@@ -152,7 +152,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   TBeing *ch;
   bool isPoly = FALSE;
   char newarg[1024];
-  sstring tStNewArg("");
+  sstring tStNewArg(""), buf, bufname;
   size_t tVar = 0;
 
 
@@ -861,7 +861,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_TELL:
-          rc = doTell(argument);
+	  buf=stringarg;
+	  buf=one_argument(buf, bufname);
+	  
+          rc = doTell(bufname, buf);
 	  addToLifeforce(1);
           break;
         case CMD_WHISPER:

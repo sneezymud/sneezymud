@@ -130,12 +130,8 @@ sstring TStaff::statObjInfo() const
 
 int TStaff::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
   if (getCurCharges() != getMaxCharges()) {
-    sprintf(buf, "%s I'm sorry, I don't buy back expended staves.",
-              ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back expended staves.");
     return TRUE;
   }
 
@@ -185,11 +181,7 @@ void TStaff::lowCheck()
 bool TStaff::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-
-    sprintf(buf, "%s You might wanna take that to the magic shop!", fname(ch->name).c_str());
-
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "You might wanna take that to the magic shop!");
   }
   return TRUE;
 }

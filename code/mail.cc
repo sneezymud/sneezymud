@@ -95,7 +95,7 @@ int mail_ok(TBeing *ch)
 
 void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 {
-  char buf[200], recipient[100], *tmp;
+  char recipient[100], *tmp;
   charFile st;
   int i, imm = FALSE;
 
@@ -104,8 +104,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     return;
 
   if (!*arg) {
-    sprintf(buf, "%s You need to specify an addressee!", getName());
-    me->doTell(buf);
+    me->doTell(getName(), "You need to specify an addressee!");
     return;
   }
   if (_parse_name(arg, recipient)) {
@@ -128,54 +127,41 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
   // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
-    sprintf(buf, "%s Sorry, you have to be level %d to send mail!",
-            getName(), MIN_MAIL_LEVEL);
-    me->doTell(buf);
+    me->doTell(getName(), fmt("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
     return;
   }
 
   if(!strcmp(recipient, "faction")){
     if(getFaction() == FACT_NONE){
-      sprintf(buf, "%s You aren't in a faction!", fname(name).c_str());
-      me->doTell(buf);
+      me->doTell(fname(name), "You aren't in a faction!");
       return;
     }
 
     if(getMoney() < FACTION_STAMP_PRICE && !imm){
-      sprintf(buf, "%s Bulk mailing costs %d talens.", fname(name).c_str(), FACTION_STAMP_PRICE);
-      me->doTell(buf);
-      sprintf(buf, "%s ...which I see you can't afford.", fname(name).c_str());
-      me->doTell(buf);
+      me->doTell(fname(name), fmt("Bulk mailing costs %d talens.") % FACTION_STAMP_PRICE);
+      me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
   } else {
     if (getMoney() < STAMP_PRICE && !imm) {
-      sprintf(buf, "%s A stamp costs %d talens.", fname(name).c_str(), STAMP_PRICE);
-      me->doTell(buf);
-      sprintf(buf, "%s ...which I see you can't afford.", fname(name).c_str());
-      me->doTell(buf);
+      me->doTell(fname(name), fmt("A stamp costs %d talens.") % STAMP_PRICE);
+      me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
   }
 
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
-    sprintf(buf, "%s I'll take %d talens for the stamp.", fname(name).c_str(), 
-         strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE);
-    me->doTell(buf);
+    me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") %
+	       (strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE));
     addToMoney(-(strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE), GOLD_HOSPITAL);
   } else if (isImmortal()) {
-    sprintf(buf, "%s Since you're high and mighty, I'll waive the fee.",
-         fname(name).c_str());
-    me->doTell(buf);
+    me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
   } else {
-    sprintf(buf, "%s Since you're mailing an immortal, I'll waive the fee.",
-         fname(name).c_str());
-    me->doTell(buf);
+    me->doTell(fname(name), "Since you're mailing an immortal, I'll waive the fee.");
   }
   if (!desc->m_bIsClient) {
-    sprintf(buf, "%s Write your message, use ~ when done, or ` to cancel.", fname(name).c_str());
-    me->doTell(buf);
+    me->doTell(fname(name), "Write your message, use ~ when done, or ` to cancel.");
     addPlayerAction(PLR_MAILING);
     desc->connected = CON_WRITING;
     strcpy(desc->name, recipient);
@@ -192,7 +178,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
 void TBeing::postmasterCheckMail(TMonster *me)
 {
-  char buf[200], recipient[100], *tmp;
+  char recipient[100], *tmp;
 
   _parse_name(getName(), recipient);
 
@@ -205,11 +191,10 @@ void TBeing::postmasterCheckMail(TMonster *me)
       *tmp = tolower(*tmp);
 
   if (has_mail(recipient))
-    sprintf(buf, "%s You have mail waiting.", getName());
+    me->doTell(getName(), "You have mail waiting.");
   else
-    sprintf(buf, "%s Sorry, you don't have any mail waiting.", getName());
+    me->doTell(getName(), "Sorry, you don't have any mail waiting.");
 
-  me->doTell(buf);
 }
 
 void TBeing::postmasterReceiveMail(TMonster *me)
@@ -230,8 +215,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       *tmp = tolower(*tmp);
 
   if (!has_mail(recipient)) {
-    sprintf(buf, "%s Sorry, you don't have any mail waiting.", fname(name).c_str());
-    me->doTell(buf);
+    me->doTell(fname(name), "Sorry, you don't have any mail waiting.");
     return;
   }
   while (has_mail(recipient)) {

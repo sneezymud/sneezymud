@@ -53,10 +53,7 @@ sstring TCookware::statObjInfo() const
 bool TCookware::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-
-    sprintf(buf,"%s Does this look like a cookware repair shop to you?", fname(ch->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "Does this look like a cookware repair shop to you?");
   }
   return TRUE;
 }

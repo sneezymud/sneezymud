@@ -41,9 +41,7 @@ bool TBaseContainer::engraveMe(TBeing *ch, TMonster *me, bool give)
   char buf[256];
 
   // engraved bags would protect too many things
-  sprintf(buf, "%s The powers that be say I can't do that anymore.", ch->getName
-());
-  me->doTell(buf);
+  me->doTell(ch->getName(), "The powers that be say I can't do that anymore.");
 
   if (give) {
     strcpy(buf, name);

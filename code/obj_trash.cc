@@ -51,14 +51,9 @@ sstring TTrash::statObjInfo() const
 
 bool TTrash::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
-  if (!silent) {
-    char buf[256];
+  if (!silent)
+    repair->doTell(fname(ch->name), fmt("I'm not the trash man. Take %s to the dump!") % getName());
 
-    sprintf(buf, "%s I'm not the trash man. Take %s to the dump!",
-      fname(ch->name).c_str(), getName());
-
-    repair->doTell(buf);
-  }
   return TRUE;
 }
 

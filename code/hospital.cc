@@ -207,7 +207,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   int j, count = 0, bought, res;
   wearSlotT i;
-  char buf[256];
+  sstring buf;
   TThing *stuck;
   int cost;
 
@@ -219,43 +219,34 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
  /* Go thru and print out what ails the person. */
   if (cmd == CMD_LIST) {
-    sprintf(buf, "%s I will list out what ails you, along with a price.", ch->getName());
-    me->doTell(buf);
+    me->doTell(ch->getName(), "I will list out what ails you, along with a price.");
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (i == HOLD_RIGHT || i == HOLD_LEFT)
         continue;
       if (!ch->slotChance(i))
         continue;
       if (ch->isLimbFlags(i, PART_MISSING)) {
-        sprintf(buf, "%s %d) Your %s is missing! (%d talens)",
-                ch->getName(), ++count, ch->describeBodySlot(i).c_str(),
-                limb_regen_price(ch, i));
-        me->doTell(buf);
+        me->doTell(ch->getName(), fmt("%d) Your %s is missing! (%d talens)") %
+		   ++count % ch->describeBodySlot(i) % limb_regen_price(ch, i));
         continue;
       } else {
         for (j = 0; j < MAX_PARTS; j++) {
           if (1<<j == PART_BANDAGED)
             continue;
           if (ch->isLimbFlags(i, 1 << j)) {
-            sprintf(buf, "%s %d) Your %s is %s. (%d talens)",
-                 ch->getName(), ++count, ch->describeBodySlot(i).c_str(), body_flags[j],
-                 limb_wound_price(ch, i, 1 << j));
-            me->doTell(buf);
+            me->doTell(ch->getName(), fmt("%d) Your %s is %s. (%d talens)") %
+		       ++count % ch->describeBodySlot(i) % body_flags[j] %
+		       limb_wound_price(ch, i, 1 << j));
           }
         }
         if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
           double perc = (double) ch->getCurLimbHealth(i) / (double) ch->getMaxLimbHealth(i);
-          sprintf(buf, "%s %d) Your %s is %s. (%d talens)",
-                  ch->getName(), ++count, ch->describeBodySlot(i).c_str(),
-                  LimbHealth(perc),
-                  limb_heal_price(ch, i));
-          me->doTell(buf);
+          me->doTell(ch->getName(), fmt("%d) Your %s is %s. (%d talens)") %
+		     ++count % ch->describeBodySlot(i) %
+		     LimbHealth(perc) % limb_heal_price(ch, i));
         }
         if ((stuck = ch->getStuckIn(i))) {
-          sprintf(buf, "%s %d) You have %s stuck in your %s. (%d talens)",
-                  ch->getName(), ++count, stuck->shortDescr, ch->describeBodySlot(i).c_str(),
-                  limb_expel_price(ch, i));
-          me->doTell(buf);
+          me->doTell(ch->getName(), fmt("%d) You have %s stuck in your %s. (%d talens)") % ++count % stuck->shortDescr % ch->describeBodySlot(i) % limb_expel_price(ch, i));
         }
       }
     }
@@ -264,45 +255,37 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       for (aff = ch->affected; aff; aff = aff->next) {
         if (aff->type == AFFECT_DISEASE) {
 	  if (ch->GetMaxLevel() < 12) {
-	    sprintf(buf, "%s Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r", ch->getName());
-	    me->doTell(buf);
+	    me->doTell(ch->getName(), "Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r");
 	  }
 	  if (ch->GetMaxLevel() < 3) {
-	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
-                    ch->getName(), ++count,
-                    DiseaseInfo[affToDisease(*aff)].name,
-                    DISEASE_PRICE_3);
+	    buf=fmt("%d) You have %s (%d talens).\n\r") %
+                    ++count % DiseaseInfo[affToDisease(*aff)].name %
+                    DISEASE_PRICE_3;
 	  } else if (ch->GetMaxLevel() < 6) {
-	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
-                    ch->getName(), ++count,
-                    DiseaseInfo[affToDisease(*aff)].name,
-                    DISEASE_PRICE_6);
+	    buf=fmt("%d) You have %s (%d talens).\n\r") %
+                    ++count % DiseaseInfo[affToDisease(*aff)].name %
+                    DISEASE_PRICE_6;
 	  } else if (ch->GetMaxLevel() < 12) {
-	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
-                    ch->getName(), ++count,
-                    DiseaseInfo[affToDisease(*aff)].name,
-                    DISEASE_PRICE_12);
+	    buf=fmt("%d) You have %s (%d talens).\n\r") %
+                    ++count % DiseaseInfo[affToDisease(*aff)].name %
+                    DISEASE_PRICE_12;
 	  } else {
-	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
-                    ch->getName(), ++count, 
-                    DiseaseInfo[affToDisease(*aff)].name,
-                    DiseaseInfo[affToDisease(*aff)].cure_cost);
+	    buf=fmt("%d) You have %s (%d talens).\n\r") %
+                    ++count % DiseaseInfo[affToDisease(*aff)].name %
+                    DiseaseInfo[affToDisease(*aff)].cure_cost;
 	  }
-	  me->doTell(buf);
+	  me->doTell(ch->getName(), buf);
         } else if (aff->type == SPELL_BLINDNESS) {
           if (!aff->shouldGenerateText())
             continue;
-          sprintf(buf, "%s %d) Affect: %s. (%d talens).\n\r",
-                    ch->getName(), ++count,
-                    discArray[aff->type]->name,
+          me->doTell(ch->getName(), fmt("%d) Affect: %s. (%d talens).\n\r") %
+                    ++count % discArray[aff->type]->name %
                     spell_regen_price(ch, SPELL_BLINDNESS));
-          me->doTell(buf);
 	}
       }  // affects loop
     }
     if (!count) {
-      sprintf(buf, "%s, I see nothing at all wrong with you!", ch->getName());
-      me->doSay(buf);
+      me->doSay(ch->getName(), " I see nothing at all wrong with you!");
     }
     return TRUE;
    /* Allow them to buy cures for their ailments. */
@@ -310,8 +293,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     for (; isspace(*arg); arg++);
 
     if (!*arg || !arg) {
-      sprintf(buf, "%s What do you want to buy? Try listing to see what ails you!", ch->getName());
-      me->doTell(buf);
+      me->doTell(ch->getName(), "What do you want to buy? Try listing to see what ails you!");
       return TRUE;
     }
 
@@ -319,19 +301,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     // fight right next to him (or get him to hate you and follow you)
     // would create a *NICE* situation for the player
     if (ch->fight()) {
-      sprintf(buf, "%s Come back when you aren't fighting.", ch->getName());
-      me->doTell(buf);
+      me->doTell(ch->getName(), "Come back when you aren't fighting.");
       return TRUE;
     }
     if (me->master == ch) {
-      sprintf(buf, "%s Your money is no good here.", ch->getName());
-      me->doTell(buf);
+      me->doTell(ch->getName(), "Your money is no good here.");
       return TRUE;
     }
 
     if(!sstring(arg).isNumber()){
-      sprintf(buf, "%s To buy a cure, type \"buy <number>\". Try listing to see what ails you!", ch->getName());
-      me->doTell(buf);
+      me->doTell(ch->getName(), "To buy a cure, type \"buy <number>\". Try listing to see what ails you!");
       return TRUE;
     }
     bought = convertTo<int>(arg);
@@ -344,13 +323,11 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if (ch->isLimbFlags(i, PART_MISSING)) {
         if (++count == bought) {
           if ((ch->getMoney() + ch->getBank()) < (cost = limb_regen_price(ch, i))) {
-            sprintf(buf, "%s You don't have enough money to regenerate your %s!", ch->getName(), ch->describeBodySlot(i).c_str());
-            me->doTell(buf);
+            me->doTell(ch->getName(), fmt("You don't have enough money to regenerate your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
             if (!ch->limbConnections(i)) {
-              sprintf(buf,"%s You can't regenerate your %s until something else is regenerated first.",ch->getName(), ch->describeBodySlot(i).c_str());
-              me->doTell(buf);
+              me->doTell(ch->getName(), fmt("You can't regenerate your %s until something else is regenerated first.") % ch->describeBodySlot(i));
               return TRUE;
             }
             int cashCost = min(ch->getMoney(), cost);
@@ -361,9 +338,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               ch->setBank(cashCost);
             }
 
-            sprintf(buf, "$n waves $s hands, utters many magic phrases and regenerates $N's %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n waves $s hands, utters many magic phrases and regenerates $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
-            sprintf(buf, "$n waves $s hands, utters many magic phrases and regenerates your %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n waves $s hands, utters many magic phrases and regenerates your %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_VICT);
             ch->setLimbFlags(i, 0);
             ch->setCurLimbHealth(i, ch->getMaxLimbHealth(i));
@@ -386,8 +363,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           if (ch->isLimbFlags(i, 1 << j)) {
             if (++count == bought) {
               if ((ch->getMoney() + ch->getBank()) < (cost = limb_wound_price(ch, i, 1 << j))) {
-                sprintf(buf, "%s You don't have enough money to do that!", ch->getName());
-                me->doTell(buf);
+                me->doTell(ch->getName(), "You don't have enough money to do that!");
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
@@ -398,9 +374,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                   ch->setBank(cashCost);
                 }
 
-                sprintf(buf, "$n waves $s hands, utters many magic phrases and touches $N's %s!", ch->describeBodySlot(i).c_str());
+                buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
                 act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
-                sprintf(buf, "$n waves $s hands, utters many magic phrases and touches your %s!", ch->describeBodySlot(i).c_str());
+                buf=fmt("$n waves $s hands, utters many magic phrases and touches your %s!") % ch->describeBodySlot(i);
                 act(buf, TRUE, me, NULL, ch, TO_VICT);
                 ch->sendTo(fmt("Your %s is healed!\n\r") % ch->describeBodySlot(i));
                 ch->remLimbFlags(i, 1 << j);
@@ -421,8 +397,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
         if (++count == bought) {
           if ((ch->getMoney() + ch->getBank()) < (cost = limb_heal_price(ch, i))) {
-            sprintf(buf, "%s You don't have enough money to heal your %s!", ch->getName(), ch->describeBodySlot(i).c_str());
-            me->doTell(buf);
+            me->doTell(ch->getName(), fmt("You don't have enough money to heal your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
@@ -433,9 +408,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               ch->setBank(cashCost);
             }
 
-            sprintf(buf, "$n waves $s hands, utters many magic phrases and touches $N's %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
-            sprintf(buf, "$n waves $s hands, utters many magic phrases and touches your %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n waves $s hands, utters many magic phrases and touches your %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_VICT);
             ch->sendTo(fmt("Your %s feels better!\n\r") % ch->describeBodySlot(i));
             ch->setCurLimbHealth(i, ch->getMaxLimbHealth(i));
@@ -452,9 +427,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if ((stuck = ch->getStuckIn(i))) {
         if (++count == bought) {
           if ((ch->getMoney() + ch->getBank()) < (cost = limb_expel_price(ch, i))) {
-            sprintf(buf, "%s You don't have enough money to expel %s from your %s!",
-                    ch->getName(), stuck->shortDescr, ch->describeBodySlot(i).c_str());
-            me->doTell(buf);
+            me->doTell(ch->getName(), fmt("You don't have enough money to expel %s from your %s!") % stuck->shortDescr % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
@@ -465,9 +438,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               ch->setBank(cashCost);
             }
 
-            sprintf(buf, "$n skillfully removes $p from $N's %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n skillfully removes $p from $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, stuck, ch, TO_NOTVICT);
-            sprintf(buf, "$n skillfully removes $p from your %s!", ch->describeBodySlot(i).c_str());
+            buf=fmt("$n skillfully removes $p from your %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, stuck, ch, TO_VICT);
             *ch += *(ch->pulloutObj(i, TRUE, &res));
 
@@ -499,10 +472,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
 	    
 	    if ((ch->getMoney() + ch->getBank()) < cost) {
-	      sprintf(buf, "%s You don't have enough money to cure %s!",
-		      fname(ch->name).c_str(),
-		      DiseaseInfo[affToDisease(*aff)].name);
-	      me->doTell(buf);
+	      me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
 	      return TRUE;
 	    } else {
 	      int cashCost = min(ch->getMoney(), cost);
@@ -533,10 +503,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             cost = spell_regen_price(ch, SPELL_BLINDNESS);
 
             if ((ch->getMoney() + ch->getBank()) < cost) {
-              sprintf(buf, "%s You don't have enough money to cure %s!",
-                       fname(ch->name).c_str(),
-                       discArray[aff->type]->name);
-              me->doTell(buf);
+              me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % discArray[aff->type]->name);
               return TRUE;
             } else {
               int cashCost = min(ch->getMoney(), cost);
@@ -560,8 +527,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
     }
     if (!count) {
-      sprintf(buf, "%s, I see nothing at all wrong with you!", ch->getName());
-      me->doSay(buf);
+      me->doSay(ch->getName(), " I see nothing at all wrong with you!");
     }
     ch->doSave(SILENT_YES);
     return TRUE;

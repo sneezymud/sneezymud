@@ -107,11 +107,8 @@ sstring TTool::statObjInfo() const
 
 int TTool::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
   if ((getToolUses() != getToolMaxUses())) {
-    sprintf(buf, "%s I'm sorry, I don't buy back used tools.", ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back used tools.");
     return TRUE;
   }
   return FALSE;

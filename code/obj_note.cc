@@ -111,10 +111,7 @@ sstring TNote::statObjInfo() const
 
 int TNote::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
-  sprintf(buf,"%s I'm sorry, I don't buy back notes.",ch->getName());
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back notes.");
   return TRUE;
 }
 

@@ -566,19 +566,16 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 #endif
   if (temp1->getStuff()) {
-    buf = fmt("%s Sorry, I don't buy items that contain other items.") % ch->getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "Sorry, I don't buy items that contain other items.");
     return TRUE;
   }
   // Notes have been denied by objectSell() above
   if (temp1->action_description) {
-    buf = fmt("%s I'm sorry, I don't buy monogrammed goods.") % ch->getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy monogrammed goods.");
     return TRUE;
   }
   if(temp1->isObjStat(ITEM_BURNING) || temp1->isObjStat(ITEM_CHARRED)){
-    buf = fmt("%s I'm sorry, I don't buy fire damaged goods.") % ch->getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy fire damaged goods.");
     return TRUE;
   }
 
@@ -615,8 +612,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   int max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    buf = fmt("%s I don't wish to buy any of those right now.") % ch->name;
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -626,8 +622,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
          !strcmp(t->getName(), getName()))) {
       total += 1;
       if (total >= max_num) {
-        buf = fmt("%s I already have plenty of those.") % ch->name;
-        keeper->doTell(buf);
+        keeper->doTell(ch->name, "I already have plenty of those.");
         return TRUE;
       }
     }
@@ -701,8 +696,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     return;
   }
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    buf = fmt("%s I'm sorry, I don't buy valueless items.") % ch->getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
     return;
   }
   if (sellMeCheck(ch, keeper, num))
@@ -733,10 +727,8 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     return;
   }
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    buf = fmt("%s Wow!  This is one of those limited items.") % ch->name;
-    keeper->doTell(buf);
-    buf = fmt("%s You should really think about auctioning it.") % ch->name;
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
+    keeper->doTell(ch->name, "You should really think about auctioning it.");
   }
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
@@ -970,8 +962,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   strcpy(argm, tString);
 
   if (!*argm) {
-    buf = fmt("%s What do you want to sell??") % ch->getName();
-    tKeeper->doTell(buf);
+    tKeeper->doTell(ch->getName(), "What do you want to sell??");
     return FALSE;
   }
 
@@ -995,8 +986,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     tObjectManip = ObjectManipType(argm, tStString, tItemType);
 
     if (tObjectManip == OBJMAN_NULL) {
-      buf = fmt("%s And what is it you want to sell??") % ch->getName();
-        tKeeper->doTell(buf);
+        tKeeper->doTell(ch->getName(), "And what is it you want to sell??");
     }
 
     if (tObjectManip != OBJMAN_NONE)
@@ -1184,8 +1174,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   strcpy(argm, arg);
 
   if (!*argm) {
-    buf = fmt("%s What do you want me to evaluate??") % ch->name;
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "What do you want me to evaluate??");
     return;
   }
   
@@ -1275,10 +1264,8 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   cost = sellPrice(1, shop_nr, chr, &discount);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    buf = fmt("%s Wow!  This is one of those limited items.") % ch->name;
-    keeper->doTell(buf);
-    buf = fmt("%s You should really think about auctioning it.") % ch->name;
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
+    keeper->doTell(ch->name, "You should really think about auctioning it.");
   }
 
   if ((getStructPoints() != getMaxStructPoints()) &&
@@ -1295,15 +1282,14 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   max(cost, 1);  // at least 1 talen
   if(willbuy){
-    buf = fmt("%s I'll give you %d talens for %s!") % ch->name % cost % getName();
+    buf = fmt("I'll give you %d talens for %s!") % cost % getName();
   } else {
-    buf = fmt("%s Normally, I'd give you %d talens for %s!") % ch->name % cost % getName();
+    buf = fmt("Normally, I'd give you %d talens for %s!") % cost % getName();
   }
-  keeper->doTell(buf);
+  keeper->doTell(ch->name, buf);
 
   if (keeper->getMoney() < cost) {
-    buf = fmt("%s Unfortunately, at the moment, I can not afford to buy that item from you.") % fname(ch->name);
-    keeper->doTell(buf);
+    keeper->doTell(fname(ch->name), "Unfortunately, at the moment, I can not afford to buy that item from you.");
     return;
   }
 
@@ -1637,8 +1623,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   int max_trade=0;
   max_trade=shop_index[shop_nr].type.size()-1;
 
-  buf = fmt("%s You can buy:") % ch->getName();
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "You can buy:");
   for (counter = 0; counter < max_trade; counter++) {
     if (shop_index[shop_nr].type[counter] == ITEM_COMPONENT)
       hasComponents = true;
@@ -1868,12 +1853,10 @@ void shopping_kill(const char *, TBeing *ch, TBeing *keeper, int shop_nr)
 
   switch (shop_index[shop_nr].temper2) {
     case 0:
-      buf = fmt("%s Don't ever try that again!") % ch->name;
-      keeper->doTell(buf);
+      keeper->doTell(ch->name, "Don't ever try that again!");
       return;
     case 1:
-      buf = fmt("%s Scram - midget!") % ch->name;
-      keeper->doTell(buf);
+      keeper->doTell(ch->name, "Scram - midget!");
       return;
 
     default:
@@ -2094,11 +2077,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   }
   if ((cmd == CMD_CAST) || (cmd == CMD_RECITE) || 
       (cmd == CMD_USE) || (cmd == CMD_PRAY)) {
-    char tString[256];
-
     if (myself->canSee(ch)) {
-      sprintf(tString, "%s <r>No magic here - kid!<z>", ch->getNameNOC(ch).c_str());
-      myself->doTell(tString);
+      myself->doTell(ch->getNameNOC(ch), "<r>No magic here - kid!<z>");
     } else
       act("I may not be able to see you kid, but there is no magic in here.",
           FALSE, ch, 0, myself, TO_CHAR);

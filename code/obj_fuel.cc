@@ -143,10 +143,7 @@ void TFuel::lowCheck()
 
 int TFuel::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
-  sprintf(buf, "%s I'm sorry, I don't buy back fuel.", ch->getName());
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back fuel.");
   return TRUE;
 }
 

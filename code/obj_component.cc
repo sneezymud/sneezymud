@@ -2231,8 +2231,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    buf = fmt("%s I don't wish to buy any of those right now.") % ch->name;
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -2248,12 +2247,10 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     }
   }
   if (total >= max_num) {
-    buf = fmt("%s I already have plenty of %s.") % ch->getName() % getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % getName());
     return TRUE;
   } else if (total + num > max_num) {
-    buf = fmt("%s I'll buy no more than %d charge%s of %s.") % ch->getName() % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d charge%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
     return FALSE;
   }
 
@@ -2544,11 +2541,7 @@ sstring TComponent::statObjInfo() const
 bool TComponent::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-  
-    sprintf(buf, "%s You might wanna take that to the magic shop!", fname(ch->getName()).c_str());
-
-    repair->doTell(buf);
+    repair->doTell(fname(ch->getName()), "You might wanna take that to the magic shop!");
   }
   return TRUE;
 }
@@ -3046,10 +3039,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     int charges = getComponentCharges();
 
     if (tNum > charges) {
-      tString = fmt("%s I don't have %d charges of %s.  Here %s the %d I do have.") %
-	ch->getName() % tNum % getName() % ((charges > 2) ? "are" : "is") %
-	charges;
-      tKeeper->doTell(tString);
+      tKeeper->doTell(ch->getName(), fmt("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
       tNum  = charges;
       tCost = shopPrice(tNum, tShop, tChr, &tDiscount);
     }
@@ -3112,14 +3102,12 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
        tDiscount = 100;
 
   if (!shop_index[tShop].profit_sell) {
-    buf = fmt(shop_index[tShop].do_not_buy) % ch->getName();
-    tKeeper->doTell(buf);
+    tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
     return;
   }
 
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    buf = fmt("%s I'm sorry, I don't buy valueless items.") % ch->getName();
-    tKeeper->doTell(buf);
+    tKeeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
     return;
   }
 
@@ -3158,10 +3146,8 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   }
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    buf = fmt("%s Wow!  This is one of those limited items.") % ch->getName();
-    tKeeper->doTell(buf);
-    buf = fmt("%s You should really think about auctioning it.") % ch->getName();
-    tKeeper->doTell(buf);
+    tKeeper->doTell(ch->getName(), "Wow!  This is one of those limited items.");
+    tKeeper->doTell(ch->getName(), "You should really think about auctioning it.");
   }
 
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
@@ -3284,16 +3270,15 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   price = sellPrice(num, shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    buf = fmt(shop_index[shop_nr].do_not_buy) % ch->getName();
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
 
   if (willbuy) {
-    buf = fmt("%s I'll give you %d talens for %s!") % ch->getName() % price % getName();
+    buf = fmt("I'll give you %d talens for %s!") % price % getName();
   } else {
-    buf = fmt("%s Normally, I'd give you %d talens for %s!") % ch->getName() % price % getName();
+    buf = fmt("Normally, I'd give you %d talens for %s!") % price % getName();
   }
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), buf);
   return;
 }

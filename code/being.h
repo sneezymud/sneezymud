@@ -1965,7 +1965,6 @@ class TBeing : public TThing {
     void doShout(const char *);
     int doWhisper(const sstring &);
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
-    int doTell(const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);
     int doAsk(const sstring &);
     void doSign(const sstring &);

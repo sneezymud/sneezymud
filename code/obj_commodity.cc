@@ -110,23 +110,19 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return -1;
   }
   if (!shop_index[shop_nr].willBuy(this)) {
-    sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return -1;
   }
   if (num > (int) (numUnits())) {
     num = (int) (numUnits());
-    sprintf(buf, "%s I don't have that much %s.  Here's the %d that I do have.",
-          ch->getName(), fname(name).c_str(), num);
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), fmt("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
   cost_per = pricePerUnit();
   price = shopPrice(num, shop_nr, -1, &discount);
   vnum = objVnum();
 
   if (ch->getMoney() < price) {
-    sprintf(buf, shop_index[shop_nr].missing_cash2, ch->name);
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
 
     switch (shop_index[shop_nr].temper1) {
       case 0:
@@ -153,8 +149,8 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     obj2 = read_object(vnum, VIRTUAL);
     obj2->describeTreasure(buf2, num, cost_per);
     *ch += *obj2;
-    sprintf(buf, "%s Here ya go.  That's %d units of %s.", ch->getName(), num, buf2);
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d units of %s.") %
+		   num % buf2);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
     ch->addToMoney(-price, GOLD_COMM);
@@ -196,13 +192,11 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     return;
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
   if (keeper->getMoney() < price) {
-    sprintf(buf, shop_index[shop_nr].missing_cash1, ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
     return;
   }
   for (t = keeper->getStuff(); t; t = t->nextThing) {
@@ -232,8 +226,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       keeper->addToMoney(-price, GOLD_COMM);
     }
     ch->addToMoney(price, GOLD_COMM);
-    sprintf(buf, "%s Thanks, here's your %d talens.", ch->getName(), price);
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "Thanks, here's your %d talens.", price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
             IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
@@ -280,21 +273,18 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
 void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   int price;
-  char buf[256], buf2[80];
+  char buf2[80];
   int discount = 100;
 
   strcpy(buf2, fname(name).c_str());
   price = sellPrice(1, shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
 
-  sprintf(buf, "%s Hmm, I'd give you %d talens for that.", ch->getName(), price)
-;
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "Hmm, I'd give you %d talens for that.", price);
   return;
 }
 

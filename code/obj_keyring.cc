@@ -50,9 +50,7 @@ sstring TKeyring::statObjInfo() const
 bool TKeyring::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-    sprintf(buf, "%s I can't repair keyrings.", fname(ch->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "I can't repair keyrings.");
   }
   return TRUE;
 }

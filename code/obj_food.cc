@@ -944,20 +944,14 @@ sstring TFood::statObjInfo() const
 
 int TFood::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
-  sprintf(buf, "%s I'm sorry, I don't purchase food.", ch->getName());
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "I'm sorry, I don't purchase food.");
   return TRUE;
 }
 
 bool TFood::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-
-    sprintf(buf, "%s you might wanna take that to the diner!", fname(ch->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "you might wanna take that to the diner!");
   }
   return TRUE;
 }

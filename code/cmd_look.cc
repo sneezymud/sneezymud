@@ -179,7 +179,8 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {
                 if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
                   if (hasColorStrings(NULL, rp->getName(), 2)) {
-                    sendTo(COLOR_ROOM_NAME, fmt("You see %s<1>.\n\r") %                           dynColorRoom(rp, 1, TRUE).c_str());
+                    sendTo(COLOR_ROOM_NAME, fmt("You see %s<1>.\n\r") %
+			   dynColorRoom(rp, 1, TRUE));
                   } else {
                     sendTo(COLOR_ROOM_NAME, fmt("You see %s%s%s.\n\r") %                           addColorRoom(rp, 1) % rp->name  %norm());
                   }

@@ -557,7 +557,6 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;
-  char buf[256];
   unsigned int shop_nr;
 
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
@@ -574,8 +573,7 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
     max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    sprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -586,8 +584,7 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
       total += 1;
 
       if (total >= max_num) {
-        sprintf(buf, "%s I already have plenty of those.", ch->name);
-        keeper->doTell(buf);
+        keeper->doTell(ch->name, "I already have plenty of those.");
         return TRUE;
       }
     }

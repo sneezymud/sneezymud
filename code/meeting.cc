@@ -68,35 +68,25 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
     arg += strlen(ORGANIZER_ID);
     if (!strncasecmp(arg, " show list", 10)) {
       sstring tmpString;
-      tmpString = fname(ch->name);
-      tmpString += " ";
-      tmpString += "The current speaker list:";
-      myself->doTell(tmpString);
+      myself->doTell(fname(ch->name), "The current speaker list:");
       if (job->speech_list.empty()) {
-        tmpString = fname(ch->name);
-        tmpString += " Empty";
-        myself->doTell(tmpString);
+        myself->doTell(fname(ch->name), "Empty");
       } else {
         unsigned int i;
-        tmpString = fname(ch->name);
-        tmpString += " ";
+        tmpString += "";
         for (i = 0; i < job->speech_list.size(); i++) {
           tmpString += job->speech_list[i];
           tmpString += " ";
         }
-        myself->doTell(tmpString);
+        myself->doTell(fname(ch->name), tmpString);
       }
-      char buf[256];
       if (job->speech_dur > 0) {
-        sprintf(buf, "%s Speech time is restricted to %d seconds.", fname(ch->name).c_str(), job->speech_dur);
-        myself->doTell(buf);
+        myself->doTell(fname(ch->name), fmt("Speech time is restricted to %d seconds.") % job->speech_dur);
         if (!job->speech_list.empty()) {
-          sprintf(buf, "%s %s has %ld seconds remaining.", fname(ch->name).c_str(), job->speech_list[0].c_str(), job->speech_dur +job->start_time - time(0));
-          myself->doTell(buf);
+          myself->doTell(fname(ch->name), fmt("%s has %ld seconds remaining.") % job->speech_list[0] % (job->speech_dur +job->start_time - time(0)));
         }
       } else {
-        sprintf(buf, "%s Speech time is unrestricted.", fname(ch->name).c_str());
-        myself->doTell(buf);
+        myself->doTell(fname(ch->name), "Speech time is unrestricted.");
       }
       *rc = true;
       return true;
@@ -105,9 +95,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
         unsigned int i;
         for (i = 0; i < job->speech_list.size(); i++) {
           if (ch->name == job->speech_list[i]){
-            sstring tmpString = fname(ch->name);
-            tmpString += " You are already in the speaker list.";
-            myself->doTell(tmpString);
+            myself->doTell(fname(ch->name), "You are already in the speaker list.");
             *rc = true;
             return true;
           }
@@ -119,9 +107,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       }
 
       job->speech_list.push_back(ch->name);
-      sstring tstr = fname(ch->name);
-      tstr += " You have been added as a speaker.";
-      myself->doTell(tstr);
+      myself->doTell(fname(ch->name), "You have been added as a speaker.");
 
       // start the cpounter if we just launched
       if (job->speech_list.size() == 1)
@@ -291,9 +277,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
     // silly bastards that aliased emote to work like a say should be shot
     // it screws up meeting logs, so deny such activity
     
-    sstring str = fname(ch->name);
-    str += " Emotting is disabled at the moment.";
-    myself->doTell(str);
+    myself->doTell(fname(ch->name), "Emotting is disabled at the moment.");
     return TRUE;
   }
 
@@ -363,62 +347,18 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
     }
   }
 
-  sstring str = fname(ch->name);
-  str += " To maintain order at the meeting, you are restricted to the following commands:";
-  myself->doTell(str);
-
-  str = fname(ch->name);
-  str += " movement, utility, NOD, SHAKE, AGREE, DISAGREE";
-  myself->doTell(str);
-
-  str = fname(ch->name);
-  str += " To be added to the speaker list : say ";
-  str += ORGANIZER_ID;
-  str += " add me";
-  myself->doTell(str);
-
-  str = fname(ch->name);
-  str += " To review the speaker list : say ";
-  str += ORGANIZER_ID;
-  str += " show list";
-  myself->doTell(str);
-
-  str = fname(ch->name);
-  str += " To relinquish the speaker position : say ";
-  str += ORGANIZER_ID;
-  str += " done";
-  myself->doTell(str);
+  myself->doTell(fname(ch->name), "To maintain order at the meeting, you are restricted to the following commands:");
+  myself->doTell(fname(ch->name), "movement, utility, NOD, SHAKE, AGREE, DISAGREE");
+  myself->doTell(fname(ch->name), fmt("To be added to the speaker list : say %s add me") % ORGANIZER_ID);
+  myself->doTell(fname(ch->name), fmt("To review the speaker list : say %s show list") % ORGANIZER_ID);
+  myself->doTell(fname(ch->name), fmt("To relinquish the speaker position : say %s done") % ORGANIZER_ID);
 
   if (ch->GetMaxLevel() > MAX_MORT) {
-    str = fname(ch->name);
-    str += " To pause/restart the speaker clock : say ";
-    str += ORGANIZER_ID;
-    str += " pause";
-    myself->doTell(str);
-
-    str = fname(ch->name);
-    str += " To open/close debate to all : say ";
-    str += ORGANIZER_ID;
-    str += " open_debate";
-    myself->doTell(str);
-
-    str = fname(ch->name);
-    str += " To set the speech time : say ";
-    str += ORGANIZER_ID;
-    str += " speech_time <seconds>";
-    myself->doTell(str);
-
-    str = fname(ch->name);
-    str += " To clear the speaker list : say ";
-    str += ORGANIZER_ID;
-    str += " clear";
-    myself->doTell(str);
-
-    str = fname(ch->name);
-    str += " To log/unlog the meeting : say ";
-    str += ORGANIZER_ID;
-    str += " log";
-    myself->doTell(str);
+    myself->doTell(fname(ch->name), fmt("To pause/restart the speaker clock : say %s pause") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), fmt("To open/close debate to all : say %s open_debate") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), fmt("To set the speech time : say %s speech_time <seconds>") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), fmt("To clear the speaker list : say %s clear") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), fmt("To log/unlog the meeting : say %s log") % ORGANIZER_ID);
   }
 
   return TRUE;

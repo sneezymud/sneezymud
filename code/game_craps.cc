@@ -644,7 +644,7 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
 void Craps::checkField(int diceroll, TBeing *ch)
 {
   TMonster *crap_man;
-  char buf[100];
+  sstring buf;
 
   Descriptor *d;
 
@@ -656,22 +656,21 @@ void Craps::checkField(int diceroll, TBeing *ch)
 
   if ((diceroll >= 5) && (diceroll <= 8)) {
     if (crap_man) {
-      sprintf(buf, "%s The roll is %d. You lose your bet on the field (%d).", ch->getName(), diceroll, d->bet.field_bet);
-      crap_man->doTell(buf);
+      crap_man->doTell(ch->getName(), fmt("The roll is %d. You lose your bet on the field (%d).") % diceroll % d->bet.field_bet);
       observerReaction(ch, GAMBLER_LOST);
     }
   } else {
     if ((diceroll < 12) && (diceroll > 2)) {
-      sprintf(buf, "%s The roll is %d. You win your bet on the field (%d)!", ch->getName(), diceroll, d->bet.field_bet);
+      buf=fmt("The roll is %d. You win your bet on the field (%d)!") % diceroll % d->bet.field_bet;
       payout(ch, 2 * d->bet.field_bet);
       observerReaction(ch, GAMBLER_WON);
     } else {
-      sprintf(buf, "%s The roll is %d. You get your field bet back (%d)!", ch->getName(), diceroll, d->bet.field_bet);
+      buf=fmt("%s The roll is %d. You get your field bet back (%d)!") % diceroll % d->bet.field_bet;
       payout(ch, d->bet.field_bet);
       observerReaction(ch, GAMBLER_WON);
     }
     if (crap_man) {
-      crap_man->doTell(buf);
+      crap_man->doTell(ch->getName(), buf);
     }
 
   }
@@ -891,7 +890,7 @@ void WinLoseCraps(TBeing *ch, int diceroll)
 int Craps::rollDice()
 {
   int die_one, die_two, dice_roll;
-  char buf[256], buf2[256];
+  sstring buf, buf2;
   TMonster *table_man;
 
   if (!m_ch || !m_ch->desc)
@@ -904,13 +903,11 @@ int Craps::rollDice()
 
   if ((table_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
     if (!can_bet_craps(m_ch)) {
-      sprintf(buf, "%s You can't roll until I say so!", m_ch->getName());
-      table_man->doTell(buf);
+      table_man->doTell(m_ch->getName(), "You can't roll until I say so!");
       return FALSE;
     }
     if (!m_ch->desc->bet.come) {
-      sprintf(buf, "%s Sorry to keep the table, you need to place a come bet.", m_ch->getName());
-      table_man->doTell(buf);
+      table_man->doTell(m_ch->getName(), "Sorry to keep the table, you need to place a come bet.");
       return FALSE;
     }
   }
@@ -945,15 +942,15 @@ int Craps::rollDice()
     sendToRoom(DICE_SIX, m_ch->in_room);
 
   if (m_ch->desc->point_roll) {
-    sprintf(buf, "You rolled a %d and a %d. Total = %d    Point = %d\n\r", 
-         die_one, die_two, dice_roll, m_ch->desc->point_roll);
-    sprintf(buf2, "%s rolled a %d and a %d. Total = %d    Point = %d\n\r", 
-         m_ch->getName(), die_one, die_two, dice_roll, m_ch->desc->point_roll);
+    buf=fmt("You rolled a %d and a %d. Total = %d    Point = %d\n\r") %
+      die_one % die_two % dice_roll % m_ch->desc->point_roll;
+    buf2=fmt("%s rolled a %d and a %d. Total = %d    Point = %d\n\r") %
+      m_ch->getName() % die_one % die_two % dice_roll % m_ch->desc->point_roll;
   } else {
-    sprintf(buf, "You rolled a %d and a %d. Total = %d\n\r", 
-         die_one, die_two, dice_roll);
-    sprintf(buf2, "%s rolled a %d and a %d. Total = %d\n\r", m_ch->getName(),
-         die_one, die_two, dice_roll);
+    buf=fmt("You rolled a %d and a %d. Total = %d\n\r") %
+      die_one % die_two % dice_roll;
+    buf2=fmt("%s rolled a %d and a %d. Total = %d\n\r") %
+      m_ch->getName() % die_one % die_two, dice_roll;
   }
   act(buf,TRUE, m_ch, NULL, NULL, TO_CHAR);
   act(buf2,TRUE, m_ch, NULL, NULL, TO_ROOM);

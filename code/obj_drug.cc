@@ -164,10 +164,7 @@ void TDrug::lowCheck()
 
 int TDrug::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
-
-  sprintf(buf, "%s I'm sorry, I don't buy back drugs.", ch->getName());
-  keeper->doTell(buf);
+  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back drugs.");
   return TRUE;
 }
 

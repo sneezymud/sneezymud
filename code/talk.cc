@@ -833,17 +833,13 @@ void TBeing::doSign(const sstring &arg)
   }
 }
 
-int TBeing::doTell(const sstring &name, const sstring &arg, bool visible = TRUE)
-{
-  return doTell(fmt("%s %s") % name % arg, visible);
-}
 
 // returns DELETE_THIS on death of this
 // triggerSpecOnPerson prevents this from being constant
-int TBeing::doTell(const sstring &arg, bool visible)
+int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 {
   TBeing *vict;
-  sstring name, capbuf, message;
+  sstring capbuf;
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -862,7 +858,6 @@ int TBeing::doTell(const sstring &arg, bool visible)
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
   }
-  message=one_argument(arg, name);
 
   if(name.empty() || message.empty()){
     sendTo("Whom do you wish to tell what??\n\r");
@@ -1214,15 +1209,12 @@ void TBeing::doWrite(const char *arg)
 
 void TBeing::doReply(const sstring &arg)
 {
-  sstring buf;
-
   if (!desc || !*desc->last_teller) {
     sendTo("No one seems to have spoken to you lately.\n\r");
     return;
   }
 
-  buf = fmt("%s %s") % add_bars(desc->last_teller) % arg;
-  doTell(buf, FALSE);
+  doTell(add_bars(desc->last_teller), arg, FALSE);
 }
 
 bool TBeing::canSpeak()

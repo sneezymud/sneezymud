@@ -1286,7 +1286,6 @@ void TBeing::checkForQuestTog(TBeing *vict)
   int bitnum = FALSE;
   affectedData af;
   affectedData *aff = NULL;
-  char buf[256];
 
   switch (vict->mobVnum()) {
     case MOB_TROLL_GIANT:
@@ -1338,10 +1337,8 @@ void TBeing::checkForQuestTog(TBeing *vict)
       af.be = this;
 
       vict->affectTo(&af, -1);
-      sprintf(buf, "%s You have acted honorably in attacking me.", getName());
-      vict->doTell(buf);
-      sprintf(buf, "%s Let this fight be to the death!", getName());
-      vict->doTell(buf);
+      vict->doTell(getName(), "You have acted honorably in attacking me.");
+      vict->doTell(getName(), "Let this fight be to the death!");
 //      vlogf(LOG_COMBAT, "Setting quest bit for %d on %s vs %s", bitnum, vict->getName(), getName());
       // some specials stun the critter so it doesn't start fighting.
       // we need to set them fighting so that if char stuns and flees
@@ -1360,10 +1357,8 @@ void TBeing::checkForQuestTog(TBeing *vict)
         }
       }
       if (!found2 && awake()) {
-        sprintf(buf, "%s You have acted dishonorably in attacking me while I was unprepared.", getName());
-        vict->doTell(buf);
-        sprintf(buf, "%s This battle will avail you naught unless you fight me at my prime.", getName());
-        vict->doTell(buf);
+        vict->doTell(getName(), "You have acted dishonorably in attacking me while I was unprepared.");
+        vict->doTell(getName(), "This battle will avail you naught unless you fight me at my prime.");
       }
     }
   }
@@ -1371,7 +1366,6 @@ void TBeing::checkForQuestTog(TBeing *vict)
 
 void TBeing::sendCheatMessage(char *cheater)
 {
-  char buf[256];
   char nameBuf[MAX_NAME_LENGTH];
 
   sprintf(nameBuf, "%s", cheater);
@@ -1379,32 +1373,24 @@ void TBeing::sendCheatMessage(char *cheater)
     case MOB_TROLL_GIANT:
     case MOB_CAPTAIN_RYOKEN:
     case MOB_TREE_SPIRIT:
-      sprintf(buf, "%s You have failed to defeat me in single combat.", nameBuf);
-      doTell(buf);
-      sprintf(buf, "%s An honorable deikhan would allow me to heal completely before attacking again.", nameBuf);
-      doTell(buf);
+      doTell(nameBuf, "You have failed to defeat me in single combat.");
+      doTell(nameBuf, "An honorable deikhan would allow me to heal completely before attacking again.");
       break;
     case MOB_JOHN_RUSTLER:
-      sprintf(buf, "%s You have failed to defeat me in single combat.", nameBuf);
-      doTell(buf);
-      sprintf(buf, "%s An honorable ranger would allow me to heal completely before attacking again.", nameBuf);
-      doTell(buf);
+      doTell(nameBuf, "You have failed to defeat me in single combat.");
+      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;      
     case MOB_ORC_MAGI:
       sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
       setQuestBit(TOG_FAILED_TO_KILL_MAGI);
       break;
     case MOB_CLERIC_VOLCANO:
-      sprintf(buf, "%s You have failed to defeat me in single combat.", nameBuf);
-      doTell(buf);
-      sprintf(buf, "%s An honorable ranger would allow me to heal completely before attacking again.", nameBuf);
-      doTell(buf);
+      doTell(nameBuf, "You have failed to defeat me in single combat.");
+      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
     case MOB_CLERIC_ARDEN:
-      sprintf(buf, "%s You have failed to defeat me in single combat.", nameBuf);
-      doTell(buf);
-      sprintf(buf, "%s An honorable ranger would allow me to heal completely before attacking again.", nameBuf);
-      doTell(buf);
+      doTell(nameBuf, "You have failed to defeat me in single combat.");
+      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
     default:
       vlogf(LOG_COMBAT, "Somehow got to getCheatMessage without a valid toggle bit %s.", getName());

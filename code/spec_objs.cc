@@ -1131,7 +1131,7 @@ void invert(const char *arg1, char *arg2)
 
 int jive_box(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *, TObj **)
 {
-  char buf[255], buf2[255], buf3[255], tmp[255];
+  char buf[255], buf2[255], tmp[255];
 
   switch (cmd) {
     case CMD_SAY:
@@ -1143,8 +1143,7 @@ int jive_box(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *, TObj **)
     case CMD_TELL:
       half_chop(arg, tmp, buf);
       invert(buf, buf2);
-      sprintf(buf3, "%s %s", tmp, buf);
-      ch->doTell(buf3);
+      ch->doTell(tmp, buf);
       return TRUE;
       break;
     case CMD_SHOUT:

@@ -58,11 +58,8 @@ void TKey::lowCheck()
 bool TKey::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
 
-    sprintf(buf, "%s Does this look like a locksmithery to you?", fname(ch->name).c_str());
-
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "Does this look like a locksmithery to you?");
   }
   return TRUE;
 }

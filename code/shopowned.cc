@@ -134,13 +134,13 @@ void TShopOwned::showInfo()
     keeper->doTell(ch->getName(), 
 		   "I only sell things, I do not buy anything.");
   } else {
-    buf = fmt("%s I deal in") % ch->getName();
+    buf = "I deal in";
     for(i=0;i<shop_index[shop_nr].type.size();++i){
       tmp=shop_index[shop_nr].type[i];
       if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
 	buf = fmt("%s %s,") % buf % ItemInfo[tmp]->name;
     }
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), buf);
   }
 }
 
@@ -450,8 +450,8 @@ int TShopOwned::setAccess(sstring arg)
     while(db.fetchRow()){
       access=convertTo<int>(db["access"]);
       
-      buf = fmt("%s Access for %s is set to %i, commands/abilities:") %
-	       ch->getName() % db["name"] % access;
+      buf = fmt("Access for %s is set to %i, commands/abilities:") %
+	       db["name"] % access;
       
       if(access>=SHOPACCESS_LOGS){
 	access-=SHOPACCESS_LOGS;
@@ -482,7 +482,7 @@ int TShopOwned::setAccess(sstring arg)
 	buf+=" owner";
       }
       
-      keeper->doTell(buf);
+      keeper->doTell(ch->getName(), buf);
     }
   }
   

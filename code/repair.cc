@@ -200,10 +200,8 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
     minutes = (diff % 3600)/60;
     seconds = diff % 60;
 
-    sprintf(buf, "%s Your item isn't ready yet.", fname(buyer->name).c_str());
-    repair->doTell(buf);
-    sprintf(buf, "%s It will be ready in %d hours, %d minutes and %d seconds.", fname(buyer->getName()).c_str(), hours, minutes, seconds);
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "Your item isn't ready yet.");
+    repair->doTell(fname(buyer->getName()),  fmt("It will be ready in %d hours, %d minutes and %d seconds.") % hours % minutes % seconds);
     fclose(fp);
     return FALSE;
   } else if (tmp_cost > buyer->getMoney()) {
@@ -216,9 +214,7 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
   } else {
     if ((fixed_obj = raw_read_item(fp, version))) {
       obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
-      sprintf(buf2, "%s Ah yes, %s, here is %s.",
-           fname(buyer->name).c_str(), buyer->getName(),fixed_obj->shortDescr);
-      repair->doTell(buf2);
+      repair->doTell(fname(buyer->name), fmt("Ah yes, %s, here is %s.") % buyer->getName() % fixed_obj->shortDescr);
       repair->doSay("Thank you for your business!");
       fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
       buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
@@ -252,77 +248,63 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
 
 static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT silent)
 {
-  char buf[160];
-
   if (obj->objectRepair(ch, repair, silent)) 
     return TRUE;
 
   if (!obj->isRentable()) {
     if (!silent) {
-      sprintf(buf, "%s I'm sorry, but that item is unrepairable.",fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "I'm sorry, but that item is unrepairable.");
     }
     return TRUE;
   }
   if (obj->getStructPoints() == obj->getMaxStructPoints()) {
     if (!silent) {
-      sprintf(buf, "%s It doesn't look like that item needs any repairing.",
-               fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "It doesn't look like that item needs any repairing.");
     }
     return TRUE;
   } 
   if (obj->getStructPoints() >= obj->maxFix(NULL, DEPRECIATION_NO)) {
     // check depreciation alone
     if (!silent) {
-      sprintf(buf, "%s That item's damage isn't something that can be repaired.",
-               fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "That item's damage isn't something that can be repaired.");
     }
     return TRUE;
   } 
   if (obj->getStructPoints() >= obj->maxFix(repair, DEPRECIATION_NO)) {
     // check repairman's skill
     if (!silent) {
-      sprintf(buf, "%s I hate to admit it, but I don't think I have the skill to fix that further.",
-             fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "I hate to admit it, but I don't think I have the skill to fix that further.");
     }
     return TRUE;
   } 
   if (!repair_time(obj)) {
     // probably superfluous
     if (!silent) {
-      sprintf(buf, "%s %s looks fine to me.", fname(ch->name).c_str(), obj->getName());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), fmt("%s looks fine to me.") % obj->getName());
     }
     return TRUE;
   }
   if (obj->objVnum() == -1) {
     if (!silent) {
-      sprintf(buf, "%s I can't take temporary items like %s.", fname(ch->name).c_str(), obj->getName());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), fmt("I can't take temporary items like %s.") % obj->getName());
     }
     return TRUE;
   }
   if (obj->isObjStat(ITEM_NODROP)) {
     if (!silent) {
-      sprintf(buf, "%s I can't take cursed items.", fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "I can't take cursed items.");
     }
     return TRUE;
   }
   if (obj->isObjStat(ITEM_BURNING)) {
     if (!silent) {
-      sprintf(buf, "%s I can't repair burning items.", fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "HOLY CRAP GET THAT THING OUT OF HERE BEFORE YOU BURN THE WHOLE PLACE DOWN!.");
     }
     return TRUE;
   }
   if (obj->isObjStat(ITEM_CHARRED)) {
     if (!silent) {
-      sprintf(buf, "%s I can repair this, but it is very badly fire-damaged.", fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "I can repair this, but it is very badly fire-damaged.");
     }
   }
   if (obj_index[obj->getItemIndex()].getNumber() > 
@@ -330,8 +312,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
     // item over max-exist, never supposed to happen, but could
     // make it unrepairable to encourage it to scrap
     if (!silent) {
-      sprintf(buf, "%s Someone has put out a contract to reclaim that item.  It's just too dangerous for me to take it.", fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "Someone has put out a contract to reclaim that item.  It's just too dangerous for me to take it.");
     }
 
     return TRUE;
@@ -340,8 +321,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
   if (obj->getStuff()) {
     // probably a mage-belt with components in it....
     if (!silent) {
-      sprintf(buf, "%s Sorry, you'll have to empty it out before I can do any work on it.", fname(ch->name).c_str());
-      repair->doTell(buf);
+      repair->doTell(fname(ch->name), "Sorry, you'll have to empty it out before I can do any work on it.");
     }
     return TRUE;
   }
@@ -350,7 +330,6 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
 
 void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 {
-  char buf[256];
   char *ready;
   TObj *valued;
   time_t when_ready, ct;
@@ -363,15 +342,13 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   for (;*arg && *arg == ' ';arg++);
 
   if (!*arg) {
-    sprintf(buf, "%s Can you be a little more specific about what you want to value....\n\r", fname(buyer->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "Can you be a little more specific about what you want to value....\n\r");
     return;
   }
   TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->getStuff());
   valued = dynamic_cast<TObj *>(t_valued);
   if (!valued) {
-    sprintf(buf, "%s %s, You don't have that item.\n\r", fname(buyer->name).c_str(), buyer->getName());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), fmt("%s, You don't have that item.\n\r") % buyer->getName());
     return;
   }
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
@@ -474,8 +451,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   t = searchLinkedListVis(buyer, obj_name, buyer->getStuff());
   TObj *tobj = dynamic_cast<TObj *>(t);
   if (!tobj) {
-    sprintf(buf, "%s You don't have that item.", fname(buyer->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "You don't have that item.");
     return FALSE;
   }
   int rc5;
@@ -506,7 +482,6 @@ static TObj *make_ticket(TMonster *repair, TBeing *buyer, TObj *repaired, time_t
 void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
 {
   extern int repair_number;
-  char buf[256];
   time_t when_ready, ct;
   char *ready;
   TObj *ticket;
@@ -521,24 +496,16 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   if (will_not_repair(buyer, repair, this, SILENT_NO))
     return;
 
-  sprintf(buf, "%s It'll cost you %d talens to repair %s to a status of %s.", 
-         fname(buyer->name).c_str(), (repairPrice(repair, buyer, DEPRECIATION_YES)),
-         getName(), equip_condition(maxFix(repair, DEPRECIATION_YES)).c_str());
-  repair->doTell(buf);
+  repair->doTell(fname(buyer->name), fmt("It'll cost you %d talens to repair %s to a status of %s.") % (repairPrice(repair, buyer, DEPRECIATION_YES)) % getName() % equip_condition(maxFix(repair, DEPRECIATION_YES)));
   when_ready = ct + repair_time(this);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
-  sprintf(buf, "%s It will be ready %s.", fname(buyer->name).c_str(), ready);
-  repair->doTell(buf);
-  sprintf(buf, "%s That's %s.",  fname(buyer->name).c_str(), secsToString(when_ready-ct).c_str());
-  repair->doTell(buf);
+  repair->doTell(fname(buyer->name), fmt("It will be ready %s.") % ready);
+  repair->doTell( fname(buyer->name), fmt("That's %s.") % secsToString(when_ready-ct));
   repair_number++;
-  sprintf(buf, "%s Payment is due when you pick your item up.", fname(buyer->name).c_str());
-  repair->doTell(buf);
-  sprintf(buf, "%s Here is your ticket, %s", fname(buyer->name).c_str(), buyer->getName());
-  repair->doTell(buf);
-  sprintf(buf, "%s If you lose the ticket, it might be hard to reclaim your item.", fname(buyer->name).c_str());
-  repair->doTell(buf);
+  repair->doTell(fname(buyer->name), "Payment is due when you pick your item up.");
+  repair->doTell(fname(buyer->name), fmt("Here is your ticket, %s") % buyer->getName());
+  repair->doTell(fname(buyer->name), "If you lose the ticket, it might be hard to reclaim your item.");
   ticket = make_ticket(repair, buyer, this, when_ready, repair_number);
   *buyer += *ticket;
   save_repairman_file(repair, buyer, this, when_ready, repair_number);
@@ -575,19 +542,16 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
   *found = TRUE;
 
   if (!action_description) {
-    sprintf(buf, "%s That ticket is blank!", fname(buyer->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "That ticket is blank!");
     return;
   }
   if (getRepairman() != mob_index[repair->getMobIndex()].virt) {
-    sprintf(buf, "%s That isn't one of my tickets!", fname(buyer->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "That isn't one of my tickets!");
     return;
   }
   strcpy(buf, getName());
   if (sscanf(buf, "a small ticket marked number %d", &iNumber) != 1) {
-    sprintf(buf, "%s That ticket isn't from THIS shop!", fname(buyer->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(buyer->name), "That ticket isn't from THIS shop!");
   } else {
     if (check_time_and_gold(repair, buyer, iNumber, this)) {
       *found = DELETE_THIS;

@@ -144,11 +144,7 @@ void TScroll::lowCheck()
 bool TScroll::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-
-    sprintf(buf, "%s You might wanna take that to the magic shop!", fname(ch->name).c_str());
-
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "You might wanna take that to the magic shop!");
   }
   return TRUE;
 }

@@ -87,9 +87,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
     case CMD_LOAD:
     case CMD_RESP_CHECKLOAD:
       if (mobVnum() < 0) {
-	buf = fmt("%s I would load it, but i'm a prototype.  Sorry.") %
-	  mob->getNameNOC(this);
-        doTell(buf);
+        doTell(mob->getNameNOC(this), "I would load it, but i'm a prototype.  Sorry.");
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
       value = convertTo<int>(arg);
@@ -143,9 +141,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       return FALSE;
     case CMD_RESP_LOADMOB:
       if (mobVnum() < 0) {
-	buf = fmt("%s I would load it, but i'm a prototype.  Sorry.") %
-	  mob->getNameNOC(this);
-        doTell(buf);
+        doTell(mob->getNameNOC(this), "I would load it, but i'm a prototype.  Sorry.");
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
       value = convertTo<int>(arg);
@@ -801,10 +797,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             value = convertTo<int>(tStString);
 
             if (speaker->getMoney() < value) {
-
-              sprintf(tString, "%s I'm afraid you don't have enough for that.",
-                      speaker->getNameNOC(this).c_str());
-              doTell(tString);
+              doTell(speaker->getNameNOC(this), "I'm afraid you don't have enough for that.");
 
               return TRUE;
             } else {

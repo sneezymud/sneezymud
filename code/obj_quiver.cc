@@ -50,9 +50,7 @@ sstring TQuiver::statObjInfo() const
 bool TQuiver::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-    sprintf(buf, "%s I can't repair quivers.", fname(ch->name).c_str());
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "I can't repair quivers.");
   }
   return true;
 }

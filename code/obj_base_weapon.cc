@@ -274,20 +274,17 @@ int TBaseWeapon::sharpenPrice() const
 
 int TBaseWeapon::sharpenerValueMe(const TBeing *ch, TMonster *me) const
 {
-  char buf[256];
   int cost;
 
   if (getCurSharp() == getMaxSharp()) {
-    sprintf(buf, "%s This weapon is perfectly ok!", ch->getName());
-    me->doTell(buf);
+    me->doTell(ch->getName(), "This weapon is perfectly ok!");
     return TRUE;
   }
   cost = sharpenPrice();
 
-  sprintf(buf, "%s It will cost %d talens to totally %s your %s.",
-     ch->getName(), cost, (isBluntWeapon() ? "dull" : "sharpen"),
-     fname(name).c_str());
-  me->doTell(buf);
+  me->doTell(ch->getName(), fmt("It will cost %d talens to totally %s your %s.") %
+	     cost % (isBluntWeapon() ? "dull" : "sharpen") %
+	     fname(name));
   return TRUE;
 }
 
@@ -298,8 +295,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   sharp_struct *job;
 
   if (getCurSharp() == getMaxSharp()) {
-    sprintf(buf, "%s That item is perfectly ok!", ch->getName());
-    me->doTell(buf);
+    me->doTell(ch->getName(), "That item is perfectly ok!");
     strcpy(buf, name);
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -309,8 +305,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   cost = sharpenPrice();
 
   if (ch->getMoney() < cost) {
-    sprintf(buf, "%s I have to make a living! If you don't have the talens , I don't do the work!", ch->getName());
-    me->doTell(buf);
+    me->doTell(ch->getName(), "I have to make a living! If you don't have the talens , I don't do the work!");
     strcpy(buf, name);
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());

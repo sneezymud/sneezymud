@@ -329,35 +329,22 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
       return FALSE;
     }
     if (count == 1) {
-      sprintf(buf, "If you want me to help you, you have to use the right syntax.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
-      sprintf(buf, "Try 'fedit create <keywords>'");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
+      myself->doTell(fname(ch->name), "If you want me to help you, you have to use the right syntax.");
+      myself->doTell(fname(ch->name), "Try 'fedit create <keywords>'");
       return TRUE;
     }
-    sprintf(buf, "Ah, so you wish to found a new faction?");
-    sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-    myself->doTell(tell);
-    sprintf(buf, "Let me just make sure your paperwork is in order.");
-    sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-    myself->doTell(tell);
+    myself->doTell(fname(ch->name), "Ah, so you wish to found a new faction?");
+    myself->doTell(fname(ch->name), "Let me just make sure your paperwork is in order.");
     
     
     if(ch->isImmortal()) {
-      sprintf(buf, "Actually... for an immortal I think I can skip the paperwork.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
-      myself->doAction(fname(ch->name).c_str(), CMD_SMILE);
+      myself->doTell(fname(ch->name), "Actually... for an immortal I think I can skip the paperwork.");
+      myself->doAction(fname(ch->name), CMD_SMILE);
     } else {
       if(ch->inRoom() != ROOM_FACTION_BUREAU) {
 	myself->doAction("", CMD_BLINK);
-	sprintf(buf, "Uh, it seem I've misplaced my office.");
-	myself->doSay(buf);
-	sprintf(buf, "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
-	sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-	myself->doTell(tell);
+	myself->doSay("Uh, it seem I've misplaced my office.");
+	myself->doTell(fname(ch->name), "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
 	act("$n hurries off back to $s office.", 0, myself, 0, 0, TO_ROOM);
 	--(*myself);
 	*real_roomp(ROOM_FACTION_BUREAU) += *myself;
@@ -367,11 +354,9 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
       act("$n gets a folder from a filing cabinet in the corner.", 0, myself, 0, 0, TO_ROOM);
       act("$n quickly scans a few of the pages from the file.", 0, myself, 0, 0, TO_ROOM);
       if(ch->GetMaxLevel() < FACTION_CREATE_LEVEL) {
-	sprintf(buf, "Awwww, I'm sorry, it appears you're too low level to create a faction.");
-	myself->doSay(buf);
-	myself->doAction(fname(ch->name).c_str(), CMD_COMFORT);
-	sprintf(buf, "You can come back later when you've become more powerful.");
-	myself->doSay(buf);
+	myself->doSay("Awwww, I'm sorry, it appears you're too low level to create a faction.");
+	myself->doAction(fname(ch->name), CMD_COMFORT);
+	myself->doSay("You can come back later when you've become more powerful.");
 	return TRUE;
       }
       if(ch->faction.whichfaction) {
@@ -383,7 +368,7 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 	sprintf(buf, "There is also a twenty-four hour wait period after you disband.");
 	myself->doSay(buf);
 	sprintf(buf, "After that, you may come back and create a faction.");
-	myself->doAction(fname(ch->name).c_str(), CMD_SMILE);
+	myself->doAction(fname(ch->name), CMD_SMILE);
 	
 	return TRUE;
       }
@@ -444,7 +429,7 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 	FALSE, myself, 0, 0, TO_ROOM);
     sprintf(buf, "The rest is up to you.  I suggest you read up on HELP FEDIT and HELP FACTIONS.");
     myself->doSay(buf);
-    myself->doAction(fname(ch->name).c_str(), CMD_SHAKE);
+    myself->doAction(fname(ch->name), CMD_SHAKE);
     sprintf(buf, "Good luck with your new faction.");
     myself->doSay(buf);
     ch->saveFactionStats();
@@ -472,39 +457,27 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
       // logic: faction doesn't exist, faction is hidden and hasn't extended an offer, or
       // faction is inactive - deny.
       
-      sprintf(buf, "I'm sorry, it appears that faction does not show up in any of my records.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
+      myself->doTell(fname(ch->name), "I'm sorry, it appears that faction does not show up in any of my records.");
       
       return TRUE;
     }
     if(ch->faction.whichfaction) {
-      sprintf(buf, "You are already a member of a faction... you'll have to disband before you join another.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
-      sprintf(buf, "There is also a twenty four hour wait period before you may join another faction.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
+      myself->doTell(fname(ch->name), "You are already a member of a faction... you'll have to disband before you join another.");
+      myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another faction.");
       
       return TRUE;
     }
     if(ch->recentlyDefected()) {
-      sprintf(buf, "You recently defected from your faction, you'll have to wait to join another.");
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
+      myself->doTell(fname(ch->name), "You recently defected from your faction, you'll have to wait to join another.");
       return TRUE;
     }
     
     if(!ch->hasOffer(f)) {
-      sprintf(buf,"%s has not extended a recruitment offer to you.", f->getName());
-      sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-      myself->doTell(tell);
+      myself->doTell(fname(ch->name), fmt("%s has not extended a recruitment offer to you.") % f->getName());
       if(!IS_SET(f->flags, FACT_OPEN_RECRUITMENT)) {
 	return TRUE;
       } else {
-	sprintf(buf, "However, they offer open recruitment, so I can sign you up anyway.");
-	sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-	myself->doTell(tell);
+	myself->doTell(fname(ch->name), "However, they offer open recruitment, so I can sign you up anyway.");
       }
       
     }
@@ -521,16 +494,14 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     }
     ch->faction.whichfaction = f->ID;
     ch->faction.rank = f->ranks - 1;
-    myself->doAction(fname(ch->name).c_str(), CMD_SHAKE);
+    myself->doAction(fname(ch->name), CMD_SHAKE);
     ch->saveFactionStats();
     return TRUE;
    
     
   }
   if (cmd == CMD_LIST) {
-    sprintf(buf, "I currently have these factions registered as active.");
-    sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-    myself->doTell(tell);
+    myself->doTell(fname(ch->name), "I currently have these factions registered as active.");
     act("$n gets a sheet of paper from $s desk and holds it out to you.\n\rIt reads as follows:\n\r",
         FALSE, myself, 0, ch, TO_VICT);
     act("$n says something to $N.\n\r$n gets a sheet of paper from $s desk and holds it out to $N.\n\r",
@@ -538,9 +509,7 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     
     ch->show_faction("showallfactions");
     ch->sendTo("\n\r");
-    sprintf(buf, "I've marked the factions that have open recruitment with an [<R>X<1>].");
-    sprintf(tell, "%s %s", fname(ch->name).c_str(), buf);
-    myself->doTell(tell);
+    myself->doTell(fname(ch->name), "I've marked the factions that have open recruitment with an [<R>X<1>].");
     return TRUE;
   }
   return FALSE;

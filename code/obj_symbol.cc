@@ -83,18 +83,15 @@ sstring TSymbol::statObjInfo() const
 
 int TSymbol::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
   int attuneCode = 1;
 
   if ((getSymbolCurStrength() != getSymbolMaxStrength())) {
-    sprintf(buf, "%s I'm sorry, I don't buy back used symbols.", ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back used symbols.");
     return TRUE;
   }
 
   if ((getSymbolFaction() != FACT_UNDEFINED) && attuneCode) {
-    sprintf(buf, "%s I'm sorry, I don't buy back attuned symbols.", ch->getName());
-    keeper->doTell(buf);
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back attuned symbols.");
     return TRUE;
   }
 
@@ -146,7 +143,6 @@ bool TSymbol::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;
-  char buf[256];
   unsigned int shop_nr;
 
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
@@ -163,8 +159,7 @@ bool TSymbol::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
     max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    sprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
-    keeper->doTell(buf);
+    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -175,8 +170,7 @@ bool TSymbol::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
          !strcmp(t->getName(), getName()))) {
       total += 1;
       if (total >= max_num) {
-        sprintf(buf, "%s I already have plenty of those.", ch->name);
-        keeper->doTell(buf);
+        keeper->doTell(ch->name, "I already have plenty of those.");
         return TRUE;
       }
     }
@@ -211,11 +205,7 @@ void TSymbol::lowCheck()
 bool TSymbol::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    char buf[256];
-
-    sprintf(buf, "%s Hey, I don't get involved with religion!", fname(ch->name).c_str());
-
-    repair->doTell(buf);
+    repair->doTell(fname(ch->name), "Hey, I don't get involved with religion!");
   }
   return TRUE;
 }

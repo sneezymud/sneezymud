@@ -2762,14 +2762,10 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   }
 
   if ((hatesMe[0] ? hatesMe[1] : autoHates)) {
-    char tString[256];
-
     recep->doAction(fname(ch->name), CMD_GROWL);
 
     if (!tStString.empty())
-      sprintf(tString, "%s %s", ch->getNameNOC(ch).c_str(), tStString.c_str());
-
-    recep->doTell(tString);
+      recep->doTell(ch->getNameNOC(ch), tStString);
 
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
       if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
@@ -2824,15 +2820,13 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
       if (vict) {
         vict->makeRentNote(ch);
-        sprintf(buf, "%s Here is a note with %s's items listed.", ch->getName(), vict->getName());
-        recep->doTell(buf);
+        recep->doTell(ch->getName(), fmt("Here is a note with %s's items listed.") % vict->getName());
         return TRUE;
       }
     }
 
     ch->makeRentNote(ch);
-    sprintf(buf, "%s Here is a note with your items listed.", ch->getName());
-    recep->doTell(buf);
+    recep->doTell(ch->getName(), "Here is a note with your items listed.");
   }
   return TRUE;
 }
