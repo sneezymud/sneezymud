@@ -811,7 +811,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
   TMonster *mob = NULL;
   int objectLevel = 0;
 
-  if (corpse || !ch || !obj)
+  if (corpse || !ch || !obj || !ch->isPc())
     return;
 
   int buffer = 20;
