@@ -83,9 +83,9 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
         sstring sb = buf;
         processStringForClient(sb);
 
-        ch->desc->clientf("%d", CLIENT_NOTE);
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
         ch->sendTo(sb);
-        ch->desc->clientf("%d", CLIENT_NOTE_END);
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
       }
       return;
     }
@@ -116,9 +116,9 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
         sstring sb = buf;
         processStringForClient(sb);
 
-        ch->desc->clientf("%d", CLIENT_NOTE);
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
         ch->sendTo(sb);
-        ch->desc->clientf("%d", CLIENT_NOTE_END);
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
       }
       return;
     }

@@ -22,45 +22,29 @@
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
 
-// clientf(...) will take a sstring, and tack on the CLIENT_CODE_CHAR at 
+// clientf(...) will take a string, and tack on the CLIENT_CODE_CHAR at 
 // the beginning and end, and also put a newline at the end. - Russ     
 
-void Descriptor::clientf(const char *msg,...)
+void Descriptor::clientf(const sstring &msg)
 {
-  char messageBuffer[12000], tmp[12000];
-  va_list ap;
-
   // This is done so that the client message isn't somehow combined 
   // with other text and missed by the client interpreter Russ - 061299
   outputProcessing();
 
-  if (m_bIsClient) {
-    if (msg) {
-      va_start(ap, msg);
-      vsprintf(messageBuffer, msg, ap);
-      va_end(ap);
-      sprintf(tmp, "\200%s\n", messageBuffer);
-      output.putInQ(tmp);
-    }
-  }
+  if (m_bIsClient && !msg.empty())
+    output.putInQ(fmt("\200%s\n") % msg);
 }
 
-void TRoom::clientf(const char *msg, ...)
+void TRoom::clientf(const sstring &msg)
 {
-  char messageBuffer[4096], tmp[4096];
-  va_list ap;
   TThing *t;
 
-  if (msg) {
-    va_start(ap, msg);
-    vsprintf(messageBuffer, msg, ap);
-    va_end(ap);
-    sprintf(tmp, "\200%s\n", messageBuffer);
+  if (!msg.empty()){
+    for (t = getStuff(); t; t = t->nextThing) {
+      if (t->isPc() && t->desc && t->desc->m_bIsClient)
+	t->sendTo(fmt("\200%s\n") % msg);
+    }
   }
-  for (t = getStuff(); t; t = t->nextThing) {
-    if (t->isPc() && t->desc && t->desc->m_bIsClient)
-      t->sendTo(tmp);
-  } 
 }
 
 
@@ -80,8 +64,8 @@ void Descriptor::send_client_inventory()
     TObj * tobj = dynamic_cast<TObj *>(t);
     if (!tobj)
       continue;
-    clientf("%d|%d|%s|%d", CLIENT_INVENTORY, ADD, 
-               tobj->getName(), tobj->itemType());
+    clientf(fmt("%d|%d|%s|%d") % CLIENT_INVENTORY % ADD % 
+               tobj->getName() % tobj->itemType());
   }
 }
 
@@ -94,7 +78,7 @@ void Descriptor::send_client_room_people()
     return;
 
   for (folx = ch->roomp->getStuff(); folx; folx = folx->nextThing)
-    clientf("%d|%d|%s", CLIENT_ROOMFOLX, ADD, folx->getName());
+    clientf(fmt("%d|%d|%s") % CLIENT_ROOMFOLX % ADD % folx->getName());
 }
 
 void Descriptor::send_client_room_objects()
@@ -106,7 +90,7 @@ void Descriptor::send_client_room_objects()
     return;
 
   for (t = ch->roomp->getStuff(); t; t = t->nextThing)
-    clientf("%d|%d|%s", CLIENT_ROOMOBJS, ADD, t->getName());
+    clientf(fmt("%d|%d|%s") % CLIENT_ROOMOBJS % ADD % t->getName());
 }
 
 
@@ -135,7 +119,8 @@ void Descriptor::send_client_prompt(int, int update)
         strcpy(t_cond, prompt_mesg[ratio]);
       }
     }
-    clientf("%d|%s|%s|%s|%s", CLIENT_FIGHT, c_name, cond, t_name, t_cond);
+    clientf(fmt("%d|%s|%s|%s|%s") % CLIENT_FIGHT % c_name % 
+	    cond % t_name % t_cond);
   }
   if ((update & CHANGED_MANA) || (update & CHANGED_PIETY) || (update & CHANGED_LIFEFORCE)) {
     char manaBuf[80], maxManaBuf[80];
@@ -148,35 +133,36 @@ void Descriptor::send_client_prompt(int, int update)
       sprintf(manaBuf, "%d", ch->getMana());
       sprintf(maxManaBuf, "%d", ch->manaLimit());
     }
-    clientf("%d|%s|%s", CLIENT_MANA, manaBuf, maxManaBuf);
+    clientf(fmt("%d|%s|%s") % CLIENT_MANA % manaBuf % maxManaBuf);
   }
   if (update & CHANGED_HP) 
-    clientf("%d|%d|%d", CLIENT_HITPOINT, ch->getHit(), ch->hitLimit());
+    clientf(fmt("%d|%d|%d") % CLIENT_HITPOINT % ch->getHit() % ch->hitLimit());
 
 
   if (update & CHANGED_MOVE)
-    clientf("%d|%d|%d", CLIENT_MOVE, ch->getMove(), ch->moveLimit());
+    clientf(fmt("%d|%d|%d") % CLIENT_MOVE % ch->getMove() % ch->moveLimit());
 
   if (update & CHANGED_ROOM) {
-    clientf("%d|%d", CLIENT_ROOM, ch->isImmortal() ? ch->in_room : -1000);
+    clientf(fmt("%d|%d") % CLIENT_ROOM % 
+	    (ch->isImmortal() ? ch->in_room : -1000));
     send_client_exits();
   }
 
   if (update & CHANGED_EXP)
-    clientf("%d|%s", CLIENT_EXP, ch->displayExp().c_str());
+    clientf(fmt("%d|%s") % CLIENT_EXP % ch->displayExp());
 
   if (update & CHANGED_GOLD)
-    clientf("%d|%d", CLIENT_GOLD, ch->getMoney());
+    clientf(fmt("%d|%d") % CLIENT_GOLD % ch->getMoney());
 
   if (update & CHANGED_COND)
-    clientf("%d|%d|%d", CLIENT_COND, ch->getCond(FULL), ch->getCond(THIRST));
+    clientf(fmt("%d|%d|%d") % CLIENT_COND % ch->getCond(FULL) % ch->getCond(THIRST));
 
   if (update & CHANGED_POS)
-    clientf("%d|%d", CLIENT_POS, ch->getPosition());
+    clientf(fmt("%d|%d") % CLIENT_POS % ch->getPosition());
 
   if (update & CHANGED_MUD) {
-    clientf("%d|%s", CLIENT_MUDTIME,
-       hmtAsString(hourminTime()).c_str());
+    clientf(fmt("%d|%s") % CLIENT_MUDTIME %
+	    hmtAsString(hourminTime()));
 
   }
   //prompt_mode = -1;
@@ -198,7 +184,7 @@ void Descriptor::send_client_exits()
           (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
         SET_BIT(bits, 1 << door);
   }
-  clientf("%d|%d|%d", CLIENT_EXITS, bits, ch->isImmortal());
+  clientf(fmt("%d|%d|%d") % CLIENT_EXITS % bits % ch->isImmortal());
 }
 
 // returns DELETE_THIS to delete the descriptor
@@ -223,28 +209,28 @@ int Descriptor::read_client(char *str2)
       m_bIsClient = TRUE;
 
       if (!Clients) {
-        clientf("%d|Clients not allowed at this time. Try later!|%d", 
-                CLIENT_ERROR, ERR_NOT_ALLOWED);
+        clientf(fmt("%d|Clients not allowed at this time. Try later!|%d") % 
+                CLIENT_ERROR % ERR_NOT_ALLOWED);
         outputProcessing();
         return FALSE;
       }
       if (WizLock) {
         // this may need better handling to let wizs in, but, oh well
-        clientf("%d|The mud is presently Wizlocked.|%d", 
-                CLIENT_ERROR, ERR_NOT_ALLOWED);
+        clientf(fmt("%d|The mud is presently Wizlocked.|%d") % 
+                CLIENT_ERROR % ERR_NOT_ALLOWED);
         if (!lockmess.empty())
-          clientf(lockmess.c_str());
+          clientf(lockmess);
         outputProcessing();
         return FALSE;
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
       vers = convertTo<int>(buf);
       if (vers <= BAD_VERSION) {
-        clientf("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d", CLIENT_ERROR, CURRENT_VERSION, ERR_BAD_VERSION);
+        clientf(fmt("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d") % CLIENT_ERROR % CURRENT_VERSION % ERR_BAD_VERSION);
         outputProcessing();
         return FALSE;
       } else if (vers < CURRENT_VERSION) {
-        clientf("%d|You client is an old version. You can continue playing with the current version, but upgrade is recommended. The latest version is %d and can be received from http://sneezy.stanford.edu/client.|%d", CLIENT_ERROR, CURRENT_VERSION, 7); //ERR_CUR_VERSION);
+        clientf(fmt("%d|You client is an old version. You can continue playing with the current version, but upgrade is recommended. The latest version is %d and can be received from http://sneezy.stanford.edu/client.|%d") % CLIENT_ERROR % CURRENT_VERSION % 7); //ERR_CUR_VERSION);
         outputProcessing();
       }
 
@@ -287,7 +273,7 @@ int Descriptor::read_client(char *str2)
       sstring sb = tmpbuf;
       processStringForClient(sb);
 
-      clientf(sb.c_str());
+      clientf(sb);
       break;
     }
     case CLIENT_ROOMNAME:
@@ -431,12 +417,13 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
         if (person->isPc() && person->polyed == POLY_TYPE_NONE) {
           if (dynamic_cast<TPerson *>(person) && character && (character->GetMaxLevel() >= person->getInvisLevel())) {
             if (person->isLinkdead() && character->isImmortal()) 
-              clientf("%d|[%s]|%d|%d|%d", CLIENT_WHO, person->getName(), ADD, person->GetMaxLevel(), notify);
+              clientf(fmt("%d|[%s]|%d|%d|%d") % CLIENT_WHO %
+		      person->getName() % ADD %person->GetMaxLevel() % notify);
             else {
               if (person->isPlayerAction(PLR_ANONYMOUS) && !character->isImmortal())
-                clientf("%d|%s|%d|0|%d", CLIENT_WHO, person->getName(), ADD, notify);
+                clientf(fmt("%d|%s|%d|0|%d") % CLIENT_WHO % person->getName() % ADD % notify);
               else
-                clientf("%d|%s|%d|%d|%d", CLIENT_WHO, person->getName(), ADD, person->GetMaxLevel(), notify);
+                clientf(fmt("%d|%s|%d|%d|%d") % CLIENT_WHO % person->getName() % ADD % person->GetMaxLevel() % notify);
             }
           }
         }
@@ -564,7 +551,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           flush();
           writeToQ("Reconnecting character...\n\r");
           send_client_prompt(TRUE, 1983);
-          clientf("%d|%d", CLIENT_ENABLEWINDOW, TRUE);
+          clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
 
           // setombatMode sends necessary client info about attack mode
           ch->setCombatMode(ch->getCombatMode());  
@@ -663,10 +650,10 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
     case CLIENT_CHECKCHARNAME:
       strcpy(buf, nextToken('|', 255, str2).c_str());
       if (_parse_name(buf, tmp_name) || checkForCharacter(tmp_name)) {
-        clientf("%d|0", CLIENT_CHECKCHARNAME);
+        clientf(fmt("%d|0") % CLIENT_CHECKCHARNAME);
         break;
       }
-      clientf("%d|1", CLIENT_CHECKCHARNAME);
+      clientf(fmt("%d|1") % CLIENT_CHECKCHARNAME);
       break;
     case CLIENT_CHECKACCOUNTNAME: {
       static char *crypted;
@@ -679,7 +666,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       int iNew = convertTo<int>(nextToken('|', 255, str2));
       if (iNew) {
         if (bogusAccountName(buf)) {
-          clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
+          clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
         }
         sprintf(buf2, "account/%c/%s/account", LOWER(buf[0]), sstring(buf).lower().c_str());
@@ -695,7 +682,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
         if (bogusAccountName(aname)) {
           delete account;
           account = NULL;
-          clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
+          clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
         }
         strcpy(account->name, aname);
@@ -724,13 +711,13 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
         if (!*pwd) {
           delete account;
           account = NULL;
-          clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_PASSWORD);
+          clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_PASSWORD);
         }
         crypted = (char *) crypt(apassword, pwd);
         if (strncmp(crypted, pwd, 10)) {
           delete account;
           account = NULL;
-          clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_PASSWORD);
+          clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_PASSWORD);
         }
         if (IS_SET(account->flags, ACCOUNT_BANISHED)) {
           writeToQ("Your account has been flagged banished.\n\r");
@@ -777,7 +764,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
         account->status = TRUE;
         if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
         }
-        clientf("%d|1", CLIENT_CHECKACCOUNTNAME);
+        clientf(fmt("%d|1") % CLIENT_CHECKACCOUNTNAME);
       }
       break;
     }
@@ -798,13 +785,13 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       account = new TAccount;
       // Does account exist or is it a bogus name? This function will return TRUE is so
       if (checkForAccount(aname, TRUE)) {
-        clientf("%d|Account name already exists! Please try another.", CLIENT_ERROR);
+        clientf(fmt("%d|Account name already exists! Please try another.") % CLIENT_ERROR);
         delete account;
         account = NULL;
 	return FALSE;
       } 
       if (strlen(aname) >= 10) {
-        clientf("%d|Account name must be less than 10 characters! Try another name please.", CLIENT_ERROR);
+        clientf(fmt("%d|Account name must be less than 10 characters! Try another name please.") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
@@ -812,18 +799,18 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       strcpy(account->name, aname);
 
       if (strlen(apassword) < 5) {
-        clientf("%d|Password must be longer than 5 characters.", CLIENT_ERROR);
+        clientf(fmt("%d|Password must be longer than 5 characters.") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
       } else if (strlen(apassword) > 10) {
-        clientf("%d|Password must be shorter than 10 characters.", CLIENT_ERROR);
+        clientf(fmt("%d|Password must be shorter than 10 characters.") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
       }
       if(!sstring(apassword).hasDigit()){
-        clientf("%d|Password must contain at least 1 numerical digit.", CLIENT_ERROR);
+        clientf(fmt("%d|Password must contain at least 1 numerical digit.") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
@@ -833,7 +820,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       *(account->passwd + 10) = '\0';
 
       if (illegalEmail(email, this, SILENT_YES)) {
-        clientf("%d|The email address you entered failed validity tests, please try another one.", CLIENT_ERROR);
+        clientf(fmt("%d|The email address you entered failed validity tests, please try another one.") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
@@ -841,7 +828,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       strcpy(account->email, email);
 
       if (!*timezone || (convertTo<int>(timezone) > 23) || (convertTo<int>(timezone) < -23)) {
-        clientf("%d|Invalid timezone please enter a number between 23 and -23!", CLIENT_ERROR);
+        clientf(fmt("%d|Invalid timezone please enter a number between 23 and -23!") % CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
@@ -892,7 +879,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       accStat.account_number++;
     
       vlogf(LOG_MISC, "New Client Account: '%s' with email '%s'", account->name, account->email);
-      clientf("%d|1", CLIENT_CHECKACCOUNTNAME);
+      clientf(fmt("%d|1") % CLIENT_CHECKACCOUNTNAME);
       break;
     } 
     default:
@@ -964,15 +951,15 @@ int Descriptor::client_nanny(char *arg)
     *pwd = '\0';
 
   if (!*pwd) {
-    clientf("%d|No account %s exists! Please reenter account name, or create a
-new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
+    clientf(fmt("%d|No account %s exists! Please reenter account name, or create a
+new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
     delete account;
     account = NULL;
     return FALSE;   
   }
   crypted = (char *) crypt(passwd, pwd);
   if (strncmp(crypted, pwd, 10)) {
-    clientf("%d|Incorrect password.|%d", CLIENT_ERROR, ERR_BAD_NAME);
+    clientf(fmt("%d|Incorrect password.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
     delete account;
     account = NULL;
     return FALSE;
@@ -992,7 +979,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
 #endif
   
   if (_parse_name(charname, tmp_name)) {
-    clientf("%d|No such character exists! Reenter character name or create a new character.|%d", CLIENT_ERROR, tmp_name, ERR_BAD_NAME);
+    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % tmp_name % ERR_BAD_NAME);
 
     // deletion at this point is semi-problematic
     // we need to remove desc so the doAccountMenu() in ~TBeing skips
@@ -1022,7 +1009,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
   if (load_char(tmp_name, &st))
     dynamic_cast<TPerson *>(character)->loadFromSt(&st);
   else {
-    clientf("%d|No such character exists! Reenter character name or create a new character.|%d", CLIENT_ERROR, tmp_name, ERR_BAD_NAME);
+    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % tmp_name % ERR_BAD_NAME);
 
     // deletion at this point is semi-problematic
     // we need to remove desc so the doAccountMenu() in ~TBeing skips
@@ -1049,8 +1036,8 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
     return FALSE;
   }
   if (strcmp(account->name, st.aname)) {
-    clientf("%d|That character isn't in the listed account.|%d", 
-              CLIENT_ERROR, ERR_BAD_NAME);
+    clientf(fmt("%d|That character isn't in the listed account.|%d") % 
+              CLIENT_ERROR % ERR_BAD_NAME);
 
     // loadFromSt has initted character (improperly)
     // delete it and recreate it so initialization will be proper
@@ -1081,10 +1068,10 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
   }
   if (WizLock) {
     // this may need better handling to let wizs in, but, oh well
-    clientf("%d|The mud is presently Wizlocked.|%d", 
-                CLIENT_ERROR, ERR_NOT_ALLOWED);
+    clientf(fmt("%d|The mud is presently Wizlocked.|%d") % 
+                CLIENT_ERROR % ERR_NOT_ALLOWED);
     if (!lockmess.empty())
-      clientf(lockmess.c_str());
+      clientf(lockmess);
     outputProcessing();
 
     return DELETE_THIS;
@@ -1115,12 +1102,12 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
     if ((k->character != character) && k->character) {
       if (k->original) {
         if (k->original->getName() && !strcasecmp(k->original->getName(), character->getName())) {
-          clientf("%d", CLIENT_CONNECTED);
+          clientf(fmt("%d") % CLIENT_CONNECTED);
           return FALSE;
         }
       } else {
         if (k->character->getName() && !strcasecmp(k->character->getName(), character->getName())) {
-          clientf("%d", CLIENT_CONNECTED);
+          clientf(fmt("%d") % CLIENT_CONNECTED);
           return FALSE;
         }
       }
@@ -1133,7 +1120,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
          !strcasecmp(character->getName(),
                   tmp_ch->orig->getName()))) {
 
-      //clientf("%d|%d", CLIENT_GLOBAL, 0);
+      //clientf(fmt("%d|%d") % CLIENT_GLOBAL % 0);
 
       if ((character->inRoom() >= 0) ||
           (character->inRoom() == ROOM_AUTO_RENT)) {
@@ -1169,13 +1156,13 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
 
       writeToQ("Reconnecting character...\n\r");
       send_client_prompt(TRUE, 1983);
-      clientf("%d|%d", CLIENT_ENABLEWINDOW, TRUE);
+      clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
       if (tmp_ch->getCombatMode() == ATTACK_NORMAL)
-        clientf("%d", CLIENT_NORMAL);
+        clientf(fmt("%d") % CLIENT_NORMAL);
       if (tmp_ch->getCombatMode() == ATTACK_OFFENSE)
-        clientf("%d", CLIENT_OFFENSIVE);
+        clientf(fmt("%d") % CLIENT_OFFENSIVE);
       if (tmp_ch->getCombatMode() == ATTACK_DEFENSE)
-        clientf("%d", CLIENT_DEFENSIVE);
+        clientf(fmt("%d") % CLIENT_DEFENSIVE);
 
       tmp_ch->initDescStuff(&st);
 
@@ -1212,7 +1199,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
 #endif
 
       if (tmp_ch->hasClass(CLASS_CLERIC) || tmp_ch->hasClass(CLASS_DEIKHAN))
-        clientf("%d", CLIENT_PIETY);
+        clientf(fmt("%d") % CLIENT_PIETY);
 
       tmp_ch->fixClientPlayerLists(FALSE);
       return FALSE;
@@ -1233,15 +1220,15 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
   }
   sendMotd(character->GetMaxLevel() > MAX_MORT);
   if (character->hasClass(CLASS_CLERIC) || character->hasClass(CLASS_DEIKHAN))
-    clientf("%d", CLIENT_PIETY);
+    clientf(fmt("%d") % CLIENT_PIETY);
 
-  clientf("%d|%d", CLIENT_ENABLEWINDOW, TRUE);
+  clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
   if (character->getCombatMode() == ATTACK_NORMAL)
-    clientf("%d", CLIENT_NORMAL);
+    clientf(fmt("%d") % CLIENT_NORMAL);
   if (character->getCombatMode() == ATTACK_OFFENSE)
-    clientf("%d", CLIENT_OFFENSIVE);
+    clientf(fmt("%d") % CLIENT_OFFENSIVE);
   if (character->getCombatMode() == ATTACK_DEFENSE)
-    clientf("%d", CLIENT_DEFENSIVE);
+    clientf(fmt("%d") % CLIENT_DEFENSIVE);
 
   rc = dynamic_cast<TPerson *>(character)->genericLoadPC();
   if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1270,18 +1257,18 @@ void TBeing::fixClientPlayerLists(bool lost)
     if (lost) {
       if (!d->character->canSeeWho(this)) {
         d->prompt_mode = -1;
-        d->clientf("%d|%s|%d|0", CLIENT_WHO, buf, DELETE);
-        d->clientf("%d|%s|%d|0", CLIENT_WHO, getName(), DELETE);
+        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
       }
     } else {
       if (d->character->canSeeWho(this)) {
         d->prompt_mode = -1;
-        d->clientf("%d|%s|%d|0", CLIENT_WHO, buf, DELETE);
-        d->clientf("%d|%s|%d|0", CLIENT_WHO, getName(), DELETE);
+        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
         if (isPlayerAction(PLR_ANONYMOUS) && !d->character->isImmortal())
-          d->clientf("%d|%s|%d|0|1", CLIENT_WHO, buf, ADD);
+          d->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
         else
-          d->clientf("%d|%s|%d|%d|1", CLIENT_WHO, buf, ADD, GetMaxLevel());
+          d->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % GetMaxLevel());
       }
     }
   }
@@ -1415,7 +1402,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   // Name
   if (_parse_name(dummy, tmp_name)) {
-    clientf("%d|Name contains illegal characters!|%d", CLIENT_ERROR, ERR_BAD_NAME);
+    clientf(fmt("%d|Name contains illegal characters!|%d") % CLIENT_ERROR % ERR_BAD_NAME);
     ch->desc = NULL;
     ch->next = character_list;
     character_list = ch;
@@ -1426,7 +1413,7 @@ int Descriptor::clientCreateChar(char *arg)
     return FALSE;
   }
   if (checkForCharacter(tmp_name)) {
-    clientf("%d|Character already exists with name provided|%d", CLIENT_ERROR, ERR_BAD_NAME);
+    clientf(fmt("%d|Character already exists with name provided|%d") % CLIENT_ERROR % ERR_BAD_NAME);
     ch->desc = NULL;
     ch->next = character_list;
     character_list = ch;
@@ -1610,7 +1597,7 @@ int Descriptor::clientCreateChar(char *arg)
       ch->chosenStats.values[STAT_CHA] +
       ch->chosenStats.values[STAT_KAR] +
       ch->chosenStats.values[STAT_SPE])  {
-    clientf("%d|Stats do not add up to 0. Email being sent to Brutius to alert of possible client hack.|%d", CLIENT_ERROR, ERR_BAD_STAT);
+    clientf(fmt("%d|Stats do not add up to 0. Email being sent to Brutius to alert of possible client hack.|%d") % CLIENT_ERROR % ERR_BAD_STAT);
     ch->desc = NULL;
     ch->next = character_list;
     character_list = ch;
@@ -1626,7 +1613,7 @@ int Descriptor::clientCreateChar(char *arg)
   ch->convertAbilities();
   ch->affectTotal();
   vlogf(LOG_PIO, "%s [%s] new player.", ch->getName(), host);
-  clientf("%d", CLIENT_NEWCHAR);
+  clientf(fmt("%d") % CLIENT_NEWCHAR);
   sprintf(wizbuf, "[%sINTERPORT INFO%s] New player %s just created on port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
   ch->mudMessage(ch, 16, wizbuf); 
 

@@ -64,7 +64,7 @@ bool check_ingredients(TCookware *pot, int recipe){
 
 
 
-TCookware *find_pot(TBeing *ch, const char *cookware){
+TCookware *find_pot(TBeing *ch, const sstring &cookware){
   TThing *tpot=NULL;
   TCookware *pot=NULL;
   int count=0;
@@ -97,7 +97,7 @@ void TBeing::doCook(sstring arg)
   tmparg=one_argument(tmparg, cookware);
   tmparg=one_argument(tmparg, recipearg);
 
-  if(!(pot=find_pot(this, cookware.c_str()))){
+  if(!(pot=find_pot(this, cookware))){
     sendTo("You need to specify a piece of cookware to use.\n\r");
     return;
   }

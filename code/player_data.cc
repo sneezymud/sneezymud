@@ -45,7 +45,7 @@ void TBeing::initDescStuff(charFile *st)
     return;
   }
   if (st->plr_act & PLR_STEALTH)
-    d->clientf("%d|%d", CLIENT_STEALTH, TRUE);
+    d->clientf(fmt("%d|%d") % CLIENT_STEALTH % TRUE);
 
   wizFileRead();
 }

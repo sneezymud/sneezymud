@@ -1623,10 +1623,10 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     strcpy(capbuf, tbob2->getName());
 
     if (t->hasColor())
-      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager.\n\r") %             t->purple() % sstring(capbuf).cap().c_str() % t->norm() % t->cyan() % arg % t->norm());
+      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager.\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
     else if (t->vt100())
       t->sendTo(fmt("%s%s%s tells you \"%s\" % triggering your pager.\n\r") %
-             t->bold() % sstring(capbuf).cap().c_str() % t->norm() % arg);
+             t->bold() % sstring(capbuf).cap() % t->norm() % arg);
     else
       t->sendTo(fmt("%s tells you \"%s\" % triggering your pager.\n\r") %
               sstring(capbuf).cap() % arg);

@@ -292,11 +292,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
 {
   TArrow *tArrow = NULL;
   TBow   *tBow   = NULL;
-  sstring  tStPost(""),
-          tStWood(""),
-          tStObject(""),
-          tStString("");
-  char    tString[256];
+  sstring  tStPost, tStWood, tStObject, tStString, tString;
 
   if ((tArrow = dynamic_cast<TArrow *>(tObj)) ||
       (tBow   = dynamic_cast<TBow   *>(tObj))) {
@@ -307,19 +303,19 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tStWood=tStString.word(1);
     tStObject = whittleItems[tIndex].getName(true);
 
-    sprintf(tString, "%s %s %s<z>",
-            tStPost.c_str(), tStWood.c_str(), tStObject.c_str());
+    tString=fmt("%s %s %s<z>") %
+      tStPost % tStWood % tStObject;
     delete [] tObj->shortDescr;
     tObj->shortDescr = mud_str_dup(tString);
 
-    sprintf(tString, "%s %s %s",
-            tStObject.c_str(), tStWood.c_str(), whittleItems[tIndex].getName(false).c_str());
+    tString=fmt("%s %s %s") %
+            tStObject % tStWood % whittleItems[tIndex].getName(false);;
     delete [] tObj->name;
     tObj->name = mud_str_dup(tString);
 
-    sprintf(tString, "%s %s %s %s<z>",
-            sstring(tStPost).cap().c_str(), tStWood.c_str(),
-            tStObject.c_str(), tailMessages[::number(0, 4)]);
+    tString=fmt("%s %s %s %s<z>") %
+      sstring(tStPost).cap() % tStWood %
+      tStObject % tailMessages[::number(0, 4)];
     delete [] tObj->descr;
     tObj->descr = mud_str_dup(tString);
 
@@ -785,24 +781,19 @@ bool taskWhittleEntry::operator==(sstring tString)
 
 sstring taskWhittleEntry::getName(bool showSecond)
 {
-  char   tName[256];
-  sstring tStString(name),
-         tStName(""),
-         tStExcess("");
+  sstring tStString(name), tStName, tStExcess, tName;
 
-  if (showSecond) {
-    tStName=tStString.word(0);
-    tStExcess=tStString.word(1);
-    strcpy(tName, tStExcess.c_str());
-  } else {
-    tStName=tStString.word(0);
-    tStExcess=tStString.word(1);
-    strcpy(tName, tStName.c_str());
-  }
+  tStName=tStString.word(0);
+  tStExcess=tStString.word(1);
 
-  for (char *tChar = tName; *tChar; tChar++)
-    if (*tChar == '-')
-      *tChar = ' ';
+  if (showSecond)
+    tName=tStExcess;
+  else
+    tName=tStName;
+
+  for(unsigned int i=0;i<tName.size();++i)
+    if(tName[i] == '-')
+      tName[i]=' ';
 
   return (tName);
 }

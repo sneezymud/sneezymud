@@ -1199,10 +1199,10 @@ byte TBeing::getInvisLevel() const
 void TBeing::setInvisLevel(byte num)
 {
   if (desc && (invisLevel > 50) && (num < 50))
-    desc->clientf("%d|%d", CLIENT_INVIS, FALSE);
+    desc->clientf(fmt("%d|%d") % CLIENT_INVIS % FALSE);
 
   if (desc && (num > 50))
-    desc->clientf("%d|%d", CLIENT_INVIS, TRUE);
+    desc->clientf(fmt("%d|%d") % CLIENT_INVIS % TRUE);
 
   invisLevel = num;
 }

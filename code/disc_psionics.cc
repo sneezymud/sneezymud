@@ -210,9 +210,9 @@ int TBeing::doPTell(const char *arg, bool visible){
   Descriptor *d = vict->desc;
   if (d->m_bIsClient) {
     sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
-    d->clientf("%d|%s|%s", CLIENT_TELL,
-        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
+    d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
+        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
   }
 
   // set up last teller for reply's use
@@ -297,7 +297,7 @@ int TBeing::doPSay(const char *arg){
             if (d->m_bIsClient) {
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf, garbedBuf);
+              d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
             }
           } else {
 	    mob->sendTo(COLOR_COMM, fmt("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
@@ -305,8 +305,8 @@ int TBeing::doPSay(const char *arg){
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf("%d|%s|%s", CLIENT_SAY, 
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
+              d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % 
+                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str() %
                 garbedBuf);
             }
           }
@@ -316,8 +316,8 @@ int TBeing::doPSay(const char *arg){
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-            d->clientf("%d|%s|%s", CLIENT_SAY,
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
+            d->clientf(fmt("%d|%s|%s") % CLIENT_SAY %
+                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str() %
                 garbedBuf);
           }
         }
@@ -325,8 +325,8 @@ int TBeing::doPSay(const char *arg){
 	mob->sendTo(COLOR_COMM, fmt("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
         if (d->m_bIsClient) {
-          d->clientf("%d|%s|%s", CLIENT_SAY, sstring(getName()).cap().c_str(),
-            colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+          d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
+            colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
         }
       }
     }

@@ -290,7 +290,7 @@ void TPerson::doEdit(const char *arg)
 #if 0
 // as is, this will cause it to send the descr as a "bug"
       if (desc->m_bIsClient) {
-        desc->clientf("%d", CLIENT_STARTEDIT, 4000);
+        desc->clientf(fmt("%d") % CLIENT_STARTEDIT % 4000);
       }
 #endif
       break;

@@ -183,7 +183,7 @@ void bootSocialMessages(void)
 // returns DELETE_THIS
 int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
 {
-  char buf[MAX_INPUT_LENGTH];
+  sstring buf;
   TBeing *vict;
   TMonster *tmp = NULL;
   TThing *t, *t2, *tvict=NULL;
@@ -323,9 +323,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
   socialMessg action = CT->second;
 
   if (action.char_found)
-    strcpy(buf, argument.c_str());
-  else
-    *buf = '\0';
+    buf=argument;
 
   if (roomp) {
     switch (cmd) {
@@ -370,7 +368,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
   if (!roomp)
     return FALSE;
 
-  if (!*buf) {
+  if (buf.empty()) {
     sendTo(action.char_no_arg);
     sendTo("\n\r");
     act(action.others_no_arg, action.hide, this, 0, 0, TO_ROOM);

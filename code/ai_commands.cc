@@ -996,15 +996,12 @@ int TMonster::aiGrin (TBeing *doer, TBeing *, aiTarg cond)
 
 int TMonster::aiBow (TBeing *doer, TBeing *, aiTarg cond)
 {
-  if (!isHumanoid()) {
-    // do nothing
+  if (!isHumanoid())
     return FALSE;
-  }
-  if (doer->getSex() == SEX_FEMALE) {
-    char buf[80];
-    sprintf(buf,"%s Pssst, polite women curtsey...",fname(doer->name).c_str());
-    doWhisper(buf);
-  }
+
+  if (doer->getSex() == SEX_FEMALE)
+    doWhisper(fmt("%s Pssst, polite women curtsey...") % fname(doer->name));
+
   switch (cond) {
     case TARGET_NONE:
     case TARGET_OTHER:
@@ -1177,14 +1174,12 @@ int TMonster::aiCough (TBeing *doer, TBeing *, aiTarg cond)
 
 int TMonster::aiCurtsey (TBeing *doer, TBeing *, aiTarg cond)
 {
-  if (!isHumanoid()) {
+  if (!isHumanoid())
     return FALSE;
-  }
-  if (doer->getSex() != SEX_FEMALE) {
-    char buf[80];
-    sprintf(buf,"%s Pssst, usually it's the WOMEN that curtsey...",fname(doer->name).c_str());
-    doWhisper(buf);
-  }
+
+  if (doer->getSex() != SEX_FEMALE)
+    doWhisper(fmt("%s Pssst, usually it's the WOMEN that curtsey...") % fname(doer->name));
+
   switch (cond) {
     case TARGET_NONE:
     case TARGET_OTHER:
@@ -2905,7 +2900,7 @@ void TBeing::aiGet(TThing *obj)
 void TMonster::aiLook(TBeing *doer)
 {
   TThing *t,*temp;
-  char buf[255];
+  sstring buf;
   
   if (UtilMobProc(this))
     return;
@@ -2923,10 +2918,10 @@ void TMonster::aiLook(TBeing *doer)
       US(3);
       if (doer->isRealUgly()) {
         if (getRace() == doer->getRace())
-          sprintf(buf, "Stop looking at me ugly!");
+	  buf="Stop looking at me ugly!";
         else
-          sprintf(buf,"Stop looking at me you ugly %s.",
-                  doer->getMyRace()->getSingularName().c_str());
+	  buf=fmt("Stop looking at me you ugly %s.") %
+	    doer->getMyRace()->getSingularName();
         if (!::number(0,3))
           doSay(buf);
         UA(4);

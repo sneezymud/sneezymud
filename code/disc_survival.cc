@@ -709,7 +709,7 @@ void TBeing::doSeekwater()
   affectTo(&aff);
 
   if (desc && desc->m_bIsClient)
-    desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
+    desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
 
   if (code <= 9) {
     if (code >= 0 && desc && (desc->autobits & AUTO_HUNT)) {

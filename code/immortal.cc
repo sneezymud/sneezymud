@@ -448,12 +448,12 @@ void TBeing::doToggle(const char *arg2)
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
       if (desc)
-	desc->clientf("%d|%d", CLIENT_STEALTH, FALSE);
+	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % FALSE);
     } else {
       sendTo("STEALTH mode ON.\n\r");
       addPlayerAction(PLR_STEALTH);
       if (desc)
-	desc->clientf("%d|%d", CLIENT_STEALTH, TRUE);
+	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % TRUE);
     }
   } else if (is_abbrev(arg, "newbiehelper") ||
 	     is_abbrev(arg, "helper")) {
@@ -488,7 +488,7 @@ void TBeing::doToggle(const char *arg2)
       sendTo("Talk to a more powerful god if you need this power enabled temporarily.\n\r");
       return;
     }
-    if (scan_number(arg2, &level)) {
+    if((level=convertTo<int>(arg2))){
       if (level < 0)
 	level = 0;
       else if (level > GetMaxLevel())
@@ -5667,8 +5667,8 @@ void TBeing::doTimeshift(const char *arg)
     return;
   if (powerCheck(POWER_TIMESHIFT))
     return;
-
-  if (!scan_number(arg, &deltatime)) {
+  
+  if(!(deltatime=convertTo<int>(arg))){
     sendTo("Syntax: timeshift <minutes>\n\r");
     return;
   } else {
@@ -6088,9 +6088,9 @@ void TBeing::doSysViewoutput()
     file_to_sstring(file, sb);
     sb += "\n\r";
     processStringForClient(sb);
-    desc->clientf("%d", CLIENT_NOTE);
+    desc->clientf(fmt("%d") % CLIENT_NOTE);
     sendTo(fmt("%s") % sb);  
-    desc->clientf("%d", CLIENT_NOTE_END);
+    desc->clientf(fmt("%d") % CLIENT_NOTE_END);
   }
 }
 
@@ -6783,7 +6783,7 @@ void TBeing::doComment(const char *argument)
 
   desc->max_str = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)
-    desc->clientf("%d", CLIENT_STARTEDIT, MAX_MAIL_SIZE);
+    desc->clientf(fmt("%d") % CLIENT_STARTEDIT % MAX_MAIL_SIZE);
 
   return;
 }

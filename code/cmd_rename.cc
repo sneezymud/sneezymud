@@ -187,7 +187,7 @@ void TBeing::doNameChange(const char *argument)
   }
 
   vict->doSave(SILENT_NO);
-  tmpbuf=fmt("The World shall now know %s as %s.") % sstring(orig_name).cap().c_str() %
+  tmpbuf=fmt("The World shall now know %s as %s.") % sstring(orig_name).cap() %
     vict->getName();
   doSystem(tmpbuf);
   vict->fixClientPlayerLists(FALSE);
@@ -236,6 +236,6 @@ void TBeing::doDescription()
   desc->max_str = 500;
 #if 0
   if (desc->m_bIsClient)
-    desc->clientf("%d|%d", CLIENT_STARTEDIT, 500);
+    desc->clientf(fmt("%d|%d") % CLIENT_STARTEDIT % 500);
 #endif
 }

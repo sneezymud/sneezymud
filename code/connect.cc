@@ -4137,7 +4137,7 @@ void Descriptor::sstring_add(char *s)
               connected = CON_PLYNG;
 
             if (m_bIsClient)
-              clientf("%d|%d", CLIENT_ENABLEWINDOW, FALSE);
+              clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
 
             return;
           }
@@ -4288,7 +4288,7 @@ void Descriptor::sstring_add(char *s)
     str = NULL;
 
     if (m_bIsClient)
-      clientf("%d|%d", CLIENT_ENABLEWINDOW, FALSE);
+      clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
   } else {
     const char *t=*str;
     strcpy(buf, t);
@@ -5520,7 +5520,7 @@ int Descriptor::doAccountMenu(const char *arg)
   int tss = screen_size;
 
   if (m_bIsClient) {
-    clientf("%d", CLIENT_MENU);
+    clientf(fmt("%d") % CLIENT_MENU);
     return DELETE_THIS;
   }
   if (!connected) {
@@ -5898,7 +5898,7 @@ void Descriptor::sendMotd(int wiz)
       sb = wizmotd;
     }
     processStringForClient(sb);
-    clientf("%d|%s", CLIENT_MOTD, sb.c_str());
+    clientf(fmt("%d|%s") % CLIENT_MOTD % sb);
   }
 }
 

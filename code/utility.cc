@@ -141,14 +141,6 @@ bool roll_chance(double fract){
 
 
 
-bool scan_number(const sstring &text, int *rval)
-{
-  if (1 != sscanf(text.c_str(), " %i ", rval))
-    return 0;
-
-  return 1;
-}
-
 // Calculate the REAL time passed over the last t2-t1 centuries (secs) 
 void realTimePassed(time_t t2, time_t t1, struct time_info_data *now)
 {
@@ -696,7 +688,7 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
         continue;
  
       if (i->m_bIsClient)
-        i->clientf("%d|%d|%s", CLIENT_LOG, tError, buf.c_str());
+        i->clientf(fmt("%d|%d|%s") % CLIENT_LOG % tError % buf);
       else
         i->character->sendTo(COLOR_LOGS, fmt("// %s\n\r") % buf);
     }

@@ -131,7 +131,6 @@ extern int vsystem(const sstring &);
 extern bool load_char(const sstring &name, charFile *);
 extern int game_loop(int s);
 extern bool safe_to_be_in_system_filepath(const sstring &);
-extern bool scan_number(const sstring &text, int *rval);
 extern void RoomLoad(TBeing *, int, int, bool);
 extern int noise(const TBeing *);
 extern void change_hands(TBeing *, const char *);

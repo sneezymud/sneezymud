@@ -308,7 +308,7 @@ int TBeing::doSay(const sstring &arg)
 	  if (d->m_bIsClient) {
 	    garbedBuf = fmt("%s") %
 	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
-	    d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf.c_str(), garbedBuf.c_str());
+	    d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
 	  }
 	} else {
 	  if (Lapspeak == 1) {
@@ -322,9 +322,9 @@ int TBeing::doSay(const sstring &arg)
 	    nameBuf = fmt("<c>%s<z>") % tmpbuf;
 	    garbedBuf = fmt("%s") %
 	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
-	    d->clientf("%d|%s|%s", CLIENT_SAY, 
-		       colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-		       garbedBuf.c_str());
+	    d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % 
+		       colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+		       garbedBuf);
 	  }
 	}
       } else {
@@ -339,9 +339,9 @@ int TBeing::doSay(const sstring &arg)
 	  nameBuf = fmt("<c>%s<z>") % tmpbuf;
 	  garbedBuf = fmt("%s") %
 	    colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
-	  d->clientf("%d|%s|%s", CLIENT_SAY,
-		     colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-		     garbedBuf.c_str());
+	  d->clientf(fmt("%d|%s|%s") % CLIENT_SAY %
+		     colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+		     garbedBuf);
 	}
       }
     } else {
@@ -353,8 +353,8 @@ int TBeing::doSay(const sstring &arg)
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
       }
       if (d->m_bIsClient) {
-	d->clientf("%d|%s|%s", CLIENT_SAY, sstring(getName()).cap().c_str(),
-		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
+		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
     }
   }
@@ -432,19 +432,19 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
           sstring tmpbuf2 = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE);
 
           if (i->m_bIsClient)
-            i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
+            i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % tmpbuf2 % argbuf);
           b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s<1>\"\n\r") %tmpbuf % (blah ? "whines" : "shouts") % arg);
         } else {
           if (i->m_bIsClient)
-            i->clientf("%d|%s|%s%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
+            i->clientf(fmt("%d|%s|%s%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap().c_str() % (blah ? "whines" : "shouts") % arg);
+          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % arg);
         }
       } else {
         if (i->m_bIsClient)
-          i->clientf("%d|%s|%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
+          i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap().c_str() % (blah ? "whines" : "shouts") % arg);
+        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % arg);
       }
     }
   }
@@ -576,8 +576,8 @@ void TBeing::doGrouptell(const char *arg)
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
     if (k->desc && k->desc->m_bIsClient && (k != this)) {
-      k->desc->clientf("%d|%s|%s", CLIENT_GROUPTELL, getName(), 
-        colorString(this, k->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
+      k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
+        colorString(this, k->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
@@ -587,8 +587,8 @@ void TBeing::doGrouptell(const char *arg)
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
       if (f->follower->desc && f->follower->desc->m_bIsClient) {
-        f->follower->desc->clientf("%d|%s|%s", CLIENT_GROUPTELL, getName(), 
-          colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
+        f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
+          colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE));
       }
       buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       act(buf, 0, this, 0, f->follower, TO_VICT);
@@ -980,9 +980,9 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   Descriptor *d = vict->desc;
   if (d->m_bIsClient) {
     garbedBuf = fmt("<c>%s<z>") % garbed;
-    d->clientf("%d|%s|%s", CLIENT_TELL,
-        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
+    d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
+        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
   }
 
   // set up last teller for reply's use
@@ -1157,7 +1157,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
     act("$n begins to jot down a note.", TRUE, ch, 0, 0, TO_ROOM);
 #if 0
     if (ch->desc->m_bIsClient)
-      ch->desc->clientf("%d|%d", CLIENT_STARTEDIT, MAX_NOTE_LENGTH);
+      ch->desc->clientf(fmt("%d|%d") % CLIENT_STARTEDIT % MAX_NOTE_LENGTH);
 #endif
 
     ch->desc->connected = CON_WRITING;

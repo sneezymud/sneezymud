@@ -10,7 +10,7 @@
 // returns DELETE_THIS if deity went boom
 int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 {
-  char buf[256];
+  sstring buf;
   TObj *obj;
   int rc;
 
@@ -19,7 +19,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
-  sprintf(buf, "This is the personalized object of %s", ch->getName());
+  buf=fmt("This is the personalized object of %s") % ch->getName();
 
   obj->swapToStrung();
   if ((virt == WEAPON_AVENGER1) || 
@@ -35,7 +35,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   obj->action_description = mud_str_dup(buf);
 
   if (deity) {
-    sprintf(buf, "%s %s", fname(obj->name).c_str(), ch->getName());
+    buf=fmt("%s %s") % fname(obj->name) % ch->getName();
     *deity += *obj; 
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -44,7 +44,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     *ch += *obj;
 
   if (obj->parent == deity) {
-    sprintf(buf, "You can't seem to carry it.  I'll just put it down here.");
+    buf="You can't seem to carry it.  I'll just put it down here.";
     deity->doSay(buf);
     rc = deity->doDrop("", obj);
     if (IS_SET_DELETE(rc, DELETE_THIS))

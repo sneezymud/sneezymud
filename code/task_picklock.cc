@@ -20,7 +20,6 @@ void TTool::pickPulse(TBeing *ch)
   int skill,difficulties;
   TRoom *temp_rp;
   roomDirData *exitp, *back;
-  char buf[256];
 
   if (getToolType() != TOOL_LOCKPICK) {
     ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
@@ -86,9 +85,9 @@ void TTool::pickPulse(TBeing *ch)
 
     REMOVE_BIT(exitp->condition, EX_LOCKED);
     if (exitp->keyword) {
-      sprintf(buf, "$n skillfully picks the lock of the %s.\n\r",
-         fname(exitp->keyword).c_str());
-      act(buf, TRUE,ch,0,0,TO_ROOM);
+      act(fmt("$n skillfully picks the lock of the %s.\n\r") % 
+	  fname(exitp->keyword),
+	  TRUE,ch,0,0,TO_ROOM);
     } else
       act("$n picks the lock.", TRUE, ch, 0, 0, TO_ROOM);
     ch->sendTo("The lock quickly yields to your skills.\n\r");

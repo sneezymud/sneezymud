@@ -1433,7 +1433,7 @@ void TBeing::stopFighting()
   }
   // Clear out client fight and tank condition fields
   if (desc && desc->m_bIsClient) 
-    desc->clientf("%d|%s|%s|%s|%s", CLIENT_FIGHT, "", "", "", "");
+    desc->clientf(fmt("%d|%s|%s|%s|%s") % CLIENT_FIGHT % "" % "" % "" % "");
 
   // see explanation at declaration for details on this
   if (gCombatNext == this)
@@ -5504,13 +5504,13 @@ void TBeing::setCombatMode(attack_mode_t n)
   combatMode = n;
   if (desc && desc->m_bIsClient) {
     if (n == ATTACK_OFFENSE)
-      desc->clientf("%d", CLIENT_OFFENSIVE);
+      desc->clientf(fmt("%d") % CLIENT_OFFENSIVE);
     else if (n == ATTACK_DEFENSE)
-      desc->clientf("%d", CLIENT_DEFENSIVE);
+      desc->clientf(fmt("%d") % CLIENT_DEFENSIVE);
     else if (n == ATTACK_BERSERK)
-      desc->clientf("%d", CLIENT_BERSERK);
+      desc->clientf(fmt("%d") % CLIENT_BERSERK);
     else
-      desc->clientf("%d", CLIENT_NORMAL);
+      desc->clientf(fmt("%d") % CLIENT_NORMAL);
   }
 }
 

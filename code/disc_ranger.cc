@@ -176,7 +176,7 @@ void TBeing::doTrack(const char *argument)
   affectTo(&aff);
 
   if (desc && desc->m_bIsClient)
-    desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
+    desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
 
   if (code <= 9) {
     if (code >= 0 && desc && (desc->autobits & AUTO_HUNT)) {
@@ -243,7 +243,7 @@ int TBeing::track(TBeing *vict)
            "your quarry") % norm());
     addToWait(combatRound(1));
     if (desc && desc->m_bIsClient)
-      desc->clientf("%d", CLIENT_TRACKOFF);
+      desc->clientf(fmt("%d") % CLIENT_TRACKOFF);
     stopTask();
     addToWait(combatRound(1));
     return FALSE;

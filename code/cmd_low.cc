@@ -1062,7 +1062,7 @@ void TPerson::doLow(const sstring &argument)
   arg=one_argument(arg, buf);
 
   sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
-  if (arg.empty()) {
+  if (buf.empty()) {
     sendTo(usage);
     return;
   } else if (is_abbrev(buf, "objs") ||

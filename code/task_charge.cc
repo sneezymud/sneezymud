@@ -400,7 +400,7 @@ int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
 {
   int  nRoom = rExit->to_room,
        nRc;
-  char nString[256];
+  sstring nString;
 
   nRc = taskChargeMoveInto(nRoom, ch, false);
 
@@ -413,11 +413,11 @@ int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
   if (nRc == TRUE || nRc == FALSE)
     return TRUE;
 
-  sprintf(nString, "$n suddenly flies into the room and smashes into the %s.",
-          real_roomp(nRoom)->describeGround().c_str());
+  nString=fmt("$n suddenly flies into the room and smashes into the %s.") %
+    real_roomp(nRoom)->describeGround();
   act(nString, TRUE, ch, 0, 0, TO_ROOM);
   ch->sendTo(fmt("You fly into the next room and smash into the %s.\n\r") %
-             real_roomp(nRoom)->describeGround().c_str());
+             real_roomp(nRoom)->describeGround());
   ch->doLook("", CMD_LOOK);
 
   return TRUE;

@@ -7521,7 +7521,7 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
   vlogf(LOG_MAROR, "%s, %s, %s", arg, target.c_str(), sarg.c_str());
   if (cmd == CMD_WHISPER) {
     ch->doWhisper(arg);
-    buf = fmt ("%s psssst") % target.c_str(); 
+    buf = fmt ("%s psssst") % target; 
     if (snicker) {
       mimic->doAction("", CMD_SNICKER);
     } else

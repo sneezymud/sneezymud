@@ -220,7 +220,7 @@ class TRoom : public TThing {
     int checkPointroll();
     virtual void sendTo(colorTypeT, const sstring &) const;
     virtual void sendTo(const sstring &) const;
-    void clientf(const char *,...);
+    void clientf(const sstring &);
     void loadOne(FILE *, bool);
     void colorRoom(int, int);
     sstring daynightColorRoom() const;

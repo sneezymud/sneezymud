@@ -31,7 +31,7 @@ TObj *get_obj_num(int nr);
 TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr);
 TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact);
 TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exact);
-TObj *get_obj_vis_accessible(TBeing *ch, const char *name);
+TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name);
 
 /* ******* characters ********* */
 

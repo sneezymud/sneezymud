@@ -2060,7 +2060,7 @@ TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 }
 
 // inv, eq, items in room
-TObj *get_obj_vis_accessible(TBeing *ch, const char *name)
+TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
 {
   TThing *i;
   TObj *obj = NULL;
@@ -2068,11 +2068,10 @@ TObj *get_obj_vis_accessible(TBeing *ch, const char *name)
   char tmpname[MAX_INPUT_LENGTH];
   char *tmp;
 
-  for (;*name && isspace(*name);name++);
-  if (!*name)
+  if (name.empty())
     return NULL;
 
-  strcpy(tmpname, name);
+  strcpy(tmpname, name.c_str());
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return NULL;

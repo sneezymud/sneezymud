@@ -41,9 +41,9 @@ void TNote::showMe(TBeing *ch) const
         ch->desc->page_string(sb);
     } else {
       processStringForClient(sb);
-      ch->desc->clientf("%d", CLIENT_NOTE);
+      ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
       ch->sendTo(fmt("%s") % sb);  // tmpbuf may have "%" in it, do it this way
-      ch->desc->clientf("%d", CLIENT_NOTE_END);
+      ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
     }
   } else
     ch->sendTo("It's blank.\n\r");

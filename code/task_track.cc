@@ -210,7 +210,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           ch->sendTo(fmt("%s###You have found %s!%s\n\r") % ch->orange() %
                      (isSW ? "some water" : "your target") % ch->norm());
           if (ch->desc && ch->desc->m_bIsClient)
-            ch->desc->clientf("%d", CLIENT_TRACKOFF);
+            ch->desc->clientf(fmt("%d") % CLIENT_TRACKOFF);
           ch->stopTask();
           ch->remPlayerAction(PLR_HUNTING);
           if (ch->affectedBySpell(SKILL_TRACK)     ) ch->affectFrom(SKILL_TRACK);
@@ -237,7 +237,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
                    dirs_to_blank[code] % ch->norm());
             // Client check
             if (ch->desc && ch->desc->m_bIsClient)
-              ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
+              ch->desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, dirs[code]);
               ch->addCommandToQue(buf);
@@ -266,7 +266,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             }
             // Client check.
             if (ch->desc && ch->desc->m_bIsClient)
-              ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
+              ch->desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, t->name);
               strcpy(buf, add_bars(buf).c_str());

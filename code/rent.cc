@@ -1099,9 +1099,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (client && recep) {
       processStringForClient(str);
 
-      desc->clientf("%d", CLIENT_RENT);
+      desc->clientf(fmt("%d") % CLIENT_RENT);
       sendTo(str);
-      desc->clientf("%d", CLIENT_RENT_END);
+      desc->clientf(fmt("%d") % CLIENT_RENT_END);
     }
     return TRUE;
   }
@@ -1226,9 +1226,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   if (client && recep) {
     processStringForClient(str);
 
-    desc->clientf("%d", CLIENT_RENT);
+    desc->clientf(fmt("%d") % CLIENT_RENT);
     sendTo(str);
-    desc->clientf("%d", CLIENT_RENT_END);
+    desc->clientf(fmt("%d") % CLIENT_RENT_END);
   }
   return TRUE;
 }
@@ -2350,7 +2350,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     }
   }
 
-  tBuffer = fmt("%c-%ds : ") % '%' % (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str())));
+  tBuffer = fmt("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
 
   if (isRentable()) {
     tBuffer+="%5d talens/day";

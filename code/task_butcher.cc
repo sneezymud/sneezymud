@@ -25,7 +25,6 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
   int  learning = ch->getSkillValue(SKILL_BUTCHER),
     Ceffect = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1),
     maxUnitsP = max(0, (int)((corpse->getWeight()*.10)/2)-1);
-  char buf[256];
   //  char msg   [256],
   //       gl_msg[256];
 
@@ -182,6 +181,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     int whichmeat=::number(0,nmeats-1);
     TPCorpse *tpc=dynamic_cast<TPCorpse *>(corpse);
     char namebuf[256];
+    sstring buf;
 
     if(tpc){
       strcpy(namebuf, tpc->getOwner().c_str());
@@ -193,25 +193,23 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     steak->setWeight((float)FoodUnits / 10.0);
     steak->setVolume(FoodUnits * 10);
 
-    sprintf(buf, "meat %s %s",
-	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str(),
-	    meats[whichmeat]);
+    buf=fmt("meat %s %s") %
+      (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName()) %
+      meats[whichmeat];
     delete [] steak->name;
     steak->name = mud_str_dup(buf);
-    sprintf(buf, "a %s of %s meat", 
-	    meats[whichmeat], 
-	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str());
+
+    buf=fmt("a %s of %s meat") %
+      meats[whichmeat] %
+      (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
     delete [] steak->shortDescr;
     steak->shortDescr = mud_str_dup(buf);
 
-    sprintf(buf, "A %s of %s meat lies here.", 
-	    meats[whichmeat],
-	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str());
+    buf=fmt("A %s of %s meat lies here.") %
+      meats[whichmeat] %
+      (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
     delete [] steak->descr;
     steak->setDescr(mud_str_dup(buf));
-    
-
-
 
     *ch += *steak;
   }
