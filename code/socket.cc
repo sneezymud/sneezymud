@@ -826,13 +826,16 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
   retcount=count=(int)((float)objCount/11.5);
-
-  while((++iter)!=object_list.end()){
-    obj=(*iter);
-
-    // move placeholder forward
-    --iter;
+  
+  while(count--){
+    // remove placeholder from object list and increment iterator
     object_list.erase(iter++);
+    
+    // set object to be processed
+    obj=(*iter);
+    
+    // move to front of list if we reach the end
+    // otherwise just stick the placeholder in
     if(++iter == object_list.end()){
       object_list.push_front(placeholder);
       iter=object_list.begin();
@@ -840,9 +843,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       object_list.insert(iter, placeholder);
       --iter;
     }
-   
-    if(!count--)
-      break;
+
 
     if (!dynamic_cast<TObj *>(obj)) {
       vlogf(LOG_BUG, fmt("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
