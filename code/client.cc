@@ -1085,6 +1085,28 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
 
     return DELETE_THIS;
   }
+
+  if(character->hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+    character->loadCareerStats();
+    if(character->desc->career.deaths){
+      
+      writeToQ("That character is a perma death character and has died.\n\r");
+      writeToQ("Name -> ");
+      
+      // copied from above
+      character->desc = NULL;
+      character->next = character_list;
+      character_list = character;
+      
+      character->setRoom(ROOM_NOWHERE);
+      
+      delete character;
+      character = new TPerson(this);
+      return FALSE;
+    }
+  }
+
+
   for (k = descriptor_list; k; k = k->next) {
     if ((k->character != character) && k->character) {
       if (k->original) {
