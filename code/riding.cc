@@ -445,11 +445,13 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
               return FALSE;
             }
           } else {
-            act("You attempt to coax $N landing but they seem to ignore you.",
+            act(fmt("You attempt to coax $N into landing but %s seems to ignore you.")
+                % horse->thirdPerson(POS_SUBJECT),
                 TRUE, this, NULL, horse, TO_CHAR);
             act("The Nerve!  $n just tried to make you land.",
                 TRUE, this, NULL, horse, TO_VICT);
-            act("$n attempts to coax $N into landing, who promptly ignores them.",
+            act(fmt("$n attempts to coax $N into landing, who promptly ignores %s.")
+                % thirdPerson(POS_OBJECT),
                 TRUE, this, NULL, horse, TO_NOTVICT);
             return FALSE;
           }
