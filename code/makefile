@@ -219,7 +219,8 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_key.o		obj.o			\
 	obj_casino_chip.o	obj_poison.o            \
 	obj_handgonne.o         obj_egg.o               \
-	obj_cannon.o		obj_tooth_necklace.o
+	obj_cannon.o		obj_tooth_necklace.o	\
+	obj_trash_pile.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -4105,7 +4106,7 @@ objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
-objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h
+objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adv_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_adv_adventuring.o: /usr/include/machine/ansi.h
@@ -12310,6 +12311,61 @@ objs/obj_trash.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/obj_trash.o: being.h person.h monster.h paths.h account.h extern.h
 objs/obj_trash.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/obj_trash.o: format.h obj_trash.h
+objs/obj_trash_pile.o: stdsneezy.h /usr/include/g++/cstdio
+objs/obj_trash_pile.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/obj_trash_pile.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/obj_trash_pile.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/obj_trash_pile.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/obj_trash_pile.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/obj_trash_pile.o: /usr/include/machine/types.h
+objs/obj_trash_pile.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/obj_trash_pile.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/obj_trash_pile.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/obj_trash_pile.o: /usr/include/g++/cstring /usr/include/string.h
+objs/obj_trash_pile.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_trash_pile.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_trash_pile.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_trash_pile.o: /usr/include/errno.h /usr/include/g++/string
+objs/obj_trash_pile.o: /usr/include/g++/std/bastring.h
+objs/obj_trash_pile.o: /usr/include/g++/cstddef
+objs/obj_trash_pile.o: /usr/include/g++/std/straits.h
+objs/obj_trash_pile.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_alloc.h
+objs/obj_trash_pile.o: /usr/include/g++/iostream.h
+objs/obj_trash_pile.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/obj_trash_pile.o: /usr/include/g++/iterator
+objs/obj_trash_pile.o: /usr/include/g++/stl_relops.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_iterator.h
+objs/obj_trash_pile.o: /usr/include/g++/std/bastring.cc
+objs/obj_trash_pile.o: /usr/include/g++/vector
+objs/obj_trash_pile.o: /usr/include/g++/stl_algobase.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_pair.h
+objs/obj_trash_pile.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/obj_trash_pile.o: /usr/include/machine/limits.h
+objs/obj_trash_pile.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/obj_trash_pile.o: /usr/include/g++/new /usr/include/g++/exception
+objs/obj_trash_pile.o: /usr/include/g++/stl_construct.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_uninitialized.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_vector.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/obj_trash_pile.o: /usr/include/g++/stl_tree.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_function.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_map.h
+objs/obj_trash_pile.o: /usr/include/g++/stl_multimap.h /usr/include/g++/list
+objs/obj_trash_pile.o: /usr/include/g++/stl_list.h /usr/include/g++/iostream
+objs/obj_trash_pile.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_trash_pile.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_trash_pile.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_trash_pile.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_trash_pile.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_trash_pile.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/obj_trash_pile.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/obj_trash_pile.o: room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/obj_trash_pile.o: charfile.h being.h person.h monster.h paths.h
+objs/obj_trash_pile.o: account.h extern.h handler.h obj_money.h spec_mobs.h
+objs/obj_trash_pile.o: materials.h colorstring.h format.h obj_trash_pile.h
+objs/obj_trash_pile.o: obj_expandable_container.h obj_open_container.h
+objs/obj_trash_pile.o: obj_base_container.h
 objs/obj_treasure.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_treasure.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_treasure.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

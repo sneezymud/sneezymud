@@ -622,6 +622,12 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Unused", 0, 0,
      "Volume necklace can hold", 100000, 1);
+
+  ItemInfo[ITEM_TRASH_PILE] = new itemInfo("trash pile","a pile of trash",
+     "Weight pile can hold", 50000, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume pile can hold", 10000000, 1);
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

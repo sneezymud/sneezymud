@@ -89,6 +89,7 @@
 #include "obj_egg.h"
 #include "obj_cannon.h"
 #include "obj_tooth_necklace.h"
+#include "obj_trash_pile.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -2944,6 +2945,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TCannon();
     case ITEM_TOOTH_NECKLACE:
       return new TToothNecklace();
+    case ITEM_TRASH_PILE:
+      return new TTrashPile();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

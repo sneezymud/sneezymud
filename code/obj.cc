@@ -249,6 +249,8 @@ itemTypeT mapFileToItemType(int num)
       return ITEM_CANNON;
     case 67:
       return ITEM_TOOTH_NECKLACE;
+    case 68:
+      return ITEM_TRASH_PILE;
   }
   vlogf(LOG_BUG, fmt("Unknown type %d in map file") %  num);
   return ITEM_UNDEFINED;
@@ -393,6 +395,8 @@ int mapItemTypeToFile(itemTypeT itt)
       return 66;
     case ITEM_TOOTH_NECKLACE:
       return 67;
+    case ITEM_TRASH_PILE:
+      return 68;
     case MAX_OBJ_TYPES:
       break;
   }
