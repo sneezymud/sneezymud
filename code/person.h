@@ -92,7 +92,7 @@ class TPerson : public TBeing {
     virtual int doAt(const char *, bool);
     virtual void doAccess(const char *);
     virtual void doSet(const char *);
-    virtual void doLow(const char *);
+    virtual void doLow(const sstring &);
     virtual void doShutdow();
     virtual void doShutdown(const char *);
     virtual void doSnoop(const char *);

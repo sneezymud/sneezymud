@@ -1047,45 +1047,48 @@ void TBeing::doCompare(const char *arg)
   compare2Mobs(this, mob2, mob1);
 }
 
-void TBeing::doLow(const char *arg)
+void TBeing::doLow(const sstring &)
 {
   sendTo("You are a monster now, forget about this command.");
 }
 
-void TPerson::doLow(const char *arg)
+void TPerson::doLow(const sstring &arg)
 {
-  char buf[256];
-  
+  sstring buf;
+
   if (!hasWizPower(POWER_LOW)) {
     sendTo("You do not yet have the low command. If you need something, see a higher level god.");
     return;
   }
 
-  arg = one_argument(arg, buf);
-  char usage[] = "Syntax: low <mob | race | statbonus | statcharts | tasks> ...\n\r";
-  if (!*buf) {
-    sendTo(usage);
+  argument_parser(arg, buf);
+
+  sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
+  if (arg.empty()) {
+    sendTo(usage.c_str());
     return;
   } else if (is_abbrev(buf, "objs") ||
 	     is_abbrev(buf, "weapons")) {
     sendTo("The low command does not currently work for objects or weapons.\n\r");
     
 #if 0
-    lowObjs(arg);
+    lowObjs(arg.c_str());
     return;
   } else if (is_abbrev(buf, "weapons")) {
-    lowWeaps(arg);
+    lowWeaps(arg.c_str());
 #endif
     return;
   } else if (is_abbrev(buf, "tasks")) {
-    lowTasks(arg);
+    lowTasks(arg.c_str());
     return;
   } else if (is_abbrev(buf, "mobs")) {
-    lowMobs(arg);
+    lowMobs(arg.c_str());
     return;
   } else if (is_abbrev(buf, "race")) {
-    lowRace(arg);
+    lowRace(arg.c_str());
     return;
+  } else if (is_abbrev(buf, "path")){
+    lowPath(arg);
   } else if (is_abbrev(buf, "statbonus")) {
     TDatabase db("sneezy");
     db.query("select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type");
@@ -1224,10 +1227,35 @@ void TPerson::doLow(const char *arg)
     
 
   } else {
-    sendTo(usage);
+    sendTo(usage.c_str());
     return;
   }
 }
+
+
+void TBeing::lowPath(const sstring &arg)
+{
+  dirTypeT dir;
+  sstring buf1, buf2;
+  int room=in_room;
+
+  // arg = path <vnum>
+  // trace a path there and spit out room nums
+
+  argument_parser(arg, buf1, buf2);
+
+  while((dir=find_path(room, is_target_room_p, 
+		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
+    ssprintf(buf1, "{DIR_%s, %i},\n\r", upper(dirs[dir]).c_str(), room);
+    sendTo(buf1.c_str());
+
+    room=real_roomp(room)->dir_option[dir]->to_room;
+  }
+
+}
+
+
+
 
 void TBeing::lowRace(const char *arg)
 {
@@ -1258,7 +1286,7 @@ void TBeing::lowRace(const char *arg)
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
-        thing_to_room(mob, ROOM_VOID);      // prevents extracting from "nowhere"
+        thing_to_room(mob, ROOM_VOID);   // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
       } else 

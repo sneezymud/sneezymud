@@ -196,6 +196,7 @@ extern dirTypeT can_see_linear(const TBeing *, const TBeing *targ, int *rng, dir
 extern dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth);
 extern dirTypeT choose_exit_global(int in_room, int tgt_room, int depth);
 extern sstring lower(sstring);
+extern sstring upper(sstring);
 extern void SetupCreateEngineData();
 extern sstring good_cap(const sstring &cp);
 extern sstring good_uncap(const sstring &cp);

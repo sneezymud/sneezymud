@@ -1424,7 +1424,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
 	  break;
         case CMD_LOW:
-          doLow(newarg);
+          doLow(stringarg);
           break;
         case CMD_ENTER:
           rc = doEnter(newarg, NULL);
@@ -3045,6 +3045,20 @@ sstring lower(sstring s)
 
   return s;
 }
+
+sstring upper(sstring s)
+{
+  sstring::size_type iter;
+
+  do {
+    iter = s.find_first_of("abcdefghijklmnopqrstuvwxyz");
+    if (iter != sstring::npos)
+      s.replace(iter, 1, toupper(s[iter]));
+  } while (iter != sstring::npos);
+
+  return s;
+}
+
 
 void makeLower(char *s)
 {

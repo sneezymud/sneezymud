@@ -1478,9 +1478,10 @@ class TBeing : public TThing {
     void lowMobs(const char *);
     void lowObjs(const char *);
     void lowWeaps(const char *);
+    void lowPath(const sstring &);
     int doLower(const char *);
     int doRaise(const char *, cmdTypeT);
-    virtual void doLow(const char *);
+    virtual void doLow(const sstring &);
     bool isNaked() const;
     bool isWieldingWeapon();
     bool hasPart(wearSlotT) const;
