@@ -324,6 +324,7 @@ void TMonster::mageComponentLoader(void)
   int comp = 0;
   int bag_num = 0;
   bool found = FALSE;
+  int inksloaded = 0;
 
   if (GetMaxLevel() >= 50  && wealth > 1000) {
     wealth -= 800;
@@ -362,6 +363,9 @@ void TMonster::mageComponentLoader(void)
 
       if (isDissectComponent(comp))
         num = -1;
+
+      if (isInkComponent(comp) && ++inksloaded>3)
+	num = -1;
 
       // disallow certain components
       switch (comp) {

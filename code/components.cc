@@ -2803,6 +2803,13 @@ void TComponent::objMenu(const TBeing *ch) const
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
 }
 
+bool isInkComponent(int vnum)
+{
+  if(vnum>=1500 && vnum<=1548)
+    return true;
+  return false;
+}
+
 bool isDissectComponent(int vnum)
 {
   switch (vnum) {
