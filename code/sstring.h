@@ -1,12 +1,17 @@
 #ifndef __SSTRING_H
 #define __SSTRING_H
 
+class format;
+
+
 class sstring : public string {
 public:
   // constructors
   sstring() : string(){}
   sstring(const char *str) : string(str?str:"") {}
   sstring(const string &str) : string(str) {}
+
+  const sstring & operator=(format &a);
 
   // these functions return modified copies of the string
   const sstring toCRLF() const;

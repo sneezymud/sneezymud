@@ -1595,7 +1595,7 @@ objs/cmd_egotrip.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/cmd_egotrip.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_egotrip.o: spec_mobs.h materials.h colorstring.h disc_shaman.h
 objs/cmd_egotrip.o: disc_shaman_healing.h disc_fire.h disc_wrath.h
-objs/cmd_egotrip.o: disc_aegis.h
+objs/cmd_egotrip.o: disc_aegis.h obj_portal.h obj_seethru.h
 objs/cmd_feigndeath.o: stdsneezy.h /usr/include/g++/cstdio
 objs/cmd_feigndeath.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/cmd_feigndeath.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -14928,7 +14928,7 @@ objs/sstring.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/sstring.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/sstring.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/sstring.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/sstring.o: colorstring.h
+objs/sstring.o: colorstring.h format.h
 objs/statistics.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/statistics.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/statistics.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

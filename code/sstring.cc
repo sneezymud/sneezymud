@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "sstring.h"
+#include "format.h"
 
 // converts newlines in the string to CRLF if possible
 // this is for preparation for sending out to a player
@@ -183,3 +184,8 @@ const bool sstring::startsVowel() const
   return false;
 } 
 
+const sstring & sstring::operator=(format &a)
+{
+  this->assign(a);
+  return *this;
+}
