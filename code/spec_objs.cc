@@ -7052,14 +7052,14 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 
 int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
-  string target,argument=arg, buf;
+  string target,buf;
   TObj *fish;
   TBeing *ch;
   int amt=20;
 
   if(cmd != CMD_GENERIC_QUICK_PULSE && cmd != CMD_POINT)
     return false;
-
+  
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
@@ -7078,7 +7078,7 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
   
   if(cmd == CMD_POINT && o->getMaxStructPoints()<100){
-    argument=one_argument(argument,target);
+    one_argument((string)arg,target);
 
     if(!(fish=generic_find_obj(target.c_str(),FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
       act("You don't see that anywhere!", TRUE,ch,o,NULL,TO_CHAR,NULL);
