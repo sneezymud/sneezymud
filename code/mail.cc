@@ -32,7 +32,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
   db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, to, tmstr, message_pointer);
 }                               /* store mail */
 
-const char *read_delete(const char *recipient, const char *recipient_formatted)
+const char *read_delete(const char *recipient, const char *recipient_formatted, string &from)
 {
   TDatabase db("sneezy");
   string buf;
@@ -41,6 +41,7 @@ const char *read_delete(const char *recipient, const char *recipient_formatted)
   if(!db.fetchRow())
     return "error!";
 
+  from=db.getColumn(0);
 
   ssprintf(buf,
 	   "The letter has a date stamped in the corner: %s\n\r\n\r"
@@ -198,6 +199,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
   char buf[200], recipient[100], *tmp;
   TObj *note, *envelope;
   const char *msg;
+  string from;
 
   _parse_name(getName(), recipient);
 
@@ -215,7 +217,6 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     return;
   }
   while (has_mail(recipient)) {
-#if 1
 // builder port uses stripped down database which was causing problems
 // hence this setup instead.
     int robj = real_object(GENERIC_NOTE);
@@ -226,15 +227,10 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     }
 
     if (!(note = read_object(robj, REAL))) {
-      vlogf(LOG_BUG, "Couldn't make a note removed from board!");
+      vlogf(LOG_BUG, "Couldn't make a note for mail!");
       return;
     }
-#else
-    if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
-      vlogf(LOG_BUG, "Couldn't make a note removed from board!");
-      return;
-    }
-#endif
+
     note->swapToStrung();
     delete [] note->name;
     note->name = mud_str_dup("letter mail");
@@ -243,8 +239,8 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     delete [] note->getDescr();
     note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
     delete [] note->action_description;
-    msg = read_delete(recipient, getName());
-    note->action_description = new char[strlen(msg)];
+    msg = read_delete(recipient, getName(), from);
+    note->action_description = new char[strlen(msg)+1];
     strcpy(note->action_description, msg);
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
@@ -278,7 +274,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
         *namebuf ? namebuf : "",
         *namebuf ? ")" : "");
 #else
-    sprintf(buf, "$n gives you $p");
+    sprintf(buf, "$n gives you $p from %s.", from.c_str());
 
 #endif
 

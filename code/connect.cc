@@ -5052,6 +5052,7 @@ int Descriptor::doAccountStuff(char *arg)
   int tss = screen_size;
   TBeing *ch;
   TTrophy *trophy;
+  string from;
 
   // apparently, crypt() has a mem leak in the lib function
   // By making this static, we limit the number of leaks to one
@@ -5439,7 +5440,7 @@ int Descriptor::doAccountStuff(char *arg)
 
       while (has_mail(delname)) {
         vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
-        const char *tmpp = read_delete(delname, delname);
+        const char *tmpp = read_delete(delname, delname, from);
         delete [] tmpp;
       }
 
