@@ -582,6 +582,12 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume chest can hold", 30000, 1);
+
+  ItemInfo[ITEM_VEHICLE] = new itemInfo("Vehicle", "a vehicle",
+     "Inside room of vehicle", 0, 0,
+     "Portal type  See HELP PORTAL INFO", 12, 0,
+     "Special: trap type", 0, 0,
+     "Special: portal states & key number", 0, 0);
 				     
 };
 
