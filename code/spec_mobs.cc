@@ -7204,11 +7204,11 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     myself->doDrive("stop");
     myself->doSay("Crew, pull us in to dock and hold her steady.");
     myself->doSay("Passengers, feel free to stick around for another sail.");
-    timer=50;
 
     if(*job==15150){
       *job=13108;
     } else {
+      timer=50;
       *job=15150;
     }
     return TRUE;
@@ -7312,11 +7312,11 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
 
   if(elevator->in_room == *job){
     myself->doDrive("stop");
-    timer=10;
 
     if(*job==2352){
       *job=2362;
     } else {
+      timer=10;
       *job=2352;
     }
     return TRUE;
@@ -7335,6 +7335,42 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   myself->doDrive("30");
 
   return TRUE;
+}
+
+
+int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *o)
+{
+  if(cmd != CMD_ENTER && cmd != CMD_MOB_GIVEN_ITEM)
+    return false;
+  
+
+  if(cmd == CMD_ENTER){
+    myself->doSay("Enter the elevator requires a 10 talen chip.");
+    myself->doEmote("stretches out his hand expectantly.");
+    return true;
+  }
+
+  if(!ch || !o) // something weird going on if this happens
+    return false;
+
+  if(o->objVnum() != 2359){
+    myself->doSay("What the hell is this?");
+    myself->doDrop("", o);
+    return false;
+  }
+
+  TVehicle *elevator;
+  for(TThing *tt=myself->roomp->getStuff();tt;tt=tt->nextThing){
+    if((elevator=dynamic_cast<TVehicle *>(tt)) && elevator->objVnum()==2360){
+      myself->doSay("Thank you, enjoy your stay!");
+      ch->doEnter("", elevator);
+      return true;
+    }
+  }
+
+  myself->doSay("You'll have to wait for the elevator.");
+  myself->doDrop("", o);
+  return false;
 }
 
 
@@ -7525,6 +7561,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "Barmaid", barmaid},
   {FALSE, "tattoo artist", tattooArtist},
   {FALSE, "casino elevator operator", casinoElevatorOperator},
+  {FALSE, "casino elevator guard", casinoElevatorGuard},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
