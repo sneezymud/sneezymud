@@ -165,7 +165,6 @@ void TBeing::listExits(const TRoom *rp) const
   dirTypeT door;
   roomDirData *exitdata;
   char buf[1024];
-  bool tCS = (getStat(STAT_CURRENT, STAT_PER) > 150);
 
   const char *exDirs[] =
   {
@@ -186,6 +185,10 @@ void TBeing::listExits(const TRoom *rp) const
       exitdata = rp->exitDir(door);
 
       if (exitdata && (exitdata->to_room != ROOM_NOWHERE)) {
+	bool secret=IS_SET(exitdata->condition, EX_SECRET);
+	bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+	bool see_thru=canSeeThruDoor(exitdata);
+
         if (isImmortal()) {
           if (IS_SET(exitdata->condition, EX_CLOSED)) 
             sendTo(fmt(" %s%s%s") % red() % exDirs[door] % norm());
@@ -197,9 +200,7 @@ void TBeing::listExits(const TRoom *rp) const
           TRoom *exitp = real_roomp(exitdata->to_room);
 
           if (exitp) {
-            if (exitdata->door_type != DOOR_NONE &&
-                ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
-                 !IS_SET(exitdata->condition, EX_CLOSED))) {
+            if (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru))) {
               if (IS_SET(exitdata->condition, EX_CLOSED))
                 sendTo(fmt(" %s*%s%s") %                       (exitp->getSectorType() == SECT_FIRE ? red() :
                         (exitp->isAirSector() ? cyan() :
@@ -374,7 +375,6 @@ void TBeing::listExits(const TRoom *rp) const
       sendTo(fmt("You can see exits to the %s") % buf);
   } else
     sendTo("You see no obvious exits.\n\r");
-
 }
   
 
