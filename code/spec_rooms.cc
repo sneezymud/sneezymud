@@ -1509,7 +1509,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
   }
 
-  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
+  //  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
 
   done[n]=true;
   return TRUE;
