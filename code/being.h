@@ -1914,7 +1914,7 @@ class TBeing : public TThing {
     int dieReturn(const char *, spellNumT, int);
     void doReturn(const char *, wearSlotT, bool);
     int doWearOffReturn();
-    int doHit(const char *, TBeing *);
+    int doHit(const sstring &, TBeing *);
     int doEngagedHit(const char *, TBeing *);
     int doKill(const char *, TBeing *);
     int doEngage(const char *, TBeing *);

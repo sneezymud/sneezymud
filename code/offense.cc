@@ -18,9 +18,9 @@
 #include "obj_bag.h"
 
 // DELETE_THIS implies this needs to be deleted
-int TBeing::doHit(const char *argument, TBeing *vict)
+int TBeing::doHit(const sstring &argument, TBeing *vict)
 {
-  char arg[80];
+  sstring arg;
   TBeing *victim, *tmp;
   int rc = FALSE;
   bool shouldHit = FALSE;
@@ -38,7 +38,7 @@ int TBeing::doHit(const char *argument, TBeing *vict)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  only_argument(argument, arg);
+  argument_parser(argument, arg);
 
   if (vict) {
     victim = vict;
@@ -47,7 +47,7 @@ int TBeing::doHit(const char *argument, TBeing *vict)
       return FALSE;
     }
   } else {
-    if ((tmp = get_best_char_room(this, arg))) {
+    if ((tmp = get_best_char_room(this, arg.c_str()))) {
       victim = tmp; 
     } else if (fight() && isAffected(AFF_ENGAGER)) {
       victim = fight();
@@ -64,7 +64,7 @@ int TBeing::doHit(const char *argument, TBeing *vict)
 
 // if pc is already in battle but not swinging and wishes to hit-Cos 3/1/97
   if (fight() && isAffected(AFF_ENGAGER)) {
-    if (doEngagedHit(argument, victim)) {
+    if (doEngagedHit(argument.c_str(), victim)) {
 
       // remove engager after stopFighting so attackers kept up with properly
       if (fight())

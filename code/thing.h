@@ -9,7 +9,7 @@
 #define __THING_H
 
 #ifndef _STRING_H
-#include <sstring.h>
+#include <string.h>
 #endif
 
 enum thingTypeT {

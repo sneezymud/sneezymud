@@ -23,6 +23,7 @@
 #include <cctype>
 #include <cassert>
 #include <cstring>
+#include <stdarg.h>
 
 #include <cerrno>
 #include <string>
