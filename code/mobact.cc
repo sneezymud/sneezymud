@@ -980,8 +980,12 @@ int TMonster::fighterMove(TBeing &vict)
   bool offensive=FALSE;
   bool badspell=FALSE;
   spellTaskData *ts=NULL;
-  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
 
+  //this goes with disarm at the bottom
+#if 0
+  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
+#endif
+  
   if (!awake())
     return FALSE;
 
@@ -1091,11 +1095,18 @@ int TMonster::fighterMove(TBeing &vict)
   } else if (canDisarm(&vict, SILENT_YES) && 
              (getPosition() >= POSITION_CRAWLING) &&
              (vict.heldInPrimHand() || 
+// as long as disarm is the last thing they try, and there is no penalty
+//  for failing to disarm a shield (currently none, other than normal lockout)
+//  they may as well try
+#if 1
+              vict.heldInSecHand())) {
+#else
               (vict.heldInSecHand() && !secHandCloth) ||
               (secHandCloth && !secHandCloth->isShield() )||
           /// trying to account for disarm working 1/3 of time with shield
           //    don't want to keep failing and landing on ass
               (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
+#endif
     return doDisarm("", &vict);
   }
   return FALSE;
@@ -1183,7 +1194,11 @@ int TMonster::monkMove(TBeing &vict)
 
 int TMonster::thiefMove(TBeing &vict)
 {
+// this goes with disarm at the end
+#if 0
   TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
+#endif
+  
   if (!awake())
     return FALSE;
 
@@ -1201,11 +1216,18 @@ int TMonster::thiefMove(TBeing &vict)
     if (canDisarm(&vict, SILENT_YES) && 
        (getPosition() >= POSITION_STANDING) &&
        (vict.heldInPrimHand() ||
+// as long as disarm is the last thing they try, and there is no penalty
+//  for failing to disarm a shield (currently none, other than normal lockout)
+//  they may as well try
+#if 1
+              vict.heldInSecHand())) {
+#else
             (vict.heldInSecHand() && !secHandCloth) ||
             (secHandCloth && !secHandCloth->isShield() )||
         /// trying to account for disarm working 1/3 of time with shield
         //    don't want to keep failing and landing on ass
             (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
+#endif
       return doDisarm("", &vict);
     }
   }
