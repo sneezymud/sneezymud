@@ -396,9 +396,9 @@ class pracData {
     sh_int ranger;
     sh_int monk;
     sh_int bard;
-    sh_int temp;
-    sh_int temp2;
+    //    sh_int temp;
     sh_int mageThief;
+    sh_int temp2;
 
     pracData();
     pracData(const pracData &a);
