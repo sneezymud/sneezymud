@@ -397,7 +397,7 @@ void TBeing::doWho(const char *argument)
                                (ch->specials.act & ACT_POLYSELF))
                         buf = fmt("%s(%-14s) ") % buf % pers(ch);
                       else if (ch->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-                        buf = fmt("%s%-11s (???) ") % buf % pers(ch);
+                        buf = fmt("%s%-11s (??\?) ") % buf % pers(ch);
                       else
                         buf = fmt("%s%-11s (L%d) ") % buf % pers(ch) % ch->GetMaxLevel();
                     }
