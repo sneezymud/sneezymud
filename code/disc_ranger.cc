@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.cc,v $
+// Revision 1.2  1999/09/30 14:03:13  lapsos
+// Fixed a starting bug in track(deduction of moves)
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -201,6 +204,11 @@ void TBeing::doTrack(const char *argument)
       sprintf(buf2, "enter %s", buf);
       addCommandToQue(buf2);
   }
+
+  bool isTR = affectedBySpell(SPELL_TRAIL_SEEK);
+
+  addToWait(combatRound(1));
+  addToMove((int) min(10, (-2-((110-getSkillValue((isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK))))/6)));
 
   start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code+1, 40);
 }
