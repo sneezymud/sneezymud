@@ -173,6 +173,15 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	  ch->sendTo("That poll isn't open for voting.\n\r");
 	  return true;
 	}
+
+	db.query("select 1 from poll_option where poll_id=%i and option_id=%i",
+		 poll_id, option_id);
+
+	if(!db.fetchRow()){
+	  ch->sendTo("That doesn't seem to be an option in that poll.\n\r");
+	  return true;
+	}
+
 	
 	db.query("insert into poll_vote values ('%s', %i, %i)",
 		 ch->desc->account->name, poll_id, option_id);
