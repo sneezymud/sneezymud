@@ -338,7 +338,11 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return;
   }
   if (shop_producing(this, shop_nr)) {
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    if(shopOwned(shop_nr))
+      chr = 0;
+    else 
+      chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
@@ -346,9 +350,6 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
           chr += 1;
     }
     chr = min(18,chr);
-
-    if(shopOwned(shop_nr))
-      chr=-1;
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -397,7 +398,11 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     strcpy(argm, name);
 
     add_bars(argm);
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    if(shopOwned(shop_nr))
+      chr=1;
+    else
+      chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
@@ -405,9 +410,6 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
           chr += 1;
     }
     chr = min(18,chr);
-
-    if(shopOwned(shop_nr))
-      chr=-1;
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -565,7 +567,11 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (sellMeCheck(ch, keeper))
     return;
 
-  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  if(shopOwned(shop_nr))
+    chr=-1;
+  else
+    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+
   if (ch->doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
     for (j = 0; j < 5; j++)
@@ -574,8 +580,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   }
   chr = min(18,chr);
 
-  if(shopOwned(shop_nr))
-    chr=-1;
 
   cost = sellPrice(shop_nr, chr, &discount);
 
@@ -636,6 +640,8 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
 
 
   if (shop_producing(this, shop_nr)) {
+    // unlimited item, so we just get the value of the item in talens
+    keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
     delete this;
   }
 #if NO_DAMAGED_ITEMS_SHOP
@@ -1078,13 +1084,13 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
-  // do not adjust for swindle on valueing, give them worst case price
-  chr = min(18,chr);
-
   if(shopOwned(shop_nr))
     chr=-1;
+  else
+    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
 
+  // do not adjust for swindle on valueing, give them worst case price
+  chr = min(18,chr);
 
   cost = sellPrice(shop_nr, chr, &discount);
 
@@ -1525,7 +1531,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
           continue;
         }
         // pawn shop shouldn't junk
-        if (shop_index[shop_nr].in_room != 562) {
+        if (shop_index[shop_nr].in_room != 562 || shopOwned(shop_nr)) {
           keeper->doSay("How did I get this piece of junk?!?!");
           rc = keeper->doJunk("", i);
           // doJunk might fail (cursed, etc), delete regardless
@@ -1835,7 +1841,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       TObj * obj = dynamic_cast<TObj *>(t);
       if (!obj)
         continue;
-      if (!::number(0,99) && !shop_producing(obj, shop_nr)) {
+      if (!::number(0,99) && !shop_producing(obj, shop_nr) &&
+	  !shopOwned(shop_nr)) {
         // random recycling
         delete obj;
         continue;
@@ -1848,7 +1855,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 #else
       // this keeps ithe fixing limited by depreciation
       if (obj->getMaxStructPoints() >= 0 &&
-          obj->getStructPoints() < obj->maxFix(NULL, DEPRECIATION_YES)) {
+          obj->getStructPoints() < obj->maxFix(NULL, DEPRECIATION_YES) &&
+	  !shopOwned(shop_nr)) {
 #endif
         obj->addToStructPoints(1);
       }
