@@ -9,7 +9,7 @@ then
   echo "Usage: $0 <start|stop>";
 elif [ "$1" = "start" ]
 then
-  pid=`ps -U $USER|grep "sneezy $PORT" | grep -v grep | cut -f2 -d' '`
+  pid=`pgrep -U peel -f "sneezy 6968"`
   if [ "$pid" == "" ]
   then
     mv -f sneezy.2 sneezy >& /dev/null
@@ -21,7 +21,7 @@ then
   fi
 elif [ "$1" = "stop" ]
 then
-  pid=`ps -U $USER|grep "sneezy $PORT" | grep -v grep | cut -f2 -d' '`
+  pid=`pgrep -U peel -f "sneezy 6968"`
   if [ "$pid" != "" ]
   then
     echo "Killing process $pid."
