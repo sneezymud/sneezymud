@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_hand_of_god.h,v $
+// Revision 5.1.1.2  2001/04/26 20:42:28  peel
+// portal changes
+//
 // Revision 5.1.1.1  1999/10/16 04:32:20  batopr
 // new branch
 //
@@ -73,8 +76,10 @@ private:
     void heroesFeast(TBeing *);
     int heroesFeast(TBeing *, int, byte, spellNumT);
 
-    void portal(TBeing *, TBeing *);
-    int portal(TBeing *, TBeing *, int, byte);
+    void portal(TBeing *, const char *);
+    int portal(TBeing *, const char *, int, byte);
+
+
 
 #endif
 
