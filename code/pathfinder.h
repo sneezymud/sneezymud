@@ -34,6 +34,18 @@ class findClutter : public TPathTarget {
 
 };
 
+// findClutter(myself) = find closest room with stuff for a janitor to pick up
+class findClutterPrison : public TPathTarget {
+ private:
+  TBeing *myself;
+
+ public:
+  findClutterPrison(TBeing *);
+  bool isTarget(int) const;
+
+};
+
+
 // findPolice() = find closest police (guard or bouncer)
 class findPolice : public TPathTarget {
  public:

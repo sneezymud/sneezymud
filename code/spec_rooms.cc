@@ -196,7 +196,46 @@ int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     
     sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
     
-    obj->logMe(NULL, "Dump nuking");
+    --(*obj);
+    *roomp += *obj;
+  }
+  return FALSE;
+}
+
+int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
+{
+  TThing *t, *t2;
+  TRoom *roomp;
+
+  if(cmd!=CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(!(roomp=real_roomp(31904))){
+    vlogf(LOG_BUG, "couldn't find sewage pipe in prisonDump!");
+    return FALSE;
+  }
+    
+
+  for (t = rp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    
+    // Only objs get nuked
+    TObj *obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+    
+    // portals should not be nuked
+    if (dynamic_cast<TPortal *>(obj))
+      continue;
+    
+    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+      continue;
+    
+    // nor should flares
+    if (obj->objVnum() == GENERIC_FLARE)
+      continue;
+    
+    sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
     
     --(*obj);
     *roomp += *obj;
@@ -2684,6 +2723,7 @@ void assign_rooms(void)
     {31781, BankVault},
     {31786, BankVault},
     {31787, BankVault},
+    {31905, prisonDump},
     {33679, SecretDoors},
     {33690, SecretDoors},
     {-1, NULL},

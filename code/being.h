@@ -1331,7 +1331,7 @@ class TBeing : public TThing {
     void putOutLightsInWater();
     spellNumT monkDamType() const;
     void openUniqueDoor(dirTypeT, doorUniqueT, const char *, const char *, const char *, const char *, const char *, const char *, const char *, const char *);
-    int doDonate();
+    int doDonate(int);
     int doMorgue();
     void doZones(sstring);
     void doZonesSingle(sstring);

@@ -45,6 +45,32 @@ bool findClutter::isTarget(int room) const
 }
 ////////////
 
+//////////// findClutterPrison
+findClutterPrison::findClutterPrison(TBeing *tb)
+{
+  myself=tb;
+}
+
+bool findClutterPrison::isTarget(int room) const
+{
+  if (room == 31905 || room > 7499 || room <7300)
+    return false;
+
+  TRoom *rp = real_roomp(room);
+
+  TThing *t;
+  for (t = rp->getStuff(); t; t = t->nextThing) {
+    TObj * obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+    if (!okForJanitor((TMonster *) myself, obj))
+      continue;
+    return true;
+  }
+  return false;
+}
+////////////
+
 // findPolice
 findPolice::findPolice(){
 }
