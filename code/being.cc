@@ -650,7 +650,7 @@ int TBeing::getPlayerID() const
   if(!isPc())
     return 0;
 
-  if(desc->playerID)
+  if(desc && desc->playerID)
     return desc->playerID;
 
   if (specials.act & ACT_POLYSELF) {
