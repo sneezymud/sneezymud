@@ -1491,7 +1491,7 @@ int TObj::updateBurning(void)
 
     dropSmoke(::number(1,5));
 
-    switch(::number(0, 3)){
+    switch(::number(0, 5)){
       case 0:
 	if(ch){
 	  act("Your $o crackles merrily as it <r>burns<1> down.",
