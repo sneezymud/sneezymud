@@ -6,6 +6,9 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "obj_note.h"
+#include "shop.h"
+#include "database.h"
+
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
 
@@ -44,6 +47,46 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
     price /= 200;
   }
 #endif
+
+  // check for shop setting
+  unsigned int shop_nr=0;
+  TDatabase db(DB_SNEEZY);
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
+  
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+  } else {
+    float profit_buy=-1;
+
+    // if the shop is player owned, we check custom pricing
+    if(shop_index[shop_nr].isOwned()){  
+      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+      if(db.fetchRow())
+	profit_buy=convertTo<float>(db["profit_buy"]);
+      
+      if(profit_buy==-1){
+	// ok, shop is owned and there is no ratio set for this specific object
+	// so check keywords
+	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+	
+	while(db.fetchRow()){
+	  if(isname(db["match"], name)){
+	    profit_buy=convertTo<float>(db["profit_buy"]);
+	    break;
+	  }
+	}
+      }
+    }
+
+    // no custom price found, so use the normal shop pricing
+    if(profit_buy == -1)
+      profit_buy=shop_index[shop_nr].profit_buy;
+
+
+    price = (int)((double) price * shop_index[shop_nr].profit_buy);
+  }
+
 
   // arbitrary maximum
   price = min(price, 5 * gsp / 2);
@@ -247,6 +290,14 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   *buyer += *fixed_obj;
   buyer->doSave(SILENT_YES);
   buyer->logItem(fixed_obj, CMD_NORTH);   // cmd indicates repair-retrieval
+
+  unsigned int shop_nr;
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
+  
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+  }
+  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), fixed_obj->getName(), tmp_cost, "repairing");
   
   // acknowledge the depreciation after all work is done
   // this way the price doesn't change during the process
@@ -535,6 +586,17 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
 
   buyer->logItem(this, CMD_REPAIR);
 
+  unsigned int shop_nr=0;
+  TDatabase db(DB_SNEEZY);
+  
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
+
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+  }
+  shoplog(shop_nr, buyer, repair, getName(), 0, "receiving");
+
+
   // we haven't really destroyed the item, repair still keeps
   // track of it.  ~TObj() will decrease number, so arbitrarily increment
   // it prior to deleting
@@ -625,6 +687,8 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
   wearSlotT j;
   roomDirData *exitp;
   TThing *t;
+  unsigned int shop_nr=0;
+
   //  TObj *o;
 
   class job_struct {
@@ -751,6 +815,15 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
 	return TRUE;
       }
       return FALSE;
+    case CMD_WHISPER:
+      for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
+
+      if (shop_nr >= shop_index.size()) {
+	vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+	return FALSE;
+      }
+      
+      return shopWhisper(buyer, repair, shop_nr, arg);
     default:
       return FALSE;
   }
