@@ -63,6 +63,8 @@ bool findClutterPrison::isTarget(int room) const
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
+    if(obj->objVnum() == 26688)
+      continue;
     if (!okForJanitor((TMonster *) myself, obj))
       continue;
     return true;
