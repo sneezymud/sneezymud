@@ -53,9 +53,9 @@ void updateStocks()
     if(shares<=0)
       continue;
 
-    if((price+pricechange) < 10.0){
+    if((price+pricechange) < ::number(1,5)){
       stockReverseSplit(ticker, pricechange);
-    } else if(price+pricechange > 100.0){
+    } else if(price+pricechange > ::number(100, 125)){
       stockSplit(ticker, pricechange);
     } else {
       db.query("update stockinfo set price=price+%f where ticker='%s'",
