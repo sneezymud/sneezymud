@@ -650,6 +650,8 @@ bool UtilMobProc(TBeing *ch)
     return TRUE;
   if (ch->rider)
     return TRUE;
+  if (ch->isShopkeeper())
+    return TRUE;
 
   return UtilProcs(ch->spec);
 }
