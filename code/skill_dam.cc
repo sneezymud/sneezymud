@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: skill_dam.cc,v $
+// Revision 1.3  1999/10/09 05:38:21  batopr
+// Added OUTSIDE_ONLY elsewhere it was needed
+//
 // Revision 1.2  1999/10/09 05:31:44  batopr
 // Added OUTDOOR_ONLY trigger for meteorswarm
 //
@@ -273,9 +276,11 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SPELL_DUST_STORM:
     case SPELL_PEBBLE_SPRAY:
-    case SPELL_TORNADO:
     case SPELL_LAVA_STREAM:
       dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_TORNADO:
+      dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05 * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_COLOR_SPRAY:
     case SPELL_ACID_BLAST:
@@ -318,11 +323,15 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_PILLAR_SALT:
     case SPELL_RAIN_BRIMSTONE:
     case SPELL_EARTHQUAKE:
-    case SPELL_CALL_LIGHTNING:
     case SPELL_SPONTANEOUS_COMBUST:
     case SPELL_FLAMESTRIKE:
-      // a 4/3 factor added here due to save cutting into damage
       dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+
+      // additionally, do faction percent modification for clerics
+      dam = (int) (dam * percModifier());
+      break;
+    case SPELL_CALL_LIGHTNING:
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
@@ -420,9 +429,12 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529, REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SPELL_ROOT_CONTROL:
-    case SPELL_STORMY_SKIES:
       // 4/3 factor added here due to save cutting into avg damage
       dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_STORMY_SKIES:
+      // 4/3 factor added here due to save cutting into avg damage
+      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_KICK_MONK:
     case SKILL_CHOP:
