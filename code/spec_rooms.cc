@@ -348,6 +348,11 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
               FactionInfo[FACT_NONE].faction_name);
         return TRUE;
       }
+      if(ch->getMoney()<money){
+	ch->sendTo("You don't have that much money.\n\r");
+	return TRUE;
+      }
+
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
       ch->sendTo("You tithe %d talen%s to the faction treasury.\n\r", money, (money == 1 ? "" : "s"));
