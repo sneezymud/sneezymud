@@ -1870,7 +1870,12 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
-  static int pulse;
+  static unsigned int pulse;
+  TBeing *mob, *boss;
+  int i=0;
+  bool found=false;
+  Descriptor *d;
+  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,-1};
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -1879,6 +1884,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(pulse%180)
     return FALSE;
 
+  // first, let's close entrance doors
   rp=real_roomp(31764);
 
   if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
@@ -1899,6 +1905,10 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     rp->sendTo("The door to the south swings closed.\n\r");
     SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
   }
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_LOCKED)){
+    rp->sendTo("The door to the south locks with an audible *click*.\n\r");
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_LOCKED);
+  }
 
   rp=real_roomp(31758);
   if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
@@ -1906,25 +1916,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
   }
 
-  return TRUE;
-}
-
-int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
-{
-  TBeing *mob, *boss;
-  int i=0;
-  bool found=false;
-  static unsigned int pulse;
-  Descriptor *d;
-  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,-1};
-  
-  if(cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-
-  ++pulse;
-  if(pulse%180)
-    return FALSE;
-
+  // now search for people in the zone and smite'em
   for (d = descriptor_list; d ; d = d->next){
     if (!d->connected && d->character && d->character->roomp &&
 	d->character->roomp->getZoneNum() == rp->getZoneNum() &&
@@ -1957,6 +1949,7 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       SET_BIT(mob->specials.affectedBy, AFF_GROUP);
     }
   }
+
 
 
   return TRUE;
@@ -2630,7 +2623,6 @@ void assign_rooms(void)
     {31756, bank},
     {31759, bank},
     {31764, BankMainEntrance},
-    {31784, BankTeleporter},
     {31774, BankVault},
     {31775, BankVault},
     {31780, BankVault},
