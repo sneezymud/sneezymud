@@ -594,7 +594,7 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
       (item.item_number >= 9600 && item.item_number <= 9611) || //whale
       (item.item_number == 9624) || // whale hood
       (item.item_number == 27109) || // hawk ring
-      (item.item_number >= 10490 && item.item_number <= 10062) || //emerald
+      (item.item_number >= 10049 && item.item_number <= 10062) || //emerald
       (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
       (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
       (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
@@ -4525,7 +4525,6 @@ void TBeing::doClone(const sstring &arg)
   }
 
   // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
-  SET_BIT(mob->specials.act, ACT_POLYSELF);  
   
   sendTo("Your clone appears before you.\n\r");
   return;

@@ -461,7 +461,7 @@ int TMonster::aiSocialSwitch (TBeing *doer,TBeing *other, cmdTypeT cmd, aiTarg c
   int rc = 0;
 
    // added pc check so that poly and switched into mobs dont ai -Cos
-  if (isPc() || desc)
+  if (isPc() || desc || isname("[clone]", name))
     return FALSE;
 
   if (!canSee(doer))
