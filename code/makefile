@@ -155,7 +155,7 @@ LDFLAGS +=-lpq
 
 # this is a list of objects to be compiled and linked
 # just add new ones to the bottom
-OBJ =	actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
+LIBMISC=actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	alignment_deity.o ansi.o being.o game_blackjack.o body.o \
 	breath.o bwiz.o game_cards.o client.o colorstring.o \
 	color.o \
@@ -185,9 +185,9 @@ OBJ =	actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	talk.o task.o    \
 	    thing.o \
 	toggle.o trap.o  utility.o weather.o \
-	sys_loot.o wiz_data.o wiz_powers.o timing.o shopowned.o 
+	sys_loot.o wiz_data.o wiz_powers.o timing.o shopowned.o
 
-OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
+LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
 LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_appliedsub.o	obj_keyring.o		\
@@ -303,7 +303,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
-LIBS = libcmd.so libspec.so libobj.so libtask.so libdisc.so
+LIBS = libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so
 LIBS := $(sort $(addprefix $(OBJDIR), $(LIBS)))
 
 ifdef USEINSURE
@@ -316,17 +316,17 @@ all: $(LIBS) $(NAME)
 endif
 
 # normal executable
-$(NAME) : $(OBJ)
+$(NAME) : $(OBJDIR)main.o
 	@echo \*\*\* Making Final Link: $(NAME)
-	@$(CC) -fPIC -o $(NAME) $(OBJ) $(LIBS) $(LDFLAGS)
+	@$(CC) -fPIC -o $(NAME) $(OBJDIR)main.o $(LIBS) $(LDFLAGS)
 	@rm -f $(VERSION_FILE)
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Make Process Complete
 	@echo "`date`"
 
-$(NAME2) : $(OBJ)
+$(NAME2) : main.o
 	@echo \*\*\* Making Final Link: $(NAME2)
-	@$(CC) -o $(NAME2) $(OBJ) $(LDFLAGS)
+	@$(CC) -o $(NAME2) $(OBJDIR)main.o $(LDFLAGS)
 	@rm -f $(VERSION_FILE)
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Insure Compile Process Complete
@@ -334,6 +334,10 @@ $(NAME2) : $(OBJ)
 
 
 ### these are our dynamic libraries
+$(OBJDIR)libmisc.so:	$(LIBMISC)
+	@echo Making library: libmisc.so
+	@$(CC) -fPIC -shared -o $(OBJDIR)libmisc.so $(LIBMISC) $(LDFLAGS) 
+
 $(OBJDIR)libobj.so:	$(LIBOBJ)
 	@echo Making library: libobj.so
 	@$(CC) -fPIC -shared -o $(OBJDIR)libobj.so $(LIBOBJ) $(LDFLAGS) 
@@ -355,17 +359,10 @@ $(OBJDIR)libspec.so:	$(LIBSPEC)
 	@$(CC) -fPIC -shared -o $(OBJDIR)libspec.so $(LIBSPEC) $(LDFLAGS)
 ###
 
-
-# object file with utility functions for the low tools
-lowlib: objs/lowtools.o $(OBJ)
-	@echo Making \"comm.cc\" for lowtools
-	@$(CC) -DLOWTOOLS -c comm.cc -o objs/comm.o
-	@touch comm.cc
-
 # low tool
-sqladdobjs: objs/sqladdobjs.o lowlib
+sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqladdobjs
-	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(OBJ) $(LDFLAGS)
+	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqladdobjs
 
 # make all low tools
