@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_physical.h,v $
+// Revision 5.1.1.2  2000/10/26 05:43:34  jesus
+// dual wield for warriors
+//
 // Revision 5.1.1.1  1999/10/16 04:32:20  batopr
 // new branch
 //
@@ -25,6 +28,7 @@ class CDPhysical : public CDiscipline
 {
 public:
     CSkill skDoorbash;
+    CSkill skDualWieldWarrior;
     CSkill skDeathstroke;
 
     CDPhysical();
