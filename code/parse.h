@@ -256,7 +256,6 @@ enum cmdTypeT {
      CMD_DEPOSIT,
      CMD_WITHDRAW,
      CMD_BALANCE,
-     CMD_NOHASSLE,
      CMD_SYSTEM,
      CMD_PULL,
      CMD_EDIT,

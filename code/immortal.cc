@@ -297,9 +297,6 @@ void TPerson::doToggle(const char *arg2)
 
     sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
-
-
-
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
     sendTo(COLOR_BASIC, "Screensize        : <G>%-3i<1>    |    ", desc->screen_size);
@@ -323,8 +320,9 @@ void TPerson::doToggle(const char *arg2)
     
     sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
     
-    sendTo(COLOR_BASIC, "Stealth Mode      : %s\n\r", on_or_off(isPlayerAction(PLR_STEALTH)));
+    sendTo(COLOR_BASIC, "Stealth Mode      : %s    |    ", on_or_off(isPlayerAction(PLR_STEALTH)));
 
+    sendTo(COLOR_BASIC, "No Hassle         : %s\n\r", on_or_off(isPlayerAction(PLR_NOHASSLE)));
 
 
     if (hasWizPower(POWER_TOGGLE)){
@@ -358,6 +356,29 @@ void TPerson::doToggle(const char *arg2)
     }      
 
     return;
+
+
+
+  } else if(is_abbrev(arg, "nohassle")){
+    TBeing *vict;
+    TObj *dummy;
+
+    if (!*arg2){
+      if (isPlayerAction(PLR_NOHASSLE)) {
+	sendTo("You can now be hassled again.\n\r");
+	remPlayerAction(PLR_NOHASSLE);
+      } else {
+	sendTo("From now on, you won't be hassled.\n\r");
+	addPlayerAction(PLR_NOHASSLE);
+      }
+    } else if (!generic_find(arg2, FIND_CHAR_WORLD, this, &vict, &dummy)){
+      sendTo("Couldn't find any such creature.\n\r");
+    } else if (dynamic_cast<TMonster *>(vict)) {
+      sendTo("Can't do that to a beast.\n\r");
+    } else if (vict->GetMaxLevel() > GetMaxLevel()) {
+      act("$E might object to that.. better not.", 0, this, 0, vict, TO_CHAR);
+    } else
+      sendTo("The implementor won't let you set this on mortals...\n\r");
   } else if(is_abbrev(arg, "stealth")){
     if (isPlayerAction(PLR_STEALTH)) {
       sendTo("STEALTH mode OFF.\n\r");
@@ -3915,36 +3936,6 @@ void TBeing::doNoshout(const char *argument)
     sendTo("Mortal noshout syntax : noshout (no argument)\n\r");
     return;
   }
-}
-
-void TBeing::doNohassle(const char *)
-{
-  return;
-}
-
-void TPerson::doNohassle(const char *argument)
-{
-  TBeing *vict;
-  TObj *dummy;
-  char buf[256];
-
-  only_argument(argument, buf);
-
-  if (!*buf)
-    if (isPlayerAction(PLR_NOHASSLE)) {
-      sendTo("You can now be hassled again.\n\r");
-      remPlayerAction(PLR_NOHASSLE);
-    } else {
-      sendTo("From now on, you won't be hassled.\n\r");
-      addPlayerAction(PLR_NOHASSLE);
-  } else if (!generic_find(argument, FIND_CHAR_WORLD, this, &vict, &dummy))
-    sendTo("Couldn't find any such creature.\n\r");
-  else if (dynamic_cast<TMonster *>(vict))
-    sendTo("Can't do that to a beast.\n\r");
-  else if (vict->GetMaxLevel() > GetMaxLevel())
-    act("$E might object to that.. better not.", 0, this, 0, vict, TO_CHAR);
-  else
-    sendTo("The implementor won't let you set this on mortals...\n\r");
 }
 
 void TBeing::doDeathcheck(const char *arg)

@@ -1472,7 +1472,6 @@ class TBeing : public TThing {
     void doPrompt(const char *);
     virtual void doPurge(const char *);
     virtual void doSet(const char *);
-    virtual void doNohassle(const char *);
     int backstabHit(TBeing *, TThing *);
     int throatSlitHit(TBeing *, TThing *);
     int critFailureChance(TBeing *, TThing *, spellNumT);

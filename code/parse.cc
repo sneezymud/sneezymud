@@ -1032,9 +1032,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_BREATH:
           doBreath(newarg);
           break;
-        case CMD_NOHASSLE:
-          doNohassle(newarg);
-          break;
         case CMD_CHANGE:
           doChange(newarg);
           break;
@@ -2571,7 +2568,6 @@ void buildCommandArray(void)
   commandArray[CMD_DEPOSIT] = new commandInfo("deposit", POSITION_RESTING, 0);
   commandArray[CMD_WITHDRAW] = new commandInfo("withdraw", POSITION_RESTING, 0);
   commandArray[CMD_BALANCE] = new commandInfo("balance", POSITION_RESTING, 0);
-  commandArray[CMD_NOHASSLE] = new commandInfo("nohassle", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SYSTEM]=new commandInfo("system", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PULL] = new commandInfo("pull", POSITION_CRAWLING, 0);
   commandArray[CMD_EDIT] = new commandInfo("edit", POSITION_DEAD, 0);

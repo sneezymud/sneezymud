@@ -101,7 +101,6 @@ class TPerson : public TBeing {
     virtual void doLoad(const char *);
     virtual void doCutlink(const char *);
     virtual void doPurge(const char *);
-    virtual void doNohassle(const char *);
     virtual short int manaLimit() const;
     virtual short int hitLimit() const;
     virtual void setMaxHit(int);
