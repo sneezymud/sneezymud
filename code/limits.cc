@@ -1269,6 +1269,9 @@ void TBeing::classSpecificStuff()
     //    value = value * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
     value *= getSpeMod();
 
+    if (doesKnowSkill(SKILL_ADVANCED_KICKING))
+      value += getSkillValue(SKILL_ADVANCED_KICKING) / 100.0;
+
     // give at least 1 hit per hand
     // reverse engineering, we realize 2.0 comes around L7.8 = 26%barehand
     // so this is also a newbie normalization
