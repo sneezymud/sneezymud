@@ -330,7 +330,8 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (victim->roomp->isRoomFlag(ROOM_ARENA)) {
+  if (victim->roomp->isRoomFlag(ROOM_ARENA) ||
+      victim->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
     caster->sendTo("You can't recall from here!\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
