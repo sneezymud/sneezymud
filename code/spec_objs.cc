@@ -6146,7 +6146,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     if(db.fetchRow()){
       float pounds=0.0;
 
-      if(db.getColumn(0)){
+      if(db.getColumn(0) && *(db.getColumn(0))){
 	pounds=convertTo<float>(db.getColumn(0));
 	score=(int)(pounds/10000.0);
       }
