@@ -73,7 +73,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
 
       if (!strcasecmp(tStBuffer.c_str(), "start")) {
         if (!(tRoom->act_ptr = new SSTControl())) {
-          vlogf(0, "Unable to allocate new SSTControl structure");
+          vlogf(LOG_PROC, "Unable to allocate new SSTControl structure");
           return FALSE;
         }
 
@@ -103,7 +103,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
             TObj *tStaff = read_object(SLEEPTAG_STAFF, VIRTUAL);
 
             if (!tNRoom || !tRoom) {
-              vlogf(0, "Serious problems in Sleeptag.  [0: %d/%d]", !tNRoom, !tStaff);
+              vlogf(LOG_PROC, "Serious problems in Sleeptag.  [0: %d/%d]", !tNRoom, !tStaff);
               return FALSE;
             }
 
@@ -242,7 +242,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
                 *tRP += *tPerson;
                 tPerson->affectFrom(SPELL_SLUMBER);
               } else
-                vlogf(0, "Unable to load room %d for sleeptag move!", SLEEPTAG_CONTROL_ROOM);
+                vlogf(LOG_PROC, "Unable to load room %d for sleeptag move!", SLEEPTAG_CONTROL_ROOM);
 
             sleepTagReport(tRoom->getZone(), "%s has lost this game...", tPerson->getName());
           } else {

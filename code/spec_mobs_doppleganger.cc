@@ -111,21 +111,21 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
   switch (cmd) {
     case CMD_GENERIC_CREATED:
       if (tMyself->act_ptr) {
-        vlogf(1, "%s created with action pointer already existing.\n\r", tMyself->getName());
+        vlogf(LOG_PROG, "%s created with action pointer already existing.\n\r", tMyself->getName());
         return FALSE;
       }
 
       if (!(tMyself->act_ptr = new mimicStructure())) {
-        vlogf(10, "Failed allocation of new Mimic proc.");
+        vlogf(LOG_PROC, "Failed allocation of new Mimic proc.");
         return FALSE;
       }
 
-      vlogf(1, "Mimic: Created");
+      vlogf(LOG_LAPSOS, "Mimic: Created");
 
       tJob = static_cast<mimicStructure *>(tMyself->act_ptr);
       tJob->tName    = tMyself->getName();
       tJob->tShort   = tMyself->shortDescr;
-      tJob->tLong    = tMyself->player.longDescr;
+      tJob->tLong    = tMyself->player.getLongDesc();
       tJob->tDesc    = tMyself->getDescr();
       tJob->tAssumed = "";
 
@@ -136,7 +136,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
         tMyself->act_ptr = NULL;
       }
 
-      vlogf(1, "Mimic: Deleted");
+      vlogf(LOG_LAPSOS, "Mimic: Deleted");
 
       break;
     case CMD_MOB_MOVED_INTO_ROOM:
@@ -162,7 +162,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
         }
       }
 
-      vlogf(1, "Mimic: Moved");
+      vlogf(LOG_LAPSOS, "Mimic: Moved");
 
       break;
     case CMD_GENERIC_PULSE:
@@ -178,7 +178,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
             tMyself->shortDescr = mud_str_dup(tSucker->shortDescr);
 
             delete [] tMyself->player.longDescr;
-            tMyself->player.longDescr = mud_str_dup(tSucker->player.longDescr);
+            tMyself->player.getLongDesc() = mud_str_dup(tSucker->player.getLongDesc);
 
             delete [] tMyself->descr;
             tMyself->descr = mud_str_dup(tSucker->descr);

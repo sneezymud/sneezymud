@@ -99,7 +99,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
         return TRUE;
       }
 
-    vlogf(1, "earthquake_digger had a problem, tell a coder.");
+    vlogf(LOG_BUG, "earthquake_digger had a problem, tell a coder.");
   }
 
   return FALSE;
