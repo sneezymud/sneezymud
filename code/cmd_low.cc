@@ -826,18 +826,38 @@ void TObj::checkObjStats()
             getName() % objVnum() % *s);
     }
   }
+
   if (strlen(getName()) > MAX_NAME_LENGTH-1) {
     vlogf(LOG_LOW, fmt("%s (%d) had excessive obj name length.") % 
          getName() % objVnum());
   }
+
+  sstring a=stripColorCodes(shortDescr);
+  bool found=false;
   
+  for(int i=0;a.word(i)!="";++i){
+    if(isname(a.word(i), name)){
+      found=true;
+      break;
+    }
+  }
+  if(!found){
+    vlogf(LOG_LOW, fmt("Item '%s' (%i) lacks appropriate name keyword (%s).") %
+	  shortDescr % objVnum() % name);
+  }
+  
+  if(sstring(name) != stripColorCodes(name)){
+    vlogf(LOG_LOW, fmt("Item '%s' (%i) has color codes in name (%s).") %
+	  shortDescr % objVnum() % name);
+  }
+
 
   if (isObjStat(ITEM_PROTOTYPE)) {
     vlogf(LOG_LOW, fmt("Item %s had a prototype flag. Get rid of it in tinyworld file!\n\rRemoving bit for object going into game.") %  getName());
     remObjStat(ITEM_PROTOTYPE);
   }
 
-  // TPool sstrings itself during constructor, so bypass this
+  // TPool strings itself during constructor, so bypass this
   if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this) && !dynamic_cast<TBaseCup *>(this)) {
     vlogf(LOG_LOW, fmt("Item %s has been set strung, fix! (%d)") %  getName() % objVnum());
     remObjStat(ITEM_STRUNG);
