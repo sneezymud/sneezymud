@@ -24,6 +24,8 @@ extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
 
 extern void saveGovMoney(const char *, int);
+extern int getGovMoney(int);
+extern void countMobWealth();
 
 const int MAX_OBJ_AFFECT = 5;
 

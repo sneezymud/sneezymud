@@ -67,6 +67,7 @@ static void bootWorld(void);
 static void bootHomes(void);
 static void renum_zone_table(void);
 static void reset_time(void);
+static void bootGovMoney(void);
 
 struct reset_q_type
 {
@@ -380,6 +381,8 @@ void bootDb(void)
 
   bootPulse("Creating Loot List.");
   sysLootBoot();
+
+  bootGovMoney();
 
   bootPulse("Resetting zones:", false);
   for (i = 0; i < zone_table.size(); i++) {
@@ -2046,6 +2049,9 @@ void zoneData::resetZone(bool bootTime)
 
             mob->createWealth();
 
+	    if(mob->spec != SPEC_SHOPKEEPER)
+	      saveGovMoney("mob load wealth", mob->getMoney());
+
             if ((mob->isNocturnal() || mob->isDiurnal()) && storageRoom)
               *storageRoom += *mob;
             else
@@ -2118,6 +2124,10 @@ void zoneData::resetZone(bool bootTime)
             mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone_nr);
 
+	    if(mob->spec != SPEC_SHOPKEEPER)
+	      saveGovMoney("mob load wealth", mob->getMoney());
+
+
 #if 1
             // Slap the mob on the born list.
             *rp << *mob;
@@ -2183,6 +2193,9 @@ void zoneData::resetZone(bool bootTime)
             *rp += *mob;
             mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone_nr);
+
+	    if(mob->spec != SPEC_SHOPKEEPER)
+	      saveGovMoney("mob load wealth", mob->getMoney());
 
 #if 1
             // Slap the mob on the born list.
@@ -2270,6 +2283,10 @@ void zoneData::resetZone(bool bootTime)
             }
             rp = real_roomp(rs.arg3);
             *rp += *mob;
+
+	    if(mob->spec != SPEC_SHOPKEEPER)
+	      saveGovMoney("mob load wealth", mob->getMoney());
+	    
 
 #if 1
             // Slap the mob on the born list.
@@ -3207,7 +3224,7 @@ int dbquery(MYSQL_RES **res, const char *dbname, const char *msg, const char *qu
 void saveGovMoney(const char *what, int talens){
   MYSQL_RES *res;
   int rc;
-  
+
   if((rc=dbquery(&res, "sneezy", "saveGovMoney", "update govmoney set talens=talens+%i where type='%s'", talens, what))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
@@ -3216,3 +3233,99 @@ void saveGovMoney(const char *what, int talens){
   }
   mysql_free_result(res);
 }
+
+int getGovMoney(int talens){
+  MYSQL_RES *res1, *res2;
+  MYSQL_ROW row;
+  int rc, amount=talens, transaction=0;
+  
+  if((rc=dbquery(&res1, "sneezy", "getGovMoney", "select type, talens from govmoney where talens>0"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in getGovMoney");
+      return 0;
+    }
+  }
+
+  while((row=mysql_fetch_row(res1)) && amount>0){
+    if(atoi(row[1]) < amount){
+      transaction=atoi(row[1]);
+    } else {
+      transaction=amount;
+    }
+
+    if((rc=dbquery(&res2, "sneezy", "getGovMoney", "update govmoney set talens=talens-%i where type='%s'", transaction, row[0]))){
+      if(rc){
+	vlogf(LOG_BUG, "Database error in getGovMoney");
+	return 0;
+      }
+    }
+    mysql_free_result(res2);
+
+    amount-=transaction;
+  }
+  mysql_free_result(res1);
+
+  return(talens-amount);
+}
+
+void countMobWealth(){
+  MYSQL_RES *res;
+  int rc;
+  int wealth=0;
+
+  for (TBeing *tmp_ch = character_list; tmp_ch; tmp_ch = tmp_ch->next) {
+    if(dynamic_cast<TMonster *>(tmp_ch) && 
+       tmp_ch->spec != SPEC_SHOPKEEPER){
+      wealth+=tmp_ch->getMoney();
+    }
+  }
+
+  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "replace govmoney values ('mob wealth', %i)", wealth))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  mysql_free_result(res);
+
+}  
+
+
+void bootGovMoney(){
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc;
+  int mobLoadWealth, mobWealth;
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob load wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  row=mysql_fetch_row(res);
+  mobLoadWealth=atoi(row[0]);
+
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  row=mysql_fetch_row(res);
+  mobWealth=atoi(row[0]);
+  
+
+  saveGovMoney("mob debt wealth", mobLoadWealth-mobWealth);
+
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='mob load wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+
+}
+

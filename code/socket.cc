@@ -527,6 +527,8 @@ int TSocket::gameLoop()
 	}
       }
 
+      countMobWealth();
+
       // note on this loop
       // it is possible that temp gets deleted in one of the sub funcs
       // we don't get acknowledgement of this in any way.
