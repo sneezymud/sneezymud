@@ -24,7 +24,7 @@ endif
 echo "Reviewing for changes since: '$dateTime'"
 
 if ("`whoami`" == "batopr") then
-  set rlogOpts = "-wlapsos,cosmo,peel,brutius,moath,hylidan,damescena,mithros"
+  set rlogOpts = "-wbrutius,cosmo,damescena,dolgan,gringar,hylidan,kriebly,lapsos,lothar,marsh,merc,mithros,moath,omen,peel,rixanne,satan,sidartha,sneezy,spawn,speef,stone"
 else
   set rlogOpts =
 endif
