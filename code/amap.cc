@@ -5,7 +5,10 @@
 #include<map>
 #include<vector>
 #include<ctype.h>
-#include <unistd.h>
+#include<unistd.h>
+#include<sys/stat.h>
+#include<sys/socket.h>
+#include<dirent.h>
 #include"stdsneezy.h"
 #include"lowtools.h"
 #include"parse.h"
@@ -643,7 +646,7 @@ void makezonelist(FILE *zone){
   while(1){
     // read until we get to a new zone ('#')
     while((tch=fgetc(zone))){
-      if(last=='\n'){
+      if(last=='\n' || tch=='#' || tch==EOF){
 	if(tch=='#')
 	  break;
 	if(tch==EOF)
@@ -697,7 +700,9 @@ void usage(){
 int main(int argc, char **argv)
 {
   FILE *tiny=NULL, *logf=NULL;
-  FILE *zone=fopen("/mud/backups/tinyworld.zon", "rt");
+  FILE *zone;
+  DIR *dfd=opendir("/mud/code/lib/zonefiles");
+  struct dirent *dp;
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
   vector <int> roomrange_t;
@@ -786,7 +791,14 @@ int main(int argc, char **argv)
   }
 
   printf("Making zone list.\n");
-  makezonelist(zone);
+  while ((dp = readdir(dfd))) {
+    if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")){
+      if((zone=fopen(dp->d_name, "rt"))){
+	makezonelist(zone);
+	fclose(zone);
+      }
+    }
+  }
 
   if(tiny){
     head=read_room(tiny);
