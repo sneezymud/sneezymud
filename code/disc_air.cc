@@ -10,6 +10,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
+#include "obj_magic_item.h"
 
 int gust(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
 {

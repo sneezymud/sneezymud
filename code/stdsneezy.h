@@ -66,7 +66,6 @@
 #include "thing.h"
 #include "room.h"
 #include "obj.h"
-#include "obj2.h"
 #include "connect.h"
 //#include "being.h"
 #include "charfile.h"

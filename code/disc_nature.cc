@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_nature.h"
+#include "obj_magic_item.h"
 
 struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] =
 {

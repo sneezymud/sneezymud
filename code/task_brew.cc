@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_potion.h"
 
 int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {

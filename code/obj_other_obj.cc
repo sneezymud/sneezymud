@@ -1,6 +1,7 @@
 // other_obj.cc
 
 #include "stdsneezy.h"
+#include "obj_other_obj.h"
 
 TOtherObj::TOtherObj() :
   TObj()

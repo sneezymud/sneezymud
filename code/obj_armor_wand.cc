@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_armor_wand.cc,v $
+// Revision 5.2  2002/01/12 01:53:24  peel
+// removed the remaining class definitions from obj2.h
+// obj2.h is no more!
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -20,6 +27,7 @@
 //
 
 #include "stdsneezy.h"
+#include "obj_armor_wand.h"
 
 TArmorWand::TArmorWand() :
   TArmor(),

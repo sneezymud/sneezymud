@@ -15,6 +15,8 @@
 #include "obj_component.h"
 #include "obj_opal.h"
 #include "obj_component.h"
+#include "obj_magic_item.h"
+#include "obj_scroll.h"
 
 int identify(TBeing *caster, TObj *obj, int, byte bKnown)
 {

@@ -2,6 +2,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_afflictions.h"
+#include "obj_magic_item.h"
 
 // returns DELETE_VICT
 static int injureLimbs(TBeing *ch, TBeing *victim, spellNumT skill, int level, int adv_learn)

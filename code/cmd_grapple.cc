@@ -2,19 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_grapple.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_base_clothing.h"
 
 static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
 {
@@ -23,6 +16,10 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
   int rc;
   int bKnown;
   int grapple_move = 25 + ::number(1,10);
+
+  TThing *obj = NULL;
+  TBaseClothing *tbc = NULL;
+  int suitDam = 0;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
@@ -121,6 +118,22 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
       if (victim->fight())
         victim->stopFighting();
 #endif
+
+      // if eqipment worn on body is spiked, add a little extra 10-20-00, -dash
+      if (((obj = c->equipment[WEAR_BODY]) &&
+	   (tbc = dynamic_cast<TBaseClothing *>(obj)) &&
+	   (tbc->isSpiked()||tbc->isObjStat(ITEM_SPIKED)))) {
+	suitDam = (int)((tbc->getWeight()/10) + 1);
+
+	act("The spikes on your $o sink into $N.", FALSE, c, tbc, victim, TO_CHAR);
+	act("The spikes on $n's $o sink into $N.", FALSE, c, tbc, victim, TO_NOTVICT);
+	act("The spikes on $n's $o sink into you.", FALSE, c, tbc, victim, TO_VICT);
+
+	if (c->reconcileDamage(victim, suitDam, TYPE_STAB) == -1)
+	  return DELETE_VICT;
+
+      }
+
       rc = c->crashLanding(POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return rc;
@@ -148,7 +161,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
                 TRUE, c, 0, victim, TO_CHAR);
             act("$n now turns $s attention to $N!", 
                 TRUE, c, 0, victim, TO_NOTVICT);
-            act("$n has turned $s attention to You!", 
+            act("$n has turned $s attention to you!", 
                 TRUE, c, 0, victim, TO_VICT);
           }
           c->stopFighting();
@@ -163,11 +176,11 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
               TRUE, c, 0, victim, TO_CHAR);
           act("$n now turns $s attention to $N!",
               TRUE, c, 0, victim, TO_NOTVICT);
-          act("$n has turned $s attention to You!",
+          act("$n has turned $s attention to you!",
               TRUE, c, 0, victim, TO_VICT);
         }
         if (victim->fight() && (victim->fight() != c)) {
-          act("$N now turns $S attention to You!", 
+          act("$N now turns $S attention to you!", 
               TRUE, c, 0, victim, TO_CHAR);
           act("$N now turns $S attention to $n!", 
               TRUE, c, 0, victim, TO_NOTVICT);
@@ -243,13 +256,13 @@ int TBeing::doGrapple(const char *argument, TBeing *vict)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = grapple(this, victim, skill);
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -259,4 +272,7 @@ int TBeing::doGrapple(const char *argument, TBeing *vict)
   }
   return rc;
 }
+
+
+
 

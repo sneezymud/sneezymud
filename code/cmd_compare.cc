@@ -16,6 +16,7 @@
 #include "obj_arrow.h"
 #include "obj_base_weapon.h"
 #include "obj_base_light.h"
+#include "obj_base_clothing.h"
 
 TObj * findShopObjForCompare(TBeing *ch, string StObject)
 {

@@ -5,6 +5,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_wrath.h"
+#include "obj_magic_item.h"
 
 int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {

@@ -4,6 +4,7 @@
 #include "disc_cures.h"
 #include "spelltask.h"
 #include "statistics.h"
+#include "obj_magic_item.h"
 
 static void repHealing(TBeing *caster, TBeing *victim)
 {

@@ -3,6 +3,11 @@
 
 #include "sys_loot.h"
 #include "obj_money.h"
+#include "obj_magic_item.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
+#include "obj_staff.h"
+#include "obj_wand.h"
 
 TLootStructure * tLoot;
 

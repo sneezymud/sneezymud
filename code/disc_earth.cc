@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_earth.h"
+#include "obj_magic_item.h"
 
 int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
 {

@@ -69,7 +69,9 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_drinkcon.h"
-
+#include "obj_potion.h"
+#include "obj_staff.h"
+#include "obj_wand.h"
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
 // returns DELETE_ITEM if t2 goes bye bye

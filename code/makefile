@@ -283,7 +283,7 @@ depend:
 	makedepend -I/usr/include/g++-3/ -p$(OBJDIR) -- $(CFLAGS) -- *.cc 
 
 GEN_HEADS    = structs.h obj.h thing.h being.h body.h room.h person.h \
-               monster.h client.h low.h obj2.h trap.h mobAI.h weather.h \
+               monster.h client.h low.h trap.h mobAI.h weather.h \
                extern.h parse.h faction.h handler.h spells.h disease.h \
                spell2.h response.h db.h connect.h comm.h rent.h spec_objs.h \
                stdsneezy.h account.h spec_mobs.h spec_rooms.h discipline.h \
@@ -374,9 +374,9 @@ objs/actions.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/actions.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/actions.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/actions.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/actions.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/actions.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/actions.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_pool.h
+objs/actions.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/actions.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/actions.o: spec_mobs.h spec_rooms.h materials.h obj_pool.h
 objs/actions.o: obj_base_cup.h
 objs/ai_commands.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/ai_commands.o: /usr/include/stdio.h /usr/include/features.h
@@ -433,7 +433,7 @@ objs/ai_commands.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/ai_commands.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/ai_commands.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/ai_commands.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/ai_commands.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/ai_commands.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/ai_commands.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/ai_commands.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/ai_commands.o: materials.h combat.h
@@ -492,8 +492,8 @@ objs/ai_reactions.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/ai_reactions.o: client.h response.h faction.h comm.h spec_objs.h
 objs/ai_reactions.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/ai_reactions.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/ai_reactions.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/ai_reactions.o: connect.h charfile.h being.h person.h monster.h
+objs/ai_reactions.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/ai_reactions.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/ai_reactions.o: account.h extern.h handler.h obj_money.h rent.h
 objs/ai_reactions.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/ai_responses.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -551,8 +551,8 @@ objs/ai_responses.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/ai_responses.o: client.h response.h faction.h comm.h spec_objs.h
 objs/ai_responses.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/ai_responses.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/ai_responses.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/ai_responses.o: connect.h charfile.h being.h person.h monster.h
+objs/ai_responses.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/ai_responses.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/ai_responses.o: account.h extern.h handler.h obj_money.h rent.h
 objs/ai_responses.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/ai_responses.o: obj_symbol.h
@@ -609,7 +609,7 @@ objs/ai_utility.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/ai_utility.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/ai_utility.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/ai_utility.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/ai_utility.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/ai_utility.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/ai_utility.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/ai_utility.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/ai_utility.o: materials.h combat.h
@@ -670,9 +670,9 @@ objs/alignment_deity.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/alignment_deity.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/alignment_deity.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/alignment_deity.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/alignment_deity.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/alignment_deity.o: being.h person.h monster.h account.h extern.h
-objs/alignment_deity.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/alignment_deity.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/alignment_deity.o: person.h monster.h account.h extern.h handler.h
+objs/alignment_deity.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/alignment_deity.o: materials.h
 objs/ansi.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/ansi.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -719,9 +719,9 @@ objs/ansi.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/ansi.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/ansi.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/ansi.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/ansi.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/ansi.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/ansi.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/ansi.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/ansi.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/ansi.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/ansi.o: materials.h
 objs/being.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/being.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -768,10 +768,10 @@ objs/being.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/being.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/being.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/being.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/being.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/being.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/being.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/being.o: spec_rooms.h materials.h
+objs/being.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/being.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/being.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/being.o: materials.h
 objs/body.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/body.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/body.o: /usr/include/gnu/stubs.h
@@ -817,9 +817,9 @@ objs/body.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/body.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/body.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/body.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/body.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/body.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/body.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/body.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/body.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/body.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/body.o: materials.h /usr/include/g++-3/fstream.h
 objs/breath.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/breath.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -869,9 +869,9 @@ objs/breath.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/breath.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/breath.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/breath.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/breath.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/breath.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/breath.o: spec_mobs.h spec_rooms.h materials.h
+objs/breath.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/breath.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/breath.o: spec_rooms.h materials.h
 objs/bwiz.o: /usr/include/stdio.h /usr/include/features.h
 objs/bwiz.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/bwiz.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
@@ -918,9 +918,9 @@ objs/bwiz.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/bwiz.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/bwiz.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/bwiz.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/bwiz.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/bwiz.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/bwiz.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/bwiz.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/bwiz.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/bwiz.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/bwiz.o: materials.h
 objs/client.o: /usr/include/g++-3/cstdarg
 objs/client.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
@@ -973,9 +973,9 @@ objs/client.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/client.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/client.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/client.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/client.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/client.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/client.o: spec_mobs.h spec_rooms.h materials.h statistics.h combat.h
+objs/client.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/client.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/client.o: spec_rooms.h materials.h statistics.h combat.h
 objs/cmd_attribute.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_attribute.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_attribute.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1031,8 +1031,8 @@ objs/cmd_attribute.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_attribute.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_attribute.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_attribute.o: body.h race.h skills.h disease.h trap.h task.h
-objs/cmd_attribute.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/cmd_attribute.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/cmd_attribute.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_attribute.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/cmd_attribute.o: monster.h account.h extern.h handler.h obj_money.h
 objs/cmd_attribute.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_bash.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -1084,10 +1084,10 @@ objs/cmd_bash.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_bash.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_bash.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_bash.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_bash.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_bash.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_bash.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_bash.o: combat.h
+objs/cmd_bash.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_bash.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_bash.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
+objs/cmd_bash.o: obj_base_clothing.h
 objs/cmd_bodyslam.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_bodyslam.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_bodyslam.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1143,8 +1143,8 @@ objs/cmd_bodyslam.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_bodyslam.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_bodyslam.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_bodyslam.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_bodyslam.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_bodyslam.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_bodyslam.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_bodyslam.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_bodyslam.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_bodyslam.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_charge.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -1200,7 +1200,7 @@ objs/cmd_charge.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_charge.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_charge.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_charge.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_charge.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_charge.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_charge.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_charge.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_charge.o: materials.h combat.h
@@ -1253,10 +1253,10 @@ objs/cmd_chop.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_chop.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_chop.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_chop.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_chop.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_chop.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_chop.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_chop.o: combat.h disc_monk.h
+objs/cmd_chop.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_chop.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_chop.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
+objs/cmd_chop.o: disc_monk.h
 objs/cmd_compare.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_compare.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_compare.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1312,11 +1312,12 @@ objs/cmd_compare.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_compare.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_compare.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_compare.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_compare.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_compare.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_compare.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_compare.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_compare.o: materials.h shop.h obj_bow.h obj_symbol.h obj_food.h
 objs/cmd_compare.o: obj_opal.h obj_arrow.h obj_base_weapon.h obj_base_light.h
+objs/cmd_compare.o: obj_base_clothing.h
 objs/cmd_consider.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_consider.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_consider.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1375,8 +1376,8 @@ objs/cmd_consider.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_consider.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_consider.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_consider.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_consider.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_consider.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_consider.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_consider.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_consider.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_consider.o: spec_mobs.h spec_rooms.h materials.h cmd_trophy.h
 objs/cmd_deathstroke.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -1436,9 +1437,9 @@ objs/cmd_deathstroke.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_deathstroke.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/cmd_deathstroke.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/cmd_deathstroke.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_deathstroke.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_deathstroke.o: being.h person.h monster.h account.h extern.h
-objs/cmd_deathstroke.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/cmd_deathstroke.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_deathstroke.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_deathstroke.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_deathstroke.o: materials.h combat.h obj_base_weapon.h
 objs/cmd_disarm.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_disarm.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -1493,7 +1494,7 @@ objs/cmd_disarm.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_disarm.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_disarm.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_disarm.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_disarm.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_disarm.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_disarm.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_disarm.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_disarm.o: materials.h combat.h
@@ -1552,7 +1553,7 @@ objs/cmd_dissect.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_dissect.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_dissect.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_dissect.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_dissect.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_dissect.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_dissect.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_dissect.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_dissect.o: materials.h obj_component.h disc_adventuring.h
@@ -1612,8 +1613,8 @@ objs/cmd_doorbash.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_doorbash.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_doorbash.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_doorbash.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_doorbash.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_doorbash.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_doorbash.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_doorbash.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_doorbash.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_doorbash.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_doorbash.o: disc_warrior.h
@@ -1672,7 +1673,7 @@ objs/cmd_egotrip.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_egotrip.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_egotrip.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_egotrip.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_egotrip.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_egotrip.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_egotrip.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_egotrip.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_egotrip.o: materials.h disc_shaman.h disc_fire.h disc_wrath.h
@@ -1733,9 +1734,9 @@ objs/cmd_feigndeath.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_feigndeath.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/cmd_feigndeath.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/cmd_feigndeath.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_feigndeath.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_feigndeath.o: being.h person.h monster.h account.h extern.h
-objs/cmd_feigndeath.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/cmd_feigndeath.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_feigndeath.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_feigndeath.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_feigndeath.o: materials.h combat.h disc_mindbody.h
 objs/cmd_get.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_get.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -1786,9 +1787,9 @@ objs/cmd_get.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_get.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/cmd_get.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/cmd_get.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_get.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/cmd_get.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/cmd_get.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
+objs/cmd_get.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/cmd_get.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/cmd_get.o: spec_mobs.h spec_rooms.h materials.h games.h
 objs/cmd_get.o: game_crazyeights.h game_drawpoker.h obj_player_corpse.h
 objs/cmd_get.o: obj_base_corpse.h obj_base_container.h obj_trap.h
 objs/cmd_get.o: obj_base_weapon.h
@@ -1847,10 +1848,10 @@ objs/cmd_grapple.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_grapple.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_grapple.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_grapple.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_grapple.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_grapple.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_grapple.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_grapple.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/cmd_grapple.o: materials.h combat.h
+objs/cmd_grapple.o: materials.h combat.h obj_base_clothing.h
 objs/cmd_headbutt.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_headbutt.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_headbutt.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1906,8 +1907,8 @@ objs/cmd_headbutt.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_headbutt.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_headbutt.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_headbutt.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_headbutt.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_headbutt.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_headbutt.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_headbutt.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_headbutt.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_headbutt.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_help.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -1959,9 +1960,9 @@ objs/cmd_help.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_help.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_help.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_help.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_help.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_help.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_help.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/cmd_help.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_help.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_help.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_help.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
 objs/cmd_help.o: /usr/include/bits/confname.h /usr/include/sys/stat.h
 objs/cmd_help.o: /usr/include/bits/stat.h /usr/include/sys/socket.h
@@ -2019,9 +2020,9 @@ objs/cmd_jump.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_jump.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_jump.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_jump.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_jump.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_jump.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_jump.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/cmd_jump.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_jump.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_jump.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_kick.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_kick.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_kick.o: /usr/include/gnu/stubs.h
@@ -2071,10 +2072,9 @@ objs/cmd_kick.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_kick.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_kick.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_kick.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_kick.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_kick.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_kick.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_kick.o: combat.h
+objs/cmd_kick.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_kick.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_kick.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_kneestrike.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_kneestrike.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_kneestrike.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2131,9 +2131,9 @@ objs/cmd_kneestrike.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_kneestrike.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/cmd_kneestrike.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/cmd_kneestrike.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_kneestrike.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_kneestrike.o: being.h person.h monster.h account.h extern.h
-objs/cmd_kneestrike.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/cmd_kneestrike.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_kneestrike.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_kneestrike.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_kneestrike.o: materials.h combat.h
 objs/cmd_look.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_look.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -2184,12 +2184,11 @@ objs/cmd_look.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_look.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_look.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_look.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_look.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_look.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_look.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_look.o: games.h game_crazyeights.h game_drawpoker.h
-objs/cmd_look.o: obj_base_corpse.h obj_base_container.h obj_table.h
-objs/cmd_look.o: obj_book.h obj_base_cup.h
+objs/cmd_look.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_look.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_look.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
+objs/cmd_look.o: game_crazyeights.h game_drawpoker.h obj_base_corpse.h
+objs/cmd_look.o: obj_base_container.h obj_table.h obj_book.h obj_base_cup.h
 objs/cmd_low.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_low.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_low.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2245,12 +2244,12 @@ objs/cmd_low.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_low.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/cmd_low.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/cmd_low.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_low.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/cmd_low.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/cmd_low.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
-objs/cmd_low.o: combat.h obj_player_corpse.h obj_base_corpse.h
-objs/cmd_low.o: obj_base_container.h obj_smoke.h obj_arrow.h
-objs/cmd_low.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
+objs/cmd_low.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/cmd_low.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/cmd_low.o: spec_mobs.h spec_rooms.h materials.h statistics.h combat.h
+objs/cmd_low.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
+objs/cmd_low.o: obj_smoke.h obj_arrow.h obj_base_weapon.h obj_pool.h
+objs/cmd_low.o: obj_base_cup.h obj_base_clothing.h obj_worn.h
 objs/cmd_mend_limb.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_mend_limb.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_mend_limb.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2306,8 +2305,8 @@ objs/cmd_mend_limb.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_mend_limb.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_mend_limb.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_mend_limb.o: body.h race.h skills.h disease.h trap.h task.h
-objs/cmd_mend_limb.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/cmd_mend_limb.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/cmd_mend_limb.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_mend_limb.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/cmd_mend_limb.o: monster.h account.h extern.h handler.h obj_money.h
 objs/cmd_mend_limb.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_message.o: /usr/include/unistd.h /usr/include/features.h
@@ -2367,7 +2366,7 @@ objs/cmd_message.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_message.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_message.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_message.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_message.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_message.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_message.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_message.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_message.o: materials.h
@@ -2427,10 +2426,9 @@ objs/cmd_news.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_news.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_news.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_news.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_news.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_news.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_news.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_news.o: statistics.h
+objs/cmd_news.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_news.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_news.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
 objs/cmd_quest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_quest.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_quest.o: /usr/include/gnu/stubs.h
@@ -2481,7 +2479,7 @@ objs/cmd_quest.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_quest.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_quest.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_quest.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_quest.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_quest.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_quest.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_quest.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_quivpalm.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -2539,8 +2537,8 @@ objs/cmd_quivpalm.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_quivpalm.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_quivpalm.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_quivpalm.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_quivpalm.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_quivpalm.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_quivpalm.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_quivpalm.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_quivpalm.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_quivpalm.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_rename.o: /usr/include/unistd.h /usr/include/features.h
@@ -2598,7 +2596,7 @@ objs/cmd_rename.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_rename.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_rename.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_rename.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_rename.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_rename.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_rename.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_rename.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_rename.o: materials.h
@@ -2655,7 +2653,7 @@ objs/cmd_rescue.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_rescue.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_rescue.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_rescue.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_rescue.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_rescue.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_rescue.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_rescue.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_rescue.o: materials.h
@@ -2708,9 +2706,9 @@ objs/cmd_save.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_save.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_save.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_save.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_save.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_save.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_save.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/cmd_save.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_save.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_save.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_score.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_score.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_score.o: /usr/include/gnu/stubs.h
@@ -2761,7 +2759,7 @@ objs/cmd_score.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_score.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_score.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_score.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_score.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_score.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_score.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_score.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_sedit.o: /usr/include/unistd.h /usr/include/features.h
@@ -2820,7 +2818,7 @@ objs/cmd_sedit.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_sedit.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_sedit.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_sedit.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_sedit.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_sedit.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_sedit.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_sedit.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_sedit.o: combat.h dirsort.h
@@ -2873,9 +2871,9 @@ objs/cmd_set.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_set.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/cmd_set.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/cmd_set.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_set.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/cmd_set.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/cmd_set.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
+objs/cmd_set.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/cmd_set.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/cmd_set.o: spec_mobs.h spec_rooms.h materials.h statistics.h
 objs/cmd_show.o: /usr/include/dirent.h /usr/include/features.h
 objs/cmd_show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/cmd_show.o: /usr/include/bits/types.h
@@ -2927,11 +2925,11 @@ objs/cmd_show.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_show.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_show.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_show.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_show.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_show.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_show.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_show.o: disc_looting.h combat.h obj_component.h disc_alchemy.h
-objs/cmd_show.o: obj_open_container.h obj_base_container.h
+objs/cmd_show.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_show.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_show.o: rent.h spec_mobs.h spec_rooms.h materials.h disc_looting.h
+objs/cmd_show.o: combat.h obj_component.h disc_alchemy.h obj_open_container.h
+objs/cmd_show.o: obj_base_container.h
 objs/cmd_spin.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_spin.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_spin.o: /usr/include/gnu/stubs.h
@@ -2981,10 +2979,9 @@ objs/cmd_spin.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_spin.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_spin.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_spin.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_spin.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_spin.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_spin.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_spin.o: combat.h
+objs/cmd_spin.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_spin.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_spin.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_stab.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_stab.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_stab.o: /usr/include/gnu/stubs.h
@@ -3034,10 +3031,10 @@ objs/cmd_stab.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_stab.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_stab.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_stab.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_stab.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_stab.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_stab.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_stab.o: combat.h obj_general_weapon.h obj_base_weapon.h obj_gun.h
+objs/cmd_stab.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_stab.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_stab.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
+objs/cmd_stab.o: obj_general_weapon.h obj_base_weapon.h obj_gun.h
 objs/cmd_stat.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_stat.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_stat.o: /usr/include/gnu/stubs.h
@@ -3087,9 +3084,9 @@ objs/cmd_stat.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_stat.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_stat.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_stat.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_stat.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/cmd_stat.o: being.h person.h monster.h account.h extern.h handler.h
-objs/cmd_stat.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/cmd_stat.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_stat.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/cmd_stat.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_steal.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_steal.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_steal.o: /usr/include/gnu/stubs.h
@@ -3140,7 +3137,7 @@ objs/cmd_steal.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_steal.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_steal.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_steal.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_steal.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_steal.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_steal.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_steal.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_steal.o: disc_looting.h obj_open_container.h obj_base_container.h
@@ -3194,7 +3191,7 @@ objs/cmd_stomp.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_stomp.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_stomp.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_stomp.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_stomp.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_stomp.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_stomp.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_stomp.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_stomp.o: combat.h
@@ -3253,11 +3250,11 @@ objs/cmd_testcode.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_testcode.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_testcode.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_testcode.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_testcode.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_testcode.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_testcode.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_testcode.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_testcode.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_testcode.o: spec_mobs.h spec_rooms.h materials.h statistics.h
-objs/cmd_testcode.o: obj_symbol.h
+objs/cmd_testcode.o: obj_symbol.h obj_base_clothing.h
 objs/cmd_testfight.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_testfight.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_testfight.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3313,8 +3310,8 @@ objs/cmd_testfight.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_testfight.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_testfight.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_testfight.o: body.h race.h skills.h disease.h trap.h task.h
-objs/cmd_testfight.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/cmd_testfight.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/cmd_testfight.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_testfight.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/cmd_testfight.o: monster.h account.h extern.h handler.h obj_money.h
 objs/cmd_testfight.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/cmd_testfight.o: spelltask.h
@@ -3371,7 +3368,7 @@ objs/cmd_trophy.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_trophy.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_trophy.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_trophy.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_trophy.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_trophy.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_trophy.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_trophy.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_trophy.o: materials.h cmd_trophy.h
@@ -3430,7 +3427,7 @@ objs/cmd_visible.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_visible.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_visible.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_visible.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/cmd_visible.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/cmd_visible.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/cmd_visible.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_visible.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_visible.o: materials.h
@@ -3483,10 +3480,10 @@ objs/cmd_who.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_who.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/cmd_who.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/cmd_who.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/cmd_who.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/cmd_who.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/cmd_who.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
-objs/cmd_who.o: games.h game_crazyeights.h game_drawpoker.h
+objs/cmd_who.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/cmd_who.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/cmd_who.o: spec_mobs.h spec_rooms.h materials.h statistics.h games.h
+objs/cmd_who.o: game_crazyeights.h game_drawpoker.h
 objs/cmd_zonefile.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_zonefile.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_zonefile.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3542,8 +3539,8 @@ objs/cmd_zonefile.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/cmd_zonefile.o: client.h response.h faction.h comm.h spec_objs.h
 objs/cmd_zonefile.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/cmd_zonefile.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_zonefile.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/cmd_zonefile.o: connect.h charfile.h being.h person.h monster.h
+objs/cmd_zonefile.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/cmd_zonefile.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/cmd_zonefile.o: account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_zonefile.o: spec_mobs.h spec_rooms.h materials.h
 objs/cmd_zones.o: /usr/include/g++-3/algorithm
@@ -3600,7 +3597,7 @@ objs/cmd_zones.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/cmd_zones.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/cmd_zones.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/cmd_zones.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/cmd_zones.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/cmd_zones.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/cmd_zones.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_zones.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/color.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -3648,10 +3645,10 @@ objs/color.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/color.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/color.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/color.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/color.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/color.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/color.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/color.o: spec_rooms.h materials.h
+objs/color.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/color.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/color.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/color.o: materials.h
 objs/colorstring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/colorstring.o: /usr/include/stdio.h /usr/include/features.h
 objs/colorstring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3707,7 +3704,7 @@ objs/colorstring.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/colorstring.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/colorstring.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/colorstring.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/colorstring.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/colorstring.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/colorstring.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/colorstring.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/colorstring.o: materials.h
@@ -3762,11 +3759,11 @@ objs/combat.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/combat.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/combat.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/combat.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/combat.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/combat.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/combat.o: spec_mobs.h spec_rooms.h materials.h range.h combat.h
-objs/combat.o: statistics.h mail.h shop.h cmd_trophy.h obj_trash.h
-objs/combat.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h obj_gun.h
+objs/combat.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/combat.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/combat.o: spec_rooms.h materials.h range.h combat.h statistics.h mail.h
+objs/combat.o: shop.h cmd_trophy.h obj_trash.h obj_arrow.h obj_base_weapon.h
+objs/combat.o: obj_general_weapon.h obj_gun.h obj_base_clothing.h
 objs/comm.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/comm.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/comm.o: /usr/include/gnu/stubs.h
@@ -3812,9 +3809,9 @@ objs/comm.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/comm.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/comm.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/comm.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/comm.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/comm.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/comm.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/comm.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/comm.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/comm.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/comm.o: materials.h systemtask.h socket.h /usr/include/g++-3/csignal
 objs/comm.o: /usr/include/signal.h /usr/include/bits/sigset.h
 objs/comm.o: /usr/include/bits/signum.h /usr/include/g++-3/cstdarg
@@ -3908,10 +3905,10 @@ objs/connect.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/connect.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/connect.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/connect.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/connect.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/connect.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/connect.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
-objs/connect.o: socket.h mail.h games.h game_crazyeights.h game_drawpoker.h
+objs/connect.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/connect.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/connect.o: spec_mobs.h spec_rooms.h materials.h statistics.h socket.h
+objs/connect.o: mail.h games.h game_crazyeights.h game_drawpoker.h
 objs/connect.o: cmd_trophy.h
 objs/constants.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/constants.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -3963,7 +3960,7 @@ objs/constants.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/constants.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/constants.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/constants.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/constants.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/constants.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/constants.o: being.h person.h monster.h account.h extern.h handler.h
 objs/constants.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/create_engine.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -4021,8 +4018,8 @@ objs/create_engine.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/create_engine.o: client.h response.h faction.h comm.h spec_objs.h
 objs/create_engine.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/create_engine.o: body.h race.h skills.h disease.h trap.h task.h
-objs/create_engine.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/create_engine.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/create_engine.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/create_engine.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/create_engine.o: monster.h account.h extern.h handler.h obj_money.h
 objs/create_engine.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/create_engine.o: create_engine.h
@@ -4084,7 +4081,7 @@ objs/create_mobs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/create_mobs.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/create_mobs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/create_mobs.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/create_mobs.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/create_mobs.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/create_mobs.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/create_mobs.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/create_mobs.o: materials.h mail.h combat.h statistics.h
@@ -4149,14 +4146,15 @@ objs/create_objs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/create_objs.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/create_objs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/create_objs.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/create_objs.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/create_objs.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/create_objs.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/create_objs.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/create_objs.o: materials.h obj_component.h dirsort.h statistics.h
 objs/create_objs.o: obj_open_container.h obj_base_container.h obj_trash.h
 objs/create_objs.o: obj_book.h obj_trap.h obj_portal.h obj_seethru.h
 objs/create_objs.o: obj_arrow.h obj_base_weapon.h obj_gun.h
-objs/create_objs.o: obj_general_weapon.h
+objs/create_objs.o: obj_general_weapon.h obj_base_clothing.h obj_magic_item.h
+objs/create_objs.o: obj_potion.h obj_scroll.h obj_staff.h obj_wand.h
 objs/create_rooms.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/create_rooms.o: /usr/include/stdio.h /usr/include/features.h
 objs/create_rooms.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4212,8 +4210,8 @@ objs/create_rooms.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/create_rooms.o: client.h response.h faction.h comm.h spec_objs.h
 objs/create_rooms.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/create_rooms.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/create_rooms.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/create_rooms.o: connect.h charfile.h being.h person.h monster.h
+objs/create_rooms.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/create_rooms.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/create_rooms.o: account.h extern.h handler.h obj_money.h rent.h
 objs/create_rooms.o: spec_mobs.h spec_rooms.h materials.h obj_table.h
 objs/create_rooms.o: obj_seethru.h
@@ -4272,7 +4270,7 @@ objs/crit_combat.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/crit_combat.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/crit_combat.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/crit_combat.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/crit_combat.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/crit_combat.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/crit_combat.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/crit_combat.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/crit_combat.o: materials.h combat.h statistics.h obj_corpse.h
@@ -4326,9 +4324,9 @@ objs/damage.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/damage.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/damage.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/damage.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/damage.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/damage.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/damage.o: spec_mobs.h spec_rooms.h materials.h combat.h statistics.h
+objs/damage.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/damage.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/damage.o: spec_rooms.h materials.h combat.h statistics.h
 objs/damage.o: obj_base_corpse.h obj_base_container.h
 objs/db.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/db.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -4374,8 +4372,8 @@ objs/db.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h parse.h
 objs/db.o: db.h ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/db.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/db.o: body.h race.h skills.h disease.h trap.h task.h weather.h sound.h
-objs/db.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
-objs/db.o: charfile.h being.h person.h monster.h account.h extern.h handler.h
+objs/db.o: create.h thing.h room.h obj.h connect.h obj_drug.h charfile.h
+objs/db.o: being.h person.h monster.h account.h extern.h handler.h
 objs/db.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h socket.h
 objs/db.o: statistics.h help.h mail.h obj_component.h loadset.h sys_loot.h
 objs/db.o: shop.h obj_spellbag.h obj_expandable_container.h
@@ -4389,7 +4387,10 @@ objs/db.o: obj_board.h obj_book.h obj_gemstone.h obj_key.h obj_note.h
 objs/db.o: obj_tool.h obj_trap.h obj_tree.h obj_window.h obj_seethru.h
 objs/db.o: obj_portal.h obj_arrow.h obj_base_weapon.h obj_general_weapon.h
 objs/db.o: obj_flame.h obj_base_light.h obj_light.h obj_gun.h obj_vial.h
-objs/db.o: obj_base_cup.h obj_pool.h obj_drinkcon.h
+objs/db.o: obj_base_cup.h obj_pool.h obj_drinkcon.h obj_armor.h
+objs/db.o: obj_base_clothing.h obj_armor_wand.h obj_wand.h obj_magic_item.h
+objs/db.o: obj_jewelry.h obj_other_obj.h obj_potion.h obj_scroll.h
+objs/db.o: obj_staff.h obj_appliedsub.h obj_worn.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4447,10 +4448,10 @@ objs/disc_adventuring.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_adventuring.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_adventuring.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_adventuring.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_adventuring.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_adventuring.o: being.h person.h monster.h account.h extern.h
-objs/disc_adventuring.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_adventuring.o: spec_rooms.h materials.h combat.h disc_adventuring.h
+objs/disc_adventuring.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_adventuring.o: person.h monster.h account.h extern.h handler.h
+objs/disc_adventuring.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/disc_adventuring.o: materials.h combat.h disc_adventuring.h
 objs/disc_aegis.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_aegis.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_aegis.o: /usr/include/gnu/stubs.h
@@ -4504,10 +4505,10 @@ objs/disc_aegis.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_aegis.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_aegis.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_aegis.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_aegis.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_aegis.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_aegis.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_aegis.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_aegis.o: materials.h combat.h disc_aegis.h
+objs/disc_aegis.o: materials.h combat.h disc_aegis.h obj_magic_item.h
 objs/disc_afflictions.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_afflictions.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_afflictions.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4565,10 +4566,11 @@ objs/disc_afflictions.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_afflictions.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_afflictions.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_afflictions.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_afflictions.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_afflictions.o: being.h person.h monster.h account.h extern.h
-objs/disc_afflictions.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_afflictions.o: spec_rooms.h materials.h combat.h disc_afflictions.h
+objs/disc_afflictions.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_afflictions.o: person.h monster.h account.h extern.h handler.h
+objs/disc_afflictions.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/disc_afflictions.o: materials.h combat.h disc_afflictions.h
+objs/disc_afflictions.o: obj_magic_item.h
 objs/disc_air.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_air.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_air.o: /usr/include/gnu/stubs.h
@@ -4618,10 +4620,10 @@ objs/disc_air.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_air.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_air.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_air.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_air.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_air.o: being.h person.h monster.h account.h extern.h handler.h
-objs/disc_air.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_air.o: disc_air.h combat.h spelltask.h
+objs/disc_air.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_air.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/disc_air.o: rent.h spec_mobs.h spec_rooms.h materials.h disc_air.h
+objs/disc_air.o: combat.h spelltask.h obj_magic_item.h
 objs/disc_alchemy.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_alchemy.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_alchemy.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4677,11 +4679,12 @@ objs/disc_alchemy.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_alchemy.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_alchemy.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_alchemy.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_alchemy.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_alchemy.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_alchemy.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_alchemy.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_alchemy.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_alchemy.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_alchemy.o: spelltask.h disc_alchemy.h obj_component.h obj_opal.h
+objs/disc_alchemy.o: obj_magic_item.h obj_scroll.h
 objs/disc_animal.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_animal.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_animal.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4737,10 +4740,10 @@ objs/disc_animal.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_animal.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_animal.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_animal.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_animal.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_animal.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_animal.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_animal.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_animal.o: materials.h combat.h disc_animal.h
+objs/disc_animal.o: materials.h combat.h disc_animal.h obj_magic_item.h
 objs/disc_blunt.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_blunt.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_blunt.o: /usr/include/gnu/stubs.h
@@ -4794,7 +4797,7 @@ objs/disc_blunt.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_blunt.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_blunt.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_blunt.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_blunt.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_blunt.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_blunt.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_blunt.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_blunt.o: materials.h disc_blunt.h
@@ -4853,8 +4856,8 @@ objs/disc_brawling.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_brawling.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_brawling.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_brawling.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_brawling.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_brawling.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_brawling.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_brawling.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_brawling.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_brawling.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_brawling.o: disc_brawling.h
@@ -4913,7 +4916,7 @@ objs/disc_cleric.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_cleric.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_cleric.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_cleric.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_cleric.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_cleric.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_cleric.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_cleric.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_cleric.o: materials.h disc_cleric.h
@@ -4972,7 +4975,7 @@ objs/disc_combat.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_combat.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_combat.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_combat.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_combat.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_combat.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_combat.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_combat.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_combat.o: materials.h combat.h obj_component.h disc_combat.h
@@ -5027,10 +5030,11 @@ objs/disc_cure.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_cure.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_cure.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_cure.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_cure.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/disc_cure.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/disc_cure.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_cure.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_cure.o: combat.h disc_cures.h spelltask.h statistics.h
+objs/disc_cure.o: obj_magic_item.h
 objs/disc_defense.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_defense.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_defense.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5086,8 +5090,8 @@ objs/disc_defense.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_defense.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_defense.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_defense.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_defense.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_defense.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_defense.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_defense.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_defense.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_defense.o: spec_mobs.h spec_rooms.h materials.h disc_defense.h
 objs/disc_deikhan.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -5145,8 +5149,8 @@ objs/disc_deikhan.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_deikhan.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_deikhan.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_deikhan.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_deikhan.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_deikhan.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_deikhan.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_deikhan.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_deikhan.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_deikhan.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_deikhan.o: disc_deikhan.h
@@ -5203,10 +5207,11 @@ objs/disc_earth.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_earth.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_earth.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_earth.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_earth.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_earth.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_earth.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_earth.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_earth.o: materials.h combat.h spelltask.h disc_earth.h
+objs/disc_earth.o: obj_magic_item.h
 objs/disc_fattacks.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_fattacks.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_fattacks.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5262,8 +5267,8 @@ objs/disc_fattacks.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_fattacks.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_fattacks.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_fattacks.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_fattacks.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_fattacks.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_fattacks.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_fattacks.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_fattacks.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_fattacks.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_fattacks.o: disc_fattacks.h
@@ -5317,11 +5322,11 @@ objs/disc_fire.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_fire.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_fire.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_fire.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_fire.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/disc_fire.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/disc_fire.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_fire.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_fire.o: combat.h spelltask.h disc_fire.h obj_light.h
-objs/disc_fire.o: obj_base_light.h
+objs/disc_fire.o: obj_base_light.h obj_magic_item.h
 objs/disc_hand_of_god.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_hand_of_god.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_hand_of_god.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5379,12 +5384,12 @@ objs/disc_hand_of_god.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_hand_of_god.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_hand_of_god.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_hand_of_god.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_hand_of_god.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_hand_of_god.o: being.h person.h monster.h account.h extern.h
-objs/disc_hand_of_god.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_hand_of_god.o: spec_rooms.h materials.h spelltask.h combat.h
-objs/disc_hand_of_god.o: disc_hand_of_god.h obj_food.h obj_portal.h
-objs/disc_hand_of_god.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
+objs/disc_hand_of_god.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_hand_of_god.o: person.h monster.h account.h extern.h handler.h
+objs/disc_hand_of_god.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/disc_hand_of_god.o: materials.h spelltask.h combat.h disc_hand_of_god.h
+objs/disc_hand_of_god.o: obj_food.h obj_portal.h obj_seethru.h obj_drinkcon.h
+objs/disc_hand_of_god.o: obj_base_cup.h obj_magic_item.h
 objs/disc_hth.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_hth.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_hth.o: /usr/include/gnu/stubs.h
@@ -5434,10 +5439,10 @@ objs/disc_hth.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_hth.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_hth.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_hth.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_hth.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_hth.o: being.h person.h monster.h account.h extern.h handler.h
-objs/disc_hth.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_hth.o: range.h combat.h disc_hth.h obj_base_weapon.h
+objs/disc_hth.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_hth.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/disc_hth.o: rent.h spec_mobs.h spec_rooms.h materials.h range.h combat.h
+objs/disc_hth.o: disc_hth.h obj_base_weapon.h
 objs/disc_leverage.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_leverage.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_leverage.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5493,8 +5498,8 @@ objs/disc_leverage.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_leverage.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_leverage.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_leverage.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_leverage.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_leverage.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_leverage.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_leverage.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_leverage.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_leverage.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_leverage.o: disc_leverage.h range.h
@@ -5553,8 +5558,8 @@ objs/disc_looting.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_looting.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_looting.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_looting.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_looting.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_looting.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_looting.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_looting.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_looting.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_looting.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_looting.o: disc_looting.h obj_trap.h obj_portal.h obj_seethru.h
@@ -5608,7 +5613,7 @@ objs/disc_mage.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_mage.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_mage.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_mage.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_mage.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/disc_mage.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/disc_mage.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_mage.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_mage.o: disc_mage.h
@@ -5669,9 +5674,9 @@ objs/disc_meditation.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_meditation.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_meditation.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_meditation.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_meditation.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_meditation.o: being.h person.h monster.h account.h extern.h
-objs/disc_meditation.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/disc_meditation.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_meditation.o: person.h monster.h account.h extern.h handler.h
+objs/disc_meditation.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_meditation.o: materials.h combat.h disc_meditation.h
 objs/disc_mindbody.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_mindbody.o: /usr/include/stdio.h /usr/include/features.h
@@ -5728,8 +5733,8 @@ objs/disc_mindbody.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_mindbody.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_mindbody.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_mindbody.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_mindbody.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_mindbody.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_mindbody.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_mindbody.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_mindbody.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_mindbody.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_mindbody.o: disc_mindbody.h
@@ -5783,7 +5788,7 @@ objs/disc_monk.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_monk.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_monk.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_monk.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/disc_monk.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/disc_monk.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/disc_monk.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_monk.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_monk.o: combat.h disc_monk.h disc_cures.h disc_aegis.h obj_light.h
@@ -5843,8 +5848,8 @@ objs/disc_mounted.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_mounted.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_mounted.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_mounted.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_mounted.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_mounted.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_mounted.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_mounted.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_mounted.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_mounted.o: spec_mobs.h spec_rooms.h materials.h disc_mounted.h
 objs/disc_murder.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -5902,7 +5907,7 @@ objs/disc_murder.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_murder.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_murder.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_murder.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_murder.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_murder.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_murder.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_murder.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_murder.o: materials.h combat.h spelltask.h disc_murder.h obj_tool.h
@@ -5962,10 +5967,11 @@ objs/disc_nature.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_nature.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_nature.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_nature.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_nature.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_nature.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_nature.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_nature.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_nature.o: materials.h combat.h spelltask.h disc_nature.h
+objs/disc_nature.o: obj_magic_item.h
 objs/disc_physical.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_physical.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_physical.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6021,8 +6027,8 @@ objs/disc_physical.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_physical.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_physical.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_physical.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_physical.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_physical.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_physical.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_physical.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_physical.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_physical.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_physical.o: disc_physical.h
@@ -6081,7 +6087,7 @@ objs/disc_pierce.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_pierce.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_pierce.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_pierce.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_pierce.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_pierce.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_pierce.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_pierce.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_pierce.o: materials.h disc_pierce.h
@@ -6140,8 +6146,8 @@ objs/disc_psionics.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_psionics.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_psionics.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_psionics.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_psionics.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_psionics.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_psionics.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_psionics.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_psionics.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_psionics.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_psionics.o: disc_psionics.h
@@ -6200,7 +6206,7 @@ objs/disc_ranged.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_ranged.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_ranged.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_ranged.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_ranged.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_ranged.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_ranged.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_ranged.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_ranged.o: materials.h disc_ranged.h obj_bow.h obj_tool.h
@@ -6259,7 +6265,7 @@ objs/disc_ranger.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_ranger.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_ranger.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_ranger.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_ranger.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_ranger.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_ranger.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_ranger.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_ranger.o: materials.h combat.h disc_ranger.h obj_portal.h
@@ -6319,11 +6325,12 @@ objs/disc_shaman.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_shaman.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_shaman.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_shaman.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_shaman.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_shaman.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_shaman.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_shaman.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_shaman.o: materials.h combat.h disc_shaman.h spelltask.h
 objs/disc_shaman.o: obj_base_corpse.h obj_base_container.h obj_tool.h
+objs/disc_shaman.o: obj_magic_item.h
 objs/disc_shaman_alchemy.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_alchemy.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_alchemy.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6384,12 +6391,11 @@ objs/disc_shaman_alchemy.o: ansi.h cmd_dissect.h client.h response.h
 objs/disc_shaman_alchemy.o: faction.h comm.h spec_objs.h toggle.h
 objs/disc_shaman_alchemy.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/disc_shaman_alchemy.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_shaman_alchemy.o: sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_shaman_alchemy.o: obj_drug.h connect.h charfile.h being.h person.h
-objs/disc_shaman_alchemy.o: monster.h account.h extern.h handler.h
-objs/disc_shaman_alchemy.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_shaman_alchemy.o: materials.h combat.h spelltask.h disc_alchemy.h
-objs/disc_shaman_alchemy.o: obj_component.h
+objs/disc_shaman_alchemy.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_shaman_alchemy.o: obj_drug.h charfile.h being.h person.h monster.h
+objs/disc_shaman_alchemy.o: account.h extern.h handler.h obj_money.h rent.h
+objs/disc_shaman_alchemy.o: spec_mobs.h spec_rooms.h materials.h combat.h
+objs/disc_shaman_alchemy.o: spelltask.h disc_alchemy.h obj_component.h
 objs/disc_shaman_armadillo.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_armadillo.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_armadillo.o: /usr/include/sys/cdefs.h
@@ -6455,11 +6461,11 @@ objs/disc_shaman_armadillo.o: faction.h comm.h spec_objs.h toggle.h
 objs/disc_shaman_armadillo.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_shaman_armadillo.o: body.h race.h skills.h disease.h trap.h task.h
 objs/disc_shaman_armadillo.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/disc_shaman_armadillo.o: obj2.h obj_drug.h connect.h charfile.h being.h
+objs/disc_shaman_armadillo.o: connect.h obj_drug.h charfile.h being.h
 objs/disc_shaman_armadillo.o: person.h monster.h account.h extern.h handler.h
 objs/disc_shaman_armadillo.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_shaman_armadillo.o: materials.h combat.h spelltask.h
-objs/disc_shaman_armadillo.o: disc_shaman_armadillo.h
+objs/disc_shaman_armadillo.o: disc_shaman_armadillo.h obj_magic_item.h
 objs/disc_shaman_control.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_control.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_control.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6520,13 +6526,13 @@ objs/disc_shaman_control.o: ansi.h cmd_dissect.h client.h response.h
 objs/disc_shaman_control.o: faction.h comm.h spec_objs.h toggle.h
 objs/disc_shaman_control.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/disc_shaman_control.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_shaman_control.o: sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_shaman_control.o: obj_drug.h connect.h charfile.h being.h person.h
-objs/disc_shaman_control.o: monster.h account.h extern.h handler.h
-objs/disc_shaman_control.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_shaman_control.o: materials.h combat.h disc_shaman.h spelltask.h
-objs/disc_shaman_control.o: obj_base_corpse.h obj_base_container.h
-objs/disc_shaman_control.o: obj_player_corpse.h
+objs/disc_shaman_control.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_shaman_control.o: obj_drug.h charfile.h being.h person.h monster.h
+objs/disc_shaman_control.o: account.h extern.h handler.h obj_money.h rent.h
+objs/disc_shaman_control.o: spec_mobs.h spec_rooms.h materials.h combat.h
+objs/disc_shaman_control.o: disc_shaman.h spelltask.h obj_base_corpse.h
+objs/disc_shaman_control.o: obj_base_container.h obj_player_corpse.h
+objs/disc_shaman_control.o: obj_magic_item.h
 objs/disc_shaman_frog.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_frog.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_frog.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6584,11 +6590,11 @@ objs/disc_shaman_frog.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_shaman_frog.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_shaman_frog.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_shaman_frog.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_shaman_frog.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/disc_shaman_frog.o: being.h person.h monster.h account.h extern.h
-objs/disc_shaman_frog.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_shaman_frog.o: spec_rooms.h materials.h combat.h spelltask.h
-objs/disc_shaman_frog.o: disc_shaman_frog.h
+objs/disc_shaman_frog.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/disc_shaman_frog.o: person.h monster.h account.h extern.h handler.h
+objs/disc_shaman_frog.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/disc_shaman_frog.o: materials.h combat.h spelltask.h disc_shaman_frog.h
+objs/disc_shaman_frog.o: obj_magic_item.h
 objs/disc_shaman_skunk.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_skunk.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_skunk.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6648,11 +6654,11 @@ objs/disc_shaman_skunk.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_shaman_skunk.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_shaman_skunk.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_shaman_skunk.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_shaman_skunk.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/disc_shaman_skunk.o: room.h obj.h connect.h obj_drug.h charfile.h
 objs/disc_shaman_skunk.o: being.h person.h monster.h account.h extern.h
 objs/disc_shaman_skunk.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/disc_shaman_skunk.o: spec_rooms.h materials.h combat.h spelltask.h
-objs/disc_shaman_skunk.o: disc_shaman_skunk.h
+objs/disc_shaman_skunk.o: disc_shaman_skunk.h obj_magic_item.h
 objs/disc_shaman_spider.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_spider.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_spider.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6712,11 +6718,11 @@ objs/disc_shaman_spider.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_shaman_spider.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/disc_shaman_spider.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/disc_shaman_spider.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/disc_shaman_spider.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/disc_shaman_spider.o: charfile.h being.h person.h monster.h account.h
-objs/disc_shaman_spider.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/disc_shaman_spider.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/disc_shaman_spider.o: being.h person.h monster.h account.h extern.h
+objs/disc_shaman_spider.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/disc_shaman_spider.o: spec_rooms.h materials.h combat.h spelltask.h
-objs/disc_shaman_spider.o: disc_shaman_spider.h
+objs/disc_shaman_spider.o: disc_shaman_spider.h obj_magic_item.h
 objs/disc_slash.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_slash.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_slash.o: /usr/include/gnu/stubs.h
@@ -6770,7 +6776,7 @@ objs/disc_slash.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_slash.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_slash.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_slash.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_slash.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_slash.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_slash.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_slash.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_slash.o: materials.h disc_slash.h
@@ -6829,7 +6835,7 @@ objs/disc_smythe.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_smythe.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_smythe.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_smythe.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_smythe.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_smythe.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_smythe.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_smythe.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_smythe.o: materials.h disc_smythe.h
@@ -6891,11 +6897,12 @@ objs/disc_sorcery.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_sorcery.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_sorcery.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_sorcery.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_sorcery.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_sorcery.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_sorcery.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_sorcery.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_sorcery.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_sorcery.o: spec_mobs.h spec_rooms.h materials.h combat.h
-objs/disc_sorcery.o: spelltask.h disc_sorcery.h
+objs/disc_sorcery.o: spelltask.h disc_sorcery.h obj_armor.h
+objs/disc_sorcery.o: obj_base_clothing.h obj_magic_item.h obj_worn.h
 objs/disc_spirit.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_spirit.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_spirit.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6951,10 +6958,11 @@ objs/disc_spirit.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_spirit.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_spirit.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_spirit.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_spirit.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_spirit.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_spirit.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_spirit.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_spirit.o: materials.h combat.h spelltask.h disc_spirit.h
+objs/disc_spirit.o: obj_magic_item.h
 objs/disc_survival.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_survival.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_survival.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7010,8 +7018,8 @@ objs/disc_survival.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_survival.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_survival.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_survival.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_survival.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_survival.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_survival.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_survival.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_survival.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_survival.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_survival.o: disc_survival.h obj_component.h obj_base_corpse.h
@@ -7072,8 +7080,8 @@ objs/disc_theology.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_theology.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_theology.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_theology.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_theology.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/disc_theology.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/disc_theology.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_theology.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_theology.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_theology.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/disc_theology.o: disc_theology.h obj_vial.h obj_base_cup.h obj_symbol.h
@@ -7130,7 +7138,7 @@ objs/disc_thief.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_thief.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_thief.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_thief.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_thief.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_thief.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_thief.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_thief.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_thief.o: materials.h games.h game_crazyeights.h game_drawpoker.h
@@ -7190,8 +7198,8 @@ objs/disc_warrior.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/disc_warrior.o: client.h response.h faction.h comm.h spec_objs.h
 objs/disc_warrior.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/disc_warrior.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_warrior.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/disc_warrior.o: connect.h charfile.h being.h person.h monster.h
+objs/disc_warrior.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/disc_warrior.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/disc_warrior.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_warrior.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_warrior.o: disc_warrior.h obj_tool.h
@@ -7248,11 +7256,11 @@ objs/disc_water.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_water.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_water.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_water.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_water.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_water.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_water.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_water.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_water.o: materials.h combat.h spelltask.h disc_water.h obj_pool.h
-objs/disc_water.o: obj_base_cup.h
+objs/disc_water.o: obj_base_cup.h obj_magic_item.h
 objs/disc_wrath.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_wrath.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_wrath.o: /usr/include/gnu/stubs.h
@@ -7306,10 +7314,10 @@ objs/disc_wrath.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disc_wrath.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/disc_wrath.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/disc_wrath.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/disc_wrath.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/disc_wrath.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/disc_wrath.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_wrath.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_wrath.o: materials.h combat.h disc_wrath.h
+objs/disc_wrath.o: materials.h combat.h disc_wrath.h obj_magic_item.h
 objs/discipline.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/discipline.o: /usr/include/bits/types.h /usr/include/features.h
 objs/discipline.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7366,7 +7374,7 @@ objs/discipline.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/discipline.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/discipline.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/discipline.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/discipline.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/discipline.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/discipline.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/discipline.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/discipline.o: materials.h obj_component.h combat.h disc_mage.h
@@ -7440,9 +7448,9 @@ objs/disease.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/disease.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/disease.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/disease.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/disease.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/disease.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/disease.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_tool.h
+objs/disease.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/disease.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/disease.o: spec_mobs.h spec_rooms.h materials.h obj_tool.h
 objs/doors.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/doors.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/doors.o: /usr/include/gnu/stubs.h
@@ -7488,10 +7496,10 @@ objs/doors.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/doors.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/doors.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/doors.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/doors.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/doors.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/doors.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/doors.o: spec_rooms.h materials.h
+objs/doors.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/doors.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/doors.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/doors.o: materials.h
 objs/edit.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/edit.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/edit.o: /usr/include/gnu/stubs.h
@@ -7537,9 +7545,9 @@ objs/edit.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/edit.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/edit.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/edit.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/edit.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/edit.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/edit.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/edit.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/edit.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/edit.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/edit.o: materials.h socket.h /usr/include/unistd.h
 objs/edit.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
 objs/edit.o: /usr/include/arpa/telnet.h /usr/include/sys/syscall.h
@@ -7598,9 +7606,9 @@ objs/enum.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/enum.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/enum.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/enum.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/enum.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/enum.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/enum.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/enum.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/enum.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/enum.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/enum.o: materials.h
 objs/equip.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/equip.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -7647,11 +7655,11 @@ objs/equip.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/equip.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/equip.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/equip.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/equip.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/equip.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/equip.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/equip.o: spec_rooms.h materials.h obj_base_container.h obj_bandaid.h
-objs/equip.o: obj_base_weapon.h
+objs/equip.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/equip.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/equip.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/equip.o: materials.h obj_base_container.h obj_bandaid.h
+objs/equip.o: obj_base_weapon.h obj_armor.h obj_base_clothing.h obj_jewelry.h
 objs/faction.o: /usr/include/unistd.h /usr/include/features.h
 objs/faction.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/faction.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -7706,9 +7714,9 @@ objs/faction.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/faction.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/faction.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/faction.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/faction.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/faction.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/faction.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/faction.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/faction.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/faction.o: spec_mobs.h spec_rooms.h materials.h
 objs/gaining.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/gaining.o: /usr/include/bits/types.h /usr/include/features.h
 objs/gaining.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7761,9 +7769,9 @@ objs/gaining.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/gaining.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/gaining.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/gaining.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/gaining.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/gaining.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/gaining.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
+objs/gaining.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/gaining.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/gaining.o: spec_mobs.h spec_rooms.h materials.h statistics.h
 objs/gaining.o: obj_component.h
 objs/game_blackjack.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/game_blackjack.o: /usr/include/stdio.h /usr/include/features.h
@@ -7821,9 +7829,9 @@ objs/game_blackjack.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_blackjack.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/game_blackjack.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/game_blackjack.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/game_blackjack.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/game_blackjack.o: being.h person.h monster.h account.h extern.h
-objs/game_blackjack.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/game_blackjack.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/game_blackjack.o: person.h monster.h account.h extern.h handler.h
+objs/game_blackjack.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_blackjack.o: materials.h games.h game_crazyeights.h
 objs/game_blackjack.o: game_drawpoker.h
 objs/game_cards.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -7879,7 +7887,7 @@ objs/game_cards.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/game_cards.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/game_cards.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/game_cards.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/game_cards.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/game_cards.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/game_cards.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/game_cards.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_cards.o: materials.h games.h game_crazyeights.h game_drawpoker.h
@@ -7936,7 +7944,7 @@ objs/game_craps.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/game_craps.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/game_craps.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/game_craps.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/game_craps.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/game_craps.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/game_craps.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/game_craps.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_craps.o: materials.h games.h game_crazyeights.h game_drawpoker.h
@@ -7997,10 +8005,10 @@ objs/game_crazyeights.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_crazyeights.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/game_crazyeights.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/game_crazyeights.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/game_crazyeights.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/game_crazyeights.o: being.h person.h monster.h account.h extern.h
-objs/game_crazyeights.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/game_crazyeights.o: spec_rooms.h materials.h games.h game_crazyeights.h
+objs/game_crazyeights.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/game_crazyeights.o: person.h monster.h account.h extern.h handler.h
+objs/game_crazyeights.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/game_crazyeights.o: materials.h games.h game_crazyeights.h
 objs/game_crazyeights.o: game_drawpoker.h
 objs/game_drawpoker.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/game_drawpoker.o: /usr/include/stdio.h /usr/include/features.h
@@ -8058,9 +8066,9 @@ objs/game_drawpoker.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_drawpoker.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/game_drawpoker.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/game_drawpoker.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/game_drawpoker.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/game_drawpoker.o: being.h person.h monster.h account.h extern.h
-objs/game_drawpoker.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/game_drawpoker.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/game_drawpoker.o: person.h monster.h account.h extern.h handler.h
+objs/game_drawpoker.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_drawpoker.o: materials.h games.h game_crazyeights.h
 objs/game_drawpoker.o: game_drawpoker.h
 objs/game_gin.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -8112,10 +8120,10 @@ objs/game_gin.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/game_gin.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/game_gin.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/game_gin.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/game_gin.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/game_gin.o: being.h person.h monster.h account.h extern.h handler.h
-objs/game_gin.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/game_gin.o: games.h game_crazyeights.h game_drawpoker.h
+objs/game_gin.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/game_gin.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/game_gin.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
+objs/game_gin.o: game_crazyeights.h game_drawpoker.h
 objs/game_hearts.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/game_hearts.o: /usr/include/stdio.h /usr/include/features.h
 objs/game_hearts.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -8171,7 +8179,7 @@ objs/game_hearts.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/game_hearts.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/game_hearts.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/game_hearts.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/game_hearts.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/game_hearts.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/game_hearts.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/game_hearts.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_hearts.o: materials.h games.h game_crazyeights.h game_drawpoker.h
@@ -8228,7 +8236,7 @@ objs/game_slots.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/game_slots.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/game_slots.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/game_slots.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/game_slots.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/game_slots.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/game_slots.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/game_slots.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/game_slots.o: materials.h games.h game_crazyeights.h game_drawpoker.h
@@ -8284,12 +8292,12 @@ objs/handler.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/handler.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/handler.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/handler.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/handler.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/handler.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/handler.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h range.h
-objs/handler.o: shop.h obj_spellbag.h obj_expandable_container.h
+objs/handler.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/handler.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/handler.o: spec_mobs.h spec_rooms.h materials.h combat.h range.h shop.h
+objs/handler.o: obj_spellbag.h obj_expandable_container.h
 objs/handler.o: obj_open_container.h obj_base_container.h obj_bag.h
-objs/handler.o: obj_table.h obj_tool.h obj_base_weapon.h
+objs/handler.o: obj_table.h obj_tool.h obj_base_weapon.h obj_base_clothing.h
 objs/hospital.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/hospital.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/hospital.o: /usr/include/gnu/stubs.h
@@ -8339,10 +8347,9 @@ objs/hospital.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/hospital.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/hospital.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/hospital.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/hospital.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/hospital.o: being.h person.h monster.h account.h extern.h handler.h
-objs/hospital.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/hospital.o: combat.h
+objs/hospital.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/hospital.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/hospital.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/immortal.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/immortal.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/immortal.o: /usr/include/gnu/stubs.h
@@ -8392,9 +8399,9 @@ objs/immortal.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/immortal.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/immortal.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/immortal.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/immortal.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/immortal.o: being.h person.h monster.h account.h extern.h handler.h
-objs/immortal.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/immortal.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/immortal.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/immortal.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/immortal.o: /usr/include/dirent.h /usr/include/bits/dirent.h
 objs/immortal.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
 objs/immortal.o: /usr/include/bits/confname.h /usr/include/ftw.h
@@ -8413,6 +8420,7 @@ objs/immortal.o: /usr/include/bits/uio.h statistics.h combat.h mail.h games.h
 objs/immortal.o: game_crazyeights.h game_drawpoker.h disc_nature.h
 objs/immortal.o: disc_shaman_armadillo.h systemtask.h socket.h shop.h
 objs/immortal.o: cmd_trophy.h obj_note.h obj_portal.h obj_seethru.h
+objs/immortal.o: obj_base_clothing.h
 objs/immunity.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/immunity.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/immunity.o: /usr/include/gnu/stubs.h
@@ -8462,9 +8470,9 @@ objs/immunity.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/immunity.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/immunity.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/immunity.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/immunity.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/immunity.o: being.h person.h monster.h account.h extern.h handler.h
-objs/immunity.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/immunity.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/immunity.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/immunity.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/indexdata.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/indexdata.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/indexdata.o: /usr/include/gnu/stubs.h
@@ -8515,7 +8523,7 @@ objs/indexdata.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/indexdata.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/indexdata.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/indexdata.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/indexdata.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/indexdata.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/indexdata.o: being.h person.h monster.h account.h extern.h handler.h
 objs/indexdata.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/indexdata.o: statistics.h
@@ -8564,9 +8572,9 @@ objs/info.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/info.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/info.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/info.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/info.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/info.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/info.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/info.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/info.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/info.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/info.o: materials.h /usr/include/g++-3/algorithm
 objs/info.o: /usr/include/g++-3/stl_tempbuf.h /usr/include/g++-3/stl_algo.h
 objs/info.o: /usr/include/g++-3/stl_heap.h games.h game_crazyeights.h
@@ -8574,7 +8582,9 @@ objs/info.o: game_drawpoker.h combat.h statistics.h obj_component.h
 objs/info.o: skillsort.h obj_open_container.h obj_base_container.h
 objs/info.o: obj_corpse.h obj_base_corpse.h obj_bow.h obj_symbol.h obj_food.h
 objs/info.o: obj_tool.h obj_trap.h obj_arrow.h obj_base_weapon.h
-objs/info.o: obj_general_weapon.h obj_base_cup.h
+objs/info.o: obj_general_weapon.h obj_base_cup.h obj_base_clothing.h
+objs/info.o: obj_magic_item.h obj_potion.h obj_scroll.h obj_staff.h
+objs/info.o: obj_wand.h
 objs/inventory.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/inventory.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/inventory.o: /usr/include/gnu/stubs.h
@@ -8625,7 +8635,7 @@ objs/inventory.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/inventory.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/inventory.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/inventory.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/inventory.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/inventory.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/inventory.o: being.h person.h monster.h account.h extern.h handler.h
 objs/inventory.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/inventory.o: games.h game_crazyeights.h game_drawpoker.h statistics.h
@@ -8680,12 +8690,12 @@ objs/limbs.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/limbs.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/limbs.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/limbs.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/limbs.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/limbs.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/limbs.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/limbs.o: spec_rooms.h materials.h /usr/include/g++-3/cmath
-objs/limbs.o: /usr/include/math.h /usr/include/bits/huge_val.h
-objs/limbs.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+objs/limbs.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/limbs.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/limbs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/limbs.o: materials.h /usr/include/g++-3/cmath /usr/include/math.h
+objs/limbs.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/limbs.o: /usr/include/bits/mathcalls.h
 objs/limits.o: /usr/include/unistd.h /usr/include/features.h
 objs/limits.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/limits.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -8738,9 +8748,9 @@ objs/limits.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/limits.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/limits.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/limits.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/limits.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/limits.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/limits.o: spec_mobs.h spec_rooms.h materials.h statistics.h games.h
+objs/limits.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/limits.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/limits.o: spec_rooms.h materials.h statistics.h games.h
 objs/limits.o: game_crazyeights.h game_drawpoker.h obj_base_container.h
 objs/limits.o: obj_food.h obj_bed.h obj_drinkcon.h obj_base_cup.h
 objs/loadset.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -8792,9 +8802,10 @@ objs/loadset.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/loadset.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/loadset.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/loadset.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/loadset.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/loadset.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/loadset.o: rent.h spec_mobs.h spec_rooms.h materials.h loadset.h
+objs/loadset.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/loadset.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/loadset.o: spec_mobs.h spec_rooms.h materials.h loadset.h obj_armor.h
+objs/loadset.o: obj_base_clothing.h
 objs/luck.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/luck.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/luck.o: /usr/include/gnu/stubs.h
@@ -8840,67 +8851,10 @@ objs/luck.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/luck.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/luck.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/luck.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/luck.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/luck.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/luck.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/luck.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/luck.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/luck.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/luck.o: materials.h
-objs/magic_item.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
-objs/magic_item.o: /usr/include/features.h /usr/include/sys/cdefs.h
-objs/magic_item.o: /usr/include/gnu/stubs.h
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/magic_item.o: /usr/include/bits/types.h /usr/include/libio.h
-objs/magic_item.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/magic_item.o: /usr/include/bits/wchar.h /usr/include/gconv.h
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
-objs/magic_item.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/magic_item.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
-objs/magic_item.o: /usr/include/time.h /usr/include/bits/time.h
-objs/magic_item.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
-objs/magic_item.o: /usr/include/ctype.h /usr/include/endian.h
-objs/magic_item.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/magic_item.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/magic_item.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/magic_item.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/magic_item.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/magic_item.o: /usr/include/g++-3/string
-objs/magic_item.o: /usr/include/g++-3/std/bastring.h
-objs/magic_item.o: /usr/include/g++-3/cstddef
-objs/magic_item.o: /usr/include/g++-3/std/straits.h
-objs/magic_item.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/magic_item.o: /usr/include/g++-3/stl_alloc.h
-objs/magic_item.o: /usr/include/g++-3/iostream.h
-objs/magic_item.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
-objs/magic_item.o: /usr/include/g++-3/stl_relops.h
-objs/magic_item.o: /usr/include/g++-3/stl_iterator.h
-objs/magic_item.o: /usr/include/g++-3/std/bastring.cc
-objs/magic_item.o: /usr/include/g++-3/vector
-objs/magic_item.o: /usr/include/g++-3/stl_algobase.h
-objs/magic_item.o: /usr/include/g++-3/stl_pair.h
-objs/magic_item.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
-objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
-objs/magic_item.o: /usr/include/g++-3/stl_construct.h
-objs/magic_item.o: /usr/include/g++-3/stl_uninitialized.h
-objs/magic_item.o: /usr/include/g++-3/stl_vector.h
-objs/magic_item.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
-objs/magic_item.o: /usr/include/g++-3/stl_tree.h
-objs/magic_item.o: /usr/include/g++-3/stl_function.h
-objs/magic_item.o: /usr/include/g++-3/stl_map.h
-objs/magic_item.o: /usr/include/g++-3/stl_multimap.h
-objs/magic_item.o: /home/oldspasm/usr/include/mysql/mysql.h
-objs/magic_item.o: /home/oldspasm/usr/include/mysql/mysql_com.h
-objs/magic_item.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
-objs/magic_item.o: mobAI.h enum.h spells.h structs.h immunity.h discipline.h
-objs/magic_item.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
-objs/magic_item.o: response.h faction.h comm.h spec_objs.h toggle.h
-objs/magic_item.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
-objs/magic_item.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/magic_item.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
-objs/magic_item.o: charfile.h being.h person.h monster.h account.h extern.h
-objs/magic_item.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/magic_item.o: materials.h
 objs/magic_off.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/magic_off.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/magic_off.o: /usr/include/gnu/stubs.h
@@ -8951,7 +8905,7 @@ objs/magic_off.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/magic_off.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/magic_off.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/magic_off.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/magic_off.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/magic_off.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/magic_off.o: being.h person.h monster.h account.h extern.h handler.h
 objs/magic_off.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/magic_skills.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -9009,8 +8963,8 @@ objs/magic_skills.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/magic_skills.o: client.h response.h faction.h comm.h spec_objs.h
 objs/magic_skills.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/magic_skills.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/magic_skills.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/magic_skills.o: connect.h charfile.h being.h person.h monster.h
+objs/magic_skills.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/magic_skills.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/magic_skills.o: account.h extern.h handler.h obj_money.h rent.h
 objs/magic_skills.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/magicutils.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -9066,7 +9020,7 @@ objs/magicutils.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/magicutils.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/magicutils.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/magicutils.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/magicutils.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/magicutils.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/magicutils.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/magicutils.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/magicutils.o: materials.h obj_open_container.h obj_base_container.h
@@ -9116,9 +9070,9 @@ objs/mail.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/mail.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/mail.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/mail.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/mail.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/mail.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/mail.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/mail.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/mail.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/mail.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/mail.o: materials.h mail.h
 objs/makecorpse.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/makecorpse.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -9173,7 +9127,7 @@ objs/makecorpse.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/makecorpse.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/makecorpse.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/makecorpse.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/makecorpse.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/makecorpse.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/makecorpse.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/makecorpse.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/makecorpse.o: materials.h combat.h obj_component.h obj_base_corpse.h
@@ -9228,7 +9182,7 @@ objs/materials.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/materials.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/materials.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/materials.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/materials.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/materials.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/materials.o: being.h person.h monster.h account.h extern.h handler.h
 objs/materials.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/materials.o: statistics.h obj_base_weapon.h
@@ -9281,10 +9235,10 @@ objs/meeting.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/meeting.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/meeting.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/meeting.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/meeting.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/meeting.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/meeting.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/meeting.o: /usr/include/g++-3/deque /usr/include/g++-3/stl_deque.h
+objs/meeting.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/meeting.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/meeting.o: spec_mobs.h spec_rooms.h materials.h /usr/include/g++-3/deque
+objs/meeting.o: /usr/include/g++-3/stl_deque.h
 objs/mob_loader.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/mob_loader.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/mob_loader.o: /usr/include/gnu/stubs.h
@@ -9338,11 +9292,11 @@ objs/mob_loader.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/mob_loader.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/mob_loader.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/mob_loader.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/mob_loader.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/mob_loader.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/mob_loader.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/mob_loader.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/mob_loader.o: materials.h obj_open_container.h obj_base_container.h
-objs/mob_loader.o: obj_component.h
+objs/mob_loader.o: obj_component.h obj_potion.h obj_magic_item.h
 objs/mobact.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/mobact.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/mobact.o: /usr/include/gnu/stubs.h
@@ -9391,13 +9345,13 @@ objs/mobact.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/mobact.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/mobact.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/mobact.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/mobact.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/mobact.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/mobact.o: spec_mobs.h spec_rooms.h materials.h range.h statistics.h
-objs/mobact.o: shop.h obj_spellbag.h obj_expandable_container.h
-objs/mobact.o: obj_open_container.h obj_base_container.h obj_base_corpse.h
-objs/mobact.o: obj_player_corpse.h obj_bow.h obj_treasure.h obj_component.h
-objs/mobact.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h
+objs/mobact.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/mobact.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/mobact.o: spec_rooms.h materials.h range.h statistics.h shop.h
+objs/mobact.o: obj_spellbag.h obj_expandable_container.h obj_open_container.h
+objs/mobact.o: obj_base_container.h obj_base_corpse.h obj_player_corpse.h
+objs/mobact.o: obj_bow.h obj_treasure.h obj_component.h obj_arrow.h
+objs/mobact.o: obj_base_weapon.h obj_general_weapon.h obj_base_clothing.h
 objs/monster.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/monster.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/monster.o: /usr/include/gnu/stubs.h
@@ -9447,10 +9401,9 @@ objs/monster.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/monster.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/monster.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/monster.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/monster.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/monster.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/monster.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
-objs/monster.o: shop.h
+objs/monster.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/monster.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/monster.o: spec_mobs.h spec_rooms.h materials.h statistics.h shop.h
 objs/movement.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/movement.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/movement.o: /usr/include/gnu/stubs.h
@@ -9500,13 +9453,13 @@ objs/movement.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/movement.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/movement.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/movement.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/movement.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/movement.o: being.h person.h monster.h account.h extern.h handler.h
-objs/movement.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/movement.o: combat.h games.h game_crazyeights.h game_drawpoker.h
-objs/movement.o: disc_looting.h obj_base_corpse.h obj_base_container.h
-objs/movement.o: obj_keyring.h obj_expandable_container.h
-objs/movement.o: obj_open_container.h obj_key.h obj_portal.h obj_seethru.h
+objs/movement.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/movement.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/movement.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h games.h
+objs/movement.o: game_crazyeights.h game_drawpoker.h disc_looting.h
+objs/movement.o: obj_base_corpse.h obj_base_container.h obj_keyring.h
+objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
+objs/movement.o: obj_portal.h obj_seethru.h
 objs/multiclass.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/multiclass.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/multiclass.o: /usr/include/gnu/stubs.h
@@ -9560,7 +9513,7 @@ objs/multiclass.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/multiclass.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/multiclass.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/multiclass.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/multiclass.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/multiclass.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/multiclass.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/multiclass.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/multiclass.o: materials.h
@@ -9612,9 +9565,9 @@ objs/newbie.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/newbie.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/newbie.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/newbie.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/newbie.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/newbie.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/newbie.o: spec_mobs.h spec_rooms.h materials.h
+objs/newbie.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/newbie.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/newbie.o: spec_rooms.h materials.h
 objs/obj.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj.o: /usr/include/gnu/stubs.h
@@ -9659,7 +9612,7 @@ objs/obj.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/obj.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/obj.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/obj.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj.o: shop.h
@@ -9719,13 +9672,13 @@ objs/obj_appliedsub.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_appliedsub.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_appliedsub.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_appliedsub.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_appliedsub.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_appliedsub.o: being.h person.h monster.h account.h extern.h
-objs/obj_appliedsub.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_appliedsub.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_appliedsub.o: person.h monster.h account.h extern.h handler.h
+objs/obj_appliedsub.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_appliedsub.o: materials.h create_engine.h obj_expandable_container.h
 objs/obj_appliedsub.o: obj_open_container.h obj_base_container.h
 objs/obj_appliedsub.o: obj_organic.h obj_arrow.h obj_base_weapon.h
-objs/obj_appliedsub.o: obj_flame.h obj_base_light.h
+objs/obj_appliedsub.o: obj_flame.h obj_base_light.h obj_appliedsub.h
 objs/obj_armor.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_armor.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_armor.o: /usr/include/gnu/stubs.h
@@ -9776,9 +9729,10 @@ objs/obj_armor.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_armor.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_armor.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_armor.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_armor.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_armor.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_armor.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_armor.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_armor.o: obj_armor.h obj_base_clothing.h
 objs/obj_armor_wand.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_armor_wand.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_armor_wand.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -9835,10 +9789,11 @@ objs/obj_armor_wand.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_armor_wand.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_armor_wand.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_armor_wand.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_armor_wand.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_armor_wand.o: being.h person.h monster.h account.h extern.h
-objs/obj_armor_wand.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_armor_wand.o: materials.h
+objs/obj_armor_wand.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_armor_wand.o: person.h monster.h account.h extern.h handler.h
+objs/obj_armor_wand.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_armor_wand.o: materials.h obj_armor.h obj_base_clothing.h obj_wand.h
+objs/obj_armor_wand.o: obj_magic_item.h
 objs/obj_arrow.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_arrow.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_arrow.o: /usr/include/gnu/stubs.h
@@ -9889,7 +9844,7 @@ objs/obj_arrow.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_arrow.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_arrow.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_arrow.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_arrow.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_arrow.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_arrow.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_arrow.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_arrow.o: obj_open_container.h obj_base_container.h obj_arrow.h
@@ -9944,7 +9899,7 @@ objs/obj_audio.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_audio.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_audio.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_audio.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_audio.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_audio.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_audio.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_audio.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_audio.o: obj_audio.h
@@ -9997,9 +9952,9 @@ objs/obj_bag.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_bag.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_bag.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_bag.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_bag.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_bag.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_bag.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_bag.h
+objs/obj_bag.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_bag.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_bag.o: spec_mobs.h spec_rooms.h materials.h obj_bag.h
 objs/obj_bag.o: obj_expandable_container.h obj_open_container.h
 objs/obj_bag.o: obj_base_container.h
 objs/obj_bandaid.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -10057,7 +10012,7 @@ objs/obj_bandaid.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_bandaid.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_bandaid.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_bandaid.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_bandaid.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_bandaid.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_bandaid.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_bandaid.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_bandaid.o: materials.h obj_bandaid.h
@@ -10124,10 +10079,10 @@ objs/obj_base_clothing.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_clothing.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_clothing.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_clothing.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_clothing.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_base_clothing.o: room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_base_clothing.o: being.h person.h monster.h account.h extern.h
 objs/obj_base_clothing.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_base_clothing.o: spec_rooms.h materials.h shop.h
+objs/obj_base_clothing.o: spec_rooms.h materials.h shop.h obj_base_clothing.h
 objs/obj_base_container.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_container.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_base_container.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10187,9 +10142,9 @@ objs/obj_base_container.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_container.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_container.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_container.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_container.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/obj_base_container.o: charfile.h being.h person.h monster.h account.h
-objs/obj_base_container.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_base_container.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/obj_base_container.o: being.h person.h monster.h account.h extern.h
+objs/obj_base_container.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_base_container.o: spec_rooms.h materials.h obj_base_container.h
 objs/obj_base_container.o: obj_player_corpse.h obj_base_corpse.h
 objs/obj_base_container.o: obj_open_container.h obj_food.h obj_opal.h
@@ -10250,11 +10205,11 @@ objs/obj_base_corpse.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_corpse.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_corpse.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_corpse.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_corpse.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_base_corpse.o: being.h person.h monster.h account.h extern.h
-objs/obj_base_corpse.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_base_corpse.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_base_corpse.o: person.h monster.h account.h extern.h handler.h
+objs/obj_base_corpse.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_base_corpse.o: materials.h obj_base_corpse.h obj_base_container.h
-objs/obj_base_corpse.o: obj_player_corpse.h
+objs/obj_base_corpse.o: obj_player_corpse.h obj_base_clothing.h
 objs/obj_base_cup.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_cup.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_base_cup.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10310,10 +10265,10 @@ objs/obj_base_cup.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_base_cup.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_base_cup.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_base_cup.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_base_cup.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_base_cup.o: connect.h charfile.h being.h person.h monster.h
+objs/obj_base_cup.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/obj_base_cup.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/obj_base_cup.o: account.h extern.h handler.h obj_money.h rent.h
-objs/obj_base_cup.o: spec_mobs.h spec_rooms.h materials.h
+objs/obj_base_cup.o: spec_mobs.h spec_rooms.h materials.h obj_base_cup.h
 objs/obj_base_light.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_light.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_base_light.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10370,9 +10325,9 @@ objs/obj_base_light.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_light.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_light.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_light.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_light.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_base_light.o: being.h person.h monster.h account.h extern.h
-objs/obj_base_light.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_base_light.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_base_light.o: person.h monster.h account.h extern.h handler.h
+objs/obj_base_light.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_base_light.o: materials.h obj_base_light.h
 objs/obj_base_weapon.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_weapon.o: /usr/include/stdio.h /usr/include/features.h
@@ -10431,9 +10386,9 @@ objs/obj_base_weapon.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_weapon.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_weapon.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_weapon.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_weapon.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_base_weapon.o: being.h person.h monster.h account.h extern.h
-objs/obj_base_weapon.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_base_weapon.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_base_weapon.o: person.h monster.h account.h extern.h handler.h
+objs/obj_base_weapon.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_base_weapon.o: materials.h combat.h statistics.h shop.h obj_tool.h
 objs/obj_base_weapon.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h
 objs/obj_base_weapontwo.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -10495,9 +10450,9 @@ objs/obj_base_weapontwo.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_base_weapontwo.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_base_weapontwo.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_base_weapontwo.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_base_weapontwo.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/obj_base_weapontwo.o: charfile.h being.h person.h monster.h account.h
-objs/obj_base_weapontwo.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_base_weapontwo.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/obj_base_weapontwo.o: being.h person.h monster.h account.h extern.h
+objs/obj_base_weapontwo.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_base_weapontwo.o: spec_rooms.h materials.h combat.h statistics.h
 objs/obj_base_weapontwo.o: shop.h obj_tool.h obj_arrow.h obj_base_weapon.h
 objs/obj_base_weapontwo.o: obj_general_weapon.h
@@ -10550,9 +10505,9 @@ objs/obj_bed.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_bed.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_bed.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_bed.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_bed.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_bed.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_bed.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
+objs/obj_bed.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_bed.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_bed.o: spec_mobs.h spec_rooms.h materials.h games.h
 objs/obj_bed.o: game_crazyeights.h game_drawpoker.h obj_bed.h
 objs/obj_board.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_board.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -10604,7 +10559,7 @@ objs/obj_board.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_board.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_board.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_board.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_board.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_board.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_board.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_board.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_board.o: obj_board.h obj_note.h
@@ -10657,10 +10612,10 @@ objs/obj_boat.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_boat.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_boat.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_boat.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_boat.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_boat.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_boat.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_boat.o: obj_boat.h obj_light.h obj_base_light.h
+objs/obj_boat.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_boat.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_boat.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_boat.h
+objs/obj_boat.o: obj_light.h obj_base_light.h
 objs/obj_book.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_book.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_book.o: /usr/include/gnu/stubs.h
@@ -10710,10 +10665,9 @@ objs/obj_book.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_book.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_book.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_book.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_book.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_book.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_book.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_book.o: obj_book.h
+objs/obj_book.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_book.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_book.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_book.h
 objs/obj_bow.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_bow.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_bow.o: /usr/include/gnu/stubs.h
@@ -10763,9 +10717,9 @@ objs/obj_bow.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_bow.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_bow.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_bow.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_bow.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_bow.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_bow.o: rent.h spec_mobs.h spec_rooms.h materials.h range.h obj_bow.h
+objs/obj_bow.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_bow.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_bow.o: spec_mobs.h spec_rooms.h materials.h range.h obj_bow.h
 objs/obj_bow.o: obj_arrow.h obj_base_weapon.h
 objs/obj_chest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_chest.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -10817,7 +10771,7 @@ objs/obj_chest.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_chest.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_chest.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_chest.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_chest.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_chest.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_chest.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_chest.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_chest.o: obj_chest.h obj_open_container.h obj_base_container.h
@@ -10876,8 +10830,8 @@ objs/obj_commodity.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_commodity.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_commodity.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_commodity.o: body.h race.h skills.h disease.h trap.h task.h
-objs/obj_commodity.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/obj_commodity.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/obj_commodity.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_commodity.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/obj_commodity.o: monster.h account.h extern.h handler.h obj_money.h
 objs/obj_commodity.o: rent.h spec_mobs.h spec_rooms.h materials.h shop.h
 objs/obj_commodity.o: obj_commodity.h
@@ -10936,8 +10890,8 @@ objs/obj_component.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_component.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_component.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_component.o: body.h race.h skills.h disease.h trap.h task.h
-objs/obj_component.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/obj_component.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/obj_component.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_component.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/obj_component.o: monster.h account.h extern.h handler.h obj_money.h
 objs/obj_component.o: rent.h spec_mobs.h spec_rooms.h materials.h shop.h
 objs/obj_component.o: obj_spellbag.h obj_expandable_container.h
@@ -10996,7 +10950,7 @@ objs/obj_corpse.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_corpse.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_corpse.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_corpse.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_corpse.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_corpse.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_corpse.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_corpse.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_corpse.o: materials.h obj_corpse.h obj_base_corpse.h
@@ -11056,8 +11010,8 @@ objs/obj_drinkcon.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_drinkcon.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_drinkcon.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_drinkcon.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_drinkcon.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_drinkcon.o: connect.h charfile.h being.h person.h monster.h
+objs/obj_drinkcon.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/obj_drinkcon.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/obj_drinkcon.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_drinkcon.o: spec_mobs.h spec_rooms.h materials.h
 objs/obj_drinkcon.o: obj_base_container.h obj_drinkcon.h obj_base_cup.h
@@ -11110,9 +11064,9 @@ objs/obj_drug.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_drug.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_drug.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_drug.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_drug.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_drug.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_drug.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_drug.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_drug.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_drug.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_drug.o: obj_drug_container.h
 objs/obj_drug_container.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_drug_container.o: /usr/include/stdio.h /usr/include/features.h
@@ -11173,9 +11127,9 @@ objs/obj_drug_container.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_drug_container.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_drug_container.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_drug_container.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_drug_container.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/obj_drug_container.o: charfile.h being.h person.h monster.h account.h
-objs/obj_drug_container.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_drug_container.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/obj_drug_container.o: being.h person.h monster.h account.h extern.h
+objs/obj_drug_container.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_drug_container.o: spec_rooms.h materials.h obj_drug_container.h
 objs/obj_expandable_container.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_expandable_container.o: /usr/include/stdio.h /usr/include/features.h
@@ -11248,11 +11202,11 @@ objs/obj_expandable_container.o: response.h faction.h comm.h spec_objs.h
 objs/obj_expandable_container.o: toggle.h wiz_powers.h cmd_message.h stats.h
 objs/obj_expandable_container.o: limbs.h body.h race.h skills.h disease.h
 objs/obj_expandable_container.o: trap.h task.h weather.h sound.h create.h
-objs/obj_expandable_container.o: thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_expandable_container.o: connect.h charfile.h being.h person.h
-objs/obj_expandable_container.o: monster.h account.h extern.h handler.h
-objs/obj_expandable_container.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_expandable_container.o: materials.h obj_expandable_container.h
+objs/obj_expandable_container.o: thing.h room.h obj.h connect.h obj_drug.h
+objs/obj_expandable_container.o: charfile.h being.h person.h monster.h
+objs/obj_expandable_container.o: account.h extern.h handler.h obj_money.h
+objs/obj_expandable_container.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_expandable_container.o: obj_expandable_container.h
 objs/obj_expandable_container.o: obj_open_container.h obj_base_container.h
 objs/obj_flame.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_flame.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -11304,7 +11258,7 @@ objs/obj_flame.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_flame.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_flame.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_flame.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_flame.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_flame.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_flame.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_flame.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_flame.o: obj_fuel.h obj_organic.h obj_trash.h obj_tool.h obj_flame.h
@@ -11361,10 +11315,10 @@ objs/obj_food.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_food.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_food.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_food.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_food.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_food.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_food.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_food.o: shop.h obj_food.h obj_base_cup.h
+objs/obj_food.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_food.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_food.o: rent.h spec_mobs.h spec_rooms.h materials.h shop.h
+objs/obj_food.o: obj_food.h obj_base_cup.h
 objs/obj_fuel.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_fuel.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_fuel.o: /usr/include/gnu/stubs.h
@@ -11414,10 +11368,10 @@ objs/obj_fuel.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_fuel.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_fuel.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_fuel.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_fuel.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_fuel.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_fuel.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_fuel.o: obj_fuel.h obj_light.h obj_base_light.h
+objs/obj_fuel.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_fuel.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_fuel.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_fuel.h
+objs/obj_fuel.o: obj_light.h obj_base_light.h
 objs/obj_gemstone.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_gemstone.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_gemstone.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11473,8 +11427,8 @@ objs/obj_gemstone.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_gemstone.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_gemstone.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_gemstone.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_gemstone.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_gemstone.o: connect.h charfile.h being.h person.h monster.h
+objs/obj_gemstone.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/obj_gemstone.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/obj_gemstone.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_gemstone.o: spec_mobs.h spec_rooms.h materials.h obj_gemstone.h
 objs/obj_general_weapon.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -11536,9 +11490,9 @@ objs/obj_general_weapon.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_general_weapon.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_general_weapon.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_general_weapon.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_general_weapon.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/obj_general_weapon.o: charfile.h being.h person.h monster.h account.h
-objs/obj_general_weapon.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_general_weapon.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/obj_general_weapon.o: being.h person.h monster.h account.h extern.h
+objs/obj_general_weapon.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_general_weapon.o: spec_rooms.h materials.h obj_general_weapon.h
 objs/obj_general_weapon.o: obj_base_weapon.h obj_gun.h
 objs/obj_gun.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -11590,10 +11544,10 @@ objs/obj_gun.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_gun.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_gun.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_gun.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_gun.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_gun.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_gun.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_gun.o: obj_general_weapon.h obj_base_weapon.h obj_gun.h
+objs/obj_gun.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_gun.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_gun.o: spec_mobs.h spec_rooms.h materials.h obj_general_weapon.h
+objs/obj_gun.o: obj_base_weapon.h obj_gun.h
 objs/obj_jewelry.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_jewelry.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_jewelry.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11649,10 +11603,10 @@ objs/obj_jewelry.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_jewelry.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_jewelry.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_jewelry.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_jewelry.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_jewelry.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_jewelry.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_jewelry.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_jewelry.o: materials.h
+objs/obj_jewelry.o: materials.h obj_base_clothing.h obj_jewelry.h
 objs/obj_key.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_key.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_key.o: /usr/include/gnu/stubs.h
@@ -11702,11 +11656,11 @@ objs/obj_key.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_key.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_key.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_key.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_key.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_key.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_key.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_key.o: obj_open_container.h obj_base_container.h obj_keyring.h
-objs/obj_key.o: obj_expandable_container.h obj_key.h
+objs/obj_key.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_key.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_key.o: spec_mobs.h spec_rooms.h materials.h obj_open_container.h
+objs/obj_key.o: obj_base_container.h obj_keyring.h obj_expandable_container.h
+objs/obj_key.o: obj_key.h
 objs/obj_keyring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_keyring.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_keyring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11762,7 +11716,7 @@ objs/obj_keyring.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_keyring.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_keyring.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_keyring.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_keyring.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_keyring.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_keyring.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_keyring.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_keyring.o: materials.h obj_keyring.h obj_expandable_container.h
@@ -11817,10 +11771,70 @@ objs/obj_light.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_light.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_light.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_light.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_light.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_light.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_light.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_light.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_light.o: obj_light.h obj_base_light.h
+objs/obj_magic_item.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/obj_magic_item.o: /usr/include/stdio.h /usr/include/features.h
+objs/obj_magic_item.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_magic_item.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_magic_item.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_magic_item.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_magic_item.o: /usr/include/bits/stdio_lim.h
+objs/obj_magic_item.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/obj_magic_item.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_magic_item.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_magic_item.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/obj_magic_item.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_magic_item.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/obj_magic_item.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/obj_magic_item.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/obj_magic_item.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_magic_item.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/obj_magic_item.o: /usr/include/g++-3/std/bastring.h
+objs/obj_magic_item.o: /usr/include/g++-3/cstddef
+objs/obj_magic_item.o: /usr/include/g++-3/std/straits.h
+objs/obj_magic_item.o: /usr/include/g++-3/alloc.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_config.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_magic_item.o: /usr/include/g++-3/iostream.h
+objs/obj_magic_item.o: /usr/include/g++-3/streambuf.h
+objs/obj_magic_item.o: /usr/include/g++-3/iterator
+objs/obj_magic_item.o: /usr/include/g++-3/stl_relops.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_magic_item.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_magic_item.o: /usr/include/g++-3/vector
+objs/obj_magic_item.o: /usr/include/g++-3/stl_algobase.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_pair.h
+objs/obj_magic_item.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_magic_item.o: /usr/include/g++-3/stl_construct.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_vector.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_bvector.h
+objs/obj_magic_item.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_function.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_map.h
+objs/obj_magic_item.o: /usr/include/g++-3/stl_multimap.h
+objs/obj_magic_item.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/obj_magic_item.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/obj_magic_item.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/obj_magic_item.o: mobAI.h enum.h spells.h structs.h immunity.h
+objs/obj_magic_item.o: discipline.h spell2.h parse.h db.h ansi.h
+objs/obj_magic_item.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/obj_magic_item.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_magic_item.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/obj_magic_item.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/obj_magic_item.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_magic_item.o: person.h monster.h account.h extern.h handler.h
+objs/obj_magic_item.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/obj_magic_item.o: materials.h obj_magic_item.h
 objs/obj_money.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_money.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_money.o: /usr/include/gnu/stubs.h
@@ -11871,7 +11885,7 @@ objs/obj_money.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_money.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_money.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_money.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_money.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_money.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_money.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_money.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_money.o: statistics.h obj_player_corpse.h obj_base_corpse.h
@@ -11925,9 +11939,9 @@ objs/obj_note.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_note.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_note.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_note.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_note.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_note.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_note.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_note.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_note.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_note.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_note.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
 objs/obj_note.o: /usr/include/bits/confname.h obj_note.h
 objs/obj_opal.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -11979,10 +11993,9 @@ objs/obj_opal.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_opal.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_opal.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_opal.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_opal.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_opal.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_opal.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_opal.o: obj_opal.h
+objs/obj_opal.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_opal.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_opal.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_opal.h
 objs/obj_open_container.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_open_container.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_open_container.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -12042,9 +12055,9 @@ objs/obj_open_container.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_open_container.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_open_container.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_open_container.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_open_container.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/obj_open_container.o: charfile.h being.h person.h monster.h account.h
-objs/obj_open_container.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_open_container.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/obj_open_container.o: being.h person.h monster.h account.h extern.h
+objs/obj_open_container.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_open_container.o: spec_rooms.h materials.h disc_looting.h
 objs/obj_open_container.o: obj_open_container.h obj_base_container.h
 objs/obj_organic.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -12102,11 +12115,71 @@ objs/obj_organic.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_organic.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_organic.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_organic.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_organic.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_organic.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_organic.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_organic.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_organic.o: materials.h shop.h obj_organic.h obj_flame.h
 objs/obj_organic.o: obj_base_light.h
+objs/obj_other_obj.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/obj_other_obj.o: /usr/include/stdio.h /usr/include/features.h
+objs/obj_other_obj.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_other_obj.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_other_obj.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_other_obj.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_other_obj.o: /usr/include/bits/stdio_lim.h
+objs/obj_other_obj.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/obj_other_obj.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_other_obj.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_other_obj.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/obj_other_obj.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_other_obj.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/obj_other_obj.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/obj_other_obj.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/obj_other_obj.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_other_obj.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/obj_other_obj.o: /usr/include/g++-3/std/bastring.h
+objs/obj_other_obj.o: /usr/include/g++-3/cstddef
+objs/obj_other_obj.o: /usr/include/g++-3/std/straits.h
+objs/obj_other_obj.o: /usr/include/g++-3/alloc.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_config.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_other_obj.o: /usr/include/g++-3/iostream.h
+objs/obj_other_obj.o: /usr/include/g++-3/streambuf.h
+objs/obj_other_obj.o: /usr/include/g++-3/iterator
+objs/obj_other_obj.o: /usr/include/g++-3/stl_relops.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_other_obj.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_other_obj.o: /usr/include/g++-3/vector
+objs/obj_other_obj.o: /usr/include/g++-3/stl_algobase.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_pair.h
+objs/obj_other_obj.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_other_obj.o: /usr/include/g++-3/stl_construct.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_vector.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/obj_other_obj.o: /usr/include/g++-3/stl_tree.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_function.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_map.h
+objs/obj_other_obj.o: /usr/include/g++-3/stl_multimap.h
+objs/obj_other_obj.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/obj_other_obj.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/obj_other_obj.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/obj_other_obj.o: mobAI.h enum.h spells.h structs.h immunity.h
+objs/obj_other_obj.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
+objs/obj_other_obj.o: client.h response.h faction.h comm.h spec_objs.h
+objs/obj_other_obj.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/obj_other_obj.o: body.h race.h skills.h disease.h trap.h task.h
+objs/obj_other_obj.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_other_obj.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_other_obj.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_other_obj.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_other_obj.o: obj_other_obj.h
 objs/obj_pen.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_pen.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_pen.o: /usr/include/gnu/stubs.h
@@ -12156,9 +12229,9 @@ objs/obj_pen.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_pen.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/obj_pen.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/obj_pen.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_pen.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/obj_pen.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/obj_pen.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_pen.h
+objs/obj_pen.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_pen.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/obj_pen.o: spec_mobs.h spec_rooms.h materials.h obj_pen.h
 objs/obj_player_corpse.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_player_corpse.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_player_corpse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -12218,7 +12291,7 @@ objs/obj_player_corpse.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_player_corpse.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/obj_player_corpse.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/obj_player_corpse.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/obj_player_corpse.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_player_corpse.o: room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_player_corpse.o: being.h person.h monster.h account.h extern.h
 objs/obj_player_corpse.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_player_corpse.o: spec_rooms.h materials.h obj_player_corpse.h
@@ -12272,10 +12345,10 @@ objs/obj_pool.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_pool.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_pool.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_pool.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_pool.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_pool.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_pool.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_pool.o: obj_pool.h obj_base_cup.h
+objs/obj_pool.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_pool.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_pool.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_pool.h
+objs/obj_pool.o: obj_base_cup.h
 objs/obj_portal.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_portal.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_portal.o: /usr/include/gnu/stubs.h
@@ -12329,7 +12402,7 @@ objs/obj_portal.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_portal.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_portal.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_portal.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_portal.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_portal.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_portal.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_portal.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_portal.o: materials.h obj_portal.h obj_seethru.h
@@ -12386,10 +12459,10 @@ objs/obj_potion.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_potion.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_potion.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_potion.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_potion.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_potion.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_potion.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_potion.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_potion.o: materials.h
+objs/obj_potion.o: materials.h obj_magic_item.h obj_potion.h
 objs/obj_quiver.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_quiver.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_quiver.o: /usr/include/gnu/stubs.h
@@ -12443,7 +12516,7 @@ objs/obj_quiver.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_quiver.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_quiver.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_quiver.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_quiver.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_quiver.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_quiver.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_quiver.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_quiver.o: materials.h disc_looting.h obj_quiver.h
@@ -12502,10 +12575,10 @@ objs/obj_scroll.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_scroll.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_scroll.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_scroll.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_scroll.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_scroll.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_scroll.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_scroll.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_scroll.o: materials.h
+objs/obj_scroll.o: materials.h obj_magic_item.h obj_scroll.h
 objs/obj_seethru.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_seethru.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_seethru.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -12561,7 +12634,7 @@ objs/obj_seethru.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_seethru.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_seethru.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_seethru.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_seethru.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_seethru.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_seethru.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_seethru.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_seethru.o: materials.h obj_seethru.h obj_window.h
@@ -12615,7 +12688,7 @@ objs/obj_smoke.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_smoke.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_smoke.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_smoke.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_smoke.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_smoke.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_smoke.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_smoke.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_smoke.o: obj_smoke.h
@@ -12674,8 +12747,8 @@ objs/obj_spellbag.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_spellbag.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_spellbag.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_spellbag.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_spellbag.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_spellbag.o: connect.h charfile.h being.h person.h monster.h
+objs/obj_spellbag.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/obj_spellbag.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/obj_spellbag.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_spellbag.o: spec_mobs.h spec_rooms.h materials.h obj_spellbag.h
 objs/obj_spellbag.o: obj_expandable_container.h obj_open_container.h
@@ -12730,9 +12803,10 @@ objs/obj_staff.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_staff.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_staff.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_staff.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_staff.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_staff.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_staff.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_staff.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_staff.o: obj_magic_item.h obj_staff.h
 objs/obj_statue.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_statue.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_statue.o: /usr/include/gnu/stubs.h
@@ -12786,7 +12860,7 @@ objs/obj_statue.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_statue.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_statue.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_statue.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_statue.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_statue.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_statue.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_statue.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_statue.o: materials.h obj_statue.h
@@ -12843,7 +12917,7 @@ objs/obj_symbol.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_symbol.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_symbol.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_symbol.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_symbol.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_symbol.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_symbol.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_symbol.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_symbol.o: materials.h shop.h obj_symbol.h
@@ -12897,7 +12971,7 @@ objs/obj_table.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_table.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_table.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_table.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_table.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_table.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_table.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_table.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_table.o: obj_table.h
@@ -12950,10 +13024,9 @@ objs/obj_tool.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_tool.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_tool.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_tool.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_tool.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_tool.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_tool.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_tool.o: obj_tool.h
+objs/obj_tool.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_tool.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_tool.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_tool.h
 objs/obj_trap.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_trap.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_trap.o: /usr/include/gnu/stubs.h
@@ -13003,10 +13076,10 @@ objs/obj_trap.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_trap.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_trap.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_trap.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_trap.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_trap.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_trap.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_trap.o: disc_looting.h obj_trap.h
+objs/obj_trap.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_trap.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_trap.o: rent.h spec_mobs.h spec_rooms.h materials.h disc_looting.h
+objs/obj_trap.o: obj_trap.h
 objs/obj_trash.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_trash.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_trash.o: /usr/include/gnu/stubs.h
@@ -13057,7 +13130,7 @@ objs/obj_trash.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_trash.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_trash.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_trash.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_trash.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_trash.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/obj_trash.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_trash.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/obj_trash.o: obj_trash.h
@@ -13116,8 +13189,8 @@ objs/obj_treasure.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/obj_treasure.o: client.h response.h faction.h comm.h spec_objs.h
 objs/obj_treasure.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/obj_treasure.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_treasure.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/obj_treasure.o: connect.h charfile.h being.h person.h monster.h
+objs/obj_treasure.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/obj_treasure.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/obj_treasure.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_treasure.o: spec_mobs.h spec_rooms.h materials.h obj_treasure.h
 objs/obj_tree.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -13169,10 +13242,9 @@ objs/obj_tree.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_tree.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_tree.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_tree.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_tree.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_tree.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_tree.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_tree.o: obj_tree.h
+objs/obj_tree.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_tree.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_tree.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_tree.h
 objs/obj_vial.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_vial.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_vial.o: /usr/include/gnu/stubs.h
@@ -13222,10 +13294,10 @@ objs/obj_vial.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_vial.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_vial.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_vial.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_vial.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_vial.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_vial.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_vial.o: obj_vial.h obj_base_cup.h
+objs/obj_vial.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_vial.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_vial.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_vial.h
+objs/obj_vial.o: obj_base_cup.h
 objs/obj_wand.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_wand.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_wand.o: /usr/include/gnu/stubs.h
@@ -13275,9 +13347,10 @@ objs/obj_wand.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_wand.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_wand.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_wand.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_wand.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_wand.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_wand.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_wand.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_wand.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_wand.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_magic_item.h
+objs/obj_wand.o: obj_wand.h
 objs/obj_window.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_window.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_window.o: /usr/include/gnu/stubs.h
@@ -13331,7 +13404,7 @@ objs/obj_window.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_window.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_window.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_window.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/obj_window.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/obj_window.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/obj_window.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_window.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_window.o: materials.h obj_window.h obj_seethru.h
@@ -13384,9 +13457,10 @@ objs/obj_worn.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/obj_worn.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/obj_worn.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/obj_worn.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/obj_worn.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/obj_worn.o: being.h person.h monster.h account.h extern.h handler.h
-objs/obj_worn.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_worn.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/obj_worn.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/obj_worn.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_worn.o: obj_base_clothing.h obj_worn.h
 objs/offense.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/offense.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/offense.o: /usr/include/gnu/stubs.h
@@ -13436,13 +13510,13 @@ objs/offense.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/offense.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/offense.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/offense.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/offense.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/offense.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/offense.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
+objs/offense.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/offense.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/offense.o: spec_mobs.h spec_rooms.h materials.h games.h
 objs/offense.o: game_crazyeights.h game_drawpoker.h combat.h obj_spellbag.h
 objs/offense.o: obj_expandable_container.h obj_open_container.h
 objs/offense.o: obj_base_container.h obj_base_weapon.h obj_gun.h
-objs/offense.o: obj_general_weapon.h obj_base_cup.h
+objs/offense.o: obj_general_weapon.h obj_base_cup.h obj_base_clothing.h
 objs/oldlimbs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/oldlimbs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/oldlimbs.o: /usr/include/gnu/stubs.h
@@ -13492,10 +13566,10 @@ objs/oldlimbs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/oldlimbs.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/oldlimbs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/oldlimbs.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/oldlimbs.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/oldlimbs.o: being.h person.h monster.h account.h extern.h handler.h
-objs/oldlimbs.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/oldlimbs.o: combat.h obj_corpse.h obj_base_corpse.h obj_base_container.h
+objs/oldlimbs.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/oldlimbs.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/oldlimbs.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
+objs/oldlimbs.o: obj_corpse.h obj_base_corpse.h obj_base_container.h
 objs/oldrace.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/oldrace.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/oldrace.o: /usr/include/gnu/stubs.h
@@ -13545,9 +13619,9 @@ objs/oldrace.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/oldrace.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/oldrace.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/oldrace.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/oldrace.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/oldrace.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/oldrace.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/oldrace.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/oldrace.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/oldrace.o: spec_mobs.h spec_rooms.h materials.h
 objs/oldrace.o: /usr/include/g++-3/fstream.h
 objs/opinion.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/opinion.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -13598,9 +13672,9 @@ objs/opinion.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/opinion.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/opinion.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/opinion.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/opinion.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/opinion.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/opinion.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/opinion.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/opinion.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/opinion.o: spec_mobs.h spec_rooms.h materials.h
 objs/other.o: /usr/include/unistd.h /usr/include/features.h
 objs/other.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/other.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -13651,10 +13725,10 @@ objs/other.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/other.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/other.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/other.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/other.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/other.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/other.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/other.o: spec_rooms.h materials.h range.h statistics.h combat.h games.h
+objs/other.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/other.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/other.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/other.o: materials.h range.h statistics.h combat.h games.h
 objs/other.o: game_crazyeights.h game_drawpoker.h mail.h skillsort.h
 objs/other.o: obj_board.h obj_spellbag.h obj_expandable_container.h
 objs/other.o: obj_open_container.h obj_base_container.h obj_base_corpse.h
@@ -13665,60 +13739,9 @@ objs/other.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
 objs/other.o: disc_hand_of_god.h disc_cures.h disc_nature.h
 objs/other.o: disc_shaman_armadillo.h disc_shaman_frog.h disc_shaman_skunk.h
 objs/other.o: disc_shaman_spider.h disc_shaman_control.h obj_trap.h
-objs/other.o: obj_light.h obj_base_light.h spelltask.h
-objs/other_obj.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
-objs/other_obj.o: /usr/include/features.h /usr/include/sys/cdefs.h
-objs/other_obj.o: /usr/include/gnu/stubs.h
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/other_obj.o: /usr/include/bits/types.h /usr/include/libio.h
-objs/other_obj.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/other_obj.o: /usr/include/bits/wchar.h /usr/include/gconv.h
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
-objs/other_obj.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/other_obj.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
-objs/other_obj.o: /usr/include/time.h /usr/include/bits/time.h
-objs/other_obj.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
-objs/other_obj.o: /usr/include/ctype.h /usr/include/endian.h
-objs/other_obj.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/other_obj.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/other_obj.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/other_obj.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/other_obj.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/other_obj.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/other_obj.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/other_obj.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/other_obj.o: /usr/include/g++-3/stl_alloc.h
-objs/other_obj.o: /usr/include/g++-3/iostream.h
-objs/other_obj.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
-objs/other_obj.o: /usr/include/g++-3/stl_relops.h
-objs/other_obj.o: /usr/include/g++-3/stl_iterator.h
-objs/other_obj.o: /usr/include/g++-3/std/bastring.cc
-objs/other_obj.o: /usr/include/g++-3/vector /usr/include/g++-3/stl_algobase.h
-objs/other_obj.o: /usr/include/g++-3/stl_pair.h
-objs/other_obj.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
-objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
-objs/other_obj.o: /usr/include/g++-3/stl_construct.h
-objs/other_obj.o: /usr/include/g++-3/stl_uninitialized.h
-objs/other_obj.o: /usr/include/g++-3/stl_vector.h
-objs/other_obj.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
-objs/other_obj.o: /usr/include/g++-3/stl_tree.h
-objs/other_obj.o: /usr/include/g++-3/stl_function.h
-objs/other_obj.o: /usr/include/g++-3/stl_map.h
-objs/other_obj.o: /usr/include/g++-3/stl_multimap.h
-objs/other_obj.o: /home/oldspasm/usr/include/mysql/mysql.h
-objs/other_obj.o: /home/oldspasm/usr/include/mysql/mysql_com.h
-objs/other_obj.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
-objs/other_obj.o: mobAI.h enum.h spells.h structs.h immunity.h discipline.h
-objs/other_obj.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
-objs/other_obj.o: response.h faction.h comm.h spec_objs.h toggle.h
-objs/other_obj.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
-objs/other_obj.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/other_obj.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/other_obj.o: being.h person.h monster.h account.h extern.h handler.h
-objs/other_obj.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/other.o: obj_light.h obj_base_light.h obj_armor.h obj_base_clothing.h
+objs/other.o: obj_armor_wand.h obj_wand.h obj_magic_item.h spelltask.h
+objs/other.o: obj_potion.h obj_scroll.h
 objs/parse.o: /usr/include/unistd.h /usr/include/features.h
 objs/parse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/parse.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -13766,10 +13789,10 @@ objs/parse.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/parse.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/parse.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/parse.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/parse.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/parse.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/parse.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/parse.o: spec_rooms.h materials.h mail.h
+objs/parse.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/parse.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/parse.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/parse.o: materials.h mail.h
 objs/peelpk.o: /usr/include/g++-3/ctime /usr/include/time.h
 objs/peelpk.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/peelpk.o: /usr/include/gnu/stubs.h
@@ -13818,10 +13841,10 @@ objs/peelpk.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/peelpk.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/peelpk.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/peelpk.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/peelpk.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/peelpk.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/peelpk.o: spec_mobs.h spec_rooms.h materials.h obj_gun.h
-objs/peelpk.o: obj_general_weapon.h obj_base_weapon.h
+objs/peelpk.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/peelpk.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/peelpk.o: spec_rooms.h materials.h obj_gun.h obj_general_weapon.h
+objs/peelpk.o: obj_base_weapon.h
 objs/periodic.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/periodic.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/periodic.o: /usr/include/gnu/stubs.h
@@ -13871,12 +13894,12 @@ objs/periodic.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/periodic.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/periodic.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/periodic.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/periodic.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/periodic.o: being.h person.h monster.h account.h extern.h handler.h
-objs/periodic.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/periodic.o: combat.h mail.h disc_monk.h obj_component.h
-objs/periodic.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
-objs/periodic.o: obj_opal.h obj_seethru.h
+objs/periodic.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/periodic.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/periodic.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h mail.h
+objs/periodic.o: disc_monk.h obj_component.h obj_player_corpse.h
+objs/periodic.o: obj_base_corpse.h obj_base_container.h obj_opal.h
+objs/periodic.o: obj_seethru.h
 objs/pets.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/pets.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/pets.o: /usr/include/gnu/stubs.h
@@ -13922,9 +13945,9 @@ objs/pets.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/pets.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/pets.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/pets.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/pets.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/pets.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/pets.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/pets.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/pets.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/pets.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/pets.o: materials.h
 objs/physics.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/physics.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -13975,9 +13998,9 @@ objs/physics.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/physics.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/physics.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/physics.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/physics.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/physics.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/physics.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
+objs/physics.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/physics.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/physics.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/player_data.o: /usr/include/unistd.h /usr/include/features.h
 objs/player_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/player_data.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -14036,7 +14059,7 @@ objs/player_data.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/player_data.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/player_data.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/player_data.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/player_data.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/player_data.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/player_data.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/player_data.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/player_data.o: materials.h shop.h mail.h statistics.h combat.h
@@ -14085,9 +14108,9 @@ objs/race.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/race.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/race.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/race.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/race.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/race.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/race.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/race.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/race.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/race.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/race.o: materials.h obj_player_corpse.h obj_base_corpse.h
 objs/race.o: obj_base_container.h obj_corpse.h /usr/include/g++-3/fstream.h
 objs/range.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
@@ -14139,10 +14162,10 @@ objs/range.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/range.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/range.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/range.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/range.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/range.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/range.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/range.o: spec_rooms.h materials.h range.h combat.h obj_quiver.h
+objs/range.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/range.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/range.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/range.o: materials.h range.h combat.h obj_quiver.h
 objs/range.o: obj_expandable_container.h obj_open_container.h
 objs/range.o: obj_base_container.h obj_bow.h obj_portal.h obj_seethru.h
 objs/range.o: obj_arrow.h obj_base_weapon.h obj_gun.h obj_general_weapon.h
@@ -14194,13 +14217,13 @@ objs/rent.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/rent.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/rent.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/rent.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/rent.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/rent.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/rent.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/rent.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/rent.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/rent.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/rent.o: materials.h statistics.h mail.h shop.h obj_player_corpse.h
 objs/rent.o: obj_base_corpse.h obj_base_container.h obj_bag.h
 objs/rent.o: obj_expandable_container.h obj_open_container.h obj_symbol.h
-objs/rent.o: obj_component.h obj_note.h
+objs/rent.o: obj_component.h obj_note.h obj_magic_item.h obj_wand.h
 objs/repair.o: /usr/include/unistd.h /usr/include/features.h
 objs/repair.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/repair.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -14251,9 +14274,9 @@ objs/repair.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/repair.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/repair.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/repair.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/repair.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/repair.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/repair.o: spec_mobs.h spec_rooms.h materials.h statistics.h obj_note.h
+objs/repair.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/repair.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/repair.o: spec_rooms.h materials.h statistics.h obj_note.h
 objs/response.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/response.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/response.o: /usr/include/gnu/stubs.h
@@ -14303,9 +14326,9 @@ objs/response.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/response.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/response.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/response.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/response.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/response.o: being.h person.h monster.h account.h extern.h handler.h
-objs/response.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/response.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/response.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/response.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/rewrite_obj_file.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/rewrite_obj_file.o: /usr/include/stdio.h /usr/include/features.h
 objs/rewrite_obj_file.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -14363,11 +14386,10 @@ objs/rewrite_obj_file.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/rewrite_obj_file.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/rewrite_obj_file.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/rewrite_obj_file.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/rewrite_obj_file.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/rewrite_obj_file.o: being.h person.h monster.h account.h extern.h
-objs/rewrite_obj_file.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/rewrite_obj_file.o: spec_rooms.h materials.h obj_base_weapon.h
-objs/rewrite_obj_file.o: obj_base_cup.h
+objs/rewrite_obj_file.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/rewrite_obj_file.o: person.h monster.h account.h extern.h handler.h
+objs/rewrite_obj_file.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/rewrite_obj_file.o: materials.h obj_base_weapon.h obj_base_cup.h
 objs/riding.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/riding.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/riding.o: /usr/include/gnu/stubs.h
@@ -14416,10 +14438,10 @@ objs/riding.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/riding.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/riding.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/riding.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/riding.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/riding.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/riding.o: spec_mobs.h spec_rooms.h materials.h combat.h
-objs/riding.o: obj_base_container.h obj_table.h
+objs/riding.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/riding.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/riding.o: spec_rooms.h materials.h combat.h obj_base_container.h
+objs/riding.o: obj_table.h obj_base_clothing.h
 objs/room.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/room.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/room.o: /usr/include/gnu/stubs.h
@@ -14465,9 +14487,9 @@ objs/room.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/room.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/room.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/room.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/room.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/room.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/room.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/room.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/room.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/room.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/room.o: materials.h
 objs/shop.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/shop.o: /usr/include/bits/types.h /usr/include/features.h
@@ -14521,13 +14543,13 @@ objs/shop.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/shop.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/shop.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/shop.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/shop.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/shop.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/shop.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/shop.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/shop.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/shop.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/shop.o: materials.h shop.h statistics.h obj_spellbag.h
 objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
-objs/shop.o: obj_base_weapon.h
+objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/show.o: /usr/include/dirent.h /usr/include/features.h
 objs/show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/show.o: /usr/include/bits/types.h
@@ -14574,12 +14596,13 @@ objs/show.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/show.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/show.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/show.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/show.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/show.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/show.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/show.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/show.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/show.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/show.o: materials.h disc_looting.h combat.h obj_component.h
 objs/show.o: disc_alchemy.h obj_table.h obj_note.h obj_trap.h obj_window.h
-objs/show.o: obj_seethru.h
+objs/show.o: obj_seethru.h obj_potion.h obj_magic_item.h obj_scroll.h
+objs/show.o: obj_staff.h
 objs/signals.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/signals.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/signals.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -14633,9 +14656,9 @@ objs/signals.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/signals.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/signals.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/signals.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/signals.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/signals.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/signals.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/signals.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/signals.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/signals.o: spec_mobs.h spec_rooms.h materials.h
 objs/skill_dam.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/skill_dam.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/skill_dam.o: /usr/include/gnu/stubs.h
@@ -14686,7 +14709,7 @@ objs/skill_dam.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/skill_dam.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/skill_dam.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/skill_dam.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/skill_dam.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/skill_dam.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/skill_dam.o: being.h person.h monster.h account.h extern.h handler.h
 objs/skill_dam.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/skill_dam.o: statistics.h
@@ -14738,9 +14761,9 @@ objs/skills.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/skills.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/skills.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/skills.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/skills.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/skills.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/skills.o: spec_mobs.h spec_rooms.h materials.h disc_mage.h disc_cleric.h
+objs/skills.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/skills.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/skills.o: spec_rooms.h materials.h disc_mage.h disc_cleric.h
 objs/skills.o: disc_physical.h disc_smythe.h disc_deikhan_fight.h
 objs/skills.o: disc_deikhan_aegis.h disc_deikhan_cures.h disc_deikhan_wrath.h
 objs/skills.o: disc_defense.h disc_mounted.h disc_monk.h disc_meditation.h
@@ -14826,10 +14849,10 @@ objs/socket.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/socket.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/socket.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/socket.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/socket.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/socket.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/socket.o: spec_mobs.h spec_rooms.h materials.h statistics.h spelltask.h
-objs/socket.o: systemtask.h socket.h obj_smoke.h
+objs/socket.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/socket.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/socket.o: spec_rooms.h materials.h statistics.h spelltask.h systemtask.h
+objs/socket.o: socket.h obj_smoke.h
 objs/sound.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/sound.o: /usr/include/gnu/stubs.h
@@ -14875,10 +14898,10 @@ objs/sound.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/sound.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/sound.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/sound.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/sound.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/sound.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/sound.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/sound.o: spec_rooms.h materials.h
+objs/sound.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/sound.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/sound.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/sound.o: materials.h
 objs/spec_mobs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spec_mobs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/spec_mobs.o: /usr/include/gnu/stubs.h
@@ -14929,7 +14952,7 @@ objs/spec_mobs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spec_mobs.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spec_mobs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spec_mobs.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/spec_mobs.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spec_mobs.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/spec_mobs.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spec_mobs.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/spec_mobs.o: combat.h disc_sorcery.h disc_afflictions.h disc_aegis.h
@@ -14938,7 +14961,7 @@ objs/spec_mobs.o: obj_component.h paths.h obj_base_corpse.h
 objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_symbol.h
 objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
 objs/spec_mobs.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
-objs/spec_mobs.o: /usr/include/g++-3/fstream.h
+objs/spec_mobs.o: obj_base_clothing.h /usr/include/g++-3/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/sys/cdefs.h
@@ -15009,11 +15032,10 @@ objs/spec_mobs_bounty_hunter.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_mobs_bounty_hunter.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/spec_mobs_bounty_hunter.o: body.h race.h skills.h disease.h trap.h
 objs/spec_mobs_bounty_hunter.o: task.h weather.h sound.h create.h thing.h
-objs/spec_mobs_bounty_hunter.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/spec_mobs_bounty_hunter.o: charfile.h being.h person.h monster.h
-objs/spec_mobs_bounty_hunter.o: account.h extern.h handler.h obj_money.h
-objs/spec_mobs_bounty_hunter.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/spec_mobs_bounty_hunter.o: shop.h statistics.h
+objs/spec_mobs_bounty_hunter.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/spec_mobs_bounty_hunter.o: being.h person.h monster.h account.h extern.h
+objs/spec_mobs_bounty_hunter.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_bounty_hunter.o: spec_rooms.h materials.h shop.h statistics.h
 objs/spec_mobs_coroner.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_coroner.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_coroner.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15073,7 +15095,7 @@ objs/spec_mobs_coroner.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_mobs_coroner.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/spec_mobs_coroner.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/spec_mobs_coroner.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/spec_mobs_coroner.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spec_mobs_coroner.o: room.h obj.h connect.h obj_drug.h charfile.h
 objs/spec_mobs_coroner.o: being.h person.h monster.h account.h extern.h
 objs/spec_mobs_coroner.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_coroner.o: spec_rooms.h materials.h obj_base_corpse.h
@@ -15144,8 +15166,8 @@ objs/spec_mobs_doppleganger.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_mobs_doppleganger.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/spec_mobs_doppleganger.o: body.h race.h skills.h disease.h trap.h task.h
 objs/spec_mobs_doppleganger.o: weather.h sound.h create.h thing.h room.h
-objs/spec_mobs_doppleganger.o: obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/spec_mobs_doppleganger.o: being.h person.h monster.h account.h extern.h
+objs/spec_mobs_doppleganger.o: obj.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_doppleganger.o: person.h monster.h account.h extern.h
 objs/spec_mobs_doppleganger.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_doppleganger.o: spec_rooms.h materials.h
 objs/spec_mobs_earthquake_digger.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -15222,10 +15244,10 @@ objs/spec_mobs_earthquake_digger.o: response.h faction.h comm.h spec_objs.h
 objs/spec_mobs_earthquake_digger.o: toggle.h wiz_powers.h cmd_message.h
 objs/spec_mobs_earthquake_digger.o: stats.h limbs.h body.h race.h skills.h
 objs/spec_mobs_earthquake_digger.o: disease.h trap.h task.h weather.h sound.h
-objs/spec_mobs_earthquake_digger.o: create.h thing.h room.h obj.h obj2.h
-objs/spec_mobs_earthquake_digger.o: obj_drug.h connect.h charfile.h being.h
-objs/spec_mobs_earthquake_digger.o: person.h monster.h account.h extern.h
-objs/spec_mobs_earthquake_digger.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_earthquake_digger.o: create.h thing.h room.h obj.h connect.h
+objs/spec_mobs_earthquake_digger.o: obj_drug.h charfile.h being.h person.h
+objs/spec_mobs_earthquake_digger.o: monster.h account.h extern.h handler.h
+objs/spec_mobs_earthquake_digger.o: obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_earthquake_digger.o: spec_rooms.h materials.h
 objs/spec_mobs_goring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_goring.o: /usr/include/stdio.h /usr/include/features.h
@@ -15284,10 +15306,10 @@ objs/spec_mobs_goring.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_mobs_goring.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/spec_mobs_goring.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/spec_mobs_goring.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/spec_mobs_goring.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/spec_mobs_goring.o: being.h person.h monster.h account.h extern.h
-objs/spec_mobs_goring.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/spec_mobs_goring.o: spec_rooms.h materials.h
+objs/spec_mobs_goring.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_goring.o: person.h monster.h account.h extern.h handler.h
+objs/spec_mobs_goring.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/spec_mobs_goring.o: materials.h
 objs/spec_mobs_posse.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_posse.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_posse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15345,9 +15367,9 @@ objs/spec_mobs_posse.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_mobs_posse.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/spec_mobs_posse.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/spec_mobs_posse.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/spec_mobs_posse.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/spec_mobs_posse.o: being.h person.h monster.h account.h extern.h
-objs/spec_mobs_posse.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/spec_mobs_posse.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_posse.o: person.h monster.h account.h extern.h handler.h
+objs/spec_mobs_posse.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spec_mobs_posse.o: materials.h paths.h
 objs/spec_mobs_realestate.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_realestate.o: /usr/include/stdio.h /usr/include/features.h
@@ -15412,8 +15434,8 @@ objs/spec_mobs_realestate.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_mobs_realestate.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/spec_mobs_realestate.o: body.h race.h skills.h disease.h trap.h task.h
 objs/spec_mobs_realestate.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/spec_mobs_realestate.o: obj2.h obj_drug.h connect.h charfile.h being.h
-objs/spec_mobs_realestate.o: person.h monster.h account.h extern.h handler.h
+objs/spec_mobs_realestate.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/spec_mobs_realestate.o: monster.h account.h extern.h handler.h
 objs/spec_mobs_realestate.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spec_mobs_realestate.o: materials.h
 objs/spec_objs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -15466,12 +15488,13 @@ objs/spec_objs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spec_objs.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spec_objs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spec_objs.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/spec_objs.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spec_objs.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/spec_objs.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spec_objs.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/spec_objs.o: obj_base_corpse.h obj_base_container.h obj_open_container.h
 objs/spec_objs.o: obj_trap.h obj_portal.h obj_seethru.h obj_general_weapon.h
 objs/spec_objs.o: obj_base_weapon.h obj_drinkcon.h obj_base_cup.h
+objs/spec_objs.o: obj_potion.h obj_magic_item.h obj_staff.h obj_wand.h
 objs/spec_objs_blind.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_blind.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_blind.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15529,9 +15552,9 @@ objs/spec_objs_blind.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_objs_blind.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/spec_objs_blind.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/spec_objs_blind.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/spec_objs_blind.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/spec_objs_blind.o: being.h person.h monster.h account.h extern.h
-objs/spec_objs_blind.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/spec_objs_blind.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_blind.o: person.h monster.h account.h extern.h handler.h
+objs/spec_objs_blind.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spec_objs_blind.o: materials.h obj_base_weapon.h
 objs/spec_objs_jambiya.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_jambiya.o: /usr/include/stdio.h /usr/include/features.h
@@ -15592,7 +15615,7 @@ objs/spec_objs_jambiya.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_objs_jambiya.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/spec_objs_jambiya.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/spec_objs_jambiya.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/spec_objs_jambiya.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spec_objs_jambiya.o: room.h obj.h connect.h obj_drug.h charfile.h
 objs/spec_objs_jambiya.o: being.h person.h monster.h account.h extern.h
 objs/spec_objs_jambiya.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_objs_jambiya.o: spec_rooms.h materials.h obj_base_weapon.h
@@ -15666,11 +15689,11 @@ objs/spec_objs_lightning_rod.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_objs_lightning_rod.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/spec_objs_lightning_rod.o: body.h race.h skills.h disease.h trap.h
 objs/spec_objs_lightning_rod.o: task.h weather.h sound.h create.h thing.h
-objs/spec_objs_lightning_rod.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/spec_objs_lightning_rod.o: charfile.h being.h person.h monster.h
-objs/spec_objs_lightning_rod.o: account.h extern.h handler.h obj_money.h
-objs/spec_objs_lightning_rod.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/spec_objs_lightning_rod.o: obj_base_weapon.h
+objs/spec_objs_lightning_rod.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/spec_objs_lightning_rod.o: being.h person.h monster.h account.h extern.h
+objs/spec_objs_lightning_rod.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_objs_lightning_rod.o: spec_rooms.h materials.h obj_base_weapon.h
+objs/spec_objs_lightning_rod.o: obj_base_clothing.h
 objs/spec_objs_manadrain.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_manadrain.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_manadrain.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15731,11 +15754,11 @@ objs/spec_objs_manadrain.o: ansi.h cmd_dissect.h client.h response.h
 objs/spec_objs_manadrain.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_objs_manadrain.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/spec_objs_manadrain.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/spec_objs_manadrain.o: sound.h create.h thing.h room.h obj.h obj2.h
-objs/spec_objs_manadrain.o: obj_drug.h connect.h charfile.h being.h person.h
-objs/spec_objs_manadrain.o: monster.h account.h extern.h handler.h
-objs/spec_objs_manadrain.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/spec_objs_manadrain.o: materials.h obj_base_weapon.h
+objs/spec_objs_manadrain.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/spec_objs_manadrain.o: obj_drug.h charfile.h being.h person.h monster.h
+objs/spec_objs_manadrain.o: account.h extern.h handler.h obj_money.h rent.h
+objs/spec_objs_manadrain.o: spec_mobs.h spec_rooms.h materials.h
+objs/spec_objs_manadrain.o: obj_base_weapon.h
 objs/spec_rooms.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/spec_rooms.o: /usr/include/bits/types.h /usr/include/features.h
 objs/spec_rooms.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15792,7 +15815,7 @@ objs/spec_rooms.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spec_rooms.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spec_rooms.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spec_rooms.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/spec_rooms.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/spec_rooms.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/spec_rooms.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/spec_rooms.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spec_rooms.o: materials.h statistics.h obj_food.h obj_note.h
@@ -15857,11 +15880,11 @@ objs/spec_rooms_sleeptag.o: ansi.h cmd_dissect.h client.h response.h
 objs/spec_rooms_sleeptag.o: faction.h comm.h spec_objs.h toggle.h
 objs/spec_rooms_sleeptag.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/spec_rooms_sleeptag.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/spec_rooms_sleeptag.o: sound.h create.h thing.h room.h obj.h obj2.h
-objs/spec_rooms_sleeptag.o: obj_drug.h connect.h charfile.h being.h person.h
-objs/spec_rooms_sleeptag.o: monster.h account.h extern.h handler.h
-objs/spec_rooms_sleeptag.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/spec_rooms_sleeptag.o: materials.h
+objs/spec_rooms_sleeptag.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/spec_rooms_sleeptag.o: obj_drug.h charfile.h being.h person.h monster.h
+objs/spec_rooms_sleeptag.o: account.h extern.h handler.h obj_money.h rent.h
+objs/spec_rooms_sleeptag.o: spec_mobs.h spec_rooms.h materials.h obj_staff.h
+objs/spec_rooms_sleeptag.o: obj_magic_item.h obj_wand.h
 objs/spell_info.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spell_info.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/spell_info.o: /usr/include/gnu/stubs.h
@@ -15915,7 +15938,7 @@ objs/spell_info.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spell_info.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spell_info.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spell_info.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/spell_info.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/spell_info.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/spell_info.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/spell_info.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spell_info.o: materials.h
@@ -15969,7 +15992,7 @@ objs/spell_num.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spell_num.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spell_num.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spell_num.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/spell_num.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spell_num.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/spell_num.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spell_num.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/spell_parser.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -16027,8 +16050,8 @@ objs/spell_parser.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/spell_parser.o: client.h response.h faction.h comm.h spec_objs.h
 objs/spell_parser.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/spell_parser.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/spell_parser.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/spell_parser.o: connect.h charfile.h being.h person.h monster.h
+objs/spell_parser.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/spell_parser.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/spell_parser.o: account.h extern.h handler.h obj_money.h rent.h
 objs/spell_parser.o: spec_mobs.h spec_rooms.h materials.h
 objs/spell_parser.o: disc_shaman_armadillo.h disc_air.h disc_alchemy.h
@@ -16092,7 +16115,7 @@ objs/spellstore.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spellstore.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spellstore.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spellstore.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/spellstore.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/spellstore.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/spellstore.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/spellstore.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spellstore.o: materials.h
@@ -16146,7 +16169,7 @@ objs/spelltask.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/spelltask.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/spelltask.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/spelltask.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/spelltask.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/spelltask.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/spelltask.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spelltask.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/spelltask.o: spelltask.h disc_air.h disc_alchemy.h
@@ -16211,7 +16234,7 @@ objs/statistics.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/statistics.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/statistics.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/statistics.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/statistics.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/statistics.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/statistics.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/statistics.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/statistics.o: materials.h statistics.h systemtask.h
@@ -16260,12 +16283,12 @@ objs/stats.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/stats.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/stats.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/stats.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/stats.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/stats.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/stats.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/stats.o: spec_rooms.h materials.h /usr/include/g++-3/cmath
-objs/stats.o: /usr/include/math.h /usr/include/bits/huge_val.h
-objs/stats.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+objs/stats.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/stats.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/stats.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/stats.o: materials.h /usr/include/g++-3/cmath /usr/include/math.h
+objs/stats.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/stats.o: /usr/include/bits/mathcalls.h
 objs/structs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/structs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/structs.o: /usr/include/gnu/stubs.h
@@ -16315,12 +16338,12 @@ objs/structs.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/structs.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/structs.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/structs.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/structs.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/structs.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/structs.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
-objs/structs.o: obj_board.h statistics.h games.h game_crazyeights.h
-objs/structs.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
-objs/structs.o: obj_table.h obj_seethru.h
+objs/structs.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/structs.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/structs.o: spec_mobs.h spec_rooms.h materials.h combat.h obj_board.h
+objs/structs.o: statistics.h games.h game_crazyeights.h game_drawpoker.h
+objs/structs.o: obj_base_corpse.h obj_base_container.h obj_table.h
+objs/structs.o: obj_seethru.h
 objs/sys_loot.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/sys_loot.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/sys_loot.o: /usr/include/gnu/stubs.h
@@ -16370,10 +16393,11 @@ objs/sys_loot.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/sys_loot.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/sys_loot.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/sys_loot.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/sys_loot.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/sys_loot.o: being.h person.h monster.h account.h extern.h handler.h
-objs/sys_loot.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/sys_loot.o: statistics.h sys_loot.h
+objs/sys_loot.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/sys_loot.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/sys_loot.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
+objs/sys_loot.o: sys_loot.h obj_magic_item.h obj_potion.h obj_scroll.h
+objs/sys_loot.o: obj_staff.h obj_wand.h
 objs/systemtask.o: /usr/include/sys/wait.h /usr/include/features.h
 objs/systemtask.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/systemtask.o: /usr/include/signal.h /usr/include/bits/sigset.h
@@ -16434,7 +16458,7 @@ objs/systemtask.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/systemtask.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/systemtask.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/systemtask.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/systemtask.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/systemtask.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/systemtask.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/systemtask.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/systemtask.o: materials.h systemtask.h obj_note.h
@@ -16483,9 +16507,9 @@ objs/talk.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/talk.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/talk.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/talk.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/talk.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/talk.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/talk.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/talk.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/talk.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/talk.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/talk.o: materials.h obj_pen.h obj_note.h
 objs/task.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -16532,9 +16556,9 @@ objs/task.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/task.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/task.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/task.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/task.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/task.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/task.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/task.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task.o: materials.h disc_alchemy.h disc_looting.h disc_survival.h
 objs/task.o: disc_air.h disc_monk.h
 objs/task_attune.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -16592,7 +16616,7 @@ objs/task_attune.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_attune.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_attune.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_attune.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_attune.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_attune.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_attune.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_attune.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_attune.o: materials.h obj_symbol.h obj_vial.h obj_base_cup.h
@@ -16646,9 +16670,10 @@ objs/task_brew.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_brew.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_brew.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_brew.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_brew.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/task_brew.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/task_brew.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_brew.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/task_brew.o: obj_potion.h obj_magic_item.h
 objs/task_butcher.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_butcher.o: /usr/include/stdio.h /usr/include/features.h
 objs/task_butcher.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -16704,8 +16729,8 @@ objs/task_butcher.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_butcher.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_butcher.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_butcher.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_butcher.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task_butcher.o: connect.h charfile.h being.h person.h monster.h
+objs/task_butcher.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/task_butcher.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/task_butcher.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_butcher.o: spec_mobs.h spec_rooms.h materials.h obj_base_corpse.h
 objs/task_butcher.o: obj_base_container.h obj_tool.h obj_base_weapon.h
@@ -16765,7 +16790,7 @@ objs/task_charge.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_charge.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_charge.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_charge.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_charge.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_charge.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_charge.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_charge.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_charge.o: materials.h
@@ -16819,7 +16844,7 @@ objs/task_dull.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_dull.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_dull.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_dull.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_dull.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/task_dull.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/task_dull.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_dull.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_dull.o: obj_tool.h
@@ -16889,8 +16914,8 @@ objs/task_extinguish_my_ass.o: faction.h comm.h spec_objs.h toggle.h
 objs/task_extinguish_my_ass.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_extinguish_my_ass.o: body.h race.h skills.h disease.h trap.h task.h
 objs/task_extinguish_my_ass.o: weather.h sound.h create.h thing.h room.h
-objs/task_extinguish_my_ass.o: obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_extinguish_my_ass.o: being.h person.h monster.h account.h extern.h
+objs/task_extinguish_my_ass.o: obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_extinguish_my_ass.o: person.h monster.h account.h extern.h
 objs/task_extinguish_my_ass.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/task_extinguish_my_ass.o: spec_rooms.h materials.h
 objs/task_fishing.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -16948,8 +16973,8 @@ objs/task_fishing.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_fishing.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_fishing.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_fishing.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_fishing.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task_fishing.o: connect.h charfile.h being.h person.h monster.h
+objs/task_fishing.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/task_fishing.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/task_fishing.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_fishing.o: spec_mobs.h spec_rooms.h materials.h obj_tool.h
 objs/task_get.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -17001,9 +17026,9 @@ objs/task_get.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_get.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_get.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_get.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_get.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_get.o: being.h person.h monster.h account.h extern.h handler.h
-objs/task_get.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/task_get.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_get.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/task_get.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_get.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
 objs/task_get.o: obj_table.h
 objs/task_lightfire.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -17062,9 +17087,9 @@ objs/task_lightfire.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_lightfire.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/task_lightfire.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/task_lightfire.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/task_lightfire.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_lightfire.o: being.h person.h monster.h account.h extern.h
-objs/task_lightfire.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/task_lightfire.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_lightfire.o: person.h monster.h account.h extern.h handler.h
+objs/task_lightfire.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_lightfire.o: materials.h obj_tool.h
 objs/task_meditate.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_meditate.o: /usr/include/stdio.h /usr/include/features.h
@@ -17121,8 +17146,8 @@ objs/task_meditate.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_meditate.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_meditate.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_meditate.o: body.h race.h skills.h disease.h trap.h task.h
-objs/task_meditate.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/task_meditate.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/task_meditate.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/task_meditate.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/task_meditate.o: monster.h account.h extern.h handler.h obj_money.h
 objs/task_meditate.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_penance.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -17180,8 +17205,8 @@ objs/task_penance.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_penance.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_penance.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_penance.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_penance.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task_penance.o: connect.h charfile.h being.h person.h monster.h
+objs/task_penance.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/task_penance.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/task_penance.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_penance.o: spec_mobs.h spec_rooms.h materials.h
 objs/task_picklock.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -17239,8 +17264,8 @@ objs/task_picklock.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_picklock.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_picklock.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_picklock.o: body.h race.h skills.h disease.h trap.h task.h
-objs/task_picklock.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/task_picklock.o: obj_drug.h connect.h charfile.h being.h person.h
+objs/task_picklock.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/task_picklock.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/task_picklock.o: monster.h account.h extern.h handler.h obj_money.h
 objs/task_picklock.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_tool.h
 objs/task_rest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -17293,7 +17318,7 @@ objs/task_rest.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_rest.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_rest.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_rest.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_rest.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/task_rest.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/task_rest.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_rest.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_sacrifice.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -17352,9 +17377,9 @@ objs/task_sacrifice.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_sacrifice.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/task_sacrifice.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/task_sacrifice.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/task_sacrifice.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_sacrifice.o: being.h person.h monster.h account.h extern.h
-objs/task_sacrifice.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/task_sacrifice.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_sacrifice.o: person.h monster.h account.h extern.h handler.h
+objs/task_sacrifice.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_sacrifice.o: materials.h obj_base_corpse.h obj_base_container.h
 objs/task_sacrifice.o: obj_tool.h
 objs/task_scribe.o: stdsneezy.h /usr/include/g++-3/cstdio
@@ -17412,10 +17437,10 @@ objs/task_scribe.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_scribe.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_scribe.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_scribe.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_scribe.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_scribe.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_scribe.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_scribe.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/task_scribe.o: materials.h
+objs/task_scribe.o: materials.h obj_scroll.h obj_magic_item.h
 objs/task_search.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_search.o: /usr/include/stdio.h /usr/include/features.h
 objs/task_search.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -17471,7 +17496,7 @@ objs/task_search.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_search.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_search.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_search.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_search.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_search.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_search.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_search.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_search.o: materials.h
@@ -17531,9 +17556,9 @@ objs/task_seekwater.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_seekwater.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/task_seekwater.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/task_seekwater.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/task_seekwater.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_seekwater.o: being.h person.h monster.h account.h extern.h
-objs/task_seekwater.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/task_seekwater.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_seekwater.o: person.h monster.h account.h extern.h handler.h
+objs/task_seekwater.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_seekwater.o: materials.h
 objs/task_sharpen.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_sharpen.o: /usr/include/stdio.h /usr/include/features.h
@@ -17590,8 +17615,8 @@ objs/task_sharpen.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_sharpen.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_sharpen.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_sharpen.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_sharpen.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task_sharpen.o: connect.h charfile.h being.h person.h monster.h
+objs/task_sharpen.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/task_sharpen.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/task_sharpen.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_sharpen.o: spec_mobs.h spec_rooms.h materials.h obj_tool.h
 objs/task_sit.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -17643,9 +17668,9 @@ objs/task_sit.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_sit.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_sit.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_sit.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_sit.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_sit.o: being.h person.h monster.h account.h extern.h handler.h
-objs/task_sit.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/task_sit.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_sit.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/task_sit.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_skin.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_skin.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_skin.o: /usr/include/gnu/stubs.h
@@ -17696,7 +17721,7 @@ objs/task_skin.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_skin.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_skin.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_skin.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_skin.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/task_skin.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/task_skin.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_skin.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_skin.o: obj_base_corpse.h obj_base_container.h obj_organic.h
@@ -17754,7 +17779,7 @@ objs/task_sleep.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_sleep.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_sleep.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_sleep.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_sleep.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_sleep.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_sleep.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_sleep.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_sleep.o: materials.h
@@ -17813,7 +17838,7 @@ objs/task_smythe.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_smythe.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_smythe.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_smythe.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_smythe.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_smythe.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_smythe.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_smythe.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_smythe.o: materials.h obj_tool.h
@@ -17876,9 +17901,9 @@ objs/task_spell_friends.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_spell_friends.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/task_spell_friends.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/task_spell_friends.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/task_spell_friends.o: room.h obj.h obj2.h obj_drug.h connect.h
-objs/task_spell_friends.o: charfile.h being.h person.h monster.h account.h
-objs/task_spell_friends.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/task_spell_friends.o: room.h obj.h connect.h obj_drug.h charfile.h
+objs/task_spell_friends.o: being.h person.h monster.h account.h extern.h
+objs/task_spell_friends.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/task_spell_friends.o: spec_rooms.h materials.h
 objs/task_stavecharge.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_stavecharge.o: /usr/include/stdio.h /usr/include/features.h
@@ -17937,10 +17962,11 @@ objs/task_stavecharge.o: cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_stavecharge.o: spec_objs.h toggle.h wiz_powers.h cmd_message.h
 objs/task_stavecharge.o: stats.h limbs.h body.h race.h skills.h disease.h
 objs/task_stavecharge.o: trap.h task.h weather.h sound.h create.h thing.h
-objs/task_stavecharge.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/task_stavecharge.o: being.h person.h monster.h account.h extern.h
-objs/task_stavecharge.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/task_stavecharge.o: spec_rooms.h materials.h obj_component.h
+objs/task_stavecharge.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/task_stavecharge.o: person.h monster.h account.h extern.h handler.h
+objs/task_stavecharge.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/task_stavecharge.o: materials.h obj_component.h obj_staff.h
+objs/task_stavecharge.o: obj_magic_item.h
 objs/task_track.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_track.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_track.o: /usr/include/gnu/stubs.h
@@ -17994,7 +18020,7 @@ objs/task_track.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_track.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_track.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_track.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/task_track.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/task_track.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/task_track.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_track.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_track.o: materials.h obj_portal.h obj_seethru.h
@@ -18063,7 +18089,7 @@ objs/task_trance_of_blades.o: faction.h comm.h spec_objs.h toggle.h
 objs/task_trance_of_blades.o: wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_trance_of_blades.o: body.h race.h skills.h disease.h trap.h task.h
 objs/task_trance_of_blades.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/task_trance_of_blades.o: obj2.h obj_drug.h connect.h charfile.h being.h
+objs/task_trance_of_blades.o: connect.h obj_drug.h charfile.h being.h
 objs/task_trance_of_blades.o: person.h monster.h account.h extern.h handler.h
 objs/task_trance_of_blades.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/task_trance_of_blades.o: materials.h obj_base_weapon.h
@@ -18117,7 +18143,7 @@ objs/task_trap.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/task_trap.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/task_trap.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/task_trap.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/task_trap.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/task_trap.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/task_trap.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_trap.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_trap.o: obj_open_container.h obj_base_container.h obj_trap.h
@@ -18176,8 +18202,8 @@ objs/task_whittle.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
 objs/task_whittle.o: client.h response.h faction.h comm.h spec_objs.h
 objs/task_whittle.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
 objs/task_whittle.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_whittle.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/task_whittle.o: connect.h charfile.h being.h person.h monster.h
+objs/task_whittle.o: sound.h create.h thing.h room.h obj.h connect.h
+objs/task_whittle.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/task_whittle.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_whittle.o: spec_mobs.h spec_rooms.h materials.h task_whittle.h
 objs/task_whittle.o: obj_bow.h obj_organic.h obj_arrow.h obj_base_weapon.h
@@ -18227,11 +18253,10 @@ objs/thing.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/thing.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/thing.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/thing.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/thing.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/thing.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/thing.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/thing.o: spec_rooms.h materials.h obj_base_container.h obj_component.h
-objs/thing.o: obj_tool.h
+objs/thing.o: weather.h sound.h create.h thing.h room.h obj.h connect.h
+objs/thing.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/thing.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/thing.o: materials.h obj_base_container.h obj_component.h obj_tool.h
 objs/toggle.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/toggle.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/toggle.o: /usr/include/gnu/stubs.h
@@ -18280,9 +18305,9 @@ objs/toggle.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/toggle.o: faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/toggle.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/toggle.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/toggle.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
-objs/toggle.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/toggle.o: spec_mobs.h spec_rooms.h materials.h
+objs/toggle.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
+objs/toggle.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/toggle.o: spec_rooms.h materials.h
 objs/trap.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/trap.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/trap.o: /usr/include/gnu/stubs.h
@@ -18328,9 +18353,9 @@ objs/trap.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
 objs/trap.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
 objs/trap.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
 objs/trap.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/trap.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
-objs/trap.o: connect.h charfile.h being.h person.h monster.h account.h
-objs/trap.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
+objs/trap.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
+objs/trap.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/trap.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/trap.o: materials.h disc_looting.h obj_trap.h obj_portal.h obj_seethru.h
 objs/trap.o: obj_open_container.h obj_base_container.h
 objs/utility.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -18382,9 +18407,9 @@ objs/utility.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/utility.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/utility.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/utility.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/utility.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/utility.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/utility.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/utility.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/utility.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/utility.o: spec_mobs.h spec_rooms.h materials.h
 objs/utility.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/utility.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
 objs/utility.o: /usr/include/g++-3/cstdarg /usr/include/unistd.h
@@ -18462,9 +18487,9 @@ objs/weather.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/weather.o: response.h faction.h comm.h spec_objs.h toggle.h wiz_powers.h
 objs/weather.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/weather.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
-objs/weather.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
-objs/weather.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/weather.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/weather.o: room.h obj.h connect.h obj_drug.h charfile.h being.h person.h
+objs/weather.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/weather.o: spec_mobs.h spec_rooms.h materials.h
 objs/wiz_data.o: /usr/include/unistd.h /usr/include/features.h
 objs/wiz_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/wiz_data.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -18517,9 +18542,9 @@ objs/wiz_data.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/wiz_data.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/wiz_data.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/wiz_data.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/wiz_data.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
-objs/wiz_data.o: being.h person.h monster.h account.h extern.h handler.h
-objs/wiz_data.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/wiz_data.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/wiz_data.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/wiz_data.o: rent.h spec_mobs.h spec_rooms.h materials.h
 objs/wiz_powers.o: /usr/include/unistd.h /usr/include/features.h
 objs/wiz_powers.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/wiz_powers.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -18575,7 +18600,7 @@ objs/wiz_powers.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
 objs/wiz_powers.o: response.h faction.h comm.h spec_objs.h toggle.h
 objs/wiz_powers.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/wiz_powers.o: skills.h disease.h trap.h task.h weather.h sound.h
-objs/wiz_powers.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
+objs/wiz_powers.o: create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/wiz_powers.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/wiz_powers.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/wiz_powers.o: materials.h

@@ -10,7 +10,8 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
-
+#include "obj_staff.h"
+#include "obj_wand.h"
 const int SLEEPTAG_CONTROL_ROOM = 23599;
 const int SLEEPTAG_STAFF        = 23500;
 const int SLEEPTAG_START        = 23400;

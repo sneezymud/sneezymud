@@ -4,6 +4,8 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "obj_base_clothing.h"
+
 
 TBaseClothing::TBaseClothing() :
   TObj()

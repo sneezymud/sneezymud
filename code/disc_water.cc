@@ -11,6 +11,7 @@
 #include "spelltask.h"
 #include "disc_water.h"
 #include "obj_pool.h"
+#include "obj_magic_item.h"
 
 int faerieFog(TBeing * caster, int, byte bKnown)
 {

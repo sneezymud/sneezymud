@@ -22,6 +22,8 @@
 #include "obj_arrow.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
+#include "obj_base_clothing.h"
+
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()

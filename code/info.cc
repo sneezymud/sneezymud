@@ -30,6 +30,12 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
+#include "obj_base_clothing.h"
+#include "obj_magic_item.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
+#include "obj_staff.h"
+#include "obj_wand.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

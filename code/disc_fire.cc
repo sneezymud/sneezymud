@@ -12,6 +12,7 @@
 #include "spelltask.h"
 #include "disc_fire.h"
 #include "obj_light.h"
+#include "obj_magic_item.h"
 
 int handsOfFlame(TBeing *caster, TBeing *victim, int level, byte bKnown, int *damage, int adv_learn)
 {

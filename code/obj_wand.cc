@@ -1,7 +1,8 @@
 // wand.cc
 
 #include "stdsneezy.h"
-
+#include "obj_magic_item.h"
+#include "obj_wand.h"
 TWand::TWand() :
   TMagicItem(),
   maxCharges(0),

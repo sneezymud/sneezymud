@@ -1,6 +1,8 @@
 // staff.cc
 
 #include "stdsneezy.h"
+#include "obj_magic_item.h"
+#include "obj_staff.h"
 
 TStaff::TStaff() :
   TMagicItem(),

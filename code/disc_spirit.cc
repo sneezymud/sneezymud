@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_spirit.h"
+#include "obj_magic_item.h"
 
 int silence(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {

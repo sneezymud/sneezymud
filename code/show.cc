@@ -18,6 +18,9 @@
 #include "obj_note.h"
 #include "obj_trap.h"
 #include "obj_window.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
+#include "obj_staff.h"
 
 void TThing::showMe(TBeing *ch) const
 {

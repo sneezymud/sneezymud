@@ -12,6 +12,9 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_sorcery.h"
+#include "obj_armor.h"
+#include "obj_magic_item.h"
+#include "obj_worn.h"
 
 int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
 {

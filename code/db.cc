@@ -65,7 +65,17 @@
 #include "obj_pool.h"
 #include "obj_base_cup.h"
 #include "obj_drinkcon.h"
-
+#include "obj_armor.h"
+#include "obj_armor_wand.h"
+#include "obj_base_clothing.h"
+#include "obj_jewelry.h"
+#include "obj_other_obj.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
+#include "obj_staff.h"
+#include "obj_appliedsub.h"
+#include "obj_wand.h"
+#include "obj_worn.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 

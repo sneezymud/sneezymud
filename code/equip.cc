@@ -10,6 +10,9 @@
 #include "obj_base_container.h"
 #include "obj_bandaid.h"
 #include "obj_base_weapon.h"
+#include "obj_armor.h"
+#include "obj_base_clothing.h"
+#include "obj_jewelry.h"
 
 int GetItemClassRestrictions(const TObj *obj)
 {

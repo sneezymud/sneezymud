@@ -9,6 +9,9 @@
 #include "obj_spellbag.h"
 #include "obj_symbol.h"
 #include "obj_general_weapon.h"
+#include "obj_base_clothing.h"
+#include "obj_magic_item.h"
+
 
 vector<shopData>shop_index(0);
 

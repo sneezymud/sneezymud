@@ -50,9 +50,12 @@ extern "C" {
 #include "disc_shaman_control.h"
 #include "obj_trap.h"
 #include "obj_light.h"
-
-
+#include "obj_armor.h"
+#include "obj_armor_wand.h"
 #include "spelltask.h"
+#include "obj_magic_item.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
 
 void TBeing::doGuard(const char *argument)
 {

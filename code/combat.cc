@@ -22,6 +22,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
+#include "obj_base_clothing.h"
 
 
 #define DAMAGE_DEBUG 0

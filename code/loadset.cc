@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: loadset.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ////////////////////////////////////////////////////////////////////////// 
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -23,6 +8,9 @@
 
 #include "stdsneezy.h"
 #include "loadset.h"
+#include "obj_armor.h"
+#include "obj_base_clothing.h"
+
 
 extern int  GetItemClassRestrictions(const TObj *);
 extern bool IsRestricted(unsigned short int, unsigned short int);
@@ -191,6 +179,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
   const char   *tArg         = NULL;
   loadSetTypeT  tPiece       = LST_ALL;
   string        StString("");
+  int           tCount;
 
   if (num < 0 && (!arg || !*arg) && tChance != 101)
     return;
@@ -227,7 +216,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
           }
 
           if (isPc() && isImmortal() && desc)
-            desc->page_string(StString.c_str(), 0);
+            desc->page_string(StString.c_str());
 
           return;
         }
@@ -425,21 +414,30 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
               StString += tString;
 
               if (suitSets.suits[suitIndex].equipment[pieceIndex] > -1) {
+                TThing        *tThing  = NULL;
                 TBaseClothing *tBCloth = NULL;
 
                 int rNum = real_object(suitSets.suits[suitIndex].equipment[pieceIndex]);
                 if (rNum < 0 || rNum >= (signed) obj_index.size() ||
-                    !(tBCloth = dynamic_cast<TBaseClothing *>(read_object(rNum, REAL))))
+                    !(tThing = read_object(rNum, REAL)))
                   StString += " ***Not Found***\n\r";
                 else {
-                  sprintf(tString, " [R:%6.2f] %s [%s] [%s]\n\r",
-                          tBCloth->armorLevel(ARMOR_LEV_REAL),
-                          suitClasses,
-                          tBCloth->getName(),
-                          material_nums[tBCloth->getMaterial()].mat_name);
+                  if ((tBCloth = dynamic_cast<TBaseClothing *>(tThing)) &&
+                      tBCloth->armorLevel(ARMOR_LEV_REAL))
+                    sprintf(tString, " [R:%6.2f] %s [%s] [%s]\n\r",
+                            tBCloth->armorLevel(ARMOR_LEV_REAL),
+                            suitClasses,
+                            tBCloth->getName(),
+                            material_nums[tBCloth->getMaterial()].mat_name);
+                  else
+                    sprintf(tString, " [R:      ] %s [%s] [%s]\n\r",
+                            suitClasses,
+                            tThing->getName(),
+                            material_nums[tThing->getMaterial()].mat_name);
+
                   StString += tString;
-                  delete tBCloth;
-                  tBCloth = NULL;
+                  delete tThing;
+                  tThing = NULL;
                 }
               } else
                 StString += "\n\r";
@@ -451,10 +449,18 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         }
 
       for (int raceIndex = 0; raceIndex < 6; raceIndex++)
+        if (suitRaces[raceIndex] > 0)
+          tCount += suitRaces[raceIndex];
+
+      for (int raceIndex = 0; raceIndex < 6; raceIndex++)
         if (suitRaces[raceIndex] > 0) {
-          sprintf(tString, " %s[%d]",
-                  good_cap(suitTypeRaces[raceIndex + 1]).c_str(),
-                  suitRaces[raceIndex]);
+          tCount = max(1, tCount);
+          float tUsedPerc = (((float)suitRaces[raceIndex] / (float)tCount) * 100);
+
+          sprintf(tString, " [%3.0f%%][%3d] %s\n\r",
+                  tUsedPerc, suitRaces[raceIndex],
+                  good_cap(suitTypeRaces[raceIndex + 1]).c_str());
+
           StString += tString;
         }
 
@@ -465,7 +471,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         StString += "\n\r";
 
       if (isPc() && isImmortal() && desc)
-        desc->page_string(StString.c_str(), 0);
+        desc->page_string(StString.c_str());
 
       return;
     } else {
@@ -495,8 +501,8 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
 
       if ((tCount % 3) != 0)
         StString += "\n\r";
-
-      sprintf(tString, "Ogre[%d] Human[%d] Elf[%d] Dwarf[%d] Gnome[%d] Hobbit[%d]",
+        StString += "\n\r";
+      sprintf(tString, "Total Suits: Ogre[%d] Human[%d] Elf[%d] Dwarf[%d] Gnome[%d] Hobbit[%d]",
               suitRaces[5], suitRaces[0], suitRaces[1],
               suitRaces[2], suitRaces[4], suitRaces[3]);
       StString += tString;
@@ -508,7 +514,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         StString += "\n\r";
 
       if (isPc() && isImmortal() && desc)
-        desc->page_string(StString.c_str(), 0);
+        desc->page_string(StString.c_str());
 
       return;
     }
@@ -547,7 +553,7 @@ void loadSetClass::SetupLoadSetSuits()
   bool    hasSuit = false;
 
   if (!(suitFile = fopen(suitFilePath, "r"))) {
-    vlogf(9, "Unable to open '%s' for reading.", suitFilePath);
+    vlogf(LOG_FILE, "Unable to open '%s' for reading.", suitFilePath);
     return;
   }
 
@@ -664,22 +670,31 @@ void loadSetClass::suitAdd(const char *tName, int tHelm, int tCollar,
     TObj          *tObj = read_object(realVNum, REAL);
     TBaseClothing *tClothing;
 
-    if (!tObj || !(tClothing = dynamic_cast<TBaseClothing *>(tObj)))
+    if (!tObj)
       newSuitStruct.equipment[suitIndex] = -1;
     else {
-      newSuitStruct.suitLevel += tClothing->armorLevel(ARMOR_LEV_REAL);
-      suitCount++;
+      if ((tClothing = dynamic_cast<TBaseClothing *>(tObj)) &&
+          tClothing->armorLevel(ARMOR_LEV_REAL)) {
+        newSuitStruct.suitLevel += tClothing->armorLevel(ARMOR_LEV_REAL);
+        suitCount++;
+      }
 
       for (int classIndex = MIN_CLASS_IND; classIndex < MAX_CLASSES; classIndex++) {
         unsigned short int  classValue = (1 << classIndex);
                        bool otherClass = false;
 
         if (classValue == CLASS_MONK &&
+            dynamic_cast<TArmor *>(tObj))
+          otherClass = true;
+
+		       /*
+        if (classValue == CLASS_MONK &&
             !tObj->canWear(ITEM_WEAR_FINGER) &&
             ((tObj->getMaterial() >= 100 && tObj->getMaterial() != MAT_BONE) ||
              tObj->getMaterial() == MAT_IRON ||
              dynamic_cast<TArmor *>(tObj)))
           otherClass = true;
+		       */
 
         if (classValue == CLASS_RANGER && tObj->isMetal() &&
             dynamic_cast<TArmor *>(tObj) && !tObj->canWear(ITEM_WEAR_FINGER))
@@ -694,6 +709,7 @@ void loadSetClass::suitAdd(const char *tName, int tHelm, int tCollar,
       }
 
       delete tObj;
+      tObj = NULL;
     }
   }
 

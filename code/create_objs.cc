@@ -27,7 +27,12 @@ extern "C" {
 #include "obj_arrow.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
-
+#include "obj_base_clothing.h"
+#include "obj_magic_item.h"
+#include "obj_potion.h"
+#include "obj_scroll.h"
+#include "obj_staff.h"
+#include "obj_wand.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {

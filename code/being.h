@@ -54,7 +54,7 @@
 
 class TWindow;
 class TGenWeapon;
-
+class TBaseClothing;
 
 class objCost;
 extern TBeing *character_list;

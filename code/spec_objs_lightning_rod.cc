@@ -11,6 +11,8 @@
 
 #include "stdsneezy.h"
 #include "obj_base_weapon.h"
+#include "obj_base_clothing.h"
+
 
 int lightningRodFryPerson  (TBaseWeapon   *, TBeing *, TBeing *);
 int lightningRodGotHit     (TBaseWeapon   *, TBeing *, TBeing *);

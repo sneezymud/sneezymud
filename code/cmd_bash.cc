@@ -2,19 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_bash.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_base_clothing.h"
 
 bool TBeing::canBash(TBeing *victim, silentTypeT silent)
 {
@@ -28,7 +21,7 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     if (!silent)
       sendTo("That person isn't around.\n\r");
     return FALSE;
@@ -58,6 +51,7 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
     case BODY_FOUR_LEG:
     case BODY_PIG:
     case BODY_FROG:
+    case BODY_WYVELIN:
       if (!silent)
         sendTo("You have the wrong form to bash.\n\r");
       return FALSE;
@@ -96,9 +90,9 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
   if (noHarmCheck(victim))
     return FALSE;
 
-  if (victim->isFlying()) {
+  if (victim->isFlying() && !isFlying()) {
     if (!silent)
-      sendTo("You can't bash someone that is flying.\n\r");
+      sendTo("You can't bash someone that is flying unless you are also.\n\r");
     return FALSE;
   }
   if (riding) {
@@ -284,7 +278,13 @@ int TBeing::bashSuccess(TBeing *victim, spellNumT skill)
 {
   int rc = 0;
   int distNum = 0;
-  int level = 0;
+  //  int level = 0;
+
+
+  TThing *obj = NULL;
+  TBaseClothing *tbc = NULL;
+  int shieldDam = 0;
+
 
   if (victim->riding) {
     act("You knock $N off $p.", FALSE, this, victim->riding, victim, TO_CHAR);
@@ -297,7 +297,23 @@ int TBeing::bashSuccess(TBeing *victim, spellNumT skill)
   act("You send $N sprawling.", FALSE, this, 0, victim, TO_CHAR);
   act("You tumble as $n knocks you over",
         FALSE, this, 0, victim, TO_VICT, ANSI_BLUE);
-  level = getSkillLevel(skill);
+ 
+  //extra damage done by shield with spikes 10-20-00 -dash
+  if (((obj = this->heldInSecHand()) &&
+       (tbc = dynamic_cast<TBaseClothing *>(obj)) &&
+       tbc->isShield() && (tbc->isSpiked() || tbc->isObjStat(ITEM_SPIKED)))) {
+    shieldDam = (int)((tbc->getWeight()/3) + 1);
+
+    act("The spikes on your $o sink into $N.", FALSE, this, tbc, victim, TO_CHAR);
+    act("The spikes on $n's $o sink into $N.", FALSE, this, tbc, victim, TO_NOTVICT);
+    act("The spikes on $n's $o sink into you.", FALSE, this, tbc, victim, TO_VICT);
+
+    if (this->reconcileDamage(victim, shieldDam, TYPE_STAB) == -1)
+      return DELETE_VICT;
+
+  }
+
+  //  level = getSkillLevel(skill);
   distNum = 1;
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distNum++;
@@ -364,7 +380,7 @@ int TBeing::doBash(const char *argument, TBeing *vict)
   }
 
   if ((rc = bash(this, victim, skill)))
-    addSkillLag(skill);
+    addSkillLag(skill,rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)

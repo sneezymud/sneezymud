@@ -2,6 +2,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_aegis.h"
+#include "obj_magic_item.h"
 
 int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
 {

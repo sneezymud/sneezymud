@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "obj_symbol.h"
+#include "obj_base_clothing.h"
 
 void TBeing::doTestCode(const char *arg)
 {

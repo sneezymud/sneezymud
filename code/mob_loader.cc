@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
+#include "obj_potion.h"
 
 static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
 {

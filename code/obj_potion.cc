@@ -1,6 +1,8 @@
 // potion.cc
 
 #include "stdsneezy.h"
+#include "obj_magic_item.h"
+#include "obj_potion.h"
 
 TPotion::TPotion() :
   TMagicItem()

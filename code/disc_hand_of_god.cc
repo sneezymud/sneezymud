@@ -7,6 +7,7 @@
 #include "obj_food.h"
 #include "obj_portal.h"
 #include "obj_drinkcon.h"
+#include "obj_magic_item.h"
 
 static void moveLoss(TBeing &ch)
 { 

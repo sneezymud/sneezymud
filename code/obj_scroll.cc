@@ -1,6 +1,8 @@
 // scroll.cc
 
 #include "stdsneezy.h"
+#include "obj_magic_item.h"
+#include "obj_scroll.h"
 
 TScroll::TScroll() :
   TMagicItem()

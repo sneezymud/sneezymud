@@ -1,22 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_armor.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // armor.cc
-//
 
 #include "stdsneezy.h"
+#include "obj_armor.h"
+#include "obj_base_clothing.h"
+
 
 TArmor::TArmor() :
   TBaseClothing()

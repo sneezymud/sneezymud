@@ -12,6 +12,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_shaman_armadillo.h"
+#include "obj_magic_item.h"
 
 // THORNFLESH
 

@@ -2,6 +2,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_animal.h"
+#include "obj_magic_item.h"
 
 int beastSoother(TBeing *caster, TBeing *victim, TMagicItem *tObj)
 {

@@ -6,7 +6,7 @@
 #include "obj_organic.h"
 #include "obj_arrow.h"
 #include "obj_flame.h"
-
+#include "obj_appliedsub.h"
 
 TASubstance::TASubstance() :
   TObj(),

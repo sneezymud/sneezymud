@@ -51,6 +51,8 @@
 #include "obj_window.h"
 #include "obj_general_weapon.h"
 #include "obj_pool.h"
+#include "obj_base_clothing.h"
+
 
 #include <fstream.h>
 
