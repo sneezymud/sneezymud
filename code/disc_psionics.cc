@@ -778,7 +778,7 @@ int TBeing::doKwave(const char *tString){
   int tDamage=0;
 
   if (bSuccess(this, bKnown, SKILL_KINETIC_WAVE)) {
-    act("You unleash a psionic blast upon $N!",
+    act("You set loose a wave of kinetic force at $N!",
         FALSE, this, NULL, tVictim, TO_CHAR);
 
     if(1){
@@ -793,7 +793,8 @@ int TBeing::doKwave(const char *tString){
       }
 
 
-      act("$n knocks $N on $S butt!", FALSE, this, 0, tVictim, TO_NOTVICT);
+      act("$n sends $N sprawling with a kinetic force wave!",
+	  FALSE, this, 0, tVictim, TO_NOTVICT);
       act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
       act("You tumble as $n knocks you over",
 	  FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
@@ -813,11 +814,11 @@ int TBeing::doKwave(const char *tString){
       if (tVictim->spelltask) 
 	tVictim->addToDistracted(1, FALSE);
     } else {
-      act("...$N screws up $S face in agony.",
+      act("You pound $N with a kinetic wave.",
 	  TRUE, this, NULL, tVictim, TO_CHAR);
-      act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
+      act("$n pounds you with a kinetic wave.",
 	  TRUE, this, NULL, tVictim, TO_VICT);
-      act("$N screws up $S face in agony.",
+      act("$N is pounded by a kinetic wave.",
 	  TRUE, this, NULL, tVictim, TO_NOTVICT);
     }
 
