@@ -736,8 +736,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	    break;
 	  }
 	}
-	moveCart(myself, cart);
       }
+      moveCart(myself, cart);
       break;
     case STATE_BM_DELIVERING:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
@@ -778,8 +778,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	    break;
 	  }
 	}
-	moveCart(myself, cart);
       }
+      moveCart(myself, cart);
       break;
     case STATE_TO_GH_SURPLUS:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
