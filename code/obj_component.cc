@@ -537,20 +537,10 @@ void assign_component_placement()
      CACT_PLACE, 9999, 50,
      5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
-  component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
-     BROWN_MUSHROOM,
-     CACT_PLACE, 9999, 50,
-     6, -1, -1, -1, -1, -1, -1,
-     "The morning light reveals $p growing in the $g.", ""));
   component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
      BROWN_MUSHROOM,
      CACT_PLACE, 9999, 50,
      5, -1, -1, -1, -1, -1, -1,
-     "The morning light reveals $p growing in the $g.", ""));
-  component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
-     BROWN_MUSHROOM,
-     CACT_PLACE, 9999, 50,
-     6, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
 
 #if 0
