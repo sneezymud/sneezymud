@@ -301,7 +301,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     sprintf(buf, "%s That item is perfectly ok!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
     return TRUE;
@@ -312,7 +312,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     sprintf(buf, "%s I have to make a living! If you don't have the talens , I don't do the work!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
     return TRUE;
@@ -344,7 +344,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     sprintf(buf, "Sorry, %s, but you'll have to wait while I re-edge %s's weapon.", ch->getName(), job->char_name);
     me->doSay(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
     if (parent == me) {

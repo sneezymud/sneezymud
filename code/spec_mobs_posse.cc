@@ -413,7 +413,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		  job->criminal->getName());
 	  myself->doSay(buf);
 	  tmp=mud_str_dup(job->criminal->name);
-	  add_bars(tmp);
+	  strcpy(tmp, add_bars(tmp).c_str());
 	  myself->doCapture(tmp);
 	  delete tmp;
 	  REMOVE_BIT(job->criminal->specials.act, ACT_DIURNAL);

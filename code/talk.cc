@@ -878,8 +878,8 @@ int TBeing::doTell(const char *arg, bool visible)
 
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
-  if (vict->desc && isPc() && vict->canSee(this, INFRA_YES))
-    strcpy(vict->desc->last_teller, getName());
+  if (vict->desc && vict->canSee(this, INFRA_YES))
+    strcpy(vict->desc->last_teller, this->name);
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);
@@ -1104,7 +1104,8 @@ void TBeing::doReply(const string arg)
     sendTo("No one seems to have spoken to you lately.\n\r");
     return;
   }
-  ssprintf(buf, "%s %s", desc->last_teller, arg.c_str());
+
+  ssprintf(buf, "%s %s", add_bars(desc->last_teller).c_str(), arg.c_str());
   doTell(buf.c_str(), FALSE);
 }
 

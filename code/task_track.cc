@@ -269,7 +269,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
               ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, t->name);
-              add_bars(buf);
+              strcpy(buf, add_bars(buf).c_str());
               sprintf(buf2, "enter %s", buf);
               ch->addCommandToQue(buf2);
             }

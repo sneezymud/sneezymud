@@ -819,7 +819,7 @@ void TBaseCup::examineObj(TBeing *ch) const
   char buf[256];
   char buf2[256];
   sprintf(buf2, "%s", name);
-  add_bars(buf2);
+  strcpy(buf2, add_bars(buf2).c_str());
   sprintf(buf, "in %s", buf2);
   ch->doLook(buf, CMD_LOOK);
 #endif

@@ -279,8 +279,8 @@ int TBaseCorpse::scavengeMe(TBeing *ch, TObj **)
           if (obj->itemAC() < (tobj ?  tobj->itemAC() : 0)) {
             strcpy(buf2, obj->name);
             strcpy(buf3, name);
-            add_bars(buf2);
-            add_bars(buf3);
+            strcpy(buf2, add_bars(buf2).c_str());
+            strcpy(buf3, add_bars(buf3).c_str());
             sprintf(buf, "%s from %s", buf2, buf3);
             rc = ch->doGet(buf);
             if (IS_SET_DELETE(rc, DELETE_THIS))

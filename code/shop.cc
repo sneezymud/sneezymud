@@ -433,7 +433,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
     strcpy(argm, name);
 
-    add_bars(argm);
+    strcpy(argm, add_bars(argm).c_str());
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 

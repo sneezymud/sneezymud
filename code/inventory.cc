@@ -739,10 +739,10 @@ int TBeing::doGive(TBeing *victim, TThing *obj, giveTypeT flags)
   }
 
   strcpy(buf, obj->name);
-  add_bars(buf);
+  strcpy(buf, add_bars(buf).c_str());
 
   strcpy(buf2, victim->name);
-  add_bars(buf2);
+  strcpy(buf2, add_bars(buf2).c_str());
   sprintf(arg, "%s %s", buf, buf2);
   
   rc = doGive(arg, flags);

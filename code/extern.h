@@ -192,7 +192,7 @@ extern int CheckStorageChar (TBeing *, TBeing *);
 extern bool raw_save_char(const char *, charFile *);
 extern void set_killer_flag(TBeing *, TBeing *);
 extern int SpaceForSkills(TBeing *);
-extern char *add_bars(char *string);
+extern string add_bars(const string string);
 extern dirTypeT can_see_linear(const TBeing *, const TBeing *targ, int *rng, dirTypeT *dr);
 extern dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth);
 extern dirTypeT choose_exit_global(int in_room, int tgt_room, int depth);

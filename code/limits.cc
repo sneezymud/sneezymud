@@ -1054,7 +1054,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
 #endif
     } else if (last_good && last_cont) {
       sprintf(buf, "%s", last_cont->name);
-      add_bars(buf);
+      strcpy(buf, add_bars(buf).c_str());
       strcpy(tmpbuf, fname(last_good->name).c_str());
       sprintf(buf2, "get %s %s", tmpbuf, buf);
       addCommandToQue(buf2);
@@ -1096,7 +1096,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
     }
     if (last_good && last_cont) {
       sprintf(buf, "%s", last_cont->name);
-      add_bars(buf);
+      strcpy(buf, add_bars(buf).c_str());
       if (getPosition() == POSITION_RESTING) 
         addCommandToQue("sit");
             

@@ -3588,7 +3588,7 @@ void TThing::attunerGiven(TBeing *ch, TMonster *me)
   sprintf(buf, "%s I can only attune symbols!", ch->getName());
   me->doTell(buf);
   strcpy(buf, name);
-  add_bars(buf);
+  strcpy(buf, add_bars(buf).c_str());
   sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
   me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
 }
@@ -3603,7 +3603,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     sprintf(buf, "%s That symbol has already been attuned!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
     return;
@@ -3614,7 +3614,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     sprintf(buf, "%s I only attune for a reasonable tithe. I am sorry, I do not make exceptions!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
     return;
@@ -3661,7 +3661,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
 
     me->doSay(buf);
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
     return;
@@ -3832,7 +3832,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
             return FALSE;
           }
           strcpy(buf, job->sym->name);
-          add_bars(buf);
+          strcpy(buf, add_bars(buf).c_str());
           sprintf(buf + strlen(buf), " %s", fname(job->pc->name).c_str());
           if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS) {
             job->clearAttuneData();
@@ -3904,7 +3904,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         ch->getName());
         me->doTell(buf);
         strcpy(buf, t->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -3918,7 +3918,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         ch->getName());
         me->doTell(buf);
         strcpy(buf, t->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -3948,7 +3948,7 @@ int TThing::sharpenerGiveMe(TBeing *ch, TMonster *me)
   sprintf(buf, "%s I can only sharpen weapons!", ch->getName());
   me->doTell(buf);
   strcpy(buf, name);
-  add_bars(buf);
+  strcpy(buf, add_bars(buf).c_str());
   sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
   me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
   return TRUE;
@@ -4870,7 +4870,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "%s That can't be engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -4879,7 +4879,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "%s Sorry, but this item has already been engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -4888,7 +4888,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "%s This artifact is too powerful to be engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -4897,7 +4897,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "%s This won't be around long enough to bother engraving it!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -4909,7 +4909,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "%s I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -4932,7 +4932,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "Sorry, %s, but you'll have to wait while I engrave %s's item.", ch->getName(), job->char_name);
         me->doSay(buf);
         strcpy(buf, item->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -5922,9 +5922,9 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   }
     	  
   hookername=mud_str_dup(myself->name);
-  add_bars(hookername);
+  strcpy(hookername, add_bars(hookername).c_str());
   johnname=mud_str_dup(job->john->name);
-  add_bars(johnname);
+  strcpy(johnname, add_bars(johnname).c_str());
   
   switch(job->state){
     case STATE_NONE:
@@ -6752,7 +6752,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       return TRUE;
     }
     strcpy(temp, bow->name);
-    add_bars(temp);
+    strcpy(temp, add_bars(temp).c_str());
     ch->doJunk(temp, NULL); // just in case its loaded, no point making tons
     act("You quickly unpack $p.", FALSE, ch, bow, 0, TO_CHAR);
     act("$n quickly unpacks $p.", FALSE, ch, bow, 0, TO_ROOM);
@@ -6863,7 +6863,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
       numsimilar = max(numsimilar, 1);// sometimes we get 0 instead of 1 if there is only one in the room
 
-      add_bars(temp);
+      strcpy(temp, add_bars(temp).c_str());
 
 
       Hi = tbt->getHit();

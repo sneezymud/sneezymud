@@ -377,8 +377,6 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
     return;
 
-  vlogf(LOG_PEEL, "got here");
-
   repair->doTell(fname(buyer->name).c_str(),
      "It'll cost you %d talens to repair %s to a status of %s.", 
      (valued->repairPrice(repair, buyer, DEPRECIATION_NO)),

@@ -457,7 +457,7 @@ int TBeing::doGet(const char *argument)
 	      }
 	    }
 	    strcpy(namebuf2, tbc->name);
-	    add_bars(namebuf2);
+	    strcpy(namebuf2, add_bars(namebuf2).c_str());
 	    sprintf(namebuf, "all %i.%s", counter, namebuf2);
 	    
             rc = tbc->getAllFrom(this, namebuf);

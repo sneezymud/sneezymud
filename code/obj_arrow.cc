@@ -225,7 +225,7 @@ bool TArrow::engraveMe(TBeing *ch, TMonster *me, bool give)
 
   if (give) {
     strcpy(buf, name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
   }

@@ -719,7 +719,7 @@ void TBeing::doSeekwater()
     }
   } else if (desc && (desc->autobits & AUTO_HUNT) && t) {
       strcpy(buf, t->name);
-      add_bars(buf);
+      strcpy(buf, add_bars(buf).c_str());
       addToWait(combatRound(1));
       sprintf(buf2, "enter %s", buf);
       addCommandToQue(buf2);

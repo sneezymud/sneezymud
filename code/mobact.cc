@@ -645,11 +645,11 @@ int TMonster::superScavenger()
       }
       if (best_o->canWear(ITEM_HOLD)) {
         strcpy(buf, best_o->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         doGrab(buf);
       } else {
         strcpy(buf, best_o->name);
-        add_bars(buf);
+        strcpy(buf, add_bars(buf).c_str());
         doWear(buf);
       }
       return TRUE;
@@ -678,7 +678,7 @@ int TMonster::superScavenger()
   }
   if (best_o) {
     strcpy(buf, best_o->name);
-    add_bars(buf);
+    strcpy(buf, add_bars(buf).c_str());
     rc = doGet(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;

@@ -468,7 +468,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
     if (job->singletarg && !temp_obj) {
       strcpy(buf,myself->name);
-      add_bars(buf);
+      strcpy(buf, add_bars(buf).c_str());
 
       temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond, buf);
       // we'll see what happens now.
@@ -1092,9 +1092,9 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 	  // code to set up the repo mob here
 	  char buf[160],buf2[160], buf3[160];
 	  strcpy(buf,obj->name);
-	  add_bars(buf);
+	  strcpy(buf, add_bars(buf).c_str());
 	  strcpy(buf3,ch->name);
-	  add_bars(buf3);
+	  strcpy(buf3, add_bars(buf3).c_str());
 	  sprintf(buf2,"Hunter, repo %s from %s",buf,buf3);
 	  vlogf(LOG_PROC,"REPO: %s rent-repoing: '%s' from %s : plev: %d, olev: %d.",
 		i->getName(), buf, ch->getName(), ch->GetMaxLevel(), objectLevel);
@@ -1132,7 +1132,7 @@ void repoCheck(TMonster *mob, int rnum)
     // reduce hunter chance on artifacts
     if (::number(1,5) <= cur_num) {
       strcpy(buf,obj_index[rnum].name);
-      add_bars(buf);
+      strcpy(buf, add_bars(buf).c_str());
       sprintf(buf2,"Hunter, repo %s",buf);
       vlogf(LOG_PROC,"REPO: %s auto-hunting: '%s' : cur:%d, max:%d.",
                mob->getName(),buf, cur_num, max_num);

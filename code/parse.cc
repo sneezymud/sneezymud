@@ -2135,14 +2135,19 @@ void half_chop(const char *string, char *arg1, char *arg2)
   for (; (*arg2 = *string); string++, arg2++);
 }
 
-char *add_bars(char *string)
-{
-  for (; *string; string++) {
-    if (isspace(*string))
-      *string = '-';
+string add_bars(const string s){
+  string whitespace=" \f\n\r\t\v";
+  string stmp=s;
+
+  for(unsigned int pos=stmp.find_first_of(whitespace);
+      pos != string::npos;
+      pos=stmp.find_first_of(whitespace, pos)){
+    stmp[pos]='-';
   }
-  return string;
+
+  return stmp;
 }
+
 
 // returns DELETE_THIS, DELETE_VICT, TRUE or FALSE
 int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
