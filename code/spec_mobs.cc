@@ -2791,16 +2791,12 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
 int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
-  char buf[1024];
-
   if (cmd >= MAX_CMD_LIST)
     return FALSE;
 
   if (cmd == CMD_LIST) {
     TWindow *tw = getFirstWindowInRoom(me);
 
-    sprintf(buf, "%s Look through %s to see the mounts!",
-            fname(ch->name).c_str(), tw ? fname(tw->name).c_str() : "window");
     sstring tellBuf = "Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the mounts!";
@@ -2891,12 +2887,10 @@ void TSymbol::attunerValue(TBeing *ch, TMonster *me)
 
 void TThing::attunerGiven(TBeing *ch, TMonster *me)
 {
-  char buf[256];
+  sstring buf;
 
   me->doTell(ch->getName(), "I can only attune symbols!");
-  strcpy(buf, name);
-  strcpy(buf, add_bars(buf).c_str());
-  sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+  buf=fmt("%s %s") % add_bars(name) % fname(ch->name);
   me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
 }
 
@@ -4304,7 +4298,6 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   return TRUE;
 }
 
-
 int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   int rc;
@@ -4325,7 +4318,6 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   hunt_struct *job;
 
   TBeing *targ;
-  char buf[160];
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct *>(myself->act_ptr);
@@ -4362,35 +4354,29 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     }
     if (targ->sameRoom(*myself)) {
       if (!strcmp(job->hunted_victim, "ambassador hobbit Grimhaven")) {
-        sprintf(buf,"Good %s, your excellency.",describeTime().c_str());
-        myself->doSay(buf);
-        sprintf(buf,"Good %s.",describeTime().c_str());
-        targ->doSay(buf);
+        myself->doSay(fmt("Good %s, your excellency.") % describeTime());
+        targ->doSay(fmt("Good %s.") % describeTime());
         myself->doSay("I have a message from his lordship.");
-        sprintf(buf, "%s sweet nothings",fname(targ->name).c_str());
-        myself->doWhisper(buf);
+        myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
         targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
-        sprintf(buf, "%s sweet nothings",fname(myself->name).c_str());
-        targ->doWhisper(buf);
+        targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
         targ->doSay("Hurry off with that and report back soonest.");
         act("$n salutes the ambassador.",0, myself, 0, 0, TO_ROOM);
+
         delete [] job->hunted_victim;
         job->hunted_victim = mud_str_dup("king Grimhaven");
         job->cur_path = 1;
         job->cur_pos = 0;
       } else if (!strcmp(job->hunted_victim, "king Grimhaven")) {
-        sprintf(buf,"Good %s, your lordship.",describeTime().c_str());
-        myself->doSay(buf);
-        sprintf(buf,"Good %s.",describeTime().c_str());
-        targ->doSay(buf);
+        myself->doSay(fmt("Good %s, your lordship.") % describeTime());
+        targ->doSay(fmt("Good %s.") % describeTime());
         myself->doSay("I have a message from his excellency.");
-        sprintf(buf, "%s sweet nothings",fname(targ->name).c_str());
-        myself->doWhisper(buf);
+        myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
         targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
-        sprintf(buf, "%s sweet nothings",fname(myself->name).c_str());
-        targ->doWhisper(buf);
+        targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
         targ->doSay("Hurry off with that and tell me his response.");
         act("$n salutes the King.",0, myself, 0, 0, TO_ROOM);
+
         delete [] job->hunted_victim;
         job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
         job->cur_path = 0;
