@@ -6652,7 +6652,7 @@ int TBeing::applyAutorentPenalties(int secs)
 
 int TBeing::applyRentBenefits(int secs)
 {
-  int local_tics, rc = 0;
+  int local_tics, rc = 0, lfmod = -1;
   affectedData *af = NULL, *next_af_dude = NULL;
   int amt, transFound = FALSE;
 
@@ -6667,7 +6667,9 @@ int TBeing::applyRentBenefits(int secs)
   setMana(min((int) manaLimit(), getMana() + (local_tics * manaGain())));
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
-  setLifeforce(min(getLifeforce()+49, 50));
+  setLifeforce(min(getLifeforce(), getLifeforce() + (local_tics * lfmod)));
+  if ((getLifeforce() + (local_tics * lfmod)) < 50)
+    setLifeforce(50);
   // THIS WILL NEED TO BE REVIEWED
 
  
