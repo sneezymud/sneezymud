@@ -16,12 +16,12 @@ class fmt : public sstring {
 };
 
 
-sstring doFormat(const sstring &fmt, const int &x)
+sstring fmt::doFormat(const sstring &fmt, const int &x)
 {
   sstring buf;
 
   if(fmt.find("diouXx")==sstring::npos){
-    ssprintf(buf, "bad format specifier (%s) used for int", fmt.c_str());
+    ssprintf(buf, "bad format specifier used for int");
     vlogf(LOG_BUG, buf.c_str());
   } else {
     ssprintf(buf, fmt.c_str(), x);
@@ -31,12 +31,12 @@ sstring doFormat(const sstring &fmt, const int &x)
 }
 
 
-sstring doFormat(const sstring &fmt, const double &x)
+sstring fmt::doFormat(const sstring &fmt, const double &x)
 {
   sstring buf;
 
   if(fmt.find("feEgG")==sstring::npos){
-    ssprintf(buf, "bad format specifier (%s) used for double", fmt.c_str());
+    ssprintf(buf, "bad format specifier used for double");
     vlogf(LOG_BUG, buf.c_str());
   } else {
     ssprintf(buf, fmt.c_str(), x);
@@ -45,12 +45,12 @@ sstring doFormat(const sstring &fmt, const double &x)
   return buf;
 }
 
-sstring doFormat(const sstring &fmt, const char &x)
+sstring fmt::doFormat(const sstring &fmt, const char &x)
 {
   sstring buf;
 
   if(fmt.find("c")==sstring::npos){
-    ssprintf(buf, "bad format specifier (%s) used for char", fmt.c_str());
+    ssprintf(buf, "bad format specifier used for char");
     vlogf(LOG_BUG, buf.c_str());
   } else {
     ssprintf(buf, fmt.c_str(), x);
@@ -59,12 +59,12 @@ sstring doFormat(const sstring &fmt, const char &x)
   return buf;
 }
 
-sstring doFormat(const sstring &fmt, const sstring &x)
+sstring fmt::doFormat(const sstring &fmt, const sstring &x)
 {
   sstring buf;
 
   if(fmt.find("s")==sstring::npos){
-    ssprintf(buf, "bad format specifier (%s) used for sstring", fmt.c_str());
+    ssprintf(buf, "bad format specifier used for sstring");
     vlogf(LOG_BUG, buf.c_str());
   } else {
     ssprintf(buf, fmt.c_str(), x.c_str());
@@ -100,6 +100,9 @@ template <class T> fmt & fmt::operator %(const T &x)
     
     output += (*this)[i];
   }
+
+  vlogf(LOG_BUG, "format passed argument with no format specifier, output=%s",
+	output.c_str());
 
   this->assign(output);
 
