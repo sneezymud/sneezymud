@@ -173,6 +173,7 @@ void doStocks(){
   int shop_nr, talens, shares;
   float price, prevprice, amt;
   TDatabase db("sneezy");
+  TDatabase dbupdate("sneezy");
 
   db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr, si.talens, si.price");
 
@@ -197,7 +198,7 @@ void doStocks(){
       price-=amt;
     }
 
-    db.query("update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
+    dbupdate.query("update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
 
 
     //    db.query("insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
