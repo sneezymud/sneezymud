@@ -2167,7 +2167,7 @@ sstring add_bars(const sstring &s){
       pos != sstring::npos;
       pos=stmp.find_first_of(whitespace, pos)){
     // replace any contiguous string of white space with a single -
-    stmp.replace(pos, stmp.find_first_not_of(whitespace, pos)-pos, '-');
+    stmp.replace(pos, stmp.find_first_not_of(whitespace, pos)-pos, "-");
   }
 
   return stmp;
