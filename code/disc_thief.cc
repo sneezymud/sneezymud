@@ -433,8 +433,8 @@ struct PolyType DisguiseList[LAST_DISGUISE_MOB] =
   {"church female"      , 10, 20,  51, DISC_STEALTH, RACE_NORACE},
   {"old-man male"       , 15, 30, 174, DISC_STEALTH, RACE_NORACE},
   {"old-woman female"   , 15, 30, 175, DISC_STEALTH, RACE_NORACE},
-  {"patrol male"        , 20, 40, 300, DISC_STEALTH, RACE_NORACE},
-  {"patrol female"      , 20, 40, 301, DISC_STEALTH, RACE_NORACE},
+  {"patron male"        , 20, 40, 300, DISC_STEALTH, RACE_NORACE},
+  {"patron female"      , 20, 40, 301, DISC_STEALTH, RACE_NORACE},
 
   {"peasant"            , 10, 20, 110, DISC_STEALTH, RACE_NORACE},
   {"bard"               , 25, 50, 188, DISC_STEALTH, RACE_NORACE},
