@@ -1810,25 +1810,25 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
     arg1[1] = '\0';
     argument.erase(0,1); // remove first character
   } else {
-    if (!argument.compare("low", 0, 3) && !isImmortal()){
+    if (!argument.substr(0,3).compare("low") && !isImmortal()){
       // KLUDGE - for low and lower command
       // l and lo == look, so we need not check for them
       strcpy(arg1, "lower");
-    } else if (!argument.compare("repl", 0, 4) && !isImmortal()){
+    } else if (!argument.substr(0,4).compare("repl") && !isImmortal()){
       // KLUDGE - for reply and replace command
       // rep == report, so we need not check for shorter
       strcpy(arg1, "reply");
-    } else if (!argument.compare("med", 0, 3) && !isImmortal()){
+    } else if (!argument.substr(0,3).compare("med") && !isImmortal()){
       // KLUDGE - for meditate and medit command
       // me == mend limb, so we need not check for shorter
       strcpy(arg1, "meditate");
-    } else if (!(lower(argument).compare("southe", 0, 6))){
+    } else if (!(lower(argument).substr(0,6).compare("southe"))){
       strcpy(arg1, "se");
-    } else if (!(lower(argument).compare("northw", 0, 6))){
+    } else if (!(lower(argument).substr(0,6).compare("northw"))){
       strcpy(arg1, "nw");
-    } else if (!(lower(argument).compare("southw", 0, 6))){
+    } else if (!(lower(argument).substr(0,6).compare("southw"))){
       strcpy(arg1, "sw");
-    } else if (!(lower(argument).compare("northe", 0, 6))){
+    } else if (!(lower(argument).substr(0,6).compare("northe"))){
       strcpy(arg1, "ne");
     }
 
