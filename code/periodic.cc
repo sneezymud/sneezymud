@@ -791,7 +791,15 @@ int TBeing::updateHalfTickStuff()
     act("$n collapses as $e falls asleep.", TRUE, this, 0, 0, TO_ROOM);
     setPosition(POSITION_SLEEPING);
   }
-    
+
+  if(inRoom() >= 31800 && inRoom() <= 31899 && getCond(DRUNK) == 0){
+    sendTo("Totally sober now, this world seems to fade away like a dream.\n\r");
+    setPosition(POSITION_SLEEPING);
+
+    TRoom *room = real_roomp(12643); // beach near jungle
+    --(*this);
+    *room += *this;
+  }
 
   rc = updateBodyParts();
   if (IS_SET_DELETE(rc, DELETE_THIS))

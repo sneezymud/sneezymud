@@ -6192,7 +6192,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       mysql_free_result(res);
 
       // check for largest
-      if((rc=dbquery(&res, "sneezy", "fishkeeper(large1)", "select weight from fishlargest where type='%s'", o->shortDescr))){
+      if((rc=dbquery(&res, "sneezy", "fishkeeper(large1)", "select weight, name from fishlargest where type='%s'", o->shortDescr))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in fishkeeper");	
       }
@@ -6206,8 +6206,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}
 	mysql_free_result(res);
 
-	sprintf(buf, "Oh my, you've set a record!  This the largest %s I've seen, weighing in at %f!  Very nice!",
-		o->shortDescr, o->getWeight());
+	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice!",
+		row[1], o->shortDescr, o->getWeight());
 	myself->doSay(buf);
       } else {
 	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one!", 

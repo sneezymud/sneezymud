@@ -1123,6 +1123,10 @@ void TBeing::gainCondition(condTypeT condition, int value)
         break;
       case MAX_COND_TYPE:
       case DRUNK:
+	if(inRoom() >= 31800 && inRoom() <= 31899){    
+	  sendTo("As you begin to sober up, your grasp on this strange world begins to loosen.\n\r");
+	}
+
         break;
     }
   }

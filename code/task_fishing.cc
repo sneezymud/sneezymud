@@ -3,6 +3,7 @@
 void TBeing::doFish(const char *direction){
   TRoom *rp;
   roomDirData *exitp;
+  const int ROOM_FISHING_SHACK=31818;
 
   if(!(exitp = exitDir(getDirFromChar(direction))) || !direction){
     rp=roomp;
@@ -27,6 +28,18 @@ void TBeing::doFish(const char *direction){
   }
 
   sendTo("You start fishing.\n\r");
+
+  if(getCond(DRUNK) > 10){
+    sendTo("All of this drunken fishing has caused you to pass out.\n\r");
+    sendTo("Strange things begin running through your mind...\n\r");
+
+    setPosition(POSITION_SLEEPING);
+
+    TRoom *room = real_roomp(ROOM_FISHING_SHACK);
+    --(*this);
+    *room += *this;    
+  }
+
   start_task(this, NULL, rp, TASK_FISHING, "", 2, inRoom(), 0, 0, 5);
 }
 
