@@ -14,6 +14,7 @@
 #include "shop.h"
 #include "obj_food.h"
 #include "obj_base_cup.h"
+#include "obj_pool.h"
 #include "disc_aegis.h"
 #include "disc_shaman_armadillo.h"
 #include "shopowned.h"
@@ -263,9 +264,17 @@ int TBaseCup::drinkMe(TBeing *ch)
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
 
-  if (!getDrinkUnits()) {
-    act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
-    remDrinkConFlags(DRINK_POISON);
+  if (getDrinkUnits() <= 0) {
+    TPool * tPool = dynamic_cast<TPool *>(this);
+
+    if (!tPool) {
+      act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
+      remDrinkConFlags(DRINK_POISON);
+    } else {
+      act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
+
+      return DELETE_THIS;
+    }
   }
 
   return FALSE;
