@@ -132,6 +132,7 @@ const short int GENERIC_NOTE        = 3090;
 const short int GENERIC_PEN         = 3091;
 const short int OBJ_VENISON         = 3114;
 const short int WEAPON_ARROW        = 3409;
+const short int BOULDER_ITEM        = 4181;
 const short int OBJ_GENERIC_GRAVE   = 4200;
 const short int OBJ_GOLD_FEATHER    = 4791;
 const short int OBJ_PHOENIX_FEATHER = 4847;

@@ -1914,6 +1914,51 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
+int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
+{
+  TRoom *rp;
+  TObj *to = NULL;
+  TThing *t = NULL, *t2 = NULL;
+  static int pulse;
+  int found = 0;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  ++pulse;
+  if(pulse%10)
+    return FALSE;
+
+  for (t = roomp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    if(!(to=dynamic_cast<TObj *>(t)))
+      continue;
+    if(obj_index[to->getItemIndex()].virt == BOULDER_ITEM) {
+      found = 1;
+      break;
+    }
+  }
+  for (t = roomp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    if(!(to=dynamic_cast<TObj *>(t)))
+      continue;
+    if (!(t2 = dynamic_cast<TObj *>(read_object(4181, VIRTUAL)))) {
+      found = 1;
+      break;
+    }
+  }
+
+  if (!found) {
+    rp=real_roomp(4189);
+    REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+  } else {
+    rp=real_roomp(4189);
+    SET_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+  }
+  rp=real_roomp(4284);
+  REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
+  return TRUE;
+}
 
 
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
@@ -1951,6 +1996,8 @@ void assign_rooms(void)
     {3700, dump},
     {3736, healing_room},
     {3755, bank},
+    {4189, boulderRoom},
+    {4284, boulderRoom},
     {5700, dayGateRoom},
     {5895, moonGateRoom},
     {6156, SecretDoors},

@@ -422,6 +422,7 @@ enum cmdTypeT {
      CMD_LOW,
      CMD_KNEESTRIKE,
      CMD_PUSH,
+     CMD_MOVE,
      CMD_RESIZE,
      CMD_DISBAND,
      CMD_LIFT,

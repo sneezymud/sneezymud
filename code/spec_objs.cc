@@ -1096,6 +1096,110 @@ void invert(const char *arg1, char *arg2)
 }
 
 
+int boulderPush(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *heap_ptr[50];
+  dirTypeT tdir;
+  int i, heap_top, heap_tot[50], result;
+  followData *k, *n;
+  char buf[256], buffer[256], dir[256], blurb[256];
+  int oldroom, or, rc;
+  TRoom *rp;
+
+  if (!arg || !*arg)
+    return FALSE;
+  if(!o) 
+    return FALSE;
+
+  two_arg(arg, buffer, dir);
+  tdir = getDirFromChar(dir);
+  *blurb = '\0';
+  if (!dir || !*dir) {
+    ch->sendTo("You must specify a direction to push.\n\r");
+    return FALSE;
+  }
+  if (tdir == DIR_NONE) {
+    strcpy(blurb, dir);
+    tdir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+  } 
+
+  if (cmd == CMD_PUSH && is_abbrev(buffer, "boulder")) {
+    arg = two_arg(arg, buffer, dir);
+    
+    if (compareWeights(o->getTotalWeight(TRUE),
+		       (5.0 * (ch->carryWeightLimit() - ch->getCarriedWeight()))) == -1) {
+      act("You strain with all your might to push $N out of the room but fail.",
+	  TRUE, ch, NULL, o, TO_CHAR);
+      act("$n strains with all $s might to push $N out of the room buts fails.",
+	  TRUE, ch, NULL, o, TO_ROOM);
+      return FALSE;
+    }
+    sprintf(buf, "%i", tdir);
+    rc = o->roomp->checkSpec(ch, CMD_ROOM_ATTEMPTED_EXIT, buf, o->roomp);
+    if(rc==TRUE) // not allowed to move
+      return FALSE;
+    
+    sprintf(buf, "You push $N %s.", dirs[tdir]);
+    act(buf, TRUE, ch, NULL, o, TO_CHAR);
+    sprintf(buf, "$n pushes $N %s.", dirs[tdir]);
+    act(buf, TRUE, ch, NULL, o, TO_ROOM);
+    oldroom = o->in_room;
+    or = o->roomp->dir_option[tdir]->to_room;
+    rp = real_roomp(or);
+    --(*o);
+    --(*ch);
+    *rp += *ch;
+    *rp += *o;
+    act("$n enters the room pushing $N!", TRUE, ch, NULL, o, TO_ROOM);
+    
+    if (ch->followers) {
+      heap_top = 0;
+      for (k = ch->followers; k; k = n) {
+	n = k->next;
+	if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
+	    (k->follower->getPosition() >= POSITION_CRAWLING)) {
+	  sprintf(buf, "You follow $N as $E pushes $p out of the room.");
+	  act(buf, FALSE, k->follower, o, ch, TO_CHAR); 
+	  if (k->follower->followers) {
+	    rc = k->follower->moveGroup(tdir);
+	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	      delete k->follower;
+	      k->follower = NULL;
+	      continue;
+	    }
+	  } else {
+	    if ((result = k->follower->rawMove(tdir))) {
+	      if (IS_SET_DELETE(result, DELETE_THIS)) {
+		delete k->follower;
+		k->follower = NULL;
+		continue;
+	      }
+	      AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
+	    }
+	  }
+	}
+      }
+      for (i = 0; i < heap_top; i++) {
+	if (heap_tot[i] > 1)
+	  rc = heap_ptr[i]->displayGroupMove(tdir, oldroom, heap_tot[i]);
+	else
+	  rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  delete heap_ptr[i];
+	  heap_ptr[i] = NULL;
+	}
+      }
+    }
+    ch->doLook("", CMD_LOOK);
+    ch->addToMove(-8);
+    ch->addToWait(combatRound(1));
+    return TRUE;
+  } else {
+    return FALSE;
+  }
+}
+
+
 int jive_box(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *, TObj **)
 {
   char buf[255], buf2[255], buf3[255], tmp[255];
@@ -5326,5 +5430,17 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
   {FALSE, "Splintered Club", splinteredClub}, // 90 
+  {FALSE, "Boulder Rolling", boulderPush}, 
   {FALSE, "last proc", bogusObjProc}
 };
+
+
+
+
+
+
+
+
+
+
+
