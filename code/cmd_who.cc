@@ -332,6 +332,8 @@ void TBeing::doWho(const char *argument)
                   if (!group) {
                     TBeing *ch;
                     followData *f;
+		    ssprintf(buf, "Group: %s\n\r%s",
+			     p->desc->session.groupName.c_str(), buf.c_str());
                     for (f = p->followers; f; f = f->next) {
                       ch = f->follower;
                       if (!ch->isPc())
@@ -339,9 +341,9 @@ void TBeing::doWho(const char *argument)
                       if (!canSeeWho(ch))
                         continue;
                       if (ch->isLinkdead() && isImmortal())
-                        ssprintf(buf, "[%-12s] ", pers(ch));
+                        ssprintf(buf, "%s[%-12s] ", buf.c_str(), pers(ch));
                       else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        ssprintf(buf, "[%-12s] (switched) ", pers(ch));
+                        ssprintf(buf, "%s[%-12s] (switched) ", buf.c_str(), pers(ch));
                       else if (dynamic_cast<TMonster *>(ch) &&
                                (ch->specials.act & ACT_POLYSELF))
                         ssprintf(buf, "%s(%-14s) ", buf.c_str(), pers(ch));

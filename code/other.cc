@@ -1800,7 +1800,8 @@ void TBeing::doGroup(const char *argument)
     if (!isAffected(AFF_GROUP))
       sendTo("But you are a member of no group?!\n\r");
     else {
-      sendTo("Your group consists of:\n\r\n\r");
+      sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
+	     desc->session.groupName.c_str());
       if (master)
         k = master;
       else
@@ -1897,7 +1898,35 @@ void TBeing::doGroup(const char *argument)
     }
     return;
   }
-  if (is_abbrev(namebuf, "share")) {
+  if(is_abbrev(namebuf, "name")){
+    if(!argument || !*argument){
+      sendTo("Syntax: group name <name>\n\r");
+      if(isAffected(AFF_GROUP)) {
+	if(master){
+	  sendTo("Current group name: %s", 
+		 master->desc->session.groupName.c_str());
+	} else {
+	  sendTo("Current group name: %s", 
+		 desc->session.groupName.c_str());
+	}
+      }
+
+      return;
+    }
+    if (!isAffected(AFF_GROUP)) {
+      sendTo("You don't seem to have a group.\n\r");
+      return;
+    }
+    if (master) {
+      sendTo("Only the group leader may set the group name.\n\r");
+      return;
+    }
+    ++argument;
+    ssprintf(desc->session.groupName, "%.60s<1>", argument);
+
+    sprintf(buf, "I have just set the group name to %s.", argument);
+    doGrouptell(buf);
+  } else if (is_abbrev(namebuf, "share")) {
     int amt;
 
     if (!argument || !*argument) {
