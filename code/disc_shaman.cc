@@ -981,3 +981,101 @@ int vampiricTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 
   return tRc;
 }
+
+int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  if (victim->isImmortal()) {
+    act("You can't touch a god in that manner!",
+             FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  int num = ::number(1,10);
+  int num2 = ::number(1,8);
+  int num3 = ::number(1,10);
+
+  if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {
+    act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("You buckle in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
+    victim->addToHit(-num);
+    caster->addToHit(num2);
+    caster->addToLifeforce(num3);
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_LIFE_LEECH)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_LIFE_LEECH);
+        act("<r>$n's body glows a dark, evil-looking red!<z>", 
+               FALSE, caster, NULL, NULL, TO_ROOM);
+        act("<r>You sang the invokation incorrectly! The ancestors are<z> <R>EXTREMELY<z> <r>pissed!<z>", 
+               FALSE, caster, NULL, NULL, TO_CHAR);
+        victim->addToHit(num);
+        caster->addToHit(-num);
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+  caster->updatePos();
+}
+
+int lifeLeech(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_LIFE_LEECH, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_LIFE_LEECH]->lag;
+  taskDiffT diff = discArray[SPELL_LIFE_LEECH]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LIFE_LEECH, diff, 1, "", rounds, caster->in_room, 0, 
+0,TRUE, 
+0);
+
+  return TRUE; 
+}
+
+int castLifeLeech(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_LIFE_LEECH);
+  int bKnown = caster->getSkillValue(SPELL_LIFE_LEECH);
+
+  ret=lifeLeech(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_LIFE_LEECH));
+  if (ret == SPELL_SUCCESS) {
+  } else {
+    if (ret==SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int lifeLeech(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
+
+  tReturn = lifeLeech(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
+}
+
+
+
+

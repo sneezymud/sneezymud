@@ -371,7 +371,6 @@ $(OBJDIR)disc_afflictions.o: disc_afflictions.h combat.h
 $(OBJDIR)disc_air.o: disc_air.h spelltask.h combat.h
 $(OBJDIR)disc_alchemy.o: disc_alchemy.h components.h combat.h spelltask.h
 $(OBJDIR)disc_animal.o: disc_animal.h combat.h
-$(OBJDIR)disc_azruzi.o: disc_azruzi.h combat.h
 $(OBJDIR)disc_blunt.o: disc_blunt.h
 $(OBJDIR)disc_brawling.o: disc_brawling.h
 $(OBJDIR)disc_meditation.o: disc_meditation.h disc_combat.h

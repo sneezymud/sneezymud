@@ -445,6 +445,9 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_LICH_TOUCH:
       dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SPELL_LIFE_LEECH:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
     case SPELL_VAMPIRIC_TOUCH:
       // added to follow suit
       dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 0.011 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);

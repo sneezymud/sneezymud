@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.8  2001/06/05 04:27:26  jesus
+// added life leech spell for shaman
+// fixed a glitch in sacrifice
+//
 // Revision 5.7  2001/05/06 14:39:15  jesus
 // rewrote vampiric touch spell fo shaman
 //
@@ -159,6 +163,7 @@ const int COMP_SHADOW_WALK        =31310;
 const int COMP_DEATH_MIST         =31311;
 const int COMP_LICH_TOUCH         =31312;
 const int COMP_VAMPIRIC_TOUCH     =31313;
+const int COMP_LIFE_LEECH         =31320;
 
 class compPlace
 {

@@ -1140,6 +1140,14 @@ void buildComponentArray()
     "$n consumes $p and swallows it down.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_LIFE_LEECH,
+    "You throw $p onto $N's chest.",
+    "$n throws $p onto $N's chest.",
+    "$n throws $p onto your chest!",                       
+    "You fumble $p and it latches on to you.",
+    "$n fumbles $p and it latches tightly to $s chest.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_ATOMIZE,
     "You blow $p at $N.",
     "$n blow $p at $N.",

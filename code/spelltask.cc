@@ -1237,6 +1237,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_LICH_TOUCH: // shaman
     case SPELL_VAMPIRIC_TOUCH: // shaman
     case SPELL_SHIELD_OF_MISTS: // shaman
+    case SPELL_LIFE_LEECH: // shaman
     case SPELL_ANIMATE:
     case SPELL_BIND:
     case SPELL_TELEPORT:
@@ -2025,6 +2026,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castVampiricTouch(this, victim);
         } else
           vlogf(LOG_BUG, "SPELL_VAMPIRIC_TOUCH called with null obj");
+        break;
+      case SPELL_LIFE_LEECH:
+        if (!o) {
+          rc = castLifeLeech(this, victim);
+        } else
+          vlogf(LOG_BUG, "SPELL_LIFE_LEECH called with null obj");
         break;
       case SPELL_SHIELD_OF_MISTS:
         if (!o) {

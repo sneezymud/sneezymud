@@ -1952,6 +1952,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_VAMPIRIC_TOUCH:
         rc = vampiricTouch(this, ch);
         break;
+      case SPELL_LIFE_LEECH:
+        rc = lifeLeech(this, ch);
+        break;
       case SPELL_THORNFLESH:
         rc = thornflesh(this);
 	break;
@@ -2001,11 +2004,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_SUMMON:
           rc = summon(this, ch);
         break;
-#if 0
-      case SPELL_LIFE_LEECH:
-          lifeLeech(this);
-        break;
-#endif
       case SPELL_SYNOSTODWEOMER:
           rc = synostodweomer(this, ch);
         break;
@@ -2274,7 +2272,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_DISARM_THIEF:
     case SKILL_COUNTER_STEAL:
     case SKILL_BREW:
-    case SPELL_LIFE_LEECH:
     case SKILL_TURN:
     case SKILL_SIGN:
     case SKILL_SWIM:

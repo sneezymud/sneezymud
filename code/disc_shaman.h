@@ -84,6 +84,11 @@ private:
     int vampiricTouch(TBeing *, TBeing *, int, byte, int);
     int vampiricTouch(TBeing *, TBeing *, TMagicItem *);
 
+    int lifeLeech(TBeing *, TBeing *);
+    int castLifeLeech(TBeing *, TBeing *);
+    int lifeLeech(TBeing *, TBeing *, int, byte, int);
+    int lifeLeech(TBeing *, TBeing *, TMagicItem *);
+
     int shieldOfMists(TBeing *, TBeing *);
     int castShieldOfMists(TBeing *, TBeing *);
     void shieldOfMists(TBeing *, TBeing *, TMagicItem *);

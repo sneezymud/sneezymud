@@ -79,7 +79,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
 
   if (percent < ch->getSkillValue(SKILL_SACRIFICE)) {
-    act("$p is being accepted by the loa.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("Your sacrifice is being accepted by the loa.", FALSE, ch, 0, 0, TO_CHAR);
     ch->addToLifeforce(factor);
     ch->updatePos();
   } else {
