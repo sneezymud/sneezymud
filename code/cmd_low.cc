@@ -887,6 +887,12 @@ void TObj::checkObjStats()
     }
 
   lowCheckSlots(SILENT_NO);
+
+  
+  if(getMaxStructPoints()<getStructPoints()){
+    vlogf(LOG_LOW, "obj %s had greater struct than max struct.", getName());
+  }
+
 }
 
 void objAffData::checkForBadness(TObj *obj)
