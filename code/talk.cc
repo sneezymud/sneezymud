@@ -182,14 +182,22 @@ int TBeing::doSay(const char *arg)
         if (hasColorStrings(NULL, capbuf, 2)) {
           if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
             sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
-            mob->sendTo(COLOR_COMM, "%s says, \"%s%s\"\n\r", tmpbuf, garbed, mob->norm());
+	    if (Lapspeak == 1) {
+	      mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s%s\"\n\r", tmpbuf, garbed, mob->norm());
+	    } else {
+	      mob->sendTo(COLOR_COMM, "%s says, \"%s%s\"\n\r", tmpbuf, garbed, mob->norm());
+	    }
             if (d->m_bIsClient) {
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
               d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf, garbedBuf);
             }
           } else {
-            mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
+	    if (Lapspeak == 1) {
+	      mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s\"\n\r", tmpbuf, garbed);
+	    } else {
+	      mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
+	    }
             if (d->m_bIsClient) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
               sprintf(garbedBuf, "%s", 
@@ -200,7 +208,11 @@ int TBeing::doSay(const char *arg)
             }
           }
         } else {
-          mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
+	  if (Lapspeak == 1) {
+	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s\"\n\r", tmpbuf, garbed);
+	  } else {
+	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
+	  }
           if (d->m_bIsClient) {
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
@@ -211,8 +223,13 @@ int TBeing::doSay(const char *arg)
           }
         }
       } else {
-        mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
-            colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
+	  if (Lapspeak == 1) {
+	    mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s\"\n\r", good_cap(getName()).c_str(), 
+			colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
+	  } else {
+	    mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
+			colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
+	  }
         if (d->m_bIsClient) {
           d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());

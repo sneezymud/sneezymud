@@ -855,6 +855,9 @@ int TMonster::senseWimps()
       if (tmp_victim->hasClass(CLASS_MAGIC_USER))
         score -= 200;
 
+      if (tmp_victim->hasClass(CLASS_SHAMAN))
+        score -= 200;
+
       // monks do massive damage, better kick their ass first
       if (tmp_victim->hasClass(CLASS_MONK))
         score -= 150;
@@ -958,7 +961,7 @@ int TMonster::fighterMove(TBeing &vict)
 	  badspell = TRUE;
       }
       if (t && t->isAffected(AFF_GROUP) && 
-	  t->hasClass(CLASS_MAGIC_USER | CLASS_CLERIC) &&
+	  t->hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_SHAMAN) &&
 	  (badspell || !::number(0,4)) &&
 	  canBash(t, SILENT_YES) && getPosition() > POSITION_SITTING){
 	return doBash("", t);
@@ -967,7 +970,7 @@ int TMonster::fighterMove(TBeing &vict)
   }
   
   //distinguish between fighting a caster and a non-caster
-  if (vict.hasClass(CLASS_MAGIC_USER | CLASS_CLERIC) &&
+  if (vict.hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_SHAMAN) &&
       vict.getPosition() > POSITION_SITTING) {
     // caster
     // knock uhm over or we are toast!
@@ -1069,7 +1072,8 @@ int TMonster::monkMove(TBeing &vict)
     num = ::number(1, 14);
     if ((num <= 2 ||
         ((vict.hasClass(CLASS_MAGIC_USER) ||
-          vict.hasClass(CLASS_CLERIC)) &&
+          vict.hasClass(CLASS_CLERIC) &&
+          vict.hasClass(CLASS_SHAMAN)) &&
          vict.getPosition() > POSITION_SITTING)) &&
          canBash(&vict, SILENT_YES) && (getPosition() >= POSITION_CRAWLING)) {
       return doShoulderThrow("", &vict);
@@ -2172,11 +2176,7 @@ int TMonster::shamanMove(TBeing &vict)
 
   if (on_me) {
     if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
-      if ((spell = SPELL_TREE_WALK)) {
-	return doDiscipline(spell, "oak");
-      } else {
-	return doDiscipline(spell, "");
-      }
+      return doDiscipline(spell, "");
     }
     vlogf(LOG_BUG, "Shaman Mob casting (1) spell %d on self with possibly bad target flags for spell", spell);
     return doDiscipline(spell, name);
@@ -2547,7 +2547,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_PILLAR_SALT;
-    if (!::number(0, 5) &&
+    if (!::number(0, 3) &&
          ch.doesKnowSkill(spell) && 
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {

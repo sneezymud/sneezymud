@@ -41,6 +41,7 @@ extern int MobCountInRoom(const TThing *);
 extern bool WizLock;
 extern bool WizGoto;
 extern bool WizShout;
+extern bool Lapspeak;
 extern bool Sleep;
 extern bool NewbiePK;
 extern bool AllowPcMobs;

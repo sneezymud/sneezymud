@@ -61,6 +61,7 @@ bool WizShout = FALSE;
 bool WizGoto = FALSE;
 bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
 bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
+bool Lapspeak = FALSE; // Heh. 
 
 int QuestVar1 = 0; // varibles for changing constants in the code in-game
 int QuestVar2 = 0;
@@ -297,6 +298,10 @@ void TPerson::doToggle(const char *arg)
     WizShout = ! WizShout;
     sendTo("Immortals can now %s.\n\r", WizShout ? "shout" : "not shout");
     vlogf(LOG_MISC,"%s has turned shout %s for immortals.",getName(),WizShout ? "on" : "off");
+  } else if (is_abbrev(arg, "lapspeak")) {
+    Lapspeak = ! Lapspeak;
+    sendTo("Lapspeak is now %s.\n\r", Lapspeak ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned Lapspeak %s for immortals.",getName(),Lapspeak ? "on" : "off");
   } else if (is_abbrev(arg, "invis")) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
