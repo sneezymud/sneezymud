@@ -581,7 +581,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
   }
   
-  if(!doctor){
+  if(!doctor && gamePort != GAMMA_GAMEPORT){
     vlogf(LOG_BUG, fmt("couldn't find doctor for shop_nr=%i!") % shop_nr);
     return FALSE;
   }
