@@ -4753,7 +4753,6 @@ void TBeing::doInfo(const char *arg)
 
   arg = one_argument(arg, arg1);
   sstring str = "Information available to you : \n\r";
-  str += "lag         : a breakdown of lag in the game loop.\n\r";
   str += "commands    : how many times certain commands were used.\n\r";
   str += "objects     : how many objects exist of each time.\n\r";
   str += "unlinked    : how many objects are in the obj list but not in the mud.\n\r";
@@ -4772,99 +4771,7 @@ void TBeing::doInfo(const char *arg)
     sendTo("What would you like info on?\n\r");
     sendTo(str);
   } else {
-    if (is_abbrev(arg1, "lag")){
-      sstring groupnames[25]={"Shutdown Handler",
-			      "Socket Handler", "Sleep",
-			      "New Connections",
-			      "Close Connections", "Input Handler",
-			      "Interport Recv", "Who List", "Repo",
-			      "Pulse Tick", "Combat", "Pulse Mudhour",
-			      "Object Loop", "Character Loop",
-			      "Misc 1", "Ping", "Misc 2", 
-			      "unknown",
-			      "unknown",
-			      "unknown",
-			      "unknown",
-			      "unknown",
-			      "unknown",
-			      "unknown", "unknown"};
-      sstring cgroupnames[25]={"Pulse Procs",
-			       "Drowning",
-			       "Mobstuff",
-			       "Combat",
-			       "Teleport",
-			       "Half Tick",
-			       "Full Tick",
-			       "Vampires/Lycan",
-			       "Quick Pulse Procs",
-			       "Screen Update",
-			       "unknown", "unknown", "unknown", "unknown",
-			       "unknown", "unknown", "unknown", "unknown",
-			       "unknown", "unknown", "unknown", "unknown",
-			       "unknown", "unknown", "unknown"};
-
-      double total=0, tlist[25], ttotal=0;
-      int n=0;
-      for(int i=0;i<25;++i){
-	for(int j=0;j<100;++j){
-	  total += lag_info.laggroup[j][i];
-	}
-	total/=100;
-	tlist[i]=total;
-	ttotal+=total;
-	total=0;
-      }
-
-      for(int j=0;j<25;++j){
-	for(int i=0;i<25;++i){
-	  if(tlist[i]>=tlist[n])
-	    n=i;
-	}
-	if(groupnames[n]!="unknown")
-	  sendTo("%-20s: %8.4f    %2.2f%%\n\r", groupnames[n].c_str(),tlist[n],
-		 ((tlist[n]/ttotal)*100));
-	tlist[n]=0;
-      }
-
-      sendTo("\n\rCharacter loop detail:\n\r");
-      total=ttotal=n=0;
-
-      for(int i=0;i<25;++i){
-	for(int j=0;j<100;++j){
-	  total += lag_info.claggroup[j][i];
-	}
-	total/=100;
-	tlist[i]=total;
-	ttotal+=total;
-	total=0;
-      }
-
-      for(int j=0;j<25;++j){
-	for(int i=0;i<25;++i){
-	  if(tlist[i]>=tlist[n])
-	    n=i;
-	}
-	if(cgroupnames[n]!="unknown")
-	  sendTo("%-20s: %8.4f    %2.2f%%\n\r",cgroupnames[n].c_str(),tlist[n],
-		 ((tlist[n]/ttotal)*100));
-	tlist[n]=0;
-      }
-
-      if(is_abbrev(arg, "mobprocs")){
-	for(int i=0;i<200;++i){
-	  total=0;
-	  for(int j=0;j<10;++j){
-	    total += lag_info.mobprocs[j][i];
-	  }					       
-	  
-	  if(total > 0){
-	    sendTo("%-4i: %8.4f\n\r", i, total/10);
-	  }
-	}
-      }
-      
-    }
-    else if (is_abbrev(arg1, "commands")) {
+    if (is_abbrev(arg1, "commands")) {
       sendTo("Command access information:\n\r");
       sendTo("  News file accessed %d times.\n\r", news_used_num);
       sendTo("  Wiznews file accessed %d times.\n\r", wiznews_used_num);
@@ -4874,8 +4781,7 @@ void TBeing::doInfo(const char *arg)
       sendTo("  Typo file accessed %d times.\n\r", typo_used_num);
       sendTo("  Bugs file accessed %d times.\n\r", bug_used_num);
       sendTo("  Idea file accessed %d times.\n\r", idea_used_num);
-    } 
-    else if (is_abbrev(arg1, "objects")) {
+    } else if (is_abbrev(arg1, "objects")) {
       TObj *o;
       int count[MAX_OBJ_TYPES], i=0, li=0;
       
@@ -5790,7 +5696,7 @@ void TBeing::doInfo(const char *arg)
       sendTo("What would you like info on?\n\r");
       sendTo(str);
     }
-  }
+}
 }
 
 static int deltatime;

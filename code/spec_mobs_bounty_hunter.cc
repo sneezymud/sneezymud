@@ -8,7 +8,6 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "statistics.h"
-#include "timing.h"
 
 static TBeing *char_with_name(char *name)
 {

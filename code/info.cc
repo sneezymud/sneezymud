@@ -38,7 +38,6 @@
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
-#include "timing.h"
 
 sstring describeDuration(const TBeing *ch, int dur)
 {
