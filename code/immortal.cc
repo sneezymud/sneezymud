@@ -2974,6 +2974,9 @@ void TPerson::doStart()
   if (hasClass(CLASS_MAGIC_USER))
     personalize_object(NULL, this, 321, -1);
 
+  if (hasClass(CLASS_SHAMAN))
+    personalize_object(NULL, this, 31317, -1);
+
   if (hasClass(CLASS_DEIKHAN))
     personalize_object(NULL, this, 500, -1);
 
@@ -3065,7 +3068,8 @@ int TBeing::genericRestore(restoreTypeT partial)
 {
   setCond(FULL, 24);
   setCond(THIRST, 24);
-  setLifeforce(25);
+  // Want lifeforce ignored on restore
+  //  setLifeforce(25);
   setPiety(pietyLimit());
   setMana(manaLimit());
   setHit(hitLimit());
@@ -3333,7 +3337,7 @@ void TBeing::doRestore(const char *argument)
     checkForStr(SILENT_NO);
   }
   victim->updatePos();
-  sendTo("Done.\n\r");
+  sendTo("Done.\n\rIf Shaman lifeforce needs to be changed please do so with \"@set\".\n\r");
   if (partial == RESTORE_PARTIAL)
     act("You have been partially healed by $N!", FALSE, victim, 0, this, TO_CHAR);
   else {

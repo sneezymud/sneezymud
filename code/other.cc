@@ -2681,7 +2681,7 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   TBeing *victim = NULL;
   int i, bits, rc;
 
-  if (!ch->hasClass(CLASS_MAGIC_USER) && !ch->hasClass(CLASS_CLERIC)) {
+  if (!ch->hasClass(CLASS_MAGIC_USER) && !ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_SHAMAN)) {
     if (!bSuccess(ch, ch->getSkillValue(SKILL_READ_MAGIC), SKILL_READ_MAGIC)) {
       ch->sendTo("You can't understand this...\n\r");
       return FALSE;

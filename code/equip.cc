@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: equip.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 //////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -80,6 +65,10 @@ int check_size_restrictions(const TBeing *ch, const TObj *o, wearSlotT slot, con
   const TBaseClothing *tbc = dynamic_cast<const TBaseClothing *>(o);
   if (!tbc || dynamic_cast<const TJewelry *>(tbc))
     return TRUE;
+  const TBaseContainer *tbc2 = (dynamic_cast<const TBaseContainer *>(o)); 
+  if (tbc2) 
+    if (tbc2->isSaddle())
+      return TRUE;
   if (tbc->isSaddle())
     return TRUE;
   if ((slot == WEAR_NECK) ||
@@ -133,24 +122,6 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent) const
         sendTo("Rangers shun the use of metal armor.\n\r");
       return FALSE;
     }
-    if ((getSex() != SEX_MALE) &&
-        (o->isObjStat(ITEM_ONLY_MALE))) {
-      if (!silent)
-        sendTo("That item seems a bit too butch for you.\n\r");
-      return FALSE;
-    }
-    if ((getSex() != SEX_FEMALE) &&
-        (o->isObjStat(ITEM_ONLY_FEMALE))) {
-      if (!silent)
-        sendTo("That item seems a bit too effeminate for you.\n\r");
-      return FALSE;
-    }
-    if ((getSex() != SEX_NEUTER) &&
-        (o->isObjStat(ITEM_ONLY_NEUTER))) {
-      if (!silent)
-        sendTo("You seem to have too much in the way of genetalia to wear this.\n\r");
-      return FALSE;
-    }
     if (getRace() == RACE_HOBBIT && o->canWear(ITEM_WEAR_FEET)) {
       if (!silent)
         sendTo("Cover up your beautiful, furry feet?!?  No way!\n\r");
@@ -170,6 +141,8 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent) const
         mod = max(mod, 10.0);
       if (hasClass(CLASS_CLERIC))
         mod = max(mod, 20.0/3);
+      if (hasClass(CLASS_SHAMAN))
+        mod = max(mod, 10.0);
       if (hasClass(CLASS_WARRIOR))
         mod = max(mod, 0.0);
       if (hasClass(CLASS_THIEF))
@@ -235,7 +208,7 @@ int TObj::personalizedCheck(TBeing *ch)
   if (action_description) {
     strcpy(capbuf, action_description);
     if ((sscanf(capbuf, "This is the personalized object of %s.", namebuf)) != 1) {
-      vlogf(10, "Bad personalized item (on %s) with bad action description...extracting from world.", ch->getName());
+      vlogf(LOG_BUG, "Bad personalized item (on %s) with bad action description...extracting from world.", ch->getName());
       return DELETE_THIS;
     } else if (strcmp(namebuf, ch->getName()) && (!ch->isPc() || dynamic_cast<TPerson *>(ch))) {
       // skips for polys
@@ -244,7 +217,7 @@ int TObj::personalizedCheck(TBeing *ch)
       act("The gods have taken away $p!", FALSE, ch, this, NULL, TO_CHAR);
       act("$n is zapped by $p!",TRUE,ch,this,0,TO_ROOM);
 
-      vlogf(2, "We got an illegal personalized item (%s) off of %s (was %s's item).", getName(), ch->getName(), namebuf);
+      vlogf(LOG_MISC, "We got an illegal personalized item (%s) off of %s (was %s's item).", getName(), ch->getName(), namebuf);
 
       t = ch->roomp->stuff;
       while (t) {
@@ -276,9 +249,9 @@ int TObj::personalizedCheck(TBeing *ch)
           --(*this);
           *ch->roomp += *this;
         }
-        vlogf(2, "Found original owner(%s), causing item to zap.", orig->getName());
+        vlogf(LOG_MISC, "Found original owner(%s), causing item to zap.", orig->getName());
       } else {
-        vlogf(2, "Couldn't find original owner, so extracting object.");
+        vlogf(LOG_MISC, "Couldn't find original owner, so extracting object.");
         return DELETE_THIS;
       }
     }
@@ -872,7 +845,11 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
     case WEAR_KEY_BACK:
       if (o->canWear(ITEM_WEAR_BACK)) {
         tbc = dynamic_cast<TBaseClothing *>(o);
-        if (tbc && tbc->isSaddle()) {
+	TBaseContainer *tbc2 = dynamic_cast<TBaseContainer *>(o);
+	if (tbc2 && tbc2->isSaddle()){
+	  sendTo("You have to be saddled to put that on.\n\r");
+	  return FALSE;
+	} else if (tbc && tbc->isSaddle()) {
           sendTo("You have to be saddled to put that on.\n\r");
           return FALSE;
         } else if (validEquipSlot(WEAR_BACK)) {
@@ -1539,7 +1516,7 @@ int TBeing::remove(TThing *obj, TBeing *ch)
 
     return FALSE;
   } else {
-    vlogf(5, "Bad call to remove(TObj *, TBeing *)");
+    vlogf(LOG_BUG, "Bad call to remove(TObj *, TBeing *)");
     return FALSE;
   }
 }
@@ -1925,6 +1902,7 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
   if (canWear(ITEM_WEAR_FINGER))
     return FALSE;
 
+#if 0
   // this includes all minerals (100-150) and metals (150-200)
   ubyte mat = getMaterial();
   if (mat >= 100 &&
@@ -1938,6 +1916,8 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
     default:
       break;
   }
+#endif
+
   if (dynamic_cast<const TArmor *>(this))
     return TRUE;
 
@@ -1981,11 +1961,17 @@ int TBeing::doUnsaddle(const char *arg)
           FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
   }
-  TBaseClothing *tbc;
-  if (!(saddle = horse->equipment[WEAR_BACK]) || 
-      !(tbc = dynamic_cast<TBaseClothing *>(saddle)) ||
-      !tbc->isSaddle()) {
-    act("$N is not wearing a saddle",
+  saddle = horse->equipment[WEAR_BACK];
+  TBaseClothing *tbc = NULL;
+  TBaseContainer *tbc2 = NULL;
+  if (saddle) {
+    tbc = dynamic_cast<TBaseClothing *>(saddle);
+    tbc2 = dynamic_cast<TBaseContainer *>(saddle); //for saddlepacks etc 10-21-00, -dash
+  }
+  if (!(saddle) ||
+      !(tbc  && tbc->isSaddle()) &&  //two checks for two kinds of saddles
+      !(tbc2 && tbc2->isSaddle())) {              
+    act("$N is not wearing a saddle.",
           FALSE, this, 0, horse , TO_CHAR);
     return FALSE;
   }
@@ -2044,13 +2030,17 @@ int TBeing::doSaddle(const char *arg)
     sendTo("You don't seem to have the '%s'.\n\r", arg2);
     return FALSE;
   }
+  if (this == horse) {
+    sendTo("You can't saddle yourself, you dolt. Try wearing it.\n\r");
+  }
   if (!horse->isRideable()) {
     act("You can't saddle $N, $E isn't rideable.", 
           FALSE, this, saddle, horse, TO_CHAR);
     return FALSE;
   }
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(saddle);
-  if (!tbc || !tbc->isSaddle()) {
+  TBaseContainer *tbc2 = dynamic_cast<TBaseContainer *>(saddle);
+  if (!(tbc && tbc->isSaddle()) &&  !(tbc2 && tbc2->isSaddle())) {
     act("$p is not a saddle.",
           FALSE, this, saddle, horse , TO_CHAR);
     return FALSE;

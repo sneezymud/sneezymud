@@ -396,6 +396,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   // as of March 2001, each class has the following specialized disciplines:
   // (Normal Spec disc is 60 pracs, weapon spec is 20, allow 1 weapon spec
   // for each of the 'fighting' classes)
+  // Shaman:   8
   // Mages:    7
   // Monks:    4.33
   // Warriors: 4.33
@@ -472,7 +473,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       discs = 5.5;
       break;
     case SHAMAN_LEVEL_IND:
-      discs = 5.75;
+      discs = 6.00;
       break; // I lowered this because I dont want shaman to jump too far ahead
              // I think this is a good start - Jesus
     case UNUSED1_LEVEL_IND:
@@ -586,7 +587,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
-        avg =7.0;
+        avg =6.7;
       }
       break;
     case UNUSED1_LEVEL_IND:
@@ -1346,7 +1347,7 @@ int TBeing::hpGainForClass(classIndT Class) const
     hpgain += ::number(6,8); // old 5,9
 
   if (hasClass(CLASS_SHAMAN) && Class == SHAMAN_LEVEL_IND)
-    hpgain += ::number(3,7); // old 2,8
+    hpgain += ::number(2,8); 
 
   return hpgain;
 }
@@ -1368,3 +1369,5 @@ int TBeing::hpGainForLevel(classIndT Class) const
 
   return max(1, (int)hpgain);
 }
+
+

@@ -4919,7 +4919,8 @@ void TBeing::doSpells(const char *argument)
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
-  TThing *belt=equipment[WEAR_WAISTE], *juju=equipment[WEAR_NECK];
+  TThing *belt=equipment[WEAR_WAISTE];
+  TThing *juju=equipment[WEAR_NECK];
   TComponent *item=NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
@@ -5147,7 +5148,8 @@ void TBeing::doPrayers(const char *argument)
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();
-  TThing *belt = equipment[WEAR_WAISTE], *juju = equipment[WEAR_NECK];
+  TThing *belt = equipment[WEAR_WAISTE];
+  TThing *juju = equipment[WEAR_NECK];
   TComponent *item = NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
