@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.5  1999/10/05 22:39:37  cosmo
+// crash fix- minor- cos
+//
 // Revision 1.4  1999/10/02 23:40:47  lapsos
 // Removed auto-join/auto-pouch from the starting autos on new chars.
 //
@@ -2516,7 +2519,8 @@ void TMonster::purgeMe(TBeing *ch)
 void TObj::purgeMe(TBeing *ch)
 {
   if (!isObjStat(ITEM_NOPURGE)) {
-    ch->logItem(this, CMD_PURGE);
+    if (ch)
+      ch->logItem(this, CMD_PURGE);
     delete this;
   }
 }
