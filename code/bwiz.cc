@@ -104,10 +104,9 @@ void recvTextHandler(const char *str)
     och = d->original ? d->original : d->character;
     if (!och)
       continue;
-    if (och->hasWizPower(POWER_WIZNET) || (och->desc->connected == CON_EDITTING)) {
-      och->sendTo("It works!");
-    } else {
+    if (och->hasWizPower(POWER_WIZNET)) {
       och->sendTo(buf);
+    } else {
     }
   }
 }
@@ -119,7 +118,7 @@ void mudRecvMessage()
   
   if (openQueue() < 0)
     return;
-  
+
   while ((ret = msgrcv(qid, (struct msgbuf *)&qbuf, MAX_MSGBUF_LENGTH, my_ipc_id, IPC_NOWAIT)) > 0)
     recvTextHandler(qbuf.mtext);
   
