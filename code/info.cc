@@ -3045,8 +3045,8 @@ void TBeing::doWorld()
   mysql_free_result(res);
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
-	  red(), (int)(((float)unkmobcount/(float)mob_index.size())*100), 
-	  unkmobcount,
+	  red(), 100-(int)(((float)unkmobcount/(float)mob_index.size())*100), 
+	  mob_index.size()-unkmobcount,
 	  norm());
   str += buf;
 
