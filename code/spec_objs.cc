@@ -5134,6 +5134,69 @@ int AKAmulet(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   
 }
 
+
+int suffGlove(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+
+
+  TBeing *ch;
+  int rc, dam = 1;
+
+  if (!o || !vict)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+  if (::number(0,40))
+    return FALSE;
+  if (cmd != CMD_OBJ_HIT)
+    return FALSE;
+
+
+  if (vict->affectedBySpell(SPELL_SUFFOCATE))
+    return FALSE;
+
+  affectedData aff;
+  aff.type = AFFECT_DISEASE;
+  aff.level = ch->GetMaxLevel();
+  aff.duration = combatRound(3);  
+  aff.modifier = DISEASE_SUFFOCATE;
+  aff.location = APPLY_NONE;
+  aff.bitvector = AFF_SILENT;
+
+
+
+  ch->addToWait(combatRound(3));
+  ch->cantHit += ch->loseRound(3);
+  vict->addToWait(combatRound(3));
+  vict->cantHit += ch->loseRound(3);
+
+
+  act("Your $o seems control your movements as you reach for $N!<1>",
+      TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("<o>$p <o>covers $N<o>'s nose and mouth, preventing $M from breathing!<1>",
+      TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("$n's $o seems control $s movements as $e reaches for $N!<1>",
+      TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("<o>$p <o>covers $N<o>'s nose and mouth, preventing $M from breathing!<1>",
+      TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("n$'s $o seems control $s movements as $e reaches for you!<1>",
+      TRUE,ch,o,vict,TO_VICT,NULL);
+  act("<o>$p <o>covers your nose and mouth.  PANIC!  You can't breathe!!!<1>",
+      TRUE,ch,o,vict,TO_VICT,NULL);
+
+
+  dam = ::number(1,10);
+  rc = ch->applyDamage(vict, dam, DAMAGE_SUFFOCATION);
+  vict->affectJoin(vict, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+
+
+}
+
+
+
 int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 {
   TBeing *ch;
@@ -5328,6 +5391,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
   {FALSE, "Splintered Club", splinteredClub}, // 90 
+  {FALSE, "Suffocation Glove", suffGlove},
   {FALSE, "last proc", bogusObjProc}
 };
 
