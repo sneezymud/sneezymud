@@ -140,7 +140,6 @@ S
  */
 
 NODE *find_node(int num){
-  return NULL;
   if(num<0) 
     return NULL;
 
