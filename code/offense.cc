@@ -658,7 +658,7 @@ int TBeing::doOrder(const char *argument)
     for (k = followers; k; k = k2) {
       k2 = k->next;
       TBeing *kfol = k->follower;
-      if (org_room == kfol->inRoom()) {
+      if (kfol && org_room == kfol->inRoom()) {
         if (kfol->isAffected(AFF_CHARM)) {
           found = TRUE;
           rc = applyOrder(this, kfol, message, SILENT_YES);
