@@ -1113,7 +1113,7 @@ int TSocket::gameLoop()
 	if(!quickpulse){
 	  if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
 	     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
-	     !strcmp(moonType(),"full")){
+	     !strcmp(moonType(),"full") && !sunIsUp()){
 	    lycanthropeTransform(tmp_ch);
 	  } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
 	    if(strcmp(moonType(),"full")){
