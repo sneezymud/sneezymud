@@ -2670,9 +2670,12 @@ int TMonster::takeFirstHit(TBeing &vict)
           v2 = dynamic_cast<TBeing *>(vict.riding);
           if (v2) {
             // can't backstab them (mounted), scrag the horse instead
-            rc = backstabHit(v2, stabber);
+	    //            rc = backstabHit(v2, stabber);
+	    //            addSkillLag(SKILL_BACKSTAB, 0);
 
-            addSkillLag(SKILL_BACKSTAB, 0);
+	    // lets not have automatic success
+	    rc=doBackstab(NULL, v2);
+
 
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
               if (vict.riding) {
@@ -2684,9 +2687,9 @@ int TMonster::takeFirstHit(TBeing &vict)
             }
             return TRUE;
           } else  {
-            rc = backstabHit(&vict, stabber);
-
-            addSkillLag(SKILL_BACKSTAB, 0);
+	    //            rc = backstabHit(&vict, stabber);
+	    //            addSkillLag(SKILL_BACKSTAB, 0);
+	    rc=doBackstab(NULL, v2);
 
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
               return DELETE_VICT;
