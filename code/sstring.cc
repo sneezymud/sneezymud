@@ -60,7 +60,7 @@ const sstring sstring::lower() const
   do {
     iter = s.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     if (iter != sstring::npos)
-      s.replace(iter, 1, tolower(s[iter]));
+      s[iter]=tolower(s[iter]);
   } while (iter != sstring::npos);
 
   return s;
@@ -75,7 +75,7 @@ const sstring sstring::upper() const
   do {
     iter = s.find_first_of("abcdefghijklmnopqrstuvwxyz");
     if (iter != sstring::npos)
-      s.replace(iter, 1, toupper(s[iter]));
+      s[iter]=toupper(s[iter]);
   } while (iter != sstring::npos);
 
   return s;
