@@ -55,6 +55,7 @@
 #include "shop.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
+#include "obj_tool.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -5383,27 +5384,40 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   }
   return FALSE;
 }
-int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
+int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
 {
-  TThing *t;
-  static unsigned int pulse;
+  TTool *tool=NULL;
+  //  static unsigned int pulse;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
+  // if they're already planting or something, don't do anything
+  // and if we're not planting, remove the sentinel bit that we set
+  if (mob->task)
+    return FALSE;
+  else
+    REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
+  
   ++pulse;
   if(pulse%150)
     return FALSE;
 
-  if (ch->task)
-    return FALSE;
-
-  if (!(t = get_thing_char_using(ch, "seed", 0, FALSE, FALSE))) {
-    return FALSE;
+  for(TThing *t=mob->getStuff();t;t=t->nextThing){
+    if((tool=dynamic_cast<TTool *>(t)) &&
+       tool->getToolType() == TOOL_SEED){
+      break;
+    }
+    tool=NULL;
   }
+  if(!tool)
+    return FALSE;
+  
+  // don't wander around while planting
+  SET_BIT(mob->specials.act, ACT_SENTINEL);
 
-  ch->doAction("", CMD_WHISTLE);
-  ch->doPlant("seed");
+  mob->doAction("", CMD_WHISTLE);
+  mob->doPlant(add_bars(tool->name));
   return TRUE;
 }
 
