@@ -3848,14 +3848,14 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_PEEL)) ? "On" : "Off"));
-/*    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
+    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
       if ((d->severity & (1 << LOG_JESUS)))
         d->severity &= ~(1 << LOG_JESUS);
       else
         d->severity |= (1 << LOG_JESUS);
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
-             ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));*/
+             ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "dash") && !strcmp(getName(), "Dash")) {
       if ((d->severity & (1 << LOG_DASH)))
         d->severity &= ~(1 << LOG_DASH);
