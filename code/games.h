@@ -394,14 +394,12 @@ class HoldemGame : public CardGame {
 
   sstring handValToStr(int);
   HoldemPlayer *getBetter(){return players[better];}
-  int betterCount();
   int getNRaises(){ return nraises;}
   int getLastBet(){return last_bet;}
   holdemStateT getState(){return state;}
   int handValue(HoldemPlayer *);
-  void nextRound(TBeing *ch);
+  void advanceRound(TBeing *ch);
   int nextBetter(int);
-  int nextPlayer(int);
   int lastPlayer();
   int firstPlayer();
   void linkPlayers();
@@ -413,7 +411,6 @@ class HoldemGame : public CardGame {
   bool isPlaying(const TBeing *) const;
   HoldemPlayer *getPlayer(const sstring &name) const;
   void Bet(TBeing *ch, const sstring &arg);
-  void allIn(TBeing *ch);
   void call(TBeing *ch);
   void raise(TBeing *ch, const sstring &arg);
   void fold(TBeing *ch);

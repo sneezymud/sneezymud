@@ -19,7 +19,7 @@ bool TBeing::checkHoldem(bool inGame = false) const
 }
 
 
-void HoldemGame::nextRound(TBeing *ch)
+void HoldemGame::advanceRound(TBeing *ch)
 {
   nraises_round=0;
   switch(state){
@@ -145,43 +145,60 @@ int HoldemGame::handValue(HoldemPlayer *hp){
   return 0;
 }
 
+const sstring cards_names[]={
+  "unknown",
+  "unknown",
+  "deuce",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "jack",
+  "queen",
+  "king",
+  "ace",
+};
+
 sstring HoldemGame::handValToStr(int val){
   sstring msg;
   
   switch((int)((float)val/15.0)){
     case 0:
-      msg="the high card";
+      ssprintf(msg, "high card %s", cards_names[val%15].c_str());
       break;
     case 1:
-      msg="a pair";
+      ssprintf(msg, "a pair of %ss", cards_names[val%15].c_str());
       break;
     case 2:
-      msg="two pair";
+      ssprintf(msg, "two pair of %ss", cards_names[val%15].c_str());
       break;
     case 3:
-      msg="three of a kind";
+      ssprintf(msg, "three of a kind, %ss", cards_names[val%15].c_str());
       break;
     case 4:
-      msg="a straight";
+      ssprintf(msg, "a straight, high card %s", cards_names[val%15].c_str());
       break;
     case 5:
-      msg="a flush";
+      ssprintf(msg, "a flush, high card %s", cards_names[val%15].c_str());
       break;
     case 6:
-      msg="a full house";
+      ssprintf(msg, "a full house, high card %s", cards_names[val%15].c_str());
       break;
     case 7:
-      msg="four of a kind";
+      ssprintf(msg, "four of a kind, %ss", cards_names[val%15].c_str());
       break;
     case 8:
-      msg="a straight flush";
+      ssprintf(msg, "a straight flush, high card %s", cards_names[val%15].c_str());
       break;
     case 9:
-      msg="a royal flush";
+      ssprintf(msg, "a royal flush", cards_names[val%15].c_str());
       break;
-    default:
-      ssprintf(msg, "unknown: %i", val);
   }
+
   return msg;
 }
 
@@ -334,17 +351,6 @@ int HoldemGame::nextBetter(int b)
 }
 
 
-
-int HoldemGame::nextPlayer(int b)
-{
-  for(int i=b+1;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->hand[0])
-      return i;
-  }
-   
-  return b;
-}
-
 int HoldemGame::lastPlayer()
 {
   int p=0;
@@ -369,17 +375,6 @@ int HoldemGame::firstPlayer()
   return p;
 }
 
-
-int HoldemGame::betterCount()
-{
-  int count=0;
-  
-  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->hand[0] && !players[i]->allin)
-      ++count;
-  }
-  return count;
-}
 
 int HoldemGame::playerCount()
 {
@@ -432,7 +427,7 @@ int HoldemGame::exitGame(const TBeing *ch)
       act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
       players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
     } else {
-      nextRound(players[better]->ch);
+      advanceRound(players[better]->ch);
     }
   }
   
@@ -586,7 +581,7 @@ void HoldemGame::call(TBeing *ch)
     act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
     players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   } else {
-    nextRound(players[better]->ch);
+    advanceRound(players[better]->ch);
   }
 }
 
@@ -685,7 +680,7 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
     act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
     players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   } else {
-    nextRound(players[better]->ch);
+    advanceRound(players[better]->ch);
   }
 }
 
@@ -814,72 +809,10 @@ void HoldemGame::fold(TBeing *ch)
   } else {
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
-    nextRound(players[better]->ch);
+    advanceRound(players[better]->ch);
   }
 }
 
-void HoldemGame::allIn(TBeing *ch)
-{
-  vector <TObj *> chipl;
-  TObj *chip;
-  sstring buf;
-
-  if (!ch->checkHoldem())
-    return;
-
-  if (!isPlaying(ch)) {
-    ch->sendTo("You are not sitting at the table yet.\n\r");
-    return;
-  }
-  if(state==STATE_NONE){
-    ch->sendTo("Betting hasn't started.\n\r");
-    return;
-  }
-
-  if(playerCount() < 2){
-    ch->sendTo("You need at least two players.\n\r");
-    return;
-  }
-
-  if(ch->name != players[better]->name){
-    ch->sendTo("It's not your turn.\n\r");
-    return;
-  }
-
-  while((chip=find_chip(ch, last_bet))){
-    chipl.push_back(chip);
-    (*chip)--;
-  }
-
-  ssprintf(buf, "$n goes all in with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
-  act(buf, FALSE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You goes all in with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
-  act(buf, FALSE, ch, 0, 0, TO_CHAR);
-  bet += chipl[0]->obj_flags.cost * chipl.size();
-
-  players[better]->allin=true;
-
-  if(chipl.size() > (unsigned) nraises)
-    nraises=chipl.size();
-
-
-  for(unsigned int i=0;i<chipl.size();++i){
-    delete chipl[i];
-  }
-
-  ch->doSave(SILENT_YES);
-   
-  int tmp;
-  if((tmp=nextBetter(better))!=-1){
-    better=tmp;
-    act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
-    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
-  } else {
-    nextRound(players[better]->ch);
-  }
-}
 
 void HoldemGame::Bet(TBeing *ch, const sstring &arg)
 {
@@ -917,13 +850,7 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
     return;
   }
   if(state!=STATE_NONE){
-#if 0
-    if(arg == "all")
-      allIn(ch);
-    else
-#endif
-      ch->sendTo("Betting has already started.\n\r");
-
+    ch->sendTo("Betting has already started.\n\r");
     return;
   }
 
