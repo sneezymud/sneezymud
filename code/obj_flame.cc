@@ -677,8 +677,8 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
         TRUE, ch, 0, this, TO_VICT);
     act("$N looks like $E is in pain!  And they seem pretty mad at $n.",
         TRUE, ch, 0, this, TO_NOTVICT);
-   
-    rc = reconcileDamage(this, ::number(5, max(6, min(15, (int) (size/20)))), DAMAGE_DRAIN);
+    
+    rc = reconcileDamage(this, ::number(5, max(6, min(15, (int) (size/20)))), DAMAGE_DISRUPTION);
   } else if (roomp && roomp->isArcticSector() && type != LIQ_WARM_MEAD &&
       getMaterial() != MAT_ICE) {
     act("$N looks very cold now, I think your going to have a bad day...",
