@@ -764,15 +764,12 @@ int TSocket::gameLoop()
 	      dirTypeT dir;
 	      TPathFinder path;
 
-	      // check portals first
 	      path.setUsePortals(true);
+	      path.setNoMob(false);
+	      path.setThruDoors(false);
+	      path.setRange(25);
 	      dir=path.findPath(smoke->inRoom(), findOutdoors());
 	      
-	      if(dir == -1){
-		path.setUsePortals(false);
-		dir=path.findPath(smoke->inRoom(), findOutdoors());
-	      }
-
 	      if(dir >= MAX_DIR){
 		dir=dirTypeT(dir-MAX_DIR+1);
 		int seen = 0;
