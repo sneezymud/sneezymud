@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_steal.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/12 00:33:00  lapsos
-// Added block to prevent stealing from shopkeepers.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -76,7 +65,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
 
   if (victim->spec == SPEC_SHOPKEEPER && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
-    vlogf(10, "%s just tried to steal from a shopkeeper! [%s]",
+    vlogf(LOG_CHEAT, "%s just tried to steal from a shopkeeper! [%s]",
           thief->getName(), victim->getName());
     return FALSE;
   }
@@ -116,6 +105,7 @@ static int steal(TBeing * thief, TBeing * victim)
   TMonster *guard = NULL;
   int vict_lev = victim->GetMaxLevel();
   int level = thief->getSkillLevel(SKILL_STEAL);
+  spellNumT skill = thief->getSkillNum(SKILL_SNEAK);
 
   if (victim->getPartMinHeight(ITEM_WEAR_WAISTE) > (thief->getPosHeight() + 5)) {
     // victim riding a tall creature...
@@ -132,7 +122,7 @@ static int steal(TBeing * thief, TBeing * victim)
   if (!victim->awake())
     modifier += 50;
 
-  if ((vict_lev > level) &&
+  if ((vict_lev > level) ||
       victim->isLucky(thief->spellLuckModifier(SKILL_STEAL)))
     modifier -= 45;
 
@@ -150,18 +140,31 @@ static int steal(TBeing * thief, TBeing * victim)
       bSuccess(thief, bKnown+ modifier, SKILL_STEAL))) {
     /* Steal some money */
     gold = (int) ((victim->getMoney() * ::number(1, 10)) / 100);
-    gold = min(4000, gold);
+    gold = min(5000, gold);
     LogDam(thief, SKILL_STEAL,gold);
     if (gold > 0) {
       thief->addToMoney(gold, GOLD_INCOME);
       victim->addToMoney(-gold, GOLD_INCOME);
       
-      thief->sendTo("Bingo! You got %d talen%s.\n\r", gold, 
-            (gold > 1) ? "s" : "");
+      thief->sendTo("You have just stolen %d talen%s from %s.\n\r", gold, 
+            (gold > 1) ? "s" : "", victim->getName());
+
+      if (victim->hasClass(CLASS_THIEF) && victim->isPerceptive())
+        victim->sendTo("You suddenly feel lighter in your moneypouch...\n\r");
     } else 
       thief->sendTo("You couldn't seem to find any talens...\n\r");
   } else {
-    act("Oops..", FALSE, thief, 0, 0, TO_CHAR);
+    act("Oh ohhh...Busted!", FALSE, thief, 0, 0, TO_CHAR);
+
+  
+    if (thief->affectedBySpell(skill) || 
+	thief->checkForSkillAttempt(skill)) {
+      thief->sendTo("You are no longer sneaking.\n\r");
+      thief->removeSkillAttempt(skill);
+      if (thief->affectedBySpell(skill))
+	thief->affectFrom(skill);
+     }
+  
     act("$n tries to steal money from $N.", TRUE, thief, 0, victim, TO_NOTVICT);
     if (victim->getPosition() == POSITION_SLEEPING && 
         !victim->isAffected(AFF_SLEEP) && victim->isLucky(thief->spellLuckModifier(SKILL_STEAL))) {
@@ -181,7 +184,7 @@ static int steal(TBeing * thief, TBeing * victim)
            !guard->awake() || guard == victim)
         continue;
       guard->doSay("Thief!  Villain!  Prepare to die!");
-      if ((rc = guard->takeFirstHit(thief)) == DELETE_VICT)
+      if ((rc = guard->takeFirstHit(*thief)) == DELETE_VICT)
         return DELETE_THIS;
       else if (rc == DELETE_THIS) {
         delete guard;
@@ -223,16 +226,34 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
   int rc;
   int bKnown = thief->getSkillValue(SKILL_STEAL);
   bool is_imp = thief->hasWizPower(POWER_WIZARD);
-
+  spellNumT skill = thief->getSkillNum(SKILL_SNEAK);
+  
   if (bKnown < 75) {
     thief->sendTo("You don't have the ability to steal equipment. (yet...)\n\r");
     return FALSE;
   }
 
+#if 0
+  // i moved this code down past where eq_pos is defined.... hehe -dash
+  if (victim->awake()) {
+    if (!thief->isImmortal()) {
+      if ((eq_pos != WEAR_NECK && eq_pos != WEAR_FINGER_R && eq_pos != WEAR_FINGER_L && 
+   	   eq_pos != WEAR_WRIST_R && eq_pos != WEAR_WRIST_L) || 
+	  (victim->getPosition() <= POSITION_SLEEPING && eq_pos != WEAR_FOOT_L && eq_pos != WEAR_FOOT_R &&
+	   eq_pos != WEAR_HAND_L && eq_pos != WEAR_HAND_R && eq_pos != WEAR_HEAD)) {
+	thief->sendTo("It is not possible to steal that without being noticed.\n\r");
+	return FALSE;
+      }
+    }
+  }
+  // The above was added to make steal a bit more realistic at Peel's request --jh
+
+#endif
+
 /* high modifier ---> easier to steal */
   modifier = (level - vict_lev)/3;
 
-  modifier -= 25;   /* tough to steal equipped stuff */
+  modifier -= 35;   /* tough to steal equipped stuff */
 
   modifier += thief->plotStat(STAT_CURRENT, STAT_DEX, -70, 15, 0);
 
@@ -240,7 +261,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     modifier += 100;
 
   if ((vict_lev > level) && victim->isLucky(thief->spellLuckModifier(SKILL_STEAL)))
-    modifier -= 55;
+    modifier -= 65;
 
   modifier += victim->getCond(DRUNK)/4;
 
@@ -248,7 +269,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     modifier -= dynamic_cast<TMonster *>(victim)->susp()/2;
 
 
-  TThing *tt = searchLinkedListVis(victim, obj_name, victim->stuff);
+  TThing *tt = searchLinkedListVis(thief, obj_name, victim->stuff);
   TObj *obj = dynamic_cast<TObj *>(tt);
   if (!obj) {
     for (eq_pos = MIN_WEAR; (eq_pos < MAX_WEAR); eq_pos++) {
@@ -279,6 +300,25 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     eq_pos = WEAR_NOWHERE; // not equiped
   }
 
+
+#ifdef SNEEZY2000
+  if (victim->awake()) {
+    if (!thief->isImmortal() && eq_pos != WEAR_NOWHERE) {
+      if ((eq_pos != WEAR_NECK && eq_pos != WEAR_FINGER_R && eq_pos != WEAR_FINGER_L &&
+           eq_pos != WEAR_WRIST_R && eq_pos != WEAR_WRIST_L) ||
+          (victim->getPosition() <= POSITION_SLEEPING && eq_pos != WEAR_FOOT_L && 
+           eq_pos != WEAR_FOOT_R && eq_pos != WEAR_HAND_L && eq_pos != WEAR_HAND_R && 
+           eq_pos != WEAR_HEAD)) {
+	thief->sendTo("It is not possible to steal that without being noticed.\n\r");
+	return FALSE;
+      }
+    }
+  }
+  // The above was added to make steal a bit more realistic at Peel's request --jh
+
+#endif
+
+
   if (!is_imp && obj->isObjStat(ITEM_NODROP)) {
     thief->sendTo("You can't steal it, it must be CURSED!\n\r");
     return FALSE;
@@ -290,7 +330,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
 
   // mostly here for spellbags, but applies to other containers too...
   // too simplistic a means of getting all their wealth fast
-  if(!is_imp && dynamic_cast<TRealContainer *>(obj)){
+  if(!is_imp && dynamic_cast<TOpenContainer *>(obj)){
     thief->sendTo("You can't seem to distract your victim enough to steal that.\n\r");
     return FALSE;
   }
@@ -310,17 +350,41 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
           act("You unequip $p and steal it.", FALSE, thief, obj, 0, TO_CHAR);
           *thief += *(victim->unequip(eq_pos));
         }
+
+	/*
+        if (thief->isPc() && victim->isPc() && !thief->isImmortal()) {
+          affectedData tAff;
+
+          tAff.type     = AFFECT_PLAYERLOOT;
+          tAff.duration = (24 * UPDATES_PER_MUDHOUR);
+          thief->affectJoin(thief, &tAff, AVG_DUR_NO, AVG_EFF_NO);
+          vlogf(LOG_CHEAT, "Adding PLoot Flag To: %s (4)", thief->getName());
+        }
+	*/
+
         thief->doSave(SILENT_YES);
         victim->doSave(SILENT_YES);
         if (!thief->hasWizPower(POWER_WIZARD))
-          vlogf(0,"%s stole %s from %s.",thief->getName(),
+          vlogf(LOG_MISC, "%s stole %s from %s.",thief->getName(),
                 obj->getName(), victim->getName());
+
+      if (victim->hasClass(CLASS_THIEF) && victim->isPerceptive())
+        victim->sendTo("You suddenly feel like something is missing...\n\r");
       } else
         thief->sendTo("You can't carry that much weight.\n\r");
     } else
        thief->sendTo("You can't carry that much volume.\n\r");
   } else {
     act("You are caught in the act of stealing the $o!",FALSE,thief,obj,0,TO_CHAR);
+
+    if (thief->affectedBySpell(skill) ||
+        thief->checkForSkillAttempt(skill)) {
+      thief->sendTo("You are no longer sneaking.\n\r");
+      thief->removeSkillAttempt(skill);
+      if (thief->affectedBySpell(skill))
+        thief->affectFrom(skill);
+    }
+
     act("$n fails to steal $N's $o.",FALSE,thief,obj,victim,TO_NOTVICT);
 
     if (victim->getPosition() == POSITION_SLEEPING && 
@@ -340,7 +404,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
            !guard->awake() || guard == victim)
         continue;
       guard->doSay("Thief!  Villain!  Prepare to die!");
-      if ((rc = guard->takeFirstHit(thief)) == DELETE_VICT)
+      if ((rc = guard->takeFirstHit(*thief)) == DELETE_VICT)
         return DELETE_THIS;
       else if (rc == DELETE_THIS) {
         delete guard;
@@ -391,7 +455,7 @@ int TBeing::doSteal(const char *argument, TBeing *vict)
     rc = steal(this,victim,obj_name);
 
   if (rc)
-    addSkillLag(SKILL_STEAL);
+    addSkillLag(SKILL_STEAL, rc);
 
   if (rc == DELETE_VICT) {
     if (vict)
