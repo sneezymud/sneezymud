@@ -3634,30 +3634,32 @@ int TMonster::mobileActivity(int pulse)
     
     if(shop_index[shop_nr].isOwned()){
       TDatabase db(DB_SNEEZY);
-      int salary=3;
+      int salary=1000;
       TObj *o;
       int value=0;
       sstring tname="";
       bool found=true;
 
-      // basically we just toss items in the dump until we can afford our
-      // salary
-      while(getMoney() < salary && found){
-	found=false;
-	for(TThing *t=getStuff();t;t=t->nextThing){
-	  if((o=dynamic_cast<TObj *>(t))){
-	    tname=o->getName();
-	    o->thingDumped(this, &value);
-	    shoplog(shop_nr, this, this, tname.c_str(), value, "dumped");
-	    setMoney(getMoney()+value);
-	    found=true;
-	    break;
+      if(!(pulse%1200)){
+	// basically we just toss items in the dump until we can afford our
+	// salary
+	while(getMoney() < salary && found){
+	  found=false;
+	  for(TThing *t=getStuff();t;t=t->nextThing){
+	    if((o=dynamic_cast<TObj *>(t))){
+	      tname=o->getName();
+	      o->thingDumped(this, &value);
+	      shoplog(shop_nr, this, this, tname.c_str(), value, "dumped");
+	      setMoney(getMoney()+value);
+	      found=true;
+	      break;
+	    }
 	  }
 	}
+	
+	setMoney(getMoney()-salary);
+	shoplog(shop_nr, this, this, "talens", -salary, "salary");
       }
-
-      setMoney(getMoney()-1);
-      shoplog(shop_nr, this, this, "talens", -1, "salary");
 
       
       if(getMoney()<0){
