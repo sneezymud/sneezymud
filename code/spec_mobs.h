@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.11  2001/11/25 00:56:55  jesus
+// beginning of mage thief as a single class
+//
 // Revision 5.10  2001/10/29 00:59:43  jesus
 // added a divination shop
 // not really a shop and not kept in the database
@@ -150,7 +153,7 @@ const int SPEC_FIRE_MAGI       =101;
 const int SPEC_SORCERER        =102;
 const int SPEC_FACTION_FAERY   =103;
 const int SPEC_TRAINER_BRAWLING=104;
-const int SPEC_TRAINER_UNUSED5   =105;
+const int SPEC_TRAINER_MAGE_THIEF   =105;
 const int SPEC_TRAINER_MEDITATION_MONK    =106;
 const int SPEC_TRAINER_SURVIVAL=107;
 const int SPEC_TRAINER_SHAMAN_ARMADILLO  =108;
@@ -206,8 +209,9 @@ const int SPEC_SCARED_KID         =160;
 const int SPEC_STOCK_BROKER       =161;
 const int SPEC_TRAINER_PSIONICS   =162;
 const int SPEC_DIVMAN             =163;
+const int SPEC_GM_MAGE_THIEF      =164;
 
-const int NUM_MOB_SPECIALS        =164;
+const int NUM_MOB_SPECIALS        =165;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -234,6 +238,7 @@ extern int receptionist(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int postmaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int ShamanGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int MageGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int MageThiefGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int DeikhanGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *o);
 extern int MonkGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int WarriorGuildMaster(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);

@@ -234,7 +234,8 @@ pracData::pracData() :
   monk(0),
   bard(0),
   temp(0),
-  temp2(0)
+  temp2(0),
+  mageThief(0)
 {
 }
 
@@ -242,7 +243,7 @@ pracData::pracData(const pracData &a)
   : mage(a.mage), cleric(a.cleric), thief(a.thief),
     warrior(a.warrior), shaman(a.shaman), deikhan(a.deikhan),
     ranger(a.ranger), monk(a.monk), bard(a.bard),
-    temp(a.temp), temp2(a.temp2)
+    temp(a.temp), temp2(a.temp2), mageThief(a.mageThief)
 {
 }
 
@@ -260,6 +261,7 @@ pracData & pracData::operator=(const pracData &a)
   bard = a.bard;
   temp = a.temp;
   temp2 = a.temp2;
+  mageThief = a.mageThief;
   return *this;
 }
 

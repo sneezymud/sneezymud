@@ -810,7 +810,8 @@ const struct pc_class_names_data classNames[MAX_CLASSES] =
   {SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman", "Shaman"},
   {DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan", "Deikhan"},
   {MONK_LEVEL_IND, CLASS_MONK, "monk", "Monk"},
-  {RANGER_LEVEL_IND, CLASS_RANGER, "ranger","Ranger"}
+  {RANGER_LEVEL_IND, CLASS_RANGER, "ranger","Ranger"},
+  {MAGE_THIEF_LEVEL_IND, CLASS_MAGE_THIEF, "mage/thief", "Mage/Thief"}
 };
 
 const char * const action_bits[] =
@@ -1703,19 +1704,20 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_SHAMAN_SPIDER, CLASS_SHAMAN, "spider abilities"},
   {DISC_SHAMAN_CONTROL, CLASS_SHAMAN, "control"},            
   {DISC_RITUALISM, CLASS_SHAMAN, "ritualism"},
-  {DISC_WIZARDRY, CLASS_MAGE, "wizardry"},
+  {DISC_WIZARDRY, CLASS_MAGE | CLASS_MAGE_THIEF, "wizardry"},
   {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith"},  // 55
   {DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN , "slash"},
   {DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN, "blunt"},                              
-  {DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_RANGER | CLASS_MAGE | CLASS_SHAMAN, "pierce"},
+  {DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGE_THIEF | CLASS_RANGER | CLASS_MAGE | CLASS_SHAMAN, "pierce"},
   {DISC_RANGED, CLASS_RANGER, "ranged"},
   {DISC_COMBAT, 0, "combat"},                           // 60
   {DISC_ADVENTURING, 0, "adventuring"},                  
   {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology"},   
-  {DISC_LORE, CLASS_MAGE, "lore"},
+  {DISC_LORE, CLASS_MAGE | CLASS_MAGE_THIEF, "lore"},
   {DISC_NATURE, CLASS_RANGER, "nature"},
   {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense"},
-  {DISC_PSIONICS, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN, "psionics"}
+  {DISC_PSIONICS, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN, "psionics"},
+  {DISC_MAGE_THIEF, CLASS_MAGE_THIEF, "mage/thief"}
 };
 
 const char * const disc_names[MAX_DISCS] =
@@ -1784,8 +1786,9 @@ const char * const disc_names[MAX_DISCS] =
   "Theological Learning",
   "Magic Lore",
   "Nature",
-  "Defensive Abilities",
-  "Psionic Abilities"
+  "Defensive Abilities",         // 65
+  "Psionic Abilities",
+  "Mage and Thief Abilities"
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

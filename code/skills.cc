@@ -16,6 +16,7 @@
 
 #include "stdsneezy.h"
 #include "disc_mage.h"
+#include "disc_mage_thief.h"
 #include "disc_cleric.h"
 #include "disc_physical.h"
 #include "disc_smythe.h"
@@ -1000,6 +1001,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRitualism *) cd)->skRitualism;
 
       // SHAMAN END *****************************************************
+      // MAGE THIEF *****************************************************
+    case SKILL_BACKSTAB_MT:
+      return &((CDMageThief *) cd)->skBackstabMT;
+
 
 // GENERAL DISCIPLINES
 

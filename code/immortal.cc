@@ -3049,7 +3049,7 @@ void TPerson::doStart()
   if (hasClass(CLASS_CLERIC)) 
     personalize_object(NULL, this, 500, -1);
   
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGIC_USER | CLASS_MAGE_THIEF))
     personalize_object(NULL, this, 321, -1);
 
   if (hasClass(CLASS_SHAMAN)) {
@@ -3370,6 +3370,8 @@ void TBeing::doRestore(const char *argument)
     }
     if (victim->hasClass(CLASS_MAGIC_USER))
       victim->practices.mage += pracs;
+    if (victim->hasClass(CLASS_MAGE_THIEF))
+      victim->practices.mageThief += pracs;
     if (victim->hasClass(CLASS_CLERIC))
       victim->practices.cleric += pracs;
     if (victim->hasClass(CLASS_WARRIOR))

@@ -2612,7 +2612,7 @@ void zoneData::resetZone(bool bootTime)
           if (mob && mobload) {
             mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
 
-            if (mob->hasClass(CLASS_MAGE)) {
+            if (mob->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
               TSpellBag *tBagA = NULL,
                         *tBagB = NULL;
               TThing    *tThing;

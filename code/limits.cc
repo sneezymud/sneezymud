@@ -88,7 +88,7 @@ float classHpPerLevel(const TPerson *tp){
     hpgain = 7.0;
   else if (tp->hasClass(CLASS_DEIKHAN))
     hpgain = 7.5;
-  else if (tp->hasClass(CLASS_MAGIC_USER) || tp->hasClass(CLASS_SHAMAN))
+  else if (tp->hasClass(CLASS_MAGIC_USER) || tp->hasClass(CLASS_MAGE_THIEF) || tp->hasClass(CLASS_SHAMAN))
     hpgain = 7.5;
   else if (tp->hasClass(CLASS_CLERIC) || tp->hasClass(CLASS_THIEF))
     hpgain = 8;
@@ -152,6 +152,8 @@ short int TPerson::manaLimit() const
 
   if (hasClass(CLASS_MAGIC_USER))
     iMax += getLevel(MAGE_LEVEL_IND) * 6;
+  else if (hasClass(CLASS_MAGE_THIEF))
+    iMax += getLevel(MAGE_THIEF_LEVEL_IND) * 5;
 #if 0
   else if (hasClass(CLASS_CLERIC))
     iMax += getLevel(CLERIC_LEVEL_IND) * 5;
@@ -308,7 +310,7 @@ int TPerson::manaGain()
   // at L50, mage has 400 mana, think we want 20
   gain *= 4;
 
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGIC_USER | CLASS_MAGE_THIEF))
     gain += gain;
 
   gain += race->getManaMod();
@@ -579,7 +581,9 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       discs = 6.00;
       break; // I lowered this because I dont want shaman to jump too far ahead
              // I think this is a good start - Jesus
-    case UNUSED1_LEVEL_IND:
+    case MAGE_THIEF_LEVEL_IND:
+      discs = 6.00; // experimental
+      break;
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:
@@ -627,6 +631,14 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   switch (Class) {
     case MAGE_LEVEL_IND:
       if (!doneCombat || (getDiscipline(DISC_MAGE)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
+        preReqs = TRUE;
+        fMin =5.0;
+        fMax =8.0;
+        avg =6.7;
+      } 
+      break;
+    case MAGE_THIEF_LEVEL_IND:
+      if (!doneCombat || (getDiscipline(DISC_MAGE_THIEF)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
@@ -689,7 +701,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
         avg =6.7;
       }
       break;
-    case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:
@@ -738,6 +749,9 @@ void TBeing::setPracs(sh_int prac, classIndT Class)
     case MAGE_LEVEL_IND:
       practices.mage = prac;
       break;
+    case MAGE_THIEF_LEVEL_IND:
+      practices.mageThief = prac;
+      break;
     case CLERIC_LEVEL_IND:
       practices.cleric = prac;
       break;
@@ -759,7 +773,6 @@ void TBeing::setPracs(sh_int prac, classIndT Class)
     case SHAMAN_LEVEL_IND:
       practices.shaman = prac;
       break;
-    case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:
@@ -786,7 +799,8 @@ sh_int TBeing::getPracs(classIndT Class)
       return practices.monk;
     case SHAMAN_LEVEL_IND:
       return practices.shaman;
-    case UNUSED1_LEVEL_IND:
+    case MAGE_THIEF_LEVEL_IND:
+      return practices.mageThief;
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:
@@ -1432,6 +1446,9 @@ int TBeing::hpGainForClass(classIndT Class) const
 
   // add for classes first
   if (hasClass(CLASS_MAGIC_USER) && Class == MAGE_LEVEL_IND)
+    hpgain += ::number(3,7); // old 2,8
+
+  if (hasClass(CLASS_MAGE_THIEF) && Class == MAGE_THIEF_LEVEL_IND)
     hpgain += ::number(3,7); // old 2,8
 
   if (hasClass(CLASS_CLERIC) && Class == CLERIC_LEVEL_IND)

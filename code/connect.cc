@@ -1982,6 +1982,16 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
+          case 'Z':
+            if (canChooseClass(CLASS_MAGE_THIEF)) {
+              character->setClass(CLASS_MAGE_THIEF);
+              go2next = TRUE;
+            } else {
+              writeToQ(badClassMessage(CLASS_MAGE_THIEF).c_str());
+              writeToQ("--> ");
+              connected = CON_QCLASS;
+            }
+            break;
           case '~':
             return DELETE_THIS;
           case '/':
@@ -4015,6 +4025,9 @@ void Descriptor::sendClassList(int home)
   sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
   sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
   sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] 8. Shaman\n\r\n\r\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_SHAMAN)); 
+  //////////////////////////////////////////////////////////////////
+  // Add multi hybrids in in succession later ie. A B C....
+  //////////////////////////////////////////////////////////////////
   strcat(buf, "There are advantages and disadvantages to each choice.\n\r");
   sprintf(buf + strlen(buf), "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
           red(), norm());
@@ -4102,6 +4115,11 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
   if (Class & CLASS_THIEF) {
     return TRUE;
   }
+
+  if (Class & CLASS_MAGE_THIEF) {
+    return TRUE;
+  }
+
   return FALSE;
 }
 
@@ -4635,6 +4653,8 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
   if (Class & CLASS_WARRIOR) {
   }
   if (Class & CLASS_MAGIC_USER) {
+  }
+  if (Class & CLASS_MAGE_THIEF) {
   }
   if (Class & CLASS_CLERIC) {
   }

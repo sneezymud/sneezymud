@@ -3,6 +3,26 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: multiclass.cc,v $
+// Revision 5.2  2001/11/25 00:56:55  jesus
+// beginning of mage thief as a single class
+//
+// Revision 5.1.1.5  2001/04/01 05:33:52  jesus
+// *** empty log message ***
+//
+// Revision 5.1.1.4  2001/04/01 04:42:55  jesus
+// took sid and omen from hardcoded 58
+//
+// both are retired
+//
+// Revision 5.1.1.3  2001/03/18 07:23:19  dash
+// changes for 5.2, old 5.1 changes fixed
+//
+// Revision 5.1.1.2  2000/10/19 22:51:17  jesus
+// *** empty log message ***
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -41,6 +61,9 @@ int NumClasses(int Class)
       tot++;
 
   if (Class & CLASS_SHAMAN)
+      tot++;
+
+  if (Class & CLASS_MAGE_THIEF)
       tot++;
 
   return(tot);
@@ -146,6 +169,8 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   if (exact) {
     if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
+     else if (!strcmp(arg, "magethief"))
+       which = CLASS_MAGE_THIEF;
      else if (!strcmp(arg, "cleric"))
        which = CLASS_CLERIC;
      else if (!strcmp(arg, "warrior"))
@@ -166,6 +191,8 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   } else {
     if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
+    else if (is_abbrev(arg, "magethief"))
+      which = CLASS_MAGE_THIEF;
     else if (is_abbrev(arg, "cleric"))
       which = CLASS_CLERIC;
     else if (is_abbrev(arg, "warrior"))
@@ -194,6 +221,8 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 
   if (which == CLASS_MAGE)
     res = MAGE_LEVEL_IND;
+  else if (which == CLASS_MAGE_THIEF)
+    res = MAGE_THIEF_LEVEL_IND;
   else if (which == CLASS_CLERIC)
     res = CLERIC_LEVEL_IND;
   else if (which == CLASS_WARRIOR)
@@ -222,6 +251,8 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
   if (exact) {
     if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
+     else if (!strcmp(arg, "magethief"))
+       which = CLASS_MAGE_THIEF;
      else if (!strcmp(arg, "cleric"))
        which = CLASS_CLERIC;
      else if (!strcmp(arg, "warrior"))
@@ -242,6 +273,8 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
   } else {
     if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
+    else if (is_abbrev(arg, "magethief"))
+      which = CLASS_MAGE_THIEF;
     else if (is_abbrev(arg, "cleric"))
       which = CLASS_CLERIC;
     else if (is_abbrev(arg, "warrior"))
@@ -321,6 +354,9 @@ void TPerson::startLevels()
 {
   if (hasClass(CLASS_MAGIC_USER))
     advanceLevel(MAGE_LEVEL_IND, NULL);
+
+  if (hasClass(CLASS_MAGE_THIEF))
+    advanceLevel(MAGE_THIEF_LEVEL_IND, NULL);
    
   if (hasClass(CLASS_CLERIC))
     advanceLevel(CLERIC_LEVEL_IND, NULL);
@@ -352,35 +388,45 @@ void TPerson::startLevels()
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
     setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT);
     setExp(2000000000);
+    setWizPowers(this,this,"allpowers");
+    remWizPower(POWER_IDLED);
     calcMaxLevel();
 
     // Major Office Holders
   } else if (!strcmp(name, "Damescena") ||
              !strcmp(name, "Kriebly") ||
-             !strcmp(name, "Lapsos") ||
-             !strcmp(name, "Mithros")) {
+             !strcmp(name, "Peel") ||
+             !strcmp(name, "Jesus") ||
+	     !strcmp(name, "Dash")) {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 1);
+    setWizPowers(this,this,"allpowers");
+    remWizPower(POWER_IDLED);
     calcMaxLevel();
 
     // Minor Office Holders
+#ifdef NO58
+    // Currently there are nonex
   } else if (!strcmp(name, "Omen") ||
              !strcmp(name, "Sidartha")) {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 2);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 2);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 2);
     setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 2);
+    setWizPowers(this,this,"allpowers");
+    remWizPower(POWER_IDLED);
     calcMaxLevel();
-
+#endif
     // Other Mudadmin
-  } else if (!strcmp(name, "Dolgan") ||
-             !strcmp(name, "Peel")) {
+  } else if (!strcmp(name, "Dolgan")) {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 3);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 3);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 3);
     setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 3);
+    setWizPowers(this,this,"allpowers");
+    remWizPower(POWER_IDLED);
     calcMaxLevel();
   }
 
@@ -427,7 +473,8 @@ const char * const TBeing::getProfName() const
     return "Mage/Warrior/Thief";
   else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
     return "Mage/Warrior";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  //  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGE_THIEF, EXACT_YES))
     return "Mage/Thief";
   else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
     return "Mage";
@@ -463,7 +510,8 @@ const char * const TBeing::getProfAbbrevName() const
     return "M/W/T";
   else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
     return "M/W";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  //  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGE_THIEF, EXACT_YES))
     return "M/T";
   else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
     return "Mage";

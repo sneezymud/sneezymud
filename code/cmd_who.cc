@@ -417,7 +417,7 @@ void TBeing::doWho(const char *argument)
               IS_SET(p->specials.act, ACT_POLYSELF)) {
             count++;
             strcpy(tempbuf, pers(p));
-            sprintf(buf, "%s (polymorphed magic user)\n\r", cap(tempbuf));
+            sprintf(buf, "%s (polymorphed)\n\r", cap(tempbuf));
             sb += buf;
           } else if (canSeeWho(p) &&
                 (!*argument || 

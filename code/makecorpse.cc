@@ -413,6 +413,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
         sprintf(buf, "%s's corpse looks like %s was bitten to death.",namebuf, hssh());
         break;
       case SKILL_BACKSTAB:
+      case SKILL_BACKSTAB_MT:
         sprintf(buf, "A big gaping wound is in the center of %s's back.", getName());
         break;
       case DAMAGE_DISEMBOWLED_HR:

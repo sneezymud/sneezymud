@@ -107,13 +107,13 @@ enum classIndT {
      DEIKHAN_LEVEL_IND,
      MONK_LEVEL_IND,
      RANGER_LEVEL_IND,
-     UNUSED1_LEVEL_IND,
+     MAGE_THIEF_LEVEL_IND,
      UNUSED2_LEVEL_IND,
      UNUSED3_LEVEL_IND,
      MAX_SAVED_CLASSES
 };
 // this affects charFile size
-const classIndT MAX_CLASSES = UNUSED1_LEVEL_IND;
+const classIndT MAX_CLASSES = UNUSED2_LEVEL_IND;
 const classIndT MIN_CLASS_IND = classIndT(0);
 extern classIndT & operator++(classIndT &, int);
 

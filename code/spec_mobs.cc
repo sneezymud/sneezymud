@@ -7211,7 +7211,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "Sorcerer", specificDisc},
   {FALSE, "Faction-Faery", factionFaery},
   {FALSE,"Trainer: brawling", CDGenericTrainer},
-  {FALSE,"Trainer: akodi", CDGenericTrainer},   // 105 
+  {FALSE,"Trainer: mage/thief", CDGenericTrainer},   // 105 
   {FALSE,"Trainer: meditation (monk)", CDGenericTrainer},
   {FALSE,"Trainer: survival", CDGenericTrainer},
   {FALSE,"Trainer: armadillo", CDGenericTrainer},
@@ -7266,10 +7266,12 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Coroner", coroner},
   {FALSE, "Faction Registrar", factionRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
-  {FALSE, "Scared Kid", scaredKid},
+  {FALSE, "Scared Kid", scaredKid},               // 160
   {FALSE, "stock broker", stockBroker},
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
+  {FALSE,"Trainer: mage/thief", CDGenericTrainer},           // 164
 // replace non-zero, bogus_mob_procs above before adding
 };
+
 

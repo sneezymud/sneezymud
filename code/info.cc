@@ -949,6 +949,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_GARROTTE:
       case SKILL_STABBING:
       case SKILL_BACKSTAB:
+      case SKILL_BACKSTAB_MT:
       case SKILL_HEADBUTT:
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
@@ -4076,7 +4077,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 
   if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_RANGER) &&
-      !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_MAGIC_USER))
+      !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF))
     learn /= 3;
 
   int maxsharp = GetApprox(obj->getMaxSharp(), learn);
@@ -4482,7 +4483,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
 
 void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
     return;
 
@@ -4518,7 +4519,7 @@ const string numberAsString(int num)
 
 void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
     return;
 
@@ -4536,7 +4537,7 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     return;
 
@@ -4707,7 +4708,7 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
 
 void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 
@@ -4741,7 +4742,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 
 void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_MAGE_THIEF) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 

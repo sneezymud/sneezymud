@@ -2436,7 +2436,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   int defense = target->defendRound(this);
   int mod = offense - defense;
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL) {
+  if(skill == SKILL_BACKSTAB || skill == SKILL_BACKSTAB_MT || skill == SKILL_CUDGEL) {
     // other surprise attacks should be added here
     if(target->isWary())
       mod /= 4;
@@ -4680,7 +4680,7 @@ static int FRACT(TBeing *ch, TBeing *v)
   else if (ch->hasClass(CLASS_RANGER) ||
            ch->hasClass(CLASS_THIEF))
     level_cut = 4;
-  else if (ch->hasClass(CLASS_CLERIC))
+  else if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_MAGE_THIEF))
     level_cut = 5;
   else if (ch->hasClass(CLASS_MAGE))
     level_cut = 6;

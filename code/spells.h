@@ -467,6 +467,12 @@ enum spellNumT {
 
      // end of psionics
 
+  // mage thief
+
+     SKILL_BACKSTAB_MT,
+
+  // end mage thief
+
      // start of generic
 
      SKILL_SIGN,
