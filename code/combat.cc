@@ -1465,8 +1465,7 @@ void TBeing::stopFighting()
   if (!(isAffected(AFF_ENGAGER)))
     fight()->attackers--;
 
-  // attackers is unsigned, so this checks for underflow
-  if (fight()->attackers > 100) {
+  if(fight()->attackers < 0){
     vlogf(LOG_COMBAT, "too few people attacking. %d", fight()->attackers);
     fight()->attackers = 0;
   }

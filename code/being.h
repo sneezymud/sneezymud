@@ -591,7 +591,7 @@ class TBeing : public TThing {
     CMasterDiscipline *discs;
     bool inPraying;
     bool inQuaffUse;
-    ubyte attackers;
+    sh_int attackers;
     byte visionBonus;
     sh_int age_mod;
     byte cantHit; 
