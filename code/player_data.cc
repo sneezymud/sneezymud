@@ -1078,10 +1078,12 @@ void do_the_player_stuff(const char *name)
       vlogf(LOG_BUG, "%s had a corrupt st.lifeforceColor. Moving player file.", name);
       handleCorrupted(name, st.aname);
       return;
+#if 0
     } else if ((max_level <= MAX_MORT) && ((st.money < 0) || (st.money > 2500000000))) {
       vlogf(LOG_BUG, "%s had a bad talens number(< 0 or > 25billion). Moving player file.", name);
       handleCorrupted(name, st.aname);
       return;
+#endif
     } else if (st.f_type < MIN_FACTION || st.f_type >= MAX_FACTIONS) {
       vlogf(LOG_BUG, "%s had a bad faction(%d). Moving player file.", name, st.f_type);
       handleCorrupted(name, st.aname);
