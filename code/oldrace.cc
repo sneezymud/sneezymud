@@ -47,6 +47,9 @@ void TBeing::setRacialStuff()
   if (IS_SET(specials.act, ACT_SKELETON)) {
     setImmunity(IMMUNE_BONE_COND, -100);
   }
+  if(hasQuestBit(TOG_VAMPIRE)){
+      SET_BIT(specials.affectedBy, AFF_TRUE_SIGHT);
+  }
   if (isUndead()) {
     addToLight(-GetMaxLevel() / 5);
     visionBonus = max(visionBonus, (byte) (-getLight() + 1));
@@ -258,6 +261,8 @@ bool TBeing::isAnimal() const
 
 bool TBeing::isUndead() const
 {
+  if(hasQuestBit(TOG_VAMPIRE))
+    return TRUE;
   if (IS_SET(specials.act, ACT_SKELETON))
     return TRUE;
   if (IS_SET(specials.act, ACT_ZOMBIE))

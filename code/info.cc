@@ -1532,7 +1532,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	  str += buf;
 	}
 	break;
-
+      case AFFECT_BITTEN_BY_VAMPIRE:
+	// secret!
+	break;
 
       // cases beyond here are considered BOGUs
       case LAST_ODDBALL_AFFECT:

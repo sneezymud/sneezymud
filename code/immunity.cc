@@ -809,6 +809,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case AFFECT_DEFECTED:
     case AFFECT_OFFER:
     case AFFECT_OBJECT_USED:
+    case AFFECT_BITTEN_BY_VAMPIRE:
     case LAST_ODDBALL_AFFECT:
     case SKILL_ALCOHOLISM:
     case SKILL_FISHING:

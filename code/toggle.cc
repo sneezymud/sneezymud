@@ -276,6 +276,8 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Dragon Armor: talens", 13732},
   {"Dragon Armor: warhammer", 13732},
   {"Dragon Armor: scales", 13732},
+  {"Bitten by vampire", MOB_NONE},
+  {"Vampire", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

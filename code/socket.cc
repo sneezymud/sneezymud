@@ -978,6 +978,35 @@ int TSocket::gameLoop()
             continue;
           }
         }
+	
+	// check for vampires in daylight
+	if(!quickpulse && !::number(0,4)){
+	  if(!tmp_ch->roomp->isIndoorSector() && 
+	     !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
+	     sunIsUp()){
+	    
+	    if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
+	      act("<r>Exposure to sunlight causes your skin to ignite!<1>",
+		  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
+	      act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
+		  FALSE, tmp_ch, NULL, NULL, TO_ROOM);
+	      
+	      rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), DAMAGE_FIRE);
+	      
+	      if(IS_SET_DELETE(rc, DELETE_THIS)) {
+		if (!tmp_ch) continue;
+		
+		temp = tmp_ch->next;
+		delete tmp_ch;
+		tmp_ch = NULL;
+		continue;
+	      }
+	    } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE)){
+	      act("Exposure to sunlight makes your skin itch.",
+		  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
+	    }
+	  }
+	}
 
         if (!quickpulse) {
           if (tmp_ch->spec) {

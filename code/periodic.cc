@@ -479,6 +479,16 @@ int TBeing::updateAffects()
               return DELETE_THIS;
           }
         }
+
+	if(af->type == AFFECT_BITTEN_BY_VAMPIRE){
+	  sendTo(COLOR_BASIC, "<r>A strange feeling of <1><k>forboding<1><r> comes over you.<1>\n\r");
+	  sendTo(COLOR_BASIC, "<r>You shiver briefly, as your blood runs cold.<1>\n\r");
+	  sendTo(COLOR_BASIC, "<r>In a moment, the feeling has passed.<1>\n\r");
+	  setQuestBit(TOG_BITTEN_BY_VAMPIRE);
+	}
+
+
+
         if ((af->type == SPELL_POLYMORPH) || 
             (af->type == SKILL_DISGUISE) ||
             (af->type == SPELL_SHAPESHIFT)) {

@@ -181,20 +181,24 @@ int TBaseCup::drinkMe(TBeing *ch)
       bSuccess(ch, ch->getSkillValue(SKILL_ALCOHOLISM), SKILL_ALCOHOLISM);
   }
 
-  if (ch->getCond(FULL) >= 0) {
-    ch->gainCondition(FULL, (getLiqHunger() * amount) / 10);
-
-    // use leftover as chance to go 1 more unit up/down
-    if (::number(0,9) < ((abs(getLiqHunger()) * amount) % 10))
-      ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
-  }
-
-  if (ch->getCond(THIRST) >= 0) {
-    ch->gainCondition(THIRST, (getLiqThirst() * amount) / 10);
-
-    // use leftover as chance to go 1 more unit up/down
-    if (::number(0,9) < ((abs(getLiqThirst()) * amount) % 10))
-      ch->gainCondition(THIRST, (getLiqThirst() > 0 ? 1 : -1));
+  if(ch->hasQuestBit(TOG_VAMPIRE)){
+    ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
+  } else {
+    if (ch->getCond(FULL) >= 0) {
+      ch->gainCondition(FULL, (getLiqHunger() * amount) / 10);
+      
+      // use leftover as chance to go 1 more unit up/down
+      if (::number(0,9) < ((abs(getLiqHunger()) * amount) % 10))
+	ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
+    }
+    
+    if (ch->getCond(THIRST) >= 0) {
+      ch->gainCondition(THIRST, (getLiqThirst() * amount) / 10);
+      
+      // use leftover as chance to go 1 more unit up/down
+      if (::number(0,9) < ((abs(getLiqThirst()) * amount) % 10))
+	ch->gainCondition(THIRST, (getLiqThirst() > 0 ? 1 : -1));
+    }
   }
 
   if (ch->getCond(DRUNK) > 10)
@@ -389,8 +393,12 @@ void TFood::eatMe(TBeing *ch)
   act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
   act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
 
-  if (ch->getCond(FULL) > -1)
-    ch->gainCondition(FULL, getFoodFill());
+  if(ch->hasQuestBit(TOG_VAMPIRE)){
+    ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
+  } else {
+    if (ch->getCond(FULL) > -1)
+      ch->gainCondition(FULL, getFoodFill());
+  }    
 
   if (ch->getCond(FULL) > 20)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
@@ -569,22 +577,26 @@ void TBaseCup::sipMe(TBeing *ch)
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS, "It tastes like %s.\n\r", DrinkInfo[getDrinkType()]->name);
 
-  if (getLiqDrunk()) {
-    ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
+  if(ch->hasQuestBit(TOG_VAMPIRE)){
+    ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
+  } else {
+    if (getLiqDrunk()) {
+      ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
+      // use leftover as chance to go 1 more unit up/down
+      if (::number(0,9) < (abs(getLiqDrunk()) % 10))
+	ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+    }
+    
+    ch->gainCondition(FULL, (getLiqHunger() / 10));
     // use leftover as chance to go 1 more unit up/down
-    if (::number(0,9) < (abs(getLiqDrunk()) % 10))
-      ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+    if (::number(0,9) < (abs(getLiqHunger()) % 10))
+      ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
+    
+    ch->gainCondition(THIRST, (getLiqThirst() / 10));
+    // use leftover as chance to go 1 more unit up/down
+    if (::number(0,9) < (abs(getLiqThirst()) % 10))
+      ch->gainCondition(THIRST, (getLiqThirst() > 0 ? 1 : -1));
   }
-
-  ch->gainCondition(FULL, (getLiqHunger() / 10));
-  // use leftover as chance to go 1 more unit up/down
-  if (::number(0,9) < (abs(getLiqHunger()) % 10))
-    ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
-
-  ch->gainCondition(THIRST, (getLiqThirst() / 10));
-  // use leftover as chance to go 1 more unit up/down
-  if (::number(0,9) < (abs(getLiqThirst()) % 10))
-    ch->gainCondition(THIRST, (getLiqThirst() > 0 ? 1 : -1));
 
   if (!isDrinkConFlag(DRINK_PERM) || (getMaxDrinkUnits() > 19))
     weightChangeObject( -SIP_WEIGHT);
@@ -658,7 +670,11 @@ void TFood::tasteMe(TBeing *ch)
   act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
   act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
 
-  ch->gainCondition(FULL, 1);
+  if(ch->hasQuestBit(TOG_VAMPIRE)){
+    ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
+  } else {
+    ch->gainCondition(FULL, 1);
+  }
 
   if (ch->getCond(FULL) > 20)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);

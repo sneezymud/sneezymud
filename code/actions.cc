@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "obj_pool.h"
 #include "obj_plant.h"
+#include "disc_sorcery.h"
 
 class socialMessg {
   public:
@@ -732,4 +733,128 @@ void TBeing::doPoint(const char *arg)
   }
   // If we got here, the person pointed at something that wasnt in the room
   sendTo("Do you usually point at things that aren't there?\n\r");
+}
+
+
+int TBeing::doBite(const sstring &arg)
+{
+  TThing *t = NULL;
+  TBeing *b;
+  sstring buf;
+  int rc;
+
+  if (!roomp)
+    return FALSE;
+
+  if (arg.empty()) {
+    sendTo("Whom do you want to bite?\n\r");
+    return FALSE;
+  }
+
+
+  if(!hasQuestBit(TOG_VAMPIRE)){
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
+      if (isname(arg, t->name)) {
+	if((b=dynamic_cast<TBeing *>(t)) && b==this){
+	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
+	  act("$n bites himself. WEIRD?!?", FALSE, this, NULL, b, TO_NOTVICT);
+	} else {
+	  sendTo(COLOR_OBJECTS, "You rip %s's flesh with your piercing bite.\n\r",
+		 b->getName());
+	  act("$n sinks $s teeth into $N. $N screams in agony!",
+	      FALSE, this, NULL, b, TO_NOTVICT);
+	  act("$n bites you. OOOOOOOOOHHHHHHHHHHHH that hurts!",
+	      FALSE, this, NULL, b, TO_VICT);
+	}
+	return TRUE;
+      }
+    }
+  } else {
+    // vampire bite!
+    if (!(b = get_char_room_vis(this, arg.c_str()))) {
+      if (!(b = fight())) {
+	sendTo("Who's blood do you wish to suck?\n\r");
+	return FALSE;
+      }
+    }
+    if (!sameRoom(*b)) {
+      sendTo("That person isn't around.\n\r");
+      return FALSE;
+    }
+    if (b == this) {
+      sendTo("Sucking blood from yourself would not be effective.\n\r");
+      return FALSE;
+    }
+    
+    if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
+      return FALSE;
+    
+    if (noHarmCheck(b))
+      return FALSE;
+
+    if(b->isImmortal()){
+      sendTo("That would be unwise.\n\r");
+      return FALSE;
+    }
+
+    if (b->isUndead() || b->isColdBlooded()) {
+      sendTo("You can only do this to living, warm blooded opponents.\n\r");
+      return FALSE;
+    }
+    
+    if(b->getPosition() <= POSITION_INCAP){
+      sendTo("That victim is too close to death already.\n\r");
+      return FALSE;
+    }
+
+
+    reconcileDamage(b, 0, DAMAGE_DRAIN);
+    
+    if(((b->hitLimit() < hitLimit()) || (GetMaxLevel() > b->GetMaxLevel())) &&
+       hits(b, attackRound(b) - b->defendRound(this))){
+      act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!",
+	  FALSE, this, NULL, b, TO_CHAR);
+      act("$n sinks $s fangs deep into $N's neck and sucks $S <r>blood<1>!",
+	  FALSE, this, NULL, b, TO_NOTVICT);
+      act("$n sinks $s fangs deep into your neck and sucks your <r>blood<1>!",
+	  FALSE, this, NULL, b, TO_VICT);
+
+      rc = reconcileDamage(b, b->getHit()+5, DAMAGE_DRAIN);
+
+      gainCondition(FULL, 15);
+      gainCondition(THIRST, 15);
+      act("You feel satiated.", FALSE, this, NULL, b, TO_CHAR);
+
+      act("You reel about unsteadily, flush with <r>blood<1>.",
+	  FALSE, this, NULL, b, TO_CHAR);
+      stopFighting();
+
+      if(b->isPc() && !b->hasQuestBit(TOG_VAMPIRE) &&
+	 !b->hasQuestBit(TOG_BITTEN_BY_VAMPIRE)){
+	affectedData aff;
+	aff.type = AFFECT_BITTEN_BY_VAMPIRE;
+	aff.location = APPLY_NONE;
+	aff.duration = 24 * UPDATES_PER_MUDHOUR;
+	
+	b->affectTo(&aff);
+      }
+
+
+      addToWait(combatRound(5));
+
+      return rc;
+    } else {
+      act("You try to bite $N's neck but $E fights you off!",
+	  FALSE, this, NULL, b, TO_CHAR);
+      act("$n tries to bite $N's neck, but $N fights $m off!",
+	  FALSE, this, NULL, b, TO_NOTVICT);
+      act("$n tries to bite your neck, but you fight him off!",
+	  FALSE, this, NULL, b, TO_VICT);
+      return TRUE;
+    }
+  }
+
+  sendTo("How about biting someone?.\n\r");
+
+  return FALSE;
 }

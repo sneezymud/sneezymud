@@ -1373,6 +1373,7 @@ class TBeing : public TThing {
     void doPee(sstring);
     void doPoint(const char *);
     void doPoke(const char *);
+    int doBite(const sstring &);
     int doJump(const char *);
     int doPick(const char *);
     int doSearch(const char *);

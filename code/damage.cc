@@ -351,22 +351,24 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     }
   }
 
-  if ((v->getPosition() == POSITION_DEAD) && v->isPc() && !isPc()) {
-    // correct some AI stuff.
-    // additional correction is done inside DeleteHatreds
-    // ok, I won, make me not as mad
-    TMonster *tmons = dynamic_cast<TMonster *>(this);
-    tmons->DA(16);
-    tmons->DMal(9);
-    // I was attacked, anybody else looking at me funny?
-    tmons->DS(8);
-    // hey, look at all this cool gear in the corpse!
-    tmons->UG(60);   // spiked high, but will drop off quickly
-
-    if (tmons->inGrimhaven()) {
-      // complete newbie protection
-      tmons->setAnger(0);
-      tmons->setMalice(0);
+  if ((v->getPosition() == POSITION_DEAD) && v->isPc()) {
+    if(!isPc()){
+      // correct some AI stuff.
+      // additional correction is done inside DeleteHatreds
+      // ok, I won, make me not as mad
+      TMonster *tmons = dynamic_cast<TMonster *>(this);
+      tmons->DA(16);
+      tmons->DMal(9);
+      // I was attacked, anybody else looking at me funny?
+      tmons->DS(8);
+      // hey, look at all this cool gear in the corpse!
+      tmons->UG(60);   // spiked high, but will drop off quickly
+      
+      if (tmons->inGrimhaven()) {
+	// complete newbie protection
+	tmons->setAnger(0);
+	tmons->setMalice(0);
+      }
     }
   }
   rc = v->tellStatus(dam, (this == v), flying);
@@ -453,6 +455,31 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 
   // this save was moved from gain_exp()
   doSave(SILENT_YES);
+
+
+  if(v->isPc() && v->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
+     v->getPosition() == POSITION_DEAD){
+    v->sendTo(COLOR_BASIC, "<r>An unbelievable pain wracks your body as your mortal self dies.<r>\n\r");
+    v->sendTo(COLOR_BASIC, "<r>The blood in your veins runs hot, hot as the sun.<r>\n\r");
+    v->sendTo(COLOR_BASIC, "<r>Your body spasms and contracts, causing you to jerk around like an out of control marionette.<r>\n\r");
+    v->sendTo(COLOR_BASIC, "<r>You try to scream as your entire existence comes to an end, but your lifeless body does not obey your command.<r>\n\r");
+    v->sendTo(COLOR_BASIC, "<W>You lie still as a millenia comes and goes.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<W>You begin to wonder if this endless nothingness will ever pass.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<k>Finally, a dark power comes over you.  Your body jerks to life.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<k>You rise slowly, as your old familiar world returns to you, in a different light.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<k>You have joined the ranks of risen, you are undead.  You are a vampire.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<k>You thirst... for <1><r>blood<1>.\n\r");
+
+    v->setQuestBit(TOG_VAMPIRE);
+    v->remQuestBit(TOG_BITTEN_BY_VAMPIRE);
+
+    v->genericRestore(RESTORE_FULL);
+
+    return false;
+  }
+
+
+
 
   // special code for quest mobs
   questmob = v->mobVnum();

@@ -2313,6 +2313,14 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 
 
   switch(liq){
+    case LIQ_BLOOD:
+      if(vict->hasQuestBit(TOG_VAMPIRE)){
+	vict->sendTo("Drinking the dead blood causes you great harm!\n\r");
+	poison(ch,vict,level,learn,SPELL_POISON);
+	slumber(ch,vict,level,learn);
+	rc=harm(ch,vict,level,learn,SPELL_HARM,0);
+      }
+      break;
     case LIQ_HOLYWATER:
       if(vict->isUndead())
 	harm(ch,vict,level,learn,SPELL_HARM,0);

@@ -631,7 +631,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_FLIPOFF:
         case CMD_MOON:
         case CMD_PINCH:
-        case CMD_BITE:
         case CMD_KISS:
         case CMD_CHEER:
         case CMD_WOO:
@@ -687,6 +686,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doPoint(newarg);
 	  addToLifeforce(1);
           break;
+        case CMD_BITE:
+	  rc = doBite(stringarg);
+	  addToLifeforce(1);
+	  break;
         case CMD_AS:
           rc = doAs(newarg);
           break;
@@ -2559,7 +2562,7 @@ void buildCommandArray(void)
   commandArray[CMD_FLIPOFF] = new commandInfo("flipoff", POSITION_SITTING, 0);
   commandArray[CMD_MOO] = new commandInfo("moo", POSITION_RESTING, 0);
   commandArray[CMD_PINCH] = new commandInfo("pinch", POSITION_SITTING, 0);
-  commandArray[CMD_BITE] = new commandInfo("bite", POSITION_CRAWLING, 0);
+  commandArray[CMD_BITE] = new commandInfo("bite", POSITION_FIGHTING, 0);
   commandArray[CMD_SEARCH] = new commandInfo("search", POSITION_CRAWLING, 0);
   commandArray[CMD_SPY] = new commandInfo("spy", POSITION_CRAWLING, 0);
   commandArray[CMD_DOORBASH]= new commandInfo("doorbash", POSITION_STANDING, 0);

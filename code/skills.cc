@@ -1334,6 +1334,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_OFFER:
     case AFFECT_OBJECT_USED:
     case LAST_ODDBALL_AFFECT:
+    case AFFECT_BITTEN_BY_VAMPIRE:
       break;
   }
 

@@ -886,6 +886,13 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
 	amount += getSkillValue(SKILL_IRON_MUSCLES)/8;
       }
 
+      if(hasQuestBit(TOG_VAMPIRE) && 
+	 (whichStat == STAT_STR ||
+	  whichStat == STAT_SPE ||
+	  whichStat == STAT_AGI ||
+	  whichStat == STAT_FOC))
+	amount += 15;
+
       return amount;
     case(STAT_RACE):
       return race->baseStats.get(whichStat);

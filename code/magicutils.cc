@@ -265,7 +265,6 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
     act("$n begins to shiver violently, and looks pale.", TRUE, this, 0, 0, TO_ROOM);
   }
 
-
   if (discArray[s]->fadeAway) 
     sendTo("%s\n\r", discArray[s]->fadeAway);
   

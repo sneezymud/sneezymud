@@ -1742,8 +1742,11 @@ void TBeing::statBeing(TBeing *k)
         break;
 
 
-	
-		
+      case AFFECT_BITTEN_BY_VAMPIRE:
+	sprintf(buf+strlen(buf), "Bitten by vampire.\n\r");
+	sprintf(buf+strlen(buf), "Expires in %6d updates.\n\r", aff->duration);
+	break;
+
 
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
