@@ -678,7 +678,9 @@ int TBeing::getPlayerID() const
     }
   }
   
-  desc->playerID=playerID;
+  if(desc)
+    desc->playerID=playerID;
+
   return playerID;
 }
 
