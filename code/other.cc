@@ -3974,7 +3974,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
   
   *character += *mynote;
 
-  character->doAt(fmt("8 post note %s") % buf, false);
+  character->doAt((fmt("8 post note %s") % buf).c_str(), false);
 
   //  mynote->postMe(character, buf, FindBoardInRoom(8, "board"));
 
