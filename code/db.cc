@@ -2647,6 +2647,7 @@ bool zoneData::doGenericReset(void)
   top = zone_table[zone_nr].top;
 
   TObj *o;
+  TTrashPile *pile;
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
     o=*iter;
     if (o->objVnum() >= bottom && o->objVnum() <= top)
@@ -2660,6 +2661,9 @@ bool zoneData::doGenericReset(void)
           continue;
         }
       }
+
+      if((pile=dynamic_cast<TTrashPile *>(o)))
+	pile->attractVermin();
     }
   }
   return TRUE;

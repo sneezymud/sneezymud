@@ -200,7 +200,7 @@ void TTrashPile::attractVermin()
   int count=0;
   TPathFinder path;
   
-  if(::number(0,9999) || index<3 || !roomp)
+  if(index<3 || !roomp)
     return;
 
   for(TThing *t=roomp->getStuff();t;t=t->nextThing){
