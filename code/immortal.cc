@@ -290,11 +290,11 @@ void TPerson::doToggle(const char *arg2)
     
 
     if(wimpy)
-      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>\n\r", wimpy);
+      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>   |    ", wimpy);
     else
-      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>\n\r");
+      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>   |    ");
 
-    sendTo(COLOR_BASIC, "Newbie Helper     : %s    |    ", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
+    sendTo(COLOR_BASIC, "Newbie Helper     : %s\n\r", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
     sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
@@ -711,6 +711,14 @@ void TPerson::doToggle(const char *arg2)
     } else {
       sendTo("You will now open moneypouches automatically.\n\r");
       SET_BIT(desc->autobits, AUTO_POUCH);
+    }
+  } else if (is_abbrev(arg, "trophy")){
+    if (IS_SET(desc->autobits, AUTO_TROPHY)) {
+      sendTo("You will no longer check trophy after kills.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_TROPHY);
+    } else {
+      sendTo("You will now check trophy after kills.\n\r");
+      SET_BIT(desc->autobits, AUTO_TROPHY);
     }
   } else if (is_abbrev(arg, "tips")) {
     if (IS_SET(desc->autobits, AUTO_TIPS)) {

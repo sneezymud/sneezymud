@@ -850,6 +850,12 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         addCommandToQue(buf);
       }
 
+      if(desc && IS_SET(desc->autobits, AUTO_TROPHY)){
+	sendTo(COLOR_BASIC,"You will gain %s experience when fighting %s.\n\r",
+	       trophy->getExpModDescr(trophy->getCount(v->mobVnum())),
+	       v->getName());
+      }
+
       // more quest stuff
       tp=dynamic_cast<TPerson *>(this);
       if (tp && v->mobVnum()==MOB_LEPER) {

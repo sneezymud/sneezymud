@@ -145,8 +145,9 @@ const unsigned int AUTO_NOSPELL        = (1<<16);
 const unsigned int AUTO_HALFSPELL      = (1<<17);
 const unsigned int AUTO_LIMBS          = (1<<18);
 const unsigned int AUTO_TIPS           = (1<<19);
+const unsigned int AUTO_TROPHY         = (1<<20);
 
-const int MAX_AUTO        = 20;    // move and change
+const int MAX_AUTO        = 21;    // move and change
 
 const unsigned long PLR_BRIEF      = (1<<0);
 const unsigned long PLR_COMPACT    = (1<<1);

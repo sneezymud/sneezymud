@@ -1672,6 +1672,7 @@ const char * const auto_name[MAX_AUTO] =
   "Auto Half Spells",
   "Auto Limbs",
   "Tips",
+  "Auto Trophy",
 };
 
 // disc_num, class_nums, practice
