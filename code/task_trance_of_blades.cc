@@ -75,7 +75,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
     }
     if (!ch->canUseArm(HAND_PRIMARY)) {
       act("Your injured arm causes you to snap out of your trance.",
-          FALSE, ch, 0, 0, TO_CHAR), ANSI_RED;
+          FALSE, ch, 0, 0, TO_CHAR);
       act("$n's injured arm causes $m to snap out of $s trance.",
           FALSE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
