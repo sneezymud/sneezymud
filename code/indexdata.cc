@@ -237,6 +237,10 @@ void generate_obj_index()
     if(strcmp(db["action_desc"], "")) tmpi->description=mud_str_dup(db["action_desc"]);
     else tmpi->description=NULL;
 
+    while(extra_db["vnum"] && convertTo<int>(extra_db["vnum"]) < tmpi->virt){
+      extra_db.fetchRow();
+    }
+
     while(extra_db["vnum"] && convertTo<int>(extra_db["vnum"])==tmpi->virt){
       new_descr = new extraDescription();
       new_descr->keyword = mud_str_dup(extra_db["name"]);
@@ -245,6 +249,10 @@ void generate_obj_index()
       tmpi->ex_description = new_descr;
 
       extra_db.fetchRow();
+    }
+
+    while(affect_db["vnum"] && convertTo<int>(affect_db["vnum"]) < tmpi->virt){
+      affect_db.fetchRow();
     }
 
     i=0;
