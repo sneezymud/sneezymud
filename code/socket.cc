@@ -333,7 +333,6 @@ int TSocket::gameLoop()
   static int sent = 0;
   int rc = 0;
   time_t lagtime_t = time(0);
-  int count;
   TVehicle *vehicle;
 
 #ifndef SOLARIS
@@ -535,11 +534,15 @@ int TSocket::gameLoop()
     // interport communication
     mudRecvMessage();
 
+    // this is causing tons of lag for some reason
+#if 0
+    int count;
     // update statistics in the database
     if(!(pulse % (ONE_SECOND*5))) {
       count=updateWholist();
       updateUsagelogs(count);
     }
+#endif
 
     // send out repo mobs
     if(!wayslowpulse){
