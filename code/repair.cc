@@ -207,7 +207,7 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
     fclose(fp);
     return FALSE;
   } else if (tmp_cost > buyer->getMoney()) {
-    sprintf(buf, "%s, I don't repair items for free! No money, no item!", buyer->getName());
+    sprintf(buf, "%s I don't repair items for free! No money, no item!", buyer->getName());
     repair->doSay(buf);
     sprintf(buf, "Remember the price is %d.", tmp_cost);
     repair->doSay(buf);
@@ -216,7 +216,7 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
   } else {
     if ((fixed_obj = raw_read_item(fp, version))) {
       obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
-      sprintf(buf2, "%s, Ah yes, %s, here is %s.",
+      sprintf(buf2, "%s Ah yes, %s, here is %s.",
            fname(buyer->name).c_str(), buyer->getName(),fixed_obj->shortDescr);
       repair->doTell(buf2);
       repair->doSay("Thank you for your business!");
@@ -377,17 +377,19 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
     return;
 
-  sprintf(buf, "%s, It'll cost you %d talens to repair %s to a status of %s.", 
-     fname(buyer->name).c_str(), (valued->repairPrice(repair, buyer, DEPRECIATION_NO)),
-     valued->getName(), valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)).c_str());
-  repair->doTell(buf);
+  vlogf(LOG_PEEL, "got here");
+
+  repair->doTell(fname(buyer->name).c_str(),
+     "It'll cost you %d talens to repair %s to a status of %s.", 
+     (valued->repairPrice(repair, buyer, DEPRECIATION_NO)),
+     valued->getName(), 
+     valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)).c_str());
+
   when_ready = ct + repair_time(valued);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
-  sprintf(buf, "%s, I can have it ready by %s.", fname(buyer->name).c_str(), ready);
-  repair->doTell(buf);
-  sprintf(buf, "%s, That's %s.",  fname(buyer->name).c_str(), secsToString(when_ready-ct).c_str());
-  repair->doTell(buf);
+  repair->doTell(fname(buyer->name).c_str(), "I can have it ready by %s.", ready);
+  repair->doTell(fname(buyer->name).c_str(), "That's %s.",  secsToString(when_ready-ct).c_str());
 }
 
 // returns DELETE_THIS if buyer goes poof
@@ -521,23 +523,23 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   if (will_not_repair(buyer, repair, this, SILENT_NO))
     return;
 
-  sprintf(buf, "%s, It'll cost you %d talens to repair %s to a status of %s.", 
+  sprintf(buf, "%s It'll cost you %d talens to repair %s to a status of %s.", 
          fname(buyer->name).c_str(), (repairPrice(repair, buyer, DEPRECIATION_YES)),
          getName(), equip_condition(maxFix(repair, DEPRECIATION_YES)).c_str());
   repair->doTell(buf);
   when_ready = ct + repair_time(this);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
-  sprintf(buf, "%s, It will be ready %s.", fname(buyer->name).c_str(), ready);
+  sprintf(buf, "%s It will be ready %s.", fname(buyer->name).c_str(), ready);
   repair->doTell(buf);
-  sprintf(buf, "%s, That's %s.",  fname(buyer->name).c_str(), secsToString(when_ready-ct).c_str());
+  sprintf(buf, "%s That's %s.",  fname(buyer->name).c_str(), secsToString(when_ready-ct).c_str());
   repair->doTell(buf);
   repair_number++;
-  sprintf(buf, "%s, Payment is due when you pick your item up.", fname(buyer->name).c_str());
+  sprintf(buf, "%s Payment is due when you pick your item up.", fname(buyer->name).c_str());
   repair->doTell(buf);
-  sprintf(buf, "%s, Here is your ticket, %s", fname(buyer->name).c_str(), buyer->getName());
+  sprintf(buf, "%s Here is your ticket, %s", fname(buyer->name).c_str(), buyer->getName());
   repair->doTell(buf);
-  sprintf(buf, "%s, If you lose the ticket, it might be hard to reclaim your item.", fname(buyer->name).c_str());
+  sprintf(buf, "%s If you lose the ticket, it might be hard to reclaim your item.", fname(buyer->name).c_str());
   repair->doTell(buf);
   ticket = make_ticket(repair, buyer, this, when_ready, repair_number);
   *buyer += *ticket;
@@ -575,7 +577,7 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
   *found = TRUE;
 
   if (!action_description) {
-    sprintf(buf, "%s, That ticket is blank!", fname(buyer->name).c_str());
+    sprintf(buf, "%s That ticket is blank!", fname(buyer->name).c_str());
     repair->doTell(buf);
     return;
   }
@@ -586,7 +588,7 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
   }
   strcpy(buf, getName());
   if (sscanf(buf, "a small ticket marked number %d", &iNumber) != 1) {
-    sprintf(buf, "%s, That ticket isn't from THIS shop!", fname(buyer->name).c_str());
+    sprintf(buf, "%s That ticket isn't from THIS shop!", fname(buyer->name).c_str());
     repair->doTell(buf);
   } else {
     if (check_time_and_gold(repair, buyer, iNumber, this)) {

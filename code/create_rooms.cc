@@ -1338,7 +1338,7 @@ void TPerson::doRload(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  tStArg = argument_parser(tStArg, tStString, tStBuffer);
+  argument_parser(tStArg, tStString, tStBuffer);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
@@ -3566,7 +3566,7 @@ void TPerson::doRsave(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  tStArg = argument_parser(tStArg, tStString, tStBuffer);
+  argument_parser(tStArg, tStString, tStBuffer);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;

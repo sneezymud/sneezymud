@@ -67,7 +67,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
 
   switch (tCmd) {
     case CMD_SAY:
-      tStOrig = argument_parser(tStOrig, tStString, tStBuffer);
+      argument_parser(tStOrig, tStString, tStBuffer);
 
       if (strcasecmp(tStString.c_str(), "sleeptag"))
         return FALSE;

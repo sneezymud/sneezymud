@@ -3585,7 +3585,7 @@ void TThing::attunerGiven(TBeing *ch, TMonster *me)
 {
   char buf[256];
 
-  sprintf(buf, "%s, I can only attune symbols!", ch->getName());
+  sprintf(buf, "%s I can only attune symbols!", ch->getName());
   me->doTell(buf);
   strcpy(buf, name);
   add_bars(buf);
@@ -3600,7 +3600,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
   attune_struct *job;
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    sprintf(buf, "%s, That symbol has already been attuned!", ch->getName());
+    sprintf(buf, "%s That symbol has already been attuned!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
     add_bars(buf);
@@ -3611,7 +3611,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
   cost = attunePrice(this);
 
   if (ch->getMoney() < cost) {
-    sprintf(buf, "%s, I only attune for a reasonable tithe. I am sorry, I do not make exceptions!", ch->getName());
+    sprintf(buf, "%s I only attune for a reasonable tithe. I am sorry, I do not make exceptions!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
     add_bars(buf);
@@ -3892,7 +3892,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return TRUE;
     case CMD_MOB_GIVEN_ITEM:
       if (!(t = o)) {
-        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        sprintf(buf, "%s You don't have that item!", ch->getName());
         me->doTell(buf);
         return TRUE;
       }
@@ -3945,7 +3945,7 @@ int TThing::sharpenerGiveMe(TBeing *ch, TMonster *me)
 {
   char buf[256];
 
-  sprintf(buf, "%s, I can only sharpen weapons!", ch->getName());
+  sprintf(buf, "%s I can only sharpen weapons!", ch->getName());
   me->doTell(buf);
   strcpy(buf, name);
   add_bars(buf);
@@ -4129,7 +4129,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return valued->sharpenerValueMe(ch, me);
     case CMD_MOB_GIVEN_ITEM:
       if (!(weap = o)) {
-        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        sprintf(buf, "%s You don't have that item!", ch->getName());
         me->doTell(buf);
         return TRUE;
       }
@@ -4852,12 +4852,12 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     case CMD_MOB_GIVEN_ITEM:
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
-        sprintf(buf, "%s, I don't engrave for beasts.", fname(ch->name).c_str());
+        sprintf(buf, "%s I don't engrave for beasts.", fname(ch->name).c_str());
         me->doTell(buf);
         return TRUE;
       }
       if (!(item = o)) {
-        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        sprintf(buf, "%s You don't have that item!", ch->getName());
         me->doTell(buf);
         return TRUE;
       }
@@ -4867,7 +4867,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
 
       if (item->obj_flags.cost <= 500) {
-        sprintf(buf, "%s, That can't be engraved!", ch->getName());
+        sprintf(buf, "%s That can't be engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
         add_bars(buf);
@@ -4876,7 +4876,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (item->action_description) {
-        sprintf(buf, "%s, Sorry, but this item has already been engraved!", ch->getName());
+        sprintf(buf, "%s Sorry, but this item has already been engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
         add_bars(buf);
@@ -4885,7 +4885,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (obj_index[item->getItemIndex()].max_exist <= 10) {
-        sprintf(buf, "%s, This artifact is too powerful to be engraved!", ch->getName());
+        sprintf(buf, "%s This artifact is too powerful to be engraved!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
         add_bars(buf);
@@ -4894,7 +4894,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (item->obj_flags.decay_time >= 0) {
-        sprintf(buf, "%s, This won't be around long enough to bother engraving it!", ch->getName());
+        sprintf(buf, "%s This won't be around long enough to bother engraving it!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
         add_bars(buf);
@@ -4906,7 +4906,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       cost = engraveCost(item);
 
       if (ch->getMoney() < cost) {
-        sprintf(buf, "%s, I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
+        sprintf(buf, "%s I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
         me->doTell(buf);
         strcpy(buf, item->name);
         add_bars(buf);
@@ -4977,7 +4977,7 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   if (ch->getPosition() > POSITION_STANDING) {
-    sprintf(buf,"%s, I won't sell you a ticket unless you stand on your own feet.",fname(ch->name).c_str());
+    sprintf(buf,"%s I won't sell you a ticket unless you stand on your own feet.",fname(ch->name).c_str());
     me->doTell(buf);
     return TRUE;
   }
@@ -4985,18 +4985,18 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   arg = one_argument(arg, obj_name);
 
   if (!*obj_name || strcmp(obj_name,"ticket")) {
-    sprintf(buf,"%s, Buy what?!?",fname(ch->name).c_str());
+    sprintf(buf,"%s Buy what?!?",fname(ch->name).c_str());
     me->doTell(buf);
     return TRUE;
   }
   // prohibit polys and charms from engraving 
   if (dynamic_cast<TMonster *>(ch)) {
-    sprintf(buf, "%s, I don't sell tickets to beasts.", fname(ch->name).c_str());
+    sprintf(buf, "%s I don't sell tickets to beasts.", fname(ch->name).c_str());
     me->doTell(buf);
     return TRUE;
   }
   if (ch->getMoney() < TICKET_PRICE) {
-    sprintf(buf,"%s, Tickets cost %d talens.",fname(ch->name).c_str(),TICKET_PRICE);
+    sprintf(buf,"%s Tickets cost %d talens.",fname(ch->name).c_str(),TICKET_PRICE);
     me->doTell(buf);
     return TRUE;
   }
@@ -6277,20 +6277,20 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if(is_abbrev(buf2, "portfolio")){
 	db.query("select o.ticker, o.shares, i.price from stockowners o, stockinfo i where owner='%s' and o.ticker=i.ticker", ch->getName());
 	
-	sprintf(buf, "%s, Here are the stocks you own:", 
+	sprintf(buf, "%s Here are the stocks you own:", 
 		fname(ch->name).c_str());
 	myself->doTell(buf);
 
 	while(db.fetchRow()){
 	  if(atoi_safe(db.getColumn(1))>0){
 	    count+=(int)(atof_safe(db.getColumn(2))*atoi_safe(db.getColumn(1)));
-	    sprintf(buf, "%s, You own %s shares of %s, worth %f",
+	    sprintf(buf, "%s You own %s shares of %s, worth %f",
 		    fname(ch->name).c_str(), db.getColumn(1), db.getColumn(0),
 		    atof_safe(db.getColumn(2))*atoi_safe(db.getColumn(1)));
 	    myself->doTell(buf);
 	  }
 	}
-	sprintf(buf, "%s, Your portfolio is worth %i talens right now.",
+	sprintf(buf, "%s Your portfolio is worth %i talens right now.",
 		fname(ch->name).c_str(), count);
 	myself->doTell(buf);
 
@@ -6299,36 +6299,36 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	if(db.fetchRow())
 	  return FALSE;
 	
-	sprintf(buf, "%s, %s - %s talens per share.",
+	sprintf(buf, "%s %s - %s talens per share.",
 		fname(ch->name).c_str(), db.getColumn(0), db.getColumn(1));
 
 	myself->doTell(buf);
-	//	sprintf(buf, "%s, %s", fname(ch->name).c_str(), row[2]);
+	//	sprintf(buf, "%s %s", fname(ch->name).c_str(), row[2]);
 	//	myself->doTell(buf);
       }
     } else {
       // generic list
       db.query("select ticker, price from stockinfo");
     
-      sprintf(buf, "%s, I charge a 10%% commission on all transactions.",
+      sprintf(buf, "%s I charge a 10%% commission on all transactions.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);
 
-      sprintf(buf, "%s, You can 'list <stock name>' to see details.",
+      sprintf(buf, "%s You can 'list <stock name>' to see details.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);
 
-      sprintf(buf, "%s, You can 'list portfolio' to see your portfolio.",
+      sprintf(buf, "%s You can 'list portfolio' to see your portfolio.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);      
 
-      sprintf(buf, "%s, Stock graphs can be seen at http://sneezy.stanford.edu/peel/stocks",
+      sprintf(buf, "%s Stock graphs can be seen at http://sneezy.stanford.edu/peel/stocks",
 	      fname(ch->name).c_str());
       myself->doTell(buf);      
 
 
       while(db.fetchRow()){
-	sprintf(buf, "%s, %s - %s talens per share.", 
+	sprintf(buf, "%s %s - %s talens per share.", 
 		fname(ch->name).c_str(), db.getColumn(0), db.getColumn(1));
 	myself->doTell(buf);
       }
@@ -6373,13 +6373,13 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     modprice*=1.01;
 
     if(ch->getMoney() < modprice){
-      sprintf(buf, "%s, You can't afford that.", fname(ch->name).c_str());
+      sprintf(buf, "%s You can't afford that.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
 
     if(atof_safe(db.getColumn(1)) < 1){
-      sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
+      sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
@@ -6396,7 +6396,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
     }
 
-    sprintf(buf, "%s, Ok, you just purchased %i shares of %s, for a price of %f.",
+    sprintf(buf, "%s Ok, you just purchased %i shares of %s, for a price of %f.",
 	    fname(ch->name).c_str(), num, db.getColumn(0), modprice);
     myself->doTell(buf);
 
@@ -6427,7 +6427,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return FALSE;
     
     if(atoi_safe(db.getColumn(2)) < num){
-      sprintf(buf, "%s, You don't own enough shares of that stock.",
+      sprintf(buf, "%s You don't own enough shares of that stock.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
@@ -6438,7 +6438,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     db.query("update stockinfo set talens=talens-%i", (int)(((float)num * atof_safe(db.getColumn(1)))));
     db.query("update stockowners set shares=shares-%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
 
-    sprintf(buf, "%s, Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
+    sprintf(buf, "%s Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
 	    fname(ch->name).c_str(), num, db.getColumn(0), (float)num * atof_safe(db.getColumn(1)),
 	    (float)num * atof_safe(db.getColumn(1)) * 0.01);
     myself->doTell(buf);
@@ -6472,7 +6472,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return FALSE;
 
     if(atof_safe(db.getColumn(1)) < 1){
-      sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
+      sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
@@ -6480,7 +6480,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     float modprice=atof_safe(db.getColumn(1));
     modprice*=1.01;
 
-    sprintf(buf, "%s, %i shares of %s would cost %i talens.",
+    sprintf(buf, "%s %i shares of %s would cost %i talens.",
 	    fname(ch->name).c_str(), num, db.getColumn(0), (int)((float)num*modprice));
 
     myself->doTell(buf);
@@ -6638,13 +6638,13 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
     case CMD_MOB_GIVEN_ITEM:
       if (!(item = o)) {
-        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        sprintf(buf, "%s You don't have that item!", ch->getName());
         me->doTell(buf);
         return TRUE;
       }
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
-        sprintf(buf, "%s, I don't identify for beasts.", fname(ch->name).c_str());
+        sprintf(buf, "%s I don't identify for beasts.", fname(ch->name).c_str());
         me->doTell(buf);
         me->doGive(ch, item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
@@ -6652,7 +6652,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->logItem(item, CMD_EAST);  // log the receipt of the item
       cost = divCost(item);
       if (ch->getMoney() < cost) {
-        sprintf(buf, "%s, I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
+        sprintf(buf, "%s I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
         me->doTell(buf);
         me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;

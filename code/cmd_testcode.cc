@@ -130,11 +130,10 @@ void TBeing::doTestCode(const char *arg)
 #if 0
   string str1, str2, strret;
   string strin = "this is input";
-  strret = argument_parser(strin, str1, str2);
+  argument_parser(strin, str1, str2);
   sendTo("in: '%s'\n\r", strin.c_str());
   sendTo("1: '%s'\n\r", str1.c_str());
   sendTo("2: '%s'\n\r", str2.c_str());
-  sendTo("ret: '%s'\n\r", strret.c_str());
 #endif
 #if 0
   extern void rewrite_obj_file();

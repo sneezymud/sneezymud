@@ -611,7 +611,7 @@ void TBeing::doWhittle(const char *tArg)
   int         tIndex     = -1;
   TGenWeapon *tWeapon = dynamic_cast<TGenWeapon *>(heldInPrimHand());
 
-  tStString = argument_parser(tStString, tStObject, tStWood);
+  argument_parser(tStString, tStObject, tStWood);
 
   if (tStObject.empty()) {
     sendTo("Syntax: whittle <object> <wood>\n\r");
@@ -788,8 +788,7 @@ string taskWhittleEntry::getName(bool showSecond)
          tStExcess("");
 
   if (showSecond) {
-    tStString = argument_parser(tStString, tStName, tStExcess);
-    //    tStString = argument_parser(tStString, tStName, tStExcess);
+    argument_parser(tStString, tStName, tStExcess);
     strcpy(tName, tStExcess.c_str());
   } else {
     argument_parser(tStString, tStName, tStExcess);

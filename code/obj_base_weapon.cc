@@ -298,7 +298,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   sharp_struct *job;
 
   if (getCurSharp() == getMaxSharp()) {
-    sprintf(buf, "%s, That item is perfectly ok!", ch->getName());
+    sprintf(buf, "%s That item is perfectly ok!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
     add_bars(buf);
@@ -309,7 +309,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   cost = sharpenPrice();
 
   if (ch->getMoney() < cost) {
-    sprintf(buf, "%s, I have to make a living! If you don't have the talens , I don't do the work!", ch->getName());
+    sprintf(buf, "%s I have to make a living! If you don't have the talens , I don't do the work!", ch->getName());
     me->doTell(buf);
     strcpy(buf, name);
     add_bars(buf);

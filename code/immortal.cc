@@ -1693,7 +1693,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
            tStString(""),
            tStBuffer("");
 
-    tStArgument = argument_parser(tStArgument, tStString, tStBuffer);
+    argument_parser(tStArgument, tStString, tStBuffer);
 
     if (!is_abbrev(tStString, "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");

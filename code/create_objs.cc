@@ -510,7 +510,7 @@ void TPerson::doOEdit(const char *argument)
     case 1:			// save 
 #if 1
       tStArg = string;
-      tStArg = argument_parser(tStArg, tStString, tStBuffer);
+      argument_parser(tStArg, tStString, tStBuffer);
 
       if (tStString.empty() || tStBuffer.empty())
         sendTo("Syntax: oed save <object> <vnum>\n\r");
@@ -3106,7 +3106,7 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
     return FALSE;
   }
 
-  tStArg = argument_parser(tStArg, tStString, tStBuffer);
+  argument_parser(tStArg, tStString, tStBuffer);
 
   classIndT tClass;
   int tStr, tBra, tCon, tDex, tAgi, tInt, tWis, tFoc, tPer, tCha, tKar, tSpe;

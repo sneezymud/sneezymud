@@ -1767,6 +1767,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 int TBeing::parseCommand(const char *orig_arg, bool typedIn)
 {
   int i;
+  unsigned int pos;
   char aliasbuf[256], arg1[512], arg2[1024];
   string argument;
   string whitespace=" \f\n\r\t\v";
@@ -1782,6 +1783,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
   }
 
   argument=orig_arg;
+
 
   if (desc) {
     i = -1;
@@ -1800,40 +1802,41 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
       half_chop(argument.c_str(), arg1, arg2);
     }
   }
+
+
   // Let people use say and emote shortcuts with no spaces - Russ
   if ((argument[0] == '\'') || (argument[0] == ':') || (argument[0] == ',')) {
     arg1[0] = argument[0];
     arg1[1] = '\0';
     argument.erase(0,1); // remove first character
-  } else if (!argument.compare("low", 0, 3) && !isImmortal()){
-    // KLUDGE - for low and lower command
-    // l and lo == look, so we need not check for them
-    strcpy(arg1, "lower");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!argument.compare("repl", 0, 4) && !isImmortal()){
-    // KLUDGE - for reply and replace command
-    // rep == report, so we need not check for shorter
-    strcpy(arg1, "reply");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!argument.compare("med", 0, 3) && !isImmortal()){
-    // KLUDGE - for meditate and medit command
-    // me == mend limb, so we need not check for shorter
-    strcpy(arg1, "meditate");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!(lower(argument).compare("southe", 0, 6))){
-    strcpy(arg1, "se");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!(lower(argument).compare("northw", 0, 6))){
-    strcpy(arg1, "nw");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!(lower(argument).compare("southw", 0, 6))){
-    strcpy(arg1, "sw");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else if (!(lower(argument).compare("northe", 0, 6))){
-    strcpy(arg1, "ne");
-    argument.erase(0, argument.find_first_of(whitespace, 0));
-  } else
-    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else {
+    if (!argument.compare("low", 0, 3) && !isImmortal()){
+      // KLUDGE - for low and lower command
+      // l and lo == look, so we need not check for them
+      strcpy(arg1, "lower");
+    } else if (!argument.compare("repl", 0, 4) && !isImmortal()){
+      // KLUDGE - for reply and replace command
+      // rep == report, so we need not check for shorter
+      strcpy(arg1, "reply");
+    } else if (!argument.compare("med", 0, 3) && !isImmortal()){
+      // KLUDGE - for meditate and medit command
+      // me == mend limb, so we need not check for shorter
+      strcpy(arg1, "meditate");
+    } else if (!(lower(argument).compare("southe", 0, 6))){
+      strcpy(arg1, "se");
+    } else if (!(lower(argument).compare("northw", 0, 6))){
+      strcpy(arg1, "nw");
+    } else if (!(lower(argument).compare("southw", 0, 6))){
+      strcpy(arg1, "sw");
+    } else if (!(lower(argument).compare("northe", 0, 6))){
+      strcpy(arg1, "ne");
+    }
+
+    // strip out first word
+    pos=argument.find_first_not_of(whitespace,0);
+    argument.erase(0, argument.find_first_of(whitespace, pos));
+  }
+
 
   cmdTypeT cmd = searchForCommandNum(arg1);
   if (cmd >= MAX_CMD_LIST) {

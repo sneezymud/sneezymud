@@ -83,7 +83,7 @@ void TBeing::doMortalCompare(const char *tArg)
     return;
   }
 
-  StString = argument_parser(StString, StObject1, StObject2);
+  argument_parser(StString, StObject1, StObject2);
 
   if (StObject1.empty() || StObject2.empty()) {
     sendTo("Syntax: compare <item> <item>\n\r");
