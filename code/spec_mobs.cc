@@ -1801,18 +1801,6 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
-    } else if (dynamic_cast<TBaseCorpse *>(obj)) {
-      sprintf(buf, "$n disposes of $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
-
-      myself->roomp->playsound(SOUND_BRING_DEAD, SOUND_TYPE_NOISE);
-
-      TThing *t;
-      while ((t = obj->getStuff())) {
-        (*t)--;
-        *myself += *t;
-      }
-      delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE)) {
       act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
       --(*obj);
