@@ -2775,6 +2775,52 @@ int bloodspike(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return TRUE;
 }
 
+// spinoff of Peel's Bloodspike
+int splinteredClub(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam;
+  TObj *obj;
+  wearSlotT slot;
+  char buf[256];
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 3)))
+     return FALSE;
+
+  slot=pickRandomLimb();
+
+  if (!vict->slotChance(wearSlotT(slot)) || 
+      vict->getStuckIn(wearSlotT(slot)) ||
+      notBleedSlot(slot))
+    return FALSE;
+
+  obj = read_object(31349, VIRTUAL);
+  dam = ::number(3,12);
+
+  sprintf(buf, "<o>A splinter from <1>$p<o> breaks off and embeds in <1>$n<o>'s <1>%s<o>.<1>", vict->describeBodySlot(slot).c_str());
+  act(buf, 0, vict, o, 0, TO_ROOM);
+  sprintf(buf, "<o>A splinter from <1>$p<o> breaks off and embeds in your <1>%s<o>.<1>", vict->describeBodySlot(slot).c_str());
+  act(buf, 0, vict, o, 0, TO_CHAR);
+
+  vict->stickIn(obj, wearSlotT(slot));
+
+  if(!vict->isImmune(IMMUNE_BLEED, 50)){
+    vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    vict->rawSyphilis(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+
+    sprintf(buf, "<R>Blood<1> <o>drips out of the wound created by the splinter.<1>");
+    act(buf, 0, vict, o, 0, TO_ROOM);
+    sprintf(buf, "<R>Blood<1> <o>drips out of the wound created by a large splinter.<1>");
+    act(buf, 0, vict, o, 0, TO_CHAR);
+  }    
+
+  rc = ch->reconcileDamage(vict, dam, TYPE_STAB);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+}
+
 
 
 int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
@@ -5280,5 +5326,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Shaman's Totem Mask", totemMask},
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
+  {FALSE, "Splintered Club", splinteredClub}, // 90 
   {FALSE, "last proc", bogusObjProc}
 };

@@ -1370,6 +1370,41 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   return TRUE;
 }
 
+int TBeing::rawSyphilis(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
+{
+  affectedData aff;
+  char buf[256];
+
+  if (immcheck) {
+    if (isImmune(IMMUNE_DISEASE,
+        duration == PERMANENT_DURATION ? 100 : (duration - 100)/6))
+      return FALSE;
+  }
+
+  aff.type = AFFECT_DISEASE;
+  aff.level = pos;
+  aff.duration = duration;
+  aff.modifier = DISEASE_SYPHILIS;
+  aff.location = APPLY_NONE;
+  aff.bitvector = 0;
+
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
+  aff.duration /= 100;
+
+  affectTo(&aff);
+  disease_start(this, &aff);
+
+  if (!silent) {
+    sendTo("Your %s has become totally infected with syphilis!\n\r", describeBodySlot(pos).c_str());
+    sprintf(buf, "$n's %s has become totally infected with syphilis!", describeBodySlot(pos).c_str());
+    act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+  }
+
+  return TRUE;
+}
+
 void TBeing::spellMessUp(spellNumT spell)
 {
   int num;

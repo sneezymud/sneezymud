@@ -647,7 +647,7 @@ int TBeing::updateBodyParts()
       if (IS_SET(flags, PART_MISSING)) {
         // remove extraneous
         setLimbFlags(i, PART_MISSING);
-      } else if (IS_SET(flags, (unsigned short int) (PART_BLEEDING | PART_LEPROSED | PART_INFECTED | PART_PARALYZED | PART_USELESS))) {
+      } else if (IS_SET(flags, (unsigned short int) (PART_BLEEDING | PART_LEPROSED | PART_INFECTED | PART_SYPHILIS | PART_PARALYZED | PART_USELESS))) {
         // change these bits to broken;
         setLimbFlags(i, PART_BROKEN);
       }
@@ -717,7 +717,7 @@ int TBeing::updateBodyParts()
           return DELETE_THIS;
       }
     }
-    if (IS_SET(flags, (unsigned short int) (PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)))
+    if (IS_SET(flags, (unsigned short int) (PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_SYPHILIS | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)))
       continue;
 
     if (getCurLimbHealth(i) < getMaxLimbHealth(i) &&

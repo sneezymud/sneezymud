@@ -1106,6 +1106,8 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
       continue;
     if (!victim->isLimbFlags(slot, PART_INFECTED)) 
       continue;
+    if (!victim->isLimbFlags(slot, PART_SYPHILIS)) 
+      continue;
     break;
   }
 
@@ -1127,7 +1129,8 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
     /* find a suitable slot to disinfect */
     for (slot = pickRandomLimb();
        (!victim->slotChance(slot) ||
-        !victim->isLimbFlags(slot, PART_INFECTED));
+        !victim->isLimbFlags(slot, PART_INFECTED) ||
+        !victim->isLimbFlags(slot, PART_SYPHILIS));
        slot = pickRandomLimb());
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
@@ -1136,6 +1139,14 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
     act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
     sprintf(buf, "The infection in $n's %s has been killed!", limb);
     act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+
+    sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
+    victim->remLimbFlags(slot, PART_SYPHILIS);
+    sprintf(buf, "The syphilis in your %s has been killed!", limb);
+    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+    sprintf(buf, "The syphilis in $n's %s has been killed!", limb);
+    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+
     caster->reconcileHelp(victim,discArray[spell]->alignMod);
     checkFactionHelp(caster,victim);
     return SPELL_SUCCESS;

@@ -225,6 +225,16 @@ int TBaseCup::drinkMe(TBeing *ch)
       disease_start(ch, &aff2);
     }
   }
+  if (getDrinkType() == LIQ_BLOOD) {
+    int numchance = ::number(0,5);
+    if (numchance > 4) {
+      act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
+      ch->rawSyphilis(WEAR_NECK, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+    } else {
+      // do nothing
+    }
+  }
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
 

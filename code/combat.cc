@@ -881,7 +881,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       return DELETE_VICT;
 
     // if bleeding or infected, take extra dam
-    if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED)) {
+    if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED | PART_SYPHILIS)) {
       rc = v->hurtLimb(*dam, part_hit);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
@@ -892,6 +892,10 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       if (!::number(0, 8)) {
         // Infection rocks! - Russ 
         v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
+      }
+      if (!::number(0, 8)) {
+        // Infection rocks! - Russ 
+        v->rawSyphilis(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
       }
     } else if (::number(0, 400) < (sharp / 2) && 
                (weapon || !v->isLucky(levelLuckModifier(5))) &&

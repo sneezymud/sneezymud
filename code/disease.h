@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disease.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//      "disease.h" - interface to disease.c
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +10,6 @@
 /**************************************************************************
 
       SneezyMUD - All rights reserved, SneezyMUD Coding Team
-      "disease.h" - interface to disease.c
 
  A note on diseases in SneezyMUD ...  Diseases are simply periodically
  activated affects.  I.e., every so often, if a mob/player is affected by
@@ -43,31 +36,33 @@
    long bitvector;     <-- this should be 0
 */
 
-const sbyte DISEASE_NULL      =0; /* a do-nothing disease which logs warning */
-const sbyte DISEASE_COLD      =1;
-const sbyte DISEASE_FLU       =2;
-const sbyte DISEASE_FROSTBITE =3;
-const sbyte DISEASE_BLEEDING  =4;
-const sbyte DISEASE_INFECTION =5;
-const sbyte DISEASE_HERPES    =6;
-const sbyte DISEASE_BROKEN_BONE =7;
-const sbyte DISEASE_NUMB      =8;
-const sbyte DISEASE_VOICEBOX  =9;
-const sbyte DISEASE_EYEBALL   =10;
-const sbyte DISEASE_LUNG      =11;
-const sbyte DISEASE_STOMACH   =12;
-const sbyte DISEASE_HEMORRAGE =13;
-const sbyte DISEASE_LEPROSY   =14;
-const sbyte DISEASE_PLAGUE    =15;
-const sbyte DISEASE_SUFFOCATE =16;
-const sbyte DISEASE_FOODPOISON= 17;
-const sbyte DISEASE_DROWNING  =18;
-const sbyte DISEASE_GARROTTE  =19;
-const sbyte DISEASE_POISON    =20;
+enum diseaseTypeT {
+     DISEASE_NULL,
+     DISEASE_COLD,
+     DISEASE_FLU,
+     DISEASE_FROSTBITE,
+     DISEASE_BLEEDING,
+     DISEASE_INFECTION,
+     DISEASE_HERPES,
+     DISEASE_BROKEN_BONE,
+     DISEASE_NUMB,
+     DISEASE_VOICEBOX,
+     DISEASE_EYEBALL,
+     DISEASE_LUNG,
+     DISEASE_STOMACH,
+     DISEASE_HEMORRAGE,
+     DISEASE_LEPROSY,
+     DISEASE_PLAGUE,
+     DISEASE_SUFFOCATE,
+     DISEASE_FOODPOISON,
+     DISEASE_DROWNING,
+     DISEASE_GARROTTE,
+     DISEASE_POISON,
+     DISEASE_SYPHILIS,
+     MAX_DISEASE
+};
 
-const int MAX_DISEASE       =21;    /* highest disease # that is valid */
-
-sbyte DISEASE_INDEX(sbyte d);
+diseaseTypeT affToDisease(affectedData &);
 
                     /* DISEASE SPEC_PROC MESSAGES */
 

@@ -469,6 +469,60 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
   return FALSE;
 }
 
+int disease_syphilis(TBeing *victim, int message, affectedData * af)
+{
+  char buf[256];
+  wearSlotT slot = wearSlotT(af->level);
+  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR, "bad slot");
+
+  if (victim->isPc() && !victim->desc)
+    return FALSE;
+
+  switch (message) {
+    case DISEASE_BEGUN:
+      victim->addToLimbFlags(slot, PART_SYPHILIS);
+      break;
+    case DISEASE_PULSE:
+      // check to see if somehow the infected bit got taken off (via spell)
+      if (!victim->isLimbFlags(slot, PART_SYPHILIS)) {
+	af->duration = 0;
+	break;
+      }
+
+      if (!number(0, 10)) {
+	victim->sendTo("Your %s stings as the syphilis develops.\n\r", victim->describeBodySlot(slot).c_str());
+	sprintf(buf, "$n cringes in pain as syphilis spreads through $s %s.", victim->describeBodySlot(slot).c_str());
+	act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+        int rc = victim->hurtLimb(1, slot);
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+
+        int dam;
+        dam = (VITAL_PART(slot) ? 3 : 1);
+        if (victim->reconcileDamage(victim, dam, SPELL_INFECT) == -1)
+          return DELETE_THIS;
+
+        if (dynamic_cast<TMonster *>(victim) && !victim->isPc())
+          (dynamic_cast<TMonster *>(victim))->UA((dam * 4));
+      }
+      victim->bodySpread(500, af);
+      break;
+    case DISEASE_DONE:
+      victim->remLimbFlags(slot, PART_SYPHILIS);
+
+      if (victim->getPosition() > POSITION_DEAD) {
+        victim->sendTo("The syphilis in your %s subsides!\n\r", victim->describeBodySlot(slot).c_str());
+        sprintf(buf, "The syphilis in $n's %s subsides and enters dormancy!", victim->describeBodySlot(slot).c_str());
+        act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+      }
+
+      break;
+    default:
+      break;
+  }
+  return FALSE;
+}
+
 int disease_hemorraging(TBeing *victim, int message, affectedData *)
 {
   int dam;
@@ -932,7 +986,7 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
       choice2 = pickRandomLimb();
     } while (badSpreadSlot(this, choice2));
 
-  } else if (isLimbFlags(part, PART_INFECTED | PART_LEPROSED)) {
+  } else if (isLimbFlags(part, PART_INFECTED | PART_LEPROSED | PART_SYPHILIS)) {
     switch (part) {
       case WEAR_FINGER_R:
         choice1 = WEAR_HAND_R;
@@ -1046,6 +1100,27 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
       char tmpb[64];
       sprintf(tmpb, describeBodySlot(slot).c_str());
       sprintf(buf, "The infection in your %s has spread to your %s!\n\r",
+          describeBodySlot(part).c_str(), tmpb);
+    }
+    sendTo(buf);
+    disease_start(this, &vaf);
+  } else if (af->modifier == DISEASE_SYPHILIS) {
+    if (!isLimbFlags(choice1, PART_SYPHILIS) && slotChance(choice1))
+      vaf.level = choice1;
+    else if (!isLimbFlags(choice2, PART_SYPHILIS) && slotChance(choice2))
+      vaf.level = choice2;
+    else
+      return;   // already infected, do nothing
+    affectTo(&vaf);
+    wearSlotT slot = wearSlotT(vaf.level);
+    if (!part)
+      sprintf(buf, "Syphilis has set into your %s.\n\r",
+          describeBodySlot(slot).c_str());
+    else {
+      // describeBody uses static buffer
+      char tmpb[64];
+      sprintf(tmpb, describeBodySlot(slot).c_str());
+      sprintf(buf, "The syphilis in your %s has spread to your %s!\n\r",
           describeBodySlot(part).c_str(), tmpb);
     }
     sendTo(buf);
@@ -1177,6 +1252,8 @@ int disease_plague(TBeing *victim, int message, affectedData * af)
       victim->bodySpread(500,&vaf);
       vaf.modifier = DISEASE_LEPROSY;
       victim->bodySpread(500,&vaf);
+      vaf.modifier = DISEASE_SYPHILIS;
+      victim->bodySpread(500,&vaf);
 
       break;
     case DISEASE_BEGUN:
@@ -1219,5 +1296,6 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] =
   {disease_drowning,"drowning",10000},
   {disease_garrotte,"a breathing problem",100000},
   {disease_poison,"poison",450},
+  {disease_syphilis,"syphilis",8500},
 };
 

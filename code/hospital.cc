@@ -93,6 +93,9 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
   else if (IS_SET(wound, PART_INFECTED))
     price *= 5;
 
+  else if (IS_SET(wound, PART_SYPHILIS))
+    price *= 12;
+
   else if (IS_SET(wound, PART_LEPROSED))
     price *= 14;
 

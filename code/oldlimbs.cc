@@ -200,7 +200,7 @@ bool has_healthy_body(TBeing *ch)
   wearSlotT i;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (ch->isLimbFlags(i, PART_BLEEDING | PART_INFECTED))
+    if (ch->isLimbFlags(i, PART_BLEEDING | PART_INFECTED | PART_SYPHILIS))
       return FALSE;
   }
   return TRUE;
@@ -412,7 +412,7 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
         continue;
       if (!slotChance(slot))
         continue;
-      if (isLimbFlags(slot, PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)) { 
+      if (isLimbFlags(slot, PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_SYPHILIS | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)) { 
         switch (limb) {
           case WEAR_ARM_R:
           case WEAR_ARM_L:

@@ -104,7 +104,7 @@ void recvTextHandler(const char *str)
     och = d->original ? d->original : d->character;
     if (!och)
       continue;
-    if (och->hasWizPower(POWER_WIZNET)) {
+    if (och->hasWizPower(POWER_WIZNET) && och->desc) {
       och->sendTo(buf);
     } else {
     }
