@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: faction.cc,v $
+// Revision 1.2  1999/10/07 19:27:25  batopr
+// Leader's name show first 20 chars now
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -790,13 +793,13 @@ void TBeing::doFactions(const char *arg)
             FactionInfo[which].faction_array[i][OFF_HURT]);
   }
   if (which != FACT_NONE) {
-    sprintf(buf + strlen(buf), "%-50.50s:     %-10.10s\n\r",
+    sprintf(buf + strlen(buf), "%-50.50s:     %-20.20s\n\r",
           factionLeaderTitle(which, 0).c_str(), FactionInfo[which].leader[0]);
-    sprintf(buf + strlen(buf), "%-50.50s:        %-10.10s\n\r",
+    sprintf(buf + strlen(buf), "%-50.50s:        %-20.20s\n\r",
           factionLeaderTitle(which, 1).c_str(), FactionInfo[which].leader[1]);
-    sprintf(buf + strlen(buf), "%-50.50s:        %-10.10s\n\r",
+    sprintf(buf + strlen(buf), "%-50.50s:        %-20.20s\n\r",
           factionLeaderTitle(which, 2).c_str(), FactionInfo[which].leader[2]);
-    sprintf(buf + strlen(buf), "%-50.50s:        %-10.10s\n\r",
+    sprintf(buf + strlen(buf), "%-50.50s:        %-20.20s\n\r",
           factionLeaderTitle(which, 3).c_str(), FactionInfo[which].leader[3]);
 
     if (which == FACT_BROTHERHOOD)
