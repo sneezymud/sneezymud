@@ -2776,6 +2776,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_RAIN_BRIMSTONE:
       rainBrimstone(caster,victim,obj, spell);
       break;
+    case SPELL_HEROES_FEAST:
+      heroesFeast(caster);
+      break;
     case SPELL_ANTIGRAVITY:
       antigravity(caster);
       break;
