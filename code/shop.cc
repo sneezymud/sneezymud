@@ -540,7 +540,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (count == 1) 
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
   else {
-    buf = fmt("$n buys %d %ss.") % count % fname(name);
+    buf = fmt("$n buys %s [%d].") % fname(name) % count;
     act(buf, FALSE, ch, this, 0, TO_ROOM);
   }
   ch->doSave(SILENT_YES);
