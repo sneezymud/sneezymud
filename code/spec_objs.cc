@@ -4962,6 +4962,64 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   return TRUE;
 }
 
+
+int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc, found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->stuff; o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_PERMA_DEATH &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+
+  if((rc=dbquery(&res, "sneezy", "permaDeathMonument", "select name, level, died from permadeath order by level desc limit 10"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in permaDeathMonument");
+    else {
+      ch->sendTo("The plaque is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+
+  ch->sendTo("You examine the plaque:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("- This monument commemorates the bravest of heroes         -\n\r");
+  ch->sendTo("- slain on the battlefield, permanently dead for all time. -\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  int i=1;
+  while((row=mysql_fetch_row(res))){
+    if(atoi(row[2])==1){
+      ch->sendTo("%i) %s perished bravely at level %s\n\r", i, row[0], row[1]);
+    } else {
+      ch->sendTo("%i) %s lives on at level %s\n\r", i, row[0], row[1]);
+    }
+    ++i;
+  }
+
+
+  mysql_free_result(res);
+
+  return TRUE;
+}
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -5063,6 +5121,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Amulet of Aeth Koralm", AKAmulet}, // 85
   {FALSE, "fire glove", fireGlove},
   {FALSE, "Shaman's Totem Mask", totemMask},
+  {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "last proc", bogusObjProc}
 };
 

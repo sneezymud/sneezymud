@@ -780,6 +780,20 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
   }
 }
 
+
+void logPermaDeathLevel(TBeing *ch){
+  MYSQL_RES *res;
+  int rc;
+  
+  if((rc=dbquery(&res, "sneezy", "permadeath", "replace into permadeath values ('%s', %i, 0)", ch->name, ch->GetMaxLevel()))){
+    if(rc==-1){
+      vlogf(LOG_BUG, "Database error in logPermaDeathLevel");
+    }
+  }
+  mysql_free_result(res);
+}
+
+
 void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 {
   char buf[160];
@@ -857,6 +871,11 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
     fixClientPlayerLists(FALSE);
     setTitle(false);
     setSelectToggles((TBeing *) gm, Class, SILENT_NO);
+    
+    if(hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+      logPermaDeathLevel(this);
+    }
+
 
     // keep track of how long it took
     // note, we use "50" instead of a macro due to how the array is declared

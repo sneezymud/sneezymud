@@ -350,6 +350,16 @@ int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller)
   return TBeing::rawKill(dmg_type, tKiller);
 }
 
+
+void logPermaDeathDied(TBeing *ch)
+{
+  MYSQL_RES *res;
+  
+  dbquery(&res, "sneezy", "permadeath", "update permadeath set died=1 where name='%s'", ch->name);
+
+  mysql_free_result(res);
+}
+
 // always returns DELETE_THIS
 int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller)
 {
@@ -411,6 +421,8 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller)
     removeRent();
 
     removeFollowers();
+
+    logPermaDeathDied(this);
   }
 
   // anything calling, should delete this

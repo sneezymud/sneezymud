@@ -22,6 +22,7 @@
 
 const int SPEC_FOUNTAIN     =     1;     // spec number for a fountain
 const int SPEC_BOARD        =     2 ;    // spec number for a bulletin board
+const int SPEC_PERMA_DEATH  =    88;
 
 const int NUM_OBJ_SPECIALS = 100;
 
