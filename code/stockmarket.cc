@@ -5,7 +5,9 @@ void updateStockHistory()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into stockhistory select max(sh.n), si.ticker, si.price from stockinfo si, stockhistory sh group by si.ticker, si.price");
+  db.query("insert into stockhistory select max(sh.n)+1, si.ticker, si.price from stockinfo si, stockhistory sh group by si.ticker, si.price");
+
+  db.query("insert into stockhistory select max(sh.n), 'INDX', sum(si.price*si.shares)/sum(si.shares) from stockinfo si, stockhistory sh where sh.ticker=si.ticker");
 }
 
 
