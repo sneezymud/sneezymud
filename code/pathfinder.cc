@@ -122,7 +122,9 @@ bool findClutterBrightmoon::isTarget(int room) const
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    if (!okForJanitor((TMonster *) myself, obj))
+    if(obj->objVnum()==OBJ_BM_TRASHCAN && obj->getStuff())
+      return true;
+    if(!okForJanitor((TMonster *) myself, obj))
       continue;
     return true;
   }

@@ -1770,6 +1770,31 @@ static int findSomeClutterAmber(TMonster *myself)
 }
 
 
+static int findSomeClutterBrightmoon(TMonster *myself)
+{
+  dirTypeT dir;
+  int rc;
+  TPathFinder path;
+
+  dir=path.findPath(myself->inRoom(), findClutterBrightmoon(myself));
+
+  if (dir >= MIN_DIR) {
+    rc = myself->goDirection(dir);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    return TRUE;
+  }
+  // no clutter found
+  rc = myself->wanderAround();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
+    return TRUE;
+
+  return FALSE;
+}
+
+
 int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   TThing *t, *t2;
@@ -1975,6 +2000,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
   int rc;
   char buf[256];  
   int DUMP=1385;
+  bool trashcan=false;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -1992,10 +2018,18 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
     if (myself->inRoom() == DUMP)
       break;
 
-    if (!okForJanitor(myself, obj))
+    if(obj->objVnum()==OBJ_BM_TRASHCAN && obj->getStuff())
+      trashcan=true;
+
+    if (!trashcan && !okForJanitor(myself, obj))
       continue;
 
-    if (dynamic_cast<TPool *>(obj)){
+    if(trashcan){
+      sprintf(buf, "$n empties out $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      myself->doGet("all trashcan");
+      trashcan=false;
+    } else if (dynamic_cast<TPool *>(obj)){
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
@@ -2018,7 +2052,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
     }
     return TRUE;
   } else {
-    rc = findSomeClutterAmber(myself);
+    rc = findSomeClutterBrightmoon(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }

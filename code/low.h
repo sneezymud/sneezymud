@@ -157,6 +157,7 @@ const int GENERIC_SMOKE       = 10560;
 const int OBJ_INERT_STICK     = 10561;
 const int OBJ_MONK_QUEST_DOG_COLLAR = 12468;
 const int OBJ_FLAMING_PORTAL  = 16157;
+const int OBJ_BM_TRASHCAN      =18583;
 const int OBJ_RIVER_SERP_VENOM= 20409;
 const int OBJ_STONE_LEG_CLUB  = 20425;
 const int OBJ_ICE_SHARD_LARGE = 20437;
