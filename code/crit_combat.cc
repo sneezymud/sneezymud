@@ -503,8 +503,19 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   crit_chance /= 100;
 
   // factor in relative levels
-  crit_chance *= (50 + GetMaxLevel() - v->GetMaxLevel());
-  
+  int diff = GetMaxLevel() - v->GetMaxLevel();
+  if (diff == 0) {
+    crit_chance *= 50;
+  } else {
+    double absdiff = abs(diff);
+    double level_mod = 50.0 + ((double)diff * log(absdiff/20.0+1) / absdiff) * 75.0;
+    if (level_mod <= 0) {
+      crit_chance = 1;
+    } else {
+      crit_chance = (int)((double)crit_chance * level_mod);
+    }
+  }
+
   if(mod == -1){
     // check the roll versus the chance
     if(dicenum > crit_chance)
