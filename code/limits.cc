@@ -976,9 +976,9 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	if(gain_pracs > 0){
 	  ch->addPracs(gain_pracs, Class);
 	  if(gain_pracs == 1){
-	    ch->sendTo(COLOR_BASIC, "<g>You have gained a practice!<1>\n\r");
+	    ch->sendTo(COLOR_BASIC, "<W>You have gained a practice!<1>\n\r");
 	  } else {
-	    ch->sendTo(COLOR_BASIC, "<g>You have gained %i practices!<1>\n\r",
+	    ch->sendTo(COLOR_BASIC, "<W>You have gained %i practices!<1>\n\r",
 		       gain_pracs);
 	  }
 	}
