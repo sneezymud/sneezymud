@@ -336,8 +336,6 @@ int TBeing::doPSay(const char *arg){
     else 
       drunkNum=getCond(DRUNK);
 
-    drunkNum=20;
-    
     mud_str_copy(garbed, garble(arg, drunkNum), 256);
 
     sendTo(COLOR_COMM, "<g>You think to the room, <z>\"%s%s\"\n\r", 
