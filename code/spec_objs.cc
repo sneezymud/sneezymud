@@ -2769,7 +2769,11 @@ int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
 
   act("$p <r>begins glowing deep red!<1>", 0, vict, o, 0, TO_ROOM);
 
-    
+  if(!::number(0,3)){
+    o->setMaxStructPoints(o->getMaxStructPoints()-1);
+    o->setStructPoints(o->getStructPoints()-1);
+  }    
+
   rc = ch->critSuccessChance(vict, weap, &part, wtype, &dam, crits[::number(0,20)]);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_VICT;

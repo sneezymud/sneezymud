@@ -74,6 +74,38 @@ int eqHpBonus(const TPerson *ch)
   return total;
 }
 
+int baseHp()
+{
+  return 21;
+}
+
+float classHpPerLevel(const TPerson *tp){
+ float hpgain=0;
+
+  if (tp->hasClass(CLASS_MONK))
+    hpgain = 5.5; 
+  else if (tp->hasClass(CLASS_RANGER))
+    hpgain = 7.0;
+  else if (tp->hasClass(CLASS_DEIKHAN))
+    hpgain = 7.5;
+  else if (tp->hasClass(CLASS_MAGIC_USER) || tp->hasClass(CLASS_SHAMAN))
+    hpgain = 7.5;
+  else if (tp->hasClass(CLASS_CLERIC) || tp->hasClass(CLASS_THIEF))
+    hpgain = 8;
+  else if (tp->hasClass(CLASS_WARRIOR))
+    hpgain = 8.5;
+  else {
+    vlogf(LOG_BUG, "No class in classHpPerLevel() for %s", tp->getName());
+    hpgain=7.0;
+  }
+
+  return hpgain;
+}
+
+int ageHpMod(const TPerson *tp){
+  return graf((tp->age()->year - tp->getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
+}
+
 
 short int TPerson::hitLimit() const
 {
@@ -82,36 +114,18 @@ short int TPerson::hitLimit() const
   if(isImmortal())
     return points.maxHit;
 
-  float hpgain=0;
 
-  if (hasClass(CLASS_MONK))
-    hpgain = 5.5;
-  
-  if (hasClass(CLASS_RANGER))
-    hpgain = 7.0;
+  float defense_amt=((35.0/100.0) * (float) getSkillValue(SKILL_DEFENSE)) +
+             ((15.0/100.0) * (float) getSkillValue(SKILL_ADVANCED_DEFENSE));
 
-  if (hasClass(CLASS_DEIKHAN))
-    hpgain = 7.5;
-  
-  if (hasClass(CLASS_MAGIC_USER) || hasClass(CLASS_SHAMAN))
-    hpgain = 7.5;
-  
-  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_THIEF))
-    hpgain = 8;
-  
-  if (hasClass(CLASS_WARRIOR))
-    hpgain = 8.5;
-
-  float defense_amt=((35.0/100.0) * (float) getSkillValue(SKILL_DEFENSE));
-  float adefense_amt=((15.0/100.0) * (float) getSkillValue(SKILL_ADVANCED_DEFENSE));
-  float newmax = 21; // level 1 base hp
-  newmax += ((hpgain * defense_amt) * (float) getConHpModifier());
-  newmax += ((hpgain * adefense_amt) * (float) getConHpModifier());
-
+  float newmax=0;
+  newmax += baseHp() + ageHpMod(this);
+  newmax += (classHpPerLevel(this) * defense_amt);
+  newmax *= getConHpModifier();
   newmax += eqHpBonus(this);
 
-  return (int) newmax + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
-;
+  return (short int) newmax;
+
 #else
   return points.maxHit + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
 #endif

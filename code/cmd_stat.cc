@@ -9,6 +9,12 @@
 #include "stdsneezy.h"
 #include "disease.h"
 
+extern int eqHpBonus(const TPerson *);
+extern int baseHp();
+extern float classHpPerLevel(const TPerson *);
+extern int ageHpMod(const TPerson *);
+
+
 void TBeing::statZone(const char *zoneNumber)
 {
   int zNum,
@@ -631,6 +637,12 @@ void TBeing::statBeing(TBeing *k)
   sprintf(buf + strlen(buf), "%sMxMana:%s [%3d]  %sMaxHit :%s %-10s  %sMaxMove :%s %-10s\n\r",
       cyan(), norm(), k->manaLimit(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
+  sprintf(buf2, "[%d]", ageHpMod(dynamic_cast<TPerson *>(k)));
+  sprintf(buf3, "[%f]", k->getConHpModifier());
+  sprintf(buf + strlen(buf), "%sEqHp  :%s [%3d]  %sAgeHp  :%s %-10s  %sConHpMod:%s %-10s\n\r",
+	  cyan(), norm(), eqHpBonus(dynamic_cast<TPerson *>(k)),
+	  cyan(), norm(), buf2, cyan(), norm(), buf3);
+
   sprintf(buf2, "[%d]", k->visibility());
   sprintf(buf3, "[%5.1f lbs]", k->getWeight());
   sprintf(buf + strlen(buf), "%sHeight:%s [%3d]  %sWeight :%s %-11s %sVisibility :%s %-10s\n\r",
