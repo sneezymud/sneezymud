@@ -537,8 +537,8 @@ Descriptor::~Descriptor()
     snoop.snoop_by->desc->snoop.snooping = 0;
   }
   if (character) {
-    //if (original)
-    //  character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    if (original)
+      character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
 
     if ((connected >= CON_REDITING) || !connected) {
       if ((connected == CON_OEDITING) && obj) {
