@@ -47,7 +47,7 @@ void TBeing::doTrophy(const char *arg)
   MYSQL_ROW row=NULL;
   MYSQL_RES *res;
   int rc, mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
-  int zonesearch=0, processedrow=1;
+  int zonesearch=0, processrow=1;
   float count;
   char buf[256];
   string sb;
@@ -71,23 +71,27 @@ void TBeing::doTrophy(const char *arg)
     zoneData &zd = zone_table[zone];
     
     while(1){
-      if(processedrow)
+      if(processrow)
 	row=mysql_fetch_row(res);
 
       if(!row)
 	break;
 
-      processedrow=0;
       vlogf(LOG_PEEL, "mob=%i, top=%i", atoi(row[0]), zd.top);
 
       // sometimes we get an entry of 0 for med mobs I think
       vnum=atoi(row[0]);
-      if(vnum==0)
+      if(vnum==0){
 	continue;
+      }
 
       // this mob doesn't belong to this zone, so break out to the zone loop
-      if(vnum>zd.top)
+      if(vnum>zd.top){
+	processrow=0; // don't get the next row yet
 	break;
+      } else {
+	processrow=1;
+      }
 
       int rnum = real_mobile(atoi(row[0]));
       if (rnum < 0) {
@@ -120,7 +124,7 @@ void TBeing::doTrophy(const char *arg)
       ++zcount;
       sb += buf;
 
-      processedrow=1;
+      processrow=1; // ok to get the next row
       
 #if 0
     sprintf(buf, "%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r", 
