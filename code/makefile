@@ -4091,7 +4091,7 @@ objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
-objs/db.o: obj_egg.h obj_cannon.h
+objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adv_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_adv_adventuring.o: /usr/include/machine/ansi.h
@@ -8085,7 +8085,7 @@ objs/inventory.o: obj_spellbag.h obj_expandable_container.h
 objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
 objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
-objs/inventory.o: obj_arrow.h obj_base_weapon.h
+objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
 objs/limbs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/limbs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/limbs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -9489,7 +9489,8 @@ objs/obj_base_corpse.o: charfile.h being.h person.h monster.h account.h
 objs/obj_base_corpse.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_base_corpse.o: materials.h colorstring.h format.h obj_base_corpse.h
 objs/obj_base_corpse.o: obj_base_container.h obj_player_corpse.h
-objs/obj_base_corpse.o: obj_base_clothing.h
+objs/obj_base_corpse.o: obj_base_clothing.h obj_tooth_necklace.h
+objs/obj_base_corpse.o: obj_expandable_container.h obj_open_container.h
 objs/obj_base_cup.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_base_cup.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_base_cup.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -12132,6 +12133,67 @@ objs/obj_tool.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_tool.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/obj_tool.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_tool.o: colorstring.h format.h obj_tool.h
+objs/obj_tooth_necklace.o: stdsneezy.h /usr/include/g++/cstdio
+objs/obj_tooth_necklace.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/obj_tooth_necklace.o: /usr/include/machine/ansi.h
+objs/obj_tooth_necklace.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/obj_tooth_necklace.o: /usr/include/g++/ctime /usr/include/time.h
+objs/obj_tooth_necklace.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/obj_tooth_necklace.o: /usr/include/sys/inttypes.h
+objs/obj_tooth_necklace.o: /usr/include/machine/types.h
+objs/obj_tooth_necklace.o: /usr/include/machine/endian.h
+objs/obj_tooth_necklace.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/obj_tooth_necklace.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/obj_tooth_necklace.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/obj_tooth_necklace.o: /usr/include/string.h /usr/include/stdarg.h
+objs/obj_tooth_necklace.o: /usr/include/g++/cmath
+objs/obj_tooth_necklace.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_tooth_necklace.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_tooth_necklace.o: /usr/include/errno.h /usr/include/g++/string
+objs/obj_tooth_necklace.o: /usr/include/g++/std/bastring.h
+objs/obj_tooth_necklace.o: /usr/include/g++/cstddef
+objs/obj_tooth_necklace.o: /usr/include/g++/std/straits.h
+objs/obj_tooth_necklace.o: /usr/include/g++/alloc.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_config.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_alloc.h
+objs/obj_tooth_necklace.o: /usr/include/g++/iostream.h
+objs/obj_tooth_necklace.o: /usr/include/g++/streambuf.h
+objs/obj_tooth_necklace.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_relops.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_iterator.h
+objs/obj_tooth_necklace.o: /usr/include/g++/std/bastring.cc
+objs/obj_tooth_necklace.o: /usr/include/g++/vector
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_algobase.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_pair.h
+objs/obj_tooth_necklace.o: /usr/include/g++/type_traits.h
+objs/obj_tooth_necklace.o: /usr/include/limits.h
+objs/obj_tooth_necklace.o: /usr/include/machine/limits.h
+objs/obj_tooth_necklace.o: /usr/include/sys/syslimits.h
+objs/obj_tooth_necklace.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/obj_tooth_necklace.o: /usr/include/g++/exception
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_construct.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_uninitialized.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_vector.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_bvector.h
+objs/obj_tooth_necklace.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_function.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_map.h
+objs/obj_tooth_necklace.o: /usr/include/g++/stl_multimap.h
+objs/obj_tooth_necklace.o: /usr/include/g++/list /usr/include/g++/stl_list.h
+objs/obj_tooth_necklace.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_tooth_necklace.o: /usr/include/g++/fstream
+objs/obj_tooth_necklace.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_tooth_necklace.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_tooth_necklace.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_tooth_necklace.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_tooth_necklace.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_tooth_necklace.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_tooth_necklace.o: create.h thing.h room.h obj.h spec_objs.h
+objs/obj_tooth_necklace.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_tooth_necklace.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_tooth_necklace.o: spec_mobs.h materials.h colorstring.h format.h
+objs/obj_tooth_necklace.o: obj_tooth_necklace.h obj_expandable_container.h
+objs/obj_tooth_necklace.o: obj_open_container.h obj_base_container.h
 objs/obj_trap.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_trap.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_trap.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -17246,7 +17308,8 @@ objs/structs.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/structs.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/structs.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
 objs/structs.o: obj_table.h obj_seethru.h cmd_trophy.h obj_open_container.h
-objs/structs.o: obj_component.h
+objs/structs.o: obj_component.h obj_tooth_necklace.h
+objs/structs.o: obj_expandable_container.h
 objs/sys_loot.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sys_loot.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sys_loot.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
