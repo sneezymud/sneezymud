@@ -365,11 +365,12 @@ const int TOG_DRAGON_ARMOR_THREAD_ELEMENT      = 260;
 const int TOG_DRAGON_ARMOR_TALENS              = 261;
 const int TOG_DRAGON_ARMOR_WARHAMMER           = 262;
 const int TOG_DRAGON_ARMOR_GAVE_SCALES         = 263;
-
 const int TOG_BITTEN_BY_VAMPIRE                = 264;
 const int TOG_VAMPIRE                          = 265;
+const int TOG_LYCANTHROPE                      = 266;
+const int TOG_TRANSFORMED_LYCANTHROPE          = 267;
 
-const int MAX_TOG_INDEX       = 266;  // move and change
+const int MAX_TOG_INDEX       = 268;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

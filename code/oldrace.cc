@@ -321,6 +321,9 @@ bool TBeing::isGiantish() const
 
 bool TBeing::isLycanthrope() const
 {
+  if(hasQuestBit(TOG_LYCANTHROPE))
+    return TRUE;
+
   return getMyRace()->isLycanthrope() ? TRUE : FALSE;
 }
 

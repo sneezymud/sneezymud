@@ -2658,6 +2658,11 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
   char argument[80];
   TRoom *rp = NULL;
 
+  if(hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
+    sendTo("You can't do that of your own free will!\n\r");
+    return;
+  }
+
   strcpy(argument, buffer);
 
   if (!limb && argument) {

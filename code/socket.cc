@@ -330,6 +330,92 @@ void updateAvgPlayers()
   }
 }
 
+// uh this shouldn't be in here but I'm lazy today
+int lycanthropeTransform(TBeing *ch)
+{
+  TMonster *mob;
+
+  if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
+      ch->polyed != POLY_TYPE_NONE){
+    act("You are already transformed into another shape.",
+	TRUE, ch, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (!(mob = read_mobile(23204, VIRTUAL))) {
+    return FALSE;
+  }
+  thing_to_room(mob,ROOM_VOID);
+  mob->swapToStrung();
+
+  act("The presence of the full moon forces you into transformation!",
+      TRUE, ch, NULL, mob, TO_CHAR);
+  act("The presence of the full moon forces $n to transform into $N!",
+      TRUE, ch, NULL, mob, TO_ROOM);
+
+
+  DisguiseStuff(ch, mob);
+  
+  --(*mob);
+  *ch->roomp += *mob;
+  --(*ch);
+  thing_to_room(ch, ROOM_POLY_STORAGE);
+  
+  // stop following whoever you are following.
+  if (ch->master)
+    ch->stopFollower(TRUE);
+  
+  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+    if (ch->hasQuestBit(tmpnum))
+      mob->setQuestBit(tmpnum);
+  }
+
+  mob->setQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+  mob->specials.affectedBy = ch->specials.affectedBy;
+  
+  
+  // switch ch into mobile 
+  ch->desc->character = mob;
+  ch->desc->original = dynamic_cast<TPerson *>(ch);
+
+  mob->desc = ch->desc;
+  ch->desc = NULL;
+  ch->polyed = POLY_TYPE_DISGUISE;
+
+  SET_BIT(mob->specials.act, ACT_DISGUISED);
+  SET_BIT(mob->specials.act, ACT_POLYSELF);
+  SET_BIT(mob->specials.act, ACT_NICE_THIEF);
+  SET_BIT(mob->specials.act, ACT_SENTINEL);
+  SET_BIT(mob->specials.act, ACT_AGGRESSIVE);
+  REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
+  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
+  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
+
+  sstring tStNewNameList(mob->name);
+  
+  tStNewNameList += " [";
+  tStNewNameList += ch->getNameNOC(ch);
+  tStNewNameList += "]";
+  
+  delete [] mob->name;
+  mob->name = mud_str_dup(tStNewNameList);
+  
+  mob->setSex(ch->getSex());
+  mob->setHeight(ch->getHeight());
+  mob->setWeight(ch->getWeight());
+
+  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
+    mob->setStat(STAT_CURRENT, tStat, ch->getStat(STAT_CURRENT, tStat));
+  }
+
+  mob->doAction("", CMD_HOWL);
+  mob->roomp->getZone()->sendTo("You hear a chilling wolf howl in the distance.\n\r", mob->roomp->number);
+
+
+  return TRUE;
+}
+
+
 int TSocket::gameLoop()
 {
   fd_set input_set, output_set, exc_set;
@@ -592,7 +678,6 @@ int TSocket::gameLoop()
       save_factions();
       save_newfactions();
       weatherAndTime(1);
-      //      updateStocks();
     }
     lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
@@ -1023,6 +1108,26 @@ int TSocket::gameLoop()
 	    }
 	  }
 	}
+
+	// lycanthrope transformation
+	if(!quickpulse){
+	  if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
+	     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
+	     !strcmp(moonType(),"full")){
+	    lycanthropeTransform(tmp_ch);
+	  } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
+	    if(strcmp(moonType(),"full")){
+	      tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+	      tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+	    } else if(!tmp_ch->fight() && tmp_ch->roomp && 
+		      !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
+		      !::number(0,24)){
+	      tmp_ch->setCombatMode(ATTACK_BERSERK);
+	      tmp_ch->goBerserk(NULL);
+	    }
+	  }
+	}
+
 
         if (!quickpulse) {
           if (tmp_ch->spec) {

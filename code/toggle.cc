@@ -278,6 +278,8 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Dragon Armor: scales", 13732},
   {"Bitten by vampire", MOB_NONE},
   {"Vampire", MOB_NONE},
+  {"Lycanthrope", MOB_NONE},
+  {"Transformed Lycanthrope", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

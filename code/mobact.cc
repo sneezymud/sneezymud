@@ -3904,7 +3904,7 @@ int TMonster::aggroCheck(bool mobpulse)
   if (fight())
     return FALSE;
 
-  if (desc)
+  if (desc && !hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE))
     return FALSE;
 
   // OK check this out.  I want to make sentenial aggro mobs not aggro
