@@ -217,6 +217,10 @@ void TBeing::statRoom(TRoom *rmp)
     else
       sprintf(buf2,"   River speed : no current.\n\r");
     str += buf2;
+
+    sprintf(buf2, "Fish caught : %i\n\r", rmp->getFished());
+    str += buf2;
+
   }
   if ((rmp->getTeleTarg() > 0) && (rmp->getTeleTime() > 0)) {
     sprintf(buf2,"Teleport speed : Every %d heartbeats. To room : %d. Look? %s.\n\r",

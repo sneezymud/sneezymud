@@ -451,6 +451,7 @@ TRoom::TRoom(int r) :
   roomHeight(-1),
   roomFlags(0),
   descPos(-1),
+  fished(0),
   tBornInsideMe(NULL)
 {
   funct = NULL;
