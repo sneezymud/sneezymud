@@ -746,9 +746,6 @@ int TBeing::doPoisonWeapon(const char * argument)
     }
   }
 
-  vlogf(LOG_PEEL, "weapon=%s, poison=%s", obj->getName(), poison->getName());
-
-
   if (fight()) {
     sendTo("You're a little too busy at the moment to try that.\n\r");
     return FALSE;
@@ -914,7 +911,7 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   addToToolUses(-1);
 
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
-  if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
+  if (0 && bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->oneSwing[j].type == SPELL_POISON) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
@@ -946,6 +943,14 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 	ch->affectTo(&aff[i], -1);
       }
     } else {
+      weapon->oneSwing[0].location = APPLY_NONE;
+      weapon->oneSwing[0].type=SPELL_POISON;
+      weapon->oneSwing[0].renew=-1;
+      weapon->oneSwing[0].level=level;
+      weapon->oneSwing[0].duration=0;  
+      weapon->oneSwing[0].bitvector=AFF_POISON;
+
+
       act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
       act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
     }
