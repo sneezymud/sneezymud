@@ -5695,7 +5695,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // trophy
-    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name", factnames[i]);
+    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name, fm.level", factnames[i]);
     score=0;
 
     while(db.fetchRow()){
@@ -5710,7 +5710,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // shops
-    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where soa.access & %i and fm.name = soa.name and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
+    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
     score=0;
     if(db.fetchRow()){
       score=atoi(db.getColumn(0))*10;

@@ -114,7 +114,7 @@ class TDatabaseConnection
       } else if(gamePort == BUILDER_GAMEPORT){
 	dbconnectstr="dbname=sneezybuilder";
       } else {
-	dbconnectstr="dbname=sneezy";
+	dbconnectstr="dbname=sneezybeta";
       }
       
       
