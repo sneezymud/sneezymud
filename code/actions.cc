@@ -614,25 +614,20 @@ void TBeing::doPee(const sstring &argument)
 {
   TThing *t;
   TObj *o;
-  TBeing *tmp_char;
-  sstring arg;
-  liqTypeT liquid=MAX_DRINK_TYPES;
+  sstring arg=argument;
+  liqTypeT liquid=LIQ_URINE;
   int amt=::number(1,10);
+  sstring whitespace=" \f\n\r\t\v";
 
   if (in_room < 0)
     return;
-
-  //  argument=one_argument(argument, arg);
-  arg=argument;
-
+  
   if (!hasWizPower(POWER_PEE)){
     amt=getCond(PEE);
     if(amt <= 0){
       sendTo("You don't have to go pee right now.\n\r");
       return;
     }
-
-    liquid=LIQ_URINE;
 
     if(getSex() == SEX_FEMALE && (equipment[WEAR_WAISTE] ||
        equipment[WEAR_LEGS_R] || equipment[WEAR_LEGS_L])){
@@ -644,22 +639,34 @@ void TBeing::doPee(const sstring &argument)
       if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
 	break;
     }
+    if(liquid==MAX_DRINK_TYPES)
+      liquid=LIQ_LEMONADE;
+    else
+      arg="";
   }
-  
-  if (!arg.empty() && liquid == MAX_DRINK_TYPES) {
-    liquid=LIQ_LEMONADE;
-    if(arg.substr(0,2) == "in" && isspace(arg[2])){
-      arg.erase(0,3); // remove "in "
 
-      if (!arg.empty() && generic_find(arg.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
-       	o->peeMe(this, liquid);	
-    } else if((t = searchLinkedListVis(this, arg,roomp->getStuff()))){
+
+  if(arg.substr(0,3) == "in "){
+    arg.erase(0,3);
+    
+    if(arg=="" || !(o=generic_find_obj(arg,FIND_OBJ_INV|FIND_OBJ_ROOM,this))){
+      sendTo("What do you want to pee into?\n\r");
+      return;
+    } else {
+      o->peeMe(this, liquid);
+    }
+  } else if(!arg.empty()){
+    if(!(t = searchLinkedListVis(this, arg,roomp->getStuff()))){
+      sendTo("What do you want to pee on?\n\r");
+      return;
+    } else {
       t->peeOnMe(this);
     }
   } else {
-    act("$n quietly relieves $mself.  You are not amused.", TRUE, this, NULL, NULL, TO_ROOM);
+    act("$n quietly relieves $mself.  You are not amused.",
+	TRUE, this, NULL, NULL, TO_ROOM);
     sendTo("You relieve yourself as stealthfully as possible.\n\r");
-    dropPool(amt, (liquid < 0 || liquid>=MAX_DRINK_TYPES) ? LIQ_LEMONADE : liquid);
+    dropPool(amt, liquid);
   }
 
   setCond(PEE, 0);
