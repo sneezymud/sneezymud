@@ -1946,7 +1946,7 @@ class TBeing : public TThing {
     int doTell(const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);
     int doAsk(const char *);
-    void doSign(const char *);
+    void doSign(const sstring &);
     void doGrouptell(const char *);
     void doWrite(const char *);
     void doExamine(const char *, TThing *specific = NULL);

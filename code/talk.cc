@@ -628,18 +628,14 @@ static const char *RandomWord()
 }
 
 
-void TBeing::doSign(const char *arg)
+void TBeing::doSign(const sstring &arg)
 {
-  int i;
-  char buf[MAX_INPUT_LENGTH + 40];
-  char buf2[MAX_INPUT_LENGTH];
-  char *p;
-  int diff;
+  sstring word, buf;
   TThing *t;
+  sstring whitespace=" \f\n\r\t\v";
+  
 
-  for (i = 0; *(arg + i) == ' '; i++);
-
-  if (!*(arg + i)) {
+  if (arg.empty()) {
     sendTo("Yes, but WHAT do you want to sign?\n\r");
     return;
   }
@@ -664,28 +660,32 @@ void TBeing::doSign(const char *arg)
     sendTo("You can't sign while fighting.\n\r");
     return;
   }
-  mud_str_copy(buf, arg + i, MAX_INPUT_LENGTH + 40);
-  buf2[0] = '\0';
+
   // work through the arg, word by word.  if you fail your
   //  skill roll, the word comes out garbled. */
-  p = strtok(buf, " ");       
 
-  diff = strlen(buf);
+  unsigned int pos=0;
 
-  bool goof = false;
-  while (p) {
-    if (bSuccess(this, getSkillValue(SKILL_SIGN) - strlen(p), SKILL_SIGN))
-      strcat(buf2, p);
-    else {
-      strcat(buf2, RandomWord());
-      goof = true;
-    }
+  while(pos!=sstring::npos){
+    word=arg.substr(pos, arg.find_first_of(whitespace,pos)-pos);
+    
+    if(bSuccess(this, getSkillValue(SKILL_SIGN) - buf.length(), SKILL_SIGN))
+      buf+=word;
+    else
+      buf+=RandomWord();
 
-    strcat(buf2, " ");
-    diff -= 1;
-    p = strtok(NULL, " ");       
+    // skip past the whitespace to the beginning of the next word
+    pos=arg.find_first_of(whitespace,pos);
+    if(pos!=sstring::npos)
+      buf+=arg.substr(pos, arg.find_first_not_of(whitespace,pos)-pos);
+    pos=arg.find_first_not_of(whitespace,pos);
   }
-  sprintf(buf, "$n signs, \"%s\"", buf2);
+
+  sendTo("You sign, \"%s\"\n\r", arg.c_str());
+  if (buf!=arg)
+    sendTo("You're not sure you got it completely right.\n\r");
+
+  ssprintf(buf, "$n signs, \"%s\"", buf.c_str());
 
   for (t = roomp->getStuff(); t; t = t->nextThing) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
@@ -703,9 +703,6 @@ void TBeing::doSign(const char *arg)
       }
     }
   }
-  sendTo("You sign, \"%s\"\n\r", arg + i);
-  if (goof)
-    sendTo("You're not sure you got it completely right.\n\r");
 }
 
 // uses printf style arguments
