@@ -514,6 +514,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_GILLS_OF_FLESH:
       case SPELL_AQUALUNG:
       case SPELL_TELEPATHY:
+      case SPELL_ROMBLER:
       case SPELL_FEAR:
       case SPELL_SLUMBER:
       case SPELL_ENTHRALL_SPECTRE:

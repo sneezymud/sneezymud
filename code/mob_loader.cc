@@ -389,6 +389,7 @@ void TMonster::mageComponentLoader(void)
         case COMP_DETECT_INVIS:
         case COMP_DISPEL_INVIS:
         case COMP_TELEPATHY:
+	case COMP_ROMBLER:
         case COMP_POLYMORPH:
         case COMP_GILLS_OF_FLESH:
         case COMP_BREATH_SARAHAGE:

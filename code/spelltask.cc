@@ -1192,6 +1192,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_DETECT_INVISIBLE:
     case SPELL_TRUE_SIGHT:
     case SPELL_TELEPATHY:
+    case SPELL_ROMBLER: // shaman
     case SPELL_FEAR:
     case SPELL_FUMBLE:
       return FALSE;
@@ -1948,6 +1949,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
      case SPELL_TELEPATHY:
         castTelepathy(this);
+        break;
+     case SPELL_ROMBLER:
+        castRombler(this);
         break;
      case SPELL_FEAR:
         castFear(this, victim);

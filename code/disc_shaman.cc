@@ -1268,3 +1268,73 @@ plea.", TRUE, caster, NULL, NULL, TO_CHAR);
   return TRUE;
 }
 
+int rombler(TBeing *caster, int, byte bKnown)
+{
+  Descriptor *i;
+  const char *msg = caster->spelltask->orig_arg;
+
+  for (; isspace(*msg); msg++);
+
+  if (caster->isPc() && 
+     ((caster->desc && 
+      IS_SET(caster->desc->autobits, AUTO_NOSHOUT)) || caster->isPlayerAction(PLR_GODNOSHOUT))) {
+    caster->sendTo("You aren't allowed to invoke the ritual drumming at this time!!\n\r");
+    return SPELL_FAIL;
+  }
+
+
+  if (bSuccess(caster, bKnown, SPELL_ROMBLER)) {
+    if (!*msg) {
+      caster->sendTo("Drumming without spirits to send is moot.\n\r");
+      caster->nothingHappens(SILENT_YES);
+    } else {
+      caster->sendTo(COLOR_SPELLS, "You romble to the world, \"%s<z>\"\n\r", msg);
+      for (i = descriptor_list; i; i = i->next) {
+        if (i->character && (i->character != caster) &&
+            !i->connected && !i->character->checkSoundproof() &&
+            (dynamic_cast<TMonster *>(i->character) ||
+              (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
+              !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
+	  if (i->character->hasClass(CLASS_SHAMAN)) {
+            i->character->sendToOutdoors(COLOR_SPELLS, "<B>%s<z> rombles, \"<Y>%s%s\<z>"\n\r", caster->getName(),  msg, 
+i->character->norm());
+          } else {
+            i->character->sendToOutdoors(COLOR_SPELLS, "<p>In the faint distance you hear savage drumming.<z>\n\r"); 
+          } 
+        }
+      }
+      caster->addToMove(-5);
+    }
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int rombler(TBeing *caster, const char * msg)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_ROMBLER, NULL))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_ROMBLER]->lag;
+     diff = discArray[SPELL_ROMBLER]->task;
+
+     start_cast(caster, NULL, NULL, caster->roomp, SPELL_ROMBLER, diff, 1, msg, rounds, caster->in_room, 0, 0,TRUE, 0);
+      return TRUE;
+}
+
+int castRombler(TBeing *caster)
+{
+int ret,level;
+
+  level = caster->getSkillLevel(SPELL_ROMBLER);
+  int bKnown = caster->getSkillValue(SPELL_ROMBLER);
+
+  if ((ret=rombler(caster,level,bKnown)) == SPELL_SUCCESS) {
+  }
+  return TRUE;
+}
+

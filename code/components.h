@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.14  2001/06/12 10:37:45  jesus
+// added rombler spell for shaman
+//
 // Revision 5.13  2001/06/11 05:51:42  jesus
 // cheval spell
 //
@@ -184,6 +187,7 @@ const int COMP_RESURRECTION       =31322;
 const int COMP_DANCING_BONES      =31323;
 const int COMP_HYPNOSIS           =31324;
 const int COMP_CHEVAL             =31325;
+const int COMP_ROMBLER            =31326;
 
 class compPlace
 {

@@ -988,6 +988,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_GILLS_OF_FLESH:
       case SPELL_AQUALUNG:
       case SPELL_TELEPATHY:
+      case SPELL_ROMBLER: // shaman
       case SPELL_FEAR:
       case SPELL_SLUMBER:
       case SPELL_CONJURE_EARTH:

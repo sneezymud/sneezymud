@@ -1342,6 +1342,14 @@ void buildComponentArray()
     "$n touches $p to $s forehead.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_ROMBLER,
+    "",                       
+    "",
+    "",
+    "You stretch out $p.",
+    "$n stretches out $p.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_TRUE_SIGHT,
     "You nibble on $p and spit it upon $N.",
     "$n nibbles on $p and spits it at $N.",

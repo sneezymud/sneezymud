@@ -14,6 +14,7 @@ public:
     CSkill skVoodoo;
     CSkill skCheval;
     CSkill skChrism;
+    CSkill skRombler;
     CSkill skVampiricTouch;
     CSkill skLifeLeech;
     CSkill skDancingBones;
@@ -26,6 +27,7 @@ public:
       skVoodoo(),
       skCheval(),
       skChrism(),
+      skRombler(),
       skVampiricTouch(),
       skLifeLeech(),
       skDancingBones() { 
@@ -39,6 +41,7 @@ public:
       skVoodoo(a.skVoodoo),
       skCheval(a.skCheval),
       skChrism(a.skChrism),
+      skRombler(a.skRombler),
       skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech),
       skDancingBones(a.skDancingBones) {
@@ -53,6 +56,7 @@ public:
       skVoodoo = a.skVoodoo;
       skCheval = a.skCheval;
       skChrism = a.skChrism;
+      skRombler = a.skRombler;
       skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
       skDancingBones = a.skDancingBones;
@@ -108,6 +112,11 @@ private:
     int castChrism(TBeing *, const char *);
     int chrism(TBeing *, const char *);
     int chrism(TBeing *, TObj **, int, const char *, byte);
+
+    int castRombler(TBeing *);
+    int rombler(TBeing *, const char *);
+    int rombler(TBeing *, const char *, int, byte);
+
  
 #endif
 

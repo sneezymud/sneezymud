@@ -435,7 +435,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DETECT_INVISIBLE:
     case SPELL_DISPEL_INVISIBLE:
     case SPELL_TELEPATHY:
-//    case SPELL_FREE_ACTION:
+    case SPELL_ROMBLER:
     case SPELL_TRUE_SIGHT:
     case SPELL_POLYMORPH:
     case SPELL_ACCELERATE:
