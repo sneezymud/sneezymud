@@ -124,6 +124,10 @@ sstring TOpal::statObjInfo() const
 
 void TOpal::describeObjectSpecifics(const TBeing *ch) const
 {
+  if(psGetStrength() < psGetCarats())
+    ch->sendTo(COLOR_OBJECTS, "Is is not at full strength.\n\r");
+  else
+    ch->sendTo(COLOR_OBJECTS, "Is is at full strength.\n\r");
 }
 
 TOpal *find_biggest_powerstone(TBeing *ch)
