@@ -860,10 +860,10 @@ int TSocket::gameLoop()
 	      dirTypeT dir;
 	      // check portals first
 	      
-	      dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, true);
+	      dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 5000, 0, NULL, true);
 	      
 	      if(dir == -1)
-		dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, false);
+		dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 5000, 0, NULL, false);
 
 	      if(dir >= MAX_DIR){
 		dir=dirTypeT(dir-MAX_DIR+1);
