@@ -520,7 +520,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	}
       }
       if (getLevel(Class)>=15 &&
-            !hasQuestBit(TOG_ELIGABLE_JUJU) &&
+            !hasQuestBit(TOG_ELIGIBLE_JUJU) &&
             !hasQuestBit(TOG_GET_THONG) &&
             !hasQuestBit(TOG_MARE_HIDE) &&
             !hasQuestBit(TOG_GET_SINEW) &&
@@ -532,10 +532,10 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("It will aid in your communications with the loa as well as store components.");
 	  gm->doSay("Say 'juju bag' if you want more information on this quest.");
 	}
-	setQuestBit(TOG_ELIGABLE_JUJU);
+	setQuestBit(TOG_ELIGIBLE_JUJU);
       }
       if (getLevel(Class)>=30 &&
-            !hasQuestBit(TOG_TOTEM_MASK_ELIGABLE) &&
+            !hasQuestBit(TOG_TOTEM_MASK_ELIGIBLE) &&
             !hasQuestBit(TOG_TOTEM_MASK_STARTED) &&
             !hasQuestBit(TOG_TOTEM_MASK_FIND_FORSAKEN) &&
             !hasQuestBit(TOG_TOTEM_MASK_FIND_WOODEN_PLANK) &&
@@ -565,7 +565,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("It is believed that Gandolfo lives in a small hut in Brazzed-Dum.");
 	  gm->doSay("I wish I knew more to help you.");
 	}
-	setQuestBit(TOG_TOTEM_MASK_ELIGABLE);
+	setQuestBit(TOG_TOTEM_MASK_ELIGIBLE);
       }
       break;
     case MAGE_LEVEL_IND:

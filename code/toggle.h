@@ -304,7 +304,7 @@ const int TOG_FINISHED_WARRIOR_L41 = 223; //b
 
 // Shaman level 15 juju bag quest
 
-const int TOG_ELIGABLE_JUJU = 224;
+const int TOG_ELIGIBLE_JUJU = 224;
 const int TOG_GET_THONG = 225;
 const int TOG_MARE_HIDE = 226;
 const int TOG_GET_SINEW = 227;
@@ -330,7 +330,7 @@ const int TOG_IMMORTAL_BLANK_10 = 96;
 const int TOG_HAS_PAID_FACT_FEE = 230;
 const int TOG_HAS_CREATED_FACTION = 231;
 
-const int TOG_TOTEM_MASK_ELIGABLE              = 232;
+const int TOG_TOTEM_MASK_ELIGIBLE              = 232;
 const int TOG_TOTEM_MASK_STARTED               = 233;
 const int TOG_TOTEM_MASK_FIND_FORSAKEN         = 234;
 const int TOG_TOTEM_MASK_FIND_WOODEN_PLANK     = 235;

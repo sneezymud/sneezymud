@@ -231,12 +231,12 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"", MOB_NONE},
   {"", MOB_NONE},
   {"", MOB_NONE},
-  {"Warrior L40 Quest: Eligable", MOB_NONE},                  
+  {"Warrior L40 Quest: Eligible", MOB_NONE},                  
   {"Warrior L40 Quest: Started", MOB_CHIEF_MALE_VILLAGER}, //220
   {"Warrior L40 Quest: Killing Chief", MOB_ELDERLY_SHAMAN},
   {"Warrior L40 Quest: Killing Shaman", MOB_ELDERLY_SHAMAN},
   {"Warrior L40 Quest: Finished Warrior", MOB_CHIEF_MALE_VILLAGER},
-  {"Shaman L15 Juju: Eligable", MOB_NONE},
+  {"Shaman L15 Juju: Eligible", MOB_NONE},
   {"Shaman L15 Juju: Get Thong", MOB_JUJU_BUNNY}, //225
   {"Shaman L15 Juju: Get Mare Hide", MOB_JUJU_MARE},
   {"Shaman L15 Juju: Get Sinew", MOB_NONE},
@@ -244,7 +244,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Shaman L15 Juju: Has Juju", MOB_NONE},
   {"Faction: Has paid registration fee", MOB_FACTION_REGISTRAR}, // 230
   {"Faction: Has created a faction", MOB_FACTION_REGISTRAR},
-  {"Shaman Totem Mask: Eligable", MOB_NONE},
+  {"Shaman Totem Mask: Eligible", MOB_NONE},
   {"Shaman Totem Mask: Started", MOB_GANDOLFO},
   {"Shaman Totem Mask: Find Forsaken", MOB_GANDOLFO},
   {"Shaman Totem Mask: Find wooden plank", MOB_FORSAKEN}, // 235
