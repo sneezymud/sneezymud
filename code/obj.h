@@ -98,6 +98,7 @@ enum itemTypeT {
     ITEM_COOKWARE,
     ITEM_VEHICLE,
     ITEM_CASINO_CHIP,
+    ITEM_POISON,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);

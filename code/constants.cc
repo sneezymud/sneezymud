@@ -593,6 +593,12 @@ void assign_item_info()
      "Number of units left", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
      "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+  ItemInfo[ITEM_POISON] = new itemInfo("Poison","a poison container",
+     "Max drink units ", 2560, 0,
+     "Number of units left", 2560, 0,
+     "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+  
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

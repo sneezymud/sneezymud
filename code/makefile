@@ -225,7 +225,7 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_gun.o		obj_window.o		\
 	obj_jewelry.o		obj_worn.o		\
 	obj_key.o		obj.o			\
-	obj_casino_chip.o
+	obj_casino_chip.o	obj_poison.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -4465,7 +4465,7 @@ objs/db.o: obj_pool.h obj_drinkcon.h obj_armor.h obj_base_clothing.h
 objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
-objs/db.o: obj_vehicle.h obj_casino_chip.h
+objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -12178,6 +12178,60 @@ objs/obj_player_corpse.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_player_corpse.o: spec_mobs.h materials.h colorstring.h
 objs/obj_player_corpse.o: obj_player_corpse.h obj_base_corpse.h
 objs/obj_player_corpse.o: obj_base_container.h
+objs/obj_poison.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/obj_poison.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_poison.o: /usr/include/gnu/stubs.h
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_poison.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_poison.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_poison.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_poison.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/obj_poison.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_poison.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_poison.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/obj_poison.o: /usr/include/ctype.h /usr/include/endian.h
+objs/obj_poison.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/obj_poison.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/obj_poison.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/obj_poison.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/obj_poison.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/obj_poison.o: /usr/include/g++-3/string
+objs/obj_poison.o: /usr/include/g++-3/std/bastring.h
+objs/obj_poison.o: /usr/include/g++-3/cstddef
+objs/obj_poison.o: /usr/include/g++-3/std/straits.h
+objs/obj_poison.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/obj_poison.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_poison.o: /usr/include/g++-3/iostream.h
+objs/obj_poison.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/obj_poison.o: /usr/include/g++-3/stl_relops.h
+objs/obj_poison.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_poison.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_poison.o: /usr/include/g++-3/vector
+objs/obj_poison.o: /usr/include/g++-3/stl_algobase.h
+objs/obj_poison.o: /usr/include/g++-3/stl_pair.h
+objs/obj_poison.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_poison.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_poison.o: /usr/include/g++-3/stl_construct.h
+objs/obj_poison.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_poison.o: /usr/include/g++-3/stl_vector.h
+objs/obj_poison.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/obj_poison.o: /usr/include/g++-3/stl_tree.h
+objs/obj_poison.o: /usr/include/g++-3/stl_function.h
+objs/obj_poison.o: /usr/include/g++-3/stl_map.h
+objs/obj_poison.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/obj_poison.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/obj_poison.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/obj_poison.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/obj_poison.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_poison.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/obj_poison.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/obj_poison.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_poison.o: materials.h colorstring.h obj_base_container.h
+objs/obj_poison.o: obj_poison.h obj_base_cup.h shop.h
 objs/obj_pool.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_pool.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_pool.o: /usr/include/gnu/stubs.h

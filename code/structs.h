@@ -163,11 +163,12 @@ class drinkInfo {
   int hunger;
   int thirst;
   bool potion;
+  bool poison;
   const char * color;
   const char * name;
   int price;
 
-  drinkInfo(int, int, int, bool, const char *, const char *, int);
+  drinkInfo(int, int, int, bool, bool, const char *, const char *, int);
   drinkInfo & operator=(const drinkInfo &a);
   ~drinkInfo();
 
