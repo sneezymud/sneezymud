@@ -1800,7 +1800,7 @@ void TBeing::doGroup(const char *argument)
     if (!isAffected(AFF_GROUP))
       sendTo("But you are a member of no group?!\n\r");
     else {
-      if(master){
+      if(master && master->desc){
 	sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
 	       master->desc->session.groupName.c_str());
       } else {
