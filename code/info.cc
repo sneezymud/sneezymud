@@ -5095,16 +5095,16 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 
   if (hasColorStrings(this, tmp.c_str(), 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).convertToCRLF().c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).toCRLF().c_str(), norm());
     } else {
       sendTo(COLOR_ROOMS, "%s%s\n\r", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
     }
   } else {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), tmp.convertToCRLF().c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), tmp.toCRLF().c_str(), norm());
       // sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, true).c_str(), norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp.convertToCRLF().c_str(), true).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp.toCRLF().c_str(), true).c_str(), norm());
     }
   }
 }

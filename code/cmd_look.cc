@@ -365,7 +365,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               if (tmpObj->ex_description) {
                 if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
                   sstring tmp_desc_str = tmp_desc;
-                  desc->page_string(tmp_desc_str.convertToCRLF());
+                  desc->page_string(tmp_desc_str.toCRLF());
                   found = TRUE;
                   describeObject(tmpObj);
                   if (tmpObj->riding)
@@ -442,13 +442,13 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                       continue;
                     if (o2 == t) {
                       // look at XX where XX is the item's name and extradesc
-                      desc->page_string(tmp_desc_str.convertToCRLF());
+                      desc->page_string(tmp_desc_str.toCRLF());
                       found = TRUE;
                       describeObject(t);
                       o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
                     } else {
                       // look at XX where XX is some random desc on the obj
-                      desc->page_string(tmp_desc_str.convertToCRLF());
+                      desc->page_string(tmp_desc_str.toCRLF());
                       found = TRUE;
                       return;
                     }
@@ -490,13 +490,13 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                         continue;
                       if (o2 == t) {
                         // look at XX where XX is the item's name and extradesc
-                        desc->page_string(tmp_desc_str.convertToCRLF());
+                        desc->page_string(tmp_desc_str.toCRLF());
                         found = TRUE;
                         describeObject(t);
                         o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
                       } else {
                         // look at XX where XX is some random desc on the obj
-                        desc->page_string(tmp_desc_str.convertToCRLF());
+                        desc->page_string(tmp_desc_str.toCRLF());
                         found = TRUE;
                         return;
                       }
@@ -529,7 +529,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                       continue;
                     if (o2 == (TObj *) t) {
                       if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-                        desc->page_string(tmp_desc_str.convertToCRLF());
+                        desc->page_string(tmp_desc_str.toCRLF());
                       } else {
                         desc->page_string(autoFormatDesc(tmp_desc_str, false));
                       }
@@ -539,7 +539,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                     } else {
                       // look at XX where XX is some random desc on the obj
                       if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-                        desc->page_string(tmp_desc_str.convertToCRLF());
+                        desc->page_string(tmp_desc_str.toCRLF());
                       } else {
                         desc->page_string(autoFormatDesc(tmp_desc_str, false));
                       }
@@ -596,7 +596,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   sstring tmp_desc_str = tmp_desc;
 
                   if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-                    desc->page_string(tmp_desc_str.convertToCRLF());
+                    desc->page_string(tmp_desc_str.toCRLF());
                   } else {
                     desc->page_string(autoFormatDesc(tmp_desc_str, false));
                   }

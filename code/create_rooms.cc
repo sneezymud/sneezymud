@@ -1764,7 +1764,7 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   sstring descr_str;
 
   descr_str = rp->getDescr();
-  descr_str = descr_str.convertToCRLF();
+  descr_str = descr_str.toCRLF();
 
   if (type != ENTER_CHECK) {
     ch->specials.edit = MAIN_MENU;

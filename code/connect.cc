@@ -850,7 +850,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
+          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -886,7 +886,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
+          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -921,7 +921,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
+          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE WIZNEWS to see more.\n\r");

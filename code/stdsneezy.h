@@ -33,8 +33,7 @@
 #include <iostream>
 #include <sstream>
 
-class sstring;
-
+#include "sstring.h"
 #include "low.h"
 #include "enum.h"
 #include "spells.h"
