@@ -168,9 +168,7 @@ void TBeing::doNameChange(const char *argument)
   wipePlayerFile(orig_name);
   wipeRentFile(orig_name);
 
-  // copy trophy over
   TDatabase db(DB_SNEEZY);
-  db.query("update trophy set name='%s' where name='%s'", tmp_name, orig_name);
 
   db.query("update player set name='%s' where name='%s'", 
 	   tmp_name, orig_name);

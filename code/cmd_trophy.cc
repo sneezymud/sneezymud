@@ -46,22 +46,22 @@ void TTrophy::setName(sstring n){
 void TTrophy::addToCount(int vnum, double add){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
-  db->query("select * from trophy where name='%s' and mobvnum=%i",
-	    getMyName().c_str(), vnum);
+  db->query("select * from trophy where player_id=%i and mobvnum=%i",
+	    parent->getPlayerID(), vnum);
   if(!db->fetchRow()){
-    db->query("insert into trophy values ('%s', %i, %f)",
-	      getMyName().c_str(), vnum, add);
+    db->query("insert into trophy values (%i, %i, %f)",
+	      parent->getPlayerID(), vnum, add);
   } else {
-    db->query("update trophy set count=count+%f where name='%s' and mobvnum=%i",
-	      add, getMyName().c_str(), vnum);
+    db->query("update trophy set count=count+%f where player_id=%i and mobvnum=%i",
+	      add, parent->getPlayerID(), vnum);
   }
 }
 
 
 float TTrophy::getCount(int vnum)
 {
-  db->query("select count from trophy where name='%s' and mobvnum=%i",
-	   getMyName().c_str(), vnum);
+  db->query("select count from trophy where player_id=%i and mobvnum=%i",
+	   parent->getPlayerID(), vnum);
   if(db->fetchRow())
     return convertTo<float>((*db)["count"]);
   else 
@@ -139,7 +139,7 @@ void TBeing::doTrophy(const sstring &arg)
   }
 
   TDatabase db(DB_SNEEZY);
-  db.query("select mobvnum, count from trophy where name='%s' order by mobvnum", per->getName());
+  db.query("select mobvnum, count from trophy where player_id=%i order by mobvnum", per->getPlayerID());
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     zoneData &zd = zone_table[zone];
@@ -263,5 +263,5 @@ void TBeing::doTrophy(const sstring &arg)
 
 
 void TTrophy::wipe(){
-  db->query("delete from trophy where upper(name)=upper('%s')", getMyName().c_str());
+  db->query("delete from trophy where player_id=%i", parent->getPlayerID());
 }

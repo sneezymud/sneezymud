@@ -647,6 +647,7 @@ class TBeing : public TThing {
     virtual const char * getLongDesc() const;
     virtual int chiMe(TBeing *);
     virtual const char *getName() const;
+    virtual int getPlayerID() const;
     virtual void remCastingList(TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
     virtual int mobVnum() const { return 0; }

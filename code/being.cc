@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "being.h"
+#include "database.h"
 
 extern bool affectShouldApply(const TObj *obj, wearSlotT pos);
 
@@ -636,6 +637,43 @@ TAccount::~TAccount()
 const char * TBeing::getName() const
 {
   return (shortDescr ? shortDescr : "");
+}
+
+// this returns the ID in the database, or creates a new one if needed
+int TBeing::getPlayerID() const
+{
+  TDatabase db(DB_SNEEZY);
+  sstring myname;
+
+  if(!isPc())
+    return 0;
+
+  if (specials.act & ACT_POLYSELF) {
+    myname=desc->original->getName();
+  } else { 
+    myname=getName();
+  }
+
+  db.query("select id from player where name='%s'", myname.c_str());
+
+  if(db.fetchRow()){
+    return convertTo<int>(db["id"]);
+  } else {
+    vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
+
+    db.query("insert into player (name) values ('%s')", myname.c_str());
+    db.query("select id from player where name='%s'", myname.c_str());
+    
+    if(db.fetchRow()){
+      return convertTo<int>(db["id"]);
+    } else {
+      vlogf(LOG_BUG,fmt("Couldn't create an entry in player table for '%s'!") %
+	    myname);
+      return 0;
+    }
+  }
+  
+  return 0;
 }
 
 void TBeing::showMultTo(const TThing *t, showModeT i, unsigned int n)
