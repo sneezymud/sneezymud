@@ -1921,7 +1921,7 @@ int Descriptor::nanny(const char *arg)
 	    // writeToQ("Shaman are not yet a playable class, sorry.\n\r");
             // writeToQ("--> ");
             // connected = CON_QCLASS;
-	    vlogf(LOG_JESUS, "UNAUTHERIZED SHAMAN CREATION: %s ", character->getName());
+	    vlogf(LOG_JESUS, "Shaman created in the %s account, please check.", account->name);
             break;
 #ifdef SNEEZY2000
 #else

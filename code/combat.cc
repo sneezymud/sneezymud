@@ -243,6 +243,8 @@ void TBeing::updatePos()
     sendTo("You have just died and are being regenerated at the location of your corpse.\n\r");
     sendTo("This is a temporary fix to an annoying problem and will change.\n\r");
     setPosition(POSITION_DEAD);
+    stopFighting();
+    die(DAMAGE_NORMAL);
     rawKill(DAMAGE_NORMAL);
     return;
   }
