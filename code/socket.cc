@@ -340,6 +340,7 @@ int TSocket::gameLoop()
   int rc = 0;
   time_t lagtime_t = time(0);
   TVehicle *vehicle;
+  int vehiclepulse = 0;
 
 #ifndef SOLARIS
   int mask;
@@ -604,6 +605,8 @@ int TSocket::gameLoop()
       // bottom line is that next_thing keeps getting set because it might be
       // bogus after the function call.
 
+      ++vehiclepulse;
+
       for (obj = object_list; obj; obj = next_thing) {
 	next_thing = obj->next;
 
@@ -621,7 +624,7 @@ int TSocket::gameLoop()
 
 	// vehicle movement
 	if((vehicle=dynamic_cast<TVehicle *>(obj)))
-	  vehicle->vehiclePulse(pulse);
+	  vehicle->vehiclePulse(vehiclepulse);
 	
 
         if (!combat) {
