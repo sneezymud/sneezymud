@@ -125,6 +125,7 @@ vector<TRoom *>roomspec_db(0);
 struct cached_object { int number; sstring s[17]; };
 vector<cached_object *>obj_cache(0);
 
+bool bootTime=false;
 
 struct time_info_data time_info;        // the infomation about the time   
 struct weather_data weather_info;        // the infomation about the weather 
@@ -189,6 +190,7 @@ void bootPulse(const char *str, bool end_str)
 
 void bootDb(void)
 {
+  bootTime=true;
   bootPulse("Boot db -- BEGIN.");
 
   bootPulse("Resetting the game time.");
@@ -352,6 +354,7 @@ void bootDb(void)
   r_q.head = r_q.tail = 0;
 
   bootPulse("Boot -- DONE.");
+  bootTime=false;
 }
 
 
@@ -1211,19 +1214,15 @@ TMonster *read_mobile(int nr, readFileTypeT type)
 
 int cache_object(int nr)
 {
-  int top;
-
-  top = obj_cache.size();
-  
-  while(--top>=0){
-    if(obj_cache[top]->number == nr)
-      return top;
+  for(int i=obj_cache.size()-1;i>=0;--i){
+    if(obj_cache[i]->number == nr)
+      return i;
   }
 
   return -1;
 }
 
-TObj *read_object(int nr, readFileTypeT type, bool cache=false)
+TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
   int i, rc, tmpcost;
@@ -1238,8 +1237,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
     return NULL;
   }
 
-
-  if(cache && cache_object(nr)!=-1){
+  if(bootTime && cache_object(nr)!=-1){
     obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s[0])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
@@ -1332,7 +1330,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
   obj->checkObjStats();
 
-  if(cache && cache_object(nr)==-1){
+  if(bootTime && cache_object(nr)==-1){
     //    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
     cached_object *c=new cached_object;
     
@@ -1987,7 +1985,7 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             if (obj != NULL) {
               *rp += *obj;
               obj->onObjLoad();
@@ -2020,7 +2018,7 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             if (obj != NULL) {
               *rp += *obj;
               obj->onObjLoad();
@@ -2037,7 +2035,7 @@ void zoneData::resetZone(bool bootTime)
           break;
         case 'P':                
           if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) {
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             obj_to = get_obj_num(rs.arg3);
             if (obj_to && obj && dynamic_cast<TBaseContainer *>(obj_to)) {
               *obj_to += *obj;
@@ -2099,7 +2097,7 @@ void zoneData::resetZone(bool bootTime)
         case 'G':        
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist &&
-              (obj = read_object(rs.arg1, REAL, bootTime))) {
+              (obj = read_object(rs.arg1, REAL))) {
             *mob += *obj;
             obj->onObjLoad();
             mob->logItem(obj, CMD_LOAD);
@@ -2176,7 +2174,7 @@ void zoneData::resetZone(bool bootTime)
         case 'E':                
           if ((obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) &&
               (::number(0,99) < (int) (100 * stats.equip)) &&  
-              (obj = read_object(rs.arg1, REAL, bootTime))) {
+              (obj = read_object(rs.arg1, REAL))) {
             if (!mob) {
               vlogf(LOG_LOW, "no mob for 'E' command.  Obj (%s)", obj->getName());
               delete obj;
