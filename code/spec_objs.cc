@@ -5780,6 +5780,97 @@ int fragileArrow(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+int starfire(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam = 1;
+
+  if (!o || !vict)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+  if (::number(0,10))
+    return FALSE;
+  if (cmd != CMD_OBJ_HIT)
+    return FALSE;
+
+  int hitterLev = ch->GetMaxLevel();
+  dam = (::number((hitterLev / 10 + 1),(hitterLev / 3 + 4)));
+  act("<c>The sapphires on your $o begins to radiate a soft blue light as you strike $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("<c>The sapphires on $n's $o begins to radiate a soft blue light as $e strikes $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("<c>The sapphires on $n's $o begins to radiate a soft blue light as $e strikes you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+
+  if (dam >= ( ( ((hitterLev/3+4)-(hitterLev/10+1))*4 )/5 + (hitterLev/10+1))) {
+    act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+ 
+    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>You scream in pain as the heated metal burns you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+
+
+  } else {
+    act("<W>$p<W> emits a dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$p<W> emits a dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>$p<W> emits a dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+
+    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>You scream in pain as the heated metal burns you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+
+  }
+  
+  rc = ch->reconcileDamage(vict, dam, TYPE_SMITE);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+}
+
+
+int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  TObj *sword = NULL;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256];
+    one_argument(arg, buf);
+    if(!strcmp(buf, "kaeshite")) {
+      if (!(sword = get_obj("starfire-blade-sword-two-handed-quest", EXACT_NO))) {
+	act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+	act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+	act("<c>$n's $o glows pale blue for a moment, but nothing seems to happen.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+        act("<c>Your $o glows pale blue for a moment, but nothing seems to happen.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+	return TRUE;
+      } else {
+	act("<c>The sapphires on $n's hilt suddenly emit a bright burst of light!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
+	act("<W>$n dissapears in a blinding flash!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
+	--(*sword);
+	*o += *sword;
+	act("<W>$N<W> suddenly materializes in $n's $o with a faint metallic sound.<1>",TRUE,ch,o,sword,TO_ROOM,NULL);
+        act("<W>$N<W> suddenly materializes in your $o with a faint metallic sound.<1>",TRUE,ch,o,sword,TO_CHAR,NULL);
+	return TRUE;
+    }
+    return FALSE;
+  }
+
+  if (!::number(0,9) && cmd == CMD_GENERIC_PULSE && o->getStructPoints() < o->getMaxStructPoints()) {
+    if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
+      return FALSE;
+
+    act("<c>$n<c>'s $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    act("<c>Your $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+    o->addToStructPoints(::number(1,min(5, o->getMaxStructPoints() - o->getStructPoints())));
+    return FALSE;
+  }
+  return FALSE;
+}
+
 
 
 //MARKER: END OF SPEC PROCS
@@ -5894,6 +5985,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "faction score board", factionScoreBoard},
   {FALSE, "fragile arrow", fragileArrow},
+  {FALSE, "Weapon: Starfire", starfire},
+  {FALSE, "Sheath: Starfire", starfiresheath}, // 100
   {FALSE, "last proc", bogusObjProc}
 };
 
