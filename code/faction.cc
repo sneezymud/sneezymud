@@ -1879,11 +1879,6 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
 {
   Descriptor *d, *d_next;
   TBeing *tmpch;
-  char buf[2048];
-
-  //  sprintf(buf, "%s Faction Announcement from %s:\n\r%s\n\r",
-  sprintf(buf, "<g>%s <c>%s<1>: %s\n\r",
-    FactionInfo[fnum].faction_name, who, arg);
 
   for (d = descriptor_list; d; d = d_next) {
     d_next = d->next;
@@ -1896,7 +1891,8 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
       continue;
 
-    d->character->sendTo(COLOR_SHOUTS, buf);
+    d->character->sendTo(COLOR_SHOUTS, "<g>%s <c>%s<1>: %s\n\r",
+			 FactionInfo[fnum].faction_name, who, arg);
   }
 }
 
