@@ -198,6 +198,9 @@ void TPerson::doEdit(const char *arg)
   doorTypeT doortype;
   sectorTypeT sectype;
   sstring tStr, whitespace, punctuation, newDescr, word, line, a2;
+  sstring colors;
+  size_t wbgin = 0;
+  unsigned int cwordend, num_color_tags = 0;
   long r_flags;
   sstring tStString("");
   char sstring[512],
@@ -1232,9 +1235,28 @@ void TPerson::doEdit(const char *arg)
       //    middle of a word.
       
 
+      /* Fix to handle color codes
+      sstring stripColorCodes(sstring s)
+      {
+        sstring buf;
+
+        for(unsigned int i=0;i<s.length();++i){
+          if(s[i] == '<'){
+            i+=2;
+            continue;
+          }
+
+          buf += s[i];
+        }
+
+        return buf;
+      }
+      */
       whitespace = " \n\r";
 
       punctuation = ".!?;:"; 
+      colors = "<";
+
       size_t bgin, look_at;
 
       line = " "; // intial extra spaces
@@ -1261,11 +1283,18 @@ void TPerson::doEdit(const char *arg)
 	  tStr = "";
 	}
 
+	wbgin = word.find_first_of(colors);
+        cwordend = word.npos;
+        while (wbgin != cwordend) {
+          num_color_tags++;
+          wbgin = word.find_first_of(colors, wbgin+1);
+        }
 
-	if ((line.length() + 1) + (word.length() + 1) >= 80) {// word is too long, end line and start on next
+	if ((line.length() + 1) + (word.length() + 1) >= (80 + (3 * num_color_tags))) {// word is too long, end line and start on next
 	  line += "\n\r";
 	  newDescr += line;
 	  line = word;
+          num_color_tags = 0;
 	} else { // word fits ok on line
 	  if (word.find_first_of(punctuation) != sstring::npos) { // word has punctuation
 	    word += " "; // so add extra spaces to the end.
