@@ -27,10 +27,137 @@ static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char
   }
 }
 
+void loadRepairItems(TMonster *tmons)
+{
+  int tool = 0;
+  int tool2 = 0;
+  int tool3 = 0;
+  int tool4 = 0;
+
+
+  if(tmons->GetMaxLevel() > 40) {
+    if(tmons->hasClass(CLASS_MAGIC_USER)) {
+      tool = 576;
+      tool2 = 580;
+      tool3 = 582;
+      tool4 = 584;
+    }
+    if(tmons->hasClass(CLASS_CLERIC)) {
+      tool = 2347;
+      tool2 = 2349;
+    }
+    if(tmons->hasClass(CLASS_THIEF)) {
+      tool = 587;
+      tool2 = 589;
+    }
+    if(tmons->hasClass(CLASS_WARRIOR)) {
+      tool = 150;
+      tool2 = 560;
+      tool3 = 157;
+      tool4 = 156;
+    }
+    if(tmons->hasClass(CLASS_RANGER)) {
+      tool = 568;
+      tool2 = 570;
+      tool3 = 574;
+    }
+    if(tmons->hasClass(CLASS_MONK)) {
+      tool = 591;
+      tool2 = 593;
+    }
+    if(tmons->hasClass(CLASS_SHAMAN)) {
+      tool = 564;
+      tool2 = 566;
+    }
+    if(tmons->hasClass(CLASS_DEIKHAN)) {
+      tool = 2347;
+      tool2 = 2349;
+    } 
+  } else if(tmons->GetMaxLevel() > 15) {
+    if(tmons->hasClass(CLASS_MAGIC_USER)) {
+      tool = 575;
+      tool2 = 579;
+      tool3 = 581;
+      tool4 = 582;
+    }
+    if(tmons->hasClass(CLASS_CLERIC)) {
+      tool = 2346;
+      tool2 = 2348;
+    }
+    if(tmons->hasClass(CLASS_THIEF)) {
+      tool = 586;
+      tool2 = 588;
+    }
+    if(tmons->hasClass(CLASS_WARRIOR)) {
+      tool = 150;
+      tool2 = 559;
+      tool3 = 153;
+      tool4 = 155;
+    }
+    if(tmons->hasClass(CLASS_RANGER)) {
+      tool = 567;
+      tool2 = 569;
+      tool3 = 573;
+    }
+    if(tmons->hasClass(CLASS_MONK)) {
+      tool = 590;
+      tool2 = 592;
+    }
+    if(tmons->hasClass(CLASS_SHAMAN)) {
+      tool = 563;
+      tool2 = 565;
+    }
+    if(tmons->hasClass(CLASS_DEIKHAN)) {
+      tool = 2346;
+      tool2 = 2348;      
+    }
+  }
+
+  TObj *obj=NULL;
+  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL)))
+    *tmons += *obj;
+  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL)))
+    *tmons += *obj;
+  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL)))
+    *tmons += *obj;
+  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL)))
+    *tmons += *obj;
+}
+
+void TMonster::thiefLootLoader()
+{
+  int vnum=0;
+  vector<int>poisons;
+  TObj *obj;
+
+  if(::number(0,3))
+    return;
+
+  // make a list of the available poisons
+  for(int i=31008;i<=31020;++i)
+    poisons.push_back(i);
+  poisons.push_back(914);
+
+  // pick one
+  vnum=poisons[::number(0, poisons.size()-1)];
+  
+  // load it
+  if (!(obj = read_object(vnum,VIRTUAL))){
+    vlogf(LOG_BUG, "couldn't load object %i", vnum);
+    return;
+  }
+    
+  // buy it, if we can afford it
+  if(getMoney() > obj->obj_flags.cost){
+    setMoney(getMoney()-obj->obj_flags.cost);
+    *this += *obj;
+    logItem(obj, CMD_LOAD);
+  }
+}
+
 void TMonster::createWealth(void)
 {
   TOpenContainer *bag;
-  TObj *obj;
 
   if (isPc())
     return;
@@ -45,6 +172,8 @@ void TMonster::createWealth(void)
   }
 
   // class based loading
+  if (hasClass(CLASS_THIEF))
+    thiefLootLoader();
   if (hasClass(CLASS_SHAMAN))
     shamanComponentLoader();
   if (hasClass(CLASS_MAGIC_USER))
@@ -62,98 +191,6 @@ void TMonster::createWealth(void)
       clericHolyWaterLoader();
     }
   }
-
-  int tool = 0;
-  int tool2 = 0;
-  int tool3 = 0;
-  int tool4 = 0;
-
-  if(GetMaxLevel() > 40) {
-    if(hasClass(CLASS_MAGIC_USER)) {
-      tool = 576;
-      tool2 = 580;
-      tool3 = 582;
-      tool4 = 584;
-    }
-    if(hasClass(CLASS_CLERIC)) {
-      tool = 2347;
-      tool2 = 2349;
-    }
-    if(hasClass(CLASS_THIEF)) {
-      tool = 587;
-      tool2 = 589;
-    }
-    if(hasClass(CLASS_WARRIOR)) {
-      tool = 150;
-      tool2 = 560;
-      tool3 = 157;
-      tool4 = 156;
-    }
-    if(hasClass(CLASS_RANGER)) {
-      tool = 568;
-      tool2 = 570;
-      tool3 = 574;
-    }
-    if(hasClass(CLASS_MONK)) {
-      tool = 591;
-      tool2 = 593;
-    }
-    if(hasClass(CLASS_SHAMAN)) {
-      tool = 564;
-      tool2 = 566;
-    }
-    if(hasClass(CLASS_DEIKHAN)) {
-      tool = 2347;
-      tool2 = 2349;
-    } 
-  } else if(GetMaxLevel() > 15) {
-    if(hasClass(CLASS_MAGIC_USER)) {
-      tool = 575;
-      tool2 = 579;
-      tool3 = 581;
-      tool4 = 582;
-    }
-    if(hasClass(CLASS_CLERIC)) {
-      tool = 2346;
-      tool2 = 2348;
-    }
-    if(hasClass(CLASS_THIEF)) {
-      tool = 586;
-      tool2 = 588;
-    }
-    if(hasClass(CLASS_WARRIOR)) {
-      tool = 150;
-      tool2 = 559;
-      tool3 = 153;
-      tool4 = 155;
-    }
-    if(hasClass(CLASS_RANGER)) {
-      tool = 567;
-      tool2 = 569;
-      tool3 = 573;
-    }
-    if(hasClass(CLASS_MONK)) {
-      tool = 590;
-      tool2 = 592;
-    }
-    if(hasClass(CLASS_SHAMAN)) {
-      tool = 563;
-      tool2 = 565;
-    }
-    if(hasClass(CLASS_DEIKHAN)) {
-      tool = 2346;
-      tool2 = 2348;      
-    }
-  }
-
-  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL)))
-    *this += *obj;
-  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL)))
-    *this += *obj;
-  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL)))
-    *this += *obj;
-  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL)))
-    *this += *obj;
 
 
   // load specialty items

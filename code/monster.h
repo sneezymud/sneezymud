@@ -485,6 +485,7 @@ class TMonster : public TBeing {
     resp *readCommand(FILE *fp);
     void createWealth();
     int dynamicComponentLoader(spellNumT, int);
+    void thiefLootLoader();
     void mageComponentLoader();
     void rangerComponentLoader();
     void shamanComponentLoader();
