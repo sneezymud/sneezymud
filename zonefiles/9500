@@ -1,0 +1,80 @@
+#9500
+Aedion - Zutanji Village~
+9524 40 2 1
+
+D 0 9504 0 1          door to temple
+D 0 9516 2 1
+
+O 0 9505 1 9504       zutanji statue
+O 0 9506 1 9522       bamboo bucket
+O 0 9507 2 9524       bamboo stool
+O 0 9507 2 9524
+
+A 0 9517 9524
+M 0 9501 1 -99        young student
+? 0 5 0 E
+E 1 9501 10 19          shinai - bamboo sword
+Y 0 80 1                wide leather set
+
+A 0 9517 9524
+M 0 9502 2 -99        experienced student
+? 0 1 0 E
+E 1 9503 9999 19        red silk handled tachi
+Y 0 96 1                heavy set
+A 0 9517 9524
+M 0 9502 2 -99        experienced student
+? 0 1 0 E
+E 1 9503 9999 19        red silk handled tachi
+Y 0 96 1                heavy set
+
+M 0 9503 1 9504       zutanji stone guardian
+M 0 9503 1 9505       zutanji stone guardian
+M 0 9503 1 9506       zutanji stone guardian
+M 0 9503 1 9507       zutanji stone guardian
+
+A 0 9500 9515
+M 0 9504 2 -99        local villager
+? 0 10 0 G
+G 1 9504 9999           bowl of noodles
+Y 0 46 1                supple leather set
+A 0 9500 9515
+M 0 9504 2 -99        local villager
+? 0 10 0 G
+G 1 9504 9999           bowl of noodles
+Y 0 46 1                supple leather set
+A 0 9500 9515
+M 0 9504 2 -99        local villager
+? 0 10 0 G
+G 1 9504 9999           bowl of noodles
+Y 0 46 1                supple leather set
+
+A 0 9517 9524
+M 0 9505 1 -99        temple sensei
+? 0 1 0 E
+E 1 9508 1 19           red silk handled masumune
+Y 0 69 2                dark blue set
+
+A 0 9500 9515
+M 0 9506 1 -99        local trader
+? 0 1 0 G
+G 1 9502 3              mithril amulet
+Y 0 105 1               black silk set
+A 0 9500 9515
+M 0 9506 1 -99        local trader
+? 0 1 0 G
+G 1 9502 3              mithril amulet
+Y 0 105 1               black silk set
+
+A 0 9500 9515
+M 0 9507 1 -99        rurouni
+? 0 1 0 E
+E 1 9500 11 19          zanbatou - huge sword
+Y 0 81 1                black leather set
+A 0 9500 9515
+M 0 9507 1 -99        rurouni
+? 0 1 0 E
+E 1 9500 11 19          zanbatou - huge sword
+Y 0 81 1                black leather set
+
+S
+

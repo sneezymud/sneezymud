@@ -1,0 +1,68 @@
+#950
+Third Ring of Roads~
+1199 25 2 1
+
+D 0 1152 2 1                  Secret south into Jungle Road
+D 0 1160 9 1                  Secret from Road to Gnoll Tower
+D 0 1045 6 1   
+D 0 1165 1 1                  Secret from Prison to faded path
+D 0 994 3 1
+
+O 0 27309 9999 1168           Broken Crate
+O 0 25505 9999 1172           Broken Wagon Wheel
+
+M 0 1000 1 1007               Large Thief
+Y 0 104 3                     black cloth set
+M 0 1000 1 1028               Large Thief
+Y 0 104 3                     black cloth set
+M 0 1000 1 1022               Large Thief
+Y 0 104 3                     black cloth set
+M 0 1001 1 1041               Crime Boss
+Y 0 105 3                     black silk set
+M 0 1001 1 1005               Crime Boss
+Y 0 105 3                     black silk set
+M 0 1002 1 1003               Tourist
+M 0 1002 1 1020               Tourist
+M 0 1002 1 1032               Tourist
+M 0 1003 1 1086               Thief
+M 0 1003 1 1000               Thief
+M 0 1004 1 1012               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+M 0 1004 1 1075               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+M 0 1005 1 1068               Traveller
+M 0 1005 1 1033               Traveller
+M 0 1006 1 1042               Merchant
+M 0 1006 1 1078               Merchant
+
+M 0 1024 1 1024		Bulge - Toll Ogre
+M 0 1025 1 1028		Hardened Mercenary
+M 0 1026 1 1020		Hobbit Traveller
+? 0 20 0 E
+E 1 1753 9999 4         vest shale gnome
+? 0 20 0 E
+E 1 1754 9999 5         helmet shale gnome
+M 0 1027 1 1016		Logrus Sentry
+M 0 1027 1 1032		Logrus Sentry
+M 0 1028 1 1009		Drow Raider Captain
+M 0 1029 1 1006		Drow Raider
+M 0 1029 1 1012		Drow Raider
+
+A 0 1160 1164
+M 0 1160 1 -99          Random load of large crow near tower
+A 0 1160 1164
+M 0 1161 1 -99          Random load of a groundhog near tower
+
+A 0 1165 1174
+M 0 1165 2 -99          Random load of a large vulture near prison
+A 0 1165 1174
+M 0 1166 1 -99          Random load of a raccoon near prison
+A 0 1165 1174
+M 0 1167 1 -99          Random load of escaped large thief near prison
+Y 0 104 3                 black cloth set
+? 0 5 0 E
+E 1 9311 20 19            stone dagger
+S
+

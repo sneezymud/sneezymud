@@ -1,0 +1,43 @@
+#550
+Market Place~
+599 25 2 1
+
+D 0 573 2 2           Gate/Grate from barn to lot
+D 0 575 0 2
+
+O 0 104 10 564       Window for pet room
+V 1 0 566
+
+O 0 132 9999 556     Window from Pub South to Market
+V 1 0 239
+O 0 133 9999 556     Window from Pub West to Branish
+V 1 0 242
+O 0 130 9999 553     Window from Tavern North to W. Kings
+V 1 0 112
+O 0 131 9999 553     Window from Tavern East to S. Main
+V 1 0 175
+O 0 130 9999 574     Window from Stable Loft North to Market
+V 1 0 240
+
+M 0 553 1 574         Jessup - Roaring Lion Stableboy
+G 1 150 9999                    ball pien hammer (smythe tool)   
+
+M 0 554 1 573         Roth - Roaring Lion Stablemaster
+G 1 150 9999                    ball pien hammer (smythe tool)   
+
+M 0 555 1 575         Broken-Down Pony in Lot
+M 0 555 2 575         Broken-Down Pony in Lot
+
+M 0 556 1 575         Broken-Down Mule in Lot
+M 0 556 2 575         Broken-Down Mule in Lot
+
+M 0 557 1 575         Old Mare in Lot
+M 0 557 2 575         Old Mare in Lot
+
+M 0 558 1 575         Old Plow-horse in Lot
+M 0 558 2 575         Old Plow-horse in Lot
+
+M 0 559 1 575         Black Stallion in Lot
+M 0 559 2 575         Black Stallion in Lot
+S
+

@@ -1,0 +1,289 @@
+#16100
+Syl - Parnithian Fort/Compound~
+16149 35 2 1
+
+D 0 16107 2 1          North Gate of trading post (close)
+D 0 16143 0 1
+D 0 16143 3 1          Silver Cup inn door (close)
+D 0 16142 1 1
+D 0 16143 1 1          Food Supplies shop (close)
+D 0 16144 3 1
+D 0 16146 1 1          Fencing Post (close)
+D 0 16147 3 1
+D 0 16146 2 1          South Gate of fencing post (close)
+D 0 16148 0 1
+D 0 16142 2 1          Kitchen door inside inn (close)
+D 0 16145 0 1
+D 0 16145 3 1          Door from kitchen to backyard (close)
+D 0 16140 1 1
+D 0 16116 0 2          1st tower gate (close) [quest]
+D 0 16117 2 1
+D 0 16117 0 1          2nd tower gate (close)
+D 0 16118 2 1
+D 0 16126 2 1          1st floor Latrine door to barracks (close)
+D 0 16124 0 1
+D 0 16126 8 1          1st floor Latrine door to barracks (close)
+D 0 16125 7 1
+D 0 16126 9 1          1st floor Latrine door to barracks (close)
+D 0 16123 6 1
+D 0 16128 0 1          Captain's quarters (close)
+D 0 16131 2 1
+D 0 16128 6 1          Cleric's quarters (close)
+D 0 16132 9 1
+D 0 16128 7 1          Mage's quarters (close)
+D 0 16130 8 1
+D 0 16133 2 1          2nd floor Latrine door to Captain's quarters (close)
+D 0 16131 0 1
+D 0 16133 8 1          2nd floor Latrine door to Cleric's quarters (close)
+D 0 16132 7 1
+D 0 16133 9 1          2nd floor Latrine dor to Mage's quarters (clsoe)
+D 0 16130 6 1
+D 0 16129 0 1          Altar room to Cleric's quarters (close)
+D 0 16132 2 1
+
+O 0 16100 1 16121      staircases in tower
+O 0 16101 1 16128
+O 0 16102 1 16128
+O 0 16103 1 16135
+O 0 16104 1 16142      staircase in tavern/inn
+O 0 16105 1 16141
+O 0 16106 1 16149      windows
+O 0 16107 1 16140
+O 0 16108 1 16145
+O 0 16109 1 16145
+O 0 16110 1 16132
+O 0 16114 1 16129      altar
+O 0 3318 9999 16129       torchiere
+O 0 3318 9999 16144       torchiere
+O 0 3318 9999 16142       torchiere
+O 0 3318 9999 16149       torchiere
+O 0 3318 9999 16141       torchiere
+O 0 3318 9999 16130       torchiere
+O 0 3318 9999 16132       torchiere
+O 0 16115 1 16135      flag
+O 0 16116 1 16121      trophy (balrog head)
+O 0 16117 1 16128      trophy (orc standard)
+O 0 16122 1 16127      gold rimmed mirror (portal to cityguard barracks)
+O 0 16111 1 16130      bed
+O 0 16112 1 16130      onyx table
+O 0 16113 1 16132      pallet
+O 0 6607 1 16131       large wooden desk
+O 0 10203 1 16131      cot bunk
+O 0 10758 1 16131      solid oak chair
+O 0 23650 2 16119      oil lamp
+O 0 3318 9999 16131       torchiere
+O 0 3318 9999 16120       torchiere
+O 0 3318 9999 16121
+O 0 3318 9999 16122
+O 0 3318 9999 16123
+O 0 3318 9999 16124
+O 0 3318 9999 16125
+O 0 3318 9999 16126
+O 0 3318 9999 16128
+O 0 3318 2 16133
+O 0 10203 5 16120      cot bunk
+O 0 10203 5 16123
+O 0 10203 5 16124
+O 0 10203 5 16125
+O 0 701 2 16122        military dining table
+O 0 3305 4 16122       wooden bench
+O 0 15408 2 16142      oak table
+O 0 10758 8 16142      solid oak chair
+O 0 15408 2 16149      oak table
+O 0 10758 8 16149      solid oak chair
+O 0 151 16 16124                         Anvil
+O 0 151 16 16124                         Anvil
+O 0 152 16 16124                         Forge
+O 0 152 16 16124                         Forge
+
+M 0 16108 1 16145      tavern cook
+M 0 16109 1 16147      Rasmin Lighttoes
+M 0 16112 1 16130      Darias(mage)
+Y 0 102 2                charred leather set
+M 0 16113 1 16131      Kharanistorel(commander)
+? 0 4 0 E
+E 1 303 9999 19           load broad sword
+Y 0 41 4                  load set of ring mail
+M 0 16114 1 16132      Granek(cleric)
+M 0 16100 1 16124      Malindorel(sargeant)
+? 0 4 0 E
+E 1 303 9999 19           load broad sword
+Y 0 41 3                  load set of ring mail
+M 0 16101 1 16118      Sanak(sargeant)
+? 0 3 0 E
+E 1 5408 9999 19          load embedded metal club
+Y 0 19 3                  load set of cyclopshide
+M 0 16102 1 16135      Merin(sargeant)
+? 0 3 0 E
+E 1 304 9999 19           load short sword
+Y 0 43 3                  load set of hobbit chainmail
+M 0 16110 1 16122      tower cook
+M 0 16111 1 16119      Jas'Reneir, animal trainer
+? 0 4 0 E
+E 1 16118 8 11            load braided leather gauntlet
+? 0 4 0 E
+E 1 303 9999 19           load broad sword
+M 0 16121 1 16116      dwarven corporal
+Y 0 59 2                  load set of dwarven studded leather
+M 0 16115 2 16119      load griffins in stable
+M 0 16116 4 16119      load horses in stable
+M 0 16117 2 16119      load warhorses in stable
+M 0 16137 1 16131      elven knights
+? 0 2 0 E
+E 1 303 9999 19           load broad sword
+Y 0 41 3                  load set of ring mail
+M 0 16139 1 16131
+? 0 2 0 E
+E 1 303 9999 19
+Y 0 41 3
+M 0 16123 2 16125      human knights
+M 0 16123 2 16149
+M 0 16138 1 16125      elven knights
+M 0 16138 1 16149
+M 0 16140 1 16143
+M 0 16103 1 16100      hobbit scouts
+? 0 2 0 E
+E 1 304 9999 19           load short sword
+Y 0 48 2                  load set of hobbit studded leather
+M 0 16103 1 16104
+? 0 2 0 E
+E 1 304 9999 19
+Y 0 48 2
+M 0 16103 1 16113
+? 0 2 0 E
+E 1 304 9999 19
+Y 0 48 2
+M 0 16103 1 16123
+? 0 2 0 E
+E 1 304 9999 19
+Y 0 48 2 
+M 0 16118 1 16148
+? 0 2 0 E
+E 1 304 9999 19
+Y 0 48 2
+M 0 16104 1 16115      elven scouts
+? 0 2 0 E
+E 1 300 9999 19           load long sword
+Y 0 61 2                  load set of elven studded leather
+M 0 16104 1 16148
+? 0 2 0 E
+E 1 300 9999 19
+Y 0 61 2
+M 0 16119 1 16120
+? 0 2 0 E
+E 1 300 9999 19
+Y 0 61 2
+M 0 16119 1 16108
+? 0 2 0 E
+E 1 300 9999 19
+Y 0 61 2
+M 0 16119 1 16100
+? 0 2 0 E
+E 1 300 9999 19
+Y 0 61 2 
+M 0 16125 1 16118      ogre soldier
+Y 0 55 2                  load set of ogre rawhide
+M 0 16125 1 16120
+Y 0 55 2
+M 0 16125 1 16149
+Y 0 55 2
+M 0 16129 1 16118      dwarven soldier
+Y 0 59 2                  load set of dwarven studded leather
+M 0 16129 1 16123
+Y 0 59 2
+M 0 16129 1 16149
+Y 0 59 2
+M 0 16133 1 16118      human soldier
+Y 0 8 2                   load set of human studded leather
+M 0 16133 1 16123
+Y 0 8 2
+M 0 16133 1 16149
+Y 0 8 2
+M 0 16126 1 16128      ogre soldier
+Y 0 55 2                  load set of ogre rawhide
+M 0 16126 1 16116
+Y 0 55 2
+M 0 16130 1 16128      dwarven soldier
+? 0 2 0 E
+E 1 314 9999 19           load battle axe
+Y 0 59 2                  load set of dwarven studded leather
+M 0 16130 1 16116
+? 0 2 0 E
+E 1 314 9999 19
+Y 0 59 2
+M 0 16134 1 16128      human soldier
+? 0 2 0 E
+E 1 14408 9999 19         load pike
+Y 0 8 2                   load set of human studded leather
+M 0 16134 1 16116
+? 0 2 0 E
+E 1 14408 9999 19
+Y 0 8 2
+M 0 16127 2 16135      ogre soldiers
+Y 0 55 2                  load set of ogre rawhide
+M 0 16131 2 16135      dwarven soldiers
+? 0 2 0 E
+E 1 314 9999 19           load hand axe
+Y 0 59 2                  load set of dwarven studded leather
+M 0 16135 2 16135      human soldiers
+? 0 2 0 E
+E 1 14408 9999 19         load pike
+Y 0 8 2                   load set of human studded leather
+M 0 16117 1 16100      warhorse
+R 1 16124 1 16100      human knight
+G 1 16120 9999            forged pass scroll
+? 0 5 0 E
+E 1 303 9999 19           load broad sword
+Y 0 9 3                   load set of chainmail human
+C 0 16128 1 16100      ogre soldiers
+Y 0 55 2                  load set of ogre rawhide
+C 0 16132 1 16100      dwarven soldiers
+? 0 2 0 E
+E 1 314 9999 19           load hand axe
+Y 0 59 2                  load set of dwarven studded leather
+C 0 16136 1 16100      human soldiers
+? 0 5 0 E
+E 1 14408 9999 19         load pike
+Y 0 8 2                   load set of human studded leather
+M 0 16115 1 16112      griffin
+R 1 16141 1 16112      elven knight [Mounted]
+? 0 5 0 E
+E 1 303 9999 19           load broad sword
+Y 0 41 3                  load set of ringmail
+C 0 16128 1 16112      ogre soldiers
+Y 0 55 2                  load set of ogre rawhide
+C 0 16132 1 16112      dwarven soldiers
+? 0 2 0 E
+E 1 314 9999 19           load hand axe
+Y 0 59 2                  load set of dwarven studded leather
+C 0 16136 1 16112      human soldiers
+? 0 2 0 E
+E 1 14408 9999 19         load pike
+Y 0 8 2                   load set of human studded leather
+M 0 16120 1 16107      human corporal
+C 0 16128 1 16107      ogre soldiers
+Y 0 55 2                  load set of ogre rawhide
+C 0 16132 1 16107      dwarven soldiers
+? 0 2 0 E
+E 1 314 9999 19           load battle axe
+Y 0 59 2                  load set of dwarven studded leather
+C 0 16136 1 16107      human soldiers
+? 0 2 0 E
+E 1 14408 9999 19         load pike
+Y 0 8 2                   load set of human studded leather
+M 0 16120 1 16115
+C 0 16128 1 16115      ogre soldiers
+Y 0 55 2                  load set of ogre rawhide
+C 0 16132 1 16115      dwarven soldiers
+? 0 2 0 E
+E 1 314 9999 19           load battle axe
+Y 0 59 2                  load set of dwarven studded leather
+C 0 16136 1 16115      human soldiers
+? 0 2 0 E
+E 1 14408 9999 19         load pike 
+Y 0 8 2                   load set of human studded leather
+M 0 16122 1 16113      highwayman
+M 0 16122 1 16102
+M 0 16122 1 16109
+S
+

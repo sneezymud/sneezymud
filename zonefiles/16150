@@ -1,0 +1,153 @@
+#16150
+Knighit - Outpost of Fire~
+16199 40 2 1
+
+D 0 16154 2 1           close doors
+D 0 16155 0 1
+D 0 16162 3 2
+D 0 16163 1 2
+D 0 16169 0 1
+D 0 16170 2 1
+D 0 16172 2 1
+D 0 16173 0 1
+D 0 16174 2 1
+D 0 16175 0 1
+D 0 16176 3 1
+D 0 16177 1 1
+D 0 16180 1 1
+D 0 16181 3 1
+D 0 16184 2 1
+D 0 16185 0 1
+D 0 16190 3 2
+D 0 16191 1 2
+D 0 16191 4 1
+D 0 16195 5 1
+D 0 16197 3 2
+D 0 16198 1 2
+
+O 0 16151 14 16197           load lights
+O 0 16151 14 16197
+O 0 16151 14 16196
+O 0 16151 14 16196
+O 0 16151 14 16195
+O 0 16151 14 16195
+O 0 16151 14 16194
+O 0 16151 14 16194
+O 0 16151 14 16191
+O 0 16151 14 16191
+O 0 16151 14 16190
+O 0 16151 14 16190
+O 0 16151 14 16154
+O 0 16151 14 16154
+O 0 16150 39 16155
+O 0 16150 39 16156
+O 0 16150 39 16157
+O 0 16150 39 16158
+O 0 16150 39 16159
+O 0 16150 39 16160
+O 0 16150 39 16161
+O 0 16150 39 16162
+O 0 16150 39 16163
+O 0 16150 39 16164
+O 0 16150 39 16165
+O 0 16150 39 16166
+O 0 16150 39 16167
+O 0 16150 39 16168
+O 0 16150 39 16169
+O 0 16150 39 16170
+O 0 16150 39 16171
+O 0 16150 39 16172
+O 0 16150 39 16173
+O 0 16150 39 16174
+O 0 16150 39 16175
+O 0 16150 39 16176
+O 0 16150 39 16177
+O 0 16150 39 16178
+O 0 16150 39 16179
+O 0 16150 39 16180
+O 0 16150 39 16181
+O 0 16150 39 16182
+O 0 16150 39 16183
+O 0 16150 39 16184
+O 0 16150 39 16185
+O 0 16150 39 16186
+O 0 16150 39 16187
+O 0 16150 39 16188
+O 0 16150 39 16189
+O 0 16150 39 16192
+O 0 16150 39 16193
+O 0 16150 39 16198
+O 0 16150 39 16199
+
+? 0 5 0 B
+B 1 16159 1 16199       load vault
+
+O 0 16156 1 16156       load window in guard post
+O 0 16158 1 16199       loads portal out of vault
+
+M 0 16198 1 16198      commander
+? 0 10 0 E                10% chance for hammer to load
+E 1 16153 250 19          hammer loads if chance hit
+M 0 16197 1 16197      elite guard
+? 0 5 0 E                 5% chance to load hammer
+E 1 16153 250 19          loads hammer on guard
+M 0 16196 1 16197      elite guard
+? 0 5 0 E                 5% chance to load dagger
+E 1 16152 2 19            load dagger on guard
+M 0 16195 1 16194      elite guard
+? 0 5 0 E                 5% chance to load hammer
+E 1 16153 250 19          load hammer on guard
+M 0 16194 1 16194      elite guard
+? 0 5 0 E                 5% chance to load dagger
+E 1 16152 250 19          load dagger on guard
+M 0 16191 1 16193      elite guard
+? 0 5 0 E                 5% chance to load hammer
+E 1 16153 250 19          load hammer on guard
+M 0 16190 1 16193      elite guard
+? 0 5 0 E                 5% chance to load dagger
+E 1 16152 250 19          load dagger on guard
+M 0 16191 1 16192      elite guard
+? 0 5 0 E                 5% chance to load hammer
+E 1 16153 250 19          load hammer on guard
+M 0 16190 1 16192      elite guard
+G 1 16190 9999            load portcullis key
+? 0 5 0 E                 5% chance to load dagger
+E 1 16152 250 19          load dagger on guard
+M 0 16187 1 16162      gate guards  
+M 0 16186 1 16162 
+M 0 16181 3 16174      lounging guards
+M 0 16180 3 16174 
+M 0 16181 3 16174 
+M 0 16180 3 16174 
+M 0 16181 3 16174 
+M 0 16180 3 16174 
+M 0 16175 1 16169 	outpost guards (roving)
+M 0 16174 1 16169 
+M 0 16175 1 16165 
+M 0 16174 1 16165 
+M 0 16175 1 16183 
+M 0 16174 1 16183 
+M 0 16175 1 16176  
+M 0 16174 1 16176        
+M 0 16172 1 16156       outpost guard
+G 1 16162 9999            load key to gate
+M 0 16171 1 16156       outpost guard
+M 0 16173 1 16170       captain
+G 1 16197 9999            load door key
+? 0 10 0 E                10% chance to load sword
+E 1 16154 250 19          load sword on captain
+M 0 16170 1 16181       master thief
+? 0 10 0 E                10% chance to load dagger
+E 1 16155 250 19          load dagger on thief
+M 0 16169 1 16185       guard's wife
+M 0 16168 1 16177       guard's husband
+M 0 16165 1 16177       female child
+M 0 16164 1 16177       male child
+M 0 16165 1 16185       female child
+M 0 16164 1 16185       male child
+M 0 16163 1 16173       firemaster
+M 0 16162 1 16173       female worshiper
+M 0 16161 1 16173       male worshiper
+M 0 16160 1 16199       fire elemental
+S
+

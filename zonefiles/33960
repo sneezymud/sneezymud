@@ -1,0 +1,95 @@
+#33960
+Dash - Blackridge Lodge & Sympathian Mountains~
+34034 30 2 1
+D 0 33975 7 1        A Winding Road Through the Sympathian Mountains -> An Overgrown Trail
+D 0 34014 2 1        A Wooden Porch -> The Blackridge Travellers' Lodge
+D 0 34017 2 2        A Wooden Porch -> The Kitchen of the Blackridge Travellers' Lodge
+D 0 34018 0 1        The Blackridge Travellers' Lodge -> A Wooden Porch
+D 0 34020 0 2        The Kitchen of the Blackridge Travellers' Lodge -> A Wooden Porch
+D 0 34020 1 1        The Kitchen of the Blackridge Travellers' Lodge -> The Tavern of the Blackridge Travellers' Lodge
+D 0 34021 3 1        The Tavern of the Blackridge Travellers' Lodge -> The Kitchen of the Blackridge Travellers' Lodge
+D 0 34023 2 2        A Small Room in the Blackridge Travellers' Lodge -> A Hallway in the Blackridge Travellers' Lodge
+D 0 34025 1 2        A Small Room in the Blackridge Travellers' Lodge -> A Hallway in the Blackridge Travellers' Lodge
+D 0 34026 0 2        A Hallway in the Blackridge Travellers' Lodge -> A Small Room in the Blackridge Travellers' Lodge
+D 0 34026 1 2        A Hallway in the Blackridge Travellers' Lodge -> A Small Room in the Blackridge Travellers' Lodge
+D 0 34026 3 2        A Hallway in the Blackridge Travellers' Lodge -> A Small Room in the Blackridge Travellers' Lodge
+D 0 34027 3 2        A Small Room in the Blackridge Travellers' Lodge -> A Hallway in the Blackridge Travellers' Lodge
+D 0 34028 8 1        An Overgrown Trail -> A Winding Road Through the Sympathian Mountains
+D 0 34029 2 1        An Overgrown Trail -> An Overgrown Trail
+D 0 34030 0 1        An Overgrown Trail -> An Overgrown Trail
+D 0 34031 4 1        An Overgrown Trail -> An Overgrown Trail
+D 0 34032 5 1        An Overgrown Trail -> An Overgrown Trail
+O 0 33966 9999 33986    a signpost
+O 0 20 9999 34015       a chair
+O 0 20 9999 34015       a chair
+O 0 23 9999 34015       a table
+O 0 14385 9999 34018    a hurricane lamp
+O 0 14385 9999 449    a hurricane lamp * moved to 449 re. short int
+O 0 14385 9999 34020    a hurricane lamp
+O 0 23 9999 34021       a table
+O 0 23 9999 34021       a table
+O 0 23 9999 34021       a table
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 20 9999 34021       a chair
+O 0 14385 9999 34021    a hurricane lamp
+O 0 23 9999 34022       a table
+O 0 23 9999 34022       a table
+O 0 23 9999 34022       a table
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 20 9999 34022       a chair
+O 0 14385 9999 34022    a hurricane lamp
+O 0 20 9999 34023       a chair
+O 0 22 9999 34023       a bed
+O 0 14385 9999 34023    a hurricane lamp
+O 0 14385 9999 34024    a hurricane lamp
+O 0 22 9999 34025       a bed
+O 0 20 9999 34025       a chair
+O 0 14385 9999 34025    a hurricane lamp
+O 0 14385 9999 34026    a hurricane lamp
+O 0 20 9999 34027       a chair
+O 0 22 9999 34027       a bed
+O 0 14385 9999 34027    a hurricane lamp
+O 0 33960 1 34033       a tent
+O 0 33961 1 34034       a tent flap
+M 0 33970 2 34010       a hired guardsman
+Y 0 9 1
+Y 0 10 1
+Y 0 11 1
+M 0 33970 2 34010       a hired guardsman
+Y 0 9 1
+Y 0 10 1
+Y 0 11 1
+M 0 33969 1 34015       a half-elven ranger
+Y 0 25 3
+M 0 33962 1 34020       Ambre, the lodge cook
+? 0 15 0 E
+E 1 33967 30 19           a huge stirring spoon [hold-left]
+M 0 33968 1 34021       a ranger scout
+Y 0 8 4
+M 0 33965 1 34021       a traveler
+M 0 33967 1 34022       a female hiker
+Y 0 7 4
+M 0 33966 1 34022       a male hiker
+Y 0 7 4
+G 1 33964 9999           a room key with a tag that says B on it
+M 0 33971 1 34025       a ranger scout
+G 1 33963 9999           a room key with a tag that says A on it
+Y 0 8 4
+M 0 33964 1 34027       a traveler
+G 1 33965 9999           a room key with a tag that says C on it
+M 0 33960 1 34034       Cale
+Y 0 80 5
+S
+

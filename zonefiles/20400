@@ -1,0 +1,697 @@
+#20400
+Mithros - Chaos Plains-River/Caverns~
+20599 40 2 0
+
+D 0 20522 0 1	Left door to Citadel Gates
+
+D 0 20523 0 1	Right door to Citadel Gates
+
+D 0 20419 9 1	Blocks of Ice to Goblin's Cave
+D 0 20568 6 1
+
+D 0 20460 3 1	Vine Screen
+D 0 20590 1 1
+
+D 0 20528 0 1	Door to Guards Outpost
+D 0 20529 2 1
+
+D 0 20528 1 2	Gate into Caverns
+D 0 20531 3 2
+
+D 0 20534 8 1	Boulder/Rubble
+D 0 20535 7 1	
+
+D 0 20536 9 1	Lid of Barrel in Cave-In
+D 0 20537 6 1	
+
+D 0 20538 1 1	Rubble
+D 0 20539 3 1	
+
+D 0 20539 2 1 	Stone Grate
+D 0 20546 0 1	
+
+D 0 20545 2 1	Slab
+D 0 20544 0 1
+
+D 0 20545 3 2	Rusty Grate
+D 0 20542 1 2
+
+D 0 20541 7 2	Portcullis
+D 0 20540 8 2
+
+D 0 20547 6 1	Archway	
+D 0 20548 9 1
+
+D 0 20555 6 2	Heavy Gate
+D 0 20556 9 2
+
+
+? 0 40 0 O
+O 1 20405 1 20521		Algae Covered Chest - Teleport Trapped
+? 0 25 0 P
+P 1 20408 100 20405	Translucent Blue Scroll - Dispel Magic
+P 1 20411 1 20405		Vazir's Talen Horde
+
+? 0 40 0 O
+O 1 20406 1 20521		Algae Covered Chest - Blade Trapped
+? 0 25 0 P
+P 1 20409 5 20406		Small Blue Tinted Ring - Water Breath
+P 1 20412 1 20406		Vazir's Sapphire Hoard
+
+? 0 40 0 O
+O 1 20407 1 20521		Algae Covered Chest - Poison Trapped
+? 0 25 0 P
+P 1 20410 5 20407		Blue Glowing Shield - Water Resistance
+P 1 20413 1 20407		Vazir's Ameythyst Hoard
+
+O 0 20417 1 20521		Stone Carved Altar
+? 0 60 0 P
+P 1 20418 10 20417	Talen Offering
+? 0 60 0 P
+P 1 20419 10 20417	Gem Offering
+
+O 0 23 9999 20529		Generic Table in Guards Outpost
+O 0 20 9999 20529		Generic Chair in Guards Outpost
+O 0 20 9999 20529
+O 0 700 9999 20529	Miltary Cot/Bunk in Guards Outpost
+O 0 700 9999 20529
+
+? 0 10 0 O
+O 1 20460 10 20412	Dull Chunk of Ice (River Quest 1)
+? 0 10 0 O
+O 1 20460 10 20413	
+? 0 10 0 O
+O 1 20460 10 20414
+? 0 10 0 O
+O 1 20460 10 20564
+? 0 10 0 O
+O 1 20460 10 20582
+? 0 10 0 O
+O 1 20460 10 20585
+? 0 10 0 O
+O 1 20460 10 20593
+? 0 10 0 O
+O 1 20460 10 20594
+? 0 10 0 O
+O 1 20460 10 20597
+
+A 0 20531 20561
+O 1 20474 5 -99		A Colorful Rock (River Quest 3)
+
+A 0 20531 20561
+O 1 20474 5 -99
+
+A 0 20531 20561
+O 1 20474 5 -99
+
+A 0 20531 20561
+O 1 20475 5 -99		A Dirty Rock (River Quest 3)
+
+A 0 20531 20561
+O 1 20475 5 -99
+
+? 0 5 0 A
+A 0 20562 20563
+O 1 20468 5 -99		Rough Cut Emeralds - (River Quest 2)
+
+? 0 5 0 A
+A 0 20565 20567
+O 1 20468 5 -99
+
+? 0 5 0 A
+A 0 20569 20581
+O 1 20468 5 -99
+
+? 0 5 0 A
+A 0 20583 20584
+O 1 20468 5 -99
+
+? 0 5 0 A
+A 0 20586 20589
+O 1 20468 5 -99
+
+M 0 20400 1 20521		Vazir (River Dragon)
+G 1 20416 2				Algae Coated Key
+
+M 0 20401 1 20590		Terraqu Shaman
+? 0 5 0 E
+E 1 20420 5 19			Shaman's Bone Staff
+? 0 10 0 G
+G 1 20421 9999			Bone Holy Symbol
+
+M 0 20402 1 20461		Terraqu Apprentice
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 5 0 G
+G 1 20421 9999			Bone Holy Symbol
+
+M 0 20402 1 20586		Terraqu Apprentice
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 5 0 G
+G 1 20421 9999			Bone Holy Symbol
+
+? 0 25 0 M
+M 1 20402 1 20579		Terraqu Apprentice
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 5 0 G
+G 1 20421 9999			Bone Holy Symbol
+
+M 0 20403 1 20519		Terraqu Worshipper
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20403 1 20578		Terraqu Worshipper
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20403 1 20461		Terraqu Worshipper
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+? 0 20 0 M
+M 1 20403 1 20468		Terraqu Worshipper
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+? 0 20 0 M
+M 1 20403 1 20588		Terraqu Worshipper
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20404 1 20518		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20404 1 20520		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20404 1 20461		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20404 1 20462		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20404 2 20461		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20404 2 20581		Terraqu Guard
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+? 0 3 0 E
+E 1 20423 20 19			Terraqu Stone Dagger
+
+M 0 20405 2 20589		Terraqu Female
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20405 2 20462		Terraqu Female
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20405 2 20587		Terraqu Female
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20405 2 20584		Terraqu Female
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20405 2 20580		Terraqu Female
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20406 2 20516		Terraqu Male
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20406 2 20510		Terraqu Male
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20406 2 20508		Terraqu Male
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20406 2 20465		Terraqu Male
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20406 2 20470		Terraqu Male
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20407 2 20516		Terraqu Child
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20407 2 20589		Terraqu Child
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20407 2 20470		Terraqu Child
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20407 2 20580		Terraqu Child
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+M 0 20407 2 20463		Terraqu Child
+? 0 10 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+? 0 50 0 M
+M 1 20408 2 20567		Invisible Rock Giant
+G 1 20424 9999 			Large Boulder
+
+? 0 50 0 M
+M 1 20408 2 20581		Invisible Rock Giant
+G 1 20424 9999 			Large Boulder
+
+? 0 50 0 M
+M 1 20408 2 20592		Invisible Rock Giant
+G 1 20424 9999 			Large Boulder
+
+? 0 50 0 M
+M 1 20409 2 20444		River Serpent
+
+? 0 50 0 M
+M 1 20409 2 20450		River Serpent
+
+? 0 50 0 M
+M 1 20409 2 20458		River Serpent
+
+? 0 75 0 M
+M 1 20410 2 20596		Muck Dweller
+? 0 5 0 G
+G 1 20427 9999			Rusted Bracer
+
+? 0 75 0 M
+M 1 20410 2 20566		Muck Dweller
+? 0 5 0 G
+G 1 20427 9999			Rusted Bracer
+
+M 0 20411 2 20562		Bloated Corpse (Male)
+? 0 3 0 E
+E 1 20428 9999 9			Soaked Leather Boot
+? 0 3 0 E 
+E 1 20429 9999 14			Shredded Leather Cloak
+
+? 0 50 0 M
+M 1 20411 2 20562		Bloated Corpse (Male)
+? 0 3 0 E
+E 1 20428 9999 9			Soaked Leather Boot
+? 0 3 0 E 
+E 1 20429 9999 14			Shredded Leather Cloak
+
+M 0 20411 2 20591		Bloated Corpse (Male)
+? 0 3 0 E
+E 1 20428 9999 9			Soaked Leather Boot
+? 0 3 0 E 
+E 1 20429 9999 14			Shredded Leather Cloak
+
+M 0 20411 2 20584		Bloated Corpse (Male)
+? 0 3 0 E
+E 1 20428 9999 9			Soaked Leather Boot
+? 0 3 0 E 
+E 1 20429 9999 14			Shredded Leather Cloak
+
+M 0 20412 2 20563		Bloated Corpse (Merchant)
+? 0 5 0 G
+G 1 20430 9999			Soaked Leather Sachel
+P 1 20469 25 20430              dirty pile of cut amethysts
+
+? 0 50 0 M
+M 0 20412 2 20563		Bloated Corpse (Merchant)
+? 0 5 0 G
+G 1 20430 9999			Soaked Leather Sachel
+P 1 20469 25 20430              dirty pile of cut amethysts
+
+M 0 20412 2 20595		Bloated Corpse (Merchant)
+? 0 5 0 G
+G 1 20430 9999			Soaked Leather Sachel
+P 1 20469 25 20430              dirty pile of cut amethysts
+
+M 0 20412 2 20583		Bloated Corpse (Merchant)
+? 0 5 0 G
+G 1 20430 9999			Soaked Leather Sachel
+P 1 20469 25 20430              dirty pile of cut amethysts
+
+M 0 20413 2 20565		Bloated Corpse (Female)
+? 0 5 0 E
+E 1 20431 9999 2			Tarnished Bronze Ring
+? 0 5 0 G
+G 1 20432 9999			Carefully Wrapped Ration
+
+? 0 50 0 M
+M 1 20413 2 20565		Bloated Corpse (Female)
+? 0 5 0 E
+E 1 20431 9999 2			Tarnished Bronze Ring
+? 0 5 0 G
+G 1 20432 9999			Carefully Wrapped Ration
+
+M 0 20413 2 20598		Bloated Corpse (Female)
+? 0 5 0 E
+E 1 20431 9999 2			Tarnished Bronze Ring
+? 0 5 0 G
+G 1 20432 9999			Carefully Wrapped Ration
+
+M 0 20413 2 20569		Bloated Corpse (Female)
+? 0 5 0 E
+E 1 20431 9999 2			Tarnished Bronze Ring
+? 0 5 0 G
+G 1 20432 9999			Carefully Wrapped Ration
+
+M 0 20414 2 20440		Bloated Corpse (Child)
+? 0 5 0 G
+G 1 20433 9999			Soggy Ration
+
+? 0 50 0 M
+M 1 20414 2 20440		Bloated Corpse (Child)
+? 0 5 0 G
+G 1 20433 9999			Soggy Ration
+
+M 0 20414 2 20599		Bloated Corpse (Child)
+? 0 5 0 G
+G 1 20433 9999			Soggy Ration
+
+M 0 20414 2 20569		Bloated Corpse (Child)
+? 0 5 0 G
+G 1 20433 9999			Soggy Ration
+
+M 0 20415 1 20439		Young Azule (water elemental)
+? 0 10 0 G
+G 1 20470 25                      Pile of Uncut Sapphires
+M 0 20415 1 20456		Young Azule (water elemental)
+? 0 10 0 G
+G 1 20470 25                      Pile of Uncut Sapphires
+
+M 0 20416 1 20567		Blazing Falcon
+
+M 0 20416 1 20574		Blazing Falcon
+
+M 0 20416 1 20580		Blazing Falcon
+
+M 0 20417 1 20443		Watery Horde
+
+M 0 20417 1 20478		Watery Horde
+
+M 0 20417 1 20448		Watery Horde
+
+M 0 20418 1 20562		Shadowy Hawk
+
+M 0 20418 1 20565		Shadowy Hawk
+
+M 0 20418 1 20586		Shadowy Hawk
+
+M 0 20419 2 20571		Skitter
+
+? 0 25 0 M
+M 0 20419 2 20571		Skitter
+
+M 0 20419 1 20500		Skitter
+
+M 0 20419 1 20576		Skitter
+
+M 0 20420 1 20564		Lost Ice Commander
+* race = golem which can't use eq, please fix
+*? 0 2 0 E
+*E 1 20434 10 18				Shield of Solid Ice
+*? 0 2 0 E
+*E 1 20435 10 5				Horned Helm
+*? 0 2 0 E
+*E 1 20436 10 19				Ice Carved Sword
+*? 0 2 0 E
+*E 1 20438 20 8				Snow Shoe
+*? 0 2 0 E
+*E 1 20438 20 9				Snow Shoe
+
+M 0 20421 1 20582		Lost Ice Scout
+
+? 0 25 0 M
+M 0 20421 1 20564		Lost Ice Scout
+
+? 0 25 0 M	
+M 0 20422 1 20585		Arctic Bear "Snow"
+
+? 0 25 0 M 
+M 0 20423 1 20585		Arctic Bear "Klondike"
+
+? 0 25 0 M
+M 0 20424 1 20597		Snow Beast
+
+M 0 20425 1 20597		Adult Penquin
+
+M 0 20425 1 20593		Adult Penquin
+
+M 0 20426 2 20597		Young Penquin
+
+M 0 20426 2 20597		Young Penquin
+
+M 0 20426 1 20594		Young Penquin
+
+M 0 20426 1 20593		Young Penquin
+
+? 0 25 0 M
+M 0 20427 1 20582		Mountain Cat
+
+? 0 25 0 M
+M 0 20427 1 20526		Mountain Cat
+
+M 0 20428 1 20406		Golden Eagle
+
+M 0 20428 1 20409		Golden Eagle
+
+M 0 20428 1 20415		Golden Eagle
+
+M 0 20428 1 20419		Golden Eagle
+
+M 0 20428 1 20426		Golden Eagle
+
+M 0 20428 1 20434		Golden Eagle
+ 
+M 0 20429 1 20568		Giggling Goblin Hunter
+? 0 5 0 G
+G 1 20444 9999				Medium Animal Hide
+? 0 5 0 E
+E 1 20445 20 18				Beaten Leather Shield
+? 0 5 0 E
+E 1 20446 20 19				Short Steel Sword
+? 0 2 0 G
+G 1 20447 20				Short Bow
+? 0 2 0 G
+G 1 20448 9999				Thin Stonehead Arrow
+? 0 1 0 G
+G 1 20449 9999				Hunting Net
+
+M 0 20430 1 20417		Wild Sea Lion
+
+? 0 25 0 M
+M 0 20430 2 20417		Wild Sea Lion
+
+M 0 20430 1 20404		Wild Sea Lion
+
+M 0 20430 1 20411		Wild Sea Lion
+
+M 0 20430 1 20413		Wild Sea Lion
+
+M 0 20431 1 20405		Large Fish
+
+? 0 25 0 M
+M 0 20431 2 20405		Large Fish
+
+M 0 20431 1 20410		Large Fish
+
+? 0 25 0 M
+M 0 20431 2 20410		Large Fish
+
+M 0 20431 1 20416		Large Fish
+
+? 0 25 0 M
+M 0 20431 2 20416		Large Fish
+
+M 0 20431 1 20422		Large Fish
+
+? 0 25 0 M
+M 0 20431 2 20422		Large Fish
+
+M 0 20431 1 20431		Large Fish
+
+? 0 25 0 M
+M 0 20431 2 20431		Large Fish
+
+M 0 20432 1 20407		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20407		Small Fish
+
+M 0 20432 1 20408		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20408		Small Fish
+
+M 0 20432 1 20412		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20412		Small Fish
+
+M 0 20432 1 20414		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20414		Small Fish
+
+M 0 20432 1 20418		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20418		Small Fish
+
+M 0 20432 1 20420		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20420		Small Fish
+
+M 0 20432 1 20433		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20433		Small Fish
+
+M 0 20432 1 20424		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20424		Small Fish
+
+M 0 20432 1 20429		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20429		Small Fish
+
+M 0 20432 1 20425		Small Fish
+
+? 0 25 0 M
+M 0 20432 2 20425		Small Fish
+
+M 0 20433 1 20529		Outpost Commander
+G 1 20401 9999				Key to Cavern Gates
+Y 0 60 2				2% Chance on Obsidian Scale set
+? 0 2 0 E
+E 1 20439 10 19				Ice Carved Spear
+
+M 0 20434 1 20529		Outpost Guard
+Y 0 60 1				1% Chance on Obsidian Scale set
+
+M 0 20434 1 20527		Outpost Guard
+Y 0 60 1				1% Chance on Obsidian Scale set
+
+M 0 20434 1 20528		Outpost Guard
+Y 0 60 1				1% Chance on Obsidian Scale set
+
+M 0 20434 1 20530		Outpost Guard
+Y 0 60 1				1% Chance on Obsidian Scale set
+
+? 0 10 0 M
+M 0 20435 1 20550		Banshee
+
+M 0 20436 1 20534		Rock Worm
+
+M 0 20436 1 20536		Rock Worm
+
+? 0 25 0 M
+M 0 20437 1 20557		Souless Shadow
+
+? 0 25 0 M
+M 0 20437 1 20559		Souless Shadow
+
+? 0 25 0 M
+M 0 20437 1 20561		Souless Shadow
+
+? 0 50 0 M
+M 0 20438 1 20554		Minor Earth Elemental
+
+? 0 50 0 M
+M 0 20438 1 20548		Minor Earth Elemental
+
+M 0 20439 1 20556		Citadel Smuggler
+? 0 2 0 E
+E 1 20451 5 14				Frayed Black Cloak
+? 0 2 0 E
+E 1 20452 10 19				Thin Obsidian Shard
+? 0 5 0 G
+G 1 20453 9999				Flawless Obsidian Nuggets
+
+M 0 20440 1 20540		Crazed Dwarf
+? 0 5 0 E
+E 1 20454 20 19				Battered Battle Axe
+? 0 99 0 G
+G 1 150 9999                    ball pien hammer (smythe tool)   
+
+M 0 20441 1 20542		Glowing Dwarf
+? 0 5 0 G
+G 1 20455 9999 				Cracked Obsidian Symbol
+
+M 0 20442 1 20539		Crippled Dwarf
+? 0 99 0 G
+G 1 150 9999                    ball pien hammer (smythe tool)   
+
+M 0 20443 1 20544		Dwarven Princess
+G 1 20404 9999                          Heavy Key
+? 0 5 0 E
+E 1 20457 20 19				Heavy Iron Skillet
+
+M 0 20444 1 20532		Mineral Slug
+
+M 0 20444 1 20537		Mineral Slug
+
+M 0 20444 1 20546		Mineral Slug
+
+M 0 20444 1 20550		Mineral Slug
+
+M 0 20445 1 20454		Slimy Troll (male)
+? 0 5 0 E
+E 1 20458 50 19				Broken Spear
+
+M 0 20445 1 20459		Slimy Troll (male)
+? 0 5 0 E
+E 1 20458 50 19				Broken Spear
+
+? 0 25 0 M
+M 0 20445 2 20459		Slimy Troll (male)
+? 0 5 0 E
+E 1 20458 50 19				Broken Spear
+
+M 0 20445 1 20451		Slimy Troll (male)
+? 0 5 0 E
+E 1 20458 50 19				Broken Spear
+
+M 0 20446 1 20459		Slimy Troll (female)
+? 0 2 0 E
+E 1 20459 10 3				Glowing Necklace
+
+M 0 20446 1 20457		Slimy Troll (female)
+? 0 2 0 E
+E 1 20459 10 3				Glowing Necklace
+
+M 0 20446 1 20453		Slimy Troll (female)
+? 0 2 0 E
+E 1 20459 10 3				Glowing Necklace
+
+M 0 20446 1 20452		Slimy Troll (female)
+? 0 2 0 E
+E 1 20459 10 3				Glowing Necklace
+S
+

@@ -1,0 +1,27 @@
+#33700
+Gilgamesh - Mountain Pass~
+33755 20 2 1
+
+M 0 33700 1 33717       Large Mountain Goat
+M 0 33700 1 33722       Large Mountain Goat
+M 0 33700 1 33727       Large Mountain Goat
+M 0 33700 1 33732       Large Mountain Goat
+M 0 33701 1 33730       Cougar
+M 0 33702 1 33715       Gray and White Hawk
+M 0 33702 1 33734       Gray and White Hawk
+M 0 33703 1 33708       Black Bellied Marmot
+M 0 33703 1 33740       Black Bellied Marmot
+M 0 33703 1 33749       Black Bellied Marmot
+M 0 33704 1 33713       Bighorn Sheep
+M 0 33704 1 33736       Bighorn Sheep
+M 0 33705 1 33705       Pronghorn Antelope
+F 1 1 1                 -fear male
+F 1 1 2                 -fear female
+M 0 33705 1 33738       Pronghorn Antelope
+F 1 1 1                 -fear male
+F 1 1 2                 -fear female
+M 0 33706 1 33719       Giant Hoary Bat
+*Stone Giant should probably load west of or in the western half
+*of this extension, to keep him in a more "remote" location.
+S
+

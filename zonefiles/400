@@ -1,0 +1,56 @@
+#400
+Upper Class Area~
+449 35 2 1
+
+M 0 404 1 401 		Sick woman (quest)
+M 0 401 1 402 		attendant
+M 0 401 1 401 		attendant
+M 0 402 1 403 		tour guide
+M 0 402 1 404 		tour guide
+*M 0 114 1 405           Pirate (rumor_mob_trainers)
+
+D 0 414 0 1             ;door into short hallway
+D 0 420 2 1
+D 0 415 0 1             ;door into storage room
+D 0 421 2 1
+D 0 416 0 1             ;door into staff lounge
+D 0 422 2 1
+D 0 428 0 1             ;door into patient room
+D 0 423 2 1
+D 0 427 0 1             ;door into patient room
+D 0 424 2 1
+D 0 426 0 1             ;door into patient room
+D 0 425 2 1
+D 0 426 2 1             ;door into patient room
+D 0 431 0 1
+D 0 427 2 1             ;door into patient room
+D 0 430 0 1
+D 0 428 2 1             ;door into patient room
+D 0 429 0 1
+
+O 0 22 9999 423        ;bed in patient rooms
+O 0 26 9999 424
+O 0 22 9999 425
+O 0 22 9999 429
+O 0 26 9999 430
+O 0 22 9999 431
+
+O 0 111 99 429       ; windows
+V 1 0 108
+O 0 111 99 430
+V 1 0 109
+O 0 111 99 431
+V 1 0 110
+
+M 0 414 1 429            ;nurse
+M 0 415 1 426            ;nurse
+M 0 416 1 424            ;nurse
+M 0 417 1 423            ;human patient
+M 0 418 1 429            ;human patient
+M 0 419 1 424            ;ogre patient
+M 0 420 1 430            ;ogre patient
+M 0 421 1 425            ;elven patient
+M 0 422 1 431            ;elven patient
+M 0 423 1 431            ;intern
+S
+

@@ -1,0 +1,60 @@
+#14100
+Aislyn - Foothills Near Myrian Ocean~
+14114 25 2 1
+
+A 0 14100 14107
+M 0 14100 2 -99     gnome pilgrim
+? 0 3 0 E
+E 1 14108 10 4       pilgrims robes
+? 0 3 0 E
+E 1 14109 20 9       pilgrims sandal
+? 0 3 0 E
+E 1 14105 20 19      carved wooden staff
+
+M 0 14102 1 14112   Siman
+? 0 5 0 E
+E 1 14104 10 19      can fishing pole
+? 0 99 0 G
+G 1 276 9999         cluster of berries (for follower load)
+K 1 14101 1 14112   Bailey (hunting hound pet)
+
+A 0 14100 14114
+M 0 14103 1 -99     Secil
+? 0 3 0 E
+E 1 14106 6 2        silver ring set with ivory
+? 0 3 0 E
+E 1 14107 3 3        wooden carved unicorn necklace
+? 0 3 0 E
+E 1 14103 30 19      battered shiny blade
+
+A 0 14109 14114
+M 0 14104 1 -99     badger
+G 1 14100 9999        light blue potion (waterbreath)
+
+A 0 14100 14107
+M 0 14105 2 -99     deer whitetail
+A 0 14100 14107
+M 0 14105 2 -99     
+
+A 0 14100 14107
+M 0 14106 2 -99     sneaky coyote
+
+A 0 14100 14107
+M 0 14107 1 -99     fox
+
+A 0 14109 14114
+M 0 14108 1 -99     huge hermit crab
+A 0 14109 14114
+M 0 14108 1 -99     
+
+A 0 14109 14114
+M 0 14109 1 -99     seagull
+A 0 14109 14114
+M 0 14109 1 -99     
+
+A 0 14109 14114
+M 0 14110 1 -99     pelican
+A 0 14109 14114
+M 0 14110 1 -99     
+S
+

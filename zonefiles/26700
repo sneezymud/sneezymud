@@ -1,0 +1,19 @@
+#26700
+Maror - South Versilard's Highway~
+26749 20 2 1
+
+M 0 1460 1 26748 logrus scout
+? 0 1 0 E
+E 1 26697 9999 1 faction sigil of logrus
+
+M 0 1460 1 26746
+? 0 1 0 E
+E 1 26697 9999 1 faction sigil of logrus
+
+M 0 1460 1 26744
+? 0 1 0 E
+E 1 26697 9999 1 faction sigil of logrus
+
+S
+
+

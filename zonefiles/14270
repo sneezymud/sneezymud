@@ -1,0 +1,579 @@
+#14270
+Mithros - Spirit Catacombs & Tombs~
+14299 40 2 1
+
+D 0 14270 2 1      A Small Storage and Preparation Room -> The Upper Catacombs
+D 0 14271 0 1      The Upper Catacombs -> A Small Storage and Preparation Room
+D 0 14285 2 2      The Lower Catacombs -> An Entry to the Vaults of the Clergy
+D 0 14285 3 2      The Lower Catacombs -> A Decorated Tomb
+D 0 14286 0 1      The Lower Catacombs -> The Lower Catacombs
+D 0 14286 3 1      The Lower Catacombs -> A Decorated Tomb
+D 0 14286 8 2      The Lower Catacombs -> A Decorated Tomb
+D 0 14287 0 2      The Lower Catacombs -> A Small Entry Chamber
+D 0 14287 1 1      The Lower Catacombs -> A Decorated Tomb
+D 0 14287 2 1      The Lower Catacombs -> The Lower Catacombs
+D 0 14287 3 1      The Lower Catacombs -> A Decorated Tomb
+D 0 14287 8 2      The Lower Catacombs -> A Decorated Tomb
+D 0 14287 9 1      The Lower Catacombs -> A Decorated Tomb
+D 0 14289 0 2      An Entry to the Vaults of the Clergy -> The Lower Catacombs
+D 0 14290 0 1      A Small Burial Vault -> A Decorated Tomb
+D 0 14291 1 2      A Decorated Tomb -> The Lower Catacombs
+D 0 14292 2 1      A Decorated Tomb -> A Small Burial Vault
+D 0 14292 7 2      A Decorated Tomb -> The Lower Catacombs
+D 0 14293 1 1      A Decorated Tomb -> The Lower Catacombs
+D 0 14293 6 1      A Decorated Tomb -> The Lower Catacombs
+D 0 14294 0 1      A Decorated Tomb -> A Decorated Tomb
+D 0 14294 7 2      A Decorated Tomb -> The Lower Catacombs
+D 0 14295 1 1      A Decorated Tomb -> The Lower Catacombs
+D 0 14296 0 1      A Decorated Tomb -> A Desecrated Burial Vault
+D 0 14296 2 1      A Decorated Tomb -> A Decorated Tomb
+D 0 14296 3 1      A Decorated Tomb -> The Lower Catacombs
+D 0 14298 1 1      A Small Entry Chamber -> A Desecrated Burial Vault
+D 0 14298 2 2      A Small Entry Chamber -> The Lower Catacombs
+D 0 14299 2 1      A Desecrated Burial Vault -> A Decorated Tomb
+D 0 14299 3 1      A Desecrated Burial Vault -> A Small Entry Chamber
+
+
+O 0 14272 9999 14281           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14272              putrid corpse
+O 0 14272 9999 14282           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14272              dried corpse
+O 0 14272 9999 14282           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14272              putrid corpse
+O 0 14272 9999 14283           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14272              dried corpse
+O 0 14272 9999 14283           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14272              putrid corpse
+O 0 14272 9999 14284           a decayed wooden coffin
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14272              dried corpse
+
+O 0 14273 9999 14291           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14273              putrid corpse
+O 0 14273 9999 14292           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14273              dried corpse
+O 0 14273 9999 14292           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14273              putrid corpse
+O 0 14273 9999 14293           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14273              dried corpse
+O 0 14273 9999 14294           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14273              putrid corpse
+O 0 14273 9999 14295           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14273              dried corpse
+O 0 14273 9999 14295           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14273              putrid corpse
+O 0 14273 9999 14296           a crumbling stone coffin
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14273              dried corpse
+
+O 0 14274 9999 14288           a crumbling marble coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14274              dried corpse
+O 0 14274 9999 14288           a crumbling marble coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14274              putrid corpse
+O 0 14274 9999 14288           a crumbling marble coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14274              dried corpse
+O 0 14274 9999 14290           a crumbling marble coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14274              putrid corpse
+O 0 14274 9999 14290           a crumbling marble coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14274              dried corpse
+
+O 0 14275 9999 14297           a cracked crystal coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14275              putrid corpse
+O 0 14275 9999 14297           a cracked crystal coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14275              dried corpse
+O 0 14275 9999 14299           a cracked crystal coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14275              putrid corpse
+O 0 14275 9999 14299           a cracked crystal coffin
+? 0 15 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14275              dried corpse
+
+O 0 14276 9999 14299           a runed crystal coffin
+? 0 20 0 L
+L 1 20 30 0 1                    random loot
+? 0 50 0 P
+P 1 14271 1 14276                   Tome of Artifacts - Volume I
+
+O 0 14277 9999 14274           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14274           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14274           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14274           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14275           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14275           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14275           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14275           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14276           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14276           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14276           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14276           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14276           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14277           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14277           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14277           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14278           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14278           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14278           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14279           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14279           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14280           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14280           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14280           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14281           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14281           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14282           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14282           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14283           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14283           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14283           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+O 0 14277 9999 14284           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5139 9999 14277              dried corpse
+O 0 14277 9999 14284           a stone niche
+? 0 5 0 L
+L 1 20 30 0 1                    random loot
+P 1 5138 9999 14277              putrid corpse
+
+O 0 14278 9999 14291           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14291           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14292           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14292           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14293           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14294           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14295           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14295           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14296           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+O 0 14278 9999 14296           a marble lined niche
+? 0 10 0 L
+L 1 20 30 0 1                    random loot
+
+O 0 14279 9999 14274           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+O 0 14279 9999 14276           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+O 0 14279 9999 14278           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+O 0 14279 9999 14278           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+O 0 14279 9999 14279           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+O 0 14279 9999 14280           a carved wooden coffer
+? 0 30 0 L
+L 1 20 30 0 1                    random loot
+
+O 0 14280 9999 14288           a marble coffer
+? 0 35 0 L
+L 1 20 30 0 1                    random loot
+? 0 5 0 P
+P 1 14117 15 14280                bloodstone inlaid scepter
+O 0 14280 9999 14290           a marble coffer
+? 0 35 0 L
+L 1 20 30 0 1                    random loot
+? 0 5 0 P
+P 1 14117 15 14280                bloodstone inlaid scepter
+O 0 14280 9999 14290           a marble coffer
+? 0 35 0 L
+L 1 20 30 0 1                    random loot
+? 0 5 0 P
+P 1 14117 15 14280                bloodstone inlaid scepter
+
+O 0 14281 9999 14297           a jeweled coffer
+? 0 40 0 L
+L 1 20 30 0 1                    random loot
+O 0 14281 9999 14297           a jeweled coffer
+? 0 40 0 L
+L 1 20 30 0 1                    random loot
+O 0 14281 9999 14299           a jeweled coffer
+? 0 40 0 L
+L 1 20 30 0 1                    random loot
+
+M 0 14270 1 14274              an animated mummy
+? 0 25 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 1 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 1 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14286 5 18                     a runed gnomemail shield [hold-right]
+? 0 8 0 E
+E 1 14285 5 19                     a runed gnomish long sword [hold-left]
+Y 0 87 3                           splintmail set 
+M 0 14270 1 14275              an animated mummy
+? 0 25 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 1 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 1 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14286 5 18                     a runed gnomemail shield [hold-right]
+? 0 8 0 E
+E 1 14285 5 19                     a runed gnomish long sword [hold-left]
+Y 0 87 3                           splintmail set 
+M 0 14270 1 14276              an animated mummy
+? 0 25 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 1 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 1 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14286 5 18                     a runed gnomemail shield [hold-right]
+? 0 8 0 E
+E 1 14285 5 19                     a runed gnomish long sword [hold-left]
+Y 0 87 3                           splintmail set 
+M 0 14270 1 14277              an animated mummy
+? 0 25 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 1 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 1 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14286 5 18                     a runed gnomemail shield [hold-right]
+? 0 8 0 E
+E 1 14285 5 19                     a runed gnomish long sword [hold-left]
+Y 0 87 3                           splintmail set 
+
+M 0 14271 1 14278              a gnome zombie
+? 0 30 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 2 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 2 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14287 5 14                     an owl-feathered cloak [back]
+? 0 8 0 E
+E 1 14288 5 19                     a runed gnomish gnife [hold-left]
+Y 0 86 3                           brigandine set
+M 0 14271 1 14279              a gnome zombie
+? 0 30 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 2 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 2 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14287 5 14                     an owl-feathered cloak [back]
+? 0 8 0 E
+E 1 14288 5 19                     a runed gnomish gnife [hold-left]
+Y 0 86 3                           brigandine set
+M 0 14271 1 14280              a gnome zombie
+? 0 30 0 G
+G 1 14282 9999                   a carved wooden key
+? 0 2 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 2 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14287 5 14                     an owl-feathered cloak [back]
+? 0 8 0 E
+E 1 14288 5 19                     a runed gnomish gnife [hold-left]
+Y 0 86 3                           brigandine set
+
+M 0 14272 1 14281              an undead monk
+? 0 3 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 3 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14289 5 3                      some runed brown monk's robes [body]
+? 0 8 0 E
+E 1 14290 10 2                     some runed gnomemail knuckles [finger-left]
+M 0 14272 1 14282              an undead monk
+? 0 3 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 3 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14289 5 3                      some runed brown monk's robes [body]
+? 0 8 0 E
+E 1 14290 10 2                     some runed gnomemail knuckles [finger-left]
+M 0 14272 1 14283              an undead monk
+? 0 3 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 3 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14289 5 3                      some runed brown monk's robes [body]
+? 0 8 0 E
+E 1 14290 10 2                     some runed gnomemail knuckles [finger-left]
+M 0 14272 1 14284              an undead monk
+? 0 3 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 3 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 14289 5 3                      some runed brown monk's robes [body]
+? 0 8 0 E
+E 1 14290 10 2                     some runed gnomemail knuckles [finger-left]
+
+M 0 14273 1 14291              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22463 5 19                     a gnight's sword [hold-left]
+Y 0 112 3                          blackened gnight set 
+M 0 14273 1 14292              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22463 5 19                     a gnight's sword [hold-left]
+Y 0 112 3                          blackened gnight set 
+M 0 14273 1 14293              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22464 5 19                     a gnight's lance [hold-left]
+Y 0 112 3                          blackened gnight set 
+M 0 14273 1 14294              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22464 5 19                     a gnight's lance [hold-left]
+Y 0 112 3                          blackened gnight set 
+M 0 14273 1 14295              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22465 5 19                     a gnight's mace [hold-left]
+Y 0 112 3                          blackened gnight set 
+M 0 14273 1 14296              a skeletal gnight
+? 0 4 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 4 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 8 0 E
+E 1 22465 5 19                     a gnight's mace [hold-left]
+Y 0 112 3                          blackened gnight set 
+
+M 0 14274 1 14288              an anquished spirit
+? 0 5 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 5 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 75 0 G
+G 1 14283 9999                   a key made of marble
+? 0 10 0 E
+E 1 14291 4 3                      some runed clerical vestments [body]
+? 0 10 0 E
+E 1 14292 4 19                     a runed gnomish mace [hold-left]
+Y 0 110 4                          spirit cloth set
+M 0 14274 1 14290              an anquished spirit
+? 0 5 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 5 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 75 0 G
+G 1 14283 9999                   a key made of marble
+? 0 10 0 E
+E 1 14291 4 3                      some runed clerical vestments [body]
+? 0 10 0 E
+E 1 14292 4 19                     a runed gnomish mace [hold-left]
+Y 0 110 4                          spirit cloth set
+
+M 0 14275 1 14297              Gnelix
+? 0 6 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 6 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 90 0 G
+G 1 14284 9999                   a jeweled key
+? 0 10 0 E
+E 1 14294 6 17                     bracer studded with onyx [wrist-left]
+? 0 10 0 E
+E 1 14293 6 2                      platinum ring w/ onyx setting [finger-left]
+? 0 5 0 E
+E 1 14116 15 19                    bloodstone inlaid dagger [hold-left]
+Y 0 110 5                          spirit cloth set
+
+M 0 14276 1 14299              Lixlor
+? 0 8 0 G
+G 1 14298 1                      quill of gnalis the thinker
+? 0 8 0 G
+G 1 14299 1                      ghostly tome of Knowledge
+? 0 5 0 G
+G 1 14270 1                      broken blade of gnulis the brave
+? 0 5 0 E
+E 1 14295 1 3                      Larnishtal - artifact pendant [neck]
+? 0 5 0 E
+E 1 14296 1 14                     Cazeerlitar - artifact cloak [back]
+? 0 5 0 E
+E 1 14115 1 19                     Duthrahl - artifact dagger [hold-left]
+Y 0 113 3                          runed flesh set
+
+A 0 14270 14273
+M 0 14277 1 -99                a gnat (polymorphed cleric named Gnatille)
+
+S
+

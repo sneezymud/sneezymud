@@ -1,0 +1,291 @@
+#6100
+Bain - Pantathian Ruins~
+6199 45 2 1
+
+D 0 6115 3 2  pantathian altar
+D 0 6118 1 2
+D 0 6119 3 1  panels to secret lake stairs
+D 0 6162 1 1
+D 0 6163 0 1  
+D 0 6183 2 1
+D 0 6122 1 2  ancient grotto
+D 0 6125 3 2
+D 0 6141 1 1  great hall
+D 0 6145 3 1
+D 0 6142 4 1  library
+D 0 6143 5 1
+D 0 6148 1 1  King's chambers
+D 0 6149 3 1
+
+O 0 33 1 6156           generic chest in wizard's lair
+V 1 2 6134                change to key 6134
+? 0 25 0 L
+L 1 13 24 0 1             random loot
+
+O 0 33 1 6149           generic chest in prince's quarters
+V 1 2 6113                change to key 6113
+? 0 25 0 L
+L 1 13 24 0 1             random loot
+
+O 0 33 1 6125           generic chest in kinslayer's grotto
+V 1 2 6135                change to key 6135
+? 0 25 0 L
+L 1 13 24 0 1             random loot
+
+O 0 15210 1 6131        straw sleeping mat in noble dwelling
+O 0 15210 1 6132        noble dwelling
+
+O 0 27 1 6149           bed in King's Chamber
+
+O 0 6132 1 6128         cracked cistern (fountain) in large chamber
+
+O 0 6131 1 6112         dim flickering wall torch at Intersection
+O 0 6131 1 6115         altar
+O 0 6131 2 6115         altar
+O 0 6131 1 6116         alcove
+O 0 6131 1 6117         alcove
+O 0 6131 1 6125         kinslayer
+O 0 6131 1 6128         stone chamber
+O 0 6131 2 6128         stone chamber
+O 0 6131 1 6129         commons
+O 0 6131 2 6129         
+O 0 6131 1 6130         
+O 0 6131 2 6130         
+O 0 6131 1 6131         dwelling
+O 0 6131 1 6132
+O 0 6131 1 6133         dining hall
+O 0 6131 2 6133
+O 0 6131 1 6134         kitchen
+O 0 6131 1 6144         wizard's workshop
+O 0 6131 1 6145         hall
+O 0 6131 1 6146         hall
+O 0 6131 1 6147         hall
+O 0 6131 1 6148         throne
+O 0 6131 2 6148
+O 0 6131 1 6149         prince's quarters
+O 0 6131 1 6150         library
+O 0 6131 1 6156         wizard's lair
+O 0 6136 1 6158
+
+M 0 6100 1 6112         pantathian guard
+G 1 1213 9999
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 6100 1 6115         pantathian guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 6100 1 6128         pantathian guard
+G 1 1213 9999
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 6100 1 6145         pantathian guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+
+M 0 6101 1 6130         pantathian male
+? 0 6 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+M 0 6101 1 6130         pantathian male
+? 0 6 0 E
+E 1 6103 500 4             frayed tunic
+? 0 6 0 E
+E 1 6114 20 19             stone knife
+M 0 6101 1 6129         pantathian male
+G 1 1213 9999
+? 0 6 0 E
+E 1 6103 500 4             frayed tunic
+? 0 6 0 E
+E 1 6114 20 19             stone knife
+
+M 0 6102 1 6131         pantathian female
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+M 0 6102 1 6132         pantathian female
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+
+M 0 6103 1 6131         pantathian child
+? 0 70 0 G
+G 1 6130 9999              mess - child's meal
+M 0 6103 1 6131         pantathian child
+? 0 60 0 G
+G 1 6130 9999              mess - child's meal
+M 0 6103 1 6132         pantathian child
+? 0 60 0 G
+G 1 6130 9999              mess - child's meal
+M 0 6103 1 6132         pantathian child
+? 0 70 0 G
+G 1 6130 9999              mess - child's meal
+
+M 0 6104 1 6116         pantathian acolyte
+? 0 5 0 E
+E 1 6104 100 4             acolyte robe
+? 0 5 0 E
+E 1 6115 20 19             stone mace
+Y 0 53 1                   Flowwhite Set
+M 0 6104 1 6117         pantathian acolyte
+? 0 5 0 E
+E 1 6104 100 4             acolyte robe
+? 0 5 0 E
+E 1 6115 20 19             stone mace
+Y 0 53 1                   Flowwhite Set
+
+M 0 6105 1 6156       pantathia wizard
+? 0 75 0 G
+G 1 6134 9999              runed metal key
+Y 0 56 1                   Glowwhite Set
+? 0 99 0 G
+G 1 432 9999               orange to sastify charm if command
+C 1 6106 1 6156       wizard's familiar
+
+M 0 6107 1 6146         pantathian noble
+? 0 5 0 E
+E 1 6106 200 4             tarnished metal
+? 0 5 0 E
+E 1 6117 20 19             tarnished sword
+Y 0 41 3                   Ringmail load
+M 0 6107 1 6147         pantathian noble
+? 0 5 0 E
+E 1 6106 200 4             tarnished metal
+? 0 5 0 E
+E 1 6117 20 19             tarnished sword
+Y 0 41 3                   Ringmail load
+
+M 0 6108 1 6148        prince s'sthir
+? 0 60 0 G
+G 1 6113 6               key
+? 0 5 0 E
+E 1 6111 200 4             polished metal breastplate
+? 0 3 0 E
+E 1 6109 200 15            ivory belt
+? 0 5 0 E
+E 1 6118 20 19             ivory headed spear 
+Y 0 41 3                   Ringmail load
+
+M 0 6109 1 6125        kinslayer
+? 0 75 0 G
+G 1 6135 9999              cold metal key
+? 0 2 0 E
+E 1 6101 200 18            serpent staff
+? 0 2 0 E
+E 1 6102 200 14            cloak human scraps
+Y 0 56 1                   Glowwhite Set
+
+M 0 6110 1 6148        pantathian jester
+? 0 5 0 E
+E 1 6107 1 19              handpuppet
+
+M 0 6111 1 6149        al'rissa
+? 0 2 0 E
+E 1 6110 20 9               silken boot
+
+M 0 6112 1 6149         pantathian handmaiden
+
+M 0 6113 1 6134         pantathian chef
+? 0 5 0 E
+E 1 6105 1 15               chef apron
+
+M 0 6114 1 6138         chef's assistant
+G 1 1213 9999
+G 1 1213 9999
+? 0 50 0 G
+G 1 1213 9999
+
+M 0 6115 1 6137         large rat-like beast
+M 0 6115 2 6137
+? 0 50 0 M
+M 1 6115 3 6137
+M 0 6115 1 6138
+? 0 50 0 M
+M 1 6115 2 6138
+
+M 0 6116 1 6150         pantathian sage
+Y 0 53 1                   Flowwhite Set
+? 0 99 0 G
+G 1 433 9999               lime to sastify K command
+K 1 6117 1 6150         aerial servant
+
+M 0 6118 1 6152         pantathian monk
+Y 0 53 1                   Flowwhite Set
+M 0 6118 1 6154
+Y 0 53 1
+
+M 0 6119 1 6144         pantathian apprentice mage
+Y 0 53 1                   Flowwhite Set
+M 0 6119 1 6155
+Y 0 53 1
+
+M 0 7818 1 6151         large chameleon pet
+
+M 0 6120 1 6199         solitary old feeble mindflayer
+? 0 5 0 G
+G 1 817 9999               slender iron wand (flaming sword)
+
+A 0 6181 6194
+M 0 6121 1 -99          guardian serpent
+
+M 0 6122 1 6198         pantathian ranger patrol leader
+? 0 10 0 E
+E 1 6103 500 4             frayed tunic
+? 0 10 0 E
+E 1 6117 20 19             tarnished broad sword
+? 0 5 0 E
+E 1 6114 20 18             stone knife
+
+A 0 6181 6194
+M 0 6123 1 -99          young guardian serpent
+A 0 6181 6194
+M 0 6123 1 -99          
+
+A 0 6195 6198
+M 0 6124 1 -99          pantathian monk scout
+Y 0 53 1                   Flowwhite Set
+A 0 6162 6163
+M 0 6124 1 -99
+Y 0 53 1                   
+A 0 6119 6124
+M 0 6124 1 -99
+Y 0 53 1                   
+A 0 6119 6124
+M 0 6124 1 -99
+Y 0 53 1                   
+
+A 0 6181 6194
+M 0 6125 2 -99          large illuminous fish
+A 0 6181 6194
+M 0 6125 2 -99          
+A 0 6181 6194
+M 0 6125 2 -99          
+A 0 6181 6194
+M 0 6125 2 -99          
+
+A 0 6181 6194
+M 0 6126 2 -99          blood-red fish
+A 0 6181 6194
+M 0 6126 2 -99          
+A 0 6181 6194
+M 0 6126 2 -99          
+
+A 0 6196 6197
+M 0 914 1 -99           doppleganger
+
+S
+

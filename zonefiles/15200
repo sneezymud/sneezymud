@@ -1,0 +1,234 @@
+#15200
+Merc - Pantathian Extension~
+15249 45 2 1
+
+D 0 15200 4 1          Trapdoor in Ceiling
+D 0 15201 5 1
+D 0 15204 0 1          Gate to Dump
+D 0 15206 2 1
+D 0 15213 1 1          Metal Door to Lab
+D 0 15238 3 1
+D 0 15239 0 1          Skin Curtain to Shaman Lair
+D 0 15240 2 1
+T 0 15239 0 6 4        Firetrap on Shaman's door
+T 0 15240 2 6 4
+
+O 0 33 1 15240         generic chest in shaman's room
+V 1 2 15247               change to key 15247
+? 0 25 0 L
+L 1 13 24 0 1             random loot
+
+O 0 15205 1 15206      crack window   
+
+O 0 15224 1 15223      gap window
+O 0 15225 1 15224      
+
+O 0 15223 20 15223     Rock
+
+O 0 15210 9999 15210   Straw Mat Bed
+O 0 15210 9999 15210
+O 0 15210 9999 15210
+O 0 15210 9999 15212
+O 0 15210 9999 15212
+O 0 15210 9999 15236
+O 0 15210 9999 15236
+O 0 15210 9999 15237
+O 0 15210 9999 15237
+O 0 15210 9999 15237
+
+O 0 15238 9999 15238   Wooden Lab Table
+
+O 0 15242 9999 15242   Egg
+O 0 15242 9999 15243   
+O 0 15242 9999 15243   
+O 0 15242 9999 15243   
+O 0 15242 9999 15244   
+O 0 15242 9999 15244   
+
+O 0 15243 9999 15243   Egg-Rotten/Poisoned
+O 0 15243 9999 15243   
+O 0 15243 9999 15244   
+
+M 0 15212 1 15200       Pant Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+
+M 0 15229 1 15206       Worker (Garbage)
+? 0 75 0 G
+G 1 15206 20               Armful of Garbage
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+
+M 0 15228 1 15204       Rat-like Beast
+M 0 15228 1 15205       
+M 0 15228 1 15206       
+M 0 15228 1 15215       
+
+M 0 15231 1 15207       Guard with Warning
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+
+M 0 15216 1 15210       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15212       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15212       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15212       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15236       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15236       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15237       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15237       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+M 0 15216 1 15237       Pant Female
+? 0 4 0 E
+E 1 6103 500 4             frayed tunic
+? 0 4 0 E
+E 1 6114 20 19             stone knife
+
+M 0 15217 1 15210       Pant Child
+M 0 15217 1 15210
+M 0 15217 1 15212
+M 0 15217 1 15212       
+M 0 15217 1 15212       
+M 0 15217 1 15212       
+M 0 15217 1 15212       
+M 0 15217 1 15236       
+M 0 15217 1 15236       
+M 0 15217 1 15236       
+M 0 15217 1 15236       
+M 0 15217 1 15237       
+M 0 15217 1 15237       
+M 0 15217 1 15237       
+M 0 15217 1 15237       
+
+M 0 15226 1 15238       Shaman Assistant
+? 0 4 0 E
+E 1 6115 20 19             stone mace
+Y 0 53 1                   Flowwhite Set
+M 0 15226 1 15238       Shaman Assistant
+? 0 4 0 E
+E 1 6115 20 19             stone mace
+Y 0 53 1                   Flowwhite Set
+
+M 0 15223 1 15240       Pant Shaman
+G 1 15247 4                Rusted Iron Key
+? 0 3 0 E
+E 1 15240 5 15             Belt of Many Pouches
+? 0 6 0 E
+E 1 6115 20 19             stone mace
+Y 0 56 1                   Glowwhite Set
+
+M 0 15227 1 15213       Young Pant Guard
+? 0 3 0 E
+E 1 6112 400 4             rusty shirt
+? 0 3 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 1                   Ringmail load
+M 0 15227 1 15209       Young Pant Guard
+? 0 3 0 E
+E 1 6112 400 4             rusty shirt
+? 0 3 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 1                   Ringmail load
+M 0 15227 1 15218       Young Pant Guard
+? 0 3 0 E
+E 1 6112 400 4             rusty shirt
+? 0 3 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 1                   Ringmail load
+M 0 15227 1 15201       Young Pant Guard
+? 0 3 0 E
+E 1 6112 400 4             rusty shirt
+? 0 3 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 1                   Ringmail load
+
+M 0 15230 1 15219       Worker (eggtender)
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+M 0 15230 1 15219       Worker (eggtender)
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+M 0 15230 1 15222       Worker (eggtender)
+? 0 5 0 E
+E 1 6103 500 4             frayed tunic
+? 0 5 0 E
+E 1 6114 20 19             stone knife
+
+M 0 15224 1 15220       Angry Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 15224 1 15221       Angry Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 15224 1 15221       Angry Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 15224 1 15222       Angry Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 15224 1 15222       Angry Guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+M 0 15224 1 15222       Angry guard
+? 0 5 0 E
+E 1 6112 400 4             rusty shirt
+? 0 5 0 E
+E 1 6116 20 19             rusty spear
+Y 0 41 2                   Ringmail load
+S
+

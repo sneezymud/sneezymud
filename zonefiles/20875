@@ -1,0 +1,123 @@
+#20875
+Mithros - Chaos Plains-Calcathian Mountains~
+20899 30 2 0
+
+D 0 20870 6 1         rock slide to refugees
+D 0 20875 9 1
+D 0 20871 6 1         rock slide to refugees
+D 0 20876 9 1
+D 0 20886 8 1         entrance to refugee cave
+D 0 20887 7 1
+D 0 20888 9 2         door between refugee & windy cave
+D 0 20889 6 2
+D 0 20892 9 1         entrance to windy cave
+D 0 20893 6 1
+D 0 20896 7 1         rock slide to split
+D 0 20872 8 1
+D 0 20897 1 2         secret to Goroth's lair
+D 0 20898 3 2
+
+
+O 0 20891 1 20885     melted plow
+
+O 0 20892 1 20879     petrified othoram corpse
+
+O 0 20893 1 20882     make-shift watermill
+
+O 0 20894 1 20878     irrigation ditches
+O 0 20894 1 20879     irrigation ditches
+O 0 20894 1 20880     irrigation ditches
+O 0 20894 1 20881     irrigation ditches
+
+O 0 20896 1 20898     sturdy stone chest (invisible)
+? 0 25 0 P
+P 1 20897 10 20896      crystal orb held in a stone dragon forearm/claw staff
+? 0 25 0 P
+P 1 20898 3 20896       stone dragoneye necklace
+? 0 25 0 P
+P 1 1557 9999 20896     earthquake scroll
+? 0 50 0 P
+P 1 37 9999 20896       7500 talens
+? 0 50 0 P
+P 1 36 9999 20896       3000 talens
+
+? 0 50 0 M
+M 1 20875 1 20899     Goroth - Granite Earth Dragon (chance outside)
+G 1 20895 9999          glowing stone key
+
+M 1 20875 1 20898     Goroth - Granite Earth Dragon (default inside)
+G 1 20895 9999          glowing stone key
+
+M 0 20876 1 20893     Firmaul - Hill Giant
+? 0 5 0 E
+E 1 20877 20 15         huge titanium/bronze girth
+? 0 3 0 E
+E 1 20876 20 19         huge notched 2H sword
+Y 0 50 1                1% chance of bronze plate
+
+M 0 20877 1 20887     Bria - Refugee Calthor Mage
+? 0 5 0 G
+G 1 20878 9999          blackened bronze staff (L35 fireball 2/5 charges left)
+? 0 5 0 G
+G 1 20879 9999          charred parchment (L35 inferno scroll)
+? 0 3 0 E
+E 1 20880 20 2          blackened bronze ring
+? 0 1 0 E
+E 1 20816 15 19         bronze handled dagger
+? 0 1 0 E
+E 1 20817 15 18         carved ganthi horn
+Y 0 107 1               1% othora hide set
+
+M 0 20878 1 20890     Heelos - Shadow Giant
+? 0 3 0 E
+E 1 20881 20 19         carved spear (shadowy)
+Y 0 50 1                1% chance of bronze plate
+
+A 0 20878 20880
+M 0 20879 1 -99       Mercenary Refugee
+? 0 20 0 G
+G 1 20889 9999          fresh field greens
+? 0 3 0 E
+E 1 20882 50 19         bronze short blade
+
+M 0 20880 1 20895     Displacer Beast
+
+A 0 20883 20888
+M 0 20881 1 -99       Pilgrim Refugee
+? 0 20 0 G
+G 1 20889 9999          bottle of mare's milk
+? 0 5 0 E
+E 1 20885 9999 3        melted bronze symbol on a necklace
+? 0 3 0 E
+E 1 20884 50 19         battered bronze hammer
+Y 0 80 1                1% chance of wide leather set
+
+A 0 20887 20888
+M 0 20882 1 -99       Young Teral (earth elemental)
+
+M 0 20883 1 20882     Tirmas 
+? 0 25 0 G
+G 1 20888 9999          hard tack ration
+? 0 5 0 E
+E 1 20887 50 19         bronze knife
+Y 0 81 1                1% chance of black leather
+
+M 0 20884 1 20894     Invisible Rock Giantess
+G 1 20424 9999 			Large Boulder
+
+A 0 20889 20896
+M 0 20885 1 -99       Scavenger Beasts
+
+A 0 20889 20896 
+M 0 20886 1 -99       Shadow Beast (wolf)
+
+A 0 20875 20886
+M 0 20887 1 -99       Young Calcat
+
+A 0 20883 20886
+M 0 20888 1 -99       Young Male Refugee
+
+A 0 20887 20888
+M 0 20889 1 -99       Young Female Refugee
+S
+

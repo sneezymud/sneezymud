@@ -1,0 +1,314 @@
+#10900
+Dolgan - Mountain Valley~
+10999 30 2 1
+
+D 0 10900 4 1              ; Secret Door, Fox's Den
+D 0 10978 5 1
+D 0 10905 3 1              ; Secret Cave Door
+D 0 10916 1 1              ; Secret Cave Door
+D 0 10914 7 1              : Secret Door, Poacher's Campsite
+D 0 10925 8 1
+D 0 10981 7 1              ; Cabin Door
+D 0 10915 8 1              ; Cabin Door
+D 0 10996 8 1              ; Sticks in Lake
+D 0 10997 7 1              ; Sticks in Lake
+
+O 0 17101 9999 10914         smoldering campfire (from ogre's)
+O 0 31357 1 10938
+M 0 31307 3 10978           ; Blue mare for juju quest
+M 0 10900 4 10923           ; Mockingbird
+M 0 10900 4 10954           ; Mockingbird
+M 0 10901 2 10975           ; Black Bear
+M 0 10902 2 10910           ; Mountain Goat
+M 0 10902 2 10919           ; Mountain Goat
+M 0 10903 2 10933           ; Great Horned Owl
+M 0 10903 2 10978           ; Great Horned Owl
+M 0 10904 3 10927           ; Bluejay
+M 0 10904 2 10970           ; Bluejay
+M 0 10904 3 10973           ; Bluejay
+M 0 10905 1 10917           ; Cougar
+M 0 10905 1 10971           ; Cougar
+M 0 10906 3 10941           ; Racoon
+M 0 10906 3 10984           ; Racoon
+M 0 10907 3 10938           ; Elk
+M 0 10907 3 10965           ; Elk
+M 0 10908 2 10954           ; Wolverine
+M 0 10909 2 10953           ; Otter, Male
+M 0 10909 2 10974           ; Otter, Male
+M 0 10910 1 10999           ; Otter, Female
+M 0 10911 4 10999           ; Otter, Young
+M 0 10912 2 10919           ; Snow Leopard
+M 0 10913 4 10930           ; Falcon
+M 0 10914 2 10918           ; Rainbow Trout
+M 0 10914 2 10993           ; Rainbow Trout
+M 0 10914 2 10995           ; Rainbow Trout
+M 0 10915 6 10969           ; Brownie Warrior
+? 0 5 0 E
+E 1 10906 999 14               ; Brownie Cloak
+? 0 8 0 E
+E 1 10917 999 19               ; Small Sword
+M 0 10916 3 10976           ; Brownie Thief
+? 0 5 0 E
+E 1 10906 999 14               ; Brownie Cloak
+? 0 5 0 E
+E 1 10938 999 19               ; Platinum Dagger
+M 0 10917 2 10961           ; Brownie Mage
+? 0 5 0 E
+E 1 10906 999 14               ; Brownie Cloak
+? 0 5 0 E
+E 1 10938 999 19               ; Platinum Dagger
+? 0 2 0 G
+G 1 10915 999 	                ; Water Breath Scroll
+? 0 75 0 G
+G 1 15 9999                     ; barkskin [barkskin quest]
+M 0 10918 1 10915           ; Hound Dog
+? 0 15 0 E
+E 1 10925 999 3                ; Collar Dog Studded
+M 0 10919 1 10915           ; Hermit Jed
+? 0 5 0 G
+G 1 10914 999	                 ; Scroll Charm Monster
+? 0 3 0 G
+G 1 10916 999                   ; Harmonica
+? 0 15 0 E
+E 1 10918 999 7                 ; Denim Pants
+? 0 6 0 E
+E 1 10919 999 9                 ; Hiking Boot
+? 0 2 0 G
+G 1 10920 100                   ; Birch Branch
+? 0 7 0 E
+E 1 10921 999 5                 ; Coonskin Cap
+? 0 5 0 E
+E 1 10922 999 14                ; Bearskin Cloak
+? 0 12 0 E
+E 1 10923 999 4                 ; Flannel Shirt
+? 0 2 0 E
+E 1 10931 20 18                 ; Platinum Bastard Sword
+? 0 5 0 G
+G 1 10924 999                   ; Hunting Knife
+? 0 6 0 E
+E 1 10926 999 17                ; Feather Bracelet
+? 0 4 0 E
+E 1 10927 999 11                ; Fur Gauntlet
+? 0 9 0 E
+E 1 10932 999 15                ; Elkskin Belt
+? 0 10 0 E
+E 1 10933 999 2                 ; Wooden Ring
+
+M 0 10921 1 10936            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10937            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10945            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10959            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 2 10959            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 3 10959            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10961            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10968            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10969            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+M 0 10921 1 10977            ; Camper
+? 0 5 0 E
+E 1 300 9999 19                 ; Simple Long Sword
+? 0 3 0 G 
+G 1 307 9999                    ; Small Bow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 5 0 G
+G 1 308 9999                    ; Small Arrow
+? 0 40 0 G
+G 1 10942 9999                  ; Honey Comb
+Y 0 8 3                         ; Studded Set
+
+
+M 0 10922 1 10900            ; Scrawny Kobold
+M 0 10923 1 10914            ; Orc Poacher
+
+M 0 10924 1 10982            ; gold miner
+
+O 0 10928 1 10915            ; Wooden Bed in Cabin
+? 0 5 0 O
+O 1 10929 999 10915          ; Beeswax Candle in Cabin
+O 0 10934 2 10915            ; Fireplace in Cabin
+O 0 10930 1 10915            ; Rocking Chair in Cabin
+? 0 5 0 O
+O 1 10937 999 10915          ; Smoked Ham
+O 0 10935 9 10959            ; Spring in Camp Site
+? 0 2 0 O
+O 1 10936 999 10981          ; Canoe outside Cabin
+O 0 10901 6 10966            ; Berry Bush
+O 0 10901 6 10975            ; Berry Bush
+O 0 10901 6 10966            ; Berry Bush
+O 0 10901 6 10975            ; Berry Bush
+O 0 10901 6 10966            ; Berry Bush
+O 0 10901 6 10975            ; Berry Bush
+? 0 10 0 O
+O 1 10900 999 10966            ; Red & Black Berries
+? 0 10 0 O
+O 1 10900 999 10975            ; Red & Black Berries
+? 0 2 0 O
+O 1 10911 999 10966            ; Yellow Berries
+? 0 2 0 O
+O 1 10911 999 10975            ; Yellow Berries
+? 0 3 0 O
+O 1 10907 999 10962            ; Orange Berries
+? 0 8 0 O
+O 1 10904 999 10941            ; Birds Nest
+? 0 20 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 15 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 10 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 5 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 8 0 O
+O 1 10904 999 10970            ; Birds Nest
+? 0 20 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 15 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 10 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 5 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 8 0 O
+O 1 10904 999 10930            ; Birds Nest
+? 0 20 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 15 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 10 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 5 0 P
+P 1 10903 999 10904              ; Birds Egg
+? 0 10 0 O
+O 1 10905 999 10923            ; Pine Cone
+? 0 10 0 O
+O 1 10905 999 10946            ; Pine Cone
+? 0 10 0 O
+O 1 10905 999 10965            ; Pine Cone
+? 0 8 0 O
+O 1 10908 4 10959              ; Pine Log
+? 0 7 0 O
+O 1 10909 999 10930            ; Aspen Leaf
+? 0 7 0 O
+O 1 10909 999 10941            ; Aspen Leaf
+? 0 7 0 O
+O 1 10909 999 10984            ; Aspen Leaf
+? 0 5 0 O
+O 1 10910 999 10924            ; Pine Branch
+? 0 5 0 O
+O 1 10910 999 10978            ; Pine Branch
+? 0 6 0 O
+O 1 10912 999 10961            ; 4 Leaf Clover
+? 0 8 0 O
+O 1 10913 999 10910            ; Small Rock
+? 0 8 0 O
+O 1 10913 999 10991            ; Small Rock
+S
+

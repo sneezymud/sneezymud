@@ -1,0 +1,122 @@
+#10500
+Cosmo - Grimhaven Pastures~
+10599 30 2 1
+
+D 0 10513 1 2    	Large Pasture gate
+D 0 10521 3 2
+D 0 10541 2 1    	Small Pasture gate
+D 0 10542 0 1
+D 0 10541 0 1    	Small Pasture gate
+D 0 10546 2 1
+
+O 0 27108 9999 10541    Worn Dagger - drelik quest
+O 0 10501 1 10548	Plank
+O 0 10521 1 10548	Hole
+O 0 10502 1 10511	Wineskin
+M 0 7872 1 10548        Vicious Wolf - mage robe quest
+
+M 0 10500 1 10545  	Donkey
+M 0 10500 1 10545  	Donkey
+M 0 10500 1 10545  	Donkey
+M 0 10501 1 10540  	Mule
+M 0 10502 1 10529  	Large Ram
+M 0 10502 1 10526  	Large Ram
+M 0 10502 1 10533  	Large Ram
+M 0 10503 1 10506  	Shepherd Boy
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+M 0 10503 1 10530  	Shepherd Boy
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+M 0 10503 1 10549  	Shepherd Boy
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+M 0 10503 1 10525  	Shepherd Boy
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+M 0 10503 1 10506  	Shepherd Boy
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+M 0 10504 1 10530  	Ewe
+M 0 10504 1 10519  	Ewe
+M 0 10504 1 10524  	Ewe
+M 0 10505 1 10543  	Neutered Ram
+
+
+M 0 10506 1 10547  	Cow
+M 0 10506 1 10549  	Cow
+M 0 10507 1 10548  	Ox
+M 0 10507 1 10549  	Ox
+
+M 0 10508 1 10522   	Simple Shepherd
+? 0 20 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10509 1 10540   	Tired Shepherd
+? 0 50 0 G
+G 1 1012 9999   	    Soft Leather Saddle
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10510 1 10522   	Shearing Shepherd
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10510 1 10531   	Shearing Shepherd
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10510 1 10534   	Shearing Shepherd
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+
+M 0 10511 1 10511   	Lounging Shepherd
+? 0 35 0 G
+G 1 1013 9999   	    Hard Leather Saddle
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10512 1 10544  	Sly Shepherd
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10512 1 10547  	Sly Shepherd
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10513 1 10513 	Shepherd Watchman/key quest
+? 0 50 0 G
+G 1 1013 9999   	    Hard Leather Saddle
+? 0 4 0 E
+E 1 10504 300 4   	    Shephard's Frock
+? 0 4 0 E
+E 1 10503 300 15   	    Shepherd's Belt
+M 0 10514 1 10549 	Furtive Poacher
+M 0 10514 1 10518 	Furtive Poacher
+M 0 10514 1 10525 	Furtive Poacher
+M 0 10515 1 10531  	Brash Poacher
+Y 0 55 5                   Rawhide suit
+M 0 10515 1 10526  	Brash Poacher
+Y 0 55 5                   Rawhide suit
+M 0 10515 1 10517  	Brash Poacher
+Y 0 55 5                   Rawhide suit
+M 0 10516 1 10527  	Wolf
+M 0 10517 1 10509 	Rabid Dog
+M 0 10517 1 10516 	Rabid Dog
+M 0 10518 1 10549 	Bonnie Lass
+M 0 10518 1 10527 	Bonnie Lass
+M 0 10518 1 10543 	Bonnie Lass
+M 0 15251 1 10526       Poacher [quest_mob]
+S
+

@@ -1,0 +1,11 @@
+#15700
+Omen - Ice Cave~
+15749 40 2 1
+
+M 0 2100 1 15718  ;  Ice Worm
+M 0 2140 2 15724  ;  Ice Worm baby
+M 0 2141 1 15714  ;  Ice trolless
+? 0 2 0 E
+E 1 15714 2 19	Ice Axe
+S
+

@@ -1,0 +1,51 @@
+#600
+Peel - Southern Market~
+649 25 2 1
+
+D 0 602 0 1		Gate to Merchant District
+D 0 244 2 1
+D 0 635 1 1		Back Room
+D 0 640 3 1
+D 0 646 1 1		Thief Shop
+D 0 641 3 1
+D 0 642 1 1		Evil Abode
+D 0 644 3 1
+D 0 643 3 1		Training Room
+D 0 645 1 1 
+
+O 0 3 1 611       Fountain
+O 0 4600 9999 611      a small lamppost
+O 0 4600 9999 609      a small lamppost
+O 0 4600 9999 612      a small lamppost
+O 0 4600 9999 614      a small lamppost
+O 0 4600 9999 629      a small lamppost
+O 0 4600 9999 606      a small lamppost
+O 0 4600 9999 602      a small lamppost
+O 0 4600 9999 601      a small lamppost
+O 0 4600 9999 603      a small lamppost
+
+
+O 0 3532 9999 2366       a glass display case with a suit of spiked armor in it
+O 0 20 9999 2366         a chair
+O 0 20 9999 2366         a chair
+O 0 20 9999 2366         a chair
+O 0 20 9999 2366         a chair
+O 0 20 9999 2366         a chair
+O 0 20 9999 2366         a chair
+O 0 23 9999 2366         a table
+O 0 23 9999 2366         a table
+O 0 23 9999 2366         a table
+O 0 3530 9999 2366       a barstool
+O 0 3530 9999 2366       a barstool
+O 0 3530 9999 2366       a barstool
+O 0 3530 9999 2366       a barstool
+O 0 3530 9999 2366       a barstool
+O 0 3531 9999 2366       the bar
+O 0 3533 9999 2366       a vibrant palm tree
+
+M 0 263 1 624              shady man 
+M 0 264 1 644              hooded assassin
+? 0 10 0 G                   load garrotte
+G 1 154 999                     
+S
+

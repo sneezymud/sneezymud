@@ -1,0 +1,65 @@
+#800
+Chaos Garrison~
+849 25 2 1
+M 0 800 1 815                  cook
+M 0 801 1 800                 corsairs
+M 0 801 1 801 
+M 0 801 1 804 
+M 0 801 1 805 
+M 0 801 1 801 
+M 0 801 1 805 
+M 0 801 1 815 
+M 0 801 1 808 
+M 0 801 1 807 
+M 0 801 1 802 
+M 0 801 1 818 
+M 0 801 1 813 
+M 0 801 1 811 
+M 0 801 1 801 
+M 0 801 1 801 
+M 0 801 1 809 
+M 0 802 1 805                   dragoons
+M 0 802 1 800 
+M 0 802 1 811 
+M 0 802 1 809 
+M 0 803 1 821                   commandant
+
+M 0 810 1 801     Young chaos irreglular
+M 0 810 1 805     Young chaos irreglular
+M 0 810 1 807     Young chaos irreglular
+M 0 810 1 808     Young chaos irreglular
+M 0 810 1 820     Young chaos irreglular
+M 0 810 1 801     Young chaos irreglular
+M 0 810 1 815     Young chaos irreglular
+
+M 0 811 1 814     Slovenly chaos irreglular
+M 0 811 1 812              chaos irreglular
+M 0 811 1 803              chaos irreglular
+M 0 811 1 805              chaos irreglular
+M 0 811 1 819              chaos irreglular
+
+M 0 812 1 802     Half-Ogre chaos irreglular
+M 0 812 1 817     Half-Ogre chaos irreglular
+M 0 812 1 821     Half-Ogre chaos irreglular
+
+D 0 119 2 1            Doors to/out of Chaos Garrison
+D 0 802 0 1
+
+D 0 802 1 1
+D 0 803 3 1
+D 0 806 1 1
+D 0 807 3 1
+D 0 809 1 1
+D 0 810 3 1
+D 0 811 2 1
+D 0 815 0 1
+D 0 814 1 1
+D 0 815 3 1
+D 0 209 6 1
+D 0 817 9 1
+D 0 818 1 1
+D 0 232 3 1
+D 0 818 2 1
+D 0 820 0 1
+S
+

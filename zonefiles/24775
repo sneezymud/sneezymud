@@ -1,0 +1,58 @@
+#24775
+Jesus - Shaman Village~
+24799 30 2 1
+D 0 24778 5 1        A Small Hut -> A Dark Passageway
+D 0 24790 1 1        A Dark Cavern -> A Dark Room Carved in the Dirt
+D 0 24796 0 1        A Dark Passageway -> A Dark Passageway
+D 0 24797 2 1        A Dark Passageway -> A Dark Passageway
+D 0 24798 3 1        A Dark Room Carved in the Dirt -> A Dark Cavern
+D 0 24799 4 1        A Dark Passageway -> A Small Hut
+O 0 24778 1 24778    a straw mat
+O 0 24775 5 24779       a small fire
+O 0 24775 5 24782       a small fire
+O 0 24775 5 24789       a small fire
+O 0 24775 5 24795       a small fire
+O 0 24775 5 24798       a small fire
+O 0 9317 1 24798        a dark altar
+P 1 31325 9999 9317       a black beetle
+P 1 31334 9999 9317       a cockroach
+P 1 31305 9999 9317       a rose stem
+P 1 31328 9999 9317       a petal from a black rose
+M 0 24784 1 24776       component trader
+M 0 24776 3 24777       a female villager
+M 0 24775 4 24777       a child villager
+M 0 24780 3 24779       an elderly male villager
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 125 4               4% at shaman set
+M 0 24776 3 24780       a female villager
+M 0 24775 4 24781       a child villager
+M 0 24775 4 24782       a child villager
+M 0 24777 4 24782       a young villager
+M 0 24775 4 24783       a child villager
+M 0 24777 4 24783       a young villager
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 125 4               4% at shaman set
+M 0 24779 3 24784       a child villager
+M 0 24778 3 24784       a male villager
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 125 4               4% at shaman set
+M 0 24781 4 24785       a male villager
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 125 4               4% at shaman set
+M 0 24781 4 24787       a male villager
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 125 4               4% at shaman set
+M 0 24782 4 24789       an elderly male villager
+M 0 24782 4 24789       an elderly male villager
+M 0 24782 4 24791       an elderly male villager
+M 0 24781 4 24793       a male villager
+M 0 24783 3 24795       an elderly houngan
+M 0 24783 3 24797       an elderly houngan
+M 0 24783 3 24798       an elderly houngan
+S
+

@@ -1,0 +1,250 @@
+#16200
+Gringar - Amber Memorial Hospital~
+16249 32 2 1
+
+D 0 16207 2 1    Main Entrance to Hospital
+D 0 8738 0 1
+D 0 16204 0 1    Door into Pharmacy (Potion Shop)
+D 0 16201 2 1
+D 0 16204 1 1    Door into Conference Room
+D 0 16205 3 1
+D 0 16204 8 1    Door into chapel
+D 0 16208 7 1
+D 0 16205 0 1    Door into staff lounge
+D 0 16202 2 1
+D 0 16202 0 1    Door into OR
+D 0 16200 2 1
+D 0 16202 2 1    Door into ER
+D 0 16206 0 1
+D 0 16201 3 1    Emergency Entrance
+D 0 8721 1 1
+D 0 16212 0 1    Door into Labor and Delivery
+D 0 16209 2 1
+D 0 16210 1 1    Door into Observation Room
+D 0 16211 3 1
+D 0 16212 2 1    Door into Examining Room
+D 0 16215 0 1
+D 0 16215 1 2    Door into OB/Gyn office
+D 0 16216 3 2
+D 0 16222 7 1    Door into Block 301
+D 0 16218 8 1
+D 0 16222 0 1    Door into Block 302
+D 0 16219 2 1
+D 0 16222 6 1    Door into Block 303
+D 0 16220 9 1
+D 0 16222 1 2    Door into Psychiatrist Office
+D 0 16223 3 2
+D 0 16222 9 1    Door into Block 304
+D 0 16224 6 1
+D 0 16222 2 1    Door into Block 305
+D 0 16225 0 1
+D 0 16222 8 1    Door into Block 306
+D 0 16226 7 1
+D 0 16231 7 1    Door into Staff Sleeping Quarters
+D 0 16227 8 1
+D 0 16231 0 1    Door into Recovery Room 1
+D 0 16228 2 1
+D 0 16231 9 1    Door into Discussion Room
+D 0 16233 6 1
+D 0 16231 2 1    Door into Recovery Room 2
+D 0 16234 0 1
+D 0 16232 0 1    Door into Spare OR
+D 0 16229 2 1
+D 0 16232 2 1    Door into Supply Room
+D 0 16235 0 1
+D 0 16239 2 1    Door into Lab
+D 0 16242 0 1
+D 0 16239 1 1    Door into Cold Rooms
+D 0 16240 3 1
+D 0 16240 0 1    Door into Autopsy Room
+D 0 16237 2 1
+D 0 16237 3 1    Door into Doctor Dimento Lab
+D 0 16236 1 1
+D 0 16237 1 2    Door into Doctor Dimento Office
+D 0 16238 3 2
+D 0 16238 1 1    Unique Door (push anatomy) into Doctor Dimento Stash
+D 0 16249 3 1
+D 0 16241 2 1    Door into Incinerating Room
+D 0 16244 0 1
+D 0 16245 2 2    Door into Roc Rider Quarters
+D 0 16247 0 2
+
+O 0 1201 9999 16221     torch (Psych ward)
+O 0 1201 9999 16222     
+O 0 1201 9999 16249              
+O 0 1201 9999 16245     
+O 0 1201 9999 16248     
+O 0 1201 9999 16236              
+O 0 1201 9999 16239             
+O 0 16200 5 16200       operating table (OR)
+O 0 16200 10 16210                      (Delivering Room)
+O 0 16200 20 16229                      (Spare OR)
+O 0 16200 20 16232      
+O 0 16200 20 16237                
+O 0 16201 3 16201       large Counter (Pharmacy
+P 1 832 9999 16201          flask on counter
+O 0 16202 5 16202       large wooden table
+O 0 16202 9999 16247    
+O 0 16203 1 16204       sign
+O 0 16204 5 16204       black marble fountain (Foyer)
+O 0 16205 50 16200      surgical lamp
+O 0 16205 50 16210      
+O 0 16205 50 16229       
+O 0 16205 20 16232      
+O 0 16205 20 16237                
+O 0 16206 5 16206       plastic marking board (ER)
+O 0 16207 50 16207      receptionist desk
+O 0 16208 9999 16207    waiting bench (Main Entrance)
+O 0 16209 9999 16202    fluorescent light
+O 0 16209 9999 16205    
+O 0 16209 9999 16206    
+O 0 16209 9999 16207    
+O 0 16209 9999 16209    
+O 0 16209 9999 16211    
+O 0 16209 9999 16212    fluorescent light (West end of hallway)
+O 0 16209 9999 16213                      (middle of hallway)
+O 0 16209 9999 16214                      (East end of hallway)
+O 0 16209 9999 16215     
+O 0 16209 9999 16216    
+O 0 16209 9999 16217    
+O 0 16209 9999 16223    
+O 0 16209 9999 16227   
+O 0 16209 9999 16228    
+O 0 16209 9999 16230    fluorescent light (ICU floor)
+O 0 16209 9999 16231                      (Intersection)
+O 0 16209 9999 16233    
+O 0 16209 9999 16234    
+O 0 16209 9999 16235    
+O 0 16209 9999 16247            
+O 0 16209 9999 16238            
+O 0 16209 9999 16242            
+O 0 16210 1 16203       neon light (Emergency Entrance)
+O 0 16211 5 16200       instrument table (OR)
+O 0 16211 5 16232       
+O 0 16211 20 16237                       (Autopsy Room)
+O 0 16212 5 16205       conference table (Conference room)
+O 0 16213 5 16202       window looking north
+V 1 0 8705                 
+O 0 16213 5 16214       window looking north
+V 1 0 16211
+O 0 16213 5 16228       window looking north
+V 1 0 8702
+O 0 16214 5 16202       black leather couch (Staff lounge)
+O 0 16214 5 16217       
+O 0 16214 20 16233                          (Discussion Room)
+O 0 16214 20 16247     
+O 0 16216 5 16208       golden altar
+O 0 16217 9999 16208    wooden pew (Chapel)
+O 0 16218 2 16208       stained glass window
+O 0 16219 9999 16206    hospital bed
+O 0 16219 9999 16209                 (Labor and Delivery)
+O 0 16219 9999 16227                 (Staff Sleeping Quarters)
+O 0 16219 9999 16227     
+O 0 16219 9999 16228     
+O 0 16219 9999 16234   
+O 0 16219 9999 16247                 (Roc Rider quarters)
+O 0 16220 5 16211       window looking south
+V 1 0 16214
+O 0 16220 5 16217       window looking south
+V 1 0 8747
+O 0 16220 5 16234       window looking south
+V 1 0 8751
+O 0 16221 9999 16217    metal chair (Visitor lounge)
+O 0 16222 2 16217       coffee table
+O 0 16223 2 16211       little bed (Observation Room)
+O 0 16223 2 16211       
+O 0 16224 2 16215       examining bed (OB/gyn examination)
+O 0 16226 20 16216      swivel chair (OB/Gyn office)
+O 0 16226 20 16223      
+O 0 16226 20 16238                
+O 0 16227 20 16216      office desk
+O 0 16227 20 16223      
+O 0 16227 20 16238                
+O 0 16228 2 16223       lounge chair restraining (Psychiatrist office)
+O 0 16229 5 16222       guard desk (Guard room)
+O 0 16230 50 16225      corpse (Block 305)
+O 0 16231 50 16218      restraining bed (Block 301)
+O 0 16231 50 16219      restraining bed (Block 302)
+O 0 16231 50 16220      restraining bed (Block 303)
+O 0 16231 50 16224      restraining bed (Block 304)
+O 0 16231 50 16225      restraining bed (Block 305)
+O 0 16231 50 16226      restraining bed (Block 306)
+O 0 16232 9999 16233    large oval table
+P 1 16234 4 16232           coffee cup on table
+O 0 16233 9999 16228    night stand (Recovery Room 1)
+O 0 16233 9999 16234                (Recovery Room 2)
+O 0 16235 2 16232       ladder (portal) to roof (Trauma Room)
+O 0 16236 5 16235       supply shelf (Supply Room)
+O 0 16238 5 16246       light circle globes (Landing Pad)
+O 0 16239 1 16245       sign Roc (Roc nest)
+O 0 16240 5 16242       stone lab bench (Lab)
+O 0 16241 50 16240      large metal cart (Cold Room)
+O 0 16241 50 16241                
+O 0 16241 50 16243                
+O 0 16242 5 16244       furnace iron large (Incinerating Room)
+O 0 16243 2 16236       wooden lab bench (Private Lab)
+O 0 16244 5 16248       ladder (portal) going down (Roof)
+O 0 16246 1 16238       bookshelf (Doctor Dimento's office)
+O 0 16247 1 16249                  treasure (Secret Stash)
+
+
+M 0 16200 1 16200         Master Surgeon (Amber Doctor)
+G 1 16248 5                   wand of binding (quest award)
+M 0 16201 1 16206         Nurse
+M 0 16201 1 16206         Nurse
+M 0 16202 1 16228         patient [one]
+M 0 16203 1 16234         patient [two]
+M 0 16205 1 16202         Intern
+M 0 16206 1 16203         Security guard
+M 0 16207 1 16204         Ambulance chaser
+M 0 16208 1 16205         Hospital Administrator
+G 1 16225 9999                Black key
+M 0 16209 1 16206         Attending Physician
+M 0 16210 1 16207         Receptionist
+M 0 16211 1 16208         Chaplain
+M 0 16212 1 16208         Mourner
+M 0 16213 1 16209         Intern [ob/gyn]
+M 0 16214 1 16210         woman labor
+M 0 16215 1 16210         father
+M 0 16216 1 16209         nurse
+M 0 16217 1 16210         Chief Resident
+M 0 16218 3 16211 	 Baby
+M 0 16219 1 16211 	 Nurse [Observation]
+M 0 16220 1 16211 	 Security Guard [Observation]
+M 0 16221 1 16213         janitor
+M 0 16222 1 16214         Uncle Bob
+M 0 16223 1 16214         Junior
+M 0 16224 1 16215         Physician Asst.
+G 1 16215 9999                Yellow key
+M 0 16225 1 16216         Doctor Short
+M 0 16226 1 16217         visitor
+M 0 16227 1 16218         insane man [block 301]
+M 0 16228 1 16219         insane man [block 302]
+M 0 16229 1 16220         Thao
+G 1 16237 9999               Golden key
+M 0 16230 1 16222         brawny guard
+M 0 16231 1 16224         insane man [block 304]
+M 0 16232 1 16223         Doctor Krueger
+M 0 16233 1 16226         insane man [block 306]
+M 0 16234 1 16225         huge spider
+M 0 16235 1 16229         cleaning lady
+M 0 16236 1 16231         security guard
+M 0 16237 1 16232         trauma surgeon
+G 1 16245 9999               Red key
+M 0 16238 1 16233         paramedic
+M 0 16239 1 16232         resident
+M 0 16240 1 16237         undead lab assistant
+M 0 16241 1 16238         Doctor Dimento
+G 1 16249 2                   scalpel [quest prop]
+M 0 16242 1 16240         zombie
+M 0 16242 1 16240         zombie
+M 0 16243 1 16241         zombie
+M 0 16244 1 16243         zombie
+M 0 16244 1 16243         zombie
+M 0 16245 1 16242         lab technician
+M 0 16246 1 16244         fiery creature
+M 0 16247 1 16245         modified Roc
+M 0 16248 1 16246         security guard
+M 0 16249 1 16247         Roc Rider
+S
+

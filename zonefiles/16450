@@ -1,0 +1,48 @@
+#16450
+Hylidan - Brightmoon sewers/tunnels~
+16499 35 2 1
+
+D 0 16456 8 2          Tiled Panel, close and lock.
+D 0 16460 7 2           
+D 0 16460 5 1 
+D 0 16462 4 1
+D 0 16467 6 2
+D 0 16468 9 2
+
+O 0 16451 1 16456   Exit sewer grate.
+O 0 16461 1 16461   Large pipe
+P 1 16450 1 16461      Put tile in pipe...
+O 0 16452 1 16452   Valve (portal) 
+O 0 16468 2 16471   Bits of moss
+O 0 16470 1 16473   Moss covered stone
+O 0 16471 1 16471   Moss
+O 0 16474 1 16479   Pool of water
+O 0 16478 1 16478   Crack Looking ?
+O 0 16479 1 16479   Crack Looking ?
+O 0 16495 1 16495   Moss garden
+O 0 16498 1 16488   Strange stone 1
+O 0 16498 1 16498   Strange stone 2
+O 0 16469 3 16490   Pebbles
+O 0 16450 5 16461   Broken tile
+
+M 0 16450 1 16450   Cleaner 1
+M 1 16450 1 16458   Cleaner 2
+M 1 16450 1 16461   Cleaner 3
+M 1 16450 1 16454   Cleaner 4 
+G 1 16453 1            put wrench on cleaner 16450
+M 0 16451 4 16465   A rat
+M 0 16451 4 16469   A rat
+M 0 16452 1 16473   A drained man
+G 1 16473 1            load moss cover key on man
+M 0 16453 1 16495   Escaped prisoner
+M 0 16454 1 16475   Thief
+M 0 16454 1 16478   Thief
+M 0 16455 1 16497   Dwarven miner
+M 0 16456 3 16464   Bat 1
+M 0 16456 3 16464   Bat 2
+M 0 16456 3 16464   Bat 3
+M 0 16457 1 16488   Illythyd
+M 0 16458 1 16494   Caraton  (rock monster)
+M 0 16458 1 16496   Caraton
+S
+

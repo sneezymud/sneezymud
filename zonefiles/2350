@@ -1,0 +1,110 @@
+#2350
+Peel - GK Highrollers Casino~
+2374 25 2 1
+
+O 0 2360 1 2352		Elevator
+M 0 2351 1 2352		Elevator guard
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+
+O 0 2371 1 2352         Sign
+
+M 0 2352 1 2370		Elevator operator
+G 1 2361 1
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+
+O 0 2359 1 2363		gaming table
+
+M 0 2354 1 2360		Blackjack dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+O 0 2359 1 2360		gaming table
+
+O 0 2365 1 2364		elephant topiary
+
+M 0 2367 1 2358		Poker dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+O 0 2359 1 2358		gaming table
+
+M 0 2368 1 2359		Hi-lo dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+O 0 2359 1 2359		gaming table
+
+M 0 2370 1 2367		Holdem dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+O 0 2359 1 2367		gaming table
+
+M 0 2371 1 2367	        Holdem player
+
+M 0 2369 1 2361		Baccarat dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+O 0 2359 1 2361		gaming table
+O 0 2362 1 2365	        Slot machines
+
+O 0 2363 1 2367		fountain
+M 0 2356 1 2367		whore
+M 0 2357 1 2367		whore
+M 0 2358 1 2367		whore
+O 0 2366 1 2367   	couch
+O 0 2366 1 2367		couch
+
+
+O 0 2370 1 2360		monk statue
+O 0 2364 1 2358		monk statue
+
+A 0 2358 2366
+M 0 2359 2 -99		waitress
+
+A 0 2358 2366
+M 0 2359 2 -99		waitress
+
+A 0 2358 2366
+M 0 2360 2 -99		drunk gambler
+A 0 2358 2366
+M 0 2360 2 -99		drunk gambler
+
+A 0 2358 2366
+M 0 2361 2 -99		serious gambler
+? 0 5 0 E
+E 1 2368 9999 4 	smoking jacket
+A 0 2358 2366
+M 0 2361 2 -99		serious gambler
+? 0 5 0 E
+E 1 2368 9999 4 	smoking jacket
+
+A 0 2358 2366
+M 0 2362 2 -99		amateur gambler
+? 0 5 0 E
+E 1 2368 9999 4 	smoking jacket
+A 0 2358 2366
+M 0 2362 2 -99		amateur gambler
+? 0 5 0 E
+E 1 2368 9999 4 	smoking jacket
+
+A 0 2358 2366
+M 0 2363 2 -99		tourist gambler
+? 0 5 0 E
+E 1 2369 9999 4 	shirt
+A 0 2358 2366
+M 0 2363 2 -99		tourist gambler
+? 0 5 0 E
+E 1 2369 9999 4 	shirt
+
+A 0 2358 2366
+M 0 2364 1 -99		pit boss
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+
+A 0 2358 2366
+M 0 2365 1 -99		waitress
+A 0 2358 2366
+M 0 2365 1 -99		waitress
+
+
+
+S

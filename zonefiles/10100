@@ -1,0 +1,181 @@
+#10100
+Batopr - Northern Haon-Dor~
+10139 25 2 1
+
+D 0 10122 3 1		gamepath east - secret door
+D 0 10129 1 1
+D 0 10129 3 1		gamepath west - secret door
+D 0 10130 1 1
+D 0 10111 4 1		elf tree - secret door
+
+O 0 10100 1 10129		impassable tree
+O 0 10100 2 10100		impassable tree
+O 0 10100 3 10101		impassable tree
+O 0 10100 4 10102		impassable tree
+O 0 10100 5 10103		impassable tree
+O 0 10100 6 10139		impassable tree
+O 0 10100 7 10104		impassable tree
+O 0 10100 8 10105		impassable tree
+O 0 10100 9 10106		impassable tree
+O 0 10100 10 10107		impassable tree
+O 0 10100 11 10108		impassable tree
+O 0 10100 12 10109		impassable tree
+O 0 10100 13 10110		impassable tree
+O 0 10100 14 10112		impassable tree
+O 0 10100 15 10113		impassable tree
+O 0 10100 16 10114		impassable tree
+O 0 10100 17 10115		impassable tree
+O 0 10100 18 10116		impassable tree
+O 0 10100 19 10117		impassable tree
+O 0 10100 20 10118		impassable tree
+O 0 10100 21 10119		impassable tree
+O 0 10100 22 10120		impassable tree
+O 0 10100 23 10121		impassable tree
+O 0 10100 24 10122		impassable tree
+O 0 10100 25 10124		impassable tree
+O 0 10101 1 10106		elm tree
+O 0 10102 1 10139		blocking tree
+O 0 10103 1 10119		hickory tree
+O 0 10108 1 10110		acorn
+O 0 10108 2 10104		acorn
+O 0 10108 3 10126		acorn
+*P 1 10113 1 10110		copper cup
+*P 1 10113 2 10110		copper cup
+*P 1 10113 3 10110		copper cup
+O 0 10111 1 10111		elf tree
+O 0 10130 1 10130		pond
+O 0 10131 1 10131		pond
+O 0 10132 1 10132		pond
+O 0 10134 1 10134		pond
+O 0 10136 1 10136		pond
+O 0 10137 1 10137		pond
+O 0 10138 1 10138		pond
+O 0 10133 1 10133		shrubbery
+O 0 10133 2 10135		shrubbery
+
+M 0 10100 1 10132 		nymph type1
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10100 1 10133 		nymph type1
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10100 1 10134 		nymph type1
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10100 1 10135 		nymph type1
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10100 1 10136 		nymph type1
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10101 1 10136 		nymph type2
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10101 1 10135 		nymph type2
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10101 1 10134 		nymph type2
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10101 1 10133 		nymph type2
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10101 1 10132 		nymph type2
+? 0 40 0 E
+E 1 10104 10 4			white gown on body
+M 0 10102 1 10132 		satyr type1
+M 0 10102 1 10136 		satyr type1
+M 0 10102 1 10134 		satyr type1
+M 0 10103 1 10133 		satyr type2
+? 0 5 0 E
+E 1 10107 20 18			pan pipes in R-hand
+M 0 10103 1 10135 		satyr type2
+? 0 5 0 E
+E 1 10107 20 18			pan pipes in R-hand
+M 0 10104 1 10134 		naiad
+? 0 40 0 E
+E 1 10105 1 4			blue gown on body
+M 0 10105 1 10137 		dryad
+? 0 40 0 E
+E 1 10106 1 4			brown gown on body
+M 0 10105 1 7829                 Dryad quiet (in tree)
+M 0 10105 1 7830                 dryad quiet (in tree)
+
+M 0 10106 1 10118 		fallow deer
+F 1 1 1				fear male
+M 0 10106 1 10128 		fallow deer
+F 1 1 1				fear male
+M 0 10106 1 10138 		fallow deer
+F 1 1 1				fear male
+M 0 10107 1 10115 		squirrel
+? 0 30 0 G
+G 1 10108 9999                   acorn
+M 0 10107 1 10102 		squirrel
+? 0 30 0 G
+G 1 10108 9999                   acorn
+M 0 10107 1 10125               squirrel
+? 0 30 0 G
+G 1 10108 9999                   acorn
+M 0 10108 2 10122 		fuzzy bunny
+M 0 10108 1 10130 		fuzzy bunny
+M 0 10108 1 10127 		fuzzy bunny
+M 0 10125 1 10125                traveller
+? 0 5 0 E
+E 1 303 900 18                  broad sword in r hand
+? 0 2 0 E
+E 1 1080 100 5                  metal helm on head
+? 0 2 0 E
+E 1 1061 100 3                  chain coif on neck
+? 0 2 0 E
+E 1 1082 100 4                  metal armor on body
+? 0 2 0 E
+E 1 1085 100 15                 metal girth
+? 0 2 0 E
+E 1 1067 200 6                  chain leggings
+? 0 2 0 E
+E 1 1068 200 8                  chain boots
+? 0 2 0 E
+E 1 1083 200 12                 metal sleeve
+? 0 2 0 E
+E 1 1066 200 16                 chain bracelet
+? 0 2 0 E
+E 1 1064 200 10                 chain glove
+? 0 2 0 E
+E 1 1069 200 1                  chain ring
+? 0 2 0 E
+E 1 1049 200 2                  studded ring
+? 0 5 0 E
+E 1 1051 150 14                 studded cloak
+M 0 10125 1 10109                traveler
+? 0 2 0 E
+E 1 303 200 18                  broad sword in r hand
+? 0 2 0 E
+E 1 1060 100 5                  chain helm on head
+? 0 2 0 E
+E 1 1061 100 3                  chain coif on neck
+? 0 2 0 E
+E 1 1082 100 4                  metal armor on body
+? 0 2 0 E
+E 1 1085 100 15                 metal girth
+? 0 2 0 E
+E 1 1087 200 6                  metal leggings
+? 0 2 0 E
+E 1 1068 200 8                  chain boots
+? 0 2 0 E
+E 1 1063 200 12                 chain sleeve
+? 0 2 0 E
+E 1 1066 200 16                 chain bracelet
+? 0 2 0 E
+E 1 1064 200 10                 chain glove
+? 0 2 0 E
+E 1 1069 200 1                  chain ring
+? 0 2 0 E
+E 1 1089 200 2                  metal ring
+? 0 2 0 E
+E 1 1051 150 14                 studded cloak
+
+M 0 10126 1 10110               half elf ranger - ranger lvl 14 quest
+
+M 0 7871 1 10128                Druidress - mage robe quest
+S
+

@@ -1,0 +1,348 @@
+#7213
+Mithros - Obsidian Citadel/Mines~
+7299 40 2 1
+
+D 0 7220 2 2	; Mine GateA
+D 0 7219 2 2	; Mine GateB
+D 0 7214 7 2	; Mine Door connected to 10718 of Keep
+D 0 7268 7 1	; bridge (openable from this side)
+D 0 7265 8 1	;            (non-openable from this side)
+D 0 7279 2 1	; Talrog's Office
+D 0 7282 0 1
+
+O 0 7027 100 7214	; Mine Lantern
+O 0 7027 100 7215
+O 0 7027 100 7216
+O 0 7027 100 7217
+O 0 7027 100 7218
+O 0 7027 100 7219
+O 0 7027 100 7220
+O 0 7027 100 7221
+O 0 7027 100 7222
+O 0 7027 100 7223
+O 0 7027 100 7224
+O 0 7027 100 7227
+O 0 7027 100 7228
+O 0 7027 100 7229
+O 0 7027 100 7230
+O 0 7027 100 7231	
+O 0 7027 100 7232
+O 0 7027 100 7234
+O 0 7027 100 7240
+O 0 7027 100 7241
+O 0 7027 100 7242
+O 0 7027 100 7243
+O 0 7027 100 7244
+O 0 7027 100 7248
+O 0 7027 100 7253
+O 0 7027 100 7265
+O 0 7027 100 7267
+O 0 7027 100 7268
+O 0 7027 100 7270
+O 0 7027 100 7272
+O 0 7027 100 7275
+O 0 7027 100 7279
+O 0 7027 100 7280
+O 0 7027 100 7282
+O 0 7027 100 7284
+O 0 7027 100 7286
+O 0 7028 100 7218	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7028 100 7222	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7028 100 7246	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7028 100 7250	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7028 100 7285	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7028 100 7286	; Mine Cart
+? 1 50 0 P
+P 1 7030 9999 7028		; Rough Chunk of Obsidian
+? 0 50 0 P
+P 1 7030 9999 7028
+O 0 7029 100 7249	; Mine Cart Wheel
+O 0 7029 100 7271
+O 0 7029 100 7288
+O 0 7030 9999 7246	; Rough Chunk of Obsidian
+O 0 7030 9999 7247
+O 0 7030 9999 7249
+O 0 7030 9999 7271
+O 0 7030 9999 7285
+O 0 7030 9999 7286
+O 0 7030 9999 7287
+O 0 23663 9999 7279	; Small Cot
+O 0 10757 9999 7279                      - Talrog's key
+V 1 2 7061			; Change to key 7061
+O 0 10758 9999 7279	; Solid Oak Chair
+
+O 0 7093 1 7236	; Invisible Portal - Loaded to so people see exit message.
+O 0 7094 1 7237	;
+
+
+M 0 7012 1 7279      ; Overseer Talrog
+G 1 7000 3		; Mine Key
+G 1 7061 1		; Desk key
+? 0 5 0 E
+E 1 7010 25 19		; Whip w/ Obsidian Handle
+
+M 0 7017 1 7226      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7231      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7235      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7248      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7265      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7269      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7272      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7017 1 7286      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+? 0 30 0 M
+M 1 7017 1 7222      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+? 0 30 0 M
+M 1 7017 1 7244      ; Mine Guard
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7063 1 7228      ; Mine Guard (sentinel liftt)
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7063 1 7228      ; Mine Guard (sentinel liftt)
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7018 1 7267      ; Mine Guard (sentinel liftb)
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7018 1 7267      ; Mine Guard (sentinel liftb)
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7068 1 7220      ; Mine Guard (sentinel gatea_1)
+G 1 7000 3		; Mine Key
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7069 1 7219      ; Mine Guard (sentinel gateb_1)
+G 1 7000 3		; Mine Key
+Y 0 60 2 			Obsidian Scale Set
+
+M 0 7023 1 7246      ; Slave, Giant
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+M 0 7023 1 7247      ; Slave, Giant
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+M 0 7023 1 7278      ; Slave, Giant
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+? 0 30 0 M
+M 1 7023 1 7260      ; Slave, Giant
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+M 0 7024 1 7249      ; Slave, Dwarf
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7024 1 7251      ; Slave, Dwarf
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7024 1 7277      ; Slave, Dwarf
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+? 0 30 0 M
+M 1 7024 1 7263      ; Slave, Dwarf
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 4 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7027 1 7268      ; Slave, Human
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 2 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+M 0 7027 1 7281      ; Slave, Human
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 2 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7027 1 7289      ; Slave, Human
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 2 0 E
+E 1 7015 25 19		; Obsidian Pick
+
+? 0 30 0 M
+M 1 7027 1 7262      ; Slave, Human
+? 0 20 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 2 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7032 1 7254      ; Mine Beast of Burden
+M 0 7032 1 7277      ; Mine Beast of Burden
+M 0 7032 1 7284      ; Mine Beast of Burden
+? 0 30 0 M
+M 1 7032 1 7250      ; Mine Beast of Burden
+
+M 0 7033 1 7268      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+
+M 0 7033 1 7285      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7033 1 7287      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+
+? 0 30 0 M
+M 1 7033 1 7273      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7040 1 7283      ; Old Blind Slave
+? 0 5 0 E
+E 1 10769 100 4		; Tattered Shirt
+? 0 5 0 E
+E 1 10770 100 7		; Tattered Pants
+? 0 40 0 G
+G 1 7022 100		; Slop Laddle
+? 0 40 0 G
+G 1 7023 100		; Bowl of Slop
+
+M 0 7044 1 7282      ; Talrog's Dog
+? 0 40 0 E
+E 1 7024 100 3		; Spiked Collar and Leash
+
+M 0 7049 1 7248      ; Slave Waterboy
+? 0 5 0 E
+E 1 10769 100 4		; Tattered Shirt
+? 0 5 0 E
+E 1 10770 100 7		; Tattered Pants
+? 0 40 0 G
+G 1 7026 200		; Water Bucket
+? 1 40 0 G
+G 1 7025 200		; Water Dipper
+
+M 0 7059 1 7246      ; Mine Rat
+M 0 7059 1 7262      ; Mine Rat
+M 0 7059 1 7264      ; Mine Rat
+M 0 7059 1 7288      ; Mine Rat
+M 0 7059 1 7289      ; Mine Rat
+? 0 50 0 M
+M 1 7059 1 7252      ; Mine Rat
+? 0 50 0 M
+M 1 7059 1 7278      ; Mine Rat
+
+M 0 7066 1 7271      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7066 1 7271      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7064 2 7276      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+
+M 0 7064 1 7276      ; Free Mine Worker
+G 1 7213 9999           ; Workman's Pass
+? 0 10 0 G
+G 1 7030 9999		; Rough Chunk of Obsidian
+? 0 1 0 E
+E 1 7016 25 19		; Obsidian Hammer
+S
+

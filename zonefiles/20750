@@ -1,0 +1,120 @@
+#20750
+Mithros - Chaos Plains-Calthor Outpost~
+20764 40 2 0
+
+D 0 20800 6 1         gates to outpost
+D 0 20750 9 1
+D 0 20754 8 1         door to outpost cavern
+D 0 20755 7 1
+D 0 20756 0 2         door to weapon storage
+D 0 20757 2 2
+D 0 20756 1 1         door to commander's room
+D 0 20758 3 1
+D 0 20756 3 1         door to kitchen
+D 0 20759 1 1
+D 0 20760 2 1         door to barracks
+D 0 20761 0 1
+D 0 20761 3 1         door to storage
+D 0 20764 1 1
+
+O 0 20752 1 20757     sturdy bronze chest
+? 0 10 0 P
+P 1 20751 5 20752       charred staff [hellfire]
+
+M 0 20750 1 20757     Orix - Huge Male Calcat
+? 0 5 0 G
+G 1 20750 5             Petrified Thigh Bone (club)
+
+A 0 20750 20762
+M 0 20751 1 -99       Wandering Shadow Mage (invis)
+? 0 2 0 E
+E 1 20532 30 19          black runed staff
+? 0 2 0 E
+E 1 20533 20 18          black runed dagger
+Y 0 100 1                black runed set
+
+M 0 20752 1 20763     Skeleton of Calisaard
+? 0 2 0 E
+E 1 20754 10 15         bronze studded belt quiver
+P 1 20755 9999 20754
+P 1 20755 9999 20754
+? 0 2 0 E
+E 1 20756 5 14          calthor commander's cloak
+? 0 2 0 E
+E 1 20757 10 1          calthor commander's signet
+? 0 2 0 E
+E 1 20843 15 19         slim bronze handled titanium blade
+? 0 2 0 E
+E 1 20844 15 18         bronze handled titanium knife
+Y 0 109 2               bronze studded othora hide set
+
+M 0 20753 1 20750       Ghost of a Calthor Scout
+? 0 2 0 E
+E 1 20842 15 19         titanium headed bronze spear
+Y 0 109 1               bronze studded othora hide set
+
+M 0 20753 1 20751       Ghost of a Calthor Scout
+? 0 2 0 E
+E 1 20842 15 19         titanium headed bronze spear
+Y 0 109 1               bronze studded othora hide set
+
+M 0 20753 1 20754       Ghost of a Calthor Scout
+? 0 2 0 E
+E 1 20842 15 19         titanium headed bronze spear
+Y 0 109 1               bronze studded othora hide set
+
+M 0 20754 1 20758       Oris - Grungy Orcin Female Leader
+G 1 20753 9999            large bronze key
+? 0 25 0 G
+G 1 20758 9999            bronze flask of firebreather
+? 0 5 0 E
+E 1 20813 15 19           slim tarnished bronze hilted titanium blade
+Y 0 108 3                 make-shift othora hide set
+
+M 0 20755 1 20755       Grungy Orcin Female Guard
+? 0 4 0 E
+E 1 20812 15 19           tarnished bronze spear
+Y 0 108 2                 make-shift othora hide set
+
+M 0 20755 1 20756       Grungy Orcin Female Guard
+? 0 4 0 E
+E 1 20812 15 19           tarnished bronze spear
+Y 0 108 2                 make-shift othora hide set
+
+M 0 20756 1 20759       Orip - Grungy Orcin Male Cook
+? 0 25 0 G
+G 1 20759 9999            bread bowl of gruel (poisoned/spoiled)
+? 0 4 0 E
+E 1 20814 15 19           tarnished bronze handled titanium knife
+Y 0 108 1                 make-shift othora hide set
+
+M 0 20757 1 20761       Grungy Orcin Female Warrior
+? 0 3 0 E
+E 1 20812 15 19           tarnished bronze spear
+Y 0 108 2                 make-shift othora hide set
+
+M 0 20757 1 20762       Grungy Orcin Female Warrior
+? 0 3 0 E
+E 1 20812 15 19           tarnished bronze spear
+Y 0 108 2                 make-shift othora hide set
+
+A 0 20755 20762
+M 0 20758 2 -99         Grungy Orcin Male
+? 0 2 0 E
+E 1 20814 15 19           tarnished bronze handled titanium knife
+Y 0 108 2                 make-shift othora hide set
+
+A 0 20755 20762
+M 0 20758 2 -99         Grungy Orcin Male
+? 0 2 0 E
+E 1 20814 15 19           tarnished bronze handled titanium knife
+Y 0 108 2                 make-shift othora hide set
+
+M 0 20759 3 20764       Grungy Orcin Youth
+Y 0 108 1                 make-shift othora hide set
+
+M 0 20759 3 20764       Grungy Orcin Youth
+Y 0 108 1                  make-shift othora hide set
+
+S
+

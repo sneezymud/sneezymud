@@ -1,0 +1,262 @@
+#25500
+Sidartha - Atakaji Desert~
+25799 60 1 1
+
+D 0 25532 5 2	Secret door to Djinni
+D 0 25657 4 2
+D 0 25663 0 2	Door to Mirrored Room
+D 0 25664 2 2
+D 0 25549 7 2	Door to Pyramid
+D 0 25595 8 2
+D 0 25596 0 1	Door to Host of Blood
+D 0 25595 2 1
+D 0 25597 3 1	Door to Scroll Room
+D 0 25595 1 1
+D 0 25598 1 1	Door to Host of Flesh
+D 0 25595 3 1
+D 0 25599 2 1	Door to Host of Pain
+D 0 25595 0 1
+D 0 25602 0 1	Door to Crypt
+D 0 25603 2 1
+D 0 25623 9 1	Door to Sphinx lair
+D 0 25624 6 1
+D 0 25624 5 2	Door to 3rd Level
+D 0 25625 4 2
+D 0 25630 1 1	Crypt Door
+D 0 25632 3 1
+D 0 25631 1 1	Crypt Door
+D 0 25633 3 1
+D 0 25631 2 1	Crypt Door
+D 0 25634 0 1
+D 0 25640 1 1	Cleric Door
+D 0 25638 3 1
+D 0 25641 2 1	Host of Repentance
+D 0 25638 0 1
+D 0 25639 7 1	Monk Quarters
+D 0 25638 8 1
+D 0 25642 3 1	Amun Alsiph Qtrs
+D 0 25638 1 1
+D 0 25642 0 1	Forbidden Passage
+D 0 25643 2 1
+D 0 25643 0 1	Secret to Temple
+D 0 25647 2 1
+D 0 25653 4 2	Host of Synjilla
+D 0 25654 5 2
+D 0 25654 1 2	Vortex
+D 0 25655 3 2
+D 0 25521 2 1	Tower - north
+D 0 25522 0 1
+D 0 25518 3 1	Tower - east
+D 0 25522 1 1
+D 0 25523 0 1	Tower - south
+D 0 25522 2 1
+D 0 25528 1 1	Tower - west
+D 0 25522 3 1
+D 0 25522 4 1	Tower - up
+D 0 25656 5 1
+D 0 25516 9 1	Town gate - NE
+D 0 25584 6 1
+D 0 25584 2 1	Town gate - South
+D 0 25588 0 1
+D 0 25584 3 1	Town gate - west
+D 0 25583 1 1
+D 0 25581 2 1	General Store
+D 0 25583 0 1
+D 0 25582 1 1	Meat shop - east
+D 0 25583 3 1
+D 0 25582 2 1	meat shop - south
+D 0 25586 0 1
+D 0 25585 1 1	Commodity Shop
+D 0 25586 3 1
+D 0 25590 5 1	Secret bazaar
+D 0 25594 4 1
+D 0 25593 0 1	Repair Shop
+D 0 25591 2 1
+D 0 25592 3 1	Desert Forge - West
+D 0 25591 1 1
+D 0 25592 0 1	Desert Forge - North
+D 0 25588 2 1
+D 0 25589 3 1	Waepon Shop
+D 0 25588 1 1
+D 0 25587 0 1	Inn - north
+D 0 25583 2 1
+D 0 25587 3 1	Inn - west
+D 0 25586 1 1
+D 0 25587 1 1	Inn - east
+D 0 25588 3 1
+D 0 25587 2 1	Inn - south
+D 0 25591 0 1
+
+O 0 25500 1 25602	Fire (offering) pit
+O 0 25501 1 25649	altar
+*P 1 512 9999 25501
+O 0 25504 1 25655	vortex
+O 0 25505 9999 25503	Broken wheel
+O 0 25505 9999 25505
+O 0 25506 9999 25522	Bench
+O 0 25507 9999 25522	Racks
+O 0 6612 9999 25601	large Fire Pit
+O 0 25508 9999 25656	West slit
+O 0 25509 9999 25656	East slit
+O 0 25510 9999 25656	North slit
+O 0 25511 9999 25656	South slit
+O 0 17108 9999 25597	Bookcase
+O 0 25512 9999 25598	Torture rack
+O 0 25513 9999 25599	Torture rack
+O 0 25514 9999 25596	Torture rack
+O 0 25551 1 25502	Roadsign
+O 0 25553 1 25664	Dais
+P 1 25554 1 25553	  Emerald on dais
+
+M 0 25500 1 25507	Scorpion
+M 0 25500 2 25507
+M 0 25500 1 25508
+M 0 25500 2 25508
+M 0 25501 1 25549       Ackbar
+G 1 25571 1        	  key
+M 0 25502 1 25598	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25597	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25596	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25599	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25648	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25647	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25502 1 25637	Dark cleric
+? 0 5 0 G
+G 1 509 9999		  steel holy symbol
+M 0 25503 1 25628	Monk (cleaner)
+M 0 25503 1 25639
+M 0 25503 1 25639
+M 0 25503 1 25645
+M 0 25504 1 25649	Priest
+? 0 5 0 G
+G 1 510 9999		  silver holy symbol
+M 0 25504 1 25641	Priest
+? 0 5 0 G
+G 1 510 9999		  silver holy symbol
+M 0 25504 1 25650	Priest
+? 0 5 0 G
+G 1 510 9999		  silver holy symbol
+M 0 25505 1 25608	Punjab
+M 0 25506 1 25610	Skeleton
+M 0 25506 1 25612
+M 0 25506 1 25614
+M 0 25506 1 25619
+M 0 25506 1 25621
+M 0 25506 1 25623
+M 0 25507 1 25624	Sphinx
+G 1 25502 1			Key
+M 0 25508 1 25642	Amun
+? 0 5 0 E
+E 1 25547 1 3			Skull Choker
+M 0 25509 1 25649	Makta
+? 0 5 0 G
+G 1 512 9999			platinum holy symbol
+M 0 25510 1 25645	Kthul
+? 0 3 0 E
+E 1 25546 1 5			barbut
+? 0 3 0 E
+E 1 25539 1 18			athanor greataxe
+M 0 25511 1 25632	Lahtnero
+? 0 3 0 E
+E 1 25545 2 19              	Athanor dagger
+M 0 25512 1 25633	Aktid
+? 0 3 0 E
+E 1 25544 1 4			Salaha corslet
+M 0 25513 1 25634	Grebnas
+? 0 5 0 E
+E 1 25543 3 11			sacrificial glove
+M 0 25514 1 25630	Mould
+? 0 3 0 E
+E 1 25541 2 7			dragonbone legplate
+M 0 25515 1 25643	Mohammed
+? 0 3 0 E
+E 1 25525 1 14			athanor backplate
+M 0 25516 1 25653	Ahmed
+G 1 25570 1			key rusty
+? 0 3 0 E
+E 1 25524 1 18			athanor shield
+M 0 25517 1 25575	Sandworm
+M 0 25517 1 25558
+M 0 25518 1 25522	Guard Captain
+? 0 3 0 E
+E 1 25540 8 19			Tungsten claymore
+Y 0 77 3			Tungsten set - 3%
+M 0 25519 4 25522	Guard
+? 0 5 0 E	
+E 1 25542 30 19			Light lance
+M 0 25519 4 25522	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25519 4 25522	Guard
+? 0 5 0 E	
+E 1 25542 30 19			Light lance
+M 0 25519 4 25522	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25519 2 25584	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25519 2 25584	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25519 1 25586	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25519 1 25591	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+M 0 25520 1 25583	Bedouin
+M 0 25520 1 25586	
+M 0 25520 1 25588
+M 0 25520 1 25591
+M 0 25520 1 25590	Bedouin
+? 0 5 0 E
+E 1 25568 5 19             	steel blue jambiya
+M 0 25520 1 25532
+M 0 25520 1 25536
+M 0 25520 1 25517
+M 0 25521 4 25522	Camel
+R 1 25519 4 25522	  riding guard
+M 0 25521 4 25522
+R 1 25519 4 25522
+M 0 25521 4 25522
+R 1 25519 4 25522
+M 0 25521 4 25522
+R 1 25519 4 25522
+M 0 25521 2 25584
+R 1 25519 2 25584
+M 0 25521 2 25584
+R 1 25519 2 25584
+M 0 25521 1 25586
+R 1 25519 1 25586
+M 0 25521 1 25591
+R 1 25519 1 25591
+M 0 25522 1 25654	Synjilla
+G 1 25503 1			exit key
+? 0 3 0 E
+E 1 25526 2 2			athanor ring
+G 1 513 9999
+Y 0 76 3			Athanor set - 3%
+M 0 25523 1 25664	Efreet
+M 0 25524 1 25663	Kwal'ish
+G 1 25552 1			key
+? 0 3 0 E
+E 1 25555 1 19			Khopesh
+? 0 3 0 E
+E 1 25556 12 1			ring of blue flames
+Y 0 78 3			Sapphire set - 3%
+
+S
+

@@ -1,0 +1,360 @@
+#3300
+Saint - Caves of the Ancients~
+3399 25 2 1
+
+O 0 20027 1 3343        Chest (kraegin)
+? 0 10 0 P
+P 1 3346 5 20027	  Gleaming Necklace 
+? 0 10 0 P
+P 1 3349 5 20027	  Ivory-hilted Poinard
+
+O 0 3318 9999 3394      Torchiere
+O 0 3318 9999 3394      Torchiere
+O 0 3318 9999 3396      Torchiere
+O 0 3318 9999 3396	Torchiere
+
+O 0 3302 6 3356         Wall Torch
+O 0 3302 6 3357        	Wall Torch
+O 0 3302 6 3358         Wall Torch
+O 0 3302 6 3359         Wall Torch
+O 0 3302 6 3360         Wall Torch
+O 0 3302 6 3398		Wall Torch
+
+O 0 3301 5 3302		Flickering Ball of Light
+O 0 3301 5 3306         Flickering Ball of Light
+O 0 3301 5 3310         Flickering Ball of Light
+O 0 3301 5 3314         Flickering Ball of Light
+O 0 3301 5 3318		Flickering Ball of Light
+
+O 0 3303 1 3343		Emerald Portal
+
+O 0 3305 3 3365		Wooden Bench
+O 0 3305 3 3362		Wooden Bench
+O 0 3305 3 3368		Wooden Bench
+
+O 0 3306 3 3375		Pile of Refuse
+O 0 3306 3 3376		Pile of Refuse
+O 0 3306 3 3377		Pile of Refuse
+
+O 0 3307 2 3378		Cask
+P 1 404 999 3307              food inside cask
+P 1 404 999 3307              food inside cask
+
+O 0 3308 2 3379		Crate
+P 1 3328 29 3308             workglove inside crate
+P 1 3366 99 3308             whiskey inside crate
+
+O 0 3309 6 3394         Giant Pillow
+O 0 3309 6 3394         Giant Pillow
+O 0 3309 6 3396         Giant Pillow
+O 0 3309 6 3396         Giant Pillow
+O 0 3309 6 3392         Giant Pillow
+
+O 0 3309 6 3374		Giant Pillow
+
+O 0 3319 2 3372		Ashtray
+O 0 3319 2 3385		Ashtray
+
+O 0 3341 2 3366		Glass Case
+
+O 0 3342 1 3365		Grey Glass Case
+P 1 27110 1 3342         Spellbook - Kalus Quest
+
+O 0 3343 1 3365		Blue Glass Case
+
+O 0 3341 2 3364		Glass Case
+
+O 0 3344 6 3364         Tapestry
+O 0 3344 6 3365         Tapestry
+O 0 3344 6 3366         Tapestry
+O 0 3344 6 3367         Tapestry
+O 0 3344 6 3368         Tapestry
+O 0 3344 6 3369		Tapestry
+
+D 0 3334 0 1	Cell Door
+D 0 3336 2 1
+D 0 3334 1 2	Cell Door
+D 0 3337 3 2
+D 0 3335 0 1	Cell Door
+D 0 3338 2 1
+D 0 3335 3 1	Cell Door
+D 0 3339 1 1
+
+M 0 3300 1 3342 		Kraegin
+? 0 30 0 G
+G 1 20049 2
+
+M 0 3301 2 3341 		Angler fish
+
+M 0 3302 1 3302 		Weary Soldier
+
+M 0 3351 1 3306 		Weary Soldier
+
+M 0 3352 1 3308 		Weary Soldier
+
+M 0 3353 1 3315 		Weary Officer
+? 0 5 0 E
+E 1 3327 9999 19                  Stiletto
+
+M 0 3354 1 3321 		Weary Soldier
+
+M 0 3303 1 3309 		Deserter
+? 0 3 0 E   
+E 1 3327 9999 19                  Stiletto
+M 0 3303 2 3311 		Deserter
+? 0 3 0 E 
+E 1 3327 9999 19                  Stiletto
+M 0 3303 1 3314                 Deserter
+? 0 3 0 E 
+E 1 3327 9999 19                  Stiletto
+M 0 3303 1 3318 		Deserter
+? 0 3 0 E 
+E 1 3327 9999 19                  Stiletto
+
+M 0 3304 2 3302 		Green Slime
+M 0 3304 1 3317 		Green Slime
+M 0 3304 1 3320 		Green Slime
+
+M 0 3305 1 3303 		Cave Serpent
+M 0 3305 1 3310 		Cave Serpent
+M 0 3305 2 3313 		Cave Serpent
+
+M 0 3306 1 3305 		Large Rat
+M 0 3306 2 3316 		Large Rat
+
+M 0 3307 1 3307 		Looter
+? 0 3 0 E 
+E 1 3327 9999 19                  Stiletto
+M 0 3307 1 3312 		Looter
+? 0 3 0 E 
+E 1 3327 9999 19                  Stiletto
+
+M 0 3308 1 3324 		Makirian Sentry
+? 0 3 0 E
+E 1 3317 250 19		          Bone Club
+Y 0 24 3                          Load Set Bone - 3%
+M 0 3308 1 3324 		Makirian Sentry
+? 0 3 0 E
+E 1 3317 250 19                   Bone Club
+Y 0 24 3                          Load Set Bone - 3%
+
+M 0 3355 1 3330 		Makirian Sentry
+? 0 3 0 E
+E 1 3317 250 19                   Bone Club
+Y 0 24 3                          Load Set Bone - 3%
+
+M 0 3309 1 3328 		Makirian Soldier
+? 0 3 0 E
+E 1 3327 250 19		          Stiletto
+Y 0 24 3                          Load Set Bone - 3%
+M 0 3309 1 3328 		Makirian Soldier
+? 0 3 0 E
+E 1 3317 250 19                   Bone Club
+Y 0 24 3                          Load Set Bone - 3%
+
+M 0 3356 1 3325 		Makirian Soldier
+Y 0 24 3                          Load Set Bone - 3%
+
+M 0 3310 1 3326 		Makirian Leader
+Y 0 24 4                          Load Set Bone - 4%
+
+M 0 3312 1 3331 		Makirian Prison Master
+G 1 3300 1		          Onyx Key
+
+M 0 3313 1 3336 		Prisoner
+? 0 5 0 E
+E 1 3338 500  16	          Manacles
+M 0 3313 1 3337 		Prisoner
+? 0 5 0 E
+E 1 3338 500  16	          Manacles
+M 0 3313 1 3338 		Prisoner
+? 0 5 0 E
+E 1 3338 500  16	          Manacles
+
+M 0 3350 1 3332 		Tortured Prisoner
+? 0 5 0 E
+E 1 3337 15 5                     Black Leather Mask
+? 0 5 0 E
+E 1 3338 500  16	          Manacles
+
+M 0 3314 1 3345 		Ghost
+? 0 5 0 E
+E 1 3339 10  4		          Ghostly Tunic
+? 0 5 0 E
+E 1 3340 10  6		          Ghostly Pants
+
+M 0 3359 1 3380 		Ghost
+? 0 4 0 E
+E 1 3339 10  4		          Ghostly Tunic
+
+M 0 3360 1 3382 		Ghost
+? 0 4 0 E
+E 1 3340 10  6		          Ghostly Pants
+
+M 0 3361 1 3383 		Ghost
+? 0 4 0 E
+E 1 3339 10  4		          Ghostly Tunic
+? 0 4 0 E
+E 1 3340 10 6                     Ghostly Pants
+
+M 0 3362 1 3354 		Ghost
+? 0 4 0 E
+E 1 3340 10 6                     Ghostly Pants
+
+M 0 3315 1 3363 		Museum Curator
+? 0 50 0 G                 
+G 1 3361 9999		          Sandwich
+? 0 20 0 G
+G 1 819 7		          Balsa Staff
+
+M 0 3316 1 3365 		Tour Guide - Jack
+? 0 50 0 G               
+G 1 3361 9999		          Sandwich
+
+M 0 3317 1 3362 		Tour Guide - Zach
+? 0 50 0 G                
+G 1 3361 9999		          Sandwich
+
+M 0 3318 1 3366 		Teacher
+? 0 50 0 G                
+G 1 3362 9999		          Apple
+
+M 0 3319 1 3367 		Lost Waif
+? 0 40 0 G               
+G 1 3364 9999		          Sweet Bread
+M 0 3319 1 3369 		Lost Waif
+? 0 40 0 G               
+G 1 3364 9999		          Sweet Bread
+
+M 0 3320 1 3395 		Slab of Beef
+
+M 0 3321 1 3387 		Cook
+? 0 30 0 E
+E 1 3320 9   4		          Apron
+G 1 3321 9    		          Spatula
+
+M 0 3322 1 3385 		Haggard Waitress - Nikita
+? 0 15 0 G
+G 1 3345 10   		          Serving Tray
+? 0 5 0 G
+G 1 3325 25		          Prime Rib Dinner
+
+M 0 3323 1 3386 		Haggard Waitress - Hikaru
+? 0 15 0 G
+G 1 3345 10   		          Serving Tray
+? 0 5 0 G
+G 1 3324 25		          Fried Chicken Dinner 
+
+M 0 3324 1 3385 		Smoking Patron
+G 1 3325 25		          Prime Rib Dinner
+
+M 0 3325 1 3384 		Non-smoking Patron
+G 1 3325 25 		          Prime Rib Dinner
+? 0 15 0 G
+G 1 3322 25 	  	          Fork
+G 1 3323 25		          Knife
+M 0 3325 1 3384 		Non-smoking Patron
+G 1 3324 25		          Fried Chicken Dinner
+? 0 15 0 G
+G 1 3322 25		          Fork
+G 1 3323 25 		          Knife
+M 0 3325 1 3386 		Non-smoking Patron
+G 1 3325 25		          Prime Rib Dinner
+? 0 15 0 G
+G 1 3322 25 19 		          Fork
+G 1 3323 25 		          Knife
+
+M 0 3326 1 3375 		Hoodlum
+E 1 3327 25 19		          Stiletto
+
+M 0 3357 1 3377 		Hoodlum
+E 1 3327 25 19		          Stiletto
+
+M 0 3327 1 3379 		Warehouse Worker
+
+M 0 3328 1 3372 		Pipe Smoker
+? 0 3 0 E
+E 1 3333 100 19		          Pipe
+M 0 3328 1 3372 		Pipe Smoker
+? 0 3 0 E
+E 1 3333 100 19		          Pipe
+
+M 0 3329 1 3394 		Sin
+? 0 75 0 G              
+G 1 3361 9999		          Sandwich
+? 0 3 0 E
+E 1 3335 30  4		          Malachite Mantle
+? 0 4 0 E
+E 1 3348 95 19		          Ivory-hilted Falchion
+? 0 2 0 E
+E 1 3334 30 2		          Malachite Ring
+
+M 0 3330 1 3396 		Madoka
+? 0 2 0 E
+E 1 3334 30  2		          Malachite Ring
+
+M 0 3331 1 3392 		Depraved Man - John
+? 0 40 0 G              
+G 1 3361 9999		          Sandwich
+? 0 20 0 E
+E 1 3327 25 19		          Stiletto
+
+M 0 3363 1 3374 		Depraved Man - James
+? 0 40 0 G              
+G 1 3361 9999		          Sandwich
+? 0 20 0 E
+E 1 3327 25 19		          Stiletto
+
+M 0 3332 1 3374 		Whore - Janie
+? 0 15 0 E
+E 1 3329 4 15		          Garter Belt
+? 0 15 0 E
+E 1 3330 4  6		          Black Hose
+? 0 15 0 E
+E 1 3331 4  4		          Silk Teddie
+? 0 15 0 E
+E 1 3332 4  8		          Spiked Heels
+
+M 0 3333 1 3392 		Whore - Liza
+? 0 10 0 E
+E 1 3329 4 15		          Garter Belt
+? 0 15 0 E
+E 1 3330 4  6		          Black Hose
+? 0 15 0 E
+E 1 3331 4  4		          Silk Teddie
+? 0 15 0 E
+E 1 3332 4  8		          Spiked Heels
+
+M 0 3335 1 3369 		Wax Figure - Magneto
+Y 0 45 4                          Load Set Wax - 4%
+
+M 0 3334 1 3367 		Wax Figure - Aunt Bee
+Y 0 45 4                          Load Set Wax - 4%
+
+M 0 3336 1 3368 		Wax Figure - Colonel Sanders
+Y 0 45 4                          Load Set Wax - 4%
+
+M 0 3349 1 3371 		Drunk
+? 0 30 0 G 
+G 1 412 999		          Shot of Whiskey
+M 0 3349 1 3371 		Drunk
+? 0 30 0 G
+G 1 412 999 		          Shot of Whiskey
+? 0 50 0 G 
+G 1 3360 999	                  Nuts
+
+M 0 3337 1 3357 		Stone Statue - Niko
+M 0 3338 1 3358 		Stone Statue - Oplop
+M 0 3339 1 3356 		Stone Statue - Magic
+M 0 3340 1 3360 		Stone Statue - Crys
+M 0 3341 1 3356 		Stone Statue - Humphry
+M 0 3342 1 3398 		Stone Statue - Rj
+M 0 3343 1 3358 		Stone Statue - Low
+M 0 3344 1 3359 		Stone Statue - Eiko
+M 0 3345 1 3357 		Stone Statue - Largo
+M 0 3346 1 3359 		Stone Statue - Belmont
+M 0 3347 1 3398 		Stone Statue - Faceless hero
+M 0 3348 1 3397 		Stone Statue - Damned mortal
+M 0 3358 1 3360 		Stone Statue - Wer
+S
+

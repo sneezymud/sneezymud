@@ -1,0 +1,415 @@
+#0
+Void~
+0 25 2 1
+*O 0 1 1 13       PUT UTILITY LOAD STUFF HERE
+*O 0 1 1 13	  All SHOPKEEPER, GUILDMASTER, TRAINERS, UTIL MUST
+*O 0 1 1 13	  LOAD IN ZONE #0
+
+*O 0 1 1 13	  QUEST STUFF LOADS
+
+*M 0 86 1 154      Bank Manager
+*M 0 86 1 118      Bank Manager
+*O 0 10549 1 154  sign
+*O 0 10549 2 118  sign
+
+*M 0 54 3 154      Angry Barhopper
+*M 0 54 3 118      Angry Barhopper
+
+*O 0 29904 1 119      recruitment poster
+  
+*O 0 29903 1 10144    bier
+*P 1 29902 1 29903         corpse
+*O 0 1 1 13	  Load of jendar (10115) disabled
+
+*M 0 29904 3 10144     mourners
+*M 0 29905 3 10144 
+
+*M 0 29906 2 10144    Honor guard
+
+*O 0 1 1 13	  New stuff in castle
+*M 0 29901 1 356    reginor
+*M 0 29908 3 356    
+*M 0 29909 3 356    
+
+*Grimhaven Gatekeepers
+M 0 210 1 200
+M 0 211 1 215
+
+
+*O 0 1 1 13	  END OF QUEST LOADS
+
+O 0 561 1 415      Repair object loads
+O 0 561 1 426
+O 0 577 1 500
+O 0 577 1 504
+O 0 577 1 516
+O 0 577 1 518
+O 0 577 1 532
+O 0 577 1 549
+O 0 585 1 503
+O 0 2345 1 772    End of repair objects.
+
+M 0 29903 1 200      orc trader
+G 1 29901 9999		Kitten pie
+M 0 29903 1 101      orc trader
+G 1 29901 9999		Kitten pie
+
+? 0 1 0 M
+M 0 10550 1 257       construction worker (quest)
+? 0 15 0 E
+E 1 3365 3 19               crowbar (quest0
+
+? 0 3 0 M
+M 0 10550 1 536       construction worker (quest)
+? 0 15 0 E
+E 1 3365 3 19               crowbar (quest0
+
+? 0 4 0 M
+M 0 10550 1 324       construction worker (quest)
+? 0 15 0 E
+E 1 3365 3 19               crowbar (quest0
+
+? 0 4 0 M
+M 0 10550 1 249       construction worker (quest)
+? 0 15 0 E
+E 1 3365 3 19               crowbar (quest0
+
+M 0 407 1 1396       Fistlantius (quest)
+
+M 0 7870 1 607		Homeless Man (mage belt quest)
+
+*O 0 1 1 13  STONECOLD'S FUNKY QUEST LOADS
+
+M 0 2273 1 2273 
+M 0 2495 1 2495 
+M 0 2874 1 2854 
+M 0 3210 1 3210 
+M 0 3459 1 3459 
+M 0 3857 1 3857 
+M 0 5347 1 5347 
+M 0 5555 1 5554 
+M 0 6761 1 6761 
+M 0 7531 1 7531 
+M 0 8677 1 8677 
+*M 0 9148 1 9148    Yola moved from FOG island to myrian zone temp. 
+M 0 9148 1 12889 
+M 0 9326 1 9326 
+M 0 9331 1 9331 
+M 0 14159 1 14162
+M 0 14227 1 14227 
+M 0 14404 1 14404  
+M 0 28876 1 28876 
+
+*O 0 0 1 13	END OF STONECOLD's FUNKY QUEST LOADS
+
+
+*TOWN CRIER LOADS
+
+M 0 111 1 100 	Town Crier (Center Square)
+M 0 1200 1 1336 Town Crier (Brightlaughter Tavern)
+M 0 3708 1 3770 Town Crier (Logrus Tavern)
+M 0 8736 1 8797 Town Crier (Amber Tavern)
+
+* LOG COMMODITY
+B 0 75 3 23276    Cedar Logs
+B 0 80 3 7070     Pine Logs
+B 0 81 3 15280    Ash Logs
+B 0 77 3 4708     Redwood Logs
+B 0 85 3 14150    Oak Logs
+B 0 85 3 5331     Oak Logs
+B 0 86 3 10119    Hickory Logs
+B 0 76 3 9587     Logs
+B 0 78 3 25283     Logs
+B 0 79 3 10914     Logs
+B 0 82 3 28086     Logs
+B 0 83 3 28961     Logs
+B 0 84 3 28081     Logs
+
+B 0 75 3 28080     Logs
+B 0 76 3 28075     Logs
+B 0 77 3 28074     Logs
+B 0 78 3 28069     Logs
+B 0 79 3 28063     Logs
+B 0 80 3 27324     Logs
+B 0 81 3 27324     Logs
+B 0 82 3 27344     Logs
+B 0 83 3 27163     Logs
+B 0 84 3 27164     Logs
+B 0 85 3 27165     Logs
+B 0 86 3 14432     Logs
+B 0 87 3 14433     Logs
+B 0 88 3 7728     Logs
+
+B 0 75 3 14377     Logs
+B 0 76 3 10246     Logs
+B 0 77 3 10244     Logs
+B 0 78 3 10243     Logs
+B 0 79 3 10242     Logs
+B 0 80 3 9962     Logs
+B 0 81 3 9407     Logs
+B 0 82 3 7728     Logs
+B 0 83 3 7729     Logs
+B 0 84 3 6794     Logs
+B 0 85 3 6794     Logs
+B 0 86 3 451     Logs
+B 0 87 3 3724     Logs
+B 0 88 3 7392     Logs
+
+
+*O 0 0 1 13	BEGIN SHOPKEEPER LOADS
+M 0 150 1 559 		Weaponsmith GH 			(shop 0)
+M 0 151 1 550 		Lumor (Lights GH)		(shop 1)
+M 0 152 1 555 		Armourer GH			(shop 2)
+M 0 153 1 560 		Froddor (GH Food)		(shop 3)
+M 0 592 1 556           Sestrel (Kindred Spirit)        (script)
+*M 0 154 1 556 		Waiter GH			(shop 4)
+M 0 155 1 561 		Quazar (GH Magic)		(shop 5)
+M 0 156 1 508 		Alchemist (GH)			(shop 6)
+M 0 157 1 506 		Scribe (GH Scrolls)		(shop 7)
+M 0 158 1 552 		Taloc (GH General)		(shop 8)
+M 0 159 1 562 		Pawn Broker			(shop 9)
+M 0 160 1 551 		Alter boy (GH Symbol)		(shop 10)
+M 0 161 1 646 		masked shopkeeper (GH) 		(shop 11)
+M 0 162 1 554 		Camron	(GH Component)		(shop 12)
+M 0 591 1 553           Jurall (Green Dragon)           (script)
+*M 0 163 1 553 		Bartender (GH Beverage)		(shop 13)
+M 0 165 1 558 		Prigon (GH Commmodity)		(shop 15)
+M 0 18624 1 18624	Konastis, bag maker (Bag Shop)  (shop 25)
+M 0 551 1 565		Tanni (GH Jewelry)      	(shop 73)
+M 0 167 1 568           Dwayne (GH worn)		(shop 36)
+M 0 166 1 564 		Petguy GH
+M 0 471 1 472		Wilhelm Adder [Bartender]	(shop 107)
+M 0 552 1 572           Delayn (GH organic commodty)    (shop 104)
+M 0 608 1 2366          Kavod Stone (south market, food/drink) (shop 116)
+M 0 609 1 2366          Arien, the barmaid
+E 1 3534 9999 19	standard issue barmaid gear
+E 1 3535 9999 5		A
+E 1 3536 9999 4		|
+E 1 3537 9999 14	|
+E 1 3538 9999 16	|
+E 1 3539 9999 15	|
+E 1 3540 9999 6		|
+E 1 3541 9999 8		V
+E 1 3541 9999 9		standard issue barmaid gear
+M 0 649 1 600		Maurice (south market, garbageman) (shop 124)
+M 0 610 1 610		Nynaeve (south market, comp)    (shop 115)
+M 0 616 1 616           Milo Blinks (south market, weapon) (shop 118)
+M 0 604 1 604           Baten Schwitz (south market, locksmith) (shop 135)
+M 0 607 1 607           Buzz Corkoff (south market, armor) (shop 137)
+M 0 627 1 627		Torkyn  (south market, clothing) (shop 117)
+M 0 628 1 628		Felicia (south market, armor/jewlery) (shop 113)
+M 0 633 1 633		Sian (south market, scroll/potion) (shop 120)
+M 0 634 1 634		Jennica (south market, armorwand) (shop 114)
+M 0 647 1 647           Senzei Reese (south market, symbols etc) (shop 119)
+M 0 648 1 648 		Kystin (south market, symbols) (shop 121)
+M 0 1209 1 1364         Huma Galin - BM Petguy
+M 0 1336 1 1336         Zaurgrah Brightlaughter (Tavern-keeper)(shop 23)
+M 0 1344 1 1344   	Pompo (BM baker)		(shop 24)
+M 0 1346 1 1346   	Shookran (BM General Store)	(shop 18)
+M 0 1362 1 1362  	Hourne (BM Armourer)		(shop 19)
+M 0 1363 1 1363  	Zephyr (BM Weapons-crafter)	(shop 20)
+M 0 1366 1 1366  	white wizard (BM reagent/magic store)	(shop 21)
+M 0 1367 1 1367  	Aaron (BM hunting supplies)	(shop 22)
+M 0 3707 1 3737         Kludge Half-Ear - Logrus Petguy
+M 0 3727 1 3727         Momar (Logrus armourer)		(shop 26)
+M 0 3728 1 3728     	Rogar (Logrus weaponer)		(shop 27)
+M 0 3741 1 3741     	Rednow (Logrus Food)		(shop 28)
+M 0 3742 1 3742     	Nekcihc (Logrus magic)		(shop 29)
+M 0 3743 1 3743     	Hsif (Logrus General)		(shop 30)
+M 0 3770 1 3770     	Tip bartender			(shop 31)
+M 0 3859 1 3859     	wan fu - weapons-ninja 		(shop 32)
+M 0 3860 1 3860     	shei lo -ninja armor		(shop 33)
+M 0 3864 1 3864         Theron symbol shop logrus       (shop 111)
+M 0 4507 1 4507 	Jem Sanders shopkeeper          (shop 125)
+M 0 4303 1 4368  	Bullywug Shopkeeper		(shop 17)
+M 0 4537 1 4537         Ethelric Darkenelf (east gate armor) (shop 138)
+M 0 5586 1 5586         Balinor bowman			(shop 63)
+M 0 5378 1 5378     	Hic bar tender			(shop 64)
+M 0 5713 1 5759         Alistayre adventurer supply 	(shop 46)
+M 0 5714 1 5761         Tirian tavern owner		(shop 47)
+M 0 5735 1 5853         Kirylian shopkeeper		(shop 45)
+M 0 5736 1 5850         Kirylian barkeep		(shop 48)
+M 0 6836 1 6951  	Pzanthar 			(shop 44)
+M 0 6837 1 6956  	Caliyon (component)		(shop 43)
+M 0 7515 1 7548  	ghostly Smithy			(shop 25)
+M 0 8701 1 8804         Tarl - Amber Petguy
+M 0 8703 1 7805         Tuvar (Amber organic commodity) (shop 105)
+M 0 31760 1 31788	Petunia, GH gardening shop
+M 0 593 1 579		Yun, grocery/cooking shop       (shop 112)
+**
+* Fishing Shop
+**
+M 0 13746 9999 15345 - shopkeeper
+M 0 13747 9999 15345 - fishmaster
+M 0 14249 1 14249       Ainx				(shop 37)
+M 0 14255 1 14255       Jank				(shop 38)
+M 0 23635 1 23663       Arenafood seller		(shop 39)
+M 0 23636 1 23665       arena armourer			(shop 40)
+M 0 23637 1 23664       weaponsmith arena		(shop 41)
+M 0 24418 1 24442	Baker's wife (shopkeeper)       (shop 106)
+M 0 14324 1 14377 	Three Toes [Bartender]		(shop 50)
+M 0 14326 1 14372 	Galdor Sugarfoot [Baker]	(shop 49)	
+M 0 14325 1 14378 	Robin [Waitress]		(shop 51)
+M 0 14332 1 14385 	Lightfingers Fastfeet [Trader]	(shop 60)
+M 0 20000 1 20000       Fay (Tournament Guy)		(shop 42)
+M 0 11028 1 11027 	Zank (Cimea Food)		(shop 52)
+M 0 11029 1 11030 	Siva (Cimea Weapons)		(shop 55)
+M 0 11030 1 11033 	Alexander (Cimea Armor)		(shop 54)
+M 0 11031 1 11029 	Boodle (Cimea Curio)		(shop 61)
+M 0 11033 1 11039 	Sexur (Cimea Tavern)		(shop 53)
+M 0 1393 1 1393  	Katherine (BM Commodity)	(shop 57)
+M 0 3709 1 3709  	Maleck (Logrus Commodity)	(shop 58)
+M 0 1296 1 1296  	Jonah (BM shipwright/shopkeeper)(shop 62)
+M 0 7002 1 7042      	Rawlens (Citadel Tavern)	(shop 65)
+M 0 7003 1 7037      	Braddock (Citadel General)	(shop 66)
+M 0 7004 1 7043      	Gena (Citadel Pastry)		(shop 67)
+M 0 16204 1 16201       Pharmacist (Amber Hospital)  	(shop 68)
+M 0 8727 1 8727 	component (amber)           	(shop 70)
+M 0 8728 1 8728 	weaponer (amber)            	(shop 35)
+M 0 8734 1 8734 	commodity (amber)           	(shop 56)
+M 0 8735 1 8735 	armorer (amber)             	(shop 34)
+M 0 8755 1 8755 	Dantrang food (amber)     	(shop 16)
+M 0 8797 1 8797 	waitress bartender (amber)	(shop 59)
+M 0 8798 1 8798 	clothing (amber)            	(shop 74)
+M 0 8739 1 8739 	boat storekeeper (amber)    	(shop 69)
+M 0 8841 1 8841 	thief shop (amber)          	(shop 71)
+M 0 8861 1 8861 	general store clerk (amber) 	(shop 72)
+M 0 16107 1 16144       Lisa, Outpost Supply store 	(shop 75)
+M 0 16106 1 16142       Karn, outpost tavern owner	(shop 76)
+M 0 14250 1 14250	Chank - Kalysia Weapons		(shop 77)
+M 0 14265 1 14265	Zaxx - Kalysia Thief shop	(shop 78)
+M 0 25525 1 25581	Raimi [Desert Gen Store]	(shop 79)
+M 0 25526 1 25582 	Moamar [Desert Food Shop]	(shop 80)
+M 0 25528 1 25585 	Magreb [Desert Commodity]	(shop 81)
+M 0 25530 1 25592	Rutherford [Desert Armor]	(shop 82)
+M 0 25531 1 25589 	Balthazar [Desert Weapons]	(shop 83)
+
+M 0 12234 1 12234	Stone's Liquid's Shop		(shop 84)
+M 0 12236 1 12236	Stone's Bone Shop		(shop 85)
+M 0 12237 1 12237	Stone's Pumice Shop		(shop 86)
+M 0 12238 1 12238	Stone's Pearl Shop		(shop 87)
+M 0 12239 1 12239	Stone's Component/Scroll Shop	(shop 88)
+M 0 12240 1 12240	Stone's Food Shop		(shop 89)
+M 0 12253 1 12253	Stone's Cloth Shop		(shop 90)
+M 0 12254 1 12254	Stone's Leather Shop		(shop 91)
+M 0 12256 1 12256	Stone's Wool Shop		(shop 92)
+M 0 12257 1 12257	Stone's Silk Shop		(shop 93)
+M 0 12272 1 12272	Stone's Gold Shop		(shop 94)
+M 0 12275 1 12275	Stone's Silver Shop		(shop 95)
+M 0 12276 1 12276	Stone's Brass Shop		(shop 96)
+M 0 12278 1 12278	Stone's Gem Shop		(shop 97)
+M 0 12279 1 12279	Stone's Fur Shop		(shop 98)
+M 0 12292 1 12292	Stone's Mineral Shop		(shop 99)
+M 0 12293 1 12293	Stone's Rubber Shop		(shop 100)
+M 0 12294 1 12294	Stone's Glass Shop		(shop 101)
+M 0 12295 1 12295	Stone's Plastic Shop		(shop 102)
+M 0 12298 1 12298	Stone's Wax Shop		(shop 103)
+M 0 27806 1 27899       Nefkar (Amber Bay Boats)        (shop 108)
+M 0 31352 1 578         Mystic Man (divination guy in Grimhaven) 
+
+*O 0 0 1 13	END SHOPKEEPER LOADS
+
+*O 0 0 1 13	BEGIN INNKEEPER LOADS
+M 0 164 1 557 		Receptionist - Grimhaven
+M 0 1333 1 1333  	Innkeeper - BM
+M 0 2124 1 2218      	receptionist - Dwarves
+M 0 3771 1 3771     	Logrus innkepper
+M 0 5715 1 5766         Stratos innkeeper
+M 0 7001 1 7050      	Innkeeper - Obsidian Citadel
+M 0 8766 1 8766 	Amber innkeeper (New)
+M 0 10615 1 10643       Innkeeper - Arden Lake
+M 0 11032 1 11040 	Musidora - Cimea
+M 0 14184 1 14184       Kaina - Kalysia Receptionist
+E 1 14184 10 4              green dress
+M 0 14323 1 14379 	Rose [Shire Innkeeper]
+M 0 23634 1 23662       innkeeper arena
+M 0 24442 1 24435       Gnorman [Gnath Innkeeper]
+M 0 25527 1 25587 	Boaz [Desert Innkeeper]
+M 0 9121 1 9121		Jolly King
+M 0 33961 1 449       Kenth [Blackridge Travellers' Lodge] * short int
+*O 0 0 1 13	END INNKEEPER LOADS
+
+*O 0 0 1 13	BEGIN REPAIRSHOP LOADS
+M 0 168 1 409 		Piggot (GH repairman)
+M 0 1345 1 1345  	Brombur (BM repairman)
+M 0 3774 1 3774 	Logrus repair
+M 0 7008 1 7110      	Thomas Ironhand (Citadel Repair)
+M 0 8737 1 8737 	Ragnerek - Amber repairman (New)
+M 0 23638 1 23799       Arena repairman
+M 0 25529 1 25593 	Rackhir [Desert Repair]
+M 0 30710 1 30703       Kallam the village blacksmith
+*O 0 0 1 13	END REPAIRSHOP LOADS
+
+*O 0 0 1 13	BEGIN CASINO LOADS
+
+M 0 2350 1 2353		cashier
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+M 0 2353 1 2363		Craps dealer
+? 0 5 0 E
+E 1 2367 9999 4		red jacket
+M 0 2355 1 2364		Hotel receptionist
+
+
+*O 0 0 1 13	END CASINO LOADS
+
+M 0 169 1 408 		Beavis (GH Sword Sharpener)
+M 0 1347 1 1347  	Ylorin (BM Weapon Sharpener)
+M 0 3754 1 3754 	Logrus sharpener
+M 0 8799 1 8799 	Dagrom - Amber sharpener (New)
+M 0 23639 1 23798       Arena sharpener
+
+M 0 406 1 406 		GH Postmaster
+M 0 1388 1 1388  	BM PostMaster
+M 0 8857 1 8857 	Amber postmaster (New)
+
+M 0 70 1 70 		The Tormentor!
+M 0 90 1 570            Welfare Worker Grim
+M 0 91 1 576		Employment Agent
+*M 0 145 1 8402 		Craps Table Dude
+M 0 147 1 569           Hornsby Engraver
+M 0 403 1 407		Fortune Teller
+
+M 0 11027 1 11052 	Porter
+M 0 11027 2 11013 	Porter
+M 0 11027 1 11037 	Porter
+
+M 0 340 1 1394         Attuner/Galen
+M 0 341 1 3863         Attuner/Thelina
+M 0 342 1 2989         Attuner/Fazoul
+M 0 343 1 775  	       Attuner/Karalina
+
+M 0 1303 1 1303          Brightmoon Lamp boys (page)
+
+M 0 3706 3 3701          logrus  Lamp boys (orc)
+
+M 0 8700 1 8747           amber Lamp boys (servant)
+M 0 8700 1 8747           amber Lamp boys (servant)
+M 0 8702 1 8891           amber Lamp boys (servant)
+
+* Silly to load without up-to-date newspapers
+*M 0 85 1 85 	    Assistant Editor
+*G 1 10542 2	       Key to inbox [xinbox
+*M 0 84 1 100 	    Newsboys
+*M 0 84 1 240 	    Newsboys
+*M 0 84 1 116 	    Newsboys
+*M 0 84 1 105 	    Newsboys
+*M 0 84 1 166 	    Newsboys
+*M 0 84 1 180 	    Newsboys
+
+*M 0 25409 1 1135    Centaurian Guard <temp quest mob for stone>
+*M 0 25409 1 1070    Centaurian Guard <temp quest mob for stone>
+*M 0 87 2 180	    Enterprising Lads
+*G 1 10555 238
+
+*M 0 88 1 117	    Enterprising Lads
+*G 1 10556 999
+*M 0 88 1 650	    Enterprising Lads
+*G 1 10556 999
+
+*M 0 89 1 108	    Enterprising Lads
+*G 1 10557 999
+*M 0 89 1 705	    Enterprising Lads
+*G 1 10557 999
+
+S

@@ -1,0 +1,227 @@
+#23200
+Omen - Arden Forest~
+23299 35 2 1
+
+O 0 23226 1 23226	 tree bridge, north side
+O 0 23232 1 23232	 west entrance to anthill
+O 0 23234 1 23258        empty waste barrel in arden forest
+O 0 23235 1 23294        dissected pegasus corpse in arden cleric's abode
+O 0 23246 1 23246	 tree bridge, south side
+O 0 23268 1 23268	 east entrance to anthill
+O 0 23280 1 23280	 water trickle during rain
+O 0 23280 2 23281	 water trickle during rain
+O 0 23280 3 23282	 water trickle during rain
+O 0 23280 4 23283	 water trickle during rain
+O 0 23284 1 23284	 door into mystic shack
+O 0 23288 1 23288	 door out of mystic shack
+
+M 0 23200 1 23200	 wild elf (10)
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set
+M 0 23200 1 23211	 wild elf
+? 0 4 0 E
+E 1 23224 20 18	  	    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23222	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23233	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23244	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23225	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23266	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23277	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23258	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23200 1 23219	 wild elf
+? 0 4 0 E
+E 1 23224 20 18		    elven longspear
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23201 	 archer (8)
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23204
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23220	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23213	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23260	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23261	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23252	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23201 1 23267	archer
+? 0 4 0 E
+E 1 23209 10 17		    archer's wristguard
+? 0 6 0 E
+E 1 3405 999 19		    medium bow/arrows
+G 1 3412 999
+G 1 3412 999
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23240 	scout (10)
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23250	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23273	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23279	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23259	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23206	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23208	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23246	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23229	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23202 1 23264	scout
+? 0 3 0 E
+E 1 23225 10 8		    elven hiking boot
+? 0 3 0 E
+E 1 23225 10 9		    elven hiking boot
+Y 0 68 2		    deerskin set 
+M 0 23203 1 23279 	stalker (3)
+Y 0 69 2		    darkblue set 
+M 0 23203 1 23254
+Y 0 69 2		    darkblue set 
+M 0 23203 1 23247
+Y 0 69 2		    darkblue set 
+M 0 23204 1 23277	 werewolf (3)
+M 0 23204 1 23246
+M 0 23204 1 23264
+M 0 23205 1 23244 	khelswyfe
+? 0 2 0 E
+E 1 23227 1 10	 	   clawed glove
+? 0 2 0 E
+E 1 23227 1 11	 	   clawed glove
+M 0 23206 1 23221 	ryakk
+? 0 2 0 E
+E 1 23228 1 14	 	   cape of the bat
+M 0 23207 1 23200 	night spider (7)
+M 0 23207 1 23251
+M 0 23207 1 23204
+M 0 23207 1 23208
+M 0 23207 1 23227
+M 0 23207 1 23267
+M 0 23207 1 23262
+
+M 0 23208 1 23257       diseased henchman
+
+M 0 23209 1 23294       dark cleric in arden
+? 0 6 0 E
+E 1 9772 9999 3           blood-stained neck symbol
+
+M 0 23210 1 23270 	chipmunk
+M 0 23261 1 23261 	geldoran
+? 0 3 0 G
+G 1 23212 1      	   black elfstone
+Y 0 68 3		    deerskin set 
+M 0 23291 1 23291	 yyrn
+? 0 3 0 G
+G 1 23211 1      	   purple elfstone
+M 0 23292 1 23292	 dalgalath
+? 0 2 0 G
+G 1 23213 1      	   dark blue elfstone
+
+M 0 9724 1 23288 	Goldfinger's mystic
+S
+

@@ -1,0 +1,132 @@
+#10600
+Onslaught - Arden Lake Elves~
+10699 40 2 1
+
+D 0 10630 5 1     Arden Lake -> Beneath the lake
+D 0 10664 5 1     Sanctuary -> Hall of King Loranth-gil
+D 0 10667 1 1     Private quarters  -> Hall of King Loranth-gil
+D 0 10668 1 2     Hall of King Loranth-gil -> Study of Loranth-gil
+D 0 10668 3 1     Hall of King Loranth-gil -> Private quarters 
+D 0 10668 4 1     Hall of King Loranth-gil -> Sanctuary
+D 0 10669 3 2     Study of Loranth-gil -> Hall of King Loranth-gil
+D 0 10671 4 1     Before a Gigantic Elm -> Platform high in the trees
+D 0 10680 5 1     Platform high in the trees -> Before a Gigantic Elm
+D 0 10681 4 1     Beneath the lake -> Arden Lake
+
+O 0 10680 9999 10693           a quiver
+P 1 3414 9999 10680                 a long hunting arrow inside a quiver
+P 1 3414 9999 10680                 a long hunting arrow inside a quiver
+P 1 3414 9999 10680                 a long hunting arrow inside a quiver
+
+O 0 10680 9999 10694           a quiver
+P 1 308 9999 10680                  a small steel arrow inside a quiver
+P 1 308 9999 10680                  a small steel arrow inside a quiver
+P 1 308 9999 10680                  a small steel arrow inside a quiver
+
+O 0 10685 5 10668              a Kings Throne
+O 0 10686 1 10668              a wooden chair
+O 0 10693 5 10655              a circle of stones
+
+O 0 10694 1 10689              a golden chest with iron strapping
+P 1 10683 9999 10694                Shorenjin's treasure
+
+O 0 10695 1 10689              the corpse of the elven prince Ronat
+
+O 0 10699 1 10670              a huge marble stone
+
+
+M 0 10600 20 10646             a lake elf
+? 0 7 0 E
+E 1 10688 30 19                     an evilly curved gaff [hold-left]
+M 0 10600 20 10648             a lake elf
+? 0 7 0 E
+E 1 10679 999 19                    a fishermans cudgel [hold-left]
+M 0 10600 20 10662             a lake elf
+? 0 7 0 E
+E 1 10687 40 19                     a fishing net [hold-left]
+
+M 0 10601 1 10689              Shorenjin
+G 1 10684 9999                      a golden key with tiny iron strapping 
+
+M 0 10602 1 10668              Loranth-gil
+? 0 14 0 E
+E 1 10630 30 2                     elven steel ring set with an emerald [finger-left]
+? 0 6 0 E
+E 1 10613 7 4                       Ancient Robes [body]
+
+M 0 10603 1 10668              Fenban-gil
+? 0 3 0 E
+E 1 5737 9999 18                   a titanium holy symbol [hold-right]
+
+M 0 10604 1 10664              Scrya-gil
+? 0 7 0 E
+E 1 10630 30 2                      elven steel ring set with an emerald [finger-left]
+? 0 7 0 E
+E 1 10631 15 18                     a elven steel stag charm [hold-right]
+? 0 7 0 E
+E 1 10632 10 19                     a runed sylvan staff [hold-left]
+
+M 0 10605 1 10669              Rivzin-gil
+Y 0 115 1                           sylvan plate set
+
+M 0 10606 1 10667              Grayvirjin-gil
+? 0 7 0 E
+E 1 10631 15 18                     a elven steel stag charm [hold-right]
+? 0 7 0 E
+E 1 10632 10 19                     a runed sylvan staff [hold-left]
+
+M 0 10607 1 10648              Rivencron-gil
+*? 0 5 0 E
+*E 1 10691 1 19                      Ary'Cor'Keryn - Rulersblade [hold-left]
+Y 0 115 2                           sylvan plate set
+
+M 0 10608 1 10669              Fenlannul-gil
+Y 0 116 2                           sylvan silk set
+
+M 0 10609 1 10668              Ayinshan-gir
+? 0 2 0 E
+E 1 5737 9999 18                    a titanium holy symbol [hold-right]
+
+M 0 10610 1 10637              Nosnietor-tir
+? 0 7 0 E
+*E 1 10692 1 19                      Ary'Velahr'Keryn - Warblade [hold-left]
+*Y 0 115 1                           sylvan plate set
+
+M 0 10611 1 10695              Lyenel-tir
+? 0 7 0 E
+*E 1 10690 1 19                      Ary'Fearn'Keryn - Artblade [hold-left]
+*Y 0 115 1                           sylvan plate set
+
+M 0 10612 30 10646             a member of the House Guard
+Y 0 116 2                           sylvan silk set
+
+M 0 10613 10 10680             a renegade lake elf
+M 0 10613 10 10691             a renegade lake elf
+M 0 10613 10 10694             a renegade lake elf
+? 0 3 0 E
+E 1 10612 40 19                     wide elven broadsword [hold-left]
+
+M 0 10614 1 10651              a mermaid
+
+M 0 10616 2 10636              a male lake elf
+M 0 10616 2 10637              a male lake elf
+
+M 0 10617 2 10665              a female lake elf
+M 0 10617 2 10666              a female lake elf
+
+M 0 10618 10 10654             a lake elf child
+M 0 10618 10 10656             a lake elf child
+M 0 10619 14 10624             a demon of the lake
+
+M 0 10620 7 10622              a large, silver-blue fish
+M 0 10620 7 10633              a large, silver-blue fish
+M 0 10620 7 10638              a large, silver-blue fish
+M 0 10620 7 10651              a large, silver-blue fish
+M 0 10620 7 10661              a large, silver-blue fish
+M 0 10620 7 10673              a large, silver-blue fish
+M 0 10620 7 10673              a large, silver-blue fish
+M 0 10620 7 10673              a large, silver-blue fish
+M 0 10620 7 10677              a large, silver-blue fish
+
+S
+

@@ -1,0 +1,34 @@
+#700
+Second Ring of Roads~
+749 30 2 1
+
+M 0 700 1 700               Large Thief
+Y 0 104 3                     black cloth set
+M 0 700 1 707               Large Thief
+Y 0 104 3                     black cloth set
+M 0 700 1 735               Large Thief
+Y 0 104 3                     black cloth set
+M 0 701 1 711               Crime Boss
+Y 0 105 3                     black silk set
+M 0 701 1 739               Crime Boss
+Y 0 105 3                     black silk set
+M 0 702 1 725               Tourist
+M 0 702 1 731               Tourist
+M 0 702 1 703               Tourist
+M 0 703 1 720               Thief
+M 0 704 1 728               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+? 0 2 0 G
+G 1 154 999                   garrotte
+M 0 705 1 735               Traveller
+M 0 706 1 739               Merchant
+
+M 0 139 1 708       cyclops
+M 0 139 1 710       cyclops
+M 0 139 1 714       cyclops
+M 0 139 1 715       cyclops
+M 0 139 1 720       cyclops
+M 0 139 1 722       cyclops
+S
+

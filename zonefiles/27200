@@ -1,0 +1,90 @@
+#27200
+Damian - Private Cemetary~
+27249 30 2 1
+
+O 0 8721 9999 27242     sconce
+D 0 27201 0 1        	cemetary gate
+D 0 27202 2 1
+D 0 27211 0 1       	tool shed 
+D 0 27216 2 1
+D 0 27212 0 2        	mauseloum
+D 0 27217 2 2
+D 0 27213 0 1        	caretaker office
+D 0 27230 2 1
+D 0 27230 1 1        	atrium
+D 0 27231 3 1
+D 0 27217 5 1      	trap door
+D 0 27220 4 1
+D 0 27215 5 1        	rubble
+D 0 27248 4 1
+D 0 27242 1 1       	casket room
+D 0 27219 3 1  
+D 0 27243 3 1       	storage room
+D 0 27219 1 1
+D 0 27249 3 1           alcove
+D 0 27245 3 1
+D 0 27246 3 1           empty room
+D 0 27245 1 1
+D 0 27245 2 1           panel shroud
+D 0 27247 0 1
+
+O 0 27206 1 27230            chair
+O 0 27205 1 27205            bush
+O 0 27205 2 27203
+O 0 27205 3 27204
+O 0 27205 4 27209
+O 0 27230 1 27230            desk
+O 0 27211 1 27211            tombstone
+O 0 27211 2 27208
+O 0 27211 3 27206
+O 0 27231 1 27231            bench
+O 0 27249 1 27249            iron rack
+O 0 27217 1 27217            casket
+O 0 27217 2 27217
+O 0 27217 3 27217
+O 0 27217 4 27217
+O 0 27217 5 27242            caskets (casket room)
+O 0 27217 6 27242
+O 0 27217 7 27242
+O 0 27217 8 27242
+O 0 27240 1 27240            underwater chest
+P 1 27238 9999 27240      	bronze potion in chest (2)
+P 1 27238 9999 27240
+
+M 0 27201 1 27211       widow
+M 0 27201 1 27208	
+M 0 27200 1 27211	child
+M 0 27200 1 27208
+M 0 27202 1 27213	vagabond
+? 0 15 0 E
+E 1 27213 5000 19		wooden bat
+M 0 27202 1 27213	vagabond
+? 0 15 0 E
+E 1 27213 5000 19		wooden bat
+M 0 27206 1 27230    	caretaker
+G 1 27212 1                    	key to mausoleum
+M 0 27209 1 27247       Shroud
+? 0 10 0 E
+E 1 27248 400 2			ring
+*? 0 10 0 E
+*E 1 27219 200 14		cape
+? 0 10 0 E
+E 1 27244 200 4			suit
+? 0 10 0 E
+E 1 27245 200 5			helm		
+? 0 11 0 E
+E 1 27247 200 19		scythe
+M 0 27205 1 27225	zombie
+M 0 27205 1 27229   
+M 0 27205 1 27215
+M 0 27205 1 27243
+M 0 27205 1 27249
+M 0 27205 1 27246
+M 0 27203 1 27217 	ghost
+M 0 27203 1 27242
+M 0 27207 1 27241	bat (mob)
+M 0 27207 1 27241
+M 0 27207 1 27241
+M 0 27207 1 27226
+S
+

@@ -1,0 +1,63 @@
+#15400
+Theodoric - Abanos's Farm~
+15449 35 2 1
+
+D 0 15441 1 1 cornfield west gate
+D 0 15414 3 1
+D 0 15409 1 1 cornfield east gate
+D 0 15420 3 1
+D 0 15434 0 1 secret brambles
+D 0 15437 3 1
+D 0 15423 0 1 barn door
+D 0 15424 2 1
+D 0 15423 2 1 house door
+D 0 15430 0 1
+D 0 15447 2 1 secret rocks
+D 0 15448 0 1
+
+O 0 15400 1 15423 well
+O 0 15401 1 15447 rope
+O 0 15408 1 15430 table
+O 0 15405 2 15430 chairs-rocking
+O 0 15409 1 15430 stove
+P 1 15410 1 15409 	burning logs in stove
+O 0 15411 1 15432 bed
+O 0 15413 1 15425 plow
+O 0 15407 5 15431 toy horse
+
+M 0 15401 1 15404  Isander
+? 0 7 0 E
+E 1 15421 50 19 	axe
+M 0 15402 1 15404  Edsul
+M 0 15403 1 15437  Jesado
+? 0 3 0 E
+E 1 15422 3 19 		sword
+M 0 15404 1 15439  Isendra
+C 1 15422 1 15439 cow
+? 0 2 0 G
+G 1 15415 7 4 		leafed clover 
+M 0 15405 1 15428  Kessel
+? 0 7 0 E
+E 1 15424 30 19 	shovel
+M 0 15406 1 15431  Kiterana
+M 0 15407 1 15425  Nathander
+? 0 7 0 E
+E 1 15420 30 19 	pitchfork
+M 0 15421 1 15429  horse
+M 0 15420 1 15424  horsefly
+M 0 15408 1 15421  Talandro
+M 0 15409 1 15448  Alaric
+M 0 15410 1 15423  Abanos
+C 1 15423 1 15423  Cody dog pet
+C 1 15424 1 15423  Teri dog pet
+M 0 15411 1 15430  Alorienne
+M 0 15412 1 15430  Firinot
+? 0 7 0 E
+E 1 15425 30 19 	carving knife
+? 0 4 0 G
+G 1 15406 5 		toy boat
+M 0 15425 1 15400  scarecrow
+H 1 2 15 		scarecrow hates race bird
+M 0 15426 2 15403  crows
+S
+

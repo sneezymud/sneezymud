@@ -1,0 +1,112 @@
+#4300
+Bullywug Swamp~
+4399 20 2 1
+
+O 0 4307 9999 4300
+
+M 0 4300 1 4300  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4306  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4303  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4342  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4348  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4330  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4377  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4334  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4356  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4300 1 4332  ; Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4310  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4370  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4328  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4326  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4308  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4367  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4374  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4339  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4315  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4301 1 4349  ; Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    Swamp Root
+M 0 4302 1 4379  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4381  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4336  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4393  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4378  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4311  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4302 1 4395  ; Large Bullywug
+Y 0 22 5              frogskin
+M 0 4304 1 4396  ; Bullywug Shamen
+? 0 15 0 E
+E 1 4300 50 8         swamp boots
+Y 0 22 5              frogskin
+M 0 4305 1 4397  ; Bullywug Tracker
+? 0 15 0 E
+E 1 4305 50 18        bullywug shield
+Y 0 22 5              frogskin
+M 0 4306 1 4398  ; Bullywug Chieftain
+? 0 13 0 E
+E 1 4302 50 5         chieftain headdress
+Y 0 22 5              frogskin
+? 0 99 0 G
+G 1 4301 9999         bullywug bait to sastify K load
+C 1 7818 1 4398       large chameleon pet
+
+M 0 4307 2 4399         bandits in swamp
+Y 0 104 3                 black cloth set
+? 0 4 0 E
+E 1 341 9999 19           long dagger
+M 0 4307 2 4399
+Y 0 104 3                 black cloth set
+? 0 4 0 E
+E 1 341 9999 19           long dagger
+
+M 0 4308 1 4399         venol - bandit leader (ranger L21 quest)
+Y 0 104 3                 black cloth set
+? 0 6 0 E
+E 1 4311 30 19            tarnished sturdy long dagger
+
+S
+

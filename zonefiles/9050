@@ -1,0 +1,227 @@
+#9050
+Staffa - Galek Church Second Floor~
+9073 35 2 1
+
+D 0 9050 3 1                   Secret Staircase -> Kitchen
+D 0 9050 5 1                   Secret Staircase -> Storage
+D 0 9051 3 1                   A Utility Room -> Colonnade Balcony
+D 0 9059 1 1                   Cleric Quarter's -> West Colonnade Balcony
+D 0 9060 1 1                   The Cathedral Library -> West Colonnade Balcony
+D 0 9061 1 1                   Altar Boy's Quarters -> West Colonnade Balcony
+D 0 9062 1 1                   Monk GM's Bedroom -> Monk GM's Meditation Room
+D 0 9062 5 1                   Monk GM's Bedroom -> Grandmaster Monk's Lair
+D 0 9063 3 1                   Monk GM's Meditation Room -> Monk GM's Bedroom
+D 0 9064 1 1                   Kitchen -> Secret Staircase
+D 0 9065 3 1                   West Colonnade Balcony -> Altar Boy's Quarters
+D 0 9067 1 1                   Colonnade Balcony -> A Utility Room
+D 0 9070 0 2                   East Attic Landing -> The Attic
+D 0 9071 3 1                   West Colonnade Balcony -> Cleric Quarter's
+D 0 9072 3 1                   West Colonnade Balcony -> The Cathedral Library
+D 0 9073 0 2                   West Attic Landing -> The Attic
+
+O 0 1443 1 9055                ceiling opening
+O 0 1443 1 9057
+V 1 0 -16768143
+O 0 1444 1 9070                floor opening
+O 0 1444 1 9073
+V 1 0 -16768159
+
+O 0 9051 9999 9050             a flickering wrought iron torch
+O 0 9050 1 9050                a iron-strapped oak barrel
+O 0 9052 9999 9051             a cluttered desk
+O 0 9079 9999 9052             a table
+O 0 9069 9999 9052             a small cot
+O 0 9055 9999 9053             a antique cherry wood table
+O 0 9066 9999 9053             a painting
+O 0 9057 9999 9053             a plush oak chair
+O 0 9065 9999 9054             an ornate highback chair
+O 0 9056 9999 9054             an ornate table
+O 0 9059 9999 9054             a bed with a huge canopy
+O 0 9054 9999 9055             a flickering torch
+O 0 9054 9999 9056             a flickering torch
+O 0 9054 9999 9057             a flickering torch
+O 0 9064 9999 9058             a table
+O 0 9064 9999 9058             a table
+O 0 9064 9999 9058             a table
+O 0 9058 9999 9058             a stiff bed
+O 0 9058 9999 9058             a stiff bed
+O 0 9058 9999 9058             a stiff bed
+O 0 9082 9999 9058             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9082 9999 9058             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9082 9999 9058             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9077 9999 9058             a rug
+O 0 9064 9999 9059             a table
+O 0 9064 9999 9059             a table
+O 0 9064 9999 9059             a table
+O 0 9058 9999 9059             a stiff bed
+O 0 9058 9999 9059             a stiff bed
+O 0 9058 9999 9059             a stiff bed
+O 0 9060 9999 9059             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9060 9999 9059             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9060 9999 9059             a wooden chest
+? 0 25 0 L
+L 1 16 25 0 1                    random loot
+O 0 9077 9999 9059             a rug
+O 0 9062 9999 9060             a wooden book cart
+O 0 9058 9999 9061             a stiff bed
+O 0 9069 9999 9061             a small cot
+O 0 9069 9999 9061             a small cot
+O 0 9069 9999 9061             a small cot
+O 0 9054 9999 9062             a flickering torch
+O 0 9054 9999 9063             a flickering torch
+O 0 9051 9999 9064             a flickering wrought iron torch
+O 0 9054 9999 9065             a flickering torch
+O 0 9054 9999 9067             a flickering torch
+O 0 9054 9999 9068             a flickering torch
+O 0 9054 9999 9069             a flickering torch
+O 0 9054 9999 9070             a flickering torch
+O 0 9054 9999 9071             a flickering torch
+O 0 9054 9999 9072             a flickering torch
+O 0 9054 9999 9073             a flickering torch
+
+O 0 9083 50 9051               a mop
+B 0 9063 1 9051                a wooden mop bucket
+O 0 9080 9999 9052             a solid oak bookcase
+P 1 9075 9999 9080               Daily thoughts - solid oak bookcase
+P 1 9070 9999 9080               Demon Guide - solid oak bookcase
+P 1 9071 9999 9080               Carnal Knowledge - solid oak bookcase
+P 1 9072 9999 9080               Priest, Harlot & Midget - solid oak bookcase
+P 1 9074 9999 9080               Mezan, Attuning Weapons - solid oak bookcase
+P 1 9073 9999 9080               clergy, hear me ROAR!! - solid oak bookcase
+O 0 9061 9999 9060             a solid oak bookcase
+O 0 1439 9999 9054             the stained glass window onto the street below
+V 1 0 112
+O 0 1426 9999 9055             the colonnade down into the nave.
+V 1 0 757
+O 0 1440 9999 9056             the colonnade down into the nave.
+V 1 0 757
+O 0 1429 9999 9057             the colonnade down into the nave.
+V 1 0 757
+O 0 1439 9999 9058             the stained glass window onto the street below
+V 1 0 116
+O 0 1425 9999 9065             the colonnade down into the nave.
+V 1 0 767           
+O 0 1428 9999 9065             the colonnade down into the nave.
+V 1 0 762
+O 0 1424 9999 9067             the colonnade down into the nave.
+V 1 0 767
+O 0 1427 9999 9067             the colonnade down into the nave.
+V 1 0 762
+O 0 1424 9999 9068             the colonnade down into the nave.
+V 1 0 762
+O 0 1426 9999 9068             the colonnade down into the nave.
+V 1 0 767
+O 0 1427 9999 9068             the colonnade down into the nave.
+V 1 0 757
+O 0 1424 9999 9069             the colonnade down into the nave.
+V 1 0 757
+O 0 1426 9999 9069             the colonnade down into the nave.
+V 1 0 762
+O 0 1425 9999 9071             the colonnade down into the nave.
+V 1 0 757
+O 0 1429 9999 9071             the colonnade down into the nave.
+V 1 0 762
+O 0 1425 9999 9072             the colonnade down into the nave.
+V 1 0 762
+O 0 1428 9999 9072             the colonnade down into the nave.
+V 1 0 757
+O 0 1429 9999 9072             the colonnade down into the nave.
+V 1 0 767
+
+
+M 0 9050 1 9051                Bobby the janitor
+Y 0 7 3             Loadset - Hard Leather
+
+M 0 9051 1 9051               the cleaning supervisor
+Y 0 7 3             Loadset - Hard Leather
+
+M 0 9054 1 9054                a visiting Amber priest
+G 1 9076 1          Key (for door in 9070 - priest)
+
+M 0 9056 2 9056               a female church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9056 2 9065               a female church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9056 2 9068               a female church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9056 2 9055               a female church visitor
+Y 0 1 3             Loadset - Soft Leather
+
+M 0 9057 2 9056               a male church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9057 2 9067               a male church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9057 2 9071               a male church visitor
+Y 0 1 3             Loadset - Soft Leather
+M 0 9057 2 9057               a male church visitor
+Y 0 1 3             Loadset - Soft Leather
+
+M 0 9058 3 9058                a small church deacon
+G 1 9081 1  9999        Key (for chest 9082 in room 9058)
+? 0 3 0 E
+E 1 9085 20 4           grey deacon robes
+M 0 9058 3 9058                a small church deacon
+? 0 3 0 E
+E 1 9085 20 4           grey deacon robes
+M 0 9058 3 9058                a small church deacon
+? 0 3 0 E
+E 1 9085 20 4           grey deacon robes
+
+M 0 9059 3 9059                a pudgy cleric
+G 1 9068 9999           Key (for chest 9060 in room 9059)
+? 0 3 0 E
+E 1 9086 20 4           beige cleric robes
+M 0 9059 3 9059                a pudgy cleric
+? 0 3 0 E
+E 1 9086 20 4           beige cleric robes
+M 0 9059 3 9059                a pudgy cleric
+? 0 3 0 E
+E 1 9086 20 4           beige cleric robes
+
+M 0 9060 1 9060               the cathedral archivist
+? 0 3 0 E
+E 1 9086 20 4           beige cleric robes
+
+M 0 9061 2 9061                an altar boy
+? 0 3 0 E
+E 1 9084 20 4           white altar boy robes
+M 0 9061 2 9061                an altar boy
+? 0 3 0 E
+E 1 9084 20 4           white altar boy robes
+M 0 9061 2 9061                an altar boy
+? 0 3 0 E
+E 1 9084 20 4           white altar boy robes
+
+M 0 9062 1 9061                a Senior altar boy
+? 0 3 0 E
+E 1 9084 20 4           white altar boy robes
+
+M 0 9064 1 9064                a sweaty cook
+Y 0 7 3             Loadset - Hard Leather
+
+M 0 9065 1 9060                a librarian assistant
+? 0 3 0 E
+E 1 9084 20 4           white altar boy robes
+
+M 0 9067 1 9064               an assistant chef
+Y 0 7 3             Loadset - Hard Leather
+
+M 0 9073 1 9055                a cunning spy
+G 1 9067 1          Key (for door in 9073 - spy)
+G 1 9095 999            a set of standard lockpicks
+? 0 1 0 E
+E 1 9089 1 10           bloody dusty glove
+Y 0 81 1            Loadset - black leather
+
+S
+

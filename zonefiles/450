@@ -1,0 +1,191 @@
+#450
+Dolgan - Adder's Coffeehouse~
+499 5 2 1
+
+D 0 450 0 1		Stair door to Perimeter Rd
+D 0 132 2 1
+D 0 450 2 1		Secret Door to Private Rm
+D 0 451 0 1
+D 0 451 2 1		Door to Private Room
+D 0 453 0 1
+D 0 452 0 1		Main Door to Perimeter Rd
+D 0 131 2 1
+D 0 452 1 1		Main Door to Park Ave
+D 0 130 3 1
+D 0 455 1 1		Kitchen Door
+D 0 456 3 1
+
+D 0 459 2 2		Railing
+D 0 461 0 2
+D 0 460 1 2		Railing
+D 0 461 3 2	
+D 0 463 0 2		Railing
+D 0 461 2 2
+
+D 0 465 2 1		Storage Room
+D 0 468 0 1
+D 0 466 2 1		Snake Pit
+D 0 469 0 1
+D 0 467 2 1		Private Room
+D 0 470 0 1
+
+O 0 450 9999 453	Sturdy Chair
+O 0 450 9999 453
+O 0 450 9999 453
+O 0 450 9999 453
+O 0 450 9999 454
+O 0 450 9999 454
+O 0 450 9999 454
+O 0 450 9999 454
+O 0 450 9999 457
+O 0 450 9999 457
+O 0 450 9999 457
+O 0 450 9999 457
+O 0 450 9999 458
+O 0 450 9999 458
+O 0 450 9999 458
+O 0 450 9999 458
+O 0 450 9999 459
+O 0 450 9999 459
+O 0 450 9999 459
+O 0 450 9999 459
+O 0 450 9999 460
+O 0 450 9999 460
+O 0 450 9999 460
+O 0 450 9999 460
+O 0 450 9999 462
+O 0 450 9999 462
+O 0 450 9999 462
+O 0 450 9999 462
+O 0 450 9999 463
+O 0 450 9999 463
+O 0 450 9999 463
+O 0 450 9999 463
+O 0 450 9999 469
+O 0 450 9999 469
+O 0 450 9999 469
+O 0 450 9999 469
+O 0 450 9999 470
+O 0 450 9999 470
+O 0 450 9999 470
+O 0 450 9999 470
+O 0 451 9999 453	Round Table
+P 1 462 9999 451	   Candle on table
+O 0 451 9999 454
+P 1 462 9999 451
+O 0 451 9999 457
+P 1 462 9999 451
+O 0 451 9999 458
+P 1 462 9999 451
+O 0 451 9999 459
+P 1 462 9999 451
+O 0 451 9999 460
+P 1 462 9999 451
+O 0 451 9999 462
+P 1 462 9999 451
+O 0 451 9999 463
+P 1 462 9999 451
+O 0 451 9999 469
+P 1 462 9999 451
+O 0 451 9999 470
+P 1 462 9999 451
+O 0 452 9999 451	Conference Table
+O 0 453 9999 451	Cherrywood Chair
+O 0 453 9999 451
+O 0 453 9999 451
+O 0 453 9999 451
+O 0 453 9999 451
+O 0 453 9999 451
+O 0 454 9999 454	Windows
+O 0 454 9999 218
+V 1 0 454			Change window to look into 454
+O 0 454 9999 461
+O 0 455 9999 455	Kitchen Dumbwaiter
+O 0 456 9999 455	Pastry Oven
+O 0 457	9999 455	Kitchen Cabinets
+O 0 457	9999 455
+O 0 458 9999 452	Skylight
+O 0 458 9999 453	
+O 0 458 9999 456
+O 0 458 9999 457
+O 0 458 9999 458
+O 0 458 9999 459
+O 0 458 9999 460
+O 0 458 9999 462
+O 0 458 9999 463
+O 0 460 9999 456	Marble Counter
+P 1 480 9999 460	   Coffee Urn on Counter
+P 1 481 9999 460	   Tea Urn on Counter
+O 0 461 9999 461	Chandelier
+O 0 463 9999 452	Candelabra
+O 0 463 9999 450
+O 0 463 9999 455
+O 0 463 9999 455
+O 0 463 9999 464
+O 0 463 9999 465
+O 0 463 9999 466
+O 0 463 9999 467
+O 0 463 9999 467
+O 0 463 9999 472
+O 0 463 9999 473
+O 0 471 9999 471	Storeroom Dumbwaiter
+O 0 472 9999 467	Pillows
+O 0 472 9999 467
+O 0 472 9999 467
+O 0 472 9999 467
+O 0 10934 9999 451	Fireplace in Private Room
+
+M 0 24100 1 472         Caldonia (rumor_mob_trainers)
+
+M 0 450 1 456		Herman Adder
+M 0 451 1 455		Mathilda Adder
+? 0 2 0 E
+E 1 7047 9999 19         - small cooking knife
+
+M 0 452 6 454		Waiter
+G 1 425 9999		  Give waiter a coffee pot
+M 0 452 6 460
+G 1 425 9999		  Give waiter a coffee pot
+M 0 453 1 452		Doorman
+
+M 0 454 1 457		Guido
+G 1 420 9999		  Cup of coffee
+? 0 2 0 E
+E 1 340 9999 19           - long dagger
+
+M 0 455 1 454		Lady Sara
+G 1 421 9999		  Cup of tea
+M 0 456 1 454		Julia
+M 0 457 1 453		Town Gossip [Rumor mob]
+G 1 420 9999		  Cup of coffee
+
+M 0 458 1 462		Caravan Trader
+? 0 2 0 E
+E 1 338 9999 19           - small steel hammer
+
+M 0 459 1 459		Merchant
+M 0 459 1 460
+M 0 460 1 458		Accountant
+
+M 0 472 1 469		Crunch [bouncer]
+? 0 2 0 E
+E 1 310 9999 19           - Wooden Club
+
+M 0 473 1 470		Barmaid
+
+M 0 474 1 470		Off-duty Guard
+? 0 2 0 E
+E 1 300 9999 19           - long sword
+
+M 0 475 1 469		Caravan Guard
+? 0 2 0 E
+E 1 342 9999 19           - slender metal longsword
+
+M 0 476 1 472		Grizzled Explorer
+? 0 2 0 E
+E 1 339 9999 19           - thick leather whip
+
+M 0 477 3 473		Dancer
+M 0 478 2 472		Bar Girl
+S
+

@@ -1,0 +1,216 @@
+#20800
+Mithros - Chaos Plains-Calthor Empire~
+20874 30 2 0
+
+O 0 20862 1 20839     dried up spring
+O 0 20862 1 20840
+
+O 0 20863 1 20833     blasted ancient tree
+
+O 0 20864 1 20836     stone statue of a pilgrim
+
+O 0 20865 1 20844     corpse of an othora
+
+O 0 20648 1 20800     window down canyon river
+V 1 0 20457              change room window looks into
+O 0 20648 1 20801
+V 1 0 20456
+O 0 20648 1 20802
+V 1 0 20455
+O 0 20648 1 20803
+V 1 0 20454
+O 0 20648 1 20804
+V 1 0 20453
+O 0 20648 1 20805
+V 1 0 20452
+O 0 20648 1 20806
+V 1 0 20451
+O 0 20648 1 20807
+V 1 0 20450
+O 0 20648 1 20808
+V 1 0 20449
+O 0 20648 1 20809
+V 1 0 20448
+O 0 20648 1 20810
+V 1 0 20499
+O 0 20648 1 20811
+V 1 0 20500
+O 0 20648 1 20812
+V 1 0 20574
+O 0 20648 1 20813
+V 1 0 20494
+O 0 20648 1 20814
+V 1 0 20493
+O 0 20648 1 20815
+V 1 0 20575
+O 0 20648 1 20816
+V 1 0 20576
+O 0 20648 1 20817
+V 1 0 20577
+O 0 20648 1 20818
+V 1 0 20578
+O 0 20648 1 20819
+V 1 0 20478
+O 0 20648 1 20820
+V 1 0 20475
+O 0 20648 1 20821
+V 1 0 20474
+O 0 20648 1 20822
+V 1 0 20473
+O 0 20648 1 20823
+V 1 0 20472
+O 0 20648 1 20824
+V 1 0 20581
+O 0 20648 1 20825
+V 1 0 20470
+O 0 20648 1 20826
+V 1 0 20583
+O 0 20648 1 20827
+V 1 0 20584
+O 0 20648 1 20828
+V 1 0 20467
+O 0 20648 1 20829
+V 1 0 20466
+O 0 20648 1 20830
+V 1 0 20465
+O 0 20648 1 20831
+V 1 0 20464
+O 0 20648 1 20874
+V 1 0 20461
+
+O 0 135 1 20874       window down to pond before the dam
+V 1 0 20462             
+
+A 0 20808 20831
+M 0 20800 1 -99       female terraqu by canyon on calthor plains
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+A 0 20835 20846
+M 0 20800 1 -99       female terraqu on calthor plains
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+A 0 20800 20874
+M 0 20801 1 -99       soulless shadow on plains
+
+A 0 20808 20831
+M 0 20802 1 -99       male terraqu by canyon on calthor plains
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+A 0 20835 20846
+M 0 20802 1 -99       male terraqu on calthor plains
+? 0 25 0 G
+G 1 20422 9999			Wrapped Fish Ration
+
+A 0 20800 20874
+M 0 20803 1 -99       shadow beast (othora)
+A 0 20800 20874
+M 0 20803 1 -99       shadow beast (othora)
+
+A 0 20800 20874
+M 0 20804 1 -99       wild plains stallion
+A 0 20800 20874
+M 0 20804 1 -99       wild plains stallion
+
+A 0 20800 20874
+M 0 20805 1 -99       scavenger beast
+A 0 20800 20874
+M 0 20805 1 -99       scavenger beast
+A 0 20800 20874
+M 0 20805 1 -99       scavenger beast
+
+A 0 20800 20874
+M 0 20806 1 -99       wild plains mare
+A 0 20800 20874
+M 0 20806 1 -99       wild plains mare
+A 0 20800 20874
+M 0 20806 1 -99       wild plains mare
+
+A 0 20800 20874
+M 0 20807 1 -99       young aeryiss
+
+A 0 20800 20874
+M 0 20808 1 -99       great shadowy hawk
+A 0 20800 20874
+M 0 20808 1 -99       great shadowy hawk
+
+A 0 20800 20810
+M 0 20809 1 -99       large slimy male troll
+? 0 6 0 E
+E 1 20458 50 19				Broken Spear
+A 0 20832 20837
+M 0 20809 1 -99       large slimy male troll
+? 0 6 0 E
+E 1 20458 50 19				Broken Spear
+
+A 0 20812 20831
+M 0 20810 1 -99       simal hunter by canyon on calthor plains
+? 0 30 0 G
+G 1 20640 9999             some dried trail food
+? 0 30 0 G
+G 1 20641 9999             huge water skin
+? 0 3 0 E
+E 1 20612 20 19            heavy reed spear
+Y 0 99 2                   chance of dyed hide
+A 0 20838 20846
+M 0 20810 1 -99       simal hunter on the calthor plains
+? 0 30 0 G
+G 1 20640 9999             some dried trail food
+? 0 30 0 G
+G 1 20641 9999             huge water skin
+? 0 3 0 E
+E 1 20612 20 19            heavy reed spear
+Y 0 99 2                   chance of dyed hide
+
+A 0 20838 20846
+M 0 20811 1 -99        simal tracker on the calthor plains
+? 0 30 0 G
+G 1 20641 9999             huge water skin
+? 0 30 0 G
+G 1 20640 9999             some dried trail food
+? 0 3 0 G
+G 1 20614 20               short curved reed bow
+? 0 3 0 G
+G 1 20615 9999             short reed arrow
+Y 0 99 2                   chance of dyed hide
+A 0 20854 20874
+M 0 20811 1 -99        simal tracker by foothills on calthor plains
+? 0 30 0 G
+G 1 20641 9999             huge water skin
+? 0 30 0 G
+G 1 20640 9999             some dried trail food
+? 0 3 0 G
+G 1 20614 20               short curved reed bow
+? 0 3 0 G
+G 1 20615 9999             short reed arrow
+Y 0 99 2                   chance of dyed hide
+
+A 0 20812 20831
+M 1 20812 1 -99       simal apprentice by canyon on calthor plains
+? 0 3 0 E
+E 1 20623 20 19             painted club
+Y 0 99 2                    chance of dyed hide
+A 0 20838 20846
+M 1 20812 1 20840     simal apprentice on the calthor plains
+? 0 3 0 E
+E 1 20623 20 19             painted club
+Y 0 99 2                    chance of dyed hide
+
+A 0 20800 20874
+M 0 20813 1 -99       wild plains colt
+A 0 20800 20874
+M 0 20813 1 -99       wild plains colt
+A 0 20800 20874
+M 0 20813 1 -99       wild plains colt
+
+A 0 20832 20837
+M 0 20814 1 -99       large slimy female troll
+? 0 3 0 E
+E 1 20459 10 3				Glowing Necklace
+A 0 20847 20853
+M 0 20814 1 -99       large slimy female troll
+? 0 3 0 E
+E 1 20459 10 3				Glowing Necklace
+
+S
+

@@ -1,0 +1,40 @@
+#28865
+Bartruce - Vampire Crypt~
+28899 45 0 1
+
+D 0 28898 1 2
+D 0 28897 3 2
+
+M 0 28809 1 28877        Undertaker
+? 0 2 0 E
+E 1 28806 4 14          Ruby Cloak
+
+M 0 28813 1 28898        Arch Vampire
+? 0 5 0 E
+E 1 28803 5 11                   ruby gauntlet
+? 0 5 0 E
+E 1 28801 5 7                  ruby legging   
+? 0 3 0 E 
+E 1 1191 5 14                   cloak power (diamond)
+Y 0 14 4                       Diamond Set
+
+M 0 28806 1 28899        Giant Octopus
+G 1 28805 1 		        small Ruby Key
+G 1 813 100			recall scroll
+G 1 813 100
+G 1 813 100
+G 1 813 100
+? 0 50 0 G
+G 1 813 200
+? 0 50 0 G
+G 1 813 200
+? 0 50 0 G
+G 1 813 200
+M 0 28800 1 28879        Skeleton1
+M 0 28800 1 28882        Skeleton1
+M 0 28800 1 28891        Skeleton1
+M 0 28814 1 28874        Skeleton2
+M 0 28814 1 28897        Skeleton2
+M 0 28814 1 28886        Skeleton2
+S
+

@@ -1,0 +1,267 @@
+#23600
+Phenohol - Thraix's Arena~
+23799 40 2 1
+M 0 23613 1 23610 	old hermit
+? 0 5 0 E
+E 1 23603 100 19		etched bostick
+M 0 23607 2 23622 	arena guard gatehouse
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+? 0 2 0 E
+E 1 23664 100 2			banded ring
+M 0 23614 1 23624 	ticket seller
+M 0 23615 1 23658 	bet taker
+G 1 23798 50			small tin key
+G 1 14366 50			michelob key
+M 0 23616 1 23656 	head arena guard
+? 0 10 0 E
+E 1 23625 12 19			golden scimitar
+Y 0 35 8			load set banded
+M 0 23617 1 23654 	raych
+? 0 7 0 E
+E 1 23622 6 5			black shawl
+M 0 23618 1 23655 	thraix
+G 1 23797 50			ebony key
+? 0 4 0 E
+E 1 23623 3 2			phase ring
+M 0 23612 2 23639        elite arena
+G 1 23799 50			ornate key
+Y 0 35 4			load set banded
+M 0 23619 1 23659 	animal keeper
+? 0 8 0 E
+E 1 23624 7 3			steel throatguard
+M 0 23621 1 23661 	arena accountant
+? 0 2 0 E
+E 1 23626 6 17			stiff leather bracelet
+M 0 23622 1 23796 	ice devil
+? 0 10 0 E
+E 1 23627 30 18			great spear
+M 0 23623 1 23795 	clyde
+? 0 5 0 E
+E 1 23629 3 14			shadowy cloak
+? 0 6 0 E
+E 1 23638 3 18			shield unholy
+? 0 5 0 E
+E 1 23628 9 19			bloody spike
+M 0 23624 1 23684 	nissus
+? 0 4 0 E
+E 1 23630 10 18			defender sword
+? 0 4 0 E
+E 1 23631 5 5			white metal helm
+Y 0 35 2			banded set
+M 0 23625 1 23687 	trajan
+? 0 7 0 E
+E 1 23632 12 19			green trident
+? 0 7 0 G
+E 1 23633 12 18			gladiator net
+Y 0 35 3                        banded set
+M 0 23626 1 23718 	nethker
+? 0 3 0 E
+E 1 23636 20 11			heavy metal gauntlet
+? 0 6 0 E
+E 1 23635 2 18			gigantic hammer
+Y 0 54 3                        spiked metal set  
+M 0 23627 1 23717 	skrell
+? 0 10 0 E
+E 1 23637 15 19			morning star
+Y 0 35 3                        banded set  
+M 0 23628 1 23700 	decimus
+? 0 25 0 E
+E 1 23640 7 3			shimmering medallion
+? 0 45 0 E
+E 1 23639 1 19			warlord sword 
+Y 0 35 7			loadset banded
+M 0 23629 4 23666 	wolf grey
+M 0 23629 4 23668 
+M 0 23630 3 23675 	tigers
+M 0 23630 3 23677 
+M 0 23631 2 23669 	lion
+M 0 23631 2 23671 
+M 0 23632 1 23674 	cave bear
+M 0 23633 1 23672 	young cloud dragon
+M 0 23608 2 23722 	crazed gladiator
+? 0 15 0 E
+E 1 23600 50 18			military pick
+Y 0 65 2			toughened set
+M 0 23608 2 23678 	crazed gladiator
+? 0 15 0 E
+E 1 23601 150 19		harpoon
+Y 0 65 2			toughened set
+M 0 23609 2 23696 	arrogant gladiator
+? 0 10 0 E
+E 1 23605 150 19		morning star
+Y 0 8 2				studded set
+M 0 23609 2 23698 	arrogant gladiator
+? 0 10 0 E
+E 1 23607 150 19		scimitar
+Y 0 8 2				studded set
+M 0 23609 2 23713 	arrogant gladiator
+? 0 10 0 E
+E 1 23609 250 19		trident
+Y 0 8 2				studded set
+M 0 23610 2 23681 	defiant gladiator
+? 0 8 0 E
+E 1 23602 250 18		heavy lance
+Y 0 41 2			ringmail set
+M 0 23610 2 23721 	defiant gladiator
+? 0 15 0 E
+E 1 23604 250 18		military fork
+Y 0 41 2			ringmail set
+M 0 23610 2 23721 	defiant gladiator
+? 0 10 0 E
+E 1 23606 250 18		ranseur
+Y 0 41 2			ringmail set
+M 0 23611 2 23692 	skilled gladiator
+? 0 5 0 E
+E 1 23620 25 19			titanium broadsword
+Y 0 54 2			spiked set
+M 0 23611 2 23706 	skilled gladiator
+? 0 5 0 E
+E 1 23620 25 19			titanium broadsword
+Y 0 54 2			spiked set
+M 0 23611 2 23708 	skilled gladiator
+? 0 5 0 E
+E 1 23620 25 19			titanium broadsword
+Y 0 54 2			spiked set
+M 0 23606 2 23625 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 1 23628 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 2 23631  	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 1 23634 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 2 23637 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 1 23640 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 2 23643 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 1 23646 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23606 2 23649 	arena guard
+? 0 7 0 E
+E 1 23665 9999 19		polished steel mace
+Y 0 35 2			banded set
+M 0 23600 1 23751 	small children
+M 0 23600 2 23763 
+M 0 23604 2 23757 	lost mothers
+M 0 23604 1 23769 
+M 0 23601 2 23754 	female spectators
+M 0 23601 2 23760 
+M 0 23601 2 23766 
+M 0 23601 2 23772 
+M 0 23601 2 23726 
+M 0 23601 2 23734 
+M 0 23601 2 23740 
+M 0 23601 2 23748 
+M 0 23602 2 23754 	male spectators
+M 0 23602 2 23760 
+M 0 23602 2 23766 
+M 0 23602 2 23773 
+M 0 23602 2 23726 
+M 0 23602 2 23734 
+M 0 23602 2 23740 
+M 0 23602 2 23748 
+M 0 23603 2 23753 	fanatic spectators
+M 0 23603 2 23759 
+M 0 23603 2 23765 
+M 0 23603 2 23771 
+M 0 23603 2 23725 
+M 0 23603 2 23733 
+M 0 23603 2 23739 
+M 0 23603 2 23747 
+M 0 23605 2 23755 	aspiring gladiators
+M 0 23605 2 23761 
+M 0 23605 2 23767 
+M 0 23605 2 23773 
+M 0 23605 2 23729 
+M 0 23605 2 23735 
+M 0 23605 2 23741 
+M 0 23605 2 23749 
+
+O 0 27116 1 23732       Broken Lockpicks - Krak Quest
+
+O 0 23651 1 1058	arena sign
+O 0 23650 1 23655	oil lamp
+O 0 23641 1 23654	demon teddy
+
+? 0 1 0 B
+B 1 23642 1 23797	black disk [shield-wand]
+
+? 0 1 0 B
+B 1 23643 1 23797	silver disk [armor-wand]
+
+? 0 5 0 B
+B 1 23644 1 23797	scroll translucent white [det-invis]
+
+? 0 1 0 B
+B 1 23645 1 23797	scroll clear [invis]
+
+? 0 5 0 B
+B 1 23646 1 23797	potion milky white (sleep)
+
+? 0 5 0 B
+B 1 23647 1 23797	potion dark yellow (bless)
+
+? 0 1 0 B
+B 1 23648 6 23797	opal large
+
+? 0 1 0 B
+B 1 23649 1 23797	gold coins
+
+O 0 23660 1 23654    bed
+O 0 23661 2 23794    couch
+O 0 23662 1 23795    bed
+O 0 23663 1 23610    cot
+
+D 0 23616 3 1
+D 0 23613 1 1
+D 0 23621 0 1
+D 0 23623 2 1
+D 0 23623 0 1
+D 0 23625 2 1
+D 0 23635 1 1
+D 0 23658 3 1
+D 0 23636 1 2
+D 0 23657 3 2
+D 0 23637 1 1
+D 0 23656 3 1
+D 0 23639 0 2
+D 0 23653 2 2
+D 0 23641 3 1
+D 0 23659 1 1
+D 0 23642 3 1
+D 0 23660 1 1
+D 0 23643 3 1
+D 0 23661 3 1
+D 0 23661 6 1
+D 0 23775 4 1
+D 0 23658 7 2
+D 0 23657 8 2
+D 0 23657 5 1
+D 0 23784 4 1
+D 0 23792 1 1
+D 0 23793 3 1
+D 0 23795 2 2
+D 0 23797 0 2
+D 0 23352 2 2
+D 0 23399 0 2
+S
+

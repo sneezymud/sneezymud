@@ -1,0 +1,30 @@
+#650
+First Ring of Roads~
+699 15 2 1
+
+M 0 113 1 688               Sage
+M 0 650 1 688               Thief
+M 0 650 1 676               Thief
+M 0 650 1 667               Thief
+M 0 651 1 684               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+M 0 651 1 697               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+M 0 651 1 673               Robber
+? 0 25 0 E
+E 1 305 1000 19               dagger
+M 0 652 1 669               Traveller
+M 0 652 1 650               Traveller
+M 0 652 1 683               Traveller
+M 0 653 1 693               Merchant
+M 0 653 1 655               Merchant
+M 0 653 1 666               Merchant
+M 0 675 1 675               Cobbled Horse
+E 1 1013 9999 14
+M 0 675 1 675               Horse
+? 0 50 0 M
+M 1 675 1 675               Horse
+S
+

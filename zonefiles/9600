@@ -1,0 +1,88 @@
+#9600
+Onslaught - Hold of Smuggler's Ship~
+9624 30 2 1
+
+D 0 9600 2 2                   Captain's Quarters  -> Storage area
+D 0 9602 0 2                   Storage area -> Captain's Quarters 
+D 0 9616 2 1                   Before the Sleeping Quarters -> Sleeping Area
+D 0 9617 2 2                   Below Decks -> Storage Area
+D 0 9619 0 1                   Sleeping Area -> Before the Sleeping Quarters
+D 0 9620 0 2                   Storage Area -> Below Decks
+D 0 9622 2 2                   Smuggler's Sleeping Area -> Secret Room
+D 0 9624 0 2                   Secret Room -> Smuggler's Sleeping Area
+
+*Remove these portal loads once Ship "moves" via code loaded portals
+O 0 9617 1 9611                Portal from Arden Dock into Ship
+O 0 9620 1 9612                Portal from Ship to Arden Dock
+
+O 0 9613 1 9600                a wall safe
+? 0 15 0 P
+P 1 9624 4 9613                     a whale skin hood inside a wall safe
+
+O 0 9614 1 9603                a small wooden crate
+? 0 5 0 P
+P 1 1559 9999 9614                  bright red scroll-small crate
+? 0 5 0 P
+P 1 1557 9999 9614                  dirty brown scroll-small crate
+? 0 5 0 P
+P 1 1305 9999 9614                  silvery blue scroll-small crate
+? 0 5 0 P
+P 1 1561 9999 9614                  salty white scroll-small crate
+? 0 5 0 P
+P 1 7519 9999 9614                  white book with platinum bindings-crate
+? 0 1 0 P
+P 1 14183 9999 9614                 goldenrod scroll-small crate
+? 0 5 0 P
+P 1 12206 9999 9614                 rice paper scroll-small crate
+? 0 50 0 P
+P 1 9622 9999 9614                  large moldy key-small crate
+
+O 0 9614 1 9603                a small wooden crate
+O 0 11434 9999 9618            a row of bunk beds
+O 0 6609 9999 9619             a large bunk-bed
+O 0 11434 9999 9621            a row of bunk beds
+O 0 11434 9999 9622            a row of bunk beds
+O 0 9612 9999 9624             a moldy chest
+? 0 5 0 P
+P 1 9615 4 9612                     razor edged bone sliver-moldy chest
+? 0 5 0 P
+P 1 9616 4 9612                     bone cudgel-moldy chest
+? 0 5 0 P
+P 1 825 9999 9612                   sturdy glass flask-moldy chest
+? 0 5 0 P
+P 1 829 9999 9612                   sturdy glass flask-moldy chest
+? 0 5 0 P
+P 1 834 9999 9612                   sturdy glass flask-moldy chest
+? 0 5 0 P
+P 1 844 9999 9612                   charcoal-gray potion-moldy chest
+? 0 5 0 P
+P 1 27914 9999 9612                 rock flask-moldy chest
+
+M 0 9600 8 9601               an elven smuggler
+Y 0 98 2                              Whale Skin set
+M 0 9600 8 9604               an elven smuggler
+Y 0 98 2                              Whale Skin set
+M 0 9600 8 9605               an elven smuggler
+Y 0 98 2                              Whale Skin set
+M 0 9600 8 9605               an elven smuggler
+Y 0 98 2                              Whale Skin set
+M 0 9600 8 9608               an elven smuggler
+Y 0 98 2                              Whale Skin set
+
+M 0 9601 1 9600                Carabrissi
+H 1 2 3				  hate dwarf
+Y 0 98 2                              Whale Skin set
+G 1 9623 1                       a dwarven bone key given to Carabrissi
+
+M 0 9602 1 9603                Faraerra, the first mate
+Y 0 98 2                              Whale Skin set
+G 1 9621 1                       the key to the Captain's room
+
+M 0 9603 1 9623                a ragged looking man
+
+M 0 9604 3 9622               an off-duty elven smuggler
+Y 0 98 2                              Whale Skin set
+M 0 9604 3 9622               an off-duty elven smuggler
+Y 0 98 2                              Whale Skin set
+S
+

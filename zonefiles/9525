@@ -1,0 +1,214 @@
+#9525
+Jimbus - Theater Basement~
+9549 25 2 1
+
+* Doors
+D 0 9525 2 1		9525 Lift
+D 0 9525 3 1
+D 0 9526 3 1		9526 Hall
+D 0 9528 3 1		9528 Hall
+D 0 9530 1 1		9530 Set Builders
+D 0 9531 1 1		9531 Prop Builders
+D 0 9531 2 1
+D 0 9532 0 1		9532 Hall
+D 0 9532 2 1
+D 0 9533 0 1		9533 Dressing Room
+D 0 9533 2 1
+D 0 9534 0 1		9534 Storage
+D 0 9535 3 1		9535 Starlet Room
+D 0 9536 3 1		9536 Wardrobe
+D 0 9536 2 1
+D 0 9537 0 1		9537 Hall
+D 0 9537 2 1
+D 0 9538 0 1		9538 Make Up
+D 0 9538 3 1
+D 0 9539 3 1		9539 Star Room
+D 0 9540 1 1		9540 Hall
+D 0 9541 1 1		9541 Hall
+D 0 9542 3 1		9542 Hall
+D 0 9543 1 1		9543 Hall
+D 0 9544 1 1		9544 Hall
+D 0 9545 2 1		9545 Hall
+D 0 9546 0 1		9546 Kitchen
+D 0 9547 1 1		9547 Commisary
+D 0 9548 2 1		9548 Manager's Office
+D 0 9549 0 1		9549 Hall
+
+*		Objects
+O 0 1201 9999 9525	9525 Lift		Torch
+O 0 9528 9999 9525				Rope & Pulley
+O 0 1201 9999 9526	9526 Hall		Torch
+O 0 1201 9999 9527	9527 Hall		Torch
+O 0 1201 9999 9528	9528 Hall		Torch
+O 0 1201 9999 9530	9530 Set Builders	Torch
+O 0 9530 9999 9530				Back Drop
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 9529 9999 9530				Piece of Lumber
+O 0 1201 9999 9531	9531 Prop Builders	Torch
+O 0 9533 9999 9531				Shelves
+O 0 9531 9999 9531				Desk
+O 0 9532 9999 9531				Workbench
+O 0 9534 9999 9531				Smelter
+O 0 1201 9999 9532	9532 Hall		Torch
+O 0 1201 9999 9533	9533 Dressing Room	Torch
+O 0 26859 9999 9533				Bench
+O 0 26859 9999 9533				Bench
+O 0 1201 9999 9534	9534 Storage		Torch
+O 0 15300 9999 9534				Shelves
+P 1 9540 9999 15300					Trash
+P 1 9540 9999 15300					Trash
+P 1 9540 9999 15300					Trash
+O 0 9538 9999 9534				Blue Pot
+P 1 9539 9999 9538					Blue Paint
+O 0 9536 9999 9534				Red Pot
+P 1 9537 9999 9536					Red Paint
+O 0 9530 9999 9534				Back Drop
+O 0 9530 9999 9534				Back Drop
+O 0 9530 9999 9534				Back Drop
+O 0 9530 9999 9534				Back Drop
+O 0 1201 9999 9535	9535 Starlet Room	Torch
+O 0 9561 9999 9535				Couch
+O 0 9525 9999 9535				Table
+O 0 14365 9999 9535				Wardrobe
+O 0 9526 9999 9535				Trunk
+O 0 9541 9999 9535				Roses
+O 0 16221 9999 9535				chair
+O 0 1201 9999 9536	9536 Wardrobe		Torch
+O 0 10762 9999 9536				Wardrobe
+V 0 1 5                                          Set to non-lockable
+V 0 2 -1                                         Set to no key
+O 0 14378 9999 9536				Stool
+O 0 1201 9999 9537	9537 Hall		Torch
+O 0 1201 9999 9538	9538 Make Up		Torch
+O 0 14378 9999 9538				Stool
+O 0 9543 9999 9538				Chest
+P 1 24435 9999 9543					Brush
+O 0 9542 9999 9538				Chair
+O 0 1201 9999 9539	9539 Star's Room	Torch
+O 0 9561 9999 9539				Couch
+O 0 9525 9999 9539				Table
+O 0 14365 9999 9539				Wardrobe
+O 0 9526 9999 9539				Trunk
+O 0 16221 9999 9539				chair
+O 0 1201 9999 9540	9540 Hall		Torch
+O 0 1201 9999 9541	9541 Hall		Torch
+O 0 1201 9999 9542	9542 Hall		Torch
+O 0 1201 9999 9543	9543 Hall		Torch
+O 0 1201 9999 9544	9544 Hall		Torch
+O 0 1201 9999 9545	9545 Hall		Torch
+O 0 1201 9999 9546	9546 Kitchen		Torch
+O 0 9544 9999 9546				Fire Pit
+O 0 9546 9999 9546				Hook
+P 1 27306 9999 9546					Pot
+O 0 9545 9999 9546				Shelf
+O 0 26864 9999 9546				Table
+O 0 26864 9999 9546				Table
+O 0 1201 9999 9547	9547 Commisary		Torch
+O 0 451 9999 9547					Table
+O 0 451 9999 9547					Table
+O 0 451 9999 9547					Table
+O 0 451 9999 9547					Table
+P 1 480 9999 451						Urn
+O 0 16221 9999 9547				Chair
+O 0 16221 9999 9547				Chair
+O 0 16221 9999 9547				Chair
+O 0 16221 9999 9547				Chair
+O 0 16221 9999 9547				Chair
+O 0 16221 9999 9547				Chair
+O 0 1201 9999 9548	9548 Manager's Office	Torch
+O 0 16227 9999 9548				Chair
+O 0 20003 9999 9548				Desk
+O 0 9547 9999 9548				File
+O 0 9548 9999 9548				Poster
+O 0 9548 9999 9548				Poster
+O 0 9548 9999 9548				Poster
+O 0 1201 9999 9549	9549 Hall		Torch
+
+*	MOBILES
+M 0 9526 1 9546		chef gnome
+
+M 0 9527 4 9546		chefs assisant gnome
+
+? 0 75 0 M
+M 1 9528 3 9532		stagehand gnome
+? 0 75 0 M
+M 1 9528 3 9537		stagehand gnome
+M 0 9528 3 9549		stagehand gnome
+A 0 9526 9528
+M 0 9528 10 -99		stagehand gnome
+A 0 9540 9545
+M 0 9528 10 -99		stagehand gnome
+
+M 0 9529 1 9548		theater manager
+
+? 0 75 0 M
+M 1 9530 3 9532		stagehand dwarf dwarven
+? 0 75 0 M
+M 1 9530 3 9537		stagehand dwarf dwarven
+? 0 75 0 M
+M 1 9530 3 9549		stagehand dwarf dwarven
+A 0 9526 9528
+M 0 9530 10 -99		stagehand dwarf dwarven
+A 0 9540 9545
+M 0 9530 10 -99		stagehand dwarf dwarven
+
+? 0 75 0 M
+M 1 9531 3 9532		stagehand hobbit
+? 0 75 0 M
+M 1 9531 3 9537		stagehand hobbit
+? 0 75 0 M
+M 1 9531 3 9549		stagehand hobbit
+A 0 9526 9528
+M 0 9531 10 -99		stagehand hobbit
+A 0 9540 9545
+M 0 9531 10 -99		stagehand hobbit
+
+M 0 9532 1 9535		female lead
+
+M 0 9533 1 9539		male lead
+
+M 0 9534 5 9533		actress
+M 0 9534 5 9533		actress
+
+M 0 9535 5 9533		actor
+M 0 9535 5 9533		actor
+
+M 0 9536 4 9530		assistant carpenter hobbit
+
+M 0 9537 1 9534		tiny spider
+
+M 0 9538 1 9530		master carpenter hobbit
+
+M 0 9539 1 9531		master prop dwarf dwarven
+
+M 0 9540 1 9531		builder prop dwarf dwarven
+
+M 0 9541 1 9538		gnome makeup artist
+
+M 0 9542 1 9536		ward robe mistress
+
+M 0 9543 3 9545		Ogre Bouncer
+E 1 9527 9999 4			Ogre's Tuxedo Jacket
+? 0 75 0 M
+M 0 9543 3 9545		Ogre Bouncer
+E 1 9527 9999 4			Ogre's Tuxedo Jacket
+M 0 9543 3 9549		Ogre Bouncer
+E 1 9527 9999 4			Ogre's Tuxedo Jacket
+S
+

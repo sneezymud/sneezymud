@@ -1,0 +1,153 @@
+#17100
+Stonecold - Ogre Campsite~
+17199 40 2 1
+
+D 0 17170 0 1       Branch
+D 0 17171 2 1       Branch
+D 0 17180 1 1       Archway
+D 0 17181 0 1       Temple Zelpth
+D 0 17181 1 1       Chiefs Hut
+D 0 17181 2 1       Sorcerers Study
+D 0 17181 3 1       Archway
+D 0 17182 3 1
+D 0 17183 2 1
+D 0 17184 0 1
+
+O 0 11835 9999 17182         portal
+O 0 17100 9999 17149         nest small
+P 1 10740 9999 17100         wire ring
+O 0 17101 9999 17100         smoldering campfire
+O 0 17102 9999 17110         Stone well
+O 0 10500 9999 17112         campfire large
+O 0 17101 9999 17119
+O 0 10500 9999 17122
+O 0 10500 9999 17127
+O 0 17101 9999 17131
+O 0 17101 9999 17136
+O 0 10500 9999 17146
+O 0 10500 9999 17150
+O 0 17101 9999 17157
+O 0 17104 9999 17127         Haycock
+O 0 17105 9999 17197         Nest Owlbears
+P 1 845 9999  17105          light yellow potion-Feathery Descent
+O 0 17106 9999 17195         Large Hive
+P 1 813 9999 17106           torn scroll-recall
+O 0 17107 9999 17184         Desk-jeweled
+O 0 17108 9999 17184         Bookcase
+P 1 814 9999 17108           scroll-color spray
+P 1 1301 9999 17108          scroll-mystic darts 
+P 1 17117 9999 17108         Blue book (Birth of Overlords)
+P 1 17118 9999 17108         Orange book (Gunderi's quest)
+O 0 17109 9999 17183         Altar of Zelpth
+P 1 503   9999 17109         Symbol Aluminum
+O 0 17120 9999 17183         Pew-large-ogre
+O 0 11135 9999 17182         Basin
+O 0 26 9999 17182            Bed-large
+M 0 17176 1 7839              Exhausted Human (quest mob)
+M 0 17105 1 17183 183         Tulaver-monk ogre
+H 1 2 1
+M 0 17104 1 17184 184         Horgan-magus ogre
+H 1 2 1
+? 0 3 0 E
+E 1 17129 100 14             Cloak-Protection
+M 0 17106 1 17182 182         Silverclaw-Chief ogre
+H 1 2 1
+Y 0 50 8		     Load-Suit-Bronze (ogre)
+
+M 0 17101 1 17181             Ogre Lord
+H 1 2 1
+Y 0 50 2		     Load-Suit-Bronze (ogre)
+M 0 17101 1 17181 
+H 1 2 1
+Y 0 50 2		     Load-Suit-Bronze (ogre)
+M 0 17101 1 17180 
+H 1 2 1
+Y 0 50 2		     Load-Suit-Bronze (ogre)
+M 0 17101 1 17180 
+H 1 2 1
+Y 0 50 2		  Load-Suit-Bronze (ogre)
+M 0 17101 1 17179 
+H 1 2 1
+Y 0 50 2		  Load-Suit-Bronze (ogre)
+M 0 17101 1 17179 
+H 1 2 1
+Y 0 50 2		  Load-Suit-Bronze (ogre)
+M 0 17101 1 17178 
+H 1 2 1
+Y 0 50 2		  Load-Suit-Bronze (ogre)
+M 0 17101 1 17178         
+H 1 2 1
+Y 0 50 2		  Load-Suit-Bronze (ogre)
+
+M 0 17113 1 17110          Ogre Monk
+H 1 2 1
+Y 0 51 2		    Load-Suit-Tornleather (ogre)
+M 0 17113 1 17114         
+H 1 2 1
+Y 0 51 2		    Load-Suit-Tornleather (ogre)
+M 0 17113 1 17173          
+H 1 2 1
+Y 0 51 2		    Load-Suit-Tornleather (ogre)
+M 0 17113 1 17162          
+H 1 2 1
+Y 0 51 2		    Load-Suit-Tornleather (ogre)
+M 0 17113 1 17100          
+H 1 2 1
+Y 0 51 2		    Load-Suit-Tornleather (ogre)
+
+
+M 0 17100 1 17101          Ogre hunter
+H 1 2 1
+M 0 17100 2 17108 
+H 1 2 1
+M 0 17100 1 17126 
+H 1 2 1
+M 0 17100 1 17127 
+H 1 2 1
+M 0 17100 2 17135 
+H 1 2 1
+M 0 17100 1 17138 
+H 1 2 1
+M 0 17100 1 17142 
+H 1 2 1
+M 0 17100 1 17145 
+H 1 2 1
+M 0 17100 2 17152 
+H 1 2 1
+M 0 17100 1 17157 
+H 1 2 1
+M 0 17100 2 17123 
+H 1 2 1
+M 0 17100 1 17169 
+H 1 2 1
+M 0 17100 1 17118
+H 1 2 1
+M 0 17100 1 17121
+H 1 2 1
+M 0 17103 2 17103          Ogre hunter type-2
+H 1 2 1
+M 0 17103 1 17111
+H 1 2 1
+M 0 17103 2 17113
+H 1 2 1
+M 0 17103 1 17132
+H 1 2 1
+M 0 17110 1 17106           Ogre hunter type-3
+H 1 2 1
+Y 0 51 2		     Load-Suit-Tornleather (ogre)
+M 0 17102 1 17134           Driders
+G 1 17103 9999               mandrake (quest object)
+M 0 17102 1 17140
+M 0 17102 1 17151
+M 0 17102 1 17153
+M 0 17102 1 17126
+M 0 17102 1 17127
+M 0 17107 1 17126           Driders non-drain
+M 0 17107 1 17130 
+M 0 17107 1 17150 
+M 0 17108 1 17197             Owlbear
+M 0 17109 1 17195             Wasp giant
+M 0 17109 1 17195 
+M 0 14350 1 17190             Crows
+S
+

@@ -1,0 +1,117 @@
+#9550
+Connovar - Mage Academy Basement~
+9574 30 2 1
+
+D 0 9573 3 2		locked door bottom stairs
+D 0 9572 1 2
+D 0 9567 0 1		southern door to opal
+D 0 9562 2 1
+D 0 9561 1 1		western door to opal
+D 0 9562 3 1
+D 0 9563 3 1		eastern door to opal
+D 0 9562 1 1
+D 0 9557 2 1		southern door to opal
+D 0 9562 0 1
+D 0 9564 2 2		locked door to well lit cell
+D 0 9569 0 2
+D 0 9570 1 1		door to restroom
+D 0 9571 3 1
+D 0 9570 2 1		door to sw guardroom
+D 0 9574 0 1
+D 0 9550 5 1		secret to confiscation room
+D 0 9559 4 1
+D 0 9574 2 2		locked secret to ratking (5276) dif zone
+D 0 5276 0 2
+
+O 0 9550 9999 9559		guitar
+O 0 9551 9999 9559		black box
+O 0 9552 9999 9559		large pile pictures
+O 0 9553 9999 9557		blue portal 
+O 0 9554 9999 9557		red portal
+O 0 9555 9999 9557		transparent portal
+O 0 9556 9999 9557		brown portal
+O 0 9557 9999 9552		arena portal - entrance
+O 0 9558 9999 9555		arena portal - exit
+O 0 9559 9999 9552		hospital portal
+O 0 9560 9999 9550		Image portal exit training
+O 0 9560 9999 9551		
+O 0 9560 9999 9554		
+O 0 9560 9999 9553		
+O 0 9561 9999 9556		red velvet couch
+O 0 9561 9999 9558		
+O 0 9561 9999 9566		
+O 0 9561 9999 9568		
+O 0 9568 9999 9571		comfortable chair
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9568 9999 9571		
+O 0 9569 9999 9571		large table
+P 1 413 9999 9569			put beer table
+O 0 9569 9999 9571		large table
+P 1 412 9999 9569			put whiskey table
+P 1 412 9999 9569			
+P 1 412 9999 9569			
+O 0 9569 9999 9571		large table
+O 0 9570 9999 9574		rat bones
+O 0 9571 9999 9562		massive opal
+
+B 0 9563 5 9559			Candy wrapper
+P 1 9564 9999 9563		put candy in wrapper
+
+M 0 9550 1 9556			master adept busy mage
+M 0 9550 1 9558
+M 0 9550 1 9566
+M 0 9550 1 9568
+M 0 9551 1 9569			shadow blood crimson
+M 0 9552 1 9564			Mage guard
+G 1 9574 9999				key dark black shadowy
+? 0 1 0 E
+E 1 9566 5 19				mystical rod
+M 0 9552 1 9570			Mage guard
+? 0 1 0 E
+E 1 9566 5 19				mystical rod
+M 0 9553 1 9550			Laplan water mage
+M 0 9554 1 9553			Sirian air mage
+Y 0 56 1				Glowing white eq
+M 0 9555 1 9551			Pyran fire mage
+Y 0 26 1				Runic eq
+M 0 9556 1 9554			Gnorme earth mage
+G 1 9562 9999				Mud
+Y 0 102 1				charred leather eq
+M 0 9557 1 9561			mage adept wandering
+M 0 9558 1 9571			female relaxing
+M 0 9559 2 9571			male relaxing
+M 0 9559 2 9571			male relaxing
+M 0 9560 1 9571			mage waitress
+M 0 9561 2 9574			ball evil
+H 1 2 8                                 hate lycanthrope race
+G 1 9573 9999				Pulsating key
+M 0 9561 2 9574			ball evil
+H 1 2 8                                 hate lycanthrope race
+G 1 9573 9999				Pulsating key
+M 0 9562 1 9562			Head mage technician
+M 0 9563 1 9573			George guard ogre
+G 1 9565 9999				Key entrance Basement
+? 0 3 0 E
+E 1 9566 10 19				mystical rod
+M 0 9564 1 9559			slinky
+M 0 9565 1 9572			Escaping thief
+G 1 14395 9999				lockpicks
+? 0 1 0 G
+G 1 274 9999                            rare load of diamond dust
+? 0 10 0 G
+G 1 237 9999                            load of bat wing
+? 0 20 0 G
+G 1 261 9999                            load of cheetah paw
+? 0 30 0 G
+G 1 238 9999                            load of dragon bone
+? 0 40 0 G
+G 1 258 9999                            load of golden carrot
+? 0 50 0 G
+G 1 253 9999                            load of invis ink
+S
+

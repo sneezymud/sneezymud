@@ -1,0 +1,494 @@
+#7700
+Satan - Cannibal Tribe/Cimean Outpost~
+7799 50 2 1
+
+D 0 7702 9 1	Secret Brush Door to Cannibal Tribe
+D 0 7705 6 1
+D 0 7715 0 1	Thatch Hut
+D 0 7729 2 1
+D 0 7715 3 1	Thatch Hut
+D 0 7728 1 1
+D 0 7711 9 2	Hut of the Savage Chief
+D 0 7726 6 2
+D 0 7710 7 2	Slave Pen
+D 0 7724 8 2
+D 0 7725 5 2	Underground Holding Cell
+D 0 7730 4 2
+D 0 7709 3 2	Hut of the Savage Priest
+D 0 7722 1 2
+D 0 7731 5 1	Pyramid Grate
+D 0 7733 4 1
+D 0 7733 8 2	Burial Chamber
+D 0 7734 7 2	
+D 0 7707 2 1	Thatch Hut
+D 0 7719 0 1	
+D 0 7717 0 1	Thatch Hut
+D 0 7720 2 1
+D 0 7717 7 1	Storage Shed
+D 0 7721 8 1
+D 0 7791 8 1	Secret Grove
+D 0 7792 7 1	
+D 0 7704 5 1	Tunnel Entrance
+D 0 7737 4 1 
+D 0 7737 7 2	Tunnel Gate
+D 0 7738 8 2
+D 0 7742 7 2	Outpost Gate
+D 0 7743 8 2
+D 0 7742 6 2	Outpost Gate
+D 0 7745 9 2
+D 0 7746 0 1	Shadow Arena Entrance
+D 0 7780 2 1
+D 0 7785 6 1	Heart of Darkness
+D 0 7789 9 1
+D 0 7745 1 1	Assassin Barracks
+D 0 7751 3 1
+D 0 7747 1 1	Commando Barracks
+D 0 7750 3 1
+D 0 7748 0 1	Crystalline Stairwell
+D 0 7749 2 1
+D 0 7752 7 1	Praetor's Office
+D 0 7753 8 1
+D 0 7753 3 2	Oriel Chamber
+D 0 7755 1 2
+D 0 7756 6 1	Storage Room
+D 0 7757 9 1	
+D 0 7760 1 1	Chapel
+D 0 7762 3 1
+D 0 7761 0 1	Chapel
+D 0 7762 2 1
+D 0 7765 0 1	Saint's Chambers
+D 0 7766 2 1
+D 0 7766 3 1	Saint's Living Quarters
+D 0 7767 1 1
+D 0 7768 1 1	Mess Hall
+D 0 7769 3 1
+D 0 7771 1 1	Mess Hall
+D 0 7770 3 1
+D 0 7771 2 1	Fridge
+D 0 7772 0 1
+D 0 7771 9 1	Servant's Quarters
+D 0 7773 6 1
+D 0 7775 0 1	Commando's Barracks
+D 0 7776 2 1
+D 0 7775 9 1	Assassin's Barracks
+D 0 7778 6 1
+D 0 7775 2 1	Servant's Quarters
+D 0 7774 0 1
+D 0 7718 3 1    Secret to Jungle Road
+
+O 0 7706 9999 7700	Brush
+O 0 7706 9999 7701      Brush
+O 0 7706 9999 7702      Brush
+O 0 7706 9999 7703      Brush
+O 0 7706 9999 7704      Brush
+O 0 7706 9999 7705      Brush
+O 0 7706 9999 7706      Brush
+O 0 7706 9999 7707      Brush
+O 0 7706 9999 7716      Brush
+O 0 7706 9999 7791      Brush
+O 0 7706 9999 7718      Brush
+O 0 7707 9999 7754	Tapestry
+O 0 7707 9999 7777      Tapestry
+O 0 7707 9999 7779      Tapestry
+O 0 7707 9999 7766      Tapestry
+O 0 7708 9999 7767	Painting
+O 0 7708 9999 7778	Painting
+O 0 7708 9999 7776	Painting
+O 0 7709 9999 7763	Pew
+O 0 7709 9999 7764	Pew
+O 0 7711 9999 7765	Ivory Altar
+O 0 7712 9999 7732	Gory Altar
+O 0 7718 9999 7744	Pool of Water
+O 0 7718 9999 7769	Pool of Water
+O 0 7717 9999 7755	Portal
+O 0 7715 9999 7754	Safe
+P 1 804 9999 7715	Platinum Potion
+P 1 808 9999 7715	Grey Potion
+P 1 829 9999 7715	Sturdy Flask
+P 1 837 9999 7715	Sturdy Flash
+P 1 9755 9999 7715	Effervescent Potion
+P 1 821 9999 7715	Orange Potion
+O 0 7713 9999 7708	Pile of Bones
+O 0 7713 9999 7732      Pile of Bones
+O 0 7713 9999 7731      Pile of Bones
+O 0 7713 9999 7722      Pile of Bones
+O 0 7713 9999 7723      Pile of Bones
+O 0 7713 9999 7726      Pile of Bones
+O 0 7713 9999 7727      Pile of Bones
+O 0 7713 9999 7728      Pile of Bones
+O 0 7713 9999 7729      Pile of Bones
+O 0 7713 9999 7720      Pile of Bones
+O 0 7713 9999 7702      Pile of Bones
+O 0 7713 9999 7718      Pile of Bones
+O 0 7713 9999 7730      Pile of Bones
+O 0 7713 9999 7735      Pile of Bones
+O 0 7746 9999 7790	Shadow Altar
+O 0 7745 9999 7727      Fire
+O 0 7739 9999 7727	Spit
+O 0 7741 9999 7727      Bedding
+O 0 7745 9999 7723      Fire         
+O 0 7739 9999 7723      Spit
+O 0 7741 9999 7723      Bedding
+O 0 7745 9999 7720      Fire         
+O 0 7739 9999 7720      Spit
+O 0 7741 9999 7720      Bedding
+O 0 7745 9999 7719      Fire         
+O 0 7739 9999 7719      Spit
+O 0 7741 9999 7719      Bedding
+O 0 7745 9999 7729      Fire         
+O 0 7739 9999 7729      Spit
+O 0 7741 9999 7728      Bedding
+O 0 7745 9999 7728      Fire         
+O 0 7739 9999 7728      Spit
+O 0 7741 9999 7728	Bedding
+O 0 7714 9999 7705      Crucifix Light
+O 0 7714 9999 7706      Crucifix Light
+O 0 7714 9999 7707      Crucifix Light
+O 0 7714 9999 7717      Crucifix Light
+O 0 7714 9999 7708      Crucifix Light
+O 0 7714 9999 7709      Crucifix Light
+O 0 7714 9999 7710      Crucifix Light
+O 0 7714 9999 7711      Crucifix Light
+O 0 7714 9999 7713      Crucifix Light
+O 0 7714 9999 7714      Crucifix Light
+O 0 7714 9999 7715      Crucifix Light
+O 0 7714 9999 7716      Crucifix Light
+O 0 11068 50 7750       Silk Bunk
+O 0 11068 50 7777       Silk Bunk
+O 0 11068 50 7776       Silk Bunk
+O 0 11068 50 7778       Silk Bunk
+O 0 11068 50 7779       Silk Bunk
+O 0 11068 50 7751       Silk Bunk
+O 0 11068 50 7754       Silk Bunk
+O 0 11068 50 7767       Silk Bunk
+O 0 22 9999 7774	Bed
+O 0 22 9999 7773	Bed
+O 0 3305 9999 7770	Bench
+O 0 3305 9999 7770	Bench
+O 0 3305 9999 7769	Bench
+O 0 3305 9999 7769	Bench
+O 0 7710 9999 7770	Crystal Table
+O 0 7710 9999 7769	Crystal Table
+O 0 7710 9999 7766	Crystal Table
+O 0 11065 40 7753	Wooden Chair
+O 0 7708 9999 7753	Painting
+O 0 11071 9 7753	Platinum Table
+
+M 0 7701 1 7727 	 Cannibal Chief
+? 0 7 0 E
+E 1 7730 30 19			Bone Spear
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999			Rump
+M 0 7703 1 7723 	 Cannibal Priest Nocturnal
+G 1 7702 10			Key Burial
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999                   Rump
+M 0 7735 1 7732 	 Cannibal Priest Diurnal
+G 1 7702 10			Key Burial
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999                   Rump
+M 0 7716 1 7725 	 Ogre Prisoner
+M 0 7716 1 7724 	 Ogre Prisoner
+M 0 7717 1 7730 	 Giant Black Spider
+M 0 7717 1 7730 	 Giant Black Spider
+M 0 7711 1 7792 	 Daddy
+M 0 7712 1 7792 	 Zest
+M 0 7713 1 7793 	 Sluggo
+M 0 7714 1 7793 	 Mata
+M 0 7710 1 7710 	 Guard Slave
+G 1 7703 10			Key Slave
+? 0 3 0 E
+E 1 7730 30 19                  Bone Spear
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999                   Rump
+M 0 7709 1 7711 	 Guard Chief
+G 1 7701 10			Key Chief
+? 0 3 0 E
+E 1 7730 30 19                  Bone Spear
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999                   Rump
+M 0 7708 1 7709 	 Guard Priest
+G 1 7700 10			Key Priest
+? 0 3 0 E
+E 1 7730 30 19                  Bone Spear
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 6 0 G
+G 1 7744 9999                   Rump
+M 0 7707 1 7732 	 Sacrificial Offering
+M 0 7715 1 7735 	 Skeleton
+M 0 7715 1 7734 	 Skeleton
+M 0 7715 1 7736 	 Skeleton
+M 0 7705 1 7720 	 Cannibal Woman
+? 0 5 0 E
+E 1 7738 9999 15                Grass Skirt
+? 0 4 0 G
+G 1 7743 9999                   Leg
+M 0 7705 1 7719          Cannibal Woman
+? 0 5 0 E
+E 1 7738 9999 15                Grass Skirt
+? 0 3 0 G
+G 1 7742 9999                   Arm 
+M 0 7705 1 7728          Cannibal Woman
+? 0 5 0 E
+E 1 7738 9999 15                Grass Skirt
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7705 1 7729          Cannibal Woman
+? 0 5 0 E
+E 1 7738 9999 15                Grass Skirt
+? 0 3 0 G
+G 1 7742 9999                   Arm
+M 0 7705 1 7726          Cannibal Woman
+? 0 5 0 E
+E 1 7738 9999 15                Grass Skirt
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7706 1 7719          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7720          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7728          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7729          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7726          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7718          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7705          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7722          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7718          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7705          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7706 1 7722          Cannibal Child
+? 0 75 0 G
+G 1 439 9999                    Pickled Elf Ears
+M 0 7704 1 7701          Cannibal Man
+? 0 3 0 E
+E 1 7731 30 19                  Bone Knife
+? 0 7 0 E
+E 1 8508 9999 15		Loincloth
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7704 1 7716          Cannibal Man
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 3 0 G
+G 1 7742 9999                   Arm
+M 0 7704 1 7711          Cannibal Man
+? 0 3 0 E
+E 1 7731 30 19                  Bone Knife
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7704 1 7709          Cannibal Man
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 3 0 G
+G 1 7742 9999                   Arm
+M 0 7704 1 7712          Cannibal Man
+? 0 3 0 E
+E 1 7731 30 19                  Bone Knife
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7704 1 7708          Cannibal Man
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 3 0 G
+G 1 7742 9999                   Arm
+M 0 7704 1 7731          Cannibal Man
+? 0 3 0 E
+E 1 7731 30 19                  Bone Knife
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 4 0 G
+G 1 7743 9999                   Leg 
+M 0 7704 1 7706          Cannibal Man
+? 0 7 0 E
+E 1 8508 9999 15                Loincloth
+? 0 3 0 G
+G 1 7742 9999                   Arm
+M 0 7719 1 7737 	 Tunnel Guard
+G 1 7704 10			Key Tunnel
+E 1 7734 10 19                  Onyx Falchion
+? 0 20 0 G
+G 1 10029 9999			Packaged Ration
+? 0 2 0 G
+G 1 157 9999                    Large Whetstone
+? 0 4 0 E
+E 1 11013 40 17			Mica Band
+M 0 7720 1 7742 	 Gate Guard
+G 1 7705 10			Key Gate
+E 1 7734 10 19                  Onyx Falchion
+? 0 20 0 G
+G 1 10029 9999			Packaged Ration
+? 0 2 0 G
+G 1 157 9999                    Large Whetstone
+? 0 4 0 E
+E 1 11013 40 17                 Mica Band
+M 0 7721 1 7755 	 Doom Guard
+M 0 7734 1 7767 	 Pmek
+? 0 1 0 E
+E 1 7737 1 18			Wrath of Heaven
+? 0 10 0 G
+G 1 11016 40                    Mica Symbol
+? 0 25 0 G
+G 1 3325 9999			Prime Rib Dinner
+M 0 7728 1 7754 	 Relxerd
+G 1 7716 1			Key Safe
+? 0 1 0 E
+E 1 7732 1 18			 word of the Ancients
+? 0 25 0 G
+G 1 3324 9999			Chicken Dinner
+M 0 7730 1 7762 	 Worshipper
+? 0 5 0 G
+G 1 11016 40			Mica Symbol
+? 0 5 0 G
+G 1 10029 9999                  Packaged Ration
+M 0 7730 1 7763 	 Worshipper
+? 0 5 0 G
+G 1 11016 40                    Mica Symbol
+? 0 5 0 G
+G 1 10029 9999                  Packaged Ration
+M 0 7730 1 7764 	 Worshipper
+? 0 5 0 G
+G 1 11016 40                    Mica Symbol
+? 0 5 0 G
+G 1 10029 9999                  Packaged Ration
+M 0 7722 1 7751 	 Assassin Roam
+? 0 2 0 E
+E 1 7733 10 18			Onyx Battle Axe
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 149 9999			Lockpicks
+Y 0 81 2                        Black Leather Set
+M 0 7722 1 7788          Assassin Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 154 9999                    Garrotte
+Y 0 81 2                        Black Leather Set
+M 0 7722 1 7786          Assassin Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 149 9999                    Lockpicks
+Y 0 81 2                        Black Leather Set
+M 0 7722 1 7782          Assassin Roam
+? 0 2 0 E
+E 1 7733 10 18                  Onyx Battle Axe
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 154 9999                    Garrotte
+Y 0 81 2                        Black Leather Set
+M 0 7722 1 7784          Assassin Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 149 9999                    Lockpicks
+Y 0 81 2                        Black Leather Set
+M 0 7724 1 7778 	 Assassin Barracks
+? 0 2 0 E
+E 1 7733 10 18                  Onyx Battle Axe
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 154 9999                    Garrotte
+M 0 7724 1 7779 	 Assassin Barracks
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 149 9999                    Lockpicks
+M 0 7726 1 7744 	 Commando Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 156 9999                    Large File
+? 0 2 0 E
+E 1 7736 10 19                  Onyx Sai
+M 0 7726 1 7747          Commando Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 156 9999                    Large File
+M 0 7726 1 7752          Commando Roam
+? 0 2 0 E
+E 1 7734 10 19                  Onyx Falchion
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 157 9999                    Large Whetstone
+M 0 7726 1 7769          Commando Roam
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 156 9999                    Large File
+M 0 7726 1 7750          Commando Roam
+? 0 2 0 E
+E 1 7734 10 19                  Onyx Falchion
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 157 9999                    Large Whetstone
+M 0 7727 1 7776 	 Commando Barracks
+? 0 2 0 E
+E 1 7735 10 18                  Onyx Warhammer
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 156 9999                    Large File
+M 0 7727 1 7777 	 Commando Barracks
+? 0 4 0 G
+G 1 10029 9999                  Packaged Ration
+? 0 2 0 G
+G 1 157 9999                    Large Whetstone
+M 0 7731 1 7771 	 Cook
+? 0 20 0 G
+G 1 10061 9999			Sausage Dinner
+? 0 20 0 G
+G 1 3325 9999			Prime Rib Dinner
+? 0 20 0 G	
+G 1 3324 9999			Chicken Dinner
+M 0 7732 1 7773 	 Servant Stationary
+? 0 15 0 G
+G 1 10061 9999			Sausage Dinner
+M 0 7733 1 7760 	 Servant Roam
+? 0 15 0 G
+G 1 10061 9999                  Sausage Dinner
+M 0 7733 1 7774 	 Servant Roam
+? 0 15 0 G
+G 1 10061 9999                  Sausage Dinner
+M 0 7733 1 7746 	 Servant Roam
+? 0 15 0 G
+G 1 10061 9999                  Sausage Dinner
+S
+

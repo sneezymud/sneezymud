@@ -1,0 +1,20 @@
+#34675
+Peel - East Tundra Road~
+34699 25 2 1
+* 10211 east, then northeast into 10213
+A 0 34650 34674
+M 0 10200 1 -99 			moose
+A 0 34650 34674
+M 0 10210 1 -99 			moose
+
+A 0 34650 34674
+M 0 10201 1 -99 			caribou
+A 0 34650 34674
+M 0 10211 1 -99 			caribou
+
+A 0 34650 34674
+M 0 10202 1 -99 			reindeer
+A 0 34650 34674
+M 0 10212 1 -99 			reindeer
+S
+          

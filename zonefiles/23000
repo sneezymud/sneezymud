@@ -1,0 +1,83 @@
+#23000
+Jesus - Ocean Floor~
+23099 30 2 1
+
+D 0 23087 3 2        Bottom of the Ocean -> A Large Underwater Grotto
+D 0 23089 1 2        A Large Underwater Grotto -> Bottom of the Ocean
+
+M 0 23001 25 23001      a large, evil-looking barracuda
+M 0 23002 20 23001      a squid
+M 0 23002 20 23002      a squid
+M 0 23002 20 23002      a squid
+M 0 23001 25 23004      a large, evil-looking barracuda
+M 0 23004 14 23005      a bluetip shark
+M 0 23004 14 23009      a bluetip shark
+M 0 23004 14 23014      a bluetip shark
+M 0 23001 25 23014      a large, evil-looking barracuda
+M 0 23001 25 23015      a large, evil-looking barracuda
+M 0 23001 25 23016      a large, evil-looking barracuda
+M 0 23001 25 23017      a large, evil-looking barracuda
+M 0 23001 25 23018      a large, evil-looking barracuda
+M 0 23001 25 23018      a large, evil-looking barracuda
+M 0 23004 14 23018      a bluetip shark
+M 0 23001 25 23019      a large, evil-looking barracuda
+M 0 23004 14 23023      a bluetip shark
+M 0 23001 25 23023      a large, evil-looking barracuda
+M 0 23002 20 23026      a squid
+M 0 23002 20 23028      a squid
+M 0 23002 20 23029      a squid
+M 0 23001 25 23031      a large, evil-looking barracuda
+M 0 23001 25 23032      a large, evil-looking barracuda
+M 0 23002 20 23033      a squid
+M 0 23002 20 23034      a squid
+M 0 23004 14 23036      a bluetip shark
+M 0 23005 8 23037       a jellyfish
+M 0 23002 20 23037      a squid
+M 0 23001 25 23037      a large, evil-looking barracuda
+M 0 23001 25 23039      a large, evil-looking barracuda
+M 0 23001 25 23040      a large, evil-looking barracuda
+M 0 23001 25 23040      a large, evil-looking barracuda
+M 0 23001 25 23041      a large, evil-looking barracuda
+M 0 23001 25 23043      a large, evil-looking barracuda
+M 0 23001 25 23043      a large, evil-looking barracuda
+M 0 23001 25 23044      a large, evil-looking barracuda
+M 0 23002 20 23045      a squid
+M 0 23001 25 23045      a large, evil-looking barracuda
+M 0 23001 25 23045      a large, evil-looking barracuda
+M 0 23001 25 23046      a large, evil-looking barracuda
+M 0 23002 20 23047      a squid
+M 0 23001 25 23048      a large, evil-looking barracuda
+M 0 23001 25 23049      a large, evil-looking barracuda
+M 0 23001 25 23049      a large, evil-looking barracuda
+M 0 23001 25 23051      a large, evil-looking barracuda
+M 0 12425 2 23052       a squid
+M 0 23005 8 23052       a jellyfish
+M 0 23001 25 23056      a large, evil-looking barracuda
+M 0 23002 20 23057      a squid
+M 0 23002 20 23057      a squid
+M 0 23001 25 23059      a large, evil-looking barracuda
+M 0 23004 14 23061      a bluetip shark
+M 0 23002 20 23061      a squid
+M 0 23001 25 23062      a large, evil-looking barracuda
+M 0 23002 20 23064      a squid
+M 0 23004 14 23064      a bluetip shark
+M 0 23001 25 23065      a large, evil-looking barracuda
+M 0 23001 25 23067      a large, evil-looking barracuda
+M 0 23004 14 23068      a bluetip shark
+M 0 23001 25 23068      a large, evil-looking barracuda
+M 0 23001 25 23069      a large, evil-looking barracuda
+M 0 23002 20 23069      a squid
+M 0 23001 25 23070      a large, evil-looking barracuda
+M 0 23001 25 23070      a large, evil-looking barracuda
+M 0 23005 8 23070       a jellyfish
+M 0 23005 8 23073       a jellyfish
+M 0 23005 8 23075       a jellyfish
+M 0 23005 8 23079       a jellyfish
+M 0 23002 20 23080      a squid
+M 0 23005 8 23081       a jellyfish
+M 0 23005 8 23085       a jellyfish
+M 0 23000 1 23089       Rangork, the wise
+? 0 2 0 G
+G 1 23000 1      	give rangork the signet ring
+S
+

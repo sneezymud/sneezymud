@@ -1,0 +1,319 @@
+#3700
+Spawn - The Town of Logrus~
+3899 35 2 1
+
+M 0 3750 1 3753      barber
+
+D 0 3710   5    1      ; Manhole
+D 0 3795   4    1
+D 0 3712   5    1      ; Manhole
+D 0 3803   4    1
+D 0 3714   5    1      ; Manhole
+D 0 3805 4 1
+D 0 3716   5    1      ; Manhole
+D 0 3806 4 1
+D 0 3720   1    1      ; East Gate
+D 0 3861 3 1
+D 0 3724   3    1      ; West Gate
+D 0 3772 1 1
+D 0 3725   3    2      ; Manor
+D 0 3740   1    2      ; ""
+D 0 3725   1    2      ; Manor
+D 0 3739   3    2      ; ""
+D 0 3731   5    1      ; Manhole
+D 0 3814 4 1
+D 0 3734 2 1           ; Kludge Half-Ear's Pet Shop
+D 0 3737 0 1
+D 0 3744   3    2      ; Manor
+D 0 3748   1    2      ; ""
+D 0 3744   1    2      ; Manor
+D 0 3747   3    2      ; ""
+D 0 3757   1    1      ; Anti Guild
+D 0 3758 3 1
+D 0 3760   1    1      ; Office
+D 0 3749 3 1
+D 0 3761   2    1      ; Temple
+D 0 3762 0 1
+D 0 3763   9    1      ; Chambers
+D 0 3765 6 1
+D 0 3764   8    1      ; ""
+D 0 3765 7 1
+D 0 3765   0    2      ; City Treasury
+D 0 3767 2 2
+T 0 3765 0 7 20             ; Acid Trap (City Treasury)
+T 0 3767 2 7 20             ; Acid Trap (City Treasury)
+D 0 3752   5    1      ; Manhole
+D 0 3811 4 1
+D 0 3775   3    2      ; House
+D 0 3777   1    2      ; ""
+D 0 3775   1    2      ; House
+D 0 3776   3    2      ; ""
+D 0 3778   1    2      ; House
+D 0 3779   3    2      ; ""
+D 0 3778   2    2      ; House
+D 0 3781   0    2      ; ""
+D 0 3778   3    2      ; House
+D 0 3780   1    2      ; ""
+D 0 3778   5    1      ; Manhole
+D 0 3789 4 1
+D 0 3782   0    2      ; House
+D 0 3784   2    2      ; ""
+D 0 3782   2    2      ; House
+D 0 3785   0    2      ; ""
+D 0 3783   0    2      ; House
+D 0 3786   2    2      ; ""
+D 0 3783   3    2      ; House
+D 0 3787   1    2      ; ""
+D 0 3783   2    2      ; House
+D 0 3788   0    2      ; ""
+D 0 3783   5    1      ; Manhole
+D 0 3821 4 1
+D 0 3793   1    2      ; Grate
+D 0 3794   3    2      ; ""
+D 0 3794   1    2      ; Grate
+D 0 3799   3    2      ; ""
+D 0 3799   0    2      ; Grate
+D 0 3800   2    2      ; ""
+D 0 3800   0    2      ; Wall
+D 0 3850   2    2      ; ""
+D 0 3801   3    2      ; Grate
+D 0 3799   1    2      ; ""
+D 0 3802   0    2      ; Grate
+D 0 3799   2    2      ; ""
+D 0 3804   3    2      ; Grate
+D 0 3808   1    2      ; ""
+D 0 3807   1    2      ; Grate
+D 0 3820   3    2      ; ""
+D 0 3814   0    2      ; Grate
+D 0 3815   2    2      ; ""
+D 0 3821   1    2      ; Grate
+D 0 3822   3    2      ; ""
+D 0 3850   0    1      ; Shrine
+D 0 3851 2 1
+D 0 3855   1    1      ; Training Room
+D 0 3857 3 1
+D 0 3855   3    1      ; Anteroom
+D 0 3858 1 1
+D 0 3889   0    2      ; Grate
+D 1 3890   2    2      ; ""
+
+O 0 3706 1 3737      ; grate (window) in Kludge's Pet Shop
+
+M 0 3701 2 3720      ; Dire Wolf (Sentinel)
+R 1 3700   4 3724      ; Orc Guard
+? 0 2 0 E
+E 1 1036 999 3		   hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1             metal ring
+Y 0 52 5                   Suit Load: Orc Mail
+
+M 0 3701 2 3724      ; Dire Wolf (Sentinel)
+R 1 3700   2 3724      ; Orc Guard
+? 0 2 0 E
+E 1 1036 999 3		   hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1             metal ring
+Y 0 52 5                   Suit Load: Orc Mail
+
+M 0 3711 2 3702       ; Dire Wolf (Wandering)
+R 1 3710 10 3702      ; Orc Guard
+? 0 2 0 E
+E 1 1036 999 3		   hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1             metal ring
+Y 0 52 5                   Suit Load: Orc Mail
+
+
+M 0 3711 2 3711      ; Dire Wolf (Wandering)
+R 1 3710   2 3711      ; Ord Guard
+? 0 2 0 E
+E 1 1036 999 3		   hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1             metal ring
+Y 0 52 5                   Suit Load: Orc Mail
+
+
+M 0 3711 2 3713      ; Dire Wolf (Wandering)
+R 1 3710   8 3713      ; Orc Guard
+? 0 2 0 E
+E 1 1036 999 3		 hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1         metal ring
+Y 0 52 5               Suit Load: Orc Mail
+
+
+M 0 3711 2 3715      ; Dire Wolf (Wandering)
+R 1 3710   8 3715      ; Orc Guard
+? 0 2 0 E
+E 1 1036 999 3		 hardened steel collar
+? 0 2 0 E
+E 1 1089 999 1         metal ring
+Y 0 52 5               Suit Load: Orc Mail
+
+
+
+M 0 3705 1 3701 01      ; Logrus Master
+? 0 2 0 E
+E 1 3898 12 16      ; Obsidian Bracer
+? 0 5 0 E
+E 1 3899 3 19      ; Obsidian Sword of Darkness
+? 0 6 0 E
+E 1 1151 1 14      ; Runic Cape
+Y 0 30 5           ; onyx suit load
+M 0 3702 2 3701 1      ; Male Citizen
+M 0 3703 2 3701 1      ; Female Citizen
+M 0 3702 2 3710 0      ; Male Citizen
+M 0 3703 2 3710 0      ; Female Citizen
+M 0 3702 2 3712 2      ; Male Citizen
+M 0 3703 2 3712 2      ; Female Citizen
+M 0 3702 2 3714 4      ; Male Citizen
+M 0 3703 2 3714 4      ; Female Citizen
+M 0 3702 2 3716 6      ; Male Citizen
+M 0 3703 2 3716 6      ; Female Citizen
+
+? 0 50 0 M
+M 0 3720 3 3776 6      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 2 3777 7      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 3 3779 9      ; Orc     
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 2 3781 1      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 3 3781 1      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 2 3784 4      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 3 3785 5      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 2 3786 6      ; Orc
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 2 3787 7      ; Orc
+G 1 3789   1           ; key
+Y 0 10 4
+
+? 0 50 0 M
+M 0 3720 3 3788 8      ; Orc
+Y 0 10 4
+
+
+M 0 3760 2 3790 0      ; Sewer Rat
+M 0 3760 2 3799 9      ; ""
+M 0 3760 2 3807 7      ; ""
+M 0 3760 2 3810 0      ; ""
+M 0 3760 2 3816 6      ; ""
+M 0 3760 2 3825 5      ; ""
+
+M 0 3798 1 3818 18      ; Ghoul
+G 1 3798   4           ; Bone
+M 0 3798 1 3818 18      ; Ghoul
+G 1 3798   4           ; Bone
+M 0 3798 1 3818 18      ; Ghoul
+G 1 3798   4           ; Bone
+G 1 3822   1           ; Key
+M 0 3798 1 3818 18      ; Ghoul
+G 1 3798   4           ; Bone
+
+M 0 3850 1 3851 51      ; Ninja
+? 0 5 0 E		   Ninjato
+E 1 3858 50 19         
+? 0 2 0 E		   Ninja Cowl
+E 1 3860 10 5         
+? 0 2 0 E		   Ninja bodysuit
+E 1 3861 5  4         
+? 0 3 0 E		   Tab Boot
+E 1 3862 20 8         
+
+M 0 3850 1 3852 52      ; Ninja
+? 0 5 0 E		   Shadow Sai
+E 1 3859 50 19         
+? 0 2 0 E		   Ninja Cowl
+E 1 3860 10 5         
+? 0 2 0 E		   Ninja bodysuit
+E 1 3861 5  4         
+? 0 2 0 E		   Tab Boot
+E 1 3862 20 8         
+
+M 0 3850 1 3853 53      ; Ninja
+? 0 10 0 E		   Tanto
+E 1 3863 50 19         
+? 0 2 0 E		   Ninja Cowl
+E 1 3860 10 5         
+? 0 2 0 E		   Ninja bodysuit
+E 1 3861 5  4         
+? 0 2 0 E		   Tab Boot
+E 1 3862 20 8         
+
+M 0 3850 1 3854 54      ; Ninja
+? 0 6 0 E		   Ninjato
+E 1 3858 50 19         
+? 0 2 0 E		   Ninja Cowl
+E 1 3860 10 5         
+? 0 2 0 E		   Ninja bodysuit
+E 1 3861 5  4         
+? 0 2 0 E		   Tab Boot
+E 1 3862 20 8         
+
+M 0 3850 1 3855 55      ; Ninja
+? 0 7 0 E		   Shadow Sai
+E 1 3859 50 19         
+? 0 2 0 E		   Ninja Cowl
+E 1 3860 10 5         
+? 0 1 0 E		   Ninja bodysuit
+E 1 3861 5  4         
+? 0 2 0 E		   Tab Boot
+E 1 3862 20 8         
+
+O 0 3825   1 3825      ; Tiny Chest
+T 1 7 20                    Acid Trap
+P 1 3799   1 3825      ; Key
+O 0 3814   1 3808      ; Key
+O 0 3791   1 3791      ; Block
+T 1 7 20                    Acid Trap
+P 1 3808   1 3791      ; Key 
+
+? 0 4 0 B
+B 1 3767   1 3767      ; City Treasure
+
+M 0 3704 1 3749 		logrus mayor
+G 1 3765 2			treasury key
+? 0 2 0 E
+E 1 1036 999 3		 hardened steel collar
+? 0 3 0 E
+E 1 1037 999 7          hardened steel legging
+? 0 3 0 E
+E 1 1038 999 18         studded metal shield
+? 0 2 0 E
+E 1 1052 999 5        ; hardened steel Helmet
+? 0 2 0 E
+E 1 1053 999 4 	       ; hardened steel breastplate
+? 0 2 0 E
+E 1 1055 999 15          hardened steel girth
+? 0 3 0 E
+E 1 1056 999 10	        hardened steel gauntlet
+? 0 2 0 E
+E 1 1057 999 14         hardened metal cloak
+? 0 3 0 E
+E 1 1058 999 17         hardened steel bracer
+? 0 2 0 E
+E 1 1059 999 12	 	hardened steel armband
+? 0 2 0 E
+E 1 1089 999 1         metal ring
+S
+

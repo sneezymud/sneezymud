@@ -1,0 +1,25 @@
+#27250
+Maror - Southern Kranor River~
+27299 20 2 1
+
+M 0 27250 1 27299 Neghya river demon
+? 0 2 0 E
+E 1 27250 9999 3 loop sinew
+? 0 2 0 E
+E 1 27251 9999 1 band sinew
+? 0 2 0 E
+E 1 27251 9999 2 band sinew
+
+M 0 27251 6 27296 soul drowned
+? 0 2 0 E
+E 1 27252 9999 6 pants ripped
+
+M 0 2400 1 27261 gar large
+M 0 2400 1 27280 gar large
+
+M 0 2401 1 27254 pirahna fish
+
+M 0 2402 1 27289 crocodile
+
+S
+

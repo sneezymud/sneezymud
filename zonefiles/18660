@@ -1,0 +1,238 @@
+#18660
+Peel - Gatlin Springs and Lodge~
+18724 25 2 0
+
+D 0 18660 7 1        Entrance -> The Reception Desk
+D 0 18662 8 1        The Reception Desk -> Entrance
+D 0 18663 3 2        The Lobby -> A Soot Lined Chimney
+D 0 18665 0 1        A Sweeping Staircase -> A Nondescript Hallway
+D 0 18666 0 1        A Nondescript Hallway -> A Changing Room
+D 0 18666 2 1        A Nondescript Hallway -> A Sweeping Staircase
+D 0 18667 2 1        A Changing Room -> A Nondescript Hallway
+D 0 18668 0 1        A Nondescript Hallway -> A Changing Room
+D 0 18668 1 1        A Nondescript Hallway -> The Gatlin Hot Springs
+D 0 18669 2 1        A Changing Room -> A Nondescript Hallway
+D 0 18670 3 1        The Gatlin Hot Springs -> A Nondescript Hallway
+D 0 18673 0 1        A Hallway -> A Bedroom
+D 0 18673 1 1        A Hallway -> A Bedroom
+D 0 18673 6 1        A Hallway -> A Bedroom
+D 0 18673 8 1        A Hallway -> A Bedroom
+D 0 18674 2 1        A Bedroom -> A Hallway
+D 0 18675 9 1        A Bedroom -> A Hallway
+D 0 18676 3 1        A Bedroom -> A Hallway
+D 0 18677 7 1        A Bedroom -> A Hallway
+D 0 18678 3 1        Deck -> Gatlin's Penthouse Suite
+D 0 18679 1 2        A Sweeping Staircase -> Gatlin's Penthouse Suite
+D 0 18680 0 1        A Hallway -> A Bedroom
+D 0 18680 1 1        A Hallway -> A Bedroom
+D 0 18680 6 1        A Hallway -> A Bedroom
+D 0 18681 2 1        A Bedroom -> A Hallway
+D 0 18682 9 1        A Bedroom -> A Hallway
+D 0 18683 3 1        A Bedroom -> A Hallway
+D 0 18684 1 1        Gatlin's Penthouse Suite -> Deck
+D 0 18684 3 2        Gatlin's Penthouse Suite -> A Sweeping Staircase
+D 0 18685 1 2        Gatlin's Bedroom -> A Walk-In Closet
+D 0 18686 3 2        A Walk-In Closet -> Gatlin's Bedroom
+D 0 18686 5 2        A Walk-In Closet -> A Torture Chamber
+D 0 18687 4 2        A Torture Chamber -> A Walk-In Closet
+
+* entrance
+O 0 18660 9999 18660    a pinnacle of stone
+O 0 18661 9999 18660    a weathered bench
+O 0 18662 9999 18660    a well-worn bench
+O 0 18663 9999 18660    a firepit
+
+* stable
+O 0 18664 9999 18661    a pile of stale hay
+O 0 18665 9999 18661    some bags of feed
+O 0 18666 9999 18661    a sturdy brass oil lamp
+
+* receptionist area
+O 0 18666 9999 18662    a sturdy brass oil lamp
+O 0 18667 9999 18662    a long receptionist's desk
+O 0 18668 9999 18662    a gigantic moosehead
+
+* lobby
+O 0 18674 9999 18663     a suit of frontier guard's platemail
+O 0 18669 9999 18663    a big plush couch
+O 0 18670 9999 18663    a black leather couch
+O 0 18671 5 18663       an inlaid wood coffee table
+O 0 18672 9999 18663    a painting
+O 0 18673 9999 18663    a white marble fireplace
+O 0 18666 9999 18663    a sturdy brass oil lamp
+
+* fireplace
+O 0 18707 9999 18689    burning log rack
+
+* bar
+O 0 18666 9999 18664    a sturdy brass oil lamp
+O 0 18678 9999 18664    a fur covered bar stool
+O 0 18678 9999 18664    a fur covered bar stool
+O 0 18678 9999 18664    a fur covered bar stool
+O 0 18678 9999 18664    a fur covered bar stool
+O 0 18678 9999 18664    a fur covered bar stool
+O 0 18677 9999 18664    a bar
+P 1 18676 9999 18677    a dart
+P 1 18676 9999 18677    a dart
+P 1 18676 9999 18677    a dart
+O 0 18675 9999 18664    a dart board
+
+* misc lamps
+O 0 18666 9999 18665    a sturdy brass oil lamp
+O 0 18666 9999 18666    a sturdy brass oil lamp
+O 0 18666 9999 18668    a sturdy brass oil lamp
+O 0 18666 9999 18672    a sturdy brass oil lamp
+O 0 18666 9999 18673    a sturdy brass oil lamp
+O 0 18666 9999 18679    a sturdy brass oil lamp
+O 0 18666 9999 18680    a sturdy brass oil lamp
+
+
+* changing room
+O 0 18679 9999 18667    a steel locker
+O 0 18679 9999 18667    a steel locker
+O 0 18679 9999 18667    a steel locker
+O 0 18666 9999 18667    a sturdy brass oil lamp
+O 0 18680 9999 18667    a plain wooden bench
+O 0 18680 9999 18667    a plain wooden bench
+
+* changing room
+O 0 18679 9999 18669    a steel locker
+O 0 18679 9999 18669    a steel locker
+O 0 18679 9999 18669    a steel locker
+O 0 18666 9999 18669    a sturdy brass oil lamp
+O 0 18680 9999 18669    a plain wooden bench
+O 0 18680 9999 18669    a plain wooden bench
+
+* hot springs
+O 0 18683 9999 18670    an outcropping of rock
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+O 0 18681 9999 18670    a sitting rock
+O 0 18681 9999 18670    a sitting rock
+O 0 18681 9999 18670    a sitting rock
+O 0 18666 9999 18670    a sturdy brass oil lamp
+
+* hot springs
+O 0 18683 9999 18671     an outcropping of rock
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+P 1 18682 9999 18683    a towel
+O 0 18681 9999 18671    a sitting rock
+O 0 18681 9999 18671    a sitting rock
+O 0 18681 9999 18671    a sitting rock
+O 0 18666 9999 18671    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18674    a bed with green sheets
+O 0 18685 9999 18674    a chair
+O 0 18686 9999 18674    a wooden chest
+O 0 18687 9999 18674    a nightstand
+O 0 18666 9999 18674    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18675    a bed with green sheets
+O 0 18685 9999 18675    a chair
+O 0 18686 9999 18675    a wooden chest
+O 0 18687 9999 18675    a nightstand
+O 0 18666 9999 18675    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18676    a bed with green sheets
+O 0 18685 9999 18676    a chair
+O 0 18686 9999 18676    a wooden chest
+O 0 18687 9999 18676    a nightstand
+O 0 18666 9999 18676    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18677    a bed with green sheets
+O 0 18685 9999 18677    a chair
+O 0 18686 9999 18677    a wooden chest
+O 0 18687 9999 18677    a nightstand
+O 0 18666 9999 18677    a sturdy brass oil lamp
+
+
+* bedroom
+O 0 18684 9999 18681    a bed with green sheets
+O 0 18685 9999 18681    a chair
+O 0 18686 9999 18681    a wooden chest
+O 0 18687 9999 18681    a nightstand
+O 0 18666 9999 18681    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18682    a bed with green sheets
+O 0 18685 9999 18682    a chair
+O 0 18686 9999 18682    a wooden chest
+O 0 18687 9999 18682    a nightstand
+O 0 18666 9999 18682    a sturdy brass oil lamp
+
+* bedroom
+O 0 18684 9999 18683    a bed with green sheets
+O 0 18685 9999 18683    a chair
+O 0 18686 9999 18683    a wooden chest
+O 0 18687 9999 18683    a nightstand
+O 0 18666 9999 18683    a sturdy brass oil lamp
+
+* gatlins room
+O 0 18691 9999 18684     a minibar
+O 0 18671 5 18684       an inlaid wood coffee table
+P 1 18692 9999 18671    a cigar box
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+P 1 18693 9999 18692    a cigar
+O 0 18689 9999 18684    a big plush couch
+O 0 18666 9999 18684    a sturdy brass oil lamp
+O 0 18688 30 18684      a thick bearskin rug
+
+* gatlins bedroom
+O 0 18666 9999 18685    a sturdy brass oil lamp
+O 0 18684 9999 18685    a bed with green sheets
+O 0 18688 30 18685      a thick bearskin rug
+O 0 18687 9999 18685    a nightstand
+
+* gatlins closet
+O 0 18688 30 18686      a thick bearskin rug
+O 0 18686 9999 18686    a wooden chest
+O 0 18695 9999 18686    an iron chest
+P 1 18705 9999 18695    bloody towel
+P 1 18706 9999 18695    bloody whip
+O 0 18694 9999 18686    a dresser
+O 0 18694 9999 18686    a dresser
+
+* torture room
+O 0 18697 9999 18687    table
+O 0 18696 9999 18687    workbench
+P 1 18698 9999 18696    candle
+P 1 18698 9999 18696    candle
+P 1 18698 9999 18696    candle
+P 1 18699 9999 18696    knife
+P 1 18700 9999 18696    rod
+P 1 18702 9999 18696    rod
+P 1 18701 9999 18696    plug
+P 1 566 9999 18696      forceps
+P 1 556 9999 18696      needle
+P 1 556 9999 18696      needle
+P 1 556 9999 18696      needle
+P 1 556 9999 18696      needle
+P 1 556 9999 18696      needle
+
+* torture bed room
+O 0 18703 9999 18688    bed
+O 0 18704 9999 18688    swing
+O 0 18682 9999 18688    a towel
+O 0 18682 9999 18688    a towel
+
+S
+
+

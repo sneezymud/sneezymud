@@ -1,0 +1,120 @@
+#30975
+Ichiban - Gnath Undercroft~
+30999 30 2 1
+
+D 0 30975 4 1 # trapdoor to Gnath temple
+D 0 24433 5 1
+ 
+D 0 30980 2 1 # temple records doors
+D 0 30998 0 1
+D 0 30998 1 1
+D 0 30999 3 1
+
+D 0 30975 4 1 # exit beneath temple altar
+
+O 0 30988 9999 30979 # glass boules for light
+O 0 30988 9999 30980
+O 0 30988 9999 30988
+O 0 30988 9999 30981
+
+O 0 30999 9999 30999 # waste can, storage room
+O 0 30998 9999 30999 # shelves
+P 1 30984 9999 30998 # fireworks
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30984 9999 30998
+P 1 30997 9999 30998 # folding chairs
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+P 1 30997 9999 30998
+O 0 30997 9999 30999
+O 0 30997 9999 30999
+O 0 30997 9999 30999
+O 0 30997 9999 30999
+
+O 0 30998 9999 30998 # shelves, records room
+O 0 30998 9999 30998
+O 0 30996 9999 30998 # table
+P 1 30985 9999 30996 # moleskin history
+O 0 30997 9999 30998 # chair
+
+O 0 30996 9999 30978 # table
+B 0 30993 9999 30978 # incense, decays in 30
+
+O 0 30981 9999 30996 # sarcophagus
+P 1 30982 9999 30981 # desiccated corpse
+
+O 0 30981 9999 30995 # sarcophagus
+P 1 30982 9999 30981 # desiccated corpse
+
+O 0 30981 9999 30994 # sarcophagus
+P 1 30982 9999 30981 # desiccated corpse
+
+O 0 30994 9999 30993 # sarcophagus with proc
+
+X 1 19 30983 # fork
+X 1 18 30978 # shield
+X 1 4 30976 # membranous sheath
+X 1 1 30979 # amber ring
+X 1 2 30979 # amber ring
+X 1 5 30991 # paper hat
+X 1 15 30995 # cummerbund
+X 1 14 30990 # gabardine riding coat
+X 1 8 30977 # moccasin
+X 1 9 30977 # moccasin
+X 1 3 30975 # neck ruff
+
+M 0 30989 1 30989 # Gneascus
+Z 0 1 6 # his set
+
+M 0 30993 1 30993 # disaffected gnome youth
+M 0 30995 1 30993 # glassy-eyed young gnome
+? 0 20 0 E
+E 1 30992 9999 19 # bong
+? 0 20 0 E
+E 1 30980 9999 6 # breeches
+M 0 30996 1 30993 # pallid young gnome
+
+M 0 30999 1 30999 # temple custodian
+? 0 20 0 G
+G 1 30984 9999 # firework
+
+M 0 30979 1 30979 # apprentice monk
+? 0 10 0 E
+E 1 30986 9999 4 # kimono
+? 0 10 0 E
+E 1 30987 9999 14 # cloak
+
+M 0 30988 2 30996 # female monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+M 0 30988 2 30996 # female monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+M 0 30990 2 30996 # male monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+M 0 30990 2 30996 # male monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+M 0 30992 1 30996 # autistic monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+M 0 30991 1 30996 # alpha monkey
+? 0 75 0 G
+G 1 30989 9999 # grub
+
+S
+

@@ -1,0 +1,467 @@
+#4475
+Dolgan/Jesus - Grimhaven East Gate Settlement~
+4699 30 2 1
+O 0 4600 9999 4514      a small lamppost
+O 0 4600 9999 4515      a small lamppost
+O 0 4600 9999 4516      a small lamppost
+O 0 4600 9999 4517      a small lamppost
+O 0 4600 9999 4520      a small lamppost
+O 0 4600 9999 4521      a small lamppost
+O 0 4600 9999 4522      a small lamppost
+O 0 4600 9999 4523      a small lamppost
+O 0 4600 9999 4524      a small lamppost
+O 0 4600 9999 4525      a small lamppost
+O 0 4600 9999 4526      a small lamppost
+O 0 4600 9999 4527      a small lamppost
+O 0 4600 9999 4528      a small lamppost
+O 0 4600 9999 4529      a small lamppost
+O 0 4600 9999 4530      a small lamppost
+O 0 4600 9999 4531      a small lamppost
+O 0 4600 9999 4538      a small lamppost
+O 0 4600 9999 4545      a small lamppost
+O 0 4600 9999 4552      a small lamppost
+O 0 4600 9999 4553      a small lamppost
+O 0 4600 9999 4557      a small lamppost
+O 0 4600 9999 4560      a small lamppost
+O 0 4600 9999 4564      a small lamppost
+O 0 4600 9999 4567      a small lamppost
+O 0 4600 9999 4569      a small lamppost
+O 0 4600 9999 4572      a small lamppost
+O 0 4600 9999 4579      a small lamppost
+O 0 4600 9999 4580      a small lamppost
+O 0 4600 9999 4595      a small lamppost
+O 0 4600 9999 4596      a small lamppost
+O 0 4600 9999 4597      a small lamppost
+O 0 4600 9999 4615      a small lamppost
+O 0 4600 9999 4616      a small lamppost
+O 0 4600 9999 4617      a small lamppost
+O 0 4600 9999 4618      a small lamppost
+O 0 4600 9999 4623      a small lamppost
+O 0 4600 9999 4625      a small lamppost
+O 0 4600 9999 4628      a small lamppost
+O 0 4600 9999 4631      a small lamppost
+O 0 4600 9999 4652      a small lamppost
+O 0 4600 9999 4658      a small lamppost
+O 0 4600 9999 4665      a small lamppost
+O 0 4600 9999 4668      a small lamppost
+O 0 4600 9999 4674      a small lamppost
+O 0 4600 9999 4678      a small lamppost
+O 0 4600 9999 4679      a small lamppost
+O 0 4600 9999 4680      a small lamppost
+O 0 4600 9999 4681      a small lamppost
+O 0 4600 9999 4682      a small lamppost
+D 0 4500 3 1         Guard Substation -> Grimhaven Outer Pathway
+D 0 4529 2 2         Grimhaven Marketplace -> Animal Paddock
+D 0 4536 0 2         Animal Paddock -> Grimhaven Marketplace
+D 0 4542 2 1         Animal Paddock -> Inspection Station
+D 0 4555 3 1         Home -> Grimhaven Outer Pathway
+D 0 4561 3 1         Home -> Grimhaven Outer Pathway
+D 0 4632 0 1         Flop House Entry -> Flop House Manager
+D 0 4635 2 1         Flop House Manager -> Flop House Entry
+D 0 4647 5 2         Warehouse Loft -> Warehouse
+D 0 4650 0 1         Inspection Station -> Animal Paddock
+D 0 4655 2 1         Loading Dock -> Warehouse
+D 0 4662 0 1         Warehouse -> Loading Dock
+D 0 4668 2 1         Warehouse Road -> New Warehouse
+D 0 4669 4 2         Warehouse -> Warehouse Loft
+D 0 4677 0 1         New Warehouse -> Warehouse Road
+O 0 4500 9999 4496      a bed
+O 0 4499 9999 4497      a bed of nails
+O 0 4500 9999 4498      a bed
+O 0 4498 1 4499         a small table
+O 0 4498 1 4505         a small table
+O 0 4506 9999 4505      a couch
+O 0 4498 1 4506         a small table
+O 0 4506 9999 4506      a couch
+O 0 4506 9999 4512      a couch
+O 0 4498 1 4512         a small table
+O 0 4498 1 4513         a small table
+O 0 4482 2 4673         a magical lift
+O 0 4484 1 4673         the fire wagon
+O 0 4481 2 4673         a fireman's pole
+O 0 4481 2 4649         a fireman's pole
+O 0 4475 9999 4683      a large copper brewing vat
+O 0 4475 9999 4684      a large copper brewing vat
+O 0 4475 9999 4693      a large copper brewing vat
+O 0 4475 9999 4694      a large copper brewing vat
+M 0 4496 1 4496         Bambi
+E 1 4496 9999 19          a sticky whip [hold-left]
+M 0 4497 1 4497         Bunny
+M 0 4498 1 4498         Barbie
+M 0 4551 12 4499        a young girl
+M 0 4544 8 4499         a shifty thief
+M 0 4499 1 4499         Bruno
+M 0 4503 1 4500         Lieutenant Jablon
+M 0 4500 1 4500         Captain Rellim
+M 0 4501 1 4501         Big Jim Slade
+M 0 4543 5 4502         a gobblin courier
+M 0 4552 5 4502         a gobblin shaman
+M 0 4547 2 4502         a traveling cannibal
+M 0 4545 5 4502         a kobold adventurer
+M 0 4532 12 4502        a brown rat
+M 0 4549 8 4502         a fat orc
+M 0 4541 10 4502        a young thief
+M 0 4531 10 4503        a bounty hunter
+M 0 4547 2 4503         a traveling cannibal
+M 0 4520 35 4503        a settlement watchman
+M 0 4524 20 4506        a sanitation worker
+M 0 4521 25 4506        a settlement sentry
+M 0 4544 8 4506         a shifty thief
+M 0 4506 1 4506         Babs
+M 0 4541 10 4508        a young thief
+M 0 4546 5 4508         a young gremlin
+M 0 4532 12 4509        a brown rat
+M 0 4592 2 4509         a young student
+M 0 4593 2 4509         a young student
+M 0 4528 15 4509        a male settler
+M 0 4530 10 4509        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4525 6 4509         a small tomcat
+M 0 4540 15 4509        a street walker
+M 0 4529 15 4509        a female settler
+M 0 4530 10 4510        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4511 1 4511         Gumdrop
+M 0 4543 5 4514         a gobblin courier
+M 0 4552 5 4514         a gobblin shaman
+M 0 4510 25 4514        a cityguard
+M 0 4523 12 4514        an elite sentry
+M 0 4541 10 4514        a young thief
+G 1 10030 9999           a stinking pile of offal
+M 0 4540 15 4514        a street walker
+M 0 4549 8 4515         a fat orc
+M 0 4545 5 4515         a kobold adventurer
+M 0 4529 15 4515        a female settler
+M 0 4524 20 4515        a sanitation worker
+M 0 4529 15 4515        a female settler
+M 0 4545 5 4515         a kobold adventurer
+M 0 4532 12 4515        a brown rat
+M 0 4527 10 4515        a vagrant
+M 0 4531 10 4516        a bounty hunter
+M 0 4551 12 4516        a young girl
+M 0 4531 10 4516        a bounty hunter
+M 0 4549 8 4516         a fat orc
+M 0 4534 100 4516       a stubborn pack mule
+M 0 4532 12 4516        a brown rat
+M 0 4527 10 4516        a vagrant
+M 0 4510 25 4516        a cityguard
+M 0 4541 10 4516        a young thief
+M 0 4550 12 4517        a young boy
+M 0 4551 12 4517        a young girl
+M 0 4544 8 4517         a shifty thief
+M 0 4523 12 4517        an elite sentry
+M 0 4520 35 4517        a settlement watchman
+M 0 4528 15 4517        a male settler
+M 0 4527 10 4517        a vagrant
+M 0 4527 10 4517        a vagrant
+M 0 4518 1 4518         Hairy
+M 0 4524 20 4520        a sanitation worker
+M 0 4545 5 4520         a kobold adventurer
+M 0 4525 6 4520         a small tomcat
+M 0 4531 10 4521        a bounty hunter
+M 0 4540 15 4521        a street walker
+M 0 4547 2 4522         a traveling cannibal
+M 0 4529 15 4522        a female settler
+G 1 10030 9999           a stinking pile of offal
+M 0 4520 35 4522        a settlement watchman
+M 0 4549 8 4523         a fat orc
+M 0 4526 10 4523        a small mangy dog
+M 0 4529 15 4523        a female settler
+M 0 4550 12 4523        a young boy
+M 0 4521 25 4523        a settlement sentry
+M 0 4525 6 4523         a small tomcat
+M 0 4551 12 4523        a young girl
+M 0 4529 15 4523        a female settler
+M 0 4524 20 4523        a sanitation worker
+M 0 4528 15 4523        a male settler
+M 0 4527 10 4523        a vagrant
+M 0 4521 25 4524        a settlement sentry
+G 1 10030 9999           a stinking pile of offal
+M 0 4551 12 4524        a young girl
+M 0 4524 20 4524        a sanitation worker
+M 0 4526 10 4524        a small mangy dog
+M 0 4528 15 4524        a male settler
+M 0 4524 20 4524        a sanitation worker
+M 0 4544 8 4524         a shifty thief
+M 0 4523 12 4524        an elite sentry
+M 0 4525 6 4524         a small tomcat
+M 0 4523 12 4525        an elite sentry
+M 0 4520 35 4526        a settlement watchman
+M 0 4534 100 4526       a stubborn pack mule
+M 0 4540 15 4527        a street walker
+M 0 4543 5 4527         a gobblin courier
+M 0 4552 5 4527         a gobblin shaman
+M 0 4532 12 4527        a brown rat
+M 0 4531 10 4527        a bounty hunter
+M 0 4528 15 4527        a male settler
+M 0 4528 15 4528        a male settler
+M 0 4523 12 4528        an elite sentry
+M 0 4550 12 4529        a young boy
+M 0 4544 8 4529         a shifty thief
+M 0 4543 5 4529         a gobblin courier
+M 0 4552 5 4529         a gobblin shaman
+M 0 4531 10 4530        a bounty hunter
+M 0 4551 12 4530        a young girl
+M 0 4531 10 4530        a bounty hunter
+M 0 4521 25 4530        a settlement sentry
+M 0 4523 12 4530        an elite sentry
+M 0 4547 2 4530         a traveling cannibal
+M 0 4523 12 4530        an elite sentry
+M 0 4534 100 4530       a stubborn pack mule
+M 0 4510 25 4531        a cityguard
+M 0 4545 5 4531         a kobold adventurer
+M 0 4526 10 4531        a small mangy dog
+M 0 4520 35 4531        a settlement watchman
+M 0 4521 25 4531        a settlement sentry
+M 0 4550 12 4531        a young boy
+M 0 4541 10 4532        a young thief
+M 0 4530 10 4532        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4551 12 4532        a young girl
+M 0 4540 15 4532        a street walker
+M 0 4549 8 4532         a fat orc
+M 0 4510 25 4532        a cityguard
+M 0 4528 15 4532        a male settler
+M 0 4534 100 4532       a stubborn pack mule
+M 0 4527 10 4532        a vagrant
+M 0 4525 6 4533         a small tomcat
+M 0 4544 8 4533         a shifty thief
+M 0 4533 1 4533         Ellsworth
+M 0 4547 2 4538         a traveling cannibal
+G 1 10030 9999           a stinking pile of offal
+M 0 4528 15 4538        a male settler
+M 0 4521 25 4538        a settlement sentry
+M 0 4534 100 4538       a stubborn pack mule
+M 0 4526 10 4538        a small mangy dog
+M 0 4521 25 4539        a settlement sentry
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4534 100 4539       a stubborn pack mule
+M 0 4539 1 4539         Omar
+M 0 4540 15 4540        a street walker
+M 0 4547 2 4540         a traveling cannibal
+G 1 10030 9999           a stinking pile of offal
+M 0 4545 5 4540         a kobold adventurer
+M 0 4521 25 4540        a settlement sentry
+M 0 4550 12 4540        a young boy
+M 0 4546 5 4540         a young gremlin
+M 0 4526 10 4540        a small mangy dog
+M 0 4510 25 4540        a cityguard
+M 0 4550 12 4540        a young boy
+G 1 10030 9999           a stinking pile of offal
+M 0 4541 10 4545        a young thief
+M 0 4540 15 4545        a street walker
+M 0 4525 6 4545         a small tomcat
+M 0 4527 10 4545        a vagrant
+M 0 4547 2 4547         a traveling cannibal
+M 0 4550 12 4548        a young boy
+M 0 4521 25 4550        a settlement sentry
+M 0 4529 15 4550        a female settler
+M 0 4532 12 4551        a brown rat
+M 0 4544 8 4552         a shifty thief
+M 0 4545 5 4553         a kobold adventurer
+M 0 4510 25 4553        a cityguard
+M 0 4592 2 4557         a young student
+M 0 4593 2 4557         a young student
+M 0 4523 12 4557        an elite sentry
+M 0 4525 6 4557         a small tomcat
+M 0 4543 5 4557         a gobblin courier
+M 0 4552 5 4557         a gobblin Shaman
+M 0 4540 15 4557        a street walker
+M 0 4544 8 4557         a shifty thief
+M 0 4551 12 4557        a young girl
+M 0 4526 10 4557        a small mangy dog
+M 0 4546 5 4557         a young gremlin
+M 0 4550 12 4557        a young boy
+M 0 4534 100 4557       a stubborn pack mule
+M 0 4527 10 4557        a vagrant
+M 0 4510 25 4558        a cityguard
+M 0 4530 10 4558        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4528 15 4560        a male settler
+G 1 10030 9999           a stinking pile of offal
+M 0 4592 2 4563         a young student
+M 0 4592 2 4563         a young student
+M 0 4593 2 4563         a young student
+M 0 4593 2 4563         a young student
+M 0 4581 1 4564         Principal Irwin
+M 0 4592 2 4564         a young student
+M 0 4593 2 4564         a young student
+M 0 4549 8 4564         a fat orc
+M 0 4528 15 4564        a male settler
+M 0 4524 20 4565        a sanitation worker
+M 0 4541 10 4565        a young thief
+M 0 4592 2 4569         a young student
+M 0 4592 2 4569         a young student
+M 0 4593 2 4569         a young student
+M 0 4593 2 4569         a young student
+M 0 4549 8 4572         a fat orc
+M 0 9501 2 4579         a young student
+G 1 604 9999             a small moneypouch
+M 0 4592 2 4579         a young student
+M 0 4592 2 4580         a young student
+M 0 4592 2 4580         a young student
+M 0 4592 2 4580         a young student
+M 0 4593 2 4579         a young student
+M 0 4593 2 4580         a young student
+M 0 4593 2 4580         a young student
+M 0 4593 2 4580         a young student
+M 0 4532 12 4580        a brown rat
+M 0 4592 2 4581         a young student
+M 0 4592 2 4582         a young student
+M 0 4582 1 4582         Luebbers
+M 0 4593 2 4589         a young student
+M 0 4592 2 4590         a young student
+M 0 4593 2 4591         a young student
+M 0 4591 1 4591         Mrs Gross
+M 0 4592 2 4592         a young student
+M 0 4593 2 4592         a young student
+M 0 4543 5 4595         a gobblin courier
+M 0 4552 5 4595         a gobblin shaman
+M 0 4545 5 4600         a kobold adventurer
+M 0 4600 1 4600         Pella
+M 0 4531 10 4601        a bounty hunter
+M 0 4531 10 4601        a bounty hunter
+M 0 4543 5 4601         a gobblin courier
+M 0 4552 5 4601         a gobblin shaman
+M 0 4523 12 4601        an elite sentry
+M 0 4523 12 4601        an elite sentry
+M 0 4530 10 4602        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4524 20 4604        a sanitation worker
+M 0 4529 15 4604        a female settler
+M 0 4521 25 4607        a settlement sentry
+M 0 4532 12 4607        a brown rat
+M 0 4520 35 4607        a settlement watchman
+M 0 4549 8 4607         a fat orc
+G 1 10030 9999           a stinking pile of offal
+M 0 4530 10 4607        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4530 10 4607        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4534 100 4607       a stubborn pack mule
+M 0 4527 10 4607        a vagrant
+M 0 4526 10 4609        a small mangy dog
+M 0 4527 10 4609        a vagrant
+M 0 4524 20 4611        a sanitation worker
+M 0 4520 35 4611        a settlement watchman
+M 0 4523 12 4611        an elite sentry
+M 0 4527 10 4611        a vagrant
+M 0 4521 25 4613        a settlement sentry
+M 0 4540 15 4613        a street walker
+M 0 4529 15 4613        a female settler
+M 0 4529 15 4614        a female settler
+M 0 4544 8 4615         a shifty thief
+M 0 4551 12 4615        a young girl
+M 0 4524 20 4615        a sanitation worker
+M 0 4540 15 4615        a street walker
+M 0 4520 35 4615        a settlement watchman
+M 0 4549 8 4616         a fat orc
+M 0 4543 5 4616         a gobblin courier
+M 0 4552 5 4616         a gobblin shaman
+M 0 4520 35 4617        a settlement watchman
+M 0 4545 5 4617         a kobold adventurer
+M 0 4524 20 4619        a sanitation worker
+M 0 4510 25 4619        a cityguard
+M 0 4510 25 4621        a cityguard
+M 0 4621 1 4621         Lucent
+M 0 4549 8 4623         a fat orc
+M 0 4541 10 4623        a young thief
+M 0 4534 100 4623       a stubborn pack mule
+M 0 4527 10 4623        a vagrant
+M 0 4541 10 4624        a young thief
+M 0 4549 8 4625         a fat orc
+M 0 4547 2 4625         a traveling cannibal
+G 1 10030 9999           a stinking pile of offal
+M 0 4540 15 4626        a street walker
+M 0 4543 5 4628         a gobblin courier
+M 0 4552 5 4616         a gobblin shaman
+M 0 4544 8 4628         a shifty thief
+M 0 4550 12 4628        a young boy
+M 0 4529 15 4628        a female settler
+M 0 4526 10 4629        a small mangy dog
+M 0 4532 12 4629        a brown rat
+M 0 4524 20 4630        a sanitation worker
+M 0 4543 5 4632         a gobblin courier
+M 0 4552 5 4616         a gobblin shaman
+M 0 4525 6 4640         a small tomcat
+M 0 4528 15 4641        a male settler
+M 0 4525 6 4642         a small tomcat
+M 0 4540 15 4642        a street walker
+M 0 4523 12 4643        an elite sentry
+M 0 4524 20 4644        a sanitation worker
+M 0 4544 8 4644         a shifty thief
+M 0 4532 12 4649        a brown rat
+M 0 4521 25 4649        a settlement sentry
+M 0 4544 8 4654         a shifty thief
+M 0 4525 6 4654         a small tomcat
+M 0 4523 12 4657        an elite sentry
+G 1 10030 9999           a stinking pile of offal
+M 0 4551 12 4657        a young girl
+M 0 4545 5 4664         a kobold adventurer
+M 0 4550 12 4664        a young boy
+M 0 4510 25 4665        a cityguard
+M 0 4528 15 4665        a male settler
+M 0 4524 20 4665        a sanitation worker
+M 0 4530 10 4666        a dwarven traveler
+M 0 4521 25 4666        a settlement sentry
+M 0 4525 6 4671         a small tomcat
+M 0 4547 2 4673         a traveling cannibal
+M 0 4551 12 4673        a young girl
+M 0 4520 35 4673        a settlement watchman
+M 0 4665 1 4673         Mist
+M 0 4541 10 4673        a young thief
+M 0 4529 15 4673        a female settler
+M 0 4673 1 4673         Angus McCloud
+G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 4476 1              lift key
+E 1 4480 9999 5           a fireman's helmet [head]
+M 0 4675 4 4673         a firehorse
+M 0 4674 1 4673         Sparky
+M 0 4540 15 4674        a street walker
+M 0 4664 1 4674         Flambeau
+M 0 4546 5 4674         a young gremlin
+M 0 4526 10 4674        a small mangy dog
+M 0 4529 15 4679        a female settler
+M 0 4531 10 4680        a bounty hunter
+M 0 4549 8 4680         a fat orc
+
+M 0 4649 3 4682         a fireman
+M 0 4649 3 4682         a fireman
+M 0 4649 3 4682         a fireman
+
+M 0 4649 3 4649         a fireman
+M 0 4649 3 4649         a fireman
+M 0 4649 3 4649         a fireman
+
+M 0 4649 3 4673         a fireman
+M 0 4649 3 4673         a fireman
+M 0 4649 3 4673         a fireman
+
+
+M 0 4540 15 4682        a street walker
+M 0 4528 15 4682        a male settler
+M 0 4534 100 4682       a stubborn pack mule
+M 0 4527 10 4682        a vagrant
+M 0 4550 12 4683        a young boy
+M 0 4543 5 4683         a gobblin courier
+M 0 4552 5 4616         a gobblin shaman
+M 0 4529 15 4683        a female settler
+M 0 4541 10 4683        a young thief
+M 0 4510 25 4691        a cityguard
+M 0 4520 35 4691        a settlement watchman
+M 0 4528 15 4691        a male settler
+M 0 4530 10 4691        a dwarven traveler
+G 1 150 9999                    ball pien hammer (smythe tool)   
+M 0 4549 8 4691         a fat orc
+M 0 4524 20 4691        a sanitation worker
+M 0 4530 10 4692        a dwarven traveler
+M 0 4545 5 4692         a kobold adventurer
+M 0 4544 8 4693         a shifty thief
+M 0 4520 35 4698        a settlement watchman
+M 0 4532 12 4698        a brown rat
+S
+

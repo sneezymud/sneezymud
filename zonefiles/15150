@@ -1,0 +1,154 @@
+#15150
+Damescena/Jesus - Cult of the Viper~
+15199 30 2 1
+D 0 15193 4 1        A Tunnel of Red Stone -> A Narrow Stairwell
+D 0 15194 5 1        A Narrow Stairwell -> A Tunnel of Red Stone
+
+O 0 15346 1 15150   sign
+O 0 15345 1 15150   fishing boat
+M 0 15311 1 15349   skipper
+E 1 15348 9999 5    cap
+
+O 0 15197 55 15152      a small red marble candelabra
+O 0 15197 55 15153      a small red marble candelabra
+O 0 15197 55 15154      a small red marble candelabra
+O 0 15197 55 15155      a small red marble candelabra
+O 0 15197 55 15156      a small red marble candelabra
+O 0 15197 55 15157      a small red marble candelabra
+O 0 15197 55 15158      a small red marble candelabra
+O 0 15197 55 15159      a small red marble candelabra
+O 0 15197 55 15159    a small red marble candelabra
+O 0 15197 55 15160      a small red marble candelabra
+O 0 15197 55 15161      a small red marble candelabra
+O 0 15197 55 15162      a small red marble candelabra
+O 0 15197 55 15163      a small red marble candelabra
+O 0 15197 55 15164      a small red marble candelabra
+O 0 15197 55 15165      a small red marble candelabra
+O 0 15197 55 15166      a small red marble candelabra
+O 0 15197 55 15167      a small red marble candelabra
+O 0 15197 55 15168      a small red marble candelabra
+O 0 15197 55 15169      a small red marble candelabra
+O 0 15197 55 15170      a small red marble candelabra
+O 0 15197 55 15171      a small red marble candelabra
+O 0 15190 1 15172       a small red mahogony table with an incense burner on it
+O 0 15197 55 15172      a small red marble candelabra
+O 0 15197 55 15173      a small red marble candelabra
+O 0 15197 55 15174      a small red marble candelabra
+O 0 15197 55 15175      a small red marble candelabra
+O 0 15197 55 15176      a small red marble candelabra
+O 0 15197 55 15177      a small red marble candelabra
+O 0 15197 55 15178      a small red marble candelabra
+O 0 15197 55 15179      a small red marble candelabra
+O 0 15197 55 15180      a small red marble candelabra
+O 0 15197 55 15181      a small red marble candelabra
+O 0 15197 55 15182      a small red marble candelabra
+O 0 15197 55 15183      a small red marble candelabra
+O 0 15197 55 15184      a small red marble candelabra
+O 0 15197 55 15185      a small red marble candelabra
+O 0 15197 55 15186      a small red marble candelabra
+O 0 15197 55 15187      a small red marble candelabra
+O 0 15197 55 15188      a small red marble candelabra
+O 0 15197 55 15189      a small red marble candelabra
+O 0 15197 55 15190      a small red marble candelabra
+O 0 15197 55 15191      a small red marble candelabra
+O 0 15197 55 15192      a small red marble candelabra
+O 0 15197 55 15193      a small red marble candelabra
+O 0 15197 55 15194      a small red marble candelabra
+O 0 15197 55 15195      a small red marble candelabra
+O 0 15197 9999 15195    a small red marble candelabra
+O 0 15197 55 15196      a small red marble candelabra
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15198 9999 15197    a red velvet cushion
+O 0 15199 9999 15197    a large mahogany table
+O 0 15197 55 15197      a small red marble candelabra
+O 0 15197 55 15198      a small red marble candelabra
+O 0 15198 9999 15199    a red velvet cushion
+O 0 15198 9999 15199    a red velvet cushion
+O 0 15197 55 15199      a small red marble candelabra
+O 0 15197 55 15199      a small red marble candelabra
+O 0 15198 9999 15199    a red velvet cushion
+O 0 15199 9999 15199    a large mahogany table
+O 0 15150 1 15199       a painting
+O 0 15151 1 15199       a painting
+O 0 15152 1 15199       a painting
+M 0 15198 20 15155      a large king snake
+M 0 15198 20 15155      a large king snake
+M 0 15198 20 15157      a large king snake
+M 0 15199 20 15158      a large coral snake
+M 0 15199 20 15159      a large coral snake
+M 0 15199 20 15159      a large coral snake
+M 0 15199 20 15159      a large coral snake
+M 0 15199 20 15159      a large coral snake
+M 0 15198 20 15176      a large king snake
+M 0 15193 3 15176       a red robed priest
+? 0 100 0 E
+E 1 15193 9999 14       robe
+? 0 5 0 E
+E 1 15194 19 3          ruby neck symbol
+M 0 15198 20 15178      a large king snake
+M 0 15198 20 15179      a large king snake
+M 0 15190 8 15180       a mercenary
+Y 0 124 3               3% chance at spiked-titanium
+M 0 15197 8 15181       a mercenary
+M 0 15196 6 15184       a stealthy assassin
+? 0 4 0 E
+E 1 15196 5 19          ruby hilted punch dagger
+M 0 15198 20 15185      a large king snake
+M 0 15191 8 15185       a mercenary
+M 0 15199 20 15186      a large coral snake
+M 0 15199 20 15187      a large coral snake
+M 0 15190 8 15187       a mercenary
+Y 0 124 3               3% chance at spiked-titanium
+M 0 15199 20 15188      a large coral snake
+M 0 15199 20 15188      a large coral snake
+M 0 15198 20 15189      a large king snake
+M 0 15198 20 15189      a large king snake
+M 0 15193 3 15189       a red robed priest
+? 0 100 0 E
+E 1 15193 9999 14       robe
+? 0 5 0 E
+E 1 15194 19 3          ruby neck symbol
+M 0 15191 8 15190       a mercenary
+M 0 15193 3 15190       a red robed priest
+? 0 100 0 E
+E 1 15193 9999 14       robe
+? 0 5 0 E
+E 1 15194 19 3          ruby neck symbol
+M 0 15199 20 15190      a large coral snake
+M 0 15198 20 15190      a large king snake
+M 0 15197 8 15190       a mercenary
+M 0 15198 20 15191      a large king snake
+M 0 15190 8 15191       a mercenary
+Y 0 124 3               3% chance at spiked-titanium
+M 0 15199 20 15191      a large coral snake
+M 0 15198 20 15191      a large king snake
+M 0 15196 6 15191       a stealthy assassin
+? 0 3 0 E
+E 1 15196 5 19          ruby hilted punch dagger
+M 0 15198 20 15191      a large king snake
+M 0 15197 8 15192       a mercenary
+M 0 15194 4 15195       a noble advisor
+M 0 15194 4 15195       a noble advisor
+M 0 15194 4 15196       a noble advisor
+M 0 15194 4 15198       a noble advisor
+M 0 15196 6 15198       a stealthy assassin
+? 0 3 0 E
+E 1 15196 5 19          ruby hilted punch dagger
+M 0 15196 6 15199       a stealthy assassin
+? 0 3 0 E
+E 1 15196 5 19          ruby hilted punch dagger
+M 0 15192 1 15199       Gareth
+? 0 2 0 E
+E 1 15164 5 14          ruby cape
+? 0 2 0 E
+E 1 15165 3 3           vipers fang
+? 0 1 0 E
+E 1 15195 1 19          blade of the viper
+M 0 15195 2 15199       a valet
+M 0 15195 2 15199       a valet
+S
+

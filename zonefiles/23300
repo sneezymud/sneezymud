@@ -1,0 +1,160 @@
+#23300
+Omen - Gnome Antrider Tunnels~
+23399 35 2 1
+
+O 0 23310 1 23310 	western portal out (to arden)
+O 0 23328 1 23328 	eastern portal out (to arden)
+O 0 23315 1 23315	 pool of water (3)
+O 0 23315 2 23317
+O 0 23315 3 23355
+O 0 23361 1 23361 	queen's throne
+
+B 0 23337 12 23302	Fungus (edible)
+B 0 23337 12 23337
+B 0 23337 12 23379
+
+M 0 23301 1 23302 	riding ant (12)
+R 1 23300 1 23302 	  gnome antrider (12)
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23300
+R 1 23300 1 23300
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23303
+R 1 23300 1 23303
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23312
+R 1 23300 1 23312
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23324
+R 1 23300 1 23324
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23337
+R 1 23300 1 23337
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23333
+R 1 23300 1 23333
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23321
+R 1 23300 1 23321
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23329
+R 1 23300 1 23329
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23379
+R 1 23300 1 23379
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23340
+R 1 23300 1 23340
+Y 0 70 3			exoskeleton set (3%)
+M 0 23301 1 23371
+R 1 23300 1 23371
+Y 0 70 3			exoskeleton set (3%)
+M 0 23302 1 23310 	drone ant (10)
+M 0 23302 1 23319
+M 0 23302 1 23315
+M 0 23302 1 23308
+M 0 23302 1 23316
+M 0 23302 1 23323
+M 0 23302 1 23369
+M 0 23302 1 23367
+M 0 23302 1 23352
+M 0 23302 1 23339
+M 0 23303 1 23386 	guard ant (10)
+M 0 23303 1 23388
+M 0 23303 1 23389
+M 0 23303 1 23380
+M 0 23303 1 23396
+M 0 23303 1 23394
+M 0 23303 1 23366
+M 0 23303 1 23342
+M 0 23303 1 23357
+M 0 23303 1 23327
+M 0 23304 1 23384 	queen ant
+? 0 2 0 G
+G 1 23316 2      	   green stone of teleport
+M 0 23308 4 23380	Ant Larva
+M 0 23308 4 23381
+M 0 23308 4 23382
+M 0 23308 4 23383
+M 0 23308 4 23385
+M 0 23308 4 23389
+M 0 23308 4 23390
+M 0 23308 4 23391
+M 0 23305 1 23305	 gnome guard (10)
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23326	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23333	gnome guard
+? 0 13 0 G
+G 1 23312 999   	    glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23347	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23354	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23344	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23368	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23372 	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+? 0 3 0 E
+E 1 23314 11 19  	   energy blade
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23398	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+? 0 3 0 E
+E 1 23314 11 19  	   energy blade
+Y 0 70 3			exoskeleton set (3%)
+M 0 23305 1 23394 	gnome guard
+? 0 13 0 G
+G 1 23312 999    	   glowstone
+? 0 3 0 E
+E 1 23314 11 19  	   energy blade
+Y 0 70 3			exoskeleton set (3%)
+M 0 23306 1 23361	gnome queen
+? 0 5 0 E
+E 1 23313 25 19  	   royal mace
+Y 0 70 3			exoskeleton set (3%)
+M 0 23307 1 23346 	gnome citizen (6)
+? 0 10 0 E
+E 1 23311 999 19 	   ant leg club
+M 0 23307 1 23345	gnome citizen
+? 0 10 0 E
+E 1 23311 999 19 	   ant leg club
+M 0 23307 1 23341	gnome citizen
+? 0 10 0 E
+E 1 23311 999 19 	   ant leg club
+M 0 23307 1 23350	gnme citizen
+? 0 10 0 E
+E 1 23311 999 19 	   ant leg club
+M 0 23307 1 23367	gnome citizen
+? 0 10 0 E
+E 1 23311 999 19 	   ant leg club
+M 0 23307 1 23360	gnome citizen
+? 0 10 0 E
+E 1 23311 999 19	    ant leg club
+
+M 0 23309 1 23399       gnome arch magus of spiders
+Y 0 103 2                   spider set
+? 0 99 0 G
+G 1 23317 9999              key made of webbing
+C 1 23310 1 23399      spider pet
+C 1 23310 2 23399  
+
+S
+

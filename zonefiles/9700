@@ -1,0 +1,15 @@
+#9700
+Mithros - Jungle Roads from Volcano~
+9725 35 2 1
+D 0 9701 0 1          Secret North out of path
+D 0 9720 1 1          Secret East to Cannibal Zone
+
+M 0 9726 2 9721         deformed monster hounds
+M 0 9726 2 9721
+
+M 0 9727 1 9722         strange cleric near volcano (ranger L21 quest)
+? 0 5 0 E
+E 1 9772 9999 3           blood-stained neck symbol
+
+S
+

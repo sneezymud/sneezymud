@@ -1,0 +1,780 @@
+#31750
+Peel - Grimhaven Bank~
+31799 30 2 1
+D 0 31758 0 1        Grimhaven First Kingdom Bank -> Small Side Room
+D 0 31761 0 2        Hallway -> Hallway
+D 0 31762 2 2        Hallway -> Hallway
+D 0 31764 0 2        Small Side Room -> Hallway
+D 0 31764 2 1        Small Side Room -> Grimhaven First Kingdom Bank
+D 0 31766 0 1        Hallway -> Break Room
+D 0 31767 2 2        Hallway -> Small Side Room
+D 0 31768 2 1        Break Room -> Hallway
+D 0 31771 1 1        Hallway -> Manager's Office
+D 0 31772 3 1        Manager's Office -> Hallway
+D 0 31779 1 2        Hallway -> Commodity Vault
+D 0 31780 3 2        Commodity Vault -> Hallway
+D 0 31785 1 2        Hallway -> Talen Vault
+D 0 31786 3 2        Talen Vault -> Hallway
+
+M 0 92 1 31758          corporate registry assistant
+O 0 15316 9999 31758   info sign
+
+
+O 0 104 1 31751      teller window
+V 1 0 31752
+O 0 104 1 31752      teller window
+V 1 0 31751
+
+O 0 104 1 31756      teller window
+V 1 0 31755
+O 0 104 1 31755      teller window
+V 1 0 31756
+
+O 0 104 1 31759      teller window
+V 1 0 31760
+O 0 104 1 31760      teller window
+V 1 0 31759
+
+M 0 31764 1 31759    loan officer
+
+X 0 5 31754          a security guard hat [head]
+X 0 3 31759          a plain black tie [neck]
+X 0 4 31755          a light blue dress shirt [body]
+X 0 10 31758         a heavy leather sap glove [hand-right]
+X 0 11 31758         a heavy leather sap glove [hand-left]
+X 0 6 31756          a pair of black dress trousers [leg-right]
+X 0 7 31756          a pair of black dress trousers [leg-left]
+X 0 8 31757          a polished black dress shoe [foot-right]
+X 0 9 31757          a polished black dress shoe [foot-left]
+X 0 19 31760         a security guard's nightstick [hold-left]
+
+O 0 31764 9999 31764   warning sign
+
+M 0 31761 1 31758      captain of the money train
+? 0 5 0 E
+E 1 303 300 19		 broadsword
+Y 0 11 1                 platemail
+
+M 0 31750 1 31752      a bank teller
+G 1 31751 9999           a small silver key
+G 1 31761 9999           a small silver key
+O 0 31762 9999 31752    a steel lockbox
+P 1 37 9999 31762        large pile of talens
+V 1 0 500000             500000 talens
+
+M 0 31750 1 31755      a bank teller
+G 1 31751 9999           a small silver key
+G 1 31761 9999           a small silver key
+O 0 31762 9999 31755    a steel lockbox
+P 1 37 9999 31762        large pile of talens
+V 1 0 500000             500000 talens
+
+M 0 31750 1 31760      a bank teller
+G 1 31751 9999           a small silver key
+G 1 31761 9999           a small silver key
+O 0 31762 9999 31760    a steel lockbox
+P 1 37 9999 31762        large pile of talens
+V 1 0 500000             500000 talens
+
+M 0 31750 1 31768      a bank teller
+G 1 31751 9999           a small silver key
+
+M 0 31752 1 31762      a bank security guard
+*M 0 29212 1 31762      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31765      a bank security guard
+*M 0 29212 1 31765      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31766      a bank security guard
+*M 0 29212 1 31766      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31770      a bank security guard
+*M 0 29212 1 31770      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31776      a bank security guard
+*M 0 29212 1 31776      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31782      a bank security guard
+*M 0 29212 1 31782      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31783      a bank security guard
+*M 0 29212 1 31783      a bank security guard
+Z 0 0 100                security guard equipment
+M 0 31752 1 31785      a bank security guard
+*M 0 29212 1 31785      a bank security guard
+Z 0 0 100                security guard equipment
+
+M 0 31751 1 31772       a bank manager
+*M 0 29211 1 31772       a bank manager
+G 1 31750 9999           a small silver key
+
+M 0 31758 1 31785      a burly bank vault guard - talens
+*M 0 29217 1 31785      a burly bank vault guard - talens
+G 1 31753 9999           a small silver key
+O 0 37 9999 31786       large pile of talens
+V 1 0 2000000          2000000 talens
+O 0 37 9999 31787       large pile of talens
+V 1 0 2000000          2000000 talens
+
+M 0 31758 1 31779      a burly bank vault guard - commodities
+*M 0 29217 1 31779      a burly bank vault guard - commodities
+G 1 31752 9999           a small silver key
+O 0 31763 9999 31780    pallet
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+
+
+O 0 31763 9999 31781    pallet
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+
+O 0 31763 9999 31774    pallet
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+
+O 0 31763 9999 31775    pallet
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 50 9999 31763        gold bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 51 9999 31763        silver bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 55 9999 31763        platinum bar 
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 56 9999 31763        titanium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 59 9999 31763        admantium bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 57 9999 31763        mithril bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 58 9999 31763        athanor bar
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 517 9999 31763       large diamond
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 515 9999 31763       large ruby
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+P 1 516 9999 31763       large emerald
+
+
+M 0 31757 1 31774      a vault security golem
+M 0 31757 1 31775      a vault security golem
+M 0 31757 1 31780      a vault security golem
+M 0 31757 1 31781      a vault security golem
+M 0 31757 1 31786      a vault security golem
+M 0 31757 1 31787      a vault security golem
+
+S
+

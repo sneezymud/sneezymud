@@ -1,0 +1,136 @@
+#9625
+Peel - Sunken Ship~
+9649 30 0 1
+D 0 9625 4 1         Kelp Forest -> Myrian Ocean
+D 0 9625 5 1         Kelp Forest -> Crow's Nest
+D 0 9626 5 1         Crow's Nest -> Ship Mast
+D 0 9627 4 1         Ship Mast -> Crow's Nest
+D 0 9641 2 1         Mess Hall -> Below Decks
+D 0 9642 1 1         Bunk Room -> Below Decks
+D 0 9643 3 1         Below Decks -> Bunk Room
+D 0 9643 5 2         Below Decks -> Cramped Bilge
+D 0 9644 0 1         Below Decks -> Mess Hall
+D 0 9644 2 1         Below Decks -> First Mate's Room
+D 0 9647 0 1         First Mate's Room -> Below Decks
+D 0 9648 4 2         Cramped Bilge -> Below Decks
+
+
+B 0 9634 1 9648      the heart of an angel
+
+M 0 9634 2 9646         the lich of Captain Betham
+G 1 9636 9999            a shackle key
+? 0 10 0 E
+E 1 9632 50 14            a surcoat of the black sun [back]
+? 0 10 0 E
+E 1 9628 9999 19          an unholy cutlass dripping with blood [hold-left]
+
+M 0 9630 2 9626         the wraith of a lookout
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9636 2 9631         the wraith of the boatswain
+? 0 10 0 E
+E 1 9627 9999 19          a ghostly shiv [hold-left]
+E 1 9625 9999 19          a shiv
+
+M 0 9625 2 9633         the ghost of the missionary Tudy
+
+M 0 9632 2 9634         the wraith of the first mate
+G 1 9637 9999            a shackle key
+? 0 10 0 E
+E 1 9633 30 2             a sunstone ring [finger-left]
+? 0 10 0 E
+E 1 9629 9999 19          a gleaming cutlass smeared with poison [hold-left]
+
+M 0 9626 2 9635         the wraith of the navigator
+? 0 10 0 E
+E 1 9630 50 14            a heavy navigator's cloak [back]
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9631 2 9640         the wraith of the cook
+? 0 10 0 E
+E 1 9631 9999 5           a black eyepatch with a skull design [head]
+
+M 0 9629 2 9641         the wraith of a sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9629 2 9641         the wraith of a sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9629 2 9641         the wraith of a sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9629 2 9641         the wraith of a sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9629 2 9641         the wraith of a sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+M 0 9633 2 9642         the wraith of a pirate
+
+M 0 9633 2 9642         the wraith of a pirate
+
+M 0 9633 2 9642         the wraith of a pirate
+
+A 0 9628 9647
+M 0 9627 10 -99		pirate
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9628 10 -99		sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9635 10 -99		brigand
+E 1 9625 9999 19          a shiv
+
+A 0 9628 9647
+M 0 9627 10 -99		pirate
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9628 10 -99		sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9635 10 -99		brigand
+E 1 9625 9999 19          a shiv
+
+A 0 9628 9647
+M 0 9627 10 -99		pirate
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9628 10 -99		sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9635 10 -99		brigand
+E 1 9625 9999 19          a shiv
+
+A 0 9628 9647
+M 0 9627 10 -99		pirate
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9628 10 -99		sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9635 10 -99		brigand
+E 1 9625 9999 19          a shiv
+
+A 0 9628 9647
+M 0 9627 10 -99		pirate
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9628 10 -99		sailor
+E 1 9626 9999 19          a cutlass [hold-left]
+
+A 0 9628 9647
+M 0 9635 10 -99		brigand
+E 1 9625 9999 19          a shiv
+
+S
+
+

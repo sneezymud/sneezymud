@@ -1,0 +1,99 @@
+#8433
+Stonecold - Serpent Stronghold~
+8450 30 2 1
+
+D 0 8433 4 1	Entry Door
+D 0 8400 5 1
+D 0 8434 1 2	Accounting Office
+D 0 8435 3 2
+D 0 8433 3 2	Clerk's Office
+D 0 8436 1 2
+D 0 8435 0 2	North Cell
+D 0 8438 2 2
+D 0 8435 1 2	East Cell
+D 0 8440 3 2
+D 0 8435 6 2	Northeast Cell
+D 0 8439 9 2
+D 0 8435 2 2	South Cell
+D 0 8441 0 2
+D 0 8434 3 1	Storage Room
+D 0 8442 1 1
+D 0 8437 3 1	Interagation Room
+D 0 8444 1 1
+D 0 8444 0 2	Interagation Cell
+D 0 8445 2 2
+D 0 8446 1 1	Owner's Suite
+D 0 8447 3 1
+D 0 8447 1 1	Dining Room
+D 0 8450 3 1
+D 0 8447 2 1	Guest Room
+D 0 8448 0 1
+D 0 8447 8 1	Bath
+D 0 8449 7 1
+
+O 0 14361 9999 8433   chandelier
+O 0 1201  9999 8433   torch
+O 0 8433  9999 8433   antique couch
+O 0 8437  9999 8437   antique table
+O 0 8432  9999 8436   wastebasket
+O 0 14362 9999 8436   desk
+O 0 8438  9999 8438   pile talens
+O 0 50    9999 8438   commodity ignot 
+O 0 51    9999 8438   commodity silver bar
+O 0 64    9999 8438   commodity bronze ignot
+O 0 15251 9999 8440   long sword
+O 0 305   9999 8440   small dagger
+O 0 1000  9999 8440   training helm
+O 0 8441 9999  8441   fur coat
+O 0 8400 9999 8442    slot machine
+O 0 10118 9999 8444   Fern need low approval
+O 0 14362 9999 8444   Desk
+O 0 8446  9999 8446   vase bronze
+O 0 8446  9999 8446
+O 0 8448 9999 8447    Bed fur large
+O 0 8434 9999 8434    table cherry wood
+O 0 3305 9999 8443    Bench need low approval
+O 0 8450  1   8450    painting (Window)
+O 0 8447 9999 8447    nightstand
+P 1 8442  100 8447    Book tattered
+O 0 22   9999 8448    Bed 
+O 0 8433 9999 8448    couch antique
+O 0 701  9999 8450    Table 
+O 0 8431 9999 8445    Bed linen
+
+M 0 8435 1 8435    Miser Ben (quest mob deik)
+Y 0 80 3              Wide leather
+M 0 8436 1 8436    Casino Clerk
+Y 0 9 3               
+M 0 8437 1 8433    lounge guard
+Y 0 1 5               soft leather
+M 0 8437 1 8434    lounge guard
+Y 0 1 5
+M 0 8438 2 8437   lounge guard type 1
+Y 0 1 2
+M 0 8439 1 8438    lounge guard type 2
+Y 0 1 5
+M 0 8440 1 8440    lounge guard type 3
+Y 0 8 2
+M 0 8441 1 8441    lounge guard type 4
+Y 0 7 2
+M 0 8442 1 8442    lounge guard type 5
+Y 0 7 2
+M 0 8443 2 8443    lounge guard type 6
+Y 0 9 3
+M 0 8444 1 8444    pit boss
+Y 0 46 10
+M 0 8447 1 8447    Casino owner
+G 1 8445 9999        clasp key
+M 0 8448 1 8448    lounge escort
+Y 0 46 5
+M 0 8433 1 8445    Kuan
+? 0 50 0 E
+E 1 23608 9999 19     quarter staff
+Y 0 46 2
+M 0 8434 1 8433    Disgruntled gambler
+M 0 8434 1 8434
+M 0 8434 1 8437
+M 0 8434 1 8446
+S
+

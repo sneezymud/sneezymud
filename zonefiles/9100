@@ -1,0 +1,247 @@
+#9100
+Damescena - Fog Islands~
+9299 40 2 0
+
+D 0 9131 5 1	Hidden Entrance To Hideout
+D 0 9132 4 1
+D 0 9132 1 2	Door to Schmuggeins Private Quarters
+D 0 9133 1 2
+D 0 9143 1 1	Door to Kitchen At Barmeks
+D 0 9144 3 1
+D 0 9144 1 2	Door to Seawall at Barmeks
+D 0 9145 3 2
+D 0 9174 4 1	Vine to Canopy
+D 0 9182 5 1
+D 0 9205 5 1	Vine to Canopy
+D 0 9246 4 1
+D 0 9228 3 1	Door to Sty
+D 0 9247 1 1
+D 0 9248 2 1	Door to Circes House
+D 0 9249 0 1
+D 0 9249 1 1	Door to Circes Bedroom
+D 0 9250 3 1
+O 0 9114 99 9114	Opalescent Shell
+O 0 9116 1 9116		Dirty Well
+O 0 9118 2 9118		Coconut Palm
+O 0 9182 99 9118	Coconut
+O 0 9182 99 9118	Coconut
+O 0 9182 99 9118	Coconut
+O 0 9118 2 9110		Coconut Palm
+O 0 9182 99 9110	Coconut
+O 0 9133 1 9133		Old Wooden Chest
+P 1 16159 1 9133        5000 talens 
+M 0 9100 2 9100		Wiry Fisherman
+M 0 9100 2 9100		Wiry Fisherman
+M 0 9100 1 9103		Wiry Fisherman
+M 0 9100 1 9105		Wiry Fisherman
+M 0 9100 2 9107		Wiry Fisherman
+M 0 9100 2 9107		Wiry Fisherman
+M 0 9110 1 9110		Carefree Surfer
+G 1 9110 99		  Spiny Shell
+M 0 9110 2 9114		Carefree Surfer
+G 1 9110 99		  Spiny Shell
+M 0 9110 1 9118		Carefree Surfer
+G 1 9110 99		  Spiny Shell
+M 0 9113 1 9113		Island Witch Doctor
+G 1 9113 9999             Holy Fishbone
+M 0 9115 2 9115		Bedraggled Male Child
+M 0 9115 1 9112		Bedraggled Male Child
+M 0 9115 1 9120		Bedraggled Male Child
+M 0 9115 1 9111		Bedraggled Male Child
+M 0 9116 1 9115		Bedraggled Female Child
+M 0 9116 1 9116		Bedraggled Female Child
+M 0 9116 1 9120		Bedraggled Female Child
+M 0 9116 1 9111		Bedraggled Female Child
+M 0 9116 2 9117		Bedraggled Female Child
+M 0 9116 1 9119		Bedraggled Female Child
+M 0 9119 2 9119		Bewildered Female
+M 0 9119 1 9112		Bewildered Female
+M 0 9120 1 9120		Bewildered Male
+M 0 9120 1 9112		Bewildered Male
+M 0 9127 2 9127		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 2 9127		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 1 9131		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 1 9130		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 2 9124		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 2 9124		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 1 9123		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9127 1 9106		Nasty Smuggler
+? 0 5 0 E
+E 1 9127 50 19		  Cutlass
+M 0 9132 1 9132		Schmuggein
+G 1 9134 1                 key
+? 0 3 0 E
+E 1 9132 1 11		  Beastmaster
+M 0 9133 1 9133		Luscious Property of Schmuggein
+M 0 9136 1 9136		Carnivorous Plant
+M 0 9136 1 9134		Carnivorous Plant
+M 0 9136 1 9137		Carnivorous Plant
+M 0 9141 3 9141		Hula Dancer
+M 0 9141 3 9141		Hula Dancer
+M 0 9141 3 9141		Hula Dancer
+M 0 9142 1 9142		Waiter
+M 0 9142 1 9143		Waiter
+M 0 9142 1 9139		Waiter
+M 0 9142 1 9140		Waiter
+M 0 9145 1 9138		Barmek
+M 0 9144 1 9144		Duplicitous Cook
+M 0 9147 5 9147		Laughing Gull
+M 0 9147 5 9147		Laughing Gull
+M 0 9147 5 9147		Laughing Gull
+M 0 9147 5 9147		Laughing Gull
+M 0 9147 5 9147		Laughing Gull
+M 0 9147 5 9164		Laughing Gull
+M 0 9147 5 9164		Laughing Gull
+M 0 9147 5 9164		Laughing Gull
+M 0 9147 5 9164		Laughing Gull
+M 0 9147 3 9100		Laughing Gull
+M 0 9147 3 9100		Laughing Gull
+M 0 9147 2 9110		Laughing Gull
+M 0 9147 2 9110		Laughing Gull
+M 0 9147 1 9170		Laughing Gull
+M 0 9147 3 9299		Laughing Gull
+M 0 9147 3 9299		Laughing Gull
+M 0 9147 3 9299		Laughing Gull
+M 0 9164 1 9164		Fiddler Crab
+M 0 9164 1 9164		Fiddler Crab
+M 0 9164 1 9164		Fiddler Crab
+M 0 9164 1 9170		Fiddler Crab
+M 0 9164 1 9170		Fiddler Crab
+M 0 9164 3 9170		Fiddler Crab
+M 0 9165 20 9158        Yellow Butterfly
+M 0 9165 20 9158	Yellow Butterfly
+M 0 9165 20 9158	Yellow Butterfly
+M 0 9165 20 9158	Yellow Butterfly
+M 0 9172 1 9172		Nesting Crocodile
+M 0 9182 3 9182		Chattering Monkey
+M 0 9182 3 9182		Chattering Monkey
+M 0 9183 10 9183	Large Snake
+M 0 9187 10 9187	Piranha
+M 0 9187 10 9187	Piranha
+M 0 9187 10 9187	Piranha
+*M 0 9187 10 9180	Piranha
+*M 0 9187 10 9180	Piranha
+*M 0 9187 10 9180	Piranha
+M 0 9187 10 9178	Piranha
+M 0 9187 10 9178	Piranha
+M 0 9187 10 9178	Piranha
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9188 20 9188	Leech
+M 0 9190 2 9190		Greedy Monkey
+M 0 9190 2 9190		Greedy Monkey
+M 0 9191 2 9191		Large Monkey
+M 0 9200 1 9199		Swarm of Bees
+M 0 9203 3 9203		Bird Catcher Spider
+M 0 9203 3 9203		Bird Catcher Spider
+M 0 9203 2 9209		Bird Catcher Spider
+M 0 9203 2 9208		Bird Catcher Spider
+M 0 9203 2 9202		Bird Catcher Spider
+M 0 9232 1 9232		Large Black Cave Bear
+M 0 9235 1 9235		Bald Eagle
+M 0 9239 1 9239		Copperhead
+M 0 9239 1 9244		Copperhead
+M 0 9240 2 9240		Kid
+M 0 9240 2 9240		Kid
+M 0 9240 1 9241		Kid
+M 0 9240 2 9237		Kid
+M 0 9240 3 9238		Kid
+M 0 9240 3 9238		Kid
+M 0 9240 3 9238		Kid
+M 0 9240 1 9239		Kid
+M 0 9241 1 9241		Mama Goat
+M 0 9241 1 9238		Mama Goat
+M 0 9241 2 9240		Mama Goat
+M 0 9242 1 9242		Papa Goat
+M 0 9245 2 9252		Pineapple Harvester
+G 1 9245 99		  Pineapple
+M 0 9245 2 9252		Pineapple Harvester
+G 1 9245 99		  Pineapple
+? 0 5 0 E
+E 1 9252 15 5		  Broad Brimmed Pineapple Hat
+M 0 9245 2 9256		Pineapple Harvester
+G 1 9245 99		  Pineapple
+M 0 9245 2 9256		Pineapple Harvester
+G 1 9245 99		  Pineapple
+? 0 5 0 E
+E 1 9252 15 5		  Broad Brimmed Pineapple Hat
+M 0 9245 1 9260		Pineapple Harvester
+G 1 9245 99		  Pineapple
+M 0 9250 1 9250		Circe
+M 0 9252 2 9252		Green Snake
+M 0 9252 2 9252		Green Snake
+M 0 9252 2 9254		Green Snake
+M 0 9252 2 9254		Green Snake
+M 0 9252 2 9275		Green Snake
+M 0 9252 2 9275		Green Snake
+M 0 9252 2 9281		Green Snake
+M 0 9252 2 9281		Green Snake
+M 0 9254 1 9254		Bamboo Worker
+M 0 9254 2 9258		Bamboo Worker
+M 0 9254 2 9258		Bamboo Worker
+M 0 9254 2 9262		Bamboo Worker
+M 0 9254 2 9262		Bamboo Worker
+M 0 9275 1 9275		Cane Cutter
+? 0 5 0 E
+E 1 9275 15 19		  Cane Knife
+M 0 9275 2 9276		Cane Cutter
+M 0 9275 2 9276		Cane Cutter
+? 0 5 0 E
+E 1 9275 15 19		  Cane Knife
+M 0 9275 2 9277		Cane Cutter
+M 0 9275 2 9277		Cane Cutter
+? 0 5 0 E
+E 1 9275 15 19		  Cane Knife
+M 0 9281 1 9281		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+M 0 9281 1 9285		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+M 0 9281 1 9284		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+M 0 9281 1 9292		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+M 0 9281 1 9293		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+M 0 9281 1 9289		Rice Gatherer
+G 1 9281 50 		  Rice Sack
+? 0 2 0 E
+E 1 9288 30 19		  Scythe
+S
+

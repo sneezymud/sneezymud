@@ -1,0 +1,180 @@
+#8900
+Coral - Sparse Forest (Haon-Dor)~
+8949 30 2 1
+
+*******
+*Doors
+*******
+D 0 8907 0 1	-door to tent
+D 0 8904 2 1     
+
+D 0 8918 9 1	-secret door to inside the tree
+D 0 8913 6 1     
+
+D 0 8942 1 1    -secret from path to pygmy path
+
+D 0 8946 5 1	-trapdoor do access tunnel
+D 0 8926 4 1     
+
+*******
+*Local Sets
+*******
+
+*Traders
+X 0 5  8910	-muddy cap
+X 0 10 8911	-muddy gauntlet
+X 0 11 8911	-muddy gauntlet
+X 0 15 8912	-muddy belt
+
+*******
+*Furniture
+*******
+O 0 8935 1 8904     -hole
+
+O 0 8937 1 8919     -desk
+
+O 0 8944 5 8936     -cushion            
+O 0 8944 5 8937     -
+O 0 8944 5 8938     -
+O 0 8944 5 8943     -
+O 0 8944 5 8944     -
+
+O 0 8945 1 8921     - spring
+O 0 8945 2 8927     - 
+
+O 0 8933 5 8936     -candle
+O 0 8933 5 8937     -
+O 0 8933 5 8938     -
+O 0 8933 5 8943     -
+O 0 8933 5 8944     -
+
+O 0 8940 5 8939     -chair
+O 0 8940 5 8939     -
+O 0 8940 5 8939     -
+O 0 8940 5 8939     -
+O 0 8940 5 8939     -
+
+O 0 8939 1 8939     -table
+
+O 0 8946 6 8939     -lamp
+O 0 8946 6 8940     -
+O 0 8946 6 8941     -
+O 0 8946 6 8942     -
+O 0 8946 6 8945     -
+O 0 8946 6 8946     -
+
+O 0 8934 5 8905     -twig
+
+B 0 8941 5 8919     -basket
+P 1 8936 10 8941     -apple 
+P 1 8936 10 8941     -apple
+
+O 0 8941 5 8919     -basket
+P 1 8930 10 8941     -orange
+P 1 8930 10 8941     -orange
+P 1 8930 10 8941     -orange
+
+O 0 8941 5 8945     -basket
+P 1 8931 10 8941     -lime
+P 1 8931 10 8941     -lime
+P 1 8936 10 8941     -apple 
+
+O 0 8941 5 8945     -basket
+P 1 8932 10 8941     -pineapple
+
+O 0 8941 5 8945     -basket
+P 1 8931 10 8941     -lime
+P 1 8930 10 8941     -orange
+
+*******
+*food
+*******
+B 0 8936 10 8928	-apple
+B 0 8936 10 8921	-
+B 0 8931 10 8914	-lime
+B 0 8930 10 8925	-orange
+
+*******
+*sparrow
+*******
+M 0 8901 1 8949
+M 0 8901 1 8948
+M 0 8901 1 8902
+
+*******
+*hobbit trader
+*******
+M 0 8904 1 8902
+Z 0 0 3		-trader set
+
+M 0 8904 1 8905
+Z 0 0 3		-trader set
+
+M 0 8904 1 8911
+Z 0 0 3		-trader set
+
+M 0 8904 1 8912
+Z 0 0 3		-trader set
+
+M 0 8904 1 8916
+Z 0 0 3		-trader set
+
+M 0 8904 1 8917
+Z 0 0 3		-trader set
+
+M 0 8904 1 8934
+Z 0 0 3		-trader set
+
+*******
+*mud workers
+*******
+M 0 8900 1 8929
+M 0 8900 1 8931
+M 0 8900 1 8933
+M 0 8900 1 8910
+M 0 8900 1 8909
+M 0 8900 1 8907
+M 0 8900 1 8942
+M 0 8900 1 8940
+
+*lazy workers
+M 0 8903 1 8944
+M 0 8903 1 8938
+M 0 8903 1 8936
+
+*worker's guard
+M 0 8909 2 8939
+Y 0 92 4		-bark set
+
+M 0 8909 2 8939
+Y 0 92 4		-bark set
+
+*******
+*hobbit sentries
+*******
+M 0 8911 1 8935
+Y 0 92 4		-bark set
+
+M 0 8912 1 8935
+Y 0 92 4	-bark set
+
+*******
+*accountant
+*******
+M 0 8902 1 8919
+
+*******
+*manager
+*******
+M 0 8910 1 8945
+? 0 2 0 E
+E 1 8925 9999 19	-iron dagger
+
+*******
+*traveler - this mob will load a key when the expansion i'm thinking of is
+*ready
+*******
+M 0 8905 1 8904
+
+S
+

@@ -1,0 +1,126 @@
+#28800
+Bartruce - Temple of the Undead~
+28864 50 1 1
+
+D 0 28822 3 1
+D 0 28825 1 1
+D 0 28826 3 1
+D 0 28824 1 1
+D 0 28826 5 2
+D 0 28865 4 2
+D 0 28830 2 1
+D 0 28827 0 1
+D 0 28832 2 1
+D 0 28829 0 1
+D 0 28831 2 1
+D 0 28828 0 1
+D 0 28838 1 1
+D 0 28837 3 1
+D 0 28838 2 1
+D 0 28839 0 1
+D 0 28802 0 2
+D 0 28803 3 3
+
+O 0 28811 1 28800	SIGN OF WARNING
+M 0 28815 1 28802 	Temple Guardian
+G 1 28802 10
+? 0 2 0 E
+E 1 28812 20 18         black steel greatsword
+M 0 28807 1 28806        Sentry
+M 0 28807 1 28807        Sentry
+M 0 28808 1 28825        Evil Cleric
+? 0 20 0 G
+G 1 509 75			titanium symbols
+? 0 20 0 G
+G 1 510 75
+? 0 20 0 G
+G 1 511 75
+? 0 3 0 E
+E 1 1140 5 5                   runic helm
+? 0 3 0 E
+E 1 1141 5 3                   runic pendant
+? 0 3 0 E
+E 1 1142 5 4                    runic plate
+? 0 3 0 E
+E 1 1143 10 12                  runic sleeve
+? 0 3 0 E
+E 1 1147 10 6                 runic stocking
+? 0 3 0 E
+E 1 1144 10 10                  runic gauntlet
+? 0 3 0 E
+E 1 1148 10 9                 runic sandal
+? 0 3 0 E
+E 1 1145 5 15                   runic belt
+? 0 3 0 E
+E 1 1146 10 16                   runic bracelet
+? 0 3 0 E
+E 1 1149 5 1                  runic ring
+E 1 1149 5 1                  runic ring
+? 0 3 0 E
+E 1 1150 5 18                  runic shield
+M 0 28804 1 28826        Priest
+? 0 30 0 G
+G 1 510 75			titanium symbol
+? 0 50 0 E
+G 1 28809 35          Ruby Potion
+G 1 28809 35
+M 0 28805 1 28830        Worshipper
+M 0 28805 1 28832        Worshipper
+M 0 28801 1 28839        Bishop Seklor
+G 1 28804 1 			Large Ruby Key
+? 0 50 0 E
+G 1 510 75			titanium symbol
+? 0 3 0 E
+E 1 1140 5 5                   runic helm
+? 0 3 0 E
+E 1 1141 5 3                   runic pendant
+? 0 3 0 E
+E 1 1142 5 4                    runic plate
+? 0 3 0 E
+E 1 1143 10 12                  runic sleeve
+? 0 3 0 E
+E 1 1147 10 6                 runic stocking 
+? 0 3 0 E
+E 1 1144 10 10                  runic gauntlet
+? 0 3 0 E
+E 1 1148 10 9                 runic sandal 
+? 0 3 0 E
+E 1 1145 5 15                   runic belt
+? 0 3 0 E
+E 1 1146 10 16                   runic bracelet
+? 0 3 0 E
+E 1 1149 10 1                  runic ring 
+? 0 3 0 E
+E 1 1150 5 18			runic shield
+? 0 3 0 E
+E 1 1151 5 14			runic cape
+M 0 28810 1 28856        Caretaker
+M 0 28811 1 28843        Gravedigger
+M 0 28812 1 28851        Corpse
+M 0 28812 1 28854        Corpse
+M 0 28812 1 28841        Corpse
+M 0 28812 1 28860        Corpse
+M 0 28802 1 28862        Quazimoto
+G 1 28808 1           Chest Key
+? 0 1 0 E
+E 1 28803 5 10          Ruby Gauntlet
+? 0 1 0 E
+E 1 28801 5 7           ruby legging 
+O 0 28807 1 28864       Ruby Chest
+? 0 65 0 P
+P 1 28810 1 28807       Put Ruby rod in chest
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28861       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+M 0 28803 1 28863       Rabid Bat
+S
+

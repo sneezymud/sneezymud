@@ -1,0 +1,275 @@
+#5300
+Stonecold/Rixanne - Lan'Quin Forest~
+5619 40 2 1
+
+D 0 5511 1 1          Stone Block gate
+D 0 5524 3 1          Slave pen
+D 0 5525 2 1
+D 0 5526 2 1
+D 0 5540 1 1          Officers Quarters
+D 0 5543 1 1          West Fence
+D 0 5544 3 1          East Fence
+D 0 5547 0 1          South Fence
+D 0 5549 3 1          Tents
+D 0 5548 0 1          SEast fence
+D 0 5562 2 1          Hallway
+D 0 5564 2 1
+D 0 5568 0 1          Treasure room
+D 0 5569 2 1          Grums Throne
+D 0 5570 0 1
+D 0 5570 2 1
+D 0 5574 2 1          Hallway
+D 0 5545 0 1
+D 0 5579 2 2          Before Cell
+D 0 5582 0 1          Locked Cell
+D 0 5582 5 2
+D 0 5528 4 2          Trapdoor
+D 0 5514 2 1
+D 0 5522 0 1
+D 0 5526 2 1          Cages
+D 0 5532 0 1
+D 0 5525 2 1          Slave Pen
+D 0 5527 0 1
+D 0 5527 2 1
+D 0 5533 0 1          Slave pen
+D 0 5581 3 1   
+D 0 5584 1 1          Trolloc Lair
+D 0 5502 0 1          Temple Entrance
+D 0 5503 3 1
+D 0 5460 2 1          Chamber
+D 0 5460 0 2
+D 0 5461 2 2          Treasure room
+D 0 5452 0 1          Fairy Cave
+D 0 5493 3 1          Magi Lair
+D 0 5497 1 1          Treasure Magi
+D 0 5481 2 1          Tree Entrance
+D 0 5367 0 1
+D 0 5368 2 2          Secret Chamber
+D 0 5372 0 2
+D 0 5374 0 1
+D 0 5374 1 1
+D 0 5374 2 1
+D 0 5377 0 1
+D 0 5376 3 1
+D 0 5376 7 1
+D 0 5375 2 1
+D 0 5375 8 1
+O 0 152 16 5424        Forge
+O 0 152 16 5424        Forge
+O 0 151 16 5424        Anvil
+O 0 151 16 5424        Anvil
+O 0 5494 9999 5428    Pot Poison
+O 0 5494 9999 5494    Pot Poison
+O 0 10935 9999 5414   Spring water
+O 0 5458 9999 5498    Brownie Throne
+O 0 5411 9999 5456    Throne silver pixie
+O 0 7718 9999 5353    Pool/fountain
+O 0 5500  1   5500    Tyrog coffin/Window
+O 0 5499  1   5499    Kinji/Window
+O 0 5498  1   5498    Ferin/Window
+O 0 5503  1   5503    Coffin/Chest
+P 1 5506  1   5503       Corpse/Therin Altair
+P 1 5504  1   5503       Silver Staff (spec pro item)
+O 0 5509  2   5510    Book  Zelpth
+O 0 5460  1   5460    Stone Chest
+P 1 11116 1   5460       Large Gem
+O 0 701  9999 5520    Table Military
+O 0 26   9999 5495    Bed Ogre
+O 0 5362 9999 5362    Altar
+O 0 10762 9999 5372   Wardrob
+O 0 5372 9999 5372    Oak table
+O 0 5373 9999 5373    Window
+O 0 5380 9999 5380    Window
+O 0 20015 9999 5461   Large pile talens
+O 0 5462 9999 5461    Pile Armor
+O 0 5463 9999 5461    Sword of death
+
+M 0 5347 1 5347     Hobbit Quest
+
+
+M 0 5416 2 5416    Fish green striped
+M 0 5416 2 5416
+M 0 5416 2 5412
+M 0 5416 1 5418
+M 0 5416 2 5464
+M 0 5416 1 5477
+M 0 5417 3 5416    Fish Silvery
+M 0 5417 4 5468
+M 0 5417 3 5470
+M 0 5443 1 5443    Dark Overlord
+M 0 5444 1 5483
+M 0 5444 1 5599
+M 0 5402 1 5402    Elven Ranger
+? 0 10 0 E
+E 1 300  9999  19         longsword simple
+M 0 5402 1 5402
+M 0 5457 1 5457    Queen Sprite
+M 0 5400 3 5457    Lady Sprite
+G 1 5412  9999            Sprite lamp
+M 0 5456 1 5456    Pixie Queen
+M 0 7805 5 5456    Pixie
+G 1 227  9999             Pixie torch
+M 0 7817 5 5456    Pixie
+M 0 5428 3 5428    Witch
+M 0 5431 2 5431    Scarecrow
+M 0 5433 1 5433    Child
+M 0 5452 2 5452    Brownie warrior
+M 0 5452 2 5460
+M 0 5458 1 5458    Brownie King
+G 1 5459 9999             Key Stonechest
+? 0 5 0 E
+E 1 5457 9999  5          Brownie hat
+M 0 5459 4 5459    Faerie
+G 1 5461 9999             Key fairy Key
+M 0 5494 1 5494    Troll Cook
+M 0 5497 1 5497    Ogre Magi
+M 0 3711 2 5491    Dire Wolf /need LOW approvel
+M 0 5303 2 5340    Spotted Deer
+M 0 5303 2 5343
+M 0 5303 2 5331
+M 0 5303 2 5313
+M 0 5303 2 5344
+M 0 5303 2 5399
+M 0 5303 2 5318
+M 0 5304 2 5333    Forest Snake
+M 0 5304 2 5304
+M 0 5304 2 5309
+M 0 5304 2 5314
+M 0 5304 2 5315
+M 0 5304 2 5323
+M 0 5306 2 5305    Bear Brown
+M 0 5306 2 5385
+M 0 5306 2 5319
+M 0 5306 2 5337 
+M 0 5306 2 5591
+M 0 5306 2 5326
+M 0 5306 2 5481
+M 0 5306 2 5345
+M 0 5363 1 5363    Two-Headed Snake Giant
+M 0 5362 2 5362    Ogre Zombie
+M 0 5362 2 5366
+M 0 5321 2 5321    Sneaky Skaven
+M 0 5321 3 5305
+M 0 5321 2 5399
+M 0 5321 3 5345
+M 0 5321 2 5312
+M 0 31312 1 5484
+E 1 31346 10 19
+M 0 5321 3 5324
+M 0 5366 1 5366    Beast
+M 0 5383 1 5383    Gargoyle
+G 1 5368  9999            Key Slimey
+M 0 5374 15 5374   Tree Dweller
+M 0 5372 3 5372    Bar wench
+M 0 5371 3 5371    Tourist
+M 0 5373 20 5374   Dwarven Tree-Dweller
+Y 0 85 5                  forest set
+M 0 5512 1 5514
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5526
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5520
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5527
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5583
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5529
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5531
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5535
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5540
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5551
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5560
+Y 0 58 3                  goblin armor 1%
+M 0 5512 1 5557
+Y 0 58 3                  goblin armor 1%
+M 0 5522 2 5519     Goblin Guard type 2
+Y 0 58 3                  goblin armor 1%
+M 0 5522 3 5580
+Y 0 58 3                  goblin armor 1%
+M 0 5526 5 5520     Goblin guard type 3
+? 0 5 0 E
+E 1 5408 9999 19           Club of embedded metal fibers
+Y 0 58 3                  goblin armor 1%
+M 0 5523 3 5575     Goblin Sentry
+Y 0 58 3                  goblin armor 1%
+M 0 5523 4 5581
+Y 0 58 3                  goblin armor 1%
+M 0 5523 3 5563
+Y 0 58 3                  goblin armor 1%
+M 0 5520 5 5529     Goblin Male
+M 0 5520 5 5571
+M 0 5520 5 5543
+M 0 5520 5 5550
+M 0 5524 3 5526     Goblin Female
+M 0 5524 2 5524
+M 0 5524 3 5572
+M 0 5524 3 5529
+M 0 5524 3 5530
+M 0 5524 3 5556
+M 0 5524 3 5545
+M 0 5521 2 5521       Goblin Janitor
+M 0 5521 2 5571
+M 0 5521 1 5534
+M 0 5528 1 5528       The Unmaker
+G 1 14 9999              clay (quest object)
+M 0 5541 1 5541       Gorash
+G 1 5579 9999                Key sealed tomb
+M 0 5584 1 5584       Trollac
+M 0 5563 4 5570      Shaman goblin
+M 0 5570 1 5570       Gruum King Goblin
+Y 0 58 3                  goblin plate 3%
+M 0 5567 1 5567       Mish
+M 0 5542 1 5542       Kar'ashsok
+Y 0 58 2                  goblin plate 2%
+M 0 5556 4 5556      Acolyte Goblin
+M 0 5556 4 5559
+M 0 5563 4 5559      Shaman goblin
+M 0 5557 4 5557       Priest Goblin
+M 0 5559 6 5559       Goblin Shaman
+M 0 5561 1 5561       Executioner
+G 1 5582 9999                Key trapdoor
+? 0 20 0 E
+E 1 5561 9999 18             Executioner Axe
+M 0 5562 4 5562      Mage goblin
+M 0 5562 3 5545
+M 0 5562 4 5573
+M 0 5562 4 5580
+M 0 5563 4 5562      Shaman goblin
+M 0 5563 3 5545
+M 0 5563 4 5573
+M 0 5563 4 5580
+M 0 5503 2 5503      Saberfish Guardian
+G 1 5505 9999               Key Tomb of Therin Altair
+? 0 6 0 E
+E 1 5507 100  5             Eel-skin helmet (human)
+? 0 10 0 E
+E 1 5508 5    3             Collar eelskin
+? 0 6 0 E
+E 1 5510 100  4             Vest eel (human)
+? 0 6 0 E
+E 1 5511 100 12             Sleeve eel (human)
+? 0 6 0 E
+E 1 5512 100 15             Belt eelskin (human)
+M 0 5502 2 5503         Saberfish guardian
+? 0 6 0 E
+E 1 5513 100 16             Wristlet eelskin (human)
+? 0 6 0 E
+E 1 5514 100 10             Eelskin glove (human)
+? 0 6 0 E
+E 1 5515 100 6              Pants eelskin (human)
+? 0 6 0 E
+E 1 5520 100 9              Eel skin boot (human)
+? 0 6 0 E
+E 1 5516 8 18               Shield eelskin (human)
+? 0 6 0 E
+E 1 5518 10  2              eel ring
+
+M 0 7873 1 5428        Imp - mage robe quest
+S
+

@@ -1,0 +1,62 @@
+#27800
+Armagedon - Amber Bay~
+27899 35 2 1
+
+D 0 27803 5 1       bayside pier to Nefkars
+D 0 27899 4 1
+D 0 27828 5 1       up to wall
+D 0 27890 4 1
+D 0 27896 1 1       hermit igloo                    
+D 0 27897 3 1
+D 0 27894 1 1       hermit igloo
+D 0 27895 3 1       
+D 0 27892 1 1       Hermans igloo
+D 0 27893 3 1
+D 0 27893 1 1       Hermans igloo<secret to hermans loot>       
+D 0 27898 3 1
+
+O 1 27810 1 27899   Picture in shop
+O 0 115 3 27897     hobbit chair
+O 0 112 3 27897     hobbit desk
+O 0 14380 3 27897   hobbit bed
+O 0 115 3 27895     hobbit chair
+O 0 112 3 27895     hobbit desk
+O 0 14380 3 27895   hobbit bed
+O 0 115 3 27893     hobbit chair
+O 0 112 3 27893     hobbit desk
+O 0 14380 3 27893   hobbit bed
+O 0 5702 1 27899    small wooden table
+O 0 27805 1 27807   mussel
+O 0 27805 1 27811   mussel 
+O 0 27805 1 27817   mussel
+O 0 27805 1 27822   mussel
+O 0 27805 1 27825   mussel
+O 0 27805 1 27828   mussel
+O 0 27805 1 27805   mussel
+M 0 27800 2 27873   seagull
+M 0 27800 2 27844   seagull
+M 0 27800 2 27838   seagull
+M 0 27800 2 27879   seagull
+M 0 27801 1 27861   eel
+M 0 27801 2 27863   eel
+M 0 27801 2 27847   eel
+M 0 27801 2 27826   eel
+M 0 27802 1 27807   lichen
+M 0 27802 1 27813   lichen
+M 0 27802 1 27816   lichen
+M 0 27802 1 27821   lichen
+M 0 27802 1 27823   lichen
+M 0 27802 1 27826   lichen
+M 0 27802 1 27810   lichen
+M 0 27804 1 27897   hermit
+Y 0 94 1                 chance of ice set
+M 0 27804 1 27895   hermit
+Y 0 94 1                 chance of ice set
+M 0 27805 1 27893   Herman the hermit
+Y 0 94 2                 chance of ice set
+M 0 27803 1 27847   Gerod
+G 1 27803 1           rowboat
+? 0 20 0 E
+E 1 27804 9999 19          fishing pole
+S
+

@@ -1,0 +1,22 @@
+#750
+Brotherhood of Galek Church~
+799 25 2 1
+
+D 0 772 4 1		     Church Steeple
+D 0 775 5 1
+
+O 0 9050 1 774    a iron-strapped oak barrel
+
+M 0 750 1 761                 Alter Boy
+M 0 750 1 763                 Alter Boy
+M 0 750 1 756                 Alter Boy
+M 0 750 1 758                 Alter Boy
+M 0 750 1 769                 Alter Boy
+M 0 750 1 765                 Alter Boy
+M 0 751 1 766                 Cleric
+M 0 751 1 768                 Cleric
+M 0 751 1 757                 Cleric
+M 0 7800 1 762		      Blind man (component carrier)
+M 0 7800 1 760		      Blind man (component carrier)
+S
+

@@ -1,0 +1,280 @@
+#24700
+Maror - Dark Jungle~
+24774 30 2 0
+D 0 24703 6 1 SW section rushes
+D 0 24705 9 1
+D 0 24722 8 1 Center rushes
+D 0 24726 7 1
+D 0 24741 2 1 East side rushes
+D 0 24744 0 1
+D 0 24745 2 1 Thorns to Mucluck's area
+D 0 24758 0 1
+D 0 24761 4 1 Trapdoor up to Mucluck's hut
+D 0 24762 5 1
+*Objects section, load once at boot time
+O 0 24700 1 24717 longberry bushes and berries
+P 1 24703 1 24700
+O 0 24700 1 24718
+P 1 24703 1 24700
+O 0 24700 1 24727
+P 1 24703 1 24700
+O 0 24700 1 24729
+P 1 24703 1 24700
+O 0 24703 2 24717
+O 0 24701 1 24737 rocknut trees and nuts
+P 1 24706 1 24701
+O 0 24701 1 24738
+P 1 24706 1 24701
+O 0 24701 1 24742
+P 1 24706 1 24701
+B 0 24704 1 24702 blue lilies
+B 0 24704 2 24703
+B 0 24704 1 24723
+B 0 24704 1 24724
+B 0 24704 1 24739
+B 0 24704 2 24740
+B 0 24704 1 24741
+B 0 24704 2 24759
+B 0 24704 1 24760
+B 0 24705 1 24732 red lilies
+B 0 24705 1 24706
+B 0 24705 2 24707
+B 0 24705 1 24708
+B 0 24705 1 24712
+B 0 24705 2 24746
+B 0 24705 1 24752
+B 0 24705 1 24751
+O 0 24702 1 24701 varicolored vines
+O 0 24702 1 24730
+O 0 24702 1 24731
+O 0 24702 1 24756
+O 0 24702 1 24714
+O 0 24702 2 24715
+O 0 24702 1 24716
+O 0 24702 1 24719
+O 0 24702 1 24744
+O 0 24702 1 24745
+O 0 24702 2 24769
+O 0 24702 1 24764
+B 0 24707 1 24766 spinefruit
+B 0 24707 1 24763
+** Other objects lying around
+O 0 1370 1 24728 raft
+O 0 17101 1 24738 campfire
+O 0 17101 1 24717 campfire
+O 0 24771 1 24767 still
+O 0 24765 1 24762 shelf
+? 0 50 0 P
+P 1 24761 1 24765 clear potion with clumps
+? 0 50 0 P
+P 1 24762 1 24765 purple potion
+O 0 24766 1 24762 candelabra
+O 0 24767 1 24762 bed
+O 0 24768 1 24762 ogre sleeping pad
+O 0 24760 1 24762 short-legged table
+O 0 24719 1 24711 lily queen's throne
+* loading mobs and equipment
+M 0 24700 1 24762 Mucluck
+H 1 1 2 hates humans
+Y 0 129 2
+G 1 24773 9999
+? 0 25 0 G
+G 1 24769 9999
+? 0 25 0 G
+G 1 24772 9999
+G 1 437 9999 
+C 1 31302 1 24762 shaman ghoul
+M 0 24701 1 24762 ogre
+? 0 5 0 E
+E 1 24763 9999 14
+M 0 24702 1 24702 caiman
+M 0 24702 1 24702
+M 0 24702 1 24722
+M 0 24702 1 24722
+M 0 24702 1 24709
+M 0 24702 1 24709
+M 0 24703 1 24757 midges
+M 0 24703 1 24730
+M 0 24703 1 24753
+M 0 24703 1 24752
+M 0 24703 1 24751
+M 0 24703 1 24750
+M 0 24703 1 24707
+M 0 24703 1 24722
+M 0 24703 1 24724
+M 0 24703 1 24725
+M 0 24704 1 24764 woodpecker
+M 0 24704 1 24768
+M 0 24704 1 24770
+M 0 24705 1 24701 swamp rats
+M 0 24705 1 24705
+M 0 24705 1 24716
+M 0 24705 1 24716
+M 0 24705 1 24736
+M 0 24705 1 24736
+M 0 24726 1 24707 lily warriors
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24726 1 24707
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24726 1 24714
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24726 1 24713
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24726 1 24712
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24726 1 24712
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24706 1 24711 lily warriors - sentinels
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24706 1 24711
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24706 1 24710
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24706 1 24710
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+M 0 24707 1 24708 lily shamans
+H 1 2 26 hate-elemental (26)
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+C 1 31301 1 24708 shaman ghast
+M 0 24707 1 24720
+H 1 2 26 hate-elemental (26)
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 130 2
+C 1 31301 1 24708 shaman ghast
+M 0 24708 1 24707 lily boys
+M 0 24708 1 24713
+M 0 24709 1 24713 lily girls
+M 0 24709 1 24715
+M 0 24710 1 24712 lily princess
+Y 0 130 2
+M 0 24711 1 24711 lily queen
+Y 0 130 2
+M 0 24712 1 24701 swamp mallows
+M 0 24712 1 24731
+M 0 24712 1 24731
+M 0 24712 1 24745
+M 0 24712 1 24704
+M 0 24712 1 24729
+M 0 24712 1 24726
+M 0 24712 1 24727
+M 0 24713 1 24741 bull rushes
+M 0 24713 1 24758
+M 0 24713 1 24722
+M 0 24713 1 24723
+M 0 24713 1 24724
+M 0 24713 1 24706
+M 0 24713 1 24709
+M 0 24713 1 24752
+M 0 24714 1 24728 Jadwiga
+G 1 13823 9999 perch
+G 1 13849 9999 a can of leechs
+E 1 13864 9999 18 expe's fishing pole
+? 0 5 0 E
+E 1 24710 9999 1 load rings
+? 0 5 0 E
+E 1 24710 9999 2
+
+M 0 24715 1 24700 entrance tree (gnared old tree)
+
+M 0 24716 1 24733 sneaky hobbit thief
+Y 0 131 2
+
+M 0 24717 1 24738 pantathian shaman
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 132 2
+M 0 24717 1 24738
+? 0 5 0 E
+E 1 24708 9999 18 shortspear
+Y 0 132 2
+
+M 0 24718 1 24739 pantathian ranger
+G 1 8512 9999 blow pipe
+? 0 5 0 G
+G 1 8513 9999 blow dart
+? 0 5 0 G
+G 1 8513 9999 blow dart
+? 0 5 0 G
+G 1 8513 9999  blow dart
+? 0 5 0 G
+G 1 24724 9999 barbed dart, sleep proc
+? 0 5 0 G
+G 1 24725 9999 barbed dart, paralyze proc
+? 0 5 0 E
+E 1 24709 9999 18 longspear
+Y 0 132 2
+
+M 0 24718 1 24739 pantathian ranger
+G 1 8512 9999 blow pipe
+? 0 5 0 G
+G 1 8513 9999 blow dart
+? 0 5 0 G
+G 1 8513 9999 blow dart
+? 0 5 0 G
+G 1 8513 9999 blow dart
+? 0 5 0 G
+G 1 24724 9999 barbed dart, sleep proc
+? 0 5 0 G
+G 1 24725 9999 barbed dart, paralyze proc
+? 0 5 0 E
+E 1 24709 9999 18 longspear
+Y 0 132 2
+
+
+M 0 24719 1 24703 anaconda
+M 0 24719 1 24735
+M 0 24719 1 24743
+M 0 24719 1 24771
+
+M 0 24720 1 24749 panther
+H 1 2 47 hate horse (47)
+
+M 0 24721 1 24748 scorpion
+M 0 24721 1 24757
+M 0 24721 1 24737
+
+M 0 24722 1 24718 deer
+M 0 24722 1 24718
+M 0 24722 1 24718
+M 0 24722 1 24735
+M 0 24722 1 24735
+M 0 24722 1 24735
+
+M 0 24723 1 24763 raccoon
+M 0 24723 1 24767 raccoon
+
+M 0 24724 1 24756 newt
+
+M 0 24725 1 24717 Mommaluck
+H 1 1 2 hates humans
+? 0 20 0 G
+G 1 24774 9999
+
+T 0 24745 2 5 6 slash trap on thorns to Mucluck's
+T 0 24758 0 5 6
+
+S
+

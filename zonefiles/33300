@@ -1,0 +1,127 @@
+#33300
+Maror - Path through the Haon Dor~
+33349 20 2 1
+
+M 0 33300 1 33306 fallow deer
+M 0 33300 1 33313
+M 0 33300 1 33346
+M 0 33300 1 33333
+
+M 0 33311 1 33303 Claudius the peddler
+? 0 4 0 E
+E 1 33309 9999 14 (cloak)
+? 0 4 0 E
+E 1 33310 9999 5 (cap)
+? 0 4 0 E
+E 1 33311 9999 6 (pants)
+? 0 4 0 E
+E 1 33312 9999 4 (vest)
+
+M 0 33301 1 33341 Shloq
+? 0 2 0 E
+E 1 33300 9999 14 cloak shadows (max exist of 5)
+? 0 2 0 E
+E 1 33301 9999 5 mask light (max exist of 5)
+? 0 2 0 E
+E 1 33302 9999 4 vest leaves (max exist of 5)
+? 0 2 0 E
+E 1 33303 9999 3 necklace flowing water (max exist of 5)
+
+M 0 33302 1 33303 abandoned pony
+M 0 33302 1 33309
+
+M 0 33303 3 33320 wild cows
+K 1 33303 2 33320 cow followers (herd group)
+
+M 0 33304 1 33343 sparrow hawk
+M 0 33304 1 33323
+
+M 0 33305 1 33331 wood cock
+M 0 33305 2 33315
+
+M 0 33306 1 33327 Frift ogre thief
+? 0 5 0 E
+E 1 305 9999 19 small dagger
+? 0 4 0 E
+E 1 1738 9999 4  toughened rawhide vest
+? 0 4 0 E
+E 1 1739 9999 3  toughened rawhide collar
+? 0 4 0 E
+E 1 1730 9999 5  toughened rawhide helm
+? 0 4 0 E
+E 1 1733 9999 14  toughened rawhide cloak
+? 0 2 0 E
+E 1 1735 9999 6  toughened rawhide pants
+? 0 4 0 E
+E 1 1734 9999 8  toughened rawhide boot
+? 0 4 0 E
+E 1 1734 9999 9  toughened rawhide boot
+? 0 4 0 E
+E 1 1732 9999 10  toughened rawhide glove
+? 0 4 0 E
+E 1 1732 9999 11  toughened rawhide glove
+? 0 4 0 E
+E 1 1731 9999 12  toughened rawhide sleeve
+? 0 4 0 E
+E 1 1731 9999 13  toughened rawhide sleeve
+? 0 4 0 E
+E 1 1736 9999 16  toughened rawhide wristband
+? 0 4 0 E
+E 1 1736 9999 17  for toughened rawhide wristband
+? 0 4 0 E
+E 1 14309 9999 1  clear tourmaline ring
+? 0 4 0 E
+E 1 14309 9999 2  clear tourmaline ring
+? 0 5 0 E
+E 1 33305 9999 15 belt with old pouches
+? 0 99 0 G              give to satisfy K command
+G 1 22430 9999 
+K 1 33307 1 33327 Forth hobbit cleric (grouped)
+? 0 10 0 E
+G 1 163 9999 tiny vial
+? 0 10 0 E
+G 1 501 9999 porcelain symbol
+? 0 10 0 E
+G 1 33306 9999 frying pan
+? 0 4 0 E
+E 1 14302 9999 4 hobbit studded vest
+? 0 4 0 E
+E 1 1770  9999 3 studded collar
+? 0 4 0 E
+E 1 14301 9999 5 hobbit studded helm
+? 0 4 0 E
+E 1 14304 9999 14 hobbit studded cloak
+? 0 2 0 E
+E 1 14303 9999 6 hobbit studded pants
+? 0 4 0 E
+E 1 14306 9999 10 hobbit studded glove
+? 0 4 0 E
+E 1 14306 9999 11 hobbit studded glove
+? 0 4 0 E
+E 1 14305 9999 12 hobbit studded sleeve
+? 0 4 0 E
+E 1 14305 9999 13 hobbit studded sleeve
+? 0 4 0 E
+E 1 14308 9999 16 hobbit studded wristband
+? 0 4 0 E
+E 1 14308 9999 17 hobbit studded wristband
+? 0 4 0 E
+E 1 22409 9999 1  gnomemail ring
+? 0 4 0 E
+E 1 22409 9999 2 gnomemail ring
+
+M 0 33308 2 33309 butterfly
+M 0 33308 2 33347
+M 0 33308 1 33348
+
+M 0 33309 1 33331 field mouse
+M 0 33309 1 33308
+M 0 33309 1 33322
+M 0 33309 1 33342
+
+M 0 33310 1 33317 snowy owl
+H 1 2 41 hates rodents
+
+S
+
+

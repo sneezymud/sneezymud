@@ -1,0 +1,253 @@
+#10140
+Batopr - Wood-Elven Village~
+10199 45 2 1
+
+D 0 10144 5 1
+D 0 10170 2 1		Gersard's house
+D 0 10172 0 1
+D 0 10140 0 1		10190 - elf house
+D 0 10190 2 1
+D 0 10141 0 1		10191 - elf house
+D 0 10191 2 1
+D 0 10148 2 1		10192 - elf house
+D 0 10192 0 1
+D 0 10149 2 1		10193 - elf house
+D 0 10193 0 1
+D 0 10152 3 1		10194 - elf house
+D 0 10194 1 1
+D 0 10153 3 1		10195 - elf house
+D 0 10195 1 1
+D 0 10154 3 1		10196 - elf house
+D 0 10196 1 1
+D 0 10154 1 1		10197 - elf house
+D 0 10197 3 1
+D 0 10155 1 1		10198 - elf house
+D 0 10198 3 1
+
+O 0 10109 1 10155		spyhole type1
+O 0 10110 1 10181		druid altar
+O 0 10112 1 10175		log seat
+O 0 10112 2 10176		log seat
+O 0 10112 3 10177		log seat
+O 0 10112 4 10178		log seat
+O 0 10112 5 10179		log seat
+O 0 10112 6 10180		log seat
+O 0 10114 1 10165		spyhole type2
+O 0 10115 1 10170		balcony railing
+O 0 10116 1 10171		wooden chair
+O 0 10116 2 10172		wooden chair
+O 0 10116 3 10174		wooden chair
+O 0 10117 1 10172		couch
+O 0 10118 2 10173		fern
+O 0 10118 3 10193		fern
+O 0 10118 4 10197		fern
+O 0 10119 1 10173		cot/bed
+O 0 10120 1 10171		desk
+O 0 10121 1 10171		bookcase
+O 0 10122 1 10174		table
+O 0 10123 2 10174		sink basin
+O 0 10199 1 10171		window
+O 0 10199 2 10172		window
+O 0 10199 3 10173		window
+O 0 10199 4 10174		window
+O 0 10199 5 10190		window
+O 0 10199 6 10191		window
+O 0 10199 7 10192		window
+O 0 10199 8 10193		window
+O 0 10199 9 10194		window
+O 0 10199 10 10195		window
+O 0 10199 11 10196		window
+O 0 10199 12 10197		window
+O 0 10199 13 10198		window
+
+M 0 10109 1 10140 		elf commoner type1 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10109 1 10147 		elf commoner type1 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10109 1 10188 		elf commoner type1 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10109 1 10184 		elf commoner type1 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10109 1 10177 		elf commoner type1 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+
+M 0 10110 1 10141 		elf commoner type1 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10110 1 10145 		elf commoner type1 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10110 1 10189 		elf commoner type1 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10110 1 10184 		elf commoner type1 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10110 1 10157               elf commoner type1 female
+H 1 2 3                           hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+
+M 0 10111 1 10144 		elf commoner type2 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10111 1 10158 		elf commoner type2 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10111 1 10154 		elf commoner type2 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10111 1 10189 		elf commoner type2 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10111 1 10183 		elf commoner type2 male
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+
+M 0 10112 1 10140 		elf commoner type2 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10112 1 10147 		elf commoner type2 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10112 1 10151 		elf commoner type2 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10112 1 10185 		elf commoner type2 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+M 0 10112 1 10179 		elf commoner type2 female
+H 1 2 3				  hate dwarf
+Y 0 61 2                          2% Chance for Elf Stud
+
+M 0 10113 1 10143 		elven hunter type1
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in r.hand
+M 0 10113 1 10147 		elven hunter type1
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in r.hand
+M 0 10113 1 10159 		elven hunter type1
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in r.hand
+M 0 10113 1 10192 		elven hunter type1
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in r.hand
+M 0 10113 1 10151 		elven hunter type1
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in r.hand
+
+M 0 10114 1 10146 		elven hunter type2
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in held_right
+M 0 10114 1 10178 		elven hunter type2
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in held_right
+M 0 10114 1 10184 		elven hunter type2
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in held_right
+M 0 10114 1 10188 		elven hunter type2
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in held_right
+M 0 10114 1 10150 		elven hunter type2
+H 1 2 3				  hate dwarf
+Y 0 25 1                          1% chance of mithril set
+? 0 2 0 E
+E 1 10142 150 19		  elven sword in held_right
+
+M 0 10115 1 10193		Jendar, head elf hunter
+H 1 2 3				  hate dwarf
+Y 0 25 2                          2% chance of mithril set
+? 0 4 0 E
+E 1 10142 150 19		  elven sword in held_right
+
+M 0 10116 1 10194 		Rangui, elven seer
+
+M 0 10118 1 10194 		rangui's caretaker
+H 1 2 3				  hate dwarf
+
+M 0 10119 1 10171 		Gersard elf leader
+
+M 0 10120 1 10172 		gersard's valet
+H 1 2 3				  hate dwarf
+? 0 3 0 E
+E 1 10141 200 16		  chance of mithril bracelet on r-wrist
+? 0 3 0 E
+E 1 10141 200 17		  chance of mithril bracelet on l-wrist
+
+M 0 10121 1 10190 		Stanfre, head elf druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+? 0 1 0 E
+E 1 10144 200 2			  chance of mithril ring on l-finger
+
+M 0 10117 1 10166 		elven druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+M 0 10117 1 10175 		elven druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+M 0 10117 1 10179 		elven druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+M 0 10117 1 10181 		elven druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+M 0 10117 1 10180 		elven druid
+? 0 1 0 E
+E 1 10144 200 1			  chance of mithril ring on r-finger
+
+M 0 10122 1 10186 		elf child
+M 0 10122 1 10187 		elf child
+M 0 10122 1 10188 		elf child
+M 0 10122 1 10189 		elf child
+M 0 10122 1 10182 		elf child
+M 0 10122 1 10183 		elf child
+M 0 10122 1 10183 		elf child
+M 0 10122 1 10185 		elf child
+M 0 10122 1 10192 		elf child
+M 0 10122 1 10196 		elf child
+
+M 0 10123 1 10191 		elf husband
+M 0 10124 1 10191 		elf wife
+
+M 0 10123 1 10192 		elf husband
+M 0 10124 1 10192 		elf wife
+
+M 0 10123 1 10195 		elf husband
+M 0 10124 1 10195 		elf wife
+
+M 0 10123 1 10196 		elf husband
+M 0 10124 1 10196 		elf wife
+
+M 0 10123 1 10197 		elf husband
+M 0 10124 1 10197 		elf wife
+
+M 0 10123 1 10198 		elf husband
+M 0 10124 1 10198 		elf wife
+
+M 0 10131 1 10181               Quiny
+Y 0 91 3                         3% chance of Tatterred
+S
+

@@ -1,0 +1,283 @@
+#22750
+Oakk - South Coastal Highway~
+22799 30 2 1
+
+O 0 22775 9999 22790	huge coast live oak tree
+O 0 22797 9999 22797 	stone slab table
+O 0 22798 9999 22797 	stone bench
+O 0 22798 9999 22797 	stone bench
+O 0 22799 9999 22799 	abandoned sign
+M 0 22750 1 22751 	WHITE SEAGULL
+M 0 22750 1 22764
+M 0 22750 1 22772
+M 0 22750 1 22768
+M 0 22750 1 22780
+M 0 22750 1 22785
+M 0 22750 1 22790
+M 0 22750 1 22796
+M 0 22751 1 22753 	SPOTTED SEAGULL
+M 0 22751 1 22757
+M 0 22751 1 22765
+M 0 22751 1 22774
+M 0 22751 1 22792
+M 0 22751 1 22797
+M 0 22752 1 22787 	FEE-FO THE GIANT
+? 0 2 0 E
+E 1 22752 9999 18 		  Fee-Fo's Big Smasher
+M 0 22753 1 22750 	RUNAWAY TEENAGER
+? 0 5 0 E
+E 1 22753 9999 19 	  paring knife
+M 0 22753 1 22753
+? 0 5 0 E
+E 1 22753 9999 19 	  paring knife
+M 0 22753 1 22756
+? 0 5 0 E
+E 1 22753 9999 19 	  paring knife
+M 0 22753 1 22760
+? 0 5 0 E
+E 1 22753 9999 19 	  paring knife
+M 0 22753 1 22763
+? 0 5 0 E
+E 1 22753 9999 19 	  paring knife
+M 0 22754 1 22751 	GRIZZLY HOBBIT
+? 0 1 0 E
+E 1 22754 9999 3 	 	  silver whistle
+? 0 5 0 E
+E 1 22751 9999 19 	  oak walking stick
+M 0 22754 1 22758
+? 0 1 0 E
+E 1 22754 9999 3 	 	  silver whistle
+? 0 5 0 E
+E 1 22751 9999 19 	  oak walking stick
+M 0 22754 1 22768
+? 0 1 0 E
+E 1 22754 9999 3 		  silver whistle
+? 0 5 0 E
+E 1 22751 9999 19 	  oak walking stick
+M 0 22754 1 22771
+? 0 1 0 E
+E 1 22754 9999 3 		  silver whistle
+? 0 5 0 E
+E 1 22751 9999 19  oak walking stick
+M 0 22754 1 22799
+? 0 1 0 E
+E 1 22754 9999 3 		  silver whistle
+? 0 5 0 E
+E 1 22751 9999 19 	  oak walking stick
+M 0 22755 1 22752 	YOUNG MISSIONARY
+? 0 15 0 G
+G 1 505 9999 		  brass symbol
+? 0 33 0 G
+G 1 164 9999 		  small vial holy water
+? 0 1 0 E
+E 1 22793 9999 19 	  weathered ivory staff
+M 0 22755 1 22760
+? 0 3 0 G
+G 1 505 9999 		  brass symbol
+? 0 33 0 G
+G 1 164 9999 		  small vial holy water
+? 0 1 0 E
+E 1 22793 9999 19 	  weathered ivory staff
+M 0 22755 1 22767
+? 0 5 0 G
+G 1 505 9999 		  brass symbol
+? 0 33 0 G
+G 1 164 9999 		  small vial holy water
+? 0 1 0 E
+E 1 22793 9999 19 	  weathered ivory staff
+M 0 22756 1 22773 	PIOUS NOBLEMAN ESCORT
+? 0 4 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 3 0 G
+G 1 504 9999 		  copper symbol
+? 0 2 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+M 0 22757 1 22773 	YOUNG MAIDEN
+? 0 3 0 E
+E 1 22757 9999 2 		  quartz ring
+? 0 5 0 G
+G 1 22750 9999	  malachite potion container
+? 0 5 0 G
+G 1 22796 9999 		  scroll case
+M 0 22758 1 22750 	BRIGHTMOON PATROLMAN
+? 0 4 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+? 0 5 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 2 0 E
+E 1 22762 9999 8 		  riding boot
+? 0 99 0 G
+G 1 22430 9999
+K 1 22761 1 22750 	STURDY STEED
+? 0 5 0 E
+E 1 22761 9999 14 	  ornate saddle 
+M 0 22758 1 22755
+? 0 4 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+? 0 5 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 2 0 E
+E 1 22762 9999 8 		  riding boot
+? 0 99 0 G
+G 1 22430 9999
+K 1 22761 1 22755 	STURDY STEED
+? 0 5 0 E
+E 1 22761 9999 14 	  ornate saddle 
+M 0 22758 1 22759
+? 0 4 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+? 0 5 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 2 0 E
+E 1 22762 9999 8 		  riding boot
+? 0 99 0 G
+G 1 22430 9999
+K 1 22761 1 22759 	STURDY STEED
+? 0 5 0 E
+E 1 22761 9999 14 	  ornate saddle 
+M 0 22758 1 22765
+? 0 4 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+? 0 5 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 2 0 E
+E 1 22762 9999 8 		  riding boot
+? 0 99 0 G
+G 1 22430 9999
+K 1 22761 1 22765 	STURDY STEED
+? 0 5 0 E
+E 1 22761 9999 14 	  ornate saddle 
+M 0 22758 1 22770
+? 0 4 0 E
+E 1 22758 9999 14 	  Brightmoon cape
+? 0 5 0 E
+E 1 22755 9999 19 	  admantium long sword
+? 0 2 0 E
+E 1 22762 9999 8 		  riding boot
+? 0 99 0 G
+G 1 22430 9999
+K 1 22761 1 22770 	STURDY STEED
+? 0 5 0 E
+E 1 22761 9999 14 	  ornate saddle 
+M 0 22759 1 22752 	HUMAN BRIGHTMOON CITIZEN MALE
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22759 1 22756
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22759 1 22771
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22759 1 22762
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22760 1 22752 	HUMAN BRIGHTMOON CITIZEN FEMALE
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22760 1 22756
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22760 1 22771
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22760 1 22762
+? 0 2 0 E
+E 1 300 9999 19 	  simple long sword
+M 0 22762 1 22750 	HOBBIT BRIGHTMOON CITIZEN MALE
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22762 1 22755
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22762 1 22759
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22762 1 22775
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22763 1 22750 	HOBBIT BRIGHTMOON CITIZEN FEMALE
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22763 1 22755
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22763 1 22759
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22763 1 22775
+? 0 2 0 E
+E 1 304 9999 19 	  simple short sword
+M 0 22788 1 22780 	GNOME LOOKOUT
+Y 0 126 2		  black and purle armor (shadowy)
+M 0 22788 1 22784
+Y 0 126 2		  black and purle armor (shadowy)
+M 0 22788 1 22789
+Y 0 126 2		  black and purle armor (shadowy)
+M 0 22789 1 22768 	SALTY HOBBIT SCOUT
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+Y 0 126 2
+M 0 22789 1 22781
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+Y 0 126 2
+M 0 22789 1 22790
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+Y 0 126 2
+M 0 22789 1 22798
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+Y 0 126 2
+M 0 22790 1 22791 	PETERSEN THE DRUNKEN THIEF
+? 0 1 0 E
+E 1 22790 1 11 		  Samson the glove
+M 0 22791 1 22792 	GHOSTLY SAILOR
+? 0 5 0 E
+E 1 22770 9999 18 	  spiked chain weapon
+M 0 22791 1 22795
+? 0 5 0 E
+E 1 22770 9999 18 	  spiked chain weapon
+M 0 22792 1 22793 	GHOSTLY CREWMAN
+? 0 5 0 E
+E 1 22770 9999 18 	  spiked chain weapon
+M 0 22792 1 22794
+? 0 5 0 E
+E 1 22770 9999 18 	  spiked chain weapon
+M 0 22793 1 22754 	SULLEN DWARF BANDIT
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+M 0 22793 1 22776
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+M 0 22794 1 22786 	SALTY HUMAN SCOUT
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+M 0 22794 1 22797
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+M 0 22795 1 22779 	HUMAN LOOKOUT
+? 0 2 0 E
+E 1 22792 9999 15 	  	  skull belt with scabbard
+? 0 5 0 E
+E 1 22795 9999 14 	  lookout's cloak
+M 0 22795 1 22788
+? 0 2 0 E
+E 1 22792 9999 15 	  	  skull belt with scabbard
+? 0 5 0 E
+E 1 22795 9999 14 	  lookout's cloak
+M 0 22796 1 22793 	GHOST CAPTAIN WESTLEY
+? 0 2 0 G
+G 1 22785 9999 14 		  Holocaust Cloak
+M 0 22797 1 22796 	GHOSTLY STOWAWAY
+? 0 3 0 E
+E 1 22770 9999 18 	  spiked chain weapon
+M 0 22797 1 22788
+M 0 22798 1 22770 	SULLEN HOBBIT BANDIT
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+M 0 22798 1 22799
+? 0 2 0 E
+E 1 22794 9999 19 	  oddly-hilted dagger
+S
+

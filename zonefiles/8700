@@ -1,0 +1,406 @@
+#8700
+Omen - Amber City~
+8899 35 2 1
+
+M 0 2773 1 8717         Fisherman (Eel quest) ++
+
+M 0 8704 1 8702         seasoned ranger - jamir (ranger L21 quest)
+? 0 5 0 E
+E 1 8719 1 4              battle-scarred mithril breastplate
+? 0 5 0 E
+E 1 8724 9999 15          studded belt quiver
+Y 0 31 2                  admantium set
+? 0 5 0 E
+E 1 7065 9999 19          long elven blade
+
+O 0 8878 1 8703 ; Serpent board
+O 0 3089 11 8703 ; Dispenser
+
+D 0 8704 2 1	West gate to gardens
+D 0 8708 0 1
+D 0 8706 2 1	East gate to gardens
+D 0 8710 0 1
+D 0 8713 2 1	Amber Shipping
+D 0 8717 0 1
+D 0 8724 5 1	North Ship
+D 0 8795 4 1
+D 0 8795 1 1	N. Ship east
+D 0 8796 3 1
+D 0 8742 5 1	Mid Ship
+D 0 8793 4 1
+D 0 8774 2 1    Tarl's Pet Shop
+D 0 8804 0 1
+D 0 8793 1 1	M. Ship east
+D 0 8794 3 1
+D 0 8763 5 1	South Ship
+D 0 8791 4 1
+D 0 8791 1 1	S. Ship east
+D 0 8792 3 1
+D 0 8783 5 2	tattoo
+D 0 8839 4 2
+D 0 8770 2 1	s. police
+D 0 8780 0 1
+D 0 8749 2 1	n. police
+D 0 8759 0 1
+D 0 8760 2 1	sheriff office
+D 0 8771 0 1
+D 0 8771 5 2	vault
+D 0 8836 4 2
+D 0 8836 1 1	vault.2
+D 0 8842 3 1
+D 0 8868 1 1	w. police
+D 0 8869 3 1
+D 0 8784 2 2	ambassador
+D 0 8787 0 2
+D 0 8785 2 1	guard
+D 0 8788 0 1
+D 0 8788 1 1	passage
+D 0 8789 3 1
+D 0 8789 1 1	passage.2
+D 0 8790 3 1
+D 0 8786 1 1	mayor office
+D 0 8832 3 1
+D 0 8778 2 1	res.1
+D 0 8831 0 1
+D 0 8831 2 2	res.2
+D 0 8843 0 2
+D 0 8843 2 1	church
+D 0 8867 0 1
+D 0 8876 1 2	back church
+D 0 8877 3 2
+D 0 8864 1 1	mayor's house
+D 0 8865 3 1
+D 0 8847 2 1	moyel's house
+D 0 8851 0 1
+D 0 8846 2 1	signmaker house
+D 0 8850 0 1
+D 0 8850 2 1	khelfenn house
+D 0 8859 0 1
+D 0 8848 2 1	signmaker shop
+D 0 8855 0 1
+D 0 8849 2 1	madman house
+D 0 8856 0 1
+D 0 8862 1 1	droppa house
+D 0 8863 3 1
+D 0 8869 1 1	bard house
+D 0 8870 3 1
+D 0 8870 1 1	cult house
+D 0 8871 3 1
+D 0 8871 5 1	cult secret
+D 0 8837 4 1
+D 0 8870 2 1	extrav. house
+D 0 8875 0 1
+
+O 0 8718 1 8804        Gate (window) in Tarl's Pet Shop
+
+O 0 8720 9999 8707     white granite streetlamp
+O 0 8720 9999 8708
+O 0 8720 9999 8709
+O 0 8720 9999 8710
+O 0 8720 9999 8711
+O 0 8720 9999 8714
+O 0 8720 9999 8715
+O 0 8720 9999 8718
+O 0 8720 9999 8719
+O 0 8720 9999 8720
+O 0 8720 9999 8721
+O 0 8720 9999 8722
+O 0 8720 9999 8726
+O 0 8720 9999 8729
+O 0 8720 9999 8730	white granite streetlamp
+O 0 8720 9999 8733
+O 0 8720 9999 8736
+O 0 8720 9999 8738
+O 0 8720 9999 8740
+O 0 8720 9999 8744
+O 0 8720 9999 8745
+O 0 8720 9999 8746	white granite streetlamp
+O 0 8720 9999 8748
+O 0 8720 9999 8749
+O 0 8720 9999 8750
+O 0 8720 9999 8751
+O 0 8720 9999 8754
+O 0 8720 9999 8757
+O 0 8720 9999 8761
+O 0 8720 9999 8765
+O 0 8720 9999 8768
+O 0 8720 9999 8772
+O 0 8720 9999 8775
+O 0 8720 9999 8776	white granite streetlamp
+O 0 8720 9999 8777
+O 0 8720 9999 8778
+O 0 8720 9999 8779
+O 0 8720 9999 8780
+O 0 8720 9999 8781
+O 0 8720 9999 8782
+O 0 8721 9999 8853     torches by east tower
+O 0 8721 9999 8899
+O 0 8721 9999 8844     torches in res-gate
+O 0 8721 9999 8845
+O 0 8721 9999 8803     torches on stairs
+O 0 8721 9999 8826
+O 0 8721 9999 8827
+O 0 8721 9999 8828
+O 0 8721 9999 8815	torches in SW Tower
+O 0 8721 9999 8817
+O 0 8721 9999 8816
+O 0 8721 9999 8800	torches in North Tower
+O 0 8721 9999 8801
+O 0 8721 9999 8802
+O 0 8721 9999 8805	torches in NE Tower
+O 0 8721 9999 8806
+O 0 8721 9999 8809
+O 0 8721 9999 8823	torches in SE Tower
+O 0 8721 9999 8824
+O 0 8721 9999 8829
+O 0 8721 9999 8896	torches in East Tower
+O 0 8721 9999 8897
+O 0 8721 9999 8898
+O 0 8720 9999 8831      streetlamps in Amber Residential District
+O 0 8720 9999 8843
+O 0 8720 9999 8852
+O 0 8720 9999 8850
+O 0 8720 9999 8851
+O 0 8720 9999 8858
+O 0 8720 9999 8864
+O 0 8720 9999 8891
+O 0 8720 9999 8892
+O 0 8720 9999 8870
+O 0 8720 9999 8862
+O 0 8720 9999 8856
+O 0 8720 9999 8855
+O 0 8720 9999 8854
+
+O 0 8702 1 8702		marble fountain
+O 0 8747 1 8747		cascading fountain
+O 0 8746 1 8747		sculpture ON fountain
+O 0 8787 1 8787		window (in inn)
+O 0 8794 3 8792		hammock (3)
+O 0 8794 3 8794
+O 0 8794 3 8796
+O 0 8847 1 8847		humidor
+P 1 8848 4 8847		cigars(4)
+P 1 8848 4 8847
+P 1 8848 4 8847
+P 1 8848 4 8847
+O 0 8855 1 8855		window (door top)
+O 0 10205 9999 8816	dep wall tables,chairs
+O 0 20 9999 8816
+O 0 20 9999 8816
+O 0 10205 9999 8760	dep
+O 0 20 9999 8816
+O 0 23 9999 8771	sher
+O 0 10758 9999 8771
+O 0 23 9999 8834	sec
+O 0 20 9999 8834
+O 0 23 9999 8835	mayor
+O 0 20 9999 8835
+O 0 10760 9999 8833	chairs
+O 0 10760 9999 8833
+O 0 10760 9999 8833
+O 0 10760 9999 8833
+O 0 2850 9999 8846	beds ++
+O 0 2850 9999 8863
+O 0 2850 9999 8875
+O 0 2850 9999 8865
+O 0 10763 9999 8784	beds
+O 0 10763 9999 8785
+O 0 6609 9999 8869	bunkbed
+
+? 0 5 0 B 
+B 1 820 9999 8836    det invis potion in treasure room
+
+? 0 5 0 B 
+B 1 820 9999 8836    det invis potion in treasure room
+
+? 0 5 0 B 
+B 1 802 9999 8836    cure crit pot
+
+? 0 5 0 B 
+B 1 3012 9999 8836   harm crit/infra/armor pot ++
+
+? 0 5 0 B 
+B 1 3014 9999 8836   sanc pot ++
+
+? 0 5 0 B 
+B 1 3767 9999 8836   city treasure
+
+? 0 5 0 B 
+B 1 8722 1 8836      chest
+
+P 1 3014 9999 8722   sanc pot in chest ++
+P 1 3014 9999 8722
+P 1 838 9999 8722    accel potion
+P 1 838 9999 8722
+P 1 3013 9999 8722   heal/rem curse/cure pois pot ++
+P 1 3013 9999 8722
+
+M 0 8742 1 8742		sailors(3)
+? 0 6 0 E
+E 1 8760 12 15         KILT
+M 0 8742 1 8742 
+? 0 6 0 E
+E 1 8760 12 15         KILT
+M 0 8742 1 8743 
+? 0 10 0 E
+E 1 8760 12 15         KILT
+M 0 8744 1 8744 	male citizens (5) -- guard
+M 0 8744 1 8747 
+M 0 8744 1 8757 
+M 0 8744 1 8718 
+M 0 8744 1 8775 
+M 0 8745 1 8843 	female citizens (5) -- guard
+M 0 8745 1 8736 
+M 0 8745 1 8729 
+M 0 8745 1 8852 
+M 0 8745 1 8751 
+M 0 8746 1 8746 	female dwarf citizens (3) -- guard
+M 0 8746 1 8855 
+M 0 8746 1 8851 
+M 0 8747 1 8745 	male dwarf citizens (3) --- guard
+M 0 8747 1 8777 
+M 0 8747 1 8843 
+M 0 8759 1 8759 	guard (14) -- guard
+M 0 8759 1 8746 
+M 0 8759 1 8748 
+M 0 8759 1 8790 
+M 0 8759 1 8769 
+M 0 8759 1 8801 
+M 0 8759 1 8808 
+M 0 8759 1 8805 
+M 0 8759 1 8813 
+M 0 8759 1 8816 
+M 0 8759 1 8819 
+M 0 8759 1 8823 
+M 0 8759 1 8825 
+M 0 8759 1 8790 
+M 0 8758 1 8747 	baanta mount (5)
+R 1 8759 6 8747		mounted guards here (5) -- guard
+M 0 8758 1 8721 
+R 1 8759 7 8721
+M 0 8758 1 8708 
+R 1 8759 8 8708
+M 0 8758 1 8749 
+R 1 8759 9 8749
+M 0 8758 1 8782 
+R 1 8759 10 8782
+M 0 8761 1 8747 	mage guard (5)
+M 0 8761 1 8761 
+M 0 8761 1 8730 
+M 0 8761 1 8710 
+M 0 8761 1 8707 
+M 0 8760 1 8760 	deputy (2) -- guard
+Y 0 73 3                  White Metal set - 3%
+M 0 8816 1 8816 
+Y 0 73 3                  White Metal set - 3%
+M 0 8762 1 8762 	merchant (4)
+M 0 8762 1 8752 
+M 0 8762 1 8741 
+M 0 8762 1 8747 
+M 0 8763 1 8763  	pirate (3)
+? 0 3 0 G
+G 1 8761 10           		BELAYING PIN
+M 0 8763 1 8763 
+? 0 3 0 G
+G 1 8761 10           		BELAYING PIN
+M 0 8763 1 8764 
+? 0 3 0 G
+G 1 8761 10           		BELAYING PIN
+M 0 8771 1 8771 	high sheriff -- guard
+G 1 8836 1			key to vault
+? 0 7 0 E
+E 1 8713 8 19			frosty broadsword in left hand
+Y 0 66 3
+M 0 8783 1 8783 	tattoo
+G 1 8783 1			key to tattoo
+? 0 10 0 E
+E 1 8757 10 19        		TATTOO NEEDLE
+? 0 10 0 E
+E 1 8758 10 12        		TATTOO
+
+M 0 8784 1 8784 	dwarf ambassador
+? 0 5 0 E
+E 1 8785 10 19			    dwarven battle axe
+Y 0 67 4
+M 0 8785 1 8785 	dwarf guard (2)
+G 1 8784 1			key to ambassador
+M 0 8785 1 8788 
+M 0 8792 1 8792 	mezzo one-eye
+? 0 4 0 E
+E 1 8717 5 5			an eyepatch on head
+M 0 8794 1 8794 	jahya
+Y 0 66 5
+M 0 8796 1 8796 	lenge
+M 0 8834 1 8834 	secretary
+M 0 8835 1 8835		terrare (mayor)
+M 0 8842 1 8842    	nivek ogre
+G 1 8723 1              	give him bitterly cold key
+? 0 3 0 E
+E 1 8700 1 5			halo of fire on head
+? 0 7 0 E
+E 1 8703 10 19			runed claymore in left hand
+Y 0 54 5      			spiked armor suit load 5%
+M 0 8840 1 8840		smugglers(2)
+? 0 4 0 E
+E 1 3119 9999 19                shiny sleek dirk
+Y 0 74 2                        darkgrey set
+M 0 8840 1 8841 
+? 0 4 0 E
+E 1 3119 9999 19                
+Y 0 74 2
+M 0 8847 1 8847 	esther (moyel's wife)
+M 0 8859 1 8859 	khelfenn (blacksmith)
+M 0 8831 1 8831 	resguard(3)
+M 0 8831 1 8843 
+M 0 8831 1 8856 
+M 0 8848 1 8848 	herman (signmaker)
+M 0 8849 1 8849 	madman
+M 0 8863 1 8863 	droppa
+M 0 8832 1 8845 	elite resguard (2)
+G 1 8843 10			residential gate key
+M 0 8832 1 8844 
+G 1 8843 10
+M 0 8837 5 8837 	chaos demons
+? 0 2 0 G
+G 1 8753 12			burnt black dagger
+M 0 8837 5 8837 
+? 0 2 0 G
+G 1 8753 12			burnt black dagger
+M 0 8837 5 8837 
+? 0 2 0 G
+G 1 8753 12			burnt black dagger
+M 0 8837 5 8837 
+? 0 2 0 G	
+G 1 8753 12			burnt black dagger
+M 0 8837 5 8837 
+? 0 2 0 G
+G 1 8753 12			burnt black dagger
+M 0 8869 1 8869 	bard
+M 0 8871 1 8871 	cultist
+M 0 8875 1 8875 	smuggler
+Y 0 93 3                  Nice clothing set - 3%
+M 0 8867 1 8867 	priests (5)
+M 0 8867 2 8868 
+M 0 8867 1 8866 
+M 0 8867 1 8872 
+M 0 8867 1 8874 
+M 0 8868 1 8873 	head priest
+G 1 8877 10			backroom key
+M 0 8712 1 8712 	travel agent
+M 0 8713 1 8713 	shipping
+M 0 2937 1 8700         Benedict ++
+G 1 2906 1
+G 1 2913 1
+? 0 2 0 E
+E 1 2869 1 4                   Oriental Robes ++
+M 0 8790 1 8747		Amber Overlord Toreth
+? 0 5 0 E
+E 1 8800 1 19		  Sunburst in left hand
+Y 0 72 3		  Azurite Set - 3%
+? 0 99 0 G
+G 1 410 9999              waterskin to make the charm load work
+C 1 8791 1 8747		Grimnur, Toreth's assistant
+? 0 10 0 E
+E 1 313 999 19		  Lucerne hammer in left hand
+S
+

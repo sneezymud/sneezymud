@@ -1,0 +1,169 @@
+#28900
+Connovar - Trolloc Infested Farmsteads~
+28999 35 2 1
+
+D 0 28926 1 1 Storage shed gate
+D 0 28927 3 1
+D 0 28927 2 1 Shed entrance gate
+D 0 28933 0 1
+D 0 28939 2 1 Odd bedroom entrance door
+D 0 28945 0 1
+D 0 28945 9 2 Adjoining bedroom door
+D 0 28951 6 2
+D 0 28951 3 1 Tidy Room entrance door
+D 0 28950 1 1 
+D 0 28962 2 1 Chicken coop door
+D 0 28967 0 1
+D 0 28962 3 1 Door house entrance
+D 0 28961 1 1
+D 0 28961 3 1 Bedroom door
+D 0 28960 1 1
+D 0 28966 3 1 Bedroom door
+D 0 28965 1 1
+D 0 28954 0 1 Toolshed door
+D 0 28947 2 1
+D 0 28948 0 1 backdoor woodworkers
+D 0 28943 2 1
+D 0 28949 1 1 frontdoor woodworkers
+D 0 28950 3 1
+D 0 28950 2 1 secret door to well
+D 0 28956 0 1
+D 0 28956 3 1 secret door to well
+D 0 28955 1 1
+D 0 28931 1 1 gate to pasture
+D 0 28932 3 1
+D 0 28917 0 1 secret brush
+D 0 28913 2 1
+D 0 28908 1 1 gate to ruined field
+D 0 28909 3 1
+D 0 28909 0 1 door entrance ruined house
+D 0 28904 2 1
+D 0 28904 1 1 ruined door kitchen
+D 0 28905 3 1
+
+O 0 28943 9999 28901 Pallet bed
+O 0 28943 9999 28901
+O 0 28943 9999 28902
+O 0 28943 9999 28902
+O 0 28901 9999 28903 Tent Entrance
+O 0 28937 9999 28904 Cookstove blood
+P 1 28953 9999 28937 Cookstove fuels
+P 1 28953 9999 28937
+P 1 28953 9999 28937
+O 0 28944 9999 28906 woodpile
+O 0 28921 9999 28909 Large rock
+O 0 28921 9999 28920
+O 0 28921 9999 28944
+O 0 28945 9999 28926 mound wool bed
+O 0 28941 9999 28945 small bed
+O 0 28941 9999 28965
+O 0 28942 9999 28951 large bed
+O 0 28942 9999 28960
+O 0 28912 9999 28954 scraps bag
+O 0 28911 9999 28956 large well
+B 0 28917 9999 28956 red rose
+B 0 28918 9999 28956 white rose
+B 0 28919 9999 28956 yellow rose
+B 0 28946 9999 28957 carrot
+B 0 28947 9999 28957 Lettuce
+O 0 28948 9999 28961 table
+O 0 28949 9999 28961 chair
+O 0 28949 9999 28961
+O 0 28949 9999 28961
+O 0 28949 9999 28961
+O 0 28950 9999 28961 fireplace
+O 0 28951 9999 28961 couch
+O 0 28913 9999 28951 cookstove
+P 1 28953 9999 28913 cookstove fuels
+P 1 28953 9999 28913
+O 0 28913 9999 28966
+P 1 28953 9999 28913 cookstove fuels
+P 1 28953 9999 28913
+P 1 28953 9999 28913
+O 0 28952 9999 28966 kitchen table
+O 0 28904 9999 28969 bloody head
+O 0 28903 9999 28969 Destroyed bed
+O 0 28905 9999 28970 destroyed cot
+O 0 28900 9999 28970 bloody body 
+O 0 28906 9999 28980 Altar
+P 1 28954 9999 28906 offering of talens
+? 0 1 0 P
+P 1 28910 1 28906 Snake scepter
+? 0 5 0 P
+P 1 28907 5 28906 serpentine hatchet
+? 0 5 0 P
+P 1 28909 5 28906 serpentine dagger
+O 0 28902 9999 28997 tent exit
+O 0 28939 9999 28999 well exit
+O 0 28955 9999 28903 large iron cookpot
+
+M 0 28901 1 28946 searching trolloc
+Y 0 119 2
+M 0 28902 1 28997 Undead fade
+M 0 28903 1 28929 Prowling wolf
+M 0 28903 1 28942
+M 0 28904 2 28992 Female wolf
+M 0 28905 3 28992 female pup
+M 0 28906 3 28992 male pup
+M 0 28907 1 28992 male wounded
+M 0 28908 1 28991 pack leader
+M 0 28909 1 28952 dirty cleric
+M 0 28910 1 28970 Goblin Commander
+Y 0 58 5 5% chance at goblin
+M 0 28911 1 28945 grumpy husband
+M 0 28912 1 28951 smug wife
+M 0 28913 1 28901 resting trollocs
+Y 0 119 2
+M 0 28913 1 28902
+Y 0 119 2
+M 0 28914 1 28901 resting trollocs
+Y 0 119 2
+M 0 28914 1 28902
+Y 0 119 2
+M 0 28915 4 28932 Sheep Ram
+M 0 28915 4 28933
+M 0 28915 4 28939
+M 0 28915 4 28940
+M 0 28916 4 28932 Sheep ewe
+M 0 28916 4 28933
+M 0 28916 4 28939
+M 0 28916 4 28940
+M 0 28917 4 28932 Sheep lamb
+M 0 28917 4 28933
+M 0 28917 4 28939
+M 0 28917 4 28940
+M 0 28918 1 28901 Resting trollocs
+Y 0 119 2
+M 0 28918 1 28902
+Y 0 119 2
+M 0 28919 1 28901 Resting trollocs
+Y 0 119 2
+M 0 28919 1 28902
+Y 0 119 2
+M 0 28920 1 28901 Resting trollocs
+Y 0 119 2
+M 0 28920 1 28902
+Y 0 119 2
+M 0 28921 1 28901 Resting trollocs
+Y 0 119 2
+M 0 28921 1 28902
+Y 0 119 2
+M 0 28922 1 28918 woodcutter
+? 0 5 0 E
+E 1 28916 32 19 Woodcutters axe
+M 0 28923 1 28917 Clearer
+M 0 28924 1 28924 Planter
+? 0 15 0 E Seeds
+G 1 28915 9999 
+M 0 28925 1 28980 Worshipper
+E 1 28938 9999 1 Amber faction sigil
+M 0 28926 1 28916 Masked trolloc
+E 1 28923 9999 5 Mask
+Y 0 119 2
+M 0 28927 1 28960 Valash
+M 0 28928 1 28957 Sabrina
+M 0 28929 8 28967 Chicken
+M 0 28930 1 28965 Syidan
+M 0 28931 1 28996 Great serpent
+S
+

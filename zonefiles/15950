@@ -1,0 +1,792 @@
+#15950
+Brightmoon Library - Pappy~
+15999 30 2 1
+
+****************
+******Doors*****
+****************
+D 0 15984 4 1  Secret stairs to East tower
+D 0 15992 5 1
+
+D 0 15992 4 1  Trapdoor East tower
+D 0 15993 5 1
+
+D 0 15986 4 1  Secret stairs to West tower
+D 0 15996 5 1
+
+D 0 15996 4 1  Trapdoor West tower
+D 0 15997 5 1
+
+D 0 15986 1 2  Vault door 2nd floor
+D 0 15987 3 2
+
+D 0 15987 0 1  Headmasters study 2nd floor
+D 0 15981 2 1
+
+D 0 15981 3 1  Assistants study 2nd floor
+D 0 15980 1 1
+
+D 0 15960 1 1  E-W Screen into Courtyard
+D 0 15961 3 1
+
+D 0 15960 2 1  N-S Screen into Courtyard
+D 0 15955 0 1
+
+D 0 15961 8 1  Main entrance double doors
+D 0 15951 7 1
+
+*! TODO: I need to add commands to lower/raise the secret stairs
+*!       for some rooms given the command "press button"
+*!       button 15986 <-up/down-> 15996
+*!       button 15984 <-up/down-> 15992
+
+****************
+****Furniture***
+****************
+
+* TODO: these bookshelves should randomly load some books from the game
+*       make sure they are non-quest, and only books (not magic items)
+
+O 0 15982 33 15982 bookshelves for top floor
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+
+O 0 15982 33 15982
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15982
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15978
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 30985 1 15982    moleskin history
+
+O 0 15982 33 15978
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15978
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15979
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 10730 1 15982    the properties of light (book simple)
+
+O 0 15982 33 15979
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15979
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 8442 1 15982     tattered book
+
+O 0 15982 33 15983
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15983
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15983
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 9070 1 15982
+
+O 0 15982 33 15984
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 9071 1 15982
+
+O 0 15982 33 15984
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 9072 1 15982
+
+O 0 15982 33 15984
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15985
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15985
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 9073 1 15982
+
+O 0 15982 33 15985
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 9074 1 15982
+
+O 0 15982 33 15988
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15988
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15988
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 17117 1 15982
+
+O 0 15982 33 15989
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15989
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15989
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15990
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 17118 1 15982
+
+O 0 15982 33 15990
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15990
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29912 1 15982    serpent
+
+O 0 15982 33 15991
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 8442 1 15982     tattered book
+
+O 0 15982 33 15991
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 29913 1 15982    logrus
+
+O 0 15982 33 15991
+? 0 50 0 P
+P 1 29910 1 15982    eyes of elyon
+? 0 50 0 P
+P 1 27327 1 15982    moldy tome
+? 0 50 0 P
+P 1 31781 1 15982
+
+O 0 15982 33 15986  bookshelves in the vault
+? 0 2 0 P
+P 1 812 1 15982		  identify scroll
+? 0 2 0 P
+P 1 31386 1 15982   detect magic
+? 0 2 0 P
+P 1 31380 1 15982   detect invis
+? 0 2 0 P
+P 1 31373 1 15982   stealth
+? 0 2 0 P
+P 1 31378 1 15982   falcon wings
+? 0 2 0 P
+P 1 31383 1 15982   p. water
+? 0 2 0 P
+P 1 31384 1 15982   p. air
+? 0 2 0 P
+P 1 31385 1 15982   p. fire
+? 0 2 0 P
+P 1 31387 1 15982   p. elements
+? 0 2 0 P
+P 1 1599 1 15982    p. earth
+? 0 2 0 P
+P 1 31393 1 15982   accelerate
+? 0 2 0 P
+P 1 1497 1 15982    gust
+? 0 2 0 P
+P 1 31368 1 15982   gusher
+? 0 2 0 P
+P 1 31375 1 15982   granite fists
+? 0 10 0 P
+P 1 1487 1 15982    parchment
+
+O 0 15982 33 15986
+? 0 2 0 P
+P 1 812 1 15982		  identify scroll
+? 0 2 0 P
+P 1 31386 1 15982   detect magic
+? 0 2 0 P
+P 1 31380 1 15982   detect invis
+? 0 2 0 P
+P 1 31373 1 15982   stealth
+? 0 2 0 P
+P 1 31378 1 15982   falcon wings
+? 0 2 0 P
+P 1 31383 1 15982   p. water
+? 0 2 0 P
+P 1 31384 1 15982   p. air
+? 0 2 0 P
+P 1 31385 1 15982   p. fire
+? 0 2 0 P
+P 1 31387 1 15982   p. elements
+? 0 2 0 P
+P 1 1599 1 15982    p. earth
+? 0 2 0 P
+P 1 31393 1 15982   accelerate
+? 0 2 0 P
+P 1 1497 1 15982    gust
+? 0 2 0 P
+P 1 31368 1 15982   gusher
+? 0 2 0 P
+P 1 31375 1 15982   granite fists
+? 0 10 0 P
+P 1 1487 1 15982    parchment
+
+O 0 15982 33 15986
+? 0 2 0 P
+P 1 812 1 15982		  identify scroll
+? 0 2 0 P
+P 1 31386 1 15982   detect magic
+? 0 2 0 P
+P 1 31380 1 15982   detect invis
+? 0 2 0 P
+P 1 31373 1 15982   stealth
+? 0 2 0 P
+P 1 31378 1 15982   falcon wings
+? 0 2 0 P
+P 1 31383 1 15982   p. water
+? 0 2 0 P
+P 1 31384 1 15982   p. air
+? 0 2 0 P
+P 1 31385 1 15982   p. fire
+? 0 2 0 P
+P 1 31387 1 15982   p. elements
+? 0 2 0 P
+P 1 1599 1 15982    p. earth
+? 0 2 0 P
+P 1 31393 1 15982   accelerate
+? 0 2 0 P
+P 1 1497 1 15982    gust
+? 0 2 0 P
+P 1 31368 1 15982   gusher
+? 0 2 0 P
+P 1 31375 1 15982   granite fists
+? 0 10 0 P
+P 1 1487 1 15982    parchment
+
+O 0 15986 1 15986  chest in the vault
+? 0 4 0 P
+P 1 15985 1 15986	4% ancient musty tome
+? 0 4 0 P
+P 1 815 1 15986		4% enhance weapon scroll
+? 0 4 0 P
+P 1 813 1 15986		4% torn scroll
+? 0 4 0 P
+P 1 4422 1 15986		4% galvanize
+
+
+O 0 15975 1 15986  large stone safe (with quest item)
+P 1 15972 1 15975	quest item: Brightmoon defense plans
+
+
+O 0 15957 45 15980  desks for the top floor
+O 0 15957 45 15987
+
+O 0 15957 45 15975  desks for the bottom floor
+O 0 15957 45 15975
+O 0 15957 45 15975
+O 0 15957 45 15975
+
+O 0 15957 45 15976
+O 0 15957 45 15976
+O 0 15957 45 15976
+O 0 15957 45 15976
+
+O 0 15957 45 15977
+O 0 15957 45 15977
+O 0 15957 45 15977
+O 0 15957 45 15977
+
+O 0 15957 45 15969
+O 0 15957 45 15969
+O 0 15957 45 15969
+O 0 15957 45 15969
+
+O 0 15957 45 15970
+O 0 15957 45 15970
+O 0 15957 45 15970
+O 0 15957 45 15970
+
+O 0 15957 45 15971
+O 0 15957 45 15971
+O 0 15957 45 15971
+O 0 15957 45 15971
+
+O 0 15957 45 15972
+O 0 15957 45 15972
+O 0 15957 45 15972
+O 0 15957 45 15972
+
+O 0 15957 45 15964
+O 0 15957 45 15964
+O 0 15957 45 15964
+O 0 15957 45 15964
+
+O 0 15957 45 15957
+O 0 15957 45 15957
+O 0 15957 45 15957
+O 0 15957 45 15957
+
+O 0 15957 45 15958
+O 0 15957 45 15958
+O 0 15957 45 15958
+O 0 15957 45 15958
+
+O 0 15957 45 15963
+O 0 15957 45 15963
+O 0 15957 45 15963
+
+O 0 15956 1 15963  desk with secret writing (has to be 1.desk so it stacks w/others)
+
+O 0 15958 1 15958  window for bottom floor looking east
+
+O 0 15971 1 15971  window for bottom floor looking south
+
+* Control max exist on this to keep it from multiplying
+B 0 15974 1 15974  gaelik statue
+* TODO: I need to have some way of making the statue a container which
+*	loads and holds the item 15969 so that when you type the 
+*	text: "twist arm off" next to this statue, you will see that there
+*	is a secret compartment inside the statue with the item inside.
+
+
+O 0 15965 1 15965  portal for toolshed
+
+O 0 15995 1 15995  exit portal for toolshed
+
+O 0 15960 1 15960  courtyard fountain
+
+O 0 15959 1 15959  courtyard bench
+
+O 0 15966 1 15966  courtyard bench with secret writing
+
+* TODO: Book of power
+* Note: want to add incantation procs to this
+*       similar to the 'time' door to the Spirits
+*       incantation procs for the BoP are always good/bad
+*       depending on random chance and sacrifice.  An example would be
+*       saying "Sunday Gravy" would 85% result in Sorcerers globe
+*       being cast on the person, and 15% getting faerie fire.
+*       the chance of a good result goes up with the more money you
+*       place on the book before incanting (which dissapears when cast)
+O 0 15999 1 15997  Marukalia, the Book of Power
+
+
+****************
+*****Lights*****
+****************
+
+O 0 15970 34 15956 first floor glowing orbs
+O 0 15970 34 15955
+O 0 15970 34 15954
+O 0 15970 34 15953
+O 0 15970 34 15952
+O 0 15970 34 15957
+O 0 15970 34 15958
+O 0 15970 34 15962
+O 0 15970 34 15963
+O 0 15970 34 15964
+O 0 15970 34 15967
+O 0 15970 34 15968
+O 0 15970 34 15969
+O 0 15970 34 15970
+O 0 15970 34 15971
+O 0 15970 34 15972
+O 0 15970 34 15973
+O 0 15970 34 15974
+O 0 15970 34 15975
+O 0 15970 34 15976
+O 0 15970 34 15977
+
+O 0 15970 34 15978 second floor glowing orbs
+O 0 15970 34 15979
+O 0 15970 34 15980
+O 0 15970 34 15981
+O 0 15970 34 15982
+O 0 15970 34 15983
+O 0 15970 34 15984
+O 0 15970 34 15985
+
+O 0 15970 34 15987
+O 0 15970 34 15988
+O 0 15970 34 15989
+O 0 15970 34 15990
+O 0 15970 34 15991
+
+O 0 14300 34 15995 load Dolgan's glowing stone for the shed
+
+****************
+******Mobs******
+****************
+
+M 0 15954 2 15975 scholar library gnome male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15955 2 15958 scholar library gnome female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15954 2 15963 scholar library gnome male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15955 2 15982 scholar library gnome female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15956 2 15975 scholar library elf male elven [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15958 2 15958 scholar library elf female elven [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15956 2 15977 scholar library elf male elven [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15958 2 15970 scholar library elf female elven [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15957 4 15963 scholar library tired human male [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15957 4 15984 scholar library tired human male [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15957 4 15979 scholar library tired human male [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15957 4 15972 scholar library tired human male [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15964 4 15969 scholar library tired human female [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15964 4 15977 scholar library tired human female [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15964 4 15976 scholar library tired human female [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15964 4 15972 scholar library tired human female [nocturnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15963 4 15963 scholar library busy human male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15963 4 15969 scholar library busy human male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15963 4 15983 scholar library busy human male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15963 4 15976 scholar library busy human male [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15969 4 15976 scholar library busy human female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15969 4 15977 scholar library busy human female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15969 4 15972 scholar library busy human female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+M 0 15969 4 15991 scholar library busy human female [diurnal]
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15959 1 15963 scholar library human male Quentin insane
+? 0 3 0 E
+E 1 15962 32 5		3% cap of insanity
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15960 1 15950 beggar pathetic Burdok
+? 0 3 0 E
+E 1 15967 32 14		3% tattered old cloak (of disguise)
+
+
+M 0 15961 1 15951 library warder guard
+Y 0 8 3  		3% chance at loading some studded leather
+M 0 15961 2 15960 library warder guard
+Y 0 8 3  		3% chance at loading some studded leather
+M 0 15961 1 15970 library warder guard
+Y 0 8 3  		3% chance at loading some studded leather
+M 0 15961 1 15981 library warder guard
+Y 0 8 3  		3% chance at loading some studded leather
+
+
+M 0 15962 1 15961 Library warder guard captain Vassus impressive
+Y 0 10 4  		4% chance at loading some metal
+
+
+M 0 15965 1 15995 groundskeeper keeper Willon disgruntled
+? 0 10 0 E
+E 1 14404 9999 19	10% shovel from the Shire zone
+
+
+M 0 15966 1 15987 Head librarian Tertullian library
+G 1 15987 1 		key sturdy iron
+? 0 4 0 E
+E 1 15979 9999 19 	4% glass magnifying
+? 0 4 0 E
+E 1 15981 9999 18 	4% pen glass slender
+? 0 4 0 G
+G 1 15980 9999		4% case scrollcase ivory
+? 0 1 0 E
+E 1 15964 200 1		1% ring silver gold flecked
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15967 1 15980 Assistant librarian Agorix library
+G 1 15951 1 		key marble vault
+? 0 4 0 E
+E 1 15979 9999 19 	4% glass magnifying
+? 0 4 0 E
+E 1 15981 9999 18 	4% pen glass slender
+? 0 4 0 G
+G 1 15980 9999		4% case scrollcase ivory
+? 0 2 0 E
+E 1 15954 16 5 		2% circlet meditation golden
+? 0 1 0 E
+E 1 15968 200 2		1% ring greenish copper
+
+
+M 0 15968 1 15989 Devarsi shaman researcher elf elven
+? 0 1 0 E
+E 1 15952 16 16		1% bracelet ravens silver
+? 0 1 0 E
+E 1 15952 16 17		1% bracelet ravens silver
+
+
+M 0 15970 1 15978 Krug ogre researcher
+? 0 25 0 E
+E 1 15983 1 18 		25% book iron-bound nursery rhyme [no-rent]
+
+
+M 0 15971 1 15988 Tyra human female researcher woman
+? 0 1 0 E
+E 1 15953 16 12		1% armband ivory beasts animals ornate
+? 0 1 0 E
+E 1 15953 16 13		1% armband ivory beasts animals ornate
+
+
+M 0 15972 1 15985 Tormod dwarf dwarven researcher
+? 0 1 0 E
+E 1 15955 16 10		1% gauntlet prayer
+? 0 1 0 E
+E 1 15955 16 11		1% gauntlet prayer
+
+
+M 0 15973 1 15990 Gnayana gnome gnomish researcher
+? 0 2 0 E
+E 1 15961 16 15		2% belt tiger's eye brown
+
+
+****************
+***TODO LATER***
+****************
+
+* Add more book of power clues and procs
+    * embed one on Quentin?  How he went insane :)
+    * embed some on the researchers, or use them for something else
+    * hide some in a few books that load in the library?
+S

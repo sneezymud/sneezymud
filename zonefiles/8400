@@ -1,0 +1,246 @@
+#8400
+Peel - Old Grimhaven Casino~
+8432 35 2 1
+
+*O 0 15317 9999 8400          high rollers
+O 0 8401 9999 8400            golden treasure boys warning sign
+
+A 0 8400 8417
+M 0 8400 10 -99                squatter
+A 0 8400 8417
+M 0 8400 10 -99                squatter
+A 0 8400 8417
+M 0 8400 10 -99                squatter
+A 0 8400 8417
+M 0 8400 10 -99                squatter
+A 0 8400 8417
+M 0 8400 10 -99                squatter
+
+A 0 8400 8417
+M 0 8401 10 -99                beggar
+A 0 8400 8417
+M 0 8401 10 -99                beggar
+A 0 8400 8417
+M 0 8401 10 -99                beggar
+
+A 0 8400 8417
+M 0 8402 10 -99                thief
+A 0 8400 8417
+M 0 8402 10 -99                thief
+A 0 8400 8417
+M 0 8402 10 -99                thief
+
+A 0 8400 8417
+M 0 8403 10 -99                thug
+A 0 8400 8417
+M 0 8403 10 -99                thug
+A 0 8400 8417
+M 0 8403 10 -99                thug
+
+A 0 8400 8417
+M 0 8404 10 -99                hustler
+A 0 8400 8417
+M 0 8404 10 -99                hustler
+
+A 0 8400 8417
+M 0 8405 10 -99                squatter
+A 0 8400 8417
+M 0 8405 10 -99                squatter
+A 0 8400 8417
+M 0 8405 10 -99                squatter
+
+
+M 0 8407 10 8415                fight spectator, squatter
+M 0 8407 10 8415                fight spectator, squatter
+M 0 8407 10 8415                fight spectator, squatter
+M 0 8407 10 8415                fight spectator, squatter
+M 0 8406 10 8415                fighter
+M 0 8410 10 8415                fighter
+M 0 8408 10 8415                referee
+
+M 0 8409 10 8403                leader
+K 1 8411 10 8403                bodyguard
+K 1 8411 10 8403                bodyguard
+K 1 8411 10 8403                bodyguard
+
+*O 0 8400 1 8404	        Slot Machine
+*O 0 8400 2 8405	        Slot Machine
+*O 0 8400 3 8406 	Slot Machine
+*O 0 8400 4 8407	        Slot Machine
+*O 0 8400 5 8409	        Slot Machine
+*O 0 8400 6 8410	        Slot Machine
+*O 0 8400 7 8411	        Slot Machine
+*O 0 8400 8 8412	        Slot Machine
+
+D 0 8418 0 2	; Lounge Manager's Office
+D 0 8421 2 2	
+D 0 8420 0 1	; Gaming Room
+D 0 8423 2 1
+D 0 8421 0 1	; Bouncer's Lounge
+D 0 8424 2 1
+D 0 8423 0 1	; Gaming Room
+D 0 8426 2 1
+D 0 8431 0 1	; Dressing Room
+D 0 8432 2 1
+
+
+O 0 8419 9999 8418	; Lounge Chair
+O 0 8419 9999 8420
+O 0 8419 9999 8420
+O 0 8419 9999 8421
+O 0 8419 9999 8421
+O 0 8419 9999 8423
+O 0 8419 9999 8423
+O 0 8419 9999 8425
+O 0 8419 9999 8425
+O 0 8419 9999 8425
+O 0 8419 9999 8426
+O 0 8419 9999 8426
+O 0 8419 9999 8426
+O 0 8419 9999 8428
+O 0 8419 9999 8428
+O 0 8419 9999 8428
+O 0 8419 9999 8429
+O 0 8419 9999 8429
+O 0 8419 9999 8429
+O 0 8420 9999 8420	; Lounge Table
+P 1 8422 9999 8420		; Deck of Cards
+O 0 8420 9999 8421
+O 0 8420 9999 8423
+P 1 8422 9999 8420		; Deck of Cards
+O 0 8420 9999 8425
+P 1 8424 9999 8420		; Bottle of Ale
+O 0 8420 9999 8426
+P 1 8425 9999 8420		; Mug of Mead
+O 0 8420 9999 8428
+P 1 8424 9999 8420		; Bottle of Ale
+O 0 8420 9999 8429
+P 1 8425 9999 8420		; Mug of Mead
+O 0 8421 9999 8424	; Lounge Bar
+P 1 8424 9999 8421		; Bottle of Ale
+P 1 8424 9999 8421
+P 1 8425 9999 8421		; Mug of Mead
+P 1 8425 9999 8421
+O 0 8421 9999 8427
+O 0 11467 9999 8418	; Wooden Desk
+P 1 23646 9999 11467		; Slumber Potion
+
+M 0 265 1 8421 		  Head Bouncer
+M 0 8426 1 8403 	; Pit Boss
+M 0 8418 1 8419 	; Lounge Bouncer
+M 0 8418 1 8426 	; Lounge Bouncer
+M 0 8418 1 8428 	; Lounge Bouncer
+? 0 50 0 M
+M 1 8418 1 8420 	; Lounge Bouncer
+? 0 50 0 M
+M 1 8418 1 8427 	; Lounge Bouncer
+
+M 0 8419 1 8429 	; Lounge Manager
+? 0 60 0 G
+G 1 8418 6
+
+M 0 8420 1 8424 	; Lounge BarKeep
+? 0 30 0 G
+G 1 8424 9999			; Bottle of Ale
+? 0 30 0 G
+G 1 8425 9999			; Mug of Mead
+
+M 0 8421 1 8425 	; Lounge BarMaid
+? 0 10 0 G
+G 1 8424 9999			; Bottle of Ale
+? 0 10 0 G
+G 1 8425 9999			; Mug of Mead
+M 0 8421 1 8426 	; Lounge BarMaid
+? 0 10 0 G
+G 1 8424 9999			; Bottle of Ale
+? 0 10 0 G
+G 1 8425 9999			; Mug of Mead
+? 0 50 0 M
+M 1 8421 1 8427 	; Lounge BarMaid
+? 0 10 0 G
+G 1 8424 9999			; Bottle of Ale
+? 0 10 0 G
+G 1 8425 9999			; Mug of Mead
+
+M 0 8422 1 8430 	; Minstrel
+
+M 0 8423 1 8431 	; Lounge Dancer
+? 0 1 0 E
+E 1 1660 999 5			Supple Headband
+? 0 1 0 E
+E 1 1661 999 3			Supple Necklace
+? 0 1 0 E
+E 1 1662 999 4			Supple Vest
+? 0 2 0 E
+E 1 1663 999 12			Supple Arm,band
+? 0 2 0 E
+E 1 1664 999 11			Supple Glove
+? 0 1 0 E
+E 1 1665 999 15			Supple Belt
+? 0 2 0 E
+E 1 1666 999 17			Supple Bracelet
+? 0 1 0 E
+E 1 1667 999 7			Supple Pants
+? 0 2 0 E
+E 1 1668 999 9			Supple Boots
+? 0 1 0 E
+E 1 1669 999 14			Supple Cloak
+
+M 0 8423 1 8432 	; Lounge Dancer
+? 0 1 0 E
+E 1 1660 999 5			Supple Headband
+? 0 1 0 E
+E 1 1661 999 3			Supple Necklace
+? 0 1 0 E
+E 1 1662 999 4			Supple Vest
+? 0 2 0 E
+E 1 1663 999 12			Supple Arm,band
+? 0 1 0 E
+E 1 1664 999 11			Supple Glove
+? 0 2 0 E
+E 1 1665 999 15			Supple Belt
+? 0 2 0 E
+E 1 1666 999 17			Supple Bracelet
+? 0 1 0 E
+E 1 1667 999 7			Supple Pants
+? 0 2 0 E
+E 1 1668 999 9			Supple Boots
+? 0 1 0 E
+E 1 1669 999 14			Supple Cloak
+
+M 0 8424 1 8425 	; Lounge Patron
+? 0 20 0 G
+G 1 8424 9999			; Bottle of Ale
+M 0 8424 1 8426 	; Lounge Patron
+? 0 20 0 G
+G 1 8425 9999			; Mug of Mead
+M 0 8424 1 8428 	; Lounge Patron
+? 0 20 0 G
+G 1 8425 9999			; Mug of Mead
+M 0 8424 1 8429 	; Lounge Patron
+? 0 20 0 G
+G 1 8425 9999			; Mug of Mead
+? 0 50 0 M
+M 1 8424 1 8429 	; Lounge Patron
+? 0 20 0 G
+G 1 8424 9999			; Bottle of Ale
+? 0 50 0 M
+M 1 8424 1 8428 	; Lounge Patron
+? 0 20 0 G
+G 1 8424 9999			; Bottle of Ale
+
+M 0 8425 1 8420 	; High-Stakes Gambler
+M 0 8425 1 8420 	; High-Stakes Gambler
+? 0 4 0 G
+G 1 8427 1			; Loaded Deck of Cards
+M 0 8425 1 8423 	; High-Stakes Gambler
+M 0 8425 1 8423 	; High-Stakes Gambler
+? 0 50 0 M
+M 1 8425 1 8423 	; High-Stakes Gambler
+? 0 10 0 G
+G 1 8422 5			; Lucky Deck of Cards
+M 0 8428 4 8429 	; Shady- Gambler
+? 0 2 0 G
+G 1 8426 1			; Loaded Dice
+S
+

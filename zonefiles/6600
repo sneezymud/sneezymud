@@ -1,0 +1,333 @@
+#6600
+Darkanan - The Dungeons Under Grimhaven~
+6799 27 2 1
+
+D 0 6600 5 1   ;Secret entrance
+D 0 6601 4 1 
+D 0 6603 1 1   ;small room
+D 0 6605 3 1
+D 0 6603 0 2   ;locked door entrance
+D 0 6604 2 2
+D 0 6627 2 1   ;spider web secret
+D 0 6628 0 1
+D 0 6615 0 1   ;storage room
+D 0 6658 0 1
+D 0 6666 0 1   ;hermits house
+D 0 6667 2 1
+D 0 6672 0 1   ;seedy hangout
+D 0 6673 2 1
+D 0 6650 0 1   ;gatekeeper's office
+D 0 6648 2 1
+D 0 6648 5 2   ;locked grate to next level
+D 0 6674 4 2
+D 0 6674 1 1   ;leper colony
+D 0 6691 3 1
+D 0 6681 1 1   ;leper colony
+D 0 6682 3 1
+D 0 6689 3 1   ;leper colony
+D 0 6690 1 1
+D 0 6706 0 1   ;leper colony
+D 0 6707 2 1
+D 0 6699 3 1   ;path to priest
+D 0 6700 1 1
+D 0 6704 3 1   ;priest's chamber
+D 0 6737 1 1
+D 0 6704 1 1   ;prayer chamber
+D 0 6738 3 1
+D 0 6704 0 1   ;leper colony
+D 0 6739 2 1
+D 0 6726 0 1   ;leper colony
+D 0 6725 2 1
+D 0 6716 0 1   ;missionary HQ
+D 0 6717 2 1
+D 0 6717 1 1   ;missionary HQ
+D 0 6718 3 1
+D 0 6724 2 2   ;path to Stairs
+D 0 6741 2 1   ;vigilante outpost
+D 0 6742 0 1
+D 0 6748 1 1   ;captains office
+D 0 6749 3 1
+D 0 6744 3 1   ;sleeping quarters
+D 0 6745 1 1
+D 0 6746 2 2   ;iron door vig outpost
+D 0 6750 0 2
+D 0 6758 2 1   ;criminal hideout
+D 0 6759 0 1
+D 0 6768 2 1   ;storage room
+D 0 6766 0 1
+D 0 6780 0 1   ;torture chamber
+D 0 6781 2 1
+D 0 6782 3 2   ;cell
+D 0 6783 1 2
+D 0 6795 3 2   ;cell
+D 0 6784 1 2
+D 0 6786 3 2   ;cell
+D 0 6785 1 2
+D 0 6788 1 2   ;cell
+D 0 6789 3 2
+D 0 6793 1 2   ;cell
+D 0 6790 3 2
+D 0 6792 1 2   ;cell
+D 0 6791 3 2
+
+M 0 7874 1 6600         Expert Thief - mage robe quest
+
+M 0 6761 1 6761 61   ;Scar Quest
+
+
+M 0 6612 1 6605      ;Vagrant
+G 1 6604 5          ;key to dungeon
+
+M 0 6613 1 6667      ;hermit
+M 0 6610 1 6648      ;gatekeeper
+G 1 6674 5	          ;grate key
+Y 0 7 5		          ;Hard leather
+
+M 0 6605 1 6628      ;Spiders
+M 0 6605 1 6628 
+
+M 0 6604 1 6638      ;Rats
+M 0 6604 1 6638 
+M 0 6604 1 6638 
+M 0 6604 1 6659 
+M 0 6604 1 6665 
+M 0 6604 1 6610 
+M 0 6604 1 6614 
+M 0 6604 1 6619 
+
+M 0 6614 1 6673      ;Shady Youths
+M 0 6614 1 6673 
+M 0 6614 1 6673 
+M 0 6614 1 6669 
+M 0 6614 1 6646 
+
+M 0 6611 1 6737      ;Priest
+G 1 6736 5          ;Bloody Key
+? 0 20 0 G          ;Chance to be given brass symbs
+G 1 505 999
+
+M 0 6601 1 6717      ;Missionary
+M 9 6601 1 6717 
+M 0 6601 1 6717 
+M 0 6601 1 6718 
+M 0 6601 1 6706 
+M 0 6601 1 6702 
+M 0 6601 1 6712 
+
+M 0 6602 1 6682     ;Leper
+M 0 6602 1 6682 
+M 0 6602 1 6682 
+M 0 6602 1 6690 
+M 0 6602 1 6690 
+M 0 6602 1 6690 
+M 0 6602 1 6707 
+M 0 6602 1 6707 
+M 0 6602 1 6691 
+M 0 6602 1 6691 
+M 0 6602 1 6725 
+M 0 6602 1 6739 
+
+M 0 6608 1 6704      ;Nurse
+M 0 6608 1 6716 
+M 0 6608 1 6676 
+
+M 0 6600 1 6749      ;Vigilante Captain
+G 1 6750 5          ;Blue Key
+? 0 15 0 E          ;long sword
+E 1 300 999 19
+? 0 10 0 E          ;chain gear
+E 1 1062 999 4
+? 0 10 0 E         
+E 1 1061 999 3
+? 0 10 0 E         
+E 1 1060 999 5
+Y 0 8 2 	         ;Studded leather
+
+M 0 6606 1 6746      ;Vigilante
+? 0 3 0 E          ;Hard leather
+E 1 1031 999 14
+? 0 3 0 E
+E 1 1030 999 18
+? 0 5 0 E           studded boots 
+E 1 1048 999 8
+? 0 5 0 E
+E 1 1048 999 9
+? 0 5 0 E
+E 1 1027 999 6
+? 0 5 0 E
+E 1 1026 999 16
+? 0 5 0 E
+E 1 1026 999 17
+? 0 5 0 E
+E 1 1025 999 15
+? 0 5 0 E
+E 1 1024 999 10
+? 0 5 0 E
+E 1 1024 999 11
+? 0 5 0 E
+E 1 1023 999 12
+? 0 5 0 E
+E 1 1023 999 13
+? 0 5 0 E
+E 1 1022 999 4
+? 0 5 0 E
+E 1 1021 999 3
+? 0 5 0 E
+E 1 1020 999 5
+
+M 0 6606 1 6746      ;Vigilante
+? 0 5 0 E          ;Hard leather
+E 1 1031 999 14
+? 0 5 0 E
+E 1 1030 999 18
+? 0 5 0 E
+E 1 1028 999 8
+? 0 5 0 E
+E 1 1028 999 9
+? 0 5 0 E
+E 1 1027 999 6
+? 0 5 0 E
+E 1 1026 999 16
+? 0 5 0 E
+E 1 1026 999 17
+? 0 5 0 E
+E 1 1025 999 15
+? 0 5 0 E
+E 1 1024 999 10
+? 0 5 0 E
+E 1 1024 999 11
+? 0 5 0 E
+E 1 1023 999 12      
+? 0 5 0 E
+E 1 1023 999 13
+? 0 10 0 E
+E 1 1042 999 4     studded vest
+? 0 5 0 E
+E 1 1021 999 3
+? 0 5 0 E
+E 1 1040 999 5     studded helm
+
+M 0 6606 1 6746      ;Vigilante
+? 0 10 0 E          ;studded cloak
+E 1 1051 999 14
+Y 0 7 5		          ;Hard leather
+
+M 0 6606 1 6746      ;Vigilante
+? 0 10 0 E
+E 1 1040 999 5      studded collar
+Y 0 7 5		          ;Hard leather
+
+M 0 6606 1 6746      ;Vigilante
+? 0 5 0 E
+E 1 1041 999 3     studded helmet
+Y 0 7 5   	       ;Hard leather
+
+M 0 6606 1 6751      ;Vigilante
+? 0 5 0 E   		Studded Vest
+E 1 1042 999 4
+Y 0 7 5		          ;Hard leather
+
+M 0 6606 1 6777      ;Vigilante
+? 0 5 0 E
+E 1 1041 999 3           ;studded collar
+Y 0 7 5		          ;Hard leather
+
+M 0 6606 1 6764      ;Vigilante
+? 0 5 0 E
+E 1 1040 999 5		   studded helmet
+Y 0 7 5		          ;Hard leather
+
+M 0 6607 1 6759      ;Escaped Convict
+M 0 6607 1 6759 
+M 0 6607 1 6759 
+M 0 6607 1 6759 
+M 0 6607 1 6775 
+M 0 6607 1 6768 
+M 0 6607 1 6758 
+
+M 0 6603 1 6794      ;Bandar Torture Master
+G 1 6788 5          ;Cell Key
+? 0 10 0 E          ;Chain
+E 1 6642 100 19
+? 0 5 0 E          ;chain gear
+E 1 1062 9999 4
+? 0 5 0 E         
+E 1 1061 9999 3
+? 0 5 0 E         
+E 1 1060 9999 5
+Y 0 8 2		          ;Studded leather
+
+
+M 0 6609 1 6785      ;Prisoner
+M 0 6615 1 6784 
+M 0 6616 1 6783 
+M 0 6617 1 6791 
+M 0 6618 1 6790 
+M 0 6619 1 6789 
+M 0 6620 1 6707           Xansensi
+
+O 0 6600 1 6658     ;Crate
+O 0 6601 1 6667     ;Bed(hay)
+O 0 6603 1 6667     ;Pole lantern
+O 0 6616 19 6682    ;Bed(bloody)
+O 0 6616 19 6682
+O 0 6616 19 6682
+O 0 6616 19 6690
+O 0 6616 19 6690
+O 0 6616 19 6690
+O 0 6616 19 6691
+O 0 6616 19 6691
+O 0 6616 19 6691
+O 0 6616 19 6707
+O 0 6616 19 6707
+O 0 6616 19 6707
+O 0 6616 19 6725
+O 0 6616 19 6725
+O 0 6616 19 6725
+O 0 6616 19 6739
+O 0 6616 19 6739
+O 0 6616 19 6739
+O 0 10935 2 6730     ;Spring(water)
+O 0 10935 3 6731
+O 0 10935 4 6732
+O 0 10935 5 6733
+O 0 10935 6 6734
+O 0 10935 7 6735
+O 0 6606 2 6717     ;Bed
+O 0 6606 2 6737
+O 0 6607 1 6749     ;Desk
+O 0 6608 2 6743     ;Training Dummy
+O 0 6608 2 6747
+O 0 6609 3 6745     ;Beds(Bunk)
+O 0 6609 3 6745
+O 0 6609 3 6745
+O 0 6610 1 6758     ;Crate(secret)
+O 0 6611 1 6766     ;Racks
+O 0 6612 1 6794     ;Fire pit
+O 0 6613 1 6787     ;Stretching machine
+O 0 6614 1 6792     ;Iron Maiden
+O 0 6615 1 6782     ;Bed(nails)
+O 0 6640 1 6737     ;Desk
+O 0 6641 1 6737     ;Cross
+O 0 1201 99 6737    ;Wall torch
+O 0 1201 99 6635 
+O 0 1201 99 6636
+O 0 1201 99 6637
+O 0 1201 99 6639
+O 0 1201 99 6640
+O 0 1201 99 6641
+O 0 1201 99 6643
+O 0 1201 99 6644
+O 0 1201 99 6645
+O 0 1201 99 6704
+O 0 1201 99 6703
+O 0 1201 99 6702
+O 0 1201 99 6701
+O 0 1201 99 6771
+O 0 1201 99 6772
+O 0 1201 99 6773
+O 0 1201 99 6774
+O 0 1201 99 6775
+O 0 1201 99 6780
+S
+

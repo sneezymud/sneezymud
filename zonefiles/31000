@@ -1,0 +1,37 @@
+#31000
+Maror - North Versilard's Highway~
+31049 20 2 1
+
+M 0 31000 1 31003 quail land bird
+M 0 31000 1 31011 quail land bird
+M 0 31000 1 31021 quail land bird
+M 0 31000 1 31028 quail land bird
+M 0 31000 1 31033 quail land bird
+
+M 0 31001 1 31046 wizened fisherman
+? 0 2 0 E
+E 1 31000 9999 8 boot oilskin 2%
+? 0 2 0 E
+E 1 31000 9999 9 boot oilskin 2%
+? 0 2 0 E
+E 1 31001 9999 4 vest oilskin 2%
+? 0 2 0 E
+E 1 31002 9999 6 pants oilskin 2%
+? 0 2 0 E
+E 1 31003 9999 5 hat oilskin 2%
+? 0 10 0 E
+G 1 31004 9999 grenade 10%
+? 0 100 0 E
+G 1 31005 9999 exploded fish bits 100%
+
+M 0 31002 1 31024 traveler dusty
+? 0 2 0 E
+E 1 31006 9999 16 bracer dusty 2%
+? 0 2 0 E
+E 1 31006 9999 17 bracer dusty 2%
+? 0 2 0 E
+E 1 31007 9999 12 sleeve dusty 2%
+? 0 2 0 E
+E 1 31007 9999 13 sleeve dusty 2%
+
+S

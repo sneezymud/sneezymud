@@ -1,0 +1,218 @@
+#16300
+Jesus - Gnomenski Bros. Circus~
+16349 30 2 1
+D 0 16302 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16302 9 2        A Small Pathway -> A Dressing Room
+D 0 16303 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16304 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16308 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16309 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16310 0 2        A Small Pathway -> A Small Animal Cage
+D 0 16311 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16312 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16313 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16314 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16315 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16316 2 2        A Small Animal Cage -> A Small Pathway
+D 0 16342 6 2        A Dressing Room -> A Small Pathway
+O 0 16347 1 16301        a banner sign
+O 0 15210 26 16311      a small pile of straw
+O 0 16348 26 16312      a small pile of straw
+O 0 16348 26 16313      a small pile of straw
+O 0 16348 26 16314      a small pile of straw
+O 0 16348 26 16315      a small pile of straw
+O 0 16348 26 16316      a small pile of straw
+O 0 16346 9999 16317    a small light
+O 0 16346 9999 16318    a small light
+O 0 16346 9999 16319    a small light
+O 0 16346 9999 16320    a small light
+O 0 16348 26 16320      a small pile of straw
+O 0 16346 9999 16321    a small light
+O 0 16348 26 16321      a small pile of straw
+O 0 16346 9999 16322    a small light
+O 0 16348 26 16322      a small pile of straw
+O 0 16346 9999 16323    a small light
+O 0 16348 26 16323      a small pile of straw
+O 0 16346 9999 16324    a small light
+O 0 16348 26 16324      a small pile of straw
+O 0 16346 9999 16325    a small light
+O 0 16348 26 16325      a small pile of straw
+O 0 16346 9999 16326    a small light
+O 0 16348 26 16326      a small pile of straw
+O 0 16346 9999 16327    a small light
+O 0 16348 26 16327      a small pile of straw
+O 0 16346 9999 16328    a small light
+O 0 16348 26 16328      a small pile of straw
+O 0 16346 9999 16329    a small light
+O 0 16348 26 16329      a small pile of straw
+O 0 16346 9999 16330    a small light
+O 0 16348 26 16330      a small pile of straw
+O 0 16346 9999 16331    a small light
+O 0 16348 26 16331      a small pile of straw
+O 0 16346 9999 16332    a small light
+O 0 16348 26 16332      a small pile of straw
+O 0 16346 9999 16333    a small light
+O 0 16348 26 16333      a small pile of straw
+O 0 16346 9999 16334    a small light
+O 0 16348 26 16334      a small pile of straw
+O 0 16346 9999 16335    a small light
+O 0 16348 26 16335      a small pile of straw
+O 0 16346 9999 16336    a small light
+O 0 16348 26 16336      a small pile of straw
+O 0 16346 9999 16337    a small light
+O 0 16348 26 16337      a small pile of straw
+O 0 16346 9999 16338    a small light
+O 0 16348 26 16338      a small pile of straw
+O 0 16346 9999 16339    a small light
+O 0 16348 26 16339      a small pile of straw
+O 0 16346 9999 16340    a small light
+O 0 16348 26 16340      a small pile of straw
+O 0 16346 9999 16341    a small light
+O 0 16348 26 16341      a small pile of straw
+O 0 1200 9999 16342     a wall lamp
+O 0 16346 9999 16343    a small light
+O 0 16346 9999 16344    a small light
+O 0 16346 9999 16345    a small light
+O 0 16346 9999 16346    a small light
+O 0 16346 9999 16347    a small light
+O 0 16346 9999 16348    a small light
+O 0 1200 9999 16349     a wall lamp
+O 0 20003 9999 16349    a long cluttered desk
+M 0 16323 5 16318      a male spectator
+? 0 99 0 G
+G 1 8932 9999          a pineapple
+Y 0 73 2               2% at white metal
+K 1 16320 5 16318      a female spectator
+K 1 16326 5 16318      a small child
+M 0 16323 5 16300      a male spectator
+? 0 99 0 G
+G 1 432 9999           an orange
+Y 0 73 2               2% at white metal
+K 1 16320 5 16300      a female spectator
+K 1 16326 5 16300      a small child
+M 0 16323 5 16347      a male spectator
+? 0 99 0 G
+G 1 433 9999           a lime
+Y 0 73 2               2% at white metal
+K 1 16320 5 16347      a female spectator
+K 1 16326 5 16347      a small child
+M 0 16324 5 16347      an elven male
+? 0 99 0 G
+G 1 403 9999           a ration
+Y 0 61 2               2% at elf stud
+K 1 16327 5 16347      an elven child
+K 1 16321 5 16347      a elven female spectator
+M 0 16324 5 16304      an elven male
+? 0 99 0 G
+G 1 20433 9999         a spoiled ration
+Y 0 61 2               2% at elf stud
+K 1 16321 5 16304      a elven female spectator
+K 1 16327 5 16304      an elven child
+M 0 16324 5 16304      an elven male
+? 0 99 0 G
+G 1 26653 9999         a packaged ration
+Y 0 61 2               2% at elf stud
+K 1 16321 5 16304      a elven female spectator
+K 1 16327 5 16304      an elven child
+M 0 16322 5 16318      a gnomish female
+? 0 99 0 G
+G 1 3362 9999          a apple
+Y 0 118 2              2% chance gnickel
+K 1 16325 5 16318      a gnomish male
+K 1 16328 5 16318      a gnome child
+M 0 16322 5 16308      a gnomish female
+? 0 99 0 G
+G 1 14344 9999         a juicy apple
+Y 0 118 2              2% chance gnickel
+K 1 16328 5 16308      a gnome child
+K 1 16325 5 16308      a gnomish male
+M 0 16322 5 16344      a gnomish female
+? 0 99 0 G
+G 1 3360 9999          handfull of nuts
+Y 0 118 2              2% chance gnickel
+K 1 16328 5 16344      a gnome child
+K 1 16325 5 16344      a gnomish male
+M 0 16315 1 16311       a small dragon
+M 0 8507 1 16312        a hyena
+M 0 10901 1 16313       a black bear
+M 0 566 1 16314       a young tiger
+M 0 8503 1 16315        a zebra
+M 0 10905 1 16316       a cougar
+M 0 16309 1 16301       the ticket seller
+M 0 16310 4 16301       an usher
+M 0 16310 4 16318       an usher
+M 0 16307 1 16320       Dym the dragon tamer
+? 0 99 0 G
+G 1 402 9999            a sausage
+K 1 16315 3 16320       a small dragon
+? 0 4 0 E
+E 1 16307 2 19          talon rangork dagger
+? 0 15 0 E
+E 1 16306 50 18         whip
+M 0 16301 1 16306       Pyson the ogre midget
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 99 0 G
+G 1 16301 9999          bottle of juice
+M 0 16306 1 16321       Negel
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 15 0 E
+E 1 16305 100 18        charred spellbag
+M 0 16304 1 16323       Gimbel and Gumbul Gnomenski
+? 0 99 0 G
+G 1 402 9999            a sausage
+M 0 16305 1 16327       T'Narf the ex-frontier guard
+? 0 99 0 G
+G 1 402 9999            a sausage
+M 0 16302 1 16333       Ironpaw the gnomish strongman
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 5  0 G
+G 1 16302 9999          bottle of body oil
+M 0 16303 1 16337       Gabrialle the bearded lady
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 99 0 E
+E 1 16304 45 3          necklace curly hair
+X 1 5 16310             straw hat local set slot 5
+X 1 3 16311             bowtie local set slot 3
+X 1 4 16312             furry suspenders local set slot 4
+X 1 6 16313             baggy pants local set slot 6
+X 1 8 16314             big red shoe local set slot 8
+M 0 16308 9 16323       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16325       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16335       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16337       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16318       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16319       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16308 9 16347       a clown
+Z 0 1 5                 3% chance at local set
+M 0 16340 4 16321       a nimble juggler
+M 0 16340 4 16337       a nimble juggler
+M 0 16340 4 16327       a nimble juggler
+M 0 16340 4 16320       a nimble juggler
+M 0 16340 4 16346       a nimble juggler
+M 0 16300 7 16318       the caretaker
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 7 0 E
+E 1 5101 9999 19        a broom
+M 0 16300 7 16346       the caretaker
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 7 0 E
+E 1 5101 9999 19          a broom
+M 0 16311 1 16349       Gorbiski Gnomenski
+? 0 99 0 G
+G 1 402 9999            a sausage
+? 0 99 0 G
+G 1 16300 9999          tiny key
+S
+

@@ -1,0 +1,934 @@
+#10700
+Mithros - Obsidian Citadel/Keep~
+10899 50 2 1
+
+D 0 10716 9 1   ; Slab
+D 0 10717 6 1  
+D 0 10717 7 1   ; Door
+D 0 10718 8 1
+D 0 10720 9 1   ; Door
+D 0 10721 6 1  
+D 0 10721 2 1   ; Dsecret
+D 0 10730 0 1   
+D 0 10739 0 0   ; Door
+D 0 10731 2 0   
+D 0 10842 1 2   ; Door
+D 0 10746 3 2
+D 0 10737 0 1   ; Door
+D 0 10729 2 1 
+D 0 10737 2 0   ; Door
+D 0 10745 0 0   
+D 0 10727 0 1   ; Dsecret
+D 0 10722 2 1
+D 0 10735 3 2   ; Steel Prison Door
+D 0 10734 1 2
+D 0 10726 0 2   ; Cell
+D 0 10723 2 2
+D 0 10726 7 2   ; Steel
+D 0 10724 8 2
+D 0 10726 3 2   ; Cell
+D 0 10725 1 2
+D 0 10734 3 2   ; Tower Door
+D 0 10733 1 2
+D 0 10734 2 2   ; Cell
+D 0 10742 0 2
+D 0 10775 0 1   ; Obsidian Throne Room Door
+D 0 10767 2 1
+D 0 10775 3 1   ; Library Door
+D 0 10774 1 1
+D 0 10773 3 2   ; Librarians Study
+D 0 10772 1 2
+D 0 10772 0 1   ; Dsecret
+D 0 10764 2 1
+D 0 10766 1 1   ; Door
+D 0 10767 3 1
+D 0 10759 3 1   ; Door
+D 0 10758 1 1
+D 0 10759 7 1   ; Dsecret
+D 0 10752 8 1
+D 0 10757 0 2   ; Advisors Quarters
+D 0 10751 2 2
+D 0 10757 7 1   ; Generals Quarters
+D 0 10750 8 1  
+D 0 10757 3 1   ; Commanders Quarters
+D 0 10756 1 1
+D 0 10760 6 1   ; Dsecret
+D 0 10753 9 1
+D 0 10760 1 1   ; Door
+D 0 10761 3 1 
+D 0 10768 1 1   ; Door
+D 0 10769 3 1
+D 0 10768 1 1   ; Obsidian Throne Room Door
+D 0 10776 0 1
+D 0 10776 1 0   ; Door
+D 0 10777 3 0
+D 0 10776 2 2   ; Keep Door
+D 0 10775 2 2   ; Keep Door
+D 0 10778 1 1   ; Swinging 
+D 0 10779 3 1
+D 0 10762 0 2   ; Headmasters Quarters
+D 0 10754 2 2
+D 0 10762 6 0   ; Servants Quarters
+D 0 10755 9 0
+D 0 10762 1 0  ; Maids Quarters
+D 0 10763 3 0
+D 0 10796 0 2   ; Shadows Quarters
+D 0 10789 2 2
+D 0 10796 7 1   ; Dwarfs Quarters
+D 0 10788 8 1
+D 0 10796 3 2   ; Halflings Quarters
+D 0 10795 1 2
+D 0 10803 3 1   ; Elfs Quarters
+D 0 10802 1 1
+D 0 10801 0 0   ; Door
+D 0 10794 2 0
+D 0 10793 2 0   ; Door
+D 0 10800 0 0
+D 0 10799 0 2   ; Princes Room
+D 0 10792 2 2   
+D 0 10785 0 1   ; Dsecret
+D 0 10782 2 1
+D 0 10785 3 1   ; Wardrobe
+D 0 10784 1 1   
+D 0 10791 3 1   ; Dsecret
+D 0 10790 1 1
+D 0 10791 2 2   ; Princess's Room
+D 0 10798 0 2
+D 0 10823 7 2   ; Kings Room
+D 0 10815 8 2
+D 0 10815 3 1   ; Dsecret
+D 0 10814 1 1
+D 0 10816 1 1   ; Door
+D 0 10817 3 1
+D 0 10809 0 1   ; Bookshelf
+D 0 10806 2 1
+D 0 10809 1 1   ; Door
+D 0 10810 3 1
+D 0 10810 7 1   ; Tapestry
+D 0 10806 8 1
+D 0 10811 6 1   ; Tapestry
+D 0 10807 9 1
+D 0 10812 3 0   ; Door
+D 0 10811 1 0  
+D 0 10812 0 1   ; Bookshelf
+D 0 10807 2 1
+D 0 10820 1 1   ; Dsecret
+D 0 10821 3 1
+D 0 10820 9 2   ; Queens Room
+D 0 10826 6 2
+D 0 10820 2 0  ; Curtain
+D 0 10827 0 0
+D 0 10827 3 1   ; Door
+D 0 10826 1 1
+D 0 10819 3 1   ; Door
+D 0 10818 1 1 
+D 0 10818 2 0   ; Door
+D 0 10825 0 0
+D 0 10749 1 1	; secret to Tower: panel
+D 0 10748 9 1	; secret to Cathedral: panel
+D 0 10718 8 2	; Mine Door 
+
+
+M 0 10700 1 10760    ; Obsidian Man
+*? 1 5 0 G
+*G 1 10700 1             ; Runed Obsidian Circlet (needs fixed)
+
+M 0 10701 1 10809    ; Spirit of King Urik
+G 1 7004 1              ; Citadel Gate Key
+? 0 5 0 E
+E 1 10701 3 4           ; Runed Obsidian Breast Plate
+Y 0 29 6		; Obsidian-Plate Set
+
+M 0 10702 1 10785    ; Spirit of the Prince of Urik
+G 1 10779 5   ; Fancy Oak Key
+? 0 6 0 E
+E 1 10702 5 19   ; Runed Obsidian Defender
+? 0 20 0 E
+E 1 10746 500 4   ; Gray Silk Shirt
+? 0 20 0 E
+E 1 10745 500 7   ; Gray Silk Pants
+Y 0 29 5		; Obsidian-Plate Set
+
+M 0 10703 1 10724    ; Torture Master
+? 0 7 0 E
+E 1 10703 10 19   ; Obsidian Flail
+? 0 15 0 G
+G 1 10724 500   ; Shackle
+? 0 10 0 E
+E 1 10740 500 2   ; Wire Ring
+
+M 0 10704 1 10756    ; Spirit of the General
+G 1 10799 2		; Key Number 10799 for Obsidian Chests
+? 0 7 0 E
+E 1 10704 20 18   ; Obsidian Shield
+? 0 50 0 E
+E 1 10735 300 3   ; Medal for Honor and Bravery
+Y 0 29 4		; Obsidian-Plate Set
+
+M 0 10705 1 10820    ; Spirit of the Queen of Urik
+? 0 7 0 E
+E 1 10705 100 3   ; Obsidian Necklace
+? 0 20 0 E
+E 1  10767 500 4   ; Gray Silk Gown
+? 0 3 0 E
+E 1 10710 300 2   ; Steel and Obsidian Ring
+? 0 20 0 E
+E 1 10768 500 11   ; Gray Silk Glove
+
+M 0 10706 1 10750    ; Spirit of the Commander
+G 1 10800 2		; Key Number 10800 for Obsidian Chests
+Y 0 29 4			; Obsidian-Plate Set
+
+M 0 10707 1 10757   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10760   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10770   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10775   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10794   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10796   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10798   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10799   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10805   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10810   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10823   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10826   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10838   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10707 1 10841   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+? 0 40 0 M
+M 1 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+? 0 40 0 M
+M 1 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+? 0 40 0 M
+M 1 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+? 0 40 0 M
+M 1 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+? 0 40 0 M
+M 1 10707 1 10833   ; Spirit of a Royal Guard
+Y 0 29 3			; Obsidian-Plate Set
+
+M 0 10708 1 10752    ; Spirit of the Royal Advisor
+? 0 3 0 E
+G 1 10751 20   ; Obsidian Staff
+? 0 7 0 E
+E 1 10708 100 4   ; Obsidian Robe
+
+M 0 10709 1 10727    ; Spirit of the Dungeon Officer
+G 1 10747 50   		; Iron Prison Key
+Y 0 29 3		; Obsidian-Plate Set
+
+M 0 10710 1 10791    ; Spirit of the Princess of Urik
+? 0 7 0 E
+E 1 10710 300 2   ; Steel and Obsidian Ring
+? 0 3 0 E
+E 1 10750 100 3   ; Obsidian Unholy Symbol (Wearable)
+? 0 30 0 E
+E 1  10767 500 4   ; Gray Silk Gown
+? 0 20 0 E
+E 1 10768 500 11  ; Gray Silk Glove
+
+M 0 10711 1 10726    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10711 1 10730    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10711 1 10735    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10711 1 10735    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10711 1 10745    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+? 0 50 0 M
+M 1 10711 1 10724    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+? 0 50 0 M
+M 1 10711 1 10734    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+? 0 50 0 M
+M 1 10711 1 10737    ; Dungeon Guard
+? 0 10 0 G
+G 1 10747 50   ; Iron Prison Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10712 1 10786   ; Spirit of the Shadow Ambassador
+? 0 2 0 E
+E 1 10708 100 4   ; Obsidian Robe
+?  0 1 0 E
+E 1 10751 20 19   ; Obsidian Staff
+
+? 0 20 0 M
+M 1 10712 1 10789    ; Spirit of the Shadow Ambassador
+
+M 0 10713 1 10772    ; Spirit of the Head Librarian
+? 0 8 0 G
+G 1 10712 100   ; Book with Obsidian Binding
+? 0 15 0 E
+E 1 10723 300 4   ; Monks Robe
+
+M 0 10714 1 10765    ; Spirit of a Monk
+? 0 8 0 E
+E 1 10723 300 4   ; Monks Robe
+
+M 0 10714 1 10765    ; Spirit of a Monk
+? 0 8 0 E
+E 1 10723 300 4   ; Monks Robe
+
+? 0 25 0 M
+M 1 10714 1 10765    ; Spirit of a Monk
+
+? 0 25 0 M
+M 1 10714 1 10765    ; Spirit of a Monk
+
+M 0 10715 1 10815    ; Spirit of the King's Squire
+? 0 7 0 E
+E 1 10713 100 19   ; Obsidian Sliver
+? 0 20 0 E
+E 1 10773 500  7   ; Wool Pants
+? 0 20 0 E
+E 1 10727 500 9   ; Leather Shoe
+
+? 0 20 0 M
+M 1 10715 1 10822    ; Spirit of the King's Squire
+? 0 5 0 E
+E 1 10713 100 19   ; Obsidian Sliver
+? 0 20 0 E
+E 1 10773 500  7   ; Wool Pants
+? 0 20 0 E
+E 1 10727 500 9   ; Leather Shoe
+
+M 0 10716 1 10779    ; Spirit of the Keep's Cook
+? 0 30 0 E
+E 1 10782 500 4   ; Ripped Apron
+? 0 10 0 E
+E 1 10753 500 19   ; Rusty Butcher Knife
+
+M 0 10717 1 10802    ; Spirit of the Elven Ambassador
+G 1 10779 5   ; Fancy Oak Key
+? 0 6 0 E
+E 1 10714 100 19   ; Obsidian Bow
+G 1 10718 300   ; Obsidian Shaft (Arrow)
+
+M 0 10718 1 10792    ; Spirit of the Prince's Squire
+? 0 5 0 E
+E 1 10716 300 17   ; Obsidian Band
+? 0 20 0 E
+E 1 10773 500 7   ; Wool Pants
+? 0 20 0 E
+E 1 10733 500 14   ; Thin Cloak
+
+? 0 20 0 M
+M 1 10718 1 10799    ; Spirit of the Prince's Squire
+? 0 20 0 E
+E 1 10773 500 7   ; Wool Pants
+? 0 20 0 E
+E 1 10733 500 14   ; Thin Cloak
+
+M 0 10719 1 10754    ; Spirit of the Headmaster of Servants
+G 1 10749 50   ; Obsidian Key
+? 0 20 0 G
+G 1 10730 500   ; Simple Book
+? 0 7 0 E
+E 1 10722 300 7   ; Obsidian Pants
+
+M 0 10720 1 10788    ; Spirit of the Dwarven Ambassador
+? 0 6 0 E
+E 1 10752 0 19   ; Obsidian Two-Handed Battle Axe
+
+M 0 10721 1 10827    ; Spirit of the Queens Lady
+? 0 5 0 G
+G 1 10779 5   ; Fancy Oak Key
+? 0 6 0 E
+E 1 10767 500 4   ; Gray Silk Gown
+? 0 5 0 E
+E 1 10729 500 3   ; Pendant w/ Red Stone
+? 0 20 0 E
+E 1 10777 500 5    ; Glass Earring
+
+? 0 20 0 M
+M 1 10721 1 10820    ; Spirit of the Queens Lady
+? 0 20 0 G
+G 1 10775 500   ; Small Hand Mirror
+? 0 6 0 E
+E 1 10767 500 4   ; Gray Silk Gown
+? 0 5 0 E
+E 1 10728 500 3   ; Pendant w/ Blue Stone
+
+M 0 10722 1 10723    ; Spirit of a Prisoner
+? 0 10 0 E
+E 1 10724 500 17   ; Shackle (Cursed)
+
+? 0 20 0 M
+M 1 10722 1 10723    ; Spirit of a Prisoner
+
+M 0 10722 1 10724    ; Spirit of a Prisoner
+? 0 10 0 E
+E 1 10724 500 17   ; Shackle (Cursed)
+
+? 0 20 0 M
+M 1 10722 1 10724    ; Spirit of a Prisoner
+
+M 0 10722 1 10725    ; Spirit of a Prisoner
+? 0 10 0 E
+E 1 10724 500 17   ; Shackle (Cursed)
+
+? 0 20 0 M
+M 1 10722 1 10725    ; Spirit of a Prisoner
+
+M 0 10722 1 10742    ; Spirit of a Prisoner
+? 0 10 0 E
+E 1 10724 500 17   ; Shackle (Cursed)
+
+? 0 20 0 M
+M 1 10722 1 10742    ; Spirit of a Prisoner
+
+M 0 10723 1 10787    ; Spirit of the Halfling Ambassador
+G 1 10779 5   ; Fancy Oak Key
+? 0 30 0 E
+E 1 10725 500 5   ; Velvet Hat
+? 0 10 0 E
+E 1 14142 8 19    ; pearl handled rapier
+Y 0 114 1         ; pearl studded set
+ 
+? 0 10 0 M
+M 1 10723 1 10795    ; Spirit of the Halfling Ambassador
+? 0 30 0 E
+E 1 10725 500 5   ; Velvet Hat
+? 0 3 0 E
+E 1 10717 300 19   ; Obsidian Short Sword
+Y 0 114 1         ; pearl studded set
+
+M 0 10724 1 10729    ; Spirit of a Servant
+G 1 10748 10   ; Steel Key
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10742 500 11   ; Tattered Glove
+ 
+M 0 10724 1 10755    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 G
+G 1 10748 10   ; Steel Key
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10742 500 11   ; Tattered Glove
+
+M 0 10724 1 10769    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10770 500 7   ; Tattered Pants
+
+M 0 10724 1 10779    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 G
+G 1 10748 10   ; Steel Key
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10769 500 4   ; Tattered Shirt
+
+M 0 10724 1 10796    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10742 500 11   ; Tattered Glove
+
+? 0 50 0 M
+M 1 10724 1 10731    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 G
+G 1 10748 10   ; Steel Key
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10770 500 7   ; Tattered Pants
+
+? 0 50 0 M
+M 1 10724 1 10755    ; Spirit of a Servant
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10769 500 4   ; Tattered Shirt
+
+? 0 50 0 M
+M 1 10724 1 10757    ; Spirit of a Servant
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10742 500 11   ; Tattered Glove
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+
+? 0 50 0 M
+M 1 10724 1 10800    ; Spirit of a Servant
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10770 500 7   ; Tattered Pants
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+
+? 0 50 0 M
+M 1 10724 1 10824    ; Spirit of a Servant
+? 0 10 0 E
+E 1 10727 500 9   ; Leather Shoe
+? 0 10 0 E
+E 1 10737 500 14   ; Thin Cloak
+? 0 5 0 E 
+E 1 10741 500 2   ; Brass Ring
+? 0 5 0 E
+E 1 10769 500 4   ; Tattered Shirt
+? 0 2 0 G
+G 1 10737 500   ; Burnt Out Globe
+
+M 0 10725 1 10791    ; Spirit of the Princess's Lady
+? 0 15 0 E
+E 1 10767 500 4   ; Gray Silk Gown
+? 0 10 0 E
+E 1 10726 500 9   ; Slipper
+? 0 15 0 E
+E 1 10768 500 11   ; Gray Silk Glove
+
+? 0 20 0 M
+M 1 10725 1 10784    ; Spirit of the Princess's Lady
+? 0 15 0 E
+E 1 10767 500 4   ; Gray Silk Gown
+? 0 10 0 E
+E 1 10726 500 9   ; Slipper
+? 0 15 0 E
+E 1 10768 500 11   ; Gray Silk Glove
+
+M 0 10726 1 10745    ; Spirit of a Maid
+G 1 10748 50   ; Steel Key
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+
+M 0 10726 1 10761    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+
+M 0 10726 1 10763    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+
+M 0 10726 1 10778    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+
+M 0 10726 1 10803    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+? 0 5 0 G
+G 1 10779 5   ; Fancy Oak Key
+
+? 0 50 0 M
+M 1 10726 1 10732    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+? 0 5 0 G
+G 1 10779 5   ; Fancy Oak Key
+
+? 0 50 0 M
+M 1 10726 1 10763    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+? 0 10 0 E
+E 1 10771 500 4    ; Tattered Gown
+
+? 0 50 0 M
+M 1 10726 1 10770    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+
+? 0 50 0 M
+M 1 10726 1 10779    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+
+? 0 50 0 M
+M 1 10726 1 10817    ; Spirit of a Maid
+? 0 9 0 E
+E 1 10732 500 14   ; Blanket (worn as cloak)
+? 0 9 0 E
+E 1 10743 500 11   ; Sturdy Wool Glve
+? 0 8 0 E
+E 1 10740 500 2   ; Wire Ring
+? 0 5 0 E
+E 1 10739 500 5   ; Blue Feather 
+? 0 1 0 E
+E 1 10736 300 18   ; Globe of Light
+
+M 0 10727 1 10762    ; Mina (obsquest)
+
+M 0 10729 1 10746    ; Treasure Guard
+G 1 10797 5   ; Tresure Room Key
+Y 0 29 2			; Obsidian-Plate Set
+
+M 0 10728 1 10747    ; Treasure Guard [a]
+Y 0 29 2			; Obsidian-Plate Set
+
+
+O 0 10763 2 10792   ; Solid Oak Bed
+
+O 0 10762 2 10792   ; Solid Oak Wardrobe
+? 0 30 0 P
+P 1 10746 2 10762   ; Gray Silk Shirt
+O 0 10757 2 10785   ; Solid Oak Desk
+? 0 30 0 P
+P 1 10781 2 10757   ; Gold Tipped Quill
+
+O 0 10760 10 10785   ; Plush Oak Chair
+O 0 10760 10 10785
+O 0 10764 2 10791   ; Oak Bed w/ Canopy
+O 0 10760 10 10809   ; Plush Oak Chair
+O 0 10760 10 10809   
+O 0 10763 2 10808   ; Solid Oak Bed
+O 0 10762 2 10808   ; Solid Oak Wardrobe
+O 0 10759 4 10818   ; Solid Oak Table
+O 0 10758 7 10818   ; Solid Oak Chair
+O 0 10758 7 10818
+O 0 10758 7 10818
+O 0 10759 4 10817   ; Solid Oak Table
+O 0 10758 7 10817   ; Solid Oak Chair
+O 0 10758 7 10817
+O 0 10758 7 10817
+O 0 10759 4 10810   ; Solid Oak Table
+O 0 10760 10 10810   ; Plush Oak Chair
+O 0 10760 10 10810
+O 0 10760 10 10810
+O 0 10759 4 10811   ; Solid Oak Table
+O 0 10760 10 10811   ; Plush Oak Chair
+O 0 10760 10 10811
+O 0 10760 10 10811
+
+O 0 10757 2 10812   ; Solid Oak Desk
+? 0 30 0 P
+P 1 10781 2 10757   ; Gold Tipped Quill
+O 0 10758 7 10812   ; Solid Oak Chair
+
+O 0 10764 2 10812   ; Oak Bed w/ Canopy
+
+O 0 10780 2 10795   ; Solid Oak Chest
+T 1 2 6   ; 6d8 Blade Trap
+? 0 30 0 P
+P 1 10713 2 10780   ; Obsidian Sliver
+
+O 0 10780 2 10802   ; Solid Oak Chest
+T 1 6 6   ; 6d8 Fire Trap
+? 0 30 0 P
+P 1 10718 2 10780   ; Obsidian Shaft (Arrow)
+
+O 0 10765 4 10798   ; Blood-Soaked Pillow
+O 0 10765 4 10798  
+O 0 10765 4 10826  
+O 0 10765 4 10826
+O 0 10766 2 10810   ; Silk Pillow w/ Black Lace
+O 0 10766 2 10811
+O 0 10738 5 10738   ; Torch Stub
+O 0 10738 5 10726   ; Torch Stub
+O 0 10738 5 10761   ; Torch Stub
+O 0 10738 5 10758   ; Torch Stub
+O 0 10738 5 10797   ; Torch Stub
+O 0 10731 2 10779   ; Bowl
+O 0 10731 2 10740  
+? 0 10 0 O
+O 1 10732 1 10755   ; Blanket
+? 0 10 0 O
+O 1 10730 2 10765   ; Simple Book
+? 0 20 0 O
+O 1 10754 1 10771   ; Broken Broom Handle
+? 0 10 0 O
+O 1 10756 1 10763   ; Small Mirror Shard
+? 0 20 0 O
+O 1 10755 1 10732   ; Rancid Meat Bone
+? 0 20 0 O
+O 1 10745 2 10816   ; Gray Silk Shirt
+? 0 20 0 O
+O 1 10746 2 10816   ; Gray Silk Pants
+? 0 20 0 O
+O 1 10767 2 10819   ; Gray Silk Gown
+? 0 10 0 O
+O 1 10736 1 10722   ; Small Globe of Light
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 6229021	; No-Pick, 95 hp Energy Trap
+V 1 2 -1		; No Key
+? 0 30 0 P
+P 1 10702 5 10798   ; Runed Obsidian Sword
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 6555165	; No-Pick, 100 hp Fire Trap
+V 1 2 10799		; Key 10799
+? 0 30 0 P
+P 1 10714 10 10798   ; Obsidian Bow
+? 0 30 0 P
+P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
+? 0 30 0 P
+P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 2845		; No-Pick, Teleport Trap
+V 1 2 10800		; Key 10800
+? 0 30 0 P
+P 1 10752 3 10798   ; Obsidian Battle Axe
+
+O 0 10789 1 10747   ; Obsidian Chest [obsquest1]
+P 1 10788 1 10789   ; Obsidian Scepter [obsquest1]
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 3932701	; 60 hp Blade Trap
+V 1 2 -1		; No Key
+? 0 30 0 P
+P 1 28809 10 10798	; Ruby Potion	
+P 1 804 9999 10798	; Platinum Potion
+P 1 823 9999 10798	; Vermilion Potion
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 1968159	; No-Pick, 30hp Disease Trap
+V 1 2 10803		; Non-Loading Key 10803, but in DB for Quests
+* ? 0 30 0 P
+* P 1 29992 10 10798	; Youth Potion - Key does not load in game.
+
+? 0 50 0 O
+O 0 10798 1 10747		; Obsidian Chest (normal)
+V 1 1 3932701	; 60 hp Blade Trap
+V 1 2 -1		; No Key
+? 0 30 0 P
+P 1 12466 10 10798	; Meteor Swarm Scroll
+P 1 7518 9999 10798	; BarkSkin Scroll
+
+O 0 10795 1 10809		; Obsidian Coffer [obsquest2]
+P 1 10794 1 10795		; Obsidian Signet [obsquest2]
+
+
+O 0 10801 9999 10800	; Glass-Block Window
+V 1 0 7081	;look into room 7081
+
+O 0 10801 9999 10801	; Glass-Block Window
+V 1 0 7082	;look into room 7082
+
+O 0 10801 9999 10804	; Glass-Block Window
+V 1 0 7094	;look into room 7094
+
+O 0 10801 9999 10805	; Glass-Block Window
+V 1 0 7097	;look into room 7097
+
+O 0 10801 9999 10824	; Glass-Block Window
+V 1 0 7095	;look into room 7095
+
+O 0 10801 9999 10825	; Glass-Block Window
+V 1 0 7096	;look into room 7096
+
+O 0 10801 9999 10828	; Glass-Block Window
+V 1 0 7105	;look into room 7105
+
+O 0 10801 9999 10829	; Glass-Block Window
+V 1 0 7108	;look into room 7108
+
+O 0 10802 9999 10838	; Archerer's Opening
+V 1 0 7106	;look into room 7106
+
+O 0 10802 9999 10839	; Archerer's Opening
+V 1 0 7107	;look into room 7107
+
+O 0 10802 9999 10840	; Archerer's Opening
+V 1 0 7112	;look into room 7112
+
+O 0 10802 9999 10841	; Archerer's Opening
+V 1 0 7115	;look into room 7115
+S
+

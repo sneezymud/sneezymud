@@ -1,0 +1,26 @@
+#250
+Royal Barracks~
+299 15 2 1
+
+M 0 267 1 274        Head Cityguard
+Y 0 9 3			Chainmail Set - 3%
+
+A 0 250 296
+M 0 100 1 -99        city watchman 
+? 0 4 0 E
+E 1 304 100 19          chance of short sword
+Y 0 7 4                 chance of hard leather
+
+A 0 250 296
+M 0 101 1 -99        city guard
+? 0 2 0 E
+E 1 300 100 19          chance of long sword
+Y 0 8 2                 chance of studded
+
+A 0 250 296
+M 0 102 1 -99        Elite guard
+? 0 4 0 E
+E 1 300 100 19          chance of long sword
+Y 0 8 4                 chance of studded
+
+S
