@@ -132,7 +132,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
       if (ch->task->flags > -5)
         ch->task->flags = min(-1, ch->task->flags - 1);
       if (exit_ok(Eroom, NULL))
-        ch->addToMove(-(int) (120-
+        ch->addToMove(-(int) (110-
 			      ch->getSkillValue((isSW ? SKILL_SEEKWATER :
 						 (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK))))/20);
       return FALSE;
