@@ -3657,11 +3657,11 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	 getMana()>=10 &&                       // requires 10 mana
 	 bSuccess(this,getSkillValue(SKILL_CHAIN_ATTACK),SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
-	act("Lightning fast, you shift your balance and chain another strike.",
+	act("Lightning fast, you shift your balance and launch another strike.",
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
-	act("Lightning fast, $n shifts $s balance and chains another strike.", 
+	act("Lightning fast, $n shifts $s balance and launches another strike.", 
 	    FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
-	act("Lighting fast, $n shifts $s balance and chains another strike.", 
+	act("Lighting fast, $n shifts $s balance and launches another strike.", 
 	    FALSE, this, 0, vict, TO_NOTVICT);
 	
 	*f += 1; // one extra attack
