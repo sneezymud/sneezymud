@@ -632,7 +632,7 @@ int TMonster::aiMobHappy(TBeing *doer)
     switch (::number(1,3)) {
       case 1:
         doAction(fname(doer->name),CMD_LICK);
-        act("$n's yips happily.",TRUE,this,0,0,TO_ROOM);
+        act("$n yips happily.",TRUE,this,0,0,TO_ROOM);
 
         break;
       default:
