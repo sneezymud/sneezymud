@@ -23,6 +23,11 @@ bool TBeing::canSpin(TBeing *victim, silentTypeT silent)
       sendTo("You need hands to spin someone.\n\r");
     return FALSE;
   }
+  if (victim->!hasHands()) {
+    if (!silent)
+      sendTo("You need something to grab to make this work.\n\r");
+    return FALSE;
+  }
   if (eitherArmHurt()) {
     if (!silent)
       sendTo("You can't spin someone with an injured arm.\n\r");
