@@ -5349,8 +5349,9 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   TDatabase db("sneezy");
 
-  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
-  
+  //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
+  db.query("select name, count from trophyplayer order by count desc limit 10");
+
   if(!db.isResults()){
     ch->sendTo("The board is empty.\n\r");
     return TRUE;

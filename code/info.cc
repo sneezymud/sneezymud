@@ -3078,7 +3078,8 @@ void TBeing::doWorld()
 
   int unkmobcount=0;
 
-  db.query("select count(distinct mobvnum) from trophy");
+  //  db.query("select count(distinct mobvnum) from trophy");
+  db.query("select count(*) from trophymob");
   if(db.fetchRow())
     unkmobcount=atoi(db.getColumn(0));
 
