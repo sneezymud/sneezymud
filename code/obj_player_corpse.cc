@@ -1,19 +1,6 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: player_corpse.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
+#include "obj_player_corpse.h"
+#include "obj_base_corpse.h"
 
 int TPCorpse::checkOnLists()
 {
@@ -198,7 +185,7 @@ int TPCorpse::getMe(TBeing *ch, TThing *sub)
     return TRUE;
   }
   if (sub) {
-    vlogf(5,"Problem with a sub in corpse.getMe %s %s", (ch ? ch->getName() : ""), getName());
+    vlogf(LOG_BUG,"Problem with a sub in corpse.getMe %s %s", (ch ? ch->getName() : ""), getName());
     removeCorpseFromList();
     return DELETE_THIS;
   }
