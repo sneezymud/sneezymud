@@ -6701,58 +6701,105 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
     arg = one_argument(arg, buf2); // plot
     arg = one_argument(arg, buf);  // plan
 
-    // check that plot is available
-    if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select count(*) from homeplots plots, homeplans plans where plots.plottype=plans.plottype and concat(plots.plottype, plots.plotnum)='%s' and plans.plan='%s' and plots.homeowner is null", buf2, buf))){
-      if(rc==-1)
-	vlogf(LOG_BUG, "Database error in realEstateAgent");
-      return FALSE;
-    }
-    if(!(row=mysql_fetch_row(res))){
-      sprintf(tellbuf, "%s, That plot or plan isn't available.",
+    if(!strcmp(buf2, "key")){
+      // buy key <plot>
+
+      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select count(*) from homeplots where homeowner='%s' and concat(plottype,plotnum)='%s'", ch->getName(), buf))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in realEstateAgent");
+	return FALSE;
+      }
+      if(!(row=mysql_fetch_row(res))){
+	sprintf(tellbuf, "%s, I can't seem to find any information on that plot.",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+
+      if(atoi(row[0])<=0){
+	sprintf(tellbuf, "%s, You don't own that plot!",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+      mysql_free_result(res);
+
+
+      // load and give the key
+      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in realEstateAgent");
+	return FALSE;
+      }
+      if(!(row=mysql_fetch_row(res))){
+	sprintf(tellbuf, "%s, Hmm, I can't seem to find the key for that plot.",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+      
+      sprintf(tellbuf, "%s, Ok, here is another key for your home.",
 	      fname(ch->name).c_str());
       myself->doTell(tellbuf);
-      return TRUE;
-    }
-
-    if(atoi(row[0])<=0){
-      sprintf(tellbuf, "%s, That plot or plan isn't available.",
+      
+      TObj *obj=read_object(atoi(row[0]), VIRTUAL);
+      *ch += *obj;
+      act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
+      mysql_free_result(res);
+    } else {
+      // check that plot is available
+      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select count(*) from homeplots plots, homeplans plans where plots.plottype=plans.plottype and concat(plots.plottype, plots.plotnum)='%s' and plans.plan='%s' and plots.homeowner is null", buf2, buf))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in realEstateAgent");
+	return FALSE;
+      }
+      if(!(row=mysql_fetch_row(res))){
+	sprintf(tellbuf, "%s, That plot or plan isn't available.",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+      
+      if(atoi(row[0])<=0){
+	sprintf(tellbuf, "%s, That plot or plan isn't available.",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+      mysql_free_result(res);
+      
+      // update homeplots
+      if((rc=dbquery(NULL, "sneezy", "realEstateAgent", "update homeplots set homeowner='%s', plan=%s where concat(plottype,plotnum)='%s'", ch->getName(), buf, buf2))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in realEstateAgent");
+	return FALSE;
+      }
+      
+      // load and give the key
+      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf2))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in realEstateAgent");
+	return FALSE;
+      }
+      if(!(row=mysql_fetch_row(res))){
+	sprintf(tellbuf, "%s, Hmm, I can't seem to find the key for that plot.",
+		fname(ch->name).c_str());
+	myself->doTell(tellbuf);
+	return TRUE;
+      }
+      
+      sprintf(tellbuf, "%s, Your home will be built as quickly as possible.",
 	      fname(ch->name).c_str());
       myself->doTell(tellbuf);
-      return TRUE;
-    }
-    mysql_free_result(res);
-
-    // update homeplots
-    if((rc=dbquery(NULL, "sneezy", "realEstateAgent", "update homeplots set homeowner='%s', plan=%s where concat(plottype,plotnum)='%s'", ch->getName(), buf, buf2))){
-      if(rc==-1)
-	vlogf(LOG_BUG, "Database error in realEstateAgent");
-      return FALSE;
-    }
-
-    // load and give the key
-    if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf2))){
-      if(rc==-1)
-	vlogf(LOG_BUG, "Database error in realEstateAgent");
-      return FALSE;
-    }
-    if(!(row=mysql_fetch_row(res))){
-      sprintf(tellbuf, "%s, Hmm, I can't seem to find the key for that plot.",
+      sprintf(tellbuf, "%s, Congratulations on your purchase. Here is your key.",
 	      fname(ch->name).c_str());
       myself->doTell(tellbuf);
-      return TRUE;
+      
+      TObj *obj=read_object(atoi(row[0]), VIRTUAL);
+      *ch += *obj;
+      act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
+      
     }
-    
-    sprintf(tellbuf, "%s, Your home will be built as quickly as possible.",
-	    fname(ch->name).c_str());
-    myself->doTell(tellbuf);
-    sprintf(tellbuf, "%s, Congratulations on your purchase. Here is your key.",
-	    fname(ch->name).c_str());
-    myself->doTell(tellbuf);
-
-    TObj *obj=read_object(atoi(row[0]), VIRTUAL);
-    *ch += *obj;
-    act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
-
   }
 
   return TRUE;

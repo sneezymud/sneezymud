@@ -539,20 +539,19 @@ void bootWorld(void)
 }
 
 
+// none of this flip stuff handles diagonals
 #define FLIP_EASTWEST   (1<<0)
 #define FLIP_NORTHSOUTH (1<<1)
 #define FLIP_UPDOWN     (1<<2)
 #define FLIP_ALL        FLIP_EASTWEST+FLIP_NORTHSOUTH+FLIP_UPDOWN
 
 dirTypeT flip_dir(dirTypeT dir, int flip){
-  dirTypeT dir_outside=dir;
-
   if(flip & FLIP_UPDOWN){
     flip-=FLIP_UPDOWN;
     
     switch(dir){
-      case DIR_UP: dir_outside=DIR_DOWN; break;
-      case DIR_DOWN: dir_outside=DIR_UP; break;
+      case DIR_UP: dir=DIR_DOWN; break;
+      case DIR_DOWN: dir=DIR_UP; break;
       default: break;
     }
   }
@@ -561,12 +560,8 @@ dirTypeT flip_dir(dirTypeT dir, int flip){
     flip-=FLIP_NORTHSOUTH;
     
     switch(dir){
-      case DIR_NORTH: dir_outside=DIR_SOUTH; break;
-      case DIR_SOUTH: dir_outside=DIR_NORTH; break;
-      case DIR_NORTHEAST: dir_outside=DIR_SOUTHEAST; break;
-      case DIR_NORTHWEST: dir_outside=DIR_SOUTHWEST; break;
-      case DIR_SOUTHEAST: dir_outside=DIR_NORTHEAST; break;
-      case DIR_SOUTHWEST: dir_outside=DIR_NORTHWEST; break;
+      case DIR_NORTH: dir=DIR_SOUTH; break;
+      case DIR_SOUTH: dir=DIR_NORTH; break;
       default: break;
     }
   }
@@ -575,33 +570,43 @@ dirTypeT flip_dir(dirTypeT dir, int flip){
     flip-=FLIP_EASTWEST;
 
     switch(dir){
-      case DIR_EAST: dir_outside=DIR_WEST; break;
-      case DIR_WEST: dir_outside=DIR_EAST; break;
-      case DIR_NORTHEAST: dir_outside=DIR_NORTHWEST; break;
-      case DIR_NORTHWEST: dir_outside=DIR_NORTHEAST; break;
-      case DIR_SOUTHEAST: dir_outside=DIR_SOUTHWEST; break;
-      case DIR_SOUTHWEST: dir_outside=DIR_SOUTHEAST; break;
+      case DIR_EAST: dir=DIR_WEST; break;
+      case DIR_WEST: dir=DIR_EAST; break;
       default: break;
     }
   }
 
-  return dir_outside;
+  return dir;
 }
+
+dirTypeT rotate_dir(dirTypeT dir, int rotate){
+  for(int i=0;i<rotate;++i){
+    switch(dir){
+      case DIR_NORTH:     dir=DIR_EAST;  break;
+      case DIR_EAST:      dir=DIR_SOUTH; break;
+      case DIR_SOUTH:     dir=DIR_WEST;  break;
+      case DIR_WEST:      dir=DIR_NORTH; break;
+      default: break;
+    }
+  }
+
+  return dir;
+}
+
 
 void bootHomes(void)
 {
-  return;
   int template_start=0, template_end=0, template_i=0;
   int plot_start=0, plot_end=0, plot_i=0, plan_i=0, keynum=0;
   TRoom *src, *dest;
-  int rc, flip;
+  int rc, flip, rotate;
   MYSQL_RES *res, *res2;
   MYSQL_ROW row, row2;
 
   // not ready yet
   return;
-  
-  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip from homeplots where homeowner is not null"))){
+
+  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in bootHomes");
     return;
@@ -613,6 +618,7 @@ void bootHomes(void)
     plot_end=atoi(row[2]);
     keynum=atoi(row[3]);
     flip=atoi(row[4]);    
+    rotate=atoi(row[5]);
 
     if((rc=dbquery(&res2, "sneezy", "bootHomes(2)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
       if(rc==-1)
@@ -649,14 +655,11 @@ void bootHomes(void)
       dirTypeT realdir;
       
       // copy exits now
-      for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
-
+      for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){	
 	realdir=flip_dir(dir, flip);
+	realdir=rotate_dir(realdir, rotate);
 
 	if(src->dir_option[dir]){ // if the template has this exit, copy it
-	  vlogf(LOG_PEEL, "src dir %i, dest dir %i",
-		dir, realdir);
-	  
 	  dest->dir_option[realdir]->door_type =
 	    src->dir_option[dir]->door_type;
 	  dest->dir_option[realdir]->condition =
@@ -671,7 +674,6 @@ void bootHomes(void)
 	  // if the template doesn't have the exit, then remove it from dest
 	  if(dest->dir_option[realdir]->to_room >= plot_start &&
 	     dest->dir_option[realdir]->to_room <= plot_end){
-	    vlogf(LOG_PEEL, "removing %i (%i) in %i", realdir, dir, dest->number);
 
 	    dest->dir_option[realdir]=NULL;
 	    //	delete dest->dir_option[realdir];
