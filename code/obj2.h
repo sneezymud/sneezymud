@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj2.h,v $
+// Revision 1.2  1999/09/16 05:42:19  peel
+// Added setVolume and addToVolume to TSmoke
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1808,6 +1811,8 @@ class TSmoke : public TObj {
     virtual void decayMe();
     virtual bool isPluralItem() const;
     virtual itemTypeT itemType() const { return ITEM_SMOKE; }
+    virtual void setVolume(int);
+    virtual void addToVolume(int);
 
     int getSizeIndex() const;
 
