@@ -14,6 +14,11 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   int factor = ::number(5, (((clev + learning) + percent) / 2));
   int factor2 = ::number(5, (((clev + learning) + percent) / 5));
 
+  if (!ch || !ch->task) {
+    vlogf(LOG_BUG, fmt("No %s in task_sacrifice!") % (ch ? "character" : "task"));
+    return FALSE;
+  }
+
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd)) {
     return FALSE;
   }
