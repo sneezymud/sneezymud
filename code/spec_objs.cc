@@ -3876,6 +3876,7 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 }
 
 int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
+#if 0
   
     TBeing *ch;
 
@@ -3890,14 +3891,17 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 	double percentBurn = ch->hitLimit() * .2;
 	double healthSteal = min((ch->hitLimit()- percentBurn),(ch->getHit() - percentBurn));
 	double manaGain = healthSteal * .8;
-	ch->setManaLimit(currentMana + manaGain);
+	//	ch->setManaLimit(currentMana + manaGain);
 	ch->setHit(healthSteal);
 	act ("Your robe begins to glow with an eerie <b>light<1>, thin tendrils of light thrash wildly and then burrow into your skin, you scream as they rip the lifeforce from you.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 	act ("&n screams in agony as thin <b>tendrils emerge from his robe and burrow into his skin!",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
 	return TRUE;
       }
     }
+
+#endif
     return FALSE;
+
   } // end manaBurnRobe
 
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
