@@ -1964,3 +1964,34 @@ sstring talenDisplay(int talens)
 
   return fmt("%i") % talens;
 }
+
+sstring volumeDisplay(int volume)
+{
+  volume = ((volume >= 100) ? volume/100 * 100 :
+	    ((volume >= 10) ? volume/10 * 10 : volume));
+    
+  int volumeTmp, yards = 0;
+  int feet = 0;
+  int inches;
+  sstring volumeBuf;
+  
+  volumeTmp = volume;
+  if (volumeTmp > CUBIC_INCHES_PER_YARD) {
+    yards = volume/CUBIC_INCHES_PER_YARD;
+    volumeTmp = volume % CUBIC_INCHES_PER_YARD;
+    volumeBuf=fmt("%d cubic yard%s, ") % yards % ((yards == 1) ? "" : "s");
+  }
+  if (volumeTmp > CUBIC_INCHES_PER_FOOT) {
+    feet = volumeTmp/CUBIC_INCHES_PER_FOOT;
+    volumeTmp = volume % CUBIC_INCHES_PER_FOOT;
+    volumeBuf += fmt("%d cubic %s, ") % feet % ((yards == 1) ? "foot":"feet");
+  }
+  if ((inches = volumeTmp))
+    volumeBuf += fmt("%d cubic inch%s") % inches % ((inches == 1) ? "" : "es");
+  if (!volume) {
+    // this only kicks in if no volume
+    volumeBuf += "0 cubic inches";
+  }
+
+  return volumeBuf;
+}

@@ -360,6 +360,7 @@ class TNote;
 extern TNote *createNote(char *);
 extern sstring secsToString(time_t num);
 extern sstring talenDisplay(int);
+extern sstring volumeDisplay(int);
 extern TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos);
 extern bool isCritPart(wearSlotT);
 extern bool hideThisSpell(spellNumT);
