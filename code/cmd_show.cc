@@ -640,10 +640,9 @@ void TPerson::doShow(const char *argument)
 	  sprintf(buf, "%-20.20s (room: %5d) Hates: %s", 
 		  tmons->getName(), tmons->inRoom(), haters.c_str());
 	  sb += buf;
-	  
+	  sb += "\n\r";
 	}
       }
-      sb += "\n\r";
       if (desc)
         desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
       return;
