@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.5  1999/09/22 17:08:49  peel
+// Minor changes to smoke
+//
 // Revision 1.4  1999/09/17 06:36:23  peel
 // changed burn message frequency
 //
@@ -1205,7 +1208,7 @@ int TObj::objectTickUpdate(int pulse)
     } else
       ch = NULL;
 
-    dropSmoke(::number(1,6));
+    dropSmoke(::number(1,5));
 
     switch(::number(0, 3)){
       case 0:
