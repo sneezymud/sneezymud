@@ -411,6 +411,7 @@ extern applyTypeT mapFileToApply(int);
 extern int mapApplyToFile(applyTypeT);
 extern void processStringForClient(string &);
 extern void repoCheck(TMonster *mob, int rnum);
+extern void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse);
 extern double balanceCorrectionForLevel(double);
 extern double getLevMod(ush_int, unsigned int);
 extern unsigned int rent_credit(ush_int, unsigned int, unsigned int);

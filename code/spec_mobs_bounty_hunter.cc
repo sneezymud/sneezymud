@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "statistics.h"
 
 static TBeing *char_with_name(char *name)
 {
@@ -785,6 +786,85 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
   }
   return FALSE;
 }
+
+// this is a bit of level control, 9/01 - dash
+void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
+  TBeing *i = NULL;
+  TMonster *mob = NULL;
+  
+  if (corpse || !ch || !obj)
+    return;
+
+  int buffer = 20;
+  // ok, what exactly do we want here?
+  // we want to call a repo check if players have eq that is too buff for them
+  // so first consideration is raw level of object vs their level
+  // we want it to be a higher chance for limited objects (<50)
+  if (obj->max_exist < 30)
+    buffer = 10;
+
+  int dif = (int)obj->objLevel() - ch->GetMaxLevel(); 
+
+  if (dif > buffer) {
+    // 1:500 chance for 10 lev lim diff, 1/20 chance for 50 lev lim diff
+    if ((100*dif)/buffer > ::number(0, 50000)) {
+      // well this is the meat of it.. now we need to randomly pick a mob roughly the level of the
+      // object and send him after.
+      
+      int minlev, maxlev;
+      int huntergroup = (int)obj->objLevel() / 10 + 1;
+      int nummobs;
+
+      minlev = huntergroup * 10 + 1;
+      maxlev = huntergroup * 10 + 10;
+
+      switch (huntergroup) {
+	case 0:
+	  // shouldn't happen, but just to be safe;
+	  nummobs = stats.act_1_5 + stats.act_6_10;
+	  break;
+	case 1:
+	  nummobs = stats.act_11_15 + stats.act_16_20;
+	  break;
+	case 2:
+	  nummobs = stats.act_21_25 + stats.act_26_30;
+	  break;
+	case 3:
+	  nummobs = stats.act_31_40;
+	  break;
+	case 4:
+	  nummobs = stats.act_41_50;
+	  break;
+	default:
+	  nummobs = stats.act_51_60;
+	  break;
+      }
+      
+      for (i = character_list; i; i = i->next) {
+	if (i->GetMaxLevel() <= maxlev && i->GetMaxLevel() >= minlev && !::number(0, nummobs)
+	    && (mob = dynamic_cast<TMonster *>(i))) {
+	  // code to set up the repo mob here
+	  char buf[160],buf2[160];
+	  strcpy(buf,obj->name);
+	  add_bars(buf);
+	  sprintf(buf2,"Hunter, repo %s",buf);
+	  vlogf(LOG_PROC,"%s rent-repoing: '%s' from %s : plev: %d, olev: %d.",
+		i->getName(), ch->getName(),buf, ch->GetMaxLevel(), obj->objLevel());
+	  i->spec = SPEC_BOUNTY_HUNTER;
+	  bounty_hunter(NULL, CMD_SAY, buf2, mob, NULL);
+
+	} else {
+	  continue;
+	}
+      }
+    }
+  }
+  return;
+}
+	  
+      
+    
+  
 
 void repoCheck(TMonster *mob, int rnum)
 {

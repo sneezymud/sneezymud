@@ -19,6 +19,9 @@ static const int CORPSE_END  = -3;
 static const int LIMITED_RENT_ITEM = 9;  
 // in 5.2 anything with max exists <= this number will be charged rent
 
+static const bool FreeRent = true;
+//BOD decision 8-28-01
+
 struct SInnkeeperHate {
   int    tVNum; // Mobile VNum of the innkeeper in question.
   race_t tRace;  // Race in question
@@ -567,7 +570,7 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
     // these items are to be retired
     // its bad to return NULL here, so instead we will have it load a
     // hairball (vnum=0), that decays immediately
-const unsigned int OBJ_HAIRBALL = 1;
+    const unsigned int OBJ_HAIRBALL = 1;
     item.item_number = OBJ_HAIRBALL; 
     item.decay_time = 0;
   }
@@ -589,89 +592,89 @@ const unsigned int OBJ_HAIRBALL = 1;
 
 // old items should reflect current tiny file
 #if 0
-if (version >= 7 || 
-  // symbols lose attuning, components given by GM loss 0 value, repair tickets
-    (dynamic_cast<TComponent *>(o) ||
-    dynamic_cast<TNote *>(o) ||
-    dynamic_cast<TSymbol *>(o))) {
+  if (version >= 7 || 
+      // symbols lose attuning, components given by GM loss 0 value, repair tickets
+      (dynamic_cast<TComponent *>(o) ||
+       dynamic_cast<TNote *>(o) ||
+       dynamic_cast<TSymbol *>(o))) {
 #else
-if (version >= 7 || 
-    // discard 0-cost components and symbols due to overhaul
-    dynamic_cast<TNote *>(o)) {
+  if (version >= 7 || 
+      // discard 0-cost components and symbols due to overhaul
+      dynamic_cast<TNote *>(o)) {
 #endif
-  o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
-
-  o->setObjStat(item.extra_flags);
-  o->setWeight((float) item.weight);
-  o->weightCorrection();
-
-  o->setVolume(item.volume);
-  o->obj_flags.bitvector = item.bitvector;
-  o->obj_flags.struct_points = item.struct_points;
-  o->obj_flags.max_struct_points = item.max_struct_points;
-  o->obj_flags.decay_time = item.decay_time;
-  o->setMaterial(item.material_points);
-  o->setDepreciation(item.depreciation);
-
-  o->obj_flags.cost = item.cost;
-
-  for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-    o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
-    o->affected[j].level = item.affected[j].level;
-    o->affected[j].duration = item.affected[j].duration;
-    o->affected[j].renew = item.affected[j].renew;
-    o->affected[j].location = mapFileToApply(item.affected[j].location);
-
-    if (applyTypeShouldBeSpellnum(o->affected[j].location))
-      o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
-    else
-      o->affected[j].modifier = item.affected[j].modifier;
-
-    o->affected[j].modifier2 = item.affected[j].modifier2;
-    o->affected[j].bitvector = item.affected[j].bitvector;
+    o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+    
+    o->setObjStat(item.extra_flags);
+    o->setWeight((float) item.weight);
+    o->weightCorrection();
+    
+    o->setVolume(item.volume);
+    o->obj_flags.bitvector = item.bitvector;
+    o->obj_flags.struct_points = item.struct_points;
+    o->obj_flags.max_struct_points = item.max_struct_points;
+    o->obj_flags.decay_time = item.decay_time;
+    o->setMaterial(item.material_points);
+    o->setDepreciation(item.depreciation);
+    
+    o->obj_flags.cost = item.cost;
+    
+    for (j = 0; j < MAX_OBJ_AFFECT; j++) {
+      o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
+      o->affected[j].level = item.affected[j].level;
+      o->affected[j].duration = item.affected[j].duration;
+      o->affected[j].renew = item.affected[j].renew;
+      o->affected[j].location = mapFileToApply(item.affected[j].location);
+      
+      if (applyTypeShouldBeSpellnum(o->affected[j].location))
+	o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
+      else
+	o->affected[j].modifier = item.affected[j].modifier;
+      
+      o->affected[j].modifier2 = item.affected[j].modifier2;
+      o->affected[j].bitvector = item.affected[j].bitvector;
+    }
+    // version 7
+  } else {
+    if ((item.extra_flags & ITEM_STRUNG) &&
+	!o->isObjStat(ITEM_STRUNG))
+      o->addObjStat(ITEM_STRUNG);  // preserve strung
   }
-  // version 7
-} else {
-  if ((item.extra_flags & ITEM_STRUNG) &&
-      !o->isObjStat(ITEM_STRUNG))
-    o->addObjStat(ITEM_STRUNG);  // preserve strung
-}
-
+  
   if (o->isObjStat(ITEM_STRUNG)) {
     if (name)
       o->name = name;
     else
       o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
-
+    
     if (shortDescr)
-      o->shortDescr = shortDescr;
+	o->shortDescr = shortDescr;
     else
       o->shortDescr = mud_str_dup(obj_index[o->getItemIndex()].short_desc);
-
+    
     if (description)
       o->setDescr(description);
     else
       o->setDescr(mud_str_dup(obj_index[o->getItemIndex()].long_desc));
-
+    
     if (action_description) 
       o->action_description = action_description;
     else if (obj_index[o->getItemIndex()].description) 
       o->action_description = mud_str_dup(obj_index[o->getItemIndex()].description);
     else 
       o->action_description = NULL;
-
+    
     if (obj_index[o->getItemIndex()].ex_description)
       o->ex_description =
-        new extraDescription(*obj_index[o->getItemIndex()].ex_description);
+	new extraDescription(*obj_index[o->getItemIndex()].ex_description);
     else
       o->ex_description = NULL;
   }
   // if they had a lantern lit, set light appropriately
   o->adjustLight();
-
+  
   return o;
 }
-
+  
 static bool shouldRecycle(int robj)
 {
   return false;
@@ -728,10 +731,10 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
       return TRUE;
     }
 #if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL: slot read %d", slot);
+    if (ch && !strcmp(ch->name, "Iradel"))
+      vlogf(LOG_SILENT, "IRADEL: slot read %d", slot);
 #endif
-
+    
     if (slot == CONTENTS_END)
       return FALSE;
     if (parent) {
@@ -754,6 +757,8 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
 
           if (immortalityNukeCheck(ch, new_obj, corpse))
             continue;  // new_obj invalid if this was true
+
+	  repoCheckForRent(ch, new_obj, corpse);
 
         } else {
           vlogf(LOG_BUG, "Error in objsFromStore (2)");
@@ -966,15 +971,28 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, string &str)
     //    vlogf(LOG_DASH, "%s getting cost on %s, max exist %d, limit %d, cost %d", getName(), obj->getName(),
     //	  obj->max_exist, LIMITED_RENT_ITEM, temp);
     
+    // BOD decision 8-28-01 - no rent :)
+    if (FreeRent) temp = 0;
+
 #endif
     cost->total_cost += temp;
     if (re) {
       if (desc && desc->m_bIsClient) {
-        sprintf(buf, "%-30s : %d talens/day\n\r", 
-            obj->getName(), temp);
+        if(!FreeRent) {
+	  sprintf(buf, "%-30s : %d talens/day\n\r", 
+		  obj->getName(), temp);
+	} else
+	  sprintf(buf, "%-30s \n\r",
+		  obj->getName());
+      }
+
         str += buf;
-      } else if (!silent)
-        sendTo(COLOR_OBJECTS, "%-30s : %d talens/day\n\r", obj->getName(), temp);
+    } else if (!silent) {
+        if (!FreeRent) 
+	  sendTo(COLOR_OBJECTS, "%-30s : %d talens/day\n\r", obj->getName(), temp);
+	else
+	  sendTo(COLOR_OBJECTS, "%-30s \n\r", obj->getName());
+
     }
     if (temp<=100)
       cost->lowrentobjs++;
@@ -1040,12 +1058,22 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
       silent = SILENT_YES;
 
+    if (FreeRent) actual_cost = 0;
+
     if (recep) {
       if (desc && desc->m_bIsClient) {
-        sprintf(buf, "%-30s : %d talens/day ********** Storage fee \n\r", ch->getName(), actual_cost);
-        str += buf;
-      } else if (!silent)
-        sendTo(COLOR_OBJECTS, "%-30s : %d talens/day   ********** Storage fee \n\r", ch->getName(), actual_cost);
+        if (!FreeRent) 
+	  sprintf(buf, "%-30s : %d talens/day ********** Storage fee \n\r", ch->getName(), actual_cost);
+        else
+	  sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
+	str += buf;
+      } else if (!silent) {
+	if (!FreeRent) 
+	  sendTo(COLOR_OBJECTS, "%-30s : %d talens/day   ********** Storage fee \n\r", ch->getName(), actual_cost);
+        else
+          sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
+
+      }
     }
     cost->total_cost += actual_cost;
 
@@ -1070,7 +1098,8 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   }
   if (isImmortal()) {
     if (recep)
-      act("$n tells you 'Considering you're immortal, you can rent for free.'",0, recep, 0, this, TO_VICT);
+      if (!FreeRent)
+	act("$n tells you 'Considering you're immortal, you can rent for free.'",0, recep, 0, this, TO_VICT);
 
     cost->total_cost = 0;
     if (client && recep) {
@@ -1095,14 +1124,16 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     return FALSE;
   }
   if (recep) {
-    sprintf(buf, "$n tells you, \"That totals to be %d talens.\"", cost->total_cost);
-    act(buf, TRUE, recep, NULL, this, TO_VICT);
-    if (cost->total_cost/GetMaxLevel() > 5000)
-      vlogf(LOG_BUG, "%s has %d value in equipment and is level %d", getName(), cost->total_cost, GetMaxLevel());
+    if (!FreeRent) {
+      sprintf(buf, "$n tells you, \"That totals to be %d talens.\"", cost->total_cost);
+      act(buf, TRUE, recep, NULL, this, TO_VICT);
+      if (cost->total_cost/GetMaxLevel() > 5000)
+	vlogf(LOG_BUG, "%s has %d value in equipment and is level %d", getName(), cost->total_cost, GetMaxLevel());
 
-    if (cost->no_carried && (cost->no_carried < 10) && (((cost->total_cost)/(cost->no_carried)) > 15000)) 
-       vlogf(LOG_BUG, "%s has only %d items with an %d average cost, please check", 
-                  getName(), cost->no_carried, (cost->total_cost/cost->no_carried));
+      if (cost->no_carried && (cost->no_carried < 10) && (((cost->total_cost)/(cost->no_carried)) > 15000)) 
+	vlogf(LOG_BUG, "%s has only %d items with an %d average cost, please check", 
+	      getName(), cost->no_carried, (cost->total_cost/cost->no_carried));
+    }
   }
 
 #if RENT_RESTRICT_INNS_BY_LEVEL
@@ -1134,7 +1165,11 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   //if (recep) 
   //  act(buf, FALSE, recep, 0, this, TO_VICT);
   
-  if (!cost->total_cost) {
+  if (FreeRent) {
+    if (recep) {
+      act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
+    }
+  } else if (!cost->total_cost) {
     if (recep) {
       sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
       act(buf, FALSE, recep, 0, this, TO_VICT);
@@ -1155,7 +1190,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 
       sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
       act(buf, FALSE, recep, 0, this, TO_VICT);
-
+      
 #if FACTIONS_IN_USE
       if (isSameFaction(recep) && !recep->isUnaff()) {
         act("$n tells you 'Because you are of the same allegiance, I will give you a discount based on your faction percentage.", FALSE, recep, 0, this, TO_VICT);
@@ -1191,7 +1226,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       act(buf, FALSE, recep, 0, this, TO_VICT);
     }
   } else {
-    if (recep) 
+    if (recep && !FreeRent) 
       act("$n tells you \"You can afford to rent as long as you'd like.\"", FALSE, recep, 0, this, TO_VICT);
   }
   if (client && recep) {
@@ -2158,7 +2193,7 @@ void TPerson::loadRent()
 #endif
 
   // Three hour grace period after crash or autorent. 
-  if (in_room == ROOM_NOWHERE && (st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
+  if (!FreeRent && in_room == ROOM_NOWHERE && (st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
     vlogf(LOG_PIO, "Character reconnecting inside grace period.");
     sendTo("You connected within the autorent grace period.\n\r");
   } else {
@@ -2183,7 +2218,8 @@ void TPerson::loadRent()
     vlogf(LOG_PIO, "%s ran up charges of %d since last update, %d total charges", getName(), timegold, gone + timegold);
 
     int total_rent=(timegold + gone)>st.total_cost?st.total_cost:(timegold + gone);
-    sendTo("You ran up charges of %d talen%s in rent.\n\r", total_rent,
+    if (!FreeRent)
+      sendTo("You ran up charges of %d talen%s in rent.\n\r", total_rent,
       ((total_rent) == 1) ? "" : "s");
     addToMoney(-(total_rent), GOLD_RENT);
     saveGovMoney("rent", total_rent);
@@ -2355,14 +2391,22 @@ int TComponent::noteMeForRent(string &tStString, TBeing *ch, TThing *tList, int 
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
 #endif
     sprintf(tString, tBuffer, getName(), tCost);
-
-    if (lCount == 1)
-      strcat(tString, "\n\r");
-    else {
-      sprintf(tBuffer, "  [%5dx%3d]\n\r", max(0, rentCost()), lCount);
-      strcat(tString, tBuffer);
+    if (FreeRent) {
+      if (lCount == 1)
+	strcat(tString, "\n\r");
+      else {
+	sprintf(tBuffer, "  x%3d\n\r", lCount);
+	strcat(tString, tBuffer);
+      }
+    } else {
+      
+      if (lCount == 1)
+	strcat(tString, "\n\r");
+      else {
+	sprintf(tBuffer, "  [%5dx%3d]\n\r", max(0, rentCost()), lCount);
+	strcat(tString, tBuffer);
+      }
     }
-
     //sprintf(tString, "%-30s : %5d talens/day  [x%3d]\n\r", getName(), tCost, lCount);
     tStString += tString;
   } else {
@@ -2377,7 +2421,7 @@ int TComponent::noteMeForRent(string &tStString, TBeing *ch, TThing *tList, int 
       strcat(tString, tBuffer);
     }
 
-    //sprintf(tString, "%-30s : NOT RENTABLE      [     x%3d]\n\r", getName(), lCount);
+    //sprintf(tString, "%-30s : NOT RENTABLE  x%3d\n\r", getName(), lCount);
     tStString += tString;
   }
 
@@ -2397,8 +2441,11 @@ int TObj::noteMeForRent(string &tStString, TBeing *ch, TThing *, int *tCount)
   sprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
   if (isRentable()) {
-    strcat(tBuffer, "%5d talens/day\n\r");
-    *tCount = *tCount + 1;
+    if (!FreeRent) 
+      strcat(tBuffer, "%5d talens/day\n\r");
+    else
+      strcat(tBuffer, "\n\r");
+   *tCount = *tCount + 1;
     tCost = max(0, rentCost());
 #ifdef SNEEZY2000
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
@@ -2475,8 +2522,14 @@ void TBeing::makeRentNote(TBeing *recip)
       continue;
 
     temp = ch->petPrice() / 4;
+    if (FreeRent) { 
+      temp = 0;
+      sprintf(buf, "%-30s : Pet/Charm/Thrall/Mount \n\r",
+              ch->getName());
+    } else {
     sprintf(buf, "%-30s : %5d talens/day ********** Storage fee \n\r",
               ch->getName(), temp);
+    }
     longBuf += buf;
     cost.total_cost += temp;
 
@@ -2516,52 +2569,58 @@ void TBeing::makeRentNote(TBeing *recip)
   tStBuffer += "\n\r";
   sprintf(buf, "%d total items.\n\r", num);
   tStBuffer += buf;
+
+  if (!FreeRent) {
 #if 1
-  sprintf(buf, "Total cost is : %d\n\r", cost.total_cost);
-  tStBuffer += buf;
+    
+    sprintf(buf, "Total cost is : %d\n\r", cost.total_cost);
+    tStBuffer += buf;
+    
 #else
-  sprintf(buf, "My storage fee is : %d\n\r", storageFee(this));
-  tStBuffer += buf;
-  sprintf(buf, "Total cost is : %d\n\r", storageFee(this) + cost.total_cost);
-  tStBuffer += buf;
+    
+    sprintf(buf, "My storage fee is : %d\n\r", storageFee(this));
+    tStBuffer += buf;
+    sprintf(buf, "Total cost is : %d\n\r", storageFee(this) + cost.total_cost);
+    tStBuffer += buf;
+    
 #endif
-  unsigned int credit = rentCredit();
+    unsigned int credit = rentCredit();
 #ifdef SNEEZY2000
-  credit = 0;
+    credit = 0;
 #endif
-  if (desc) {
-    if (recip->isImmortal()) {
-      //      sprintf(buf, "Minimal Rent Credit is : %d\n\rActual ", credit);
-      //tStBuffer += buf;
+    if (desc) {
+      if (recip->isImmortal()) {
+	//      sprintf(buf, "Minimal Rent Credit is : %d\n\rActual ", credit);
+	//tStBuffer += buf;
+      }
+      desc->best_rent_credit = max(credit, desc->best_rent_credit);
+      credit = desc->best_rent_credit;
     }
-    desc->best_rent_credit = max(credit, desc->best_rent_credit);
-    credit = desc->best_rent_credit;
-  }
 #ifdef SNEEZY2000
-  credit = 0;
+    credit = 0;
 #endif
-
-  //  sprintf(buf, "Rent Credit is : %d\n\r", credit);
-  //tStBuffer += buf;
-  if (credit >= (unsigned int) cost.total_cost) {
-    sprintf(buf, "Daily Rent Cost : 0\n\r");
-    tStBuffer += buf;
-  } else {
-    //sprintf(buf, "Equipment Cost : %d\n\r",
-    //           max((int) (cost.total_cost-credit), 0));
+    
+    //  sprintf(buf, "Rent Credit is : %d\n\r", credit);
     //tStBuffer += buf;
-    sprintf(buf, "Current Rent Factor : %.2f\n\r",
-               gold_modifier[GOLD_RENT].getVal());
-    tStBuffer += buf;
-    sprintf(buf, "Daily Rent Cost : %d\n\r",
-               max((int) ((cost.total_cost-credit)*gold_modifier[GOLD_RENT].getVal()), 0));
-    tStBuffer += buf;
-    sprintf(buf, "Total Days Rentable: On-Hand: %d / Total: %d\n\r",
-            (int) (getMoney() / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())),
-            (int) ((getMoney() + getBank()) / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())));
-    tStBuffer += buf;
+    if (credit >= (unsigned int) cost.total_cost) {
+      sprintf(buf, "Daily Rent Cost : 0\n\r");
+      tStBuffer += buf;
+    } else {
+      //sprintf(buf, "Equipment Cost : %d\n\r",
+      //           max((int) (cost.total_cost-credit), 0));
+      //tStBuffer += buf;
+      sprintf(buf, "Current Rent Factor : %.2f\n\r",
+	      gold_modifier[GOLD_RENT].getVal());
+      tStBuffer += buf;
+      sprintf(buf, "Daily Rent Cost : %d\n\r",
+	      max((int) ((cost.total_cost-credit)*gold_modifier[GOLD_RENT].getVal()), 0));
+      tStBuffer += buf;
+      sprintf(buf, "Total Days Rentable: On-Hand: %d / Total: %d\n\r",
+	      (int) (getMoney() / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())),
+	      (int) ((getMoney() + getBank()) / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())));
+      tStBuffer += buf;
+    }
   }
-
   // semi-weird : we want the note to have the summary, the itemized list,
   // and then the summary again...
   longBuf += tStBuffer;
@@ -4167,49 +4226,53 @@ int TBeing::doRent(const char *argument)
       string sb;
       char buf[256];
 
-      sb = "Rent Credit by level for [";
-      sb += getProfAbbrevName();
-      sb += "]:\n\r\n\r";
+      if (FreeRent) {
+	sb = "Rent is free! Who needs credit?\n\r";
+      } else {
 
-      for (lev = 1; lev <= MAX_MORT/4 + 1; lev++) {
-        int lev0 = lev;
-        int lev1 = lev0 + 1*(MAX_MORT/4 +1);
-        int lev2 = lev0 + 2*(MAX_MORT/4 +1);
-        int lev3 = lev0 + 3*(MAX_MORT/4 +1);
-
-        if (lev0 <= MAX_MORT) {
-          sprintf(buf, "%s[%2d]%s %s%10d%s ",
-            cyan(), lev0, norm(), orange(),
-            rent_credit(getClass(), lev0, howManyClasses()),
-            norm());
-          sb += buf;
-        }
-        if (lev1 <= MAX_MORT) {
-          sprintf(buf, "%s[%2d]%s %s%10d%s ",
-            cyan(), lev1, norm(), orange(),
-            rent_credit(getClass(), lev1, howManyClasses()),
-            norm());
-          sb += buf;
-        }
-        if (lev2 <= MAX_MORT) {
-          sprintf(buf, "%s[%2d]%s %s%10d%s ",
-            cyan(), lev2, norm(), orange(),
-            rent_credit(getClass(), lev2, howManyClasses()),
-            norm());
-          sb += buf;
-        }
-        if (lev3 <= MAX_MORT) {
-          sprintf(buf, "%s[%2d]%s %s%10d%s\n\r",
-            cyan(), lev3, norm(), orange(),
-            rent_credit(getClass(), lev3, howManyClasses()),
-            norm());
-          sb += buf;
-        } else {
-          sb += "\n\r";
-        }
+	sb = "Rent Credit by level for [";
+	sb += getProfAbbrevName();
+	sb += "]:\n\r\n\r";
+	
+	for (lev = 1; lev <= MAX_MORT/4 + 1; lev++) {
+	  int lev0 = lev;
+	  int lev1 = lev0 + 1*(MAX_MORT/4 +1);
+	  int lev2 = lev0 + 2*(MAX_MORT/4 +1);
+	  int lev3 = lev0 + 3*(MAX_MORT/4 +1);
+	  
+	  if (lev0 <= MAX_MORT) {
+	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
+		    cyan(), lev0, norm(), orange(),
+		    rent_credit(getClass(), lev0, howManyClasses()),
+		    norm());
+	    sb += buf;
+	  }
+	  if (lev1 <= MAX_MORT) {
+	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
+		    cyan(), lev1, norm(), orange(),
+		    rent_credit(getClass(), lev1, howManyClasses()),
+		    norm());
+	    sb += buf;
+	  }
+	  if (lev2 <= MAX_MORT) {
+	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
+		    cyan(), lev2, norm(), orange(),
+		    rent_credit(getClass(), lev2, howManyClasses()),
+		    norm());
+	    sb += buf;
+	  }
+	  if (lev3 <= MAX_MORT) {
+	    sprintf(buf, "%s[%2d]%s %s%10d%s\n\r",
+		    cyan(), lev3, norm(), orange(),
+		    rent_credit(getClass(), lev3, howManyClasses()),
+		    norm());
+	    sb += buf;
+	  } else {
+	    sb += "\n\r";
+	  }
+	}
+	sb += "\n\r";
       }
-      sb += "\n\r";
-
       if (desc)
         desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
       return TRUE;
@@ -4253,11 +4316,13 @@ int TBeing::doRent(const char *argument)
 
 int TObj::rentCost() const
 {
+  if (FreeRent) return 0;
   return obj_flags.cost / 2 + obj_flags.cost % 2;
 }
 
 int TWand::rentCost() const
 {
+  if (FreeRent) return 0;
   int num = TMagicItem::rentCost();
 
   num *= getCurCharges();

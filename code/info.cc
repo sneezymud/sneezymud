@@ -3832,9 +3832,12 @@ void TObj::describeMe(const TBeing *ch) const
       else
         ch->sendTo("It is not limited for immortals.\n\r");
     }
+#if 0
     if (10 >= max_exist) {
       ch->sendTo("This item is considered limited and will cost a rental fee.\n\r");
+
     }
+#endif
 #ifndef SNEEZY2000
     if (isRentable()) {
       int temp = max(0, rentCost());

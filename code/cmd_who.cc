@@ -66,8 +66,12 @@ static const string getWizDescriptLev(const TBeing *ch)
 {
   if (ch->hasWizPower(POWER_WIZARD))
     return "creator";
-  else if (ch->hasWizPower(POWER_GOD))
-    return "  god  ";
+  else if (ch->hasWizPower(POWER_GOD)) {
+    if(ch->getSex() == SEX_FEMALE)
+      return "godess ";
+    else
+      return "  god  ";
+  }
   else if (ch->hasWizPower(POWER_BUILDER))
     return "demigod";
   else
