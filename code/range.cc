@@ -439,17 +439,17 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
           act("In the distance, $N catches your $o.",TRUE,ch,this,tbt,TO_CHAR);
  
         if (!tbt->heldInPrimHand()) {
-          act("You catch $o.",
+          act("You catch $p.",
                        FALSE,tbt,this,0,TO_CHAR);
           --(*this);
           tbt->equipChar(this, tbt->getPrimaryHold());
         } else if (!tbt->heldInSecHand()) {
-          act("You catch $o.",
+          act("You catch $p.",
                        FALSE,tbt,this,0,TO_CHAR);
           --(*this);
           tbt->equipChar(this, tbt->getSecondaryHold());
         } else {
-          act("You catch $o, and add it to your inventory.",
+          act("You catch $p, and add it to your inventory.",
                        FALSE,tbt,this,0,TO_CHAR);
           --(*this);
           *tbt += *this;
