@@ -136,4 +136,6 @@ extern int  start_task(TBeing *, TThing *, TRoom *, taskTypeT,
                        const char *, int, unsigned short, ubyte, int, int);
 extern void warn_busy(TBeing *ch);
 
+extern void handleFishRespawning();
+
 #endif

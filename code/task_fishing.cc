@@ -1,6 +1,8 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 
+map <int, bool> mRoomsFished;
+
 void TBeing::doFish(sstring direction){
   TRoom *rp;
   roomDirData *exitp;
@@ -110,6 +112,9 @@ TObj *catch_a_fish(TRoom *rp){
   }
 
   rp->setFished(rp->getFished()+1);
+
+  if (mRoomsFished.find(rp->number) == mRoomsFished.end())
+    mRoomsFished[rp->number] = true;
 
   return fish;
 }
@@ -326,3 +331,39 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   return TRUE;
 }
 
+void handleFishRespawning()
+{
+  map <int, bool> ::iterator tIter     = mRoomsFished.begin(),
+                             tLastGood = mRoomsFished.begin();
+
+  while (tIter != mRoomsFished.end()) {
+    TRoom * tRoom = real_roomp((*tIter).first);
+
+    if (!tRoom) {
+      vlogf(LOG_BUG, fmt("handleFishRespawning() handling non-existent room! (%d)") % (*tIter).first);
+      continue;
+    }
+
+    // Make it only a chance.
+    if ((tRoom->getFished() > 0) && !::number(0, 24))
+      tRoom->setFished(tRoom->getFished() - 1);
+
+    if (tRoom->getFished() < 1) {
+      vlogf(LOG_LAPSOS, "...Expunging Room!");
+
+      if (tIter == tLastGood) {
+        mRoomsFished.erase(tIter);
+        tIter = tLastGood = mRoomsFished.begin();
+      } else {
+        mRoomsFished.erase(tIter);
+        tIter = tLastGood;
+      }
+    } else
+      tLastGood = tIter;
+
+    if (tIter == mRoomsFished.end())
+      break;
+
+    ++tIter;
+  }
+}

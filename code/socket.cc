@@ -1111,6 +1111,9 @@ int TMainSocket::gameLoop()
 
       pingData();
       pulseLog("pingData", t, pulse);
+
+      handleFishRespawning();
+      pulseLog("handleFishRespawning", t, pulse);
     }
 
 
