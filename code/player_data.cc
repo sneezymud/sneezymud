@@ -175,10 +175,6 @@ void TPerson::resetChar()
   points.maxMana = 0;
   points.maxMove = 0;
 
-  if (isImmortal()) {
-    setBank(0);
-    setMoney(100000);
-  }
   if ((GetMaxLevel() == 52) || (GetMaxLevel() == 51))
     setMoney(0);
 
