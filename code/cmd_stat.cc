@@ -436,6 +436,9 @@ void TBeing::statObj(const TObj *j)
     for (t = j->getStuff(); t; t = t->nextThing) {
       //      str += fname(t->name);
       str += t->shortDescr;
+      str += " (";
+      str += t->name;
+      str += ")";
       str += "\n\r";
     }
   }
