@@ -970,7 +970,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  bool doneStockHistory=false;
+  //  bool doneStockHistory=false;
   TTiming t;
 
   avail_descs = 150;		
