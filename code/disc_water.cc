@@ -796,6 +796,7 @@ int conjureElemWater(TBeing * caster)
   TThing *t;
   int found=0;
   TPool *tp;
+  TBaseCup *tbc;
 
   if (real_mobile(WATER_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
@@ -815,6 +816,16 @@ int conjureElemWater(TBeing * caster)
 	   tp->getDrinkType() == LIQ_SALTWATER ||
 	   tp->getDrinkType() == LIQ_HOLYWATER)) {
 	tp->addToDrinkUnits(-100);
+	found=1;
+	break;
+      }
+
+      if ((tbc = dynamic_cast<TBaseCup *>(t)) && 
+	  tbc->getDrinkUnits() >= 100 &&
+	  (tbc->getDrinkType() == LIQ_WATER ||
+	   tbc->getDrinkType() == LIQ_SALTWATER ||
+	   tbc->getDrinkType() == LIQ_HOLYWATER)) {
+	tbc->addToDrinkUnits(-100);
 	found=1;
 	break;
       }
