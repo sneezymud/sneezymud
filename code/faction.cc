@@ -604,10 +604,12 @@ void TBeing::edit_faction(const char * args) {
       } else {
 	return;
       }
-      f = newfaction();
+    
 #endif
     }
-    if (!f) {
+    f = newfaction();
+    
+    if (!f || f->ID == 0) {
       sprintf(buf,"You are not a member of any faction.\n\r");
       sendTo(buf);
       return;
