@@ -1003,13 +1003,13 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
         sendTo(COLOR_MOBS, fmt("You damage your claw on %s's %s.\n\r") % pers(v) % 
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
         sendTo(COLOR_MOBS, fmt("You damage your wing on %s's %s.\n\r") % pers(v) %
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       else
         sendTo(COLOR_MOBS, fmt("You damage your hand on %s's %s.\n\r") % pers(v) %
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       return TRUE;
     }
   }

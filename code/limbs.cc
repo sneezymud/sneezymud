@@ -131,14 +131,15 @@ wearSlotT pickRandomLimb(bool)
 int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
 {
   unsigned int limHlt = getCurLimbHealth(part_hit);
+  sstring buf;
+
   if (limHlt > 0) {
     addCurLimbHealth(part_hit, -min(dam, limHlt));
     if (getCurLimbHealth(part_hit) <= 0) {
-      char buf[256];
       sendTo(COLOR_BASIC, fmt("%sYour %s has become totally useless!%s\n\r") %
-         red() % describeBodySlot(part_hit) % norm());
-      sprintf(buf, "$n's %s has become completely useless!",
-         describeBodySlot(part_hit).c_str());
+	     red() % describeBodySlot(part_hit) % norm());
+      buf=fmt("$n's %s has become completely useless!") %
+	describeBodySlot(part_hit);
       act(buf, TRUE, this, NULL, NULL, TO_ROOM, ANSI_ORANGE);
       addToLimbFlags(part_hit, PART_USELESS);
 

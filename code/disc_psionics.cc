@@ -306,7 +306,7 @@ int TBeing::doPSay(const char *arg){
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
               d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % 
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str() %
+                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
             }
           }
@@ -317,7 +317,7 @@ int TBeing::doPSay(const char *arg){
             sprintf(garbedBuf, "%s",
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
             d->clientf(fmt("%d|%s|%s") % CLIENT_SAY %
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str() %
+                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
           }
         }

@@ -275,7 +275,7 @@ void TDrugContainer::describeObjectSpecifics(const TBeing *ch) const
   diff = (double) ((double) getCurBurn() / max(1.0, (double) getMaxBurn()));
   if(diff==0 || getDrugType()==DRUG_NONE)
     ch->sendTo(COLOR_OBJECTS, fmt("%s is completely empty.\n\r") %
-	       sstring(getName()).uncap().c_str());
+	       sstring(getName()).uncap());
   else      
     ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s %s left.\n\r") % sstring(getName()).uncap() %
 	       (((diff == 0) ? "no" :

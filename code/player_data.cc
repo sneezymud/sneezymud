@@ -1677,7 +1677,7 @@ void TBeing::saveTitle()
 
   if (!(fp = fopen(buf.c_str(), "w"))) {
     vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving title (%d)") %  
-	  buf.c_str() % errno);
+	  buf % errno);
     return;
   }
 

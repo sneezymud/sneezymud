@@ -1580,7 +1580,7 @@ void TBeing::doBload(const char *arg)
       //--(*tObj);
       //*this += *tObj;
       sendTo(COLOR_OBJECTS, fmt("You remove %s to load it.\n\r") %
-             sstring(tObj->getName()).uncap().c_str());
+             sstring(tObj->getName()).uncap());
     }
   }
   if (heldInSecHand()) {

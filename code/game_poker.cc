@@ -342,7 +342,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
     
     
     ch->sendTo(COLOR_BASIC, fmt("You discard %s.\n\r") %
-	       pretty_card_printout(ch, card[i]).c_str());
+	       pretty_card_printout(ch, card[i]));
     buf = fmt("$n discards %s.") %
       pretty_card_printout(ch, card[i]);
     act(buf, TRUE, ch, 0, 0, TO_ROOM);

@@ -139,7 +139,7 @@ void TBeing::doMessage(const char *tArg)
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_GNAME) &&
           !isNamed && (tStString.find("<n>") == sstring::npos)) {
         sendTo(fmt("This type requires your name.  Either use %s or <n>\n\r") %
-               getNameNOC(this).c_str());
+               getNameNOC(this));
         return;
       }
 

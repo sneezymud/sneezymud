@@ -430,7 +430,7 @@ int TSocket::gameLoop()
 	str += "wayslowpulse  ";
 
       vlogf(LOG_MISC, fmt("%i %i) %s = %i") % 
-	    pulse % pulse%12 % str.c_str() %
+	    pulse % pulse%12 % str %
 	    ((timespent.tv_sec*1000000)+timespent.tv_usec));
     }
 

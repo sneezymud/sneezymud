@@ -146,7 +146,7 @@ void TBaseClothing::descMaxStruct(const TBeing *ch, int learn) const
 
   strcpy(capbuf, ch->objs(this));
   ch->sendTo(COLOR_OBJECTS,fmt("%s seems to %s.\n\r") %
-           sstring(capbuf).cap().c_str() %
+           sstring(capbuf).cap() %
           ((maxstruct >= 99) ? "be virtually indestructible" :
            ((maxstruct >= 95) ? "be very durable" :
            ((maxstruct >= 91) ? "be durable" :

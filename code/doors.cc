@@ -148,7 +148,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   exitp = rp->dir_option[dir];
   if (exitp->condition & EX_DESTROYED) {
     sendTo(fmt("The %s has been destroyed, of course it's open.\n\r") %
-       exitp->getName().c_str());
+       exitp->getName());
     return;
   }
   if (exitp->door_type == DOOR_PORTCULLIS && riding && getSkillValue(SKILL_RIDE) < 30) {
@@ -217,13 +217,13 @@ void TBeing::rawOpenDoor(dirTypeT dir)
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach up and push the %s open.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and lifts the %s open.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach down and lift the %s open.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else {
         sprintf(buf, "$n opens the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
@@ -245,7 +245,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You unlatch the %s in the ceiling and pull it open.\n\r") %
-                exitp->getName().uncap().c_str());
+                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n unlatches the %s in the $g and pushes it open.",
                 exitp->getName().uncap().c_str());
@@ -266,7 +266,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach up and open the %s in the ceiling.\n\r") %
-                exitp->getName().uncap().c_str());
+                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and opens the %s in the $g.",
                 exitp->getName().uncap().c_str());
@@ -395,7 +395,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   exitp = rp->dir_option[dir];
   if (IS_SET(exitp->condition, EX_DESTROYED)) {
     sendTo(fmt("The %s has been destroyed, it can't be closed.\n\r") %
-       exitp->getName().c_str());
+       exitp->getName());
     return;
   }
   if (dir == DIR_DOWN && riding) {
@@ -440,13 +440,13 @@ void TBeing::rawCloseDoor(dirTypeT dir)
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach up and push the %s close.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach down and close the %s.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
@@ -468,7 +468,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You push the %s in the ceiling closed and latch it.\n\r") %
-                exitp->getName().uncap().c_str());
+                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n pull the %s in the $g closed and latch it.",
                   exitp->getName().uncap().c_str());
@@ -489,13 +489,13 @@ void TBeing::rawCloseDoor(dirTypeT dir)
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach up and push the %s closed.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo(fmt("You reach down and close the %s.\n\r") %
-              exitp->getName().uncap().c_str());
+              exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);

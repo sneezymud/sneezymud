@@ -620,7 +620,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
-            caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON.cap()).c_str());
+            caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
@@ -716,7 +716,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
-          caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON.cap()).c_str());
+          caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
@@ -817,7 +817,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
-            caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON.cap()).c_str());
+            caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();

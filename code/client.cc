@@ -1358,12 +1358,12 @@ sstring(account->name).lower().c_str());
 sstring(account->name).lower().c_str());
     if (mkdir(buf2, 0770)) {
       vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") % 
-sstring(account->name).lower().c_str());
+sstring(account->name).lower());
       return FALSE;
     }
     if (!(fp = fopen(buf, "w"))) {
       vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") % 
-sstring(account->name).lower().c_str());
+sstring(account->name).lower());
       return FALSE;
     }
   }

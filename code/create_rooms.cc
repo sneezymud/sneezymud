@@ -2245,7 +2245,7 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
     }
   }
   ch->sendTo(fmt("\n\r\n\rEnter the weight you wish the %s to have.\n\r") %
-    ((rp->dir_option[dir]->keyword) ? fname(rp->dir_option[dir]->keyword).c_str() :
+    ((rp->dir_option[dir]->keyword) ? fname(rp->dir_option[dir]->keyword) :
       "BOGUS DOOR KEYWORD"));
   ch->sendTo("\n\rNew Weight: ");
   return;

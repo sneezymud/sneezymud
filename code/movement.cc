@@ -1710,7 +1710,7 @@ int TBeing::doOpen(const char *argument)
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
       act(buf, TRUE, this, 0, 0, TO_ROOM);
@@ -1718,7 +1718,7 @@ int TBeing::doOpen(const char *argument)
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
       sendTo(fmt("The %s has been destroyed, it stands wide open.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
       sendTo("A cave-in blocks the way.  It would take hours to dig your way through.\n\r");
@@ -1794,7 +1794,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
       act(buf, TRUE, this, 0, 0, TO_ROOM);
@@ -1802,7 +1802,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
       sendTo(fmt("The %s has been destroyed, it stands wide open.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
       sendTo("A cave-in blocks the way.  It would take hours to dig your way through.\n\r");
@@ -1885,7 +1885,7 @@ void TBeing::doClose(const char *argument)
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
       act(buf, TRUE, this, 0, 0, TO_ROOM);
@@ -1893,7 +1893,7 @@ void TBeing::doClose(const char *argument)
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
       sendTo(fmt("The %s has been destroyed, it can't be closed anymore.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       return;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
       sendTo("It's been caved in.  You can't get much more closed than that...\n\r");
@@ -1948,7 +1948,7 @@ int TBeing::doLower(const char *argument)
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
       act(buf, TRUE, this, 0, 0, TO_ROOM);
@@ -1956,7 +1956,7 @@ int TBeing::doLower(const char *argument)
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
       sendTo(fmt("The %s has been destroyed.\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
       sendTo("It's been caved in.  You can't get much more lowered than that...\n\r");
@@ -2127,7 +2127,7 @@ void TBeing::doUnlock(const char *argument)
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
       sendTo(fmt("The %s has been destroyed and stands wide open.\n\rWhy do you need to unlock it?\n\r") %
-         exitp->getName().c_str());
+         exitp->getName());
       return;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
       sendTo("It's not locked....  it's caved in!\n\r");
@@ -3007,7 +3007,7 @@ int TBeing::goDirection(dirTypeT dir)
                             (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
       if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
         sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
-           exitp->getName().c_str());
+           exitp->getName());
         sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
            exitp->getName().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);

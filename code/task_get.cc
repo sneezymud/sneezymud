@@ -121,7 +121,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             if (o->isObjStat(ITEM_ATTACHED)) {
               if (ch->isImmortal()) {
                 ch->sendTo(COLOR_OBJECTS, fmt("%s : You'll have to be more specific to get this.\n\r") %
-                           sstring(o->getName()).cap().c_str());
+                           sstring(o->getName()).cap());
               } else {
                 if (o->canWear(ITEM_TAKE)) {
                   ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") %
@@ -137,10 +137,10 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             if (!o->canWear(ITEM_TAKE)) {
               if (ch->isImmortal()) {
                 ch->sendTo(COLOR_OBJECTS, fmt("%s : You'll have to be more specific to get this.\n\r") %
-                           sstring(o->getName()).cap().c_str());
+                           sstring(o->getName()).cap());
               } else {
 		//  ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") %
-		//             sstring(o->getName()).cap().c_str());
+		//             sstring(o->getName()).cap());
               }
               continue;
             }

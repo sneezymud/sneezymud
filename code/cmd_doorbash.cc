@@ -154,7 +154,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
                  fname(exitp->keyword).c_str());
     act(buf, FALSE, caster, 0, 0, TO_ROOM);
     caster->sendTo(fmt("You slam into the %s, and it bursts open!\n\r") % 
-            fname(exitp->keyword).c_str());
+            fname(exitp->keyword));
     int room = caster->in_room;
     if (IS_SET(exitp->condition, EX_TRAPPED))
     {

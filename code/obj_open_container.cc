@@ -187,7 +187,7 @@ void TOpenContainer::describeContains(const TBeing *ch) const
 {
   if (getStuff() && !isClosed())
     ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") %
-	       sstring(getName()).cap().c_str());
+	       sstring(getName()).cap());
 }
 
 void TOpenContainer::lowCheck()

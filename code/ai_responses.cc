@@ -200,7 +200,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, fmt("Bad argument to response (%s) command %d.  (%s)") % 
-                name % cmd % arg.c_str());
+                name % cmd % arg);
         return FALSE;
       }
       if (TogIndex[value].togmob != mobVnum()) {
@@ -216,7 +216,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, fmt("Bad argument to response (%s) special command %d.  (%s)") % 
-                name % cmd % arg.c_str());
+                name % cmd % arg);
         return FALSE;
       }
       if (!mob->hasQuestBit(value)) {
@@ -229,7 +229,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, fmt("Bad argument to response (%s) special command %d.  (%s)") % 
-                name % cmd % arg.c_str());
+                name % cmd % arg);
         return FALSE;
       }
       if (!mob->hasQuestBit(value))
@@ -240,7 +240,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, fmt("Bad argument to response (%s) special command %d.  (%s)") % 
-                name % cmd % arg.c_str());
+                name % cmd % arg);
         return FALSE;
       }
       if (mob->hasQuestBit(value))
@@ -251,7 +251,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = real_object(convertTo<int>(arg));
       if (value <= 0 || value >= (signed)obj_index.size()) {
         vlogf(LOG_MOB_RS, fmt("Bad argument to response (%s) special command %s.  (%s)") % 
-              name % cmd % arg.c_str());
+              name % cmd % arg);
         return FALSE;
       }
       if (obj_index[value].getNumber() >= obj_index[value].max_exist)

@@ -457,7 +457,7 @@ void TPerson::doPowers(const sstring &argument) const
       unsigned int tValue;
 
       tStPath = fmt("player/%c/%s.wizpower") %
-	LOWER((tStName.c_str())[0]) %
+	LOWER(tStName[0]) %
 	tStName.lower();
 
       if ((tFile = fopen(tStPath.c_str(), "r"))) {

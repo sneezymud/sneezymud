@@ -684,7 +684,7 @@ int TBeing::updateBodyParts()
         addCurLimbHealth(i, -1);
         if (getCurLimbHealth(i) <= 0) {
           sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
-               describeBodySlot(i).c_str());
+               describeBodySlot(i));
           makePartMissing(i, TRUE);
         }
       }
@@ -718,7 +718,7 @@ int TBeing::updateBodyParts()
           setCurLimbHealth(i, 0);
         } else {
           sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
-               describeBodySlot(i).c_str());
+               describeBodySlot(i));
           makePartMissing(i, TRUE);
         }
       }

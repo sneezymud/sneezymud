@@ -2793,7 +2793,7 @@ void TPerson::doForce(const char *argument)
     else {
       if (vict->canSee(this))
         vict->sendTo(COLOR_MOBS, fmt("%s\n\r") %
-                     msgVariables(MSG_FORCE, (TThing *)NULL, to_force).c_str());
+                     msgVariables(MSG_FORCE, (TThing *)NULL, to_force));
       else
         vict->sendTo(COLOR_MOBS, fmt("%s has forced you to '%s'.\n\r") %
                      vict->pers(this) % to_force);
@@ -4486,7 +4486,7 @@ void TBeing::doReplace(const sstring &argument)
 
     // log this event so we can see if item duplication (etc.) is caused by it.
     vlogf(LOG_FILE, fmt("%s replacing %s's %s file.") % 
-       getName() % arg1.c_str() % dir2);
+       getName() % arg1 % dir2);
 
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
 	    dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());

@@ -6000,7 +6000,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  break;
 	case 4:
 	  tmp = fmt("%s Do you swallow?") % hookername;
-	  job->john->doWhisper(tmp.c_str());
+	  job->john->doWhisper(tmp);
 	  myself->doEmote("looks startled and almost chokes.");
 	  myself->doAction(johnname, CMD_SLAP);
 	  job->john->doAction(hookername, CMD_GRIN);

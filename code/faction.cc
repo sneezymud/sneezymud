@@ -1661,7 +1661,7 @@ void TBeing::doMakeLeader(const char *arg)
   }
   if (fnum == FACT_NONE) {
     sendTo(fmt("%s don't have or want leaders.\n\r") %
-         sstring(FactionInfo[FACT_NONE].faction_name).cap().c_str());
+         sstring(FactionInfo[FACT_NONE].faction_name).cap());
     return;
   }
   if (which == 0 && doNoone) {

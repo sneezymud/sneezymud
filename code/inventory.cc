@@ -235,7 +235,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
 
   if (!isname("grenade", name)) {
     ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, concealing and arming it.\n\r") % 
-                     sstring(getName()).uncap().c_str());
+                     sstring(getName()).uncap());
 
     swapToStrung();
     ed = new extraDescription();
@@ -250,7 +250,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
     return;
   } else {
     ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, activating it.\n\r") % 
-                     sstring(getName()).uncap().c_str());
+                     sstring(getName()).uncap());
 
     armGrenade(ch);
 

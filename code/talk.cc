@@ -577,7 +577,7 @@ void TBeing::doGrouptell(const char *arg)
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
     if (k->desc && k->desc->m_bIsClient && (k != this)) {
       k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
-        colorString(this, k->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE));
+        colorString(this, k->desc, garbed, NULL, COLOR_NONE, FALSE));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
@@ -588,7 +588,7 @@ void TBeing::doGrouptell(const char *arg)
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
       if (f->follower->desc && f->follower->desc->m_bIsClient) {
         f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
-          colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE));
+          colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
       buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       act(buf, 0, this, 0, f->follower, TO_VICT);
@@ -638,7 +638,7 @@ void TBeing::doCommune(const char *arg)
 
   if (!levnum) {
     sendTo(fmt("You tell the gods: %s") %
-         colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE).c_str());
+         colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
     sprintf(wizbuf, "[%sPort:%d%s] %s%s:%s %s%s%s\n\r", red(), gamePort, norm(), purple(), getName(), norm(), cyan(), arg, norm());
     mudMessage(this, 16, wizbuf);
   } else {
@@ -652,7 +652,7 @@ void TBeing::doCommune(const char *arg)
     // "i think you guys ought to watch xxx, i suspect he is cheating"
 
     sendTo(fmt("You tell level %d+ gods: %s") % levnum %
-         colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE).c_str());
+         colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
   }
 
   for (i = descriptor_list; i; i = i->next) {

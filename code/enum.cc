@@ -559,7 +559,7 @@ dirTypeT getDirFromChar(const sstring direction)
   else if (dirbuf.lower() == "southwest")
     dirbuf = "sw";
 
-  int dr = search_block(dirbuf.c_str(), scandirs, false);
+  int dr = search_block(dirbuf, scandirs, false);
   if (dr == -1)
     return DIR_NONE;
 

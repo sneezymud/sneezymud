@@ -543,26 +543,18 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 //  }
 
   int len, letter;
-  char argument[MAX_STRING_LENGTH];
-  char buf2[10];
-  char buf3[5];
-
-  *buf2 = *buf3 = '\0';
-
-  memset(argument, '\0', sizeof(argument));
-  memset(buf2, '\0', sizeof(buf2));
-  memset(buf3, '\0', sizeof(buf3));
+  sstring argument, buf2, buf3;
 
   if (title == 1) {
     if (rp->getName()) {
-      strcpy(argument, rp->getName());
+      argument=rp->getName();
       if (argument[0] == '<') {
           buf3[0] = argument[0];
           buf3[1] = argument[1];
           buf3[2] = argument[2];
-          strcpy(buf2, buf3);
+	  buf2=buf3;
       } else {
-        strcpy(buf2, addColorRoom(rp, 1).c_str());
+	buf2=addColorRoom(rp, 1);
       }
     } else {
       vlogf(LOG_BUG, fmt("%s is in a room with no descr") %  getName());
@@ -570,20 +562,13 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
     }
   } else if (title == 2) {
     if (rp->getDescr()) {
-      strcpy(argument, rp->getDescr());
+      argument=rp->getDescr();
       if (argument[0] == '<') {
-#if 1
         buf2[0] = argument[0];
         buf2[1] = argument[1];
         buf2[2] = argument[2];
-#else
-        buf3[0] = argument[0];
-        buf3[1] = argument[1];  
-        buf3[2] = argument[2];  
-        strcpy(buf2, buf3);
-#endif
       } else {   
-        strcpy(buf2, addColorRoom(rp, 2).c_str());
+	buf2=addColorRoom(rp, 2);
       }
     } else {
       vlogf(LOG_BUG, fmt("%s is in a room with no descr") %  getName());
@@ -596,11 +581,11 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 // Found had to initialize with this logic and too tired to figure out why
 
   sstring buf = "";
-  if (buf2) {
+  if (!buf2.empty()) {
     buf = buf2;
   }
 
-  len = strlen(argument);
+  len = argument.length();
   for(letter=0; letter < len; letter++) {
     if (letter < 2) {
       buf += argument[letter];
@@ -612,7 +597,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
         case 'z':
         case 'Z':
           buf += argument[letter];
-          if (buf2) {
+          if (!buf2.empty()) {
             buf += buf2;
           }
           break;
@@ -656,239 +641,236 @@ sstring TRoom::daynightColorRoom() const
 
 const sstring TBeing::addColorRoom(TRoom * rp, int title) const
 {
-  char buf2[10];
-  char buf3[10];
-
-  *buf2 = *buf3 = '\0';
+  sstring buf2, buf3;
 
 // Found had to initialize with this logic and too tired to figure out why
-  strcpy(buf3, "<z>");
+  buf3="<z>";
 
   sectorTypeT sector = rp->getSectorType();
 
   switch (sector) {
     case SECT_SUBARCTIC:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2="<P>";
+      buf3="<p>";
       break;
     case SECT_ARCTIC_WASTE:
-      strcpy(buf2, "<w>");
-      strcpy(buf3, "<W>");
+      buf2="<w>";
+      buf3="<W>";
       break;
     case SECT_ARCTIC_CITY:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<C>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_ARCTIC_ROAD:
-      strcpy(buf2, "<W>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<W>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_TUNDRA:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<p>");
+      buf2="<o>";
+      buf3="<p>";
       break;
     case SECT_ARCTIC_MOUNTAINS:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<W>");
+      buf2="<o>";
+      buf3="<W>";
       break;
     case SECT_ARCTIC_FOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<W>");
+      buf2="<G>";
+      buf3="<W>";
       break;
     case SECT_ARCTIC_MARSH:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<p>");
+      buf2="<B>";
+      buf3="<p>";
       break;
     case SECT_ARCTIC_RIVER_SURFACE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2="<C>";
+      buf3="<c>";
       break;
     case SECT_ICEFLOW:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<W>");
+      buf2="<C>";
+      buf3="<W>";
       break;
     case SECT_COLD_BEACH:
-      strcpy(buf2, "<p>");
-      strcpy(buf3, "<P>");
+      buf2="<p>";
+      buf3="<P>";
       break;
     case SECT_SOLID_ICE:
-      strcpy(buf2, "<c>");
-      strcpy(buf3, "<C>");
+      buf2="<c>";
+      buf3="<C>";
       break;
     case SECT_ARCTIC_BUILDING:
-      strcpy(buf2, "<p>");
+      buf2="<p>";
       break;
     case SECT_ARCTIC_CAVE:
-      strcpy(buf2, "<c>");
-      strcpy(buf3, "<k>");
+      buf2="<c>";
+      buf3="<k>";
       break;
     case SECT_ARCTIC_ATMOSPHERE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<C>");
+      buf2="<C>";
+      buf3="<C>";
       break;
     case SECT_ARCTIC_CLIMBING:
     case SECT_ARCTIC_FOREST_ROAD:
-      strcpy(buf2, "<p>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<p>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_PLAINS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2="<G>";
+      buf3="<g>";
       break;
     case SECT_TEMPERATE_CITY:
     case SECT_TEMPERATE_ROAD:
-      strcpy(buf2, "<p>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<p>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_GRASSLANDS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2="<G>";
+      buf3="<g>";
       break;
     case SECT_TEMPERATE_HILLS:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<g>");
+      buf2="<o>";
+      buf3="<g>";
       break;
     case SECT_TEMPERATE_MOUNTAINS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<o>");
+      buf2="<G>";
+      buf3="<o>";
       break;
     case SECT_TEMPERATE_FOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2="<G>";
+      buf3="<g>";
       break;
     case SECT_TEMPERATE_SWAMP:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2="<P>";
+      buf3="<p>";
       break;
     case SECT_TEMPERATE_OCEAN:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2="<C>";
+      buf3="<c>";
       break;
     case SECT_TEMPERATE_RIVER_SURFACE:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<b>");
+      buf2="<B>";
+      buf3="<b>";
       break;
     case SECT_TEMPERATE_UNDERWATER:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<b>");
+      buf2="<C>";
+      buf3="<b>";
       break;
     case SECT_TEMPERATE_CAVE:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<k>");
+      buf2="<o>";
+      buf3="<k>";
       break;
     case SECT_TEMPERATE_ATMOSPHERE:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<G>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_TEMPERATE_CLIMBING:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<G>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_TEMPERATE_FOREST_ROAD:
-      strcpy(buf2, "<g>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<g>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_DESERT:
     case SECT_SAVANNAH:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<o>");
+      buf2="<y>";
+      buf3="<o>";
       break;
     case SECT_VELDT:
-      strcpy(buf2, "<g>");
-      strcpy(buf3, "<o>");
+      buf2="<g>";
+      buf3="<o>";
       break;
     case SECT_TROPICAL_CITY:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<G>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_TROPICAL_ROAD:
-      strcpy(buf2, "<g>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<g>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_JUNGLE:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<g>");
+      buf2="<P>";
+      buf3="<g>";
       break;
     case SECT_RAINFOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2="<G>";
+      buf3="<g>";
       break;
     case SECT_TROPICAL_HILLS:
-      strcpy(buf2, "<R>");
-      strcpy(buf3, "<g>");
+      buf2="<R>";
+      buf3="<g>";
       break;
     case SECT_TROPICAL_MOUNTAINS:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2="<P>";
+      buf3="<p>";
       break;
     case SECT_VOLCANO_LAVA:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2="<y>";
+      buf3="<R>";
       break;
     case SECT_TROPICAL_SWAMP:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2="<G>";
+      buf3="<g>";
       break;
     case SECT_TROPICAL_OCEAN:
-      strcpy(buf2, "<b>");
-      strcpy(buf3, "<c>");
+      buf2="<b>";
+      buf3="<c>";
       break;
     case SECT_TROPICAL_RIVER_SURFACE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<B>");
+      buf2="<C>";
+      buf3="<B>";
       break;
     case SECT_TROPICAL_UNDERWATER:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<b>");
+      buf2="<B>";
+      buf3="<b>";
       break;
     case SECT_TROPICAL_BEACH:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<y>");
+      buf2="<P>";
+      buf3="<y>";
       break;
     case SECT_TROPICAL_BUILDING:
-      strcpy(buf2, "<p>");
+      buf2="<p>";
       break;
     case SECT_TROPICAL_CAVE:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<k>");
+      buf2="<P>";
+      buf3="<k>";
       break;
     case SECT_TROPICAL_ATMOSPHERE:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<P>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_TROPICAL_CLIMBING:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<P>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_RAINFOREST_ROAD:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, rp->daynightColorRoom().c_str());
+      buf2="<P>";
+      buf3=rp->daynightColorRoom();
       break;
     case SECT_ASTRAL_ETHREAL:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2="<C>";
+      buf3="<c>";
       break;
     case SECT_SOLID_ROCK:
-      strcpy(buf2, "<k>");
-      strcpy(buf3, "<w>");
+      buf2="<k>";
+      buf3="<w>";
       break;
     case SECT_FIRE:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2="<y>";
+      buf3="<R>";
       break;
     case SECT_INSIDE_MOB:
-      strcpy(buf2, "<R>");
-      strcpy(buf3, "<r>");
+      buf2="<R>";
+      buf3="<r>";
       break;
     case SECT_FIRE_ATMOSPHERE:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2="<y>";
+      buf3="<R>";
       break;
     case SECT_TEMPERATE_BEACH:
     case SECT_TEMPERATE_BUILDING:
     case SECT_MAKE_FLY:
     case MAX_SECTOR_TYPES:
-      strcpy(buf2, "<p>");
+      buf2="<p>";
       break;
   }
 
@@ -934,16 +916,7 @@ void TBaseCup::examineObj(TBeing *ch) const
   }
 
   ch->sendTo("When you look inside, you see:\n\r");
-#if 1
   lookObj(ch, bits);
-#else
-  char buf[256];
-  char buf2[256];
-  sprintf(buf2, "%s", name);
-  strcpy(buf2, add_bars(buf2).c_str());
-  sprintf(buf, "in %s", buf2);
-  ch->doLook(buf, CMD_LOOK);
-#endif
 }
 
 void TBeing::doExamine(const char *argument, TThing * specific)
@@ -981,7 +954,6 @@ void TBeing::doExamine(const char *argument, TThing * specific)
 sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 {
   affectedData *aff, *af2;
-  char buf[256];
   sstring str;
   int objused;
 
@@ -995,9 +967,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
     switch (aff->type) {
       case SKILL_TRACK:
       case SKILL_SEEKWATER:
-        sprintf(buf,"Tracking: %s\n\r", (aff->type == SKILL_TRACK ?
-               ch->specials.hunting->getName() : "seeking water"));
-        str += buf;
+	str += fmt("Tracking: %s\n\r") % (aff->type == SKILL_TRACK ?
+					  ch->specials.hunting->getName() : 
+					  "seeking water");
         break;
       case SPELL_GUST:
       case SPELL_DUST_STORM:
@@ -1403,200 +1375,182 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_STAVECHARGE:
       case SKILL_MANA:
       case SPELL_EMBALM:
-#if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
       case SPELL_FERAL_WRATH:
       case SPELL_SKY_SPIRIT:
-#endif
         // some spells have 2 effects, skip over one of them
         if (!aff->shouldGenerateText())
           continue;
         else if (discArray[aff->type]) {
           if (show && strcmp(discArray[aff->type]->name, "sneak")) {
             if (aff->renew < 0) {
-              sprintf(buf,"Affected : '%s'\t: Approx. Duration : %s\n\r",
-                   discArray[aff->type]->name,
-                   describeDuration(this, aff->duration).c_str());
-  
+	      str += fmt("Affected : '%s'\t: Approx. Duration : %s\n\r") %
+		discArray[aff->type]->name %
+		describeDuration(this, aff->duration);
             } else {
-              sprintf(buf,"Affected : '%s'\t: Time Left : %s %s\n\r",
-                 discArray[aff->type]->name,
-                 describeDuration(this, aff->duration).c_str(), 
-                 (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
+              str += fmt("Affected : '%s'\t: Time Left : %s %s\n\r") %
+		discArray[aff->type]->name %
+		describeDuration(this, aff->duration) %
+		(aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
             }
-            str += buf;
           }
         } else {
-          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %  aff->type % ch->getName());
+          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %
+		aff->type % ch->getName());
           ch->affectRemove(aff);
         }
         break;
       case AFFECT_DISEASE:
         if (show) {
-          sprintf(buf, "Disease: '%s'\n\r",
-                  DiseaseInfo[affToDisease(*aff)].name);
-          str += buf;
+          str+=fmt("Disease: '%s'\n\r") %
+	    DiseaseInfo[affToDisease(*aff)].name;
         } 
         break;
       case AFFECT_DUMMY:
         if (show) {
-          sprintf(buf, "Affected : '%s'\t: Time Left : %s %s\n\r",
-                 "DUMMY",
-                 describeDuration(this, aff->duration).c_str(),
-                 (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
-          str += buf;
+          str+=fmt("Affected : '%s'\t: Time Left : %s %s\n\r") %
+	    "DUMMY" %
+	    describeDuration(this, aff->duration) %
+	    (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
         }
         break;
       case AFFECT_WAS_INDOORS:
         if (ch->isImmortal() && show) {
-          sprintf(buf, "Was indoors (immune to frostbite): Time Left : %s\n\r",
-		  describeDuration(this, aff->duration).c_str());
-          str += buf;
+          str+=fmt("Was indoors (immune to frostbite): Time Left : %s\n\r") %
+	    describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_FREE_DEATHS:
-        sprintf(buf, "Free deaths remaining: %ld\n\r",
-               aff->modifier);
-        str += buf;
+        str+=fmt("Free deaths remaining: %ld\n\r") %
+               aff->modifier;
         break;
       case AFFECT_HORSEOWNED:
-        sprintf(buf, "Horseowned:\t Time Left : %s\n\r",
-  	     describeDuration(this, aff->duration).c_str());
-        str += buf;
+        str+=fmt("Horseowned:\t Time Left : %s\n\r") %
+	  describeDuration(this, aff->duration);
         break;
       case AFFECT_PLAYERKILL:
-        sprintf(buf, "Player Killer:\t Time Left : %s\n\r",
-	     describeDuration(this, aff->duration).c_str());
-        str += buf;
+        str+=fmt("Player Killer:\t Time Left : %s\n\r") %
+	  describeDuration(this, aff->duration);
         break;
       case AFFECT_PLAYERLOOT:
-        sprintf(buf, "Player Looter:\t Time Left : %s\n\r",
-                describeDuration(this, aff->duration).c_str());
-        str += buf;
+        str+=fmt("Player Looter:\t Time Left : %s\n\r") %
+	  describeDuration(this, aff->duration);
         break;
       case AFFECT_TEST_FIGHT_MOB:
-        sprintf(buf, "Test Fight Mob: %ld\n\r",
-               aff->modifier);
-        str += buf;
+        str+=fmt("Test Fight Mob: %ld\n\r") %
+	  aff->modifier;
         break;
       case AFFECT_SKILL_ATTEMPT:
         if (isImmortal()) {
-          sprintf(buf, "Skill Attempt:(%ld) '%s'\t: Time Left : %s\n\r", aff->modifier, (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
-          str += buf;
+          str+=fmt("Skill Attempt:(%ld) '%s'\t: Time Left : %s\n\r") %
+	    aff->modifier % 
+	    (discArray[aff->modifier] ? 
+	     discArray[aff->modifier]->name : 
+	     "Unknown") %
+	    describeDuration(this, aff->duration);
         } else if (aff->modifier != getSkillNum(SKILL_SNEAK)) {
-          sprintf(buf, "Skill Attempt: '%s'\t: Time Left : %s\n\r", (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
-          str += buf;
+          str+=fmt("Skill Attempt: '%s'\t: Time Left : %s\n\r") %
+	    (discArray[aff->modifier] ? 
+	     discArray[aff->modifier]->name : 
+	     "Unknown") %
+	    describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_NEWBIE:
         if (show) {
-          sprintf(buf, "Donation Recipient: \n\r");
-          str += buf;
+          str += "Donation Recipient: \n\r";
         }
         break;
       case AFFECT_DRUNK:
         if (show) {
-          sprintf(buf, "Affected: Drunken Slumber: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
-          str += buf;
+          str+=fmt("Affected: Drunken Slumber: approx. duration : %s\n\r") %
+	    describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Affected: Drunken Slumber: \n\r");
-          str += buf;
+          str += "Affected: Drunken Slumber: \n\r";
         }
         break;
       case AFFECT_DRUG:
         if (!aff->shouldGenerateText())
           continue;
         if (show) {
-          sprintf(buf, "Affected: %s: approx. duration : %s\n\r",
-  	       drugTypes[aff->modifier2].name,
-	       describeDuration(this, aff->duration).c_str());
-          str += buf;
+          str+=fmt("Affected: %s: approx. duration : %s\n\r") %
+  	       drugTypes[aff->modifier2].name %
+	       describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Affected: %s: \n\r", drugTypes[aff->modifier2].name);
-          str += buf;
+          str+=fmt("Affected: %s: \n\r") % drugTypes[aff->modifier2].name;
         }
         break;
       case AFFECT_TRANSFORMED_ARMS:
         if (show) {
-          sprintf(buf, "Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Affected: Transformed Limb: falcon wings: \n\r");
+          str += "Affected: Transformed Limb: falcon wings: \n\r";
         }
-        str += buf;
         break;
       case AFFECT_TRANSFORMED_HANDS:
         if (ch == this)
-          sprintf(buf, "Affected: Transformed Limb: bear claws: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Transformed Limb: bear claws: approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
         else
-          sprintf(buf, "Affected: Transformed Limb: bear claws \n\r");
-        str += buf;
+          str+="Affected: Transformed Limb: bear claws \n\r";
         break;
       case AFFECT_TRANSFORMED_LEGS:
         if (ch == this)
-          sprintf(buf, "Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
         else
-          sprintf(buf, "Affected: Transformed Limb: dolphin tail: \n\r");
-        str += buf;
+          str+="Affected: Transformed Limb: dolphin tail: \n\r";
         break;
       case AFFECT_TRANSFORMED_HEAD:
         if (ch == this)
-          sprintf(buf, "Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
         else
-          sprintf(buf, "Affected: Transformed Limb: eagle's head: \n\r");
+          str+="Affected: Transformed Limb: eagle's head: \n\r";
         break;
       case AFFECT_TRANSFORMED_NECK:
         if (ch == this)
-          sprintf(buf, "Affected: Transformed Limb: fish gills: approx. duration : %s\n\r",
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Transformed Limb: fish gills: approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
         else
-          sprintf(buf, "Affected: Transformed Limb: fish gills: \n\r");
-        str += buf;
+          str+="Affected: Transformed Limb: fish gills: \n\r";
         break;
       case AFFECT_GROWTH_POTION:
         if (ch == this)
-          sprintf(buf, "Affected: Abnormal Growth: approx duration : %s\n\r",
-                  describeDuration(this, aff->duration).c_str());
+          str+=fmt("Affected: Abnormal Growth: approx duration : %s\n\r") %
+                  describeDuration(this, aff->duration);
         else
-          sprintf(buf, "Affected: Abnormal Growth\n\r");
-
-        str += buf;
+          str+="Affected: Abnormal Growth\n\r";
         break;
 
       case AFFECT_DEFECTED:
 	if (ch == this) 
-	  sprintf(buf, "You recently defected from your faction.\n\r\ttime left : %s\n\r",
-		  describeDuration(this, aff->duration).c_str());
+	  str+=fmt("You recently defected from your faction.\n\r\ttime left : %s\n\r") %
+		  describeDuration(this, aff->duration);
 	else
-	  sprintf(buf, "Recently defected from a faction.\n\r");
-	str += buf;
+	  str+="Recently defected from a faction.\n\r";
 	break;
       case AFFECT_OFFER:
 	if (ch == this) {
 	  TFaction *f = NULL;
 	  f = get_faction_by_ID(aff->modifier);
 	  if (!f) break;
-	  sprintf(buf, "You received an offer to join %s. (Good for %s.)\n\r",
-		  f->getName(), describeDuration(this, aff->duration).c_str());
+	  str+=fmt("You received an offer to join %s. (Good for %s.)\n\r") %
+		  f->getName() % describeDuration(this, aff->duration);
 	} else
-	  sprintf(buf, "Received an offer to join a faction.\n\r");
-	str += buf;
+	  str+="Received an offer to join a faction.\n\r";
 	break;
       case AFFECT_OBJECT_USED:
         objused = aff->modifier;
 	if (show) {
-	  sprintf(buf, "Used magical object: %s\n\r", obj_index[objused].short_desc);
-	  str +=buf;
-	  sprintf(buf, "     Object is reusable in %s.\n\r", describeDuration(this, aff->duration).c_str());
+	  str+=fmt("Used magical object: %s\n\r") % obj_index[objused].short_desc;
+	  str+=fmt("     Object is reusable in %s.\n\r") %
+	    describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Used a magical object effect.");
+          str+="Used a magical object effect.";
         }
-	str += buf;
 	break;
 
 
@@ -1605,33 +1559,30 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_PET:
         if (show) {
-          sprintf(buf, "Pet of: '%s'.  Approx. duration : %s\n\r",
-                 (char *) aff->be,
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Pet of: '%s'.  Approx. duration : %s\n\r") %
+                 (char *) aff->be %
+                 describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Somebody's Pet.\n\r");
+          str="Somebody's Pet.\n\r";
         }
-        str += buf;
         break;
       case AFFECT_CHARM:
         if (show) {
-          sprintf(buf, "Charm of: '%s'.  Approx. duration : %s\n\r",
-                 (char *) aff->be,
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Charm of: '%s'.  Approx. duration : %s\n\r") %
+                 (char *) aff->be %
+                 describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Somebody's Charm.\n\r");
+          str+="Somebody's Charm.\n\r";
         }
-        str += buf;
         break;
       case AFFECT_THRALL:
         if (show) {
-          sprintf(buf, "Thrall of: '%s'.  Approx. duration : %s\n\r",
-                 (char *) aff->be,
-                 describeDuration(this, aff->duration).c_str());
+          str+=fmt("Thrall of: '%s'.  Approx. duration : %s\n\r") %
+                 (char *) aff->be %
+                 describeDuration(this, aff->duration);
         } else {
-          sprintf(buf, "Somebody's Thrall.\n\r");
+          str+="Somebody's Thrall.\n\r";
         }
-        str += buf;
         break;
       case AFFECT_WARY:
       case AFFECT_ORPHAN_PET:
@@ -1640,17 +1591,15 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
       case SKILL_MIND_FOCUS:
 	if(show){
-	  sprintf(buf, "Affected: mind focus.  Approx. duration : %s\n\r",
-		  describeDuration(this, aff->duration).c_str());
-	  str += buf;
+	  str+=fmt("Affected: mind focus.  Approx. duration : %s\n\r") %
+		  describeDuration(this, aff->duration);
 	}
 	break;
 
       case SKILL_PSI_BLAST:
 	if(show && aff->shouldGenerateText()){
-	  sprintf(buf, "Affected: psionic blast.  Approx. duration : %s\n\r",
-		  describeDuration(this, aff->duration).c_str());
-	  str += buf;
+	  str+=fmt("Affected: psionic blast.  Approx. duration : %s\n\r") %
+		  describeDuration(this, aff->duration);
 	}
 	break;
       case AFFECT_BITTEN_BY_VAMPIRE:
@@ -1776,7 +1725,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
       case SKILL_POISON_ARROW:
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %  aff->type % ch->getName());
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %
+	      aff->type % ch->getName());
         ch->affectRemove(aff);
         break;
     }
@@ -1786,14 +1736,14 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
 void TBeing::describeLimbDamage(const TBeing *ch) const
 {
-  char buf[256], buf2[80];
+  sstring buf, buf2;
   wearSlotT j;
   TThing *t;
 
   if (ch == this)
-    strcpy(buf2,"your");
+    buf2="your";
   else
-    strcpy(buf2,ch->hshr());
+    buf2=ch->hshr();
 
   for (j = MIN_WEAR; j < MAX_WEAR; j++) {
     if (j == HOLD_RIGHT || j == HOLD_LEFT)
@@ -1803,16 +1753,15 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
     if (ch->isLimbFlags(j, PART_TRANSFORMED)) {
       const sstring str = describe_part_wounds(ch, j);
       if (!str.empty()) {
-        act(fmt("<y>%s %s %s %s<1>") % sstring(buf2).cap() %  
+        act(fmt("<y>%s %s %s %s<1>") % buf2.cap() %  
 	    ch->describeBodySlot(j) % ch->slotPlurality(j) % str, 
 	    FALSE, this, NULL, NULL, TO_CHAR);
       }
     }
     if ((t = ch->getStuckIn(j))) {
       if (canSee(t)) {
-        sprintf(buf, "<y>$p is sticking out of %s %s!<1>",
-		sstring(buf2).uncap().c_str(),
-		ch->describeBodySlot(j).c_str());
+	buf = fmt("<y>$p is sticking out of %s %s!<1>") %
+	  buf2.uncap() % ch->describeBodySlot(j);
         act(buf, FALSE, this, t, NULL, TO_CHAR);
       }
     }
@@ -2423,11 +2372,11 @@ void TBeing::doInventory(const char *argument)
   return;
 }
 
-void TBeing::doEquipment(const char *argument)
+void TBeing::doEquipment(const sstring &arg)
 {
   wearSlotT j;
   int found;
-  char capbuf[80], buf[80], trans[80];
+  sstring capbuf, buf, trans, argument=arg;
   TThing *t;
 
   one_argument(argument, buf);
@@ -2439,7 +2388,7 @@ void TBeing::doEquipment(const char *argument)
       TObj *tobj = dynamic_cast<TObj *>(tt);
       if (tobj && tobj->getMaxStructPoints() != tobj->getStructPoints()) {
         if (!tobj->shouldntBeShown(j)) {
-          sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+	  buf=fmt("<%s>") % describeEquipmentSlot(j);
 	  sendTo(fmt("%s%-25s%s") % cyan() % buf % norm());
 	  if (canSee(tobj)) {
             showTo(tobj, SHOW_MODE_SHORT_PLUS);
@@ -2451,7 +2400,7 @@ void TBeing::doEquipment(const char *argument)
         }
       }
     }
-  } else if (!*argument || !isImmortal()) {
+  } else if (argument.empty() || !isImmortal()) {
     TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
@@ -2466,7 +2415,7 @@ void TBeing::doEquipment(const char *argument)
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j]) {
         if (!equipment[j]->shouldntBeShown(j)) {
-          sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+          buf=fmt("<%s>") % describeEquipmentSlot(j);
           sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
           if (canSee(equipment[j])) {
             showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
@@ -2478,7 +2427,7 @@ void TBeing::doEquipment(const char *argument)
         }
       } else if(tattoos[j]!=""){
 	sstring slot = describeEquipmentSlot(j);
-	sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
+	buf=fmt("<%s>") % (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed") : slot);
 	sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 	sendTo(COLOR_BASIC, tattoos[j]);
 	sendTo("\n\r");
@@ -2504,7 +2453,7 @@ void TBeing::doEquipment(const char *argument)
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (victim->equipment[j]) {
           if (!victim->equipment[j]->shouldntBeShown(j)) {
-            sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
+            buf=fmt("<%s>") % victim->describeEquipmentSlot(j);
             sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
             if (canSee(victim->equipment[j])) {
               showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
@@ -2516,7 +2465,7 @@ void TBeing::doEquipment(const char *argument)
           }
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
-	  sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
+	  buf=fmt("<%s>") % (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed") : slot);
 	  sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
@@ -2544,19 +2493,19 @@ void TBeing::doEquipment(const char *argument)
         case WEAR_FINGER_L:
           break;
         case WEAR_NECK:
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BODY:
           break;
         case WEAR_HEAD:
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_LEGS_L:
           break;
         case WEAR_LEGS_R:
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_FOOT_R:
@@ -2565,21 +2514,21 @@ void TBeing::doEquipment(const char *argument)
         case WEAR_HAND_R:
           if (isLimbFlags(WEAR_ARM_R, PART_TRANSFORMED))
             break;
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_HAND_L:
           if (isLimbFlags(WEAR_ARM_L, PART_TRANSFORMED))
             break;
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_R:
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_L:
-          sprintf(trans, "<%s>", describeTransLimb(j).c_str());
+          trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BACK :
@@ -2597,8 +2546,8 @@ void TBeing::doEquipment(const char *argument)
     }
     if ((t = getStuckIn(j))) {
       if (canSee(t)) {
-        strcpy(capbuf, t->getName());
-        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % sstring(capbuf).cap() % describeBodySlot(j));
+	capbuf=t->getName();
+        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % capbuf.cap() % describeBodySlot(j));
       }
     }
   }
@@ -4259,7 +4208,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a ragged edge");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           sstring(capbuf).cap().c_str() % sharpbuf);
+           sstring(capbuf).cap() % sharpbuf);
 }
 
 void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
@@ -4300,7 +4249,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a dull point");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           sstring(capbuf).cap().c_str() % sharpbuf);
+           sstring(capbuf).cap() % sharpbuf);
 }
 
 void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
@@ -4316,13 +4265,13 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
   if (hasClass(CLASS_THIEF) || isImmortal()) {
     if (obj->canCudgel())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for cudgeling.\n\r") %
-             sstring(capbuf).cap().c_str());
+             sstring(capbuf).cap());
     if (obj->canStab())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for stabbing.\n\r") %
-             sstring(capbuf).cap().c_str());
+             sstring(capbuf).cap());
     if (obj->canBackstab())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for backstabbing or throat slitting.\n\r") %
-             sstring(capbuf).cap().c_str());
+             sstring(capbuf).cap());
   }
 }
 
@@ -4363,7 +4312,7 @@ void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a sharp and ragged bluntness");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           sstring(capbuf).cap().c_str() % sharpbuf);
+           sstring(capbuf).cap() % sharpbuf);
 }
 
 void TBeing::describeMaxStructure(const TObj *obj, int learn) const
@@ -4467,7 +4416,7 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
     tStLevel = "way too much of an amount";
 
   sendTo(COLOR_OBJECTS, fmt("This supplies %s of protection for your class and level\n\r") %
-         tStLevel.c_str());
+         tStLevel);
 #else
   int armor = 0;    // works in reverse here.  armor > 0 is GOOD
   armor -= obj->itemAC();
@@ -4731,7 +4680,7 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
 
   if (obj->getMagicLevel() > level) {
     sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spells %s produces.\n\r") % 
-	   sstring(objs(obj)).uncap().c_str());
+	   sstring(objs(obj)).uncap());
     return;
   }
 
@@ -4898,7 +4847,7 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 #if 0
   if (obj->getMagicLevel() > level) {
     sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spell %s is used for.\n\r") % 
-	   sstring(objs(obj)).uncap().c_str());
+	   sstring(objs(obj)).uncap());
     return;
   }
 #endif
@@ -4936,64 +4885,42 @@ sstring describeMaterial(const TThing *t)
 
 sstring describeMaterial(int mat)
 {
-  sstring str;
-  char buf[256];
+  sstring str, mat_name;
+  
+  mat_name=material_nums[mat].mat_name;
+  mat_name=mat_name.cap();
 
-  char mat_name[40];
+  str += fmt("%s is %d%c susceptible to slash attacks.\n\r") %
+    mat_name % material_nums[mat].cut_susc % '%';
 
-  strcpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str());
+  str += fmt("%s is %d%c susceptible to pierce attacks.\n\r") %
+    mat_name % material_nums[mat].pierced_susc % '%';
 
-  sprintf(buf, "%s is %d%% susceptible to slash attacks.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].cut_susc);
-  str += buf;
+  str += fmt("%s is %d%c susceptible to blunt attacks.\n\r") %
+    mat_name % material_nums[mat].smash_susc % '%';
 
-  sprintf(buf, "%s is %d%% susceptible to pierce attacks.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].pierced_susc);
-  str += buf;
+  str += fmt("%s is %d%c susceptible to flame attacks.\n\r") %
+    mat_name % material_nums[mat].burned_susc % '%';
 
-  sprintf(buf, "%s is %d%% susceptible to blunt attacks.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].smash_susc);
-  str += buf;
+  str += fmt("%s is %d%c susceptible to acid attacks.\n\r") %
+    mat_name % material_nums[mat].acid_susc % '%';
 
-  sprintf(buf, "%s is %d%% susceptible to flame attacks.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].burned_susc);
-  str += buf;
+  str += fmt("%s is %d%c susceptible to water erosion, and suffers %d damage per erosion.\n\r") %
+    mat_name % (material_nums[mat].water_susc%10 * 10) % '%' %
+    (material_nums[mat].water_susc/10);
 
-  sprintf(buf, "%s is %d%% susceptible to acid attacks.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].acid_susc);
-  str += buf;
+  str += fmt("%s is %d%c susceptible to fall shock, and suffers %d damage per shock.\n\r") %
+    mat_name % (material_nums[mat].fall_susc%10 *10) % '%' %
+    (material_nums[mat].fall_susc/10);
 
-  sprintf(buf, "%s is %d%% susceptible to water erosion, and suffers %d damage per erosion.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].water_susc%10 * 10,
-     material_nums[mat].water_susc/10);
-  str += buf;
+  str += fmt("%s has a hardness of %d units.\n\r") %
+    mat_name % material_nums[mat].hardness;
 
-  sprintf(buf, "%s is %d%% susceptible to fall shock, and suffers %d damage per shock.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].fall_susc%10 *10,
-     material_nums[mat].fall_susc/10);
-  str += buf;
+  str += fmt("%s has a compaction ratio of %d:1.\n\r") %
+    mat_name % material_nums[mat].vol_mult;
 
-  sprintf(buf, "%s has a hardness of %d units.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].hardness);
-  str += buf;
-
-  sprintf(buf, "%s has a compaction ratio of %d:1.\n\r",
-     sstring(mat_name).cap().c_str(),
-     material_nums[mat].vol_mult);
-  str += buf;
-
-  sprintf(buf, "%s is %sconsidered a conductive material.\n\r",
-     sstring(mat_name).cap().c_str(),
-     (material_nums[mat].conductivity ? "" : "not "));
-  str += buf;
+  str += fmt("%s is %sconsidered a conductive material.\n\r") %
+    mat_name % (material_nums[mat].conductivity ? "" : "not ");
 
   return str;
 }
@@ -5079,7 +5006,7 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 
   tmp = rp->getDescr();
 
-  if (hasColorStrings(this, tmp.c_str(), 2)) {
+  if (hasColorStrings(this, tmp, 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
       sendTo(COLOR_ROOMS, fmt("%s%s") % dynColorRoom(rp, 2, TRUE).toCRLF() % norm());
     } else {

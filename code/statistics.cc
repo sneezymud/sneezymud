@@ -483,7 +483,7 @@ void TBeing::doGamestats(const sstring &arg)
         sendTo("PC Leveling Data:\n\r");
         unsigned int factor = secs_to_level(lev);
         sendTo(fmt("Desired leveling time: %s\n\r") %
-           secsToString(factor).c_str());
+           secsToString(factor));
 
         for (i=0;i<MAX_CLASSES;i++) {
           time_t factor = 0;

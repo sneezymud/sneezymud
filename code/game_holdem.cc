@@ -224,14 +224,14 @@ void HoldemGame::showdown(TBeing *ch)
 
 	act("$n's hand was:", FALSE, players[i]->ch, 0, 0, TO_ROOM);
 	buf = fmt("%s") % players[i]->hand[0]->getName();
-	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+	act(buf, FALSE, players[i]->ch, 0, 0, TO_ROOM);
 	buf = fmt("%s") % players[i]->hand[1]->getName();
-	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+	act(buf, FALSE, players[i]->ch, 0, 0, TO_ROOM);
 	buf = fmt("$n has %s.\n\r") % handValToStr(hands[i]);
-	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+	act(buf, FALSE, players[i]->ch, 0, 0, TO_ROOM);
 
 	buf = fmt("You have %s.\n\r") % handValToStr(hands[i]);
-	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
+	act(buf, FALSE, players[i]->ch, 0, 0, TO_CHAR);
 
 	players[i]->allin=false;
       }
@@ -272,9 +272,9 @@ void HoldemGame::showdown(TBeing *ch)
       }
       
       buf = fmt("$n has %i chips left.") % tcount;
-      act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+      act(buf, FALSE, players[i]->ch, 0, 0, TO_ROOM);
       buf = fmt("You have %i chips left.") % tcount;
-      act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
+      act(buf, FALSE, players[i]->ch, 0, 0, TO_CHAR);
       tcount=0;
     }
   }
@@ -521,11 +521,11 @@ void HoldemGame::peek(const TBeing *ch)
       if(players[i] && players[i]->hand[0] &&
 	 players[i]->hand[1] && players[i]->name != ch->name){
 	ch->sendTo(COLOR_BASIC, fmt("\n\rYou peek at %s's hand:\n\r") %
-		   players[i]->name.c_str());
+		   players[i]->name);
 	ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % players[i]->hand[0]->getName());
 	ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % players[i]->hand[1]->getName());
 	ch->sendTo(COLOR_BASIC, fmt("%s has %s.\n\r") % players[i]->name %
-		   handValToStr(handValue(players[i])).c_str());
+		   handValToStr(handValue(players[i])));
       }
     }
 

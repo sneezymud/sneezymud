@@ -90,7 +90,7 @@ void TBeing::doEgoTrip(const char *arg)
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
 
     sendToRoom((fmt("%s suddenly appears out of a swirling mist.") %
-	       sstring(next_tmp_obj->shortDescr).cap()).c_str(), 
+		sstring(next_tmp_obj->shortDescr).cap()).c_str(),
 	       next_tmp_obj->roomp->number);
 
     return;
@@ -214,7 +214,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
       ch->sendTo(fmt("%s has bestowed upon you enlivenment.\n\r") %
-            sstring(ch->pers(this)).cap().c_str());
+            sstring(ch->pers(this)).cap());
       castEnliven(this, ch);
     }
     return;

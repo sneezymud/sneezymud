@@ -135,7 +135,7 @@ void TBeing::setRacialStuff()
     case RACE_UNCERT:
     case RACE_NORACE:
       vlogf(LOG_LOW, fmt("%s had race %s (%d)") %  getName() %
-             getMyRace()->getSingularName().c_str() %getRace());
+             getMyRace()->getSingularName() %getRace());
       break;
     case RACE_HUMAN:
     case RACE_ELVEN:
@@ -227,13 +227,13 @@ void TBeing::setRacialStuff()
       getMyRace()->getRace() == RACE_KOBOLD) {
     if (!isCult())
       vlogf(LOG_LOW, fmt("%s: Bad faction for race %s (should be 2)") %  getName() %
-               getMyRace()->getSingularName().c_str());
+               getMyRace()->getSingularName());
   }
   if (getMyRace()->getRace() == RACE_TROLL ||
       getMyRace()->getRace() == RACE_TYTAN) {
     if (!isBrother())
       vlogf(LOG_LOW, fmt("%s: Bad faction for race %s (should be 1)") %  getName() %
-               getMyRace()->getSingularName().c_str());
+               getMyRace()->getSingularName());
   }
   if (getMyRace()->getRace() == RACE_WOODELF ||
       getMyRace()->getRace() == RACE_DRYAD ||
@@ -241,7 +241,7 @@ void TBeing::setRacialStuff()
       getMyRace()->getRace() == RACE_SATYR) {
     if (!isSnake())
       vlogf(LOG_LOW, fmt("%s: Bad faction for race %s (should be 3)") %  getName() %
-               getMyRace()->getSingularName().c_str());
+               getMyRace()->getSingularName());
   }
 }
 
@@ -3299,7 +3299,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_OTYUGH:
@@ -3320,7 +3320,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_LEGS_L);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_KUOTOA:
@@ -3348,7 +3348,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_WAISTE);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_CRUSTACEAN:
@@ -3370,7 +3370,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_R);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_DJINN:
@@ -3414,7 +3414,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_EX_LEG_L);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_CENTAUR:
@@ -3456,7 +3456,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_WAISTE);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_WYVERN:
@@ -3483,7 +3483,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_EX_LEG_L);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_PEGASUS:
@@ -3513,7 +3513,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BACK);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_CHIMERA:
@@ -3551,7 +3551,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_EX_LEG_L);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_COATL:
@@ -3562,7 +3562,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_FISH:
@@ -3573,7 +3573,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_SPIDER:
@@ -3595,7 +3595,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_OCTOPUS:
@@ -3615,7 +3615,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }      
     case BODY_BIRD:
@@ -3636,7 +3636,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_R);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       } 
     case BODY_TREE:
@@ -3646,7 +3646,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_DEMON:
@@ -3680,7 +3680,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_R);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case BODY_WYVELIN:
@@ -3710,7 +3710,7 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BACK);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName().c_str() % slot);
+             getMyRace()->getSingularName() % slot);
           return FALSE;
       }
     case MAX_BODY_TYPES:

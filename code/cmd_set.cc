@@ -267,7 +267,7 @@ void TPerson::doSet(const char *argument)
         mob->setWizPower(wpt);
 #if 0
         mob->sendTo(fmt("You have been granted the following Wiz-Power: %s\n\r") %
-                getWizPowerName(wpt).c_str());
+                getWizPowerName(wpt));
         vlogf(LOG_MISC, fmt("%s given %s by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
 #endif
         mob->doSave(SILENT_NO);
@@ -276,7 +276,7 @@ void TPerson::doSet(const char *argument)
         mob->remWizPower(wpt);
 #if 0
         mob->sendTo(fmt("The following Wiz-Power has been revoked: %s\n\r") %
-                getWizPowerName(wpt).c_str());
+                getWizPowerName(wpt));
         vlogf(LOG_MISC, fmt("%s had %s revoked by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
 #endif
       }
@@ -338,7 +338,7 @@ void TPerson::doSet(const char *argument)
     }
     if (faction_num == FACT_NONE) {
       sendTo(fmt("%s don't have or want leaders.\n\r") %
-         sstring(FactionInfo[FACT_NONE].faction_name).cap().c_str());
+         sstring(FactionInfo[FACT_NONE].faction_name).cap());
       return;
     }
 
@@ -757,7 +757,7 @@ mob->getName());
       }
 
       mob->sendTo(fmt("You are now of the %s race.\n\r") %
-              mob->getMyRace()->getSingularName().c_str());
+              mob->getMyRace()->getSingularName());
       mob->sendTo("Your equipment has been placed into your inventory.\n\r");
 
     } else {

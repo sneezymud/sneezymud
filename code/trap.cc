@@ -120,7 +120,7 @@ int TBeing::doSetTraps(const char *arg)
 
       if (!IS_SET(exitp->condition, EX_CLOSED)) {
         sendTo(fmt("You need to close the %s first.\n\r") %
-	       exitp->getName().uncap().c_str());
+	       exitp->getName().uncap());
         return FALSE;
       }
       if (IS_SET(exitp->condition, EX_TRAPPED)) {
@@ -656,7 +656,7 @@ int TBeing::triggerDoorTrap(dirTypeT door)
   switch (exitp->trap_info) {
     case DOOR_TRAP_POISON:
       sendTo(fmt("A small needle lunges out of the %s and punctures your hand.\n\r") %
-               fname(exitp->keyword).c_str());
+               fname(exitp->keyword));
       trapPoison(dam);
       break;
     case DOOR_TRAP_SPIKE:

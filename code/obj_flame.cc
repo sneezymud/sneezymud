@@ -193,7 +193,7 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     // If object is left, then we 'crack and pop'
     if (obj_flags.decay_time > 0) {
       ch->sendTo(COLOR_OBJECTS, fmt("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
-                 sstring(shortDescr).cap().c_str() % DrinkInfo[dContainer->getDrinkType()]->name);
+                 sstring(shortDescr).cap() % DrinkInfo[dContainer->getDrinkType()]->name);
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
               sstring(shortDescr).cap().c_str(), DrinkInfo[dContainer->getDrinkType()]->name);
       act(Buf[0], TRUE, ch, NULL, NULL, TO_ROOM);

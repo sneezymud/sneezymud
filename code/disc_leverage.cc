@@ -231,7 +231,7 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
   }
   if (victim->getPosition() < POSITION_STANDING)  {
     caster->sendTo(fmt("You can't hurl someone whom is already on the %s.\n\r") % 
-    caster->roomp->describeGround().c_str());
+    caster->roomp->describeGround());
     return FALSE;
   }
   if (caster->getPosition() != POSITION_STANDING)  {

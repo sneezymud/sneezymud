@@ -119,7 +119,7 @@ void TDrug::refuelMeDrug(TBeing *ch, TDrugContainer *lamp)
   sprintf(buf, "$n packs some %s into $s $o", drugTypes[getDrugType()].name);
   act(buf, TRUE, ch, lamp, 0, TO_ROOM);
   ch->sendTo(fmt("You pack some %s into the %s.\n\r") % drugTypes[getDrugType()].name %
-	     fname(lamp->name).c_str());
+	     fname(lamp->name));
 
   addToCurFuel(-use);
   lamp->addToCurBurn(use);

@@ -1992,7 +1992,7 @@ class TBeing : public TThing {
     void doWizhelp();
     virtual void doUsers(const sstring &);
     void doInventory(const char *);
-    void doEquipment(const char *);
+    void doEquipment(const sstring &);
     void doOutfit(const sstring &);
     void doCredits();
     void doNews(const char *);

@@ -3087,7 +3087,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
     return FALSE;
 
   tp->roomp->sendTo(COLOR_BASIC, fmt("%s flares up brightly and disappears.\n\r") %
-		    sstring(o->getName()).cap().c_str());
+		    sstring(o->getName()).cap());
   
   rc = o->genericTeleport(SILENT_YES, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {

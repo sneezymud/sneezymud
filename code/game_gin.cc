@@ -245,7 +245,7 @@ int GinGame::draw(TBeing *ch, const char *arg)
     hands[which][10] = pile[pile_index];
     pile[pile_index--] = 0;
     ch->sendTo(fmt("You draw the %s off of the pile top.\n\r") %
-pretty_card_printout(ch, hands[which][10]).c_str());
+	       pretty_card_printout(ch, hands[which][10]));
     act("$n takes the top card from the pile.", FALSE, ch, NULL, NULL, TO_ROOM);
     return TRUE;
   } else {
@@ -371,10 +371,10 @@ void GinGame::gin(TBeing *ch)
   for (int i = 0; i < 11; i++) {
     if (hands[which][i])
       other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
-            suit(ch, hands[which][i]).c_str());
+            suit(ch, hands[which][i]));
     if (hands[!which][i])
       ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
-            suit(ch, hands[!which][i]).c_str());
+            suit(ch, hands[!which][i]));
   }
   score[which] += (25 + low);
   if (score[which] >= 100)
@@ -414,10 +414,10 @@ other->hshr());
     for (int i = 0; i < 11; i++) {
       if (hands[which][i])
         other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
-              suit(ch, hands[which][i]).c_str());
+              suit(ch, hands[which][i]));
       if (hands[!which][i])
         ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
-              suit(ch, hands[!which][i]).c_str());
+              suit(ch, hands[!which][i]));
     }
     score[which] += (other_low - low);
     if (score[which] >= 100)
@@ -432,10 +432,10 @@ other->hshr());
     for (int i = 0; i < 11; i++) {
       if (hands[which][i])
         other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
-              suit(ch, hands[which][i]).c_str());
+              suit(ch, hands[which][i]));
       if (hands[!which][i])
         ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
-              suit(ch, hands[!which][i]).c_str());
+              suit(ch, hands[!which][i]));
     }
     score[!which] += (10 + (low - other_low));
     if (score[!which] >= 100)

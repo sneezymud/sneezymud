@@ -1240,7 +1240,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	  return 0;
 	if ((obj = v->equipment[WEAR_WRIST_L])) {
 	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a hand!\n\r") %
-		    fname(obj->name).c_str());
+		    fname(obj->name));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_WRIST_L])
 	      v->damageItem(this,WEAR_WRIST_L,wtype,weapon,*dam);

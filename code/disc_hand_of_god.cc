@@ -349,7 +349,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
   if (victim->isImmortal()) {
     caster->sendTo("I don't think that is a good idea...\n\r");
     victim->sendTo(fmt("%s just tried to recall you, how pathetic...\n\r") %
-                   caster->getNameNOC(victim).c_str());
+                   caster->getNameNOC(victim));
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }

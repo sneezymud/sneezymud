@@ -18,22 +18,22 @@ sstring lockmess;
 commandInfo *commandArray[MAX_CMD_LIST];
 bool WizLock;
 
-int search_block(const char *arg, const char * const *list, bool exact)
+int search_block(const sstring &arg, const char * const *list, bool exact)
 {
   register int i, l;
 
-  l = strlen(arg);
+  l = arg.length();
 
   if (exact) {
     for (i = 0; **(list + i) != '\n'; i++)
-      if (!strcasecmp(arg, *(list + i)))
+      if (!strcasecmp(arg.c_str(), *(list + i)))
         return (i);
   } else {
     if (!l)
       l = 1;
 
     for (i = 0; **(list + i) != '\n'; i++)
-      if (!strncasecmp(arg, *(list + i), l))
+      if (!strncasecmp(arg.c_str(), *(list + i), l))
         return (i);
   }
   return (-1);
@@ -959,7 +959,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doUsers(newarg);
           break;
         case CMD_EQUIPMENT:
-          doEquipment(newarg);
+          doEquipment(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_QUIT:

@@ -589,7 +589,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
     starterCard |= newSuit;
 
     ch->sendTo(fmt("You change the %s into an %s.\n\r") % tString %
-               pretty_card_printout(ch, starterCard).c_str());
+               pretty_card_printout(ch, starterCard));
     sprintf(tBuffer, "%s waves his hand and changes the %s into an %s.\n\r",
             sstring(ch->getName()).cap().c_str(), tString,
             pretty_card_printout(ch, starterCard).c_str());
@@ -707,7 +707,7 @@ int CrazyEightsGame::look(const TBeing *ch, const char *tArg)
 
       if (is_abbrev(tArg, "pile") || showFull)
         ch->sendTo(fmt("Current card in play: %s\n\r") %
-                   pretty_card_printout(ch, starterCard).c_str());
+                   pretty_card_printout(ch, starterCard));
 
       if (is_abbrev(tArg, "deck") || showFull) {
         if (nextCard < 30)

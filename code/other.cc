@@ -1570,10 +1570,10 @@ void TBeing::doGroup(const char *argument)
     else {
       if(master && master->desc){
 	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
-	       master->desc->session.groupName.c_str());
+	       master->desc->session.groupName);
       } else {
 	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
-	       desc->session.groupName.c_str());
+	       desc->session.groupName);
       }
 
 
@@ -1679,10 +1679,10 @@ void TBeing::doGroup(const char *argument)
       if(isAffected(AFF_GROUP)) {
 	if(master){
 	  sendTo(fmt("Current group name: %s") % 
-		 master->desc->session.groupName.c_str());
+		 master->desc->session.groupName);
 	} else {
 	  sendTo(fmt("Current group name: %s") % 
-		 desc->session.groupName.c_str());
+		 desc->session.groupName);
 	}
       }
 
@@ -3381,7 +3381,7 @@ void TBeing::doStop(const sstring &tStArg)
 
   if (!tBeing) {
     sendTo(fmt("Whom?  You look around for '%s', but fail to find them...\n\r") %
-           tStArg.c_str());
+           tStArg);
     return;
   }
 
