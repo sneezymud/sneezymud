@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: utility.cc,v $
+// Revision 1.2  1999/10/07 15:27:27  batopr
+// Added case for GOLD_DUMP to addMoney
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1517,6 +1520,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
       case GOLD_HOSPITAL:
       case GOLD_GAMBLE:
       case GOLD_RENT:
+      case GOLD_DUMP:
       case GOLD_SHOP_SYMBOL:
       case GOLD_SHOP_WEAPON:
       case GOLD_SHOP_ARMOR:
