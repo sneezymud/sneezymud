@@ -532,25 +532,25 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-
-
-
       if (!ch->get_metal_tools(&forge, &anvil, &hammer, &tongs) || (ch->getPosition() < POSITION_RESTING)) {
 	smythe_stop(ch);
 	return FALSE;
       }
-      
 
+      if (o->getMaxStructPoints() <= o->getStructPoints()) {
+	act("$n finishes repairing $p and proudly smiles.", FALSE, ch, o, forge, TO_ROOM);
+	act("You finish repairing $p and smile triumphantly.", FALSE, ch, o, forge, TO_CHAR);
+	act("You let $p cool down.", FALSE, ch, o, 0, TO_CHAR);
+	act("$n lets $p cool down.", FALSE, ch, o, 0, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
 
       learning = ch->getSkillValue(SKILL_SMYTHE);
       didSucceed = bSuccess(ch, learning, SKILL_SMYTHE);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
-
       if (ch->task->status && didSucceed || !ch->task->status) {
-	
-
-
 	if (ch->getRace() == RACE_DWARF) {
 	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10))) + 4));
 	} else {
@@ -597,14 +597,7 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	    delete hammer;
 	    return FALSE;
 	  }
-	  if (o->getMaxStructPoints() <= o->getStructPoints()) {
-	    act("$n finishes repairing $p and proudly smiles.", FALSE, ch, o, forge, TO_ROOM);
-	    act("You finish repairing $p and smile triumphantly.", FALSE, ch, o, forge, TO_CHAR);
-	    act("You let $p cool down.", FALSE, ch, o, 0, TO_CHAR);
-	    act("$n lets $p cool down.", FALSE, ch, o, 0, TO_ROOM);
-	    ch->stopTask();
-	    return FALSE;
-	  }
+
 	  if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	    percent -= ch->getDexReaction() * 3;
 
@@ -693,12 +686,21 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         smythe_stop(ch);
         return FALSE;
       }
+
+      if (o->getMaxStructPoints() * 85 / 100 <= o->getStructPoints()) {
+	act("$n finishes operating on $p and smiles triumphantly.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish operating on $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You remove $p from $P.", FALSE, ch, o, operatingtable, TO_CHAR);
+	act("$n removes $p from $P.", FALSE, ch, o, operatingtable, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(SKILL_REPAIR_SHAMAN);
       didSucceed = bSuccess(ch, learning, SKILL_REPAIR_SHAMAN);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
- 
+      if (ch->task->status && didSucceed || !ch->task->status) { 
 	ch->addToMove(min(-1, ::number(-10,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_SHAMAN) / 20)))));
         if (ch->getMove() < 10) {
           act("You are much too tired to continue operating on $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -748,14 +750,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	    return FALSE;
 	  }
 	}
-	if (o->getMaxStructPoints() * 85 / 100 <= o->getStructPoints()) {
-	  act("$n finishes operating on $p and smiles triumphantly.", FALSE, ch, o, 0, TO_ROOM);
-	  act("You finish operating on $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-	  act("You remove $p from $P.", FALSE, ch, o, operatingtable, TO_CHAR);
-	  act("$n removes $p from $P.", FALSE, ch, o, operatingtable, TO_ROOM);
-	  ch->stopTask();
-	  return FALSE;
-	}
+
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 	
@@ -833,14 +828,21 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-
       if (!ch->get_shell_tools(&ladle, &oils) || (ch->getPosition() < POSITION_RESTING)
 	  || !ch->roomp->isWaterSector()) {
-	
 	smythe_stop(ch);
 	return FALSE;
       }
-      
+
+      if (o->getMaxStructPoints() <= o->getStructPoints()) {
+	act("$n finishes regenerating $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish regenerating $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You dry $p off.", FALSE, ch, o, 0, TO_CHAR);
+	act("$n dries $p off.", FALSE, ch, o, 0, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(SKILL_REPAIR_RANGER);
       didSucceed = bSuccess(ch, learning, SKILL_REPAIR_RANGER);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
@@ -913,14 +915,6 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  }
 	}
 	
-	if (o->getMaxStructPoints() <= o->getStructPoints()) {
-	  act("$n finishes regenerating $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-	  act("You finish regenerating $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-	  act("You dry $p off.", FALSE, ch, o, 0, TO_CHAR);
-	  act("$n dries $p off.", FALSE, ch, o, 0, TO_ROOM);
-	  ch->stopTask();
-	  return FALSE;
-	}
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 	
@@ -1001,18 +995,25 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-
       if (!ch->get_magic_tools(&pentagram, &runes, &energy) || (ch->getPosition() < POSITION_RESTING)) {
-
         smythe_stop(ch);
         return FALSE;
+      }
+
+      if (o->getMaxStructPoints() <= o->getStructPoints()) {
+	act("$n finishes refocusing the energy in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish refocusing the energy in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
+	act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
       }
 
       learning = ch->getSkillValue(SKILL_REPAIR_MAGE);
       didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MAGE);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
+      if (ch->task->status && didSucceed || !ch->task->status) {
         if (ch->getRace() == RACE_ELVEN) {
           ch->addToMove(min(-1, ::number(-5,-10) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_MAGE) / 20))) + 2));
         } else {
@@ -1071,14 +1072,6 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  ch->task->status++;
         }
 
-        if (o->getMaxStructPoints() <= o->getStructPoints()) {
-          act("$n finishes refocusing the energy in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-          act("You finish refocusing the energy in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-          act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
-          act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
-          ch->stopTask();
-          return FALSE;
-        }
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
@@ -1171,12 +1164,20 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         return FALSE;
       }
 
+      if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
+	act("$n finishes reforming the crystals in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish reforming the crystals in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
+	act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(skill);
       didSucceed = bSuccess(ch, learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
-       
+      if (ch->task->status && didSucceed || !ch->task->status) {       
         ch->addToMove(min(-1, ::number(-10,-15) + ::number(1,((ch->getSkillValue(skill) / 20)))));
         
         if (ch->getMove() < 10) {
@@ -1231,14 +1232,6 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
           ch->task->status++;
         }
 
-        if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
-          act("$n finishes reforming the crystals in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-          act("You finish reforming the crystals in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-          act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
-          act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
-          ch->stopTask();
-          return FALSE;
-        }
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
@@ -1332,12 +1325,20 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
         return FALSE;
       }
 
+      if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
+	act("$n finishes rearranging the gems in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish rearranging the gems in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You remove $p from $P.", FALSE, ch, o, workbench, TO_CHAR);
+	act("$n removes $p from $P.", FALSE, ch, o, workbench, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(skill);
       didSucceed = bSuccess(ch, learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
-       
+      if (ch->task->status && didSucceed || !ch->task->status) {       
         ch->addToMove(min(-1, ::number(-15,-25) + ::number(1,((ch->getSkillValue(skill) / 10)))));
         
         if (ch->getMove() < 10) {
@@ -1378,14 +1379,6 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
           ch->task->status++;
         }
 
-        if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
-          act("$n finishes rearranging the gems in $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-          act("You finish rearranging the gems in $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-          act("You remove $p from $P.", FALSE, ch, o, workbench, TO_CHAR);
-          act("$n removes $p from $P.", FALSE, ch, o, workbench, TO_ROOM);
-          ch->stopTask();
-          return FALSE;
-        }
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
@@ -1479,12 +1472,18 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         return FALSE;
       }
 
+      if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
+	act("$n finishes mending $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish mending $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(skill);
       didSucceed = bSuccess(ch, learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
-       
+      if (ch->task->status && didSucceed || !ch->task->status) {       
         ch->addToMove(min(-1, ::number(-10,-15) + ::number(1,((ch->getSkillValue(skill) / 20)))));
         
         if (ch->getMove() < 10) {
@@ -1529,12 +1528,6 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
           ch->task->status++;
         }
 
-        if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
-          act("$n finishes mending $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-          act("You finish mending $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-          ch->stopTask();
-          return FALSE;
-        }
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
@@ -1646,12 +1639,20 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         return FALSE;
       }
 
+      if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
+	act("$n finishes mending $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish mending $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You remove $p from $P.", FALSE, ch, o, altar, TO_CHAR);
+	act("$n removes $p from $P.", FALSE, ch, o, altar, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
       learning = ch->getSkillValue(skill);
       didSucceed = bSuccess(ch, learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-      if (ch->task->status && didSucceed || !ch->task->status) {
 
-       
+      if (ch->task->status && didSucceed || !ch->task->status) {       
         ch->addToMove(min(-1, ::number(-10,-15) + ::number(1,((ch->getSkillValue(skill) / 20)))));
         
         if (ch->getMove() < 10) {
@@ -1667,7 +1668,6 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
           ch->stopTask();
           return FALSE;
         }
-
  
         if (!ch->task->status) {
           act("$n carefully inspects $p.", FALSE, ch, o, 0, TO_ROOM);
@@ -1701,14 +1701,6 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
           ch->task->status++;
         }
 
-        if (o->getMaxStructPoints() * maxrepair / 100 <= o->getStructPoints()) {
-          act("$n finishes mending $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
-          act("You finish mending $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
-          act("You remove $p from $P.", FALSE, ch, o, altar, TO_CHAR);
-          act("$n removes $p from $P.", FALSE, ch, o, altar, TO_ROOM);
-          ch->stopTask();
-          return FALSE;
-        }
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
