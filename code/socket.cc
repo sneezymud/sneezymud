@@ -472,7 +472,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   return timeout;
 }
 
-int TMainSocket::characterPulse(TPulseList &pl)
+int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 {
   TBeing *temp;
   int rc, count, retcount;
@@ -564,7 +564,7 @@ int TMainSocket::characterPulse(TPulseList &pl)
 	  (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
 	   tmp_ch->isShopkeeper() || 
 	   IS_SET(tmp_ch->specials.act, ACT_HUNTING))){
-	rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pl.pulse);
+	rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(realpulse);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  temp = tmp_ch->next;
 	  delete tmp_ch;
@@ -572,13 +572,13 @@ int TMainSocket::characterPulse(TPulseList &pl)
 	  continue;
 	}
       }
-      if (tmp_ch->task && (pl.pulse >= tmp_ch->task->nextUpdate)) {
+      if (tmp_ch->task && (realpulse >= tmp_ch->task->nextUpdate)) {
 	TObj *tmper_obj = NULL;
 	if (tmp_ch->task->obj) {
 	  tmper_obj = tmp_ch->task->obj; 
 	} 
 	rc = (*(tasks[tmp_ch->task->task].taskf))
-	  (tmp_ch, CMD_TASK_CONTINUE, "", pl.pulse, tmp_ch->task->room, tmp_ch->task->obj);
+	  (tmp_ch, CMD_TASK_CONTINUE, "", realpulse, tmp_ch->task->room, tmp_ch->task->obj);
 	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
 	  if (tmper_obj) {
 	    delete tmper_obj;
@@ -621,7 +621,7 @@ int TMainSocket::characterPulse(TPulseList &pl)
 
 
       if (tmp_ch->spelltask) {
-	rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, pl.pulse));
+	rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, realpulse));
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  temp = tmp_ch->next;
 	  delete tmp_ch;
@@ -655,14 +655,14 @@ int TMainSocket::characterPulse(TPulseList &pl)
 	tmp_ch->cantHit--;
     }
     if (!pl.teleport) {
-      rc = tmp_ch->riverFlow(pl.pulse);
+      rc = tmp_ch->riverFlow(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	temp = tmp_ch->next;
 	delete tmp_ch;
 	tmp_ch = NULL;
 	continue;
       }
-      rc = tmp_ch->teleportRoomFlow(pl.pulse);
+      rc = tmp_ch->teleportRoomFlow(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	temp = tmp_ch->next;
 	delete tmp_ch;
@@ -800,7 +800,7 @@ int TMainSocket::characterPulse(TPulseList &pl)
 }
 
 
-int TMainSocket::objectPulse(TPulseList &pl)
+int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 {
   TObj *next_thing;
   TVehicle *vehicle;
@@ -862,7 +862,7 @@ int TMainSocket::objectPulse(TPulseList &pl)
       obj = NULL;
       continue;
     }
-    rc = obj->riverFlow(pl.pulse);
+    rc = obj->riverFlow(realpulse);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       next_thing = obj->next;
       delete obj;
@@ -920,7 +920,7 @@ int TMainSocket::objectPulse(TPulseList &pl)
     }
 
     if (!pl.pulse_mudhour) { // 1440
-      rc = obj->objectTickUpdate(pl.pulse);
+      rc = obj->objectTickUpdate(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	next_thing = obj->next;
 	delete obj;
@@ -1083,7 +1083,7 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
     // handle pulse stuff for objects
-    count=objectPulse(pl);
+    count=objectPulse(pl, oldpulse);
 
     if(TestCode1)
       vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
@@ -1091,7 +1091,7 @@ int TMainSocket::gameLoop()
 	    (int)(t.getElapsedReset()*1000000) % count);
     
     // handle pulse stuff for mobs and players
-    count=characterPulse(pl);
+    count=characterPulse(pl, oldpulse);
 
     if(TestCode1)
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %

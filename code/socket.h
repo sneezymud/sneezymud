@@ -21,6 +21,7 @@ public:
   bool pulse_mudhour, mobstuff, pulse_tick, wayslowpulse;
 
   void init(int pulse){
+    this->pulse=pulse;
     teleport = (pulse % PULSE_TELEPORT);
     combat = (pulse % PULSE_COMBAT);
     drowning = (pulse % PULSE_DROWNING);
@@ -66,8 +67,8 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  int objectPulse(TPulseList &);
-  int characterPulse(TPulseList &);
+  int objectPulse(TPulseList &, int);
+  int characterPulse(TPulseList &, int);
 
   TMainSocket();
   ~TMainSocket();
