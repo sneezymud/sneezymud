@@ -471,6 +471,7 @@ void TBeing::doCommune(const char *arg)
 {
   char buf[256];
   char buf2[256];
+  char wizbuf[256];
   Descriptor *i;
   TBeing *critter;
   int levnum = 0;
@@ -506,10 +507,12 @@ void TBeing::doCommune(const char *arg)
       levnum = 0;
   }
 
-  if (!levnum) 
+  if (!levnum) {
     sendTo("You tell the gods: %s",
          colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE).c_str());
-  else {
+    sprintf(wizbuf, "[%sPort:%d%s] %s%s:%s %s%s%s\n\r", red(), gamePort, norm(), purple(), getName(), norm(), cyan(), arg, norm());
+    mudMessage(this, 16, wizbuf);
+  } else {
     if (levnum <= MAX_MORT) {
       sendTo("Hey dummy, all the gods are at least level %d.\n\r",
              MAX_MORT+1);

@@ -357,12 +357,12 @@ int TSocket::gameLoop()
         }
       }
     }
-
     processAllInput();
 
     setPrompts(output_set);
     afterPromptProcessing(output_set);
     pulse++;
+    mudRecvMessage();
     if (!TurboMode) {
       teleport = (pulse % PULSE_TELEPORT);
       combat = (pulse % PULSE_COMBAT);

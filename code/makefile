@@ -156,7 +156,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	alignment_deity.o ansi.o \
 	being.o game_blackjack.o body.o \
 	spec_mobs_bounty_hunter.o breath.o \
-	game_cards.o client.o \
+	bwiz.o game_cards.o client.o \
 	cmd_attribute.o cmd_show.o \
 	cmd_bash.o cmd_bodyslam.o cmd_charge.o cmd_chop.o \
 	cmd_compare.o cmd_consider.o \

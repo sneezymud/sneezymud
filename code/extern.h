@@ -444,6 +444,11 @@ extern string describeDuration(const TBeing *, int);
 extern bool is_ok(TMonster *, TBeing *, int);
 extern int compareDetermineMessage(const int tDrift, const int tValue);
 extern bool in_range(int, int, int);
+extern int openQueue();
+extern void closeQueue();
+extern void mudSendMessage(int, int, const char *);
+extern void recvTextHandler(const char *);
+extern void mudRecvMessage();
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
@@ -453,3 +458,4 @@ extern int GetApprox(int, int);
 extern double GetApprox(double, int);
 
 #endif
+
