@@ -4333,30 +4333,59 @@ void setPrompts(fd_set out)
     nextd = d->next;
     if ((FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin()) || d->prompt_mode) {
       update = 0;
-      if (!d->connected && (ch = d->character) && ch->isPc() &&
+      ch = d->character;
+
+      if (!d->connected && ch && ch->isPc() &&
           !(ch->isPlayerAction(PLR_COMPACT)))
         d->output.putInQ("\n\r");
 
-      if ((ch = d->character) && ch->task) {
+      if (ch && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
           sprintf(promptbuf, "\n\rPIETY : %5.2f > ", ch->getPiety());
           d->output.putInQ(sstring(promptbuf).cap().c_str());
-        }
+        } else
+
         if (ch->task->task == TASK_MEDITATE) {
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
           d->output.putInQ(sstring(promptbuf).cap().c_str());
-        }
+        } else
+
         if (ch->task->task == TASK_SACRIFICE) {
           sprintf(promptbuf, "\n\rLIFEFORCE : %d > ", ch->getLifeforce());
           d->output.putInQ(sstring(promptbuf).cap().c_str());
-        }
-        if ((ch->task->task == TASK_SHARPEN || 
-             ch->task->task == TASK_DULL) && 
-            (obj = ch->heldInPrimHand())) {
+        } else
+
+        if (((ch->task->task == TASK_SHARPEN) || (ch->task->task == TASK_DULL)) && (obj = ch->heldInPrimHand())) {
           sprintf(promptbuf, "\n\r%s > ", ch->describeSharpness(obj).c_str());
           d->output.putInQ(promptbuf);
-        }
+        } else
+
+        if ((ch->task->task == TASK_SMYTHE)            || (ch->task->task == TASK_REPAIR_DEAD)     ||
+            (ch->task->task == TASK_REPAIR_ORGANIC)    || (ch->task->task == TASK_REPAIR_MAGICAL)  ||
+            (ch->task->task == TASK_REPAIR_ROCK)       || (ch->task->task == TASK_SMYTHE_ADVANCED) ||
+            (ch->task->task == TASK_MEND_HIDE)         || (ch->task->task == TASK_MEND)            ||
+            (ch->task->task == TASK_REPAIR_SPIRITUAL)) {
+          TThing * tThing = NULL;
+          TObj   * tObj   = NULL;
+
+          for (tThing = ch->getStuff(); tThing; tThing = tThing->nextThing) {
+            if ((tObj = dynamic_cast<TObj *>(tThing)) && isname(ch->task->orig_arg, tThing->name))
+              break;
+
+            tObj = NULL;
+	  }
+
+          if (tObj) {
+            sprintf(promptbuf, "\n\r%s (%s) > ", sstring(tObj->getName()).cap().c_str(), tObj->equip_condition(-1).c_str());
+            d->output.putInQ(colorString(ch, d, promptbuf, NULL, COLOR_BASIC, FALSE));
+          } else {
+            strcat(promptbuf, "\n\rERROR!  Unable to find repair target! > ");
+            d->output.putInQ(promptbuf);
+            vlogf(LOG_OBJ, fmt("Unable to find repair item for (%s) for prompt report (%s)") % ch->getName() % ch->task->orig_arg);
+          }
+	}
       }
+
       if (d->str && (d->prompt_mode != DONT_SEND)) {
         if (ch && ch->isPlayerAction(PLR_BUGGING) && !*d->str &&
             strcmp(d->name, "Comment")) {
