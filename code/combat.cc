@@ -3476,11 +3476,15 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // unlimited ammo for mobs
       if(!gun->isCaseless())
 	gun->dropSpentCasing(roomp);
+      if(!gun->isSilenced())
+	roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
     } else {
       if(gun->getRounds()>0){
 	if(!gun->isCaseless() && gun->getAmmo())
 	  gun->dropSpentCasing(roomp);
 	gun->setRounds(gun->getRounds()-1);
+	if(!gun->isSilenced())
+	  roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
       } else {
 	act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
 	found=TRUE;
@@ -3489,8 +3493,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
     mod = attackRound(vict); // no defense against guns
 
-    if(!gun->isSilenced())
-      roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
   }
 
 
