@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: talk.cc,v $
+// Revision 1.2  1999/10/10 20:50:52  batopr
+// Added mud_assert in disturbMeditation to avoid crash bug
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -23,6 +26,8 @@
 
 void TBeing::disturbMeditation(TBeing *vict) const
 {
+  mud_assert(vict != NULL, "No vict in disturbMeditation");
+
   if (vict->task && !isImmortal()) {
     if (vict->task->task == TASK_PENANCE) {
       act("$n disturbs your penance!", FALSE, this, NULL, vict, TO_VICT);
