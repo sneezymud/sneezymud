@@ -117,7 +117,7 @@ class Card {
 
   cardSuitT getSuit() const;
 
-  const char *getName() const;
+  sstring getName() const;
   int getVal() const{
     return value;
   }

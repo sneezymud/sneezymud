@@ -21,7 +21,7 @@ cardSuitT Card::getSuit() const {
   return suit;
 }
 
-const char *Card::getName() const{
+sstring Card::getName() const{
   sstring buf;
 
   buf = card_names[value];
@@ -43,7 +43,7 @@ const char *Card::getName() const{
       buf += " of <k>an unknown suit<z>";
   }
 
-  return buf.c_str();
+  return buf;
 }
 
 
