@@ -825,11 +825,11 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   ch->affectTo(&aff, -1);
 
   if (!bSuccess(ch, bKnown, SKILL_SMITE)) {
-    act("You call upon $d to smite $N, but they do not heed your plea!",
+    act("You call upon $d to smite $N, but $d does not heed your plea!",
              FALSE, ch, 0, v, TO_CHAR);
-    act("$n calls upon $d to smite $N, but they do not heed $m.",
+    act("$n calls upon $d to smite $N, but $d does not heed $m.",
              FALSE, ch, 0, v, TO_NOTVICT);
-    act("$n calls upon $d to smite you, but they do not heed $m!",
+    act("$n calls upon $d to smite you, but $d does not heed $m!",
              FALSE, ch, 0, v, TO_VICT);
 
     // man, this would REALLY piss me off
