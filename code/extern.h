@@ -287,7 +287,6 @@ extern int getsockopt(int, int, int, char *buf, int *);
 
 int ssprintf(string &, const char *, ...);
 void   doGlobalRoomStuff(void);
-void  do_other_obj_stuff(void);
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);
 int is_target_room_p(int room, void *tgt_room);

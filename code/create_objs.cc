@@ -3288,61 +3288,6 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   setWeight((float) (num + 0.5)/10.0);
 }
 
-// called on PULSE_MUDHOUR
-void do_other_obj_stuff(void)
-{
-
-#if 0
-  TObj *to;
-  TPortal *obj;
-
-  if (time_info.hours == 12) {
-    // create day gates at noon
-    if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error loading day gate");
-      return;
-    }
-    obj = dynamic_cast<TPortal *>(to);
-    obj->setTarget(5700);
-    obj->setPortalNumCharges(-1);
-    obj->setPortalType(10);
-    thing_to_room(obj,1303);
-    act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
-    if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error loading day gate");
-      return;
-    }
-    obj = dynamic_cast<TPortal *>(to);
-    obj->setTarget(1303);
-    obj->setPortalNumCharges(-1);
-    obj->setPortalType(10);
-    thing_to_room(obj,5700);
-    act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
-  } else if (time_info.hours == 0) {
-    // create moon gates at midnight
-    if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error loading moon gate");
-      return;
-    }
-    obj = dynamic_cast<TPortal *>(to);
-    obj->setTarget(5895);
-    obj->setPortalNumCharges(-1);
-    obj->setPortalType(10);
-    thing_to_room(obj,28800);
-    act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
-    if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error loading moon gate");
-      return;
-    }
-    obj = dynamic_cast<TPortal *>(to);
-    obj->setTarget(28800);
-    obj->setPortalNumCharges(-1);
-    obj->setPortalType(10);
-    thing_to_room(obj,5895);
-    act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
-  }
-#endif
-}
 
 int TThing::editAverageMe(TBeing *tBeing, const char *)
 {

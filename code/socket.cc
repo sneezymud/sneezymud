@@ -169,7 +169,7 @@ void TSocket::addNewDescriptorsDuringBoot(string tStString)
 }
 
 
-void doStocks(){
+void updateStocks(){
   int shop_nr, talens, shares;
   float price, prevprice, amt;
   TDatabase db("sneezy");
@@ -207,13 +207,122 @@ void doStocks(){
 }
 
 
+// updates the data in the wholist table in the database
+// returns the count of players logged in now
+int updateWholist()
+{
+  TBeing *p;
+  TPerson *p2;
+  int count = 0;
+  
+  // every 10 RL seconds
+  TDatabase db("sneezyglobal");
+  db.query("delete from wholist where port=%i", gamePort);
+  
+  //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
+  for (p = character_list; p; p = p->next) {
+    if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
+      if ((p2 = dynamic_cast<TPerson *>(p))) {
+	db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
+	count++;
+      }
+    }
+  }
+  return count;
+}
+
+// updates the usagelogs table in the database
+// takes the count of players currently logged on
+void updateUsagelogs(int count)
+{
+  time_t ct=time(0);
+  static time_t logtime;
+  static time_t lastlog;
+  
+  int TIME_BETWEEN_LOGS = 300;
+  
+  // every 10 RL seconds
+  TDatabase db("sneezyglobal");
+  db.query("delete from wholist where port=%i", gamePort);
+
+  if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
+    //	vlogf(LOG_DASH, "Webstuff: collecting game usage data - %d seconds since last log", ct-lastlog);
+    //        vlogf(LOG_DASH, "Webstuff:  logtime = %d,  ct = %d, players = %d", logtime, ct, count);
+    
+    
+    if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
+    else logtime = ct;
+    lastlog = ct;
+    
+    db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
+    
+  }
+}
+
+// check eq of all players online for repo
+void checkForRepo(){
+  TBeing *tmp_ch, *temp;
+
+  for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
+    temp = tmp_ch->next; 
+    int i;
+    TThing *repot, *repot2;
+    TObj *repoo;
+    // check worn equipment
+    for (i = MIN_WEAR;i < MAX_WEAR;i++) {
+      if (!(repot = tmp_ch->equipment[i]) || !(repoo = dynamic_cast<TObj *>(repot)))
+	continue;
+      
+      repoCheckForRent(tmp_ch, repoo, false);
+    }
+    // check inventory
+    for (repot = tmp_ch->getStuff(); repot; repot = repot2) {
+      repot2 = repot->nextThing;
+      repoo = dynamic_cast<TObj *>(repot);
+      if (!repoo)
+	continue;
+      
+      repoCheckForRent(tmp_ch, repoo, false);
+    }
+    
+  }
+}
+
+void nukeInactiveMobs()
+{
+  unsigned int i;
+  for (i = 0; i < zone_table.size(); i++) {
+    if (!zone_table[i].isEmpty())
+      continue;
+    if (zone_table[i].zone_value == 1)
+      zone_table[i].nukeMobs();
+    if (zone_table[i].zone_value > 0) {
+      zone_table[i].zone_value -= 1;
+    }
+  }
+}
+
+// update the average players displayed in "who"
+void updateAvgPlayers()
+{
+  // statistics stuff
+  if (time(0) - stats.useage_timer > (1 * SECS_PER_REAL_MIN)) {
+    // figure out average user load
+    stats.useage_timer = time(0);
+    stats.useage_iters++;
+    Descriptor *d;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected == CON_PLYNG || d->connected > MAX_CON_STATUS)
+	stats.num_users++;
+    }
+  }
+}
+
 int TSocket::gameLoop()
 {
   fd_set input_set, output_set, exc_set;
   struct timeval last_time, now, timespent, timeout, null_time;
   static struct timeval opt_time;
-  static time_t logtime;
-  static time_t lastlog;
   char buf[256];
   Descriptor *point;
   int pulse = 0;
@@ -224,6 +333,7 @@ int TSocket::gameLoop()
   static int sent = 0;
   int rc = 0;
   time_t lagtime_t = time(0);
+  int count;
 
 #ifndef SOLARIS
   int mask;
@@ -259,6 +369,9 @@ int TSocket::gameLoop()
   time_t ticktime = time(0);
 
   while (!Shutdown) {
+    ////////////////////////////////////////////
+    // handle shutdown
+    ////////////////////////////////////////////
     if (timeTill  && (timeTill <= time(0))) {
       if (descriptor_list) {
         sprintf(buf, "%s time has arrived!\n\r", shutdown_or_reboot().c_str());
@@ -281,7 +394,13 @@ int TSocket::gameLoop()
       }
     } else
       sent = 0;
+    ////////////////////////////////////////////    
+    ////////////////////////////////////////////
+
     
+    ////////////////////////////////////////////
+    // do some socket stuff or something
+    ////////////////////////////////////////////
     // Check what's happening out there 
     FD_ZERO(&input_set);
     FD_ZERO(&output_set);
@@ -292,6 +411,12 @@ int TSocket::gameLoop()
       FD_SET(point->socket->m_sock, &exc_set);
       FD_SET(point->socket->m_sock, &output_set);
     }
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // do some time related stuff
+    ////////////////////////////////////////////
     // check out the time 
     gettimeofday(&now, NULL);
     timediff(&now, &last_time, &timespent);
@@ -322,8 +447,12 @@ int TSocket::gameLoop()
 #ifndef SOLARIS
     sigsetmask(0);
 #endif
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
 
+    ////////////////////////////////////////////
     // establish any new connections 
+    ////////////////////////////////////////////
     if (FD_ISSET(m_sock, &input_set)) {
       int rc = newDescriptor();
       if (rc < 0)
@@ -335,7 +464,12 @@ int TSocket::gameLoop()
           descriptor_list->sendLogin("1");
       }
     }
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
     // close any connections with an exceptional condition pending 
+    ////////////////////////////////////////////
     for (point = descriptor_list; point; point = next_to_process) {
       next_to_process = point->next;
       if (FD_ISSET(point->socket->m_sock, &exc_set)) {
@@ -344,7 +478,12 @@ int TSocket::gameLoop()
 	delete point;
       }
     }
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
     // read any incoming input, and queue it up 
+    ////////////////////////////////////////////
     for (point = descriptor_list; point; point = next_to_process) {
       next_to_process = point->next;
       if (FD_ISSET(point->socket->m_sock, &input_set)) {
@@ -355,11 +494,15 @@ int TSocket::gameLoop()
       }
     }
     processAllInput();
-
     setPrompts(output_set);
     afterPromptProcessing(output_set);
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // setup the pulse boolean flags
+    ////////////////////////////////////////////
     pulse++;
-    mudRecvMessage();
     if (!TurboMode) {
       teleport = (pulse % PULSE_TELEPORT);
       combat = (pulse % PULSE_COMBAT);
@@ -384,71 +527,24 @@ int TSocket::gameLoop()
       wayslowpulse = (pulse % (PULSE_MUDHOUR * 24));
     }
 
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+
+    
+    // interport communication
+    mudRecvMessage();
+
+    // update statistics in the database
     if(!(pulse % (ONE_SECOND*5))) {
-      time_t ct;
-      ct = time(0);
-      
-      int TIME_BETWEEN_LOGS = 300;
-
-      // every 10 RL seconds
-      TDatabase db("sneezyglobal");
-      db.query("delete from wholist where port=%i", gamePort);
-      TBeing *p;
-      TPerson *p2;
-      
-      //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
-      int count = 0;
-      for (p = character_list; p; p = p->next) {
-	if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
-	  if ((p2 = dynamic_cast<TPerson *>(p))) {
-	    db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
-	    count++;
-	  }
-	}
-      }
-
-      if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
-	vlogf(LOG_DASH, "Webstuff: collecting game usage data - %d seconds since last log", ct-lastlog);
-        vlogf(LOG_DASH, "Webstuff:  logtime = %d,  ct = %d, players = %d", logtime, ct, count);
-
-
-        if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
-        else logtime = ct;
-	lastlog = ct;
-
-	db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
-
-      }
-
-	
+      count=updateWholist();
+      updateUsagelogs(count);
     }
-    if(!wayslowpulse) {
-      for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
-        temp = tmp_ch->next; 
-	int i;
-	TThing *repot, *repot2;
-	TObj *repoo;
-	for (i = MIN_WEAR;i < MAX_WEAR;i++) {
-	  if (!(repot = tmp_ch->equipment[i]) || !(repoo = dynamic_cast<TObj *>(repot)))
-	    continue;
-	  
-	
-	  repoCheckForRent(tmp_ch, repoo, false);
-	  
-	  
-	  
-	}
-	for (repot = tmp_ch->getStuff(); repot; repot = repot2) {
-	  repot2 = repot->nextThing;
-	  repoo = dynamic_cast<TObj *>(repot);
-	  if (!repoo)
-	    continue;
-	  
-	  repoCheckForRent(tmp_ch, repoo, false);
-	}
-	
-      }
+
+    // send out repo mobs
+    if(!wayslowpulse){
+      checkForRepo();
     }
+
 
     if (!pulse_tick) {
       // these are done per tick (15 mud minutes)
@@ -457,10 +553,8 @@ int TSocket::gameLoop()
       apocCheck();
       save_factions();
       save_newfactions();
-
       weatherAndTime(1);
-
-      doStocks();
+      updateStocks();
     }
 
     if (!combat)
@@ -471,43 +565,17 @@ int TSocket::gameLoop()
       recalcFactionPower();
 
       // adjust zones for nuking
-      if (nuke_inactive_mobs) {
-        // technically, this doesn't need to be if'd, but waste of time since
-        // g_zone_value == -1 always for !nuke_inactive_mobs
-        unsigned int i;
-        for (i = 0; i < zone_table.size(); i++) {
-          if (!zone_table[i].isEmpty())
-            continue;
-          if (zone_table[i].zone_value == 1)
-            zone_table[i].nukeMobs();
-          if (zone_table[i].zone_value > 0) {
-            zone_table[i].zone_value -= 1;
-          }
-        }
-
-      }
-
+      if (nuke_inactive_mobs)
+	nukeInactiveMobs();
 
       // weather and time stuff
       if (time_info.hours == 1)
 	update_time();
+
       zone_update();
       do_components(-1);
-
-      do_other_obj_stuff();
       launch_caravans();
-
-      // statistics stuff
-      if (time(0) - stats.useage_timer > (1 * SECS_PER_REAL_MIN)) {
-        // figure out average user load
-        stats.useage_timer = time(0);
-        stats.useage_iters++;
-        Descriptor *d;
-        for (d = descriptor_list; d; d = d->next) {
-          if (d->connected == CON_PLYNG || d->connected > MAX_CON_STATUS)
-            stats.num_users++;
-        }
-      }
+      updateAvgPlayers();
       checkGoldStats();
     }
     if (!teleport || !special_procs || !pulse_mudhour) {
