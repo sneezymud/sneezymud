@@ -545,7 +545,9 @@ void TBeing::affectTotal()
       if (discAdd) {
         for (i = MIN_WEAR; i < MAX_WEAR; i++) {
           if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-            if (o->usedAsPaired())
+            if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
+                 i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEGS_L ||
+                 i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
               continue;
             if (!affectShouldApply(o, i))
               continue;
@@ -704,7 +706,9 @@ void TBeing::affectTotal()
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-      if (o->usedAsPaired())
+      if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
+          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEGS_L ||
+          i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
         continue;
       if (!affectShouldApply(o, i))
         continue;
