@@ -241,10 +241,17 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
     if(this->isPc() && !v->isPc()){
       followData *f;
+      TBeing *k;
       int groupcount=1;
       double trophyperc;
 
-      for (f = followers; f; f = f->next) {
+      if (master)
+        k = master;
+      else
+        k = this;
+
+
+      for (f = k->followers; f; f = f->next) {
 	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
 	  groupcount++;
 	}
@@ -255,7 +262,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       if(!isImmortal())
 	trophy->addToCount(v->mobVnum(), trophyperc);
 
-      for (f = followers; f; f = f->next) {
+      for (f = k->followers; f; f = f->next) {
 	if (f->follower->isPc() && inGroup(*f->follower) && 
 	    sameRoom(*f->follower)) {
 	  f->follower->trophy->addToCount(v->mobVnum(), trophyperc);
