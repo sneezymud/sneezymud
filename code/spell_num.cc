@@ -1863,7 +1863,8 @@ spellNumT mapFileToSpellnum(int stt)
     default:
       break;
   }
-  forceCrash("Bad value (%d) in mapFileToSpellnum", stt);
+  //  forceCrash("Bad value (%d) in mapFileToSpellnum", stt);
+  vlogf(LOG_BUG, "Bad value (%d) in mapFileToSpellnum", stt);
   return MAX_SKILL;
 }
 
