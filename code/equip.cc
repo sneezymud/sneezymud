@@ -1873,7 +1873,7 @@ void TBeing::wearNTear(void)
         }
       }
     } else if(hasPart((wearSlotT)i)) {
-      if(getRace()== RACE_HOBBIT)
+      if ((getRace()== RACE_HOBBIT))
 	return; // hobbits have tough feet
 
       if(!::number(0,chance*2) && ::number(0,getCurLimbHealth((wearSlotT)i)) && GetMaxLevel() > 10) {
@@ -1888,6 +1888,9 @@ void TBeing::wearNTear(void)
 	
 	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L || 
 	    i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
+          if (isLevitating())
+            return; // If they are levitating, they will not hurt their feet.
+
           act("<r>Your feet are getting sore from walking around barefoot.<1>",
 	      TRUE,this,NULL,0,TO_CHAR);
         }
