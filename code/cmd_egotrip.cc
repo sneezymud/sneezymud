@@ -23,7 +23,7 @@ void TBeing::doEgoTrip(const char *arg)
     return;
   }
 
-  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | \"stupidity\" >\n\r";
+  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | \"stupidity\" | \"sanctuary\" >\n\r";
 
 //  char argument[256];
   string argument, sarg = arg, restarg;
@@ -82,6 +82,34 @@ void TBeing::doEgoTrip(const char *arg)
             good_cap(ch->pers(this)).c_str(), hshr());
 #endif
       bless(this, ch);
+    }
+    return;
+  } else if (is_abbrev(argument, "sanctuary")) {
+    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
+      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
+      return;
+    }
+
+    vlogf(LOG_MISC, "%s egotripped sanctuary", getName());
+    Descriptor *d;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected != CON_PLYNG)
+        continue;
+
+      TBeing *ch = d->character;
+
+      // Try and ditch some of the un-needed spam/waste.
+      if (!ch || ch->GetMaxLevel() > MAX_MORT)
+        continue;
+#if 0
+// doesn't work if not in room
+      act("$N has given you sanctuary.",
+            FALSE, ch, 0, this, TO_CHAR);
+#else
+      ch->sendTo("%s has given you sanctuary.\n\r",
+            good_cap(ch->pers(this)).c_str(), hshr());
+#endif
+      sanctuary(this, ch);
     }
     return;
   } else if (is_abbrev(argument, "stupidity")) {
