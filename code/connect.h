@@ -255,7 +255,7 @@ class careerData
       crit_kidney = crit_kidney_suff = 0;
       crit_genitalia = crit_genitalia_suff = 0;
       crit_tooth = crit_tooth_suff =0;
-      crit_heart_ripped_out=crit_heart_ripped_out_suff=0;
+      crit_ripped_out_heart=crit_ripped_out_heart_suff=0;
       arena_victs = arena_loss = 0;
       skill_success_attempts = 0;
       skill_success_pass = 0;
