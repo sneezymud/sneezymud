@@ -947,11 +947,11 @@ void Descriptor::updateScreenVt100(unsigned int update)
 	last.fighting = TRUE;
       } else {
 	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-	sprintf(buf + strlen(buf), "                    ");
+	sprintf(buf + strlen(buf), "                      ");
       }
     } else {
       sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-      sprintf(buf + strlen(buf), "                    ");
+      sprintf(buf + strlen(buf), "                      ");
     }
 #endif
   }
@@ -1046,7 +1046,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
   } else {
     if (last.fighting) {
       sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      sprintf(buf + strlen(buf), "                    ");
+      sprintf(buf + strlen(buf), "                      ");
       last.fighting = FALSE;
     }
   }
@@ -1208,11 +1208,11 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 	last.fighting = TRUE;
       } else {
         sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-        sprintf(buf + strlen(buf), "                    ");
+        sprintf(buf + strlen(buf), "                      ");
       }
     } else {
       sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-      sprintf(buf + strlen(buf), "                    ");
+      sprintf(buf + strlen(buf), "                      ");
     }
 #endif
   }
@@ -1306,7 +1306,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   } else {
     if (last.fighting) {
       sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      sprintf(buf + strlen(buf), "                    ");
+      sprintf(buf + strlen(buf), "                      ");
       last.fighting = FALSE;
     }
   }
