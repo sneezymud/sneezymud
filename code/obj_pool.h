@@ -1,0 +1,37 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//
+//
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef __OBJ_POOL_H
+#define __OBJ_POOL_H
+
+#include "obj_base_cup.h"
+
+class TPool : public TBaseCup {
+  public:    
+    void fillMeAmount(int, liqTypeT);
+    void updateDesc();
+
+    virtual void setDrinkUnits(int);    
+    virtual void addToDrinkUnits(int);    
+    virtual void decayMe();
+    virtual void setDrinkType(liqTypeT);
+    virtual void weightChangeObject(float);
+    virtual void peeMe(const TBeing *);
+    virtual bool isPluralItem() const;
+    virtual itemTypeT itemType() const { return ITEM_POOL; }
+
+    int getDrinkIndex() const;
+
+    TPool();
+    TPool(const TPool &a);
+    TPool & operator=(const TPool &a);
+    virtual ~TPool();
+};
+
+
+
+#endif
