@@ -113,15 +113,24 @@ void loadRepairItems(TMonster *tmons)
     }
   }
 
+
   TObj *obj=NULL;
-  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL)))
+  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL))){
     *tmons += *obj;
-  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL)))
+    tmons->logItem(obj, CMD_LOAD);
+  }
+  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL))){
     *tmons += *obj;
-  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL)))
+    tmons->logItem(obj, CMD_LOAD);
+  }
+  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL))){
     *tmons += *obj;
-  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL)))
+    tmons->logItem(obj, CMD_LOAD);
+  }
+  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL))){
     *tmons += *obj;
+    tmons->logItem(obj, CMD_LOAD);
+  }
 }
 
 void TMonster::thiefLootLoader()
@@ -195,6 +204,7 @@ void TMonster::createWealth(void)
 
 
   // load specialty items
+  loadRepairItems(this);
   buffMobLoader();
   genericMobLoader(&bag);
 
