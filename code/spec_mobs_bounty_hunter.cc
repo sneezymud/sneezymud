@@ -497,7 +497,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	myself->spec = 0;
 
 	vlogf(LOG_PROC, "REPO: %s finished repoing  %s of %s, deactivating.", myself->getName(),
-	      job->hunted_victim, job->hunted_item);
+	      (job->hunted_victim ? job->hunted_victim : "NULL"),
+	      (job->hunted_item   ? job->hunted_item : "NULL"));
 	delete job;
       }
       
@@ -512,9 +513,11 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
     if (targ) {
 
-      if (strcmp(targ->getName(), job->last_targ)) {
+      if (!job->last_targ || strcmp(targ->getName(), job->last_targ)) {
 	// we switched targets or something
-	vlogf(LOG_PROC, "REPO: hunter %s switched targets from %s to %s, reseting chances.",myself->getName(), job->last_targ, targ->getName());
+	vlogf(LOG_PROC, "REPO: hunter %s switched targets from %s to %s, reseting chances.",myself->getName(), 
+	      (job->last_targ ? job->last_targ : "NULL"), 
+	      (targ->getName() ? targ->getName() : "NULL"));
 	strcpy(job->last_targ, targ->getName());
 
 	
@@ -560,7 +563,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
         if (job->hunted_victim != NULL) {
           myself->doAction(job->hunted_victim, CMD_THANK);
           vlogf(LOG_PROC, "REPO: %s apparently repo'd %s (%d) from %s", myself->getName(),
-                temp_obj->getName(), temp_obj->objVnum(), job->hunted_victim);
+                temp_obj->getName(), temp_obj->objVnum(), (job->hunted_victim ? job->hunted_victim : "NULL"));
           job->hunted_victim = NULL;
         } else {
           act("$n appears pleased.", FALSE, myself, NULL, targ, TO_ROOM);
