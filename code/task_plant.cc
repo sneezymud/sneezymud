@@ -26,6 +26,15 @@ void TBeing::doPlant(const char *arg)
     return;
   }
 
+  for(t=roomp->getStuff(),count=0;t;t=t->nextThing){
+    if(dynamic_cast<TPlant *>(t))
+      ++count;
+  }
+  if(count>=7){
+    sendTo("There isn't any room for more plants in here.\n\r");
+    return;
+  }
+
 
   sendTo("You begin to plant some seeds.\n\r");
   start_task(this, t, NULL, TASK_PLANT, "", 2, inRoom(), 0, 0, 5);
