@@ -907,6 +907,14 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	  return;
 	}
       }
+      
+      // reset 50th levelers to 1bil exp if their Max Exp is unset (0) : should never happen except for 1time conversion
+      // this also verifies first timers get the practices they deserve - dash oct 2003
+      if (ch->getMaxExp() == 0) {
+	ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
+	ch->setMaxExp(curr);
+      }
+
 
 
       // check for prac gain
