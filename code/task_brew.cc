@@ -114,6 +114,8 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
             p2->setSpell(2, potion_obj->getSpell(2));
             p2->setMagicLevel(potion_obj->getMagicLevel());
             p2->setMagicLearnedness(potion_obj->getMagicLearnedness());
+	    p2->addObjStat(ITEM_NORENT);
+	    p2->obj_flags.cost = 0;
             *ch += *p2;
           }
           ch->stopTask();

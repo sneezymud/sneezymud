@@ -48,24 +48,14 @@ void TBeing::doBrew(const char *arg)
     sendTo("You seem to be lacking a flask.\n\r");
     return;
   }
-#if BREW_DEBUG
-  vlogf(LOG_MISC, "Generic comp: %s", comp_gen->getName());
-#endif
   if (!comp_spell) {
     sendTo("You seem to be lacking the spell component.\n\r");
     return;
   }
-#if BREW_DEBUG
-  vlogf(LOG_MISC, "spell comp: %s", comp_spell->getName());
-#endif
   if (!comp_brew) {
     sendTo("You seem to be lacking the brew component.\n\r");
     return;
   }
-#if BREW_DEBUG
-  vlogf(LOG_MISC, "brew comp: %s", comp_brew->getName());
-#endif
-
   if (!doesKnowSkill(SKILL_BREW)) {
     sendTo("You lack any knowledge of how to brew potions.\n\r");
     return;

@@ -587,11 +587,13 @@ void TMonster::rangerComponentLoader(void)
 void TMonster::shamanComponentLoader(void)
 {
   int wealth = getMoney();
-  TObj *obj, *bag;
+  TObj *obj,
+       *bag = NULL;
   int num = -1, iters = 0;
-  int spell, comp = 0;
+  spellNumT spell;
+  int comp = 0;
   int bag_num = 0;
-  int found = FALSE;
+  bool found = FALSE;
 
   if (GetMaxLevel() >= 50  && wealth > 1000) {
     wealth -= 800;
@@ -608,61 +610,71 @@ void TMonster::shamanComponentLoader(void)
   while (::number(0,3) && (wealth > 10)) { 
     iters = 0;
     num = -1;
-    while ((num == -1) && (iters < 15)) {
+    while ((num == -1) && (iters < 25)) {
       num = ::number(0, CompIndex.size() - 1);
       spell = CompIndex[num].spell_num;
       comp = CompIndex[num].comp_vnum;
       iters++;
     
-      // no ranger spell components
-      if (spell < -1 || spell >= MAX_SKILL) {
+      if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
         vlogf(LOG_BUG, "Component (%d) defined with bad spell (%d).  num=%d", comp, spell, num);
         continue;
       }
-      if(spell != -1 && discArray[spell] && 
-	 discArray[spell]->typ != SPELL_SHAMAN){
+      if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {
+        num = -1;
+        continue;
+      }
+      // only load mage spell component
+      if (spell != TYPE_UNDEFINED && discArray[spell]->typ != SPELL_SHAMAN) {
       	num=-1;
       	continue;
       }
 
+      if (isDissectComponent(comp))
+        num = -1;
+
+      // disallow certain components
       switch (comp) {
-        case COMP_THORNFLESH:
-        case COMP_AQUALUNG:
-        case COMP_RESURRECTION:
+	case COMP_BLOOD_BOIL:
+	case COMP_AQUALUNG:
         case COMP_HYPNOSIS:
           // we'll make utility comps more rare so that relatively speaking
           // the comps for offensive spells are more prevalent
           if (::number(0,2))
             num = -1;
           break;
-	case COMP_BLOOD_BOIL:
-        case COMP_DETECT_SHADOW:
-        case COMP_SHADOW_WALK:
+	case COMP_CELERITE:
         case COMP_CLARITY:
-	case COMP_CONTROL_UNDEAD:
+        case COMP_SHADOW_WALK:
           // these are also "utility" comps, but players have asked for a
           // slightly higher load rate on them
           if (::number(0,9) < 5)
             num = -1;
           break;
-	case COMP_CELERITE:
-        case COMP_RAZE:
-        case COMP_CARDIAC_STRESS:
-        case COMP_AQUATIC_BLAST:
-        case COMP_DEATHWAVE:
+#ifdef RARECOMPSHAMAN
+	case COMP_XXXXXXXXXXXXXXXXXXX:
           // keep fairly rare
           if (::number(0,19))
             num = -1;
           break;
-	case COMP_INVISIBILITY_BREW:
-	case COMP_TRUE_SIGHT_BREW:
+        case COMP_XXXXXXXXXXXX:
           // keep VERY rare
           if (::number(0,29))
             num = -1;
           break;
+#endif
         default:
           break;
       }
+      if (num == -1)
+        continue;
+
+      // this check is to prevent a mob that "sells" comps via responses
+      // from loading the comp they sell, and hence preventing the response
+      // load from working
+      if (isMobComponentSeller(comp, mobVnum()))
+        num = -1;
+
       if (num == -1)
         continue;
 
@@ -678,8 +690,26 @@ void TMonster::shamanComponentLoader(void)
 
     if (!(obj = read_object(comp,VIRTUAL)))
       continue;
-    // 15 is a wee high
-    int price = obj->obj_flags.cost / 10;
+
+    TComponent *tcom =dynamic_cast<TComponent *>(obj);
+    spell = CompIndex[num].spell_num;
+
+    if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
+      num = -1;
+      delete tcom;
+      continue;
+    }
+    // skip scribe comps
+    if (tcom->isComponentType(COMP_SCRIBE)) {
+      num = -1;
+      delete tcom;
+      continue;
+    }
+
+    // 15 is a wee high, 12 is a wee low
+    // this is the best way to up the overall availability of components
+    // increase the divisor to increase the loads
+    int price = obj->obj_flags.cost / 13;
     if (wealth >= price) {
       *bag += *obj;
       wealth -= price;

@@ -2083,14 +2083,14 @@ void TPerson::doUsers(const char *argument)
     sb += USERS_HEADER;
 
     for (d = descriptor_list; d; d = d->next) {
-      if (d->character && d->character->name) {
+      if (d->character && d->character->getName()) {
         if (!d->connected && !canSeeWho(d->character))
           continue;
 
         if (d->original)
           sprintf(line, "%s%-16.16s%s: ",purple(), d->original->name, norm());
         else
-          sprintf(line, "%s%-16.16s%s: ",purple(), d->character->name, norm());
+          sprintf(line, "%s%-16.16s%s: ",purple(), d->character->getName(), norm());
       } else
         strcpy(line, "UNDEFINED       : ");
 
@@ -2130,14 +2130,14 @@ void TPerson::doUsers(const char *argument)
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
         if (d->host && strcasestr(d->host, arg2)) {
-          if (d->character && d->character->name) {
+          if (d->character && d->character->getName()) {
             if (!d->connected && !canSeeWho(d->character))
               continue;
 
             if (d->original)
               sprintf(line, "%-16.16s: ", d->original->name);
             else
-              sprintf(line, "%-16.16s: ", d->character->name);
+              sprintf(line, "%-16.16s: ", d->character->getName());
           } else
             strcpy(line, "UNDEFINED       : ");
 
@@ -2399,9 +2399,9 @@ static int whichNumberMobile(const TThing *mob)
   string name;
   int iNum;
 
-  name = fname(mob->name);
+  name = fname(mob->getName());
   for (i = character_list, iNum = 0; i; i = i->next) {
-    if (isname(name.c_str(), i->name) && i->in_room != ROOM_NOWHERE) {
+    if (isname(name.c_str(), i->getName()) && i->in_room != ROOM_NOWHERE) {
       iNum++;
       if (i == mob)
         return iNum;
@@ -2415,7 +2415,7 @@ static const string numbered_person(const TBeing *ch, const TThing *person)
   char buf[256];
 
   if (dynamic_cast<const TMonster *>(person) && ch->isImmortal())
-    sprintf(buf, "%d.%s", whichNumberMobile(person), fname(person->name).c_str());
+    sprintf(buf, "%d.%s", whichNumberMobile(person), fname(person->getName()).c_str());
   else
     strcpy(buf, ch->pers(person));
 
@@ -2436,7 +2436,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf, "%-30s- carried by %s -", obj->getNameNOC(ch).c_str(), 
                numbered_person(ch, obj->parent).c_str());
     sprintf(buf + strlen(buf), " %-20s [%d]\n\r",
-               (obj->parent->roomp->name ? obj->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (obj->parent->roomp->getName() ? obj->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->parent->in_room);
   } else if (dynamic_cast<TBeing *>(obj->parent) && obj->parent->riding && obj->parent->riding->roomp) {
     sprintf(buf, "%-30s- carried by %s - ", 
@@ -2445,7 +2445,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf + strlen(buf), "riding %s - ", 
                obj->parent->riding->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-               (obj->parent->riding->roomp->name ? obj->parent->riding->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
+               (obj->parent->riding->roomp->getName() ? obj->parent->riding->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
                obj->parent->riding->in_room);
   } else if (dynamic_cast<TBeing *>(obj->parent) && obj->parent->riding) {
     sprintf(buf, "%-30s- carried by %s - ",
@@ -2460,7 +2460,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf, "%-30s- equipped by %s - ", obj->getNameNOC(ch).c_str(), 
                numbered_person(ch, obj->equippedBy).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-               (obj->equippedBy->roomp->name ? obj->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (obj->equippedBy->roomp->getName() ? obj->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->equippedBy->in_room);
   } else if (obj->equippedBy) {       // object equipped by monster 
     sprintf(buf, "%-30s- equipped by %s (Room Unknown)\n\r", obj->getNameNOC(ch).c_str(), 
@@ -2470,7 +2470,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
                obj->getNameNOC(ch).c_str(), 
                numbered_person(ch, obj->stuckIn).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r",
-               (obj->stuckIn->roomp->name ? obj->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (obj->stuckIn->roomp->getName() ? obj->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->stuckIn->in_room);
   } else if (obj->stuckIn) {
     sprintf(buf, "%-20s- stuck in %s - (Room Unknown)\n\r", obj->getNameNOC(ch).c_str(), 
@@ -2484,7 +2484,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf + strlen(buf), "in %s - ",
                obj->parent->parent->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-            ((obj->parent->parent->roomp && obj->parent->parent->roomp->name) ?
+            ((obj->parent->parent->roomp && obj->parent->parent->roomp->getName()) ?
              obj->parent->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
                obj->parent->parent->in_room);
   } else if (obj->parent && obj->parent->equippedBy) {
@@ -2495,7 +2495,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf + strlen(buf), "equipped by %s - ",
                obj->parent->equippedBy->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-    ((obj->parent->equippedBy->roomp && obj->parent->equippedBy->roomp->name) ?
+    ((obj->parent->equippedBy->roomp && obj->parent->equippedBy->roomp->getName()) ?
        obj->parent->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
        obj->parent->equippedBy->in_room);
   } else if (obj->parent && obj->parent->stuckIn) {
@@ -2506,7 +2506,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &s
     sprintf(buf + strlen(buf), "stuck in %s - ",
                obj->parent->stuckIn->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-       ((obj->parent->stuckIn->roomp && obj->parent->stuckIn->roomp->name) ?
+       ((obj->parent->stuckIn->roomp && obj->parent->stuckIn->roomp->getName()) ?
         obj->parent->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
         obj->parent->stuckIn->in_room);
 // object in object 
@@ -2575,7 +2575,7 @@ void TBeing::doWhere(const char *argument)
     count = 0;
 
     for (k = object_list; k; k = k->next) {
-      if (!k->name) {
+      if (!k->getName()) {
         vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
         continue;
       }
@@ -2650,11 +2650,11 @@ void TBeing::doWhere(const char *argument)
             (!gods || ch->isImmortal())) {
           if (d->original)
             sprintf(buf, "%-20s - %s [%d] In body of %s\n\r",
-                    d->original->getNameNOC(ch).c_str(), ch->roomp->name,
+                    d->original->getNameNOC(ch).c_str(), ch->roomp->getName(),
                     ch->in_room, ch->getNameNOC(ch).c_str());
           else
             sprintf(buf, "%-20s - %s [%d]\n\r", ch->getNameNOC(ch).c_str(),
-                    ch->roomp ? ch->roomp->name : "Bad room", ch->in_room);
+                    ch->roomp ? ch->roomp->getName() : "Bad room", ch->in_room);
 
           sb += buf;
         }
@@ -2701,11 +2701,11 @@ void TBeing::doWhere(const char *argument)
   }
   if (GetMaxLevel() > MAX_MORT) {
     for (k = object_list; k; k = k->next) {
-      if (!k->name) {
+      if (!k->getName()) {
         vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
         continue;
       }
-      if (isname(namebuf, k->name) && canSee(k)) {
+      if (isname(namebuf, k->getName()) && canSee(k)) {
         if (!iNum || !(--count)) {
           if (!iNum) {
             sprintf(buf, "[%2d] ", ++count);
@@ -4505,7 +4505,7 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
   strcpy(capbuf, objs(obj));
 
   if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
+      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     return;
 
   int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
@@ -4676,7 +4676,7 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
 void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 {
   if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
+      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 
   int level = GetApprox(obj->obj_flags.decay_time, learn);
@@ -4710,7 +4710,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 {
   if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
+      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 
 //  int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
@@ -5630,6 +5630,8 @@ void TBeing::doPrayers(const char *argument)
   d->page_string(buffer);
   return;
 }
+
+
 
 
 
