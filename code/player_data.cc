@@ -311,7 +311,7 @@ bool load_char(const sstring &name, charFile *char_element)
   fclose(fl);
 
   TDatabase db(DB_SNEEZY);
-  db.query("select talens from player where lower(name)=lower('%s')",
+  db.query("select talens from player where lower(name)=lower('%s') and talens is not null",
 	   name.c_str());
   if(db.fetchRow()){
     char_element->money=convertTo<int>(db["talens"]);
