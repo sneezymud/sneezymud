@@ -3904,26 +3904,58 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
-int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) {
-  
+int healingNeckwear(TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj *) 
+{  
   TBeing *ch;
+  wearSlotT slot;
 
-  if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
-    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FASE;
 
   for (int i = 1; i < 5; i++) {
-  
-    ch->setHit(ch->getHit() + 2);
-    if (!(ch-> hasClass(CLASS_SHAMAN))) 
-      ch->setHit(ch->getHit()-2);
+    if (ch->hasClass(CLASS_SHAMAN)) {
+      ch->addToHit(::number(1,2));
+    } else {
+      ch->addToHit(-(::number(1,2)));
+    }
+    if (ch->hasClass(CLASS_SHAMAN)) {
+      if (i == 1) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 2) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 3) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 4) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 5) {
+	ch->sendTo("\n\r");
+      }
+    } else {
+      if (i == 1) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 2) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 3) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 4) {
+	ch->sendTo("\n\r");
+      }
+      if (i == 5) {
+ 	ch->sendTo("\n\r");
+      }
+    }
   }
-  
 
-  if (cmd == CMD_GENERIC_PULSE) { 
+  if (cmd == CMD_GENERIC_PULSE) 
     return DELETE_THIS;
-  }
-
-  return FALSE;
+   
 }
 
 
@@ -4739,7 +4771,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon}, //75
   {FALSE, "Mana Burn Robe", manaBurnRobe},
-  {FALSE, "Healing Totem", healingHead}
+  {FALSE, "Chrism Item", healingNeckwear}
 };
 
 
