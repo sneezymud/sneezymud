@@ -275,20 +275,13 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
       return FALSE;
     } else if (cmd == CMD_CONSIDER) {
-      // this is just cruel, do this instead
-      job->num_chances--;
-      return FALSE;
-
-      // if victim considers, treat this as willing ness to attack and bump up delay
+     
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
       if (job) {
-        job->warned = TRUE;
-        if (job->num_chances >= -99 || job->num_chances <= -96)
-          job->num_chances = -96;
-        else
-          job->num_chances = 1;
+	job->num_chances--;
       }
       return FALSE;
+
     } else if (((cmd == CMD_SAY) || (cmd == CMD_SAY2)) && 
 	       (!ch || ch->isImmortal())) {
       if (!arg)

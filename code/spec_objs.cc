@@ -5834,21 +5834,49 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   TObj *sword = NULL;
+  TBeing *ch2 = NULL;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     char buf[256];
     one_argument(arg, buf);
     if(!strcmp(buf, "kaeshite")) {
-      if (!(sword = get_obj("blade starfire sword two handed quest", EXACT_NO))) {
-	act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
-	act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
+      if (!(sword = get_obj("blade starfire sword two handed quest", EXACT_NO))) {
 	act("<c>$n's $o glows pale blue for a moment, but nothing seems to happen.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
         act("<c>Your $o glows pale blue for a moment, but nothing seems to happen.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 	return TRUE;
       } else {
-	act("<c>The sapphires on $n's hilt suddenly emit a bright burst of light!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
-	act("<W>$n dissapears in a blinding flash!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
+        act("<c>$n's $o glows pale blue for a moment.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+        act("<c>Your $o glows pale blue for a moment.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+	if (sword->equippedBy) {
+	  if (sword->eq_pos > WEAR_NOWHERE) {
+	    act("<W>$p <W>suddenly turns incredibly hot in your hands, and you drop it!<1>",TRUE,ch2,sword,NULL,TO_CHAR,NULL);
+
+	    act("<W>$p <W>suddenly turns incredibly hot in $N's hands, and $e drops it!<1>",TRUE,ch2,sword,NULL,TO_ROOM,NULL);
+
+	    ch2 = dynamic_cast<TBeing *>(sword->equippedBy);
+	    *ch2->roomp += *ch2->unequip(sword->eq_pos);
+	  } else {
+	    vlogf(LOG_BUG, "starfire proc trying to unequip %s in slot -1 on %s", sword->getName(),
+		  sword->equippedBy->getName());
+	    return FALSE;
+	  }
+	}
+
+	if(!(ch2 = dynamic_cast<TBeing *>(sword->parent))) {
+	  
+	  act("<c>The sapphires on $n'<c>s hilt suddenly emit a bright burst of light!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
+	  act("<W>$n <W>dissapears in a blinding flash!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
+	} else {
+	  act("<c>The sapphires on $p<c>'s hilt suddenly emit a bright burst of light!<1>",TRUE,ch2,sword,NULL,TO_CHAR,NULL);
+          act("<W>$p <W>dissapears from your hands in a blinding flash!<1>",TRUE,ch2,sword,NULL,TO_CHAR,NULL);
+
+	  act("<c>The sapphires on $p<c>'s hilt suddenly emit a bright burst of light!<1>",TRUE,ch2,sword,NULL,TO_ROOM,NULL);
+          act("<W>$p <W>dissapears from $n<W>'s hands in a blinding flash!<1>",TRUE,ch2,sword,NULL,TO_ROOM,NULL);
+	}
 	--(*sword);
 	*o += *sword;
 	act("<W>$N<W> suddenly materializes in $n's $o with a faint metallic sound.<1>",TRUE,ch,o,sword,TO_ROOM,NULL);
