@@ -2667,21 +2667,21 @@ int boneStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!ch)
     return FALSE;
 
-  // if we hit body or neck, suck some life into user
+  // if we hit body, head, or neck, suck some life into user
   // we've already "hit" them, so life from vict has already been taken
-  if (part_hit != WEAR_BODY && part_hit != WEAR_NECK)
+  if (part_hit != WEAR_BODY && part_hit != WEAR_NECK && part_hit != WEAR_HEAD)
     return FALSE;
 
   int amount = min(1, ch->hitLimit() - ch->getHit());
   if (amount) {
-    act("$p draws the your life force through it into $N.",
-       TRUE, vict, o, ch, TO_CHAR);
+    act("$p draws your life force through it into $N.",
+       TRUE, vict, o, ch, TO_CHAR, ANSI_GREEN_BOLD);
     act("$p draws the life force of $n through it into you.",
-       TRUE, vict, o, ch, TO_VICT);
+       TRUE, vict, o, ch, TO_VICT, ANSI_GREEN_BOLD);
     act("$p draws the life force of $n through it into $N.",
-       TRUE, vict, o, ch, TO_NOTVICT);
+       TRUE, vict, o, ch, TO_NOTVICT, ANSI_GREEN_BOLD);
     ch->addToHit(amount);
-    ch->addToLifeforce(10);
+    ch->addToLifeforce(amount);
   }
 
   return TRUE;
