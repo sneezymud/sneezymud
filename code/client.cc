@@ -1314,10 +1314,12 @@ int TBeing::doClientMessage(const char *arg)
   if (!desc)
      return FALSE;
 
+#if 0
   if (!desc->m_bIsClient) {
     sendTo("This command is only available for users of the SneezyMUD client (http://sneezy.stanford.edu/client).\n\r");
     return FALSE;
   }
+#endif
   Descriptor *i;
   TBeing *b;
 
