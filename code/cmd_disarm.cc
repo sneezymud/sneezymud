@@ -223,6 +223,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
 
 	*victim->roomp += *obj;
 	victim->logItem(obj, CMD_DISARM);
+	victim->doSave(SILENT_YES);
       }      
     } else {
       act("You try to disarm $N, but $E doesn't have a weapon.", TRUE, caster, 0, victim, TO_CHAR);
