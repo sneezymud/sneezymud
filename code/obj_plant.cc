@@ -228,5 +228,7 @@ void TPlant::updateDesc()
 void TPlant::updateAge(){
   setAge(getAge()+::number(1,3));
   updateDesc();
+  if(roomp)
+    roomp->saveItems("");
 }
 
