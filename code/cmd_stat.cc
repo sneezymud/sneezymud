@@ -1601,6 +1601,12 @@ void TBeing::statBeing(TBeing *k)
                   "     Expires in %d updates.  Status = %d.\n\r",
             aff->duration , aff->level);
         break;
+      case AFFECT_WAS_INDOORS:
+        sprintf(buf + strlen(buf), "Was indoors (immune to frostbite): \n\r");
+        sprintf(buf + strlen(buf),
+		"     Expires in %d updates.  Status = %d.\n\r",
+		aff->duration , aff->level);
+        break;
       case AFFECT_FREE_DEATHS:
         sprintf(buf + strlen(buf), "Free Deaths: \n\r");
         sprintf(buf + strlen(buf), 

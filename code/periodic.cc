@@ -1612,6 +1612,37 @@ int TBeing::terrainSpecial()
     default:
       break;
   }
+
+  if (!outside() && !(dynamic_cast<TMonster *>(this))) {
+    affectedData aff;
+    aff.type = AFFECT_WAS_INDOORS;
+    aff.level = 50;
+    aff.duration = UPDATES_PER_MUDHOUR * 2;
+    affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+  }
+
+  if (QuestCode4) {
+    if (affectedBySpell(AFFECT_WAS_INDOORS) || hasDisease(DISEASE_FROSTBITE)) return FALSE;  // make it only hit em if they sit outside for a while
+    if (weather_info.sky != SKY_RAINING && weather_info.sky != SKY_CLOUDY && weather_info.sky != SKY_LIGHTNING)
+      return FALSE;
+    if (isImmune(IMMUNE_COLD, 0))
+      return FALSE;
+    if (dynamic_cast<TMonster *>(this))
+      return FALSE;
+    if (isPc() && isImmortal())
+      return FALSE;
+
+    af.type = AFFECT_DISEASE;
+    af.level = 0;
+    af.duration = 200;
+    af.modifier = DISEASE_FROSTBITE;
+    af.location = APPLY_NONE;
+    af.bitvector = 0;
+    affectTo(&af);
+    disease_start(this, &af);
+  }
+
+
   return FALSE;
 }
 

@@ -836,6 +836,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:
       case AFFECT_DUMMY:
+      case AFFECT_WAS_INDOORS:
       case AFFECT_DRUNK:
       case AFFECT_NEWBIE:
       case AFFECT_SKILL_ATTEMPT:

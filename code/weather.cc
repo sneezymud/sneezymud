@@ -915,6 +915,10 @@ void weatherChange()
   // lets keep this from changing WAY too radically
   weather_info.pressure += weather_info.change/10;
 
+  if(QuestCode3) {
+    weather_info.change = -5;
+  }
+
   if (weather_info.change > 0) {
     if (::number(0,9) < weather_info.change%10)
       weather_info.pressure++;
@@ -922,6 +926,8 @@ void weatherChange()
     if (::number(0,9) < (-weather_info.change)%10)
       weather_info.pressure--;
   }
+
+  
 
   weather_info.pressure = min(weather_info.pressure, 1040);
   weather_info.pressure = max(weather_info.pressure, 960);

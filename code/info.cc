@@ -1325,6 +1325,13 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
           str += buf;
         }
         break;
+      case AFFECT_WAS_INDOORS:
+        if (ch->isImmortal() && show) {
+          sprintf(buf, "Was indoors (immune to frostbite): Time Left : %s\n\r",
+		  describeDuration(this, aff->duration).c_str());
+          str += buf;
+        }
+        break;
       case AFFECT_FREE_DEATHS:
         sprintf(buf, "Free deaths remaining: %ld\n\r",
                aff->modifier);

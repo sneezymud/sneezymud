@@ -1296,6 +1296,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_TRANSFORMED_NECK:
     case LAST_TRANSFORMED_LIMB:
     case AFFECT_DUMMY:
+    case AFFECT_WAS_INDOORS:
     case AFFECT_DRUNK:
     case AFFECT_NEWBIE:
     case AFFECT_SKILL_ATTEMPT:

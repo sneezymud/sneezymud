@@ -57,6 +57,9 @@ bool NewbiePK = FALSE;
 bool QuestCode = false;       // spec-procs for quests 
 bool Gravity = TRUE;         // Do we allow gravity, fallen objects etc.
 bool QuestCode2 = FALSE;     // spec-procs for quests 
+bool QuestCode3 = FALSE;     // spec-procs for quests
+bool QuestCode4 = FALSE;     // spec-procs for quests
+
 bool Clients = true;         // Do we allow clients? 
 bool WizBuild = true;         // can builders hear wiznet
 bool WizInvis = FALSE;
@@ -362,13 +365,15 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
       sendTo(COLOR_BASIC, "Test code #1      : %s  | ",on_or_off(TestCode1));
-      sendTo(COLOR_BASIC, "Test code #5      : %s  | ", on_or_off(TestCode5));
-      sendTo(COLOR_BASIC, "Test code #2      : %s\n\r", on_or_off(TestCode2));
-      sendTo(COLOR_BASIC, "Test code #6      : %s  | ", on_or_off(TestCode6));
-      sendTo(COLOR_BASIC, "Test code #3      : %s  | ", on_or_off(TestCode3));
-      sendTo(COLOR_BASIC, "Quest code        : %s\n\r", on_or_off(QuestCode));
+      sendTo(COLOR_BASIC, "Test code #2      : %s  | ", on_or_off(TestCode2));
+      sendTo(COLOR_BASIC, "Test code #3      : %s\n\r", on_or_off(TestCode3));
       sendTo(COLOR_BASIC, "Test code #4      : %s  | ", on_or_off(TestCode4));
-      sendTo(COLOR_BASIC, "Quest code 2      : %s\n\r", on_or_off(QuestCode2));
+      sendTo(COLOR_BASIC, "Test code #5      : %s  | ", on_or_off(TestCode5));
+      sendTo(COLOR_BASIC, "Test code #6      : %s\n\r", on_or_off(TestCode6));
+      sendTo(COLOR_BASIC, "Quest code #1     : %s  | ", on_or_off(QuestCode));
+      sendTo(COLOR_BASIC, "Quest code #2     : %s  | ", on_or_off(QuestCode2));
+      sendTo(COLOR_BASIC, "Quest code #3     : %s\n\r", on_or_off(QuestCode3));
+      sendTo(COLOR_BASIC, "Quest code #4     : %s  | ", on_or_off(QuestCode4));
     }      
 
     return;
@@ -924,14 +929,27 @@ void TPerson::doToggle(const char *arg2)
     TestCode6 = ! TestCode6;
     sendTo("TestCode #6 is now %s.\n\r", TestCode6 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #6.",getName(),TestCode6 ? "enabled" : "disabled");
+    
   } else if (is_abbrev(arg, "questcode") && hasWizPower(POWER_TOGGLE)) {
     QuestCode = !QuestCode;
     sendTo("Questcode is now %s.\n\r", QuestCode ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
+
   } else if (is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2") && hasWizPower(POWER_TOGGLE)) {
     QuestCode2 = !QuestCode2;
     sendTo("Questcode 2 is now %s.\n\r", QuestCode2 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
+
+  } else if (is_abbrev(arg, "questcode3") || is_abbrev(arg, "quest3") && hasWizPower(POWER_TOGGLE)) {
+    QuestCode3 = !QuestCode3;
+    sendTo("Questcode 3 is now %s.\n\r", QuestCode3 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s questcode 3.",getName(),QuestCode3 ? "enabled" : "disabled");
+
+  } else if (is_abbrev(arg, "questcode4") || is_abbrev(arg, "quest4") && hasWizPower(POWER_TOGGLE)) {
+    QuestCode4 = !QuestCode4;
+    sendTo("Questcode 4 is now %s.\n\r", QuestCode4 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s questcode 4.",getName(),QuestCode4 ? "enabled" : "disabled");
+
   } else if(is_abbrev(arg, "timequeries") && hasWizPower(POWER_TOGGLE)){
     timeQueries = !timeQueries;
     sendTo("DB query timing is now %s.\n\r", timeQueries ? "activated" : "deactivated");
@@ -3717,6 +3735,8 @@ int TBeing::genericRestore(restoreTypeT partial)
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         affectRemove(aff);
+      } else {
+	affectRemove(aff);
       }
     }
   }

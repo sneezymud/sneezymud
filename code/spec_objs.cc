@@ -68,6 +68,7 @@
 #include "obj_open_container.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
+#include "obj_symbol.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_drinkcon.h"
@@ -4208,6 +4209,102 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
+int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  char target[30];
+  TBeing *vict = NULL;
+  TBeing *vict2 = NULL;
+  TObj *obj = NULL;
+
+  int dam, rc;
+
+  if (cmd != CMD_POINT)
+    return FALSE;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  arg = one_argument(arg, target);
+  int bits = generic_find(target, FIND_CHAR_ROOM | FIND_OBJ_ROOM, ch, &vict, &obj);
+  if(!bits)
+    return FALSE;
+  if(vict == ch) {
+    return FALSE;
+  }
+
+
+  vict2 = ch->fight();
+
+  if(vict && (!vict2 || vict2 == vict)) {
+    // throw somebody
+    act("You point at $N, and your glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<g>As you raise your arm, <1>$N<g> flails wildly and is lifted into the air.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<R>You spread your fingers wide, and $N is thrown backwards with incredible force!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+
+    act("$n points at $N, and $s glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<g>As $n raises $s arm, <1>$N<g> flails wildly and is lifted into the air.<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<R>$n spreads $s fingers wide, and $N is thrown backwards with incredible force!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+
+    act("$n points at you, and $s glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_VICT,NULL);
+    act("<g>As $n raises $s arm, you flail wildly and are lifted into the air.<G>  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+    act("<R>$n spreads $s fingers wide, and your are thrown backwards with incredible force!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+
+    
+    if (vict->riding) {
+      int rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+	return DELETE_VICT;
+    }
+    vict->setPosition(POSITION_SITTING);
+
+    ch->addToWait(combatRound(6));
+    ch->cantHit += ch->loseRound(2);
+    vict->addToWait(combatRound(2));
+    vict->cantHit += ch->loseRound(2);
+
+    dam = ::number(10,30);
+    rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
+    return TRUE;
+
+  } else if (vict && vict2 && vict2 != vict) {
+    // throw vict into vict2
+    act("You point at $N, and your glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<g>As <1>$N<g> is lifted into the air you gesture vaugely in $p's direction.<1>",TRUE,ch,vict2,vict,TO_CHAR,NULL);
+    act("<R>You spread your fingers wide, and $N is thrown into $p with incredible force!<1>",TRUE,ch,vict2,vict,TO_CHAR,NULL);
+
+    act("$n points at $N, and $s glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<g>As <1>$N<g> is lifted into the air $n gestures vaugely in $p's direction.<1>",TRUE,ch,vict2,vict,TO_NOTVICT,NULL);
+    act("<R>$n spreads $s fingers wide, and $N is thrown into $p with incredible force!<1>",TRUE,ch,vict2,vict,TO_NOTVICT,NULL);
+
+    act("$n points at you, and $s glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_VICT,NULL);
+    act("<g>As you are lifted into the air $n gesture vaugely in $p's direction.<1>",TRUE,ch,vict2,vict,TO_VICT,NULL);
+    act("<R>$n spreads $s fingers wide, and you are thrown into $p with incredible force!<1>",TRUE,ch,vict2,vict,TO_VICT,NULL);
+
+    if (vict2->riding) {
+      int rc = vict2->fallOffMount(vict2->riding, POSITION_SITTING);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_VICT;
+    }
+    vict2->setPosition(POSITION_SITTING);
+
+    ch->addToWait(combatRound(6));
+    ch->cantHit += ch->loseRound(2);
+    vict->addToWait(combatRound(2));
+    vict->cantHit += ch->loseRound(2);
+    vict2->addToWait(combatRound(2));
+    vict2->cantHit += ch->loseRound(2);
+
+
+    dam = ::number(10,30);
+    rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
+    rc = ch->applyDamage(vict2, dam, SKILL_KINETIC_WAVE);
+
+    return TRUE;
+  } 
+  return FALSE;
+}
+
+
 int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 #if 0
   
@@ -5677,7 +5774,7 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
       
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
       
       act("The point of $n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
@@ -5754,7 +5851,7 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
 
       act("$n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
@@ -5840,7 +5937,7 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 12);
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
 
       act("$n grips $p in one hand, and utters the word, '<b>blizzard soul<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The $o glows for a moment, and a powerful <b>chill<1><c>runs through the room.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -5862,6 +5959,66 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
+int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if(::number(0,9))
+    return false;
+
+  TSymbol *symbol = NULL;
+  
+  if (!(symbol = dynamic_cast<TSymbol *>(o)))
+    return FALSE;
+  
+  TThing *t = NULL;
+  TBeing *tmp_victim = NULL;
+  
+  if(!::number(0,1200)) {
+    
+    act("$n's eyes suddenly glaze over as $e begins to chant in a monotonous voice.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    act("You suddenly feel possesed by a higher power, and are compelled to chant.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    
+    
+    ch->doSay("Oh Blinding Light!");
+    ch->doSay("Oh Light That Blinds!");
+    ch->doSay("Look Out For Me!");
+    ch->doSay("I Cannot See!");
+    
+    act("<Y>$n<Y>'s $o suddenly starts to glow and quickly becomes unbearably bright!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    act("<Y>Your $o suddenly starts to glow and quickly becomes unbearably bright!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    
+    
+    for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+      tmp_victim = dynamic_cast<TBeing *>(t);
+      if (!tmp_victim)
+	continue;
+      
+      
+      act("$N is blinded by the light!", FALSE, tmp_victim, NULL, tmp_victim, TO_NOTVICT);
+      act("You are blinded by the light!", FALSE, tmp_victim, NULL, NULL, TO_CHAR);
+      tmp_victim->rawBlind(100, UPDATES_PER_MUDHOUR / 4, SAVE_NO);
+      
+    }
+    
+  }
+  
+  if (cmd == CMD_GENERIC_PULSE && symbol->getSymbolCurStrength() < symbol->getSymbolMaxStrength()) {
+    if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
+    return FALSE;
+    
+    act("You smile inwardly as you feel your $o regain strength.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+    symbol->addToSymbolCurStrength(::number(1,min(100, symbol->getSymbolMaxStrength() - symbol->getSymbolCurStrength() )));
+    return FALSE;
+  }
+
+  return FALSE;
+}
+
+
 
 int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
@@ -5881,7 +6038,7 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
 
       act("$n's $o glows <b>a cold blue<1> as $e yells a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -5922,9 +6079,6 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 	int dam = ::number(10,60);
 	rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-	if (rc == -1)
-	  return DELETE_VICT;
-
 
 
         affectedData aff;
@@ -6604,12 +6758,14 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "ghostly shiv", ghostlyShiv},
   {FALSE, "hammer set: peke", HSPeke},
   {FALSE, "hammer set: copsi", HSCopsi},
-  {FALSE, "hammer set: pendant", HSPendant}, //110
-  {FALSE, "blizzard ring", blizzardRing}, 
+  {FALSE, "hammer set: pendant", HSPendant}, 
+  {FALSE, "blizzard ring", blizzardRing}, //110
   {FALSE, "frost spear", frostSpear},
   {FALSE, "ice staff", iceStaff},
   {FALSE, "heart of the arctic", arcticHeart},
-  {FALSE, "frost armor", frostArmor}, // 115
+  {FALSE, "frost armor", frostArmor}, 
+  {FALSE, "telekinesis glove", telekinesisGlove}, //115
+  {FALSE, "Symbol of the Blinding Light", symbolBlindingLight},
   {FALSE, "last proc", bogusObjProc}
 };
 

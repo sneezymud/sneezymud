@@ -211,6 +211,11 @@ void TBeing::spellWearOffSoon(spellNumT s)
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
     return;
 
+  if (s == AFFECT_WAS_INDOORS && QuestCode4) {
+    sendTo("You begin to shiver and wonder how much longer you can stay outdoors before catching frostbite.\n\r");
+    act("$n's teeth begin to chatter.", TRUE, this, 0, 0, TO_ROOM);
+  }
+
   if (discArray[s]->fadeAwaySoon) 
     sendTo("%s\n\r", discArray[s]->fadeAwaySoon);
   
@@ -240,6 +245,12 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
 
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
     return 0;
+
+  if (s == AFFECT_WAS_INDOORS && QuestCode4) {
+    sendTo("You're getting really cold now, and can barely feel your limbs.\n\r");
+    act("$n begins to shiver violently, and looks pale.", TRUE, this, 0, 0, TO_ROOM);
+  }
+
 
   if (discArray[s]->fadeAway) 
     sendTo("%s\n\r", discArray[s]->fadeAway);
