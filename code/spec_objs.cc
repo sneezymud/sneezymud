@@ -3907,10 +3907,20 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * ) {
   
   TBeing *ch;
-  if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
-    return FALSE;
+  wearSlotT slot;
 
-  if (ch = dynamic_cast<TBeing *> (o->equippedBy)) {
+  if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
+    return FASE;
+
+  for (int i = 1; i < 5; i++) {
+  
+    ch->setHit(ch0>getHit() + 2);
+
+  }
+
+  o->destroy();
+
+  }
   
     
     
