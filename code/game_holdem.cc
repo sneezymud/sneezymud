@@ -259,6 +259,8 @@ void HoldemGame::showdown(TBeing *ch)
     }
   }
 
+
+  // show chip count
   int tcount=0;
   TObj *obj;
   for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
@@ -279,9 +281,9 @@ void HoldemGame::showdown(TBeing *ch)
   }
 
 
-  for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->ch && 
-       players[i]->ch->isPc() && players[i]->ch->name == button){
+  // move button
+  for(i=1;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
       act("The button moves to $n.",
 	  FALSE, players[i]->ch, 0, 0, TO_ROOM);
       act("The button moves to you.",
@@ -291,6 +293,7 @@ void HoldemGame::showdown(TBeing *ch)
   }
 
 
+  // reinitialize players
   for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i]){
       players[i]->hand[0]=NULL;
@@ -901,18 +904,19 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
       break;
   }
 
-  // swap with first player
+
+  // rotate so they are the first player
   HoldemPlayer *tmp=players[0];
-  players[0]=players[i];
-  players[i]=tmp;
+  sstring pname=players[i]->name;
+
   better=0;
 
-  for(int i=1;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
-      button=players[i]->ch->name;
-    }
+  while(!players[0] || players[0]->name!=pname){
+    tmp=players[0];
+    for(i=0;i<MAX_HOLDEM_PLAYERS-1;++i)
+      players[i]=players[i+1];
+    players[i]=tmp;
   }
-
   
   // deal cards to everyone
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){    
@@ -933,7 +937,10 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   }
     
   // move the bet to the next person
+  vlogf(LOG_PEEL, "better1=%i, %s", better, players[better]->name.c_str());
   better=nextBetter(better);
+  vlogf(LOG_PEEL, "better2=%i, %s", better,  players[better]->name.c_str());  
+
   act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
   players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   
