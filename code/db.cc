@@ -2577,7 +2577,7 @@ void zoneData::sendTo(sstring s, int exclude_room=-1)
     
     if(tmp_victim->roomp->getZoneNum() == zone_nr &&
        tmp_victim->in_room != exclude_room){
-      tmp_victim->sendTo(s);
+      tmp_victim->sendTo(COLOR_BASIC, s);
     }
   }
 }
