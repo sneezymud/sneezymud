@@ -1115,6 +1115,11 @@ void TBeing::doBoot(const sstring &arg)
   TMonster *mob;
   TObj *obj;
 
+  if (!hasWizPower(POWER_RESET)) {
+    sendTo("You lack the power to reset.\n\r");
+    return;
+  }
+
   if(arg.word(0)=="zone")
     z=convertTo<int>(arg.word(1));
 
