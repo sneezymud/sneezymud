@@ -5873,17 +5873,17 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     }
     return FALSE;
   } else  if ((cmd != CMD_GENERIC_PULSE) ||
-	      !myself->awake() || myself->fight() || ::number(0,25))
+	      !myself->awake() || myself->fight())
     return FALSE;
 
   if (!myself->act_ptr) {
-    //    if(::number(0,5))
-    //      return FALSE;
+    if(::number(0,10))
+      return FALSE;
 
     // find a john
     for(t=myself->roomp->getStuff(); t && !found; t=t->nextThing){
       if((tmons=dynamic_cast<TMonster *>(t))){
-	if(tmons!=myself && tmons->getRace()==myself->getRace() &&
+	if(tmons!=myself && tmons->isHumanoid() &&
 	   (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
 	  found=1;
 	  break;
@@ -5904,6 +5904,9 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     job->cur_path=::number(0, nhomes-1);
     job->john=tmons;
     job->state=STATE_OFFER;
+  } else {
+    if(::number(0,4))
+      return FALSE;
   }
   
   if (!(job = static_cast<hunt_struct *>(myself->act_ptr))) {
@@ -5917,6 +5920,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     myself->act_ptr=NULL;
     return FALSE;
   }
+
 
   // Make sure our john is still alive and in the same room
   found=0;
@@ -6082,21 +6086,25 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       job->state=STATE_WALKING;
       break;
     case STATE_WALKING:
-      if(::number(0,2))
-	break;
+      //      if(::number(0,2))
+      //	break;
 
       if(myself->in_room != homes[job->cur_path]){
 	switch((dir=find_path(myself->in_room, is_target_room_p, 
 			 (void *) homes[job->cur_path], myself->trackRange(), 0))){
-          case -1: // lost
-	    myself->doSay("I'm lost and shit");
-	    break;
           case 0: case 1: case 2: case 3: case 4: 
           case 5: case 6: case 7: case 8: case 9:
 	    myself->goDirection(dir);
 	    break;
-  	  default:
-	    myself->doSay("I need to enter a portal");
+          case -1: // lost
+  	  default: // portal
+	    myself->doSay("Damn, I think I'm lost.");
+	    delete job->john;
+	    if(myself->act_ptr){
+	      delete static_cast<hunt_struct *>(myself->act_ptr);
+	      myself->act_ptr = NULL;
+	    }
+	    break;
         }
 // returns -1 indicating a problem or can't find a path
 // returns 0-9 indicating a direction to travel
@@ -6112,7 +6120,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     case STATE_WAITFORCLEAR:
       found=0;
       for(t=myself->roomp->getStuff();t;t=t->nextThing){
-	if(dynamic_cast<TBeing *>(t)){
+	if(dynamic_cast<TPerson *>(t)){
 	  switch(::number(0,1)){
 	    case 0:
 	      myself->doSay("Um, a little privacy please.");
