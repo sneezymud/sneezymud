@@ -234,7 +234,7 @@ void BjGame::stay(TBeing *ch)
   while (player < 17) {
     dealer[nd++] = deck[deck_inx++];
 
-    if((best_dealer() > 21) && !::number(0,1))
+    if((best_dealer() > 21) && !::number(0,3))
       dealer[nd-1] = deck[deck_inx++];
 
     sprintf(log_msg, "The dealer is dealt the ");
