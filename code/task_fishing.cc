@@ -29,7 +29,9 @@ void TBeing::doFish(const char *direction){
 
   sendTo("You start fishing.\n\r");
 
-  if(getCond(DRUNK) > 10 && !::number(0,10)){
+  if(getCond(DRUNK) > 10 && !::number(0,10) &&
+     inRoom() < 31800 && inRoom() > 31899){
+
     sendTo("All of this drunken fishing has caused you to pass out.\n\r");
     sendTo("Strange things begin running through your mind...\n\r");
 
