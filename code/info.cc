@@ -3696,7 +3696,7 @@ void TBeing::doEvaluate(const char *argument)
       else if (rNatureCount > 3)
         sendTo("The soothing sounds of nature rush over your body.\n\r");
       else if (rNatureCount > 0)
-        sendTo("Altho not that dense, it's still home.\n\r");
+        sendTo("Although not that dense, it's still home.\n\r");
       else
         sendTo("It's nature, but it sure doesn't feel like nature...\n\r");
     }
