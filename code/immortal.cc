@@ -6234,7 +6234,7 @@ int TBeing::doExec()
 
     char argument[256];
     strcpy(argument, lbuf);
-    cleanCharBuf(argument);
+    //    cleanCharBuf(argument);
     for (i = 0; invalidcmds[i]; ++i) {
       if (is_abbrev(lbuf, invalidcmds[i])) {
         sendTo("%s isn't an allowed command.\n\r", invalidcmds[i]);
