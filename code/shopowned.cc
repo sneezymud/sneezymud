@@ -419,6 +419,14 @@ void TShopOwned::showInfo()
     keeper->doTell(ch->getName(),
 		   fmt("I pay out %f in yearly interest, compounded daily.") %
 		   (shop_index[shop_nr].profit_sell));
+    db.query("select a.talens+b.talens as talens from (select sum(talens) as talens from shopownedbank) a, (select sum(talens) as talens from shopownedcorpbank) b");
+    if(db.fetchRow()){
+      keeper->doTell(ch->getName(), fmt("My equity value is %i talens.") %
+		     convertTo<int>(db["talens"]));
+    }
+    
+
+
   } else {
     keeper->doTell(ch->getName(),
 		   fmt("My profit_buy is %f and my profit_sell is %f.") %
