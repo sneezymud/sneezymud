@@ -162,7 +162,7 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
   int num, p, count;
 
 
-  one_argument(argument, arg);
+  only_argument(argument, arg);
   if (!*arg && !obj) {
     sendTo("Set the nojunk flag on what?\n\r");
     return FALSE;
@@ -219,7 +219,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
   int num, p, count;
   TThing *t;
 
-  one_argument(argument, arg);
+  only_argument(argument, arg);
   if (!*arg && !obj) {
     sendTo("Junk what?\n\r");
     return FALSE;
@@ -574,7 +574,7 @@ void TBeing::doReport(const char *argument)
     return;
   }
   memset(target, '\0', sizeof(target));
-  one_argument(argument, target);
+  only_argument(argument, target);
   if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
     sprintf(info, "$n reports '%s%.1f%% H, %.2f%% P. I am %s%s'",
            red(), getPercHit(), getPiety(),
