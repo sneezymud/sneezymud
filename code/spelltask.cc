@@ -210,7 +210,7 @@ void TBeing::stopCast(stopCastT messages)
         } else {
           colorAct(COLOR_SPELLS, "<y>You cease the ritual as your target no longer seems to be there.<z>",FALSE, this,NULL, NULL, TO_CHAR);
         }
-        colorAct(COLOR_SPELLS, "<y>$n stops $s ritual dance and the spirits ignore $m.<z>", TRUE, this, NULL, NULL, TO_ROOM);
+        colorAct(COLOR_SPELLS, "<y>$n<z><y> stops $s ritual dance and the spirits ignore $m.<z>", TRUE, this, NULL, NULL, TO_ROOM);
       }
       break;
     case STOP_CAST_NONE:
