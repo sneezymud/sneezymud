@@ -330,7 +330,7 @@ int TBeing::doFeralWrath(const char *argument)
   if (!useComponent(findComponent(SPELL_FERAL_WRATH), this, CHECK_ONLY_NO))
     return FALSE;
 
-  int which = ::number(1,4);
+  int which = ::number(1,3);
 
   affectedData aff, aff2;
   aff.type = SPELL_FERAL_WRATH;
@@ -354,10 +354,11 @@ int TBeing::doFeralWrath(const char *argument)
       aff2.location = APPLY_SPE;
       aff2.modifier = modifier;
       break;
-    case 4:
-      aff2.location = APPLY_HIT;
-      aff2.modifier = modifier * 2;
-      break;
+      // removed this - dumb to give hp in a hitter spell - Maror
+//    case 4:
+//      aff2.location = APPLY_HIT;
+//      aff2.modifier = modifier * 2;
+//      break;
   }
   aff2.type = SPELL_FERAL_WRATH;
   aff2.duration = aff.duration;
@@ -379,6 +380,19 @@ int TBeing::doFeralWrath(const char *argument)
       return SPELL_FALSE;
     }
 
+    if (aff2.location == APPLY_STR) {
+      act("The misty shape of a large bear settles on you.\n\rYou feel stronger.", FALSE, this, NULL, NULL, TO_CHAR);
+      act("A light mist in the shape of a large bear settles on $n.",
+          FALSE, this, NULL, NULL, TO_ROOM);
+    } else if (aff2.location == APPLY_DEX) {
+      act("The misty shape of a great cat settles on you.\n\rYou feel your reflexes quicken.", FALSE, this, NULL, NULL, TO_CHAR);
+      act("A light mist in the shape of a great cat settles on $n.",
+          FALSE, this, NULL, NULL, TO_ROOM);
+    } else if (aff2.location == APPLY_SPE) {
+      act("The misty shape of a snake settles on you.\n\rYou feel you can strike with great speed.", FALSE, this, NULL, NULL, TO_CHAR);
+      act("A light mist in the shape of a snake settles on $n.",
+          FALSE, this, NULL, NULL, TO_ROOM);
+    }
 
     act("Your blood boils with feral rage!",
         FALSE, this, NULL, NULL, TO_CHAR);
