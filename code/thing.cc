@@ -123,7 +123,10 @@ float TThing::getCarriedWeight() const
   }
 
   for(t=getStuff();t;t=t->nextThing){
-    total+=t->getTotalWeight(true);
+    if(dynamic_cast<TComponent *>(t))
+      total+=(t->getTotalWeight(true)*0.10);
+    else 
+      total+=t->getTotalWeight(true);
   }
 
   return total;

@@ -55,22 +55,6 @@ bool TSpellBag::objectRepair(TBeing *, TMonster *, silentTypeT)
 }
 
 
-float TSpellBag::getCarriedWeight() const
-{
-  TThing *t;
-  float total=0;
-
-  for(t=getStuff();t;t=t->nextThing){
-    if(dynamic_cast<TComponent *>(t))
-      total+=(t->getTotalWeight(true)*0.25);
-    else 
-      total+=t->getTotalWeight(true);
-  }
-
-  return total;
-}
-
-
 
 bool TSpellBag::lowCheckSlots(silentTypeT silent)
 {
