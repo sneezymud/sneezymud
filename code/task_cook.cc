@@ -3,16 +3,15 @@
 #include "task_cook.h"
 #include "obj_pool.h"
 #include "obj_corpse.h"
+#include "obj_food.h"
 
-// 0 = no ingredients
-// 1 = basic ingredients
-// 2+ = optional ingredients
-int check_ingredients(TCookware *pot, int recipe){
+
+bool check_ingredients(TCookware *pot, int recipe){
   int found=0;
-  int count=0;
   TThing *t;
   TPool *pool;
   TCorpse *corpse;
+  TObj *obj;
 
   // check basic ingredients
   for(int i=0;ingredients[i].recipe>=0;++i){
@@ -33,116 +32,30 @@ int check_ingredients(TCookware *pot, int recipe){
 	      found += pool->getDrinkUnits();
 	  break;
 	case TYPE_MATERIAL:
+	  if(t->getMaterial() == ingredients[i].num)
+	    found++;
 	  break;
 	case TYPE_CORPSE:
 	  if((corpse=dynamic_cast<TCorpse *>(t)) &&
 	     corpse->getCorpseRace() == ingredients[i].num)
 	    found++;
 	  break;
+	case TYPE_ITEM:
+	  if((obj=dynamic_cast<TObj *>(t)) &&
+	     obj->itemType() == ingredients[i].num)
+	    found++;
+	  break;
       }
     }
 
     if(found < ingredients[i].amt){
-      return 0;
+      return false;
     }
   }
 
-  count=1; // got basic ingredients
-
-  // check optional ingredients
-  for(int i=0;opt_ingredients[i].recipe>=0;++i){
-    if(opt_ingredients[i].recipe!=recipe)
-      continue;
-    
-    // look for this ingredient
-    found=0;
-    for(t=pot->getStuff();t;t=t->nextThing){
-      switch(opt_ingredients[i].type){
-	case TYPE_VNUM:
-	  if(obj_index[t->number].virt==opt_ingredients[i].num)
-	    found++;
-	  break;
-	case TYPE_LIQUID:
-	  if((pool=dynamic_cast<TPool *>(t)) &&
-	     pool->getDrinkType() == opt_ingredients[i].num)
-	      found += pool->getDrinkUnits();;
-	  break;
-	case TYPE_MATERIAL:
-	  break;
-	case TYPE_CORPSE:
-	  if((corpse=dynamic_cast<TCorpse *>(t)) &&
-	     corpse->getCorpseRace() == opt_ingredients[i].num)
-	    found++;
-	  break;
-      }
-    }
-
-    if(found>=ingredients[i].amt){
-      ++count;
-    }
-  }
-
-  return count;
+  return true;
 }
 
-
-void show_recipe(TBeing *ch, int which){
-  for(int i=0;recipes[i].recipe>=0;++i){
-    if(which==-1 || i==which){
-      ch->sendTo(COLOR_BASIC, "Recipe %i: %s, creates %i\n\r", 
-		 i, recipes[i].name, recipes[i].vnum);
-      
-      for(int j=0;ingredients[j].recipe>=0;++j){
-	if(ingredients[j].recipe != which)
-	  continue;
-
-	switch(ingredients[j].type){
-	  case TYPE_VNUM:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i of %i\n\r", 
-		       j, ingredients[j].amt, ingredients[j].num);      
-	    break;
-	  case TYPE_LIQUID:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i ounces of %s\n\r", 
-		       j, ingredients[j].amt,
-		       DrinkInfo[ingredients[j].num]->name);
-	    break;
-	  case TYPE_CORPSE:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i corpse(s) of type %i\n\r", 
-		       j, ingredients[j].amt, ingredients[j].num);      
-	    break;
-	  case TYPE_MATERIAL:
-	    break;
-	}
-      }
-      for(int j=0;opt_ingredients[j].recipe>=0;++j){
-	if(opt_ingredients[j].recipe != which)
-	  continue;
-
-	switch(opt_ingredients[j].type){
-	  case TYPE_VNUM:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i of %i\n\r", 
-		       j, opt_ingredients[j].amt, opt_ingredients[j].num);      
-	    break;
-	  case TYPE_LIQUID:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i ounces of %s\n\r", 
-		       j, opt_ingredients[j].amt,
-		       DrinkInfo[opt_ingredients[j].num]->name);
-	    break;
-	  case TYPE_CORPSE:
-	    ch->sendTo(COLOR_BASIC, "Ingredient %i: %i corpse(s) of type %i\n\r", 
-		       j, opt_ingredients[j].amt, opt_ingredients[j].num);      
-	    break;
-	  case TYPE_MATERIAL:
-	    break;
-	}
-      }
-    }
-  }
-
-  ch->sendTo("\n\r");
-
-  return;
-}
 
 
 TCookware *find_pot(TBeing *ch, const char *cookware){
@@ -169,8 +82,6 @@ int find_recipe(string recipearg){
   return recipe;
 }
 
-// find_recipe
-
 void TBeing::doCook(string arg)
 {
   int recipe=-1;
@@ -190,8 +101,8 @@ void TBeing::doCook(string arg)
     return;
   }
 
-  if(isImmortal())
-    show_recipe(this, recipe);
+  //  if(isImmortal())
+  //    show_recipe(this, recipe);
 
   // check ingredients
   if(!check_ingredients(pot, recipe)){
@@ -208,9 +119,14 @@ void TBeing::doCook(string arg)
     delete t;
     t=t2;
   }
-  TObj *o=read_object(recipes[recipe].vnum, VIRTUAL);
-  *pot+=*o;
-
+  TObj *o;
+  if((o=read_object(recipes[recipe].vnum, VIRTUAL)))
+    *pot+=*o;
+  else {
+    sendTo("Error loading food, alert an admin.\n\r");
+    return;
+  }
+    
 
   sendTo(COLOR_BASIC, "You begin to cook %s.\n\r", recipes[recipe].name);
   start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
