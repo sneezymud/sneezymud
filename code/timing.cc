@@ -21,7 +21,10 @@ double TTiming::getEnd(){
 }
 
 double TTiming::getElapsed(){
-  return (to_secs(tv_end)-to_secs(tv_start));
+  struct timeval tmp;
+  gettimeofday(&tmp, &tz);
+
+  return (to_secs(tmp)-to_secs(tv_start));
 }
 
 double TTiming::getElapsedReset(){

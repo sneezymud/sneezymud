@@ -38,6 +38,7 @@
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "timing.h"
 
 sstring describeDuration(const TBeing *ch, int dur)
 {
@@ -2774,19 +2775,18 @@ void TBeing::doWhere(const char *argument)
 {
   char namebuf[MAX_INPUT_LENGTH], buf[MAX_STRING_LENGTH];
   char *nameonly;
-  register TBeing *i, *ch;
-  register TObj *k;
+  TBeing *i, *ch;
+  TObj *k;
   Descriptor *d;
   int iNum, count;
   sstring sb;
-  bool dash = FALSE;
-  bool gods = FALSE;
+  bool dash = FALSE, gods = FALSE, found=false;
   unsigned int tot_found = 0;
   sstring tStString(argument),
          tStName(""),
          tStArg("");
   map <int,bool> vnums_notmatch;
-  bool found=false;
+  TTiming timer;
 
   if (powerCheck(POWER_WHERE))
     return;
@@ -2925,7 +2925,13 @@ void TBeing::doWhere(const char *argument)
   }
 
   if (GetMaxLevel() > MAX_MORT) {
+    timer.start();
     for (k = object_list; k; k = k->next) {
+      if(timer.getElapsed() > 1.0){
+	sb += "Time limit elapsed, ending search prematurely.\n\r";
+	break;
+      }
+
       if (vnums_notmatch[k->objVnum()])
 	continue;
 
