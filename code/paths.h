@@ -2344,4 +2344,63 @@ const path_struct head_guard_path[3][19]={
         {DIR_NONE, -1}}
 };
 
+
+const path_struct money_train_path[4][13]={
+  // bank to cs
+  {
+    {DIR_NONE, 31758},
+    {DIR_SOUTH, 31757},
+    {DIR_SOUTH, 31750},
+    {DIR_UP, 410},
+    {DIR_SOUTH, 118},
+    {DIR_EAST, 117},
+    {DIR_EAST, 116},
+    {DIR_EAST, 115},
+    {DIR_EAST, 114},
+    {DIR_EAST, 113},
+    {DIR_EAST, 112},
+    {DIR_EAST, 100},
+    {DIR_NONE, -1}
+  },
+  // bm fountain to bm bank
+  {
+    {DIR_NONE, 1303},
+    {DIR_WEST, 1304},
+    {DIR_WEST, 1300},
+    {DIR_WEST, 1297},
+    {DIR_WEST, 1292},
+    {DIR_NORTH, 1293},
+    {DIR_EAST, 1295},
+    {DIR_NONE, -1}
+  },
+  // bm bank to bm fountain
+  {
+    {DIR_NONE, 1295},
+    {DIR_WEST, 1293},
+    {DIR_SOUTH, 1292},
+    {DIR_EAST, 1297},
+    {DIR_EAST, 1300},
+    {DIR_EAST, 1304},
+    {DIR_EAST, 1303},
+    {DIR_NONE, -1}
+  },
+  // cs to bank
+  {
+    {DIR_NONE, 100},
+    {DIR_WEST, 112},
+    {DIR_WEST, 113},
+    {DIR_WEST, 114},
+    {DIR_WEST, 115},
+    {DIR_WEST, 116},
+    {DIR_WEST, 117},
+    {DIR_WEST, 118},
+    {DIR_NORTH, 410},
+    {DIR_DOWN, 31750},
+    {DIR_NORTH, 31757},
+    {DIR_NORTH, 31758},
+    {DIR_NONE, -1}
+  },
+    
+};
+
 #endif

@@ -7435,6 +7435,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 }
 
 
+extern int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7611,6 +7612,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: mage/thief", CDGenericTrainer},           // 164
   {FALSE, "Gardener", gardener}, // 165
   {FALSE, "Brightmoon Archer", bmarcher},
+  {FALSE, "Money Train", moneyTrain},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

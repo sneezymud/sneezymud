@@ -8,11 +8,12 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
   string tmp;
   unsigned int npos;
 
+#if 0
   printf("argc=%i\n", argc);
   for(int i=0;i<argc;++i){
     printf("argv[%i]=%s\n", i, argv[i]);
   }
-  
+#endif
 
   for(int i=0;i<=(argc-1);i++){
     tmp=argv[i];

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.16  2002/03/17 00:00:15  peel
+// added the money train
+//
 // Revision 5.15  2002/03/12 06:24:05  dash
 // fixes for repo
 //
@@ -225,7 +228,8 @@ const int SPEC_DIVMAN             =163;
 const int SPEC_GM_MAGE_THIEF      =164; // reuse this for something else
 const int SPEC_PLANTER            =165;
 const int SPEC_BMARCHER           =166;
-const int NUM_MOB_SPECIALS        =167;
+const int SPEC_MONEY_TRAIN        =167;
+const int NUM_MOB_SPECIALS        =168;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
