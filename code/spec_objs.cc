@@ -7174,6 +7174,23 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   fortunes.push_back("No problem is so formidable that you can't just walk away from it.\n\r");
   fortunes.push_back("If ignorance is bliss, why aren't there more happy people?\n\r");
   fortunes.push_back("The cost of living hasn't affected its popularity.\n\r");
+  fortunes.push_back("Carry the water for the one you love.\n\r");
+  fortunes.push_back("Good seed don't grow on a barren ground.\n\r");
+  fortunes.push_back("One fine day you will find your way across the River.\n\r");
+  fortunes.push_back("You might get stranded on Easy Street.\n\r");
+  fortunes.push_back("You will take your seat in the Royal Suite.\n\r");
+  fortunes.push_back("Thats just the way it is, but don't you believe it.\n\r");
+  fortunes.push_back("You will wind up king of the hill.\n\r");
+  fortunes.push_back("You will find comfort a long way from your resting place.\n\r");
+  fortunes.push_back("Round and round it goes, first to laugh is the last to know.\n\r");
+  fortunes.push_back("We will all come together across the great divide.\n\r");
+  fortunes.push_back("Wake up, you are the eyes of the world.\n\r");
+  fortunes.push_back("You will see a sunlight moon and be home soon.\n\r");
+  fortunes.push_back("You may listen to the silence and hear what you're looking for.\n\r");
+  fortunes.push_back("Its nice to be here with all you good people.\n\r");
+  fortunes.push_back("Let your spirit linger with the spider fingers.\n\r");
+  fortunes.push_back("Be careful what you look for, you just might find it.\n\r");
+  fortunes.push_back("Look deep and you might find, you like it when you cross the line.\n\r");
 
   string buf=fortunes[::number(0,fortunes.size()-1)];
 
