@@ -212,7 +212,7 @@ OBJ2 = gin.o handler.o hearts.o hospital.o immortal.o immunity.o \
 	offense.o oldlimbs.o oldrace.o \
 	opal.o opinion.o organic.o other.o other_obj.o parse.o peelpk.o \
 	pen.o periodic.o pets.o physics.o player_corpse.o player_data.o \
-	poker.o pool.o portal.o posse.o potion.o quiver.o race.o range.o \
+	poker.o pool.o portal.o spec_mobs_posse.o potion.o quiver.o race.o range.o \
 	rent.o repair.o response.o riding.o room.o \
 	shop.o show.o signals.o skill_dam.o skills.o \
 	slots.o socket.o sound.o spec_mobs.o \
