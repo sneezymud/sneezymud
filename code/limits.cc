@@ -260,8 +260,8 @@ double TBeing::pietyGain(double modif)
     stats.piety_gained_attempts++;
     stats.piety_gained += gain;
   }
-  if (affectedBySpell(SPELL_ENLIVEN))
-    gain *= 2;
+//  if (affectedBySpell(SPELL_ENLIVEN))
+//    gain *= 2;
 
   // limit the gain so we don't go over max
   if ((getPiety() + gain) > 100.0)
@@ -282,8 +282,8 @@ int TMonster::manaGain()
 
   if (!getCond(FULL) || !getCond(THIRST))
     gain >>= 2;
-  if (affectedBySpell(SPELL_ENLIVEN))
-    gain *= 2;
+//  if (affectedBySpell(SPELL_ENLIVEN))
+//    gain *= 2;
   return (gain);
 }
 
@@ -312,8 +312,8 @@ int TPerson::manaGain()
 
   if (!getCond(FULL) || !getCond(THIRST))
     gain >>= 2;
-  if (affectedBySpell(SPELL_ENLIVEN))
-    gain *= 2;
+//  if (affectedBySpell(SPELL_ENLIVEN))
+//    gain *= 2;
 
   stats.mana_gained_attempts++;
   stats.mana_gained += gain;
