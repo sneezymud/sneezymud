@@ -165,3 +165,22 @@ bool TTable::isSimilar(const TThing *t) const
   }
   return TObj::isSimilar(t);
 }
+
+void TTable::putMoneyInto(TBeing *ch, int amount)
+{
+  TMoney * money;
+
+  ch->sendTo("OK.\n\r");
+
+  act("$n puts some money onto $p.", FALSE, ch, this, 0, TO_ROOM);
+  money  = create_money(amount);
+  money->mount(this);
+//  *this += *money;
+
+  ch->addToMoney(-amount, GOLD_INCOME);
+  if (ch->fight())
+    ch->addToWait(combatRound(1 + amount/5000));
+  ch->doSave(SILENT_YES);
+}
+
+

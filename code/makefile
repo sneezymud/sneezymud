@@ -305,7 +305,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_statSurgeon.o		spec_objs_graffitiObj.o 	\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
 	spec_objs_weapons.o             spec_mobs_stockbroker.o		\
-	spec_mobs_banker.o		spec_mobs_taxman.o
+	spec_mobs_banker.o		spec_mobs_taxman.o \
+	spec_objs_casting.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -15699,6 +15700,63 @@ objs/spec_objs_blind.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/spec_objs_blind.o: charfile.h being.h person.h monster.h account.h
 objs/spec_objs_blind.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_objs_blind.o: materials.h colorstring.h format.h obj_base_weapon.h
+objs/spec_objs_casting.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_objs_casting.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_objs_casting.o: /usr/include/machine/ansi.h
+objs/spec_objs_casting.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/spec_objs_casting.o: /usr/include/g++/ctime /usr/include/time.h
+objs/spec_objs_casting.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/spec_objs_casting.o: /usr/include/sys/inttypes.h
+objs/spec_objs_casting.o: /usr/include/machine/types.h
+objs/spec_objs_casting.o: /usr/include/machine/endian.h
+objs/spec_objs_casting.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_objs_casting.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_objs_casting.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_objs_casting.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_casting.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_objs_casting.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_objs_casting.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_objs_casting.o: /usr/include/g++/string
+objs/spec_objs_casting.o: /usr/include/g++/std/bastring.h
+objs/spec_objs_casting.o: /usr/include/g++/cstddef
+objs/spec_objs_casting.o: /usr/include/g++/std/straits.h
+objs/spec_objs_casting.o: /usr/include/g++/alloc.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_config.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_alloc.h
+objs/spec_objs_casting.o: /usr/include/g++/iostream.h
+objs/spec_objs_casting.o: /usr/include/g++/streambuf.h
+objs/spec_objs_casting.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/spec_objs_casting.o: /usr/include/g++/stl_relops.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_iterator.h
+objs/spec_objs_casting.o: /usr/include/g++/std/bastring.cc
+objs/spec_objs_casting.o: /usr/include/g++/vector
+objs/spec_objs_casting.o: /usr/include/g++/stl_algobase.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_pair.h
+objs/spec_objs_casting.o: /usr/include/g++/type_traits.h
+objs/spec_objs_casting.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/spec_objs_casting.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/spec_objs_casting.o: /usr/include/g++/new /usr/include/g++/exception
+objs/spec_objs_casting.o: /usr/include/g++/stl_construct.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_vector.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/spec_objs_casting.o: /usr/include/g++/stl_tree.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_function.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_map.h
+objs/spec_objs_casting.o: /usr/include/g++/stl_multimap.h
+objs/spec_objs_casting.o: /usr/include/g++/list /usr/include/g++/stl_list.h
+objs/spec_objs_casting.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs_casting.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
+objs/spec_objs_casting.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/spec_objs_casting.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_objs_casting.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/spec_objs_casting.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_objs_casting.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_objs_casting.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_objs_casting.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_casting.o: person.h monster.h account.h extern.h handler.h
+objs/spec_objs_casting.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/spec_objs_casting.o: format.h
 objs/spec_objs_deikhan_sword.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_deikhan_sword.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_objs_deikhan_sword.o: /usr/include/machine/ansi.h

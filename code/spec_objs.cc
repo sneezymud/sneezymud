@@ -5727,6 +5727,7 @@ extern int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj
 extern int chromaticWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 
@@ -5875,5 +5876,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "stock board", stockBoard},
   {FALSE, "switch object", switchObject},
   {FALSE, "gnome tenderizer", gnomeTenderizer}, // 140
+  {FALSE, "Marukalia", marukalia},
   {FALSE, "last proc", bogusObjProc}
 };

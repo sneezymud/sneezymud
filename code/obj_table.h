@@ -18,6 +18,7 @@ class TTable : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_TABLE; }
 
+    virtual void putMoneyInto(TBeing *, int);
     virtual void lowCheck();
     virtual void writeAffects(int, FILE *) const;
     virtual void lookObj(TBeing *, int) const;
