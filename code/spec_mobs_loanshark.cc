@@ -125,9 +125,6 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   TShopOwned tso(shop_nr, me, ch);
 
 
-  vlogf(LOG_PEEL, fmt("(enter) loanshark has %i gold") % me->getMoney());
-  
-
   db.query("select x, y from shopownedloanrate where shop_nr=%i",
 	   shop_nr);
   if(!db.fetchRow()){

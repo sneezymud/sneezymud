@@ -1348,8 +1348,6 @@ void TMonster::saveItems(const sstring &filepath)
 
     TDatabase db(DB_SNEEZY);
     db.query("update shop set gold=%i where shop_nr=%i", getMoney(), shop_nr);
-
-    vlogf(LOG_PEEL, fmt("shop %i saved %i gold") % shop_nr % getMoney());
   }
 }
 
