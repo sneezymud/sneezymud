@@ -225,10 +225,11 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 
   map<int, pathData *>path_map;
   path_map[here] = pd;
-
-  for(;;) {
+  bool found=true;
     map<int, pathData *>::const_iterator CI;
-    map<int, pathData *>next_map;
+
+  for(int distance=0;found;++distance){
+    found=false;
 
     if (path_map.size() > (unsigned int) range) {
       dest = path_map.size();
@@ -238,11 +239,6 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
         pd = CI->second;
         delete pd;
       }
-      for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-        pd = CI->second;
-        delete pd;
-      }
-
       return DIR_NONE;
     }
 
@@ -251,6 +247,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       pd = CI->second;
       if (pd->checked)
         continue;
+
+      if(pd->distance > distance)
+	continue;
 
       dirTypeT dir;
       TRoom *rp = real_roomp(CI->first);
@@ -276,9 +275,6 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	  CT = path_map.find(exitp->to_room);
 	  if (CT != path_map.end())
 	    continue;
-	  CT = next_map.find(exitp->to_room);
-	  if (CT != next_map.end())
-	    continue;
 	  
 	  // is this our target?
 	  if(pt.isTarget(exitp->to_room)){
@@ -290,10 +286,6 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	      if (pd->source == -1) {
 		// clean up allocated memory
 		for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-		  pathData *tpd = CI->second;
-		  delete tpd;
-		}
-		for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
 		  pathData *tpd = CI->second;
 		  delete tpd;
 		}
@@ -309,8 +301,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	  pd->source = CI->first; 
 	  pd->direct = dir; 
 	  pd->checked = false; 
-	  next_map[exitp->to_room] = pd;
-	  
+	  pd->distance=distance+1;
+	  path_map[exitp->to_room] = pd;
+	  found=true;
 	}
       }
 
@@ -343,9 +336,6 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           CT = path_map.find(tmp_room);
           if (CT != path_map.end())
             continue;
-          CT = next_map.find(tmp_room);
-          if (CT != next_map.end())
-            continue;
 
           // is this our target?
 	  if(pt.isTarget(tmp_room)){
@@ -357,8 +347,6 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
               if (pd->source == -1) {
                 // clean up allocated memory
                 for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-                  delete CI->second;
-                for (CI = next_map.begin(); CI != next_map.end(); ++CI)
                   delete CI->second;
 
                 return dir;
@@ -372,7 +360,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           pd->source = CI->first; 
           pd->direct = dir; 
           pd->checked = false; 
-          next_map[tmp_room] = pd;
+	  pd->distance=distance+1;
+          path_map[tmp_room] = pd;
+	  found=true;
         }  // stuff in room
       }
       // end portal check
@@ -381,27 +371,16 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       pd = CI->second;
       pd->checked = true;
     }
-
-
-    // if we failed to find any new rooms, abort, or be in an endless loop
-    if (next_map.size() == 0) {
-      dest=ROOM_NOWHERE;
-
-      // clean up allocated memory
-      for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-        delete CI->second;
-      for (CI = next_map.begin(); CI != next_map.end(); ++CI)
-        delete CI->second;
-
-
-      return DIR_NONE;
-    }
-
-    // we've looped over the entire map list, so move the next_map values in
-    for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-      path_map[CI->first] = CI->second;
-    }
-    next_map.clear();
   }
+
+  
+  // if we failed to find any new rooms, abort, or be in an endless loop
+  dest=ROOM_NOWHERE;
+  
+  // clean up allocated memory
+  for (CI = path_map.begin(); CI != path_map.end(); ++CI)
+    delete CI->second;
+  
+  return DIR_NONE;
 }
 

@@ -113,7 +113,8 @@ class pathData {
     dirTypeT direct;
     int source;
     bool checked;
-    pathData() : direct(DIR_NONE), source(0), checked(false) {}
+    int distance;
+    pathData() : direct(DIR_NONE), source(0), checked(false), distance(0) {}
 };
 
 
