@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: posse.cc,v $
+// Revision 1.2  1999/09/29 22:19:03  batopr
+// Fixed so CMD_GENERIC_DESTROYED would always result in memory being freed
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -30,10 +33,6 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   char buf[256], *tmp;
   followData *f, *n;
 
-  if ((cmd != CMD_GENERIC_PULSE && cmd != CMD_GENERIC_DESTROYED) || 
-      !myself->awake() || myself->fight())
-    return FALSE;
-
   enum posseeStateT {
     STATE_NONE,
     STATE_LEAVE_OFFICE,
@@ -58,6 +57,9 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
     myself->act_ptr = NULL;
     return FALSE;
   }
+
+  if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
+    return FALSE;
 
   // Not doing anything yet, time to start a posse  
   if (!myself->act_ptr) {
