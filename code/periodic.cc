@@ -1445,7 +1445,7 @@ int TObj::objectTickUpdate(int pulse)
 
       if (myTimer == 1) {
         if (rp) {
-          sendrpf(rp, "%s begins to wiggle a bit.\n\r", good_cap(shortDescr).c_str());
+          sendrpf(COLOR_BASIC, rp, "%s begins to wiggle a bit.\n\r", good_cap(shortDescr).c_str());
         }
       } else if (myTimer <= 0) {
         if (rp && !(rp->isRoomFlag(ROOM_NO_MOB))) {
