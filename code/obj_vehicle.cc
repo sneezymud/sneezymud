@@ -252,15 +252,15 @@ void TVehicle::vehiclePulse(int pulse)
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails rapidly in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p speeds %s.", dirs[getDir()]);
+      ssprintf(buf, "$p sails %s.", dirs[getDir()]);
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p rolls %s.", dirs[getDir()]);
+      ssprintf(buf, "$p sails %s.", dirs[getDir()]);
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s drifts in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p creeps %s.", dirs[getDir()]);
+      ssprintf(buf, "$p drifts %s.", dirs[getDir()]);
     }
   } else {
     if(getSpeed() >= FAST_SPEED){
