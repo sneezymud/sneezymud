@@ -3727,7 +3727,7 @@ int TMonster::mobileActivity(int pulse)
     }
 
     // Do the vampire/lycanthrope stuff
-    if (!::number(0, 5)) {
+    if (!::number(0, 74) && !tmp_ch->isLucky(levelLuckModifier(GetMaxLevel()))) {
       if ((isVampire() && (tmp_ch->hitLimit() < hitLimit()) &&
          (GetMaxLevel() > tmp_ch->GetMaxLevel() + 10) &&
          hits(tmp_ch, attackRound(tmp_ch) - tmp_ch->defendRound(this))) ||
@@ -4804,10 +4804,28 @@ int TMonster::defendSelf(int)
         }
       }
       if (!found) {
+        spell = SPELL_FLY;
+        if (!isAffected(AFF_FLYING) &&
+	     doesKnowSkill(spell) && (getSkillValue(spell) > 60)) {
+          act("$n utters the words, 'Whoa, I feel light headed!'",
+                   TRUE, this, 0, 0, TO_ROOM);
+          found = TRUE;
+        }
+      }
+      if (!found) {
         spell = SPELL_HASTE;
         if (!affectedBySpell(spell) &&
-	     doesKnowSkill(spell) && (getSkillValue(spell) > 50)) {
+	     doesKnowSkill(spell) && (getSkillValue(spell) > 60)) {
           act("$n utters the words, 'Time to get moving!'",
+                   TRUE, this, 0, 0, TO_ROOM);
+          found = TRUE;
+        }
+      }
+      if (!found) {
+        spell = SPELL_DETECT_INVISIBLE;
+        if (!isAffected(AFF_DETECT_INVISIBLE) &&
+             doesKnowSkill(spell) && (getSkillValue(spell) > 60)) {
+          act("$n utters the words, 'I can smell 'em.  Now I can see 'em!'",
                    TRUE, this, 0, 0, TO_ROOM);
           found = TRUE;
         }
@@ -4817,15 +4835,6 @@ int TMonster::defendSelf(int)
         if (!isAffected(AFF_INVISIBLE) &&
              doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
           act("$n utters the words, 'All my troubles will disappear!'",
-                   TRUE, this, 0, 0, TO_ROOM);
-          found = TRUE;
-        }
-      }
-      if (!found) {
-        spell = SPELL_DETECT_INVISIBLE;
-        if (!isAffected(AFF_DETECT_INVISIBLE) &&
-             doesKnowSkill(spell) && (getSkillValue(spell) > 50)) {
-          act("$n utters the words, 'I can smell 'em.  Now I can see 'em!'",
                    TRUE, this, 0, 0, TO_ROOM);
           found = TRUE;
         }
