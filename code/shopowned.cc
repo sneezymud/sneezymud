@@ -470,8 +470,9 @@ int TShopOwned::doLogs(const char *arg)
   } else if(!strcmp(arg, " summaries")){
     db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
     
-    ssprintf(sb, "%s<r>%-12.12s %-10.10s %s<1>\n\r", sb.c_str(),
+    ssprintf(buf, "<r>%-12.12s %-10.10s %s<1>\n\r",
 	     "Person", "Action", "Total Talens");
+    sb += buf;
 
     while(db.fetchRow()){
       ssprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
@@ -485,8 +486,9 @@ int TShopOwned::doLogs(const char *arg)
     
     db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
 
-    ssprintf(sb, "%s<r>%-26.26s %-10.10s %s<1>\n\r", sb.c_str(),
+    ssprintf(buf, "<r>%-26.26s %-10.10s %s<1>\n\r",
 	     "Item", "Action" ,"Total Talens");
+    sb += buf;
     
     while(db.fetchRow()){
       ssprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
@@ -500,8 +502,9 @@ int TShopOwned::doLogs(const char *arg)
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
-    ssprintf(sb, "%s<r>%-12.12s %s<1>\n\r", sb.c_str(),
+    ssprintf(buf, "%s<r>%-12.12s %s<1>\n\r",
 	     "Action", "Total Talens");
+    sb += buf;
 
     while(db.fetchRow()){
       ssprintf(buf, "%-12.12s %8i\n\r", 
@@ -513,25 +516,28 @@ int TShopOwned::doLogs(const char *arg)
     sb += "\n\r";
     int profit=0, loss=0;
 
-    ssprintf(sb, "%s<r>Balance Sheet<1>\n\r", sb.c_str());
-
+    ssprintf(buf, "<r>Balance Sheet<1>\n\r");
+    sb += buf;
+    
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
 	     shop_nr);
     if(db.fetchRow())
       profit=atoi_safe(db.getColumn(0));
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Profit", profit);
-
+    ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
+    sb += buf;
 
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
 	     shop_nr);
     if(db.fetchRow())
       loss=atoi_safe(db.getColumn(0));
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Loss", loss);
+    ssprintf(buf, "%-15.15s %i\n\r", "Gross Loss", loss);
+    sb += buf;
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Net Income", profit+loss);
-    
+    ssprintf(buf, "%-15.15s %i\n\r", "Net Income", profit+loss);
+    sb += buf;
+
     
     /////////
     if (ch->desc)
@@ -539,8 +545,9 @@ int TShopOwned::doLogs(const char *arg)
   } else if(!strcmp(arg, " balance")){
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
-    ssprintf(sb, "%s<r>%-12.12s %s<1>\n\r", sb.c_str(),
+    ssprintf(buf, "<r>%-12.12s %s<1>\n\r", 
 	     "Action", "Total Talens");
+    sb += buf;
 
     while(db.fetchRow()){
       ssprintf(buf, "%-12.12s %8i\n\r", 
@@ -552,25 +559,28 @@ int TShopOwned::doLogs(const char *arg)
     sb += "\n\r";
     int profit=0, loss=0;
 
-    ssprintf(sb, "%s<r>Balance Sheet<1>\n\r", sb.c_str());
-
+    ssprintf(buf, "%s<r>Balance Sheet<1>\n\r");
+    sb += buf;
+    
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
 	     shop_nr);
     if(db.fetchRow())
       profit=atoi_safe(db.getColumn(0));
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Profit", profit);
-
+    ssprintf(buf, "%s%-15.15s %i\n\r", "Gross Profit", profit);
+    sb += buf;
 
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
 	     shop_nr);
     if(db.fetchRow())
       loss=atoi_safe(db.getColumn(0));
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Loss", loss);
+    ssprintf(buf, "%-15.15s %i\n\r", "Gross Loss", loss);
+    sb += buf;
     
-    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Net Income", profit+loss);
-    
+    ssprintf(buf, "%-15.15s %i\n\r", "Net Income", profit+loss);
+    sb += buf;
+
     
     /////////
     if (ch->desc)
