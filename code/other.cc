@@ -2304,7 +2304,7 @@ int TBeing::doQuaff(const char *argument)
 
 
 // this function handles any special affect that drinking a liquid has
-int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
+int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 {
   int rc=0, i;
   int level=max(30, amt*6), learn=max(100, amt*20);
@@ -2315,30 +2315,30 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 
   switch(liq){
     case LIQ_HOLYWATER:
-      if(ch->isUndead())
-	harm(ch,ch,level,learn,SPELL_HARM,0);
-      else if(ch->isDiabolic())
-	harmLight(ch,ch,level,learn,SPELL_HARM,0);
+      if(vict->isUndead())
+	harm(ch,vict,level,learn,SPELL_HARM,0);
+      else if(vict->isDiabolic())
+	harmLight(ch,vict,level,learn,SPELL_HARM,0);
       else
-	bless(ch,ch,level/10,learn/10,SPELL_BLESS);
+	bless(ch,vict,level/10,learn/10,SPELL_BLESS);
       break;
     case LIQ_POT_CURE_POISON:
-      curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
+      curePoison(ch,vict,level,learn,SPELL_CURE_POISON);
       break;
     case LIQ_POT_HEAL_LIGHT:
     case LIQ_POT_HEAL_LIGHT2:
-      healLight(ch,ch,level,learn,SPELL_HEAL_LIGHT,0);
+      healLight(ch,vict,level,learn,SPELL_HEAL_LIGHT,0);
       break;
     case LIQ_POT_HEAL_CRIT:
-      healCritical(ch,ch,level,learn,SPELL_HEAL_CRITICAL,0);
+      healCritical(ch,vict,level,learn,SPELL_HEAL_CRITICAL,0);
       break;
     case LIQ_POT_HEAL:
     case LIQ_POT_HEAL2:
-      heal(ch,ch,level,learn,SPELL_HEAL,0);
+      heal(ch,vict,level,learn,SPELL_HEAL,0);
       break;
     case LIQ_POT_SANCTUARY:
     case LIQ_POT_SANCTUARY2:
-      sanctuary(ch,ch,level,learn);
+      sanctuary(ch,vict,level,learn);
       break;
     case LIQ_POT_FLIGHT:
       aff.type = SPELL_FLY;
@@ -2349,175 +2349,175 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       aff.bitvector = AFF_FLYING;
       
       // correct for weight
-      weightCorrectDuration(ch, &aff);
+      weightCorrectDuration(vict, &aff);
       
-      rc = fly(ch,ch,level,&aff,learn);
+      rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-	if (ch == ch) {
-	  ch->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	if (vict == vict) {
+	  vict->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
 	} else {
-	  ch->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	  vict->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
 	}
       } else {
-	ch->nothingHappens();
+	vict->nothingHappens();
       }
       break;
     case LIQ_POT_BIND:
-      bind(ch,ch,level,learn);
+      bind(ch,vict,level,learn);
       break;
     case LIQ_POT_BLINDNESS:
-      blindness(ch,ch,level,learn);
+      blindness(ch,vict,level,learn);
       break;
     case LIQ_POT_ARMOR:
-      armor(ch,ch,level,learn,SPELL_ARMOR);
+      armor(ch,vict,level,learn,SPELL_ARMOR);
       break;
     case LIQ_POT_REFRESH:
-      refresh(ch,ch,level,learn,SPELL_REFRESH);
+      refresh(ch,vict,level,learn,SPELL_REFRESH);
       break;
     case LIQ_POT_SECOND_WIND:
     case LIQ_POT_SECOND_WIND2:
-      secondWind(ch,ch,level,learn);
+      secondWind(ch,vict,level,learn);
       break;
     case LIQ_POT_CURSE:
-      curse(ch,ch,level,learn,SPELL_CURSE);
+      curse(ch,vict,level,learn,SPELL_CURSE);
       break;
     case LIQ_POT_DETECT_INVIS:
-      detectInvisibility(ch,ch,level,learn);
+      detectInvisibility(ch,vict,level,learn);
       break;
     case LIQ_POT_BLESS:
     case LIQ_POT_BLESS2:
-      bless(ch,ch,level,learn,SPELL_BLESS);
+      bless(ch,vict,level,learn,SPELL_BLESS);
       break;
     case LIQ_POT_INVIS:
-      invisibility(ch,ch,level,learn);
+      invisibility(ch,vict,level,learn);
       break;
     case LIQ_POT_HEAL_FULL:
-      healFull(ch,ch,level,learn,SPELL_HEAL_FULL);
+      healFull(ch,vict,level,learn,SPELL_HEAL_FULL);
       break;
     case LIQ_POT_SUFFOCATE:
-      suffocate(ch,ch,level,learn);
+      suffocate(ch,vict,level,learn);
       break;
     case LIQ_POT_FEATHERY_DESCENT:
     case LIQ_POT_FEATHERY_DESCENT2:
-      featheryDescent(ch,ch);
+      featheryDescent(ch,vict);
       break;
     case LIQ_POT_DETECT_MAGIC:
-      detectMagic(ch,ch,level,learn);
+      detectMagic(ch,vict,level,learn);
       break;
     case LIQ_POT_DISPEL_MAGIC:
-      dispelMagic(ch,ch,level,learn);
+      dispelMagic(ch,vict,level,learn);
       break;
     case LIQ_POT_STONE_SKIN:
     case LIQ_POT_STONE_SKIN2:
-      stoneSkin(ch,ch,level,learn);
+      stoneSkin(ch,vict,level,learn);
       break;
     case LIQ_POT_TRAIL_SEEK:
-      trailSeek(ch,ch,level,learn);
+      trailSeek(ch,vict,level,learn);
       break;
     case LIQ_POT_FAERIE_FIRE:
-      faerieFire(ch,ch,level,learn);
+      faerieFire(ch,vict,level,learn);
       break;
     case LIQ_POT_FLAMING_FLESH:
-      flamingFlesh(ch,ch,level,learn);
+      flamingFlesh(ch,vict,level,learn);
       break;
     case LIQ_POT_CONJURE_ELE_EARTH:
-      conjureElemEarth(ch,level,learn);
+      conjureElemEarth(vict,level,learn);
       break;
     case LIQ_POT_SENSE_LIFE:
-      senseLife(ch,ch,level,learn);
+      senseLife(ch,vict,level,learn);
       break;
     case LIQ_POT_STEALTH:
-      stealth(ch,ch,level,learn);
+      stealth(ch,vict,level,learn);
       break;
     case LIQ_POT_TRUE_SIGHT:
-      trueSight(ch,ch,level,learn);
+      trueSight(ch,vict,level,learn);
       break;
     case LIQ_POT_ACCELERATE:
-      accelerate(ch,ch,level,learn);
+      accelerate(ch,vict,level,learn);
       break;
     case LIQ_POT_INFRAVISION:
     case LIQ_POT_INFRAVISION2:
-      infravision(ch,ch,level,learn);
+      infravision(ch,vict,level,learn);
       break;
     case LIQ_POT_SORC_GLOBE:
-      sorcerersGlobe(ch,ch,level,learn);
+      sorcerersGlobe(ch,vict,level,learn);
       break;
     case LIQ_POT_POISON:
-      poison(ch,ch,level,learn,SPELL_POISON);
+      poison(ch,vict,level,learn,SPELL_POISON);
       break;
     case LIQ_POT_BONE_BREAKER:
-      boneBreaker(ch,ch,level,learn,SPELL_BONE_BREAKER);
+      boneBreaker(ch,vict,level,learn,SPELL_BONE_BREAKER);
       break;
     case LIQ_POT_AQUALUNG:
-      aqualung(ch,ch,level,learn);
+      aqualung(ch,vict,level,learn);
       break;
     case LIQ_POT_HASTE:
-      haste(ch,ch,level,learn);
+      haste(ch,vict,level,learn);
       break;
     case LIQ_POT_TELEPORT:
     case LIQ_POT_TELEPORT2:
-      teleport(ch,ch,level,learn);
+      teleport(ch,vict,level,learn);
       break;
     case LIQ_POT_GILLS_OF_FLESH:
     case LIQ_POT_GILLS_OF_FLESH2:
-      gillsOfFlesh(ch,ch,level,learn);
+      gillsOfFlesh(ch,vict,level,learn);
       break;
     case LIQ_POT_CURE_BLINDNESS:
-      cureBlindness(ch,ch,level,learn);
+      cureBlindness(ch,vict,level,learn);
       break;
     case LIQ_POT_CURE_DISEASE:
-      cureDisease(ch,ch,level,learn,SPELL_CURE_DISEASE);
+      cureDisease(ch,vict,level,learn,SPELL_CURE_DISEASE);
       break;
     case LIQ_POT_SHIELD_OF_MISTS:
-      shieldOfMists(ch,ch,level,learn);
+      shieldOfMists(ch,vict,level,learn);
       break;
     case LIQ_POT_SENSE_PRESENCE:
-      senseLifeShaman(ch,ch,level,learn);
+      senseLifeShaman(ch,vict,level,learn);
       break;
     case LIQ_POT_CHEVAL:
-      cheval(ch,ch,level,learn);
+      cheval(ch,vict,level,learn);
       break;
     case LIQ_POT_DJALLAS_PROTECTION:
-      djallasProtection(ch,ch,level,learn);
+      djallasProtection(ch,vict,level,learn);
       break;
     case LIQ_POT_LEGBAS_GUIDANCE:
-      legbasGuidance(ch,ch,level,learn);
+      legbasGuidance(ch,vict,level,learn);
       break;
     case LIQ_POT_DETECT_SHADOW:
-      detectShadow(ch,ch,level,learn);
+      detectShadow(ch,vict,level,learn);
       break;
     case LIQ_POT_CELERITE:
     case LIQ_POT_CELERITE2:
     case LIQ_POT_CELERITE3:
-      celerite(ch,ch,level,learn);
+      celerite(ch,vict,level,learn);
       break;
     case LIQ_POT_CLARITY:
-      clarity(ch,ch,level,learn);
+      clarity(ch,vict,level,learn);
       break;
     case LIQ_POT_BOILING_BLOOD:
-      bloodBoil(ch,ch,level,learn,SPELL_BLOOD_BOIL);
+      bloodBoil(ch,vict,level,learn,SPELL_BLOOD_BOIL);
       break;
     case LIQ_POT_STUPIDITY:
-      stupidity(ch,ch,level,learn);
+      stupidity(ch,vict,level,learn);
       break;
     case LIQ_POT_SLUMBER:
-      slumber(ch,ch,level,learn);
+      slumber(ch,vict,level,learn);
       break;
     case LIQ_POT_MULTI1: // harm crit, infravision, armor
-      harmCritical(ch,ch,level,learn,SPELL_HARM_CRITICAL,0);
-      infravision(ch,ch,level,learn);
-      armor(ch,ch,level,learn,SPELL_ARMOR);
+      harmCritical(ch,vict,level,learn,SPELL_HARM_CRITICAL,0);
+      infravision(ch,vict,level,learn);
+      armor(ch,vict,level,learn,SPELL_ARMOR);
       break;
     case LIQ_POT_MULTI2: // heal, remove curse, cure poison
-      heal(ch,ch,level,learn,SPELL_HEAL,0);
-      ch->removeCurseBeing(ch,level,learn,SPELL_REMOVE_CURSE);
-      curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
+      heal(ch,vict,level,learn,SPELL_HEAL,0);
+      vict->removeCurseBeing(vict,level,learn,SPELL_REMOVE_CURSE);
+      curePoison(ch,vict,level,learn,SPELL_CURE_POISON);
       break;
     case LIQ_POT_MULTI3: // sanc, bless
-      sanctuary(ch,ch,level,learn);
-      bless(ch,ch,level,learn,SPELL_BLESS);
+      sanctuary(ch,vict,level,learn);
+      bless(ch,vict,level,learn,SPELL_BLESS);
       break;
     case LIQ_POT_MULTI4: // flight, gills of flesh
       aff.type = SPELL_FLY;
@@ -2528,123 +2528,123 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       aff.bitvector = AFF_FLYING;
       
       // correct for weight
-      weightCorrectDuration(ch, &aff);
+      weightCorrectDuration(vict, &aff);
       
-      rc = fly(ch,ch,level,&aff,learn);
+      rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-	if (ch == ch) {
-	  ch->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	if (vict == vict) {
+	  vict->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
 	} else {
-	  ch->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	  vict->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
 	}
       } else {
-	ch->nothingHappens();
+	vict->nothingHappens();
       }
 
-      gillsOfFlesh(ch,ch,level,learn);
+      gillsOfFlesh(ch,vict,level,learn);
       break;
     case LIQ_POT_MULTI5: // harm, stealth, invis
-      harm(ch,ch,level,learn,SPELL_HARM,0);
-      stealth(ch,ch,level,learn);
-      invisibility(ch,ch,level,learn);
+      harm(ch,vict,level,learn,SPELL_HARM,0);
+      stealth(ch,vict,level,learn);
+      invisibility(ch,vict,level,learn);
       break;
     case LIQ_POT_MULTI6: // heal, salve, refresh
-      heal(ch,ch,level,learn,SPELL_HEAL,0);
-      salve(ch,ch,level,learn,SPELL_SALVE);
-      refresh(ch,ch,level,learn,SPELL_REFRESH);
+      heal(ch,vict,level,learn,SPELL_HEAL,0);
+      salve(ch,vict,level,learn,SPELL_SALVE);
+      refresh(ch,vict,level,learn,SPELL_REFRESH);
       break;
     case LIQ_POT_MULTI7: // sanc, harm crit
-      sanctuary(ch,ch,level,learn);
-      harmCritical(ch,ch,level,learn,SPELL_HARM_CRITICAL,0);
+      sanctuary(ch,vict,level,learn);
+      harmCritical(ch,vict,level,learn,SPELL_HARM_CRITICAL,0);
       break;
     case LIQ_POT_MULTI8: // sanc, harm ser
-      sanctuary(ch,ch,level,learn);
-      harmSerious(ch,ch,level,learn,SPELL_HARM_SERIOUS,0);
+      sanctuary(ch,vict,level,learn);
+      harmSerious(ch,vict,level,learn,SPELL_HARM_SERIOUS,0);
       break;
     case LIQ_POT_MULTI9: // sanc, armor, bless
-      sanctuary(ch,ch,level,learn);
-      armor(ch,ch,level,learn,SPELL_ARMOR);
-      bless(ch,ch,level,learn,SPELL_BLESS);
+      sanctuary(ch,vict,level,learn);
+      armor(ch,vict,level,learn,SPELL_ARMOR);
+      bless(ch,vict,level,learn,SPELL_BLESS);
       break;
     case LIQ_POT_MULTI10: // blind, sanc, stone skin
-      blindness(ch,ch,level,learn);
-      sanctuary(ch,ch,level,learn);
-      stoneSkin(ch,ch,level,learn);
+      blindness(ch,vict,level,learn);
+      sanctuary(ch,vict,level,learn);
+      stoneSkin(ch,vict,level,learn);
       break;
     case LIQ_POT_MULTI11: // heal, second wind, sterilize
-      heal(ch,ch,level,learn,SPELL_HEAL,0);
-      secondWind(ch,ch,level,learn);
-      sterilize(ch,ch,level,learn,SPELL_STERILIZE);
+      heal(ch,vict,level,learn,SPELL_HEAL,0);
+      secondWind(ch,vict,level,learn);
+      sterilize(ch,vict,level,learn,SPELL_STERILIZE);
       break;
     case LIQ_POT_YOUTH:
       if(amt==1)
-	ch->sendTo("You feel a little younger.\n\r");
+	vict->sendTo("You feel a little younger.\n\r");
       else
-	ch->sendTo("You feel much younger.\n\r");
+	vict->sendTo("You feel much younger.\n\r");
 
       while(amt--)
-	ch->age_mod -= ::number(1, 2);
+	vict->age_mod -= ::number(1, 2);
       break;
     case LIQ_POT_STAT:
       whichStat = statTypeT(number(0, MAX_STATS - 1));
-      ch->addToStat(STAT_CHOSEN, whichStat, amt);
+      vict->addToStat(STAT_CHOSEN, whichStat, amt);
       
       switch (whichStat) {
 	case STAT_STR:
-	  ch->sendTo("You feel stronger.\n\r");
+	  vict->sendTo("You feel stronger.\n\r");
 	  break;
 	case STAT_BRA:
-	  ch->sendTo("You feel brawnier.\n\r");
+	  vict->sendTo("You feel brawnier.\n\r");
 	  break;
 	case STAT_AGI:
-	  ch->sendTo("You feel more agile.\n\r");
+	  vict->sendTo("You feel more agile.\n\r");
 	  break;
 	case STAT_CON:
-	  ch->sendTo("You feel more hardy.\n\r");
+	  vict->sendTo("You feel more hardy.\n\r");
 	  break;
 	case STAT_DEX:
-	  ch->sendTo("You feel more dexterous.\n\r");
+	  vict->sendTo("You feel more dexterous.\n\r");
 	  break;
 	case STAT_INT:
-	  ch->sendTo("You feel smarter.\n\r");
+	  vict->sendTo("You feel smarter.\n\r");
 	  break;
 	case STAT_WIS:
-	  ch->sendTo("You feel more wise.\n\r");
+	  vict->sendTo("You feel more wise.\n\r");
 	  break;
 	case STAT_FOC:
-	  ch->sendTo("You feel more focused.\n\r");
+	  vict->sendTo("You feel more focused.\n\r");
 	  break;
 	case STAT_KAR:
-	  ch->sendTo("You feel luckier.\n\r");
+	  vict->sendTo("You feel luckier.\n\r");
 	  break;
 	case STAT_CHA:
-	  ch->sendTo("You feel more charismatic.\n\r");
+	  vict->sendTo("You feel more charismatic.\n\r");
 	  break;
 	case STAT_SPE:
-	  ch->sendTo("You feel faster.\n\r");
+	  vict->sendTo("You feel faster.\n\r");
 	  break;
 	case STAT_PER:
-	  ch->sendTo("You feel more perceptive.\n\r");
+	  vict->sendTo("You feel more perceptive.\n\r");
 	  break;
 	case STAT_LUC:
 	case STAT_EXT:
 	case MAX_STATS:
-	  ch->age_mod -= 1;
-	  ch->sendTo("You feel younger.\n\r");
+	  vict->age_mod -= 1;
+	  vict->sendTo("You feel younger.\n\r");
 	  break;
       }
       break;
     case LIQ_POT_LEARNING:
       for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-	if (ch->hasClass(1<<Class)){
-	  ch->addPracs(amt, Class);
+	if (vict->hasClass(1<<Class)){
+	  vict->addPracs(amt, Class);
 	  break;
 	}
       }
       
-      ch->sendTo("You feel ready to learn more.\n\r");
+      vict->sendTo("You feel ready to learn more.\n\r");
       break;
     case LIQ_POISON_STANDARD:
     case LIQ_POISON_CAMAS:
@@ -2664,10 +2664,10 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       
       for(i=0;i<5;++i){
 	if(aff5[i].type != TYPE_UNDEFINED){
-	  ch->affectTo(&(aff5[i]), -1);
+	  vict->affectTo(&(aff5[i]), -1);
 	
 	  if (aff5[i].type == AFFECT_DISEASE)
-	    disease_start(ch, &(aff5[i]));
+	    disease_start(vict, &(aff5[i]));
 	}
       }
       break;

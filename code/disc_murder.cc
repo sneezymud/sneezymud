@@ -941,7 +941,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 	  FALSE, ch, weapon, ch, TO_NOTVICT, ANSI_RED);
 
 
-      doLiqSpell(ch, getDrinkType(), 1);
+      doLiqSpell(ch, ch, getDrinkType(), 1);
     } else {
       weapon->setPoison(LIQ_WATER);
       

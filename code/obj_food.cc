@@ -255,7 +255,7 @@ int TBaseCup::drinkMe(TBeing *ch)
 
   
   if(DrinkInfo[liquidType]->potion)
-    doLiqSpell(ch, getDrinkType(), amount);
+    doLiqSpell(ch, ch, getDrinkType(), amount);
   
 
   if (!isDrinkConFlag(DRINK_PERM))
@@ -613,7 +613,7 @@ void TBaseCup::sipMe(TBeing *ch)
   }
 
   if(DrinkInfo[liquidType]->potion)
-    doLiqSpell(ch, getDrinkType(), 1);
+    doLiqSpell(ch, ch, getDrinkType(), 1);
 
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-1);
