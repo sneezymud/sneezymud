@@ -60,7 +60,7 @@ enum discNumT {
      DISC_WATER,
      DISC_CLERIC,
      DISC_WRATH,
-     DISC_AFFLICTIONS,
+     DISC_AFFLICTIONS, //10
      DISC_AEGIS,
      DISC_CURES,
      DISC_HAND_OF_GOD,
@@ -70,7 +70,7 @@ enum discNumT {
      DISC_PHYSICAL,
      DISC_SMYTHE,
      DISC_RANGER,
-     DISC_RANGER_FIGHT,
+     DISC_RANGER_FIGHT, //20
      DISC_SHAMAN_ARMADILLO,
      DISC_ANIMAL,
      DISC_PLANTS,
@@ -80,7 +80,7 @@ enum discNumT {
      DISC_MOUNTED,
      DISC_DEIKHAN_AEGIS,
      DISC_DEIKHAN_CURES,
-     DISC_DEIKHAN_WRATH,
+     DISC_DEIKHAN_WRATH, //30
      DISC_MONK,
      DISC_MEDITATION_MONK,
      DISC_LEVERAGE,
@@ -90,7 +90,7 @@ enum discNumT {
      DISC_THIEF,
      DISC_THIEF_FIGHT,
      DISC_MURDER,
-     DISC_LOOTING,
+     DISC_LOOTING,//40
      DISC_POISONS,
      DISC_STEALTH,
      DISC_TRAPS,
@@ -100,7 +100,7 @@ enum discNumT {
      DISC_SHAMAN_SKUNK,
      DISC_SHAMAN_SPIDER,
      DISC_SHAMAN_CONTROL,
-     DISC_RITUALISM,
+     DISC_RITUALISM,//50
      DISC_WIZARDRY,
      DISC_FAITH,
      DISC_SLASH,
@@ -110,11 +110,11 @@ enum discNumT {
      DISC_COMBAT,
      DISC_ADVENTURING,
      DISC_THEOLOGY,
-     DISC_LORE,
+     DISC_LORE,//60
      DISC_NATURE,
      DISC_DEFENSE,
      MAX_DISCS,
-     MAX_SAVED_DISCS = 91
+     MAX_SAVED_DISCS = 90
 };
 const discNumT MIN_DISC = discNumT(0);
 extern discNumT & operator++(discNumT &, int);
