@@ -427,7 +427,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       continue;
 
     if (!ch->isUndead() && !ch->isDiabolic()) {
-      TObj *amulet = NULL; // something special for my amulet - dash
+      //TObj *amulet = NULL; // something special for my amulet - dash
       //      if (tch->isUndead() && 
       //	  (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) && 
       //	  obj_index[amulet->getItemIndex()].virt != 9597)
