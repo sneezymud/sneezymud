@@ -15,8 +15,10 @@ sstring stripColorCodes(const sstring &s)
   sstring buf;
   
   for(unsigned int i=0;i<s.length();++i){
-    if(s[i] == '<')
-      i+=3;
+    if(s[i] == '<') {
+      i+=2;
+      continue;
+    }
     
     buf += s[i];
   }
