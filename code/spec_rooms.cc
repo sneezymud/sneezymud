@@ -1896,15 +1896,15 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   
   if(found){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
-//QUEST
-//    boss = read_mobile(31759, VIRTUAL);
-    boss = read_mobile(29218, VIRTUAL);
+//QUEST - commented lines are for easier versions of mobs
+    boss = read_mobile(31759, VIRTUAL);
+//    boss = read_mobile(29218, VIRTUAL);
     *rp += *boss;
     SET_BIT(boss->specials.affectedBy, AFF_GROUP);
 
     for(i=0;i<4;++i){
-//      mob = read_mobile(31753+::number(0,3), VIRTUAL);
-      mob = read_mobile(29213+::number(0,3), VIRTUAL);
+      mob = read_mobile(31753+::number(0,3), VIRTUAL);
+//      mob = read_mobile(29213+::number(0,3), VIRTUAL);
       *rp += *mob;
       boss->addFollower(mob);
       SET_BIT(mob->specials.affectedBy, AFF_GROUP);
