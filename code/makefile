@@ -19,7 +19,7 @@ VERSION_FILE = lib/txt/version.new
 # GPROFF=1    # Use with care, mud stays up for about 45 minutes with this on.
 # USECRYPT=1  # Uncomment to have all the crypt stuff
 
-CC = /usr/bin/g++
+CC = /usr/local/bin/g++33
 
 ###############################################################################
 #                    Base Values (Do Not Modify/Add Here)                     #
@@ -58,8 +58,8 @@ CFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
 CFLAGS +=-Wconversion           # bad conversions
 CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
 CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
-CFLAGS +=-Wmissing-declarations # global function without a declaration
-CFLAGS +=-Wnested-externs       # extern found within a func
+#CFLAGS +=-Wmissing-declarations # global function without a declaration
+#CFLAGS +=-Wnested-externs       # extern found within a func
 CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
 CFLAGS +=-Werror                # turns a warning into an error
 
@@ -77,13 +77,13 @@ CFLAGS +=-Werror                # turns a warning into an error
 # for dynamic libraries
 CFLAGS +=-fPIC
 
-CFLAGS += -I/usr/local/include
+#CFLAGS += -I/usr/local/include
 
 ###############################################################################
 #                                   LDFLAGS                                   #
 ###############################################################################
 LDFLAGS=-g # enable core debugging
-LDFLAGS +=-L/usr/lib # specify this directory to look in
+#LDFLAGS +=-L/usr/lib # specify this directory to look in
 # LDFLAGS +=-L/usr/pubsw/lib # specify this directory to look in
 # **** libg++ and libm seem to be equivalent for Gnu 2.7.2 and before
 # **** The standard C++ libraries
@@ -119,7 +119,7 @@ endif
 #LDFLAGS +=-lpq++
 LDFLAGS +=-lpq
 
-LDFLAGS += -L/usr/local/lib
+#LDFLAGS += -L/usr/local/lib
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
