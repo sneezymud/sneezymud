@@ -578,6 +578,7 @@ class TBeing : public TThing {
 
     int heroNum;
   public:
+    Race *disguise_race; // for polymorph/disguise code
     bool toggles[MAX_TOG_INDEX];
     Craps * m_craps;
   private:

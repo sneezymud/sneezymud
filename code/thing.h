@@ -48,6 +48,7 @@ class TThing {
     TThing *stuff;           // The stuff inside me
   public:
     char *descr;             // Description of thing
+    char *real_descr;        // used with disguise/polymorph
     TBeing *stuckIn;
     TThing *equippedBy;
     wearSlotT eq_pos;                 // what is the equip. pos?
@@ -66,7 +67,12 @@ class TThing {
     int height;              // Height in centimeters
     byte canBeSeen;          
     char *name;              // Name of thing
+    char *real_name;         // used with disguise/polymorph
     char *shortDescr;
+    char *real_shortDescr;   // used with disguise/polymorph
+    bool is_disguised;
+    int disguise_level;
+    int disguise_zone;
     TThing *parent;          // Room, Obj, Being etc. that I am inside of.
     TThing *nextThing;       // The next thing in the list I am inside of
     TThing *nextBorn;        // The next thing born in my room(mobiles)

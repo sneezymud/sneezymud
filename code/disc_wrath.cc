@@ -865,12 +865,12 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, byte bKnown, i
       act("<r>$N is immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
       if (caster != victim) {
-        act("<r>$N is immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+        act("<r>$N is immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
             FALSE, caster, NULL, victim, TO_CHAR);
-        act("<r>You are immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+        act("<r>You are immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
             FALSE, caster, NULL, victim, TO_VICT);
       } else {
-        act("<r>You are immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+        act("<r>You are immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
             FALSE, caster, NULL, victim, TO_VICT);
       }
       
