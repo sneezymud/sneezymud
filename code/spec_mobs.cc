@@ -1959,6 +1959,27 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
       return;
     }
 
+    if (forceStand && v->isFlying()) {
+      act("You bat $N out of the air.",
+	  false, this, 0, v, TO_CHAR);
+      act("$n bats you out of the air.",
+	  false, this, 0, v, TO_VICT);
+      act("$n bats $N out of the air..",
+	  false, this, 0, v, TO_NOTVICT);
+      v->setPosition(POSITION_STANDING);
+    }
+
+    if (forceStand && v->riding) {
+      act("You knock $N off $S mount.",
+          false, this, 0, v, TO_CHAR);
+      act("$n knocks you off your mount.",
+          false, this, 0, v, TO_VICT);
+      act("$n knock $N off $S mount.",
+          false, this, 0, v, TO_NOTVICT);
+      v->fallOffMount(v->riding, POSITION_SITTING);
+    }
+
+
     if (forceStand && v->getPosition() < POSITION_STANDING) {
       act("You drag $N to $S feet.",
                 false, this, 0, v, TO_CHAR);

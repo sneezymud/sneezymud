@@ -206,6 +206,7 @@ int TMonster::charmeeStuff()
             tmp->stopFighting();
             master->stopFighting();
             setCharFighting(tmp);
+	    tmp->setCharFighting(this);
             tmp->addToWait(combatRound(1));
           } else {
             act("$n tries to rescue you but fails.",FALSE,this,0,master,TO_VICT);
@@ -971,6 +972,9 @@ int TMonster::fighterMove(TBeing &vict)
 	if(((ts->victim == this || ts->room == this->roomp) && offensive) ||
 	   (t->inGroup(vict) && !offensive))
 	  badspell = TRUE;
+      }
+      if (!canSee(t)) {
+	continue;
       }
       if (t && t->isAffected(AFF_GROUP) && 
 	  t->hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_SHAMAN) &&
@@ -3422,6 +3426,7 @@ int TMonster::mobileActivity(int pulse)
         if (tmp_ch->fight())
           tmp_ch->stopFighting();
 	setCharFighting(vict);
+	vict->setCharFighting(this);
 	vict->addToWait(combatRound(1));
       } else {
 	act("$n tries to rescue you but fails.",FALSE,this,0,tmp_ch,TO_VICT);

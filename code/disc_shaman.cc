@@ -774,6 +774,7 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
 void TBeing::doSacrifice(const char *arg)
 {
   TThing *tobj;
+  TTool *ttool = NULL;
 
   for (; isspace(*arg); arg++);
 
@@ -786,8 +787,13 @@ void TBeing::doSacrifice(const char *arg)
     return;
   }
 
+  if (task) {
+    sendTo("You're already busy doing something.\n\r");
+    return;
+  }
+
   tobj = equipment[HOLD_RIGHT];
-  if (!(tobj = equipment[HOLD_RIGHT])) {
+  if (!tobj || !(ttool = dynamic_cast<TTool *>(tobj)) || ttool->getToolType() != TOOL_TOTEM) {
     sendTo("You must be holding a totem in your right hand to perform the ritual.\n\r");
     return;
   }

@@ -902,6 +902,13 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     --(*caster);
     thing_to_room(caster, ROOM_POLY_STORAGE);
 
+    for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+      if (caster->hasQuestBit(tmpnum))
+	mob->setQuestBit(tmpnum);
+    }
+
+    mob->specials.affectedBy = caster->specials.affectedBy;
+
     // stop following whoever you are following.. 
     if (caster->master)
       caster->stopFollower(TRUE);

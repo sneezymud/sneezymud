@@ -1629,7 +1629,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         sendTo("You can only invoke this upon yourself.\n\r");
       stopCast(STOP_CAST_GENERIC);
       return FALSE;
-    } else if (isAffected(AFF_CHARM) && (master == victim)) {
+    } else if (isAffected(AFF_CHARM) && (master == victim) && !isPc()) {
       sendTo("You are afraid that it could harm your master.\n\r");
       stopCast(STOP_CAST_GENERIC);
       return FALSE;

@@ -2656,6 +2656,18 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
         *rp += *per;
       }
 
+      for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+	if (mob->hasQuestBit(tmpnum) && !per->hasQuestBit(tmpnum))
+	  per->setQuestBit(tmpnum);
+	if (!mob->hasQuestBit(tmpnum) && per->hasQuestBit(tmpnum))
+          per->remQuestBit(tmpnum);
+
+      }
+
+      per->specials.affectedBy = mob->specials.affectedBy;
+
+
+
       SwitchStuff(mob, per);
       per->affectFrom(SPELL_POLYMORPH);
       per->affectFrom(SKILL_DISGUISE);

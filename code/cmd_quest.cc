@@ -1,17 +1,37 @@
 #include "stdsneezy.h"
 
 
-bool TBeing::hasQuestBit(int) const
+bool TBeing::hasQuestBit(int value) const
 {
-  return false;
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, "Bad check of hasQuestBit(%d)", value);
+    return FALSE;
+  }
+
+  return (toggles[value]);
+
 }
 
-void TBeing::setQuestBit(int)
+void TBeing::setQuestBit(int value)
 {
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, "Bad check of setQuestBit(%d)", value);
+    return;
+  }
+
+  toggles[value] |= 0x1;
+
 }
 
-void TBeing::remQuestBit(int)
+void TBeing::remQuestBit(int value)
 {
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, "Bad check of remQuestBit(%d)", value);
+    return;
+  }
+
+  toggles[value] &= ~(0x1);
+
 }
 
 bool TPerson::hasQuestBit(int value) const

@@ -186,6 +186,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
   if ((cmd != CMD_GENERIC_PULSE)) {
     if ((cmd == CMD_RENT) || (cmd == CMD_DROP) || (cmd == CMD_GIVE)) {
+      if (!isname(job->hunted_victim, ch->name))
+        return FALSE;
       if (!arg)
         return FALSE;
       for (; *arg == ' '; arg++);
@@ -254,10 +256,14 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       return FALSE;
     } else if (((cmd == CMD_GROUP) || (cmd == CMD_FOLLOW)) && !ch->isImmortal()) {
       // need this, since mob follows pc, they might try and group it
+      if (!isname(job->hunted_victim, ch->name)) 
+	return FALSE;
       myself->doAction(ch->name, CMD_GROWL);
       myself->doSay("No one is grouping here, scum.");
       return TRUE;
     } else if (cmd == CMD_FLEE && ch != myself) {
+      if (!isname(job->hunted_victim, ch->name))
+        return FALSE;
       ch->addToMove(-15);
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
       if (job) {
@@ -275,7 +281,9 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
       return FALSE;
     } else if (cmd == CMD_CONSIDER) {
-     
+      if (!isname(job->hunted_victim, ch->name))
+        return FALSE;
+
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
       if (job) {
 	job->num_chances--;

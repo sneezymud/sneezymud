@@ -622,6 +622,14 @@ int disguise(TBeing *caster, char * buffer)
   // stop following whoever you are following.
   if (caster->master)
     caster->stopFollower(TRUE);
+
+  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+    if (caster->hasQuestBit(tmpnum))
+      mob->setQuestBit(tmpnum);
+  }
+
+  mob->specials.affectedBy = caster->specials.affectedBy;
+
     
   // switch caster into mobile 
   caster->desc->character = mob;

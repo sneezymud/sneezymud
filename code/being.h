@@ -578,6 +578,7 @@ class TBeing : public TThing {
 
     int heroNum;
   public:
+    bool toggles[MAX_TOG_INDEX];
     Craps * m_craps;
   private:
     byte invisLevel;

@@ -2,20 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: ai_reactions.cc,v $
-// Revision 5.1  1999/10/16 04:29:21  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "ai_reactions.cc" - containing "packets" of reactions for use
 //         by other ai-code.  These packets are meant to add some randomness
 //         to how the mob will react to various stimuli.  ie, it won't always
@@ -255,6 +241,9 @@ int TMonster::aiInsultDoer(TBeing *vict)
       case 6:
         strcpy(buf2,"wimpy");
         break;
+      case 7:
+	strcpy(buf2,"faggy");
+	break;    
       default:
         strcpy(buf2, "gutless");
         break;
@@ -288,7 +277,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
     else
       strcpy(buf2,"ugly");
   }
-  switch (::number(1,20)) {
+  switch (::number(1,22)) {
     case 1:
       strcpy(buf3,"bastich");
       break;
@@ -337,11 +326,17 @@ int TMonster::aiInsultDoer(TBeing *vict)
     case 16:
       strcpy(buf3,"scum of the earth");
       break;
+    case 17:
+      strcpy(buf3,"jackass");
+      break;   
+    case 18:
+      strcpy(buf3,"hunk of DiqMeat");
+      break;         
     default:
       strcpy(buf3,"freak of nature");
       break;
   }
-  switch (::number(1,18)) {
+  switch (::number(1,21)) {
     case 1:
       sprintf(buf, "You %s %s",buf2, buf3);
       break;
@@ -405,6 +400,9 @@ int TMonster::aiInsultDoer(TBeing *vict)
       act("$n sticks $s tongue out at you gives you a razzberry!",
           FALSE, this, 0, vict, TO_VICT);
       break;
+    case 20:
+      strcpy(buf, "The best part of you rolled down the back of a horses leg!");
+      break;  
     default:
       return FALSE;
   }
@@ -471,6 +469,9 @@ int TMonster::aiBadManners(TBeing *ch)
       break;
     case 6:
       act("$n grimaces.",TRUE,this,0,0,TO_ROOM);
+      break;
+    case 7:
+      doSay("Stop that crap will ya?!?");
       break;
     default:
       return FALSE;
@@ -580,7 +581,7 @@ int TMonster::aiMobShock(TBeing *doer)
         return FALSE;
         break;
     }
-  } else if (getRace() == RACE_FELINE) {
+  } else if (getRace() == RACE_FELINE || getRace() == RACE_WYVELIN) {
     switch (::number(1,5)) {
       case 1:
         act("The hair on $n's back raises and $e hisses loudly.",
@@ -638,7 +639,7 @@ int TMonster::aiMobHappy(TBeing *doer)
         return FALSE;
         break;
     }
-  } else if (getRace() == RACE_FELINE) {
+  } else if (getRace() == RACE_FELINE || getRace() == RACE_WYVELIN) {
     switch (::number(1,4)) {
       case 1:
         doAction(fname(doer->name),CMD_PURR);
@@ -884,7 +885,7 @@ int TMonster::aiWimpSwitch(TBeing *vict)
   //  10. tank must also have a wait less than 4, allows for lagged blocking.
   //  11. tank has Neither AUTO_ENGAGE or AUTO_ENGAGE_ALWAYS set.
   if (tank                && tank->desc                      && tank->isPc()        &&
-      vict->isPc()        && tank->desc->session.amGroupTank && vict->inGroup(tank) &&
+      vict->isPc()        && tank->desc->session.amGroupTank && vict->inGroup(*tank) &&
       tank->awake()       && !tank->bothLegsHurt()           && tank->canSee(this)  &&
       tank->canSee(vict)  && tank->getPosition() >= POSITION_STANDING               &&
       tank->getWait() < 4 && !IS_SET(tank->desc->autobits, AUTO_ENGAGE)             &&
@@ -924,11 +925,6 @@ int TMonster::aiWimpSwitch(TBeing *vict)
     //   0, 0, 39, (39, -39), (19, 0)
     // Level 50: 100/100 rescue/switch
     //   100, 200, -10, (190, 210), (95, 105)
-
-    // Monster [Arch Vampire:Lapsos] attempting switch: S:blocked M:101(127) T:204(58)
-    vlogf(0, "Monster [%s:%s] attempting switch: S:%s M:%d(%d) T:%d(%d)",
-          getName(), tank->getName(), (tSkill > mSkill ? "blocked" : "switched"),
-          mSkill, GetMaxLevel(), tSkill, tank->GetMaxLevel());
 
     // Just check to see if tank got a higher score, if so he blocked it.
     // Random was added Earlier so we just want to check ending values here.
@@ -985,6 +981,8 @@ int TMonster::aiWimpSwitch(TBeing *vict)
       act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
       break;
   }
+
+  addToWait(2);
   return TRUE;
 }
 
@@ -998,7 +996,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
   UA(15);
 
   if (canSpeak() && !::number(0,2)) {
-    if (worked && !sameRoom(doer)) {
+    if (worked && !sameRoom(*doer)) {
       act("You shake your head and say, \"Jeez, $N sure is pushy.\"",
               FALSE, this, 0, doer, TO_CHAR);
       act("$n shakes $s head and says, \"Jeez, $N sure is pushy.\"",
@@ -1007,16 +1005,16 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
       return aiInsultDoer(doer);
     }
   }
-  if (isSmartMob(40) && worked && !sameRoom(doer)) {
+  if (isSmartMob(40) && worked && !sameRoom(*doer)) {
     rc = goDirection(rev_dir[dir]);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // we're not checking for death, log an error
-      vlogf(10, "error in shove react (%s shoving %d)",  
+      vlogf(LOG_MOB_AI, "error in shove react (%s shoving %d)",  
           doer->getName(), dir);
       return DELETE_THIS;
     }
   }
-  if (sameRoom(doer) && worked) {
+  if (sameRoom(*doer) && worked) {
     if (hasHands() && !bothArmsHurt()) {
       act("$n shoves $N.", TRUE, this, 0, doer, TO_NOTVICT);
       act("$n shoves you.", TRUE, this, 0, doer, TO_VICT);
@@ -1027,7 +1025,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
       act("You nudge $N.", TRUE, this, 0, doer, TO_CHAR);
     }
     if (isAngry()) 
-      return takeFirstHit(doer);
+      return takeFirstHit(*doer);
     else
       aiUpset(doer);
   }
@@ -1038,35 +1036,6 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
 // presumes isDumbAnimal()
 void TMonster::aiGrowl(const TBeing *tar) const
 {
-  switch (race->getBodyType()) {
-    case BODY_BIRD:
-    case BODY_BAT:
-      if (tar) {
-        int tmp = ::number(0,1);
-        switch(tmp) {
-          case 0:
-            act("$n screeches impatiently at $N.", TRUE, this, 0, tar, TO_ROOM);
-            return;
-          case 1:
-            act("$n screeches angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
-            return;
-        }
-      } else {
-        int tmp = ::number(0,1);
-        switch(tmp) {
-          case 0:
-            act("$n screeches impatiently.", TRUE, this, 0, tar, TO_ROOM);
-            return;
-          case 1:
-            act("$n screeches angrily.", TRUE, this, 0, tar, TO_ROOM);
-            return;
-        }
-      }
-      return;
-    default:
-      break;
-  }  // BY body type
-
   if (getRace() == RACE_FELINE) {
     if (tar) {
       int tmp = ::number(0,1);
@@ -1094,8 +1063,7 @@ void TMonster::aiGrowl(const TBeing *tar) const
       }
     }
     return;
-  }
-  if (getRace() == RACE_CANINE) {
+  } else if (getRace() == RACE_CANINE) {
     soundNumT snd = pickRandSound(SOUND_DOGBARK_1, SOUND_DOGBARK_2);
     roomp->playsound(snd, SOUND_TYPE_NOISE);
     if (tar) {
@@ -1120,20 +1088,90 @@ void TMonster::aiGrowl(const TBeing *tar) const
       }
     }
     return;
-  }
-
-  // generic case
-  if (tar) {
-    act("$n growls at $N.",TRUE,this,0,tar,TO_ROOM);
+  } else if (getRace() == RACE_BAT) {
+    if (tar) {
+      int tmp = ::number(0,1);
+      switch(tmp) {
+        case 0:
+          act("$n screeches impatiently at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 1:
+          act("$n screeches angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+      }
+    } else {
+      int tmp = ::number(0,1);
+      switch(tmp) {
+        case 0:
+          act("$n screeches impatiently.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 1:
+          act("$n screeches angrily.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+      }
+    }
+    return;
+  } else if (getRace() == RACE_BIRD) {
+    if (tar) {
+      int tmp = ::number(0,5);
+      switch(tmp) {
+        case 0:
+          act("$n squawks noisily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 1:
+          act("$n squawks angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 2:
+          act("$n chirps noisily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 3:
+          act("$n chirps angrily at $N, and flaps $s wings menacingly.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 4:
+          act("$n chirps noisily at $N, and flaps $s wings menacingly.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+        case 5:
+          act("$n chirps angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          return;
+      }
+    } else {
+      int tmp = ::number(0,5);
+      switch(tmp) {
+        case 0:
+          act("$n squawks noisily.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 1:
+          act("$n squawks angrily.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 2:
+          act("$n chirps noisily.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 3:
+          act("$n chirps angrily.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 4:
+          act("$n chirps noisily, and flaps $s wings meanicingly.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+        case 5:
+          act("$n chirps angrily, and flaps $s wings meanicingly.", TRUE, this, 0, 0, TO_ROOM);
+          return;
+      }
+    }
+    return;
   } else {
-    int tmp = ::number(0,1);
-    switch (tmp) {
-      case 0:
-        act("$n growls angrily!", FALSE, this, 0, 0, TO_ROOM);
-        return;
-      case 1:
-        act("$n growls impatiently!", FALSE, this, 0, 0, TO_ROOM);
-        return;
+    // generic case
+    if (tar) {
+      act("$n growls at $N.",TRUE,this,0,tar,TO_ROOM);
+    } else {
+      int tmp = ::number(0,1);
+      switch (tmp) {
+        case 0:
+          act("$n growls angrily!", FALSE, this, 0, 0, TO_ROOM);
+          return;
+        case 1:
+          act("$n growls impatiently!", FALSE, this, 0, 0, TO_ROOM);
+          return;
+      }
     }
   }
 }
