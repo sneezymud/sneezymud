@@ -106,7 +106,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     SET_BIT(mob->specials.affectedBy, AFF_CHARM );
     mob->setPosition(POSITION_STUNNED);    // make it take a little to wake up
     caster->addFollower(mob);
-    delete corpse;
+    //    delete corpse;
     act("$N slowly begins to move...it's slowly standing up!",
              FALSE, caster, NULL, mob, TO_CHAR);
     act("$N slowly begins to move...it's slowly standing up!", 
@@ -281,7 +281,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
     SET_BIT(mob->specials.affectedBy, AFF_CHARM );
     mob->setPosition(POSITION_STUNNED);    // make it take a little to wake up
     caster->addFollower(mob);
-    delete corpse;
+    //    delete corpse;
     act("$N slowly begins to move...it's slowly standing up!",
              FALSE, caster, NULL, mob, TO_CHAR);
     act("$N slowly begins to move...it's slowly standing up!", 
