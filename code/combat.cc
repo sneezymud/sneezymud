@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
+// Revision 1.2  1999/09/29 07:44:23  lapsos
+// Added code for the new mobile strings.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -165,33 +168,58 @@ void TBeing::deathCry()
   TRoom *newR;
   char buf[256];
   TThing *i;
+  dirTypeT door;
 
   if ((in_room == ROOM_NOWHERE) || !roomp)
     return;
 
-  sprintf(buf, "Your blood freezes as you hear %s's death cry.\n\r",
-          getName());
+#if 1
+  strcpy(buf, ((ex_description && ex_description->findExtraDesc("deathcry")) ?
+               ex_description->findExtraDesc("deathcry") : 
+               "Your blood freezes as you hear $N's death cry."));
+#else
+  sprintf(buf, "Your blood freezes as you hear %s's death cry.\n\r", getName());
+#endif
 
-  dirTypeT door;
   for (door = MIN_DIR; door < MAX_DIR; door++) {
+#if 1
+    new_room = roomp->dir_option[door]->to_room;
+    newR     = real_roomp(new_room);
+    TMonster *tMons;
+
+    if (in_room != new_room && canGo(door)) {
+      for (i = newR->stuff; i; i = i->nextThing) {
+        if (!inGrimhaven() && (tMons = dynamic_cast<TMonster *>(i))) {
+          tMons->UA(1);
+          tMons->UM(1);
+          tMons->US(4);
+        } else if (dynamic_cast<TBeing *>(i)) {
+          colorAct(COLOR_MOBS, buf, FALSE, dynamic_cast<TBeing *>(i), NULL, this, TO_CHAR);
+        }
+      }
+    }
+#else
     if (canGo(door)) {
       new_room = roomp->dir_option[door]->to_room;
       newR = real_roomp(new_room);
-      if (in_room != new_room){
+      if (in_room != new_room) {
         sendrpf(COLOR_MOBS, newR, buf);
 
-	if(!inGrimhaven()){
+	if (!inGrimhaven()) {
 	  for (i = newR->stuff; i; i = i->nextThing) {
 	    TMonster *tmons = dynamic_cast<TMonster *>(i);
-	    if(tmons){
+
+	    if (tmons) {
 	      tmons->UA(1);
 	      tmons->UM(1);
 	      tmons->US(4);
-	    }
+	    } else if (dynamic_cast<TBeing *>(i))
+              colorAct(COLOR_MOBS, 
 	  }
 	}
       }
     }
+#endif
   }
 }
 
