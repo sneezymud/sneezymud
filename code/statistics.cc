@@ -324,7 +324,7 @@ void TBeing::doGamestats(const sstring &arg)
       plot1 = plotStat(STAT_CURRENT, STAT_STR, .80, 1.25, 1.00, curve);
       plot2 = plotStat(STAT_CURRENT, STAT_STR, 0.0, 100.0, 50.0, curve);
       ssprintf(buf, "Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%%\n\r", (double)tmpint, plot1, plot2);
-      sendTo(buf.c_str());
+      sendTo(buf);
     }
     setStat(STAT_CURRENT, STAT_STR, temp_stat);
     return;

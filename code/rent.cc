@@ -1102,7 +1102,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       processStringForClient(str);
 
       desc->clientf("%d", CLIENT_RENT);
-      sendTo(str.c_str());
+      sendTo(str);
       desc->clientf("%d", CLIENT_RENT_END);
     }
     return TRUE;
@@ -1229,7 +1229,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     processStringForClient(str);
 
     desc->clientf("%d", CLIENT_RENT);
-    sendTo(str.c_str());
+    sendTo(str);
     desc->clientf("%d", CLIENT_RENT_END);
   }
   return TRUE;

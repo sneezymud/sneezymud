@@ -101,7 +101,7 @@ void TTable::writeAffects(int i, FILE *fp) const
 void TTable::lookObj(TBeing *ch, int bits) const
 {
   if (bits)
-    ch->sendTo(fname(name).c_str());
+    ch->sendTo(fname(name));
   switch (bits) {
     case FIND_OBJ_INV:
       ch->sendTo(" (carried) : \n\r");

@@ -57,7 +57,7 @@ void BaccaratGame::stay(TBeing *ch)
     dealer[2]=deck[deck_inx++];
 
     ssprintf(log_msg, "The dealer is dealt %s.",pretty_card_printout(ch, dealer[2]).c_str());
-    ch->sendTo(COLOR_BASIC, log_msg.c_str());
+    ch->sendTo(COLOR_BASIC, log_msg);
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
   }
 
@@ -142,7 +142,7 @@ void BaccaratGame::Hit(TBeing *ch)
   player[2]=deck[deck_inx++];
   
   ssprintf(log_msg, "You are dealt %s.\n\r", pretty_card_printout(ch, player[2]).c_str());
-  ch->sendTo(COLOR_BASIC, log_msg.c_str());
+  ch->sendTo(COLOR_BASIC, log_msg);
     
   ssprintf(log_msg, "$n is dealt %s.",pretty_card_printout(ch, player[2]).c_str());
   act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
@@ -216,7 +216,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
       player[i]=dealer[i]=0;
 
     ssprintf(log_msg, "You are dealt:\n\r");
-    ch->sendTo(COLOR_BASIC, log_msg.c_str());
+    ch->sendTo(COLOR_BASIC, log_msg);
     act("$n is dealt:", TRUE, ch, 0, 0, TO_ROOM);
 
     for(int i=0;i<2;++i){
@@ -224,7 +224,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
       dealer[i] = deck[deck_inx++];
 
       ssprintf(log_msg, "%s (down)\n\r", pretty_card_printout(ch, player[i]).c_str());
-      ch->sendTo(COLOR_BASIC, log_msg.c_str());
+      ch->sendTo(COLOR_BASIC, log_msg);
       
       ssprintf(log_msg, "%s (down)",pretty_card_printout(ch, player[i]).c_str());
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
@@ -346,13 +346,13 @@ void BaccaratGame::peek(const TBeing *ch)
     return;
   }
   ssprintf(log_msg, "You peek at your hand:\n\r");
-  ch->sendTo(COLOR_BASIC, log_msg.c_str());
+  ch->sendTo(COLOR_BASIC, log_msg);
 
   for(int i=0;i<3;++i){
     if(player[i]){
       ssprintf(log_msg, "%s (down)\n\r",
 	       pretty_card_printout(ch, player[i]).c_str());
-      ch->sendTo(COLOR_BASIC, log_msg.c_str());
+      ch->sendTo(COLOR_BASIC, log_msg);
     }
   }    
 

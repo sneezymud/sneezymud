@@ -1021,7 +1021,7 @@ void TBeing::doCompare(const char *arg)
       }
     }
   } else {
-    sendTo(errMsg.c_str());  
+    sendTo(errMsg);  
     return;
   }
 
@@ -1035,7 +1035,7 @@ void TBeing::doCompare(const char *arg)
       }
     }
   } else {
-    sendTo(errMsg.c_str());  
+    sendTo(errMsg);
     return;
   }
 
@@ -1065,7 +1065,7 @@ void TPerson::doLow(const sstring &arg)
 
   sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
   if (arg.empty()) {
-    sendTo(usage.c_str());
+    sendTo(usage);
     return;
   } else if (is_abbrev(buf, "objs") ||
 	     is_abbrev(buf, "weapons")) {
@@ -1230,7 +1230,7 @@ void TPerson::doLow(const sstring &arg)
     
 
   } else {
-    sendTo(usage.c_str());
+    sendTo(usage);
     return;
   }
 }
@@ -1250,7 +1250,7 @@ void TBeing::lowPath(const sstring &arg)
   while((dir=find_path(room, is_target_room_p, 
 		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
     ssprintf(buf1, "{DIR_%s, %i},\n\r", upper(dirs[lastdir]).c_str(), room);
-    sendTo(buf1.c_str());
+    sendTo(buf1);
 
     room=real_roomp(room)->dir_option[dir]->to_room;
     lastdir=dir;

@@ -31,7 +31,7 @@ void TBeing::doEgoTrip(const char *arg)
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
   if (!argument.length()) {
-    sendTo(badsyn.c_str());
+    sendTo(badsyn);
     return;
   }
   if (is_abbrev(argument, "deity")) {
@@ -387,7 +387,7 @@ void TBeing::doEgoTrip(const char *arg)
 
     return;
   } else {
-    sendTo(badsyn.c_str());
+    sendTo(badsyn);
     return;
   }
 }

@@ -170,7 +170,7 @@ void TPerson::doSEdit(const char *tArg)
     tStString += "  sedit add elite-guard {black gate} tell %%n I saw that!  To the East!\n\r";
     tStString += "  sedit delete elite-guard {black gate} tell %%n Go East!\n\r";
 
-    sendTo(tStString.c_str());
+    sendTo(tStString);
     return;
   }
 
@@ -833,7 +833,7 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
             tStTemporary.replace(tSize, 1, "%%");
           while ((tSize = tStTemporary.find("%", tSize += 2)) != sstring::npos);
 
-        ch->sendTo(COLOR_COMM, tStTemporary.c_str());
+        ch->sendTo(COLOR_COMM, tStTemporary);
       }
     }
 

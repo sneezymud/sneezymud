@@ -288,7 +288,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
           ch->getNameNOC(ch).c_str(), ch->getNameNOC(ch).c_str());
   vsystem(tString);
   tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
-  ch->sendTo(tStString.c_str());
+  ch->sendTo(tStString);
 }
 
 void doLoadZoneFile(TBeing * tBeing, const sstring & tArg)
@@ -371,7 +371,7 @@ void doLoadZoneFile(TBeing * tBeing, const sstring & tArg)
   tString = NULL;
   tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
 
-  tBeing->sendTo(tStString.c_str());
+  tBeing->sendTo(tStString);
 
 
 #endif

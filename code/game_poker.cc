@@ -52,7 +52,7 @@ void PokerGame::stay(TBeing *ch)
   sstring log_msg;
 
   ssprintf(log_msg, "You are dealt:\n\r");
-  ch->sendTo(COLOR_BASIC, log_msg.c_str());
+  ch->sendTo(COLOR_BASIC, log_msg);
   act("$n is dealt", TRUE, ch, 0, 0, TO_ROOM);
 
   for(int i=0;i<5;++i){
@@ -61,7 +61,7 @@ void PokerGame::stay(TBeing *ch)
 
       
     ssprintf(log_msg, "%i) %s\n\r", i+1, pretty_card_printout(ch, card[i]).c_str());
-    ch->sendTo(COLOR_BASIC, log_msg.c_str());
+    ch->sendTo(COLOR_BASIC, log_msg);
     
     ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
@@ -304,14 +304,14 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
       poker_shuffle(ch);
 
     ssprintf(log_msg, "You are dealt:\n\r");
-    ch->sendTo(COLOR_BASIC, log_msg.c_str());
+    ch->sendTo(COLOR_BASIC, log_msg);
     act("$n is dealt:", TRUE, ch, 0, 0, TO_ROOM);
 
     for(int i=0;i<5;++i){
       card[i] = deck[deck_inx++];
 
       ssprintf(log_msg, "%i) %s\n\r", i+1, pretty_card_printout(ch, card[i]).c_str());
-      ch->sendTo(COLOR_BASIC, log_msg.c_str());
+      ch->sendTo(COLOR_BASIC, log_msg);
       
 
       ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
@@ -368,13 +368,13 @@ void PokerGame::peek(const TBeing *ch)
     return;
   }
   ssprintf(log_msg, "You peek at your hand:\n\r");
-  ch->sendTo(COLOR_BASIC, log_msg.c_str());
+  ch->sendTo(COLOR_BASIC, log_msg);
 
   for(int i=0;i<5;++i){
     if(card[i]){
       ssprintf(log_msg, "%i) %s\n\r", i+1, 
 	       pretty_card_printout(ch, card[i]).c_str());
-      ch->sendTo(COLOR_BASIC, log_msg.c_str());
+      ch->sendTo(COLOR_BASIC, log_msg);
     }
   }    
 

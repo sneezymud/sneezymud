@@ -1029,7 +1029,7 @@ void TBeing::doWizlock(const char *argument)
     sendTo("Wizlock {all | off | add <host> | rem <host> | list  | message}\n\r");
     sendTo("Global wizlock is presently %s.\n\r", WizLock ? "ON" : "OFF");
     sendTo("The wizlock message is currently:\n\r");
-    sendTo(lockmess.c_str());
+    sendTo(lockmess);
     return;
   }
   if (!strcmp(buf, "all")) {
@@ -1117,7 +1117,7 @@ void TBeing::doWizlock(const char *argument)
         lockmess = note->action_description;
         vlogf(LOG_MISC, "%s added a wizlock message.", getName());
         sendTo("The wizlock message is now:\n\r");
-        sendTo(lockmess.c_str());
+        sendTo(lockmess);
         return;
       }
     } else {
@@ -1128,7 +1128,7 @@ void TBeing::doWizlock(const char *argument)
     sendTo("Wizlock {all | add <host> | rem <host> | list}\n\r");
     sendTo("Global wizlock is presently %s.\n\r", WizLock ? "ON" : "OFF");
     sendTo("The wizlock message is currently:\n\r");
-    sendTo(lockmess.c_str());
+    sendTo(lockmess);
     return;
   }
   return;
@@ -4757,7 +4757,7 @@ void TBeing::doInfo(const char *arg)
 
   if (!*arg1) {
     sendTo("What would you like info on?\n\r");
-    sendTo(str.c_str());
+    sendTo(str);
   } else {
     if (is_abbrev(arg1, "lag")){
       sstring groupnames[25]={"Shutdown Handler",
@@ -5723,7 +5723,7 @@ void TBeing::doInfo(const char *arg)
       desc->page_string(buf);
     } else {
       sendTo("What would you like info on?\n\r");
-      sendTo(str.c_str());
+      sendTo(str);
     }
   }
 }
@@ -6620,7 +6620,7 @@ void TBeing::doClients()
   if (tStString.empty()) 
     sendTo("Noone currently logged in with a client.\n\r");
   else
-    sendTo(tStString.c_str());
+    sendTo(tStString);
 }
 
 // returns DELETE_THIS if this should be toasted.

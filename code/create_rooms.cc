@@ -268,7 +268,7 @@ void TPerson::doEdit(const char *arg)
     tStr += "  list <2>                Will list all rooms in the rooms file.\n\r";
     tStr += "  autoformat              Will automatically format room to standards.\n\r";
     tStr += "Please see HELP EDIT for more information.\n\r";
-    sendTo(tStr.c_str());
+    sendTo(tStr);
     return;
   }
 
@@ -302,7 +302,7 @@ void TPerson::doEdit(const char *arg)
                     roomp->dir_option[dir]->trap_dam);
             tStr += sstring;
           }
-        sendTo(tStr.c_str());
+        sendTo(tStr);
         return;
       }
       if ((rdir < MIN_DIR) || (rdir >= MAX_DIR)) {

@@ -1675,7 +1675,7 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(o->displayFourValues().c_str());
+  ch->sendTo(o->displayFourValues());
   /*
   ch->sendTo("Current values : %d %d %d %d",
         x1, x2, x3, x4);

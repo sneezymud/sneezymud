@@ -1508,7 +1508,7 @@ void TBeing::stopFighting()
 bool TBeing::checkPeaceful(const sstring &msg) const
 {
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
-    sendTo(msg.c_str());
+    sendTo(msg);
     return TRUE;
   }
   if (affectedBySpell(SPELL_CALM) && !fight()) {
@@ -1521,7 +1521,7 @@ bool TBeing::checkPeaceful(const sstring &msg) const
 bool TBeing::checkPeacefulVictim(const sstring &msg, const TThing *v) const
 {
   if (v->roomp && v->roomp->isRoomFlag(ROOM_PEACEFUL)) {
-    sendTo(msg.c_str());
+    sendTo(msg);
     return TRUE;
   }
   return FALSE;

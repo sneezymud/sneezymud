@@ -2362,7 +2362,7 @@ void TBeing::doEquipment(const char *argument)
 	sstring slot = describeEquipmentSlot(j);
 	sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
 	sendTo("%s%-26s%s", red(), buf, norm());
-	sendTo(COLOR_BASIC, tattoos[j].c_str());
+	sendTo(COLOR_BASIC, tattoos[j]);
 	sendTo("\n\r");
       }
     }
@@ -2403,7 +2403,7 @@ void TBeing::doEquipment(const char *argument)
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
 	  //	  sendTo("%s%-26s%s", cyan(), buf, norm());
-	  sendTo(COLOR_BASIC, tattoos[j].c_str());
+	  sendTo(COLOR_BASIC, tattoos[j]);
 	  sendTo("\n\r");
 	}
       }

@@ -104,7 +104,7 @@ void TBeing::doMortalCompare(const char *tArg)
 
   StString += tObj1->compareMeAgainst(this, tObj2);
 
-  sendTo(COLOR_OBJECTS, StString.c_str());
+  sendTo(COLOR_OBJECTS, StString);
 }
 
 int compareDetermineMessage(const int tDrift, const int tValue)

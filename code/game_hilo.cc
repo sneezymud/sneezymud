@@ -203,7 +203,7 @@ void HiLoGame::peek(const TBeing *ch)
     return;
   }
   ssprintf(log_msg, "You peek at your hand:\n\r%s\n\r", card->getName());
-  ch->sendTo(COLOR_BASIC, log_msg.c_str());
+  ch->sendTo(COLOR_BASIC, log_msg);
 }
 
 

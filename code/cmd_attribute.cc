@@ -577,13 +577,13 @@ void TBeing::doAttribute(const char *arg)
       }
     }
     sendTo(COLOR_MOBS, "<c>Stats  :<z>");
-    sendTo(COLOR_MOBS, chosenStats.printStatHeader().c_str());
+    sendTo(COLOR_MOBS, chosenStats.printStatHeader());
 
     Stats mortalStats;
 
     if (GetMaxLevel() >= 1){
       sendTo(COLOR_MOBS,"<c>Chosen:<z>");
-      sendTo(COLOR_MOBS, chosenStats.printRawStats(this).c_str());
+      sendTo(COLOR_MOBS, chosenStats.printRawStats(this));
     }
 
     if (GetMaxLevel() >= 20) {
@@ -597,7 +597,7 @@ void TBeing::doAttribute(const char *arg)
       sendTo("\n\r");
 
       sendTo(COLOR_MOBS,"<c>Current:<z>");
-      sendTo(COLOR_MOBS, curStats.printRawStats(this).c_str());
+      sendTo(COLOR_MOBS, curStats.printRawStats(this));
     } else if (GetMaxLevel() >= 1){
       sendTo(COLOR_MOBS,"<c>Natural:<z>");
       statTypeT ij;
@@ -726,7 +726,7 @@ void TBeing::doAttribute(const char *arg)
 
 
     if (GetMaxLevel() >= 5)
-      sendTo(describeImmunities(this, 100).c_str());
+      sendTo(describeImmunities(this, 100));
 
     if (!getCond(THIRST))
       sendTo(COLOR_BASIC, "<R>You are totally parched.<1>\n\r");
@@ -874,7 +874,7 @@ void TBeing::doAttribute(const char *arg)
       sendTo("Your account has MUD Sound Protocol enabled.\n\r");
   
     describeLimbDamage(this);
-    sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME).c_str());
+    sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));
   
     return;
   } else if (is_abbrev(cmdbuf, "statistics")) {

@@ -456,7 +456,7 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
     return;
   }
 
-  ch->sendTo(fname(name).c_str());
+  ch->sendTo(fname(name));
   switch (bits) {
     case FIND_OBJ_INV:
       ch->sendTo(" (carried) : ");

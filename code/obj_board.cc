@@ -331,7 +331,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       processStringForClient(sb);
 
       ch->desc->clientf("%d", CLIENT_NOTE);
-      ch->sendTo(COLOR_BASIC, sb.c_str());
+      ch->sendTo(COLOR_BASIC, sb);
       ch->desc->clientf("%d", CLIENT_NOTE_END);
     } else {
       sprintf(buffer, "Message %d : %s\n\r\n\r", msg, b->head[msg - 1]);

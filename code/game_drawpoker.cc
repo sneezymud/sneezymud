@@ -363,7 +363,7 @@ void DrawPokerGame::peek(const TBeing *ch)
     tString += tArg;
   }
 
-  ch->sendTo(tString.c_str());
+  ch->sendTo(tString);
 }
 
 int DrawPokerGame::move_card(TBeing *ch, const char *tArg)

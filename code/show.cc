@@ -1102,7 +1102,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
 	  //	  sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
 	  ch->sendTo("%-26s",buf);
-	  ch->sendTo(COLOR_BASIC, tattoos[ij].c_str());
+	  ch->sendTo(COLOR_BASIC, tattoos[ij]);
 	  ch->sendTo("\n\r");
 	}
       }
