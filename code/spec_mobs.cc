@@ -7461,6 +7461,125 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 }
 
 
+int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *o)
+{
+  sstring arg=argument, buf;
+  TDrinkCon *tdc;
+  TObj *obj;
+
+  if(cmd!=CMD_SAY && cmd!=CMD_SAY2 && cmd!=CMD_MOB_GIVEN_ITEM)
+    return false;
+
+  if((cmd == CMD_SAY || cmd==CMD_SAY2) && lower(arg) == "hello"){
+    me->doSay("Bring me some beer and maybe I'll give you the key!");
+    me->doAction("", CMD_LICK);
+    return true;
+  }
+
+  if(cmd == CMD_MOB_GIVEN_ITEM && o && (tdc=dynamic_cast<TDrinkCon *>(o))){
+    ssprintf(buf, "takes a sip from the %s.", tdc->getName());
+
+    switch(tdc->getDrinkType()){
+      case LIQ_BEER:
+	me->doEmote(buf.c_str());
+	obj=read_object(18600, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("I could really use an ale to go with this beer!");
+	break;
+      case LIQ_ALE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18601, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("This ale is delicious, but I'd like a dark ale!");
+	break;
+      case LIQ_DARKALE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18602, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("I love ales and beers, but I think I'd like to try some white wine.");
+	break;
+      case LIQ_WINE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18603, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Ahh good, but now I'd care to sample some red wine.");
+	break;
+      case LIQ_RED_WINE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18604, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Wine is great for taste, but I'd like to move on to something harder now, say, whiskey!");
+	break;
+      case LIQ_WHISKY:
+	me->doEmote(buf.c_str());
+	obj=read_object(18605, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("That hits the spot.  Let's kick it up a notch with some firebreather!");
+	break;
+      case LIQ_FIREBRT:
+	me->doEmote(buf.c_str());
+	obj=read_object(18606, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("This stuff tastes foul.  Now vodka, there's a drink that goes down easy.");
+	break;
+      case LIQ_VODKA:
+	me->doEmote(buf.c_str());
+	obj=read_object(18607, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("I need to cleanse my palate with some mead.");
+	break;
+      case LIQ_MEAD:
+	me->doEmote(buf.c_str());
+	obj=read_object(18608, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Ok, let's get back to the hard stuff.  How about some nice rum?");
+	break;
+      case LIQ_RUM:
+	me->doEmote(buf.c_str());
+	obj=read_object(18609, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Ahh, reminds me of my bucaneering days.  We used to loot brandy from rich manors.");
+	break;
+      case LIQ_BRANDY:
+	me->doEmote(buf.c_str());
+	obj=read_object(18610, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Whew, this is quite a drinking binge.  Time to celebrate with some champagne!");
+	break;
+      case LIQ_CHAMPAGNE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18611, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Not bad, not bad, but I need some coffee now to stay awake.");
+	break;
+      case LIQ_COFFEE:
+	me->doEmote(buf.c_str());
+	obj=read_object(18612, VIRTUAL);
+	*me += *obj;
+	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
+	me->doSay("Ok I've had enough to drink for now.  Come by some other time!");
+	break;
+      default:
+	return false;
+    }
+    return DELETE_ITEM;
+  }
+  
+  return false;
+}
+
 
 
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7652,6 +7771,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "casino elevator guard", casinoElevatorGuard},
   {FALSE, "commodity maker", commodMaker}, // 175
   {FALSE, "lottery redeemer", lotteryRedeemer},
+  {FALSE, "konastis's guard", konastisGuard},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
