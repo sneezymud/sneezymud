@@ -802,15 +802,13 @@ void TBeing::doNotHere() const
 
 static const sstring describe_practices(TBeing *ch)
 {
-  char buf[1024];
+  sstring buf = "";
 
-  *buf = '\0';
-
-  for(int i=0;i<MAX_CLASSES;i++){
+  for(int i=0; i<MAX_CLASSES; i++){
     if(ch->hasClass(ch->getClassNum((classIndT)i)) || ch->practices.prac[i]){
-      sprintf(buf + strlen(buf), "You have %d %s practice%s left.\n\r", 
-	      ch->practices.prac[i], classInfo[i].name.c_str(), 
-	      ((ch->practices.prac[i] == 1) ? "" : "s"));
+      buf += fmt("You have %d %s practice%s left.\n\r") %
+        ch->practices.prac[i] % classInfo[i].name %
+        ((ch->practices.prac[i] == 1) ? "" : "s");
     }
   }
 
@@ -3047,18 +3045,18 @@ int TBeing::doRecite(const char *argument)
 
   argument = one_argument(argument, buf);
 
-  if (isAffected(AFF_BLIND)) {
-    sendTo("How do you expect to read something when you are blind???\n\r");
-    return FALSE;
-  }
-
   if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = heldInPrimHand();
     if (!t || !isname(buf, t->name)) {
-      act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
+      if (isAffected(AFF_BLIND)) {
+        sendTo("How do you expect to read something when you are blind???\n\r");
+      } else {
+        act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
+      }
       return FALSE;
     }
   }
+
   setQuaffUse(true);
   rc = t->reciteMe(this, argument);
   setQuaffUse(false);
