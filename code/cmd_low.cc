@@ -1253,6 +1253,12 @@ void TBeing::lowPath(const sstring &arg)
   int target=convertTo<int>(arg.word(0));
   TPathFinder path;
 
+  path.setUsePortals(false);
+  //  path.setNoMob(false);
+
+  path.findPath(here, findRoom(target));
+  sendTo(fmt("Distance: %i\n\r") % path.getDist());
+
   // trace a path there and spit out room nums
   while((dir=path.findPath(here, findRoom(target))) >= 0){
     if(lastdir==DIR_NONE)
@@ -1269,6 +1275,7 @@ void TBeing::lowPath(const sstring &arg)
   sendTo(fmt("{DIR_%s, %i},\n\r") % sstring(dirs[lastdir]).upper() % here);
 
   sendTo("{DIR_NONE, -1}\n\r");
+  
 }
 
 

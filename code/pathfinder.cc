@@ -226,8 +226,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   map<int, pathData *>::const_iterator CI;
   bool found=true;
   pathData *pd;
+  int distance=0;
 
-  for(int distance=0;found;++distance){
+  for(distance=0;found;++distance){
     found=false;
 
     if (distance > range) {
@@ -365,6 +366,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   
   // if we failed to find any new rooms, abort, or be in an endless loop
   dest=ROOM_NOWHERE;
+  dist=distance;
   
   // clean up allocated memory
   for (CI = path_map.begin(); CI != path_map.end(); ++CI)
