@@ -47,13 +47,15 @@ void corpListing(TBeing *ch, TMonster *me)
     gold=convertTo<int>(db["gold"]);
     bankgold=convertTo<int>(db["bankgold"]);
     shopval=convertTo<int>(db["shopcount"]) * 1000000;
-    val=gold+getAssets(corp_id)+shopval;
     bankowner=convertTo<int>(db["bankowner"]);
    
     // if we don't own the bank, record our gold that's in the bank
     // otherwise we end up counting it twice
     if(bankowner!=corp_id)
       gold += bankgold;
+
+    val=gold+getAssets(corp_id)+shopval;
+
 
     m.insert(pair<int,sstring>(val,fmt("%-2i| <r>%s<1>") % corp_id % db["name"]));
     m.insert(pair<int,sstring>(val,fmt("  | %s talens, %s in assets") %
