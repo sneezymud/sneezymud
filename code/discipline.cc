@@ -3034,9 +3034,11 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     if (!silent) {
       if(isname("Sephie", name)) {
         act("Other clerics can do it, dunno what's wrong with you.", FALSE, this, 0, vict, TO_CHAR);
-      } else 
+      } else
         act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
-      act("$n is unable to get past $N's defenses.", TRUE, this, 0, vict, TO_ROOM);
+
+      act("$n is unable to get past your defenses.", TRUE, this, 0, vict, TO_VICT);
+      act("$n is unable to get past $N's defenses.", TRUE, this, 0, vict, TO_NOTVICT);
     }
     return TRUE;
   }
