@@ -567,6 +567,7 @@ enum cmdTypeT {
      CMD_KWAVE,
      CMD_TELEVISION,
      CMD_PLANT,
+     CMD_COOK,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

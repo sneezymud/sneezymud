@@ -275,8 +275,12 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
 int TBaseContainer::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
-  act("Containers can't hold other containers.", FALSE, ch, cont,this, TO_CHAR);
-  return FALSE;
+  if(cont->getStuff()){
+    act("Cookware can't hold other containers unless they're empty.", FALSE, ch, cont,this, TO_CHAR);
+    return FALSE;
+  }
+
+  return TThing::putSomethingIntoContainer(ch, cont);
 }
 
 void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_cont, TBaseContainer *)

@@ -577,6 +577,11 @@ void assign_item_info()
      "Age", 0, 0,
      "Unused", 0, 0,
      "Unused", 0, 0);
+  ItemInfo[ITEM_COOKWARE] = new itemInfo("Cookware","a piece of cookware",
+     "Max weight inside", 300, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume chest can hold", 30000, 1);
 				     
 };
 

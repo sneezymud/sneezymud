@@ -150,7 +150,6 @@ int TBeing::dropPool(int amt, liqTypeT liq)
 {
   TPool *pool=NULL;
   TThing *t;
-  char buf[256];
   TObj *obj;
 
   if(amt==0)
@@ -183,23 +182,12 @@ int TBeing::dropPool(int amt, liqTypeT liq)
     pool = dynamic_cast<TPool *>(obj);
     if (!pool)
       return false;
-    pool->swapToStrung();
-    pool->remObjStat(ITEM_TAKE);
-    pool->setDrinkType(liq);
-    pool->canBeSeen = 1;
-    pool->setMaterial(MAT_WATER);
-
-    sprintf(buf, "pool puddle %s", 
-        colorString(this, desc, DrinkInfo[liq]->name, NULL, COLOR_NONE, TRUE).c_str());
-    sprintf(buf+strlen(buf), " %s", 
-        colorString(this, desc, DrinkInfo[liq]->color, NULL, COLOR_NONE, TRUE).c_str());
-    delete [] pool->name;
-    pool->name = mud_str_dup(buf);
+    pool->initPool(amt, liq);
 
     *roomp += *pool;
+  } else {
+    pool->fillMeAmount(amt, liq);
   }
-
-  pool->fillMeAmount(amt, liq);
 
   return TRUE;
 }
@@ -219,6 +207,27 @@ void TPool::decayMe()
   else // large pools evaporate faster
     addToDrinkUnits(-(drinkunits/25)); 
 }
+
+
+void TPool::initPool(int amt, liqTypeT liq)
+{
+  string buf;
+
+  swapToStrung();
+  remObjStat(ITEM_TAKE);
+  setDrinkType(liq);
+  canBeSeen = 1;
+  setMaterial(MAT_WATER);
+  
+  ssprintf(buf, "pool puddle %s %s", 
+	   DrinkInfo[liq]->name,
+	   DrinkInfo[liq]->color);
+  delete [] name;
+  name = mud_str_dup(buf.c_str());
+  
+  fillMeAmount(amt, liq);
+}
+
 
 TPool::TPool() :
   TBaseCup()

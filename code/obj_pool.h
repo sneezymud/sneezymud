@@ -24,6 +24,8 @@ class TPool : public TBaseCup {
     virtual bool isPluralItem() const;
     virtual itemTypeT itemType() const { return ITEM_POOL; }
 
+    void initPool(int, liqTypeT);
+
     int getDrinkIndex() const;
 
     TPool();

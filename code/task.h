@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task.h,v $
+// Revision 5.6  2002/02/28 18:37:08  peel
+// added cooking
+// allowed putting of empty containers into other containers
+//
 // Revision 5.5  2002/01/16 05:40:29  peel
 // added plants
 //
@@ -82,6 +86,7 @@ extern int task_seekwater     (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_search        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_lightfire     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_plant     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_cook     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_createEngine  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_charge        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_whittle       (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -134,6 +139,7 @@ enum taskTypeT {
      TASK_FISHING,
      TASK_EXTINGUISH_MY_ASS,
      TASK_BUTCHER,
+     TASK_COOK,
      NUM_TASKS  // keep this as max
 };
 

@@ -190,9 +190,9 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o game_drawpoker.o \
 	obj_drinkcon.o obj_drug_container.o obj_drug.o edit.o enum.o equip.o \
 	obj_expandable_container.o faction.o obj_flame.o obj_food.o obj_fuel.o gaining.o \
-	obj_gemstone.o obj_general_weapon.o obj_gun.o task_plant.o obj_plant.o
-
-OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
+	obj_gemstone.o obj_general_weapon.o obj_gun.o task_plant.o obj_plant.o\
+	obj_cookware.o task_cook.o \
+	game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o obj_jewelry.o obj_key.o obj_keyring.o obj_light.o \
 	limbs.o limits.o loadset.o luck.o obj_magic_item.o magic_off.o \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
@@ -245,7 +245,6 @@ OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 #	rewrite_obj_file.o \
 
 OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
-OBJ2 := $(sort $(addprefix $(OBJDIR), $(OBJ2)))
 
 ifdef USEINSURE
 all: $(NAME2)
@@ -256,19 +255,17 @@ else
 all: $(NAME)
 endif
 
-reverse : $(OBJ2) $(OBJ)
-
-$(NAME) : $(OBJ) $(OBJ2)
+$(NAME) : $(OBJ)
 	@echo \*\*\* Making Final Link: $(NAME)
-	@$(CC) -o $(NAME) $(OBJ) $(OBJ2) $(LDFLAGS)
+	@$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
 	@rm -f $(VERSION_FILE)
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Make Process Complete
 	@echo "`date`"
 
-$(NAME2) : $(OBJ) $(OBJ2)
+$(NAME2) : $(OBJ)
 	@echo \*\*\* Making Final Link: $(NAME2)
-	@$(CC) -o $(NAME2) $(OBJ) $(OBJ2) $(LDFLAGS)
+	@$(CC) -o $(NAME2) $(OBJ) $(LDFLAGS)
 	@rm -f $(VERSION_FILE)
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Insure Compile Process Complete
@@ -4440,7 +4437,7 @@ objs/db.o: obj_flame.h obj_base_light.h obj_light.h obj_gun.h obj_vial.h
 objs/db.o: obj_base_cup.h obj_pool.h obj_drinkcon.h obj_armor.h
 objs/db.o: obj_base_clothing.h obj_armor_wand.h obj_wand.h obj_magic_item.h
 objs/db.o: obj_jewelry.h obj_other_obj.h obj_potion.h obj_scroll.h
-objs/db.o: obj_staff.h obj_appliedsub.h obj_worn.h obj_plant.h
+objs/db.o: obj_staff.h obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6646,6 +6643,72 @@ objs/disc_shaman_frog.o: cmd_trophy.h person.h monster.h account.h extern.h
 objs/disc_shaman_frog.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/disc_shaman_frog.o: combat.h spelltask.h disc_shaman_frog.h
 objs/disc_shaman_frog.o: obj_magic_item.h
+objs/disc_shaman_healing.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/disc_shaman_healing.o: /usr/include/stdio.h /usr/include/features.h
+objs/disc_shaman_healing.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/disc_shaman_healing.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/disc_shaman_healing.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/disc_shaman_healing.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/disc_shaman_healing.o: /usr/include/bits/stdio_lim.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_healing.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/disc_shaman_healing.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/disc_shaman_healing.o: /usr/include/bits/errno.h
+objs/disc_shaman_healing.o: /usr/include/linux/errno.h
+objs/disc_shaman_healing.o: /usr/include/asm/errno.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/string
+objs/disc_shaman_healing.o: /usr/include/g++-3/std/bastring.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/cstddef
+objs/disc_shaman_healing.o: /usr/include/g++-3/std/straits.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/alloc.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_config.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_alloc.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/iostream.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/streambuf.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/iterator
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_relops.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_iterator.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/std/bastring.cc
+objs/disc_shaman_healing.o: /usr/include/g++-3/vector
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_algobase.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_pair.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/type_traits.h
+objs/disc_shaman_healing.o: /usr/include/limits.h
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_construct.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_uninitialized.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_vector.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_bvector.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/map
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_tree.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_function.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_map.h
+objs/disc_shaman_healing.o: /usr/include/g++-3/stl_multimap.h
+objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql_version.h
+objs/disc_shaman_healing.o: low.h mobAI.h enum.h spells.h structs.h
+objs/disc_shaman_healing.o: immunity.h discipline.h spell2.h parse.h db.h
+objs/disc_shaman_healing.o: ansi.h cmd_dissect.h client.h response.h
+objs/disc_shaman_healing.o: faction.h comm.h toggle.h wiz_powers.h
+objs/disc_shaman_healing.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/disc_shaman_healing.o: skills.h disease.h trap.h task.h weather.h
+objs/disc_shaman_healing.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/disc_shaman_healing.o: connect.h obj_drug.h charfile.h being.h
+objs/disc_shaman_healing.o: cmd_trophy.h person.h monster.h account.h
+objs/disc_shaman_healing.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/disc_shaman_healing.o: materials.h combat.h disc_shaman_healing.h
+objs/disc_shaman_healing.o: spelltask.h statistics.h obj_magic_item.h
 objs/disc_shaman_skunk.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_skunk.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_skunk.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6710,68 +6773,6 @@ objs/disc_shaman_skunk.o: cmd_trophy.h person.h monster.h account.h extern.h
 objs/disc_shaman_skunk.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/disc_shaman_skunk.o: materials.h combat.h spelltask.h
 objs/disc_shaman_skunk.o: disc_shaman_skunk.h obj_magic_item.h
-objs/disc_shaman_healing.o: stdsneezy.h /usr/include/g++-3/cstdio
-objs/disc_shaman_healing.o: /usr/include/stdio.h /usr/include/features.h
-objs/disc_shaman_healing.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/disc_shaman_healing.o: /usr/include/bits/types.h /usr/include/libio.h
-objs/disc_shaman_healing.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/disc_shaman_healing.o: /usr/include/bits/wchar.h /usr/include/gconv.h
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
-objs/disc_shaman_healing.o: /usr/include/bits/stdio_lim.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/ctime /usr/include/time.h
-objs/disc_shaman_healing.o: /usr/include/bits/time.h /usr/include/sys/types.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cctype /usr/include/ctype.h
-objs/disc_shaman_healing.o: /usr/include/endian.h /usr/include/bits/endian.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cassert /usr/include/assert.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cstring /usr/include/string.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/disc_shaman_healing.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/disc_shaman_healing.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/disc_shaman_healing.o: /usr/include/g++-3/std/bastring.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/cstddef
-objs/disc_shaman_healing.o: /usr/include/g++-3/std/straits.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/alloc.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_config.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_alloc.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/iostream.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/streambuf.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/iterator
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_relops.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_iterator.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/std/bastring.cc
-objs/disc_shaman_healing.o: /usr/include/g++-3/vector
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_algobase.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_pair.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/type_traits.h
-objs/disc_shaman_healing.o: /usr/include/limits.h
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
-objs/disc_shaman_healing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_construct.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_uninitialized.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_vector.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_bvector.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_function.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_map.h
-objs/disc_shaman_healing.o: /usr/include/g++-3/stl_multimap.h
-objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql.h
-objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql_com.h
-objs/disc_shaman_healing.o: /home/oldspasm/usr/include/mysql/mysql_version.h
-objs/disc_shaman_healing.o: low.h mobAI.h enum.h spells.h structs.h immunity.h
-objs/disc_shaman_healing.o: discipline.h spell2.h parse.h db.h ansi.h
-objs/disc_shaman_healing.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_shaman_healing.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_shaman_healing.o: body.h race.h skills.h disease.h trap.h task.h
-objs/disc_shaman_healing.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/disc_shaman_healing.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/disc_shaman_healing.o: cmd_trophy.h person.h monster.h account.h extern.h
-objs/disc_shaman_healing.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/disc_shaman_healing.o: combat.h spelltask.h disc_shaman_frog.h
-objs/disc_shaman_healing.o: obj_magic_item.h
 objs/disc_shaman_spider.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman_spider.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman_spider.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7499,19 +7500,19 @@ objs/discipline.o: disc_mindbody.h disc_fattacks.h disc_plants.h
 objs/discipline.o: disc_ranger_fight.h disc_shaman_alchemy.h
 objs/discipline.o: disc_shaman_frog.h disc_shaman_control.h
 objs/discipline.o: disc_shaman_spider.h disc_shaman_skunk.h
-objs/discipline.o: disc_shaman_armadillo.h disc_ritualism.h disc_thief.h
-objs/discipline.o: disc_thief_fight.h disc_poisons.h disc_traps.h
-objs/discipline.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
-objs/discipline.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
-objs/discipline.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
-objs/discipline.o: disc_cures.h disc_hand_of_god.h disc_ranger.h
-objs/discipline.o: disc_deikhan.h disc_looting.h disc_murder.h disc_hth.h
-objs/discipline.o: disc_warrior.h disc_brawling.h disc_adventuring.h
-objs/discipline.o: disc_combat.h disc_wizardry.h disc_lore.h disc_theology.h
-objs/discipline.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
-objs/discipline.o: disc_ranged.h disc_barehand.h disc_survival.h
-objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h spelltask.h
-objs/discipline.o: obj_symbol.h
+objs/discipline.o: disc_shaman_armadillo.h disc_shaman_healing.h
+objs/discipline.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
+objs/discipline.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
+objs/discipline.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
+objs/discipline.o: disc_spirit.h disc_water.h disc_wrath.h disc_shaman.h
+objs/discipline.o: disc_aegis.h disc_afflictions.h disc_cures.h
+objs/discipline.o: disc_hand_of_god.h disc_ranger.h disc_deikhan.h
+objs/discipline.o: disc_looting.h disc_murder.h disc_hth.h disc_warrior.h
+objs/discipline.o: disc_brawling.h disc_adventuring.h disc_combat.h
+objs/discipline.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
+objs/discipline.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
+objs/discipline.o: disc_barehand.h disc_survival.h disc_animal.h
+objs/discipline.o: disc_nature.h disc_psionics.h spelltask.h obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disease.o: /usr/include/gnu/stubs.h
@@ -11008,6 +11009,67 @@ objs/obj_component.o: obj_money.h rent.h spec_mobs.h materials.h shop.h
 objs/obj_component.o: database.h obj_spellbag.h obj_expandable_container.h
 objs/obj_component.o: obj_open_container.h obj_base_container.h
 objs/obj_component.o: obj_component.h
+objs/obj_cookware.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/obj_cookware.o: /usr/include/stdio.h /usr/include/features.h
+objs/obj_cookware.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_cookware.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_cookware.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_cookware.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_cookware.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/obj_cookware.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_cookware.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_cookware.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/obj_cookware.o: /usr/include/ctype.h /usr/include/endian.h
+objs/obj_cookware.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/obj_cookware.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/obj_cookware.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/obj_cookware.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/obj_cookware.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/obj_cookware.o: /usr/include/g++-3/string
+objs/obj_cookware.o: /usr/include/g++-3/std/bastring.h
+objs/obj_cookware.o: /usr/include/g++-3/cstddef
+objs/obj_cookware.o: /usr/include/g++-3/std/straits.h
+objs/obj_cookware.o: /usr/include/g++-3/alloc.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_config.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_cookware.o: /usr/include/g++-3/iostream.h
+objs/obj_cookware.o: /usr/include/g++-3/streambuf.h
+objs/obj_cookware.o: /usr/include/g++-3/iterator
+objs/obj_cookware.o: /usr/include/g++-3/stl_relops.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_cookware.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_cookware.o: /usr/include/g++-3/vector
+objs/obj_cookware.o: /usr/include/g++-3/stl_algobase.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_pair.h
+objs/obj_cookware.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_cookware.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_cookware.o: /usr/include/g++-3/stl_construct.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_vector.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/obj_cookware.o: /usr/include/g++-3/stl_tree.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_function.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_map.h
+objs/obj_cookware.o: /usr/include/g++-3/stl_multimap.h
+objs/obj_cookware.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/obj_cookware.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/obj_cookware.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/obj_cookware.o: mobAI.h enum.h spells.h structs.h immunity.h
+objs/obj_cookware.o: discipline.h spell2.h parse.h db.h ansi.h cmd_dissect.h
+objs/obj_cookware.o: client.h response.h faction.h comm.h toggle.h
+objs/obj_cookware.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_cookware.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_cookware.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/obj_cookware.o: obj_drug.h charfile.h being.h cmd_trophy.h person.h
+objs/obj_cookware.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_cookware.o: rent.h spec_mobs.h materials.h obj_cookware.h
+objs/obj_cookware.o: obj_open_container.h obj_base_container.h obj_pool.h
+objs/obj_cookware.o: obj_base_cup.h
 objs/obj_corpse.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_corpse.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_corpse.o: /usr/include/gnu/stubs.h
@@ -13906,11 +13968,11 @@ objs/other.o: obj_note.h disc_air.h disc_alchemy.h disc_animal.h disc_earth.h
 objs/other.o: disc_fire.h disc_water.h disc_sorcery.h disc_spirit.h
 objs/other.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
 objs/other.o: disc_hand_of_god.h disc_cures.h disc_nature.h
-objs/other.o: disc_shaman_armadillo.h disc_shaman_frog.h disc_shaman_skunk.h
-objs/other.o: disc_shaman_spider.h disc_shaman_control.h obj_trap.h
-objs/other.o: obj_light.h obj_base_light.h obj_armor.h obj_base_clothing.h
-objs/other.o: obj_armor_wand.h obj_wand.h obj_magic_item.h spelltask.h
-objs/other.o: obj_potion.h obj_scroll.h
+objs/other.o: disc_shaman_armadillo.h disc_shaman_frog.h
+objs/other.o: disc_shaman_healing.h disc_shaman_skunk.h disc_shaman_spider.h
+objs/other.o: disc_shaman_control.h obj_trap.h obj_light.h obj_base_light.h
+objs/other.o: obj_armor.h obj_base_clothing.h obj_armor_wand.h obj_wand.h
+objs/other.o: obj_magic_item.h spelltask.h obj_potion.h obj_scroll.h
 objs/parse.o: /usr/include/unistd.h /usr/include/features.h
 objs/parse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/parse.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -14936,20 +14998,20 @@ objs/skills.o: disc_physical.h disc_smythe.h disc_deikhan_fight.h
 objs/skills.o: disc_deikhan_aegis.h disc_deikhan_cures.h disc_deikhan_wrath.h
 objs/skills.o: disc_defense.h disc_mounted.h disc_monk.h disc_meditation.h
 objs/skills.o: disc_leverage.h disc_mindbody.h disc_fattacks.h disc_plants.h
-objs/skills.o: disc_ranger_fight.h disc_shaman_frog.h disc_shaman_alchemy.h
-objs/skills.o: disc_shaman_control.h disc_shaman_spider.h disc_shaman_skunk.h
-objs/skills.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
-objs/skills.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
-objs/skills.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
-objs/skills.o: disc_spirit.h disc_water.h disc_wrath.h disc_aegis.h
-objs/skills.o: disc_shaman.h disc_afflictions.h disc_cures.h
-objs/skills.o: disc_hand_of_god.h disc_deikhan.h disc_ranger.h disc_looting.h
-objs/skills.o: disc_murder.h disc_hth.h disc_combat.h disc_adventuring.h
-objs/skills.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
-objs/skills.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
-objs/skills.o: disc_barehand.h disc_brawling.h disc_warrior.h disc_survival.h
-objs/skills.o: disc_animal.h disc_shaman_armadillo.h disc_nature.h
-objs/skills.o: disc_psionics.h
+objs/skills.o: disc_ranger_fight.h disc_shaman_frog.h disc_shaman_healing.h
+objs/skills.o: disc_shaman_alchemy.h disc_shaman_control.h
+objs/skills.o: disc_shaman_spider.h disc_shaman_skunk.h disc_ritualism.h
+objs/skills.o: disc_thief.h disc_thief_fight.h disc_poisons.h disc_traps.h
+objs/skills.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
+objs/skills.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
+objs/skills.o: disc_wrath.h disc_aegis.h disc_shaman.h disc_afflictions.h
+objs/skills.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h disc_ranger.h
+objs/skills.o: disc_looting.h disc_murder.h disc_hth.h disc_combat.h
+objs/skills.o: disc_adventuring.h disc_wizardry.h disc_lore.h disc_theology.h
+objs/skills.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
+objs/skills.o: disc_ranged.h disc_barehand.h disc_brawling.h disc_warrior.h
+objs/skills.o: disc_survival.h disc_animal.h disc_shaman_armadillo.h
+objs/skills.o: disc_nature.h disc_psionics.h
 objs/socket.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/socket.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -16222,14 +16284,14 @@ objs/spell_parser.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/spell_parser.o: obj_drug.h charfile.h being.h cmd_trophy.h person.h
 objs/spell_parser.o: monster.h account.h extern.h handler.h obj_money.h
 objs/spell_parser.o: rent.h spec_mobs.h materials.h disc_shaman_armadillo.h
-objs/spell_parser.o: disc_air.h disc_alchemy.h disc_earth.h disc_fire.h
-objs/spell_parser.o: disc_sorcery.h disc_spirit.h disc_water.h disc_aegis.h
-objs/spell_parser.o: disc_wrath.h disc_shaman.h disc_afflictions.h
-objs/spell_parser.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h
-objs/spell_parser.o: disc_survival.h disc_animal.h disc_nature.h
-objs/spell_parser.o: disc_ranged.h disc_adventuring.h disc_shaman_frog.h
-objs/spell_parser.o: disc_shaman_spider.h disc_shaman_skunk.h
-objs/spell_parser.o: disc_shaman_control.h obj_opal.h
+objs/spell_parser.o: disc_shaman_healing.h disc_air.h disc_alchemy.h
+objs/spell_parser.o: disc_earth.h disc_fire.h disc_sorcery.h disc_spirit.h
+objs/spell_parser.o: disc_water.h disc_aegis.h disc_wrath.h disc_shaman.h
+objs/spell_parser.o: disc_afflictions.h disc_cures.h disc_hand_of_god.h
+objs/spell_parser.o: disc_deikhan.h disc_survival.h disc_animal.h
+objs/spell_parser.o: disc_nature.h disc_ranged.h disc_adventuring.h
+objs/spell_parser.o: disc_shaman_frog.h disc_shaman_spider.h
+objs/spell_parser.o: disc_shaman_skunk.h disc_shaman_control.h obj_opal.h
 objs/spellstore.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spellstore.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/spellstore.o: /usr/include/gnu/stubs.h
@@ -16341,13 +16403,13 @@ objs/spelltask.o: being.h cmd_trophy.h person.h monster.h account.h extern.h
 objs/spelltask.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/spelltask.o: spelltask.h disc_air.h disc_alchemy.h
 objs/spelltask.o: disc_shaman_armadillo.h disc_shaman_frog.h
-objs/spelltask.o: disc_shaman_spider.h disc_shaman_skunk.h
-objs/spelltask.o: disc_shaman_control.h disc_nature.h disc_cures.h
-objs/spelltask.o: disc_earth.h disc_fire.h disc_sorcery.h disc_spirit.h
-objs/spelltask.o: disc_water.h disc_aegis.h disc_wrath.h disc_shaman.h
-objs/spelltask.o: disc_afflictions.h disc_hand_of_god.h disc_deikhan.h
-objs/spelltask.o: disc_ranger.h disc_survival.h disc_animal.h disc_leverage.h
-objs/spelltask.o: disc_ranged.h combat.h obj_symbol.h
+objs/spelltask.o: disc_shaman_healing.h disc_shaman_spider.h
+objs/spelltask.o: disc_shaman_skunk.h disc_shaman_control.h disc_nature.h
+objs/spelltask.o: disc_cures.h disc_earth.h disc_fire.h disc_sorcery.h
+objs/spelltask.o: disc_spirit.h disc_water.h disc_aegis.h disc_wrath.h
+objs/spelltask.o: disc_shaman.h disc_afflictions.h disc_hand_of_god.h
+objs/spelltask.o: disc_deikhan.h disc_ranger.h disc_survival.h disc_animal.h
+objs/spelltask.o: disc_leverage.h disc_ranged.h combat.h obj_symbol.h
 objs/statistics.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/statistics.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/statistics.o: /usr/include/gnu/stubs.h
@@ -16962,6 +17024,62 @@ objs/task_charge.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/task_charge.o: charfile.h being.h cmd_trophy.h person.h monster.h
 objs/task_charge.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_charge.o: spec_mobs.h materials.h
+objs/task_cook.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/task_cook.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/task_cook.o: /usr/include/gnu/stubs.h
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/task_cook.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/task_cook.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/task_cook.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/task_cook.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/task_cook.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_cook.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_cook.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/task_cook.o: /usr/include/ctype.h /usr/include/endian.h
+objs/task_cook.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/task_cook.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/task_cook.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/task_cook.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/task_cook.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/task_cook.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/task_cook.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/task_cook.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/task_cook.o: /usr/include/g++-3/stl_alloc.h
+objs/task_cook.o: /usr/include/g++-3/iostream.h
+objs/task_cook.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/task_cook.o: /usr/include/g++-3/stl_relops.h
+objs/task_cook.o: /usr/include/g++-3/stl_iterator.h
+objs/task_cook.o: /usr/include/g++-3/std/bastring.cc
+objs/task_cook.o: /usr/include/g++-3/vector /usr/include/g++-3/stl_algobase.h
+objs/task_cook.o: /usr/include/g++-3/stl_pair.h
+objs/task_cook.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/task_cook.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/task_cook.o: /usr/include/g++-3/stl_construct.h
+objs/task_cook.o: /usr/include/g++-3/stl_uninitialized.h
+objs/task_cook.o: /usr/include/g++-3/stl_vector.h
+objs/task_cook.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/task_cook.o: /usr/include/g++-3/stl_tree.h
+objs/task_cook.o: /usr/include/g++-3/stl_function.h
+objs/task_cook.o: /usr/include/g++-3/stl_map.h
+objs/task_cook.o: /usr/include/g++-3/stl_multimap.h
+objs/task_cook.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/task_cook.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/task_cook.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/task_cook.o: mobAI.h enum.h spells.h structs.h immunity.h discipline.h
+objs/task_cook.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
+objs/task_cook.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/task_cook.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/task_cook.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
+objs/task_cook.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/task_cook.o: being.h cmd_trophy.h person.h monster.h account.h extern.h
+objs/task_cook.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
+objs/task_cook.o: obj_cookware.h obj_open_container.h obj_base_container.h
+objs/task_cook.o: task_cook.h obj_pool.h obj_base_cup.h obj_corpse.h
+objs/task_cook.o: obj_base_corpse.h
 objs/task_dull.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_dull.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_dull.o: /usr/include/gnu/stubs.h
