@@ -8,7 +8,7 @@
 // whee system()
 // this code pretty much sucks
 
-const char *pgcmd="pg_dump --no-quotes --no-reconnect --data-only --column-inserts --table=%s %s | grep -E \"%s\" | grep \"%s\" | perl -pe \"s/\',/\',\n/g; s/\\134012/\n/g;s/VALUES /VALUES\n/;s/INSERT/\nINSERT/g;\" >> %s";
+const char *pgcmd="pg_dump -R -a -D -t %s %s | grep -E \"%s\" | grep \"%s\" | perl -pe \"s/\',/\',\n/g; s/\\134012/\n/g;s/VALUES /VALUES\n/;s/INSERT/\nINSERT/g;\" >> %s";
 
 int main(int argc, char **argv)
 {
@@ -98,10 +98,10 @@ int main(int argc, char **argv)
     }
   }
 
-  ssprintf(buf, "/usr/bin/psql %s < %s", db.c_str(), file);
+  ssprintf(buf, "/usr/local/bin/psql %s < %s", db.c_str(), file);
   system(buf.c_str());
 
-  unlink(file);
+  //  unlink(file);
 
   printf("Done. Your backup file is: ");
   fflush(stdout);
