@@ -471,16 +471,17 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
 
   temp = min(from_obj->getDrinkUnits(),
        getMaxDrinkUnits() - getDrinkUnits());
-  from_obj->addToDrinkUnits(-temp);
+
+  if(!from_obj->isDrinkConFlag(DRINK_PERM))
+    from_obj->addToDrinkUnits(-temp);
   addToDrinkUnits(temp);
 
   from_obj->weightChangeObject(-temp * SIP_WEIGHT);
   weightChangeObject(temp * SIP_WEIGHT);
 
   //  addDrinkConFlags(from_obj->getDrinkConFlags());
-  if(from_obj->getDrinkConFlags() == DRINK_POISON){
+  if(from_obj->isDrinkConFlag(DRINK_POISON))
     addDrinkConFlags(DRINK_POISON);
-  }
 }
 
 int TBeing::doPour(const char *argument)
