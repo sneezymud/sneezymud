@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.3  2001/06/28 04:47:24  peel
+// added spec mob stub for realEstateAgent
+//
 // Revision 5.2  2001/06/18 04:31:00  peel
 // Added bankGuard proc
 //
@@ -160,7 +163,8 @@ const int SPEC_DOPPLEGANGER    =152;
 const int SPEC_TUSKGORE        =153;
 const int SPEC_FISHTRACKER     =154;
 const int SPEC_BANK_GUARD      =155;
-const int NUM_MOB_SPECIALS     =156;
+const int SPEC_REAL_ESTATE_AGENT=156;
+const int NUM_MOB_SPECIALS     =157;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -203,6 +207,7 @@ extern int tunnelerEarthquake(TBeing *, cmdTypeT, const char *, TMonster *, TObj
 extern int tuskGoring(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fishTracker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 class attune_struct {
   public:
