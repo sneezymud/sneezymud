@@ -1265,6 +1265,7 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
 	  TRoom *hp = NULL;
 	  if (exitp && 
 	      (hp = real_roomp(exitp->to_room)) &&
+	      !(hp->isRoomFlag(ROOM_NO_MOB)) &&
 	      (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
 	    // check in_zone criteria
 	    if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
