@@ -1521,6 +1521,8 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
 
+
+
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {
             addToStructPoints(-1);
@@ -1678,3 +1680,46 @@ void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_n
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 }
 
+bool TBaseWeapon::isPoisoned() const
+{
+  for (int j = 0; j < MAX_SWING_AFFECT; j++) {
+    if (oneSwing[j].type == SPELL_POISON) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+void TBaseWeapon::applyPoison(TBeing *vict)
+{
+  TBeing *ch;
+
+  for (int j = 0; j < MAX_SWING_AFFECT; j++) {
+    if ((oneSwing[j].type == SPELL_POISON) ||
+	(oneSwing[j].type == AFFECT_DISEASE)) {
+      vict->affectTo(&(oneSwing[j]), -1);
+      
+      if (oneSwing[j].type == AFFECT_DISEASE)
+	disease_start(vict, &(oneSwing[j]));
+      
+      // kill the affect on the weapon
+      oneSwing[j].type = TYPE_UNDEFINED;
+      oneSwing[j].level = 0;
+      oneSwing[j].duration = 0;
+      oneSwing[j].modifier = 0;
+      oneSwing[j].location = APPLY_NONE;
+      oneSwing[j].modifier2 = 0;
+      oneSwing[j].bitvector = 0;
+    }
+  }
+
+  if((ch=dynamic_cast<TBeing *>(equippedBy))){
+    act("There was something nasty on that $o!",
+	FALSE, ch, this, vict, TO_VICT, ANSI_RED);
+    act("You inflict something nasty on $N!",
+	FALSE, ch, this, vict, TO_CHAR, ANSI_RED);
+    act("There was something nasty on that $o!",
+	FALSE, ch, this, vict, TO_NOTVICT, ANSI_RED);
+  }
+}

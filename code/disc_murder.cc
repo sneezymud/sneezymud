@@ -749,99 +749,122 @@ int TThing::poisonMePoison(TBeing *ch, TBaseWeapon *)
 }
 
 
+void addPoisonDefaults(affectedData *aff, int level, int duration)
+{
+  aff->type=SPELL_POISON;
+  aff->bitvector=AFF_POISON;
+  aff->renew=-1;
+  aff->level=level;
+  aff->duration=duration;  
+}
+
 // this is ugly as hell
 void addPoison(affectedData aff[5], 
 	       int vnum, int level, int duration){
-  int i;
-
-  for(i=0;i<5;++i){
-    aff[i].type=SPELL_POISON;
-    aff[i].bitvector=AFF_POISON;
-    aff[i].renew=-1;
-    aff[i].level=level;
-    aff[i].duration=duration;
-  }
-
+  addPoisonDefaults(&aff[4], level, duration);
   aff[4].type = AFFECT_DISEASE;
   aff[4].modifier = DISEASE_POISON;
   aff[4].location = APPLY_NONE;
 
   switch(vnum){
     case 31008:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_DEX;
       aff[0].modifier=-20;
+      addPoisonDefaults(&aff[1], level, duration);
       aff[1].location=APPLY_AGI;
       aff[1].modifier=-20;
+      addPoisonDefaults(&aff[2], level, duration);
       aff[2].location=APPLY_STR;
       aff[2].modifier=-20;
+      addPoisonDefaults(&aff[3], level, duration);
       aff[3].location=APPLY_SPE;
       aff[3].modifier=-20;
       break;
     case 31009:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_VISION;
       aff[0].modifier=-5;
+      addPoisonDefaults(&aff[1], level, duration);
       aff[1].location=APPLY_FOC;
       aff[1].modifier=-20;
+      addPoisonDefaults(&aff[2], level, duration);
       aff[2].location=APPLY_WIS;
       aff[2].modifier=-20;
       break;
     case 31010:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_VISION;
       aff[0].modifier=-10;
+      addPoisonDefaults(&aff[1], level, duration);
       aff[1].location=APPLY_FOC;
       aff[1].modifier=-20;
       break;
-    case 31011:
+    case 31011:      
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
+      addPoisonDefaults(&aff[1], level, duration);
       aff[1].location=APPLY_INT;
       aff[1].modifier=-20;
+      addPoisonDefaults(&aff[2], level, duration);
       aff[2].location=APPLY_FOC;
       aff[2].modifier=-20;
       break;
     case 31012:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
       break;
     case 31013:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_LIGHT;
       aff[0].modifier=10;
       break;
     case 31014:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_INT;
       aff[0].modifier=-20;
+      addPoisonDefaults(&aff[1], level, duration);
       aff[1].location=APPLY_SPE;
       aff[1].modifier=-40;
       break;
     case 31015:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_SLEEP;
       aff[0].modifier2=-30;
       break;
     case 31016:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_HEAT;
       aff[0].modifier2=-20;
       break;
     case 31017:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_COLD;
       aff[0].modifier2=-20;
       break;
     case 31018:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_DRAIN;
       aff[0].modifier2=-20;
       break;
     case 31019:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_SPE;
       aff[0].modifier=-20;
       break;
     case 31020:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-40;
       break;
     default:
+      addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
       break;
