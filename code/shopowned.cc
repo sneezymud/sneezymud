@@ -208,6 +208,14 @@ int TShopOwned::setRates(string arg)
   arg = one_argument(arg, buf);
   if(buf != "")
     argc++;
+
+
+  if(profit_buy>5 || profit_buy<0 ||
+     profit_sell>5 || profit_sell<0){
+    keeper->doTell(ch->getName(), "Due to fraud regulations, I cannot set my profit_sell or profit_buy to more than 5 or less than 0.");
+    return FALSE;
+  }
+  
   
   if(argc==0){
     db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
