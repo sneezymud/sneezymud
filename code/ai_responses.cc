@@ -1374,7 +1374,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
       tmpstr = "Welcome to the ";
       tmpstr += FactionInfo[ch->getFaction()].faction_name;
       tmpstr += "!";
-      mob->doSay(tmpstr.c_str());
+      mob->doSay(tmpstr);
 
       return FALSE;
     case 3:
@@ -1396,7 +1396,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
       tmpstr = "Welcome to the ";
       tmpstr += FactionInfo[ch->getFaction()].faction_name;
       tmpstr += "!";
-      mob->doSay(tmpstr.c_str());
+      mob->doSay(tmpstr);
 
       return FALSE;
     case 4:
@@ -1418,7 +1418,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
       tmpstr = "Welcome to the ";
       tmpstr += FactionInfo[ch->getFaction()].faction_name;
       tmpstr += "!";
-      mob->doSay(tmpstr.c_str());
+      mob->doSay(tmpstr);
 
       return FALSE;
     case 5:

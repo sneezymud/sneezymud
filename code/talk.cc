@@ -129,7 +129,7 @@ static sstring garble(const char *arg, int chance)
 
 
 // may return DELETE_THIS
-int TBeing::doSay(const char *arg)
+int TBeing::doSay(const sstring &arg)
 {
   char buf[MAX_INPUT_LENGTH + 40];
   char garbed[256];
@@ -151,17 +151,16 @@ int TBeing::doSay(const char *arg)
     sendTo("You are a dumb animal; you can't talk!\n\r");
     return FALSE;
   }
-  for (; isspace(*arg); arg++);
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
     act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
-  if (!*arg)
+  if (arg.empty())
     sendTo("Yes, but WHAT do you want to say?\n\r");
   else {
-    mud_str_copy(garbed, garble(arg, getCond(DRUNK)).c_str(), 256);
+    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)).c_str(), 256);
 
     if (hasDisease(DISEASE_DROWNING)) 
       mud_str_copy(garbed, "Glub glub glub.", 256);

@@ -453,7 +453,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           break;
         case CMD_SAY:
         case CMD_SAY2:
-          rc = doSay(argument);
+          rc = doSay(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_LOOK:

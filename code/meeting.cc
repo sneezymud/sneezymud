@@ -42,7 +42,7 @@ static void announceNextSpeaker(TMonster *myself, organizer_struct *job)
   job->start_time = time(0);
   if (!job->speech_list.empty()) {
     sstring tmpstr = "The next speaker is " + job->speech_list.front();
-    myself->doSay(tmpstr.c_str());
+    myself->doSay(tmpstr);
   } else
     myself->doSay("There are no speakers listed.");
 }
@@ -115,7 +115,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       } else {
         sstring tmpstr = "The next speaker is ";
         tmpstr += ch->getName();
-        myself->doSay(tmpstr.c_str());
+        myself->doSay(tmpstr);
       }
 
       job->speech_list.push_back(ch->name);
@@ -263,7 +263,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
         sstring tmpstr = "The current speaker, ";
         tmpstr += nameStr;
         tmpstr += ", no longer seems to be here.";
-        myself->doSay(tmpstr.c_str());
+        myself->doSay(tmpstr);
         announceNextSpeaker(myself, job);
         continue;
       }
@@ -274,7 +274,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
       if ((job->start_time + job->speech_dur) < time(0)) {
         sstring tmpstr = nameStr;
         tmpstr += "'s alloted time has expired.";
-        myself->doSay(tmpstr.c_str());
+        myself->doSay(tmpstr);
         announceNextSpeaker(myself, job);
       }
     }
