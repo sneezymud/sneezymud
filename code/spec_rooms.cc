@@ -296,6 +296,8 @@ static int bankLimit(const TBeing *ch)
 
 int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 {
+  return FALSE;
+
   //  const int MONK_BANK_LIMIT = 500;
 
   if (cmd >= MAX_CMD_LIST)  // we only trap player commands in this spec_proc 
