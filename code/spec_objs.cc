@@ -7662,6 +7662,8 @@ extern int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
 extern int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int lotteryTicket(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 // assign special procedures to objects
@@ -7801,5 +7803,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "lycanthropy cure", lycanthropyCure}, // 130
   {FALSE, "vella key join", vellaKeyJoin},
   {FALSE, "Gnath well bucket", fillBucket},
+  {FALSE, "sweeps scratch", sweepsScratch},
+  {FALSE, "sweeps split join", sweepsSplitJoin},
   {FALSE, "last proc", bogusObjProc}
 };
