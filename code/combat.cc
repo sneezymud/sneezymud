@@ -3492,13 +3492,13 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
     if(dynamic_cast<TMonster *>(this) && !master){
       // unlimited ammo for mobs
-      dropSpentCasing(roomp, gun->getAmmoType());
+      if(!gun->isCaseless())
+	dropSpentCasing(roomp, gun->getAmmoType());
     } else {
-      TAmmo *ammo;
-      if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo())) &&
-	 ammo->getRounds()>0){
-	ammo->setRounds(ammo->getRounds()-1);
-	dropSpentCasing(roomp, ammo->getAmmoType());
+      if(gun->getRounds()>0){
+	if(!gun->isCaseless() && gun->getAmmo())
+	  dropSpentCasing(roomp, gun->getAmmo()->getAmmoType());
+	gun->setRounds(gun->getRounds()-1);
       } else {
 	act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
 	found=TRUE;
@@ -3507,7 +3507,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
     mod = attackRound(vict); // no defense against guns
 
-    roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
+    if(!gun->isSilenced())
+      roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
   }
 
 

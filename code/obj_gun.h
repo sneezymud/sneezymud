@@ -10,6 +10,13 @@
 
 #include "obj_general_weapon.h"
 
+const unsigned int GUN_FLAG_SILENCED         = (1<<0);
+const unsigned int GUN_FLAG_CASELESS         = (1<<1);
+const unsigned int GUN_FLAG_CLIPLESS         = (1<<2);
+
+
+
+
 class TAmmo : public TObj {
   private:
     int ammotype;
@@ -35,9 +42,6 @@ class TAmmo : public TObj {
 };
 
 
-
-
-
 class TGun : public TGenWeapon {
   private:
     int rof;
@@ -52,8 +56,13 @@ class TGun : public TGenWeapon {
     int getAmmoType() const { return ammotype; }
     void setAmmo(TAmmo *a) { ammo=a; }
     TAmmo *getAmmo() const { return ammo; }
+    void setRounds(int);
+    int getRounds() const;
     void setFlags(int f) { flags=f; }
     int getFlags() const { return flags; }
+    bool isSilenced() const { return flags & GUN_FLAG_SILENCED; }
+    bool isCaseless() const { return flags & GUN_FLAG_CASELESS; }
+    bool isClipless() const { return flags & GUN_FLAG_CLIPLESS; }
     
 
     bool canStab() const { return false; }

@@ -76,6 +76,7 @@ const char *shellkeyword [] =
 };
 
 
+
 const char *getAmmoKeyword(int ammo){
   if(ammo < AMMO_NONE ||
      ammo >= AMMO_MAX){
@@ -461,8 +462,9 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     }
 
     // decrement ammo and drop a casing
-    ammo->setRounds(ammo->getRounds()-1);
-    dropSpentCasing(ch->roomp, ammo->getAmmoType());
+    if(!isCaseless())
+      dropSpentCasing(ch->roomp, ammo->getAmmoType());
+    setRounds(getRounds()-1);
     
     // send messages
     capbuf = colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
@@ -486,8 +488,9 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
-    ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
-				 ch->in_room);
+    if(!isSilenced())
+      ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
+				   ch->in_room);
 
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
@@ -505,3 +508,19 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 }
 
 
+void TGun::setRounds(int r){
+  if(getAmmo()){
+    if(r<=0 && isClipless()){
+      delete ammo;
+      ammo=NULL;
+    } else
+      getAmmo()->setRounds(r);
+  }
+}
+
+int TGun::getRounds() const {
+  if(getAmmo())
+    return getAmmo()->getRounds();
+  else 
+    return 0;
+}
