@@ -9792,8 +9792,8 @@ objs/obj_armor_wand.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_armor_wand.o: room.h obj.h connect.h obj_drug.h charfile.h being.h
 objs/obj_armor_wand.o: person.h monster.h account.h extern.h handler.h
 objs/obj_armor_wand.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_armor_wand.o: materials.h obj_armor.h obj_base_clothing.h obj_wand.h
-objs/obj_armor_wand.o: obj_magic_item.h
+objs/obj_armor_wand.o: materials.h obj_armor_wand.h obj_armor.h
+objs/obj_armor_wand.o: obj_base_clothing.h obj_wand.h obj_magic_item.h
 objs/obj_arrow.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_arrow.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_arrow.o: /usr/include/gnu/stubs.h
