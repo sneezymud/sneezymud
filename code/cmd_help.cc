@@ -819,3 +819,16 @@ void cleanUpHelp()
   for (i = 0; i < spellIndex.size(); i++)
     delete [] spellIndex[i];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
