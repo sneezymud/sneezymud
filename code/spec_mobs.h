@@ -211,6 +211,7 @@ extern int tuskGoring(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fishTracker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int shopWhisper(TBeing *, TMonster *, int, const char *);
 
 class attune_struct {
   public:

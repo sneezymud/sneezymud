@@ -2038,40 +2038,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 #endif
 
   if(cmd == CMD_WHISPER){
-    char buf[256];
-
-    arg = one_argument(arg, buf);
-    if(!isname(buf, myself->name))
-      return FALSE;
-
-    arg = one_argument(arg, buf);
-
-    TShopOwned tso(shop_nr, myself, ch);
-    
-    if(!strcmp(buf, "info")){ /////////////////////////////////////////
-      tso.showInfo();
-    } else if(!strcmp(buf, "dividend")){
-      tso.setDividend(arg);
-    } else if(!strcmp(buf, "reserve")){
-      tso.setReserve(arg);
-    } else if(!strcmp(buf, "setrates")){ //////////////////////////////////
-      tso.setRates(arg);
-    } else if(!strcmp(buf, "buy")){ /////////////////////////////////
-      tso.buyShop(arg);
-    } else if(!strcmp(buf, "sell")){ //////////////////////////////////
-      tso.sellShop();
-    } else if(!strcmp(buf, "give")){ /////////////////////////////
-      tso.giveMoney(arg);
-    } else if(!strcmp(buf, "access")){ ////////////////////////////
-      tso.setAccess(arg);
-    } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
-      tso.doLogs(arg);
-    } else {
-      myself->doTell(ch->getName(), "Read 'help shop owner' for assistance.");
-    }
-
-
-    return TRUE;
+    return shopWhisper(ch, myself, shop_nr, arg);
   }
 
   return FALSE;
