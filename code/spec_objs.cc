@@ -6843,10 +6843,17 @@ int chromaticWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   
-  if (cmd != CMD_OBJ_OPENED) 
+  if (cmd != CMD_OBJ_OPENED || cmd != CMD_GENERIC_RESET) 
     return FALSE;
 
-  if(isname("[OPENED]", o->getName()))
+  TObj *dummy;
+  if (cmd == CMD_GENERIC_RESET)
+  {
+    dummy = read_object(obj_index[o->getItemIndex()].virt, VIRTUAL);
+    o->name = dummy->name;
+    return TRUE;
+  }
+  if(isname("[OPENED]", o->name))
     return FALSE;
 
   TBeing *mob = read_mobile(obj_index[o->getItemIndex()].virt , VIRTUAL);
@@ -7522,10 +7529,10 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 int vellaKeyJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   // joins the two held keys
   sstring buf;
-  if (!(cmd == CMD_COMBINE)) 
+  if (cmd != CMD_COMBINE) 
     return FALSE;
   argument_parser(arg, buf);
-  if (!(buf == "keys"))
+  if (buf != "keys")
     return FALSE;
  
   if (!o || !ch || !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
@@ -7584,11 +7591,38 @@ int vellaKeyJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   delete key1;
   delete key2;
-  ch->equipChar(linked_key, ch->getPrimaryHold(), SILENT_YES);
+ch->equipChar(linked_key, ch->getPrimaryHold(), SILENT_YES);
 
   return TRUE;
 }
 
+int fillBucket (TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  sstring buf;
+  if (cmd != CMD_FILL) 
+    return FALSE;
+  argument_parser(arg, buf);
+  if (buf != "bucket")
+    return FALSE;
+
+  TDrinkCon *bucket=dynamic_cast<TDrinkCon *>(o);
+  
+  if (!me->hasHands()) {
+    me->sendTo(COLOR_OBJECTS, "I'm afraid you need hands to manipulate the bucket.\n\r");
+    return TRUE;
+  }
+  if (me->bothArmsHurt()) {
+    me->sendTo(COLOR_OBJECTS, "I'm afraid you need working arms to manipulate the bucket.\n\r");
+  }
+
+  act("You throw the bucket into the well and crank it back up again, full of fresh water.", TRUE, me, bucket, 0, TO_CHAR);
+  act("$n throws the bucket into the well and cranks it back up again.", TRUE, me, bucket, 0, TO_ROOM);
+  
+  bucket->setDrinkUnits(bucket->getMaxDrinkUnits());
+
+  return TRUE;
+}
+    
 //MARKER: END OF SPEC PROCS
 
 
@@ -7740,5 +7774,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "lottery ticket", lotteryTicket},
   {FALSE, "lycanthropy cure", lycanthropyCure}, // 130
   {FALSE, "vella key join", vellaKeyJoin},
+  {FALSE, "Gnath well bucket", fillBucket},
   {FALSE, "last proc", bogusObjProc}
 };
