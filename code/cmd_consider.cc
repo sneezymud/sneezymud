@@ -88,7 +88,7 @@ void TBeing::doConsider(const char *argument)
     sendTo("You must sure have a big ego to contemplate fighting gods.\n\r");
     act("$N just considered fighting you.",TRUE,victim,0,this,TO_CHAR);
     return;
-  } else if (dynamic_cast<TPerson *>(victim)) {
+  } else if (dynamic_cast<TPerson *>(victim) || isname("[clone]", victim->name)) {
     if (isImmortal() && hasWizPower(POWER_IMM_EVAL)) {
       diff       = (int) (victim->getArmor());
       sh_int suggest = victim->suggestArmor();
