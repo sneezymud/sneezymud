@@ -198,6 +198,10 @@ void doStocks(){
 
     prevprice=price;
     price+=range;
+    
+    if(price<0)
+      price=0;
+
 
     dbquery(TRUE, NULL, "sneezy", "doStocks2", "insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
     dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f, prevprice=%f where ticker='%s'", price, prevprice, stockinfo_row[0]);
