@@ -159,6 +159,13 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
           if (bSuccess(ch, learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
+        case -1:
+          act("You feel the loa ignoring your vain attempt and feel completed to stop.",
+              false, ch, 0, 0, TO_CHAR);
+          ch->stopTask();
+          if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+            corpse->remCorpseFlag(CORPSE_SACRIFICE);
+	  break;
         default:
           act("Bug Maror if you get this message.", false, ch, 0, 0, TO_CHAR);
           vlogf(LOG_BUG, "no appropriate option in switch in sacrifice.cc");
