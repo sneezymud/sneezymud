@@ -545,17 +545,17 @@ void makezonelist(FILE *zone){
 void usage(){
   printf("Syntax: amap <options>\n");
   printf("  -f <tinyfile>   - any room file will work.  the default is to\n");
-  printf("                  - use /mud/code/lib/tinyworld.wld.\n");
+  printf("                    use /mud/code/lib/tinyworld.wld.\n");
   printf("  -s <scale by>   - scaling factor for the map, default is 2\n");
-  printf("                  - factor of 1 will give you a more compact view\n");
+  printf("                    factor of 1 will give you a more compact view\n");
   printf("  -c              - print consistency errors.  this will create\n");
-  printf("                  - tons of spam, so redirect to a file.  suggest\n");
-  printf("                  - using the q option with this as well\n");
+  printf("                    tons of spam, so redirect to a file.  suggest\n");
+  printf("                    using the q option with this as well\n");
   printf("  -q              - quiet mode, useful for slow connections\n");
   printf("  -h <head room>  - specify the 0,0,0 coordinate room\n");
   printf("  -r <room range> - a list of room numbers to map, in the same\n");
-  printf("                  - format as the other tools.\n");
-  printf("                  - MUST BE THE LAST ARGUMENT\n");
+  printf("                    format as the other tools.\n");
+  printf("                    MUST BE THE LAST ARGUMENT\n");
   printf("\n");
   printf("You may attempt to map multiple zones if they are connected, by\n");
   printf("specifying both of their room ranges, ex: 2350-2374 600-649\n");
