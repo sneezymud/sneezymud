@@ -651,7 +651,9 @@ enum spellNumT {
   AFFECT_OBJECT_USED,
   AFFECT_WAS_INDOORS,
   AFFECT_BITTEN_BY_VAMPIRE,
-     LAST_ODDBALL_AFFECT
+     LAST_ODDBALL_AFFECT,
+// DO NOT MODIFY THIS, AFFECTS SIZE OF CHARFILE
+     ABSOLUTE_MAX_SKILL=900
 };
 const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);
 const spellNumT MAX_SPELL = spellNumT(SKILL_KICK); // 1 more than last spell
@@ -689,8 +691,6 @@ extern spellNumT & operator-= (spellNumT &, spellNumT);
      SKILL_TAN,
 #endif
 
-// DO NOT MODIFY THIS, AFFECTS SIZE OF CHARFILE
-const spellNumT ABSOLUTE_MAX_SKILL    = spellNumT(900);
 
 #endif
 
