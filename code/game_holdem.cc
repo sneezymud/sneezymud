@@ -206,10 +206,10 @@ void HoldemGame::showdown(TBeing *ch)
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
 	ssprintf(buf, "%s", players[i]->hand[1]->getName());
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
-	ssprintf(buf, "$n has %s (%i).\n\r", handValToStr(hands[i]).c_str(), hands[i]);
+	ssprintf(buf, "$n has %s.\n\r", handValToStr(hands[i]).c_str());
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
 
-	ssprintf(buf, "You have %s (%i).\n\r", handValToStr(hands[i]).c_str(), hands[i]);
+	ssprintf(buf, "You have %s.\n\r", handValToStr(hands[i]).c_str());
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
 
 	players[i]->allin=false;
