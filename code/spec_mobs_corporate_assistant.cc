@@ -1,5 +1,5 @@
 #include "stdsneezy.h"
-
+#include "database.h"
 
 int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
