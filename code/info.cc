@@ -2262,7 +2262,7 @@ void TPerson::doUsers(const sstring &argument)
 	if(db.fetchRow()){
 	  buf2=fmt("[%s](%s)") % (d->host ? d->host : "????") % db["pingtime"];
 	} else {
-	  buf2=fmt("[%s](???)") % (d->host ? d->host : "????");
+	  buf2=fmt("[%s](??\?)") % (d->host ? d->host : "????");
 	}
 
         buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
@@ -3137,7 +3137,7 @@ void TBeing::doWorld()
 	db["min"] % norm();
       str += buf;
     } else {
-      buf=fmt("/???/???/???%s\n\r") % norm();
+      buf=fmt("/??\?/??\?/???%s\n\r") % norm();
       str += buf;
     }
   }
