@@ -2366,12 +2366,12 @@ void TBeing::doEquipment(const char *argument)
     if (!victim)
       victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
 
-    db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
-    while(db.fetchRow()){
-      tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
-    }
-
     if (victim) {
+      db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
+      while(db.fetchRow()){
+	tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
+      }
+
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
       found = FALSE;
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
