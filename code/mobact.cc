@@ -3844,7 +3844,7 @@ int TMonster::factionAggroCheck()
 int TMonster::aggroCheck(bool mobpulse)
 {
   TThing *t, *t2;
-  TPerson *tmp_ch;
+  TBeing *tmp_ch;
   int rc, numtargets, whichtarget;
   numtargets = 0;
   bool hasWandered = FALSE;
@@ -3858,12 +3858,13 @@ int TMonster::aggroCheck(bool mobpulse)
   if (desc)
     return FALSE;
 
-  // OK check this out.  I want to make sentenial aggro mobs not aggro unless they are in
-  // their starting room, and stay_zone aggro mobs not aggro unless they are in the zone
-  // that include their starting room.  This works in conjunction with the free tracking code
-  // i set up to make sure high level aggro mobs don't go and fuck lowbies up, but should also
-  // make mobs act like they should under normal circumstances
-  // ok, lets do it. -Dash 4/7/01
+  // OK check this out.  I want to make sentenial aggro mobs not aggro
+  // unless they are in their starting room, and stay_zone aggro mobs
+  // not aggro unless they are in the zone that include their starting
+  // room.  This works in conjunction with the free tracking code i
+  // set up to make sure high level aggro mobs don't go and fuck
+  // lowbies up, but should also make mobs act like they should under
+  // normal circumstances ok, lets do it. -Dash 4/7/01
   
   TRoom *rp1 = NULL, *rp2 = NULL;
 
@@ -3874,8 +3875,8 @@ int TMonster::aggroCheck(bool mobpulse)
   if (IS_SET(specials.act, ACT_SENTINEL) && rp1 != rp2)
     hasWandered = TRUE;
 
-  // ok now we know if theyre out of their home area, now we just tack on a level check later on
-  // to protect lowbies
+  // ok now we know if theyre out of their home area, now we just tack
+  // on a level check later on to protect lowbies
 
 
   // Some randomization of who gets attacked added - Brutius 1/28/97
@@ -3884,9 +3885,8 @@ int TMonster::aggroCheck(bool mobpulse)
 
     for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
-      // cast to Person, rather than isPc(), so poly'd chars are safe 
-      tmp_ch = dynamic_cast<TPerson *>(t);
-      if (!tmp_ch)
+      tmp_ch = dynamic_cast<TBeing *>(t);
+      if (!tmp_ch || !tmp_ch->isPc())
         continue;
 
       if (canSee(tmp_ch) && (getPosition() >= POSITION_STANDING)) {
@@ -3904,9 +3904,8 @@ int TMonster::aggroCheck(bool mobpulse)
     if(!mobpulse) whichtarget = -1;  // no randomization since we're attacking on roomenter
     for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
-      // cast to Person, rather than isPc(), so poly'd chars are safe
-      tmp_ch = dynamic_cast<TPerson *>(t);
-      if (!tmp_ch)
+      tmp_ch = dynamic_cast<TBeing *>(t);
+      if (!tmp_ch || !tmp_ch->isPc())
         continue;
 
       if (canSee(tmp_ch) && (getPosition() >= POSITION_STANDING)) {
