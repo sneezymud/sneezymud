@@ -1,3 +1,9 @@
+12-24-99 - Lapsos
+- Modified the 'damage output' on evaluate <weapon> and the AC output on
+  evaluate <armor> to display according to PC lvl VS obj level.  Figured if
+  we are going to be harsh in this area we really do need to give them an
+  idea of what this stuff is compared to them.
+
 12-21-99 - Peel
 - I've been working on some mage stuff, 'store' and 'trigger' commands,
   dealing with casting spells and such.  I alterated the doCast->doDiscipline
