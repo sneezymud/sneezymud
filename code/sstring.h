@@ -20,6 +20,7 @@ public:
   const sstring cap() const;
   const sstring uncap() const;
   const sstring word(int) const;
+  const sstring comify() const;
 
   // other functions
   const bool hasDigit() const;

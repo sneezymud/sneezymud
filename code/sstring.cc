@@ -2,6 +2,36 @@
 #include "sstring.h"
 #include "format.h"
 
+
+// puts commas every 3rd char, for formatting number strings
+const sstring sstring::comify() const
+{
+  sstring tString=*this;
+  int  strCount, charIndex = 0;
+
+  tString=fmt("%.0f") % convertTo<float>(*this);
+  strCount = tString.length();
+  tString=*this;
+
+  for (; charIndex < strCount; charIndex++) {
+    // put commas every 3rd char EXCEPT if next char is '-'
+    // that is, want "123456" to become "123,456" 
+    // but don't want "-123" to become "-,123"
+    if (!((strCount - charIndex) % 3) && charIndex != 0 &&
+        !(charIndex == 1 && (*this)[0] == '-'))
+      tString += ",";
+
+    tString += (*this)[charIndex];
+  }
+
+  for (; (*this)[charIndex]; charIndex++)
+    tString += (*this)[charIndex];
+
+  return tString;
+}
+
+
+
 // converts newlines in the string to CRLF if possible
 // this is for preparation for sending out to a player
 // for cross platform compatibility
@@ -189,3 +219,6 @@ const sstring & sstring::operator=(fmt &a)
   this->assign(a);
   return *this;
 }
+
+
+
