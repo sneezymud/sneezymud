@@ -7062,6 +7062,223 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
   return FALSE;
 }
 
+int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
+{
+  TBeing *ch = NULL;
+  //  TObj *shield = NULL;
+
+  char buf2[256];
+  char arg1[256];
+  char arg2[256];
+
+  int charge;
+  int newcharge;
+  int isOn = 0; // 1 = on, 0 = off
+  bool ret = FALSE;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  sscanf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", &isOn,  &charge);
+
+  newcharge = charge;
+
+  if (cmd == CMD_GENERIC_PULSE) {
+
+    if (charge < 1000 && ch->getHit() > 1 && isOn == 1 && !(::number(0,9))) {
+      // if we aren't fully charged, we have hitpoints left, the charger is on, then 1 in 10 chance of...
+      ch->setHit(max(1,ch->getHit() - ::number(10,20))); // subtract 1-10 hp from player, but don't kill
+      newcharge = min(1000,newcharge + ::number(10,50));
+      act("You wince as your <W>forearm guard<1> drains some <r>blood<1> from your arm.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n winces and grabs $s forearm in pain.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+      act("The <P>charge<1> light on your <W>forearm guard<1> blinks briefly.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("A small <P>light<1> on $n's <W>forearm guard<1> blinks briefly.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+
+
+
+  } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
+    arg = one_argument(arg, arg1);
+    arg = one_argument(arg, arg2);
+    if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
+      
+      
+      
+      
+      act("You press the display button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+      
+      
+      sprintf(buf2, "The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      sprintf(buf2, "The light representing the first stim is %s.", (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The light representing the second stim is %s.", (charge >= 800 ? "<C>lit<1>" : "<k>dim<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The light representing the third stim is %s.", (charge >= 600 ? "<G>lit<1>" : "<k>dim<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The light representing the fourth stim is %s.", (charge >= 400 ? "<Y>lit<1>" : "<k>dim<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The light representing the fifth stim is %s.", (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "$n glances quickly at the panel before flipping it closed again.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      sprintf(buf2, "The charging LED on your <W>forearm guard<1> is currently %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "You quickly flip the display panel closed again.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+      
+      ret = TRUE;
+    } else if (is_abbrev(arg1, "stim") && is_abbrev(arg2, "button")) {
+      
+      act("You press the stim button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+      
+      if (charge < 200) {
+	sprintf(buf2, "Nothing seems to happen.");
+	act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      } else {
+      
+	newcharge = charge - 200;
+
+	affectedData aff;
+	
+	aff.type = AFFECT_DRUG;
+	aff.level = 50;
+	aff.duration = 2 * UPDATES_PER_MUDHOUR;
+	aff.modifier = ::number(10,20);
+	aff.location = APPLY_SPE;
+	aff.bitvector = AFF_SILENT;
+	ch->affectTo(&aff, -1);
+	aff.type = AFFECT_DRUG;
+	aff.level = 50;
+	aff.duration = 2 * UPDATES_PER_MUDHOUR;
+	aff.modifier = 0 - ::number(10,20);
+	aff.location = APPLY_CON;
+	aff.bitvector = AFF_SILENT;
+	ch->affectTo(&aff, -1);
+	if (charge == 1000) {  // give an extra boost when stimming from full 
+	  aff.type = SPELL_HASTE;
+	  aff.level = 50;
+	  aff.duration =  1 * UPDATES_PER_MUDHOUR;
+	  aff.modifier = 0;
+	  aff.location = APPLY_NONE;
+	  aff.bitvector = AFF_SILENT;
+	  ch->affectTo(&aff, -1);
+	}
+	
+	act("You feel a <r>sharp prick<1> from your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+	act("<o>Suddenly a tendril of burning fire seems to course through your bloodstream!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("You shudder in pain but simultaneously feel your reflexes become quicker!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+	act("$n's eyes widen for a second as $e gasps in pain.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+        act("$e shudders momentarily.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+	int rc = ch->reconcileDamage(ch, ::number(5,10), DAMAGE_DRAIN);
+	if (rc == -1)
+	  return DELETE_VICT;
+      }
+      ret = TRUE;
+      
+    } else if (is_abbrev(arg1, "charge") && is_abbrev(arg2, "button")) {
+
+      act("You press the charge button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+
+
+      if (isOn) {
+        isOn = 0;
+      } else {
+        isOn = 1;
+      }
+
+      sprintf(buf2, "The charging LED on your $o turns %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "A little %s on $n's <W>forearm guard<1> %s.", 
+	      (isOn ? "<k>light<1>" : "<P>light<1>"), (isOn ? "turns <P>on<1>" : "goes <k>out<1>"));
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      
+      sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
+      ret = TRUE;
+      
+    }
+    
+  }
+  
+  
+  if (newcharge != charge) {
+    // for display lights turning on  
+    if (newcharge >= 200 && charge < 200) {
+      sprintf(buf2, "The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <R>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge >= 400 && charge < 400) {
+      sprintf(buf2, "The <k>second<1> LED on your <W>forearm guard<1> begins to <Y>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <Y>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge >= 600 && charge < 600) {
+      sprintf(buf2, "The <k>third<1> LED on your <W>forearm guard<1> begins to <G>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <G>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge >= 800 && charge < 800) {
+      sprintf(buf2, "The <k>fourth<1> LED on your <W>forearm guard<1> begins to <C>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <C>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge == 1000 && charge < 1000) {
+      sprintf(buf2, "The <k>fifth<1> LED on your <W>forearm guard<1> begins to <B>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <B>glow<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    // for display lights turning off
+    if (newcharge < 200 && charge >= 200) {
+      sprintf(buf2, "The <R>first<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <R>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge < 400 && charge >= 400) {
+      sprintf(buf2, "The <Y>second<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <Y>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge < 600 && charge >= 600) {
+      sprintf(buf2, "The <G>third<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <G>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge < 800 && charge >= 800) {
+      sprintf(buf2, "The <C>fourth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <C>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+    }
+    if (newcharge < 1000 && charge >= 1000) {
+      sprintf(buf2, "The <B>fifth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      
+    }
+    sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
+  }
+  
+  return ret;
+}
+
+
+
 
 int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
@@ -7382,5 +7599,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},
   {FALSE, "Finns Gaff", finnsGaff},
+  {FALSE, "stim pack", stimPack},
   {FALSE, "last proc", bogusObjProc}
 };
