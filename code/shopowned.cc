@@ -214,6 +214,7 @@ int TShopOwned::setRates(string arg)
     arg = one_argument(arg, buf);
     if(buf == "all"){
       db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
+      db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
       keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
     } else {
     }
