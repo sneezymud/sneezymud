@@ -645,9 +645,13 @@ int TBeing::getPlayerID() const
 {
   TDatabase db(DB_SNEEZY);
   sstring myname;
+  int playerID=0;
 
   if(!isPc())
     return 0;
+
+  if(desc->playerID)
+    return desc->playerID;
 
   if (specials.act & ACT_POLYSELF) {
     myname=desc->original->getName();
@@ -658,7 +662,7 @@ int TBeing::getPlayerID() const
   db.query("select id from player where lower(name)=lower('%s')", myname.c_str());
 
   if(db.fetchRow()){
-    return convertTo<int>(db["id"]);
+    playerID=convertTo<int>(db["id"]);
   } else {
     vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
 
@@ -666,7 +670,7 @@ int TBeing::getPlayerID() const
     db.query("select id from player where lower(name)=('%s')", myname.c_str());
     
     if(db.fetchRow()){
-      return convertTo<int>(db["id"]);
+      playerID=convertTo<int>(db["id"]);
     } else {
       vlogf(LOG_BUG,fmt("Couldn't create an entry in player table for '%s'!") %
 	    myname);
@@ -674,7 +678,8 @@ int TBeing::getPlayerID() const
     }
   }
   
-  return 0;
+  desc->playerID=playerID;
+  return playerID;
 }
 
 void TBeing::showMultTo(const TThing *t, showModeT i, unsigned int n)

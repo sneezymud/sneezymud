@@ -76,6 +76,7 @@ Descriptor::Descriptor(TSocket *s) :
   career(),
   autobits(0),
   best_rent_credit(0),
+  playerID(0),
   character(NULL),
   account(NULL),
   original(NULL),
@@ -131,6 +132,7 @@ Descriptor::Descriptor(const Descriptor &a) :
   career(a.career),
   autobits(a.autobits),
   best_rent_credit(a.best_rent_credit),
+  playerID(a.playerID),
   character(a.character),
   account(a.account),
   original(a.original),
@@ -203,6 +205,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   career = a.career;
   autobits = a.autobits;
   best_rent_credit = a.best_rent_credit;
+  playerID=a.playerID;
   character = a.character;
   account = a.account;
   original = a.original;

@@ -400,6 +400,7 @@ class Descriptor
     drugData drugs[MAX_DRUG];
     unsigned int autobits;
     unsigned int best_rent_credit;
+    int playerID;
     char last_teller[128];
     TBeing *character;            // linked to char (might be a poly)
     TAccount *account;            // linked to account
