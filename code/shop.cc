@@ -2494,6 +2494,7 @@ void bootTheShops()
       sd.type.push_back(atoi(type_row[1]));
       type_row=mysql_fetch_row(type_res);
     }
+    sd.type.push_back(MAX_OBJ_TYPES);
     
     while(producing_row && atoi(producing_row[0])==shop_nr){
       sd.producing.push_back(real_object(atoi(producing_row[1])));
@@ -2862,7 +2863,7 @@ shopData::shopData(const shopData &t) :
   for(i=0;i<max_type;++i)
     type.push_back(t.type[i]);
 
-  unsigned int max_mat_type=t.type.size();
+  unsigned int max_mat_type=t.mat_type.size();
   mat_type.erase(mat_type.begin(), mat_type.end());
   for(i=0;i<max_mat_type;++i)
     mat_type.push_back(t.mat_type[i]);
