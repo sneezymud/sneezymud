@@ -75,132 +75,118 @@ D 0 35497 1 1        Inside a Smokey Shed -> Path Through a Small Village
 D 0 35498 2 1        The Jail -> Path Through a Small Village
 D 0 35498 5 2        The Jail -> A Jail Cell
 D 0 35499 4 2        A Jail Cell -> The Jail
-O 0 35476 9999 35412    a woodpile
-O 0 35488 9999 35412    a chopping block
-O 0 20 9999 35456       a chair
-O 0 20 9999 35456       a chair
-O 0 20 9999 35456       a chair
-O 0 20 9999 35456       a chair
-O 0 20 9999 35456       a chair
-O 0 20 9999 35456       a chair
-O 0 35492 9999 35456    a table
-O 0 35492 9999 35456    a table
-O 0 35494 9999 35456    a small brass candelabra
-O 0 35492 9999 35457    a table
-O 0 35494 9999 35457    a small brass candelabra
-O 0 35494 9999 35458    a small brass candelabra
-O 0 702 9999 35459      a bench
-O 0 702 9999 35459      a bench
-O 0 35494 9999 35459    a small brass candelabra
-O 0 35494 9999 35460    a small brass candelabra
-O 0 35489 9999 35461    a straw pallet
-O 0 35489 9999 35461    a straw pallet
-O 0 35494 9999 35461    a small brass candelabra
-O 0 35489 9999 35462    a straw pallet
-O 0 35489 9999 35462    a straw pallet
-O 0 35494 9999 35462    a small brass candelabra
-O 0 35412 9999 35463    a wooden counter
-O 0 35494 9999 35463    a small brass candelabra
-O 0 35492 9999 35464    a table
-O 0 35412 9999 35464    a wooden counter
-O 0 35494 9999 35464    a small brass candelabra
-O 0 35412 9999 35465    a wooden counter
-O 0 35494 9999 35465    a small brass candelabra
-O 0 152 9999 35466      a large forge
-O 0 151 9999 35466      a large black anvil
-O 0 35412 9999 35466    a wooden counter
-O 0 35494 9999 35466    a small brass candelabra
-O 0 20 9999 35467       a chair
-O 0 20 9999 35467       a chair
-O 0 20 9999 35467       a chair
-O 0 20 9999 35467       a chair
-O 0 35496 9999 35467    a simple wooden desk
-O 0 35496 9999 35467    a simple wooden desk
-O 0 35496 9999 35467    a simple wooden desk
-O 0 35496 9999 35467    a simple wooden desk
-O 0 35487 9999 35467    an old musty blackboard
-O 0 35494 9999 35467    a small brass candelabra
-O 0 20 9999 35468       a chair
-O 0 35496 9999 35468    a simple wooden desk
-O 0 35494 9999 35468    a small brass candelabra
-O 0 35495 9999 35469    a small stone fireplace
-O 0 35494 9999 35469    a small brass candelabra
-O 0 35412 9999 35470    a wooden counter
-O 0 35494 9999 35470    a small brass candelabra
-O 0 35495 9999 35471    a small stone fireplace
-O 0 35495 9999 35472    a small stone fireplace
-O 0 35495 9999 35473    a small stone fireplace
-O 0 35495 9999 35474    a small stone fireplace
-O 0 20 9999 35475       a chair
-O 0 35496 9999 35475    a simple wooden desk
-O 0 35494 9999 35475    a small brass candelabra
-O 0 35412 9999 35476    a wooden counter
-O 0 35494 9999 35476    a small brass candelabra
-O 0 35495 9999 35477    a small stone fireplace
-O 0 35494 9999 35477    a small brass candelabra
-O 0 35494 9999 35477    a small brass candelabra
-O 0 35495 9999 35478    a small stone fireplace
-O 0 35494 9999 35478    a small brass candelabra
-O 0 35494 9999 35478    a small brass candelabra
-O 0 35495 9999 35479    a small stone fireplace
-O 0 35494 9999 35479    a small brass candelabra
-O 0 35494 9999 35479    a small brass candelabra
-O 0 35495 9999 35480    a small stone fireplace
-O 0 35494 9999 35480    a small brass candelabra
-O 0 35495 9999 35481    a small stone fireplace
-O 0 35494 9999 35481    a small brass candelabra
-O 0 35495 9999 35482    a small stone fireplace
-O 0 35494 9999 35482    a small brass candelabra
-O 0 35495 9999 35483    a small stone fireplace
-O 0 35494 9999 35483    a small brass candelabra
-O 0 35495 9999 35484    a small stone fireplace
-O 0 35495 9999 35485    a small stone fireplace
-O 0 35495 9999 35486    a small stone fireplace
-O 0 35495 9999 35487    a small stone fireplace
-O 0 35495 9999 35488    a small stone fireplace
-O 0 35495 9999 35489    a small stone fireplace
-O 0 35495 9999 35490    a small stone fireplace
-O 0 35490 9999 35491    some small wooden bins
-O 0 35412 9999 35491    a wooden counter
-O 0 35494 9999 35491    a small brass candelabra
-O 0 35491 9999 35492    a long wooden pew
-O 0 35491 9999 35492    a long wooden pew
-O 0 35491 9999 35492    a long wooden pew
-O 0 35491 9999 35492    a long wooden pew
-O 0 35494 9999 35492    a small brass candelabra
-O 0 35489 9999 35493    a straw pallet
-O 0 35496 9999 35493    a simple wooden desk
+O 0 35476 1 35412    a woodpile
+O 0 35488 1 35412    a chopping block
+O 0 20 1 35456       a chair
+O 0 20 1 35456       a chair
+O 0 20 1 35456       a chair
+O 0 20 1 35456       a chair
+O 0 20 1 35456       a chair
+O 0 20 1 35456       a chair
+O 0 35492 1 35456    a table
+O 0 35492 1 35456    a table
+O 0 35494 1 35456    a small brass candelabra
+O 0 35492 1 35457    a table
+O 0 35494 1 35457    a small brass candelabra
+O 0 35494 1 35458    a small brass candelabra
+O 0 702 1 35459      a bench
+O 0 702 1 35459      a bench
+O 0 35494 1 35459    a small brass candelabra
+O 0 35494 1 35460    a small brass candelabra
+O 0 35489 1 35461    a straw pallet
+O 0 35489 1 35461    a straw pallet
+O 0 35494 1 35461    a small brass candelabra
+O 0 35489 1 35462    a straw pallet
+O 0 35489 1 35462    a straw pallet
+O 0 35494 1 35462    a small brass candelabra
+O 0 35412 1 35463    a wooden counter
+O 0 35494 1 35463    a small brass candelabra
+O 0 35492 1 35464    a table
+O 0 35412 1 35464    a wooden counter
+O 0 35494 1 35464    a small brass candelabra
+O 0 35412 1 35465    a wooden counter
+O 0 35494 1 35465    a small brass candelabra
+O 0 152 1 35466      a large forge
+O 0 151 1 35466      a large black anvil
+O 0 35412 1 35466    a wooden counter
+O 0 35494 1 35466    a small brass candelabra
+O 0 20 1 35467       a chair
+O 0 20 1 35467       a chair
+O 0 20 1 35467       a chair
+O 0 20 1 35467       a chair
+O 0 35496 1 35467    a simple wooden desk
+O 0 35496 1 35467    a simple wooden desk
+O 0 35496 1 35467    a simple wooden desk
+O 0 35496 1 35467    a simple wooden desk
+O 0 35487 1 35467    an old musty blackboard
+O 0 35494 1 35467    a small brass candelabra
+O 0 20 1 35468       a chair
+O 0 35496 1 35468    a simple wooden desk
+O 0 35494 1 35468    a small brass candelabra
+O 0 35495 1 35469    a small stone fireplace
+O 0 35494 1 35469    a small brass candelabra
+O 0 35412 1 35470    a wooden counter
+O 0 35494 1 35470    a small brass candelabra
+O 0 35495 1 35471    a small stone fireplace
+O 0 35495 1 35472    a small stone fireplace
+O 0 35495 1 35473    a small stone fireplace
+O 0 35495 1 35474    a small stone fireplace
+O 0 20 1 35475       a chair
+O 0 35496 1 35475    a simple wooden desk
+O 0 35494 1 35475    a small brass candelabra
+O 0 35412 1 35476    a wooden counter
+O 0 35494 1 35476    a small brass candelabra
+O 0 35495 1 35477    a small stone fireplace
+O 0 35494 1 35477    a small brass candelabra
+O 0 35494 1 35477    a small brass candelabra
+O 0 35495 1 35478    a small stone fireplace
+O 0 35494 1 35478    a small brass candelabra
+O 0 35494 1 35478    a small brass candelabra
+O 0 35495 1 35479    a small stone fireplace
+O 0 35494 1 35479    a small brass candelabra
+O 0 35494 1 35479    a small brass candelabra
+O 0 35495 1 35480    a small stone fireplace
+O 0 35494 1 35480    a small brass candelabra
+O 0 35495 1 35481    a small stone fireplace
+O 0 35494 1 35481    a small brass candelabra
+O 0 35495 1 35482    a small stone fireplace
+O 0 35494 1 35482    a small brass candelabra
+O 0 35495 1 35483    a small stone fireplace
+O 0 35494 1 35483    a small brass candelabra
+O 0 35495 1 35484    a small stone fireplace
+O 0 35495 1 35485    a small stone fireplace
+O 0 35495 1 35486    a small stone fireplace
+O 0 35495 1 35487    a small stone fireplace
+O 0 35495 1 35488    a small stone fireplace
+O 0 35495 1 35489    a small stone fireplace
+O 0 35495 1 35490    a small stone fireplace
+O 0 35490 1 35491    some small wooden bins
+O 0 35412 1 35491    a wooden counter
+O 0 35494 1 35491    a small brass candelabra
+O 0 35491 1 35492    a long wooden pew
+O 0 35491 1 35492    a long wooden pew
+O 0 35491 1 35492    a long wooden pew
+O 0 35491 1 35492    a long wooden pew
+O 0 35494 1 35492    a small brass candelabra
+O 0 35489 1 35493    a straw pallet
+O 0 35496 1 35493    a simple wooden desk
 P 1 35497 1 35496         a key to the cell
-O 0 35494 9999 35493    a small brass candelabra
-O 0 35493 9999 35494    a large glass window
-O 0 35492 9999 35494    a table
-O 0 35412 9999 35494    a wooden counter
-O 0 35494 9999 35494    a small brass candelabra
-O 0 35492 9999 35495    a table
-O 0 35412 9999 35495    a wooden counter
-O 0 35494 9999 35495    a small brass candelabra
-O 0 35412 9999 35496    a wooden counter
-O 0 35494 9999 35496    a small brass candelabra
-O 0 20 9999 35498       a chair
-O 0 35496 9999 35498    a simple wooden desk
-O 0 35494 9999 35498    a small brass candelabra
-O 0 35498 9999 35499    a small pile of muddy straw
-O 0 35498 9999 35499    a small pile of muddy straw
-O 0 35494 9999 35499    a small brass candelabra
-M 0 35401 4 35402       a village guardsman
-G 1 35403 9999           a topaz boot
-G 1 35415 9              a long sword with a topaz hilt
-E 1 35410 9 5             a topaz helm [head]
-E 1 35409 9 3             a necklace with a topaz pendant [neck]
-E 1 35408 9 4             a topaz breastplate [body]
-E 1 35401 9999 14         a cape with topaz studs [back]
-E 1 35407 18 13           a topaz sleeve [arm-left]
-E 1 35404 9999 17         a topaz bracelet [wrist-left]
-E 1 35406 9999 11         a topaz gauntlet [hand-left]
-E 1 35402 9999 2          a topaz ring [finger-left]
-E 1 35405 9999 15         a topaz girth [waist]
-E 1 35411 9 18            a topaz shield [hold-right]
-E 1 35414 9 19            a short sword with a topaz hilt [hold-left]
+O 0 35494 1 35493    a small brass candelabra
+O 0 35493 1 35494    a large glass window
+O 0 35492 1 35494    a table
+O 0 35412 1 35494    a wooden counter
+O 0 35494 1 35494    a small brass candelabra
+O 0 35492 1 35495    a table
+O 0 35412 1 35495    a wooden counter
+O 0 35494 1 35495    a small brass candelabra
+O 0 35412 1 35496    a wooden counter
+O 0 35494 1 35496    a small brass candelabra
+O 0 20 1 35498       a chair
+O 0 35496 1 35498    a simple wooden desk
+O 0 35494 1 35498    a small brass candelabra
+O 0 35498 1 35499    a small pile of muddy straw
+O 0 35498 1 35499    a small pile of muddy straw
+O 0 35494 1 35499    a small brass candelabra
 A 0 35400 35448
 M 0 35400 1 -99
 Y 0 133 4
