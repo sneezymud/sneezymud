@@ -425,7 +425,8 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 
   TDatabase db("immortal");
 
-  if(!db.query("replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
+  db.query("delete from obj where vnum=%i", vnum);
+  if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
 	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
 	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
@@ -451,12 +452,12 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       }
       temp[j] = '\0';
 
-      if(!db.query("replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
+      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '%s', '%s', %i)", exdes->keyword, temp, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
-      }           
+      }
     } else {
-      if(!db.query("replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
+      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s')", exdes->keyword, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
@@ -473,7 +474,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     
     if (o->affected[i].location != APPLY_NONE) {
-      if(!db.query("replace objaffect set type=%i, mod1=%i, mod2=%i, owner='%s', vnum=%i",
+      if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
 		 o->affected[i].modifier2, ch->name, vnum)){

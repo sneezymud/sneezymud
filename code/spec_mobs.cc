@@ -6189,7 +6189,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
 
       db.query("select 1 from fishkeeper where name='%s'", ch->name);
-      if(db.fetchRow()){
+      if(!db.fetchRow()){
 	db.query("insert into fishkeeper values ('%s', %f)", 
 		 ch->name, o->getWeight());
       } else {
