@@ -2093,6 +2093,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
 
   db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action, name, cost, keeper->getMoney(), value, count);
 
+#if 0
   if(!strcmp(action, "buying")){
     db.query("update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
 #if 0
@@ -2100,6 +2101,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
     db.query("update stockinfo set talens=talens-%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
 #endif
   }
+#endif
 
 }
 
