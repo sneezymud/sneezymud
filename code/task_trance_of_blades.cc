@@ -2,35 +2,8 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_trance_of_blades.cc,v $
-// Revision 5.3  2002/12/17 00:34:47  brat
-// Fixed a typo in the lose concentration message.
-//
-// Revision 5.2  2002/01/10 05:56:59  peel
-// even more splitting up of obj2.h
-//
-// Revision 5.1.1.1  2001/01/09 20:00:40  batopr
-// *** empty log message ***
-//
-// Revision 5.1  2001/01/09 20:00:32  batopr
-// *** empty log message ***
-//
-// Revision 1.2  2000/12/27 08:27:35  dash
-// added code for 'defensive trance' warrior skill
-//
-// Revision 1.1  2000/12/22 07:12:03  dash
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
-//      "task.cc" - All functions related to tasks that keep mobs/PCs busy
-//
-//////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
 #include "obj_base_weapon.h"

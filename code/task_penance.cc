@@ -1,37 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_penance.cc,v $
-// Revision 5.5  2002/07/03 18:39:22  peel
-// penning will put your piety at 100% rather than randomizing, if the
-// piety gain without randomization would be 100%.  er yeah.
-//
-// Revision 5.4  2001/09/25 13:28:55  jesus
-// *** empty log message ***
-//
-// Revision 5.3  2001/07/05 21:25:54  peel
-// Trying to fix cvs
-// what a headache
-//
-// Revision 5.2  2001/06/29 19:37:57  jesus
-// piety speed regen tweak
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //

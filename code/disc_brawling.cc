@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_brawling.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -20,7 +12,8 @@ CDBrawling::CDBrawling() :
   CDiscipline(),
   skGrapple(),
   skStomp(),
-  skBodyslam()
+  skBodyslam(),
+  skSpin()
 {
 }
 
@@ -28,7 +21,8 @@ CDBrawling::CDBrawling(const CDBrawling &a) :
   CDiscipline(a),
   skGrapple(a.skGrapple),
   skStomp(a.skStomp),
-  skBodyslam(a.skBodyslam)
+  skBodyslam(a.skBodyslam),
+  skSpin(a.skSpin)
 {
 }
 
@@ -39,10 +33,26 @@ CDBrawling & CDBrawling::operator=(const CDBrawling &a)
   skGrapple = a.skGrapple;
   skStomp = a.skStomp;
   skBodyslam = a.skBodyslam;
+  skSpin = a.skSpin;
   return *this;
 }
 
 CDBrawling::~CDBrawling()
 {
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

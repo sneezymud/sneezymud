@@ -2,48 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_sit.cc,v $
-// Revision 5.7  2001/08/21 22:19:10  jesus
-// shaman newbie protection updates
-//
-// Revision 5.6  2001/08/16 22:10:29  jesus
-// fixed a bug with newbie protection for shamans
-//
-// Revision 5.5  2001/07/05 21:25:54  peel
-// Trying to fix cvs
-// what a headache
-//
-// Revision 5.4  2001/06/20 04:27:24  jesus
-// couple updates for lifeforce and farlook fix for stuff they shouldnt see
-// will need review
-//
-// Revision 5.3  2001/06/09 07:35:45  jesus
-// minor updates for shaman
-//
-// Revision 5.2  2001/06/03 07:58:14  jesus
-// temporary fix to an annoying -hp bug with shaman
-//
-// Revision 5.1.1.2  2001/04/01 07:02:49  jesus
-// shaman regen
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
-//      "task.cc" - All functions related to tasks that keep mobs/PCs busy
-//
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"

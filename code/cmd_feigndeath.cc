@@ -2,23 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_feigndeath.cc,v $
-// Revision 5.2  2001/09/07 07:07:34  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.1.1.2  1999/10/29 05:26:15  cosmo
-// *** empty log message ***
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 

@@ -2,32 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_quiver.cc,v $
-// Revision 5.3  2003/03/13 22:40:54  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.2  2002/01/08 21:05:12  peel
-// removed the TBaseContainer hierarchy from obj2.h
-// added header files for those objects
-// inserted appropriate includes
-//
-// Revision 5.1  2001/07/13 05:32:20  peel
-// renamed a bunch of source files
-//
-// Revision 5.1.1.2  2000/01/23 17:02:18  batopr
-// fixed misspelling
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 

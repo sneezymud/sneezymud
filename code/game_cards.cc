@@ -1,40 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: game_cards.cc,v $
-// Revision 5.5  2003/04/28 17:48:15  peel
-// added baccarat game
-//
-// Revision 5.4  2003/04/28 02:04:39  peel
-// added poker game (video poker)
-//
-// Revision 5.3  2003/03/13 22:40:53  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.2  2002/08/14 17:35:43  peel
-// fixed some color code problems with card display
-// added room echoes to show blackjack games
-//
-// Revision 5.1  2001/07/13 05:32:20  peel
-// renamed a bunch of source files
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "cards.cc" - All functions and routines related to general card games 
 //

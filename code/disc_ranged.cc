@@ -2,39 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_ranged.cc,v $
-// Revision 5.7  2003/03/19 19:01:51  peel
-// fixed restring
-// I broke it with the string->sstrng conversion
-//
-// Revision 5.6  2003/03/13 22:40:53  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.5  2003/01/28 19:30:15  peel
-// converted a few more things from char * to sstring
-//
-// Revision 5.4  2002/01/10 00:45:47  peel
-// more splitting up of obj2.h
-//
-// Revision 5.3  2002/01/09 23:27:03  peel
-// More splitting up of obj2.h
-// renamed food.cc to obj_food.cc
-// renamed organic.cc to obj_organic.cc
-//
-// Revision 5.2  2001/09/07 07:07:34  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 

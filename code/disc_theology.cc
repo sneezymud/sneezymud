@@ -2,32 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_theology.cc,v $
-// Revision 5.5  2002/01/11 00:16:46  peel
-// splitting obj2.h etc
-// almost done
-//
-// Revision 5.4  2002/01/09 23:27:03  peel
-// More splitting up of obj2.h
-// renamed food.cc to obj_food.cc
-// renamed organic.cc to obj_organic.cc
-//
-// Revision 5.3  2001/11/11 06:48:49  brutius
-// *** empty log message ***
-//
-// Revision 5.2  2001/09/07 07:07:34  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 

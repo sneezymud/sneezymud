@@ -2,27 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: spec_objs_manadrain.cc,v $
-// Revision 5.4  2002/01/10 05:56:59  peel
-// even more splitting up of obj2.h
-//
-// Revision 5.3  2001/07/05 21:25:54  peel
-// Trying to fix cvs
-// what a headache
-//
-// Revision 5.2  2001/06/18 21:01:40  jesus
-// few standard updates blah blah blah
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 

@@ -2,45 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: multiclass.cc,v $
-// Revision 5.5  2002/10/01 02:51:01  glint
-// Fixed floating flares and flare renaming in water rooms.
-// Added Glint as a Lvl 57 autogod
-//
-// Revision 5.4  2002/08/08 16:42:46  dash
-// ooh lets see... calm no longer keeps mobs from using moves if they're already fighting
-// put int repair obj.
-//
-// Revision 5.3  2002/02/20 20:33:42  jesus
-// Took out all the class_mage_thief stuff and added a shaman healing disc in its place
-//
-// Revision 5.2  2001/11/25 00:56:55  jesus
-// beginning of mage thief as a single class
-//
-// Revision 5.1.1.5  2001/04/01 05:33:52  jesus
-// *** empty log message ***
-//
-// Revision 5.1.1.4  2001/04/01 04:42:55  jesus
-// took sid and omen from hardcoded 58
-//
-// both are retired
-//
-// Revision 5.1.1.3  2001/03/18 07:23:19  dash
-// changes for 5.2, old 5.1 changes fixed
-//
-// Revision 5.1.1.2  2000/10/19 22:51:17  jesus
-// *** empty log message ***
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
