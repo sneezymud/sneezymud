@@ -758,7 +758,7 @@ int TBeing::doBite(const sstring &arg)
 	if((b=dynamic_cast<TBeing *>(t)) && b==this){
 	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
 	  act("$n bites himself. WEIRD?!?", FALSE, this, NULL, b, TO_NOTVICT);
-	} else {
+	} else if(b){
 	  sendTo(COLOR_OBJECTS, "You rip %s's flesh with your piercing bite.\n\r",
 		 b->getName());
 	  act("$n sinks $s teeth into $N. $N screams in agony!",
