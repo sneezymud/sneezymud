@@ -979,7 +979,7 @@ new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
 #endif
   
   if (_parse_name(charname, tmp_name)) {
-    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % tmp_name % ERR_BAD_NAME);
+    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
 
     // deletion at this point is semi-problematic
     // we need to remove desc so the doAccountMenu() in ~TBeing skips
@@ -1009,7 +1009,7 @@ new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
   if (load_char(tmp_name, &st))
     dynamic_cast<TPerson *>(character)->loadFromSt(&st);
   else {
-    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % tmp_name % ERR_BAD_NAME);
+    clientf(fmt("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
 
     // deletion at this point is semi-problematic
     // we need to remove desc so the doAccountMenu() in ~TBeing skips
