@@ -1432,8 +1432,13 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
       range = cdist;
 
     // if we didn't get a target specified, just hit the first thing we see
-    if(!*targ)
+    // that isn't in the same room as us
+    if(!*targ){
+      if(ch->roomp == rp)
+	continue;
+
       *targ=tb;
+    }
 
     // anyone we want to hit here?  (including innocents)
     // the ch->isImmortal() checks prevent gods from hitting innocents
