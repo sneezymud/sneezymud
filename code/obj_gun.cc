@@ -10,6 +10,7 @@
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "range.h"
+#include "obj_arrow.h"
 
 enum ammoTypeT {
   AMMO_NONE = 0,                // 0
@@ -441,8 +442,15 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       continue;
     }
 
-    // grab a bullet object and decrement gun ammo
+    // grab a bullet object and adjust for damage
     bullet=read_object(31864, VIRTUAL);
+    TArrow *tmp=dynamic_cast<TArrow *>(bullet);
+    if(tmp){
+      tmp->setWeapDamLvl(getWeapDamLvl());
+      tmp->setWeapDamDev(getWeapDamDev());
+    }
+
+    // decrement ammo and drop a casing
     ammo->setRounds(ammo->getRounds()-1);
     dropSpentCasing(ch->roomp, ammo->getAmmoType());
     
