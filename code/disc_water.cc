@@ -2,31 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_water.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.6  1999/09/26 17:16:21  lapsos
-// Added spec-fountain check to elemental water create.
-//
-// Revision 1.5  1999/09/19 20:42:10  peel
-// Can conjure water elemental in rain now.
-//
-// Revision 1.4  1999/09/16 04:49:41  peel
-// Fixed typo.
-//
-// Revision 1.3  1999/09/16 04:48:23  peel
-// Tsunami will create pools of water now.
-// Conjure water elemental requires water to be in the room (either water
-// sector or a pool of water >= 100 units large)
-//
-// Revision 1.2  1999/09/15 21:41:52  peel
-// Gusher now creates pools of water after casting.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -49,7 +24,7 @@ int faerieFog(TBeing * caster, int, byte bKnown)
         continue;
       if ((caster != tmp_victim) && !tmp_victim->isImmortal()) {
 
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           if (tmp_victim->isAffected(AFF_INVISIBLE)) {
             if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_FAERIE_FOG))) {
               REMOVE_BIT(tmp_victim->specials.affectedBy, AFF_INVISIBLE);
@@ -94,7 +69,7 @@ int faerieFog(TBeing * caster)
     victim = dynamic_cast<TBeing *>(t);
     if (!victim)
       continue;
-    if (!caster->inGroup(victim) && !victim->isImmortal()) {
+    if (!caster->inGroup(*victim) && !victim->isImmortal()) {
     }
   }
   return TRUE;
@@ -134,7 +109,7 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
 
   if (bSuccess(caster, bKnown, SPELL_ICY_GRIP)) {
     aff.type = SPELL_ICY_GRIP;
-    aff.duration = 12 * UPDATES_PER_TICK;
+    aff.duration = 12 * UPDATES_PER_MUDHOUR;
     aff.location = APPLY_STR;
     aff.modifier = -20;
     aff.bitvector = 0;
@@ -363,7 +338,7 @@ int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
         continue;
       if ((caster != tmp_victim) && !tmp_victim->isImmortal()) {
 
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_ARCTIC_BLAST]->alignMod);
 
           act("$N can't escape the freezing cold -- $E's chilled to the bone!", FALSE, caster, NULL, tmp_victim, TO_NOTVICT);
@@ -513,7 +488,7 @@ int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
         continue;
       if ((caster != tmp_victim) && !tmp_victim->isImmortal()) {
 
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_ICE_STORM]->alignMod);
           int damage = orig_damage;
 
@@ -638,7 +613,7 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
         continue;
       if ((caster != tmp_victim) && !tmp_victim->isImmortal()) {
 
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_TSUNAMI]->alignMod);
           int damage = orig_damage;
 
@@ -724,7 +699,7 @@ void spell_geyser(byte level, TBeing *ch, TBeing *, int)
 
   for (tmp_victim = ch->roomp->people; tmp_victim; tmp_victim = temp) {
     temp = tmp_victim->next_in_room;
-    if ((ch != tmp_victim) && ch->sameRoom(tmp_victim)) {
+    if ((ch != tmp_victim) && ch->sameRoom(*tmp_victim)) {
       if ((tmp_victim->GetMaxLevel() < LOW_IMMORTAL) || (tmp_victim->isNpc())) {
         ch->getActualDamage(tmp_victim, NULL, dam, SPELL_GEYSER);
         act("You are seared by the boiling water!!", FALSE, ch, 0, tmp_victim, TO_VICT);
@@ -759,12 +734,16 @@ int conjureElemWater(TBeing * caster, int level, byte bKnown)
     if (victim->master)
       victim->stopFollower(TRUE);
 
-    aff.type = SPELL_ENSORCER;
+    aff.type = SPELL_CONJURE_WATER;
     aff.level = level;
     aff.duration  = caster->followTime();
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
+    victim->affectTo(&aff);
+
+    aff.type = AFFECT_THRALL;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
     /* Add hp for higher levels - Russ */
@@ -793,10 +772,8 @@ int conjureElemWater(TBeing * caster, int level, byte bKnown)
              TRUE, caster, NULL, victim, TO_ROOM);
       act("You've created a monster; $N hates you!",
              FALSE, caster, NULL, victim, TO_CHAR);
-      victim->affectFrom(SPELL_ENSORCER);
-      victim->developHatred(caster);
-      caster->setCharFighting(victim);
-      caster->setVictFighting(victim);
+      victim->affectFrom(SPELL_CONJURE_WATER);
+      victim->affectFrom(AFFECT_THRALL);
       return SPELL_FAIL;
     }
     caster->addFollower(victim);
@@ -826,7 +803,7 @@ int conjureElemWater(TBeing * caster)
   if (!bPassMageChecks(caster, SPELL_CONJURE_WATER, NULL))
     return FALSE;
 
-  if(caster->roomp->isWaterSector() ||
+  if(caster->roomp->isWaterSector() || caster->roomp->isUnderwaterSector() ||
      caster->roomp->getWeather() == WEATHER_RAINY){
     found=1;
   } else {
@@ -906,8 +883,9 @@ int gillsOfFlesh(TBeing * caster, TBeing * victim, int level, byte bKnown)
     caster->reconcileHelp(victim,discArray[SPELL_GILLS_OF_FLESH]->alignMod);
     aff.type = SPELL_GILLS_OF_FLESH;
     aff.level = level;
-    aff.duration = 6 * UPDATES_PER_TICK;
+    aff.duration = 6 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
+    aff.renew = aff.duration;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_WATERBREATH;
 
@@ -983,7 +961,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_BREATH_OF_SARAHAGE)) {
     aff.type = SPELL_GILLS_OF_FLESH;
     aff.level = level;
-    aff.duration = 6 * UPDATES_PER_TICK;
+    aff.duration = 6 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_WATERBREATH;
@@ -993,7 +971,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
-      if (caster->inGroup(tmp_victim)) {
+      if (caster->inGroup(*tmp_victim)) {
         if (!tmp_victim->isAffected(AFF_WATERBREATH)) {
           caster->reconcileHelp(tmp_victim,discArray[SPELL_BREATH_OF_SARAHAGE]->alignMod);
           act("$n makes a face like a fish.", TRUE, tmp_victim, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
@@ -1048,7 +1026,7 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   aff.type = SPELL_PROTECTION_FROM_WATER;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_WATER;
   aff.modifier2 = ((level * 2) / 3);
@@ -1062,7 +1040,7 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_WATER);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:
@@ -1322,7 +1300,7 @@ int plasmaMirror(TBeing *caster, int level, byte bKnown)
   }
 
   aff.type = SPELL_PLASMA_MIRROR;
-  aff.duration = max(min(level/10, 5), 1) * UPDATES_PER_TICK;
+  aff.duration = max(min(level/10, 5), 1) * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -1394,7 +1372,7 @@ int garmulsTail(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_GARMULS_TAIL)) {
     aff.type = SPELL_GARMULS_TAIL;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_TICK;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
     aff.location = APPLY_SPELL;
     aff.modifier = SKILL_SWIM;
     aff.modifier2 = bKnown/2;
