@@ -982,6 +982,9 @@ int TMainSocket::gameLoop()
     timespent=handleTimeAndSockets();
     
     if(TestCode1){
+      // this doesn't really work because of the staggered pulse for
+      // objectPulse and characterPulse but it's still helpful to see
+      // the timings etc
       sstring str = "";
       if(!pl.combat)
 	str += "combat        ";
@@ -1007,18 +1010,10 @@ int TMainSocket::gameLoop()
 	    ((timespent.tv_sec*1000000)+timespent.tv_usec));
     }
     
-
-
-    ////////////////////////////////////////////
     // setup the pulse boolean flags
-    ////////////////////////////////////////////
     pulse++;
     pl.init(pulse);
 
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
-
-    
     // interport communication
     mudRecvMessage();
 
@@ -1087,12 +1082,9 @@ int TMainSocket::gameLoop()
     call_room_specials();
 
 
-
     // since we're operating on non-multiples of 12 pulses, we need to
     // temporarily put the pulse at the next multiple of 12
     // this is pretty klugey
-
-    // advance the pulse to the next multiple of 12
     int oldpulse=pulse;
     while(pulse % 12)
       ++pulse;
@@ -1100,8 +1092,10 @@ int TMainSocket::gameLoop()
     // reset the pulse flags
     pl.init(pulse);
 
+    // handle pulse stuff for objects
     objectPulse(pl);
     
+    // handle pulse stuff for mobs and players
     characterPulse(pl);
 
     // reset the old values from the artifical pulse
@@ -1109,6 +1103,8 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
 
+    // get some lag info
+    // this needs to remain at pulse%100
     if (!(pulse %100)){
       int which=(pulse/100)%10;
       
@@ -1120,17 +1116,14 @@ int TMainSocket::gameLoop()
       lag_info.low = min(lag_info.lagtime[which], lag_info.low);
     }
 
-
     if (pulse >= 2400) {
       unsigned int secs = time(0) - ticktime;
       ticktime = time(0);
 
-      if (TestCode6) {
-    	vlogf(LOG_MISC, fmt("2400 pulses took %ld seconds.  ONE_SEC=%.3f pulses") %  secs % (2400.0/(float) secs));
-      }
-
-      // THIS PUSLE = 0 IS NOT SIMPLY FOR LOGGING PURPOSES.
+      // THIS PULSE = 0 IS NOT SIMPLY FOR LOGGING PURPOSES.
       // if it gets removed all tasks go into hyper mode. So don't.
+      // (appears to be true: some functions above take the pulse as
+      //  an argument - peel 04/20/04)
       pulse = 0;
     }
 
