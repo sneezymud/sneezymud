@@ -7133,17 +7133,9 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   TObj *boat=NULL;
   TRoom *boatroom=real_roomp(cockpit);
   int *job=NULL;
-  int where=-1,i;
+  int i;
   TThing *tt;
   TVehicle *vehicle=NULL;
-
-  int path[]={-1, 15150, 
-	      2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448,
-	      2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458,
-	      2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468,
-	      2469, 2470, 2471, 2475, 12551, 12583, 12616, 12651, 12690,
-	      12733, 12770, 12803, 12831, 12857, 12886, 12911, 12935, 12958,
-	      12982, 13006, 13030, 13052, 13072, 13091, 13108, -1};
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -7197,42 +7189,37 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   // ok, let's sail
 
   // first, get out action pointer, which tells us which way to go
-  // 1 = to island, -1 = to docks
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new int)) {
      perror("failed new of fishing boat.");
      exit(0);
     }
     job = static_cast<int *>(myself->act_ptr);
-    *job=1;
+    *job=13108;
   } else {
     job = static_cast<int *>(myself->act_ptr);
   }
 
-  for(where=1;path[where]!=-1 && boat->in_room != path[where];++where);
-
-  if(path[where]==-1){
-    vlogf(LOG_BUG, "fishing boat lost");
-    return FALSE;
-  }
-
-  if((path[where+*job])==-1){
+  if(boat->in_room == *job){
     myself->doDrive("stop");
     myself->doSay("Crew, pull us in to dock and hold her steady.");
     myself->doSay("Passengers, feel free to stick around for another sail.");
     timer=50;
 
-    *job=-*job;
+    if(*job==15150){
+      *job=13108;
+    } else {
+      *job=15150;
+    }
     return TRUE;
   }
 
-  for(i=MIN_DIR;i<MAX_DIR;++i){
-    if(boat->roomp->dir_option[i] &&
-       boat->roomp->dir_option[i]->to_room==path[where+*job]){
-      break;
-    }
-  }
+  i=find_path(boat->in_room, is_target_room_p, (void *) *job, 5000, 0);
 
+  if(i==DIR_NONE){
+    vlogf(LOG_BUG, "fishing boat lost");
+    return FALSE;
+  }
 
   switch(::number(0,99)){
     case 0:
