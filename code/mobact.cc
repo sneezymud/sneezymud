@@ -2803,7 +2803,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
          ch.doesKnowSkill(spell) && 
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'Hurts, doesn't it??'",
+      act("$n utters the words, 'Hurts, doesn't it?\?'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
