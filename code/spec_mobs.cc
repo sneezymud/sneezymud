@@ -6951,6 +6951,9 @@ static int divCost(TObj *obj)
 
   cost = (int) (FEE * (obj->obj_flags.cost));
 
+  if(cost<0)
+    cost=0;
+
   return cost;
 }
 
