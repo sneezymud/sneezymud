@@ -2992,7 +2992,10 @@ int slipInOffal(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       vlogf(LOG_PROC, "Problematic direction in CMD_OBJ_MOVEMENT for Offal");
       return FALSE;
     }
-    if (::number(0,15) == 0) {
+    if (ch->isFlying() || ch->riding) {
+      return FALSE;
+    }
+    if (::number(0,99) == 0) {
       act("$n steps in $p and slips.", TRUE, ch, me, 0, TO_ROOM);
       act("You step in $p and slip.", TRUE, ch, me, 0, TO_CHAR);
       sprintf(buf, "As you moved %sward, you fell down.", dirs[dir]);
