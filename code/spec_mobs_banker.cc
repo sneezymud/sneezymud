@@ -8,17 +8,19 @@ void calcBankInterest()
 {
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
   float profit_sell;
+  unsigned int shop_nr;
 
   db.query("select shop_nr, keeper from shop");
   
   while(db.fetchRow()){
     if(mob_index[real_mobile(convertTo<int>(db["keeper"]))].spec==SPEC_BANKER){
-      profit_sell=shop_index[convertTo<int>(db["shop_nr"])].profit_sell;
+      shop_nr=convertTo<int>(db["shop_nr"]);
+      profit_sell=shop_index[shop_nr].profit_sell;
       
-      in.query("update shopownedbank set talens=talens * %f", 
-	       1.0+(profit_sell/365.0));
-      in.query("update shopownedcorpbank set talens=talens * %f", 
-	       1.0+(profit_sell/365.0));
+      in.query("update shopownedbank set talens=talens * %f where shop_nr=%i", 
+	       1.0+(profit_sell/365.0), shop_nr);
+      in.query("update shopownedcorpbank set talens=talens * %f where shop_nr=%i", 
+	       1.0+(profit_sell/365.0), shop_nr);
     }
   }
 }
