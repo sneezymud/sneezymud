@@ -1437,11 +1437,6 @@ int TBeing::doShoot(const char *arg)
     return FALSE;
   }
 #endif
-  if (getSkillValue(SKILL_RANGED_PROF) <= 0) {
-    sendTo("You almost shoot yourself in the foot!\n\r");
-    sendTo("You realize you don't have any clue what you're doing...get some training.\n\r");
-    return FALSE;
-  }
   rc = sscanf(arg, "%s %s %d", arg2, arg1, &iDist);
   if (rc < 3) 
     iDist = 99;
@@ -1463,6 +1458,11 @@ int TBeing::doShoot(const char *arg)
 
   if (!(t = equipment[getPrimaryHold()])) {
     sendTo("You are not holding a bow to shoot!\n\r");
+    return FALSE;
+  }
+  if (getSkillValue(SKILL_RANGED_PROF) <= 0 && !dynamic_cast<TGun *>(t)) {
+    sendTo("You almost shoot yourself in the foot!\n\r");
+    sendTo("You realize you don't have any clue what you're doing...get some training.\n\r");
     return FALSE;
   }
   if (arg1 && *arg1 &&
