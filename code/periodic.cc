@@ -233,7 +233,8 @@ bool TObj::isTrash()
      getStuff() ||
      roomp->isWaterSector() ||
      roomp->isAirSector() ||
-     isObjStat(ITEM_BURNING))
+     isObjStat(ITEM_BURNING) ||
+     dynamic_cast<TBaseCorpse *>(this))
     return false;
 
   return true;
