@@ -3461,6 +3461,10 @@ int TMonster::mobileActivity(int pulse)
     
     if(shop_index[shop_nr].isOwned()){
 
+      TDatabase db("sneezy");
+
+      db.query("update stockinfo set talens=talens-%i where shop_nr=%i", 10, shop_nr);
+
 #if 0
       setMoney(getMoney()-100);
       

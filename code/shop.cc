@@ -2004,8 +2004,10 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
 
   if(!strcmp(action, "buying")){
     db.query("update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
+#if 0
   } else if(!strcmp(action, "selling")){
     db.query("update stockinfo set talens=talens-%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
+#endif
   }
 
 }
