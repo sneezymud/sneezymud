@@ -1595,13 +1595,15 @@ static const string factionLeaderTitle(factionTypeT faction, int slot)
 
   if (faction == FACT_CULT) {
     if (slot == 0)
-      mud_str_copy(buf, "Grand Master of the Way", 64);
+      mud_str_copy(buf, "Grand Master", 64);
     else if (slot == 1)
-      mud_str_copy(buf, "Mystic Superior", 64);
+      mud_str_copy(buf, "Zenith of Death", 64);
     else if (slot == 2)
-      mud_str_copy(buf, "Unholy Protector", 64);
+      mud_str_copy(buf, "Magus of the Damned", 64);
     else if (slot == 3)
       mud_str_copy(buf, "Master Assassin", 64);
+    else if (slot == 4)
+      mud_str_copy(buf, "Unholy Cardinal",64);
   } else if (faction == FACT_BROTHERHOOD) {
     if (slot == 0)
       mud_str_copy(buf, "Chief Councillor of Three", 64);
