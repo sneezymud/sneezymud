@@ -188,7 +188,9 @@ OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	task_spell_friends.o task_get.o task_rest.o task_sit.o task_track.o \
 	task_whittle.o task_stavecharge.o thing.o toggle.o tool.o trap.o \
 	trash.o treasure.o tree.o utility.o vial.o wand.o weather.o \
-	window.o wiz_data.o wiz_powers.o worn.o
+	window.o wiz_data.o wiz_powers.o worn.o \
+	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
+        spec_mobs_goring.o
 
 #	rewrite_obj_file.o \
 
