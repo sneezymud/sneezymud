@@ -6552,7 +6552,7 @@ int TBeing::applyAutorentPenalties(int secs)
 
 int TBeing::applyRentBenefits(int secs)
 {
-  int local_tics, rc = 0, lfmod = -1;
+  int local_tics, rc = 0, lfmod = 1;
   affectedData *af = NULL, *next_af_dude = NULL;
   int amt, transFound = FALSE;
 

@@ -1862,8 +1862,9 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
   if (hasClass(CLASS_SHAMAN)) {
     if (0 >= getLifeforce()) {
       setLifeforce(0);
-      addToHit(-1);
       updatePos();
+      if (GetMaxLevel() < 6) {
+	addToHit(-1);
     } else {
       addToLifeforce(-1);
       updatePos();
