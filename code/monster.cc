@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: monster.cc,v $
+// Revision 1.3  1999/10/01 14:36:47  batopr
+// reenabled gold modifier
+//
 // Revision 1.2  1999/09/22 19:00:22  cosmo
 // Temporarily Removed the gold modifier GOLD_INCOME, till we can evalute
 // why it dropped to .1 and if thats a good thing.
@@ -364,11 +367,7 @@ int TMonster::calculateGoldFromConstant()
   double the_gold = rlev * max(20.0,rlev) * moneyConst * 7.5 / 10;
 
   // adjust for global gold modifier...
-
-// Temporarily Removing the gold modifier till we can investigate why
-// it dropped to .1 and if thats a good thing. COS SEPT 99
-
-// the_gold *= gold_modifier[GOLD_INCOME];
+  the_gold *= gold_modifier[GOLD_INCOME];
 
   if (spec == SPEC_SHOPKEEPER)
     the_gold = 1000000;
