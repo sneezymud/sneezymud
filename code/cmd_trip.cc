@@ -58,12 +58,12 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
     default:
       break;
   }
-  if (desc && isFlying())  {
+  if (isFlying())  {
     if (!silent)
       sendTo("You can't trip while flying.\n\r");
     return FALSE;
   }
-  if (desc && victim->isFlying())  {
+  if (victim->isFlying())  {
     if (!silent)
       sendTo("You can't trip them while they are flying.\n\r");
     return FALSE;
