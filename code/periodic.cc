@@ -743,17 +743,20 @@ int TBeing::updateHalfTickStuff()
   
 
   if (hasClass(CLASS_SHAMAN)) {
-    if (0 >= getLifeforce()) {
-      setLifeforce(0);
-      addToHit(-2);
-      updatePos();
-      sendTo("The ancestors are not pleased with you.\n\r");
-      sendTo("Your ancestors demand you gather lifeforce.\n\r");
+    if (!isPc()) {
+      if (0 >= getLifeforce()) {
+	setLifeforce(0);
+	addToHit(-2);
+	updatePos();
+	sendTo("The ancestors are not pleased with you.\n\r");
+	sendTo("Your ancestors demand you gather lifeforce.\n\r");
+      } else {
+	addToLifeforce(-1);
+      }
     } else {
-      addToLifeforce(-1);
+      setLifeforce(9000);
     }
   }
-
 
   if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
     sendTo("You grow sleepy and can remain awake no longer.\n\r");

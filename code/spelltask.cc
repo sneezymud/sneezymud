@@ -743,6 +743,12 @@ your spell.", FALSE, ch, NULL, NULL, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
             return FALSE;
           }
+        } else if (discArray[spell]->minLifeforce) {
+          if (!reconcileLifeforce(spell, FALSE)) {
+            act("You have totally run out of lifeforce!.", FALSE, ch, NULL, NULL, TO_CHAR);
+            ch->stopCast(STOP_CAST_NONE);
+            return FALSE;
+          }
         } else {
           if (!reconcilePiety(spell, FALSE)) {
             act("You have totally run out of piety and are forced to abort
@@ -1545,7 +1551,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
     return FALSE;
   }
   if (isPc() && canSpeak()) {
-    if (discArray[which]->minMana && 
+    if ((discArray[which]->minLifeforce || discArray[which]->minMana) && 
         (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
       saySpell(which);
 
@@ -1572,6 +1578,8 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
   if (isPc()) {
     if (discArray[which]->minMana)
       reconcileMana(which, FALSE);
+    else if (discArray[which]->minLifeforce)
+      reconcileLifeforce(which, FALSE);
     else
       reconcilePiety(which, FALSE);
   }

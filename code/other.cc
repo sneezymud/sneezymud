@@ -3015,16 +3015,13 @@ void TBeing::doContinue(const char *argument)
       sendTo("You can not change your prayer in this manner.\n\r");
       return;
     }
-    if ((spellType == SPELL_PRAYER) && (getPiety() < (value *
-usePiety(spelltask->spell)))) {
+    if ((spellType == SPELL_PRAYER) && (getPiety() < (value * usePiety(spelltask->spell)))) {
       sendTo("You do not have the piety to continue your prayer that many times.\n\r");
       return;
-    } else if ((spellType == SPELL_CASTER) && (getMana() < (value *
-useMana(spelltask->spell)))) {
+    } else if ((spellType == SPELL_CASTER) && (getMana() < (value * useMana(spelltask->spell)))) {
       sendTo("You do not have the mana to continue your spell that many times.\n\r");
       return;
-    } else if ((spellType == SPELL_DANCER) && (getMana() < (value *
-useMana(spelltask->spell)))) {
+    } else if ((spellType == SPELL_DANCER) && (getLifeforce() < (value * useLifeforce(spelltask->spell)))) {
       sendTo("You do not have the lifeforce to invoke that many times.\n\r");
       return;
     }

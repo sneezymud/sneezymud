@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_scroll.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // scroll.cc
 
 #include "stdsneezy.h"
@@ -54,7 +39,7 @@ int TScroll::changeItemVal2Check(TBeing *ch, int the_update)
 {
   if (the_update != -1 &&
       (!discArray[the_update] ||
-      (!discArray[the_update]->minMana && !discArray[the_update]->minPiety))) {
+      (!discArray[the_update]->minMana && !discArray[the_update]->minLifeforce && !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
     return TRUE;
   }
@@ -129,23 +114,24 @@ void TScroll::lowCheck()
          ((!discArray[curspell] ||
           ((discArray[curspell]->typ != SPELL_RANGER) &&
            !discArray[curspell]->minMana &&
+           !discArray[curspell]->minLifeforce &&
            !discArray[curspell]->minPiety)) ||
         (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-      vlogf(LOW_ERROR, "scroll (%s:%d) has messed up spell (slot %d: %d)",
+      vlogf(LOG_LOW, "scroll (%s:%d) has messed up spell (slot %d: %d)",
            getName(), objVnum(), i+1, curspell);
       if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
-        vlogf(LOW_ERROR, "bogus range");
+        vlogf(LOG_LOW, "bogus range");
       else if (!discArray[curspell])
-        vlogf(LOW_ERROR, "bogus spell, %d", curspell);
-      else if ((!discArray[curspell]->minMana &&
+        vlogf(LOG_LOW, "bogus spell, %d", curspell);
+      else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce &&
         !discArray[curspell]->minPiety))
-        vlogf(LOW_ERROR, "non-spell");
+        vlogf(LOG_LOW, "non-spell");
       continue;
     }
     if (curspell > TYPE_UNDEFINED &&
         discArray[curspell]->targets & TAR_CHAR_WORLD) {
       // spells that use this setting are not a good choice for obj spells
-      vlogf(LOW_ERROR, "Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)" ,
+      vlogf(LOG_LOW, "Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)" ,
           getName(), objVnum(), discArray[curspell]->name, curspell);
     }
   }

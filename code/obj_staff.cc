@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_staff.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // staff.cc
 
 #include "stdsneezy.h"
@@ -90,7 +75,7 @@ int TStaff::changeItemVal4Check(TBeing *ch, int the_update)
 {
   if (the_update != -1 &&
       (!discArray[the_update] ||
-       (!discArray[the_update]->minMana && !discArray[the_update]->minPiety))) {
+       (!discArray[the_update]->minMana && !discArray[the_update]->minLifeforce && !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
     return TRUE;
   }
@@ -163,22 +148,23 @@ void TStaff::lowCheck()
        ((!discArray[curspell] ||
         ((discArray[curspell]->typ != SPELL_RANGER) &&
         !discArray[curspell]->minMana &&
+        !discArray[curspell]->minLifeforce &&
       !discArray[curspell]->minPiety)) ||
       (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOW_ERROR, "staff (%s:%d) has messed up spell(%d)",
+    vlogf(LOG_LOW, "staff (%s:%d) has messed up spell(%d)",
          getName(), objVnum(), curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
-      vlogf(LOW_ERROR, "bogus range");
+      vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
-      vlogf(LOW_ERROR, "bogus spell, %d", curspell);
-    else if ((!discArray[curspell]->minMana &&
+      vlogf(LOG_LOW, "bogus spell, %d", curspell);
+    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
       !discArray[curspell]->minPiety))
-      vlogf(LOW_ERROR, "non-spell");
+      vlogf(LOG_LOW, "non-spell");
   }
   if (curspell > TYPE_UNDEFINED &&
       discArray[curspell]->targets & TAR_CHAR_WORLD) {
     // spells that use this setting are not a good choice for obj spells
-    vlogf(LOW_ERROR, "Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)" ,
+    vlogf(LOG_LOW, "Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)" ,
         getName(), objVnum(), discArray[curspell]->name, curspell);
   }
   if (curspell > TYPE_UNDEFINED &&
@@ -188,7 +174,7 @@ void TStaff::lowCheck()
     // go area effect to begin with
 // Fixed the code so it doesnt loop if its an area..used TAR_AREA for areas
 
-//    vlogf(LOW_ERROR, "Staff (%s : %d) had possible-area-spell that shouldn't be on objs (%s : %d)" , getName(), objVnum(), discArray[curspell]->name, curspell);
+//    vlogf(LOG_LOW, "Staff (%s : %d) had possible-area-spell that shouldn't be on objs (%s : %d)" , getName(), objVnum(), discArray[curspell]->name, curspell);
   }
 
   TMagicItem::lowCheck();
@@ -249,7 +235,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
     sleepTag = TRUE;
   }
   if (!discArray[the_spell]) {
-    vlogf(10,"doUse (%s) called spell (%d) that does not exist! - Don't do that!", getName(), the_spell);
+    vlogf(LOG_BUG,"doUse (%s) called spell (%d) that does not exist! - Don't do that!", getName(), the_spell);
     return FALSE;
   }
   act("$n taps $p three times on the $g.", TRUE,  ch, this, 0, TO_ROOM);
@@ -278,7 +264,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
             continue;
           if (tmp_char == ch)
             continue;
-          if (!sleepTag && isViolent && tmp_char->inGroup(ch))
+          if (!sleepTag && isViolent && tmp_char->inGroup(*ch))
             continue;
           rc = doObjSpell(ch,tmp_char,this, NULL,argument,the_spell);
           if (IS_SET_DELETE(rc, DELETE_VICT) && ch != tmp_char) {

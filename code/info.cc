@@ -4983,7 +4983,7 @@ void TBeing::doSpells(const char *argument)
   vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || !discArray[i]->minMana)
+    if (hideThisSpell(i) || !discArray[i]->minLifeforce || !discArray[i]->minMana)
       continue;
 
     skillSortVec.push_back(skillSorter(this, i));
@@ -5203,7 +5203,7 @@ void TBeing::doPrayers(const char *argument)
   vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || !discArray[i]->minMana)
+    if (hideThisSpell(i) || !discArray[i]->minLifeforce || !discArray[i]->minMana)
       continue;
     skillSortVec.push_back(skillSorter(this, i));
   }  

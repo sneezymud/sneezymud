@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: spell2.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -19,8 +11,10 @@
 enum skillUseTypeT {
      SPELL_UNDEFINED,
      SPELL_CASTER,
+     SPELL_DANCER,
      SPELL_PRAYER,
      SKILL_CASTER ,
+     SKILL_DANCER,
      SKILL_PRAYER ,
      SKILL_FIGHTER,
 };
@@ -132,6 +126,42 @@ enum manaCostT {
   MANA_95         = 95,
   MANA_100        = 100,
   MANA_200        = 200
+};
+
+enum lifeforceCostT {
+  LIFEFORCE_0 = 0,
+  LIFEFORCE_5          =  5,
+  LIFEFORCE_10         = 10,
+  LIFEFORCE_15         = 15,
+  LIFEFORCE_17         = 17,
+  LIFEFORCE_20         = 20,
+  LIFEFORCE_23         = 23,
+  LIFEFORCE_25         = 25,
+  LIFEFORCE_27         = 27,
+  LIFEFORCE_30         = 30,
+  LIFEFORCE_33         = 33,
+  LIFEFORCE_35         = 35,
+  LIFEFORCE_38         = 38,
+  LIFEFORCE_40         = 40,
+  LIFEFORCE_45         = 45,
+  LIFEFORCE_47         = 47,
+  LIFEFORCE_50         = 50,
+  LIFEFORCE_53         = 53,
+  LIFEFORCE_54         = 54,
+  LIFEFORCE_55         = 55,
+  LIFEFORCE_60         = 60,
+  LIFEFORCE_65         = 65,
+  LIFEFORCE_70         = 70,
+  LIFEFORCE_75         = 75,
+  LIFEFORCE_80         = 80,
+  LIFEFORCE_85         = 85,
+  LIFEFORCE_90         = 90,
+  LIFEFORCE_95         = 95,
+  LIFEFORCE_100        = 100,
+  LIFEFORCE_125        = 125,
+  LIFEFORCE_150        = 150,
+  LIFEFORCE_175        = 175,
+  LIFEFORCE_200        = 200
 };
 
 // enum can't be float unfortunately, which we want
@@ -373,6 +403,7 @@ class spellInfo {
     taskDiffT task;
     positionTypeT minPosition;
     int minMana;
+    int minLifeforce; // shaman
     float minPiety;
     unsigned int targets;
     int holyStrength;
@@ -401,6 +432,7 @@ class spellInfo {
          lag_t l,
          positionTypeT pos,
          manaCostT mana,
+         lifeforceCostT lifeforce,
          pietyCostT align,
          unsigned int t, 
          symbolStressT h, 
@@ -450,6 +482,7 @@ struct PolyType {
   int  learning;
   int  number;
   discNumT  discipline;
+  unsigned long int tRace;
 };
 
 extern spellInfo *discArray[MAX_SKILL+1];

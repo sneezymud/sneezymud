@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_attribute.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ////////////////////////////////////////////////////////////////////////
 //                                                                      //
 //    SneezyMUD++ - All rights reserved, SneezyMUD Coding Team      //
@@ -429,7 +414,17 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
            ch->cyan(), d->career.crit_kidney_suff, ch->norm());
     str += buffer;
   }
-  ch->desc->page_string(str.c_str(), 0);
+  if (d->career.crit_genitalia) {
+    sprintf(buffer, "COMBAT_CRIT: Genitalia Severings inflicted   : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_genitalia, ch->norm());
+    str += buffer;
+  }
+  if (d->career.crit_genitalia_suff) {
+    sprintf(buffer, "COMBAT_CRIT: Genitalia Severings suffered   : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_genitalia_suff, ch->norm());
+    str += buffer;
+  }
+  ch->desc->page_string(str.c_str());
   return;
 }
 
@@ -446,7 +441,7 @@ void TBeing::doAttribute(const char *arg)
 
   one_argument(arg, cmdbuf);
   if (!*cmdbuf) {
-    sendTo("Syntax: attribute <personal | condition | statistics>\n\r");
+    sendTo("Syntax: attribute <personal | condition | statistics | reset>\n\r");
     return;
   }
   // I put immortal check before the regular since there is a PC called "per"
@@ -502,12 +497,12 @@ void TBeing::doAttribute(const char *arg)
 #endif
 
 #if SPEEF_MAKE_BODY
-    vlogf(5,"Attribute argument: %s",cmdbuf);
+    vlogf(LOG_MISC, "Attribute argument: %s",cmdbuf);
     if(body)
       body->showBody(this);
     else
       sendTo("You have no Body!\n\r");
-    vlogf(5,"I tried to show a body.");
+    vlogf(LOG_MISC, "I tried to show a body.");
 #endif
  
     return;
@@ -560,7 +555,7 @@ void TBeing::doAttribute(const char *arg)
     }
 
     if (GetMaxLevel() >= 5)
-      describeImmunities(this, 100);
+      sendTo(describeImmunities(this, 100).c_str());
 
     if (!getCond(THIRST))
       sendTo(COLOR_BASIC, "<R>You are totally parched.<1>\n\r");
@@ -693,6 +688,8 @@ void TBeing::doAttribute(const char *arg)
         sendTo("You are praying.\n\r");
       if (discArray[which]->minMana)
         sendTo("You are casting a spell.\n\r");
+      if (discArray[which]->minLifeforce)
+        sendTo("You are invoking a ritual.\n\r");
     }
     sendTo("You are in %s%s%s attack mode.\n\r",
           cyan(), attack_modes[getCombatMode()], norm());
@@ -705,7 +702,7 @@ void TBeing::doAttribute(const char *arg)
       sendTo("Your account has MUD Sound Protocol enabled.\n\r");
   
     describeLimbDamage(this);
-    describeAffects(this);
+    sendTo(describeAffects(this, SHOW_ME).c_str());
   
     return;
   } else if (is_abbrev(cmdbuf, "statistics")) {
@@ -734,8 +731,15 @@ void TBeing::doAttribute(const char *arg)
 	
       }
     }
+  } else if (is_abbrev(cmdbuf, "reset")) {
+    if (!strcmp("reset", cmdbuf))
+      desc->session.setToZero();
+    else {
+      sendTo("This is a critical thing.  It resets all of your current session statis.\n\r");
+      sendTo("You must enter the entire  reset  to do this.\n\r");
+    }
   } else {
-    sendTo("Syntax: attribute <statistics | personal | condition>\n\r");
+    sendTo("Syntax: attribute <statistics | personal | condition | reset>\n\r");
     return;
   }
 }

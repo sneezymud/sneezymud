@@ -74,7 +74,7 @@ int TBeing::useLifeforce(spellNumT spl)
     return 0;
   }
   // for arrayLifeforce im using minMana...should be replaced later on JESUS
-  arrayLifeforce = getDiscipline(das)->useLifeforce(getSkillValue(spl),discArray[spl]->minMana);
+  arrayLifeforce = getDiscipline(das)->useLifeforce(getSkillValue(spl),discArray[spl]->minLifeforce);
 
 // divide total LF/rounds for each spell if spell tasked
   if (IS_SET(discArray[spl]->comp_types, SPELL_TASKED) &&
@@ -350,6 +350,9 @@ void TBeing::saySpell(spellNumT si)
   if (discArray[si]->minMana) {
     sprintf(buf2, "$n utters the incantation, '%s'", buf);
     sprintf(buf, "$n utters the incantation, '%s'", discArray[si]->name);
+  } else if (discArray[si]->minLifeforce) {
+    sprintf(buf2, "$n chants the invokation, '%s'", buf);
+    sprintf(buf, "$n chants the invokation, '%s'", discArray[si]->name);
   } else {
     sprintf(buf2, "$n utters the holy words, '%s'", buf);
     sprintf(buf, "$n utters the holy words, '%s'", discArray[si]->name);
@@ -1407,6 +1410,11 @@ int TBeing::preDiscCheck(spellNumT which)
         sendTo("You can't summon enough energy to cast the spell.\n\r");
         return FALSE;
       }
+    } else if (discArray[which]->minLifeforce) {
+      if (!preflight_lifeforce(this, which)) {
+        sendTo("You don't have enough lifeforce to perform the ritual.\n\r");
+        return FALSE;
+      }
     } else {
       if (!preflight_piety(this, which)) {
         sendTo("You lack the piety to pray to your deity for that.\n\r");
@@ -1453,6 +1461,11 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
         (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
       saySpell(which);
   }
+  if (isPc() && canSpeak()) {
+    if (discArray[which]->minLifeforce && 
+        (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
+      saySpell(which);
+  }
 #endif
   if (isPc() && canSpeak()) {
     if (discArray[which]->holyStrength && 
@@ -1467,6 +1480,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
   if (isPc()) {
     if (discArray[which]->minMana) {
       if (!reconcileMana(which, TRUE)) 
+        return FALSE;
+    } else if (discArray[which]->minLifeforce) {
+      if (!reconcileLifeforce(which, TRUE)) 
         return FALSE;
     } else {
       if (!reconcilePiety(which, TRUE)) 
@@ -2371,6 +2387,8 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
   if (isPc()) {
     if (discArray[which]->minMana) {
       reconcileMana(which, FALSE);
+    } else if (discArray[which]->minLifeforce) {
+      reconcileLifeforce(which, FALSE);
     } else {
       reconcilePiety(which, FALSE);
     }
@@ -2418,6 +2436,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
             if (discArray[which]->minMana) {
               act("Your enemies sense your offensive magic.", FALSE, this, NULL, NULL ,TO_CHAR);
               act("You sense offensive magic emanating from $n.", FALSE, this, NULL, NULL, TO_ROOM);
+            } else if (discArray[which]->minLifeforce) {
+              act("Your enemies sense your harmful invokation is directed toward them.", FALSE, this, NULL, NULL ,TO_CHAR);
+              act("You sense evil from $n.", FALSE, this, NULL, NULL, TO_ROOM);
             } else {
               act("Your enemies sense your offensive praying.", FALSE, this, NULL, NULL ,TO_CHAR);
               act("You sense offensive praying emanating from $n.", FALSE, this, NULL, NULL, TO_ROOM);

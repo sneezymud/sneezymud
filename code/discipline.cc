@@ -1592,6 +1592,14 @@ static void logSkillAttempts(const TBeing *caster, spellNumT spell, logSkillAtte
         caster->desc->session.spell_success_attempts--;
         caster->desc->career.spell_success_attempts--;
       }
+    } else if (discArray[spell]->minLifeforce) {
+      if (type == ATTEMPT_ADD_NORM) {
+        caster->desc->session.spell_success_attempts++;
+        caster->desc->career.spell_success_attempts++;
+      } else if (type == ATTEMPT_REM_NORM) {
+        caster->desc->session.spell_success_attempts--;
+        caster->desc->career.spell_success_attempts--;
+      }
     } else if (discArray[spell]->minPiety) {
       if (type == ATTEMPT_ADD_NORM) {
         caster->desc->session.prayer_success_attempts++;
@@ -1749,6 +1757,9 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
   discArray[spell]->success++;
   
   if (discArray[spell]->minMana) {
+    caster->desc->session.spell_success_pass++;
+    caster->desc->career.spell_success_pass++;
+  } else if (discArray[spell]->minLifeforce) {
     caster->desc->session.spell_success_pass++;
     caster->desc->career.spell_success_pass++;
   } else if (discArray[spell]->minPiety) {
