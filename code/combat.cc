@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
-// Revision 1.2  1999/09/29 07:44:23  lapsos
+// Revision 1.3  1999/09/30 01:07:10  lapsos
 // Added code for the new mobile strings.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
@@ -183,6 +183,9 @@ void TBeing::deathCry()
 
   for (door = MIN_DIR; door < MAX_DIR; door++) {
 #if 1
+    if (!roomp->dir_option[door])
+      continue;
+
     new_room = roomp->dir_option[door]->to_room;
     newR     = real_roomp(new_room);
     TMonster *tMons;
