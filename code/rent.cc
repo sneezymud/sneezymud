@@ -676,7 +676,12 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 	!o->isObjStat(ITEM_STRUNG))
       o->addObjStat(ITEM_STRUNG);  // preserve strung
   }
-  
+    // deal with structure
+    o->setStructPoints(min(item.struct_points, (int) obj_index[o->getItemIndex()].max_struct));
+    
+  if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
+    o->addObjStat(ITEM_CHARRED); // preserve charred
+    
   if (o->isObjStat(ITEM_STRUNG)) {
     if (name)
       o->name = name;
@@ -705,6 +710,7 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 	new extraDescription(*obj_index[o->getItemIndex()].ex_description);
     else
       o->ex_description = NULL;
+
   }
   // if they had a lantern lit, set light appropriately
   o->adjustLight();
@@ -4453,40 +4459,68 @@ void TBeing::doClone(const sstring &arg)
 
 
   // add NO RENT to the objects, don't want them falling into PC 
-  // hands permanently
+  //   hands permanently
+  // ALSO - junk notes, and increase object number for these loads (since
+  //   they will decrease when purged)
   wearSlotT ij;
   TObj *o;
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++){
-    if((o = dynamic_cast<TObj *>(mob->equipment[ij])))
+    if((o = dynamic_cast<TObj *>(mob->equipment[ij]))) 
+    {
+      obj_index[o->getItemIndex()].addToNumber(1);
       o->addObjStat(ITEM_NORENT);
-    else 
-      vlogf(LOG_BUG, fmt("did not add no-rent flag to item in slot %d when cloning") %  (int) ij);
+      if ((dynamic_cast<TNote *>(o)))
+      {
+        o->makeScraps();
+        delete o;
+      }
+    } else if (mob->equipment[ij]) 
+      vlogf(LOG_BUG, fmt("did not add no-rent flag to item %s in slot %d when cloning") % mob->equipment[ij]->name % (int) ij);
   }
   
-  TThing *tmp2 = mob->getStuff();
-  TThing *t2;
-//  TThing *b1, *next;
-  mob->setStuff(NULL);
-  while (tmp2) {
-    if ((o = dynamic_cast<TObj *>(tmp2)))
+  TThing *i, *j, *tmp;
+  TObj *bo;
+//  TBaseContainer *b1;
+  
+  for (i = mob->getStuff(); i; i=i)
+  {
+    if ((o = dynamic_cast<TObj *>(i)))
+    {
+      obj_index[o->getItemIndex()].addToNumber(1);
       o->addObjStat(ITEM_NORENT);
-    else 
-      vlogf(LOG_BUG, fmt("did not add no-rent flag to %s when cloning") %  
-	    tmp2->name);
-/*    if ((dynamic_cast<TBag *>(tmp2))) {
-      for (b1 = tmp2->getStuff(); b1; next) 
+      if ((dynamic_cast<TNote *>(o)))
       {
-        if ((o = dynamic_cast<TObj *>(b1))) 
-        {
-          o->addObjStat(ITEM_NORENT);
-        }
-        next = b1->nextThing;
+        i = o->nextThing;
+        o->makeScraps();
+        delete o;
+        continue;
       }
-    }*/
-    t2 = tmp2->nextThing;
-    tmp2->nextThing = mob->getStuff();
-    mob->setStuff(tmp2);
-    tmp2 = t2;
+    } else 
+      vlogf(LOG_BUG, fmt("did not add no-rent flag to %s when cloning") %  
+	    i->name);
+    
+    if ((dynamic_cast<TBaseContainer *>(i))) {
+      for (j = i->getStuff(); j; j=j) {
+        if ((bo = dynamic_cast<TObj *>(j))) 
+        {
+          obj_index[bo->getItemIndex()].addToNumber(1);
+          bo->addObjStat(ITEM_NORENT);
+        } else 
+          vlogf(LOG_BUG, fmt("did not add no-rent flag to %s when cloning") %  
+	          bo->name);
+        
+        if ((dynamic_cast<TNote *>(j))) 
+        {
+          tmp = j->nextThing;
+          j->makeScraps();
+          delete j;
+          j = tmp;
+          continue;
+        }
+        j = j->nextThing;
+      }
+    }
+    i = i->nextThing;
   }
   
   sendTo("Your clone appears before you.\n\r");

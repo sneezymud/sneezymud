@@ -1082,7 +1082,6 @@ TThing::~TThing()
     act_ptr = NULL;
 #endif
   }
-
   if (name) {
     delete [] name;
     name = NULL;

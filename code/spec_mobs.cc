@@ -7511,7 +7511,6 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
       return FALSE;
   }
   
-  vlogf(LOG_MAROR, "1");
   bool snicker = FALSE;
   if ( sarg.lower().find("i'm") != sstring::npos ||
         sarg.lower().find("i am") != sstring::npos)
@@ -7519,8 +7518,6 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
     snicker = TRUE;
   }
   
-  vlogf(LOG_MAROR, fmt("2, FALSE %d, snicker %d") %  FALSE % snicker);
-  vlogf(LOG_MAROR, fmt("%s, %s, %s") %  arg % target % sarg);
   if (cmd == CMD_WHISPER) {
     ch->doWhisper(arg);
     buf = fmt ("%s psssst") % target; 
@@ -7548,7 +7545,6 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
       mimic->doShout(arg);
     return TRUE;
   }
-  vlogf(LOG_MAROR, "3");
 
   return FALSE;
 

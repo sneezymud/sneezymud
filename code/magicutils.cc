@@ -45,7 +45,7 @@ void setCombatStats(TBeing *ch, TBeing *mob, PolyType shape, spellNumT skill)
   TMonster *critter = dynamic_cast<TMonster *>(mob);
   if (!critter)
   {
-    vlogf(LOG_MAROR, "couldn't cast as TMonster, getting out!");
+    vlogf(LOG_BUG, "in setCombatStats, couldn't cast as TMonster, getting out!");
     return;
   }
   
@@ -83,7 +83,7 @@ void setDisguiseCombatStats(TBeing *ch, TBeing *mob)
   TMonster *critter = dynamic_cast<TMonster *>(mob);
   if (!critter)
   {
-    vlogf(LOG_MAROR, "couldn't cast as TMonster, getting out!");
+    vlogf(LOG_BUG, "in setDisguiseCombatStats, couldn't cast as TMonster, getting out!");
     return;
   }
   
