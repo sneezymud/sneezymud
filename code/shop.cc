@@ -2014,12 +2014,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if (!obj)
         continue;
 
-      if(shop_nr==SHOP_DUMP && !::number(0,24)){
-	// this is the garbageman, he recycles items a lot
-	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
-	myself->addToMoney((int)(obj->getValue() * shop_index[shop_nr].profit_sell), GOLD_SHOP);
-	shoplog(shop_nr, myself, myself, obj->getName(), (int)(obj->getValue() * shop_index[shop_nr].profit_sell), "recycling");
+      if(IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_RECYCLE) &&
+	 !::number(0,24)){
+	int val=(int)(obj->getValue() * shop_index[shop_nr].profit_sell);
+	
+	myself->addToMoney(val, GOLD_SHOP);
+	shoplog(shop_nr, myself, myself, obj->getName(), val, "recycling");
 	delete obj;
+
+	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
+
 	continue;
       }
 
