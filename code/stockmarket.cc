@@ -7,8 +7,7 @@ void updateStockHistory()
 
   // stockhistory table needs to be seeded with at least one entry for
   // each stock, for this query to work
-  db.query("insert into stockhistory select sh.n+1, s.ticker, s.price from stockinfo s left outer join (select ticker, max(n) as n from stockhistory group by ticker) sh on (s.ticker=sh.ticker)");
-
+  db.query("insert into stockhistory select max(sh.n), si.ticker, si.price from stockinfo si, stockhistory sh group by si.ticker, si.price");
 }
 
 
