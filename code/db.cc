@@ -1319,7 +1319,7 @@ void bootZones(void)
 {
   DIR *dfd;
   struct dirent *dp;
-  int zon=0;
+  int zon=0, tmp;
   multimap <int, sstring, std::less<int> > files;
   multimap <int, sstring, std::less<int> >::iterator it;
     
@@ -1334,14 +1334,14 @@ void bootZones(void)
        !strcmp(dp->d_name, ".."))
       continue;
 
-    zon=convertTo<int>(dp->d_name);
+    tmp=convertTo<int>(dp->d_name);
 
     // convertTo returns 0 on failure, so this means some random file
     // in the zonefiles directory.  Just ignore it.
-    if(zon==0 && strcmp(dp->d_name, "0"))
+    if(tmp==0 && strcmp(dp->d_name, "0"))
       continue;
 
-    files.insert(pair<int,sstring>(zon, dp->d_name));
+    files.insert(pair<int,sstring>(tmp, dp->d_name));
   }
 
   for(it=files.begin();it!=files.end();++it){
