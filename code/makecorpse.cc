@@ -492,6 +492,16 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_CHI:
 	sprintf(buf, "%s's corpse wears a deep grimace of agony.", getName());
 	break;
+      case SKILL_KINETIC_WAVE:
+	sprintf(buf, "Blood trickles out of the eyes, ears and nose of %s's corpse.", getName());
+	break;
+      case SKILL_PSI_BLAST:
+	sprintf(buf, "Blank eyes stare out of the slackjawed face of %s's corpse.", getName());
+	break;
+      case SKILL_PSYCHIC_CRUSH:
+	sprintf(buf, "%s's corpse wears a death mask of pure terror.", getName());
+	break;
+    
 #if 1
       case SPELL_EARTHMAW:
 	sprintf(buf, "The corpse of %s lies here half buried in the earth.", getName());
@@ -842,10 +852,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_TELE_SIGHT:
       case SKILL_TELE_VISION:
       case SKILL_MIND_FOCUS:
-      case SKILL_PSI_BLAST:
       case SKILL_MIND_THRUST:
-      case SKILL_PSYCHIC_CRUSH:
-      case SKILL_KINETIC_WAVE:
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
         break;

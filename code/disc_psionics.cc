@@ -717,7 +717,7 @@ int TBeing::doPsiblast(const char *tString){
   }
 
 
-  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_PSI_BLAST);
 
   addSkillLag(SKILL_PSI_BLAST, rc);
 
@@ -830,7 +830,7 @@ int TBeing::doPsycrush(const char *tString){
     psiAttackFailMsg(this, tVictim);
   }
 
-  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_PSYCHIC_CRUSH);
   addSkillLag(SKILL_PSYCHIC_CRUSH, rc);
 
   if (IS_SET_ONLY(rc, DELETE_VICT)) {
@@ -911,7 +911,7 @@ int TBeing::doKwave(const char *tString){
     psiAttackFailMsg(this, tVictim);
   }
 
-  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_KINETIC_WAVE);
   addSkillLag(SKILL_KINETIC_WAVE, rc);
 
   if (IS_SET_ONLY(rc, DELETE_VICT)) {
