@@ -105,8 +105,6 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
     strcat(buffer, " (hovering)");
   if (isObjStat(ITEM_HUM))
     strcat(buffer, " (humming)");
-  if (isObjStat(ITEM_ATTACHED))
-    strcat(buffer, " (attached)");
   if (isObjStat(ITEM_BURNING))
     sprintf(buffer + strlen(buffer), " %s(burning)%s", ch->red(), ch->norm());
   if (isObjStat(ITEM_CHARRED))
@@ -188,8 +186,6 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
 
     if (isObjStat(ITEM_HUM)) 
       strcat(buffer, " (humming)");
-    if (isObjStat(ITEM_ATTACHED))
-      strcat(buffer, " (attached)");
     if (isObjStat(ITEM_BURNING))
       sprintf(buffer + strlen(buffer), " %s(burning)%s", ch->red(), ch->norm());
     if (isObjStat(ITEM_CHARRED))

@@ -233,6 +233,10 @@ int TObj::riverFlow(int)
   if (!roomp)   // this covers carried && equipped
     return FALSE;
  
+  // attached objects don't float away
+  if (isObjStat(ITEM_ATTACHED))
+    return FALSE;
+
   if (!roomp->isUnderwaterSector() && !roomp->isWaterSector())
     return FALSE;
 
