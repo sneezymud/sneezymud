@@ -452,6 +452,9 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   if (affectedBySpell(SKILL_BERSERK))
     affectFrom(SKILL_BERSERK);
 
+  if (affectedBySpell(AFFECT_BITTEN_BY_VAMPIRE))
+    affectFrom(AFFECT_BITTEN_BY_VAMPIRE);
+
   // dead immortals mortal again
   if (GetMaxLevel() > MAX_MORT) {
     if (!isPlayerAction(PLR_IMMORTAL))
