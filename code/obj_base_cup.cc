@@ -95,12 +95,16 @@ int TBaseCup::getDrinkUnits() const
 void TBaseCup::setDrinkUnits(int n)
 {
   curDrinks = n;
+  if(isDrinkConFlag(DRINK_PERM) && curDrinks<=0)
+    remDrinkConFlags(DRINK_PERM);
   updateDesc();
 }
 
 void TBaseCup::addToDrinkUnits(int n)
 {
   curDrinks += n;
+  if(isDrinkConFlag(DRINK_PERM) && curDrinks<=0)
+    remDrinkConFlags(DRINK_PERM);
   updateDesc();
 }
 
