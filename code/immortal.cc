@@ -4792,6 +4792,7 @@ void TBeing::doInfo(const char *arg)
 			       "Drowning",
 			       "Mobstuff",
 			       "Combat",
+			       "Teleport",
 			       "Half Tick",
 			       "Full Tick",
 			       "Vampires/Lycan",
@@ -4800,7 +4801,7 @@ void TBeing::doInfo(const char *arg)
 			       "unknown", "unknown", "unknown", "unknown",
 			       "unknown", "unknown", "unknown", "unknown",
 			       "unknown", "unknown", "unknown", "unknown",
-			       "unknown", "unknown", "unknown", "unknown"};
+			       "unknown", "unknown", "unknown"};
 
       double total=0, tlist[25], ttotal=0;
       int n=0;
@@ -4847,6 +4848,19 @@ void TBeing::doInfo(const char *arg)
 	  sendTo("%-20s: %8.4f    %2.2f%%\n\r",cgroupnames[n].c_str(),tlist[n],
 		 ((tlist[n]/ttotal)*100));
 	tlist[n]=0;
+      }
+
+      if(is_abbrev(arg, "mobprocs")){
+	for(int i=0;i<200;++i){
+	  total=0;
+	  for(int j=0;j<10;++j){
+	    total += lag_info.mobprocs[j][i];
+	  }					       
+	  
+	  if(total > 0){
+	    sendTo("%-4i: %8.4f\n\r", i, total/10);
+	  }
+	}
       }
       
     }
