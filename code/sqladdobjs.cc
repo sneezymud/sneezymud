@@ -4,8 +4,8 @@
 
 int main(int argc, char **argv)
 {
-  TDatabase db_immo("immortal");
-  TDatabase db_beta("sneezybeta");
+  TDatabase db_immo(DB_IMMORTAL);
+  TDatabase db_beta(DB_SNEEZYBETA);
   sstring immortal;
   vector<int>vnums;
   int action_flag;
