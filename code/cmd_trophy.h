@@ -54,8 +54,8 @@ class TTrophy {
  public:
   void setName(sstring);
 
-  float getExpModVal(float);
-  const char *getExpModDescr(float);
+  float getExpModVal(float, int);
+  const char *getExpModDescr(float, int);
   void addToCount(int, double);
   float getCount(int);
 

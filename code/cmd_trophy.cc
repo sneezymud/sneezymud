@@ -74,13 +74,16 @@ float TTrophy::getCount(int vnum)
 }
 
 
-float TTrophy::getExpModVal(float count)
+float TTrophy::getExpModVal(float count, int mobvnum)
 {
   float min_mod=0.3;
   float max_mod=1.0; // shouldn't ever be above 1.0
   float free_kills=8; // how many kills you get before trophy kicks in
   float step_mod=0.5; // mod per step
   float num_steps=14.0; // number of steps
+
+  if(mob_index[real_mobile(mobvnum)].numberLoad>0)
+    count/=mob_index[real_mobile(mobvnum)].numberLoad;
 
   float t1, t2, t3, t4, t5;
 
@@ -93,13 +96,14 @@ float TTrophy::getExpModVal(float count)
 
   //  vlogf(LOG_PEEL, fmt("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
 
+
   return t5;
 }
 
 
-const char *TTrophy::getExpModDescr(float count)
+const char *TTrophy::getExpModDescr(float count, int mobvnum)
 {
-  float f=getExpModVal(count);
+  float f=getExpModVal(count, mobvnum);
 
   return((f == 1.0) ? "<Y>full<1>" :
 	 ((f >= 0.90) ? "<o>much<1>" :
@@ -200,7 +204,7 @@ void TBeing::doTrophy(const sstring &arg)
 
       if(!summary){
 	buf = fmt("You will gain %s experience when fighting %s.\n\r") %
-		trophy.getExpModDescr(count) % mob_index[rnum].short_desc;
+		trophy.getExpModDescr(count,vnum) % mob_index[rnum].short_desc;
 	sb += buf;
       }
 

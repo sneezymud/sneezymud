@@ -80,7 +80,8 @@ mobIndexData::mobIndexData() :
   Class(-99),
   level(-99),
   race(-99),
-  doesLoad(false)
+  doesLoad(false),
+  numberLoad(0)
 {
 }
 
@@ -96,6 +97,7 @@ mobIndexData & mobIndexData::operator= (const mobIndexData &a)
   level = a.level;
   race = a.race;
   doesLoad = a.doesLoad;
+  numberLoad = a.numberLoad;
 
   return *this;
 }
@@ -106,7 +108,8 @@ mobIndexData::mobIndexData(const mobIndexData &a) :
   Class(a.Class),
   level(a.level),
   race(a.race),
-  doesLoad(a.doesLoad)
+  doesLoad(a.doesLoad),
+  numberLoad(a.numberLoad)
 {
 }
 

@@ -1874,8 +1874,10 @@ void zoneData::resetZone(bool bootTime)
             continue;
           }
 
-	  if(this->zone_value != 0)
+	  if(this->zone_value != 0){
 	    mob_index[rs.arg1].doesLoad=true;
+	    mob_index[rs.arg1].numberLoad++;
+	  }
 
           if ((this->zone_value != 0) &&
               mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {

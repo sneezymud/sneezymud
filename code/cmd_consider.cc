@@ -152,12 +152,12 @@ void TBeing::doConsider(const char *argument)
 
   if(trophy->getCount(tmon->mobVnum()) > 0){
     sendTo(COLOR_BASIC, fmt("You will gain %s experience when fighting %s.\n\r") % 
-	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum())) %
+	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum()), tmon->mobVnum()) %
 	   namebuf);
   } else {
     sendTo(COLOR_BASIC, fmt("You have never fought %s and will gain %s experience.\n\r") %
 	   namebuf %
-	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum())));
+	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum()), tmon->mobVnum()));
   }
 
   if (getDiscipline(DISC_ADVENTURING)) {
