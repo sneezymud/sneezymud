@@ -1070,6 +1070,14 @@ void buildComponentArray()
     "",
     "You stretch $p between your forefingers.",
     "$n stretches $p between $s forefingers."));
+  CompInfo.push_back(compInfo(SPELL_EMBALM,
+    "",
+    "",
+    "",
+    "You uncap $p and sprinkle the corpse with it.",
+    "$n uncaps $p and sprinkles the corpse with it.",
+    "You uncap $p and sprinkle the corpse with it.",
+    "$n uncaps $p and sprinkles the corpse with it."));
   CompInfo.push_back(compInfo(SPELL_VOODOO,
     "",                       
     "",

@@ -6,6 +6,7 @@
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_magic_item.h"
+#include "obj_corpse.h"
 
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
@@ -1750,6 +1751,73 @@ int castLegbasGuidance(TBeing *caster, TBeing *victim)
   }
   return TRUE;
 }
+
+
+int embalm(TBeing *caster, TObj *corpse)
+{
+  taskDiffT diff;
+
+  if (!bPassMageChecks(caster, SPELL_EMBALM, corpse))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_EMBALM]->lag;
+  diff = discArray[SPELL_EMBALM]->task;
+
+  start_cast(caster, NULL, corpse, caster->roomp, SPELL_EMBALM, diff, 2,"", rounds, caster->in_room, 0, 0,TRUE, 0);
+    return TRUE;
+}
+
+int castEmbalm(TBeing *caster, TObj *corpse)
+{
+  int ret = 0,level;
+
+  level = caster->getSkillLevel(SPELL_EMBALM);
+
+  ret=embalm(caster,corpse,level,caster->getSkillValue(SPELL_EMBALM));
+
+  return FALSE;
+}
+
+int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
+{
+  TCorpse *corpse;
+
+  if(!bSuccess(caster, bKnown, SPELL_EMBALM)){
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+ 
+  if(!(corpse=dynamic_cast<TCorpse *>(o))){
+    act("$N is not a corpse!  You can only embalm corpses.", 
+	FALSE, caster, NULL, o, TO_CHAR);
+    act("$n looks momentarily befuddled.",
+	FALSE, caster, NULL, corpse, TO_NOTVICT);
+    return SPELL_FAIL;
+  }
+
+  if(corpse->obj_flags.decay_time < 0){
+    act("$N is not decaying and would not benefit from embalming.",
+	FALSE, caster, NULL, corpse, TO_CHAR);
+    act("$n looks momentarily befuddled.",
+	FALSE, caster, NULL, corpse, TO_NOTVICT);
+    return SPELL_FAIL;
+  }
+  
+  corpse->obj_flags.decay_time += (bKnown/2); // 1-50
+
+  act("$N stiffens and takes on a rubbery appearance.",
+      FALSE, caster, NULL, corpse, TO_CHAR, ANSI_RED);
+  act("The steady march of the flesh devourers has been slowed.",
+      FALSE, caster, NULL, corpse, TO_CHAR, ANSI_RED);
+  act("$N stiffens and takes on a rubbery appearance.",
+      FALSE, caster, NULL, corpse, TO_ROOM, ANSI_RED);
+  act("The steady march of the flesh devourers has been slowed.",
+      FALSE, caster, NULL, corpse, TO_ROOM, ANSI_RED);
+
+
+  return SPELL_SUCCESS;
+}
+
 
 int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
 {

@@ -237,8 +237,9 @@ private:
     int castFlatulence(TBeing *);
     int flatulence(TBeing *, int, byte, int);
 
-    int embalm(TBeing *, TBeing *);
-    int castEmbalm(TBeing *, TBeing *);
-    int embalm(TBeing *, TBeing *, int, byte, int);
+    int embalm(TBeing *, TObj *);
+    int castEmbalm(TBeing *, TObj *);
+    int embalm(TBeing *, TObj *, int, byte);
+
 #endif
 

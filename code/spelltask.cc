@@ -2399,9 +2399,16 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_FIRE called with null obj");
         break;
-      default:
-        sendTo("Spell or discipline not yet implemented (doSpellCast)!\n\r");
-        break;
+    case SPELL_EMBALM:
+      if (o) { // !o
+	castEmbalm(this, o);
+      } else
+	vlogf(LOG_BUG, "SPELL_EMBALM called with null obj");
+      break;
+      break;
+    default:
+      sendTo("Spell or discipline not yet implemented (doSpellCast)!\n\r");
+      break;
   }
   if (spelltask && IS_SET(discArray[which]->comp_types, SPELL_TASKED_EVERY)) {
     if (!IS_SET(spelltask->flags, CASTFLAG_CAST_INDEFINITE) &&  

@@ -2189,6 +2189,10 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       else
         removeCurseObj(o);
       break;
+    case SPELL_EMBALM:
+      embalm(this, o);
+      break;
+
 #if 1
     case SPELL_EARTHMAW:
     case SPELL_CREEPING_DOOM:
@@ -2522,7 +2526,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_IRON_WILL:
     case SKILL_PLANT:
     case SKILL_POISON_ARROW:
-    case SPELL_EMBALM:
         sendTo("Spell or discipline not yet implemented!\n\r");
         return FALSE;
   }
