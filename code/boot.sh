@@ -7,6 +7,9 @@ case $USER in
   angus)
     PORT=6975
     ;;
+  jesus)
+    PORT=7000
+    ;;
 esac
 
 if [ "$1" = "" ]

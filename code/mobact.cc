@@ -3171,6 +3171,30 @@ int TMonster::takeFirstHit(TBeing &vict)
             }
             return TRUE;
           }
+	  // Thieves should have slit as well
+          if (v2) {
+	    // lets not have automatic success
+	    rc=doThroatSlit("", v2);
+
+            if (IS_SET_DELETE(rc, DELETE_VICT)) {
+              if (vict.riding) {
+		// not sure why were loging here with backstab
+		// but may as well do the same for slit
+                vlogf(LOG_MISC, "is this called? (slit-mobact.cc:3183)");
+                vict.dismount(POSITION_SITTING);
+              }
+              delete v2;
+              v2 = NULL;
+            }
+            return TRUE;
+          } else  {
+	    rc=doThroatSlit("", &vict);
+	    vlogf(LOG_JESUS, "Slit called in takeFirstHit");
+            if (IS_SET_DELETE(rc, DELETE_VICT)) {
+              return DELETE_VICT;
+            }
+            return TRUE;
+          }
         }
       }
     }
