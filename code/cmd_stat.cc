@@ -538,7 +538,7 @@ void TBeing::statObjForDivman(const TObj *j)
 
   str += j->statObjInfo();
 
-  sprintf(buf, "\n\rIt has %s for a special proceedure.\n\r", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");;
+  sprintf(buf, "\n\rIt has %s for a special procedure.\n\r", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");;
   str += buf;
 
   if (!j->getStuff())

@@ -715,11 +715,11 @@ const sstring TBeing::describeBodySlot(wearSlotT i) const
   char buf[160];
 
   if (IS_SET(specials.act, ACT_SKELETON)) 
-    sprintf(buf, "skeletal, %s", describeBodySlot2(i).c_str());
+    sprintf(buf, "skeletal %s", describeBodySlot2(i).c_str());
   else if (IS_SET(specials.act, ACT_ZOMBIE)) 
-    sprintf(buf, "rotting, %s", describeBodySlot2(i).c_str());
+    sprintf(buf, "rotting %s", describeBodySlot2(i).c_str());
   else if (IS_SET(specials.act, ACT_GHOST)) 
-    sprintf(buf, "ghostly, %s", describeBodySlot2(i).c_str());
+    sprintf(buf, "ghostly %s", describeBodySlot2(i).c_str());
   else if (isLimbFlags(i, PART_TRANSFORMED)) {
     sprintf(buf, "%s", describeTransBodySlot(i).c_str());
   } else 

@@ -833,7 +833,7 @@ void TBeing::doPoint(const sstring &arg)
       if (obj) {
         sendTo(COLOR_OBJECTS,fmt("You point your %s at %s.\n\r") % 
 	       buf % obj->getName());
-        holdBuf = fmt("$n points $s %s at $o.") % buf;
+        holdBuf = fmt("$n points $s %s at %s.") % buf % obj->getName();
         act(holdBuf, FALSE, this, obj, NULL, TO_ROOM);
         return;
       } 
@@ -845,7 +845,7 @@ void TBeing::doPoint(const sstring &arg)
         } else {
 	  sendTo(COLOR_OBJECTS, fmt("You point at %s with your %s.\n\r") % 
 		 b->getName() % buf);
-	  holdBuf = fmt("$n points at $N with $s %s.") % buf;
+	  holdBuf = fmt("$n points at %s with $s %s.") % b->getName() % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
 	  holdBuf = fmt("$n points at you with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_VICT);

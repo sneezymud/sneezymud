@@ -861,7 +861,7 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_CHAR);
 
-    sprintf(buf, "%s suddenly appears out of a swirling mist.", next_tmp_obj->shortDescr);
+    sprintf(buf, "%s suddenly appears out of a swirling mist.\n\r", (sstring(next_tmp_obj->shortDescr).cap()).c_str());
     sendToRoom(buf, location);
 
     return SPELL_SUCCESS;
