@@ -222,7 +222,6 @@ static void TBeingLoad(TBeing *ch, int vnum)
 
   wearSlotT ij;
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {        // Initializing 
-    mob->equipment[ij] = NULL;
     mob->setLimbFlags(ij, 0);
     mob->setCurLimbHealth(ij, mob->getMaxLimbHealth(ij));
     mob->setStuckIn(ij, NULL);

@@ -56,10 +56,6 @@ TBeing::TBeing() :
   // change the default value here
   number = -1;
 
-  wearSlotT i;
-  for (i = MIN_WEAR; i < MAX_WEAR; i++)
-    equipment[i] = NULL;
-
   mobCount++;
   setRace(RACE_NORACE);
 }
@@ -1242,6 +1238,7 @@ TBeing::TBeing(const TBeing &a) :
   player(a.player),
   specials(a.specials),
   practices(a.practices),
+  equipment(a.equipment),
   master(a.master),
   orig(a.orig),
   next_fighting(a.next_fighting),
@@ -1262,7 +1259,6 @@ TBeing::TBeing(const TBeing &a) :
     body = NULL;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    equipment[i] = a.equipment[i];
     body_parts[i] = a.body_parts[i];
   }
 
@@ -1331,9 +1327,9 @@ TBeing & TBeing::operator=(const TBeing &a)
   m_craps = a.m_craps;
   invisLevel = a.invisLevel;
   my_protection = a.my_protection;
+  equipment = a.equipment;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    equipment[i] = a.equipment[i];
     body_parts[i] = a.body_parts[i];
   }
 

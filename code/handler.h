@@ -2,21 +2,9 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: handler.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// Usage: Various routines for moving about objects/players               
 //
 //////////////////////////////////////////////////////////////////////////
-
-
-/* ************************************************************************
-*  file: handler.h , Handler module.                      Part of DIKUMUD *
-*  Usage: Various routines for moving about objects/players               *
-************************************************************************* */
 
 #ifndef __HANDLER_H
 #define __HANDLER_H
@@ -33,7 +21,7 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list);
 TThing *get_thing_on_list(const char *name, TThing *list);
 TThing *get_thing_on_list_num(int num, TThing *list);
 TThing *get_thing_on_list_vis(TBeing *ch, const char *name, TThing *list);
-TThing *get_thing_in_equip(TBeing *, const char *, TThing *equipment[], wearSlotT *j, bool, int*count);
+TThing *get_thing_in_equip(TBeing *, const char *, equipmentData equipment, wearSlotT *j, bool, int*count);
 TThing *get_thing_stuck_in_vis(TBeing *, const char *, wearSlotT *j, int *count, TBeing *);
 TThing *get_thing_char_using(TBeing *, const char *, int, bool, bool);
 TObj *get_obj(const char *name, exactTypeT);
@@ -67,7 +55,7 @@ const unsigned int FIND_OBJ_EQUIP     =(1<<5);
 const unsigned int FIND_OBJ_COMM      =(1<<6);
 const unsigned int FIND_ROOM_EXTRA    =(1<<7);
 
-extern TThing *searchLinkedListVis(TBeing *ch, const char *name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedListVis(const TBeing *ch, const char *name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
 
 extern TThing *searchLinkedList(const char * name, TThing *list, thingTypeT x = TYPETHING);
 extern TThing *searchLinkedList(const string & name, TThing *list, thingTypeT x = TYPETHING);

@@ -58,12 +58,8 @@ void TPerson::resetChar()
 {
   char recipient[100], *tmp, *tmstr;
   affectedData *af;
-  int i;
 
   roomp = NULL;
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++)	/* Initializing */
-    equipment[i] = NULL;
 
   if (isPlayerAction(PLR_MAILING))
     remPlayerAction(PLR_MAILING);

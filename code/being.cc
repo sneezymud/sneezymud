@@ -450,6 +450,31 @@ spellStoreData::~spellStoreData()
 }
 
 
+equipmentData::equipmentData(){
+  wearSlotT i;
+  for (i = MIN_WEAR; i < MAX_WEAR; i++)
+    equipment[i] = NULL;
+}
+
+equipmentData::equipmentData(const equipmentData &a){
+  wearSlotT i;
+  for (i = MIN_WEAR; i < MAX_WEAR; i++)
+    equipment[i] = a.equipment[i];
+}
+
+equipmentData & equipmentData::operator= (const equipmentData &a){
+  wearSlotT i;
+  for (i = MIN_WEAR; i < MAX_WEAR; i++)
+    equipment[i] = a.equipment[i];
+  
+  return *this;
+}
+
+equipmentData::~equipmentData(){
+}
+
+
+
 charFile::charFile() :
   sex(SEX_MALE),
   race(0),

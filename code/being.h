@@ -504,6 +504,54 @@ class taskData {
     ~taskData();
 };
 
+class equipmentData {
+ private:
+  TThing *equipment[MAX_WEAR];
+
+ public:
+  TThing *operator[] (int slot) const {
+    return this->equipment[slot]; 
+  }
+
+  TThing *remove(enum wearSlotT slot){
+    TThing *t=equipment[slot];
+
+    TObj *tobj = dynamic_cast<TObj *>(t);
+    if (tobj && tobj->usedAsPaired()) {
+      if (slot == WEAR_LEGS_R || 
+	  slot == HOLD_RIGHT || 
+	  slot == WEAR_EX_LEG_R)
+	equipment[slot + 1] = NULL;
+      else
+	equipment[slot - 1] = NULL;
+    }
+
+    equipment[slot]=NULL;
+    return t;
+  }
+
+  void wear(TThing *t, enum wearSlotT slot){
+    TObj *tobj = dynamic_cast<TObj *>(t);
+    if (tobj && tobj->usedAsPaired()) {
+      if (slot == WEAR_LEGS_R ||
+	  slot == HOLD_RIGHT || 
+	  slot == WEAR_EX_LEG_R)
+	equipment[slot + 1] = t;
+      else
+	equipment[slot - 1] = t;
+    }
+
+    equipment[slot]=t;
+  }
+
+   equipmentData();
+   equipmentData(const equipmentData &a);
+   equipmentData & operator=(const equipmentData &a);
+   ~equipmentData();
+};
+
+
+
 class TBeing : public TThing {
 
     friend class Descriptor;
@@ -548,8 +596,9 @@ class TBeing : public TThing {
     specialData specials;  
     pracData practices; 
     affectedData *affected;    
+    equipmentData equipment;
 
-    TThing *equipment[MAX_WEAR];
+
 
     TBeing *master;            
     TPerson *orig;    // a pointer to who I really am (if poly'd)
@@ -1571,10 +1620,14 @@ class TBeing : public TThing {
     TBeing *fight() const;
 
     virtual TThing *heldInPrimHand() const {
-      return (isRightHanded() ? equipment[HOLD_RIGHT] : equipment[HOLD_LEFT]);
+      return (isRightHanded() ? 
+	      equipment[HOLD_RIGHT] : 
+	      equipment[HOLD_LEFT]);
     }
     virtual TThing *heldInSecHand() const {
-      return (isRightHanded() ? equipment[HOLD_LEFT] : equipment[HOLD_RIGHT]);
+      return (isRightHanded() ? 
+	      equipment[HOLD_LEFT] : 
+	      equipment[HOLD_RIGHT]);
     }
     bool isAffected(unsigned long bv) const;
     unsigned int rentCredit() const;

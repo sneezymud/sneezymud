@@ -3378,10 +3378,7 @@ float old_ac_lev = mob->getACLevel();
           }
           delete new_obj;
         }
-      } else {
-        mob->equipment[mapped_slot] = NULL;
       }
-
       mob->setStuckIn(mapped_slot, NULL);
     }
 
