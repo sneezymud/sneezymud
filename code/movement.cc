@@ -3343,6 +3343,9 @@ int TBeing::doMortalGoto(const string & argument)
   } else if (is_abbrev(arg, "combat_trainer") ||
              is_abbrev(arg, "combat-trainer")) {
     targ_ch = MOB_COMBAT_TRAINER;
+  } else if (is_abbrev(arg, "thief_entrance") ||
+	     is_abbrev(arg, "thief-entrance")) {
+    targ_rm = 634;
   } else if (is_abbrev(arg, "air_trainer") ||
              is_abbrev(arg, "air-trainer") ||
              is_abbrev(arg, "alchemy_trainer") ||
@@ -3465,6 +3468,20 @@ int TBeing::doMortalGoto(const string & argument)
 
     dir = choose_exit_global(in_room, targ_rm, -1000);
     if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
+      // thieves guild is behind a secret door
+      // if not with jennica track to jennica
+      // if with jennica, tell them to open the door
+      if(in_room == 634){
+	sendTo("The entrance to the Thieves Guild is secret.\n\r");
+	sendTo("You must carefully examine this room to find it the entrance.\n\r");
+	sendTo("Once you have entered the Guild, you may use goto to continue.\n\r");
+	return FALSE;
+      } else if(targ_ch == 262 || targ_ch == 203){
+	// this better not match the if above or we're in trouble
+	return doMortalGoto("thief-entrance");
+      }
+
+
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
     }
