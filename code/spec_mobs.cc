@@ -1703,6 +1703,31 @@ static int findSomeClutterPrison(TMonster *myself)
   return FALSE;
 }
 
+static int findSomeClutterAmber(TMonster *myself)
+{
+  dirTypeT dir;
+  int rc;
+  TPathFinder path;
+
+  dir=path.findPath(myself->inRoom(), findClutterAmber(myself));
+
+  if (dir >= MIN_DIR) {
+    rc = myself->goDirection(dir);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    return TRUE;
+  }
+  // no clutter found
+  rc = myself->wanderAround();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
+    return TRUE;
+
+  return FALSE;
+}
+
+
 int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   TThing *t, *t2;
@@ -1782,6 +1807,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   TObj *obj = NULL;
   int rc;
   char buf[256];  
+  int DUMP=31905;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -1796,7 +1822,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     if (!obj)
       continue;
 
-    if (myself->inRoom() == 31905)
+    if (myself->inRoom() == DUMP)
       break;
 
     if(obj->objVnum() == 26688)
@@ -1822,13 +1848,135 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   // we only get here if there is nothing in my room worth picking up
 
   if (myself->getStuff()) {
-    rc = myself->doDonate(31905);
+    rc = myself->doDonate(DUMP);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
     return TRUE;
   } else {
     rc = findSomeClutterPrison(myself);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+
+
+int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  TThing *t, *t2;
+  TObj *obj = NULL;
+  int rc;
+  char buf[256];  
+  int DUMP=33281;
+
+  if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
+    return FALSE;
+
+  if (::number(0,3))
+    return FALSE;
+
+  for (t = myself->roomp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+
+    obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+    if (myself->inRoom() == DUMP)
+      break;
+
+    if (!okForJanitor(myself, obj))
+      continue;
+
+    if (dynamic_cast<TPool *>(obj)){
+      sprintf(buf, "$n mops up $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      delete obj;
+    } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
+      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      --(*obj);
+      *myself += *obj; 
+      if(obj->objVnum() == OBJ_PILE_OFFAL)
+	delete obj;
+    }
+    return TRUE;
+  }
+
+  // we only get here if there is nothing in my room worth picking up
+
+  if (myself->getStuff()) {
+    rc = myself->doDonate(DUMP);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+    return TRUE;
+  } else {
+    rc = findSomeClutterAmber(myself);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  TThing *t, *t2;
+  TObj *obj = NULL;
+  int rc;
+  char buf[256];  
+  int DUMP=1385;
+
+  if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
+    return FALSE;
+
+  if (::number(0,3))
+    return FALSE;
+
+  for (t = myself->roomp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+
+    obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+    if (myself->inRoom() == DUMP)
+      break;
+
+    if (!okForJanitor(myself, obj))
+      continue;
+
+    if (dynamic_cast<TPool *>(obj)){
+      sprintf(buf, "$n mops up $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      delete obj;
+    } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
+      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      --(*obj);
+      *myself += *obj; 
+      if(obj->objVnum() == OBJ_PILE_OFFAL)
+	delete obj;
+    }
+    return TRUE;
+  }
+
+  // we only get here if there is nothing in my room worth picking up
+
+  if (myself->getStuff()) {
+    rc = myself->doDonate(DUMP);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+    return TRUE;
+  } else {
+    rc = findSomeClutterAmber(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
@@ -8251,6 +8399,8 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "cat", cat},
   {FALSE, "taxman", taxman}, // 195
   {FALSE,"Trainer: advanced adventuring", CDGenericTrainer},
+  {FALSE, "amber janitor", amberJanitor},
+  {FALSE, "brightmoon janitor", brightmoonJanitor},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

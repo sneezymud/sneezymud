@@ -179,7 +179,9 @@ const int SPEC_PRISON_JANITOR     =193;
 const int SPEC_CAT                =194;
 const int SPEC_TAXMAN             =195;
 const int SPEC_TRAINER_ADV_ADVENTURING=196;
-const int NUM_MOB_SPECIALS        =196;
+const int SPEC_AMBER_JANITOR      =197;
+const int SPEC_BRIGHTMOON_JANITOR =198;
+const int NUM_MOB_SPECIALS        =198;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
