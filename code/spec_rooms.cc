@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_rooms.cc,v $
+// Revision 1.3  1999/10/07 14:26:27  batopr
+// Made dump take global money modifiers into account
+//
 // Revision 1.2  1999/09/25 09:39:38  peel
 // Made the checks for monk green sash quest more lenient
 //
@@ -214,8 +217,12 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
     if (ch->GetMaxLevel() < 3)
       gain_exp(ch, min(0.010, value/1000.0));
-    else 
+    else { 
+      // take the global income modifier into account, in times of drought, we
+      // don't want folks resorting to using the dump to get their money
+      value = (int) (value * gold_modifier[GOLD_INCOME]);
       ch->addToMoney(value, GOLD_INCOME);
+    }
   }
   return TRUE;
 }
