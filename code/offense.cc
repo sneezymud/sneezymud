@@ -1051,10 +1051,38 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
   strcpy(v_name, argument);
 
   if (!(v = vict)) {
-    if (!(v = get_char_room_vis(this, v_name, NULL, EXACT_NO, INFRA_YES))) {
-      sendTo("Whom do you want to assist?\n\r");
-      return FALSE;
+    // Default to the first PC group member who is currently tanking, or the first mobile group member if no PC is.
+    if (isAffected(AFF_GROUP) && (!argument || !*argument) && (followers || (master && master->followers))) {
+      followData * tFData    = (master ? master->followers : followers);
+      TBeing     * tAssistMe = NULL,
+	         * tMaybeMe  = NULL;
+
+      if (master && master->isAffected(AFF_GROUP) && sameRoom(*master) && canSee(master) && master->fight() &&
+          (master->fight()->fight() == master))
+	tAssistMe = master;
+      else
+	for (; tFData; tFData = tFData->next)
+	  if (tFData->follower && tFData->follower->isAffected(AFF_GROUP) && canSee(tFData->follower) &&
+              tFData->follower->fight() && (tFData->follower->fight()->fight() == tFData->follower) &&
+              (tFData->follower != this) && sameRoom(*tFData->follower)) {
+	    if (tFData->follower->isPc()) {
+	      tAssistMe = tFData->follower;
+	      break;
+	    } else if (!tMaybeMe)
+	      tMaybeMe = tFData->follower;
+	  }
+
+      if (!tAssistMe && tMaybeMe)
+	tAssistMe = tMaybeMe;
+
+      v = tAssistMe; // Since this is NULL'ed above we are safe doing this without a check.
     }
+
+    if (!v)
+      if (!(v = get_char_room_vis(this, v_name, NULL, EXACT_NO, INFRA_YES))) {
+        sendTo("Whom do you want to assist?\n\r");
+        return FALSE;
+      }
   }
   if (v == this) {
     sendTo("Oh, by all means, help yourself...\n\r");
