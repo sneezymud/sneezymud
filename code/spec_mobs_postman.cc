@@ -5,7 +5,6 @@ sstring randommessage(sstring from)
   sstring msg, buf, sbuf;
   sstring to=mob_index[::number(0,mob_index.size()-1)].short_desc;
   vector <sstring> sentences;
-  vector <sstring>::iterator iter;
 
   sentences.push_back("The %s jumps over the %s in the pale moonlight.");
   sentences.push_back("The %s barks %s at noon.");
