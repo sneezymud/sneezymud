@@ -321,6 +321,7 @@ class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN 
    int money;        
    int bankmoney;        
    double exp;             
+   double max_exp;
 
    sh_int spellHitroll;
    sh_int hitroll;     
@@ -1017,6 +1018,7 @@ class TBeing : public TThing {
     void raiseDiscOnce(discNumT);
     int calcRaiseDisc(discNumT, bool) const;
     int pracsBetween(discNumT, int) const;
+    double pracsPerLevel(classIndT Class, bool forceBasic);
     sh_int calcNewPracs(classIndT, bool);
     sh_int getPracs(classIndT);
     void setPracs(sh_int, classIndT);
@@ -1652,6 +1654,8 @@ class TBeing : public TThing {
     int raceHasNoBones() { return race->hasNoBones(); }
     int raceHasNaturalClimb() { return race->hasNaturalClimb(); }
     void setRace(race_t r);
+    double getMaxExp() const;
+    void setMaxExp(double n);
     double getExp() const;
     void setExp(double n);
     void addToExp(double n);

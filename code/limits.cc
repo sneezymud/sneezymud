@@ -506,10 +506,8 @@ int getAdvancedPracs(TBeing *ch){
   return totalpracs;
 }
 
-
-sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
+double TBeing::pracsPerLevel(classIndT Class, bool forceBasic)
 {
-  sh_int prac;
   double num;
   double class_tweak = 0.50;
 
@@ -568,7 +566,17 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
     num = advancedpracs;
   else
     num = basicpracs;
-  
+
+  return num;
+}
+
+sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
+{
+  sh_int prac;
+  double num;
+
+  num = pracsPerLevel(Class, forceBasic);
+
   float temp = (int) num; // save for logging
   prac = (int) num;
   num = num - prac;
@@ -589,10 +597,10 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   if ((100.0*num) >= roll) {
     prac++;
   }
-
+  
   if(isPc()) {
-    vlogf(LOG_DASH, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d, advancedlev: %5.2f", getName(),
-	  prac, roll, (int)temp, num, getLevel(Class), advancedlevel);
+    vlogf(LOG_DASH, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d", getName(),
+	  prac, roll, (int)temp, num, getLevel(Class));
   }
 
   return prac;
@@ -673,8 +681,6 @@ void TBeing::addPracs(sh_int pracs, classIndT Class)
 
 void TPerson::advanceLevel(classIndT Class, TMonster *gm)
 {
-  sh_int prac = 0;
-
   setLevel(Class, getLevel(Class) + 1);
   calcMaxLevel();
 
@@ -697,11 +703,15 @@ void TPerson::advanceLevel(classIndT Class, TMonster *gm)
 #endif
   }
 
+#if 0
+  sh_int prac = 0;
+
   prac = calcNewPracs(Class, FALSE);
   addPracs(prac, Class);
 
   if (gm)
     pracPath(gm, Class, (ubyte) prac);
+#endif
 
   doHPGainForLev(Class);
 
@@ -791,31 +801,35 @@ void TPerson::setTitle(bool tForm)
 }
 
 
-// Ok we're doing some wierd stuff in this function, so I'll document here.  For the exp cap,
-// we're capping anything with:
-// rawgain > (damage_of_hit / max_hp_of_mob) * (exp_for_level / min_kills_per_lev) 
-// we also modify for number of classes, so that the cap is 1/2 as large for a dual class
-// basically, if you play with the formula, you'll find that this limits the player so that
-// in any particular fight, the player CANNOT gain more than 1/min_kills of his exp needed to
-// move from his current level to the next.
-// damage / max_hp is passed as a single integer, dam  (no damage = 0, full damage = 10000)
-// exp_for_level is calculated from the exp needed for next lev minus exp needed for current lev
-//   ie, (peak - curr)
-// min_kills_per_lev is an AXIOM, since projected kills per lev is 17 + 1.25*lev (18-80, linear)
-// we decided on gainmod = lev + 1 (2-50, linear)
-// if the cap is being hit too much, it is a sign that the PCs have grown too powerful, or the
-// gainmod formula is too strict.  if the cap isn't being hit (specifically when players are
-// being pleveled) then gainmod is too lenient.             Dash - Jan 2001
+// Ok we're doing some wierd stuff in this function, so I'll document
+// here.  For the exp cap, we're capping anything with: rawgain >
+// (damage_of_hit / max_hp_of_mob) * (exp_for_level /
+// min_kills_per_lev) we also modify for number of classes, so that
+// the cap is 1/2 as large for a dual class basically, if you play
+// with the formula, you'll find that this limits the player so that
+// in any particular fight, the player CANNOT gain more than
+// 1/min_kills of his exp needed to move from his current level to the
+// next.  damage / max_hp is passed as a single integer, dam (no
+// damage = 0, full damage = 10000) exp_for_level is calculated from
+// the exp needed for next lev minus exp needed for current lev ie,
+// (peak - curr) min_kills_per_lev is an AXIOM, since projected kills
+// per lev is 17 + 1.25*lev (18-80, linear) we decided on gainmod =
+// lev + 1 (2-50, linear) if the cap is being hit too much, it is a
+// sign that the PCs have grown too powerful, or the gainmod formula
+// is too strict.  if the cap isn't being hit (specifically when
+// players are being pleveled) then gainmod is too lenient.  Dash -
+// Jan 2001
 
-// NOTE, gainmod is defined in multiple places, if you change it, change all of them please
-// adding a small change so that low levs don't have a cap of 0 (max(lev*2,newgain))
-// it looks like my logic for multiclasses isn't right, they're getting 1/#c as much exp as
+// NOTE, gainmod is defined in multiple places, if you change it,
+// change all of them please adding a small change so that low levs
+// don't have a cap of 0 (max(lev*2,newgain)) it looks like my logic
+// for multiclasses isn't right, they're getting 1/#c as much exp as
 // they should, even with the multiclass penalty... 01/01 - dash
 
 
 void gain_exp(TBeing *ch, double gain, int dam)
 {
-  classIndT i;
+  classIndT Class;
   double newgain = 0;
   double oldcap = 0;
   bool been_here = false;
@@ -823,107 +837,166 @@ void gain_exp(TBeing *ch, double gain, int dam)
   if (!ch->isPc() && ch->isAffected(AFF_CHARM)) {
     // do_nothing so they get no extra exp
     return;
-  } else if (ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA)) {
+  }
+
+  if (ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA)) {
     // do nothing, these rooms safe
     return;
-  } else if (!ch->isImmortal()) {
-    if (gain > 0) {
-      gain /= ch->howManyClasses();
-      if (ch->isPc()) {
-        for (i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
-          double peak2 = getExpClassLevel(i,ch->getLevel(i) + 2);
-          double peak = getExpClassLevel(i,ch->getLevel(i) + 1);
-          double curr = getExpClassLevel(i,ch->getLevel(i));
-	  double gainmod = ((1.15*ch->getLevel(i)) ); // removed +1
-          if (ch->getLevel(i)) {
-            if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) {
-              been_here = TRUE; // don't show multiple logs for multiclasses
-              // the 100 turns dam into a %
-              newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 1.0;
-	      // 05/24/01 - adding a 'soft' cap here
-	      oldcap = newgain;
-	      double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     
-	      // this gives us a range of 1-2
-	      newgain *= softmod;
-	      //newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
-	      // don't need this anymore since no hard cap - dash
-	      if (gain < newgain)
-		newgain = gain;
-#if 0
-	      vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)    (%5.2f soft <- %5.2f hard)",
-                    ch->getName(), ch->getLevel(i),(ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
-                    (ch->specials.fighting)?ch->specials.fighting->GetMaxLevel() : -1, (gain/newgain), (gain/oldcap));
-	      vlogf(LOG_DASH, "   gain: %6.2f   oldc: %6.2f   newc: %6.2f   softm: %6.2f",
-		    gain, oldcap, softmod, newgain);
-#endif
-	      gain = newgain;
-            }
-            // intentionally avoid having L50's get this message
-            if ((ch->getExp() >= peak2) && (ch->GetMaxLevel() < MAX_MORT)) {
-              ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
-              ch->setExp(peak2);
-              return;
-            } else if (ch->getExp() >= peak) {
-              // do nothing..this rules! Tell Brutius Hey, I didnt get any exp? 
-            } else if ((ch->getExp() + gain >= peak) && (ch->GetMaxLevel() < MAX_MORT)) {
-              ch->sendTo(COLOR_BASIC, "<G>You have gained enough to be a Level %d %s.<1>\n\r", 
-			 ch->getLevel(i)+1, classNames[i].capName);
-              ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
-              if (ch->getExp() + gain >= peak2) {
-                ch->setExp(peak2- 1);
-                return;
-              }
+  }
+
+  if(ch->isImmortal())
+    return;
+  
+
+  if (gain < 0) {
+    ch->addToExp(gain);
+    if (ch->getExp() < 0)
+      ch->setExp(0);
+
+    return;
+  }
+
+  
+  gain /= ch->howManyClasses();
+  if (ch->isPc()) {
+    for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+      const double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
+      const double peak = getExpClassLevel(Class,ch->getLevel(Class) + 1);
+      const double curr = getExpClassLevel(Class,ch->getLevel(Class));
+      const double gainmod = ((1.15*ch->getLevel(Class)) );
+      
+      if(!ch->getLevel(Class))
+	continue;
+
+      // calculate exp gain
+      if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) {
+	been_here = TRUE; // don't show multiple logs for multiclasses
+	
+	// the 100 turns dam into a %
+	newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 1.0;
+	
+	// 05/24/01 - adding a 'soft' cap here
+	oldcap = newgain;
+	double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     
+	
+	// this gives us a range of 1-2
+	newgain *= softmod;
+	
+	//newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
+	// don't need this anymore since no hard cap - dash
+	if (gain < newgain)
+	  newgain = gain;
+	gain = newgain;
+      }
+      
+
+      // check for level gain
+      if ((ch->getExp() >= peak2) && (ch->GetMaxLevel() < MAX_MORT)) {
+	ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
+	ch->setExp(peak2);
+	return;
+      } else if (ch->getExp() >= peak) {
+	// do nothing..this rules! Tell Brutius Hey, I didnt get any exp? 
+      } else if ((ch->getExp() + gain >= peak) &&
+		 (ch->GetMaxLevel() < MAX_MORT)) {
+	ch->sendTo(COLOR_BASIC, "<G>You have gained enough to be a Level %d %s.<1>\n\r", 
+		   ch->getLevel(Class)+1, classNames[Class].capName);
+	ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
+	if (ch->getExp() + gain >= peak2) {
+	  ch->setExp(peak2- 1);
+	  return;
+	}
+      }
+
+
+      // check for prac gain
+      if((ch->getExp() + gain) > ch->getMaxExp()){
+	double t_curr=curr, t_peak=peak;
+	double delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
+	double exp = ch->getExp();
+	int gain_pracs=0;
+	double t_exp=0;
+	double new_exp = ch->getExp() + gain;
+
+	if(ch->getMaxExp() < peak){
+	  // getting some exp in the current level
+	  t_curr=curr;            // beginning of this level
+	  t_peak=peak;            // end of this level
+	  delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
+	  exp = ch->getMaxExp();  // gain pracs only past this exp
+	  new_exp = min(t_peak, ch->getExp() + gain);
+
+	  // loop through this levels exp, stepping by the delta_exp, ie
+	  // the amount needed for each practice.
+	  for(t_exp=t_curr;t_exp<=new_exp && t_exp<=t_peak;t_exp+=delta_exp){
+	    // if this exp step is past our max exp and is under the exp
+	    // we've gained, then get a prac
+	    if(t_exp > exp && t_exp <= new_exp){
+	      vlogf(LOG_PEEL, "%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp, t_exp); ;
+	      gain_pracs++;
 	    }
-	    // if(gain > ((peak - curr) / gainmod)) {
-#if 0
-	    if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) { 
-	      been_here = TRUE; // don't show multiple logs for multiclasses
-	      // the 100 turns dam into a %
-	      newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 2.0;
-	      vlogf(LOG_DASH, "%s(L%d) vs %s(L%d) cap: D: %d, E: %f, C: %f (%fx), MK: %f, %d classes",
-		    ch->getName(), ch->getLevel(i), (ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a", 
-		    (ch->specials.fighting) ?  ch->specials.fighting->GetMaxLevel() : -1, dam/100 + 1, gain,	
-		    newgain, (gain/newgain), gainmod, ch->howManyClasses());
-	    }  
-#endif
+	  }
+
+	  // crossing the threshold into the next level
+	  if(new_exp >= peak){
+	    // roll for extra prac
+	    if(::number(1,(int)delta_exp) < (delta_exp - (t_peak - t_exp))){
+	      vlogf(LOG_PEEL, "%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp);
+	      gain_pracs++;
+	    }
+	  }
+	}
+
+
+	if(new_exp > peak){
+	  // getting exp in the next level
+	  t_curr=peak;
+	  t_peak=peak2;
+	  delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
+	  exp = max(ch->getMaxExp(),t_curr+1);
+	  new_exp = ch->getExp() + gain;
+
+	  for(double j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
+	    if(j > exp && j < new_exp){
+	      vlogf(LOG_PEEL, "%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp, t_exp); ;
+	      gain_pracs++;
+	    }
+	  }
+	}
+
+	if(gain_pracs > 0){
+	  ch->addPracs(gain_pracs, Class);
+	  if(gain_pracs == 1){
+	    ch->sendTo(COLOR_BASIC, "<g>You have gained a practice!<1>\n\r");
+	  } else {
+	    ch->sendTo(COLOR_BASIC, "<g>You have gained %i practices!<1>\n\r",
+		       gain_pracs);
 	  }
 	}
       }
-#if 0
-      // Theoretically, a players peak - curr / gainmod is extremely reasonable
-      // for a veteran player hitting mobs above their level but not too far
-      // We may need to watch for the backstabbers
-      if(dam > 0) {
-	double peak = getExpClassLevel(i,ch->getLevel(i) + 1);
-	double curr = getExpClassLevel(i,ch->getLevel(i));
-	double gainmod = ((ch->getLevel(i))) + 1.0; // removed +1
-	newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 2;
-	// the 100 compensates for dam
-	gain = min(gain, newgain); 
-	//	gain += (rand()%(int)(gain*.1))-(gain*.05);
-	gain = (gain*0.95) +  (((float)::number(0,100))*gain)/1000.0;
-      }
-#endif
-      ch->addToExp(gain);
-      // we check mortal level here...
-      // an imm can go mort to test xp gain (theoretically)
-      // for level > 50, the peak would have flipped over, which is bad
-      if (ch->isPc() && ch->GetMaxLevel() <= MAX_MORT) {
-	for (i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
-	  double peak2 = getExpClassLevel(i,ch->getLevel(i) + 2);
-	  if (ch->getLevel(i)) {
-	    if (ch->getExp() > peak2)
-              ch->setExp(peak2 - 1);
-	  }
-	}
-      }
-    }
-    if (gain < 0) {
-      ch->addToExp(gain);
-      if (ch->getExp() < 0)
-        ch->setExp(0);
     }
   }
+
+  ch->addToExp(gain);
+
+#if 0
+  // we check mortal level here...
+  // an imm can go mort to test xp gain (theoretically)
+  // for level > 50, the peak would have flipped over, which is bad
+  if (ch->isPc() && ch->GetMaxLevel() <= MAX_MORT) {
+    for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+      double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
+      if (ch->getLevel(Class)) {
+	if (ch->getExp() > peak2)
+	  ch->setExp(peak2 - 1);
+      }
+    }
+  }
+#endif
+
+  // update max exp
+  if(ch->getExp() > ch->getMaxExp())
+    ch->setMaxExp(ch->getExp());
 }
 
 void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *cont) 

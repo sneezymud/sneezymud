@@ -65,6 +65,7 @@ class charFile {
    int money;
    int bankmoney;
    double exp;
+   double max_exp;
    sh_int spellHitroll;
    sh_int hitroll;
    sbyte damroll;

@@ -433,6 +433,7 @@ void TPerson::storeToSt(charFile *st)
   st->money = points.money;
   st->bankmoney = points.bankmoney;
   st->exp = points.exp;
+  st->max_exp = points.max_exp;
   st->spellHitroll = points.spellHitroll;
   st->hitroll = points.hitroll;
   st->damroll = points.damroll;
@@ -666,6 +667,7 @@ void TPerson::loadFromSt(charFile *st)
    points.money = st->money;
    points.bankmoney = st->bankmoney;
    points.exp = st->exp;
+   points.max_exp = st->max_exp;
    points.spellHitroll = st->spellHitroll;
    points.hitroll = st->hitroll;
    points.damroll = st->damroll;

@@ -708,8 +708,9 @@ void TBeing::statBeing(TBeing *k)
         k->age()->year, k->age()->month, k->age()->day, k->age()->hours);
   }
   sprintf(buf3, "[%.2f]", k->getExp());
-  sprintf(buf + strlen(buf), "%sDefRnd:%s [%3d]  %sExp    :%s %-10s  %sBLANK   :%s [%d]\n\r",
-          cyan(), norm(), k->defendRound(NULL),  cyan(), norm(), buf3, cyan(), norm(), 0);
+  sprintf(buf2, "[%.2f]", k->getMaxExp());
+  sprintf(buf + strlen(buf), "%sDefRnd:%s [%3d]  %sExp    :%s %-10s  %sMax Exp:%s %-10s\n\r",
+          cyan(), norm(), k->defendRound(NULL),  cyan(), norm(), buf3, cyan(), norm(), buf2);
   sprintf(buf2, "[%d]", k->getMoney());
   sprintf(buf3, "[%d]", k->getBank());
   sprintf(buf + strlen(buf), "%sVision:%s [%3d]  %sTalens :%s %-10s  %sBank    :%s %-10s\n\r",

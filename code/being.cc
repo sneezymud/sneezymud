@@ -96,6 +96,7 @@ pointData::pointData() :
   money(0),
   bankmoney(0),
   exp(0), 
+  max_exp(0), 
   spellHitroll(0),
   hitroll(0),
   damroll(0),
@@ -115,6 +116,7 @@ pointData::pointData(const pointData &a) :
   money(a.money),
   bankmoney(a.bankmoney),
   exp(a.exp), 
+  max_exp(a.max_exp), 
   spellHitroll(a.spellHitroll), 
   hitroll(a.hitroll),
   damroll(a.damroll),
@@ -129,6 +131,7 @@ pointData & pointData::operator=(const pointData &a)
   money = a.money;
   bankmoney = a.bankmoney;
   exp = a.exp;
+  max_exp = a.max_exp;
   mana = a.mana;
   maxMana = a.maxMana;
   hit = a.hit;
@@ -1077,6 +1080,21 @@ void TBeing::setRace(race_t r)
 {
   race = Races[r];
 }
+
+double TBeing::getMaxExp() const
+{
+  if (snum > -1)
+    return 0;
+
+  return points.max_exp;
+}  
+
+
+void TBeing::setMaxExp(double n)
+{
+  points.max_exp = n;
+}
+
 
 double TBeing::getExp() const
 {
