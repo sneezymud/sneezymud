@@ -145,7 +145,7 @@ void TBeing::doGload(string arg)
   TObj  *bow;
   TThing  *arrow;
   TGun *gun;
-  TAmmo *ammo;
+  TAmmo *ammo=NULL;
   int nargs;
   TBeing *tb;
 
