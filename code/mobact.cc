@@ -3634,6 +3634,8 @@ int TMonster::mobileActivity(int pulse)
     
     if(shop_index[shop_nr].isOwned()){
       TDatabase db(DB_SNEEZY);
+#if 0
+
       int salary=1000;
       TObj *o;
       int value=0;
@@ -3660,6 +3662,7 @@ int TMonster::mobileActivity(int pulse)
 	setMoney(getMoney()-salary);
 	shoplog(shop_nr, this, this, "talens", -salary, "salary");
       }
+#endif
 
       
       if(getMoney()<0){
