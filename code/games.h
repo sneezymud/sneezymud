@@ -9,10 +9,22 @@
 #ifndef __GAMES_H
 #define __GAMES_H
 
+#include <algorithm>
+#include <deque>
+
 const int CARD_WATER = 128;
 const int CARD_FIRE = 64;
 const int CARD_EARTH = 32;
 const int CARD_ETHER = 16;
+
+enum cardSuitT {
+  MIN_SUIT=0,
+  SUIT_WATER=0,
+  SUIT_FIRE,
+  SUIT_EARTH,
+  SUIT_ETHER,
+  MAX_SUIT
+};
 
 
 const int CHIP_100    = 2350;
@@ -93,6 +105,38 @@ typedef struct bj_players {
   int bet;
 } BlackJack;
 
+class Card {
+ private:
+  cardSuitT suit;
+  int value;
+
+ public:
+  Card();
+  Card(cardSuitT, int);
+  virtual ~Card(){};
+
+  const char *getName() const;
+  int getVal() const{
+    return value;
+  }
+  int getValAceHi() const{
+    if(value==1)
+      return 14;
+    return value;
+  }
+};
+
+class CardDeck {
+ private:
+  deque <Card *> deck;
+ public:
+  CardDeck();
+  virtual ~CardDeck(){};
+
+  void shuffle();
+  const Card *draw();
+
+};
 
 class CardGame {
   protected:
@@ -233,18 +277,17 @@ class HeartsGame : public CardGame {
 
 class HiLoGame : public CardGame {
  private:
-  int card;
+  const Card *card;
   bool inuse;
-  int deck_inx;
   float win_perc;
   sstring name;
+  CardDeck deck;
  public:
   bool enter(const TBeing *ch);
   virtual void peek(const TBeing *) const;
-  void BetHi(TBeing *, int);
-  void BetLo(TBeing *, int);
+  void BetHi(TBeing *, const Card *);
+  void BetLo(TBeing *, const Card *);
   void Bet(TBeing *ch, const sstring &arg);
-  void hilo_shuffle(const TBeing *ch);
   void stay(TBeing *ch);
   int check_for_bet() {
     return bet;

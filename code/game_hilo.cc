@@ -12,20 +12,10 @@ bool HiLoGame::enter(const TBeing *ch)
   }
 
   inuse = true;
-  hilo_shuffle(ch);
   bet = 0;
   name=ch->name;
 
   return true;
-}
-
-void HiLoGame::hilo_shuffle(const TBeing *ch)
-{
-  act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_CHAR);
-  act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_ROOM);
-
-  shuffle();
-  deck_inx = 0;
 }
 
 bool TBeing::checkHiLo(bool inGame = false) const
@@ -36,11 +26,11 @@ bool TBeing::checkHiLo(bool inGame = false) const
     return false;
 }
 
-void HiLoGame::BetHi(TBeing *ch, int new_card)
+void HiLoGame::BetHi(TBeing *ch, const Card *new_card)
 {
   sstring buf;
 
-  if(CARD_NUM_ACEHI(new_card) > CARD_NUM_ACEHI(card)){
+  if(new_card->getValAceHi() > card->getValAceHi()){
     win_perc*=2;
     ch->sendTo("You win!  Your winnings are now at %i talens.\n\r",
 	       (int)((float)bet * (1.0 + win_perc)));
@@ -63,11 +53,11 @@ void HiLoGame::BetHi(TBeing *ch, int new_card)
   }
 }
 
-void HiLoGame::BetLo(TBeing *ch, int new_card)
+void HiLoGame::BetLo(TBeing *ch, const Card *new_card)
 {
   sstring buf;
 
-  if(CARD_NUM_ACEHI(new_card) < CARD_NUM_ACEHI(card)){
+  if(new_card->getValAceHi() < card->getValAceHi()){
     win_perc*=2;
     ch->sendTo("You win!  Your winnings are now at %i talens.\n\r",
 	       (int)((float)bet * (1.0 + win_perc)));
@@ -101,10 +91,12 @@ void HiLoGame::stay(TBeing *ch)
   act("$n gives up and cashes out $s winnings.",
       TRUE, ch, 0, 0, TO_ROOM);
 
-  int next_card=deck[deck_inx++];
+  const Card *next_card=deck.draw();
+
   sstring buf;
-  ch->sendTo(COLOR_BASIC, "The next card was the %s.\n\r", pretty_card_printout(ch, next_card).c_str());
-  ssprintf(buf, "The next card was the %s.", pretty_card_printout(ch, next_card).c_str());
+  ch->sendTo(COLOR_BASIC,"The next card was the %s.\n\r",next_card->getName());
+
+  ssprintf(buf, "The next card was the %s.", next_card->getName());
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
@@ -116,32 +108,27 @@ void HiLoGame::stay(TBeing *ch)
 
 void HiLoGame::Bet(TBeing *ch, const sstring &arg)
 {
-  int inx, new_card;
+  const Card *new_card;
   sstring coin_str;
   sstring log_msg;
   sstring buf;
   TObj *chip;
 
   if (ch->checkHiLo()) {
-    inx = index(ch);
-    if (inx < 0) {
+    if (index(ch) < 0) {
       ch->sendTo("You are not sitting at the table yet.\n\r");
       return;
     }
     if (bet > 0) {
       if(arg=="hi" || arg=="lo"){
-	if (deck_inx > 10)
-	  hilo_shuffle(ch);
-	
-	new_card=deck[deck_inx++];
+	new_card=deck.draw();
 	
 	ssprintf(buf, "$n bets %s.", arg.c_str());
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	
-	ssprintf(log_msg, "You are dealt:\n\r%s\n\r", pretty_card_printout(ch, new_card).c_str());
-	ch->sendTo(COLOR_BASIC, log_msg.c_str());
+	ch->sendTo(COLOR_BASIC,"You are dealt:\n\r%s\n\r",new_card->getName());
 	
-	ssprintf(log_msg, "$n is dealt:\n\r%s", pretty_card_printout(ch, new_card).c_str());
+	ssprintf(log_msg, "$n is dealt:\n\r%s", new_card->getName());
 	act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	
 	if(arg=="hi"){
@@ -181,16 +168,17 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     delete chip;
 
     win_perc=WIN_INIT;
-    card=0;
-    if (deck_inx > 10)
-      hilo_shuffle(ch);
+    card=NULL;
 
-    card = deck[deck_inx++];
+    deck.shuffle();
+    act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_CHAR);
+    act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_ROOM);
 
-    ssprintf(log_msg, "You are dealt:\n\r%s\n\r", pretty_card_printout(ch, card).c_str());
-    ch->sendTo(COLOR_BASIC, log_msg.c_str());
+    card=deck.draw();
 
-    ssprintf(log_msg, "$n is dealt:\n\r%s\n\r", pretty_card_printout(ch, card).c_str());
+    ch->sendTo(COLOR_BASIC, "You are dealt:\n\r%s\n\r", card->getName());
+
+    ssprintf(log_msg, "$n is dealt:\n\r%s\n\r", card->getName());
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
     observerReaction(ch, GAMBLER_HILO_BET);
@@ -210,7 +198,7 @@ void HiLoGame::peek(const TBeing *ch) const
     ch->sendTo("You are not playing a game.\n\r");
     return;
   }
-  ssprintf(log_msg, "You peek at your hand:\n\r%s\n\r", pretty_card_printout(ch, card).c_str());
+  ssprintf(log_msg, "You peek at your hand:\n\r%s\n\r", card->getName());
   ch->sendTo(COLOR_BASIC, log_msg.c_str());
 }
 
@@ -225,7 +213,6 @@ int HiLoGame::exitGame(const TBeing *ch)
   }
   inuse = FALSE;
   name="";
-  deck_inx = 0;
   bet = 0;
   card = 0;
   win_perc=0;

@@ -11,6 +11,79 @@
 #include "stdsneezy.h"
 #include "games.h"
 
+
+cardSuitT & operator++(cardSuitT &c, int)
+{
+  return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c+1);
+}
+
+const char *Card::getName() const{
+  sstring buf;
+
+  buf = card_names[value];
+
+  switch(suit){
+    case SUIT_WATER:
+      buf += " of <b>Blue Water<z>";
+      break;
+    case SUIT_FIRE:
+      buf += " of <r>Red Fire<z>";
+      break;
+    case SUIT_EARTH:
+      buf += " of <g>Green Earth<z>";
+      break;
+    case SUIT_ETHER:
+      buf += " of <p>Purple Ether<z>";
+      break;
+    default:
+      buf += " of <k>an unknown suit<z>";
+  }
+
+  return buf.c_str();
+}
+
+
+Card::Card(cardSuitT suit, int value)
+{
+  this->suit=suit;
+  this->value=value;
+}
+
+
+
+const Card *CardDeck::draw()
+{
+  Card *tmp;
+  tmp=deck.front();
+  deck.pop_front();
+  deck.push_back(tmp);
+
+  return tmp;
+}
+
+void CardDeck::shuffle()
+{
+  std::random_shuffle( deck.begin( ), deck.end( ) );
+}
+
+
+CardDeck::CardDeck()
+{
+  for(cardSuitT suit=MIN_SUIT;suit<MAX_SUIT;suit++){
+    for(int card=1;card<=13;++card){
+      deck.push_back(new Card(suit, card));
+    }
+  }
+  
+  shuffle();
+}
+
+
+
+
+
+
+
 unsigned char CARD_NUM(unsigned char card)
 {
   return (card & 0x0f);
