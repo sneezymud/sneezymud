@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.cc,v $
+// Revision 1.2  1999/09/14 01:33:32  batopr
+// fixed frostGiant not to leak hunt_struct memory
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -2307,9 +2310,6 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   dirTypeT door;
   TBeing *mob;
 
-  if (::number(0,2))
-    return FALSE;
-
   class hunt_struct {
     public:
       int cur_pos;
@@ -2326,6 +2326,9 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
  
+  if (::number(0,2))
+    return FALSE;
+
   if (!myself->awake() || myself->fight())
     return FALSE;
  
