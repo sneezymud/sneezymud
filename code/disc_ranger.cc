@@ -368,9 +368,9 @@ int TBeing::trackRange()
   return range;
 }
 
-void TBeing::doConceal(const char *argument)
+void TBeing::doConceal(string argument)
 {
-  char name_buf[256];
+  string name_buf;
   int rc;
   TBeing *vict;
  
@@ -380,13 +380,14 @@ void TBeing::doConceal(const char *argument)
   }
   argument = one_argument(argument, name_buf);
  
-  if (!*name_buf) {
+  if (name_buf.empty()) {
     vict = this;
   } else {
-    if (is_abbrev(name_buf, "off") || is_abbrev(name_buf, "stop")) {
-      only_argument(argument, name_buf);
-      if (*name_buf) {
-        vict = get_char_room_vis(this, name_buf);
+    if (is_abbrev(name_buf.c_str(), "off") || 
+	is_abbrev(name_buf.c_str(), "stop")) {
+      one_argument(argument, name_buf);
+      if (!name_buf.empty()) {
+        vict = get_char_room_vis(this, name_buf.c_str());
         if (!vict) {
            sendTo("No such person present.\n\r");
            sendTo("Syntax: conceal off <person>\n\r");
@@ -419,7 +420,7 @@ void TBeing::doConceal(const char *argument)
         return;
       }
     } else {
-      vict = get_char_room_vis(this, name_buf);
+      vict = get_char_room_vis(this, name_buf.c_str());
       if (!vict) {
         sendTo("No such person present.\n\r");
         sendTo("Syntax: conceal <person>\n\r");

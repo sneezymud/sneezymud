@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.5  2003/01/28 19:30:15  peel
+// converted a few more things from char * to string
+//
 // Revision 5.4  2002/01/10 00:45:47  peel
 // more splitting up of obj2.h
 //
@@ -67,13 +70,13 @@ void TTool::stringMeString(TBeing *ch, TBow *bow)
   }
 }
 
-void TBeing::doRestring(const char *argument)
+void TBeing::doRestring(string argument)
 {
   TThing *bow = NULL;
   TThing *bstr = NULL;
   char arg1[256], arg2[256];
 
-  if (sscanf(argument, "%s %s", arg1, arg2) != 2) {
+  if (sscanf(argument.c_str(), "%s %s", arg1, arg2) != 2) {
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }

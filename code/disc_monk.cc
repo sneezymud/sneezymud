@@ -149,20 +149,20 @@ int TBeing::trySpringleap(TBeing *vict)
   return doSpringleap("", false, vict);
 }
 
-int TBeing::doSpringleap(const char *argument, bool should_lag, TBeing *vict)
+int TBeing::doSpringleap(string argument, bool should_lag, TBeing *vict)
 {
   TBeing *victim;
-  char name_buf[256];
+  string name_buf;
   int rc;
 
   if (!doesKnowSkill(SKILL_SPRINGLEAP)) {
     sendTo("You don't know how.\n\r");
     return FALSE;
   }
-  only_argument(argument, name_buf);
+  one_argument(argument, name_buf);
 
   if (!(victim = vict)) {
-    if (!(victim = get_char_room_vis(this, name_buf))) {
+    if (!(victim = get_char_room_vis(this, name_buf.c_str()))) {
       if (!(victim = fight())) {
         sendTo("Springleap at whom?\n\r");
         return FALSE;

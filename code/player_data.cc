@@ -1457,22 +1457,23 @@ void TBeing::checkForStr(silentTypeT silent)
   }
 }
 
-void TBeing::doReset(const char *arg)
+void TBeing::doReset(string arg)
 {
   sh_int pracs = 0;
   int j, num;
   classIndT Class;
-  char buf[150];
+  string buf;
   TMonster *keeper;
   TThing *tmp;
   int zone, temp;
+
   arg = one_argument(arg, buf);
 
-  if (!*buf) {
+  if(buf.empty()){
     sendTo("What do you want to reset?\n\r");
     return;
   }
-  if (is_abbrev(buf, "practices")) {
+  if (is_abbrev(buf.c_str(), "practices")) {
 #if 0
     
 #else
@@ -1535,7 +1536,7 @@ void TBeing::doReset(const char *arg)
     affectTo(&af);
     return;
 #endif
-  } else if (is_abbrev(buf, "gold") && isImmortal()) {
+  } else if (is_abbrev(buf.c_str(), "gold") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1543,7 +1544,7 @@ void TBeing::doReset(const char *arg)
     memset(&gold_statistics, 0, sizeof(gold_statistics));
     memset(&gold_positive, 0, sizeof(gold_positive));
     sendTo("Global statistics tracking gold (info gold) reset.\n\r");
-  } else if (is_abbrev(buf, "shops") && isImmortal()) {
+  } else if (is_abbrev(buf.c_str(), "shops") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1561,20 +1562,20 @@ void TBeing::doReset(const char *arg)
           delete tmp;
         }
         keeper->autoCreateShop(isi);
-        sprintf(buf, "%s/%d", SHOPFILE_PATH, isi);
-        keeper->saveItems(buf);
+        ssprintf(buf, "%s/%d", SHOPFILE_PATH, isi);
+        keeper->saveItems(buf.c_str());
       }
     }
     sendTo("Shops reset.\n\r");
     sendTo("You may also want to do: \"purge shops\" to clear fluxuating prices.\n\r");
     return;
-  } else if (is_abbrev(buf, "zone") && isImmortal()) {
+  } else if (is_abbrev(buf.c_str(), "zone") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
     }
     one_argument(arg, buf);
-    if (!buf || !*buf) {
+    if (buf.empty()){
       zone = (roomp ? roomp->getZoneNum() : 0);
       /*
       sendTo("Syntax: reset zone <zone#>\n\r");
@@ -1582,18 +1583,18 @@ void TBeing::doReset(const char *arg)
       */
     }
     unsigned int i;
-    if (is_abbrev(buf, "all")) {
+    if (is_abbrev(buf.c_str(), "all")) {
       for (i= 0; i < zone_table.size(); i++) {
         zone_table[i].resetZone(FALSE);
       }
       sendTo("Zone 0-%d reset.\n\r", i-1);
       return;
     }
-    zone = atoi_safe(buf);
+    zone = atoi_safe(buf.c_str());
     zone_table[zone].resetZone(FALSE);
     sendTo("Zone %d reset.\n\r", zone);
     return;
-  } else if (is_abbrev(buf, "levels") && isImmortal()) {
+  } else if (is_abbrev(buf.c_str(), "levels") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1607,7 +1608,7 @@ void TBeing::doReset(const char *arg)
     }
     sendTo("Level stat information reset.\n\r");
     return;
-  } else if (is_abbrev(buf, "logins") && isImmortal()) {
+  } else if (is_abbrev(buf.c_str(), "logins") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;

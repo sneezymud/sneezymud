@@ -1118,7 +1118,7 @@ class TBeing : public TThing {
     double usePiety(spellNumT);
     int reconcileDamage(TBeing *, int, spellNumT);
     int doRent(const char *);
-    void doRestring(const char *);
+    void doRestring(string);
     void doRelease(const string &);
     void doCapture(const string &);
     void doCompare(const char *);
@@ -1386,7 +1386,7 @@ class TBeing : public TThing {
     int doShoot(const char *);
     void doSeekwater();
     void doTrack(const char *);
-    void doConceal(const char *);
+    void doConceal(string);
     void doDivine(const char *);
     void doForage();
     void doTan();
@@ -1430,7 +1430,7 @@ class TBeing : public TThing {
     int doShove(const char *, TBeing *);
     int doGrapple(const char *, TBeing *);
     int doRescue(const char *);
-    void doReset(const char *);
+    void doReset(string);
     void doResize(const char *);
     int doDeathstroke(const char *, TBeing *);
     void doBandage(const char *);
@@ -1794,7 +1794,7 @@ class TBeing : public TThing {
     int doRecite(const char *);
     int doUse(const char *);
     int doUnsaddle(string);
-    int doSaddle(const char *);
+    int doSaddle(string);
     int doChop(const char *, TBeing *);
     int doHurl(const char *, TBeing *);
     int doChi(const char *, TThing *);
@@ -1876,7 +1876,7 @@ class TBeing : public TThing {
 
     // Monk Skills
     int doQuiveringPalm(const char *, TBeing *);
-    int doSpringleap(const char *, bool, TBeing *);
+    int doSpringleap(string, bool, TBeing *);
     int doShoulderThrow(const char *, TBeing *);
     int doGrappleMonk(const char *, int, TBeing *);
     int doFeignDeath();

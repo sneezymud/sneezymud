@@ -2100,31 +2100,31 @@ int TBeing::doUnsaddle(string arg)
   return TRUE;
 }
 
-int TBeing::doSaddle(const char *arg)
+int TBeing::doSaddle(string arg)
 {
   TBeing *horse;
   TThing *t;
   TObj *saddle;
-  char arg1[160], arg2[160];
+  string arg1, arg2;
 
   argument_interpreter(arg, arg1, arg2);
 
-  if (!*arg1 || !*arg2) {
+  if(arg1.empty() || arg2.empty()){
     sendTo("Syntax: saddle <horse> <saddle>\n\r");
     return FALSE;
   }
-  if (!(horse = get_char_room_vis(this, arg1))) {
-    sendTo("You don't see '%s' here.\n\r", arg1);
+  if (!(horse = get_char_room_vis(this, arg1.c_str()))) {
+    sendTo("You don't see '%s' here.\n\r", arg1.c_str());
     return FALSE;
   }
 
-  if (!(t = searchLinkedListVis(this, arg2, getStuff()))) {
-    sendTo("You don't seem to have the '%s'.\n\r", arg2);
+  if (!(t = searchLinkedListVis(this, arg2.c_str(), getStuff()))) {
+    sendTo("You don't seem to have the '%s'.\n\r", arg2.c_str());
     return FALSE;
   }
   saddle = dynamic_cast<TObj *>(t);
   if (!saddle) {
-    sendTo("You don't seem to have the '%s'.\n\r", arg2);
+    sendTo("You don't seem to have the '%s'.\n\r", arg2.c_str());
     return FALSE;
   }
   if (this == horse) {
