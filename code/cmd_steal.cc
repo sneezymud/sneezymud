@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_steal.cc,v $
-// Revision 1.2  1999/10/12 00:15:05  lapsos
+// Revision 1.3  1999/10/12 00:33:00  lapsos
 // Added block to prevent stealing from shopkeepers.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
@@ -309,7 +309,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
         }
         thief->doSave(SILENT_YES);
         victim->doSave(SILENT_YES);
-        if (strcmp(thief->getName(), "Batopr"))
+        if (!thief->hasWizPower(POWER_WIZARD))
           vlogf(0,"%s stole %s from %s.",thief->getName(),
                 obj->getName(), victim->getName());
       } else
