@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_sorcery.h,v $
+// Revision 1.2  1999/09/27 00:08:28  lapsos
+// added atomize(TB, TB, TMagicItem) for doObjSpell code.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -89,6 +92,7 @@ private:
     int atomize(TBeing *, TBeing *);
     int castAtomize(TBeing *, TBeing *);
     int atomize(TBeing *, TBeing *, int, byte, int);
+    int atomize(TBeing *, TBeing *, TMagicItem *);
 
     int castAnimate(TBeing *);
     int animate(TBeing *);
