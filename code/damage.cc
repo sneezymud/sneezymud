@@ -97,7 +97,7 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 
   if (!v->isPc()) {
     TMonster *tmons = dynamic_cast<TMonster *>(v);
-    if (!tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+    if (tmons && !tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       tmons->developHatred(this);
 
       // if we are fighting an NPC pet, develop hatred toward the master
