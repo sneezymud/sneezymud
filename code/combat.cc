@@ -71,7 +71,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] =
   {"maul", "mauls", "mauling"},  // TYPE_BEAR_CLAW
   {"kick", "kicks", "kicking"},
   {"maul", "mauls", "mauling"},
-  {"shot", "shoots", "shooting"},
+  {"shoot", "shoots", "shooting"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
@@ -1590,6 +1590,13 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       wepDam += wielded->swungObjectDamage(this, v);
     }
   }
+
+  // guns rule, just do straight damage none of that pussy modify
+  // for skill crap.  BLAM BLAM!
+  if(dynamic_cast<const TGun *>(wielded)){
+    return wepDam;
+  }
+
 
   // fighting from ground is an adjustment to hit, but not an
   // adjustment to damage taken - Bat
@@ -3301,6 +3308,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	found=TRUE;
       }
     }
+
+    mod = attackRound(vict); // no defense against guns
   }
 
 

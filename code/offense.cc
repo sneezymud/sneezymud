@@ -1935,7 +1935,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     if((gun=dynamic_cast<TGun *>(prim))){
       fx = gun->getROF();
     }
-    if((gun=dynamic_cast<TGun *>(sec))){
+    if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
       fy = gun->getROF();
     }
     
@@ -1962,7 +1962,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fy += (0.40 * num);
     else if (sec != prim) {
       fy = sec->blowCountSplitter(this, false);
-      if((gun=dynamic_cast<TGun *>(sec))){
+      if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
 	fy = gun->getROF();
       }
     } else
@@ -2024,7 +2024,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fy = (float) 1.0;
     }
 
-    if((gun=dynamic_cast<TGun *>(sec))){
+    if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
       fy = gun->getROF();
     }
 
