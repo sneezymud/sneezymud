@@ -2018,6 +2018,11 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	 !::number(0,24)){
 	int val=(int)(obj->getValue() * shop_index[shop_nr].profit_sell);
 	
+	// no profit for recycling right now
+	// experiment in closed loop economy
+	val=0;
+	//
+
 	myself->addToMoney(val, GOLD_SHOP);
 	shoplog(shop_nr, myself, myself, obj->getName(), val, "recycling");
 	delete obj;
