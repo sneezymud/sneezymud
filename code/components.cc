@@ -1253,7 +1253,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_STUNNING_ARROW,
     "You wrap $p around your wrist and reach for $N.",
     "$n wraps $p around a wrist and reaches for $N.",
-    "$n wraps $P around a wrist and reaches for you.",                       
+    "$n wraps $p around a wrist and reaches for you.",                       
     "You wrap $p around your wrist and grab yourself.",
     "$n wraps $p around a wrist and grabs $mself.",
     "",

@@ -389,7 +389,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, byte bKnown)
     }
 
 
-    act("<G>$n is enveloped by a thick green mist!<z>", FALSE, victim, NULL,
+    act("<G>$n <G>is enveloped by a thick green mist!<z>", FALSE, victim, NULL,
 NULL, TO_ROOM);
     act("<G>You are enveloped by a thick green mist!<z>", FALSE, victim,
 NULL, NULL, TO_CHAR);
