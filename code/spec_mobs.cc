@@ -3537,7 +3537,7 @@ void CallForGuard(TBeing *ch, TBeing *vict, int lev)
       continue;
     // get only critters in my zone
     // treat grimhaven as all one zone
-    if (tmons->roomp->getZone() != vict->roomp->getZone() &&
+    if (tmons->roomp->getZoneNum() != vict->roomp->getZoneNum() &&
         !(tmons->inGrimhaven() && vict->inGrimhaven()))
       continue;
     if (tmons->fight() || !::number(0,4))
@@ -5476,7 +5476,7 @@ int Fireballer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     } else if (tmp->isImmortal() && me->sameRoom(*tmp)) {
       act("The Djinn chokes on a hairball.",TRUE,tmp,0,0,TO_CHAR);
       act("$n causes the Djinn to choke on a hairball before it can breathe at $m.",TRUE,tmp,0,0,TO_ROOM);
-    } else if ((me != tmp) && (tmp->in_room != ROOM_NOWHERE) && (rp->getZone() == tmp->roomp->getZone())) {
+    } else if ((me != tmp) && (tmp->in_room != ROOM_NOWHERE) && (rp->getZoneNum() == tmp->roomp->getZoneNum())) {
       tmp->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
     }
   }

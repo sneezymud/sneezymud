@@ -1,29 +1,28 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_animal.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_animal.h"
 
-int beastSoother(TBeing * caster, TBeing * victim, int, byte bKnown)
+int beastSoother(TBeing *caster, TBeing *victim, TMagicItem *tObj)
+{
+  int tKnown = tObj->getMagicLearnedness(),
+      tReturn = 0;
+
+  tReturn = beastSoother(caster, victim, 1, tKnown);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tReturn, DELETE_THIS);
+
+  return tReturn;
+}
+
+int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
 {
   int rc;
 
-  if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SOOTHER), victim, CHECK_ONLY_NO))
-    return FALSE;
+  if (!tWand)
+    if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SOOTHER), victim, CHECK_ONLY_NO))
+      return FALSE;
 
   if (!victim->awake()) {
     act("$N looks sound asleep.  Oops!", TRUE, caster, NULL, victim, TO_CHAR);
@@ -110,14 +109,14 @@ int TBeing::doSoothBeast(const char *argument)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
 
   level = getSkillLevel(SKILL_BEAST_SOOTHER);
 
-  ret=beastSoother(this,victim,level,getSkillValue(SKILL_BEAST_SOOTHER));
+  ret=beastSoother(this,victim,0,getSkillValue(SKILL_BEAST_SOOTHER));
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -133,7 +132,7 @@ int beastSoother(TBeing * caster, TBeing * victim)
 
   level = caster->getSkillLevel(SKILL_BEAST_SOOTHER);
 
-  ret=beastSoother(caster,victim,level,caster->getSkillValue(SKILL_BEAST_SOOTHER));
+  ret=beastSoother(caster,victim,0,caster->getSkillValue(SKILL_BEAST_SOOTHER));
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -159,7 +158,7 @@ int TBeing::doBefriendBeast(const char *argument)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -194,7 +193,7 @@ int TBeing::doCharmBeast(const char *argument)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -249,7 +248,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, byte bKnown)
     aff.level = level;
     aff.location = APPLY_NONE;
     aff.modifier = 0;
-    aff.duration = (level/10)* UPDATES_PER_TICK;
+    aff.duration = (level/10)* UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
 
     if (critSuccess(caster, SKILL_TRANSFIX)) {
@@ -304,7 +303,7 @@ int TBeing::doTransfix(const char *argument)
     return FALSE;
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -364,7 +363,7 @@ i=0;
       if (!v->isPc() && v->awake() && isname(targ_name, v->name) &&
 	  !v->fight() && (caster->isImmortal() || v->isDumbAnimal()) &&
 	  !IS_SET(v->specials.act, ACT_HUNTING) && (v->in_room != -1) &&
-	  (caster->isImmortal() || (caster->roomp->getZone() == v->roomp->getZone()))) {
+	  (caster->isImmortal() || (caster->roomp->getZoneNum() == v->roomp->getZoneNum()))) {
         if (!v->isLucky(caster->spellLuckModifier(SKILL_BEAST_SUMMON))) {
           TMonster *tmons = dynamic_cast<TMonster *>(v);
 	  SET_BIT(tmons->specials.act, ACT_HUNTING);
@@ -429,172 +428,3 @@ int beastSummon(TBeing * caster, const char * arg)
   return rc;
 }
 
-static const int LAST_SHAPESHIFT_MOB = 12;
-struct PolyType shapeShiftList[LAST_SHAPESHIFT_MOB] =
-{
-  {"gopher", 30, 1, 25401, DISC_ANIMAL},
-  {"deer", 31, 1, 14105, DISC_ANIMAL},
-  {"wolf", 35, 10, 3400, DISC_ANIMAL},
-  {"snake", 37, 20, 3412, DISC_ANIMAL},
-  {"moose", 39, 30,10200, DISC_ANIMAL},
-  {"dolphin", 40, 45, 12432, DISC_ANIMAL},
-  {"bear", 42, 75, 3403, DISC_ANIMAL},
-  {"crow", 44, 70, 14350, DISC_ANIMAL},
-  {"shark", 40, 60,  12413, DISC_ANIMAL},
-  {"hawk", 48, 100, 14440, DISC_ANIMAL},
-  {"saberfish", 49, 80, 5503, DISC_ANIMAL},
-  {"spider", 49, 80, 7717, DISC_ANIMAL},
-};
-
-int shapeShift(TBeing *caster, const char * buffer, int level, byte bKnown)
-{
-  int i, ret, duration = 0, nameFound = FALSE, found = FALSE;
-  TBeing *mob;
-  affectedData aff;
-  affectedData aff2;
-
-  if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_SHAPESHIFT)) {
-    act("You are not prepared to try to shapeshift yourself again so soon.",
-         FALSE, caster, NULL, NULL, TO_CHAR);
-    return FALSE;
-  }
-  
-  discNumT das = getDisciplineNumber(SPELL_SHAPESHIFT, FALSE);
-  if (das == DISC_NONE) {
-    vlogf(5, "bad discipline for shapeshift");
-    return SPELL_FAIL;
-  }
-  for (i = 0; (i < LAST_SHAPESHIFT_MOB); i++) {
-    if (is_abbrev(buffer,shapeShiftList[i].name)) {
-      nameFound = TRUE; 
-    } else {
-      continue;
-    }
-    if ((caster->getDiscipline(das)->getLearnedness() >= shapeShiftList[i].learning) && (level > 25))
-      break;
-  }
-
-  if (i >= LAST_SHAPESHIFT_MOB) {
-    if (nameFound) {
-    caster->sendTo("You are not powerful enough yet to change into such a creature.\n\r");
-    } else {
-    caster->sendTo("Couldn't find any of those.\n\r");
-    }
-    return SPELL_FAIL;
-  }
-  if (!(mob = read_mobile(shapeShiftList[i].number, VIRTUAL))) {
-    caster->sendTo("You couldn't summon an image of that creature.\n\r");
-    return SPELL_FAIL;
-  }
-  thing_to_room(mob,ROOM_VOID);   // just so if extracted it isn't in NOWHERE 
-
-  // Check to make sure that there is no snooping going on. 
-  if (!caster->desc || caster->desc->snoop.snooping) {
-    caster->sendTo("Nothing seems to happen.\n\r");
-    vlogf(5,"PC tried to shapeshift while being snooped");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-  if (caster->desc->original) {
-    // implies they are switched, while already switched (as x switch)
-    caster->sendTo("You already seem to be switched.\n\r");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-  if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
-  aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.location = APPLY_NONE;
-  aff.duration = (2 + (level/5)) * UPDATES_PER_TICK;
-  aff.bitvector = 0;
-  aff.modifier = SPELL_SHAPESHIFT;
-
-  if (bSuccess(caster, bKnown, SPELL_SHAPESHIFT)) {
-    switch (critSuccess(caster, SPELL_SHAPESHIFT)) {
-      case CRIT_S_KILL:
-      case CRIT_S_DOUBLE:
-        CS(SPELL_SHAPESHIFT);
-        ret = SPELL_CRIT_SUCCESS;
-      default:
-        break;
-   }
-
-    --(*mob);
-    *caster->roomp += *mob;
-    SwitchStuff(caster, mob);
-
-    act("$n's flesh melts and flows into the shape of $N.", TRUE, caster, NULL, mob, TO_ROOM);
-    for (i=MIN_WEAR;i < MAX_WEAR;i++) {
-      if (caster->equipment[i]) {
-        found = TRUE;
-        break;
-      }
-    }
-    if (found) {
-      act("Your equipment falls from your body as your flesh turns liquid.",
-               TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly you take on the shape of $N.", 
-               TRUE, caster, NULL, mob, TO_CHAR);
-    } else {
-      act("Your flesh turns liquid.", TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly you take on the shape of $N.", TRUE, caster, NULL, mob, TO_CHAR);
-    }
-  
-    --(*caster);
-    thing_to_room(caster, ROOM_POLY_STORAGE);
-
-    // stop following whoever you are following.. 
-    if (caster->master)
-      caster->stopFollower(TRUE);
-
-    // switch caster into mobile 
-    caster->desc->character = mob;
-    caster->desc->original = dynamic_cast<TPerson *>(caster);
-
-    mob->desc = caster->desc;
-    caster->desc = NULL;
-    caster->polyed = POLY_TYPE_SHAPESHIFT;
-
-// first add the attempt -- used to regulate attempts
-    aff.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
-    caster->affectTo(&aff);
-
-    aff2.type = AFFECT_SKILL_ATTEMPT;
-    aff2.location = APPLY_NONE;
-    aff2.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
-    aff2.bitvector = 0;
-    aff2.modifier = SPELL_SHAPESHIFT;
-    mob->affectTo(&aff2);
-
-    SET_BIT(mob->specials.act, ACT_POLYSELF);
-    SET_BIT(mob->specials.act, ACT_NICE_THIEF);
-    SET_BIT(mob->specials.act, ACT_SENTINEL);
-    REMOVE_BIT(mob->specials.act, ACT_AGGRESSIVE);
-    REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
-    REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
-    REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
-
-    mob->setMana(min((mob->getMana() - 15), 85));
-    return SPELL_SUCCESS;
-  } else {
-    caster->affectTo(&aff);
-    return SPELL_FAIL;
-  }
-}
-
-void shapeShift(TBeing *caster, const char * buffer)
-{
-  int ret,level;
-
-  if (!bPassMageChecks(caster, SPELL_SHAPESHIFT, NULL))
-    return;
-
-  level = caster->getSkillLevel(SPELL_SHAPESHIFT);
-  int bKnown = caster->getSkillValue(SPELL_SHAPESHIFT);
-
-  if ((ret=shapeShift(caster,buffer,level,bKnown)) == SPELL_SUCCESS) {
-  } else 
-    caster->sendTo("Nothing seems to happen.\n\r");
-}

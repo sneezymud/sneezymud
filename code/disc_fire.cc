@@ -2,25 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_fire.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/09/16 05:06:44  peel
-// more typo's, dammit
-//
-// Revision 1.4  1999/09/16 05:05:12  peel
-// Typo
-//
-// Revision 1.3  1999/09/16 05:04:16  peel
-// Conjure fire elemental now extinguishes the fire source.
-//
-// Revision 1.2  1999/09/16 05:01:10  peel
-// Conjure fire elemental requires a lit light in the room to work.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -336,10 +317,14 @@ int faerieFire(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   aff.type = SPELL_FAERIE_FIRE;
   aff.level = level;
-  aff.duration = (aff.level * UPDATES_PER_TICK / 4);
   aff.location = APPLY_ARMOR;
-  aff.modifier = 100;
   aff.bitvector = 0;
+
+  // we'd like it to last about 5 minutes
+  aff.duration = 5 * UPDATES_PER_MUDHOUR / 2;
+
+  // let the affect be level dependant
+  aff.modifier = 100 + (aff.level*4);
 
   if (bSuccess(caster, bKnown, SPELL_FAERIE_FIRE)) {
     ret = SPELL_SUCCESS;
@@ -886,7 +871,7 @@ int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(vict) && !vict->isImmortal()) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_HELLFIRE]->alignMod);
         act("$n is incinerated by the hellfire!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are incinerated by the hellfire!", FALSE, vict, NULL, NULL, TO_CHAR);
@@ -918,7 +903,7 @@ int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
         if (!vict)
           continue;
 
-        if (caster->inGroup(vict) && caster != vict && !vict->isImmortal()) {
+        if (caster->inGroup(*vict) && caster != vict && !vict->isImmortal()) {
           caster->reconcileHurt(vict, discArray[SPELL_HELLFIRE]->alignMod);
           act("$n is incinerated by the hellfire!", FALSE, vict, NULL, NULL, TO_ROOM);
           act("You are incinerated by the hellfire!", FALSE, vict, NULL, NULL, TO_CHAR);
@@ -1029,9 +1014,9 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
     caster->flameRoom();
     for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
       temp = tmp_victim->next;
-      if (caster->sameRoom(tmp_victim) && (caster != tmp_victim) &&
+      if (caster->sameRoom(*tmp_victim) && (caster != tmp_victim) &&
           (!tmp_victim->isImmortal())) {
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_FIREBALL]->alignMod);
           if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_FIREBALL))) {
             act("$N is able to dodge part of the explosion!", FALSE, caster, NULL, tmp_victim, TO_CHAR);
@@ -1057,7 +1042,7 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
         } else
           act("You are able to avoid the flames!", FALSE, caster, NULL, tmp_victim, TO_VICT);
       } else if ((caster != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
-                 (rp->getZone() == tmp_victim->roomp->getZone())) {
+                 (rp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
         if (tmp_victim->awake())
           tmp_victim->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
       }
@@ -1162,7 +1147,7 @@ int flamingFlesh(TBeing *caster, TBeing *victim, int level, byte bKnown)
     // ARMOR APPLY
     aff1.type = SPELL_FLAMING_FLESH;
     aff1.level = level;
-    aff1.duration = aff1.level * UPDATES_PER_TICK;
+    aff1.duration = aff1.level * UPDATES_PER_MUDHOUR;
     aff1.location = APPLY_ARMOR;
     aff1.modifier = -75;
 
@@ -1272,13 +1257,17 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
     if (victim->master)
       victim->stopFollower(TRUE);
 
-    aff.type = SPELL_ENSORCER;
+    aff.type = SPELL_CONJURE_FIRE;
     aff.level = level;
     aff.duration  = caster->followTime();
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
+    aff.type = AFFECT_THRALL;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
+    victim->affectTo(&aff);
 
     /* Add hp for higher levels - Russ */
     victim->setMaxHit(victim->hitLimit() + number(1, level));
@@ -1306,10 +1295,8 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
              TRUE, caster, NULL, victim, TO_ROOM);
       act("You've created a monster; $N hates you!",
              FALSE, caster, NULL, victim, TO_CHAR);
-      victim->affectFrom(SPELL_ENSORCER);
-      victim->developHatred(caster);
-      caster->setCharFighting(victim);
-      caster->setVictFighting(victim);
+      victim->affectFrom(SPELL_CONJURE_FIRE);
+      victim->affectFrom(AFFECT_THRALL);
       return SPELL_FAIL;
     }
     caster->addFollower(victim);
@@ -1631,7 +1618,7 @@ int infravision(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_INFRAVISION)) {
     ret = SPELL_SUCCESS;
     aff.type = SPELL_INFRAVISION;
-    aff.duration = (level * UPDATES_PER_TICK)+level;
+    aff.duration = (level * UPDATES_PER_MUDHOUR)+level;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_INFRAVISION;
@@ -1814,7 +1801,7 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, byte bKnown)
  
   aff.type = SPELL_PROTECTION_FROM_FIRE;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_HEAT; 
   aff.modifier2 = ((level * 2)/3);
@@ -1828,7 +1815,7 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_FIRE);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:

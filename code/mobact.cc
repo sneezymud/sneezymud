@@ -323,7 +323,7 @@ int TMonster::mobileWander(dirTypeT door)
   // keep mobs where they are supposed to be
   // but let them out if they're pissed - dash
   if (IS_SET(specials.act, ACT_STAY_ZONE) && !IS_SET(specials.act, ACT_HUNTING) &&
-      rp->getZone() != rp2->getZone())
+      rp->getZoneNum() != rp2->getZoneNum())
     return 0;
 
   if (specials.last_direction == door)
@@ -399,7 +399,7 @@ int TMonster::hunt()
       !spelltask && hunted && !sameRoom(*hunted) && 
       hunted->GetMaxLevel() > 15 && !isPolice()){
     if(roomp && hunted->roomp && 
-       roomp->getZone()  == hunted->roomp->getZone()){
+       roomp->getZoneNum()  == hunted->roomp->getZoneNum()){
       if(doesKnowSkill(SPELL_SUMMON) && getSkillValue(SPELL_SUMMON) > 33 &&
 	 !isNotPowerful(hunted, getSkillLevel(SPELL_SUMMON), 
 			SPELL_SUMMON, SILENT_YES)) {
@@ -3664,7 +3664,7 @@ int TMonster::aggroCheck(bool mobpulse)
 
   if (!(rp1 = roomp) || !(rp2 = real_roomp(brtRoom)))
     return FALSE;
-  if (IS_SET(specials.act, ACT_STAY_ZONE) && rp1->getZone() != rp2->getZone())
+  if (IS_SET(specials.act, ACT_STAY_ZONE) && rp1->getZoneNum() != rp2->getZoneNum())
     hasWandered = TRUE;
   if (IS_SET(specials.act, ACT_SENTINEL) && rp1 != rp2)
     hasWandered = TRUE;

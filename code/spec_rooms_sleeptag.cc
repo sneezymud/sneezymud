@@ -138,7 +138,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
             continue;
 
           // If they are active an in the game, then just return;
-          if (tEntry->tPlayer->roomp && tEntry->tPlayer->roomp->getZone() == tRoom->getZone())
+          if (tEntry->tPlayer->roomp && tEntry->tPlayer->roomp->getZoneNum() == tRoom->getZoneNum())
             return FALSE;
 
           tEntry->isActive = false;
@@ -244,7 +244,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
               } else
                 vlogf(LOG_PROC, "Unable to load room %d for sleeptag move!", SLEEPTAG_CONTROL_ROOM);
 
-            sleepTagReport(tRoom->getZone(), "%s has lost this game...", tPerson->getName());
+            sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName());
           } else {
             if (tPerson->isAffected(AFF_SLEEP)) {
               --(*tPerson);
@@ -262,7 +262,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
       if (!tArg || !*tArg)
         tBeing->sendTo("Shout is good, but usually you shout something...\n\r");
       else
-        sleepTagReport(tRoom->getZone(),
+        sleepTagReport(tRoom->getZoneNum(),
                        "<g>%s<z> shouts, \"%s<1>\"\n\r", tBeing->getName(), tArg);
 
       return TRUE;
@@ -416,7 +416,7 @@ void sleepTagReport(int tZone, const char *tString, ...)
 
   for (tBeing = character_list; tBeing; tBeing = tBeing->next)
     if (tBeing->isPc() && tBeing->roomp &&
-        tBeing->roomp->getZone() == tZone &&
+        tBeing->roomp->getZoneNum() == tZone &&
         dynamic_cast<TPerson *>(tBeing))
       tBeing->sendTo(COLOR_COMM, tBuffer);
 

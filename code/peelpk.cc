@@ -3,6 +3,22 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.2  2001/06/15 21:11:32  peel
+// more zonedata changes, all finished
+//
+// Revision 5.1.1.4  2001/01/25 03:35:15  sneezy
+// added damage cut to peelpk
+// (dash)
+//
+// Revision 5.1.1.3  2000/12/28 19:42:03  peel
+// uh made some changes or something
+//
+// Revision 5.1.1.2  1999/10/18 17:11:12  batopr
+// changed an int to a spellNumT
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -21,29 +37,42 @@
 
 struct TPeelPk {
   int zones;
+  bool cutdam;
   sh_int zone[4];
   int respawns[2];
   int respawn[2][4];
+  int respawnlag;
   int default_respawn;
   int announce;
   int teamnum[2];
   int teamscore[2];
   TBeing *teammembers[2][PEELPK_TEAMSIZE];
   int teamscores[2][PEELPK_TEAMSIZE];
+  int teamdeaths[2][PEELPK_TEAMSIZE];
   int holding[2];
   time_t endtime;
-} peelPk={0, {0,0,0,0}, {0,0}, {{0,0,0,0}, {0,0,0,0}}, 100, 0, {0, 0}, {0, 0},
+} peelPk={0, false, {0,0,0,0}, {0,0}, {{0,0,0,0}, {0,0,0,0}}, 
+	  0, 100, 0, {0, 0}, {0, 0},
 	  {{NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,},
 	  {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,}},
-	  {{0,0,0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0,0,0}},{0,0},0};
+	  {{0,0,0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0,0,0}},
+	  {{0,0,0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0,0,0}},
+	  {0,0},0};
 
+
+bool TBeing::cutPeelPkDam() const
+{
+  if (inPkZone())
+    return peelPk.cutdam;
+  return FALSE;
+}
 
 bool TBeing::inPkZone() const
 {
   int i;
   
   for(i=0;i<peelPk.zones;++i){
-    if(roomp->getZone()==peelPk.zone[i])
+    if(roomp->getZoneNum()==peelPk.zone[i])
       return TRUE;
   }
   return FALSE;
@@ -73,25 +102,22 @@ void TBeing::doPeelPk(const char *argument)
   Descriptor *idesc;
   TBeing *b;
 
-  if (!hasWizPower(POWER_WIZARD)) {
-    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-    return;
-  }
-
   half_chop(argument, buf, buf2);
 
-  if(!*buf && !*buf2){
-    sendTo("Syntax : peelpk <command>\n\r");
-    sendTo("Syntax : peelpk <variable|command> <value>\n\r");
-    sendTo("Syntax : peelpk <variable|command> <index> <value>\n\r");
-    sendTo("Variables : zones, zone, respawns, respawn, announce, holding, settimer\n\r");
-    sendTo("            default_respawn\n\r");
-    sendTo("Commands : addmember, remmember, echoscore, checktime, resetscore, toholding\n\r");
-    sendTo("  # zones     =  %i\n\r", peelPk.zones);
-    sendTo("  zones       =  %i, %i, %i, %i\n\r", peelPk.zone[0],
-	   peelPk.zone[1], peelPk.zone[2], peelPk.zone[3]);
-    sendTo("  announce    =  %i\n\r", peelPk.announce);
-    sendTo("  def respawn =  %i\n\r", peelPk.default_respawn);
+  if((!*buf && !*buf2) || !hasWizPower(POWER_WIZARD)){
+    if(hasWizPower(POWER_WIZARD)){
+      sendTo("Syntax : peelpk <command>\n\r");
+      sendTo("Syntax : peelpk <variable|command> <value>\n\r");
+      sendTo("Syntax : peelpk <variable|command> <index> <value>\n\r");
+      sendTo("Variables : zones, zone, respawns, respawn, announce, holding, settimer, respawnlag, default_respawn, cutdam\n\r");
+      sendTo("Commands : addmember, remmember, echoscore, checktime, resetscore, resetteam, toholding, torespawn\n\r");
+      sendTo("  # zones     =  %i\n\r", peelPk.zones);
+      sendTo("  zones       =  %i, %i, %i, %i\n\r", peelPk.zone[0],
+	     peelPk.zone[1], peelPk.zone[2], peelPk.zone[3]);
+      sendTo("  announce    =  %i\n\r", peelPk.announce);
+      sendTo("  def respawn =  %i\n\r", peelPk.default_respawn);
+      sendTo("  cutdam      =  %s\n\r", (peelPk.cutdam)?"is ON, damage reduced by one half":"is OFF, no damage reduction");
+    }
     if(peelPk.endtime>0)
       sendTo("  time left   =  %i:%i\n\r", (peelPk.endtime-time(NULL))/60,
 	     (peelPk.endtime-time(NULL))%60);
@@ -99,15 +125,16 @@ void TBeing::doPeelPk(const char *argument)
     for(j=0;j<2;++j){
       sendTo("  Team%i       =  %i members, %i score\n\r", 
 	     j, peelPk.teamnum[j], peelPk.teamscore[j]);
-      sendTo("  holding     =  %i\n\r  ", peelPk.holding[j]);
-      sendTo("  # respawns  =  %i\n\r", peelPk.respawns[j]);
-      sendTo("  respawns    =  %i, %i, %i, %i\n\r", peelPk.respawn[j][0],
-	     peelPk.respawn[j][1], peelPk.respawn[j][2], peelPk.respawn[j][3]);
-      
+      if(hasWizPower(POWER_WIZARD)){
+	sendTo("  holding     =  %i\n\r  ", peelPk.holding[j]);
+	sendTo("  # respawns  =  %i\n\r", peelPk.respawns[j]);
+	sendTo("  respawns    =  %i, %i, %i, %i\n\r", peelPk.respawn[j][0],
+	       peelPk.respawn[j][1], peelPk.respawn[j][2], peelPk.respawn[j][3]);
+      }
       for(i=0;i<PEELPK_TEAMSIZE;++i){
 	if(peelPk.teammembers[j][i])
-	  sendTo(COLOR_MOBS, "%s(%i)  ", peelPk.teammembers[j][i]->getName(), 
-		 peelPk.teamscores[j][i]);
+	  sendTo(COLOR_MOBS, "%s(%i / %i)  ", peelPk.teammembers[j][i]->getName(), 
+		 peelPk.teamscores[j][i], peelPk.teamdeaths[j][i]);
       }
       sendTo("\n\r");
     }
@@ -184,7 +211,7 @@ void TBeing::doPeelPk(const char *argument)
 	  !b->checkSoundproof() && 
 	  !b->isPlayerAction(PLR_MAILING | PLR_BUGGING)){
 	for(i=0;i<peelPk.zones;++i){
-	  if(b->roomp->getZone()==peelPk.zone[i]){
+	  if(b->roomp->getZoneNum()==peelPk.zone[i]){
 	    valid=1;
 	    break;
 	  }
@@ -205,6 +232,13 @@ void TBeing::doPeelPk(const char *argument)
   } else if(!strcmp(buf, "holding")){
     half_chop(buf2, buf, buf2);
     peelPk.holding[atoi(buf)]=atoi(buf2);
+  } else if (!strcmp(buf, "cutdam")) {
+    if (!strcmp(buf2, "on")) peelPk.cutdam = TRUE;
+    else if (!strcmp(buf2, "off")) peelPk.cutdam = FALSE;
+    else sendTo("syntax: peelpk cutdam <on | off>");
+    sendTo("PkQuest: %s\n\r", (peelPk.cutdam)?"Damage cut by 50 percent":"No damage modification");
+  } else if(!strcmp(buf, "respawnlag")){
+    peelPk.respawnlag=atoi(buf2);
   } else if(!strcmp(buf, "settimer")){
     peelPk.endtime=time(NULL)+atoi(buf2)*60;
   } else if(!strcmp(buf, "checktime")){
@@ -233,8 +267,16 @@ void TBeing::doPeelPk(const char *argument)
     for(j=0;j<2;++j){
       for(i=0;i<PEELPK_TEAMSIZE;++i){
 	peelPk.teamscores[j][i]=0;
+	peelPk.teamdeaths[j][i]=0;
       }
       peelPk.teamscore[j]=0;
+    }
+  } else if(!strcmp(buf, "resetteams")){
+    for(j=0;j<2;++j){
+      for(i=0;i<PEELPK_TEAMSIZE;++i){
+	peelPk.teammembers[j][i]=NULL;	  
+      }
+      peelPk.teamnum[j]=0;
     }
   } else if(!strcmp(buf, "toholding")){
     if(peelPk.zones>0){
@@ -251,11 +293,26 @@ void TBeing::doPeelPk(const char *argument)
 	}
       }
     }
-  }
+  } else if(!strcmp(buf, "torespawn")){
+    if(peelPk.zones>0){
+      sendTo("Transferring teams to respawn rooms.\n\r");
+      for(j=0;j<2;++j){
+	if(peelPk.respawn[j][0]>0){
+	  for(i=0;i<PEELPK_TEAMSIZE;++i){
+	    if(peelPk.teammembers[j][i]){
+	      peelPk.teammembers[j][i]->sendTo("Transferring to respawn room.\n\r");
+	      --(*peelPk.teammembers[j][i]);
+	      thing_to_room(peelPk.teammembers[j][i], peelPk.respawn[j][0]);
+	    }
+	  }
+	}
+      }
+    }
+  } 
 } 
 
 // returns DELETE_THIS
-int TBeing::peelPkRespawn(TBeing *killer, int dmg_type)
+int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
 {
   int i, valid=0, team=-1;
   Descriptor *idesc;
@@ -266,7 +323,7 @@ int TBeing::peelPkRespawn(TBeing *killer, int dmg_type)
   }
   
   for(i=0;i<peelPk.zones;++i){
-    if(roomp->getZone()==peelPk.zone[i]){
+    if(roomp->getZoneNum()==peelPk.zone[i]){
       valid=1;
       break;
     }
@@ -279,10 +336,12 @@ int TBeing::peelPkRespawn(TBeing *killer, int dmg_type)
   for(i=0;i<PEELPK_TEAMSIZE;++i){
     if(this==peelPk.teammembers[0][i]){
       team=0;
+      peelPk.teamdeaths[0][i]++;
       break;
     }
     if(this==peelPk.teammembers[1][i]){
       team=1;
+      peelPk.teamdeaths[1][i]++;
       break;
     }
   }
@@ -343,7 +402,7 @@ int TBeing::peelPkRespawn(TBeing *killer, int dmg_type)
 	  !b->checkSoundproof() && 
 	  !b->isPlayerAction(PLR_MAILING | PLR_BUGGING)){
 	for(i=0;i<peelPk.zones;++i){
-	  if(b->roomp->getZone()==peelPk.zone[i]){
+	  if(b->roomp->getZoneNum()==peelPk.zone[i]){
 	    valid=1;
 	    break;
 	  }
@@ -410,6 +469,8 @@ int TBeing::peelPkRespawn(TBeing *killer, int dmg_type)
 
   act("You wake up and try to clear your thoughts.  Maybe it was just a dream...", FALSE, this, NULL, NULL, TO_CHAR);
   act("You suddenly notice $n sitting here.  Odd, you didn't notice $m before.  $n looks confused.", FALSE, this, NULL, NULL, TO_ROOM);
+
+  addToWait(peelPk.respawnlag);
  
   return TRUE;
 }

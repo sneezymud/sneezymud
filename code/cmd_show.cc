@@ -15,6 +15,116 @@
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"
 
+static void print_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  char buf[10240];
+  int dink, bits, scan;
+
+  sprintf(buf, "%5d %4d %-12s     %s\n\r", rp->number, rnum,
+        TerrainInfo[rp->getSectorType()]->name, (rp->name ? rp->name : "Empty"));
+  if (rp->getRoomFlags()) {
+    strcat(buf, "    [");
+
+    dink = 0;
+    for (bits = rp->getRoomFlags(), scan = 0; bits; scan++) {
+      if (bits & (1 << scan)) {
+        if (dink)
+          strcat(buf, " ");
+        if (scan < MAX_ROOM_BITS)
+          strcat(buf, room_bits[scan]);
+        dink = 1;
+        bits ^= (1 << scan);
+      }
+    }
+    strcat(buf, "]\n\r");
+  }
+
+  sb += buf;
+}
+
+static void show_room_zone(int rnum, TRoom *rp, string &, struct
+			   show_room_zone_struct *srzs)
+{
+  char buf[MAX_STRING_LENGTH];
+
+  *buf = '\0';
+
+  if (!rp || rp->number < srzs->bottom || rp->number > srzs->top)
+    return;            // optimize later
+
+  if (srzs->blank && (srzs->lastblank + 1 != rp->number)) {
+    sprintf(buf, "rooms %d-%d are blank.\n\r", srzs->startblank,
+	    srzs->lastblank);
+    srzs->sb += buf;
+    srzs->blank = 0;
+  }
+  if (!rp->name) {
+    vlogf(LOG_BUG, "room %d's name is screwed!\n\r", rp->number);
+    return;
+  } else if (1 == sscanf(rp->name, "%d", &srzs->lastblank) && srzs->lastblank
+	     == rp->number) {
+    if (!srzs->blank) {
+      srzs->startblank = srzs->lastblank;
+      srzs->blank = 1;
+    }
+    return;
+  } else if (srzs->blank) {
+    sprintf(buf, "rooms %d-%d are blank.\n\r", srzs->startblank,
+	    srzs->lastblank);
+    srzs->sb += buf;
+    srzs->blank = 0;
+  }
+  print_room(rnum, rp, srzs->sb, NULL);
+}
+
+static void print_lit_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_ALWAYS_LIT))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_save_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_SAVE_ROOM))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_death_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_DEATH))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_hospital_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_HOSPITAL))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_noheal_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_NO_HEAL))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_arena_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_ARENA))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_noflee_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_NO_FLEE))
+    print_room(rnum, rp, sb, NULL);
+}
+
+static void print_private_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+{
+  if (rp && rp->isRoomFlag(ROOM_PRIVATE))
+    print_room(rnum, rp, sb, NULL);
+}
+
 unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
                                  bool isMobileF, bool shFrLoop=false)
 {
@@ -441,7 +551,7 @@ void TPerson::doShow(const char *argument)
       only_argument(argument, zonenum);
       sscanf(zonenum, "%i", &zone);
     } else
-      zone = roomp->getZone();
+      zone = roomp->getZoneNum();
     if ((zone < 0 || zone >= (signed int) zone_table.size()) && !*zonenum) {
       sb += "That is not a valid zone_number\n\r";
       if (desc)
@@ -618,7 +728,7 @@ void TPerson::doShow(const char *argument)
     int zone = -1;
 
     if (!*zonenum)
-      zone = roomp->getZone();
+      zone = roomp->getZoneNum();
     else
       sscanf(zonenum, "%i", &zone);
 
@@ -702,10 +812,18 @@ void TPerson::doShow(const char *argument)
       room_iterate(room_db, print_noflee_room, sb, NULL);
     else if (is_abbrev(zonenum, "arena"))
       room_iterate(room_db, print_arena_room, sb, NULL);
-    else {
+    else if (isalpha(zonenum[0])){
+      register int i;
+      for (i = 0; i < WORLD_SIZE; i++) {
+	TRoom *temp = real_roomp(i);
+	if (temp && temp->name && strstr(temp->name, zonenum)){
+	  print_room(i, temp, sb, NULL);
+	}
+      }
+    } else {
       int zone;
       if (1 != sscanf(zonenum, "%i", &zone))
-        zone = roomp->getZone();
+        zone = roomp->getZoneNum();
       if (zone < 0 || zone >= (signed int) zone_table.size())
         sb += "Zone number too high or too low.\n\r";
       else {
@@ -797,7 +915,7 @@ void TPerson::doShow(const char *argument)
             return;
           }
 
-          top = bottom = roomp->getZone();
+          top = bottom = roomp->getZoneNum();
         }
       }
     }
@@ -1025,6 +1143,196 @@ void TPerson::doShow(const char *argument)
 
 
 
+
+
+
+
+
+
+
+unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
+                                 bool isMobileF, bool shFrLoop=false)
+{
+  if (shFrZoneNumber < 0 || shFrZoneNumber >= ((signed int) zone_table.size())) {
+    *sb += "Zone Number incorect.\n\r";
+    return 0;
+  }
+                int shFrTop = 0,
+                    shFrBot = 0,
+                    shFrTopR = -1,
+                    shFrBotR = -1;
+  unsigned long int shFrTotalCount[2] = {0, 0};
+  zoneData          &zd = zone_table[shFrZoneNumber];
+
+  if (!zd.enabled)
+    return 0;
+
+  shFrTop = zd.top;
+  shFrBot = (shFrZoneNumber ? zone_table[shFrZoneNumber - 1].top + 1: 0);
+
+  int  shFrCountSize = (shFrTop - shFrBot + 1),
+       shFrCountMax  = (isMobileF ? mob_index.size() : obj_index.size());
+  bool shFrCountList[shFrCountSize];
+  char tString[256];
+
+  for (int Runner = 0; Runner < shFrCountSize; Runner++)
+    shFrCountList[Runner] = false;
+
+  shFrTotalCount[0] = shFrCountSize;
+
+  for (int Runner = 0; Runner < shFrCountMax; Runner++) {
+    if (( isMobileF && (mob_index[Runner].virt < shFrBot || mob_index[Runner].virt > shFrTop)) ||
+        (!isMobileF && (obj_index[Runner].virt < shFrBot || obj_index[Runner].virt > shFrTop)))
+      continue;
+
+    int shFrWalkVirt = (isMobileF ? mob_index[Runner].virt : obj_index[Runner].virt) - shFrBot;
+
+    shFrCountList[max(min(shFrWalkVirt, (shFrCountSize - 1)), 0)] = true;
+    shFrTotalCount[0]--;
+  }
+
+  if (shFrTotalCount[0] > 0) {
+    if (shFrLoop) {
+      sprintf(tString, "**** Zone: %d\n\r", shFrZoneNumber);
+      *sb += tString;
+    }
+
+    for (int Runner = 0; Runner < shFrCountSize; Runner++) {
+      if (shFrCountList[Runner]) {
+        if (shFrBotR != -1) {
+          shFrTotalCount[1] = (shFrTopR - shFrBotR + 1);
+          sprintf(tString, "%5d - %5d : %5lu Free\n\r",
+                  shFrBotR, shFrTopR, shFrTotalCount[1]);
+          *sb += tString;
+        }
+
+        shFrBotR = shFrTopR = -1;
+      } else {
+        if (shFrBotR == -1)
+          shFrBotR = shFrTopR = (Runner + shFrBot);
+        else
+          shFrTopR = (Runner + shFrBot);
+
+        if (Runner == (shFrCountSize - 1)) {
+          shFrTotalCount[1] = (shFrTopR - shFrBotR + 1);
+          sprintf(tString, "%5d - %5d : %5lu Free\n\r",
+                  shFrBotR, shFrTopR, shFrTotalCount[1]);
+          *sb += tString;
+        }
+      }
+    }
+
+    sprintf(tString, "----- Total Count: %5lu\n\r", shFrTotalCount[0]);
+    *sb += tString;
+
+    return shFrTotalCount[0];
+  }
+
+  return 0;
+}
+
+// Does major searching and returns the following:
+// Dissection loads
+// 'Nature' loads
+// Scriptfile loads
+string showComponentTechnical(const int tValue)
+{
+  string         tStString(""),
+                 tStBuffer("");
+  char           tString[256],
+                 tBuffer[256];
+  int            tMobNum;
+  struct dirent *tDir;
+  DIR           *tDirInfo;
+  FILE          *tFile;
+
+  // Check for dissection loads.
+  // This doesn't check for hard-coded ones such as 'by race' and such.
+  for (unsigned int tDissectIndex = 0; tDissectIndex < dissect_array.size(); tDissectIndex++)
+    if ((dissect_array[tDissectIndex].loadItem == (unsigned) tValue)) {
+      tMobNum = real_mobile(tDissectIndex);
+
+      if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
+        strcpy(tBuffer, "[Unknown]");
+      else
+        strcpy(tBuffer, mob_index[tMobNum].name);
+
+      sprintf(tString, "Dissect Load: %d %s\n\r", tDissectIndex, tBuffer);
+      tStString += tString;
+    }
+
+  // Check for natural loads.  Unfortunatly it's easy to do a double entry here
+  // so we have to be careful.
+  for (unsigned int tCompIndex = 0; tCompIndex < component_placement.size(); tCompIndex++)
+    if (component_placement[tCompIndex].number == tValue &&
+        (component_placement[tCompIndex].place_act & CACT_PLACE)) {
+      if (component_placement[tCompIndex].room2 == -1)
+        tBuffer[0] = '\0';
+      else
+        sprintf(tBuffer, "-%d", component_placement[tCompIndex].room2);
+
+      sprintf(tString, "Natural Load: Room%s %d%s\n\r",
+              (!tBuffer[0] ? "" : "s"),
+              component_placement[tCompIndex].room1,
+              tBuffer);
+      tStString += tString;
+    }
+
+  // Check for script loads.  This will go through ALL of the scripts and check.
+  // We only do this on !PROD because of the lag it will generate, and I do mean a
+  // LOT of lag it will make.
+  if (gamePort != PROD_GAMEPORT) {
+    if (!(tDirInfo = opendir("mobdata/responses"))) {
+      vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/resposnes");
+      tStString += "ERROR.  Unable to open mobdata/responses for reading.";
+      return tStString;
+    }
+
+    while ((tDir = readdir(tDirInfo))) {
+      if (!strcmp(tDir->d_name, ".") || !strcmp(tDir->d_name, ".."))
+        continue;
+
+      sprintf(tBuffer, "mobdata/responses/%s", tDir->d_name);
+
+      if (!(tFile = fopen(tBuffer, "r")))
+        continue;
+
+      while (fgets(tString, 256, tFile)) {
+        char *tChar = tString;
+
+        for (; isspace(*tChar) || *tChar == '\t'; tChar++);
+
+        sprintf(tBuffer, "load %d;\n", tValue);
+
+        if (!strcmp(tChar, tBuffer)) {
+          tMobNum = real_mobile(atoi(tDir->d_name));
+
+          if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
+            strcpy(tString, "[Unknown]");
+          else
+            strcpy(tString, mob_index[tMobNum].name);
+
+          sprintf(tBuffer, "Script: %s %s\n\r",
+                  tDir->d_name, tString);
+          tStString += tBuffer;
+
+          // Don't show the same entry twice.
+          break;
+        }
+      }
+
+      fclose(tFile);
+    }
+
+    closedir(tDirInfo);
+  }
+
+  return tStString;
+}
+
+
+
+
 const char SHOW_LIST[][15] =
 {
   "zones",      //  1
@@ -1043,6 +1351,11 @@ const char SHOW_LIST[][15] =
 };
 
 const int MAX_SHOW_LIST_ENTIRES = 13;
+
+void TBeing::doShow(const char *)
+{
+  return;
+}
 
 void TPerson::doShow(string tStString)
 {

@@ -29,7 +29,7 @@ void TBeing::statZone(const char *zoneNumber)
       return;
     }
 
-    zNum = roomp->getZone();
+    zNum = roomp->getZoneNum();
   } else
     zNum = atoi(zoneNumber);
 
@@ -154,7 +154,7 @@ void TBeing::statRoom(TRoom *rmp)
 
 
   sprintf(buf2,"Room name: %s, Of zone : %d. V-Number : %d, R-number : %d\n\r",
-        rmp->name, rmp->getZone(), rmp->number, in_room);
+        rmp->name, rmp->getZoneNum(), rmp->number, in_room);
   str = buf2;
 
   sprintf(buf2, "Room Coords: %d, %d, %d\n\r",

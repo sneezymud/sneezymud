@@ -1,30 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_testcode.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/10/08 19:27:55  batopr
-// *** empty log message ***
-//
-// Revision 1.4  1999/10/08 19:26:54  batopr
-// Added stuff for calculating money equilibrium
-//
-// Revision 1.3  1999/09/14 02:24:58  batopr
-// *** empty log message ***
-//
-// Revision 1.2  1999/09/13 14:27:25  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "statistics.h"
 
@@ -37,12 +10,12 @@ void TBeing::doTestCode(const char *arg)
 
   act("test code", FALSE, this, 0, 0, TO_CHAR, "\033[1;30m");
 
-#if 1
+#if 0
   unsigned int shopPos = getPosGoldShops();
   int shopNet = getNetGoldShops();
   int shopDrain = shopPos - shopNet;
 
-  float old_shop_mod = gold_modifier[GOLD_SHOP];
+  float old_shop_mod = gold_modifier[GOLD_SHOP].getVal();
 
   // target shop is to drain 1.05 * what it provides
   float new_shop_mod = old_shop_mod * shopDrain / shopPos / 1.05;
@@ -73,7 +46,7 @@ void TBeing::doTestCode(const char *arg)
   int drainNoRep = budgDrainNew - drainRepAct;
   int drainDes = (int) (budgPosNew * 0.90);
   int drainRepDes = drainDes - drainNoRep;
-  float old_repair_factor = gold_modifier[GOLD_REPAIR];
+  float old_repair_factor = gold_modifier[GOLD_REPAIR].getVal();
   float new_repair_factor = drainRepDes / drainRepAct * old_repair_factor;
   sendTo("Theoretical repair equilibrium modifier:   %.2f\n\r", new_repair_factor);
 
@@ -82,7 +55,7 @@ void TBeing::doTestCode(const char *arg)
   int posNoInc = budgPosNew - posIncAct;
   int posDes = (int) (budgDrainNew * 1.02);
   int posIncDes = posDes - posNoInc;
-  float old_inc_factor = gold_modifier[GOLD_INCOME];
+  float old_inc_factor = gold_modifier[GOLD_INCOME].getVal();
   float new_inc_factor = posIncDes / posIncAct * old_inc_factor;
   sendTo("Theoretical income quilibrium modifier: %.2f\n\r", new_inc_factor);
 #endif
@@ -195,7 +168,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_PENANCE) || (i == CMD_IMMORTAL) || (i == CMD_TRACEROUTE) ||
         (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
       continue;
-    vlogf(-1, "%s : con %d", commandArray[i]->name, desc->connected);
+    vlogf(LOG_MISC, "%s : con %d", commandArray[i]->name, desc->connected);
     doCommand(i, "", NULL, FALSE);
     if (note) {
       char *tmp = note->action_description;
@@ -218,7 +191,7 @@ void TBeing::doTestCode(const char *arg)
   TThing *obj = NULL;
   char tmpbuf[256];
 
-  sendTo("You are in zone %d.\n\r", roomp->getZone());
+  sendTo("You are in zone %d.\n\r", roomp->getZoneNum());
   return;
 
   one_argument(arg, tmpbuf);

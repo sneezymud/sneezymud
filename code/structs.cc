@@ -734,18 +734,18 @@ TThing& TRoom::operator += (TThing& t)
     saveItems("");
 
   if (t.isPc()) {
-    zoneData &zd = zone_table[getZone()];
+    zoneData &zd = zone_table[getZoneNum()];
     if ((zd.zone_value == 0) &&
          zd.enabled) {
       zd.zone_value = ZONE_MAX_TIME;
       // init to non-zero before resetting so mobs load
-      zone_table[getZone()].resetZone(FALSE);
+      zone_table[getZoneNum()].resetZone(FALSE);
     }
     if (zd.zone_value >= 0)
       zd.zone_value = ZONE_MAX_TIME;
-  } else if (getZone() >= 0 && getZone() < ((signed int) zone_table.size())) {
+  } else if (getZoneNum() >= 0 && getZoneNum() < ((signed int) zone_table.size())) {
 #if 1
-    if (zone_table[getZone()].enabled) {
+    if (zone_table[getZoneNum()].enabled) {
       TThing *tThing   = NULL,
              *tObj     = NULL,
              *tObjNext = NULL;

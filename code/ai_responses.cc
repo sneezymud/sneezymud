@@ -353,7 +353,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
 
       tRoom = real_roomp(value);
 
-      if ((!roomp || !tRoom || tRoom->getZone() != roomp->getZone()) && !inImperia())
+      if ((!roomp || !tRoom || tRoom->getZoneNum() != roomp->getZoneNum()) && !inImperia())
         return RET_STOP_PARSING;
 
       break;

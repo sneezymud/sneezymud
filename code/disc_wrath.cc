@@ -655,7 +655,7 @@ int earthquake(TBeing *caster, int level, byte bKnown, spellNumT spell, int adv_
         }
       } else if ((caster != tmp_victim) &&
         	 (tmp_victim->in_room != ROOM_NOWHERE) &&
-		 (caster->roomp->getZone() == tmp_victim->roomp->getZone())) {
+		 (caster->roomp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
 	tmp_victim->sendTo("The earth shakes for a moment...\n\r");
 	if ((tmp_victim->getPosition() > POSITION_SITTING) &&
 	    !tmp_victim->isImmortal() &&

@@ -1547,7 +1547,7 @@ void TBeing::doReset(const char *arg)
     }
     one_argument(arg, buf);
     if (!buf || !*buf) {
-      zone = (roomp ? roomp->getZone() : 0);
+      zone = (roomp ? roomp->getZoneNum() : 0);
       /*
       sendTo("Syntax: reset zone <zone#>\n\r");
       return;

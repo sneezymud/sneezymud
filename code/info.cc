@@ -2648,7 +2648,7 @@ void TBeing::doWhere(const char *argument)
       continue;
     }
     if (isname(namebuf, i->name) && canSeeWho(i) && canSee(i)) {
-      if ((i->in_room != ROOM_NOWHERE) && (isImmortal() || (i->roomp->getZone() == roomp->getZone()))) {
+      if ((i->in_room != ROOM_NOWHERE) && (isImmortal() || (i->roomp->getZoneNum() == roomp->getZoneNum()))) {
         if (!iNum || !(--count)) {
           if (!iNum) {
             sprintf(buf, "[%2d] ", ++count);

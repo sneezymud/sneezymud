@@ -915,8 +915,8 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone)
     // note, all rooms below 100 are ignored
 
     if (keepZone) {
-      int minroom = zone_table[roomp->getZone() - 1].top + 1;
-      int maxroom = zone_table[roomp->getZone()].top;
+      int minroom = zone_table[roomp->getZoneNum() - 1].top + 1;
+      int maxroom = zone_table[roomp->getZoneNum()].top;
       to_room = ::number(minroom, maxroom);
     } else {
       to_room = ::number(100, top_of_world);
@@ -931,7 +931,7 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone)
       continue;
     if (rp->isFlyingSector())
       continue;
-    if (zone_table[rp->getZone()].enabled == FALSE)
+    if (zone_table[rp->getZoneNum()].enabled == FALSE)
       continue;
 
     break;

@@ -186,7 +186,7 @@ class TRoom : public TThing {
     byte riverSpeed;        // River flows with this speed
     byte hasWindow;         // whether or not room has a window   
     byte teleLook;          // do a do_look or not when teleported 
-    zoneData *zone;            // Room zone (for resetting)          
+    zoneData *zone;         // Room zone (for resetting)          
     sh_int teleTime;        // time to a teleport                
     sh_int teleTarg;        // target room of a teleport       
     ubyte moblim;           // # of mobs allowed in room.       
@@ -270,10 +270,13 @@ class TRoom : public TThing {
     void setRoomHeight(int r_height) {
       roomHeight = r_height;
     }
-    void setZone(int z) {
+    zoneData *getZone() {
+      return zone;
+    }
+    void setZoneNum(int z) {
       zone = &zone_table[z];
     }
-    int getZone() const {
+    int getZoneNum() const {
       return zone?zone->zone_nr:-1;
     }
     ubyte getMoblim() const {

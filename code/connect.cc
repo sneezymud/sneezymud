@@ -5147,7 +5147,7 @@ void setPrompts(fd_set out)
             if (ch->isImmortal() && IS_SET(d->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[0],
-                      ch->roomp->getZone(),
+                      ch->roomp->getZoneNum(),
                       (ch->roomp->funct ? "Y" : "N"),
                       ch->roomp->getLight(),
                       ch->roomp->getRoomHeight(),

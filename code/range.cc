@@ -1,25 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: range.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD  - All rights reserved, SneezyMUD Coding Team
 //      "range.cc" - All functions and routines related to ranged combat
 //
-//      Ranged systems coded by Russ Russell and Benjamin Youngdahl,
-//          Summer 1993. Last revision : August 1996
+//      Ranged systems coded by Russ Russell and Benjamin Youngdahl
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -137,10 +121,10 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
 #if RANGE_DEBUG
 char buf[256];
 sprintf(buf, "Ranged debug: max_distance: %d\n\racceleration: %6.2f, velocity: %6.2f\n\rhangtime: %6.2f, angle: %d", max_distance, acc, v0, tt, ang);
-vlogf(5, buf);
+vlogf(LOG_BUG, buf);
 #endif
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_BOW, 20);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 20);
   
   strcpy(local_vict, vict);
 
@@ -185,7 +169,7 @@ vlogf(5, buf);
   act("$n throws $p!", TRUE, ch, this, 0, TO_ROOM);
   tmp = ch->unequip(ch->getPrimaryHold());
   if (!tmp) {
-    vlogf(5, "Bad unequip in throwThing (%s : %s)", getName(), ch->getName());
+    vlogf(LOG_BUG, "Bad unequip in throwThing (%s : %s)", getName(), ch->getName());
     ch->sendTo("Something real bad happened.  Talk to a god.\n\r");
     return FALSE;
   }
@@ -288,13 +272,13 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
     if (dynamic_cast<TArrow *>(o)) {
       // shot objects are here
       // ranged spec basically allows arrow to do extra damage...
-      q = 100 + ch->getSkillValue(SKILL_BOW);
+      q = 100 + ch->getSkillValue(SKILL_RANGED_PROF);
       q += 2 * ch->getSkillValue(SKILL_RANGED_SPEC);
       dam *= q;
       dam /= 200;
     } else {
       // thrown objects are here
-      q = ch->getSkillValue(SKILL_BOW);
+      q = ch->getSkillValue(SKILL_RANGED_PROF);
       dam *= q;
       dam /= 100;
     }
@@ -353,24 +337,28 @@ void pissOff(TMonster *irritated, TBeing *reason)
   }
 }
 
-// ch is thrower of thing
+// ch is thrower of thing (sometimes NULL - falling objects)
 // vict is potential victim
 bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
 {
   // hit innocent due to misthrow
-  if (ch && ch->isImmortal())
-    return FALSE;
- 
-  // presume anyone in group and near thrower, is safely out of the way
-  const TBeing * tbc = dynamic_cast<const TBeing *>(vict);
-  if (tbc && tbc->inGroup(ch) && tbc->sameRoom(ch)) 
-    return false;
 
-  // protect the mounts of group members too
-  if (tbc && tbc->rider) {
-    TBeing *temp = dynamic_cast<TBeing *>(tbc->horseMaster());
-    if (temp && temp->inGroup(ch) && temp->sameRoom(ch))
+  const TBeing * tbc = dynamic_cast<const TBeing *>(vict);
+
+  if (ch) {
+    if (ch->isImmortal())
+      return FALSE;
+ 
+    // presume anyone in group and near thrower, is safely out of the way
+    if (tbc && tbc->inGroup(*ch) && tbc->sameRoom(*ch)) 
       return false;
+  
+    // protect the mounts of group members too
+    if (tbc && tbc->rider) {
+      TBeing *temp = dynamic_cast<TBeing *>(tbc->horseMaster());
+      if (temp && temp->inGroup(*ch) && temp->sameRoom(*ch))
+        return false;
+    }
   }
 
   float num;
@@ -444,7 +432,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
            tbt->awake() && tbt->canGet(this, SILENT_YES)) {
         resCode = TRUE;
         act("$n catches $p.", FALSE, tbt, this, NULL, TO_ROOM);
-        if (!ch->sameRoom(tbt))
+        if (!ch->sameRoom(*tbt))
           act("In the distance, $N catches your $o.",TRUE,ch,this,tbt,TO_CHAR);
  
         if (!tbt->heldInPrimHand()) {
@@ -469,11 +457,11 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
           ch->setCharFighting(tbt, 0);
         return resCode;
       } else if (!ch->isImmortal() &&
-                  (!(i = ch->specialAttack(tbt, SKILL_BOW)) || 
+                  (!(i = ch->specialAttack(tbt, SKILL_RANGED_PROF)) || 
                    i == GUARANTEED_FAILURE)) {
         act("$n dodges out of the way of $p.", FALSE, tbt, this, NULL, TO_ROOM);
         tbt->sendTo("You dodge out of its way.\n\r");
-        if (!ch->sameRoom(tbt))
+        if (!ch->sameRoom(*tbt))
           act("In the distance, $N dodges out of the way of $p.",
                  TRUE,ch,this,tbt,TO_CHAR);
         resCode = FALSE;
@@ -490,37 +478,37 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
           act("$n is accidentally smacked by $p!", FALSE, tbt, this, NULL, TO_ROOM);
         act("You are unable to dodge being hit by $p!",
                   FALSE, tbt, this, NULL, TO_CHAR);
-        if (!ch->sameRoom(tbt))
+        if (!ch->sameRoom(*tbt))
           act("In the distance, $N is hit by $p.",TRUE,ch,this,tbt,TO_CHAR);
         resCode = TRUE;
         d = min(max(0, (int) (getWeight() - 5)), 10);
 #if RANGE_DEBUG
-        vlogf(5, "Range debug: (2) dam ping 1: %d", d);
+        vlogf(LOG_BUG, "Range debug: (2) dam ping 1: %d", d);
 #endif
 // don't do this or we wind up with acorns killing people
 //        d *= mdist - range + 1;  // modify for point blank range - bat
 #if RANGE_DEBUG
-        vlogf(5, "Range debug: (2) dam ping 3: %d", d);
+        vlogf(LOG_BUG, "Range debug: (2) dam ping 3: %d", d);
 #endif
         TObj *tobj = dynamic_cast<TObj *>(this);
         if (tobj) {
           d = get_range_actual_damage(ch, tbt, tobj, d, TYPE_HIT);
 #if RANGE_DEBUG
-          vlogf(5, "Range debug: (2) dam ping 4: %d", d);
+          vlogf(LOG_BUG, "Range debug: (2) dam ping 4: %d", d);
 #endif
 
           if (::number(1, d) <= tobj->getStructPoints() &&
               tbt->roomp && !tbt->roomp->isRoomFlag(ROOM_ARENA)) {
             tobj->addToStructPoints(-1);
             if (tobj->getStructPoints() <= 0) {
-              if (!ch->sameRoom(tbt))
+              if (!ch->sameRoom(*tbt))
                 act("In the distance, $p is destroyed.",TRUE,ch,tobj,0,TO_CHAR);
               tobj->makeScraps();
               ADD_DELETE(resCode, DELETE_ITEM);
             }
           }
 #if RANGE_DEBUG
-          vlogf(5, "Range debug: (2) %s damaging %s with %s for %d dam",
+          vlogf(LOG_BUG, "Range debug: (2) %s damaging %s with %s for %d dam",
                  ch->getName(), tbt->getName(), tobj->getName(), d);
 #endif
           if (ch->reconcileDamage(tbt, d, getWtype()) == -1) {
@@ -735,6 +723,14 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
       act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
       return FALSE;
     }
+
+    if (newrp->isRoomFlag(ROOM_NO_HEAL)) {
+      act("Strangely, $n hits a magical barrier and falls to the $g.",
+	  FALSE, t, 0, 0, TO_ROOM);
+      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR);
+      return FALSE;
+    }
+
     sprintf(capbuf, "$n %s %s out of the room.", (dir == 5 ? "drops" : "flies"), directions[dir][0]);
     act(capbuf, TRUE, t, 0, 0, TO_ROOM);
     --(*t);
@@ -742,7 +738,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     *(real_roomp(from)) += *t;
   }
   if (!rp) {
-    vlogf(10, "%s thrown into non-existant room #%d", capbuf, from);
+    vlogf(LOG_BUG, "%s thrown into non-existant room #%d", capbuf, from);
     --(*t);
     thing_to_room(t, ROOM_VOID);
     return FALSE;
@@ -908,7 +904,7 @@ int clearpath(int room, dirTypeT dir)
     return FALSE;
 
   if (!real_roomp(rp->dir_option[dir]->to_room)) {
-    vlogf(10, "Range function done in room with bad exit. (%d) Dir:[%d]", room, dir);
+    vlogf(LOG_BUG, "Range function done in room with bad exit. (%d) Dir:[%d]", room, dir);
     return FALSE;
   }
   if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED))
@@ -1240,7 +1236,7 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
       dirTypeT dir;
       TRoom *rp = real_roomp(CI->first);
       if (!rp) {
-        vlogf(5, "Problem iterating path map.");
+        vlogf(LOG_BUG, "Problem iterating path map.");
         continue;
       }
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
@@ -1250,7 +1246,7 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
             (hp = real_roomp(exitp->to_room)) &&
             (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
           // check in_zone criteria
-          if (in_zone && (hp->getZone() != rp->getZone())) {
+          if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
             continue;
           }
 
@@ -1315,7 +1311,7 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
           }
 
           // check in_zone criteria
-          if (in_zone && (hp->getZone() != rp->getZone())) {
+          if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
             continue;
           }
 
@@ -1409,13 +1405,15 @@ int TBeing::doShoot(const char *arg)
   if (!desc || (!isPc() && !orig))
     return FALSE;
 
+#if 0
   if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_RANGER) &&
       !hasClass(CLASS_WARRIOR) && !hasClass(CLASS_DEIKHAN) &&
       !isImmortal()) {
     sendTo("You don't possess the correct skills to shoot a bow!\n\r");
     return FALSE;
   }
-  if (getSkillValue(SKILL_BOW) <= 0) {
+#endif
+  if (getSkillValue(SKILL_RANGED_PROF) <= 0) {
     sendTo("You almost shoot yourself in the foot!\n\r");
     sendTo("You realize you don't have any clue what you're doing...get some training.\n\r");
     return FALSE;
@@ -1492,15 +1490,55 @@ int TBeing::unloadBow(const char *arg)
   return TRUE;
 }
  
+TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
+{
+  TThing *arrow;
+  TQuiver *tQuiver;
+  int     curPos;
+  TThing  *tThing;
+
+  arrow = searchLinkedListVis(this, buf, stuff);
+  if (!arrow) {
+    for (curPos = MIN_WEAR; curPos < MAX_WEAR; curPos++) {
+      if ((tQuiver = dynamic_cast<TQuiver *>(equipment[curPos])) &&
+           !tQuiver->isClosed()) {
+        if ((arrow = searchLinkedListVis(this, buf, tQuiver->stuff))) {
+          if (!silent) {
+            act("You pull $p from $N.",
+                TRUE, this, arrow, tQuiver, TO_CHAR);
+            act("$n pulls $p from $N.",
+                TRUE, this, arrow, tQuiver, TO_ROOM);
+          }
+          return arrow;
+        }
+      }
+    }
+    for (tThing = stuff; tThing; tThing = tThing->nextThing) {
+      if (!(tQuiver = dynamic_cast<TQuiver *>(tThing)) ||
+           tQuiver->isClosed())
+        continue;
+
+      if (!(arrow = searchLinkedListVis(this, buf, tThing->stuff)))
+        continue;
+
+      if (!silent) {
+        act("You pull $p from $N.",
+            TRUE, this, arrow, tQuiver, TO_CHAR);
+      }
+      return arrow;
+    }
+
+    return NULL;
+  }
+  return arrow;
+}
+
 void TBeing::doBload(const char *arg)
 {
   char    arg1[128],
           arg2[128];
-  TThing  *bow,
-          *arrow,
-          *tThing;
-  TQuiver *tQuiver;
-  int     curPos;
+  TThing  *bow;
+  TThing  *arrow;
  
   if (sscanf(arg, "%s %s", arg1, arg2) != 2) {
     sendTo("Syntax : bload <bow> <arrow>\n\r");
@@ -1530,39 +1568,13 @@ void TBeing::doBload(const char *arg)
     sendTo("Syntax : bload <bow> <arrow>\n\r");
     return;
   }
-  if (!(arrow = searchLinkedListVis(this, arg2, stuff))) {
-    for (curPos = MIN_WEAR; curPos < MAX_WEAR; curPos++) {
-      if ((tQuiver = dynamic_cast<TQuiver *>(equipment[curPos])) &&
-           !tQuiver->isClosed()) {
-        if ((arrow = searchLinkedListVis(this, arg2, tQuiver->stuff))) {
-          act("You pull $p from $N.",
-              TRUE, this, arrow, tQuiver, TO_CHAR);
-          act("$n pulls $p from $N.",
-              TRUE, this, arrow, tQuiver, TO_ROOM);
-          arrow->bloadBowArrow(this, bow);
-          return;
-        }
-      }
-    }
-    for (tThing = stuff; tThing; tThing = tThing->nextThing) {
-      if (!(tQuiver = dynamic_cast<TQuiver *>(tThing)) ||
-           tQuiver->isClosed())
-        continue;
 
-      if (!(arrow = searchLinkedListVis(this, arg2, tThing->stuff)))
-        continue;
+  arrow = findArrow(arg2, SILENT_NO);
 
-      act("You pull $p from $N.",
-          TRUE, this, arrow, tQuiver, TO_CHAR);
-      arrow->bloadBowArrow(this, bow);
-      return;
-    }
-
+  if (arrow)
+    arrow->bloadBowArrow(this, bow);
+  else
     sendTo("You seem to have run out of '%s's.\n\r", arg2);
-    return;
-  }
-
-  arrow->bloadBowArrow(this, bow);
 }
 
 void TThing::bloadBowArrow(TBeing *ch, TThing *)

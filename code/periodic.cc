@@ -818,7 +818,7 @@ int TBeing::updateHalfTickStuff()
       vlogf(LOG_BUG, "Somehow %s was not flying in flying sector", getName());
     }
   }
-  if (roomp && (zone_table[roomp->getZone()].enabled == TRUE) && 
+  if (roomp && (zone_table[roomp->getZoneNum()].enabled == TRUE) && 
       (!inImperia() || (in_room == ROOM_NOCTURNAL_STORAGE)) && 
       ((specials.act & ACT_DIURNAL) || (specials.act & ACT_NOCTURNAL)) &&
        !fight() && (getPosition() > POSITION_STUNNED) &&

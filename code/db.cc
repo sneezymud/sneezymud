@@ -2433,7 +2433,7 @@ bool zoneData::isEmpty(void)
 
   for (i = descriptor_list; i; i = i->next)
     if (!i->connected && i->character && i->character->roomp)
-      if (i->character->roomp->getZone() == zone_nr)
+      if (i->character->roomp->getZoneNum() == zone_nr)
         return (false);
 
   return (true);

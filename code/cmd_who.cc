@@ -683,7 +683,7 @@ void TBeing::doWhozone()
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
-        (rp->getZone() == roomp->getZone())) {
+        (rp->getZoneNum() == roomp->getZoneNum())) {
       sprintf(buf, "%-25s - %s ", person->getName(), rp->name);
       if (GetMaxLevel() > MAX_MORT)
         sprintf(buf + strlen(buf), "[%d]", person->in_room);
