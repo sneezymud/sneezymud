@@ -88,9 +88,6 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   }
 
 
-  // arbitrary maximum
-  price = min(price, 5 * gsp / 2);
-
   price = (price * 75) / 100;
 
   return (price);
