@@ -31,7 +31,7 @@ class TBed : public TObj {
     virtual void sleepMe(TBeing *);
     virtual int getMaxRiders() const;
     virtual int getRiderHeight() const;
-    virtual int mobPulseBed(TMonster *);
+    virtual int mobPulseBed(TMonster *, short int);
     void bedRegen(TBeing *, int *, silentTypeT) const;
     virtual void changeObjValue1(TBeing *);
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT);

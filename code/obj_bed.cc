@@ -447,30 +447,33 @@ void TBed::sleepMe(TBeing *ch)
   }
 }
 
-int TBed::mobPulseBed(TMonster *mob)
+int TBed::mobPulseBed(TMonster *mob, short int occurrence)
 {
   int n;
+  sstring fullName;
+// concatenate name of object with occurrence in room, e.g. 3.chair
+  ssprintf(fullName, "%hi%s%s", occurrence, ".", fname(name).c_str());
+
   if (mob->default_pos <= POSITION_SLEEPING)
     n = 3;
   else if (mob->default_pos <= POSITION_RESTING)
     n = 2;
   else
     n = 1;
-
-  if ((getNumRiders(mob) + n) > getMaxRiders())
+  if ((getNumRiders(mob) + n) > getMaxRiders()) {
     return FALSE;
-
+}
   mob->doWake("");
   mob->doStand();
   if (mob->default_pos == POSITION_SITTING ||
        (getMinPosUse() == 2)) {
-    mob->doSit(fname(name));
+    mob->doSit(fullName);
   } else if (mob->default_pos == POSITION_RESTING ||
       (getMinPosUse() == 1)) {
-    mob->doRest(fname(name));
+    mob->doRest(fullName);
   } else if (mob->default_pos == POSITION_SLEEPING ||
       (getMinPosUse() == 0)) {
-    mob->doSleep(fname(name));
+    mob->doSleep(fullName);
   }
   return TRUE;
 }

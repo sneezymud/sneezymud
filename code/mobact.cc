@@ -3444,8 +3444,14 @@ int TMonster::mobileActivity(int pulse)
         (getHit() >= hitLimit()) &&
         !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       // anything more comfortable around?
+      map <sstring, short int> bedsChecked;
       for (t = roomp->getStuff(); t; t = t->nextThing) {
-        if (t->mobPulseBed(this))
+      // added the hash to keep track of 1.chair, 2.chair, etc
+        if (bedsChecked.find(fname(t->name)) == bedsChecked.end()) {
+          bedsChecked[fname(t->name)] = 1;
+        } else { bedsChecked[fname(t->name)] += 1; }
+        
+        if (t->mobPulseBed(this, bedsChecked[fname(t->name)]))
           return TRUE;
       }
     }

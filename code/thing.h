@@ -295,7 +295,7 @@ class TThing {
     virtual void sitMe(TBeing *);
     virtual void restMe(TBeing *);
     virtual void sleepMe(TBeing *);
-    virtual int mobPulseBed(TMonster *) { return FALSE; }
+    virtual int mobPulseBed(TMonster *, short int) { return FALSE; }
     virtual void attuneMe(TBeing *, TVial *);
     virtual void sharpenMeStone(TBeing *, TThing *);
     virtual void dullMeFile(TBeing *, TThing *);
