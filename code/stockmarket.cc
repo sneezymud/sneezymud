@@ -11,30 +11,24 @@ void updateStockHistory()
 }
 
 
-void stockSplit(sstring ticker, float pricechange)
+void stockSplit(sstring ticker, int price)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update stockinfo set shares=shares*2, price=(price/2)+%f where ticker='%s'", pricechange, ticker.c_str());
+  db.query("update stockinfo set shares=shares*2, price=(price/5) where ticker='%s'", ticker.c_str());
   
   db.query("update stockhistory set price=price/2 where ticker='%s'",
   	   ticker.c_str());
-
-  //  db.query("insert into stockhistory select max(n), ticker, max(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
-  //  db.query("insert into stockhistory select max(n), ticker, min(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
 }
 
-void stockReverseSplit(sstring ticker, float pricechange)
+void stockReverseSplit(sstring ticker, int price)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update stockinfo set shares=shares/10, price=(price*2)+%f where ticker='%s'", pricechange, ticker.c_str());
+  db.query("update stockinfo set shares=shares/10, price=(price*10) where ticker='%s'", ticker.c_str());
 
   db.query("update stockhistory set price=price*10 where ticker='%s'",
 	   ticker.c_str());
-    
-  //  db.query("insert into stockhistory select max(n), ticker, max(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
-  //  db.query("insert into stockhistory select max(n), ticker, min(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
 }
 
 void updateStocks()
@@ -53,15 +47,15 @@ void updateStocks()
     if(shares<=0)
       continue;
 
-    //    if((newprice) < ::number(1,5)){
-      //      stockReverseSplit(ticker, pricechange);
-    //    } else if(newprice > ::number(100, 125)){
-      //      stockSplit(ticker, pricechange);
-    //    } else {
-      db.query("update stockinfo set price=%f where ticker='%s'",
-	       newprice, ticker.c_str());
-      //    }
-    
+    db.query("update stockinfo set price=%f where ticker='%s'",
+	     newprice, ticker.c_str());
+
+    if((newprice) < ::number(1,5)){
+      //      stockReverseSplit(ticker, newprice);
+    } else if(newprice > ::number(100, 200)){
+      //      stockSplit(ticker, newprice);
+    }
+
   }
 }
 
@@ -126,7 +120,7 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     shares=convertTo<int>(db["shares"]);
     pricediff=price-convertTo<float>(db["dayprice"]);
 
-    ch->sendTo(COLOR_BASIC, fmt("%-6s  <Y>%.2f  %.2f<1>  %s%+.2f<1>   %s\n\r") %
+    ch->sendTo(COLOR_BASIC, fmt("%-6s<Y>%6.2f%8.2f<1>%s%+8.2f<1>   %6s\n\r") %
 	       db["ticker"] % getBidPrice(price) % getAskPrice(price) % 
 	       (pricediff>0?"<G>":"<R>") % pricediff %
 	       talenDisplay((int)(price*(float)shares)));
@@ -140,52 +134,99 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   return TRUE;
 }
 
+TObj *createReport(const sstring &name, const sstring &content)
+{
+  TObj *note;
+
+  if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+    vlogf(LOG_BUG, "Couldn't make a note for stockbroker!");
+    return NULL;
+  }
+  
+  note->swapToStrung();
+  delete [] note->name;
+  note->name = mud_str_dup(name);
+  delete [] note->shortDescr;
+  note->shortDescr = mud_str_dup(fmt("a <W>%s<1>") % name); 
+  delete [] note->getDescr();
+  note->setDescr(mud_str_dup(fmt("A crumpled <W>%s<1> lies here.") % name));
+
+  delete [] note->action_description;
+  note->action_description = mud_str_dup(content);
+
+  return note;
+}
 
 
 int stockBroker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
 {
   TDatabase db(DB_SNEEZY);
-  sstring arg=argument;
+  sstring arg=argument, buf;
+  float price, basis, pricediff;
+  int shares;
+  TObj *note;
 
   if(cmd != CMD_LIST && cmd != CMD_BUY && cmd != CMD_SELL)
     return FALSE;
 
-  // list -> point them at stock board
-  // buy info -> load up a little pamphlet with stock info and give for 100
+  // list -> show portfolio
+  // list <ticker>-> stock detail
   // buy <amt>*<ticker> -> buy stock
   // sell <amt>*<ticker> -> sell stock
 
 
-
+  ///////////////////////////////// list
   if(cmd==CMD_LIST){
+    ///////////////////////////////// list portfolio
     if(arg.empty()){
-      me->doTell(ch->getName(), "Have a look at the stock board if you want to see current listings.");
-      me->doTell(ch->getName(), "You can get a prospectus on a particular stock for 100 talens, with 'buy info <ticker>'.");
-      return TRUE;
-    }
-  }
+      db.query("select so.ticker, so.shares, so.cost_basis, s.price from stockowner so, stockinfo s where s.ticker=so.ticker and so.player_id=%i", ch->getPlayerID());
+      
+      buf="ticker shares basis price change worth change\n\r";
 
-  if(cmd==CMD_BUY){
-    if(arg.word(0) == "info"){
-      db.query("select ticker, price, volatility, shares, descr from stockinfo where ticker=upper('%s')", arg.c_str());
+      while(db.fetchRow()){
+	price=convertTo<float>(db["price"]);
+	basis=convertTo<float>(db["cost_basis"]);
+	pricediff=basis-price;
+	shares=convertTo<int>(db["shares"]);
+
+	buf += fmt("%-6s %6s %6.2f %6.2f %s%+.2f%c<1> %s %s%+i<1>\n") %
+	  db["ticker"] % talenDisplay(convertTo<int>(db["shares"])) %
+	  basis %
+	  getBidPrice(price) %
+	  (pricediff>0?"<G>":"<R>") % (((price-basis)/basis)*100)%'%'%
+	  talenDisplay((int)((float)shares * price)) %
+	  (pricediff>0?"<G>":"<R>") % 
+	  (int)(pricediff*convertTo<int>(db["shares"]));
+	
+      }		   
+
+      note=createReport("portfolio report", buf);
+      *me += *note;
+      me->doGive(ch, note, GIVE_FLAG_DROP_ON_FAIL);
+      ///////////////////////////////// list stock info
+    } else {
+      db.query("select ticker, price, volatility, shares, descr from stockinfo where ticker=upper('%s')", arg.word(0).c_str());
       
       if(!db.fetchRow()){
-	me->doTell(ch->getName(), "I don't seem to have any data on that stock.");
+	me->doTell(ch->getName(), "I don't have any data on that stock.");
 	return TRUE;
       }
+
       
-      me->doTell(ch->getName(), fmt("%s selling at %f with %i shares outstanding.") % 
-		 db["ticker"] % getAskPrice(convertTo<float>(db["price"])) %
-		 convertTo<int>(db["shares"]));
-      me->doTell(ch->getName(), db["descr"]);
+      buf = fmt("%s selling at %f with %i shares outstanding.") % 
+	db["ticker"] % getAskPrice(convertTo<float>(db["price"])) %
+	convertTo<int>(db["shares"]);
+      buf += db["descr"];
+      
+      note=createReport("stock report", buf);
+      *me += *note;
+      me->doGive(ch, note, GIVE_FLAG_DROP_ON_FAIL);    
     }
-
-
-    return TRUE;
+    ///////////////////////////////// buy
+  } else if(cmd == CMD_BUY){
+    me->doTell(ch->getName(), "I'm not selling anything yet");
   }
 
-  
 
-
-  return FALSE;
+  return TRUE;
 }
