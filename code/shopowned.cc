@@ -97,13 +97,14 @@ void TShopOwned::chargeTax(TObj *o, int cost)
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
 					      SHOPFILE_PATH % gh_tax_office);
-
-
   
   shoplog(shop_nr, keeper, keeper, o->getName(), 
 	  -cost, "paying tax");
   shoplog(gh_tax_office, keeper, dynamic_cast<TMonster *>(taxman),
 	  o->getName(), cost, "tax");
+
+  TShopOwned tso(gh_tax_office, dynamic_cast<TMonster *>(taxman), keeper);
+  tso.doReserve();
 }
 
 
