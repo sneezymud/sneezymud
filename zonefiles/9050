@@ -82,12 +82,12 @@ O 0 9054 1 9073              a flickering torch
 O 0 9083 1 9051                a mop
 B 0 9063 1 9051                a wooden mop bucket
 O 0 9080 1 9052              a solid oak bookcase
-P 1 9075 9999 9080               Daily thoughts - solid oak bookcase
-P 1 9070 9999 9080               Demon Guide - solid oak bookcase
-P 1 9071 9999 9080               Carnal Knowledge - solid oak bookcase
-P 1 9072 9999 9080               Priest, Harlot & Midget - solid oak bookcase
-P 1 9074 9999 9080               Mezan, Attuning Weapons - solid oak bookcase
-P 1 9073 9999 9080               clergy, hear me ROAR!! - solid oak bookcase
+P 1 9075 1 9080               Daily thoughts - solid oak bookcase
+P 1 9070 1 9080               Demon Guide - solid oak bookcase
+P 1 9071 1 9080               Carnal Knowledge - solid oak bookcase
+P 1 9072 1 9080               Priest, Harlot & Midget - solid oak bookcase
+P 1 9074 1 9080               Mezan, Attuning Weapons - solid oak bookcase
+P 1 9073 1 9080               clergy, hear me ROAR!! - solid oak bookcase
 O 0 9061 1 9060              a solid oak bookcase
 O 0 1439 1 9054              the stained glass window onto the street below
 V 1 0 112
