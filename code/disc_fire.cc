@@ -1030,9 +1030,11 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
             act("You had no hope of dodging the lashing flames!", FALSE, caster, NULL, tmp_victim, TO_VICT);
           }
           if (caster->reconcileDamage(tmp_victim, damage, SPELL_FIREBALL) == -1) {
+	    /*
             delete tmp_victim;
             tmp_victim = NULL;
             continue;
+	    */
           }
           rc = tmp_victim->flameEngulfed();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
