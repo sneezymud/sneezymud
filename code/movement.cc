@@ -3187,6 +3187,12 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     return TRUE;
+  } else if (doesKnowSkill(SKILL_CATFALL) &&
+	     bSuccess(this, getSkillValue(SKILL_CATFALL),SKILL_CATFALL)){
+    setPosition(POSITION_STANDING);
+    act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
+    sendTo(fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
+    dam=false;
   } else {
 // Flying person
     setPosition(pos);
