@@ -153,6 +153,9 @@ int TShopOwned::setRates(sstring arg)
     return FALSE;
   }
 
+  // reset the price cache
+  cached_shop_nr=-1;
+
   arg = one_argument(arg, buf);
   profit_buy = convertTo<float>(buf);
   if(buf != "")

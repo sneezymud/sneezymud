@@ -15,6 +15,10 @@
 #include "shopowned.h"
 
 vector<shopData>shop_index(0);
+int cached_shop_nr;
+map <int,float> ratios_cache;
+map <sstring,float> matches_cache;
+
 
 #if SHOP_PRICES_FLUXUATE
 vector<shop_pricing>ShopPriceIndex(0);
@@ -99,10 +103,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 {
   int cost;
   float profit_buy=-1;
-  static int cached_shop_nr=-1;
-  static map <int,float> ratios;
-  static map <string,float> matches;
-  map <string,float>::iterator iter;
+  map <sstring,float>::iterator iter;
   TDatabase db("sneezy");
 
   // we do this caching so that if we get the shopPrice on many items at once
@@ -113,36 +114,35 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
   // as well, and then we'll have the cache ready.
   if(cached_shop_nr != shop_nr){
     cached_shop_nr=shop_nr;
-    ratios.clear();
-    matches.clear();
-    
+    ratios_cache.clear();
+    matches_cache.clear();
+
     db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
 	     shop_nr);
     while(db.fetchRow())
-      ratios[convertTo<int>(db.getColumn("obj_nr"))]=convertTo<float>(db.getColumn("profit_buy"));
+      ratios_cache[convertTo<int>(db.getColumn("obj_nr"))]=convertTo<float>(db.getColumn("profit_buy"));
 
     db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
 	     shop_nr);
     while(db.fetchRow())
-      matches[db.getColumn("match")]=convertTo<float>(db.getColumn("profit_buy"));
+      matches_cache[db.getColumn("match")]=convertTo<float>(db.getColumn("profit_buy"));
   }
-
 
   if(shop_index[shop_nr].isOwned()){  
     if(cached_shop_nr==shop_nr){
-      profit_buy=ratios[objVnum()];
+      if(ratios_cache.count(objVnum()))
+	profit_buy=ratios_cache[objVnum()];
     } else {
       db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
       if(db.fetchRow())
 	profit_buy=convertTo<float>(db.getColumn(0));
     }
 
-    
     if(profit_buy==-1){
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
       if(cached_shop_nr==shop_nr){
-	for(iter=matches.begin();iter!=matches.end();++iter){
+	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
 	  if(isname((*iter).first, name)){
 	    profit_buy=(*iter).second;
 	    break;
@@ -2139,7 +2139,7 @@ void bootTheShops()
       sd.profit_sell=convertTo<float>(db.getColumn(18));
     }
 
-    if(isowned_db.getColumn(0) && (convertTo<int>(owned_db.getColumn(0)))==shop_nr){
+    if(isowned_db.getColumn(0) && (convertTo<int>(isowned_db.getColumn(0)))==shop_nr){
       sd.owned=true;
       isowned_db.fetchRow();
     } else {
@@ -2451,6 +2451,7 @@ void TSymbol::recalcShopData(int bought, int cost)
 
 shopData::shopData() :
   shop_nr(0),
+  owned(false),
   profit_buy(1.0),
   profit_sell(1.0),
   no_such_item1(NULL),
@@ -2489,6 +2490,7 @@ shopData::~shopData()
 
 shopData::shopData(const shopData &t) :
   shop_nr(t.shop_nr),
+  owned(t.owned),
   profit_buy(t.profit_buy),
   profit_sell(t.profit_sell),
   temper1(t.temper1),
@@ -2559,6 +2561,7 @@ shopData & shopData::operator =(const shopData &t)
   message_buy = mud_str_dup(t.message_buy);
   message_sell = mud_str_dup(t.message_sell);
 
+  owned = t.owned;
   temper1 = t.temper1;
   temper2 = t.temper2;
   keeper = t.keeper;

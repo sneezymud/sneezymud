@@ -23,7 +23,6 @@ const char * const SHOP_PRICING  = "shop_pricing.dat";
 
 const unsigned int SHOP_FLAG_INFINITE_MONEY      = (1<<0);
 const unsigned int SHOP_FLAG_MAT_RESTRICTED      = (1<<1);
-
 struct shop_pricing {
   int obj_vnum;
   int num_sold;
@@ -43,6 +42,10 @@ extern vector<shop_pricing>ShopPriceIndex;
 #endif
 
 extern vector<shopData>shop_index;
+extern int cached_shop_nr;
+extern map <int,float> ratios_cache;
+extern map <sstring,float> matches_cache;
+
 
 extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
 
@@ -74,7 +77,6 @@ class shopData {
     bool isOwned();
     bool willTradeWith(TMonster *keeper, TBeing *ch);
     bool willBuy(const TObj *item);
-
 
     shopData();
     ~shopData();
