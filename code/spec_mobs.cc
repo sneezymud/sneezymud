@@ -57,6 +57,7 @@
 #include "obj_trap.h"
 #include "obj_table.h"
 #include "obj_drinkcon.h"
+#include "obj_vehicle.h"
 
 #include <fstream.h>
 
@@ -7124,6 +7125,141 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 }
 
 
+int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  const int cockpit=15349;
+  const int boatnum=15345;
+  static int timer;
+  TObj *boat=NULL;
+  TRoom *boatroom=real_roomp(cockpit);
+  int *job=NULL;
+  int where=-1,i;
+  TThing *tt;
+  TVehicle *vehicle=NULL;
+
+  int path[]={-1, 15150, 
+	      2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448,
+	      2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458,
+	      2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468,
+	      2469, 2470, 2471, 2475, 12551, 12583, 12616, 12651, 12690,
+	      12733, 12770, 12803, 12831, 12857, 12886, 12911, 12935, 12958,
+	      12982, 13006, 13030, 13052, 13072, 13091, 13108, -1};
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // find the boat
+  for(boat=object_list;boat;boat=boat->next){
+    if(boat->objVnum() == boatnum)
+      break;
+  }
+  if(!boat)
+    return FALSE;
+
+  if(!(vehicle=dynamic_cast<TVehicle *>(boat))){
+    vlogf(LOG_BUG, "couldn't cast boat to vehicle!");
+    return FALSE;
+  }
+
+  // wait until we have passengers before we leave the docks
+  if(boat->in_room == 15150 && timer<=0 && vehicle->getSpeed()==0){
+    for(tt=boatroom->getStuff();tt;tt=tt->nextThing){
+      if(dynamic_cast<TPerson *>(tt))
+	break;
+    }
+    if(!tt)
+      return FALSE;
+    else
+      timer=50;
+  }
+
+  if(timer == 40){
+    myself->doEmote("begins making preparations to leave port.");
+  } else if(timer == 30){
+    myself->doSay("Crew, prepare to leave port!");
+  } else if(timer == 20){
+    myself->doSay("Passengers, we will be sailing soon.");
+    myself->doSay("Please get your luggage and companions on board.");
+  } else if(timer == 10){
+    myself->doSay("Last call for boarding, we will be departing shortly!");
+  } else if(timer == 1){
+    myself->doSay("Cast off the lines and push us away from dock!");
+  }
+
+  if((--timer)>0)
+    return FALSE;
+
+  // ok, let's sail
+
+  // first, get out action pointer, which tells us which way to go
+  // 1 = to island, -1 = to docks
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new int)) {
+     perror("failed new of fishing boat.");
+     exit(0);
+    }
+    job = static_cast<int *>(myself->act_ptr);
+    *job=1;
+  } else {
+    job = static_cast<int *>(myself->act_ptr);
+  }
+
+  for(where=1;path[where]!=-1 && boat->in_room != path[where];++where);
+
+  if(path[where]==-1){
+    vlogf(LOG_BUG, "fishing boat lost");
+    return FALSE;
+  }
+
+  if((path[where+*job])==-1){
+    myself->doDrive("stop");
+    myself->doSay("Crew, pull us in to dock and hold her steady.");
+    myself->doSay("Passengers, feel free to stick around for another sail.");
+    timer=50;
+
+    *job=-*job;
+    return TRUE;
+  }
+
+  for(i=MIN_DIR;i<MAX_DIR;++i){
+    if(boat->roomp->dir_option[i] &&
+       boat->roomp->dir_option[i]->to_room==path[where+*job]){
+      break;
+    }
+  }
+
+
+  switch(::number(0,99)){
+    case 0:
+      myself->doEmote("whistles a sea shanty.");
+      break;
+    case 1:
+      myself->doSay("Sailor, get over here and swab this deck!");
+      break;
+    case 2:
+      myself->doSay("Uh oh!  I think I see a pirate sail!");
+      myself->doAction("", CMD_CHORTLE);
+      myself->doSay("Just joking.");
+      break;
+    case 3:
+      myself->doSay("So how's the fishing today?");
+      break;
+    case 4:
+      myself->doEmote("hums a sea shanty.");
+      break;
+  }
+	
+
+  if(vehicle->getDir() != i)
+    myself->doDrive(dirs[i]);
+
+  myself->doDrive("1");
+
+  return TRUE;
+}
+
+
+
 
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7292,7 +7428,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE,"Tusker/Goring", tuskGoring},
   {FALSE,"Fish Tracker", fishTracker},
   {FALSE, "Bank Guard", bankGuard},               // 155
-  {FALSE, "BOGUS", bogus_mob_proc},
+  {FALSE, "Fishing Boat Captain", fishingBoatCaptain},
   {FALSE, "Coroner", coroner},
   {FALSE, "Faction Registrar", factionRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
