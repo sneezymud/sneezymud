@@ -17,17 +17,14 @@ void TBeing::doPlant(const char *arg)
     }
   }
   if(!found){
-    if(!*arg){
-      sendTo("You need to specify some seeds to plant.\n\r");
-    } else {
-      sendTo("You can't plant that!\n\r");
-    }
+    sendTo("You need to specify some seeds to plant.\n\r");
     return;
   }
   
   sendTo("You begin to plant some seeds.\n\r");
   start_task(this, t, NULL, TASK_PLANT, "", 2, inRoom(), 0, 0, 5);
 }
+
 
 int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {
@@ -51,7 +48,7 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
   tt=dynamic_cast<TTool *>(obj);
 
   if (ch->task->timeLeft < 0){
-    act("You finish planting your $p.",
+    act("You finish planting $p.",
 	FALSE, ch, obj, 0, TO_CHAR);
     act("$n finishes planting $p.",
 	TRUE, ch, obj, 0, TO_ROOM);
@@ -61,11 +58,17 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
     TPlant *tplant;
     tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
     if((tplant=dynamic_cast<TPlant *>(tp))){
+      tplant->setType(tt->objVnum()-13880);
       tplant->updateDesc();
     }
     
     *ch->roomp += *tp;
 
+    if (tt->getToolUses() <= 0) {
+      act("You disgard $p because it is empty.",
+	  FALSE, ch, tt, 0, TO_CHAR);
+      delete tt;
+    }
 
     return FALSE;
   }
@@ -74,31 +77,23 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
     case CMD_TASK_CONTINUE:
       ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 3);
 
-      tt->addToToolUses(-1);
-      if (tt->getToolUses() < 0) {
-        act("Oops, your $p have been used up.",
-            FALSE, ch, tt, 0, TO_CHAR);
-        act("$n looks startled as $e realizes that his $p has been used up.",
-            FALSE, ch, tt, 0, TO_ROOM);
-        ch->stopTask();
-        delete tt;
-        return FALSE;
-      }
-
       switch (ch->task->timeLeft) {
 	case 2:
-          act("You dig a little hole for $p.",
+          act("You dig a little hole for some seeds from $p.",
               FALSE, ch, obj, 0, TO_CHAR);
           act("$n digs a little hole.",
               TRUE, ch, obj, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
 	case 1:
-          act("You put $p into your hole.",
+          act("You put some seeds from $p into your hole.",
               FALSE, ch, tt, 0, TO_CHAR);
-          act("$n puts $p into the hole.",
+          act("$n puts some seeds from $p into the hole.",
               TRUE, ch, tt, 0, TO_ROOM);
           ch->task->timeLeft--;
+
+	  tt->addToToolUses(-1);
+
           break;
 	case 0:
 	  act("You cover up the hole.",

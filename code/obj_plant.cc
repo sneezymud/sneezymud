@@ -96,20 +96,32 @@ void TPlant::updateDesc()
   const char *planttypes [] =
   {
     "<r>tomato<1> <g>plant<1>",
-    "a <r>red<1> rose bush",
-    "an <r>apple<1> tree",
+    "<r>red<1> rose bush",
+    "<r>apple<1> tree",
+    "<W>white<1> rose bush",
+    "<Y>white<1> rose bush",
+    "<o>orange<1> tree",
+    "<g>money<1> tree",
   };
   const char *planttypeskeywords [] =
   {
     "tomato",
-    "rose bush",
+    "red rose bush",
     "apple tree",
+    "white rose bush",
+    "yellow rose bush",
+    "orange tree",
+    "money tree",
   };
   int plantfruits [] =
   {
     14348,
     28917,
     8936,
+    28918,
+    28919,
+    432,
+    13,
   };
 
   if (isObjStat(ITEM_STRUNG)) {
@@ -132,7 +144,7 @@ void TPlant::updateDesc()
   }
 
   if(plantindex>=2){
-    sprintf(buf, plantkeywords[plantindex]);
+    sprintf(buf, plantkeywords[plantindex], planttypeskeywords[getType()]);
     delete [] name;
     name = mud_str_dup(buf);
 
@@ -142,7 +154,7 @@ void TPlant::updateDesc()
     sprintf(buf, plantdesc[plantindex], planttypes[getType()]);
     setDescr(mud_str_dup(buf));
   } else {
-    sprintf(buf, plantkeywords[plantindex], planttypeskeywords[getAge()]);
+    sprintf(buf, plantkeywords[plantindex]);
     delete [] name;
     name = mud_str_dup(buf);
 
