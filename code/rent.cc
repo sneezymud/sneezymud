@@ -1440,7 +1440,7 @@ void TMonster::saveItems(const sstring &filepath)
   ItemSave is;
 
   if (!is.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TMonster::saveItems() call.") % filepath);
     return;
   }
 
@@ -1519,7 +1519,7 @@ void TRoom::loadItems()
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
   if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TRoom::loadItems() call.") % filepath);
     return;
   }
   
@@ -1949,7 +1949,7 @@ void TBeing::assignCorpsesToRooms()
 
 
   if(!il.openFile(buf)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % buf);
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in assignCorpsesToRooms() call.") % buf);
     return;
   }
 
@@ -2048,7 +2048,7 @@ void TPCorpse::saveCorpseToFile()
   sprintf(buf, "corpses/%s", fileName.c_str());
 
   if(!is.openFile(buf)){
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % buf);
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveCorpseToFile() call.") % buf);
     onlyCorpse = TRUE; 
   }
 
@@ -2180,7 +2180,7 @@ void TMonster::loadItems(const sstring &filepath)
   ItemLoad il;
 
   if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TMonster::loadItems() call.") % filepath);
     return;
   }
 
