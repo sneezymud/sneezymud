@@ -14,7 +14,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   char time_buf[160];
   char buffer[256];
   char buf3[12], buf4[12];
-  string str;
+  sstring str;
 
   realTimePassed((time(0) - d->session.connect),0, &playing_time);
   if (playing_time.day)

@@ -262,7 +262,7 @@ bool hasSpellOnIt(TMagicItem * tObj, spellNumT tSpell)
   return false;
 }
 
-void TBeing::doLoot(const string & tStString)
+void TBeing::doLoot(const sstring & tStString)
 {
   if (!desc || !isImmortal())
     return;
@@ -272,7 +272,7 @@ void TBeing::doLoot(const string & tStString)
     return;
   }
 
-  string tStOutput(""),
+  sstring tStOutput(""),
          tStBuffer(""),
          tStArg(tStString),
          tStCommand(""),

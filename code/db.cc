@@ -122,7 +122,7 @@ FILE *obj_f = NULL;        // obj prototypes
 
 vector<TRoom *>roomspec_db(0);
 
-struct cached_object { int number; string s[17]; };
+struct cached_object { int number; sstring s[17]; };
 vector<cached_object *>obj_cache(0);
 
 
@@ -152,8 +152,8 @@ void bootPulse(const char *str, bool end_str)
   */
 
   Descriptor *d;
-  string sc;
-  static string tLastRealMessage("");
+  sstring sc;
+  static sstring tLastRealMessage("");
   bool tLRMN = false;
 
   if (str) {
@@ -2305,8 +2305,8 @@ void zoneData::resetZone(bool bootTime)
   this->age = 0;
 }
 
-// echos a string to every room in the zone except exclude_room
-void zoneData::sendTo(string s, int exclude_room=-1)
+// echos a sstring to every room in the zone except exclude_room
+void zoneData::sendTo(sstring s, int exclude_room=-1)
 {
   TBeing *tmp_victim, *temp;
   
@@ -2344,10 +2344,10 @@ void readStringNoAlloc(FILE *fp)
   *buf = 0;
   ptr = buf;
   while(fgets(ptr, MAX_STRING_LENGTH, fp)) {
-    //  Check if we've hit the end of string marker. 
+    //  Check if we've hit the end of sstring marker. 
     if ((marker=strchr(ptr, '~')) != 0) 
       break;
-    //  Set the pointer to the end of the string. NOTE: This is better then
+    //  Set the pointer to the end of the sstring. NOTE: This is better then
     // the strlen because we're not starting at the beggining every time. 
     if ((ptr = strchr(ptr, '\000')) == 0) {
       vlogf(LOG_FILE, "fread_string(): read error.");
@@ -2359,7 +2359,7 @@ void readStringNoAlloc(FILE *fp)
   *marker = 0;   // Nuke the ~ 
 }
 
-// read and allocate space for a '~'-terminated string from a given file 
+// read and allocate space for a '~'-terminated sstring from a given file 
 char *fread_string(FILE *fp)
 {
   char buf[MAX_STRING_LENGTH], *ptr, *marker = NULL;
@@ -2368,11 +2368,11 @@ char *fread_string(FILE *fp)
   ptr = buf;
   unsigned int read_len = MAX_STRING_LENGTH;
   while(fgets(ptr, read_len, fp)) {
-    //  Check if we've hit the end of string marker. 
+    //  Check if we've hit the end of sstring marker. 
     if((marker=strchr(ptr, '~')) != 0) {
       break;
     }  
-    //  Set the pointer to the end of the string. NOTE: This is better then the
+    //  Set the pointer to the end of the sstring. NOTE: This is better then the
     // strlen because we're not starting at the beggining every time. 
     if((ptr = strchr(ptr, '\000')) == 0) {
       vlogf(LOG_FILE, "fread_string(): read error. ack!");
@@ -2401,7 +2401,7 @@ char *fread_string(FILE *fp)
 }
 
 // read contents of a text file, and place in buf 
-bool file_to_string(const char *name, string &buf, concatT concat)
+bool file_to_sstring(const char *name, sstring &buf, concatT concat)
 {
   FILE *fl;
   char tmp[256];

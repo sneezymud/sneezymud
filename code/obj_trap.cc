@@ -329,7 +329,7 @@ void TTrap::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getTrapCharges();
 }
 
-string TTrap::statObjInfo() const
+sstring TTrap::statObjInfo() const
 {
   char buf[256];
 
@@ -341,7 +341,7 @@ string TTrap::statObjInfo() const
   sprintf(buf + strlen(buf), "Trap effect type: ");
            sprintbit(getTrapEffectType(), trap_effects, buf + strlen(buf));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

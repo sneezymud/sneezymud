@@ -12,7 +12,7 @@ extern "C" {
 #include "obj_drinkcon.h"
 
 #if 0
-static const string ClassTitles(const TBeing *ch)
+static const sstring ClassTitles(const TBeing *ch)
 {
   int count = 0;
   classIndT i;
@@ -770,7 +770,7 @@ void TPerson::setTitle(bool tForm)
 {
   char   tString[256] = "\0",
          tBuffer[256] = "\0";
-  string tStString((title ? title : "ERROR OCCURED"));
+  sstring tStString((title ? title : "ERROR OCCURED"));
 
   if (tForm) {
     sprintf(tString, "<n> the %s level %s",
@@ -780,7 +780,7 @@ void TPerson::setTitle(bool tForm)
     sprintf(tString, "%s", numberAsString(GetMaxLevel() - 1).c_str());
     sprintf(tBuffer, "%s", numberAsString(GetMaxLevel()).c_str());
 
-    while (tStString.find(tString) != string::npos)
+    while (tStString.find(tString) != sstring::npos)
       tStString.replace(tStString.find(tString), strlen(tString), tBuffer);
 
     strcpy(tString, tStString.c_str());

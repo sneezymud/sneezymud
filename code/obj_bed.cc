@@ -519,7 +519,7 @@ void TBed::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getRegen();
 }
 
-string TBed::statObjInfo() const
+sstring TBed::statObjInfo() const
 {
   char buf[256];
 
@@ -531,7 +531,7 @@ string TBed::statObjInfo() const
   sprintf(buf + strlen(buf), "Max Designed Size: %d inches, Seat height: %d inches\n\rExtra Regen: %d%%",
       getMaxSize(), getSeatHeight(), getRegen());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

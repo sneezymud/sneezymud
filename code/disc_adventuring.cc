@@ -91,12 +91,12 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   }
 }
 
-void TBeing::doBandage(const string &arg)
+void TBeing::doBandage(const sstring &arg)
 {
   TBeing *vict;
   wearSlotT slot;
   int band_num, count;
-  string buf, buf2;
+  sstring buf, buf2;
 
   argument_parser(arg, buf, buf2);
 

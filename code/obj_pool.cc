@@ -211,7 +211,7 @@ void TPool::decayMe()
 
 void TPool::initPool(int amt, liqTypeT liq)
 {
-  string buf;
+  sstring buf;
 
   swapToStrung();
   remObjStat(ITEM_TAKE);

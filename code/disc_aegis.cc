@@ -10,7 +10,7 @@ void relive(TBeing *ch, TBeing *vict)
 
   TThing *t;
   TPCorpse *corpse=NULL;
-  string s;
+  sstring s;
   TObj *o;
 
   if (!bPassClericChecks(ch,SPELL_RELIVE))

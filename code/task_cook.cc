@@ -70,7 +70,7 @@ TCookware *find_pot(TBeing *ch, const char *cookware){
   return pot;
 }
 
-int find_recipe(string recipearg){
+int find_recipe(sstring recipearg){
   int recipe=-1;
 
   // find which recipe
@@ -82,11 +82,11 @@ int find_recipe(string recipearg){
   return recipe;
 }
 
-void TBeing::doCook(string arg)
+void TBeing::doCook(sstring arg)
 {
   int recipe=-1;
   TCookware *pot=NULL;
-  string cookware, recipearg, tmparg=arg;
+  sstring cookware, recipearg, tmparg=arg;
 
   tmparg=one_argument(tmparg, cookware);
   tmparg=one_argument(tmparg, recipearg);

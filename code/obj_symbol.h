@@ -18,7 +18,7 @@ class TSymbol : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_HOLY_SYM; }
 
     virtual int chiMe(TBeing *);
@@ -42,10 +42,10 @@ class TSymbol : public TObj {
     virtual void objMenu(const TBeing *) const;
     double getSymbolLevel() const;
     virtual double objLevel() const;
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void evaluateMe(TBeing *) const;
-    virtual string compareMeAgainst(TBeing *, TObj *);
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
 
     int getSymbolCurStrength() const;
     void setSymbolCurStrength(int r);

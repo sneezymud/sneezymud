@@ -71,31 +71,31 @@ CDPsionics::~CDPsionics()
 // unfortunately, turning off red (<z>) makes everything go back to
 // normal, and we lose the 'normal' color.
 // To get around this, we parse the say statement, and convert any <z>, <Z>,
-// or <1> to a 'replacement' color string and then send it out.
+// or <1> to a 'replacement' color sstring and then send it out.
 // unfortunately, we also need to "unbold", so we need to send both the
 // normal <z> as well as the replacement
-static void convertStringColor(const string replacement, string & str)
+static void convertStringColor(const sstring replacement, sstring & str)
 {
   // we use <tmpi> to represent a dummy placeholder which we convert to
   // <z> at the end
-  string repl = "<tmpi>";
+  sstring repl = "<tmpi>";
   repl += replacement;
  
-  while (str.find("<z>") != string::npos)  
+  while (str.find("<z>") != sstring::npos)  
     str.replace(str.find("<z>"), 3, repl);
 
-  while (str.find("<Z>") != string::npos)  
+  while (str.find("<Z>") != sstring::npos)  
     str.replace(str.find("<Z>"), 3, repl);
 
-  while (str.find("<1>") != string::npos)  
+  while (str.find("<1>") != sstring::npos)  
     str.replace(str.find("<1>"), 3, repl);
 
-  while (str.find("<tmpi>") != string::npos)  
+  while (str.find("<tmpi>") != sstring::npos)  
     str.replace(str.find("<tmpi>"), 6, "<z>");
 }
 
 // Make drunk people garble their words!
-static string garble(const char *arg, int chance)
+static sstring garble(const char *arg, int chance)
 {
   char *tmp;
   char temp[256];
@@ -109,7 +109,7 @@ static string garble(const char *arg, int chance)
     return arg;
 
   for (;!isalpha(*arg); arg++);
-// get rid of bad things at the beginning of string
+// get rid of bad things at the beginning of sstring
 
   // first, lets turn things into pig latin
   *temp = '\0';
@@ -232,7 +232,7 @@ int TBeing::doPTell(const char *arg, bool visible){
   else 
     drunkNum = getCond(DRUNK);
 
-  string garbed;
+  sstring garbed;
   garbed = garble(message, drunkNum);
 
   rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
@@ -266,7 +266,7 @@ int TBeing::doPTell(const char *arg, bool visible){
 
   sendTo(COLOR_COMM, "<G>You telepath %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
 
-  // we only color the string to the victim, so leave this AFTER
+  // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
   convertStringColor("<c>", garbed);
   vict->sendTo(COLOR_COMM, "%s telepaths you, \"<c>%s<z>\"\n\r",

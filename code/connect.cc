@@ -359,7 +359,7 @@ bool Descriptor::checkForMultiplay()
           char *tmstr = asctime(lt);
           *(tmstr + strlen(tmstr) - 1) = '\0';
 
-          string tmpstr;
+          sstring tmpstr;
           tmpstr = "***** Auto-Comment on ";
           tmpstr += tmstr;
           tmpstr += ":\nPlayer ";
@@ -370,7 +370,7 @@ bool Descriptor::checkForMultiplay()
           tmpstr += d->account->name;
           tmpstr += "'.\n";
 
-          string cmd_buf;
+          sstring cmd_buf;
           cmd_buf = "account/";
           cmd_buf += LOWER(account->name[0]);
           cmd_buf += "/";
@@ -526,7 +526,7 @@ Descriptor::~Descriptor()
   if (socket->m_sock == maxdesc) 
     --maxdesc;
 
-  // clear up any editing strings
+  // clear up any editing sstrings
   cleanUpStr();
 
   // Forget snoopers
@@ -948,7 +948,7 @@ int Descriptor::nanny(const char *arg)
   bool found, go2next = FALSE;
   int free_stat;
   TRoom *rp;
-  string str;
+  sstring str;
   TDatabase db("sneezy");
 
   switch (connected) {
@@ -1040,10 +1040,10 @@ int Descriptor::nanny(const char *arg)
             break;
           case '?':
             character->cls();
-            file_to_string(RACEHELP, str);
+            file_to_sstring(RACEHELP, str);
             character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
             page_string(str, SHOWNOW_YES);
@@ -1098,10 +1098,10 @@ int Descriptor::nanny(const char *arg)
       character->name = new char[strlen(tmp_name) + 1];
       strcpy(character->name, cap(tmp_name));
       character->cls();
-      file_to_string("objdata/books/1458.28", str);
+      file_to_sstring("objdata/books/1458.28", str);
       str += "\n\r[Press Return to continue]\n\r";
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
@@ -1111,10 +1111,10 @@ int Descriptor::nanny(const char *arg)
     case CON_DISCLAIMER:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
       character->cls();
-      file_to_string("objdata/books/1458.29", str);
+      file_to_sstring("objdata/books/1458.29", str);
       str += "\n\r[Press Return to continue]\n\r";
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
@@ -1124,11 +1124,11 @@ int Descriptor::nanny(const char *arg)
     case CON_DISCLAIMER2:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
       character->cls();
-      file_to_string("objdata/books/1458.30", str);
+      file_to_sstring("objdata/books/1458.30", str);
       str += "\n\r[Press Return to continue]\n\r";
       character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
       writeToQ(str.c_str());
@@ -1562,10 +1562,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_HUMAN_HELP, str);
+          file_to_sstring(TER_HUMAN_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1631,10 +1631,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_ELF_HELP, str);
+          file_to_sstring(TER_ELF_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1690,10 +1690,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_DWARF_HELP, str);
+          file_to_sstring(TER_DWARF_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1744,10 +1744,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_GNOME_HELP, str);
+          file_to_sstring(TER_GNOME_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1793,10 +1793,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_OGRE_HELP, str);
+          file_to_sstring(TER_OGRE_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1857,10 +1857,10 @@ int Descriptor::nanny(const char *arg)
         case 'H':
         case '?':
           character->cls();
-          file_to_string(TER_HOBBIT_HELP, str);
+          file_to_sstring(TER_HOBBIT_HELP, str);
           character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
@@ -1994,10 +1994,10 @@ int Descriptor::nanny(const char *arg)
             break;
           case '?':
             character->cls();
-            file_to_string(CLASSHELP, str);
+            file_to_sstring(CLASSHELP, str);
             character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
             page_string(str, SHOWNOW_YES);
@@ -2170,10 +2170,10 @@ int Descriptor::nanny(const char *arg)
         return DELETE_THIS;
       } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
         character->cls();
-        file_to_string(STATHELP, str);
+        file_to_sstring(STATHELP, str);
         character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
@@ -2261,10 +2261,10 @@ int Descriptor::nanny(const char *arg)
         return DELETE_THIS;
       } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
         character->cls();
-        file_to_string(STATHELP, str);
+        file_to_sstring(STATHELP, str);
         character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
@@ -2354,10 +2354,10 @@ int Descriptor::nanny(const char *arg)
         return DELETE_THIS;
       } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
         character->cls();
-        file_to_string(STATHELP, str);
+        file_to_sstring(STATHELP, str);
         character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
@@ -2451,10 +2451,10 @@ int Descriptor::nanny(const char *arg)
         return DELETE_THIS;
       } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
         character->cls();
-        file_to_string(STATHELP, str);
+        file_to_sstring(STATHELP, str);
         character->fullscreen();
 
-      // swap color strings
+      // swap color sstrings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
@@ -3709,7 +3709,7 @@ bool Descriptor::page_file(const char *the_input)
 // allow will permit the string to parse for %n in the colorstring
 // the chief problem with this is you can make a board message look like the
 // reader's name is in it.  (it is default TRUE)
-void Descriptor::page_string(const string &strs, showNowT shownow, allowReplaceT allowRep)
+void Descriptor::page_string(const sstring &strs, showNowT shownow, allowReplaceT allowRep)
 {
   delete [] showstr_head;
   showstr_head = mud_str_dup(strs);
@@ -4093,7 +4093,7 @@ char *Descriptor::badRaceMessage(int race)
 }
 #endif
 
-const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
+const sstring Descriptor::badClassMessage(int Class, bool multi, bool triple)
 {
   TBeing *ch;
   char buf[512];
@@ -4136,7 +4136,7 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
   return (buf);
 }
 
-void Descriptor::string_add(char *s)
+void Descriptor::sstring_add(char *s)
 {
   char *scan;
   int terminator = 0, t2 = 0;
@@ -4163,14 +4163,14 @@ void Descriptor::string_add(char *s)
         break;
       if (!*str) {
         *str = new char[iter + 3];
-        mud_assert(*str != NULL, "string_add(): Bad string memory");
+        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
         strncpy(*str, s, iter);
         (*str)[iter] = '\0';
         strcat(*str, "\n\r");
       } else {
         char *t = *str;
         *str = new char[strlen(t) + iter + 3];
-        mud_assert(*str != NULL, "string_add(): Bad string memory");
+        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
         strcpy(*str, t);
         strncat(*str, s, iter);
         (*str)[strlen(t) + iter] = '\0';
@@ -4182,7 +4182,7 @@ void Descriptor::string_add(char *s)
       char *t = s;
       for (;iter < (int) strlen(s) && isspace(s[iter]); iter++);
       s = mud_str_dup(&s[iter]);
-      mud_assert(s != NULL, "string_add(): Bad string memory");
+      mud_assert(s != NULL, "sstring_add(): Bad sstring memory");
       if (loop > 1)
         delete [] t;
     }
@@ -4193,7 +4193,7 @@ void Descriptor::string_add(char *s)
     } else {
       char *t = *str;
       *str = new char[strlen(t) + strlen(s) + 3];
-      mud_assert(*str != NULL, "string_add(): Bad string memory");
+      mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
       strcpy(*str, t);
       strcat(*str, s);
       delete [] t;
@@ -4241,7 +4241,7 @@ void Descriptor::string_add(char *s)
             // bugs, ideas, typos in here
             *str = new char[strlen(t) + strlen(s) + strlen("Subject: ") + 3 +
                     strlen(name) + 3];
-            mud_assert(*str != NULL, "string_add(): Bad string memory");
+            mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
             strcpy(*str, t);
             strcat(*str, "Subject: [");
             strcat(*str, name);
@@ -4250,7 +4250,7 @@ void Descriptor::string_add(char *s)
           } else {
             // comments in here
             *str = new char[strlen(t) + strlen(s) + 3];
-            mud_assert(*str != NULL, "string_add(): Bad string memory");
+            mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
             strcpy(*str, t);
             strcat(*str, s);
           }
@@ -4259,7 +4259,7 @@ void Descriptor::string_add(char *s)
           // body of idea
           char *t = *str;
           *str = new char[strlen(t) + strlen(s) + 3];
-          mud_assert(*str != NULL, "string_add(): Bad string memory");
+          mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
           strcpy(*str, t);
           strcat(*str, s);
           if (!m_bIsClient)
@@ -4270,7 +4270,7 @@ void Descriptor::string_add(char *s)
 #if 0
         char *t = *str;
         *str = new char[strlen(t) + strlen(s) + 3];
-        mud_assert(*str != NULL, "string_add(): Bad string memory");
+        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
         strcpy(*str, t);
         strcat(*str, s);
         delete [] t;
@@ -4287,7 +4287,7 @@ void Descriptor::string_add(char *s)
           loop++;
           char *t = *str;
           *str = new char[strlen(t) + iter + 3];
-          mud_assert(*str != NULL, "string_add(): Bad string memory");
+          mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
           strcpy(*str, t);
           strncat(*str, s, iter);
           (*str)[strlen(t) + iter] = '\0';
@@ -4299,7 +4299,7 @@ void Descriptor::string_add(char *s)
           for (;iter < (int) strlen(s) && isspace(s[iter]); iter++);
           if (iter < (int) strlen(s)) {
             s = mud_str_dup(&s[iter]);
-            mud_assert(s != NULL, "string_add(): Bad string memory");
+            mud_assert(s != NULL, "sstring_add(): Bad sstring memory");
             if (loop > 1)
               delete [] t;
           } else {
@@ -4312,7 +4312,7 @@ void Descriptor::string_add(char *s)
 
         char *t = *str;
         *str = new char[strlen(t) + strlen(s) + 3];
-        mud_assert(*str != NULL, "string_add(): Bad string memory");
+        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
         strcpy(*str, t);
         strcat(*str, s);
         delete [] t;
@@ -4347,7 +4347,7 @@ void Descriptor::string_add(char *s)
         for (;*t && isspace(*t); t++);
 
         if (!*t) 
-          writeToQ("Blank string entered.  Ignoring!\n\r");
+          writeToQ("Blank sstring entered.  Ignoring!\n\r");
         else {
           if (!strcmp(name, "Comment"))
             add_comment(delname, t);
@@ -4380,9 +4380,9 @@ void Descriptor::string_add(char *s)
     }
     if (connected == CON_WRITING) {
       connected = CON_PLYNG;
-      // do not delete the string, it has been aplied to the mob/obj/room
+      // do not delete the sstring, it has been aplied to the mob/obj/room
     }
-    // set the string to NULL to insure we don't fall into string_add again
+    // set the sstring to NULL to insure we don't fall into sstring_add again
     str = NULL;
 
     if (m_bIsClient)
@@ -4786,7 +4786,7 @@ void processAllInput()
       if (d->prompt_mode != DONT_SEND)
         d->prompt_mode = 1;
 
-      if (is_client_string(comm)) {
+      if (is_client_sstring(comm)) {
         rc = d->read_client(comm);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete d;
@@ -4799,7 +4799,7 @@ void processAllInput()
           continue;
         }
       } else if (d->str) 
-        d->string_add(comm);
+        d->sstring_add(comm);
       else if (d->pagedfile) 
         d->page_file(comm);
       else if (!d->account) {            // NO ACCOUNT
@@ -4949,9 +4949,9 @@ int Descriptor::sendLogin(const char *arg)
 
         if ((signFile = fopen(SIGN_MESS, "r"))) {
           fclose(signFile);
-          string iostring;
-          file_to_string(SIGN_MESS, iostring);
-          page_string(iostring, SHOWNOW_YES);
+          sstring iosstring;
+          file_to_sstring(SIGN_MESS, iosstring);
+          page_string(iosstring, SHOWNOW_YES);
         }
       }
       writeToQ("Wiz-Lock password: ");
@@ -5052,13 +5052,13 @@ int Descriptor::doAccountStuff(char *arg)
   char tmp_name[256];
   char buf[256];
   int count = 0;
-  string lStr;
+  sstring lStr;
   struct stat timestat;
   int rc;
   int tss = screen_size;
   TBeing *ch;
   TTrophy *trophy;
-  string from;
+  sstring from;
   TDatabase db("sneezy");
 
   // apparently, crypt() has a mem leak in the lib function
@@ -5277,18 +5277,18 @@ int Descriptor::doAccountStuff(char *arg)
           ifstream op(SIGN_MESS, ios::in | ios::nocreate);
           if (op) {
             op.close();
-            string iostring;
-            file_to_string(SIGN_MESS, iostring);
-            page_string(iostring, SHOWNOW_YES);
+            sstring iosstring;
+            file_to_sstring(SIGN_MESS, iosstring);
+            page_string(iosstring, SHOWNOW_YES);
           }
 #else
           FILE *signFile;
 
           if ((signFile = fopen(SIGN_MESS, "r"))) {
             fclose(signFile);
-            string iostring;
-            file_to_string(SIGN_MESS, iostring);
-            page_string(iostring, SHOWNOW_YES);
+            sstring iosstring;
+            file_to_sstring(SIGN_MESS, iosstring);
+            page_string(iosstring, SHOWNOW_YES);
           }
 #endif
         }
@@ -5305,8 +5305,8 @@ int Descriptor::doAccountStuff(char *arg)
           ifstream opp(SIGN_MESS, ios::in | ios::nocreate);
           if (opp) {
             opp.close();
-            string iosstring;
-            file_to_string(SIGN_MESS, iosstring);
+            sstring iosstring;
+            file_to_sstring(SIGN_MESS, iosstring);
             page_string(iosstring, SHOWNOW_YES);
           }
 #else
@@ -5314,9 +5314,9 @@ int Descriptor::doAccountStuff(char *arg)
 
           if ((signFile = fopen(SIGN_MESS, "r"))) {
             fclose(signFile);
-            string iostring;
-            file_to_string(SIGN_MESS, iostring);
-            page_string(iostring, SHOWNOW_YES);
+            sstring iosstring;
+            file_to_sstring(SIGN_MESS, iosstring);
+            page_string(iosstring, SHOWNOW_YES);
           }
 #endif
         }
@@ -5631,7 +5631,7 @@ int Descriptor::doAccountStuff(char *arg)
 // returns DELETE_THIS
 int Descriptor::doAccountMenu(const char *arg)
 {
-  string lStr;
+  sstring lStr;
   int count = 1;
   int tss = screen_size;
 
@@ -5728,8 +5728,8 @@ int Descriptor::doAccountMenu(const char *arg)
             start_page_file(ANSI_MENU_2, "");
           else {
 //            start_page_file(ANSI_MENU_3, "");
-            string fileBuf;
-            if (file_to_string(ANSI_MENU_3, fileBuf)) {
+            sstring fileBuf;
+            if (file_to_sstring(ANSI_MENU_3, fileBuf)) {
                fileBuf += "\n\r";
                page_string(fileBuf);
             }
@@ -5961,21 +5961,21 @@ void Descriptor::sendMotd(int wiz)
 {
   char wizmotd[MAX_STRING_LENGTH] = "\0\0\0";
   char motd[MAX_STRING_LENGTH] = "\0\0\0";
-  string version;
+  sstring version;
   struct stat timestat;
 
-  file_to_string("txt/version", version);
+  file_to_sstring("txt/version", version);
   // file_to_str adds \n\r, strip both off
   size_t iter = version.find_last_not_of(" \n\r");
-  if (iter != string::npos)
+  if (iter != sstring::npos)
     version.erase(iter+1);
 
   strcpy(motd, "/****************************************************************************/\n\r");
   sprintf(motd + strlen(motd), "     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
   sprintf(motd + strlen(motd), "     Running on a dual processor Linux machine at Stanford University.\n\r\n\r");
 
-  file_to_string(MOTD_FILE, version);
-  // swap color strings
+  file_to_sstring(MOTD_FILE, version);
+  // swap color sstrings
   version = colorString(character, this, version.c_str(), NULL, COLOR_BASIC,  false);
   strcat(motd, version.c_str());
 
@@ -5987,8 +5987,8 @@ void Descriptor::sendMotd(int wiz)
   sprintf(motd + strlen(motd), "\n\rREAD the NEWS LAST UPDATED       : %s\n\r",
                                 ctime(&(timestat.st_mtime)));
   if (wiz) {
-    file_to_string(WIZMOTD_FILE, version);
-    // swap color strings
+    file_to_sstring(WIZMOTD_FILE, version);
+    // swap color sstrings
     version = colorString(character, this, version.c_str(), NULL, COLOR_BASIC,  false);
     strcat(motd, version.c_str());
     if (stat(WIZNEWS_FILE, &timestat)) {
@@ -6007,7 +6007,7 @@ void Descriptor::sendMotd(int wiz)
    
     return;
   } else {
-    string sb;
+    sstring sb;
     if (!wiz) {
       sb = motd;
     } else {

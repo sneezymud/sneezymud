@@ -19,14 +19,14 @@ class TTool : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_TOOL; }
 
     virtual int objectSell(TBeing *, TMonster *);
     virtual void sharpenMeStone(TBeing *, TThing *);
     virtual void dullMeFile(TBeing *, TThing *);
     virtual int garotteMe(TBeing *, TBeing *);
-    virtual void stringMeString(TBeing *, TBow *);
+    virtual void sstringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);
     virtual void butcherMe(TBeing *, const char *);
     virtual void sacrificeMe(TBeing *, const char *);

@@ -20,7 +20,7 @@ class TTrap : public TObj {
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual itemTypeT itemType() const { return ITEM_TRAP; }
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
 
     virtual void changeObjValue2(TBeing *);
     virtual void changeObjValue3(TBeing *);

@@ -40,7 +40,7 @@ class TBoard : public TObj {
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual itemTypeT itemType() const { return ITEM_BOARD; }
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
 
     virtual void purgeMe(TBeing *);
     virtual int boardHandler(TBeing *, cmdTypeT, const char *);

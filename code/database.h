@@ -35,20 +35,20 @@
 //
 // Documentation:
 //
-// TDatabase(string) - The initializer takes the name of the database you 
+// TDatabase(sstring) - The initializer takes the name of the database you 
 // want to use as an argument.  Allowable databases are "sneezy" and 
 // "immortal".
 // Returns: TDatabase (initializer)
 // Ex: TDatabase db("sneezy");
 //
-// bool setDB(string) - This function sets the database that the instance 
+// bool setDB(sstring) - This function sets the database that the instance 
 // will use, and is generally called from the constructor rather than directly.
 // Allowable databases are "sneezy" and "immortal".  
 // Returns: nothing (void)
 // Ex: db.setDB("immortal");
 //
 // bool query(const char*,...) - This function sends a query to the database.
-// It takes a printf style format string as the arguments.  The allowed
+// It takes a printf style format sstring as the arguments.  The allowed
 // specifiers are %s (char *), %i (int), %f (double) and %% (to print a %).
 // The arguments that are passed are escaped for the query.  If the query
 // does not expect results (insert, update, delete, etc) then the results are
@@ -76,14 +76,14 @@
 // db.query("select vnum, short_desc from obj");
 // db.fetchRow();
 // vnum=atoi(db.getColumn(0));
-// string short_desc = db.getColumn(1);
+// sstring short_desc = db.getColumn(1);
 //
-// char *getColumn(string) - works as getColumn(int) above, but you specify
+// char *getColumn(sstring) - works as getColumn(int) above, but you specify
 // the desired column by name rather than number.
 // Ex:
 // db.query("select vnum, short_desc from obj");
 // db.fetchRow();
-// string short_desc = db.getColumn("short_desc");
+// sstring short_desc = db.getColumn("short_desc");
 //
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
@@ -95,15 +95,15 @@ class TDatabase
   PGconn *db;
   
  public:
-  void setDB(string);
+  void setDB(sstring);
   bool query(const char *,...);
   bool fetchRow();
   char *getColumn(int);
-  char *getColumn(string);
+  char *getColumn(sstring);
   bool isResults();
 
   TDatabase();
-  TDatabase(string);
+  TDatabase(sstring);
   ~TDatabase();
 };
 

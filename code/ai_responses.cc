@@ -48,7 +48,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
   TRoom *tRoom;
   dirTypeT dir=DIR_NONE;
   RespMemory *tMem, *rMem, *lMem;
-  string tStObj(""),
+  sstring tStObj(""),
          tStSucker(""),
          tStArgument(arg);
 
@@ -552,7 +552,7 @@ int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const char *tSaid, 
 //     NOTE, strip "this" of the item first
 int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char *said, cmdTypeT trig_cmd)
 {
-  string parsedArgs;
+  sstring parsedArgs;
   resp *respo;
   int found = FALSE;
   int rc;
@@ -562,7 +562,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
   int arg_int;
   int    storedCash = 0;
   bool   beenPassed = false;
-  string tStString(""),
+  sstring tStString(""),
          tStBuffer(""),
          tStArg("");
   char   tString[256];
@@ -1009,7 +1009,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
 //	parseResponse():	Replace the format chars with there
 //				values.
 //
-string TMonster::parseResponse( TBeing *speaker, const char *string)
+sstring TMonster::parseResponse( TBeing *speaker, const char *sstring)
 {
   char respBuf[256];
   char		*ptr=respBuf;
@@ -1017,15 +1017,15 @@ string TMonster::parseResponse( TBeing *speaker, const char *string)
 
   *respBuf = 0;
 
-  if (!string)
+  if (!sstring)
     return respBuf;
 
-  for( i=0; string[i]; ++i) {
+  for( i=0; sstring[i]; ++i) {
     //  Check for the format char.
-    if( string[i] == '%') {
+    if( sstring[i] == '%') {
       //  Switch on the type of format char.
       //    %n - Name of person who said something.
-      switch( string[++i]) {
+      switch( sstring[++i]) {
         case 'n':
           sprintf( ptr, "%s", pers(speaker));
           ptr = strchr( ptr, 0);
@@ -1033,7 +1033,7 @@ string TMonster::parseResponse( TBeing *speaker, const char *string)
       }
     //  Normal char.
     } else {
-      *ptr++ = string[i];
+      *ptr++ = sstring[i];
     }
   }
   *ptr = 0;
@@ -1074,18 +1074,18 @@ int readToChar( FILE *fp, char *buf, char chr)
   return 0;
 }
 
-void cleanString(char *string)
+void cleanString(char *sstring)
 {
-  char *ptr = string;
+  char *ptr = sstring;
   int i;
 
-  if (string) {
-    for (i = 0; string[i]; ++i) {
-      if (string[i] != '"')
-        *ptr++ = string[i];
+  if (sstring) {
+    for (i = 0; sstring[i]; ++i) {
+      if (sstring[i] != '"')
+        *ptr++ = sstring[i];
       /*
       else {
-        if (string[i+1] && string[i+1] == '"') {
+        if (sstring[i+1] && sstring[i+1] == '"') {
           *ptr++ = '"';
           i++;
         }
@@ -1096,18 +1096,18 @@ void cleanString(char *string)
   }
 }
 		
-// takes the buf passed, and looks for certain substrings
+// takes the buf passed, and looks for certain subsstrings
 // which will be replaced
-// an implicit assumption is that the replacement substring will
+// an implicit assumption is that the replacement subsstring will
 // fit ok back into buf
-static void stringTranslate(char *buf)
+static void sstringTranslate(char *buf)
 {
   char * start_pt;
 
   while ((start_pt = strstr(buf, "#OBJCOST("))) {
     char * end_pt = strstr(start_pt, ")#");
     if (!end_pt) {
-      vlogf(LOG_LOW, "stringTranslate(): no terminator found");
+      vlogf(LOG_LOW, "sstringTranslate(): no terminator found");
       return;
     }
     end_pt += strlen(")#");
@@ -1121,12 +1121,12 @@ static void stringTranslate(char *buf)
     int obj_num, markup;
     int rc = sscanf(tmp, "#OBJCOST( %d, %d)#", &obj_num, &markup);
     if (rc != 2) {
-      vlogf(LOG_LOW, "stringTranslate(): failed parse OBJCOST (%d)", rc);
+      vlogf(LOG_LOW, "sstringTranslate(): failed parse OBJCOST (%d)", rc);
       return;
     }
     int robj = real_object(obj_num);
     if (robj < 0) {
-      vlogf(LOG_LOW, "stringTranslate(): bad vnum (%d)", obj_num);
+      vlogf(LOG_LOW, "sstringTranslate(): bad vnum (%d)", obj_num);
       return;
     }
 
@@ -1180,17 +1180,17 @@ resp * TMonster::readCommand( FILE *fp)
   }
 
   //  If it's a say command we need to get what to look for.
-  // all commands will have some sort of argment string
+  // all commands will have some sort of argment sstring
   readToChar(fp, buf, ';');
   cleanString(buf);
 
-  // this parses trigger arguments for special strings, etc
-  stringTranslate(buf);
+  // this parses trigger arguments for special sstrings, etc
+  sstringTranslate(buf);
 
-  //  Convert the command string into an int and allocate space for the 
+  //  Convert the command sstring into an int and allocate space for the 
   //  resp structure.
 
-  // convert cmdStr string into the actual command
+  // convert cmdStr sstring into the actual command
   cmdTypeT cmd;
   if (!strcasecmp(cmdStr, "roomenter")) {
     cmd = CMD_RESP_ROOM_ENTER;
@@ -1236,8 +1236,8 @@ resp * TMonster::readCommand( FILE *fp)
       // Put a null in so buf just shows the command.
       *args++ = 0;
 
-      // this parses response arguments for special strings, etc
-      stringTranslate(args);
+      // this parses response arguments for special sstrings, etc
+      sstringTranslate(args);
     }
 
     // this allows us to check for special commands in the scripts
@@ -1323,7 +1323,7 @@ resp * TMonster::readCommand( FILE *fp)
 // return DELETE_VICT for ch
 int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
 {
-  string       tmpstr;
+  sstring       tmpstr;
   TSymbol     *tSymbol;
   followData  *FDt;
   affectedData tAff;

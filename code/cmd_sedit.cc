@@ -28,7 +28,7 @@ void seditDisplayMenu    (TBeing *, TMonster *, const char *, int);
 void seditSaveMenu       (TBeing *, TMonster *, const char *, int);
 void seditLoadMenu       (TBeing *, TMonster *, const char *, int);
 void seditClearMenu      (TBeing *, TMonster *, const char *, int);
-void seditLoad           (TBeing *, TMonster *, string, bool = false);
+void seditLoad           (TBeing *, TMonster *, sstring, bool = false);
 void seditSave           (TBeing *, TMonster *, bool = false);
 void update_sedit_menu   (TBeing *, TMonster *, bool = false);
 void sedit               (TBeing *, TMonster *);
@@ -36,14 +36,14 @@ void seditClear          (TBeing *, TMonster *);
 void seditList           (TBeing *);
 void seditPurge          (TBeing *);
 FILE * seditVerifyDirTree(TBeing *, char * = NULL, bool = false, bool = false);
-void seditDisplayResponse(TBeing *, resp *, bool, int, bool = false, string * = NULL);
-resp * seditFindResponse (resp *, string, bool *, int = -1);
-string seditExtraWords   (cmdTypeT);
-void seditReadUntil      (string &, string &, char);
-cmdTypeT seditCmdFromText(string, bool);
-void seditCoreAdd        (TBeing *, TMonster *, cmdTypeT, string, cmdTypeT, string);
-void seditCoreDelete     (TBeing *, TMonster *, cmdTypeT, string, cmdTypeT, string);
-void seditCoreBreakdown  (string, cmdTypeT &, string &);
+void seditDisplayResponse(TBeing *, resp *, bool, int, bool = false, sstring * = NULL);
+resp * seditFindResponse (resp *, sstring, bool *, int = -1);
+sstring seditExtraWords   (cmdTypeT);
+void seditReadUntil      (sstring &, sstring &, char);
+cmdTypeT seditCmdFromText(sstring, bool);
+void seditCoreAdd        (TBeing *, TMonster *, cmdTypeT, sstring, cmdTypeT, sstring);
+void seditCoreDelete     (TBeing *, TMonster *, cmdTypeT, sstring, cmdTypeT, sstring);
+void seditCoreBreakdown  (sstring, cmdTypeT &, sstring &);
 
 const char *editor_types_sedit[] =
 {
@@ -82,7 +82,7 @@ void send_sedit_menu(TBeing *ch)
              ch->cyan(), ch->norm());
 }
 
-void stSpaceOut(string & tStString)
+void stSpaceOut(sstring & tStString)
 {
   while (!tStString.empty() && isspace((tStString.c_str())[0]))
     tStString.erase(tStString.begin());
@@ -129,7 +129,7 @@ void TPerson::doSEdit(const char *tArg)
   char      tString[256];
   TThing   *tThing;
   TMonster *tMonster = NULL;
-  string    tStArg(""),
+  sstring    tStArg(""),
             tStMobile(""),
             tStInit(""),
             tStString(""),
@@ -314,9 +314,9 @@ void TPerson::doSEdit(const char *tArg)
   }
 }
 
-void seditCoreBreakdown(string tStString, cmdTypeT &tCmd, string &tStArgs)
+void seditCoreBreakdown(sstring tStString, cmdTypeT &tCmd, sstring &tStArgs)
 {
-  string tStBuffer(""),
+  sstring tStBuffer(""),
          tStCommand("");
 
   stSpaceOut(tStString);
@@ -336,8 +336,8 @@ void seditCoreBreakdown(string tStString, cmdTypeT &tCmd, string &tStArgs)
 }
 
 void seditCoreAdd(TBeing *ch, TMonster *tMonster,
-                  cmdTypeT blockCmd, string tStBlock,
-                  cmdTypeT tCmd, string tStCommand)
+                  cmdTypeT blockCmd, sstring tStBlock,
+                  cmdTypeT tCmd, sstring tStCommand)
 {
   bool     tForm = true;
   resp    *respIndex;
@@ -381,8 +381,8 @@ void seditCoreAdd(TBeing *ch, TMonster *tMonster,
 }
 
 void seditCoreDelete(TBeing *ch, TMonster *tMonster,
-                     cmdTypeT blockCmd, string tStBlock,
-                     cmdTypeT tCmd, string tStCommand)
+                     cmdTypeT blockCmd, sstring tStBlock,
+                     cmdTypeT tCmd, sstring tStCommand)
 {
   bool     tForm = true;
   resp    *respIndex;
@@ -447,7 +447,7 @@ void seditCoreDelete(TBeing *ch, TMonster *tMonster,
   tRespCmd = NULL;
 }
 
-void seditReadUntil(string & tStOrig, string & tStStore, char tChar)
+void seditReadUntil(sstring & tStOrig, sstring & tStStore, char tChar)
 {
   char tString[256];
   int  tMarker;
@@ -570,7 +570,7 @@ void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent = false)
   }
 }
 
-void seditLoad(TBeing *ch, TMonster *tMonster, string tStArg, bool isSilent = false)
+void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent = false)
 {
   FILE *tFile;
   char  tValue[256];
@@ -615,7 +615,7 @@ void seditLoad(TBeing *ch, TMonster *tMonster, string tStArg, bool isSilent = fa
   }
 }
 
-cmdTypeT seditCmdFromText(string tStString, bool checkMini)
+cmdTypeT seditCmdFromText(sstring tStString, bool checkMini)
 {
   if (is_abbrev(tStString, "roomenter"))
     return CMD_RESP_ROOM_ENTER;
@@ -671,7 +671,7 @@ cmdTypeT seditCmdFromText(string tStString, bool checkMini)
   return searchForCommandNum(tStString.c_str());
 }
 
-string seditExtraWords(cmdTypeT tCmd)
+sstring seditExtraWords(cmdTypeT tCmd)
 {
   if (tCmd < MAX_CMD_LIST)
     return commandArray[tCmd]->name;
@@ -738,7 +738,7 @@ string seditExtraWords(cmdTypeT tCmd)
 //   false : {name} {conditions} {contents}
 void seditDisplayResponse(TBeing *ch, resp *respIndex,
                           bool tForm, int tValue,
-                          bool isSilent = false, string *tStString = NULL)
+                          bool isSilent = false, sstring *tStString = NULL)
 {
   char tString[256] = "",
        tBuffer[256];
@@ -824,14 +824,14 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
       if (isSilent)
         *tStString += tBuffer;
       else {
-        string tStTemporary(tBuffer);
-        string::size_type tSize;
+        sstring tStTemporary(tBuffer);
+        sstring::size_type tSize;
 
         // Turn all those %n into %%n so they become %n in the lower sendTo.
-        if ((tSize = tStTemporary.find("%")) != string::npos)
+        if ((tSize = tStTemporary.find("%")) != sstring::npos)
           do
             tStTemporary.replace(tSize, 1, "%%");
-          while ((tSize = tStTemporary.find("%", tSize += 2)) != string::npos);
+          while ((tSize = tStTemporary.find("%", tSize += 2)) != sstring::npos);
 
         ch->sendTo(COLOR_COMM, tStTemporary.c_str());
       }
@@ -981,10 +981,10 @@ void seditList(TBeing *ch)
   DIR            *tDirInfo;
   char            tString[256],
                   tBuffer[256];
-  string          tStString(""),
+  sstring          tStString(""),
                   tStBuffer("");
   unsigned int    tCount = 0;
-  vector<string>  sortStr(0);
+  vector<sstring>  sortStr(0);
 
   if ((tFile = seditVerifyDirTree(ch, NULL)))
     fclose(tFile);
@@ -1041,7 +1041,7 @@ void seditPurge(TBeing *ch)
   struct dirent  *tDir;
   DIR            *tDirInfo;
   char            tString[256];
-  string          tStBuffer;
+  sstring          tStBuffer;
 
   if ((tFile = seditVerifyDirTree(ch, NULL)))
     fclose(tFile);
@@ -1208,10 +1208,10 @@ const char * sedit_display_menu =
 "%s3)%s [%2d] roomenter\n\r"
 "%s4)%s [%2d] other\n\r";
 
-resp * seditFindResponse(resp *tResp, string tStArg, bool *tForm, int tCount = -1)
+resp * seditFindResponse(resp *tResp, sstring tStArg, bool *tForm, int tCount = -1)
 {
   exactTypeT tExact = exactTypeT(*tForm);
-  string tStString(tStArg);
+  sstring tStString(tStArg);
 
   if (tExact)
     tStString += '.';
@@ -1271,7 +1271,7 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
   resp   *respIndex = (tMonster->resps ? tMonster->resps->respList : NULL);
   bool    tForm = false;
   int     tCount = 0;
-  string  tStString(""),
+  sstring  tStString(""),
           tStOutput("");
   char    tString[256],
           tCommand[256];
@@ -1359,7 +1359,7 @@ void seditDisplayMenu(TBeing *ch, TMonster *tMonster, const char *tArg, int tTyp
   resp   *respIndex = (tMonster->resps ? tMonster->resps->respList : NULL);
   bool    tForm = false;
   int     tCount = 0;
-  string  tStString("");
+  sstring  tStString("");
   char    tString[256];
 
   if (!seditCanModify(ch, tMonster)) {

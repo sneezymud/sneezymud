@@ -14,7 +14,7 @@
 class zoneSorter {
   public:
     float avgLevel;
-    string zoneName;
+    sstring zoneName;
     zoneSorter(float n, const char *s) :
       avgLevel(n), zoneName(s)
     {}
@@ -27,12 +27,12 @@ bool zoneSorter::operator()  (const zoneSorter &x, const zoneSorter &y) const
   return x.avgLevel < y.avgLevel;
 }
 
-void TBeing::doZonesSingle(string tStString)
+void TBeing::doZonesSingle(sstring tStString)
 {
   unsigned int tZone;
   char         tString[256] = "\0",
                tBuffer[256] = "\0";
-  string       tStBuffer(""),
+  sstring       tStBuffer(""),
                tStTemp("");
 
   for (tZone = 0; tZone < zone_table.size(); tZone++) {
@@ -72,7 +72,7 @@ void TBeing::doZonesSingle(string tStString)
   if (tZone >= 0 && tZone < zone_table.size()) {
     sprintf(tString, "zoneHelp/%d", (tZone > 0 ? (zone_table[tZone - 1].top + 1) : 0));
 
-    if (file_to_string(tString, tStTemp)) {
+    if (file_to_sstring(tString, tStTemp)) {
       tStBuffer += "\n\r";
       tStBuffer += tStTemp;
     }
@@ -81,7 +81,7 @@ void TBeing::doZonesSingle(string tStString)
   desc->page_string(tStBuffer);
 }
 
-void TBeing::doZones(string tStString)
+void TBeing::doZones(sstring tStString)
 {
   if (!tStString.empty()) {
     doZonesSingle(tStString);
@@ -89,7 +89,7 @@ void TBeing::doZones(string tStString)
   }
 
   unsigned int zone;
-  string str;
+  sstring str;
   int    cIndex = 0;
 
   const char *colorStrings[] =

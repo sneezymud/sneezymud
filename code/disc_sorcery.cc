@@ -19,7 +19,7 @@
 int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
 {
   char buf[256];
-  string misBuf;
+  sstring misBuf;
 
   if (caster->isNotPowerful(victim, level, SPELL_MYSTIC_DARTS, SILENT_NO))
     return SPELL_FAIL;

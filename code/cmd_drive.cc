@@ -18,9 +18,9 @@ TVehicle *findVehicle(TBeing *ch)
 // drive <north|south|etc>
 // drive exit
 // drive look
-void TBeing::doDrive(string arg)
+void TBeing::doDrive(sstring arg)
 {
-  string buf;
+  sstring buf;
   TVehicle *vehicle;
 
   if(!(vehicle=findVehicle(this))){

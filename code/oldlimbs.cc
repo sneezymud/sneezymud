@@ -513,7 +513,7 @@ bool TBeing::hasHands() const
           bod == BODY_SIMAL) ;
 }
 
-const string TBeing::describeTransBodySlot(wearSlotT i) const
+const sstring TBeing::describeTransBodySlot(wearSlotT i) const
 {
   mud_assert(i >= MIN_WEAR && i < MAX_WEAR, 
          "Bad limb slot, %s %d", getName(), i);
@@ -695,7 +695,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
   }
 }
 
-const string TBeing::describeTransLimb(wearSlotT i) const
+const sstring TBeing::describeTransLimb(wearSlotT i) const
 {
   if (!slotChance(i)) {
     vlogf(LOG_BUG, "There is a race problem in describeTransLimb");
@@ -748,7 +748,7 @@ const string TBeing::describeTransLimb(wearSlotT i) const
   }
 }
 
-const string TBeing::describeTransEquipSlot(wearSlotT i) const
+const sstring TBeing::describeTransEquipSlot(wearSlotT i) const
 {
   if (!slotChance(i)) {
     vlogf(LOG_BUG, "There is a race problem in describeTransEquipSlot");

@@ -22,7 +22,7 @@ class TBaseCorpse : public TBaseContainer {
 
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual int chiMe(TBeing *);
     virtual void peeOnMe(const TBeing *);

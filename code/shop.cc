@@ -779,14 +779,14 @@ int TThing::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
   return FALSE;
 }
 
-tObjectManipT ObjectManipType(string tStString, string & tStBuffer, itemTypeT & tItem)
+tObjectManipT ObjectManipType(sstring tStString, sstring & tStBuffer, itemTypeT & tItem)
 {
   if (tStString.empty()) {
     return OBJMAN_NULL;
     tStBuffer = "";
   }
 
-  string tStType(""),
+  sstring tStType(""),
          tStPassed("");
 
   tStBuffer = one_argument(tStString, tStType);
@@ -824,7 +824,7 @@ tObjectManipT ObjectManipType(string tStString, string & tStBuffer, itemTypeT & 
 
 bool TObj::fitsSellType(tObjectManipT tObjectManip,
                         TBeing *ch, TMonster *tKeeper,
-                        string tStString, itemTypeT tItemType,
+                        sstring tStString, itemTypeT tItemType,
                         int & tCount, int tShop)
 {
   switch (tObjectManip) {
@@ -891,7 +891,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   }
 
   if (0 && gamePort != PROD_GAMEPORT) {
-    string         tStString("");
+    sstring         tStString("");
     itemTypeT      tItemType;
     tObjectManipT  tObjectManip;
     int            tCount = 0;
@@ -1171,7 +1171,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   return;
 }
 
-const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
+const sstring TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
 {
   int cost, found = FALSE;
   char buf[256];
@@ -1410,7 +1410,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   char buf2[100], stString[256] = "\0";
   int found_obj;
   int counter;
-  string sb;
+  sstring sb;
   int rc;
   bool hasComponents = false;
   bool owned=shop_index[shop_nr].isOwned();
@@ -1671,7 +1671,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
       return FALSE;
     }
   }
-  string str = "You examine ";
+  sstring str = "You examine ";
   if (shop_index[shop_nr].isProducing(temp1)) {
     str += temp1->getNameForShow(true, false, ch);
   } else

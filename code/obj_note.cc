@@ -97,7 +97,7 @@ void TNote::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TNote::statObjInfo() const
+sstring TNote::statObjInfo() const
 {
   char buf[256];
   int rc = real_mobile(getRepairman());
@@ -105,7 +105,7 @@ string TNote::statObjInfo() const
   sprintf(buf, "Repairman: %s : %d",
       (rc >= 0 ? mob_index[rc].short_desc : "Unknown"), getRepairman());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

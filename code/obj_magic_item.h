@@ -19,17 +19,17 @@ class TMagicItem : public virtual TObj
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual void changeObjValue1(TBeing *);
-    virtual string displayFourValues();
+    virtual sstring displayFourValues();
     virtual void changeMagicItemValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void evaluateMe(TBeing *) const;
     virtual void divinateMe(TBeing *) const = 0;
     virtual int objectSell(TBeing *, TMonster *);
 
     virtual void descMagicSpells(TBeing *) const = 0;
-    virtual string getNameForShow(bool, bool, const TBeing *) const = 0;
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const = 0;
     virtual int suggestedPrice() const = 0;
     virtual void objMenu(const TBeing *) const;
     virtual void lowCheck();

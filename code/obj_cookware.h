@@ -16,7 +16,7 @@ class TCookware : public TOpenContainer {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_COOKWARE; }
 
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);

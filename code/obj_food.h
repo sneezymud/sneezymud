@@ -24,9 +24,9 @@ class TFood : public TObj {
     virtual void describeCondition(const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void lowCheck();
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_FOOD; }
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual int suggestedPrice() const;
 
     virtual bool poisonObject();

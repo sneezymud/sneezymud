@@ -171,14 +171,14 @@ int TDrug::objectSell(TBeing *ch, TMonster *keeper)
   return TRUE;
 }
 
-string TDrug::statObjInfo() const
+sstring TDrug::statObjInfo() const
 {
   char buf[256];
 
   sprintf(buf, "Refuel capability : current : %d, max : %d",
          getCurFuel(), getMaxFuel());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

@@ -62,7 +62,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
 
   bool tKill = tThief->willKill(tSucker, tDamage, tDamageType, FALSE);
 
-  string tStLimb(tSucker->describeBodySlot(tLimb));
+  sstring tStLimb(tSucker->describeBodySlot(tLimb));
 
   char tStringChar[256],
        tStringVict[256],

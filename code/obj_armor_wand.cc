@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_armor_wand.cc,v $
+// Revision 5.3  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/12 01:53:24  peel
 // removed the remaining class definitions from obj2.h
 // obj2.h is no more!
@@ -53,7 +57,7 @@ TArmorWand::~TArmorWand()
 {
 }
 
-string TArmorWand::statObjInfo() const
+sstring TArmorWand::statObjInfo() const
 {
   return TArmor::statObjInfo() + TWand::statObjInfo();
 }
@@ -114,7 +118,7 @@ void TArmorWand::generalUseMessage(const TBeing *ch, unsigned int bits, const TB
   }
 }
 
-string TArmorWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TArmorWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf[256];
 

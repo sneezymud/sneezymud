@@ -14,7 +14,7 @@
 class mimicStructure
 {
   public:
-    string tName,
+    sstring tName,
            tShort,
            tLong,
            tDesc,

@@ -828,7 +828,7 @@ void TObj::checkObjStats()
     remObjStat(ITEM_PROTOTYPE);
   }
 
-  // TPool strings itself during constructor, so bypass this
+  // TPool sstrings itself during constructor, so bypass this
   if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this) && !dynamic_cast<TBaseCup *>(this)) {
     vlogf(LOG_LOW, "Item %s has been set strung, fix! (%d)", getName(), objVnum());
     remObjStat(ITEM_STRUNG);
@@ -1004,7 +1004,7 @@ void TBeing::doCompare(const char *arg)
     return;
   }
 
-  string errMsg = "Syntax: compare <mob1> <mob2>\n\r";
+  sstring errMsg = "Syntax: compare <mob1> <mob2>\n\r";
 
   char mArg1[256], mArg2[256];
   arg = one_argument(arg, mArg1);
@@ -1138,7 +1138,7 @@ void TPerson::doLow(const char *arg)
 
   } else if (is_abbrev(buf, "statcharts")) {
     Stats st;
-    string buf;
+    sstring buf;
     char tmpbuf[256];
     race_t races[6]={RACE_HUMAN, RACE_GNOME, RACE_ELVEN, RACE_OGRE,
 		     RACE_DWARF, RACE_HOBBIT};
@@ -1234,7 +1234,7 @@ void TBeing::lowRace(const char *arg)
   TMonster *mob;
   char namebuf2[256], buf2[255];
   int race_num;
-  string str;
+  sstring str;
   bool show_stat=true;
 
   arg = one_argument(arg, buf2);
@@ -1273,7 +1273,7 @@ void TBeing::lowRace(const char *arg)
       continue;     
     }
     strcpy(namebuf2, mob->getName());
-    string namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+    sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
     if (show_stat)
       sprintf(buf2, "%-17.17s: %60s", 
          namebuf.c_str(), mob->chosenStats.printRawStats(this).c_str());
@@ -1304,7 +1304,7 @@ void TBeing::lowTasks(const char *arg)
   TDatabase db("sneezy");
 
   char buf[256], buf2[256], temp[512];
-  string str;
+  sstring str;
   int id, priority;
 
   arg = one_argument(arg, buf);
@@ -1454,7 +1454,7 @@ void TBeing::lowMobs(const char *arg)
   TMonster *mob;
   char namebuf2[256],buf2[255];
   int level;
-  string str;
+  sstring str;
 
   level = convertTo<int>(arg);
   if ((level <= 0) || (level > 127)) {
@@ -1489,7 +1489,7 @@ void TBeing::lowMobs(const char *arg)
     }
 
     strcpy(namebuf2, mob->getName());
-    string namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+    sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
 
     sprintf(buf2, "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r", 
        mob->mobVnum(), namebuf.c_str(), mob->getClass(), mob->getHPLevel(),
@@ -1565,7 +1565,7 @@ void TBeing::lowObjs(const char *arg)
   int sort_race_low = 0;
   int sort_race_high = 0;
   double tmp;
-  string str;
+  sstring str;
   vector<int>objList(0);
 
   arg = one_argument(arg, buf2);
@@ -1798,7 +1798,7 @@ void TBeing::lowWeaps(const char *arg)
   int i;
   vector<int>objList(0);
   bool sort_val = false;
-  string str;
+  sstring str;
 
   one_argument(arg, buf2);
   if (!*buf2) {

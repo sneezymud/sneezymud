@@ -30,7 +30,7 @@ void TThing::showMe(TBeing *ch) const
 
 void TNote::showMe(TBeing *ch) const
 {
-  string sb;
+  sstring sb;
   const char HEADER_TXT_NOTE[] = "There is something written upon it:\n\r\n\r";
 
   if (action_description) {
@@ -68,11 +68,11 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
       cap(buffer);
     } else {
       sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
-      string cStrbuf = capbuf;
-      while (cStrbuf.find("$$g") != string::npos)
+      sstring cStrbuf = capbuf;
+      while (cStrbuf.find("$$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$$g"), 3,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-      while (cStrbuf.find("$g") != string::npos)
+      while (cStrbuf.find("$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$g"), 2,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, cStrbuf.c_str());
@@ -145,17 +145,17 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
 
   buffer[0] = '\0';
 
-  // uses page string (needs desc), so don't bother unless PC
+  // uses page sstring (needs desc), so don't bother unless PC
   if (!ch->desc)
     return;
 
   if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
     sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
-    string cStrbuf = capbuf;
-    while (cStrbuf.find("$$g") != string::npos)
+    sstring cStrbuf = capbuf;
+    while (cStrbuf.find("$$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$$g"), 3, 
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-    while (cStrbuf.find("$g") != string::npos)
+    while (cStrbuf.find("$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
     strcpy(capbuf, cStrbuf.c_str());
@@ -439,7 +439,7 @@ void list_thing_on_heap(const TThing *list, TBeing *ch, bool show_all)
   }
 }
 
-static string displayShowApprox(const TBeing *looked, const TBeing *looker, spellNumT tSkill, float tDiff)
+static sstring displayShowApprox(const TBeing *looked, const TBeing *looker, spellNumT tSkill, float tDiff)
 {
   // This function is still experimental.  Don't use it in the main world yet.
   if (strcmp(looker->getName(), "Jesus") != 0 || !looker->isImmortal())
@@ -486,7 +486,7 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
   char   bufpray[1024];
   int    totspell = 0;
   int    totpray  = 0;
-  string tStSpell(""),
+  sstring tStSpell(""),
          tStPray("");
 
   // these are the less common or more urgent affects that we want noticed
@@ -855,18 +855,18 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
       sprintf(capbuf, "%s",
               addNameToBuf(ch, ch->desc, this, getLongDesc(), COLOR_MOBS).c_str());
-      string Strng = capbuf;
+      sstring Strng = capbuf;
       // let's concat the name of a loser god that didn't put it in their
       // long desc
-      if (isPc() && (Strng.find(getName()) == string::npos) && ch->isImmortal() &&
+      if (isPc() && (Strng.find(getName()) == sstring::npos) && ch->isImmortal() &&
           (hasWizPower(POWER_WIZARD) || ch->GetMaxLevel() > GetMaxLevel()) &&
           ch->isPc())
         sprintf(capbuf + strlen(capbuf), " (%s)", getName());
       Strng = capbuf;
-      while (Strng.find("$$g") != string::npos)
+      while (Strng.find("$$g") != sstring::npos)
         Strng.replace(Strng.find("$$g"), 3,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-      while (Strng.find("$g") != string::npos)
+      while (Strng.find("$g") != sstring::npos)
         Strng.replace(Strng.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, Strng.c_str());
@@ -911,11 +911,11 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
   } else if (mode == SHOW_MODE_SHORT_PLUS) {
     if (getDescr()) {
       sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_MOBS).c_str());
-      string cStrbuf = capbuf;
-      while (cStrbuf.find("$$g") != string::npos)
+      sstring cStrbuf = capbuf;
+      while (cStrbuf.find("$$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$$g"), 3,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-      while (cStrbuf.find("$g") != string::npos)
+      while (cStrbuf.find("$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$g"), 2,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, cStrbuf.c_str());
@@ -1074,7 +1074,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
           found = TRUE;
     }
     TDatabase db("sneezy");
-    string tattoos[MAX_WEAR];
+    sstring tattoos[MAX_WEAR];
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
     while(db.fetchRow()){
@@ -1100,8 +1100,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
             }
           }
         } else if(tattoos[ij]!=""){
-	  string slot = describeEquipmentSlot(ij);
-	  sprintf(buf, "<%s>", (slot.find("Worn") != string::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
+	  sstring slot = describeEquipmentSlot(ij);
+	  sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
 
 
 	  //	  sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
@@ -1304,11 +1304,11 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
       *buffer = '\0';
     
     sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getLongDesc(), COLOR_MOBS).c_str());
-    string cStrbuf = capbuf;
-    while (cStrbuf.find("$$g") != string::npos)
+    sstring cStrbuf = capbuf;
+    while (cStrbuf.find("$$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$$g"), 3,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-    while (cStrbuf.find("$g") != string::npos)
+    while (cStrbuf.find("$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
     strcpy(capbuf, cStrbuf.c_str());
@@ -1404,7 +1404,7 @@ void TBeing::doGlance(const char *argument)
   }
 }
 
-string TStaff::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TStaff::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s [%s]", 
@@ -1413,7 +1413,7 @@ string TStaff::getNameForShow(bool useColor, bool useName, const TBeing *ch) con
   return buf2;
 }
 
-string TScroll::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TScroll::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s [%s/%s/%s]", 

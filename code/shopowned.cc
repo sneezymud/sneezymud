@@ -8,7 +8,7 @@
 // that they were created, chronologically.  I'm not sure if this is defined
 // behavior or not, so if it stops working, you need to put a timestamp value
 // into the table and sort by that
-bool sameAccount(string buf, int shop_nr){
+bool sameAccount(sstring buf, int shop_nr){
   charFile st, stthis;
 
   load_char(buf.c_str(), &stthis);
@@ -91,7 +91,7 @@ void TShopOwned::showInfo()
   TObj *o;
   int count=0, value=0, tmp=0;
   unsigned int i=0;
-  string buf;
+  sstring buf;
   int volume=0;
 
   // if not owned, or owned and has "owner" or "info"
@@ -141,10 +141,10 @@ void TShopOwned::showInfo()
 }
 
 
-int TShopOwned::setRates(string arg)
+int TShopOwned::setRates(sstring arg)
 {
   TDatabase db("sneezy");
-  string buf;
+  sstring buf;
   float profit_buy, profit_sell;
   int max_num, argc=0;
 
@@ -292,7 +292,7 @@ int TShopOwned::setRates(string arg)
 int TShopOwned::buyShop(){
   int value=0;
   TDatabase db("sneezy");
-  string buf;
+  sstring buf;
   TThing *tt;
   TObj *o;
 
@@ -361,8 +361,8 @@ int TShopOwned::sellShop(){
 
 
 
-int TShopOwned::giveMoney(string arg){
-  string buf;
+int TShopOwned::giveMoney(sstring arg){
+  sstring buf;
 
   if(!hasAccess(SHOPACCESS_GIVE)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
@@ -398,9 +398,9 @@ int TShopOwned::giveMoney(string arg){
   return TRUE;
 }
 
-int TShopOwned::setAccess(string arg)
+int TShopOwned::setAccess(sstring arg)
 {
-  string buf, buf2;
+  sstring buf, buf2;
   TDatabase db("sneezy");
   unsigned int access;
 
@@ -476,16 +476,16 @@ int TShopOwned::setAccess(string arg)
 
 
 
-int TShopOwned::doLogs(string arg)
+int TShopOwned::doLogs(sstring arg)
 {
   TDatabase db("sneezy");
-  string buf;
+  sstring buf;
 
   if(!hasAccess(SHOPACCESS_LOGS)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return FALSE;
   }
-  string sb;
+  sstring sb;
 
   if(arg==" clear"){
     db.query("delete from shoplog where shop_nr=%i", shop_nr);

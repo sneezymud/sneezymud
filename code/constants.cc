@@ -2,14 +2,14 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-//  Constant integer and string arrays
+//  Constant integer and sstring arrays
 //
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
 #include "obj_drug.h"
 
-const string whitespace=" \f\n\r\t\v";  // from isspace() man page
+const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 
 const dirTypeT rev_dir[MAX_DIR] =
 {
@@ -1520,7 +1520,7 @@ const char * const immunity_names[MAX_IMMUNES] =
   "",
 };
 
-// make first letter '*' to block the string anywhere in the name
+// make first letter '*' to block the sstring anywhere in the name
 // otherwise, blocks the exact name (case insensative)
 // that is "*fuck" blocks "somefuck", "fucksome", and "sfucky"
 const char * const illegalnames[] = 

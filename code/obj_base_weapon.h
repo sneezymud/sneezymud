@@ -21,7 +21,7 @@ class TBaseWeapon : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual bool isPoisoned() const;
     virtual void applyPoison(TBeing *);
@@ -31,7 +31,7 @@ class TBaseWeapon : public TObj {
     virtual double baseDamage() const;
     virtual int swungObjectDamage(const TBeing *, const TBeing *) const;
     virtual void lowCheck();
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void divinateMe(TBeing *) const;
     virtual int damageMe(TBeing *, TBeing *, wearSlotT);
     virtual void changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
@@ -40,7 +40,7 @@ class TBaseWeapon : public TObj {
     virtual void sharpenMe(TBeing *, TTool *);
     virtual void dullMe(TBeing *, TTool *);
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual string describeMySharp(const TBeing *) const;
+    virtual sstring describeMySharp(const TBeing *) const;
     virtual void evaluateMe(TBeing *) const;
     virtual int suggestedPrice() const;
     virtual void sharpenMeStoneWeap(TBeing *, TTool *);
@@ -55,7 +55,7 @@ class TBaseWeapon : public TObj {
     virtual void changeObjValue1(TBeing *);
     virtual void changeObjValue2(TBeing *);
     virtual void changeObjValue3(TBeing *);
-    virtual string displayFourValues();
+    virtual sstring displayFourValues();
     virtual void specializationCheck(TBeing *, float *);
     virtual void descMaxStruct(const TBeing *, int) const;
     virtual int expelPrice(const TBeing *, int) const;
@@ -65,8 +65,8 @@ class TBaseWeapon : public TObj {
     virtual int galvanizeMe(TBeing *, byte);
     virtual int enhanceMe(TBeing *, int, byte);
     virtual int rentCost() const;
-    virtual string compareMeAgainst(TBeing *, TObj *);
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
 

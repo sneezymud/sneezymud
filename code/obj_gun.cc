@@ -138,10 +138,10 @@ void gload_usage(TBeing *tb){
 }
 
 
-void TBeing::doGload(string arg)
+void TBeing::doGload(sstring arg)
 {
-  string arg1, arg2;
-  string buf;
+  sstring arg1, arg2;
+  sstring buf;
   TObj  *bow;
   TThing  *arrow;
   TGun *gun;
@@ -240,7 +240,7 @@ int TGun::suggestedPrice() const
 
 
 
-string TGun::statObjInfo() const
+sstring TGun::statObjInfo() const
 {
   char buf[256];
 
@@ -251,7 +251,7 @@ string TGun::statObjInfo() const
 	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
 	  (ammo?ammo->getName():"None"));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -333,14 +333,14 @@ TGun::~TGun()
 }
 
 
-string TAmmo::statObjInfo() const
+sstring TAmmo::statObjInfo() const
 {
   char buf[256];
   
   sprintf(buf, "Ammo Type: %s, Rounds Remaining: %i",
 	  getAmmoDescr(getAmmoType()), getRounds());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -401,10 +401,10 @@ void TAmmo::setRounds(int r) {
 }
 
 
-string TAmmo::showModifier(showModeT tMode, const TBeing *tBeing) const
+sstring TAmmo::showModifier(showModeT tMode, const TBeing *tBeing) const
 {
   // recurse if necessary
-  string tString = TObj::showModifier(tMode, tBeing);
+  sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (getRounds()<=0) {
     tString += " (empty)";                                          
@@ -413,10 +413,10 @@ string TAmmo::showModifier(showModeT tMode, const TBeing *tBeing) const
   return tString;                                             
 }
 
-string TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
+sstring TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
 {
   // recurse if necessary
-  string tString = TObj::showModifier(tMode, tBeing);
+  sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (!getAmmo() || getAmmo()->getRounds()<=0) {
     tString += " (empty)";                                          
@@ -438,7 +438,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   if (targ && ch->noHarmCheck(targ))
     return FALSE;
 
-  string capbuf, capbuf2;
+  sstring capbuf, capbuf2;
   
   ch->addToWait(combatRound(2));
   int rof=getROF();

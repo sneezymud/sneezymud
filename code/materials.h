@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: materials.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/03 14:55:51  lapsos
-// Added materials elvenmail/elvensteel
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -155,5 +144,8 @@ struct material_type_numbers
 };
 
 extern const struct material_type_numbers material_nums[200];
+
+extern sstring describeMaterial(const int);
+extern sstring describeMaterial(const TThing *);
 
 #endif

@@ -62,7 +62,7 @@ void TOrganic::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getAEffect();
 }
 
-string TOrganic::statObjInfo() const
+sstring TOrganic::statObjInfo() const
 {
   int  MType = 9;
   char Buf[256];
@@ -85,7 +85,7 @@ string TOrganic::statObjInfo() const
           getOLevel(),
           getAEffect());
 
-  string a(Buf);
+  sstring a(Buf);
   return a;
 }
 
@@ -165,7 +165,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       nWeight;
   TObj *obj2 = NULL;
   TOrganic *nOrg = NULL;
-  string nocName("");
+  sstring nocName("");
   nVolume = (int) getVolume();
   nWeight = (int) getWeight();
   nCost   = (int) obj_flags.cost;
@@ -483,7 +483,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 }
 
 // Used by the list command
-const string TOrganic::shopList(const TBeing *ch, const char *arg,
+const sstring TOrganic::shopList(const TBeing *ch, const char *arg,
                                 int min_amt, int max_amt, int num,
                                 int shop_nr, int k, unsigned long int) const
 {

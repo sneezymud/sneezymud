@@ -57,12 +57,12 @@ class Immunities {
   public:
 
     Immunities();
-    void setImmunity(const string &whichImmunity, byte percent);
+    void setImmunity(const sstring &whichImmunity, byte percent);
     byte getImmunity(immuneTypeT whichImmunity) const;
 
     // convert() is a utility function to switch from const char *
     // to immune_t so other functions can access the ImmunityArray.
-    immuneTypeT convert(const string & immunity) const;
+    immuneTypeT convert(const sstring & immunity) const;
 };
 
 #endif

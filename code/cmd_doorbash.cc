@@ -196,7 +196,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
 }
 
 /* skill to allow fighters to break down doors */
-int TBeing::doDoorbash(const string & argument)
+int TBeing::doDoorbash(const sstring & argument)
 {
   int rc;
   dirTypeT dir;
@@ -207,8 +207,8 @@ int TBeing::doDoorbash(const string & argument)
     sendTo("You know nothing about door bashing.\n\r");
     return FALSE;
   }
-  string type;
-  string direction;
+  sstring type;
+  sstring direction;
   argument_parser(argument, type, direction);
           
   if (type.empty()) {

@@ -43,7 +43,7 @@ int CrazyEightsGame::count(int playerNum)
   return 32;
 }
 
-const string CrazyEightsGame::score()
+const sstring CrazyEightsGame::score()
 {
   TBeing *ch1,
          *ch2,
@@ -154,7 +154,7 @@ void CrazyEightsGame::peek(const TBeing *ch) const
 {
   int    playerNum;
   char   tArg[256];
-  string tString("");
+  sstring tString("");
 
   if (!game) {
     ch->sendTo("No one has dealt yet, perhaps you should deal the cards yourself.\n\r");

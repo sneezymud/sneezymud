@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_keyring.cc,v $
+// Revision 5.4  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.3  2002/01/10 00:45:49  peel
 // more splitting up of obj2.h
 //
@@ -64,7 +68,7 @@ void TKeyring::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TExpandableContainer::getFourValues(x1, x2, x3, x4);
 }
 
-string TKeyring::statObjInfo() const
+sstring TKeyring::statObjInfo() const
 {
   return TExpandableContainer::statObjInfo();
 }

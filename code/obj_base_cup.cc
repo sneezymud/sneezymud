@@ -135,10 +135,10 @@ int TBaseCup::getLiqThirst() const
 }
 
 
-string TBaseCup::showModifier(showModeT tMode, const TBeing *tBeing) const
+sstring TBaseCup::showModifier(showModeT tMode, const TBeing *tBeing) const
 {
   // recurse if necessary
-  string tString = TObj::showModifier(tMode, tBeing);
+  sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (!getDrinkUnits()){
     tString += " (empty)";                                          
@@ -250,7 +250,7 @@ void TBaseCup::weightCorrection()
   setWeight(wgt);
 }
 
-string TBaseCup::statObjInfo() const
+sstring TBaseCup::statObjInfo() const
 {
   char buf[256];
 
@@ -261,7 +261,7 @@ string TBaseCup::statObjInfo() const
           (isDrinkConFlag(DRINK_SPILL) ? "true" : "false"),
           DrinkInfo[getDrinkType()]->name, getDrinkType());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -382,7 +382,7 @@ int TBaseCup::chiMe(TBeing *tLunatic)
 
 void TBaseCup::updateDesc()
 {
-  string newname, short_desc, long_desc, liquid;
+  sstring newname, short_desc, long_desc, liquid;
   bool found=false;
 
   // get og desc
@@ -399,27 +399,27 @@ void TBaseCup::updateDesc()
     liquid=DrinkInfo[getDrinkType()]->color;
   }
 
-  while (newname.find("$$l") != string::npos){
+  while (newname.find("$$l") != sstring::npos){
     newname.replace(newname.find("$$l"), 3, liquid);
     found=true;
   }
-  while (newname.find("$l") != string::npos){
+  while (newname.find("$l") != sstring::npos){
     newname.replace(newname.find("$l"), 2, liquid);
     found=true;
   }
-  while (short_desc.find("$$l") != string::npos){
+  while (short_desc.find("$$l") != sstring::npos){
     short_desc.replace(short_desc.find("$$l"), 3, liquid);
     found=true;
   }
-  while (short_desc.find("$l") != string::npos){
+  while (short_desc.find("$l") != sstring::npos){
     short_desc.replace(short_desc.find("$l"), 2, liquid);
     found=true;
   }
-  while (long_desc.find("$$l") != string::npos){
+  while (long_desc.find("$$l") != sstring::npos){
     long_desc.replace(long_desc.find("$$l"), 3, liquid);
     found=true;
   }
-  while (long_desc.find("$l") != string::npos){
+  while (long_desc.find("$l") != sstring::npos){
     long_desc.replace(long_desc.find("$l"), 2, liquid);
     found=true;
   }
@@ -430,27 +430,27 @@ void TBaseCup::updateDesc()
     ssprintf(liquid, "a %s", DrinkInfo[getDrinkType()]->color);
   }
 
-  while (newname.find("$$al") != string::npos){
+  while (newname.find("$$al") != sstring::npos){
     newname.replace(newname.find("$$al"), 4, liquid);
     found=true;
   }
-  while (newname.find("$al") != string::npos){
+  while (newname.find("$al") != sstring::npos){
     newname.replace(newname.find("$al"), 3, liquid);
     found=true;
   }
-  while (short_desc.find("$$al") != string::npos){
+  while (short_desc.find("$$al") != sstring::npos){
     short_desc.replace(short_desc.find("$$al"), 4, liquid);
     found=true;
   }
-  while (short_desc.find("$al") != string::npos){
+  while (short_desc.find("$al") != sstring::npos){
     short_desc.replace(short_desc.find("$al"), 3, liquid);
     found=true;
   }
-  while (long_desc.find("$$al") != string::npos){
+  while (long_desc.find("$$al") != sstring::npos){
     long_desc.replace(long_desc.find("$$al"), 4, liquid);
     found=true;
   }
-  while (long_desc.find("$al") != string::npos){
+  while (long_desc.find("$al") != sstring::npos){
     long_desc.replace(long_desc.find("$al"), 3, liquid);
     found=true;
   }
@@ -462,27 +462,27 @@ void TBaseCup::updateDesc()
     ssprintf(liquid, "%s", DrinkInfo[getDrinkType()]->name);
   }
 
-  while (newname.find("$$nl") != string::npos){
+  while (newname.find("$$nl") != sstring::npos){
     newname.replace(newname.find("$$nl"), 4, liquid);
     found=true;
   }
-  while (newname.find("$nl") != string::npos){
+  while (newname.find("$nl") != sstring::npos){
     newname.replace(newname.find("$nl"), 3, liquid);
     found=true;
   }
-  while (short_desc.find("$$nl") != string::npos){
+  while (short_desc.find("$$nl") != sstring::npos){
     short_desc.replace(short_desc.find("$$nl"), 4, liquid);
     found=true;
   }
-  while (short_desc.find("$nl") != string::npos){
+  while (short_desc.find("$nl") != sstring::npos){
     short_desc.replace(short_desc.find("$nl"), 3, liquid);
     found=true;
   }
-  while (long_desc.find("$$nl") != string::npos){
+  while (long_desc.find("$$nl") != sstring::npos){
     long_desc.replace(long_desc.find("$$nl"), 4, liquid);
     found=true;
   }
-  while (long_desc.find("$nl") != string::npos){
+  while (long_desc.find("$nl") != sstring::npos){
     long_desc.replace(long_desc.find("$nl"), 3, liquid);
     found=true;
   }

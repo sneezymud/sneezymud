@@ -15,12 +15,12 @@ class TShopOwned {
 
   int getMaxNum(const TObj *);
   void showInfo();
-  int setRates(string);
+  int setRates(sstring);
   int buyShop();
   int sellShop();
-  int giveMoney(string);
-  int setAccess(string);
-  int doLogs(string);
+  int giveMoney(sstring);
+  int setAccess(sstring);
+  int doLogs(sstring);
 
   TShopOwned(int, TMonster *, TBeing *);
   ~TShopOwned();

@@ -28,7 +28,7 @@ extern "C" {
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things
 // with items and mobs in the name field.  - Bat 6-30-97
-const string fname(const char *namelist)
+const sstring fname(const char *namelist)
 {
   char holder[60];
   register char *point;
@@ -41,12 +41,12 @@ const string fname(const char *namelist)
   return (holder);
 }
 
-// split up "str", using delimiters "sep" and place resulting strings in "argv"
-int split_string(const string &str, const string &sep, vector<string> &argv)
+// split up "str", using delimiters "sep" and place resulting sstrings in "argv"
+int split_sstring(const sstring &str, const sstring &sep, vector<sstring> &argv)
 {
   unsigned int pos=0, last=0;
 
-  while((pos=str.find_first_of(sep,last)) != string::npos){
+  while((pos=str.find_first_of(sep,last)) != sstring::npos){
     argv.push_back(str.substr(last,pos-last));
     last=pos+1;
   }
@@ -56,16 +56,16 @@ int split_string(const string &str, const string &sep, vector<string> &argv)
   return argv.size();
 }
 
-bool isname(const string &str, const string &namelist)
+bool isname(const sstring &str, const sstring &namelist)
 {
-  vector <string> argv, xargv;
+  vector <sstring> argv, xargv;
   unsigned int i, j;
 
   if (namelist.empty())
     return false;
 
-  split_string(str, "- \t\n\r,", argv);
-  split_string(namelist, "- \t\n\r,", xargv);
+  split_sstring(str, "- \t\n\r,", argv);
+  split_sstring(namelist, "- \t\n\r,", xargv);
 
   for(i=0;i < argv.size();i++) {
     for(j=0;j < xargv.size();j++) {
@@ -80,13 +80,13 @@ bool isname(const string &str, const string &namelist)
   return TRUE;
 }
 
-bool is_exact_spellname(const string &str, const string &namelist)
+bool is_exact_spellname(const sstring &str, const sstring &namelist)
 {
-  vector <string> argv, xargv;
+  vector <sstring> argv, xargv;
   unsigned int i, j;
 
-  split_string(str, "- \t\n\r,", argv);
-  split_string(namelist, "- \t\n\r,", xargv);
+  split_sstring(str, "- \t\n\r,", argv);
+  split_sstring(namelist, "- \t\n\r,", xargv);
 
   if(!is_abbrev(argv[0], xargv[0]))
     return FALSE;
@@ -104,13 +104,13 @@ bool is_exact_spellname(const string &str, const string &namelist)
   return TRUE;
 }
 
-bool is_exact_name(const string &str, const string &namelist)
+bool is_exact_name(const sstring &str, const sstring &namelist)
 {
-  vector <string> argv, xargv;
+  vector <sstring> argv, xargv;
   unsigned int i, j;
 
-  split_string(str, "- \t\n\r,", argv);
-  split_string(namelist, "- \t\n\r,", xargv);
+  split_sstring(str, "- \t\n\r,", argv);
+  split_sstring(namelist, "- \t\n\r,", xargv);
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
@@ -1329,11 +1329,11 @@ TThing *get_thing_stuck_in_vis(TBeing *ch, const char *arg, wearSlotT *j, int *c
 
 TThing *searchLinkedList(const char * name, TThing *list, thingTypeT type)
 {
-  const string tmps = name;
+  const sstring tmps = name;
   return searchLinkedList(tmps, list, type);
 }
 
-TThing *searchLinkedList(const string & name, TThing *list, thingTypeT type)
+TThing *searchLinkedList(const sstring & name, TThing *list, thingTypeT type)
 {
   TThing *i, *t;
   int j, numx;
@@ -1634,7 +1634,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count, exactT
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
   char *tmp;
-  string tStName("");
+  sstring tStName("");
 
   if (!ch) {
     vlogf(LOG_BUG, "NULL ch in get_char_room_vis");
@@ -1813,7 +1813,7 @@ TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exact
   return 0;
 }
 
-TBeing *get_char_vis(const TBeing *ch, const string name, int *count, infraTypeT infra)
+TBeing *get_char_vis(const TBeing *ch, const sstring name, int *count, infraTypeT infra)
 {
   TBeing *i;
 
@@ -1907,7 +1907,7 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
   return NULL;
 }
 
-TThing *searchLinkedListVis(const TBeing *ch, string name, TThing *list, int *count, thingTypeT type)
+TThing *searchLinkedListVis(const TBeing *ch, sstring name, TThing *list, int *count, thingTypeT type)
 {
   TThing *i, *t;
   int j, numx;
@@ -2105,8 +2105,8 @@ TObj *get_obj_vis_accessible(TBeing *ch, const char *name)
 
 // Generic Find, designed to find any object/character                    
 // Calling :                                                              
-//  *arg      is the sting containing the string to be searched for.       
-//            This string doesn't have to be a single word, the routine    
+//  *arg      is the sting containing the sstring to be searched for.       
+//            This sstring doesn't have to be a single word, the routine    
 //            extracts the next word itself.                              
 //  bv        All those bits that you want to "search through".            
 //            Bit found will be result of the function                     
@@ -2117,7 +2117,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const char *name)
 // The routine returns a pointer to the next word in *arg (just like the  
 // one_argument routine).                                                 
 
-TObj *generic_find_obj(string arg, int bv, TBeing *ch)
+TObj *generic_find_obj(sstring arg, int bv, TBeing *ch)
 {
   TBeing *tar_ch;
   TObj *o;
@@ -2127,7 +2127,7 @@ TObj *generic_find_obj(string arg, int bv, TBeing *ch)
   return o;
 }
 
-TBeing *generic_find_being(string arg, int bv, TBeing *ch)
+TBeing *generic_find_being(sstring arg, int bv, TBeing *ch)
 {
   TBeing *tar_ch;
   TObj *o;
@@ -2467,7 +2467,7 @@ void forceCrash(const char *errorMsg,...)
 }
 
 // provides "this"'s name, with no color as defined by ch
-const string TThing::getNameNOC(const TBeing *ch) const
+const sstring TThing::getNameNOC(const TBeing *ch) const
 {
   return colorString(ch, ch->desc, getName(), NULL, COLOR_NONE, TRUE);
 }

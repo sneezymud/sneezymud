@@ -2,28 +2,20 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: sound.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __SOUND_H
 #define __SOUND_H
 
-extern const string & SOUND_TYPE_SOCIAL;
-extern const string & SOUND_TYPE_NOISE;
-extern const string & SOUND_TYPE_COMBAT;
-extern const string & SOUND_TYPE_MAGIC;
+extern const sstring & SOUND_TYPE_SOCIAL;
+extern const sstring & SOUND_TYPE_NOISE;
+extern const sstring & SOUND_TYPE_COMBAT;
+extern const sstring & SOUND_TYPE_MAGIC;
 
-extern const string & MUSIC_TYPE_COMBAT;
-extern const string & MUSIC_TYPE_ZONE;
-extern const string & MUSIC_TYPE_DEATH;
+extern const sstring & MUSIC_TYPE_COMBAT;
+extern const sstring & MUSIC_TYPE_ZONE;
+extern const sstring & MUSIC_TYPE_DEATH;
 
 enum musicNumT {
      MUSIC_OFF,

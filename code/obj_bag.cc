@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_bag.cc,v $
+// Revision 5.5  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.4  2002/08/09 16:13:00  peel
 // changed junk to drop in auto pouch code
 //
@@ -64,7 +68,7 @@ void TBag::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TExpandableContainer::getFourValues(x1, x2, x3, x4);
 }
 
-string TBag::statObjInfo() const
+sstring TBag::statObjInfo() const
 {
   return TExpandableContainer::statObjInfo();
 }

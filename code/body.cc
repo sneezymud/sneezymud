@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: body.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // body.cc
 //
 //  Lets see if I can make some magic.
@@ -85,7 +70,7 @@ Body::Body()
 
 Body::~Body() {
 
-  vlogf(5,"Destroying the Body.");
+  vlogf(LOG_MISC, "Destroying the Body.");
   attack = NULL;
 
   for(int mainLimb=LIMB_HEAD; mainLimb < MAX_MAIN_LIMBS; mainLimb++) {
@@ -107,9 +92,9 @@ Body::~Body() {
 
 void Body::loadBody()
 {
-  const string bodyLib = "bodytypes/";
+  const sstring bodyLib = "bodytypes/";
 
-  string limbtype, connector, description, aFilename;
+  sstring limbtype, connector, description, aFilename;
   ifstream bodyFile;
 
   aFilename = bodyLib + bodyNames[bodyType];
@@ -174,8 +159,8 @@ Limb *Body::search(int target, int status)
 int Body::join(Limb *newLimb) {
   Limb **joinTo;
 
-  if(newLimb->limbType == LIMB_NONE) {
-    vlogf(5,"LOW error: this limb not initialized properly.");
+  if (newLimb->limbType == LIMB_NONE) {
+    vlogf(LOG_LOW, " this limb not initialized properly.");
     return 0;
   }
 
@@ -324,6 +309,8 @@ const ubyte slot_chance[MAX_BODY_TYPES][MAX_WEAR] =
    7, 7, 5, 0, 0, 2, 2, 5, 5, 3, 3},        // BODY_PEGASUS
   {0, 0, 0, 0, 15, 25, 5, 5, 0, 0, 0, 0, 0,
    0, 5, 25, 0, 0, 0, 0, 5, 5, 5, 5},       // BODY_ANT
+  {0, 0, 0, 6, 38, 8, 5, 5, 3, 3, 0, 0, 7,
+   7, 7, 5, 0, 0, 2, 2, 5, 5, 3, 3},        // BODY_WYVELIN
 };
 // unused, fing, fing, neck, body, head, leg, leg, foot, foot, hand, hand, arm
 // arm, back, waist, wrist, wrist, hold, hold, leg, leg, foot, foot

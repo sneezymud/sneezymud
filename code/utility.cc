@@ -45,9 +45,9 @@ extern long random(void);
 #include "obj_seethru.h"
 
 
-// sprintf for string class
+// sprintf for sstring class
 // this should be safe to use, truncates at 1024 chars
-int ssprintf(string &s, const char *fmt, ...){
+int ssprintf(sstring &s, const char *fmt, ...){
   va_list ap;
   char buf[MAX_STRING_LENGTH];
   int ret;
@@ -1923,46 +1923,46 @@ float TBeing::lagAdjust(lag_t orig_lag)
   return act_lag;
 }
 
-string secsToString(time_t num)
+sstring secsToString(time_t num)
 {
   unsigned int days = num / SECS_PER_REAL_DAY;
   unsigned int hours = (num / SECS_PER_REAL_HOUR) % 24;
   unsigned int mins = (num / SECS_PER_REAL_MIN) % 60;
   unsigned int secs = num % 60;
 
-  string timestring = "";
+  sstring timesstring = "";
   char buf[256];
 #if 0
   if (weeks) {
     sprintf(buf, "%d week%s", weeks, weeks == 1 ? "" : "s");
-    timestring += buf;
+    timesstring += buf;
   }
 #endif
   if (days) {
     sprintf(buf, "%d day%s", days, days == 1 ? "" : "s");
-    if (!timestring.empty())
-      timestring += ", ";
-    timestring += buf;
+    if (!timesstring.empty())
+      timesstring += ", ";
+    timesstring += buf;
   }
   if (hours) {
     sprintf(buf, "%d hour%s", hours, hours == 1 ? "" : "s");
-    if (!timestring.empty())
-      timestring += ", ";
-    timestring += buf;
+    if (!timesstring.empty())
+      timesstring += ", ";
+    timesstring += buf;
   }
   if (mins) {
     sprintf(buf, "%d minute%s", mins, mins == 1 ? "" : "s");
-    if (!timestring.empty())
-      timestring += ", ";
-    timestring += buf;
+    if (!timesstring.empty())
+      timesstring += ", ";
+    timesstring += buf;
   }
   if (secs) {
     sprintf(buf, "%d second%s", secs, secs == 1 ? "" : "s");
-    if (!timestring.empty())
-      timestring += ", ";
-    timestring += buf;
+    if (!timesstring.empty())
+      timesstring += ", ";
+    timesstring += buf;
   }
-  return timestring;
+  return timesstring;
 }
 
 bool isanumber(const char *c)

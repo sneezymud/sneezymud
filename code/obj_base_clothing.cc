@@ -612,12 +612,12 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
   REMOVE_BIT(ui, ITEM_THROW);
 
   if (ui == ITEM_HOLD) {
-    string buf = "$p looks like it is meant to be held in your hands.";
+    sstring buf = "$p looks like it is meant to be held in your hands.";
     act(buf.c_str(), FALSE, ch, this, 0, TO_CHAR);
   } else {
     int num = CountBits(ui) - 1;
     if (num >= 0) {
-      string buf = "$p looks like it is meant to be worn on your ";
+      sstring buf = "$p looks like it is meant to be worn on your ";
       buf += good_uncap(wear_bits[num]);
       buf += ".";
       act(buf.c_str(), FALSE, ch, this, 0, TO_CHAR);
@@ -634,9 +634,9 @@ int TBaseClothing::rentCost() const
   return TObj::rentCost();
 }
 
-string TBaseClothing::showModifier(showModeT mode, const TBeing *ch) const
+sstring TBaseClothing::showModifier(showModeT mode, const TBeing *ch) const
 {
-  string a;
+  sstring a;
   if (mode == SHOW_MODE_SHORT_PLUS ||
        mode == SHOW_MODE_SHORT_PLUS_INV ||
        mode == SHOW_MODE_SHORT) {
@@ -657,7 +657,7 @@ double TBaseClothing::objLevel() const
   return armorLevel(ARMOR_LEV_REAL);
 }
 
-string TBaseClothing::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TBaseClothing::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",

@@ -58,7 +58,7 @@ int TVial::rentCost() const
 
 int TVial::objectSell(TBeing *ch, TMonster *keeper)
 {
-  string buf;
+  sstring buf;
 
   if(getDrinkType()!=LIQ_HOLYWATER){
     ssprintf(buf, "%s Hey, that's not holy water!.", ch->getName());

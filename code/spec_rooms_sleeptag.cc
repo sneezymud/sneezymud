@@ -58,7 +58,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
              *tIThing,
              *tCThing,
              *tEThing;
-  string      tStOrig(tArg),
+  sstring      tStOrig(tArg),
               tStString(""),
               tStBuffer("");
 

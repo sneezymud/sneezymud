@@ -16,11 +16,11 @@
 // that is passed and extract the name from it for use.  The TBeing passed
 // is the player whose trophy data you want to interact with.
 //
-// TTrophy(string) - This initializer will store the string that is passed
-// and store it for use.  The string passed is the name of the player whose
+// TTrophy(sstring) - This initializer will store the sstring that is passed
+// and store it for use.  The sstring passed is the name of the player whose
 // trophy data you want to interact with.
 //
-// setName(string) - Sets the name variable to the passed string and unlinks
+// setName(sstring) - Sets the name variable to the passed sstring and unlinks
 // the TBeing pointer that is stored.  Use this if you want to re-use a
 // TTrophy instance.
 //
@@ -46,13 +46,13 @@ class TDatabase;
 class TTrophy {
   TDatabase *db;
   const TBeing *parent;
-  string name;
+  sstring name;
 
-  string getMyName();
+  sstring getMyName();
 
   TTrophy(){}; // no blank initializations
  public:
-  void setName(string);
+  void setName(sstring);
 
   float getExpModVal(float);
   const char *getExpModDescr(float);
@@ -61,7 +61,7 @@ class TTrophy {
 
   void wipe();
   
-  TTrophy(string);
+  TTrophy(sstring);
   TTrophy(TBeing *);
 };
 

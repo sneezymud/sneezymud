@@ -19,7 +19,7 @@ class TLight : public TBaseLight {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void lowCheck();
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_LIGHT; }
 
     virtual int chiMe(TBeing *);
@@ -31,7 +31,7 @@ class TLight : public TBaseLight {
     virtual void extinguishWater();
     virtual void lampLightStuff(TMonster *);
     virtual void lightDecay();
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void adjustLight();
     virtual int getMe(TBeing *, TThing *);
     virtual bool isSimilar(const TThing *t) const;

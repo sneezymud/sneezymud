@@ -56,7 +56,7 @@ void TMagicItem::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TMagicItem::displayFourValues()
+sstring TMagicItem::displayFourValues()
 {
   char tString[256];
   int  x1,

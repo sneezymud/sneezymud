@@ -1709,7 +1709,7 @@ int lightning_hammer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
-  string objbuf, targbuf;
+  sstring objbuf, targbuf;
   TBeing *target;
   char buf[256];
   TRoom *rp;
@@ -7055,7 +7055,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 
 int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
-  string target,buf;
+  sstring target,buf;
   TObj *fish;
   TBeing *ch;
   int amt=20;
@@ -7081,7 +7081,7 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
   
   if(cmd == CMD_POINT && o->getMaxStructPoints()<100){
-    one_argument((string)arg,target);
+    one_argument((sstring)arg,target);
 
     if(!(fish=generic_find_obj(target,FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
       act("You don't see that anywhere!", TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -7121,7 +7121,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if(!ch || !o || cmd != CMD_OBJ_OPENED)
     return false;
 
-  vector <TString> fortunes;
+  vector <sstring> fortunes;
   fortunes.push_back("This paper is better than you in every way, because it can achieve Zen.  You, on the other hand, cannot.  And thus you must resume your misguided existence and continue on forever envious of this little bit of bleached wood pulp.\n\r");
   fortunes.push_back("The greatest danger could be your stupidity.\n\r");
   fortunes.push_back("Our first and last love is... self love.\n\r");
@@ -7192,7 +7192,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   fortunes.push_back("Be careful what you look for, you just might find it.\n\r");
   fortunes.push_back("Look deep and you might find, you like it when you cross the line.\n\r");
 
-  TString buf=fortunes[::number(0,fortunes.size()-1)];
+  sstring buf=fortunes[::number(0,fortunes.size()-1)];
 
   // create fortune
   TNote *fortune = createNote(mud_str_dup(buf));

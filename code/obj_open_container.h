@@ -24,7 +24,7 @@ class TOpenContainer : public TBaseContainer {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
 
     virtual void changeObjValue2(TBeing *);
     virtual bool getObjFromMeCheck(TBeing *);
@@ -42,9 +42,9 @@ class TOpenContainer : public TBaseContainer {
     virtual void lowCheck();
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual int putSomethingInto(TBeing *, TThing *);
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
 
     bool isCloseable() const;
     bool isClosed() const;

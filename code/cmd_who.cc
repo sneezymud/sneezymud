@@ -28,7 +28,7 @@ void TPerson::parseTitle(char *arg, Descriptor *user)
   strcpy(arg, nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE).c_str());
   if (!flag &&
       colorString(this, user, title, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
-      string::npos)
+      sstring::npos)
     strcpy(arg, getName());  // did not specify a <n>
 
   // explicitely terminate it since players are sloppy
@@ -63,7 +63,7 @@ void Descriptor::menuWho()
   writeToQ("[Press return to continue]\n\r");
 }
 
-static const string getWizDescriptLev(const TBeing *ch)
+static const sstring getWizDescriptLev(const TBeing *ch)
 {
   if (ch->hasWizPower(POWER_WIZARD))
     return "creator";
@@ -79,7 +79,7 @@ static const string getWizDescriptLev(const TBeing *ch)
     return "BUG ME!";
 }
 
-static const string getWhoLevel(const TBeing *ch, TBeing *p)
+static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
 {
   char tempbuf[256];
   char colorBuf[256] = "\0";
@@ -93,7 +93,7 @@ static const string getWhoLevel(const TBeing *ch, TBeing *p)
 
   // Do it this way so you get the default-titles also.
   if (p && p->GetMaxLevel() > MAX_MORT) {
-    string str = p->msgVariables(MSG_IMM_TITLE);
+    sstring str = p->msgVariables(MSG_IMM_TITLE);
     unsigned int len = str.size();
     unsigned int padding = 14-len;
     unsigned int frontpadding = padding/2;
@@ -104,7 +104,7 @@ static const string getWhoLevel(const TBeing *ch, TBeing *p)
             colorBuf, str.c_str(),
             colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
   } else {
-    string tmpstring;
+    sstring tmpstring;
 
     if(p->isPlayerAction(PLR_ANONYMOUS) && !ch->isImmortal()){
       tmpstring = "Anonymous";
@@ -140,16 +140,16 @@ void TBeing::doWho(const char *argument)
 {
   TBeing *k, *p;
   //  char buf[1024] = "\0\0\0";
-  string buf;
+  sstring buf;
   int listed = 0, lcount, l;
   unsigned int count;
   char arg[1024], tempbuf[1024];
   char tString[256];
-  string sb;
+  sstring sb;
   int which1 = 0;
   int which2 = 0;
 
-  string stmp;
+  sstring stmp;
   unsigned int pos;
 		  
   for (; isspace(*argument); argument++);
@@ -269,10 +269,10 @@ void TBeing::doWho(const char *argument)
 	while(db.fetchRow()){
 	  stmp=db.getColumn(0);
 	  
-	  if((pos=stmp.find("<n>")) != string::npos)
+	  if((pos=stmp.find("<n>")) != sstring::npos)
 	    stmp.replace(pos,3,db.getColumn(2));
 
-	  if((pos=stmp.find("<N>")) != string::npos)
+	  if((pos=stmp.find("<N>")) != sstring::npos)
 	    stmp.replace(pos,3,db.getColumn(2));
 
 	  
@@ -290,10 +290,10 @@ void TBeing::doWho(const char *argument)
         while(db2.fetchRow()){
           stmp=db2.getColumn(0);
 
-          if((pos=stmp.find("<n>")) != string::npos)
+          if((pos=stmp.find("<n>")) != sstring::npos)
             stmp.replace(pos,3,db2.getColumn(2));
 
-          if((pos=stmp.find("<N>")) != string::npos)
+          if((pos=stmp.find("<N>")) != sstring::npos)
             stmp.replace(pos,3,db2.getColumn(2));
 
 
@@ -312,10 +312,10 @@ void TBeing::doWho(const char *argument)
         while(db3.fetchRow()){
           stmp=db3.getColumn(0);
 
-          if((pos=stmp.find("<n>")) != string::npos)
+          if((pos=stmp.find("<n>")) != sstring::npos)
             stmp.replace(pos,3,db3.getColumn(2));
 
-          if((pos=stmp.find("<N>")) != string::npos)
+          if((pos=stmp.find("<N>")) != sstring::npos)
             stmp.replace(pos,3,db3.getColumn(2));
 
 

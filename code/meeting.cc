@@ -15,7 +15,7 @@ class organizer_struct {
     bool pause;
     bool open_debate;
     bool logging;
-    deque<string>speech_list;
+    deque<sstring>speech_list;
 
     organizer_struct()  :
       speech_dur(-1),
@@ -24,12 +24,12 @@ class organizer_struct {
       open_debate(false),
       logging(false)
     {
-      // deque<string>speech_list(0);
+      // deque<sstring>speech_list(0);
     }
     ~organizer_struct()
     {
       while (!speech_list.empty()) {
-        // string nameStr = speech_list[0];
+        // sstring nameStr = speech_list[0];
         speech_list.pop_front();
       }
     }
@@ -37,11 +37,11 @@ class organizer_struct {
 
 static void announceNextSpeaker(TMonster *myself, organizer_struct *job)
 {
-  // string nameStr = job->speech_list.front();
+  // sstring nameStr = job->speech_list.front();
   job->speech_list.pop_front();
   job->start_time = time(0);
   if (!job->speech_list.empty()) {
-    string tmpstr = "The next speaker is " + job->speech_list.front();
+    sstring tmpstr = "The next speaker is " + job->speech_list.front();
     myself->doSay(tmpstr.c_str());
   } else
     myself->doSay("There are no speakers listed.");
@@ -67,7 +67,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
   if (!strncasecmp(arg, ORGANIZER_ID, strlen(ORGANIZER_ID))) {
     arg += strlen(ORGANIZER_ID);
     if (!strncasecmp(arg, " show list", 10)) {
-      string tmpString;
+      sstring tmpString;
       tmpString = fname(ch->name);
       tmpString += " ";
       tmpString += "The current speaker list:";
@@ -105,7 +105,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
         unsigned int i;
         for (i = 0; i < job->speech_list.size(); i++) {
           if (ch->name == job->speech_list[i]){
-            string tmpString = fname(ch->name);
+            sstring tmpString = fname(ch->name);
             tmpString += " You are already in the speaker list.";
             myself->doTell(tmpString.c_str());
             *rc = true;
@@ -113,13 +113,13 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
           }
         }
       } else {
-        string tmpstr = "The next speaker is ";
+        sstring tmpstr = "The next speaker is ";
         tmpstr += ch->getName();
         myself->doSay(tmpstr.c_str());
       }
 
       job->speech_list.push_back(ch->name);
-      string tstr = fname(ch->name);
+      sstring tstr = fname(ch->name);
       tstr += " You have been added as a speaker.";
       myself->doTell(tstr.c_str());
 
@@ -182,7 +182,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       return true;
     } else if (!strncasecmp(arg, " clear", 6) && ch->isImmortal()) {
       while (!job->speech_list.empty()) {
-        string nameStr = job->speech_list[0];
+        sstring nameStr = job->speech_list[0];
         job->speech_list.pop_front();
       }
       myself->doSay("The speaker list has been cleared.");
@@ -257,10 +257,10 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
       if (job->speech_list.empty())
         return FALSE;
 
-      string nameStr = job->speech_list.front();
+      sstring nameStr = job->speech_list.front();
       ch = get_char_room(nameStr.c_str(), myself->in_room);
       if (!ch) {
-        string tmpstr = "The current speaker, ";
+        sstring tmpstr = "The current speaker, ";
         tmpstr += nameStr;
         tmpstr += ", no longer seems to be here.";
         myself->doSay(tmpstr.c_str());
@@ -270,9 +270,9 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
       break;
     }
     if (job->speech_dur > 0 && !job->pause) {
-      string nameStr = job->speech_list.front();
+      sstring nameStr = job->speech_list.front();
       if ((job->start_time + job->speech_dur) < time(0)) {
-        string tmpstr = nameStr;
+        sstring tmpstr = nameStr;
         tmpstr += "'s alloted time has expired.";
         myself->doSay(tmpstr.c_str());
         announceNextSpeaker(myself, job);
@@ -291,7 +291,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
     // silly bastards that aliased emote to work like a say should be shot
     // it screws up meeting logs, so deny such activity
     
-    string str = fname(ch->name);
+    sstring str = fname(ch->name);
     str += " Emotting is disabled at the moment.";
     myself->doTell(str.c_str());
     return TRUE;
@@ -363,7 +363,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
     }
   }
 
-  string str = fname(ch->name);
+  sstring str = fname(ch->name);
   str += " To maintain order at the meeting, you are restricted to the following commands:";
   myself->doTell(str.c_str());
 

@@ -46,13 +46,13 @@ void TMoney::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TMoney::statObjInfo() const
+sstring TMoney::statObjInfo() const
 {
   char buf[256];
 
   sprintf(buf, "Talens in pile: %d", getMoney());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -254,7 +254,7 @@ void TMoney::onObjLoad()
   setMoney(x);
 }
 
-string TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s [%d talens]", useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()), 

@@ -481,7 +481,7 @@ class TObj : public TThing {
     virtual ~TObj();
 
     // VIRTUAL FUNCTIONS
-    virtual string showModifier(showModeT, const TBeing *) const { return ""; }
+    virtual sstring showModifier(showModeT, const TBeing *) const { return ""; }
     virtual bool isPersonalized() { return action_description != NULL; }
     virtual int getVolume() const { return (obj_flags.volume); }
     virtual const char *getName() const { return shortDescr; }
@@ -588,7 +588,7 @@ class TObj : public TThing {
     virtual int objectDecay() { return FALSE; }
     virtual void lowCheck();
     virtual bool lowCheckSlots(silentTypeT);
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
     virtual void setEmpty() {}
     virtual void lookObj(TBeing *, int) const;
     virtual void examineObj(TBeing *) const {}
@@ -609,8 +609,8 @@ class TObj : public TThing {
     virtual void writeAffects(int, FILE *) const;
     virtual int addApply(TBeing *, applyTypeT);
     virtual void noteMe(TMonster *, TBeing*, TObj *, time_t, int) {}
-    virtual int noteMeForRent(string &, TBeing *, TThing *, int *);
-    virtual string displayFourValues();
+    virtual int noteMeForRent(sstring &, TBeing *, TThing *, int *);
+    virtual sstring displayFourValues();
     virtual void changeObjValue1(TBeing *);
     virtual void changeObjValue2(TBeing *);
     virtual void changeObjValue3(TBeing *);
@@ -627,7 +627,7 @@ class TObj : public TThing {
     virtual void decayMe();
     virtual bool sellMeCheck(TBeing *, TMonster *) const;
     virtual void recalcShopData(int, int) {}
-    virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, string, itemTypeT, int &, int);
+    virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
     virtual int treeMe(TBeing *, const char *, int, int*);
     virtual bool canGetMeDeny(const TBeing *, silentTypeT) const;
     virtual bool canGetMe(const TBeing *, silentTypeT) const;
@@ -636,7 +636,7 @@ class TObj : public TThing {
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
     virtual void makeScraps();
     virtual int shopPrice(int, int, float, int *) const;
     virtual int sellPrice(int, float, int *);
@@ -645,7 +645,7 @@ class TObj : public TThing {
     virtual int changeItemVal2Check(TBeing *, int);
     virtual int changeItemVal3Check(TBeing *, int);
     virtual int changeItemVal4Check(TBeing *, int);
-    virtual string getNameForShow(bool = true, bool = true, const TBeing * = NULL) const;
+    virtual sstring getNameForShow(bool = true, bool = true, const TBeing * = NULL) const;
     virtual int foodItemUsed(TBeing *ch, const char *arg);
     virtual void changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT) {}
     //virtual void changeBaseWeaponValue2(TBeing *, const char *, editorEnterTypeT) {}
@@ -679,7 +679,7 @@ class TObj : public TThing {
     virtual void show_me_mult_to_char(TBeing *, showModeT, unsigned int) const;
     virtual void show_me_to_char(TBeing *, showModeT) const;
     virtual void descMaxStruct(const TBeing *, int) const {}
-    string equip_condition(int) const;
+    sstring equip_condition(int) const;
     virtual void describeCondition(const TBeing *) const;
     virtual int drinkMe(TBeing *);
     virtual void sipMe(TBeing *);

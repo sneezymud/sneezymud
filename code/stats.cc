@@ -56,12 +56,12 @@ void Stats::zero()
     values[stat]=0;
 }
 
-string Stats::showStats(TBeing *caller)
+sstring Stats::showStats(TBeing *caller)
 {
   byte level = caller->GetMaxLevel();
   Stats showStat;
   char tmpbuf[80];
-  string buf;
+  sstring buf;
 
   if(level < GOD_LEVEL1)
     showStat = *this - caller->race->baseStats;
@@ -79,9 +79,9 @@ string Stats::showStats(TBeing *caller)
   return buf;
 }
 
-const string Stats::printStatHeader() const
+const sstring Stats::printStatHeader() const
 {
-  string header;
+  sstring header;
 
   // Physical Stats
   header = "<c>[STR]<z><c>[BRA]<z><c>[CON]<z><c>[DEX]<z><c>[AGI]<z>";
@@ -93,7 +93,7 @@ const string Stats::printStatHeader() const
   return header;
 }
 
-const string Stats::printRawStats(const TBeing *) const
+const sstring Stats::printRawStats(const TBeing *) const
 {
   char rawStats[256];
 

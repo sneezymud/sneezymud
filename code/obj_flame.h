@@ -20,7 +20,7 @@ class TFFlame : public TBaseLight {
   private:
     int magBV;
   public:
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_FLAME; }
 
     virtual int    chiMe(TBeing *);
@@ -34,7 +34,7 @@ class TFFlame : public TBaseLight {
     virtual void   lightMe(TBeing *, silentTypeT);
     virtual void   extinguishMe(TBeing *);
     virtual int    pourWaterOnMe(TBeing *, TObj *);
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void   refuelMeLight(TBeing *, TThing *);
     virtual void   describeObjectSpecifics(const TBeing *) const;
     virtual void   assignFourValues(int, int, int, int);

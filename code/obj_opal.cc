@@ -128,7 +128,7 @@ int TOpal::objectSell(TBeing *ch, TMonster *keeper)
   return TRUE;
 }
 
-string TOpal::statObjInfo() const
+sstring TOpal::statObjInfo() const
 {
   char buf[256];
 
@@ -136,7 +136,7 @@ string TOpal::statObjInfo() const
                 psGetCarats(),
                 psGetStrength(), psGetMana(), psGetConsecFails());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

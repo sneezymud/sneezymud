@@ -82,9 +82,9 @@ void TTable::lowCheck()
 //  TObj::lowCheck();
 }
 
-string TTable::statObjInfo() const
+sstring TTable::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

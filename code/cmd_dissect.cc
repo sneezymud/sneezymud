@@ -78,9 +78,9 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
   return num;
 }
 
-int TBeing::doDissect(string argument)
+int TBeing::doDissect(sstring argument)
 {
-  string namebuf;
+  sstring namebuf;
   TObj *obj;
   int rc;
 
@@ -179,10 +179,10 @@ void readDissectionFile()
     di.message_to_others = buf;
 
     size_t end_whitespace = di.message_to_self.find_last_of("\n");
-    if (end_whitespace != string::npos)
+    if (end_whitespace != sstring::npos)
       di.message_to_self.erase(end_whitespace);
     end_whitespace = di.message_to_others.find_last_of("\n");
-    if (end_whitespace != string::npos)
+    if (end_whitespace != sstring::npos)
       di.message_to_others.erase(end_whitespace);
 
     dissect_array[mobNum] = di;

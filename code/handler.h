@@ -42,12 +42,12 @@ TBeing *get_char(const char *name, exactTypeT exact);
 /* find if character can see */
 TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count = NULL, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
 TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exactTypeT exact, infraTypeT = INFRA_NO);
-TBeing *get_char_vis(const TBeing *ch, const string name, int *count, infraTypeT = INFRA_NO);
+TBeing *get_char_vis(const TBeing *ch, const sstring name, int *count, infraTypeT = INFRA_NO);
 TBeing *get_pc_world(const TBeing *ch, const char *name, exactTypeT exact, infraTypeT = INFRA_NO, bool visible = TRUE);
 TBeing * get_best_char_room(const TBeing *, const char *, visibleTypeT vis = VISIBLE_YES, infraTypeT inf = INFRA_NO);
 
-TObj *generic_find_obj(string, int, TBeing *);
-TBeing *generic_find_being(string, int, TBeing *);
+TObj *generic_find_obj(sstring, int, TBeing *);
+TBeing *generic_find_being(sstring, int, TBeing *);
 int generic_find(const char *, int, TBeing *, TBeing**, TObj**);
 
 const unsigned int FIND_CHAR_ROOM     =(1<<0);
@@ -59,9 +59,9 @@ const unsigned int FIND_OBJ_EQUIP     =(1<<5);
 const unsigned int FIND_OBJ_COMM      =(1<<6);
 const unsigned int FIND_ROOM_EXTRA    =(1<<7);
 
-extern TThing *searchLinkedListVis(const TBeing *ch, string name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedListVis(const TBeing *ch, sstring name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
 
 extern TThing *searchLinkedList(const char * name, TThing *list, thingTypeT x = TYPETHING);
-extern TThing *searchLinkedList(const string & name, TThing *list, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedList(const sstring & name, TThing *list, thingTypeT x = TYPETHING);
 
 #endif

@@ -79,7 +79,7 @@ void TFFlame::remMagBV(int cBV)
   magBV &= ~cBV;
 }
 
-string TFFlame::statObjInfo() const
+sstring TFFlame::statObjInfo() const
 {
   char Buf[2][256]={"\0", "\0"};
 
@@ -108,7 +108,7 @@ string TFFlame::statObjInfo() const
           getMaxBurn(),
           (strlen(Buf[1]) > 0 ? Buf[1] : " --none--"));
 
-  string a(Buf[0]);
+  sstring a(Buf[0]);
   return a;
 }
 
@@ -395,9 +395,9 @@ void TFFlame::addFlameMessages()
 
 // Used when a person 'looks' and sees the object in a room and such.
 // TLight does a (lit) and I prefer not to have that here.
-string TFFlame::showModifier(showModeT, const TBeing *) const
+sstring TFFlame::showModifier(showModeT, const TBeing *) const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

@@ -915,14 +915,14 @@ void TFood::lowCheck()
   TObj::lowCheck();
 }
 
-string TFood::statObjInfo() const
+sstring TFood::statObjInfo() const
 {
   char buf[256];
 
   sprintf(buf, "Makes full : %d      Poisoned : %d",
           getFoodFill(), getFoodFlags());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

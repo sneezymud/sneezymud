@@ -32,7 +32,7 @@ class TVehicle : public TPortal {
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }
   unsigned char getPortalType() const;
   char getPortalNumCharges() const;
-  void driveSpeed(TBeing *, string);
+  void driveSpeed(TBeing *, sstring);
   void driveDir(TBeing *, dirTypeT);
   void vehiclePulse(int);
   void driveStatus(TBeing *);

@@ -2470,7 +2470,7 @@ void TComponent::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getComponentType();
 }
 
-string TComponent::statObjInfo() const
+sstring TComponent::statObjInfo() const
 {
   char buf[256];
 
@@ -2498,7 +2498,7 @@ string TComponent::statObjInfo() const
       getComponentCharges(),
       getComponentMaxCharges());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -2689,7 +2689,7 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
               tValue = 0;
   double      tCost  = 0.0;
   TComponent *tComponent;
-  string      tStString(""),
+  sstring      tStString(""),
               tStBuffer("");
 
   for (; isspace(*tString); tString++);
@@ -2771,9 +2771,9 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   return rc;
 }
 
-string TComponent::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TComponent::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
-  string buf;
+  sstring buf;
   buf = useName ? name : (useColor ? getName() : getNameNOC(ch));
 
   spellNumT spell_num = getComponentSpell();
@@ -2945,7 +2945,7 @@ TThing & TComponent::operator -- ()
   return *this;
 }
 
-const string TComponent::shopList(const TBeing *ch, const char *tArg,
+const sstring TComponent::shopList(const TBeing *ch, const char *tArg,
                                   int iMin, int iMax, int num,
                                   int shop_nr, int k, unsigned long int FitT) const
 {

@@ -10,9 +10,9 @@
 #include "colorstring.h"
 
 
-string stripColorCodes(string s)
+sstring stripColorCodes(sstring s)
 {
-  string buf;
+  sstring buf;
   
   for(unsigned int i=0;i<s.length();++i){
     if(s[i] == '<'){
@@ -106,14 +106,14 @@ bool hasColorStrings(const TBeing *mob, const char *arg, int field)
   return FALSE;
 }
 
-// takes the string given by arg, replaces any <m> or <M> in it with
+// takes the sstring given by arg, replaces any <m> or <M> in it with
 // ting's name.  Colorizes as appropriate for me/ch.  Undoes any color
-// changes that were made by insertion of ting's name string also.
-string addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, const char *arg, colorTypeT lev) 
+// changes that were made by insertion of ting's name sstring also.
+sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, const char *arg, colorTypeT lev) 
 {
   unsigned int s;
   unsigned int len;
-  string buf;
+  sstring buf;
   char tmp[256];
   bool y = FALSE;
   int x = 0;
@@ -198,7 +198,7 @@ string addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, 
         case '1':
         case 'h':
         case 'H':
-          // if there is a color string, it will pick it up after <m>
+          // if there is a color sstring, it will pick it up after <m>
           y = TRUE;
           x = s; 
         // pass through
@@ -215,10 +215,10 @@ string addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, 
   return buf;
 }
 
-string nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, colorTypeT, bool noret)
+sstring nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, colorTypeT, bool noret)
 {
   unsigned int len, s;
-  string buf;
+  sstring buf;
   char tmp[256];
           
   len = strlen(arg);
@@ -263,15 +263,15 @@ string nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, c
   return buf;
 }
 
-const string colorString(const TBeing *me, const Descriptor *ch, const char *arg, int *flag, colorTypeT lev, bool end, bool noret)
+const sstring colorString(const TBeing *me, const Descriptor *ch, const char *arg, int *flag, colorTypeT lev, bool end, bool noret)
 {
 // (me = who to, ch is the desc, arg = arg, flag = ?, int lev = desired color
-//  level, end = whether to send terminator at end of string..false if in
+//  level, end = whether to send terminator at end of sstring..false if in
 //  middle of senstence (color a mob or something).. used in act() 
 //  noret is overloaded to add a \n\r to the end of the buf, it defaults
 //  to no so if you dont pass anything, it will not return -Cos
   int len, s;
-  string buf;
+  sstring buf;
   char tmp[80];
   bool colorize = TRUE;
   bool addNorm = FALSE;
@@ -353,7 +353,7 @@ const string colorString(const TBeing *me, const Descriptor *ch, const char *arg
       
       break;
     default:
-      vlogf(LOG_BUG,"Colorstring with a default COLOR setting");
+      vlogf(LOG_BUG,"Colorsstring with a default COLOR setting");
       colorize = TRUE;
       break;
   }

@@ -422,7 +422,7 @@ static void sendWeatherMessage(weatherMessT num)
             break;
         }
 
-        string buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
+        sstring buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
         i->output.putInQ(buf.c_str());
       }
     }
@@ -983,8 +983,8 @@ void calcNewSunSet()
   si_sunSet = (18*4+0) + (int) (x*4 + 0.5);
 }
 
-// display time (given in hourminTime format) as a string
-string hmtAsString(int hmt)
+// display time (given in hourminTime format) as a sstring
+sstring hmtAsString(int hmt)
 {
   int hour = hmt/4;
   int minute = hmt%4 * 15;

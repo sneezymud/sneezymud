@@ -54,11 +54,11 @@ int TPlant::putSomethingInto(TBeing *ch, TThing *)
 }
 
 
-string TPlant::statObjInfo() const
+sstring TPlant::statObjInfo() const
 {
   char buf[256];
   sprintf(buf, "Type: %i Age: %i", getType(), getAge());
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

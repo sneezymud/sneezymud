@@ -18,26 +18,26 @@
 // unfortunately, turning off red (<z>) makes everything go back to
 // normal, and we lose the 'normal' color.
 // To get around this, we parse the say statement, and convert any <z>, <Z>,
-// or <1> to a 'replacement' color string and then send it out.
+// or <1> to a 'replacement' color sstring and then send it out.
 // unfortunately, we also need to "unbold", so we need to send both the
 // normal <z> as well as the replacement
-static void convertStringColor(const string replacement, string & str)
+static void convertStringColor(const sstring replacement, sstring & str)
 {
   // we use <tmpi> to represent a dummy placeholder which we convert to
   // <z> at the end
-  string repl = "<tmpi>";
+  sstring repl = "<tmpi>";
   repl += replacement;
  
-  while (str.find("<z>") != string::npos)  
+  while (str.find("<z>") != sstring::npos)  
     str.replace(str.find("<z>"), 3, repl);
 
-  while (str.find("<Z>") != string::npos)  
+  while (str.find("<Z>") != sstring::npos)  
     str.replace(str.find("<Z>"), 3, repl);
 
-  while (str.find("<1>") != string::npos)  
+  while (str.find("<1>") != sstring::npos)  
     str.replace(str.find("<1>"), 3, repl);
 
-  while (str.find("<tmpi>") != string::npos)  
+  while (str.find("<tmpi>") != sstring::npos)  
     str.replace(str.find("<tmpi>"), 6, "<z>");
 }
 
@@ -65,7 +65,7 @@ void TBeing::disturbMeditation(TBeing *vict) const
 }
 
 // Make drunk people garble their words!
-static string garble(const char *arg, int chance)
+static sstring garble(const char *arg, int chance)
 {
   char *tmp;
   char temp[256];
@@ -79,7 +79,7 @@ static string garble(const char *arg, int chance)
     return arg;
 
   for (;!isalpha(*arg); arg++);
-// get rid of bad things at the beginning of string
+// get rid of bad things at the beginning of sstring
 
   // first, lets turn things into pig latin
   *temp = '\0';
@@ -302,13 +302,13 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
         forceCrash("No capbuf in sendShout!");
         continue;
       }
-      string argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
+      sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
       sprintf(namebuf, "<g>%s<z>", cap(capbuf));
-      string nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
+      sstring nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
       if(hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          string tmpbuf = colorString(b, i, cap(capbuf), NULL, COLOR_MOBS, FALSE);
-          string tmpbuf2 = colorString(b, i, cap(capbuf), NULL, COLOR_NONE, FALSE);
+          sstring tmpbuf = colorString(b, i, cap(capbuf), NULL, COLOR_MOBS, FALSE);
+          sstring tmpbuf2 = colorString(b, i, cap(capbuf), NULL, COLOR_NONE, FALSE);
 
           if (i->m_bIsClient)
             i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
@@ -408,7 +408,7 @@ void TBeing::doShout(const char *arg)
 
 void TBeing::doGrouptell(const char *arg)
 {
-  string buf, garbed;
+  sstring buf, garbed;
   followData *f;
   TBeing *k;
 
@@ -498,7 +498,7 @@ void TBeing::doCommune(const char *arg)
     mud_str_copy(buf2, &buf2[1],256);  // skip the @
     levnum = convertTo<int>(buf2);
     if (levnum > 0) {
-      // only a properly formatted string should be changed
+      // only a properly formatted sstring should be changed
       arg = one_argument(arg, buf2);
       for (; isspace(*arg); arg++);
       if (!*arg) {
@@ -535,7 +535,7 @@ void TBeing::doCommune(const char *arg)
       } else
         critter = i->character;
 
-      string str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
+      sstring str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
       convertStringColor("<c>", str);
 
       if (!levnum) {
@@ -572,7 +572,7 @@ void TBeing::doCommune(const char *arg)
 
 static const char *RandomWord()
 {
-  static const char *string[50] =
+  static const char *sstring[50] =
   {
     "argle",
     "bargle",
@@ -625,7 +625,7 @@ static const char *RandomWord()
     "your",
     "mother"                    // 50 */
   };
-  return (string[number(0, 49)]);
+  return (sstring[number(0, 49)]);
 }
 
 
@@ -718,7 +718,7 @@ int TBeing::doTell(const char *name, const char *fmt, ...)
   va_start(ap, fmt);
   vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
 
-  string sbuf;
+  sstring sbuf;
   ssprintf(sbuf, "%s %s", name, buf);
   
   return doTell(sbuf.c_str());
@@ -806,7 +806,7 @@ int TBeing::doTell(const char *arg, bool visible)
   }
 
   int drunkNum = getCond(DRUNK);
-  string garbed;
+  sstring garbed;
   garbed = garble(message, drunkNum);
 
   if(vict->isImmortal() && drunkNum>0)
@@ -848,7 +848,7 @@ int TBeing::doTell(const char *arg, bool visible)
   sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
 
 
-  // we only color the string to the victim, so leave this AFTER
+  // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
   convertStringColor("<c>", garbed);
 
@@ -1039,7 +1039,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
     // we can write - hooray! (This hooray is a ghee Stargazerism. - Russ)
     ch->sendTo("Ok...go ahead and write. End the note with a ~.\n\r");
 
-    // New memory stuff. Set up with its own strings, and set it strung - Russ 
+    // New memory stuff. Set up with its own sstrings, and set it strung - Russ 
     if (objVnum() >= 0) {
       swapToStrung();
     }
@@ -1096,9 +1096,9 @@ void TBeing::doWrite(const char *arg)
   pen->writeMePen(this, paper);
 }
 
-void TBeing::doReply(const string &arg)
+void TBeing::doReply(const sstring &arg)
 {
-  string buf;
+  sstring buf;
 
   if (!desc || !*desc->last_teller) {
     sendTo("No one seems to have spoken to you lately.\n\r");

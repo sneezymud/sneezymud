@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: limbs.h,v $
+// Revision 5.2  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -111,13 +118,13 @@ class Limb {
 private:
 
   Limb();
-  Limb(string typeOfLimb, string connector, string desc);
+  Limb(sstring typeOfLimb, sstring connector, sstring desc);
   virtual ~Limb();
   virtual void initLimb();
 
   virtual Limb *search(int target, int status);
   virtual int join(Limb *newLimb);
-  virtual int toInt(string limb_name);
+  virtual int toInt(sstring limb_name);
 
 public:
 
@@ -126,7 +133,7 @@ public:
 
 private:
   int limbType;
-  string name;
+  sstring name;
 
   int limbHitPoints;
   ubyte limbStatus;

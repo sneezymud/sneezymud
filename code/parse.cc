@@ -14,7 +14,7 @@ extern "C" {
 #include "stdsneezy.h"
 #include "mail.h"
 
-string lockmess;
+sstring lockmess;
 commandInfo *commandArray[MAX_CMD_LIST];
 bool WizLock;
 
@@ -154,7 +154,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   TBeing *ch;
   bool isPoly = FALSE;
   char newarg[1024];
-  string tStNewArg("");
+  sstring tStNewArg("");
   size_t tVar = 0;
 
 
@@ -169,19 +169,19 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   // "self"/"me"/"tank" word has a leading space and is the Last
   // word in the line.  This way ->me<-rcees doesn't trigger.
   if (cmd == CMD_PRAY) {
-    if ((tVar = tStNewArg.find(" self")) != string::npos &&
+    if ((tVar = tStNewArg.find(" self")) != sstring::npos &&
         !(tStNewArg.size() - tVar - 5))
       tStNewArg.replace(tStNewArg.find("self"), 4, getName());
 
-    else if ((tVar = tStNewArg.find(" me")) != string::npos &&
+    else if ((tVar = tStNewArg.find(" me")) != sstring::npos &&
              !(tStNewArg.size() - tVar - 3))
       tStNewArg.replace(tStNewArg.find("me"), 2, getName());
 
-    else if ((tVar = tStNewArg.find(" tank")) != string::npos && fight() &&
+    else if ((tVar = tStNewArg.find(" tank")) != sstring::npos && fight() &&
              !(tStNewArg.size() - tVar - 5) &&
              isAffected(AFF_GROUP) && fight()->fight()) {
       tStNewArg.replace(tStNewArg.find("tank"), 4, persfname(fight()->fight()).c_str());
-    } else if ((tVar = tStNewArg.find(" tank")) != string::npos &&
+    } else if ((tVar = tStNewArg.find(" tank")) != sstring::npos &&
                !(tStNewArg.size() - tVar - 5) &&
                cmd == CMD_PRAY && isAffected(AFF_GROUP)) {
       if ((master && master->followers) || followers) {
@@ -318,27 +318,27 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
       else if (rc) 
         return FALSE;
 
-      // slowly switching to strings over char *
-      const string stringarg = newarg;
+      // slowly switching to sstrings over char *
+      const sstring sstringarg = newarg;
 
       switch(cmd) {
         case CMD_UNSADDLE:
-          doUnsaddle(stringarg);
+          doUnsaddle(sstringarg);
           break;
         case CMD_SPRINGLEAP:
-          doSpringleap(stringarg, true, dynamic_cast<TBeing *>(vict));
+          doSpringleap(sstringarg, true, dynamic_cast<TBeing *>(vict));
           break;
         case CMD_SADDLE:
-          doSaddle(stringarg);
+          doSaddle(sstringarg);
           break;
         case CMD_CONCEAL:
-          doConceal(stringarg);
+          doConceal(sstringarg);
           break;
         case CMD_RESTRING:
-          doRestring(stringarg);
+          doResstring(sstringarg);
           break;
         case CMD_RESET:
-          doReset(stringarg);
+          doReset(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_RELEASE:
@@ -346,10 +346,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
 	    break;
 	  }	  
-	  doRelease(stringarg);
+	  doRelease(sstringarg);
           break;
         case CMD_CRIT:
-          rc = doCrit(stringarg);
+          rc = doCrit(sstringarg);
           break;
         case CMD_CLIENTS:
           doClients();
@@ -360,22 +360,22 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
 	    break;
 	  }
-	  doCapture(stringarg);
+	  doCapture(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_HEAVEN:
-          doHeaven(stringarg);
+          doHeaven(sstringarg);
           break;
         case CMD_REFUEL:
           doRefuel(newarg);
 	  addToLifeforce(1);
           break;
         case CMD_REPLY:
-          doReply(stringarg);
+          doReply(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_USE:
-          rc = doUse(stringarg);
+          rc = doUse(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DRAG:
@@ -385,22 +385,22 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doRoll(newarg);
           break;
         case CMD_DISSECT:
-          rc = doDissect(stringarg);
+          rc = doDissect(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DISARM:
-          rc = doDisarm(stringarg, vict);
+          rc = doDisarm(sstringarg, vict);
           break;
         case CMD_EXEC:
           rc = doExec();
           break;
         case CMD_QUAFF:
-          rc = doQuaff(stringarg);
+          rc = doQuaff(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_GUARD:
         case CMD_PROTECT:
-          doGuard(stringarg);
+          doGuard(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_ORDER:
@@ -673,7 +673,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_SALUTE:
         case CMD_PET:
         case CMD_GRIMACE:
-          rc = doAction(stringarg, cmd);
+          rc = doAction(sstringarg, cmd);
 	  addToLifeforce(1);
           break;
         case CMD_JUMP:
@@ -839,7 +839,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doLoad(newarg);
           break;
         case CMD_GOTO:
-          rc = doGoto(stringarg);
+          rc = doGoto(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_SHOUT:
@@ -901,7 +901,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_SIT:
-          doSit(stringarg);
+          doSit(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_RAISE:
@@ -914,7 +914,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_REST:
-          doRest(stringarg);
+          doRest(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_LOWER:
@@ -934,7 +934,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_SLEEP:
-          doSleep(stringarg);
+          doSleep(sstringarg);
           break;
         case CMD_WAKE:
           doWake(newarg);
@@ -1008,7 +1008,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_LIMBS:
-          doLimbs(stringarg);
+          doLimbs(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BREATH:
@@ -1151,7 +1151,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  rc = doKneestrike(newarg, dynamic_cast<TBeing *>(vict));
  	  break;
         case CMD_DOORBASH:
-          rc = doDoorbash(stringarg);
+          rc = doDoorbash(sstringarg);
           break;
         case CMD_TRANCE_OF_BLADES:
 	  doTranceOfBlades(newarg);
@@ -1270,7 +1270,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doBload(newarg);
           break;
 	case CMD_GLOAD:
-	  doGload(stringarg);
+	  doGload(sstringarg);
 	  break;
         case CMD_THROW:
           doThrow(newarg);
@@ -1400,11 +1400,11 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_LIGHT:
-          doLight(stringarg);
+          doLight(sstringarg);
 	  addToLifeforce(1);
           break;
 	case CMD_FISH:
-	  doFish(stringarg);
+	  doFish(sstringarg);
 	  addToLifeforce(1);
 	  break;
         case CMD_LOW:
@@ -1422,7 +1422,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_EXTINGUISH:
-          doExtinguish(stringarg);
+          doExtinguish(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BASH:
@@ -1501,13 +1501,13 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doTan();
           break;
 	case CMD_PLANT:
-	  doPlant(stringarg);
+	  doPlant(sstringarg);
 	  break;
 	case CMD_COOK:
-	  doCook(stringarg);
+	  doCook(sstringarg);
 	  break;
 	case CMD_DRIVE:
-	  doDrive(stringarg);
+	  doDrive(sstringarg);
 	  break;
         case CMD_WHITTLE:
           doWhittle(newarg);
@@ -1610,7 +1610,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
 	  break;
 	case CMD_STOP:
-	  doStop(stringarg);
+	  doStop(sstringarg);
 	  addToLifeforce(1);
 	  break;
 	case CMD_TRIGGER:
@@ -1621,10 +1621,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doStore(newarg);
 	  break;
         case CMD_ZONEFILE:
-          doZonefile(stringarg);
+          doZonefile(sstringarg);
           break;
         case CMD_LOOT:
-          doLoot(stringarg);
+          doLoot(sstringarg);
 	  addToLifeforce(1);
           break;
         case CMD_TROPHY:
@@ -1769,8 +1769,8 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
   int i;
   unsigned int pos;
   char aliasbuf[256], arg1[512], arg2[1024];
-  string argument;
-  string whitespace=" \f\n\r\t\v";
+  sstring argument;
+  sstring whitespace=" \f\n\r\t\v";
 
   half_chop(orig_arg, arg1, arg2);
 
@@ -1912,7 +1912,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
 
 // I tried it this way, but had a memory leak reported by insure from it
 // bat 2/19/99
-// static bool fill_word(string & argument)
+// static bool fill_word(sstring & argument)
 static bool fill_word(const char * argument)
 {
   const char *filler_word[] =
@@ -1933,7 +1933,7 @@ static bool fill_word(const char * argument)
 void argument_interpreter(const char *argument, char *first_arg, char *second_arg)
 {
   try {
-    string tf1, tf2;
+    sstring tf1, tf2;
     argument_interpreter(argument, tf1, tf2);
     strcpy(first_arg, tf1.c_str());
     strcpy(second_arg, tf2.c_str());
@@ -1942,9 +1942,9 @@ void argument_interpreter(const char *argument, char *first_arg, char *second_ar
   }
 }
 
-void argument_interpreter(string argument, string &first_arg, string &second_arg)
+void argument_interpreter(sstring argument, sstring &first_arg, sstring &second_arg)
 {
-  string st = one_argument(argument, first_arg);
+  sstring st = one_argument(argument, first_arg);
   one_argument(st, second_arg);
 }
 
@@ -1965,8 +1965,8 @@ bool is_number(const char *str)
 const char *one_argument(const char *argument, char *first_arg)
 {
   char * temp;
-  string s;
-  string tmp_fa;
+  sstring s;
+  sstring tmp_fa;
   try {
     s = one_argument(argument, tmp_fa);
     strcpy(first_arg, tmp_fa.c_str());
@@ -1994,29 +1994,29 @@ const char *one_argument(const char *argument, char *first_arg)
   return NULL;
 }
 
-string one_argument(string argument, string & first_arg)
+sstring one_argument(sstring argument, sstring & first_arg)
 {
   size_t bgin, look_at;
-  string a2;
-  string whitespace = " \n\r";
+  sstring a2;
+  sstring whitespace = " \n\r";
   bgin = 0;
 
   do {
- //   string whitespace = " \n\r";
+ //   sstring whitespace = " \n\r";
     bgin = argument.find_first_not_of(whitespace);
     look_at = argument.find_first_of(whitespace, bgin);
 
-    if (look_at != string::npos) {
+    if (look_at != sstring::npos) {
       // normal, return the part between
       first_arg = argument.substr(bgin, look_at - bgin);
       a2 = argument.substr(look_at);
       argument = a2;
-    } else if (bgin != string::npos) {
-      // string had no terminator
+    } else if (bgin != sstring::npos) {
+      // sstring had no terminator
       first_arg = argument.substr(bgin);
       argument = "";
     } else {
-      // whole string was whitespace
+      // whole sstring was whitespace
       first_arg = "";
       argument = "";
     }
@@ -2038,49 +2038,49 @@ void only_argument(const char *argument, char *dest)
 
 bool is_abbrev(const char *arg1, const char *arg2, multipleTypeT multiple, exactTypeT exact)
 {
-  const string str1 = arg1;
-  const string str2 = arg2;
+  const sstring str1 = arg1;
+  const sstring str2 = arg2;
   return is_abbrev(str1, str2, multiple, exact);
 }
 
-// determine if a given string is an abbreviation of another 
+// determine if a given sstring is an abbreviation of another 
 // multiple word functionality FALSE by c++ default - Russ
 // Must be explicitly passed TRUE otherwise defaults to FALSE
 
-bool is_abbrev(const string &arg1, const string &arg2, multipleTypeT multiple, exactTypeT exact)
+bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple, exactTypeT exact)
 {
   int spaces1 = 0;
   int spaces2 = 0;
-  const string whitespace = " \n\r";
+  const sstring whitespace = " \n\r";
 
   // This functionality was added 01/03/98 by me - Russ
   if (multiple) {
     // Do we wanna check for multi word stuff?
-    string carg1 = arg1;
+    sstring carg1 = arg1;
     trimString(carg1);
-    string::size_type pos = carg1.find_last_not_of(whitespace);
-    if (pos != string::npos)
+    sstring::size_type pos = carg1.find_last_not_of(whitespace);
+    if (pos != sstring::npos)
       carg1.erase(pos+1);
 
     pos = 0;
     do {
       pos++;
       pos = carg1.find_first_of(whitespace, pos);
-      if (pos != string::npos)
+      if (pos != sstring::npos)
         spaces1++;
-    } while (pos != string::npos);
+    } while (pos != sstring::npos);
 
     // Now we have number of spaces in arg1, lets see if arg2
     // 1) Has that many words
     // 2) passes is_abbrev for all words
-    string carg2 = arg2;
+    sstring carg2 = arg2;
     pos = 0;
     do {
       ++pos;
       pos = carg2.find_first_of(whitespace, pos);
-      if (pos != string::npos)
+      if (pos != sstring::npos)
         spaces2++;
-    } while (pos != string::npos);
+    } while (pos != sstring::npos);
 
     if (exact) {
       if (spaces1 != spaces2)
@@ -2092,10 +2092,10 @@ bool is_abbrev(const string &arg1, const string &arg2, multipleTypeT multiple, e
 
     // may have converted the following code incorrectly
     // I wasn't entirely certain what it was doing - peel
-    vector <string> buf1, buf2;
+    vector <sstring> buf1, buf2;
 
-    split_string(carg1, " ", buf1);
-    split_string(carg2, " ", buf2);
+    split_sstring(carg1, " ", buf1);
+    split_sstring(carg2, " ", buf2);
 
     for(unsigned int i=0;i<buf1.size();++i){
       if(lower(buf1[i]) != lower(buf2[i].substr(0,buf1[i].size())))
@@ -2112,35 +2112,35 @@ bool is_abbrev(const string &arg1, const string &arg2, multipleTypeT multiple, e
 
   // do case insenitive matching
   // we create carg2 "short" so that the compare will work properly
-  string carg1 = lower(arg1);
-  string carg2 = lower(arg2);
+  sstring carg1 = lower(arg1);
+  sstring carg2 = lower(arg2);
 
   // check for just garbage whitespace
   trimString(carg1);
   if (carg1.empty())
     return false;
 
-  if (!stringncmp(carg1, carg2, carg1.length()))
+  if (!sstringncmp(carg1, carg2, carg1.length()))
     return true;
   return false;
 }
 
-// return first 'word' plus trailing substring of input string 
-void half_chop(const char *string, char *arg1, char *arg2)
+// return first 'word' plus trailing subsstring of input sstring 
+void half_chop(const char *sstring, char *arg1, char *arg2)
 {
-  for (; isspace(*string); string++);
-  for (; *string && !isspace(*arg1 = *string); string++, arg1++);
+  for (; isspace(*sstring); sstring++);
+  for (; *sstring && !isspace(*arg1 = *sstring); sstring++, arg1++);
   *arg1 = '\0';
-  for (; isspace(*string); string++);
-  for (; (*arg2 = *string); string++, arg2++);
+  for (; isspace(*sstring); sstring++);
+  for (; (*arg2 = *sstring); sstring++, arg2++);
 }
 
-string add_bars(const string &s){
-  string whitespace=" \f\n\r\t\v";
-  string stmp=s;
+sstring add_bars(const sstring &s){
+  sstring whitespace=" \f\n\r\t\v";
+  sstring stmp=s;
 
   for(unsigned int pos=stmp.find_first_of(whitespace);
-      pos != string::npos;
+      pos != sstring::npos;
       pos=stmp.find_first_of(whitespace, pos)){
     stmp[pos]='-';
   }
@@ -2739,7 +2739,7 @@ void buildCommandArray(void)
   commandArray[CMD_FINDEMAIL] = new commandInfo("findemail", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_ENGAGE] = new commandInfo("engage", POSITION_FIGHTING, 0);
   commandArray[CMD_DISENGAGE]=new commandInfo("disengage",POSITION_FIGHTING, 0);
-  commandArray[CMD_RESTRING]= new commandInfo("restring", POSITION_FIGHTING, 0);
+  commandArray[CMD_RESTRING]= new commandInfo("resstring", POSITION_FIGHTING, 0);
   commandArray[CMD_CONCEAL] = new commandInfo("conceal", POSITION_STANDING, 0);
   commandArray[CMD_COMMENT] = new commandInfo("comment", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_CAMP] = new commandInfo("camp", POSITION_CRAWLING, 0);
@@ -3016,15 +3016,15 @@ void sprinttype(int type, const char * const names[], char *result)
     strcpy(result, "UNDEFINED");
 }
 
-string lower(string s)
+sstring lower(sstring s)
 {
-  string::size_type iter;
+  sstring::size_type iter;
 
   do {
     iter = s.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    if (iter != string::npos)
+    if (iter != sstring::npos)
       s.replace(iter, 1, tolower(s[iter]));
-  } while (iter != string::npos);
+  } while (iter != sstring::npos);
 
   return s;
 }
@@ -3070,7 +3070,7 @@ const char *strcasestr(const char *s1, const char *s2)
 
 // I redid this function to make it more flexible. It has a new argument  
 // for the array, making it useful with any array.  - Russ                
-void bisect_arg(const char *arg, int *field, char *string, const char * const array[])
+void bisect_arg(const char *arg, int *field, char *sstring, const char * const array[])
 {
   char buf[MAX_INPUT_LENGTH];
 
@@ -3079,7 +3079,7 @@ void bisect_arg(const char *arg, int *field, char *string, const char * const ar
     return;
 
   for (; isspace(*arg); arg++);
-  for (; (*string = *arg); arg++, string++);
+  for (; (*sstring = *arg); arg++, sstring++);
 
   return;
 }
@@ -3102,7 +3102,7 @@ char *cap(char *s)
     }
     return s;
   } else {
-// Accounting for Items with color strings and % as first character
+// Accounting for Items with color sstrings and % as first character
     for (i = 0; *letter; letter++, i++) {
         if (*letter == '<')
           counter = 0;
@@ -3121,7 +3121,7 @@ char *cap(char *s)
   }
 }
 
-string good_cap(const string &cp)
+sstring good_cap(const sstring &cp)
 {
   char buf[1024];
   strcpy(buf, cp.c_str());
@@ -3146,7 +3146,7 @@ char *uncap(char *s)
     }
     return s;
   } else {
-// Accounting for Items with color strings and % as first character
+// Accounting for Items with color sstrings and % as first character
     for (i = 0; *letter; letter++, i++) {
         if (*letter == '<')
           counter = 0;
@@ -3166,7 +3166,7 @@ char *uncap(char *s)
   }
 }
 
-string good_uncap(const string &cp)
+sstring good_uncap(const sstring &cp)
 {
   char buf[1024];
   strcpy(buf, cp.c_str());
@@ -3220,11 +3220,11 @@ void cleanCharBuf(char *buf)
     *to = '\000';
 }
 
-int startsVowel(const char *string)
+int startsVowel(const char *sstring)
 {
-  for (;*string && isspace(*string); string++);
+  for (;*sstring && isspace(*sstring); sstring++);
 
-  switch (*string) {
+  switch (*sstring) {
     case 'A':
     case 'E':
     case 'I':
@@ -3248,7 +3248,7 @@ void str_shiftleft(char *str, int n)
   for (cp = str + n; (*(cp - n) = *cp); cp++);
 }
 
-string nextToken(char delim, unsigned int maxSize, char *str)
+sstring nextToken(char delim, unsigned int maxSize, char *str)
 {
   char retbuf[256];
   char *cp;
@@ -3269,17 +3269,16 @@ string nextToken(char delim, unsigned int maxSize, char *str)
   return retbuf;
 }
 
-// we need this version of mud_str_dup, as the string version will
-// crash if we pass a NULL
+
 char *mud_str_dup(const char *buf)
 {
   if (!buf)
     return NULL;
 
-  return mud_str_dup((string) buf);
+  return mud_str_dup((sstring) buf);
 }
 
-char * mud_str_dup(const string &buf)
+char * mud_str_dup(const sstring &buf)
 {
   char *tmp = NULL;
 
@@ -3301,7 +3300,7 @@ char *mud_str_copy(char *dest, const char *src, size_t n)
 
   if(strlen(src) > n){
     dest[n-1]='\0';
-    vlogf(LOG_BUG, "mud_str_copy: source string too long.  Truncated to: %s", dest);
+    vlogf(LOG_BUG, "mud_str_copy: source sstring too long.  Truncated to: %s", dest);
   }
 
   return dest;
@@ -3309,19 +3308,19 @@ char *mud_str_copy(char *dest, const char *src, size_t n)
 
 
 
-void trimString(string &arg)
+void trimString(sstring &arg)
 {
   if (arg.empty())
     return;
   size_t iter = arg.find_first_not_of(" \n\r");
-  if (iter == string::npos)
+  if (iter == sstring::npos)
     return;
   arg.erase(0, iter);  // erase the leading whitespace
 }
 
-int stringncmp(const string str1, const string str2, unsigned int len)
+int sstringncmp(const sstring str1, const sstring str2, unsigned int len)
 {
-  // ANSI doesn't provide a strncmp for strings
+  // ANSI doesn't provide a strncmp for sstrings
   // I've hacked this together cuz I think it's needed
 
   // trunc down to length and compare
@@ -3332,13 +3331,13 @@ commandInfo::~commandInfo()
 {
 }
 
-// take what is in the output buffer, cat into single string, and page it
+// take what is in the output buffer, cat into single sstring, and page it
 void TBeing::makeOutputPaged()
 {
   if (!desc)
     return;
 
-  string str;
+  sstring str;
   char buf[MAX_STRING_LENGTH];
 
   memset(buf, '\0', sizeof(buf));

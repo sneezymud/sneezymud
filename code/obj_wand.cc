@@ -111,7 +111,7 @@ void TWand::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = mapSpellnumToFile(getSpell());
 }
 
-string TWand::statObjInfo() const
+sstring TWand::statObjInfo() const
 {
   char buf[256];
 
@@ -124,7 +124,7 @@ string TWand::statObjInfo() const
               getCurCharges(),
               getMaxCharges());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -283,7 +283,7 @@ void TWand::generalUseMessage(const TBeing *ch, unsigned int bits, const TBeing 
   }
 }
 
-string TWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s [%s]",

@@ -9,7 +9,7 @@
 #define __THING_H
 
 #ifndef _STRING_H
-#include <string.h>
+#include <sstring.h>
 #endif
 
 enum thingTypeT {
@@ -21,8 +21,8 @@ enum thingTypeT {
   TYPEBEING,    // = 5;
 };
 
-extern bool isname(const string &str, const string &namelist);
-extern const string fname(const char *namelist);
+extern bool isname(const sstring &str, const sstring &namelist);
+extern const sstring fname(const char *namelist);
 
 class extraDescription {
   public:
@@ -115,7 +115,7 @@ class TThing {
     virtual void addToVolume(int) {}
     virtual int getVolume() const { return 0; }
     virtual bool canDrop() const { return TRUE; }
-    virtual string yourDeity(spellNumT, personTypeT, const TBeing *who = NULL) const { return ""; }
+    virtual sstring yourDeity(spellNumT, personTypeT, const TBeing *who = NULL) const { return ""; }
     virtual void remCastingList(TThing *);
     virtual bool isSimilar(const TThing *) const { return false; }
     virtual bool canSee(const TThing *, infraTypeT = INFRA_NO) const { return false; }
@@ -137,7 +137,7 @@ class TThing {
     virtual bool splitMe(TBeing *, const char *) { return false; }
     virtual int dropSmoke(int);
 
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     // END VIRTUAL FUNCTIONS
 
     // INLINE FUNCTIONS
@@ -173,11 +173,11 @@ class TThing {
 
     void newOwner(TThing *);
     const char *objs(const TThing *t) const;
-    const string objn(const TThing *t) const;
+    const sstring objn(const TThing *t) const;
     const char *ana() const;
     const char *sana() const;
     const char *pers(const TThing *t) const;
-    const string persfname(const TThing *t) const;
+    const sstring persfname(const TThing *t) const;
     TThing * dismount(positionTypeT);
     void mount(TThing *);
     bool sameRoom(const TThing &ch) const;
@@ -295,8 +295,8 @@ class TThing {
     virtual void dullMeFile(TBeing *, TThing *);
     virtual int poisonMePoison(TBeing *, TBaseWeapon *);
     virtual int garotteMe(TBeing *, TBeing *);
-    virtual void stringMeBow(TBeing *, TThing *);
-    virtual void stringMeString(TBeing *, TBow *);
+    virtual void sstringMeBow(TBeing *, TThing *);
+    virtual void sstringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);
     virtual void butcherMe(TBeing *, const char *);
     virtual void sacrificeMe(TBeing *, const char *);
@@ -314,7 +314,7 @@ class TThing {
     virtual void sharpenPulse(TBeing *, TThing *);
     virtual void dullPulse(TBeing *, TThing *);
     virtual void findSym(TSymbol **) {}
-    const string getNameNOC(const TBeing *) const;
+    const sstring getNameNOC(const TBeing *) const;
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void makeScraps() {}
     virtual void attunerValue(TBeing *, TMonster *);
@@ -330,7 +330,7 @@ class TThing {
     virtual void dullMe(TBeing *, TTool *);
     virtual int sellHidenSkin(TBeing *, TMonster *, int, TThing *);
 
-    virtual string describeMySharp(const TBeing *) const;
+    virtual sstring describeMySharp(const TBeing *) const;
     virtual void sharpenMeStoneWeap(TBeing *, TTool *);
     virtual void dullMeFileWeap(TBeing *, TTool *);
     virtual int catchSmack(TBeing *, TBeing **, TRoom *, int, int);

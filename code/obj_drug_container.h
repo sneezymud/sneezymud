@@ -23,7 +23,7 @@ class TDrugContainer : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void lowCheck();
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_DRUG_CONTAINER; }
 
     virtual bool isSimilar(const TThing *t) const;
@@ -31,7 +31,7 @@ class TDrugContainer : public TObj {
     virtual int objectDecay();
     virtual void extinguishWater(TBeing *);
     virtual void extinguishWater();
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void lightMe(TBeing *, silentTypeT);
     virtual void extinguishMe(TBeing *);
     virtual bool monkRestrictedItem(const TBeing *) const;

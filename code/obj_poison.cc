@@ -67,7 +67,7 @@ int TPoison::shopPrice(int num, int shop_nr, float, int *) const
 
 int TPoison::objectSell(TBeing *ch, TMonster *keeper)
 {
-  string buf;
+  sstring buf;
 
   if(!DrinkInfo[getDrinkType()]->poison){
     ssprintf(buf, "%s Hey, that's not poison!.", ch->getName());

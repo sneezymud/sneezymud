@@ -291,7 +291,7 @@ TMonster::~TMonster()
     distantSnds = NULL;
   }
 
-  // if we are using shared strings, reallocate them so ~TThing can purge
+  // if we are using shared sstrings, reallocate them so ~TThing can purge
   // safely
   int didAloc = FALSE;
   if (!IS_SET(specials.act,ACT_STRINGS_CHANGED)) {
@@ -310,17 +310,17 @@ TMonster::~TMonster()
   mobCount--;
 // Looking for bugs below--cos 8/98
   if (getDescr() && getDescr() == mob_index[getMobIndex()].description) { 
-    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : descr", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared sstring (%s) : descr", getName());
     vlogf(LOG_BUG, "New Alloc: %s: shared descr is: %s", (didAloc ? "True" : "False"), getDescr());
   }
   if (name && name == mob_index[getMobIndex()].name) 
-    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : name", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared sstring (%s) : name", getName());
 
   if (shortDescr && shortDescr == mob_index[getMobIndex()].short_desc) 
-    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : short", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared sstring (%s) : short", getName());
 
   if (getLongDesc() && player.longDescr == mob_index[getMobIndex()].long_desc)
-    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : long", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared sstring (%s) : long", getName());
 
   TRoom *tRoom;
 
@@ -350,7 +350,7 @@ void TMonster::swapToStrung()
   if (specials.act & ACT_STRINGS_CHANGED)
     return;
 
-  // Set flags saying editted and point all strings to new stuff - Russ 
+  // Set flags saying editted and point all sstrings to new stuff - Russ 
   specials.act |= ACT_STRINGS_CHANGED;
   name = mud_str_dup(mob_index[getMobIndex()].name);
   shortDescr = mud_str_dup(mob_index[getMobIndex()].short_desc);

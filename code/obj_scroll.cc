@@ -83,7 +83,7 @@ void TScroll::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = mapSpellnumToFile(getSpell(2));
 }
 
-string TScroll::statObjInfo() const
+sstring TScroll::statObjInfo() const
 {
   char buf[256];
   sprintf(buf, "Level:   %d        Learnedness:   %d\n\rSpells : %s, %s, %s",
@@ -101,7 +101,7 @@ string TScroll::statObjInfo() const
                 discArray[getSpell(2)]->name :
                 "BOGUS SPELL.  Bug this")));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

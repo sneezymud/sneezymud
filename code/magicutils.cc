@@ -605,7 +605,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component string.  component %d  (1)", i);
+      vlogf(LOG_BUG, "Bad component sstring.  component %d  (1)", i);
     }
   } else {
     if (*CompInfo[i].to_self && 
@@ -613,7 +613,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component string.  component %d  (2)", i);
+      vlogf(LOG_BUG, "Bad component sstring.  component %d  (2)", i);
     }
   }
 
@@ -677,10 +677,10 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
       act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component string.  component %d  (3)", i);
+      vlogf(LOG_BUG, "Bad component sstring.  component %d  (3)", i);
     }
   } else {
-    vlogf(LOG_BUG, "Bad component string.  component %d  (4)", i);
+    vlogf(LOG_BUG, "Bad component sstring.  component %d  (4)", i);
   }
 
   if (o->getComponentCharges() > 1)
@@ -1876,7 +1876,7 @@ void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)
   v->affectTo(&aff2);
 }
 
-string displayDifficulty(spellNumT skill)
+sstring displayDifficulty(spellNumT skill)
 {
   switch (discArray[skill]->task) {
     case TASK_TRIVIAL:

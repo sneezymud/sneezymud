@@ -120,7 +120,7 @@ void TBeing::doTestCode(const char *arg)
       sendTo("%s\n\r", discArray[i]->name); 
   }
   sendTo("Checking new/delete\n\r");
-  char *s = mud_str_dup("test string");
+  char *s = mud_str_dup("test sstring");
   delete s;
   sendTo("Checking unused.\n\r");
   int x = 5;
@@ -128,8 +128,8 @@ void TBeing::doTestCode(const char *arg)
   sendTo("done\n\r");
 #endif
 #if 0
-  string str1, str2, strret;
-  string strin = "this is input";
+  sstring str1, str2, strret;
+  sstring strin = "this is input";
   argument_parser(strin, str1, str2);
   sendTo("in: '%s'\n\r", strin.c_str());
   sendTo("1: '%s'\n\r", str1.c_str());

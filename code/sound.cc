@@ -166,7 +166,7 @@ int TThing::checkSoundproof() const
   return (roomp->isRoomFlag(ROOM_SILENCE));
 }
 
-void TRoom::playsound(soundNumT sound, const string &type, int vol, int prior, int loop) const
+void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, int loop) const
 {
   TThing *ch;
   for (ch = getStuff(); ch; ch = ch->nextThing) {
@@ -193,19 +193,19 @@ void TBeing::stopmusic()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      string url = "http://sneezy.stanford.edu/sounds/";
+      sstring url = "http://sneezy.stanford.edu/sounds/";
       sendTo("!!MUSIC(Off U=%s)\n\r", url.c_str());
     }
   }
 }
 
-const string & MUSIC_TYPE_DEATH = "death";
-const string & MUSIC_TYPE_ZONE = "zone";
-const string & MUSIC_TYPE_COMBAT = "combat";
+const sstring & MUSIC_TYPE_DEATH = "death";
+const sstring & MUSIC_TYPE_ZONE = "zone";
+const sstring & MUSIC_TYPE_COMBAT = "combat";
 
-void TBeing::playmusic(musicNumT music, const string &type, int vol, int cont, int loop)
+void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, int loop)
 {
-  const string musicStruct[MAX_MUSIC_NUM] = {
+  const sstring musicStruct[MAX_MUSIC_NUM] = {
     "Off",
     "combat_01.mid",
     "combat_02.mid",
@@ -221,7 +221,7 @@ void TBeing::playmusic(musicNumT music, const string &type, int vol, int cont, i
       // the U is only needed the first time, hence I put it in stopmusic()
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
-      string argString = "";
+      sstring argString = "";
       char buf[160];
       if (vol != 100) {
         sprintf(buf, " V=%d", vol);
@@ -249,16 +249,16 @@ void TBeing::stopsound()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      string url = "http://sneezy.stanford.edu/sounds/";
+      sstring url = "http://sneezy.stanford.edu/sounds/";
       sendTo("!!SOUND(Off U=%s)\n\r", url.c_str());
     }
   }
 }
 
-const string & SOUND_TYPE_SOCIAL = "socials";
-const string & SOUND_TYPE_NOISE = "noise";
-const string & SOUND_TYPE_COMBAT = "combat";
-const string & SOUND_TYPE_MAGIC = "magic";
+const sstring & SOUND_TYPE_SOCIAL = "socials";
+const sstring & SOUND_TYPE_NOISE = "noise";
+const sstring & SOUND_TYPE_COMBAT = "combat";
+const sstring & SOUND_TYPE_MAGIC = "magic";
 
 // randomly chooses a sound from a sequential range
 // we should group any sounds we want together
@@ -274,9 +274,9 @@ musicNumT pickRandMusic(musicNumT s1, musicNumT s2)
   return musicNumT(::number(s1, s2));
 }
 
-void TBeing::playsound(soundNumT sound, const string &type, int vol, int prior, int loop)
+void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior, int loop)
 {
-  const string soundStruct[MAX_SOUND_NUM] = {
+  const sstring soundStruct[MAX_SOUND_NUM] = {
     "Off",
     "snore.wav",
     "horse1.wav",
@@ -465,7 +465,7 @@ void TBeing::playsound(soundNumT sound, const string &type, int vol, int prior, 
       // with other text and missed by the client interpreter - Russ 061299
       desc->outputProcessing();
 
-      string argString = "";
+      sstring argString = "";
       char buf[160];
       if (vol != 100) {
         sprintf(buf, " V=%d", vol);

@@ -31,9 +31,9 @@ class TAmmo : public TObj {
     virtual itemTypeT itemType() const { return ITEM_AMMO; }
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual string showModifier(showModeT , const TBeing *) const;
+    virtual sstring showModifier(showModeT , const TBeing *) const;
 
     TAmmo();
     TAmmo(const TAmmo &a);
@@ -80,8 +80,8 @@ class TGun : public TGenWeapon {
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void describeContains(const TBeing *) const;
 
-    virtual string showModifier(showModeT , const TBeing *) const;
-    virtual string statObjInfo() const;
+    virtual sstring showModifier(showModeT , const TBeing *) const;
+    virtual sstring statObjInfo() const;
     TGun();
     TGun(const TGun &a);
     TGun & operator=(const TGun &a);

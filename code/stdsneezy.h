@@ -32,6 +32,8 @@
 #include <iostream>
 #include <sstream>
 
+class sstring;
+
 #include "low.h"
 #include "enum.h"
 #include "spells.h"

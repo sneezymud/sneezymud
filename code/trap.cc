@@ -84,7 +84,7 @@ int TBeing::doSetTraps(const char *arg)
 {
   roomDirData *exitp;
   char buf[256], task_arg[128];
-  char string[512], trap_type[40], direct[20];
+  char sstring[512], trap_type[40], direct[20];
   int field, dir;
   dirTypeT door;
   doorTrapT type;
@@ -97,7 +97,7 @@ int TBeing::doSetTraps(const char *arg)
   if (checkPeaceful("You are not permitted to construct traps here.\n\r"))
     return FALSE;
 
-  bisect_arg(arg, &field, string, user_trap_types);
+  bisect_arg(arg, &field, sstring, user_trap_types);
 
   switch (field - 1) {
     case TRAP_TARG_DOOR:  // exit traps
@@ -106,7 +106,7 @@ int TBeing::doSetTraps(const char *arg)
         return FALSE;
       }
 
-      sscanf(string, "%s %s", direct, trap_type);
+      sscanf(sstring, "%s %s", direct, trap_type);
       if ((dir = old_search_block(direct, 0, strlen(direct), dirs, 0)) <= 0) {
 	sendTo("No such direction.\n\r");
         sendTo("Syntax: trap exit <direction> <trap-type>\n\r");
@@ -183,7 +183,7 @@ int TBeing::doSetTraps(const char *arg)
         sendTo("You know nothing about making container traps.\n\r");
         return FALSE;
       }
-      sscanf(string, "%s %s", direct, trap_type);
+      sscanf(sstring, "%s %s", direct, trap_type);
       if (!(obj = get_obj_vis_accessible(this, direct))) {
 	sendTo("No such item present.\n\r");
         sendTo("Syntax: trap container <item> <trap-type>\n\r");
@@ -204,7 +204,7 @@ int TBeing::doSetTraps(const char *arg)
         return FALSE;
       }
 
-      sscanf(string, "%s", trap_type);
+      sscanf(sstring, "%s", trap_type);
 
       if (is_abbrev(trap_type, "fire")) {
         type = DOOR_TRAP_FIRE;
@@ -255,7 +255,7 @@ int TBeing::doSetTraps(const char *arg)
         return FALSE;
       }
 
-      sscanf(string, "%s", trap_type);
+      sscanf(sstring, "%s", trap_type);
 
       if (is_abbrev(trap_type, "fire")) {
         type = DOOR_TRAP_FIRE;

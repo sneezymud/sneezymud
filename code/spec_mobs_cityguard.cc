@@ -2,8 +2,8 @@
 #include "obj_trap.h"
 
 
-string guardShout(TBeing *ch){
-  string s;
+sstring guardShout(TBeing *ch){
+  sstring s;
   bool targVis=ch->canSee(ch->fight());
 
   switch (number(1, 145)) {
@@ -331,7 +331,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TTrap *trap;
   char buf[256], buf2[256], buf3[256];
   int rc = 0, num = 0, num2 = 0;
-  string s;
+  sstring s;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
     return FALSE;

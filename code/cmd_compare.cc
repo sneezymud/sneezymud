@@ -18,7 +18,7 @@
 #include "obj_base_light.h"
 #include "obj_base_clothing.h"
 
-TObj * findShopObjForCompare(TBeing *ch, string StObject)
+TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
 {
   TThing *tThing;
   unsigned int     shop_nr,
@@ -53,7 +53,7 @@ TObj * findShopObjForCompare(TBeing *ch, string StObject)
   return NULL;
 }
 
-TObj * findForCompare(TBeing *ch, string StObject)
+TObj * findForCompare(TBeing *ch, sstring StObject)
 {
   int        tCount = 0;
   wearSlotT  tSlot;
@@ -69,7 +69,7 @@ TObj * findForCompare(TBeing *ch, string StObject)
 
 void TBeing::doMortalCompare(const char *tArg)
 {
-  string     StObject1(""),
+  sstring     StObject1(""),
              StObject2(""),
              StString(tArg);
   TObj      *tObj1 = NULL,
@@ -112,7 +112,7 @@ int compareDetermineMessage(const int tDrift, const int tValue)
   return (min(6, max(0, 3 - (tValue / tDrift))));
 }
 
-string compareStructure(TObj *tObj1, TObj *tObj2, TBeing *ch)
+sstring compareStructure(TObj *tObj1, TObj *tObj2, TBeing *ch)
 {
   const char *structureLevels[] =
   {
@@ -132,7 +132,7 @@ string compareStructure(TObj *tObj1, TObj *tObj2, TBeing *ch)
          tStruct2 = tObj2->getMaxStructPoints(),
          tMessage = 0;
   int    tStructDiff = (tStruct1 - tStruct2);
-  string StString("");
+  sstring StString("");
 
   tMessage = compareDetermineMessage(15, tStructDiff);
 
@@ -144,7 +144,7 @@ string compareStructure(TObj *tObj1, TObj *tObj2, TBeing *ch)
   return StString;
 }
 
-string compareNoise(TObj *tObj1, TObj *tObj2, TBeing *ch)
+sstring compareNoise(TObj *tObj1, TObj *tObj2, TBeing *ch)
 {
   const char * noiseLevels[] =
   {
@@ -161,7 +161,7 @@ string compareNoise(TObj *tObj1, TObj *tObj2, TBeing *ch)
          tNoise2  = material_nums[tObj2->getMaterial()].noise,
          tMessage = 0;
   int    tNoiseDiff = (tNoise1 - tNoise2);
-  string StString("");
+  sstring StString("");
 
   tMessage = compareDetermineMessage(3, tNoiseDiff);
 
@@ -173,12 +173,12 @@ string compareNoise(TObj *tObj1, TObj *tObj2, TBeing *ch)
   return StString;
 }
 
-string TThing::compareMeAgainst(TBeing *, TObj *)
+sstring TThing::compareMeAgainst(TBeing *, TObj *)
 {
   return "These two things can not be compared.";
 }
 
-string TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * sharpnessLevels[] =
   {
@@ -242,7 +242,7 @@ string TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
          tDamage2 = (int)tWeapon->baseDamage(),
          tDamageDiff,
          tMessage2;
-  string StString("");
+  sstring StString("");
 
   tSharpDiff  = (tSharp1 - tSharp2);
   tMessage1   = compareDetermineMessage(15, tSharpDiff);
@@ -280,7 +280,7 @@ string TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TBaseClothing::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TBaseClothing::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * armorLevels[] =
   {
@@ -308,7 +308,7 @@ string TBaseClothing::compareMeAgainst(TBeing *ch, TObj *tObj)
          tArmor2 = (int)tClothing->armorLevel(ARMOR_LEV_AC),
          tArmorDiff,
          tMessage;
-  string StString("");
+  sstring StString("");
 
   StString += compareStructure(this, tClothing, ch);
   StString += compareNoise(this, tClothing, ch);
@@ -326,7 +326,7 @@ string TBaseClothing::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TBow::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TBow::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * rangeLevels[] =
   {
@@ -358,7 +358,7 @@ string TBow::compareMeAgainst(TBeing *ch, TObj *tObj)
          tRange2 = tBow->getMaxRange(),
          tRangeDiff,
          tMessage;
-  string StString("");
+  sstring StString("");
 
   StString += compareStructure(this, tBow, ch);
   StString += compareNoise(this, tBow, ch);
@@ -376,7 +376,7 @@ string TBow::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * sharpnessLevels[] =
   {
@@ -412,7 +412,7 @@ string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
        !(tBow = dynamic_cast<TBow *>(tObj))))
     return "These two items cannot be compared against one another.\n\r";
 
-  string StString("");
+  sstring StString("");
 
   if (tBow) {
     StString += good_cap(getName());
@@ -465,7 +465,7 @@ string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TFood::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TFood::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char *fillLevels[] =
   {
@@ -491,7 +491,7 @@ string TFood::compareMeAgainst(TBeing *ch, TObj *tObj)
          tFill2 = tFood->getFoodFill(),
          tFillDiff,
          tMessage;
-  string StString("");
+  sstring StString("");
 
   tFillDiff = (tFill1 - tFill2);
   tMessage  = compareDetermineMessage(4, tFillDiff);
@@ -504,7 +504,7 @@ string TFood::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * strengthLevels[] =
   {
@@ -545,7 +545,7 @@ string TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
            tHolyWater2 = (tSymbol->obj_flags.cost / 100),
            tHolyWaterDiff,
            tMessage2;
-  string   StString("");
+  sstring   StString("");
 
   tStrengthDiff  = (tStrength1 - tStrength2);
   tMessage1      = compareDetermineMessage(100, tStrengthDiff);
@@ -569,7 +569,7 @@ string TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TBaseLight::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TBaseLight::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * lightLevels[] =
   {
@@ -594,7 +594,7 @@ string TBaseLight::compareMeAgainst(TBeing *ch, TObj *tObj)
            tLight2 = tLight->getLightAmt(),
            tLightDiff,
            tMessage;
-  string   StString("");
+  sstring   StString("");
 
   tLightDiff = (tLight1 - tLight2);
   tMessage    = compareDetermineMessage(3, tLightDiff);
@@ -607,7 +607,7 @@ string TBaseLight::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-string TOpal::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TOpal::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * chargeLevels[] =
   {
@@ -633,7 +633,7 @@ string TOpal::compareMeAgainst(TBeing *ch, TObj *tObj)
          tCharge2 = tOpal->psGetCarats(),
          tChargeDiff,
          tMessage;
-  string StString("");
+  sstring StString("");
 
   tChargeDiff = (tCharge1 - tCharge2);
   tMessage    = compareDetermineMessage(3, tChargeDiff);

@@ -296,11 +296,11 @@ void save_game_stats(void)
   }
 }
 
-void TBeing::doGamestats(const string &arg)
+void TBeing::doGamestats(const sstring &arg)
 {
-  string buf, buf2;
+  sstring buf, buf2;
   int lev, i;
-  string str;
+  sstring str;
 
   if (powerCheck(POWER_GAMESTATS))
     return;

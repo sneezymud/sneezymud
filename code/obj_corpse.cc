@@ -32,7 +32,7 @@ TCorpse::~TCorpse()
 {
 }
 
-string TCorpse::statObjInfo() const
+sstring TCorpse::statObjInfo() const
 {
   char buf[256];
 
@@ -41,6 +41,6 @@ string TCorpse::statObjInfo() const
   sprintf(buf + strlen(buf), "Corpse Level: %d, Corpse Vnum: %d\n\r", 
        getCorpseLevel(), getCorpseVnum());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }

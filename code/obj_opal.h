@@ -22,14 +22,14 @@ class TOpal : public TObj {
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual int objectSell(TBeing *, TMonster *);
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void powerstoneCheck(TOpal **);
     virtual void powerstoneCheckCharged(TOpal **);
     virtual void powerstoneMostMana(int *);
     virtual int powerstoneMe(TBeing *, int, byte);
     virtual itemTypeT itemType() const { return ITEM_OPAL; }
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual int suggestedPrice() const;
     virtual void lowCheck();
 

@@ -53,7 +53,7 @@ void TExpandableContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) con
   TOpenContainer::getFourValues(x1, x2, x3, x4);
 }
 
-string TExpandableContainer::statObjInfo() const
+sstring TExpandableContainer::statObjInfo() const
 {
   return TOpenContainer::statObjInfo();
 }

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_drawpoker.h,v $
+// Revision 5.2  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -46,8 +50,8 @@ class DrawPokerGame : public CardGame {
     int   LEFT(int) const;
     int   getNextPlayer(const TBeing *);
     int   count(int) const;
-    const string score() const;
-    const string bets() const;
+    const sstring score() const;
+    const sstring bets() const;
     bool  getPlayers(const TBeing *, TBeing **, TBeing **,
                      TBeing **, TBeing **, TBeing **) const;
     void  deal(TBeing *, const char *);

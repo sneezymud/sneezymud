@@ -13,7 +13,7 @@
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {
-  string  tStThing(""),
+  sstring  tStThing(""),
           tStValue(""),
           tStArg(tArg);
   int     tValue;

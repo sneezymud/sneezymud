@@ -18,18 +18,18 @@ class TBow : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_BOW; }
 
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual bool isBluntWeapon() const;
-    virtual void stringMeBow(TBeing *, TThing *);
+    virtual void sstringMeBow(TBeing *, TThing *);
     virtual void evaluateMe(TBeing *) const;
     virtual int shootMeBow(TBeing *ch, TBeing *, unsigned int, dirTypeT, int);
     virtual void bloadArrowBow(TBeing *, TArrow *);
     virtual bool sellMeCheck(TBeing *, TMonster *) const;
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual void dropMe(TBeing *, showMeT, showRoomT);
 
     int getArrowType() const;

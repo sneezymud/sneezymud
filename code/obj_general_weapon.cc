@@ -101,7 +101,7 @@ void TGenWeapon::setWeaponFreq(int n, int which=0)
   wtype_frequency[which] = n;
 }
 
-string TGenWeapon::statObjInfo() const
+sstring TGenWeapon::statObjInfo() const
 {
   char buf[256];
 
@@ -114,7 +114,7 @@ string TGenWeapon::statObjInfo() const
                (isPierceWeapon() ? "pointiness" :
                "sharpness"))),
                getCurSharp());
-  string a(buf);
+  sstring a(buf);
 
   sprintf(buf, "Damage Level: %.2f, Damage Deviation: %d\n\r",
                getWeapDamLvl() / 4.0,

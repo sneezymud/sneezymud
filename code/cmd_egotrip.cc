@@ -24,11 +24,11 @@ void TBeing::doEgoTrip(const char *arg)
     return;
   }
 
-  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | 
+  sstring badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | 
 \"stupidity\" | \"sanctuary\" | \"enliven\" >\n\r";
 
 //  char argument[256];
-  string argument, sarg = arg, restarg;
+  sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
   if (!argument.length()) {
     sendTo(badsyn.c_str());
@@ -159,7 +159,7 @@ void TBeing::doEgoTrip(const char *arg)
     }
     return;
   } else if (is_abbrev(argument, "crit")) {
-    string target;
+    sstring target;
     restarg = one_argument(restarg, target);
     if (target.empty()) {
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
@@ -176,7 +176,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Do this to an immortal??? Bad god, no bone!\n\r");
       return;
     }
-    string whichcrit;
+    sstring whichcrit;
     one_argument(restarg, whichcrit);
     if (whichcrit.empty()) {
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
@@ -198,7 +198,7 @@ void TBeing::doEgoTrip(const char *arg)
     vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit);
     return;
   } else if (is_abbrev(argument, "blast")) {
-    string target;
+    sstring target;
     one_argument(restarg, target);
     if (target.empty()) {
       sendTo("Syntax: egotrip blast <target>\n\r");
@@ -226,7 +226,7 @@ void TBeing::doEgoTrip(const char *arg)
     act("A bolt of lightning streaks down from the heavens right at $n's feet!",
          FALSE, ch, 0, 0, TO_ROOM);
 
-    string worldBuf = "You smell burnt flesh as a bolt of lightning takes the hide off of ";
+    sstring worldBuf = "You smell burnt flesh as a bolt of lightning takes the hide off of ";
     worldBuf += ch->getName();
     worldBuf += "!\n\r";
     descriptor_list->worldSend(worldBuf.c_str(), this);
@@ -249,7 +249,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    string target;
+    sstring target;
     one_argument(restarg, target);
     if (target.empty()) {
       sendTo("Syntax: egotrip damn <target>\n\r");
@@ -285,7 +285,7 @@ void TBeing::doEgoTrip(const char *arg)
 
     return;
   } else if (is_abbrev(argument, "hate")) {
-    string target;
+    sstring target;
     one_argument(restarg, target);
     if (target.empty()) {
       sendTo("Syntax: egotrip hate <target>\n\r");

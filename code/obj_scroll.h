@@ -16,7 +16,7 @@ class TScroll : public TMagicItem {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_SCROLL; }
 
     virtual void descMagicSpells(TBeing *) const;
@@ -26,7 +26,7 @@ class TScroll : public TMagicItem {
     virtual int changeItemVal4Check(TBeing *, int);
     virtual int reciteMe(TBeing *, const char *);
     virtual void divinateMe(TBeing *) const;
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
     virtual void lowCheck();
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
     virtual int suggestedPrice() const;

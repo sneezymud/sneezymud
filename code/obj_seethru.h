@@ -16,7 +16,7 @@ class TSeeThru : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual void purgeMe(TBeing *);
     virtual bool canSeeMe(const TBeing *, infraTypeT) const;

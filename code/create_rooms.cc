@@ -145,7 +145,7 @@ static void update_room_menu(const TBeing *ch)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     dirTypeT     tExit;
     roomDirData *tData;
-    string       tStString("");
+    sstring       tStString("");
 
     const char *exDirs[] =
     {
@@ -197,10 +197,10 @@ void TPerson::doEdit(const char *arg)
   int exroom;
   doorTypeT doortype;
   sectorTypeT sectype;
-  string tStr, whitespace, punctuation, newDescr, word, line, a2;
+  sstring tStr, whitespace, punctuation, newDescr, word, line, a2;
   long r_flags;
-  string tStString("");
-  char string[512],
+  sstring tStString("");
+  char sstring[512],
        Buf[256],
        tString[256],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
@@ -236,7 +236,7 @@ void TPerson::doEdit(const char *arg)
   }
 
 
-  bisect_arg(arg, &field, string, room_fields);
+  bisect_arg(arg, &field, sstring, room_fields);
 
   /******************** NOTES ********************
    * Even after much sucessful testing I still   *
@@ -287,11 +287,11 @@ void TPerson::doEdit(const char *arg)
 #endif
       break;
     case  2: // Exdscr
-      if (sscanf(string, "%d", &rdir) != 1) {
+      if (sscanf(sstring, "%d", &rdir) != 1) {
         tStr = "\0";
         for (dir = MIN_DIR; dir < MAX_DIR; dir++)
           if (roomp->dir_option[dir]) {
-            sprintf(string,
+            sprintf(sstring,
                     "%d) %s %s -To> %d\n\rLock Diff:%d  Weight:%d  Key:%d\n\rTrap Dam: %d\n\r",
                     dir, dirs[dir],
                     roomp->dir_option[dir]->keyword,
@@ -300,7 +300,7 @@ void TPerson::doEdit(const char *arg)
                     roomp->dir_option[dir]->weight,
                     roomp->dir_option[dir]->key,
                     roomp->dir_option[dir]->trap_dam);
-            tStr += string;
+            tStr += sstring;
           }
         sendTo(tStr.c_str());
         return;
@@ -310,7 +310,7 @@ void TPerson::doEdit(const char *arg)
         sendTo("Must enter %d-%d.  I will ask for text.\n\r", MIN_DIR, MAX_DIR-1);
         return;
       }
-      string[0] = 0;
+      sstring[0] = 0;
       if (roomp->dir_option[rdir]) {
         desc->str = &roomp->dir_option[rdir]->description;
       } else {
@@ -324,7 +324,7 @@ void TPerson::doEdit(const char *arg)
       // edit exit copy <to-room> <exit-list|to-room-list>
 
       // Copy Extension.
-      tBuf = string;
+      tBuf = sstring;
       half_chop(tBuf, Buf, tString);
 
       if (*tBuf && is_abbrev(tBuf, "copy")) {
@@ -384,12 +384,12 @@ void TPerson::doEdit(const char *arg)
           } else {
             char tStEmpty[256];
 
-            if (sscanf(Buf, "%s-%d", string, &rdir) != 2) {
+            if (sscanf(Buf, "%s-%d", sstring, &rdir) != 2) {
               sendTo("Incorrect Form.  Should be direction-exitroom\n\r");
               return;
             }
 
-            bisect_arg(string, &new_dir, tStEmpty, scandirs);
+            bisect_arg(sstring, &new_dir, tStEmpty, scandirs);
             new_dir--;
 
             if (new_dir < MIN_DIR || new_dir > MAX_DIR) {
@@ -473,7 +473,7 @@ void TPerson::doEdit(const char *arg)
       }
 
       // Normal creation process.
-      if (sscanf(string, "%d %d %d %d %d %d %d", 
+      if (sscanf(sstring, "%d %d %d %d %d %d %d", 
           &rdir, &dtype, &dcond, &dldiff, &dweight, &dkey, &exroom) != 7) {
         sendTo("Syntax : edit exit <dir> <door_type> <condition> <lock difficulty> <weight> <key> <exitroom>.\n\r");
         return;
@@ -541,7 +541,7 @@ void TPerson::doEdit(const char *arg)
       roomp->dir_option[rdir]->to_room = exroom;
 
       if ((roomp->dir_option[rdir]->door_type) != DOOR_NONE) {
-        string[0] = 0;
+        sstring[0] = 0;
         sendTo("Enter keywords, 1 line only. \n\r");
         sendTo("Terminate with a '~' on the SAME LINE.\n\r");
         desc->str = &roomp->dir_option[rdir]->keyword;
@@ -577,7 +577,7 @@ void TPerson::doEdit(const char *arg)
       newrp->dir_option[new_dir]->key = dkey;
       return;
     case  4: // Extra Description
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You have to supply a keyword.\n\r");
         sendTo("Existing keywords:\n\r");
         for (ed = roomp->ex_description; ed; ed = ed->next) {
@@ -591,13 +591,13 @@ void TPerson::doEdit(const char *arg)
           ed = new extraDescription();
           ed->next = roomp->ex_description;
           roomp->ex_description = ed;
-          ed->keyword = mud_str_dup(string);
+          ed->keyword = mud_str_dup(sstring);
           ed->description = NULL;
           desc->str = &ed->description;
           sendTo("New field.\n\r");
           sendTo("Terminate with a '~' on a NEW LINE.\n\r");
           break;
-        } else if (!strcasecmp(ed->keyword, string)) {
+        } else if (!strcasecmp(ed->keyword, sstring)) {
           sendTo("Current description:\n\r%s\n\r", ed->description);
           sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
           sendTo("Press return to proceed.\n\r");
@@ -616,7 +616,7 @@ void TPerson::doEdit(const char *arg)
       int j;
       // If no argument was given, display all possible room flags and
       // there current state.
-      if (!*string) {
+      if (!*sstring) {
         for (j = 0; j < MAX_ROOM_BITS; j++) {
           sendTo("%-2d [%s] %-30s%s", j + 1,
                  ((roomp->getRoomFlags() & (1 << j)) ? "X" : " "),
@@ -628,16 +628,16 @@ void TPerson::doEdit(const char *arg)
       }
       // If they didn't pass a number, it might have been a flag name or
       // rawbv.
-      if (!is_number(string)) {
-        char stringB[2][256];
-        const char *stringC;
-        stringC = string;
-        stringC = one_argument(stringC, stringB[0]); // rawbv/flag-name
-                  one_argument(stringC, stringB[1]); // on/off
+      if (!is_number(sstring)) {
+        char sstringB[2][256];
+        const char *sstringC;
+        sstringC = sstring;
+        sstringC = one_argument(sstringC, sstringB[0]); // rawbv/flag-name
+                  one_argument(sstringC, sstringB[1]); // on/off
         // Old style edit fs ???  format.
-        if (is_abbrev(stringB[0], "rawbv")) {
-          stringC = one_argument(stringC, stringB[1]);
-          if (sscanf(stringB[1], "%lu", &r_flags) != 1) {
+        if (is_abbrev(sstringB[0], "rawbv")) {
+          sstringC = one_argument(sstringC, sstringB[1]);
+          if (sscanf(sstringB[1], "%lu", &r_flags) != 1) {
             sendTo("I'm afraid flags must be a number...\n\r");
             return;
           }
@@ -645,26 +645,26 @@ void TPerson::doEdit(const char *arg)
           return;
         }
         // This is for: edit flags INDOORS on  mode forcing.
-        if (*stringB[1] && !is_abbrev("off", stringB[1]) &&
-                           !is_abbrev("on", stringB[1])) {
+        if (*sstringB[1] && !is_abbrev("off", sstringB[1]) &&
+                           !is_abbrev("on", sstringB[1])) {
           sendTo("Mode is on or off, nothing else...\n\r");
           return;
         }
         // Must have been a flag name, lets find it and toggle it.
         // Or force it if they gave us that.
         for (j = 0; j < MAX_ROOM_BITS; j++) {
-          if (is_abbrev(room_bits[j], stringB[0])) {
+          if (is_abbrev(room_bits[j], sstringB[0])) {
             // This is the value that flag actually represents.
             // 1, 2, 4, 8, 16, 32, ....
             r_flags = (1 << j);
-            if (((*stringB[1] && is_abbrev("off", stringB[1])) ||
-                !*stringB[1]) && (roomp->getRoomFlags() & r_flags)) {
+            if (((*sstringB[1] && is_abbrev("off", sstringB[1])) ||
+                !*sstringB[1]) && (roomp->getRoomFlags() & r_flags)) {
               sendTo("Removing Flag %s\n\r", room_bits[j]);
               r_flags = roomp->getRoomFlags() - r_flags;
               roomp->setRoomFlags(r_flags);
               return;
-            } else if (((*stringB[1] && is_abbrev("on", stringB[1])) ||
-                       !*stringB[1]) && !(roomp->getRoomFlags() & r_flags)) {
+            } else if (((*sstringB[1] && is_abbrev("on", sstringB[1])) ||
+                       !*sstringB[1]) && !(roomp->getRoomFlags() & r_flags)) {
               sendTo("Adding Flag %s\n\r", room_bits[j]);
               r_flags = roomp->getRoomFlags() + r_flags;
               roomp->setRoomFlags(r_flags);
@@ -677,7 +677,7 @@ void TPerson::doEdit(const char *arg)
         sendTo("Was unable to find the flag you requested...\n\r");
         return;
       }
-      if (sscanf(string, "%lu", &r_flags) != 1 || r_flags < 1 ||
+      if (sscanf(sstring, "%lu", &r_flags) != 1 || r_flags < 1 ||
           r_flags >= MAX_ROOM_BITS) {
         sendTo("Invalid flags...try again.\n\r");
         return;
@@ -703,7 +703,7 @@ void TPerson::doEdit(const char *arg)
       return;
       break;
     case  6: // Height
-      if (sscanf(string, "%d", &rheight) != 1 ||
+      if (sscanf(sstring, "%d", &rheight) != 1 ||
           (rheight < -1 || rheight == 0 || rheight > 1000)) {
         sendTo("Invalid height...try again.\n\r");
         sendTo("A height of -1 means Unlimited.\n\r");
@@ -742,10 +742,10 @@ void TPerson::doEdit(const char *arg)
       //     Create an exit from room 102 South into room 103
 
       // Get the first room in the list.
-      tBuf = string;
+      tBuf = sstring;
       for (; isspace(*tBuf); tBuf++);
-      half_chop(tBuf, Buf, string);
-      tBuf = string;
+      half_chop(tBuf, Buf, sstring);
+      tBuf = sstring;
       r_flags = 0;
       // Loop while we got rooms to do.
       if (!*Buf) {
@@ -779,8 +779,8 @@ void TPerson::doEdit(const char *arg)
           }
 
           // Now we get the exit direction.
-          half_chop(tBuf, Buf, string);
-          tBuf = string;
+          half_chop(tBuf, Buf, sstring);
+          tBuf = sstring;
           if (!*Buf) {
             sendTo("And which direction should this exit go?\n\r");
             return;
@@ -795,8 +795,8 @@ void TPerson::doEdit(const char *arg)
 
           // Now we get the Exit room, this will also be our start room on
           // the next loop through.
-          half_chop(tBuf, Buf, string);
-          tBuf = string;
+          half_chop(tBuf, Buf, sstring);
+          tBuf = sstring;
           new_dir = convertTo<int>(Buf);
           // Now we check the new room.
           if (is_number(Buf) && (new_dir > -1) && (new_dir < WORLD_SIZE)) {
@@ -887,7 +887,7 @@ void TPerson::doEdit(const char *arg)
             sendTo("Room number incorrect.\n\r");
           return;
         }
-        if (!*string) {
+        if (!*sstring) {
           sendTo("Done.\n\r");
           return;
         }
@@ -895,14 +895,14 @@ void TPerson::doEdit(const char *arg)
       return;
       break;
     case  8: // Max_Capacity
-      if (sscanf(string, "%d", &moblim) != 1) 
+      if (sscanf(sstring, "%d", &moblim) != 1) 
         sendTo("edit max_capacity <mob_limit>\n\r");
       else 
         roomp->setMoblim(moblim);
       return;
       break;
     case  9: // Name
-      tStString = string;
+      tStString = sstring;
       stSpaceOut(tStString);
 
       if (!tStString.empty()) {
@@ -918,7 +918,7 @@ void TPerson::doEdit(const char *arg)
     case 10: // River
       rspeed = 0;
       rdir = 0;
-      sscanf(string, "%d %d ", &rspeed, &rdir);
+      sscanf(sstring, "%d %d ", &rspeed, &rdir);
       if ((rdir >= MIN_DIR) && (rdir < MAX_DIR)) {
         roomp->setRiverSpeed(rspeed);
         roomp->setRiverDir(mapFileToDir(rdir));
@@ -928,7 +928,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case 11: // Sector_Type
       // If no argument was given, display all possible sector types.
-      if (!*string) {
+      if (!*sstring) {
         int j;
         for (j = 0; j < MAX_SECTOR_TYPES; j++) {
           if (!*TerrainInfo[j]->name)
@@ -941,7 +941,7 @@ void TPerson::doEdit(const char *arg)
           sendTo("\n\r");
         return;
       }
-      sscanf(string, "%d", &s_type);
+      sscanf(sstring, "%d", &s_type);
       s_type--;
       if ((s_type < 0) || (s_type >= MAX_SECTOR_TYPES)) {
         sendTo("That sector choice is invalid, please try again.\n\r");
@@ -962,7 +962,7 @@ void TPerson::doEdit(const char *arg)
       tele_room = -1;
       tele_time = -1;
       tele_look = -1;
-      sscanf(string, "%d %d %d", &tele_time, &tele_room, &tele_look);
+      sscanf(sstring, "%d %d %d", &tele_time, &tele_room, &tele_look);
       if (tele_room < 0 || tele_time < 0 || tele_look < 0) 
         sendTo("edit tele <time> <room_nr> <look-flag>\n\r");
       else {
@@ -985,10 +985,10 @@ void TPerson::doEdit(const char *arg)
       // Set tBuf to <<field> <rooms>>
       // dissect it to get <field> then set tBuf to <rooms>
       // Then we just make sure we got some rooms and not a lot of spaces.
-      tBuf  = string;
-      bisect_arg(tBuf, &field, string, copy_fieldT);
+      tBuf  = sstring;
+      bisect_arg(tBuf, &field, sstring, copy_fieldT);
       cRoom = -1;
-      tBuf  = string;
+      tBuf  = sstring;
       for (; isspace(*tBuf); tBuf++);
 
       // Means we went out of bounds from what copy_fieldT has.
@@ -1017,8 +1017,8 @@ void TPerson::doEdit(const char *arg)
         return;
       }
       // Get the first room in the list.
-      half_chop(tBuf, Buf, string);
-      tBuf = string;
+      half_chop(tBuf, Buf, sstring);
+      tBuf = sstring;
       r_flags = 0;
       // Loop while we got rooms to do.
       while (*Buf && ++r_flags < 15) {
@@ -1105,8 +1105,8 @@ void TPerson::doEdit(const char *arg)
             sendTo("Room number incorrect.\n\r");
         }
         // Get the next room in the list.
-        half_chop(tBuf, Buf, string);
-        tBuf = string;
+        half_chop(tBuf, Buf, sstring);
+        tBuf = sstring;
       }
       sendTo("Done.\n\r");
       if (r_flags >= 15)
@@ -1125,7 +1125,7 @@ void TPerson::doEdit(const char *arg)
       sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0], tTextLns[0]);
       tTextLns[0][0] = '\0';
 
-      dcond = sscanf(string, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+      dcond = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
 
       if (((!is_abbrev(tTextLns[0], "description") ||                    dcond < 2) &&
            (!is_abbrev(tTextLns[0], "extra"      ) || !tTextLns[2][0] || dcond < 3)) ||
@@ -1142,7 +1142,7 @@ void TPerson::doEdit(const char *arg)
 
         tStr = roomp->descr;
 
-        if (tStr.find(tTextLns[1]) == string::npos) {
+        if (tStr.find(tTextLns[1]) == sstring::npos) {
           sendTo("Couldn't find pattern in description.\n\r");
           return;
         }
@@ -1167,7 +1167,7 @@ void TPerson::doEdit(const char *arg)
           return;
         }
 
-        if (tStr.find(tTextLns[2]) == string::npos) {
+        if (tStr.find(tTextLns[2]) == sstring::npos) {
           sendTo("Couldn't find pattern in extra description.\n\r");
           return;
         }
@@ -1182,11 +1182,11 @@ void TPerson::doEdit(const char *arg)
     case 15: // edit list <2>
       sprintf(tString, "immortals/%s/rooms%s",
               good_cap(getNameNOC(this).c_str()).c_str(),
-              (*string ? "_2" : ""));
+              (*sstring ? "_2" : ""));
 
       if (!(tFile = fopen(tString, "r"))) {
         sendTo("You don't have a %srooms file.\n\r",
-               (*string ? "2nd " : ""));
+               (*sstring ? "2nd " : ""));
       } else {
         tStr = "Room List:\n\r";
 
@@ -1246,17 +1246,17 @@ void TPerson::doEdit(const char *arg)
 	bgin = tStr.find_first_not_of(whitespace);
 	look_at = tStr.find_first_of(whitespace, bgin);
 	
-	if (look_at != string::npos) {
+	if (look_at != sstring::npos) {
 	  // normal, return the part between
 	  word = tStr.substr(bgin, look_at - bgin);
 	  a2 = tStr.substr(look_at);
 	  tStr = a2;
-	} else if (bgin != string::npos) {
-	  // string had no terminator
+	} else if (bgin != sstring::npos) {
+	  // sstring had no terminator
 	  word = tStr.substr(bgin);
 	  tStr = "";
 	} else {
-	  // whole string was whitespace
+	  // whole sstring was whitespace
 	  word = "";
 	  tStr = "";
 	}
@@ -1267,7 +1267,7 @@ void TPerson::doEdit(const char *arg)
 	  newDescr += line;
 	  line = word;
 	} else { // word fits ok on line
-	  if (word.find_first_of(punctuation) != string::npos) { // word has punctuation
+	  if (word.find_first_of(punctuation) != sstring::npos) { // word has punctuation
 	    word += " "; // so add extra spaces to the end.
 	    // note: this is sort of a hack, because words like sjdgh:jdsgh will trigger it...
 	    // but if they want to put crap like that in they can format it themselves, damnit.
@@ -1296,15 +1296,15 @@ void TPerson::doEdit(const char *arg)
   if (*desc->str) 
     delete [] (*desc->str);
   
-  if (*string) {		// there was a string in the argument array 
-    if (strlen(string) > (unsigned int) room_length[field - 1]) {
+  if (*sstring) {		// there was a sstring in the argument array 
+    if (strlen(sstring) > (unsigned int) room_length[field - 1]) {
       sendTo("String too long - truncated.\n\r");
-      *(string + room_length[field - 1]) = '\0';
+      *(sstring + room_length[field - 1]) = '\0';
     }
-    *(desc->str) = mud_str_dup(string);
+    *(desc->str) = mud_str_dup(sstring);
     sendTo("Ok.\n\r");
-  } else {			// there was no string. enter string mode 
-    sendTo("Enter string.  Terminate with '~' on %s.\n\r",
+  } else {			// there was no sstring. enter sstring mode 
+    sendTo("Enter sstring.  Terminate with '~' on %s.\n\r",
            ((field == 1 || field == 2) ? "NEW LINE" : "SAME LINE"));
     *desc->str = 0;
     desc->max_str = room_length[field - 1];
@@ -1325,7 +1325,7 @@ void TPerson::doRload(const char *argument)
          tEnd = 0;
   bool   tSec = false;
   char   tString[256];
-  string tStArg(argument),
+  sstring tStArg(argument),
          tStString(""),
          tStBuffer("");
 
@@ -1348,7 +1348,7 @@ void TPerson::doRload(const char *argument)
     tEnd   = desc->blockbend;
     tSec   = true;
   } else if (is_abbrev(tStString, "backup")) {
-    string tStExtra(""),
+    sstring tStExtra(""),
            tStStandard("");
     bool   tStandard = false;
 
@@ -1396,7 +1396,7 @@ void TPerson::doRload(const char *argument)
   else
     RoomLoad(this, tStart, tEnd, tSec);
 #else
-  string stRoom(""),
+  sstring stRoom(""),
          enRoom(""),
          tString("");
   int  start = -1,
@@ -3030,7 +3030,7 @@ void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
       } else {
 	rp2 = new TRoom(vnum);
 
-        string tStString(ch->msgVariables(MSG_RLOAD, (TThing *)NULL));
+        sstring tStString(ch->msgVariables(MSG_RLOAD, (TThing *)NULL));
         tStString += "\n\r";
 
         sendrpf(rp, tStString.c_str());
@@ -3271,7 +3271,7 @@ TRoom *room_find_or_create(int key)
   return rv;
 }
 
-string TRoom::describeGround() const
+sstring TRoom::describeGround() const
 {
   if (isUnderwaterSector())
     return "ocean floor";
@@ -3553,7 +3553,7 @@ void TPerson::doRsave(const char *argument)
          tEnd   = 0;
   bool   tSec   = false;
   char   tString[256];
-  string tStArg(argument),
+  sstring tStArg(argument),
          tStString(""),
          tStBuffer("");
 
@@ -3609,7 +3609,7 @@ void TPerson::doRsave(const char *argument)
     RoomSave(this, tStart, tEnd, tSec);
   }
 #else
-  string stRoom(""),
+  sstring stRoom(""),
          enRoom(""),
          tString("");
   char tBuffer[256];

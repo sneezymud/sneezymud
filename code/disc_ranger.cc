@@ -368,9 +368,9 @@ int TBeing::trackRange()
   return range;
 }
 
-void TBeing::doConceal(string argument)
+void TBeing::doConceal(sstring argument)
 {
-  string name_buf;
+  sstring name_buf;
   int rc;
   TBeing *vict;
  

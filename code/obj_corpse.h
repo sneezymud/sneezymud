@@ -14,7 +14,7 @@
 class TCorpse : public TBaseCorpse {
   private:
   public:
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_CORPSE; }
     virtual void describeObjectSpecifics(const TBeing *) const;
 

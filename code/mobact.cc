@@ -367,7 +367,7 @@ int TMonster::targetFound()
     doAction(fname(v->name),CMD_FUME);
   else {
     if (!isDumbAnimal()) {
-      string screamBuf = "$n screams, 'Time to die, ";
+      sstring screamBuf = "$n screams, 'Time to die, ";
       screamBuf += pers(v);
       screamBuf += "!'";
       if(strcmp(pers(v),"someone"))

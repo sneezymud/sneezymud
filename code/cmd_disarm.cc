@@ -241,9 +241,9 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   return TRUE;
 }
 
-int TBeing::doDisarm(string argument, TThing *v) 
+int TBeing::doDisarm(sstring argument, TThing *v) 
 {
-  string v_name;
+  sstring v_name;
   TBeing * victim = NULL;
   int rc;
 

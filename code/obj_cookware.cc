@@ -45,7 +45,7 @@ void TCookware::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TOpenContainer::getFourValues(x1, x2, x3, x4);
 }
 
-string TCookware::statObjInfo() const
+sstring TCookware::statObjInfo() const
 {
   return TOpenContainer::statObjInfo();
 }
@@ -100,7 +100,7 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
 
 
   // let them know
-  string buf;
+  sstring buf;
   ssprintf(buf, "You pour %s into %s.\n\r",
 	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
   act(buf.c_str(), FALSE, ch, 0, 0, TO_CHAR);

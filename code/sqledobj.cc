@@ -12,7 +12,7 @@ const char *pgcmd="pg_dump --no-quotes --no-reconnect --data-only --column-inser
 
 int main(int argc, char **argv)
 {
-  string immortal, db, buf, where, grep;
+  sstring immortal, db, buf, where, grep;
   char file[]="/tmp/sqledobjXXXXXX";
   int answer;
   unsigned int i;

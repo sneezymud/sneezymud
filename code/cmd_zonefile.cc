@@ -13,12 +13,12 @@
 
 //#define MAIL_ZONEFILE
 
-void doSaveZoneFile(TBeing *, const string &);
-void doLoadZoneFile(TBeing *, const string &);
+void doSaveZoneFile(TBeing *, const sstring &);
+void doLoadZoneFile(TBeing *, const sstring &);
 
-void TBeing::doZonefile(const string & tStArg)
+void TBeing::doZonefile(const sstring & tStArg)
 {
-  string tStString(""),
+  sstring tStString(""),
          tStBuffer("");
 
   if (!hasWizPower(POWER_ZONEFILE_UTILITY)) {
@@ -48,7 +48,7 @@ void TBeing::doZonefile(const string & tStArg)
 
 const char SAVEZONEFILE_REPLYTO[] = "damescena@spasm.stanford.edu";
 
-void doSaveZoneFile(TBeing *ch, const string & tArg)
+void doSaveZoneFile(TBeing *ch, const sstring & tArg)
 {
   unsigned int  zValue,
                 roomIndex,
@@ -57,7 +57,7 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
   char          tString[256],
                 tBuffer[256];
   TRoom        *tRoom;
-  string        tStString("");
+  sstring        tStString("");
 
   if (!ch->isImmortal() || !ch->desc || !ch->isPc())
     return;
@@ -291,7 +291,7 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
   ch->sendTo(tStString.c_str());
 }
 
-void doLoadZoneFile(TBeing * tBeing, const string & tArg)
+void doLoadZoneFile(TBeing * tBeing, const sstring & tArg)
 {
 #if 0
   unsigned int  zValue,
@@ -301,7 +301,7 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
   char          tString[256],
                 tBuffer[256];
   TRoom        *tRoom;
-  string        tStString("");
+  sstring        tStString("");
 
   if (!tBeing->isImmortal() || !tBeing->desc || !tBeing->isPc())
     return;

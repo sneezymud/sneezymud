@@ -541,9 +541,9 @@ dirTypeT getDirFromCmd(cmdTypeT cmd)
   }
 }
 
-dirTypeT getDirFromChar(const string direction)
+dirTypeT getDirFromChar(const sstring direction)
 {
-  string dirbuf;
+  sstring dirbuf;
 
   one_argument(direction, dirbuf);
   if (dirbuf.empty())

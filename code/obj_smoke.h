@@ -14,7 +14,7 @@ class TSmoke : public TObj {
   public:    
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     void updateDesc();
     virtual void decayMe();
     virtual bool isPluralItem() const;

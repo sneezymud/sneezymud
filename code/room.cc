@@ -266,7 +266,7 @@ roomDirData * TObj::exitDir(dirTypeT door) const
   return (roomp->dir_option[door]);
 }
 
-void room_iterate(TRoom *[], void (*func) (int, TRoom *, string &, struct show_room_zone_struct *), string &sbdata, void *srzdata)
+void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &sbdata, void *srzdata)
 {
   register int i;
   for (i = 0; i < WORLD_SIZE; i++) {

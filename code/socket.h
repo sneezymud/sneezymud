@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: socket.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -26,8 +18,8 @@ extern char hostlist[MAX_BAN_HOSTS][40];
 
 class TSocket {
   public:
-    int sock;
-    int port;
+    int m_sock;
+    int m_port;
     
   int gameLoop();
   int writeToSocket(const char *);
@@ -36,7 +28,7 @@ class TSocket {
   int newDescriptor();
   void nonBlock();
   void initSocket();
-  void addNewDescriptorsDuringBoot();
+  void addNewDescriptorsDuringBoot(sstring);
 
   TSocket(int p);
   ~TSocket();

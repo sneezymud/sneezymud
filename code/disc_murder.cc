@@ -706,10 +706,10 @@ int throatSlit(TBeing *thief, TBeing * victim)
 
 //////////
 
-int TBeing::doPoisonWeapon(string arg)
+int TBeing::doPoisonWeapon(sstring arg)
 {
   TObj *obj, *poison;
-  string namebuf;
+  sstring namebuf;
   int rc;
 
   if (!doesKnowSkill(SKILL_POISON_WEAPON) &&
@@ -901,7 +901,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   int j;
   int level;
   int duration;
-  string s;
+  sstring s;
   spellNumT skill=SKILL_POISON_ARROW;
 
   if(ch->doesKnowSkill(SKILL_POISON_WEAPON))

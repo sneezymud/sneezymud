@@ -289,7 +289,7 @@ class sessionData
     double perc;
     byte group_share;
     bool amGroupTank;
-    string groupName;
+    sstring groupName;
     unsigned int hits[MAX_ATTACK_MODE_TYPE];
     unsigned int swings[MAX_ATTACK_MODE_TYPE];
     unsigned int rounds[MAX_ATTACK_MODE_TYPE];
@@ -391,7 +391,7 @@ class Descriptor
     int max_str;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
-    textQ output;                 // q of strings to send    
+    textQ output;                 // q of sstrings to send    
     textQ input;                  // q of unprocessed input  
     sessionData session;          // data for this session
     careerData career;            // data for career
@@ -478,9 +478,9 @@ class Descriptor
     void writeToQ(const char *arg);
     void clientf(const char *msg,...);
     bool page_file(const char *);
-    void page_string(const string &, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
+    void page_string(const sstring &, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
     void show_string(const char *, showNowT, allowReplaceT);
-    const string badClassMessage(int Class, bool multi = FALSE, bool triple = FALSE);
+    const sstring badClassMessage(int Class, bool multi = FALSE, bool triple = FALSE);
 #if 0
     char *badRaceMessage(int race);
 #endif
@@ -491,7 +491,7 @@ class Descriptor
     void send_client_prompt(int, int);
     void send_client_exits();
     int read_client(char *);
-    void string_add(char *);
+    void sstring_add(char *);
     void fdSocketClose(int);
     void saveAll();
     void worldSend(const char *, TBeing *);
@@ -506,11 +506,11 @@ class Descriptor
       writeToQ("");
     }
 
-    const string doColorSub() const;
-    const string ansi_color_bold(const char *s) const;
-    const string ansi_color_bold(const char *s, unsigned int) const;
-    const string ansi_color(const char *s) const;
-    const string ansi_color(const char *s, unsigned int) const;
+    const sstring doColorSub() const;
+    const sstring ansi_color_bold(const char *s) const;
+    const sstring ansi_color_bold(const char *s, unsigned int) const;
+    const sstring ansi_color(const char *s) const;
+    const sstring ansi_color(const char *s, unsigned int) const;
     bool hasColor() const;
     bool hasColorVt() const;
     const char *highlight(char *s) const;

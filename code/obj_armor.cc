@@ -38,9 +38,9 @@ void TArmor::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TArmor::statObjInfo() const
+sstring TArmor::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

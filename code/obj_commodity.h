@@ -15,7 +15,7 @@ class TCommodity : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_RAW_MATERIAL; }
 
     virtual void lowCheck();
@@ -24,7 +24,7 @@ class TCommodity : public TObj {
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
     virtual int shopPrice(int, int, float, int *) const;
     virtual int sellPrice(int, float, int *);
 

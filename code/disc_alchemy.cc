@@ -145,9 +145,9 @@ int castIdentify(TBeing *caster, TObj *obj)
     return TRUE;
 }
 
-static string identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT show)
+static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT show)
 {
-  string str;
+  sstring str;
   char buf[256];
 
   sprintf(buf, "You sense that %s is a %s %s.\n\r", victim->hssh(), 
@@ -201,7 +201,7 @@ int identify(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
   if (bSuccess(caster, bKnown, SPELL_IDENTIFY)) {
     if (caster->desc) {
-      string str = identifyBeingStuff(caster, victim, DONT_SHOW_ME);
+      sstring str = identifyBeingStuff(caster, victim, DONT_SHOW_ME);
       str += caster->describeImmunities(victim, bKnown);
 
       caster->desc->page_string(str);
@@ -352,7 +352,7 @@ int divinationBeing(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
   if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
     if (caster->desc) {
-      string str = identifyBeingStuff(caster, victim, SHOW_ME);
+      sstring str = identifyBeingStuff(caster, victim, SHOW_ME);
 
       char buf[256];
       for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
@@ -419,7 +419,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
   bool found = FALSE;
   char capbuf[256], buf[256];
   char *chr;
-  string mod_to_find;
+  sstring mod_to_find;
 
   // prevent people from looking for things with brackets
   mod_to_find = tofind;

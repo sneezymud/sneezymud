@@ -435,7 +435,7 @@ void TPerson::doPowers(const char *argument) const
   if (!desc)
     return;
 
-  string    tStName(""),
+  sstring    tStName(""),
             tStPower(""),
             tStString("");
   char      tString[MAX_INPUT_LENGTH];
@@ -515,7 +515,7 @@ void TPerson::doPowers(const char *argument) const
   desc->page_string(tStString, SHOWNOW_NO, ALLOWREP_YES);  
 }
 
-const string getWizPowerName(wizPowerT wpt)
+const sstring getWizPowerName(wizPowerT wpt)
 {
   // powers command truncs at 20 chars
   switch (wpt) {

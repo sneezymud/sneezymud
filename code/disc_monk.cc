@@ -149,10 +149,10 @@ int TBeing::trySpringleap(TBeing *vict)
   return doSpringleap("", false, vict);
 }
 
-int TBeing::doSpringleap(string argument, bool should_lag, TBeing *vict)
+int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing *vict)
 {
   TBeing *victim;
-  string name_buf;
+  sstring name_buf;
   int rc;
 
   if (!doesKnowSkill(SKILL_SPRINGLEAP)) {

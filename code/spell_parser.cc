@@ -549,14 +549,14 @@ int TBeing::reconcileLifeforce(spellNumT spl, bool checking, int lifeforce)
 }
 // END LIFEFORCE
 
-char *skip_spaces(char *string)
+char *skip_spaces(char *sstring)
 {
-  for (; *string && (*string) == ' '; string++);
+  for (; *sstring && (*sstring) == ' '; sstring++);
 
-  return (string);
+  return (sstring);
 }
 
-spellNumT searchForSpellNum(const string &arg, exactTypeT exact)
+spellNumT searchForSpellNum(const sstring &arg, exactTypeT exact)
 {
   spellNumT i = MIN_SPELL;
 
@@ -602,7 +602,7 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
     }
     return;
   }
-  string tars = "";
+  sstring tars = "";
   unsigned int targets = discArray[which]->targets;
   if (!IS_SET(targets, TAR_SELF_NONO) &&
        (targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)))

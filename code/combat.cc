@@ -1502,7 +1502,7 @@ void TBeing::stopFighting()
   goBerserk(tmp);
 }
 
-bool TBeing::checkPeaceful(const string &msg) const
+bool TBeing::checkPeaceful(const sstring &msg) const
 {
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
     sendTo(msg.c_str());
@@ -1515,7 +1515,7 @@ bool TBeing::checkPeaceful(const string &msg) const
   return FALSE;
 }
 
-bool TBeing::checkPeacefulVictim(const string &msg, const TThing *v) const
+bool TBeing::checkPeacefulVictim(const sstring &msg, const TThing *v) const
 {
   if (v->roomp && v->roomp->isRoomFlag(ROOM_PEACEFUL)) {
     sendTo(msg.c_str());
@@ -3156,7 +3156,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
       continue;
     sprintf(namebuf, other->pers(this));
     sprintf(victbuf, other->pers(v));
-    string equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
+    sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
       other->sendTo(COLOR_MOBS, "%s parries %s's blow with %s.\n\r",
            cap(victbuf), namebuf, equipBuf.c_str()); 
@@ -5186,7 +5186,7 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
 
   if (weapon && !v->getStuckIn(part)) {
-    string nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
+    sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
 
     sendTo(COLOR_OBJECTS, "Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r",
        objn(weapon).c_str(), nameBuf.c_str(), 

@@ -310,7 +310,7 @@ void generate_mob_index()
       tmpi->virt = bc;
       tmpi->pos = ftell(mob_f);
 
-      // read the strings
+      // read the sstrings
       tmpi->name = fread_string(mob_f);
       tmpi->short_desc = fread_string(mob_f);
       tmpi->long_desc = fread_string(mob_f);

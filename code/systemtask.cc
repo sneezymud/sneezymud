@@ -147,8 +147,8 @@ void SystemTask::CheckTask()
       // 20 meg which would degrade performance though...
       const int maxnotesize = 4096;
       if (fstatus.st_size <= maxnotesize && fstatus.st_size > 0) {
-        string str;
-        file_to_string(TMPFILE, str);
+        sstring str;
+        file_to_sstring(TMPFILE, str);
         // Create a note and put the output in it.
         TNote * note = createNote(mud_str_dup(str));
         // Inform the requester and give them the note.
@@ -174,7 +174,7 @@ void SystemTask::CheckTask()
 //  SystemTask::Tasks(TBeing *, char *)
 //
 
-string SystemTask::Tasks(TBeing *ch, const char *args) 
+sstring SystemTask::Tasks(TBeing *ch, const char *args) 
 {
   _task	*tsk;
 
@@ -187,7 +187,7 @@ string SystemTask::Tasks(TBeing *ch, const char *args)
   } else {
     if (top) {
       char lbuf[256];
-      string str;
+      sstring str;
       sprintf(lbuf, "%-10s %s\n\r", "Owner", "Task");
       str = lbuf;
       for(tsk=top; tsk; tsk=tsk->next) {

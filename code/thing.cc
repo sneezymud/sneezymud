@@ -18,7 +18,7 @@ const char * TThing::objs(const TThing *t) const
   return (canSee(t) ? t->getName() : "something");
 }
 
-const string TThing::objn(const TThing *t) const
+const sstring TThing::objn(const TThing *t) const
 {
   return (canSee(t) ? fname(t->name) : "something");
 }
@@ -38,7 +38,7 @@ const char * TThing::pers(const TThing *t) const
   return (canSee(t) ? t->getName() : "someone");
 }
 
-const string TThing::persfname(const TThing *t) const
+const sstring TThing::persfname(const TThing *t) const
 {
   return (canSee(t) ? fname(t->name) : "someone");
 }

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: stats.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -40,6 +32,8 @@ enum statTypeT {
 const statTypeT MIN_STAT=	statTypeT(0);
 const statTypeT MAX_STATS_USED=	statTypeT(STAT_SPE+1);
 extern statTypeT & operator++(statTypeT &c, int);
+
+extern int territory_adjustment(territoryT, statTypeT);
 	
 const int MAX_STAT_COMBAT=	5;
 const int MAX_STAT_LEARN=	3;
@@ -49,7 +43,10 @@ const int MAX_STAT_EXTS	=2;
 enum statSetT {
      STAT_CHOSEN,
      STAT_NATURAL,
-     STAT_CURRENT
+     STAT_CURRENT,
+     STAT_RACE,
+     STAT_AGE,
+     STAT_TERRITORY,
 };
 
 class Stats {
@@ -75,10 +72,10 @@ class Stats {
 
   void zero();
 
-  string showStats(TBeing *caller);
+  sstring showStats(TBeing *caller);
 
-  const string printStatHeader() const;
-  const string printRawStats(const TBeing *caller) const;
+  const sstring printStatHeader() const;
+  const sstring printRawStats(const TBeing *caller) const;
 
 };
 #endif

@@ -551,7 +551,7 @@ int castShapeShift(TBeing *caster)
 int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
 {
   char buf[256];
-  string bBuf;
+  sstring bBuf;
 
   level = min(level, 75);
 

@@ -51,12 +51,12 @@ void TPCorpse::addToNumInRoom(int n)
   num_corpses_in_room += n;
 }
 
-void TPCorpse::setOwner(const string &Name)
+void TPCorpse::setOwner(const sstring &Name)
 {
   fileName = Name;
 }
 
-const string & TPCorpse::getOwner() const
+const sstring & TPCorpse::getOwner() const
 {
   return fileName;
 }
@@ -169,7 +169,7 @@ void TPCorpse::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getRoomNum();
 }
 
-string TPCorpse::statObjInfo() const
+sstring TPCorpse::statObjInfo() const
 {
   char buf[256];
 
@@ -180,7 +180,7 @@ string TPCorpse::statObjInfo() const
   sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",
 	  getExpLost());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

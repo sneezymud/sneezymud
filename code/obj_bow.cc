@@ -79,7 +79,7 @@ void TBow::describeObjectSpecifics(const TBeing *ch) const
     ch->sendTo(COLOR_OBJECTS, "%s has no arrow ready.\n\r", good_cap(getName()).c_str());
 
   if (isBowFlag(BOW_STRING_BROKE))
-    act("$p has a broken string.", false, ch, this, 0, TO_CHAR);
+    act("$p has a broken sstring.", false, ch, this, 0, TO_CHAR);
   if (isBowFlag(BOW_CARVED))
     act("$p is carved.", false, ch, this, 0, TO_CHAR);
   if (isBowFlag(BOW_SCRAPED))
@@ -103,7 +103,7 @@ void TBow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getMaxRange();
 }
 
-string TBow::statObjInfo() const
+sstring TBow::statObjInfo() const
 {
   char    buf[256];
   TArrow *tArrow;
@@ -112,7 +112,7 @@ string TBow::statObjInfo() const
 
   sprintf(buf, "Arrow: %d, flags: %d, type: %d", (tArrow ? tArrow->objVnum() : 0), getBowFlags(), getArrowType());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -178,9 +178,9 @@ void TBow::evaluateMe(TBeing *ch) const
     ch->describeBowRange(this, learn);
 }
 
-void TBow::stringMeBow(TBeing *ch, TThing *string)
+void TBow::sstringMeBow(TBeing *ch, TThing *sstring)
 {
-  string->stringMeString(ch, this);
+  sstring->sstringMeString(ch, this);
 }
 
 bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper) const
@@ -227,7 +227,7 @@ bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper) const
 void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
 {
   if (isBowFlag(BOW_STRING_BROKE)) {
-    ch->sendTo("The bowstring on your bow has snapped.  It needs repair before use.\n\r");
+    ch->sendTo("The bowsstring on your bow has snapped.  It needs repair before use.\n\r");
     return;
   }
 
@@ -337,11 +337,11 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       *ch->roomp += *the_arrow;
       return DELETE_THIS;
     } else {
-      ch->sendTo("Your bowstring snaps! It will need repair before further use!\n\r");
+      ch->sendTo("Your bowsstring snaps! It will need repair before further use!\n\r");
       addToStructPoints(-1);
       addBowFlags(BOW_STRING_BROKE);
 
-      act("You hear a loud pop as $n's bowstring snaps!", 
+      act("You hear a loud pop as $n's bowsstring snaps!", 
                  FALSE, ch, NULL, NULL, TO_ROOM);
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
@@ -368,8 +368,8 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       --nattacks;
 
     --(*the_arrow);
-    string capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL, COLOR_OBJECTS, TRUE);
-    string capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+    sstring capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL, COLOR_OBJECTS, TRUE);
+    sstring capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ)
       ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
@@ -426,9 +426,9 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   return FALSE;
 }
 
-string TBow::showModifier(showModeT mode, const TBeing *ch) const
+sstring TBow::showModifier(showModeT mode, const TBeing *ch) const
 {
-  string a;
+  sstring a;
 
   if (getStuff())
     a = " (loaded)";

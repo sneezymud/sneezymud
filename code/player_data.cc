@@ -900,9 +900,9 @@ void TBeing::wipeChar(int)
 }
 
 
-time_t lastAccountLogin(string name)
+time_t lastAccountLogin(sstring name)
 {
-  string fileName = "account/";
+  sstring fileName = "account/";
   fileName += LOWER(name[0]);
   fileName += "/";
   fileName +=  lower(name);
@@ -955,8 +955,8 @@ void do_the_player_stuff(const char *name)
   if (strlen(name) > 7 && !strcmp(&name[strlen(name) - 7], ".career"))
     return;
 
-  // skip strings data.
-  if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".strings"))
+  // skip sstrings data.
+  if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".sstrings"))
     return;
 
   // skip drug data
@@ -1461,12 +1461,12 @@ void TBeing::checkForStr(silentTypeT silent)
   }
 }
 
-void TBeing::doReset(string arg)
+void TBeing::doReset(sstring arg)
 {
   sh_int pracs = 0;
   int j, num;
   classIndT Class;
-  string buf;
+  sstring buf;
   TMonster *keeper;
   TThing *tmp;
   int zone, temp;
@@ -1640,7 +1640,7 @@ bool TBeing::isLinkdead() const
 void TBeing::saveTitle()
 {
   FILE *fp;
-  string buf;
+  sstring buf;
   TPerson *tp;
 
   if(!(tp=dynamic_cast<TPerson *>(this)))
@@ -1664,7 +1664,7 @@ void TBeing::saveTitle()
 void TBeing::loadTitle()
 {
   FILE *fp;
-  string buf;
+  sstring buf;
   char inbuf[1024];
   TPerson *tp;
 
@@ -2217,9 +2217,9 @@ if (current_version < 13) {
   fclose(fp);
 }
 
-int listAccount(string name, string &buf)
+int listAccount(sstring name, sstring &buf)
 {
-  string fileName = "account/";
+  sstring fileName = "account/";
   fileName += LOWER(name[0]);
   fileName += "/";
   fileName +=  lower(name);

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_audio.cc,v $
+// Revision 5.3  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/09 23:27:04  peel
 // More splitting up of obj2.h
 // renamed food.cc to obj_food.cc
@@ -73,13 +77,13 @@ void TAudio::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TAudio::statObjInfo() const
+sstring TAudio::statObjInfo() const
 {
   char buf[256];
 
   sprintf(buf, "Frequency: %d", getFreq());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

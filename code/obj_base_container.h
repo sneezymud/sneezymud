@@ -16,7 +16,7 @@ class TBaseContainer : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int) = 0;
     virtual void getFourValues(int *, int *, int *, int *) const = 0;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual int stealModifier();
     virtual void lookObj(TBeing *, int) const = 0;
@@ -33,8 +33,8 @@ class TBaseContainer : public TObj {
     virtual void powerstoneCheck(TOpal **);
     virtual void powerstoneCheckCharged(TOpal **);
     virtual void powerstoneMostMana(int *);
-    virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, string, itemTypeT, int &, int);
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
 
     int isSaddle() const;

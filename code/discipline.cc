@@ -517,7 +517,7 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
 
       // adjust the damage if overpowering the symbol
       float sym_level = holy->getSymbolLevel();
-      string sb;  // damage string
+      sstring sb;  // damage sstring
       if (level >= (sym_level+15)) {
         sym_stress *= 8;
         sb = "$p suffers TREMENDOUS structural damage from the stress!";
@@ -3658,7 +3658,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if ((discArray[sknum]->comp_types & COMP_MATERIAL))
       strcpy(tString, "feel you have more control over the powers of");
     else if (discArray[sknum]->holyStrength) {
-      string tStDeity("");
+      sstring tStDeity("");
 
       tStDeity = yourDeity(sknum, FIRST_PERSON);
       sprintf(tString, "feel %s favoring you more in respects to",
@@ -3708,7 +3708,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if ((discArray[sknum]->comp_types & COMP_MATERIAL))
       strcpy(tString, "feel you have total control over the powers of");
     else if (discArray[sknum]->holyStrength) {
-      string tStDeity("");
+      sstring tStDeity("");
 
       tStDeity = yourDeity(sknum, FIRST_PERSON);
       sprintf(tString, "feel %s has blessed you fully with the powers of", tStDeity.c_str());
@@ -3727,7 +3727,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if ((discArray[sknum]->comp_types & COMP_MATERIAL))
       strcpy(tString, "feel you have all the control you can currently obtain of");
     else if (discArray[sknum]->holyStrength) {
-      string tStDeity("");
+      sstring tStDeity("");
 
       tStDeity = yourDeity(sknum, FIRST_PERSON);
       sprintf(tString, "feel %s refuses to bless you more, for now, in respects to", tStDeity.c_str());

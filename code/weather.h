@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: weather.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -31,7 +23,12 @@ struct weather_data
    sunT sunlight;        /* And how much sun. */
 };
 
+// this represents the arbitrary starting point for mud-time functions
+// It is Fri Aug 10 18:05:15 1990  (Gamma 0.0 release?)
+// If people care, May 1, 1992 is around 704700000 (SneezyMUD opening)
 const unsigned long BEGINNING_OF_TIME      =650336715;
+
+// Beginning_OF_TIME will be Jan 1, year 0 + YEAR_ADJUST
 const int YEAR_ADJUST            =550;
 
 enum changeWeatherT {
@@ -47,5 +44,35 @@ enum changeWeatherT {
 extern void AlterWeather(changeWeatherT *);
 extern void calcNewSunRise();
 extern void calcNewSunSet();
+extern int hourminTime();
+extern sstring hmtAsString(int);
+extern void weatherAndTime(int);
+extern struct weather_data weather_info;
+extern void anotherHour();
+extern void weatherChange();
+extern void GetMonth(int);
+extern void sunriseAndSunset();
+
+extern unsigned char moontype;
+enum moonTimeT {
+  MOON_TIME_SET,
+  MOON_TIME_RISE,
+};
+
+extern int moonTime(moonTimeT);
+extern const char * moonType();
+extern bool moonIsUp();
+
+enum sunTimeT {
+  SUN_TIME_DAWN,
+  SUN_TIME_RISE,
+  SUN_TIME_DAY,
+  SUN_TIME_SINK,
+  SUN_TIME_SET,
+  SUN_TIME_NIGHT,
+};
+
+extern int sunTime(sunTimeT);
+extern bool sunIsUp();
 
 #endif

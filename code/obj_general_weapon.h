@@ -18,7 +18,7 @@ class TGenWeapon : public TBaseWeapon {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_WEAPON; }
     virtual int smiteWithMe(TBeing *, TBeing *);
 

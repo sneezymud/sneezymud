@@ -275,7 +275,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
 {
   char numb[MAX_INPUT_LENGTH], buffer[MAX_STRING_LENGTH];
   int msg;
-  string sb;
+  sstring sb;
 
   if (ch->isAffected(AFF_BLIND)) {
     ch->sendTo("You are blind! This board does not support braile.\n\r");
@@ -327,7 +327,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       sprintf(buffer, "Message %d : %s\n\r\n\r%s\n\rEnd of message %d.\n\r",
                       msg, b->head[msg - 1], b->msgs[msg - 1], msg);
      
-      string sb = buffer;
+      sstring sb = buffer;
       processStringForClient(sb);
 
       ch->desc->clientf("%d", CLIENT_NOTE);
@@ -401,13 +401,13 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   if (!reverse) {
     unsigned int i;
     for (i = 0; i < b->msg_num; i++) {
-      // recall that we stored the string into head as "[date] title (name)"
+      // recall that we stored the sstring into head as "[date] title (name)"
       // parse this in order to colorize
-      char date_string[256];
-      char head_string[256];
-      char name_string[256];
-      strcpy(date_string, b->head[i]);
-      char *tmp = strchr(date_string, ']');
+      char date_sstring[256];
+      char head_sstring[256];
+      char name_sstring[256];
+      strcpy(date_sstring, b->head[i]);
+      char *tmp = strchr(date_sstring, ']');
       if (!tmp) {
         vlogf(LOG_PROC, "Serious error in show_board (1).");
         b->msg_num = i;
@@ -415,39 +415,39 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       }
       *(tmp+1) = '\0';
 
-      strcpy(head_string, &tmp[2]);
-      tmp = strrchr(head_string, '(');
+      strcpy(head_sstring, &tmp[2]);
+      tmp = strrchr(head_sstring, '(');
       if (!tmp) {
         vlogf(LOG_PROC, "Serious error in show_board (2).");
         b->msg_num = i;
         continue;
       }
       *(tmp-1) = '\0';
-      strcpy(name_string, tmp);
+      strcpy(name_sstring, tmp);
 
       sprintf(buf + strlen(buf), "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
-              ch->cyan(), i + 1, ch->norm(), ch->green(), date_string,
-              ch->purple(), head_string, ch->orange(), name_string, ch->norm());
+              ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
+              ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
     }
   } else {
     int i;
     for (i = b->msg_num-1; i >= 0; i--) {
-      // recall that we stored the string into head as "[date] title (name)"
+      // recall that we stored the sstring into head as "[date] title (name)"
       // parse this in order to colorize
-      char date_string[256];
-      char head_string[256];
-      char name_string[256];
-      strcpy(date_string, b->head[i]);
-      char *tmp = strchr(date_string, ']');
+      char date_sstring[256];
+      char head_sstring[256];
+      char name_sstring[256];
+      strcpy(date_sstring, b->head[i]);
+      char *tmp = strchr(date_sstring, ']');
       *(tmp+1) = '\0';
-      strcpy(head_string, &tmp[2]);
-      tmp = strrchr(head_string, '(');
+      strcpy(head_sstring, &tmp[2]);
+      tmp = strrchr(head_sstring, '(');
       *(tmp-1) = '\0';
-      strcpy(name_string, tmp);
+      strcpy(name_sstring, tmp);
 
       sprintf(buf + strlen(buf), "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
-              ch->cyan(), i + 1, ch->norm(), ch->green(), date_string,
-              ch->purple(), head_string, ch->orange(), name_string, ch->norm());
+              ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
+              ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
     }
   }
 
@@ -669,12 +669,12 @@ void TBoard::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TBoard::statObjInfo() const
+sstring TBoard::statObjInfo() const
 {
   char buf[256];
   sprintf(buf, "Minimum level to view board: %d", getBoardLevel());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

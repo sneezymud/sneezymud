@@ -37,12 +37,12 @@ void TKey::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TKey::statObjInfo() const
+sstring TKey::statObjInfo() const
 {
   char buf[256];
   sprintf(buf, "It is a key to %s", what_does_it_open(this));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

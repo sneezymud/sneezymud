@@ -204,7 +204,7 @@ void TDrugContainer::lowCheck()
   }
 }
 
-string TDrugContainer::statObjInfo() const
+sstring TDrugContainer::statObjInfo() const
 {
   char buf[256];
 
@@ -215,7 +215,7 @@ string TDrugContainer::statObjInfo() const
           getCurBurn(),
           (getLit() ? "Yes" : "No"));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -246,9 +246,9 @@ int TDrugContainer::objectDecay()
   return DELETE_THIS;
 }
 
-string TDrugContainer::showModifier(showModeT, const TBeing *) const
+sstring TDrugContainer::showModifier(showModeT, const TBeing *) const
 {
-  string a;
+  sstring a;
 
   if (getLit())
     a = " (lit)";

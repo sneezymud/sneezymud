@@ -17,14 +17,14 @@ class TPCorpse : public TBaseCorpse {
     int corpse_in_room;
     int num_corpses_in_room;
     float exp_lost;
-    string fileName;
+    sstring fileName;
     TPCorpse *nextGlobalCorpse;
     TPCorpse *nextCorpse;
     TPCorpse *previousCorpse;
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual void decayMe();
     virtual int getMe(TBeing *, TThing *);
     virtual void getMeFrom(TBeing *, TThing *);
@@ -44,8 +44,8 @@ class TPCorpse : public TBaseCorpse {
     void addToNumInRoom(int n);
     float getExpLost() const;
     void setExpLost(float exp);
-    void setOwner(const string &Name);
-    const string & getOwner() const;
+    void setOwner(const sstring &Name);
+    const sstring & getOwner() const;
     void clearOwner();
     void setNext(TPCorpse *n);
     void removeNext();

@@ -39,7 +39,7 @@ struct SInnkeeperHate {
   int    tVNum; // Mobile VNum of the innkeeper in question.
   race_t tRace;  // Race in question
   bool   isHate; // Do I hate this race?  Or like them...
-  string tStMessage; // Message to display for 'hated' races.
+  sstring tStMessage; // Message to display for 'hated' races.
 } SIKHates[] = {
   // An innkeeper can be specified more than once if they have multiple
   // Hates/Likes.  Rules:
@@ -272,7 +272,7 @@ void handleCorrupted(const char *name, char *account)
          LOWER(name[0]), lower(name).c_str());
   vsystem(buf);
 
-  sprintf(buf, "mv player/%c/%s.strings player/corrupt/.",
+  sprintf(buf, "mv player/%c/%s.sstrings player/corrupt/.",
           LOWER(name[0]), lower(name).c_str());
   vsystem(buf);
 
@@ -327,8 +327,8 @@ void wipePlayerFile(const char *name)
   sprintf(buf, "player/%c/%s.wizpower", LOWER(name[0]), lower(name).c_str());
   unlink(buf);
 
-  // nuke strings, ignore errors
-  sprintf(buf, "player/%c/%s.strings", LOWER(name[0]), lower(name).c_str());
+  // nuke sstrings, ignore errors
+  sprintf(buf, "player/%c/%s.sstrings", LOWER(name[0]), lower(name).c_str());
   unlink(buf);
 
   // nuke toggles, ignore errors
@@ -431,7 +431,7 @@ void TBeing::removeRent()
   wipeRentFile(tmp->name);
 }
 
-static char *raw_read_string(FILE * fp)
+static char *raw_read_sstring(FILE * fp)
 {
   char buf[MAX_STRING_LENGTH] = "\0";
   char *s = NULL;
@@ -458,16 +458,16 @@ static bool raw_read_rentObject(FILE *fp, rentObject *item, char **name, char **
     return FALSE;
 
   if (item->extra_flags & ITEM_STRUNG) {
-    if (!(*name = raw_read_string(fp)))
+    if (!(*name = raw_read_sstring(fp)))
       return FALSE;
 
-    if (!(*sd = raw_read_string(fp)))
+    if (!(*sd = raw_read_sstring(fp)))
       return FALSE;
 
-    if (!(*d = raw_read_string(fp)))
+    if (!(*d = raw_read_sstring(fp)))
       return FALSE;
 
-    *ad = raw_read_string(fp);
+    *ad = raw_read_sstring(fp);
   }
   return TRUE;
 }
@@ -989,7 +989,7 @@ vlogf(LOG_SILENT, "IRADEL: slot write %d", slot);
   }
 }
 
-void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, string &str)
+void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
 {
   int temp;
   char buf[256];
@@ -1052,7 +1052,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   int i, actual_cost;
   unsigned int credit;
   TObj *obj;
-  string str;
+  sstring str;
   followData *f;
 
   if (!cost)
@@ -1277,7 +1277,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   return TRUE;
 }
 
-void TMonster::saveItems(const string &filepath)
+void TMonster::saveItems(const sstring &filepath)
 {
   FILE *fp;
   signed char i;
@@ -1323,10 +1323,10 @@ void TMonster::saveItems(const string &filepath)
   }
 }
 
-void TRoom::saveItems(const string &)
+void TRoom::saveItems(const sstring &)
 {
   FILE *fp;
-  string filepath;
+  sstring filepath;
   signed char i;
   rentHeader st;
 
@@ -1347,10 +1347,10 @@ void TRoom::saveItems(const string &)
 }
 
 
-void emailStorageBag(string tStMessage, string tStSender, TThing * tStuff)
+void emailStorageBag(sstring tStMessage, sstring tStSender, TThing * tStuff)
 {
   FILE * tFile;
-  string tStMail("");
+  sstring tStMail("");
   char   tString[256];
 
   if (gamePort != PROD_GAMEPORT)
@@ -1376,7 +1376,7 @@ void emailStorageBag(string tStMessage, string tStSender, TThing * tStuff)
 
 void TRoom::loadItems()
 {
-  string filepath;
+  sstring filepath;
   int num_read;
   FILE *fp;
   int reset;
@@ -1611,7 +1611,7 @@ void TRoom::loadItems()
     if (!tBag->getStuff())
       delete tBag;
     else {
-      string tStString("");
+      sstring tStString("");
 
       tBag->swapToStrung();
       tBag->addObjStat(ITEM_NOPURGE);
@@ -2054,7 +2054,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 }
 
 // this is used to load the items a shopkeeper has
-void TMonster::loadItems(const string &filepath)
+void TMonster::loadItems(const sstring &filepath)
 {
   FILE *fp;
   int num_read = 0;
@@ -2167,7 +2167,7 @@ void TPerson::loadRent()
   FILE *fp;
   objCost cost;
   TPerson *tmp;
-  string lbuf;
+  sstring lbuf;
 
   if (desc && desc->original)
     tmp = desc->original;
@@ -2362,7 +2362,7 @@ void TPerson::loadRent()
   return;
 }
 
-int TComponent::noteMeForRent(string &tStString, TBeing *ch, TThing *tList, int *tCount)
+int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int *tCount)
 {
   int         tCost    = 0,
               lCount   = 0;
@@ -2455,10 +2455,10 @@ int TComponent::noteMeForRent(string &tStString, TBeing *ch, TThing *tList, int 
 }
 
 // (int) return : Cost for this item(block)
-// (string)     : The running note output string.
+// (sstring)     : The running note output sstring.
 // (thing)      : The list the item is in, or the item itself.
 // (tCount)     : A running count of total items.
-int TObj::noteMeForRent(string &tStString, TBeing *ch, TThing *, int *tCount)
+int TObj::noteMeForRent(sstring &tStString, TBeing *ch, TThing *, int *tCount)
 {
   int  tCost = 0;
   char tString[256],
@@ -2490,8 +2490,8 @@ int TObj::noteMeForRent(string &tStString, TBeing *ch, TThing *, int *tCount)
 void TBeing::makeRentNote(TBeing *recip)
 {
   char        buf[1024];
-  string      longBuf("");
-  string      tStBuffer("");
+  sstring      longBuf("");
+  sstring      tStBuffer("");
   TThing     *t, *t2;
   int         i, temp;
   objCost     cost;
@@ -2791,7 +2791,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   bool   autoHates  = false,
          autoLikes  = false,
          hatesMe[2] = {false, false};
-  string tStString("");
+  sstring tStString("");
 
   for (int tCounter = 0; SIKHates[tCounter].tRace != RACE_NORACE; tCounter++) {
     if (SIKHates[tCounter].tVNum != recep->mobVnum())
@@ -2928,22 +2928,22 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
 
     if (IS_SET(item.extra_flags, ITEM_STRUNG)) {
       // we only care about the action_description
-      if (!(n = raw_read_string(fp))) {
+      if (!(n = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (1) in noteLimitedItem");
         return FALSE;
       }
       delete [] n;
-      if (!(s = raw_read_string(fp))) {
+      if (!(s = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (2) in noteLimitedItem");
         return FALSE;
       }
-      if (!(d = raw_read_string(fp))) {
+      if (!(d = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (3) in noteLimitedItem");
         delete [] s;
         return FALSE;
       }
       delete [] d;
-      ad = raw_read_string(fp);
+      ad = raw_read_sstring(fp);
     }
     int robj = real_object(item.item_number);
 //    if ((item.cost > LIM_ITEM_COST_MIN) && (item.item_number >= 0)) {
@@ -3113,7 +3113,7 @@ void countAccounts(const char *arg)
 
 static void deleteDuringRead(TMonster *mob)
 {
-  // we read the act bits early in the read, but don't alter the strings
+  // we read the act bits early in the read, but don't alter the sstrings
   // until the end of the read, so this is a good idea
   REMOVE_BIT(mob->specials.act, ACT_STRINGS_CHANGED);
 
@@ -3508,7 +3508,7 @@ float old_ac_lev = mob->getACLevel();
       }
     }
 
-    // configure strings if necessary
+    // configure sstrings if necessary
     if (IS_SET(mob->specials.act, ACT_STRINGS_CHANGED)) {
       mob->name = fread_string(fp);
       mob->shortDescr = fread_string(fp);
@@ -4056,7 +4056,7 @@ bool TBeing::saveFollowers(bool rent_time)
     }
     fprintf(fp, " -1\n");   // stuff terminator
 
-    // save strung mob strings
+    // save strung mob sstrings
     if (IS_SET(mob->specials.act, ACT_STRINGS_CHANGED)) {
       for (j = 0, k = 0; k <= (int) strlen(mob->name); k++) {
         if (mob->name[k] != 13)
@@ -4248,7 +4248,7 @@ int TBeing::doRent(const char *argument)
   if (arg && *arg) {
     if (is_abbrev(arg, "credit")) {
       int lev;
-      string sb;
+      sstring sb;
       char buf[256];
 
       if (FreeRent) {

@@ -720,7 +720,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           TObj * grave = read_object(OBJ_GENERIC_GRAVE, VIRTUAL);
 #endif
           if (grave) {
-            string graveDesc = "Here lies ";
+            sstring graveDesc = "Here lies ";
             graveDesc += v->getName();
             graveDesc += ".\n\rKilled ";
   
@@ -961,7 +961,7 @@ int TBeing::getActualDamage(TBeing *v, TThing *o, int dam, spellNumT attacktype)
   return dam;
 }
 
-int TBeing::damageEm(int dam, string log, spellNumT dmg_type)
+int TBeing::damageEm(int dam, sstring log, spellNumT dmg_type)
 {
   int rc;
 

@@ -739,7 +739,7 @@ int GinGame::recursive_gin_search(TBeing *ch, Hand *hs, int *hand)
   return total;
 }
 
-const string GinGame::gin_score()
+const sstring GinGame::gin_score()
 {
   TBeing *ch1, *ch2;
   char buf[80];

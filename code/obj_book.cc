@@ -36,9 +36,9 @@ void TBook::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TBook::statObjInfo() const
+sstring TBook::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 
@@ -63,8 +63,8 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
   if (section) {
     if (ch->hasColorVt()) {
       sprintf(the_filebuf, "objdata/books/%d.%d.ansi", vnum, section);
-      string buf2;
-      if (file_to_string(the_filebuf, buf2)) {
+      sstring buf2;
+      if (file_to_sstring(the_filebuf, buf2)) {
         // found ansi section
         strcat(buf, buf2.c_str());
         sprintf(buf + strlen(buf), "\n\rEnd of section %d.\n\r", section);
@@ -73,14 +73,14 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       }
     }
     sprintf(the_filebuf, "objdata/books/%d.%d", vnum, section);
-    string buf2;
-    if (file_to_string(the_filebuf, buf2)) {
+    sstring buf2;
+    if (file_to_sstring(the_filebuf, buf2)) {
       strcat(buf, buf2.c_str());
       sprintf(buf + strlen(buf), "\n\rEnd of section %d.\n\r", section);
       if (!ch->desc->m_bIsClient)
         ch->desc->page_string(buf);
       else {
-        string sb = buf;
+        sstring sb = buf;
         processStringForClient(sb);
 
         ch->desc->clientf("%d", CLIENT_NOTE);
@@ -96,8 +96,8 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
   } else {
     if (ch->hasColorVt()) {
       sprintf(the_filebuf, "objdata/books/%d.ansi", vnum);
-      string buf2;
-      if (file_to_string(the_filebuf, buf2)) {
+      sstring buf2;
+      if (file_to_sstring(the_filebuf, buf2)) {
         // found ansi section
         strcat(buf, buf2.c_str());
         strcat(buf, "\n\r");
@@ -106,14 +106,14 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       }
     }
     sprintf(the_filebuf, "objdata/books/%d", vnum);
-    string buf2;
-    if (file_to_string(the_filebuf, buf2)) {
+    sstring buf2;
+    if (file_to_sstring(the_filebuf, buf2)) {
       strcat(buf, buf2.c_str());
       strcat(buf, "\n\r");
       if (!ch->desc->m_bIsClient)
         ch->desc->page_string(buf);
       else {
-        string sb = buf;
+        sstring sb = buf;
         processStringForClient(sb);
 
         ch->desc->clientf("%d", CLIENT_NOTE);

@@ -1355,7 +1355,7 @@ void TBeing::setMaxLevel(ubyte num)
   player.max_level = num;
 }
 
-string TBeing::displayExp() const
+sstring TBeing::displayExp() const
 {
   char buf[256];
 
@@ -1386,8 +1386,8 @@ string TBeing::displayExp() const
     sprintf(buf, "%6.2fG", (getExp() / 1000000000.0));
 #endif
 
-  string xp_string = buf;
-  return xp_string;
+  sstring xp_sstring = buf;
+  return xp_sstring;
 }
 
 byte TBeing::getProtection() const

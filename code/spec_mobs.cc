@@ -392,10 +392,10 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
         return TRUE;
       }
     } else if (cmd == CMD_LIST) {
-      // the next (2nd) line contains the string we should say
+      // the next (2nd) line contains the sstring we should say
       do {
         if (!fgets(buf, 255, fp)) {
-          vlogf(LOG_LOW, "Missing string for list (%s)", caFilebuf);
+          vlogf(LOG_LOW, "Missing sstring for list (%s)", caFilebuf);
           fclose(fp);
           return TRUE;
         }
@@ -412,7 +412,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     // don't count the "list" line
     do {
       if (!fgets(buf, 255, fp)) {
-        vlogf(LOG_LOW, "Missing string for list (%s)", caFilebuf);
+        vlogf(LOG_LOW, "Missing sstring for list (%s)", caFilebuf);
         fclose(fp);
         return TRUE;
       }
@@ -442,7 +442,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     } while (*buf == '#');
 
     do {
-      fgets(buf, 255, fp); // skip over list string
+      fgets(buf, 255, fp); // skip over list sstring
     } while (*buf == '#');
 
     numrumors = 0;
@@ -3327,7 +3327,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   if (cmd == CMD_LIST) {
     TWindow *tw = getFirstWindowInRoom(me);
 
-    string tellBuf = fname(ch->name);
+    sstring tellBuf = fname(ch->name);
     tellBuf += " Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the pets!";
@@ -3345,7 +3345,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     if (!pet) {
       TWindow *tw = getFirstWindowInRoom(me);
 
-      string tellBuf = fname(ch->name);
+      sstring tellBuf = fname(ch->name);
       tellBuf += " Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
@@ -3442,7 +3442,7 @@ a pet.", fname(ch->name).c_str());
     if (!pet) {
       TWindow *tw = getFirstWindowInRoom(me);
 
-      string tellBuf = fname(ch->name);
+      sstring tellBuf = fname(ch->name);
       tellBuf += " Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
@@ -3493,7 +3493,7 @@ int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
     sprintf(buf, "%s Look through %s to see the mounts!",
             fname(ch->name).c_str(), tw ? fname(tw->name).c_str() : "window");
-    string tellBuf = fname(ch->name);
+    sstring tellBuf = fname(ch->name);
     tellBuf += " Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the mounts!";
@@ -6522,7 +6522,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   roomDirData *exitp;
   TBeing *tbt = NULL;
   TThing *ttt;
-  string str;
+  sstring str;
 
   class div_struct {
     public:
@@ -6784,11 +6784,11 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   }
 
   if (bow->isBowFlag(BOW_STRING_BROKE)) {
-    //    vlogf(LOG_DASH, "archer fixing a bowstring");
+    //    vlogf(LOG_DASH, "archer fixing a bowsstring");
 
     
-    act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
-    act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
+    act("You quickly resstring $p.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$n quickly resstrings $p.", FALSE, ch, bow, 0, TO_ROOM);
 
     bow->remBowFlags(BOW_STRING_BROKE);
     return TRUE;

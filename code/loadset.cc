@@ -106,7 +106,7 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
   return false;
 }
 
-static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const string &slotname)
+static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname)
 {
   if (vnum < 0) {
     if (chance > 100)
@@ -178,7 +178,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
                 suitClasses[256];
   const char   *tArg         = NULL;
   loadSetTypeT  tPiece       = LST_ALL;
-  string        StString("");
+  sstring        StString("");
   int           tCount;
 
   if (num < 0 && (!arg || !*arg) && tChance != 101)

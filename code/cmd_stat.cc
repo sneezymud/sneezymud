@@ -23,7 +23,7 @@ void TBeing::statZone(const char *zoneNumber)
     cnExtra[2] = {0, 0},
     cnFlags[7] = {0, 0, 0, 0, 0, 0, 0},
     rzCount    = 0;
-  string sb("");
+  sstring sb("");
   unsigned long int rNums[2] = {0, 0},
                     Runner = 0;
   char tString[256];
@@ -146,7 +146,7 @@ void TBeing::statZone(const char *zoneNumber)
 
 void TBeing::statRoom(TRoom *rmp)
 {
-  string str;
+  sstring str;
   char buf2[256];
   char buf3[80], buf4[80];
   extraDescription *e;
@@ -319,7 +319,7 @@ void TBeing::statObj(const TObj *j)
   extraDescription *e;
   TThing *t;
   int i;
-  string str;
+  sstring str;
 
   if (!limitPowerCheck(CMD_OEDIT, j->getSnum())) {
     sendTo("You are not allowed to stat that object, sorry.\n\r");
@@ -484,7 +484,7 @@ void TBeing::statObjForDivman(const TObj *j)
   char buf[256];
   TThing *t;
   int i;
-  string str;
+  sstring str;
 
 
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {

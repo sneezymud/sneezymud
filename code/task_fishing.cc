@@ -1,7 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 
-void TBeing::doFish(string direction){
+void TBeing::doFish(sstring direction){
   TRoom *rp;
   roomDirData *exitp;
   const int ROOM_FISHING_SHACK=31818;

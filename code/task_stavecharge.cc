@@ -157,7 +157,7 @@ int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCou
   return tValue;
 }
 
-void TBeing::doChargeStave(string tStString)
+void TBeing::doChargeStave(sstring tStString)
 {
   /*
   if (strcmp("Jesus", getName()) != 0) {

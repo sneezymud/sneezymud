@@ -70,11 +70,11 @@ int DrawPokerGame::count(int playerNum) const
   return 5;
 }
 
-const string DrawPokerGame::score() const
+const sstring DrawPokerGame::score() const
 {
   TBeing *ch[6];
   char    tString[256];
-  string  tBuffer("\n\r");
+  sstring  tBuffer("\n\r");
 
   ch[0] = get_char_room(names[0], ROOM_DRAWPOKER);
   ch[1] = get_char_room(names[1], ROOM_DRAWPOKER);
@@ -103,11 +103,11 @@ const string DrawPokerGame::score() const
   return tBuffer;
 }
 
-const string DrawPokerGame::bets() const
+const sstring DrawPokerGame::bets() const
 {
   TBeing *ch[6];
   char    tString[256];
-  string  tBuffer("\n\r");
+  sstring  tBuffer("\n\r");
 
   ch[0] = get_char_room(names[0], ROOM_DRAWPOKER);
   ch[1] = get_char_room(names[1], ROOM_DRAWPOKER);
@@ -333,7 +333,7 @@ void DrawPokerGame::peek(const TBeing *ch) const
 {
   int    playerNum;
   char   tArg[256];
-  string tString("");
+  sstring tString("");
 
   if (!game) {
     ch->sendTo("No one has dealt yet, perhaps you should deal the cards yourself.\n\r");

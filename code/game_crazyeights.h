@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_crazyeights.h,v $
+// Revision 5.2  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -37,7 +41,7 @@ class CrazyEightsGame : public CardGame {
     int   RIGHT(const TBeing *) const;
     int   ACROSS(const TBeing *) const;
     int   count(int);
-    const string score();
+    const sstring score();
     bool  getPlayers(const TBeing *, TBeing **, TBeing **, TBeing **);
     void  deal(TBeing *);
     void  peek(const TBeing *) const;

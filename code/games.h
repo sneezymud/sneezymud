@@ -83,13 +83,13 @@ class CardGame {
 
     void take_card_from_hand(int *, int, int);
     void setup_deck();
-    const string pretty_card_printout(const TBeing *, int) const;
+    const sstring pretty_card_printout(const TBeing *, int) const;
     int same_suit(int, int);
     bool is_heart(int);
     bool is_queen_of_spades(int);
     bool has_suit(int *, int);
     int add_suit(const TBeing *, char *, int) const;
-    const string suit(const TBeing *, int) const;
+    const sstring suit(const TBeing *, int) const;
     void shuffle();
     void pass(TBeing *, const char *, int);
     void order_high_to_low(int *, int *, int *);
@@ -131,7 +131,7 @@ class GinGame : public CardGame {
     int *find_book(int num, int *hand, int *left);
     int *find_run(int num, int *hand, int *left);
     int recursive_gin_search(TBeing *ch, Hand *hs, int *hand);
-    const string gin_score();
+    const sstring gin_score();
     int look(TBeing *ch, const char *arg);
 };
 
@@ -185,7 +185,7 @@ class HeartsGame : public CardGame {
 
     HeartsGame();
 
-    const string hearts_score();
+    const sstring hearts_score();
     void deal(TBeing *);
     void play(TBeing *, const char *);
     virtual void peek(const TBeing *) const;

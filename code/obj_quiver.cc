@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_quiver.cc,v $
+// Revision 5.3  2003/03/13 22:40:54  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/08 21:05:12  peel
 // removed the TBaseContainer hierarchy from obj2.h
 // added header files for those objects
@@ -64,7 +68,7 @@ void TQuiver::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TExpandableContainer::getFourValues(x1, x2, x3, x4);
 }
 
-string TQuiver::statObjInfo() const
+sstring TQuiver::statObjInfo() const
 {
   return TExpandableContainer::statObjInfo();
 }

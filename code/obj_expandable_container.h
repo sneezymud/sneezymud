@@ -16,7 +16,7 @@ class TExpandableContainer : public TOpenContainer {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
 
     virtual int getTotalVolume() const;
     virtual void addToCarriedVolume(int num);

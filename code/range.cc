@@ -197,10 +197,10 @@ vlogf(LOG_BUG, buf);
   return TRUE;
 }
 
-void TBeing::doThrow(const string &argument)
+void TBeing::doThrow(const sstring &argument)
 {
   TThing *t;
-  string object, dir, vict;
+  sstring object, dir, vict;
   int rc;
   dirTypeT tdir;
 

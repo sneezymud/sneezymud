@@ -41,10 +41,10 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
   }
 }                               /* store mail */
 
-string read_delete(const char *recipient, const char *recipient_formatted, string &from)
+sstring read_delete(const char *recipient, const char *recipient_formatted, sstring &from)
 {
   TDatabase db("sneezy");
-  string buf;
+  sstring buf;
 
   db.query("select mailfrom, timesent, content, mailid from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient);
   if(!db.fetchRow())
@@ -64,7 +64,7 @@ string read_delete(const char *recipient, const char *recipient_formatted, strin
 
   db.query("delete from mail where mailid=%s", db.getColumn(3));
   
-  return string(buf);
+  return sstring(buf);
 }
 
 int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
@@ -223,8 +223,8 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 {
   char buf[200], recipient[100], *tmp;
   TObj *note, *envelope;
-  string msg;
-  string from;
+  sstring msg;
+  sstring from;
 
   _parse_name(getName(), recipient);
 

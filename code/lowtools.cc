@@ -5,7 +5,7 @@
 bool parse_num_args(int argc, char **argv, vector<int> &vnums)
 {
   int s, e, n;
-  string tmp;
+  sstring tmp;
   unsigned int npos;
 
 #if 0
@@ -19,7 +19,7 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
     tmp=argv[i];
     npos=tmp.find("-");
 
-    if(npos != string::npos){
+    if(npos != sstring::npos){
       s=convertTo<int>(tmp.substr(0, npos));
       e=convertTo<int>(tmp.substr(npos+1, tmp.size()));
       

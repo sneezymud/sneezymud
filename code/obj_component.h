@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.7  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.6  2002/11/24 17:45:29  peel
 // setting max_num for owned shops should work now
 // had to remove const correctness from sellMeCheck
@@ -360,10 +364,10 @@ class compPlace
     // BUT, in order to be used as bitvector, do 1<<WEATHER_xx on all
     int weather;
 
-    // message string sent to room item loads in or is removed from
+    // message sstring sent to room item loads in or is removed from
     const char *message;
 
-    // message string sent to entire room range when item loads anywhere
+    // message sstring sent to entire room range when item loads anywhere
     // in that range.
     // not used for removal at all
     const char *glo_msg;
@@ -443,9 +447,9 @@ class TComponent : public TObj {
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual itemTypeT itemType() const { return ITEM_COMPONENT; }
-    virtual string statObjInfo() const;
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
-    virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual sstring statObjInfo() const;
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
+    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
 
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
@@ -474,7 +478,7 @@ class TComponent : public TObj {
     virtual int suggestedPrice() const;
     virtual void objMenu(const TBeing *) const;
     double priceMultiplier() const;
-    virtual int noteMeForRent(string &, TBeing *, TThing *, int *);
+    virtual int noteMeForRent(sstring &, TBeing *, TThing *, int *);
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual int buyMe(TBeing *, TMonster *, int, int);
 

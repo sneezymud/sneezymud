@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: limbs.cc,v $
+// Revision 5.2  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -29,7 +36,7 @@ const char *limbNames[MAX_LIMB_TYPES] = {
 // much zeroed out.  Set up limbType, description and connectsTo based on
 // params.
 
-Limb::Limb(string typeOfLimb, string connector, string desc)
+Limb::Limb(sstring typeOfLimb, sstring connector, sstring desc)
   : limbType(toInt(typeOfLimb)), 
   name(desc),
   connectsTo(toInt(connector))
@@ -111,7 +118,7 @@ int Limb::join(Limb *newLimb) {
   return 1;
 }
 
-int Limb::toInt(string limb_name) {
+int Limb::toInt(sstring limb_name) {
 
   for(int i=LIMB_NONE; i<MAX_LIMB_TYPES; i++)
     if(limb_name == limbNames[i])

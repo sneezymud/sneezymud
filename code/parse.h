@@ -16,9 +16,9 @@
 int search_block(const char *arg, const char * const *, bool);
 int old_search_block(const char *, int, int, const char * const *, bool);
 void argument_interpreter(const char *, char *, char *);
-void argument_interpreter(string, string &, string &);
+void argument_interpreter(sstring, sstring &, sstring &);
 extern const char *one_argument(const char *argument, char *first_arg);
-extern string one_argument(string argument, string & first_arg);
+extern sstring one_argument(sstring argument, sstring & first_arg);
 void only_argument(const char *argument, char *dest);
 
 class commandInfo {
@@ -647,32 +647,26 @@ const cmdTypeT MIN_CMD = cmdTypeT(0);
 
 extern commandInfo *commandArray[MAX_CMD_LIST];
 extern cmdTypeT searchForCommandNum(const char *);
-extern void half_chop(const char *string, char *arg1, char *arg2);
+extern void half_chop(const char *sstring, char *arg1, char *arg2);
 extern bool _parse_name(const char *arg, char *name);
 extern void makeLower(char *);
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
-extern bool is_abbrev(const string &, const string &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
+extern bool is_abbrev(const sstring &, const sstring &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern char *uncap(char *s);
 extern char *cap(char *s);
 extern char *fread_string(FILE *);
-extern void trimString(string &);
+extern void trimString(sstring &);
 
-template<class T> T convertTo(const char *stmp)
-{
-  T x;
 
-  if(stmp == NULL)
-    return 0;
+class sstring : public string {
+public:
+  sstring() : string(){}
+  sstring(const char *str) : string(str?str:"") {}
+  sstring(const string &str) : string(str) {}
+};
 
-  const string s=stmp;
-  istringstream is(s);
-  if(!(is >> x)) // let failure convert to 0 with no warning.  we relied on
-    x=0;         // this (undefined) behavior with atoi, so we need it now
 
-  return x;
-}
-
-template<class T> T convertTo(const string s)
+template<class T> T convertTo(const sstring s)
 {
   T x;
   istringstream is(s);
@@ -681,5 +675,7 @@ template<class T> T convertTo(const string s)
 
   return x;
 }
+
+
 
 #endif

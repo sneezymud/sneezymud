@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_worn.cc,v $
+// Revision 5.3  2003/03/13 22:40:54  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/12 01:53:24  peel
 // removed the remaining class definitions from obj2.h
 // obj2.h is no more!
@@ -60,9 +64,9 @@ void TWorn::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TWorn::statObjInfo() const
+sstring TWorn::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_dissect.h,v $
+// Revision 5.2  2003/03/13 22:40:52  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -22,8 +29,8 @@ class dissectInfo
     unsigned int loadItem;
     unsigned int amount;
     unsigned int count;
-    string message_to_self;
-    string message_to_others;
+    sstring message_to_self;
+    sstring message_to_others;
 
     dissectInfo *tNext;
 

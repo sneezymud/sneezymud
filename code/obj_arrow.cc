@@ -157,7 +157,7 @@ void TArrow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = tValue;
 }
 
-string TArrow::displayFourValues()
+sstring TArrow::displayFourValues()
 {
   char tString[256];
   int  x1,
@@ -174,10 +174,10 @@ string TArrow::displayFourValues()
   return tString;
 }
 
-string TArrow::statObjInfo() const
+sstring TArrow::statObjInfo() const
 {
   char buf[256];
-  string a;
+  sstring a;
 
   sprintf(buf, "Damage Level: %.4f, Damage Deviation: %d\n\r",
            getWeapDamLvl() / 4.0,

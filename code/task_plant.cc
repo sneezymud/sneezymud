@@ -2,9 +2,9 @@
 #include "obj_tool.h"
 #include "obj_plant.h"
 
-int TBeing::doPlant(string arg)
+int TBeing::doPlant(sstring arg)
 {
-  string obj_arg, vict_arg, orig=arg;
+  sstring obj_arg, vict_arg, orig=arg;
 
   arg=one_argument(arg, obj_arg);
   arg=one_argument(arg, vict_arg);
@@ -97,9 +97,9 @@ static int getPlantThiefChance(TBeing *thief, TBeing *victim)
 }
 
 
-int TBeing::doThiefPlant(string arg)
+int TBeing::doThiefPlant(sstring arg)
 {
-  string obj_arg, vict_arg;
+  sstring obj_arg, vict_arg;
   TObj *obj;
   TBeing *vict;
 
@@ -134,7 +134,7 @@ int TBeing::doThiefPlant(string arg)
   }
 }
 
-int TBeing::doSeedPlant(string arg){
+int TBeing::doSeedPlant(sstring arg){
   TThing *t;
   TTool *seeds;
   int found=0, count;  

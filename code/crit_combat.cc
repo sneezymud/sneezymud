@@ -407,7 +407,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   affectedData af;
   TThing *obj = NULL;
   int rc;
-  string limbStr;
+  sstring limbStr;
 
   if (isAffected(AFF_ENGAGER))
     return FALSE;
@@ -967,7 +967,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         }
     } else if (slashType(wtype)) {
         // Do slash crit
-        string limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
+        sstring limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
         if (num <= 33) {
              // double damage 
           *dam <<= 1;
@@ -1537,7 +1537,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         }
     } else if (bluntType(wtype)) {
         // Do crush crit 
-      string limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
+      sstring limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
     
         if (num <= 33) {
           // double damage 

@@ -42,7 +42,7 @@ int HeartsGame::ACROSS(const TBeing *ch) const
   return (index(ch) + ((index(ch) < 2) ? 2 : -2));
 }
 
-const string HeartsGame::hearts_score()
+const sstring HeartsGame::hearts_score()
 {
   TBeing *ch1, *ch2, *ch3, *ch4;
   char buf[256];

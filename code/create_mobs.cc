@@ -254,7 +254,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
 
   if (!mob->name || !mob->getDescr() || 
       !mob->shortDescr || !mob->getLongDesc()) {
-    ch->sendTo("Your mob is missing one or more strings.\n\r");
+    ch->sendTo("Your mob is missing one or more sstrings.\n\r");
     ch->sendTo("Please update the follwing before saving:%s%s%s%s\n\r",
                (mob->name                 ? "" : " Name"),
                (mob->getDescr()           ? "" : " Description"),
@@ -2035,7 +2035,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     player.longDescr = mob_index[number].long_desc;
     setDescr(mob_index[number].description);
 
-    // We allocated the names and strings in the indeces, don't do it again!
+    // We allocated the names and sstrings in the indeces, don't do it again!
     readStringNoAlloc(fp);
     readStringNoAlloc(fp);
     readStringNoAlloc(fp);
@@ -2281,11 +2281,11 @@ void TPerson::doMedit(const char *argument)
   int vnum, field,/* zGot,*/ oValue, Diff = 0;
   float oFValue;
   TMonster *cMob = NULL;
-  string tStr,
+  sstring tStr,
          tStString(""),
          tStBuffer(""),
          tStArg("");
-  char string[256],
+  char sstring[256],
        mobile[80],
        Buf[256],
        tTextLns[3][256] = {"\0", "\0", "\0"};
@@ -2299,14 +2299,14 @@ void TPerson::doMedit(const char *argument)
   if (!desc)
     return;
 
-  bisect_arg(argument, &field, string, editor_types_medit);
+  bisect_arg(argument, &field, sstring, editor_types_medit);
 
   switch (field) {
     case 30:
-      if (!*string)
+      if (!*sstring)
         sendTo("Syntax: med resave <mobile>\n\r");
-      else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, string, roomp->getStuff()))))
-        sendTo("Unable to find %s...Sorry...\n\r", string);
+      else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, sstring, roomp->getStuff()))))
+        sendTo("Unable to find %s...Sorry...\n\r", sstring);
       else if (cMob->getSnum() == cMob->mobVnum() && !hasWizPower(POWER_MEDIT_IMP_POWER))
         sendTo("Unknown value on this mobile.  resave only usable on med loaded mobiles...\n\r");
 
@@ -2314,14 +2314,14 @@ void TPerson::doMedit(const char *argument)
 	sendTo("You are not allowed to edit that monster.\n\r");
 
       else {
-        sprintf(string, "%s %d", string, cMob->getSnum());
-        msave(this, string);
+        sprintf(sstring, "%s %d", sstring, cMob->getSnum());
+        msave(this, sstring);
       }
       return;
       break;
     case 1:        // save 
 #if 1
-      tStArg = string;
+      tStArg = sstring;
       argument_parser(tStArg, tStString, tStBuffer);
 
       if (tStString.empty() || tStBuffer.empty())
@@ -2339,13 +2339,13 @@ void TPerson::doMedit(const char *argument)
 	    sendTo("You are not allowed to edit that monster.\n\r");
 
 	  else {
-            sprintf(string, "%s %d", tStString.c_str(), cMob->getSnum());
+            sprintf(sstring, "%s %d", tStString.c_str(), cMob->getSnum());
 
-            msave(this, string);
+            msave(this, sstring);
             doPurge(tStString.c_str());
           }
         } else
-          msave(this, string);
+          msave(this, sstring);
       }
 
 #else
@@ -2355,10 +2355,10 @@ void TPerson::doMedit(const char *argument)
       //   med save mob_100 resave
       //   for: med save mob_100 100  followed by a  purge mob_100
       // Basically for doing large db changes online.
-      if ((zGot = sscanf(string, "%s %d", mobile, &vnum)) != 2) {
+      if ((zGot = sscanf(sstring, "%s %d", mobile, &vnum)) != 2) {
         if (zGot == 1) {
           cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, mobile, roomp->getStuff()));
-          tString = one_argument(string, mobile);
+          tString = one_argument(sstring, mobile);
           if (*tString) tString++;
         }
         if (!hasWizPower(POWER_MEDIT_IMP_POWER) || !cMob || (cMob->mobVnum() < 0) ||
@@ -2366,9 +2366,9 @@ void TPerson::doMedit(const char *argument)
           sendTo("Syntax : med save <mobile> <vnum>\n\r");
           return;
         } else
-          sprintf(string, "%s %d", mobile, cMob->mobVnum());
+          sprintf(sstring, "%s %d", mobile, cMob->mobVnum());
       }
-      msave(this, string);
+      msave(this, sstring);
       if (zGot == 1)
         doPurge(mobile);
       doSave(SILENT_YES);
@@ -2376,7 +2376,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 2:        // load 
-      if (sscanf(string, "%d", &vnum) != 1) {
+      if (sscanf(sstring, "%d", &vnum) != 1) {
         sendTo("Syntax : med load <vnum>\n\r");
         return;
       }
@@ -2391,11 +2391,11 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 3:        // modify 
-      if (sscanf(string, "%s", mobile) != 1) {
+      if (sscanf(sstring, "%s", mobile) != 1) {
         sendTo("Syntax : med modify <mobile name>\n\r");
         return;
       }
-      medit(this, string);
+      medit(this, sstring);
       return;
       break;
     case 4:        // list 
@@ -2403,7 +2403,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 5:        // remove 
-      if (sscanf(string, "%d", &vnum) != 1) {
+      if (sscanf(sstring, "%d", &vnum) != 1) {
         sendTo("Syntax : med remove <vnum>\n\r");
         return;
       }
@@ -2416,8 +2416,8 @@ void TPerson::doMedit(const char *argument)
   if (!desc)
     return;
 
-  tString = string;
-  half_chop(tString, mobile, string);
+  tString = sstring;
+  half_chop(tString, mobile, sstring);
 
   if (!(cMob = dynamic_cast<TMonster *>(searchLinkedList(mobile, roomp->getStuff())))) {
     sendTo("Try a mobile next time, it works better.\n\r");
@@ -2436,7 +2436,7 @@ void TPerson::doMedit(const char *argument)
 
   switch (field) {
     case 6: // Name
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me a name.\n\r");
         sendTo("Current name is: %s\n\r", cMob->name);
         return;
@@ -2446,11 +2446,11 @@ void TPerson::doMedit(const char *argument)
         delete [] cMob->name;
         cMob->name = NULL;
       }
-      cMob->name = mud_str_dup(string);
+      cMob->name = mud_str_dup(sstring);
       return;
       break;
     case 7: // Short Description
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me a short description.\n\r");
         sendTo("Current Short is: %s\n\r", cMob->shortDescr);
         return;
@@ -2458,11 +2458,11 @@ void TPerson::doMedit(const char *argument)
       cMob->swapToStrung();
       if (cMob->shortDescr)
         delete [] cMob->shortDescr;
-      cMob->shortDescr = mud_str_dup(string);
+      cMob->shortDescr = mud_str_dup(sstring);
       return;
       break;
     case 8: // Long Description
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me a long description.\n\r");
         sendTo("Current Long is:\n\r%s\n\r", cMob->getLongDesc());
         return;
@@ -2470,8 +2470,8 @@ void TPerson::doMedit(const char *argument)
       cMob->swapToStrung();
       if (cMob->getLongDesc())
         delete [] cMob->player.longDescr;
-      strcat(string, "\n\r");
-      cMob->player.longDescr = mud_str_dup(string);
+      strcat(sstring, "\n\r");
+      cMob->player.longDescr = mud_str_dup(sstring);
       return;
       break;
     case 9: // Description
@@ -2487,7 +2487,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 10: // Level
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue > 100) {
         sendTo("Incorrect Level, Must be between 1 and 100.\n\r");
         return;
@@ -2500,7 +2500,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 11: // Number of Attacks
-      if (sscanf(string, "%f", &oFValue) != 1) {
+      if (sscanf(sstring, "%f", &oFValue) != 1) {
         sendTo("Incorrect Number of attacks.\n\r");
         return;
       }
@@ -2509,7 +2509,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 12: // Hitroll
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < -30 || oValue > 200) {
         sendTo("Incorrect Hitroll, Must be between -30 and 200.\n\r");
         return;
@@ -2521,7 +2521,7 @@ void TPerson::doMedit(const char *argument)
     case 13: // Armor Class
       sendTo("Defunct feature.  Bug Batopr.\n\r");
 #if 0
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < -1000 || oValue > 1000) {
         sendTo("Incorrect Armor Class, Must be between -1000 and 1000.\n\r");
         return;
@@ -2533,7 +2533,7 @@ void TPerson::doMedit(const char *argument)
     case 14: // HP Bonus
       sendTo("Defunct feature.  Bug Batopr.\n\r");
 #if 0
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 0 || oValue > 5000) {
         sendTo("Incorrect HP Bonus, Must be between 0 and 5000.\n\r");
         return;
@@ -2552,7 +2552,7 @@ void TPerson::doMedit(const char *argument)
 #endif
       return;
     case 15: // Faction & Percent
-      if (sscanf(string, "%d %d", &oValue, &Diff) != 2 ||
+      if (sscanf(sstring, "%d %d", &oValue, &Diff) != 2 ||
           oValue < MIN_FACTION || oValue >= MAX_FACTIONS ||
           Diff < 0 || Diff > 100) {
         sendTo("Incorrect Faction or Percent.\n\r");
@@ -2567,7 +2567,7 @@ void TPerson::doMedit(const char *argument)
     case 16: // Bare Hand Damage
       sendTo("Defunct feature.  Bug Batopr.\n\r");
 #if 0
-      if (sscanf(string, "%dd%d+%d", &oValue, &Diff, &zGot) != 3 ||
+      if (sscanf(sstring, "%dd%d+%d", &oValue, &Diff, &zGot) != 3 ||
           oValue < 1 || Diff < 1 ||
           zGot < 0 || zGot > 50) {
         sendTo("Incorrect Bare Hand Damage.\n\r");
@@ -2582,7 +2582,7 @@ void TPerson::doMedit(const char *argument)
 #endif
       return;
     case 17: // Money Constant
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 0 || oValue > 10) {
         sendTo("Incorrect Money Constant, Must be between 0 and 10.\n\r");
         sendTo("Dumb animals should be 0.\n\r");
@@ -2597,7 +2597,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 18: // Race
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue >= MAX_RACIAL_TYPES) {
         sendTo("Incorrect Race, Must be between 1 and %d.\n\r", MAX_RACIAL_TYPES-1);
         sendTo("See HELP RACES for race list.\n\r");
@@ -2608,7 +2608,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 19: // Sex
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 0 || oValue > 2) {
         sendTo("Incorrect Sex, Must be between 0(other) and 2(female).\n\r");
         return;
@@ -2617,7 +2617,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 20: // Max Exist
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 0 || oValue > 9999) {
         sendTo("Incorrect Max Exist, Must be between 0 and 9999.\n\r");
         return;
@@ -2626,7 +2626,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 21: // Default Position
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue > 6) {
         sendTo("Incorrect Default Position, Must be between 1 and 6.\n\r");
         return;
@@ -2654,7 +2654,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 22: // Height
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue > 10000) {
         sendTo("Incorrect Height, Must be between 1 and 10000.\n\r");
         return;
@@ -2663,7 +2663,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 23: // Weight
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue > 10000) {
         sendTo("Incorrect Weight, Must be between 1 and 10000.\n\r");
         return;
@@ -2677,7 +2677,7 @@ void TPerson::doMedit(const char *argument)
 
 
 
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < MIN_CLASS_IND || oValue >= MAX_CLASSES) {
         sendTo("Incorrect Class, Must be between %d and %d.\n\r",
                MIN_CLASS_IND, MAX_CLASSES-1);
@@ -2691,7 +2691,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 25: // Vision Bonus
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < -100 || oValue > 100) {
         sendTo("Incorrect Vision Bonus, Must be between -100 and 100.\n\r");
         return;
@@ -2700,7 +2700,7 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 26: // Can Be Seen
-      if (sscanf(string, "%d", &oValue) != 1 ||
+      if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 0 || oValue > 10000) {
         sendTo("Incorrect Can Be Seen, Must be between 0 and 10000.\n\r");
         return;
@@ -2740,7 +2740,7 @@ void TPerson::doMedit(const char *argument)
       sprintf(Buf, "%%s \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0]);
       tTextLns[0][0] = '\0';
 
-      vnum = sscanf(string, Buf, tTextLns[0], tTextLns[1], tTextLns[2]);
+      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2]);
 
       if ((!is_abbrev(tTextLns[0], "long") &&
            !is_abbrev(tTextLns[0], "desc")) ||
@@ -2759,7 +2759,7 @@ void TPerson::doMedit(const char *argument)
 
         tStr = cMob->getLongDesc();
 
-        if (tStr.find(tTextLns[1]) == string::npos) {
+        if (tStr.find(tTextLns[1]) == sstring::npos) {
           sendTo("Couldn't find pattern in long description.\n\r");
           return;
         }
@@ -2776,7 +2776,7 @@ void TPerson::doMedit(const char *argument)
 
         tStr = cMob->descr;
 
-        if (tStr.find(tTextLns[1]) == string::npos) {
+        if (tStr.find(tTextLns[1]) == sstring::npos) {
           sendTo("Couldn't find pattern in description.\n\r");
           return;
         }
@@ -2789,10 +2789,10 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 31:
-      if (!*string)
+      if (!*sstring)
         sendTo("Syntax: med average <mobile> <level> <class(optional)>\n\r");
       else
-        cMob->editAverageMe(this, string);
+        cMob->editAverageMe(this, sstring);
       return;
       break;
     default:
@@ -2804,7 +2804,7 @@ void TPerson::doMedit(const char *argument)
 const char * const tMobStringShorts[] =
   {"bamfin", "bamfout", "deathcry", "repop", "movein", "moveout"};
 
-static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tString, editorEnterTypeT tEnterT)
+static void change_mob_sstring_values(TBeing *ch, TMonster *tMob, const char *tString, editorEnterTypeT tEnterT)
 {
   int tUpdate;
   bool tHas = (tMob->ex_description ? true : false);
@@ -2855,7 +2855,7 @@ static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tSt
   ch->sendTo("Select message type, <ENTER> to return to the main menu.\n\r--> ");
 }
 
-static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tString, int tType)
+static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tString, int tType)
 {
   if (tType < 0 || tType > 5 || !*tString || *tString == '\n')
     return;
@@ -2863,9 +2863,9 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
   extraDescription *tExDesc,
                    *tExLast = NULL;
 
-  string tStString(tString);
+  sstring tStString(tString);
 
-  while (tStString.find("$$") != string::npos)
+  while (tStString.find("$$") != sstring::npos)
     tStString.replace(tStString.find("$$"), 2, "$");
 
   for (tExDesc = tMob->ex_description; ; tExDesc = tExDesc->next) {
@@ -2893,13 +2893,13 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
       }
 
     if ((tExLast = tExDesc)) {
-      vlogf(LOG_EDIT, "Fell off end of mobile string entry.");
+      vlogf(LOG_EDIT, "Fell off end of mobile sstring entry.");
       break;
     }
   }
 
   ch->specials.edit = CHANGE_MOB_STRINGS;
-  change_mob_string_values(ch, tMob, "", ENTER_CHECK);
+  change_mob_sstring_values(ch, tMob, "", ENTER_CHECK);
 }
 
 void mob_edit(TBeing *ch, const char *arg)
@@ -3003,7 +3003,7 @@ void mob_edit(TBeing *ch, const char *arg)
         return;
       case 20:
         ch->specials.edit = CHANGE_MOB_STRINGS;
-        change_mob_string_values(ch, ch->desc->mob, "", ENTER_CHECK);
+        change_mob_sstring_values(ch, ch->desc->mob, "", ENTER_CHECK);
         return;
       case 21:
         ch->specials.edit = CHANGE_MOB_IMMUNE;
@@ -3158,25 +3158,25 @@ void mob_edit(TBeing *ch, const char *arg)
       change_mob_sounds(ch, ch->desc->mob, arg, ENTER_REENTRANT);
       return;
     case CHANGE_MOB_STRINGS:
-      change_mob_string_values(ch, ch->desc->mob, arg, ENTER_REENTRANT);
+      change_mob_sstring_values(ch, ch->desc->mob, arg, ENTER_REENTRANT);
       return;
     case CHANGE_MOB_STRINGS__BAMFIN:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 0);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 0);
       return;
     case CHANGE_MOB_STRINGS__BAMFOUT:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 1);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 1);
       return;
     case CHANGE_MOB_STRINGS__DEATHCRY:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 2);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 2);
       return;
     case CHANGE_MOB_STRINGS__REPOP:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 3);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 3);
       return;
     case CHANGE_MOB_STRINGS__MOVEIN:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 4);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 4);
       return;
     case CHANGE_MOB_STRINGS__MOVEOUT:
-      change_mob_string_enter(ch, ch->desc->mob, arg, 5);
+      change_mob_sstring_enter(ch, ch->desc->mob, arg, 5);
       return;
     default:
       vlogf(LOG_EDIT, "Got to a bad spot in mob_edit");

@@ -127,7 +127,7 @@ void TBaseWeapon::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TBaseWeapon::displayFourValues()
+sstring TBaseWeapon::displayFourValues()
 {
   char tString[256];
   int  x1,
@@ -1275,11 +1275,11 @@ void TBaseWeapon::describeObjectSpecifics(const TBeing *ch) const
   ch->sendTo(COLOR_OBJECTS, "You can tell that %s.\n\r", ch->describeSharpness(this).c_str());
 }
 
-string TBaseWeapon::describeMySharp(const TBeing *ch) const
+sstring TBaseWeapon::describeMySharp(const TBeing *ch) const
 {
   char buf[256];
   char sharpbuf[80];
-  string capbuf;
+  sstring capbuf;
 
   if (isBluntWeapon()) {
     return ch->describeBluntness(this);
@@ -1545,9 +1545,9 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
   return FALSE;
 }
 
-string TBaseWeapon::showModifier(showModeT mode, const TBeing *ch) const
+sstring TBaseWeapon::showModifier(showModeT mode, const TBeing *ch) const
 {
-  string a;
+  sstring a;
   if (mode == SHOW_MODE_SHORT_PLUS ||
        mode == SHOW_MODE_SHORT_PLUS_INV ||
        mode == SHOW_MODE_SHORT) {
@@ -1634,7 +1634,7 @@ double TBaseWeapon::objLevel() const
   return weaponLevel();
 }
 
-string TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",

@@ -42,9 +42,9 @@ void TCasinoChip::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TCasinoChip::statObjInfo() const
+sstring TCasinoChip::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

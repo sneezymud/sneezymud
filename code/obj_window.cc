@@ -35,11 +35,11 @@ void TWindow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TSeeThru::getFourValues(x1,x2,x3,x4);
 }
 
-string TWindow::statObjInfo() const
+sstring TWindow::statObjInfo() const
 {
   char buf[256];
   sprintf(buf, "Target room: %d", getTarget());
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

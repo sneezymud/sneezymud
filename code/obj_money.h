@@ -16,7 +16,7 @@ class TMoney : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_MONEY; }
 
     virtual int scavengeMe(TBeing *, TObj **);
@@ -28,7 +28,7 @@ class TMoney : public TObj {
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
     virtual bool isPluralItem() const;
     virtual void onObjLoad();
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
 
     int getMoney() const;
     void setMoney(int n);

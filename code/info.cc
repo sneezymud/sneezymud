@@ -38,10 +38,10 @@
 #include "obj_staff.h"
 #include "obj_wand.h"
 
-string describeDuration(const TBeing *ch, int dur)
+sstring describeDuration(const TBeing *ch, int dur)
 {
   char buf[160];
-  string ret;
+  sstring ret;
   int weeks = 0, days = 0, hours = 0, mins = 0;
   int errnum = 0;
 
@@ -117,7 +117,7 @@ void argument_split_2(const char *argument, char *first_arg, char *second_arg)
   begin += look_at;
 }
 
-static const string describe_part_wounds(const TBeing *ch, wearSlotT pos)
+static const sstring describe_part_wounds(const TBeing *ch, wearSlotT pos)
 {
   int i, flags;
   int last = 0, count = 0;
@@ -416,7 +416,7 @@ void list_char_to_char(TBeing *list, TBeing *ch, int)
   }
 }
 
-string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
+sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 {
 //  if (rp && title && full) {
 //  }
@@ -474,7 +474,7 @@ string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
   }
 // Found had to initialize with this logic and too tired to figure out why
 
-  string buf = "";
+  sstring buf = "";
   if (buf2) {
     buf = buf2;
   }
@@ -508,7 +508,7 @@ string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 }
 
 // Peel
-string TRoom::daynightColorRoom() const
+sstring TRoom::daynightColorRoom() const
 {
   if(IS_SET(roomFlags, ROOM_INDOORS))
     return("<z>");
@@ -533,7 +533,7 @@ string TRoom::daynightColorRoom() const
   return("<z>");
 }
 
-const string TBeing::addColorRoom(TRoom * rp, int title) const
+const sstring TBeing::addColorRoom(TRoom * rp, int title) const
 {
   char buf2[10];
   char buf3[10];
@@ -857,11 +857,11 @@ void TBeing::doExamine(const char *argument, TThing * specific)
 }
 
 // affect is on ch, this is person looking
-string TBeing::describeAffects(TBeing *ch, showMeT showme) const
+sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 {
   affectedData *aff, *af2;
   char buf[256];
-  string str;
+  sstring str;
   int objused;
 
   // limit what others can see.  Magic should reveal truth, but in general
@@ -1677,7 +1677,7 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
     if (!ch->slotChance(j))
       continue;
     if (ch->isLimbFlags(j, PART_TRANSFORMED)) {
-      const string str = describe_part_wounds(ch, j);
+      const sstring str = describe_part_wounds(ch, j);
       if (!str.empty()) {
         sprintf(buf, "<y>%s %s %s %s<1>", cap(buf2), 
                ch->describeBodySlot(j).c_str(),
@@ -2139,18 +2139,18 @@ void TBeing::doWizhelp()
   desc->page_string(buf);
 }
 
-void TBeing::doUsers(const string &)
+void TBeing::doUsers(const sstring &)
 {
   sendTo("Dumb monsters can't use the users command!\n\r");
 }
 
-void TPerson::doUsers(const string &argument)
+void TPerson::doUsers(const sstring &argument)
 {
   char line[200], buf2[100], buf3[100], buf4[10];
   Descriptor *d;
   int count = 0;
-  string sb;
-  string arg1, arg2;
+  sstring sb;
+  sstring arg1, arg2;
   TBeing *k = NULL;
 
   if (powerCheck(POWER_USERS))
@@ -2332,7 +2332,7 @@ void TBeing::doEquipment(const char *argument)
     }
   } else if (!*argument || !isImmortal()) {
     TDatabase db("sneezy");
-    string tattoos[MAX_WEAR];
+    sstring tattoos[MAX_WEAR];
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
     while(db.fetchRow()){
@@ -2355,8 +2355,8 @@ void TBeing::doEquipment(const char *argument)
           }
         }
       } else if(tattoos[j]!=""){
-	string slot = describeEquipmentSlot(j);
-	sprintf(buf, "<%s>", (slot.find("Worn") != string::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
+	sstring slot = describeEquipmentSlot(j);
+	sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
 	sendTo("%s%-26s%s", red(), buf, norm());
 	sendTo(COLOR_BASIC, tattoos[j].c_str());
 	sendTo("\n\r");
@@ -2364,7 +2364,7 @@ void TBeing::doEquipment(const char *argument)
     }
   } else {
     TDatabase db("sneezy");
-    string tattoos[MAX_WEAR];
+    sstring tattoos[MAX_WEAR];
 
     // allow immortals to get eq of players
     TBeing *victim = get_char_vis_world(this, argument, NULL, EXACT_YES);
@@ -2393,8 +2393,8 @@ void TBeing::doEquipment(const char *argument)
             }
           }
         } else if(tattoos[j]!=""){
-	  string slot = describeEquipmentSlot(j);
-	  sprintf(buf, "<%s>", (slot.find("Worn") != string::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
+	  sstring slot = describeEquipmentSlot(j);
+	  sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
 	  sendTo("%s%-26s%s", red(), buf, norm());
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
@@ -2493,14 +2493,14 @@ void TBeing::doWizlist()
 {
   if (desc) {
     FILE   *tFile;
-    string  tStString("");
+    sstring  tStString("");
 
     if (!(tFile = fopen(WIZLIST_FILE, "r")))
       sendTo("Sorry, wizlist under construction!\n\r");
     else {
       wizlist_used_num++;
 
-      file_to_string(WIZLIST_FILE, tStString);
+      file_to_sstring(WIZLIST_FILE, tStString);
       desc->page_string(tStString);
       fclose(tFile);
     }
@@ -2510,7 +2510,7 @@ void TBeing::doWizlist()
 static int whichNumberMobile(const TThing *mob)
 {
   TBeing *i;
-  string name;
+  sstring name;
   int iNum;
 
   name = fname(mob->getName());
@@ -2524,7 +2524,7 @@ static int whichNumberMobile(const TThing *mob)
   return 0;
 }
 
-static const string numbered_person(const TBeing *ch, const TThing *person)
+static const sstring numbered_person(const TBeing *ch, const TThing *person)
 {
   char buf[256];
 
@@ -2536,7 +2536,7 @@ static const string numbered_person(const TBeing *ch, const TThing *person)
   return buf;
 }
 
-void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, string &sb)
+void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &sb)
 {
   char buf[256];
 
@@ -2670,11 +2670,11 @@ void TBeing::doWhere(const char *argument)
   register TObj *k;
   Descriptor *d;
   int iNum, count;
-  string sb;
+  sstring sb;
   bool dash = FALSE;
   bool gods = FALSE;
   unsigned int tot_found = 0;
-  string tStString(argument),
+  sstring tStString(argument),
          tStName(""),
          tStArg("");
   map <int,bool> vnums_notmatch;
@@ -2872,7 +2872,7 @@ void TBeing::doLevels(const char *argument)
             tDents[4];
   char      tString[256],
             tBuffer[256];
-  string    tStString("");
+  sstring    tStString("");
   classIndT tClass     = MAGE_LEVEL_IND;
   bool      tRemaining = false;
 
@@ -2914,7 +2914,7 @@ void TBeing::doLevels(const char *argument)
   int i;
   classIndT Class;
 // int RaceMax;
-  string sb;
+  sstring sb;
   char buf[256],
        tString[256];
 
@@ -3036,7 +3036,7 @@ void TBeing::doWorld()
   time_t ct, ot, tt;
   char *tmstr, *otmstr;
   int i;
-  string str;
+  sstring str;
   char buf[256];
 
   if (!desc)
@@ -3445,12 +3445,12 @@ options menu\n\r");
   sendTo("Setting alias %s to %s\n\r", arg1, arg2);
 }
 
-string TObj::equip_condition(int amt) const
+sstring TObj::equip_condition(int amt) const
 {
   double p;
 
   if (!getMaxStructPoints()) {
-    string a("<C>brand new<1>");
+    sstring a("<C>brand new<1>");
     return a;
   } else if (amt == -1)
     p = ((double) getStructPoints()) / ((double) getMaxStructPoints());
@@ -3459,43 +3459,43 @@ string TObj::equip_condition(int amt) const
 
   if(p > 1.0){
     // shouldn't happen theoretically
-    string a("<W>better than new<1>");
+    sstring a("<W>better than new<1>");
     return a;
   } else if (p == 1) {
-    string a("<C>brand new<1>");
+    sstring a("<C>brand new<1>");
     return a;
   } else if (p > .9) {
-    string a("<c>like new<1>");
+    sstring a("<c>like new<1>");
     return a;
   } else if (p > .8) {
-    string a("<B>excellent<1>");
+    sstring a("<B>excellent<1>");
     return a;
   } else if (p > .7) {
-    string a("<b>very good<1>");
+    sstring a("<b>very good<1>");
     return a;
   } else if (p > .6) {
-    string a("<P>good<1>");
+    sstring a("<P>good<1>");
     return a;
   } else if (p > .5) {
-    string a("<p>fine<1>");
+    sstring a("<p>fine<1>");
     return a;
   } else if (p > .4) {
-    string a("<G>fair<1>");
+    sstring a("<G>fair<1>");
     return a;
   } else if (p > .3) {
-    string a("<g>poor<1>");
+    sstring a("<g>poor<1>");
     return a;
   } else if (p > .2) {
-    string a("<y>very poor<1>");
+    sstring a("<y>very poor<1>");
     return a;
   } else if (p > .1) {
-    string a("<o>bad<1>");
+    sstring a("<o>bad<1>");
     return a;
   } else if (p > .001) {
-    string a("<R>very bad<1>");
+    sstring a("<R>very bad<1>");
     return a;
   } else {
-    string a("<r>destroyed<1>");
+    sstring a("<r>destroyed<1>");
     return a;
   }
 }
@@ -3550,7 +3550,7 @@ const char *LimbHealth(double a)
     return ("in near perfect condition");
 }
 
-const string TBeing::slotPlurality(int limb) const
+const sstring TBeing::slotPlurality(int limb) const
 {
   char buf[10];
 
@@ -3569,7 +3569,7 @@ const string TBeing::slotPlurality(int limb) const
   return buf;
 }
 
-void TBeing::doLimbs(const string & argument)
+void TBeing::doLimbs(const sstring & argument)
 {
   wearSlotT i;
   char buf[512], who[5];
@@ -4069,19 +4069,19 @@ void TBeing::describeObject(const TThing *t)
   t->describeMe(this);
 }
 
-string TBeing::describeSharpness(const TThing *obj) const
+sstring TBeing::describeSharpness(const TThing *obj) const
 {
   return obj->describeMySharp(this);
 }
 
-string TThing::describeMySharp(const TBeing *) const
+sstring TThing::describeMySharp(const TBeing *) const
 {
   char buf[256];
   sprintf(buf, "%s is not a weapon", getName());
   return buf;
 }
 
-string TBeing::describePointiness(const TBaseWeapon *obj) const
+sstring TBeing::describePointiness(const TBaseWeapon *obj) const
 {
   char buf[256];
   char sharpbuf[80];
@@ -4094,7 +4094,7 @@ string TBeing::describePointiness(const TBaseWeapon *obj) const
   else
     diff = (double) ((double) sharp / (double) maxsharp);
 //  strcpy(capbuf, objs(obj));
-  string capbuf = colorString(this,desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
+  sstring capbuf = colorString(this,desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
 
   if (diff <= .02)
     strcpy(sharpbuf, "is totally blunt");
@@ -4117,7 +4117,7 @@ string TBeing::describePointiness(const TBaseWeapon *obj) const
   return buf;
 }
 
-string TBeing::describeBluntness(const TBaseWeapon *obj) const
+sstring TBeing::describeBluntness(const TBaseWeapon *obj) const
 {
   char buf[256];
   char sharpbuf[80];
@@ -4129,7 +4129,7 @@ string TBeing::describeBluntness(const TBaseWeapon *obj) const
   else
     diff = (double) ((double) sharp / (double) maxsharp);
 //  strcpy(capbuf, objs(obj));
-  string capbuf = colorString(this,desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
+  sstring capbuf = colorString(this,desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
 
   if (diff <= .02)
     strcpy(sharpbuf, "is totally jagged");
@@ -4378,7 +4378,7 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
   tSHLvl = tACQua / 25;
 
   int tDiff = GetApprox((int) (tIsLvl - tSHLvl), learn);
-  string tStLevel("");
+  sstring tStLevel("");
 
   if (tDiff < -20)
     tStLevel = "a horrid amount";
@@ -4431,11 +4431,11 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
 #endif
 }
 
-string TBeing::describeImmunities(const TBeing *vict, int learn) const
+sstring TBeing::describeImmunities(const TBeing *vict, int learn) const
 {
   char buf[80];
   char buf2[256];
-  string str;
+  sstring str;
 
   int x;
   for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
@@ -4628,7 +4628,7 @@ void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
 
 }
 
-const string numberAsString(int num)
+const sstring numberAsString(int num)
 {
   char buf[50];
 
@@ -4856,9 +4856,9 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
   return;
 }
 
-string describeMaterial(const TThing *t)
+sstring describeMaterial(const TThing *t)
 {
-  string str;
+  sstring str;
   char buf[256];
 
   int mat = t->getMaterial();
@@ -4877,9 +4877,9 @@ string describeMaterial(const TThing *t)
   return str;
 }
 
-string describeMaterial(int mat)
+sstring describeMaterial(int mat)
 {
-  string str;
+  sstring str;
   char buf[256];
 
   char mat_name[40];
@@ -5068,7 +5068,7 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
        good_uncap(trap_types[obj->getTrapDamType()]).c_str());
 }
 
-void TBeing::doSpells(const string &argument)
+void TBeing::doSpells(const sstring &argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5076,7 +5076,7 @@ void TBeing::doSpells(const string &argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  string arg, arg2, arg3;
+  sstring arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
@@ -5306,7 +5306,7 @@ void TBeing::doSpells(const string &argument)
   return;
 }
 
-void TBeing::doRituals(const string &argument)
+void TBeing::doRituals(const sstring &argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5314,7 +5314,7 @@ void TBeing::doRituals(const string &argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  string arg, arg2, arg3;
+  sstring arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
@@ -5544,7 +5544,7 @@ void TBeing::doRituals(const string &argument)
   return;
 }
 
-void TBeing::doPrayers(const string &argument)
+void TBeing::doPrayers(const sstring &argument)
 {
   char buf[MAX_STRING_LENGTH * 2] = "\0";
   char buffer[MAX_STRING_LENGTH * 2] = "\0";
@@ -5553,7 +5553,7 @@ void TBeing::doPrayers(const string &argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  string arg, arg2, arg3;
+  sstring arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();

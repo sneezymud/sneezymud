@@ -77,7 +77,7 @@ char TVehicle::getPortalNumCharges() const
 
 void TVehicle::lookObj(TBeing *ch, int) const
 {
-  string buf;
+  sstring buf;
 
   ssprintf(buf, "%d look", getTarget());
   ch->doAt(buf.c_str(), true);
@@ -85,7 +85,7 @@ void TVehicle::lookObj(TBeing *ch, int) const
 
 
 
-void TVehicle::driveSpeed(TBeing *ch, string arg)
+void TVehicle::driveSpeed(TBeing *ch, sstring arg)
 {
   int nspeeds=4;
 
@@ -141,7 +141,7 @@ void TVehicle::driveSpeed(TBeing *ch, string arg)
 
 void TVehicle::driveDir(TBeing *ch, dirTypeT dir)
 {
-  string buf;
+  sstring buf;
 
   setDir(dir);
 
@@ -163,7 +163,7 @@ void TVehicle::driveExit(TBeing *ch)
 
 void TVehicle::driveLook(TBeing *ch, bool silent=false)
 {
-  string buf;
+  sstring buf;
 
   if(!silent)
     ch->sendTo("You look outside.\n\r");
@@ -178,7 +178,7 @@ void TVehicle::vehiclePulse(int pulse)
   TThing *t;
   TBeing *tb;
   TRoom *troom=roomp;
-  string buf;
+  sstring buf;
   char shortdescr[256];
   vector<TBeing *>tBeing(0);
 
@@ -308,7 +308,7 @@ void TVehicle::vehiclePulse(int pulse)
 
 void TVehicle::driveStatus(TBeing *ch)
 {
-  string buf;
+  sstring buf;
 
   ssprintf(buf, "$p is pointing to the %s.\n\r", dirs[getDir()]);
   act(buf.c_str(), 0, ch, this, 0, TO_CHAR);

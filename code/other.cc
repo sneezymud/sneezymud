@@ -61,7 +61,7 @@ extern "C" {
 #include "database.h"
 #include "disc_cures.h"
 
-void TBeing::doGuard(const string &argument)
+void TBeing::doGuard(const sstring &argument)
 {
   if (isPc()) {
     sendTo("Sorry, you can't just put your brain on autopilot!\n\r");
@@ -393,7 +393,7 @@ void TBeing::doCommand(const char *arg)
   }
 
   unsigned int i;
-  vector<string>cmdVec(0);
+  vector<sstring>cmdVec(0);
 
   // shove everything into the vector
   for (i = 0; i < MAX_CMD_LIST; i++) {
@@ -414,7 +414,7 @@ void TBeing::doCommand(const char *arg)
   sort(cmdVec.begin(), cmdVec.end());
 
   unsigned int num;
-  string str;
+  sstring str;
   str = "The following commands are available:\n\r\n\r";
 
   for (num = 0; num < cmdVec.size(); num++) {
@@ -652,28 +652,28 @@ void TPerson::doTitle(const char *argument)
   for (; isspace(*argument); argument++);
 
   if (*argument) {
-    string str = argument;
+    sstring str = argument;
 
     // Basic name sake checks
-    if (str.find("<n>") == string::npos &&
+    if (str.find("<n>") == sstring::npos &&
         colorString(this, desc, argument, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
-        string::npos) {
+        sstring::npos) {
       sendTo("Your %s or <n> Must appear somewhere in here.\n\r", getNameNOC(this).c_str());
       return;
     }
 
     // keep morts from using flash in their titles
     if (!isImmortal()) {
-      while (str.find("<f>") != string::npos) {
+      while (str.find("<f>") != sstring::npos) {
         str.replace(str.find("<f>"), 3, "");
       }
-      while (str.find("<F>") != string::npos) {
+      while (str.find("<F>") != sstring::npos) {
         str.replace(str.find("<F>"), 3, "");
       }
     }
 
 
-    string stmp=nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
+    sstring stmp=nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
     stmp=stripColorCodes(stmp);
 
     if (stmp.length() > 79) {
@@ -795,7 +795,7 @@ void TBeing::doNotHere() const
   sendTo("Sorry, but you cannot do that here!\n\r");
 }
 
-static const string describe_practices(const TBeing *ch)
+static const sstring describe_practices(const TBeing *ch)
 {
   char buf[1024];
 
@@ -834,7 +834,7 @@ void TBeing::doPractice(const char *argument)
 #if 0
   // Experimental code to allow: prac <player> <ect...>
 
-  string       tStName(""),
+  sstring       tStName(""),
                tStArg(argument),
                tStTemp(""),
                tStOutput("");
@@ -1387,7 +1387,7 @@ void TBeing::sendSkillsList(discNumT which)
         if ((signed) ShapeShiftList[tCount].tRace != RACE_NORACE)
           continue;
 
-        string tStArg(ShapeShiftList[tCount].name),
+        sstring tStArg(ShapeShiftList[tCount].name),
                tStRes("");
 
         one_argument(tStArg, tStRes);
@@ -2270,9 +2270,9 @@ int TThing::quaffMe(TBeing *ch)
 }
 
 // return DELETE_THIS
-int TBeing::doQuaff(string argument)
+int TBeing::doQuaff(sstring argument)
 {
-  string buf;
+  sstring buf;
   TThing *t;
   int rc = 0;
 
@@ -3316,9 +3316,9 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
 }
 
 // returns DELETE_THIS if this should be toasted.
-int TBeing::doUse(string argument)
+int TBeing::doUse(sstring argument)
 {
-  string buf;
+  sstring buf;
   int rc;
 
   argument = one_argument(argument, buf);
@@ -3373,13 +3373,13 @@ int TBeing::doUse(string argument)
   return FALSE;
 }
 
-void TBeing::doLight(const string & argument)
+void TBeing::doLight(const sstring & argument)
 {
   TThing *t = NULL;
   char tmpname[256], *tmp;
   bool roomOnly, heldOnly;
   int num;
-  string arg1, arg2;
+  sstring arg1, arg2;
 
   argument_parser(argument, arg1, arg2);
 
@@ -3455,12 +3455,12 @@ void TThing::extinguishMe(TBeing *ch)
   return;
 }
 
-void TBeing::doExtinguish(const string & argument)
+void TBeing::doExtinguish(const sstring & argument)
 {
   TThing *t = NULL;
   char tmpname[256], *tmp;
   int num;
-  string arg1, arg2;
+  sstring arg1, arg2;
 
   argument_parser(argument, arg1, arg2);
 
@@ -3517,11 +3517,11 @@ void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
   return;
 }
 
-void TBeing::doRefuel(const string &argument)
+void TBeing::doRefuel(const sstring &argument)
 {
   TThing *fuel;
   TThing *t;
-  string arg, arg2, arg3;
+  sstring arg, arg2, arg3;
   int roomOnly, heldOnly;
 
   argument_parser(argument, arg, arg2, arg3);
@@ -3557,7 +3557,7 @@ void TBeing::doRefuel(const string &argument)
   t->refuelMeLight(this, fuel);
 }
 
-void TBeing::doStop(const string &tStArg)
+void TBeing::doStop(const sstring &tStArg)
 {
   if (tStArg.empty()) {
     sendTo("Stop what?  You aren't doing anything!\n\r");
@@ -3953,9 +3953,9 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doDrag(const string &arg)
+void TBeing::doDrag(const sstring &arg)
 {
-  string caName, dir;
+  sstring caName, dir;
   TBeing *v;
   dirTypeT tdir;
   unsigned int bits;
@@ -4524,9 +4524,9 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doRoll(const string &arg)
+void TBeing::doRoll(const sstring &arg)
 {
-  string caName, dir;
+  sstring caName, dir;
   TBeing *v;
   dirTypeT tdir;
   unsigned int bits;

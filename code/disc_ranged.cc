@@ -3,8 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.6  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.5  2003/01/28 19:30:15  peel
-// converted a few more things from char * to string
+// converted a few more things from char * to sstring
 //
 // Revision 5.4  2002/01/10 00:45:47  peel
 // more splitting up of obj2.h
@@ -35,32 +39,32 @@
 #include "obj_bow.h"
 #include "obj_tool.h"
 
-void TThing::stringMeBow(TBeing *ch, TThing *)
+void TThing::sstringMeBow(TBeing *ch, TThing *)
 {
   act("$p isn't a bow.", FALSE, ch, this, 0, TO_CHAR);
   return;
 }
 
-void TThing::stringMeString(TBeing *ch, TBow *)
+void TThing::sstringMeString(TBeing *ch, TBow *)
 {
-  act("$p isn't bowstring.", FALSE, ch, this, 0, TO_CHAR);
+  act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
   return;
 }
 
-void TTool::stringMeString(TBeing *ch, TBow *bow)
+void TTool::sstringMeString(TBeing *ch, TBow *bow)
 {
   if (getToolType() != TOOL_BOWSTRING) {
-    act("$p isn't bowstring.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
     return;
   }
   if (!bow->isBowFlag(BOW_STRING_BROKE)) {
-    act("$p doesn't need any restringing.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$p doesn't need any resstringing.", FALSE, ch, bow, 0, TO_CHAR);
     return;
   }
 
   bow->remBowFlags(BOW_STRING_BROKE);
-  act("You restring $p with $P.", FALSE, ch, bow, this, TO_CHAR);
-  act("$n restrings $s $o with $P.", FALSE, ch, bow, this, TO_ROOM);
+  act("You resstring $p with $P.", FALSE, ch, bow, this, TO_CHAR);
+  act("$n resstrings $s $o with $P.", FALSE, ch, bow, this, TO_ROOM);
 
   addToToolUses(-1);
   if (getToolUses() <= 0) {
@@ -70,14 +74,14 @@ void TTool::stringMeString(TBeing *ch, TBow *bow)
   }
 }
 
-void TBeing::doRestring(string argument)
+void TBeing::doResstring(sstring argument)
 {
   TThing *bow = NULL;
   TThing *bstr = NULL;
   char arg1[256], arg2[256];
 
   if (sscanf(argument.c_str(), "%s %s", arg1, arg2) != 2) {
-    sendTo("Syntax : restring <bow> <string>\n\r");
+    sendTo("Syntax : resstring <bow> <sstring>\n\r");
     return;
   }
 #if 1
@@ -96,28 +100,28 @@ void TBeing::doRestring(string argument)
   }
   if (!bow) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
-    sendTo("Syntax : restring <bow> <string>\n\r");
+    sendTo("Syntax : resstring <bow> <sstring>\n\r");
     return;
   }
   if (!bstr) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
-    sendTo("Syntax : restring <bow> <string>\n\r");
+    sendTo("Syntax : resstring <bow> <sstring>\n\r");
     return;
   }
 #else
-  // works, but gets confused since "bow" is an abbrev for "bowstring"
+  // works, but gets confused since "bow" is an abbrev for "bowsstring"
   if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
-    sendTo("Syntax : restring <bow> <string>\n\r");
+    sendTo("Syntax : resstring <bow> <sstring>\n\r");
     return;
   }
   if (!(bstr = searchLinkedListVis(this, arg2, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
-    sendTo("Syntax : restring <bow> <string>\n\r");
+    sendTo("Syntax : resstring <bow> <sstring>\n\r");
     return;
   }
 #endif
-  bow->stringMeBow(this, bstr);
-  // string may be invalid here
+  bow->sstringMeBow(this, bstr);
+  // sstring may be invalid here
   return;
 }

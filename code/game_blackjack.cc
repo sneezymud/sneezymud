@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_blackjack.cc,v $
+// Revision 5.3  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/08/14 17:35:43  peel
 // fixed some color code problems with card display
 // added room echoes to show blackjack games
@@ -114,7 +118,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
 {
   int inx, bet_amt, player;
   char coin_str[20], log_msg[2048];
-  string buf;
+  sstring buf;
 
   if (ch->checkBlackjack()) {
     inx = index(ch);
@@ -148,7 +152,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     ch->addToMoney(-bet_amt, GOLD_GAMBLE);
     ch->doSave(SILENT_YES);
 
-    string buf;
+    sstring buf;
     ssprintf(buf, "$n bets %i talens.", bet_amt);
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
 

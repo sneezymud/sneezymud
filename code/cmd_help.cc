@@ -12,7 +12,7 @@ extern "C" {
 #include "statistics.h"
 #include "systemtask.h"
 
-static vector<string>helpIndex(0);
+static vector<sstring>helpIndex(0);
 static vector<char *>immortalIndex(0);
 static vector<char *>builderIndex(0);
 static vector<char *>skillIndex(0);
@@ -62,7 +62,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
   int j;
   struct stat timestat;
   char timebuf[1024], buf2[1024];
-  string str;
+  sstring str;
 
   // make the topic name upper case
   for (j = 0;namebuf[j] != '\0';j++)
@@ -89,7 +89,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
   }
 
   // now print the file
-  file_to_string(helppath, str, CONCAT_YES);
+  file_to_sstring(helppath, str, CONCAT_YES);
   str += "\n\r";
   desc->page_string(str);
   return;
@@ -98,7 +98,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
 
 void TBeing::doHelp(const char *arg)
 {
-  string str;
+  sstring str;
   int j;
   bool found = FALSE;
   int helpnum = 0;
@@ -170,7 +170,7 @@ void TBeing::doHelp(const char *arg)
       strcpy(namebuf, immortalIndex[i]);
       if (hasColorVt()) {
         sprintf(ansipath, "%s.ansi", helppath);
-        if (file_to_string(ansipath, str)) {
+        if (file_to_sstring(ansipath, str)) {
           // an ansi file was found, swap helppath request with ansi
           strcpy(helppath, ansipath);
         }
@@ -187,7 +187,7 @@ void TBeing::doHelp(const char *arg)
       sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
             namebuf,timebuf, norm());
       str = buf2;
-      file_to_string(helppath, str, CONCAT_YES);
+      file_to_sstring(helppath, str, CONCAT_YES);
       str += "\n\r";
       desc->page_string(str);
       return;
@@ -211,7 +211,7 @@ void TBeing::doHelp(const char *arg)
       strcpy(namebuf, builderIndex[i]);
       if (hasColorVt()) {
         sprintf(ansipath, "%s.ansi", helppath);
-        if (file_to_string(ansipath, str)) {
+        if (file_to_sstring(ansipath, str)) {
           // an ansi file was found, swap helppath request with ansi
           strcpy(helppath, ansipath);
         }
@@ -227,7 +227,7 @@ void TBeing::doHelp(const char *arg)
       sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
             namebuf,timebuf, norm());
       str = buf2;
-      file_to_string(helppath, str, CONCAT_YES);
+      file_to_sstring(helppath, str, CONCAT_YES);
       str += "\n\r";
       desc->page_string(str);
       return;
@@ -283,7 +283,7 @@ void TBeing::doHelp(const char *arg)
     strcpy(namebuf, spellIndex[i]);
     if (hasColorVt()) {
       sprintf(ansipath, "%s.ansi", helppath);
-      if (file_to_string(ansipath, str)) {
+      if (file_to_sstring(ansipath, str)) {
         // an ansi file was found, swap helppath request with ansi
         strcpy(helppath, ansipath);
       }
@@ -544,7 +544,7 @@ void TBeing::doHelp(const char *arg)
 
     str += "\n\r";
 
-    file_to_string(helppath, str, CONCAT_YES);
+    file_to_sstring(helppath, str, CONCAT_YES);
     str += "\n\r";
     desc->page_string(str);
     return;
@@ -570,7 +570,7 @@ void TBeing::doHelp(const char *arg)
     strcpy(namebuf, skillIndex[i]);
     if (hasColorVt()) {
       sprintf(ansipath, "%s.ansi", helppath);
-      if (file_to_string(ansipath, str)) {
+      if (file_to_sstring(ansipath, str)) {
         // an ansi file was found, swap helppath request with ansi
         strcpy(helppath, ansipath);
       }
@@ -697,7 +697,7 @@ void TBeing::doHelp(const char *arg)
     }
 
     str += "\n\r";
-    file_to_string(helppath, str, CONCAT_YES);
+    file_to_sstring(helppath, str, CONCAT_YES);
     str += "\n\r";
     desc->page_string(str);
     return;
@@ -752,7 +752,7 @@ void buildHelpIndex()
     exit(0);
   }
   // COSMO STRING
-  string str;
+  sstring str;
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&

@@ -27,7 +27,7 @@ class TBaseCup : public TObj {
     virtual void describeContains(const TBeing *) const;
     virtual void lowCheck();
     virtual bool waterSource();
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     void updateDesc();
 
     virtual int chiMe(TBeing *);
@@ -52,7 +52,7 @@ class TBaseCup : public TObj {
     virtual void peeMe(const TBeing *);
     virtual int getReducedVolume(const TThing *) const;
     virtual int poisonMePoison(TBeing *, TBaseWeapon *);
-    string showModifier(showModeT, const TBeing *) const;
+    sstring showModifier(showModeT, const TBeing *) const;
 
     void genericEmpty();
     unsigned int getDrinkConFlags() const;

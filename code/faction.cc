@@ -1069,7 +1069,7 @@ TFaction * get_faction_by_keywords(const char * args) {
 }
 
 
-// this function takes an unsigned int and converts it to a char string
+// this function takes an unsigned int and converts it to a char sstring
 // to display when showing permissions for each rank
 char * display_permission(unsigned int perms) {
   char buf[10];
@@ -1583,7 +1583,7 @@ factionTypeT factionNumber(const char *name)
     return FACT_UNDEFINED;
 }
 
-static const string factionLeaderTitle(factionTypeT faction, int slot)
+static const sstring factionLeaderTitle(factionTypeT faction, int slot)
 {
   // display length for this is typically 30 chars
   char buf[64];
@@ -1897,10 +1897,10 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
 }
 
 
-void TBeing::doSend(string arg)
+void TBeing::doSend(sstring arg)
 { 
   factionTypeT fnum = getFaction();
-  string msg, faction, new_arg;
+  sstring msg, faction, new_arg;
 
   // allow immortals to send to any faction via "send snake mess"
   bool wizSent = false;
@@ -1989,10 +1989,10 @@ void TBeing::doSend(string arg)
   sendToFaction(fnum, getName(), msg.c_str());
 }
 
-void TBeing::doRelease(const string & arg)
+void TBeing::doRelease(const sstring & arg)
 {
   TBeing *targ;
-  string buf;
+  sstring buf;
 
   one_argument(arg, buf);
 
@@ -2019,10 +2019,10 @@ void TBeing::doRelease(const string & arg)
   return;
 }
 
-void TBeing::doCapture(const string & arg)
+void TBeing::doCapture(const sstring & arg)
 {
   TBeing *targ;
-  string buf;
+  sstring buf;
 
   one_argument(arg, buf);
 
@@ -2586,7 +2586,7 @@ int TBeing::doTithe()
   return FALSE;
 }
 
-string TBeing::yourDeity(spellNumT skill, personTypeT self, const TBeing *who) const
+sstring TBeing::yourDeity(spellNumT skill, personTypeT self, const TBeing *who) const
 {
   char buf[256];
   deityTypeT deity = DEITY_NONE;

@@ -286,7 +286,7 @@ void Race::initRace(const char *whichRace)
   // Basically we just start looking for keywords and then assign values
   // into the appropriate data member.
   // COSMO STRING
-  string buf_string;
+  sstring buf_sstring;
   const char *buf2;
   
   while (fgets(buf, 256, raceFile)) {
@@ -295,19 +295,19 @@ void Race::initRace(const char *whichRace)
     if (!keyword || !*keyword || *keyword == '#')
       continue;
 
-    buf_string = buf;
-    size_t end_whitespace = buf_string.find_last_of("\n");
-    if (end_whitespace != string::npos)
-      buf_string.erase(end_whitespace);
-    trimString(buf_string);
+    buf_sstring = buf;
+    size_t end_whitespace = buf_sstring.find_last_of("\n");
+    if (end_whitespace != sstring::npos)
+      buf_sstring.erase(end_whitespace);
+    trimString(buf_sstring);
 
     //Names
     if (!strcasecmp(keyword, "singname")) {
-      singular_name = buf_string;
+      singular_name = buf_sstring;
     } else if (!strcasecmp(keyword, "plurname")) {
-      plural_name = buf_string;
+      plural_name = buf_sstring;
     } else if (!strcasecmp(keyword, "propname")) {
-      proper_name = buf_string;
+      proper_name = buf_sstring;
     }
 
     //Lore
@@ -419,9 +419,9 @@ void Race::initRace(const char *whichRace)
 
     // Movement Messages
     else if (!strcasecmp(keyword, "movein"))
-      moveMessageIn=buf_string;
+      moveMessageIn=buf_sstring;
     else if (!strcasecmp(keyword, "moveout"))
-      moveMessageOut=buf_string;
+      moveMessageOut=buf_sstring;
 
     // Body stuff
     else if (!strcasecmp(keyword, "body")) {
@@ -595,18 +595,18 @@ void Race::initRace(const char *whichRace)
                &tDissectItem[1].amount);
     } else if (!strcasecmp(keyword, "DISSECT_MSGA")) {
       if (tDissectItem[0].message_to_self.empty())
-        tDissectItem[0].message_to_self = buf_string;
+        tDissectItem[0].message_to_self = buf_sstring;
       else
-        tDissectItem[1].message_to_self = buf_string;
+        tDissectItem[1].message_to_self = buf_sstring;
     } else if (!strcasecmp(keyword, "DISSECT_MSGB")) {
       if (tDissectItem[0].message_to_others.empty())
-        tDissectItem[0].message_to_others = buf_string;
+        tDissectItem[0].message_to_others = buf_sstring;
       else
-        tDissectItem[1].message_to_others = buf_string;
+        tDissectItem[1].message_to_others = buf_sstring;
     }
   }
 // COSMO STRING
-//  delete buf_string;
+//  delete buf_sstring;
   fclose(raceFile);
   vlogf(LOG_FILE, "Racefile fclose.");
 
@@ -618,7 +618,7 @@ void Race::initRace(const char *whichRace)
 void Race::showTo(TBeing *caller)
 {
   char buf[256];
-  string str;
+  sstring str;
 
   if (!caller->desc)
     return;
@@ -667,12 +667,12 @@ void Race::showTo(TBeing *caller)
 	  	    drinkMod, foodMod);
   str += buf;
 
-  str += string("Move In: ") + moveMessageIn + string("\n\r");
-  str += string("Move Out: ") + moveMessageOut + string("\n\r");
+  str += sstring("Move In: ") + moveMessageIn + sstring("\n\r");
+  str += sstring("Move Out: ") + moveMessageOut + sstring("\n\r");
 
-  str += string("Limb for: slash: ") + getBodyLimbSlash();
-  str += string(", pierce: ") + getBodyLimbPierce();
-  str += string(", blunt: ") + getBodyLimbBlunt() + string("\n\r");
+  str += sstring("Limb for: slash: ") + getBodyLimbSlash();
+  str += sstring(", pierce: ") + getBodyLimbPierce();
+  str += sstring(", blunt: ") + getBodyLimbBlunt() + sstring("\n\r");
 
   if(isDumbAnimal())
     str += "CHARACTERISTIC: \tDUMB_ANIMAL\n\r";
@@ -827,7 +827,7 @@ const Stats & Race::getBaseStats() const
   return baseStats;
 }
 
-const string Race::getBodyLimbBlunt() const
+const sstring Race::getBodyLimbBlunt() const
 {
   switch (bodyType) {
     case BODY_AMPHIBEAN:
@@ -912,7 +912,7 @@ const string Race::getBodyLimbBlunt() const
   return "";
 }
 
-const string Race::getBodyLimbPierce() const
+const sstring Race::getBodyLimbPierce() const
 {
   switch (bodyType) {
     case BODY_DEMON:
@@ -991,7 +991,7 @@ const string Race::getBodyLimbPierce() const
   return "";
 }
 
-const string Race::getBodyLimbSlash() const
+const sstring Race::getBodyLimbSlash() const
 {
   switch (bodyType) {
     case BODY_OCTOPUS:
@@ -1194,17 +1194,17 @@ int Race::getMaleHtDieSize() const
   return maleHtDieSize;
 }
 
-string Race::getSingularName() const
+sstring Race::getSingularName() const
 {
   return singular_name;
 }
 
-string Race::getPluralName() const
+sstring Race::getPluralName() const
 {
   return plural_name;
 }
 
-string Race::getProperName() const
+sstring Race::getProperName() const
 {
   return proper_name;
 }

@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
   TDatabase db_immo("immortal");
   TDatabase db_beta("sneezybeta");
-  string immortal;
+  sstring immortal;
   vector<int>vnums;
   int action_flag;
   

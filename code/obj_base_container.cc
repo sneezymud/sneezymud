@@ -64,9 +64,9 @@ int TBaseContainer::getReducedVolume(const TThing *) const
   return getTotalVolume();
 }
 
-string TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
+sstring TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
 {
-  string tString("");
+  sstring tString("");
 
   // Take 1 higher than the current used and minus 1 from it to get All of the
   // bits set.  From there remove the hold/thrown/take items as we only care
@@ -328,7 +328,7 @@ void TBaseContainer::powerstoneMostMana(int *topMax)
 
 bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
                               TBeing *ch, TMonster *tKeeper,
-                              string tStString, itemTypeT tItemType,
+                              sstring tStString, itemTypeT tItemType,
                               int & tCount, int tShop)
 {
   TThing         *tThing,

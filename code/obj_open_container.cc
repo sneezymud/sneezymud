@@ -74,7 +74,7 @@ void TOpenContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = carryVolumeLimit();
 }
 
-string TOpenContainer::statObjInfo() const
+sstring TOpenContainer::statObjInfo() const
 {
   char buf[256];
 
@@ -87,7 +87,7 @@ string TOpenContainer::statObjInfo() const
   sprintf(buf + strlen(buf), "Vnum of key that opens: %d",
            getKeyNum());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
@@ -221,10 +221,10 @@ void TOpenContainer::purchaseMe(TBeing *ch, TMonster *tKeeper, int tCost, int tS
     addContainerFlag(CONT_EMPTYTRAP);
 }
 
-string TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
+sstring TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
 {
   // recurse if necessary
-  string tString = TBaseContainer::showModifier(tMode, tBeing);
+  sstring tString = TBaseContainer::showModifier(tMode, tBeing);
 
   if (isCloseable()) {
     tString += " (";                                          
@@ -388,7 +388,7 @@ bool TOpenContainer::getObjFromMeCheck(TBeing *ch)
   return FALSE;
 }
 
-string TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
+sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
 {
   const char * sizeLevels[] =
   {
@@ -429,7 +429,7 @@ string TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
          tWeight2 = (int)tOpenContainer->carryWeightLimit(),
          tWeightDiff,
          tMessage2;
-  string StString("");
+  sstring StString("");
 
   tSizeDiff   = (tSize1 - tSize2);
   tMessage1   = compareDetermineMessage(15, tSizeDiff);
@@ -479,7 +479,7 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   }
   list_in_heap(getStuff(), ch, 0, 100);
 
-  // list_in_heap uses sequential sendTo's, so lets string it to them for
+  // list_in_heap uses sequential sendTo's, so lets sstring it to them for
   // easier browsing
   ch->makeOutputPaged();
 }

@@ -111,7 +111,7 @@ void TStaff::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = mapSpellnumToFile(getSpell());
 }
 
-string TStaff::statObjInfo() const
+sstring TStaff::statObjInfo() const
 {
   char buf[256];
 
@@ -124,7 +124,7 @@ string TStaff::statObjInfo() const
               getCurCharges(),
               getMaxCharges());
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 

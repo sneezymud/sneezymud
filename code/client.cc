@@ -22,7 +22,7 @@
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
 
-// clientf(...) will take a string, and tack on the CLIENT_CODE_CHAR at 
+// clientf(...) will take a sstring, and tack on the CLIENT_CODE_CHAR at 
 // the beginning and end, and also put a newline at the end. - Russ     
 
 void Descriptor::clientf(const char *msg,...)
@@ -284,7 +284,7 @@ int Descriptor::read_client(char *str2)
               rp->getSectorType(),
               rp->getMoblim(), rp->getRoomHeight(), tmpBuf, tmpBuf2);
 
-      string sb = tmpbuf;
+      sstring sb = tmpbuf;
       processStringForClient(sb);
 
       clientf(sb.c_str());
@@ -763,9 +763,9 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
   
             if ((signFile = fopen(SIGN_MESS, "r"))) {
               fclose(signFile);
-              string iostring;
-              file_to_string(SIGN_MESS, iostring);
-              page_string(iostring, SHOWNOW_YES);
+              sstring iosstring;
+              file_to_sstring(SIGN_MESS, iosstring);
+              page_string(iosstring, SHOWNOW_YES);
             }
           }
           // we ought to allow for them to enter the password here, but oh well
@@ -911,7 +911,7 @@ void stripFrontBytes(char *s, int num)
   while ((*(s++) = *(c++)));	// tight code rocks 
 }
 
-bool is_client_string(char *str)
+bool is_client_sstring(char *str)
 {
   if (!str || !*str)
     return FALSE;
@@ -1294,19 +1294,19 @@ void TBeing::fixClientPlayerLists(bool lost)
   }
 }
 
-void processStringForClient(string &sb)
+void processStringForClient(sstring &sb)
 {
   // Go thru and change all newlines to ^
 
-  string::size_type pos;
+  sstring::size_type pos;
   pos = sb.find("\n\r");
-  while (pos != string::npos) {
+  while (pos != sstring::npos) {
     sb.replace(pos, 2, "^");
     pos = sb.find("\n\r");
   }
 
   pos = sb.find("\r\n");
-  while (pos != string::npos) {
+  while (pos != sstring::npos) {
     sb.replace(pos, 2, "^");
     pos = sb.find("\r\n");
   }
@@ -1672,7 +1672,7 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
   char stString[256] = "\0";
   int found_obj;
   int counter;
-  string sb;
+  sstring sb;
   int rc;
   bool hasComponents = false;
   char arg[256];

@@ -223,13 +223,13 @@ class TRoom : public TThing {
     void clientf(const char *,...);
     void loadOne(FILE *, bool);
     void colorRoom(int, int);
-    string daynightColorRoom() const;
+    sstring daynightColorRoom() const;
     virtual int getLight();
     void initLight();
     void initWeather();
     void updateWeather();
     void computeNewWeather();
-    void saveItems(const string &);
+    void saveItems(const sstring &);
     void loadItems();
     weatherT getWeather();
     int outdoorLight();
@@ -369,9 +369,9 @@ class TRoom : public TThing {
     bool roomIsEmpty(bool) const;
     virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
-    string describeGround() const;
+    sstring describeGround() const;
 
-    void playsound(soundNumT, const string &, int = 100, int = 50, int = 1) const;
+    void playsound(soundNumT, const sstring &, int = 100, int = 50, int = 1) const;
     void stopsound() const;
     int brightSunlight() { return getLight() > 20; }
     int pitchBlackDark() { return getLight() <= 0; }

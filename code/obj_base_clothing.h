@@ -16,10 +16,10 @@ class TBaseClothing : public virtual TObj
   public:
     virtual void assignFourValues(int, int, int, int) = 0;
     virtual void getFourValues(int *, int *, int *, int *) const = 0;
-    virtual string statObjInfo() const = 0;
+    virtual sstring statObjInfo() const = 0;
 
     virtual int editAverageMe(TBeing *, const char *);
-    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void objMenu(const TBeing *) const;
     virtual int rentCost() const;
     virtual void lowCheck();
@@ -31,8 +31,8 @@ class TBaseClothing : public virtual TObj
     virtual int scavengeMe(TBeing *, TObj **);
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual int suggestedPrice() const;
-    virtual string compareMeAgainst(TBeing *, TObj *);
-    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
+    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
     virtual bool isPluralItem() const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);

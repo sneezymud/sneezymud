@@ -443,7 +443,7 @@ class TMonster : public TBeing {
     int protectionStuff();
     int randomHunt();
     int modifiedDoCommand(cmdTypeT, const char *, TBeing *, const resp *);
-    string parseResponse(TBeing *, const char *);
+    sstring parseResponse(TBeing *, const char *);
     int remHated(const TBeing *, const char *);
     int remFeared(const TBeing *, const char *);
     int remHatred(unsigned short);
@@ -514,8 +514,8 @@ class TMonster : public TBeing {
     bool isTestmob() const;
     int wanderAround();
     void quickieDefend();
-    void saveItems(const string &);
-    void loadItems(const string &);
+    void saveItems(const sstring &);
+    void loadItems(const sstring &);
     bool isSmartMob(int) const;
     bool aiLoveNonHumanoid(TBeing *, aiTarg);
     double getRealLevel() const;

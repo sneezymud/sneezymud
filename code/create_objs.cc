@@ -355,7 +355,7 @@ static void osave(TBeing *ch, const char *argument)
 
 static void olist(TPerson *ch, bool zone=false)
 {
-  string longstr;
+  sstring longstr;
   TDatabase db("immortal");
 
   if(zone){
@@ -473,11 +473,11 @@ void TPerson::doOEdit(const char *argument)
   int vnum, field, zGot, oValue/*, ac_orig, str_orig, price_orig*/;
   float oFValue;
   TObj *cObj = NULL;
-  string tStr;
-  string tStString(""),
+  sstring tStr;
+  sstring tStString(""),
          tStBuffer(""),
          tStArg("");
-  char string[256],
+  char sstring[256],
        object[80],
        Buf[256],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
@@ -487,14 +487,14 @@ void TPerson::doOEdit(const char *argument)
     return;
   }
 
-  bisect_arg(argument, &field, string, editor_types_oedit);
+  bisect_arg(argument, &field, sstring, editor_types_oedit);
 
   switch (field) {
     case 21:
-      if (!*string)
+      if (!*sstring)
         sendTo("Syntax: oed resave <object>\n\r");
-      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, string, getStuff()))))
-	sendTo("Unable to find %s...Sorry...\n\r", string);
+      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, sstring, getStuff()))))
+	sendTo("Unable to find %s...Sorry...\n\r", sstring);
       else if (cObj->getSnum() == cObj->objVnum() && !hasWizPower(POWER_OEDIT_IMP_POWER))
         sendTo("Unknown value on this object.  resave only usable on oed loaded objects...\n\r");
 
@@ -502,14 +502,14 @@ void TPerson::doOEdit(const char *argument)
 	sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
       else {
-        sprintf(string, "%s %d", string, cObj->getSnum());
-        osave(this, string);
+        sprintf(sstring, "%s %d", sstring, cObj->getSnum());
+        osave(this, sstring);
       }
       return;
       break;
     case 1:			// save 
 #if 1
-      tStArg = string;
+      tStArg = sstring;
       argument_parser(tStArg, tStString, tStBuffer);
 
       if (tStString.empty() || tStBuffer.empty())
@@ -527,9 +527,9 @@ void TPerson::doOEdit(const char *argument)
 	    sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
 	  else {
-            sprintf(string, "%s %d", tStString.c_str(), cObj->getSnum());
+            sprintf(sstring, "%s %d", tStString.c_str(), cObj->getSnum());
 
-            osave(this, string);
+            osave(this, sstring);
 #if 1
             --(*cObj);
             delete cObj;
@@ -540,7 +540,7 @@ void TPerson::doOEdit(const char *argument)
             doSave(SILENT_YES);
           }
         } else
-          osave(this, string);
+          osave(this, sstring);
       }
 #else
       // zGot, cObj, tString are additions for Mithros for:
@@ -549,10 +549,10 @@ void TPerson::doOEdit(const char *argument)
       //   oed save obj_100 resave
       //   for: oed save obj_100 100  followed by a  junk obj_100
       // Basically for doing large db changes online.
-      if ((zGot = sscanf(string, "%s %d", object, &vnum)) != 2) {
+      if ((zGot = sscanf(sstring, "%s %d", object, &vnum)) != 2) {
         if (zGot == 1) {
           cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, object, getStuff()));
-          tString = one_argument(string, object);
+          tString = one_argument(sstring, object);
           if (*tString) tString++;
         }
         if (!hasWizPower(POWER_OEDIT_IMP_POWER) || !cObj || (cObj->objVnum() < 0) ||
@@ -560,9 +560,9 @@ void TPerson::doOEdit(const char *argument)
 	  sendTo("Syntax : oed save <object> <vnum>\n\r");
 	  return;
         } else
-          sprintf(string, "%s %d", object, cObj->objVnum());
+          sprintf(sstring, "%s %d", object, cObj->objVnum());
       }
-      osave(this, string);
+      osave(this, sstring);
       if (zGot == 1) {
 #if 1
         --(*cObj);
@@ -577,15 +577,15 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 2:			// load 
-      if (sscanf(string, "%d", &vnum) != 1) {
-	// assume that string is an object name
+      if (sscanf(sstring, "%d", &vnum) != 1) {
+	// assume that sstring is an object name
 	TDatabase db("immortal");
 
 	db.query("select vnum, name from obj where owner='%s'", getName());
   
 	vnum=-1;
 	while(db.fetchRow()){
-	  if(isname(string, db.getColumn(1))){
+	  if(isname(sstring, db.getColumn(1))){
 	    vnum=convertTo<int>(db.getColumn(0));
 	    break;
 	  }
@@ -601,15 +601,15 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 3:			// modify 
-      if (sscanf(string, "%s", object) != 1) {
+      if (sscanf(sstring, "%s", object) != 1) {
 	sendTo("Syntax : oed modify <object name>\n\r");
 	return;
       }
-      oedit(this, string);
+      oedit(this, sstring);
       return;
       break;
     case 4:			// list 
-      sscanf(string, "%s", object);
+      sscanf(sstring, "%s", object);
       if(!strcmp(object, "zone"))
 	olist(this, true);
       else
@@ -617,7 +617,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 5:			// remove 
-      if (sscanf(string, "%d", &vnum) != 1) {
+      if (sscanf(sstring, "%d", &vnum) != 1) {
 	sendTo("Syntax : oed remove <vnum>\n\r");
 	return;
       }
@@ -634,8 +634,8 @@ void TPerson::doOEdit(const char *argument)
   if (!desc)
     return;
 
-  tString = string;
-  half_chop(tString, object, string);
+  tString = sstring;
+  half_chop(tString, object, sstring);
 
   if (!(cObj = dynamic_cast<TObj *>(searchLinkedList(object, getStuff())))) {
     sendTo("Try an object next time, it works better.\n\r");
@@ -656,7 +656,7 @@ void TPerson::doOEdit(const char *argument)
 
   switch (field) {
     case 7: // Name
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me some keywords.\n\r");
         sendTo("Current keywords: %s\n\r", cObj->name);
         return;
@@ -664,11 +664,11 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
       if (cObj->name)
         delete [] cObj->name;
-      cObj->name = mud_str_dup(string);
+      cObj->name = mud_str_dup(sstring);
       return;
       break;
     case 8: // Long Description
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me a long description.\n\r");
         sendTo("Current Long is:\n\r%s\n\r", cObj->descr);
         return;
@@ -676,11 +676,11 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
       if (cObj->descr)
         delete [] cObj->descr;
-      cObj->descr = mud_str_dup(string);
+      cObj->descr = mud_str_dup(sstring);
       return;
       break;
     case 9: // Short Description
-      if (!*string) {
+      if (!*sstring) {
         sendTo("You need to give me a short description.\n\r");
         sendTo("Current Short is:\n\r%s\n\r", cObj->shortDescr);
         return;
@@ -688,11 +688,11 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
       if (cObj->shortDescr)
         delete [] cObj->shortDescr;
-      cObj->shortDescr = mud_str_dup(string);
+      cObj->shortDescr = mud_str_dup(sstring);
       return;
       break;
     case 10: // Max Structure Points
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < -1 || oValue > 100) {
         sendTo("Incorrect Max Structure, Must be between -1 and 100.\n\r");
         return;
@@ -701,7 +701,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 11: // Cur Structure Points
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < -1 || oValue > 100) {
         sendTo("Incorrect Current Structure, Must be between -1 and 100.\n\r");
         return;
@@ -710,7 +710,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 12: // Weight
-      if ((sscanf(string, "%f", &oFValue)) != 1 ||
+      if ((sscanf(sstring, "%f", &oFValue)) != 1 ||
           oFValue < 0.0 || oFValue > 500000.0) {
         sendTo("Incorrect Weight, Must be between 0 and 500000.\n\r");
         return;
@@ -719,7 +719,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 13: // Volume
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < 0 || oValue > 50000) {
         sendTo("Incorrect Volume, Must be between 0 and 50000.\n\r");
         return;
@@ -728,7 +728,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 14: // Cost & Value
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < 0 || oValue > 1000000) {
         sendTo("Incorrect Cost/Value, Must be between 0 and 1000000.\n\r");
         return;
@@ -740,7 +740,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 15: // Decay Time
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < -1 || oValue > 10000) {
         sendTo("Incorrect Decay Time, Must be between -1(never) and 10000.\n\r");
         return;
@@ -755,20 +755,20 @@ void TPerson::doOEdit(const char *argument)
         return;
       }
       cObj->swapToStrung();
-      if (!*string) {
+      if (!*sstring) {
         sendTo("Assuming Object name for extra description.\n\r");
-        strcpy(string, cObj->name);
+        strcpy(sstring, cObj->name);
       }
       for (ed = cObj->ex_description; ; ed = ed->next) {
         if (!ed) {
           ed = new extraDescription();
           ed->next = cObj->ex_description;
           cObj->ex_description = ed;
-          ed->keyword = mud_str_dup(string);
+          ed->keyword = mud_str_dup(sstring);
           ed->description = NULL;
           desc->str = &ed->description;
           break;
-        } else if (!strcasecmp(ed->keyword, string)) {
+        } else if (!strcasecmp(ed->keyword, sstring)) {
           sendTo("Extra already exists, Currently is:\n\r%s\n\r", ed->description);
           delete [] ed->description;
         }
@@ -783,7 +783,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 17: // Can Be Seen
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < 0 || oValue > 25) {
         sendTo("Incorrect Can Be Seen, Must be between 0 and 25.\n\r");
         return;
@@ -792,7 +792,7 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 18: // Max Exist
-      if ((sscanf(string, "%d", &oValue)) != 1 ||
+      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
           oValue < 0 || oValue > 9999) {
         sendTo("Incorrect Max Exist, Must be between 0 and 9999(Unlimited).\n\r");
         return;
@@ -802,12 +802,12 @@ void TPerson::doOEdit(const char *argument)
       break;
     case 19:
 #if 1
-      if (!*string)
+      if (!*sstring)
         sendTo("Syntax: oed average <object> <value>\n\r");
       else
-        cObj->editAverageMe(this, string);
+        cObj->editAverageMe(this, sstring);
 #else
-      if ((sscanf(string, "%f", &oFValue)) != 1 || oValue < 0){
+      if ((sscanf(sstring, "%f", &oFValue)) != 1 || oValue < 0){
 	sendTo("Syntax : oed default_ac_str <object> <level>\n\r");
 	return;
       }
@@ -843,7 +843,7 @@ void TPerson::doOEdit(const char *argument)
       sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0], tTextLns[0]);
       tTextLns[0][0] = '\0';
 
-      vnum = sscanf(string, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
 
       if (((!is_abbrev(tTextLns[0], "long" )                    || vnum < 2) &&
            (!is_abbrev(tTextLns[0], "extra") || !tTextLns[2][0] || vnum < 3)) ||
@@ -862,7 +862,7 @@ void TPerson::doOEdit(const char *argument)
 
         tStr = cObj->descr;
 
-        if (tStr.find(tTextLns[1]) == string::npos) {
+        if (tStr.find(tTextLns[1]) == sstring::npos) {
           sendTo("Couldn't find pattern in long description.\n\r");
           return;
         }
@@ -887,7 +887,7 @@ void TPerson::doOEdit(const char *argument)
           return;
         }
 
-        if (tStr.find(tTextLns[2]) == string::npos) {
+        if (tStr.find(tTextLns[2]) == sstring::npos) {
           sendTo("Couldn't find pattern in extra description.\n\r");
           return;
         }
@@ -2774,7 +2774,7 @@ int TObj::changeItemVal4Check(TBeing *, int)
   return FALSE;
 }
 
-string TObj::displayFourValues()
+sstring TObj::displayFourValues()
 {
   char tString[256];
   int  x1,
@@ -2789,13 +2789,13 @@ string TObj::displayFourValues()
   return tString;
 }
 
-bool dirlistSort::operator() (const string &xstr, const string &ystr) const
+bool dirlistSort::operator() (const sstring &xstr, const sstring &ystr) const
 {
-  // strings come in of the form "1234 object name"
+  // sstrings come in of the form "1234 object name"
   // yank the 1st argument, parse as a number, and put in numerical order
 
-  string xnum;
-  string ynum;
+  sstring xnum;
+  sstring ynum;
   one_argument(xstr, xnum);
   one_argument(ystr, ynum);
   int xint = convertTo<int>(xnum);
@@ -2814,7 +2814,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
     return;
   }
   unsigned int totcnt = 0;
-  string longstr;
+  sstring longstr;
 
   // readdir does NOT read in any specific order (non alphabetic)
   // so sorting the buf is nice
@@ -2823,12 +2823,12 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   // alphabetic order anyway -> (1, 10, 11, 2, 20, 200, 3, ...) BAD!
 
   // this will be a vector that we can sort later
-  vector<string>sort_str(0);
+  vector<sstring>sort_str(0);
 
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
-    string str = buf;
+    sstring str = buf;
     str += "/";
     str += dp->d_name;
     FILE *fp = fopen(str.c_str(), "r");
@@ -2840,7 +2840,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
         char *n;
         n = fread_string(fp);
   
-        string newstr;
+        sstring newstr;
         newstr += dp->d_name;
         newstr += " ";
         newstr += n;
@@ -3092,7 +3092,7 @@ int TThing::editAverageMe(TBeing *tBeing, const char *)
 
 int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
 {
-  string tStString(""),
+  sstring tStString(""),
          tStBuffer(""),
          tStArg(tString);
 

@@ -180,7 +180,7 @@ void bootSocialMessages(void)
 }
 
 // returns DELETE_THIS
-int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
+int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
 {
   char buf[MAX_INPUT_LENGTH];
   TBeing *vict;
@@ -566,12 +566,12 @@ void TPlant::peeOnMe(const TBeing *ch)
   updateAge();
 }
 
-void TBeing::doPee(string argument)
+void TBeing::doPee(sstring argument)
 {
   TThing *t;
   TObj *o;
   TBeing *tmp_char;
-  string arg;
+  sstring arg;
   liqTypeT liquid=MAX_DRINK_TYPES;
 
   if (powerCheck(POWER_PEE))

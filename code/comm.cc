@@ -131,7 +131,7 @@ void TBeing::sendTo(colorTypeT lev, const char *msg,...) const
   vsprintf(buf, msg, ap);
   va_end(ap);
 
-  string messageBuffer = colorString(this, desc, buf, NULL, lev, FALSE);
+  sstring messageBuffer = colorString(this, desc, buf, NULL, lev, FALSE);
   desc->output.putInQ(messageBuffer.c_str());
 }
 
@@ -150,7 +150,7 @@ void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
     if (tbt && tbt->desc && !tbt->desc->connected) {
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
       } else {
-        string messageBuffer = colorString(tbt, i->desc, buf, NULL, lev, TRUE);
+        sstring messageBuffer = colorString(tbt, i->desc, buf, NULL, lev, TRUE);
         tbt->desc->output.putInQ(messageBuffer.c_str());
       }
     }
@@ -200,7 +200,7 @@ void sendToOutdoor(colorTypeT lev, const char *text, const char *text_tropic)
               i->output.putInQ(text);
             }
           } else {
-            string buf;
+            sstring buf;
             if (ch->roomp->isTropicalSector()) {
               buf = colorString(ch, i, text_tropic, NULL, lev, FALSE);
             } else {
@@ -237,7 +237,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
     for (i = real_roomp(room)->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
-        string buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
+        sstring buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
         tbt->desc->output.putInQ(buf.c_str());
       }
     }
@@ -527,7 +527,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
   int x = 0;
   personTypeT per;
   const TObj *tobj = NULL;
-  string catstr;
+  sstring catstr;
 
   if (!str || !*str)
     return;
@@ -632,7 +632,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
                   i = t1->hshr();
                   strp += 2;
                 } else if (strp != (str + 1)) {
-                  // "himself" if it isn't the first word in the string
+                  // "himself" if it isn't the first word in the sstring
                   char tmp_buffer[20];
                   sprintf(tmp_buffer, "%sself", t1->hmhr());
                   i = tmp_buffer;
@@ -824,7 +824,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
               i = "$";
 	      break;
           }
-          // color in the replacement string may reset existing color
+          // color in the replacement sstring may reset existing color
           // to get around this, lets tack on any existing color
           if (color) {
             catstr = i;
@@ -852,7 +852,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
       if (!color) {
         to->desc->output.putInQ(cap(buf));
       } else {
-        string str = to->ansi_color(color);
+        sstring str = to->ansi_color(color);
         if (str.empty())
           to->desc->output.putInQ(cap(buf));
         else {

@@ -5,6 +5,8 @@
 #include <time.h>
 #endif
 
+#include "parse.h"
+
 // forward declarations
 class TObj;
 class TBeing;
@@ -60,7 +62,7 @@ typedef signed char byte;
 
 extern void vlogf(const char *, ...);
 extern void vlogf(logTypeT, const char *, ...);
-extern char * mud_str_dup(const string &buf);
+extern char * mud_str_dup(const sstring &buf);
 extern char * mud_str_dup(const char *buf);
 extern char * mud_str_copy(char *dest, const char *src, size_t n);
 
@@ -155,7 +157,7 @@ struct show_room_zone_struct {
   int blank;
   int startblank, lastblank;
   int bottom, top;
-  string sb;
+  sstring sb;
 };
 
 class drinkInfo {
@@ -290,8 +292,8 @@ class roomDirData {
     void wardDoor(dirTypeT, int);
     doorTypeT doorType() { return door_type; };
     int destination() { return to_room; };
-    const string getName() const;
-    const string closed() const;
+    const sstring getName() const;
+    const sstring closed() const;
 
     roomDirData();
     roomDirData(const roomDirData &a);

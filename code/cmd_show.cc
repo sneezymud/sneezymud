@@ -17,7 +17,7 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 
-static void print_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   char buf[10240];
   int dink, bits, scan;
@@ -44,7 +44,7 @@ static void print_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_st
   sb += buf;
 }
 
-static void show_room_zone(int rnum, TRoom *rp, string &, struct
+static void show_room_zone(int rnum, TRoom *rp, sstring &, struct
 			   show_room_zone_struct *srzs)
 {
   char buf[MAX_STRING_LENGTH];
@@ -79,55 +79,55 @@ static void show_room_zone(int rnum, TRoom *rp, string &, struct
   print_room(rnum, rp, srzs->sb, NULL);
 }
 
-static void print_lit_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_lit_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_ALWAYS_LIT))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_save_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_save_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_SAVE_ROOM))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_death_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_death_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_DEATH))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_hospital_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_hospital_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_HOSPITAL))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_noheal_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_noheal_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_NO_HEAL))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_arena_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_arena_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_ARENA))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_noflee_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_noflee_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_NO_FLEE))
     print_room(rnum, rp, sb, NULL);
 }
 
-static void print_private_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
+static void print_private_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_struct *)
 {
   if (rp && rp->isRoomFlag(ROOM_PRIVATE))
     print_room(rnum, rp, sb, NULL);
 }
 
-unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
+unsigned long int showFreeMobObj(int shFrZoneNumber, sstring *sb,
                                  bool isMobileF, bool shFrLoop=false)
 {
   if (shFrZoneNumber < 0 || shFrZoneNumber >= ((signed int) zone_table.size())) {
@@ -212,9 +212,9 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
 // Dissection loads
 // 'Nature' loads
 // Scriptfile loads
-string showComponentTechnical(const int tValue)
+sstring showComponentTechnical(const int tValue)
 {
-  string         tStString(""),
+  sstring         tStString(""),
                  tStBuffer("");
   char           tString[256],
                  tBuffer[256];
@@ -319,7 +319,7 @@ void TPerson::doShow(const char *argument)
             buf2[256];
   int       bottom = 0,
             top    = 0;
-  string    sb;
+  sstring    sb;
   TBeing   *ch     = NULL,
            *b;
   TMonster *k;
@@ -337,14 +337,14 @@ void TPerson::doShow(const char *argument)
 
 // Show Race:
 //   First, check for the race option.  Assign the second argument to target.
-//   If target has a string (ie. not empty), check to see if they passed an
+//   If target has a sstring (ie. not empty), check to see if they passed an
 //   index number.  If so, call the appropriate race's showTo method and
 //   return.  Make sure the number is less than the MAX_RACIAL_TYPES, else
 //   send them a list of valid races.
 //
 //   If the index passed is 0, it will fail the first check, but they might
 //   be checking on the RACE_NORACE stats, so see if they passed "0".  If so,
-//   call NORACE's showTo method.  Otherwise, pass the string to the
+//   call NORACE's showTo method.  Otherwise, pass the sstring to the
 //   getRaceIndex() function.  If it returns a valid index, call the
 //   appropriate showTo method.  Otherwise, let it fall out of the "if" and
 //   list all valid races.
@@ -970,7 +970,7 @@ void TPerson::doShow(const char *argument)
 
     for (; isspace(*argument); argument++);
 
-    string tStArgument(argument),
+    sstring tStArgument(argument),
            tStType(""),
            tStItemType("");
 
@@ -1165,7 +1165,7 @@ void TPerson::doShow(const char *argument)
 
 
 
-unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
+unsigned long int showFreeMobObj(int shFrZoneNumber, sstring *sb,
                                  bool isMobileF, bool shFrLoop=false)
 {
   if (shFrZoneNumber < 0 || shFrZoneNumber >= ((signed int) zone_table.size())) {
@@ -1250,9 +1250,9 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, string *sb,
 // Dissection loads
 // 'Nature' loads
 // Scriptfile loads
-string showComponentTechnical(const int tValue)
+sstring showComponentTechnical(const int tValue)
 {
-  string         tStString(""),
+  sstring         tStString(""),
                  tStBuffer("");
   char           tString[256],
                  tBuffer[256];
@@ -1372,12 +1372,12 @@ void TBeing::doShow(const char *)
   return;
 }
 
-void TPerson::doShow(string tStString)
+void TPerson::doShow(sstring tStString)
 {
   bool   tError        = false;
   int    tSelection    = 0;
   char   tString[1024] = "\0";
-  string tSb("");
+  sstring tSb("");
 
   if (tStString.empty())
     tError = true;
@@ -1388,7 +1388,7 @@ void TPerson::doShow(string tStString)
     tError = true;
 
   if (!tError) {
-    string tStArg(tString),
+    sstring tStArg(tString),
            tStFirst(""),
       tStSecond("");
 

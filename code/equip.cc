@@ -1533,9 +1533,9 @@ int TBeing::remove(TThing *obj, TBeing *ch)
 }
 
 // DELETE_THIS
-int TBeing::doRemove(const string &argument, TThing *obj)
+int TBeing::doRemove(const sstring &argument, TThing *obj)
 {
-  string arg1, buf;
+  sstring arg1, buf;
   TThing *o = NULL;
   TBeing *ch;
   int res, count = 0;
@@ -2038,7 +2038,7 @@ bool TObj::rangerRestrictedItem(const TBeing *ch) const
   return TRUE;
 }
 
-int TBeing::doUnsaddle(string arg)
+int TBeing::doUnsaddle(sstring arg)
 {
   TThing *saddle;
   TBeing *horse;
@@ -2098,12 +2098,12 @@ int TBeing::doUnsaddle(string arg)
   return TRUE;
 }
 
-int TBeing::doSaddle(string arg)
+int TBeing::doSaddle(sstring arg)
 {
   TBeing *horse;
   TThing *t;
   TObj *saddle;
-  string arg1, arg2;
+  sstring arg1, arg2;
 
   argument_interpreter(arg, arg1, arg2);
 
@@ -2236,9 +2236,9 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
   return maxval;
 }
 
-void TBeing::doOutfit(const string &arg)
+void TBeing::doOutfit(const sstring &arg)
 {
-  string buf, buf2;
+  sstring buf, buf2;
   TBeing *mob;
   TObj *obj;
   int rc;

@@ -11,7 +11,7 @@
 #include "stdsneezy.h"
 
 messageTypeT mapMessageFromFile(const char tString);
-string mapMessageToFile(TMessages *tMsgStore, messageTypeT tType);
+sstring mapMessageToFile(TMessages *tMsgStore, messageTypeT tType);
 
 messageTypeT & operator++ (messageTypeT &c, int)
 {
@@ -72,7 +72,7 @@ const char * messageCommandTypes[] =
 
 void TBeing::doMessage(const char *tArg)
 {
-  string  tStString(tArg),
+  sstring  tStString(tArg),
           tStCommand("");
   char    tString[256],
          *tMark = NULL;
@@ -98,7 +98,7 @@ void TBeing::doMessage(const char *tArg)
              !hasWizPower(wizPowerT(messageCommandSwitches[tValue][2])))
       sendTo("You do not have the power to change that, sorry.\n\r");
     else if (tStString.length() > 250)
-      sendTo("All strings have a hard limit of 250 characters, please use less than you did.\n\r");
+      sendTo("All sstrings have a hard limit of 250 characters, please use less than you did.\n\r");
     else {
       if (tStString.empty()) {
         sendTo(COLOR_BASIC, "Message Type: %s set to:\n\r%s\n\r",
@@ -115,7 +115,7 @@ void TBeing::doMessage(const char *tArg)
         return;
       }
 
-      bool isNamed = (colorString(this, desc, getName(), NULL, COLOR_NONE, TRUE).find(getNameNOC(this)) != string::npos);
+      bool isNamed = (colorString(this, desc, getName(), NULL, COLOR_NONE, TRUE).find(getNameNOC(this)) != sstring::npos);
 
       if (colorString(this, desc, tStString.c_str(), NULL, COLOR_NONE, TRUE).length() >
           messageCommandSwitches[tValue][0]) {
@@ -125,38 +125,38 @@ void TBeing::doMessage(const char *tArg)
       }
 
       if (tValue == MSG_IMM_TITLE &&
-          (tStString.find("~R") != string::npos)) {
+          (tStString.find("~R") != sstring::npos)) {
         sendTo("You Can NOT use newlines in the god title, Bad Bad.\n\r");
         return;
       }
 
-      // string has the extra \n\r from the input attached, so strip that off
-      while (tStString.find("\n") != string::npos)
+      // sstring has the extra \n\r from the input attached, so strip that off
+      while (tStString.find("\n") != sstring::npos)
         tStString.replace(tStString.find("\n"), 1, "");
-      while (tStString.find("\r") != string::npos)
+      while (tStString.find("\r") != sstring::npos)
         tStString.replace(tStString.find("\r"), 1, "");
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_GNAME) &&
-          !isNamed && (tStString.find("<n>") == string::npos)) {
+          !isNamed && (tStString.find("<n>") == sstring::npos)) {
         sendTo("This type requires your name.  Either use %s or <n>\n\r",
                getNameNOC(this).c_str());
         return;
       }
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_ONAME) &&
-          (tStString.find("<N>") == string::npos)) {
+          (tStString.find("<N>") == sstring::npos)) {
         sendTo("This type requires <N> in it.\n\r");
         return;
       }
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_STRING) &&
-          (tStString.find("<a>") == string::npos)) {
+          (tStString.find("<a>") == sstring::npos)) {
         sendTo("This type requires <a> in it.\n\r");
         return;
       }
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_DIR) &&
-          (tStString.find("<d>") == string::npos)) {
+          (tStString.find("<d>") == sstring::npos)) {
         sendTo("This type requires <d> in it.\n\r");
         return;
       }
@@ -168,13 +168,13 @@ void TBeing::doMessage(const char *tArg)
               msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false).c_str());
       msgVariables.savedown();
 
-      if (tStString.find("$") != string::npos)
-        sendTo("You used $ in your string, this will be replaced with -, sorry.\n\r");
+      if (tStString.find("$") != sstring::npos)
+        sendTo("You used $ in your sstring, this will be replaced with -, sorry.\n\r");
     }
   }
 }
 
-string TMessages::getImmortalTitles(TBeing *tChar)
+sstring TMessages::getImmortalTitles(TBeing *tChar)
 {
   int tLevel = (tChar ? (tChar->GetMaxLevel() - 51) : -1);
   const char * levelMessages[] =
@@ -214,7 +214,7 @@ string TMessages::getImmortalTitles(TBeing *tChar)
   return levelMessages[tLevel];
 }
 
-string TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
+sstring TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
 {
   switch (tValue)
   {
@@ -285,11 +285,11 @@ bool TMessages::operator==(messageTypeT tValue)
   return true;
 }
 
-// TMessages & TMessages::operator()(messageTypeT tValue, string tStString)
-void TMessages::operator()(messageTypeT tValue, string tStString)
+// TMessages & TMessages::operator()(messageTypeT tValue, sstring tStString)
+void TMessages::operator()(messageTypeT tValue, sstring tStString)
 {
   // look for "~R" and replace with newlines
-  while (tStString.find("~R") != string::npos)
+  while (tStString.find("~R") != sstring::npos)
     tStString.replace(tStString.find("~R"), 2, "\n\r");
   
   switch (tValue)
@@ -398,23 +398,23 @@ void TMessages::operator()(messageTypeT tValue, string tStString)
       break;
     case MSG_ERROR:
     case MSG_MAX:
-      vlogf(LOG_BUG, "TMessages::operator()(int, string) got invalid tValue.  [%d]",
+      vlogf(LOG_BUG, "TMessages::operator()(int, sstring) got invalid tValue.  [%d]",
             tValue);
   }
 }
 
-void findAndReplace(string & tStOrig, string tStArg, string tStNew)
+void findAndReplace(sstring & tStOrig, sstring tStArg, sstring tStNew)
 {
-  while ((tStOrig.find(tStArg.c_str()) != string::npos))
+  while ((tStOrig.find(tStArg.c_str()) != sstring::npos))
     tStOrig.replace(tStOrig.find(tStArg.c_str()), tStArg.length(), tStNew.c_str());
 }
 
-string TMessages::operator()(messageTypeT tValue,
+sstring TMessages::operator()(messageTypeT tValue,
                              TThing *tThing = NULL,
                              const char * tString = NULL,
                              bool sendFiltered = true)
 {
-  string  tMessage("");
+  sstring  tMessage("");
   TBeing *tBeing = dynamic_cast<TBeing *>(tThing);
   int     tSexP = (!tPlayer ? 2 :
                    (tPlayer->getSex() == SEX_FEMALE ? 0 :
@@ -479,7 +479,7 @@ string TMessages::operator()(messageTypeT tValue,
   return tMessage;
 }
 
-string TMessages::operator[](messageTypeT tValue) const
+sstring TMessages::operator[](messageTypeT tValue) const
 {
   switch (tValue)
   {
@@ -542,9 +542,9 @@ string TMessages::operator[](messageTypeT tValue) const
   return "ERROR";
 }
 
-string fread_tilTilde(FILE *tFile)
+sstring fread_tilTilde(FILE *tFile)
 {
-  string tStString("");
+  sstring tStString("");
   char   tChar = '\0';
 
   if (tFile && !feof(tFile))
@@ -580,11 +580,11 @@ void TMessages::initialize()
         tChar;
   FILE *tFile = NULL;
 
-  sprintf(tString, "player/%c/%s.strings",
+  sprintf(tString, "player/%c/%s.sstrings",
           LOWER(tPlayer->name[0]),
           lower(tPlayer->name).c_str());
 
-  // They don't have a strings file, so just return.
+  // They don't have a sstrings file, so just return.
   // Common for mortals.
   if (!(tFile = fopen(tString, "r")))
     return;
@@ -620,10 +620,10 @@ void TMessages::savedown()
 
   FILE   *tFile = NULL;
   char    tString[256];
-  string  tStString("");
+  sstring  tStString("");
   bool    didWrite = false;
 
-  sprintf(tString, "player/%c/%s.strings",
+  sprintf(tString, "player/%c/%s.sstrings",
           LOWER(tPlayer->name[0]),
           lower(tPlayer->name).c_str());
 
@@ -641,7 +641,7 @@ void TMessages::savedown()
 
   fclose(tFile);
 
-  // if we didn't write even 1 string, just delete the file.
+  // if we didn't write even 1 sstring, just delete the file.
   if (!didWrite)
     unlink(tString);
 }
@@ -686,7 +686,7 @@ messageTypeT mapMessageFromFile(const char tString)
   return messageTypeT(tType);
 }
 
-string mapMessageToFile(TMessages *tMsgStore, messageTypeT tType)
+sstring mapMessageToFile(TMessages *tMsgStore, messageTypeT tType)
 {
   char tString[256];
 

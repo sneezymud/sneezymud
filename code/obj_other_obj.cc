@@ -36,9 +36,9 @@ void TOtherObj::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TOtherObj::statObjInfo() const
+sstring TOtherObj::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

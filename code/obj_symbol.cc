@@ -64,10 +64,10 @@ void TSymbol::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TSymbol::statObjInfo() const
+sstring TSymbol::statObjInfo() const
 {
   char buf[256];
-  string a;
+  sstring a;
 
   sprintf(buf, "Symbol Strength: Current: %d, Maximum: %d\n\r",
     getSymbolCurStrength(), 
@@ -266,9 +266,9 @@ double TSymbol::getSymbolLevel() const
   return sqrt((double) getSymbolMaxStrength() / 500.0);
 }
 
-string TSymbol::showModifier(showModeT mode, const TBeing *ch) const
+sstring TSymbol::showModifier(showModeT mode, const TBeing *ch) const
 {
-  string a;
+  sstring a;
   if (mode == SHOW_MODE_SHORT_PLUS ||
        mode == SHOW_MODE_SHORT_PLUS_INV ||
        mode == SHOW_MODE_SHORT) {
@@ -318,7 +318,7 @@ void TSymbol::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 }
 
-string TSymbol::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TSymbol::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",

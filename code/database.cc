@@ -13,7 +13,7 @@ TDatabase::TDatabase() :
   //  vlogf(LOG_DB, "constructor");
 }
 
-TDatabase::TDatabase(string tdb) :
+TDatabase::TDatabase(sstring tdb) :
   res(NULL),
   row(-1),
   db(NULL)
@@ -27,7 +27,7 @@ TDatabase::~TDatabase(){
   //    vlogf(LOG_DB, "query results freed");
 }
 
-void TDatabase::setDB(string tdb){
+void TDatabase::setDB(sstring tdb){
   if(tdb=="sneezy"){
     db=database_connection.getSneezyDB();
   } else if(tdb=="sneezybeta"){
@@ -76,7 +76,7 @@ char *TDatabase::getColumn(int i){
 
 // get one of the results from the current row of the current query
 // specified by column name
-char *TDatabase::getColumn(string s){
+char *TDatabase::getColumn(sstring s){
   if(!res || row<0 || row >= PQntuples(res))
     return NULL;
   
@@ -95,7 +95,7 @@ char *TDatabase::getColumn(string s){
 bool TDatabase::query(const char *query,...)
 {
   va_list ap;
-  string buf;
+  sstring buf;
   const char *qsave=query;
   char *from=NULL;
   PGresult *restmp;

@@ -678,7 +678,7 @@ int disguise(TBeing *caster, char * buffer)
   } else if (caster->name) {
     // Consider this immortal use.
 
-    string tStNewNameList(mob->name);
+    sstring tStNewNameList(mob->name);
 
     tStNewNameList += " [";
     tStNewNameList += caster->getNameNOC(caster);

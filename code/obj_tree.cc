@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_tree.cc,v $
+// Revision 5.3  2003/03/13 22:40:54  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/10 00:45:49  peel
 // more splitting up of obj2.h
 //
@@ -58,9 +62,9 @@ void TTree::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TTree::statObjInfo() const
+sstring TTree::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

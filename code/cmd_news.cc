@@ -18,11 +18,11 @@
 
 class newsFileList {
   public:
-    string fileName;
+    sstring fileName;
     time_t modTime;
-    string prependStr;
+    sstring prependStr;
 
-  newsFileList(string a, time_t tim, string b) :
+  newsFileList(sstring a, time_t tim, sstring b) :
     fileName(a),
     modTime(tim),
     prependStr(b)
@@ -193,7 +193,7 @@ void TBeing::doNews(const char *argument)
     }
   }
 
-  string str;
+  sstring str;
 
   str += "<H> News\n\r";
   str += "------------------------------------------------------\n\r";
@@ -220,11 +220,11 @@ void TBeing::doNews(const char *argument)
 
   if(*arg){
     ifstream news(NEWS_FILE);
-    string s;
+    sstring s;
 
     while(news.getline(buf, 256)){
       if(!*buf){
-	if(s.find(arg) != string::npos){
+	if(s.find(arg) != sstring::npos){
 	  str+=s;
 	}
 	s="";
@@ -234,7 +234,7 @@ void TBeing::doNews(const char *argument)
       s+="\n\r";
     }
   } else 
-    file_to_string(NEWS_FILE, str, CONCAT_YES);
+    file_to_sstring(NEWS_FILE, str, CONCAT_YES);
 
   if (desc) {
     news_used_num++;

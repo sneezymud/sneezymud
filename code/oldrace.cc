@@ -556,14 +556,14 @@ int TBeing::validEquipSlot(wearSlotT i)
   return FALSE;
 }
 
-const string TBeing::bogus_slot_worn(wearSlotT i) const
+const sstring TBeing::bogus_slot_worn(wearSlotT i) const
 {
 //  vlogf(LOG_BUG, "%s had bogus slot (%d) worn.", getName(), i);
   forceCrash("%s had bogus slot (%d) worn.", getName(), i);
   return "Worn on BOGUS slot - Bug this!";
 }
 
-const string TBeing::defaultEquipmentSlot(wearSlotT i) const
+const sstring TBeing::defaultEquipmentSlot(wearSlotT i) const
 {
   switch (i) {
     case WEAR_EX_LEG_L:
@@ -635,14 +635,14 @@ const string TBeing::defaultEquipmentSlot(wearSlotT i) const
   }
 }
 
-const string TBeing::bogus_slot(wearSlotT i) const
+const sstring TBeing::bogus_slot(wearSlotT i) const
 {
 //  vlogf(LOG_BUG, "%s had bogus slot (%d) used.", getName(), i);
   forceCrash("%s had bogus slot (%d) used.", getName(), i);
   return "BOGUS slot - Bug this!";
 }
 
-const string TBeing::default_body_slot(wearSlotT i) const
+const sstring TBeing::default_body_slot(wearSlotT i) const
 {
   switch (i) {
     case WEAR_FINGER_R:
@@ -693,7 +693,7 @@ const string TBeing::default_body_slot(wearSlotT i) const
   }
 }
 
-const string TBeing::describeBodySlot(wearSlotT i) const
+const sstring TBeing::describeBodySlot(wearSlotT i) const
 {
   char buf[160];
 
@@ -711,7 +711,7 @@ const string TBeing::describeBodySlot(wearSlotT i) const
   return buf;
 }
 
-const string TBeing::describeBodySlot2(wearSlotT i) const
+const sstring TBeing::describeBodySlot2(wearSlotT i) const
 {
   switch (getMyRace()->getBodyType()) {
     case BODY_NONE:
@@ -1874,7 +1874,7 @@ const string TBeing::describeBodySlot2(wearSlotT i) const
   return default_body_slot(i);
 }
 
-const string TBeing::describeEquipmentSlot(wearSlotT i) const
+const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
 {
   if (isLimbFlags(i, PART_TRANSFORMED)) {
     return describeTransEquipSlot(i);

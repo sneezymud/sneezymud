@@ -64,7 +64,7 @@ static void timediff(struct timeval *a, struct timeval *b, struct timeval *rslt)
   return;
 }
 
-void TSocket::addNewDescriptorsDuringBoot(string tStString)
+void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
 {
   fd_set input_set, output_set, exc_set;
   static struct timeval last_time, now, timespent, timeout, null_time;
@@ -1078,7 +1078,7 @@ TSocket *TSocket::newConnection()
   return (s);
 }
 
-static const string IP_String(sockaddr_in &_a)
+static const sstring IP_String(sockaddr_in &_a)
 {
   char buf[256];
 #if (defined SUN)

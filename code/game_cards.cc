@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_cards.cc,v $
+// Revision 5.3  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/08/14 17:35:43  peel
 // fixed some color code problems with card display
 // added room echoes to show blackjack games
@@ -67,7 +71,7 @@ void CardGame::setup_deck()
   }
 }
 
-const string CardGame::pretty_card_printout(const TBeing *ch, int card) const
+const sstring CardGame::pretty_card_printout(const TBeing *ch, int card) const
 {
   char buf[80];
 
@@ -143,7 +147,7 @@ int CardGame::add_suit(const TBeing *ch, char *cat_msg, int card) const
   return TRUE;
 }
 
-const string CardGame::suit(const TBeing *ch, int card) const
+const sstring CardGame::suit(const TBeing *ch, int card) const
 {
   char buf[80];
 

@@ -3,6 +3,19 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_message.h,v $
+// Revision 5.2  2003/03/13 22:40:52  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
+// Revision 5.1.1.3  2001/02/08 08:02:19  cosmo
+// changed return type of operator ()
+//
+// Revision 5.1.1.2  1999/12/09 18:40:40  lapsos
+// Massive revision of setsev/wizfiles
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -34,13 +47,16 @@ enum messageTypeT
   MSG_SLAY,
   MSG_SLAY_TARG,
   MSG_FORCE,
+  MSG_BAMFIN,
+  MSG_BAMFOUT,
+  MSG_LONGDESCR,
   MSG_MAX
 };
 
 const int MSG_TYPE_MAX   = MSG_MAX;
 const int MSG_REQ_GNAME  = (1 << 0); // God Name
 const int MSG_REQ_ONAME  = (1 << 1); // Other Name [mobile/object/player]
-const int MSG_REQ_STRING = (1 << 2); // Command string
+const int MSG_REQ_STRING = (1 << 2); // Command sstring
 const int MSG_REQ_DIR    = (1 << 3); // Direction of travel
 
 struct messageBuffer
@@ -58,7 +74,10 @@ struct messageBuffer
        *msgMoveOut,
        *msgSlay,
        *msgSlayTarg,
-       *msgForce;
+       *msgForce,
+       *msgBamfin,
+       *msgBamfout,
+       *msgLongDescr;
 };
 
 class TMessages
@@ -67,17 +86,18 @@ class TMessages
     messageBuffer  tMessages;
     TBeing        *tPlayer;
 
-    string getImmortalTitles(TBeing *);
+    sstring getImmortalTitles(TBeing *);
     // Return the old default messages.
-    string getDefaultMessage(messageTypeT, TBeing *);
+    sstring getDefaultMessage(messageTypeT, TBeing *);
     // ?(Has message type), also checks for appropriate power setting.
     bool operator== (messageTypeT);
     // Set message type to message
-    TMessages & operator() (messageTypeT, string);
+    void operator() (messageTypeT, sstring);
+   // TMessages & operator() (messageTypeT, sstring);
     // Sets the fields in message  [Call this to actually Get the messages]
-    string operator() (messageTypeT, TThing * = NULL, const char * = NULL, bool = true);
+    sstring operator() (messageTypeT, TThing * = NULL, const char * = NULL, bool = true);
     // Used by  : Get message from type
-    string operator[] (messageTypeT) const;
+    sstring operator[] (messageTypeT) const;
     void initialize();
     void savedown();
 

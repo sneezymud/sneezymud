@@ -2369,7 +2369,7 @@ static bool sitCasinoEnter(const TBeing *ch)
   return false;
 }
 
-void TBeing::doSit(const string & argument)
+void TBeing::doSit(const sstring & argument)
 {
   if (isFlying()) {
     sendTo("Why don't we land first...\n\r");
@@ -2397,7 +2397,7 @@ void TBeing::doSit(const string & argument)
     return FALSE;
 #endif
 
-  string arg = argument;
+  sstring arg = argument;
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing *>(riding))) {
@@ -2444,11 +2444,11 @@ void TBeing::doSit(const string & argument)
         break;
     }
   } else {
-    string str;
+    sstring str;
 
-    if (stringncmp(arg, "on ", 3) == 0)
+    if (sstringncmp(arg, "on ", 3) == 0)
       str = string(arg, 3);
-    else if (stringncmp(arg, "in ", 3) == 0)
+    else if (sstringncmp(arg, "in ", 3) == 0)
       str = string(arg, 3);
     else
       str = arg;
@@ -2479,7 +2479,7 @@ void TThing::restMe(TBeing *ch)
   return;
 }
 
-void TBeing::doRest(const string & argument)
+void TBeing::doRest(const sstring & argument)
 {
   if (isFlying()) {
     sendTo("Why don't we land first...\n\r");
@@ -2497,7 +2497,7 @@ void TBeing::doRest(const string & argument)
     sendTo("Your berserker rage prevents you from resting at this time.\n\r");
     return;
   }
-  string arg = argument;
+  sstring arg = argument;
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing *>(riding))) {
@@ -2539,11 +2539,11 @@ void TBeing::doRest(const string & argument)
         break;
     }
   } else {
-    string str;
+    sstring str;
 
-    if (stringncmp(arg, "on ", 3) == 0)
+    if (sstringncmp(arg, "on ", 3) == 0)
       str = string(arg, 3);
-    else if (stringncmp(arg, "in ", 3) == 0)
+    else if (sstringncmp(arg, "in ", 3) == 0)
       str = string(arg, 3);
     else
       str = arg;
@@ -2574,7 +2574,7 @@ void TThing::sleepMe(TBeing *ch)
   return;
 }
 
-void TBeing::doSleep(const string & argument)
+void TBeing::doSleep(const sstring & argument)
 {
   TThing *t = NULL;
 
@@ -2594,7 +2594,7 @@ void TBeing::doSleep(const string & argument)
     sendTo("Your berserker rage prevents you from resting at this time.\n\r");
     return;
   }
-  string arg = argument;
+  sstring arg = argument;
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing *>(riding))) {
@@ -2633,11 +2633,11 @@ void TBeing::doSleep(const string & argument)
         break;
     }
   } else {
-    string str;
+    sstring str;
 
-    if (stringncmp(arg, "on ", 3) == 0)
+    if (sstringncmp(arg, "on ", 3) == 0)
       str = string(arg, 3);
-    else if (stringncmp(arg, "in ", 3) == 0)
+    else if (sstringncmp(arg, "in ", 3) == 0)
       str = string(arg, 3);
     else
       str = arg;
@@ -3164,14 +3164,14 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   return TRUE;
 }
 
-int TBeing::doMortalGoto(const string & argument)
+int TBeing::doMortalGoto(const sstring & argument)
 {
   int targ_rm = 0;
   int targ_ch = 0;
   dirTypeT dir;
   TRoom *rp;
   TBeing *ch;
-  string arg;
+  sstring arg;
 
   one_argument(argument, arg);
 
@@ -3563,12 +3563,12 @@ bool TBeing::removeAllCasinoGames() const
   return false;
 }
 
-const string roomDirData::getName() const
+const sstring roomDirData::getName() const
 {
   return (keyword ? fname(keyword) : "door");
 }
 
-const string roomDirData::closed() const
+const sstring roomDirData::closed() const
 {
   switch (door_type) {
     case DOOR_DRAWBRIDGE:

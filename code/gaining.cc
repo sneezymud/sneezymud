@@ -1885,7 +1885,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
           continue;
 
         char tString[256];
-        string tStArg(DisguiseList[tType].name),
+        sstring tStArg(DisguiseList[tType].name),
                tStRes("");
 
         one_argument(tStArg, tStRes);
@@ -1918,7 +1918,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
           continue;
 
         char tString[256];
-        string tStArg(ShapeShiftList[tType].name),
+        sstring tStArg(ShapeShiftList[tType].name),
                tStRes("");
 
         one_argument(tStArg, tStRes);

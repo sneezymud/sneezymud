@@ -8,7 +8,7 @@
 
 void TBeing::doBrew(const char *arg)
 {
-  string buf;
+  sstring buf;
   TComponent *invalid=NULL, *comp_spell=NULL, *comp_brew=NULL;
   TPotion *comp_gen=NULL;
   TThing *t;

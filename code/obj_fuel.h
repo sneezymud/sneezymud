@@ -20,7 +20,7 @@ class TFuel : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void lowCheck();
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual int objectSell(TBeing *, TMonster *);
     virtual void refuelMeFuel(TBeing *, TLight *);
     virtual itemTypeT itemType() const { return ITEM_FUEL; }

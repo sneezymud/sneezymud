@@ -292,7 +292,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
 {
   TArrow *tArrow = NULL;
   TBow   *tBow   = NULL;
-  string  tStPost(""),
+  sstring  tStPost(""),
           tStWood(""),
           tStObject(""),
           tStString("");
@@ -337,7 +337,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
   tObj->setMaterial(tWood->getMaterial());
 }
 
-bool task_whittleCreateNew(TBeing *ch, string tStWood, int tIndex)
+bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
 {
   TOrganic *tWood        = NULL,
            *tOldWood     = NULL;
@@ -476,7 +476,7 @@ int checkForSlipup(TBeing *ch)
 }
 
 // This process is supposed to take a TON of time.  Please keep it that way.
-int task_whittleObject(TBeing *ch, string tStWood)
+int task_whittleObject(TBeing *ch, sstring tStWood)
 {
   int    nRc = TRUE;
     // dRc;
@@ -603,7 +603,7 @@ void TBeing::doWhittle(const char *tArg)
     return;
   }
 
-  string      tStString(tArg),
+  sstring      tStString(tArg),
               tStObject(""),
               tStWood("");
   TThing     *tObj;
@@ -721,7 +721,7 @@ void TBeing::doWhittle(const char *tArg)
 int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *, TObj *tObj)
 {
   int         nRc = TRUE;
-  string      tStWood(tArg);
+  sstring      tStWood(tArg);
   TGenWeapon *tWeapon;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
@@ -775,15 +775,15 @@ int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *,
 
 //***** All below here is for the 'class taskWhittleEntry' stuff
 
-bool taskWhittleEntry::operator==(string tString)
+bool taskWhittleEntry::operator==(sstring tString)
 {
   return (valid && isname(tString.c_str(), name.c_str()));
 }
 
-string taskWhittleEntry::getName(bool showSecond)
+sstring taskWhittleEntry::getName(bool showSecond)
 {
   char   tName[256];
-  string tStString(name),
+  sstring tStString(name),
          tStName(""),
          tStExcess("");
 
@@ -802,7 +802,7 @@ string taskWhittleEntry::getName(bool showSecond)
   return (tName);
 }
 
-void taskWhittleEntry::operator()(string tString, int newtClass,
+void taskWhittleEntry::operator()(sstring tString, int newtClass,
                                   int newWhittleReq, int newItemVnum,
                                   bool newAffectValue,
                                   whittleTypeT newItemType = WHITTLE_ERROR)

@@ -25,7 +25,7 @@ class TBaseLight : public TObj {
     virtual bool shamanRestrictedItem(const TBeing *) const;
     virtual bool rangerRestrictedItem(const TBeing *) const;
     virtual void putLightOut();
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
 
     void addToLightAmt(int n);
     void setLightAmt(int n);

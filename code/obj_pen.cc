@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_pen.cc,v $
+// Revision 5.3  2003/03/13 22:40:54  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.2  2002/01/09 23:27:04  peel
 // More splitting up of obj2.h
 // renamed food.cc to obj_food.cc
@@ -62,9 +66,9 @@ void TPen::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TPen::statObjInfo() const
+sstring TPen::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

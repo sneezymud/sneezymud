@@ -198,7 +198,7 @@ void TLight::lowCheck()
   }
 }
 
-string TLight::statObjInfo() const
+sstring TLight::statObjInfo() const
 {
   char buf[256];
 
@@ -210,13 +210,13 @@ string TLight::statObjInfo() const
           getCurBurn(),
           (isLit() ? "Yes" : "No"));
 
-  string a(buf);
+  sstring a(buf);
   return a;
 }
 
-string TLight::showModifier(showModeT, const TBeing *) const
+sstring TLight::showModifier(showModeT, const TBeing *) const
 {
-  string a;
+  sstring a;
 
   if (isLit())
     a = " (lit)";

@@ -1585,7 +1585,7 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 // tools: tape (primary)
 // mend generic: wax (3), plastic (8), rubber (9)
 // tools: a candle (primary)
-// mend generic: string (11), hair (16), horsehair (15), straw (66)
+// mend generic: sstring (11), hair (16), horsehair (15), straw (66)
 // tools: a small needle (primary)
 // mend generic: cloth (2), silk (6), wool (54), hemp (77)
 // tools: a small needle (primary), a spool of thread (secondary)

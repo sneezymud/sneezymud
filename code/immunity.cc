@@ -14,7 +14,7 @@ Immunities::Immunities()
 
 // convert() is a utility function to switch from const char *
 // to immune_t so other functions can access the ImmunityArray.
-immuneTypeT Immunities::convert(const string & immunity) const
+immuneTypeT Immunities::convert(const sstring & immunity) const
 {
   if (!immunity.compare("IMMUNE_HEAT"))
     return IMMUNE_HEAT;
@@ -78,7 +78,7 @@ immuneTypeT Immunities::convert(const string & immunity) const
 }
 
 // setImmunity() assigns a percentage to a particular immunity.
-void Immunities::setImmunity(const string &whichImmunity, byte percent)
+void Immunities::setImmunity(const sstring &whichImmunity, byte percent)
 {
   immuneTypeT itt = convert(whichImmunity);
   ImmunityArray[itt] = percent;

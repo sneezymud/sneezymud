@@ -413,7 +413,7 @@ TObj::~TObj()
   
   objCount--;
 
-  // if thing is using shared strings, temporarily assign it new strings
+  // if thing is using shared sstrings, temporarily assign it new sstrings
   // so that TThing delete can clean up without problem
   // Also, must use number and not objVnum
   if (!isObjStat(ITEM_STRUNG) && (number != -1)) {
@@ -616,7 +616,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
     }
 
   if (!tPreserve && !iHaveOwned && !ch->hasWizPower(POWER_WIZARD)) {
-    string tmp("");
+    sstring tmp("");
 
     if (owners) {
       tmp  = owners;
@@ -1528,7 +1528,7 @@ TObj & TObj::operator= (const TObj &a)
     affected[i] = a.affected[i];
   }
 
-  // duplicate necessary strings
+  // duplicate necessary sstrings
   if (a.isObjStat(ITEM_STRUNG) || (a.number == -1)) {
     name = mud_str_dup(a.name);
     shortDescr = mud_str_dup(a.shortDescr);
@@ -1540,7 +1540,7 @@ TObj & TObj::operator= (const TObj &a)
     else
       ex_description = NULL;
   } else {
-    // this is only string that is obj specific, others got assigned by TThing
+    // this is only sstring that is obj specific, others got assigned by TThing
     action_description = a.action_description;
   }
 
@@ -2023,7 +2023,7 @@ affectedData::affectedData(const saveAffectedData &a) :
 
   type = mapFileToSpellnum(a.type);
 
-  // for AFFECT_PET types, TThing * be should get the owner as a string
+  // for AFFECT_PET types, TThing * be should get the owner as a sstring
   // but we didn't save that info, and we lack the info here, we will
   // have to recreate this info elsewhere (pet rentin)
   // Ditto, AFFECT_ORPHAN_PET, AFFECT_CHARM and AFFECT_THRALL

@@ -20,7 +20,7 @@ class TArrow : public TBaseWeapon {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_ARROW; }
     virtual int suggestedPrice() const;
 
@@ -43,9 +43,9 @@ class TArrow : public TBaseWeapon {
     virtual void bloadBowArrow(TBeing *, TThing *);
     virtual int throwMe(TBeing *, dirTypeT, const char *);
     virtual int putMeInto(TBeing *, TOpenContainer *);
-    virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual void changeObjValue4(TBeing *);
-    virtual string displayFourValues();
+    virtual sstring displayFourValues();
     virtual bool sellMeCheck(TBeing *, TMonster *) const;
 
     TArrow();

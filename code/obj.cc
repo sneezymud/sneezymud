@@ -98,7 +98,7 @@ void TObj::swapToStrung()
     ex_description = NULL;
 }
 
-string TObj::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+sstring TObj::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   return useName ? name : (useColor ? getName() : getNameNOC(ch));
 }

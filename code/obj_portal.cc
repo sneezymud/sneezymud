@@ -90,7 +90,7 @@ void TPortal::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = r;
 }
 
-string TPortal::displayFourValues()
+sstring TPortal::displayFourValues()
 {
   char tString[256];
   int  x1,
@@ -114,10 +114,10 @@ string TPortal::displayFourValues()
   return tString;
 }
 
-string TPortal::statObjInfo() const
+sstring TPortal::statObjInfo() const
 {
   char   tString[256];
-  string tStString("");
+  sstring tStString("");
 
   sprintf(tString, "Portal Destination: %d, Charges: %d, Type: %d\n\r",
           getTarget(), getPortalNumCharges(), getPortalType());

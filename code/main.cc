@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
 #if 0
   printf("Checking new/delete\n");
-  char *s = mud_str_dup("test string");
+  char *s = mud_str_dup("test sstring");
   delete s;
   printf("Checking unused.\n");
   int x = 5;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 	break;
       default:
-	vlogf(LOG_MISC, "Unknown option -% in argument string.", *(argv[pos] + 1));
+	vlogf(LOG_MISC, "Unknown option -% in argument sstring.", *(argv[pos] + 1));
 	break;
     }
     pos++;

@@ -197,9 +197,9 @@ public:
   int getBaseMaleHeight() const;
   int getMaleHtNumDice() const;
   int getMaleHtDieSize() const;
-  string getSingularName() const;
-  string getPluralName() const;
-  string getProperName() const;
+  sstring getSingularName() const;
+  sstring getPluralName() const;
+  sstring getProperName() const;
   int getLOS() const;
   void setLOS(int x);
 
@@ -213,9 +213,9 @@ public:
   float getCorpseConst() const;
   void setCorpseConst(float n);
 
-  const string getBodyLimbBlunt() const;
-  const string getBodyLimbPierce() const;
-  const string getBodyLimbSlash() const;
+  const sstring getBodyLimbBlunt() const;
+  const sstring getBodyLimbPierce() const;
+  const sstring getBodyLimbSlash() const;
 
   unsigned int getTalents() const;
   void setTalents(unsigned int n);
@@ -227,9 +227,9 @@ public:
   
 private:
   float corpse_const;
-  string singular_name;
-  string plural_name;
-  string proper_name;
+  sstring singular_name;
+  sstring plural_name;
+  sstring proper_name;
   race_t raceType;
   lore_t Kingdom;
   unsigned int talents;
@@ -261,8 +261,8 @@ private:
   float foodMod;
 
   // Movement messages
-  string moveMessageIn;
-  string moveMessageOut;
+  sstring moveMessageIn;
+  sstring moveMessageOut;
 
   // Limb Information
   body_t bodyType;

@@ -233,7 +233,7 @@ void TSmoke::decayMe()
     setVolume(0);
 }
 
-string TSmoke::statObjInfo() const
+sstring TSmoke::statObjInfo() const
 {
   return "";
 }

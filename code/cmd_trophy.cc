@@ -10,7 +10,7 @@
 #include "database.h"
 
 
-TTrophy::TTrophy(string n) :
+TTrophy::TTrophy(sstring n) :
   db(new TDatabase("sneezy")),
   parent(NULL),
   name(n)
@@ -24,7 +24,7 @@ TTrophy::TTrophy(TBeing *p) :
 {
 }
 
-string TTrophy::getMyName(){
+sstring TTrophy::getMyName(){
   if(parent){
     return parent->getName();
   } else {
@@ -33,7 +33,7 @@ string TTrophy::getMyName(){
   }
 }
 
-void TTrophy::setName(string n){
+void TTrophy::setName(sstring n){
   parent=NULL;
   name=n;
 }
@@ -98,13 +98,13 @@ const char *TTrophy::getExpModDescr(float count)
 }
 
 // this function is a little messy, I apologize
-void TBeing::doTrophy(const string &arg)
+void TBeing::doTrophy(const sstring &arg)
 {
   int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
   int zonesearch=0, processrow=1;
   bool summary=false;
   float count;
-  string buf, sb, arg1, arg2;
+  sstring buf, sb, arg1, arg2;
   unsigned int zone;
 
   if(!isPc()){

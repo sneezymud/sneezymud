@@ -57,9 +57,9 @@ void TASubstance::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = getISpell();
 }
 
-string TASubstance::statObjInfo() const
+sstring TASubstance::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 
@@ -68,14 +68,14 @@ void TASubstance::describeObjectSpecifics(const TBeing *ch) const
 {
 }
 
-int TBeing::doApplyHerbs(const string &tArg)
+int TBeing::doApplyHerbs(const sstring &tArg)
 {
   TBeing      *vict   = NULL;
   TThing      *tArrow = NULL;
   TASubstance *asHerb = NULL;
   int          tValue,
                nRc;
-  string       tStHerb,
+  sstring       tStHerb,
                tStVict,
                tStPart;
   wearSlotT    tSlot;

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_boat.cc,v $
+// Revision 5.5  2003/03/13 22:40:53  peel
+// added sstring class, same as string but takes NULL as an empty string
+// replaced all uses of string to sstring
+//
 // Revision 5.4  2002/01/10 05:56:58  peel
 // even more splitting up of obj2.h
 //
@@ -72,9 +76,9 @@ void TBoat::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-string TBoat::statObjInfo() const
+sstring TBoat::statObjInfo() const
 {
-  string a("");
+  sstring a("");
   return a;
 }
 

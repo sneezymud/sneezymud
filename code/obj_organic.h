@@ -19,7 +19,7 @@ class TOrganic : public TObj {
   public:
     virtual void   assignFourValues(int, int, int, int);
     virtual void   getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
+    virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const {return ITEM_RAW_ORGANIC; }
 
     virtual int  chiMe(TBeing *);
@@ -32,7 +32,7 @@ class TOrganic : public TObj {
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *ch, TMonster *, int);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
     virtual int sellHidenSkin(TBeing *, TMonster *, int, TThing *);
     void setOType(organicTypeT);
     organicTypeT getOType() const;

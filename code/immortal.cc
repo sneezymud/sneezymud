@@ -169,13 +169,13 @@ void TPerson::doChange(const char *argument)
   }
 }
 
-char * dsearch(const char *string)
+char * dsearch(const char *sstring)
 {
   char *c, buf[256], buf2[256];
   int j;
   char *tmp;
 
-  tmp = mud_str_dup(string);
+  tmp = mud_str_dup(sstring);
   while (1) {
     if (!strchr(tmp, '~')) {
       return tmp;
@@ -1132,7 +1132,7 @@ void TBeing::doWizlock(const char *argument)
 int TBeing::doEmote(const char *argument)
 {
   int i;
-  string buf, tmpbuf;
+  sstring buf, tmpbuf;
   TThing *t, *t2;
 
   if (checkSoundproof())
@@ -1633,7 +1633,7 @@ static bool isSpammyRoom(int tRoom)
   return FALSE;
 }
 
-bool isInt(const string &s)
+bool isInt(const sstring &s)
 {
   int x;
   istringstream is(s);
@@ -1700,7 +1700,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
   }
 
   if (isSpammyRoom(location)) {
-    string tStArgument(com_buf),
+    sstring tStArgument(com_buf),
            tStString(""),
            tStBuffer("");
 
@@ -1752,7 +1752,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
 }
 
 // returns DELETE_THIS if died
-int TBeing::doGoto(const string & argument)
+int TBeing::doGoto(const sstring & argument)
 {
   followData *k, *n;
   int loc_nr, was_in = inRoom(), location, i;
@@ -1773,7 +1773,7 @@ int TBeing::doGoto(const string & argument)
   if (powerCheck(POWER_GOTO))
     return FALSE;
 
-  string buf,
+  sstring buf,
          tStString;
   argument_parser(argument, buf, tStString);
 
@@ -1805,7 +1805,7 @@ int TBeing::doGoto(const string & argument)
     return FALSE;
   }
 
-  if (isdigit(*buf.c_str()) && buf.find('.') == string::npos) {
+  if (isdigit(*buf.c_str()) && buf.find('.') == sstring::npos) {
     loc_nr = convertTo<int>(buf);
     if (NULL == real_roomp(loc_nr)) {
       if (loc_nr < 0) {
@@ -1881,7 +1881,7 @@ int TBeing::doGoto(const string & argument)
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        string s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFOUT, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
+        sstring s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFOUT, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
         act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
       }
     }
@@ -1897,7 +1897,7 @@ int TBeing::doGoto(const string & argument)
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        string s = nameColorString(tbt, tbt->desc, desc->poof.poofout, NULL, COLOR_BASIC, TRUE);
+        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofout, NULL, COLOR_BASIC, TRUE);
         act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
       }
     }
@@ -1931,7 +1931,7 @@ int TBeing::doGoto(const string & argument)
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        string s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFIN, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
+        sstring s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFIN, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
         act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
       }
     }
@@ -1948,7 +1948,7 @@ int TBeing::doGoto(const string & argument)
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        string s = nameColorString(tbt, tbt->desc, desc->poof.poofin, NULL, COLOR_BASIC, TRUE);
+        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofin, NULL, COLOR_BASIC, TRUE);
         act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
       }
     }
@@ -2000,7 +2000,7 @@ void TBeing::doShutdown(const char *)
   sendTo("Mobs shouldn't be shutting down.\n\r");
 }
 
-string shutdown_or_reboot()
+sstring shutdown_or_reboot()
 {
   int rc = system("ps aux | grep reboot | grep -v grep");
  
@@ -2148,7 +2148,7 @@ void TBeing::doSwitch(const char *)
 
 void TPerson::doSwitch(const char *argument)
 {
-  string  tStMobile(""),
+  sstring  tStMobile(""),
           tStBuffer(""),
           tStArg(argument);
   TBeing *tBeing;
@@ -4282,7 +4282,7 @@ void TBeing::doAccess(const char *)
 
 void TPerson::doAccess(const char *arg)
 {
-  string arg1, arg2, buf, tmpbuf;
+  sstring arg1, arg2, buf, tmpbuf;
   char npasswd[128], pass[20];
   char filebuf[MAX_STRING_LENGTH];
   char *birth, *tmstr, birth_buf[40];
@@ -4483,7 +4483,7 @@ void TPerson::doAccess(const char *arg)
       ssprintf(tmpbuf, "Account name: %s%s%s, Account email address : %s%s%s\n\r", cyan(), afp.name, norm(), cyan(), afp.email, norm());
       buf+=tmpbuf;
 
-      string lStr = "";
+      sstring lStr = "";
       if (IS_SET(afp.flags, ACCOUNT_BANISHED))
         lStr += "<R><f>Account is banished<z>\n\r";
       if (IS_SET(afp.flags, ACCOUNT_EMAIL))
@@ -4497,10 +4497,10 @@ void TPerson::doAccess(const char *arg)
   }
 }
 
-void TBeing::doReplace(const string &argument)
+void TBeing::doReplace(const sstring &argument)
 {
   char buf[256], dir[256], dir2[256];
-  string arg1, arg2, arg3;
+  sstring arg1, arg2, arg3;
   FILE *fp;
   charFile st;
   bool dontMove = FALSE;
@@ -4721,7 +4721,7 @@ void TBeing::doInfo(const char *arg)
   Descriptor *i;
   TBeing *ch;
   char buf2[126];
-  string buf;
+  sstring buf;
   int j, ci;
   char arg1[80];
 
@@ -4734,7 +4734,7 @@ void TBeing::doInfo(const char *arg)
     return;
 
   arg = one_argument(arg, arg1);
-  string str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects, Unlinked";
+  sstring str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects, Unlinked";
   str += ".\n\r";
 
   if (!*arg1) {
@@ -4783,7 +4783,7 @@ void TBeing::doInfo(const char *arg)
     else if(is_abbrev(arg1, "unlinked")){
       TObj *obj;
       int i=1;
-      string tbuf;
+      sstring tbuf;
 
       for(obj=object_list;obj;obj=obj->next){
 	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
@@ -6069,7 +6069,7 @@ void TBeing::doSysTasks(const char *arg)
   char argument[256];
   strcpy(argument, arg);
   cleanCharBuf(argument);
-  string lst = systask->Tasks(this, argument);
+  sstring lst = systask->Tasks(this, argument);
   desc->page_string(lst);
 }
 
@@ -6106,7 +6106,7 @@ void TBeing::doSysChecklog(const char *arg)
   for (; isspace(*arg); arg++);
 
   if (!*arg) {
-    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
@@ -6115,7 +6115,7 @@ void TBeing::doSysChecklog(const char *arg)
 
   if (!(tMarkerS = strchr(tString, '"')) ||
       !(tMarkerE = strchr((tMarkerS + 1), '"'))) {
-    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
@@ -6127,7 +6127,7 @@ void TBeing::doSysChecklog(const char *arg)
   strcpy(tLog, tMarkerE);
 
   if (!tLog[0]) {
-    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
@@ -6159,8 +6159,8 @@ void TBeing::doSysViewoutput()
   if (!desc->m_bIsClient) 
     desc->start_page_file( file, "There is nothing to read.\n\r");
   else {
-    string sb = "";
-    file_to_string(file, sb);
+    sstring sb = "";
+    file_to_sstring(file, sb);
     sb += "\n\r";
     processStringForClient(sb);
     desc->clientf("%d", CLIENT_NOTE);
@@ -6334,10 +6334,10 @@ void TBeing::doResize(const char *arg)
   }
 }
 
-void TBeing::doHeaven(const string &arg)
+void TBeing::doHeaven(const sstring &arg)
 {
   int num;
-  string buf;
+  sstring buf;
 
   if (powerCheck(POWER_HEAVEN))
     return;
@@ -6366,7 +6366,7 @@ void TBeing::doAccount(const char *arg)
   int count = 1;
   accountFile afp;
   FILE *fp;
-  string str;
+  sstring str;
 
   if (!desc)
     return;
@@ -6552,7 +6552,7 @@ void TBeing::doClients()
   if (powerCheck(POWER_CLIENTS))
     return;
 
-  string tStString("");
+  sstring tStString("");
   char   tString[1024];
 
   for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
@@ -6572,13 +6572,13 @@ void TBeing::doClients()
 
 // returns DELETE_THIS if this should be toasted.
 // returns TRUE if tbeing given by arg has already been toasted
-int TBeing::doCrit(string arg)
+int TBeing::doCrit(sstring arg)
 {
   TThing *weap;
   int dam, rc, mod;
   wearSlotT part;
   TBeing *vict;
-  string name_buf;
+  sstring name_buf;
   spellNumT wtype;
 
   // sometimes, to be really mean in a quest, we set this command to L1
@@ -6665,7 +6665,7 @@ static bool isSanctionedCommand(cmdTypeT tCmd)
   return false;
 }
 
-static bool verifyName(const string tStString)
+static bool verifyName(const sstring tStString)
 {
            FILE *tFile;
            char  tString[256];
@@ -6713,16 +6713,19 @@ static bool verifyName(const string tStString)
   its ability.  We use the Creator check down in doAs() to make
   sure it's Only used by trusted people.
  */
-int TBeing::doAsOther(const string &tStString)
+int TBeing::doAsOther(const sstring &tStString)
 {
-  string   tStNewName(""),
+  sstring   tStNewName(""),
            tStCommand(""),
            tStArguments(""),
            tStOriginalName("");
   int      tRc = FALSE;
   cmdTypeT tCmd;
+  sstring tStTmp=tStString;
 
-  tStArguments = argument_parser(tStString, tStNewName, tStCommand);
+  tStTmp = one_argument(tStTmp, tStNewName);
+  tStTmp = one_argument(tStTmp, tStCommand);
+  tStArguments=tStTmp;
 
   tCmd = searchForCommandNum(tStCommand.c_str());
 

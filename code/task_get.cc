@@ -75,7 +75,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 {
   TThing *t, *t2;
   TObj *o;
-  string buf1, buf2;
+  sstring buf1, buf2;
   int rc;
   TObj *sub = NULL;
 
