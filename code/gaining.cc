@@ -765,7 +765,8 @@ void TMonster::raiseLevel(classIndT Class)
 
   // set the level
   setLevel(Class, (int) getLevel(Class)+1);
-  
+  calcMaxLevel();
+
   // set the hit and damage levels
   setHPLevel(getHPLevel()+1);
   setHPFromHPLevel();
