@@ -305,9 +305,9 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 
       if (mob && tThing && canSee(mob))
-        rc = doGiveObj(mob, tThing, GIVE_FLAG_DROP_ON_FAIL);
+        rc = doGive(mob, tThing, GIVE_FLAG_DROP_ON_FAIL);
       else if (!mob || !tThing)
-        vlogf(LOG_BUG, "Error in doGiveObj:%s%s Mob[%s]",
+        vlogf(LOG_BUG, "Error in doGive:%s%s Mob[%s]",
               (mob ? "" : " !mob"),
               (tThing ? "" : " !tThing"),
               getNameNOC(this).c_str());
@@ -1441,7 +1441,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
             TRUE, mob, 0, ch, TO_ROOM);
 
         *mob += *tSymbol;
-        mob->doGiveObj(ch, tSymbol, GIVE_FLAG_DROP_ON_FAIL);
+        mob->doGive(ch, tSymbol, GIVE_FLAG_DROP_ON_FAIL);
       }
 
       return FALSE;

@@ -1844,7 +1844,7 @@ class TBeing : public TThing {
     virtual void doShow(const char *);
     void doChecklog(const char *, int);
     void doDeathcheck(const char *);
-    int doGiveObj(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
+    int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
     int doGive(const char *, giveTypeT = GIVE_FLAG_DEF);
     int doMount(const char *, cmdTypeT, TBeing *);
     int doJunk(const char *, TObj *);

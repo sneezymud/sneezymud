@@ -724,7 +724,7 @@ int TBeing::doPut(const char *argument)
 }
 
 // returns DELETE_THIS IF this got toasted (PC ONLY)
-int TBeing::doGiveObj(TBeing *victim, TThing *obj, giveTypeT flags)
+int TBeing::doGive(TBeing *victim, TThing *obj, giveTypeT flags)
 {
   int rc = 0;
   char buf[128];
@@ -732,11 +732,11 @@ int TBeing::doGiveObj(TBeing *victim, TThing *obj, giveTypeT flags)
   char arg[256]; 
  
   if (!victim || !obj) {
-    vlogf(LOG_BUG, "Bad give in doGiveObj");
+    vlogf(LOG_BUG, "Bad give in doGive");
     return FALSE;
   }
   if (!*victim->name) {
-    vlogf(LOG_BUG, "Bad give names in doGiveObj");
+    vlogf(LOG_BUG, "Bad give names in doGive");
     return FALSE;
   }
 
