@@ -93,7 +93,8 @@ endif
 # CFLAGS +=-Wredundant-decls  # declaration done more than once
 # **** the STL map header file has a non-inlinable function or two
 # CFLAGS +=-Winline           # looks for non-inlineable inlines
-
+# postgresql header files
+CFLAGS +=-I/usr/include/postgresql
 
 ###############################################################################
 #                                   LDFLAGS                                   #
@@ -131,6 +132,9 @@ ifdef GPROFF
 LDFLAGS +=-pg #              gprof mapping
 endif
 #LDFLAGS +=-fhandle-exceptions
+# postgresql database lib
+LDFLAGS +=-lpq++
+
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
