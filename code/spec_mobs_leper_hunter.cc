@@ -17,6 +17,7 @@ int leperHunter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if(::number(0,2))
     return FALSE;
 
+  path.setNoMob(false);
   dir=path.findPath(myself->inRoom(), findLeper());
 
   if(dir==DIR_NONE){
