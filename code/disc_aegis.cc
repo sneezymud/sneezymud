@@ -259,6 +259,42 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
       }
     }
 
+    if ((spell != SKILL_WOHLIN) || !found)
+      for (wearSlotT iLimb = MIN_WEAR; iLimb < MAX_WEAR; iLimb++) {
+        if (iLimb == HOLD_RIGHT || iLimb == HOLD_LEFT)
+	  continue;
+
+        if (!victim->slotChance(iLimb))
+	  continue;
+
+        if (victim->isLimbFlags(iLimb, PART_LEPROSED)) {
+          mod = min(((learn - 50 + 1) * 3), (int)MAX_SKILL_LEARNEDNESS);
+	  found = TRUE;
+
+          // While we now allow this we do not want it easy to do.  10% chance at most, sounds good to me. -Lapsos
+          if (::number(1, 1000) > mod) {
+            if (spell != SKILL_WOHLIN) {
+              act("$d fails to hear your plea to cure the leprosy!", FALSE, caster, 0, 0, TO_CHAR);
+              act("$d fails to hear $s pleas.", FALSE, caster, 0, 0, TO_ROOM);
+            }
+          } else {
+            if (caster == victim) {
+              act("You remove the leprosy inflicting you.", FALSE, caster, 0, 0, TO_CHAR);
+              act("$m removes the leprosy inflicting $m.", FALSE, caster, 0, 0, TO_ROOM);
+            } else {
+              act("You remove the leprosy inflicting $N.", FALSE, caster, 0, victim, TO_CHAR);
+              act("$n removes the leprosy inflicting you.", FALSE, caster, 0, victim, TO_VICT);
+              act("$n removes the leprosy inflicting $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+            }
+
+            victim->remLimbFlags(iLimb, PART_LEPROSED);
+
+            if (spell == SKILL_WOHLIN)
+              break;
+          }
+        }
+      }
+
     if (!found && spell!=SKILL_WOHLIN) {
       act("$d wisely ignores you.", FALSE, caster, NULL, 0, TO_CHAR);
       act("Do you normally go around curing diseases on unafflicted people?",
