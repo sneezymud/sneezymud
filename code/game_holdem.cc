@@ -454,6 +454,10 @@ void HoldemGame::peek(const TBeing *ch) const
     return;
   }
 
+  ch->sendTo(COLOR_BASIC, "You peek at the pot and see: %s. [%i]\n\r\n\r",
+	     obj_index[real_object(last_bet)].short_desc, 
+	     (int)(bet/obj_index[real_object(last_bet)].value));
+
   HoldemPlayer *tmp = getPlayer(ch->name);
 
   if(tmp->hand[0] && tmp->hand[1]){
