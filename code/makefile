@@ -43,7 +43,7 @@ CFLAGS +=-g             # debugger
 CFLAGS +=-DLINUX        # compiling on Linux
 # CFLAGS +=-DSLOW       # compiling on a slow processor machine
 CFLAGS +=-DFAST         # compiling on a fast processor machine
-CFLAGS +=-O4            # optimize code
+CFLAGS +=-O2            # optimize code
 OBJDIR = objs/
 
 
