@@ -351,7 +351,7 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
 	FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
     act("The stress on your heart is INTENSE!! You fall down from the pain!",
 	FALSE, caster, NULL, victim, TO_VICT, ANSI_RED_BOLD);
-    act("$n spits on $N as $E clutches at $S chest keels over in EXTREME pain!",
+    act("$n spits on $N who clutches at $S chest and keels over in EXTREME pain!",
 	FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED_BOLD);
     switch(critSuccess(caster, SPELL_CARDIAC_STRESS)) {
       case CRIT_S_DOUBLE:
@@ -475,29 +475,29 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
       case CRIT_S_DOUBLE:
         CS(SPELL_BLOOD_BOIL);
         dam <<= 1;
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands boiling $N's blood!<z>", 
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands boiling $N's blood!<z>", 
+        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_CHAR);
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands boiling your blood!<z>", 
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling your blood!<z>", 
                   FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLOOD_BOIL))) {
           SV(SPELL_BLOOD_BOIL);
           dam /= 2;
-          act("<r>$n directs heat from $s hands boiling $N's blood!<z>", 
+          act("<r>$n directs heat from $s hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<r>You direct heat from your hands boiling $N's blood!<z>", 
+          act("<r>You direct heat from your hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_CHAR);
-          act("<r>$n directs heat from $s hands boiling your blood!<z>", 
+          act("<r>$n directs heat from $s hands, boiling your blood!<z>", 
                   FALSE, caster, NULL, victim, TO_VICT);
         } else {
-          act("<R>$n directs heat from $s hands boiling $N's blood!<z>", 
+          act("<R>$n directs heat from $s hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<R>You direct heat from your hands boiling $N's blood!<z>", 
+          act("<R>You direct heat from your hands, boiling $N's blood!<z>", 
                   FALSE, caster, NULL, victim, TO_CHAR);
-          act("<R>$n directs heat from $s hands boiling your blood!<z>", 
+          act("<R>$n directs heat from $s hands, boiling your blood!<z>", 
                   FALSE, caster, NULL, victim, TO_VICT);
         }
         break;
@@ -514,7 +514,7 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
         caster->setVictFighting(victim);
         act("<R>$n screwed up $s ritual and burned $mself!<z>", 
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands boiling <W>YOUR OWN<R> blood!<z>", 
+        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands, boiling <W>YOUR OWN<R> blood!<z>", 
                   FALSE, caster, NULL, victim, TO_CHAR);
         act("<R>$n has just tried to harm you!<z>", 
                   FALSE, caster, NULL, victim, TO_VICT);
