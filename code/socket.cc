@@ -565,7 +565,7 @@ int TSocket::gameLoop()
       save_factions();
       save_newfactions();
       weatherAndTime(1);
-      updateStocks();
+      //      updateStocks();
     }
 
     if (!combat)
