@@ -3314,16 +3314,20 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
   // handle ammunition
   TGun *gun;
-  if(weapon && (gun=dynamic_cast<TGun *>(weapon)) &&
-     !dynamic_cast<TMonster *>(this)){
-    TAmmo *ammo;
-    if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo())) &&
-       ammo->getRounds()>0){
-      ammo->setRounds(ammo->getRounds()-1);
-      dropSpentCasing(roomp, ammo->getAmmoType());
+  if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
+    if(dynamic_cast<TMonster *>(this)){
+      // unlimited ammo for mobs
+      dropSpentCasing(roomp, gun->getAmmoType());
     } else {
-      act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
-      found=TRUE;
+      TAmmo *ammo;
+      if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo())) &&
+	 ammo->getRounds()>0){
+	ammo->setRounds(ammo->getRounds()-1);
+	dropSpentCasing(roomp, ammo->getAmmoType());
+      } else {
+	act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
+	found=TRUE;
+      }
     }
   }
 

@@ -17,6 +17,8 @@ enum ammoTypeT {
   AMMO_50CAL,
   AMMO_357CAL,
   AMMO_38CAL,
+  AMMO_556MM,
+  AMMO_768MM,
   AMMO_MAX
 };
 
@@ -29,8 +31,35 @@ const char *shelldesc [] =
   ".45 caliber",
   ".50 caliber",
   ".357 caliber",
-  ".38 caliber"
+  ".38 caliber",
+  "5.56mm",
+  "7.68mm"
 };
+
+const char *shellkeyword [] = 
+{
+  "None",
+  "10mm",
+  "9mm",
+  "22cal",
+  "45cal",
+  "50cal",
+  "357cal",
+  "38cal",
+  "556mm",
+  "768mm"
+};
+
+
+const char *getAmmoKeyword(int ammo){
+  if(ammo < AMMO_NONE ||
+     ammo >= AMMO_MAX){
+    return shellkeyword[0];
+  }
+  
+  return shellkeyword[ammo];
+}
+
 
 
 const char *getAmmoDescr(int ammo){
@@ -49,7 +78,7 @@ void dropSpentCasing(TRoom *roomp, int ammo){
 
   int robj = real_object(13874);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, "dropPool(): No object (%d) in database!", GENERIC_POOL);
+    vlogf(LOG_BUG, "dropSpentCasing(): No object (%d) in database!", 13874);
     return;
   }
   
@@ -96,12 +125,13 @@ void gload_usage(TBeing *tb){
 void TBeing::doGload(const char *arg)
 {
   char    arg1[128],
-          arg2[128];
-  TThing  *bow;
+          arg2[128], buf[256];
+  TObj  *bow;
   TThing  *arrow;
   TGun *gun;
   TAmmo *ammo;
   int nargs;
+  TBeing *tb;
 
   nargs=sscanf(arg, "%s %s", arg1, arg2);
 
@@ -111,14 +141,15 @@ void TBeing::doGload(const char *arg)
   }
   
   if(strcmp(arg1, "unload")){
-    if (!(bow = searchLinkedListVis(this, arg1, stuff)) ||
-	!(gun=dynamic_cast<TGun *>(bow))){
+    generic_find(arg1, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+    
+    if(!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
       return;
     }
 
     if(nargs==1){
-      strcpy(arg2, getAmmoDescr(gun->getAmmoType()));
+      strcpy(arg2, getAmmoKeyword(gun->getAmmoType()));
     } 
 
     if(!(arrow = searchLinkedListVis(this, arg2, stuff)) ||
@@ -128,8 +159,12 @@ void TBeing::doGload(const char *arg)
     }
     
     if(gun->getAmmo()){
-      sendTo("That gun is already loaded!\n\r");
-      return;
+      sprintf(buf, "unload %s", arg1);
+      doGload(buf);
+      if(gun->getAmmo()){
+	sendTo("That gun is already loaded!\n\r");
+	return;
+      }
     }
     
     if(ammo->getAmmoType() != gun->getAmmoType()){
@@ -144,8 +179,9 @@ void TBeing::doGload(const char *arg)
     act("$n loads $p into $N.", TRUE, this, ammo, gun, TO_ROOM);
     addToWait(combatRound(1));
   } else {
-    if (!(bow = searchLinkedListVis(this, arg2, stuff)) ||
-	!(gun=dynamic_cast<TGun *>(bow))){
+    generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+
+    if (!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
       return;
     }
@@ -188,6 +224,26 @@ string TGun::statObjInfo() const
 
   string a(buf);
   return a;
+}
+
+
+void TGun::describeObjectSpecifics(const TBeing *ch) const
+{
+  if(getAmmo()){
+    ch->sendTo("It has %i rounds of ammunition left.\n\r",
+	       getAmmo()->getRounds());
+  } else {
+    ch->sendTo("Is does not have any rounds of ammunition left.\n\r");
+  }
+
+}
+
+
+void TAmmo::describeObjectSpecifics(const TBeing *ch) const
+{
+  ch->sendTo("It has %i rounds of ammunition left.\n\r",
+	     getRounds());
+
 }
 
 
