@@ -1171,8 +1171,14 @@ void TBeing::gainCondition(condTypeT condition, int value)
       t->findSomeFood(&last_good, &last_cont, NULL);
             
     if (last_good && !last_cont) {
+      sprintf(buf, "%s", fname(last_good->name).c_str()
+      doEat(buf);
+#if 0
+  // Changed this so auto eat didn't make AFK go off
+  // Will change the part with the bag later, more complicated
       sprintf(buf, "eat %s", fname(last_good->name).c_str());
       addCommandToQue(buf);
+#endif
     } else if (last_good && last_cont) {
       sprintf(buf, "%s", last_cont->name);
       add_bars(buf);
@@ -1207,8 +1213,12 @@ void TBeing::gainCondition(condTypeT condition, int value)
       t->findSomeDrink(&last_good, &last_cont, NULL);
     
     if (last_good && !last_cont) {
+      sprintf(buf, "%s", fname(last_good->name).c_str()
+      doDrink(buf);
+#if 0
       sprintf(buf, "drink %s", fname(last_good->name).c_str());
       addCommandToQue(buf);
+#endif
       return;
     }
     if (last_good && last_cont) {
