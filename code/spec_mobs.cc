@@ -55,6 +55,8 @@
 #include "obj_base_clothing.h"
 #include "obj_bow.h"
 #include "obj_trap.h"
+#include "obj_table.h"
+#include "obj_drinkcon.h"
 
 #include <fstream.h>
 
@@ -7031,6 +7033,64 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return TRUE;
 }
 
+int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+
+  TThing *t, *t2=NULL;
+  TDrinkCon *glass;
+  TTable *table;
+
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // if fighting return false
+  if(myself->fight() || myself->getWait())
+    return FALSE;
+
+
+  if ((myself->getCarriedWeight()/myself->carryWeightLimit()) * 100.0 > 25 || 
+      (myself->getCarriedVolume()/myself->carryVolumeLimit()) * 100.0 > 25) {
+    act("$N carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
+    for(t=myself->getStuff();t;t=t->nextThing){
+      if((glass=dynamic_cast<TDrinkCon *>(t))){
+	delete glass;
+	glass = NULL;
+	myself->addToWait(2);
+      }
+    }
+    myself->addToWait(20);
+    return TRUE;
+  }
+  
+  for(t=myself->roomp->getStuff();t;t=t->nextThing){
+    if((table=dynamic_cast<TTable *>(t))){
+      for(t2=table->getStuff();t2;t2=t2->nextThing){
+	if((glass=dynamic_cast<TDrinkCon *>(t2))){
+	  if (!glass->getStuff()) {
+	    glass->getMe(myself, table);
+	    myself->addToWait(5);
+	    return TRUE;
+	  }
+	}
+      }
+    } else if ((glass=dynamic_cast<TDrinkCon *>(t2))){
+      if (!glass->getStuff()) {
+	glass->getMe(myself, NULL);
+	myself->addToWait(10);
+	return TRUE;
+      }
+    }
+  }
+  
+  if (!::number(0,19)) {
+    act("$N flirts with some of the patrons.",FALSE, myself, 0, 0, TO_ROOM);
+  }
+
+  return TRUE;
+}
+
+
 
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7215,6 +7275,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Adventurer", adventurer},
   {FALSE, "Trainer: iron body", CDGenericTrainer},
   {FALSE, "Tudy", tudy},
+  {TRUE, "Barmaid", barmaid},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -1264,6 +1264,8 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   max_followers = GetMaxLevel() / 5;
   max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
 
+
+
   for(k = followers, count = 0; k; k = k->next) {
     if (k->follower->isPet(PETTYPE_THRALL)) {
       count += 1 + (k->follower->GetMaxLevel() / 10);
@@ -1287,7 +1289,8 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
 
   if (count > max_followers)
     return TRUE;
-  if (tot_num >= 3)  // allow 3 pets max
+  //  if (tot_num >= 3)  // allow 3 pets max
+  if (tot_num >=1) // nah, make it 1.  pets suck.
     return TRUE;
 
   return FALSE;
