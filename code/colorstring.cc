@@ -23,8 +23,6 @@ string stripColorCodes(string s)
     buf += s[i];
   }
 
-  vlogf(LOG_PEEL, "s=%s, buf=%s", s.c_str(), buf.c_str());
-
   return buf;
 }
 
