@@ -280,7 +280,7 @@ int kills_to_level(int lev)
 #endif
 }
   
-static double hpModifier(const TBeing *ch)
+static double hpModifier(const TMonster *ch)
 {
   double sanct_modifier = (100.0 / (100.0 - min(99.0, (double) ch->getProtection())));
   double hp_modifier = ((double) ch->hitLimit());
@@ -288,7 +288,16 @@ static double hpModifier(const TBeing *ch)
   // adjust hp for correction made in calcHitPoints
   hp_modifier /= balanceCorrectionForLevel(ch->GetMaxLevel());
 
-  hp_modifier *= sanct_modifier * 2.0 / 31.0;
+  if (ch->getHPLevel() <= 70) 
+  {
+    hp_modifier *= sanct_modifier * 2.0 / 31.0;
+  }
+  else
+  // mobs over level 70 get special treatment
+  {
+    hp_modifier *= sanct_modifier * 1 / ( 15.5 +
+      11 * (ch->getHPLevel() - 70) * (ch->getHPLevel() - 70) / 150);
+  }
   return hp_modifier;
 }
 
