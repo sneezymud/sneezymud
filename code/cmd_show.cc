@@ -849,7 +849,16 @@ void TPerson::doShow(const char *argument)
     only_argument(argument, buf2);
     if(*buf2){  
       // one material
-      matnum=atoi(buf2);
+      for(i=0;i<200;++i){
+	if(material_nums[i].mat_name[0] &&
+	   is_abbrev(buf2, material_nums[i].mat_name)){
+	  matnum=i;
+	}
+      }
+
+      if(matnum==-1)
+	matnum=atoi(buf2);
+
       sb += describeMaterial(matnum);
     } else {
       // list materials
