@@ -23,11 +23,17 @@ else
 endif
 echo "Reviewing for changes since: '$dateTime'"
 
+if ("`whoami`" == "batopr") then
+  set rlogOpts = "-wlapsos,cosmo,peel,brutius,moath,hylidan,damescena,mithros"
+else
+  set rlogOpts =
+endif
+
 foreach file (*.cc *.h makefile README)
-  set revLine = `rlog -N -d"$dateTime<" $file | grep "selected revisions"`
+  set revLine = `rlog -N -d"$dateTime<" $rlogOpts $file | grep "selected revisions"`
   set revNum = $revLine[6]
   if ($revNum > 0) then
-    rlog -N -d"$dateTime<" $file
+    rlog -N -d"$dateTime<" $rlogOpts $file
     echo "<### Hit Return ###>"
     set input = $<
   endif
