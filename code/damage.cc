@@ -273,7 +273,8 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
       trophyperc=(double)(((double)dam/(double)(v->hitLimit()+11))/groupcount);
 
-      update_trophy(getName(), v->mobVnum(), trophyperc);
+      if(!isImmortal())
+	update_trophy(getName(), v->mobVnum(), trophyperc);
 
       for (f = followers; f; f = f->next) {
 	if (f->follower->isPc() && inGroup(*f->follower) && 
