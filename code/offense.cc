@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: offense.cc,v $
+// Revision 1.2  1999/09/29 01:17:30  lapsos
+// Modified to allow for mounted opening of doors.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -587,7 +590,11 @@ int TBeing::doOrder(const char *argument)
           is_abbrev(cmd_buf, "kneestrike") ||
           is_abbrev(cmd_buf, "sleep") || // order sleep, backstab....
           is_abbrev(cmd_buf, "emote") ||
-          is_abbrev(cmd_buf, "headbutt"))
+          is_abbrev(cmd_buf, "headbutt") ||
+          is_abbrev(cmd_buf, "open") ||
+          is_abbrev(cmd_buf, "lower") ||
+          is_abbrev(cmd_buf, "lift") ||
+          is_abbrev(cmd_buf, "raise"))
         check = 3;   // force indifference
 
       // if mount has no ego (check <=0) do command

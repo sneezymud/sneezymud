@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: movement.cc,v $
-// Revision 1.2  1999/09/29 01:05:49  lapsos
+// Revision 1.3  1999/09/29 01:13:46  lapsos
 // Modified to allow for mounted opening of doors.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
@@ -1558,6 +1558,11 @@ int TBeing::doOpen(const char *argument)
     return FALSE;
   }
 
+  if (isDumbAnimal()) {
+    sendTo("You are a dumb animal, you don't understand things like this!\n\r");
+    return FALSE;
+  }
+
   if (!*type) {
     sendTo("Open what?\n\r");
     return FALSE;
@@ -1667,6 +1672,11 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
   roomDirData *exitp;
   argument_interpreter(argument, type, dir);
  
+  if (isDumbAnimal()) {
+    sendTo("You are a dumb animal, you don't understand things like this!\n\r");
+    return FALSE;
+  }
+
   if (!*type) {
       if (cmd == CMD_LIFT)
         sendTo("Lift what?\n\r");
@@ -1819,6 +1829,11 @@ int TBeing::doLower(const char *argument)
  
   argument_interpreter(argument, type, dir);
  
+  if (isDumbAnimal()) {
+    sendTo("You are a dumb animal, you don't understand things like this!\n\r");
+    return FALSE;
+  }
+
   if (!*type) {
     sendTo("Lower what?\n\r");
   } else if ((findDoor(type, dir, DOOR_INTENT_LOWER, SILENT_YES) == DIR_NONE) &&
