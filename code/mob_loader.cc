@@ -43,7 +43,7 @@ void potionLoader(TMonster *tmons)
   potions.push_back(805); // flight
   potions.push_back(823); // heal full
 
-  if(::number(0,9))
+  if(::number(0,4))
     return;
 
   if(tmons->GetMaxLevel() < 10)
