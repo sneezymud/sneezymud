@@ -294,7 +294,7 @@ int find_closest_police(int, void *);
 int named_object_on_ground(int room, void *c_data);
 int named_mob_on_ground(int room, void *c_data);
 int named_being_on_ground(int room, void *c_data);
-dirTypeT find_path(int, int (*predicate) (int, void *), void *, int, bool, int *answer = NULL);
+dirTypeT find_path(int, int (*predicate) (int, void *), void *, int, bool, int *answer = NULL, bool use_portals=false);
 extern bool exit_ok(roomDirData *, TRoom **);
 extern spellNumT searchForSpellNum(const sstring &arg, exactTypeT exact);
 extern bool thingsInRoomVis(TThing *, TRoom *);

@@ -1201,7 +1201,7 @@ class pathData {
 // returns DIR_NONE1 indicating a problem or can't find a path
 // returns 0-9 indicating a direction to travel
 // returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
-dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, bool in_zone, int *answer)
+dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, bool in_zone, int *answer, bool use_portals)
 {
   // just to be dumb, check my own room first
   if ((pred) (room, data)) {
@@ -1314,7 +1314,7 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
       // check for portals that might lead to target
       // return 10 if its the 1st portal in the room, 11 for 2nd, etc
       // 0-9 are obviously real exits (see above)
-      if (thru_doors) {
+      if (thru_doors || use_portals) {
         dir = dirTypeT(MAX_DIR-1);
         TThing *t;
         for (t = rp->getStuff(); t; t = t->nextThing) {

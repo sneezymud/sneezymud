@@ -377,6 +377,17 @@ int lycanthropeTransform(TBeing *ch)
   return TRUE;
 }
 
+// used as a conditional to find_path
+static int find_closest_outdoor(int room, void *myself)
+{
+  TRoom *rp = real_roomp(room);
+  
+  if(rp->isRoomFlag(ROOM_INDOORS))
+    return FALSE;
+
+  return TRUE;
+}
+
 
 int TSocket::gameLoop()
 {
@@ -809,6 +820,82 @@ int TSocket::gameLoop()
           }
 	  TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
 	  
+	  // handle merging
+	  if(smoke){	    
+	    TSmoke *tsmoke;
+	    TThing *t, *t2;
+
+	    for(t=real_roomp(smoke->in_room)->getStuff();t;t=t2){
+	      t2=t->nextThing;
+
+	      if((tsmoke=dynamic_cast<TSmoke *>(t)) && tsmoke!=smoke){
+		// merge!
+		smoke->addToVolume(tsmoke->getVolume());
+		--(*tsmoke);
+		delete tsmoke;
+	      }
+	    }
+
+	  }
+
+
+	  // handle drifting
+	  if(smoke && smoke->roomp){
+	    roomDirData *exitp;
+	    TRoom *rp=smoke->roomp;
+	    TThing *t, *t2;
+	    TPortal *tp;
+	    
+	    // move up if possible
+	    if((exitp=smoke->roomp->exitDir(DIR_UP)) &&
+	       !IS_SET(exitp->condition, EX_CLOSED) &&
+	       (rp=real_roomp(exitp->to_room))){
+	      act("$n drifts upwards.",
+		  FALSE, smoke, 0, 0, TO_ROOM); 
+	      --(*smoke);
+	      *rp += *smoke;
+	      act("$n drifts in from below.",
+		  FALSE, smoke, 0, 0, TO_ROOM); 
+	    } else {
+	      // otherwise find the nearest outdoor room
+	      dirTypeT dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, true);
+
+	      if(dir >= MAX_DIR){
+		dir=dirTypeT(dir-MAX_DIR+1);
+		int seen = 0;
+
+		for (t = smoke->roomp->getStuff(); t; t = t2) {
+		  t2 = t->nextThing;
+
+		  if ((tp=dynamic_cast<TPortal *>(t))){
+		    seen++;
+		    if (dir == seen) {
+		      if((rp=real_roomp(tp->getTarget()))){
+			act(fmt("$n drifts into %s.") % tp->getName(),
+			    FALSE, smoke, 0, 0, TO_ROOM); 
+			--(*smoke);
+			*rp += *smoke;
+			act(fmt("$n drifts in from %s.") % tp->getName(),
+			    FALSE, smoke, 0, 0, TO_ROOM); 
+		      }
+		    }
+		  }
+		}
+	      } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
+		  (exitp=smoke->roomp->exitDir(dir)) &&
+		  (rp=real_roomp(exitp->to_room))){
+		act(fmt("$n drifts %s.") % dirs_to_blank[dir],
+		    FALSE, smoke, 0, 0, TO_ROOM); 
+
+		--(*smoke);
+		*rp += *smoke;		
+		act(fmt("$n drifts in from the %s.") % dirs[rev_dir[dir]],
+		    FALSE, smoke, 0, 0, TO_ROOM); 
+	      }
+	    }
+	  }
+	  
+	  // handle choking
 	  if(smoke && smoke->getSizeIndex()>=7){
 	    for(TThing *t=real_roomp(smoke->in_room)->getStuff();t;t=t->nextThing){
 	      TBeing *tb;
