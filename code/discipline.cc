@@ -2152,7 +2152,8 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
   limit /= MAX_SKILL_LEARNEDNESS;
 
   // factor in focus
-  limit *= caster->plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
+  //limit *= caster->plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
+  limit *= caster->getFocMod(); // does the same thing, just uses standard formula
 
   // make other adjustments here
   // possibly have some for things like position, etc

@@ -512,10 +512,10 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   // smart people should be able to learn 1/2 all possible learning
   // average people should learn 3/8
   // stupid people should learn 1/4
-  // new - 2/3,1/2,3/3
+  // new - 2/3,1/2,1/3
   double minlearn = 1.0/3.0;
   double avlearn = 1.0/2.0;
-  double maxlearn = 2.0/3.0;
+  //double maxlearn = 2.0/3.0;
 
   // I'd like to see all classes finish their prereqs at the same rate
   // thus leaving all the spec to be done after that
@@ -591,13 +591,16 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   
   double learnrate;
 
+  learnrate = getIntModForPracs() * avlearn;
 
+#if 0
   if (!desc) {
-    learnrate = plotStat(STAT_CURRENT, STAT_INT, minlearn, maxlearn, avlearn, 1.2);
+    learnrate = (maxlearn - minlearn) * getIntModForPracs() + avlearn;
+    //    learnrate = plotStat(STAT_CURRENT, STAT_INT, minlearn, maxlearn, avlearn, 1.2);
   } else {
     learnrate = plotStat(STAT_NATURAL, STAT_INT, minlearn, maxlearn, avlearn, 1.2);
   }
-
+#endif
 
 
   double advancedlevel = (double)((avbasic+(deviation*((avlearn - learnrate)/(avlearn-minlearn)))));

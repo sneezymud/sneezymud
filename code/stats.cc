@@ -1101,6 +1101,18 @@ float TBeing::getBraMod() const
   return plotStat(STAT_CURRENT, STAT_BRA, 0.8, 1.25, 1.0);
 }
 
+float TBeing::getFocMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_FOC, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getIntModForPracs() const
+{
+  // this formula is convoluted, and we use stat natural because we don't want them
+  // to carry around +int eq purely for the sake of gaining.
+  return plotStat(STAT_NATURAL, STAT_INT, .666 , 1.333, 1.0, 1.2);
+}
+
 Stats TBeing::getCurStats() const
 {
   return curStats;

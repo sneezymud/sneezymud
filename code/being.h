@@ -1489,6 +1489,8 @@ class TBeing : public TThing {
     float getSpeMod() const;
     float getAgiMod() const;
     float getBraMod() const;
+    float getFocMod() const;
+    float getIntModForPracs() const;
     void combatFatigue(TThing *);
     int weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam);
     virtual void reconcileHelp(TBeing *, double) { return; }
