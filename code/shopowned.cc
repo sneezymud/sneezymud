@@ -411,15 +411,15 @@ int TShopOwned::setAccess(string arg)
   
   arg = one_argument(arg, buf);
   arg = one_argument(arg, buf2);
-  
-  if(buf2.empty()){ // set value
+
+  if(!buf2.empty()){ // set value
     db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
     
     if(atoi_safe(buf2.c_str()) != 0)
       db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), atoi_safe(buf2.c_str()));
     
   } else {
-    if(buf.empty()){
+    if(!buf.empty()){
       db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
     } else {
       db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
