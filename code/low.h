@@ -160,6 +160,7 @@ const short int OBJ_SEAL_SKIN_HIDE  = 20450;
 const short int OBJ_EARMUFF         = 20456;
 const short int OBJ_AQUA_DRAG_HEAD  = 22522;
 const short int OBJ_SLEEPTAG_STAFF  = 23500;
+const short int OBJ_RAINBOW_MIST    = 27491;
 const short int OBJ_QUEST_ORE       = 29020;
 const short int OBJ_RED_ORE         = 29022;
 const short int OBJ_GENERIC_SCROLL  = 29990;

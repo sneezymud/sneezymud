@@ -6576,10 +6576,82 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   return TRUE;
 }
 
+// for the jungle canyon zone - dash 7/25/01
+int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+{
+  TThing *t = NULL, *t2 = NULL;
+  TBeing *tb = NULL;;
+  bool found = false;
 
+  if (cmd != CMD_GENERIC_QUICK_PULSE || myself->fight())
+    return FALSE;
+  
+  // look for people to run from
+  for (t = myself->roomp->stuff; t; t = t2) {
+    t2 = t->nextThing;
+    if(!(tb=dynamic_cast<TBeing *>(t)))
+      continue;
+    if(tb->isPc() && myself->canSee(tb))
+      found = true;
+  }
+  if (!found)
+    return FALSE;
 
+  // ok, its a pulse, i'm not fighting, and there's a big scary PC that i can see
+  // RUN HOME!!!
 
+  int r = myself->inRoom();
+  switch (r) {
+    case 27472:
+      act("$n begins to cry as $e flees through the jungle.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_EAST);
+      break;
+    case 27473:
+      act("$n sobs softly as $e flees through the jungle.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_EAST);
+      break;
+    case 27474:
+      act("$n sobs softly as $e fiddles with one of the trees.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doOpen("canopy");
+      act("$n grabs a vine and leaps up through the hole in the canopy.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_UP);
+      myself->doClose("canopy");
+      break;
+    case 27476:
+      act("$n charges through the undergrowth, glancing over $s shoulder.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_NW);
+      break;
+    case 27477:
+      act("$n charges through the undergrowth, glancing over $s shoulder.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_WEST);
+      break;
+    case 27480:
+      act("$n charges through the undergrowth, glancing over $s shoulder.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_NW);
+      break;
+    case 27481:
+      act("$n runs toward the small wooden bridge to the northwest.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_WEST);
+      break;
+    case 27483:
+      act("$n squeaks with fright!", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n jumps to $s feet and dives into the undergrowth.", FALSE, myself, 0, 0, TO_ROOM);
+      myself->doMove(CMD_NORTH);
+      break;
+    case 27488:
+      act("$n screams with rage!", FALSE, myself, 0, tb, TO_ROOM);
+      myself->doMove(CMD_EAST);
+      myself->doMove(CMD_SOUTH);
+      myself->doMove(CMD_SOUTH);
+      myself->doMove(CMD_EAST);
+      break;
+    default:
+      return FALSE;
+      break;
+  }
 
+  return TRUE;
+}
 
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6750,6 +6822,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Coroner", coroner},
   {FALSE, "Faction Registrar", factionRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
+  {FALSE, "Scared Kid", scaredKid},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

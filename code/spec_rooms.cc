@@ -1757,6 +1757,52 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 }
 
 
+int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  TObj *to = NULL;
+  TThing *t = NULL, *t2 = NULL;
+  bool found = false;
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  for (t = rp->stuff; t; t = t2) {
+    t2 = t->nextThing;
+    if(!(to=dynamic_cast<TObj *>(t)))
+      continue;
+    if(obj_index[to->getItemIndex()].virt == OBJ_RAINBOW_MIST) {
+      found = true;
+      break;
+    }
+  }
+  if (weather_info.sunlight != SUN_LIGHT || weather_info.sky != SKY_CLOUDLESS) {
+    // code to remove rainbow
+    if (!found || !to)
+      return FALSE;
+    act("<W>The sunlight no longer reaches the mist, and $p<W> fades from sight.<1>",
+        TRUE, to, 0, 0, TO_ROOM);
+    --(*to);
+
+  } else {
+    // code to place rainbow
+    if (found || to)
+      return FALSE;
+    if (!(to = read_object(OBJ_RAINBOW_MIST, VIRTUAL))) {
+      vlogf(LOG_LOW, "Error loading rainbow mist object");
+      return FALSE;;
+    }
+    *rp += *to;
+    act("<W>Suddenly, light from the sun strikes the mist, and $p<W> is formed.<1>",
+	TRUE, to, 0, 0, TO_ROOM);
+  
+
+  }
+
+  return TRUE;
+}
+
+
+
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
