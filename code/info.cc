@@ -3079,8 +3079,20 @@ void TBeing::doWorld()
      norm());
   str += buf;
 
+  
+  int activemobcount=0;
+  for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
+    for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+      if(mob_index[mobnum].virt <= zone_table[zone].top){
+	if(zone_table[zone].enabled)
+	  activemobcount++;
+	break;
+      }
+    }
+  }
+
   sprintf(buf, "Total number of distinct mobiles in world:%s    %d%s\n\r",
-        red(), mob_index.size(), norm());
+	  red(), activemobcount, norm());
   str += buf;
 
   int unkmobcount=0;
@@ -3091,8 +3103,8 @@ void TBeing::doWorld()
     unkmobcount=atoi_safe(db.getColumn(0));
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
-	  red(), 100-(int)(((float)unkmobcount/(float)mob_index.size())*100), 
-	  mob_index.size()-unkmobcount,
+	  red(), 100-(int)(((float)unkmobcount/(float)activemobcount)*100), 
+	  activemobcount-unkmobcount,
 	  norm());
   str += buf;
 
