@@ -464,7 +464,6 @@ class TObj : public TThing {
   public:
     objFlagData obj_flags;
     objAffData affected[MAX_OBJ_AFFECT];
-    affectedData oneSwing[MAX_SWING_AFFECT];
 
     char *action_description;      /* What to write when used          */
     TObj *next;         /* For the object list              */

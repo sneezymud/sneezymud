@@ -1494,9 +1494,6 @@ TObj::TObj(const TObj &a) :
   for (i = 0; i < MAX_OBJ_AFFECT; i++) 
     affected[i] = a.affected[i];
   
-  for (i = 0; i < MAX_SWING_AFFECT; i++) 
-    oneSwing[i] = a.oneSwing[i];
-
   if (a.isObjStat(ITEM_STRUNG) || (a.number == -1)) {
     name = mud_str_dup(a.name);
     shortDescr = mud_str_dup(a.shortDescr);
@@ -1529,9 +1526,6 @@ TObj & TObj::operator= (const TObj &a)
 
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     affected[i] = a.affected[i];
-  }
-  for (i = 0; i < MAX_SWING_AFFECT; i++) {
-    oneSwing[i] = a.oneSwing[i];
   }
 
   // duplicate necessary strings

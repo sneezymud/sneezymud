@@ -471,17 +471,6 @@ void TBeing::statObj(const TObj *j)
       str += buf;
     }
   }
-  for (i = 0; i < MAX_SWING_AFFECT; i++) {
-    if (j->oneSwing[i].type != TYPE_UNDEFINED) {
-      sprintf(buf, "   One-Swing Affect: %s\n\r",
-           affected_bits[j->oneSwing[i].bitvector]);
-      str += buf;
-      sprintf(buf, "        Effects: %s by %ld\n\r",
-           apply_types[j->oneSwing[i].location].name, 
-           j->oneSwing[i].modifier);
-      str += buf;
-    }
-  }
   desc->page_string(str.c_str());
   return;
 }
@@ -583,17 +572,6 @@ void TBeing::statObjForDivman(const TObj *j)
     } else if (j->affected[i].location != APPLY_NONE) {
       sprintf(buf, "   Affects:  %s by %ld.\n\r",apply_types[j->affected[i].location].name,
         j->affected[i].modifier);
-      str += buf;
-    }
-  }
-  for (i = 0; i < MAX_SWING_AFFECT; i++) {
-    if (j->oneSwing[i].type != TYPE_UNDEFINED) {
-      sprintf(buf, "   One-Swing Affect: %s.\n\r",
-           affected_bits[j->oneSwing[i].bitvector]);
-      str += buf;
-      sprintf(buf, "        Effects: %s by %ld.\n\r",
-           apply_types[j->oneSwing[i].location].name, 
-           j->oneSwing[i].modifier);
       str += buf;
     }
   }

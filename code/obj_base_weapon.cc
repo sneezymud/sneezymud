@@ -20,7 +20,8 @@ TBaseWeapon::TBaseWeapon() :
   maxSharp(0),
   curSharp(0),
   damLevel(0),
-  damDev(0)
+  damDev(0),
+  poison((liqTypeT)-1)
 {
 }
 
@@ -29,7 +30,8 @@ TBaseWeapon::TBaseWeapon(const TBaseWeapon &a) :
   maxSharp(a.maxSharp),
   curSharp(a.curSharp),
   damLevel(a.damLevel),
-  damDev(a.damDev)
+  damDev(a.damDev),
+  poison(a.poison)
 {
 }
 
@@ -41,6 +43,7 @@ TBaseWeapon & TBaseWeapon::operator=(const TBaseWeapon &a)
   curSharp = a.curSharp;
   damLevel = a.damLevel;
   damDev = a.damDev;
+  poison = a.poison;
   return *this;
 }
 
@@ -1661,11 +1664,9 @@ void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_n
 
 bool TBaseWeapon::isPoisoned() const
 {
-  for (int j = 0; j < MAX_SWING_AFFECT; j++) {
-    if (oneSwing[j].type == SPELL_POISON) {
-      return true;
-    }
-  }
+  if(poison >= LIQ_WATER)
+    return true;
+
   return false;
 }
 
@@ -1674,24 +1675,11 @@ void TBaseWeapon::applyPoison(TBeing *vict)
 {
   TBeing *ch;
 
-  for (int j = 0; j < MAX_SWING_AFFECT; j++) {
-    if ((oneSwing[j].type == SPELL_POISON) ||
-	(oneSwing[j].type == AFFECT_DISEASE)) {
-      vict->affectTo(&(oneSwing[j]), -1);
-      
-      if (oneSwing[j].type == AFFECT_DISEASE)
-	disease_start(vict, &(oneSwing[j]));
-      
-      // kill the affect on the weapon
-      oneSwing[j].type = TYPE_UNDEFINED;
-      oneSwing[j].level = 0;
-      oneSwing[j].duration = 0;
-      oneSwing[j].modifier = 0;
-      oneSwing[j].location = APPLY_NONE;
-      oneSwing[j].modifier2 = 0;
-      oneSwing[j].bitvector = 0;
-    }
-  }
+  if(!isPoisoned())
+    return;
+
+  doLiqSpell(vict, poison, 1);
+  poison=(liqTypeT)-1;
 
   if((ch=dynamic_cast<TBeing *>(equippedBy))){
     act("There was something nasty on that $o!",
@@ -1701,4 +1689,10 @@ void TBaseWeapon::applyPoison(TBeing *vict)
     act("There was something nasty on that $o!",
 	FALSE, ch, this, vict, TO_NOTVICT, ANSI_RED);
   }
+}
+
+void TBaseWeapon::setPoison(liqTypeT liq)
+{
+  if(!isPoisoned())
+    poison=liq;
 }

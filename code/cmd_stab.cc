@@ -236,19 +236,13 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       for (int tSwingIndex = 0; tSwingIndex < MAX_SWING_AFFECT; tSwingIndex++) {
         int tDuration = (tThief->GetMaxLevel() * UPDATES_PER_MUDHOUR);
 
-        if (tWeapon->oneSwing[tSwingIndex].bitvector == AFF_POISON)
+  
+	if(tWeapon->isPoisoned()){
           if (!tSucker->isLimbFlags(tLimb, PART_BLEEDING) &&
               !tSucker->isAffected(AFF_POISON)) {
             if (!tSucker->isImmune(IMMUNE_POISON, tThief->GetMaxLevel()) && !::number(0, 9)) {
-              affectedData tAff;
-
-              tAff.type      = SPELL_POISON;
-              tAff.duration  = tDuration;
-              tAff.modifier  = 0;
-              tAff.location  = APPLY_NONE;
-              tAff.bitvector = AFF_POISON;
-
-              tSucker->affectJoin(NULL, &tAff, AVG_DUR_NO, AVG_EFF_NO);
+	      tWeapon->applyPoison(tSucker);
+	      
 
               act("You poison $N with your stab!",
                   FALSE, tThief, NULL, tSucker, TO_CHAR);
@@ -263,11 +257,12 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
               sprintf(tStringChar, "Your stab to $N's %s infects it!", tStLimb.c_str());
               sprintf(tStringVict, "Your %s gets infected from $n's stab!", tStLimb.c_str());
               sprintf(tStringOthr, "$N's %s gets infected from $n's stab!", tStLimb.c_str());
-
+	      
               act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
               act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);
               act(tStringOthr, FALSE, tThief, NULL, tSucker, TO_NOTVICT);
             }
+	}
       }
     } else {
 #if ALLOW_STAB_SEVER

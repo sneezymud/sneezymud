@@ -134,16 +134,23 @@ string TGenWeapon::statObjInfo() const
   a += buf;
 
   if (Twink == 1) {
-    sprintf(buf, "Type : %s (%d)",
+    sprintf(buf, "Type : %s (%d)\n\r",
 	    attack_hit_text_twink[(getWtype() - TYPE_MIN_HIT)].singular,
 	    getWeaponType());
     a += buf;
   } else {
-    sprintf(buf, "Type : %s (%d)",
+    sprintf(buf, "Type : %s (%d)\n\r",
 	    attack_hit_text[(getWtype() - TYPE_MIN_HIT)].singular,
 	    getWeaponType());
     a += buf;
   }
+
+  if(isPoisoned()){
+    sprintf(buf, "Poisoned : %s (%i)",
+	    DrinkInfo[getPoison()]->name, (int)getPoison());
+    a += buf;
+  }
+
   //  sprintf(buf, "New weapons system stats:\n\r Weapon type: %d\n\r Weapon quality: %d\n\r",
   //	  getWeapType(),
   //	  getWeapQual());

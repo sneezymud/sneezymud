@@ -912,18 +912,14 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
   if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
-      if (weapon->oneSwing[j].type == SPELL_POISON) {
+      if (weapon->isPoisoned()) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
         return FALSE;
       }
     }
-    
-    if(!addPoison(weapon->oneSwing, getDrinkType(), level, duration)){
-      act("$p doesn't seem to contain a contact poison.",
-	  TRUE, ch, this, 0, TO_CHAR);
-      return FALSE;
-    }
 
+    weapon->setPoison(getDrinkType());
+    
     ssprintf(s, "You coat $p with %s.",
 	     DrinkInfo[getDrinkType()]->name);
     act(s.c_str(), FALSE, ch, weapon, NULL, TO_CHAR);
@@ -944,26 +940,10 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       act("There was something nasty on that $o!",
 	  FALSE, ch, weapon, ch, TO_NOTVICT, ANSI_RED);
 
-      affectedData aff[5];
 
-      if(!addPoison(aff, getDrinkType(), level, duration)){
-	act("$p doesn't seem to contain a contact poison.",
-	    TRUE, ch, this, 0, TO_CHAR);
-	return FALSE;
-      }
-
-      for(int i=0;i<5;++i){
-	if(aff[i].type != TYPE_UNDEFINED)
-	  ch->affectTo(&aff[i], -1);
-      }
+      doLiqSpell(ch, getDrinkType(), 1);
     } else {
-      weapon->oneSwing[0].location = APPLY_NONE;
-      weapon->oneSwing[0].type=SPELL_POISON;
-      weapon->oneSwing[0].renew=-1;
-      weapon->oneSwing[0].level=level;
-      weapon->oneSwing[0].duration=0;  
-      weapon->oneSwing[0].bitvector=AFF_POISON;
-
+      weapon->setPoison(LIQ_WATER);
       
       ssprintf(s, "You coat $p with %s.",
 	       DrinkInfo[getDrinkType()]->name);
