@@ -955,33 +955,21 @@ void TBeing::wipeChar(int)
 
 time_t lastAccountLogin(sstring name)
 {
-  sstring fileName = "account/";
-  fileName += LOWER(name[0]);
-  fileName += "/";
-  fileName +=  name.lower();
-  time_t ct = 0;
+  sstring buf = fmt("account/%c/%s/account") %
+    LOWER(name[0]) % name.lower();
 
-  DIR *dfd;
-  struct dirent *dp;
+  FILE * fp = fopen(buf.c_str(), "r");
+  accountFile afp;
 
-  if (!(dfd = opendir(fileName.c_str()))) {
-    vlogf(LOG_FILE, fmt("Unable to walk directory for character listing (%s account)") %  name);
-    return 0;
+  if(!fp){
+    vlogf(LOG_BUG, fmt("couldn't open %s for reading!") % buf);
+    return time(0);
   }
-  while ((dp = readdir(dfd))) {
-    if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
-        !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
-      continue;
+  
+  fread(&afp, sizeof(afp), 1, fp);
+  fclose(fp);
 
-    charFile st;
-
-    load_char(dp->d_name, &st);
-
-    if(st.last_logon > ct)
-      ct=st.last_logon;
-  }
-  closedir(dfd);
-  return ct;
+  return afp.last_logon;
 }
 
 
