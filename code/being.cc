@@ -1290,6 +1290,11 @@ sh_int TBeing::getArmor() const
     if(discs && !equipment[wearIndex] && doesKnowSkill(SKILL_IRON_FLESH)){
       armor+=(int)(getIronFleshArmor(wearIndex)*(getSkillValue(SKILL_IRON_FLESH)/100.0));
     }
+    // correction for paired items
+    if(discs && to && to->isPaired() && doesKnowSkill(SKILL_IRON_FLESH)) {
+      armor-=(int)(getIronFleshArmor(wearIndex)*(getSkillValue(SKILL_IRON_FLESH)/100.0));
+    }
+
     
   }
 

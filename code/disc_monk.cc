@@ -85,14 +85,15 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    }
 	    
 	    // reduce hunger/thirst 90
+      // bumped these up a bit - Maror Feb 2004
 	    if(wohlin_learn>90 && ::number(0, 100) <= (wohlin_learn-90)){
-	      if(ch->getCond(THIRST)<=2){
+	      if(ch->getCond(THIRST)<=5){
 		ch->sendTo("You don't feel quite so thirsty.\n\r");
-		ch->gainCondition(THIRST, 2);
+		ch->gainCondition(THIRST, 4);
 	      }
-	      if(ch->getCond(FULL)<=2){
+	      if(ch->getCond(FULL)<=5){
 		ch->sendTo("You don't feel quite so hungry.\n\r");
-		ch->gainCondition(FULL, 2);
+		ch->gainCondition(FULL, 4);
 	      }
 	    }	    
 	    
