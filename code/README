@@ -1,3 +1,7 @@
+12-7 - bat
+- Enhanced the review.csh script so that you can do like:
+  "review Dec 2" and see all the changes since the 2nd
+
 12-03-99 / 12-04-99 - Lapsos
 - Added 'arrowType' output to 'eval bow'
 - Added 'arrowType' output to 'eval arrow'
