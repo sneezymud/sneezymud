@@ -23,6 +23,8 @@ void TMonster::balanceMakeNPCLikePC()
   // modify HP
   float hpl = getHPLevel();
   hpl *= conv_num;
+  // we want to make player tanks a bit more favorable than charm/elemental tanks... yes?
+  hpl *= .80;
   setHPLevel(hpl);
   setHPFromHPLevel();
 
@@ -30,6 +32,7 @@ void TMonster::balanceMakeNPCLikePC()
   float daml = getDamLevel();
   daml /= (conv_num * 1.5);
   setDamLevel(daml);
+
 
   // leave AC alone, should be OK
 }
@@ -1056,20 +1059,26 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
   level = ::number(level-3, level);
   level = max(level, 4);
 
+  float elemmod = 1.0;
+
   switch (spell) {
     case SPELL_CONJURE_AIR:
       // air elems fly, so let's account for this and make uhm weak
       level = (int) (0.9 * level);
+      elemmod = 0.9;
       break;
     case SPELL_CONJURE_FIRE:
       // fire elms fly, so let's account for this and also make them weak
       level = (int) (0.9 * level);
+      elemmod = 0.9;
       break;
     case SPELL_CONJURE_EARTH:
+      elemmod = 0.9;
       level = (int) (1.0 * level);
       break;
     case SPELL_CONJURE_WATER:
       level = (int) (1.0 * level);
+      elemmod = 0.9;
       break;
     case SPELL_ENTHRALL_SPECTRE:
       level = (int) (0.8 * level);
@@ -1108,11 +1117,14 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
 
   float lvl = level;
 
-  setHPLevel(lvl);
+  // elemmod here is a tweak to make elems slighly less favorable tanks... cause it sucks to have them
+  // taking the place of good fighter tanks.
+
+  setHPLevel(lvl * elemmod);
   setHPFromHPLevel();
-  setACLevel(lvl);
+  setACLevel(lvl * elemmod);
   setACFromACLevel();
-  setDamLevel(lvl);
+  setDamLevel(lvl / elemmod);
 
   setHitroll(0);
 
