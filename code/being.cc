@@ -1192,6 +1192,7 @@ void TBeing::setDamroll(int d)
 
 int TBeing::getBank() const
 {
+  return 0;
   return points.bankmoney;
 }
 
