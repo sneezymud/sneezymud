@@ -172,7 +172,7 @@ int enliven(TBeing *caster, TBeing *victim, int level, byte bKnown)
     act("You have become enlivened!",
            FALSE, victim, NULL, NULL, TO_CHAR);
     if (caster != victim)
-      act("&n's loa has given $N enlivenment!",
+      act("$N has been enlivened!",
            FALSE, caster, NULL, victim, TO_CHAR);
     return SPELL_SUCCESS;
   } else {
