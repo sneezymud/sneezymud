@@ -139,20 +139,24 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   vector <sstring> partinfo;
   split_string(partname, " []\n\r\t", partinfo);
   sstring chopper = partinfo.back();
-  vlogf(LOG_MAROR, fmt("%d, %s, %s, %s") % partinfo.size() % partinfo.front()
-      % partinfo.back() % chopper.length());
   while(chopper.length() == 0 and partinfo.size() > 0) {
     partinfo.erase(partinfo.end()-1);
     chopper = partinfo.back();
   }
+  sstring mob_vnum = "";
+  while (mob_vnum.length() == 0 and partinfo.size() > 0) {
+    partinfo.erase(partinfo.end()-1);
+    mob_vnum = partinfo.back();
+  }
+  
   if (chopper.isNumber())
     chopper = "UNKNOWN";
   if (partname.find("diseased") == sstring::npos &&
       partname.find("corpse of a") == sstring::npos &&
       partname.find("pile of dust") == sstring::npos ){
     time_t lt = time(0);
-    sstring buf = fmt("%s chopped by %s, deposited by %s at %s") 
-      % bodypart->getName() % chopper
+    sstring buf = fmt("%s chopped by %s, vnum %s, deposited by %s at %s") 
+      % bodypart->getName() % chopper % mob_vnum
       % ch->getName() % asctime(localtime(&lt));
  //   autoMail(NULL, "bump", buf.c_str());
     vlogf(LOG_MAROR, fmt("%s") % buf);
