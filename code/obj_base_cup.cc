@@ -152,10 +152,12 @@ void TBaseCup::fillMe(const TBeing *ch, liqTypeT liq)
 
 void TBaseCup::genericEmpty()
 {
-  weightChangeObject( -(getDrinkUnits() * SIP_WEIGHT));
-  setDrinkUnits(0);
-  setDrinkType(LIQ_WATER);
-  remDrinkConFlags(DRINK_POISON);
+  if(!isDrinkConFlag(DRINK_PERM)){
+    weightChangeObject( -(getDrinkUnits() * SIP_WEIGHT));
+    setDrinkUnits(0);
+    setDrinkType(LIQ_WATER);
+    remDrinkConFlags(DRINK_POISON);
+  }
 }
 
 void TBaseCup::pourMeOut(TBeing *ch)
