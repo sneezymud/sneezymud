@@ -53,6 +53,9 @@ static int findACorpse(TMonster *myself)
   int rc;
   TPathFinder path;
 
+  // findCorpse only works in GH, so limit range
+  path.setRange(50);
+
   dir=path.findPath(myself->inRoom(), findCorpse());
 
   if (dir >= MIN_DIR) {

@@ -38,6 +38,10 @@ static int findAFire(TMonster *myself)
   int rc;
   TPathFinder path;
 
+  // findFire only works in grimhaven, so really we only need a limited range
+  // if no fire is found, they'll just head back to the fire station in GH
+  path.setRange(50);
+
   dir=path.findPath(myself->inRoom(), findFire());
 
   if (dir >= MIN_DIR) {
