@@ -4130,7 +4130,7 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     act("<k>$N<k> screams in pain as $n<k> leeches the life from $S body!<1>",TRUE,ch,o,victim,TO_NOTVICT,NULL);       
     int dam = victim->GetMaxLevel();
     int rc = ch->reconcileDamage(victim, dam, DAMAGE_DRAIN);
-    if (ch->isUndead()) {
+    if (!ch->isUndead()) {
       dam = dam/5;
     }
     ch->setHit(min((int)(ch->getHit() + dam),(int)(ch->hitLimit())));
