@@ -147,13 +147,50 @@ bool TBeing::isTanking()
   return FALSE;
 }
 
+TBeing *findNextOpponent(TBeing *ch, TBeing *cur)
+{
+  TThing *temp;
+  TBeing *tmp=NULL;
+
+  for (TThing *t = ch->roomp->getStuff(); t; t = temp) {
+    temp = t->nextThing;
+    tmp = dynamic_cast<TBeing *>(t);
+    if (!tmp)
+      continue;
+
+    if ((tmp == ch)) // skip ourselves
+      continue;
+
+    if((dynamic_cast<TPerson *>(tmp))) // skip players
+      continue;
+
+    if(tmp->rider) // skip mounts
+      continue;
+
+    if(tmp == cur) // skip our current opponent
+      continue;
+
+    if ((tmp->getPosition() <= POSITION_SLEEPING) || !ch->canSee(tmp))
+      continue;
+
+    // this used to have a isPet() check too, seems like we should skip
+    // all elems, thralls, charms, epts etc, so...
+    if ((ch->inGroup(*tmp) || tmp->master == ch))
+      continue;
+
+    if (ch->setCharFighting(tmp, 0) == -1)
+      continue;
+
+    // made it to here, so we have a valid target
+    return tmp;
+  }
+
+  return NULL;
+}
+
 // value passed thru cur will NOT be selected for bezerking
 void TBeing::goBerserk(TBeing *cur)
 {
-  TThing *t, *temp;
-  TBeing *tmp;
-
-  tmp = NULL;
   if (!isCombatMode(ATTACK_BERSERK))
     return;
   if (fight()) {
@@ -168,30 +205,12 @@ void TBeing::goBerserk(TBeing *cur)
     setCombatMode(ATTACK_NORMAL);
     return;
   }
-  for (t = roomp->getStuff(); t; t = temp) {
-    temp = t->nextThing;
-    tmp = dynamic_cast<TBeing *>(t);
-    if (!tmp)
-      continue;
 
-    if ((tmp == this) || (dynamic_cast<TPerson *>(tmp)) || tmp->rider || tmp == cur)
-      continue;
-
-    if ((tmp->getPosition() <= POSITION_SLEEPING) || !canSee(tmp))
-      continue;
-
-    // this used to have a isPet() check too, seems like we should skip
-    // all elems, thralls, charms, epts etc, so...
-    if ((inGroup(*tmp) || tmp->master == this))
-      continue;
-
-    if (setCharFighting(tmp, 0) == -1)
-      continue;
-
+  TBeing *tmp=NULL;
+  if((tmp=findNextOpponent(this, cur))){
     act("You go berserk on $N.",TRUE,this,0,tmp,TO_CHAR);
     act("$n's berserker rage is unleashed on you!",TRUE,this,0,tmp,TO_VICT);
     act("$n's berserker rage is unleashed on $N.",TRUE,this,0,tmp,TO_ROOM);
-    break;
   }
   return;
 }
@@ -2080,7 +2099,6 @@ int TBeing::hit(TBeing *target, int pulse)
     }
   }
   /////
-
 
   while (fx > 0.999) {
     checkLearnFromHit(this, tarLevel, o, true, w_type);
