@@ -465,18 +465,19 @@ int TShopOwned::setRates(sstring arg)
   if(buf != "")
     argc++;
 
-
-  if(profit_buy>5 || profit_buy<0 ||
-     profit_sell>5 || profit_sell<0){
-    keeper->doTell(ch->getName(), "Due to fraud regulations, I cannot set my profit_sell or profit_buy to more than 5 or less than 0.");
-    return FALSE;
+  if(keeper->spec != SPEC_REPAIRMAN &&
+     keeper->spec != SPEC_LOAN_SHARK){
+    if(profit_buy>5 || profit_buy<0 ||
+       profit_sell>5 || profit_sell<0){
+      keeper->doTell(ch->getName(), "Due to fraud regulations, I cannot set my profit_sell or profit_buy to more than 5 or less than 0.");
+      return FALSE;
+    }
+    
+    if(profit_buy < profit_sell){
+      keeper->doTell(ch->getName(), "You can't set your buy profit lower than your sell profit, you'd lose all your money!");
+      return FALSE;
+    }
   }
-
-  if(profit_buy < profit_sell && buf != "repair"){
-    keeper->doTell(ch->getName(), "You can't set your buy profit lower than your sell profit, you'd lose all your money!");
-    return FALSE;
-  }
-  
   
   if(argc==0){
     db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
@@ -555,11 +556,23 @@ int TShopOwned::setRates(sstring arg)
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for player %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
+  } else if(buf == "loanrate"){
+    db.query("select 1 from shopownedloanrate where shop_nr=%i", shop_nr);
+
+    if(!db.fetchRow()){
+      db.query("insert into shopownedloanrate values (%i, %f, %f, %i)",
+	       shop_nr, profit_buy, profit_sell, max_num);
+    } else {
+      db.query("update shopownedloanrate set x=%f, y=%f, term=%i where shop_nr=%i", profit_buy, profit_sell, max_num, shop_nr);
+    }    
+
+    keeper->doTell(ch->getName(), 
+		   fmt("Ok, my loanrate X value is now %f, my Y value is now %f and my max term is %i.") % profit_buy % profit_sell % max_num);
   } else if(buf == "repair"){
     db.query("select 1 from shopownedrepair where shop_nr=%i", shop_nr);
 
     if(!db.fetchRow()){
-      db.query("insert into shopownedrepair values (shop_nr, quality, speed)",
+      db.query("insert into shopownedrepair values (%i, %f, %f)",
 	       shop_nr, profit_buy, profit_sell);
     } else {
       db.query("update shopownedrepair set quality=%f, speed=%f where shop_nr=%i", profit_buy, profit_sell, shop_nr);

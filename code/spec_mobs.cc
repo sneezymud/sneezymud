@@ -7505,6 +7505,7 @@ int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 }
 
 
+extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int statSurgeon(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int flaskPeddler(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7714,6 +7715,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "limb disposer", limbDispo},
   {FALSE, "stat surgeon", statSurgeon},
   {FALSE, "shipping official", shippingOfficial},
+  {FALSE, "loan shark", loanShark}
 // replace non-zero, bogus_mob_procs above before adding
 };
 
