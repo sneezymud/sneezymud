@@ -150,10 +150,14 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	chest.o client.o cmd_bash.o cmd_bodyslam.o cmd_charge.o cmd_chop.o \
 	cmd_compare.o cmd_deathstroke.o cmd_disarm.o cmd_dissect.o \
 	cmd_doorbash.o cmd_feigndeath.o cmd_grapple.o cmd_headbutt.o \
+	cmd_jump.o \
 	cmd_kick.o cmd_kneestrike.o cmd_mend_limb.o cmd_message.o \
 	cmd_quest.o cmd_quivpalm.o cmd_rename.o cmd_rescue.o cmd_save.o \
 	cmd_score.o cmd_sedit.o cmd_set.o cmd_stab.o cmd_stat.o cmd_steal.o \
-	cmd_stomp.o cmd_testcode.o cmd_testfight.o cmd_zones.o color.o \
+	cmd_stomp.o cmd_testcode.o cmd_testfight.o \
+	cmd_visible.o \
+	cmd_zonefile.o \
+	cmd_zones.o color.o \
 	combat.o comm.o commodity.o components.o connect.o constants.o \
 	container.o corpse.o craps.o crazyeights.o create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
@@ -170,7 +174,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o drawpoker.o \
 	drinkcon.o drug_container.o drug.o edit.o egotrip.o enum.o equip.o \
 	expandable_container.o faction.o flame.o food.o fuel.o gaining.o \
-	gemstone.o general_weapon.o cmd_visible.o cmd_jump.o
+	gemstone.o general_weapon.o 
 
 OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o jewelry.o key.o keyring.o light.o \
@@ -183,9 +187,18 @@ OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	poker.o pool.o portal.o posse.o potion.o quiver.o race.o range.o \
 	real_container.o rent.o repair.o response.o riding.o room.o \
 	scroll.o see_thru.o shop.o show.o signals.o skill_dam.o skills.o \
-	slots.o smoke.o socket.o sound.o spec_mobs.o spec_objs.o \
-	spec_objs_blind.o spec_objs_manadrain.o spec_rooms.o spell_info.o \
-	spell_num.o spell_parser.o spellbag.o spelltask.o staff.o \
+	slots.o smoke.o socket.o sound.o spec_mobs.o \
+	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
+        spec_mobs_goring.o \
+	spec_objs.o \
+	spec_objs_lightning_rod.o \
+	spec_objs_blind.o spec_objs_manadrain.o \
+	spec_rooms.o \
+        spec_rooms_sleeptag.o \
+	spell_info.o \
+	spell_num.o spell_parser.o spellbag.o \
+	spellstore.o \
+	spelltask.o staff.o \
 	statistics.o stats.o statue.o structs.o symbol.o systemtask.o \
 	table.o talk.o task.o task_attune.o task_lightfire.o task_scribe.o \
 	task_skin.o task_trap.o task_brew.o task_meditate.o task_search.o \
@@ -194,10 +207,7 @@ OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	task_spell_friends.o task_get.o task_rest.o task_sit.o task_track.o \
 	task_whittle.o task_stavecharge.o thing.o toggle.o tool.o trap.o \
 	trash.o treasure.o tree.o utility.o vial.o wand.o weather.o \
-	window.o wiz_data.o wiz_powers.o worn.o \
-	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
-        spec_mobs_goring.o spec_objs_lightning_rod.o \
-        spec_rooms_sleeptag.o spellstore.o cmd_zonefile.o
+	window.o wiz_data.o wiz_powers.o worn.o
 
 #	rewrite_obj_file.o \
 
