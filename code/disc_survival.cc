@@ -934,6 +934,11 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
   int num, pulse;
   //  char msg[256], gl_msg[256];
 
+  if (!arg || !*arg) {
+    ch->sendTo("You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't be lame and lazy and not supply an argument!!!\n\r");
+    return;
+  }
+
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
     ch->sendTo("You do not see a %s here.\n\r", arg);
