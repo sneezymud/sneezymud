@@ -1294,12 +1294,12 @@ void buildComponentArray()
     "$n ties $p in a knot.",
     "",
     ""));
-  CompInfo.push_back(compInfo(SPELL_FEAR,
-    "You crush $p into powder and blow it at $N.",
-    "$n crushes $p into a powder and blows it at $N.",
-    "$n crushes $p into a powder and blows it at you.",                       
-    "You crush $p into powder and inhale it.",
-    "$n crushes $p into a powder and inhale it.",
+  CompInfo.push_back(compInfo(SPELL_INTIMIDATE,
+    "You flick $p at $N.",
+    "$n flicks $p at $N.",
+    "$n flicks $p at you.",                       
+    "You rub $p on your face? YUCK!.",
+    "$n rubs $p on $s face! What a dweeb!",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_INVISIBILITY,

@@ -571,6 +571,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_armadillo
 
+    case SPELL_INTIMIDATE:
+      return &((CDShaman *) cd)->skIntimidate;
     case SPELL_ROMBLER:
       return &((CDShaman *) cd)->skRombler;
     case SPELL_CHEVAL:

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.15  2001/06/13 00:18:35  jesus
+// lifeforce cost restructures and shaman intimidate spell
+//
 // Revision 5.14  2001/06/12 10:37:45  jesus
 // added rombler spell for shaman
 //
@@ -188,6 +191,7 @@ const int COMP_DANCING_BONES      =31323;
 const int COMP_HYPNOSIS           =31324;
 const int COMP_CHEVAL             =31325;
 const int COMP_ROMBLER            =31326;
+const int COMP_INTIMIDATE         =31327;
 
 class compPlace
 {

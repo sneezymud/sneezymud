@@ -1680,7 +1680,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
     if ((cdisc->getLearnedness() >= 
 	 ch.getDiscipline(best_disc)->getLearnedness()) ||
-	(best_disc==DISC_MAGE && cdisc->getLearnedness()>20)){
+	(best_disc==DISC_SHAMAN && cdisc->getLearnedness()>20)){
       if (!::number(0,1))
         best_disc = i;
     }
@@ -1692,7 +1692,20 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
   // PANIC spells
   int cutoff = min((int) ch.GetMaxLevel(), 50);
-
+  spell = SPELL_INTIMIDATE;
+  if (ch.doesKnowSkill(spell) && 
+      (ch.getSkillValue(spell) > 33)) {
+    // teleport myself as a "flee"
+    if (!::number(0,30) &&
+        !ch.pissed() && 
+        (ch.getHit() < ch.hitLimit()/8) &&
+        // don't let test fight mobs teleport
+        !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
+      act("$n utters the invokation, 'Go Away! Leave me the Hell Alone!'", FALSE, &ch, 0, 0, TO_ROOM);
+      on_me = FALSE;
+      return spell;
+    }
+  }
   if (best_disc == DISC_SHAMAN) {
     // AREA AFFECT HERE
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
@@ -1703,7 +1716,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'Ahh!! The BLUUD!!!!!'",
+      act("$n utters the invokation, 'Ahh!! The BLUUD!!!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
@@ -1712,7 +1725,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (!::number(0, 1) && 
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
-      act("$n utters the words, 'I'm gonna suck you dry!!!'",
+      act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
@@ -1738,7 +1751,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'River run DEEEEEEEEEEP!!!!'",
+      act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
@@ -1751,14 +1764,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'Lich me, SUCKAH!!!'",
+      act("$n utters the invokation, 'Lich me, SUCKAH!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
     spell = SPELL_DEATH_MIST;
     if ((cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell)) {
-      act("$n utters the words, 'Chowe Kondizz Bub!'",
+      act("$n utters the invokation, 'Chowe Kondizz Bub!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
@@ -3309,6 +3322,7 @@ int TMonster::mobileActivity(int pulse)
         // we also wait for the effects of a "fear" spell to decay
         if (getHit() == (hitLimit()*4)/5 &&
             !eitherLegHurt() && !eitherArmHurt() &&
+            !affectedBySpell(SPELL_FEAR) &&
             !affectedBySpell(SPELL_FEAR)) {
 	  if(fears.clist) {
 	    int safety = 0;
@@ -3366,7 +3380,7 @@ int TMonster::fearCheck(const TBeing *ch, bool mobpulse)
     return false;
 
   if (getHit() > hitLimit()/4 && (!eitherLegHurt() && !eitherArmHurt()) &&
-	  !affectedBySpell(SPELL_FEAR))
+      !affectedBySpell(SPELL_FEAR) && !affectedBySpell(SPELL_FEAR))
     return false;
 
 
@@ -3944,6 +3958,15 @@ int TMonster::defendOther(TBeing &targ)
       if (!targ.affectedBySpell(spell) && 
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n sings the words, 'Eluagga Xypomine!'",
+                 TRUE, this, 0, 0, TO_ROOM);
+        found = TRUE;
+      }
+    }
+    if (!found) {
+      spell = SPELL_CHEVAL;
+      if (!targ.affectedBySpell(spell) && 
+           doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
+        act("$n sings the words, 'Legba du' Cheval!'",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }

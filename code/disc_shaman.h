@@ -12,6 +12,7 @@ public:
     CSkill skEnthrallSpectre;
     CSkill skEnthrallGhast;
     CSkill skVoodoo;
+    CSkill skIntimidate;
     CSkill skCheval;
     CSkill skChrism;
     CSkill skRombler;
@@ -25,6 +26,7 @@ public:
       skEnthrallSpectre(),
       skEnthrallGhast(),
       skVoodoo(),
+      skIntimidate(),
       skCheval(),
       skChrism(),
       skRombler(),
@@ -39,6 +41,7 @@ public:
       skEnthrallSpectre(a.skEnthrallSpectre),
       skEnthrallGhast(a.skEnthrallGhast),
       skVoodoo(a.skVoodoo),
+      skIntimidate(a.skIntimidate),
       skCheval(a.skCheval),
       skChrism(a.skChrism),
       skRombler(a.skRombler),
@@ -54,6 +57,7 @@ public:
       skEnthrallSpectre = a.skEnthrallSpectre;
       skEnthrallGhast = a.skEnthrallGhast;
       skVoodoo = a.skVoodoo;
+      skIntimidate = a.skIntimidate;
       skCheval = a.skCheval;
       skChrism = a.skChrism;
       skRombler = a.skRombler;
@@ -117,6 +121,9 @@ private:
     int rombler(TBeing *, const char *);
     int rombler(TBeing *, const char *, int, byte);
 
- 
+    int intimidate(TBeing *, TBeing *);
+    int castIntimidate(TBeing *, TBeing *);
+    int intimidate(TBeing *, TBeing *, int, byte);
+
 #endif
 

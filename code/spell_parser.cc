@@ -1729,6 +1729,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_FEAR:
       rc = fear(this, ch);
       break;
+    case SPELL_INTIMIDATE:
+      rc = intimidate(this, ch);
+      break;
     case SPELL_INVISIBILITY:
       if (!o) {
         invisibility(this, ch);

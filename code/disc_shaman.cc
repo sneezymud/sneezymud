@@ -1288,14 +1288,14 @@ int rombler(TBeing *caster, int, byte bKnown)
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
-      caster->sendTo(COLOR_SPELLS, "You romble to the world, \"%s<z>\"\n\r", msg);
+      caster->sendTo(COLOR_SPELLS, "<g>You romble to the world, \"<z>%s<g>\"<z>\n\r", msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
             !i->connected && !i->character->checkSoundproof() &&
             (dynamic_cast<TMonster *>(i->character) ||
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
-	  if (i->character->hasClass(CLASS_SHAMAN)) {
+	  if (i->character->hasClass(CLASS_SHAMAN) || i->character->isImmortal()) {
             i->character->sendTo(COLOR_SPELLS, "<P>%s<z> rombles, \"<c>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
           } else {
             i->character->sendTo(COLOR_SPELLS, "<P>In the faint distance you hear savage drumming.<z>\n\r"); 
@@ -1337,8 +1337,104 @@ int ret,level;
   return TRUE;
 }
 
+int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  int rc;
 
+  if (caster->isNotPowerful(victim, level, SPELL_INTIMIDATE, SILENT_NO)) {
+    return SPELL_FAIL;
+  }
 
+  caster->reconcileHurt(victim, discArray[SPELL_INTIMIDATE]->alignMod);
 
+  if (bSuccess(caster, bKnown, SPELL_INTIMIDATE)) {
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR, level)) {
+      SV(SPELL_INTIMIDATE);
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("You feel intimidatedbriefly.", FALSE, caster, NULL, victim, TO_VICT, ANSI_YELLOW_BOLD);
+    } else {
+      act("$N is totally intimidated of $n!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_YELLOW_BOLD);
+      act("$N is totally intimidated by you.", FALSE, caster, NULL, victim, TO_CHAR, ANSI_YELLOW_BOLD);
+      act("$n intimidates you! RUN!!!", FALSE, caster, NULL, victim, TO_VICT, ANSI_YELLOW_BOLD);
 
+      rc = victim->doFlee("");
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        return SPELL_SUCCESS + VICTIM_DEAD;
+      }
+
+      // this will keep them running away
+      if (!victim->isPc() && level >= (int) (victim->GetMaxLevel() * 1.1)) {
+        dynamic_cast<TMonster *>(victim)->addFeared(caster);
+      }
+
+      // but since once at full HP (and fearing) they will grow a hatred
+      // we need a way to make the fear last a little while....
+      affectedData aff;
+      aff.type = SPELL_INTIMIDATE;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 2;
+      aff.renew = aff.duration;  // renewable immediately
+
+    // we've made raw immunity check, but allow it to reduce effects too
+    aff.duration *= (100 - victim->getImmunity(IMMUNE_FEAR));
+    aff.duration /= 100;
+
+      victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    }
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_INTIMIDATE)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_INTIMIDATE);
+        act("$n attempts to flee...from $mself?!? Strange...",
+              FALSE, caster, NULL, NULL, TO_ROOM, ANSI_YELLOW_BOLD);
+        act("Damn! The loa have intimidated you by yourself. Run for your life!",
+              FALSE, caster, NULL, victim, TO_CHAR, ANSI_YELLOW_BOLD);
+        act("$n was trying to invoke ritual on you!",
+              FALSE, caster, NULL, victim, TO_VICT, ANSI_YELLOW_BOLD);
+        rc = caster->doFlee("");
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+        }
+        return SPELL_CRIT_FAIL;
+        break;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int intimidate(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_INTIMIDATE, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_INTIMIDATE]->lag;
+  taskDiffT diff = discArray[SPELL_INTIMIDATE]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_INTIMIDATE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castIntimidate(TBeing *caster, TBeing *victim)
+{
+  int rc = 0;
+
+  int level = caster->getSkillLevel(SPELL_INTIMIDATE);
+  int bKnown = caster->getSkillValue(SPELL_INTIMIDATE);
+
+  int ret=intimidate(caster,victim,level,bKnown);
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
+  } else { 
+  }
+  
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
 

@@ -1088,6 +1088,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_GILLS_OF_FLESH:
       case SPELL_TELEPATHY:
       case SPELL_ROMBLER: // shaman
+      case SPELL_INTIMIDATE: //shaman
       case SPELL_FEAR:
       case SPELL_SLUMBER:
       case SPELL_CONJURE_EARTH:

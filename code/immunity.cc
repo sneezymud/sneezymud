@@ -369,6 +369,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_WATER;
       break;
     case SPELL_FEAR:
+    case SPELL_INTIMIDATE:
       bit = IMMUNE_FEAR;
       break; 
     case SPELL_DISEASE:
