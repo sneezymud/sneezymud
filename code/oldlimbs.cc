@@ -262,14 +262,13 @@ int TBeing::getPosHeight() const
   return iHeight;
 }
 
-void TBeing::makeBodyPart(wearSlotT pos)
+void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
 {
   TCorpse *corpse;
   char buf[256];
   sstring sbuf;
   int v_vnum;
   TMonster *vmob;
-  TPerson *opp = dynamic_cast<TPerson *>(fight());
 
   if ((vmob = dynamic_cast<TMonster *>(this)))
     v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
@@ -278,7 +277,7 @@ void TBeing::makeBodyPart(wearSlotT pos)
     
   corpse = new TCorpse();
   sbuf = fmt("%s [%d]") % describeBodySlot(pos) % v_vnum;
-  if (opp)
+  if (opp && opp->isPc())
     sbuf = fmt("%s [%s]") % sbuf % opp->getName();
   corpse->name = mud_str_dup(sbuf);
   
@@ -315,14 +314,13 @@ void TBeing::makeBodyPart(wearSlotT pos)
   *roomp += *corpse;
 }
 
-void TBeing::makeOtherPart(const char *single, const char *part)
+void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
 {
   TCorpse *corpse;
   char buf[128];
   sstring sbuf;
   int v_vnum;
   TMonster *vmob;
-  TPerson *opp = dynamic_cast<TPerson *>(fight());
   
   if ((vmob = dynamic_cast<TMonster *>(this)))
     v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
@@ -331,7 +329,7 @@ void TBeing::makeOtherPart(const char *single, const char *part)
     
   corpse = new TCorpse();
   sbuf = fmt("%s [%d]") % (single ? single : part) % v_vnum;
-  if (opp)
+  if (opp && opp->isPc())
     sbuf = fmt("%s [%s]") % sbuf % opp->getName();
   corpse->name = mud_str_dup(sbuf);
 

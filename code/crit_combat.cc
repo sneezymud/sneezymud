@@ -1176,7 +1176,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_FINGER_R, FALSE);
+	v->makePartMissing(WEAR_FINGER_R, FALSE, this);
 	v->rawBleed(WEAR_HAND_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	*part_hit = WEAR_FINGER_R;
 	if (desc)
@@ -1200,7 +1200,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_FINGER_L, FALSE);
+	v->makePartMissing(WEAR_FINGER_L, FALSE, this);
 	v->rawBleed(WEAR_HAND_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	*part_hit = WEAR_FINGER_L;
 	if (desc)
@@ -1241,7 +1241,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_HAND_R, FALSE);
+	v->makePartMissing(WEAR_HAND_R, FALSE, this);
 	v->rawBleed(WEAR_WRIST_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	v->woundedHand(v->isRightHanded());
 	*part_hit = WEAR_WRIST_R;
@@ -1283,7 +1283,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_HAND_L, FALSE);
+	v->makePartMissing(WEAR_HAND_L, FALSE, this);
 	v->rawBleed(WEAR_WRIST_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	v->woundedHand(!v->isRightHanded());
 	*part_hit = WEAR_WRIST_L;
@@ -1311,7 +1311,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_ARM_R, FALSE);
+	v->makePartMissing(WEAR_ARM_R, FALSE, this);
 	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	v->woundedHand(v->isRightHanded());
 	*part_hit = WEAR_ARM_R;
@@ -1339,7 +1339,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(WEAR_ARM_L, FALSE);
+	v->makePartMissing(WEAR_ARM_L, FALSE, this);
 	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	v->woundedHand(!v->isRightHanded());
 	*part_hit = WEAR_ARM_L;
@@ -1366,7 +1366,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_R);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  v->makePartMissing(WEAR_FOOT_R, FALSE);
+	  v->makePartMissing(WEAR_FOOT_R, FALSE, this);
 	  v->addToLimbFlags(WEAR_LEGS_R, PART_USELESS);
 	  if ((obj = v->equipment[WEAR_LEGS_R]))
 	    critHitEqDamage(v, obj, (::number(-35,-22)));
@@ -1396,7 +1396,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_L);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  v->makePartMissing(WEAR_FOOT_L, FALSE);
+	  v->makePartMissing(WEAR_FOOT_L, FALSE, this);
 	  v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
 	  if ((obj = v->equipment[WEAR_LEGS_L]))
 	    critHitEqDamage(v, obj, (::number(-35,-22)));
@@ -1628,7 +1628,7 @@ buf=fmt("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 	      (obj = v->equipment[WEAR_NECK]))
 	    critHitEqDamage(v, obj, (::number(-40,-25)));
 
-	  v->makeBodyPart(WEAR_HEAD);
+	  v->makeBodyPart(WEAR_HEAD, this);
 	  applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
 	  *part_hit = WEAR_NECK;
 	  if (desc)
@@ -1759,7 +1759,7 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
-	v->makeOtherPart(NULL,"eyeballs");
+	v->makeOtherPart(NULL,"eyeballs",this);
 	af.type = AFFECT_DISEASE;
 	af.level = 0;   // has to be 0 for doctor to treat
 	af.duration = PERMANENT_DURATION;
@@ -1956,7 +1956,7 @@ buf=fmt("$n's %s severs your arm below the wrist!") %
 buf=fmt("$n's %s severs $N's hand at the wrist!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(v->getPrimaryHand(), FALSE);
+	v->makePartMissing(v->getPrimaryHand(), FALSE, this);
 	v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	v->woundedHand(TRUE);
 	*part_hit = v->getPrimaryHand();

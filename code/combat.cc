@@ -5226,7 +5226,7 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   return FALSE;
 }
 
-void TBeing::makePartMissing(wearSlotT slot, bool diseased)
+void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing *opp)
 {
   TThing *t;
 
@@ -5241,7 +5241,7 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased)
     return;
   }
   if (!diseased)
-    makeBodyPart(slot);
+    makeBodyPart(slot,opp);
   else
     makeDiseasedPart(slot);
 

@@ -195,7 +195,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
 
     if (tLimb == WEAR_NECK)
       if (tDamageType == DAMAGE_BEHEADED)
-        tSucker->makeBodyPart(WEAR_HEAD);
+        tSucker->makeBodyPart(WEAR_HEAD, tThief);
       else
         tSucker->dropPool(50, LIQ_BLOOD);
   } else {
@@ -289,7 +289,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
         sprintf(tStringVict, "$n slices your %s right off!", tStLimb.c_str());
         sprintf(tStringOthr, "$n slices $N's %s right off!", tStLimb.c_str());
 
-        tSucker->makePartMissing(tLimb, false);
+        tSucker->makePartMissing(tLimb, false, tThief);
 
         act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
         act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);

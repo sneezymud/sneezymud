@@ -954,7 +954,7 @@ class TBeing : public TThing {
     void aiWear(TObj *);
     int defaultLimbConnections(wearSlotT);
     int limbConnections(wearSlotT);
-    void makePartMissing(wearSlotT, bool);
+    void makePartMissing(wearSlotT, bool, TBeing * = NULL);
     void makeLimbTransformed(TBeing *, wearSlotT, bool);
     void doTransformDrop(wearSlotT);
     int teleportRoomFlow(int);
@@ -1576,9 +1576,9 @@ class TBeing : public TThing {
     TThing * makeCorpse(spellNumT, TBeing * = NULL, float = 0);
     int die(spellNumT, TBeing * = NULL);
     int slotChance(wearSlotT num) const;
-    void makeBodyPart(wearSlotT);
+    void makeBodyPart(wearSlotT, TBeing * = NULL);
     void makeDiseasedPart(wearSlotT);
-    void makeOtherPart(const char *, const char *);
+    void makeOtherPart(const char *, const char *, TBeing * = NULL);
     bool checkCut(TBeing *, wearSlotT, spellNumT, TThing *, int);
     bool checkPierced(TBeing *, wearSlotT, spellNumT, TThing *, int);
     bool checkSmashed(TBeing *, wearSlotT, spellNumT, TThing *, int, const char * = NULL);
