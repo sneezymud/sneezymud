@@ -3,5 +3,6 @@
 
 float trophy_exp_mod(float);
 const char * describe_trophy_exp(float);
+void wipeTrophy(const char *);
 
 #endif

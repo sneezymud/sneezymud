@@ -2,67 +2,10 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: immortal.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.15  1999/10/14 03:54:48  batopr
-// removed #if 0 code
-//
-// Revision 1.14  1999/10/14 03:18:51  batopr
-// Modified display of info gold slightly
-//
-// Revision 1.13  1999/10/08 03:32:43  batopr
-// info gold display modification
-//
-// Revision 1.12  1999/10/08 03:06:11  batopr
-// Improved messages for info gold
-//
-// Revision 1.11  1999/10/07 17:14:26  batopr
-// Added display of "factor" for info-gold on shops
-//
-// Revision 1.10  1999/10/07 17:05:26  batopr
-// typo
-//
-// Revision 1.9  1999/10/07 17:04:20  batopr
-// typo fix
-//
-// Revision 1.8  1999/10/07 16:15:43  batopr
-// Switched info gold stuff to using functios to get gold data
-//
-// Revision 1.7  1999/10/07 04:09:29  batopr
-// Added percentage indicator for budget economy in info gold
-//
-// Revision 1.6  1999/10/06 22:02:03  batopr
-// "Use the TIME command at any point to see time until x." now uses
-// shutdown_or_reboot to populate x
-//
-// Revision 1.5  1999/10/05 22:39:37  cosmo
-// crash fix- minor- cos
-//
-// Revision 1.4  1999/10/02 23:40:47  lapsos
-// Removed auto-join/auto-pouch from the starting autos on new chars.
-//
-// Revision 1.3  1999/10/01 16:45:52  batopr
-// *** empty log message ***
-//
-// Revision 1.2  1999/09/16 20:59:29  batopr
-// added drain info to rent economy log
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////// 
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
 //      "immortal.cc" - All commands reserved for wizards
 //  
 //////////////////////////////////////////////////////////////////////////
+
 #include "stdsneezy.h"
 
 extern "C" {
@@ -73,10 +16,7 @@ extern "C" {
 #include <netinet/in.h>
 #include <sys/param.h>
 #include <sys/syscall.h>
-
-#ifdef SOLARIS
 #include <sys/socket.h>
-#endif
 }
 
 #include "disease.h"
@@ -84,12 +24,14 @@ extern "C" {
 #include "combat.h"
 #include "mail.h"
 #include "games.h"
-
 #include "disc_nature.h"
+#include "disc_shaman_armadillo.h"
 #include "account.h"
 #include "systemtask.h"
 #include "socket.h"
 #include "shop.h"
+#include "cmd_trophy.h"
+
 
 bool Silence = FALSE;
 bool Sleep = TRUE;
@@ -212,110 +154,6 @@ char * dsearch(const char *string)
   }
 }
 
-void TBeing::doBamfin(const char *arg)
-{
-  int len;
-  Descriptor *d;
-
-  if (!(d = desc))
-    return;
-
-  for (; *arg == ' '; arg++);    // pass all those spaces 
-
-  if (!*arg) {
-    sendTo("Bamfin <bamf definition>\n\r");
-    sendTo(" Additional arguments can include ~N for where you want your name (if you want\n\r");
-    sendTo(" your name) to appear.  ~H will be replaced with \"his\" or \"her\" as appropriate.\n\r");
-    sendTo(" ~R will become a newline sequence. If you use the keyword \"def\" for your bamf,\n\r");
-    sendTo(" it turns on the default bamf. Use the keyword \"?\" to see your bamfin.\n\r\n\r");
-  }
-  if (!*arg || !strcmp(arg, "?")) {
-    sendTo("Your current bamfin is : \n\r\n\r");
-    if (!(d->poof.poofin)) {
-      sendTo("Default.\n\r");
-      return;
-    } else {
-      sendTo("%s\n\r", nameColorString(this, d, d->poof.poofin, NULL, COLOR_BASIC, FALSE).c_str());
-      return;
-    }
-  }
-  if (!strcmp(arg, "def")) {
-    delete [] d->poof.poofin;
-    d->poof.poofin = NULL;
-    sendTo("Ok.\n\r");
-    return;
-  }
-  len = (int) strlen(arg);
-
-  char tmpbuf[256];
-  if (len > 150) {
-    sendTo("String too long.  Truncated to:\n\r");
-    strncpy(tmpbuf, arg, 149);
-    tmpbuf[150] = '\0';
-    sendTo("%s\n\r", tmpbuf);
-    len = 150;
-  } else
-    strcpy(tmpbuf, arg);
-
-  delete [] d->poof.poofin;
-  d->poof.poofin = dsearch(tmpbuf);
-
-  sendTo("Ok.\n\r");
-  return;
-}
-
-void TBeing::doBamfout(const char *arg)
-{
-  int len;
-  Descriptor *d;
-
-  if (!(d = desc))
-    return;
-
-  for (; isspace(*arg); arg++);    // pass all those spaces 
-
-  if (!*arg) {
-    sendTo("Bamfout <bamf definition>\n\r");
-    sendTo(" Additional arguments can include ~N for where you want your name (if you want\n\r");
-    sendTo(" your name) to appear.  ~H will be replaced with \"his\" or \"her\" as appropriate.\n\r");
-    sendTo(" ~R will become a newline sequence. If you use the keyword \"def\" for your bamf,\n\r");
-    sendTo(" it turns on the default bamf. Use the keyword \"?\" to see your bamfout.\n\r\n\r");
-  }
-  if (!*arg || !strcmp(arg, "?")) {
-    sendTo("Your current bamfout is : \n\r\n\r");
-    if (!(d->poof.poofout)) {
-      sendTo("Default.\n\r");
-      return;
-    } else {
-      sendTo("%s\n\r", nameColorString(this, d, d->poof.poofout, NULL, COLOR_BASIC, FALSE).c_str());
-      return;
-    }
-  }
-  if (!strcmp(arg, "def")) {
-    delete [] d->poof.poofout;
-    d->poof.poofout = NULL;
-    sendTo("Ok.\n\r");
-    return;
-  }
-  len = (int) strlen(arg);
-
-  char tmpbuf[256];
-  if (len > 150) {
-    sendTo("String too long.  Truncated to:\n\r");
-    strncpy(tmpbuf, arg, 149);
-    tmpbuf[150] = '\0';
-    sendTo("%s\n\r", tmpbuf);
-    len = 150;
-  } else
-    strcpy(tmpbuf, arg);
-
-  delete [] d->poof.poofout;
-  d->poof.poofout = dsearch(tmpbuf);
-
-  sendTo("Ok.\n\r");
-  return;
-}
-
 void TBeing::doHighfive(const char *argument)
 {
   char buf[80];
@@ -336,7 +174,7 @@ void TBeing::doHighfive(const char *argument)
         name, tch->name);
             break;
           case 3:
-            sprintf(mess, "The World shakes as %s and %s high five.\n\r",
+            sprintf(mess, "The world shakes as %s and %s high five.\n\r",
         name, tch->name);
             break;
           default:
@@ -390,27 +228,27 @@ void TPerson::doToggle(const char *arg)
   } else if (is_abbrev(arg, "silence")) {
     Silence = !Silence;
     sendTo("You have now %s shouting.\n\r", Silence ? "disallowed" : "allowed");
-    vlogf(10, "%s has turned player shouting %s.", getName(), Silence ? "off" : "on");
+    vlogf(LOG_MISC, "%s has turned player shouting %s.", getName(), Silence ? "off" : "on");
   } else if (is_abbrev(arg, "gravity")) {
     Gravity = !Gravity;
     sendTo("You have now turned gravity %s.\n\r", !Gravity ? "off" : "on");
-    vlogf(10, "%s has turned gravity %s.", getName(), !Gravity ? "off" : "on");
+    vlogf(LOG_MISC, "%s has turned gravity %s.", getName(), !Gravity ? "off" : "on");
   } else if (is_abbrev(arg, "sleep")) {
     Sleep = !Sleep;
     sendTo("You have now turned offensive sleep %s.\n\r", !Sleep ? "off": "on");
-    vlogf(10, "%s has turned offensive sleep %s.", getName(), !Sleep ? "off"   : "on");
+    vlogf(LOG_MISC, "%s has turned offensive sleep %s.", getName(), !Sleep ? "off"   : "on");
   } else if (is_abbrev(arg, "wiznet")) {
     WizBuild = ! WizBuild;
     sendTo("Builders can now %s the wiznet.\n\r", WizBuild ? "hear" : "not hear");
-    vlogf(5,"%s has turned wiznet %s for builders.",getName(),WizBuild ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned wiznet %s for builders.",getName(),WizBuild ? "on" : "off");
   } else if (is_abbrev(arg, "wizgoto")) {
     WizGoto = ! WizGoto;
     sendTo("Immortals can now %s the enabled zones.\n\r", WizGoto ? "goto" : "not goto");
-    vlogf(5,"%s has turned goto %s for immortals.",getName(),WizGoto ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned goto %s for immortals.",getName(),WizGoto ? "on" : "off");
   } else if (is_abbrev(arg, "wizshout")) {
     WizShout = ! WizShout;
     sendTo("Immortals can now %s.\n\r", WizShout ? "shout" : "not shout");
-    vlogf(5,"%s has turned shout %s for immortals.",getName(),WizShout ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned shout %s for immortals.",getName(),WizShout ? "on" : "off");
   } else if (is_abbrev(arg, "invis")) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
@@ -418,13 +256,13 @@ void TPerson::doToggle(const char *arg)
     }
     WizInvis = ! WizInvis;
     sendTo("Immortals can now %s invisible.\n\r", WizInvis ? "go" : "not go");
-    vlogf(5,"%s has turned invisibility %s.",getName(),WizInvis? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned invisibility %s.",getName(),WizInvis? "on" : "off");
     } else if (is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk")) {
       NewbiePK = ! NewbiePK;
       sendTo("Newbie Pk toggle is now %s.\n\r", NewbiePK ? "in use" : "off");
-      vlogf(10,"%s has now %s newbie pk.",getName(),NewbiePK ? "enabled" : "disabled");
+      vlogf(LOG_MISC,"%s has now %s newbie pk.",getName(),NewbiePK ? "enabled" : "disabled");
       if (NewbiePK)
-        vlogf(10,"Newbies can now be killed by anyone.");
+        vlogf(LOG_MISC,"Newbies can now be killed by anyone.");
   } else if (is_abbrev(arg, "testcode1")) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -435,7 +273,7 @@ void TPerson::doToggle(const char *arg)
 #endif
     TestCode1 = ! TestCode1;
     sendTo("TestCode #1 is now %s.\n\r", TestCode1 ? "in use" : "off");
-    vlogf(10,"%s has %s TestCode #1.",getName(),TestCode1 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s TestCode #1.",getName(),TestCode1 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "testcode2")) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -446,7 +284,7 @@ void TPerson::doToggle(const char *arg)
 #endif
     TestCode2 = ! TestCode2;
     sendTo("TestCode #2 is now %s.\n\r", TestCode2 ? "in use" : "off");
-    vlogf(10,"%s has %s TestCode #2.",getName(),TestCode2 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s TestCode #2.",getName(),TestCode2 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "testcode3")) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -457,7 +295,7 @@ void TPerson::doToggle(const char *arg)
 #endif
     TestCode3 = ! TestCode3;
     sendTo("TestCode #3 is now %s.\n\r", TestCode3 ? "in use" : "off");
-    vlogf(10,"%s has %s TestCode #3.",getName(),TestCode3 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s TestCode #3.",getName(),TestCode3 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "testcode4")) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -468,32 +306,32 @@ void TPerson::doToggle(const char *arg)
 #endif
     TestCode4 = ! TestCode4;
     sendTo("TestCode #4 is now %s.\n\r", TestCode4 ? "in use" : "off");
-    vlogf(10,"%s has %s TestCode #4.",getName(),TestCode4 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s TestCode #4.",getName(),TestCode4 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "questcode")) {
     QuestCode = !QuestCode;
     sendTo("Questcode is now %s.\n\r", QuestCode ? "in use" : "off");
-    vlogf(10,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2")) {
     QuestCode2 = !QuestCode2;
     sendTo("Questcode 2 is now %s.\n\r", QuestCode2 ? "in use" : "off");
-    vlogf(10,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "pcmobs")) {
     AllowPcMobs = !AllowPcMobs;
     sendTo("You have now %s mob-named pcs.\n\r",
               AllowPcMobs ? "allowed" : "disallowed");
-    vlogf(10, "%s has turned mob/pcs mode %s.", getName(), 
+    vlogf(LOG_MISC, "%s has turned mob/pcs mode %s.", getName(), 
               AllowPcMobs ? "on" : "off");
   } else if (is_abbrev(arg, "clients")) {
     Clients = !Clients;
     sendTo("You have now %s clients.\n\r", Clients ? "allowed" : "disallowed");
-    vlogf(10, "%s has turned client mode %s.", getName(), Clients ? "on" : "off");
+    vlogf(LOG_MISC, "%s has turned client mode %s.", getName(), Clients ? "on" : "off");
 
     if (!Clients) {
       sendTo("Severing current client connections.\n\r");
       Descriptor *d, *dn;
       for (d = descriptor_list; d; d = dn) {
         dn = d->next;
-        if (d->client) {
+        if (d->m_bIsClient) {
           d->writeToQ("Link severed by admin.\n\r");
           sendTo(COLOR_MOBS, "Disconnecting client use by %s.\n\r", d->character ? d->character->getName() : "Unknown");
           delete d;
@@ -505,7 +343,7 @@ void TPerson::doToggle(const char *arg)
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo("Mobs in inactive zones are now %s.\n\r", 
            nuke_inactive_mobs ? "nuked" : "preserved");
-    vlogf(10, "%s has turned nuke mode %s.", getName(),
+    vlogf(LOG_MISC, "%s has turned nuke mode %s.", getName(),
              nuke_inactive_mobs ? "on" : "off");
     unsigned int zone;
     for (zone = 1; zone < zone_table.size(); zone++) {
@@ -513,14 +351,14 @@ void TPerson::doToggle(const char *arg)
     }
 
   } else if (is_abbrev(arg, "turbomode")) {
-    if (strcmp(getName(), "Batopr")) {
+    if (strcmp(getName(), "Batopr") || strcmp(getName(), "Dash")) {
       sendTo("Please contact a coder if the game speed is not correct.\n\r");
       return;
     }
 
     TurboMode = !TurboMode;
     sendTo("You have now %s turbo mode.\n\r", TurboMode ? "activated" : "deactivated");
-    vlogf(10, "%s has turned turbomode mode %s.", getName(), TurboMode ? "on" : "off");
+    vlogf(LOG_MISC, "%s has turned turbomode mode %s.", getName(), TurboMode ? "on" : "off");
   } else {
     sendTo("Syntax : toggle <silence | sleep | testcode | wiznet | pcmobs | client>\n\r");
     sendTo("Syntax : toggle <questcode | questcode2 | turbomode | nuke |
@@ -556,7 +394,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already on!\n\r");
     else {
       sendTo("WizLock is now on.\n\r");
-      vlogf(10, "WizLock was turned on by %s.", getName());
+      vlogf(LOG_MISC, "WizLock was turned on by %s.", getName());
       WizLock = TRUE;
     }
   } else if (!strcmp(buf, "off")) {
@@ -564,7 +402,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already off!\n\r");
     else {
       sendTo("WizLock is now off.\n\r");
-      vlogf(10, "WizLock was turned off by %s.", getName());
+      vlogf(LOG_MISC, "WizLock was turned off by %s.", getName());
       WizLock = FALSE;
     }
   } else if (!strcmp(buf, "add")) {
@@ -585,7 +423,7 @@ void TBeing::doWizlock(const char *argument)
       }
     }
     strcpy(hostlist[numberhosts], buf);
-    vlogf(10, "%s has added host %s to the access denied list.", getName(), hostlist[numberhosts]);
+    vlogf(LOG_MISC, "%s has added host %s to the access denied list.", getName(), hostlist[numberhosts]);
     numberhosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -608,7 +446,7 @@ void TBeing::doWizlock(const char *argument)
       if (!strncmp(hostlist[a], buf, length)) {
     for (b = a; b <= numberhosts; b++)
       strcpy(hostlist[b], hostlist[b + 1]);
-    vlogf(10, "%s has removed host %s from the access denied list.", getName(), buf);
+    vlogf(LOG_MISC, "%s has removed host %s from the access denied list.", getName(), buf);
     numberhosts--;
     return;
       }
@@ -634,7 +472,7 @@ void TBeing::doWizlock(const char *argument)
         return;
       } else {
         lockmess = note->action_description;
-        vlogf(9, "%s added a wizlock message.", getName());
+        vlogf(LOG_MISC, "%s added a wizlock message.", getName());
         sendTo("The wizlock message is now:\n\r");
         sendTo(lockmess.c_str());
         return;
@@ -696,10 +534,14 @@ int TBeing::doEmote(const char *argument)
         sprintf(tmpbuf, "%s", nameColorString(ch, ch->desc, buf, NULL, COLOR_COMM, FALSE).c_str());
         act(tmpbuf, TRUE, this, 0, ch, TO_VICT);
       }
+#if 0
 // Commented out..cosmo..we dont break it for say we shouldnt for emote
 // cept the caster shouldnt be able to
-//      disturbMeditation(ch);
+      disturbMeditation(ch);
+#endif
 
+#if 0
+// commented out since polymorph isn't overused/abused
       TMonster *tmons = dynamic_cast<TMonster *>(ch);
       if (tmons && IS_SET(specials.act, ACT_POLYSELF)) {
         if ((tmons->getPosition() <= POSITION_SLEEPING) || !tmons->canSee(this))
@@ -715,6 +557,7 @@ int TBeing::doEmote(const char *argument)
         }
         tmons->aiSay(this, 0);
       }
+#endif
     }
   }
   return TRUE;
@@ -809,11 +652,13 @@ TO_CHAR);
     if (victim->isPlayerAction(PLR_BANISHED)) {
       victim->remPlayerAction(PLR_BANISHED);
       act("You just removed $N's banished flag", FALSE, this, 0, victim, TO_CHAR);
-      vlogf(5, "%s removed %s's banish flag.", getName(), victim->getName());
+      victim->sendTo("Your banishment flag has been removed.\n\r");
+      vlogf(LOG_MISC, "%s removed %s's banish flag.", getName(), victim->getName());
     } else {
       victim->addPlayerAction(PLR_BANISHED);
       act("You just set $N's banished flag.", FALSE, this, 0, victim, TO_CHAR);
-      vlogf(5, "%s banished %s.", getName(), victim->getName());
+      vlogf(LOG_MISC, "%s banished %s.", getName(), victim->getName());
+      victim->sendTo("Your banishment flag has just been activated!\n\r");
     }
   } else if (is_abbrev(buf2, "solo")) {
     // check for quest stuff first
@@ -888,36 +733,6 @@ TO_CHAR);
       victim->addPlayerAction(PLR_NOSNOOP);
       act("$N can no longer be snooped.", FALSE, this, 0, victim, TO_CHAR);
     }
-  } else if (is_abbrev(buf2, "double")) {
-    if (powerCheck(POWER_FLAG_IMP_POWER))
-      return;
-
-    if (!victim->desc) {
-      sendTo("You can't flag them for this.\n\r");
-      return;
-    }
-    if (IS_SET(victim->desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-      REMOVE_BIT(victim->desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS);
-      act("You remove $N's ability to doubleclass.", false, this, 0, victim, TO_CHAR);
-    } else {
-      SET_BIT(victim->desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS);
-      act("You grant $N the ability to doubleclass.", false, this, 0, victim, TO_CHAR);
-    }
-  } else if (is_abbrev(buf2, "triple")) {
-    if (powerCheck(POWER_FLAG_IMP_POWER))
-      return;
-
-    if (!victim->desc) {
-      sendTo("You can't flag them for this.\n\r");
-      return;
-    }
-    if (IS_SET(victim->desc->account->flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
-      REMOVE_BIT(victim->desc->account->flags, ACCOUNT_ALLOW_TRIPLECLASS);
-      act("You remove $N's ability to tripleclass.", false, this, 0, victim, TO_CHAR);
-    } else {
-      SET_BIT(victim->desc->account->flags, ACCOUNT_ALLOW_TRIPLECLASS);
-      act("You grant $N the ability to tripleclass.", false, this, 0, victim, TO_CHAR);
-    }
   } else if (is_abbrev(buf2, "faction")) {
     if (powerCheck(POWER_FLAG_IMP_POWER))
       return;
@@ -943,6 +758,26 @@ TO_CHAR);
         act("$N is already of a faction, you cannot let them join another.",
             FALSE, this, 0, victim, TO_CHAR);
     }
+  } else if (is_abbrev(buf2, "immortal")) {
+    if (powerCheck(POWER_FLAG_IMP_POWER))
+      return;
+
+    if (!victim->desc) {
+      sendTo("You can not flag them for this.\n\r");
+      return;
+    }
+
+    if (victim->GetMaxLevel() > MAX_MORT) {
+      sendTo("That person is an immortal...Are you crazy??");
+      return;
+    }
+
+    if (IS_SET(victim->desc->account->flags, ACCOUNT_IMMORTAL)) {
+      REMOVE_BIT(victim->desc->account->flags, ACCOUNT_IMMORTAL);
+      act("$N is no longer flagged as an immortal.", false, this, 0, victim, TO_CHAR);
+      victim->doSave(SILENT_YES);
+    } else
+      sendTo("This flag is setup Automatically.  You Can Not simply add it.\n\r");
   } else {
     sendTo("Syntax: flag <player> <\"banished\" | \"killable\" | \"solo\" | \"group\" | \"newbiehelper\" | \"nosnoop\" | \"double\" | \"triple\" | \"faction\">\n\r");
     return;
@@ -981,7 +816,7 @@ int getSockReceiveBuffer(int s)
 #elif defined(LINUX)
   unsigned int size;
   size = sizeof(buf);
-
+  // JESUS
   if (getsockopt(s, SOL_SOCKET, SO_RCVBUF, &buf, (unsigned *) &size))
     perror("getsockopt 2");
 #else
@@ -1144,6 +979,13 @@ void TPerson::doTrans(const char *argument)
         sendTo("You lack the power to load anywhere, therefore you can't transfer MEdit Mobs.\n\r");
         return;
       }
+      if(!limitPowerCheck(CMD_TRANSFER,(victim->isPc()) ? -1 : victim->number)) {
+	sendTo("You are not allowed to transfer that being.\n\r");
+	return;
+      }
+      // used to track down: XXX trans'd me outta inn and got me killed!
+      vlogf(LOG_SILENT, "%s transferring %s from %d to %d.", getName(), victim->getName(), victim->inRoom(), inRoom());
+
       act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
       --(*victim);
       if (victim->riding) {
@@ -1258,12 +1100,24 @@ int TPerson::doAt(const char *argument, bool isFarlook)
 
     if (!is_abbrev(tStString.c_str(), "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");
-      sendTo("To do this, do this: at %s yes %s\n\r", loc, tStArgument.c_str());
+      sendTo("To do this, do this: at %s yes %s %s %s\n\r", 
+             loc, tStString.c_str(), tStBuffer.c_str(), tStArgument.c_str());
       return FALSE;
     }
 
     strcpy(com_buf, tStBuffer.c_str());
     strcat(com_buf, tStArgument.c_str());
+  }
+
+  if (location == ROOM_STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
+    sendTo("You are forbidden to do this.  Sorry.\n\r");
+    return FALSE;
+  }
+
+  if (hasWizPower(POWER_IDLED) && real_roomp(location) &&
+      !real_roomp(location)->inImperia()) {
+    sendTo("I'm afraid you can not do this right now.\n\r");
+    return FALSE;
   }
 
   original_loc = in_room;
@@ -1294,14 +1148,14 @@ int TBeing::doGoto(const string & argument)
 {
   followData *k, *n;
   int loc_nr, was_in = inRoom(), location, i;
-  TBeing *target_mob, *v = NULL;
+  TBeing *target_mob;//, *v = NULL;
   TThing *t;
   TObj *target_obj;
   TRoom *rp2;
   int rc;
 
   if (!roomp) {
-    vlogf(10, "Character in invalid room in doGoto!");
+    vlogf(LOG_MISC, "Character in invalid room in doGoto!");
     return FALSE;
   }
 
@@ -1316,9 +1170,33 @@ int TBeing::doGoto(const string & argument)
   two_arg(argument, buf, tStString);
 
   if (buf.empty()) {
-    sendTo("You must supply a room number or a name.\n\r");
+    char tString[10];
+
+    sprintf(tString, "%d", (desc ? desc->office : ROOM_IMPERIA));
+    buf = tString;
+  } else if (buf == "help" && desc) {
+    sendTo("Useful rooms:\n\r____________________\n\r");
+    sendTo("         %6d: Your Office\n\r", desc->office);
+
+    if (desc->blockastart)
+      sendTo("%6d - %6d: Your Primary Room Block\n\r", desc->blockastart, desc->blockaend);
+
+    if (desc->blockbstart)
+      sendTo("%6d - %6d: Your Secondary Room Block\n\r", desc->blockbstart, desc->blockbend);
+
+    sendTo("         %6d: Wizard Board\n\r", ROOM_IMPERIA);
+    sendTo("              9: Lab\n\r");
+    sendTo("              2: Builder's Lounge/Board\n\r");
+    sendTo("              8: Reimbursement/Enforcement Board\n\r");
+    sendTo("         %6d: Center Square\n\r", ROOM_CS);
+    sendTo("             77: Slap on the Wrist (First Offense)\n\r");
+    sendTo("             70: Hell\n\r");
+    sendTo("             81: Conference Room\n\r");
+    sendTo("            557: Roaring Lion Inn\n\r");
+
     return FALSE;
   }
+
   if (isdigit(*buf.c_str()) && buf.find('.') == string::npos) {
     loc_nr = atoi(buf);
     if (NULL == real_roomp(loc_nr)) {
@@ -1326,7 +1204,10 @@ int TBeing::doGoto(const string & argument)
         sendTo("No room exists with that number.\n\r");
         return FALSE;
       } else {
-        if (loc_nr < WORLD_SIZE) {
+	if (!limitPowerCheck(CMD_GOTO, loc_nr)) {
+	  sendTo("You are currently forbidden from going there.\n\r");
+	  return FALSE;
+	} else if (loc_nr < WORLD_SIZE) {
           sendTo("You form order out of chaos.\n\r");
           CreateOneRoom(loc_nr);
         } else {
@@ -1354,14 +1235,23 @@ int TBeing::doGoto(const string & argument)
     return FALSE;
   }
   // a location has been found.
+  if (!limitPowerCheck(CMD_GOTO, location)) {
+    sendTo("You are currently forbidden from going there.\n\r");
+    return FALSE;
+  }
 
   if (isSpammyRoom(location) && !is_abbrev(tStString.c_str(), "yes")) {
     sendTo("To enter this particular room you must do: goto %d yes\n\r", location);
     return FALSE;
   }
 
+  if (location == ROOM_STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
+    sendTo("You are forbidden to do this.  Sorry.\n\r");
+    return FALSE;
+  }
+
   if (!(rp2 = real_roomp(location))) {
-    vlogf(10, "Invalid room in doGoto!");
+    vlogf(LOG_MISC, "Invalid room in doGoto!");
     return FALSE;
   }
   if (!hasWizPower(POWER_GOTO_IMP_POWER) &&
@@ -1378,6 +1268,19 @@ int TBeing::doGoto(const string & argument)
 
   bool hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
+  if (msgVariables(MSG_BAMFOUT)[0] != '!') {
+    for (t = roomp->stuff; t; t = t->nextThing) {
+      TBeing *tbt = dynamic_cast<TBeing *>(t);
+
+      if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
+        string s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFOUT, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
+        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+      }
+    }
+  } else if ((rc = parseCommand((msgVariables(MSG_BAMFOUT).c_str()) + 1, FALSE)) == DELETE_THIS)
+    return DELETE_THIS;
+
+#if 0
   if (!desc || !desc->poof.poofout)
     act("$n disappears in a cloud of mushrooms.",
         TRUE, this, NULL, NULL, TO_ROOM, NULL,  (hasStealth ? MAX_MORT : 0));
@@ -1394,6 +1297,7 @@ int TBeing::doGoto(const string & argument)
     if ((rc = parseCommand((desc->poof.poofout + 1), FALSE)) == DELETE_THIS)
       return DELETE_THIS;
   }
+#endif
 
   if (fight())
     stopFighting();
@@ -1414,6 +1318,19 @@ int TBeing::doGoto(const string & argument)
 
   hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
+  if (msgVariables(MSG_BAMFIN)[0] != '!') {
+    for (t = roomp->stuff; t; t = t->nextThing) {
+      TBeing *tbt = dynamic_cast<TBeing *>(t);
+
+      if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
+        string s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFIN, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
+        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+      }
+    }
+  } else if ((rc = parseCommand((msgVariables(MSG_BAMFIN).c_str()) + 1, FALSE)) == DELETE_THIS)
+    return DELETE_THIS;
+
+#if 0
   if (!desc || !desc->poof.poofin) {
     act("$n appears with an explosion of rose-petals.",
         TRUE, this, 0, v, TO_ROOM, NULL, (hasStealth ? MAX_MORT : 0));
@@ -1431,6 +1348,8 @@ int TBeing::doGoto(const string & argument)
     if ((rc = parseCommand((desc->poof.poofin + 1), FALSE)) == DELETE_THIS)
       return DELETE_THIS;
   }
+#endif
+
   doLook("", CMD_LOOK);
   if (riding) {
     rc = riding->genericMovedIntoRoom(rp2, was_in);
@@ -1585,7 +1504,7 @@ void TPerson::doSnoop(const char *argument)
       if (desc->snoop.snooping->desc)
     desc->snoop.snooping->desc->snoop.snoop_by = 0;
       else
-    vlogf(10, "Caught %s snooping %s who didn't have a descriptor!", name, desc->snoop.snooping->name);
+    vlogf(LOG_MISC, "Caught %s snooping %s who didn't have a descriptor!", name, desc->snoop.snooping->name);
 
       desc->snoop.snooping = 0;
     }
@@ -1665,6 +1584,11 @@ void TPerson::doSwitch(const char *argument)
       return;
     }
 
+    if(!limitPowerCheck(CMD_SWITCH, tBeing->number)) {
+      sendTo("You're not allowed to switch/load that mobile.\n\r");
+      return;
+    }
+
     *roomp += *tBeing;
     (dynamic_cast<TMonster *>(tBeing))->oldRoom = inRoom();
     (dynamic_cast<TMonster *>(tBeing))->createWealth();
@@ -1680,6 +1604,12 @@ void TPerson::doSwitch(const char *argument)
       return;
     }
   }
+  if(!limitPowerCheck(CMD_SWITCH, tBeing->number)) {
+    sendTo("You're not allowed to switch into that mobile.\n\r");
+    return;
+  }
+
+
   if (this == tBeing) {
     sendTo("Heh heh heh...we are jolly funny today, aren't we?\n\r");
     return;
@@ -1820,12 +1750,12 @@ void TBeing::makeLimbTransformed(TBeing * victim, wearSlotT limb, bool paired)
         return;
       default:
         sendTo("That limb is currently not supported for paired transformation.\n\r");
-        vlogf(10, "doTransformLimb called with bad case");
+        vlogf(LOG_MISC, "doTransformLimb called with bad case");
         return;
     }
   } else {
         sendTo("Single limb transformations are not currently supported.\n\r");
-        vlogf(10, "doTransformLimb called a single limb transformation");
+        vlogf(LOG_MISC, "doTransformLimb called a single limb transformation");
         return;
   }
 }
@@ -1922,12 +1852,12 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
 
   if (!hasTransformedLimb() && affectedBySpell(spell)) {
     sendTo("Please bug what you just did.\n\r");
-    vlogf(10,"Somehow transformlimbback got sent a null limb");
+    vlogf(LOG_MISC,"Somehow transformlimbback got sent a null limb");
   }
 
   if (!limb) {
     sendTo("Please bug what you just did.\n\r");
-    vlogf(10,"Somehow transformlimbback got sent a null limb");
+    vlogf(LOG_MISC,"Somehow transformlimbback got sent a null limb");
     return;
   } else if (limb == MAX_WEAR) {
     if (!hasTransformedLimb() &&
@@ -2069,7 +1999,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
         if (isLimbFlags(slot, PART_TRANSFORMED)) {
           found = TRUE;
           if (isLimbFlags(slot, PART_MISSING))
-           vlogf(5, "%s has both a missing and a transformed limb", getName());
+           vlogf(LOG_MISC, "%s has both a missing and a transformed limb", getName());
         remLimbFlags(slot, PART_TRANSFORMED);
         }
       }
@@ -2105,7 +2035,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
       }
       break;
     default:
-      vlogf (10,"Bad limb number sent to transformLimbsBack");
+      vlogf(LOG_BUG,"Bad limb number sent to transformLimbsBack");
       sendTo("Please bug what you just did or tell a god.\n\r");
       return;
   }
@@ -2227,6 +2157,10 @@ void TPerson::doForce(const char *argument)
     return;
       }
     }
+    if (!limitPowerCheck(CMD_FORCE, (vict->isPc()) ? -1 : vict->number)) {
+      sendTo("You are not allowed to force that being.\n\r");
+      return;
+    }
     if ((GetMaxLevel() <= vict->GetMaxLevel()) && dynamic_cast<TPerson *>(vict))
       sendTo("Oh no you don't!!\n\r");
     else {
@@ -2246,7 +2180,7 @@ void TPerson::doForce(const char *argument)
     }
   } else if (!strcmp("all", name_buf)) {
     // force all 
-    vlogf(5, "%s just forced all to '%s'", getName(), to_force);
+    vlogf(LOG_MISC, "%s just forced all to '%s'", getName(), to_force);
     for (i = descriptor_list; i; i = i->next) {
       if ((vict = i->character) && (i->character != this) && !i->connected) {
         if ((GetMaxLevel() <= vict->GetMaxLevel()) && dynamic_cast<TPerson *>(vict))
@@ -2412,7 +2346,7 @@ void TPerson::doLoad(const char *argument)
 	return;
       }
       if (!(obj = read_object(numx, REAL))) {
-	vlogf(3, "Error finding object.");
+	vlogf(LOG_BUG, "Error finding object.");
 	return;
       }
       if (obj_index[numx].number > obj_index[numx].max_exist) {
@@ -2749,7 +2683,7 @@ void TPerson::doPurge(const char *argument)
     if ((vict = get_char_room_vis(this, name_buf))) {
       if (vict->spec == SPEC_SHOPKEEPER) {    // shopkeeper 
         sendTo("Be glad Brutius put this catch in for shopkeepers.\n\r");
-        vlogf(10, "%s just tried to purge a shopkeeper.", getName());
+        vlogf(LOG_MISC, "%s just tried to purge a shopkeeper.", getName());
         return;
       }
       if (vict->isPc() && 
@@ -2808,7 +2742,7 @@ void TPerson::doPurge(const char *argument)
 
       if (vict->desc) {
         delete vict->desc;
-        vict->desc = 0;
+        vict->desc = NULL;
       }
       delete vict;
       vict = NULL;
@@ -2816,9 +2750,45 @@ void TPerson::doPurge(const char *argument)
       // since we already did a get_char loop above, this is really just doing
       // objs, despite the fact that it is a TThing
       act("$n destroys $p.", TRUE, this, t_obj, 0, TO_ROOM);
-      TPerson *tper = dynamic_cast<TPerson *>(t_obj);
-      if (tper)
-        tper->dropItemsToRoom(SAFE_YES, DROP_IN_ROOM);
+      TPerson *vict = dynamic_cast<TPerson *>(t_obj);
+      if (vict && vict->isLinkdead()) {
+        // linkdead PC will have eq stored from last save.
+        // without this, eq would be dropped on ground (duplicated)
+        wearSlotT ij;
+        for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
+          if (vict->equipment[ij]) {
+            t_obj = vict->unequip(ij);
+            obj = dynamic_cast<TObj *>(t_obj);
+
+            // since the item is technically still in rent, it is accounted
+            // for.  Deleting it here is going to drop the number by 1 which
+            // would be bad.  Artifically bump it up, so that things stay
+            // in synch.
+            if (obj->isRare() && (obj->number >= 0))
+              obj_index[obj->getItemIndex()].number++;
+
+            delete obj;
+            obj = NULL;
+          }
+        }
+        TThing *t, *t2;
+        for (t = vict->stuff; t; t = t2) {
+          t2 = t->nextThing;
+          obj = dynamic_cast<TObj *>(t);
+
+          // since the item is technically still in rent, it is accounted
+          // for.  Deleting it here is going to drop the number by 1 which
+          // would be bad.  Artifically bump it up, so that things stay
+          // in synch.
+          if (obj->isRare() && (obj->number >= 0))
+            obj_index[obj->getItemIndex()].number++;
+
+          delete obj;
+          obj = NULL;
+        }
+      } else if (vict) 
+        vict->dropItemsToRoom(SAFE_YES, DROP_IN_ROOM);
+
       delete t_obj;
       t_obj = NULL;
     } else {
@@ -2929,7 +2899,7 @@ void TPerson::doStart()
     addPlayerAction(PLR_COLOR);
     SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
   }
-  if (!desc->client)
+  if (!desc->m_bIsClient)
     sendTo(COLOR_BASIC, "<R>Initializing your Character<1> ...\n\r");
 
   if (!discs)
@@ -2945,7 +2915,7 @@ void TPerson::doStart()
   if (desc->account->term == TERM_VT100) 
     doTerminal("vt100");
   
-  if (desc && !desc->client && !ansi() && !vt100()) 
+  if (desc && !desc->m_bIsClient && !ansi() && !vt100()) 
     doPrompt("all");
 
   desc->autobits = 0;
@@ -2956,13 +2926,13 @@ void TPerson::doStart()
   if ((GetMaxLevel() > MAX_MORT) && !isPlayerAction(PLR_IMMORTAL)) {
     addPlayerAction(PLR_IMMORTAL);
     SET_BIT(desc->autobits, AUTO_SUCCESS);
-    if (!desc->client)
+    if (!desc->m_bIsClient)
       sendTo("Setting various autobits with recommended immortal configuration.\n\r");
     setMoney(100000);
     sprintf(buf, "%s full", getName());
     doRestore(buf);
   } else {
-    if (!desc->client) {
+    if (!desc->m_bIsClient) {
       sendTo("Setting various autobits with recommended newbie configuration.\n\r");
       if (IS_SET(desc->plr_color, PLR_COLOR_BASIC)) 
         sendTo("Setting color to all available color options.\n\r");
@@ -3009,7 +2979,7 @@ void TPerson::doStart()
 
   doNewbieEqLoad(RACE_NORACE, 0, true);
 
-  if (!desc->client) {
+  if (!desc->m_bIsClient) {
     sendTo("You have been given appropriate newbie equipment.\n\r");
     sendTo("--> See %sHELP WEAR%s for more details.\n\r", cyan(), norm());
     sendTo("Be sure to read your %snewbie guide%s...\n\r", green(), norm());
@@ -3020,6 +2990,7 @@ void TPerson::doStart()
   setMana(manaLimit());
   setPiety(pietyLimit());
   setMove(moveLimit());
+  setLifeforce(25);
 
   // Ripped from the level gain functions to give classes a variant 
   // from the standard 25 hp based on con etc. Brutius 06/18/1999
@@ -3057,7 +3028,7 @@ void TPerson::doStart()
 
   doSave(SILENT_NO);
 
-  if (desc->client) {
+  if (desc->m_bIsClient) {
     addPlayerAction(PLR_COMPACT);
     SET_BIT(desc->plr_color, PLR_COLOR_BASIC);
     addPlayerAction(PLR_COLOR);
@@ -3094,7 +3065,7 @@ int TBeing::genericRestore(restoreTypeT partial)
 {
   setCond(FULL, 24);
   setCond(THIRST, 24);
-
+  setLifeforce(25);
   setPiety(pietyLimit());
   setMana(manaLimit());
   setHit(hitLimit());
@@ -3145,6 +3116,7 @@ void TBeing::doRestore(const char *argument)
   restoreTypeT partial = RESTORE_FULL;
   statTypeT statx;
   int rc;
+  bool found = FALSE;
 
   if (powerCheck(POWER_RESTORE))
     return;
@@ -3173,13 +3145,106 @@ void TBeing::doRestore(const char *argument)
   else if (is_abbrev(arg2, "full"))
     partial = RESTORE_FULL;
   else if (is_abbrev(arg2, "pracs")) {
+    int pracs,pracs2;
+    pracs =  pracs2  = 0;
+    char name2[60],name[60];
+    char buf[60];
+    
+    FILE *fp, *fp2;
+    
+    if (!(fp = fopen("reimburse.list","r"))) {
+      vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
+      return;
+    }
+    if (!(fp2 = fopen("reimburse.new","w+"))) {
+      vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
+      return;
+    }
+    if (fgets(buf,60,fp) == NULL && !strcmp("START\n",buf)) {
+      vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
+      fclose(fp);
+      return;
+    }
+    fprintf(fp2,buf);
+    
+    while(strcmp(buf, "END")) {
+      if (fgets(buf,60,fp) == NULL) {
+	vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
+	fclose(fp);
+	return;
+      }
+      if (!strcmp(buf, "END")) //end of list
+	break;
+      if (sscanf(buf,"%d %s\n", &pracs, name) != 2) {
+        vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
+        fclose(fp);
+	return;
+      }
+      if (!strcmp(name, victim->getName())) {
+	found = TRUE;
+	name2 = name;
+	pracs2 = pracs;
+      } else {
+	fprintf(fp2,buf);
+      }
+    }
+    name = name2;
+    pracs = pracs2;
+    fprintf(fp2,buf);
+    fclose(fp);
+    fclose(fp2);
+    char buf2[256];
+    strcpy(buf2,"cp reimburse.new reimburse.list");
+    vsystem(buf2);
+    if (!found) {// not in list
+      sendTo("They are not currently supposed to be reimbursed.\n\r");
+      return;
+    }
+    //ok we found them in the list, num holds how many practices they need
+    pracs = min(pracs,(int)victim->getLevel(victim->bestClass())); // cap at 1/lev
+    switch (victim->bestClass()) {
+      case MAGE_LEVEL_IND:
+        victim->practices.mage += pracs;
+        break;
+      case CLERIC_LEVEL_IND:
+        victim->practices.cleric += pracs;
+        break;
+      case WARRIOR_LEVEL_IND:
+        victim->practices.warrior += pracs;
+        break;
+      case THIEF_LEVEL_IND:
+        victim->practices.thief += pracs;
+        break;
+      case DEIKHAN_LEVEL_IND:
+        victim->practices.deikhan += pracs;
+        break;
+      case MONK_LEVEL_IND:
+        victim->practices.monk += pracs;
+        break;
+      case RANGER_LEVEL_IND:
+        victim->practices.ranger += pracs;
+        break;
+      case SHAMAN_LEVEL_IND:
+        victim->practices.shaman += pracs;
+        break;
+
+      default:
+
+        return;
+    }
+
+    victim->sendTo("Congratulations, you've been reimbursed %d practices!\n\r",pracs);
+    sendTo("Reimbursing %s %d practices.\n\r",victim->getName(),pracs);
+
+    
+#if 0
     // this use to check for god level, so probabl yneeds a power
     sendTo("Not fully converted yet.  Bug Cosmo\n\r");
     return;
-#if 0
+
     int pracs = 0;
       sendTo("Bug that restore practices formula isn't fixed-tell Cosmo.\n\r");
-      vlogf(5,"Tell Cosmo that the restore Practices formula isn't fixed");
+      vlogf(LOG_MISC,"Tell Cosmo that the restore Practices formula isn't fixed");
       return;
     if (!victim->isSingleClass()) {
       sendTo("Restoring practices on multi-class characters is not supported.\n\r");
@@ -3310,12 +3375,12 @@ void TBeing::doNoshout(const char *argument)
       vict->sendTo("You can shout again.\n\r");
       sendTo("NOSHOUT removed.\n\r");
       vict->remPlayerAction(PLR_GODNOSHOUT);
-      vlogf(4,"%s had noshout removed by %s",vict->getName(), getName());
+      vlogf(LOG_MISC,"%s had noshout removed by %s",vict->getName(), getName());
     } else if (hasWizPower(POWER_NOSHOUT)) {
       vict->sendTo("The gods take away your ability to shout!\n\r");
       sendTo("NOSHOUT set.\n\r");
       vict->addPlayerAction(PLR_GODNOSHOUT);
-      vlogf(4,"%s had noshout set by %s",vict->getName(), getName());
+      vlogf(LOG_MISC,"%s had noshout set by %s",vict->getName(), getName());
     } else
       sendTo("Sorry, you can't do that.\n\r");
   } else {
@@ -3472,6 +3537,11 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
 
   sendTo("Obvious exits:\n\r");
   if (roomp) {
+    if (!isImmortal() && isAffected(AFF_BLIND) &&
+        !isAffected(AFF_TRUE_SIGHT)) {
+      sendTo("Blindness makes it impossible to tell.\n\r");
+      return FALSE;
+    }
     if (!isImmortal() && roomp->pitchBlackDark() &&
         !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
         (visionBonus <= 0) &&
@@ -3587,10 +3657,16 @@ void TBeing::doWipe(const char *argument)
     sendTo("Wrong wipe password.\n\r");
     return;
   }
-  if ((victim = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) != NULL) {
+  victim = get_char_vis_world(this, namebuf, NULL, EXACT_YES);
+  if (victim) {
     if (!victim->isPc() || victim->GetMaxLevel() > MAX_IMMORT ||
         (victim->GetMaxLevel() >= GetMaxLevel()) || !(d = victim->desc)) {
       sendTo("You can only banish players less than your level.\n\r");
+      return;
+    }
+    if (!victim->isPlayerAction(PLR_BANISHED)) {
+      act("$N is not flagged banished.", false, this, 0, victim, TO_CHAR);
+      sendTo("Please explore the punishment of temporarily banishing the player\n\rbefore resorting to wiping first.\n\r");
       return;
     }
     sendTo("Ok.\n\r");
@@ -3623,12 +3699,13 @@ void TBeing::doWipe(const char *argument)
   wipePlayerFile(namebuf);
   wipeRentFile(namebuf);
   wipeFollowersFile(namebuf);
+  wipeTrophy(namebuf);
 
   sprintf(buf, "account/%c/%s/%s",
          LOWER(st.aname[0]), lower(st.aname).c_str(), lower(namebuf).c_str());
 
   if (unlink(buf) != 0)
-    vlogf(9, "error in unlink (7) (%s) %d", buf, errno);
+    vlogf(LOG_FILE, "error in unlink (7) (%s) %d", buf, errno);
 
   sendTo("Removing: %s\n\r", buf);
 }
@@ -3722,7 +3799,7 @@ void TPerson::doAccess(const char *arg)
         strcpy(st.pwd, pass);
       
         if (!raw_save_char(lower(arg1).c_str(), &st)) {
-          vlogf(10, "Ran into problems (#1) saving file in doAccess()");
+          vlogf(LOG_MISC, "Ran into problems (#1) saving file in doAccess()");
           return;
         }
         sprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
@@ -3737,6 +3814,7 @@ void TPerson::doAccess(const char *arg)
           fclose(fp);
         } 
         sendTo("Password changed successfully.\n\r");
+        vlogf(LOG_MISC, "%s changed password on %s account", getName(), st.aname);
         return;
       case 5:
         if (sscanf(arg, "%d %d", &lev, &Class) != 2) {
@@ -3755,7 +3833,7 @@ void TPerson::doAccess(const char *arg)
           return;
         }
         if (!raw_save_char(lower(arg1).c_str(), &st)) {
-          vlogf(10, "Ran into problems (#2) saving file in doAccess()");
+          vlogf(LOG_MISC, "Ran into problems (#2) saving file in doAccess()");
           return;
         }
         return;
@@ -3800,7 +3878,7 @@ void TPerson::doAccess(const char *arg)
            st.stats[STAT_SPE]);
 
     sprintf(buf + strlen(buf), "Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r",
-          st.points.money, st.points.bankmoney, st.points.exp);
+          st.money, st.bankmoney, st.exp);
     sprintf(buf + strlen(buf), "Height:  %d,    Weight:  %.1f\n\r",
           st.height, st.weight);
 
@@ -3825,11 +3903,17 @@ void TPerson::doAccess(const char *arg)
       sprintf(buf + strlen(buf), "Account flagged immortal.  Remaining Information Restricted.\n\r");
     } else {
       sprintf(buf + strlen(buf), "Account name: %s%s%s, Account email address : %s%s%s\n\r", cyan(), afp.name, norm(), cyan(), afp.email, norm());
+
       string lStr = "";
+      if (IS_SET(afp.flags, ACCOUNT_BANISHED))
+        lStr += "<R><f>Account is banished<z>\n\r";
+      if (IS_SET(afp.flags, ACCOUNT_EMAIL))
+        lStr += "<R><f>Account is email-banished<z>\n\r";
+
       listAccount(afp.name, lStr);
       strcat(buf, lStr.c_str());
     }
-    desc->page_string(buf, 0);
+    desc->page_string(buf);
     return;
   }
 }
@@ -3890,6 +3974,11 @@ void TBeing::doReplace(const char *argument)
     return;
   } else {
     fclose(fp);
+
+    // log this event so we can see if item duplication (etc.) is caused by it.
+    vlogf(LOG_FILE, "%s replacing %s's %s file.",
+       getName(), arg1, dir2);
+
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
                     dir, dir2, arg1[0], arg1, dir2, arg1[0], arg1);
     vsystem(buf);
@@ -3921,28 +4010,133 @@ void TBeing::doReplace(const char *argument)
 
 void TBeing::doSetsev(const char *arg)
 {
-  int sev;
+  int  tMatch;
+  char tString[512];
   Descriptor *d;
+  const char *tFields[] =
+  {
+    "miscellaneous", "low"     , "file"  , "bug"    , "procedure",
+    "player"       , "immortal", "client", "combat" , "cheat",
+    "faction"      , "mobile"  , "mobai" , "mobresp", "object",
+    "editor"       , "\n"
+  };
+  const char *tHelp[] =
+  {
+    "Anything not found in the others",
+    "L.O.W Errors",
+    "File I/O Errors",
+    "Generic Bugs",
+    "Mobile/Object/Room Procedures",
+    "Player Login/Logouts",
+    "Immortal Info",
+    "Client Bugs/Info",
+    "Combat Bugs",
+    "Cheat Reports/Notifications",
+    "Faction Bugs",
+    "Generic Mobile Bugs",
+    "Mobile AI Bugs",
+    "Mobile Response Script Bugs",
+    "Generic Object Bugs",
+    "Editor Bugs"
+  };
 
   if (!(d = desc))
     return;
 
+  if (powerCheck(POWER_SETSEV))
+    return;
+
   for (; isspace(*arg); arg++);
 
-  if (!*arg || !arg || !strcmp(arg, "?")) {
-    sendTo("Your current log severity is set to %d.\n\r", d->severity);
-    return;
-  }
-  sev = atoi(arg);
+  bisect_arg(arg, &tMatch, tString, tFields);
 
-  if ((sev < 0) || (sev > 10)) {
-    sendTo("Severity must be between 0 and 10.\n\r");
+  if (!tMatch) {
+    sendTo("Leg Severity Options:\n\r______________________________\n\r");
+
+    for (tMatch = 0; tFields[tMatch][0] != '\n'; tMatch++)
+      sendTo("%s: %-15s: %s\n\r",
+             ((d->severity & (1 << tMatch)) ? "On " : "Off"),
+             tFields[tMatch], tHelp[tMatch]);
+
     return;
   }
-  sendTo("Setting log severity level to %d.\n\r", sev);
-  d->severity = sev;
-  doSave(SILENT_YES);
+
+  if (tMatch < 1 || tMatch > LOG_MAX) {
+    if (is_abbrev(arg, "batopr") && !strcmp(getName(), "Batopr")) {
+      if ((d->severity & (1 << LOG_BATOPR)))
+        d->severity &= ~(1 << LOG_BATOPR);
+      else
+        d->severity |= (1 << LOG_BATOPR);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_BATOPR)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "brutius") && !strcmp(getName(), "Brutius")) {
+      if ((d->severity & (1 << LOG_BRUTIUS)))
+        d->severity &= ~(1 << LOG_BRUTIUS);
+      else
+        d->severity |= (1 << LOG_BRUTIUS);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_BRUTIUS)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "cosmo") && !strcmp(getName(), "Cosmo")) {
+      if ((d->severity & (1 << LOG_COSMO)))
+        d->severity &= ~(1 << LOG_COSMO);
+      else
+        d->severity |= (1 << LOG_COSMO);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_COSMO)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
+      if ((d->severity & (1 << LOG_LAPSOS)))
+        d->severity &= ~(1 << LOG_LAPSOS);
+      else
+        d->severity |= (1 << LOG_LAPSOS);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "peel") && !strcmp(getName(), "Peel")) {
+      if ((d->severity & (1 << LOG_PEEL)))
+        d->severity &= ~(1 << LOG_PEEL);
+      else
+        d->severity |= (1 << LOG_PEEL);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_PEEL)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
+      if ((d->severity & (1 << LOG_JESUS)))
+        d->severity &= ~(1 << LOG_JESUS);
+      else
+        d->severity |= (1 << LOG_JESUS);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "dash") && !strcmp(getName(), "Dash")) {
+      if ((d->severity & (1 << LOG_DASH)))
+        d->severity &= ~(1 << LOG_DASH);
+      else
+        d->severity |= (1 << LOG_DASH);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_DASH)) ? "On" : "Off"));
+    } else
+      sendTo("Incorrect Log Type.\n\r");
+  } else {
+    if ((tMatch - 1) == LOG_LOW && powerCheck(POWER_SETSEV_IMM))
+      return;
+
+    if ((d->severity & (1 << (tMatch - 1))))
+      d->severity &= ~(1 << (tMatch - 1));
+    else
+      d->severity |= (1 << (tMatch - 1));
+
+    sendTo("Log Type %s toggled %s.\n\r",
+           tFields[(tMatch - 1)],
+           ((d->severity & (1 << (tMatch - 1))) ? "On" : "Off"));
+  }
 }
+
+moneyTypeT & operator++(moneyTypeT &c, int)
+{ return (c = ((c == MAX_MONEY_TYPE) ? GOLD_XFER : moneyTypeT(c + 1))); }
 
 void TBeing::doInfo(const char *arg)
 {
@@ -3979,7 +4173,27 @@ void TBeing::doInfo(const char *arg)
       sendTo("  Typo file accessed %d times.\n\r", typo_used_num);
       sendTo("  Bugs file accessed %d times.\n\r", bug_used_num);
       sendTo("  Idea file accessed %d times.\n\r", idea_used_num);
-    } else if (is_abbrev(arg1, "deaths")) {
+    } 
+#if 1
+    else if (is_abbrev(arg1, "tweak")) {
+      if (!hasWizPower(POWER_INFO_TRUSTED)) {
+        sendTo("You should not attempt to change that.\n\r");
+	return;
+      }
+      char arg2[80];
+      arg = one_argument(arg,arg2);
+      if (is_abbrev(arg2, "loadrate")) {
+        char opt[80];
+	arg = one_argument(arg,opt);
+	if (is_abbrev(opt, "up"))
+	  stats.equip += .05;
+	else
+	  stats.equip -= .05;
+	save_game_stats();
+      }
+#endif
+    } 
+      else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information.\n\r");
         return;
@@ -4001,7 +4215,7 @@ void TBeing::doInfo(const char *arg)
     } else if (is_abbrev(arg1, "descriptors")) {
       for (i = descriptor_list; i; i = i->next) {
         if (i->character)  {
-          sprintf(buf2,"[%d] ",i->socket->sock);
+          sprintf(buf2,"[%d] ",i->socket->m_sock);
           strcat(buf2,((i->character->name) ? i->character->getName() : "unknown"));
           if (!i->connected)
             strcat(buf2," Connected");
@@ -4011,8 +4225,8 @@ void TBeing::doInfo(const char *arg)
       }
     } else if (is_abbrev(arg1, "numbers")) {
       sendTo("Player number info:\n\r");
-      sendTo("  Current number of players: %u.\n\r", player_num);
-      sendTo("  Max number since reboot : %u.\n\r", max_player_since_reboot);
+      sendTo("  Current number of players: %u.\n\r", accStat.player_num);
+      sendTo("  Max number since reboot : %u.\n\r", accStat.max_player_since_reboot);
       sendTo("  Max descriptors is presently: %d.\n\r", maxdesc);
       sendTo("  Average faction_power is: %.4f\n\r", avg_faction_power);
       sendTo("  Number of room-specials: %u\n\r", roomspec_db.size());
@@ -4029,6 +4243,342 @@ void TBeing::doInfo(const char *arg)
     } else if (is_abbrev(arg1, "gold")) {
       buf.erase();
 
+#if 0
+      float tot_gold = getPosGoldGlobal();
+      float tot_gold_shop = getPosGold(GOLD_SHOP);
+      float tot_gold_income = getPosGold(GOLD_INCOME);
+      float tot_gold_dump = getPosGold(GOLD_DUMP);
+      float tot_gold_comm = getPosGold(GOLD_COMM);
+      float tot_gold_rent = getPosGold(GOLD_RENT);
+      float tot_gold_repair = getPosGold(GOLD_REPAIR);
+      float tot_gold_hospital = getPosGold(GOLD_HOSPITAL);
+      float tot_gold_shop_sym = getPosGold(GOLD_SHOP_SYMBOL);
+      float tot_gold_shop_weap = getPosGold(GOLD_SHOP_WEAPON);
+      float tot_gold_shop_arm = getPosGold(GOLD_SHOP_ARMOR);
+      float tot_gold_shop_pet = getPosGold(GOLD_SHOP_PET);
+      float tot_gold_shop_comp = getPosGold(GOLD_SHOP_COMPONENTS);
+      float tot_gold_shop_food = getPosGold(GOLD_SHOP_FOOD);
+      float tot_gold_shop_resp = getPosGold(GOLD_SHOP_RESPONSES);
+      float tot_gold_gamble = getPosGold(GOLD_GAMBLE);
+      float tot_gold_tithe = getPosGold(GOLD_TITHE);
+      float tot_gold_allshops = getPosGoldShops();
+      float tot_gold_budget = getPosGoldBudget();
+
+      float net_gold = getNetGoldGlobal();
+      float net_gold_shop = getNetGold(GOLD_SHOP);
+      float net_gold_income = getNetGold(GOLD_INCOME);
+      float net_gold_comm = getNetGold(GOLD_COMM);
+      float net_gold_rent = getNetGold(GOLD_RENT);
+      float net_gold_dump = getNetGold(GOLD_DUMP);
+      float net_gold_repair = getNetGold(GOLD_REPAIR);
+      float net_gold_hospital = getNetGold(GOLD_HOSPITAL);
+      float net_gold_shop_sym = getNetGold(GOLD_SHOP_SYMBOL);
+      float net_gold_shop_weap = getNetGold(GOLD_SHOP_WEAPON);
+      float net_gold_shop_arm = getNetGold(GOLD_SHOP_ARMOR);
+      float net_gold_shop_pet = getNetGold(GOLD_SHOP_PET);
+      float net_gold_shop_comp = getNetGold(GOLD_SHOP_COMPONENTS);
+      float net_gold_shop_food = getNetGold(GOLD_SHOP_FOOD);
+      float net_gold_shop_resp = getNetGold(GOLD_SHOP_RESPONSES);
+      float net_gold_gamble = getNetGold(GOLD_GAMBLE);
+      float net_gold_tithe = getNetGold(GOLD_TITHE);
+      float net_gold_allshops = getNetGoldShops();
+      float net_gold_budget = getNetGoldBudget();
+
+      float tot_drain = tot_gold - net_gold;
+
+      sprintf(buf2, "Shop  : modifier: %.2f        (factor  : %.2f%%)\n\r",
+           gold_modifier[GOLD_SHOP].getVal(),
+           100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
+      buf += buf2;
+      sprintf(buf2, "Income: modifier: %.2f        (factor  : %.2f%%)\n\r",
+            gold_modifier[GOLD_INCOME].getVal(),
+            100.0 * net_gold_budget / tot_gold_budget);
+      buf += buf2;
+      sprintf(buf2, "Repair: modifier: %.2f        (factor  : %.2f%%)\n\r",
+            gold_modifier[GOLD_REPAIR].getVal(),
+            100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
+      buf += buf2;
+      sprintf(buf2, "Equip: modifier: %.2f        (factor  : %.2f%%)\n\r",
+            stats.equip,
+            100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
+      buf += buf2;
+      buf += "\n\r";
+
+      sprintf(buf2, "TOTAL ECONOMY:     pos %.2f, net gold = %.2f, drain=%.2f\n\r", tot_gold, net_gold, tot_drain);
+      buf += buf2;
+      // shops are a little diff from normal
+      // want shops to be a slight drain, so compare drain to source
+      sprintf(buf2, "SHOP ECONOMY:      pos %.2f, net gold = %.2f, drain=%.2f\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops);
+      buf += buf2;
+      sprintf(buf2, "BUDGET ECONOMY:    pos %.2f, net gold = %.2f, drain=%.2f\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget);
+      buf += buf2;
+
+      buf += "\n\r";
+
+      sprintf(buf2, "INCOME ECONOMY:    pos %.2f, net gold = %.2f  (drain: %.2f : %.2f%%)\n\r", tot_gold_income, net_gold_income, tot_gold_income - net_gold_income, 100.0 * (tot_gold_income - net_gold_income) / tot_drain);
+      buf += buf2;
+      sprintf(buf2, "SHOPS ECONOMY:     pos %.2f, net gold = %.2f  (drain: %.2f : %.2f%%)\n\r", tot_gold_shop, net_gold_shop, tot_gold_shop - net_gold_shop, 100.0 * (tot_gold_shop - net_gold_shop) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "FOOD SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_food, net_gold_shop_food, tot_gold_shop_food - net_gold_shop_food, 100.0 * (tot_gold_shop_food - net_gold_shop_food) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "COMP SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_comp, net_gold_shop_comp, tot_gold_shop_comp - net_gold_shop_comp, 100.0 * (tot_gold_shop_comp - net_gold_shop_comp) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "SYMB SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_sym, net_gold_shop_sym, tot_gold_shop_sym - net_gold_shop_sym, 100.0 * (tot_gold_shop_sym - net_gold_shop_sym) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "WEAP SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_weap, net_gold_shop_weap, tot_gold_shop_weap - net_gold_shop_weap, 100.0 * (tot_gold_shop_weap - net_gold_shop_weap) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "ARMR SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_arm, net_gold_shop_arm, tot_gold_shop_arm - net_gold_shop_arm, 100.0 * (tot_gold_shop_arm - net_gold_shop_arm) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "PETS SHOP ECONOMY: pos %.2f, net gold = %.2f (bad drain: %.2f : %.2f%%)\n\r", tot_gold_shop_pet, net_gold_shop_pet, tot_gold_shop_pet - net_gold_shop_pet, 100.0 * (tot_gold_shop_pet - net_gold_shop_pet) / tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "RESP SHOP ECONOMY: pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_shop_resp, net_gold_shop_resp, tot_gold_shop_resp - net_gold_shop_resp, 100.0 * ((int) tot_gold_shop_resp - net_gold_shop_resp) / (int) tot_drain);
+      buf += buf2;
+
+      sprintf(buf2, "COMMODITY ECONOMY: pos %.2f, net gold = %.2f\n\r", tot_gold_comm, net_gold_comm);
+      buf += buf2;
+      sprintf(buf2, "RENT ECONOMY:      pos %.2f, net gold = %.2f (bad drain: %.2f : %.2f%%)\n\r", tot_gold_rent, net_gold_rent, tot_gold_rent - net_gold_rent, 100.0 * ((int) tot_gold_rent - net_gold_rent) / (int) tot_drain);
+      buf += buf2;
+      sprintf(buf2, "REPAIR ECONOMY:    pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_repair, net_gold_repair, tot_gold_repair - net_gold_repair, 100.0 * (tot_gold_repair - net_gold_repair) / tot_drain);
+      buf += buf2;
+      sprintf(buf2, "HOSPITAL ECONOMY:  pos %.2f, net gold = %.2f (drain: %.2f : %.2f%%)\n\r", tot_gold_hospital, net_gold_hospital, tot_gold_hospital - net_gold_hospital, 100.0 * (tot_gold_hospital - net_gold_hospital) / tot_drain);
+      buf += buf2;
+      sprintf(buf2, "GAMBLE ECONOMY:    pos %.2f, net gold = %.2f\n\r", tot_gold_gamble, net_gold_gamble);
+      buf += buf2;
+      sprintf(buf2, "TITHE ECONOMY:     pos %.2f, net gold = %.2f\n\r", tot_gold_tithe, net_gold_tithe);
+      buf += buf2;
+      sprintf(buf2, "DUMP ECONOMY:      pos %.2f, net gold = %.2f\n\r", tot_gold_dump, net_gold_dump);
+      buf += buf2;
+
+      desc->page_string(buf.c_str());
+#elif 0
+      buf += "\n\rGold Income/Outlay statistics:\n\r\n\r";
+      for (j=0; j < MAX_IMMORT; j++ ) {
+        long amount = gold_statistics[GOLD_INCOME][j] + 
+                 gold_statistics[GOLD_COMM][j] +
+                 gold_statistics[GOLD_GAMBLE][j] +
+                 gold_statistics[GOLD_REPAIR][j] +
+                 gold_statistics[GOLD_SHOP][j] +
+                 gold_statistics[GOLD_DUMP][j] +
+                 gold_statistics[GOLD_SHOP_ARMOR][j] +
+                 gold_statistics[GOLD_SHOP_WEAPON][j] +
+                 gold_statistics[GOLD_SHOP_PET][j] +
+                 gold_statistics[GOLD_SHOP_COMPONENTS][j] +
+                 gold_statistics[GOLD_SHOP_FOOD][j] +
+                 gold_statistics[GOLD_SHOP_RESPONSES][j] +
+                 gold_statistics[GOLD_SHOP_SYMBOL][j] +
+                 gold_statistics[GOLD_RENT][j] +
+                 gold_statistics[GOLD_HOSPITAL][j] +
+                 gold_statistics[GOLD_TITHE][j];
+        unsigned long pos = gold_positive[GOLD_INCOME][j] + 
+                 gold_positive[GOLD_COMM][j] +
+                 gold_positive[GOLD_GAMBLE][j] +
+                 gold_positive[GOLD_REPAIR][j] +
+                 gold_positive[GOLD_SHOP][j] +
+                 gold_positive[GOLD_DUMP][j] +
+                 gold_positive[GOLD_SHOP_SYMBOL][j] +
+                 gold_positive[GOLD_SHOP_ARMOR][j] +
+                 gold_positive[GOLD_SHOP_WEAPON][j] +
+                 gold_positive[GOLD_SHOP_PET][j] +
+                 gold_positive[GOLD_SHOP_RESPONSES][j] +
+                 gold_positive[GOLD_SHOP_COMPONENTS][j] +
+                 gold_positive[GOLD_SHOP_FOOD][j] +
+                 gold_positive[GOLD_RENT][j] +
+                 gold_positive[GOLD_HOSPITAL][j] +
+                 gold_positive[GOLD_TITHE][j];
+        sprintf(buf2, "   %sLevel %2d:%s\n\r",
+          cyan(),j+1, norm());
+        buf += buf2;
+        sprintf(buf2, "         %sPos  : %9ld%s  (%.2f%% of total)\n\r",
+          cyan(), pos, norm(),
+          100.0 * pos / tot_gold);
+        buf += buf2;
+        sprintf(buf2, "         %sNet  : %9ld%s  (%.2f%% of total)\n\r",
+          cyan(), amount, norm(),
+          100.0 * amount / net_gold);
+        buf += buf2;
+        sprintf(buf2, "         %sDrain: %9ld%s  (%.2f%% of total)\n\r",
+          cyan(), pos - amount, norm(),
+          100.0 * (pos - amount) / (tot_gold - net_gold));
+        buf += buf2;
+
+        sprintf(buf2, "      income     : %8ld, comm       : %8ld, gamble     : %8ld\n\r",
+              gold_statistics[GOLD_INCOME][j], 
+              gold_statistics[GOLD_COMM][j], 
+              gold_statistics[GOLD_GAMBLE][j]);
+        buf += buf2;
+
+        sprintf(buf2, "      shop       : %8ld, respon shop: %8ld, repair     : %8ld\n\r",
+              gold_statistics[GOLD_SHOP][j], 
+              gold_statistics[GOLD_SHOP_RESPONSES][j], 
+              gold_statistics[GOLD_REPAIR][j]);
+        buf += buf2;
+
+        sprintf(buf2, "      armor shop : %8ld, weapon shop: %8ld, pet shop   : %8ld\n\r",
+              gold_statistics[GOLD_SHOP_ARMOR][j], 
+              gold_statistics[GOLD_SHOP_WEAPON][j], 
+              gold_statistics[GOLD_SHOP_PET][j]);
+        buf += buf2;
+
+        sprintf(buf2, "      symbol shop: %8ld, compon shop: %8ld, food shop  : %8ld\n\r",
+              gold_statistics[GOLD_SHOP_SYMBOL][j],
+              gold_statistics[GOLD_SHOP_COMPONENTS][j],
+              gold_statistics[GOLD_SHOP_FOOD][j]);
+        buf += buf2;
+
+        sprintf(buf2, "      rent       : %8ld, hospit     : %8ld, tithe      : %8ld\n\r",
+              gold_statistics[GOLD_RENT][j], 
+              gold_statistics[GOLD_HOSPITAL][j], 
+              gold_statistics[GOLD_TITHE][j]);
+        buf += buf2;
+
+        sprintf(buf2, "      dump       : %8ld\n\r",
+              gold_statistics[GOLD_DUMP][j]);
+        buf += buf2;
+      }
+      desc->page_string(buf.c_str());
+#elif 1
+      unsigned int tTotalGold[MAX_MONEY_TYPE],
+                   tTotalGlobal = getPosGoldGlobal(),
+                   tTotalShops  = getPosGoldShops(),
+                   tTotalRent   = getPosGold(GOLD_RENT),
+                   tTotalBudget = getPosGoldBudget();
+               int tNetGold[MAX_MONEY_TYPE],
+                   tNetGlobal   = getNetGoldGlobal(),
+                   tNetShops    = getNetGoldShops(),
+                   tNetBudget   = getNetGoldBudget(),
+                   tNetRent     = getNetGold(GOLD_RENT);
+               int tTotalDrain  = tTotalGlobal - tNetGlobal;
+
+      if (!arg || !*arg) {
+        char tNames[MAX_MONEY_TYPE][20] =
+        { "X-Fer"         , "Income"  , "Repair"     , "Shop",
+          "Commodities"   , "Hospital", "Gamble"     , "Rent",
+          "Dump"          , "Tithe"   , "Shop-Symbol", "Shop-Weapon",
+          "Shop-Armor"    , "Shop-Pet", "Shop-Food"  , "Shop-Components",
+          "Shop-Responses"
+        };
+
+        sprintf(buf2, "Modifier: Shop  : %2.2f (Factor: %6.2f%%)\n\r",
+                gold_modifier[GOLD_SHOP].getVal(),
+                100.0 * (tTotalShops - tNetShops) / tTotalShops);
+        buf += buf2;
+        sprintf(buf2, "Modifier: Income: %2.2f (Factor: %6.2f%%)\n\r",
+                gold_modifier[GOLD_INCOME].getVal(),
+                100.0 * tNetBudget / tTotalBudget);
+        buf += buf2;
+        sprintf(buf2, "Modifier: Repair: %2.2f (Factor: %6.2f%%)\n\r",
+                gold_modifier[GOLD_REPAIR].getVal(),
+                100.0 * (tTotalBudget - tNetBudget) / tTotalDrain);
+        buf += buf2;
+        sprintf(buf2, "Modifier: Rent  : %2.2f (Factor: %6.2f%%) (Adjusted: %6.2f%%)\n\r",
+                gold_modifier[GOLD_RENT].getVal(),
+                100.0 * (tTotalRent - tNetRent) / tTotalDrain,
+                100.0 * (tTotalRent - tNetRent) / gold_modifier[GOLD_RENT].getVal() / tTotalDrain);
+        buf += buf2;
+        sprintf(buf2, "Modifier: Equip : %2.2f (Factor: %6.2f%%)\n\r",
+                stats.equip,
+                100.0 * (getPosGold(GOLD_SHOP_WEAPON) + getPosGold(GOLD_SHOP_ARMOR)) / tTotalGlobal);
+        buf += buf2;
+        buf += "\n\r";
+
+        sprintf(buf2, "Economy-Total :   pos = %10u   net gold = %10d   drain = %10d\n\r",
+                tTotalGlobal, tNetGlobal, tTotalDrain);
+        buf += buf2;
+
+        // Shops are a little Different from normal.
+        // Want shops to be a slight drain, so compare drain to source.
+        sprintf(buf2, "Economy-Shop  :   pos = %10u   net gold = %10d   drain = %10d\n\r",
+                tTotalShops, tNetShops, tTotalShops - tNetShops);
+        buf += buf2;
+        sprintf(buf2, "Economy-Budget:   pos = %10u   net gold = %10d   drain = %10d\n\r",
+                tTotalBudget, tNetBudget, tTotalBudget - tNetBudget);
+        buf += buf2;
+        buf += "\n\r";
+
+        for (moneyTypeT tMoney = GOLD_XFER; tMoney < MAX_MONEY_TYPE; tMoney++) {
+          tTotalGold[tMoney] = getPosGold(tMoney);
+          tNetGold[tMoney]   = getNetGold(tMoney);
+
+          sprintf(buf2, "Ecomony-%s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
+                  tNames[tMoney], tTotalGold[tMoney], tNetGold[tMoney],
+                  tTotalGold[tMoney] - tNetGold[tMoney],
+                  100.0 * (tTotalGold[tMoney] - tNetGold[tMoney]) / tTotalDrain);
+          buf += buf2;
+        }
+      }
+
+      buf += "\n\rGold Income/Outlay statistics:\n\r\n\r";
+
+      if (arg && *arg && (atoi(arg) < 1 || atoi(arg) > MAX_IMMORT))
+        buf += "...Invalid Level Specified...\n\r\n\r";
+
+      for (j = ((arg && *arg) ? (atoi(arg) - 1) : 0); j < MAX_IMMORT; j++) {
+        if (j < 0)
+          break;
+
+        unsigned long tPosTotal = 0;
+                 long tStaTotal = 0;
+
+        for (moneyTypeT tMoney = GOLD_INCOME; tMoney < MAX_MONEY_TYPE; tMoney++) {
+          tPosTotal += gold_positive[tMoney][j];
+          tStaTotal += gold_statistics[tMoney][j];
+        }
+
+        sprintf(buf2, "%sLevel %2d:%s\n\r", cyan(), j + 1, norm());
+        buf += buf2;
+        sprintf(buf2, "     %sPos  : %9ld%s  (%.2f%% of total)\n\r",
+                cyan(), tPosTotal, norm(), 100.0 * tPosTotal / tTotalGlobal);
+        buf += buf2;
+        sprintf(buf2, "     %sNet  : %9ld%s  (%.2f%% of total)\n\r",
+                cyan(), tStaTotal, norm(), 100.0 * tStaTotal / tNetGlobal);
+        buf += buf2;
+        sprintf(buf2, "     %sDrain: %9ld%s  (%.2f%% of total)\n\r",
+                cyan(), tPosTotal - tStaTotal, norm(),
+                100.0 * (tPosTotal - tStaTotal) / (tTotalGlobal - tNetGlobal));
+        buf += buf2;
+
+        sprintf(buf2, "          Income: %8ld          Comm: %8ld      Gamble: %8ld\n\r",
+                gold_statistics[GOLD_INCOME][j],
+                gold_statistics[GOLD_COMM][j],
+                gold_statistics[GOLD_GAMBLE][j]);
+        buf += buf2;
+        sprintf(buf2, "            Shop: %8ld     Resp-Shop: %8ld      Repair: %8ld\n\r",
+                gold_statistics[GOLD_SHOP][j],
+                gold_statistics[GOLD_SHOP_RESPONSES][j],
+                gold_statistics[GOLD_REPAIR][j]);
+        buf += buf2;
+        sprintf(buf2, "      Armor-Shop: %8ld   Weapon-Shop: %8ld    Pet-Shop: %8ld\n\r",
+                gold_statistics[GOLD_SHOP_ARMOR][j],
+                gold_statistics[GOLD_SHOP_WEAPON][j],
+                gold_statistics[GOLD_SHOP_PET][j]);
+        buf += buf2;
+        sprintf(buf2, "     Symbol-Shop: %8ld     Comp-Shop: %8ld   Good-Shop: %8ld\n\r",
+                gold_statistics[GOLD_SHOP_SYMBOL][j],
+                gold_statistics[GOLD_SHOP_COMPONENTS][j],
+                gold_statistics[GOLD_SHOP_FOOD][j]);
+        buf += buf2;
+        sprintf(buf2, "            Rent: %8ld      Hospital: %8ld       Tithe: %8ld\n\r",
+                gold_statistics[GOLD_RENT][j],
+                gold_statistics[GOLD_HOSPITAL][j],
+                gold_statistics[GOLD_TITHE][j]);
+        buf += buf2;
+        sprintf(buf2, "            Dump: %8ld\n\r\n\r",
+                gold_statistics[GOLD_DUMP][j]);
+        buf += buf2;
+
+        if (arg && *arg)
+          break;
+      }
+
+      desc->page_string(buf.c_str());
+#else
       unsigned int tot_gold = getPosGoldGlobal();
       unsigned int tot_gold_shop = getPosGold(GOLD_SHOP);
       unsigned int tot_gold_income = getPosGold(GOLD_INCOME);
@@ -4072,15 +4622,15 @@ void TBeing::doInfo(const char *arg)
       int tot_drain = tot_gold - net_gold;
 
       sprintf(buf2, "Shop  : modifier: %.2f        (factor  : %.2f%%)\n\r",
-           gold_modifier[GOLD_SHOP],
+           gold_modifier[GOLD_SHOP].getVal(),
            100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
       buf += buf2;
       sprintf(buf2, "Income: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_INCOME],
+            gold_modifier[GOLD_INCOME].getVal(),
             100.0 * net_gold_budget / tot_gold_budget);
       buf += buf2;
       sprintf(buf2, "Repair: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_REPAIR],
+            gold_modifier[GOLD_REPAIR].getVal(),
             100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
       buf += buf2;
       sprintf(buf2, "Equip: modifier: %.2f        (factor  : %.2f%%)\n\r",
@@ -4132,7 +4682,7 @@ void TBeing::doInfo(const char *arg)
       buf += buf2;
       sprintf(buf2, "REPAIR ECONOMY:    pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_repair, net_gold_repair, tot_gold_repair - net_gold_repair, 100.0 * (tot_gold_repair - net_gold_repair) / tot_drain);
       buf += buf2;
-      sprintf(buf2, "HOSPITAL ECONOMY:  pos %u, net gold = %d\n\r", tot_gold_hospital, net_gold_hospital);
+      sprintf(buf2, "HOSPITAL ECONOMY:  pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_hospital, net_gold_hospital, tot_gold_hospital - net_gold_hospital, 100.0 * (tot_gold_hospital - net_gold_hospital) / tot_drain);
       buf += buf2;
       sprintf(buf2, "GAMBLE ECONOMY:    pos %u, net gold = %d\n\r", tot_gold_gamble, net_gold_gamble);
       buf += buf2;
@@ -4225,7 +4775,8 @@ void TBeing::doInfo(const char *arg)
               gold_statistics[GOLD_DUMP][j]);
         buf += buf2;
       }
-      desc->page_string(buf.c_str(), 0);
+      desc->page_string(buf.c_str());
+#endif
     } else if (is_abbrev(arg1, "discipline")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information at your level.\n\r");
@@ -4257,7 +4808,7 @@ void TBeing::doInfo(const char *arg)
               discArray[snt]->saves);
         buf += buf2;
       }
-      desc->page_string(buf.c_str(), 0);
+      desc->page_string(buf.c_str());
     } else if (is_abbrev(arg1, "skills")) {
       arg = one_argument(arg, arg1);
 
@@ -4265,11 +4816,29 @@ void TBeing::doInfo(const char *arg)
         sendTo("You cannot access that information at your level.\n\r");
         return;
       }
-      int w2 = atoi(arg1);
-      spellNumT which = spellNumT(w2);
-      if (which < MIN_SPELL || which >= MAX_SKILL) {
-        sendTo("Syntax: info skills <skill #>\n\r");
-        return;
+
+      spellNumT which;
+
+      if (is_number(arg1)) {
+        which = spellNumT(atoi(arg1));
+
+        if (which < MIN_SPELL || which >= MAX_SKILL) {
+          sendTo("Syntax: info skills <skill #:%d - %d>\n\r", MIN_SPELL, (MAX_SKILL + 1));
+          return;
+        }
+      } else {
+        for (which = MIN_SPELL; which < MAX_SKILL; which++) {
+          if (!discArray[which] || hideThisSpell(which))
+            continue;
+
+          if (is_abbrev(arg1, discArray[which]->name))
+            break;
+        }
+
+        if (which >= MAX_SKILL) {
+          sendTo("Unable to find requested skill.\n\r");
+          return;
+        }
       }
 
       if (hideThisSpell(which)) {
@@ -4391,7 +4960,7 @@ void TBeing::doInfo(const char *arg)
         *this += *note;
         sendTo("Note created.\n\r");
       } else
-        desc->page_string(buf.c_str(), 0);
+        desc->page_string(buf.c_str());
       return;
     } else if (is_abbrev(arg1, "mobskills")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
@@ -4424,7 +4993,7 @@ void TBeing::doInfo(const char *arg)
               discArray[snt]->mobSaves);
         buf += buf2;
       }
-      desc->page_string(buf.c_str(), 0);
+      desc->page_string(buf.c_str());
     } else if (is_abbrev(arg1, "immskills")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information at your level.\n\r");
@@ -4456,7 +5025,7 @@ void TBeing::doInfo(const char *arg)
               discArray[snt]->immSaves);
           buf += buf2;
       }
-      desc->page_string(buf.c_str(), 0);
+      desc->page_string(buf.c_str());
     } else {
       sendTo("What would you like info on?\n\r");
       sendTo(str.c_str());
@@ -4485,12 +5054,12 @@ static void TimeTravel(const char *ch)
     return;
 
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(10, "Error updating %s's rent file!", ch);
+    vlogf(LOG_MISC, "Error updating %s's rent file!", ch);
     return;
   }
 
   if (fread(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(10, "  Cannot read rent file header for %s", ch);
+    vlogf(LOG_MISC, "  Cannot read rent file header for %s", ch);
     fclose(fp);
     return;
   }
@@ -4504,15 +5073,15 @@ static void TimeTravel(const char *ch)
     h.last_update = time(0);
     unsigned int amt = h.total_cost * delta / SECS_PER_REAL_DAY;
     h.gold_left += amt;
-    vlogf(-1, "Crediting %s with %u gold for downtime. (left=%d)",
+    vlogf(LOG_SILENT, "Crediting %s with %u gold for downtime. (left=%d)",
         ch, amt, h.gold_left);
   } else
-    vlogf(-1, "TimeTravel for %s done as update-advance only. (left=%d)",
+    vlogf(LOG_SILENT, "TimeTravel for %s done as update-advance only. (left=%d)",
         ch, h.gold_left);
 
   rewind(fp);
   if (fwrite(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(10, "Cannot write updated rent file header for %s", h.owner);
+    vlogf(LOG_MISC, "Cannot write updated rent file header for %s", h.owner);
     fclose(fp);
     return;
   }
@@ -4542,7 +5111,7 @@ void TBeing::doTimeshift(const char *arg)
       return;
     }
 #endif
-    vlogf(5,"%s moving time back %d minutes.",getName(),deltatime);
+    vlogf(LOG_MISC,"%s moving time back %d minutes.",getName(),deltatime);
     dirwalk("rent/a",TimeTravel);
     dirwalk("rent/b",TimeTravel);
     dirwalk("rent/c",TimeTravel);
@@ -4577,6 +5146,12 @@ void TBeing::doTimeshift(const char *arg)
     }
     tmp = deltatime * SECS_PER_REAL_MIN;
 
+#if 0
+// there's no good reason to do this
+// time_info gets recalculated based on real time since a given date at bootup
+// so this is semi-pointless
+// I'll leave it in the hopes that in the future, mud-time will actually
+// be preserved from reboot to reboot and not based on the real world at all
     if (tmp/SECS_PER_MUD_YEAR) {
       time_info.year -= tmp/SECS_PER_MUD_YEAR;
       tmp %= SECS_PER_MUD_YEAR;
@@ -4616,6 +5191,7 @@ void TBeing::doTimeshift(const char *arg)
         time_info.month += 12;
       }
     }
+#endif
     sprintf(buf,"%s has shifted game time back %d real minutes.",getName(),deltatime);
     doSystem(buf);
     sprintf(buf,"Adjusting mud-time, rent charges for PC's rented and talens for PC's online.");
@@ -4711,7 +5287,7 @@ void TBeing::doHostlog(const char *argument)
       }
     }
     strcpy(hostLogList[numberLogHosts], buf);
-    vlogf(10, "%s has added host %s to the hostlog list.", getName(), hostLogList[numberLogHosts]);
+    vlogf(LOG_MISC, "%s has added host %s to the hostlog list.", getName(), hostLogList[numberLogHosts]);
     numberLogHosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -4734,7 +5310,7 @@ void TBeing::doHostlog(const char *argument)
       if (!strncmp(hostLogList[a], buf, length)) {
         for (b = a; b <= numberLogHosts; b++)
           strcpy(hostLogList[b], hostLogList[b + 1]);
-        vlogf(10, "%s has removed host %s from the hostlog list.", getName(), buf);
+        vlogf(LOG_MISC, "%s has removed host %s from the hostlog list.", getName(), buf);
         numberLogHosts--;
         return;
       }
@@ -4856,7 +5432,7 @@ void TBeing::doSysTasks(const char *arg)
   strcpy(argument, arg);
   cleanCharBuf(argument);
   string lst = systask->Tasks(this, argument);
-  desc->page_string(lst.c_str(), 0);
+  desc->page_string(lst.c_str());
 }
 
 void TBeing::doSysLoglist()
@@ -4874,52 +5450,67 @@ void TBeing::doSysLoglist()
 
 void TBeing::doSysChecklog(const char *arg)
 {
-  char *squote, *equote;
+  char *tMarkerS, // Start
+       *tMarkerE, // End
+        tString[256],
+        tSearch[256],
+        tLog[256];
+  unsigned int tIndex;
 
   if (!hasWizPower(POWER_CHECKLOG)) {
     sendTo("You don't have that power.\n\r");
     return;
   }
 
-  if (!isImmortal()) 
+  if (!isImmortal())
     return;
 
-  for (; isspace(*arg); arg++);    
+  for (; isspace(*arg); arg++);
 
   if (!*arg) {
-    sendTo("Syntax:  checklog \"string\" datestring\n\r");
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
-  char argument[256];
-  strcpy(argument, arg);
-  cleanCharBuf(argument);
-  //  Make sure the grep string is wrapped in double quotes.
-  squote = strchr(argument, '"');
-  equote = strrchr(argument, '"');
-  if (!equote || !squote) {
-    sendTo("Syntax:  checklog \"string\" datestring\n\r");
-    return;
-  }
-  //  Make sure a log file was given.
-  if (!*(equote+1)) {
-    sendTo("You need to specify a particular log file.\n\r");
-    return;
-  }
-  // verify that they are looking at the logs
-  // e.g. avoid checklog "." /mud/code/foo.cc
-  char *tmpch = equote+1;
-  for (;*tmpch && isspace(*tmpch);tmpch++);
-  if (*(tmpch) == '.' ||
-      *(tmpch) == '/') {
-    // dodge relative paths and hard paths
-    sendTo("That's not allowed.\n\r");
-    return;
-  }
-  systask->AddTask(this, SYSTEM_CHECKLOG, argument);
+  strcpy(tString, arg);
+  cleanCharBuf(tString);
 
-  // this is here to avoid gods checking logs on other gods
-  vlogf(5, "%s checklogging: '%s'", getName(), argument);
+  if (!(tMarkerS = strchr(tString, '"')) ||
+      !(tMarkerE = strchr((tMarkerS + 1), '"'))) {
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    return;
+  }
+
+  strncpy(tSearch, tMarkerS, (tMarkerE - tMarkerS));
+  tSearch[(tMarkerE - tMarkerS)] = '\0';
+
+  for (tMarkerE++; *tMarkerE == ' '; tMarkerE++);
+
+  strcpy(tLog, tMarkerE);
+
+  if (!tLog[0]) {
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    return;
+  }
+
+  for (tIndex = 0; tIndex < strlen(tLog); tIndex++)
+    // need to be able to type "log.121299.0000" but not "../" or "."
+    if ( tLog[tIndex] == '/' ||
+         (tLog[tIndex] == '.' && (tIndex == 0))) {
+      sendTo("Illegal log specified.  Bad, Bad god!\n\r");
+      return;
+    }
+
+  sprintf(tString, "\\%s\\\" %s", tSearch, tLog);
+  systask->AddTask(this, SYSTEM_CHECKLOG, tString);
+
+  // There is a tendency for people to see what bad things folks have said
+  // about them using checklog.  Obviously, not good, so we log the event
+  // and watch for imms blindly checking logs on other imms, etc.
+ 
+  // If we don't trust these people why even have the command?
+  if (!hasWizPower(POWER_WIZARD))
+    vlogf(LOG_MISC, "%s checklogging: '%s'", getName(), tString);
 }
 
 void TBeing::doSysViewoutput() 
@@ -4927,11 +5518,11 @@ void TBeing::doSysViewoutput()
   char  file[32];
   sprintf(file, "tmp/%s.output", getName());
 
-  if (!desc->client) 
+  if (!desc->m_bIsClient) 
     desc->start_page_file( file, "There is nothing to read.\n\r");
   else {
     string sb = "";
-    file_to_string(file, sb, true);
+    file_to_string(file, sb);
     sb += "\n\r";
     processStringForClient(sb);
     desc->clientf("%d", CLIENT_NOTE);
@@ -5149,12 +5740,12 @@ void TBeing::doHeaven(const char *arg)
     return;
   }
 
-  if (num > 24) {
-    sendTo("A higher power has decreed that 24 units is the most you may do at once.\n\r");
+  if (num > 100) {
+    sendTo("A higher power has decreed that 100 units is the most you may do at once.\n\r");
     return;
   }
 
-  sendTo("You move the heavens and The World.\n\r");
+  sendTo("You move the heavens and the world.\n\r");
   for (int i = 0; i < num; i++)
     weatherAndTime(1);
 }
@@ -5169,9 +5760,6 @@ void TBeing::doAccount(const char *arg)
   FILE *fp;
   string str;
 
-  if (powerCheck(POWER_ACCOUNT))
-    return;
-
   if (!desc)
     return;
 
@@ -5181,6 +5769,16 @@ void TBeing::doAccount(const char *arg)
   if (!namebuf || !*namebuf || (*namebuf == '.'))  {
     sendTo("Syntax: account <account name>\n\r");
     return;
+  }
+
+  if (!hasWizPower(POWER_ACCOUNT)) {
+    // person isn't an imm, only let them check their own account
+    if (!desc->account || !desc->account->name ||
+        strcmp(desc->account->name, namebuf)) {
+      sendTo("You may only check your own account.\n\r");
+      sendTo("Syntax: account <account name>\n\r");
+      return;
+    }
   }
 
   sprintf(buf2, "account/%c/%s", LOWER(namebuf[0]), lower(namebuf).c_str());
@@ -5199,33 +5797,107 @@ void TBeing::doAccount(const char *arg)
 
   fread(&afp, sizeof(afp), 1, fp);
 
-  arg = one_argument(arg, buf2);
-  if (is_abbrev(buf2, "banished")) {
-    if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
-      REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
-      sendTo("You have unbanished the %s account.\n\r", afp.name);
-    } else {
-      SET_BIT(afp.flags, ACCOUNT_BANISHED);
-      sendTo("You have set the %s account banished.\n\r", afp.name);
+  // only let imms do this
+  if (hasWizPower(POWER_ACCOUNT)) {
+    arg = one_argument(arg, buf2);
+    if (is_abbrev(buf2, "banished")) {
+      if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
+        REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
+        sendTo("You have unbanished the %s account.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s unbanished account '%s'", getName(), afp.name);
+      } else {
+        SET_BIT(afp.flags, ACCOUNT_BANISHED);
+        sendTo("You have set the %s account banished.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s banished account '%s'", getName(), afp.name);
+      }
+      
+      rewind(fp);
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+      return;
+    } else if (is_abbrev(buf2, "email")) {
+      if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
+        REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
+        sendTo("You have un-email-banished the %s account.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s un-email-banished account '%s'", getName(), afp.name);
+      } else {
+        SET_BIT(afp.flags, ACCOUNT_EMAIL);
+        sendTo("You have set the %s account email-banished.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s email-banished account '%s'", getName(), afp.name);
+      }
+      
+      rewind(fp);
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+      return;
+    } else if (is_abbrev(buf2, "double")) {
+      if (powerCheck(POWER_FLAG_IMP_POWER)) {
+        fclose(fp);
+        return;
+      }
+  
+      if (IS_SET(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
+        REMOVE_BIT(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+        sendTo("You revoke the %s account's ability to double-class.\n\r", afp.name);
+      } else {
+        SET_BIT(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+        sendTo("You grant the %s account the ability to double-class.\n\r", afp.name);
+      }
+      
+      rewind(fp);
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+      return;
+    } else if (is_abbrev(buf2, "triple")) {
+      if (powerCheck(POWER_FLAG_IMP_POWER)) {
+        fclose(fp);
+        return;
+      }
+  
+      if (IS_SET(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
+        REMOVE_BIT(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+        sendTo("You revoke the %s account's ability to triple-class.\n\r", afp.name);
+      } else {
+        SET_BIT(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+        sendTo("You grant the %s account the ability to triple-class.\n\r", afp.name);
+      }
+      
+      rewind(fp);
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+      return;
+    } else if (is_abbrev(buf2, "immortal")) {
+      // this is not something that should be done (manually) unless a 
+      // god has left immortality entirely
+
+      if (powerCheck(POWER_FLAG_IMP_POWER)) {
+        fclose(fp);
+        return;
+      }
+
+      // Given that ACCOUNT_IMMORTAL prevents imms from violating our own
+      // rules, it's a bit too tempting for folks to turn off the automatic
+      // checks.  I'm cynical and don't trust anyone but myself, so sue me.
+      if (strcmp(getName(), "Batopr")) {
+        sendTo("Only Batopr should be doing this.\n\r");
+        return;
+      }
+  
+      if (IS_SET(afp.flags, ACCOUNT_IMMORTAL)) {
+        REMOVE_BIT(afp.flags, ACCOUNT_IMMORTAL);
+        sendTo("You un-flag the %s account immortal.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s making account='%s' non-immortal", getName(), afp.name);
+      } else {
+        SET_BIT(afp.flags, ACCOUNT_IMMORTAL);
+        sendTo("You flag the %s account as immortal.\n\r", afp.name);
+        vlogf(LOG_MISC, "%s making account='%s' immortal", getName(), afp.name);
+      }
+      
+      rewind(fp);
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+      return;
     }
-    
-    rewind(fp);
-    fwrite(&afp, sizeof(accountFile), 1, fp);
-    fclose(fp);
-    return;
-  } else if (is_abbrev(buf2, "email")) {
-    if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
-      REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
-      sendTo("You have un-email-banished the %s account.\n\r", afp.name);
-    } else {
-      SET_BIT(afp.flags, ACCOUNT_EMAIL);
-      sendTo("You have set the %s account email-banished.\n\r", afp.name);
-    }
-    
-    rewind(fp);
-    fwrite(&afp, sizeof(accountFile), 1, fp);
-    fclose(fp);
-    return;
   }
 
   fclose(fp);
@@ -5236,9 +5908,10 @@ void TBeing::doAccount(const char *arg)
   if ((afp.flags & ACCOUNT_IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
     str += "This account belongs to an immortal.\n\r";
     str += "*** Information Concealed ***\n\r";
-    desc->page_string(str.c_str(), 0);
+    desc->page_string(str.c_str());
     return;
   }
+
   if (IS_SET(afp.flags, ACCOUNT_BANISHED))
     str += "<R><f>Account is banished<z>\n\r";
   if (IS_SET(afp.flags, ACCOUNT_EMAIL))
@@ -5249,13 +5922,16 @@ void TBeing::doAccount(const char *arg)
     str += "No characters in account.\n\r";
   str += "\n\r";
 
-  sprintf(buf2, "account/%c/%s/comment", LOWER(namebuf[0]), lower(namebuf).c_str());
-  if ((fp = fopen(buf2, "r"))) {
-    while (fgets(buf2, 255, fp))
-      str += buf2;
-    fclose(fp);
+  // only let imms see comments
+  if (hasWizPower(POWER_ACCOUNT)) {
+    sprintf(buf2, "account/%c/%s/comment", LOWER(namebuf[0]), lower(namebuf).c_str());
+    if ((fp = fopen(buf2, "r"))) {
+      while (fgets(buf2, 255, fp))
+        str += buf2;
+      fclose(fp);
+    }
   }
-  desc->page_string(str.c_str(), 0);
+  desc->page_string(str.c_str());
 
   return;
 }
@@ -5269,7 +5945,7 @@ void TBeing::doClients()
   char   tString[1024];
 
   for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
-    if (tDesc->client) {
+    if (tDesc->m_bIsClient) {
       sprintf(tString, "%-16s %-34s\n\r",
               ((tDesc->character && tDesc->character->name) ?
                tDesc->character->name : "UNDEFINED"),
@@ -5335,7 +6011,7 @@ int TBeing::doCrit(const char *arg)
   }
   weap = heldInPrimHand();
   part = vict->getPartHit(this, TRUE);
-  dam = getWeaponDam(vict, weap, TRUE);
+  dam = getWeaponDam(vict, weap, HAND_PRIMARY);
 
   if (weap)
     wtype = getAttackType(weap);
@@ -5422,7 +6098,7 @@ static bool verifyName(const string tStString)
   All this does at the moment is renames us then performs the command
   then changes us back.  This Really should be setup to replace the
   account information but at the moment this is enough to test/verify
-  it's ability.  We use the Creator check down in doAs() to make
+  its ability.  We use the Creator check down in doAs() to make
   sure it's Only used by trusted people.
  */
 int TBeing::doAsOther(const string tStString)
@@ -5483,9 +6159,11 @@ int TBeing::doAs(const char *arg)
 
   if (!desc || !desc->original || desc->original->GetMaxLevel() <= MAX_MORT) {
     // not connected, not switched, not a god
-    if (desc && isImmortal() && hasWizPower(POWER_WIZARD))
+    if (desc && isImmortal() && hasWizPower(POWER_WIZARD)) {
+      // this is pretty weird, but I guess the LOWS want to be able to
+      // use other imms MED, OED, RED, etc
       return doAsOther(arg);
-    else
+    } else
       incorrectCommand();
 
     return FALSE;
@@ -5516,7 +6194,7 @@ int TBeing::doAs(const char *arg)
   // this is event where rc == DELETE_THIS
   // handle this by forcing a return
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    vlogf(9, "doAs(): %s somehow killed self: %s",
+    vlogf(LOG_BUG, "doAs(): %s somehow killed self: %s",
             desc->original->getName(), arg);
     sendTo("Please don't do things that will cause your original character to be destroyed.\n\r");
     doReturn("", WEAR_NOWHERE, CMD_RETURN);
@@ -5568,7 +6246,7 @@ void TBeing::doComment(const char *argument)
   *(*desc->str) = '\0';
 
   desc->max_str = MAX_MAIL_SIZE;
-  if (desc->client)
+  if (desc->m_bIsClient)
     desc->clientf("%d", CLIENT_STARTEDIT, MAX_MAIL_SIZE);
 
   return;
@@ -5583,50 +6261,4 @@ immortalTypeT TPerson::isImmortal(int lev) const
 bool TBeing::inQuest() const
 {
   return (isPlayerAction(PLR_SOLOQUEST) || isPlayerAction(PLR_GRPQUEST));
-}
-
-int TBeing::doLongDescr(const char *arg)
-{
-  Descriptor *d;
-
-  if (powerCheck(POWER_LONGDESC))
-    return FALSE;
-
-  if (!(d = desc))
-    return FALSE;
-
-  for (; isspace(*arg); arg++);
-
-  if (!*arg || !strcmp(arg, "?")) {
-    sendTo("Your current long description is : \n\r\n\r");
-    if (!(player.longDescr)) {
-      sendTo("Default.\n\r");
-      return FALSE;
-    } else {
-      sendTo("%s\n\r", nameColorString(this, d, player.longDescr, NULL, COLOR_BASIC, FALSE).c_str());
-      return FALSE;
-    }
-  }
-  if (!strcmp(arg, "def")) {
-    delete [] player.longDescr;
-    player.longDescr = NULL;
-    sendTo("Ok, long description is now the PC default.\n\r");
-    return TRUE;
-  }
-  int len = (int) strlen(arg);
-
-  char tmpbuf[256];
-  if (len > 100) {
-    sendTo("String too long.  Truncated to:\n\r");
-    strncpy(tmpbuf, arg, 149);
-    tmpbuf[100] = '\0';
-    sendTo("%s\n\r", tmpbuf);
-    len = 100;
-  } else
-    strcpy(tmpbuf, arg);
-
-  delete [] player.longDescr;
-  player.longDescr = dsearch(tmpbuf);
-  sendTo("Ok, long description is now:\n\r%s\n\r", player.longDescr);
-  return TRUE;
 }
