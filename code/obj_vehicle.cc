@@ -140,6 +140,7 @@ void TVehicle::vehiclePulse(int pulse)
   TRoom *troom=roomp;
   string buf;
   char shortdescr[256];
+  vector<TBeing *>tBeing(0);
 
   if(!troom)
     return;
@@ -147,7 +148,8 @@ void TVehicle::vehiclePulse(int pulse)
   // this is where we regulate speed
   if(getSpeed()==0)
     return;
-  else if(pulse % (ONE_SECOND/getSpeed()))
+  
+  if(pulse % (ONE_SECOND/getSpeed()))
     return;
 
   // should stop car and send message
@@ -192,11 +194,15 @@ void TVehicle::vehiclePulse(int pulse)
   troom=real_roomp(getTarget());
 
 
-  for(t=troom->getStuff();t;t=t->nextThing){
-    if((tb=dynamic_cast<TBeing *>(t))){
-      act(buf.c_str(), 0, tb, this, 0, TO_CHAR);
-      driveLook(tb, true);
-    }
+  // the doAt in driveLook() would screw up the getStuff list
+  // so we "pre-cache" it
+  for (t=troom->getStuff(); t; t = t->nextThing)
+    if((tb=dynamic_cast<TBeing *>(t)))
+      tBeing.push_back(tb);
+  
+  for(unsigned int tBeingIndex=0;tBeingIndex<tBeing.size();tBeingIndex++){
+    act(buf.c_str(), 0, tBeing[tBeingIndex], this, 0, TO_CHAR);
+    driveLook(tBeing[tBeingIndex], true);
   }
 }
 
