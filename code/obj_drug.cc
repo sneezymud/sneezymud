@@ -305,7 +305,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	    act("You feel a little light-headed.",TRUE,ch,0,0,TO_CHAR);
 	    break;
 	  case 4:
-	    act("You can feel the pipeweed taking affect.",
+	    act("You can feel the pipeweed taking effect.",
 		TRUE,ch,0,0,TO_CHAR);
 	    break;
 	  case 7:
