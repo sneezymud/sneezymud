@@ -382,7 +382,13 @@ const short int MOB_JUJU_BUNNY     =4497;
 const short int MOB_JUJU_MARE      =31307;
 const short int MOB_JUJU_TETRARCH  =15104;
 const short int MOB_FACTION_REGISTRAR = 360;
-
+const short int MOB_SAMEDI = 31310;
+const short int MOB_PTOK = 31311;
+const short int MOB_FORSAKEN = 31312;
+const short int MOB_ELRIC = 31313;
+const short int MOB_SPIRIT_FATHER = 31314;
+const short int MOB_GANDOLFO = 31315;
+const short int MOB_STRANGE_LIZARD = 31316;
 #endif
 
 
