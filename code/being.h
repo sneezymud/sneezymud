@@ -1059,6 +1059,7 @@ class TBeing : public TThing {
     bool nobrainerTaskCommand(cmdTypeT);
     void listExits(const TRoom *) const;
     virtual bool listThingRoomMe(const TBeing *) const;
+    void displayHelpFile(char *, char *);
     void genericKillFix();
     virtual int genericMovedIntoRoom(TRoom *, int, checkFallingT = CHECK_FALL_YES);
     int genericItemCheck(TThing *);

@@ -58,6 +58,44 @@ static const char *learn_name(byte num)
     return "very fast";
 }
 
+void TBeing::displayHelpFile(char *helppath, char *namebuf){
+  int j;
+  struct stat timestat;
+  char timebuf[1024], buf2[1024];
+  string str;
+
+  // make the topic name upper case
+  for (j = 0;namebuf[j] != '\0';j++)
+    namebuf[j] = UPPER(namebuf[j]);
+
+  // find the last modified time on the file
+  if (stat(helppath, &timestat)) {
+    vlogf(LOG_BUG,"bad call to help function %s", namebuf);
+    return;
+  }
+  strcpy(timebuf, ctime(&(timestat.st_mtime)));
+  timebuf[strlen(timebuf) - 1] = '\0';
+  sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
+	  namebuf,timebuf, norm());
+  str = buf2;
+  
+  
+  // special message for nextversion file
+  if (!strcmp(namebuf, "NEXTVERSION")) {
+    str += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
+    str += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
+    str += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
+    str += "FORTHCOMING...\n\r\n\r";
+  }
+
+  // now print the file
+  file_to_string(helppath, str, CONCAT_YES);
+  str += "\n\r";
+  desc->page_string(str.c_str());
+  return;
+
+}
+
 void TBeing::doHelp(const char *arg)
 {
   string str;
@@ -100,32 +138,17 @@ void TBeing::doHelp(const char *arg)
     desc->start_page_file(HELP_PAGE_FILE, "General help unavailable.\n\r");
     return;
   }
-  if (is_abbrev(arg, "multiplaying") ||
-      is_abbrev(arg, "multi playing")) {
-    strcpy(helppath, "objdata/books/1458.23");
-#if 0
-    desc->start_page_file(helppath, "ERROR in multi playing.  Tell a god.");
-#else
-    str = "";
-    file_to_string(helppath, str, CONCAT_YES);
-    str += "\n\r";
+
+  if(!strcasecmp(arg, "index")){
+    FILE *index=popen("bin/helpindex", "r");
+    
+    while(fread(buf2, 1, MAX_STRING_LENGTH, index)){
+      str+=buf2;
+    }
+    pclose(index);
+    
     desc->page_string(str.c_str());
-#endif
-    return;
-  }
-  if (is_abbrev(arg, "pkill")) {
-    strcpy(helppath, "objdata/books/1458.26");
-    desc->start_page_file(helppath, "ERROR in player kill.  Tell a god.");
-    return;
-  }
-  if (is_abbrev(arg, "ploot")) {
-    strcpy(helppath, "objdata/books/1458.27");
-    desc->start_page_file(helppath, "ERROR in player loot.  Tell a god.");
-    return;
-  }
-  if (is_abbrev(arg, "monogramming") || 
-      is_abbrev(arg, "engraving")) {
-    doAt("569 look disclaimer", true);
+
     return;
   }
 
@@ -231,37 +254,8 @@ void TBeing::doHelp(const char *arg)
     }
   }
   if (found) {
-    i = helpnum;
-    strcpy(namebuf, helpIndex[i].c_str());
-    if (hasColorVt()) {
-      sprintf(ansipath, "%s.ansi", helppath);
-      if (file_to_string(ansipath, str)) {
-        // an ansi file was found, swap helppath request with ansi
-        strcpy(helppath, ansipath);
-      }
-    }
-    for (j = 0;namebuf[j] != '\0';j++)
-      namebuf[j] = UPPER(namebuf[j]);
-    if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,"bad call to help function %s", namebuf);
-      return;
-    }
-    strcpy(timebuf, ctime(&(timestat.st_mtime)));
-    timebuf[strlen(timebuf) - 1] = '\0';
-    sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-            namebuf,timebuf, norm());
-    str = buf2;
-
-    if (!strcmp(namebuf, "NEXTVERSION")) {
-      str += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
-      str += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
-      str += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
-      str += "FORTHCOMING...\n\r\n\r";
-    }
-
-    file_to_string(helppath, str, CONCAT_YES);
-    str += "\n\r";
-    desc->page_string(str.c_str());
+    strcpy(namebuf, helpIndex[helpnum].c_str());
+    displayHelpFile(helppath, namebuf);
     return;
   }
   for (i = 0; i < spellIndex.size(); i++) {
@@ -708,6 +702,7 @@ void TBeing::doHelp(const char *arg)
     desc->page_string(str.c_str());
     return;
   }
+
   sendTo("No such help file available.\n\r");
 }
 
