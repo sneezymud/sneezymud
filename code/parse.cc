@@ -18,15 +18,6 @@ string lockmess;
 commandInfo *commandArray[MAX_CMD_LIST];
 bool WizLock;
 
-static const char *one_arg(const char *s, char *a)
-{
-  for (; isspace(*s); s++);
-  for (; !isspace(*a = *s) && *s; s++, a++);
-  *a = '\0';
-
-  return s;
-}
-
 int search_block(const char *arg, const char * const *list, bool exact)
 {
   register int i, l;
@@ -1777,7 +1768,8 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
 {
   int i;
   char aliasbuf[256], arg1[512], arg2[1024];
-  char argument[256];
+  string argument;
+  string whitespace=" \f\n\r\t\v";
 
   half_chop(orig_arg, arg1, arg2);
 
@@ -1789,7 +1781,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
       dismount(POSITION_STANDING);
   }
 
-  strcpy(argument, orig_arg);
+  argument=orig_arg;
 
   if (desc) {
     i = -1;
@@ -1804,44 +1796,44 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
       else
         strcpy(aliasbuf, desc->alias[i].command);
 
-      strcpy(argument, aliasbuf);
-      half_chop(argument, arg1, arg2);
+      argument=aliasbuf;
+      half_chop(argument.c_str(), arg1, arg2);
     }
   }
   // Let people use say and emote shortcuts with no spaces - Russ
-  if ((*argument == '\'') || (*argument == ':') || (*argument == ',')) {
-    arg1[0] = *argument;
+  if ((argument[0] == '\'') || (argument[0] == ':') || (argument[0] == ',')) {
+    arg1[0] = argument[0];
     arg1[1] = '\0';
-    strcpy(argument, &argument[1]);
-  } else if (!strncmp(argument, "low", 3) && !isImmortal()) {
+    argument.erase(0,1); // remove first character
+  } else if (!argument.compare("low", 0, 3) && !isImmortal()){
     // KLUDGE - for low and lower command
     // l and lo == look, so we need not check for them
     strcpy(arg1, "lower");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncmp(argument, "repl", 4) && !isImmortal()) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!argument.compare("repl", 0, 4) && !isImmortal()){
     // KLUDGE - for reply and replace command
     // rep == report, so we need not check for shorter
     strcpy(arg1, "reply");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncmp(argument, "med", 3) && !isImmortal()) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!argument.compare("med", 0, 3) && !isImmortal()){
     // KLUDGE - for meditate and medit command
     // me == mend limb, so we need not check for shorter
     strcpy(arg1, "meditate");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncasecmp(argument, "southe", 6)) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!(lower(argument).compare("southe", 0, 6))){
     strcpy(arg1, "se");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncasecmp(argument, "northw", 6)) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!(lower(argument).compare("northw", 0, 6))){
     strcpy(arg1, "nw");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncasecmp(argument, "southw", 6)) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!(lower(argument).compare("southw", 0, 6))){
     strcpy(arg1, "sw");
-    strcpy(argument, one_arg(argument, arg2));
-  } else if (!strncasecmp(argument, "northe", 6)) {
+    argument.erase(0, argument.find_first_of(whitespace, 0));
+  } else if (!(lower(argument).compare("northe", 0, 6))){
     strcpy(arg1, "ne");
-    strcpy(argument, one_arg(argument, arg2));
+    argument.erase(0, argument.find_first_of(whitespace, 0));
   } else
-    strcpy(argument, one_arg(argument, arg2));
+    argument.erase(0, argument.find_first_of(whitespace, 0));
 
   cmdTypeT cmd = searchForCommandNum(arg1);
   if (cmd >= MAX_CMD_LIST) {
@@ -1911,7 +1903,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
   }
   return (doCommand(cmd, argument, NULL, FALSE));
 #else
-  return (doCommand(cmd, argument, NULL, typedIn));
+  return (doCommand(cmd, argument.c_str(), NULL, typedIn));
 #endif
 }
 
