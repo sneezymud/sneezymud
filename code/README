@@ -2,6 +2,8 @@
 - Fixed a bug in @set blocka/blockb that was not setting the ending block.
 - Fixed a bug in stat that was displaying the stater's rooms and not the
   stat'eds rooms.
+- Setup info skill <skill> to understand things like:
+  info skill backstab
 
 12-09-99 - bat
 - created an rcsls.csh script that basically reveals what files are
