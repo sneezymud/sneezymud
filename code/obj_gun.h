@@ -42,7 +42,8 @@ class TGun : public TGenWeapon {
   private:
     int rof;
     int ammotype;
-  
+    int flags;
+
     TAmmo *ammo;
   public:    
     void setROF(int r) { rof=r; }
@@ -51,7 +52,9 @@ class TGun : public TGenWeapon {
     int getAmmoType() const { return ammotype; }
     void setAmmo(TAmmo *a) { ammo=a; }
     TAmmo *getAmmo() const { return ammo; }
-
+    void setFlags(int f) { flags=f; }
+    int getFlags() const { return flags; }
+    
 
     int shootMeBow(TBeing *, TBeing *, unsigned int, dirTypeT, int);
     virtual int suggestedPrice() const;

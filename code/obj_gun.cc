@@ -280,15 +280,25 @@ void TAmmo::describeObjectSpecifics(const TBeing *ch) const
 void TGun::assignFourValues(int x1, int x2, int x3, int x4)
 {
   setROF(x1);  
-  setWeapDamLvl(x2);
-  setWeapDamDev(x3);
+
+  setWeapDamLvl(GET_BITS(x2, 7, 8));
+  setWeapDamDev(GET_BITS(x2, 15, 8));
+
+  setFlags(x3);
+
   setAmmoType(x4);  
 }
 
 void TGun::getFourValues(int *x1, int *x2, int *x3, int *x4) const {
+  int x = 0;
+
   *x1=getROF();
-  *x2=getWeapDamLvl();
-  *x3=getWeapDamDev();
+
+  SET_BITS(x, 7, 8, getWeapDamLvl());
+  SET_BITS(x, 15, 8, getWeapDamDev());
+  *x2 = x;
+
+  *x3=getFlags();
   *x4=getAmmoType();
 }
 
