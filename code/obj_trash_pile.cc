@@ -198,7 +198,7 @@ void TTrashPile::attractVermin()
   int mobvnum;
   int count=0;
 
-  if(!::number(0,999) || index<3 || !roomp)
+  if(::number(0,999) || index<3 || !roomp)
     return;
 
   for(TThing *t=roomp->getStuff();t;t=t->nextThing){
