@@ -1,4 +1,4 @@
-12-12-99 / 12-14-99 / 12-17-99 / 12-18-99 / 12-19-99- Lapsos
+12-12-99 / 12-14-99 / 12-17-99 / 12-18-99 / 12-19-99 / 12-20-99 - Lapsos
 - Fixed a bug in @set blocka/blockb that was not setting the ending block.
 - Fixed a bug in stat that was displaying the stater's rooms and not the
   stat'eds rooms.
@@ -17,6 +17,8 @@
   This should fix the large chunk of the 'vanishing noc/diu' mobs prob.
   I also set a hardCheck in tickUpdateStuff to not bother checking mobs
   currently in the noc/diu storage room.
+- setCond setup to ignore immortals.
+- Response Script GIVE code has been fixed up some more.
 
 12-09-99 - bat
 - created an rcsls.csh script that basically reveals what files are
