@@ -1012,11 +1012,6 @@ int TBaseWeapon::poisonWeaponWeapon(TBeing *ch)
     ch->sendTo("Blunt weapons can't be poisoned effectively.\n\r");
     return FALSE;
   }
-  if (isObjStat(ITEM_BLESS) ||
-      isObjStat(ITEM_MAGIC)) {
-    ch->sendTo("The weapon resists the poison!\n\r");
-    return FALSE;
-  }
   for (i=0;i < MAX_SWING_AFFECT;i++) {
     if (oneSwing[i].bitvector == AFF_POISON) {
       ch->sendTo("That is already poisoned!\n\r");
