@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: temper.cc,v $
+// Revision 1.2  1999/09/16 22:33:37  cosmo
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/16 22:16:32  cosmo
 // Initial revision
 //
@@ -11,7 +14,7 @@
 //
 //
 //////////////////////////////////////////////////////////////////////////
-
+//test
 
 // chop.cc
 
