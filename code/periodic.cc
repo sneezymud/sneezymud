@@ -752,7 +752,11 @@ int TBeing::updateHalfTickStuff()
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
 	reconcileDamage(this,::number(0,2),DAMAGE_DRAIN);
-	setLifeforce(0);
+	if (GetMaxLevel() > 5) {
+	  setLifeforce(0);
+	} else {
+	  setLifeforce(1);
+	}
 	updatePos();
 	if ((0 > getHit()) && (getHit() > -3)) {
 	  updatePos();
