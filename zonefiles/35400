@@ -1,5 +1,292 @@
 #35400
 Jesus/Damesena - Haunted Hobbit Village~
-35499 25 2 0
+35499 30 2 0
+D 0 35404 3 1        A Dusty Path -> A Decrepit Farmhouse
+D 0 35412 3 1        A Dusty Path -> A Decrepit Farmhouse
+D 0 35415 2 1        Before a Stockade Fence -> Path Through a Small Village
+D 0 35416 0 1        Path Through a Small Village -> Before a Stockade Fence
+D 0 35416 1 1        Path Through a Small Village -> Guardhouse by the Gate
+D 0 35416 3 1        Path Through a Small Village -> Tig's
+D 0 35420 0 1        A Shabby Village Square -> The Sweet Tart
+D 0 35420 1 1        A Shabby Village Square -> Inside The Sour Grape
+D 0 35421 1 1        A Shabby Village Square -> Inside The Inn of the Weasel
+D 0 35421 2 1        A Shabby Village Square -> Greb's General
+D 0 35422 0 1        A Shabby Village Square -> Tig's
+D 0 35423 2 1        A Shabby Village Square -> The Wick and Tallow
+D 0 35424 2 1        Path Through a Small Village -> Church of the Wilted and Downtrodden
+D 0 35424 8 1        Path Through a Small Village -> The Village Garden
+D 0 35428 3 1        Path Through a Small Village -> A Small Schoolhouse
+D 0 35431 2 1        Path Through a Small Village -> Bartley's Tannery
+D 0 35432 0 1        Path Through a Small Village -> The Jail
+D 0 35433 0 1        Path Through a Small Village -> Kort's Smithey
+D 0 35434 2 1        Path Through a Small Village -> Inside a Tidy House
+D 0 35434 3 1        Path Through a Small Village -> Inside a Tidy House
+D 0 35434 9 1        Path Through a Small Village -> Inside a Tidy House
+D 0 35435 3 1        Path Through a Small Village -> Inside a Tidy House
+D 0 35437 3 1        Path Through a Small Village -> Garn's Coopery
+D 0 35439 1 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35440 2 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35441 2 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35441 3 1        Path Through a Small Village -> Inside a Smokey Shed
+D 0 35442 1 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35443 2 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35443 3 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35443 9 1        Path Through a Small Village -> A Shabby Peasant Hut
+D 0 35445 2 1        A Cobblestone Road -> Inside an Elegant House
+D 0 35446 0 1        A Cobblestone Road -> Inside an Elegant House
+D 0 35447 2 1        A Cobblestone Road -> Inside an Elegant House
+D 0 35449 7 1        The Village Garden -> Path Through a Small Village
+D 0 35452 1 1        The Village Garden -> Tiny Path Through Some Weeds
+D 0 35453 3 1        Tiny Path Through Some Weeds -> The Village Garden
+D 0 35456 3 1        Inside The Sour Grape -> A Shabby Village Square
+D 0 35458 1 1        Inside The Sour Grape -> The Auction Room
+D 0 35459 3 1        The Auction Room -> Inside The Sour Grape
+D 0 35460 3 1        Inside The Inn of the Weasel -> A Shabby Village Square
+D 0 35463 0 1        Bartley's Tannery -> Path Through a Small Village
+D 0 35465 2 1        Kort's Smithey -> Path Through a Small Village
+D 0 35467 1 1        A Small Schoolhouse -> Path Through a Small Village
+D 0 35470 2 1        The Sweet Tart -> A Shabby Village Square
+D 0 35471 1 1        A Decrepit Farmhouse -> A Dusty Path
+D 0 35474 1 1        A Decrepit Farmhouse -> A Dusty Path
+D 0 35475 3 1        Guardhouse by the Gate -> Path Through a Small Village
+D 0 35476 1 1        Garn's Coopery -> Path Through a Small Village
+D 0 35477 0 1        Inside an Elegant House -> A Cobblestone Road
+D 0 35478 2 1        Inside an Elegant House -> A Cobblestone Road
+D 0 35479 0 1        Inside an Elegant House -> A Cobblestone Road
+D 0 35480 0 1        Inside a Tidy House -> Path Through a Small Village
+D 0 35481 6 1        Inside a Tidy House -> Path Through a Small Village
+D 0 35482 1 1        Inside a Tidy House -> Path Through a Small Village
+D 0 35483 1 1        Inside a Tidy House -> Path Through a Small Village
+D 0 35484 0 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35485 0 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35486 1 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35487 6 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35488 0 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35489 3 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35490 3 1        A Shabby Peasant Hut -> Path Through a Small Village
+D 0 35491 0 1        Greb's General -> A Shabby Village Square
+D 0 35492 0 1        Church of the Wilted and Downtrodden -> Path Through a Small Village
+D 0 35492 2 1        Church of the Wilted and Downtrodden -> Father Crin's Sanctuary
+D 0 35493 0 1        Father Crin's Sanctuary -> Church of the Wilted and Downtrodden
+D 0 35494 2 1        Tig's -> A Shabby Village Square
+D 0 35495 1 1        Tig's -> Path Through a Small Village
+D 0 35496 0 1        The Wick and Tallow -> A Shabby Village Square
+D 0 35497 1 1        Inside a Smokey Shed -> Path Through a Small Village
+D 0 35498 2 1        The Jail -> Path Through a Small Village
+D 0 35498 5 2        The Jail -> A Jail Cell
+D 0 35499 4 2        A Jail Cell -> The Jail
+O 0 35476 9999 35412    a woodpile
+O 0 35488 9999 35412    a chopping block
+O 0 20 9999 35456       a chair
+O 0 20 9999 35456       a chair
+O 0 20 9999 35456       a chair
+O 0 20 9999 35456       a chair
+O 0 20 9999 35456       a chair
+O 0 20 9999 35456       a chair
+O 0 35492 9999 35456    a table
+O 0 35492 9999 35456    a table
+O 0 35494 9999 35456    a small brass candelabra
+O 0 35492 9999 35457    a table
+O 0 35494 9999 35457    a small brass candelabra
+O 0 35494 9999 35458    a small brass candelabra
+O 0 702 9999 35459      a bench
+O 0 702 9999 35459      a bench
+O 0 35494 9999 35459    a small brass candelabra
+O 0 35494 9999 35460    a small brass candelabra
+O 0 35489 9999 35461    a straw pallet
+O 0 35489 9999 35461    a straw pallet
+O 0 35494 9999 35461    a small brass candelabra
+O 0 35489 9999 35462    a straw pallet
+O 0 35489 9999 35462    a straw pallet
+O 0 35494 9999 35462    a small brass candelabra
+O 0 35412 9999 35463    a wooden counter
+O 0 35494 9999 35463    a small brass candelabra
+O 0 35492 9999 35464    a table
+O 0 35412 9999 35464    a wooden counter
+O 0 35494 9999 35464    a small brass candelabra
+O 0 35412 9999 35465    a wooden counter
+O 0 35494 9999 35465    a small brass candelabra
+O 0 152 9999 35466      a large forge
+O 0 151 9999 35466      a large black anvil
+O 0 35412 9999 35466    a wooden counter
+O 0 35494 9999 35466    a small brass candelabra
+O 0 20 9999 35467       a chair
+O 0 20 9999 35467       a chair
+O 0 20 9999 35467       a chair
+O 0 20 9999 35467       a chair
+O 0 35496 9999 35467    a simple wooden desk
+O 0 35496 9999 35467    a simple wooden desk
+O 0 35496 9999 35467    a simple wooden desk
+O 0 35496 9999 35467    a simple wooden desk
+O 0 35487 9999 35467    an old musty blackboard
+O 0 35494 9999 35467    a small brass candelabra
+O 0 20 9999 35468       a chair
+O 0 35496 9999 35468    a simple wooden desk
+O 0 35494 9999 35468    a small brass candelabra
+O 0 35495 9999 35469    a small stone fireplace
+O 0 35494 9999 35469    a small brass candelabra
+O 0 35412 9999 35470    a wooden counter
+O 0 35494 9999 35470    a small brass candelabra
+O 0 35495 9999 35471    a small stone fireplace
+O 0 35495 9999 35472    a small stone fireplace
+O 0 35495 9999 35473    a small stone fireplace
+O 0 35495 9999 35474    a small stone fireplace
+O 0 20 9999 35475       a chair
+O 0 35496 9999 35475    a simple wooden desk
+O 0 35494 9999 35475    a small brass candelabra
+O 0 35412 9999 35476    a wooden counter
+O 0 35494 9999 35476    a small brass candelabra
+O 0 35495 9999 35477    a small stone fireplace
+O 0 35494 9999 35477    a small brass candelabra
+O 0 35494 9999 35477    a small brass candelabra
+O 0 35495 9999 35478    a small stone fireplace
+O 0 35494 9999 35478    a small brass candelabra
+O 0 35494 9999 35478    a small brass candelabra
+O 0 35495 9999 35479    a small stone fireplace
+O 0 35494 9999 35479    a small brass candelabra
+O 0 35494 9999 35479    a small brass candelabra
+O 0 35495 9999 35480    a small stone fireplace
+O 0 35494 9999 35480    a small brass candelabra
+O 0 35495 9999 35481    a small stone fireplace
+O 0 35494 9999 35481    a small brass candelabra
+O 0 35495 9999 35482    a small stone fireplace
+O 0 35494 9999 35482    a small brass candelabra
+O 0 35495 9999 35483    a small stone fireplace
+O 0 35494 9999 35483    a small brass candelabra
+O 0 35495 9999 35484    a small stone fireplace
+O 0 35495 9999 35485    a small stone fireplace
+O 0 35495 9999 35486    a small stone fireplace
+O 0 35495 9999 35487    a small stone fireplace
+O 0 35495 9999 35488    a small stone fireplace
+O 0 35495 9999 35489    a small stone fireplace
+O 0 35495 9999 35490    a small stone fireplace
+O 0 35490 9999 35491    some small wooden bins
+O 0 35412 9999 35491    a wooden counter
+O 0 35494 9999 35491    a small brass candelabra
+O 0 35491 9999 35492    a long wooden pew
+O 0 35491 9999 35492    a long wooden pew
+O 0 35491 9999 35492    a long wooden pew
+O 0 35491 9999 35492    a long wooden pew
+O 0 35494 9999 35492    a small brass candelabra
+O 0 35489 9999 35493    a straw pallet
+O 0 35496 9999 35493    a simple wooden desk
+P 1 35497 1 35496         a key to the cell
+O 0 35494 9999 35493    a small brass candelabra
+O 0 35493 9999 35494    a large glass window
+O 0 35492 9999 35494    a table
+O 0 35412 9999 35494    a wooden counter
+O 0 35494 9999 35494    a small brass candelabra
+O 0 35492 9999 35495    a table
+O 0 35412 9999 35495    a wooden counter
+O 0 35494 9999 35495    a small brass candelabra
+O 0 35412 9999 35496    a wooden counter
+O 0 35494 9999 35496    a small brass candelabra
+O 0 20 9999 35498       a chair
+O 0 35496 9999 35498    a simple wooden desk
+O 0 35494 9999 35498    a small brass candelabra
+O 0 35498 9999 35499    a small pile of muddy straw
+O 0 35498 9999 35499    a small pile of muddy straw
+O 0 35494 9999 35499    a small brass candelabra
+M 0 35401 4 35402       a village guardsman
+G 1 35403 9999           a topaz boot
+G 1 35415 9              a long sword with a topaz hilt
+E 1 35410 9 5             a topaz helm [head]
+E 1 35409 9 3             a necklace with a topaz pendant [neck]
+E 1 35408 9 4             a topaz breastplate [body]
+E 1 35401 9999 14         a cape with topaz studs [back]
+E 1 35407 18 13           a topaz sleeve [arm-left]
+E 1 35404 9999 17         a topaz bracelet [wrist-left]
+E 1 35406 9999 11         a topaz gauntlet [hand-left]
+E 1 35402 9999 2          a topaz ring [finger-left]
+E 1 35405 9999 15         a topaz girth [waist]
+E 1 35411 9 18            a topaz shield [hold-right]
+E 1 35414 9 19            a short sword with a topaz hilt [hold-left]
+A 0 35400 35448
+M 0 35400 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35401 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35402 1 -99
+A 0 35400 35448
+M 0 35400 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35401 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35402 1 -99
+A 0 35400 35448
+M 0 35400 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35401 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35402 1 -99
+A 0 35400 35448
+M 0 35400 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35401 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35402 1 -99
+A 0 35400 35448
+M 0 35400 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35401 1 -99
+Y 0 133 4
+A 0 35400 35448
+M 0 35402 1 -99
+M 0 35407 1 35405       Geoff
+M 0 35405 1 35407       Buggie
+M 0 35406 1 35407       Dougie
+M 0 35408 1 35412       Rupe
+M 0 35416 1 35455       Anna
+M 0 35409 1 35456       Peron
+M 0 35410 1 35456       Trinia
+M 0 35411 1 35459       Rudairyk
+M 0 35432 1 35460       Frank, the innkeeper
+M 0 35412 1 35463       Bartley
+M 0 35414 1 35466       Kort
+M 0 35436 12 35467      a ghostly student
+M 0 35436 12 35467      a ghostly student
+M 0 35436 12 35467      a ghostly student
+M 0 35436 12 35467      a ghostly student
+M 0 35436 12 35467      a ghostly student
+M 0 35436 12 35467      a ghostly student
+M 0 35435 8 35467       an attentive hobbit girl
+M 0 35435 8 35467       an attentive hobbit girl
+M 0 35434 8 35467       a studious hobbit boy
+M 0 35434 8 35467       a studious hobbit boy
+M 0 35415 1 35468       Master Beltair
+M 0 35417 1 35470       Bess
+M 0 35403 1 35471       Bruno
+M 0 35418 1 35471       Hilda
+M 0 35404 1 35472       Betha
+M 0 35421 1 35472       Freyda
+M 0 35419 1 35472       Frit
+M 0 35420 1 35473       Greta
+M 0 35413 1 35474       Elayda
+M 0 35428 1 35475       the captain of the guard
+E 1 35413 4 18            a topaz warhammer [hold-right]
+E 1 35413 4 19            a topaz warhammer [hold-left]
+M 0 35422 1 35476       Garn
+M 0 35423 1 35491       Greb
+M 0 35424 1 35493       Father Crin
+M 0 35426 1 35494       Tanni
+M 0 35425 1 35495       Tigg
+M 0 35433 1 35496       Willy
+G 1 35482 9999           a small cyan candle
+G 1 35481 9999           a small blue candle
+G 1 35480 9999           a small golden candle
+G 1 35479 9999           a small white candle
+G 1 35478 9999           a small grey candle
+G 1 35477 9999           a small green candle
+M 0 35429 1 35498       the jailor
+M 0 35430 1 35499       a ghostly prisoner
+M 0 35430 1 35499       a ghostly prisoner
 S
-
