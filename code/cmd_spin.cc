@@ -185,7 +185,8 @@ static int spinHit(TBeing *caster, TBeing *victim)
     return DELETE_THIS;
 
   // see the balance notes for details on what's going on here.
-  float wt = combatRound(discArray[SKILL_SPIN]->lag);
+  float wt = (combatRound(discArray[SKILL_SPIN]->lag) / 3);
+
   // adjust based on bash difficulty
   wt = (wt * 100.0 / getSkillDiffModifier(SKILL_SPIN));
 
@@ -195,16 +196,11 @@ static int spinHit(TBeing *caster, TBeing *victim)
   // since success and failure both have reciprocal positional changes
   // there is no reason to account for that here.
 
+  victim->addToWait((int) wt);
+
   // round up
   wt += 0.5;
 
-  victim->addToWait((int) wt);
-
-  // in general, we should not do BOTH damage and command lock-out
-  // however, since Bslam has nasty requirements on strength and
-  // dex to lift person up, doing this damage will counter-balance
-  // those penalties.  Warrior-skill damage isn't all that high
-  // to begin with...
   int dam = caster->getSkillDam(victim, SKILL_SPIN, caster->getSkillLevel(SKILL_SPIN), caster->getAdvLearning(SKILL_SPIN));
 
   if (caster->reconcileDamage(victim, dam,SKILL_SPIN) == -1)
