@@ -54,25 +54,25 @@ void initWhittle()
 
   // Arrows
   whittleItems[i++]("hunting-arrow arrow long",
-                    CLASS_RANGER, 30, 166, true, WHITTLE_TIMECONSUMING);
+                    -1, 30, 166, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("fighting-arrow arrow short",
-                    CLASS_RANGER, 30, 167, true, WHITTLE_TIMECONSUMING);
+                    -1, 30, 167, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("melee-quarrel quarrel long",
-                    CLASS_RANGER, 30, 168, true, WHITTLE_TIMECONSUMING);
+                    -1, 30, 168, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("common-quarrel quarrel short",
-                    CLASS_RANGER, 30, 169, true, WHITTLE_TIMECONSUMING);
+                    -1, 30, 169, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("totem small wooden",
                     CLASS_SHAMAN, 1, 31395, true, WHITTLE_TIMECONSUMING);
 
   // Bows
   whittleItems[i++]("hunting-bow bow long",
-                    CLASS_RANGER, 70, 170, true, WHITTLE_STANDARD);
+                    -1, 70, 170, true, WHITTLE_STANDARD);
   whittleItems[i++]("fighting-bow bow short",
-                    CLASS_RANGER, 70, 171, true, WHITTLE_STANDARD);
+                    -1, 70, 171, true, WHITTLE_STANDARD);
   whittleItems[i++]("melee-crossbow crossbow long",
-                    CLASS_RANGER, 70, 172, true, WHITTLE_STANDARD);
+                    -1, 70, 172, true, WHITTLE_STANDARD);
   whittleItems[i++]("common-crossbow crossbow short",
-                    CLASS_RANGER, 70, 173, true, WHITTLE_STANDARD);
+                    -1, 70, 173, true, WHITTLE_STANDARD);
 
   // Other
   whittleItems[i++]("small-boat simple boat toy",
