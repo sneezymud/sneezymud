@@ -5399,16 +5399,16 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   }
 
   ch->sendTo("You examine the board:\n\r");
-  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("__________________________________________________________________\n\r");
   ch->sendTo("\n\r");
-  ch->sendTo("-  According to the research of the shaman guildmaster,    -\n\r");
-  ch->sendTo("-  these people have done a wider range of death bringing  -\n\r");
-  ch->sendTo("-  than any other.                                         -\n\r");
-  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("-     According to the research of the shaman guildmaster,       -\n\r");
+  ch->sendTo("-     these people have done a wider range of death bringing     -\n\r");
+  ch->sendTo("-     than any other.                                            -\n\r");
+  ch->sendTo("__________________________________________________________________\n\r");
   ch->sendTo("\n\r");
-  ch->sendTo("-  Number of distinct        |  Total number of            -\n\r");
-  ch->sendTo("-  life forms killed.        |  lives taken.               -\n\r");
-  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("-  Number of distinct           |  Total number of               -\n\r");
+  ch->sendTo("-  life forms killed.           |  lives taken.                  -\n\r");
+  ch->sendTo("__________________________________________________________________\n\r");
   ch->sendTo("\n\r");
 
   // set the mob count to the highest players kill count
