@@ -29,6 +29,8 @@ public:
     virtual ~CDPsionics();
     virtual CDPsionics * cloneMe() { return new CDPsionics(*this); }
 
+    bool isFast(){ return true; }
+
 private:
 };
 

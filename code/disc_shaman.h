@@ -118,6 +118,9 @@ public:
     }
     virtual ~CDShaman() {}
     virtual CDShaman * cloneMe() { return new CDShaman(*this); }
+
+    bool isBasic(){ return true; }
+
 private:
 };
 

@@ -135,6 +135,9 @@ class CDiscipline
     CDiscipline & operator= (const CDiscipline &a);
     virtual ~CDiscipline();
 
+    virtual bool isBasic(){ return false; }
+    virtual bool isFast(){ return false; }
+
     virtual CDiscipline * cloneMe() = 0;  // a virtual constructor
     int getDoLearnedness() const;
     void setDoLearnedness(int);

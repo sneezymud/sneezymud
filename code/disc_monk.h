@@ -107,6 +107,8 @@ public:
     virtual ~CDMonk() {}
     virtual CDMonk * cloneMe() { return new CDMonk(*this); }
 
+    bool isBasic(){ return true; }
+
 private:
 };
 

@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_cleric.h,v $
+// Revision 5.3  2002/11/12 00:14:33  peel
+// added isBasic() and isFast() to CDiscipline
+// added isBasic() return true to each discipline that is a basic disc
+// added isFast() return true for fast discs, weapon specs etc
+//
 // Revision 5.2  2002/07/04 18:34:11  dash
 // added new repair skills
 //
@@ -103,6 +108,8 @@ public:
     CDCleric & operator=(const CDCleric &a);
     virtual ~CDCleric();
     virtual CDCleric * cloneMe();
+
+    bool isBasic(){ return true; }
 
 private:
 };

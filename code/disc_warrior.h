@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_warrior.h,v $
+// Revision 5.3  2002/11/12 00:14:33  peel
+// added isBasic() and isFast() to CDiscipline
+// added isBasic() return true to each discipline that is a basic disc
+// added isFast() return true for fast discs, weapon specs etc
+//
 // Revision 5.2  2002/11/07 04:02:37  jesus
 // Added a trip skill for warriors
 //
@@ -89,6 +94,9 @@ public:
     }
     virtual ~CDWarrior() {}
     virtual CDWarrior * cloneMe() { return new CDWarrior(*this); }
+
+    bool isBasic(){ return true; }
+
 private:
 };
 

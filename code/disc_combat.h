@@ -3,6 +3,14 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_combat.h,v $
+// Revision 5.2  2002/11/12 00:14:33  peel
+// added isBasic() and isFast() to CDiscipline
+// added isBasic() return true to each discipline that is a basic disc
+// added isFast() return true for fast discs, weapon specs etc
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -35,6 +43,8 @@ class CDCombat : public CDiscipline
     CDCombat & operator=(const CDCombat &a);
     virtual ~CDCombat();
     virtual CDCombat * cloneMe() { return new CDCombat(*this); }
+
+    bool isBasic(){ return true; }
 
 private:
 };

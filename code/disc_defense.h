@@ -19,6 +19,8 @@ public:
     virtual ~CDDefense();
     virtual CDDefense * cloneMe() { return new CDDefense(*this); }
 
+    bool isFast(){ return true; }
+
 private:
 };
 
