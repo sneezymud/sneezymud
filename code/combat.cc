@@ -5260,6 +5260,7 @@ void TBeing::genericKillFix(void)
   if (isPc()) {
     if (hasClass(CLASS_SHAMAN)) {
       setHit(25);
+      setLifeforce(25);
     } else {
       setHit(1);
     }
