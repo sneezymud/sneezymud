@@ -1911,7 +1911,6 @@ void TBeing::doSend(sstring arg)
       fnum = fnum2;
       wizSent = true;
       msg = new_arg;
-      msg.erase(0,1);
     }
   }
   if (!wizSent)
