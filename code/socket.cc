@@ -39,6 +39,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "weather.h"
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
+#include "obj_trash_pile.h"
 #include "pathfinder.h"
 #include "timing.h"
 
@@ -943,6 +944,20 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       // trash piles
       if(!::number(0,999) && obj->joinTrash())
 	  continue;
+      
+      TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
+      if(pile){
+	if(!pile->getStuff()){
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	} else {
+	  pile->updateDesc();
+	}
+      }
+
+	
+
     }
 
     if (pl.pulse_mudhour) { // 1440
