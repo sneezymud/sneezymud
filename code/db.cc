@@ -8,6 +8,9 @@
 
 #include "stdsneezy.h"
 
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "socket.h"
 #include "statistics.h"
 #include "help.h"
@@ -1116,25 +1119,48 @@ void renum_zone_table(void)
 void bootZones(void)
 {
   FILE *fl;
-  int zon = 0, tmp;
+  int tmp, zon=0;
   char *check, buf[256];
-  int rc, zone_nr = 0;
+  int rc;
   int i1 = 0, i2, i3, i4;
-
-  if (!(fl = fopen(ZONE_FILE, "r"))) {
+  struct dirent *dp;
+  DIR *dfd;
+  multimap <int, sstring, std::less<int> > files;
+  multimap <int, sstring, std::less<int> >::iterator it;
+  
+  
+  if(!(dfd=opendir("zonefiles"))){
+    vlogf(LOG_BUG, "couldn't open zonefiles directory");
     perror("bootZones");
     exit(0);
   }
-  for (;;) {
+  
+  while ((dp = readdir(dfd))) {
+    if(!strcmp(dp->d_name, ".") ||
+       !strcmp(dp->d_name, ".."))
+      continue;
+
+    files.insert(pair<int,sstring>(convertTo<int>(dp->d_name), dp->d_name));
+  }
+
+
+  for(it=files.begin();it!=files.end();++it){
+    fl=fopen((fmt("zonefiles/%s") % (*it).second).c_str(), "r");
+    if (!fl) {
+      perror("bootZones");
+      exit(0);
+    }
+
+    zoneData zd;
+    zd.zone_nr=zon++;
+
     fscanf(fl, " #%*d\n");
     check = fread_string(fl);
 
     if (*check == '$')
       break;                        
 
-    zoneData zd;
     zd.name = check;
-    zd.zone_nr=zone_nr++;
     rc = fscanf(fl, " %d %d %d %d", &i1, &i2, &i3, &i4);
     if (rc == 4) {
       zd.top = i1;
@@ -1143,7 +1169,8 @@ void bootZones(void)
       zd.enabled = i4;
       zd.age = 0;
     } else { 
-      vlogf(LOG_LOW, fmt("Bad zone format for zone %d (%s)") %  zon % check);
+      vlogf(LOG_LOW, fmt("Bad zone format for zone %d (%s)") %
+	    zd.zone_nr % check);
       exit(0);
     }
 
@@ -1240,13 +1267,14 @@ continue;
     }
 
     zone_table.push_back(zd);
+
+    fclose(fl);
   }
 
   // the only way out of the above loop is when check = "$"
   // delete this final line as not needed.
   delete [] check;
 
-  fclose(fl);
 }
 
 TMonster *read_mobile(int nr, readFileTypeT type)
