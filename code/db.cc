@@ -1601,7 +1601,6 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->addToLight(obj->affected[i].modifier);
   }
 
-  vlogf(LOG_PEEL, "got here");
   obj_index[nr].addToNumber(1);
   
   obj->weightCorrection();
