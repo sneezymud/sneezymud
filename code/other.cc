@@ -3704,7 +3704,7 @@ void TBeing::doHistory()
   db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc", getName());
   for(i=0;i<25 && db.fetchRow();i++){
     sendTo(COLOR_BASIC, "[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r",
-	   i, db.getColumn("tellfrom"), db.getColumn("tell"));
+	   i, db["tellfrom"], db["tell"]);
   }
   
 

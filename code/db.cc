@@ -121,7 +121,8 @@ FILE *mob_f = NULL;        // file containing mob prototypes
 
 vector<TRoom *>roomspec_db(0);
 
-struct cached_object { int number; sstring s[17]; };
+//struct cached_object { int number; sstring s[17]; };
+struct cached_object { int number;map <sstring, sstring> s; };
 vector<cached_object *>obj_cache(0);
 
 bool bootTime=false;
@@ -1233,7 +1234,7 @@ TObj *read_object(int nr, readFileTypeT type)
   }
 
   if(bootTime && cache_object(nr)!=-1){
-    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s[0])));
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s["type"])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1243,21 +1244,21 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->ex_description=obj_index[nr].ex_description;
     }
 
-    obj->setObjStat(convertTo<int>(obj_cache[cache_object(nr)]->s[1]));
-    obj->obj_flags.wear_flags = convertTo<int>(obj_cache[cache_object(nr)]->s[2]);
-    obj->assignFourValues(convertTo<int>(obj_cache[cache_object(nr)]->s[3]), convertTo<int>(obj_cache[cache_object(nr)]->s[4]), convertTo<int>(obj_cache[cache_object(nr)]->s[5]), convertTo<int>(obj_cache[cache_object(nr)]->s[6]));
-    obj->setWeight(convertTo<float>(obj_cache[cache_object(nr)]->s[7]));
-    obj->obj_flags.cost = convertTo<int>(obj_cache[cache_object(nr)]->s[8]);
-    obj->canBeSeen = convertTo<int>(obj_cache[cache_object(nr)]->s[9]);
-    obj->spec = convertTo<int>(obj_cache[cache_object(nr)]->s[10]);
-    obj->setMaxStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s[11]));
-    obj->setStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s[12]));
+    obj->setObjStat(convertTo<int>(obj_cache[cache_object(nr)]->s["action_flag"]));
+    obj->obj_flags.wear_flags = convertTo<int>(obj_cache[cache_object(nr)]->s["wear_flag"]);
+    obj->assignFourValues(convertTo<int>(obj_cache[cache_object(nr)]->s["val0"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val1"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val2"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val3"]));
+    obj->setWeight(convertTo<float>(obj_cache[cache_object(nr)]->s["weight"]));
+    obj->obj_flags.cost = convertTo<int>(obj_cache[cache_object(nr)]->s["price"]);
+    obj->canBeSeen = convertTo<int>(obj_cache[cache_object(nr)]->s["can_be_seen"]);
+    obj->spec = convertTo<int>(obj_cache[cache_object(nr)]->s["spec_proc"]);
+    obj->setMaxStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s["max_struct"]));
+    obj->setStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s["cur_struct"]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(obj_cache[cache_object(nr)]->s[13]);
-    obj->setVolume(convertTo<int>(obj_cache[cache_object(nr)]->s[14]));
-    obj->setMaterial(convertTo<int>(obj_cache[cache_object(nr)]->s[15]));
+    obj->obj_flags.decay_time=convertTo<int>(obj_cache[cache_object(nr)]->s["decay"]);
+    obj->setVolume(convertTo<int>(obj_cache[cache_object(nr)]->s["volume"]));
+    obj->setMaterial(convertTo<int>(obj_cache[cache_object(nr)]->s["material"]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[cache_object(nr)]->s[16]));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[cache_object(nr)]->s["max_exist"]));
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
@@ -1265,7 +1266,7 @@ TObj *read_object(int nr, readFileTypeT type)
     if(!db.fetchRow())
       return NULL;
     
-    obj = makeNewObj(mapFileToItemType(convertTo<int>(db.getColumn("type"))));
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1274,21 +1275,21 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->action_description = obj_index[nr].description;
       obj->ex_description=obj_index[nr].ex_description;
     }
-    obj->setObjStat(convertTo<int>(db.getColumn("action_flag")));
-    obj->obj_flags.wear_flags = convertTo<int>(db.getColumn("wear_flag"));
-    obj->assignFourValues(convertTo<int>(db.getColumn("val0")), convertTo<int>(db.getColumn("val1")), convertTo<int>(db.getColumn("val2")), convertTo<int>(db.getColumn("val3")));
-    obj->setWeight(convertTo<float>(db.getColumn("weight")));
-    obj->obj_flags.cost = convertTo<int>(db.getColumn("price"));
-    obj->canBeSeen = convertTo<int>(db.getColumn("can_be_seen"));
-    obj->spec = convertTo<int>(db.getColumn("spec_proc"));
-    obj->setMaxStructPoints(convertTo<int>(db.getColumn("max_struct")));
-    obj->setStructPoints(convertTo<int>(db.getColumn("cur_struct")));
+    obj->setObjStat(convertTo<int>(db["action_flag"]));
+    obj->obj_flags.wear_flags = convertTo<int>(db["wear_flag"]);
+    obj->assignFourValues(convertTo<int>(db["val0"]), convertTo<int>(db["val1"]), convertTo<int>(db["val2"]), convertTo<int>(db["val3"]));
+    obj->setWeight(convertTo<float>(db["weight"]));
+    obj->obj_flags.cost = convertTo<int>(db["price"]);
+    obj->canBeSeen = convertTo<int>(db["can_be_seen"]);
+    obj->spec = convertTo<int>(db["spec_proc"]);
+    obj->setMaxStructPoints(convertTo<int>(db["max_struct"]));
+    obj->setStructPoints(convertTo<int>(db["cur_struct"]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(db.getColumn("decay"));
-    obj->setVolume(convertTo<int>(db.getColumn("volume")));
-    obj->setMaterial(convertTo<int>(db.getColumn("material")));
+    obj->obj_flags.decay_time=convertTo<int>(db["decay"]);
+    obj->setVolume(convertTo<int>(db["volume"]));
+    obj->setMaterial(convertTo<int>(db["material"]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db.getColumn("max_exist")));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db["max_exist"]));
   }
   
 
@@ -1330,23 +1331,23 @@ TObj *read_object(int nr, readFileTypeT type)
     cached_object *c=new cached_object;
     
     c->number=nr;
-    c->s[0]=db.getColumn(0);
-    c->s[1]=db.getColumn(1);
-    c->s[2]=db.getColumn(2);
-    c->s[3]=db.getColumn(3);
-    c->s[4]=db.getColumn(4);
-    c->s[5]=db.getColumn(5);
-    c->s[6]=db.getColumn(6);
-    c->s[7]=db.getColumn(7);
-    c->s[8]=db.getColumn(8);
-    c->s[9]=db.getColumn(9);
-    c->s[10]=db.getColumn(10);
-    c->s[11]=db.getColumn(11);
-    c->s[12]=db.getColumn(12);
-    c->s[13]=db.getColumn(13);
-    c->s[14]=db.getColumn(14);
-    c->s[15]=db.getColumn(15);
-    c->s[16]=db.getColumn(16);
+    c->s["type"]=db["type"];
+    c->s["action_flag"]=db["action_flag"];
+    c->s["wear_flag"]=db["wear_flag"];
+    c->s["val0"]=db["val0"];
+    c->s["val1"]=db["val1"];
+    c->s["val2"]=db["val2"];
+    c->s["val3"]=db["val3"];
+    c->s["weight"]=db["weight"];
+    c->s["price"]=db["price"];
+    c->s["can_be_seen"]=db["can_be_seen"];
+    c->s["spec_proc"]=db["spec_proc"];
+    c->s["max_struct"]=db["max_struct"];
+    c->s["cur_struct"]=db["cur_struct"];
+    c->s["decay"]=db["decay"];
+    c->s["volume"]=db["volume"];
+    c->s["material"]=db["material"];
+    c->s["max_exist"]=db["max_exist"];
 
     obj_cache.push_back(c);
 

@@ -25,27 +25,25 @@
 // name like '%%%s%%' and vnum>%i", weight, name, vnum);
 //
 // while(db.fetchRow()){
-//   if(atoi(db.getColumn(1)) > 10000){
-//     vlogf(LOG_BUG, "item %s had value of %s",
-//           db.getColumn(0), db.getColumn(1));
+//   if(atoi(db["price"]) > 10000){
+//     vlogf(LOG_BUG, "item %s had value of %s", db["vnum"], db["price"]);
 //   }
-//   sendTo("%s %s", db.getColumn(0), db.getColumn(2));
+//   sendTo("%s %s", db["vnum"], db["short_desc"]);
 // }
 //
 //
 // Documentation:
 //
-// TDatabase(sstring) - The initializer takes the name of the database you 
-// want to use as an argument.  Allowable databases are "sneezy" and 
-// "immortal".
+// TDatabase(dbTypeT) - The initializer takes the name of the database you 
+// want to use as an argument.  Allowable databases are listed below under
+// dbTypeT, but the most common is DB_SNEEZY.
 // Returns: TDatabase (initializer)
-// Ex: TDatabase db("sneezy");
+// Ex: TDatabase db(DB_SNEEZY);
 //
-// bool setDB(sstring) - This function sets the database that the instance 
+// bool setDB(dbTypeT) - This function sets the database that the instance 
 // will use, and is generally called from the constructor rather than directly.
-// Allowable databases are "sneezy" and "immortal".  
 // Returns: nothing (void)
-// Ex: db.setDB("immortal");
+// Ex: db.setDB(DB_SNEEZY);
 //
 // bool query(const char*,...) - This function sends a query to the database.
 // It takes a printf style format sstring as the arguments.  The allowed
@@ -66,24 +64,15 @@
 // Returns: FALSE if no results or no more rows available.
 // Ex:
 // while(db.fetchRow(){
-//   printf("%s", db.getColumn(0));
+//   printf("%s", db["vnum"]);
 // }
 //
-// char *getColumn(int) - Returns a column out of the current row of
-// the result set.  The memory returned does not have to be freed.
-// Returns: A char * to the result column or NULL if no results are available.
+// char *operator[](const sstring &) - returns the data associated with
+// the specified column (by name)
 // Ex:
 // db.query("select vnum, short_desc from obj");
 // db.fetchRow();
-// vnum=atoi(db.getColumn(0));
-// sstring short_desc = db.getColumn(1);
-//
-// char *getColumn(sstring) - works as getColumn(int) above, but you specify
-// the desired column by name rather than number.
-// Ex:
-// db.query("select vnum, short_desc from obj");
-// db.fetchRow();
-// sstring short_desc = db.getColumn("short_desc");
+// sstring short_desc = db["short_desc"];
 //
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
@@ -108,9 +97,9 @@ class TDatabase
   void setDB(dbTypeT);
   bool query(const char *,...);
   bool fetchRow();
-  char *getColumn(int);
-  char *getColumn(const sstring &);
+  char *operator[] (const sstring &) const;
   bool isResults();
+
 
   TDatabase();
   TDatabase(dbTypeT);

@@ -1074,7 +1074,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
     while(db.fetchRow()){
-      tattoos[convertTo<int>(db.getColumn("location"))]=db.getColumn("tattoo");
+      tattoos[convertTo<int>(db["location"])]=db["tattoo"];
       found=true;
     }
 

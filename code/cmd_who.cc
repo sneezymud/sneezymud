@@ -267,17 +267,17 @@ void TBeing::doWho(const char *argument)
         db.query("select title, port, name from wholist order by port");
 
 	while(db.fetchRow()){
-	  stmp=db.getColumn("title");
+	  stmp=db["title"];
 	  
 	  if((pos=stmp.find("<n>")) != sstring::npos)
-	    stmp.replace(pos,3,db.getColumn("name"));
+	    stmp.replace(pos,3,db["name"]);
 
 	  if((pos=stmp.find("<N>")) != sstring::npos)
-	    stmp.replace(pos,3,db.getColumn("name"));
+	    stmp.replace(pos,3,db["name"]);
 
 	  
 	  ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-		   db.getColumn("port"), stmp.c_str());
+		   db["port"], stmp.c_str());
 	}
 	
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
@@ -288,17 +288,17 @@ void TBeing::doWho(const char *argument)
         db2.query("select title, port, name from wholist order by port");
 
         while(db2.fetchRow()){
-          stmp=db2.getColumn("title");
+          stmp=db2["title"];
 
           if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db2.getColumn("name"));
+            stmp.replace(pos,3,db2["name"]);
 
           if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db2.getColumn("name"));
+            stmp.replace(pos,3,db2["name"]);
 
 
           ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-                   db2.getColumn("port"), stmp.c_str());
+                   db2["port"], stmp.c_str());
         }
 	
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
@@ -310,17 +310,17 @@ void TBeing::doWho(const char *argument)
         db3.query("select title, port, name from wholist order by port");
 
         while(db3.fetchRow()){
-          stmp=db3.getColumn("title");
+          stmp=db3["title"];
 
           if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db3.getColumn("name"));
+            stmp.replace(pos,3,db3["name"]);
 
           if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db3.getColumn("name"));
+            stmp.replace(pos,3,db3["name"]);
 
 
           ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-                   db3.getColumn("port"), stmp.c_str());
+                   db3["port"], stmp.c_str());
         }
 
 

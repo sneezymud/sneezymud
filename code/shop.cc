@@ -67,15 +67,15 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
     db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
 
     if(db.fetchRow())
-      profit_sell=convertTo<float>(db.getColumn("profit_sell"));
+      profit_sell=convertTo<float>(db["profit_sell"]);
     else {
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
       db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
 
       while(db.fetchRow()){
-	if(isname(db.getColumn("match"), name)){
-	  profit_sell=convertTo<float>(db.getColumn("profit_sell"));
+	if(isname(db["match"], name)){
+	  profit_sell=convertTo<float>(db["profit_sell"]);
 	  break;
 	}
       }
@@ -124,12 +124,12 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
     db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
 	     shop_nr);
     while(db.fetchRow())
-      ratios_cache[convertTo<int>(db.getColumn("obj_nr"))]=convertTo<float>(db.getColumn("profit_buy"));
+      ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
 
     db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
 	     shop_nr);
     while(db.fetchRow())
-      matches_cache[db.getColumn("match")]=convertTo<float>(db.getColumn("profit_buy"));
+      matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
   }
 
   if(shop_index[shop_nr].isOwned()){  
@@ -139,7 +139,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
     } else {
       db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
       if(db.fetchRow())
-	profit_buy=convertTo<float>(db.getColumn("profit_buy"));
+	profit_buy=convertTo<float>(db["profit_buy"]);
     }
 
     if(profit_buy==-1){
@@ -156,8 +156,8 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
       
 	while(db.fetchRow()){
-	  if(isname(db.getColumn("match"), name)){
-	    profit_buy=convertTo<float>(db.getColumn("profit_buy"));
+	  if(isname(db["match"], name)){
+	    profit_buy=convertTo<float>(db["profit_buy"]);
 	    break;
 	  }
 	}
@@ -2139,55 +2139,55 @@ void bootTheShops()
   while(db.fetchRow()){
     shopData sd;
 
-    shop_nr=convertTo<int>(db.getColumn("shop_nr"));
+    shop_nr=convertTo<int>(db["shop_nr"]);
     sd.shop_nr=shop_nr;
-    sd.no_such_item1 = mud_str_dup(db.getColumn("no_such_item1"));
-    sd.no_such_item2 = mud_str_dup(db.getColumn("no_such_item2"));
-    sd.do_not_buy = mud_str_dup(db.getColumn("do_not_buy"));
-    sd.missing_cash1 = mud_str_dup(db.getColumn("missing_cash1"));
-    sd.missing_cash2 = mud_str_dup(db.getColumn("missing_case2"));
-    sd.message_buy = mud_str_dup(db.getColumn("message_buy"));
-    sd.message_sell = mud_str_dup(db.getColumn("message_sell"));
-    sd.temper1=convertTo<int>(db.getColumn("temper1"));
-    sd.temper2=convertTo<int>(db.getColumn("temper2"));
-    sd.keeper=real_mobile(convertTo<int>(db.getColumn("keeper")));
-    sd.flags=convertTo<int>(db.getColumn("flags"));
-    sd.in_room=convertTo<int>(db.getColumn("in_room"));
-    sd.open1=convertTo<int>(db.getColumn("open1"));
-    sd.close1=convertTo<int>(db.getColumn("close1"));
-    sd.open2=convertTo<int>(db.getColumn("open2"));
-    sd.close2=convertTo<int>(db.getColumn("close2"));
+    sd.no_such_item1 = mud_str_dup(db["no_such_item1"]);
+    sd.no_such_item2 = mud_str_dup(db["no_such_item2"]);
+    sd.do_not_buy = mud_str_dup(db["do_not_buy"]);
+    sd.missing_cash1 = mud_str_dup(db["missing_cash1"]);
+    sd.missing_cash2 = mud_str_dup(db["missing_case2"]);
+    sd.message_buy = mud_str_dup(db["message_buy"]);
+    sd.message_sell = mud_str_dup(db["message_sell"]);
+    sd.temper1=convertTo<int>(db["temper1"]);
+    sd.temper2=convertTo<int>(db["temper2"]);
+    sd.keeper=real_mobile(convertTo<int>(db["keeper"]));
+    sd.flags=convertTo<int>(db["flags"]);
+    sd.in_room=convertTo<int>(db["in_room"]);
+    sd.open1=convertTo<int>(db["open1"]);
+    sd.close1=convertTo<int>(db["close1"]);
+    sd.open2=convertTo<int>(db["open2"]);
+    sd.close2=convertTo<int>(db["close2"]);
 
-    if(owned_db.getColumn("shop_nr") && (convertTo<int>(owned_db.getColumn("shop_nr")))==shop_nr){
-      sd.profit_buy=convertTo<float>(owned_db.getColumn("profit_buy"));
-      sd.profit_sell=convertTo<float>(owned_db.getColumn("profit_sell"));
+    if(owned_db["shop_nr"] && (convertTo<int>(owned_db["shop_nr"]))==shop_nr){
+      sd.profit_buy=convertTo<float>(owned_db["profit_buy"]);
+      sd.profit_sell=convertTo<float>(owned_db["profit_sell"]);
       owned_db.fetchRow();
     } else {
-      sd.profit_buy=convertTo<float>(db.getColumn("profit_buy"));
-      sd.profit_sell=convertTo<float>(db.getColumn("profit_sell"));
+      sd.profit_buy=convertTo<float>(db["profit_buy"]);
+      sd.profit_sell=convertTo<float>(db["profit_sell"]);
     }
 
-    if(isowned_db.getColumn("shop_nr") && (convertTo<int>(isowned_db.getColumn("shop_nr")))==shop_nr){
+    if(isowned_db["shop_nr"] && (convertTo<int>(isowned_db["shop_nr"]))==shop_nr){
       sd.owned=true;
       isowned_db.fetchRow();
     } else {
       sd.owned=false;
     }
 
-    while(type_db.getColumn("shop_nr") && convertTo<int>(type_db.getColumn("shop_nr"))==shop_nr){
-      sd.type.push_back(convertTo<int>(type_db.getColumn("type")));
+    while(type_db["shop_nr"] && convertTo<int>(type_db["shop_nr"])==shop_nr){
+      sd.type.push_back(convertTo<int>(type_db["type"]));
       type_db.fetchRow();
     }
     sd.type.push_back(MAX_OBJ_TYPES);
     
-    while(producing_db.getColumn("shop_nr") && convertTo<int>(producing_db.getColumn("shop_nr"))==shop_nr){
-      sd.producing.push_back(real_object(convertTo<int>(producing_db.getColumn("producing"))));
+    while(producing_db["shop_nr"] && convertTo<int>(producing_db["shop_nr"])==shop_nr){
+      sd.producing.push_back(real_object(convertTo<int>(producing_db["producing"])));
       producing_db.fetchRow();
     }
     sd.producing.push_back(-1);
     
-    while(material_db.getColumn("shop_nr") && convertTo<int>(material_db.getColumn("shop_nr"))==shop_nr){
-      sd.mat_type.push_back(convertTo<int>(material_db.getColumn("mat_type")));
+    while(material_db["shop_nr"] && convertTo<int>(material_db["shop_nr"])==shop_nr){
+      sd.mat_type.push_back(convertTo<int>(material_db["mat_type"]));
       material_db.fetchRow();
     }
     sd.mat_type.push_back(MAX_OBJ_TYPES);

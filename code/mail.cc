@@ -12,7 +12,7 @@ bool has_mail(const char *recipient)
 
   db.query("select count(*) as count from mail where lower(mailto)=lower('%s')", recipient);
 
-  if(db.fetchRow() && convertTo<int>(db.getColumn("count")) != 0)
+  if(db.fetchRow() && convertTo<int>(db["count"]) != 0)
     return TRUE;
 
   return FALSE;
@@ -34,7 +34,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
     fm.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
     
     while(fm.fetchRow()){
-      db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, fm.getColumn("name"), tmstr, message_pointer);
+      db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, fm["name"], tmstr, message_pointer);
     }
   } else {
     db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, to, tmstr, message_pointer);
@@ -50,19 +50,19 @@ sstring read_delete(const char *recipient, const char *recipient_formatted, sstr
   if(!db.fetchRow())
     return "error!";
 
-  from=db.getColumn("mailfrom");
+  from=db["mailfrom"];
 
   ssprintf(buf,
 	   "The letter has a date stamped in the corner: %s\n\r\n\r"
            "%s,\n\r"
            "%s\n\r"
            "Signed, %s\n\r\n\r",
-	   db.getColumn("timesent"),
+	   db["timesent"],
 	   recipient_formatted,
-	   db.getColumn("content"), 
-	   db.getColumn("mailfrom"));
+	   db["content"], 
+	   db["mailfrom"]);
 
-  db.query("delete from mail where mailid=%s", db.getColumn("mailid"));
+  db.query("delete from mail where mailid=%s", db["mailid"]);
   
   return sstring(buf);
 }

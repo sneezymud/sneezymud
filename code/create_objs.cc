@@ -169,30 +169,30 @@ void ObjLoad(TBeing *ch, int vnum)
 
   ch->sendTo("Loading saved object number %d\n\r", vnum);
 
-  o = makeNewObj(mapFileToItemType(convertTo<int>(db.getColumn(0))));
+  o = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
   o->snum   = vnum;
   o->number = -1;
 
-  o->name = mud_str_dup(db.getColumn(1));
-  o->shortDescr = mud_str_dup(db.getColumn(2));
-  o->setDescr(mud_str_dup(db.getColumn(3)));
+  o->name = mud_str_dup(db["name"]);
+  o->shortDescr = mud_str_dup(db["short_desc"]);
+  o->setDescr(mud_str_dup(db["long_desc"]));
 
-  o->setObjStat(convertTo<int>(db.getColumn(4)));
-  o->obj_flags.wear_flags = convertTo<int>(db.getColumn(5));
+  o->setObjStat(convertTo<int>(db["action_flag"]));
+  o->obj_flags.wear_flags = convertTo<int>(db["wear_flag"]);
 
-  o->assignFourValues(convertTo<int>(db.getColumn(6)), convertTo<int>(db.getColumn(7)), convertTo<int>(db.getColumn(8)), convertTo<int>(db.getColumn(9)));
+  o->assignFourValues(convertTo<int>(db["val0"]), convertTo<int>(db["val1"]), convertTo<int>(db["val2"]), convertTo<int>(db["val3"]));
 
-  o->setWeight(convertTo<float>(db.getColumn(10)));
-  o->obj_flags.cost = convertTo<int>(db.getColumn(11));
-  o->canBeSeen = convertTo<int>(db.getColumn(12));
-  o->spec = convertTo<int>(db.getColumn(13));
-  o->obj_flags.max_struct_points = convertTo<int>(db.getColumn(14));
-  o->obj_flags.struct_points = convertTo<int>(db.getColumn(15));
-  o->obj_flags.decay_time = convertTo<int>(db.getColumn(16));
-  o->setVolume(convertTo<int>(db.getColumn(17)));
-  o->setMaterial(convertTo<int>(db.getColumn(18)));
-  o->max_exist = convertTo<int>(db.getColumn(19));
-  if(strcmp(db.getColumn(20), "")) o->action_description=mud_str_dup(db.getColumn(20));
+  o->setWeight(convertTo<float>(db["weight"]));
+  o->obj_flags.cost = convertTo<int>(db["price"]);
+  o->canBeSeen = convertTo<int>(db["can_be_seen"]);
+  o->spec = convertTo<int>(db["spec_proc"]);
+  o->obj_flags.max_struct_points = convertTo<int>(db["max_struct"]);
+  o->obj_flags.struct_points = convertTo<int>(db["cur_struct"]);
+  o->obj_flags.decay_time = convertTo<int>(db["decay"]);
+  o->setVolume(convertTo<int>(db["volume"]));
+  o->setMaterial(convertTo<int>(db["material"]));
+  o->max_exist = convertTo<int>(db["max_exist"]);
+  if(strcmp(db["action_desc"], "")) o->action_description=mud_str_dup(db["action_desc"]);
   else o->action_description=NULL;
 
   o->ex_description = NULL;
@@ -202,8 +202,8 @@ void ObjLoad(TBeing *ch, int vnum)
   
   while(db.fetchRow()){
     new_descr = new extraDescription();
-    new_descr->keyword = mud_str_dup(db.getColumn(0));
-    new_descr->description = mud_str_dup(db.getColumn(1));
+    new_descr->keyword = mud_str_dup(db["name"]);
+    new_descr->description = mud_str_dup(db["description"]);
     new_descr->next = o->ex_description;
     o->ex_description = new_descr;
   }
@@ -214,14 +214,14 @@ void ObjLoad(TBeing *ch, int vnum)
   db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name);
 
   while(db.fetchRow()){
-    o->affected[i].location = mapFileToApply(convertTo<int>(db.getColumn(0)));
+    o->affected[i].location = mapFileToApply(convertTo<int>(db["type"]));
 
     if (applyTypeShouldBeSpellnum(o->affected[i].location))
-      o->affected[i].modifier = mapFileToSpellnum(convertTo<int>(db.getColumn(1)));
+      o->affected[i].modifier = mapFileToSpellnum(convertTo<int>(db["mod1"]));
     else
-      o->affected[i].modifier = convertTo<int>(db.getColumn(1));
+      o->affected[i].modifier = convertTo<int>(db["mod1"]);
  
-    o->affected[i].modifier2 = convertTo<int>(db.getColumn(2));
+    o->affected[i].modifier2 = convertTo<int>(db["mod2"]);
 
     if (o->affected[i].location == APPLY_LIGHT)
       o->addToLight(o->affected[i].modifier);
@@ -372,9 +372,9 @@ static void olist(TPerson *ch, bool zone=false)
     
 
   while(db.fetchRow()){
-    longstr += db.getColumn(0);
+    longstr += db["vnum"];
     longstr += " ";
-    longstr += db.getColumn(1);
+    longstr += db["name"];
     longstr += "\n\r";
   }
 
@@ -585,8 +585,8 @@ void TPerson::doOEdit(const char *argument)
   
 	vnum=-1;
 	while(db.fetchRow()){
-	  if(isname(sstring, db.getColumn(1))){
-	    vnum=convertTo<int>(db.getColumn(0));
+	  if(isname(sstring, db["vnum"])){
+	    vnum=convertTo<int>(db["name"]);
 	    break;
 	  }
 	}

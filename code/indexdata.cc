@@ -210,11 +210,11 @@ void generate_obj_index()
       exit(0);
     }
     
-    tmpi->virt=convertTo<int>(db.getColumn("vnum"));
-    tmpi->name=mud_str_dup(db.getColumn("name"));
-    tmpi->short_desc=mud_str_dup(db.getColumn("short_desc"));
-    tmpi->long_desc=mud_str_dup(db.getColumn("long_desc"));
-    tmpi->max_exist=convertTo<int>(db.getColumn("max_exist"));
+    tmpi->virt=convertTo<int>(db["vnum"]);
+    tmpi->name=mud_str_dup(db["name"]);
+    tmpi->short_desc=mud_str_dup(db["short_desc"]);
+    tmpi->long_desc=mud_str_dup(db["long_desc"]);
+    tmpi->max_exist=convertTo<int>(db["max_exist"]);
 
     // use 327 so we don't go over 32765 in calculation
     if (tmpi->max_exist < 327) {
@@ -225,19 +225,19 @@ void generate_obj_index()
       tmpi->max_exist = max(tmpi->max_exist, (short int) (gamePort == BETA_GAMEPORT ? 9999 : 1));
     
 
-    tmpi->spec=convertTo<int>(db.getColumn("spec_proc"));
-    tmpi->weight=convertTo<float>(db.getColumn("weight"));
-    tmpi->max_struct=convertTo<int>(db.getColumn("max_struct"));
-    tmpi->where_worn=convertTo<int>(db.getColumn("wear_flag"));
-    tmpi->itemtype=convertTo<int>(db.getColumn("type"));
-    tmpi->value=convertTo<int>(db.getColumn("price"));
-    if(strcmp(db.getColumn("action_desc"), "")) tmpi->description=mud_str_dup(db.getColumn("action_desc"));
+    tmpi->spec=convertTo<int>(db["spec_proc"]);
+    tmpi->weight=convertTo<float>(db["weight"]);
+    tmpi->max_struct=convertTo<int>(db["max_struct"]);
+    tmpi->where_worn=convertTo<int>(db["wear_flag"]);
+    tmpi->itemtype=convertTo<int>(db["type"]);
+    tmpi->value=convertTo<int>(db["price"]);
+    if(strcmp(db["action_desc"], "")) tmpi->description=mud_str_dup(db["action_desc"]);
     else tmpi->description=NULL;
 
-    while(extra_db.getColumn("vnum") && convertTo<int>(extra_db.getColumn("vnum"))==tmpi->virt){
+    while(extra_db["vnum"] && convertTo<int>(extra_db["vnum"])==tmpi->virt){
       new_descr = new extraDescription();
-      new_descr->keyword = mud_str_dup(extra_db.getColumn("name"));
-      new_descr->description = mud_str_dup(extra_db.getColumn("description"));
+      new_descr->keyword = mud_str_dup(extra_db["name"]);
+      new_descr->description = mud_str_dup(extra_db["description"]);
       new_descr->next = tmpi->ex_description;
       tmpi->ex_description = new_descr;
 
@@ -245,15 +245,15 @@ void generate_obj_index()
     }
 
     i=0;
-    while(affect_db.getColumn("vnum") && convertTo<int>(affect_db.getColumn("vnum"))==tmpi->virt){
-      tmpi->affected[i].location = mapFileToApply(convertTo<int>(affect_db.getColumn("type")));
+    while(affect_db["vnum"] && convertTo<int>(affect_db["vnum"])==tmpi->virt){
+      tmpi->affected[i].location = mapFileToApply(convertTo<int>(affect_db["type"]));
 
       if (tmpi->affected[i].location == APPLY_SPELL)
-	tmpi->affected[i].modifier = mapFileToSpellnum(convertTo<int>(affect_db.getColumn("mod1")));
+	tmpi->affected[i].modifier = mapFileToSpellnum(convertTo<int>(affect_db["mod1"]));
       else
-	tmpi->affected[i].modifier = convertTo<int>(affect_db.getColumn("mod1"));
+	tmpi->affected[i].modifier = convertTo<int>(affect_db["mod1"]);
       
-      tmpi->affected[i].modifier2 = convertTo<int>(affect_db.getColumn("mod2"));
+      tmpi->affected[i].modifier2 = convertTo<int>(affect_db["mod2"]);
       tmpi->affected[i].type = TYPE_UNDEFINED;
       tmpi->affected[i].level = 0;
       tmpi->affected[i].bitvector = 0;      

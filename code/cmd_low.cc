@@ -1097,11 +1097,10 @@ void TPerson::doLow(const sstring &arg)
 	   "Bonus       :","Cnt","Max","Min","Avg","Sum");
 
     while(db.fetchRow()){
-      ssprintf(buf, "%5s %5s %5s %10s %10s", db.getColumn("count"),
-	       db.getColumn("min"), db.getColumn("avg"),
-	       db.getColumn("max"), db.getColumn("sum"));
+      ssprintf(buf, "%5s %5s %5s %10s %10s", db["count"],
+	       db["min"], db["avg"], db["max"], db["sum"]);
 
-      switch(mapFileToApply(convertTo<int>(db.getColumn("type")))){
+      switch(mapFileToApply(convertTo<int>(db["type"]))){
 	case APPLY_STR:
 	  sendTo("Strength    : %s\n\r", buf.c_str());
 	  break;
@@ -1366,9 +1365,9 @@ void TBeing::lowTasks(const char *arg)
     str += "---------------------------------------------------------\n\r";
 
     while(db.fetchRow()){
-      id = convertTo<int>(db.getColumn("id"));
-      priority = convertTo<int>(db.getColumn("priority"));
-      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn("assigned_to"), db.getColumn("task"), db.getColumn("status"));      
+      id = convertTo<int>(db["id"]);
+      priority = convertTo<int>(db["priority"]);
+      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db["assigned_to"], db["task"], db["status"]);      
       str += buf;
     }
 
@@ -1395,7 +1394,7 @@ void TBeing::lowTasks(const char *arg)
 	if(!db.fetchRow()) {
 	  id = 0;
 	} else {
-	  id = convertTo<int>(db.getColumn("id")) + 1;
+	  id = convertTo<int>(db["id"]) + 1;
 	}
         sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), arg);
         vlogf(LOG_DASH, "lowtask: %s", temp);

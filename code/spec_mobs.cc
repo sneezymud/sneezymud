@@ -5777,10 +5777,10 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       // check for largest
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
 
-      if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db.getColumn("weight")))){
+      if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db["weight"]))){
 
 	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
-		db.getColumn("name"), o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
+		db["name"], o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
 
 	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
 
@@ -5819,7 +5819,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	while(db.fetchRow()){
 	  sprintf(buf, "%s caught %s weighing in at %f.",
-		  db.getColumn("name"), db.getColumn("type"), convertTo<float>(db.getColumn("weight")));
+		  db["name"], db["type"], convertTo<float>(db["weight"]));
 	  myself->doSay(buf);
 	}      
       } else {
@@ -5831,7 +5831,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	
 	while(db.fetchRow()){
 	  sprintf(buf, "%s has %f pounds of fish and %i records.",
-		  db.getColumn("name"), convertTo<float>(db.getColumn("weight")), convertTo<int>(db.getColumn("count")));
+		  db["name"], convertTo<float>(db["weight"]), convertTo<int>(db["count"]));
 	  myself->doSay(buf);
 	}      
       }
@@ -6333,11 +6333,11 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
 
 	while(db.fetchRow()){
-	  if(convertTo<int>(db.getColumn("shares"))>0){
-	    count+=(int)(convertTo<float>(db.getColumn("price"))*convertTo<int>(db.getColumn("shares")));
+	  if(convertTo<int>(db["shares"])>0){
+	    count+=(int)(convertTo<float>(db["price"])*convertTo<int>(db["shares"]));
 	    sprintf(buf, "%s You own %s shares of %s, worth %f",
-		    fname(ch->name).c_str(), db.getColumn("shares"), db.getColumn("ticker"),
-		    convertTo<float>(db.getColumn("price"))*convertTo<int>(db.getColumn("shares")));
+		    fname(ch->name).c_str(), db["shares"], db["ticker"],
+		    convertTo<float>(db["price"])*convertTo<int>(db["shares"]));
 	    myself->doTell(buf);
 	  }
 	}
@@ -6351,7 +6351,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  return FALSE;
 	
 	sprintf(buf, "%s %s - %s talens per share.",
-		fname(ch->name).c_str(), db.getColumn("ticker"), db.getColumn("price"));
+		fname(ch->name).c_str(), db["ticker"], db["price"]);
 
 	myself->doTell(buf);
 	//	sprintf(buf, "%s %s", fname(ch->name).c_str(), row[2]);
@@ -6380,7 +6380,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       while(db.fetchRow()){
 	sprintf(buf, "%s %s - %s talens per share.", 
-		fname(ch->name).c_str(), db.getColumn("ticker"), db.getColumn("price"));
+		fname(ch->name).c_str(), db["ticker"], db["price"]);
 	myself->doTell(buf);
       }
     }
@@ -6420,7 +6420,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     // row[1] price
     // num amount to buy
 
-    float modprice=convertTo<float>(db.getColumn("price"))*(float)num;
+    float modprice=convertTo<float>(db["price"])*(float)num;
     modprice*=1.01;
 
     if(ch->getMoney() < modprice){
@@ -6429,7 +6429,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     }
 
-    if(convertTo<float>(db.getColumn("price")) < 1){
+    if(convertTo<float>(db["price"]) < 1){
       sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
@@ -6440,15 +6440,15 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     db.query("update stockinfo set talens=talens+%i", (int)(modprice/1.01));
 
     db.query("select 1 from stockowners where owner='%s' and ticker='%s'",
-	     ch->getName(), db.getColumn("ticker"));
+	     ch->getName(), db["ticker"]);
     if(!db.fetchRow()){
-      db.query("insert into stockowners values ('%s', '%s', %i)", ch->getName(), db.getColumn("ticker"), num);
+      db.query("insert into stockowners values ('%s', '%s', %i)", ch->getName(), db["ticker"], num);
     } else {
-      db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn("ticker"));
+      db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db["ticker"]);
     }
 
     sprintf(buf, "%s Ok, you just purchased %i shares of %s, for a price of %f.",
-	    fname(ch->name).c_str(), num, db.getColumn("ticker"), modprice);
+	    fname(ch->name).c_str(), num, db["ticker"], modprice);
     myself->doTell(buf);
 
     return TRUE;
@@ -6477,21 +6477,21 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!db.fetchRow())
       return FALSE;
     
-    if(convertTo<int>(db.getColumn("shares")) < num){
+    if(convertTo<int>(db["shares"]) < num){
       sprintf(buf, "%s You don't own enough shares of that stock.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
 
-    ch->addToMoney(((float)num * convertTo<float>(db.getColumn("price"))), GOLD_COMM);
+    ch->addToMoney(((float)num * convertTo<float>(db["price"])), GOLD_COMM);
 
-    db.query("update stockinfo set talens=talens-%i", (int)(((float)num * convertTo<float>(db.getColumn("price")))));
-    db.query("update stockowners set shares=shares-%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn("ticker"));
+    db.query("update stockinfo set talens=talens-%i", (int)(((float)num * convertTo<float>(db["price"]))));
+    db.query("update stockowners set shares=shares-%i where owner='%s' and ticker='%s'", num, ch->getName(), db["ticker"]);
 
     sprintf(buf, "%s Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
-	    fname(ch->name).c_str(), num, db.getColumn("ticker"), (float)num * convertTo<float>(db.getColumn("price")),
-	    (float)num * convertTo<float>(db.getColumn("price")) * 0.01);
+	    fname(ch->name).c_str(), num, db["ticker"], (float)num * convertTo<float>(db["price"]),
+	    (float)num * convertTo<float>(db["price"]) * 0.01);
     myself->doTell(buf);
     
     
@@ -6522,17 +6522,17 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!db.fetchRow())
       return FALSE;
 
-    if(convertTo<float>(db.getColumn("price")) < 1){
+    if(convertTo<float>(db["price"]) < 1){
       sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
 
-    float modprice=convertTo<float>(db.getColumn("price"));
+    float modprice=convertTo<float>(db["price"]);
     modprice*=1.01;
 
     sprintf(buf, "%s %i shares of %s would cost %i talens.",
-	    fname(ch->name).c_str(), num, db.getColumn("ticker"), (int)((float)num*modprice));
+	    fname(ch->name).c_str(), num, db["ticker"], (int)((float)num*modprice));
 
     myself->doTell(buf);
 

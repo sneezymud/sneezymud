@@ -383,7 +383,7 @@ int TMonster::calculateGoldFromConstant()
     db.query("select gold from shop where shop_nr=%i", shop_nr);
     
     if(db.fetchRow()){
-      the_gold = convertTo<int>(db.getColumn("gold"));
+      the_gold = convertTo<int>(db["gold"]);
     } else {
       the_gold = 1000000;
     }

@@ -58,7 +58,7 @@ float TTrophy::getCount(int vnum)
   db->query("select count from trophy where name='%s' and mobvnum=%i",
 	   getMyName().c_str(), vnum);
   if(db->fetchRow())
-    return convertTo<float>(db->getColumn("count"));
+    return convertTo<float>((*db)["count"]);
   else 
     return 0.0;
 }
@@ -141,7 +141,7 @@ void TBeing::doTrophy(const sstring &arg)
       }
 
       // sometimes we get an entry of 0 for med mobs I think
-      vnum=convertTo<int>(db.getColumn("mobvnum"));
+      vnum=convertTo<int>(db["mobvnum"]);
       if(vnum==0){
 	continue;
       }
@@ -154,10 +154,10 @@ void TBeing::doTrophy(const sstring &arg)
 	processrow=1;
       }
 
-      int rnum = real_mobile(convertTo<int>(db.getColumn("mobvnum")));
+      int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
 	vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
-	      convertTo<int>(db.getColumn("mobvnum")), getName());
+	      convertTo<int>(db["mobvnum"]), getName());
 	continue;
       }
 
@@ -180,7 +180,7 @@ void TBeing::doTrophy(const sstring &arg)
 	header=1;
       }
 
-      count=convertTo<float>(db.getColumn("count"));
+      count=convertTo<float>(db["count"]);
 
       if(!summary){
 	ssprintf(buf, "You will gain %s experience when fighting %s.\n\r", 

@@ -2095,9 +2095,9 @@ void buildComponentArray()
     exit(0);
   }
   while(db.fetchRow()){
-    vnum=convertTo<int>(db.getColumn("vnum"));
-    spell=mapFileToSpellnum(convertTo<int>(db.getColumn("val2")));
-    usage=convertTo<int>(db.getColumn("val3"));
+    vnum=convertTo<int>(db["vnum"]);
+    spell=mapFileToSpellnum(convertTo<int>(db["val2"]));
+    usage=convertTo<int>(db["val3"]);
 
     if(spell != TYPE_UNDEFINED &&
        (((usage & COMP_SPELL) != 0))){

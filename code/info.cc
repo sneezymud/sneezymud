@@ -2189,7 +2189,7 @@ void TPerson::doUsers(const sstring &argument)
 	db.query("select pingtime from pings where host='%s'", d->host);
 
 	if(db.fetchRow()){
-	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), db.getColumn("pingtime"));
+	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), db["pingtime"]);
 	} else {
 	  sprintf(buf2, "[%s](???)", (d->host ? d->host : "????"));
 	}
@@ -2340,7 +2340,7 @@ void TBeing::doEquipment(const char *argument)
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
     while(db.fetchRow()){
-      tattoos[convertTo<int>(db.getColumn("location"))]=db.getColumn("tattoo");
+      tattoos[convertTo<int>(db["location"])]=db["tattoo"];
     }
 
     sendTo("You are using:\n\r");
@@ -2378,7 +2378,7 @@ void TBeing::doEquipment(const char *argument)
     if (victim) {
       db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
       while(db.fetchRow()){
-	tattoos[convertTo<int>(db.getColumn("location"))]=db.getColumn("tattoo");
+	tattoos[convertTo<int>(db["location"])]=db["tattoo"];
       }
 
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
@@ -3089,14 +3089,14 @@ void TBeing::doWorld()
 
   if(db.fetchRow()){
     sprintf(buf, "%sNetwork Lag: Yours/Avg/High/Low      %s",
-	    blue(), db.getColumn("pingtime"));
+	    blue(), db["pingtime"]);
     str += buf;
 
     db.query("select avg(pingtime) as avg, max(pingtime) as max, min(pingtime) as min from pings");
 
     if(db.fetchRow()){
-      sprintf(buf, "/%s/%s/%s%s\n\r", db.getColumn("avg"),db.getColumn("max"), 
-	      db.getColumn("min"), norm());
+      sprintf(buf, "/%s/%s/%s%s\n\r", db["avg"],db["max"], 
+	      db["min"], norm());
       str += buf;
     } else {
       sprintf(buf, "/???/???/???%s\n\r", norm());
@@ -3171,7 +3171,7 @@ void TBeing::doWorld()
   //  db.query("select count(distinct mobvnum) from trophy");
   db.query("select count(*) as count from trophymob");
   if(db.fetchRow())
-    unkmobcount=convertTo<int>(db.getColumn("count"));
+    unkmobcount=convertTo<int>(db["count"]);
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
 	  red(), 100-(int)(((float)unkmobcount/(float)activemobcount)*100), 

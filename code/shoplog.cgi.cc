@@ -43,8 +43,8 @@ int main(int argc, char **argv){
 
     db.query("select soa.shop_nr from shopownedaccess soa, shopowned so where lower(name) = lower('%s') and soa.shop_nr=so.shop_nr and so.password='%s'", (**name).c_str(), (**pw).c_str());
     while(db.fetchRow()){
-      cout << "<option value=" << db.getColumn("shop_nr");
-      cout << "> " << db.getColumn("shop_nr") << endl;
+      cout << "<option value=" << db["shop_nr"];
+      cout << "> " << db["shop_nr"] << endl;
     }
     cout << "</select>";
     cout << "<input type=hidden name=name value=" << **name << ">";
@@ -57,10 +57,15 @@ int main(int argc, char **argv){
     cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
 
     while(db.fetchRow()){
-      for(int i=0;i<8;++i){
-	cout << stripColorCodes(db.getColumn(i)) << ", ";
-      }
-      cout << stripColorCodes(db.getColumn(8)) << endl;
+      cout << stripColorCodes(db["shop_nr"]) << ", ";
+      cout << stripColorCodes(db["name"]) << ", ";
+      cout << stripColorCodes(db["action"]) << ", ";
+      cout << stripColorCodes(db["item"]) << ", ";
+      cout << stripColorCodes(db["talens"]) << ", ";
+      cout << stripColorCodes(db["shoptalens"]) << ", ";
+      cout << stripColorCodes(db["shopvalue"]) << ", ";
+      cout << stripColorCodes(db["logtime"]) << ", ";
+      cout << stripColorCodes(db["itemcount"]) << endl;
     }
   }
   
