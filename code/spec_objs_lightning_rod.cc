@@ -11,21 +11,24 @@
 
 #include "stdsneezy.h"
 
-int lightningRodFryPerson  (TBaseWeapon *, TBeing *, TBeing *);
-int lightningRodGotHit     (TBaseWeapon *, TBeing *, TBeing *);
-int lightningRodFryRoom    (TBaseWeapon *, TRoom *);
-int lightningRodInternalFry(TBaseWeapon *, TBeing *);
+int lightningRodFryPerson  (TBaseWeapon   *, TBeing *, TBeing *);
+int lightningRodGotHit     (TBaseWeapon   *, TBeing *, TBeing *);
+int lightningRodGotHit     (TBaseClothing *, TBeing *, TBeing *);
+int lightningRodFryRoom    (TBaseWeapon   *, TRoom *);
+int lightningRodInternalFry(TBaseWeapon   *, TBeing *);
 
 int weaponLightningRod(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, TObj *)
 {
-  TBaseWeapon *tWeapon;
+  TBaseWeapon   *tWeapon = NULL;
+  TBaseClothing *tArmor  = NULL;
 
-  if (!(tWeapon = dynamic_cast<TBaseWeapon *>(tObj)))
+  if (!(tWeapon = dynamic_cast<TBaseWeapon   *>(tObj)) &&
+      !(tArmor  = dynamic_cast<TBaseClothing *>(tObj)))
     return FALSE;
 
   switch (tCmd) {
     case CMD_OBJ_HIT:
-      if (!tObj->equippedBy || !dynamic_cast<TBeing *>(tObj->equippedBy) || !tVictim)
+      if (!tObj->equippedBy || !dynamic_cast<TBeing *>(tObj->equippedBy) || !tVictim || !tWeapon)
         return FALSE;
 
       return lightningRodFryPerson(tWeapon, dynamic_cast<TBeing *>(tObj->equippedBy), tVictim);
@@ -34,16 +37,19 @@ int weaponLightningRod(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj,
       if (!tObj->equippedBy || !dynamic_cast<TBeing *>(tObj->equippedBy) || !tVictim)
         return FALSE;
 
-      return lightningRodGotHit(tWeapon, dynamic_cast<TBeing *>(tObj->equippedBy), tVictim);
+      if (tWeapon)
+        return lightningRodGotHit(tWeapon, dynamic_cast<TBeing *>(tObj->equippedBy), tVictim);
+      else
+        return lightningRodGotHit(tArmor, dynamic_cast<TBeing *>(tObj->equippedBy), tVictim);
 
     case CMD_GENERIC_PULSE:
-      if (!tObj || tObj->parent || tObj->stuckIn || tObj->equippedBy || !tObj->roomp)
+      if (!tObj || tObj->parent || tObj->stuckIn || tObj->equippedBy || !tObj->roomp || !tWeapon)
         return FALSE;
 
       return lightningRodFryRoom(tWeapon, tObj->roomp);
 
     case CMD_OBJ_STUCK_IN:
-      if (!tObj || !tVictim)
+      if (!tObj || !tVictim || !tWeapon)
         return FALSE;
 
       return lightningRodInternalFry(tWeapon, tVictim);
@@ -90,6 +96,27 @@ int lightningRodGotHit(TBaseWeapon *tObj, TBeing *tMaster, TBeing *tSucker)
   tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of electricty course through your body!<z>\n\r");
 
   int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
+
+  tDamage = ::number(1, tDamage);
+
+  if (IS_SET_DELETE(tMaster->reconcileDamage(tSucker, tDamage, DAMAGE_ELECTRIC), DELETE_VICT))
+    return DELETE_VICT;
+
+  return TRUE;
+}
+
+// Object has been hit by something else.
+int lightningRodGotHit(TBaseClothing *tObj, TBeing *tMaster, TBeing *tSucker)
+{
+  if (::number(0, 10))
+    return FALSE;
+
+  sendrpf(COLOR_OBJECTS, tMaster->roomp,
+          "%s<W> glows violently in reaction to being struck!<z>\n\r",
+          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+  tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of electricty course through your body!<z>\n\r");
+
+  int tDamage = max(1, (int) (tObj->armorLevel(ARMOR_LEV_REAL) / 8.0));
 
   tDamage = ::number(1, tDamage);
 
