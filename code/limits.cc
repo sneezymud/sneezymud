@@ -1170,7 +1170,9 @@ void TBeing::gainCondition(condTypeT condition, int value)
     // anything else - Russ 01/06/95
     for (t = roomp->stuff; t; t = t->nextThing) {
       if (dynamic_cast<TObj *>(t) && (t->spec == SPEC_FOUNTAIN)) {
-        parseCommand("drink fountain", FALSE);
+        char drinkbuf[256];
+	sprintf(drinkbuf, "drink %s", t->name);
+	parseCommand(drinkbuf, FALSE);
         return;
       }
     }

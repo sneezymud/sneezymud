@@ -421,7 +421,7 @@ void TPerson::doToggle(const char *arg)
     }
 
   } else if (is_abbrev(arg, "turbomode")) {
-    if (strcmp(getName(), "Batopr") || strcmp(getName(), "Dash")) {
+    if (strcmp(getName(), "Batopr") && strcmp(getName(), "Dash")) {
       sendTo("Please contact a coder if the game speed is not correct.\n\r");
       return;
     }
@@ -5981,7 +5981,10 @@ void TBeing::doAccount(const char *arg)
       // Given that ACCOUNT_IMMORTAL prevents imms from violating our own
       // rules, it's a bit too tempting for folks to turn off the automatic
       // checks.  I'm cynical and don't trust anyone but myself, so sue me.
-      if (strcmp(getName(), "Batopr")) {
+
+      // bat is mostly gone, and i need to remove the imm flag on a retired
+      // account, so i'm adding myself. - dash
+      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Dash")) {
         sendTo("Only Batopr should be doing this.\n\r");
         return;
       }
