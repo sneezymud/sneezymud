@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: show.cc,v $
+// Revision 1.3  1999/10/05 23:51:58  batopr
+// efficiency: "show objs" was converting from REAL to VIRTUAL before calling
+// read_object.
+//
 // Revision 1.2  1999/09/17 17:38:45  peel
 // Added show maxed, for listing maxed objects
 //
@@ -1917,7 +1921,7 @@ void TPerson::doShow(const char *argument)
        || zone < 0 && !isname(zonenum, obj_index[objnx].name))
         continue;
 
-      obj = read_object(obj_index[objnx].virt, VIRTUAL);
+      obj = read_object(objnx, REAL);
       sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
       delete obj;
 
