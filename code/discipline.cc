@@ -2920,7 +2920,7 @@ void TBeing::assignSkillsClass()
     // a new char is started at level 0 and advanced 1 level automatically
     for (i = 1; i <= getLevel(Class); i++) {
       // adjust for basic/ vs spelcialization practices
-      if (pracs >= 250) 
+      if (pracs < 200) 
         pracs += calcNewPracs(Class, true);
       else 
         pracs += calcNewPracs(Class, false);
@@ -2931,6 +2931,7 @@ void TBeing::assignSkillsClass()
 
     setPracs(max((int) pracs, 0), Class);
   }
+
    
 // 1. Give them some Adventuring and Wizardry
 

@@ -472,110 +472,63 @@ int TBeing::moveGain()
   return ((gain * 4) / 3);
 }
 
+
+// find out how many pracs ch needs to max all advanced discs
+int getAdvancedPracs(TBeing *ch){
+  discNumT i;
+  CDiscipline *cd;
+  int totalpracs=0;
+
+  for (i=MIN_DISC; i < MAX_DISCS; i++) {
+    cd = ch->getDiscipline(i);
+    if(cd && cd->ok_for_class){
+      if(cd->isBasic() || cd->isAutomatic())
+	totalpracs+=0;
+      else if(cd->isFast()){
+	totalpracs+=20;
+      } else {
+	totalpracs+=60;
+      }
+    }
+  }
+  return totalpracs;
+}
+
+
 sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
 {
   sh_int prac;
   double num;
-  //bool preReqs = FALSE;
-  int combat = 0;
-  bool doneCombat = FALSE;
+  double class_tweak = 0.50;
 
-  if (Class == MAGE_LEVEL_IND) {
-    combat = getDiscipline(DISC_COMBAT)->getLearnedness() + getDiscipline(DISC_LORE)->getLearnedness();
-  } else if (Class == CLERIC_LEVEL_IND || Class == DEIKHAN_LEVEL_IND) {
-    combat = getDiscipline(DISC_COMBAT)->getLearnedness() + getDiscipline(DISC_THEOLOGY)->getLearnedness();
-  } else {
-    combat = getDiscipline(DISC_COMBAT)->getLearnedness();
-  }
-
-  if (combat >= MAX_DISC_LEARNEDNESS) {
-    doneCombat = TRUE;
-  }
-
-  // A note on learning
-  // as of March 2001, each class has the following specialized disciplines:
-  // (Normal Spec disc is 60 pracs, weapon spec is 20, allow 1 weapon spec
-  // for each of the 'fighting' classes)
-  // Shaman:   8
-  // Mages:    7
-  // Monks:    4.33
-  // Warriors: 4.33
-  // Rangers:  5.33
-  // Deikhans: 5.33
-  // Thieves:  6.33
-  // Clerics:  5
-
-  // smart people should be able to learn 1/2 all possible learning
-  // average people should learn 3/8
-  // stupid people should learn 1/4
-  // new - 2/3,1/2,1/3
-  double minlearn = 1.0/3.0;
-  double avlearn = 1.0/2.0;
-  //double maxlearn = 2.0/3.0;
-
-  // I'd like to see all classes finish their prereqs at the same rate
-  // thus leaving all the spec to be done after that
-  // this gets messy, however.
-  // i'll assume average person should finish basic discs at L30
-  // thus basic learning should give a person 200/30 pracs a level = 6.67
-  
-  // thus, the next 20 levels should give 1/2 learning in however many base
-  // disciplines.
-
-  // using cleric as and example, this should be 5 discs * 60 pracs/disc = 300 pracs
-  // 300 pracs * (3/8) learning = 112.5 pracs / 20 level = 5.625 pracs per level.
-
-  // if we use the rate of basic learning, we can calculate the level when they
-  // should have started learning advanced stuff
-
-  // advanced level = 30 * (8/3) * (learnrate) = 80 * learnrate
-  // like a putz, i decided this was too low and went to change it
-  // so i plugged it into the statPlot with higher values, but FORGOT
-  // to change the formulas we later derived using those values.
-  // DON'T DO THAT
-
-  // new things - we can force the range at which they finish basic training
-  // for the moment i'd like to force between 22.5 and 37.5, because that will give a maxed
-  // int person dependable 9 pracs a lev for basic training
-
-  double deviation = 7.5;
-  double avbasic = 30.0; // try to keep this 30, the balance docs follow that premise
-
-
-
-  // so pracs per advanced level = (discs * 60 * learnrate) / (50 - 80 * learnrate) = pracs
-  
-  // ok... so lets do it!
-  double discs = 0;
-
-  // NOTE - this is what you should change if a class is getting too many/too few pracs
-  // or if more disciplines are added.
+  // class_tweak is what percentage of advanced discs they should be able to
+  // learn.  0.50 would let them learn half of their advanced discs, or 50%
+  // in each advanced disc.  This includes "fast" discs like weapon specs.
   switch (Class) {
     case MAGE_LEVEL_IND:
-      discs = 6.333;
+      class_tweak = 0.43;
       break;
     case CLERIC_LEVEL_IND:
-      discs = 5.0;
+      class_tweak = 0.47;
       break;
     case WARRIOR_LEVEL_IND:
-      discs = 5.00;  // 4.666;
+      class_tweak = 0.47;
       break;
     case THIEF_LEVEL_IND:
-      discs = 5.5;
+      class_tweak = 0.41;
       break;
     case DEIKHAN_LEVEL_IND:
-      discs = 5.833; // 5.5;
+      class_tweak = 0.44;
       break;
     case MONK_LEVEL_IND:
-      discs = 5.00; // 4.666;
+      class_tweak = 0.44;
       break;
     case RANGER_LEVEL_IND:
-      discs = 5.833; // 5.5;
+      class_tweak = 0.46;
       break;
     case SHAMAN_LEVEL_IND:
-      discs = 6.666;
-      break; // I lowered this because I dont want shaman to jump too far ahead
-             // I think this is a good start - Jesus
+      class_tweak = 0.39;
+      break;
     case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
@@ -583,130 +536,31 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       vlogf(LOG_BUG,"Got to a bad spot in calcNewPracs(), bad class");
       break;
   }
-  
-  
-  double learnrate;
 
-  learnrate = getIntModForPracs() * avlearn;
+  // what level player should finish basic at (200 pracs)
+  double avbasic = 30.0; 
 
-#if 0
-  if (!desc) {
-    learnrate = (maxlearn - minlearn) * getIntModForPracs() + avlearn;
-    //    learnrate = plotStat(STAT_CURRENT, STAT_INT, minlearn, maxlearn, avlearn, 1.2);
-  } else {
-    learnrate = plotStat(STAT_NATURAL, STAT_INT, minlearn, maxlearn, avlearn, 1.2);
-  }
-#endif
+  // modify the level by the int mod, smart people finish sooner
+  double advancedlevel = avbasic / getIntModForPracs();
 
-
-  double advancedlevel = (double)((avbasic+(deviation*((avlearn - learnrate)/(avlearn-minlearn)))));
-  //  double advancedlevel = (90.0/(8.0*learnrate));
+  // this is how many pracs to give per level to hit 200 at advancedlevel
   double basicpracs = (200.0/advancedlevel);
-  double advancedpracs = (discs * 60.0 * learnrate)/(50.0 - advancedlevel);
-  
 
-  if (getLevel(Class) >= advancedlevel)
+  // the percentage of advanced discs this person can learn
+  double learnrate = getIntModForPracs() * class_tweak;
+
+  // advancedpracs is the pracs per level you get after you finish basic
+  double advancedpracs = (getAdvancedPracs(this) * learnrate)/(50.0 - advancedlevel);
+
+  if (getLevel(Class) >= advancedlevel && !forceBasic)
     num = advancedpracs;
   else
     num = basicpracs;
   
-  float temp = num;
-
-  #if 0
-
-
-  // these are the default number of practices to use for each class
-  // after they are done with their basic discs
-  // we override these numbers appropriately
-  float fMin = 5.0;
-  float fMax = 9.0;
-  float avg = 6.6;
-
-  // override the defaults as appropriate (i.e., if we want person to
-  // get practice gain appropriate for the basic discs
-  switch (Class) {
-    case MAGE_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_MAGE)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =6.7;
-      } 
-      break;
-    case CLERIC_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_CLERIC)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =6.7;
-      }
-      break;
-    case WARRIOR_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_WARRIOR)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =6.0;
-        fMax =8.0;
-        avg =7.0;
-      }
-      break;
-    case THIEF_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_THIEF)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =7.0;
-      }
-      break;
-    case DEIKHAN_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_DEIKHAN)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        fMin =5.0;
-        fMax =8.0;
-        avg =7.0;
-        preReqs = TRUE;
-      }
-      break;
-    case MONK_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_MONK)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =7.0;
-      }
-      break;
-    case RANGER_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_RANGER)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =6.7;
-      }
-      break;
-    case SHAMAN_LEVEL_IND:
-      if (!doneCombat || (getDiscipline(DISC_SHAMAN)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-        preReqs = TRUE;
-        fMin =5.0;
-        fMax =8.0;
-        avg =6.7;
-      }
-      break;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      vlogf(LOG_BUG, "Bad class in calcNewPracs");
-      break;
-  } 
-
-  if (!desc) {
-    num = plotStat(STAT_CURRENT, STAT_INT, fMin, fMax, avg, 1.0);
-  } else {
-    num = plotStat(STAT_NATURAL, STAT_INT, fMin, fMax, avg, 1.0);
-  }
-#endif
-
+  float temp = (int) num; // save for logging
   prac = (int) num;
-  temp = prac;
   num = num - prac;
+
   if (isTripleClass()) {
     prac *= 4;
     prac /= 6;
@@ -718,18 +572,18 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
     num *= 3;
     num /= 4;
   } 
+
   int roll = ::number(1,99);
   if ((100.0*num) >= roll) {
     prac++;
   }
+
   if(isPc()) {
     vlogf(LOG_DASH, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d, advancedlev: %5.2f", getName(),
 	  prac, roll, (int)temp, num, getLevel(Class), advancedlevel);
-
   }
+
   return prac;
-
-
 }
 
 void TBeing::setPracs(sh_int prac, classIndT Class)
