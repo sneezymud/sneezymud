@@ -199,9 +199,8 @@ void TBaseWeapon::sharpenMe(TBeing *ch, TTool *tool)
     return;
   }
 
-  if (bSuccess(ch, ch->getSkillValue(SKILL_SHARPEN), SKILL_SHARPEN)) {
-    addToCurSharp(1);
-  }
+  if (bSuccess(ch, ch->getSkillValue(SKILL_SHARPEN), SKILL_SHARPEN)) 
+    addToCurSharp((itemType() == ITEM_ARROW) ? 2 : 1);
 
   // task can continue forever, so don't bother decrementing the timer
   return;
@@ -236,9 +235,8 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
     ch->stopTask();
     return;
   }
-  if (bSuccess(ch, ch->getSkillValue(SKILL_DULL), SKILL_DULL)) {
+  if (bSuccess(ch, ch->getSkillValue(SKILL_DULL), SKILL_DULL)) 
     addToCurSharp(1);
-  }
 
   // task can continue forever, so don't bother decrementing the timer
   return;
