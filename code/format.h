@@ -45,6 +45,13 @@ template <class T> fmt & fmt::operator %(const T &x)
 
   for(unsigned int i=last;i<size();++i){
     if((*this)[i]=='%'){
+      // skip %%
+      if((i+1)<size() && (*this)[i+1]=='%'){
+	++i;
+	output += "%";
+	continue;
+      }
+
       // first grab the format specifier
       for(buf="%",++i;i<size() && (*this)[i]!='%';++i){
 	buf += (*this)[i];

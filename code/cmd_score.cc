@@ -7,6 +7,7 @@
 
 
 #include "stdsneezy.h"
+#include "format.h"
 
 void comify(char *tString)
 {
@@ -35,66 +36,67 @@ void comify(char *tString)
   *tString = '\0';
 }
 
+
 void TBeing::doScore()
 {
   struct time_info_data playing_time;
-  char Buf[256],
-       tString[256];
+  sstring Buf, tString;
+  char tbuf[256];
 
-  sprintf(Buf, "You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ",
-          red(), getHit(), norm(),
-          green(), hitLimit(), norm(),
-          purple(), getMove(), norm(),
-          green(), moveLimit(), norm());
-  sendTo(Buf);
+  sendTo(fmt("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %
+	 red() % getHit() % norm() %
+	 green() % hitLimit() % norm() %
+	 purple() % getMove() % norm() %
+	 green() % moveLimit() % norm());
 
   if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
-    sprintf(Buf, "%s%.2f%% %spiety.\n\r",
-            cyan(), getPiety(), norm());
+    Buf = fmt("%s%.2f%%%% %spiety.\n\r") % cyan() % getPiety() % norm();
   else if (hasClass(CLASS_SHAMAN))
-    sprintf(Buf, "%s%d %slifeforce.\n\r",
-            red(), getLifeforce(), norm());
+    Buf = fmt("%s%d %slifeforce.\n\r") % red() % getLifeforce() % norm();
   else
-    sprintf(Buf, "%s%d%s/%s%d%s mana.\n\r",
-            orange(), getMana(), norm(),
-            green(), manaLimit(), norm());
+    Buf = fmt("%s%d%s/%s%d%s mana.\n\r") %
+      orange() % getMana() % norm() %
+      green() % manaLimit() % norm();
+
   sendTo(Buf);
 
-
-
-  sendTo("You are %s.\n\r", DescMoves((((double) getMove()) / ((double)
+  sendTo(fmt("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double)
          moveLimit()))));
 
-  strcpy(tString, displayExp().c_str());
-  comify(tString);
+  tString = displayExp();
+  strcpy(tbuf, tString.c_str());
+  comify(tbuf);
+  tString=tbuf;
 
-  sendTo("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r",
-         cyan(), tString, norm(),
-         purple(), getMoney(), norm(),
-         purple(), getBank(), norm());
+  sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") %
+         cyan() % tString % norm() %
+         purple() % getMoney() % norm() %
+         purple() % getBank() % norm());
 
   if (desc) {
-    sprintf(tString, "%.2f", desc->session.xp);
-    comify(tString);
-    sendTo("You have earned %s%s%s exp this session.\n\r",
-         cyan(), tString, norm());
+    tString = fmt("%.2f") % desc->session.xp;
+    strcpy(tbuf, tString.c_str());
+    comify(tbuf);
+    tString=tbuf;
+    sendTo(fmt("You have earned %s%s%s exp this session.\n\r") %
+         cyan() % tString % norm());
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
 
-    sendTo("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r",
-         purple(), playing_time.hours  , norm(), (playing_time.hours   == 1 ? "" : "s"),
-         purple(), playing_time.minutes, norm(), (playing_time.minutes == 1 ? "" : "s"),
-         purple(), playing_time.seconds, norm(), (playing_time.seconds == 1 ? "" : "s"));
+    sendTo(fmt("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %
+         purple() % playing_time.hours   % norm() % (playing_time.hours   == 1 ? "" : "s") %
+         purple() % playing_time.minutes % norm() % (playing_time.minutes == 1 ? "" : "s") %
+         purple() % playing_time.seconds % norm() % (playing_time.seconds == 1 ? "" : "s"));
   }
 
   realTimePassed((time(0) - player.time.logon) + player.time.played,
                  0, &playing_time);
 
-  sendTo("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r",
-         purple(), playing_time.day  , norm(), (playing_time.day   == 1 ? "" : "s"),
-         purple(), playing_time.hours, norm(), (playing_time.hours == 1 ? "" : "s"));
+  sendTo(fmt("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %
+         purple() % playing_time.day   % norm() % (playing_time.day   == 1 ? "" : "s") %
+         purple() % playing_time.hours % norm() % (playing_time.hours == 1 ? "" : "s"));
 
   classIndT i;
   // since XP tables are all the same, the only time this should be
@@ -106,42 +108,45 @@ void TBeing::doScore()
       allClassesSame = false;
 
   if (allClassesSame)
-    sendTo("Your level: %s lev %2d          This ranks you as:\n\r",
-           getProfName(), GetMaxLevel());
+    sendTo(fmt("Your level: %s lev %2d          This ranks you as:\n\r") %
+           getProfName() % GetMaxLevel());
   else {
     sendTo("Your level: ");
     bool shownFirst = false;
     for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
       if (getLevel(i)) {
-        sendTo("%s%s lev %2d", 
-             shownFirst ? ", " : "",
-	       classInfo[i].name.cap().c_str(), getLevel(i));
+        sendTo(fmt("%s%s lev %2d") %
+             (shownFirst ? ", " : "") %
+	       classInfo[i].name.cap() % getLevel(i));
         shownFirst = true;
       }
     }
     sendTo("          This ranks you as:\n\r");
   }
 
-  parseTitle(Buf, desc);
-  strcat(Buf, "\n\r");
+  parseTitle(tbuf, desc);
+  Buf = tbuf;
+  Buf += "\n\r";
   // Done this way just in case the player uses a % in there title.
-  sendTo(COLOR_BASIC, "%s", Buf);
+  sendTo(COLOR_BASIC, fmt("%s") % Buf);
 
   for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
     if (getLevel(i) && getLevel(i) < MAX_MORT) {
       double need = getExpClassLevel(i, getLevel(i) + 1) - getExp();
-      sprintf(tString, "%.2f", need);
-      comify(tString);
+      tString = fmt("%.2f") % need;
+      strcpy(tbuf, tString.c_str());
+      comify(tbuf);
+      tString=tbuf;
       if (allClassesSame) {
-        sendTo("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r",
-             purple(), tString, norm(), purple(), getLevel(i)+1,
-             getProfName(), norm());
+        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
+             purple() % tString % norm() % purple() % (getLevel(i)+1) %
+	       getProfName() % norm());
         break;
       } else {
         // leveled in one class, but not another, show each class as own line
-        sendTo("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r",
-             purple(), tString, norm(), purple(), getLevel(i)+1,
-             classInfo[i].name.cap().c_str(), norm());
+        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
+             purple() % tString % norm() % purple() % (getLevel(i)+1) %
+             classInfo[i].name.cap() % norm());
       }
     }
   }
@@ -182,8 +187,7 @@ void TBeing::doScore()
   if (fight())
     act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
   else if (task) {
-    sprintf(Buf, "You are %s.\n\r", tasks[task->task].name);
-    sendTo(Buf);
+    sendTo(fmt("You are %s.\n\r") % tasks[task->task].name);
   } else {
     TBeing *tbr;
     switch (getPosition()) {
@@ -201,29 +205,30 @@ void TBeing::doScore()
         break;
       case POSITION_SLEEPING:
         if (riding) {
-          sprintf(Buf, "You are sleeping on ");
-          if (riding->getName())
-            strcat(Buf, objs(riding));
-          else
-            strcat(Buf, "A bad object");
+          Buf="You are sleeping on ";
 
-          strcat(Buf,".\n\r");
+          if (riding->getName())
+            Buf+=objs(riding);
+          else
+            Buf+="A bad object";
+
+          Buf+=".\n\r";
         } else
-          sprintf(Buf, "You are sleeping.\n\r");
+          Buf="You are sleeping.\n\r";
 
         sendTo(Buf);
         break;
       case POSITION_RESTING:
         if (riding) {
-          sprintf(Buf, "You are resting on ");
+          Buf = "You are resting on ";
           if (riding->getName())
-            strcat(Buf, objs(riding));
+            Buf+=objs(riding);
           else
-            strcat(Buf, "A horse with a bad short description, BUG THIS!");
+            Buf+="A horse with a bad short description, BUG THIS!";
 
-          strcat(Buf, ".\n\r");
+          Buf+=".\n\r";
         } else
-          sprintf(Buf, "You are resting.\n\r");
+          Buf = "You are resting.\n\r";
 
         sendTo(Buf);
         break;
@@ -232,15 +237,15 @@ void TBeing::doScore()
         break;
       case POSITION_SITTING:
         if (riding) {
-          strcpy(Buf, "You are sitting on ");
+          Buf="You are sitting on ";
           if (riding->getName())
-            strcat(Buf, objs(riding));
+            Buf += objs(riding);
           else
-            strcat(Buf, "A bad object!");
+	    Buf += "A bad object!";
 
-          strcat(Buf, ".\n\r");
+          Buf += ".\n\r";
         } else
-          strcpy(Buf, "You are sitting.\n\r");
+          Buf="You are sitting.\n\r";
 
         sendTo(Buf);
         break;
@@ -257,16 +262,15 @@ void TBeing::doScore()
       case POSITION_MOUNTED:
         tbr = dynamic_cast<TBeing *>(riding);
         if (tbr && tbr->horseMaster() == this) {
-          strcpy(Buf, "You are here, riding ");
-          strcat(Buf, pers(tbr));
-          strcat(Buf, ".\n\r");
+	  Buf = "You are here, riding ";
+	  Buf += pers(tbr);
+	  Buf += ".\n\r";
           sendTo(COLOR_MOBS, Buf);
         } else if (tbr) {
-          sprintf(Buf, "You are here, also riding on %s's %s%s.\n\r",
-              pers(tbr->horseMaster()),
-              persfname(tbr).c_str(),
-              tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
-
+	  Buf = fmt("You are here, also riding on %s's %s%s.\n\r") %
+	    pers(tbr->horseMaster()) %
+	    persfname(tbr).c_str() %
+	    (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
 
           sendTo(COLOR_MOBS, Buf);
         } else
@@ -278,11 +282,11 @@ void TBeing::doScore()
     }
   }
 
-  sendTo("You are in %s%s%s attack mode.\n\r",
-         cyan(), attack_modes[getCombatMode()], norm());
+  sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
+         cyan() % attack_modes[getCombatMode()] % norm());
 
   if (wimpy)
-    sendTo("You are in wimpy mode, and will flee at %d hit points.\n\r", wimpy);
+    sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % wimpy);
 
   describeLimbDamage(this);
   sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));

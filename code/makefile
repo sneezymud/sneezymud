@@ -2441,6 +2441,7 @@ objs/cmd_score.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/cmd_score.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/cmd_score.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_score.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_score.o: format.h
 objs/cmd_sedit.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/cmd_sedit.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/cmd_sedit.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
