@@ -5519,7 +5519,7 @@ bool Descriptor::checkForCharacter(char *arg)
 // return DELETE_THIS
 int Descriptor::doAccountStuff(char *arg)
 {
-  //  char tmp_name[256];
+  char tmp_name[256];
   char buf[256];
   int count = 0;
   string lStr;
