@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.4  1999/10/06 23:46:50  batopr
+// Boosted target profit ratio to 2% (from 1%) for PCs
+//
 // Revision 1.3  1999/09/22 19:05:50  cosmo
 // Took out peels .3 cap on GOLD_INCOME, just made the mud not modify for it in
 // monster.cc. so it will still float but wont be used till we evaluate it
@@ -609,7 +612,7 @@ void checkGoldStats()
   }
 
   // overall, would like players to be gaining slightly on gold (2% target)
-  float target_income = 0.01;
+  float target_income = 0.02;
   if ((unsigned int) net_gold_budget < ((target_income - 0.03) * pos_gold_budget)) {
     // players losing money
     gold_modifier[GOLD_INCOME] += 0.01;
