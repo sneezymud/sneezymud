@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_nature.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -21,7 +13,7 @@
 
 struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] =
 {
-  {"hands", 8, 20, "bear claws", WEAR_HAND_R, AFFECT_TRANSFORMED_HANDS, DISC_RANGER},
+  {"hands", 6, 20, "bear claws", WEAR_HAND_R, AFFECT_TRANSFORMED_HANDS, DISC_RANGER},
   {"arms", 30, 75,"falcon wings", WEAR_ARM_R, AFFECT_TRANSFORMED_ARMS,
 DISC_ANIMAL},
   {"legs", 20, 15, "a dolphin's tail", WEAR_LEGS_R, AFFECT_TRANSFORMED_LEGS, DISC_ANIMAL},
@@ -143,7 +135,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
       aff.modifier2 = 50;
       break;
     default:
-      vlogf(10, "Bad limb case in TRANSFORM_LIMB");
+      vlogf(LOG_BUG, "Bad limb case in TRANSFORM_LIMB");
       caster->sendTo("Bug in your limbs, tell a god and put in bug file.\n\r");
       return FALSE;
   }
@@ -395,9 +387,9 @@ int barkskin(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   aff.type = SKILL_BARKSKIN;
   aff.location = APPLY_ARMOR;
-  aff.duration = combatRound(((level / 5) + 2));
+  aff.duration = max(min(level/10, 5), 1) * UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
-  aff.modifier = -75;
+  aff.modifier = -90;
 
   if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_BARKSKIN)) {
     if (critSuccess(caster, SKILL_BARKSKIN)) {
@@ -467,7 +459,7 @@ int TBeing::doBarkskin(const char *argument)
       return FALSE;
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -516,284 +508,18 @@ int castBarkskin(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int rootControl(TBeing *caster, TBeing *victim, TMagicItem *tObj)
 {
-  TMonster *snake;
-  affectedData aff; 
-  int rc, mobile;
-  followData *k, *n;
+  int tLevel = tObj->getMagicLevel(),
+    tKnown = tObj->getMagicLearnedness(),
+    tReturn = 0;
 
-  if (caster->roomp->notRangerLandSector() && !caster->roomp->isForestSector()) {
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    caster->sendTo("You need to be in nature and to have solid ground to cast this spell!\n\r");
-    return SPELL_FAIL;
-  }
+  tReturn = rootControl(caster, victim, 0, tLevel, tKnown);
 
-  if (level < 26) {
-     mobile = MOB_SNAKES25;
-  } else if (level < 31) {
-     mobile = MOB_SNAKES30;
-  } else if (level < 36) {
-     mobile = MOB_SNAKES35;
-  } else if (level < 41) {
-     mobile = MOB_SNAKES40;
-  } else {
-     mobile = MOB_SNAKES50;
-  }
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tReturn, DELETE_THIS);
 
-
-  if(!(snake = read_mobile(mobile, VIRTUAL))) {
-    vlogf(10, "Spell STICKS_TO_SNAKES unable to load mob...");
-    caster->sendTo("Unable to create the snake, please report this.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;
-  }
-
-  if ((caster->followers) && (caster->GetMaxLevel() < GOD_LEVEL1))  {
-      for (k = caster->followers; k; k = n) {
-        n = k->next;
-        if (!strcmp(k->follower->getName(), snake->getName())) {
-          act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-          caster->sendTo("You would have to be immortal to summon another snake!\n\r");
-          delete snake;
-          snake=NULL;
-          return SPELL_FAIL;
-        }
-      }
-   }
-
-  float lvl = max(1.0, (float) level/2.0);
-  snake->setDamPrecision(20);
-
-  snake->setExp(0);
-  snake->setMoney(0);
-  snake->setHitroll(0);
-
-  *caster->roomp += *snake;
-  act("The sticks on the $g suddenly change into $n!", TRUE, snake, NULL, caster, TO_ROOM);
-  act("The sticks on the $g suddenly change into $n!", TRUE, snake, NULL, caster, TO_CHAR);
-
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STICKS_TO_SNAKES)) {
-    switch(critSuccess(caster, SPELL_STICKS_TO_SNAKES)) {
-      case CRIT_S_KILL:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_DOUBLE:
-        CS(SPELL_STICKS_TO_SNAKES);
-        act("The snake appears to be particularly strong and particularly angry!", TRUE, caster, 0, snake, TO_ROOM);
-        act("The snake appears to be particularly strong and particularly angry!", TRUE, caster, 0, snake, TO_CHAR);
-        lvl *= 2;
-        break;
-      default:
-        if (victim->isLucky(caster->spellLuckModifier(SPELL_STICKS_TO_SNAKES))) {
-          SV(SPELL_STICKS_TO_SNAKES);
-          lvl /=2;
-        }
-        break;
-    }
-
-    if (!caster->fight()) {
-      if (caster->reconcileDamage(victim, 0, SPELL_STICKS_TO_SNAKES) == -1)
-        return SPELL_SUCCESS + VICTIM_DEAD;
-    }
-
-    snake->setLevel(WARRIOR_LEVEL_IND, lvl);
-    snake->setHPLevel(lvl);
-    snake->setHPFromHPLevel();
-    snake->setACLevel(lvl);
-    snake->setACFromACLevel();
-    snake->setDamLevel(lvl);
-
-    if (!IS_SET(snake->specials.act, ACT_SENTINEL))
-      SET_BIT(snake->specials.act, ACT_SENTINEL);
-
-    if (!snake->master)
-      caster->addFollower(snake);
-
-    act("After following $n, the coiled snake bares its fangs and springs at $N!", TRUE, caster, 0, victim, TO_NOTVICT);
-    act("After following you, the coiled snake bares its fangs and springs at $N!", TRUE, caster, 0, victim, TO_CHAR);
-    act("After following $n, the snake bares its fangs and springs to attack you!", TRUE, caster, 0, victim, TO_VICT);
-
-
-    aff.type = SPELL_STICKS_TO_SNAKES;
-    aff.level = level;
-    aff.duration = 32000;
-    aff.location = APPLY_NONE;
-    aff.modifier = 0;
-    aff.bitvector = 0;
-    snake->affectTo(&aff);
-
-    if (snake->reconcileDamage(victim, 0, SPELL_STICKS_TO_SNAKES) == -1)
-       return SPELL_SUCCESS + VICTIM_DEAD;
-
-    return SPELL_SUCCESS;
-
-  } else {
-    snake->setLevel(WARRIOR_LEVEL_IND, lvl);
-    snake->setHPLevel(lvl);
-    snake->setHPFromHPLevel();
-    snake->setACLevel(lvl);
-    snake->setACFromACLevel();
-    snake->setDamLevel(lvl);
-
-    switch (critFail(caster, SPELL_STICKS_TO_SNAKES)) {
-      case CRIT_F_HITOTHER:
-      case CRIT_F_HITSELF:
-        CF(SPELL_STICKS_TO_SNAKES);
-        act("$n loses control of the magic $e has unleashed!", TRUE, caster, 0, snake, TO_ROOM);
-        act("You lose control of the magic you have unleashed!", TRUE, caster, 0, snake, TO_CHAR);
-
-        rc = snake->hit(caster);
-        if (IS_SET_DELETE(rc, DELETE_VICT)) {
-          return SPELL_CRIT_FAIL + CASTER_DEAD;
-        }
-        if (rc == DELETE_THIS) {
-          delete snake;
-          snake = NULL;
-        }
-        return SPELL_CRIT_FAIL;
-      default:
-        break;
-    }
-    caster->sendTo("You don't seem to have control of the snake.\n\r");
-    act("The snake seems to have no interest in $n!", TRUE, caster, 0, snake, TO_ROOM);
-    caster->sendTo("The snake reverts back into sticks.\n\r");
-    act("$N reverts back into the sticks from which it came.", TRUE, caster, 0, snake, TO_ROOM);
-    *snake->roomp += *read_object(OBJ_INERT_STICK, VIRTUAL);
-    delete snake;
-    snake = NULL;
-    return SPELL_FAIL;
-  }
-}
-
-
-int sticksToSnakes(TBeing * caster, TBeing * victim, TMagicItem * obj)
-{
-  int ret = 0;
-  int rc=0;
-
-  ret=sticksToSnakes(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-  } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
-  } else {
-    }
-  if (IS_SET(ret, VICTIM_DEAD))
-    ADD_DELETE(rc, DELETE_VICT);
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-    return rc;
-}
-
-int sticksToSnakes(TBeing * caster, TBeing * victim)
-{
-  int level,ret;
-  int rc = 0;
-
-  if (!bPassMageChecks(caster, SPELL_STICKS_TO_SNAKES, victim)) 
-    return FALSE;
-
-  level = caster->getSkillLevel(SPELL_STICKS_TO_SNAKES);
-  int bKnown = caster->getSkillValue(SPELL_STICKS_TO_SNAKES);
-
-  ret=sticksToSnakes(caster, victim, level, bKnown);
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-  return rc;
-
-}
-
-int livingVines(TBeing *caster, TBeing *victim,int level, byte bKnown)
-{
-  affectedData aff1, aff2;
- 
-  if (caster->isNotPowerful(victim, level, SPELL_LIVING_VINES, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
-  if (caster->roomp->notRangerLandSector() && !caster->roomp->isForestSector()) {
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    caster->sendTo("You need to be in nature or on land to cast this spell!\n\r");
-    return SPELL_FAIL;
-  }
- 
-  caster->reconcileHurt(victim, discArray[SPELL_LIVING_VINES]->alignMod);
- 
-  aff1.type = SPELL_LIVING_VINES;
-  aff1.level = level;
-  aff1.bitvector = AFF_WEB;
-  aff1.location = APPLY_ARMOR;
-  aff1.modifier = (level / 2) + 5;
-  aff1.duration = level * UPDATES_PER_TICK;
- 
-  aff2.type = SPELL_LIVING_VINES;
-  aff2.level = level;
-  aff2.bitvector = AFF_WEB;
-  aff2.location = APPLY_SPELL_HITROLL;
-  aff2.modifier = (-level*2);
-  aff2.duration = level * UPDATES_PER_TICK;
-   
-  if (bSuccess(caster, bKnown, SPELL_LIVING_VINES)) {
-    act("$n summons the vines to hold $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("You command the vines to trap $N!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n summons the vines to ensnare you!", FALSE, caster, NULL, victim, TO_VICT);
-    switch(critSuccess(caster, SPELL_LIVING_VINES)) {
-      case CRIT_S_DOUBLE:
-        CS(SPELL_LIVING_VINES);
-        aff1.duration *= 2;
-        aff2.modifier *= 2;
-        break;
-      default:
-        if (victim->isLucky(caster->spellLuckModifier(SPELL_LIVING_VINES))) {
-          SV(SPELL_LIVING_VINES);
-          aff1.duration /= 2;
-          aff2.modifier /= 2;
-        }
-    }
-    victim->affectTo(&aff1);
-    victim->affectTo(&aff2);
-    caster->reconcileDamage(victim, 0,SPELL_LIVING_VINES);
-    return SPELL_SUCCESS;
-  } else {
-    switch (critFail(caster, SPELL_LIVING_VINES)) {
-      case CRIT_F_HITSELF:
-      case CRIT_F_HITOTHER:
-        CF(SPELL_LIVING_VINES);
-        act("$n traps $mself with the vines %s summoned!", FALSE, caster, NULL, NULL, TO_ROOM);
-        act("Oops! You trap yourself in the vines you summoned!", FALSE, caster, NULL, victim, TO_CHAR);
-        act("Hey, $n was trying to trap you with the vines %s summoned!", FALSE, caster, NULL, victim, TO_VICT);
-        caster->affectTo(&aff1);
-        caster->affectTo(&aff2);
-        caster->reconcileDamage(victim, 0,SPELL_LIVING_VINES);
-        return SPELL_CRIT_FAIL;
-        break;
-      default:
-        break;
-    }
-    caster->sendTo("Nothing seems to happen.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
-    return SPELL_FAIL;
-  }
-}
- 
-void livingVines(TBeing *caster, TBeing *victim, TMagicItem * obj)
-{
-  livingVines(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-}
- 
-void livingVines(TBeing *caster, TBeing *victim)
-{
-int ret,level;
- 
-  if (!bPassMageChecks(caster, SPELL_LIVING_VINES, victim))
-    return;
- 
-  level = caster->getSkillLevel(SPELL_LIVING_VINES);
-  int bKnown = caster->getSkillValue(SPELL_LIVING_VINES);
- 
-  if ((ret=livingVines(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
-  } else {
-    if (ret==SPELL_CRIT_FAIL) {
-    } else {
-    }
-  }
+  return tReturn;
 }
 
 int rootControl(TBeing * caster, TBeing * victim, int, int dam, byte bKnown)
@@ -805,7 +531,7 @@ int rootControl(TBeing * caster, TBeing * victim, int, int dam, byte bKnown)
     return SPELL_FAIL;
   }
   if (victim->getPosition() <= POSITION_SLEEPING) {
-    act("$N seems to already be on the ground!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N seems to already be on the $g!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
@@ -883,134 +609,105 @@ int rootControl(TBeing * caster, TBeing * victim)
   return rc;
 }
  
-int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
+// LIVING VINES
+
+int livingVines(TBeing *caster, TBeing *victim,int level, byte bKnown)
 {
-  int rc;
-
-  if (caster->isNotPowerful(victim, level, SPELL_STORMY_SKIES, SILENT_NO)) {
+  affectedData aff1, aff2;
+ 
+  if (caster->isNotPowerful(victim, level, SPELL_LIVING_VINES, SILENT_NO)) {
     return SPELL_FAIL;
   }
-
-  if (!((victim->roomp->getWeather() == WEATHER_RAINY) || 
-     (victim->roomp->getWeather() == WEATHER_LIGHTNING) ||
-     (victim->roomp->getWeather() == WEATHER_SNOWY))) {
-    caster->sendTo("You fail to call upon the weather to aid you!\n\r");
-    if (!victim->outside())
-      caster->sendTo("You have to be outside to cast this spell!\n\r");
+  if (caster->roomp->notRangerLandSector() && !caster->roomp->isForestSector()) {
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    caster->sendTo("You need to be in nature or on land to cast this spell!\n\r");
     return SPELL_FAIL;
   }
-
-  caster->reconcileHurt(victim, discArray[SPELL_STORMY_SKIES]->alignMod);
-  
-  int dam = caster->getSkillDam(victim, SPELL_STORMY_SKIES, caster->getSkillLevel(SPELL_STORMY_SKIES), caster->getAdvLearning(SPELL_STORMY_SKIES));
  
-  if ((victim->roomp->getWeather() == WEATHER_RAINY) ||
-     (victim->roomp->getWeather() == WEATHER_LIGHTNING)) {
-    if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
-      if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
-        dam /= 2; // half damage
+  caster->reconcileHurt(victim, discArray[SPELL_LIVING_VINES]->alignMod);
  
-      if (critSuccess(caster, SPELL_STORMY_SKIES)) {
-        CS(SPELL_STORMY_SKIES);
-        dam *= 2;
-      }
-      act("$n summons a lightning bolt from the stormy skies and causes it to hit $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
-      act("You summon a lightning bolt from the stormy skies and cause it to hit $N!", FALSE, caster, NULL, victim, TO_CHAR);
-      act("$n summons a lightning bolt from the stormy skies and causes it to hit you!", FALSE, caster, NULL, victim, TO_VICT);
-      if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
-        return SPELL_SUCCESS + VICTIM_DEAD;
-      rc = victim->lightningEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return SPELL_SUCCESS + VICTIM_DEAD;
-      return SPELL_SUCCESS;
-    } else {
-      switch (critFail(caster, SPELL_STORMY_SKIES)) {
-        case CRIT_F_HITSELF:
-          CF(SPELL_STORMY_SKIES);
-          act("$n summons lightning from the stormy skies, bringing down a bolt upon $mself!", FALSE, caster, NULL, NULL, TO_ROOM);
-          act("You summon lightning from the stormy skies, bringing down a bolt upon yourself!", FALSE, caster, NULL, NULL, TO_CHAR);
-          act("That lightning bolt was intended for you!", FALSE, caster, NULL, victim, TO_VICT);
-          if (caster->reconcileDamage(caster, dam,SPELL_STORMY_SKIES) == -1)
-            return SPELL_CRIT_FAIL + CASTER_DEAD;
-          return SPELL_CRIT_FAIL;
-          break;
-        case CRIT_F_HITOTHER:
-        case CRIT_F_NONE:
-          break;
-      }
-      caster->sendTo("Nothing seems to happen.\n\r");
-      return SPELL_FAIL;
+  aff1.type = SPELL_LIVING_VINES;
+  aff1.level = level;
+  aff1.bitvector = AFF_WEB;
+  aff1.location = APPLY_ARMOR;
+  aff1.modifier = (level / 2) + 5;
+  aff1.duration = level * UPDATES_PER_MUDHOUR;
+ 
+  aff2.type = SPELL_LIVING_VINES;
+  aff2.level = level;
+  aff2.bitvector = AFF_WEB;
+  aff2.location = APPLY_SPELL_HITROLL;
+  aff2.modifier = (-level*2);
+  aff2.duration = level * UPDATES_PER_MUDHOUR;
+   
+  if (bSuccess(caster, bKnown, SPELL_LIVING_VINES)) {
+    act("$n summons the vines to hold $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("You command the vines to trap $N!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n summons the vines to ensnare you!", FALSE, caster, NULL, victim, TO_VICT);
+    switch(critSuccess(caster, SPELL_LIVING_VINES)) {
+      case CRIT_S_DOUBLE:
+        CS(SPELL_LIVING_VINES);
+        aff1.duration *= 2;
+        aff2.modifier *= 2;
+        break;
+      default:
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_LIVING_VINES))) {
+          SV(SPELL_LIVING_VINES);
+          aff1.duration /= 2;
+          aff2.modifier /= 2;
+        }
     }
-  } else if (victim->roomp->getWeather() == WEATHER_SNOWY) { 
-    if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
-      if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
-        dam /= 2;         // half damage
- 
-      if (critSuccess(caster, SPELL_STORMY_SKIES)) {
-        CS(SPELL_STORMY_SKIES);
-        dam *= 2;
-      }
-      act("$n summons hail from the snowy sky and guides it down upon $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
-      act("You summon hail from the snowy sky and guide it down upon $N!", FALSE, caster, NULL, victim, TO_CHAR);
-      act("$n summons hail from the snowy sky and guides it down upon you!", FALSE, caster, NULL, victim, TO_VICT);
-      if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
-        return SPELL_SUCCESS + VICTIM_DEAD;
-      return SPELL_SUCCESS;
-    } else {
-      switch (critFail(caster, SPELL_STORMY_SKIES)) {
-        case CRIT_F_HITSELF:
-          CF(SPELL_STORMY_SKIES);
-          act("$n summons hail from the snowy sky and guids it down upon $mself!", FALSE, caster, NULL, NULL, TO_NOTVICT);
-          act("You summon hail from the snowy sky and guid it down upon yourself!", FALSE, caster, NULL, NULL, TO_CHAR);
-          act("That hail storm was intended for you!", FALSE, caster, NULL, victim, TO_VICT);
-          if (caster->reconcileDamage(caster, dam,SPELL_STORMY_SKIES) == -1)
-            return SPELL_CRIT_FAIL + CASTER_DEAD;
-          return SPELL_CRIT_FAIL;
-          break;
-        case CRIT_F_HITOTHER:
-        case CRIT_F_NONE:
-          break;
-      }
-      caster->sendTo("Nothing seems to happen.\n\r");
-      return SPELL_FAIL;
-    }
+    victim->affectTo(&aff1);
+    victim->affectTo(&aff2);
+    caster->reconcileDamage(victim, 0,SPELL_LIVING_VINES);
+    return SPELL_SUCCESS;
   } else {
-    caster->sendTo("The weather here isn't quite right.\n\r");
+    switch (critFail(caster, SPELL_LIVING_VINES)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_LIVING_VINES);
+        act("$n traps $mself with the vines %s summoned!", FALSE, caster, NULL, NULL, TO_ROOM);
+        act("Oops! You trap yourself in the vines you summoned!", FALSE, caster, NULL, victim, TO_CHAR);
+        act("Hey, $n was trying to trap you with the vines %s summoned!", FALSE, caster, NULL, victim, TO_VICT);
+        caster->affectTo(&aff1);
+        caster->affectTo(&aff2);
+        caster->reconcileDamage(victim, 0,SPELL_LIVING_VINES);
+        return SPELL_CRIT_FAIL;
+        break;
+      default:
+        break;
+    }
+    caster->sendTo("Nothing seems to happen.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 }
-
-int stormySkies(TBeing * caster, TBeing * victim, TMagicItem * obj)
+ 
+void livingVines(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-  int rc = 0;
-
-  ret=stormySkies(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-  if (IS_SET(ret, VICTIM_DEAD))
-    ADD_DELETE(rc, DELETE_VICT);
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-  return rc;
+  livingVines(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
-
-int stormySkies(TBeing * caster, TBeing * victim)
+ 
+void livingVines(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+int ret,level;
  
-  if (!bPassMageChecks(caster, SPELL_STORMY_SKIES, victim))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_LIVING_VINES, victim))
+    return;
  
-  level = caster->getSkillLevel(SPELL_STORMY_SKIES);
-  int bKnown = caster->getSkillValue(SPELL_STORMY_SKIES);
+  level = caster->getSkillLevel(SPELL_LIVING_VINES);
+  int bKnown = caster->getSkillValue(SPELL_LIVING_VINES);
  
-  if ((ret=stormySkies(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
+  if ((ret=livingVines(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
   } else {
     if (ret==SPELL_CRIT_FAIL) {
     } else {
     }
   }
-  return FALSE;
 }
+
+// END LIVING VINES
+// TREE WALK
  
 int TObj::treeMe(TBeing *, const char *, int, int *)
 {
@@ -1076,7 +773,7 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt)
         continue;
-      if (tbt->inGroup(caster)) {
+      if (tbt->inGroup(*caster)) {
         act("A mystic force thrusts you into the Sydarthae, and out the otherside.",
            FALSE, tbt, 0, 0, TO_CHAR);
         act("A mystic force yanks $n into somewhere unknown.",
@@ -1160,4 +857,8 @@ int treeWalk(TBeing * caster, const char * arg)
     return DELETE_THIS;
   return FALSE;
 }
- 
+
+// END TREE WALK
+
+
+
