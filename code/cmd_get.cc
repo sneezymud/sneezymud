@@ -79,11 +79,6 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
 {
   int rc = 0;
 
-  TMonster *monster = dynamic_cast<TMonster *>(ch);
-
-  if (monster && (monster->in_room == ROOM_DONATION))
-    return FALSE;
-
   // redundant checks also done in doGet but allows code to call get() directly
   if (!ch->hasHands() && !ch->isImmortal()) {
     ch->sendTo("How do you expect to do that without any hands?!?\n\r");
@@ -264,11 +259,6 @@ int TBeing::doGet(const char *argument)
   }
 
   argument_interpreter(argument, arg1, arg2);
-
-  TMonster *monster = dynamic_cast<TMonster *>(this);
-
-  if (monster && (monster->in_room == ROOM_DONATION))
-    return FALSE;
 
   if (checkHearts()) {
     if (gHearts.get_pass(this, arg1))

@@ -70,8 +70,6 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   TThing *t=NULL;
   TObj *o, *cart;
   roomDirData *exitp;
-  followData *f, *n;
-  TBeing *vict;
 
   enum hunt_stateT {
     STATE_NONE,
@@ -110,8 +108,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
   }
 
-  if ((cmd != CMD_GENERIC_PULSE &&
-       cmd != CMD_GENERIC_QUICK_PULSE) || !myself->awake() || myself->fight())
+  if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
     return FALSE;
 
   cart=findCart(myself);
@@ -154,7 +151,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	if(!cart->getStuff()){
 	  switch(::number(0,3)){
 	    case 0:
-	      job->cur_path=1;
+
 	      job->cur_pos=0;
 	      job->state=STATE_TROLLEY_TO;
 	      break;
@@ -174,7 +171,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	  job->cur_pos=0;
 	  job->state=STATE_TO_LOGRUS_DUMP;
 	}
-      }
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_TO_LOGRUS_DUMP:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
@@ -286,18 +284,6 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       break;
     case STATE_TO_GH_DUMP:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	for (f = myself->followers; f; f = n) {
-	  n = f->next;
-	  if((vict=f->follower)&& vict->inGroup(*myself) && !vict->fight()){
-	    TMonster *tmons = dynamic_cast<TMonster *>(vict);
-	    if (!tmons)
-	      continue;
-	    delete tmons;
-	  }
-	}
-	delete static_cast<hunt_struct *>(myself->act_ptr);
-	myself->act_ptr = NULL;
-
 	putAllCart(myself, cart);
 
 	job->cur_pos=0;
