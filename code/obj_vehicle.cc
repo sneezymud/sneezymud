@@ -216,13 +216,23 @@ void TVehicle::vehiclePulse(int pulse)
   sstring buf;
   char shortdescr[256];
   vector<TBeing *>tBeing(0);
+  TRoom *vehicleroom;
 
   if(!troom)
     return;
 
+  // update exits
+  // we update here just to be sure they are correct
+  // we update below again, after the move if one takes place
+  vehicleroom=real_roomp(getTarget());
+  for(int i=MIN_DIR;i<MAX_DIR;++i){
+    if(vehicleroom->dir_option[i])
+      vehicleroom->dir_option[i]->to_room=roomp->number;
+  }
+
   if(getSpeed()==0)
     return;
-  
+
   // this is where we regulate speed
   if(pulse % max(1, (ONE_SECOND*10)/getSpeed()))
     return;
@@ -358,7 +368,7 @@ void TVehicle::vehiclePulse(int pulse)
   }
   
   // update exits
-  TRoom *vehicleroom=real_roomp(getTarget());
+  vehicleroom=real_roomp(getTarget());
 
   for(int i=MIN_DIR;i<MAX_DIR;++i){
     if(vehicleroom->dir_option[i])
