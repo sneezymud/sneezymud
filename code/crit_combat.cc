@@ -1096,7 +1096,11 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
               dropPool(9, LIQ_BLOOD);
             }
 
-	    equipChar(corpse, getPrimaryHold(), SILENT_YES);
+	    if(!heldInPrimHand())
+	      equipChar(corpse, getPrimaryHold(), SILENT_YES);
+	    else
+	      equipChar(corpse, getSecondaryHold(), SILENT_YES);
+
 	  }
 
 	  if (desc)
