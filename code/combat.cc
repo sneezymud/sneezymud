@@ -16,6 +16,8 @@
 #include "mail.h"
 #include "shop.h"
 #include "cmd_trophy.h"
+#include "obj_money.h"
+#include "obj_trash.h"
 
 #define DAMAGE_DEBUG 0
 

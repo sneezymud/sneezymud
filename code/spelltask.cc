@@ -78,6 +78,7 @@
 #include "combat.h"
 #include "disease.h"
 #include "being.h"
+#include "obj_symbol.h"
 
 // FYI: CMD_TASK_CONTINUE is checked once per PULSE_COMBAT
 void spellTaskData::getNextUpdate(int pulse, int interval) 

@@ -14,6 +14,7 @@
 #include "components.h"
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"
+#include "obj_table.h"
 
 void TThing::showMe(TBeing *ch) const
 {

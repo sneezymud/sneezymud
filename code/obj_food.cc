@@ -12,6 +12,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "shop.h"
+#include "obj_food.h"
 
 #define DRINK_DEBUG 0
 

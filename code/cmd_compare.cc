@@ -9,6 +9,10 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "obj_bow.h"
+#include "obj_symbol.h"
+#include "obj_food.h"
+#include "obj_opal.h"
 
 TObj * findShopObjForCompare(TBeing *ch, string StObject)
 {

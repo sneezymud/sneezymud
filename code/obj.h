@@ -9,8 +9,9 @@
 #define __OBJ_H
 
 #ifndef __SPEC_OBJS_H
-#error Please include SPEC_OBJ.H prior to OBJ.H
+#include "spec_objs.h"
 #endif
+
 
 extern vector<objIndexData>obj_index;
 

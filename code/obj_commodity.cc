@@ -9,6 +9,7 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "obj_commodity.h"
 
 TCommodity::TCommodity() :
   TObj()

@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_theology.cc,v $
+// Revision 5.4  2002/01/09 23:27:03  peel
+// More splitting up of obj2.h
+// renamed food.cc to obj_food.cc
+// renamed organic.cc to obj_organic.cc
+//
 // Revision 5.3  2001/11/11 06:48:49  brutius
 // *** empty log message ***
 //
@@ -28,6 +33,7 @@
 #include "stdsneezy.h"
 #include "disc_theology.h"
 
+#include "obj_symbol.h"
 void TBeing::doAttune(const char *argument)
 {
   char name_buf[256];

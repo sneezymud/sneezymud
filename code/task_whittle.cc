@@ -11,7 +11,8 @@
 
 #include "stdsneezy.h"
 #include "task_whittle.h"
-
+#include "obj_bow.h"
+#include "obj_organic.h"
 map<unsigned long int, taskWhittleEntry>whittleItems;
 
 void initWhittle()

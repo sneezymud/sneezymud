@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_pen.cc,v $
+// Revision 5.2  2002/01/09 23:27:04  peel
+// More splitting up of obj2.h
+// renamed food.cc to obj_food.cc
+// renamed organic.cc to obj_organic.cc
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -22,6 +27,7 @@
 // pen.cc
 
 #include "stdsneezy.h"
+#include "obj_pen.h"
 
 TPen::TPen() :
   TObj()

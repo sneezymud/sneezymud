@@ -20,6 +20,9 @@
 #include "skillsort.h"
 #include "obj_open_container.h"
 #include "obj_corpse.h"
+#include "obj_bow.h"
+#include "obj_symbol.h"
+#include "obj_food.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

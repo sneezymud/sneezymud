@@ -70,6 +70,7 @@
 #include "disc_nature.h"
 #include "disc_psionics.h"
 #include "spelltask.h"
+#include "obj_symbol.h"
 
 #define DISC_DEBUG  0
 

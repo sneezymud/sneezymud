@@ -11,6 +11,7 @@
 #include "disc_looting.h"
 #include "obj_open_container.h"
 #include "obj_open_container.h"
+#include "obj_money.h"
 
 TOpenContainer::TOpenContainer() :
   TBaseContainer(),

@@ -18,6 +18,8 @@
 #include "obj_open_container.h"
 #include "obj_quiver.h"
 #include "obj_base_container.h"
+#include "obj_table.h"
+#include "obj_money.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1

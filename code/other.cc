@@ -25,6 +25,7 @@ extern "C" {
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
+#include "obj_drug_container.h"
 
 #include "disc_air.h"
 #include "disc_alchemy.h"

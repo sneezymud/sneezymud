@@ -2,8 +2,10 @@
 #include "statistics.h"
 
 #include "sys_loot.h"
+#include "obj_money.h"
 
 TLootStructure * tLoot;
+
 
 // Put objects that should *NOT* be loaded through the LootBooter here.
 // List these by VNum, Not RNum
@@ -87,6 +89,7 @@ bool sysLootBoot()
           isLegalLoot(obj_index[tOIndex].name)) ||
           isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
+      vlogf(LOG_BUG, "Loot Object Debug, reading object: %d", tOIndex);
       tObj = read_object(tOIndex, REAL);
 
       switch (obj_index[tOIndex].itemtype) { // Set tLevel
@@ -229,7 +232,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
       }
 
       if (gamePort != PROD_GAMEPORT)
-        vlogf(LOG_LOW, "Loot Load: %d talens -> %s", tCashValue, tThing->getName());
+        vlogf(LOG_LOW, "Loot Load: %.0f talens -> %s", tCashValue, tThing->getName());
     }
 
   return tLoaded;

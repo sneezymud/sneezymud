@@ -11,6 +11,7 @@
  *****************************************************************************/
 
 #include "stdsneezy.h"
+#include "obj_table.h"
 
 const char *room_fields[] =
 {

@@ -9,6 +9,7 @@
 
 #include "stdsneezy.h"
 #include "obj_drug.h"
+#include "obj_drug_container.h"
 
 TDrugContainer::TDrugContainer() :
   TObj(),

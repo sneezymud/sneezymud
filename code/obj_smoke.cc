@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "obj_smoke.h"
 
 /* todo
 light reduction

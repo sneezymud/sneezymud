@@ -20,6 +20,7 @@ extern "C" {
 #include "dirsort.h"
 #include "statistics.h"
 #include "obj_open_container.h"
+#include "obj_trash.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {

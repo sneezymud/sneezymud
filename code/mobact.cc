@@ -16,6 +16,9 @@
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
+#include "obj_bow.h"
+#include "obj_money.h"
+#include "obj_treasure.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()

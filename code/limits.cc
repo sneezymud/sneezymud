@@ -7,6 +7,7 @@ extern "C" {
 #include "statistics.h"
 #include "games.h"
 #include "obj_base_container.h"
+#include "obj_food.h"
 
 #if 0
 static const string ClassTitles(const TBeing *ch)

@@ -4,6 +4,7 @@
 #include "disease.h"
 #include "components.h"
 #include "obj_open_container.h"
+#include "obj_opal.h"
 
 void TMonster::balanceMakeNPCLikePC()
 {

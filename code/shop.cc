@@ -7,6 +7,7 @@
 #include "statistics.h"
 #include "obj_drug.h"
 #include "obj_spellbag.h"
+#include "obj_symbol.h"
 
 vector<shopData>shop_index(0);
 

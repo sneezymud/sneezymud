@@ -18,6 +18,7 @@
 
 #include "stdsneezy.h"
 #include "statistics.h"
+#include "obj_food.h"
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
 {

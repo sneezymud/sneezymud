@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "obj_base_container.h"
+#include "obj_table.h"
 
 // Peel
 spellNumT TBeing::mountSkillType() const

@@ -36,6 +36,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "systemtask.h"
 #include "socket.h"
 #include "weather.h"
+#include "obj_smoke.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown

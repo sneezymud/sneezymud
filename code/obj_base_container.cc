@@ -12,6 +12,8 @@
 #include "obj_base_container.h"
 #include "obj_player_corpse.h"
 #include "obj_open_container.h"
+#include "obj_food.h"
+#include "obj_opal.h"
 
 TBaseContainer::TBaseContainer() :
   TObj()

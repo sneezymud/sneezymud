@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "games.h"
+#include "obj_money.h"
 
 void spin_slot(TBeing *ch);
 

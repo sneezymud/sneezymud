@@ -7,6 +7,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "obj_player_corpse.h"
+#include "obj_money.h"
 
 TMoney::TMoney() :
   TObj(),

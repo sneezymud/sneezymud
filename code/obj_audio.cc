@@ -3,6 +3,14 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_audio.cc,v $
+// Revision 5.2  2002/01/09 23:27:04  peel
+// More splitting up of obj2.h
+// renamed food.cc to obj_food.cc
+// renamed organic.cc to obj_organic.cc
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -16,6 +24,7 @@
 // audio.cc
 
 #include "stdsneezy.h"
+#include "obj_audio.h"
 
 int TAudio::getFreq() const
 {

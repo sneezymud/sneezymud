@@ -14,6 +14,7 @@
 #include "components.h"
 #include "obj_drug.h"
 #include "obj_player_corpse.h"
+#include "obj_opal.h"
 
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys

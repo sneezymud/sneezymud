@@ -4,6 +4,7 @@
 #include "combat.h"
 #include "disc_hand_of_god.h"
 #include "being.h"
+#include "obj_food.h"
 
 static void moveLoss(TBeing &ch)
 { 

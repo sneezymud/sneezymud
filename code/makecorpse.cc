@@ -12,6 +12,7 @@
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"
+#include "obj_money.h"
 
 TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
 {

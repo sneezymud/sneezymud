@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.3  2002/01/09 23:27:03  peel
+// More splitting up of obj2.h
+// renamed food.cc to obj_food.cc
+// renamed organic.cc to obj_organic.cc
+//
 // Revision 5.2  2001/09/07 07:07:34  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -21,6 +26,7 @@
 
 #include "stdsneezy.h"
 #include "disc_ranged.h"
+#include "obj_bow.h"
 
 void TThing::stringMeBow(TBeing *ch, TThing *)
 {

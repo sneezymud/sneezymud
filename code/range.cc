@@ -14,6 +14,7 @@
 #include "range.h"
 #include "combat.h"
 #include "obj_quiver.h"
+#include "obj_bow.h"
 
 #define RANGE_DEBUG 0
 

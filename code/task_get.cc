@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "obj_player_corpse.h"
 #include "obj_base_container.h"
+#include "obj_table.h"
 
 // anything_getable(TBeing *, Obj *, char *) - Russ Russell c. June 1994
 // anything_getable() looks to see if there is anything getable (gee)

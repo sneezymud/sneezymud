@@ -8,6 +8,9 @@
 // flame.cc
 
 #include "stdsneezy.h"
+#include "obj_fuel.h"
+#include "obj_organic.h"
+#include "obj_trash.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),

@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_symbol.h"
 
 static char	responseFile[32];
 

@@ -27,6 +27,23 @@
 #include "obj_chest.h"
 #include "obj_bag.h"
 #include "obj_base_container.h"
+#include "obj_bow.h"
+#include "obj_commodity.h"
+#include "obj_symbol.h"
+#include "obj_table.h"
+#include "obj_fuel.h"
+#include "obj_audio.h"
+#include "obj_boat.h"
+#include "obj_drug_container.h"
+#include "obj_food.h"
+#include "obj_money.h"
+#include "obj_opal.h"
+#include "obj_organic.h"
+#include "obj_pen.h"
+#include "obj_smoke.h"
+#include "obj_statue.h"
+#include "obj_trash.h"
+#include "obj_treasure.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 

@@ -9,7 +9,7 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
-
+#include "obj_organic.h"
 TOrganic::TOrganic() :
   TObj(),
   OCType(ORGANIC_NONE),

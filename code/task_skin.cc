@@ -8,7 +8,7 @@
 
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
-
+#include "obj_organic.h"
 void stop_skin(TBeing *ch)
 {
   if (ch->getPosition() >= POSITION_RESTING) {

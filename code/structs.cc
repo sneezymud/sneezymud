@@ -13,6 +13,8 @@
 #include "statistics.h"
 #include "games.h"
 #include "obj_base_corpse.h"
+#include "obj_table.h"
+#include "obj_money.h"
 
 TBeing::TBeing() :
   TThing(),

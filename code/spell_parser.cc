@@ -38,6 +38,7 @@
 #include "disc_shaman_spider.h"
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_control.h"
+#include "obj_opal.h"
 
 int TBeing::useMana(spellNumT spl)
 {
