@@ -1,0 +1,565 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//
+// $Log: spells.h,v $
+// Revision 1.1  1999/09/12 17:24:04  sneezy
+// Initial revision
+//
+//
+//////////////////////////////////////////////////////////////////////////
+
+
+#ifndef __SPELLS_H
+#define __SPELLS_H
+
+enum spellNumT {
+     DAMAGE_NORMAL = -56,
+     DAMAGE_CAVED_SKULL = -55,
+     DAMAGE_BEHEADED = -54,
+     DAMAGE_DISEMBOWLED = -53,
+     DAMAGE_STOMACH_WOUND = -52,
+     DAMAGE_HACKED = -51,
+     DAMAGE_IMPALE = -50,
+     DAMAGE_STARVATION = -49,
+     DAMAGE_FALL = -48,
+     DAMAGE_HEMORRAGE = -47,
+     DAMAGE_DROWN = -46,
+     DAMAGE_DRAIN = -45,
+     DAMAGE_DISRUPTION = -44,
+     DAMAGE_SUFFOCATION = -43,
+     DAMAGE_RAMMED = -42,
+     DAMAGE_WHIRLPOOL = -41,
+     DAMAGE_ELECTRIC = -40,
+     DAMAGE_ACID = -39,
+     DAMAGE_GUST = -38,
+     DAMAGE_EATTEN = -37,
+     DAMAGE_KICK_HEAD = -36,
+     DAMAGE_KICK_SOLAR = -35,
+     DAMAGE_HEADBUTT_THROAT = -34,
+     DAMAGE_HEADBUTT_BODY = -33,
+     DAMAGE_HEADBUTT_CROTCH = -32,
+     DAMAGE_HEADBUTT_LEG = -31,
+     DAMAGE_HEADBUTT_FOOT = -30,
+     DAMAGE_HEADBUTT_JAW = -29,
+     DAMAGE_TRAP_SLEEP = -28,
+     DAMAGE_TRAP_TELEPORT = -27,
+     DAMAGE_TRAP_FIRE = -26,
+     DAMAGE_TRAP_POISON = -25,
+     DAMAGE_TRAP_ACID = -24,
+     DAMAGE_TRAP_TNT = -23,
+     DAMAGE_TRAP_ENERGY = -22,
+     DAMAGE_TRAP_BLUNT = -21,
+     DAMAGE_TRAP_PIERCE = -20,
+     DAMAGE_TRAP_SLASH = -19,
+     DAMAGE_TRAP_FROST = -18,
+     DAMAGE_TRAP_DISEASE = -17,
+     DAMAGE_ARROWS = -16,
+     DAMAGE_FIRE = -15,
+     DAMAGE_FROST = -14,
+     DAMAGE_HEADBUTT_SKULL = -13,
+     DAMAGE_COLLISION = -12,
+     DAMAGE_KICK_SHIN = -11,
+     DAMAGE_KNEESTRIKE_FOOT = -10,
+     DAMAGE_KNEESTRIKE_SHIN = -9,
+     DAMAGE_KNEESTRIKE_KNEE = -8,
+     DAMAGE_KNEESTRIKE_THIGH = -7,
+     DAMAGE_KNEESTRIKE_CROTCH = -6,
+     DAMAGE_KNEESTRIKE_SOLAR = -5,
+     DAMAGE_KNEESTRIKE_CHIN = -4,
+     DAMAGE_KNEESTRIKE_FACE = -3,
+     DAMAGE_KICK_SIDE = -2,
+     // keep all fake numbers before here
+
+     // this is the only "fake" number a spell should use
+     // that is, a potion with only 1 (of 3) spells should set other 2 to this
+     // it should always be the highest of the fake numbers, and 1 less than
+     // the first spell
+     TYPE_UNDEFINED = -1,
+
+     // this is the start of real spells
+     // start of mage
+     SPELL_GUST = 0,
+     SPELL_SLING_SHOT,
+     SPELL_GUSHER,
+     SPELL_HANDS_OF_FLAME,
+     SPELL_MYSTIC_DARTS,
+     SPELL_FLARE,
+     SPELL_SORCERERS_GLOBE,
+     SPELL_FAERIE_FIRE,
+     SPELL_ILLUMINATE,
+     SPELL_DETECT_MAGIC,
+     SPELL_STUNNING_ARROW,
+     SPELL_MATERIALIZE,
+     SPELL_PROTECTION_FROM_EARTH,
+     SPELL_PROTECTION_FROM_AIR,
+     SPELL_PROTECTION_FROM_FIRE,
+     SPELL_PROTECTION_FROM_WATER,
+     SPELL_PROTECTION_FROM_ELEMENTS,
+     SPELL_PEBBLE_SPRAY,
+     SPELL_ARCTIC_BLAST,
+     SPELL_COLOR_SPRAY,
+     SPELL_INFRAVISION,
+     SPELL_IDENTIFY,
+     SPELL_POWERSTONE,
+     SPELL_FAERIE_FOG,
+     SPELL_TELEPORT,
+     SPELL_SENSE_LIFE,
+     SPELL_CALM,
+     SPELL_ACCELERATE,
+     SPELL_DUST_STORM,
+     SPELL_LEVITATE,
+     SPELL_FEATHERY_DESCENT,
+     SPELL_STEALTH,
+     SPELL_GRANITE_FISTS,
+     SPELL_ICY_GRIP,
+     SPELL_GILLS_OF_FLESH,
+     SPELL_TELEPATHY,
+     SPELL_FEAR,
+     SPELL_SLUMBER,
+     SPELL_CONJURE_EARTH,
+     SPELL_CONJURE_AIR,
+     SPELL_CONJURE_FIRE,
+     SPELL_CONJURE_WATER,
+     SPELL_DISPEL_MAGIC,
+     SPELL_ENHANCE_WEAPON,
+     SPELL_GALVANIZE,
+     SPELL_DETECT_INVISIBLE,
+     SPELL_DISPEL_INVISIBLE,
+     SPELL_TORNADO,
+     SPELL_SAND_BLAST,
+     SPELL_ICE_STORM,
+     SPELL_BLAST_OF_FURY,
+     SPELL_ACID_BLAST,
+     SPELL_FIREBALL,
+     SPELL_FARLOOK,
+     SPELL_FALCON_WINGS,
+     SPELL_INVISIBILITY,
+     SPELL_ENSORCER,
+     SPELL_EYES_OF_FERTUMAN,
+     SPELL_COPY,
+     SPELL_HASTE,
+     SPELL_IMMOBILIZE,
+     SPELL_SUFFOCATE,
+     SPELL_FLY,
+     SPELL_ANTIGRAVITY,
+     SPELL_DIVINATION,
+     SPELL_SHATTER,
+     SKILL_SCRIBE,
+     SPELL_SPONTANEOUS_GENERATION,
+     SPELL_METEOR_SWARM,
+     SPELL_LAVA_STREAM,
+     SPELL_STONE_SKIN,
+     SPELL_TRAIL_SEEK,
+     SPELL_INFERNO,
+     SPELL_HELLFIRE,
+     SPELL_FLAMING_FLESH,
+     SPELL_FLAMING_SWORD,
+     SPELL_ENERGY_DRAIN,
+     SPELL_ATOMIZE,
+     SPELL_ANIMATE,
+     SPELL_BIND,
+     SPELL_FUMBLE,
+     SPELL_TRUE_SIGHT,
+     SPELL_CLOUD_OF_CONCEALMENT,
+     SPELL_POLYMORPH,
+     SPELL_SILENCE,
+     SPELL_WATERY_GRAVE,
+     SPELL_TSUNAMI,
+     SPELL_BREATH_OF_SARAHAGE,
+     SPELL_PLASMA_MIRROR,
+     SPELL_GARMULS_TAIL,
+     SPELL_ETHER_GATE,
+
+     // end of mage
+     // start of cleric
+
+     SPELL_HEAL_LIGHT,
+     SPELL_HARM_LIGHT,
+     SPELL_CREATE_FOOD,
+     SPELL_CREATE_WATER,
+     SPELL_ARMOR,
+     SPELL_BLESS,
+     SPELL_CLOT,
+     SPELL_RAIN_BRIMSTONE,
+     SPELL_HEAL_SERIOUS,
+     SPELL_HARM_SERIOUS,
+     SPELL_STERILIZE,
+     SPELL_EXPEL,
+     SPELL_CURE_DISEASE,
+     SPELL_CURSE,
+     SPELL_REMOVE_CURSE,
+     SPELL_CURE_POISON,
+     SPELL_HEAL_CRITICAL,
+     SPELL_SALVE,
+     SPELL_POISON,
+     SPELL_HARM_CRITICAL,
+     SPELL_INFECT,
+     SPELL_REFRESH,
+     SPELL_NUMB,
+     SPELL_DISEASE,
+     SPELL_FLAMESTRIKE,
+     SPELL_PLAGUE_LOCUSTS,
+     SPELL_CURE_BLINDNESS,
+     SPELL_SUMMON,
+     SPELL_HEAL,
+     SPELL_PARALYZE_LIMB,
+     SPELL_WORD_OF_RECALL,
+     SPELL_HARM,
+     SPELL_BLINDNESS,
+     SPELL_PILLAR_SALT,
+     SPELL_EARTHQUAKE,
+     SPELL_CALL_LIGHTNING,
+     SPELL_SPONTANEOUS_COMBUST,
+     SPELL_BLEED,
+     SPELL_PARALYZE,
+     SPELL_BONE_BREAKER,
+     SPELL_WITHER_LIMB,
+     SPELL_SANCTUARY,
+     SPELL_CURE_PARALYSIS,
+     SPELL_SECOND_WIND,
+     SPELL_HEROES_FEAST,
+     SPELL_ASTRAL_WALK,
+     SPELL_PORTAL,
+     SPELL_HEAL_FULL,
+     SPELL_HEAL_CRITICAL_SPRAY,
+     SPELL_HEAL_SPRAY,
+     SPELL_HEAL_FULL_SPRAY,
+     SPELL_RESTORE_LIMB,
+     SPELL_KNIT_BONE,
+  
+     // end of cleric
+     // start of warrior
+
+     SKILL_KICK,
+     SKILL_BASH,
+     SKILL_HEADBUTT,
+     SKILL_RESCUE,
+     SKILL_SMYTHE,
+     SKILL_DISARM,
+     SKILL_BERSERK,
+     SKILL_SWITCH_OPP,
+     SKILL_BODYSLAM,
+     SKILL_KNEESTRIKE,
+     SKILL_SHOVE,
+     SKILL_RETREAT,
+     SKILL_GRAPPLE,
+     SKILL_STOMP,
+     SKILL_DOORBASH,
+     SKILL_DEATHSTROKE,
+  
+     // end of warrior
+     // start of ranger
+
+     SKILL_HIKING,
+     SKILL_KICK_RANGER,
+     SKILL_FORAGE,
+     SKILL_SEEKWATER,
+     SKILL_TRANSFORM_LIMB,
+     SKILL_BEAST_SOOTHER,
+     SKILL_TRACK,
+     SPELL_ROOT_CONTROL,
+     SKILL_BASH_RANGER,
+     SKILL_RESCUE_RANGER,
+     SKILL_BEFRIEND_BEAST,
+     SKILL_TRANSFIX,
+     SKILL_SKIN,
+     SKILL_DUAL_WIELD,
+     SPELL_LIVING_VINES,
+     SKILL_BEAST_SUMMON,
+     SKILL_BARKSKIN,
+     SKILL_SWITCH_RANGER,
+     SKILL_RETREAT_RANGER,
+     SPELL_STICKS_TO_SNAKES,
+     SPELL_STORMY_SKIES,
+     SPELL_TREE_WALK,
+     SKILL_BEAST_CHARM,
+     SPELL_SHAPESHIFT,
+     SKILL_CONCEALMENT,
+     SKILL_APPLY_HERBS,
+     SKILL_DIVINATION,
+     SKILL_ENCAMP,
+  
+     // end of ranger
+     // start of deikhan
+
+     SKILL_KICK_DEIKHAN,
+     SPELL_HEAL_LIGHT_DEIKHAN,
+     SKILL_CHIVALRY,
+     SPELL_ARMOR_DEIKHAN,
+     SPELL_BLESS_DEIKHAN,
+     SKILL_BASH_DEIKHAN,
+     SPELL_EXPEL_DEIKHAN,
+     SPELL_CLOT_DEIKHAN,
+     SPELL_RAIN_BRIMSTONE_DEIKHAN,
+     SPELL_STERILIZE_DEIKHAN,
+     SPELL_REMOVE_CURSE_DEIKHAN,
+     SPELL_CURSE_DEIKHAN,
+     SKILL_RESCUE_DEIKHAN,
+     SKILL_SMITE,
+     SPELL_INFECT_DEIKHAN,
+     SPELL_CURE_DISEASE_DEIKHAN,
+     SPELL_CREATE_FOOD_DEIKHAN,
+     SPELL_CREATE_WATER_DEIKHAN,
+     SPELL_HEAL_SERIOUS_DEIKHAN,
+     SPELL_CURE_POISON_DEIKHAN,
+     SKILL_CHARGE,
+     SPELL_HARM_SERIOUS_DEIKHAN,
+     SPELL_POISON_DEIKHAN,
+     SKILL_DISARM_DEIKHAN,
+     SPELL_HEAL_CRITICAL_DEIKHAN,
+     SPELL_HARM_CRITICAL_DEIKHAN,
+     SPELL_HARM_LIGHT_DEIKHAN,
+     SKILL_SWITCH_DEIKHAN,
+     SKILL_RETREAT_DEIKHAN,
+     SKILL_SHOVE_DEIKHAN,
+     SKILL_RIDE,
+     SKILL_CALM_MOUNT,
+     SKILL_TRAIN_MOUNT,
+     SKILL_ADVANCED_RIDING,
+     SKILL_RIDE_DOMESTIC,
+     SKILL_RIDE_NONDOMESTIC,
+     SKILL_RIDE_WINGED,
+     SKILL_RIDE_EXOTIC,
+     SPELL_HEROES_FEAST_DEIKHAN,
+     SPELL_REFRESH_DEIKHAN,
+     SPELL_SYNOSTODWEOMER,
+     SPELL_SALVE_DEIKHAN,
+     SKILL_LAY_HANDS,
+     SPELL_HARM_DEIKHAN,
+     SPELL_NUMB_DEIKHAN,
+     SPELL_EARTHQUAKE_DEIKHAN,
+     SPELL_CALL_LIGHTNING_DEIKHAN,
+  
+     // end of deikhan
+     // start of monk
+
+     SKILL_YOGINSA,
+     SKILL_CINTAI,
+     SKILL_OOMLAT,
+     SKILL_KICK_MONK,
+     SKILL_ADVANCED_KICKING,
+     SKILL_DISARM_MONK,
+     SKILL_GROUNDFIGHTING,
+     SKILL_CHOP,
+     SKILL_SPRINGLEAP,
+     SKILL_DUFALI,
+     SKILL_RETREAT_MONK,
+     SKILL_SNOFALTE,
+     SKILL_COUNTER_MOVE,
+     SKILL_SWITCH_MONK,
+     SKILL_JIRIN,
+     SKILL_KUBO,
+     SKILL_CATFALL,
+     SKILL_WOHLIN,
+     SKILL_VOPLAT,
+     SKILL_BLINDFIGHTING,
+     SKILL_CHI,
+     SKILL_QUIV_PALM,
+     SKILL_CRIT_HIT,
+     SKILL_FEIGN_DEATH,
+     SKILL_BLUR,
+     SKILL_HURL,
+     SKILL_SHOULDER_THROW,
+  
+     // end of monk
+     // start of thief
+
+     SKILL_SWINDLE,
+     SKILL_SNEAK,
+     SKILL_STABBING,
+     SKILL_RETREAT_THIEF,
+     SKILL_KICK_THIEF,
+     SKILL_PICK_LOCK,
+     SKILL_BACKSTAB,
+     SKILL_SEARCH,
+     SKILL_SPY,
+     SKILL_SWITCH_THIEF,
+     SKILL_STEAL,
+     SKILL_DETECT_TRAP,
+     SKILL_SUBTERFUGE,
+     SKILL_DISARM_TRAP,
+     SKILL_CUDGEL,
+     SKILL_HIDE,
+     SKILL_POISON_WEAPON,
+     SKILL_DISGUISE,
+     SKILL_DODGE_THIEF,
+     SKILL_GARROTTE,
+     SKILL_SET_TRAP,
+     SKILL_DUAL_WIELD_THIEF,
+     SKILL_DISARM_THIEF,
+     SKILL_COUNTER_STEAL,
+  
+     // end of thief
+     // start of shaman
+
+     SPELL_CACAODEMON,
+     SPELL_CREATE_GOLEM,
+     SPELL_DANCING_BONES,
+     SPELL_CONTROL_UNDEAD,
+     SPELL_RESURRECTION,
+     SPELL_VOODOO,
+     SKILL_BREW,
+     SPELL_VAMPIRIC_TOUCH,
+     SPELL_LIFE_LEECH,
+     SKILL_TURN,
+  
+     // end of shaman
+     // start of generic
+
+     SKILL_SIGN,
+     SKILL_SWIM,
+     SKILL_CONS_UNDEAD,
+     SKILL_CONS_VEGGIE,
+     SKILL_CONS_DEMON,
+     SKILL_CONS_ANIMAL,
+     SKILL_CONS_REPTILE,
+     SKILL_CONS_PEOPLE,
+     SKILL_CONS_GIANT,
+     SKILL_CONS_OTHER,
+     SKILL_READ_MAGIC,
+     SKILL_BANDAGE,
+     SKILL_CLIMB,
+     SKILL_FAST_HEAL,
+     SKILL_EVALUATE,
+     SKILL_TACTICS,
+     SKILL_DISSECT,
+     SKILL_DEFENSE,
+     SKILL_OFFENSE,
+     SKILL_WHITTLE,
+     SKILL_WIZARDRY,
+     SKILL_MEDITATE,
+     SKILL_DEVOTION,
+     SKILL_PENANCE,
+     SKILL_SLASH_PROF,
+     SKILL_PIERCE_PROF,
+     SKILL_BLUNT_PROF,
+     SKILL_BAREHAND_PROF,
+     SKILL_SLASH_SPEC,
+     SKILL_BLUNT_SPEC,
+     SKILL_PIERCE_SPEC,
+     SKILL_BAREHAND_SPEC,
+     SKILL_RANGED_SPEC,
+     SKILL_BOW,
+     SKILL_FAST_LOAD,
+     SKILL_SHARPEN,
+     SKILL_DULL,
+     SKILL_ATTUNE,
+     SKILL_STAVECHARGE,
+  
+     // end of generic
+
+     // keep this as the last of the true skills
+     MAX_SKILL,
+
+     // put some fake damage types here
+
+     // TYPE_MIN_HIT defines as first one here
+     TYPE_HIT,
+     TYPE_BLUDGEON,   // weap # : 7;
+     TYPE_WHIP,   // weap # : 2;
+     TYPE_CRUSH,   // weap # : 6;
+     TYPE_SMASH,   // weap # : 4;
+     TYPE_SMITE,   // weap # : 25;
+     TYPE_PUMMEL,   // weap # : 12;
+     TYPE_FLAIL,   // weap # : 13;
+     TYPE_BEAT,   // weap # : 14;
+     TYPE_THRASH,   // weap # : 15;
+     TYPE_THUMP,   // weap # : 16;
+     TYPE_WALLOP,   // weap # : 17;
+     TYPE_BATTER,   // weap # : 18;
+     TYPE_STRIKE,   // weap # : 19;
+     TYPE_CLUB,   // weap # : 20;
+     TYPE_POUND,   // weap # : 22;
+     TYPE_PIERCE,   // weap # : 11;
+     TYPE_BITE,   // weap # :9;
+     TYPE_STING,   // weap # : 10;
+     TYPE_STAB,   // weap # : 1;
+     TYPE_THRUST,   // weap # : 23;
+     TYPE_SPEAR,   // weap # : 24;
+     TYPE_BEAK,   // weap # : 26;
+     TYPE_SLASH,   // weap # : 3;
+     TYPE_CLAW,   // weap # :8;
+     TYPE_CLEAVE,   // weap # :5;
+     TYPE_SLICE,   // weap # : 21;
+     TYPE_AIR,   // weap # : 27;
+     TYPE_EARTH,   // weap # : 28;
+     TYPE_FIRE,   // weap # : 29;
+     TYPE_WATER,   // weap # : 30;
+     TYPE_BEAR_CLAW,   // weap # : 31;
+     TYPE_KICK,   // monk melee kick
+     TYPE_MAUL,   // yet another blunt type
+
+     // keep this as the last of the "weapon" damage types
+     TYPE_MAX_HIT,  
+
+     // FIRST_TRANFORMED_LIMB defines as the first one here
+     AFFECT_TRANSFORMED_HANDS,
+     AFFECT_TRANSFORMED_ARMS,
+     AFFECT_TRANSFORMED_LEGS,
+     AFFECT_TRANSFORMED_HEAD,
+     AFFECT_TRANSFORMED_NECK,
+     // keep this guy as last transformed
+     LAST_TRANSFORMED_LIMB,
+
+     // FIRST_BREATH_WEAPON defines as here, so careful of order
+     SPELL_FIRE_BREATH,
+     SPELL_CHLORINE_BREATH,
+     SPELL_FROST_BREATH,
+     SPELL_ACID_BREATH,
+     SPELL_LIGHTNING_BREATH,
+     LAST_BREATH_WEAPON,
+
+     // these represent oddball affects, mostly used for affectData stuff
+     AFFECT_DUMMY,
+     AFFECT_DRUNK,
+     AFFECT_NEWBIE,
+     AFFECT_SKILL_ATTEMPT,
+     AFFECT_FREE_DEATHS,
+     AFFECT_TEST_FIGHT_MOB,
+     AFFECT_DRUG,
+     AFFECT_ORPHAN_PET,
+     AFFECT_DISEASE,
+     AFFECT_COMBAT,
+     AFFECT_PET,
+     AFFECT_PLAYERKILL,
+     LAST_ODDBALL_AFFECT,
+};
+const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);
+const spellNumT TYPE_MIN_HIT = TYPE_HIT;
+const spellNumT FIRST_TRANSFORMED_LIMB = AFFECT_TRANSFORMED_HANDS;
+const spellNumT FIRST_BREATH_WEAPON = SPELL_FIRE_BREATH;
+const spellNumT FIRST_ODDBALL_AFFECT = AFFECT_DUMMY;
+
+extern spellNumT & operator++ (spellNumT &, int);
+extern spellNumT & operator-= (spellNumT &, spellNumT);
+
+#if 0
+     SPELL_FIND_FAMILIAR,
+     SKILL_BUTCHER,   // not coded;
+     SPELL_DETECT_POISON,   // NOT CODED;
+     SPELL_DETECT_POISON_DEIKHAN,   // not coded;
+     SKILL_HOLY_WEAPONS,   // not coded;
+     SPELL_HOLY_LIGHT,   // not coded;
+     SPELL_CHAIN_LIGHTNING, // not coded
+     SPELL_HAIL_STORM,   // not coded;
+     SPELL_HOLOCAUST,   // not coded;
+     SPELL_HARM_FULL,   // not coded (maybe good);
+     SPELL_HARM_CRITICAL_SPRAY,   // not coded;
+     SPELL_HARM_SPRAY,   // not coded;
+     SPELL_HARM_FULL_SPRAY,   // not coded;
+     SPELL_SYNO_CASTER,
+     SKILL_THRUST,
+     SKILL_SPEAR,
+     SKILL_DEFEND,
+     SKILL_THROW,
+     SKILL_CASTING,
+     SKILL_PRAYING,
+     SKILL_MASS_FORAGE,
+     SKILL_TAN,
+#endif
+
+// DO NOT MODIFY THIS, AFFECTS SIZE OF CHARFILE
+const spellNumT ABSOLUTE_MAX_SKILL    = spellNumT(900);
+
+#endif

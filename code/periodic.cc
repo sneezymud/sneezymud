@@ -1,0 +1,1613 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//
+// $Log: periodic.cc,v $
+// Revision 1.1  1999/09/12 17:24:04  sneezy
+// Initial revision
+//
+//
+//////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////
+//  
+//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//      periodic.cc : functions that are called periodically by the game
+//  
+///////////////////////////////////////////////////////////////////////////
+
+#include "stdsneezy.h"
+#include "combat.h"
+#include "disease.h"
+#include "mail.h"
+#include "disc_monk.h"
+#include "components.h"
+
+// this function gets called ever 120 pulse (30 secs?)
+// it should randomly load a deity and/or extract extra deitys
+// based on various condition
+void deityCheck(int)
+{
+  // deities are currently whacky, disable auto-load for time being.
+  // Bat 9/9/98
+  return;
+#if 0
+  TBeing *deity;
+  int num_d = mob_index[real_mobile(MOB_DEITY_JUDGMENT)].number;
+  int num_t = obj_index[real_object(DEITY_TOKEN)].number;
+
+
+  if (num_d <= 0) {
+    if (num_t <= 0) {
+      // no tokens, no deitys in game.  chance put in game 
+      if (!number(0,300)) {
+        deity = read_mobile(MOB_DEITY_JUDGMENT, VIRTUAL);
+        thing_to_room(deity,ROOM_IMPERIA);
+      }
+      return;
+    }
+    // token in game, do not load 
+  } else {
+    // there's already a deity somewhere 
+    // chance of getting rid of extra deity 
+    if (!number(0,200)) {
+      for (deity = character_list; deity; deity = deity->next) {
+        if (deity->mobVnum() == MOB_DEITY_JUDGMENT)
+          break;
+      }
+      if (!deity) {   
+        vlogf(5,"Big 'Ol bug in deityCheck()");
+        return;
+      }
+      vlogf(3,"Purging the deity in room #%d",deity->in_room);
+      delete deity;
+      deity = NULL;
+    }
+  }
+  return;
+#endif
+}
+
+void apocCheck()
+{
+  int num, rc;
+  TMonster *mob;
+
+  if (number(0,350)) 
+    return;
+
+  // these are in biblical order, shrug, seems to make sense
+  if ((num = real_mobile(APOC_PESTILENCE)) && mob_index[num].number)
+    if ((num = real_mobile(APOC_WAR)) && mob_index[num].number)
+      if ((num = real_mobile(APOC_FAMINE)) && mob_index[num].number)
+        if ((num = real_mobile(APOC_DEATH)) && mob_index[num].number)
+          return;
+
+  if (!num)
+    return;
+
+  if (!(mob = read_mobile(num, REAL))) {
+    vlogf(9, "Bad mob in apocCheck");
+    return;
+  }  
+  thing_to_room(mob, ROOM_IMPERIA);
+  rc = mob->genericTeleport(SILENT_NO);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete mob;
+    mob = NULL;
+    return;
+  }
+  vlogf(3,"Loading a horseman into the game.");
+}
+
+// this simplifies room specials since we have a huge number of rooms
+// and only a handful have specs
+void call_room_specials(void)
+{
+  unsigned int i;
+
+  for (i = 0; i < roomspec_db.size(); i++) {
+    TRoom *rp = roomspec_db[i];
+    if (rp)
+      rp->checkSpec(NULL, CMD_GENERIC_PULSE, NULL, rp);
+  }
+}
+
+// returns DELETE_THIS
+int TBeing::riverFlow(int)
+{
+  int was_in = inRoom(), rc, resCode = 0;
+  TRoom *to_room;
+  char buf[256];
+  TThing *t, *t2;
+
+  if (!roomp) 
+    return FALSE;
+
+  // I won't float unless my mount does
+  if (riding)
+    return FALSE;   
+
+  // lets skip floating for generic mobs
+  if (!isPc() && (!rider || !rider->isPc()))
+    return FALSE; 
+
+  // no water = no float
+  if (!roomp->isUnderwaterSector() && !roomp->isWaterSector()) 
+    return FALSE;
+
+  // still water
+  if (roomp->getRiverSpeed() <= 0) 
+    return FALSE;
+
+  if (::number(0,roomp->getRiverSpeed()) &&
+      ::number(0,roomp->getRiverSpeed())) {
+    return FALSE;
+  }
+
+  dirTypeT rd = roomp->getRiverDir();
+  if ((rd < MIN_DIR) || (rd >= MAX_DIR)) {
+    vlogf(9, "Illegal river direction (%d) in room %d", rd, inRoom());
+    return FALSE;
+  }
+
+  if (!isSwimming())
+    return FALSE;
+
+  if (isImmortal()) {
+    act("The waters swirl and eddy about you.",
+                   FALSE, this, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+
+  if (!exitDir(rd) || (exitDir(rd)->to_room == ROOM_NOWHERE) ||
+      IS_SET(exitDir(rd)->condition, EX_CLOSED))
+    return FALSE;
+
+  if (!(to_room = real_roomp(exitDir(rd)->to_room)))
+    return FALSE;
+
+  // skip flow, just confuses things
+  if (fight())
+    return FALSE;
+
+  // all checks done, now cause things to start flowing
+  for (t = rider; t; t = t2) {
+    t2 = t->nextRider;
+    
+    --(*t);
+    *to_room += *t;
+
+    TBeing *tbt = dynamic_cast<TBeing *>(t);
+    if (tbt) {
+      tbt->sendTo("You drift %s...\n\r", dirs[rd]);
+      tbt->doLook("", CMD_LOOK);
+    }
+
+    if (t == rider) 
+      sprintf(buf, "$n drifts in from the %s riding $N.", dirs[rev_dir[rd]]);
+    else
+      sprintf(buf, "$n also drifts in from the %s riding $N.", dirs[rev_dir[rd]]);
+    act(buf, FALSE, t, 0, this, TO_NOTVICT);
+
+  }
+
+  sendTo("You drift %s...\n\r", dirs[rd]);
+  --(*this);
+  *to_room += *this;
+  doLook("", CMD_LOOK);
+
+  if (!rider) {
+    sprintf(buf, "$n drifts in from the %s.", dirs[rev_dir[rd]]);
+    act(buf, FALSE, this, 0, 0, TO_ROOM);
+  }
+
+  // all drifting is done, and text has been shown
+
+  if (riding) {
+    rc = riding->genericMovedIntoRoom(to_room, was_in);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete riding;
+      riding = NULL;
+      REM_DELETE(rc, DELETE_THIS);
+    }
+  } else {
+    rc = genericMovedIntoRoom(to_room, was_in);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+
+  return resCode;
+}
+
+int TObj::riverFlow(int)
+{
+  int rc, was_in = inRoom();
+  TRoom *tmprp, *to_room;
+  char buf[256];
+  TThing *t, *t2;
+
+  if (!roomp)   // this covers carried && equipped
+    return FALSE;
+ 
+  if (!roomp->isUnderwaterSector() && !roomp->isWaterSector())
+    return FALSE;
+
+  if (roomp->getRiverSpeed() <= 0) 
+    return FALSE;
+
+  if (::number(0,roomp->getRiverSpeed()) && ::number(0,roomp->getRiverSpeed()))
+    return FALSE;
+
+  dirTypeT rd = roomp->getRiverDir();
+
+  if ((rd < MIN_DIR) || (rd >= MAX_DIR))
+    return FALSE;
+
+  if (rd == DIR_UP) {
+    if (!willFloat())
+      return FALSE;
+  }
+
+  if (isLevitating() && (!roomp->isUnderwaterSector())) 
+    return FALSE;
+
+  if (!exitDir(rd) || !exitDir(rd)->to_room ||
+      (exitDir(rd)->to_room == ROOM_NOWHERE) ||
+      IS_SET(exitDir(rd)->condition, EX_CLOSED))
+    return FALSE;
+
+  tmprp = roomp;
+  if (!(to_room = real_roomp(tmprp->dir_option[rd]->to_room)))
+    return FALSE;
+
+  for (t = rider; t; t = t2) {
+    t2 = t->nextRider;
+
+    t->sendTo("Your %s drifts %s...\n\r", objn(this).c_str(), dirs[rd]);
+    sprintf(buf, "$n drifts %s in $p.", dirs[rd]);
+    act(buf, TRUE, t, this, 0, TO_ROOM);
+
+    --(*t);
+    *to_room += *t;
+
+    sprintf(buf, "$n drifts in from the %s on $p.", dirs[rev_dir[rd]]);
+    act(buf, TRUE, t, this, 0, TO_ROOM);
+    TBeing *tbt = dynamic_cast<TBeing *>(t);
+    if (tbt)
+      tbt->doLook("", CMD_LOOK);
+
+  }
+  if (!rider) {
+    sprintf(buf, "$n drifts %s...", dirs[rd]);
+    act(buf, TRUE, this, 0, 0, TO_ROOM);
+  }
+  --(*this);
+  *to_room += *this;
+
+  if (!rider) {
+    sprintf(buf, "$n drifts in from the %s...", dirs[rev_dir[rd]]);
+    act(buf, TRUE, this, 0, 0, TO_ROOM);
+  }
+  if (riding) {
+    rc = riding->genericMovedIntoRoom(to_room, was_in);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete riding;
+      riding = NULL;
+      REM_DELETE(rc, DELETE_THIS);
+    }
+  } else {
+    rc = genericMovedIntoRoom(to_room, was_in);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+
+  return TRUE;
+}
+
+// returns DELETE_THIS
+int TBeing::teleportRoomFlow(int pulse)
+{
+  TRoom *dest, *tmprp;
+  char *tmp_desc = NULL;
+  int rc;
+
+  if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
+    return FALSE;
+
+  // pulse will be a multiple of PULSE_TELEPORT
+  if (pulse % roomp->getTeleTime())
+    return FALSE;
+
+  if (isImmortal()) {
+    if((tmp_desc=roomp->ex_description->findExtraDesc("_tele_")) && 
+       inRoom() == roomp->getTeleTarg()){
+      act(tmp_desc, TRUE, this, NULL, NULL, TO_CHAR);
+    } else {
+    // Change this to use act so it didnt send while in redit - Russ 011397
+    act("Your immortal status allows you to avoid a teleporter in this room.", TRUE, this, NULL, NULL, TO_CHAR);
+    //sendTo("Your immortal status allows you to avoid a teleporter in this room.\n\r");
+    }
+    return FALSE;
+  }
+
+  if (!(dest = real_roomp(roomp->getTeleTarg()))) {
+    vlogf(10, "Invalid teleTarg room (%d) to room (%d)", 
+             inRoom(), roomp->getTeleTarg());
+    return FALSE;
+  }
+  tmprp = roomp;  // char_from_room will set roomp to NULL
+  --(*this);
+  thing_to_room(this, tmprp->getTeleTarg());
+  if ((tmp_desc = tmprp->ex_description->findExtraDesc("_tele_"))) {
+    if (desc)
+      desc->page_string(tmp_desc, 0);
+  }
+  if (tmprp->getTeleLook())
+    doLook("", CMD_LOOK);
+
+  rc = genericMovedIntoRoom(dest, -1);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    return DELETE_THIS;
+  }
+
+  return TRUE;
+}
+
+void TMonster::makeNoise()
+{
+  char buffer[100];
+
+  if (fight() || desc)
+    return;
+  if (inRoom() == ROOM_NOCTURNAL_STORAGE)
+    return;
+
+  if (!isPc() && sounds) {
+    if (default_pos > POSITION_SLEEPING) {
+      if (getPosition() > POSITION_SLEEPING) 
+        MakeRoomNoise(this, in_room, sounds, distantSnds);
+      else if (getPosition() == POSITION_SLEEPING) {
+        sprintf(buffer, "%s snores loudly.\n\r", getName());
+        MakeRoomNoise(this, in_room, buffer, "You hear a loud snore nearby.\n\r");
+      }
+    } else if (getPosition() == default_pos)
+      MakeRoomNoise(this, in_room, sounds, distantSnds);
+  }
+
+  checkResponses((opinion.random ? opinion.random : (targ() ? targ() : this)),
+                 NULL, NULL, CMD_RESP_PULSE);
+}
+
+// return DELETE_THIS if this should die
+int TBeing::updateAffects()
+{
+  static affectedData *af, *next_af_dude;
+  bool shouldReturn = FALSE;
+  int rc;
+
+  if (isPc() && !desc)
+    return FALSE;
+
+  if (!affected) 
+    return FALSE;
+
+  if (isPc()) {
+    int test = TRUE;
+    test = FALSE;
+  }
+  for (af = affected; af; af = next_af_dude) {
+    next_af_dude = af->next;
+    bool couldBeRenewed = af->canBeRenewed();
+
+    if ((af->duration == PERMANENT_DURATION) &&
+          (af->type == AFFECT_DISEASE)) {
+      rc = (DiseaseInfo[DISEASE_INDEX(af->modifier)].code) (this, DISEASE_PULSE, af);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      continue;
+    }
+    if ((af->duration == PERMANENT_DURATION) &&
+          (af->type == SKILL_ENCAMP)) {
+      if (((TRoom *) af->be) == roomp)
+        continue;
+    }
+    if ((af->duration == PERMANENT_DURATION) &&
+          ((af->type == AFFECT_COMBAT) ||
+           (af->type == AFFECT_FREE_DEATHS) ||
+           (af->type == AFFECT_TEST_FIGHT_MOB) ||
+           (af->type == SKILL_TRACK) ||
+           (af->type == SKILL_SEEKWATER) ||
+           (af->type == AFFECT_PET) ||
+           (af->type == SKILL_BERSERK))) {
+      continue;
+    }
+    if ((af->type == SPELL_POLYMORPH) ||
+        (af->type == SKILL_DISGUISE) ||
+        (af->type == SPELL_SHAPESHIFT)) {
+      if (!desc->original) {
+        affectRemove(af);
+        continue;
+      }
+    }
+
+    if (af->duration >= 1) {
+      af->duration--;
+
+      // let user know if it can now be renewed
+      if (!couldBeRenewed && af->canBeRenewed()) {
+        if (af->shouldGenerateText()) {
+          if (af->type >= 0 && af->type < MAX_SKILL && discArray[af->type])
+            sendTo("The effects of %s can now be renewed.\n\r",
+              discArray[af->type]->name);
+        }
+      }
+
+      if (af->type == AFFECT_DISEASE) {
+        rc = (DiseaseInfo[DISEASE_INDEX(af->modifier)].code) 
+                    (this, DISEASE_PULSE, af);
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+      } else if (af->duration == 1 * UPDATES_PER_TICK) {
+        // some spells have > 1 effect, do not show 2 messages
+        if (af->shouldGenerateText())
+          spellWearOffSoon(af->type);
+      }
+    } else {
+      // duration == 0
+      if (((af->type >= MIN_SPELL) && (af->type < MAX_SKILL)) ||
+          ((af->type >= FIRST_TRANSFORMED_LIMB) && (af->type < LAST_TRANSFORMED_LIMB)) ||
+          ((af->type >= FIRST_BREATH_WEAPON) && (af->type < LAST_BREATH_WEAPON)) ||
+          ((af->type >= FIRST_ODDBALL_AFFECT) && (af->type < LAST_ODDBALL_AFFECT))) {
+        if (af->shouldGenerateText() ||
+            (af->next->duration > 0)) {
+          spellNumT k = af->type;
+          if (k == AFFECT_DISEASE)
+            diseaseStop(af);
+          else {
+            rc = spellWearOff(k);
+            if (IS_SET_DELETE(rc, DELETE_THIS))
+              return DELETE_THIS;
+          }
+        }
+        if ((af->type == SPELL_POLYMORPH) || 
+            (af->type == SKILL_DISGUISE) ||
+            (af->type == SPELL_SHAPESHIFT)) {
+          shouldReturn = TRUE;
+        } else if (af->type == AFFECT_TRANSFORMED_ARMS) {
+          if (!af->shouldGenerateText()) {
+            next_af_dude = af->next->next;
+          }
+          transformLimbsBack("", WEAR_ARM_R, FALSE);
+        } else if (af->type == AFFECT_TRANSFORMED_HANDS) {
+          if (!af->shouldGenerateText()) {
+            next_af_dude = af->next->next;
+          }
+          transformLimbsBack("", WEAR_HAND_R, FALSE);
+        } else if (af->type == AFFECT_TRANSFORMED_LEGS) {
+          if (!af->shouldGenerateText()) {
+            next_af_dude = af->next->next;
+          }
+          transformLimbsBack("", WEAR_LEGS_R, FALSE);
+        } else if (af->type == AFFECT_TRANSFORMED_HEAD) {
+          if (!af->shouldGenerateText()) {
+            next_af_dude = af->next->next;
+          }
+          transformLimbsBack("", WEAR_HEAD, FALSE);
+        } else if (af->type == AFFECT_TRANSFORMED_NECK) {
+          if (!af->shouldGenerateText()) {
+            next_af_dude = af->next->next;
+          }
+          transformLimbsBack("", WEAR_NECK, FALSE);
+        } else {
+          affectRemove(af);
+        }
+      }
+    }
+  }
+  if (shouldReturn) {
+    rc = doWearOffReturn();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+  return 0;
+}
+
+// returns DELETE_THIS
+int TBeing::updateTickStuff()
+{
+  int rc;
+
+  if (desc && isPc()) {
+    updateCharObjects();
+    if (getTimer() < 127)
+      addToTimer(1);
+    if (getTimer() > 4 && 
+        (hasWizPower(POWER_WIZARD) || inRoom() == ROOM_STORAGE))
+      setTimer(4);
+    rc = checkIdling();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    
+    if (getCond(DRUNK) > 15) {
+      rc = passOut();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+    }
+    if (desc && (desc->character != this))
+      vlogf(0, "bad desc in updateTickStuff() (%s)(%s)", (name ? getName() :
+"unknown"), desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char");
+    if (desc && vt100())
+      desc->updateScreenVt100(CHANGED_MUD);
+    else if (desc && ansi())
+      desc->updateScreenAnsi(CHANGED_MUD);
+  } else if (isPc()) {
+    // essentially, linkdead
+    if (getTimer() < 127)
+      addToTimer(1);
+
+    // linkdead too long, get rid of them
+    if (getTimer() > 15 && GetMaxLevel() <= MAX_MORT) {
+      // mortals get 15 mins
+      nukeLdead(this);
+      return DELETE_THIS;
+    } else if (getTimer() > 60) {
+      // imms get an hour
+      nukeLdead(this);
+      return DELETE_THIS;
+    }
+  } else if (desc && desc->original) {
+    if (desc->original->getTimer() < 127)
+      desc->original->addToTimer(1);
+  } else if (!desc && !master) {
+#if 1
+    bool isAnElemental = isElemental();
+    bool hasExp = getExp();
+    bool shouldGo = TRUE;
+    bool isAnOrphanPet = affectedBySpell(AFFECT_ORPHAN_PET);
+    bool isAnOldPet = (affectedBySpell(AFFECT_PET) && !isAnOrphanPet);
+    int j;    
+
+    if (!fight() && ((isAnElemental || isAnOldPet) || 
+                     (!isAnOrphanPet && !hasExp))) {
+      if (specials.hunting || act_ptr || (dynamic_cast<TMonster *>(this) && 
+                              dynamic_cast<TMonster *>(this)->hates.clist)) {
+        shouldGo = FALSE;
+      }
+      if (shouldGo && !stuff) {
+        for (j = MIN_WEAR; j < MAX_WEAR; j++) {
+          if (equipment[j]) {
+            shouldGo = FALSE;
+            break;
+          }
+        }
+        if (shouldGo) {
+          if (isAnElemental) {
+            rc = checkDecharm(FORCE_YES);
+            if (IS_SET_DELETE(rc, DELETE_THIS))
+              return DELETE_THIS;
+            return 0;
+          } else {
+            act("$n passes away from natural causes.",
+                TRUE, this, NULL, NULL, TO_ROOM);
+            j = die(DAMAGE_NORMAL);
+            if (IS_SET_DELETE(j, DELETE_THIS))
+              return DELETE_THIS;
+
+          }
+          return DELETE_THIS;
+        }
+      }
+    }
+#endif
+  }
+  return 0;
+}
+
+// returns DELETE_THIS
+int TBeing::updateBodyParts()
+{
+  int rc;
+  wearSlotT i;
+  unsigned short int flags;
+  unsigned int conLimbBonus = plotStat(STAT_CURRENT, STAT_CON, 1, 5, 3);
+
+  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
+    // Check for certain flags that disallow healing here - Russ
+
+    // Making transformed legs tranform back if not in water
+    if (isLimbFlags(i, PART_TRANSFORMED)) {
+      if (((i == WEAR_LEGS_R) || (i==WEAR_LEGS_L) || (i==WEAR_FOOT_R) || (i==WEAR_FOOT_L)) && !(roomp->isWaterSector() || roomp->isUnderwaterSector())) {
+        sendTo("Your dolphin's tail can't survive out of water.\n\r");
+        doReturn("", WEAR_LEGS_R, 0);
+      }
+    }
+
+    if (isLimbFlags(i, PART_BANDAGED) &&
+          (!equipment[i] || !isname(equipment[i]->name, "bandage")))
+      remLimbFlags(i, PART_BANDAGED);
+    
+    if (IS_SET(specials.act, ACT_SKELETON) &&
+        isAffected(AFF_CHARM) && hasPart(i)) {    // skeleton mobs no regen
+      flags = getLimbFlags(i);
+      if (IS_SET(flags, PART_MISSING)) {
+        // remove extraneous
+        setLimbFlags(i, PART_MISSING);
+      } else if (IS_SET(flags, (unsigned short int) (PART_BLEEDING | PART_LEPROSED | PART_INFECTED | PART_PARALYZED | PART_USELESS))) {
+        // change these bits to broken;
+        setLimbFlags(i, PART_BROKEN);
+      }
+      continue;    // no regen of body parts
+    }
+    if (IS_SET(specials.act, ACT_ZOMBIE) &&
+        isAffected(AFF_CHARM) && hasPart(i)) {    // zombie mobs decay
+      if (::number(0,1)) {
+        addCurLimbHealth(i, -1);
+        if (getCurLimbHealth(i) <= 0) {
+          sendTo("The leprosy in your %s causes it to fall off!!\n\r",
+               describeBodySlot(i).c_str());
+          makePartMissing(i, TRUE);
+        }
+      }
+      if (isLimbFlags(i, PART_MISSING)) {
+        setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
+        if (i == WEAR_HEAD) {
+          vlogf(5, "%s killed by lack of a head at %s (%d)",
+            getName(), roomp->getName(), inRoom());
+
+          rc = die(DAMAGE_BEHEADED);
+          if (IS_SET_ONLY(rc, DELETE_THIS))
+            return DELETE_THIS;
+        }
+        if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
+          vlogf(5, "%s killed by lack of a critical body spot (%d:1) at %s (%d)",
+            getName(), i, roomp->getName(), inRoom());
+          rc = die(DAMAGE_NORMAL);
+          if (IS_SET_ONLY(rc, DELETE_THIS))
+            return DELETE_THIS;
+        }
+      }
+      continue;   // zombies never regen
+    }
+
+    // normal critters follow
+    if (isLimbFlags(i, PART_LEPROSED) && hasPart(i)) {
+      addCurLimbHealth(i, -2);
+      if (getCurLimbHealth(i) <= 0) {
+        if (isCritPart(i)) {
+          // let go to 0, but don't cause "neck to fall off"
+          setCurLimbHealth(i, 0);
+        } else {
+          sendTo("The leprosy in your %s causes it to fall off!!\n\r",
+               describeBodySlot(i).c_str());
+          makePartMissing(i, TRUE);
+        }
+      }
+    }
+    flags = getLimbFlags(i);
+
+    if (isLimbFlags(i, PART_MISSING)) {
+      setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
+      if (i == WEAR_HEAD) {
+        vlogf(5, "%s killed by lack of a head at %s (%d)",
+            getName(), roomp->getName(), inRoom());
+        rc = die(DAMAGE_BEHEADED);
+        if (IS_SET_ONLY(rc, DELETE_THIS))
+          return DELETE_THIS;
+      }
+      if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
+        vlogf(5, "%s killed by lack of a critical body spot (i:2) at %s (%d)",
+            getName(), i, roomp->getName(), inRoom());
+        rc = die(DAMAGE_NORMAL);
+        if (IS_SET_ONLY(rc, DELETE_THIS))
+          return DELETE_THIS;
+      }
+    }
+    if (IS_SET(flags, (unsigned short int) (PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)))
+      continue;
+
+    if (getCurLimbHealth(i) < getMaxLimbHealth(i) &&
+          !::number(0,1) && !fight()) 
+      addCurLimbHealth(i,
+           ((flags & PART_BANDAGED) ? 1 + conLimbBonus : conLimbBonus));
+  }
+  return TRUE;
+}
+
+// DELETE_THIS implies this should be deleted
+int TBeing::updateHalfTickStuff()
+{
+  int foodReject = FALSE;
+  int rc = FALSE;
+  TOpal *stone = NULL;
+  TThing *t;
+  int j;
+  char buf[256];
+  TRoom *room = NULL;
+  int loadRoom = 0;
+  int vnum = mobVnum();
+  affectedData *af;
+  int berserk_noheal=0;
+  TBeing *trider=NULL;
+
+  if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
+    sendTo("You grow sleepy and can remain awake no longer.\n\r");
+    act("$n collapses as $e falls asleep.", TRUE, this, 0, 0, TO_ROOM);
+    setPosition(POSITION_SLEEPING);
+  }
+
+  rc = updateBodyParts();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+
+  TMonster *tmons = dynamic_cast<TMonster *>(this);
+  if (tmons && !tmons->desc) {
+    tmons->mobAI();
+    loadRoom = tmons->oldRoom;
+  }
+  if (tmons && !tmons->desc && (trider=dynamic_cast<TBeing *>(tmons->rider)))
+    trider->calmMount(this);
+  
+  if (isFlying()) {
+    if (!canFly() && roomp && !roomp->isFlyingSector()) {
+      vlogf(5, "Somehow %s was position fly and was not in flying sector", getName());
+      sendTo("You stop flying around in the air.\n\r");
+      setPosition(POSITION_STANDING);
+    }
+  }
+  if (roomp && roomp->isFlyingSector()) {
+    TBeing *tbr = dynamic_cast<TBeing *>(riding);
+    if (!riding && !isFlying()) {
+      setPosition(POSITION_FLYING);
+      sendTo("You start to fly up in the air.\n\r");
+      vlogf(5, "Somehow %s was not flying in flying sector", getName());
+    } else if (riding && !tbr) {
+      dismount(POSITION_FLYING);
+      sendTo("You start to fly up in the air.\n\r");
+    } else if (tbr && !tbr->isFlying()) {
+      tbr->setPosition(POSITION_FLYING);
+      sendTo("Your mount starts to fly up in the air.\n\r");
+      vlogf(5, "Somehow %s was not flying in flying sector", getName());
+    }
+  }
+  if (roomp && (zone_table[roomp->getZone()].enabled == TRUE) && 
+      (!inImperia() || (in_room == ROOM_NOCTURNAL_STORAGE)) && 
+      ((specials.act & ACT_DIURNAL) || (specials.act & ACT_NOCTURNAL)) &&
+       !fight() && (getPosition() > POSITION_STUNNED) &&
+       (!::number(0,2)) &&
+       !act_ptr &&  // prevents hornsby taking off
+       (getHit() >= hitLimit()) &&
+      (number >= 0)) {
+    j = 0; // temp holder
+    t = NULL; // temp holder
+    if (IS_SET(specials.act, ACT_DIURNAL) && !isAffected(AFF_CHARM)) {
+      if ((inRoom() == ROOM_NOCTURNAL_STORAGE)) {
+
+        // hoppers are a mob that load periodically from spec-room proc
+        // they are removed via nocturnal, but we don't want them
+        // "reappearing" by waking up, so if they get sucked out, just
+        // whack them
+        if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER)) 
+          return DELETE_THIS;
+
+        if (is_daytime()) {
+          if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
+            return DELETE_THIS;
+            vlogf(5, "%s has oldRoom equal to %d", getName(), loadRoom);
+          }
+          if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+            return DELETE_THIS;
+          }
+          if (!(room = real_roomp(loadRoom))) {
+            return DELETE_THIS;
+          }
+          --(*this);
+          *room += *this;
+          if (vnum == MOB_FREEZING_MIST) {
+            act("$n forms in the surrounding air.",
+               TRUE, this, 0, 0, TO_ROOM);
+          } else if (IS_SET(specials.act, ACT_GHOST)) {
+            act("$n shimmers into existence.",
+                   TRUE, this, 0, 0, TO_ROOM);
+          } else if (isAnimal()) {
+            act("$n awakens from $s slumber.",
+                   TRUE, this, 0, 0, TO_ROOM);
+           } else {
+             char tString[256];
+
+             sprintf(tString, "$n %s to begin work.", race->moveIn());
+             act(tString, TRUE, this, 0, 0, TO_ROOM);
+	     //act("$n yawns as $e returns to The World.",
+             //      TRUE, this, 0, 0, TO_ROOM);
+          }
+        }
+      } else if (!is_daytime() &&
+                    ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
+        if (vnum == MOB_FREEZING_MIST) {
+          act("$n is dispersed by the coming of morning.", 
+              TRUE, this, 0, 0, TO_ROOM);
+        } else if (IS_SET(specials.act, ACT_GHOST)) {
+          act("$n shimmers out of existence.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        } else if (isAnimal()) {
+          act("$n wanders off to find $s den.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        } else {
+          act("$n notices the time, and hurries on $s way.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        }
+        if (!(room = real_roomp(ROOM_NOCTURNAL_STORAGE))) {
+           return DELETE_THIS;
+        }
+        if (riding)
+          dismount(POSITION_STANDING);
+        while (rider)
+          rider->dismount(POSITION_STANDING);
+
+        --(*this);
+        *room += *this;
+      } else {
+// not in storage and is daytime -- do nothing
+      }
+    } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
+      if ((in_room == ROOM_NOCTURNAL_STORAGE)) {
+        if (!is_nighttime()) {
+          if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER)) {
+            return DELETE_THIS;
+          }
+        } else {
+          if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
+            return DELETE_THIS;
+            vlogf(5, "%s has oldRoom equal to %d", getName(), loadRoom);
+          }
+          if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+            return DELETE_THIS;
+          }
+          if (!(room = real_roomp(loadRoom))) {
+            return DELETE_THIS;
+          }
+          --(*this);
+          *room += *this;
+         if (vnum == MOB_FREEZING_MIST) {
+           act("$n forms in the surrounding air.", 
+               TRUE, this, 0, 0, TO_ROOM);
+          } else if (IS_SET(specials.act, ACT_GHOST)) {
+            act("$n shimmers into existence.",
+                TRUE, this, 0, 0, TO_ROOM);
+          } else if (isAnimal()) {
+            act("$n awakens from $s slumber.",
+                TRUE, this, 0, 0, TO_ROOM);
+          } else {
+            char tString[256];
+
+            sprintf(tString, "$n %s to begin work.", race->moveIn());
+            act(tString, TRUE, this, 0, 0, TO_ROOM);
+            //act("$n yawns as $e returns to The World.",
+            //    TRUE, this, 0, 0, TO_ROOM);
+          }
+        }
+      } else if (!is_nighttime() && 
+                   ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
+        if (vnum == MOB_FREEZING_MIST) {
+          act("$n is dispersed by the coming of morning.", 
+              TRUE, this, 0, 0, TO_ROOM);
+        } else if (IS_SET(specials.act, ACT_GHOST)) {
+          act("$n shimmers out of existence.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        } else if (isAnimal()) {
+          act("$n wanders off to find $s den.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        } else {
+          act("$n notices the time, and hurries on $s way.",
+                 TRUE, this, 0, 0, TO_ROOM);
+        }
+        if (!(room = real_roomp(ROOM_NOCTURNAL_STORAGE))) {
+           return DELETE_THIS;
+        }
+        if (riding)
+          dismount(POSITION_STANDING);
+        while (rider)
+          rider->dismount(POSITION_STANDING);
+
+        --(*this);
+        *room += *this;
+      } else {
+// nocturnal mob in world and not nighttime
+      }
+    } else {
+// do nothing cause it doesnt involve nocturnal or diurnal mobs
+    }
+  }
+  if (!isPc() || desc) {
+    int mg = moveGain();
+    mg = min(mg, moveLimit() - getMove());
+    addToMove(mg);
+  }
+
+  if (!fight()) {
+    if (isCombatMode(ATTACK_BERSERK)) 
+      goBerserk(NULL);
+  }
+  rc = terrainSpecial();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+
+  if (!fight() && (!isPc() || desc)) {
+    if (isCombatMode(ATTACK_BERSERK) || isAffected(SKILL_BERSERK)) {
+      if(isCombatMode(ATTACK_BERSERK)){
+	setCombatMode(ATTACK_OFFENSE);
+	act("You finally calm down and stop berserking.",TRUE, this,0,0,TO_CHAR);
+	sendTo("--> Attack mode set to: offense.\n\r");
+	act("$n calms down and stops berserking.",TRUE,this,0,0,TO_ROOM);
+      }
+
+      for (af = affected; af; af = af->next) {
+	if (af->type == SKILL_BERSERK && af->location == APPLY_CURRENT_HIT){
+	  if(getHit() < af->modifier){
+	    af->modifier=getHit()+2;
+	    berserk_noheal=1;
+	    setPosition(POSITION_STUNNED);
+	    sendTo("You have overexerted yourself and nearly die from the strain.\n\r");
+	  } else 
+	    sendTo("You feel drained as the bloodlust leaves you.\n\r");
+	}
+      }
+      affectFrom(SKILL_BERSERK);
+    }
+    if (roomp && roomp->isIndoorSector() && !(roomp->isWaterSector() || roomp->isUnderwaterSector()))  {
+      if (hasTransformedLimb()) 
+        transformLimbsBack("", MAX_WEAR, FALSE);
+      
+      if(desc && desc->original && !desc->original->isImmortal() && (desc->original->polyed == POLY_TYPE_SHAPESHIFT)) {
+        sendTo("Your shape can not survive without a connection to nature.\n\r");
+        doReturn("", WEAR_NOWHERE, CMD_RETURN); 
+        return FALSE;
+      }
+    }
+
+    int drunk = getCond(DRUNK);
+    if (drunk > 15) {
+      rc = passOut();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+    }
+    // Imperia is immune to Food and Drink
+    if (isPc() && !inImperia() && !inLethargica())  {
+      int old_food = getCond(FULL);
+      int old_drink = getCond(THIRST);
+
+      // not the ideal choice for sector choice if !roomp, but oh well
+      foodNDrink(roomp ? roomp->getSectorType() : SECT_INSIDE_MOB,4);
+
+      // Changed to not take timer into account, people want to lose hit points
+      if ((!getCond(FULL) && !old_food) || (!getCond(THIRST) && !old_drink)) {
+        if (desc) { 
+          points.hit -= 1; // + GetMaxLevel()/2; Whoever did this sucks - Russ
+          if (!old_food)
+            sendTo(COLOR_BASIC, "<R>You are weak from lack of nutrients.<1>\n\r");
+
+          if (!old_drink)
+            sendTo(COLOR_BASIC, "<R>You are parched.<1>\n\r");
+
+          foodReject = TRUE;
+          updatePos();
+          if (points.hit < -10) {
+            vlogf(5, "%s killed by starvation at %s (%d)",
+                getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+            rc = die(DAMAGE_STARVATION);
+            if (IS_SET_ONLY(rc, DELETE_THIS))
+              return DELETE_THIS;
+          }
+        }
+      }
+    }
+    if (roomp && (roomp->getSectorType() == SECT_DESERT) &&
+        (getPosition() > POSITION_STUNNED) && is_daytime())
+      sendTo("The desert heat makes you uncomfortably warm.\n\r");
+    else if (roomp && (roomp->getSectorType() == SECT_JUNGLE) &&
+        (getPosition() > POSITION_STUNNED) && is_daytime())
+      sendTo("The jungle humidity causes you to sweat uncontrollably.\n\r");
+    else if (roomp && (getPosition() > POSITION_STUNNED) && (drunk < 15) &&
+               !roomp->isRoomFlag(ROOM_NO_HEAL) &&
+               has_healthy_body(this)) {
+      int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
+      if (foodReject || (drunk > 15)) {
+        mana_bump = ::number(1,3);
+        if (!foodReject) {
+          addToHit(1);
+          sendTo("Your condition prevents your body's full recovery.\n\r");
+        } else 
+          sendTo("Your condition takes its toll on your body.\n\r"); 
+      } else if(!berserk_noheal)
+        addToHit(hitGain());
+      
+      addToPiety(pietyGain(0.0));
+      if ((hasClass(CLASS_RANGER) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGIC_USER)) && 
+            (stone = find_biggest_powerstone(this)) && 
+            (mana_bump + mana_cur >= mana_max)) {
+        addToMana(mana_max - mana_cur);
+        
+        if (stone->psGetMana() != stone->psGetMaxMana()) {
+          stone->psAddMana(mana_bump - (mana_max - mana_cur));
+            stone->psSetMana(min(stone->psGetMana(), stone->psGetMaxMana()));
+          if (stone->psGetMana() != stone->psGetMaxMana())
+            sprintf(buf, "Your $o turn$Q whiter.");
+          else
+            sprintf(buf, "Your $o $q now a solid white.");
+          act(buf, TRUE, this, stone, 0, TO_CHAR);
+        }
+      } else
+        addToMana(mana_bump);
+
+       // Check charms *AFTER* the periodic gain
+       // if gain is 50, and cost if 65, players will see themselves losing
+       // 15 per tick.  We don't want charm to be untenable at what appears
+       // to be ~65 mana
+      checkCharmMana();
+
+    } else if ((getPosition() == POSITION_STUNNED) && getCond(THIRST) && getCond(FULL) && !berserk_noheal) {
+      addToHit(1);
+      updatePos();
+    } else if (getPosition() == POSITION_INCAP) {
+      if (reconcileDamage(this, 1,DAMAGE_NORMAL) == -1)
+        return DELETE_THIS;
+
+      doSave(SILENT_YES);
+    } else if (getPosition() == POSITION_MORTALLYW) {
+      if (reconcileDamage(this, 1,DAMAGE_NORMAL) == -1)
+        return DELETE_THIS;
+
+      doSave(SILENT_YES);
+    }
+  }
+  return FALSE;
+}
+
+void TPCorpse::decayMe()
+{
+  int found = FALSE;
+  TThing *tmp = NULL;
+
+  if (!stuff) {
+    obj_flags.decay_time = min(obj_flags.decay_time, (short int) MAX_PC_CORPSE_EMPTY_TIME);
+    obj_flags.decay_time--;
+    if (checkOnLists()) {
+      removeCorpseFromList();
+    }
+    return;
+  }
+
+  for(tmp = stuff; tmp; tmp = tmp->nextThing) {
+    TObj *obj = dynamic_cast<TObj *>(tmp);
+    if (!obj)
+      continue;
+    if (!obj->isObjStat(ITEM_NORENT)) {
+      found = TRUE;
+      break;
+    }
+  }
+  if (!found) {
+    obj_flags.decay_time--;
+    if (checkOnLists()) {
+      removeCorpseFromList();
+    }
+    return;
+  } 
+  if (inRoom() == ROOM_STORAGE) {
+    return;
+  }
+
+// valid corpse, see if we have a dead mud
+  if (!descriptor_list && checkOnLists()) {
+    obj_flags.decay_time = max(obj_flags.decay_time, (short int) MAX_PC_CORPSE_EQUIPPED_TIME);
+    return;
+  }
+  obj_flags.decay_time--;
+  return;
+}
+
+void TObj::decayMe()
+{
+  if (obj_flags.decay_time > 0)
+    if (in_room != ROOM_NOWHERE) 
+      obj_flags.decay_time--;
+}
+
+// returns DELETE_THIS if this has been destroyed (for whatever reason), 
+int TObj::objectTickUpdate(int pulse)
+{
+  TBeing *ch = NULL;
+  TThing *t;
+  int rc;
+
+  if (!name) {
+    vlogf(10, "Object with NULL name in objectTickUpdate() : %d", objVnum());
+    return DELETE_THIS;
+  }
+
+  for (int j = 0; j < MAX_OBJ_AFFECT; j++) {
+    if (affected[j].duration > 0) {
+      affected[j].duration--;
+      if (affected[j].duration == 0) {
+
+       // don't show multiple times
+       if ((j == MAX_OBJ_AFFECT - 1) || 
+           affected[j+1].type != affected[j].type) {
+          if (((t = equippedBy) && (ch = dynamic_cast<TBeing *>(t))) ||
+              ((t = parent) && (ch = dynamic_cast<TBeing *>(t)))) {
+            // thing is held or in inventory
+            switch (affected[j].type) {
+              case SPELL_BLESS:
+                act("The blessing surrounding your $o fades.",
+                      FALSE, ch, this, 0, TO_CHAR);
+                act("The blessing surrounding $n's $o fades.",
+                      FALSE, ch, this, 0, TO_ROOM);
+                break;
+              case SPELL_BLESS_DEIKHAN:
+                act("The blessing surrounding your $o fades.",
+                      FALSE, ch, this, 0, TO_CHAR);
+                act("The blessing surrounding $n's $o fades.",
+                      FALSE, ch, this, 0, TO_ROOM);
+                break;
+              default:
+                break;
+            }
+          } else {
+            // thing is lying in the room
+            switch (affected[j].type) {
+              case SPELL_BLESS:
+                act("The blessing surrounding $n fades.",
+                      FALSE, this, 0, 0, TO_ROOM);
+                break;
+              case SPELL_BLESS_DEIKHAN:
+                act("The blessing surrounding $n fades.",
+                      FALSE, this, 0, 0, TO_ROOM);
+                break;
+              default:
+                break;
+            }
+          }
+        }
+        affected[j].type = TYPE_UNDEFINED;
+        affected[j].level = 0;
+        affected[j].duration = 0;
+        affected[j].modifier = 0;
+        affected[j].location = APPLY_NONE;
+        affected[j].modifier2 = 0;
+        affected[j].bitvector = 0;
+      }
+    }
+  }
+
+  if (isObjStat(ITEM_BURNING)){
+    // we calculate the number of structure points per cubic inch
+    // flammability is the number of ci's that burn per tick
+    // so struct per ci * flam is how much we lose per tick
+    // suppose we have a wooden staff, 4000 volume, 20 structure and 500
+    // flammability, (20/4000)=.005, .005*500 = 2.5, 20/2.5 = 8
+    // so it will burn for approx 8 rounds
+    int burnamount = (int)((double)((double)getMaxStructPoints()/getVolume())*
+			       material_nums[getMaterial()].flammability);
+    burnamount=max(1, burnamount);
+
+    if((t = equippedBy) || (t = parent)){
+      ch = dynamic_cast<TBeing *>(t);
+    } else
+      ch = NULL;
+
+    switch(::number(0, 4)){
+      case 0:
+	if(ch){
+	  act("Your $o crackles merrily as it <r>burns<1> down.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o crackles merrily as it <r>burns<1> down.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else 
+	  act("$n crackles merrily as it <r>burns<1> down.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 1:
+	if(ch){
+	  act("Your $o <r>burns<1> away steadily.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o <r>burns<1> away steadily.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("$n <r>burns<1> away steadily.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 2:
+	if(ch){
+	  act("<k>Smoke<1> billows forth from $o as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("<k>Smoke<1> billows forth from $n's $o as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("<k>Smoke<1> billows forth from $n as it <r>burns<1>.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 3:
+	if(ch){
+	  act("Your $o <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("$n <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      default:
+	// nothing
+	break;
+    }
+
+    // we let non-flammable things burn, but we don't 'decay' them
+    if(material_nums[getMaterial()].flammability){
+      addToStructPoints(-burnamount);
+      
+      if (getStructPoints() <= 0) {
+	remBurning(ch);
+	makeScraps();
+	return DELETE_THIS;
+      }
+    }
+  }
+
+  if (obj_flags.decay_time > -1) {
+    // updateCharObjects takes care of worn, carried It decrements decay
+    // but does NOT delete the obj
+    decayMe();
+
+    if (!obj_flags.decay_time) {
+      if ((rc = objectDecay())) {
+        return rc;
+      } else {
+        if (equippedBy)        {
+          // Worn in equipment 
+          act("$p decay$Q into nothing.", FALSE, equippedBy, this, 0, TO_CHAR);
+          while ((t = stuff)) {
+            (*t)--;
+            *equippedBy += *t;
+          }
+        } else if (parent) {
+          act("$p biodegrade$Q in your hands.", FALSE, parent, this, 0, TO_CHAR);
+          while ((t = stuff)) {
+            (*t)--;
+            *parent += *t;
+          }
+        } else if (roomp) {  // in room
+          act("$n fade$R into insignificance.",
+                 TRUE, this, 0, 0, TO_ROOM);
+          while ((t = stuff)) {
+            (*t)--;
+            *roomp += *t;
+          }
+        }
+
+        return DELETE_THIS;
+      }
+    }
+  }
+  // Lights!!!! - Russ
+  lightDecay();
+
+  // Jugged items - Russ 
+  if (eq_stuck > WEAR_NOWHERE) {
+    if ((t = stuckIn) && (ch = dynamic_cast<TBeing *>(t))) {
+      ch->sendTo(COLOR_OBJECTS, "The wounds in your %s start to fester as %s sinks deeper into your flesh.\n\r", ch->describeBodySlot(eq_stuck).c_str(), shortDescr);
+      if (::number(0, ch->getConShock()) < 2) {
+        if (!ch->isLimbFlags(eq_stuck, PART_INFECTED)) {
+          if (ch->rawInfect(eq_stuck, 200, SILENT_YES, CHECK_IMMUNITY_YES)) 
+            ch->sendTo(COLOR_OBJECTS, "Your %s has been infected by %s.\n\r", ch->describeBodySlot(eq_stuck).c_str(), shortDescr);
+        }
+      }
+      if (ch->reconcileDamage(ch, (int) baseDamage(), SPELL_INFECT) == -1) {
+        delete ch;
+        ch = NULL;
+      }
+      return FALSE;
+    }
+  }
+  // Sound objects 
+  audioCheck(pulse);
+
+  // damage things in water
+  // portals,windows get a pass on this
+  if ((getStructPoints() != -1) &&
+      roomp && roomp->isWaterSector() &&
+      !dynamic_cast<TSeeThru *>(this)) {
+    if (dice(1, 10) <= (material_nums[getMaterial()].water_susc % 10)) {
+      if ((obj_flags.struct_points -= (material_nums[getMaterial()].water_susc / 10)) <= 0) {
+        sendrpf(roomp, "%s sinks into the water and is gone.\n\r", good_cap(shortDescr).c_str());
+        return DELETE_THIS;
+      } else
+        sendrpf(roomp, "%s becomes water-logged and is damaged.\n\r", good_cap(shortDescr).c_str());
+    }
+  }
+  
+  // this relies on fact that:
+  // weatherAndTime() and objectTickUpdate both trigger off of !tick_update
+  // from socket.cc.  weatherAndTime has already been called
+  rc = checkSpec(NULL, CMD_OBJ_WEATHER_TIME, "", NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    return DELETE_THIS;
+
+  return FALSE;
+}
+
+void do_check_mail()
+{
+  Descriptor *d;
+
+  for (d = descriptor_list; d; d = d->next) {
+    TBeing *ch = d->character;
+    if (!no_mail && !d->connected && ch) {
+      char recipient[100], *tmp;
+
+      _parse_name(ch->getName(), recipient);
+      for (tmp = recipient; *tmp; tmp++)
+        if (isupper(*tmp))
+          *tmp = tolower(*tmp);
+      if (has_mail(recipient))
+        ch->sendTo("You have %sMAIL!%s\n\r", ch->cyan(), ch->norm());
+    }
+    // d->checkForMultiplay();
+  }
+}
+
+// returns DELETE_THIS
+int TBeing::terrainSpecial()
+{
+  int dam, num = 0;
+  affectedData af;
+  TThing *t;
+
+  if (!roomp)
+    return FALSE;
+
+  switch (roomp->getSectorType()) {
+    case SECT_FIRE:
+    case SECT_FIRE_ATMOSPHERE:
+      if (!desc && isPc())
+        return FALSE;
+      dam = ::number(2,6);
+      sendTo("Flames lick about you, scorching your skin.\n\r");
+      act("Flames lick about $n and scorch $s skin.",TRUE,this,0,0,TO_ROOM);
+      return reconcileDamage(this,dam,SPELL_FIREBALL);
+    case SECT_DESERT:
+      // drain water
+      for (t = stuff; t; t = t->nextThing) {
+        evaporate(this);
+      }
+      return FALSE;
+    case SECT_SUBARCTIC:
+    case SECT_ARCTIC_WASTE:
+    case SECT_TUNDRA:
+      if (!num)
+        num = 1;
+    case SECT_ARCTIC_ROAD:
+      if (!num)
+        num = 3;
+    case SECT_ARCTIC_MOUNTAINS:
+      if (!num)
+        num = 1;
+    case SECT_ARCTIC_FOREST:
+      if (!num)
+        num = 4;
+    case SECT_ARCTIC_RIVER_SURFACE:
+    case SECT_ICEFLOW:
+    case SECT_COLD_BEACH:
+      if (!num)
+        num = 2;
+    case SECT_SOLID_ICE:
+    case SECT_ARCTIC_ATMOSPHERE:
+    case SECT_ARCTIC_CLIMBING:
+      if (!num)
+        num = 1;
+      if (!outside())
+        break;
+      if (::number(0,num))
+        break;
+      act("A cold wind blows through, chilling you to the bone.",TRUE,this,0,0,TO_CHAR);
+// frostbite needs rethinking - bat 
+#if 0   
+      if (isImmune(IMMUNE_COLD, 0))
+        break;
+      if (dynamic_cast<TMonster *>(this))
+        break;
+      if (isPc() && isImmortal())
+         break;
+      af.type = AFFECT_DISEASE;
+      af.level = 0;
+      af.duration = 200;
+      af.modifier = DISEASE_FROSTBITE;
+      af.location = APPLY_NONE;
+      af.bitvector = 0;
+      affectTo(&af);
+      disease_start(this, &af);
+#endif
+      break;
+    default:
+      break;
+  }
+  return FALSE;
+}
+
+int TBeing::passOut()
+{
+  affectedData af;
+  int rc;
+
+  int drunk = max(1,plotStat(STAT_CURRENT, STAT_CON, 13, 28, 23) - getCond(DRUNK));
+  if (::number(0,drunk))
+    return FALSE;
+  af.type = AFFECT_DRUNK;
+  af.level = max(1, (int) getCond(DRUNK));
+  af.duration = max(1,getCond(DRUNK) - 15);
+  af.modifier = 0;
+  af.location = APPLY_NONE;
+  af.bitvector = AFF_SLEEP;
+  affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+  sendTo("You pass out from too much drink.\n\r");
+  if (getPosition() > POSITION_SLEEPING) {
+    if (riding) {
+      rc = fallOffMount(riding, POSITION_STANDING);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+    }
+    act("$n passes out!", TRUE, this, NULL, NULL, TO_ROOM);
+    setPosition(POSITION_SLEEPING);
+  }
+  return TRUE;
+}
+
+int TBeing::bumpHead(int *iHeight)
+{
+  *iHeight = roomp->getRoomHeight();
+
+  if (!willBumpHead(roomp))
+    return FALSE;
+  
+  if (!isPc() && !inImperia() && master && isAffected(AFF_CHARM))
+    vlogf(LOW_ERROR,"Being (%s) (height %d) in small room (#%d)(roof: %d)",
+           getName(), getPosHeight(), roomp->number, *iHeight); 
+
+  int num = max(0,(getPosHeight() - *iHeight));
+  if (::number(0, num) && (!isPc() || desc)) {
+    sendTo("You bump your head on the ceiling.  OUCH!\n\r");
+    act("$n bumps $s head on the ceiling.  That had to hurt.", 
+              TRUE, this, 0,0,TO_ROOM);
+    reconcileDamage(this,::number(1,3),DAMAGE_NORMAL);
+  }
+  return TRUE;
+}
+
+void TBeing::checkCharmMana()
+{
+  followData *k, *k2;
+  int rc;
+  TBeing *ch;
+
+  if (!isPc())
+    return;
+  if (!followers)
+    return;
+
+  for (k = followers;k; k = k2) {
+    k2 = k->next;
+    if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
+      vlogf(10, "Non-Tbeing in followers of %s", getName());
+      return;
+    }
+    if (!ch->isCharm() && !ch->isZombie())
+      continue;
+ 
+    if (!sameRoom(ch)) {
+      ch->stopFollower(TRUE);
+      continue;
+    }
+    int mana = 0;
+  
+    mana = ch->GetMaxLevel()/5 + 1;
+
+    mana += plotStat(STAT_CURRENT, STAT_FOC, 16, 1, 8);
+    mana += plotStat(STAT_CURRENT, STAT_CHA, 16, 1, 8);
+
+    if (ch->isZombie())
+      mana = 2*mana/3;
+
+    if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)) {
+      if (getMana() < mana && isPc()) {
+        sendTo(COLOR_MOBS, "You lack the mental concentration to control %s any longer.\n\r", ch->getName());
+        ch->stopFollower(TRUE);
+        if (ch->fight()) {
+          rc = ch->doFlee("");
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete ch;
+            ch = NULL;
+          }
+        }
+        setMana(0);
+      } else {
+        act("The effort of keeping $N enthralled weakens you.", 
+             FALSE, this, 0, ch, TO_CHAR);
+        reconcileMana(TYPE_UNDEFINED, FALSE, mana);
+      }
+    } else {
+      // clerics and deikhans
+      double piety;
+      piety = (double) mana / 6.0;
+      if (getPiety() < piety) {
+        sendTo(COLOR_MOBS, "You lack the concentration to control %s any longer.\n\r", ch->getName());
+        ch->stopFollower(TRUE);
+        if (ch->fight()) {
+          rc = ch->doFlee("");
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete ch;
+            ch = NULL;
+          }
+        }
+        setPiety(0.0);
+      } else {
+        act("The effort of keeping $N enthralled weakens you.", FALSE, this, 0, ch, TO_CHAR);
+        addToPiety(-piety);
+      }
+    }
+  }
+  return;
+}
+
+void sendAutoTips()
+{
+  // first, get a tip...
+  FILE *fp = fopen("tipsfile", "r");
+  if (!fp) {
+    vlogf(5, "Failed opening tipsfile.");
+    return;
+  }
+  // skip any comments
+  char buf[256];
+  do {
+    fgets(buf, 255, fp);
+  } while (*buf == '#');
+
+  // how many tips do we have?
+  unsigned int numtips = 0;
+  while (fgets(buf, 255, fp)) {
+    if (*buf != '#')
+      numtips++;
+  }
+  if (!numtips) {
+    fclose(fp);
+    return;
+  }
+  unsigned int num = ::number(1, numtips);
+
+  // now startover and get the num'th tip
+  rewind(fp);
+  numtips = 0;
+  do {
+    fgets(buf, 255, fp);
+    if (*buf != '#')
+      numtips++;
+  } while (numtips < num);
+  
+  // clean up the tip
+  if (strlen(buf) >= 1)
+    buf[strlen(buf) - 1] = '\0';
+
+  fclose(fp);
+
+  Descriptor *d;
+  for (d = descriptor_list; d; d = d->next) {
+    if (d->connected != CON_PLYNG)
+      continue;
+    TBeing *ch = d->character;
+    if (!ch)
+      continue;
+    if (!IS_SET(d->autobits, AUTO_TIPS))
+      continue;
+    ch->sendTo(COLOR_BASIC, "<y>%s Tip :<z> %s\n\r", MUD_NAME, buf);
+  }
+}

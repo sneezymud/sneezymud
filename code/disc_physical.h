@@ -1,0 +1,35 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//
+// $Log: disc_physical.h,v $
+// Revision 1.1  1999/09/12 17:24:04  sneezy
+// Initial revision
+//
+//
+//////////////////////////////////////////////////////////////////////////
+
+
+#ifndef __DISC_PHYSICAL_H
+#define __DISC_PHYSICAL_H
+
+// This is the WARRIOR PHYSICAL discipline.
+
+class CDPhysical : public CDiscipline
+{
+public:
+    CSkill skDoorbash;
+    CSkill skDeathstroke;
+
+    CDPhysical();
+    CDPhysical(const CDPhysical &a);
+    CDPhysical & operator=(const CDPhysical &a);
+    virtual ~CDPhysical();
+    virtual CDPhysical * cloneMe() { return new CDPhysical(*this); }
+
+private:
+};
+
+
+#endif
+
