@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.5  2002/10/18 15:50:08  peel
+// changed buyMe to return the item cost, or -1 on failure
+//
 // Revision 5.4  2002/02/21 02:11:05  jesus
 // added a comp for new shaman spell
 //
@@ -469,7 +472,7 @@ class TComponent : public TObj {
     double priceMultiplier() const;
     virtual int noteMeForRent(string &, TBeing *, TThing *, int *);
     virtual void sellMe(TBeing *, TMonster *, int);
-    virtual void buyMe(TBeing *, TMonster *, int, int);
+    virtual int buyMe(TBeing *, TMonster *, int, int);
 
     int getComponentCharges() const;
     void setComponentCharges(int n);

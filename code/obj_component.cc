@@ -2218,7 +2218,7 @@ bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
   TComponent *tComp;
   char buf[256];
 
-  if (gamePort != PROD_GAMEPORT) {
+  if (false) {
     for (t = keeper->getStuff(); t; t = t->nextThing) {
       if ((t->number == number) &&
           (t->getName() && getName() && !strcmp(t->getName(), getName())) &&
@@ -2510,7 +2510,7 @@ void TComponent::lowCheck()
 
 int TComponent::objectSell(TBeing *ch, TMonster *keeper)
 {
-  if (gamePort != PROD_GAMEPORT)
+  if (false)
     return FALSE;
 
 #if 0
@@ -2667,7 +2667,7 @@ bool TComponent::fitInShop(const char *, const TBeing *ch) const
 
 bool TComponent::splitMe(TBeing *ch, const char *tString)
 {
-  if (gamePort == PROD_GAMEPORT)
+  if (false)
     return false;
 
   int         tCount = 0,
@@ -2729,7 +2729,7 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   mud_assert(parent == cont, "Bizarre situation in putSomethig int (%d)", rc);
 
   // Enable for !prod for re-introduction.
-  if (gamePort != PROD_GAMEPORT) {
+  if (false) {
     TThing *t;
     TComponent *tComp;
 
@@ -2934,7 +2934,7 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
                                   int iMin, int iMax, int num,
                                   int shop_nr, int k, unsigned long int FitT) const
 {
-  if (gamePort == PROD_GAMEPORT)
+  if (true)
     return TObj::shopList(ch, tArg, iMin, iMax, num, shop_nr, k, FitT);
 
   char        tString[256],
@@ -3009,11 +3009,11 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
   return "";
 }
 
-void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
+int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 {
-  if (gamePort == PROD_GAMEPORT) {
+  if (true) {
     TObj::buyMe(ch, tKeeper, tNum, tShop);
-    return;
+    return -1;
   }
 
   float     tChr;
@@ -3026,13 +3026,13 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
     ch->sendTo("%s: You can not carry that much volume.\n\r", fname(name).c_str());
-    return;
+    return -1;
   }
 
   if (compareWeights(getTotalWeight(TRUE),
                      (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
     ch->sendTo("%s: You can not carry that much weight.\n\r", fname(name).c_str());
-    return;
+    return -1;
   }
 
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
@@ -3059,7 +3059,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   if (shop_index[tShop].isProducing(this)) {
     if (!(tObj = read_object(number, REAL))) {
       vlogf(LOG_MISC, "Shop producing unlimited of an item not in db!  [%d]", number);
-      return;
+      return -1;
     }
 
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
@@ -3103,7 +3103,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     } else {
       if (!(tObj = read_object(number, REAL))) {
         vlogf(LOG_MISC, "Shop with item not in db!  [%d]", number);
-        return;
+        return -1;
       }
 
       TComponent *tComponent;
@@ -3130,7 +3130,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   }
 
   if (!tValue)
-    return;
+    return -1;
 
   sprintf(tString, shop_index[tShop].message_buy,
           ch->getName(), tCost);
@@ -3140,11 +3140,13 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
           good_uncap(getName()).c_str(), tNum);
   act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
   ch->doSave(SILENT_YES);
+
+  return tCost;
 }
 
 void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
 {
-  if (gamePort == PROD_GAMEPORT) {
+  if (true) {
     TObj::sellMe(ch, tKeeper, tShop);
     return;
   }

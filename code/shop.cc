@@ -363,7 +363,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   temp1->buyMe(ch, keeper, num, shop_nr);
 }
 
-void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
+int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
   char buf[256];
   char argm[256];
@@ -376,13 +376,13 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
     ch->sendTo("%s: You can't carry that much volume.\n\r", fname(name).c_str());
-    return;
+    return -1;
   }
   // obj-weight > free ch limit
   if (compareWeights(getTotalWeight(TRUE),
        ((ch->carryWeightLimit() - ch->getCarriedWeight())/num)) == -1) {
     ch->sendTo("%s: You can't carry that much weight.\n\r", fname(name).c_str());
-    return;
+    return -1;
   }
   if (shop_index[shop_nr].isProducing(this)) {
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
@@ -493,7 +493,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     keeper->saveItems(buf);
   }
   if (!count)
-    return;
+    return -1;
 
   keeper->doTell(ch->name, shop_index[shop_nr].message_buy,
           (cost * count));
@@ -507,7 +507,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     act(buf, FALSE, ch, this, 0, TO_ROOM);
   }
   ch->doSave(SILENT_YES);
-  return;
+  return cost;
 }
 
 bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)

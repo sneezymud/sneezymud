@@ -154,7 +154,7 @@ int TOrganic::shopPrice(int num, int shop_nr, float, int *) const
 }
 
 // This function deals with the buying of these things.
-void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
+int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
   char Buf[2][256];
   int price,
@@ -172,13 +172,13 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   if (parent != keeper) {
     vlogf(LOG_BUG, "Error: buyMe():organic.cc  obj not on keeper");
-    return;
+    return -1;
   }
   // Make sure it's an item we buy.
   if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf[0], shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(Buf[0]);
-    return;
+    return -1;
   }
   nocName = getNameNOC(ch);
   // If it's a 'unit' item, then treat it as such.
@@ -200,12 +200,12 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     switch (shop_index[shop_nr].temper1) {
       case 0:
         keeper->doAction(ch->name, CMD_SMILE);
-        return;
+        return -1;
       case 1:
         act("$n grins happily.", 0, keeper, 0, 0, TO_ROOM);
-        return;
+        return -1;
       default:
-        return;
+        return -1;
     }
   }
   strcpy(Buf[1], shortDescr);
@@ -270,7 +270,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   sprintf(Buf[0], "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(Buf[0]);
   ch->doSave(SILENT_YES);
-  return;
+  return price;
 }
 
 // used by sell all.hide and sell all.skin

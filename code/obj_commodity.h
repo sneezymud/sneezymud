@@ -20,7 +20,7 @@ class TCommodity : public TObj {
 
     virtual void lowCheck();
     virtual void logMe(const TBeing *, const char *) const {}
-    virtual void buyMe(TBeing *, TMonster *, int, int);
+    virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int);

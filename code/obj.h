@@ -540,7 +540,7 @@ class TObj : public TThing {
     virtual bool canGetMe(const TBeing *, silentTypeT) const;
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT) {}
     virtual void changeMagicItemValue1(TBeing *, const char *, editorEnterTypeT) {}
-    virtual void buyMe(TBeing *, TMonster *, int, int);
+    virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual void valueMe(TBeing *, TMonster *, int);
     virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;

@@ -97,7 +97,7 @@ int TCommodity::shopPrice(int num, int shop_nr, float, int *) const
   return price;
 }
 
-void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
+int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
   char buf[256];
   char buf2[80];
@@ -107,12 +107,12 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   if (parent != keeper) {
     vlogf(LOG_BUG, "Error: buy_treasure():shop.cc  obj not on keeper");
-    return;
+    return -1;
   }
   if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
-    return;
+    return -1;
   }
   if (num > (int) (numUnits())) {
     num = (int) (numUnits());
@@ -131,12 +131,12 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     switch (shop_index[shop_nr].temper1) {
       case 0:
         keeper->doAction(ch->name, CMD_SMILE);
-        return;
+        return -1;
       case 1:
         act("$n grins happily.", 0, keeper, 0, 0, TO_ROOM);
-        return;
+        return -1;
       default:
-        return;
+        return -1;
     }
   }
   strcpy(buf2, fname(name).c_str());
@@ -170,7 +170,7 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
   ch->doSave(SILENT_YES);
-  return;
+  return price;
 }
 
 void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
