@@ -387,7 +387,9 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
 int Donation(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  char check[256];
+  const char * pStArg = arg;
+  char check[256],
+       StContainer[256];
   TThing *t, *t2;
 
   if (cmd == CMD_GENERIC_PULSE && !::number(0, 75)) {
@@ -409,14 +411,25 @@ int Donation(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       return FALSE;
 
     if (cmd == CMD_GET || cmd == CMD_TAKE) {
-      one_argument(arg, check);
+      pStArg = one_argument(arg, check);
+      one_argument(pStArg, StContainer);
   
       if (*check) {
         // prevent "get all", "get all.xxx", and "get 20*xxx"
-        if (!strncmp(check, "all", 3) ||
-            strchr(check, '*')) {
-          ch->sendTo("Now now, that would be greedy!\n\r");
-          return TRUE;
+        // ...But do not prevent them from getting all out of their own posessions. -Lapsos (5/15/04)
+
+        if (!strncmp(check, "all", 3) || strchr(check, '*')) {
+
+if (*StContainer)
+  ch->sendTo(StContainer);
+else
+  ch->sendTo("Major Problems Here!");
+
+
+	  if (!*StContainer || !generic_find_obj(StContainer, (FIND_OBJ_INV | FIND_OBJ_EQUIP), ch)) {
+            ch->sendTo("Now now, that would be greedy!\n\r");
+            return TRUE;
+	  }
         }
       }
     } else if (cmd == CMD_JUNK) {
