@@ -98,7 +98,8 @@ void Descriptor::Edit(char *arg)
         edit.x = 1;
         break;
       default:
-        if (isascii(*raw) || isprint(*raw) || iscntrl(*raw)) {
+	//        if (isascii(*raw) || isprint(*raw) || iscntrl(*raw)) {
+        if (isascii(*buf) || isprint(*buf) || iscntrl(*buf)) {
           sprintf(buf, "%c", *arg);
           writeToQ(buf);
           move(++edit.x, edit.y);
