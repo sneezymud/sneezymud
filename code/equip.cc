@@ -1910,7 +1910,7 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
 #if 0
   // this includes all minerals (100-150) and metals (150-200)
   ubyte mat = getMaterial();
-  if (mat >= 100 &&
+  if (mat >= 150 &&
       (mat != MAT_BONE))
     return TRUE;
 
@@ -1943,13 +1943,31 @@ bool TObj::shamanRestrictedItem(const TBeing *ch) const
   if (objVnum() == CRAPS_DICE)
     return FALSE;
 
+  if (objVnum() == MASK1)
+    return FALSE;
+
+  if (objVnum() == MASK2)
+    return FALSE;
+
+  if (objVnum() == MASK3)
+    return FALSE;
+
+  if (objVnum() == MASK4)
+    return FALSE;
+
+  if (objVnum() == MASK5)
+    return FALSE;
+
+  if (objVnum() == MASK6)
+    return FALSE;
+
   if (canWear(ITEM_WEAR_FINGER))
     return FALSE;
 
 #if 0
   // this includes all minerals (100-150) and metals (150-200)
   ubyte mat = getMaterial();
-  if (mat >= 100 &&
+  if (mat >= 150 &&
       (mat != MAT_BONE))
     return TRUE;
 

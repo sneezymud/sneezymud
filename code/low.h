@@ -168,6 +168,12 @@ const short int STATS_POTION        = 29991;
 const short int YOUTH_POTION        = 29992;
 const short int OBJ_GENERIC_POTION  = 29993;
 const short int CRAPS_DICE          = 29999;
+const short int MASK1          = 1415;
+const short int MASK2          = 1416;
+const short int MASK3          = 1417;
+const short int MASK4          = 1418;
+const short int MASK5          = 1419;
+const short int MASK6          = 1420;
 
 // ------------------------- MOBS
 

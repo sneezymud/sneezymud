@@ -4933,29 +4933,32 @@ int AKAmulet(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 {
   TBeing *ch;
-  int rc, dam;
+  int rc, dam, chance, result;
   wearSlotT t;
 
   if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
-    return FALSE;
-  if(::number(0, 4))
     return FALSE;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;     
 
   t=((!weapon || (weapon->eq_pos==HOLD_RIGHT))?WEAR_HAND_R:WEAR_HAND_L);
+  chance = ::number(0, 9);
+  result = ::number(5, 15);
 
-  act("<r>The eyes of $o <r>glow blood red as life force is channeled from your body.<1>"
-      , 0, v, o, 0, TO_CHAR);
-  act("<r>The eyes of $p <r>glow blood red.<1>"
-      , 0, v, o, 0, TO_ROOM);
-  ch->addToLifeforce(50);    
-  dam = ::number(3, 15);
+  if (chance >= 5) {
+    // do nothing
+  } else {
+    act("<r>The eyes of $o <r>glow blood red as life force is channeled from your body.<1>"
+	, 0, v, o, 0, TO_CHAR);
+    act("<r>The eyes of $p <r>glow blood red.<1>"
+	, 0, v, o, 0, TO_ROOM);
+    ch->addToLifeforce(result);    
+    dam = ::number(3, 15);
     
-  rc = ch->reconcileDamage(v, dam, DAMAGE_DRAIN);
-  if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_VICT;
-  
+    rc = ch->reconcileDamage(v, dam, DAMAGE_DRAIN);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  }
   return TRUE;
 }
 
