@@ -234,7 +234,9 @@ int TOpal::chiMe(TBeing *tLunatic)
   act("$n concentrates upon $p, causing it to glow violently!",
       TRUE, tLunatic, this, NULL, TO_ROOM);
 
-  psSetMana(min(psGetMaxMana(), (psGetMana() + ::number(1, 4))));
+  // increased mana input from 1-4 (mean 2.5) to 3-10 (mean 7.5)
+  //   still slow, but not totally useless
+  psSetMana(min(psGetMaxMana(), (psGetMana() + ::number(4, 11))));
 
   return true;
 }
