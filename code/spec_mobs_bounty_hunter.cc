@@ -1011,6 +1011,10 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
 // this is a bit of level control, 9/01 - dash
 void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
+  
+  // apparently players don't like repo?? disable
+  return;
+
   TBeing *i = NULL;
   TMonster *mob = NULL;
   int objectLevel = 0;
