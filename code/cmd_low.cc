@@ -1,3 +1,4 @@
+
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "LOW.cc" - routines related to checking stats.
@@ -1340,8 +1341,7 @@ void TBeing::lowTasks(const char *arg)
     return;
   } else if (is_abbrev(buf, "add")) {
     arg = one_argument(arg, buf);
-    arg = one_argument(arg, buf2);
-    if (!*buf || !*buf2) {
+    if (!*buf || !*arg) {
       sendTo("Syntax: low tasks add <priority> <task>\n\r");
       return;
     } else {
@@ -1359,7 +1359,7 @@ void TBeing::lowTasks(const char *arg)
 	} else {
 	  id = atoi(db.getColumn(0)) + 1;
 	}
-        sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), buf2);
+        sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), arg);
         vlogf(LOG_DASH, "lowtask: %s", temp);
         db.query(temp);
 
