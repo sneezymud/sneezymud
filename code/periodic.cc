@@ -264,7 +264,9 @@ bool TObj::joinTrash()
   *pile += *this;
 
   pile->updateDesc();
-  //  roomp->saveItems("");
+
+  if(pile->roomp)
+    pile->roomp->saveItems("");
   
   return false;
 }
