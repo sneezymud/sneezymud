@@ -48,7 +48,7 @@ void TBeing::doTrophy(const char *arg)
   MYSQL_ROW row=NULL;
   MYSQL_RES *res;
   int rc, mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
-  int zonesearch=0, processrow=1;
+  int zonesearch=0, processrow=1, summary=0;
   float count;
   char buf[256];
   string sb;
@@ -60,16 +60,23 @@ void TBeing::doTrophy(const char *arg)
   }
 
   for (; isspace(*arg); arg++);
+
+  vlogf(LOG_PEEL, "%s", arg);
   
   if(!strncmp(arg, "zone", 4)){
-    
+  vlogf(LOG_PEEL, "got here 1");
     if(arg[4]){
       for (; !isspace(*arg); arg++);
       zonesearch=-1;
     } else {
       zonesearch=roomp->getZoneNum();
     }
+  } else if(!strncmp(arg, "summary", 7)){
+  vlogf(LOG_PEEL, "got here 2");
+    summary=1;
   }
+
+  vlogf(LOG_PEEL, "got here 3");
 
   rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
@@ -110,7 +117,7 @@ void TBeing::doTrophy(const char *arg)
       } else if(zonesearch>0){
 	if(zonesearch!=zd.zone_nr)
 	  continue;
-      } else {
+      } else if(!summary){
 	if(*arg && !isname(arg, mob_index[rnum].name))
 	  continue;
       }
@@ -124,12 +131,16 @@ void TBeing::doTrophy(const char *arg)
       }
 
       count=atof(row[1]);
-      sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
-	      describe_trophy_exp(count),
-	      mob_index[rnum].short_desc);
+
+      if(!summary){
+	sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
+		describe_trophy_exp(count),
+		mob_index[rnum].short_desc);
+	sb += buf;
+      }
+
       ++mcount;
       ++zcount;
-      sb += buf;
 
       processrow=1; // ok to get the next row
     }
