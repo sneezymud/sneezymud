@@ -184,7 +184,7 @@ const bool sstring::startsVowel() const
   return false;
 } 
 
-const sstring & sstring::operator=(format &a)
+const sstring & sstring::operator=(fmt &a)
 {
   this->assign(a);
   return *this;

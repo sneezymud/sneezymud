@@ -1,7 +1,7 @@
 #ifndef __SSTRING_H
 #define __SSTRING_H
 
-class format;
+class fmt;
 
 
 class sstring : public string {
@@ -11,7 +11,7 @@ public:
   sstring(const char *str) : string(str?str:"") {}
   sstring(const string &str) : string(str) {}
 
-  const sstring & operator=(format &a);
+  const sstring & operator=(fmt &a);
 
   // these functions return modified copies of the string
   const sstring toCRLF() const;
