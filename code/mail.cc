@@ -32,7 +32,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
   db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, to, tmstr, message_pointer);
 }                               /* store mail */
 
-const char *read_delete(const char *recipient, const char *recipient_formatted, string &from)
+string read_delete(const char *recipient, const char *recipient_formatted, string &from)
 {
   TDatabase db("sneezy");
   string buf;
@@ -55,7 +55,7 @@ const char *read_delete(const char *recipient, const char *recipient_formatted, 
 
   db.query("delete from mail where mailid=%s", db.getColumn(3));
   
-  return buf.c_str();
+  return string(buf);
 }
 
 int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
@@ -198,7 +198,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 {
   char buf[200], recipient[100], *tmp;
   TObj *note, *envelope;
-  const char *msg;
+  string msg;
   string from;
 
   _parse_name(getName(), recipient);
@@ -240,8 +240,8 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
     delete [] note->action_description;
     msg = read_delete(recipient, getName(), from);
-    note->action_description = new char[strlen(msg)+1];
-    strcpy(note->action_description, msg);
+    note->action_description = new char[strlen(msg.c_str())+1];
+    strcpy(note->action_description, msg.c_str());
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
 

@@ -5447,9 +5447,6 @@ int Descriptor::doAccountStuff(char *arg)
       while (has_mail(delname)) {
         vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
 	db.query("delete from mail where mailto='%s'", delname);
-	
-	//        const char *tmpp = read_delete(delname, delname, from);
-	//        delete [] tmpp;
       }
 
       sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 

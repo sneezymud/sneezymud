@@ -18,6 +18,5 @@ extern bool has_mail(const char *);
 extern bool no_mail;
 
 extern void autoMail(TBeing *, const char *, const char *);
-extern const char *read_delete(const char *recipient, const char *recipient_formatted, string &from);
 
 #endif
