@@ -28,7 +28,7 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
     return NULL;
 
   TObj *obj, *last;
-  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, (targ ? targ : "NULL"));
+  //  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, (targ ? targ : "NULL"));
 
   for (obj = object_list, last = NULL; obj; obj = obj->next) {
     if (isname(arg, obj->name)) {
@@ -47,7 +47,7 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
 static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stopper)
 {
   TObj *obj, *last;
-  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, "none");
+  //  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, "none");
 
   for (obj = object_list, last = NULL; obj; obj = obj->next) {
     if (isname(arg, obj->name)) {
@@ -86,11 +86,13 @@ bounty_hunt_struct::~bounty_hunt_struct()
 void bounty_hunt_struct::reset()
 {
 
-  vlogf(LOG_DASH, "hunter being reset with vict: %s", (hunted_victim ? hunted_victim : "NULL"));
+  //  vlogf(LOG_DASH, "hunter being reset with vict: %s", (hunted_victim ? hunted_victim : "NULL"));
   delete [] hunted_item;
   hunted_item = NULL;
-  delete [] hunted_victim;
-  hunted_victim = NULL;
+  if (!singletarg || missionaccomplished) {
+    delete [] hunted_victim;
+    hunted_victim = NULL;
+  }
   num_chances = 9;
   num_retrieved = 0;
   noneBeyond = NULL;
@@ -408,9 +410,9 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
 
   job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
-  vlogf(LOG_DASH, "Bounty hunter %s, generic pulse, item = %s, victim = %s, singletarg = %s.", myself->getName(),
-	(job->hunted_item ? job->hunted_item : "NULL"), (job->hunted_victim ? job->hunted_victim : "NULL"),
-	(job->singletarg ? "TRUE" : "FALSE"));
+  //  vlogf(LOG_DASH, "Bounty hunter %s, generic pulse, item = %s, victim = %s, singletarg = %s.", myself->getName(),
+  //	(job->hunted_item ? job->hunted_item : "NULL"), (job->hunted_victim ? job->hunted_victim : "NULL"),
+  //	(job->singletarg ? "TRUE" : "FALSE"));
   if (job->hunted_item) {
     if (job->singletarg)
       temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond, job->hunted_victim);
