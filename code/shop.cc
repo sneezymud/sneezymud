@@ -2136,7 +2136,7 @@ void bootTheShops()
     sd.no_such_item2 = mud_str_dup(db["no_such_item2"]);
     sd.do_not_buy = mud_str_dup(db["do_not_buy"]);
     sd.missing_cash1 = mud_str_dup(db["missing_cash1"]);
-    sd.missing_cash2 = mud_str_dup(db["missing_case2"]);
+    sd.missing_cash2 = mud_str_dup(db["missing_cash2"]);
     sd.message_buy = mud_str_dup(db["message_buy"]);
     sd.message_sell = mud_str_dup(db["message_sell"]);
     sd.temper1=convertTo<int>(db["temper1"]);
@@ -2191,13 +2191,13 @@ void bootTheShops()
 bool safe_to_save_shop_stuff(TMonster *ch)
 {
 
-  if (mob_index[ch->getMobIndex()].number < 1) {
+  if (mob_index[ch->getMobIndex()].getNumber() < 1) {
      vlogf(LOG_BUG, "Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!",
             mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 1.");
     return FALSE;
   }
-  if (mob_index[ch->getMobIndex()].number > 1) {
+  if (mob_index[ch->getMobIndex()].getNumber() > 1) {
     vlogf(LOG_BUG, "More than one shopkeeper #%d in world.  Now the shop won't work!",
           mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 2.");

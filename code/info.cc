@@ -3983,7 +3983,7 @@ void TObj::describeMe(TBeing *ch) const
       if (obj_index[getItemIndex()].max_exist <= MIN_EXIST_IMMORTAL)
 #endif
         ch->sendTo("It is limited for immortals and there is %i out of %i in existence.\n\r", 
-                   obj_index[getItemIndex()].number,
+                   obj_index[getItemIndex()].getNumber(),
                    obj_index[getItemIndex()].max_exist);
       else
         ch->sendTo("It is not limited for immortals.\n\r");

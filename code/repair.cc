@@ -325,7 +325,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
       repair->doTell(buf);
     }
   }
-  if (obj_index[obj->getItemIndex()].number > 
+  if (obj_index[obj->getItemIndex()].getNumber() > 
       obj_index[obj->getItemIndex()].max_exist) {
     // item over max-exist, never supposed to happen, but could
     // make it unrepairable to encourage it to scrap

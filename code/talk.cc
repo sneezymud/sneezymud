@@ -781,8 +781,7 @@ int TBeing::doTell(const sstring &arg, bool visible)
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
   }
-  message=arg;
-  one_argument(message, name);
+  message=one_argument(arg, name);
 
   if(name.empty() || message.empty()){
     sendTo("Whom do you wish to tell what??\n\r");

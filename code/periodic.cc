@@ -76,10 +76,10 @@ void apocCheck()
     return;
 
   // these are in biblical order, shrug, seems to make sense
-  if ((num = real_mobile(APOC_PESTILENCE)) && mob_index[num].number)
-    if ((num = real_mobile(APOC_WAR)) && mob_index[num].number)
-      if ((num = real_mobile(APOC_FAMINE)) && mob_index[num].number)
-        if ((num = real_mobile(APOC_DEATH)) && mob_index[num].number)
+  if ((num = real_mobile(APOC_PESTILENCE)) && mob_index[num].getNumber())
+    if ((num = real_mobile(APOC_WAR)) && mob_index[num].getNumber())
+      if ((num = real_mobile(APOC_FAMINE)) && mob_index[num].getNumber())
+        if ((num = real_mobile(APOC_DEATH)) && mob_index[num].getNumber())
           return;
 
   if (!num)

@@ -13,7 +13,7 @@ bool TObj::engraveMe(TBeing *, TMonster *, bool)
 
 bool TObj::isUnique() const
 {
-  return (!obj_index[getItemIndex()].number);
+  return (!obj_index[getItemIndex()].getNumber());
 }
 
 int TObj::objVnum() const

@@ -122,30 +122,36 @@ class zoneData
 class extraDescription;
 
 class indexData {
-  public:
-    int virt;   
-    long pos;  
-    int number;
-    char *name;
-    char *short_desc;
-    char *long_desc;
-    char *description;
+ public:
+  int virt;   
+  long pos;  
+ private:
+  int number;
+ public:
+  char *name;
+  char *short_desc;
+  char *long_desc;
+  char *description;
+  
+  short max_exist;        // for objs and mobs
+  int spec;
+  float weight;
+  
+  void addToNumber(const short int n){
+    vlogf(LOG_PEEL, "adding %i to number %i for object %i",
+	  n, number, virt);
+    number+=n;
+  }
 
-    short max_exist;        // for objs and mobs
-    int spec;
-    float weight;
-
-    void addToNumber(const short int n){
-      //      vlogf(LOG_PEEL, "adding %i to number %i for object %i",
-      //	    n, number, virt);
-      number+=n;
-    }
-
-
-    indexData();
-    indexData(const indexData &);
-    indexData & operator= (const indexData &a);
-    virtual ~indexData();
+  int getNumber(){
+    return number;
+  }
+  
+  
+  indexData();
+  indexData(const indexData &);
+  indexData & operator= (const indexData &a);
+  virtual ~indexData();
 };
 
 class objIndexData : public indexData

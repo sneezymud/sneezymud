@@ -119,7 +119,7 @@ static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const
   if (rob < 0 || rob >= (signed) obj_index.size())
     return;
 
-  if (obj_index[rob].number >= obj_index[rob].max_exist) {
+  if (obj_index[rob].getNumber() >= obj_index[rob].max_exist) {
     if (chance <= 100) {
       // mob trying to load over max
 

@@ -46,7 +46,7 @@ void TObj::logMe(const TBeing *ch, const char *cmdbuf) const
            (ch ? " " : ""),
            cmdbuf, getName(),
            obj_index[getItemIndex()].max_exist,
-           obj_index[getItemIndex()].number);
+           obj_index[getItemIndex()].getNumber());
 }
 
 void TBeing::logItem(const TThing *obj, cmdTypeT cmd) const

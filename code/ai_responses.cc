@@ -109,7 +109,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
         vlogf(LOG_MOB_RS, "Problem in script (2).  Trying to load %d on %s",value,getName());
         return FALSE;
       }
-      if (obj_index[rc].number > obj_index[rc].max_exist) {
+      if (obj_index[rc].getNumber() > obj_index[rc].max_exist) {
         vlogf(LOG_MOB_RS, "Quest mob (%s:%d) loading item (%s:%d) when over max_exist.",
               getName(), mobVnum(),
               obj->getName(), obj->objVnum());
@@ -160,7 +160,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
         vlogf(LOG_MOB_RS, "Problem in script (4).  Trying to load %d on %s",value,getName());
         return FALSE;
       }
-      if (mob_index[rc].number > mob_index[rc].max_exist) {
+      if (mob_index[rc].getNumber() > mob_index[rc].max_exist) {
         vlogf(LOG_MOB_RS, "Quest mob (%s:%d) loading mob (%s:%d) when over max_exist.",
               getName(), mobVnum(),
               tMonster->getName(), tMonster->mobVnum());
@@ -259,7 +259,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
               name, cmd, arg);
         return FALSE;
       }
-      if (obj_index[value].number >= obj_index[value].max_exist)
+      if (obj_index[value].getNumber() >= obj_index[value].max_exist)
         return RET_STOP_PARSING;
 
       return FALSE;

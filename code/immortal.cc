@@ -2902,7 +2902,7 @@ void TPerson::doLoad(const char *argument)
         sendTo("Loading shopkeepers is a restricted function.\n\r");
         return;
       }
-      if (mob_index[numx].number > 0) {
+      if (mob_index[numx].getNumber() > 0) {
         sendTo("Trying to create that mob when one already exists could create problems.\n\r");
         return;
       }
@@ -2966,7 +2966,7 @@ void TPerson::doLoad(const char *argument)
     }
 
     while(count--){
-      if ((obj_index[numx].number >= obj_index[numx].max_exist) &&
+      if ((obj_index[numx].getNumber() >= obj_index[numx].max_exist) &&
           !hasWizPower(POWER_LOAD_LIMITED)) {
 	sendTo("Sorry, all of those items are presently in use in the game.\n\r");
 	sendTo("You are unable to load extraneous artifacts at your level.\n\r");
@@ -2976,7 +2976,7 @@ void TPerson::doLoad(const char *argument)
 	vlogf(LOG_BUG, "Error finding object.");
 	return;
       }
-      if (obj_index[numx].number > obj_index[numx].max_exist) {
+      if (obj_index[numx].getNumber() > obj_index[numx].max_exist) {
 	sendTo("WARNING!  This item is in excess of the defined max_exist.\n\r");
 	sendTo("Please don't let this item fall into mortal hands.\n\r");
       }

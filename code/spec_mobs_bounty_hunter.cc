@@ -1122,7 +1122,7 @@ void repoCheck(TMonster *mob, int rnum)
 
 #if REPO_MOBS
   char buf[160],buf2[160];
-  int cur_num = obj_index[rnum].number;
+  int cur_num = obj_index[rnum].getNumber();
   int max_num = obj_index[rnum].max_exist;
 
   // Bounty's just cause massive griping - bat 2/23/97

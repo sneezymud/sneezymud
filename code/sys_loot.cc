@@ -187,7 +187,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
         (isImmortal || --tFound == 0)) {
       TObj *tObj;
 
-      if (obj_index[tTLoot->tRNum].number >=
+      if (obj_index[tTLoot->tRNum].getNumber() >=
           obj_index[tTLoot->tRNum].max_exist)
         continue;
 

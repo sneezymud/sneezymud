@@ -475,7 +475,7 @@ class TMonster : public TBeing {
     int readMobFromFile(FILE *, bool);
     int getMobIndex() const { return (number < 0 ? 0 : number); }
     bool isUnique() {
-      return (!mob_index[getMobIndex()].number);
+      return (!mob_index[getMobIndex()].getNumber());
     }
     virtual void purgeMe(TBeing *);
     void loadResponses(int);

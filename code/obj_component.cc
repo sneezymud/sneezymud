@@ -777,7 +777,7 @@ void do_components(int situ)
           continue;
 
         if ((component_placement[i].max_number <= 0) ||
-            (obj_index[value].number < component_placement[i].max_number)) {
+            (obj_index[value].getNumber() < component_placement[i].max_number)) {
 
           // uniqueness check
           if (IS_SET(component_placement[i].place_act, CACT_UNIQUE)) {

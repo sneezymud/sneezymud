@@ -2921,16 +2921,16 @@ void printLimitedInRent(void)
 {
   unsigned int i;
   for (i = 0; i < obj_index.size(); i++) {
-    if (obj_index[i].number > 0) {
+    if (obj_index[i].getNumber() > 0) {
       vlogf(LOG_MISC, "  %d - [%d] : max [%d]",
-           obj_index[i].virt, obj_index[i].number, obj_index[i].max_exist);
-      if (obj_index[i].number > obj_index[i].max_exist &&
+           obj_index[i].virt, obj_index[i].getNumber(), obj_index[i].max_exist);
+      if (obj_index[i].getNumber() > obj_index[i].max_exist &&
           obj_index[i].max_exist) {
         // latter condition is because DEITY_TOKEN max exist = 0
         char buf[1024];
         sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
             obj_index[i].name, obj_index[i].virt,
-            obj_index[i].max_exist, obj_index[i].number);
+            obj_index[i].max_exist, obj_index[i].getNumber());
 	// these have to be lower case
         // autoMail(NULL, "jesus", buf);
         autoMail(NULL, "damescena", buf);
@@ -3050,7 +3050,7 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
       break;
     }
     // Since this mob was in rent, don't double count it.
-    mob_index[mob->getMobIndex()].number--;
+    mob_index[mob->getMobIndex()].addToNumber(-1);
 
     if (fscanf(fp, "%d ", &tmp) != 1) {
       vlogf(LOG_BUG, "Error reading follower data (%s mobs %d) (1)", arg, num);
@@ -3371,7 +3371,8 @@ float old_ac_lev = mob->getACLevel();
           // we want to add 1 to count the item, and another 1 because
           // the delete will reduce the number, add an additional one
           if ((new_obj->number >= 0)) {
-            obj_index[new_obj->getItemIndex()].number += 2;
+            obj_index[new_obj->getItemIndex()].addToNumber(2);
+	    
             vlogf(LOG_PIO, "     [%d] - in %s's follower rent", 
                      new_obj->objVnum(), arg);
           }
@@ -3404,7 +3405,7 @@ float old_ac_lev = mob->getACLevel();
           // we want to add 1 to count the item, and another 1 because
           // the delete will reduce the number, add an additional one
           if ((new_obj->number >= 0)) {
-            obj_index[new_obj->getItemIndex()].number += 2;
+            obj_index[new_obj->getItemIndex()].addToNumber(2);
             vlogf(LOG_PIO, "     [%d] - in %s's follower rent", 
                      new_obj->objVnum(), arg);
           }
@@ -3463,7 +3464,7 @@ float old_ac_lev = mob->getACLevel();
       // handle the count for this mob.
       // we are adding 1 to count the mob, and another one to offset the
       // decrease that will happen in delete.
-      mob_index[mob->getMobIndex()].number += 2;
+      mob_index[mob->getMobIndex()].addToNumber(2);
 
       vlogf(LOG_PIO, "     [%d] - mobile (%s) owned by %s",
                      mob->mobVnum(), mob->getName(), arg);
@@ -4023,7 +4024,7 @@ bool TBeing::saveFollowers(bool rent_time)
 
       // Since mob is heading into rent, artificially raise number so the
       // number is kept up with properly
-      mob_index[mob->getMobIndex()].number++;
+      mob_index[mob->getMobIndex()].addToNumber(1);
 
       delete mob;
       mob = NULL;

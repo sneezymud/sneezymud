@@ -527,7 +527,7 @@ void TPerson::doShow(const char *argument)
                     obj_index[objectIndex].virt, objectIndex, buf);
           else
             sprintf(buf2, "%5d %3d    %5d   %3d %2d %5d %s\n\r",
-                    obj_index[objectIndex].virt, obj_index[objectIndex].number,
+                    obj_index[objectIndex].virt, obj_index[objectIndex].getNumber(),
                     obj_index[objectIndex].max_exist,
                     obj_index[objectIndex].max_struct,
                     max(obj_index[objectIndex].armor, (sh_int) 0),
@@ -585,7 +585,7 @@ void TPerson::doShow(const char *argument)
         sprintf(buf, "%5d %5d   %s\n\r", obj_index[objnx].virt, objnx, buf2);
       } else {
         sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
-              obj_index[objnx].virt, obj_index[objnx].number,
+              obj_index[objnx].virt, obj_index[objnx].getNumber(),
               obj_index[objnx].max_exist, 
                obj_index[objnx].max_struct,
                max(obj_index[objnx].armor, (sh_int) 0),
@@ -711,7 +711,7 @@ void TPerson::doShow(const char *argument)
           else
             sprintf(buf2, "%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r",
                     mob_index[mobileIndex].virt, mob_index[mobileIndex].max_exist,
-                    mob_index[mobileIndex].number, mob_index[mobileIndex].level,
+                    mob_index[mobileIndex].getNumber(), mob_index[mobileIndex].level,
                     mob_index[mobileIndex].Class, mob_index[mobileIndex].faction,
                     mob_index[mobileIndex].name);
 
@@ -761,7 +761,7 @@ void TPerson::doShow(const char *argument)
       } else {
         sprintf(buf, "%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r", 
                mob_index[objnx].virt, mob_index[objnx].max_exist,
-               mob_index[objnx].number, mob_index[objnx].level, 
+               mob_index[objnx].getNumber(), mob_index[objnx].level, 
                mob_index[objnx].Class, mob_index[objnx].faction,
                mob_index[objnx].name);
       }
@@ -777,13 +777,13 @@ void TPerson::doShow(const char *argument)
 
     unsigned int objnx;
     for (objnx = 0; objnx < obj_index.size(); objnx++) {
-      if(obj_index[objnx].number<obj_index[objnx].max_exist) continue;
+      if(obj_index[objnx].getNumber()<obj_index[objnx].max_exist) continue;
       obj = read_object(obj_index[objnx].virt, VIRTUAL);
       sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
       delete obj;
 
       sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
-              obj_index[objnx].virt, obj_index[objnx].number,
+              obj_index[objnx].virt, obj_index[objnx].getNumber(),
               obj_index[objnx].max_exist, 
 	      obj_index[objnx].max_struct,
 	      max(obj_index[objnx].armor, (sh_int) 0),
@@ -801,13 +801,13 @@ void TPerson::doShow(const char *argument)
 
     unsigned int objnx;
     for (objnx = 0; objnx < obj_index.size(); objnx++) {
-      if(obj_index[objnx].number<=obj_index[objnx].max_exist) continue;
+      if(obj_index[objnx].getNumber()<=obj_index[objnx].max_exist) continue;
       obj = read_object(obj_index[objnx].virt, VIRTUAL);
       sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
       delete obj;
 
       sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
-              obj_index[objnx].virt, obj_index[objnx].number,
+              obj_index[objnx].virt, obj_index[objnx].getNumber(),
               obj_index[objnx].max_exist, 
 	      obj_index[objnx].max_struct,
 	      max(obj_index[objnx].armor, (sh_int) 0),

@@ -58,7 +58,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
           if (::number(0,10))
             continue;
           int rmob = real_mobile(::number(0,1) ? MOB_MALE_HOPPER : MOB_FEMALE_HOPPER);  
-          if (mob_index[rmob].number >= mob_index[rmob].max_exist)
+          if (mob_index[rmob].getNumber() >= mob_index[rmob].max_exist)
              continue;
           mob = read_mobile(rmob, REAL);
           *rp += *mob;
@@ -77,7 +77,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
           if (::number(0,9))
             continue;
           int rmob = real_mobile(::number(0,1) ? MOB_MALE_CHURCH_GOER : MOB_FEMALE_CHURCH_GOER);  
-          if (mob_index[rmob].number >= mob_index[rmob].max_exist)
+          if (mob_index[rmob].getNumber() >= mob_index[rmob].max_exist)
              continue;
           mob = read_mobile(rmob, REAL);
           *rp += *mob;
@@ -89,7 +89,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       // april 4th at noon
       if ((time_info.month == 3) && (time_info.day == 3) && (time_info.hours == 12)) {
         int rom = real_mobile(MOB_SONGBIRD);
-        if (mob_index[rom].number > 100)
+        if (mob_index[rom].getNumber() > 100)
           break;
         for (i = 1; i <= 200; i++) {
           mob = read_mobile(rom, REAL);
@@ -111,7 +111,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int isBelimusAlive(void)
 {
-  if (mob_index[real_mobile(MOB_BELIMUS)].number >= 1)
+  if (mob_index[real_mobile(MOB_BELIMUS)].getNumber() >= 1)
     return TRUE;
   return FALSE;
 }
@@ -916,7 +916,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   if (cmd == CMD_ENTER) {
     one_argument(arg, buf);
     if (is_abbrev(buf, "circle")) {
-      if (mob_index[mobnum].number != 0)
+      if (mob_index[mobnum].getNumber() != 0)
         return FALSE;   // already loaded
 
       if (!(mob = read_mobile(mobnum, REAL))) {
@@ -945,7 +945,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     return FALSE;
   }
   if (cmd == CMD_GENERIC_PULSE) {
-    if (mob_index[mobnum].number && !::number(0,29)) {
+    if (mob_index[mobnum].getNumber() && !::number(0,29)) {
       // keeps it around roughly 60 secs
       if (!(mob = get_char_room(mob_index[mobnum].name, rp->number)))
         return FALSE;
@@ -1206,7 +1206,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("As $n pulls the lever the lift begins to move with a loud creak.", TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].number >= 1) {
+      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;
@@ -1221,7 +1221,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       // loading the portal
       act("With a loud boom the entry platform is dropped as the lift arrives.",          TRUE,ch,portal,0,TO_CHAR);
       act("With a loud boom the entry platform is dropped as the lift arrives.",          TRUE,ch,portal,0,TO_ROOM);
-      if (obj_index[real_object(OBJ_MINELIFT_UP)].number >= 1) {
+      if (obj_index[real_object(OBJ_MINELIFT_UP)].getNumber() >= 1) {
         other_room = real_roomp(7266);
         temp = NULL;
         found_other = FALSE;
@@ -1248,7 +1248,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         if (time_info.hours != 6 && time_info.hours != 18)
           return FALSE;
 
-        if (obj_index[real_object(7214)].number)
+        if (obj_index[real_object(7214)].getNumber())
           return TRUE;
   
         if (!(portal = read_object(7214, VIRTUAL))) {
@@ -1275,7 +1275,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         }
         int rob = real_object(7214);
 
-        if (obj_index[rob].number) {
+        if (obj_index[rob].getNumber()) {
           act("The drawbridge is already lowered.", TRUE,ch,0,0,TO_CHAR);
           return TRUE;
         }
@@ -1306,7 +1306,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         }
         int rob = real_object(7214);
 
-        if (!obj_index[rob].number) {
+        if (!obj_index[rob].getNumber()) {
           act("The drawbridge is already raised.", TRUE,ch,0,0,TO_CHAR);
           return TRUE;
         }
@@ -1349,7 +1349,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
             TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_MINELIFT_UP)].number >= 1) {
+      if (obj_index[real_object(OBJ_MINELIFT_UP)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;
@@ -1366,7 +1366,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           TRUE,ch,portal,0,TO_CHAR);
       act("With a loud boom the entry platform is dropped as the lift arrives.",
           TRUE,ch,portal,0,TO_ROOM);
-      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].number >= 1) {
+      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].getNumber() >= 1) {
         other_room = real_roomp(7228);
         temp = NULL;
         found_other = FALSE;
@@ -1436,7 +1436,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("$n pushes the button.", TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_FLAMING_PORTAL)].number >= 1) {
+      if (obj_index[real_object(OBJ_FLAMING_PORTAL)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;

@@ -1609,7 +1609,7 @@ void TBeing::updateCharObjects()
 void extract_edit_char(TMonster *ch)
 {                          
   if (ch->number > -1)         
-    mob_index[ch->getMobIndex()].number--;
+    mob_index[ch->getMobIndex()].addToNumber(-1);
 
   mobCount--;
 

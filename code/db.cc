@@ -1173,7 +1173,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
     mob->setCurLimbHealth(j, mob->getMaxLimbHealth(j));
     mob->setStuckIn(j, NULL);
   }
-  mob_index[nr].number++;
+  mob_index[nr].addToNumber(1);
 
   mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
 
@@ -1652,7 +1652,7 @@ void zoneData::resetZone(bool bootTime)
 	    mob_index[rs.arg1].doesLoad=true;
 
           if ((this->zone_value != 0) &&
-              mob_index[rs.arg1].number < mob_index[rs.arg1].max_exist) {
+              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) {
               rp = real_roomp(rs.arg3);
             } else {
@@ -1714,7 +1714,7 @@ void zoneData::resetZone(bool bootTime)
             mobRepop(mob, zone_nr, (rp ? rp->number : ROOM_NOWHERE));
           } else {
 	    if(bootTime && 
-	       mob_index[rs.arg1].number >= mob_index[rs.arg1].max_exist)
+	       mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist)
 	      vlogf(LOG_LOW, "Mob %s (%i) tried to load but hit max_exist",
 		    mob_index[rs.arg1].short_desc, mob_index[rs.arg1].virt);
 
@@ -1727,7 +1727,7 @@ void zoneData::resetZone(bool bootTime)
 
           // check if zone is disabled or if mob exceeds absolute max
           if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].number < mob_index[rs.arg1].max_exist) {
+              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
             if (!(old_mob = mob)) {
               vlogf(LOG_BUG, "Lack of master mob in 'C' command.");
               continue;
@@ -1794,7 +1794,7 @@ void zoneData::resetZone(bool bootTime)
 
           // check if zone is disabled or if mob exceeds absolute max
           if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].number < mob_index[rs.arg1].max_exist) {
+              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
             if (!(old_mob = mob)) {
               vlogf(LOG_BUG, "Lack of master mob in 'K' command.");
               continue;
@@ -1882,7 +1882,7 @@ void zoneData::resetZone(bool bootTime)
         case 'R':
           // check if zone is disabled or if mob exceeds absolute max
           if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].number < mob_index[rs.arg1].max_exist) {
+              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) {
               rp = real_roomp(rs.arg3);
             } else {
@@ -1973,7 +1973,7 @@ void zoneData::resetZone(bool bootTime)
           break;
 
         case 'O':                
-          if ((bootTime) && (obj_index[rs.arg1].number < 
+          if ((bootTime) && (obj_index[rs.arg1].getNumber() < 
                  obj_index[rs.arg1].max_exist)) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) 
               rp = real_roomp(rs.arg3);
@@ -2005,7 +2005,7 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'B':               
-          if (obj_index[rs.arg1].number <
+          if (obj_index[rs.arg1].getNumber() <
                  obj_index[rs.arg1].max_exist) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) {
               rp = real_roomp(rs.arg3);
@@ -2037,7 +2037,7 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'P':                
-          if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) {
+          if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
             obj = read_object(rs.arg1, REAL);
             obj_to = get_obj_num(rs.arg3);
             if (obj_to && obj && dynamic_cast<TBaseContainer *>(obj_to)) {
@@ -2099,7 +2099,7 @@ void zoneData::resetZone(bool bootTime)
           break;
         case 'G':        
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
-          if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist &&
+          if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
               (obj = read_object(rs.arg1, REAL))) {
             *mob += *obj;
             obj->onObjLoad();
@@ -2175,7 +2175,7 @@ void zoneData::resetZone(bool bootTime)
             last_cmd = 0;
           break;
         case 'E':                
-          if ((obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) &&
+          if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
               (::number(0,99) < (int) (100 * stats.equip)) &&  
               (obj = read_object(rs.arg1, REAL))) {
             if (!mob) {

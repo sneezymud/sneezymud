@@ -255,7 +255,7 @@ void TBeing::doBet(const char *arg)
 	  if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
 	  } else {
 	    // no dice in world
-	    if (!obj_index[real_object(CRAPS_DICE)].number) {
+	    if (!obj_index[real_object(CRAPS_DICE)].getNumber()) {
 	      the_dice = read_object(CRAPS_DICE, VIRTUAL);
 	      *crap_man += *the_dice;
 	    }

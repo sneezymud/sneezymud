@@ -1548,7 +1548,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
   if (inRoom() == AVENGER_ROOM && hasQuestBit(TOG_AVENGER_HUNTING)) {
     // avenger quest, hunting troll set and got to right room
 
-    if (mob_index[real_mobile(MOB_TROLL_GIANT)].number) {
+    if (mob_index[real_mobile(MOB_TROLL_GIANT)].getNumber()) {
       // don't load unless unique
       return TRUE;
     }
@@ -1564,7 +1564,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
 
   if (in_room == ROOM_VINDICATOR_2 && hasQuestBit(TOG_VINDICATOR_HUNTING_2)) {
     // vindicator quest, hunting tree spirit set and got to right room
-    if (mob_index[real_mobile(MOB_TREE_SPIRIT)].number) {
+    if (mob_index[real_mobile(MOB_TREE_SPIRIT)].getNumber()) {
       // don't load unless unique
       return TRUE;
     }

@@ -191,7 +191,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
   act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
   addCorpseFlag(CORPSE_NO_DISSECT);
   
-  if (obj_index[rnum].number >= obj_index[rnum].max_exist) {
+  if (obj_index[rnum].getNumber() >= obj_index[rnum].max_exist) {
     // item at max
     act("You find nothing useful in $p.",
 	FALSE, caster, this, 0, TO_CHAR);

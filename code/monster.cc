@@ -280,7 +280,7 @@ TMonster::~TMonster()
   fears.clist = NULL;
 
   if (number > -1)
-    mob_index[getMobIndex()].number--;
+    mob_index[getMobIndex()].addToNumber(-1);
 
   if (sounds) {
     delete [] sounds;

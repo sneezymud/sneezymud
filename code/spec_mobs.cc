@@ -4422,7 +4422,7 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         }
       }
     }
-    if (mob_index[real_mobile(APOC_WARRIOR)].number > 5)
+    if (mob_index[real_mobile(APOC_WARRIOR)].getNumber() > 5)
       return FALSE;
 
     act("$n calls forth a great warrior to bring war upon The World!",0, me, 0, 0, TO_ROOM, ANSI_RED);
