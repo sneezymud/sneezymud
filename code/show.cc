@@ -1101,7 +1101,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
           }
         } else if(tattoos[ij]!=""){
 	  string slot = describeEquipmentSlot(ij);
-	  sprintf(buf, "<%s>", slot.replace(slot.find("Worn on"),7,"Tattooed on").c_str());
+	  sprintf(buf, "<%s>", (slot.find("Worn") != string::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
 
 
 	  //	  sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
