@@ -2457,6 +2457,9 @@ void forceCrash(const char *errorMsg,...)
   vsprintf(message, errorMsg, ap);
   va_end(ap);
 
+  // this would be a good idea if batopr didn't put it in freaking 
+  // everywhere.  90% of our crashes are because of this
+#if 0
   vlogf(LOG_BUG, "FORCED CORE GENERATION: %s", message);
 
   // track number of times been in here
@@ -2468,6 +2471,9 @@ void forceCrash(const char *errorMsg,...)
 
   if (fork())
     abort();    // force a crash in the child
+#else
+  vlogf(LOG_BUG, "forceCrash: %s", message);
+#endif
 
   // parent process continues on...
 #if 0
