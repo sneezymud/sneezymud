@@ -1106,8 +1106,6 @@ void TBeing::doReply(const sstring &arg)
   }
 
   ssprintf(buf, "%s %s", add_bars(desc->last_teller).c_str(), arg.c_str());
-  vlogf(LOG_PEEL, "tellarg=%s", arg.c_str());
-  vlogf(LOG_PEEL, "tellbuf=%s", buf.c_str());
   doTell(buf.c_str(), FALSE);
 }
 
