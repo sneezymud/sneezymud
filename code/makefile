@@ -134,7 +134,8 @@ endif
 #LDFLAGS +=-fhandle-exceptions
 # postgresql database lib
 #LDFLAGS +=-lpq++
-
+# mysql database lib
+LDFLAGS +=-lmysqlclient
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
