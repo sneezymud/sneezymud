@@ -2590,7 +2590,7 @@ void buildCommandArray(void)
   commandArray[CMD_SUBTERFUGE] = new commandInfo("subterfuge", POSITION_CRAWLING, 0);
   commandArray[CMD_THROW] = new commandInfo("throw", POSITION_FIGHTING, 0);
   commandArray[CMD_EXAMINE] = new commandInfo("examine", POSITION_RESTING, 0);
-  commandArray[CMD_SCRIBE]=new commandInfo("scribe", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_SCRIBE]=new commandInfo("scribe", POSITION_DEAD, 0);
   commandArray[CMD_BREW] = new commandInfo("brew", POSITION_STANDING, 0);
   commandArray[CMD_GRAPPLE] = new commandInfo("grapple", POSITION_FIGHTING, 0);
   commandArray[CMD_FLIPOFF] = new commandInfo("flipoff", POSITION_SITTING, 0);
