@@ -661,6 +661,7 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
     }
     if (caster->reconcileDamage(victim, dam, SPELL_RAZE) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
+    vlogf(LOG_JESUS, "Raze damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_RAZE)) {

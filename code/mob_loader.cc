@@ -628,15 +628,8 @@ void TMonster::shamanComponentLoader(void)
       switch (comp) {
         case COMP_THORNFLESH:
         case COMP_AQUALUNG:
-        case COMP_VOODOO:
         case COMP_RESURRECTION:
-        case COMP_DANCING_BONES:
         case COMP_HYPNOSIS:
-        case COMP_ROMBLER:
-        case COMP_INTIMIDATE:
-        case COMP_SENSE_LIFE_SHAMAN:
-        case COMP_DJALLA:
-        case COMP_LEGBA:
           // we'll make utility comps more rare so that relatively speaking
           // the comps for offensive spells are more prevalent
           if (::number(0,2))
@@ -647,19 +640,11 @@ void TMonster::shamanComponentLoader(void)
         case COMP_SHADOW_WALK:
         case COMP_CLARITY:
 	case COMP_CONTROL_UNDEAD:
-        case COMP_CHEVAL:
           // these are also "utility" comps, but players have asked for a
           // slightly higher load rate on them
           if (::number(0,9) < 5)
             num = -1;
           break;
-	case COMP_GILLS_OF_FLESH_BREW:
-	case COMP_DISPEL_MAGIC_BREW:
-	case COMP_TRAIL_SEEK_BREW:
-	case COMP_INFRAVISION_BREW:
-	case COMP_SORCERERS_GLOBE_BREW:
-	case COMP_SENSE_LIFE_BREW:
-	case COMP_INFRAVISION2_BREW:
 	case COMP_CELERITE:
         case COMP_RAZE:
         case COMP_CARDIAC_STRESS:
@@ -669,12 +654,14 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,19))
             num = -1;
           break;
+#ifdef NOBREW
 	case COMP_INVISIBILITY_BREW:
 	case COMP_TRUE_SIGHT_BREW:
           // keep VERY rare
           if (::number(0,29))
             num = -1;
           break;
+#endif
         default:
           break;
       }

@@ -53,6 +53,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
       if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
         return SPELL_SUCCESS + VICTIM_DEAD;
       rc = victim->lightningEngulfed();
+      vlogf(LOG_JESUS, "Stormy Skies Damage: %d", dam);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return SPELL_SUCCESS + VICTIM_DEAD;
       return SPELL_SUCCESS;
@@ -88,6 +89,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
       act("$n summons hail from the snowy sky and guides it down upon you!", FALSE, caster, NULL, victim, TO_VICT);
       if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
         return SPELL_SUCCESS + VICTIM_DEAD;
+      vlogf(LOG_JESUS, "Stormy Skies Damage: %d", dam);
       return SPELL_SUCCESS;
     } else {
       switch (critFail(caster, SPELL_STORMY_SKIES)) {
@@ -224,6 +226,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
     if (caster->reconcileDamage(victim, dam, SPELL_AQUATIC_BLAST) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
+    vlogf(LOG_JESUS, "Aquatic Blast Damage: %d", dam);
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
@@ -594,6 +597,7 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
       return SPELL_SUCCESS + VICTIM_DEAD;
 
     return SPELL_SUCCESS;
+    vlogf(LOG_JESUS, "Death Wave Damage: %d", dam);
   } else {
     switch (critFail(caster, SPELL_DEATHWAVE)) {
       case CRIT_F_HITSELF:

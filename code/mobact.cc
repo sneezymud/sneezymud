@@ -4333,15 +4333,9 @@ int TMonster::defendSelf(int)
   int usecomp=1;
   TBeing *k, *t=NULL;
   followData *f;
-#ifdef JEEZ
-  followData *z, *z2;
-  int thrall = 0;
-  int random = (::number(0,3));
-  TBeing *ch=NULL;
-#endif
+
   // this is called by notFightingMove, so we have already made checks for
   // standing, awake, !fight(), etc.  Don't bother to repeat them
-
   if (!awake() || isPc() || cantHit > 0)
     return FALSE;
 
@@ -4406,6 +4400,7 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
+#ifdef NPCTHRALLUSE
     //////// enthralls
     if (!found) {
       int foundmental=0;
@@ -4496,6 +4491,7 @@ int TMonster::defendSelf(int)
       }
     }
     //////// end enthralls
+#endif
     if (!found) {
       spell = SPELL_CHEVAL;
       if (!affectedBySpell(spell) && 

@@ -998,28 +998,28 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       level = (int) (1.0 * level);
       break;
     case SPELL_ENTHRALL_SPECTRE:
-      level = (int) (0.5 * level);
-      break;
-    case SPELL_ENTHRALL_GHAST:
-      level = (int) (0.55 * level);
-      break;
-    case SPELL_ENTHRALL_GHOUL:
-      level = (int) (0.6 * level);
-      break;
-    case SPELL_ENTHRALL_DEMON:
-      level = (int) (0.65 * level);
-      break;
-    case SPELL_CREATE_WOOD_GOLEM:
-      level = (int) (0.75 * level);
-      break;
-    case SPELL_CREATE_ROCK_GOLEM:
       level = (int) (0.8 * level);
       break;
-    case SPELL_CREATE_IRON_GOLEM:
+    case SPELL_ENTHRALL_GHAST:
+      level = (int) (0.8 * level);
+      break;
+    case SPELL_ENTHRALL_GHOUL:
       level = (int) (0.85 * level);
       break;
-    case SPELL_CREATE_DIAMOND_GOLEM:
+    case SPELL_ENTHRALL_DEMON:
+      level = (int) (0.85 * level);
+      break;
+    case SPELL_CREATE_WOOD_GOLEM:
       level = (int) (0.9 * level);
+      break;
+    case SPELL_CREATE_ROCK_GOLEM:
+      level = (int) (0.95 * level);
+      break;
+    case SPELL_CREATE_IRON_GOLEM:
+      level = (int) (1.0 * level);
+      break;
+    case SPELL_CREATE_DIAMOND_GOLEM:
+      level = (int) (1.0 * level);
       break;
     default:
       forceCrash("Bad spellNumT (%d) to elementalFix", spell);

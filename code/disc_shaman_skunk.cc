@@ -129,8 +129,6 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
         break;
       case CRIT_S_KILL:
         CS(SPELL_LICH_TOUCH);
-        // I am basing this on energy drain
-        // Russ had this nasty sucker below for supah crit...i left it
         pers = dynamic_cast<TPerson *>(victim);
         if (pers && !save) {
           pers->dropLevel(pers->bestClass());
@@ -151,6 +149,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
       victim->addToMove(-vit);
     if (caster->reconcileDamage(victim, dam, SPELL_LICH_TOUCH) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
+    vlogf(LOG_JESUS, "Lich Touch damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_LICH_TOUCH)) {
@@ -282,6 +281,7 @@ int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int 
     }
     if (caster->reconcileDamage(victim, dam, SPELL_CARDIAC_STRESS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
+    vlogf(LOG_JESUS, "Coronary damgae: %d", dam);
     return SPELL_SUCCESS;
   } else {
     caster->setCharFighting(victim);
@@ -410,6 +410,7 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     }
     if (caster->reconcileDamage(victim, dam, SPELL_BLOOD_BOIL) == -1)
       return SPELL_FAIL + VICTIM_DEAD;
+    vlogf(LOG_JESUS, "Boiling Blood damage: %d", dam);
     return SPELL_FAIL;
   } else {
     switch(critFail(caster, SPELL_BLOOD_BOIL)) {
