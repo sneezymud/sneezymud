@@ -579,7 +579,7 @@ void TBeing::doPoop(void)
   }
 #endif
 
-  if(getCond(POOP) <= 0){
+  if(isPc() && getCond(POOP) <= 0){
     sendTo("You don't have to go poop right now.\n\r");
     return;
   }
