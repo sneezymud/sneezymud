@@ -1923,7 +1923,6 @@ void TBeing::doGroup(const char *argument)
       sendTo("Only the group leader may set the group name.\n\r");
       return;
     }
-    ++argument;
     ssprintf(desc->session.groupName, "%.60s<1>", argument);
 
     sprintf(buf, "I have just set the group name to %s.", argument);
