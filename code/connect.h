@@ -289,6 +289,7 @@ class sessionData
     double perc;
     byte group_share;
     bool amGroupTank;
+    string groupName;
     unsigned int hits[MAX_ATTACK_MODE_TYPE];
     unsigned int swings[MAX_ATTACK_MODE_TYPE];
     unsigned int rounds[MAX_ATTACK_MODE_TYPE];
@@ -321,6 +322,7 @@ class sessionData
       xp = 0.0;
       perc = 0.0;
       group_share = 1;
+      groupName = "A group of adventurers";
       amGroupTank = false;
       skill_success_attempts = 0;
       skill_success_pass = 0;
