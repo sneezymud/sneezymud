@@ -939,25 +939,69 @@ int TBeing::doPsidrain(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_PSIDRAIN, tString)))
     return FALSE;
+
+  // check mindflayer race
+  if(getRace() != RACE_MFLAYER && !isImmortal()){
+    sendTo("Only mindflayer psionicists can drain.\n\r");
+    return FALSE;
+  }
   
+  // check incap or mortal etc
+  if(tVictim->getPosition() > POSITION_INCAP){
+    sendTo("You can only drain incapacitated victims.\n\r");
+    return FALSE;
+  }
+
   int bKnown=getSkillValue(SKILL_PSIDRAIN);
 
   if (bSuccess(this, bKnown, SKILL_PSIDRAIN)) {
-    sendTo("owned etc\n\r");
+    int perc=::number(15,25);
+
+    // reduce amount significantly if victim is a dumb animal
+    if(tVictim->isDumbAnimal())
+      perc/=5;
+
+    // plus or minus 5 percent for level difference
+    if(tVictim->GetMaxLevel() > GetMaxLevel())
+      perc += min(5, tVictim->GetMaxLevel()-GetMaxLevel());
+    else if(tVictim->GetMaxLevel() < GetMaxLevel())
+      perc -= min(5, GetMaxLevel()-tVictim->GetMaxLevel());
+    
+    short int addhit=(int)((hitLimit()*perc)/100.0);
+    short int addmana=(int)((manaLimit()*(perc/2))/100.0);
+
+    addhit=min(addhit, tVictim->hitLimit());
+    addmana=min(addmana, tVictim->manaLimit());
+
+    addToHit(addhit);
+    addToMana(addmana);
+
+    colorAct(COLOR_SPELLS,
+	"<k>You wrap your tentacles around $N's head begin to devour $S energy.<1>",
+	TRUE, this, NULL, tVictim, TO_CHAR);
+    colorAct(COLOR_SPELLS,
+    "<k>$n wraps $s tentacles around your head and begins to devour your energy.<1>",
+	TRUE, this, NULL, tVictim, TO_VICT);
+    colorAct(COLOR_SPELLS,
+     "<k>$n wraps $s tentacles around $N's head and begins to devour $S energy.<1>",
+	TRUE, this, NULL, tVictim, TO_NOTVICT);
+
+    int rc = reconcileDamage(tVictim, 100, SKILL_PSIDRAIN);
+    addSkillLag(SKILL_PSIDRAIN, rc);
+
+    if (IS_SET_ONLY(rc, DELETE_VICT)) {
+      delete tVictim;
+      tVictim = NULL;
+      REM_DELETE(rc, DELETE_VICT);
+    }
   } else {
     psiAttackFailMsg(this, tVictim);
   }
 
-#if 0
-  addSkillLag(SKILL_PSIDRAIN, rc);
-
-  if (IS_SET_ONLY(rc, DELETE_VICT)) {
-    delete tVictim;
-    tVictim = NULL;
-    REM_DELETE(rc, DELETE_VICT);
-  }
-#endif
-
   return TRUE;
 }
+
+
+
+
 
