@@ -238,5 +238,5 @@ void TBeing::doTrophy(const char *arg)
 
 
 void TTrophy::wipe(){
-  db->query("delete from trophy where name='%s'", name.c_str());
+  db->query("delete from trophy where upper(name)=upper('%s')", getMyName().c_str());
 }
