@@ -243,6 +243,7 @@ void TBeing::deathCry()
     new_room = roomp->dir_option[door]->to_room;
     newR     = real_roomp(new_room);
     TMonster *tMons;
+    TBeing   *tPlayer;
 
     if (in_room != new_room && canGo(door)) {
       for (i = newR->getStuff(); i; i = i->nextThing) {
@@ -250,7 +251,26 @@ void TBeing::deathCry()
           tMons->UA(1);
           tMons->UM(1);
           tMons->US(4);
-        } else if (dynamic_cast<TBeing *>(i)) {
+        } else if ((tPlayer = dynamic_cast<TBeing *>(i))) {
+	  if (!ex_description || !ex_description->findExtraDesc("deathcry"))
+            if (tPlayer->hasClass(CLASS_MAGE)) {
+              sprintf(buf, "Your heart skips a beat as you hear %s's death cry.", getName());
+	    } else if (tPlayer->hasClass(CLASS_CLERIC)) {
+              sprintf(buf, "You say a silent prayer for %s as you hear their death cry.", getName());
+	    } else if (tPlayer->hasClass(CLASS_WARRIOR)) {
+              sprintf(buf, "Your hand twitches as you hear the death cry of %s.", getName());
+            } else if (tPlayer->hasClass(CLASS_THIEF)) {
+              sprintf(buf, "Your blood runs cold as %s's death cry echos in your ears.", getName());
+            } else if (tPlayer->hasClass(CLASS_SHAMAN)) {
+              sprintf(buf, "A small drop of saliva escapes the corner of your mouth as you hear the death cry of %s.", getName());
+            } else if (tPlayer->hasClass(CLASS_DEIKHAN)) {
+              sprintf(buf, "A smile, then grimace, graces your lips as you hear %s's death cry.", getName());
+            } else if (tPlayer->hasClass(CLASS_MONK)) {
+              sprintf(buf, "The remnent soul of %s runs through you as their death cry echos in your ears.", getName());
+            } else if (tPlayer->hasClass(CLASS_RANGER)) {
+              sprintf(buf, "The air around you becomes a little colder as you hear %s's death cry.", getName());
+	    }
+
           colorAct(COLOR_MOBS, buf, FALSE, dynamic_cast<TBeing *>(i), NULL, this, TO_CHAR);
         }
       }
