@@ -2837,7 +2837,7 @@ int sonicBlast(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (!ch)
     return FALSE;
 
-  act("\a\a$p <G>sends an earpiercing blast of sound at<z> $n<G>.", false, vict, o, NULL, TO_ROOM);
+  act("\a\a$p <G>sends an earpiercing blast of sound at<z> $n<G>.<z>", false, vict, o, NULL, TO_ROOM);
   act("\a\a$p <G>blasts your eardrums with an intense sound!<z>", false, vict, o, NULL, TO_CHAR);
 
   int dam = ::number(5,8);
