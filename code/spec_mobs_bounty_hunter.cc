@@ -826,6 +826,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
               if (shop_nr < shop_index.size()) {
                 sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
                 tmtarg->saveItems(buf);
+		shoplog(shop_nr, myself, dynamic_cast<TMonster *>(targ), temp_obj->getName(), 0, "repoing");
               }
 
             } else if (targ->isLinkdead()) {

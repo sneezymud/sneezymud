@@ -412,8 +412,8 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
-      shoplog(shop_nr, ch, keeper, temp1->getName(), obj_flags.cost, "producing");
       keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
+      shoplog(shop_nr, ch, keeper, temp1->getName(), -obj_flags.cost, "producing");
 
       ch->logItem(temp1, CMD_BUY);
       count++;
@@ -655,6 +655,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (shop_index[shop_nr].isProducing(this)) {
     // unlimited item, so we just get the value of the item in talens
     keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
+    shoplog(shop_nr, ch, keeper, getName(), this->obj_flags.cost, "wholesale");
     delete this;
   }
 #if NO_DAMAGED_ITEMS_SHOP
@@ -1987,7 +1988,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   TThing *tt;
   TObj *o;  
 
-  if(!shop_index[shop_nr].isOwned()){
+  if(!shop_index[shop_nr].isOwned() || !keeper){
     return;
   }
 
@@ -1999,7 +2000,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   
   TDatabase db("sneezy");
 
-  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count);
+  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action, name, cost, keeper->getMoney(), value, count);
 
   if(!strcmp(action, "buying")){
     db.query("update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);

@@ -450,7 +450,7 @@ int TShopOwned::setAccess(const char *arg)
 int TShopOwned::doLogs(const char *arg)
 {
   TDatabase db("sneezy");
-  char buf[256];
+  string buf;
 
   if(!hasAccess(SHOPACCESS_LOGS)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
@@ -464,8 +464,11 @@ int TShopOwned::doLogs(const char *arg)
   } else if(!strcmp(arg, " summaries")){
     db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
     
+    ssprintf(sb, "%s<r>%-12.12s %-10.10s %s<1>\n\r", sb.c_str(),
+	     "Person", "Action", "Total Talens");
+
     while(db.fetchRow()){
-      sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
+      ssprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
 	      db.getColumn(0), db.getColumn(1), atoi_safe(db.getColumn(2)));
       sb += buf;
     }
@@ -475,9 +478,12 @@ int TShopOwned::doLogs(const char *arg)
     sb += "\n\r";
     
     db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
+
+    ssprintf(sb, "%s<r>%-26.26s %-10.10s %s<1>\n\r", sb.c_str(),
+	     "Item", "Action" ,"Total Talens");
     
     while(db.fetchRow()){
-      sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
+      ssprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
 	      db.getColumn(0), db.getColumn(1), atoi_safe(db.getColumn(2)));
       sb += buf;
     }
@@ -488,24 +494,58 @@ int TShopOwned::doLogs(const char *arg)
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
+    ssprintf(sb, "%s<r>%-12.12s %s<1>\n\r", sb.c_str(),
+	     "Action", "Total Talens");
+
     while(db.fetchRow()){
-      sprintf(buf, "%-12.12s %8i\n\r", 
+      ssprintf(buf, "%-12.12s %8i\n\r", 
 	      db.getColumn(0), atoi_safe(db.getColumn(1)));
       sb += buf;
     }
+
+    /////////
+    sb += "\n\r";
+    int profit=0, loss=0;
+
+    ssprintf(sb, "%s<r>Balance Sheet<1>\n\r", sb.c_str());
+
+    db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
+	     shop_nr);
+    if(db.fetchRow())
+      profit=atoi_safe(db.getColumn(0));
     
+    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Profit", profit);
+
+
+    db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
+	     shop_nr);
+    if(db.fetchRow())
+      loss=atoi_safe(db.getColumn(0));
+    
+    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Gross Loss", loss);
+    
+    ssprintf(sb, "%s%-15.15s %i\n\r", sb.c_str(), "Net Income", profit+loss);
+    
+    
+    /////////
     if (ch->desc)
       ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
-    
-    
+
   } else {
-    db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
-    
+    if(*arg){
+      while (*arg && isspace(*arg))
+	arg++;
+
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, shoptalens+shopvalue desc", shop_nr, arg);      
+    } else {
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
+    }    
+
     while(db.fetchRow()){
-      sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(4))+atoi_safe(db.getColumn(5)));
+      ssprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(4))+atoi_safe(db.getColumn(5)));
       sb += buf;
       
-      sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
+      ssprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
 	      db.getColumn(0), db.getColumn(1), db.getColumn(2), atoi_safe(db.getColumn(3)));
       sb += buf;
     }
@@ -517,4 +557,5 @@ int TShopOwned::doLogs(const char *arg)
   }
   return TRUE;
 }
+
 

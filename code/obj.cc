@@ -457,7 +457,7 @@ void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     keeper->addToMoney(-cost, GOLD_SHOP);
 
 
-  shoplog(shop_nr, ch, keeper, getName(), cost, "selling");
+  shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 }
 
 void TObj::peeOnMe(const TBeing *ch)

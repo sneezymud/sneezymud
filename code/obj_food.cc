@@ -963,7 +963,7 @@ void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP_FOOD);
 
-  shoplog(shop_nr, ch, keeper, getName(), cost, "selling");
+  shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 }
 
 int TFood::chiMe(TBeing *tLunatic)

@@ -1556,6 +1556,6 @@ void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_n
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP_WEAPON);
 
-  shoplog(shop_nr, ch, keeper, getName(), cost, "selling");
+  shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 }
 
