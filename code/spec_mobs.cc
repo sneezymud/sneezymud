@@ -6308,17 +6308,16 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 
 
 
-static int divCost(TObj *obj)
+static int divCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
 {
-  const float FEE = 0.8;
-  int cost;
+  double cost=obj->obj_flags.cost;
 
-  cost = (int) (FEE * (obj->obj_flags.cost));
+  cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
 
   if(cost<0)
     cost=0;
 
-  return cost;
+  return (int) cost;
 }
 
 int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
@@ -6471,7 +6470,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
 
-      cost = divCost(valued);
+      cost = divCost(valued, ch, find_shop_nr(me->number));
 
       me->doTell(ch->getName(), fmt("It will cost %d talens to identify your %s.") % cost % fname(valued->name));
       return TRUE;
@@ -6488,7 +6487,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
-      cost = divCost(item);
+      cost = divCost(item, ch, find_shop_nr(me->number));
       if (ch->getMoney() < cost) {
         me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
         me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
