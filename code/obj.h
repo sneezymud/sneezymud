@@ -15,7 +15,7 @@
 
 extern vector<objIndexData>obj_index;
 
-extern TObj *read_object(int nr, readFileTypeT type);
+extern TObj *read_object(int nr, readFileTypeT type, bool cache=false);
 extern TObj *object_list;
 
 // weight of 1 sip/unit of drink
