@@ -104,7 +104,7 @@ class socialMessg {
     }
 };
 
-char *fread_action(FILE *fl) return rslt(NULL)
+char *fread_action(FILE *fl)
 {
   char buf[MAX_STRING_LENGTH];
 
@@ -120,8 +120,7 @@ char *fread_action(FILE *fl) return rslt(NULL)
       return NULL;
     else {
       *(buf + strlen(buf) - 1) = '\0';
-      rslt = mud_str_dup(buf);
-      return;
+      return mud_str_dup(buf);
     }
   }
 }
@@ -181,12 +180,13 @@ void bootSocialMessages(void)
 }
 
 // returns DELETE_THIS
-int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
+int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
 {
   sstring buf;
   TBeing *vict;
   TMonster *tmp = NULL;
   TThing *t, *t2, *tvict=NULL;
+  int rc;
 
   if (fight() || riding) {
     switch(cmd) {
