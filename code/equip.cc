@@ -2043,8 +2043,6 @@ int TBeing::doUnsaddle(string arg)
   TThing *saddle;
   TBeing *horse;
 
-  vlogf(LOG_PEEL, "'%s'", arg.c_str());
-
   if (arg.empty()) {
     sendTo("Syntax: unsaddle <horse>\n\r");
     return FALSE;
