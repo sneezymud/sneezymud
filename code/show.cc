@@ -1389,7 +1389,7 @@ void TBeing::doGlance(const char *argument)
       describeLimbDamage(i);
 //      describeAffects(i);
       sendTo(COLOR_MOBS, fmt("%s look%s %s.\n\r") %
-	     (i == this ? "You" : sstring(i->getName()).cap().c_str()) %
+	     (i == this ? "You" : sstring(i->getName()).cap()) %
 	     (i == this ? "" : "s") %
         DescMoves((((double) i->getMove()) / ((double) i->moveLimit()))));
 

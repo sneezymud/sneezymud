@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: response.h,v $
+// Revision 5.3  2003/12/02 23:40:03  peel
+// did some char * -> sstring conversions
+//
 // Revision 5.2  2002/01/08 18:26:40  peel
 // removed being.h from stdsneezy.h
 // fixed some header file interdependencies
@@ -67,7 +70,7 @@ class RespMemory {
     RespMemory();
 
   public:
-    RespMemory(cmdTypeT, TBeing *, const char *);
+    RespMemory(cmdTypeT, TBeing *, const sstring &);
     RespMemory(const RespMemory &);
     RespMemory & operator = (const RespMemory &);
     ~RespMemory();

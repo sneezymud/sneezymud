@@ -5778,9 +5778,9 @@ int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   return FALSE;
 }
 
-int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself, TObj *o)
 {
-  char buf[256];
+  sstring buf, arg=argument;
   TThing *t;
   TDatabase db(DB_SNEEZY);
 
@@ -5814,17 +5814,17 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
 
       if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db["weight"]))){
-
-	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
-		db["name"], o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
+	buf=fmt("Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)") %
+	  db["name"] % o->shortDescr % o->getWeight() % 
+	  (int)(o->getWeight()*100);
 
 	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
 
 	myself->doSay(buf);
 	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
-	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one! (%i talens)", 
-		o->getWeight(), (int)(o->getWeight()*2));
+	buf=fmt("Ok, I tallied your fish, weighing in at %f.  Nice one! (%i talens)") %
+	  o->getWeight() % (int)(o->getWeight()*2);
 	myself->doSay(buf);
 	ch->addToMoney((int)(o->getWeight()*2), GOLD_COMM);
       }
@@ -5850,24 +5850,25 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       arg = one_argument(arg, buf);
 
-      if(!strcmp(buf, "records")){
+      if(buf=="records"){
 	db.query("select name, type, weight from fishlargest order by weight desc");
 
 	while(db.fetchRow()){
-	  sprintf(buf, "%s caught %s weighing in at %f.",
-		  db["name"], db["type"], convertTo<float>(db["weight"]));
+	  buf=fmt("%s caught %s weighing in at %f.") %
+	    db["name"] % db["type"] % convertTo<float>(db["weight"]);
 	  myself->doSay(buf);
 	}      
       } else {
-	if(!strcmp(buf, "topten")){
+	if(buf=="topten"){
 	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
 	} else {
-	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf);
+	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf.c_str());
 	}
 	
 	while(db.fetchRow()){
-	  sprintf(buf, "%s has %f pounds of fish and %i records.",
-		  db["name"], convertTo<float>(db["weight"]), convertTo<int>(db["count"]));
+	  buf=fmt("%s has %f pounds of fish and %i records.") %
+	    db["name"] % convertTo<float>(db["weight"]) %
+	    convertTo<int>(db["count"]);
 	  myself->doSay(buf);
 	}      
       }
@@ -6343,241 +6344,6 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 }
 
 
-int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
-{
-  int num, count=0;
-  char buf2[1024], buf[1024];
-  TDatabase db(DB_SNEEZY);
-
-  if(cmd != CMD_LIST &&
-     cmd != CMD_BUY &&
-     cmd != CMD_SELL &&
-     cmd != CMD_VALUE)
-    return FALSE;
-
-  arg = one_argument(arg, buf2);
-  
-  if(cmd == CMD_LIST){
-    if(*buf2){
-      // list details
-      
-      // list their portfolio
-      if(is_abbrev(buf2, "portfolio")){
-	db.query("select o.ticker, o.shares, i.price from stockowners o, stockinfo i where owner='%s' and o.ticker=i.ticker", ch->getName());
-	
-	sprintf(buf, "%s Here are the stocks you own:", 
-		fname(ch->name).c_str());
-	myself->doTell(buf);
-
-	while(db.fetchRow()){
-	  if(convertTo<int>(db["shares"])>0){
-	    count+=(int)(convertTo<float>(db["price"])*convertTo<int>(db["shares"]));
-	    sprintf(buf, "%s You own %s shares of %s, worth %f",
-		    fname(ch->name).c_str(), db["shares"], db["ticker"],
-		    convertTo<float>(db["price"])*convertTo<int>(db["shares"]));
-	    myself->doTell(buf);
-	  }
-	}
-	sprintf(buf, "%s Your portfolio is worth %i talens right now.",
-		fname(ch->name).c_str(), count);
-	myself->doTell(buf);
-
-      } else {
-	db.query("select ticker, price from stockinfo where upper('%s')=ticker", buf2);
-	if(db.fetchRow())
-	  return FALSE;
-	
-	sprintf(buf, "%s %s - %s talens per share.",
-		fname(ch->name).c_str(), db["ticker"], db["price"]);
-
-	myself->doTell(buf);
-	//	sprintf(buf, "%s %s", fname(ch->name).c_str(), row[2]);
-	//	myself->doTell(buf);
-      }
-    } else {
-      // generic list
-      db.query("select ticker, price from stockinfo");
-    
-      sprintf(buf, "%s I charge a 10%% commission on all transactions.",
-	      fname(ch->name).c_str());
-      myself->doTell(buf);
-
-      sprintf(buf, "%s You can 'list <stock name>' to see details.",
-	      fname(ch->name).c_str());
-      myself->doTell(buf);
-
-      sprintf(buf, "%s You can 'list portfolio' to see your portfolio.",
-	      fname(ch->name).c_str());
-      myself->doTell(buf);      
-
-      sprintf(buf, "%s Stock graphs can be seen at http://sneezy.stanford.edu/peel/stocks",
-	      fname(ch->name).c_str());
-      myself->doTell(buf);      
-
-
-      while(db.fetchRow()){
-	sprintf(buf, "%s %s - %s talens per share.", 
-		fname(ch->name).c_str(), db["ticker"], db["price"]);
-	myself->doTell(buf);
-      }
-    }
-    return TRUE;
-  } else if(cmd == CMD_BUY){
-    if(!ch->isImmortal()){
-      myself->doSay("Buying is disabled right now.");
-      return TRUE;
-    }
-    
-
-    char tmpname[80] = "\0";
-    char *bptr=buf2;
-    
-    sscanf(bptr, "%d*%s", &num, tmpname);
-    if (tmpname[0] == '\0')
-      return FALSE;
-    if (num < 1)
-      num=0;
-
-    while (*bptr != '*')
-      bptr++;
-    
-    bptr++;
-
-    if(num)
-      strcpy(buf2, bptr);
-    else 
-      return FALSE;
-
-    db.query("select ticker, price, talens from stockinfo where upper('%s')=ticker", buf2);
-
-    if(!db.fetchRow())
-      return FALSE;
-
-    // row[0] ticker
-    // row[1] price
-    // num amount to buy
-
-    float modprice=convertTo<float>(db["price"])*(float)num;
-    modprice*=1.01;
-
-    if(ch->getMoney() < modprice){
-      sprintf(buf, "%s You can't afford that.", fname(ch->name).c_str());
-      myself->doTell(buf);
-      return TRUE;
-    }
-
-    if(convertTo<float>(db["price"]) < 1){
-      sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
-      myself->doTell(buf);
-      return TRUE;
-    }
-    
-    ch->addToMoney(-modprice, GOLD_COMM);
-
-    db.query("update stockinfo set talens=talens+%i", (int)(modprice/1.01));
-
-    db.query("select 1 from stockowners where owner='%s' and ticker='%s'",
-	     ch->getName(), db["ticker"]);
-    if(!db.fetchRow()){
-      db.query("insert into stockowners values ('%s', '%s', %i)", ch->getName(), db["ticker"], num);
-    } else {
-      db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db["ticker"]);
-    }
-
-    sprintf(buf, "%s Ok, you just purchased %i shares of %s, for a price of %f.",
-	    fname(ch->name).c_str(), num, db["ticker"], modprice);
-    myself->doTell(buf);
-
-    return TRUE;
-  } else if(cmd == CMD_SELL){
-    char tmpname[80] = "\0";
-    char *bptr=buf2;
-    
-    sscanf(bptr, "%d*%s", &num, tmpname);
-    if (tmpname[0] == '\0')
-      return FALSE;
-    if (num < 1)
-      num=0;
-
-    while (*bptr != '*')
-      bptr++;
-    
-    bptr++;
-
-    if(num)
-      strcpy(buf2, bptr);
-    else 
-      return FALSE;
-
-    db.query("select i.ticker, i.price, o.shares from stockinfo i, stockowners o where o.owner='%s' and i.ticker='%s' and i.ticker=o.ticker", ch->getName(), buf2);
-
-    if(!db.fetchRow())
-      return FALSE;
-    
-    if(convertTo<int>(db["shares"]) < num){
-      sprintf(buf, "%s You don't own enough shares of that stock.",
-	      fname(ch->name).c_str());
-      myself->doTell(buf);
-      return TRUE;
-    }
-
-    ch->addToMoney(((float)num * convertTo<float>(db["price"])), GOLD_COMM);
-
-    db.query("update stockinfo set talens=talens-%i", (int)(((float)num * convertTo<float>(db["price"]))));
-    db.query("update stockowners set shares=shares-%i where owner='%s' and ticker='%s'", num, ch->getName(), db["ticker"]);
-
-    sprintf(buf, "%s Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
-	    fname(ch->name).c_str(), num, db["ticker"], (float)num * convertTo<float>(db["price"]),
-	    (float)num * convertTo<float>(db["price"]) * 0.01);
-    myself->doTell(buf);
-    
-    
-    
-    return TRUE;
-  } else if(cmd==CMD_VALUE){
-    char tmpname[80] = "\0";
-    char *bptr=buf2;
-    
-    sscanf(bptr, "%d*%s", &num, tmpname);
-    if (tmpname[0] == '\0')
-      return FALSE;
-    if (num < 1)
-      num=0;
-
-    while (*bptr != '*')
-      bptr++;
-    
-    bptr++;
-
-    if(num)
-      strcpy(buf2, bptr);
-    else 
-      return FALSE;
-
-    db.query("select ticker, price, talens from stockinfo where upper('%s')=ticker", buf2);
-
-    if(!db.fetchRow())
-      return FALSE;
-
-    if(convertTo<float>(db["price"]) < 1){
-      sprintf(buf, "%s Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
-      myself->doTell(buf);
-      return TRUE;
-    }
-
-    float modprice=convertTo<float>(db["price"]);
-    modprice*=1.01;
-
-    sprintf(buf, "%s %i shares of %s would cost %i talens.",
-	    fname(ch->name).c_str(), num, db["ticker"], (int)((float)num*modprice));
-
-    myself->doTell(buf);
-
-    return TRUE;
-  }
-
-  return FALSE;
-}
 
 static int divCost(TObj *obj)
 {
@@ -7529,91 +7295,91 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 
     switch(tdc->getDrinkType()){
       case LIQ_BEER:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18600, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("I could really use an ale to go with this beer!");
 	break;
       case LIQ_ALE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18601, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("This ale is delicious, but I'd like a dark ale!");
 	break;
       case LIQ_DARKALE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18602, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("I love ales and beers, but I think I'd like to try some white wine.");
 	break;
       case LIQ_WINE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18603, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Ahh good, but now I'd care to sample some red wine.");
 	break;
       case LIQ_RED_WINE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18604, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Wine is great for taste, but I'd like to move on to something harder now, say, whiskey!");
 	break;
       case LIQ_WHISKY:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18605, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("That hits the spot.  Let's kick it up a notch with some firebreather!");
 	break;
       case LIQ_FIREBRT:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18606, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("This stuff tastes foul.  Now vodka grain alcohol, there's a drink that goes down easy.");
 	break;
       case LIQ_VODKA:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18607, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("I need to cleanse my palate with some mead.");
 	break;
       case LIQ_MEAD:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18608, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Ok, let's get back to the hard stuff.  How about some nice rum?");
 	break;
       case LIQ_RUM:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18609, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Ahh, reminds me of my bucaneering days.  We used to loot brandy from rich manors.");
 	break;
       case LIQ_BRANDY:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18610, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Whew, this is quite a drinking binge.  Time to celebrate with some champagne!");
 	break;
       case LIQ_CHAMPAGNE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18611, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
 	me->doSay("Not bad, not bad, but I need some coffee now to stay awake.");
 	break;
       case LIQ_COFFEE:
-	me->doEmote(buf.c_str());
+	me->doEmote(buf);
 	obj=read_object(18612, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
@@ -7948,7 +7714,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Faction Registrar", factionRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
   {FALSE, "Scared Kid", scaredKid},               // 160
-  {FALSE, "stock broker", stockBroker},
+  {TRUE, "BOGUS", bogus_mob_proc},     
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
   {FALSE,"Trainer: healing abilities", CDGenericTrainer},

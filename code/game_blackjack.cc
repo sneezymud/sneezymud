@@ -64,7 +64,7 @@ int BjGame::exitGame(const TBeing *ch)
   int inx, i;
 
   if ((inx = index(ch)) < 0) {
-    forceCrash("%s left a table he was not at!", ch->name);
+    vlogf(LOG_BUG, "%s left a table he was not at!", ch->name);
     return FALSE;
   }
   *name = '\0';

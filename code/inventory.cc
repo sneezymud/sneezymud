@@ -774,10 +774,10 @@ static int genericGiveDrop(TBeing *ch, TObj *obj)
 }
 
 // returns DELETE_THIS if this got toasted (PC only)
-int TBeing::doGive(const char *argument, giveTypeT flags)
+int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 {
-  char obj_name[80], vict_name[80];
-  char arg[80], newarg[100], buf[256];
+  sstring obj_name, vict_name, arg, buf, argument=oarg;
+  char newarg[100];
   int amount, num, p, rc = 0;
   TBeing *vict = NULL;
   TObj *obj = NULL;
@@ -801,10 +801,10 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
     }
     argument = one_argument(argument, vict_name);
 
-    if (*vict_name && !strcasecmp(vict_name,"to"))
+    if (!vict_name.empty() && vict_name.lower()=="to")
       argument = one_argument(argument, vict_name);
 
-    if (!*vict_name) {
+    if (vict_name.empty()){
       sendTo("To whom?\n\r");
       return FALSE;
     }
@@ -839,8 +839,8 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
       return FALSE;
     }
     sendTo(COLOR_MOBS, fmt("You give %d talen%s to %s.\n\r") % amount %             ((amount == 1) ? "" : "s") % pers(vict));
-    sprintf(buf, "$n gives you %d talen%s.\n\r", amount,
-            (amount == 1) ? "" : "s");
+    buf=fmt("$n gives you %d talen%s.\n\r") % 
+      amount % ((amount == 1) ? "" : "s");
     if(flags != GIVE_FLAG_SILENT_VICT){
       act(buf, TRUE, this, NULL, vict, TO_VICT);
       act("$n gives some money to $N.", 1, this, 0, vict, TO_NOTVICT);
@@ -869,7 +869,8 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
       }
       
       // check reponses
-      sprintf(buf, "%d", amount);
+      buf=fmt("%i") % amount;
+
       rc = dynamic_cast<TMonster *>(vict)->checkResponses(this, NULL, buf, CMD_GIVE);
       TMonster *tMob;
 
@@ -927,7 +928,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
     }
 
     if (vict) {
-      rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg, (TObj *) amount);
+      rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg.c_str(), (TObj *) amount);
 
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
@@ -941,16 +942,16 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
   } else {
     argument = one_argument(argument, vict_name);
 
-    if (!*obj_name || !*vict_name) {
+    if (obj_name.empty() || vict_name.empty()){
       sendTo("Give what to whom?\n\r");
       return FALSE;
     }
-    if (getall(obj_name, newarg)) {
+    if (getall(obj_name.c_str(), newarg)) {
       num = -1;
-      strcpy(obj_name, newarg);
-    } else if ((p = getabunch(obj_name, newarg))) {
+      obj_name=newarg;
+    } else if ((p = getabunch(obj_name.c_str(), newarg))) {
       num = p;
-      strcpy(obj_name, newarg);
+      obj_name=newarg;
     } else
       num = 1;
 
@@ -1148,7 +1149,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           return rc;
       }
 
-      rc = vict->checkSpec(this, CMD_MOB_GIVEN_ITEM, arg, obj);
+      rc = vict->checkSpec(this, CMD_MOB_GIVEN_ITEM, arg.c_str(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
         vict = NULL;
@@ -1723,7 +1724,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
         // quit calls this with ok=true before deleting
         // idle-timeout moves player to dump, and does ok=true call
         if (!ok)
-          forceCrash("%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!", getName());
+          vlogf(LOG_BUG, "%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!", getName());
 
         if (actually_nuke) {
           // this is mostly a handler for idle-time-out

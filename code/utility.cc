@@ -776,7 +776,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
     if (parent) 
       r = parent->roomp;
     else {
-      forceCrash("Thing (%s) has no rp pointer in TBeing::canSeeMe", name);
+      vlogf(LOG_BUG, "Thing (%s) has no rp pointer in TBeing::canSeeMe", name);
       return FALSE;
     }
   }
@@ -1122,7 +1122,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 {
   // sanity check
   if (!shortDescr) {
-    forceCrash("!shortDescr for obj in canGetMe");
+    vlogf(LOG_BUG, "!shortDescr for obj in canGetMe");
     return false;
   }
 
@@ -1207,7 +1207,7 @@ bool TThing::canGetMe(const TBeing *, silentTypeT) const
 const sstring TBeing::movementType(bool enter) const
 {
   if (!roomp) {
-    forceCrash("NULL roomp in MovementType()!");
+    vlogf(LOG_BUG, "NULL roomp in MovementType()!");
     return "";
   }
   if (getPosition() == POSITION_CRAWLING)

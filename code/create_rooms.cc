@@ -170,7 +170,7 @@ static void update_room_menu(const TBeing *ch)
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
                ch->cyan() % ch->norm() % TerrainInfo[ch->roomp->getSectorType()]->name %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() % tStString.c_str() %
+               ch->cyan() % ch->norm() % ch->purple() % ch->norm() % tStString %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() % ch->roomp->getMoblim() %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() % ch->roomp->getRoomHeight() %

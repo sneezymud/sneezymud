@@ -442,7 +442,7 @@ class TMonster : public TBeing {
     int charmeeStuff();
     int protectionStuff();
     int randomHunt();
-    int modifiedDoCommand(cmdTypeT, const char *, TBeing *, const resp *);
+    int modifiedDoCommand(cmdTypeT, const sstring &, TBeing *, const resp *);
     sstring parseResponse(TBeing *, const char *);
     int remHated(const TBeing *, const char *);
     int remFeared(const TBeing *, const char *);

@@ -446,10 +446,10 @@ void TPerson::doPowers(const sstring &argument) const
   tStPower=argument.word(1);
 
   if (!tStName.empty()) {
-    ch = get_pc_world(this, tStName.c_str(), EXACT_YES);
+    ch = get_pc_world(this, tStName, EXACT_YES);
 
     if (!ch)
-      ch = get_pc_world(this, tStName.c_str(), EXACT_NO);
+      ch = get_pc_world(this, tStName, EXACT_NO);
 
     if (!ch) {
       sstring tStPath;

@@ -9,39 +9,10 @@
 #include "stdsneezy.h"
 #include "format.h"
 
-void comify(char *tString)
-{
-  char tOldString[256];
-  int  strCount,
-       charIndex = 0;
-
-  sprintf(tOldString, "%.0f", convertTo<float>(tString));
-  strCount = strlen(tOldString);
-  strcpy(tOldString, tString);
-
-  for (; charIndex < strCount; charIndex++) {
-    // put commas every 3rd char EXCEPT if next char is '-'
-    // that is, want "123456" to become "123,456" 
-    // but don't want "-123" to become "-,123"
-    if (!((strCount - charIndex) % 3) && charIndex != 0 &&
-        !(charIndex == 1 && tOldString[0] == '-'))
-      *tString++ = ',';
-
-    *tString++ = tOldString[charIndex];
-  }
-
-  for (; tOldString[charIndex]; charIndex++)
-    *tString++ = tOldString[charIndex];
-
-  *tString = '\0';
-}
-
-
 void TBeing::doScore()
 {
   struct time_info_data playing_time;
   sstring Buf, tString;
-  char tbuf[256];
 
   sendTo(fmt("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %	 red() % getHit() % norm() %
 	 green() % hitLimit() % norm() %
@@ -61,20 +32,15 @@ void TBeing::doScore()
 
   sendTo(fmt("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double)         moveLimit()))));
 
-  tString = displayExp();
-  strcpy(tbuf, tString.c_str());
-  comify(tbuf);
-  tString=tbuf;
+  tString = displayExp().comify();
 
   sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") %         cyan() % tString % norm() %
          purple() % getMoney() % norm() %
          purple() % getBank() % norm());
 
   if (desc) {
-    tString = fmt("%.2f") % desc->session.xp;
-    strcpy(tbuf, tString.c_str());
-    comify(tbuf);
-    tString=tbuf;
+    tString = (fmt("%.2f") % desc->session.xp).comify();
+
     sendTo(fmt("You have earned %s%s%s exp this session.\n\r") %         cyan() % tString % norm());
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
@@ -116,19 +82,18 @@ void TBeing::doScore()
     sendTo("          This ranks you as:\n\r");
   }
 
+  char tbuf[256];
   parseTitle(tbuf, desc);
   Buf = tbuf;
   Buf += "\n\r";
-  // Done this way just in case the player uses a % in there title.
+  // Done this way just in case the player uses a % in their title.
   sendTo(COLOR_BASIC, fmt("%s") % Buf);
 
   for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
     if (getLevel(i) && getLevel(i) < MAX_MORT) {
       double need = getExpClassLevel(i, getLevel(i) + 1) - getExp();
-      tString = fmt("%.2f") % need;
-      strcpy(tbuf, tString.c_str());
-      comify(tbuf);
-      tString=tbuf;
+      tString = (fmt("%.2f") % need).comify();
+
       if (allClassesSame) {
         sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %             purple() % tString % norm() % purple() % (getLevel(i)+1) %
 	       getProfName() % norm());
@@ -259,7 +224,7 @@ void TBeing::doScore()
         } else if (tbr) {
 	  Buf = fmt("You are here, also riding on %s's %s%s.\n\r") %
 	    pers(tbr->horseMaster()) %
-	    persfname(tbr).c_str() %
+	    persfname(tbr) %
 	    (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
 
           sendTo(COLOR_MOBS, Buf);

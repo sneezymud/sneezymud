@@ -1411,7 +1411,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             str += buf;
           }
         } else {
-          forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
+          vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
           ch->affectRemove(aff);
         }
         break;
@@ -1759,7 +1759,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
       case SKILL_POISON_ARROW:
-        forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
         ch->affectRemove(aff);
         break;
     }
@@ -1852,7 +1852,7 @@ void TBeing::doTime(const char *argument)
   day = time_info.day + 1;        // day in [1..28] 
 
   sendTo(fmt("The %s day of %s, Year %d P.S.\n\r") % 
-           numberAsString(day).c_str() %
+           numberAsString(day) %
            month_name[time_info.month] % time_info.year);
 
   tmp2 = sunTime(SUN_TIME_RISE);
@@ -2249,11 +2249,9 @@ void TBeing::doUsers(const sstring &)
 
 void TPerson::doUsers(const sstring &argument)
 {
-  char line[200], buf2[100], buf3[100], buf4[10];
+  sstring line, buf2, buf3, buf4, sb, arg1, arg2;
   Descriptor *d;
   int count = 0;
-  sstring sb;
-  sstring arg1, arg2;
   TBeing *k = NULL;
 
   if (powerCheck(POWER_USERS))
@@ -2264,8 +2262,6 @@ void TPerson::doUsers(const sstring &argument)
   arg1=argument.word(0);
   arg2=argument.word(1);
 
-  *line = '\0';
-
   if(arg1.empty()){
     sb += USERS_HEADER;
 
@@ -2275,35 +2271,38 @@ void TPerson::doUsers(const sstring &argument)
           continue;
 
         if (d->original)
-          sprintf(line, "%s%-16.16s%s: ",purple(), d->original->name, norm());
+          line=fmt("%s%-16.16s%s: ") % purple() % d->original->name % norm();
         else
-          sprintf(line, "%s%-16.16s%s: ",purple(), d->character->getName(), norm());
+          line=fmt("%s%-16.16s%s: ") % purple() % d->character->getName() %
+	    norm();
       } else
-        strcpy(line, "UNDEFINED       : ");
+        line="UNDEFINED       : ";
 
       // don't let newbie gods blab who imm's mortals are
       if (d->account && IS_SET(d->account->flags, ACCOUNT_IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-        sprintf(line + strlen(line), "*** Information Concealed ***\n\r");
+        line += "*** Information Concealed ***\n\r";
       } else {
 	TDatabase db(DB_SNEEZY);
 
 	db.query("select pingtime from pings where host='%s'", d->host);
 
 	if(db.fetchRow()){
-	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), db["pingtime"]);
+	  buf2=fmt("[%s](%s)") % (d->host ? d->host : "????") % db["pingtime"];
 	} else {
-	  sprintf(buf2, "[%s](???)", (d->host ? d->host : "????"));
+	  buf2=fmt("[%s](???)") % (d->host ? d->host : "????");
 	}
 
-        sprintf(buf3, "[%s]", ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing"));
-        sprintf(buf4, "[%s]", (d->account && d->account->name) ? d->account->name : "UNDEFINED");
-        sprintf(line + strlen(line), "%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r", red(), buf2, norm(), green(), buf3, norm(), cyan(), buf4, norm());
+        buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
+        buf4=fmt("[%s]") % ((d->account && d->account->name) ? d->account->name : "UNDEFINED");
+        line += fmt("%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r") %
+	  red() % buf2 % norm() % green() % buf3 %
+	  norm() % cyan() % buf4 % norm();
       }
       sb += line;
       count++;
     }
-    sprintf(buf2, "\n\rTotal Descriptors : %d\n\r", count);
+    buf2=fmt("\n\rTotal Descriptors : %d\n\r") % count;
     sb += buf2;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -2322,21 +2321,21 @@ void TPerson::doUsers(const sstring &argument)
               continue;
 
             if (d->original)
-              sprintf(line, "%-16.16s: ", d->original->name);
+              line=fmt("%-16.16s: ") % d->original->name;
             else
-              sprintf(line, "%-16.16s: ", d->character->getName());
+              line=fmt("%-16.16s: ") % d->character->getName();
           } else
-            strcpy(line, "UNDEFINED       : ");
+            line="UNDEFINED       : ";
 
           // don't let newbie gods blab who imm's mortals are
           if (d->account && IS_SET(d->account->flags, ACCOUNT_IMMORTAL) && 
                 !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-            sprintf(line + strlen(line), "*** Information Concealed ***\n\r");
+            line += "*** Information Concealed ***\n\r";
           } else {
-            sprintf(buf2, "[%s]", (d->host ? d->host : "????"));
-            sprintf(buf3, "[%s]", ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing"));
-            sprintf(buf4, "[%s]", (d->account && d->account->name) ? d->account->name : "UNDEFINED");
-            sprintf(line + strlen(line), "%-34.34s %-10.10s %s\n\r", buf2, buf3, buf4);
+            buf2=fmt("[%s]") % (d->host ? d->host : "????");
+            buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
+            buf4=fmt("[%s]") % ((d->account && d->account->name) ? d->account->name : "UNDEFINED");
+            line += fmt("%-34.34s %-10.10s %s\n\r") % buf2 % buf3 % buf4;
           }
           sendTo(line);
           count++;
@@ -2347,17 +2346,17 @@ void TPerson::doUsers(const sstring &argument)
       sendTo("No players online from that site.\n\r");
       return;
     }
-  } else if ((k = get_pc_world(this, arg1.c_str(), EXACT_YES)) ||
-             (k = get_pc_world(this, arg1.c_str(), EXACT_NO))) {
+  } else if ((k = get_pc_world(this, arg1, EXACT_YES)) ||
+             (k = get_pc_world(this, arg1, EXACT_NO))) {
     if (k->desc) {
       // don't let newbie gods blab who imm's mortals are
       if (k->desc->account && IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
       } else {
-        sprintf(buf2, "[%s]", (k->desc->host ? k->desc->host : "????"));
-        sprintf(buf3, "[%s]", ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing"));
-        sprintf(buf4, "[%s]", (k->desc->account->name));
+        buf2=fmt("[%s]") % (k->desc->host ? k->desc->host : "????");
+        buf3=fmt("[%s]") % ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing");
+        buf4=fmt("[%s]") % (k->desc->account->name);
         sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r") % k->getName() % buf2 % buf3 % buf4);
       }
       return;
@@ -2936,7 +2935,6 @@ void TBeing::doWhere(const char *argument)
   }
 }
 
-extern void comify(char *);
 
 void TBeing::doLevels(const char *argument)
 {
@@ -3016,7 +3014,7 @@ void TBeing::doLevels(const char *argument)
 
     if (i <= MAX_MORT) {
       sprintf(tString, "%.0f", getExpClassLevel(Class, i));
-      comify(tString);
+      strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
             ((i > cLvl) ? orange() : green()), tString, norm(),
@@ -3025,7 +3023,7 @@ void TBeing::doLevels(const char *argument)
     }
     if (j <= MAX_MORT) {
       sprintf(tString, "%.0f", getExpClassLevel(Class, j));
-      comify(tString);
+      strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
             ((j > cLvl) ? orange() : green()), tString, norm(),
@@ -3034,7 +3032,7 @@ void TBeing::doLevels(const char *argument)
     }
     if (k <= MAX_MORT) {
       sprintf(tString, "%.0f", getExpClassLevel(Class, k));
-      comify(tString);
+      strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
             ((k > cLvl) ? orange() : green()), tString, norm(),
@@ -3043,7 +3041,7 @@ void TBeing::doLevels(const char *argument)
     }
     if (m <= MAX_MORT) {
       sprintf(tString, "%.0f", getExpClassLevel(Class, m));
-      comify(tString);
+      strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),
             ((m > cLvl) ? orange() : green()), tString, norm(),
@@ -3064,8 +3062,7 @@ void TBeing::doWorld()
   time_t ct, ot, tt;
   char *tmstr, *otmstr;
   int i;
-  sstring str;
-  char buf[256];
+  sstring str, buf;
 
   if (!desc)
     return;
@@ -3075,21 +3072,21 @@ void TBeing::doWorld()
 
   otmstr = asctime(localtime(&tt));
   *(otmstr + strlen(otmstr) - 1) = '\0';
-  sprintf(buf, "%sStart time was:                      %s%s\n\r", 
-        blue(),otmstr, norm());
+  buf = fmt("%sStart time was:                      %s%s\n\r") %
+    blue() % otmstr % norm();
   str += buf;
 
   ct = time(0) + 3600 * desc->account->time_adjust;
 
   tmstr = asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  sprintf(buf, "%sCurrent time is:                     %s%s\n\r", 
-         blue(), tmstr, norm());
+  buf=fmt("%sCurrent time is:                     %s%s\n\r") %
+         blue() % tmstr % norm();
   str += buf;
 
   time_t upt = ct - tt;
-  sprintf(buf, "%sUptime is:                           %s%s\n\r", 
-         blue(), secsToString(upt).c_str(), norm());
+  buf=fmt("%sUptime is:                           %s%s\n\r") %
+    blue() % secsToString(upt) % norm();
   str += buf;
 
   long int total=0, count=0;
@@ -3099,12 +3096,9 @@ void TBeing::doWorld()
       count++;
     }
   }
-  sprintf(buf, "%sMachine Lag: Avg/Cur/High/Low        %ld/%ld/%ld/%ld%s\n\r",
-	  blue(),
-	  (count ? total/count : 0),
-	  lag_info.current,
-	  lag_info.high,
-	  lag_info.low, norm());
+  buf=fmt("%sMachine Lag: Avg/Cur/High/Low        %ld/%ld/%ld/%ld%s\n\r") %
+    blue() % (count ? total/count : 0) % lag_info.current %
+    lag_info.high % lag_info.low % norm();
   str += buf;
 
   TDatabase db(DB_SNEEZY);
@@ -3112,55 +3106,45 @@ void TBeing::doWorld()
   db.query("select pingtime from pings where host='%s'", desc->host);
 
   if(db.fetchRow()){
-    sprintf(buf, "%sNetwork Lag: Yours/Avg/High/Low      %s",
-	    blue(), db["pingtime"]);
+    buf=fmt("%sNetwork Lag: Yours/Avg/High/Low      %s") %
+      blue() % db["pingtime"];
     str += buf;
 
     db.query("select avg(pingtime) as avg, max(pingtime) as max, min(pingtime) as min from pings");
 
     if(db.fetchRow()){
-      sprintf(buf, "/%s/%s/%s%s\n\r", db["avg"],db["max"], 
-	      db["min"], norm());
+      buf=fmt("/%s/%s/%s%s\n\r") % db["avg"] % db["max"] %
+	db["min"] % norm();
       str += buf;
     } else {
-      sprintf(buf, "/???/???/???%s\n\r", norm());
+      buf=fmt("/???/???/???%s\n\r") % norm();
       str += buf;
     }
   }
 
 
-  sprintf(buf, "Total number of rooms in world:               %ld\n\r", 
-        roomCount);
-  str += buf;
-  sprintf(buf, "Total number of zones in world:               %d\n\r", 
-        zone_table.size());
-  str += buf;
-  sprintf(buf, "Total number of distinct objects in world:%s    %d%s\n\r",
-        green(), obj_index.size(), norm());
-  str += buf;
-  sprintf(buf, "Total number of objects in game:%s              %ld%s\n\r",
-        green(), objCount, norm());
-  str += buf;
-  sprintf(buf, "Total number of registered accounts:%s          %d%s\n\r", 
-         blue(), accStat.account_number, norm());
-  str += buf;
-  sprintf(buf, "Total number of registered players:%s           %d%s\n\r", 
-         blue(), accStat.player_count, norm());
-  str += buf;
-
+  str += fmt("Total number of rooms in world:               %ld\n\r") %
+    roomCount;
+  str += fmt("Total number of zones in world:               %d\n\r") %
+    zone_table.size();
+  str += fmt("Total number of distinct objects in world:%s    %d%s\n\r") %
+    green() % obj_index.size() % norm();
+  str += fmt("Total number of objects in game:%s              %ld%s\n\r") %
+        green() % objCount % norm();
+  str += fmt("Total number of registered accounts:%s          %d%s\n\r") %
+    blue() % accStat.account_number % norm();
+  str += fmt("Total number of registered players:%s           %d%s\n\r") % 
+    blue() % accStat.player_count % norm();
+  
   if (hasWizPower(POWER_WIZARD)) {
-    sprintf(buf, "Total number of 7-day active accounts:%s        %d%s\n\r", 
-           blue(), accStat.active_account7, norm());
-    str += buf;
-    sprintf(buf, "Total number of 7-day active players:%s         %d%s\n\r", 
-           blue(), accStat.active_player7, norm());
-    str += buf;
-    sprintf(buf, "Total number of 30-day active accounts:%s       %d%s\n\r", 
-           blue(), accStat.active_account30, norm());
-    str += buf;
-    sprintf(buf, "Total number of 30-day active players:%s        %d%s\n\r", 
-           blue(), accStat.active_player30, norm());
-    str += buf;
+    str += fmt("Total number of 7-day active accounts:%s        %d%s\n\r") %
+      blue() % accStat.active_account7 % norm();
+    str += fmt("Total number of 7-day active players:%s         %d%s\n\r") %
+      blue() % accStat.active_player7 % norm();
+    str += fmt("Total number of 30-day active accounts:%s       %d%s\n\r") %
+      blue() % accStat.active_account30 % norm();
+    str += fmt("Total number of 30-day active players:%s        %d%s\n\r") %
+      blue() % accStat.active_player30 % norm();
   }
 
   char timebuf[256];
@@ -3168,12 +3152,11 @@ void TBeing::doWorld()
   strcpy(timebuf, ctime(&stats.first_login));
   timebuf[strlen(timebuf) - 1] = '\0';
   strcat(timebuf, ":");
-  sprintf(buf, "Logins since %-32.32s %s%ld  (%ld per day)%s\n\r",
-     timebuf,  blue(), stats.logins, 
-     (long) ((double) stats.logins * SECS_PER_REAL_DAY / (time(0) - stats.first_login)),
-     norm());
+  buf=fmt("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r") %
+    timebuf %  blue() % stats.logins %
+    (long) ((double) stats.logins * SECS_PER_REAL_DAY / (time(0) - stats.first_login)) %
+     norm();
   str += buf;
-
   
   int activemobcount=0;
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
@@ -3186,8 +3169,8 @@ void TBeing::doWorld()
     }
   }
 
-  sprintf(buf, "Total number of distinct mobiles in world:%s    %d%s\n\r",
-	  red(), activemobcount, norm());
+  buf=fmt("Total number of distinct mobiles in world:%s    %d%s\n\r") %
+	  red() % activemobcount % norm();
   str += buf;
 
   int unkmobcount=0;
@@ -3197,63 +3180,63 @@ void TBeing::doWorld()
   if(db.fetchRow())
     unkmobcount=convertTo<int>(db["count"]);
 
-  sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
-	  red(), 100-(int)(((float)unkmobcount/(float)activemobcount)*100), 
-	  activemobcount-unkmobcount,
-	  norm());
+  buf=fmt("Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r") %
+    red() % (100-(int)(((float)unkmobcount/(float)activemobcount)*100)) % 
+    (activemobcount-unkmobcount) %
+    norm();
   str += buf;
 
 
   if (GetMaxLevel() >= GOD_LEVEL1) {
-    sprintf(buf, "%sDistinct Mobs by level:%s\n\r",
-         blue(), norm());
+    buf=fmt("%sDistinct Mobs by level:%s\n\r") %
+         blue() % norm();
     str += buf;
-    sprintf(buf, "%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r", norm(),
-        purple(), stats.mobs_1_5, norm(),
-        purple(), stats.mobs_6_10, norm(),
-        purple(), stats.mobs_11_15, norm(),
-        purple(), stats.mobs_16_20, norm(),
-        purple(), stats.mobs_21_25, norm(),
-        purple(), stats.mobs_26_30, norm(),
-        norm());
+    buf=fmt("%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r") % norm() %
+        purple() % stats.mobs_1_5 % norm() %
+        purple() % stats.mobs_6_10 % norm() %
+        purple() % stats.mobs_11_15 % norm() %
+        purple() % stats.mobs_16_20 % norm() %
+        purple() % stats.mobs_21_25 % norm() %
+        purple() % stats.mobs_26_30 % norm() %
+        norm();
     str += buf;
-    sprintf(buf, "%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r", norm(),
-        purple(), stats.mobs_31_40, norm(),
-        purple(), stats.mobs_41_50, norm(),
-        purple(), stats.mobs_51_60, norm(),
-        purple(), stats.mobs_61_70, norm(),
-        purple(), stats.mobs_71_100, norm(),
-        purple(), stats.mobs_101_127, norm(),
-        norm());
+    buf=fmt("%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r") % norm() %
+        purple() % stats.mobs_31_40 % norm() %
+        purple() % stats.mobs_41_50 % norm() %
+        purple() % stats.mobs_51_60 % norm() %
+        purple() % stats.mobs_61_70 % norm() %
+        purple() % stats.mobs_71_100 % norm() %
+        purple() % stats.mobs_101_127 % norm() %
+        norm();
     str += buf;
   }
-  sprintf(buf, "Total number of monsters in game:%s             %ld%s\n\r",
-        red(), mobCount, norm());
+  buf=fmt("Total number of monsters in game:%s             %ld%s\n\r") %
+        red() % mobCount % norm();
   str += buf;
 
-  sprintf(buf, "%sActual Mobs by level:%s\n\r",
-        purple(), norm());
+  buf=fmt("%sActual Mobs by level:%s\n\r") %
+        purple() % norm();
   str += buf;
 
-  sprintf(buf, "%sL  1-  5  [%s%4u%s]  L  6- 10  [%s%4u%s]  L 11- 15  [%s%4u%s]  L 16- 20  [%s%4u%s]\n\r", norm(),
-         purple(), stats.act_1_5, norm(),
-         purple(), stats.act_6_10, norm(),
-         purple(), stats.act_11_15, norm(),
-         purple(), stats.act_16_20, norm());
+  buf=fmt("%sL  1-  5  [%s%4u%s]  L  6- 10  [%s%4u%s]  L 11- 15  [%s%4u%s]  L 16- 20  [%s%4u%s]\n\r") % norm() %
+         purple() % stats.act_1_5 % norm() %
+         purple() % stats.act_6_10 % norm() %
+         purple() % stats.act_11_15 % norm() %
+         purple() % stats.act_16_20 % norm();
   str += buf;
 
-  sprintf(buf, "%sL 21- 25  [%s%4u%s]  L 26- 30  [%s%4u%s]  L 31- 40  [%s%4u%s]  L 41- 50  [%s%4u%s]\n\r", norm(),
-         purple(), stats.act_21_25, norm(),
-         purple(), stats.act_26_30, norm(),
-         purple(), stats.act_31_40, norm(),
-         purple(), stats.act_41_50, norm());
+  buf=fmt("%sL 21- 25  [%s%4u%s]  L 26- 30  [%s%4u%s]  L 31- 40  [%s%4u%s]  L 41- 50  [%s%4u%s]\n\r") % norm() %
+         purple() % stats.act_21_25 % norm() %
+         purple() % stats.act_26_30 % norm() %
+         purple() % stats.act_31_40 % norm() %
+         purple() % stats.act_41_50 % norm();
   str += buf;
 
-  sprintf(buf, "%sL 51- 60  [%s%4u%s]  L 61- 70  [%s%4u%s]  L 71-100  [%s%4u%s]  L101-127  [%s%4u%s]\n\r", norm(),
-         purple(), stats.act_51_60, norm(),
-         purple(), stats.act_61_70, norm(),
-         purple(), stats.act_71_100, norm(),
-         purple(), stats.act_101_127, norm());
+  buf=fmt("%sL 51- 60  [%s%4u%s]  L 61- 70  [%s%4u%s]  L 71-100  [%s%4u%s]  L101-127  [%s%4u%s]\n\r") % norm() %
+         purple() % stats.act_51_60 % norm() %
+         purple() % stats.act_61_70 % norm() %
+         purple() % stats.act_71_100 % norm() %
+         purple() % stats.act_101_127 % norm();
   str += buf;
 
   desc->page_string(str);
@@ -3656,25 +3639,25 @@ void TBeing::doLimbs(const sstring & argument)
     }
     if (v->isLimbFlags(i, PART_PARALYZED)) {
       sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <O>paralyzed<Z>!\n\r") %
-         who %red() %v->describeBodySlot(i).c_str() %
+         who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_BLEEDING)) {
       sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
-         who %red() %v->describeBodySlot(i).c_str() %
+         who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_INFECTED)) {
       sendTo(COLOR_BASIC, fmt("%s %s%s%s %s infected with many germs!\n\r") %
-         who %red() %v->describeBodySlot(i).c_str() %
+         who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_BROKEN)) {
       sendTo(COLOR_BASIC, fmt("%s %s%s%s %s broken!\n\r") %
-         who %red() %v->describeBodySlot(i).c_str() %
+         who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }

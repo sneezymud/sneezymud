@@ -104,7 +104,10 @@ void TShopOwned::showInfo()
       // shopPrice does db queries, it tends to be too slow here
       //      price+=o->shopPrice(1, shop_nr, -1, &discount);
     }
-    keeper->doTell(ch->getName(), "I have %i talens and %i items worth %i talens and selling for approximately %i talens.", keeper->getMoney(), count, value, (int)(value * shop_index[shop_nr].profit_buy));
+    keeper->doTell(ch->getName(),
+		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %
+		   keeper->getMoney() % count % value %
+		   (int)(value * shop_index[shop_nr].profit_buy));
     keeper->doTell(ch->getName(), "My inventory takes up %i cubic inches of space.", volume);
     
     keeper->doTell(ch->getName(), "That puts my total value at %i talens.",
@@ -119,8 +122,9 @@ void TShopOwned::showInfo()
   }
 
   // anyone can see profit_buy, profit_sell and trading types, anytime
-  keeper->doTell(ch->getName(),"My profit_buy is %f and my profit_sell is %f.",
-		 shop_index[shop_nr].profit_buy,
+  keeper->doTell(ch->getName(),
+		 fmt("My profit_buy is %f and my profit_sell is %f.") %
+		 shop_index[shop_nr].profit_buy %
 		 shop_index[shop_nr].profit_sell);
   keeper->doTell(ch->getName(),"My maximum inventory per item is %i.",
 		 getMaxNum(NULL));
@@ -224,20 +228,20 @@ int TShopOwned::setRates(sstring arg)
     db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %i %s", 
-		     convertTo<float>(db["profit_buy"]), 
-		     convertTo<float>(db["profit_sell"]), 
-		     convertTo<int>(db["max_num"]),
+      keeper->doTell(ch->getName(), fmt("%f %f %i %s") %
+		     convertTo<float>(db["profit_buy"]) % 
+		     convertTo<float>(db["profit_sell"]) % 
+		     convertTo<int>(db["max_num"]) %
 		     obj_index[real_object(convertTo<int>(db["obj_nr"]))].short_desc);
     }
 
     db.query("select match, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %i %s", 
-		     convertTo<float>(db["profit_buy"]), 
-		     convertTo<float>(db["profit_sell"]), 
-		     convertTo<int>(db["max_num"]),
+      keeper->doTell(ch->getName(),fmt( "%f %f %i %s") %
+		     convertTo<float>(db["profit_buy"]) % 
+		     convertTo<float>(db["profit_sell"]) % 
+		     convertTo<int>(db["max_num"]) %
 		     db["match"]);
     }    
     return TRUE;
@@ -252,7 +256,10 @@ int TShopOwned::setRates(sstring arg)
     
     db.query("update shopowned set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, max_num, shop_nr);
     
-    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i.", shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, max_num);
+    keeper->doTell(ch->getName(), 
+		   fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i.") % 
+		   shop_index[shop_nr].profit_buy %
+		   shop_index[shop_nr].profit_sell % max_num);
   } else if(buf == "match"){ /////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
@@ -266,7 +273,8 @@ int TShopOwned::setRates(sstring arg)
       db.query("update shopownedmatch set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and match='%s'", profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
     }
     
-    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.", profit_buy, profit_sell, max_num, buf.c_str());    
+    keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.") %
+		   profit_buy % profit_sell % max_num % buf);    
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
@@ -289,7 +297,8 @@ int TShopOwned::setRates(sstring arg)
       db.query("update shopownedratios set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and obj_nr=%i", profit_buy, profit_sell, max_num, shop_nr, o->objVnum());
     }
     
-    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is %i, all for %s.", profit_buy, profit_sell, max_num, o->getName());
+    keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is %i, all for %s.") %
+		   profit_buy % profit_sell % max_num % o->getName());
   }
   
   return TRUE;

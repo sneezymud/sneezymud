@@ -581,7 +581,7 @@ void TBeing::setPracs(sh_int prac, classIndT Class)
 sh_int TBeing::getPracs(classIndT Class)
 {
   if(Class >= MAX_CLASSES)
-    forceCrash("Bad class in getPracs");
+    vlogf(LOG_BUG, "Bad class in getPracs");
   else
     return practices.prac[Class];
 
@@ -1180,7 +1180,7 @@ int TBeing::checkIdling()
     per->checkIdling();
     if (IS_SET(specials.act, ACT_POLYSELF)) {
       // WTF is this for?  wouldn't a return make more sense?
-forceCrash("does this get called?  checkIdle");
+vlogf(LOG_BUG, "does this get called?  checkIdle");
 
       // this would be done by ~TPerson
       // but generates an error.  So we do it here in "safe" mode instead

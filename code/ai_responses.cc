@@ -36,14 +36,13 @@ void TMonster::loadResponses(int virt)
 
 // returns RET_STOP_PARSING if no further response parsing should occur
 // returns DELETE_THIS or DELETE_VICT in some situations.
-int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, const resp* respo)
+int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, const resp* respo)
 {
   int rc = 0;
   int value;
   TObj *obj = NULL;
   TMonster *tMonster;
-  char buf[80];
-  const char *arg2;
+  sstring arg2, buf;
   cmdTypeT cmd_val;
   TRoom *tRoom;
   dirTypeT dir=DIR_NONE;
@@ -88,8 +87,8 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
     case CMD_LOAD:
     case CMD_RESP_CHECKLOAD:
       if (mobVnum() < 0) {
-        sprintf(buf, "%s I would load it, but i'm a prototype.  Sorry.",
-                mob->getNameNOC(this).c_str());
+	buf = fmt("%s I would load it, but i'm a prototype.  Sorry.") %
+	  mob->getNameNOC(this);
         doTell(buf);
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
@@ -144,8 +143,8 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       return FALSE;
     case CMD_RESP_LOADMOB:
       if (mobVnum() < 0) {
-        sprintf(buf, "%s I would load it, but i'm a prototype.  Sorry.",
-                mob->getNameNOC(this).c_str());
+	buf = fmt("%s I would load it, but i'm a prototype.  Sorry.") %
+	  mob->getNameNOC(this);
         doTell(buf);
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
@@ -205,7 +204,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) command %d.  (%s)",
-                name, cmd, arg);
+                name, cmd, arg.c_str());
         return FALSE;
       }
       if (TogIndex[value].togmob != mobVnum()) {
@@ -221,7 +220,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
-                name, cmd, arg);
+                name, cmd, arg.c_str());
         return FALSE;
       }
       if (!mob->hasQuestBit(value)) {
@@ -234,7 +233,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
-                name, cmd, arg);
+                name, cmd, arg.c_str());
         return FALSE;
       }
       if (!mob->hasQuestBit(value))
@@ -245,7 +244,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
-                name, cmd, arg);
+                name, cmd, arg.c_str());
         return FALSE;
       }
       if (mob->hasQuestBit(value))
@@ -256,7 +255,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value = real_object(convertTo<int>(arg));
       if (value <= 0 || value >= (signed)obj_index.size()) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %s.  (%s)",
-              name, cmd, arg);
+              name, cmd, arg.c_str());
         return FALSE;
       }
       if (obj_index[value].getNumber() >= obj_index[value].max_exist)
@@ -265,18 +264,19 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       return FALSE;
     case CMD_RESP_LINK:
       // link this to an existing command
-      // known problem: link nod me due to how "me" gets parsed in social
-      arg2 = one_argument(arg, buf);
-      if (!strcasecmp(buf, "roomenter")) {
+      // known problem: link nod me due to how "me" gets parsed in social      
+      arg2=arg;
+      arg2=one_argument(arg2, buf);
+      if (buf.lower() == "roomenter"){
         cmd_val = CMD_RESP_ROOM_ENTER;
-      } else if (!strcasecmp(buf, "package")) {
+      } else if (buf.lower() == "package"){
         cmd_val = CMD_RESP_PACKAGE;
-      } else if (!strcasecmp(buf, "pulse")) {
+      } else if (buf.lower() == "pulse"){
         cmd_val = CMD_RESP_PULSE;
       } else {
         cmd_val=searchForCommandNum(buf);
         if (cmd_val >= MAX_CMD_LIST) {
-          vlogf(LOG_MOB_RS, "Responses::readCommand(): Parse error in %s. link bad.", buf);
+          vlogf(LOG_MOB_RS, "Responses::readCommand(): Parse error in %s. link bad.", buf.c_str());
           return RET_STOP_PARSING;
         }
       }
@@ -297,7 +297,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
         return rc;
       break;
     case CMD_JUNK:
-      rc = doCommand(cmd, arg, NULL, FALSE);
+      rc = doCommand(cmd, arg.c_str(), NULL, FALSE);
       break;
     case CMD_GIVE:
 #if 0
@@ -435,7 +435,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       break;
     default:
       mud_assert(cmd >= 0, "Unhandled special command in modifiedDoCommand array %d", cmd);
-      rc = doCommand(cmd, arg, (TThing *) mob, FALSE);
+      rc = doCommand(cmd, arg.c_str(), (TThing *) mob, FALSE);
       break;
   }
   
@@ -600,7 +600,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
               found = TRUE;
-              rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+              rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked
@@ -625,7 +625,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
             parsedArgs = parseResponse( speaker, cmd->args);
             found = TRUE;
-            rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
@@ -650,7 +650,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
             parsedArgs = parseResponse( speaker, cmd->args);
             found = TRUE;
-            rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
@@ -673,7 +673,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
                 parsedArgs = parseResponse( speaker, cmd->args);
                 found = TRUE;
-                rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+                rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
@@ -727,7 +727,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
                 parsedArgs = parseResponse( speaker, cmd->args);
                 found = TRUE;
-                rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+                rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
@@ -759,7 +759,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
               parsedArgs = parseResponse(speaker, cmd->args);
               found = TRUE;
-              rc = modifiedDoCommand(cmd->cmd, parsedArgs.c_str(), speaker, respo);
+              rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked
@@ -775,7 +775,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
             parsedArgs = parseResponse(speaker, cmd->args);
             found = TRUE;
-            rc = modifiedDoCommand(cmd->cmd, parsedArgs.c_str(), speaker, respo);
+            rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                 IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
@@ -813,7 +813,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
                 parsedArgs = parseResponse(speaker, cmd->args);
                 found = TRUE;
-                rc = modifiedDoCommand(cmd->cmd, parsedArgs.c_str(), speaker, respo);
+                rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
@@ -989,7 +989,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
               found = TRUE;
-              rc = modifiedDoCommand( cmd->cmd, parsedArgs.c_str(), speaker, respo);
+              rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked

@@ -3420,6 +3420,52 @@ objs/constants.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/constants.o: being.h person.h monster.h account.h extern.h handler.h
 objs/constants.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/constants.o: format.h obj_gun.h obj_general_weapon.h obj_base_weapon.h
+objs/corporation.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/corporation.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/corporation.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/corporation.o: /usr/include/g++/ctime /usr/include/time.h
+objs/corporation.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/corporation.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/corporation.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/corporation.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/corporation.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/corporation.o: /usr/include/g++/cstring /usr/include/string.h
+objs/corporation.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/corporation.o: /usr/include/errno.h /usr/include/g++/string
+objs/corporation.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/corporation.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/corporation.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/corporation.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/corporation.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/corporation.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/corporation.o: /usr/include/g++/stl_relops.h
+objs/corporation.o: /usr/include/g++/stl_iterator.h
+objs/corporation.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/corporation.o: /usr/include/g++/stl_algobase.h
+objs/corporation.o: /usr/include/g++/stl_pair.h
+objs/corporation.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/corporation.o: /usr/include/machine/limits.h
+objs/corporation.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/corporation.o: /usr/include/g++/new /usr/include/g++/exception
+objs/corporation.o: /usr/include/g++/stl_construct.h
+objs/corporation.o: /usr/include/g++/stl_uninitialized.h
+objs/corporation.o: /usr/include/g++/stl_vector.h
+objs/corporation.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/corporation.o: /usr/include/g++/stl_tree.h
+objs/corporation.o: /usr/include/g++/stl_function.h
+objs/corporation.o: /usr/include/g++/stl_map.h
+objs/corporation.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/corporation.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/corporation.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
+objs/corporation.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/corporation.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/corporation.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/corporation.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/corporation.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/corporation.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/corporation.o: spec_mobs.h materials.h colorstring.h format.h database.h
+objs/corporation.o: /usr/local/include/libpq-fe.h
+objs/corporation.o: /usr/local/include/postgres_ext.h corporation.h
 objs/create_engine.o: stdsneezy.h /usr/include/g++/cstdio
 objs/create_engine.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/create_engine.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib

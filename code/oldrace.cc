@@ -569,14 +569,14 @@ int TBeing::validEquipSlot(wearSlotT i)
     case MAX_BODY_TYPES:
       break;
   }
-  forceCrash("Bogus body type (%d) in validEquipSlot", getMyRace()->getBodyType());
+  vlogf(LOG_BUG, "Bogus body type (%d) in validEquipSlot", getMyRace()->getBodyType());
   return FALSE;
 }
 
 const sstring TBeing::bogus_slot_worn(wearSlotT i) const
 {
 //  vlogf(LOG_BUG, "%s had bogus slot (%d) worn.", getName(), i);
-  forceCrash("%s had bogus slot (%d) worn.", getName(), i);
+  vlogf(LOG_BUG, "%s had bogus slot (%d) worn.", getName(), i);
   return "Worn on BOGUS slot - Bug this!";
 }
 
@@ -655,7 +655,7 @@ const sstring TBeing::defaultEquipmentSlot(wearSlotT i) const
 const sstring TBeing::bogus_slot(wearSlotT i) const
 {
 //  vlogf(LOG_BUG, "%s had bogus slot (%d) used.", getName(), i);
-  forceCrash("%s had bogus slot (%d) used.", getName(), i);
+  vlogf(LOG_BUG, "%s had bogus slot (%d) used.", getName(), i);
   return "BOGUS slot - Bug this!";
 }
 

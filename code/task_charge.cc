@@ -615,7 +615,7 @@ void startChargeTask(TBeing *ch, const char *tString)
   for (; isspace(*tArg); tArg++);
 
   if (!ch || !tString || !*tString) {
-    forceCrash("startChargeTask() called with bad arguments.");
+    vlogf(LOG_BUG, "startChargeTask() called with bad arguments.");
     return;
   }
 

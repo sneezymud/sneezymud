@@ -68,7 +68,7 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
     case MAX_WEAR:
       break;
   }
-  forceCrash("Bad pos (%d) in limb_heal_price for %s!", pos, ch->getName());
+  vlogf(LOG_BUG, "Bad pos (%d) in limb_heal_price for %s!", pos, ch->getName());
   return (basenum * 10);
 }
 

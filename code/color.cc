@@ -11,7 +11,7 @@
 void TBeing::doPrompt(const char *arg)
 {
   sstring tStString("");
-  char sstring[512];
+  char str[512];
   char caColor[50], caStat[200];
   int field, statnum;
   int kolor2;
@@ -95,29 +95,28 @@ void TBeing::doPrompt(const char *arg)
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
 
-    sprintf(sstring, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
-    tStString += sstring;
+    sprintf(str, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
+    tStString += str;
 
-    sprintf(sstring, "Piety      : (%s): P:%.1f\n\r", (tPrompts[16] ? "yes" : " no"), getPiety());
-    tStString += sstring;
+    sprintf(str, "Piety      : (%s): P:%.1f\n\r", (tPrompts[16] ? "yes" : " no"), getPiety());
+    tStString += str;
 
-    sprintf(sstring, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[17] ? "yes" : " no"), getLifeforce());
-    tStString += sstring;
+    sprintf(str, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[17] ? "yes" : " no"), getLifeforce());
+    tStString += str;
 
-    sprintf(sstring, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
-    tStString += sstring;
+    sprintf(str, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
+    tStString += str;
 
-    sprintf(sstring, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"), getMove());
-    tStString += sstring;
+    sprintf(str, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"), getMove());
+    tStString += str;
 
-    sprintf(sstring, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"), getMoney());
-    tStString += sstring;
+    sprintf(str, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"), getMoney());
+    tStString += str;
 
-    strcpy(caStat, displayExp().c_str());
-    comify(caStat);
+    strcpy(caStat, displayExp().comify().c_str());
 
-    sprintf(sstring, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
-    tStString += sstring;
+    sprintf(str, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
+    tStString += str;
 
     for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES; tClassIndex++)
       if (getLevel(tClassIndex) && getLevel(tClassIndex) < MAX_MORT) {
@@ -127,26 +126,28 @@ void TBeing::doPrompt(const char *arg)
         double tNeed = desc->prompt_d.xptnl - getExp();
 
         sprintf(caStat, "%.0f", tNeed);
-        comify(caStat);
-        sprintf(sstring, "Exp_tolevel: (%s): N:%s\n\r", (tPrompts[14] ? "yes" : " no"), caStat);
-        tStString += sstring;
+
+        strcpy(caStat, sstring(caStat).comify().c_str());
+
+        sprintf(str, "Exp_tolevel: (%s): N:%s\n\r", (tPrompts[14] ? "yes" : " no"), caStat);
+        tStString += str;
       }
 
     if (isImmortal()) {
-      sprintf(sstring, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
-      tStString += sstring;
+      sprintf(str, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
+      tStString += str;
     }
 
     tStString += "--------------------\n\r";
-    sprintf(sstring, "Opponent  : (%s): Current target when in battle.\n\r",
+    sprintf(str, "Opponent  : (%s): Current target when in battle.\n\r",
             (tPrompts[6] ? "yes" : " no"));
-    tStString += sstring;
-    sprintf(sstring, "Tank      : (%s): Current tank when in battle, including self.\n\r",
+    tStString += str;
+    sprintf(str, "Tank      : (%s): Current tank when in battle, including self.\n\r",
             (tPrompts[11] ? "yes" : " no"));
-    tStString += sstring;
-    sprintf(sstring, "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
+    tStString += str;
+    sprintf(str, "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
             (tPrompts[12] ? "yes" : " no"));
-    tStString += sstring;
+    tStString += str;
     tStString += "--------------------\n\r";
 
     desc->page_string(tStString);
@@ -154,7 +155,7 @@ void TBeing::doPrompt(const char *arg)
     return;
   }
 
-  bisect_arg(arg, &field, sstring, stat_fields);
+  bisect_arg(arg, &field, str, stat_fields);
 
   switch (field) {
     case 1:
@@ -230,7 +231,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 7:
-      sscanf(sstring, "%s %s ", caStat, caColor);
+      sscanf(str, "%s %s ", caStat, caColor);
       if (is_abbrev(caStat, "off")) {
         sendTo("Turning off color prompting.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);

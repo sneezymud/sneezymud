@@ -378,10 +378,10 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     return;
 
   repair->doTell(fname(buyer->name),
-     "It'll cost you %d talens to repair %s to a status of %s.", 
-     (valued->repairPrice(repair, buyer, DEPRECIATION_NO)),
-     valued->getName(), 
-     valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)).c_str());
+     fmt("It'll cost you %d talens to repair %s to a status of %s.") %
+		 (valued->repairPrice(repair, buyer, DEPRECIATION_NO)) %
+		 valued->getName() %
+		 valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
 
   when_ready = ct + repair_time(valued);
   ready = asctime(localtime(&when_ready));

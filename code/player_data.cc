@@ -474,7 +474,7 @@ void TPerson::storeToSt(charFile *st)
   st->f_actions = getFactAct();
 
   if (!desc) {
-    forceCrash("No desc while writing charFile");
+    vlogf(LOG_BUG, "No desc while writing charFile");
   }
 
   st->screen = getScreen();

@@ -234,14 +234,16 @@ void generate_obj_index()
     tmpi->where_worn=convertTo<int>(db["wear_flag"]);
     tmpi->itemtype=convertTo<int>(db["type"]);
     tmpi->value=convertTo<int>(db["price"]);
-    if(strcmp(db["action_desc"], "")) tmpi->description=mud_str_dup(db["action_desc"]);
+    if(!db["action_desc"].empty())
+      tmpi->description=mud_str_dup(db["action_desc"]);
     else tmpi->description=NULL;
 
-    while(extra_db["vnum"] && convertTo<int>(extra_db["vnum"]) < tmpi->virt){
+    while(!extra_db["vnum"].empty() && convertTo<int>(extra_db["vnum"]) < tmpi->virt){
       extra_db.fetchRow();
     }
 
-    while(extra_db["vnum"] && convertTo<int>(extra_db["vnum"])==tmpi->virt){
+    while(!extra_db["vnum"].empty() &&
+	  convertTo<int>(extra_db["vnum"])==tmpi->virt){
       new_descr = new extraDescription();
       new_descr->keyword = mud_str_dup(extra_db["name"]);
       new_descr->description = mud_str_dup(extra_db["description"]);
@@ -251,12 +253,14 @@ void generate_obj_index()
       extra_db.fetchRow();
     }
 
-    while(affect_db["vnum"] && convertTo<int>(affect_db["vnum"]) < tmpi->virt){
+    while(!affect_db["vnum"].empty() &&
+	  convertTo<int>(affect_db["vnum"]) < tmpi->virt){
       affect_db.fetchRow();
     }
 
     i=0;
-    while(affect_db["vnum"] && convertTo<int>(affect_db["vnum"])==tmpi->virt){
+    while(!affect_db["vnum"].empty() &&
+	  convertTo<int>(affect_db["vnum"])==tmpi->virt){
       tmpi->affected[i].location = mapFileToApply(convertTo<int>(affect_db["type"]));
 
       if (tmpi->affected[i].location == APPLY_SPELL)

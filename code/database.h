@@ -100,7 +100,7 @@ class TDatabase
   void setDB(dbTypeT);
   bool query(const char *,...);
   bool fetchRow();
-  const char *operator[] (const sstring &) const;
+  const sstring operator[] (const sstring &) const;
   bool isResults();
 
 

@@ -256,7 +256,7 @@ int HeartsGame::exitGame(const TBeing *ch)
   TBeing *left = NULL, *across = NULL, *right = NULL;
 
   if ((which = index(ch)) < 0) {
-    forceCrash("%s left a hearts table %s wasn't at!", ch->getName(), ch->hssh());
+    vlogf(LOG_BUG, "%s left a hearts table %s wasn't at!", ch->getName(), ch->hssh());
     return FALSE;
   }
   ch->sendTo("You leave the hearts table.\n\r");

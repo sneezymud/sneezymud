@@ -102,7 +102,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
   discNumT which = getDisciplineNumber(skill, FALSE);
   if (which == DISC_NONE) {
     // silly core-generator, but helps to track down the item that is bad
-    forceCrash("Bad discipline for skill %d in getSkill()", skill);
+    vlogf(LOG_BUG, "Bad discipline for skill %d in getSkill()", skill);
     return NULL;
   }
 

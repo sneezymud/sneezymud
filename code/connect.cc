@@ -676,7 +676,7 @@ Descriptor::~Descriptor()
     bool found = false;
     for (tch = character_list; tch; tch = tch->next) {
       if (tch == mob) {
-        forceCrash("Whoa bad!, in list but adding to list again");
+        vlogf(LOG_BUG, "Whoa bad!, in list but adding to list again");
         found = true;
       }
     }
@@ -1108,7 +1108,7 @@ int Descriptor::nanny(const char *arg)
       str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
-      writeToQ(str.c_str());
+      writeToQ(str);
       connected = CON_DISCLAIMER;
       break;
     case CON_DISCLAIMER:
@@ -1121,7 +1121,7 @@ int Descriptor::nanny(const char *arg)
       str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
-      writeToQ(str.c_str());
+      writeToQ(str);
       connected = CON_DISCLAIMER2;
       break;
     case CON_DISCLAIMER2:
@@ -1134,7 +1134,7 @@ int Descriptor::nanny(const char *arg)
       // swap color sstrings
       str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
-      writeToQ(str.c_str());
+      writeToQ(str);
       connected = CON_MULTIWARN;
       break;
     case CON_DISCLAIMER3:
@@ -1935,7 +1935,7 @@ int Descriptor::nanny(const char *arg)
 	      character->setClass(classInfo[i].class_num);
 	      go2next = TRUE;
 	    } else {
-	      writeToQ(badClassMessage(classInfo[i].class_num).c_str());
+	      writeToQ(badClassMessage(classInfo[i].class_num));
 	      writeToQ("--> ");
 	      connected = CON_QCLASS;
 	    }
@@ -2729,7 +2729,7 @@ void Descriptor::go_back_menu(connectStateT con_state)
           connected = CON_HOME_HOBBIT;
           break;
         default:
-          forceCrash("Unknown race");
+          vlogf(LOG_BUG, "Unknown race");
           connected = CON_HOME_HUMAN;
           break;
       }
@@ -2973,7 +2973,7 @@ void Descriptor::sendHomeList()
       writeToQ("/.) Go back one screen\n\r");
       break;
       //    default:
-      //      forceCrash("crash");
+      //      vlogf(LOG_BUG, "crash");
   }
   writeToQ("\n\r--> ");
   return;
@@ -4543,8 +4543,7 @@ void setPrompts(fd_set out)
                       ch->roomp->number,
                       ch->norm());
             if (IS_SET(d->prompt_d.type, PROMPT_EXP)) {
-              strcpy(tString, ch->displayExp().c_str());
-              comify(tString);
+              strcpy(tString, ch->displayExp().comify().c_str());
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[7],
                       (hasColor ? d->prompt_d.expColor : ""),
@@ -4562,7 +4561,7 @@ void setPrompts(fd_set out)
                   double need = d->prompt_d.xptnl - ch->getExp();
 
                   sprintf(tString, "%.0f", need);
-                  comify(tString);
+		  strcpy(tString, sstring(tString).comify().c_str());
                   sprintf(promptbuf + strlen(promptbuf),
                           StPrompts[8],
                           (hasColor ? ch->desc->prompt_d.expColor : ""),
@@ -5572,7 +5571,7 @@ int Descriptor::doAccountMenu(const char *arg)
       if (count == 0)
         writeToQ("No characters in account.\n\r");
       else
-        writeToQ(lStr.c_str());
+        writeToQ(lStr);
 
       writeToQ("\n\r");
       writeToQ("[Press return to continue]\n\r");

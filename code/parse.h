@@ -645,7 +645,7 @@ extern cmdTypeT & operator++(cmdTypeT &c, int);
 const cmdTypeT MIN_CMD = cmdTypeT(0);
 
 extern commandInfo *commandArray[MAX_CMD_LIST];
-extern cmdTypeT searchForCommandNum(const char *);
+extern cmdTypeT searchForCommandNum(const sstring &);
 extern void half_chop(const char *sstring, char *arg1, char *arg2);
 extern bool _parse_name(const char *arg, char *name);
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);

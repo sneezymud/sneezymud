@@ -17,7 +17,7 @@ public:
 class recipeTypeT {
 public:
   int recipe;
-  const char *keywords, *name;
+  const sstring keywords, name;
   int vnum; // base, quality adds more
 };
 

@@ -503,7 +503,7 @@ TRoom::~TRoom()
   // I cleaned up RoomLoad to fix this problem, but I figure this check is
   // a what-if for ther future.  Bat 5/30/99
   if (room_db[in_room] != this)
-    forceCrash("TRoom dtor removing room from database that isn't in the database");
+    vlogf(LOG_BUG, "TRoom dtor removing room from database that isn't in the database");
   else
     room_db[in_room] = NULL;
 
@@ -692,7 +692,7 @@ TThing& TThing::operator += (TThing& t)
 
   TRoom *rp2 = dynamic_cast<TRoom *>(&t);
   if (rp2)
-    forceCrash("Operator += trying to put a room somewhere");
+    vlogf(LOG_BUG, "Operator += trying to put a room somewhere");
 
   mud_assert(t.parent == NULL, "TThing += : t.parent existed");
   mud_assert(t.equippedBy == NULL, "TThing += : t.equippedBy existed");
@@ -861,7 +861,7 @@ TThing& TBeing::operator -- ()
   if (checkBlackjack()) {
     extern BjGame gBj;
     if (gBj.index(this) >= 0)
-      forceCrash("forced crash: blackjack");
+      vlogf(LOG_BUG, "forced crash: blackjack");
   }
 
   return TThing::operator-- ();
@@ -948,7 +948,7 @@ TThing& TThing::operator -- ()
 
   } else {
     // guaranteed crash
-    forceCrash("Bogus call to TThing operator--, %s", getName());
+    vlogf(LOG_BUG, "Bogus call to TThing operator--, %s", getName());
   }
 
   // set the obj 
@@ -1071,7 +1071,7 @@ TThing::~TThing()
   }
 
   if (act_ptr) {
-    forceCrash("Memory leaked: act_ptr on %s", getName()); 
+    vlogf(LOG_BUG, "Memory leaked: act_ptr on %s", getName()); 
 #if 0
     delete act_ptr;
     act_ptr = NULL;
@@ -1253,7 +1253,7 @@ void TThing::mount(TThing *ch)
       vlogf(LOG_BUG, "Possible lighting error due to table being mounted in bad state.  (Room=%d, heldBy=%s)", 
               ttab->parent->inRoom(), ttab->parent->getName());
     } else 
-      forceCrash("Potential lighting screw up involving tables.");
+      vlogf(LOG_BUG, "Potential lighting screw up involving tables.");
   }
 }
 

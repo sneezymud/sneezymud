@@ -421,7 +421,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     
     if (targ)
       ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
-		 capbuf.uncap().c_str() % capbuf2.uncap().c_str() %
+		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     else
       ch->sendTo(fmt("You shoot %s out of %s.\n\r") %

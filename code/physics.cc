@@ -426,18 +426,18 @@ int TObj::checkFalling()
   while (count < 100) {
     sendrpf(roomp, "%s drops downward.\n\r", sstring(shortDescr).cap().c_str());
     if (!roomp) {
-      forceCrash("Serious bug in falling objects!");
+      vlogf(LOG_BUG, "Serious bug in falling objects!");
       return FALSE;
     }
     roomDirData * rdd = roomp->exitDir(DIR_DOWN);
     if (!rdd) {
-      forceCrash("Serious bug in falling objects!");
+      vlogf(LOG_BUG, "Serious bug in falling objects!");
       return FALSE;
     }
     int new_room = rdd->to_room;
     TRoom * rp = real_roomp(new_room);
     if (!rp) {
-      forceCrash("Serious bug in falling objects!");
+      vlogf(LOG_BUG, "Serious bug in falling objects!");
       return FALSE;
     }
     --(*this);

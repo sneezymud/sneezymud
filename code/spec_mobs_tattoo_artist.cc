@@ -32,9 +32,9 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
   if(cmd == CMD_LIST){
     myself->doTell(ch->getName(), "I charge 10000 talens for a tattoo.  They are permanent.");
     myself->doTell(ch->getName(), "You can buy the following tattoos from me:");
-    for(i=0;i<ntattoos;++i){
-      myself->doTell(ch->getName(), "%i) %s", i+1, tattoos[i]);
-    }
+    for(i=0;i<ntattoos;++i)
+      myself->doTell(ch->getName(), fmt("%i) %s") % (i+1) % tattoos[i]);
+
     return TRUE;
   } else if(cmd==CMD_BUY){
     arg=one_argument(arg, buf);

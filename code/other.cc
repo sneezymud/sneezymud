@@ -2492,7 +2492,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
   if (!IS_SET(discArray[spell]->targets, TAR_IGNORE | TAR_AREA)) {
 
     if (!victim && !target) {
-      forceCrash("Bad targetting in doObjSpell() %d", spell);
+      vlogf(LOG_BUG, "Bad targetting in doObjSpell() %d", spell);
       return 0;
     }
 

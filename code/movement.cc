@@ -1092,7 +1092,7 @@ int TBeing::moveGroup(dirTypeT dir)
                 if (tb->riding)
                   tb->dismount(post <= POSITION_STANDING ? post : POSITION_STANDING);
                 else
-                  forceCrash("riding error in moveGroup");
+                  vlogf(LOG_BUG, "riding error in moveGroup");
 #else
                 tb->dismount(post <= POSITION_STANDING ? post : POSITION_STANDING);
 #endif
@@ -2846,7 +2846,7 @@ void TBeing::setPosition(positionTypeT pos)
   if (dynamic_cast<TBeing *>(riding) && 
       (pos != POSITION_FIGHTING) && (pos != POSITION_MOUNTED)) {
     // for debug
-    forceCrash("Mounted person (%s) set to new position (%s:%d).", getName(), position_types[pos].c_str(), pos);
+    vlogf(LOG_BUG, "Mounted person (%s) set to new position (%s:%d).", getName(), position_types[pos].c_str(), pos);
     dismount(POSITION_STANDING);
   }
   if (!hasLegs()) {

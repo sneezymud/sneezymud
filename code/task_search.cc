@@ -120,7 +120,7 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
           IS_SET(fdd->condition, EX_CLOSED) &&
           strcmp(fdd->keyword, "_unique_door_")) {
         ch->sendTo(fmt("Secret %s found %s!\n\r") %
-                   (fdd->keyword ? fname(fdd->keyword).c_str() : "NO NAME.  TELL A GOD") %
+                   (fdd->keyword ? fname(fdd->keyword) : "NO NAME.  TELL A GOD") %
                    dirs[eDirection]);
         sprintf(buf, "$n exclaims, \"Look!  A Secret %s found %s!\"\n\r",
                 (fdd->keyword ? fname(fdd->keyword).c_str() : "NO NAME.  TELL A GOD"),

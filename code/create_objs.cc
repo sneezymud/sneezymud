@@ -193,7 +193,8 @@ void ObjLoad(TBeing *ch, int vnum)
   o->setVolume(convertTo<int>(db["volume"]));
   o->setMaterial(convertTo<int>(db["material"]));
   o->max_exist = convertTo<int>(db["max_exist"]);
-  if(strcmp(db["action_desc"], "")) o->action_description=mud_str_dup(db["action_desc"]);
+  if(!db["action_desc"].empty())
+    o->action_description=mud_str_dup(db["action_desc"]);
   else o->action_description=NULL;
 
   o->ex_description = NULL;

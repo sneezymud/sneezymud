@@ -241,7 +241,7 @@ itemTypeT mapFileToItemType(int num)
     case 66:
       return ITEM_CANNON;
   }
-  forceCrash("Unknown type %d in map file", num);
+  vlogf(LOG_BUG, "Unknown type %d in map file", num);
   return ITEM_UNDEFINED;
 }
 
@@ -385,7 +385,7 @@ int mapItemTypeToFile(itemTypeT itt)
     case MAX_OBJ_TYPES:
       break;
   }
-  forceCrash("Unknown type %d in map item", itt);
+  vlogf(LOG_BUG, "Unknown type %d in map item", itt);
   return 0;
 }
 

@@ -1136,7 +1136,7 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       level = (int) (1.0 * level);
       break;
     default:
-      forceCrash("Bad spellNumT (%d) to elementalFix", spell);
+      vlogf(LOG_BUG, "Bad spellNumT (%d) to elementalFix", spell);
       break;
   }
   // correct the level

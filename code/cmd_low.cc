@@ -1323,7 +1323,7 @@ void TBeing::lowRace(const char *arg)
   desc->page_string(str);
 }
 
-void TBeing::lowTasks(const char *arg)
+void TBeing::lowTasks(const sstring &oarg)
 {
   // this works a database of tasks that need doing for the low team
   // low tasks list [<name>]
@@ -1334,27 +1334,23 @@ void TBeing::lowTasks(const char *arg)
   // low tasks delete <task ID>
   TDatabase db(DB_SNEEZY);
 
-  char buf[256], buf2[256], temp[512];
-  sstring str;
+  sstring buf, buf2, temp, str, arg=oarg;
   int id, priority;
 
   arg = one_argument(arg, buf);
-  if (!*buf) {
+  if (buf.empty()){
     sendTo("Syntax: low  tasks <list | add | assign | priority | delete> ...\n\r");
     return;
   } else if (is_abbrev(buf, "list")) {
     arg = one_argument(arg, buf);
-    if (!*buf) {
-      
-      sprintf(temp, "select id, priority, assigned_to, task, status from lowtasks order by priority");
-      vlogf(LOG_DASH, "lowtask: %s", temp);
-      db.query(temp);
-    
+    if(buf.empty()){
+      temp="select id, priority, assigned_to, task, status from lowtasks order by priority";
+      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      db.query(temp.c_str());
     } else {
-      
-      sprintf(temp, "select id, priority, assigned_to, task, status from lowtasks where assign_to='%s' order by priority", buf);
-      vlogf(LOG_DASH, "lowtask: %s", temp);
-      db.query(temp);
+      temp=fmt("select id, priority, assigned_to, task, status from lowtasks where assign_to='%s' order by priority") % buf;
+      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      db.query(temp.c_str());
 
     }
 
@@ -1364,7 +1360,8 @@ void TBeing::lowTasks(const char *arg)
     while(db.fetchRow()){
       id = convertTo<int>(db["id"]);
       priority = convertTo<int>(db["priority"]);
-      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db["assigned_to"], db["task"], db["status"]);      
+      buf=fmt("%-4d| %d |  %-13s| %s (%s)\n\r") %
+	id % priority % db["assigned_to"] % db["task"] % db["status"];
       str += buf;
     }
 
@@ -1375,7 +1372,7 @@ void TBeing::lowTasks(const char *arg)
     return;
   } else if (is_abbrev(buf, "add")) {
     arg = one_argument(arg, buf);
-    if (!*buf || !*arg) {
+    if (buf.empty() || arg.empty()){
       sendTo("Syntax: low tasks add <priority> <task>\n\r");
       return;
     } else {
@@ -1384,18 +1381,18 @@ void TBeing::lowTasks(const char *arg)
 	sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
 	return;
       } else {
-	sprintf(temp, "select id from lowtasks order by id desc");
-	vlogf(LOG_DASH, "lowtask: %s", temp);
-	db.query(temp);
+	temp="select id from lowtasks order by id desc";
+	vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+	db.query(temp.c_str());
 
 	if(!db.fetchRow()) {
 	  id = 0;
 	} else {
 	  id = convertTo<int>(db["id"]) + 1;
 	}
-        sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), arg);
-        vlogf(LOG_DASH, "lowtask: %s", temp);
-        db.query(temp);
+        temp=fmt("insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')") % id % priority % getName() % arg;
+        vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+        db.query(temp.c_str());
 
 	sendTo("New task inserted into list.\n\r");
 	return;
@@ -1405,14 +1402,15 @@ void TBeing::lowTasks(const char *arg)
   } else if (is_abbrev(buf, "assign")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if (!*buf || !*buf2) {
+    if(buf.empty() || buf2.empty()){
       sendTo("Syntax: low tasks assign <task ID> <name>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
-      sprintf(temp, "update lowtasks set assigned_to='%s' where id=%d", buf2, id);
-      vlogf(LOG_DASH, "lowtask: %s", temp);
-      db.query(temp);
+      temp=fmt("update lowtasks set assigned_to='%s' where id=%d") %
+	buf2 % id;
+      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      db.query(temp.c_str());
 
       sendTo("Task assignment updated.\n\r");
       return;
@@ -1421,14 +1419,14 @@ void TBeing::lowTasks(const char *arg)
   } else if (is_abbrev(buf, "status")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if (!*buf || !*buf2) {
+    if(buf.empty() || buf2.empty()){
       sendTo("Syntax: low tasks status <task ID> <status>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
-      sprintf(temp, "update lowtasks set status='%s' where id=%d", buf2, id);
-      vlogf(LOG_DASH, "lowtask: %s", temp);
-      db.query(temp);
+      temp=fmt("update lowtasks set status='%s' where id=%d") % buf2 % id;
+      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      db.query(temp.c_str());
       
       sendTo("Task status updated.\n\r");
       return;
@@ -1437,7 +1435,7 @@ void TBeing::lowTasks(const char *arg)
   } else if (is_abbrev(buf, "priority")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if (!*buf || !*buf2) {
+    if(buf.empty() || buf2.empty()){
       sendTo("Syntax: low tasks priority <task ID> <priority>\n\r");
       return;
     } else {
@@ -1447,9 +1445,9 @@ void TBeing::lowTasks(const char *arg)
         sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
         return;
       } else {
-	sprintf(temp, "update lowtasks set priority=%d where id=%d", priority, id);
-	vlogf(LOG_DASH, "lowtask: %s", temp);
-	db.query(temp);
+	temp=fmt("update lowtasks set priority=%d where id=%d") %priority %id;
+	vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+	db.query(temp.c_str());
 
 	sendTo("Task priority updated.\n\r");
 	return;
@@ -1458,16 +1456,15 @@ void TBeing::lowTasks(const char *arg)
     return;
   } else if (is_abbrev(buf, "delete")) {
     arg = one_argument(arg, buf);
-    if (!*buf) {
+    if(buf.empty()){
       sendTo("Syntax: low tasks delete <task ID>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
-      
 
-      sprintf(temp, "delete from lowtasks where id=%d", id);
-      vlogf(LOG_DASH, "lowtask: %s", temp);
-      db.query(temp);
+      temp=fmt("delete from lowtasks where id=%d") % id;
+      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      db.query(temp.c_str());
 
       sendTo("Task deleted.\n\r");
       return;
@@ -1548,11 +1545,11 @@ bool lowObjSort::operator() (const int &x, const int &y) const
   // if armor is same, sort in descending struct order
 
   if (x < 0 || x >= (int) obj_index.size()) {
-    forceCrash("Bogus value for x: %d in lowObjSort", x);
+    vlogf(LOG_BUG, "Bogus value for x: %d in lowObjSort", x);
     return false;
   }
   if (y < 0 || y >= (int) obj_index.size()) {
-    forceCrash("Bogus value for y: %d in lowObjSort", y);
+    vlogf(LOG_BUG, "Bogus value for y: %d in lowObjSort", y);
     return false;
   }
 

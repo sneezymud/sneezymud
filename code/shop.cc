@@ -468,8 +468,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   } else {
     tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
     if (num > tmp) {
-      keeper->doTell(ch->name, "I don't have %d of that item. Here %s the %d I do have.",
-                num , (tmp > 1) ? "are" : "is", tmp);
+      keeper->doTell(ch->name, fmt("I don't have %d of that item. Here %s the %d I do have.") %
+		     num  % ((tmp > 1) ? "are" : "is") % tmp);
     } else
       tmp = num;
 
@@ -2245,7 +2245,8 @@ void bootTheShops()
     sd.open2=convertTo<int>(db["open2"]);
     sd.close2=convertTo<int>(db["close2"]);
 
-    if(owned_db["shop_nr"] && (convertTo<int>(owned_db["shop_nr"]))==shop_nr){
+    if(!owned_db["shop_nr"].empty() &&
+       (convertTo<int>(owned_db["shop_nr"]))==shop_nr){
       sd.profit_buy=convertTo<float>(owned_db["profit_buy"]);
       sd.profit_sell=convertTo<float>(owned_db["profit_sell"]);
       owned_db.fetchRow();
@@ -2254,26 +2255,30 @@ void bootTheShops()
       sd.profit_sell=convertTo<float>(db["profit_sell"]);
     }
 
-    if(isowned_db["shop_nr"] && (convertTo<int>(isowned_db["shop_nr"]))==shop_nr){
+    if(!isowned_db["shop_nr"].empty() &&
+       (convertTo<int>(isowned_db["shop_nr"]))==shop_nr){
       sd.owned=true;
       isowned_db.fetchRow();
     } else {
       sd.owned=false;
     }
 
-    while(type_db["shop_nr"] && convertTo<int>(type_db["shop_nr"])==shop_nr){
+    while(!type_db["shop_nr"].empty() &&
+	  convertTo<int>(type_db["shop_nr"])==shop_nr){
       sd.type.push_back(convertTo<int>(type_db["type"]));
       type_db.fetchRow();
     }
     sd.type.push_back(MAX_OBJ_TYPES);
     
-    while(producing_db["shop_nr"] && convertTo<int>(producing_db["shop_nr"])==shop_nr){
+    while(!producing_db["shop_nr"].empty() &&
+	  convertTo<int>(producing_db["shop_nr"])==shop_nr){
       sd.producing.push_back(real_object(convertTo<int>(producing_db["producing"])));
       producing_db.fetchRow();
     }
     sd.producing.push_back(-1);
     
-    while(material_db["shop_nr"] && convertTo<int>(material_db["shop_nr"])==shop_nr){
+    while(!material_db["shop_nr"].empty() &&
+	  convertTo<int>(material_db["shop_nr"])==shop_nr){
       sd.mat_type.push_back(convertTo<int>(material_db["mat_type"]));
       material_db.fetchRow();
     }

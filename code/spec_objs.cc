@@ -6172,7 +6172,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     score=0;
     float level=0;
     while(db.fetchRow()){
-      if(db["level"]){
+      if(!db["level"].empty()){
 	level=(float) convertTo<int>(db["level"]);
 	score+=(int)(level * (level / 25.0));
       }
@@ -6190,7 +6190,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     if(db.fetchRow()){
       float pounds=0.0;
 
-      if(db["weight"] && *(db["weight"])){
+      if(!db["weight"].empty()){
 	pounds=convertTo<float>(db["weight"]);
 	score=(int)(pounds/10000.0);
       }

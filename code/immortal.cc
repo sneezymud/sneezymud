@@ -1122,9 +1122,8 @@ void TBeing::doWizlock(const char *argument)
 }
 
 // returns DELETE_THIS if this should go
-int TBeing::doEmote(const char *argument)
+int TBeing::doEmote(const sstring &argument)
 {
-  int i;
   sstring buf, tmpbuf;
   TThing *t, *t2;
 
@@ -1143,12 +1142,10 @@ int TBeing::doEmote(const char *argument)
     return FALSE;
   }
 
-  for (i = 0; *(argument + i) == ' '; i++);
-
-  if (!*(argument + i))
+  if (argument.empty())
     sendTo("Yes.. But what?\n\r");
   else {
-    buf = fmt("$n %s<z>") % (argument + i);
+    buf = fmt("$n %s<z>") % argument;
     tmpbuf = fmt("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
     for (t = roomp->getStuff(); t ; t = t2) {
@@ -1810,7 +1807,7 @@ int TBeing::doGoto(const sstring & argument)
       }
     }
     location = loc_nr;
-  } else if ((target_mob = get_pc_world(this, buf.c_str(), EXACT_NO)) != NULL) {
+  } else if ((target_mob = get_pc_world(this, buf, EXACT_NO)) != NULL) {
     location = target_mob->in_room;
   } else if ((target_mob = get_char_vis_world(this, buf, NULL, EXACT_NO)))
     location = target_mob->in_room;
@@ -4263,7 +4260,7 @@ void TPerson::doAccess(const sstring &arg)
     }
   }
   if(!arg2.empty()){
-    if (get_pc_world(this, arg1.c_str(), EXACT_YES)) {
+    if (get_pc_world(this, arg1, EXACT_YES)) {
       sendTo("That player is online. Better not mess with the player file.\n\r");
       return;
     }
@@ -4472,7 +4469,7 @@ void TBeing::doReplace(const sstring &argument)
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }
-  if (get_pc_world(this, arg1.c_str(), EXACT_YES)) {
+  if (get_pc_world(this, arg1, EXACT_YES)) {
     sendTo("Probably don't want to backup with the person on. Ask them to log off.\n\r");
     return;
   }
@@ -6671,7 +6668,7 @@ int TBeing::doAsOther(const sstring &tStString)
   tStTmp = one_argument(tStTmp, tStCommand);
   tStArguments=tStTmp;
 
-  tCmd = searchForCommandNum(tStCommand.c_str());
+  tCmd = searchForCommandNum(tStCommand);
 
   if (!isSanctionedCommand(tCmd)) {
     sendTo("You can not do this.  Sorry.\n\r");

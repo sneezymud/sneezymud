@@ -268,7 +268,7 @@ static bool doComponentUse(spellNumT spell, TBeing *ch)
     if (!ch->useComponentObj(ch->findComponent(spell), ch->spelltask->object)) 
       return FALSE;
   } else {
-    forceCrash("Bad target in doComponentUse(%s)(%d).", ch->getName(), spell);
+    vlogf(LOG_BUG, "Bad target in doComponentUse(%s)(%d).", ch->getName(), spell);
     return FALSE;
   }
   return TRUE;
@@ -290,7 +290,7 @@ int start_cast(TBeing *ch, TBeing *victim, TThing *obj, TRoom *rp, spellNumT spe
       return FALSE;
     }
     // mob casting 2 spells.  2nd spell is "spell", look at spelltask for first...
-    forceCrash("%s got to bad place in start_cast (%d).  Tell a coder.",
+    vlogf(LOG_BUG, "%s got to bad place in start_cast (%d).  Tell a coder.",
        (ch ? ch->getName() : "Unknown"), spell);
 
     if (ch)

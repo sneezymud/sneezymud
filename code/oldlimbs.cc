@@ -619,7 +619,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "right paw";
         }
       } else {
-        forceCrash("Something called HOLD_RIGHT in describeTransBodySlot");
+        vlogf(LOG_BUG, "Something called HOLD_RIGHT in describeTransBodySlot");
         return "bogus transformed body part";
       }
     case HOLD_LEFT:
@@ -630,7 +630,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "left paw";
         }
       } else {
-        forceCrash("Something called HOLD_LEFT in describeTransBodySlot");
+        vlogf(LOG_BUG, "Something called HOLD_LEFT in describeTransBodySlot");
         return "bogus transformed body part";
       }
     case WEAR_EX_LEG_R:

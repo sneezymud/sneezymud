@@ -181,7 +181,7 @@ void board_reset_board(boardStruct *b)
   unsigned int ind;
 
   for (ind = 0; ind < MAX_MSGS; ind++) {
-    if (ind >= MAX_MSGS) forceCrash("reset board error");
+    if (ind >= MAX_MSGS) vlogf(LOG_BUG, "reset board error");
     delete [] b->head[ind];
     delete [] b->msgs[ind];
     delete [] b->writer[ind];

@@ -2555,7 +2555,7 @@ void TBeing::assignDisciplinesClass()
   try {
     discs = new CMasterDiscipline();
   } catch (...) {
-    forceCrash("assignDisc(): assertion trapped");
+    vlogf(LOG_BUG, "assignDisc(): assertion trapped");
   }
   mud_assert(discs != NULL, "assignDisc(): discs was null after new");
 

@@ -1424,7 +1424,7 @@ void TBeing::stopFighting()
   if (!fight()) {
     REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
     //vlogf(LOG_COMBAT, "Character (%s) not fighting at invocation of stopFighting", getName());
-    forceCrash("Character (%s) not fighting at invocation of stopFighting", getName());
+    vlogf(LOG_BUG, "Character (%s) not fighting at invocation of stopFighting", getName());
     if (desc && (cantHit > 0)) {
       sendTo("You finish orienting yourself.\n\r");
       cantHit = 0;
@@ -4072,7 +4072,7 @@ bool TBeing::damDetailsOk(const TBeing *vict, int dam, bool ranged) const
 int TBeing::setCharFighting(TBeing *vict, int dam)
 {
   if (!vict) {
-    forceCrash("No victim in call to setCharFighting! (%s)", getName());
+    vlogf(LOG_BUG, "No victim in call to setCharFighting! (%s)", getName());
     sendTo("Something bad happened, tell a god what you did!\n\r");
     return -1;
   }
@@ -5155,7 +5155,7 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
        objn(weapon) % nameBuf % 
        v->describeBodySlot(part) %red() %norm());
     v->sendTo(COLOR_OBJECTS, fmt("%s%s leaves %s %s stuck in your %s%s.\n\r") %
-       v->orange() % sstring(getName()).cap().c_str() % hshr() %
+       v->orange() % sstring(getName()).cap() % hshr() %
        objn(weapon) %v->describeBodySlot(part) % v->norm());
 
     sprintf(buf,"$n leaves $s $o stuck in $N's %s", v->describeBodySlot(part).c_str());
@@ -5397,12 +5397,12 @@ void TBeing::genericKillFix(void)
   int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    forceCrash("Multiple deaths (%s in room %d) occurred!",
+    vlogf(LOG_BUG, "Multiple deaths (%s in room %d) occurred!",
          getName(), inRoom());
   }
 
   if (IS_SET_DELETE(rc2, DELETE_VICT)) {
-    forceCrash("Multiple deaths (%s in room %d) occurred!",
+    vlogf(LOG_BUG, "Multiple deaths (%s in room %d) occurred!",
          getName(), inRoom());
   }
 

@@ -838,7 +838,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     // theoretically possible, but I don't believe situation will
     // have it occur realistically, JIC though
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      forceCrash("Bad result from PkRespawn (%s at %d).  Multiple deaths??",
+      vlogf(LOG_BUG, "Bad result from PkRespawn (%s at %d).  Multiple deaths??",
           v->getName(), v->inRoom());
     }
 

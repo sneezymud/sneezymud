@@ -172,7 +172,7 @@ int GinGame::exitGame(const TBeing *ch)
   int which, i;
 
   if ((which = index(ch)) < 0) {
-    forceCrash( "%s left a gin table he wasn't at!", ch->getName());
+    vlogf(LOG_BUG,  "%s left a gin table he wasn't at!", ch->getName());
     return FALSE;
   }
   other = get_char_room(names[!which], GIN_TABLE);

@@ -489,7 +489,7 @@ static void fastFight()
             temp = tmp_ch->next;
             if (!dynamic_cast<TBeing *>(tmp_ch)) {
               // something may be corrupting tmp_ch below - bat 8-18-98
-              forceCrash("forced crash.  How did we get here?");
+              vlogf(LOG_BUG, "forced crash.  How did we get here?");
             }
             delete tmp_ch;
             tmp_ch = NULL;

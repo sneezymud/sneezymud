@@ -529,12 +529,12 @@ void bootWorld(void)
 
       rp->dir_option[dir] = new roomDirData();
 
-      if(*db_exits["name"])
+      if(!db_exits["name"].empty())
 	rp->dir_option[dir]->keyword = mud_str_dup(db_exits["name"]);
       else
 	rp->dir_option[dir]->keyword = NULL;
 
-      if(*db_exits["description"])
+      if(!db_exits["description"].empty())
 	rp->dir_option[dir]->description = mud_str_dup(db_exits["description"]);
       else
 	rp->dir_option[dir]->description = NULL;
@@ -1260,7 +1260,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   try {
     mob = new TMonster();
   } catch (...) {
-    forceCrash("caught an exception");
+    vlogf(LOG_BUG, "caught an exception");
     return NULL;
   }
   mob->number = nr;
@@ -1351,7 +1351,7 @@ TObj *read_object(int nr, readFileTypeT type)
     nr = real_object(nr);
 
   if ((nr < 0) || (nr >= (signed int) obj_index.size())) {
-    forceCrash( "read_object: bad nr %d (i = %d)", nr, i);
+    vlogf(LOG_BUG,  "read_object: bad nr %d (i = %d)", nr, i);
     return NULL;
   }
 
@@ -1612,7 +1612,7 @@ wearSlotT mapFileToSlot(int num)
         return WEAR_EX_FOOT_L;
       default:
         vlogf(LOG_LOW, "Bogus slot (%d, 1) in zone file", num);
-        forceCrash("forced crash");
+        vlogf(LOG_BUG, "forced crash");
         return wearSlotT(0);
     }
 }
@@ -1670,7 +1670,7 @@ int mapSlotToFile(wearSlotT num)
     case MAX_WEAR:
     default:
       vlogf(LOG_LOW, "Bogus slot (%d, 2) in zone file", num);
-      forceCrash("forced crash");
+      vlogf(LOG_BUG, "forced crash");
       return 0;
   }
 }
@@ -2543,7 +2543,7 @@ char *fread_string(FILE *fp)
 
     if ((int) (ptr - buf) >= (int) sizeof(buf)) {
     vlogf(LOG_MISC, "SHIT! buf overflow!");
-      forceCrash("buf overflow");
+      vlogf(LOG_BUG, "buf overflow");
     }
 
     read_len = MAX_STRING_LENGTH - (ptr-buf);
@@ -2779,7 +2779,7 @@ TObj * makeNewObj(itemTypeT tmp)
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
-      forceCrash("Unknown item type (%d)", tmp);
+      vlogf(LOG_BUG, "Unknown item type (%d)", tmp);
   }
   return NULL;
 }

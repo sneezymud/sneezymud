@@ -66,7 +66,7 @@ unsigned int CountBits(unsigned int Class)
    if (Class == (1<<21))
       return (22);
 
-   forceCrash("Bad call to CountBits (%d)", Class);
+   vlogf(LOG_BUG, "Bad call to CountBits (%d)", Class);
    return FALSE;
 }
 
@@ -158,7 +158,7 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
   }
       
   if(res==MIN_CLASS_IND) {
-    forceCrash("unknown class result");
+    vlogf(LOG_BUG, "unknown class result");
   }
 
   return res;
@@ -177,7 +177,7 @@ classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
   }
       
   if(res==MIN_CLASS_IND) {
-    forceCrash("unknown class result");
+    vlogf(LOG_BUG, "unknown class result");
   }
 
   return res;
@@ -329,7 +329,7 @@ classIndT TBeing::bestClass() const
 void TBeing::setLevel(classIndT i, ubyte lev)
 {
   if (i >= MAX_CLASSES) {
-    forceCrash("Bad class value");
+    vlogf(LOG_BUG, "Bad class value");
     return;
   }
 

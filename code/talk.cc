@@ -420,7 +420,7 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
         (b->desc && !IS_SET(i->autobits, AUTO_NOSHOUT))) {
       mud_str_copy(capbuf, b->pers(ch), 256);
       if (!capbuf) {
-        forceCrash("No capbuf in sendShout!");
+        vlogf(LOG_BUG, "No capbuf in sendShout!");
         continue;
       }
       sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
@@ -833,19 +833,9 @@ void TBeing::doSign(const sstring &arg)
   }
 }
 
-// uses printf style arguments
-int TBeing::doTell(const sstring &name, const char *format, ...)
+int TBeing::doTell(const sstring &name, const sstring &arg, bool visible = TRUE)
 {
-  va_list ap;
-  char buf[MAX_STRING_LENGTH];
-
-  va_start(ap, format);
-  vsnprintf(buf, MAX_STRING_LENGTH, format, ap);
-
-  sstring sbuf;
-  sbuf = fmt("%s %s") % name % buf;
-  
-  return doTell(sbuf);
+  return doTell(fmt("%s %s") % name % arg, visible);
 }
 
 // returns DELETE_THIS on death of this

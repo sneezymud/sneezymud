@@ -424,7 +424,7 @@ void TBeing::removeRent()
     // being::isPc() checks for a bit set in specials.act, but could be
     // that bit is set (poly) but has no desc.  Not sure how this happens
     // so add this to track problem down
-    forceCrash("removeRent() called for a bad isPc() (%s)", getName()); 
+    vlogf(LOG_BUG, "removeRent() called for a bad isPc() (%s)", getName()); 
     return;
   }
 

@@ -67,16 +67,14 @@ int old_search_block(const char *argument, int bgin, int length, const char * co
   return (found ? guess : -1);
 }
 
-cmdTypeT searchForCommandNum(const char *argument)
+cmdTypeT searchForCommandNum(const sstring &argument)
 {
-  char buf[256];
   cmdTypeT i;
 
-  sprintf(buf, "%s", argument);
   for (i = MIN_CMD; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
       continue;
-    if (is_abbrev(buf, commandArray[i]->name))
+    if (is_abbrev(argument, commandArray[i]->name))
       return i;
   }
 

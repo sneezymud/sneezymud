@@ -1476,7 +1476,7 @@ class TBeing : public TThing {
     void statObjForDivman(const TObj *);
     void statBeing(TBeing *);
     virtual void doChange(const char *);
-    void lowTasks(const char *);
+    void lowTasks(const sstring &);
     void lowRace(const char *);
     void lowMobs(const char *);
     void lowObjs(const char *);
@@ -1872,7 +1872,7 @@ class TBeing : public TThing {
     void doChecklog(const char *, int);
     void doDeathcheck(const sstring &);
     int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
-    int doGive(const char *, giveTypeT = GIVE_FLAG_DEF);
+    int doGive(const sstring &, giveTypeT = GIVE_FLAG_DEF);
     int doMount(const char *, cmdTypeT, TBeing *);
     int doJunk(const char *, TObj *);
     int doNoJunk(const char *, TObj *);
@@ -1882,7 +1882,7 @@ class TBeing : public TThing {
     void doThrow(const sstring &);
     void doWear(const char *);
     int stickIn(TThing *o, wearSlotT pos, silentTypeT silent = SILENT_NO);
-    int doEmote(const char *);
+    int doEmote(const sstring &);
     void doNotHere() const;
     void doWield(const char *);
     // psionics
@@ -1964,7 +1964,7 @@ class TBeing : public TThing {
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);
     int doWhisper(const sstring &);
-    int doTell(const sstring &, const char *, ...);
+    int doTell(const sstring &, const sstring &, bool visible = TRUE);
     int doTell(const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);
     int doAsk(const sstring &);

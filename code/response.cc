@@ -133,7 +133,7 @@ RespMemory::RespMemory() :
 {
 }
 
-RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const char *tArg)
+RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const sstring &tArg)
 {
   if (tBeing && !tBeing->getNameNOC(tBeing).empty()) {
     name = mud_str_dup(tBeing->getNameNOC(tBeing));
@@ -141,7 +141,7 @@ RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const char *tArg)
     name = NULL;
   }
 
-  if (tArg && *tArg)
+  if (!tArg.empty())
     args = mud_str_dup(tArg);
 
   cmd  = newCmd;

@@ -83,7 +83,7 @@ int mapApplyToFile(applyTypeT att)
     case MAX_APPLY_TYPES:
       break;
   }
-  forceCrash("Unknown apply in mapApplyToFile (%d)", att);
+  vlogf(LOG_BUG, "Unknown apply in mapApplyToFile (%d)", att);
   return 0;
 }
 
@@ -169,7 +169,7 @@ applyTypeT mapFileToApply(int att)
     default:
       break;
   }
-  forceCrash("Unknown apply in mapFileToApply. (%d)", att);
+  vlogf(LOG_BUG, "Unknown apply in mapFileToApply. (%d)", att);
   return APPLY_NONE;
 }
 
@@ -348,7 +348,7 @@ int mapDiscToFile(discNumT dn)
     case DISC_NONE:
       break;
   }
-  forceCrash("Bad value to mapDiscToFile");
+  vlogf(LOG_BUG, "Bad value to mapDiscToFile");
   return -1;
 }
 
@@ -488,7 +488,7 @@ discNumT mapFileToDisc(int num)
     case 68:
       return DISC_IRON_BODY;
   }
-  forceCrash("Bad value to mapFileToDisc");
+  vlogf(LOG_BUG, "Bad value to mapFileToDisc");
   return DISC_NONE;
 }
 
@@ -536,7 +536,7 @@ dirTypeT getDirFromCmd(cmdTypeT cmd)
     case CMD_SW:
       return DIR_SOUTHWEST;
     default:
-      forceCrash("bad cmd to get dir from");
+      vlogf(LOG_BUG, "bad cmd to get dir from");
       return MAX_DIR;
   }
 }
@@ -695,7 +695,7 @@ sectorTypeT mapFileToSector(int num)
     case 65:
       return SECT_MAKE_FLY;
     default:
-      forceCrash("Bad num (%d) in file to sector", num);
+      vlogf(LOG_BUG, "Bad num (%d) in file to sector", num);
       return SECT_ASTRAL_ETHREAL;
   }
 }
@@ -826,7 +826,7 @@ int mapSectorToFile(sectorTypeT sec)
     case MAX_SECTOR_TYPES:
       break;
   }
-  forceCrash("Bad sec (%d) in file to sector", sec);
+  vlogf(LOG_BUG, "Bad sec (%d) in file to sector", sec);
   return -1;
 }
 
@@ -1063,7 +1063,7 @@ int mapWizPowerToFile(wizPowerT att)
     case MAX_POWER_INDEX:
       break;
   }
-  forceCrash("Bad power (%d) in mapWizPowerToFile", att);
+  vlogf(LOG_BUG, "Bad power (%d) in mapWizPowerToFile", att);
   return -1;
 }
 
@@ -1295,7 +1295,7 @@ wizPowerT mapFileToWizPower(int att)
     default:
       break;
   }
-  forceCrash("Unknown power (%d) in mapFileToWizPower", att);
+  vlogf(LOG_BUG, "Unknown power (%d) in mapFileToWizPower", att);
   return MAX_POWER_INDEX;
 }
 
@@ -1316,7 +1316,7 @@ int mapDrugToFile(drugTypeT d)
     case MAX_DRUG:
       break;
   }
-  forceCrash("Bad drug to mapDrugToFile %d", d);
+  vlogf(LOG_BUG, "Bad drug to mapDrugToFile %d", d);
   return -1;
 }
 
@@ -1332,7 +1332,7 @@ drugTypeT mapFileToDrug(int d)
     default:
       break;
   }
-  forceCrash("Bad drug to mapFileToDrug %d", d);
+  vlogf(LOG_BUG, "Bad drug to mapFileToDrug %d", d);
   return MAX_DRUG;
 }
 
@@ -1373,7 +1373,7 @@ doorTrapT mapFileToDoorTrap(int dt)
       return DOOR_TRAP_PEBBLE;
   }
 
-  forceCrash("Bad value (%d) in mapFileToDoorTrap", dt);
+  vlogf(LOG_BUG, "Bad value (%d) in mapFileToDoorTrap", dt);
   return MAX_TRAP_TYPES;
 }
 
@@ -1416,6 +1416,6 @@ int mapDoorTrapToFile(doorTrapT dt)
       break;
   }
 
-  forceCrash("Bad value (%d) in mapDoorTrapToFile", dt);
+  vlogf(LOG_BUG, "Bad value (%d) in mapDoorTrapToFile", dt);
   return -1;
 }

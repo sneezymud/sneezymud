@@ -132,7 +132,7 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
     if ((tFd = newDescriptor()) < 0)
       perror("New connection");
     else if (!tStString.empty() && tFd)
-      descriptor_list->writeToQ(tStString.c_str());
+      descriptor_list->writeToQ(tStString);
   }
   // close any connections with an exceptional condition pending 
   for (point = descriptor_list; point; point = next_to_process) {
@@ -1024,7 +1024,7 @@ int TSocket::gameLoop()
       }
 
       if (!tmp_ch) {
-	forceCrash("how did we get to here: socket");
+	vlogf(LOG_BUG, "how did we get to here: socket");
 	temp = tmp_ch->next;
 	continue;
       }
@@ -1048,7 +1048,7 @@ int TSocket::gameLoop()
 	  temp = tmp_ch->next;
 	  if (!dynamic_cast<TBeing *>(tmp_ch)) {
 	    // something may be corrupting tmp_ch below - bat 8-18-98
-	    forceCrash("forced crash.  How did we get here?");
+	    vlogf(LOG_BUG, "forced crash.  How did we get here?");
 	  }
 	  delete tmp_ch;
 	  tmp_ch = NULL;

@@ -101,11 +101,11 @@ static int genericDam(const TBeing *victim, spellNumT skill, discNumT basic_disc
 if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // specialized disc
   //  if (discArray[skill]->disc == basic_disc)
-  //    forceCrash("bad setup for skill %d wrt disc arrangement (1)", skill);
+  //    vlogf(LOG_BUG, "bad setup for skill %d wrt disc arrangement (1)", skill);
 } else {
   // basic disc
   if (discArray[skill]->disc != basic_disc)
-    forceCrash("bad setup for skill %d wrt disc arrangement (2)", skill);
+    vlogf(LOG_BUG, "bad setup for skill %d wrt disc arrangement (2)", skill);
 }
 
   getSkillLevelRange(skill, min_lev, max_lev, adv_learn);

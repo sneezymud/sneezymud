@@ -209,7 +209,7 @@ TThing * TThing::dismount(positionTypeT pos)
 
   if (!riding) {
     // use this to find out where this is called from
-    forceCrash("%s not riding in call to dismount().", getName());
+    vlogf(LOG_BUG, "%s not riding in call to dismount().", getName());
     return NULL;
   }
   if (riding->rider == this)
@@ -267,7 +267,7 @@ TThing * TThing::dismount(positionTypeT pos)
     if (ttab->roomp)
       ttab->roomp->addToLight(-getLight());
     else {
-      forceCrash("Potential lighting screw up involving tables (dismount).");
+      vlogf(LOG_BUG, "Potential lighting screw up involving tables (dismount).");
     }
   }
 

@@ -367,7 +367,6 @@ extern void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_n
 extern TRoom *room_find_or_create(int);
 class TNote;
 extern TNote *createNote(char *);
-extern void forceCrash(const char *, ...);
 extern sstring secsToString(time_t num);
 extern TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos);
 extern bool isCritPart(wearSlotT);
@@ -418,7 +417,6 @@ extern bool isInkComponent(int);
 extern bool isBrewComponent(int);
 extern wizPowerT mapFileToWizPower(int);
 extern int mapWizPowerToFile(wizPowerT);
-extern void comify(char *);
 extern bool checkAttuneUsage(TBeing *, int *, int *, TVial **, TSymbol *);
 extern const sstring getWizPowerName(wizPowerT); 
 extern void setWizPowers(const TBeing *, TBeing *, const sstring &);

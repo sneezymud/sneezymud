@@ -187,7 +187,7 @@ void TBeing::affectChange(unsigned long original, silentTypeT silent)
         rc = crashLanding(POSITION_SITTING);
         if (IS_SET_DELETE(rc, DELETE_THIS))
         // I don't think this can happen, so won't bother to do work to pass the return if it does
-          forceCrash("fix problem in affectChange and crashLanding");
+          vlogf(LOG_BUG, "fix problem in affectChange and crashLanding");
       }
     }
   }
@@ -234,7 +234,7 @@ void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
   skillApplyData *temp = NULL, *temp2 = NULL;
  
   if (!skillApplys) {
-    forceCrash("Somehow, remSkillApply was called with no skillApplys (%s) (%d)", getName(), skillNum);
+    vlogf(LOG_BUG, "Somehow, remSkillApply was called with no skillApplys (%s) (%d)", getName(), skillNum);
     return;
   }
   for (temp = skillApplys; temp; temp = temp2) {
@@ -298,7 +298,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
       return;
     case APPLY_SPELL:
       if (!discArray[mod]) {
-        forceCrash("ILLEGAL skill (%d) on being %s.  Ignoring.", mod, getName());
+        vlogf(LOG_BUG, "ILLEGAL skill (%d) on being %s.  Ignoring.", mod, getName());
         return;
       }
       if (add) {
@@ -333,7 +333,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
       }
     case APPLY_IMMUNITY:
       if (mod < MIN_IMMUNE || mod >= MAX_IMMUNES) {
-        forceCrash("Bad immunity value");
+        vlogf(LOG_BUG, "Bad immunity value");
         return;
       }
       if (add) 
@@ -451,7 +451,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
       break;
   }
   vlogf(LOG_BUG, "Unknown apply adjust attempt (::affectModify()) %s loc: %d.", getName(), loc);
-  forceCrash("how'd this happen");
+  vlogf(LOG_BUG, "how'd this happen");
 }
 
 bool affectShouldApply(const TObj *obj, wearSlotT pos)
@@ -986,7 +986,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
   mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "pos in equip_char(%s %s %d) was out of range!!", getName(), obj->name, pos);
 
   if (equipment[pos]) {
-    forceCrash("equip_char(%s %s %d) called with position already equipped!", getName(), obj->name, pos);
+    vlogf(LOG_BUG, "equip_char(%s %s %d) called with position already equipped!", getName(), obj->name, pos);
     return;
   }
   if (obj->parent) {
@@ -2419,52 +2419,6 @@ void mud_assert(int parm, const char *errorMsg,...)
   abort();    // force a crash
 }
 
-// this forks the process, and drops a core in the child
-// the regular process continues on
-void forceCrash(const char *errorMsg,...)
-{
-  char message[512];
-  va_list ap;
- 
-  va_start(ap, errorMsg);
-  vsprintf(message, errorMsg, ap);
-  va_end(ap);
-
-  // this would be a good idea if batopr didn't put it in freaking 
-  // everywhere.  90% of our crashes are because of this
-#if 0
-  vlogf(LOG_BUG, "FORCED CORE GENERATION: %s", message);
-
-  // track number of times been in here
-  // if large number of crashes, exit program
-  static unsigned int numForced = 0;
-  numForced++;
-  if (numForced >= 3)
-    abort();   // kills the entire proc
-
-  if (fork())
-    abort();    // force a crash in the child
-#else
-  vlogf(LOG_BUG, "forceCrash (not crashing): %s", message);
-#endif
-
-  // parent process continues on...
-#if 0
-  // this didn't background well (at all)
-  // so the rebooter was enhanced to do this for us instead.
-
-  // fix the core and preserve it
-  char buf[64];
-  strcpy(buf, "chmod 770 core");
-  vsystem(buf);
-  // do rename and move in two steps
-  // move may cross network paths and don't want to take forever
-  strcpy(buf, "mv core core.`date +%m%d%y.%H%M`");
-  vsystem(buf);
-  strcpy(buf, "mv core.* cores/. &");
-  vsystem(buf);
-#endif
-}
 
 // provides "this"'s name, with no color as defined by ch
 const sstring TThing::getNameNOC(const TBeing *ch) const

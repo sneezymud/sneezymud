@@ -282,7 +282,7 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       vlogf(LOG_LOW, "Dragon (%s:%d) trying to breathe in room %d and not hard coded.",
             myself->getName(), myself->mobVnum(), myself->inRoom());
     else
-      forceCrash("Dragon has no defined breath. (%d)", myself->mobVnum());
+      vlogf(LOG_BUG, "Dragon has no defined breath. (%d)", myself->mobVnum());
     return FALSE;
   }
   if (myself->hasDisease(DISEASE_DROWNING) ||

@@ -622,7 +622,7 @@ cmdTypeT seditCmdFromText(sstring tStString, bool checkMini)
     return CMD_RESP_ROOM_ENTER;
 
   if (checkMini)
-    return searchForCommandNum(tStString.c_str());
+    return searchForCommandNum(tStString);
 
   if (is_abbrev(tStString, "toggle"))
     return CMD_RESP_TOGGLE;
@@ -669,7 +669,7 @@ cmdTypeT seditCmdFromText(sstring tStString, bool checkMini)
   if (is_abbrev(tStString, "loadmob") && tStString.length() > 4)
     return CMD_RESP_LOADMOB;
 
-  return searchForCommandNum(tStString.c_str());
+  return searchForCommandNum(tStString);
 }
 
 sstring seditExtraWords(cmdTypeT tCmd)

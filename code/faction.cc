@@ -2936,7 +2936,7 @@ const char * CaravanDestination(int which)
       return "Amber";
     default:
       vlogf(LOG_BUG, "CaravanDestination had an i of %d (which %d)", i, which);
-      forceCrash("bad carvan");
+      vlogf(LOG_BUG, "bad carvan");
       return "unknown";
   }
 }
@@ -2990,7 +2990,7 @@ void launch_caravans()
         break;
       case MAX_FACTIONS:
       case FACT_UNDEFINED:
-        forceCrash("Bad faction (%d) in LaunchCaravans", i);
+        vlogf(LOG_BUG, "Bad faction (%d) in LaunchCaravans", i);
         break;
     }
   }

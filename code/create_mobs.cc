@@ -2006,7 +2006,7 @@ int mapPosToFile(positionTypeT pos)
     case POSITION_FLYING:
       return 12;
   }
-  forceCrash("Bad pos");
+  vlogf(LOG_BUG, "Bad pos");
   return -1;
 }
 
@@ -2269,7 +2269,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     // skills are needed by almost everything
     assignDisciplinesClass();
   } else
-    forceCrash("Bogus letter on mob");
+    vlogf(LOG_BUG, "Bogus letter on mob");
 
   return TRUE;
 }
