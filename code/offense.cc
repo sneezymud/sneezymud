@@ -700,8 +700,11 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
   if (rp2->isAirSector() && !ch->isFlying())
     return false;
 
+#if 0
+     // this is dumb
   if (rp2->isUnderwaterSector() && !ch->isAffected(AFF_WATERBREATH))
     return false;
+#endif
 
   if (ch->isAquatic() && 
       !(rp2->isWaterSector() || rp2->isUnderwaterSector()))
