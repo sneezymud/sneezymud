@@ -488,7 +488,9 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
       return TRUE;
     }
 #else
-    if (horse->GetMaxLevel() > GetMaxLevel()) {
+    if(!(horse->mobVnum()==MOB_ELEPHANT &&
+	 hasQuestBit(TOG_MONK_GREEN_STARTED)) &&
+       horse->GetMaxLevel() > GetMaxLevel()){
       switch (::number(0, 3)) {
         case 0:
           act("$N bucks you off, you fall on your butt.",
