@@ -2315,7 +2315,6 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       break;
     case LIQ_POT_HEAL:
     case LIQ_POT_HEAL2:
-      break;
       heal(ch,ch,level,learn,SPELL_HEAL,0);
       break;
     case LIQ_POT_SANCTUARY:
