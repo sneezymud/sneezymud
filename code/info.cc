@@ -3604,17 +3604,13 @@ const sstring TBeing::slotPlurality(int limb) const
 void TBeing::doLimbs(const sstring & argument)
 {
   wearSlotT i;
-  char buf[512], who[5];
+  sstring who;
   affectedData *aff;
   TThing *t;
   TBeing *v=NULL;
 
-  *buf = '\0';
-
-
   if(!argument.empty()) {
-    strcpy(buf, argument.c_str());
-    if (!(v = get_char_room_vis(this, buf))) {
+    if (!(v = get_char_room_vis(this, argument))) {
       if (!(v = fight())) {
 	sendTo("Check whose limbs?\n\r");
 	return;
@@ -3627,15 +3623,13 @@ void TBeing::doLimbs(const sstring & argument)
   }
 
   if(!v || v==this){
-    v=this;
-    strcpy(who, "Your");
+    v = this;
+    who = "Your";
     sendTo("You evaluate your limbs and their health.\n\r");
   } else {
-    strncpy(who, v->hshr(), 5);
-    strcpy(who, sstring(who).cap().c_str());
+    who = sstring(v->hshr()).cap();
     sendTo(COLOR_BASIC, fmt("You evaluate %s's limbs and their health.\n\r") % v->getName());
   }
-
 
   bool found = false;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -3694,18 +3688,16 @@ void TBeing::doLimbs(const sstring & argument)
     }
     if ((t = v->getStuckIn(i))) {
       if (canSee(t)) {
-        strcpy(buf, t->getName());
         sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
-        sstring(buf).cap() % who % v->describeBodySlot(i));
+        sstring(t->getName()).cap() % who % v->describeBodySlot(i));
       }
     }
   }
    
   if(v==this)
-    strcpy(who, "You");
+    who = "You";
   else {
-    strncpy(who, v->hssh(), 5);
-    strcpy(who, sstring(who).cap().c_str());
+    who = sstring(v->hssh()).cap();
   }
     
   if (v->affected) {
@@ -3721,13 +3713,14 @@ void TBeing::doLimbs(const sstring & argument)
     }
   }
 
-  if (v == this)
-    strcpy(who, "your");
-  else
-    strncpy(who, v->hshr(), 5);
+  if (!found) {
+    if (v == this)
+      who = "your";
+    else
+      who = v->hshr();
 
-  if (!found)
     sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % who);
+  }
 }
 
 void TBeing::genericEvaluateItem(const TThing *obj)
