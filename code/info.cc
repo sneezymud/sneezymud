@@ -3837,6 +3837,15 @@ void TBeing::doEvaluate(const char *argument)
     else
       sendTo("You are somewhere...But damned if you can figure it out.\n\r");
 
+
+    if(roomp && (roomp->isIndoorSector() ||
+		 roomp->isRoomFlag(ROOM_INDOORS))){
+      sendTo("You are indoors.\n\r");
+    } else {
+      sendTo("You are outside.\n\r");
+    }
+
+
     if (!hasClass(CLASS_RANGER))
       return;
 
