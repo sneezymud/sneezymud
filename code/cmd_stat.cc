@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_stat.cc,v $
+// Revision 1.2  1999/10/01 16:57:58  batopr
+// Changed so monks will show prim/second hand attack breakdown too
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -695,9 +698,11 @@ void TBeing::statBeing(TBeing *k)
     int chg = (int) (bd * km->getDamPrecision() / 100);
     sprintf(buf + strlen(buf), "  NPC Damage range: %d-%d.\n\r",
         max(1, (int) bd-chg), max(1, (int) bd+chg));
-  } else if (k->hasClass(CLASS_MONK)) {
-    sprintf(buf + strlen(buf), "Number of attacks : %.2f\n\r", k->getMult());
   } else {
+    if (k->hasClass(CLASS_MONK)) {
+      sprintf(buf + strlen(buf), "Number of attacks : %.2f\n\r", k->getMult());
+    }
+
     float fx, fy;
     k->blowCount(false, fx, fy);
     sprintf(buf + strlen(buf), "Prim attacks: %.2f, Off attacks: %.2f\n\r",
