@@ -721,7 +721,8 @@ const char * const room_bits[MAX_ROOM_BITS] =
   "NO-HEAL",
   "HOSPITAL",
   "SAVE ROOMS",
-  "BEING EDITED",
+  "NO AUTOFORMAT",
+  "BEING EDITED"
 };
 
 

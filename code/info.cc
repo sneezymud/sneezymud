@@ -18,6 +18,7 @@
 #include "statistics.h"
 #include "obj_component.h"
 #include "database.h"
+#include "room.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"
@@ -415,6 +416,200 @@ void list_char_to_char(TBeing *list, TBeing *ch, int)
       ch->showTo(i, SHOW_MODE_DESC_PLUS);
   }
 }
+
+sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
+{
+  sstring line, garbled;
+  sstring punctuation = ".!?;:"; 
+
+  sstring newDescr = "";
+  size_t swlen = 0, llen_diff = 0;
+  bool was_word = false;
+
+  if (regStr.empty()) {
+    return newDescr;
+  }
+
+  vlogf(LOG_BUG, "autoFormatDesc: before garble");
+  garbled = garble(regStr, getCond(DRUNK));
+  vlogf(LOG_BUG, "autoFormatDesc: after garble");
+
+  vector <sstring> words;
+  vector <sstring>::iterator iter;
+  argument_parser(garbled, words);
+
+  // indent the first line, if needed
+  if (indent) {
+    line = "  "; // intial extra space
+    indent = false;
+  }
+
+  for(iter=words.begin(); iter!=words.end(); ++iter){
+    sstring word, stripped_word;
+
+    // count the number of unprintable characters in each word
+    word = *iter;
+    stripped_word = stripColorCodes(word);
+    swlen = stripped_word.length();
+    llen_diff += word.length() - swlen;
+
+    if ((line.length() + 1) + (word.length() + 1) >= (80 + llen_diff)) {
+      if (iter!=words.end()) {
+        line += "\n\r";
+      }
+      newDescr += line;
+      line = word;
+      llen_diff = 0;
+    } else { // word fits ok on line
+      size_t last_char = 0;
+
+      // check if the word ends with punctuation
+      stripped_word += " ";
+      last_char = stripped_word.find_last_not_of(" ");
+
+      if (stripped_word.find_first_of(punctuation, last_char) !=
+          stripped_word.npos) {
+        word += " "; // and add an extra space to the end.
+      }
+      // if the length of the stripped word > 0
+      // and the previous word was a real word, then append a space to the
+      // line before appending the word.
+      if (swlen) {
+        if (was_word) {
+          line += " ";
+        }
+        was_word = true;
+      } else {
+        was_word = false;
+      }
+      line += word;
+    }
+  }
+
+  newDescr += line;
+  newDescr += "\n\r";
+
+  return newDescr;
+}
+
+#if 0
+sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
+{
+  sstring tStr, whitespace, punctuation, word, line, a2;
+  sstring colors;
+  sstring newDescr;
+  size_t wbgin = 0;
+  unsigned int cwordend, num_ctags_line = 0;
+  unsigned int num_ctags_word = 0;
+
+  if (regStr.empty()) {
+    return newDescr;
+  }
+
+  tStr = regStr;
+  /*
+  tStr = rp->descr;
+
+  if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
+    return tStr;
+  }
+  if (!rp->descr) {
+    return tStr;
+  }
+  */
+
+  // Ok what do we want here:
+  // A) Description should start with two spaces
+  // B) There should be two spaces and only two spaces after each sentence end
+  // C) Lines should be no longer than 80 characters, and should not break in the
+  //    middle of a word.
+  
+  // whitespace = " \n\r";
+  whitespace = " \f\n\r\t\v";
+
+  punctuation = ".!?;:"; 
+  colors = "<";
+
+  size_t bgin, look_at;
+  bool was_word = false;
+
+  if (indent) {
+    line = " "; // intial extra space
+  }
+
+  while (!tStr.empty()) {
+
+    bgin = 0;
+
+    bgin = tStr.find_first_not_of(whitespace);
+    look_at = tStr.find_first_of(whitespace, bgin);
+    
+    if (look_at != tStr.npos) {
+      // normal, return the part between
+      word = tStr.substr(bgin, look_at - bgin);
+      a2 = tStr.substr(look_at);
+      tStr = a2;
+    } else if (bgin != tStr.npos) {
+      // sstring had no terminator
+      word = tStr.substr(bgin);
+      tStr = "";
+    } else {
+      // whole sstring was whitespace
+      word = "";
+      tStr = "";
+    }
+
+    num_ctags_word = 0;
+    wbgin = word.find_first_of(colors);
+    cwordend = word.npos;
+    while (wbgin != cwordend) {
+      num_ctags_word++;
+      num_ctags_line++;
+      wbgin = word.find_first_of(colors, wbgin+1);
+    }
+
+    if ((line.length() + 1) + (word.length() + 1) >=
+        (80 + (3 * num_ctags_line))) {
+      // word is too long, end line and start on next
+      // if this is the last word of the desc, don't append a CR/LF
+      if (tStr != "" ) {
+        line += "\n\r";
+      }
+      newDescr += line;
+      line = word;
+      num_ctags_line = 0;
+    } else { // word fits ok on line
+      // check if the word ends with punctuation
+      if (word.find_first_of(punctuation) != tStr.npos) {
+        word += " "; // and add an extra space to the end.
+        // note: this is sort of a hack, because words like sjdgh:jdsgh
+        // will trigger it...  but if they want to put crap like that in
+        // they can format it themselves, damnit.
+      }
+      // if the word contains only color codes, don't append a space
+      // to the line.
+      if (indent) {
+        line += " ";
+        indent = false;
+      } else {
+        if ((word.length() != (3 * num_ctags_word))) {
+          if (was_word) {
+            line += " ";
+          }
+          was_word = true;
+        } else {
+          was_word = false;
+        }
+      }
+      line += word;
+    }
+  }
+  newDescr += line;
+  newDescr += "\n\r";
+
+  return newDescr;
+}
+#endif
 
 sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 {
@@ -5021,9 +5216,17 @@ void TBeing::sendRoomName(TRoom *rp) const
 void TBeing::sendRoomDesc(TRoom *rp) const
 {
   if (hasColorStrings(this, rp->getDescr(), 2)) {
-    sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).c_str(), norm());
+    if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
+      sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).c_str(), norm());
+    } else {
+      sendTo(COLOR_ROOMS, "%s%s\n\r", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
+    }
   } else {
-    sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), rp->getDescr(), norm());
+    if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), rp->getDescr(), norm());
+    } else {
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true).c_str(), norm());
+    }
   }
 }
 

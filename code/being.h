@@ -1959,6 +1959,7 @@ class TBeing : public TThing {
     virtual void doShutdow();
     virtual void doShutdown(const char *);
     const sstring addColorRoom(TRoom *, int) const;
+    sstring autoFormatDesc(const sstring &, bool) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
     sstring garble(const sstring &, int) const;
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);

@@ -197,10 +197,27 @@ void TPerson::doEdit(const char *arg)
   int exroom;
   doorTypeT doortype;
   sectorTypeT sectype;
+  sstring tStr;
+  /*
   sstring tStr, whitespace, punctuation, newDescr, word, line, a2;
   sstring colors;
   size_t wbgin = 0;
-  unsigned int cwordend, num_color_tags = 0;
+  unsigned int cwordend = 0;
+  unsigned int num_ctags_word = 0;
+  */
+
+  sstring regStr;
+  sstring line, garbled;
+  sstring word, stripped_word;
+
+  sstring punctuation = ".!?;:"; 
+  vector <sstring> words;
+  vector <sstring>::iterator iter;
+
+  sstring newDescr = "";
+  size_t swlen = 0;
+  bool was_word = false;
+
   long r_flags;
   sstring tStString("");
   char sstring[512],
@@ -1226,6 +1243,59 @@ void TPerson::doEdit(const char *arg)
 	return;
       }
 
+      regStr = roomp->descr;
+
+      argument_parser(regStr, words);
+
+      line = "  "; // intial extra space
+
+      for(iter=words.begin(); iter!=words.end(); ++iter){
+        // count the number of unprintable characters in each word
+        word = *iter;
+        stripped_word = stripColorCodes(word);
+        swlen = stripped_word.length();
+
+        if ((line.length() + 1) + (word.length() + 1) >= 80) {
+          if (iter!=words.end()) {
+            line += "\n\r";
+          }
+          newDescr += line;
+          line = word;
+        } else { // word fits ok on line
+          size_t last_char = 0;
+
+          // check if the word ends with punctuation
+          stripped_word += " ";
+          last_char = stripped_word.find_last_not_of(" ");
+
+          if (stripped_word.find_first_of(punctuation, last_char) !=
+              stripped_word.npos) {
+            word += " "; // and add an extra space to the end.
+          }
+          // if the length of the stripped word > 0
+          // and the previous word was a real word, then append a space to the
+          // line before appending the word.
+          if (swlen) {
+            if (was_word) {
+              line += " ";
+            }
+            was_word = true;
+          } else {
+            was_word = false;
+          }
+          line += word;
+        }
+      }
+
+      newDescr += line;
+      newDescr += "\n\r";
+
+      delete [] roomp->descr;
+      roomp->descr = mud_str_dup(newDescr);
+
+      sendTo("Room has been formatted.\n\r");
+
+#if 0
       tStr = roomp->descr;
 
       // Ok what do we want here:
@@ -1234,24 +1304,6 @@ void TPerson::doEdit(const char *arg)
       // C) Lines should be no longer than 80 characters, and should not break in the
       //    middle of a word.
       
-
-      /* Fix to handle color codes
-      sstring stripColorCodes(sstring s)
-      {
-        sstring buf;
-
-        for(unsigned int i=0;i<s.length();++i){
-          if(s[i] == '<'){
-            i+=2;
-            continue;
-          }
-
-          buf += s[i];
-        }
-
-        return buf;
-      }
-      */
       whitespace = " \n\r";
 
       punctuation = ".!?;:"; 
@@ -1283,25 +1335,32 @@ void TPerson::doEdit(const char *arg)
 	  tStr = "";
 	}
 
+        num_ctags_word = 0;
 	wbgin = word.find_first_of(colors);
         cwordend = word.npos;
         while (wbgin != cwordend) {
-          num_color_tags++;
+          num_ctags_word++;
           wbgin = word.find_first_of(colors, wbgin+1);
         }
 
-	if ((line.length() + 1) + (word.length() + 1) >= (80 + (3 * num_color_tags))) {// word is too long, end line and start on next
-	  line += "\n\r";
+	if ((line.length() + 1) + (word.length() + 1) >= 80) {// word is too long, end line and start on next
+          // if this is the last word of the desc, don't append a CR/LF
+          if (tStr != "" ) {
+            line += "\n\r";
+          }
 	  newDescr += line;
 	  line = word;
-          num_color_tags = 0;
 	} else { // word fits ok on line
 	  if (word.find_first_of(punctuation) != sstring::npos) { // word has punctuation
 	    word += " "; // so add extra spaces to the end.
 	    // note: this is sort of a hack, because words like sjdgh:jdsgh will trigger it...
 	    // but if they want to put crap like that in they can format it themselves, damnit.
 	  }
-	  line += " ";
+          // if the word contains only color codes, don't append a space
+          // to the line.
+          if ((word.length() != (3 * num_ctags_word))) {
+            line += " ";
+          }
 	  line += word;
 	}
       }
@@ -1313,6 +1372,7 @@ void TPerson::doEdit(const char *arg)
       roomp->descr = mud_str_dup(newDescr);
 
       sendTo("Room has been formatted.\n\r");
+#endif
 
       return;
       break;

@@ -44,7 +44,7 @@ const unsigned int ROOM_NO_MOB        = (1<<2);     // 4
 const unsigned int ROOM_INDOORS       = (1<<3);     // 8
 const unsigned int ROOM_PEACEFUL      = (1<<4);     // 16
 const unsigned int ROOM_NO_STEAL      = (1<<5);     // 32
-const unsigned int ROOM_NO_ESCAPE        = (1<<6);     // 64
+const unsigned int ROOM_NO_ESCAPE     = (1<<6);     // 64
 const unsigned int ROOM_NO_MAGIC      = (1<<7);     // 128
 const unsigned int ROOM_NO_PORTAL     = (1<<8);     // 256
 const unsigned int ROOM_PRIVATE       = (1<<9);     // 512
@@ -56,9 +56,10 @@ const unsigned int ROOM_ARENA         = (1<<14);    // 16384
 const unsigned int ROOM_NO_HEAL       = (1<<15);    // 32768
 const unsigned int ROOM_HOSPITAL      = (1<<16);    // 65536
 const unsigned int ROOM_SAVE_ROOM     = (1<<17);    // 131072
-const unsigned int ROOM_BEING_EDITTED = (1<<18);    // 262144
+const unsigned int ROOM_NO_AUTOFORMAT = (1<<18);    // 262144
+const unsigned int ROOM_BEING_EDITTED = (1<<19);    // 524288
 
-const int MAX_ROOM_BITS      = 19;          /* move and change */
+const int MAX_ROOM_BITS      = 20;          /* move and change */
 
 const unsigned int EX_CLOSED       = (1<<0);   // 1
 const unsigned int EX_LOCKED       = (1<<1);   // 2
