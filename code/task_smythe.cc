@@ -75,13 +75,13 @@ int TBeing::get_metal_tools(TTool **forge, TTool **anvil, TTool **hammer, TTool 
   return (*forge && *anvil && *hammer && *tongs);
 }
 
-int TBeing::get_wood_tools(TTool **ladel, TTool **soil)
+int TBeing::get_wood_tools(TTool **ladle, TTool **soil)
 {
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
-    if (!*ladel && tt->getToolType() == TOOL_LADEL)
-      *ladel = tt;
+    if (!*ladle && tt->getToolType() == TOOL_LADEL)
+      *ladle = tt;
   }
   if ((tt = dynamic_cast<TTool *>(heldInSecHand()))) {
     if (!*soil && tt->getToolType() == TOOL_SOIL)
@@ -90,21 +90,21 @@ int TBeing::get_wood_tools(TTool **ladel, TTool **soil)
 
 
 
-  if (!*ladel) sendTo("You need to have a ladel in your primary hand.\n\r");
+  if (!*ladle) sendTo("You need to have a ladle in your primary hand.\n\r");
   if (!*soil) sendTo("You need to have some soil in your secondary hand.\n\r");
 
 
-  return (*ladel && *soil);
+  return (*ladle && *soil);
 }
 
-int TBeing::get_shell_tools(TTool **ladel, TTool **oils)
+int TBeing::get_shell_tools(TTool **ladle, TTool **oils)
 {
 
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
-    if (!*ladel && tt->getToolType() == TOOL_LADEL)
-      *ladel = tt;
+    if (!*ladle && tt->getToolType() == TOOL_LADEL)
+      *ladle = tt;
   }
   if ((tt = dynamic_cast<TTool *>(heldInSecHand()))) {
     if (!*oils && tt->getToolType() == TOOL_PLANT_OIL)
@@ -112,11 +112,11 @@ int TBeing::get_shell_tools(TTool **ladel, TTool **oils)
   }
 
 
-  if (!*ladel) sendTo("You need to have a ladel in your primary hand.\n\r");
+  if (!*ladle) sendTo("You need to have a ladle in your primary hand.\n\r");
   if (!*oils) sendTo("You need to have some oil in your secondary hand.\n\r");
 
 
-  return (*ladel && *oils);
+  return (*ladle && *oils);
 }
 
 int TBeing::get_magic_tools(TTool **pentagram, TTool **runes, TTool **energy)
@@ -801,16 +801,16 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 }
 
 // repair organic: wood (5), ebony (105) 
-// tools: water (room), a ladel (primary), some rich soil (secondary)
+// tools: water (room), a ladle (primary), some rich soil (secondary)
 
 // repair organic: coral (14), dragon scale (53), fish scale (75)
-// tools: water (room), a ladel (primary), a vial of plant oils (secondary)
+// tools: water (room), a ladle (primary), a vial of plant oils (secondary)
 
 int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
 
   TThing *t;
-  TTool *ladel = NULL, *oils = NULL;
+  TTool *ladle = NULL, *oils = NULL;
   TObj *o = NULL;
   int learning;
   int percent;
@@ -834,7 +834,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   switch (cmd) {
     case CMD_TASK_CONTINUE:
 
-      if (!ch->get_shell_tools(&ladel, &oils) || (ch->getPosition() < POSITION_RESTING)
+      if (!ch->get_shell_tools(&ladle, &oils) || (ch->getPosition() < POSITION_RESTING)
 	  || !ch->roomp->isWaterSector()) {
 	
 	smythe_stop(ch);
@@ -874,15 +874,15 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  ch->task->status++;
 	} else if (::number(0,1)) {
 	  if (::number(0,1)) {
-	    act("$n pours water over $p with $P.", FALSE, ch, o, ladel, TO_ROOM);
-	    act("You pour water over $p with $P.", FALSE, ch, o, ladel, TO_CHAR);
-	    ladel->addToToolUses(-1);
-	    if (ladel->getToolUses() <= 0) {
-	      act("Your $O breaks from overuse!", FALSE, ch, o, ladel, TO_CHAR);
-	      act("$n's $O breaks from overuse!", FALSE, ch, o, ladel, TO_ROOM);
-	      ladel->makeScraps();
+	    act("$n pours water over $p with $P.", FALSE, ch, o, ladle, TO_ROOM);
+	    act("You pour water over $p with $P.", FALSE, ch, o, ladle, TO_CHAR);
+	    ladle->addToToolUses(-1);
+	    if (ladle->getToolUses() <= 0) {
+	      act("Your $O breaks from overuse!", FALSE, ch, o, ladle, TO_CHAR);
+	      act("$n's $O breaks from overuse!", FALSE, ch, o, ladle, TO_ROOM);
+	      ladle->makeScraps();
 	      ch->stopTask();
-	      delete ladel;
+	      delete ladle;
 	      return FALSE;
 	    }
 	  } else {
