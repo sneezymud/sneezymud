@@ -5667,6 +5667,7 @@ void TBeing::doAccount(const sstring &arg)
           (tmp_name != "Lapsos") &&
           (tmp_name != "Damescena") &&
           (tmp_name != "Peel") &&
+          (tmp_name != "Jesus") &&
           (tmp_name != "Dash") &&
           (tmp_name != "Angus")) {
         sendTo("Sorry you suck too much to do this.\n\r");

@@ -553,17 +553,17 @@ enum logTypeT
 
   LOG_EDIT    = 21, // Various 'edit' errors
 
-  LOG_MAX     = 24, // This is here to prevent unwarrented use of the belows.
+  LOG_MAX     = 23, // This is here to prevent unwarrented use of the belows.
 
   LOG_BATOPR  = 24, // Batopr only logs
   LOG_BRUTIUS = 25, // Brutius only logs
   LOG_COSMO   = 26, // Cosmo only logs
-  LOG_LAPSOS  = 29, // Lapsos only logs
+  LOG_MAROR   = 27, // Maror only logs
   LOG_PEEL    = 28,  // Peel only logs
-  LOG_JESUS   = 32,  // Jesus only
+  LOG_LAPSOS  = 29, // Lapsos only logs
   LOG_DASH    = 30, // Dash only
   LOG_ANGUS   = 31,  // Angus only
-  LOG_MAROR   = 27 // Maror only logs
+  LOG_JESUS   = 23  // Jesus only
 };
 
 enum checkFallingT
