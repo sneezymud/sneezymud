@@ -1861,7 +1861,7 @@ int StatTeller(TBeing *pch, cmdTypeT cmd, const char *, TMonster *, TObj *)
 void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, bool forceStand)
 {
   TRoom *rp;
-  int or;
+  int oldr;
   char buf[256];
 
   rp = v->roomp;
@@ -1915,13 +1915,13 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
       sprintf(buf, "$N is pushed %s out of the room by $n.", dirs[dir]);
       act(buf, TRUE, this, 0, v, TO_NOTVICT);
     }
-    or = v->in_room;
+    oldr = v->in_room;
     --(*v);
     if (also) {
       --(*this);
-      thing_to_room(this, real_roomp(or)->dir_option[dir]->to_room);
+      thing_to_room(this, real_roomp(oldr)->dir_option[dir]->to_room);
     }
-    thing_to_room(v, real_roomp(or)->dir_option[dir]->to_room);
+    thing_to_room(v, real_roomp(oldr)->dir_option[dir]->to_room);
 
     if(!silent){
       act("$n is pushed into the room.", TRUE, v, 0, 0, TO_ROOM);
@@ -3673,8 +3673,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           me->doSay(buf);
 
           if (!job->pc->desc || !(me->roomp == job->pc->roomp)) {
-            me->doSay("Hmm, I seem to have lost the person I was attuning for.
-");
+            me->doSay("Hmm, I seem to have lost the person I was attuning for.");
             rc = me->doDrop(t->name, NULL);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               job->clearAttuneData();
@@ -7244,7 +7243,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
 
   // reset the proc after 10 minutes
   if (firstGuessTime) elapsedTime = (time(0) - firstGuessTime) / 60;
-  if (elapsedTime >= 10) firstGuessTime = NULL;
+  if (elapsedTime >= 10) firstGuessTime = 0;
   if (!firstGuessTime) chancesLeft = 3;
   
   riddles.push_back("A great tree that spreads its roots where dryads step around the gentle dancing of nymphs.");
@@ -7291,7 +7290,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   if (cmd == CMD_TELL && sarg.lower().find(answers[whichRiddle]) != 
       sstring::npos) {
 // reset guessing
-    firstGuessTime = NULL;
+    firstGuessTime = 0;
     tree->doAction("", CMD_SMILE);
     act("<c>$n says,<z> \"Oh, thank you - you have brought a ray of sunshine into an old tree's day.\"", 
       TRUE, tree, NULL, ch, TO_ROOM);
