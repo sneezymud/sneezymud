@@ -23,6 +23,12 @@ class TShopOwned {
   int getMaxReserve();
   void doReserve();
 
+  // repair specific
+  double getQuality();
+  void setQuality(sstring);
+  double getSpeed();
+  void setSpeed(sstring);
+
   int getMaxNum(const TObj *);
   void showInfo();
   int setRates(sstring);

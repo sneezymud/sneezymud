@@ -14,13 +14,35 @@ int counter_work;  // Global variable used to count # of undone items/man
 
 static int global_repair = 0;
 
-int TObj::maxFix(const TBeing *repair, depreciationTypeT dep_done) const
+int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
 {
   int amount = getMaxStructPoints() - getDepreciation();
 
-  if (repair) {
-    amount *= max(95, (int) repair->GetMaxLevel());
-    amount /= 100;
+  amount *= 95;
+  amount /= 100;
+
+
+  if(keeper){
+    unsigned int shop_nr=0;
+    TDatabase db(DB_SNEEZY);
+    
+    for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
+    
+    if (shop_nr >= shop_index.size()) {
+      vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+      return FALSE;
+    }
+    
+    if(shop_index[shop_nr].isOwned()){
+      db.query("select quality from shopownedrepair where shop_nr=%i", shop_nr);
+      
+      if(db.fetchRow()){
+	float quality=convertTo<float>(db["quality"]);
+	
+	if(quality<=1.0 && quality>0)
+	  amount = (int)((float) amount * quality);
+      }
+    }
   }
 
   return amount;
@@ -84,6 +106,22 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
       profit_buy=shop_index[shop_nr].profit_buy;
 
 
+    // check for speed and quality
+    db.query("select speed, quality from shopownedrepair where shop_nr=%i",
+	     shop_nr);
+    
+    if(db.fetchRow()){
+      float speed=convertTo<float>(db["speed"]);
+      float quality=convertTo<float>(db["quality"]);
+
+      if(speed>0)
+	profit_buy /= speed;
+
+      if(quality>0)
+	profit_buy *= quality;
+    }
+    
+
     price = (int)((double) price * profit_buy);
   }
 
@@ -94,12 +132,33 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
 }
 
 // time it will take to repair an item in seconds 
-static int repair_time(const TObj *o)
+static int repair_time(TBeing *keeper, const TObj *o)
 {
   int structs;
   double percDam;
   double iTime;
-  int MINS_AT_60TH = 60; // maximum (full repair) for 60th level eq
+  int MINS_AT_60TH = 60; // maximum (full repair) for 60TH level eq
+  unsigned int shop_nr=0;
+  TDatabase db(DB_SNEEZY);
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
+
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+    return FALSE;
+  }
+
+  if(shop_index[shop_nr].isOwned()){
+    db.query("select speed from shopownedrepair where shop_nr=%i", shop_nr);
+    
+    if(db.fetchRow()){
+      float speed=convertTo<float>(db["speed"]);
+
+      if(speed <= 5.0 && speed > 0)
+	MINS_AT_60TH=(int)((float)MINS_AT_60TH * speed);
+    }
+  }
+
 
   if (!(structs = (o->getMaxStructPoints() - o->getStructPoints())))
     return (0);
@@ -341,7 +400,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
     }
     return TRUE;
   } 
-  if (!repair_time(obj)) {
+  if (!repair_time(repair, obj)) {
     // probably superfluous
     if (!silent) {
       repair->doTell(fname(ch->name), fmt("%s looks fine to me.") % 
@@ -430,7 +489,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 		 valued->getName() %
 		 valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
 
-  when_ready = ct + repair_time(valued);
+  when_ready = ct + repair_time(repair, valued);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
   repair->doTell(fname(buyer->name), fmt("I can have it ready by %s.") % ready);
@@ -567,7 +626,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
     return;
 
   repair->doTell(fname(buyer->name), fmt("It'll cost you %d talens to repair %s to a status of %s.") % (repairPrice(repair, buyer, DEPRECIATION_YES)) % getName() % equip_condition(maxFix(repair, DEPRECIATION_YES)));
-  when_ready = ct + repair_time(this);
+  when_ready = ct + repair_time(repair, this);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
   repair->doTell(fname(buyer->name), fmt("It will be ready %s.") % ready);

@@ -148,6 +148,77 @@ void TShopOwned::doReserve()
   }
 }
 
+double TShopOwned::getQuality()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select quality from shopownedrepair where shop_nr=%i", shop_nr);
+
+  if(db.fetchRow())
+    return convertTo<double>(db["quality"]);
+
+  return -1;
+}
+
+double TShopOwned::getSpeed()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select speed from shopownedrepair where shop_nr=%i", shop_nr);
+
+  if(db.fetchRow())
+    return convertTo<double>(db["speed"]);
+
+  return -1;
+}
+
+
+void TShopOwned::setQuality(sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+
+  if(!hasAccess(SHOPACCESS_RATES)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return;
+  }
+
+  double f=convertTo<double>(arg);
+
+  if(f > 1.0 || f <= 0.0){
+    keeper->doTell(ch->getName(), "The quality percentage must be less than or equal to 1.0 and greater than 0.0.");
+    return;
+  }
+
+  db.query("update shopownedrepair set quality=%f where shop_nr=%i", f, shop_nr);
+
+  keeper->doTell(ch->getName(), fmt("Ok, the quality percentage has been set to %f.") % f);
+}
+
+
+
+void TShopOwned::setSpeed(sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+
+  if(!hasAccess(SHOPACCESS_RATES)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return;
+  }
+
+  double f=convertTo<double>(arg);
+
+  if(f > 5.0 || f <= 0.0){
+    keeper->doTell(ch->getName(), "The speed modifier must be less than or equal to 1.0 and greater than 0.0.");
+    return;
+  }
+
+  db.query("update shopownedrepair set speed=%f where shop_nr=%i", f, shop_nr);
+
+  keeper->doTell(ch->getName(), fmt("Ok, the speed modifier has been set to %f.") % f);
+}
+
+
+
 
 void TShopOwned::doDividend(TObj *o, int cost)
 {
@@ -278,6 +349,11 @@ void TShopOwned::showInfo()
 		   corp.getName());
 
   }
+
+  // repair stuff
+  if(getQuality() >=0)
+    keeper->doTell(ch->getName(), fmt("My quality percentage is %f and my speed modifier is %f.") % getQuality() % getSpeed());
+
 
   // anyone can see profit_buy, profit_sell and trading types, anytime
   keeper->doTell(ch->getName(),
@@ -473,6 +549,12 @@ int TShopOwned::setRates(sstring arg)
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for player %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
+  } else if(buf == "repair"){
+    db.query("update shopownedrepair set quality=%f, speed=%f where shop_nr=%i", profit_buy, profit_sell, shop_nr);
+    
+    keeper->doTell(ch->getName(), 
+		   fmt("Ok, my quality percentage is now %f and my speed modifier is now %f.") % profit_buy % profit_sell);
+
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
