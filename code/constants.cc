@@ -430,7 +430,7 @@ void assign_item_info()
   ItemInfo[ITEM_COMPONENT] = new itemInfo("Component","a spell component",
      "Number of uses left", 10, 0,
      "Maximum number of uses", 10, 0,
-     "Spell # component is for", MAX_SKILL, 0,
+     "Spell # component is for", 1000, 0,
      "Special - decay/useage", 15, 0);
   ItemInfo[ITEM_BOOK] = new itemInfo("Book","a book",
      "", 0, 0,
