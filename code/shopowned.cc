@@ -506,8 +506,12 @@ void TShopOwned::showInfo()
     if(getMinReserve() > 0 || getMaxReserve() > 0)
       keeper->doTell(ch->getName(), fmt("My corporate reserve is %i-%i.") %
 		     getMinReserve() % getMaxReserve());
+    if(getExpenseRatio() > 0)
+      keeper->doTell(ch->getName(), fmt("My expense ratio is %f.") % getExpenseRatio());
 
   }
+
+
 
   if(!isOwned()){
     keeper->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");
