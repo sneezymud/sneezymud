@@ -834,7 +834,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	    // if this exp step is past our max exp and is under the exp
 	    // we've gained, then get a prac
 	    if(t_exp > exp && t_exp <= new_exp){
-	      vlogf(LOG_FILE, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
+	      vlogf(LOG_SILENT, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
 	      gain_pracs++;
 	    }
 	  }
@@ -843,7 +843,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	  if(new_exp >= peak){
 	    // roll for extra prac
 	    if(::number(1,(int)delta_exp) < (delta_exp - (t_peak - t_exp))){
-	      vlogf(LOG_FILE, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp);
+	      vlogf(LOG_SILENT, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp);
 	      gain_pracs++;
 	    }
 	  }
@@ -874,7 +874,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 
 	  for(double j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
 	    if(j > exp && j < new_exp){
-	      vlogf(LOG_FILE, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
+	      vlogf(LOG_SILENT, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
 	      gain_pracs++;
 	    }
 	  }
