@@ -7344,8 +7344,14 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   i=find_path(elevator->in_room, is_target_room_p, (void *) *job, 5000, 0);
 
   if(i==DIR_NONE){
-    vlogf(LOG_BUG, "fishing elevator lost");
-    return FALSE;
+    if(elevator->in_room==2374)
+      i=DIR_UP;
+    else if(elevator->in_room=2367)
+      i=DIR_DOWN;
+    else {
+      vlogf(LOG_BUG, "fishing elevator lost");
+      return FALSE;
+    }
   }
 
   if(vehicle->getDir() != i)
