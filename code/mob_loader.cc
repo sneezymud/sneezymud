@@ -212,7 +212,9 @@ void TMonster::thiefLootLoader()
     return;
 
   // thief trap stuff
-  for(int i=900;i<=934;++i)
+  for(int i=900;i<=923;++i)
+    loot.push_back(i);
+  for(int i=926;i<=934;++i)
     loot.push_back(i);
 
   // make a list of the available poisons
