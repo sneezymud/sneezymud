@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: show.cc,v $
+// Revision 1.4  1999/10/09 05:47:56  batopr
+// Upped name display on show faction to 15 chars
+//
 // Revision 1.3  1999/10/05 23:51:58  batopr
 // efficiency: "show objs" was converting from REAL to VIRTUAL before calling
 // read_object.
@@ -1751,7 +1754,7 @@ void TPerson::doShow(const char *argument)
           FactionInfo[i].faction_wealth,
           FactionInfo[i].faction_tithe);
       sb += buf;
-      sprintf(buf, "      %s%-10.10s%s %-10.10s %-10.10s %-10.10s\n\r",
+      sprintf(buf, "      %s%-15.15s%s %-15.15s %-15.15s %-15.15s\n\r",
           blue(), FactionInfo[i].leader[0], norm(),
           FactionInfo[i].leader[1],
           FactionInfo[i].leader[2],FactionInfo[i].leader[3]);
