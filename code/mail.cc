@@ -11,7 +11,7 @@ bool has_mail(const char *recipient)
 {
   TDatabase db("sneezy");
 
-  db.query("select 1 from mail where mailto='%s'", recipient);
+  db.query("select 1 from mail where lower(mailto)=lower('%s')", recipient);
 
   if(db.fetchRow())
     return TRUE;
@@ -37,7 +37,7 @@ const char *read_delete(const char *recipient, const char *recipient_formatted)
   TDatabase db("sneezy");
   string buf;
 
-  db.query("select mailfrom, timesent, content, mailid from mail where port=%i and mailto='%s'", gamePort, recipient);
+  db.query("select mailfrom, timesent, content, mailid from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient);
   if(!db.fetchRow())
     return "error!";
 
