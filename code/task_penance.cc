@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_penance.cc,v $
+// Revision 5.2  2001/06/29 19:37:57  jesus
+// piety speed regen tweak
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -50,7 +56,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
         ch->stopTask();
         return TRUE;
     }
-      ch->task->calcNextUpdate(pulse, 4 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 5 * PULSE_MOBACT);
       ch->task->timeLeft++;
       val = (double) ch->task->timeLeft * 0.3;
       if (!ch->task->status) {

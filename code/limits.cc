@@ -163,7 +163,7 @@ double TBeing::pietyGain(double modif)
 //  gain *= (50.0 + 100.0 + modif)/200.;
 //  gain *= 25.0;  // arbitrary
   // simplify math
-  gain = (150.0 + modif)/16.0;
+  gain = (150.0 + modif)/18.0;
 #endif
 
   if (dynamic_cast<TPerson *>(this)) {
