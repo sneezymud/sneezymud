@@ -746,6 +746,7 @@ int TPerson::doQuit2()
 
 void TBeing::verifyWeightVolume()
 {
+#if 0
   // there is an intrinsic round off error present in float
   // in a get all (or similar) situation, this can propigate to a sizeable
   // amount throwing off the weight.  This function will reset the values
@@ -778,6 +779,7 @@ void TBeing::verifyWeightVolume()
     setCarriedWeight(rw);
     setCarriedVolume(rv);
   }
+#endif
 }
 
 void TBeing::doNotHere() const

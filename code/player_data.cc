@@ -719,8 +719,6 @@ void TPerson::loadFromSt(charFile *st)
   desc->plr_colorOff = st->plr_colorOff;
 
   specials.act = 0;
-  setCarriedWeight(0.0);
-  setCarriedVolume(0);
   //  setArmor(1000);
   setSpellHitroll(0);
   setHitroll(0);

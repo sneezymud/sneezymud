@@ -4364,8 +4364,6 @@ void TBeing::catchLostLink(TBeing *vict)
       if (vict->equipment[ij])
         *bag += *(vict->unequip(ij));
     }
-    vict->setCarriedWeight(0.0);
-    vict->setCarriedVolume(0);
     vict->removeRent();
     *bag += *note;
     *rp += *bag;

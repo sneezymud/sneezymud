@@ -1116,8 +1116,6 @@ int animate(TBeing *caster, int level, byte bKnown)
     double av_dam = gol->baseDamage() + gol->getDamroll();
     gol->setMult( ((((double) gol->GetMaxLevel()) / 1.10) / av_dam));
 
-    gol->setCarriedWeight(0.0);
-    gol->setCarriedVolume(0);
     gol->player.Class = CLASS_WARRIOR;
 
     gol->addAffects(l_boot);

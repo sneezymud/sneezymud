@@ -236,8 +236,6 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   mob->setMaxHit(max(1, mob->hitLimit() * 4 / 7));
   mob->setHit((int) (mob->hitLimit() >> 1));
   mob->setSex(SEX_NEUTER);
-  mob->setCarriedWeight(0.0);
-  mob->setCarriedVolume(0);
 
   // take all from corpse, and give to mob
   for (t = corpse->getStuff(); t; t = n) {

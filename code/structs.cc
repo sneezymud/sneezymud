@@ -17,6 +17,7 @@
 #include "obj_money.h"
 #include "obj_seethru.h"
 #include "cmd_trophy.h"
+#include "obj_open_container.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -695,8 +696,6 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
-  addToCarriedWeight(t.getTotalWeight(TRUE));
-  addToCarriedVolume(t.getReducedVolume(this));
   return *this;
 }
 
@@ -858,8 +857,7 @@ TThing& TThing::operator -- ()
 
       tmp->addToLight(-light_mod);
     }
-    t_in->addToCarriedWeight(-getTotalWeight(TRUE));
-    t_in->addToCarriedVolume(-getReducedVolume(NULL));
+
 
   } else if ((rp = dynamic_cast<TRoom *> (roomp))) {
     // obj from room
@@ -1200,9 +1198,6 @@ void TThing::mount(TThing *ch)
   nextRider = ch->rider;
   ch->rider = this;
   riding = ch;
-
-  ch->addToCarriedWeight(getTotalWeight(TRUE));
-  ch->addToCarriedVolume(getReducedVolume(NULL));
 
   // lamp on a table ought to contribute to room's light
   TTable *ttab = dynamic_cast<TTable *>(ch);

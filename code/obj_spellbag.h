@@ -18,6 +18,7 @@ class TSpellBag : public TExpandableContainer {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_SPELLBAG; }
+    float getCarriedWeight() const;
 
     virtual void findSomeComponent(TComponent **, TComponent **, TComponent **, spellNumT, int);
     virtual bool allowsCast() { return true; }

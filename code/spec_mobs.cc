@@ -3857,8 +3857,6 @@ a pet.", fname(ch->name).c_str());
     *ch->roomp += *pet;
     ch->addFollower(pet);
 
-    pet->setCarriedWeight(0.0);
-    pet->setCarriedVolume(0);
 //   PET CHANGES
     pet->balanceMakeNPCLikePC();
 

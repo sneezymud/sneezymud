@@ -2924,14 +2924,6 @@ void TComponent::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr
 
 TThing & TComponent::operator -- ()
 {
-  // if we are in a spellbag, then spellbag does NOT have the weight/volume
-  // of our component
-  // counterintuitive: we are UNDOing what will happen in TThing::
-  // we want things to be 25% of true mass/vol
-  if (parent && dynamic_cast<TSpellBag *>(parent)) {
-    parent->addToCarriedWeight(getTotalWeight(TRUE) * 0.75);
-    parent->addToCarriedVolume((int) (getReducedVolume(NULL) * 0.75));
-  }
 
   TObj::operator -- ();
 

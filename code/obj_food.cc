@@ -50,7 +50,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
       weightDiff = getWeight();
       addToWeight(wgt_amt);
       weightDiff -= getWeight();
-      tmp->addToCarriedWeight(-weightDiff);
+      //      tmp->addToCarriedWeight(-weightDiff);
     } else {
       --(*this);
       addToWeight(wgt_amt);
@@ -93,7 +93,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
         setWeight(obj_index[getItemIndex()].weight +
                      getDrinkUnits() * SIP_WEIGHT);
         weightDiff -= getWeight();
-        tmp->addToCarriedWeight(-weightDiff);
+	//        tmp->addToCarriedWeight(-weightDiff);
       } else {
         (*this)--;
         setWeight(obj_index[getItemIndex()].weight +

@@ -260,8 +260,6 @@ TThing * TThing::dismount(positionTypeT pos)
       }
     }
   }
-  riding->addToCarriedWeight(-getTotalWeight(TRUE));
-  riding->addToCarriedVolume(-getReducedVolume(NULL));
 
   // lamp on a table ought to contribute to room's light
   TTable *ttab = dynamic_cast<TTable *>(riding);

@@ -9,6 +9,7 @@
 
 #include "stdsneezy.h"
 #include "obj_base_container.h"
+#include "obj_open_container.h"
 #include "obj_component.h"
 #include "obj_tool.h"
 
@@ -105,14 +106,43 @@ int TThing::useMe(TBeing *ch, const char *)
   return FALSE;
 }
 
+// Weight of all things that I am carrying, or that I contain
+// or things that are riding me
 float TThing::getCarriedWeight() const
 {
-  return carried_weight;
+  TThing *t;
+  float total=0;
+  const TOpenContainer *toc;
+
+  if((toc=dynamic_cast<const TOpenContainer *>(this)) &&
+     toc->isContainerFlag(CONT_WEIGHTLESS))
+    return getWeight();
+
+  for(t=rider;t;t=t->nextRider){
+    total+=t->getTotalWeight(true);
+  }
+
+  for(t=getStuff();t;t=t->nextThing){
+    total+=t->getTotalWeight(true);
+  }
+
+  return total;
 }
 
 int TThing::getCarriedVolume() const
 {
-  return carried_volume;
+  TThing *t;
+  int total=0;
+
+  for(t=rider;t;t=t->nextRider){
+    total+=t->getTotalVolume();
+  }
+
+  for(t=getStuff();t;t=t->nextThing){
+    total+=t->getTotalVolume();
+  }
+
+  return total;
 }
 
 void TThing::setCarriedWeight(float num)

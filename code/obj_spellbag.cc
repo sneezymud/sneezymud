@@ -54,6 +54,24 @@ bool TSpellBag::objectRepair(TBeing *, TMonster *, silentTypeT)
   return false;
 }
 
+
+float TSpellBag::getCarriedWeight() const
+{
+  TThing *t;
+  float total=0;
+
+  for(t=getStuff();t;t=t->nextThing){
+    if(dynamic_cast<TComponent *>(t))
+      total+=(t->getTotalWeight(true)*0.25);
+    else 
+      total+=t->getTotalWeight(true);
+  }
+
+  return total;
+}
+
+
+
 bool TSpellBag::lowCheckSlots(silentTypeT silent)
 {
   // spellbags should be (take hold) or (take waist) or (take hold waiste)
@@ -81,15 +99,6 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
 TThing & TSpellBag::operator+= (TThing &t)
 {
   TExpandableContainer::operator+=(t);
-
-  // way down in tthing::operator, we expand volume and increase weight of bag
-  // undo this if obj being put in is a component
-  // counterintuitive: we are UNDOing what will happen in TThing::
-  // we want things to be 25% of true mass/vol
-  if (dynamic_cast<TComponent *>(&t)) {
-    addToCarriedWeight((-t.getTotalWeight(TRUE) * 0.75));
-    addToCarriedVolume(-t.getReducedVolume(this) * 0.75);
-  }
 
   return *this;
 }

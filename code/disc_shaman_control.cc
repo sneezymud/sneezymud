@@ -73,8 +73,6 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     victim->affectTo(&aff);
 
     caster->addFollower(victim);
-    victim->setCarriedWeight(0.0);
-    victim->setCarriedVolume(0);
     for (t = corpse->getStuff(); t; t = n) {
       n = t->nextThing;
       --(*t);
