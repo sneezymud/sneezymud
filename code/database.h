@@ -1,7 +1,9 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
-// TDatabase is a class for interacting with the mysql database.
+#include <postgresql/libpq-fe.h>
+
+// TDatabase is a class for interacting with the sql database.
 //
 // You should always use local instances of TDatabase, do not use a pointer
 // and the new operator.  The local instance will clean up after itself in
@@ -67,7 +69,7 @@
 //   printf("%s", db.getColumn(0));
 // }
 //
-// char *getColumn(unsigned int) - Returns a column out of the current row of
+// char *getColumn(int) - Returns a column out of the current row of
 // the result set.  The memory returned does not have to be freed.
 // Returns: A char * to the result column or NULL if no results are available.
 // Ex:
@@ -81,15 +83,15 @@
 
 class TDatabase
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  MYSQL *db;
+  PGresult *res;
+  int row;
+  PGconn *db;
   
  public:
   void setDB(string);
   bool query(const char *,...);
   bool fetchRow();
-  char *getColumn(unsigned int);
+  char *getColumn(int);
   bool isResults();
 
   TDatabase();
@@ -100,29 +102,27 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  MYSQL *sneezydb, *immodb, *globaldb;
+  PGconn *sneezydb, *immodb;
 
  public:
-  MYSQL *getSneezyDB(){
+  PGconn *getSneezyDB(){
     if(!sneezydb){
       const char * dbconnectstr = NULL;
       
       if(gamePort == PROD_GAMEPORT){
-	dbconnectstr="sneezy";
+	dbconnectstr="dbname=sneezy";
       } else if(gamePort == BUILDER_GAMEPORT){
-	dbconnectstr="sneezybuilder";
+	dbconnectstr="dbname=sneezybuilder";
       } else {
-	dbconnectstr="sneezybeta";
+	dbconnectstr="dbname=sneezy";
       }
       
       
       vlogf(LOG_DB, "Initializing database '%s'.",
 	    dbconnectstr);
-      sneezydb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL, 
-			     dbconnectstr, 0, NULL, 0)){
+      if(!(sneezydb=PQconnectdb(dbconnectstr))){
 	vlogf(LOG_DB, "Could not connect to database '%s'.",
 	      dbconnectstr);
 	return NULL;
@@ -130,33 +130,15 @@ class TDatabaseConnection
     }
       
     return sneezydb;
-  }    
-
-  MYSQL *getGlobalDB(){
-    if(!globaldb){
-      vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
-      globaldb=mysql_init(NULL);
-
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(globaldb, NULL, "sneezy", NULL,
-                             "sneezyglobal", 0, NULL, 0)){
-        vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
-        return NULL;
-      }
-    }
-
-    return globaldb;
   }
 
 
-  MYSQL *getImmoDB(){
+  PGconn *getImmoDB(){
     if(!immodb){
       vlogf(LOG_DB, "Initializing database 'immortal'.");
-      immodb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(immodb, NULL, "sneezy", NULL, 
-			     "immortal", 0, NULL, 0)){
+      if(!(immodb=PQconnectdb("immortal"))){
 	vlogf(LOG_DB, "Could not connect to database 'immortal'.");
 	return NULL;
       }

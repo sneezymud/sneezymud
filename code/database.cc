@@ -1,12 +1,40 @@
-#include "stdsneezy.h"
+#include <stdio.h>
+#include <string>
+#include <string.h>
+#include <iostream.h>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <sys/types.h>
+#include <cctype>
+#include <cassert>
+#include <cstring>
+
+#include <cerrno>
+#include <string>
+#include <vector>
+#include <map>
+
+
+static int gamePort=6968;
+
+static int PROD_GAMEPORT=7900;
+static int BUILDER_GAMEPORT=8900;
+
+#define vlogf fprintf
+#define LOG_DB stdout
+#define FALSE 0
+#define TRUE 1
+
 #include "database.h"
+
 
 static TDatabaseConnection database_connection;
 
 
 TDatabase::TDatabase() : 
   res(NULL), 
-  row(NULL),
+  row(-1),
   db(NULL)
 {
   //  vlogf(LOG_DB, "constructor");
@@ -14,7 +42,7 @@ TDatabase::TDatabase() :
 
 TDatabase::TDatabase(string tdb) :
   res(NULL),
-  row(NULL),
+  row(-1),
   db(NULL)
 {
   setDB(tdb);
@@ -22,7 +50,7 @@ TDatabase::TDatabase(string tdb) :
 }
 
 TDatabase::~TDatabase(){
-  mysql_free_result(res);
+  PQclear(res);
   //    vlogf(LOG_DB, "query results freed");
 }
 
@@ -31,8 +59,6 @@ void TDatabase::setDB(string tdb){
     db=database_connection.getSneezyDB();
   } else if(tdb=="immortal"){
     db=database_connection.getImmoDB();
-  } else if(tdb=="sneezyglobal"){
-    db=database_connection.getGlobalDB();
   } else {
     vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
     db=NULL;
@@ -40,25 +66,29 @@ void TDatabase::setDB(string tdb){
 }
 
 // advance to the next row of the current query
+// this is a little funky under postgres.  we initialize row to -1 when
+// we do a query, then fetchRow increments it each time.
 bool TDatabase::fetchRow(){
   if(!res)
     return FALSE;
+
+  ++row;
   
-  if(!(row=mysql_fetch_row(res)))
+  if(PQntuples(res)<=row)
     return FALSE;
-  
+
   return TRUE;
 }
 
 // get one of the results from the current row of the current query
-char *TDatabase::getColumn(unsigned int i){
-  if(!res || !row)
+char *TDatabase::getColumn(int i){
+  if(!res || row<0 || row >= PQntuples(res))
     return NULL;
 
-  if(i > (mysql_num_fields(res)-1) || i < 0){
+  if(i > (PQnfields(res)-1) || i < 0){
     return NULL;
   } else {
-    return row[i];
+    return PQgetvalue(res, row, i);
   }
 }
 
@@ -67,9 +97,9 @@ bool TDatabase::query(const char *query,...){
   va_list ap;
   string buf;
   int fromlen=0, tolen=(512*2)+1, numlen=32;
-  char *from=NULL, to[tolen], numbuf[numlen];
+  char *from=NULL, *fromptr, to[tolen], *toptr, numbuf[numlen];
   const char *qsave=query;
-  MYSQL_RES *restmp;
+  PGresult *restmp;
   
   // no db set yet
   if(!db)
@@ -89,8 +119,8 @@ bool TDatabase::query(const char *query,...){
 	  }
 
 	  fromlen=strlen(from);
-	  
-	  // mysql_escape_string needs a buffer that is 
+
+	  // escaping the string needs a buffer that is 
 	  // (string * 2) + 1 in size to avoid overruns
 	  if(((fromlen*2)+1) > tolen){
 	    vlogf(LOG_DB, "query - buffer overrun on %s", from);
@@ -98,7 +128,17 @@ bool TDatabase::query(const char *query,...){
 	    return FALSE;
 	  }
 	  
-	  mysql_escape_string(to, from, strlen(from));
+	  // escape ' and %
+	  toptr=to;
+	  fromptr=from;
+	  while(*fromptr){
+	    if(*fromptr == '\'' || *fromptr == '%'){
+	      *toptr++='\\';
+	    }
+	    *toptr++=*fromptr++;
+	  }
+	  *toptr='\0';
+
 	  buf += to;
 	  break;
 	case 'i':
@@ -122,13 +162,12 @@ bool TDatabase::query(const char *query,...){
     }
   } while(*query++);
   va_end(ap);
-  
-  if(mysql_query(db, buf.c_str())){
-    vlogf(LOG_DB, "query failed: %s", mysql_error(db));
+
+  if(!(restmp=PQexec(db, buf.c_str()))){
+    vlogf(LOG_DB, "query failed: %s", PQresStatus(PQresultStatus(restmp)));
     vlogf(LOG_DB, "%s", buf.c_str());
     return FALSE;
   }
-  restmp=mysql_store_result(db);
 
   // if there is supposed to be some results from this query,
   // free the previous results (if any) and assign the new results
@@ -136,8 +175,9 @@ bool TDatabase::query(const char *query,...){
   // then don't do anything with the results, they might still be used
   if(restmp){
     if(res)
-      mysql_free_result(res);
+      PQclear(res);
     res=restmp;
+    row=-1;
   }
 
   //  if(res)
@@ -147,7 +187,7 @@ bool TDatabase::query(const char *query,...){
 }
 
 bool TDatabase::isResults(){
-  if(res && mysql_num_rows(res))
+  if(res && PQntuples(res))
     return TRUE;
 
   return FALSE;

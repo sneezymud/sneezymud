@@ -29,7 +29,7 @@
 #include <vector>
 #include <map>
 
-#include </home/oldspasm/usr/include/mysql/mysql.h>
+//#include </home/oldspasm/usr/include/mysql/mysql.h>
 
 #include "low.h"
 #include "mobAI.h"

@@ -140,10 +140,11 @@ endif
 #LDFLAGS +=-fhandle-exceptions
 # postgresql database lib
 #LDFLAGS +=-lpq++
+LDFLAGS +=-lpq
+
 # mysql database lib
-LDFLAGS +=-L/home/oldspasm/usr/lib
-LDFLAGS +=-lmysqlclient
-#LDFLAGS +=-lpq
+#LDFLAGS +=-L/home/oldspasm/usr/lib
+#LDFLAGS +=-lmysqlclient
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
