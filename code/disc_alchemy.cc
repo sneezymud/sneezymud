@@ -1582,6 +1582,8 @@ int castEnhanceWeapon(TBeing *caster, TObj *obj)
   return FALSE;
 }
 
+
+
 bool alchemy_create_deny(int numberx)
 {
   objIndexData oid = obj_index[numberx];
@@ -1665,7 +1667,17 @@ bool alchemy_create_deny(int numberx)
   if (isname("muffs ear", oid.name))
     return true;
 
-  return false;
+  // the above checks remain as a safeguard against putting bad objects
+  // in this list
+  int allowed[]={6,9,105,106,108,321,330,410,1012,3090,3091,13841,13860,
+		 26686,28917,28918,28919,148,318, -1};
+
+  for(int i=0;allowed[i]!=-1;++i){
+    if(allowed[i] == oid.virt)
+      return false;
+  }
+
+  return true;
 }
         
 int materialize(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
@@ -1744,10 +1756,6 @@ int materialize(TBeing *caster, const char * name)
 
 int castMaterialize(TBeing *caster, const char * name)
 {
-  caster->sendTo("Temporarily disabled.\n\r");
-  return FALSE;
-  
-
   if (caster->getMoney() < MATERIALIZE_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
     return FALSE;
@@ -1850,11 +1858,6 @@ int castSpontaneousGeneration(TBeing *caster, const char * name)
 {
   TObj *obj;
   int level;
-
-  
-  caster->sendTo("Temporarily disabled.\n\r");
-  return FALSE;
-
 
   if (caster->getMoney() < SPONT_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
