@@ -21,6 +21,7 @@ public:
     CSkill skSenseLifeShaman;
     CSkill skDetectShadow;
     CSkill skDjallasProtection;
+    CSkill skLegbasGuidance;
     CSkill skDancingBones;
 
     CDShaman()
@@ -39,6 +40,7 @@ public:
       skSenseLifeShaman(),
       skDetectShadow(),
       skDjallasProtection(),
+      skLegbasGuidance(),
       skDancingBones() { 
     }
     CDShaman(const CDShaman &a)
@@ -57,6 +59,7 @@ public:
       skSenseLifeShaman(a.skSenseLifeShaman),
       skDetectShadow(a.skDetectShadow),
       skDjallasProtection(a.skDjallasProtection),
+      skLegbasGuidance(a.skLegbasGuidance),
       skDancingBones(a.skDancingBones) {
     }
     CDShaman & operator=(const CDShaman &a) {
@@ -76,6 +79,7 @@ public:
       skSenseLifeShaman = a.skSenseLifeShaman;
       skDetectShadow = a.skDetectShadow;
       skDjallasProtection = a.skDjallasProtection;
+      skLegbasGuidance = a.skLegbasGuidance;
       skDancingBones = a.skDancingBones;
       return *this;
     }
@@ -152,6 +156,11 @@ private:
     int castDjallasProtection(TBeing *, TBeing *);
     void djallasProtection(TBeing *, TBeing *, TMagicItem *);
     int djallasProtection(TBeing *, TBeing *, int, byte);
+
+    int legbasGuidance(TBeing *, TBeing *);
+    int castLegbasGuidance(TBeing *, TBeing *);
+    void legbasGuidance(TBeing *, TBeing *, TMagicItem *);
+    int legbasGuidance(TBeing *, TBeing *, int, byte);
 
 #endif
 

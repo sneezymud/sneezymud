@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.19  2001/06/14 16:46:57  jesus
+// legba's guidance spell
+//
 // Revision 5.18  2001/06/14 10:55:44  jesus
 // djallas protection spell
 //
@@ -208,6 +211,7 @@ const int COMP_RAZE               =31328;
 const int COMP_DETECT_SHADOW      =31329;
 const int COMP_SENSE_LIFE_SHAMAN  =31330;
 const int COMP_DJALLA             =31331;
+const int COMP_LEGBA              =31332;
 
 class compPlace
 {

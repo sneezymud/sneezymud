@@ -1556,6 +1556,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_DJALLA:
       rc = djallasProtection(this, ch);
       break;
+    case SPELL_LEGBA:
+      rc = legbasGuidance(this, ch);
+      break;
     case SPELL_IDENTIFY:
       if (!o) {
         rc = identify(this,ch);

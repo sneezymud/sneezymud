@@ -1596,3 +1596,78 @@ int castDjallasProtection(TBeing *caster, TBeing *victim)
   }
   return TRUE;
 }
+
+int legbasGuidance(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff, aff2, aff3, aff4;
+
+  aff.type = SPELL_LEGBA;
+  aff.level = level;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_BLEED;
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_EARTH;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_CHARM;
+  aff4.location = APPLY_IMMUNITY;
+  aff4.modifier = IMMUNE_SLEEP;
+  aff.modifier2 = ((level * 2) / 3);
+  aff.bitvector = 0;
+ 
+  if (bSuccess(caster,bKnown,SPELL_LEGBA)) {
+    act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+    act("You have been granted the protection of Legba!", FALSE, victim, NULL, NULL, 
+TO_CHAR, ANSI_GREEN);
+    switch (critSuccess(caster, SPELL_LEGBA)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_LEGBA);
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.modifier2 = (level * 2);
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+ 
+    if (caster != victim) 
+      aff.modifier2 /= 2;
+ 
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    caster->reconcileHelp(victim, discArray[SPELL_LEGBA]->alignMod);
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+void legbasGuidance(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  legbasGuidance(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int legbasGuidance(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_LEGBA, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_LEGBA]->lag;
+  taskDiffT diff = discArray[SPELL_LEGBA]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LEGBA, diff, 1, "", rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castLegbasGuidance(TBeing *caster, TBeing *victim)
+{
+  int level = caster->getSkillLevel(SPELL_LEGBA);
+  int bKnown = caster->getSkillValue(SPELL_LEGBA);
+ 
+  int ret=legbasGuidance(caster,victim,level,bKnown);
+  if (ret == SPELL_SUCCESS) {
+  } else {
+  }
+  return TRUE;
+}

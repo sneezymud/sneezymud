@@ -2337,6 +2337,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_DJALLA:
       djallasProtection(caster,victim,obj);
       break;
+    case SPELL_LEGBA:
+      legbasGuidance(caster,victim,obj);
+      break;
     case SPELL_PROTECTION_FROM_EARTH:
       protectionFromEarth(caster,victim,obj);
       break;

@@ -503,6 +503,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_MATERIALIZE:
       case SPELL_CHRISM:
       case SPELL_DJALLA:
+      case SPELL_LEGBA:
       case SPELL_PROTECTION_FROM_EARTH:
       case SPELL_PROTECTION_FROM_AIR:
       case SPELL_PROTECTION_FROM_FIRE:

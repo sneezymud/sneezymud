@@ -408,6 +408,7 @@ enum spellNumT {
   
      // end of thief
      // start of shaman
+     SPELL_LEGBA,
      SPELL_DJALLA,
      SPELL_SENSE_LIFE_SHAMAN,
      SPELL_DETECT_SHADOW,

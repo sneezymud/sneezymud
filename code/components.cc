@@ -1672,6 +1672,14 @@ void buildComponentArray()
     "$n smears $p on $s forehead.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_LEGBA,
+    "You smear $p on $N's forehead.",
+    "$n smears $p on $N's forehead.",
+    "$n smears $p on your forehead.",                       
+    "You smear $p on your forehead.",
+    "$n smears $p on $s forehead.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_FIRE,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
