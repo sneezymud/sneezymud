@@ -909,9 +909,11 @@ int TSocket::gameLoop()
 	    continue;
 	  }
 	}
+	
 	if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
 	    (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
-	     tmp_ch->isShopkeeper())){
+	     tmp_ch->isShopkeeper() || 
+	     IS_SET(tmp_ch->specials.act, ACT_HUNTING))){
 	  rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pulse);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    temp = tmp_ch->next;
