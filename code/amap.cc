@@ -455,7 +455,8 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   map <int,int> roomcount;
   int max=0;
 
-  roomcount=makeroomcount(logf, max);
+  if(logf)
+    roomcount=makeroomcount(logf, max);
 
   if(sideways){
     for(t=head;t;t=t->next){
