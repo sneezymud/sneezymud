@@ -7020,7 +7020,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	  
 	  if ((armor = dynamic_cast<TBaseClothing *>(shield))) {
 	    armor->setDefArmorLevel(ch->GetMaxLevel());
-	    armor->setVolume((int) (((100. * (double) ch->getHeight()) / 70.) * race_vol_constants[mapSlotToFile(il)] / 100));
+	    armor->setVolume((int) (((100. * (double) ch->getHeight())) * race_vol_constants[mapSlotToFile(il)] / 100));
 	  }
 	  
 	  ch->equipChar(shield, il);

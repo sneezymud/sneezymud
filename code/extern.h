@@ -119,7 +119,7 @@ extern const byte sharpness[];
 extern const byte attack_mode_bonus[];
 extern const int corpse_volume[];
 extern const struct race_perc race_size[];
-extern const int race_vol_constants[MAX_WEAR];
+extern const double race_vol_constants[MAX_WEAR];
 extern const int TrapDir[];
 extern float power_level_number(int);
 extern int personalize_object(TBeing *deity, TBeing *, int virt, int decay);

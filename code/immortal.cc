@@ -6235,30 +6235,9 @@ void TBeing::doResize(const char *arg)
     return;
   }
   wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
-  double player_perc;
 
-  if(!race)
-    player_perc = (100. * (double) targ->getHeight()) / 70.;
-  else {
-    double height_tmp=Races[race]->getBaseMaleHeight()+
-      (Races[race]->getMaleHtNumDice()*((Races[race]->getMaleHtDieSize()/2)+0.5));
-    player_perc = (100. * height_tmp) / 70.;
-  }
-
-  double current_perc;
-  if (race_vol_constants[mapSlotToFile(slot)])   //  A few of them are 0
-    current_perc = (100. * (double) obj->getVolume()) / 
-                              (double) race_vol_constants[mapSlotToFile(slot)];
-  else
-    current_perc = 100.;
-
-  double diff = current_perc - player_perc;
-  if (diff < 0.)
-    diff = -diff;
-  diff /= 100.;
-
-  obj->setVolume((int) (player_perc * race_vol_constants[mapSlotToFile(slot)] / 100));
-  obj->obj_flags.cost += (int) (2. * diff * (double) obj->obj_flags.cost);
+  if(race_vol_constants[mapSlotToFile(slot)])
+    obj->setVolume((int)((double)getHeight() * race_vol_constants[mapSlotToFile(slot)]));
   
   // disassociate from global memory
   obj->swapToStrung();

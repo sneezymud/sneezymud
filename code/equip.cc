@@ -82,7 +82,7 @@ int check_size_restrictions(const TBeing *ch, const TObj *o, wearSlotT slot, con
       (slot == WEAR_FINGER_L))
     return TRUE;
 
-  perc = (((double) ch->getHeight()/(double)70) * (double) race_vol_constants[mapSlotToFile(slot)]);
+  perc = (((double) ch->getHeight()) * (double) race_vol_constants[mapSlotToFile(slot)]);
 
   if (tbc->isPaired())
     perc *= 2;

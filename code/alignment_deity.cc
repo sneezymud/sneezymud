@@ -69,21 +69,10 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 
   // resize
   wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
-  double player_perc = (100. * (double) ch->getHeight()) / 70.;
 
-  double current_perc;
-  if (race_vol_constants[mapSlotToFile( slot)])   //  A few of them are 0
-    current_perc = (100. * (double) obj->getVolume()) / 
-                              (double) race_vol_constants[mapSlotToFile( slot)];
-  else
-    current_perc = 100.;
+  if(race_vol_constants[mapSlotToFile(slot)])
+    obj->setVolume((int)((double)ch->getHeight() * race_vol_constants[mapSlotToFile(slot)]));
 
-  double diff = current_perc - player_perc;
-  if (diff < 0.)
-    diff = -diff;
-  diff /= 100.;
-
-  obj->setVolume((int) (player_perc * race_vol_constants[mapSlotToFile( slot)] / 100));
   // end resize
 
   obj->swapToStrung();

@@ -1294,7 +1294,7 @@ int TThing::visibility() const
       TThing *tt = tbt->equipment[j];
       if((to=dynamic_cast<TObj *>(tt)) && to->isObjStat(ITEM_SHADOWY)){
 	// silly to use getVolume; that'd make ogres sneakier than elves
-	eqbonus+=race_vol_constants[j+1];
+	eqbonus+=(int)(race_vol_constants[j+1]*70.0);
       }
     }
     if(tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))

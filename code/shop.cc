@@ -1284,7 +1284,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   slot = slot_from_bit(obj_flags.wear_flags);
 
   if (slot > 0) {
-    perc = (((double) ch->getHeight() / (double) 70) * (double) race_vol_constants[mapSlotToFile(slot)]);
+    perc = (((double) ch->getHeight()) * (double) race_vol_constants[mapSlotToFile(slot)]);
     if (isPaired())
       perc *= 2;
   } else

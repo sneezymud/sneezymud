@@ -1494,31 +1494,35 @@ const char * const card_names[14] =
   "King"
 };
 
-const int race_vol_constants[MAX_WEAR] = {
-  0,     // none
-  0,     // finger R
-  0,     // finger L
-  900,   // neck
-  11000, // body
-  2500,  // head
-  6000,  // leg right
-  6000,  // leg left
-  1600,  // foot right
-  1600,  // foot left
-  800,   // hand right
-  800,   // hand left
-  2000,  // arm right
-  2000,  // arm left
-  2500,  // back
-  4000,  // waiste
-  400,   // wrist right
-  400,   // wrist left
-  0,     // hold right
-  0,     // hold left
-  6000,  // extra leg right
-  6000,  // extra leg left
-  1600,  // extra foot right
-  1600,  // extra foot left
+
+// these numbers are cubic inches of volume for each inch of height
+// 157.14 for body, for a 70 inch tall person would require an item of about
+// 11000 cubic inches for a perfect fit (157.14 * 70)
+const double race_vol_constants[MAX_WEAR] = {
+  0,       // none
+  0,       // finger R
+  0,       // finger L
+  12.86,   // neck
+  157.14,  // body
+  35.71,   // head
+  85.71,   // leg right
+  85.71,   // leg left
+  22.86,   // foot right
+  22.86,   // foot left
+  11.43,   // hand right
+  11.43,   // hand left
+  28.57,   // arm right
+  28.57,   // arm left
+  35.71,   // back
+  57.14,   // waiste
+  5.71,    // wrist right
+  5.71,    // wrist left
+  0,       // hold right
+  0,       // hold left
+  85.71,   // extra leg right
+  85.71,   // extra leg left
+  22.86,   // extra foot right
+  22.86,   // extra foot left
 };
 
 const char * const immunity_names[MAX_IMMUNES] =

@@ -2430,18 +2430,18 @@ void zoneData::resetZone(bool bootTime)
                   realslot != HOLD_RIGHT && realslot != HOLD_LEFT) {
                 int size_per = 100;
                 if (race_vol_constants[mapSlotToFile(realslot)]) {
-                  size_per = 100 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)];
+                  size_per = (int)(100.0 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)]);
                   if (obj->isPaired())
                     size_per /= 2;
                 }
                 vlogf(LOG_LOW, fmt("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
 		      mob->getName() % mob->mobVnum() % 
 		      obj->getName() % obj->objVnum() %
-		      (mob->getHeight() * 100 / 70) %
+		      (mob->getHeight() * 100) %
 		      size_per % 
 		      (mob->getHeight() * (obj->isPaired() ? 2 : 1) *
-                       race_vol_constants[mapSlotToFile( realslot)] / 70) %
-		      (size_per * 70 / 100));
+                       race_vol_constants[mapSlotToFile( realslot)]) %
+		      (size_per / 100));
               }
               // OK, actually do the equip
               mob->equipChar(obj, realslot);

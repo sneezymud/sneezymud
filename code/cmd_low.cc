@@ -1671,7 +1671,6 @@ void TBeing::lowObjs(const char *arg)
 
     tmp=Races[sort_race]->getBaseMaleHeight()+
 	Races[sort_race]->getMaleHtNumDice();
-    tmp/=70;
     tmp*=0.85;
     tmp*=race_vol_constants[mapSlotToFile(slot)];
     sort_race_low=(int) tmp;
@@ -1679,7 +1678,6 @@ void TBeing::lowObjs(const char *arg)
     tmp=Races[sort_race]->getBaseMaleHeight()+
 	   (Races[sort_race]->getMaleHtNumDice()*
 	    Races[sort_race]->getMaleHtDieSize());
-    tmp/=70;
     tmp*=1.15;
     tmp*=race_vol_constants[mapSlotToFile(slot)];
     sort_race_high=(int) tmp;
@@ -1738,8 +1736,9 @@ void TBeing::lowObjs(const char *arg)
       delete obj;
     }
     int size_per = 100;
-    if (slot && race_vol_constants[mapSlotToFile( slot)]) {  // the bogus slots are set to 0
-      size_per = 100 * tbc->getVolume() / race_vol_constants[mapSlotToFile( slot)];
+    // the bogus slots are set to 0
+    if (slot && race_vol_constants[mapSlotToFile( slot)]){
+      size_per = (int)(100.0 * tbc->getVolume() / race_vol_constants[mapSlotToFile(slot)]);
       if (tbc->isPaired())
         size_per /= 2;
     }
