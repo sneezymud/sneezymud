@@ -1157,9 +1157,9 @@ void TPerson::doLow(const sstring &argument)
     char tmpbuf[256];
     race_t races[6]={RACE_HUMAN, RACE_GNOME, RACE_ELVEN, RACE_OGRE,
 		     RACE_DWARF, RACE_HOBBIT};
-    int i;
+    int i, total=0;
 
-    sendTo(COLOR_BASIC, "        <c>[STR] [BRA] [CON] [DEX] [AGI] [INT] [WIS] [FOC] [PER] [CHA] [KAR] [SPE]<1>\n\r");
+    sendTo(COLOR_BASIC, "       <c>[STR][BRA][CON][DEX][AGI][INT][WIS][FOC][PER][CHA][KAR][SPE][TOTAL]<1>\n\r");
 
 
     for(i=0;i<6;++i){
@@ -1167,70 +1167,82 @@ void TPerson::doLow(const sstring &argument)
       buf += tmpbuf;
       st=Races[races[i]]->getBaseStats();
       for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	sprintf(tmpbuf, " %3d  ", st.get(stat));
+	sprintf(tmpbuf, "%3d  ", st.get(stat));
 	buf += tmpbuf;
+	total+=st.get(stat);
       }
-      buf += "\n\r";
+      sprintf(tmpbuf, "%5d\n\r", total);
+      buf += tmpbuf;
+      total=0;
     }
     sendTo(COLOR_BASIC, fmt("%s\n\r") % buf);
 
     for(territoryT terr=HOME_TER_NONE;terr<MAX_HOME_TERS;terr++){
+      total=0;
       switch(terr){
 	case HOME_TER_HUMAN_VILLAGER:
 	  sendTo("Villager");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_URBAN:
 	  sendTo("Urban   ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_PLAINS:
 	  sendTo("Plains  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_RECLUSE:
 	  sendTo("Recluse ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_HILL:
 	  sendTo("Hill    ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_MOUNTAIN:
 	  sendTo("Mountain");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_FOREST:
 	  sendTo("Forest  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	case HOME_TER_HUMAN_MARINER:
 	  sendTo("Marine  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
+	    sendTo(fmt("%3d  ") % territory_adjustment(terr, stat));
+	    total += territory_adjustment(terr, stat);
 	  }
-	  sendTo("\n\r");
+	  sendTo(fmt("%5d\n\r") % total);
 	  break;
 	default:
 	  break;
