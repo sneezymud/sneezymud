@@ -390,14 +390,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return;
   }
   if (shop_index[shop_nr].isProducing(this)) {
-    chr = ch->getChaShopPenalty();
-    
-    if (ch->doesKnowSkill(SKILL_SWINDLE)) {
-      // make 5 separate rolls so chr goes up amount based on learning
-      for (i = 0; i < 5; i++)
-        if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr -= 0.02;
-    }
+    chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
@@ -448,14 +441,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     strcpy(argm, name);
 
     add_bars(argm);
-    chr = ch->getChaShopPenalty();
-
-    if (ch->doesKnowSkill(SKILL_SWINDLE)) {
-      // make 5 separate rolls so chr goes up amount based on learning
-      for (i = 0; i < 5; i++)
-        if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr -= 0.02;
-    }
+    chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
@@ -605,7 +591,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   int cost;
   char buf[256];
   float chr;
-  int j;
   int discount = 100;
 
   if (!shop_index[shop_nr].profit_sell) {
@@ -621,14 +606,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (sellMeCheck(ch, keeper))
     return;
 
-  chr = ch->getChaShopPenalty();
-
-  if (ch->doesKnowSkill(SKILL_SWINDLE)) {
-    // make 5 separate rolls so chr goes up amount based on learning
-    for (j = 0; j < 5; j++)
-      if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        chr -= 0.02;
-  }
+  chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
 
 
@@ -2233,9 +2211,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
       ch->setMoney(ch->getMoney()-value);
 
-      // we save the full value, because the government "owns" all 
-      // non-player owned shops
-      saveGovMoney("shop purchase", value);
       
       db.query("insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell);
 
@@ -2274,8 +2249,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       value+=myself->getMoney();
       ch->setMoney(ch->getMoney()+value);
 
-
-      saveGovMoney("shop purchase", -value);      
 
       shop_index[shop_nr].profit_buy=1.1;
       shop_index[shop_nr].profit_sell=0.9;

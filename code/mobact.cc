@@ -3441,7 +3441,6 @@ int TMonster::mobileActivity(int pulse)
 
 #if 0
       setMoney(getMoney()-100);
-      saveGovMoney("shop tick tax", 100);
       
       shoplog(shop_nr, this, this, "talens", 100, "paying tax");
 #endif

@@ -223,7 +223,6 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
       buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
       // I think this is just for gold stats, the repair guy doesn't use it
       repair->addToMoney(tmp_cost, GOLD_REPAIR); 
-      saveGovMoney("repair", tmp_cost);
 
       *buyer += *fixed_obj;
       fclose(fp);

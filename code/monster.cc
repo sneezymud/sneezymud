@@ -386,7 +386,6 @@ int TMonster::calculateGoldFromConstant()
       the_gold = atoi(db.getColumn(0));
     } else {
       the_gold = 1000000;
-      saveGovMoney("shop load wealth", 1000000);
     }
   }
 

@@ -3043,15 +3043,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     return;
   }
 
-  tChr = ch->getChaShopPenalty();
-
-  if (ch->doesKnowSkill(SKILL_SWINDLE)) {
-    // make 5 separate rolls so chr goes up amount based on learning
-    for (int tRunner = 0; tRunner < 5; tRunner++)
-      if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        tChr -= 0.02;
-  }
-
+  tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
   tCount = ((double) tNum / (double) getComponentCharges());
   tCost  = (int) ((double) shopPrice(1, tShop, tChr, &tDiscount) * tCount);
@@ -3185,15 +3177,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   if (sellMeCheck(ch, tKeeper))
     return;
 
-  tChr = ch->getChaShopPenalty();
-
-  if (ch->doesKnowSkill(SKILL_SWINDLE)) {
-    // make 5 separate rolls so chr goes up amount based on learning
-    for (int tRunner = 0; tRunner < 5; tRunner++)
-      if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        tChr -= 0.02;
-  }
-
+  tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
   tCost  = max(1, sellPrice(tShop, tChr, &tDiscount));
 

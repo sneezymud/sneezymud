@@ -323,7 +323,6 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     sprintf(buf, "Thanks for your business, I'll take your %d talen%s payment in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
     ch->addToMoney(-cost, GOLD_REPAIR);
-    saveGovMoney("sharpening", cost);
     job->cost = cost;
     job->char_name = mud_str_dup(ch->getName());
     job->obj_name = mud_str_dup(fname(name).c_str());

@@ -1114,6 +1114,20 @@ float TBeing::getChaShopPenalty() const
   return plotStat(STAT_CURRENT, STAT_CHA, 1.3, 1.0, 1.1);
 }
 
+float TBeing::getSwindleBonus()
+{
+  float chr=0.0;
+
+  if(doesKnowSkill(SKILL_SWINDLE)){
+    // make 5 separate rolls so chr goes up amount based on learning
+    for (int i = 0; i < 5; i++)
+      if (bSuccess(this, getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
+	chr += 0.02;
+  }
+
+  return chr;
+}
+
 Stats TBeing::getCurStats() const
 {
   return curStats;

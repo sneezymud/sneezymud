@@ -128,7 +128,6 @@ static void bootWorld(void);
 static void bootHomes(void);
 static void renum_zone_table(void);
 static void reset_time(void);
-static void bootGovMoney(void);
 
 struct reset_q_type
 {
@@ -323,8 +322,6 @@ void bootDb(void)
 
   bootPulse("Creating Loot List.");
   sysLootBoot();
-
-  bootGovMoney();
 
   bootPulse("Resetting zones:", false);
   for (i = 0; i < zone_table.size(); i++) {
@@ -1969,9 +1966,6 @@ void zoneData::resetZone(bool bootTime)
 
             mob->createWealth();
 
-	    if(mob->spec != SPEC_SHOPKEEPER)
-	      saveGovMoney("mob load wealth", mob->getMoney());
-
             if ((mob->isNocturnal() || mob->isDiurnal()) && storageRoom)
               *storageRoom += *mob;
             else
@@ -2044,9 +2038,6 @@ void zoneData::resetZone(bool bootTime)
             mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone_nr);
 
-	    if(mob->spec != SPEC_SHOPKEEPER)
-	      saveGovMoney("mob load wealth", mob->getMoney());
-
 
 #if 1
             // Slap the mob on the born list.
@@ -2113,9 +2104,6 @@ void zoneData::resetZone(bool bootTime)
             *rp += *mob;
             mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone_nr);
-
-	    if(mob->spec != SPEC_SHOPKEEPER)
-	      saveGovMoney("mob load wealth", mob->getMoney());
 
 #if 1
             // Slap the mob on the born list.
@@ -2203,9 +2191,6 @@ void zoneData::resetZone(bool bootTime)
             }
             rp = real_roomp(rs.arg3);
             *rp += *mob;
-
-	    if(mob->spec != SPEC_SHOPKEEPER)
-	      saveGovMoney("mob load wealth", mob->getMoney());
 	    
 
 #if 1
@@ -3035,32 +3020,6 @@ extern void cleanUpMail();
 }
 
 
-void saveGovMoney(const char *what, int talens){
-  TDatabase db("sneezy");
-
-  db.query("update govmoney set talens=talens+%i where type='%s'", talens, what);
-}
-
-int getGovMoney(int talens){
-  int amount=talens, transaction=0;
-  TDatabase db("sneezy");
-
-  db.query("select type, talens from govmoney where talens>0");
-
-  while((db.fetchRow()) && amount>0){
-    if(atoi(db.getColumn(1)) < amount){
-      transaction=atoi(db.getColumn(1));
-    } else {
-      transaction=amount;
-    }
-
-    db.query("update govmoney set talens=talens-%i where type='%s'", transaction, db.getColumn(0));
-
-    amount-=transaction;
-  }
-
-  return(talens-amount);
-}
 
 int find_shopnr(int number){
   unsigned int shop_nr;
@@ -3076,52 +3035,4 @@ int find_shopnr(int number){
 }
 
 
-void countMobWealth(){
-  int wealth=0, shopwealth=0;
-      
-  for (TBeing *tmp_ch = character_list; tmp_ch; tmp_ch = tmp_ch->next) {
-    if(dynamic_cast<TMonster *>(tmp_ch)){
-      if(tmp_ch->spec != SPEC_SHOPKEEPER){
-	wealth+=tmp_ch->getMoney();
-      } else if(!shop_index[find_shopnr(tmp_ch->number)].isOwned()){
-	shopwealth+=tmp_ch->getMoney();
-      }
-    }
-  }
-
-  TDatabase db("sneezy");
-
-  db.query("replace govmoney values ('mob wealth', %i)", wealth);
-  db.query("replace govmoney values ('shop wealth', %i)", shopwealth);
-}  
-
-
-void bootGovMoney(){
-  int mobLoadWealth=0, mobWealth=0;
-  int shopLoadWealth=0, shopWealth=0;
-  TDatabase db("sneezy");
-
-  db.query("select talens from govmoney where type='mob load wealth' and 1=1");
-  if(db.fetchRow())
-    mobLoadWealth=atoi(db.getColumn(0));
-
-  db.query("select talens from govmoney where type='mob wealth' and 1=1");
-  if(db.fetchRow())
-    mobWealth=atoi(db.getColumn(0));
-
-  saveGovMoney("mob debt wealth", mobLoadWealth-mobWealth);
-
-  db.query("update govmoney set talens=0 where type='mob load wealth' and 1=1");
-  db.query("select talens from govmoney where type='shop load wealth' and 1=1");
-  if(db.fetchRow())
-    shopLoadWealth=atoi(db.getColumn(0));
-
-  db.query("select talens from govmoney where type='shop wealth' and 1=1");
-  if(db.fetchRow())
-    shopWealth=atoi(db.getColumn(0));
-
-  saveGovMoney("shop debt wealth", shopLoadWealth-shopWealth);
-  
-  db.query("update govmoney set talens=0 where type='shop load wealth' and 1=1");
-}
 
