@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.11  1999/10/07 17:14:26  batopr
+// Added display of "factor" for info-gold on shops
+//
 // Revision 1.10  1999/10/07 17:05:26  batopr
 // typo
 //
@@ -4083,7 +4086,9 @@ void TBeing::doInfo(const char *arg)
 
       sprintf(buf2, "TOTAL ECONOMY:     pos %u, net gold = %d, drain=%d\n\r", tot_gold, net_gold, tot_drain);
       buf += buf2;
-      sprintf(buf2, "SHOP ECONOMY:      pos %u, net gold = %d, drain=%d\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops);
+      // shops are a little diff from normal
+      // want shops to be a slight drain, so compare drain to source
+      sprintf(buf2, "SHOP ECONOMY:      pos %u, net gold = %d, drain=%d (factor %.2f%%)\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops, 100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops );
       buf += buf2;
       sprintf(buf2, "BUDGET ECONOMY:    pos %u, net gold = %d, drain=%d (%.2f%%)\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget,
  100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
