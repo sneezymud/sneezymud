@@ -665,7 +665,7 @@ int main(int argc, char **argv)
   bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
   bool popularity=false;
   int headroom=100;
-  sstring infile="/mud/code/lib/tinyworld.wld", buf, outputfile="imageout.gif";
+  sstring infile="/mud/code/lib/tinyworld.wld", buf, outputfile="imageout.jpg";
   sstring logfile="/mud/prod/lib/logs/logcurrent";
 
   while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:xl:p")) != -1){
