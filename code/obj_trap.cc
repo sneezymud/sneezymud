@@ -402,7 +402,8 @@ void TTrap::armGrenade(TBeing *ch)
   if(::number(0,1)){
     for(t=ch->roomp->getStuff(); t; t=t->nextThing){
       if((tm=dynamic_cast<TMonster *>(t))){
-	tm->doFlee("");
+	if(tm->canSee(this))
+	  tm->doFlee("");
       }
     }
   }
