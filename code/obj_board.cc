@@ -10,11 +10,11 @@
 #include "obj_note.h"
 #define POST_IN_REVERSE 0
 
-boardStruct *board_list;
+boardStruct *board_list=NULL;
 
 void InitBoards()
 {
-  board_list = NULL;
+  //  board_list = NULL;
 }
 
 void DeleteABoard(TObj *obj)
