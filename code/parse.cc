@@ -1863,7 +1863,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
     if (0 >= getLifeforce()) {
       setLifeforce(0);
       updatePos();
-      if (GetMaxLevel() < 6) {
+      if (GetMaxLevel() > 5) {
 	addToHit(-1);
       }
     } else {
