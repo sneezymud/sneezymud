@@ -799,10 +799,8 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if (is_abbrev(arg, "engage-all") || is_abbrev(arg, "no-fight") || is_abbrev(arg, "engage-always") ) {
     if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
-      sendTo("You will now default to fighting back if attacked and when you cast.\n
-\r");
-      sendTo("You are still free to engage rather than fight by using the engage
- command.\n\r");
+      sendTo("You will now default to fighting back if attacked and when you cast.\n\r");
+      sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
     } else {
       if (IS_SET(desc->autobits, AUTO_ENGAGE)) {

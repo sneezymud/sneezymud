@@ -242,8 +242,7 @@ victim, TO_CHAR);
 int enthrallDemon(TBeing * caster)
 {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
-    caster->sendTo("You cannot dance the ritual under these wet
-conditions!\n\r");
+    caster->sendTo("You cannot dance the ritual under these wet conditions!\n\r");
     return FALSE;
   }
 

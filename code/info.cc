@@ -3405,8 +3405,7 @@ void TBeing::doAlias(const char *argument)
     return;
 
   if (desc->m_bIsClient) {
-    sendTo("Use the client aliases. See client help file for #alias command and
-options menu\n\r");
+    sendTo("Use the client aliases. See client help file for #alias command and options menu.\n\r");
     return;
   }
 

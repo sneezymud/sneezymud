@@ -743,8 +743,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
       if (isPc()) {
         if (discArray[spell]->minMana) {
           if (!reconcileMana(spell, FALSE)) {
-            act("You have totally run out of mana and are forced to abort
-your spell.", FALSE, ch, NULL, NULL, TO_CHAR);
+            act("You have totally run out of mana and are forced to abort your spell.", FALSE, ch, NULL, NULL, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
             return FALSE;
           }
@@ -756,8 +755,7 @@ your spell.", FALSE, ch, NULL, NULL, TO_CHAR);
           }
         } else {
           if (!reconcilePiety(spell, FALSE)) {
-            act("You have totally run out of piety and are forced to abort
-your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
+            act("You have totally run out of piety and are forced to abort your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
             return FALSE;
           }
@@ -1157,8 +1155,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
    case SPELL_DISPEL_INVISIBLE:
      if (!victim->isAffected(AFF_INVISIBLE)) {
        act("Do you need glasses or something?  $N is already visible!", FALSE, caster, NULL, victim, TO_CHAR,ANSI_WHITE);
-       act("Humor the pitiful mage and pretend that $N just magically appeared.
-Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
+       act("Humor the pitiful mage and pretend that $N just magically appeared. Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
       return TRUE;
      }
      return FALSE;
