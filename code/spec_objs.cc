@@ -3282,8 +3282,6 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
     if(!found)
       return FALSE;
     else if(timer <= 0){
-      vlogf(LOG_PEEL, "found people in boat, setting timer");
-      
       if(myself->in_room == 15150){
 	sendrpf(real_roomp(15150), "The fishing boat is preparing to leave.\n\r");
       } else if(myself->in_room == 13091){
