@@ -83,13 +83,23 @@ class rentHeader {
 
 class ItemSave {
   FILE *fp;
+
  public:
   rentHeader st;
 
+  bool openFile(const sstring &);
   void setFile(FILE *);
-  
+
+  void writeVersion();
+  bool writeHeader();
+  void writeFooter();
+
   bool raw_write_item(TObj *);
   void objsToStore(signed char, TObj *, TBeing *, bool, bool);
+
+  ItemSave();
+  ~ItemSave();
+  
 };
 
 

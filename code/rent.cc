@@ -470,6 +470,45 @@ static bool raw_read_rentObject(FILE *fp, rentObject *item, char **name, char **
   return TRUE;
 }
 
+void ItemSave::writeFooter()
+{
+  signed char i;
+  i = CONTENTS_END;
+  fwrite(&i, sizeof(i), 1, fp);
+}
+
+bool ItemSave::writeHeader()
+{
+  return (fwrite(&st, sizeof(rentHeader), 1, fp)==1);
+}
+
+void ItemSave::writeVersion()
+{
+  // prepare the rent file header and write it out
+  fwrite(&st.version, sizeof(st.version), 1, fp);
+}
+
+
+ItemSave::ItemSave()
+{
+  memset(&st, 0, sizeof(rentHeader));
+  st.version = CURRENT_RENT_VERSION;
+  fp=NULL;
+}
+
+ItemSave::~ItemSave()
+{
+  if(fp)
+    fclose(fp);
+}
+
+bool ItemSave::openFile(const sstring &filepath)
+{
+  if (!(fp = fopen(filepath.c_str(), "w+b"))) {
+    return false;
+  }
+  return true;
+}
 
 bool ItemSave::raw_write_item(TObj *o)
 {
@@ -1340,22 +1379,11 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 
 void TMonster::saveItems(const sstring &filepath)
 {
-  FILE *fp;
-  signed char i;
   TObj *obj;
   ItemSave is;
 
-  // open the save file
-  if (!(fp = fopen(filepath.c_str(), "w+b"))) {
-    //    vlogf(LOG_BUG, fmt("Error saving mob [%s] items.") %  getName());
-    return;
-  }
-  is.setFile(fp);
-
-  // prepare the rent file header and write it out
-  memset(&is.st, 0, sizeof(rentHeader));
-  is.st.version = CURRENT_RENT_VERSION;
-  fwrite(&is.st.version, sizeof(is.st.version), 1, fp);
+  is.openFile(filepath);
+  is.writeVersion();
 
   // store worn objects
   wearSlotT ij;
@@ -1374,9 +1402,7 @@ void TMonster::saveItems(const sstring &filepath)
   is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, FALSE);
 
   // write the rent file footer
-  i = CONTENTS_END;
-  fwrite(&i, sizeof(i), 1, fp);
-  fclose(fp);
+  is.writeFooter();
 
   // shopkeeper specific stuff - save gold
   if(isShopkeeper()){
@@ -1388,26 +1414,19 @@ void TMonster::saveItems(const sstring &filepath)
 
 void TRoom::saveItems(const sstring &)
 {
-  FILE *fp;
   sstring filepath;
-  signed char i;
   ItemSave is;
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
 
-  if (!(fp = fopen(filepath.c_str(), "w+b"))) {
+  if(!is.openFile(filepath)){
     vlogf(LOG_BUG, fmt("Error saving room [%d] items.") %  number);
     return;
   }
-  is.setFile(fp);
-  memset(&is.st, 0, sizeof(rentHeader));
-  is.st.version = CURRENT_RENT_VERSION;
-  fwrite(&is.st.version, sizeof(is.st.version), 1, fp);
+  is.writeVersion();
 
   is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), NULL, FALSE);
-  i = CONTENTS_END;
-  fwrite(&i, sizeof(i), 1, fp);
-  fclose(fp);
+  is.writeFooter();
 }
 
 
@@ -1955,9 +1974,7 @@ rp2->getName() % corpse->getRoomNum());
 
 void TPCorpse::saveCorpseToFile()
 {
-  signed char i;
   char buf[256];
-  FILE *fp;
   TPCorpse *firstCorpse = NULL;
   TPCorpse *tmpCorpse = NULL;
   int numCorpses = 0;
@@ -1973,10 +1990,9 @@ void TPCorpse::saveCorpseToFile()
 
   sprintf(buf, "corpses/%s", fileName.c_str());
 
-  if (!(fp = fopen(buf, "w+b"))) {
+  if(!is.openFile(buf)){
     onlyCorpse = TRUE; 
   }
-  is.setFile(fp);
 
   firstCorpse = this;
   while (firstCorpse) {
@@ -1993,18 +2009,15 @@ void TPCorpse::saveCorpseToFile()
   }
 
 
-  memset(&is.st, 0, sizeof(rentHeader));
   strcpy(is.st.owner, fileName.c_str());
   is.st.number = numCorpses;
-  is.st.version = (unsigned char) CURRENT_RENT_VERSION;
   is.st.gold_left = (int) in_room; 
   is.st.original_gold = 0;
   is.st.total_cost = 0;
   is.st.first_update = is.st.last_update = (long) time(0);
 
-  if (fwrite(&is.st, sizeof(rentHeader), 1, fp) != 1) {
+  if(!is.writeHeader()){
     vlogf(LOG_BUG, fmt("Error writing corpse header for %s.") %  getName());
-    fclose(fp);
     return;
   }
 
@@ -2014,14 +2027,11 @@ void TPCorpse::saveCorpseToFile()
     objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, NULL, FALSE, TRUE);
     tmpCorpse = tmpCorpse->nextCorpse;
   }
-  i = CONTENTS_END;
-  fwrite(&i, sizeof(signed char), 1, fp);
+  is.writeFooter();
 #else
   is.objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, NULL, FALSE, TRUE);
-  i = CONTENTS_END;
-  fwrite(&i, sizeof(signed char), 1, fp);
+  is.writeFooter();
 #endif
-  fclose(fp);
 
 }
 
@@ -2030,9 +2040,7 @@ void TPCorpse::saveCorpseToFile()
 // msgStatus = 2, "renting"
 void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 {
-  signed char i;
   char buf[256];
-  FILE *fp;
   TPerson *tmp;
   TObj *obj;
   ItemSave is;
@@ -2043,21 +2051,19 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     tmp = dynamic_cast<TPerson *>(this);
 
   sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
-  if (!(fp = fopen(buf, "w+b"))) {
-    vlogf(LOG_BUG, fmt("Error opening file for saving %s's objects") %  getName());
+  if(!is.openFile(buf)){
+    vlogf(LOG_BUG, fmt("Error opening file for saving %s's objects") %
+	  getName());
     return;
   }
-  is.setFile(fp);
-  memset(&is.st, 0, sizeof(rentHeader));
   strcpy(is.st.owner, getName());
   is.st.number = (int) cost->no_carried;
-  is.st.version = (unsigned char) CURRENT_RENT_VERSION;
   is.st.gold_left = (int) getMoney();
   is.st.original_gold = (int) getMoney();
   is.st.total_cost = (int) cost->total_cost;
   is.st.first_update = is.st.last_update = (long) time(0);
 
-  if (fwrite(&is.st, sizeof(rentHeader), 1, fp) != 1) {
+  if(!is.writeHeader()){
     vlogf(LOG_BUG, fmt("Error writing rent header for %s.") %  getName());
     return;
   }
@@ -2081,9 +2087,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     }
   }
   is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, d);
-
-  i = CONTENTS_END;
-  fwrite(&i, sizeof(signed char), 1, fp);
+  is.writeFooter();
 
   if (d)
     setStuff(NULL);
@@ -2105,7 +2109,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
         age_mod % is.st.total_cost);
   }
   last_rent = is.st.total_cost;
-  fclose(fp);
 
   if (!is.st.number) 
     wipeRentFile(getName());
