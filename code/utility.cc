@@ -22,7 +22,6 @@ extern "C" {
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/param.h>
-#include <cmath>
 #include <dirent.h>
 #include <sys/stat.h>                                                           
 #include <sys/wait.h>                                                           
