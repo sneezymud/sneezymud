@@ -67,10 +67,10 @@ int main(int argc, char **argv)
     db.query("select * from objaffect where vnum=%i", vnums[i]);
     while(db.fetchRow()){
       ssprintf(buf, "- objaffect\n"); sbuf+=buf;
-      ssprintf(buf, "vnum:      %s\n", db["vnum"]);  sbuf+=buf;
+      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
       ssprintf(buf, "type: %s\n", db["type"]);  sbuf+=buf;
-      ssprintf(buf, "mod1:      %s\n", db["mod1"]);  sbuf+=buf;
-      ssprintf(buf, "mod2:\n%s~\n", db["mod2"]);  sbuf+=buf;
+      ssprintf(buf, "mod1: %s\n", db["mod1"]);  sbuf+=buf;
+      ssprintf(buf, "mod2: %s\n", db["mod2"]);  sbuf+=buf;
       ssprintf(buf, "\n"); sbuf+=buf;
     }
   }
