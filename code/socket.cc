@@ -293,29 +293,67 @@ void updateAvgPlayers()
   }
 }
 
+////////////////////////////////////////////
+// handle shutdown
+////////////////////////////////////////////
+bool TSocket::handleShutdown()
+{
+  sstring buf;
+  static bool sent = false;
+
+  if(Shutdown)
+    return true;
+
+  if (timeTill  && (timeTill <= time(0))) {
+    if (descriptor_list) {
+      buf=fmt("%s time has arrived!\n\r") % shutdown_or_reboot();
+      descriptor_list->worldSend(buf, NULL);
+      descriptor_list->outputProcessing();
+    }
+    return true;
+  } else if (timeTill && !((timeTill - time(0)) % 60)) {
+    int minutes=(timeTill - time(0)) / 60;
+    if (!sent) {
+      buf="<r>******* SYSTEM MESSAGE ******<z>\n\r";
+      buf+=fmt("<c>%s in %ld minute%s.<z>\n\r") % 
+	shutdown_or_reboot() % minutes % ((minutes == 1) ? "" : "s");
+      descriptor_list->worldSend(buf, NULL);
+    }
+    sent = true;
+  } else if (timeTill && ((timeTill- time(0)) <= 5)) {
+    long secs = timeTill - time(0);
+    if (!sent) {
+      buf="<r>******* SYSTEM MESSAGE ******<z>\n\r";
+      buf+=fmt("<c>%s in %ld second%s.<z>\n\r") %
+	shutdown_or_reboot() % secs % ((secs == 1) ? "" : "s");
+      descriptor_list->worldSend(buf, NULL);
+      sent = true;
+    }
+  } else
+    sent = false;
+
+  return false;
+}
+
+
 int TSocket::gameLoop()
 {
   fd_set input_set, output_set, exc_set;
   struct timeval last_time, now, timespent, timeout, null_time;
   static struct timeval opt_time;
-  char buf[256];
   Descriptor *point;
   int pulse = 0;
   int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
   int pulse_tick=0, pulse_mudhour=0, mobstuff=0, quickpulse=0, wayslowpulse=0;
   TBeing *tmp_ch, *temp;
   TObj *obj, *next_thing;
-  static int sent = 0;
   int rc = 0;
   time_t lagtime_t = time(0);
   TVehicle *vehicle;
   int vehiclepulse = 0;
   sstring str;
   int count;
-
-#ifndef SOLARIS
   int mask;
-#endif
 
   // prepare the time values 
   null_time.tv_sec = 0;
@@ -325,15 +363,10 @@ int TSocket::gameLoop()
   gettimeofday(&last_time, NULL);
 
   avail_descs = 150;		
-
-#ifndef SOLARIS
+  
   mask = sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
-// blah, trapping PROF PREVENTS the timing signals from working!
-//      sigmask(SIGPROF) |  // needed for profile code
-// sigmask(SIGALRM) |
-      sigmask(SIGPIPE) | sigmask(SIGTERM) |
-      sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
-#endif
+    sigmask(SIGPIPE) | sigmask(SIGTERM) |
+    sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
 
   // players may have connected before this point via 
   // addNewDescriptorsDuringBoot, so send all those descriptors the login
@@ -343,36 +376,7 @@ int TSocket::gameLoop()
 
   time_t ticktime = time(0);
 
-  while (!Shutdown) {
-    ////////////////////////////////////////////
-    // handle shutdown
-    ////////////////////////////////////////////
-    if (timeTill  && (timeTill <= time(0))) {
-      if (descriptor_list) {
-        sprintf(buf, "%s time has arrived!\n\r", shutdown_or_reboot().c_str());
-        descriptor_list->worldSend(buf, NULL);
-        descriptor_list->outputProcessing();
-      }
-      break; 
-    } else if (timeTill && !((timeTill - time(0)) % 60)) {
-      if (!sent) {
-        sprintf(buf, "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld minute%s.<z>\n\r", shutdown_or_reboot().c_str(), ((timeTill - time(0)) / 60), (((timeTill - time(0)) / 60) == 1) ? "" : "s");
-        descriptor_list->worldSend(buf, NULL);
-      }
-      sent = 1;
-    } else if (timeTill && ((timeTill- time(0)) <= 5)) {
-      long secs = timeTill - time(0);
-      if (!sent) {
-        sprintf(buf, "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld second%s.<z>\n\r", shutdown_or_reboot().c_str(), secs, (secs == 1) ? "" : "s");
-        descriptor_list->worldSend(buf, NULL);
-        sent = secs;
-      }
-    } else
-      sent = 0;
-    ////////////////////////////////////////////    
-    ////////////////////////////////////////////
-
-    
+  while (!handleShutdown()) {
     ////////////////////////////////////////////
     // do some socket stuff or something
     ////////////////////////////////////////////

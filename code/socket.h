@@ -29,6 +29,8 @@ class TSocket {
   void nonBlock();
   void initSocket();
   void addNewDescriptorsDuringBoot(sstring);
+  bool handleShutdown();
+
 
   TSocket(int p);
   ~TSocket();
