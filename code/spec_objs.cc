@@ -4232,6 +4232,8 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   }
 
+  if (ch->checkPeaceful("Somehow, you think pointing that thing around here wouldn't go over well.")) 
+    return FALSE;
 
   vict2 = ch->fight();
 
@@ -4262,7 +4264,7 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     vict->addToWait(combatRound(2));
     vict->cantHit += ch->loseRound(2);
 
-    dam = ::number(10,30);
+    dam = ::number(10,80);
     rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
     return TRUE;
 
@@ -5965,8 +5967,6 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  if(::number(0,9))
-    return false;
 
   TSymbol *symbol = NULL;
   
@@ -5976,7 +5976,7 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
   TThing *t = NULL;
   TBeing *tmp_victim = NULL;
   
-  if(!::number(0,1200)) {
+  if(!::number(0,1000) && cmd == CMD_GENERIC_PULSE) {
     
     act("$n's eyes suddenly glaze over as $e begins to chant in a monotonous voice.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     act("You suddenly feel possesed by a higher power, and are compelled to chant.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -6002,19 +6002,12 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
       tmp_victim->rawBlind(100, UPDATES_PER_MUDHOUR / 4, SAVE_NO);
       
     }
+
+    symbol->addToSymbolCurStrength(symbol->getSymbolMaxStrength() - symbol->getSymbolCurStrength());
+    return FALSE;
+
     
   }
-  
-  if (cmd == CMD_GENERIC_PULSE && symbol->getSymbolCurStrength() < symbol->getSymbolMaxStrength()) {
-    if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
-    return FALSE;
-    
-    act("You smile inwardly as you feel your $o regain strength.",TRUE,ch,o,NULL,TO_CHAR,NULL);
-
-    symbol->addToSymbolCurStrength(::number(1,min(100, symbol->getSymbolMaxStrength() - symbol->getSymbolCurStrength() )));
-    return FALSE;
-  }
-
   return FALSE;
 }
 
@@ -6038,7 +6031,7 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
 
       act("$n's $o glows <b>a cold blue<1> as $e yells a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -6629,6 +6622,77 @@ int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  TObj *clay;
+
+  char buf[256];
+
+  if (!o || !vict)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+  if (::number(0,49))
+    return FALSE;
+  if (cmd != CMD_OBJ_HITTING)
+    return FALSE;
+
+
+  if (!ch->canWither(vict, SILENT_YES))
+    return FALSE;
+
+  wearSlotT slot;
+
+  bool ok = FALSE;;
+  bool found = FALSE;
+
+  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+    if (notBreakSlot(slot, false))  // same ones, right?
+      continue;
+    if (!vict->slotChance(slot))
+      continue;
+    found |= (vict->isLimbFlags(slot, PART_MISSING));
+    ok = TRUE;
+  }
+
+  if (found || !ok) return FALSE;
+
+  for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+    if (notBreakSlot(slot, true))
+      continue;
+    if (!vict->slotChance(slot))
+      continue;
+    break;
+  }
+
+  if ((clay = read_object(14, VIRTUAL))) {
+    *ch->roomp += *clay;
+  }
+
+  char limb[80];
+  sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
+
+  vict->makePartMissing(slot, FALSE);
+  sprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes your %s!", limb);
+  act(buf, FALSE, ch, o, vict, TO_VICT, NULL);
+  sprintf(buf, "Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!", limb, limb);
+  act(buf, FALSE, vict, NULL, NULL, TO_CHAR, NULL);
+
+  sprintf(buf, "Your $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
+  act(buf, FALSE, ch, o, vict, TO_CHAR, NULL);
+  sprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
+  act(buf, FALSE, ch, o, vict, TO_NOTVICT, NULL);
+
+  sprintf(buf, "$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>"
+	  , limb);
+  act(buf, FALSE, vict, NULL, vict, TO_ROOM, NULL);
+
+  vict->dropWeapon(slot);
+
+  return TRUE;
+}
+
 
 
 //MARKER: END OF SPEC PROCS
@@ -6766,6 +6830,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "frost armor", frostArmor}, 
   {FALSE, "telekinesis glove", telekinesisGlove}, //115
   {FALSE, "Symbol of the Blinding Light", symbolBlindingLight},
+  {TRUE, "Weapon: Unmaker", weaponUnmaker},
   {FALSE, "last proc", bogusObjProc}
 };
 
