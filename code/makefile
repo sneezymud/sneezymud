@@ -56,8 +56,8 @@ CFLAGS +=-Wcast-qual            # Warns about using casting to remove const
 CFLAGS +=-Wcast-align           # a pointer cast changes alignment
 CFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
 CFLAGS +=-Wconversion           # bad conversions
-CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
-CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
+#CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
+#CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
 #CFLAGS +=-Wmissing-declarations # global function without a declaration
 #CFLAGS +=-Wnested-externs       # extern found within a func
 CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
@@ -77,7 +77,7 @@ CFLAGS +=-Werror                # turns a warning into an error
 # for dynamic libraries
 CFLAGS +=-fPIC
 
-#CFLAGS += -I/usr/local/include
+CFLAGS += -I/usr/local/include
 
 ###############################################################################
 #                                   LDFLAGS                                   #
@@ -119,7 +119,7 @@ endif
 #LDFLAGS +=-lpq++
 LDFLAGS +=-lpq
 
-#LDFLAGS += -L/usr/local/lib
+LDFLAGS += -L/usr/local/lib
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
