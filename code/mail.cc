@@ -29,7 +29,17 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
   tmstr = asctime(localtime(&mail_time));
   *(tmstr + strlen(tmstr) - 1) = '\0';
 
-  db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, to, tmstr, message_pointer);
+
+  if(!strcmp(to, "faction")){
+    TDatabase fm("sneezy");
+    fm.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
+    
+    while(fm.fetchRow()){
+      db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, fm.getColumn(0), tmstr, message_pointer);
+    }
+  } else {
+    db.query("insert into mail (port, mailfrom, mailto, timesent, content) values (%i, '%s', '%s', '%s', '%s')", gamePort, from, to, tmstr, message_pointer);
+  }
 }                               /* store mail */
 
 string read_delete(const char *recipient, const char *recipient_formatted, string &from)
@@ -114,7 +124,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     if (isupper(*tmp))
       *tmp = tolower(*tmp);
 
-  if (!load_char(recipient, &st)) {
+  if (strcmp(recipient, "faction") && !load_char(recipient, &st)) {
     sendTo("No such player to mail to!\n\r");
     return;
   }
@@ -132,20 +142,36 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     return;
   }
 
-  if (getMoney() < STAMP_PRICE && !imm) {
-    sprintf(buf, "%s A stamp costs %d talens.", fname(name).c_str(), STAMP_PRICE);
-    me->doTell(buf);
-    sprintf(buf, "%s ...which I see you can't afford.", fname(name).c_str());
-    me->doTell(buf);
-    return;
+  if(!strcmp(recipient, "faction")){
+    if(getFaction() == FACT_NONE){
+      sprintf(buf, "%s You aren't in a faction!", fname(name).c_str());
+      me->doTell(buf);
+      return;
+    }
+
+    if(getMoney() < FACTION_STAMP_PRICE && !imm){
+      sprintf(buf, "%s Bulk mailing costs %d talens.", fname(name).c_str(), FACTION_STAMP_PRICE);
+      me->doTell(buf);
+      sprintf(buf, "%s ...which I see you can't afford.", fname(name).c_str());
+      me->doTell(buf);
+      return;
+    }
+  } else {
+    if (getMoney() < STAMP_PRICE && !imm) {
+      sprintf(buf, "%s A stamp costs %d talens.", fname(name).c_str(), STAMP_PRICE);
+      me->doTell(buf);
+      sprintf(buf, "%s ...which I see you can't afford.", fname(name).c_str());
+      me->doTell(buf);
+      return;
+    }
   }
 
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
     sprintf(buf, "%s I'll take %d talens for the stamp.", fname(name).c_str(), 
-         STAMP_PRICE);
+         strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE);
     me->doTell(buf);
-    addToMoney(-STAMP_PRICE, GOLD_HOSPITAL);
+    addToMoney(-(strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE), GOLD_HOSPITAL);
   } else if (isImmortal()) {
     sprintf(buf, "%s Since you're high and mighty, I'll waive the fee.",
          fname(name).c_str());
@@ -254,30 +280,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     *envelope += *note;
     *this += *envelope;
 
-#if 0
-    // parse the action_desc and get the "from"
-    char namebuf[24];
-    *namebuf = '\0';
-    char *c = strstr(note->action_description, "From: ");
-    if (c) {
-      c += 6;
-      char *d = strchr(c, '\n');
-      if (d) {
-        int len = d - c;
-        strncpy(namebuf, c, len);
-        namebuf[len] = '\0';
-      }
-    }
-
-    sprintf(buf, "$n gives you $p%s%s%s.", 
-        *namebuf ? " (from " : "",
-        *namebuf ? namebuf : "",
-        *namebuf ? ")" : "");
-#else
     sprintf(buf, "$n gives you $p from %s.", from.c_str());
-
-#endif
-
     act(buf, FALSE, me, envelope, this, TO_VICT);
     act("$N gives $n $p.", FALSE, this, envelope, me, TO_ROOM);
   }
