@@ -5839,7 +5839,7 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     char buf[256];
     one_argument(arg, buf);
     if(!strcmp(buf, "kaeshite")) {
-      if (!(sword = get_obj("starfire-blade-sword-two-handed-quest", EXACT_NO))) {
+      if (!(sword = get_obj("blade starfire sword two handed quest", EXACT_NO))) {
 	act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
 	act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
