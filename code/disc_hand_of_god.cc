@@ -797,9 +797,10 @@ portalRoomT portalRooms[] =
   {15346, "grimhaven"},
   {15347, "brightmoon"},
   {15348, "logrus"},
+  {33760, "slab"},
 };
 
-const int NUM_PORTAL_ROOMS = 3;
+const int NUM_PORTAL_ROOMS = 4;
 
 
 int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
