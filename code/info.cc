@@ -444,7 +444,11 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     return newDescr;
   }
 
-  garbled = garble(regStr, getCond(DRUNK));
+  if (isImmortal()) {
+    garbled = regStr;
+  } else {
+    garbled = garble(regStr, getCond(DRUNK));
+  }
 
   // indent the first line, if needed
   if (indent) {
