@@ -1112,10 +1112,10 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
   // This should be difficult, considering what they are trying to do.  But even blind mobs should have a chance
   // to assist in due situations, but not a guaranteed assist.  This also applies to any situation in which a mobile
   // wanting to assist can not see the person in trouble and/or the aggressor.   -Lapsos
-  if ((!canSee(v) || !canSee(tmp_ch)) && (::number(-100, getStat(STAT_CURRENT, STAT_FOC)) < 0) || (::number(-100, getStat(STAT_CURRENT, STAT_PER)) < 0) ) {
+  if ((!canSee(v) || !canSee(tmp_ch)) && ((::number(-100, getStat(STAT_CURRENT, STAT_FOC)) < 0) || (::number(-100, getStat(STAT_CURRENT, STAT_PER)) < 0))) {
     act("You try to assist $N but your lack of sight interferes.", TRUE, this, 0, v, TO_CHAR, ANSI_ORANGE);
     act("$n fails to assist you, look at them stumble around.", TRUE, this, 0, v, TO_VICT, ANSI_GREEN);
-    act("$n tried to attack you but their blindness stops them.", TRUE, this, 0, tmp_ch, TO_VICT, ANSI_RED);
+    act("$n tried to attack you but their lack of ability to see you stops them.", TRUE, this, 0, tmp_ch, TO_VICT, ANSI_RED);
     act("$n tries to assist against $N, but fails.", TRUE, this, 0, tmp_ch, TO_NOTVICT, ANSI_BLUE);
     return FALSE;
   }
