@@ -497,61 +497,6 @@ void bootWorld(void)
 }
 
 
-// none of this flip stuff handles diagonals
-#define FLIP_EASTWEST   (1<<0)
-#define FLIP_NORTHSOUTH (1<<1)
-#define FLIP_UPDOWN     (1<<2)
-#define FLIP_ALL        FLIP_EASTWEST+FLIP_NORTHSOUTH+FLIP_UPDOWN
-
-dirTypeT flip_dir(dirTypeT dir, int flip){
-  if(flip & FLIP_UPDOWN){
-    flip-=FLIP_UPDOWN;
-    
-    switch(dir){
-      case DIR_UP: dir=DIR_DOWN; break;
-      case DIR_DOWN: dir=DIR_UP; break;
-      default: break;
-    }
-  }
-
-  if(flip & FLIP_NORTHSOUTH){
-    flip-=FLIP_NORTHSOUTH;
-    
-    switch(dir){
-      case DIR_NORTH: dir=DIR_SOUTH; break;
-      case DIR_SOUTH: dir=DIR_NORTH; break;
-      default: break;
-    }
-  }
-  
-  if(flip & FLIP_EASTWEST){
-    flip-=FLIP_EASTWEST;
-
-    switch(dir){
-      case DIR_EAST: dir=DIR_WEST; break;
-      case DIR_WEST: dir=DIR_EAST; break;
-      default: break;
-    }
-  }
-
-  return dir;
-}
-
-dirTypeT rotate_dir(dirTypeT dir, int rotate){
-  for(int i=0;i<rotate;++i){
-    switch(dir){
-      case DIR_NORTH:     dir=DIR_EAST;  break;
-      case DIR_EAST:      dir=DIR_SOUTH; break;
-      case DIR_SOUTH:     dir=DIR_WEST;  break;
-      case DIR_WEST:      dir=DIR_NORTH; break;
-      default: break;
-    }
-  }
-
-  return dir;
-}
-
-
 void TRoom::colorRoom(int title, int full)
 {
   int len, place = 0, letter;
