@@ -420,11 +420,12 @@ void TMonster::setHPFromHPLevel()
   else
     amt = (int) (4.5 * getHPLevel());
 
-  // this should be reviewed - peel 02/02
-  if(getHPLevel()<=70)
-    amt += (int) (11 * getHPLevel());
-  else
-    amt += (int) ((11 * ((getHPLevel()-70) * (getHPLevel() - 70)) / 150) * getHPLevel());
+  // boost for everyone
+  amt += (int) (11 * getHPLevel());
+  // extra boost for mobs above level 70
+  if(getHPLevel()>70)
+    amt += (int) ( 11 * getHPLevel()  * 
+      (getHPLevel()-70) * (getHPLevel() - 70) / 150 );
 
   // balance stuff:
   // HP for mobs should roughly balance with damage for PCs
