@@ -1949,7 +1949,9 @@ void TBeing::assignCorpsesToRooms()
 
 
   if(!il.openFile(buf)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in assignCorpsesToRooms() call.") % buf);
+    // this isn't an error really, just means they don't have a corpse in
+    // the game
+    //    vlogf(LOG_FILE, fmt("Failed to open file '%s' in assignCorpsesToRooms() call.") % buf);
     return;
   }
 
