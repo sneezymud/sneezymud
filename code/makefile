@@ -164,7 +164,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o drawpoker.o \
 	drinkcon.o drug_container.o drug.o edit.o egotrip.o enum.o equip.o \
 	expandable_container.o faction.o flame.o food.o fuel.o gaining.o \
-	gemstone.o general_weapon.o cmd_visible.o
+	gemstone.o general_weapon.o cmd_visible.o cmd_jump.o
 
 OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o jewelry.o key.o keyring.o light.o \
