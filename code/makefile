@@ -222,7 +222,7 @@ OBJ =	actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	task_sit.o task_track.o task_whittle.o task_stavecharge.o thing.o \
 	toggle.o trap.o task_trance_of_blades.o utility.o weather.o \
 	sys_loot.o wiz_data.o wiz_powers.o timing.o shopowned.o \
-	spec_mobs_money_train.o
+	spec_mobs_money_train.o spec_objs_deikhan_sword.o
 
 OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
 

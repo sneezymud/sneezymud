@@ -36,6 +36,8 @@ struct TObjSpecs {
   int (*proc) (TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 };
 
+TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance);
+
 extern const int GET_OBJ_SPE_INDEX(int d);
 
 extern TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1];

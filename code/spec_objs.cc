@@ -116,7 +116,7 @@ void obj_act(const char *message, const TThing *ch, const TObj *o, const TBeing 
   act(buffer, TRUE, ch, o, ch2, TO_CHAR, color);
 }
 
-static TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance)
+TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance)
 {
   TBeing *ch;
 
@@ -5937,6 +5937,8 @@ extern int weaponBlinder(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponManaDrainer(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponLightningRod(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponJambiyaSpecial(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
+extern int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+
 
 // assign special procedures to objects
 
@@ -6044,12 +6046,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Weapon: Starfire", starfire},
   {FALSE, "Sheath: Starfire", starfiresheath}, // 100
   {FALSE, "Teleport Rescue Item", teleportRescue},
+  {FALSE, "Deikhan Sword", deikhanSword},
   {FALSE, "last proc", bogusObjProc}
 };
-
-
-
-
-
-
-
