@@ -1921,7 +1921,7 @@ class TBeing : public TThing {
     void doBruttest(const char *);
     int doMove(cmdTypeT);
     int doMove(dirTypeT);
-    int doSay(const char *);
+    int doSay(const char *, ...);
     virtual void doForce(const char *);
     void doCommune(const char *);
     void mudMessage(TBeing *, int, const char *); 
