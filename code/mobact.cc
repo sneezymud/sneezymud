@@ -4244,6 +4244,7 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
+#ifdef GEEPERS
     if (!found) {
       spell = SPELL_SHADOW_WALK;
       if (!affectedBySpell(spell) && 
@@ -4253,6 +4254,7 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
+#endif
     if (!found) {
       spell = SPELL_CLARITY;
       if (!affectedBySpell(spell) && 
