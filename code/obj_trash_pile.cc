@@ -211,7 +211,7 @@ void TTrashPile::attractVermin()
     return;
 
 
-  switch(::number(3, max(7,index))){
+  switch(::number(3, max(8,index))){
     case 3: // rats
       mobvnum=132;
       buf="%s starts sniffing around %s.\n\r";
@@ -228,6 +228,7 @@ void TTrashPile::attractVermin()
       mobvnum=1468;
       buf="%s begins circling %s.\n\r";
       break;
+#if 0
     case 7: // bums
       mobvnum=1656;
       buf="%s starts rooting around in %s.\n\r";
@@ -236,6 +237,7 @@ void TTrashPile::attractVermin()
       mobvnum=6602;
       buf="%s starts rooting around in %s.\n\r";
       break;
+#endif
     default: // shouldn't happen, load a plague rat anyway
       mobvnum=5109;
       buf="%s starts sniffing around %s.\n\r";
