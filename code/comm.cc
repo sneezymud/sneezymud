@@ -987,7 +987,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
         else {
-          if (iNeed < 100)
+          if (ch->getExp() < 100)
             sprintf(buf + strlen(buf), "%.3f", iNeed);
           else
             sprintf(buf + strlen(buf), "%.0f", iNeed);
@@ -1220,7 +1220,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
         else {
-          if (iNeed < 100)
+          if (ch->getExp() < 100)
             sprintf(buf + strlen(buf), "%.3f", iNeed);
           else
             sprintf(buf + strlen(buf), "%.0f", iNeed);
