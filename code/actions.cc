@@ -827,7 +827,9 @@ int TBeing::doBite(const sstring &arg)
 
       act("You reel about unsteadily, flush with <r>blood<1>.",
 	  FALSE, this, NULL, b, TO_CHAR);
-      stopFighting();
+
+      if(fight())
+	stopFighting();
 
       if(b->isPc() && !b->hasQuestBit(TOG_VAMPIRE) &&
 	 !b->hasQuestBit(TOG_BITTEN_BY_VAMPIRE)){

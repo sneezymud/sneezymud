@@ -470,6 +470,13 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     v->sendTo(COLOR_BASIC, "<k>You have joined the ranks of risen, you are undead.  You are a vampire.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>You thirst... for <1><r>blood<1>.\n\r");
 
+    act("$n rises from the dead!",
+	FALSE, v, NULL, NULL, TO_ROOM);
+
+
+    if(v->fight())
+      v->stopFighting();
+
     v->setQuestBit(TOG_VAMPIRE);
     v->remQuestBit(TOG_BITTEN_BY_VAMPIRE);
 
