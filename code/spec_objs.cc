@@ -5386,35 +5386,50 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     return FALSE;
 
   TDatabase db(DB_SNEEZY);
+  TDatabase db2(DB_SNEEZY);
 
   //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
   //  db.query("select name, count from trophyplayer order by count desc limit 25");
   db.query("select p.name, t.count from player p, trophyplayer t where t.player_id=p.id order by count desc limit 25");
+  db2.query("select p.name, t.total from player p, trophyplayer t where t.player_id=p.id order by count desc limit 25");
 
-  if(!db.isResults()){
+  if(!db.isResults() || !db2.isResults()){
     ch->sendTo("The board is empty.\n\r");
     return TRUE;
   }
 
   ch->sendTo("You examine the board:\n\r");
-  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("\n\r");
   ch->sendTo("-  According to the research of the shaman guildmaster,    -\n\r");
   ch->sendTo("-  these people have done a wider range of death bringing  -\n\r");
   ch->sendTo("-  than any other.                                         -\n\r");
-  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("\n\r");
+  ch->sendTo("-  Number of distinct        |  Total number of            -\n\r");
+  ch->sendTo("-  life forms killed.        |  lives taken.               -\n\r");
+  ch->sendTo("____________________________________________________________\n\r");
+  ch->sendTo("\n\r");
 
   // set the mob count to the highest players kill count
   int activemobcount=1;
   if(db.fetchRow())
     activemobcount=convertTo<int>(db["count"]);
+
+  float mostkilled=0.1;
+  if(db2.fetchRow())
+    mostkilled=convertTo<float>(db2["total"]);
     
   int i=1;
   do {
-    ch->sendTo(COLOR_BASIC, fmt("%i) %s has killed %i (%d%c) life forms.\n\r") % 
+    ch->sendTo(COLOR_BASIC, fmt("%2i) %-13s - %i (%3d%c) | %2i) %-13s - %i (%3d%c)\n\r") % 
 	       i % db["name"] % convertTo<int>(db["count"]) % 
-	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%');
+	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%' %
+	       i % db2["name"] % (int)(convertTo<float>(db2["total"])) %
+	       (int)((convertTo<float>(db2["total"])/mostkilled)*100) % '%');
+	       
     ++i;
-  } while(db.fetchRow());
+  } while(db.fetchRow() && db2.fetchRow());
 
 
   return TRUE;

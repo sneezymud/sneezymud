@@ -46,15 +46,20 @@ void TTrophy::setName(sstring n){
 void TTrophy::addToCount(int vnum, double add){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
+  int player_id=parent->getPlayerID();
+
   db->query("select * from trophy where player_id=%i and mobvnum=%i",
-	    parent->getPlayerID(), vnum);
+	    player_id, vnum);
   if(!db->fetchRow()){
     db->query("insert into trophy values (%i, %i, %f)",
-	      parent->getPlayerID(), vnum, add);
+	      player_id, vnum, add);
   } else {
     db->query("update trophy set count=count+%f where player_id=%i and mobvnum=%i",
-	      add, parent->getPlayerID(), vnum);
+	      add, player_id, vnum);
   }
+
+  db->query("update trophyplayer set total=total+%f where player_id=%i",
+	   add, player_id);
 }
 
 
