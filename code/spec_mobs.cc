@@ -6212,9 +6212,9 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
 	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one! (%i talens)", 
-		o->getWeight(), (int)(o->getWeight()*5));
+		o->getWeight(), (int)(o->getWeight()*2));
 	myself->doSay(buf);
-	ch->addToMoney((int)(o->getWeight()*5), GOLD_COMM);
+	ch->addToMoney((int)(o->getWeight()*2), GOLD_COMM);
       }
 
 
