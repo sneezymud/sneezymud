@@ -3907,7 +3907,6 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) {
   
   TBeing *ch;
-  wearSlotT slot;
 
   if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
     return FALSE;
@@ -4739,7 +4738,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Randomizer", randomizer},
   {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon}, //75
-  {FALSE, "Mana Burn Robe", manaBurnRobe}
+  {FALSE, "Mana Burn Robe", manaBurnRobe},
+  {FALSE, "Healing Totem", healingHead}
 };
 
 
