@@ -1642,6 +1642,10 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   if (corpse && corpse->getStuff())
     return false;
 
+  // Don't let them take things with riders.
+  if (corpse && corpse->getNumRiders(corpse))
+    return false;
+
   return true;
 }
 
@@ -1741,7 +1745,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         *myself += *t;
       }
       delete obj;
-    } else if (!obj->isObjStat(ITEM_PROTOTYPE)) {
+    } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
@@ -1805,7 +1809,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
-    } else if (!obj->isObjStat(ITEM_PROTOTYPE)) {
+    } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
