@@ -158,16 +158,13 @@ short int TPerson::manaLimit() const
     iMax += getLevel(MAGE_LEVEL_IND) * 6;
   else if (hasClass(CLASS_MAGE_THIEF))
     iMax += getLevel(MAGE_THIEF_LEVEL_IND) * 5;
-#if 0
-  else if (hasClass(CLASS_CLERIC))
-    iMax += getLevel(CLERIC_LEVEL_IND) * 5;
-  else if (hasClass(CLASS_DEIKHAN))
-    iMax += GetMaxLevel() * 3;
-#endif
   else if (hasClass(CLASS_RANGER))
     iMax += GetMaxLevel() * 3;
   else if (hasClass(CLASS_MONK))
     iMax += GetMaxLevel() * 3;
+  else if(hasQuestBit(TOG_PSIONICIST)){
+    iMax += getDiscipline(DISC_PSIONICS)->getLearnedness();
+  }
 
   iMax += points.maxMana;        /* bonus mana */
 
