@@ -180,6 +180,9 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       if (dynamic_cast<TPortal *>(obj))
         continue;
 
+      if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+	continue;
+
       // nor should flares
       if (obj->objVnum() == GENERIC_FLARE)
         continue;

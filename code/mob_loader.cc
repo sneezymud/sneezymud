@@ -30,6 +30,7 @@ static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char
 void TMonster::createWealth(void)
 {
   TOpenContainer *bag;
+  TObj *obj;
 
   if (isPc())
     return;
@@ -61,6 +62,99 @@ void TMonster::createWealth(void)
       clericHolyWaterLoader();
     }
   }
+
+  int tool = 0;
+  int tool2 = 0;
+  int tool3 = 0;
+  int tool4 = 0;
+
+  if(GetMaxLevel() > 40) {
+    if(hasClass(CLASS_MAGIC_USER)) {
+      tool = 576;
+      tool2 = 580;
+      tool3 = 582;
+      tool4 = 584;
+    }
+    if(hasClass(CLASS_CLERIC)) {
+      tool = 2347;
+      tool2 = 2349;
+    }
+    if(hasClass(CLASS_THIEF)) {
+      tool = 587;
+      tool2 = 589;
+    }
+    if(hasClass(CLASS_WARRIOR)) {
+      tool = 150;
+      tool2 = 560;
+      tool3 = 157;
+      tool4 = 156;
+    }
+    if(hasClass(CLASS_RANGER)) {
+      tool = 568;
+      tool2 = 570;
+      tool3 = 574;
+    }
+    if(hasClass(CLASS_MONK)) {
+      tool = 591;
+      tool2 = 593;
+    }
+    if(hasClass(CLASS_SHAMAN)) {
+      tool = 564;
+      tool2 = 566;
+    }
+    if(hasClass(CLASS_DEIKHAN)) {
+      tool = 2347;
+      tool2 = 2349;
+    } 
+  } else if(GetMaxLevel() > 20) {
+    if(hasClass(CLASS_MAGIC_USER)) {
+      tool = 575;
+      tool2 = 579;
+      tool3 = 581;
+      tool4 = 582;
+    }
+    if(hasClass(CLASS_CLERIC)) {
+      tool = 2346;
+      tool2 = 2348;
+    }
+    if(hasClass(CLASS_THIEF)) {
+      tool = 586;
+      tool2 = 588;
+    }
+    if(hasClass(CLASS_WARRIOR)) {
+      tool = 150;
+      tool2 = 559;
+      tool3 = 153;
+      tool4 = 155;
+    }
+    if(hasClass(CLASS_RANGER)) {
+      tool = 567;
+      tool2 = 569;
+      tool3 = 573;
+    }
+    if(hasClass(CLASS_MONK)) {
+      tool = 590;
+      tool2 = 592;
+    }
+    if(hasClass(CLASS_SHAMAN)) {
+      tool = 563;
+      tool2 = 565;
+    }
+    if(hasClass(CLASS_DEIKHAN)) {
+      tool = 2346;
+      tool2 = 2348;      
+    }
+  }
+
+  if (tool && !::number(0,49) && (obj = read_object(tool,VIRTUAL)))
+    *this += *obj;
+  if (tool2 && !::number(0,49) && (obj = read_object(tool2,VIRTUAL)))
+    *this += *obj;
+  if (tool3 && !::number(0,49) && (obj = read_object(tool3,VIRTUAL)))
+    *this += *obj;
+  if (tool4 && !::number(0,49) && (obj = read_object(tool4,VIRTUAL)))
+    *this += *obj;
+
 
   // load specialty items
   buffMobLoader();

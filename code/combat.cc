@@ -1513,7 +1513,7 @@ bool TBeing::checkPeaceful(const string &msg) const
     sendTo(msg.c_str());
     return TRUE;
   }
-  if (affectedBySpell(SPELL_CALM)) {
+  if (affectedBySpell(SPELL_CALM) && !fight()) {
     sendTo("You've got a peaceful easy feeling.\n\r");
     return TRUE;
   }

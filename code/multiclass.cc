@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: multiclass.cc,v $
+// Revision 5.4  2002/08/08 16:42:46  dash
+// ooh lets see... calm no longer keeps mobs from using moves if they're already fighting
+// put int repair obj.
+//
 // Revision 5.3  2002/02/20 20:33:42  jesus
 // Took out all the class_mage_thief stuff and added a shaman healing disc in its place
 //
@@ -306,6 +310,9 @@ bool TBeing::hasClass(ush_int bit, exactTypeT exact) const
 
 int TBeing::howManyClasses() const
 {
+
+  return 1;
+
   short tot = 0;
   classIndT i;
 
@@ -492,6 +499,9 @@ const char * const TBeing::getProfName() const
 
 const char * const TBeing::getProfAbbrevName() const
 {
+  if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR | CLASS_CLERIC | CLASS_MONK | CLASS_THIEF, EXACT_YES))
+    return "Thief";
+
   if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
     return "M/W/T";
   else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))

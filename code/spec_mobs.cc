@@ -7037,7 +7037,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
 
   TThing *t, *t2=NULL;
-  TDrinkCon *glass;
+  TBaseCup *glass;
   TTable *table;
 
 
@@ -7053,7 +7053,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       (myself->getCarriedVolume()/myself->carryVolumeLimit()) * 100.0 > 25) {
     act("$N carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
     for(t=myself->getStuff();t;t=t->nextThing){
-      if((glass=dynamic_cast<TDrinkCon *>(t))){
+      if((glass=dynamic_cast<TBaseCup *>(t))){
 	delete glass;
 	glass = NULL;
 	myself->addToWait(2);
@@ -7065,17 +7065,22 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   
   for(t=myself->roomp->getStuff();t;t=t->nextThing){
     if((table=dynamic_cast<TTable *>(t))){
+      
       for(t2=table->getStuff();t2;t2=t2->nextThing){
-	if((glass=dynamic_cast<TDrinkCon *>(t2))){
-	  if (!glass->getStuff()) {
+	if((glass=dynamic_cast<TBaseCup *>(t2))){
+	  vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+	  if (glass->getDrinkUnits() <= 0) {
+	    vlogf(LOG_DASH, "Barmaid: found empty %s on %s.", glass->getName(), table->getName());
 	    glass->getMe(myself, table);
 	    myself->addToWait(5);
 	    return TRUE;
 	  }
 	}
       }
-    } else if ((glass=dynamic_cast<TDrinkCon *>(t2))){
-      if (!glass->getStuff()) {
+    } else if ((glass=dynamic_cast<TBaseCup *>(t))){
+      vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+      if(glass->getDrinkUnits() <= 0) {
+	vlogf(LOG_DASH, "Barmaid: found empty  %s.", glass->getName());
 	glass->getMe(myself, NULL);
 	myself->addToWait(10);
 	return TRUE;
@@ -7084,7 +7089,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   }
   
   if (!::number(0,19)) {
-    act("$N flirts with some of the patrons.",FALSE, myself, 0, 0, TO_ROOM);
+    act("$N flirts with some of the patrons." , FALSE, myself, myself, myself, TO_ROOM);
   }
 
   return TRUE;
