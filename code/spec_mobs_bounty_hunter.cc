@@ -568,7 +568,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
           case -97:
             (job->num_chances)++;
             break;
-          case 9:
+          case 27:
             myself->doAction(targ->name, CMD_POKE);
             sprintf(buf, "That's a pretty nice %s you have there, %s.", 
                  fname(temp_obj->name).c_str(), targ->getName());
@@ -576,15 +576,33 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
             myself->doSay("If you do not give the item to me, I will kill you and take it myself.");
             if (!targ->isPc())
               targ->doSay("Buzz off, creep.");
+          case 26:
+          case 25:
+          case 24:
+          case 23:
+          case 22:
+          case 21:
+          case 20:
+          case 19:
+          case 17:
+          case 16:
+          case 15:
+          case 14:
+          case 13:
+          case 12:
+          case 10:
           case 8:
+          case 7:
+          case 6:
           case 5:
           case 4:
+          case 3:
           case 2:
           case 1:
-          case 7:
+
             (job->num_chances)--;
             break;
-          case 6:
+          case 18:
             myself->doAction(targ->name, CMD_SNARL);
             sprintf(buf, "I'm not kidding.  Hand over %s!", temp_obj->getName());
             myself->doSay(buf);
@@ -592,7 +610,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
             if (!targ->isPc())
               targ->doSay("I said, BUZZ OFF!");
             break;
-          case 3:
+          case 9:
             myself->doAction(targ->name, CMD_POKE);
             sprintf(buf, "This is your *LAST* warning.  Give me %s or DIE!", 
                 temp_obj->getName());
@@ -804,7 +822,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
   if (obj->max_exist < 30)
     buffer = 10;
 
-  objectLevel = (int) obj->objLevel();
+  objectLevel = (int) (obj->objLevel() + 0.5);
   int dif = objectLevel - ch->GetMaxLevel(); 
 
   if (dif > buffer) {
@@ -814,7 +832,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
       // object and send him after.
       
       int minlev, maxlev;
-      int huntergroup = (int)obj->objLevel() / 10 + 1;
+      int huntergroup = ( objectLevel / 10 ) + 1;
       int nummobs;
 
       minlev = huntergroup * 10 + 1;
@@ -851,7 +869,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 	  add_bars(buf);
 	  sprintf(buf2,"Hunter, repo %s",buf);
 	  vlogf(LOG_PROC,"%s rent-repoing: '%s' from %s : plev: %d, olev: %d.",
-		i->getName(), ch->getName(),buf, ch->GetMaxLevel(), obj->objLevel());
+		i->getName(), buf, ch->getName(), ch->GetMaxLevel(), objectLevel);
 	  i->spec = SPEC_BOUNTY_HUNTER;
 	  bounty_hunter(NULL, CMD_SAY, buf2, mob, NULL);
 

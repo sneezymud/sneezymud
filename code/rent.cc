@@ -807,6 +807,8 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
           if (immortalityNukeCheck(ch, new_obj, corpse))
             continue;  // new_obj invalid if this was true
 
+	  repoCheckForRent(ch, new_obj, corpse);
+
         } else {
           vlogf(LOG_BUG, "Error in objsFromStore (6)");
           return TRUE;
@@ -833,6 +835,9 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
 
           if (immortalityNukeCheck(ch, new_obj, corpse))
             continue;  // new_obj invalid if this was true
+
+	  repoCheckForRent(ch, new_obj, corpse);
+
 
         } else {
           vlogf(LOG_BUG, "Error in objsFromStore (8)");
