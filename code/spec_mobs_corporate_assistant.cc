@@ -79,34 +79,38 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
   sstring buf, sb;
   int corp_id=0;
 
-  db.query("select corp_id from corpaccess where lower(name)='%s'",
-	   sstring(ch->getName()).lower().c_str());
-
-  if(arg.empty()){
-    if(db.fetchRow())
-      corp_id=convertTo<int>(db["corp_id"]);
-
-    if(db.fetchRow()){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
-      return;
-    }
+  if(ch->isImmortal()){
+    corp_id=convertTo<int>(arg);
   } else {
-    if(convertTo<int>(arg) == 0){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
-      return;
-    }
+    db.query("select corp_id from corpaccess where lower(name)='%s'",
+	     sstring(ch->getName()).lower().c_str());
 
-    while(db.fetchRow()){
-      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
-	corp_id=convertTo<int>(arg);
-	break;
+    if(arg.empty()){
+      if(db.fetchRow())
+	corp_id=convertTo<int>(db["corp_id"]);
+
+      if(db.fetchRow()){
+	me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+	return;
+      }
+    } else {
+      if(convertTo<int>(arg) == 0){
+	me->doTell(ch->getName(), "You must specify the ID of the corporation you wish look at the logs of.");
+	return;
+      }
+
+      while(db.fetchRow()){
+	if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	  corp_id=convertTo<int>(arg);
+	  break;
+	}
       }
     }
-  }
 
-  if(!corp_id){
+    if(!corp_id){
       me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
+    }
   }
   
 
