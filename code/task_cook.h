@@ -30,6 +30,13 @@ recipeTypeT recipes[] =
   {3, "potatoes mashed", "side of mashed potatoes", 31773},
   {4, "salad side", "small side salad", 31774},
   {5, "steak dinner", "steak dinner", 31775},
+  {6, "chicken fried", "fried chicken", 3324},
+  {7, "pita sandwich", "pita sandwich", 34700},
+  {8, "offal pot pie", "offal pot pie", 34701},
+  {9, "beggar stew", "beggar stew", 34704},
+  {10,"berry friendship bread", "berry friendship bread", 34705},
+  {11,"pancake", "pancake", 34708},
+  {12,"berry pancake", "berry pancake", 34709},
   {-1, NULL, NULL, -1}
 };
 
@@ -70,6 +77,59 @@ ingredientTypeT ingredients[] =
   {5, 2, 1, TYPE_VNUM, 31773}, // side of mashed potatoes, recipe 3
   {5, 3, 1, TYPE_VNUM, 31774}, // side salad, recipe 4
 
+  // fried chicken
+  {6, 1, 1, TYPE_CORPSE, RACE_BIRD}, // preferably chicken, heh
+  {6, 2, 1, TYPE_VNUM, 263}, // jar of whale grease
+
+  // pita sandwich
+  {7, 1, 1, TYPE_VNUM, 25550}, // pita
+  {7, 2, 1, TYPE_VNUM, 10037}, // lettuce
+  {7, 2, 1, TYPE_VNUM, 14349},
+  {7, 2, 1, TYPE_VNUM, 28947},
+  {7, 2, 1, TYPE_VNUM, 31768},
+  {7, 3, 1, TYPE_VNUM, 14348}, // tomato
+
+  // offal pot pie
+  {8, 1, 1, TYPE_VNUM, 10030}, // offal
+  {8, 2, 1, TYPE_VNUM, 256}, // gnome flour
+  {8, 3, 3, TYPE_LIQUID, LIQ_WATER}, // water
+  {8, 4, 1, TYPE_VNUM, 34703}, // parsley
+
+  // beggar stew
+  {9, 1, 1, TYPE_VNUM, 10030}, // offal
+  {9, 2, 1, TYPE_VNUM, 10913}, // rock
+  {9, 3, 10, TYPE_LIQUID, LIQ_WATER}, // water
+  
+  // friendship bread
+  {10, 1, 1, TYPE_VNUM, 256}, // gnome flour
+  {10, 2, 1, TYPE_VNUM, 276}, // berries
+  {10, 2, 1, TYPE_VNUM, 5701},
+  {10, 2, 1, TYPE_VNUM, 10900},
+  {10, 2, 1, TYPE_VNUM, 10907},
+  {10, 2, 1, TYPE_VNUM, 10911},
+  {10, 2, 1, TYPE_VNUM, 24703},
+  {10, 3, 3, TYPE_LIQUID, LIQ_WATER},
+  {10, 4, 1, TYPE_VNUM, 34706}, //sugar
+  {10, 5, 1, TYPE_VNUM, 34707}, //yeast
+
+  // pancake
+  {11, 1, 1, TYPE_VNUM, 34706}, //sugar
+  {11, 2, 1, TYPE_VNUM, 256}, // gnome flour
+  {11, 3, 2, TYPE_LIQUID, LIQ_WATER},
+
+  // berry pancake
+  {12, 1, 1, TYPE_VNUM, 34706}, //sugar
+  {12, 2, 1, TYPE_VNUM, 256}, // gnome flour
+  {12, 3, 2, TYPE_LIQUID, LIQ_WATER},
+  {12, 4, 1, TYPE_VNUM, 276}, // berries
+  {12, 4, 1, TYPE_VNUM, 5701},
+  {12, 4, 1, TYPE_VNUM, 10900},
+  {12, 4, 1, TYPE_VNUM, 10907},
+  {12, 4, 1, TYPE_VNUM, 10911},
+  {12, 4, 1, TYPE_VNUM, 24703},
+
+
+  
   {-1, -1, -1, -1}
 };
 
