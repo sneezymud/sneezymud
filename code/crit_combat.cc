@@ -396,6 +396,17 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
   return FALSE;
 }
 
+void TBeing::critHitEqDamage(TThing *obj, int eqdam)
+{
+  TObj *damaged_item = dynamic_cast<TObj *>(obj);
+  damaged_item->addToStructPoints(eqdam);
+  if (damaged_item->getStructPoints() <= 0) {
+    damaged_item->makeScraps();
+    delete damaged_item;
+    damaged_item = NULL;
+  }
+}
+
 // This will just be a big ass case statement based on random diceroll 
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
@@ -1231,9 +1242,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 v->makePartMissing(WEAR_FOOT_R, FALSE);
                 v->addToLimbFlags(WEAR_LEGS_R, PART_USELESS);
                 if ((obj = v->equipment[WEAR_LEGS_R])) {
+		  /*
                   obj->makeScraps();
                   delete obj;
                   obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-35,-22)));
                 }
                 v->rawBleed(WEAR_LEGS_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
                 *part_hit = WEAR_LEGS_R;
@@ -1265,9 +1281,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 v->makePartMissing(WEAR_FOOT_L, FALSE);
                 v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
                 if ((obj = v->equipment[WEAR_LEGS_L])) {
+		  /*
                   obj->makeScraps();
                   delete obj;
                   obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-35,-22)));
                 }
                 v->rawBleed(WEAR_LEGS_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
                 *part_hit = WEAR_LEGS_L;
@@ -1322,9 +1343,15 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 sprintf(buf, "$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!",
              limbStr.c_str());
                 act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+		/*
                 obj->makeScraps();
                 delete obj;
                 obj = NULL;
+		*/
+		// Just do big damage to the item.  It'll scrap if the damage
+		// is more than the eq can handle. angus 08/2003
+		critHitEqDamage(obj, (::number(-55,-40)));
+
                 *part_hit = WEAR_WAISTE;
                 rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -1351,9 +1378,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   limbStr.c_str());
                   act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
                   if ((obj = v->equipment[WEAR_WAISTE])) {
+		    /*
                     obj->makeScraps();
                     delete obj;
                     obj = NULL;
+		    */
+		    // Just do big damage to the item.  It'll scrap if the
+		    // damage is more than the eq can handle. angus 08/2003
+		    critHitEqDamage(obj, (::number(-45,-30)));
                   }
                   *part_hit = WEAR_WAISTE;
                   if (desc)
@@ -1374,9 +1406,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   limbStr.c_str());
                   act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
                   if ((obj = v->equipment[WEAR_WAISTE])) {
+		    /*
                     obj->makeScraps();
                     delete obj;
                     obj = NULL;
+		    */
+		    // Just do big damage to the item.  It'll scrap if the
+		    // damage is more than the eq can handle. angus 08/2003
+		    critHitEqDamage(obj, (::number(-45,-30)));
                   }
                   applyDamage(v, 20 * v->hitLimit(),DAMAGE_HACKED);
                   *part_hit = WEAR_WAISTE;
@@ -1403,9 +1440,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                limbStr.c_str());
                 act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
                 if ((obj = v->equipment[WEAR_BODY])) {
+		  /*
                   obj->makeScraps();
                   delete obj;
                   obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-105,-80)));
                 }
                 applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED_HR);
                 *part_hit = WEAR_BODY;
@@ -1425,9 +1467,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
 
 		if(obj){
+		  /*
 		  obj->makeScraps();
 		  delete obj;
 		  obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-45,-30)));
 		}
 
 		TCorpse *corpse;
@@ -1500,9 +1547,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 sprintf(buf, "$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!",
              limbStr.c_str());
                 act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+		/*
                 obj->makeScraps();
                 delete obj;
                 obj = NULL;
+		*/
+		// Just do big damage to the item.  It'll scrap if the damage
+		// is more than the eq can handle. angus 08/2003
+		critHitEqDamage(obj, (::number(-40,-25)));
                 *part_hit = WEAR_NECK;
                 rc = damageLimb(v,*part_hit,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -1516,9 +1568,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
 		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 		    (obj = v->equipment[WEAR_NECK])) {
+		  /*
 		  obj->makeScraps();
 		  delete obj;
 		  obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-40,-25)));
 		}
 		v->makeBodyPart(WEAR_HEAD);
 		applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
@@ -1648,9 +1705,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               v->addToLimbFlags(WEAR_FINGER_R, PART_BROKEN);
               if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
                   (obj = v->equipment[WEAR_FINGER_R])) {
+		/*
                 obj->makeScraps();
                 delete obj;
                 obj = NULL;
+		*/
+		// Just do big damage to the item.  It'll scrap if the damage
+		// is more than the eq can handle. angus 08/2003
+		critHitEqDamage(obj, (::number(-21,-15)));
               }
               *part_hit = WEAR_FINGER_R;
               if (desc)
@@ -1975,9 +2037,11 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
             case 96:
             case 97:
 	      sprintf(buf, "You swing your %s right into $N's face, sending a tooth flying.", limbStr.c_str());
-	      act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
+	      act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
 	      sprintf(buf, "$n's %s connects with your face, sending a tooth flying.", limbStr.c_str());
-	      act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
+	      act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
+              sprintf(buf, "$n's %s connects with $N's face, sending a tooth flying.", limbStr.c_str());
+              act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
 	      TCorpse *corpse;
 	      char buf[256];
@@ -2029,9 +2093,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 			limbStr.c_str());
                 act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
                 if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
+		  /*
                   obj->makeScraps();
                   delete obj;
                   obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-55,-40)));
                 }
                 *part_hit = WEAR_HEAD;
                 rc = damageLimb(v,*part_hit,weapon,dam);
@@ -2055,9 +2124,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 		    (obj = v->equipment[WEAR_HEAD])) {
+		  /*
 		  obj->makeScraps();
 		  delete obj;
 		  obj = NULL;
+		  */
+		  // Just do big damage to the item.  It'll scrap if the damage
+		  // is more than the eq can handle. angus 08/2003
+		  critHitEqDamage(obj, (::number(-55,-40)));
 		}
 		if (desc)
 		  desc->career.crit_crushed_skull++;

@@ -1104,11 +1104,34 @@ int TMonster::monkMove(TBeing &vict)
     } else if ((num <= 8) &&
                canDisarm(&vict, SILENT_YES) &&
                (getPosition() >= POSITION_CRAWLING) &&
-               (vict.heldInPrimHand() || vict.heldInSecHand()))
+               (vict.heldInPrimHand() || vict.heldInSecHand())) {
       return doDisarm("", &vict);
     //else if (num <= 11 && (4 * getHit() < 3 * hitLimit()))
       //return doFeignDeath();
-    else 
+    } else if ((num <= 12) &&
+	      (getPosition() == POSITION_STANDING)) {
+      return doChi("", &vict);
+    } else if ((num <= 13) &&
+	       (this->attackers > 2) &&
+               (getPosition() == POSITION_STANDING)) {
+      int i;
+
+      if (!doesKnowSkill(SKILL_HURL))
+	setSkillValue(SKILL_HURL,min(100, 10 + GetMaxLevel() * 2));
+
+      for (i = 0; i < 20; i++) {
+	dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+	/*
+	Peel tells you, "so roomp->dir_option[::number(0,MAX_DIR)]"
+	exitDir(dirTypeT door)
+	*/
+
+	if (this->canGo(hurlDir)) {
+          vlogf(LOG_ANGUS, "monkMove: %s hurling %s, dir= %i", name, vict.name, hurlDir);
+	  return aiHurl(hurlDir, &vict);
+	}
+      }
+    } else 
       return doChop("", &vict);
   }
   return FALSE;
@@ -1305,6 +1328,14 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
     // offensive spells
     // hit um with the long-term effect ones first
+    spell = SPELL_DISPEL_MAGIC;
+    if (!::number(0, 4) && !(faerieFireCheck(ch, vict, spell)) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Back to the basics!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_FAERIE_FIRE;
     if (faerieFireCheck(ch, vict, spell))
       return spell;
@@ -1650,6 +1681,15 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
                  TRUE, &ch, 0, 0, TO_ROOM);
         return spell;
       }
+    }
+    spell = SPELL_PLASMA_MIRROR;
+    if (!::number(0, 8) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Mirror Mirror!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      on_me = TRUE;
+      return spell;
     }
     spell = SPELL_WATERY_GRAVE;
     if (!::number(0, 6) &&
@@ -4622,10 +4662,28 @@ int TMonster::defendSelf(int)
     if (!found && specials.hunting && Hates(specials.hunting, NULL)) {
       // we're hunting down some bastard!  Let's be real nasty about it
       if (!found) {
+        spell = SPELL_HASTE;
+        if (!affectedBySpell(spell) &&
+	     doesKnowSkill(spell) && (getSkillValue(spell) > 70)) {
+          act("$n utters the words, 'Time to get moving!'",
+                   TRUE, this, 0, 0, TO_ROOM);
+          found = TRUE;
+        }
+      }
+      if (!found) {
         spell = SPELL_INVISIBILITY;
         if (!isAffected(AFF_INVISIBLE) &&
              doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
           act("$n utters the words, 'All my troubles will disappear!'",
+                   TRUE, this, 0, 0, TO_ROOM);
+          found = TRUE;
+        }
+      }
+      if (!found) {
+        spell = SPELL_DETECT_INVISIBLE;
+        if (!isAffected(AFF_DETECT_INVISIBLE) &&
+             doesKnowSkill(spell) && (getSkillValue(spell) > 50)) {
+          act("$n utters the words, 'I can smell 'em.  Now I can see 'em!'",
                    TRUE, this, 0, 0, TO_ROOM);
           found = TRUE;
         }

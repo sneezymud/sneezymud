@@ -1493,6 +1493,7 @@ class TBeing : public TThing {
     int backstabHit(TBeing *, TThing *);
     int throatSlitHit(TBeing *, TThing *);
     int critFailureChance(TBeing *, TThing *, spellNumT);
+    void critHitEqDamage(TThing *, int);
     int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
     int numValidSlots();
     int checkShield(TBeing *, TThing *, wearSlotT, spellNumT, int);
@@ -1894,6 +1895,7 @@ class TBeing : public TThing {
     int doGrappleMonk(const char *, int, TBeing *);
     int doFeignDeath();
     int doMendLimb(const char *, int);
+    int aiHurl(dirTypeT, TBeing *);
 #if 0
     int doFizal(const char *, int);
     int doDoubleKick(const char *, int, TBeing *);

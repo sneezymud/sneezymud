@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_leverage.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "combat.h"
 #include "disc_leverage.h"
@@ -41,14 +26,14 @@ int TBeing::doHurl(const char *argument, TBeing *vict)
     }
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = hurl(this,victim,obje);
 
   if (rc)
-    addSkillLag(SKILL_HURL);
+    addSkillLag(SKILL_HURL, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -143,6 +128,55 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
   return TRUE;
 }
 
+int TBeing::aiHurl(dirTypeT dr, TBeing *victim)
+{
+  int rc, i;
+  int bKnown = getSkillValue(SKILL_HURL);
+ 
+  if (checkBusy(NULL)) { 
+    return FALSE;
+  }
+
+  if (!sameRoom(*victim)) {
+    sendTo("That person isn't around.\n\r");
+    return FALSE;
+  }
+
+  if (victim->getPosition() <= POSITION_STUNNED) {
+    rc = hurlHit(this, victim, dr);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  } else if ((i = specialAttack(victim,SKILL_HURL)) &&
+             (i != GUARANTEED_FAILURE) &&
+             bSuccess(this, bKnown, SKILL_HURL)) {
+    rc = hurlHit(this, victim, dr);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  } else {
+    rc = hurlMiss(this, victim);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+
+  if (rc)
+    addSkillLag(SKILL_HURL, rc);
+
+  /*
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    if (vict)
+      return rc;
+    delete victim;
+    victim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+  */
+  return rc;
+}
+
 int hurl(TBeing *caster, TBeing *victim, char *direction)
 {
   int percent;
@@ -232,6 +266,15 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
     return FALSE;
   }
 
+  TRoom *tRoom = (caster->roomp->dir_option[dr]->to_room ?
+                  real_roomp(caster->roomp->dir_option[dr]->to_room) :
+                  NULL);
+
+  if (!tRoom || tRoom->isRoomFlag(ROOM_PEACEFUL)) {
+    caster->sendTo("That is a peaceful room, you can not just hurl people in there!\n\r");
+    return FALSE;
+  }
+
   percent = 0;               
   level = caster->getSkillLevel(SKILL_HURL);
   int bKnown = caster->getSkillValue(SKILL_HURL);
@@ -283,14 +326,14 @@ int TBeing::doShoulderThrow(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = shoulderThrow(this,victim);
 
   if (rc){
-    addSkillLag(SKILL_SHOULDER_THROW);
+    addSkillLag(SKILL_SHOULDER_THROW, rc);
     cantHit += loseRound(1);
   }
 
