@@ -6,6 +6,9 @@
 // "materials.cc" - Various functions related to materials.
 //
 // $Log: materials.cc,v $
+// Revision 1.3  1999/09/30 17:28:52  batopr
+// removed gold_modifier[GOLD_REPAIR] from damcheck formula
+//
 // Revision 1.2  1999/09/13 13:52:13  batopr
 // *** empty log message ***
 //
@@ -18,9 +21,13 @@
 
 static bool genericDamCheck(int susc, int sharp)
 {
+#if 0
+  // gold_repair is taken into account in the cost to repair stuff formula
+  // this is probably obsolete - 9/30/99
   int chance = 1000 - (int) (1000 * gold_modifier[GOLD_REPAIR]); 
   if (::number(0,999) < chance)
     return false;
+#endif
 
   // num is the hardness of what i a hitting
   // susc is the hardness of the hitter
