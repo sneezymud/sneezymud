@@ -1018,6 +1018,17 @@ void ItemSave::setFile(FILE *f)
   fp=f;
 }
 
+void ItemLoad::setFile(FILE *f)
+{
+  fp=f;
+}
+
+void ItemLoad::setVersion(unsigned char v)
+{
+  version=v;
+}
+
+
 
 // write a list of items and their contents to storage. 
 // recursive
@@ -3504,8 +3515,8 @@ float old_ac_lev = mob->getACLevel();
         fp2_open = true;
       }
       ItemLoad il;
-      il.fp=fp2;
-      il.version=version;
+      il.setFile(fp2);
+      il.setVersion(version);
       if (tmp != -1 && (new_obj = il.raw_read_item())) {
         if (ch) {
           vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
@@ -3541,8 +3552,8 @@ float old_ac_lev = mob->getACLevel();
         fp2_open = true;
       }
       ItemLoad il;
-      il.fp=fp2;
-      il.version=version;
+      il.setFile(fp2);
+      il.setVersion(version);
       if ((new_obj = il.raw_read_item())) {
         if (ch) {
           vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());

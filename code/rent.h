@@ -81,13 +81,16 @@ class rentHeader {
 };
 
 class ItemLoad {
- public:
   FILE *fp;
-  rentHeader st;
   unsigned char version;
 
-  bool openFile(const sstring &);
+ public:
+  rentHeader st;
 
+  bool openFile(const sstring &);
+  void setFile(FILE *);
+  void setVersion(unsigned char);
+  
   bool readVersion();
   bool readHeader();
 

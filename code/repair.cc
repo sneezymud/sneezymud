@@ -286,8 +286,8 @@ TObj *loadRepairItem(TBeing *repair, int ticket,
   
   // read the object data
   ItemLoad il;
-  il.fp=fp;
-  il.version=version;
+  il.setFile(fp);
+  il.setVersion(version);
   obj=il.raw_read_item();
   fclose(fp);
 
