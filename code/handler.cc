@@ -1503,7 +1503,7 @@ TObj *get_obj(const char *name, exactTypeT exact)
 TObj *get_obj_num(int nr)
 {
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    if ((*iter)->number == nr)
+    if ((*iter) && (*iter)->number == nr)
       return (*iter);
   }
   return (0);
