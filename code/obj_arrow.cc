@@ -348,7 +348,7 @@ void TArrow::evaluateMe(TBeing *ch) const
   if (learn > 30) {
     ch->describeArrowDamage(this, learn);
     if(traptype != DOOR_TRAP_NONE)
-      ch->sendTo(COLOR_OBJECTS, fmt("%s is trapped with %s.\n\r") % getName() % trap_types[traptype].c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s is trapped with %s.\n\r") % getName() % trap_types[traptype]);
   }
   if (learn > 35)
     ch->describeWeaponDamage(this, learn);
