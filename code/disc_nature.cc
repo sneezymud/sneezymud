@@ -288,6 +288,9 @@ int TBeing::doTransform(const char *argument)
   int rc = 0;
   char buffer[256];
 
+  sendTo("This is disabled due to a bug right now.\n\r");
+  return FALSE;
+
   if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
     if(isVampire())
       return vampireTransform(this);
