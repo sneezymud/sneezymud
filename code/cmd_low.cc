@@ -852,6 +852,11 @@ void TObj::checkObjStats()
   }
 
 
+  if(!canWear(ITEM_TAKE) && obj_flags.wear_flags>0){
+    vlogf(LOG_LOW, fmt("Item '%s' (%i) is !take but has other wear flags.") %
+	  shortDescr % objVnum());
+  }
+
   if (isObjStat(ITEM_PROTOTYPE)) {
     vlogf(LOG_LOW, fmt("Item %s had a prototype flag. Get rid of it in tinyworld file!\n\rRemoving bit for object going into game.") %  getName());
     remObjStat(ITEM_PROTOTYPE);
