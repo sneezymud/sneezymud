@@ -127,7 +127,33 @@ int TBeing::doRescue(const char *argument)
     sendTo("You know nothing about rescuing.\n\r");
     return FALSE;
   }
-  strcpy(name_buf, argument);
+
+  // Default to the first PC group member who is currently tanking, or the first mobile group member if no PC is.
+  if (isAffected(AFF_GROUP) && (!argument || !*argument) && (followers || (master && master->followers))) {
+    followData * tFData    = (master ? master->followers : followers);
+    TBeing     * tRescueMe = NULL,
+               * tMaybeMe  = NULL;
+
+    for (; tFData; tFData = tFData->next)
+      if (tFData->follower && tFData->follower->isAffected(AFF_GROUP) && canSee(tFData->follower) && tFData->follower->fight() && (tFData->follower->fight()->fight() == tFData->follower) && (tFData->follower != this)) {
+        if (tFData->follower->isPc()) {
+          tRescueMe = tFData->follower;
+          break;
+        } else if (!tMaybeMe)
+          tMaybeMe = tFData->follower;
+      }
+
+    if (!tRescueMe && tMaybeMe)
+      tRescueMe = tMaybeMe;
+
+    if (tRescueMe) {
+      strcpy(name_buf, tRescueMe->name);
+
+      while (strchr(name_buf, ' '))
+        *strchr(name_buf, ' ') = '-';
+    }
+  } else
+    strcpy(name_buf, argument);
 
   if (!(victim = get_char_room_vis(this, name_buf))) {
     sendTo("Whom do you want to rescue?\n\r");
