@@ -10,6 +10,7 @@
 #include "obj_base_container.h"
 #include "obj_potion.h"
 #include "shop.h"
+#include "database.h"
 
 TPotion::TPotion() :
   TBaseCup()
@@ -72,19 +73,6 @@ int TPotion::sellPrice(int, int shop_nr, float, const TBeing *)
   } else {
     price = max(1, price);
   }
-
-  return price;
-}
-
-int TPotion::shopPrice(int num, int shop_nr, float, const TBeing *) const
-{
-//  int cost_per;
-  int price;
-
-//  cost_per = DrinkInfo[getDrinkType()]->price;
-//  price = (int) (num * cost_per * getDrinkUnits() * shop_index[shop_nr].profit_buy);
-  price = (int) (num * getValue() * shop_index[shop_nr].profit_buy);
-  price = max(1, price);
 
   return price;
 }
