@@ -289,6 +289,10 @@ bool raw_save_char(const char *name, charFile *char_element)
   }
   fclose(fl);
 
+  TDatabase db(DB_SNEEZY);
+  db.query("update player set talens=%i where lower(name)=lower('%s')",
+	   char_element->money, name);
+
   return TRUE;
 }
 
@@ -305,6 +309,15 @@ bool load_char(const sstring &name, charFile *char_element)
 
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
+
+  TDatabase db(DB_SNEEZY);
+  db.query("select talens from player where lower(name)=lower('%s')",
+	   name.c_str());
+  if(db.fetchRow()){
+    char_element->money=convertTo<int>(db["talens"]);
+  } else {
+    vlogf(LOG_BUG, fmt("couldn't load talens for %s!") % name);
+  }
 
   if (rc == 1)
     return TRUE;
@@ -877,6 +890,11 @@ void TBeing::saveChar(sh_int load_room)
     strcpy(buf2, sstring(tmp->name).lower().c_str());
     sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
+  TDatabase db(DB_SNEEZY);
+  db.query("update player set talens=%i where id=%i",
+	   st.money, getPlayerID());
+	   
+
   fl = fopen(buf, "w");
   mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);
   fwrite(&st, sizeof(charFile), 1, fl);
