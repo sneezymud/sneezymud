@@ -282,6 +282,7 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
     case CMD_GROUP:
     case CMD_AFK:
     case CMD_WEATHER:
+    case CMD_TOGGLE:
       return TRUE;
     default:
       return FALSE;
