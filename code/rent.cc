@@ -976,13 +976,12 @@ void ItemSave::setFile(FILE *f)
 
 
 // write a list of items and their contents to storage. 
+// recursive
 //
 // slot = slot the item is worn on, if worn (NORMAL_SLOT if in inventory)
 // o = object to save
-// st = rent header to use (for version, and item count, I guess?)
 // ch = character that is saving items
 // d = delete the item after saving (for renting)
-// fp = file to write items too
 // corpse = indicate if pcorpse saving items
 void ItemSave::objsToStore(signed char slot, TObj *o, 
 			   TBeing *ch, bool d, bool corpse = FALSE)
@@ -996,6 +995,8 @@ void ItemSave::objsToStore(signed char slot, TObj *o,
     // be hanging out in the room
     objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
 
+    // with persistent rooms, we don't need pcorpse saving
+#if 0
     // save pcorpses
   } else if (corpse && !(o->parent && o->parent->isPc())) {
     // sanity check
@@ -1023,7 +1024,7 @@ void ItemSave::objsToStore(signed char slot, TObj *o,
     }
     if (tmpcorpse->getNext()) 
       objsToStore(NORMAL_SLOT, tmpcorpse->getNext(), ch, d, corpse);
-
+#endif
 
     // if it's not rentable, save what it contains and
     // move on to the next item in the list
