@@ -436,7 +436,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
   while(rof--){
     if(!(ammo=dynamic_cast<TAmmo *>(getAmmo())) || ammo->getRounds()<=0){
-      act("Click.  $N is out of ammunition.", TRUE, this, NULL, this, TO_CHAR);
+      act("Click.  $N is out of ammunition.", TRUE, ch, NULL, this, TO_CHAR);
       // keep looping to simulate trigger pulls - looks cooler
       continue;
     }
