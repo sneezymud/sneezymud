@@ -1048,6 +1048,7 @@ int TMainSocket::gameLoop()
     if(time_info.seconds==0 && time_info.hours==0 && time_info.minutes==0){
       if(!doneBankInterest){
 	calcBankInterest();
+	pulseLog("calcBankInterest", t, pulse);
 	doneBankInterest=true;
       }
     } else {
