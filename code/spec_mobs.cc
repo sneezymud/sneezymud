@@ -6206,13 +6206,15 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}
 	mysql_free_result(res);
 
-	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice!",
-		row[1], o->shortDescr, o->getWeight());
+	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
+		row[1], o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
 	myself->doSay(buf);
+	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
-	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one!", 
-		o->getWeight());
+	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one! (%i talens)", 
+		o->getWeight(), (int)(o->getWeight()*5));
 	myself->doSay(buf);
+	ch->addToMoney((int)(o->getWeight()*5), GOLD_COMM);
       }
 
 
