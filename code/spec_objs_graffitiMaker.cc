@@ -13,7 +13,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring ccodes[ncolors]={"<W>", "<g>", "<b>", "<r>", "<Y>", "<p>"};
   int color=0;
 
-  if(cmd == CMD_GENERIC_CREATED){
+  if(cmd == CMD_GENERIC_CREATED && !o->isObjStat(ITEM_STRUNG)){
     sstring buf;
     int c=::number(0,ncolors-1);
     o->swapToStrung();
