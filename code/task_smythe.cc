@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.11  2002/06/13 23:06:40  peel
+// fixed another bug in object finding
+// probably needs to be redone
+//
 // Revision 5.10  2002/06/13 05:38:53  peel
 // fixed up smything a bit
 //
@@ -191,15 +195,16 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
   }
 }
 
-int task_smythe(TBeing *ch, cmdTypeT cmd, const char *v_name, int pulse, TRoom *, TObj *)
+int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
   TThing *w = NULL, *t;
-  TObj *o = dynamic_cast<TObj *>(ch->heldInSecHand());
+  TObj *o = NULL;
   int learning;
 
   for(t=ch->getStuff();t;t=t->nextThing){
-    if((o=dynamic_cast<TObj *>(t)) && isname(v_name, o->name))
+    if((o=dynamic_cast<TObj *>(t)) && isname(ch->task->orig_arg, o->name))
       break;
+    o=NULL;
   }
 
   // sanity check
