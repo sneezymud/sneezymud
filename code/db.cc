@@ -1408,6 +1408,8 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
   int i, rc, tmpcost;
   TDatabase db("sneezy");
 
+  cache = false;  // eep caching don't seem to work
+
   i = nr;
   if (type == VIRTUAL)
     nr = real_object(nr);
