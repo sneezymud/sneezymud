@@ -51,13 +51,13 @@ sstring TCasinoChip::statObjInfo() const
 
 
 
-int TCasinoChip::sellPrice(int num, int shop_nr, float, const TBeing *)
+int TCasinoChip::sellPrice(int num, int shop_nr, float, const TBeing *ch)
 {
-  return (int)(obj_flags.cost * shop_index[shop_nr].profit_sell);
+  return (int)(obj_flags.cost * shop_index[shop_nr].getProfitSell(this, ch));
 }
 
-int TCasinoChip::shopPrice(int num, int shop_nr, float, const TBeing *) const
+int TCasinoChip::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
-  return (int)(obj_flags.cost * shop_index[shop_nr].profit_buy);
+  return (int)(obj_flags.cost * shop_index[shop_nr].getProfitBuy(this, ch));
 }
 

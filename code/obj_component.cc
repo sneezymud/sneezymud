@@ -3242,14 +3242,14 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   ch->doSave(SILENT_YES);
 }
 
-int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *)
+int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *ch)
 {
   int cost_per;
   int price;
 
   cost_per = pricePerUnit();
   num = min(num, getComponentCharges());
-  price = (int) (num * cost_per * shop_index[shop_nr].profit_sell);
+  price = (int) (num * cost_per * shop_index[shop_nr].getProfitSell(this, ch));
 
   if (obj_flags.cost <= 1) {
     price = max(0, price);
@@ -3260,13 +3260,13 @@ int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *)
   return price;
 }
 
-int TComponent::shopPrice(int num, int shop_nr, float, const TBeing *) const
+int TComponent::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
   int cost_per;
   int price;
 
   cost_per = pricePerUnit();
-  price = (int) (num * cost_per * shop_index[shop_nr].profit_buy);
+  price = (int) (num * cost_per * shop_index[shop_nr].getProfitBuy(this, ch));
   price = max(1, price);
 
   return price;

@@ -82,6 +82,8 @@ class shopData {
     bool isOwned();
     bool willTradeWith(TMonster *keeper, TBeing *ch);
     bool willBuy(const TObj *item);
+    float getProfitBuy(const TObj *, const TBeing *);
+    float getProfitSell(const TObj *, const TBeing *);
 
     shopData();
     ~shopData();

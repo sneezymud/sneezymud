@@ -105,13 +105,13 @@ void TOrganic::lightMe(TBeing *ch, silentTypeT iSilent)
 }
 
 // Determine Sell[PC selling] value
-int TOrganic::sellPrice(int, int shop_nr, float, const TBeing *)
+int TOrganic::sellPrice(int, int shop_nr, float, const TBeing *ch)
 {
 #if 1
   int price;
 
   // price the shopkeeper will Pay
-  price = max(1, (int) (obj_flags.cost * shop_index[shop_nr].profit_sell));
+  price = max(1, (int) (obj_flags.cost * shop_index[shop_nr].getProfitSell(this, ch)));
 
   return price;
 #else
@@ -119,7 +119,7 @@ int TOrganic::sellPrice(int, int shop_nr, float, const TBeing *)
   int price;
 
   cost_per = pricePerUnit();
-  price = (int) (numUnits() * cost_per * shop_index[shop_nr].profit_sell);
+  price = (int) (numUnits() * cost_per * shop_index[shop_nr].getProfitSell(this, ch));
 
   if (obj_flags.cost <= 1) {
     price = max(0, price);
@@ -132,13 +132,13 @@ int TOrganic::sellPrice(int, int shop_nr, float, const TBeing *)
 }
 
 // Determine Buy[Shop selling] value
-int TOrganic::shopPrice(int num, int shop_nr, float, const TBeing *) const
+int TOrganic::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
 #if 1
   int price;
 
   // price the shopkeeper will Want
-  price = max(1, (int) (obj_flags.cost * shop_index[shop_nr].profit_buy));
+  price = max(1, (int) (obj_flags.cost * shop_index[shop_nr].getProfitBuy(this, ch)));
 
   return price;
 #else
@@ -146,7 +146,7 @@ int TOrganic::shopPrice(int num, int shop_nr, float, const TBeing *) const
   int price;
 
   cost_per = pricePerUnit();
-  price = (int) (num * cost_per * shop_index[shop_nr].profit_buy);
+  price = (int) (num * cost_per * shop_index[shop_nr].getProfitBuy(this, ch));
   price = max(1, price);
 
   return price;

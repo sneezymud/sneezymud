@@ -88,6 +88,47 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
 }
 
 
+int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
+{
+  // adjust cost based on structure
+  double cost = getValue();
+
+  // adjust cost based on shop pricing
+  cost *= shop_index[shop_nr].getProfitSell(this, ch);
+
+
+  // adjust for charisma/swindle modifier
+  if (chr != -1 && chr!=0)
+    cost /= chr;
+
+  // make sure we don't have a negative cost
+  cost = max(1.0, cost);
+
+  return (int) cost;
+}
+
+
+int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
+{
+  // adjust cost based on structure
+  double cost = getValue();
+
+  // adjust cost based on shop pricing
+  cost *= shop_index[shop_nr].getProfitBuy(this, ch);
+
+  // adjust for charisma/swindle modifier
+  if(chr != -1)
+    cost *= chr;
+
+  // multiply by the number of items
+  cost *= num;
+
+  // make sure we don't have a negative cost
+  cost = max(1.0, cost);
+
+  return (int) cost;
+}
+
 
 // return the liquid associated with the shaman spell
 // or LIQ_WATER if it is not an allowed potion to brew

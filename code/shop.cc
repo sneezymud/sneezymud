@@ -63,9 +63,7 @@ unsigned int find_shop_nr(int mobvnum)
   return shop_nr;
 }
 
-
-// this is the price the shop will buy an item for
-int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
+float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
 {
   float profit_sell=shop_index[shop_nr].profit_sell;
 
@@ -73,7 +71,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
   if(shop_index[shop_nr].isOwned()){
     TDatabase db(DB_SNEEZY);
 
-    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
 
     if(db.fetchRow())
       profit_sell=convertTo<float>(db["profit_sell"]);
@@ -83,7 +81,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
       db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
 
       while(db.fetchRow()){
-	if(isname(db["match"], name)){
+	if(isname(db["match"], obj->name)){
 	  profit_sell=convertTo<float>(db["profit_sell"]);
 	  break;
 	}
@@ -97,11 +95,114 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
 
   }
 
+  return profit_sell;
+}
+
+float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
+{
+  float profit_buy=-1;
+  map <sstring,float>::iterator iter;
+  TDatabase db(DB_SNEEZY);
+
+  // we do this caching so that if we get the shopPrice on many items at once
+  // (list) it doesn't have to query for each one
+  // overhead is that with one at a time shopPrices (value/sell/buy) we may
+  // rebuild the cache needlessly.  On the upside, when you've got someone
+  // doing value/buy/sell in a shop, they're likely to do a list pretty soon
+  // as well, and then we'll have the cache ready.
+  if(cached_shop_nr != shop_nr){
+    cached_shop_nr=shop_nr;
+    ratios_cache.clear();
+    matches_cache.clear();
+    player_cache.clear();
+
+    db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
+
+    db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
+
+    db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
+    
+  }
+
+
+  // if the shop is player owned, we check custom pricing
+  if(shop_index[shop_nr].isOwned()){  
+    if(cached_shop_nr==shop_nr){
+      if(ratios_cache.count(obj->objVnum()))
+	profit_buy=ratios_cache[obj->objVnum()];
+    } else {
+      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
+      if(db.fetchRow())
+	profit_buy=convertTo<float>(db["profit_buy"]);
+    }
+
+    if(profit_buy==-1){
+      // ok, shop is owned and there is no ratio set for this specific object
+      // so check keywords
+      if(cached_shop_nr==shop_nr){
+	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
+	  if(isname((*iter).first, obj->name)){
+	    profit_buy=(*iter).second;
+	    break;
+	  }
+	}
+      } else {
+	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+      
+	while(db.fetchRow()){
+	  if(isname(db["match"], obj->name)){
+	    profit_buy=convertTo<float>(db["profit_buy"]);
+	    break;
+	  }
+	}
+      }
+    }
+  }
+
+  // no custom price found, so use the normal shop pricing
+  if(profit_buy == -1)
+    profit_buy=shop_index[shop_nr].profit_buy;
+
+
+  // check for player specific modifiers
+  if(shop_index[shop_nr].isOwned()){
+    if(cached_shop_nr==shop_nr){
+      for(iter=player_cache.begin();iter!=player_cache.end();++iter){
+	if((*iter).first == (sstring) ch->name){
+	  profit_buy = ((*iter).second);
+	  break;
+	}
+      }
+    } else {
+      db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
+      
+      if(db.fetchRow()){
+	profit_buy = convertTo<float>(db["profit_buy"]);
+      }
+    }
+  }
+
+  return profit_buy;
+}
+
+
+// this is the price the shop will buy an item for
+int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
+{
   // adjust cost based on structure
   double cost = adjPrice();
 
   // adjust cost based on shop pricing
-  cost *= profit_sell;
+  cost *= shop_index[shop_nr].getProfitSell(this, ch);
 
   // adjust for charisma/swindle modifier
   if (chr != -1 && chr!=0)
@@ -115,268 +216,12 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
 
 // this is price shop will sell it at
 int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
-{
-  float profit_buy=-1;
-  map <sstring,float>::iterator iter;
-  TDatabase db(DB_SNEEZY);
-
-  // we do this caching so that if we get the shopPrice on many items at once
-  // (list) it doesn't have to query for each one
-  // overhead is that with one at a time shopPrices (value/sell/buy) we may
-  // rebuild the cache needlessly.  On the upside, when you've got someone
-  // doing value/buy/sell in a shop, they're likely to do a list pretty soon
-  // as well, and then we'll have the cache ready.
-  if(cached_shop_nr != shop_nr){
-    cached_shop_nr=shop_nr;
-    ratios_cache.clear();
-    matches_cache.clear();
-    player_cache.clear();
-
-    db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
-    
-  }
-
-
-  // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){  
-    if(cached_shop_nr==shop_nr){
-      if(ratios_cache.count(objVnum()))
-	profit_buy=ratios_cache[objVnum()];
-    } else {
-      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-      if(db.fetchRow())
-	profit_buy=convertTo<float>(db["profit_buy"]);
-    }
-
-    if(profit_buy==-1){
-      // ok, shop is owned and there is no ratio set for this specific object
-      // so check keywords
-      if(cached_shop_nr==shop_nr){
-	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
-	  if(isname((*iter).first, name)){
-	    profit_buy=(*iter).second;
-	    break;
-	  }
-	}
-      } else {
-	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
-      
-	while(db.fetchRow()){
-	  if(isname(db["match"], name)){
-	    profit_buy=convertTo<float>(db["profit_buy"]);
-	    break;
-	  }
-	}
-      }
-    }
-  }
-
-  // no custom price found, so use the normal shop pricing
-  if(profit_buy == -1)
-    profit_buy=shop_index[shop_nr].profit_buy;
-
-
-  // check for player specific modifiers
-  if(shop_index[shop_nr].isOwned()){
-    if(cached_shop_nr==shop_nr){
-      for(iter=player_cache.begin();iter!=player_cache.end();++iter){
-	if((*iter).first == (sstring) ch->name){
-	  profit_buy = ((*iter).second);
-	  break;
-	}
-      }
-    } else {
-      db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
-      
-      if(db.fetchRow()){
-	profit_buy = convertTo<float>(db["profit_buy"]);
-      }
-    }
-  }
-
-    
+{    
   // adjust cost based on structure
   double cost = adjPrice();
 
   // adjust cost based on shop pricing
-  cost *= profit_buy;
-
-  // adjust for charisma/swindle modifier
-  if(chr != -1)
-    cost *= chr;
-
-  // multiply by the number of items
-  cost *= num;
-
-  // make sure we don't have a negative cost
-  cost = max(1.0, cost);
-
-  return (int) cost;
-}
-
-int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
-{
-  float profit_sell=shop_index[shop_nr].profit_sell;
-
-  // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){
-    TDatabase db(DB_SNEEZY);
-
-    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-
-    if(db.fetchRow())
-      profit_sell=convertTo<float>(db["profit_sell"]);
-    else {
-      // ok, shop is owned and there is no ratio set for this specific object
-      // so check keywords
-      db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
-
-      while(db.fetchRow()){
-	if(isname(db["match"], name)){
-	  profit_sell=convertTo<float>(db["profit_sell"]);
-	  break;
-	}
-      }
-    }
-
-    db.query("select profit_sell from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
-    
-    if(db.fetchRow())
-      profit_sell = convertTo<float>(db["profit_sell"]);
-
-  }
-
-  // adjust cost based on structure
-  double cost = getValue();
-
-  // adjust cost based on shop pricing
-  cost *= profit_sell;
-
-  // adjust for charisma/swindle modifier
-  if (chr != -1 && chr!=0)
-    cost /= chr;
-
-  // make sure we don't have a negative cost
-  cost = max(1.0, cost);
-
-  return (int) cost;
-}
-
-
-int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
-{
-  float profit_buy=-1;
-  map <sstring,float>::iterator iter;
-  TDatabase db(DB_SNEEZY);
-
-  vlogf(LOG_PEEL, fmt("entering shopPrice for %s") % getName());
-
-  // we do this caching so that if we get the shopPrice on many items at once
-  // (list) it doesn't have to query for each one
-  // overhead is that with one at a time shopPrices (value/sell/buy) we may
-  // rebuild the cache needlessly.  On the upside, when you've got someone
-  // doing value/buy/sell in a shop, they're likely to do a list pretty soon
-  // as well, and then we'll have the cache ready.
-  if(cached_shop_nr != shop_nr){
-    cached_shop_nr=shop_nr;
-    ratios_cache.clear();
-    matches_cache.clear();
-    player_cache.clear();
-
-    db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
-    
-  }
-
-
-  // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){  
-    if(cached_shop_nr==shop_nr){
-      if(ratios_cache.count(objVnum()))
-	profit_buy=ratios_cache[objVnum()];
-    } else {
-      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-      if(db.fetchRow())
-	profit_buy=convertTo<float>(db["profit_buy"]);
-    }
-
-    if(profit_buy==-1){
-      // ok, shop is owned and there is no ratio set for this specific object
-      // so check keywords
-      if(cached_shop_nr==shop_nr){
-	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
-	  if(isname((*iter).first, name)){
-	    profit_buy=(*iter).second;
-	    break;
-	  }
-	}
-      } else {
-	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
-      
-	while(db.fetchRow()){
-	  if(isname(db["match"], name)){
-	    profit_buy=convertTo<float>(db["profit_buy"]);
-	    break;
-	  }
-	}
-      }
-    }
-  }
-
-  // no custom price found, so use the normal shop pricing
-  if(profit_buy == -1)
-    profit_buy=shop_index[shop_nr].profit_buy;
-
-
-  // check for player specific modifiers
-  if(shop_index[shop_nr].isOwned()){
-    if(cached_shop_nr==shop_nr){
-      for(iter=player_cache.begin();iter!=player_cache.end();++iter){
-	if((*iter).first == (sstring) ch->name){
-	  profit_buy = ((*iter).second);
-	  break;
-	}
-      }
-    } else {
-      db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
-      
-      if(db.fetchRow()){
-	profit_buy = convertTo<float>(db["profit_buy"]);
-      }
-    }
-  }
-
-    
-  // adjust cost based on structure
-  double cost = getValue();
-
-  // adjust cost based on shop pricing
-  cost *= profit_buy;
+  cost *= shop_index[shop_nr].getProfitBuy(this, ch);
 
   // adjust for charisma/swindle modifier
   if(chr != -1)
