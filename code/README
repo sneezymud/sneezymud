@@ -25,6 +25,7 @@
   have been fixed to reflect the new format.  I tried my best to
   put a proper LOG_ type on each one but I expect that a good few
   past by me, considering over 1800 in total.
+- The new vlogf function is in place.
 
 12-7 - Peel
 - added code to deal with player killing better
