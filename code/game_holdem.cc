@@ -744,6 +744,11 @@ void HoldemGame::flop(TBeing *ch)
   
   better=firstbetter;
 
+  if(players[better]->hand[0]==NULL)
+    if((better=nextBetter(better))==-1)
+      advanceRound(players[better]->ch);
+
+
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
   players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
@@ -767,6 +772,10 @@ void HoldemGame::turn(TBeing *ch)
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
   better=firstbetter;
+  if(players[better]->hand[0]==NULL)
+    if((better=nextBetter(better))==-1)
+      advanceRound(players[better]->ch);
+
 
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
@@ -791,6 +800,10 @@ void HoldemGame::river(TBeing *ch)
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
   better=firstbetter;
+  if(players[better]->hand[0]==NULL)
+    if((better=nextBetter(better))==-1)
+      advanceRound(players[better]->ch);
+
 
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
