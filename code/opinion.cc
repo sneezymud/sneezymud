@@ -145,7 +145,7 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
   if (!hatefield)
     return false;
 
-  const char *namebuf;
+  sstring namebuf;
 
   if (!v) 
     namebuf = n;
@@ -157,7 +157,7 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
     }
   }
 
-  if (!namebuf)
+  if (namebuf.empty())
     return FALSE;
  
   if (!awake())
@@ -170,9 +170,9 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
     if (hates.clist) {
       charList *i;
       for (i = hates.clist; i; i = i->next) {
-        if (i->name) {
-          if (!strcmp(i->name, namebuf))
-	    return TRUE;
+        sstring tmpname = i->name;
+        if (namebuf == tmpname) {
+          return TRUE;
         }
       }
     }
@@ -324,7 +324,7 @@ int TMonster::addFeared(TBeing *hatee)
     SET_BIT(fearfield, FEAR_CHAR);
 
     if (hatee->isImmortal())
-      hatee->sendTo("---Someone fears you.  (as well they should)\n\r");
+      hatee->sendTo(COLOR_MOBS, fmt("--- %s fears you.  (as well they should)\n\r") % sstring(getName()).cap());
   }
   return ((hatee) ? TRUE : FALSE);
 }
