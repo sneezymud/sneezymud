@@ -267,8 +267,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 
 	    //	    gain_exp(ch, fish->getWeight() * 10, -1);
 	    int lvl=ch->GetMaxLevel();
-	    if(lvl>5)
-	      lvl-=5;
+	    if(lvl>15)
+	      lvl-=15;
 	    else
 	      lvl=1;
 
