@@ -590,7 +590,7 @@ int TShopOwned::giveMoney(sstring arg){
     
     shoplog(shop_nr, ch, keeper, "talens", amount, "receiving");
     
-    buf = fmt("$n gives you %d talen%s.\n\r") % amount %
+    buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");
     act(buf, TRUE, keeper, NULL, ch, TO_VICT);
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
