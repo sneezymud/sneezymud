@@ -1,4 +1,4 @@
-12-12-99 / 12-14-99 - Lapsos
+12-12-99 / 12-14-99 / 12-17-99 - Lapsos
 - Fixed a bug in @set blocka/blockb that was not setting the ending block.
 - Fixed a bug in stat that was displaying the stater's rooms and not the
   stat'eds rooms.
@@ -8,6 +8,7 @@
   Trap if it isn't current trapped/ghost-trapped.  This should fix the
   'buy bag then find a trap on it'.
 - Setup the 'kill blob' for infravision killing to allow 'kill blob-race'.
+- Guard proc will not trigger if mob has task or spelltask.
 
 12-09-99 - bat
 - created an rcsls.csh script that basically reveals what files are
