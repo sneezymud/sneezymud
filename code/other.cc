@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.2  1999/09/14 23:22:20  cosmo
+// Fixed crash bug related to grouping npc's no victim->desc
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1736,10 +1739,11 @@ void TBeing::doGroup(const char *argument)
                                victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
             }
           }
-          victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
         }
-        if (victim->desc)
+        if (victim->desc) {
+          victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
           victim->desc->session.group_share = 1;
+        }
       }
     } else
       act("$N must follow you to enter the group", FALSE, this, 0, victim, TO_CHAR);
