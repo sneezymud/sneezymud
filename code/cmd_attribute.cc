@@ -442,39 +442,39 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 const char *statBonusDescr(int percent)
 {
   if (percent <= 80)
-    return "terrible";
+    return "a terrible";
   else if (percent <= 83)
-    return "horrid";
+    return "a horrid";
   else if (percent <= 86)
-    return "awful";
+    return "an awful";
   else if (percent <= 89)
-    return "bad";
+    return "a bad";
   else if (percent <= 92)
-    return "lousy";
+    return "a lousy";
   else if (percent <= 95)
-    return "poor";
+    return "a poor";
   else if (percent <= 98)
-    return "so-so";
+    return "a so-so";
   else if (percent <= 101)
-    return "average";
+    return "an average";
   else if (percent <= 104)
-    return "fair";
+    return "a fair";
   else if (percent <= 107)
-    return "ok";
+    return "an ok";
   else if (percent <= 110)
-    return "decent";
+    return "a decent";
   else if (percent <= 113)
-    return "good";
+    return "a good";
   else if (percent <= 116)
-    return "pretty good";
+    return "a pretty good";
   else if (percent <= 119)
-    return "very good";
+    return "a very good";
   else if (percent <= 122)
-    return "extremely good";
+    return "an extremely good";
   else if (percent >= 123)
-    return "superb";
+    return "a superb";
   else
-    return "unknown";
+    return "an unknown";
 }
 
 
@@ -620,7 +620,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your strength gives you a %i%% damage %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your strength gives you a %s damage %s.\n\r",
+	sendTo(COLOR_MOBS, "Your strength gives you %s damage %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -631,7 +631,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your brawn gives you a %i%% damage absorption %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your brawn gives you a %s damage absorption %s.\n\r",
+	sendTo(COLOR_MOBS, "Your brawn gives you %s damage absorption %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -642,7 +642,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your constitution gives you a %i%% hit point %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your constitution gives you a %s hit point %s.\n\r",
+	sendTo(COLOR_MOBS, "Your constitution gives you %s hit point %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -654,7 +654,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your dexterity gives you a %i%% hitting %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your dexterity gives you a %s hitting %s.\n\r",
+	sendTo(COLOR_MOBS, "Your dexterity gives you %s hitting %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -665,7 +665,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your agility gives you a %i%% armor class %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your agility gives you a %s armor class %s.\n\r",
+	sendTo(COLOR_MOBS, "Your agility gives you %s armor class %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -678,7 +678,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your intelligence gives you a %i%% practice %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your intelligence gives you a %s practice %s.\n\r",
+	sendTo(COLOR_MOBS, "Your intelligence gives you %s practice %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -689,7 +689,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your focus gives you a %i%% skill success %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your focus gives you a %s skill success %s.\n\r",
+	sendTo(COLOR_MOBS, "Your focus gives you %s skill success %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -702,7 +702,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your charisma gives you a %i%% shop price %s.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your charisma gives you a %s shop price %s.\n\r",
+	sendTo(COLOR_MOBS, "Your charisma gives you %s shop price %s.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
@@ -713,7 +713,7 @@ void TBeing::doAttribute(const char *arg)
 	sendTo(COLOR_MOBS, "Your speed gives you a %i%% %s to your number of attacks.\n\r",
 	       mod, (mod>0)?"bonus":"penalty");
       } else {
-	sendTo(COLOR_MOBS, "Your speed gives you a %s %s to your number of attacks.\n\r",
+	sendTo(COLOR_MOBS, "Your speed gives you %s %s to your number of attacks.\n\r",
 	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
       }
 
