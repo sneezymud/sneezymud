@@ -722,14 +722,14 @@ int TBeing::doPoisonWeapon(string arg)
   
   arg = one_argument(arg, namebuf);
 
-  if(!(obj=generic_find_obj(namebuf, FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
+  if(arg.empty() ||
+     !(obj=generic_find_obj(namebuf, FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
     sendTo("Poison what?\n\r");
     return FALSE;
   }
 
   if(!doesKnowSkill(SKILL_POISON_WEAPON) &&
      !(dynamic_cast<TArrow *>(obj))){
-
     sendTo("You are only skilled at poisoning arrows.\n\r");
     return FALSE;
   }
