@@ -691,6 +691,10 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
     return;
   }
 
+  if (ch->task) {
+    ch->sendTo(COLOR_OBJECTS, "The sacrifice of %s requires your total attention.\n\r", obj->getName());
+    return;
+  }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
     ch->sendTo("You do not see a %s here.\n\r", arg);
