@@ -5929,6 +5929,25 @@ int teleportRescue(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 }
 
 
+int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 0)))
+    return FALSE;
+  
+  act("<k>Ghosts of $n's former enemies announce their presence with a shriek.<1>",
+      0, ch, o, vict, TO_ROOM);
+  
+  act("<k>The ghosts of your former enemies assail $N with with frightening shrieks.<1>", 
+      0, ch, o, vict, TO_CHAR);
+  
+  vict->doFlee("");
+
+  return TRUE;
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -6051,7 +6070,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Teleport Rescue Item", teleportRescue},
   {FALSE, "Deikhan Sword", deikhanSword},
   {FALSE, "black sun", blackSun},
-  {FALSE, "Poison Cutlass", poisonCutlass},
-  {FALSE, "Unholy Cutlass", unholyCutlass},
+  {FALSE, "poison cutlass", poisonCutlass},
+  {FALSE, "unholy cutlass", unholyCutlass},
+  {FALSE, "ghostly shiv", ghostlyShiv},
   {FALSE, "last proc", bogusObjProc}
 };
