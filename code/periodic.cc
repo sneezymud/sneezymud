@@ -64,6 +64,9 @@ void apocCheck()
   int num, rc;
   TMonster *mob;
 
+  if(gamePort == BUILDER_GAMEPORT)
+    return;
+
   if (number(0,350)) 
     return;
 
