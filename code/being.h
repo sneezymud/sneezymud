@@ -884,6 +884,7 @@ class TBeing : public TThing {
     virtual int getWait(void) const { return 0; }
     virtual void setWait(int) { return; }
     wizardryLevelT getWizardryLevel() const;
+    ritualismLevelT getRitualismLevel() const;
     devotionLevelT getDevotionLevel() const;
     void addCaptive(TBeing *);
     void remCaptive(TBeing *);
@@ -1741,6 +1742,7 @@ class TBeing : public TThing {
     void doPracSkill(const char *, spellNumT);
     void doPracDisc(const char *, int);
     void doSpells(const char *);
+    void doRituals(const char *);
     void doPrayers(const char *);
     void sendSkillsList(discNumT);
     void doPractice(const char *);

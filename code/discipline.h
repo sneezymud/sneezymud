@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: discipline.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #ifndef __DISCIPLINE_H
 #define __DISCIPLINE_H 
 
@@ -56,7 +41,7 @@ const byte LEARNEDNESS_STEP=1;
 const int PRACS_TO_MAX      = 60;
 
 const char *describe_level(int n);
-const char *describe_damage(int n);
+const char *describe_damage(int n, const TBeing *);
 const char *describe_armor(int n);
 const char *describe_light(int n);
 const char *what_does_it_open(const TKey *o);
@@ -86,7 +71,7 @@ enum discNumT {
      DISC_SMYTHE,
      DISC_RANGER,
      DISC_RANGER_FIGHT,
-     DISC_NATURE,
+     DISC_SHAMAN_ARMADILLO,
      DISC_ANIMAL,
      DISC_PLANTS,
      DISC_SURVIVAL,
@@ -110,12 +95,12 @@ enum discNumT {
      DISC_STEALTH,
      DISC_TRAPS,
      DISC_SHAMAN,
-     DISC_SHAMAN_FIGHT,
+     DISC_SHAMAN_FROG,
      DISC_SHAMAN_ALCHEMY,
-     DISC_SHAMAN_HEALING,
-     DISC_UNDEAD,
-     DISC_DRAINING,
-     DISC_TOTEM,
+     DISC_SHAMAN_SKUNK,
+     DISC_SHAMAN_SPIDER,
+     DISC_SHAMAN_CONTROL,
+     DISC_RITUALISM,
      DISC_WIZARDRY,
      DISC_FAITH,
      DISC_SLASH,
@@ -126,6 +111,7 @@ enum discNumT {
      DISC_ADVENTURING,
      DISC_THEOLOGY,
      DISC_LORE,
+     DISC_NATURE,
      MAX_DISCS,
      MAX_SAVED_DISCS = 90
 };
@@ -153,6 +139,7 @@ class CDiscipline
     int getLearnedness() const;
     void setLearnedness(int);
     int useMana(byte, byte);
+    int useLifeforce(byte, byte);
     double usePerc(byte, double);
 };
 

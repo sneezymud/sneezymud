@@ -652,7 +652,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
   int i, count, initial, final;
 
   for (i = 0; i < numx; i++) {
-    if ((Class == MAGE_LEVEL_IND) || (Class == SHAMAN_LEVEL_IND)) {
+    if ((Class == MAGE_LEVEL_IND)) {
       CDiscipline *cd = getDiscipline(DISC_WIZARDRY);
       if (cd) {
         initial = cd->getNatLearnedness();
@@ -670,6 +670,27 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
             sendTo("You feel your natural wizardry increase.\n\r");
 
           doLevelSkillsLearn(gm, DISC_WIZARDRY, initial, final);
+        }
+      }
+    }
+    if ((Class == SHAMAN_LEVEL_IND)) {
+      CDiscipline *cd = getDiscipline(DISC_RITUALISM);
+      if (cd) {
+        initial = cd->getNatLearnedness();
+        if (initial < 100) {
+          learnAdd = 2;
+          if (plotStat(STAT_NATURAL, STAT_WIS, 30, 180, 105, 1.0) > (::number(0,200))) 
+            learnAdd += 1;
+          
+          for (count = 1; count <= learnAdd; count++) {
+            if (cd->getNatLearnedness() < MAX_DISC_LEARNEDNESS)
+             raiseDiscOnce(DISC_RITUALISM);
+          }
+          final = cd->getNatLearnedness();
+          if (!silent) 
+            sendTo("Your channel to the ancestors grows within you.\n\r");
+
+          doLevelSkillsLearn(gm, DISC_RITUALISM, initial, final);
         }
       }
     }
@@ -955,7 +976,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
-  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER | CLASS_SHAMAN},
+  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER},
   {SPEC_TRAINER_FAITH, "faith", "Faith", DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_SLASH, "slash", "Slash Specialization", DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN},
   {SPEC_TRAINER_BLUNT, "blunt", "Blunt Specialization", DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN},
@@ -997,7 +1018,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_SHAMAN_SKUNK, "skunk", "about the Abilities of the Skunk", DISC_SHAMAN_SKUNK, CLASS_SHAMAN},
   {SPEC_TRAINER_SHAMAN_SPIDER, "spider", "about the Abilities of the Spider", DISC_SHAMAN_SPIDER, CLASS_SHAMAN},
   {SPEC_TRAINER_SHAMAN_CONTROL, "control", "about Being Controling", DISC_SHAMAN_CONTROL, CLASS_SHAMAN},
-  {SPEC_TRAINER_TOTEM, "totemism", "about Totemism", DISC_TOTEM, CLASS_SHAMAN},
+  {SPEC_TRAINER_RITUALISM, "ritualism", "about Rituals", DISC_RITUALISM, CLASS_SHAMAN},
 
   {SPEC_TRAINER_RANGER_FIGHT, "fighting", "Fighting Skills for Rangers", DISC_RANGER_FIGHT, CLASS_RANGER},
   {SPEC_TRAINER_STEALTH, "stealth", "about Stealthiness", DISC_STEALTH, CLASS_THIEF},
@@ -1424,6 +1445,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
                   discipline == DISC_THEOLOGY ||
                   discipline == DISC_FAITH ||
                   discipline == DISC_WIZARDRY ||
+                  discipline == DISC_RITUALISM ||
   // No restrictions on DISC_COMBAT and EQUIVALENTs
                   discipline == DISC_SLASH || 
                   discipline == DISC_BLUNT || 
@@ -1731,6 +1753,27 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     else if (wiz <= WIZ_LEV_COMP_PRIM_OTHER_FREE)
       ch->sendTo("Components must be in your primary hand, and the other hand must be free.\n\r");
   }
+  if (TrainerInfo[offset].disc == DISC_RITUALISM) {
+    ritualismLevelT wiz = ch->getRitualismLevel();
+    if (wiz >= RIT_LEV_COMP_BELT)
+        ch->sendTo("It is ok to have components contained on your belt.\n\r");
+    else if (wiz == RIT_LEV_COMP_NECK)
+        ch->sendTo("It is ok to have components contained in a neck pouch.\n\r");
+    else if (wiz == RIT_LEV_COMP_WRIST)
+        ch->sendTo("It is ok to have components contained in a wristpouch.\n\r");
+    else if (wiz == RIT_LEV_NO_MANTRA)
+        ch->sendTo("You no longer need to speak the incantation.\n\r");
+    else if (wiz == RIT_LEV_NO_GESTURES)
+        ch->sendTo("You no longer need to make hand gestures while casting!\n\r");
+    else if (wiz == RIT_LEV_COMP_INV)
+        ch->sendTo("Components in your inventory will now be used.\n\r");
+    else if (wiz == RIT_LEV_COMP_EITHER)
+      ch->sendTo("Components may be in either hand.\n\r");
+    else if (wiz == RIT_LEV_COMP_EITHER_OTHER_FREE)
+      ch->sendTo("Components may be in either hand, and the other hand must be free.\n\r");
+    else if (wiz <= RIT_LEV_COMP_PRIM_OTHER_FREE)
+      ch->sendTo("Components must be in your primary hand, and the other hand must be free.\n\r");
+  }
   if (TrainerInfo[offset].disc == DISC_FAITH) {
     devotionLevelT wiz = ch->getDevotionLevel();
     if (wiz >= DEV_LEV_NO_MANTRA)
@@ -2009,6 +2052,34 @@ wizardryLevelT TBeing::getWizardryLevel() const
     return WIZ_LEV_COMP_BELT;
   else
     return WIZ_LEV_MAXED;
+}
+
+ritualismLevelT TBeing::getRitualismLevel() const
+{
+  int skill;
+
+  if (!doesKnowSkill(SKILL_RITUALISM))
+    return RIT_LEV_NONE;
+  else if ((skill = getSkillValue(SKILL_RITUALISM)) < 15)
+    return RIT_LEV_COMP_PRIM_OTHER_FREE;
+  else if (skill < 30)
+    return RIT_LEV_COMP_EITHER_OTHER_FREE;
+  else if (skill < 40)
+    return RIT_LEV_COMP_EITHER;
+  else if (skill < 50)
+    return RIT_LEV_COMP_INV;
+  else if (skill < 60)
+    return RIT_LEV_NO_GESTURES;
+  else if (skill < 75)
+    return RIT_LEV_NO_MANTRA;
+  else if (skill < 98)
+    return RIT_LEV_COMP_NECK;
+  else if (skill < 99)
+    return RIT_LEV_COMP_NECK;
+  else if (skill < MAX_SKILL_LEARNEDNESS)
+    return RIT_LEV_COMP_BELT;
+  else
+    return RIT_LEV_MAXED;
 }
 
 devotionLevelT TBeing::getDevotionLevel() const

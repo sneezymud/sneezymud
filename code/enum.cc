@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: enum.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -181,6 +173,11 @@ applyTypeT mapFileToApply(int att)
   return APPLY_NONE;
 }
 
+territoryT & operator++(territoryT &c, int)
+{
+  return c = (c == MAX_HOME_TERS) ? HOME_TER_NONE : territoryT(c+1);
+}
+
 applyTypeT & operator++(applyTypeT &c, int)
 {
   return c = (c == MAX_APPLY_TYPES) ? MIN_APPLY : applyTypeT(c+1);
@@ -256,7 +253,7 @@ int mapDiscToFile(discNumT dn)
       return 19;
     case DISC_RANGER_FIGHT:
       return 20;
-    case DISC_NATURE:
+    case DISC_SHAMAN_ARMADILLO:
       return 21;
     case DISC_ANIMAL:
       return 22;
@@ -304,17 +301,17 @@ int mapDiscToFile(discNumT dn)
       return 46;
     case DISC_SHAMAN:
       return 47;
-    case DISC_SHAMAN_FIGHT:
+    case DISC_SHAMAN_FROG:
       return 48;
     case DISC_SHAMAN_ALCHEMY:
       return 49;
-    case DISC_SHAMAN_HEALING:
+    case DISC_SHAMAN_SKUNK:
       return 50;
-    case DISC_UNDEAD:
+    case DISC_SHAMAN_SPIDER:
       return 51;
-    case DISC_DRAINING:
+    case DISC_SHAMAN_CONTROL:
       return 52;
-    case DISC_TOTEM:
+    case DISC_RITUALISM:
       return 53;
     case DISC_WIZARDRY:
       return 54;
@@ -336,6 +333,8 @@ int mapDiscToFile(discNumT dn)
       return 62;
     case DISC_LORE:
       return 63;
+    case DISC_NATURE:
+      return 64;
     case MAX_DISCS:
     case MAX_SAVED_DISCS:
     case DISC_NONE:
@@ -391,7 +390,7 @@ discNumT mapFileToDisc(int num)
     case 20:
       return DISC_RANGER_FIGHT;
     case 21:
-      return DISC_NATURE;
+      return DISC_SHAMAN_ARMADILLO;
     case 22:
       return DISC_ANIMAL;
     case 23:
@@ -439,17 +438,17 @@ discNumT mapFileToDisc(int num)
     case 47:
       return DISC_SHAMAN;
     case 48:
-      return DISC_SHAMAN_FIGHT;
+      return DISC_SHAMAN_FROG;
     case 49:
       return DISC_SHAMAN_ALCHEMY;
     case 50:
-      return DISC_SHAMAN_HEALING;
+      return DISC_SHAMAN_SKUNK;
     case 51:
-      return DISC_UNDEAD;
+      return DISC_SHAMAN_SPIDER;
     case 52:
-      return DISC_DRAINING;
+      return DISC_SHAMAN_CONTROL;
     case 53:
-      return DISC_TOTEM;
+      return DISC_RITUALISM;
     case 54:
       return DISC_WIZARDRY;
     case 55:
@@ -470,6 +469,8 @@ discNumT mapFileToDisc(int num)
       return DISC_THEOLOGY;
     case 63:
       return DISC_LORE;
+    case 64:
+      return DISC_NATURE;
   }
   forceCrash("Bad value to mapFileToDisc");
   return DISC_NONE;
@@ -1035,6 +1036,14 @@ int mapWizPowerToFile(wizPowerT att)
       return 105;
     case POWER_SEE_FACTION_SENDS:
       return 106;
+    case POWER_SETSEV:
+      return 107;
+    case POWER_SETSEV_IMM:
+      return 108;
+    case POWER_IDLED:
+      return 109;
+    case POWER_NO_LIMITS:
+      return 110;
     case MAX_POWER_INDEX:
       break;
   }
@@ -1259,6 +1268,14 @@ wizPowerT mapFileToWizPower(int att)
       return POWER_IMMORTAL_OUTFIT;
     case 106:
       return POWER_SEE_FACTION_SENDS;
+    case 107:
+      return POWER_SETSEV;
+    case 108:
+      return POWER_SETSEV_IMM;
+    case 109:
+      return POWER_IDLED;
+    case 110:
+      return POWER_NO_LIMITS;
     default:
       break;
   }
@@ -1303,3 +1320,86 @@ drugTypeT mapFileToDrug(int d)
   return MAX_DRUG;
 }
 
+doorTrapT mapFileToDoorTrap(int dt)
+{
+  switch (dt) {
+    case 0:
+      return DOOR_TRAP_NONE;
+    case 1:
+      return DOOR_TRAP_POISON;
+    case 2:
+      return DOOR_TRAP_SPIKE;
+    case 3:
+      return DOOR_TRAP_SLEEP;
+    case 4:
+      return DOOR_TRAP_TNT;
+    case 5:
+      return DOOR_TRAP_BLADE;
+    case 6:
+      return DOOR_TRAP_FIRE;
+    case 7:
+      return DOOR_TRAP_ACID;
+    case 8:
+      return DOOR_TRAP_DISEASE;
+    case 9:
+      return DOOR_TRAP_HAMMER;
+    case 10:
+      return DOOR_TRAP_FROST;
+    case 11:
+      return DOOR_TRAP_TELEPORT;
+    case 12:
+      return DOOR_TRAP_ENERGY;
+    case 13:
+      return DOOR_TRAP_BOLT;
+    case 14:
+      return DOOR_TRAP_DISK;
+    case 15:
+      return DOOR_TRAP_PEBBLE;
+  }
+
+  forceCrash("Bad value (%d) in mapFileToDoorTrap", dt);
+  return MAX_TRAP_TYPES;
+}
+
+int mapDoorTrapToFile(doorTrapT dt)
+{
+  switch (dt) {
+    case DOOR_TRAP_NONE:
+      return 0;
+    case DOOR_TRAP_POISON:
+      return 1;
+    case DOOR_TRAP_SPIKE:
+      return 2;
+    case DOOR_TRAP_SLEEP:
+      return 3;
+    case DOOR_TRAP_TNT:
+      return 4;
+    case DOOR_TRAP_BLADE:
+      return 5;
+    case DOOR_TRAP_FIRE:
+      return 6;
+    case DOOR_TRAP_ACID:
+      return 7;
+    case DOOR_TRAP_DISEASE:
+      return 8;
+    case DOOR_TRAP_HAMMER:
+      return 9;
+    case DOOR_TRAP_FROST:
+      return 10;
+    case DOOR_TRAP_TELEPORT:
+      return 11;
+    case DOOR_TRAP_ENERGY:
+      return 12;
+    case DOOR_TRAP_BOLT:
+      return 13;
+    case DOOR_TRAP_DISK:
+      return 14;
+    case DOOR_TRAP_PEBBLE:
+      return 15;
+    case MAX_TRAP_TYPES:
+      break;
+  }
+
+  forceCrash("Bad value (%d) in mapDoorTrapToFile", dt);
+  return -1;
+}

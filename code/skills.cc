@@ -36,7 +36,7 @@
 #include "disc_shaman_control.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_skunk.h"
-#include "disc_totem.h"
+#include "disc_ritualism.h"
 #include "disc_thief.h"
 #include "disc_thief_fight.h"
 #include "disc_poisons.h"
@@ -987,6 +987,11 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SKILL_BREW: // 405
       return &((CDShamanAlchemy *) cd)->skBrew;
+
+      // ritualism
+
+    case SKILL_RITUALISM:
+      return &((CDRitualism *) cd)->skRitualism;
 
       // SHAMAN END *****************************************************
 

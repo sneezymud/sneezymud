@@ -1688,8 +1688,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_SHAMAN_SKUNK, CLASS_SHAMAN, "skunk abilities"},       // 50
   {DISC_SHAMAN_SPIDER, CLASS_SHAMAN, "spider abilities"},
   {DISC_SHAMAN_CONTROL, CLASS_SHAMAN, "control"},            
-  {DISC_TOTEM, CLASS_SHAMAN, "totemism"},
-  {DISC_WIZARDRY, CLASS_MAGE | CLASS_SHAMAN, "wizardry"},
+  {DISC_RITUALISM, CLASS_SHAMAN, "ritualism"},
+  {DISC_WIZARDRY, CLASS_MAGE, "wizardry"},
   {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith"},  // 55
   {DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN , "slash"},
   {DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN, "blunt"},                              
@@ -1757,7 +1757,7 @@ const char * const disc_names[MAX_DISCS] =
   "Skunk Abilities",           // 50
   "Spider Abilities",
   "Control Abilities",
-  "Totemism",
+  "Ritualism",
   "Wizardry",
   "Faith",                        // 55
   "Slash Weapons",

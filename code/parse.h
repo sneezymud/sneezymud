@@ -530,6 +530,7 @@ enum cmdTypeT {
      CMD_COVER,
      CMD_OPERATE,
      CMD_SPELLS,
+     CMD_RITUALS,
      CMD_COMPARE,
      CMD_TEST_FIGHT,
      CMD_DONATE,

@@ -241,6 +241,7 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
     case CMD_LOOK:
     case CMD_LIMBS:  // not realistic, but let's just be nice
     case CMD_SPELLS:
+    case CMD_RITUALS:
     case CMD_GLANCE:
     case CMD_TIME:
     case CMD_SCORE:

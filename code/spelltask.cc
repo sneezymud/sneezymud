@@ -1627,8 +1627,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
     return FALSE;
   }
   if (isPc() && canSpeak()) {
-    if ((discArray[which]->minLifeforce || discArray[which]->minMana) && 
-        (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
+    if ((discArray[which]->minMana) && (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
+      saySpell(which);
+    if ((discArray[which]->minLifeforce) && (getRitualismLevel() < RIT_LEV_NO_MANTRA))
       saySpell(which);
 
     if (spelltask && IS_SET(discArray[which]->comp_types, SPELL_TASKED_EVERY)) {
@@ -2529,10 +2530,10 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
           act("$n makes a final gesture and completes the magic pattern.",
               TRUE,this, NULL, NULL, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
-          act("Crying out, you can feel the power of your ancestors flow.",
-              TRUE,this, NULL, NULL, TO_CHAR, ANSI_RED);
-          act("$n cries out and is enveloped in a blood red mist.",
-              TRUE,this, NULL, NULL, TO_ROOM, ANSI_RED);
+          act("You hold your hands up high and call upon your ancestors for power.",
+              FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
+          act("$n holds $s hands up high and cries out to $s ancestors for power.",
+              TRUE, this, NULL, NULL, TO_ROOM, ANSI_RED);
         } else if (typ == SPELL_PRAYER) {
           if (isPc()) {
             act("You raise your glowing symbol strongly to the heavens.",
@@ -2574,10 +2575,10 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
           act("$n's voice cries out as $e utters a last word of power.",
               TRUE, this, NULL, NULL, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
-          act("You hold your hands up high and call upon your ancestors for power.",
-              FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
-          act("$n holds $s hands up high and cries out to $s ancestors for power.",
-              TRUE, this, NULL, NULL, TO_ROOM, ANSI_RED);
+          act("$n cries out and is enveloped in a blood red mist.",
+              TRUE,this, NULL, NULL, TO_ROOM, ANSI_RED);
+          act("Crying out, you can feel the power of your ancestors flow.",
+              TRUE,this, NULL, NULL, TO_CHAR, ANSI_RED);
         } else if (typ == SPELL_PRAYER) {
           act("You give thanks as you utter the final word of your prayer.",
               FALSE,this, NULL, NULL, TO_CHAR, ANSI_GREEN);

@@ -770,6 +770,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
+      case SKILL_RITUALISM:
       case SKILL_MEDITATE:
       case SKILL_DEVOTION:
       case SKILL_PENANCE:

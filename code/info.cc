@@ -1233,6 +1233,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
+      case SKILL_RITUALISM:
       case SKILL_MEDITATE:
       case SKILL_DEVOTION:
       case SKILL_PENANCE:
@@ -5029,7 +5030,7 @@ void TBeing::doSpells(const char *argument)
   vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || (!discArray[i]->minLifeforce && !discArray[i]->minMana))
+    if (hideThisSpell(i) || (!discArray[i]->minMana))
       continue;
 
     skillSortVec.push_back(skillSorter(this, i));
@@ -5177,6 +5178,238 @@ void TBeing::doSpells(const char *argument)
   return;
 }
 
+void TBeing::doRituals(const char *argument)
+{
+  char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
+  char learnbuf[64];
+  spellNumT i;
+  unsigned int j, l;
+  Descriptor *d;
+  CDiscipline *cd;
+  char arg[200], arg2[200], arg3[200];
+  int subtype=0, types[4], type=0, badtype=0, showall=0;
+  discNumT das;
+  TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
+  TThing *belt=equipment[WEAR_WAISTE];
+  TThing *juju=equipment[WEAR_NECK];
+  TThing *wristpouch=equipment[WEAR_WRIST_R];
+  TThing *wristpouch2=equipment[WEAR_WRIST_L];
+  TComponent *item=NULL;
+  int totalcharges;
+  ritualismLevelT ritlevel = getRitualismLevel();
+  TThing *t1, *t2;
+  TOpenContainer *tContainer;
+
+  struct {
+    TThing *where;
+    ritualismLevelT ritlevel;
+  } search[] = {
+      {primary  , RIT_LEV_COMP_PRIM_OTHER_FREE},
+      {secondary, RIT_LEV_COMP_EITHER         },
+      {stuff    , RIT_LEV_COMP_INV            },
+      {belt     , RIT_LEV_COMP_BELT           },
+      {juju     , RIT_LEV_COMP_NECK           },
+      {wristpouch, RIT_LEV_COMP_WRIST         },
+      {wristpouch2, RIT_LEV_COMP_WRIST         }
+  };
+
+  if (!(d = desc))
+    return;
+
+  *buffer = '\0';
+
+  if (!*argument)
+    memset(types, 1, sizeof(int) * 4);      
+  else {
+    memset(types, 0, sizeof(int) * 4);
+
+    three_arg(argument, arg, arg2, arg3);    
+
+    if (*arg3 && is_abbrev(arg3, "all"))
+      showall = 1;
+
+    if (*arg2) {
+      if (is_abbrev(arg2, "all"))
+        showall = 1;
+      else if (is_abbrev(arg2, "targeted"))
+        subtype = 1;
+      else if (is_abbrev(arg2, "nontargeted"))
+        subtype = 2;
+      else
+        badtype = 1;
+    }
+    
+    if (is_abbrev(arg, "offensive")) {
+      if(!subtype || subtype == 1)
+        types[0] = 1;
+      if(!subtype || subtype == 2)
+        types[1] = 1;
+    } else if (is_abbrev(arg, "utility")) {
+      if(!subtype || subtype == 1)
+        types[2] = 1;
+      if(!subtype || subtype == 2)
+        types[3] = 1;      
+    } else
+      badtype = 1;
+    
+    if (badtype) {
+      sendTo("You must specify a valid ritual type.\n\r");
+      sendTo("Syntax: rituals <offensive|utility> <targeted|nontargeted> <all>.\n\r");
+      return;
+    }
+  }
+
+  vector<skillSorter>skillSortVec(0);
+
+  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
+    if (hideThisSpell(i) || !discArray[i]->minLifeforce)
+      continue;
+
+    skillSortVec.push_back(skillSorter(this, i));
+  }
+  
+  // sort it into proper order
+  sort(skillSortVec.begin(), skillSortVec.end(), skillSorter());
+
+  for (type = 0; type < 4;++type) {
+    if (!types[type])
+      continue;
+
+    if (*buffer)
+      strcat(buffer, "\n\r");
+
+    switch (type) {
+      case 0:
+        strcat(buffer, "Targeted offensive rituals:\n\r");
+        break;
+      case 1:
+        strcat(buffer, "Non-targeted offensive rituals:\n\r");
+        break;
+      case 2:
+        strcat(buffer, "Targeted utility rituals:\n\r");
+        break;
+      case 3:
+        strcat(buffer, "Non-targeted utility rituals:\n\r");
+        break;
+    }
+
+    for (j = 0; j < skillSortVec.size(); j++) {
+      i = skillSortVec[j].theSkill;
+      das = getDisciplineNumber(i, FALSE);
+      if (das == DISC_NONE) {
+        vlogf(LOG_BUG, "Bad disc for skill %d in doRituals", i);
+        continue;
+      }
+      cd = getDiscipline(das);
+      
+      // getLearnedness is -99 for an unlearned skill, make it seem like a 0
+      int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
+      tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
+
+      switch (type) {
+        case 0: // single target offensive
+          if (!(discArray[i]->targets & TAR_VIOLENT) ||
+              (discArray[i]->targets & TAR_AREA))
+            continue;
+          break;
+        case 1: // area offensive
+          if (!(discArray[i]->targets & TAR_VIOLENT) ||
+              !(discArray[i]->targets & TAR_AREA))
+            continue;
+          break;
+        case 2: // targeted utility
+          if ((discArray[i]->targets & TAR_VIOLENT) ||
+              !(discArray[i]->targets & TAR_CHAR_ROOM))
+            continue;
+          break;
+        case 3: // non-targeted utility
+          if ((discArray[i]->targets &  TAR_VIOLENT) ||
+              (discArray[i]->targets & TAR_CHAR_ROOM))
+            continue;
+          break;
+      }
+
+      // can't we say if !cd, continue here?
+      if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
+        continue;
+
+      totalcharges = 0;
+      item = NULL;
+      
+      for (l = 0; l < 7; l++) {
+        if (search[l].where && ritlevel >= search[l].ritlevel) {
+          for (t1 = search[l].where; t1; t1 = t1->nextThing) {
+            if (!(item = dynamic_cast<TComponent *>(t1)) &&
+                (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
+                 !tContainer->isClosed())) {
+              for (t2 = t1->stuff; t2; t2 = t2->nextThing) {
+                if ((item = dynamic_cast<TComponent *>(t2)) &&
+                    item->getComponentSpell() == i && 
+                    item->isComponentType(COMP_SPELL))
+                  totalcharges += item->getComponentCharges();
+              }
+            } else if (item->getComponentSpell() == i && 
+                       item->isComponentType(COMP_SPELL))
+              totalcharges += item->getComponentCharges();
+          }
+        }
+      }
+
+      if ((getSkillValue(i) <= 0) &&
+          (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
+        if (!showall) 
+          continue;
+
+        sprintf(buf, "%s%-22.22s%s  (Learned: %s)", 
+                cyan(), discArray[i]->name, norm(),
+                skill_diff(discArray[i]->start - tmp_var));
+      } else if (discArray[i]->toggle && 
+                 !hasQuestBit(discArray[i]->toggle)) {
+        if (!showall) 
+          continue;
+
+        sprintf(buf, "%s%-22.22s%s  (Learned: Quest)",
+                cyan(), discArray[i]->name, norm());
+      } else { 
+        if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
+          if (discArray[i]->startLearnDo > 0) {
+            sprintf(learnbuf, "%.9s/%.9s", how_good(getSkillValue(i)),
+                    how_good(getMaxSkillValue(i))+1);
+            sprintf(buf, "%s%-22.22s%s %-19.19s",
+                    cyan(), discArray[i]->name, norm(), 
+                    learnbuf);
+          } else {
+            sprintf(buf, "%s%-22.22s%s %-19.19s",
+                    cyan(), discArray[i]->name, norm(), 
+                    how_good(getSkillValue(i)));
+          }
+        } else {
+          sprintf(buf, "%s%-22.22s%s %-19.19s",
+                  cyan(), discArray[i]->name, norm(), 
+                  how_good(getSkillValue(i)));
+        }
+        unsigned int comp;
+
+        for (comp = 0; (comp < CompInfo.size()) &&
+                       (i != CompInfo[comp].spell_num); comp++);
+
+        if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
+          sprintf(buf + strlen(buf), "   [%3i] %s",  totalcharges, 
+                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
+        }         
+      }
+        strcat(buf, "\n\r");
+        
+      if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
+        break;
+
+      strcat(buffer, buf);
+    } 
+  }
+  d->page_string(buffer);
+  return;
+}
+
 void TBeing::doPrayers(const char *argument)
 {
   char buf[MAX_STRING_LENGTH * 2] = "\0";
@@ -5252,7 +5485,7 @@ void TBeing::doPrayers(const char *argument)
   vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || (!discArray[i]->minLifeforce && !discArray[i]->minMana))
+    if (hideThisSpell(i) || (!discArray[i]->minMana))
       continue;
     skillSortVec.push_back(skillSorter(this, i));
   }  

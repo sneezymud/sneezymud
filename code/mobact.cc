@@ -1681,8 +1681,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
   int j;
   discNumT i, best_disc;
   discNumT good_discs[]={DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_FROG, 
-                         DISC_SHAMAN_SPIDER, DISC_SHAMAN_SKUNK, DISC_TOTEM,
-                         DISC_SHAMAN_CONTROL, DISC_NONE};
+                         DISC_SHAMAN_SPIDER, DISC_SHAMAN_SKUNK, DISC_SHAMAN_CONTROL, DISC_NONE};
 
   on_me = FALSE;
 
@@ -1998,10 +1997,6 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
   } else if (best_disc == DISC_SHAMAN_ARMADILLO) {
-    // area affect
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
-    }
-  } else if (best_disc == DISC_TOTEM) {
     // area affect
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }

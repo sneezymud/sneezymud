@@ -3,6 +3,16 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.4  2001/07/03 08:57:25  jesus
+// added ritualismLevelT
+// removed totemism disc
+// added ritualism disc
+// removed wizardry from shaman
+// added ritualism as a replacement
+// added a rituals command for spell and comp listing
+// took shaman out of dospells
+// now 2 seperate so gods can list seperatly
+//
 // Revision 5.3  2001/06/28 04:47:24  peel
 // added spec mob stub for realEstateAgent
 //
@@ -149,7 +159,7 @@ const int SPEC_TRAINER_SHAMAN_ALCHEMY=137;
 const int SPEC_TRAINER_SHAMAN_SKUNK =138;
 const int SPEC_TRAINER_SHAMAN_SPIDER=139;
 const int SPEC_TRAINER_SHAMAN_CONTROL=140;
-const int SPEC_TRAINER_TOTEM=141;
+const int SPEC_TRAINER_RITUALISM=141;
 const int SPEC_TRAINER_RANGER_FIGHT=142;
 const int SPEC_GM_SHAMAN         =143;
 const int SPEC_TRAINER_COMBAT  =144;

@@ -373,6 +373,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   TThing *primary, *secondary, *belt, *juju, *wristpouch, *inventory;
   TComponent *item;
   wizardryLevelT wizlevel = WIZ_LEV_NONE;
+  ritualismLevelT ritlevel = RIT_LEV_NONE;
 
   primary = heldInPrimHand();
   secondary = heldInSecHand();
@@ -388,6 +389,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
       wizlevel = WIZ_LEV_COMP_EITHER;
     else 
       wizlevel = WIZ_LEV_COMP_BELT;
+  } else if (hasClass(CLASS_SHAMAN)) {
+    ritlevel = getRitualismLevel();
   } else {
     wizlevel = getWizardryLevel();
   }
@@ -410,6 +413,42 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	return NULL;
     }
     if (wizlevel <= WIZ_LEV_NO_MANTRA) {
+      if (primary || secondary || inventory) {
+	if (primary)
+	  item = comp_from_object(primary, spell);
+	if (!item && secondary)
+	  item = comp_from_object(secondary, spell);
+        if (!item && inventory) {
+          TThing *t;
+          for (t = stuff; t && !item; t = t->nextThing) {
+            inventory = dynamic_cast<TObj *>(t);
+            if (inventory)
+              item = comp_from_object(inventory, spell);
+          }
+        }
+	return item;
+      } else
+	return NULL;
+    }
+  }
+  if (isPc()) {
+    if (ritlevel <= RIT_LEV_COMP_PRIM_OTHER_FREE) {
+      if (primary)
+	return comp_from_object(primary, spell);
+      else
+	return NULL;
+    }
+    if (ritlevel <= RIT_LEV_COMP_EITHER) {
+      if (primary || secondary) {
+        if (primary)
+	  item = comp_from_object(primary, spell);
+        if (!item && secondary)
+          item = comp_from_object(secondary, spell);
+        return item;
+      } else
+	return NULL;
+    }
+    if (ritlevel <= RIT_LEV_NO_MANTRA) {
       if (primary || secondary || inventory) {
 	if (primary)
 	  item = comp_from_object(primary, spell);
@@ -457,8 +496,8 @@ static void missingComponent(const TBeing * ch)
   if (ch->hasClass(CLASS_RANGER)) {
     ch->sendTo("You seem to lack the proper materials to complete this magic skill.\n\r");
   } else {
-    ch->sendTo("You seem to lack the proper materials to complete this spell.\n\r");
-    act("$n kicks $mself as $e realizes $e just screwed up $s spell.",
+    ch->sendTo("You seem to lack the proper materials to complete your task.\n\r");
+    act("$n kicks $mself as $e realizes $e just screwed up.",
       TRUE, ch, 0, 0, TO_ROOM);
   }
 }
@@ -1350,13 +1389,22 @@ void TBeing::spellMessUp(spellNumT spell)
         act("Your brain is jumbled and confused, and you flub the prayer.",
              FALSE, this, 0, 0, TO_CHAR); 
       else
-        act("Your brain is jumbled and confused, and you flub the spell.",
+        act("Your brain is jumbled and confused.",
              FALSE, this, 0, 0, TO_CHAR); 
       act("$n must have done something wrong.",
               FALSE, this, 0, 0, TO_ROOM); 
       break;
     case 3:
       if (getWizardryLevel() < WIZ_LEV_NO_GESTURES &&
+          IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
+        // requires gestures
+        act("Darn it!  You mess up one of the intricate gestures.",
+              FALSE, this, 0, 0, TO_CHAR); 
+        act("$n must have done something wrong.",
+              FALSE, this, 0, 0, TO_ROOM); 
+        break;
+      } // otherwise drop through for different text
+      if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         // requires gestures
         act("Darn it!  You mess up one of the intricate gestures.",
@@ -1379,6 +1427,14 @@ void TBeing::spellMessUp(spellNumT spell)
               FALSE, this, 0, 0, TO_ROOM); 
         break;
       } // otherwise drop through for different text
+      if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
+          IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
+	act("You pathetic excuse for a houngan....Grrrrrr!!!",
+	    FALSE, this, 0, 0, TO_CHAR); 
+        act("$n must have done something wrong.",
+	    FALSE, this, 0, 0, TO_ROOM); 
+        break;
+      } // otherwise drop through for different text
     case 5:
       if (getWizardryLevel() < WIZ_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
@@ -1389,11 +1445,29 @@ void TBeing::spellMessUp(spellNumT spell)
               FALSE, this, 0, 0, TO_ROOM); 
         break;
       } // otherwise drop through for different text
+      if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
+          IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
+        // requires incantation
+        act("Oops...  You messed that one up....",
+              FALSE, this, 0, 0, TO_CHAR); 
+        act("$n must have done something wrong.",
+              FALSE, this, 0, 0, TO_ROOM); 
+        break;
+      } // otherwise drop through for different text
     case 6:
       if (getWizardryLevel() < WIZ_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
         act("You trip over your tongue and mis-speak the incantation.",
+              FALSE, this, 0, 0, TO_CHAR); 
+        act("$n must have done something wrong.",
+              FALSE, this, 0, 0, TO_ROOM); 
+        break;
+      } // otherwise drop through for different text
+      if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
+          IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
+        // requires incantation
+        act("You trip over your own feet trying to dance for the loa!",
               FALSE, this, 0, 0, TO_CHAR); 
         act("$n must have done something wrong.",
               FALSE, this, 0, 0, TO_ROOM); 

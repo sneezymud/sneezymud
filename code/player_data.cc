@@ -1466,7 +1466,7 @@ void TBeing::doReset(const char *arg)
       CDiscipline *cd = getDiscipline(dnt);
       if (!cd)
         continue;
-     if (dnt == DISC_ADVENTURING || dnt == DISC_WIZARDRY || dnt == DISC_FAITH) 
+     if (dnt == DISC_ADVENTURING || dnt == DISC_RITUALISM || dnt == DISC_WIZARDRY || dnt == DISC_FAITH) 
         continue;
       cd->setNatLearnedness(0);
       cd->setLearnedness(0);
@@ -1476,7 +1476,7 @@ void TBeing::doReset(const char *arg)
       if (!discArray[snt] || !*discArray[snt]->name)
         continue;
       temp = discArray[snt]->disc;
-      if (temp == DISC_ADVENTURING || temp == DISC_WIZARDRY || temp == DISC_FAITH)
+      if (temp == DISC_ADVENTURING || temp == DISC_RITUALISM || temp == DISC_WIZARDRY || temp == DISC_FAITH)
         continue;
       setSkillValue(snt, SKILL_MIN);
     }

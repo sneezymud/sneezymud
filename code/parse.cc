@@ -1595,6 +1595,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doSpells(newarg);
 	  addToLifeforce(1);
 	  break;
+        case CMD_RITUALS:
+	  doRituals(newarg);
+	  addToLifeforce(1);
+	  break;
         case CMD_COMPARE:
 	  doCompare(newarg);
 	  addToLifeforce(1);
@@ -2788,6 +2792,7 @@ void buildCommandArray(void)
   commandArray[CMD_COVER] = new commandInfo("cover", POSITION_STANDING, 0);
   commandArray[CMD_OPERATE] = new commandInfo("operate", POSITION_STANDING, 0);
   commandArray[CMD_SPELLS] = new commandInfo("spells", POSITION_DEAD, 0);
+  commandArray[CMD_RITUALS] = new commandInfo("rituals", POSITION_DEAD, 0);
   commandArray[CMD_COMPARE] = new commandInfo("compare", POSITION_DEAD, 0);
   commandArray[CMD_TEST_FIGHT] = new commandInfo("testfight", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_DONATE] = new commandInfo("donate", POSITION_RESTING, 0);

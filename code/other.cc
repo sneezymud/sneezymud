@@ -957,9 +957,11 @@ void TBeing::doPractice(const char *argument)
     if (!*argument) 
       sendTo("You need to specify what skill: practice skill <\"skill\">.\n\r");
     else {
-      if (strlen(argument) > 2 && is_abbrev(argument, "wizardry")) 
+      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry")) 
         doPracSkill(argument, SKILL_WIZARDRY);
-      else if (strlen(argument) > 2 && is_abbrev(argument, "devotion")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism")) 
+        doPracSkill(argument, SKILL_RITUALISM);
+      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion")) 
         doPracSkill(argument, SKILL_DEVOTION);
       else 
         doPracSkill(argument, TYPE_UNDEFINED);
@@ -1131,9 +1133,11 @@ void TBeing::doPractice(const char *argument)
     if (!*argument) 
       sendTo("You need to specify what skill: practice skill <\"skill\">.\n\r");
     else {
-      if (strlen(argument) > 2 && is_abbrev(argument, "wizardry")) 
+      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry")) 
         doPracSkill(argument, SKILL_WIZARDRY);
-      else if (strlen(argument) > 2 && is_abbrev(argument, "devotion")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism")) 
+        doPracSkill(argument, SKILL_RITUALISM);
+      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion")) 
         doPracSkill(argument, SKILL_DEVOTION);
       else 
         doPracSkill(argument, TYPE_UNDEFINED);
@@ -1239,7 +1243,7 @@ void TBeing::sendSkillsList(discNumT which)
       strcpy(how_long, "(Learned: Not in this Lifetime)");
     else if ((getSkillValue(i) <= 0) &&
           (!tmp_var || (discArray[i]->start - tmp_var) > 0) &&
-          (i != SKILL_WIZARDRY && i != SKILL_DEVOTION)) {
+          (i != SKILL_WIZARDRY && i != SKILL_RITUALISM && i != SKILL_DEVOTION)) {
       sprintf(how_long, "(Learned: %s)", 
           skill_diff(discArray[i]->start - tmp_var));
     } else if (discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle)) {
@@ -1252,7 +1256,7 @@ void TBeing::sendSkillsList(discNumT which)
       } else {
 	strcpy(how_long, "(Learned: When Teacher is Found)");
       }
-    } else if (i == SKILL_WIZARDRY) {
+    } else if ((i == SKILL_WIZARDRY)) {
       wizardryLevelT wiz_lev = getWizardryLevel();
       if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
@@ -1279,6 +1283,35 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
         strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+      }
+    } else if ((i == SKILL_RITUALISM)) {
+      ritualismLevelT wiz_lev = getRitualismLevel();
+      if (wiz_lev < RIT_LEV_COMP_PRIM_OTHER_FREE) {
+        if (isRightHanded())
+          sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free", skill_diff(discArray[i]->start - tmp_var));
+        else
+          sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free", skill_diff(discArray[i]->start - tmp_var));
+      } else if (wiz_lev == RIT_LEV_COMP_PRIM_OTHER_FREE) {
+        if (isRightHanded())
+          strcpy(how_long, "\tcomponent=right hand, left hand=free");
+        else
+          strcpy(how_long, "\tcomponent=left hand, right hand=free");
+      } else if (wiz_lev == RIT_LEV_COMP_EITHER_OTHER_FREE) {
+        strcpy(how_long,   "\tcomponent=either hand, other free");
+      } else if (wiz_lev == RIT_LEV_COMP_EITHER) {
+        strcpy(how_long, "\tcomponent=any hand");
+      } else if (wiz_lev == RIT_LEV_COMP_INV) {
+        strcpy(how_long, "\tcomponent=any hand or inventory");
+      } else if (wiz_lev == RIT_LEV_NO_GESTURES) {
+        strcpy(how_long, "\tcomponent=any hand or inventory; no gestures");
+      } else if (wiz_lev == RIT_LEV_NO_MANTRA) {
+        strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures");
+      } else if (wiz_lev >= RIT_LEV_COMP_BELT) {
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+      } else if (wiz_lev >= RIT_LEV_COMP_NECK) {
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+      } else if (wiz_lev >= RIT_LEV_COMP_WRIST) {
         strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
       }
     } else if (i == SKILL_DEVOTION) {
@@ -1347,7 +1380,7 @@ void TBeing::sendSkillsList(discNumT which)
 
     if (!isImmortal()) {
       if (doesKnowSkill(i)) {
-        if ((i == SKILL_WIZARDRY) || (i == SKILL_DEVOTION)) {
+        if ((i == SKILL_WIZARDRY) || (i == SKILL_RITUALISM) || (i == SKILL_DEVOTION)) {
             sprintf(buf, "%s%-25.25s%s   Current: %-15s\n\r%-15s.\n\r",
                    cyan(), discArray[i]->name, norm(),
                    how_good(getSkillValue(i)), how_long);
@@ -1409,14 +1442,21 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   if (!*argument && skNum == TYPE_UNDEFINED) 
     return;
 
-  if (skNum == SKILL_WIZARDRY) {
+  if ((skNum == SKILL_WIZARDRY)) {
     if (hasClass(CLASS_MAGE) ||
-	hasClass(CLASS_RANGER) ||
-	hasClass(CLASS_SHAMAN)) {
+	hasClass(CLASS_RANGER)) {
       found=2;
       wiz = 1;
     } else {
       sendTo("You do not know about Wizardry.\n\r");
+      found = 1;
+    }
+  } else if ((skNum == SKILL_RITUALISM)) {
+    if (hasClass(CLASS_SHAMAN)) {
+      found=2;
+      wiz = 1;
+    } else {
+      sendTo("You do not know about Ritualism.\n\r");
       found = 1;
     }
   } else if (skNum == SKILL_DEVOTION){
@@ -1480,39 +1520,73 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   tmp_var = max((int) MAX_DISC_LEARNEDNESS, tmp_var);
 
   if (wiz == 1) {
-    wizardryLevelT wiz_lev = getWizardryLevel();
-    if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
-      if (isRightHanded()) {
-        sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
-      } else {
-        sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+    if (hasClass(CLASS_SHAMAN)) {
+      ritualismLevelT wiz_lev = getRitualismLevel();
+      if (wiz_lev < RIT_LEV_COMP_PRIM_OTHER_FREE) {
+	if (isRightHanded()) {
+	  sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+	} else {
+	  sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+	}
+	sendTo(COLOR_BASIC, how_long);
+	return;
+      } else if (wiz_lev == RIT_LEV_COMP_PRIM_OTHER_FREE) {
+	if (isRightHanded())
+	  strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
+	else
+	  strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
+      } else if (wiz_lev == RIT_LEV_COMP_EITHER_OTHER_FREE) {
+	strcpy(how_long,   "\tcomponent=either hand, other free.\n\r");
+      } else if (wiz_lev == RIT_LEV_COMP_EITHER) {
+	strcpy(how_long, "\tcomponent=any hand.\n\r");
+      } else if (wiz_lev == RIT_LEV_COMP_INV) {
+	strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
+      } else if (wiz_lev == RIT_LEV_NO_GESTURES) {
+	strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
+      } else if (wiz_lev == RIT_LEV_NO_MANTRA) {
+	strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= RIT_LEV_COMP_BELT) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= RIT_LEV_COMP_NECK) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= RIT_LEV_COMP_WRIST) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
       }
       sendTo(COLOR_BASIC, how_long);
-      return;
-    } else if (wiz_lev == WIZ_LEV_COMP_PRIM_OTHER_FREE) {
-      if (isRightHanded())
-        strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
-      else
-        strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
-    } else if (wiz_lev == WIZ_LEV_COMP_EITHER_OTHER_FREE) {
-      strcpy(how_long,   "\tcomponent=either hand, other free.\n\r");
-    } else if (wiz_lev == WIZ_LEV_COMP_EITHER) {
-      strcpy(how_long, "\tcomponent=any hand.\n\r");
-    } else if (wiz_lev == WIZ_LEV_COMP_INV) {
-      strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
-    } else if (wiz_lev == WIZ_LEV_NO_GESTURES) {
-      strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
-    } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
-      strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
-    } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
-      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
-    } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
-      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
-    } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
-      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+    } else {
+      wizardryLevelT wiz_lev = getWizardryLevel();
+      if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
+	if (isRightHanded()) {
+	  sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+	} else {
+	  sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+	}
+	sendTo(COLOR_BASIC, how_long);
+	return;
+      } else if (wiz_lev == WIZ_LEV_COMP_PRIM_OTHER_FREE) {
+	if (isRightHanded())
+	  strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
+	else
+	  strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
+      } else if (wiz_lev == WIZ_LEV_COMP_EITHER_OTHER_FREE) {
+	strcpy(how_long,   "\tcomponent=either hand, other free.\n\r");
+      } else if (wiz_lev == WIZ_LEV_COMP_EITHER) {
+	strcpy(how_long, "\tcomponent=any hand.\n\r");
+      } else if (wiz_lev == WIZ_LEV_COMP_INV) {
+	strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
+      } else if (wiz_lev == WIZ_LEV_NO_GESTURES) {
+	strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
+      } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
+	strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+      } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
+	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+      }
+      sendTo(COLOR_BASIC, how_long);
     }
-    sendTo(COLOR_BASIC, how_long);
-
   } else if (wiz == 2) {
     devotionLevelT wiz_lev = getDevotionLevel();
     if (wiz_lev < DEV_LEV_SYMB_PRIM_OTHER_FREE) {

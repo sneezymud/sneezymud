@@ -6724,9 +6724,9 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: skunk", CDGenericTrainer},
   {FALSE,"Trainer: spider", CDGenericTrainer},
   {FALSE,"Trainer: control", CDGenericTrainer},       // 140 
-  {FALSE,"Trainer: totemism", CDGenericTrainer},
+  {FALSE,"Trainer: ritualism", CDGenericTrainer},
   {FALSE,"Trainer: ranger fight", CDGenericTrainer},
-  {FALSE, "shaman guildmaster", ShamanGuildMaster},
+  {FALSE,"shaman guildmaster", ShamanGuildMaster},
   {FALSE,"Trainer: combat", CDGenericTrainer},
   {FALSE,"Trainer: stealth", CDGenericTrainer},     // 145 
   {FALSE,"Trainer: traps", CDGenericTrainer},       

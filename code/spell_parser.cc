@@ -1475,7 +1475,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
   }
   if (isPc() && canSpeak()) {
     if (discArray[which]->minLifeforce && 
-        (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
+        (getRitualismLevel() < RIT_LEV_NO_MANTRA))
       saySpell(which);
   }
 #endif
@@ -2366,6 +2366,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_OFFENSE:
     case SKILL_WHITTLE:
     case SKILL_WIZARDRY:
+    case SKILL_RITUALISM:
     case SKILL_MEDITATE:
     case SKILL_DEVOTION:
     case SKILL_PENANCE:
