@@ -2,23 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: light.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
 //      "light.cc" - Methods for TLight class
-//
-//      Last revision December 18, 1997.
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -109,16 +93,13 @@ void TLight::extinguishWater()
 void TLight::lampLightStuff(TMonster *ch)
 {
   // if lamp is on during day, turn off
-  if (time_info.hours >= (sunRise() + 3) &&
-      time_info.hours < (sunSet() - 3) &&
-      isLit()) {
+  if (is_daytime() && isLit()) {
     ch->doExtinguish(fname(name));
   }
   // if off at night, turn on
-  // note, this starts turning on 2 hours before sun sets
-  if ((time_info.hours < (sunRise() + 3) ||
-       time_info.hours >= sunSet() - 3) &&
-       !isLit())  {
+  // we use !isday rather than isnight so that dawn/twilight will cause
+  // lights to be turned on
+  if (!is_daytime() && !isLit())  {
     ch->doLight(fname(name));
   }
   // refill if < 90% full.  val1 = max, val2 = current
@@ -141,8 +122,8 @@ void TLight::lightDecay()
       putLightOut();
 
       if (roomp && roomp->stuff) {
-        act("$p flickers a bit, and then burns out.",
-                 FALSE, roomp->stuff, this, 0, TO_CHAR);
+        act("$n flickers a bit, and then burns out.",
+                 FALSE, this, 0, 0, TO_ROOM);
         roomp->addToLight(-getLightAmt());
       } else if (parent) {
         act("$p flickers a bit, and then burns out.",
@@ -157,7 +138,7 @@ void TLight::lightDecay()
       }
     } else if (getCurBurn() < 4) {
       if (roomp && roomp->stuff) 
-        act("$p flickers a bit.", FALSE, roomp->stuff, this, 0, TO_CHAR);
+        act("$n flickers a bit.", FALSE, this, 0, 0, TO_ROOM);
       else if (parent) 
         act("$p flickers a bit.", FALSE, parent, this, 0, TO_CHAR);
       else if (equippedBy) 
@@ -211,7 +192,7 @@ void TLight::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_LIGHT) {
       if (!isLit())
-        vlogf(LOW_ERROR,"item %s was defined apply-light.",getName());
+        vlogf(LOG_LOW,"item %s was defined apply-light.",getName());
     }
   }
 }
@@ -413,8 +394,50 @@ void TLight::lightMe(TBeing *ch, silentTypeT silent)
     return;
   } else {
     ch->sendTo("Problems lighting object. Tell a god!\n\r");
-    vlogf(9, "%s had problems lighting an object.", ch->getName());
+    vlogf(LOG_BUG, "%s had problems lighting an object.", ch->getName());
     return;
   }
 }
 
+int TLight::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this!\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  if (isLit()) {
+      act("You concentrate hard on $p, then clap twice.  It goes out.",
+          TRUE, tLunatic, this, NULL, TO_CHAR);
+      act("$n knits $s brow in concentration then claps twice causing $p to go out.",
+          TRUE, tLunatic, this, NULL, TO_ROOM);
+
+      putLightOut();
+  } else {
+    if (tLunatic->roomp->isUnderwaterSector() || getCurBurn() <= 0) {
+      tLunatic->sendTo("You seem unable to do anything to that.\n\r");
+      return FALSE;
+    }
+
+    act("You furrow your brow in concentration then clap twice.",
+        TRUE, tLunatic, this, NULL, TO_CHAR);
+    act("$n furrows $s brow in concentration then claps twice.",
+        TRUE, tLunatic, this, NULL, TO_ROOM);
+    act("$p springs into light.",
+        FALSE, tLunatic, this, NULL, TO_ROOM);
+
+    lightMe(tLunatic, SILENT_YES);
+  }
+
+  return true;
+}

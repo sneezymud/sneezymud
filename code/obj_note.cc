@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: note.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "unistd.h"
 
@@ -142,7 +127,7 @@ void TNote::junkMe(TBeing *ch)
       sprintf(buf, "mobdata/repairs/%d/%d", getRepairman(), tmpnum);
       int rc = unlink(buf);
       if (rc != 0) {
-        vlogf(6, "%s junking apparent ticket (#%d) [%s] that failed to unlink: err=%d, rc=%d",
+        vlogf(LOG_BUG, "%s junking apparent ticket (#%d) [%s] that failed to unlink: err=%d, rc=%d",
             ch->getName(), tmpnum, buf, errno, rc);
       } else {
         // successfully unlinked the repair

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: portal.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -17,7 +9,6 @@
 //
 
 #include "stdsneezy.h"
-#include "create.h"
 
 TPortal::TPortal() :
   TSeeThru(),
@@ -309,9 +300,10 @@ void TPortal::changeObjValue4(TBeing *ch)
 // returns DELETE_THIS, DELETE_VICT(ch)
 int TPortal::enterMe(TBeing *ch)
 {
-  TRoom *rp;
-  int    rc,
-         isRandom = -1;
+  TRoom    *rp;
+  int       rc,
+            isRandom = -1;
+  TPerson *tPerson = dynamic_cast<TPerson *>(ch);
 
   if (isPortalFlag(EX_CLOSED)) {
     ch->sendTo("You can't enter that!  It's closed!\n\r");
@@ -335,6 +327,22 @@ int TPortal::enterMe(TBeing *ch)
   if (isRandom == -1)
     ch->sendTo("You feel strangly pulled in many directions.\n\r");
 
+  if (tPerson && checkOwnersList(tPerson, true)) {
+    // This is done by clerics who create portals then logon lower
+    // level characters of theirs and use them.  So we are going
+    // to do something VERY crual to them for this.
+
+    ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
+    vlogf(LOG_CHEAT, "Player using Portal created by other player in same account! (%s)",
+          ch->getName());
+    rc = ch->genericTeleport(SILENT_NO, true);
+
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
+
+    return FALSE;
+  }
+
   ch->goThroughPortalMsg(this);
   if (isPortalFlag(EX_TRAPPED)) {
     rc = ch->triggerPortalTrap(this);
@@ -349,7 +357,7 @@ int TPortal::enterMe(TBeing *ch)
       return FALSE;
 
     // if we got teleported, go no further
-    if (!ch->sameRoom(this))
+    if (!sameRoom(*ch))
       return FALSE;
   }
   int orig_room = ch->inRoom();
@@ -434,7 +442,7 @@ TPortal * TPortal::findMatchingPortal() const
   TRoom *rp;
 
   if (!(rp = real_roomp(getTarget()))) {
-    vlogf(7, "Bad portal (%s) with destination to NULL room! %d",
+    vlogf(LOG_BUG, "Bad portal (%s) with destination to NULL room! %d",
           getName(), getTarget());
     return NULL;
   }
@@ -452,3 +460,27 @@ TPortal * TPortal::findMatchingPortal() const
   return NULL;
 }
 
+int TPortal::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this!\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) | obj_flags.decay_time <= 0) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus upon $p causing it to shimmer out of existance!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n concentrates upon $p, causing it to vanish!",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  return DELETE_VICT;
+}

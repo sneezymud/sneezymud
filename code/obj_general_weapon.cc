@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: general_weapon.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 
 TGenWeapon::TGenWeapon() :
@@ -97,8 +82,12 @@ string TGenWeapon::statObjInfo() const
 
   sprintf(buf, "Type : %s (%d)",
                attack_hit_text[(getWtype() - TYPE_MIN_HIT)].singular,
-               getWeaponType());
+	  getWeaponType());
   a += buf;
+
+  //  sprintf(buf, "New weapons system stats:\n\r Weapon type: %d\n\r Weapon quality: %d\n\r",
+  //	  getWeapType(),
+  //	  getWeapQual());
 
   return a;
 }
@@ -116,20 +105,20 @@ float TThing::blowCountSplitter(const TBeing *, bool) const
 void TGenWeapon::lowCheck()
 {
   if ((int) getWeight() < 1)
-    vlogf(LOW_ERROR,"weapon %s has a bad weight set.",
+    vlogf(LOG_LOW,"weapon %s has a bad weight set.",
              getName());
 
   if ((getVolume() <= 800) && (getWeight() < 3))
     if (!canWear(ITEM_THROW))
-      vlogf(LOW_ERROR,"weapon %s probably needs to be set throwable.",
+      vlogf(LOG_LOW,"weapon %s probably needs to be set throwable.",
               getName());
 
   if (getWeaponType() == WEAPON_TYPE_NONE)
-    vlogf(LOW_ERROR,"weapon %s needs a weapon_type defined",
+    vlogf(LOG_LOW,"weapon %s needs a weapon_type defined",
              getName());
 
   if (!isBluntWeapon() && !isSlashWeapon() && !isPierceWeapon())
-    vlogf(LOW_ERROR,"weapon %s has bogus type apparently.",
+    vlogf(LOG_LOW,"weapon %s has bogus type apparently.",
              getName());
 
   TBaseWeapon::lowCheck();

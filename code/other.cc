@@ -19,7 +19,7 @@ extern "C" {
 #include "account.h"
 #include "games.h"
 #include "mail.h"
-#include "drug.h"
+#include "obj_drug.h"
 #include "skillsort.h"
 #include "board.h"
 

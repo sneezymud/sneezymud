@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: drawpoker.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
 
   SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
@@ -64,7 +49,7 @@ int DrawPokerGame::getNextPlayer(const TBeing *tChar)
   getPlayers(tChar, &ch[0], &ch[1], &ch[2], &ch[3], &ch[4]);
 
   if ((playerNum = index(tChar)) < 0) {
-    vlogf(10, "DrawPoker::getNextPlayer called by player not at poker table.");
+    vlogf(LOG_BUG, "DrawPoker::getNextPlayer called by player not at poker table.");
     return 0;
   }
 
@@ -72,7 +57,7 @@ int DrawPokerGame::getNextPlayer(const TBeing *tChar)
     if (ch[playerIndex] && hands[playerIndex][0] && inuse[playerIndex])
       return index(ch[playerIndex]);
 
-  vlogf(10, "DrawPoker::getNextPlayer called when apparently no next player!");
+  vlogf(LOG_BUG, "DrawPoker::getNextPlayer called when apparently no next player!");
 
   return index(tChar);
 }
@@ -99,7 +84,7 @@ const string DrawPokerGame::score() const
   ch[5] = get_char_room(names[5], ROOM_DRAWPOKER);
 
   if (!ch[0] || !ch[1]) {
-    vlogf(10, "DrawPoker::score() called without two poker players!");
+    vlogf(LOG_BUG, "DrawPoker::score() called without two poker players!");
     return "";
   }
 
@@ -132,7 +117,7 @@ const string DrawPokerGame::bets() const
   ch[5] = get_char_room(names[5], ROOM_DRAWPOKER);
 
   if (!ch[0] || !ch[1]) {
-    vlogf(10, "DrawPoker::bets() called without two poker players!");
+    vlogf(LOG_BUG, "DrawPoker::bets() called without two poker players!");
     return "";
   }
 
@@ -196,7 +181,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(10, "%s got into DrawPoker::deal without being at the poker table!",
+    vlogf(LOG_BUG, "%s got into DrawPoker::deal without being at the poker table!",
           ch->getName());
     return;
   }
@@ -223,7 +208,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   anteCost     = anteCosts[0];
 
   if (*tArg) {
-    vlogf(10, "DrawPoker::deal [%s]", tArg);
+    vlogf(LOG_LAPSOS, "DrawPoker::deal [%s]", tArg);
 
     do {
       half_chop(tArg, tString, tBuffer);
@@ -502,7 +487,7 @@ int DrawPokerGame::exitGame(const TBeing *ch)
          *ch6 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "%s left a poker table %s wasn't at!",
+    vlogf(LOG_BUG, "%s left a poker table %s wasn't at!",
           ch->getName(), ch->hssh());
     return FALSE;
   }
@@ -619,7 +604,7 @@ int DrawPokerGame::new_deal()
   isbidding         = false;
 
   if (!getPlayers(tChar[0], &tChar[1], &tChar[2], &tChar[3], &tChar[4], &tChar[5])) {
-    vlogf(10, "DrawPoker::new_deal called with less than 2 players!");
+    vlogf(LOG_BUG, "DrawPoker::new_deal called with less than 2 players!");
     return FALSE;
   }
 
@@ -651,7 +636,7 @@ void DrawPokerGame::pass(const TBeing *ch)
   TBeing *tChar[6];
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "DrawPoker::pass called by player not in game.");
+    vlogf(LOG_BUG, "DrawPoker::pass called by player not in game.");
     return;
   }
 
@@ -708,7 +693,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   char    tBuffer[256];
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "DrawPoker::bet called by player not in game.\n\r");
+    vlogf(LOG_BUG, "DrawPoker::bet called by player not in game.\n\r");
     return;
   }
 
@@ -812,7 +797,7 @@ void DrawPokerGame::stop(const TBeing *ch)
   char    tString[256];
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "DrawPoker::stop called by player not in game.");
+    vlogf(LOG_BUG, "DrawPoker::stop called by player not in game.");
     return;
   }
 
@@ -899,7 +884,7 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
   char    tString[256];
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "DrawPoker::discard called by player not in game.");
+    vlogf(LOG_BUG, "DrawPoker::discard called by player not in game.");
     return;
   }
 
@@ -1031,7 +1016,7 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     if (handHighs[playerIndex][0] == -1)
       handHighs[playerIndex][0] = getHighCard(playerIndex, 0);
 
-    vlogf(10, "DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d",
+    vlogf(LOG_LAPSOS, "DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d",
           hasStraight, hasFlush, hasTwoPair, hasSecondTwoPair, hasThreePair, hasFourPair,
           handHighs[playerIndex][0], handHighs[playerIndex][1], playerIndex);
 
@@ -1081,7 +1066,7 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
   }
 
   if (winnerCount == 0)
-    vlogf(10, "Something went very wrong in DrawPoker::findWinner.  No Winner Found.");
+    vlogf(LOG_BUG, "Something went very wrong in DrawPoker::findWinner.  No Winner Found.");
   else if (winnerCount > 1) {
     for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
       if (handScores[playerIndex] > winnerNum ||
@@ -1270,7 +1255,7 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
       WinLoss;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "DrawPoker::settleUp called by player not in the game!");
+    vlogf(LOG_BUG, "DrawPoker::settleUp called by player not in the game!");
     return;
   }
 
@@ -1289,7 +1274,7 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
 
   tChar = get_char_room(names[index(ch)], ROOM_DRAWPOKER);
   if (!tChar) {
-    vlogf(9, "WHOA, lost player in drawpoker [%s][index=%d][name=%s]", ch->getName(), index(ch), names[index(ch)]);
+    vlogf(LOG_BUG, "WHOA, lost player in drawpoker [%s][index=%d][name=%s]", ch->getName(), index(ch), names[index(ch)]);
     return;
   }
 

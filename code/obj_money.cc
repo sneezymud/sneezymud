@@ -82,7 +82,7 @@ TMoney *create_money(int amount)
   delete [] money->shortDescr;
   delete [] money->getDescr();
   if (amount == 1) {
-    money->setName(mud_str_dup("talens money"));
+    money->name = mud_str_dup("talens money");
     money->shortDescr = mud_str_dup("a talen");
     money->setDescr(mud_str_dup("One miserable talen lies here."));
 
@@ -90,7 +90,7 @@ TMoney *create_money(int amount)
     new_descr->description = mud_str_dup("One miserable talen.\n\r");
 
   } else {
-    money->setName(mud_str_dup("talens money"));
+    money->name = mud_str_dup("talens money");
     money->shortDescr = mud_str_dup("some talens");
     if (amount > 100000)
       sprintf(buf, "A tremendously HUGE pile of talens lies here.");
@@ -170,7 +170,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   bool isMyCorpse = false;
   TPerson *tP;
 
-  if (sub && isname(ch->getName(), sub->getName()) && dynamic_cast<TPCorpse*>(sub))
+  if (sub && isname(ch->name, sub->name) && dynamic_cast<TPCorpse*>(sub))
     isMyCorpse = true;
 
   if ((tP = dynamic_cast<TPerson *>(ch)))
@@ -207,7 +207,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
         tmons->UA(1);
     }
   }
-  if (sub && isname("slot", sub->getName()))
+  if (sub && isname("slot", sub->name))
     ch->addToMoney(amount, GOLD_GAMBLE);
   else if (isMyCorpse) {
     ch->addToMoney(amount, GOLD_INCOME);
@@ -223,7 +223,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     ch->addToMoney(amount, GOLD_INCOME);
 
   // don't split coins from my own corpse
-  if (!sub || !isname(fname(ch->getName()).c_str(), sub->getName())) {
+  if (!sub || !isname(fname(ch->name).c_str(), sub->name)) {
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
         (ch->master || ch->followers)){

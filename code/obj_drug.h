@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: drug.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -52,5 +45,9 @@ class drugData {
     drugData & operator =(const drugData &t);
 
 };
+
+
+void applyDrugAffects(TBeing *, drugTypeT, bool);
+void applyAddictionAffects(TBeing *, drugTypeT, int);
 
 #endif

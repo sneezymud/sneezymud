@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: opal.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD++ 4.5 - All rights reserved, SneezyMUD Coding Team
@@ -220,10 +205,37 @@ void TOpal::lowCheck()
 {
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && ap) {
-    vlogf(LOW_ERROR, "Opal (%s:%d) has a bad price (%d).  should be (%d)",
+    vlogf(LOG_LOW, "Opal (%s:%d) has a bad price (%d).  should be (%d)",
          getName(), objVnum(), obj_flags.cost, ap);
     obj_flags.cost = ap;
   }
 
   TObj::lowCheck();
+}
+
+int TOpal::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this!\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || psGetMana() >= psGetMaxMana()) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus upon $p causing it to glow violently!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n concentrates upon $p, causing it to glow violently!",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  psSetMana(min(psGetMaxMana(), (psGetMana() + ::number(1, 4))));
+
+  return true;
 }

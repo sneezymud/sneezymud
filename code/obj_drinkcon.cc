@@ -2,7 +2,22 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: drinkcon.cc,v $
+// $Log: obj_drinkcon.cc,v $
+// Revision 5.1  2001/07/13 05:32:20  peel
+// renamed a bunch of source files
+//
+// Revision 5.1.1.4  2001/01/25 03:28:55  dash
+// added cola drinktype
+//
+// Revision 5.1.1.3  2000/09/04 04:38:08  jesus
+// *** empty log message ***
+//
+// Revision 5.1.1.2  2000/01/27 17:49:53  batopr
+// renamed classes project
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -40,7 +55,7 @@ TDrinkCon::~TDrinkCon()
 {
 }
 
-void TDrinkCon::findSomeDrink(TDrinkCon **last_good, TContainer **last_cont, TContainer *cont)
+void TDrinkCon::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_cont, TBaseContainer *cont)
 {
   if ((getDrinkUnits() > 0) && (getLiqThirst() > 0)) {
     *last_good = this;
@@ -154,4 +169,6 @@ void assign_drink_types()
   DrinkInfo[LIQ_HOLYWATER] = new drinkInfo(0,  1, -5, "clear", "holy water");
   DrinkInfo[LIQ_PORT] = new drinkInfo(8, -1,  5, "<R>red<1>", "<R>port<1>");
   DrinkInfo[LIQ_MUSHROOM_ALE] = new drinkInfo(7, -1,  5, "<g>green<1>", "<g>mushroom<1><o> ale<1>");
+  DrinkInfo[LIQ_VOMIT] = new drinkInfo(8, -1,  5, "<G>light green<1>", "<G>v<o>o<G>m<o>i<G>t<1>");
+  DrinkInfo[LIQ_COLA] = new drinkInfo(-1, 2, 5, "<o>brown<1>", "<o>cola<1>");
 }

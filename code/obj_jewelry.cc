@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: jewelry.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // jewelry.cc
 //
 
@@ -63,7 +48,7 @@ void TJewelry::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if ((affected[i].location == APPLY_ARMOR) &&
         (affected[i].modifier > 1))
-      vlogf(LOW_ERROR, "jewelry (%s : %d) had armor, bad!",
+      vlogf(LOG_LOW, "jewelry (%s : %d) had armor, bad!",
          getName(), objVnum());
   }
 

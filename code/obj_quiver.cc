@@ -2,7 +2,16 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: quiver.cc,v $
+// $Log: obj_quiver.cc,v $
+// Revision 5.1  2001/07/13 05:32:20  peel
+// renamed a bunch of source files
+//
+// Revision 5.1.1.2  2000/01/23 17:02:18  batopr
+// fixed misspelling
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -92,7 +101,7 @@ int TQuiver::openMe(TBeing *ch)
   } else if (isContainerFlag(CONT_TRAPPED)) {
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
       if (detectTrapObj(ch, this)) {
-        sprintf(buf, "You start to open $p, but then notice an insideous %s trap...",
+        sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
               good_uncap(trap_types[getContainerTrapType()]).c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
         return FALSE;

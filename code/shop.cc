@@ -5,7 +5,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "statistics.h"
-#include "drug.h"
+#include "obj_drug.h"
 
 vector<shopData>shop_index(0);
 

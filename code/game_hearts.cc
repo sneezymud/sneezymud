@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: hearts.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*************************************************************************
 
       SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -69,7 +54,7 @@ const string HeartsGame::hearts_score()
   ch4 = get_char_room(names[3], ROOM_HEARTS);
 
   if (!ch1 || !ch2 || !ch3 || !ch4) {
-    vlogf(10, "hearts_score() called without four hearts players!");
+    vlogf(LOG_BUG, "hearts_score() called without four hearts players!");
     return "";
   }
   score1 = score[0];
@@ -107,7 +92,7 @@ void HeartsGame::deal(TBeing *ch)
   TBeing *left = NULL, *across = NULL, *right = NULL;
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into HeartsGame::deal without being at the hearts table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into HeartsGame::deal without being at the hearts table!", ch->getName());
     return;
   }
   if (game) {
@@ -337,8 +322,7 @@ int HeartsGame::new_deal()
         countx += 13;
     }
     if (!in_range(tricks[i][4], 0, 3)) {
-       vlogf(10, "Bad number in HeartsGame::new_deal for winner of trick! (%d)",
-tricks[i][4]);
+       vlogf(LOG_BUG, "Bad number in HeartsGame::new_deal for winner of trick! (%d)", tricks[i][4]);
        return FALSE;
     }
     scores[tricks[i][4]] += countx;
@@ -365,7 +349,7 @@ tricks[i][4]);
     ch4 = get_char_room(names[3], ROOM_HEARTS);
   
     if (!ch1 || !ch2 || !ch3 || !ch4) {
-      vlogf(10, "HeartsGame::new_deal called without four hearts players!");
+      vlogf(LOG_BUG, "HeartsGame::new_deal called without four hearts players!");
       return FALSE;
     }
     ipass = (ipass == PASS_NONE) ? PASS_LEFT : ipass + 1;
@@ -390,7 +374,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
   int i, which, winner = 0, wincard = 0, high = 0;
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "HeartsGame::new_round called with ch not at hearts table!");
+    vlogf(LOG_BUG, "HeartsGame::new_round called with ch not at hearts table!");
     return FALSE;
   }
   for (i = 0; i < 4; i++) {
@@ -419,7 +403,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
   }
 
   if (!(won = get_char_room(names[winner], ROOM_HEARTS))) {
-    vlogf(10, "Null character for won in HeartsGame::new_round()");
+    vlogf(LOG_BUG, "Null character for won in HeartsGame::new_round()");
     return FALSE;
   }
   sendrpf(won->roomp, "%s takes the trick with the %s.\n\r", won->getName(), pretty_card_printout(NULL, pilex[wincard]).c_str());
@@ -524,7 +508,7 @@ void HeartsGame::pass(TBeing *ch, const char *arg)
   for (; isspace(*arg); arg++);
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into hearts_pass without being at the hearts table!\n\r", ch->getName());
+    vlogf(LOG_BUG, "%s got into hearts_pass without being at the hearts table!\n\r", ch->getName());
     return;
   }
   if (!passing || !canpass[which]) {

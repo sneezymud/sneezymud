@@ -2,7 +2,13 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: blackjack.cc,v $
+// $Log: game_blackjack.cc,v $
+// Revision 5.1  2001/07/13 05:32:20  peel
+// renamed a bunch of source files
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //

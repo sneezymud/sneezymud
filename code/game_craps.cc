@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: craps.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -94,7 +79,7 @@ void Craps::loseDice()
   if (!the_dice || the_dice->objVnum() != CRAPS_DICE) {
     the_dice = dynamic_cast<TObj *>(m_ch->heldInSecHand());
     if (!the_dice || the_dice->objVnum() != CRAPS_DICE) {
-      vlogf(10, "loseDice called without dice held???");
+      vlogf(LOG_BUG, "loseDice called without dice held???");
     }
   }
   
@@ -406,7 +391,7 @@ int Craps::checkCraps(int diceroll)
   int newRoll = FALSE;
 
   if (!m_ch->roomp) {
-    vlogf(10, "checkCraps() called with NULL roomp!");
+    vlogf(LOG_BUG, "checkCraps() called with NULL roomp!");
     return FALSE;
   }
   if ((diceroll != 2) && (diceroll != 3) && (diceroll != 12))
@@ -459,7 +444,7 @@ int Craps::checkSeven(int diceroll)
     pointRoll = m_ch->desc->point_roll;
     m_ch->desc->point_roll = 0;
   } else {
-    vlogf(5, "Somehow m_ch without a desc got to checkSeven");
+    vlogf(LOG_BUG, "Somehow m_ch without a desc got to checkSeven");
   }
 
   for (t = m_ch->roomp->stuff; t; t = t->nextThing) {
@@ -570,7 +555,7 @@ void Craps::checkOnerollSeven(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in checkOnerollSeven()");
+    vlogf(LOG_BUG, "No better desc in checkOnerollSeven()");
     return;
   }
   if (diceroll == 7) {
@@ -588,7 +573,7 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in checkHorn()");
+    vlogf(LOG_BUG, "No better desc in checkHorn()");
     return;
   }
   if ((diceroll > 3) || (diceroll < 11))
@@ -614,7 +599,7 @@ void Craps::checkField(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in checkField()");
+    vlogf(LOG_BUG, "No better desc in checkField()");
     return;
   }
   crap_man = FindMobInRoomWithProcNum(ch->in_room, SPEC_CRAPSGUY);
@@ -668,7 +653,7 @@ void Craps::checkTwo(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in check_two()");
+    vlogf(LOG_BUG, "No better desc in check_two()");
     return;
   }
   if (diceroll == 2) {
@@ -689,7 +674,7 @@ void Craps::checkThree(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in check_three()");
+    vlogf(LOG_BUG, "No better desc in check_three()");
     return;
   }
   if (diceroll == 3) {
@@ -710,7 +695,7 @@ void Craps::checkOnerollEleven(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in check_oneroll_eleven()");
+    vlogf(LOG_BUG, "No better desc in check_oneroll_eleven()");
     return;
   }
   if (diceroll == 11) {
@@ -731,7 +716,7 @@ void Craps::checkTwelve(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in check_twelve()");
+    vlogf(LOG_BUG, "No better desc in check_twelve()");
     return;
   }
   if (diceroll == 12) {
@@ -749,7 +734,7 @@ void Craps::checkOnerollCraps(int diceroll, TBeing *ch)
   Descriptor *d;
 
   if (!(d = ch->desc)) {
-    vlogf(10, "No better desc in check_oneroll_craps()");
+    vlogf(LOG_BUG, "No better desc in check_oneroll_craps()");
     return;
   }
   if (diceroll == 3) {

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: commodity.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -60,15 +52,15 @@ string TCommodity::statObjInfo() const
 void TCommodity::lowCheck()
 {
   if (!isname("commodity", name)) {
-    vlogf(LOW_ERROR, "raw material without COMMODITY in name (%s : %d)",
+    vlogf(LOG_LOW, "raw material without COMMODITY in name (%s : %d)",
                getName(), objVnum());
   }
   if (!numUnits()) {
-    vlogf(LOW_ERROR, "raw material needs weight above 0.0 (%s : %d)",
+    vlogf(LOG_LOW, "raw material needs weight above 0.0 (%s : %d)",
                getName(), objVnum());
   }
   if (!pricePerUnit()) {
-    vlogf(LOW_ERROR, "raw material needs price above 0 (%s : %d)",
+    vlogf(LOG_LOW, "raw material needs price above 0 (%s : %d)",
                getName(), objVnum());
   }
 
@@ -113,7 +105,7 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int discount = 100;
 
   if (parent != keeper) {
-    vlogf(8, "Error: buy_treasure():shop.cc  obj not on keeper");
+    vlogf(LOG_BUG, "Error: buy_treasure():shop.cc  obj not on keeper");
     return;
   }
   if (!trade_with(this, shop_nr)) {
@@ -171,7 +163,7 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   } else {
     // this happens with sub zero weight components
-    vlogf(5, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
+    vlogf(LOG_BUG, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
   }
 
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
@@ -264,7 +256,7 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
     *ch += *ch->unequip(eq_pos);
 
   if (bag && bag != ch) {
-    rc = get(ch, this, bag);
+    rc = get(ch, this, bag, GETOBJOBJ, true);
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       return DELETE_THIS;
     }

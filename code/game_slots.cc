@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: slots.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*************************************************************************
 
       SneezyMUD 3.0 - All rights reserved, SneezyMUD Coding Team
@@ -338,7 +323,7 @@ void spin_slot(TBeing *ch)
 	ch->desc->bet.slot = 0;
 	return;
       } else {
-	vlogf(10, "No slot machine in room %d", ch->in_room);
+	vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
 	return;
       }
     } else {
@@ -350,7 +335,7 @@ void spin_slot(TBeing *ch)
 	ch->desc->bet.slot = 0;
 	return;
       } else {
-	vlogf(10, "No slot machine in room %d", ch->in_room);
+	vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
 	return;
       }
     }
@@ -363,7 +348,7 @@ void spin_slot(TBeing *ch)
       ch->desc->bet.slot = 0;
       return;
     } else {
-      vlogf(10, "No slot machine in room %d", ch->in_room);
+      vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
       return;
     }
   } else if (!strcmp(fruit3, "bally") && !strcmp(fruit2, fruit1)) {
@@ -375,7 +360,7 @@ void spin_slot(TBeing *ch)
       ch->desc->bet.slot = 0;
       return;
     } else {
-      vlogf(10, "No slot machine in room %d", ch->in_room);
+      vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
       return;
     }
   } else {

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: fuel.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD++ 4.5 - All rights reserved, SneezyMUD Coding Team
@@ -149,7 +134,7 @@ void TFuel::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TFuel::lowCheck()
 {
   if (getCurFuel() > getMaxFuel())
-    vlogf(LOW_ERROR,"fuel %s had more current fuel than max.", getName());
+    vlogf(LOG_LOW,"fuel %s had more current fuel than max.", getName());
 
   TObj::lowCheck();
 }
@@ -195,4 +180,65 @@ float TFuel::getTotalWeight(bool pweight) const
     amt /= getMaxFuel();
 
   return amt;
+}
+
+int TFuel::chiMe(TBeing *tLunatic)
+{
+  int     tMana  = ::number(10, 30),
+          bKnown = tLunatic->getSkillLevel(SKILL_CHI),
+          tDamage,
+          tRc = DELETE_VICT;
+  TThing *tThing,
+         *tNextThing;
+  TBeing *tBeing;
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this!\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (tLunatic->checkPeaceful("Violent things can not be done here and something tells you that would be violent!"))
+    return FALSE;
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus upon $p causing it to blow up violently!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n concentrates upon $p, causing it to blow up violently",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  tDamage = max(1, (::number((getCurFuel() / 2), getCurFuel()) / 10));
+
+  for (tThing = roomp->stuff; tThing; tThing = tNextThing) {
+    tNextThing = tThing->nextThing;
+
+    if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || tBeing->isImmortal())
+      continue;
+
+    act("You are struck by the flames, caused by $n!",
+        FALSE, tLunatic, NULL, tBeing, TO_VICT);
+
+    if (tBeing->isPc()) {
+      if (tBeing->reconcileDamage(tBeing, ::number(1, tDamage), DAMAGE_FIRE) == -1) {
+        if (tBeing == tLunatic)
+          ADD_DELETE(tRc, (DELETE_THIS | RET_STOP_PARSING));
+        else {
+          delete tThing;
+          tThing = NULL;
+        }
+      }
+    } else {
+      if (tLunatic->reconcileDamage(tBeing, ::number(1, tDamage), DAMAGE_FIRE) == -1) {
+        delete tThing;
+        tThing = NULL;
+      }
+    }
+  }
+
+  return tRc;
 }

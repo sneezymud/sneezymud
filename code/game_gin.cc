@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: gin.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team         //
@@ -45,7 +30,7 @@ void GinGame::deal(TBeing *ch)
   TBeing *ch1, *ch2;
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into GinGame::deal without being at the gin table!\n\r", ch->getName());
+    vlogf(LOG_BUG, "%s got into GinGame::deal without being at the gin table!\n\r", ch->getName());
     return;
   }
   if (game) {
@@ -56,7 +41,7 @@ void GinGame::deal(TBeing *ch)
   ch2 = get_char_room(names[which], GIN_TABLE);
 
   if (!ch1 || !ch2) {
-    vlogf(10, "GinGame::deal() called without two players!");
+    vlogf(LOG_BUG, "GinGame::deal() called without two players!");
     return;
   }
   shuffle();
@@ -319,11 +304,11 @@ void GinGame::win(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into GinGame::win() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into GinGame::win() while not at a gin table!", ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
-    vlogf(10, "GinGame::win() called without two players!");
+    vlogf(LOG_BUG, "GinGame::win() called without two players!");
     return;
   }
   ch->sendTo("You win the game! The score is : %s.\n\r", gin_score().c_str());
@@ -343,11 +328,11 @@ void GinGame::win_hand(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into GinGame::win() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into GinGame::win() while not at a gin table!", ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
-    vlogf(10, "GinGame::win_hand() called without two players!");
+    vlogf(LOG_BUG, "GinGame::win_hand() called without two players!");
     return;
   }
   ch->sendTo("You win the hand! The score is : %s.\n\r", gin_score().c_str());
@@ -367,11 +352,11 @@ void GinGame::gin(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into gin() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into gin() while not at a gin table!", ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
-    vlogf(10, "gin() called without two players!");
+    vlogf(LOG_BUG, "gin() called without two players!");
     return;
   }
   if ((low = can_knock_or_gin(other)) == -1)
@@ -407,11 +392,11 @@ void GinGame::knock(TBeing *ch, int low)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into () while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into () while not at a gin table!", ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
-    vlogf(10, "knock() called without two players!");
+    vlogf(LOG_BUG, "knock() called without two players!");
     return;
   }
   if ((other_low = can_knock_or_gin(other)) == -1)
@@ -634,7 +619,7 @@ int GinGame::can_knock_or_gin(TBeing *ch)
   Hand hand;
 
   if ((which = index(ch)) < 0) {
-    vlogf(10, "%s got into can_knock_or_gin without being at the gin table!", ch->getName());
+    vlogf(LOG_BUG, "%s got into can_knock_or_gin without being at the gin table!", ch->getName());
     return -1;
   }
   total = total_not_in_book(hands[which], &hand);
@@ -764,7 +749,7 @@ const string GinGame::gin_score()
   ch2 = get_char_room(names[1], GIN_TABLE);
 
   if (!ch1 || !ch2) {
-    vlogf(10, "gin_score() called without two gin players!");
+    vlogf(LOG_BUG, "gin_score() called without two gin players!");
     return "";
   }
   score1 = score[0];

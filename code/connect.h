@@ -1,20 +1,7 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: connect.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #ifndef __CONNECT_H
 #define __CONNECT_H
+
+#include "obj_drug.h"
 
 const unsigned short int PROMPT_HIT               = (1<<0);
 const unsigned short int PROMPT_MANA              = (1<<1);
@@ -53,6 +40,7 @@ enum connectStateT {
        CON_QRACE,
        CON_DELETE,
        CON_STAT_COMBAT,
+       CON_STAT_COMBAT2,
        CON_QHANDS,
        CON_DISCON,
        CON_NEWACT,
@@ -163,7 +151,8 @@ class textQ
     void putInQ(const char *txt);
 };
 
-class editStuff {
+class editStuff
+{
   public:
     int x, y;        // Current x andy position on the screen for cursor
     int bottom, end; // Bottom of text, and end of current line
@@ -174,7 +163,8 @@ class editStuff {
     ~editStuff();
 };
     
-class careerData {
+class careerData
+{
   public:
     unsigned int kills;            // keep up with kills I've made
     unsigned int group_kills;            // keep up with kills I've made
@@ -219,6 +209,8 @@ class careerData {
     unsigned int crit_eviscerate_suff;
     unsigned int crit_kidney;
     unsigned int crit_kidney_suff;
+    unsigned int crit_genitalia;
+    unsigned int crit_genitalia_suff;
     unsigned int skill_success_attempts;
     unsigned int skill_success_pass;
     unsigned int spell_success_attempts;
@@ -254,6 +246,7 @@ class careerData {
       crit_impale = crit_impale_suff = 0;
       crit_eviscerate = crit_eviscerate_suff = 0;
       crit_kidney = crit_kidney_suff = 0;
+      crit_genitalia = crit_genitalia_suff = 0;
       arena_victs = arena_loss = 0;
       skill_success_attempts = 0;
       skill_success_pass = 0;
@@ -279,7 +272,8 @@ class careerData {
     }
 };
 
-class sessionData {
+class sessionData
+{
   public:
     time_t connect;
     int kills;
@@ -349,7 +343,8 @@ class sessionData {
     }
 };
 
-class promptData {
+class promptData
+{
   public:
     unsigned short int type;
     char hpColor[20];
@@ -369,7 +364,8 @@ class promptData {
 };
 
 // Descriptor class
-class Descriptor {
+class Descriptor
+{
   public:
     TSocket *socket;
     editStuff edit;
@@ -383,7 +379,7 @@ class Descriptor {
     char **str;                   // for the modify-str system
     int max_str;
     int prompt_mode;              // control of prompt-printing 
-    char raw[4096];               // buffer for raw input    
+    char m_raw[4096];               // buffer for raw input    
     textQ output;                 // q of strings to send    
     textQ input;                  // q of unprocessed input  
     sessionData session;          // data for this session
@@ -408,11 +404,15 @@ class Descriptor {
     byte screen_size;
     byte point_roll;
     time_t talkCount;
-    bool client;
+    bool m_bIsClient;
     sh_int bad_login;              // login catches for hackers 
-    byte severity;
+    int severity;
+    int office;
+    int blockastart;
+    int blockaend;
+    int blockbstart;
+    int blockbend;
     lastChangeData last;
-    poofinData poof;
     ubyte deckSize;
     char delname[20];
     promptData prompt_d;
@@ -436,7 +436,7 @@ class Descriptor {
     void flushInput();
     int sendLogin(const char *);
     bool checkForMultiplay();
-    bool checkForAccount(char *);
+    bool checkForAccount(char *, bool silent = FALSE);
     bool checkForCharacter(char *);
     int doAccountStuff(char *);
     int clientCreateAccount(char *);
@@ -467,8 +467,8 @@ class Descriptor {
     void writeToQ(const char *arg);
     void clientf(const char *msg,...);
     bool page_file(const char *);
-    void page_string(const char *, int, bool allow = FALSE);
-    void show_string(const char *, bool, bool);
+    void page_string(const char *, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
+    void show_string(const char *, showNowT, allowReplaceT);
     const string badClassMessage(int Class, bool multi = FALSE, bool triple = FALSE);
 #if 0
     char *badRaceMessage(int race);

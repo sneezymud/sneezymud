@@ -149,9 +149,9 @@ LDFLAGS +=-lmysqlclient
 
 OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	alignment_deity.o ansi.o \
-	being.o blackjack.o body.o \
-	bounty_hunter.o breath.o \
-	cards.o client.o \
+	being.o game_blackjack.o body.o \
+	spec_mobs_bounty_hunter.o breath.o \
+	game_cards.o client.o \
 	cmd_attribute.o cmd_show.o \
 	cmd_bash.o cmd_bodyslam.o cmd_charge.o cmd_chop.o \
 	cmd_compare.o cmd_consider.o \
@@ -168,8 +168,8 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	cmd_visible.o cmd_who.o \
 	cmd_zonefile.o \
 	cmd_zones.o color.o colorstring.o \
-	combat.o comm.o commodity.o components.o connect.o constants.o \
-	craps.o crazyeights.o create_engine.o \
+	combat.o comm.o obj_commodity.o components.o connect.o constants.o \
+	game_craps.o game_crazyeights.o create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
 	db.o disc_adventuring.o disc_aegis.o disc_afflictions.o disc_air.o \
 	disc_alchemy.o disc_animal.o disc_blunt.o disc_brawling.o \
@@ -184,17 +184,17 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_shaman_skunk.o \
 	disc_slash.o disc_smythe.o disc_sorcery.o disc_spirit.o \
 	disc_survival.o disc_theology.o disc_thief.o disc_warrior.o \
-	disc_water.o disc_wrath.o discipline.o disease.o doors.o drawpoker.o \
-	drinkcon.o drug_container.o drug.o edit.o enum.o equip.o \
-	expandable_container.o faction.o flame.o food.o fuel.o gaining.o \
-	gemstone.o general_weapon.o 
+	disc_water.o disc_wrath.o discipline.o disease.o doors.o game_drawpoker.o \
+	obj_drinkcon.o obj_drug_container.o obj_drug.o edit.o enum.o equip.o \
+	obj_expandable_container.o faction.o flame.o food.o obj_fuel.o gaining.o \
+	obj_gemstone.o obj_general_weapon.o 
 
-OBJ2 = gin.o handler.o hearts.o hospital.o immortal.o immunity.o \
-	indexdata.o info.o inventory.o jewelry.o key.o keyring.o light.o \
+OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
+	indexdata.o info.o inventory.o obj_jewelry.o obj_key.o obj_keyring.o obj_light.o \
 	limbs.o limits.o loadset.o luck.o magic_item.o magic_off.o \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
-	meeting.o mob_loader.o mobact.o money.o monster.o movement.o \
-	multiclass.o newbie.o note.o obj.o \
+	meeting.o mob_loader.o mobact.o obj_money.o monster.o movement.o \
+	multiclass.o newbie.o obj_note.o obj.o \
 	obj_armor.o obj_armor_wand.o obj_arrow.o obj_appliedsub.o \
 	obj_audio.o \
 	obj_bag.o obj_bandaid.o obj_base_clothing.o \
@@ -210,9 +210,9 @@ OBJ2 = gin.o handler.o hearts.o hospital.o immortal.o immunity.o \
 	obj_vial.o \
 	obj_wand.o obj_window.o obj_worn.o \
 	offense.o oldlimbs.o oldrace.o \
-	opal.o opinion.o organic.o other.o other_obj.o parse.o peelpk.o \
-	pen.o periodic.o pets.o physics.o player_corpse.o player_data.o \
-	poker.o pool.o portal.o spec_mobs_posse.o potion.o quiver.o race.o range.o \
+	obj_opal.o opinion.o organic.o other.o other_obj.o parse.o peelpk.o \
+	obj_pen.o periodic.o pets.o physics.o player_corpse.o player_data.o \
+	poker.o obj_pool.o obj_portal.o spec_mobs_posse.o obj_potion.o obj_quiver.o race.o range.o \
 	rent.o repair.o response.o riding.o room.o \
 	shop.o show.o signals.o skill_dam.o skills.o \
 	slots.o socket.o sound.o spec_mobs.o \
@@ -283,7 +283,7 @@ GEN_HEADS    = structs.h obj.h thing.h being.h body.h room.h person.h \
                skills.h toggle.h limbs.h immunity.h stats.h \
                sound.h enum.h wiz_powers.h cmd_message.h create.h cmd_dissect.h
 
-CASINO_HEADS = games.h crazyeights.h drawpoker.h
+CASINO_HEADS = games.h game_crazyeights.h game_drawpoker.h
 
 DISC_HEADS   = disc_adventuring.h disc_aegis.h disc_afflictions.h \
                disc_air.h disc_animal.h disc_blunt.h \
@@ -317,9 +317,9 @@ $(OBJDIR)ai_commands.o: combat.h
 $(OBJDIR)ai_reactions.o: combat.h
 $(OBJDIR)ai_responses.o: combat.h parse.h
 $(OBJDIR)ai_utility.o: combat.h
-$(OBJDIR)blackjack.o: $(CASINO_HEADS)
-$(OBJDIR)bounty_hunter.o: shop.h
-$(OBJDIR)cards.o: $(CASINO_HEADS)
+$(OBJDIR)game_blackjack.o: $(CASINO_HEADS)
+$(OBJDIR)spec_mobs_bounty_hunter.o: shop.h
+$(OBJDIR)game_cards.o: $(CASINO_HEADS)
 $(OBJDIR)client.o: statistics.h
 $(OBJDIR)cmd_bash.o: combat.h
 $(OBJDIR)cmd_bodyslam.o: combat.h
@@ -353,11 +353,11 @@ $(OBJDIR)cmd_who.o: statistics.h games.h
 $(OBJDIR)combat.o: combat.h statistics.h range.h mail.h spelltask.h shop.h
 $(OBJDIR)comm.o: task.h socket.h sneezy_signals.h systemtask.h
 $(OBJDIR)insure.o: task.h socket.h sneezy_signals.h systemtask.h
-$(OBJDIR)commodity.o: shop.h
+$(OBJDIR)obj_commodity.o: shop.h
 $(OBJDIR)components.o: components.h shop.h
 $(OBJDIR)connect.o: statistics.h mail.h $(CASINO_HEADS) socket.h
-$(OBJDIR)craps.o: $(CASINO_HEADS)
-$(OBJDIR)crazyeights.o: $(CASINO_HEADS)
+$(OBJDIR)game_craps.o: $(CASINO_HEADS)
+$(OBJDIR)game_crazyeights.o: $(CASINO_HEADS)
 $(OBJDIR)create_mobs.o: mail.h statistics.h combat.h
 $(OBJDIR)create_engine.o: create_engine.h
 $(OBJDIR)create_objs.o: dirsort.h components.h statistics.h
@@ -414,13 +414,13 @@ $(OBJDIR)disc_warrior.o: disc_warrior.h combat.h
 $(OBJDIR)disc_water.o: disc_water.h combat.h spelltask.h
 $(OBJDIR)disc_wrath.o: disc_wrath.h combat.h
 $(OBJDIR)discipline.o: $(DISC_HEADS) components.h combat.h spelltask.h
-$(OBJDIR)drawpoker.o: $(CASINO_HEADS)
+$(OBJDIR)game_drawpoker.o: $(CASINO_HEADS)
 $(OBJDIR)edit.o: socket.h
 $(OBJDIR)food.o: shop.h
 $(OBJDIR)gaining.o: statistics.h
-$(OBJDIR)gin.o: $(CASINO_HEADS)
+$(OBJDIR)game_gin.o: $(CASINO_HEADS)
 $(OBJDIR)handler.o: combat.h range.h connect.h shop.h
-$(OBJDIR)hearts.o: $(CASINO_HEADS)
+$(OBJDIR)game_hearts.o: $(CASINO_HEADS)
 $(OBJDIR)hospital.o: combat.h
 $(OBJDIR)immortal.o: statistics.h mail.h $(CASINO_HEADS) combat.h
 $(OBJDIR)immortal.o: socket.h systemtask.h disc_shaman_armadillo.h disc_nature.h shop.h
@@ -437,7 +437,7 @@ $(OBJDIR)makecorpse.o: combat.h components.h
 $(OBJDIR)materials.o: statistics.h
 $(OBJDIR)mob_loader.o: components.h
 $(OBJDIR)mobact.o: range.h statistics.h
-$(OBJDIR)money.o: statistics.h
+$(OBJDIR)obj_money.o: statistics.h
 $(OBJDIR)monster.o: statistics.h
 $(OBJDIR)movement.o: combat.h $(CASINO_HEADS) disc_looting.h
 $(OBJDIR)obj.o: shop.h
@@ -457,34 +457,8 @@ $(OBJDIR)parse.o: mail.h
 $(OBJDIR)periodic.o: mail.h combat.h components.h disc_meditation.h
 $(OBJDIR)physics.o: combat.h
 $(OBJDIR)player_data.o: mail.h statistics.h combat.h shop.h
-$(OBJDIR)posse.o: paths.h
-$(OBJDIR)prof_cl_th.o: profession.h prof_cleric.h prof_thief.h
-$(OBJDIR)prof_cl_th.o: prof_cl_th.h
-$(OBJDIR)prof_cl_wa.o: profession.h prof_cleric.h prof_warrior.h
-$(OBJDIR)prof_cl_wa.o: prof_cl_wa.h
-$(OBJDIR)prof_cl_wa_th.o: profession.h prof_cleric.h prof_warrior.h
-$(OBJDIR)prof_cl_wa_th.o: prof_thief.h prof_cl_wa_th.h
-$(OBJDIR)prof_cleric.o: profession.h prof_cleric.h
-$(OBJDIR)prof_deikhan.o: prof_warrior.h prof_deikhan.h
-$(OBJDIR)prof_ma_th.o: profession.h prof_mage.h prof_thief.h
-$(OBJDIR)prof_ma_th.o: prof_ma_th.h
-$(OBJDIR)prof_ma_wa.o: profession.h prof_mage.h prof_warrior.h
-$(OBJDIR)prof_ma_wa.o: prof_ma_wa.h
-$(OBJDIR)prof_ma_wa_th.o: profession.h prof_mage.h prof_warrior.h
-$(OBJDIR)prof_ma_wa_th.o: prof_thief.h prof_ma_wa_th.h
-$(OBJDIR)prof_mage.o: prof_mage.h
-$(OBJDIR)prof_monk.o: prof_warrior.h prof_monk.h
-$(OBJDIR)prof_ranger.o: prof_warrior.h prof_ranger.h
-$(OBJDIR)prof_shaman.o: profession.h prof_shaman.h
-$(OBJDIR)prof_thief.o: profession.h prof_thief.h
-$(OBJDIR)prof_wa_th.o: profession.h prof_warrior.h prof_thief.h
-$(OBJDIR)prof_wa_th.o: prof_wa_th.h
-$(OBJDIR)prof_warrior.o: profession.h prof_warrior.h
-$(OBJDIR)profession.o: profession.h prof_mage.h prof_thief.h prof_cleric.h
-$(OBJDIR)profession.o: prof_warrior.h prof_monk.h prof_deikhan.h prof_ranger.h
-$(OBJDIR)profession.o: prof_shaman.h prof_cl_th.h prof_cl_wa.h prof_ma_th.h
-$(OBJDIR)profession.o: prof_ma_wa.h prof_wa_th.h
-$(OBJDIR)quiver.o: disc_looting.h
+$(OBJDIR)spec_mobs_posse.o: paths.h
+$(OBJDIR)obj_quiver.o: disc_looting.h
 $(OBJDIR)range.o: combat.h range.h
 $(OBJDIR)rent.o: ansi.h statistics.h components.h
 $(OBJDIR)repair.o: statistics.h

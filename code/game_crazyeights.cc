@@ -1,23 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: crazyeights.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
 
   SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
 
-  "crazyeights.cc"
+  "game_crazyeights.cc"
   All functions and routines related to the crazy eights card game.
 
   Created 4/24/99 - Lapsos(William A. Perrotto III)
@@ -72,7 +57,7 @@ const string CrazyEightsGame::score()
   ch4 = get_char_room(names[3], ROOM_CRAZYEIGHTS);
 
   if (!ch1 || !ch2 || !ch3 || !ch4) {
-    vlogf(10, "CrazyEights::score() called without four eights players!");
+    vlogf(LOG_BUG, "CrazyEights::score() called without four eights players!");
     return "";
   }
 
@@ -113,7 +98,7 @@ void CrazyEightsGame::deal(TBeing *ch)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(10, "%s got into CrazyEights::deal without being at the eights table!",
+    vlogf(LOG_BUG, "%s got into CrazyEights::deal without being at the eights table!",
           ch->getName());
     return;
   }
@@ -194,7 +179,7 @@ void CrazyEightsGame::peek(const TBeing *ch) const
     tString += tArg;
   }
 
-  ch->desc->page_string(tString.c_str(), 0);
+  ch->desc->page_string(tString.c_str());
 }
 
 int CrazyEightsGame::move_card(TBeing *ch, const char *tArg)
@@ -303,7 +288,7 @@ int CrazyEightsGame::exitGame(const TBeing *ch)
          *ch4 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "%s left a crazy eights table %s wasn't at!",
+    vlogf(LOG_BUG, "%s left a crazy eights table %s wasn't at!",
           ch->getName(), ch->hssh());
     return FALSE;
   }
@@ -387,7 +372,7 @@ int CrazyEightsGame::new_deal()
     }
 
   if (playerNum == -1) {
-    vlogf(10, "CrazyEights::new_deal() called when people still had cards.");
+    vlogf(LOG_BUG, "CrazyEights::new_deal() called when people still had cards.");
     return FALSE;
   }
 
@@ -402,7 +387,7 @@ int CrazyEightsGame::new_deal()
   ch5 = get_char_room(names[initialPlayer], ROOM_CRAZYEIGHTS);
 
   if (!ch1 || !ch2 || !ch3 || !ch4) {
-    vlogf(10, "CrazyEights::new_deal called with less than 4 players!");
+    vlogf(LOG_BUG, "CrazyEights::new_deal called with less than 4 players!");
     return FALSE;
   }
 
@@ -444,12 +429,12 @@ void CrazyEightsGame::pass(const TBeing *ch)
   }
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "CrazyEights::pass called by player not in the game!");
+    vlogf(LOG_BUG, "CrazyEights::pass called by player not in the game!");
     return;
   }
 
   if (!getPlayers(ch, &ch2, &ch3, &ch4)) {
-    vlogf(10, "CrazyEights::pass called without a full table!");
+    vlogf(LOG_BUG, "CrazyEights::pass called without a full table!");
     return;
   }
 
@@ -509,7 +494,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
   }
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "CrazyEights::play called by player not in game!");
+    vlogf(LOG_BUG, "CrazyEights::play called by player not in game!");
     return;
   }
 
@@ -651,7 +636,7 @@ int CrazyEightsGame::get(const TBeing *ch, const char *tArg)
   }
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(10, "CrazyEights::get called by player not in game!");
+    vlogf(LOG_BUG, "CrazyEights::get called by player not in game!");
     return FALSE;
   }
 
@@ -686,7 +671,7 @@ int CrazyEightsGame::get(const TBeing *ch, const char *tArg)
   }
 
   ch->sendTo("How odd.  You can't find a place in your hand to Put a new card.\n\r");
-  vlogf(10, "CrazyEights::get called while player had 0 free slots and some deck left.");
+  vlogf(LOG_BUG, "CrazyEights::get called while player had 0 free slots and some deck left.");
 
   return TRUE;
 }

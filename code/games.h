@@ -2,27 +2,9 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: games.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//      "games.h" - All functions and routines related to sneezyMUD games
 //
 //////////////////////////////////////////////////////////////////////////
-
-
-/*************************************************************************
-
-      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-      "games.h" - All functions and routines related to sneezyMUD games
-
-      The SneezyMUD games were coded by Russ Russell, April 1994, 
-      Changed to c++ objects October 1994
-      Last revision, October 13th, 1994.
-
-*************************************************************************/
 
 #ifndef __GAMES_H
 #define __GAMES_H
@@ -265,10 +247,9 @@ extern const char *suit(TBeing *, int card);
 extern int hearts_index(TBeing *);
 extern int hearts_pass(TBeing *, char *arg);
 extern int hearts_get_pass(TBeing *, char *);
-extern bool in_range(int num, int low, int high);
 extern int get_suit(int);
 
-#include "crazyeights.h"
-#include "drawpoker.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 #endif

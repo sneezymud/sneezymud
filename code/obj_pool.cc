@@ -193,7 +193,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
     sprintf(buf+strlen(buf), " %s", 
         colorString(this, desc, DrinkInfo[liq]->color, NULL, COLOR_NONE, TRUE).c_str());
     delete [] pool->name;
-    pool->setName(mud_str_dup(buf));
+    pool->name = mud_str_dup(buf);
 
     *roomp += *pool;
   }

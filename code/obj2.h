@@ -8,7 +8,7 @@
 #ifndef __OBJ2_H
 #define __OBJ2_H
 
-#include "drug.h"
+#include "obj_drug.h"
 
 // Things can be in a base container (but people can't put things into it)
 class TBaseContainer : public TObj {
