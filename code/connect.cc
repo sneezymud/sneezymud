@@ -2,21 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: connect.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/15 21:55:26  batopr
-// typo fix
-//
-// Revision 1.2  1999/10/15 21:53:22  batopr
-// Added code to protect against use of potentially freed memory following
-// call to parseCommand.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -57,8 +42,8 @@ const int FORCE_LOW_INVSTE = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "Grimhaven";
-const char * const MUD_NAME_VERS = "Grimhaven v5.1";
-static const char * const WELC_MESSG = "\n\rWelcome to Grimhaven 5.1! May your journeys be interesting!\n\r\n\r";
+const char * const MUD_NAME_VERS = "Grimhaven v5.2";
+static const char * const WELC_MESSG = "\n\rWelcome to Grimhaven 5.2! May your journeys be interesting!\n\r\n\r";
 
 static const char * const TER_HUMAN_HELP = "help/territory help human";
 static const char * const TER_ELF_HELP = "help/territory help elf";
@@ -66,7 +51,6 @@ static const char * const TER_DWARF_HELP = "help/territory help dwarf";
 static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
-static const char * const SIGN_MESS = "/mud/sign/currentMess";
 
 Descriptor::Descriptor() :
   output(true),
@@ -106,11 +90,15 @@ Descriptor::Descriptor(TSocket *s) :
   screen_size(24),
   point_roll(0),
   talkCount(time(0)),
-  client(FALSE),
+  m_bIsClient(FALSE),
   bad_login(0),
   severity(0),
+  office(0),
+  blockastart(0),
+  blockaend(0),
+  blockbstart(0),
+  blockbend(0),
   last(),
-  poof(),
   deckSize(0),
   prompt_d(),
   plr_act(0),
@@ -120,7 +108,7 @@ Descriptor::Descriptor(TSocket *s) :
 {
   int i;
 
-  *raw = '\0';
+  *m_raw = '\0';
   *delname = '\0';
 
   for (i = 0; i < 10; i++)
@@ -156,11 +144,15 @@ Descriptor::Descriptor(const Descriptor &a) :
   screen_size(a.screen_size),
   point_roll(a.point_roll),
   talkCount(a.talkCount),
-  client(a.client),
+  m_bIsClient(a.m_bIsClient),
   bad_login(a.bad_login),
   severity(a.severity),
+  office(a.office),
+  blockastart(a.blockastart),
+  blockaend(a.blockaend),
+  blockbstart(a.blockbstart),
+  blockbend(a.blockbend),
   last(a.last),
-  poof(a.poof),
   deckSize(a.deckSize),
   prompt_d(a.prompt_d),
   plr_act(a.plr_act),
@@ -173,14 +165,14 @@ Descriptor::Descriptor(const Descriptor &a) :
   // not sure how this is being used, theoretically correct, but watch
   // for duplication stuff
   // str may also be prolematic
-  vlogf(10, "Inform Batopr immediately that Descriptor copy constructor was called.");
+  vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor copy constructor was called.");
 
   showstr_head = mud_str_dup(a.showstr_head);
 //  str = mud_str_dup(a.str);
   str = NULL;
   pagedfile = mud_str_dup(a.pagedfile);
 
-  strcpy(raw, a.raw);
+  strcpy(m_raw, a.m_raw);
   strcpy(delname, a.delname);
 
   for (i = 0; i < 10; i++)
@@ -196,7 +188,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   // not sure how this is being used, theoretically correct, but watch
   // for duplication stuff
   // str is most likely also screwy
-  vlogf(10, "Inform Batopr immediately that Descriptor operator= was called.");
+  vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor operator= was called.");
 
   socket = a.socket;
   edit = a.edit;
@@ -223,11 +215,15 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   screen_size = a.screen_size;
   point_roll = a.point_roll;
   talkCount = a.talkCount;
-  client = a.client;
+  m_bIsClient = a.m_bIsClient;
   bad_login = a.bad_login;
   severity = a.severity;
+  office = a.office;
+  blockastart = a.blockastart;
+  blockaend = a.blockaend;
+  blockbstart = a.blockbstart;
+  blockbend = a.blockbend;
   last = a.last;
-  poof = a.poof;
   deckSize = a.deckSize;
   prompt_d = a.prompt_d;
   plr_act = a.plr_act;
@@ -245,7 +241,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   delete [] pagedfile;
   pagedfile = mud_str_dup(a.pagedfile);
 
-  strcpy(raw, a.raw);
+  strcpy(m_raw, a.m_raw);
   strcpy(delname, a.delname);
 
   for (int i = 0; i < 10; i++)
@@ -309,7 +305,7 @@ bool Descriptor::checkForMultiplay()
     if (!strcmp(d->account->name, account->name)) {
       total += 1;
       if (total > max_multiplay_chars) {
-        vlogf(8, "MULTIPLAY: %s and %s from same account[%s]",
+        vlogf(LOG_CHEAT, "MULTIPLAY: %s and %s from same account[%s]",
               character->name, ch->name, account->name);
 #if FORCE_MULTIPLAY_COMPLIANCE
         character->sendTo("Player Load: %d, Current MultiPlay Limit: %d\n\r",
@@ -349,12 +345,12 @@ bool Descriptor::checkForMultiplay()
     if (max_multiplay_chars == 1) {
       // some diabolical logic to catch multiplay with separate accounts
       // check to see if they are grouped, but haven't spoken recently
-      if (character->inGroup(ch)) {
+      if (character->inGroup(*ch)) {
         time_t now = time(0);
         const int trigger_minutes = 1;
         if (((now - talkCount) > ((trigger_minutes + character->getTimer()) * SECS_PER_REAL_MIN)) &&
             ((now - ch->desc->talkCount) > ((trigger_minutes + ch->getTimer()) * SECS_PER_REAL_MIN))) {
-          vlogf(7, "MULTIPLAY: Players %s and %s are possibly multiplaying.", character->getName(), ch->getName());
+          vlogf(LOG_CHEAT, "MULTIPLAY: Players %s and %s are possibly multiplaying.", character->getName(), ch->getName());
 
           time_t ct = time(0);
           struct tm * lt = localtime(&ct);
@@ -382,7 +378,7 @@ bool Descriptor::checkForMultiplay()
           FILE *fp;
           if (!(fp = fopen(cmd_buf.c_str(), "a+"))) {
             perror("doComment");
-            vlogf(9, "Could not open the comment-file (%s).", cmd_buf.c_str());
+            vlogf(LOG_FILE, "Could not open the comment-file (%s).", cmd_buf.c_str());
           } else {
             fputs(tmpstr.c_str(), fp);
             fclose(fp);
@@ -449,15 +445,15 @@ int Descriptor::outputProcessing()
   int counter = 0;
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 
-  if (!prompt_mode && !connected && !client)
+  if (!prompt_mode && !connected && !m_bIsClient)
     if (socket->writeToSocket("\n\r") < 0)
       return -1;
 
   if (output.getEnd() && !output.getBegin()) {
     if (character && character->name)
-      vlogf(5, "%s's output has end and no begin (client: %d).", character->getName(), client ? 1 : 0);
+      vlogf(LOG_BUG, "%s's output has end and no begin (client: %d).", character->getName(), m_bIsClient ? 1 : 0);
     else
-      vlogf(5, "output has end and no begin.");
+      vlogf(LOG_BUG, "output has end and no begin.");
 // kludge, seems like it may lead to memory leaks but better than
 // leaving an end in here cos -4/2/98
     output.setEnd(NULL);
@@ -474,8 +470,8 @@ int Descriptor::outputProcessing()
     if (counter >= 5000) {
       char buf2[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
       strcpy(buf2, i);
-      vlogf(5, "Tell a coder, bad loop in outputProcessing, please investigate %s", character ? character->getName() : "'No char for desc'");
-      vlogf(5, "i = %s, last i= %s", buf2, buf); 
+      vlogf(LOG_BUG, "Tell a coder, bad loop in outputProcessing, please investigate %s", character ? character->getName() : "'No char for desc'");
+      vlogf(LOG_BUG, "i = %s, last i= %s", buf2, buf); 
       // Set everything to NULL, might lose memory but we dont wanna try
       // a delete cause it might crash/ - Russ
       output.setBegin(NULL);
@@ -500,8 +496,8 @@ int Descriptor::outputProcessing()
     }
     strcpy(buf, i);
     if (snoop.snoop_by && snoop.snoop_by->desc) {
-      (&snoop.snoop_by->desc->output)->putInQ("% ");
-      (&snoop.snoop_by->desc->output)->putInQ(i);
+      snoop.snoop_by->desc->output.putInQ("% ");
+      snoop.snoop_by->desc->output.putInQ(i);
     }
     if (socket->writeToSocket(i))
       return -1;
@@ -517,15 +513,15 @@ Descriptor::~Descriptor()
   TThing *th, *th2;
   TRoom *rp;
 
-  if (close(socket->sock))
-    vlogf(10, "Close() exited with errno (%d) return value in ~Descriptor", errno);
+  if (close(socket->m_sock))
+    vlogf(LOG_BUG, "Close() exited with errno (%d) return value in ~Descriptor", errno);
   
   // clear out input/output buffers
   flush();
 
   // This is a semi-kludge to fix some extra crap we had being sent
   // upon reconnect - Russ 6/15/96
-  if (socket->sock == maxdesc) 
+  if (socket->m_sock == maxdesc) 
     --maxdesc;
 
   // clear up any editing strings
@@ -563,7 +559,7 @@ Descriptor::~Descriptor()
       }
 
       act("$n has lost $s link.", TRUE, character, 0, 0, TO_ROOM);
-      vlogf(0, "Closing link to: %s.", character->getName());
+      vlogf(LOG_PIO, "Closing link to: %s.", character->getName());
 
       // this is partly a penalty for losing link (lose followers)
       // the more practical reason is that the mob and items are saved
@@ -594,12 +590,16 @@ Descriptor::~Descriptor()
           num++;
         }
       }
-      vlogf(0, "Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]",
+      vlogf(LOG_PIO, "Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]",
             character->getName(), character->getMoney(), character->getBank(),
             character->getExp(), num, character->age_mod, 
             dynamic_cast<TPerson *>(character)->last_rent);
       character->desc = NULL;
-      character->setInvisLevel(GOD_LEVEL1);
+      if((!character->affectedBySpell(AFFECT_PLAYERKILL) &&
+          !character->affectedBySpell(AFFECT_PLAYERLOOT)) ||
+	  character->isImmortal()){
+	character->setInvisLevel(GOD_LEVEL1);
+      }
 
       if (character->riding) 
         character->dismount(POSITION_STANDING);
@@ -615,7 +615,7 @@ Descriptor::~Descriptor()
       if (connected == CON_PWDNRM)
         bad_login++;
       if (character->getName())
-        vlogf(1, "Losing player: %s [%s].", character->getName(), host);
+        vlogf(LOG_PIO, "Losing player: %s [%s].", character->getName(), host);
 
       // shove into list so delete works OK
       character->desc = NULL;
@@ -707,7 +707,7 @@ void Descriptor::cleanUpStr()
                    connected == CON_SEDITING)) {
       // the str is attached to the mob/obj/room, so this is OK
     } else
-      vlogf(6, "Descriptor::cleanUpStr(): Probable memory leak");
+      vlogf(LOG_BUG, "Descriptor::cleanUpStr(): Probable memory leak");
   }
 }
 
@@ -744,7 +744,7 @@ void TPerson::autoDeath()
 {
   char buf[1024];
 
-  vlogf(6,"%s reconnected with negative hp, auto death occurring.", 
+  vlogf(LOG_PIO, "%s reconnected with negative hp, auto death occurring.", 
                         getName());
   sendTo("You reconnected with negative hit points, automatic death occurring.");
   sprintf(buf, "%s detected you reconnecting with %d hit points.\n\r", MUD_NAME, getHit());
@@ -757,9 +757,177 @@ void TPerson::autoDeath()
   sprintf(buf + strlen(buf), "contact a god.  Type WHO -G to see if any gods are connected.\n\r");
             
   autoMail(this, NULL, buf);
-  gain_exp(this, -deathExp());
+  gain_exp(this, -deathExp(), -1);
   genericKillFix();
   return;
+}
+
+bool MakeTimeT(int tMon, int tDay, int tYear, time_t tLast)
+{
+  time_t     tCurrent = time(0);
+  struct tm  tTemp,
+           * tTime = localtime(&tCurrent);
+  int        tTempDay = 0;
+
+  tTemp.tm_sec   = 0;
+  tTemp.tm_min   = 0;
+  tTemp.tm_hour  = 0;
+  tTemp.tm_isdst = tTime->tm_isdst;
+  tTemp.tm_mon   = (tMon - 1);
+  tTemp.tm_mday  = tDay;
+  tTemp.tm_year  = (in_range(tYear, 0, 50) ? (tYear + 100) : tYear);
+
+  switch (tTemp.tm_mon) {
+    case 10:
+      tTempDay += 31;
+    case 9:
+      tTempDay += 30;
+    case 8:
+      tTempDay += 31;
+    case 7:
+      tTempDay += 30;
+    case 6:
+      tTempDay += 31;
+    case 5:
+      tTempDay += 31;
+    case 4:
+      tTempDay += 30;
+    case 3:
+      tTempDay += 31;
+    case 2:
+      tTempDay += 30;
+    case 1:
+      tTempDay += 31;
+    case 0:
+      tTempDay += (!(((1900 + tTemp.tm_year) - 1996) % 4) ? 29 : 28);
+  }
+
+  // Jan 1st, 1900 == Monday(1)
+  double tDays = tTemp.tm_year;
+
+  tDays         -=   1.0;
+  tDays         *= 365.75;
+  tTemp.tm_yday  = (tTempDay + (tTemp.tm_mday - 1));
+  tDays         += tTemp.tm_yday;
+  tTemp.tm_wday  = (((int) tDays - 1) % 7);
+  tCurrent       = mktime(&tTemp);
+
+  return (difftime(tCurrent, tLast) > 0.0);
+}
+
+void ShowNewNews(TBeing * tBeing)
+{
+  time_t  tLast = tBeing->player.time.last_logon,
+          tTime = time(0);
+  struct  stat tData;
+  FILE   *tFile;
+  char    tString[256];
+  int     tMon,
+          tDay,
+          tYear,
+          tCount = 0;
+  bool    tPosted = false;
+
+  // Report for the NEWS file
+  if (!stat(NEWS_FILE, &tData))
+    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
+      if ((tFile = fopen(NEWS_FILE, "r"))) {
+        while (!feof(tFile)) {
+          fgets(tString, 256, tFile);
+
+          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
+            continue;
+
+          if (!MakeTimeT(tMon, tDay, tYear, tLast))
+            break;
+
+          if (!tPosted) {
+            tPosted = true;
+            tBeing->sendTo("NEWS File Changes:\n\r");
+          }
+
+          tBeing->sendTo("%s", tString);
+
+          if (++tCount == 10) {
+            tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
+            break;
+          }
+        }
+
+        fclose(tFile);
+      }
+
+  if (tPosted)
+    tBeing->sendTo("\n\r");
+
+  tPosted = false;
+  tCount  = 0;
+
+  // Report for the NEWS.new file (help nexversion)
+  if (!stat("help/nextversion", &tData))
+    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
+      if ((tFile = fopen("help/nextversion", "r"))) {
+        while (!feof(tFile)) {
+          fgets(tString, 256, tFile);
+
+          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
+            continue;
+
+          if (!MakeTimeT(tMon, tDay, tYear, tLast))
+            break;
+
+          if (!tPosted) {
+            tPosted = true;
+            tBeing->sendTo("Future NEWS File Changes:\n\r");
+          }
+
+          tBeing->sendTo("%s", tString);
+
+          if (++tCount == 10) {
+            tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
+            break;
+          }
+        }
+
+        fclose(tFile);
+      }
+
+  if (tPosted)
+    tBeing->sendTo("\n\r");
+
+  tPosted = false;
+  tCount  = 0;
+
+  if (tBeing->isImmortal() && !stat(WIZNEWS_FILE, &tData))
+    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
+      if ((tFile = fopen(WIZNEWS_FILE, "r"))) {
+        while (!feof(tFile)) {
+          fgets(tString, 256, tFile);
+
+          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
+            continue;
+
+          if (!MakeTimeT(tMon, tDay, tYear, tLast))
+            break;
+
+          if (!tPosted) {
+            tPosted = true;
+            tBeing->sendTo("WIZNEWS File Changes:\n\r");
+          }
+
+          tBeing->sendTo("%s", tString);
+
+          if (++tCount == 10) {
+            tBeing->sendTo("...And there is more, SEE WIZNEWS to see more.\n\r");
+            break;
+          }
+        }
+
+        fclose(tFile);
+      }
+
+  if (tPosted)
+    tBeing->sendTo("\n\r");
 }
 
 // if descriptor is to be deleted, DELETE_THIS
@@ -836,7 +1004,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-            page_string(str.c_str(), TRUE);
+            page_string(str.c_str(), SHOWNOW_YES);
             connected = CON_QRACE;
             break;
 	  case 'X':
@@ -1079,10 +1247,11 @@ int Descriptor::nanny(const char *arg)
             objCost cost;
 
             if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-              vlogf(0, "%s[*masked*] has reconnected  (account: *masked*).",
-                     character->getName());
-            } else {
-              vlogf(0, "%s[%s] has reconnected  (account: %s).", 
+              vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).",
+	             character->getName(), host, account->name);
+
+	    } else {
+              vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).", 
                      character->getName(), host, account->name);
             }
 
@@ -1101,9 +1270,9 @@ int Descriptor::nanny(const char *arg)
       }
       if (should_be_logged(character)) {
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-          vlogf(0, "%s[*masked*] has connected  (account: *masked*).", character->getName());
+	  vlogf(LOG_PIO, "%s[%s] has connected  (account: %s).", character->getName(), host, account->name);
         } else {
-          vlogf(0, "%s[%s] has connected  (account: %s).", character->getName(), host, account->name);
+          vlogf(LOG_PIO, "%s[%s] has connected  (account: %s).", character->getName(), host, account->name);
         }
       }
       
@@ -1195,9 +1364,9 @@ int Descriptor::nanny(const char *arg)
                 objCost cost;
 
                 if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
-                  vlogf(0, "%s[*masked*] has reconnected  (account: *masked*).", tmp_ch->getName());
+		  vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).", tmp_ch->getName(), host, account->name);
                 else 
-                  vlogf(0, "%s[%s] has reconnected  (account: %s).", tmp_ch->getName(), host, account->name);
+                  vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).", tmp_ch->getName(), host, account->name);
                 
                 tmp_ch->recepOffer(NULL, &cost);
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
@@ -1321,7 +1490,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1390,7 +1559,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1449,7 +1618,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1503,7 +1672,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1552,7 +1721,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("Ugh!  Choice BAD!\n\r");
@@ -1616,7 +1785,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), TRUE);
+          page_string(str.c_str(), SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1645,10 +1814,10 @@ int Descriptor::nanny(const char *arg)
       }
       character->convertAbilities();
       character->affectTotal();
-      vlogf(9, "%s [%s] new player.", character->getName(), host);
+      vlogf(LOG_PIO, "%s [%s] new player.", character->getName(), host);
 
       character->saveChar(ROOM_AUTO_RENT);
-      player_count++;
+      accStat.player_count++;
       character->cls();
       sendMotd(FALSE);
       writeToQ("\n\r\n*** PRESS RETURN: ");
@@ -1730,8 +1899,7 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
-          case '8':
-#if 0
+          case 'Z':
             if (canChooseClass(CLASS_SHAMAN)) {
               character->setClass(CLASS_SHAMAN);
               go2next = TRUE;
@@ -1740,11 +1908,22 @@ int Descriptor::nanny(const char *arg)
               writeToQ("--> ");
               connected = CON_QCLASS;
             }
-#endif
-            writeToQ("Shaman are not yet a playable class, sorry.\n\r");
-            writeToQ("--> ");
-            connected = CON_QCLASS;
+	    writeToQ("Shaman are not yet a playable class.\n\r");
+	    writeToQ("At some point in time, Jesus may authorize your use of this\n\r");
+	    writeToQ("class as a play tester or whatever. If not consider this a \n\r");
+	    writeToQ("warning to go back and create something else.\n\r\n\r");
+	    writeToQ("Shaman are to be a very high maintainance class. You are\n\r");
+	    writeToQ("therefore warned now that this class may be unplayable by\n\r");
+	    writeToQ("even the average mudder. This class is meant for the most\n\r");
+	    writeToQ("experienced of players. Not paying attention to your Shaman\n\r");
+	    writeToQ("can and will result in multiple deaths. YOU HAVE BEEN WARNED!\n\r");
+	    // writeToQ("Shaman are not yet a playable class, sorry.\n\r");
+            // writeToQ("--> ");
+            // connected = CON_QCLASS;
+	    vlogf(LOG_JESUS, "UNAUTHERIZED SHAMAN CREATION: %s ", character->getName());
             break;
+#ifdef SNEEZY2000
+#else
           case 'a':
           case 'A':
             if (canChooseClass(CLASS_THIEF | CLASS_WARRIOR, TRUE)) {
@@ -1864,6 +2043,7 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
+#endif
           case '~':
             return DELETE_THIS;
           case '/':
@@ -1877,7 +2057,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-            page_string(str.c_str(), TRUE);
+            page_string(str.c_str(), SHOWNOW_YES);
             connected = CON_QCLASS;
             break;
           default:
@@ -1972,6 +2152,7 @@ int Descriptor::nanny(const char *arg)
       character->cls();
       sendStatList(1, TRUE);
       break;
+#ifdef SNEEZY2000
     case CON_STAT_COMBAT:
       if (!*arg) {
         sendStatList(1, FALSE);
@@ -1986,14 +2167,6 @@ int Descriptor::nanny(const char *arg)
         if (strchr(buf, 's') || strchr(buf, 'S')) {
           local_stats = character->chosenStats.get(STAT_STR),
           which = STAT_STR;
-          found = TRUE;
-        } else if (strchr(buf, 'd') || strchr(buf, 'D')) {
-          local_stats = character->chosenStats.get(STAT_DEX),
-          which = STAT_DEX;
-          found = TRUE;
-        } else if (strchr(buf, 'a') || strchr(buf, 'A')) {
-          local_stats = character->chosenStats.get(STAT_AGI),
-          which = STAT_AGI;
           found = TRUE;
         } else if (strchr(buf, 'c') || strchr(buf, 'C')) {
           local_stats = character->chosenStats.get(STAT_CON),
@@ -2010,8 +2183,6 @@ int Descriptor::nanny(const char *arg)
         }
       } else if (*buf == 'e' || *buf == 'E') {
         free_stat = (0 - ((character->chosenStats.values[STAT_STR]) +
-                 (character->chosenStats.values[STAT_DEX]) +
-                 (character->chosenStats.values[STAT_AGI]) +
                  (character->chosenStats.values[STAT_CON]) +
                  (character->chosenStats.values[STAT_BRA])));
         if (free_stat < 0) {
@@ -2020,8 +2191,8 @@ int Descriptor::nanny(const char *arg)
           writeToQ("\n\rPress return....");
           break;
         } else {
-          connected = CON_STAT_LEARN;
-          sendStatList(2, TRUE);
+          connected = CON_STAT_COMBAT2;
+          sendStatList(4, TRUE);
           break;       
         }
       } else if (*buf == '/') {
@@ -2037,7 +2208,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), TRUE);
+        page_string(str.c_str(), SHOWNOW_YES);
         break;
       } else {
 //        writeToQ("You typed in an incorrect command at this point.\n\r");
@@ -2071,6 +2242,99 @@ int Descriptor::nanny(const char *arg)
       }
       if (connected == CON_STAT_COMBAT) {
         sendStatList(1, FALSE);
+        break;
+      }
+      break;
+    case CON_STAT_COMBAT2:
+      if (!*arg) {
+        sendStatList(4, FALSE);
+        break;
+      }
+      for (; isspace(*arg); arg++);
+      local_stats = 0;
+
+      arg = one_argument(arg, buf);
+      if ((*buf == '-') || (*buf == '+')) {
+        if (strchr(buf, 'd') || strchr(buf, 'D')) {
+          local_stats = character->chosenStats.get(STAT_DEX),
+          which = STAT_DEX;
+          found = TRUE;
+        } else if (strchr(buf, 'a') || strchr(buf, 'A')) {
+          local_stats = character->chosenStats.get(STAT_AGI),
+          which = STAT_AGI;
+          found = TRUE;
+        } else if (strchr(buf, 's') || strchr(buf, 'S')) {
+          local_stats = character->chosenStats.get(STAT_SPE),
+          which = STAT_SPE;
+          found = TRUE;
+        } else {
+          writeToQ("You must specify a valid characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+      } else if (*buf == 'e' || *buf == 'E') {
+        free_stat = (0 - ((character->chosenStats.values[STAT_DEX]) +
+                 (character->chosenStats.values[STAT_AGI]) +
+                 (character->chosenStats.values[STAT_SPE])));
+        if (free_stat < 0) {
+          character->cls();
+          writeToQ("You may not continue with negative free points.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        } else {
+          connected = CON_STAT_LEARN;
+          sendStatList(2, TRUE);
+          break;
+        }
+      } else if (*buf == '/') {
+        go_back_menu(connected);
+        break;
+      } else if (*buf == '~') {
+        return DELETE_THIS;
+      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+        character->cls();
+        file_to_string(STATHELP, str);
+        character->fullscreen();
+
+      // swap color strings
+      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+
+        page_string(str.c_str(), SHOWNOW_YES);
+        break;
+      } else {
+        sendStatList(4, FALSE);
+//        writeToQ("You typed in an incorrect command at this point.\n\r");
+        break;
+      }
+
+      if (found) {
+        int amt = 0;
+        character->cls();
+
+        // buf should have form -9s or whatever
+        // fortunately, atoi will strip non signedness and numbers
+        // we do need to check for +s and make sure this is +1, -s == -1
+        if (!(amt = atoi(buf)))
+          amt = (*buf == '+' ? +1 : -1);
+        character->sendTo("amount was: %d\n\r", amt);
+
+        // Need to initialize buf or they can cheat
+        memset(buf, '\0', sizeof(buf));
+
+        if (local_stats + amt < -25) {
+          writeToQ("You can't go below -25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        if (local_stats + amt > 25) {
+          writeToQ("You can't go above 25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        character->chosenStats.values[which] += amt;
+      }
+      if (connected == CON_STAT_COMBAT2) {
+        sendStatList(4, FALSE);
         break;
       }
       break;
@@ -2128,7 +2392,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), TRUE);
+        page_string(str.c_str(), SHOWNOW_YES);
         break;
       } else {
         sendStatList(2, FALSE);
@@ -2201,8 +2465,7 @@ int Descriptor::nanny(const char *arg)
       } else if (*buf == 'e' || *buf == 'E') {
         free_stat = (0 - ((character->chosenStats.values[STAT_PER]) +
                  (character->chosenStats.values[STAT_KAR]) +
-                 (character->chosenStats.values[STAT_CHA]) +
-                 (character->chosenStats.values[STAT_SPE])));
+                 (character->chosenStats.values[STAT_CHA])));
         if (free_stat < 0) {
           character->cls();
           writeToQ("You may not continue with negative free points.\n\r");
@@ -2226,7 +2489,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), TRUE);
+        page_string(str.c_str(), SHOWNOW_YES);
         break;
       } else {
         sendStatList(3, FALSE);
@@ -2265,6 +2528,302 @@ int Descriptor::nanny(const char *arg)
         break;
       }
       break;
+#else
+    case CON_STAT_COMBAT:
+      if (!*arg) {
+        sendStatList(1, FALSE);
+        break;
+      }
+      for (; isspace(*arg); arg++);
+      local_stats = 0;
+
+      arg = one_argument(arg, buf);
+
+      if ((*buf == '-') || (*buf == '+')) {
+        if (strchr(buf, 's') || strchr(buf, 'S')) {
+          local_stats = character->chosenStats.get(STAT_STR),
+          which = STAT_STR;
+          found = TRUE;
+        } else if (strchr(buf, 'd') || strchr(buf, 'D')) {
+          local_stats = character->chosenStats.get(STAT_DEX),
+          which = STAT_DEX;
+          found = TRUE;
+        } else if (strchr(buf, 'a') || strchr(buf, 'A')) {
+          local_stats = character->chosenStats.get(STAT_AGI),
+          which = STAT_AGI;
+          found = TRUE;
+        } else if (strchr(buf, 'c') || strchr(buf, 'C')) {
+          local_stats = character->chosenStats.get(STAT_CON),
+          which = STAT_CON;
+          found = TRUE;
+        } else if (strchr(buf, 'b') || strchr(buf, 'B')) {
+          local_stats = character->chosenStats.get(STAT_BRA),
+          which = STAT_BRA;
+          found = TRUE;
+        } else {
+          writeToQ("You must specify a valid characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+      } else if (*buf == 'e' || *buf == 'E') {
+        free_stat = (0 - ((character->chosenStats.values[STAT_STR]) +
+                 (character->chosenStats.values[STAT_DEX]) +
+                 (character->chosenStats.values[STAT_AGI]) +
+                 (character->chosenStats.values[STAT_CON]) +
+                 (character->chosenStats.values[STAT_BRA])));
+        if (free_stat < 0) {
+          character->cls();
+          writeToQ("You may not continue with negative free points.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        } else {
+          connected = CON_STAT_LEARN;
+          sendStatList(2, TRUE);
+          break;       
+        }
+      } else if (*buf == '/') {
+        go_back_menu(connected);
+        break;
+      } else if (*buf == '~') {
+        return DELETE_THIS;
+      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+        character->cls();
+        file_to_string(STATHELP, str);
+        character->fullscreen();
+
+      // swap color strings
+      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+
+        page_string(str.c_str(), SHOWNOW_YES);
+        break;
+      } else {
+//        writeToQ("You typed in an incorrect command at this point.\n\r");
+        sendStatList(1, FALSE);
+        break;
+      }
+
+      if (found) {
+        int amt = 0;
+        character->cls();
+
+        // buf should have form -9s or whatever
+        // fortunately, atoi will strip non signedness and numbers
+        // we do need to check for +s and make sure this is +1, -s == -1
+        if (!(amt = atoi(buf)))
+          amt = (*buf == '+' ? +1 : -1);
+        character->sendTo("amount was: %d\n\r", amt);
+        // Need to initialize buf or they can cheat 
+        memset(buf, '\0', sizeof(buf));
+        if (local_stats + amt < -25) {
+          writeToQ("You can't go below -25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        if (local_stats + amt > 25) {
+          writeToQ("You can't go above 25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        character->chosenStats.values[which] += amt;
+      }
+      if (connected == CON_STAT_COMBAT) {
+        sendStatList(1, FALSE);
+        break;
+      }
+      break;
+    case CON_STAT_COMBAT2:
+      break;
+    case CON_STAT_LEARN:
+      if (!*arg) {
+        sendStatList(2, FALSE);
+        break;
+      }
+      for (; isspace(*arg); arg++);
+      local_stats = 0;
+
+      arg = one_argument(arg, buf);
+      if ((*buf == '-') || (*buf == '+')) {
+        if (strchr(buf, 'i') || strchr(buf, 'I')) {
+          local_stats = character->chosenStats.get(STAT_INT),
+          which = STAT_INT;
+          found = TRUE;
+        } else if (strchr(buf, 'w') || strchr(buf, 'W')) {
+          local_stats = character->chosenStats.get(STAT_WIS),
+          which = STAT_WIS;
+          found = TRUE;
+        } else if (strchr(buf, 'f') || strchr(buf, 'F')) {
+          local_stats = character->chosenStats.get(STAT_FOC),
+          which = STAT_FOC;
+          found = TRUE;
+        } else {
+          writeToQ("You must specify a valid characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+      } else if (*buf == 'e' || *buf == 'E') {
+        free_stat = (0 - ((character->chosenStats.values[STAT_INT]) +
+                 (character->chosenStats.values[STAT_FOC]) +
+                 (character->chosenStats.values[STAT_WIS])));
+        if (free_stat < 0) {
+          character->cls();
+          writeToQ("You may not continue with negative free points.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        } else {
+          connected = CON_STAT_UTIL;
+          sendStatList(3, TRUE);
+          break;
+        }
+      } else if (*buf == '/') {
+        go_back_menu(connected);
+        break;
+      } else if (*buf == '~') {
+        return DELETE_THIS;
+      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+        character->cls();
+        file_to_string(STATHELP, str);
+        character->fullscreen();
+
+      // swap color strings
+      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+
+        page_string(str.c_str(), SHOWNOW_YES);
+        break;
+      } else {
+        sendStatList(2, FALSE);
+//        writeToQ("You typed in an incorrect command at this point.\n\r");
+        break;
+      }
+
+      if (found) {
+        int amt = 0;
+        character->cls();
+
+        // buf should have form -9s or whatever
+        // fortunately, atoi will strip non signedness and numbers
+        // we do need to check for +s and make sure this is +1, -s == -1
+        if (!(amt = atoi(buf)))
+          amt = (*buf == '+' ? +1 : -1);
+        character->sendTo("amount was: %d\n\r", amt);
+
+        // Need to initialize buf or they can cheat
+        memset(buf, '\0', sizeof(buf));
+
+        if (local_stats + amt < -25) {
+          writeToQ("You can't go below -25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        if (local_stats + amt > 25) {
+          writeToQ("You can't go above 25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        character->chosenStats.values[which] += amt;
+      }
+      if (connected == CON_STAT_LEARN) {
+        sendStatList(2, FALSE);
+        break;
+      }
+      break;
+    case CON_STAT_UTIL:
+      if (!*arg) {
+        sendStatList(3, FALSE);
+        break;
+      }
+      for (; isspace(*arg); arg++);
+      local_stats = 0;
+
+      arg = one_argument(arg, buf);
+      if ((*buf == '-') || (*buf == '+')) {
+        if (strchr(buf, 'p') || strchr(buf, 'P')) {
+          local_stats = character->chosenStats.get(STAT_PER),
+          which = STAT_PER;
+          found = TRUE;
+        } else if (strchr(buf, 'k') || strchr(buf, 'K')) {
+          local_stats = character->chosenStats.get(STAT_KAR),
+          which = STAT_KAR;
+          found = TRUE;
+        } else if (strchr(buf, 'c') || strchr(buf, 'C')) {
+          local_stats = character->chosenStats.get(STAT_CHA),
+          which = STAT_CHA;
+          found = TRUE;
+        } else if (strchr(buf, 's') || strchr(buf, 'S')) {
+          local_stats = character->chosenStats.get(STAT_SPE),
+          which = STAT_SPE;
+          found = TRUE;
+        } else {
+          writeToQ("You must specify a valid characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+      } else if (*buf == 'e' || *buf == 'E') {
+        free_stat = (0 - ((character->chosenStats.values[STAT_PER]) +
+                 (character->chosenStats.values[STAT_KAR]) +
+                 (character->chosenStats.values[STAT_CHA])));
+        if (free_stat < 0) {
+          character->cls();
+          writeToQ("You may not continue with negative free points.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        } else {
+          sendDoneScreen();
+          connected = CON_CREATE_DONE;
+          break;
+        }
+      } else if (*buf == '/') {
+        go_back_menu(connected);
+        break;
+      } else if (*buf == '~') {
+        return DELETE_THIS;
+      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+        character->cls();
+        file_to_string(STATHELP, str);
+        character->fullscreen();
+
+      // swap color strings
+      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+
+        page_string(str.c_str(), SHOWNOW_YES);
+        break;
+      } else {
+        sendStatList(3, FALSE);
+//        writeToQ("You typed in an incorrect command at this point.\n\r");
+        break;
+      }
+
+      if (found) {
+        int amt = 0;
+        character->cls();
+
+        // buf should have form -9s or whatever
+        // fortunately, atoi will strip non signedness and numbers
+        // we do need to check for +s and make sure this is +1, -s == -1
+        if (!(amt = atoi(buf)))
+          amt = (*buf == '+' ? +1 : -1);
+        character->sendTo("amount was: %d\n\r", amt);
+
+        // Need to initialize buf or they can cheat
+        memset(buf, '\0', sizeof(buf));
+
+        if (local_stats + amt < -25) {
+          writeToQ("You can't go below -25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        if (local_stats + amt > 25) {
+          writeToQ("You can't go above 25 on any characteristic.\n\r");
+          writeToQ("\n\rPress return....");
+          break;
+        }
+        character->chosenStats.values[which] += amt;
+      }
+      if (connected == CON_STAT_UTIL) {
+        sendStatList(3, FALSE);
+        break;
+      }
+      break;
+#endif
     case CON_RMOTD:        
       character->doCls(false);
       if (!character->GetMaxLevel())
@@ -2285,7 +2844,10 @@ int Descriptor::nanny(const char *arg)
 
       character->fixClientPlayerLists(FALSE);
    
+      ShowNewNews(character);
+
       character->doLook("", CMD_LOOK);
+
       prompt_mode = 1;
       character->doSave(SILENT_YES);
       break;
@@ -2319,7 +2881,7 @@ int Descriptor::nanny(const char *arg)
     case CON_HELP:
     case CON_WRITING:
     case CON_SEDITING:
-      vlogf(0, "Nanny: illegal state of con'ness");
+      vlogf(LOG_BUG, "Nanny: illegal state of con'ness");
       abort();
       break;
   }
@@ -2338,7 +2900,7 @@ int TPerson::genericLoadPC()
 #endif
 
   if (should_be_logged(this))
-    vlogf(0, "Loading %s's equipment", name);
+    vlogf(LOG_PIO, "Loading %s's equipment", name);
   resetChar();
   BatoprsResetCharFlags(this);
   loadRent();
@@ -2354,7 +2916,7 @@ int TPerson::genericLoadPC()
   character_list = this;
 
 #if SPEEF_MAKE_BODY
-  vlogf(5,"Loading a body for %s\n\r", name);
+  vlogf(LOG_MISC, "Loading a body for %s\n\r", name);
   body = new Body(race->getBodyType(), points.maxHit);
 #endif
   if (in_room == ROOM_NOWHERE || in_room == ROOM_AUTO_RENT) {
@@ -2366,7 +2928,7 @@ int TPerson::genericLoadPC()
       if (player.hometown >= 0) {
         rp = real_roomp(player.hometown);
         if (!rp) {
-          vlogf(LOW_ERROR, "Player (%s) had non-existant hometown (%d)", getName(), player.hometown);
+          vlogf(LOG_LOW, "Player (%s) had non-existant hometown (%d)", getName(), player.hometown);
           rp = real_roomp(ROOM_CS);
         }
         *rp += *this;
@@ -2376,6 +2938,16 @@ int TPerson::genericLoadPC()
         player.hometown = ROOM_CS;
       }
     } else {
+      wizFileRead(); // Needed for office
+
+      rp = real_roomp((desc ? desc->office : ROOM_IMPERIA));
+
+      if (!IS_SET(desc->account->flags, ACCOUNT_IMMORTAL)) {
+        vlogf(LOG_BUG, "%s is immortal but account isn't set immortal.  Setting now.",
+              getName());
+        SET_BIT(desc->account->flags, ACCOUNT_IMMORTAL);
+      }
+      /*
       if (!strcmp(name, "Bump"))
         rp = real_roomp(3);
       else if (!strcmp(name, "Kriebly"))
@@ -2400,10 +2972,12 @@ int TPerson::genericLoadPC()
         rp = real_roomp(17);
       else if (!strcmp(name, "Messiah"))
         rp = real_roomp(18);
-      else if (!strcmp(name, "Lothar"))
-        rp = real_roomp(19);
       else if (!strcmp(name, "Marsh"))
         rp = real_roomp(20);
+      else if (!strcmp(name, "Demo"))
+        rp = real_roomp(21);
+      else if (!strcmp(name, "Kechara"))
+        rp = real_roomp(23);
       else if (!strcmp(name, "Dirk"))
         rp = real_roomp(24);
       else if (!strcmp(name, "Matel"))
@@ -2414,13 +2988,13 @@ int TPerson::genericLoadPC()
         rp = real_roomp(27);
       else if (!strcmp(name, "Mithros"))
         rp = real_roomp(28);
-      else if (!strcmp(name, "Armagedon"))
+      else if (!strcmp(name, "Armaggedon"))
         rp = real_roomp(30);
       else if (!strcmp(name, "Onslaught"))
         rp = real_roomp(31);
-      else if (!strcmp(name, "Custer"))
+      else if (!strcmp(name, "Dash"))
         rp = real_roomp(32);
-      else if (!strcmp(name, "Gish"))
+      else if (!strcmp(name, "Connovar"))
         rp = real_roomp(33);
       else if (!strcmp(name, "Smyrke"))
         rp = real_roomp(34);
@@ -2432,21 +3006,13 @@ int TPerson::genericLoadPC()
         rp = real_roomp(38);
       else if (!strcmp(name, "Omen"))
         rp = real_roomp(39);
-      else if (!strcmp(name, "Drentar"))
-        rp = real_roomp(40);
-      else if (!strcmp(name, "Albria"))
-        rp = real_roomp(41);
       else if (!strcmp(name, "Rixanne"))
         rp = real_roomp(42);
-      else if (!strcmp(name, "Ghosks"))
+      else if (!strcmp(name, "Jesus"))
         rp = real_roomp(43);
-      else if (!strcmp(name, "Wrayth"))
-        rp = real_roomp(44);
-      else if (!strcmp(name, "Theodoric"))
-        rp = real_roomp(45);
       else if (!strcmp(name, "Moath"))
         rp = real_roomp(46);
-      else if (!strcmp(name, "Urvile"))
+      else if (!strcmp(name, "Staffa"))
         rp = real_roomp(47);
       else if (!strcmp(name, "Lapsos"))
         rp = real_roomp(48);
@@ -2467,15 +3033,15 @@ int TPerson::genericLoadPC()
 
       else
         rp = real_roomp(ROOM_IMPERIA);
+      */
 
       if (!rp) {
-        vlogf(9, "Attempting to place %s in room that does not exist.\n\r", name);
+        vlogf(LOG_BUG, "Attempting to place %s in room that does not exist.\n\r", name);
         rp = real_roomp(ROOM_VOID);
       }
       in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
       *rp += *this;
       player.hometown = ROOM_IMPERIA;
-      wizFileRead();        // Immort bamfins 
       if (!isImmortal())   // they turned it off
         doImmortal();
 
@@ -2591,9 +3157,13 @@ void Descriptor::go_back_menu(connectStateT con_state)
       sendRaceList();
       connected = CON_QRACE;
       break;
-    case CON_STAT_LEARN:
+    case CON_STAT_COMBAT2:
       sendStatList(1, TRUE);
       connected = CON_STAT_COMBAT;
+      break;
+    case CON_STAT_LEARN:
+      sendStatList(4, TRUE);
+      connected = CON_STAT_COMBAT2;
       break;
     case CON_STAT_UTIL:
       sendStatList(2, TRUE);
@@ -2657,29 +3227,29 @@ void Descriptor::go_back_menu(connectStateT con_state)
     case CON_SEDITING:
     case CON_HELP:
     case CON_WRITING:
-      vlogf(10, "Bad connected state in go_back_menu() [%d], BUG BRUTIUS!!!!", con_state);
+      vlogf(LOG_BUG, "Bad connected state in go_back_menu() [%d], BUG BRUTIUS!!!!", con_state);
       break;
   }
 }
 
 void Descriptor::EchoOn()
 {
-  if (client)
+  if (m_bIsClient)
     return;
 
   char echo_on[6] = {IAC, WONT, TELOPT_ECHO, '\n', '\r', '\0'};
 
-  write(socket->sock, echo_on, 6);
+  write(socket->m_sock, echo_on, 6);
 }
 
 void Descriptor::EchoOff()
 {
-  if (client)
+  if (m_bIsClient)
     return;
 
   char echo_off[4] = {IAC, WILL, TELOPT_ECHO, '\0'};
 
-  write(socket->sock, echo_off, 4);
+  write(socket->m_sock, echo_off, 4);
 }
 
 void Descriptor::sendHomeList()
@@ -2892,7 +3462,7 @@ void Descriptor::sendStatRules(int num)
     writeToQ("Please remember the following as you customize your characteristics.  First,\n\rall characteristics are merely modifiers on preselected racial norms.\n\rThat is, if you elected to be an ogre, you start off with an ogre's\n\rcharacteristics (strength, brawn, intellect, etc).  Likewise, those who\n\relected to be elves, have the elven norm as their starting point.\n\r\n\r");
     writeToQ("REALIZE THAT A ZERO STAT IS YOUR RACIAL NORM.\n\r\n\r");
   } else if (num == 2) {
-    sprintf(buf, "Characteristics on %s are separated into three sections, physical,\n\rmental, and utility.  Each section has 3-5 characteristics.  You are free\n\rto move points between characteristics in the same section, but you may not\n\rmove points between characteristics in different sections.  Additionally, no\n\rcharacteristic may be raised or lowered more than 25 points above or below\n\rthe racial norm.\n\r\n\r", MUD_NAME);
+    sprintf(buf, "Characteristics on %s are split into four groups, two for physical,\n\rmental, and utility.  Each section has 3 characteristics.  You are free\n\rto move points between characteristics in the same section, but you may not\n\rmove points between characteristics in different sections.  Additionally, no\n\rcharacteristic may be raised or lowered more than 25 points above or below\n\rthe racial norm.\n\r\n\r", MUD_NAME);
     writeToQ(buf);
     writeToQ("The customization process begins on the following screens.\n\r\n\r");
     writeToQ("To change any characteristic, you may do ('+', '-'){amount}(characteristic).\n\rWhere {amount} represents the number of points of the (characteristic)\n\rto change, and (characteristic) represents the letter corresponding to the\n\rcharacteristic.\n\r\n\r");
@@ -2907,14 +3477,287 @@ void Descriptor::sendStatList(int group, int)
 {
   char buf[1024];
   char buf1[80];
-  char buf2[80];
+  // char buf2[80];
   char pc_race[80];
-  int stat1, stat2;
+  int stat1;//, stat2;
   int free_stat;
-
+  // buf2 = "";
+  // stat2 = 0;
   // get the race description
   strcpy(pc_race, character->getMyRace()->getSingularName().c_str());
+#ifdef SNEEZY2000
+  switch (group) {
+    case 1:
+      character->cls();
+      writeToQ("Your current physical characteristics are: \n\r\n\r");
+      stat1 = character->chosenStats.get(STAT_STR);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sS%s)%strength%s       [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(S)trength       [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+      stat1 = character->chosenStats.get(STAT_CON);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sC%s)%sonstitution%s   [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(C)onstitution   [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
 
+      stat1 = character->chosenStats.get(STAT_BRA);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sB%s)%srawn%s          [%3d] (%s%s %s%s)\n\r\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(B)rawn          [%3d] (%s %s)\n\r\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      writeToQ("(S)trength affects your ability to manipulate weight and your combat damage.\n\r");
+      writeToQ("(B)rawn affects your ability to wear armor and your hardiness.\n\r");
+      writeToQ("(C)onstitution affects your endurance and your life force.\n\r\n\r");
+
+      free_stat = (0 - ((character->chosenStats.values[STAT_STR]) +
+                 (character->chosenStats.values[STAT_CON]) +
+                 (character->chosenStats.values[STAT_BRA])));
+      sprintf(buf, "You have %d free physical stat points.\n\r\n\r", free_stat);
+      writeToQ(buf);
+      if (account->term == TERM_ANSI) {
+        sprintf(buf, "To go back to the previous menu, %stype%s '%s/%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "To disconnect, %stype%s '%s~%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "For help, %stype%s '%s?%s' or (%sH%s)%selp%s.\n\r",
+             cyan(), norm(), cyan(), norm(),
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "(%sE%s)%snd%s when you are done customizing your physical characteristics.\n\r\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+      } else {
+        writeToQ("To go back to the previous menu, type '/'.\n\r");
+        writeToQ("To disconnect, type '~'.\n\r");
+        writeToQ("For help, type '?' or (H)elp.\n\r");
+        writeToQ("(E)nd when you are done customizing your physical characteristics.\n\r\n\r");
+      }
+      writeToQ("--> ");
+      break;
+    case 2:
+      character->cls();
+      writeToQ("Your current mental characteristics are: \n\r\n\r");
+      stat1 = character->chosenStats.get(STAT_INT);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sI%s)%sntelligence%s   [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(I)ntelligence   [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+      stat1 = character->chosenStats.get(STAT_WIS);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sW%s)%sisdom%s         [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(W)isdom         [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      stat1 = character->chosenStats.get(STAT_FOC);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sF%s)%socus%s          [%3d] (%s%s %s%s)\n\r\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(F)ocus          [%3d] (%s %s)\n\r\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      writeToQ("(I)ntelligence affects your maximum total learning.\n\r");
+
+      writeToQ("(W)isdom affects how fast you will learn your skills.\n\r");
+      writeToQ("(F)ocus affects the success rate of your skills.\n\r\n\r");
+
+      free_stat = (0 - ((character->chosenStats.values[STAT_INT]) +
+                 (character->chosenStats.values[STAT_FOC]) +
+                 (character->chosenStats.values[STAT_WIS])));
+      sprintf(buf, "You have %d free mental stat points.\n\r\n\r", free_stat);
+      writeToQ(buf);
+      if (account->term == TERM_ANSI) {
+        sprintf(buf, "To go back to the previous menu, %stype%s '%s/%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "To disconnect, %stype%s '%s~%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "For help, %stype%s '%s?%s' or (%sH%s)%selp%s.\n\r",
+             cyan(), norm(), cyan(), norm(),
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "(%sE%s)%snd%s when you are done customizing your mental characteristics.\n\r\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+      } else {
+        writeToQ("To go back to the previous menu, type '/'.\n\r");
+        writeToQ("To disconnect, type '~'.\n\r");
+        writeToQ("For help, type '?' or (H)elp.\n\r");
+        writeToQ("(E)nd when you are done customizing your mental characteristics.\n\r\n\r");
+      }
+      writeToQ("--> ");
+      break;
+    case 3:
+      character->cls();
+      writeToQ("Your current utility characteristics are: \n\r\n\r");
+      stat1 = character->chosenStats.get(STAT_PER);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sP%s)%serception%s     [%3d] (%s%s %s%s)\n\r", 
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(P)erception     [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      stat1 = character->chosenStats.get(STAT_CHA);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sC%s)%sharisma%s       [%3d] (%s%s %s%s)\n\r", 
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(C)harisma       [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      stat1 = character->chosenStats.get(STAT_KAR);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sK%s)%sarma%s          [%3d] (%s%s %s%s)\n\r\n\r", 
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(K)arma          [%3d] (%s %s)\n\r\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+
+
+      writeToQ("(P)erception affects your abilities to see and evaluate.\n\r");
+      writeToQ("(C)harisma affects your ability to lead others including control pets.\n\r");
+      writeToQ("(K)arma affects your luck.\n\r\n\r");
+
+      free_stat = (0 - ((character->chosenStats.values[STAT_PER]) +
+                 (character->chosenStats.values[STAT_KAR]) +
+                 (character->chosenStats.values[STAT_CHA])));
+      sprintf(buf, "You have %d free utility stat points.\n\r\n\r", free_stat);
+      writeToQ(buf);
+      if (account->term == TERM_ANSI) {
+        sprintf(buf, "To go back to the previous menu, %stype%s '%s/%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "To disconnect, %stype%s '%s~%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "For help, %stype%s '%s?%s' or (%sH%s)%selp%s.\n\r",
+             cyan(), norm(), cyan(), norm(),
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "(%sE%s)%snd%s when you are done customizing your utility characteristics.\n\r\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+      } else {
+        writeToQ("To go back to the previous menu, type '/'.\n\r");
+        writeToQ("To disconnect, type '~'.\n\r");
+        writeToQ("For help, type '?' or (H)elp.\n\r");
+        writeToQ("(E)nd when you are done customizing your utility characteristics.\n\r\n\r");
+      }
+      writeToQ("--> ");
+      break;
+    case 4:
+      character->cls();
+      writeToQ("Your current physical characteristics are: \n\r\n\r");
+      stat1 = character->chosenStats.get(STAT_DEX);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sD%s)%sexterity%s      [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(D)exterity      [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+      stat1 = character->chosenStats.get(STAT_AGI);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sA%s)%sgility%s        [%3d] (%s%s %s%s)\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(A)gilitiy       [%3d] (%s %s)\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      stat1 = character->chosenStats.get(STAT_SPE);
+      strcpy(buf1, getStatDescription(stat1));
+      if (account->term == TERM_ANSI) {
+        sprintf(buf,"(%sS%s)%speed%s          [%3d] (%s%s %s%s)\n\r\n\r",
+          cyan(), norm(), cyan(), norm(), stat1, 
+          orange(), buf1, pc_race, norm());
+      } else {
+        sprintf(buf,"(S)peed          [%3d] (%s %s)\n\r\n\r", stat1, buf1,  pc_race);
+      }
+      writeToQ(buf);
+
+      writeToQ("(D)exterity affects volume manipulation and offensive skill abilities.\n\r");
+      writeToQ("(A)gility affects your defensive combat abilities.\n\r");
+      writeToQ("(S)peed affects how fast you are able to do things.\n\r\n\r");
+      free_stat = (0 - ((character->chosenStats.values[STAT_DEX]) +
+                 (character->chosenStats.values[STAT_AGI]) +
+                 (character->chosenStats.values[STAT_SPE])));
+      sprintf(buf, "You have %d free physical stat points.\n\r\n\r", free_stat);
+      writeToQ(buf);
+      if (account->term == TERM_ANSI) {
+        sprintf(buf, "To go back to the previous menu, %stype%s '%s/%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "To disconnect, %stype%s '%s~%s'.\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "For help, %stype%s '%s?%s' or (%sH%s)%selp%s.\n\r",
+             cyan(), norm(), cyan(), norm(),
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+        sprintf(buf, "(%sE%s)%snd%s when you are done customizing your physical characteristics.\n\r\n\r",
+             cyan(), norm(), cyan(), norm());
+        writeToQ(buf);
+      } else {
+        writeToQ("To go back to the previous menu, type '/'.\n\r");
+        writeToQ("To disconnect, type '~'.\n\r");
+        writeToQ("For help, type '?' or (H)elp.\n\r");
+        writeToQ("(E)nd when you are done customizing your physical characteristics.\n\r\n\r");
+      }
+      writeToQ("--> ");
+      break;
+    default:
+      break;
+  }
+#else
   switch (group) {
     case 1:
       character->cls();
@@ -3113,8 +3956,7 @@ void Descriptor::sendStatList(int group, int)
       writeToQ("(S)peed affects how fast you are able to do things.\n\r\n\r");
       free_stat = (0 - ((character->chosenStats.values[STAT_PER]) +
                  (character->chosenStats.values[STAT_KAR]) +
-                 (character->chosenStats.values[STAT_CHA]) +
-                 (character->chosenStats.values[STAT_SPE])));
+                 (character->chosenStats.values[STAT_CHA])));
       sprintf(buf, "You have %d free utility stat points.\n\r\n\r", free_stat);
       writeToQ(buf);
       if (account->term == TERM_ANSI) {
@@ -3139,9 +3981,12 @@ void Descriptor::sendStatList(int group, int)
       }
       writeToQ("--> ");
       break;
+    case 4:
+      break;
     default:
       break;
   }
+#endif
   return;
 }
 
@@ -3186,13 +4031,23 @@ void Descriptor::sendClassList(int home)
     writeToQ("Now you get to select your class.\n\r\n\r");
   }
 
-
-
-  strcpy(buf, "Please pick one of the following combinations for your class.\n\r");
+#ifdef SNEEZY2000
+  strcpy(buf, "Please pick one of the following choices for your class.\n\r");
   strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
-  strcat(buf, "If there is no X, for some reason you can't choose the class(es).\n\r");
+  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
   strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
-  strcat(buf, "given an error message telling you why you cannot select the class(es).\n\r\n\r");
+  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
+  sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] 2. Cleric\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_CLERIC));
+  sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
+  sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
+  sprintf(buf + strlen(buf), "[%c] 7. Ranger\n\r\n\r\n\r", CCC(this, CLASS_RANGER)); 
+
+#else
+  strcpy(buf, "Please pick one of the following for your class.\n\r");
+  strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
+  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
+  strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
+  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
   sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] A. Warrior/Thief\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_WARRIOR | CLASS_THIEF, TRUE));
   sprintf(buf + strlen(buf), "[%c] 2. Cleric                   [%c] B. Warrior/Cleric\n\r", CCC(this, CLASS_CLERIC), CCC(this, CLASS_WARRIOR | CLASS_CLERIC, TRUE));
   sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] C. Thief/Mage\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF | CLASS_MAGIC_USER, TRUE));
@@ -3202,6 +4057,8 @@ void Descriptor::sendClassList(int home)
   sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] G. Warrior/Thief/Mage\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER, FALSE, TRUE));
   sprintf(buf + strlen(buf), "[%c] 8. Shaman\n\r\n\r",
           CCC(this, CLASS_SHAMAN));
+
+#endif
   strcat(buf, "There are advantages and disadvantages to each choice.\n\r");
   sprintf(buf + strlen(buf), "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
           red(), norm());
@@ -3240,7 +4097,7 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
   TBeing *ch;
 
   if (!(ch = character)) {
-    vlogf(10, "Descriptor got to canChooseClass with no character!!! BUG BRUTIUS!");
+    vlogf(LOG_BUG, "Descriptor got to canChooseClass with no character!!! BUG BRUTIUS!");
     return FALSE;
   }
 
@@ -3271,7 +4128,8 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
   }
 
   if (Class & CLASS_SHAMAN) {
-    return FALSE;
+    return TRUE;
+    // enabled for development - was FALSE
   }
 
   if (Class &CLASS_DEIKHAN) {
@@ -3289,6 +4147,7 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
   if (Class & CLASS_SHAMAN) {
     return TRUE;
   }
+  // boggle...why is this here if its also above about 10 lines up?
 
   if (Class & CLASS_THIEF) {
     return TRUE;
@@ -3386,7 +4245,7 @@ bool Descriptor::page_file(const char *the_input)
 
   for (lines = 0; lines < (cur_page - 1) * lines_per_page; lines++) {
     if (!fgets(buffer, 255, fp)) {
-      vlogf(5, "Error paging file: %s, %d", pagedfile, cur_page);
+      vlogf(LOG_FILE, "Error paging file: %s, %d", pagedfile, cur_page);
       delete [] pagedfile;
       pagedfile = NULL;
       cur_page = tot_pages = 0;
@@ -3417,7 +4276,7 @@ bool Descriptor::page_file(const char *the_input)
 // allow will permit the string to parse for %n in the colorstring
 // the chief problem with this is you can make a board message look like the
 // reader's name is in it.  (it is default TRUE)
-void Descriptor::page_string(const char *strs, int show, bool allow)
+void Descriptor::page_string(const char *strs, showNowT shownow, allowReplaceT allowRep)
 {
   delete [] showstr_head;
   showstr_head = mud_str_dup(strs);
@@ -3426,10 +4285,10 @@ void Descriptor::page_string(const char *strs, int show, bool allow)
   cur_page = 0;
   tot_pages = 0;
 
-  show_string("", show, allow);
+  show_string("", shownow, allowRep);
 }
 
-void Descriptor::show_string(const char *the_input, bool show, bool allow)
+void Descriptor::show_string(const char *the_input, showNowT showNow, allowReplaceT allowRep)
 {
   // this will hold the text of the single page that we are on
   // theortically, it is no more than screen_length * 80, but color
@@ -3520,7 +4379,7 @@ void Descriptor::show_string(const char *the_input, bool show, bool allow)
       switch (*(chk + 1)) {
         case 'n':
         case 'N':
-          if (allow) {
+          if (allowRep) {
             strcpy(buffer + i, character->getName());
             i += strlen(character->getName());
             chk += 2;
@@ -3718,7 +4577,7 @@ void Descriptor::show_string(const char *the_input, bool show, bool allow)
   buffer[i] = '\0';
   strcat(buffer, norm());
 
-  if (show) {
+  if (showNow) {
     if (tot_pages) {
       sprintf(buffer + strlen(buffer),
          "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
@@ -3753,7 +4612,7 @@ char *Descriptor::badRaceMessage(int race)
   *buf = '\0';
 
   if (!(ch = character)) {
-    vlogf(10, "Descriptor got to badClassMessage with no character!!! BUG BRUTIUS!");
+    vlogf(LOG_BUG, "Descriptor got to badClassMessage with no character!!! BUG BRUTIUS!");
     return NULL;
   }
 
@@ -3809,7 +4668,7 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
   *buf = '\0';
 
   if (!(ch = character)) {
-    vlogf(10, "Descriptor got to badClassMessage with no character!!! BUG BRUTIUS!");
+    vlogf(LOG_BUG, "Descriptor got to badClassMessage with no character!!! BUG BRUTIUS!");
     return ("");
   }
   if (multi && !IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
@@ -3938,7 +4797,7 @@ void Descriptor::string_add(char *s)
             if (connected == CON_WRITING)
               connected = CON_PLYNG;
 
-            if (client)
+            if (m_bIsClient)
               clientf("%d|%d", CLIENT_ENABLEWINDOW, FALSE);
 
             return;
@@ -3973,7 +4832,7 @@ void Descriptor::string_add(char *s)
           mud_assert(*str != NULL, "string_add(): Bad string memory");
           strcpy(*str, t);
           strcat(*str, s);
-          if (!client)
+          if (!m_bIsClient)
             delete [] t;
         }
       } else {
@@ -4096,11 +4955,11 @@ void Descriptor::string_add(char *s)
     // set the string to NULL to insure we don't fall into string_add again
     str = NULL;
 
-    if (client)
+    if (m_bIsClient)
       clientf("%d|%d", CLIENT_ENABLEWINDOW, FALSE);
   } else {
     strcat(*str, "\n\r");
-    //if (client)
+    //if (m_bIsClient)
       //prompt_mode = -1;
   }
 }
@@ -4111,7 +4970,7 @@ void Descriptor::fdSocketClose(int desc)
 
   for (d = this; d; d = d2) {
     d2 = d->next;
-    if (d->socket->sock == desc) {
+    if (d->socket->m_sock == desc) {
       delete d;
       d = NULL;
     }
@@ -4131,36 +4990,36 @@ void setPrompts(fd_set out)
 
   for (d = descriptor_list; d; d = nextd) {
     nextd = d->next;
-    if ((FD_ISSET(d->socket->sock, &out) && d->output.getBegin()) || d->prompt_mode) {
+    if ((FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin()) || d->prompt_mode) {
       update = 0;
       if (!d->connected && (ch = d->character) && ch->isPc() &&
           !(ch->isPlayerAction(PLR_COMPACT)))
-        (&d->output)->putInQ("\n\r");
+        d->output.putInQ("\n\r");
 
       if ((ch = d->character) && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
           sprintf(promptbuf, "\n\rPIETY : %5.2f > ", ch->getPiety());
-          (&d->output)->putInQ(cap(promptbuf));
+          d->output.putInQ(cap(promptbuf));
         }
         if (ch->task->task == TASK_MEDITATE) {
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
-          (&d->output)->putInQ(cap(promptbuf));
+          d->output.putInQ(cap(promptbuf));
         }
         if ((ch->task->task == TASK_SHARPEN || 
              ch->task->task == TASK_DULL) && 
             (obj = ch->heldInPrimHand())) {
           sprintf(promptbuf, "\n\r%s > ", ch->describeSharpness(obj).c_str());
-          (&d->output)->putInQ(promptbuf);
+          d->output.putInQ(promptbuf);
         }
       }
       if (d->str && (d->prompt_mode != DONT_SEND)) {
         if (ch && ch->isPlayerAction(PLR_BUGGING) && !**d->str &&
             strcmp(d->name, "Comment")) {
           // ideas, bugs, typos
-          (&d->output)->putInQ("Subject: ");
+          d->output.putInQ("Subject: ");
         } else {
           // comments
-          (&d->output)->putInQ("-> ");
+          d->output.putInQ("-> ");
         }
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
@@ -4170,10 +5029,10 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-        (&d->output)->putInQ(promptbuf);
+        d->output.putInQ(promptbuf);
       } else if (!d->connected) {
         if (!ch) {
-          vlogf(6, "Descriptor in connected mode with NULL desc->character.");
+          vlogf(LOG_BUG, "Descriptor in connected mode with NULL desc->character.");
           continue;
         }
         if (d->showstr_head && (d->prompt_mode != DONT_SEND)) {
@@ -4184,9 +5043,9 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-          (&d->output)->putInQ(promptbuf);
+          d->output.putInQ(promptbuf);
         } else {
-          if ((d->client || (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) &&
+          if ((d->m_bIsClient || (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) &&
                              IS_SET(d->prompt_d.type, PROMPT_VTANSI_BAR)))) {
             if (ch->getHit() != d->last.hit) {
               d->last.hit = ch->getHit();
@@ -4197,8 +5056,12 @@ void setPrompts(fd_set out)
               SET_BIT(update, CHANGED_MANA);
             }
             if (ch->getPiety() != d->last.piety) {
-              d->last.piety= ch->getPiety();
+              d->last.piety = ch->getPiety();
               SET_BIT(update, CHANGED_PIETY);
+            }
+            if (ch->getLifeforce() != d->last.lifeforce) {
+              d->last.lifeforce = ch->getLifeforce();
+              SET_BIT(update, CHANGED_LIFEFORCE);
             }
             if (ch->getMove() != d->last.move) {
               d->last.move = ch->getMove();
@@ -4234,8 +5097,8 @@ void setPrompts(fd_set out)
               SET_BIT(update, CHANGED_PERC);
             }
 #endif
-            if (time_info.hours != d->last.mudtime) {
-              d->last.mudtime = time_info.hours;
+            if (hourminTime() != d->last.mudtime) {
+              d->last.mudtime = hourminTime();
               SET_BIT(update, CHANGED_MUD);
             }
             if (update || ch->fight()) {
@@ -4243,15 +5106,15 @@ void setPrompts(fd_set out)
                 d->updateScreenVt100(update);
               else if (ch->ansi())
                 d->updateScreenAnsi(update);
-              else if (d->client) {
+              else if (d->m_bIsClient) {
                 d->outputProcessing();
                 d->send_client_prompt(TRUE, update); // Send client prompt
               }
             }
             /*
-            if (d->prompt_mode != DONT_SEND && d->client) {
+            if (d->prompt_mode != DONT_SEND && d->m_bIsClient) {
               strcpy(promptbuf, "> ");
-              (&d->output)->putInQ(promptbuf);
+              d->output.putInQ(promptbuf);
             }
             */
           }
@@ -4273,7 +5136,8 @@ void setPrompts(fd_set out)
               "%sN:%s%s ",           // Exp Tnl
               "%s%s<%s%s=%s>%s ",    // Opponent
               "%s%s<%s/tank=%s>%s ", // Tank / Tank-Other
-              "%s<%.1f%s> "          // Lockout
+              "%s<%.1f%s> ",          // Lockout
+              "%sLF:%d%s "         // Lifeforce
             };
 
             if (ch->isImmortal() && IS_SET(d->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
@@ -4298,6 +5162,12 @@ void setPrompts(fd_set out)
                         StPrompts[2],
                         (hasColor ? d->prompt_d.manaColor : ""),
                         ch->getPiety(),
+                        ch->norm());
+              else if (ch->hasClass(CLASS_SHAMAN))
+                sprintf(promptbuf + strlen(promptbuf),
+                        StPrompts[12],
+                        (hasColor ? d->prompt_d.manaColor : ""),
+                        ch->getLifeforce(),
                         ch->norm());
               else
                 sprintf(promptbuf + strlen(promptbuf),
@@ -4354,7 +5224,7 @@ void setPrompts(fd_set out)
             }
             bool bracket_used = false;
             if (IS_SET(d->prompt_d.type, PROMPT_OPPONENT))
-              if (ch->fight() && ch->fight()->sameRoom(ch)) {
+              if (ch->fight() && ch->fight()->sameRoom(*ch)) {
                 int ratio = min(10, max(0, ((ch->fight()->getHit() * 9) /
                                 ch->fight()->hitLimit())));
 
@@ -4371,11 +5241,11 @@ void setPrompts(fd_set out)
             bool isOther = false;
             if ((isOther = IS_SET(d->prompt_d.type, PROMPT_TANK_OTHER)) ||
                 IS_SET(d->prompt_d.type, PROMPT_TANK))
-              if (ch->fight() && ch->awake() && ch->fight()->sameRoom(ch)) {
+              if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
                 tank = ch->fight()->fight();
 
                 if (tank && (!isOther || tank != ch)) {
-                  if (ch->sameRoom(tank)) {
+                  if (ch->sameRoom(*tank)) {
                     int ratio = min(10, max(0, ((tank->getHit() * 9) / tank->hitLimit())));
 
                     sprintf(promptbuf + strlen(promptbuf),
@@ -4402,7 +5272,7 @@ void setPrompts(fd_set out)
             }
 
             strcat(promptbuf, "> ");
-            (&d->output)->putInQ(promptbuf);
+            d->output.putInQ(promptbuf);
           }
         }
       }
@@ -4416,7 +5286,7 @@ void afterPromptProcessing(fd_set out)
 
   for (d = descriptor_list; d; d = next_d) {
     next_d = d->next;
-    if (FD_ISSET(d->socket->sock, &out) && d->output.getBegin())
+    if (FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin())
       if (d->outputProcessing() < 0) {
         delete d;
         d = NULL;
@@ -4441,51 +5311,7 @@ void Descriptor::worldSend(const char *text, TBeing *ch)
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      (&d->output)->putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE).c_str());
-  }
-}
-
-void Descriptor::sendShout(TBeing *ch, const char *arg)
-{
-  Descriptor *i;
-  TBeing *b;
-  char capbuf[256];
-  char namebuf[100];
-
-  for (i = descriptor_list; i; i = i->next) {
-    if ((b = i->character) && (b != ch) && !i->connected &&
-       b->awake() &&
-       (dynamic_cast<TMonster *>(b) ||
-        (!b->isImmortal() && ch->isImmortal()) ||
-        (b->desc && !IS_SET(i->autobits, AUTO_NOSHOUT))) &&
-       !b->checkSoundproof() && 
-       !b->isPlayerAction(PLR_MAILING | PLR_BUGGING)) {
-      strcpy(capbuf, b->pers(ch));
-      string argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
-      sprintf(namebuf, "<g>%s<z>", cap(capbuf));
-      string nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
-      if(hasColorStrings(NULL, capbuf, 2)) {
-        if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          string tmpbuf = colorString(b, i, cap(capbuf), NULL, COLOR_MOBS, FALSE);
-          string tmpbuf2 = colorString(b, i, cap(capbuf), NULL, COLOR_NONE, FALSE);
-
-          if (i->client) 
-            i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
-
-          b->sendTo(COLOR_SHOUTS, "%s shouts, \"%s<1>\"\n\r",tmpbuf.c_str(), arg);
-        } else { 
-          if (i->client) 
-            i->clientf("%d|%s|%s%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
-
-          b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
-        }
-      } else {
-        if (i->client) 
-          i->clientf("%d|%s|%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
-
-        b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
-      }
-    }
+      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE).c_str());
   }
 }
 
@@ -4541,7 +5367,7 @@ void processAllInput()
       else if (d->pagedfile) 
         d->page_file(comm);
       else if (!d->account) {            // NO ACCOUNT
-        if (d->client) {
+        if (d->m_bIsClient) {
           rc = d->client_nanny(comm);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete d;
@@ -4564,7 +5390,7 @@ void processAllInput()
         }
       } else if (!d->connected) {
         if (d->showstr_head) {
-          d->show_string(comm, FALSE, TRUE);
+          d->show_string(comm, SHOWNOW_NO, ALLOWREP_YES);
         } else {
           rc = d->character->parseCommand(comm, TRUE);
           // the "if d" is here due to a core that showed d=0x0
@@ -4582,7 +5408,7 @@ void processAllInput()
             } else {
               // either descriptor_list hit end, or d is the next guy to process
               // in all likelihood, this descriptor has already been deleted and we point to free'd memory
-              vlogf(9, "Descriptor not found in list after parseCommand called.  (%s).  VERY BAD!", comm);
+              vlogf(LOG_BUG, "Descriptor not found in list after parseCommand called.  (%s).  VERY BAD!", comm);
             }
             continue;
           }
@@ -4606,7 +5432,7 @@ void processAllInput()
       else if (d->connected == CON_SEDITING)
         seditCore(d->character, comm);
       else if (d->showstr_head) {
-        d->show_string(comm, TRUE, TRUE);
+        d->show_string(comm, SHOWNOW_YES, ALLOWREP_YES);
       } else {
         rc = d->nanny(comm);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4640,7 +5466,7 @@ int Descriptor::sendLogin(const char *arg)
   char buf[160], buf2[4096] = "\0\0\0";
   accountFile afp;
 
-  if (client)
+  if (m_bIsClient)
     return FALSE;
 
   if (!*arg)
@@ -4663,17 +5489,17 @@ int Descriptor::sendLogin(const char *arg)
   } else if (*arg == '1') {
     FILE * fp = fopen("txt/version", "r");
     if (!fp) {
-      vlogf(10, "No version file found");
+      vlogf(LOG_FILE, "No version file found");
     } else {
       fgets(buf, 79, fp);
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s :\n\r%s :\n\r", MUD_NAME_VERS, buf);
+      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s (a.k.a. SneezyMUD):\n\r%s :\n\r", MUD_NAME_VERS, buf);
       fclose(fp);
     }
-    sprintf(buf2 + strlen(buf2), "Celebrating seven years providing quality MUDding.\n\r\n\r");
-    sprintf(buf2 + strlen(buf2), "Enter NEW for a new account, or ? for help.\n\r");
+    sprintf(buf2 + strlen(buf2), "Celebrating nine years of quality mudding (est. 5-1-1992)\n\r\n\r");
+    sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r\n\r");
     sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
     output.putInQ(buf2);
     return FALSE;
@@ -4681,7 +5507,7 @@ int Descriptor::sendLogin(const char *arg)
     if (WizLock) {
       writeToQ("The game is currently wiz-locked.\n\r");
       if (!lockmess.empty()) {
-        page_string(lockmess.c_str(), TRUE);
+        page_string(lockmess.c_str(), SHOWNOW_YES);
       } else {
         FILE *signFile;
 
@@ -4689,7 +5515,7 @@ int Descriptor::sendLogin(const char *arg)
           fclose(signFile);
           string iostring;
           file_to_string(SIGN_MESS, iostring);
-          page_string(iostring.c_str(), TRUE);
+          page_string(iostring.c_str(), SHOWNOW_YES);
         }
       }
       writeToQ("Wiz-Lock password: ");
@@ -4747,19 +5573,21 @@ int Descriptor::sendLogin(const char *arg)
   return FALSE;
 }
 
-bool Descriptor::checkForAccount(char *arg)
+bool Descriptor::checkForAccount(char *arg, bool silent)
 {
   char buf[256];
   struct stat timestat;
 
   if (bogusAccountName(arg)) {
-    writeToQ("Sorry, that is an illegal name for an account.\n\r");
+    if (!silent)
+      writeToQ("Sorry, that is an illegal name for an account.\n\r");
     return TRUE;
   }
   sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), lower(arg).c_str());
   
   if (!stat(buf, &timestat)) {
-    writeToQ("Account already exists, enter another name.\n\r");
+    if (!silent)
+      writeToQ("Account already exists, enter another name.\n\r");
     return TRUE;
   }
   return FALSE;
@@ -4773,7 +5601,7 @@ bool Descriptor::checkForCharacter(char *arg)
   sprintf(buf, "player/%c/%s", LOWER(arg[0]), lower(arg).c_str());
  
   if (!stat(buf, &timestat)) {
-    if (!client)
+    if (!m_bIsClient)
       writeToQ("Character already exists, enter another name.\n\r--> ");
     return TRUE;
   }
@@ -4792,6 +5620,7 @@ int Descriptor::doAccountStuff(char *arg)
   struct stat timestat;
   int rc;
   int tss = screen_size;
+  TBeing *ch;
 
   // apparently, crypt() has a mem leak in the lib function
   // By making this static, we limit the number of leaks to one
@@ -4924,7 +5753,10 @@ int Descriptor::doAccountStuff(char *arg)
         return FALSE;
       }
       saveAccount();
-      account_number++;
+      accStat.account_number++;
+
+      vlogf(LOG_MISC, "New Account: '%s' with email '%s'", account->name, account->email);
+
       account->status = TRUE;
       rc = doAccountMenu("");
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4934,7 +5766,7 @@ int Descriptor::doAccountStuff(char *arg)
       if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD)) 
         return DELETE_THIS;
 
-      vlogf(9, "Person making new character after entering wizlock password.");
+      vlogf(LOG_MISC, "Person making new character after entering wizlock password.");
 
       output.putInQ("Enter a login name for your account -> ");
       connected = CON_NEWLOG;
@@ -4943,7 +5775,7 @@ int Descriptor::doAccountStuff(char *arg)
       if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD)) 
         return DELETE_THIS;
       
-      vlogf(9, "Person entering game by entering wizlock password.");
+      vlogf(LOG_MISC, "Person entering game by entering wizlock password.");
 
       account->status = TRUE;
       if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
@@ -5000,7 +5832,7 @@ int Descriptor::doAccountStuff(char *arg)
       if (WizLock && !IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
         writeToQ("The game is currently wiz-locked.\n\r");
         if (!lockmess.empty()) {
-          page_string(lockmess.c_str(), TRUE);
+          page_string(lockmess.c_str(), SHOWNOW_YES);
         } else {
 #if 0
           ifstream op(SIGN_MESS, ios::in | ios::nocreate);
@@ -5008,7 +5840,7 @@ int Descriptor::doAccountStuff(char *arg)
             op.close();
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), TRUE);
+            page_string(iostring.c_str(), SHOWNOW_YES);
           }
 #else
           FILE *signFile;
@@ -5017,7 +5849,7 @@ int Descriptor::doAccountStuff(char *arg)
             fclose(signFile);
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), TRUE);
+            page_string(iostring.c_str(), SHOWNOW_YES);
           }
 #endif
         }
@@ -5028,7 +5860,7 @@ int Descriptor::doAccountStuff(char *arg)
         // wizlock is on, but I am an IMM, just notify me
         writeToQ("The game is currently wiz-locked.\n\r");
         if (!lockmess.empty()) {
-          page_string(lockmess.c_str(), TRUE);
+          page_string(lockmess.c_str(), SHOWNOW_YES);
         } else {
 #if 0
           ifstream opp(SIGN_MESS, ios::in | ios::nocreate);
@@ -5036,7 +5868,7 @@ int Descriptor::doAccountStuff(char *arg)
             opp.close();
             string iosstring;
             file_to_string(SIGN_MESS, iosstring);
-            page_string(iosstring.c_str(), TRUE);
+            page_string(iosstring.c_str(), SHOWNOW_YES);
           }
 #else
           FILE *signFile;
@@ -5045,7 +5877,7 @@ int Descriptor::doAccountStuff(char *arg)
             fclose(signFile);
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), TRUE);
+            page_string(iostring.c_str(), SHOWNOW_YES);
           }
 #endif
         }
@@ -5093,14 +5925,34 @@ int Descriptor::doAccountStuff(char *arg)
           return DELETE_THIS;
         break;
       }
+#if 0
+      strcpy(delname, lower(arg).c_str());
+
+      char charname[20];
+   
+      for (ch = character_list; ch; ch = ch->next) {
+        strcpy(charname, lower(ch->name).c_str());
+	if (!strcmp(charname, delname)) {
+	  
+	  writeToQ("That character is still connected, so you'll have to\n\r");
+	  writeToQ("reconnect and log off before you can delete.\n\r");
+	  go_back_menu(connected);
+	  break;
+
+        }
+      }
+      
+#endif      
+      
       writeToQ("Deleting a character will result in total deletion and\n\r");
-      writeToQ("equipment loss. Enter your password to verify or hit enter\n\r"); 
+      writeToQ("equipment loss. Enter your password to verify or hit enter\n\r");
       writeToQ("to return to the account menu system\n\r-> ");
       EchoOff();
-
       strcpy(delname, lower(arg).c_str());
+      
       connected = CON_CHARDELCNF;
       break;
+    
     case CON_CHARDELCNF:
       EchoOn();
       if (!*pwd) {
@@ -5122,17 +5974,42 @@ int Descriptor::doAccountStuff(char *arg)
         connected = CON_DELETE;
         break;
       }
+#if 1
+      // it's possible that char is in game (link-dead), check for this
+      for (ch = character_list; ch; ch = ch->next) {
+        if (!strcmp(lower(ch->name).c_str(), delname)) {
+          writeToQ("Character is still connected.  Disconnect before deleting.\n\r");
+          writeToQ("Which do you want to do?\n\r");
+          writeToQ("1) Delete your account\n\r");
+          writeToQ("2) Delete a character in your account\n\r");
+          writeToQ("3) Return to main account menu.\n\r-> ");
+          connected = CON_DELETE;
+          break;
+        }
+      }
+      if (ch)
+        break;
+#endif
+
       writeToQ("Character deleted.\n\r");
-      vlogf(1, "Character %s self-deleted. (%s account)", delname, account->name);
+      vlogf(LOG_PIO, "Character %s self-deleted. (%s account)", delname, account->name);
       DeleteHatreds(NULL, delname);
       autobits = 0;
+      // remove trophy entries so they do not carry over if the character is recreated
+    
+
+      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->getName()))==-1){
+      //vlogf(LOG_BUG, "Database error for trophy character delete");
+      //}
+
+
 
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
       while (has_mail(delname)) {
-        vlogf(1, "Deleting mail for character %s.", delname);
+        vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
         char *tmpp = read_delete(delname, delname);
         delete [] tmpp;
       }
@@ -5140,7 +6017,7 @@ int Descriptor::doAccountStuff(char *arg)
       sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
            lower(account->name).c_str(), delname);
       if (unlink(buf) != 0)
-        vlogf(9, "error in unlink (3) (%s) %d", buf, errno);
+        vlogf(LOG_FILE, "error in unlink (3) (%s) %d", buf, errno);
       account->status = TRUE;
       rc = doAccountMenu("");
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -5273,6 +6150,7 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_PWDNCNF:
     case CON_QRACE:
     case CON_STAT_COMBAT:
+    case CON_STAT_COMBAT2:
     case CON_QHANDS:
     case CON_DISCON:
     case CON_NEWACT:
@@ -5301,9 +6179,9 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_SEDITING:
     case CON_HELP:
     case CON_WRITING:
-      vlogf(10, "Bad connectivity in doAccountStuff() (%d, %s, %s)", 
+      vlogf(LOG_BUG, "Bad connectivity in doAccountStuff() (%d, %s, %s)", 
           connected, (character ? character->getName() : "false"), "0");
-      vlogf(10, "Trying to delete it.");
+      vlogf(LOG_BUG, "Trying to delete it.");
       return DELETE_THIS;
   }
   return FALSE;
@@ -5316,17 +6194,17 @@ int Descriptor::doAccountMenu(const char *arg)
   int count = 1;
   int tss = screen_size;
 
-  if (client) {
+  if (m_bIsClient) {
     clientf("%d", CLIENT_MENU);
     return DELETE_THIS;
   }
   if (!connected) {
-    vlogf(10, "DEBUG: doAM with !connected");
+    vlogf(LOG_BUG, "DEBUG: doAM with !connected");
     return DELETE_THIS;
   }
 #if 1
 // COSMO TEST-fake color setting
-  if (account->term == TERM_ANSI) {
+  if (account && account->term == TERM_ANSI) {
     SET_BIT(plr_act, PLR_COLOR);
   }
 #endif
@@ -5412,7 +6290,7 @@ int Descriptor::doAccountMenu(const char *arg)
             string fileBuf;
             if (file_to_string(ANSI_MENU_3, fileBuf)) {
                fileBuf += "\n\r";
-               page_string(fileBuf.c_str(), 0);
+               page_string(fileBuf.c_str());
             }
           }
           screen_size = tss;
@@ -5452,18 +6330,18 @@ void Descriptor::saveAccount()
   accountFile afp;
 
   if (!account || !account->name) {
-    vlogf(10, "Bad descriptor in saveAccount");
+    vlogf(LOG_BUG, "Bad descriptor in saveAccount");
     return;
   }
   sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), lower(account->name).c_str());
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
     if (mkdir(buf2, 0770)) {
-      vlogf(10, "Can't make directory for saveAccount (%s)", lower(account->name).c_str());
+      vlogf(LOG_FILE, "Can't make directory for saveAccount (%s)", lower(account->name).c_str());
       return;
     }
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(10, "Big problems in saveAccount (s)", lower(account->name).c_str());
+      vlogf(LOG_FILE, "Big problems in saveAccount (s)", lower(account->name).c_str());
       return;
     }
   }
@@ -5491,7 +6369,7 @@ void Descriptor::deleteAccount()
 
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
   if (!(dfd = opendir(buf))) {
-    vlogf(10, "Unable to walk directory for delete account (%s account)", account->name);
+    vlogf(LOG_FILE, "Unable to walk directory for delete account (%s account)", account->name);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -5500,7 +6378,7 @@ void Descriptor::deleteAccount()
 
     sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), lower(account->name).c_str(), dp->d_name);
     if (unlink(buf) != 0)
-      vlogf(9, "error in unlink (4) (%s) %d", buf, errno);
+      vlogf(LOG_FILE, "error in unlink (4) (%s) %d", buf, errno);
 
     // these are in the dir, but are not "players"
     if (!strcmp(dp->d_name, "comment") ||
@@ -5513,7 +6391,7 @@ void Descriptor::deleteAccount()
   }
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
   rmdir(buf);
-  account_number--;
+  accStat.account_number--;
   closedir(dfd);
 }
 
@@ -5527,10 +6405,10 @@ int Descriptor::inputProcessing()
 
   sofar = 0;
   flag = 0;
-  bgin = strlen(raw);
+  bgin = strlen(m_raw);
 
   do {
-    if ((thisround = read(socket->sock, raw + bgin + sofar,
+    if ((thisround = read(socket->m_sock, m_raw + bgin + sofar,
                           4096 - (bgin + sofar) - 1)) > 0) {
       sofar += thisround;
     } else {
@@ -5542,21 +6420,21 @@ int Descriptor::inputProcessing()
           break;
         
       } else {
-        vlogf(1, "EOF encountered on socket read.");
+        vlogf(LOG_PIO, "EOF encountered on socket read.");
         return (-1);
       }
     }
-  } while (!ISNEWL(*(raw + bgin + sofar - 1)));
+  } while (!ISNEWL(*(m_raw + bgin + sofar - 1)));
 
-  *(raw + bgin + sofar) = 0;
+  *(m_raw + bgin + sofar) = 0;
 
-  for (i = bgin; !ISNEWL(*(raw + i)); i++)
-    if (!*(raw + i))
+  for (i = bgin; !ISNEWL(*(m_raw + i)); i++)
+    if (!*(m_raw + i))
       return (0);
 
-  for (i = 0, k = 0; *(raw + i);) {
-    if (!ISNEWL(*(raw + i)) && !(flag = (k >= (!client ? (MAX_INPUT_LENGTH - 2) : 4096)))) {
-      if (*(raw + i) == '\b') {      // backspace 
+  for (i = 0, k = 0; *(m_raw + i);) {
+    if (!ISNEWL(*(m_raw + i)) && !(flag = (k >= (!m_bIsClient ? (MAX_INPUT_LENGTH - 2) : 4096)))) {
+      if (*(m_raw + i) == '\b') {      // backspace 
         if (k) {                // more than one char ? 
           if (*(tmp + --k) == '$')
             k--;
@@ -5564,10 +6442,10 @@ int Descriptor::inputProcessing()
         } else
           i++;
       } else {
-        if ((*(raw + i) == '\200') ||
-            (isascii(*(raw + i)) && isprint(*(raw + i)))) {
+        if ((*(m_raw + i) == '\200') ||
+            (isascii(*(m_raw + i)) && isprint(*(m_raw + i)))) {
           // trans char, double for '$' (printf)   
-          if ((*(tmp + k) = *(raw + i)) == '$')
+          if ((*(tmp + k) = *(m_raw + i)) == '$')
             *(tmp + ++k) = '$';
           k++;
           i++;
@@ -5621,14 +6499,14 @@ int Descriptor::inputProcessing()
         }
 
         // skip the rest of the line 
-        for (; !ISNEWL(*(raw + i)); i++);
+        for (; !ISNEWL(*(m_raw + i)); i++);
       }
       // find end of entry 
-      for (; ISNEWL(*(raw + i)); i++);
+      for (; ISNEWL(*(m_raw + i)); i++);
 
       // squelch the entry from the buffer 
       for (squelch = 0;; squelch++) {
-        if ((*(raw + squelch) = *(raw + i + squelch)) == '\0')
+        if ((*(m_raw + squelch) = *(m_raw + i + squelch)) == '\0')
           break;
       }
       k = 0;
@@ -5661,7 +6539,7 @@ void Descriptor::sendMotd(int wiz)
   strcat(motd, version.c_str());
 
   if (stat(NEWS_FILE, &timestat)) {
-    vlogf(0,"bad call to news file");
+    vlogf(LOG_BUG, "bad call to news file");
     return;
   }
 
@@ -5673,7 +6551,7 @@ void Descriptor::sendMotd(int wiz)
     version = colorString(character, this, version.c_str(), NULL, COLOR_BASIC,  false);
     strcat(motd, version.c_str());
     if (stat(WIZNEWS_FILE, &timestat)) {
-      vlogf(0,"bad call to wiznews file");
+      vlogf(LOG_BUG, "bad call to wiznews file");
       return;
     }
     sprintf(wizmotd + strlen(wizmotd), 
@@ -5681,7 +6559,7 @@ void Descriptor::sendMotd(int wiz)
                                ctime(&(timestat.st_mtime)));
   }
 
-  if (!client) {
+  if (!m_bIsClient) {
     writeToQ(motd);
     if (wiz)
       writeToQ(wizmotd);
@@ -5710,7 +6588,7 @@ bool textQ::takeFromQ(char *dest)
   if (begin->getText())
     strcpy(dest, begin->getText());
   else {
-    vlogf(5, "There was a begin with no text but a next");
+    vlogf(LOG_BUG, "There was a begin with no text but a next");
     return (0);
   }
   // store it off for later
@@ -5721,7 +6599,7 @@ bool textQ::takeFromQ(char *dest)
     if (begin->getNext() == begin) {
       begin->setNext(NULL);
       begin = NULL;
-      vlogf(5, "Tell a coder, begin->next = begin");
+      vlogf(LOG_BUG, "Tell a coder, begin->next = begin");
     }
   } else {
     begin = NULL;
@@ -5741,7 +6619,7 @@ void textQ::putInQ(const char *txt)
  
   n = new commText();
   if (!n) {
-    vlogf(10, "Failed mem alloc in putInQ()");
+    vlogf(LOG_BUG, "Failed mem alloc in putInQ()");
     return;
   }
   char *tx = mud_str_dup(txt);
@@ -5759,7 +6637,7 @@ void textQ::putInQ(const char *txt)
 int TBeing::applyAutorentPenalties(int secs)
 {
 #if PENALIZE_FOR_AUTO_RENTING
-  vlogf(0, "%s was autorented for %d secs", getName() ? getName() : "Unknown name", secs);
+  vlogf(LOG_PIO, "%s was autorented for %d secs", getName() ? getName() : "Unknown name", secs);
 
 #endif
   return FALSE;
@@ -5771,11 +6649,11 @@ int TBeing::applyRentBenefits(int secs)
   affectedData *af = NULL, *next_af_dude = NULL;
   int amt, transFound = FALSE;
 
-  // award healing for every 3 mins gone
-  local_tics = secs * ONE_SECOND / PULSE_TICKS;
+  // award healing for every 3 ticks gone gone
+  local_tics = secs / SECS_PER_UPDATE;
   local_tics /= 3;  // arbitrary
 
-  vlogf(0, "%s was rented for %d secs, counting as %d tics out-of-game",
+  vlogf(LOG_PIO, "%s was rented for %d secs, counting as %d tics out-of-game",
         getName(), secs, local_tics);
 
   setHit(min((int) hitLimit(), getHit() + (local_tics * hitGain())));
@@ -5795,7 +6673,7 @@ int TBeing::applyRentBenefits(int secs)
 
     if (af->duration == PERMANENT_DURATION)
       continue;
-    if ((af->duration - (local_tics * UPDATES_PER_TICK)) <= 0) {
+    if ((af->duration - (local_tics * UPDATES_PER_MUDHOUR)) <= 0) {
       if (((af->type >= MIN_SPELL) && (af->type < MAX_SKILL)) ||
           ((af->type >= FIRST_TRANSFORMED_LIMB) && (af->type < LAST_TRANSFORMED_LIMB)) ||
           ((af->type >= FIRST_BREATH_WEAPON) && (af->type < LAST_BREATH_WEAPON)) ||
@@ -5820,7 +6698,7 @@ int TBeing::applyRentBenefits(int secs)
         affectRemove(af);
       }
     } else 
-      af->duration -= local_tics * UPDATES_PER_TICK;
+      af->duration -= local_tics * UPDATES_PER_MUDHOUR;
   }
   if (transFound)
     transformLimbsBack("", MAX_WEAR, FALSE);
