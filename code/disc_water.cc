@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_water.cc,v $
+// Revision 1.6  1999/09/26 17:16:21  lapsos
+// Added spec-fountain check to elemental water create.
+//
 // Revision 1.5  1999/09/19 20:42:10  peel
 // Can conjure water elemental in rain now.
 //
@@ -824,18 +827,24 @@ int conjureElemWater(TBeing * caster)
      caster->roomp->getWeather() == WEATHER_RAINY){
     found=1;
   } else {
-    for(t=caster->roomp->stuff;t;t=t->nextThing){
-      if((tp=dynamic_cast<TPool *>(t)) && tp->getDrinkUnits()>=100 &&
-	 (tp->getDrinkType()==LIQ_WATER ||
-	  tp->getDrinkType()==LIQ_SALTWATER ||
-	  tp->getDrinkType()==LIQ_HOLYWATER)){
+    for(t = caster->roomp->stuff; t; t = t->nextThing) {
+      if ((tp = dynamic_cast<TPool *>(t)) && tp->getDrinkUnits() >= 100 &&
+	  (tp->getDrinkType() == LIQ_WATER ||
+	   tp->getDrinkType() == LIQ_SALTWATER ||
+	   tp->getDrinkType() == LIQ_HOLYWATER)) {
 	tp->setDrinkUnits(-100);
 	found=1;
 	break;
       }
+
+      if (t->spec == SPEC_FOUNTAIN) {
+        found = 1;
+        break;
+      }
     }
   }
-  if(!found){
+
+  if (!found) {
     caster->sendTo("There doesn't seem to be enough water around to conjure a water elemental.\n\r"); 
     return FALSE;
   }
