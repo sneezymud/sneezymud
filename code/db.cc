@@ -17,6 +17,7 @@
 #include "loadset.h"
 #include "sys_loot.h"
 #include "shop.h"
+#include "database.h"
 #include "obj_spellbag.h"
 #include "obj_player_corpse.h"
 #include "obj_open_container.h"
@@ -789,146 +790,130 @@ bool bootHome(int plan_i, int plot_start, int plot_end,
 	      int keynum, int flip, int rotate, bool copy_objs=FALSE)
 {
   int template_start=0, template_end=0, template_i=0;
-  int plot_i, rc;
+  int plot_i;
   TRoom *src, *dest;
-  MYSQL_RES *res2;
-  MYSQL_ROW row2;
+  TDatabase db("sneezy");
 
-
-    if((rc=dbquery(TRUE, &res2, "sneezy", "bootHome(1)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
-      if(rc==-1)
-	vlogf(LOG_BUG, "Database error in bootHome");
-      return FALSE;
-    }
-    if(!(row2=mysql_fetch_row(res2))){
-      return FALSE;
-    }
+  db.query("select template_start, template_end from homeplans where plan=%i", plan_i);
+  if(!db.fetchRow())
+    return FALSE;
     
-    template_start=atoi(row2[0]);
-    template_end=atoi(row2[1]);
+  template_start=atoi(db.getColumn(0));
+  template_end=atoi(db.getColumn(1));
+  
+  plot_i=plot_start;
+  for(template_i=template_start;template_i<=template_end;++template_i){
+    bootPulse(".", false);
     
-    plot_i=plot_start;
-    for(template_i=template_start;template_i<=template_end;++template_i){
-      bootPulse(".", false);
+    src=real_roomp(template_i);
+    dest=real_roomp(plot_i);
+    
+    if (dest->getDescr())
+      delete [] dest->descr;
+    dest->descr = mud_str_dup(src->getDescr());
+    
+    if (dest->name)
+      delete [] dest->name;
+    dest->name = mud_str_dup(src->name);
+    
+    dest->setRoomFlags(src->getRoomFlags());
+    dest->setSectorType(src->getSectorType());
+    dest->setRoomHeight(src->getRoomHeight());
+    dest->setMoblim(src->getMoblim());
+    
+    dirTypeT realdir;
+    
+    // copy exits now
+    for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){	
+      realdir=flip_dir(dir, flip);
+      realdir=rotate_dir(realdir, rotate);
       
-      src=real_roomp(template_i);
-      dest=real_roomp(plot_i);
-      
-      if (dest->getDescr())
-	delete [] dest->descr;
-      dest->descr = mud_str_dup(src->getDescr());
-      
-      if (dest->name)
-	delete [] dest->name;
-      dest->name = mud_str_dup(src->name);
-      
-      dest->setRoomFlags(src->getRoomFlags());
-      dest->setSectorType(src->getSectorType());
-      dest->setRoomHeight(src->getRoomHeight());
-      dest->setMoblim(src->getMoblim());
-
-      dirTypeT realdir;
-      
-      // copy exits now
-      for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){	
-	realdir=flip_dir(dir, flip);
-	realdir=rotate_dir(realdir, rotate);
-
-	if(src->dir_option[dir]){ // if the template has this exit, copy it
-	  dest->dir_option[realdir]->door_type =
-	    src->dir_option[dir]->door_type;
-	  dest->dir_option[realdir]->condition =
-	    src->dir_option[dir]->condition;
-	  dest->dir_option[realdir]->lock_difficulty =
-	    src->dir_option[dir]->lock_difficulty;
-	  dest->dir_option[realdir]->weight =
-	    src->dir_option[dir]->weight;
-	  dest->dir_option[realdir]->key =
-	    src->dir_option[dir]->key;
-	} else if(dest->dir_option[realdir]){
-	    TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
-
-	  // if the template doesn't have the exit, then remove it from dest
-	  if((dest->dir_option[realdir]->to_room >= plot_start &&
-	     dest->dir_option[realdir]->to_room <= plot_end) ||
-             !outside->isRoomFlag(ROOM_INDOORS)){
-
-	    dest->dir_option[realdir]=NULL;
-	    // delete?
-	  } else { // unless it goes outside, in which case make a door
-	    // external exit, make a door and lock it
-	    
-	    dirTypeT dir_outside=flip_dir(realdir, FLIP_ALL);
-
-	    // do outside room
-	    outside->dir_option[dir_outside]->door_type=DOOR_DOOR;
-	    outside->dir_option[dir_outside]->condition=EX_CLOSED + EX_LOCKED;
-	    outside->dir_option[dir_outside]->lock_difficulty=100;
-	    outside->dir_option[dir_outside]->weight=5;
-	    outside->dir_option[dir_outside]->key=keynum;
-	    
-	    if(outside->dir_option[dir_outside]->keyword)
-	      delete [] outside->dir_option[dir_outside]->keyword;
-	    outside->dir_option[dir_outside]->keyword=mud_str_dup("door");
-
-	    // do inside room
-	    dest->dir_option[realdir]->door_type=DOOR_DOOR;
-	    dest->dir_option[realdir]->condition=EX_CLOSED + EX_LOCKED;
-	    dest->dir_option[realdir]->lock_difficulty=100;
-	    dest->dir_option[realdir]->weight=5;
-	    dest->dir_option[realdir]->key=keynum;
-	    
-	    if(dest->dir_option[realdir]->keyword)
-	      delete [] dest->dir_option[realdir]->keyword;
-	    dest->dir_option[realdir]->keyword=mud_str_dup("door");
-
-	  }
+      if(src->dir_option[dir]){ // if the template has this exit, copy it
+	dest->dir_option[realdir]->door_type =
+	  src->dir_option[dir]->door_type;
+	dest->dir_option[realdir]->condition =
+	  src->dir_option[dir]->condition;
+	dest->dir_option[realdir]->lock_difficulty =
+	  src->dir_option[dir]->lock_difficulty;
+	dest->dir_option[realdir]->weight =
+	  src->dir_option[dir]->weight;
+	dest->dir_option[realdir]->key =
+	  src->dir_option[dir]->key;
+      } else if(dest->dir_option[realdir]){
+	TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
+	
+	// if the template doesn't have the exit, then remove it from dest
+	if((dest->dir_option[realdir]->to_room >= plot_start &&
+	    dest->dir_option[realdir]->to_room <= plot_end) ||
+	   !outside->isRoomFlag(ROOM_INDOORS)){
+	  
+	  dest->dir_option[realdir]=NULL;
+	  // delete?
+	} else { // unless it goes outside, in which case make a door
+	  // external exit, make a door and lock it
+	  
+	  dirTypeT dir_outside=flip_dir(realdir, FLIP_ALL);
+	  
+	  // do outside room
+	  outside->dir_option[dir_outside]->door_type=DOOR_DOOR;
+	  outside->dir_option[dir_outside]->condition=EX_CLOSED + EX_LOCKED;
+	  outside->dir_option[dir_outside]->lock_difficulty=100;
+	  outside->dir_option[dir_outside]->weight=5;
+	  outside->dir_option[dir_outside]->key=keynum;
+	  
+	  if(outside->dir_option[dir_outside]->keyword)
+	    delete [] outside->dir_option[dir_outside]->keyword;
+	  outside->dir_option[dir_outside]->keyword=mud_str_dup("door");
+	  
+	  // do inside room
+	  dest->dir_option[realdir]->door_type=DOOR_DOOR;
+	  dest->dir_option[realdir]->condition=EX_CLOSED + EX_LOCKED;
+	  dest->dir_option[realdir]->lock_difficulty=100;
+	  dest->dir_option[realdir]->weight=5;
+	  dest->dir_option[realdir]->key=keynum;
+	  
+	  if(dest->dir_option[realdir]->keyword)
+	    delete [] dest->dir_option[realdir]->keyword;
+	  dest->dir_option[realdir]->keyword=mud_str_dup("door");
+	  
 	}
       }
-      
-      // copy objects now
-      if(copy_objs){
-	for(TThing *t=src->getStuff();t;t=t->nextThing){
-	  TObj *obj=read_object(t->number, REAL);
-	  *dest+=*obj;
-	}
-      }
-      
-      ++plot_i;
     }
-
-    mysql_free_result(res2);
-
-    return TRUE;
+    
+    // copy objects now
+    if(copy_objs){
+      for(TThing *t=src->getStuff();t;t=t->nextThing){
+	TObj *obj=read_object(t->number, REAL);
+	*dest+=*obj;
+      }
+    }
+    
+    ++plot_i;
+  }
+  
+  return TRUE;
 }
 
 
 void bootHomes(void)
 {
-  int plot_start=0, plot_end=0, plan_i=0, keynum=0, flip, rotate, rc;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  int plot_start=0, plot_end=0, plan_i=0, keynum=0, flip, rotate;
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in bootHomes");
-    return;
-  }
+  db.query("select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null");
   
-  while((row=mysql_fetch_row(res))){
-    plan_i=atoi(row[0]);
-    plot_start=atoi(row[1]);
-    plot_end=atoi(row[2]);
-    keynum=atoi(row[3]);
-    flip=atoi(row[4]);    
-    rotate=atoi(row[5]);
+  while(db.fetchRow()){
+    plan_i=atoi(db.getColumn(0));
+    plot_start=atoi(db.getColumn(1));
+    plot_end=atoi(db.getColumn(2));
+    keynum=atoi(db.getColumn(3));
+    flip=atoi(db.getColumn(4));    
+    rotate=atoi(db.getColumn(5));
 
     if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate)){
       vlogf(LOG_BUG, "bootHome failed");
     }
   }
-
-  mysql_free_result(res);
 }
 
 void TRoom::colorRoom(int title, int full)
@@ -1800,8 +1785,7 @@ TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
   int i, rc, tmpcost;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  TDatabase db("sneezy");
 
   i = nr;
   if (type == VIRTUAL)
@@ -1812,39 +1796,34 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "read_object(1)", "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in read_object");
+  db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
+  
+  if(!db.fetchRow())
     return NULL;
-  }
-  if(!(row=mysql_fetch_row(res))){
-    return NULL;
-  }
+  
 
-  obj = makeNewObj(mapFileToItemType(atoi(row[0])));
+  obj = makeNewObj(mapFileToItemType(atoi(db.getColumn(0))));
   obj->number=nr;
   obj->name = obj_index[nr].name;
   obj->shortDescr = obj_index[nr].short_desc;
   obj->setDescr(obj_index[nr].long_desc);
   obj->action_description = obj_index[nr].description;
-  obj->setObjStat(atoi(row[1]));
-  obj->obj_flags.wear_flags = atoi(row[2]);
-  obj->assignFourValues(atoi(row[3]), atoi(row[4]), atoi(row[5]), atoi(row[6]));
-  obj->setWeight(atof(row[7]));
-  obj->obj_flags.cost = atoi(row[8]);
-  obj->canBeSeen = atoi(row[9]);
-  obj->spec = atoi(row[10]);
-  obj->setMaxStructPoints(atoi(row[11]));
-  obj->setStructPoints(atoi(row[12]));
+  obj->setObjStat(atoi(db.getColumn(1)));
+  obj->obj_flags.wear_flags = atoi(db.getColumn(2));
+  obj->assignFourValues(atoi(db.getColumn(3)), atoi(db.getColumn(4)), atoi(db.getColumn(5)), atoi(db.getColumn(6)));
+  obj->setWeight(atof(db.getColumn(7)));
+  obj->obj_flags.cost = atoi(db.getColumn(8));
+  obj->canBeSeen = atoi(db.getColumn(9));
+  obj->spec = atoi(db.getColumn(10));
+  obj->setMaxStructPoints(atoi(db.getColumn(11)));
+  obj->setStructPoints(atoi(db.getColumn(12)));
   obj->setDepreciation(0);
-  obj->obj_flags.decay_time=atoi(row[13]);
-  obj->setVolume(atoi(row[14]));
-  obj->setMaterial(atoi(row[15]));
+  obj->obj_flags.decay_time=atoi(db.getColumn(13));
+  obj->setVolume(atoi(db.getColumn(14)));
+  obj->setMaterial(atoi(db.getColumn(15)));
   // beta is used to test LOW loads, so don't let max_exist be a factor
-  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi(row[16]));
+  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi(db.getColumn(16)));
   obj->ex_description=obj_index[nr].ex_description;
-
-  mysql_free_result(res);
 
   for(i=0;i<MAX_OBJ_AFFECT;++i){
     obj->affected[i].location = obj_index[nr].affected[i].location;
@@ -3288,162 +3267,30 @@ extern void cleanUpMail();
 #endif
 }
 
-// -1=db error (malformed query, db down, etc)
-//  0=no error
-//  1=query successful, but it was a "select" and no results were returned
-int dbquery(bool escape, MYSQL_RES **res, const char *dbname, const char *msg, const char *query,...)
-{
-  char buf[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
-  char buf2[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
-  int onstring=0, ptr2=0, ptr=0, tmp=0;
-  char tmpc;
-  va_list ap;
-  static MYSQL *sneezydb, *immodb;
-  MYSQL *db=NULL;
-
-  if(res) *res=NULL;
-
-  va_start(ap, query);
-  vsprintf(buf, query, ap);
-  va_end(ap);
-
-  if(escape){
-    // try and process the query string a little bit, to find single quotes
-    // this is really messy.  too messy.
-    while(buf[ptr]){
-      if(buf[ptr]=='\''){
-	if(onstring){
-	  if(buf[ptr+1]==',' || buf[ptr+1]=='\0' || buf[ptr+1]==' ')
-	    onstring=0;
-	  else
-	    buf2[ptr2++]='\'';
-	} else {
-	  if(buf[ptr-1]=='=' || !strncmp(&buf[ptr-5], "like", 4) || 
-	     (buf[ptr-1]==' ' && buf[ptr-2]==',') || buf[ptr-1]=='(')
-	    onstring=1;
-	  else {
-	    // serious klugery
-	    // found a stray ', so assume we screwed up, backtrack and fix it
-	    tmp=ptr2;
-	    while(buf2[--ptr2]!='\'');
-	    tmpc=buf2[++ptr2];
-	    buf2[ptr2]='\'';
-	    while(++ptr2 && ptr2<tmp)
-	      buf2[ptr2]^=tmpc^=buf2[ptr2]^=tmpc;
-	    vlogf(LOG_BUG, "dbquery: Found stray ' in query parsing, cross your fingers");
-	  }
-	}
-      }
-      
-      buf2[ptr2++]=buf[ptr++];
-    }
-    buf2[ptr2]='\0';
-  } else {
-    strcpy(buf2, buf);
-  }
-
-  if(!strcmp(dbname, "sneezy")){
-    if(!sneezydb){
-      const char * dbconnectstr = NULL;
-      if(gamePort == PROD_GAMEPORT){
-	dbconnectstr="sneezy";
-      } else if(gamePort == BUILDER_GAMEPORT){
-	dbconnectstr="sneezybuilder";
-      } else {
-	dbconnectstr="sneezybeta";
-      }
-
-      vlogf(LOG_MISC, "%s: Initializing database '%s'.", msg,
-	    dbconnectstr);
-      sneezydb=mysql_init(NULL);
-      
-      vlogf(LOG_MISC, "%s: Connecting to database.", msg);
-      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL, 
-	  dbconnectstr, 0, NULL, 0)){
-	vlogf(LOG_BUG, "Could not connect to database '%s'.",
-	      dbconnectstr);
-	return -1;
-      }
-    }    
-
-    db=sneezydb;
-  } else if(!strcmp(dbname, "immortal")){
-    if(!immodb){
-      vlogf(LOG_MISC, "%s: Initializing database 'immortal'.", msg);
-      immodb=mysql_init(NULL);
-      
-      vlogf(LOG_MISC, "%s: Connecting to database.", msg);
-      if(!mysql_real_connect(immodb, NULL, "sneezy", NULL, 
-			     "immortal", 0, NULL, 0)){
-	vlogf(LOG_BUG, "Could not connect to database 'immortal'.");
-	return -1;
-      }
-    }    
-
-    db=immodb;
-  } else {
-    vlogf(LOG_BUG, "%s: Unknown database %s", msg, dbname);
-    return -1;
-  }
-
-  if(mysql_query(db, buf2)){
-    vlogf(LOG_BUG, "%s: Database query failed: %s", msg, mysql_error(db));
-    vlogf(LOG_BUG, "%s: %s", msg, buf2);
-    return 1;
-  }
-  if(res){
-    *res=mysql_store_result(db);
-    if(*res && !mysql_num_rows(*res) && mysql_field_count(db)) 
-      return 1;
-  }  
-
-  return 0;
-}
-
 
 void saveGovMoney(const char *what, int talens){
-  MYSQL_RES *res;
-  int rc;
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "update govmoney set talens=talens+%i where type='%s'", talens, what))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  mysql_free_result(res);
+  db.query("update govmoney set talens=talens+%i where type='%s'", talens, what);
 }
 
 int getGovMoney(int talens){
-  MYSQL_RES *res1, *res2;
-  MYSQL_ROW row;
-  int rc, amount=talens, transaction=0;
-  
-  if((rc=dbquery(TRUE, &res1, "sneezy", "getGovMoney", "select type, talens from govmoney where talens>0"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in getGovMoney");
-      return 0;
-    }
-  }
+  int amount=talens, transaction=0;
+  TDatabase db("sneezy");
 
-  while((row=mysql_fetch_row(res1)) && amount>0){
-    if(atoi(row[1]) < amount){
-      transaction=atoi(row[1]);
+  db.query("select type, talens from govmoney where talens>0");
+
+  while((db.fetchRow()) && amount>0){
+    if(atoi(db.getColumn(1)) < amount){
+      transaction=atoi(db.getColumn(1));
     } else {
       transaction=amount;
     }
 
-    if((rc=dbquery(TRUE, &res2, "sneezy", "getGovMoney", "update govmoney set talens=talens-%i where type='%s'", transaction, row[0]))){
-      if(rc){
-	vlogf(LOG_BUG, "Database error in getGovMoney");
-	return 0;
-      }
-    }
-    mysql_free_result(res2);
+    db.query("update govmoney set talens=talens-%i where type='%s'", transaction, db.getColumn(0));
 
     amount-=transaction;
   }
-  mysql_free_result(res1);
 
   return(talens-amount);
 }
@@ -3463,8 +3310,6 @@ int find_shopnr(int number){
 
 
 void countMobWealth(){
-  MYSQL_RES *res;
-  int rc;
   int wealth=0, shopwealth=0;
       
   for (TBeing *tmp_ch = character_list; tmp_ch; tmp_ch = tmp_ch->next) {
@@ -3477,92 +3322,39 @@ void countMobWealth(){
     }
   }
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "replace govmoney values ('mob wealth', %i)", wealth))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  mysql_free_result(res);
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "replace govmoney values ('shop wealth', %i)", shopwealth))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  mysql_free_result(res);
+  db.query("replace govmoney values ('mob wealth', %i)", wealth);
+  db.query("replace govmoney values ('shop wealth', %i)", shopwealth);
 }  
 
 
 void bootGovMoney(){
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc;
-  int mobLoadWealth, mobWealth;
-  int shopLoadWealth, shopWealth;
+  int mobLoadWealth=0, mobWealth=0;
+  int shopLoadWealth=0, shopWealth=0;
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob load wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  row=mysql_fetch_row(res);
-  mobLoadWealth=atoi(row[0]);
+  db.query("select talens from govmoney where type='mob load wealth' and 1=1");
+  if(db.fetchRow())
+    mobLoadWealth=atoi(db.getColumn(0));
 
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  row=mysql_fetch_row(res);
-  mobWealth=atoi(row[0]);
-  
+  db.query("select talens from govmoney where type='mob wealth' and 1=1");
+  if(db.fetchRow())
+    mobWealth=atoi(db.getColumn(0));
 
   saveGovMoney("mob debt wealth", mobLoadWealth-mobWealth);
 
+  db.query("update govmoney set talens=0 where type='mob load wealth' and 1=1");
+  db.query("select talens from govmoney where type='shop load wealth' and 1=1");
+  if(db.fetchRow())
+    shopLoadWealth=atoi(db.getColumn(0));
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='mob load wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop load wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  row=mysql_fetch_row(res);
-  shopLoadWealth=atoi(row[0]);
-
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-  row=mysql_fetch_row(res);
-  shopWealth=atoi(row[0]);
-  
+  db.query("select talens from govmoney where type='shop wealth' and 1=1");
+  if(db.fetchRow())
+    shopWealth=atoi(db.getColumn(0));
 
   saveGovMoney("shop debt wealth", shopLoadWealth-shopWealth);
-
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='shop load wealth' and 1=1"))){
-    if(rc){
-      vlogf(LOG_BUG, "Database error in saveGovMoney");
-      return;
-    }
-  }
-
-
+  
+  db.query("update govmoney set talens=0 where type='shop load wealth' and 1=1");
 }
 
