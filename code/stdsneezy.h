@@ -43,7 +43,6 @@
 #include "discipline.h"
 #include "spell2.h"
 #include "parse.h"
-#include "argument.h"
 #include "db.h"
 #include "ansi.h"
 #include "cmd_dissect.h"
