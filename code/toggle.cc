@@ -256,7 +256,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Shaman Totem Mask: Kill Baron Samedi", MOB_ELRIC},
   {"Shaman Totem Mask: Has Baron Samedi's vision", MOB_SAMEDI},
   {"Shaman Totem Mask: Killed Elric", MOB_ELRIC},
-  {"Shaman Totem Mask: Find Ptok to face true evil", MOB_GANDOLFO},
+  {"Shaman Totem Mask: Find Ptok to face true evil", MOB_PTOK},
   {"Shaman Totem Mask: Killed Father's Spirit", MOB_PTOK}, // 245
   {"Shaman Totem Mask: Finished", MOB_GANDOLFO},
   {"", MOB_NONE}, 
