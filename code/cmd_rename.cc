@@ -171,6 +171,9 @@ void TBeing::doNameChange(const char *argument)
   TDatabase db("sneezy");
   db.query("update trophy set name='%s' where name='%s'", tmp_name, orig_name);
 
+  db.query("update player set name=lower('%s') where name=lower('%s')", 
+	   tmp_name, orig_name);
+
 
   sprintf(tmpbuf, "account/%c/%s", LOWER(vict->desc->account->name[0]),
                   lower(vict->desc->account->name).c_str());
