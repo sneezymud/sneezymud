@@ -742,7 +742,8 @@ int trailSeek(TBeing * caster, TBeing * victim, int level, byte bKnown)
       default:
         break;
     } 
-    victim->affectTo(&aff);
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
     if (caster != victim) {
       act("You have successfully granted $N the senses of a bloodhound!", 
           FALSE, caster, NULL, victim, TO_CHAR);
