@@ -191,6 +191,8 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 {
   TDatabase db(DB_SNEEZY);
   int corp_id=0;
+  unsigned int shop_nr;
+  TBeing *banker;
 
   db.query("select corp_id from corpaccess where lower(name)='%s'",
 	   sstring(ch->getName()).lower().c_str());
@@ -233,6 +235,19 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
   ch->addToMoney(-gold, GOLD_XFER);
   corp.setMoney(corp.getMoney() + gold);
   corp.corpLog(ch->getName(), "deposit", gold);
+  
+  shop_nr=corp.getBank();
+  for(banker=character_list;banker;banker=banker->next){
+    if(banker->number==shop_index[shop_nr].keeper)
+      break;
+  }
+
+  if(banker){
+    banker->addToMoney(gold, GOLD_XFER);
+    shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
+  } else
+    vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i, gold=%i!") % 
+	  shop_nr % gold);
 
   me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
 }
@@ -241,7 +256,9 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0;
+  int corp_id=0, bank_amt=0;
+  unsigned int shop_nr;
+  TBeing *banker;
 
   db.query("select corp_id from corpaccess where lower(name)='%s'",
 	   sstring(ch->getName()).lower().c_str());
@@ -282,10 +299,33 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
     return;
   }
 
+
+  shop_nr=corp.getBank();
+  for(banker=character_list;banker;banker=banker->next){
+    if(banker->number==shop_index[shop_nr].keeper)
+      break;
+  }
+
+  if(banker){
+    bank_amt=banker->getMoney();
+    shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", -gold, "corporate withdrawal");
+  } else {
+    vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % shop_nr);
+    me->doTell(ch->getName(), "serious problem!");
+    return;
+  }
+
+  if(bank_amt < gold){
+    me->doTell(ch->getName(), "I'm afraid your bank has overextended itself, and doesn't have your cash available write now.");
+    return;
+  }
+
+
   corp.setMoney(corp.getMoney() - gold);
   corp.corpLog(ch->getName(), "withdrawal", -gold);
 
   ch->addToMoney(gold, GOLD_XFER);
+  banker->addToMoney(-gold, GOLD_XFER);
 
   me->doTell(ch->getName(), fmt("Ok, here is %i talens.") % gold);
   me->doTell(ch->getName(), fmt("Your balance is %i.") % (tmp-gold));

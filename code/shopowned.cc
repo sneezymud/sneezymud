@@ -124,9 +124,19 @@ void TShopOwned::doReserve()
   int even=min + (int)((max-min)/2);
   int money=keeper->getMoney();
   int amt=0;
+  TBeing *banker;
+  int bank_nr=corp.getBank();
 
   if(min<=0 || max<=0 || min>max || (max-min)<100000)
     return;
+
+  for(banker=character_list;banker;banker=banker->next){
+    if(banker->number==shop_index[bank_nr].keeper)
+      break;
+  }
+  if(!banker)
+    vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % bank_nr);
+  
 
   if(money < min){
     amt=even-money;
@@ -138,6 +148,12 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", -amt);
 
     keeper->addToMoney(amt, GOLD_SHOP);
+
+    if(banker){
+      banker->addToMoney(-amt, GOLD_SHOP);
+      shoplog(bank_nr, keeper, dynamic_cast<TMonster *>(banker), "talens", -amt, "reserve");
+    }
+
     shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
   } else if(money > max){
     amt=money-even;
@@ -146,6 +162,12 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", amt);
 
     keeper->addToMoney(-amt, GOLD_SHOP);
+
+    if(banker){
+      banker->addToMoney(amt, GOLD_SHOP);
+      shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", amt, "reserve");
+    }
+
     shoplog(shop_nr, keeper, keeper, "talens", -amt, "reserve");
   }
 }
@@ -226,12 +248,26 @@ void TShopOwned::doDividend(TObj *o, int cost)
 {
   if(getDividend()){
     int div=(int)((double)cost * getDividend());
+    TCorporation corp(getCorpID());
     div=max(0, min(div,cost));
-    
+    TBeing *banker;
+    int bank_nr=corp.getBank();
+
+    for(banker=character_list;banker;banker=banker->next){
+      if(banker->number==shop_index[bank_nr].keeper)
+	break;
+    }
+    if(!banker)
+      vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % bank_nr);
+    else {
+      banker->addToMoney(div, GOLD_SHOP);
+      shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
+    }
+
     keeper->addToMoney(-div, GOLD_SHOP);
     shoplog(shop_nr, ch, keeper, o->getName(), -div, "dividend");
     
-    TCorporation corp(getCorpID());
+
     corp.setMoney(corp.getMoney() + div);
     corp.corpLog(keeper->getName(), "dividend", div);
   }
