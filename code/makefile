@@ -6855,6 +6855,47 @@ objs/game_hearts.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/game_hearts.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/game_hearts.o: spec_mobs.h materials.h colorstring.h games.h
 objs/game_hearts.o: game_crazyeights.h game_drawpoker.h
+objs/game_hilo.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/game_hilo.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/game_hilo.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/game_hilo.o: /usr/include/g++/ctime /usr/include/time.h
+objs/game_hilo.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/game_hilo.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/game_hilo.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/game_hilo.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/game_hilo.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/game_hilo.o: /usr/include/g++/cstring /usr/include/string.h
+objs/game_hilo.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_hilo.o: /usr/include/errno.h /usr/include/g++/string
+objs/game_hilo.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/game_hilo.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/game_hilo.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/game_hilo.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/game_hilo.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/game_hilo.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_hilo.o: /usr/include/g++/stl_relops.h
+objs/game_hilo.o: /usr/include/g++/stl_iterator.h
+objs/game_hilo.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/game_hilo.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
+objs/game_hilo.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/game_hilo.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
+objs/game_hilo.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/game_hilo.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/game_hilo.o: /usr/include/g++/stl_uninitialized.h
+objs/game_hilo.o: /usr/include/g++/stl_vector.h
+objs/game_hilo.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/game_hilo.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
+objs/game_hilo.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
+objs/game_hilo.o: /usr/include/g++/iostream /usr/include/g++/sstream low.h
+objs/game_hilo.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/game_hilo.o: spell2.h argument.h db.h ansi.h cmd_dissect.h client.h
+objs/game_hilo.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/game_hilo.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/game_hilo.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
+objs/game_hilo.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/game_hilo.o: being.h person.h monster.h account.h extern.h handler.h
+objs/game_hilo.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/game_hilo.o: games.h game_crazyeights.h game_drawpoker.h
 objs/game_slots.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_slots.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/game_slots.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
