@@ -18,11 +18,11 @@ bool sameAccount(sstring buf, int shop_nr){
   db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
 
   while(db.fetchRow()){
-    if (!load_char(db.getColumn(0), &st))
+    if (!load_char(db.getColumn("name"), &st))
       continue;
 
     if(!strcmp(stthis.aname, st.aname)){
-      if(lower(buf) == lower(db.getColumn(0)))
+      if(lower(buf) == lower(db.getColumn("name")))
 	return FALSE;
       else
 	return TRUE;
@@ -44,7 +44,7 @@ int getShopAccess(int shop_nr, TBeing *ch){
   db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
   
   if(db.fetchRow())
-    access=convertTo<int>(db.getColumn(0));
+    access=convertTo<int>(db.getColumn("access"));
   
   if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
     ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
@@ -224,17 +224,21 @@ int TShopOwned::setRates(sstring arg)
     db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %i %s", convertTo<float>(db.getColumn(1)), 
-		     convertTo<float>(db.getColumn(2)), convertTo<int>(db.getColumn(3)),
-	       obj_index[real_object(convertTo<int>(db.getColumn(0)))].short_desc);
+      keeper->doTell(ch->getName(), "%f %f %i %s", 
+		     convertTo<float>(db.getColumn("profit_buy")), 
+		     convertTo<float>(db.getColumn("profit_sell")), 
+		     convertTo<int>(db.getColumn("max_num")),
+		     obj_index[real_object(convertTo<int>(db.getColumn("obj_nr")))].short_desc);
     }
 
     db.query("select match, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %i %s", convertTo<float>(db.getColumn(1)), 
-		     convertTo<float>(db.getColumn(2)), convertTo<int>(db.getColumn(3)),
-		     db.getColumn(0));
+      keeper->doTell(ch->getName(), "%f %f %i %s", 
+		     convertTo<float>(db.getColumn("profit_buy")), 
+		     convertTo<float>(db.getColumn("profit_sell")), 
+		     convertTo<int>(db.getColumn("max_num")),
+		     db.getColumn("match"));
     }    
     return TRUE;
   } else if(argc<4){
@@ -433,10 +437,10 @@ int TShopOwned::setAccess(sstring arg)
       db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
     }
     while(db.fetchRow()){
-      access=convertTo<int>(db.getColumn(1));
+      access=convertTo<int>(db.getColumn("access"));
       
       ssprintf(buf, "%s Access for %s is set to %i, commands/abilities:",
-	       ch->getName(), db.getColumn(0), access);
+	       ch->getName(), db.getColumn("name"), access);
       
       if(access>=SHOPACCESS_LOGS){
 	access-=SHOPACCESS_LOGS;
@@ -507,7 +511,7 @@ int TShopOwned::doLogs(sstring arg)
       
       while(db.fetchRow()){
 	ssprintf(buf, "%10i %-65.65s\n\r",
-		 convertTo<int>(db.getColumn(1)), db.getColumn(0));
+		 convertTo<int>(db.getColumn("tsum")), db.getColumn("name"));
 	sb += buf;
       }
       
@@ -521,7 +525,7 @@ int TShopOwned::doLogs(sstring arg)
       
       while(db.fetchRow()){
 	ssprintf(buf, "%10i %-65.65s\n\r", 
-		 convertTo<int>(db.getColumn(1)), db.getColumn(0));
+		 convertTo<int>(db.getColumn("tsum")), db.getColumn("item"));
 	sb += buf;
       }
 
@@ -536,7 +540,7 @@ int TShopOwned::doLogs(sstring arg)
     
     while(db.fetchRow()){
       ssprintf(buf, "%-12.12s %8i\n\r", 
-	       db.getColumn(0), convertTo<int>(db.getColumn(1)));
+	       db.getColumn("action"), convertTo<int>(db.getColumn("tsum")));
       sb += buf;
     }
     
@@ -547,18 +551,18 @@ int TShopOwned::doLogs(sstring arg)
     ssprintf(buf, "<r>Sales Balance<1>\n\r");
     sb += buf;
     
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0 and action != 'receiving' and action != 'giving'", shop_nr);
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0 and action != 'receiving' and action != 'giving'", shop_nr);
     
     if(db.fetchRow())
-      profit=convertTo<int>(db.getColumn(0));
+      profit=convertTo<int>(db.getColumn("talens"));
     
     ssprintf(buf, "%-15.15s %i\n\r", "Sales Profit", profit);
     sb += buf;
     
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0 and action != 'receiving' and action != 'giving'", shop_nr);
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0 and action != 'receiving' and action != 'giving'", shop_nr);
     
     if(db.fetchRow())
-      loss=convertTo<int>(db.getColumn(0));
+      loss=convertTo<int>(db.getColumn("talens"));
     
     ssprintf(buf, "%-15.15s %i\n\r", "Sales Loss", loss);
     sb += buf;
@@ -573,18 +577,18 @@ int TShopOwned::doLogs(sstring arg)
     ssprintf(buf, "<r>Gross Balance<1>\n\r");
     sb += buf;
     
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0",
 	     shop_nr);
     if(db.fetchRow())
-      profit=convertTo<int>(db.getColumn(0));
+      profit=convertTo<int>(db.getColumn("talens"));
     
     ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
     sb += buf;
     
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0",
 	     shop_nr);
     if(db.fetchRow())
-      loss=convertTo<int>(db.getColumn(0));
+      loss=convertTo<int>(db.getColumn("talens"));
     
     ssprintf(buf, "%-15.15s %i\n\r", "Gross Loss", loss);
     sb += buf;
@@ -604,11 +608,11 @@ int TShopOwned::doLogs(sstring arg)
     }    
 
     while(db.fetchRow()){
-      ssprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), convertTo<int>(db.getColumn(4)), convertTo<int>(db.getColumn(5)), convertTo<int>(db.getColumn(4))+convertTo<int>(db.getColumn(5)));
+      ssprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn("logtime"), convertTo<int>(db.getColumn("shoptalens")), convertTo<int>(db.getColumn("shopvalue")), convertTo<int>(db.getColumn("shopvalue"))+convertTo<int>(db.getColumn("shoptalens")));
       sb += buf;
       
       ssprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
-	      db.getColumn(0), db.getColumn(1), db.getColumn(2), convertTo<int>(db.getColumn(3)));
+	      db.getColumn("name"), db.getColumn("action"), db.getColumn("item"), convertTo<int>(db.getColumn("talens")));
       sb += buf;
     }
     
@@ -630,21 +634,21 @@ int TShopOwned::getMaxNum(const TObj *o)
     db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      if(isname(db.getColumn(0), o->name))
-	return convertTo<int>(db.getColumn(1));
+      if(isname(db.getColumn("match"), o->name))
+	return convertTo<int>(db.getColumn("max_num"));
     }
     
     db.query("select max_num from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
     
     if(db.fetchRow())
-      return convertTo<int>(db.getColumn(0));
+      return convertTo<int>(db.getColumn("max_num"));
   }
 
 
   db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
   
   if(db.fetchRow())
-    return convertTo<int>(db.getColumn(0));
+    return convertTo<int>(db.getColumn("max_num"));
 
   // this is non-owned shop default
   return 9;

@@ -2225,7 +2225,7 @@ void TBeing::doFactions(const sstring &arg)
 
       while(db.fetchRow()){
 	ssprintf(buf, "      %-10.10s    Level: %s\n\r",
-		db.getColumn(0), db.getColumn(1));
+		db.getColumn("name"), db.getColumn("level"));
 	sbuf+=buf;
       }
     }

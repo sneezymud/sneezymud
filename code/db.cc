@@ -1265,7 +1265,7 @@ TObj *read_object(int nr, readFileTypeT type)
     if(!db.fetchRow())
       return NULL;
     
-    obj = makeNewObj(mapFileToItemType(convertTo<int>(db.getColumn(0))));
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(db.getColumn("type"))));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1274,21 +1274,21 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->action_description = obj_index[nr].description;
       obj->ex_description=obj_index[nr].ex_description;
     }
-    obj->setObjStat(convertTo<int>(db.getColumn(1)));
-    obj->obj_flags.wear_flags = convertTo<int>(db.getColumn(2));
-    obj->assignFourValues(convertTo<int>(db.getColumn(3)), convertTo<int>(db.getColumn(4)), convertTo<int>(db.getColumn(5)), convertTo<int>(db.getColumn(6)));
-    obj->setWeight(convertTo<float>(db.getColumn(7)));
-    obj->obj_flags.cost = convertTo<int>(db.getColumn(8));
-    obj->canBeSeen = convertTo<int>(db.getColumn(9));
-    obj->spec = convertTo<int>(db.getColumn(10));
-    obj->setMaxStructPoints(convertTo<int>(db.getColumn(11)));
-    obj->setStructPoints(convertTo<int>(db.getColumn(12)));
+    obj->setObjStat(convertTo<int>(db.getColumn("action_flag")));
+    obj->obj_flags.wear_flags = convertTo<int>(db.getColumn("wear_flag"));
+    obj->assignFourValues(convertTo<int>(db.getColumn("val0")), convertTo<int>(db.getColumn("val1")), convertTo<int>(db.getColumn("val2")), convertTo<int>(db.getColumn("val3")));
+    obj->setWeight(convertTo<float>(db.getColumn("weight")));
+    obj->obj_flags.cost = convertTo<int>(db.getColumn("price"));
+    obj->canBeSeen = convertTo<int>(db.getColumn("can_be_seen"));
+    obj->spec = convertTo<int>(db.getColumn("spec_proc"));
+    obj->setMaxStructPoints(convertTo<int>(db.getColumn("max_struct")));
+    obj->setStructPoints(convertTo<int>(db.getColumn("cur_struct")));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(db.getColumn(13));
-    obj->setVolume(convertTo<int>(db.getColumn(14)));
-    obj->setMaterial(convertTo<int>(db.getColumn(15)));
+    obj->obj_flags.decay_time=convertTo<int>(db.getColumn("decay"));
+    obj->setVolume(convertTo<int>(db.getColumn("volume")));
+    obj->setMaterial(convertTo<int>(db.getColumn("material")));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db.getColumn(16)));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db.getColumn("max_exist")));
   }
   
 

@@ -5356,10 +5356,10 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
 
   int i=1;
   while(db.fetchRow()){
-    if(convertTo<int>(db.getColumn(2))==1){
-      ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, db.getColumn(0), db.getColumn(1), db.getColumn(3));
+    if(convertTo<int>(db.getColumn("died"))==1){
+      ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, db.getColumn("name"), db.getColumn("level"), db.getColumn("killer"));
     } else {
-      ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, db.getColumn(0), db.getColumn(1));
+      ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, db.getColumn("name"), db.getColumn("level"));
     }
     ++i;
   }
@@ -5423,8 +5423,8 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   int i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
-	       i, db.getColumn(0), convertTo<int>(db.getColumn(1)), 
-	       (int)(((float)convertTo<int>(db.getColumn(1))/(float)activemobcount)*100));
+	       i, db.getColumn("name"), convertTo<int>(db.getColumn("count")), 
+	       (int)(((float)convertTo<int>(db.getColumn("count"))/(float)activemobcount)*100));
     ++i;
   }
 
@@ -5455,7 +5455,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("select getPlayerName(player_id), money from gamblers where money > 0 order by money desc limit 10");
+  db.query("select getPlayerName(player_id) as name, money from gamblers where money > 0 order by money desc limit 10");
 
   ch->sendTo("You examine the board:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
@@ -5465,18 +5465,18 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   int i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has won %s talens!\n\r", 
-	       i, db.getColumn(0), db.getColumn(1));
+	       i, db.getColumn("name"), db.getColumn("money"));
     ++i;
   }
 
-  db.query("select getPlayerName(player_id), money from gamblers where money < 0 order by money limit 10");
+  db.query("select getPlayerName(player_id) as name, money from gamblers where money < 0 order by money limit 10");
   
   ch->sendTo(COLOR_BASIC, "\n\r");
 
   i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has lost %i talens.\n\r", 
-	       i, db.getColumn(0), abs(convertTo<int>(db.getColumn(1))));
+	       i, db.getColumn("name"), abs(convertTo<int>(db.getColumn("money"))));
     ++i;
   }
 
@@ -5517,37 +5517,37 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   //////////////////////////////////////
   // number of shops and owned status
   //
-  db.query("select count(*) from shop");
+  db.query("select count(*) as count from shop");
 
   if(!db.isResults()){
     ch->sendTo("The board is empty.\n\r");
     return TRUE;
   }
   db.fetchRow();
-  int nshops=convertTo<int>(db.getColumn(0));
+  int nshops=convertTo<int>(db.getColumn("count"));
 
-  db.query("select count(distinct shop_nr) from shopownedaccess");
+  db.query("select count(distinct shop_nr) as count from shopownedaccess");
   int nowned=0;
   if(db.fetchRow())
-    nowned=convertTo<int>(db.getColumn(0));
+    nowned=convertTo<int>(db.getColumn("count"));
     
   ch->sendTo("There are %i shops, %i of which are privately owned.\n\r",
 	     nshops, nowned);
 
   ////////////////////////////
   // broke shops
-  db.query("select count(*) from shop where gold<100000");
+  db.query("select count(*) as count from shop where gold<100000");
 
   if(db.fetchRow())
-    ch->sendTo("%s shops have less than 100000 talens.\n\r", db.getColumn(0));
+    ch->sendTo("%s shops have less than 100000 talens.\n\r", db.getColumn("count"));
 
 
   /////////////////////////////
   // average talens
-  db.query("select round(avg(gold)) from shop");
+  db.query("select round(avg(gold)) as gold from shop");
 
   if(db.fetchRow())
-    ch->sendTo("Average talens per shop is %s.\n\r", db.getColumn(0));
+    ch->sendTo("Average talens per shop is %s.\n\r", db.getColumn("gold"));
   
   ////////////////////////////
   // top ten shops
@@ -5557,30 +5557,30 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   int i=1;
   ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
   while(db.fetchRow()){
-    if((tr=real_roomp(convertTo<int>(db.getColumn(0))))){
+    if((tr=real_roomp(convertTo<int>(db.getColumn("in_room"))))){
       ch->sendTo(COLOR_BASIC, "%i) %s with %s talens.\n\r",
-		 i, tr->getName(), db.getColumn(1));
+		 i, tr->getName(), db.getColumn("gold"));
     }
     ++i;
   }
 
   /////////////////////////////
   // shop types
-  db.query("select type, count(*) from shoptype group by type order by count(*) desc");
+  db.query("select type, count(*) as count from shoptype group by type order by count(*) desc");
   ch->sendTo("\n\rThe number of shops that deal in each commodity are:\n\r");
   
   while(db.fetchRow()){
     ch->sendTo("[%2s] %-17s   ",
-	       db.getColumn(1), ItemInfo[convertTo<int>(db.getColumn(0))]->name);
+	       db.getColumn("count"), ItemInfo[convertTo<int>(db.getColumn("type"))]->name);
 
     if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 db.getColumn(1), ItemInfo[convertTo<int>(db.getColumn(0))]->name);
+		 db.getColumn("count"), ItemInfo[convertTo<int>(db.getColumn("type"))]->name);
     }
 
     if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 db.getColumn(1), ItemInfo[convertTo<int>(db.getColumn(0))]->name);
+		 db.getColumn("count"), ItemInfo[convertTo<int>(db.getColumn("type"))]->name);
     }
 
     ch->sendTo("\n\r");
@@ -6170,9 +6170,9 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 #if 0
     // get the number of members, we use this in a few places
-    db.query("select count(*) from factionmembers where faction='%s'", factnames[i].c_str());
+    db.query("select count(*) as count from factionmembers where faction='%s'", factnames[i].c_str());
     db.fetchRow();
-    int nmembers=convertTo<int>(db.getColumn(0));
+    int nmembers=convertTo<int>(db.getColumn("count"));
 #endif
 
     totalscore=0;
@@ -6183,8 +6183,8 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     score=0;
     float level=0;
     while(db.fetchRow()){
-      if(db.getColumn(0)){
-	level=(float) convertTo<int>(db.getColumn(0));
+      if(db.getColumn("level")){
+	level=(float) convertTo<int>(db.getColumn("level"));
 	score+=(int)(level * (level / 25.0));
       }
     }
@@ -6196,20 +6196,20 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // fishing
-    db.query("select sum(fk.weight) from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i].c_str());
+    db.query("select sum(fk.weight) as weight from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i].c_str());
     score=0;
     if(db.fetchRow()){
       float pounds=0.0;
 
-      if(db.getColumn(0) && *(db.getColumn(0))){
-	pounds=convertTo<float>(db.getColumn(0));
+      if(db.getColumn("weight") && *(db.getColumn("weight"))){
+	pounds=convertTo<float>(db.getColumn("weight"));
 	score=(int)(pounds/10000.0);
       }
     }
 
-    db.query("select count(*) from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i].c_str());
+    db.query("select count(*) as count from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i].c_str());
     if(db.fetchRow()){
-      score+=convertTo<int>(db.getColumn(0));
+      score+=convertTo<int>(db.getColumn("count"));
     }
 
     
@@ -6225,7 +6225,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     score=0;
 
     while(db.fetchRow()){
-      score += convertTo<int>(db.getColumn(1)) * convertTo<int>(db.getColumn(0));
+      score += convertTo<int>(db.getColumn("count")) * convertTo<int>(db.getColumn("level"));
     }
     score /= 10000;
 
@@ -6236,13 +6236,13 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // shops
-    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i].c_str());
+    db.query("select count(distinct soa.shop_nr) as count from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i].c_str());
     score=0;
     if(db.fetchRow()){
-      score=convertTo<int>(db.getColumn(0))*10;
+      score=convertTo<int>(db.getColumn("count"))*10;
 
       ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> shops owned by faction members\n\r", 
-		 score, db.getColumn(0));
+		 score, db.getColumn("count"));
       totalscore+=score;
     }
 

@@ -1091,48 +1091,52 @@ void TPerson::doLow(const sstring &arg)
     lowPath(arg);
   } else if (is_abbrev(buf, "statbonus")) {
     TDatabase db(DB_SNEEZY);
-    db.query("select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type");
+    db.query("select type, count(*) as count, max(mod1) as max, min(mod1) as min, avg(mod1) as avg, sum(mod1) as sum from objaffect group by type");
 
     sendTo("%13s %5s %5s %5s %10s %10s\n\r", 
 	   "Bonus       :","Cnt","Max","Min","Avg","Sum");
 
     while(db.fetchRow()){
-      switch(mapFileToApply(convertTo<int>(db.getColumn(0)))){
+      ssprintf(buf, "%5s %5s %5s %10s %10s", db.getColumn("count"),
+	       db.getColumn("min"), db.getColumn("avg"),
+	       db.getColumn("max"), db.getColumn("sum"));
+
+      switch(mapFileToApply(convertTo<int>(db.getColumn("type")))){
 	case APPLY_STR:
-	  sendTo("Strength    : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Strength    : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_BRA:
-	  sendTo("Brawn       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Brawn       : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_CON:
-	  sendTo("Constitution: %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Constitution: %s\n\r", buf.c_str());
 	  break;
 	case APPLY_DEX:
-	  sendTo("Dexterity   : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Dexterity   : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_AGI:
-	  sendTo("Agility     : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Agility     : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_INT:
-	  sendTo("Intelligence: %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Intelligence: %s\n\r", buf.c_str());
 	  break;
 	case APPLY_WIS:
-	  sendTo("Wisdom      : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Wisdom      : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_FOC:
-	  sendTo("Focus       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Focus       : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_PER:
-	  sendTo("Perception  : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Perception  : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_CHA:
-	  sendTo("Charisma    : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Charisma    : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_KAR:
-	  sendTo("Karma       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Karma       : %s\n\r", buf.c_str());
 	  break;
 	case APPLY_SPE:
-	  sendTo("Speed       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
+	  sendTo("Speed       : %s\n\r", buf.c_str());
 	  break;
 	default:
 	  break;
@@ -1362,9 +1366,9 @@ void TBeing::lowTasks(const char *arg)
     str += "---------------------------------------------------------\n\r";
 
     while(db.fetchRow()){
-      id = convertTo<int>(db.getColumn(0));
-      priority = convertTo<int>(db.getColumn(2));
-      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn(2), db.getColumn(3), db.getColumn(4));      
+      id = convertTo<int>(db.getColumn("id"));
+      priority = convertTo<int>(db.getColumn("priority"));
+      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn("assigned_to"), db.getColumn("task"), db.getColumn("status"));      
       str += buf;
     }
 
@@ -1391,7 +1395,7 @@ void TBeing::lowTasks(const char *arg)
 	if(!db.fetchRow()) {
 	  id = 0;
 	} else {
-	  id = convertTo<int>(db.getColumn(0)) + 1;
+	  id = convertTo<int>(db.getColumn("id")) + 1;
 	}
         sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), arg);
         vlogf(LOG_DASH, "lowtask: %s", temp);

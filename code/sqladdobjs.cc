@@ -31,7 +31,7 @@ int main(int argc, char **argv)
       printf("Adding %i ('%s')\n", vnums[t], db_immo.getColumn("short_desc"));
       
       // fix strung and prototype bits
-      action_flag=convertTo<int>(db_immo.getColumn(6));
+      action_flag=convertTo<int>(db_immo.getColumn("action_flag"));
       if(action_flag & (1<<2)){
 	action_flag=action_flag - (1<<2);
       }
@@ -42,7 +42,20 @@ int main(int argc, char **argv)
 
 
       db_beta.query("delete from obj where vnum=%i", vnums[t]);
-      db_beta.query("insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", db_immo.getColumn(0), db_immo.getColumn(1), db_immo.getColumn(2), db_immo.getColumn(3), db_immo.getColumn(4), db_immo.getColumn(5), action_flag, db_immo.getColumn(7), db_immo.getColumn(8), db_immo.getColumn(9), db_immo.getColumn(10), db_immo.getColumn(11), db_immo.getColumn(12), db_immo.getColumn(13), db_immo.getColumn(14), db_immo.getColumn(15), db_immo.getColumn(16), db_immo.getColumn(17), db_immo.getColumn(18), db_immo.getColumn(19), db_immo.getColumn(20), db_immo.getColumn(21));
+      db_beta.query("insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+		    db_immo.getColumn("vnum"), db_immo.getColumn("name"),
+		    db_immo.getColumn("short_desc"), db_immo.getColumn("long_desc"), 
+		    db_immo.getColumn("action_desc"), db_immo.getColumn("type"),
+		    action_flag, db_immo.getColumn("wear_flag"),
+		    db_immo.getColumn("val0"), db_immo.getColumn("val1"), 
+		    db_immo.getColumn("val2"), db_immo.getColumn("val3"),
+		    db_immo.getColumn("weight"), db_immo.getColumn("price"),
+		    db_immo.getColumn("can_be_seen"), db_immo.getColumn("spec_proc"), 
+		    db_immo.getColumn("max_exist"), db_immo.getColumn("max_struct"),
+		    db_immo.getColumn("cur_struct"), db_immo.getColumn("decay"),
+		    db_immo.getColumn("volume"), db_immo.getColumn("material"));
+
+
     } else {
       printf("Not found: %i\n", vnums[t]);
     }
@@ -53,7 +66,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
     while(db_immo.fetchRow()){
-      db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo.getColumn(0), db_immo.getColumn(1), db_immo.getColumn(2), db_immo.getColumn(3));
+      db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo.getColumn("vnum"), db_immo.getColumn("type"), db_immo.getColumn("mod1"), db_immo.getColumn("mod2"));
     }      
 
     
@@ -63,7 +76,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
     while(db_immo.fetchRow()){
-      db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo.getColumn(0), db_immo.getColumn(1), db_immo.getColumn(2));
+      db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo.getColumn("vnum"), db_immo.getColumn("name"), db_immo.getColumn("description"));
     }
 
   }

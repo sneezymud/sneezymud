@@ -267,17 +267,17 @@ void TBeing::doWho(const char *argument)
         db.query("select title, port, name from wholist order by port");
 
 	while(db.fetchRow()){
-	  stmp=db.getColumn(0);
+	  stmp=db.getColumn("title");
 	  
 	  if((pos=stmp.find("<n>")) != sstring::npos)
-	    stmp.replace(pos,3,db.getColumn(2));
+	    stmp.replace(pos,3,db.getColumn("name"));
 
 	  if((pos=stmp.find("<N>")) != sstring::npos)
-	    stmp.replace(pos,3,db.getColumn(2));
+	    stmp.replace(pos,3,db.getColumn("name"));
 
 	  
 	  ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-		   db.getColumn(1), stmp.c_str());
+		   db.getColumn("port"), stmp.c_str());
 	}
 	
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
@@ -288,17 +288,17 @@ void TBeing::doWho(const char *argument)
         db2.query("select title, port, name from wholist order by port");
 
         while(db2.fetchRow()){
-          stmp=db2.getColumn(0);
+          stmp=db2.getColumn("title");
 
           if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db2.getColumn(2));
+            stmp.replace(pos,3,db2.getColumn("name"));
 
           if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db2.getColumn(2));
+            stmp.replace(pos,3,db2.getColumn("name"));
 
 
           ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-                   db2.getColumn(1), stmp.c_str());
+                   db2.getColumn("port"), stmp.c_str());
         }
 	
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
@@ -310,17 +310,17 @@ void TBeing::doWho(const char *argument)
         db3.query("select title, port, name from wholist order by port");
 
         while(db3.fetchRow()){
-          stmp=db3.getColumn(0);
+          stmp=db3.getColumn("title");
 
           if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db3.getColumn(2));
+            stmp.replace(pos,3,db3.getColumn("name"));
 
           if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db3.getColumn(2));
+            stmp.replace(pos,3,db3.getColumn("name"));
 
 
           ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-                   db3.getColumn(1), stmp.c_str());
+                   db3.getColumn("port"), stmp.c_str());
         }
 
 

@@ -157,43 +157,6 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
 }
 
 
-void updateStocks(){
-  int shop_nr, talens, shares;
-  float price, prevprice, amt;
-  TDatabase db(DB_SNEEZY);
-  TDatabase dbupdate(DB_SNEEZY);
-
-  db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr, si.talens, si.price");
-
-  while(db.fetchRow()){
-    shop_nr=convertTo<int>(db.getColumn(0));
-    talens=convertTo<int>(db.getColumn(1));
-    price=convertTo<float>(db.getColumn(2));
-    shares=convertTo<int>(db.getColumn(3));
-
-    prevprice=price;
-
-    amt=((float)talens/(10000.0+(float)shares))-price;
-    if(amt<0)
-      amt-=(amt*2);
-
-    if(amt>0.25)
-      amt=((float)::number(10,25)/100.0);
-
-    if(((float)talens/(10000.0+(float)shares))>price){
-      price+=amt;
-    } else if(((float)talens/(10000.0+(float)shares))<price){
-      price-=amt;
-    }
-
-    dbupdate.query("update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
-
-
-    //    db.query("insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
-  }
-
-}
-
 
 // updates the data in the wholist table in the database
 // returns the count of players logged in now
