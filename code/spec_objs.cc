@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs.cc,v $
+// Revision 1.4  1999/09/26 23:13:53  lapsos
+// Typo fix.
+//
 // Revision 1.3  1999/09/26 23:04:37  lapsos
 // Few bug/crash fixes.
 //
@@ -2233,7 +2236,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
       (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= 0)
     return FALSE;
 
-  sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>",
+  sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
           (me->getName() ? me->getName() : "Bogus Object"));
 
   if (cmd == CMD_OBJ_MISS) {
