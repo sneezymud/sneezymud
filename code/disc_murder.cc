@@ -723,7 +723,7 @@ int cudgel(TBeing *thief, TBeing *victim)
 
   // Jesus's fix for cudgel...cheesy as hell but oh well
   if (victim->isUndead()) {
-    thief->sendTo("You cannot cudgel a dead head.\n\r");
+    thief->sendTo("You cannot cudgel an undead creature.\n\r");
     return FALSE;
   }
   // Jesus's fix for cudgel...cheesy as hell but oh well
@@ -750,11 +750,11 @@ int cudgel(TBeing *thief, TBeing *victim)
     thief->sendTo("There's not enough room for you to knock them senseless!\n\r");
     return FALSE;
   }
-
-  if (thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) {
-    thief->sendTo("You can't knock them unconscious.\n\r");
-    return FALSE;
-  }
+  //
+  //  if (thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) {
+  //    thief->sendTo("You can't knock them unconscious.\n\r");
+  //    return FALSE;
+  //  }
   if (victim->equipment[WEAR_HEAD]) {
     act("$N's $o prevents you from cudgeling $M.",
         FALSE, thief, victim->equipment[WEAR_HEAD], victim, TO_CHAR);
@@ -764,7 +764,8 @@ int cudgel(TBeing *thief, TBeing *victim)
   if (victim->fight())
     bKnown /= 2;
   thief->reconcileHurt(victim,0.06);
-  if (bSuccess(thief, bKnown, SKILL_CUDGEL) || !victim->awake()) {
+  if ((bSuccess(thief, bKnown, SKILL_CUDGEL) && 
+       !thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) || !victim->awake()) {
     if (!victim->isLucky(thief->spellLuckModifier(SKILL_CUDGEL))) {
       act("You knock $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_CHAR);
       act("$n knocks $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);

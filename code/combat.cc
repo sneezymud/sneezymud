@@ -2464,8 +2464,10 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
     // other surprise attacks should be added here
     if(target->isWary())
       mod /= 4;
-    else
+    else {
       target->makeWary();
+      vlogf(LOG_DASH,"%s being made wary by sneak attack from %s.", target->getName(), getName());
+    }
   }
   return hits(target, mod);
 }

@@ -1494,7 +1494,7 @@ void TBeing::statBeing(TBeing *k)
 	
       case AFFECT_WARY:
 	sprintf(buf + strlen(buf), "State: Wary\n\r");
-	sprintf(buf + strlen(buf), "     Decreases chance of multiple cudgels");
+	sprintf(buf + strlen(buf), "     Decreases chance of multiple cudgels\n\r");
 	break;
 
       case LAST_ODDBALL_AFFECT:
