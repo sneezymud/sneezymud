@@ -2,21 +2,8 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: magic_skills.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//
 //   File containing all skills for spell casters, and classes with
-//    casting derivatives. - Russ Russell  Last Updated 03/15/94
+//    casting derivatives. - Russ Russell
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +36,7 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -83,26 +70,26 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
   if ((percent > getSkillValue(SKILL_TURN) || (victim->GetMaxLevel() > 50)) &&
       (GetMaxLevel() <= 50)) {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n boldly presents $s symbol to $N, only to have $s faith falter!", FALSE, this, 0, victim, TO_NOTVICT);
-      act("You boldly present your symbol to $N, only to falter in your faith!", FALSE, this, 0, victim, TO_CHAR);
-      act("Stronger in your faith than $n, you resist their attempts to turn you!", FALSE, this, 0, victim, TO_VICT);
+      act("$n attempts to confuse $N, but fails.", FALSE, this, 0, victim, TO_NOTVICT);
+      act("You attempt to confuse $N, but fail.", FALSE, this, 0, victim, TO_CHAR);
+      act("$n has just tried to confuse you!", FALSE, this, 0, victim, TO_VICT);
       reconcileDamage(victim, 0, SKILL_TURN);
     }
   } else {
-    act("$n boldly presents $s symbol to $N, confident in their faith.", FALSE, this, 0, victim, TO_NOTVICT);
-    act("$n boldly presents $s symbol to you, confident in $s faith.", FALSE, this, 0, victim, TO_VICT);
-    act("You boldly present your symbol to $N, confident in your faith.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tries to confuse $N.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("$n tries to confuse you.", FALSE, this, 0, victim, TO_VICT);
+    act("You try to confuse $N.", FALSE, this, 0, victim, TO_CHAR);
 #if 0
     if (isGood()) {
-      act("$n's goodness sends $N reeling backwards in screams of agony!", FALSE, this, 0, victim, TO_NOTVICT);
-      act("You scream in utter agony as $n's goodness penetrates your soul!", FALSE, this, 0, victim, TO_VICT);
-      act("Your goodness sends $N reeling backwards in screams of agony!", FALSE, this, 0, victim, TO_CHAR);
+      act("$n mind focus sends $N reeling backwards in screams of agony!", FALSE, this, 0, victim, TO_NOTVICT);
+      act("You scream in utter agony as $n's mind penetrates your soul!", FALSE, this, 0, victim, TO_VICT);
+      act("The loa send $N reeling backwards!", FALSE, this, 0, victim, TO_CHAR);
 
       if ((percent < 5) || (GetMaxLevel() > 50)) {
 	act("$N is blasted into oblivion!", FALSE, this, 0, victim, TO_NOTVICT);
 	act("$N is blasted into oblivion!", FALSE, this, 0, victim, TO_VICT);
 	act("$N is blasted into oblivion!", FALSE, this, 0, victim, TO_CHAR);
-	victim->rawKill(SKILL_TURN);
+	victim->rawKill(SKILL_TURN, this);
         if (vict)
           return DELETE_VICT;
         delete victim;
@@ -110,11 +97,11 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
 	return FALSE;
       } else {
 	if (percent < 10) {
-	  act("$N is blinded by $n's holiness!", FALSE, this, 0, victim, TO_NOTVICT);
-	  act("$N is blinded by $n's holiness!", FALSE, this, 0, victim, TO_VICT);
-	  act("$N is blinded by $n's holiness!", FALSE, this, 0, victim, TO_CHAR);
+	  act("$N is blinded!", FALSE, this, 0, victim, TO_NOTVICT);
+	  act("$N is blinded!", FALSE, this, 0, victim, TO_VICT);
+	  act("$N is blinded!", FALSE, this, 0, victim, TO_CHAR);
 
-          victim->rawBlind(GetMaxLevel(), GetMaxLevel() * UPDATES_PER_TICK, SAVE_YES);
+          victim->rawBlind(GetMaxLevel(), GetMaxLevel() * UPDATES_PER_MUDHOUR, SAVE_YES);
 
 	  if (reconcileDamage(victim, (4 * getLevel(SHAMAN_LEVEL_IND)),DMG_DISINT) == -1) {
             if (vict)
@@ -127,9 +114,9 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
 	    victim->addFeared(this);
 	} else {
 	  if (percent < 20) {
-	    act("$N is stunned by $n's holiness!", FALSE, this, 0, victim, TO_NOTVICT);
-	    act("$N is stunned by $n's holiness!", FALSE, this, 0, victim, TO_VICT);
-	    act("$N is stunned by $n's holiness!", FALSE, this, 0, victim, TO_CHAR);
+	    act("$N is stunned!", FALSE, this, 0, victim, TO_NOTVICT);
+	    act("$N is stunned!", FALSE, this, 0, victim, TO_VICT);
+	    act("$N is stunned!", FALSE, this, 0, victim, TO_CHAR);
 	    victim->setPosition(POSITION_STUNNED);
 	    if (reconcileDamage(victim, (2 * getLevel(SHAMAN_LEVEL_IND)),SKILL_TURN) == -1) {
               if (vict)
@@ -156,9 +143,9 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
       }
     } else {
       if (isEvil()) {
-	act("$N becomes enthralled by $n's vileness!", FALSE, this, 0, victim, TO_NOTVICT);
-	act("You are helpless but to submit to $n's darkness!", FALSE, this, 0, victim, TO_VICT);
-	act("$N becomes enthralled by your vileness!", FALSE, this, 0, victim, TO_CHAR);
+	act("$N becomes enthralled by $n!", FALSE, this, 0, victim, TO_NOTVICT);
+	act("You are helpless but to submit to $n!", FALSE, this, 0, victim, TO_VICT);
+	act("$N becomes enthralled by you!", FALSE, this, 0, victim, TO_CHAR);
       }
     }
 #endif
