@@ -2303,8 +2303,42 @@ void zoneData::resetZone(bool bootTime)
     } else
       last_cmd = 0;
   }
+ doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
   this->age = 0;
 }
+
+bool zoneData::doGenericReset(void) 
+{
+  int top = 0;
+  int bottom = 0;
+  int rc;
+  
+  if (zone_nr < 0 || zone_nr >= (signed int) zone_table.size())
+  {
+    vlogf(LOG_BUG, "Bad zone number in doGenericReset (%d)", zone_nr);
+    return FALSE;
+  }
+  bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
+  top = zone_table[zone_nr].top;
+
+  for (TObj *o=object_list; o; o = o->next)
+  {
+    if (o->objVnum() >= bottom && o->objVnum() <= top)
+    {
+      if (o->spec)
+      {
+        rc = o->checkSpec(NULL, CMD_GENERIC_RESET, "", NULL);
+        if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+          delete o;
+          o = NULL;
+          continue;
+        }
+      }
+    }
+  }
+  return TRUE;
+}
+
 
 // echos a sstring to every room in the zone except exclude_room
 void zoneData::sendTo(sstring s, int exclude_room=-1)

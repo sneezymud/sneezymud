@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////
+
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "spec_objs.cc" - Special procedures for Objects 
@@ -461,8 +461,8 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_POISON;
 
-    act("<G>A strange green mist eminates from<1> $p.", 0, vict, o, 0, TO_CHAR);
-    act("<G>A strange green mist eminates from<1> $p.", 0, vict, o, 0, TO_ROOM);
+    act("<G>A strange green mist emanates from<1> $p.", 0, vict, o, 0, TO_CHAR);
+    act("<G>A strange green mist emanates from<1> $p.", 0, vict, o, 0, TO_ROOM);
     act("<G>The green mist quickly forms into the shape of a venomous viper!<1>", 0, vict, o, 0, TO_CHAR);
       act("<G>The green mist quickly forms into the shape of a venomous viper!<1>", 0, vict, o, 0, TO_ROOM);
 	act("<G>The viper quickly strikes $n, and just as quickly disappears!<1>", 0, vict, o, 0, TO_CHAR);
@@ -6839,24 +6839,28 @@ int chromaticWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }
 
-
+// use this for a non-closeable object
+// can close the object in the zonefile
 int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   
-  if (cmd != CMD_OBJ_OPENED || cmd != CMD_GENERIC_RESET) 
+  if (cmd != CMD_OBJ_OPENED && cmd != CMD_GENERIC_RESET) 
     return FALSE;
 
-  TObj *dummy;
-  if (cmd == CMD_GENERIC_RESET)
-  {
-    dummy = read_object(obj_index[o->getItemIndex()].virt, VIRTUAL);
-    o->name = dummy->name;
-    return TRUE;
+  TOpenContainer *cont;
+  if (!(cont=dynamic_cast<TOpenContainer *>(o)))
+    return FALSE;
+
+  if (cmd == CMD_GENERIC_RESET) {
+    if (!cont->isContainerFlag(CONT_CLOSED)) 
+    {
+      cont->addContainerFlag(CONT_CLOSED);
+      o->roomp->sendTo(COLOR_BASIC, "The %s slams shut.\n\r", o->name);
+    }
+    return FALSE;
   }
-  if(isname("[OPENED]", o->name))
-    return FALSE;
 
-  TBeing *mob = read_mobile(obj_index[o->getItemIndex()].virt , VIRTUAL);
+  TBeing *mob = read_mobile(obj_index[cont->getItemIndex()].virt , VIRTUAL);
   if (!mob) {
     ch->sendTo("Problem!  Tell a god.\n\r");
     return FALSE;
@@ -6867,9 +6871,6 @@ int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
                         mob->ex_description->findExtraDesc("repop") :
                         "$n appears suddenly in the room."),
            TRUE, mob, 0, 0, TO_ROOM);
-
-  sprintf(o->name, "%s [OPENED]", o->name);
-
 
   return FALSE;
 }
@@ -7606,19 +7607,28 @@ int fillBucket (TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   TDrinkCon *bucket=dynamic_cast<TDrinkCon *>(o);
-  
+  if (!o) 
+    return FALSE;
+
   if (!me->hasHands()) {
     me->sendTo(COLOR_OBJECTS, "I'm afraid you need hands to manipulate the bucket.\n\r");
     return TRUE;
   }
   if (me->bothArmsHurt()) {
     me->sendTo(COLOR_OBJECTS, "I'm afraid you need working arms to manipulate the bucket.\n\r");
+    return TRUE;
   }
 
   act("You throw the bucket into the well and crank it back up again, full of fresh water.", TRUE, me, bucket, 0, TO_CHAR);
   act("$n throws the bucket into the well and cranks it back up again.", TRUE, me, bucket, 0, TO_ROOM);
   
-  bucket->setDrinkUnits(bucket->getMaxDrinkUnits());
+  int water;
+  if ((water = (bucket->getMaxDrinkUnits() - bucket->getDrinkUnits())) > 0)
+  {
+    bucket->setDrinkType(LIQ_WATER);
+    bucket->addToDrinkUnits(water);
+    bucket->weightChangeObject( water * SIP_WEIGHT);
+  }
 
   return TRUE;
 }

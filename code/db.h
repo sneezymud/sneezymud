@@ -110,6 +110,7 @@ class zoneData
     void logError(char, const char *, int, int);
     void nukeMobs(void);
     void sendTo(sstring, int exclude_room=-1);
+    bool doGenericReset(void);
 
     vector<resetCom>cmd;          // command table for reset
   
