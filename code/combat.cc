@@ -3275,10 +3275,13 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
     if (victimCanAttack && ((tarLevel - myLevel) < (10 + (tarLevel / 5)))) {
       if (canAttack(isprimary)) {
-        if (vict->hasClass(CLASS_WARRIOR)) 
+        if (vict->hasClass(CLASS_WARRIOR)) {
           vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (120 - (2 * myLevel)));
-        else 
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (120 - (2 * myLevel)));
+        } else {
           vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (170 - (2 * myLevel)));
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (170 - (2 * myLevel)));
+	}
       }
     }
   }
@@ -3357,11 +3360,15 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         if (canAttack(isprimary)) {
           if (victimCanAttack) {
             vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (200 - (2 * myLevel)));
+            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (200 - (2 * myLevel)));
           } else {
-            if (vict->hasClass(CLASS_WARRIOR)) 
+            if (vict->hasClass(CLASS_WARRIOR)) {
               vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
-            else 
+              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
+            } else { 
               vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (450 - (2 * myLevel)));
+              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (450 - (2 * myLevel)));
+	    }
           }
         }
       }

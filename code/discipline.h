@@ -112,8 +112,9 @@ enum discNumT {
      DISC_THEOLOGY,
      DISC_LORE,
      DISC_NATURE,
+     DISC_DEFENSE,
      MAX_DISCS,
-     MAX_SAVED_DISCS = 90
+     MAX_SAVED_DISCS = 91
 };
 const discNumT MIN_DISC = discNumT(0);
 extern discNumT & operator++(discNumT &, int);

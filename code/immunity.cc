@@ -641,6 +641,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_TACTICS:
     case SKILL_DISSECT:
     case SKILL_DEFENSE:
+    case SKILL_ADVANCED_DEFENSE:
     case SKILL_OFFENSE:
     case SKILL_WIZARDRY:
     case SKILL_RITUALISM:

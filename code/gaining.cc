@@ -163,6 +163,7 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
     case DISC_BLUNT:
     case DISC_PIERCE:
     case DISC_BAREHAND:
+    case DISC_DEFENSE:
       return min(5, (MAX_DISC_LEARNEDNESS - L));
     default:
       break;
@@ -1296,7 +1297,7 @@ int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accc
     bakpracs = trainLevel - discLearn;
   } else if (((discipline == DISC_SLASH) || (discipline == DISC_PIERCE) ||
               (discipline == DISC_BLUNT) || (discipline == DISC_RANGED) ||
-	      (discipline == DISC_BAREHAND)) &&
+	      (discipline == DISC_BAREHAND)|| (discipline == DISC_DEFENSE)) &&
               (ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() < MAX_DISC_LEARNEDNESS)) {
     if (trainLevel == discLearn) 
       bakpracs = 0;
@@ -1369,6 +1370,14 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       return TRUE;
     }
   }
+  if (discipline == DISC_DEFENSE) {
+    if (ch->getRawNatSkillValue(SKILL_DEFENSE) < WEAPON_GAIN_LEARNEDNESS) {
+      sprintf(buf, " %s You aren't proficient enough yet.", fname(ch->name).c_str());
+      me->doTell(buf);
+      return TRUE;
+    }
+  }
+
 
   if (!prereqs) {
   // no prereqs
@@ -1451,7 +1460,8 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
                   discipline == DISC_BLUNT || 
                   discipline == DISC_PIERCE || 
                   discipline == DISC_RANGED ||
-                  discipline == DISC_BAREHAND) {
+                  discipline == DISC_BAREHAND ||
+                  discipline == DISC_DEFENSE) {
     // No restrictions on these disciplines if prof maxxed see first checks
     return FALSE;
   } else {  // needs basic skills for class

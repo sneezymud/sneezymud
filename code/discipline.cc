@@ -13,6 +13,7 @@
 #include "disc_deikhan_aegis.h"
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
+#include "disc_defense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
 #include "disc_meditation.h"
@@ -2567,7 +2568,7 @@ void TBeing::assignDisciplinesClass()
 
     discs->disc[DISC_COMBAT] = new CDCombat();
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
-
+    discs->disc[DISC_DEFENSE] = new CDDefense();
   }
   // assign these to every class
   if (!isPc()) {
@@ -2645,6 +2646,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_SLASH] = new CDSlash();
       discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
     }
     getDiscipline(DISC_WARRIOR)->ok_for_class |= CLASS_WARRIOR;
     getDiscipline(DISC_HTH)->ok_for_class |= CLASS_WARRIOR;
@@ -2654,6 +2656,8 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_WARRIOR;
     getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_WARRIOR;
     getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_WARRIOR;
+    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_WARRIOR;
+
   }
 
   if (hasClass(CLASS_RANGER)) {
@@ -2667,6 +2671,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_NATURE] = new CDNature();
       discs->disc[DISC_RANGED] = new CDRanged();
       discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
     }
     getDiscipline(DISC_RANGER)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_NATURE)->ok_for_class |= CLASS_RANGER;
@@ -2677,6 +2682,7 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_RANGED)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_RANGER;
+    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_RANGER;
   }
 
   if (hasClass(CLASS_DEIKHAN)) {
@@ -2691,6 +2697,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_THEOLOGY] = new CDTheology();
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
     }
     getDiscipline(DISC_DEIKHAN)->ok_for_class |= CLASS_DEIKHAN;
     getDiscipline(DISC_DEIKHAN_FIGHT)->ok_for_class |= CLASS_DEIKHAN;
@@ -2702,6 +2709,7 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_THEOLOGY)->ok_for_class |= CLASS_DEIKHAN;
     getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_DEIKHAN;
     getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_DEIKHAN;
+    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_DEIKHAN;
   }
 
   if (hasClass(CLASS_MONK)) {
@@ -2712,6 +2720,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_MINDBODY] = new CDMindBody();
       discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
       discs->disc[DISC_BAREHAND] = new CDBarehand();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
     }
     getDiscipline(DISC_MONK)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_MEDITATION_MONK)->ok_for_class |= CLASS_MONK;
@@ -2719,6 +2728,7 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_MINDBODY)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_FOCUSED_ATTACKS)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_BAREHAND)->ok_for_class |= CLASS_MONK;
+    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_MONK;
   }
 
   if (hasClass(CLASS_THIEF)) {
@@ -3217,6 +3227,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_SMYTHE)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_SMYTHE);
+	} else if ((cd = getDiscipline(DISC_DEFENSE)) &&
+		   cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	  raiseDiscOnce(DISC_DEFENSE);
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
@@ -3453,6 +3466,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_BLUNT)) &&
                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_BLUNT);
+	} else if ((cd = getDiscipline(DISC_DEFENSE)) &&
+		   cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	  raiseDiscOnce(DISC_DEFENSE);
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
@@ -3560,6 +3576,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_BAREHAND)) &&
                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_BAREHAND);
+	} else if ((cd = getDiscipline(DISC_DEFENSE)) &&
+		   cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	  raiseDiscOnce(DISC_DEFENSE);
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
@@ -3677,6 +3696,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_SURVIVAL)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_SURVIVAL);
+	} else if ((cd = getDiscipline(DISC_DEFENSE)) &&
+		   cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	  raiseDiscOnce(DISC_DEFENSE);
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
@@ -4127,6 +4149,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_PIERCE:
     case DISC_RANGED:
     case DISC_BAREHAND:
+    case DISC_DEFENSE:
       lev = GetMaxLevel();
       break;
     case MAX_DISCS:

@@ -1230,6 +1230,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_TACTICS:
       case SKILL_DISSECT:
       case SKILL_DEFENSE:
+      case SKILL_ADVANCED_DEFENSE:
       case SKILL_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:

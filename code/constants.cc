@@ -1699,8 +1699,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_ADVENTURING, 0, "adventuring"},                  
   {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology"},   
   {DISC_LORE, CLASS_MAGE, "lore"},
-  {DISC_NATURE, CLASS_RANGER, "nature"} // 64 is last
-
+  {DISC_NATURE, CLASS_RANGER, "nature"},
+  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense"}
 };
 
 const char * const disc_names[MAX_DISCS] =
@@ -1769,6 +1769,7 @@ const char * const disc_names[MAX_DISCS] =
   "Theological Learning",
   "Magic Lore",
   "Nature",
+  "Defensive Abilities",
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

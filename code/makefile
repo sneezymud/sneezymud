@@ -181,7 +181,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o \
 	disc_shaman_alchemy.o disc_shaman_armadillo.o \
 	disc_shaman_frog.o disc_shaman_spider.o disc_shaman_control.o \
-	disc_shaman_skunk.o \
+	disc_shaman_skunk.o disc_defense.o\
 	disc_slash.o disc_smythe.o disc_sorcery.o disc_spirit.o \
 	disc_survival.o disc_theology.o disc_thief.o disc_warrior.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o game_drawpoker.o \

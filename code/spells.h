@@ -493,6 +493,7 @@ enum spellNumT {
      SKILL_STAVECHARGE,
      SKILL_ALCOHOLISM,
      SKILL_FISHING,
+     SKILL_ADVANCED_DEFENSE,
 
      // end of generic
 

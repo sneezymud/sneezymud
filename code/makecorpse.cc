@@ -823,6 +823,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case LAST_ODDBALL_AFFECT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
+      case SKILL_ADVANCED_DEFENSE:
         break;
     }
   }
