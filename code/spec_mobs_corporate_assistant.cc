@@ -421,10 +421,10 @@ int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster 
     }
   } else if(cmd==CMD_DEPOSIT){
     tmp=convertTo<int>(arg);
-    corpDeposit(ch, me, tmp, arg.word(2));
+    corpDeposit(ch, me, tmp, arg.word(1));
   } else if(cmd==CMD_WITHDRAW){
     tmp=convertTo<int>(arg);
-    corpWithdraw(ch, me, tmp, arg.word(2));
+    corpWithdraw(ch, me, tmp, arg.word(1));
   } else if(cmd==CMD_BALANCE){
     corpBalance(ch, me, arg);
   } else
