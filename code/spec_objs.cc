@@ -3918,10 +3918,13 @@ int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) 
     if (!(ch-> hasClass(CLASS_SHAMAN))) 
       ch->setHit(ch->getHit()-2);
   }
+  
 
-  if (cmd == CMD_GENERIC_PULSE) 
+  if (cmd == CMD_GENERIC_PULSE) { 
     return DELETE_THIS;
-   
+  }
+
+  return FALSE;
 }
 
 
