@@ -535,7 +535,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
      BROWN_MUSHROOM,
      CACT_PLACE, 9999, 90,
-     6, -1, -1, -1, -1, -1, -1,
+     5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
   component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
      BROWN_MUSHROOM,
@@ -545,7 +545,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
      BROWN_MUSHROOM,
      CACT_PLACE, 9999, 90,
-     6, -1, -1, -1, -1, -1, -1,
+     5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
   component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
      BROWN_MUSHROOM,
@@ -694,6 +694,12 @@ void do_components(int situ)
     if ((value = real_object(component_placement[i].number)) < 0) {
       vlogf(LOG_MISC, fmt("Bad component (%d, %d)") %  i % component_placement[i].number);
       continue;
+    }
+
+    // Stupid hack to make this function work.  I don't want to debug this
+    // anymore.
+    if (false) {
+      vlogf(LOG_SILENT, fmt("Trying to place object %d") % component_placement[i].number);
     }
 
     bool placed = FALSE;
