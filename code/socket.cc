@@ -1117,7 +1117,6 @@ int TMainSocket::gameLoop()
     }
 
     if (pulse >= 2400) {
-      unsigned int secs = time(0) - ticktime;
       ticktime = time(0);
 
       // THIS PULSE = 0 IS NOT SIMPLY FOR LOGGING PURPOSES.
