@@ -5378,6 +5378,82 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   return TRUE;
 }
 
+
+int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc, found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_HIGHROLLERS_BOARD &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "highrollersBoard", "select name, money from gamblers where money > 0 order by money desc limit 10"))){
+    if(rc==-1){
+      vlogf(LOG_BUG, "Database error in highrollersBoard");
+      return FALSE;
+    }
+      
+  }
+
+  ch->sendTo("You examine the board:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo(" The high rollers and the big losers at the Grimhaven Casino\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  int i=1;
+  while((row=mysql_fetch_row(res))){
+    ch->sendTo(COLOR_BASIC, "%i) %s has won %s talens!\n\r", 
+	       i, row[0], row[1]);
+    ++i;
+  }
+
+
+  mysql_free_result(res);
+
+
+
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "highrollersBoard", "select name, money from gamblers where money < 0 order by money limit 10"))){
+    if(rc==-1){
+      vlogf(LOG_BUG, "Database error in highrollersBoard");
+      return FALSE;
+    }
+  }
+
+  ch->sendTo(COLOR_BASIC, "\n\r");
+
+  i=1;
+  while((row=mysql_fetch_row(res))){
+    ch->sendTo(COLOR_BASIC, "%i) %s has lost %s talens.\n\r", 
+	       i, row[0], row[1]);
+    ++i;
+  }
+
+
+  mysql_free_result(res);
+
+
+
+  return TRUE;
+}
+
+
 int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   MYSQL_RES *res;
@@ -5728,6 +5804,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "trophy board", trophyBoard},
   {FALSE, "shopinfo board", shopinfoBoard},
   {FALSE, "Sonic Blast", sonicBlast},  // 95
+  {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "last proc", bogusObjProc}
 };
 

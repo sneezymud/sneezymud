@@ -1635,11 +1635,14 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         // it's helpful, if they GIVE money by tithing (money would be < 0)
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
+      case GOLD_GAMBLE:
+	dbquery(TRUE, NULL, "sneezy", "addToMoney", "insert ignore into gamblers values ('%s', %i)", getName(), 0);
+	dbquery(TRUE, NULL, "sneezy", "addToMoney", "update gamblers set money=money+%i where name='%s'", money, getName());
+	// fall through
       case GOLD_REPAIR:
       case GOLD_SHOP:
       case GOLD_COMM:
       case GOLD_HOSPITAL:
-      case GOLD_GAMBLE:
       case GOLD_RENT:
       case GOLD_DUMP:
       case GOLD_SHOP_SYMBOL:
