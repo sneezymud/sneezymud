@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.7  2003/03/19 19:01:51  peel
+// fixed restring
+// I broke it with the string->sstrng conversion
+//
 // Revision 5.6  2003/03/13 22:40:53  peel
 // added sstring class, same as string but takes NULL as an empty string
 // replaced all uses of string to sstring
@@ -58,13 +62,13 @@ void TTool::sstringMeString(TBeing *ch, TBow *bow)
     return;
   }
   if (!bow->isBowFlag(BOW_STRING_BROKE)) {
-    act("$p doesn't need any resstringing.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$p doesn't need any restringing.", FALSE, ch, bow, 0, TO_CHAR);
     return;
   }
 
   bow->remBowFlags(BOW_STRING_BROKE);
-  act("You resstring $p with $P.", FALSE, ch, bow, this, TO_CHAR);
-  act("$n resstrings $s $o with $P.", FALSE, ch, bow, this, TO_ROOM);
+  act("You restring $p with $P.", FALSE, ch, bow, this, TO_CHAR);
+  act("$n restrings $s $o with $P.", FALSE, ch, bow, this, TO_ROOM);
 
   addToToolUses(-1);
   if (getToolUses() <= 0) {
@@ -74,14 +78,14 @@ void TTool::sstringMeString(TBeing *ch, TBow *bow)
   }
 }
 
-void TBeing::doResstring(sstring argument)
+void TBeing::doRestring(sstring argument)
 {
   TThing *bow = NULL;
   TThing *bstr = NULL;
   char arg1[256], arg2[256];
 
   if (sscanf(argument.c_str(), "%s %s", arg1, arg2) != 2) {
-    sendTo("Syntax : resstring <bow> <sstring>\n\r");
+    sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
 #if 1
@@ -100,24 +104,24 @@ void TBeing::doResstring(sstring argument)
   }
   if (!bow) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
-    sendTo("Syntax : resstring <bow> <sstring>\n\r");
+    sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
   if (!bstr) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
-    sendTo("Syntax : resstring <bow> <sstring>\n\r");
+    sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
 #else
   // works, but gets confused since "bow" is an abbrev for "bowsstring"
   if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
-    sendTo("Syntax : resstring <bow> <sstring>\n\r");
+    sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
   if (!(bstr = searchLinkedListVis(this, arg2, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
-    sendTo("Syntax : resstring <bow> <sstring>\n\r");
+    sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
 #endif

@@ -6787,8 +6787,8 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     //    vlogf(LOG_DASH, "archer fixing a bowsstring");
 
     
-    act("You quickly resstring $p.", FALSE, ch, bow, 0, TO_CHAR);
-    act("$n quickly resstrings $p.", FALSE, ch, bow, 0, TO_ROOM);
+    act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
 
     bow->remBowFlags(BOW_STRING_BROKE);
     return TRUE;

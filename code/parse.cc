@@ -319,26 +319,26 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         return FALSE;
 
       // slowly switching to sstrings over char *
-      const sstring sstringarg = newarg;
+      const sstring stringarg = newarg;
 
       switch(cmd) {
         case CMD_UNSADDLE:
-          doUnsaddle(sstringarg);
+          doUnsaddle(stringarg);
           break;
         case CMD_SPRINGLEAP:
-          doSpringleap(sstringarg, true, dynamic_cast<TBeing *>(vict));
+          doSpringleap(stringarg, true, dynamic_cast<TBeing *>(vict));
           break;
         case CMD_SADDLE:
-          doSaddle(sstringarg);
+          doSaddle(stringarg);
           break;
         case CMD_CONCEAL:
-          doConceal(sstringarg);
+          doConceal(stringarg);
           break;
         case CMD_RESTRING:
-          doResstring(sstringarg);
+          doRestring(stringarg);
           break;
         case CMD_RESET:
-          doReset(sstringarg);
+          doReset(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_RELEASE:
@@ -346,10 +346,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
 	    break;
 	  }	  
-	  doRelease(sstringarg);
+	  doRelease(stringarg);
           break;
         case CMD_CRIT:
-          rc = doCrit(sstringarg);
+          rc = doCrit(stringarg);
           break;
         case CMD_CLIENTS:
           doClients();
@@ -360,22 +360,22 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
 	    break;
 	  }
-	  doCapture(sstringarg);
+	  doCapture(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_HEAVEN:
-          doHeaven(sstringarg);
+          doHeaven(stringarg);
           break;
         case CMD_REFUEL:
           doRefuel(newarg);
 	  addToLifeforce(1);
           break;
         case CMD_REPLY:
-          doReply(sstringarg);
+          doReply(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_USE:
-          rc = doUse(sstringarg);
+          rc = doUse(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DRAG:
@@ -385,22 +385,22 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doRoll(newarg);
           break;
         case CMD_DISSECT:
-          rc = doDissect(sstringarg);
+          rc = doDissect(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DISARM:
-          rc = doDisarm(sstringarg, vict);
+          rc = doDisarm(stringarg, vict);
           break;
         case CMD_EXEC:
           rc = doExec();
           break;
         case CMD_QUAFF:
-          rc = doQuaff(sstringarg);
+          rc = doQuaff(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_GUARD:
         case CMD_PROTECT:
-          doGuard(sstringarg);
+          doGuard(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_ORDER:
@@ -673,7 +673,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_SALUTE:
         case CMD_PET:
         case CMD_GRIMACE:
-          rc = doAction(sstringarg, cmd);
+          rc = doAction(stringarg, cmd);
 	  addToLifeforce(1);
           break;
         case CMD_JUMP:
@@ -839,7 +839,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doLoad(newarg);
           break;
         case CMD_GOTO:
-          rc = doGoto(sstringarg);
+          rc = doGoto(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_SHOUT:
@@ -901,7 +901,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_SIT:
-          doSit(sstringarg);
+          doSit(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_RAISE:
@@ -914,7 +914,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_REST:
-          doRest(sstringarg);
+          doRest(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_LOWER:
@@ -934,7 +934,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_SLEEP:
-          doSleep(sstringarg);
+          doSleep(stringarg);
           break;
         case CMD_WAKE:
           doWake(newarg);
@@ -1008,7 +1008,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_LIMBS:
-          doLimbs(sstringarg);
+          doLimbs(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BREATH:
@@ -1151,7 +1151,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  rc = doKneestrike(newarg, dynamic_cast<TBeing *>(vict));
  	  break;
         case CMD_DOORBASH:
-          rc = doDoorbash(sstringarg);
+          rc = doDoorbash(stringarg);
           break;
         case CMD_TRANCE_OF_BLADES:
 	  doTranceOfBlades(newarg);
@@ -1270,7 +1270,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doBload(newarg);
           break;
 	case CMD_GLOAD:
-	  doGload(sstringarg);
+	  doGload(stringarg);
 	  break;
         case CMD_THROW:
           doThrow(newarg);
@@ -1400,11 +1400,11 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_LIGHT:
-          doLight(sstringarg);
+          doLight(stringarg);
 	  addToLifeforce(1);
           break;
 	case CMD_FISH:
-	  doFish(sstringarg);
+	  doFish(stringarg);
 	  addToLifeforce(1);
 	  break;
         case CMD_LOW:
@@ -1422,7 +1422,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_EXTINGUISH:
-          doExtinguish(sstringarg);
+          doExtinguish(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BASH:
@@ -1501,13 +1501,13 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doTan();
           break;
 	case CMD_PLANT:
-	  doPlant(sstringarg);
+	  doPlant(stringarg);
 	  break;
 	case CMD_COOK:
-	  doCook(sstringarg);
+	  doCook(stringarg);
 	  break;
 	case CMD_DRIVE:
-	  doDrive(sstringarg);
+	  doDrive(stringarg);
 	  break;
         case CMD_WHITTLE:
           doWhittle(newarg);
@@ -1610,7 +1610,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
 	  break;
 	case CMD_STOP:
-	  doStop(sstringarg);
+	  doStop(stringarg);
 	  addToLifeforce(1);
 	  break;
 	case CMD_TRIGGER:
@@ -1621,10 +1621,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doStore(newarg);
 	  break;
         case CMD_ZONEFILE:
-          doZonefile(sstringarg);
+          doZonefile(stringarg);
           break;
         case CMD_LOOT:
-          doLoot(sstringarg);
+          doLoot(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_TROPHY:
@@ -2739,7 +2739,7 @@ void buildCommandArray(void)
   commandArray[CMD_FINDEMAIL] = new commandInfo("findemail", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_ENGAGE] = new commandInfo("engage", POSITION_FIGHTING, 0);
   commandArray[CMD_DISENGAGE]=new commandInfo("disengage",POSITION_FIGHTING, 0);
-  commandArray[CMD_RESTRING]= new commandInfo("resstring", POSITION_FIGHTING, 0);
+  commandArray[CMD_RESTRING]= new commandInfo("restring", POSITION_FIGHTING, 0);
   commandArray[CMD_CONCEAL] = new commandInfo("conceal", POSITION_STANDING, 0);
   commandArray[CMD_COMMENT] = new commandInfo("comment", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_CAMP] = new commandInfo("camp", POSITION_CRAWLING, 0);

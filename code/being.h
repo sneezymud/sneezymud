@@ -1118,7 +1118,7 @@ class TBeing : public TThing {
     double usePiety(spellNumT);
     int reconcileDamage(TBeing *, int, spellNumT);
     int doRent(const char *);
-    void doResstring(sstring);
+    void doRestring(sstring);
     void doRelease(const sstring &);
     void doCapture(const sstring &);
     void doCompare(const char *);
