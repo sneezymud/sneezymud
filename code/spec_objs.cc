@@ -5643,27 +5643,32 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     // faction header
     ch->sendTo("%s\n\r", FactionInfo[factionNumber(factnames[i])].faction_name);
 
+#if 0
     // get the number of members, we use this in a few places
     db.query("select count(*) from factionmembers where faction='%s'", factnames[i]);
     db.fetchRow();
     int nmembers=atoi(db.getColumn(0));
+#endif
+
     totalscore=0;
 
+
     // number of members and total levels
-    db.query("select count(*), sum(level) from factionmembers where faction='%s'", factnames[i]);
+    db.query("select level from factionmembers where faction='%s'", factnames[i]);
     score=0;
-    if(db.fetchRow()){
-      // this should reward high member count AND high average level, adjust
-      int nlevels=0;
-
-      if(db.getColumn(1) && nmembers){
-	nlevels=atoi(db.getColumn(1));
-	score=(int)((float)nlevels/(float)nmembers);
+    float level=0;
+    while(db.fetchRow()){
+      if(db.getColumn(0)){
+	level=(float) atoi(db.getColumn(0));
+	score+=(int)(level * (level / 25.0));
       }
-
-      ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> number of members and average level\n\r", score);
-      totalscore+=score;
     }
+    score=score/10; // scale down a bit
+
+    ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> average level\n\r", score);
+    totalscore+=score;
+
+
 
     // fishing
     db.query("select sum(fk.weight) from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i]);
@@ -5687,20 +5692,19 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     totalscore+=score;
 
 
+
+
     // trophy
-    db.query("select count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s'", factnames[i]);
+    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name", factnames[i]);
     score=0;
-    if(db.fetchRow()){
-      // should scale this based on level
 
-      if(nmembers){
-	score=(int)(atof(db.getColumn(0)) / nmembers);
-	score = (int)(((float)score/(float)mob_index.size())*100.0);
-      }
-
-      ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> average trophy percentage\n\r", score);
-      totalscore+=score;
+    while(db.fetchRow()){
+      score += atoi(db.getColumn(1)) * atoi(db.getColumn(0));
     }
+    score /= 10000;
+
+    ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> average trophy percentage\n\r", score);
+    totalscore+=score;
 
     // shops
     db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where soa.access & %i and fm.name = soa.name and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
@@ -5713,10 +5717,14 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
       totalscore+=score;
     }
 
+
+
+
     // faction bank account
     score=(int)(FactionInfo[factionNumber(factnames[i])].faction_wealth/100000.0);
     ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> faction wealth\n\r", score);
     totalscore+=score;
+
 
 
 
