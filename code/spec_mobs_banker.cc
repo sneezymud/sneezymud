@@ -159,7 +159,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 		     talenDisplay(convertTo<int>(db["talens"])));
     }
 
-    db.query("select count(*) as c, sum(talens) as t from shopowned bank");
+    db.query("select count(*) as c, sum(talens) as t from shopownedbank");
 
     if(db.fetchRow()){
       myself->doTell(ch->getName(), fmt("%i accounts, %s talens.") %
