@@ -114,12 +114,12 @@ void TBeing::doGload(sstring arg)
   TThing  *arrow;
   TGun *gun;
   TAmmo *ammo=NULL;
-  int nargs;
   TBeing *tb;
 
-  nargs=argument_parser(arg, arg1, arg2);
+  arg1=arg.word(0);
+  arg2=arg.word(1);
 
-  if(nargs<1 || nargs>2){
+  if(arg1.empty()){
     gload_usage(this);
     return;
   }
@@ -132,7 +132,7 @@ void TBeing::doGload(sstring arg)
       return;
     }
 
-    if(nargs==1){
+    if(arg2.empty()){
       arg2=getAmmoKeyword(gun->getAmmoType());
     } 
 

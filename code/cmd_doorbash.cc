@@ -207,9 +207,8 @@ int TBeing::doDoorbash(const sstring & argument)
     sendTo("You know nothing about door bashing.\n\r");
     return FALSE;
   }
-  sstring type;
-  sstring direction;
-  argument_parser(argument, type, direction);
+  sstring type=argument.word(0);
+  sstring direction=argument.word(1);
           
   if (type.empty()) {
     sendTo("You must specify a direction.\n\r");

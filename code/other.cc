@@ -3393,7 +3393,8 @@ void TBeing::doLight(const sstring & argument)
   int num;
   sstring arg1, arg2;
 
-  argument_parser(argument, arg1, arg2);
+  arg1=argument.word(0);
+  arg2=argument.word(1);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
@@ -3474,7 +3475,8 @@ void TBeing::doExtinguish(const sstring & argument)
   int num;
   sstring arg1, arg2;
 
-  argument_parser(argument, arg1, arg2);
+  arg1=argument.word(0);
+  arg2=argument.word(1);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
@@ -3536,7 +3538,9 @@ void TBeing::doRefuel(const sstring &argument)
   sstring arg, arg2, arg3;
   int roomOnly, heldOnly;
 
-  argument_parser(argument, arg, arg2, arg3);
+  arg=argument.word(0);
+  arg2=argument.word(1);
+  arg3=argument.word(2);
 
   if (arg.empty()) {
     sendTo("Refuel what?\n\r");
@@ -3975,7 +3979,9 @@ void TBeing::doDrag(const sstring &arg)
   TObj *o;
   const char *syntax="Syntax : drag <object|person> <direction>\n\r";
 
-  argument_parser(arg, caName, dir);
+  caName=arg.word(0);
+  dir=arg.word(1);
+
 
   if(caName.empty() || dir.empty()){
     sendTo(syntax);
@@ -4508,7 +4514,8 @@ void TBeing::doRoll(const sstring &arg)
   TObj *o;
   const char *syntax="Syntax : roll <object|person> <direction>\n\r";
 
-  argument_parser(arg, caName, dir);
+  caName=arg.word(0);
+  dir=arg.word(1);
 
   if(caName.empty() || dir.empty()){
     sendTo(syntax);

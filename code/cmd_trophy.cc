@@ -114,7 +114,8 @@ void TBeing::doTrophy(const sstring &arg)
 
   TTrophy trophy(getName());
 
-  argument_parser(arg, arg1, arg2);
+  arg1=arg.word(0);
+  arg2=arg.word(1);
 
   if(arg1=="zone"){
     if(!arg2.empty()){

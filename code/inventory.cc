@@ -272,7 +272,9 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
   TMoney *money;
   int rc = 0, count = 0, numx = 0;
 
-  argument_parser(argument, arg, arg2);
+  arg=argument.word(0);
+  arg2=argument.word(1);
+
 
   if(arg.empty() && !tng){
     sendTo("Drop what?!?\n\r");

@@ -1700,7 +1700,8 @@ int TPerson::doAt(const char *argument, bool isFarlook)
            tStString(""),
            tStBuffer("");
 
-    argument_parser(tStArgument, tStString, tStBuffer);
+    tStString=tStArgument.word(0);
+    tStBuffer=tStArgument.word(1);
 
     if (!is_abbrev(tStString, "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");
@@ -1771,7 +1772,9 @@ int TBeing::doGoto(const sstring & argument)
 
   sstring buf,
          tStString;
-  argument_parser(argument, buf, tStString);
+
+  buf=argument.word(0);
+  tStString=argument.word(1);
 
   if (buf.empty()) {
     char tString[10];
@@ -2154,7 +2157,8 @@ void TPerson::doSwitch(const char *argument)
   if (powerCheck(POWER_SWITCH))
     return;
 
-  argument_parser(tStArg, tStMobile, tStBuffer);
+  tStMobile=tStArg.word(0);
+  tStBuffer=tStArg.word(1);
 
   doLoadCmd = is_abbrev(tStMobile, "load");
 
@@ -4314,7 +4318,9 @@ void TPerson::doAccess(const char *arg)
   if (!isImmortal())
     return;
 
-  argument_parser(arg, arg1, arg2, arg3);
+  arg1=sstring(arg).word(0);
+  arg2=sstring(arg).word(1);
+  arg3=sstring(arg).word(2);
 
   if(arg1.empty()){
     sendTo("Syntax: access <player> (<changes>)\n\r");
@@ -4511,9 +4517,12 @@ void TBeing::doReplace(const sstring &argument)
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }
-  int argc=argument_parser(argument, arg1, arg2, arg3);
+  
+  arg1=argument.word(0);
+  arg2=argument.word(1);
+  arg3=argument.word(2);
 
-  if (argc<3){
+  if (arg1.empty() || arg2.empty() || arg3.empty()){
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }

@@ -1556,7 +1556,9 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
   if (unloadBow(argument.c_str()))
     return TRUE;
 
-  argument_parser(argument, arg1, buf);
+  arg1=argument.word(0);
+  buf=argument.word(1);
+
 
   if (!arg1.empty() || obj) {
     if (arg1=="all"){
@@ -2249,7 +2251,9 @@ void TBeing::doOutfit(const sstring &arg)
   TObj *obj;
   int rc;
 
-  argument_parser(arg, buf, buf2);
+  buf=arg.word(0);
+  buf2=arg.word(1);
+
   if(buf.empty() || buf2.empty()){
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;

@@ -94,7 +94,9 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
   }
   switch (cmd) {
   case CMD_TASK_CONTINUE:
-      argument_parser(ch->task->orig_arg, buf1, buf2);
+    buf1=sstring(ch->task->orig_arg).word(0);
+    buf2=sstring(ch->task->orig_arg).word(1);
+
       if(buf2.empty()){
         if (!thingsInRoomVis(ch, rp)) {
           ch->sendTo("You don't see anything else!\n\r");

@@ -277,7 +277,8 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
       return;
     }
 
-    argument_parser(arg, coin_str);
+    coin_str=arg.word(0);
+
     if (coin_str.empty()){
       ch->sendTo("Bet which chip?\n\r");
       return;
@@ -325,12 +326,10 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
 void PokerGame::discard(TBeing *ch, sstring arg)
 {
   sstring buf;
-  vector <sstring> args;
-  int j=argument_parser(arg, args);
   int i;
 
-  while(j--){
-    i=convertTo<int>(args[j]);
+  for(int j=0;!arg.word(j).empty();++j){
+    i=convertTo<int>(arg.word(j));
 
     if(!i || i<1 || i>5)
       continue;

@@ -80,7 +80,9 @@ int TBeing::doApplyHerbs(const sstring &tArg)
                tStPart;
   wearSlotT    tSlot;
 
-  argument_parser(tArg, tStHerb, tStPart, tStVict);
+  tStHerb=tArg.word(0);
+  tStPart=tArg.word(1);
+  tStVict=tArg.word(2);
 
   // Temp return until all the apply code is finished and tested.
   return FALSE;

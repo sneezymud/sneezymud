@@ -1719,7 +1719,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return FALSE;
 
   if (cmd == CMD_REMOVE) {
-    argument_parser(arg, objbuf);
+    objbuf=sstring(arg).word(0);
 
     if(objbuf.empty() || !isname(objbuf, me->getName())){
       return FALSE;
@@ -1743,8 +1743,8 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return DELETE_THIS;
   }
 
-  argument_parser(arg, objbuf, targbuf);
-
+  objbuf=sstring(arg).word(0);
+  targbuf=sstring(arg).word(1);
 
   if (objbuf.empty() || !isname(objbuf, me->getName()) || targbuf.empty())
     return FALSE;
@@ -3677,8 +3677,7 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     
   } else if ((cmd == CMD_SAY || cmd == CMD_SAY2) && !(ch->checkForSkillAttempt(SPELL_BLAST_OF_FURY))) {
     affectedData aff;
-    sstring buf;
-    argument_parser(arg, buf);
+    sstring buf=sstring(arg).word(0);
 
     if(buf=="aerolithe") {  //this is the activation keyword
       aff.type = AFFECT_SKILL_ATTEMPT;
@@ -3788,8 +3787,7 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     return TRUE;
   } else if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     affectedData aff, aff2;
-    sstring buf;
-    argument_parser(arg, buf);
+    sstring buf=sstring(arg).word(0);
 
     if(buf=="rime") {  //this is the activation keyword
       if(ch->checkForSkillAttempt(SPELL_CONJURE_WATER)) {
@@ -3976,8 +3974,7 @@ int stoneSkinAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    sstring buf;
-    argument_parser(arg, buf);
+    sstring buf=sstring(arg).word(0);
 
     if(buf=="fortify"){
       if(ch->affectedBySpell(SPELL_FLAMING_FLESH)) {
@@ -4243,8 +4240,7 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
       return FALSE;
 
     if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-      sstring buf;
-      argument_parser(arg, buf);
+      sstring buf=sstring(arg).word(0);
 
       if(buf=="manifest"){
 	double currentMana = ch-> getMana();
@@ -4416,7 +4412,7 @@ int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf;
-    argument_parser(arg, buf);
+    buf=sstring(arg).word(0);
 
     if(buf=="whullalo"){
       TObj *portal;
@@ -5593,8 +5589,8 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    sstring buf;
-    argument_parser(arg, buf);
+    sstring buf=sstring(arg).word(0);
+
     if(buf=="force"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5698,8 +5694,9 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf, buf2;
     TBeing *vict = NULL;
-    argument_parser(arg, buf, buf2);
-    
+    buf=sstring(arg).word(0);
+    buf2=sstring(arg).word(1);
+
     if(buf=="chill" && buf2=="out"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5779,7 +5776,8 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf, buf2;
     TBeing *vict = NULL;
-    argument_parser(arg, buf, buf2);
+    buf=sstring(arg).word(0);
+    buf2=sstring(arg).word(1);
 
     if(buf=="chill" && buf2=="out"){
       if(ch->checkObjUsed(o)) {
@@ -5958,7 +5956,8 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf, buf2;
-    argument_parser(arg, buf, buf2);
+    buf=sstring(arg).word(0);
+    buf2=sstring(arg).word(1);
 
     if(buf=="blizzard" && buf2=="soul"){
       if(ch->checkObjUsed(o)) {
@@ -6050,7 +6049,8 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf, buf2;
-    argument_parser(arg, buf, buf2);
+    buf=sstring(arg).word(0);
+    buf2=sstring(arg).word(1);
 
     if(buf=="cold" && buf2=="shoulder"){
       if(ch->checkObjUsed(o)) {
@@ -6355,7 +6355,8 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     sstring buf;
-    argument_parser(arg, buf);
+    buf=sstring(arg).word(0);
+
     if(buf=="kaeshite"){
       act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -7047,7 +7048,9 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
     return FALSE;
 
   } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
-    argument_parser(arg, arg1, arg2);
+    arg1=sstring(arg).word(0);
+    arg2=sstring(arg).word(1);
+
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
      
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
@@ -7134,12 +7137,10 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 
 
   } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
-    argument_parser(arg, arg1, arg2);
+    arg1=sstring(arg).word(0);
+    arg2=sstring(arg).word(1);
+
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
-      
-      
-      
-      
       act("You press the display button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
       
@@ -7532,7 +7533,7 @@ int vellaKeyJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   sstring buf;
   if (cmd != CMD_COMBINE) 
     return FALSE;
-  argument_parser(arg, buf);
+  buf=sstring(arg).word(0);
   if (buf != "keys")
     return FALSE;
  
@@ -7602,7 +7603,7 @@ int fillBucket (TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring buf;
   if (cmd != CMD_FILL) 
     return FALSE;
-  argument_parser(arg, buf);
+  buf=sstring(arg).word(0);
   if (buf != "bucket")
     return FALSE;
 

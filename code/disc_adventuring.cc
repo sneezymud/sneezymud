@@ -98,7 +98,9 @@ void TBeing::doBandage(const sstring &arg)
   int band_num, count;
   sstring buf, buf2;
 
-  argument_parser(arg, buf, buf2);
+  buf=arg.word(0);
+  buf2=arg.word(1);
+
 
   if (!hasHands() || affectedBySpell(AFFECT_TRANSFORMED_ARMS) ||
                      affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {

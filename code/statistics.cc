@@ -305,7 +305,9 @@ void TBeing::doGamestats(const sstring &arg)
   if (powerCheck(POWER_GAMESTATS))
     return;
 
-  argument_parser(arg, buf, buf2);
+  buf=arg.word(0);
+  buf2=arg.word(1);
+
 
   if(buf.empty()){
     sendTo("Syntax: gamestats <combat | equipment | level | trivia | statistics>\n\r");

@@ -2330,7 +2330,9 @@ void TPerson::doMedit(const char *argument)
     case 1:        // save 
 #if 1
       tStArg = sstring;
-      argument_parser(tStArg, tStString, tStBuffer);
+      tStString=tStArg.word(0);
+      tStBuffer=tStArg.word(1);
+
 
       if (tStString.empty() || tStBuffer.empty())
         sendTo("Syntax: med save <mobile> <vnum>\n\r");

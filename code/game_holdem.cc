@@ -897,8 +897,8 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
     return;
   }
 
-  
-  argument_parser(arg, coin_str);
+  coin_str=arg.word(0);
+
   if (coin_str.empty()){
     ch->sendTo("Bet which chip?\n\r");
     return;

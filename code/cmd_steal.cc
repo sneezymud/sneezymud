@@ -435,7 +435,9 @@ int TBeing::doSteal(const sstring &argument, TBeing *vict)
   sstring victim_name, obj_name;
   int rc;
 
-  argument_parser(argument, obj_name, victim_name);
+  obj_name=argument.word(0);
+  victim_name=argument.word(1);
+
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, victim_name))) {

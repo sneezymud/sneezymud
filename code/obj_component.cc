@@ -2695,8 +2695,11 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
 
   for (; isspace(*tString); tString++);
 
-  if (*tString)
-    argument_parser(tString, tStString, tStBuffer);
+  if (*tString){
+    tStString=sstring(tString).word(0);
+    tStBuffer=sstring(tString).word(1);
+  }
+
 
   if (!*tString || ((tCount = convertTo<int>(tStBuffer)) <= 0)) {
     ch->sendTo("Syntax: split <component> <charges>\n\r");

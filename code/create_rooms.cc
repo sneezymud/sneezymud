@@ -199,26 +199,13 @@ void TPerson::doEdit(const char *arg)
   doorTypeT doortype;
   sectorTypeT sectype;
   sstring tStr;
-  /*
-  sstring tStr, whitespace, punctuation, newDescr, word, line, a2;
-  sstring colors;
-  size_t wbgin = 0;
-  unsigned int cwordend = 0;
-  unsigned int num_ctags_word = 0;
-  */
-
   sstring regStr;
   sstring line, garbled;
   sstring word, stripped_word;
-
   sstring punctuation = ".!?;:"; 
-  vector <sstring> words;
-  vector <sstring>::iterator iter;
-
   sstring newDescr = "";
   size_t swlen = 0;
   bool was_word = false;
-
   long r_flags;
   sstring tStString("");
   char sstring[512],
@@ -1246,22 +1233,18 @@ void TPerson::doEdit(const char *arg)
 
       regStr = roomp->descr;
 
-      argument_parser(regStr, words);
-
       line = "  "; // intial extra space
 
-      for(iter=words.begin(); iter!=words.end(); ++iter){
+      for(int i=0;!regStr.word(i).empty();++i){
         // count the number of unprintable characters in each word
-        word = *iter;
+        word = regStr.word(i);
         stripped_word = stripColorCodes(word);
         swlen = stripped_word.length();
 
         if ((line.length() + 1) + (word.length() + 1) >= 80) {
           size_t last_char = 0;
 
-          if (iter!=words.end()) {
-            line += "\n\r";
-          }
+	  line += "\n\r";
           newDescr += line;
 
           // check if the word ends with punctuation
@@ -1439,7 +1422,8 @@ void TPerson::doRload(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  argument_parser(tStArg, tStString, tStBuffer);
+  tStString=tStArg.word(0);
+  tStBuffer=tStArg.word(1);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
@@ -1453,7 +1437,8 @@ void TPerson::doRload(const char *argument)
            tStStandard("");
     bool   tStandard = false;
 
-    argument_parser(tStBuffer, tStExtra, tStStandard);
+    tStExtra=tStBuffer.word(0);
+    tStStandard=tStBuffer.word(1);
 
     if (!tStExtra.empty()) {
       if (tStExtra[0] == '1') {
@@ -1519,8 +1504,8 @@ void TPerson::doRload(const char *argument)
     return;
   }
 
-  tString = argument;
-  tString = argument_parser(tString, stRoom, enRoom);
+  stRoom=tString.word(0);
+  enRoom=tString.word(1);
 
   if (stRoom.empty() || enRoom.empty()) {
     sendTo("Syntax: rload <first-room> <last-room>\n\r");
@@ -3668,7 +3653,8 @@ void TPerson::doRsave(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  argument_parser(tStArg, tStString, tStBuffer);
+  tStString=tStArg.word(0);
+  tStBuffer=tStArg.word(1);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
@@ -3734,8 +3720,8 @@ void TPerson::doRsave(const char *argument)
     return;
   }
 
-  tString = argument;
-  tString = argument_parser(tString, stRoom, enRoom);
+  stRoom=tString.word(0);
+  enRoom=tString.word(1);
 
   if (stRoom.empty() || enRoom.empty()) {
     sendTo("Syntax: rsave <first-room> <last-room>\n\r");

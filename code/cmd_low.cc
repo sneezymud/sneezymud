@@ -1059,7 +1059,7 @@ void TPerson::doLow(const sstring &arg)
     return;
   }
 
-  argument_parser(arg, buf);
+  buf=arg.word(0);
 
   sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
   if (arg.empty()) {
@@ -1243,7 +1243,8 @@ void TBeing::lowPath(const sstring &arg)
   // arg = path <vnum>
   // trace a path there and spit out room nums
 
-  argument_parser(arg, buf1, buf2);
+  buf1=arg.word(0);
+  buf2=arg.word(1);
 
   while((dir=find_path(room, is_target_room_p, 
 		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){

@@ -166,7 +166,9 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
       return;
     }
 
-    argument_parser(arg, coin_str, bet_str);
+    coin_str=arg.word(0);
+    bet_str=arg.word(1);
+
     if (coin_str.empty()){
       ch->sendTo("Bet which chip?\n\r");
       return;

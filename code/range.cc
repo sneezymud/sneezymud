@@ -212,7 +212,10 @@ void TBeing::doThrow(const sstring &argument)
     return;
   }
   vict="";
-  argument_parser(argument, object, dir, vict);
+  object=argument.word(0);
+  dir=argument.word(1);
+  vict=argument.word(2);
+
   if (object.empty()) {
     sendTo("Syntax: throw <object> [direction] [character | distance]\n\r");
     return;
@@ -1501,18 +1504,12 @@ int TBeing::unloadBow(const char *arg)
   TObj *arrow;
   TBow *bow = NULL;
   TThing *t;
-  //char arg1[128], arg2[128];
  
   if (!(t = equipment[getPrimaryHold()]) ||
       !(bow = dynamic_cast<TBow *>(t)) ||
       !bow->getStuff() || !dynamic_cast<TArrow *>(bow->getStuff()))
     return FALSE;
  
-  //argument_parser(arg, arg1, arg2);
- 
-  //if (!is_abbrev(arg1, "arrow") || !is_abbrev(arg2, "bow"))
-    //return FALSE;
-
   arrow = dynamic_cast<TObj *>(bow->getStuff());
   --(*arrow);
   sendTo("You uncock your bow and take out its arrow!\n\r");

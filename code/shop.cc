@@ -1483,56 +1483,55 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   // value.  So:
   //   1 number : No floor value, value is considered max.
   //   2 numbers: First is floor, 2nd is max.
-  argument_parser(argument, args);
-  for(unsigned int i=0;i<args.size();++i){
-         if (is_abbrev(args[i], "fit")    ) FitT |= (1 <<  0);
-    else if (is_abbrev(args[i], "slash")  ) FitT |= (1 <<  1);
-    else if (is_abbrev(args[i], "pierce") ) FitT |= (1 <<  2);
-    else if (is_abbrev(args[i], "blunt")  ) FitT |= (1 <<  3);
-    else if (is_abbrev(args[i], "body")   ) FitT |= (1 <<  4);
-    else if (is_abbrev(args[i], "finger") ) FitT |= (1 <<  5);
-    else if (is_abbrev(args[i], "wrist")  ) FitT |= (1 <<  6);
-    else if (is_abbrev(args[i], "legs")   ) FitT |= (1 <<  7);
-    else if (is_abbrev(args[i], "arms")   ) FitT |= (1 <<  8);
-    else if (is_abbrev(args[i], "neck")   ) FitT |= (1 <<  9);
-    else if (is_abbrev(args[i], "feet")   ) FitT |= (1 << 10);
-    else if (is_abbrev(args[i], "hands")  ) FitT |= (1 << 11);
-    else if (is_abbrev(args[i], "head")   ) FitT |= (1 << 12);
-    else if (is_abbrev(args[i], "back")   ) FitT |= (1 << 13);
-    else if (is_abbrev(args[i], "waist")  ) FitT |= (1 << 14);
-    else if (is_abbrev(args[i], "glowing")) FitT |= (1 << 15);
-    else if (is_abbrev(args[i], "shadowy")) FitT |= (1 << 16);
-    else if (is_abbrev(args[i], "paired") ) FitT |= (1 << 17);
-    else if (is_abbrev(args[i], "stab")) {
+  for(int i=0;!argument.word(i).empty();++i){
+         if (is_abbrev(argument.word(i), "fit")    ) FitT |= (1 <<  0);
+    else if (is_abbrev(argument.word(i), "slash")  ) FitT |= (1 <<  1);
+    else if (is_abbrev(argument.word(i), "pierce") ) FitT |= (1 <<  2);
+    else if (is_abbrev(argument.word(i), "blunt")  ) FitT |= (1 <<  3);
+    else if (is_abbrev(argument.word(i), "body")   ) FitT |= (1 <<  4);
+    else if (is_abbrev(argument.word(i), "finger") ) FitT |= (1 <<  5);
+    else if (is_abbrev(argument.word(i), "wrist")  ) FitT |= (1 <<  6);
+    else if (is_abbrev(argument.word(i), "legs")   ) FitT |= (1 <<  7);
+    else if (is_abbrev(argument.word(i), "arms")   ) FitT |= (1 <<  8);
+    else if (is_abbrev(argument.word(i), "neck")   ) FitT |= (1 <<  9);
+    else if (is_abbrev(argument.word(i), "feet")   ) FitT |= (1 << 10);
+    else if (is_abbrev(argument.word(i), "hands")  ) FitT |= (1 << 11);
+    else if (is_abbrev(argument.word(i), "head")   ) FitT |= (1 << 12);
+    else if (is_abbrev(argument.word(i), "back")   ) FitT |= (1 << 13);
+    else if (is_abbrev(argument.word(i), "waist")  ) FitT |= (1 << 14);
+    else if (is_abbrev(argument.word(i), "glowing")) FitT |= (1 << 15);
+    else if (is_abbrev(argument.word(i), "shadowy")) FitT |= (1 << 16);
+    else if (is_abbrev(argument.word(i), "paired") ) FitT |= (1 << 17);
+    else if (is_abbrev(argument.word(i), "stab")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_STABBING)) || ch->isImmortal()) {
         FitT |= (1 << 18);
         FitT |= (1 <<  2);
       }
-    } else if (is_abbrev(args[i], "cudgel")) {
+    } else if (is_abbrev(argument.word(i), "cudgel")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_CUDGEL)) || ch->isImmortal()) {
         FitT |= (1 << 19);
         FitT |= (1 <<  3);
       }
-    } else if (is_abbrev(args[i], "backstab")) {
+    } else if (is_abbrev(argument.word(i), "backstab")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_BACKSTAB)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
-    } else if (is_abbrev(args[i], "slit")) {
+    } else if (is_abbrev(argument.word(i), "slit")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
-    } else if (is_number(args[i])) {
+    } else if (is_number(argument.word(i))) {
       if (iMin == 999999) {
         iMin = 0;
-        iMax = convertTo<int>(args[i]);
+        iMax = convertTo<int>(argument.word(i));
       } else if (iMin == 0) {
         iMin = iMax;
-        iMax = convertTo<int>(args[i]);
+        iMax = convertTo<int>(argument.word(i));
       }
-    } else if (!args[i].empty()) {
-      arg=args[i];
+    } else if (!argument.word(i).empty()) {
+      arg=argument.word(i);
     }
     if (argument.empty())
       break;

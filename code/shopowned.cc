@@ -418,7 +418,9 @@ int TShopOwned::setAccess(sstring arg)
     return FALSE;
   }
 
-  argument_parser(arg, buf, buf2);
+  buf=arg.word(0);
+  buf2=arg.word(1);
+
 
   if(!buf2.empty()){ // set value
     if(buf=="password"){

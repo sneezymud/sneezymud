@@ -67,54 +67,54 @@ void TBeing::disturbMeditation(TBeing *vict) const
 // Deal with whiney bitches
 sstring TBeing::blahblah(const sstring &arg) const
 {
-  sstring obuf, buf, blah, origword;
+  sstring obuf, buf, blah, word;
 
   if (arg.empty())
     return "";
 
-  vector <sstring> args;
   unsigned int loc;
-  argument_parser(arg, args);
   buf=obuf=arg;
 
-  for(unsigned int i=0;i<args.size()-1;++i){
+  for(int i=0;!arg.word(i).empty();++i){
+    word=arg.word(i);
+
     // remove color codes at the beginning
-    while(args[i].length()>2 && args[i][0]=='<' && args[i][2]=='>'){
-      args[i].erase(0, 3);
+    while(word.length()>2 && word[0]=='<' && word[2]=='>'){
+      word.erase(0, 3);
     }
 
     // make sure we have something left to play with
-    if(args[i].length()<2)
+    if(word.length()<2)
       continue;
 
     // find punctuation at the end of the word and remove
-    for(loc=args[i].length()-1;loc>0;--loc){
-      if(isalpha(args[i][loc]) || args[i][loc]=='>')
+    for(loc=word.length()-1;loc>0;--loc){
+      if(isalpha(word[loc]) || word[loc]=='>')
 	break;
     }
-    args[i].erase(loc, args[i].length()-loc);
+    word.erase(loc, word.length()-loc);
 
     // make sure we have something left to play with
-    if(args[i].length()<2)
+    if(word.length()<2)
       continue;
 
     // swap out with a random word sometimes
     if (::number(0, 4)) {
       blah="blah";
     } else {
-      blah=args[i];
+      blah=word;
     }
 
-    if(isupper(args[i][0]))
+    if(isupper(word[0]))
       blah[0]=toupper(blah[0]);
 
     // replace the original word in obuf with whitespace
     // replace the original word in buf with the new word
-    loc=obuf.find(args[i], 0);
+    loc=obuf.find(word, 0);
     if(loc != sstring::npos){
-      obuf.erase(loc, args[i].length());
+      obuf.erase(loc, word.length());
       obuf.insert(loc, blah.length(), ' ');
-      buf.erase(loc, args[i].length());
+      buf.erase(loc, word.length());
       buf.insert(loc, blah);
     }
   }
@@ -124,7 +124,7 @@ sstring TBeing::blahblah(const sstring &arg) const
 // Make drunk people garble their words!
 sstring TBeing::garble(const sstring &arg, int chance) const
 {
-  sstring obuf, buf, latin, origword;
+  sstring obuf, buf, latin, word;
 
   if (arg.empty())
     return "";
@@ -132,61 +132,61 @@ sstring TBeing::garble(const sstring &arg, int chance) const
   if (chance <= 9)
     return arg;
 
-  vector <sstring> args;
   unsigned int loc;
-  argument_parser(arg, args);
   buf=obuf=arg;
 
   // first, lets turn things into pig latin, word by word
-  for(unsigned int i=0;i<args.size()-1;++i){
+  for(int i=0;!arg.word(i).empty();++i){
+    word=arg.word(i);
+
     // remove color codes at the beginning
-    while(args[i].length()>2 && args[i][0]=='<' && args[i][2]=='>'){
-      args[i].erase(0, 3);
+    while(word.length()>2 && word[0]=='<' && word[2]=='>'){
+      word.erase(0, 3);
     }
 
     // make sure we have something left to play with
-    if(args[i].length()<2)
+    if(word.length()<2)
       continue;
 
     // find punctuation at the end of the word and remove
-    for(loc=args[i].length()-1;loc>0;--loc){
-      if(isalpha(args[i][loc]) || args[i][loc]=='>')
+    for(loc=word.length()-1;loc>0;--loc){
+      if(isalpha(word[loc]) || word[loc]=='>')
 	break;
     }
-    args[i].erase(loc, args[i].length()-loc);
+    word.erase(loc, word.length()-loc);
 
     // make sure we have something left to play with
-    if(args[i].length()<2)
+    if(word.length()<2)
       continue;
 
     // swap out with a random word sometimes
     if (::number(0, chance) >= 14){
       latin=RandomWord();
     } else {
-      latin=args[i];
+      latin=word;
     }
 
     // pig latinize sometimes
     if (::number(0, chance) >= 10){
-      if(isupper(args[i][0]))
-	latin[0]=tolower(args[i][0]);
+      if(isupper(word[0]))
+	latin[0]=tolower(word[0]);
 
       ssprintf(latin, "%s%cay", 
 	       latin.substr(1,latin.length()-1).c_str(),
 	       latin[0]);
     }
 
-    if(isupper(args[i][0]))
+    if(isupper(word[0]))
       latin[0]=toupper(latin[0]);
 
 
     // replace the original word in obuf with whitespace
     // replace the original word in buf with the new word
-    loc=obuf.find(args[i], 0);
+    loc=obuf.find(word, 0);
     if(loc != sstring::npos){
-      obuf.erase(loc, args[i].length());
+      obuf.erase(loc, word.length());
       obuf.insert(loc, latin.length(), ' ');
-      buf.erase(loc, args[i].length());
+      buf.erase(loc, word.length());
       buf.insert(loc, latin);
     }
   }

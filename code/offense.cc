@@ -42,7 +42,7 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  argument_parser(argument, arg);
+  arg=argument.word(0);
 
   if (vict) {
     victim = vict;

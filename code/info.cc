@@ -446,20 +446,16 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
 
   garbled = garble(regStr, getCond(DRUNK));
 
-  vector <sstring> words;
-  vector <sstring>::iterator iter;
-  argument_parser(garbled, words);
-
   // indent the first line, if needed
   if (indent) {
     line = "  "; // intial extra space
     indent = false;
   }
 
-  for(iter=words.begin(); iter!=words.end(); ++iter){
+  for(int i=0;!garbled.word(i).empty();++i){
     sstring word, stripped_word;
 
-    word = *iter;
+    word = garbled.word(i);
 
     // count the number of unprintable characters in each word
     stripped_word = stripColorCodes(word);
@@ -470,10 +466,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
 
     // if the word is too long to fit on the current line
     if ((line.length() + 1) + (word.length() + 1) >= (79 + llen_diff)) {
-
-      if (iter!=words.end()) {
-        line += "\n\r";
-      }
+      line += "\n\r";
 
       // then start a new line
       newDescr += line;
@@ -2258,7 +2251,8 @@ void TPerson::doUsers(const sstring &argument)
 
   const char USERS_HEADER[] = "\n\rName              Hostname                           Connected  Account Name\n\r--------------------------------------------------------------------------------\n\r";
 
-  argument_parser(argument, arg1, arg2);
+  arg1=argument.word(0);
+  arg2=argument.word(1);
 
   *line = '\0';
 
@@ -2756,7 +2750,8 @@ void TBeing::doWhere(const char *argument)
     return;
 
   strcpy(namebuf, argument);
-  argument_parser(tStString, tStArg, tStName);
+  tStArg=tStString.word(0);
+  tStName=tStString.word(1);
 
   if (hasWizPower(POWER_WIZARD) && (GetMaxLevel() > MAX_MORT) &&
       (is_abbrev(tStArg, "engraved") || is_abbrev(tStArg, "owners"))) {
@@ -5204,7 +5199,9 @@ void TBeing::doSpells(const sstring &argument)
   else {
     memset(types, 0, sizeof(int) * 4);
 
-    argument_parser(argument, arg, arg2, arg3);
+    arg=argument.word(0);
+    arg2=argument.word(1);
+    arg3=argument.word(2);
 
     if (is_abbrev(arg3, "all"))
       showall = 1;
@@ -5442,7 +5439,9 @@ void TBeing::doRituals(const sstring &argument)
   else {
     memset(types, 0, sizeof(int) * 4);
 
-    argument_parser(argument, arg, arg2, arg3);
+    arg=argument.word(0);
+    arg2=argument.word(2);
+    arg3=argument.word(3);
 
     if (is_abbrev(arg3, "all"))
       showall = 1;
@@ -5665,7 +5664,9 @@ void TBeing::doPrayers(const sstring &argument)
   else {
     memset(types, 0, sizeof(int)*4);
 
-    argument_parser(argument, arg, arg2, arg3);
+    arg=argument.word(0);
+    arg2=argument.word(1);
+    arg3=argument.word(2);
 
     if (is_abbrev(arg3, "all"))
       showall = 1;
