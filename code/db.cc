@@ -540,6 +540,7 @@ void bootWorld(void)
 
 void bootHomes(void)
 {
+  return;
   int template_start=0, template_end=0, template_i=0;
   int plot_start=0, plot_end=0, plot_i=0, plan_i=0, keynum=0;
   TRoom *src, *dest;
