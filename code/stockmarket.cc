@@ -41,29 +41,38 @@ void updateStocks()
 {
   TDatabase db(DB_SNEEZY), stocks(DB_SNEEZY);
 
-  stocks.query("select ticker, shares, price, (((random() * volatility * 2) - volatility) / 1000) as pricechange from stockinfo");
+  stocks.query("select ticker, shares, price, (((random() * volatility * 2) - volatility) / 10000.0) as pricechange from stockinfo");
 
   while(stocks.fetchRow()){
-    float pricechange=convertTo<float>(stocks["pricechange"]);
-    float price=convertTo<float>(stocks["price"]);
+    double pricechange=1.0+convertTo<float>(stocks["pricechange"]);
+    double price=convertTo<float>(stocks["price"]);
+    double newprice=price*pricechange;
     sstring ticker=stocks["ticker"];
     int shares=convertTo<int>(stocks["shares"]);
 
     if(shares<=0)
       continue;
 
-    if((price+pricechange) < ::number(1,5)){
-      stockReverseSplit(ticker, pricechange);
-    } else if(price+pricechange > ::number(100, 125)){
-      stockSplit(ticker, pricechange);
-    } else {
-      db.query("update stockinfo set price=price+%f where ticker='%s'",
-	       pricechange, ticker.c_str());
-    }
+    //    if((newprice) < ::number(1,5)){
+      //      stockReverseSplit(ticker, pricechange);
+    //    } else if(newprice > ::number(100, 125)){
+      //      stockSplit(ticker, pricechange);
+    //    } else {
+      db.query("update stockinfo set price=%f where ticker='%s'",
+	       newprice, ticker.c_str());
+      //    }
     
   }
+}
 
+float getAskPrice(float price)
+{
+  return price*1.03;
+}
 
+float getBidPrice(float price)
+{
+  return price*0.97;
 }
 
 int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
@@ -118,7 +127,7 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     pricediff=price-convertTo<float>(db["dayprice"]);
 
     ch->sendTo(COLOR_BASIC, fmt("%-6s  <Y>%.2f  %.2f<1>  %s%+.2f<1>   %s\n\r") %
-	       db["ticker"] % (price*0.97) % (price * 1.03) % 
+	       db["ticker"] % getBidPrice(price) % getAskPrice(price) % 
 	       (pricediff>0?"<G>":"<R>") % pricediff %
 	       talenDisplay((int)(price*(float)shares)));
   }
@@ -133,3 +142,50 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
 
 
+int stockBroker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
+{
+  TDatabase db(DB_SNEEZY);
+  sstring arg=argument;
+
+  if(cmd != CMD_LIST && cmd != CMD_BUY && cmd != CMD_SELL)
+    return FALSE;
+
+  // list -> point them at stock board
+  // buy info -> load up a little pamphlet with stock info and give for 100
+  // buy <amt>*<ticker> -> buy stock
+  // sell <amt>*<ticker> -> sell stock
+
+
+
+  if(cmd==CMD_LIST){
+    if(arg.empty()){
+      me->doTell(ch->getName(), "Have a look at the stock board if you want to see current listings.");
+      me->doTell(ch->getName(), "You can get a prospectus on a particular stock for 100 talens, with 'buy info <ticker>'.");
+      return TRUE;
+    }
+  }
+
+  if(cmd==CMD_BUY){
+    if(arg.word(0) == "info"){
+      db.query("select ticker, price, volatility, shares, descr from stockinfo where ticker=upper('%s')", arg.c_str());
+      
+      if(!db.fetchRow()){
+	me->doTell(ch->getName(), "I don't seem to have any data on that stock.");
+	return TRUE;
+      }
+      
+      me->doTell(ch->getName(), fmt("%s selling at %f with %i shares outstanding.") % 
+		 db["ticker"] % getAskPrice(convertTo<float>(db["price"])) %
+		 convertTo<int>(db["shares"]));
+      me->doTell(ch->getName(), db["descr"]);
+    }
+
+
+    return TRUE;
+  }
+
+  
+
+
+  return FALSE;
+}
