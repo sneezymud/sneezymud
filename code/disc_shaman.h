@@ -12,6 +12,7 @@ public:
     CSkill skEnthrallSpectre;
     CSkill skEnthrallGhast;
     CSkill skVoodoo;
+    CSkill skCheval;
     CSkill skVampiricTouch;
     CSkill skLifeLeech;
     CSkill skDancingBones;
@@ -22,6 +23,7 @@ public:
       skEnthrallSpectre(),
       skEnthrallGhast(),
       skVoodoo(),
+      skCheval(),
       skVampiricTouch(),
       skLifeLeech(),
       skDancingBones() { 
@@ -33,6 +35,7 @@ public:
       skEnthrallSpectre(a.skEnthrallSpectre),
       skEnthrallGhast(a.skEnthrallGhast),
       skVoodoo(a.skVoodoo),
+      skCheval(a.skCheval),
       skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech),
       skDancingBones(a.skDancingBones) {
@@ -45,6 +48,7 @@ public:
       skEnthrallSpectre = a.skEnthrallSpectre;
       skEnthrallGhast = a.skEnthrallGhast;
       skVoodoo = a.skVoodoo;
+      skCheval = a.skCheval;
       skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
       skDancingBones = a.skDancingBones;
@@ -89,5 +93,11 @@ private:
     int shieldOfMists(TBeing *, TBeing *, int, byte);
 
     void sacrifice(TBeing *, TBaseCorpse *);
+
+    int cheval(TBeing *, TBeing *);
+    int castCheval(TBeing *, TBeing *);
+    void cheval(TBeing *, TBeing *, TMagicItem *);
+    int cheval(TBeing *, TBeing *, int, byte);
+
 #endif
 

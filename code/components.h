@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.13  2001/06/11 05:51:42  jesus
+// cheval spell
+//
 // Revision 5.12  2001/06/09 21:10:33  jesus
 // hypnosis spell
 //
@@ -180,6 +183,7 @@ const int COMP_VOODOO             =31321;
 const int COMP_RESURRECTION       =31322;
 const int COMP_DANCING_BONES      =31323;
 const int COMP_HYPNOSIS           =31324;
+const int COMP_CHEVAL             =31325;
 
 class compPlace
 {

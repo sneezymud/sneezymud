@@ -1526,6 +1526,14 @@ void buildComponentArray()
     "$n shakes $p.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CHEVAL,
+    "",                       
+    "",
+    "",
+    "You swallow $p.",
+    "$n swallows $p.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_CLARITY,
     "",
     "",

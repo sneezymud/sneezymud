@@ -1483,6 +1483,8 @@ void TPerson::addToWait(int orig_amt)
   int mod = 100;
   if (affectedBySpell(SPELL_ACCELERATE))
     mod = 80;
+  if (affectedBySpell(SPELL_CHEVAL))
+    mod = 75;
   if (affectedBySpell(SPELL_HASTE))
     mod = 60;
 

@@ -570,6 +570,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRangerFight *) cd)->skRetreatRanger;
 
 // disc_armadillo
+    case SPELL_CHEVAL:
+      return &((CDShaman *) cd)->skCheval;
     case SPELL_LICH_TOUCH: // 543
       return &((CDShamanSkunk *) cd)->skLichTouch;
     case SPELL_DEATH_MIST: // 544

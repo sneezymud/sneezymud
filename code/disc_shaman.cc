@@ -1008,9 +1008,78 @@ int lifeLeech(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 
+int cheval(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
 
+  caster->reconcileHelp(victim, discArray[SPELL_CHEVAL]->alignMod);
 
+  if (bSuccess(caster, bKnown, SPELL_CHEVAL)) {
+    aff.type = SPELL_CHEVAL;
+    aff.level = level;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+    aff.modifier = -50;
+    aff.location = APPLY_ARMOR;
+    aff.bitvector = 0;
+    switch (critSuccess(caster, SPELL_CHEVAL)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_CHEVAL);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
 
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
 
+    act("$N seems as if $E is possessed!",
+        FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_GREEN);
+    act("The power of the loa takes dominion inside of you!", 
+        FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
+    return SPELL_SUCCESS;
+  } else {
+    act("The loa ignore your unfaithful request!",
+        FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
+    caster->addToLifeforce(-10);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+}
 
+int cheval(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
 
+    if (!bPassShamanChecks(caster, SPELL_CHEVAL, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_CHEVAL]->lag;
+     diff = discArray[SPELL_CHEVAL]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CHEVAL, diff, 1, "", 
+rounds, caster->in_room, 0, 0,TRUE, 0);
+       return TRUE;
+}
+
+void cheval(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  cheval(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int castCheval(TBeing *caster, TBeing *victim)
+{
+int ret,level;
+
+  level = caster->getSkillLevel(SPELL_CHEVAL);
+  int bKnown = caster->getSkillValue(SPELL_CHEVAL);
+
+  if ((ret=cheval(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
+  } else {
+  }
+  return TRUE;
+}
