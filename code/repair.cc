@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: repair.cc,v $
+// Revision 1.3  1999/09/30 17:30:46  batopr
+// Made repair price take gold_modifier[GOLD_REPAIR] into account
+//
 // Revision 1.2  1999/09/30 17:27:24  batopr
 // *** empty log message ***
 //
@@ -49,8 +52,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   int discount = 100;
   int gsp = getShopPrice(&discount);
 
-ZZ
-  int price = 6 * gsp / 10;
+  int price = (int) (0.6 * gsp * gold_modifier[GOLD_REPAIR]);
 
   price *= maxFix(repair, dep_done) - getStructPoints();
   price /= getMaxStructPoints();
