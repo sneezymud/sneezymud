@@ -255,6 +255,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	     (::number(5,10) > rp->getFished())){
             *ch += *fish;
 
+	    ch->addToExp(fish->getWeight());
+
 	    act("You reel in $p!",
 		FALSE, ch, fish, 0, TO_CHAR);
 	    act("$n reels in $p!",
