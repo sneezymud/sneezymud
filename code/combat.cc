@@ -3566,7 +3566,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       critKillCheck(this, vict, mess_sent);
       return retCode | DELETE_VICT;
     }
-
+    if (hasClass(CLASS_SHAMAN) && (dam == 0)) {
+      addToLifeforce(1);
+    }
     rc = damageWeapon(vict, part_hit, &weapon);
     if (IS_SET_ONLY(rc, DELETE_ITEM))
       retCode |= DELETE_ITEM;
@@ -3581,9 +3583,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       }
     }
   }
-  if (hasClass(CLASS_SHAMAN) && (dam == 0)) {
-    addToLifeforce(1);
-  }    
   combatFatigue(weapon);
   updatePos();
   vict->updatePos();
