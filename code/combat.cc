@@ -252,6 +252,7 @@ void TBeing::deathCry()
           tMons->UM(1);
           tMons->US(4);
         } else if ((tPlayer = dynamic_cast<TBeing *>(i))) {
+#if 0
 	  if (!ex_description || !ex_description->findExtraDesc("deathcry"))
             if (tPlayer->hasClass(CLASS_MAGE)) {
               sprintf(buf, "Your heart skips a beat as you hear %s's death cry.", getName());
@@ -266,10 +267,11 @@ void TBeing::deathCry()
             } else if (tPlayer->hasClass(CLASS_DEIKHAN)) {
               sprintf(buf, "A smile, then grimace, graces your lips as you hear %s's death cry.", getName());
             } else if (tPlayer->hasClass(CLASS_MONK)) {
-              sprintf(buf, "The remnent soul of %s runs through you as their death cry echoes in your ears.", getName());
+              sprintf(buf, "The remanent soul of %s runs through you as their death cry echoes in your ears.", getName());
             } else if (tPlayer->hasClass(CLASS_RANGER)) {
               sprintf(buf, "The air around you becomes a little colder as you hear %s's death cry.", getName());
 	    }
+#endif
 
           colorAct(COLOR_MOBS, buf, FALSE, dynamic_cast<TBeing *>(i), NULL, this, TO_CHAR);
         }
