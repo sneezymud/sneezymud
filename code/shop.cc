@@ -53,6 +53,39 @@ bool shopOwned(int shop_nr){
 }
 
 
+// this function relies on the fact that mysql will return rows in the order
+// that they were created, chronologically.  I'm not sure if this is defined
+// behavior or not, so if it stops working, you need to put a timestamp value
+// into the table and sort by that
+bool sameAccount(const char *buf, int shop_nr){
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc;
+  charFile st, stthis;
+
+  load_char(buf, &stthis);
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "sameAccount", "select name from shopownedaccess where shop_nr=%i", shop_nr))==-1){
+    vlogf(LOG_BUG, "Database error in shop_keeper");
+    return FALSE;
+  }
+  
+  while((row=mysql_fetch_row(res))){
+    if (!load_char(row[0], &st))
+      continue;
+
+    if(!strcmp(stthis.aname, st.aname)){
+      if(!strcmp(lower(buf).c_str(), lower(row[0]).c_str()))
+	return FALSE;
+      else
+	return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int shop_nr, int chr, int *discount)
 {
@@ -1962,6 +1995,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     //    if(!is_abbrev(buf, myself->getName()))
     //      return FALSE;
 
+
     if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, ch->getName()))==-1){
       vlogf(LOG_BUG, "Database error in shop_keeper");
       return FALSE;
@@ -1970,6 +2004,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       access=atoi(row[0]);
     }
     mysql_free_result(res);
+
+    if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
+      ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
+      access=0;
+    }
+
 
     if(ch->isImmortal())
       access=SHOPACCESS_OWNER;
@@ -1984,6 +2024,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 #endif
+
 
       // if not owned, or owned and has "owner" or "info"
       if(!owned || ((access & SHOPACCESS_OWNER)||(access & SHOPACCESS_INFO))){
