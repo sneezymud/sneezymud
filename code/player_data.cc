@@ -1008,18 +1008,9 @@ void do_the_player_stuff(const char *name)
   if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".strings"))
     return;
 
-  // skip drug data
-  if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 6], ".drugs"))
-    return;
-
   // skip faction data
   if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 8], ".faction"))
     return;
-
-  // skip title data
-  if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 6], ".title"))
-    return;
-
 
   // skip wizpowers data if there was an error up above.
   if (strlen(name) > 9 && !strcmp(&name[strlen(name) - 9], ".wizpower")) {
@@ -1689,57 +1680,30 @@ bool TBeing::isLinkdead() const
 
 void TBeing::saveTitle()
 {
-  FILE *fp;
-  sstring buf;
+  TDatabase db(DB_SNEEZY);
   TPerson *tp;
 
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
-
-  if (!(fp = fopen(buf.c_str(), "w"))) {
-    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving title (%d)") %  
-	  buf % errno);
-    return;
-  }
-
-  fprintf(fp,"%s\n", tp->title);
-  
-  if (fclose(fp)) 
-      vlogf(LOG_FILE, fmt("Problem closing %s's saveTitle") %  name);
-
+  db.query("update player set title='%s' where id=%i", 
+	   tp->title, getPlayerID());
 }
 
 void TBeing::loadTitle()
 {
-  FILE *fp;
-  sstring buf;
-  char inbuf[1024];
+  TDatabase db(DB_SNEEZY);
   TPerson *tp;
 
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
-
-  if (!(fp = fopen(buf.c_str(), "r"))) {
-    //    vlogf(LOG_FILE, fmt("Unable to open file (%s) for loading title (%d)") %  buf % errno);
-    tp->setTitle(true);
-    return;
+  db.query("select title from player where id=%i",
+	   getPlayerID());
+  if(db.fetchRow()){
+    delete [] tp->title;
+    tp->title = mud_str_dup(db["title"]);
   }
-
-  if (fscanf(fp, "%[^\n]", inbuf) != 1){
-    vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
-    fclose(fp);
-    return;
-  }
-
-  delete [] tp->title;
-  tp->title = mud_str_dup(inbuf);
-
-  if (fclose(fp))
-    vlogf(LOG_FILE, fmt("Problem closing %s's loadTitle") %  name);
 }
 
 
