@@ -2546,6 +2546,8 @@ void TComponent::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
     keeper->addToMoney(cost, GOLD_SHOP_COMPONENTS);
   }
+
+  shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
 }
 
 void TComponent::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
@@ -2553,6 +2555,8 @@ void TComponent::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr
   ch->addToMoney(cost, GOLD_SHOP_COMPONENTS);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP_COMPONENTS);
+
+  shoplog(shop_nr, ch, keeper, getName(), cost, "selling");
 }
 
 TThing & TComponent::operator -- ()

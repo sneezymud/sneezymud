@@ -2,19 +2,20 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: shop.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __SHOP_H
 #define __SHOP_H
+
+const unsigned int SHOPACCESS_OWNER   = (1<<0);
+const unsigned int SHOPACCESS_INFO    = (1<<1);
+const unsigned int SHOPACCESS_PROFITS = (1<<2);
+const unsigned int SHOPACCESS_GIVE    = (1<<3);
+const unsigned int SHOPACCESS_SELL    = (1<<4);
+const unsigned int SHOPACCESS_ACCESS  = (1<<5);
+const unsigned int SHOPACCESS_LOGS  = (1<<6);
 
 const char * const SHOP_FILE =     "tinyworld.shp";
 const char * const SHOPFILE_PATH = "mobdata/shops";
@@ -42,6 +43,8 @@ extern vector<shop_pricing>ShopPriceIndex;
 #endif
 
 extern vector<shopData>shop_index;
+
+extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
 
 class shopData {
   public:
@@ -74,5 +77,5 @@ class shopData {
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);
 extern bool shop_producing(const TObj *item, int shop_nr);
 extern void waste_shop_file(int shop_nr);
-
+extern bool shopOwned(int shop_nr);
 #endif

@@ -1,23 +1,11 @@
 //////////////////////////////////////////////////////////////////////////
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_base_weapon.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// base_weapon.cc
 //
 //////////////////////////////////////////////////////////////////////////
 
-
-// base_weapon.cc
-//
-
 #include "stdsneezy.h"
-#include "create.h"
 #include "combat.h"
 #include "statistics.h"
 #include "shop.h"
@@ -320,14 +308,14 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     return TRUE;
   }
   // Now we have a weapon that can be sharpened
-  job = (sharp_struct *) me->act_ptr;
+  job = static_cast<sharp_struct *>(me->act_ptr);
   if (!job->wait) {
 #if 0
     act("You give $p to $N to be re-edged.", FALSE, ch, this, me, TO_CHAR);
     act("$n gives $p to $N to be re-edged.", FALSE, ch, this, me, TO_ROOM);
 #endif
     job->wait = max((int) (getMaxSharp() - getCurSharp()) ,  (int) (getCurSharp() - getMaxSharp()));
-    job->wait /= 5;
+    job->wait /= 15;
     job->wait += 1;   // gotta exit with at least 1
     sprintf(buf, "Thanks for your business, I'll take your %d talen%s payment in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
@@ -342,7 +330,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     return TRUE;
   } else {
     if (!job->char_name)
-      vlogf(5, "somehow sharpener %s didnt have a name on existing job", me->getName());
+      vlogf(LOG_PROC, "somehow sharpener %s didnt have a name on existing job", me->getName());
     sprintf(buf, "Sorry, %s, but you'll have to wait while I re-edge %s's weapon.", ch->getName(), job->char_name);
     me->doSay(buf);
     strcpy(buf, name);
@@ -444,7 +432,7 @@ void TBaseWeapon::changeObjValue3(TBeing *ch)
 
 int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
 {
-  int sharp, hardness;
+  int hardness;
   char buf[256];
   TThing *tt;
 
@@ -460,21 +448,22 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
     else
       hardness = 0;
   } else {
-    if (v->getMaxLimbHealth(part_hit))
+    int maxlim = v->getMaxLimbHealth(part_hit);
+    if (maxlim)
       hardness = material_nums[v->getMaterial()].hardness *
-          v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
+          v->getCurLimbHealth(part_hit) / maxlim;
     else
       hardness = 0;
   }
   // Check to see if it gets dulled.
-  sharp = getCurSharp();
+  int sharp = getCurSharp();
 
   // this hardness check will be made for ALL types of weapon damage
   // both blunting and structural
   if ((::number(WEAPON_DAM_MIN_HARDNESS, WEAPON_DAM_MAX_HARDNESS) <= hardness) ||
       (::number(WEAPON_DAM_MIN_HARDNESS, WEAPON_DAM_MAX_HARDNESS) <= hardness)) {
-    if (getCurSharp() &&
-          (!::number(0, WEAPON_DAM_MAX_SHARP) <= sharp)) {
+    if (sharp &&
+          (::number(0, WEAPON_DAM_MAX_SHARP) <= sharp)) {
       if (isBluntWeapon()) {
         // The blunter the weapon, the easier to chip a bit - bat
         sprintf(buf, "Your %s%s%s is %schipped%s by %s$n's %s.",
@@ -495,10 +484,11 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
               v->describeBodySlot(part_hit).c_str());
       }
       act(buf, TRUE, v, item, ch, TO_VICT);
+      ch->sendTo(COLOR_OBJECTS, "It is in %s condition.\n\r",equip_condition(-1).c_str());
       addToCurSharp(-1);
     }
     // Check for structural damage
-    int chance = 1000 - (int) (1000 * gold_modifier[GOLD_REPAIR]);
+    int chance = 1000 - (int) (1000 * gold_modifier[GOLD_REPAIR].getVal());
     if (::number(0,999) >= chance) {
       // NOTE: this makes it easier to damage an item that is very damaged already
       if (::number(0, getMaxStructPoints()) >= getStructPoints()) {
@@ -512,6 +502,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
              ch->red(), ch->norm(), (item ? "$p on " : ""),
                v->describeBodySlot(part_hit).c_str());
           act(buf, FALSE, ch, item, v, TO_CHAR);
+	  ch->sendTo(COLOR_OBJECTS, "<R>It is in<1> %s <R>condition.<1>\n\r",equip_condition(-1).c_str());
         }
       }
     }
@@ -552,8 +543,13 @@ bool TBaseWeapon::isPierceWeapon() const
 
 void TBaseWeapon::divinateMe(TBeing *caster) const
 {
+#if 1
+  caster->sendTo("It is capable of doing %s of damage for your level.\n\r", 
+          describe_damage((int) damageLevel(), caster));
+#else
   caster->sendTo("It is capable of doing %s of damage.\n\r", 
-          describe_damage((int) damageLevel()));
+          describe_damage((int) damageLevel(), caster));
+#endif
 }
 
 int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
@@ -601,7 +597,7 @@ int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
         CS(SPELL_ENHANCE_WEAPON);
         affected[0].modifier += 1;
 //        affected[1].modifier += 1;
-//        vlogf(10,"Somehow, %s just got a critical success on enchant weapon", caster->getName());
+//        vlogf(LOG_MISC, "Somehow, %s just got a critical success on enchant weapon", caster->getName());
         break;
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
@@ -776,13 +772,13 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
   }
   ch->sendTo(VT_HOMECLR);
   if (isSlashWeapon()) {
-    ch->sendTo("1) Max sharpness (Maximum sharpness item can ever be):     Current=%d\n\r", getMaxSharp());
+    ch->sendTo("1) Max sharpness (Maximum sharpness item can ever be):     Max    =%d\n\r", getMaxSharp());
     ch->sendTo("2) Sharpness (sharpness that weapon will start out with):  Current=%d\n\r", getCurSharp());
   } else if (isBluntWeapon()) {
-    ch->sendTo("1) Max Bluntness (Maximum bluntness item can ever be):     Current=%d\n\r", getMaxSharp());
+    ch->sendTo("1) Max Bluntness (Maximum bluntness item can ever be):     Max    =%d\n\r", getMaxSharp());
     ch->sendTo("2) Bluntness (sharpness that weapon will start out with):  Current=%d\n\r", getCurSharp());
   } else {
-    ch->sendTo("1) Max Pointiness (Maximum pointiness item can ever have):   Current=%d\n\r", getMaxSharp());
+    ch->sendTo("1) Max Pointiness (Maximum pointiness item can ever have):   Max    =%d\n\r", getMaxSharp());
     ch->sendTo("2) Pointiness (pointiness that weapon will start out with):  Current=%d\n\r", getCurSharp());
   }
   ch->sendTo(VT_CURSPOS, 10, 1);
@@ -819,7 +815,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   }
 
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 2 * UPDATES_PER_TICK;
+  aff.duration = 2 * UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -838,11 +834,13 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
     if (tmon)
       tmon->developHatred(ch);
 
+    ch->reconcileDamage(v, 0, SKILL_SMITE);
+
     return TRUE;
   }
 
   aff.type = SKILL_SMITE;
-  aff.duration = 40 * UPDATES_PER_TICK;
+  aff.duration = 30 * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -884,7 +882,7 @@ int TBaseWeapon::poisonWeaponWeapon(TBeing *ch)
   }
   if (isObjStat(ITEM_BLESS) ||
       isObjStat(ITEM_MAGIC)) {
-    ch->sendTo("You can't poison that!\n\r");
+    ch->sendTo("The weapon resists the poison!\n\r");
     return FALSE;
   }
   for (i=0;i < MAX_SWING_AFFECT;i++) {
@@ -897,7 +895,7 @@ int TBaseWeapon::poisonWeaponWeapon(TBeing *ch)
       break;
   }
   if (i >= MAX_SWING_AFFECT) {
-    ch->sendTo("You can't poison that!\n\r");
+    ch->sendTo("The weapon resists the poison!\n\r");
     return FALSE;
   }
   if (!(poison = get_thing_char_using(ch, "poison", 0, TRUE, FALSE))) {
@@ -925,8 +923,10 @@ int TBaseWeapon::wieldMe(TBeing *ch, char *arg2)
     if (isname(name, "[paired]"))
       canSingleWieldPrim = canSingleWieldSecd = false;
 
-    vlogf(7, "Dynamic Paired Code Active: %s %d %d",
+#if 0
+    vlogf(LOG_LAPSOS, "Dynamic Paired Code Active: %s %d %d",
           arg2, canSingleWieldPrim, canSingleWieldSecd);
+#endif
 
     if (!*arg2) {
       if (!canSingleWieldPrim)
@@ -1306,11 +1306,11 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
         range++;
 
       if (!ch->isImmortal() &&
-            (!(i = ch->specialAttack(tb, SKILL_BOW)) ||
+            (!(i = ch->specialAttack(tb, SKILL_RANGED_PROF)) ||
             i == GUARANTEED_FAILURE)) {
         act("$n dodges out of the way of $p.", FALSE, tb, this, NULL, TO_ROOM);
         tb->sendTo("You dodge out of its way.\n\r");
-        if (!ch->sameRoom(tb))
+        if (!ch->sameRoom(*tb))
           act("In the distance, $N dodges out of the way of $p.",
                  TRUE,ch,this,tb,TO_CHAR);
         resCode = FALSE;
@@ -1334,11 +1334,11 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
           --(*this);
           rc = tb->stickIn(this, phit);
           if (rc) {
-            if (!ch->sameRoom(tb))
+            if (!ch->sameRoom(*tb))
               act("In the distance, $p embeds itself in $N.",
                    TRUE,ch,this,tb,TO_CHAR);
           } else {
-            if (!ch->sameRoom(tb))
+            if (!ch->sameRoom(*tb))
               act("In the distance, $N is hit by $p.",TRUE,ch,this,tb,TO_CHAR);
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1353,7 +1353,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
         } else {
           --(*this);
           *(tb->roomp) += *this;
-          if (!ch->sameRoom(c))
+          if (!ch->sameRoom(*c))
             act("In the distance, $N is hit by $p.",TRUE,ch,this,tb,TO_CHAR);
         }
 
@@ -1365,7 +1365,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
           if (::number(1, d) <= getStructPoints()) {
             addToStructPoints(-1);
             if (getStructPoints() <= 0) {
-              if (!ch->sameRoom(tb))
+              if (!ch->sameRoom(*tb))
                 act("In the distance, $p is destroyed.",TRUE,ch,this,0,TO_CHAR);
               makeScraps();
               ADD_DELETE(resCode, DELETE_ITEM);
@@ -1373,7 +1373,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
           }
         }
 #if RANGE_DEBUG
-        vlogf(5, "Range debug: (1) %s damaging %s with %s for %d dam",
+        vlogf(LOG_MISC, "Range debug: (1) %s damaging %s with %s for %d dam",
                  ch->getName(), tb->getName(), getName(), d);
 #endif
         rc = ch->applyDamage(tb, d, damtype);
@@ -1414,6 +1414,12 @@ string TBaseWeapon::showModifier(showModeT mode, const TBeing *ch) const
       a += buf;
     }
   }
+
+  for (int tIndex = 0; tIndex < MAX_SWING_AFFECT; tIndex++)
+    if (oneSwing[tIndex].type != TYPE_UNDEFINED &&
+        oneSwing[tIndex].bitvector == AFF_POISON)
+      a += " (poisoned)";
+
   return a;
 }
 
@@ -1429,14 +1435,14 @@ void TBaseWeapon::lowCheck()
 #else
   if (ap != obj_flags.cost) {
 #endif
-    vlogf(LOW_ERROR, "base_weapon %s has a bad price (%d).  should be (%d)",
+    vlogf(LOG_LOW, "base_weapon %s has a bad price (%d).  should be (%d)",
          getName(), obj_flags.cost, ap);
     obj_flags.cost = ap;
   }
   if (canWear(ITEM_HOLD)) {
     int amt = -itemAC();
     if (amt)
-      vlogf(LOW_ERROR, "Holdable weapon (%s:%d) with AC.  (bad!)",
+      vlogf(LOG_LOW, "Holdable weapon (%s:%d) with AC.  (bad!)",
           getName(), objVnum());
   }
 }
@@ -1499,6 +1505,8 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
     keeper->addToMoney(cost, GOLD_SHOP_WEAPON);
   }
+
+  shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
 }
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
@@ -1506,5 +1514,7 @@ void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_n
   ch->addToMoney(cost, GOLD_SHOP_WEAPON);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP_WEAPON);
+
+  shoplog(shop_nr, ch, keeper, getName(), cost, "selling");
 }
 
