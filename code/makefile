@@ -158,33 +158,23 @@ LDFLAGS +=-lpq
 LIBMISC=actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	alignment_deity.o ansi.o being.o game_blackjack.o body.o \
 	breath.o bwiz.o game_cards.o client.o colorstring.o \
-	color.o \
-	combat.o comm.o   connect.o constants.o \
+	color.o combat.o comm.o connect.o constants.o \
 	game_craps.o game_crazyeights.o create_engine.o database.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
-	db.o \
-	game_drawpoker.o \
-	discipline.o disease.o doors.o \
-	   edit.o enum.o equip.o \
-	 faction.o   \
-	 gaining.o    \
-	game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
-	indexdata.o info.o inventory.o    \
-	 limbs.o limits.o loadset.o luck.o  \
+	db.o game_drawpoker.o discipline.o disease.o doors.o faction.o   \
+	edit.o enum.o equip.o gaining.o game_gin.o handler.o \
+	game_hearts.o hospital.o immortal.o immunity.o \
+	indexdata.o info.o inventory.o limbs.o limits.o loadset.o luck.o  \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
 	meeting.o mob_loader.o mobact.o  monster.o movement.o \
-	multiclass.o newbie.o  obj.o magic_off.o  \
-	offense.o oldlimbs.o oldrace.o  opinion.o  \
-	other.o  parse.o peelpk.o  periodic.o pets.o \
-	physics.o  player_data.o game_poker.o  \
-	    race.o \
-	range.o rent.o repair.o response.o riding.o room.o shop.o show.o \
+	multiclass.o newbie.o  obj.o magic_off.o offense.o oldlimbs.o \
+	oldrace.o  opinion.o other.o  parse.o peelpk.o  periodic.o pets.o \
+	physics.o  player_data.o game_poker.o race.o range.o rent.o \
+	repair.o response.o riding.o room.o shop.o show.o \
 	signals.o skill_dam.o skills.o game_slots.o socket.o sound.o \
-         spell_info.o spell_num.o spell_parser.o \
-	spellstore.o spelltask.o statistics.o stats.o structs.o systemtask.o \
-	talk.o task.o    \
-	    thing.o \
-	toggle.o trap.o  utility.o weather.o \
+        spell_info.o spell_num.o spell_parser.o spellstore.o spelltask.o \
+	statistics.o stats.o structs.o systemtask.o \
+	talk.o task.o thing.o toggle.o trap.o  utility.o weather.o \
 	sys_loot.o wiz_data.o wiz_powers.o timing.o shopowned.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
