@@ -14,7 +14,6 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
   int w2, i;
   spellNumT which;
   int how_many;
-  char buf[256];
   int knowledge = ch->getSkillValue(SKILL_BREW);
   int factor1 = (ch->getSkillValue(SKILL_BREW) * 3);
   int factor2 = (ch->getSkillValue(SKILL_BREW) * 2);
@@ -88,10 +87,8 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 	    potion_obj->setDrinkType(LIQ_WATER);
           }
 
-	  sprintf(buf, "You now have a potion of %s.\n\r",
-		  discArray[which]->name);
-
-          ch->sendTo(buf);
+          ch->sendTo("You now have a potion of %s.\n\r",
+		     discArray[which]->name);
           act("$n finishes brewing.", FALSE, ch, 0, 0, TO_ROOM);
 
           ch->stopTask();
