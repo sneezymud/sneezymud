@@ -2,20 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_sorcery.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/09 05:23:15  batopr
-// Fixed "0 missiles" problem in mystic darts
-//
-// Revision 1.2  1999/09/18 06:03:56  brutius
-// Fixed typo in energy drain
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -109,6 +95,7 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
 
     victim->roomp->playsound(SOUND_SPELL_MYSTIC_DART, SOUND_TYPE_MAGIC);
 
+    vlogf(LOG_JESUS, "Mystic Darts damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_MYSTIC_DARTS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
 
@@ -236,6 +223,7 @@ int stunningArrow(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
 
     victim->roomp->playsound(SOUND_SPELL_STUNNING_ARROW, SOUND_TYPE_MAGIC);
 
+    vlogf(LOG_JESUS, "Stunning Arrow damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_STUNNING_ARROW) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
 
@@ -312,6 +300,20 @@ int castStunningArrow(TBeing *caster, TBeing *victim)
   return rc;
 }
 
+int blastOfFury(TBeing *caster, TBeing *victim, TMagicItem *tObj)
+{
+  int tLevel = tObj->getMagicLevel(),
+      tKnown = tObj->getMagicLearnedness(),
+      tReturn = 0;
+
+  tReturn = blastOfFury(caster, victim, tLevel, tKnown, 0);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tReturn, DELETE_THIS);
+
+  return tReturn;
+}
+
 int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
@@ -326,25 +328,40 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
   if (bSuccess(caster, bKnown, SPELL_BLAST_OF_FURY)) {
     caster->reconcileHurt(victim, discArray[SPELL_BLAST_OF_FURY]->alignMod);
 
-    act("$n unleashes all $s pent up anger and frustration on $N!", 
-            FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("You unleash all your pent up anger and frustration on $N!", 
-            FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n unleashes all $s pent up anger and frustration on you!", 
-            FALSE, caster, NULL, victim, TO_VICT);
     switch (critSuccess(caster, SPELL_BLAST_OF_FURY)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_BLAST_OF_FURY);
         dam <<= 1;
+        act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on $N!", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+        act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+        act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on you!", 
+                  FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLAST_OF_FURY))) {
           SV(SPELL_BLAST_OF_FURY);
           dam /= 2;
+          act("$n unleashes a small portion of $s pent up anger on $N!", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+          act("You unleash a small portion of your pent up anger on $N!", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+          act("$n unleashes a small portion of $s pent up anger on you!", 
+                  FALSE, caster, NULL, victim, TO_VICT);
+        } else {
+          act("$n unleashes all $s pent up anger on $N!", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+          act("You unleash all your pent up anger on $N!", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+          act("$n unleashes all $s pent up anger on you!", 
+                  FALSE, caster, NULL, victim, TO_VICT);
         }
+        break;
     }
+    vlogf(LOG_JESUS, "Blast of Fury damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_BLAST_OF_FURY) == -1)
       return SPELL_FAIL + VICTIM_DEAD;
     return SPELL_FAIL;
@@ -437,7 +454,7 @@ int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
         continue;
 
       if ((caster != tmp_victim) && !tmp_victim->isImmortal()) {
-        if (!caster->inGroup(tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim)) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_COLOR_SPRAY]->alignMod);
           int dam = orig_dam;
 
@@ -519,7 +536,7 @@ int colorSpray(TBeing *caster)
     victim = dynamic_cast<TBeing *>(t);
     if (!victim || (victim->isPc() && !victim->desc))
       continue;
-    if (!caster->inGroup(victim) && !victim->isImmortal()) {
+    if (!caster->inGroup(*victim) && !victim->isImmortal()) {
     }
     found = TRUE;
   }
@@ -590,7 +607,7 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
         if (pers && !save) {
           pers->dropLevel(pers->bestClass());
           pers->setTitle(false);
-          vlogf(10, "%s just lost a level from energy drain! :-)", pers->getName());
+          vlogf(LOG_MISC, "%s just lost a level from energy drain! :-)", pers->getName());
         }
         break;
       case CRIT_S_NONE:
@@ -603,6 +620,7 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
     }
     if (!victim->isImmortal())
       victim->addToMove(-vit);
+    vlogf(LOG_JESUS, "Energy Drain damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -663,6 +681,22 @@ int castEnergyDrain(TBeing *caster, TBeing *victim)
   return rc;
 }
 
+int energyDrain(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
+
+  tReturn = energyDrain(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
+}
+
 int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
 {
   TThing *t, *temp;
@@ -687,7 +721,7 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
       temp = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && (caster != tbt) && !tbt->isImmortal()) {
-        if (!caster->inGroup(tbt)) {
+        if (!caster->inGroup(*tbt)) {
           caster->reconcileHurt(tbt, discArray[SPELL_ACID_BLAST]->alignMod);
           int dam = orig_dam;
 
@@ -723,7 +757,7 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
             temp = t->nextThing;
             b = dynamic_cast<TBeing *>(t);
             if (b && (caster != b) && (!b->isImmortal())) {
-               if (caster->inGroup(b)) {
+               if (caster->inGroup(*b)) {
                  caster->reconcileHurt(b,discArray[SPELL_ACID_BLAST]->alignMod);
                  int dam = orig_dam;
 
@@ -815,6 +849,7 @@ int atomize(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
           dam /= 2;
         }
     }
+    vlogf(LOG_JESUS, "Atomize damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_ATOMIZE) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -871,6 +906,22 @@ int castAtomize(TBeing *caster, TBeing *victim)
   if (IS_SET(ret, CASTER_DEAD))
     ADD_DELETE(rc, DELETE_THIS);
   return rc;
+}
+
+int atomize(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
+
+  tReturn = atomize(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
 }
 
 int animate(TBeing *caster, int level, byte bKnown)
@@ -993,7 +1044,7 @@ int animate(TBeing *caster, int level, byte bKnown)
     if (count > 10) {
       act("Smells like an error to me!", FALSE, caster, NULL, NULL, TO_CHAR);
       caster->nothingHappens(SILENT_YES);
-      vlogf(10, "greater than 10 eq pieces counted for monster creation!!");
+      vlogf(LOG_BUG, "greater than 10 eq pieces counted for monster creation!!");
       return SPELL_FAIL;
     }
     if (!l_boot || !r_boot ||
@@ -1007,7 +1058,7 @@ int animate(TBeing *caster, int level, byte bKnown)
     }
     gol = read_mobile(MOB_ANIMATION, VIRTUAL);
     if (!gol) {
-      vlogf(10, "ERROR! spell 'animate' (in code as create_monster) tried to load mob vnum #%d -- doesn't exist!", MOB_ANIMATION);
+      vlogf(LOG_BUG, "ERROR! spell 'animate' (in code as create_monster) tried to load mob vnum #%d -- doesn't exist!", MOB_ANIMATION);
       caster->sendTo("Oops. Buggy spell. Error logged. Sorry.\n\r");
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;
@@ -1141,7 +1192,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   aff.type = SPELL_SORCERERS_GLOBE;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_ARMOR;
   aff.modifier = -100;
   aff.bitvector = 0;
@@ -1152,7 +1203,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SORCERERS_GLOBE);
-        aff.duration = (12 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (12 + (level / 2)) * UPDATES_PER_MUDHOUR;
         if (caster != victim)
           aff.modifier *= 2;
         break;
@@ -1229,14 +1280,14 @@ int bind(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff1.bitvector = AFF_WEB;
   aff1.location = APPLY_ARMOR;
   aff1.modifier = (level / 2) + 5;
-  aff1.duration = level * UPDATES_PER_TICK;
+  aff1.duration = level * UPDATES_PER_MUDHOUR;
 
   aff2.type = SPELL_BIND;
   aff2.level = level;
   aff2.bitvector = AFF_WEB;
   aff2.location = APPLY_SPELL_HITROLL;
   aff2.modifier = (-level * 2);
-  aff2.duration = level * UPDATES_PER_TICK;
+  aff2.duration = level * UPDATES_PER_MUDHOUR;
 
   if (bSuccess(caster, bKnown, SPELL_BIND)) {
     caster->reconcileHurt(victim, discArray[SPELL_BIND]->alignMod);
@@ -1428,7 +1479,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, byte bKnow
  
   aff.type = SPELL_PROTECTION_FROM_ELEMENTS;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_ACID;
   aff.modifier2 = ((level * 2) / 3);
@@ -1436,7 +1487,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, byte bKnow
 
   aff2.type = SPELL_PROTECTION_FROM_ELEMENTS;
   aff2.level = level;
-  aff2.duration = (3 + (level / 2)) * UPDATES_PER_TICK; 
+  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR; 
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_ELECTRICITY;
   aff2.modifier2 = ((level * 2) / 3);
@@ -1450,7 +1501,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, byte bKnow
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_ELEMENTS);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         aff2.duration = aff.duration;
         aff2.modifier2 = (level * 2);
