@@ -1246,25 +1246,28 @@ void TPerson::doLow(const sstring &argument)
 
 void TBeing::lowPath(const sstring &arg)
 {
-  dirTypeT dir, lastdir=DIR_NORTH;
-  sstring buf2;
-  int room=in_room;
+  dirTypeT dir, lastdir=DIR_NONE;
+  sstring buf;
+  int here=in_room;
+  int target=convertTo<int>(arg.word(0));
 
-  // arg = path <vnum>
   // trace a path there and spit out room nums
 
-  buf2=arg.word(1);
+  while((dir=find_path(here,is_target_room_p,(void *)target,-5000,false))>=0){
+    if(lastdir==DIR_NONE)
+      buf="NONE";
+    else
+      buf=dirs[lastdir];
 
-  while((dir=find_path(room, is_target_room_p, 
-		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
-    sendTo(fmt("{DIR_%s, %i},\n\r") % sstring(dirs[lastdir]).upper() % room);
+    sendTo(fmt("{DIR_%s, %i},\n\r") % buf.upper() % here);
 
-    room=real_roomp(room)->dir_option[dir]->to_room;
+    here=real_roomp(here)->dir_option[dir]->to_room;
     lastdir=dir;
   }
 
-  sendTo("{DIR_NONE, -1}\n\r");
+  sendTo(fmt("{DIR_%s, %i},\n\r") % sstring(dirs[lastdir]).upper() % here);
 
+  sendTo("{DIR_NONE, -1}\n\r");
 }
 
 
