@@ -494,7 +494,7 @@ class TMonster : public TBeing {
     void genericMobLoader(TOpenContainer **);
     virtual int hitGain();
     virtual int manaGain();
-    virtual int rawKill(spellNumT, TBeing * = NULL);
+    virtual int rawKill(spellNumT, TBeing * = NULL, float = 0);
     virtual int doQuit2();
     virtual void wizFileSave();
     virtual bool isDragonRideable() const;

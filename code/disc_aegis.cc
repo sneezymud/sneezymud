@@ -41,15 +41,18 @@ void relive(TBeing *ch, TBeing *vict)
   act("Images rapidly flash through your mind as you relive the experiences of your corpse.",
       FALSE, ch, NULL, vict, TO_VICT);
   act("$N looks dazed as $n completes $s prayer.",
-      FALSE, ch, NULL, vict, TO_ROOM);
+      FALSE, ch, NULL, vict, TO_NOTVICT);
   act("$N looks dazed as you complete your prayer.",
       FALSE, ch, NULL, vict, TO_CHAR);
   
-  // Up to 50% exp back
-  vict->addToExp(((vict->deathExp()/100)*ch->getSkillValue(SPELL_RELIVE)) / 2);
+  int exp_perc=::number(1,25);  // 1-25% random chance
+  exp_perc += ch->getSkillValue(SPELL_RELIVE)/4;  // 1-25% based on skill
+  vict->addToExp((corpse->getExpLost() * exp_perc)/100);
 
   // 25% chance of having 1-3 years age added
   if(!::number(0,3)){
+    act("The ordeal has left you feeling aged.",
+	FALSE, ch, NULL, vict, TO_VICT);
     vict->age_mod += ::number(1,3);
   }
   

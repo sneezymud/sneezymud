@@ -14,7 +14,7 @@
 #include "obj_corpse.h"
 #include "obj_money.h"
 
-TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
+TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float exp_lost=0)
 {
   TMoney *money;
   TThing *o, *next_o;
@@ -1002,6 +1002,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     pcorpse->setOwner(lower(tmpbuf).c_str());
     pcorpse->addCorpseToLists();
     pcorpse->saveCorpseToFile();
+    pcorpse->setExpLost(exp_lost);
   }
 
   if (gamePort != PROD_GAMEPORT)

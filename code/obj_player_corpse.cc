@@ -2,6 +2,15 @@
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
 
+float TPCorpse::getExpLost() const
+{
+  return exp_lost;
+}
+void TPCorpse::setExpLost(float exp)
+{
+  exp_lost=exp;
+}
+
 int TPCorpse::checkOnLists()
 {
   return on_lists;
@@ -168,6 +177,8 @@ string TPCorpse::statObjInfo() const
        getCorpseFlags(), getCorpseRace());
   sprintf(buf + strlen(buf), "Corpse Level: %d, Corpse Vnum: %d\n\r",
        getCorpseLevel(), getCorpseVnum());
+  sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",
+	  getExpLost());
 
   string a(buf);
   return a;

@@ -1533,7 +1533,7 @@ class TBeing : public TThing {
     bool checkPeaceful(const string &) const;
     bool checkPeacefulVictim(const string &, const TThing *) const;
     int extraDam(const TBeing *, const TBaseWeapon *) const;
-    TThing * makeCorpse(spellNumT, TBeing * = NULL);
+    TThing * makeCorpse(spellNumT, TBeing * = NULL, float = 0);
     int die(spellNumT, TBeing * = NULL);
     int slotChance(wearSlotT num) const;
     void makeBodyPart(wearSlotT);
@@ -1561,7 +1561,7 @@ class TBeing : public TThing {
     bool canUseLeg(primLegT) const;
     int checkPassWard(dirTypeT) const;
     bool canSwim(dirTypeT);
-    int rawKill(spellNumT, TBeing * = NULL);
+    int rawKill(spellNumT, TBeing * = NULL, float = 0);
     bool validMove(dirTypeT);
     const char *movementType(bool) const;
     ubyte getMaxLimbHealth(wearSlotT) const;

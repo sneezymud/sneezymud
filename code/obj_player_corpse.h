@@ -16,6 +16,7 @@ class TPCorpse : public TBaseCorpse {
     int on_lists;
     int corpse_in_room;
     int num_corpses_in_room;
+    float exp_lost;
     string fileName;
     TPCorpse *nextGlobalCorpse;
     TPCorpse *nextCorpse;
@@ -41,6 +42,8 @@ class TPCorpse : public TBaseCorpse {
     void setNumInRoom(int n);
     int getNumInRoom() const;
     void addToNumInRoom(int n);
+    float getExpLost() const;
+    void setExpLost(float exp);
     void setOwner(const string Name);
     const string & getOwner() const;
     void clearOwner();

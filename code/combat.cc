@@ -356,7 +356,7 @@ void TBeing::updatePos()
 }
 
 // always returns DELETE_THIS
-int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller)
+int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
 {
   TBeing *mob = NULL, *per = NULL;
 
@@ -409,7 +409,7 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
 }
 
 // always returns DELETE_THIS
-int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller)
+int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
 {
   // using this to keep an eye on potential problem cropping up. bat - 12/26/99
   Descriptor * tmpdesc = desc;
@@ -457,7 +457,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller)
     setMoney(0);
   }
 
-  makeCorpse(dmg_type, tKiller);
+  makeCorpse(dmg_type, tKiller, exp_lost);
   deathCry();
   genericKillFix();
 
@@ -501,6 +501,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
   Descriptor *d;
   TRoom *rp;
   int polymorph = 0;
+  float exp_lost = 0;
   rp = roomp;
 
   if (dynamic_cast<TMonster *>(this) && (desc || isPc())) {
@@ -540,10 +541,12 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
       //      vlogf(LOG_COMBAT,"Average skill loss: %f", deathSkillLoss());
       age_mod += val_num;
       gain_exp(this, -deathExp(), -1);
+      exp_lost=deathExp();
     }
   } else {
     vlogf(LOG_COMBAT, "Death called with ch (%s) in ROOM_NOWHERE!", getName());
     gain_exp(this, -deathExp(), -1);
+    exp_lost=deathExp();
   }
 
   // affectedData *aff;
@@ -552,7 +555,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
     test_fight_death(this, dynamic_cast<TBeing *>(aff->be), aff->level);
   }
 
-  rawKill(dam_type, tKiller);
+  rawKill(dam_type, tKiller, exp_lost);
 
   return DELETE_THIS;
 }
