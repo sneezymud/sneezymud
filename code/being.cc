@@ -918,6 +918,7 @@ void TBeing::addToLifeforce(int lifeforce)
 {
   points.lifeforce += lifeforce;
   points.lifeforce = max((short int) 0, points.lifeforce);
+  points.lifeforce = min(points.lifeforce, 32000);
 }
 
 bool TBeing::noLifeforce(int lifeforce) const
