@@ -1865,6 +1865,16 @@ int TBeing::doDonate(int room)
     return TRUE;
   } else {
     rc = doDrop("all" , NULL);
+
+    // Deal with cursed items, since they can not be dropped.
+    if (real_roomp(in_room))
+      while (getStuff()) {
+        TThing * tThing = getStuff();
+
+        (*tThing)--;
+        (*real_roomp(in_room)) += *tThing;
+      }
+
     return TRUE;
   }
 }
