@@ -697,7 +697,7 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
   if (!rp2)
     return false;
 
-  if (rp2->isAirSector() && !ch->isFlying())
+  if ((rp2->isAirSector() || rp2->isVertSector()) && !ch->isFlying())
     return false;
 
 #if 0
@@ -711,9 +711,6 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
     return false;
 
   if (rp2->getMoblim() && MobCountInRoom(rp2->getStuff()) >= rp2->getMoblim())
-    return false;
-
-  if (rp2->isVertSector())
     return false;
 
 #if 0
