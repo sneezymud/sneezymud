@@ -40,7 +40,6 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
 #include "pathfinder.h"
-#include "stockmarket.h"
 #include "timing.h"
 
 int maxdesc, avail_descs;  
@@ -970,7 +969,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  bool doneStockHistory=false, doneBankInterest=false;
+  bool doneBankInterest=false;
   TTiming t;
 
   avail_descs = 150;		
@@ -1017,28 +1016,16 @@ int TMainSocket::gameLoop()
 
       count=updateWholist();
       updateUsagelogs(count);
-
-      if (gamePort != BUILDER_GAMEPORT && gamePort != BETA_GAMEPORT &&
-          gamePort != ALPHA_GAMEPORT && gamePort != GAMMA_GAMEPORT)
-        // note:  BETA is the port used for walk-throughs and not your
-        // individual test instance
-        updateStocks();
     }
 
 
     // once per mud day
     if(time_info.seconds==0 && time_info.hours==0 && time_info.minutes==0){
-      if(!doneStockHistory){
-	updateStockHistory();
-	doneStockHistory=true;
-      }
-
       if(!doneBankInterest){
 	calcBankInterest();
 	doneBankInterest=true;
       }
     } else {
-      doneStockHistory=false;
       doneBankInterest=false;
     }
 

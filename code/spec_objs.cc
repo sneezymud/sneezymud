@@ -5676,7 +5676,6 @@ int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 
 extern int ballotBox(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
-extern int stockBoard(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponBlinder(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponManaDrainer(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -5874,7 +5873,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "graffiti maker", graffitiMaker}, // 135
   {FALSE, "graffiti object", graffitiObject},
   {FALSE, "statue arm twist", statueArmTwist},
-  {FALSE, "stock board", stockBoard},
+  {FALSE, "BOGUS", bogusObjProc},
   {FALSE, "switch object", switchObject},
   {FALSE, "gnome tenderizer", gnomeTenderizer}, // 140
   {FALSE, "Marukalia", marukalia},

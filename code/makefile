@@ -157,8 +157,7 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	talk.o 			task.o 			thing.o            \
 	toggle.o 		trap.o  		utility.o          \
 	weather.o 		sys_loot.o 		wiz_data.o         \
-	wiz_powers.o 		shopowned.o		corporation.o      \
-	stockmarket.o
+	wiz_powers.o 		shopowned.o		corporation.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
@@ -307,10 +306,9 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_flaskPeddler.o	spec_mobs_limbDispo.o 		\
 	spec_mobs_statSurgeon.o		spec_objs_graffitiObj.o 	\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
-	spec_objs_weapons.o             spec_mobs_stockbroker.o		\
+	spec_objs_weapons.o             spec_mobs_signmaker.o		\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
-	spec_objs_ballot_box.o		spec_objs_casting.o		\
-	spec_mobs_signmaker.o
+	spec_objs_ballot_box.o		spec_objs_casting.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -14037,7 +14035,7 @@ objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
 objs/socket.o: pathfinder.h /usr/include/g++/deque
-objs/socket.o: /usr/include/g++/stl_deque.h stockmarket.h timing.h
+objs/socket.o: /usr/include/g++/stl_deque.h timing.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -15633,75 +15631,6 @@ objs/spec_mobs_statSurgeon.o: spec_objs.h connect.h obj_drug.h charfile.h
 objs/spec_mobs_statSurgeon.o: being.h person.h monster.h paths.h account.h
 objs/spec_mobs_statSurgeon.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_statSurgeon.o: materials.h colorstring.h format.h
-objs/spec_mobs_stockbroker.o: stdsneezy.h /usr/include/g++/cstdio
-objs/spec_mobs_stockbroker.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-objs/spec_mobs_stockbroker.o: /usr/include/machine/ansi.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/ctime /usr/include/time.h
-objs/spec_mobs_stockbroker.o: /usr/include/sys/_posix.h
-objs/spec_mobs_stockbroker.o: /usr/include/sys/types.h
-objs/spec_mobs_stockbroker.o: /usr/include/sys/inttypes.h
-objs/spec_mobs_stockbroker.o: /usr/include/machine/types.h
-objs/spec_mobs_stockbroker.o: /usr/include/machine/endian.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cctype /usr/include/ctype.h
-objs/spec_mobs_stockbroker.o: /usr/include/runetype.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_stockbroker.o: /usr/include/stdarg.h /usr/include/g++/cmath
-objs/spec_mobs_stockbroker.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_stockbroker.o: /usr/include/stddef.h /usr/include/math.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/string
-objs/spec_mobs_stockbroker.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/cstddef
-objs/spec_mobs_stockbroker.o: /usr/include/g++/std/straits.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/alloc.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_config.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_alloc.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/iostream.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/libio.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/iterator
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_relops.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_iterator.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/std/bastring.cc
-objs/spec_mobs_stockbroker.o: /usr/include/g++/vector
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_algobase.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_pair.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/type_traits.h
-objs/spec_mobs_stockbroker.o: /usr/include/limits.h
-objs/spec_mobs_stockbroker.o: /usr/include/machine/limits.h
-objs/spec_mobs_stockbroker.o: /usr/include/sys/syslimits.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/spec_mobs_stockbroker.o: /usr/include/g++/exception
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_construct.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_uninitialized.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_vector.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_bvector.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/map
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_tree.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_function.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_map.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_multimap.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/list
-objs/spec_mobs_stockbroker.o: /usr/include/g++/stl_list.h
-objs/spec_mobs_stockbroker.o: /usr/include/g++/iostream
-objs/spec_mobs_stockbroker.o: /usr/include/g++/sstream
-objs/spec_mobs_stockbroker.o: /usr/include/g++/fstream
-objs/spec_mobs_stockbroker.o: /usr/include/g++/fstream.h sstring.h low.h
-objs/spec_mobs_stockbroker.o: enum.h spells.h structs.h parse.h immunity.h
-objs/spec_mobs_stockbroker.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
-objs/spec_mobs_stockbroker.o: client.h response.h faction.h comm.h toggle.h
-objs/spec_mobs_stockbroker.o: wiz_powers.h cmd_message.h stats.h limbs.h
-objs/spec_mobs_stockbroker.o: body.h race.h skills.h disease.h trap.h task.h
-objs/spec_mobs_stockbroker.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/spec_mobs_stockbroker.o: spec_objs.h connect.h obj_drug.h charfile.h
-objs/spec_mobs_stockbroker.o: being.h person.h monster.h paths.h account.h
-objs/spec_mobs_stockbroker.o: extern.h handler.h obj_money.h spec_mobs.h
-objs/spec_mobs_stockbroker.o: materials.h colorstring.h format.h
-objs/spec_mobs_stockbroker.o: stockmarket.h database.h
-objs/spec_mobs_stockbroker.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_stockbroker.o: /usr/local/include/postgres_ext.h
 objs/spec_mobs_tattoo_artist.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_tattoo_artist.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/machine/ansi.h
@@ -17804,55 +17733,6 @@ objs/stats.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/stats.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/stats.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/stats.o: colorstring.h format.h
-objs/stockmarket.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
-objs/stockmarket.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
-objs/stockmarket.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
-objs/stockmarket.o: /usr/include/g++/ctime /usr/include/time.h
-objs/stockmarket.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
-objs/stockmarket.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
-objs/stockmarket.o: /usr/include/machine/endian.h /usr/include/g++/cctype
-objs/stockmarket.o: /usr/include/ctype.h /usr/include/runetype.h
-objs/stockmarket.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/stockmarket.o: /usr/include/g++/cstring /usr/include/string.h
-objs/stockmarket.o: /usr/include/stdarg.h /usr/include/g++/cmath
-objs/stockmarket.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
-objs/stockmarket.o: /usr/include/math.h /usr/include/g++/cerrno
-objs/stockmarket.o: /usr/include/errno.h /usr/include/g++/string
-objs/stockmarket.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/stockmarket.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/stockmarket.o: /usr/include/g++/stl_config.h
-objs/stockmarket.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/stockmarket.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/stockmarket.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
-objs/stockmarket.o: /usr/include/g++/stl_iterator.h
-objs/stockmarket.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/stockmarket.o: /usr/include/g++/stl_algobase.h
-objs/stockmarket.o: /usr/include/g++/stl_pair.h
-objs/stockmarket.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/stockmarket.o: /usr/include/machine/limits.h
-objs/stockmarket.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
-objs/stockmarket.o: /usr/include/g++/new /usr/include/g++/exception
-objs/stockmarket.o: /usr/include/g++/stl_construct.h
-objs/stockmarket.o: /usr/include/g++/stl_uninitialized.h
-objs/stockmarket.o: /usr/include/g++/stl_vector.h
-objs/stockmarket.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
-objs/stockmarket.o: /usr/include/g++/stl_tree.h
-objs/stockmarket.o: /usr/include/g++/stl_function.h
-objs/stockmarket.o: /usr/include/g++/stl_map.h
-objs/stockmarket.o: /usr/include/g++/stl_multimap.h /usr/include/g++/list
-objs/stockmarket.o: /usr/include/g++/stl_list.h /usr/include/g++/iostream
-objs/stockmarket.o: /usr/include/g++/sstream /usr/include/g++/fstream
-objs/stockmarket.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
-objs/stockmarket.o: spells.h structs.h parse.h immunity.h discipline.h
-objs/stockmarket.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
-objs/stockmarket.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
-objs/stockmarket.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
-objs/stockmarket.o: task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/stockmarket.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/stockmarket.o: person.h monster.h paths.h account.h extern.h handler.h
-objs/stockmarket.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/stockmarket.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/stockmarket.o: /usr/local/include/postgres_ext.h
 objs/structs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/structs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/structs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
