@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.6  1999/10/06 22:02:03  batopr
+// "Use the TIME command at any point to see time until x." now uses
+// shutdown_or_reboot to populate x
+//
 // Revision 1.5  1999/10/05 22:39:37  cosmo
 // crash fix- minor- cos
 //
@@ -1487,7 +1491,9 @@ void TPerson::doShutdown(const char *argument)
       } else {
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       }
-      sprintf(buf, "<r>******* SYSTEM MESSAGE *******\n\r%s in %d minute%s by %s.<z>\n\r<c>Use the TIME command at any point to see time until shutdown.<z>\n\r", shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName());
+      sprintf(buf, "<r>******* SYSTEM MESSAGE *******\n\r%s in %d minute%s by %s.<z>\n\r<c>Use the TIME command at any point to see time until %s.<z>\n\r", 
+       shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName(),
+       shutdown_or_reboot().c_str());
       descriptor_list->worldSend(buf, this); 
     } else if (is_abbrev(arg, "abort")) {
       if (!timeTill) {
