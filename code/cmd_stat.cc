@@ -147,6 +147,7 @@ void TBeing::statZone(const char *zoneNumber)
 void TBeing::statRoom(TRoom *rmp)
 {
   sstring str;
+  sstring tmp_str;
   char buf2[256];
   char buf3[80], buf4[80];
   extraDescription *e;
@@ -186,10 +187,12 @@ void TBeing::statRoom(TRoom *rmp)
   str += buf2;
 
   str += "Description:\n\r";
-  if (rmp->getDescr())
-    str += rmp->getDescr();
-  else
+  tmp_str = rmp->getDescr();
+  if (tmp_str.empty()) {
     str += "NO DESCRIPTION\n\r";
+  } else {
+    str += tmp_str.toCRLF();
+  }
 
   str += "Extra description keywords(s): ";
   if (rmp->ex_description) {
