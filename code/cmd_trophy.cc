@@ -161,6 +161,10 @@ void TBeing::doTrophy(const sstring &arg)
 	continue;
       }
 
+      if(!mob_index[rnum].doesLoad)
+	continue;
+
+
       if(zonesearch==-1){
 	if(!isname(arg1, zd.name))
 	  continue;
@@ -221,7 +225,8 @@ void TBeing::doTrophy(const sstring &arg)
   int activemobcount=0;
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-      if(mob_index[mobnum].virt <= zone_table[zone].top){
+      if(mob_index[mobnum].virt <= zone_table[zone].top &&
+	 mob_index[mobnum].doesLoad){
 	if(zone_table[zone].enabled)
 	  activemobcount++;
 	break;

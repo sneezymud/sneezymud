@@ -1650,6 +1650,10 @@ void zoneData::resetZone(bool bootTime)
             mobload = 0;
             continue;
           }
+
+	  if(this->zone_value != 0)
+	    mob_index[rs.arg1].doesLoad=true;
+
           if ((this->zone_value != 0) &&
               mob_index[rs.arg1].number < mob_index[rs.arg1].max_exist) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) {

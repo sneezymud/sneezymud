@@ -172,6 +172,7 @@ class mobIndexData : public indexData
     long Class;
     long level;
     long race;
+    bool doesLoad;
 
     mobIndexData();
     mobIndexData(const mobIndexData &);
