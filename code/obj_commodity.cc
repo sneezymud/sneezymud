@@ -219,7 +219,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     --(*this);
 
     keeper->giveMoney(ch, price, GOLD_COMM);
-    shoplog(shop_nr, ch, keeper, obj2->getName(), price, "selling");
+    shoplog(shop_nr, ch, keeper, obj2->getName(), -price, "selling");
 
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
