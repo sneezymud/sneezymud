@@ -566,9 +566,9 @@ void assign_item_info()
 				    "Rate of fire", 10, 0,
 				    "Damage Level * 4", 240, 0,
 				    "Damage Precision", 10, 0,
-				    "Ammo type", 9, 0);
+				    "Ammo type", 14, 0);
   ItemInfo[ITEM_AMMO] = new itemInfo("Ammo", "some ammo",
-				     "Ammo type", 9, 0,
+				     "Ammo type", 14, 0,
 				     "Rounds", 500, 0,
 				     "Unused", 0, 0,
 				     "Unused", 0, 0);

@@ -7,47 +7,61 @@
 
 #include "stdsneezy.h"
 
-
 enum ammoTypeT {
-  AMMO_NONE,
-  AMMO_10MM,
-  AMMO_9MM,
-  AMMO_22CAL,
-  AMMO_45CAL,
-  AMMO_50CAL,
-  AMMO_357CAL,
-  AMMO_38CAL,
-  AMMO_556MM,
-  AMMO_768MM,
+  AMMO_NONE,                    // 0
+  AMMO_10MM_PISTOL,             // 1
+  AMMO_9MM_PARABELLEM_PISTOL,   // 2
+  AMMO_45CAL_ACP_PISTOL,        // 3
+  AMMO_50CAL_AE_PISTOL,         // 4
+  AMMO_44CAL_MAGNUM_PISTOL,     // 5
+  AMMO_32CAL_ACP_PISTOL,        // 6
+  AMMO_50CAL_BMG_PISTOL,        // 7
+  AMMO_556MM_NATO_PISTOL,       // 8
+  AMMO_SS190,                   // 9
+  AMMO_9MM_PARABELLEM_RIFLE,    // 10
+  AMMO_45CAL_ACP_RIFLE,         // 11
+  AMMO_556MM_RIFLE,             // 12
+  AMMO_762MM_RIFLE,             // 13
+  AMMO_30CAL_RIFLE,             // 14
   AMMO_MAX
 };
 
 const char *shelldesc [] =
 {
   "None",
-  "10mm",
-  "9mm",
-  ".22 caliber",
-  ".45 caliber",
-  ".50 caliber",
-  ".357 caliber",
-  ".38 caliber",
-  "5.56mm",
-  "7.68mm"
+  "10mm pistol",
+  "9mm Parabellem pistol",
+  ".45cal ACP pistol",
+  ".50cal Action Express",
+  ".44cal Magnum",
+  ".32cal ACP",
+  ".50cal BMG",
+  "5.56mm NATO pistol" 
+  "SS190",
+  "9mm Parabellem rifle",
+  ".45cal ACP rifle",  
+  "5.56mm rifle",
+  "7.62mm rifle",
+  "30cal rifle",
 };
 
 const char *shellkeyword [] = 
 {
   "None",
-  "10mm",
-  "9mm",
-  "22cal",
-  "45cal",
-  "50cal",
-  "357cal",
-  "38cal",
-  "556mm",
-  "768mm"
+  "10mmPistol",
+  "9mmPistol",
+  "45calPistol",
+  "50calAE",
+  "44calMag",
+  "32calACP",
+  "50calBMG",
+  "556mmPistol"
+  "SS190",
+  "9mmRifle",
+  "45calRifle",
+  "556mmRifle",
+  "762mmRifle",
+  "30calRifle"
 };
 
 
@@ -217,6 +231,8 @@ void TBeing::doGload(const char *arg)
 string TGun::statObjInfo() const
 {
   char buf[256];
+
+  TObj::statObjInfo();
 
   sprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
 	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
