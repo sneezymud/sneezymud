@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: connect.cc,v $
+// Revision 1.3  1999/10/15 21:55:26  batopr
+// typo fix
+//
 // Revision 1.2  1999/10/15 21:53:22  batopr
 // Added code to protect against use of potentially freed memory following
 // call to parseCommand.
@@ -4565,7 +4568,7 @@ void processAllInput()
           // after a purge ldead
           if (d && IS_SET_DELETE(rc, DELETE_THIS)) {
             // in another wierd core, d was no longer in the descriptor_list
-            Descriptor *tmpdesc;
+            Descriptor *tempdesc;
             for (tempdesc = descriptor_list; tempdesc; tempdesc = tempdesc->next) {
               if (tempdesc == d || tempdesc == next_to_process)
                 break;
