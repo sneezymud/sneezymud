@@ -2103,6 +2103,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       value+=myself->getMoney();
       ch->setMoney(ch->getMoney()+value);
 
+      shop_index[shop_nr].profit_buy=1.1;
+      shop_index[shop_nr].profit_sell=0.9;
+
       sprintf(buf, "%s Ok, you no longer own this shop.", ch->getName());
       myself->doTell(buf);
     } else if(!strcmp(buf, "give")){ /////////////////////////////
