@@ -7628,6 +7628,149 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 }
 
 
+// riddling tree proc
+int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj *)
+{
+  
+  if (cmd != CMD_SAY && cmd != CMD_TELL && cmd != CMD_OPEN)
+    return FALSE;
+    
+  sstring sarg = arg;
+  if ( (cmd == CMD_TELL && sarg.find(" ") > 0 && 
+         !isname(sarg.substr(0,(int) sarg.find(" ")), tree->name)) ||
+       (cmd == CMD_SAY && lower(sarg).find("clue") == sstring::npos ))
+  {
+    return FALSE;
+  }
+  
+// make him unresponsive if somehow he's in the wrong room
+  if (tree->inRoom() != 24700)
+    return FALSE;
+    
+  if (cmd == CMD_OPEN && lower(sarg).find("vine") != sstring::npos) 
+  {
+    act("$n blocks your way.", TRUE, tree, NULL, ch, TO_VICT);
+    act("$N moves towards some vines, but $n blocks the way.", 
+      TRUE, tree, NULL, ch, TO_NOTVICT);
+    act("<c>$n says,<z> \"Just where do you think you're going?!?\"", 
+      TRUE, tree, NULL, ch, TO_ROOM);
+    return TRUE;
+  } else if (cmd == CMD_OPEN) 
+    return FALSE;
+  
+  int whichRiddle;
+  vector <sstring> riddles;
+  vector <sstring> answers;
+  static time_t firstGuessTime;
+  static short int chancesLeft;
+  int elapsedTime = 0;
+
+  // reset the proc after 10 minutes
+  if (firstGuessTime) elapsedTime = (time(0) - firstGuessTime) / 60;
+  if (elapsedTime >= 10) firstGuessTime = NULL;
+  if (!firstGuessTime) chancesLeft = 3;
+  
+  riddles.push_back("A great tree that spreads its roots where dryads step around the gentle dancing of nymphs.");
+  answers.push_back("oak");
+
+  riddles.push_back("An odd-looking tree, but quite friendly.  Always had problems with nasty werewolves scraping off its bark.");
+  answers.push_back("scraggly");
+
+  riddles.push_back("A great tree, but hard set-upon by the large number of travelers that now issue from that vile fledgling city to the south of it.");
+  answers.push_back("spruce");
+
+  riddles.push_back("Among the oldest of trees and very wise, it sits in a grove sometimes frequented by shedu seeking knowledge.");
+  answers.push_back("willow");
+
+  riddles.push_back("Alas, last I saw this great tree was sitting in the midst of slaughtered animals.  I suppose it should come as no surprise that the nasty mess-making humans had stolen the animals from their own kin.");
+  answers.push_back("ash");
+
+  riddles.push_back("I always loved to watch the griffons and winged lions sweep about the skies near this tree.  The gnats were a little annoying, though.");
+  answers.push_back("redwood");
+  
+  riddles.push_back("This tree was well-tended by elves from a nearby village."); 
+  answers.push_back("elm"); 
+  
+  riddles.push_back("A settlement of short hairy-footed folk had recently been established near this tree last I visited.");
+  answers.push_back("apple");
+
+  riddles.push_back("Passing travellers had a bad habit of writing their initials in this one.  Felons, all.");
+  answers.push_back("hickory");
+
+  riddles.push_back("A most wonderful valley, with many elk, black bears, and bluejays and a curious saltwater lake was the home of this tree.");
+  answers.push_back("pine");
+
+  riddles.push_back("A dark forest well-protected by its bears was this one's home.");
+  answers.push_back("oak");
+
+  riddles.push_back("Home to many birds and monkeys, this fair tree grows where lions and zebras roam.");
+  answers.push_back("acacia");
+  
+  // which riddle are we using this boot
+  whichRiddle = Uptime % riddles.size();
+  vlogf(LOG_MAROR, "riddle = %s",riddles[whichRiddle].c_str());
+  vlogf(LOG_MAROR, "answer = %s", answers[whichRiddle].c_str());
+
+  if (cmd == CMD_TELL && lower(sarg).find(answers[whichRiddle]) != 
+      sstring::npos) {
+// reset guessing
+    firstGuessTime = NULL;
+    tree->doAction("", CMD_SMILE);
+    act("<c>$n says,<z> \"Oh, thank you - you have brought a ray of sunshine into an old tree's day.\"", 
+      TRUE, tree, NULL, ch, TO_ROOM);
+    act("$n hums a little tune.", TRUE, tree, NULL, ch, TO_ROOM);
+    tree->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF,
+      "",
+      "",
+      "The tree reaches out gnarled hands and pushes some vines to the north aside and away.",
+      "The tree reaches out gnarled hands and pushes some vines to the north aside and away.",
+      "Some vines to the south have been pushed aside.",
+      "",
+      "",
+      ""
+    );
+  }
+  else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY) && 
+      lower(sarg).find("clue") != sstring::npos) 
+  {
+    act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"", 
+      TRUE, tree, NULL, ch, TO_ROOM);
+    sstring sayRiddle;
+    ssprintf(sayRiddle, "<c>$n says,<z> \"%s\"", riddles[whichRiddle].c_str());
+    act(sayRiddle, TRUE, tree, NULL, ch, TO_ROOM);
+    sstring askForClue;
+    ssprintf(askForClue, "<c>$n says,<z> \"You'll have to <g>tell<z> me the answer if you hope to pass.  I'll give you %d %s to guess.\"", 
+      chancesLeft, (chancesLeft != 1) ? "chances" : "chance");
+    act(askForClue, TRUE, tree, NULL, ch, TO_ROOM);
+  }
+ // control response to other tells to the tree 
+  else 
+/*  if ((cmd == CMD_SAY && chancesLeft == 0 ) || (cmd == CMD_TELL &&*/
+/*      lower(sarg).find(answers[whichRiddle]) == sstring::npos))*/
+  {
+    if (chancesLeft == 3) 
+      firstGuessTime = time(0);
+    chancesLeft--;
+    act("$n shrugs helplessly.", TRUE, tree, NULL, ch, TO_ROOM);
+    if (chancesLeft > 0)
+    {
+      act("<c>$n says<z>, \"A shame, a shame... I do hope you're wrong due to ignorance, and not because my friend no longer stands.\"", 
+        TRUE, tree, NULL, ch, TO_ROOM);
+      tree->doAction("",CMD_SNICKER); 
+      sstring stateChancesLeft;
+      ssprintf(stateChancesLeft, "<c>$n says,<z> \"There's a good chance of that, at least.  You have %d %s left, so you'd best stop fooling around.\"", 
+        chancesLeft, (chancesLeft != 1) ? "chances" : "chance");
+      act(stateChancesLeft, TRUE, tree, NULL, ch, TO_ROOM);
+    } else {
+      act("<c>$n says,<z> \"I gave plenty of chances.  I still am not sure whether to mourn my friend or pity your kind its ignorance, but I'm certainly not letting anyone in.\"",
+        TRUE, tree, NULL, ch, TO_ROOM);
+    }
+  }
+  return TRUE;
+    
+}
+
+
 extern int postman(TBeing *, cmdTypeT , const char *, TMonster *, TObj *);
 extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *);
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7822,7 +7965,8 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "konastis's guard", konastisGuard},
   {FALSE, "hold'em player", holdemPlayer},
   {FALSE, "postman", postman},
-  {TRUE, "poison bite", poisonBite},
+  {TRUE, "poison bite", poisonBite}, // 180
+  {FALSE, "riddling tree", riddlingTree},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

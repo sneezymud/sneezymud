@@ -431,7 +431,6 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       break;
     default:
       mud_assert(cmd >= 0, "Unhandled special command in modifiedDoCommand array %d", cmd);
-
       rc = doCommand(cmd, arg, (TThing *) mob, FALSE);
       break;
   }
@@ -444,11 +443,11 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBein
 {
   if (desc || !resps || !resps->respList || !tBeing->isPc() || fight())
     return false;
-
   resp *tResp;
 
   if (tCmd == CMD_WHISPER || tCmd == CMD_ASK)
     tCmd = CMD_SAY;
+
 
   // If they have a response with the same command we only want to do
   // sensative matching for say/ask/whisper else we just assume that it
@@ -1241,7 +1240,7 @@ resp * TMonster::readCommand( FILE *fp)
     }
 
     // this allows us to check for special commands in the scripts
-    cleanString( args);
+/*    cleanString( args);*/
     if (is_abbrev(buf, "toggle"))
       newCmd = new command( CMD_RESP_TOGGLE, args);
     else if (is_abbrev(buf, "untoggle"))

@@ -4663,14 +4663,14 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo("Your Personal Log Messages are now %s\n\r",
              ((d->severity & (1 << LOG_COSMO)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
+/*    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
       if ((d->severity & (1 << LOG_LAPSOS)))
         d->severity &= ~(1 << LOG_LAPSOS);
       else
         d->severity |= (1 << LOG_LAPSOS);
 
       sendTo("Your Personal Log Messages are now %s\n\r",
-             ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));
+             ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));*/
     } else if (is_abbrev(arg, "peel") && !strcmp(getName(), "Peel")) {
       if ((d->severity & (1 << LOG_PEEL)))
         d->severity &= ~(1 << LOG_PEEL);
@@ -4695,6 +4695,12 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo("Your Personal Log Messages are now %s\n\r",
              ((d->severity & (1 << LOG_DASH)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "maror") && !strcmp(getName(), "Maror")) {
+      if ((d->severity & (1 << LOG_MAROR))) d->severity &= ~(1 << LOG_MAROR);
+      else d->severity |= (1 << LOG_MAROR);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_MAROR)) ? "On" : "Off"));
     } else
       sendTo("Incorrect Log Type.\n\r");
   } else {

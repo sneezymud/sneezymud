@@ -677,6 +677,11 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       strncpy(name, buf, strlen(buf)-2);
       name[strlen(buf)-2]='\0';
       break;
+    case LOG_MAROR:
+      strcpy(buf, "Maror: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
     case LOG_DB:
       strcpy(buf, "Database: ");
       strncpy(name, buf, strlen(buf)-2);

@@ -156,12 +156,14 @@ const int SPEC_KAVOD_BARMAID      =171;
 const int SPEC_TATTOO_ARTIST      =172;
 const int SPEC_ELEVATOR_OP        =173;
 const int SPEC_ELEVATOR_GUARD     =174;
-const int SPEC_LOTTERY_REDEEMER   =175;
-const int SPEC_KONASTIS_GUARD     =176;
-const int SPEC_HOLDEM_PLAYER      =177;
-const int SPEC_POSTMAN            =178;
-const int SPEC_POISON_BITE        =179;
-const int NUM_MOB_SPECIALS        =180;
+const int SPEC_COMMOD_MAKER       =175;
+const int SPEC_LOTTERY_REDEEMER   =176;
+const int SPEC_KONASTIS_GUARD     =177;
+const int SPEC_HOLDEM_PLAYER      =178;
+const int SPEC_POSTMAN            =179;
+const int SPEC_POISON_BITE        =180;
+const int SPEC_RIDDLING_TREE      =181;
+const int NUM_MOB_SPECIALS        =181;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
