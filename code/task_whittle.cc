@@ -119,6 +119,8 @@ void initWhittle()
                     -1, 99, 194, false, WHITTLE_INVOLVED);
   whittleItems[i++]("miniature-idol-gringar",
                     -1, 99, 195, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-peel",
+                    -1, 99, 197, false, WHITTLE_INVOLVED);
   whittleItems[i++]("pole-fishingpole-very-nice", 
                     -1, 60, 13862, false, WHITTLE_GENERAL);
   
