@@ -391,10 +391,9 @@ void corpBalance(TBeing *ch, TMonster *me, sstring arg)
       return;
   }
 
-  db.query("select gold from corporation where corp_id=%i", corp_id);
-  db.fetchRow();
+  TCorporation corp(corp_id);
 
-  me->doTell(ch->getName(), fmt("Your balance is %s.") % db["gold"]);
+  me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
 
 
 }
