@@ -1479,6 +1479,20 @@ int TBeing::doShoot(const char *arg)
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
   }
+
+  // this is mainly for dual wielding guns, bows should be 2-handed
+  if((t = equipment[getSecondaryHold()]) && 
+     dynamic_cast<TObj *>(t) && !dynamic_cast<TObj *>(t)->usedAsPaired()){
+    rc = t->shootMeBow(this, targ, count, dir, iDist);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete t;
+      t = NULL;
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      return DELETE_THIS;
+    }
+  }
+
   return FALSE;
 }
 
