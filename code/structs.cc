@@ -703,7 +703,6 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
-#if 0
   TComponent *c = dynamic_cast<TComponent *>(&t);
   if (c) {
     TThing *i;
@@ -722,12 +721,13 @@ TThing& TThing::operator += (TThing& t)
 
       if (!(rp = roomp)) {
         if (parent) {
-          if (!(rp = parent->roomp)) {
-            rp = parent->parent->roomp;
-          }
+          rp = parent->roomp;
         } else {
-          if (tComp)
-            rp = tComp->roomp;
+          if (!(rp = tComp->roomp)) {
+            if (tComp->parent) {
+              rp = tComp->parent->roomp;
+            }
+          }
         }
       }
       if (rp) {
@@ -740,7 +740,6 @@ TThing& TThing::operator += (TThing& t)
       delete tComp;
     }
   }
-#endif
   return *this;
 }
 
