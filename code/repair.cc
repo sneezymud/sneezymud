@@ -84,7 +84,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
       profit_buy=shop_index[shop_nr].profit_buy;
 
 
-    price = (int)((double) price * shop_index[shop_nr].profit_buy);
+    price = (int)((double) price * profit_buy);
   }
 
 
