@@ -54,6 +54,7 @@
 #include "obj_pool.h"
 #include "obj_base_clothing.h"
 #include "obj_bow.h"
+#include "obj_trap.h"
 
 #include <fstream.h>
 
@@ -3076,6 +3077,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
   TBeing *tch = NULL;
   TThing *t1 = NULL, *t2 = NULL;
+  TTrap *trap;
   char buf[256], buf2[256], buf3[256];
   int rc = 0, num = 0, num2 = 0;
 
@@ -3465,18 +3467,31 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
     t2 = t1->nextThing;
     tch = dynamic_cast<TBeing *>(t1);
+
+    if((trap=dynamic_cast<TTrap *>(t1)) && trap->getTrapCharges()>0){
+      ch->doSay("Whoa, this looks dangerous!");
+      act("$n disarms $p.", FALSE, ch, trap, 0, TO_ROOM);
+      trap->setTrapCharges(0);
+    }
+
     if (!tch)
       continue;
+
     if (tch == ch || !ch->canSee(tch))
       continue;
+
     if (tch->isImmortal() && tch->isPlayerAction(PLR_NOHASSLE))
       continue;
+
     if (!ch->isUndead() && !ch->isDiabolic()) {
       TObj *amulet; // something special for my amulet - dash
-      if (tch->isUndead() && (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) && 
+      if (tch->isUndead() && 
+	  (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) && 
 	  obj_index[amulet->getItemIndex()].virt != 9597)
 	continue;
-      if ((tch->isUndead() || tch->isDiabolic()) && !tch->inGrimhaven() && !tch->isPc()) {
+
+      if ((tch->isUndead() || tch->isDiabolic()) && 
+	  !tch->inGrimhaven() && !tch->isPc()) {
         if (!ch->checkSoundproof())
           act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);
 
