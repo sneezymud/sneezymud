@@ -8,8 +8,6 @@
 
 #include "stdsneezy.h"
 
-#include <iostream.h>
-#include <fstream.h>
 
 /* remove these races
     case RACE_UNCERT:

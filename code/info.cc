@@ -9,7 +9,6 @@
 #include "stdsneezy.h"
 
 #include <algorithm>
-#include <iostream.h>
 #include <sys/types.h>
 #include <dirent.h>
 

@@ -3,7 +3,6 @@
 #include "stdsneezy.h"
 #include "stats.h"
 
-#include <iostream.h>
 #include <cmath>
 
 Stats Stats::operator+(const Stats &operand)

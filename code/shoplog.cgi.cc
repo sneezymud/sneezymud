@@ -2,7 +2,6 @@
 #include "database.h"
 #include "shop.h"
 
-#include <iostream>
 #include <vector>
 #include <string>
 

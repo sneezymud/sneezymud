@@ -10,8 +10,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <algorithm>
-#include <iostream.h>
-#include <fstream.h>
 
 #include "stdsneezy.h"
 #include "statistics.h"

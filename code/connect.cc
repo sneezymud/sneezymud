@@ -7,8 +7,6 @@
 
 #include <csignal>
 #include <cstdarg>
-#include <iostream.h>
-#include <fstream.h>
 
 extern "C" {
 #include <dirent.h>

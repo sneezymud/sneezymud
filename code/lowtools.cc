@@ -1,7 +1,5 @@
 #include "stdsneezy.h"
 #include "database.h"
-#include <iostream.h>
-#include <fstream.h>
 
 // parses args like "13700-13780 13791 13798"
 bool parse_num_args(int argc, char **argv, vector<int> &vnums)

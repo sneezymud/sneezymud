@@ -3,9 +3,6 @@
 //  Lets see if I can make some magic.
 
 #include "stdsneezy.h"
-
-#include <iostream.h>
-#include <fstream.h>
 #include "body.h"
 #include "race.h"
 

@@ -64,8 +64,6 @@
 #include "shopowned.h"
 #include "pathfinder.h"
 
-#include <fstream.h>
-
 const int GET_MOB_SPE_INDEX(int d)
 {
   return (((d > NUM_MOB_SPECIALS) || (d < 0)) ? 0 : d);

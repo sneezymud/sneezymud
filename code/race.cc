@@ -11,8 +11,6 @@
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"
 
-#include <iostream.h>
-#include <fstream.h>
 
 const char * RaceNames[MAX_RACIAL_TYPES] = {
   "RACE_NORACE", "RACE_HUMAN", "RACE_ELVEN", "RACE_DWARF", "RACE_HOBBIT",
