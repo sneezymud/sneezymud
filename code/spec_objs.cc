@@ -4854,17 +4854,18 @@ int selfRepairing(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
-  if (ch->getHit() > 10 && cmd == CMD_GENERIC_PULSE && o->getStructPoints() < o->getMaxStructPoints()) {
+
+  if(!::number(0,9))
+    return false;
+
+  if (cmd == CMD_GENERIC_PULSE && o->getStructPoints() < o->getMaxStructPoints()) {
     if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
       return FALSE;
 
-    if(!::number(0,4))
-      return false;
+    act("<W>$n<W>'s $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    act("<W>Your $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-    act("<W>$n<W>'s $o turns liquid and reforms itself anew.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
-    act("<W>Your $o turns liquid and reforms itself anew.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
-
-    o->addToStructPoints(1);
+    o->addToStructPoints(::number(1,min(5, o->getMaxStructPoints() - o->getStructPoints())));
     return FALSE;
   }
   return FALSE;
@@ -4909,7 +4910,7 @@ int AKAmulet(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
   if (cmd == CMD_GENERIC_PULSE && !::number(0,3)) {
-    if(ch->isUndead()) {
+    if(ch->isUndead() && ch->hitLimit() > ch->getHit()) {
        int dam =::number(1,5);
        act("$n regenerates slightly.",TRUE,ch,o,NULL,TO_ROOM,NULL);
        act("You regenerate slightly.",TRUE,ch,o,NULL,TO_CHAR,NULL);

@@ -1766,28 +1766,8 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (t = rp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    if(!(to=dynamic_cast<TObj *>(t)))
-      continue;
-    if(obj_index[to->getItemIndex()].virt == 9598) {
-      found = true;
-      break;
-    }
-  }
-  //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-  vlogf(LOG_DASH, "daygate proc: hmt: %d  hour: %d", hourminTime(), hourminTime()/4);
-  if (hourminTime() > 72   || hourminTime() < 24) {
-    // code to remove gate
-    if (found && to) {
-      vlogf(LOG_DASH, "daygate proc found evilgate, removing");
-      act("<k>The dark portal of negative energy flickers once, and is gone.<1>",
-	  TRUE, to, 0, 0, TO_ROOM);
-      --(*to);
-      delete to;
-    }
-  }
-  found = false;
+  
+  //  vlogf(LOG_DASH, "daygate proc PULSE");
   for (t = rp->stuff; t; t = t2) {
     t2 = t->nextThing;
     if(!(to=dynamic_cast<TObj *>(t)))
@@ -1808,102 +1788,26 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       --(*to);
       delete to;
     }
-  } 
-
-  found = false;
-
-  if (QuestCode) {
-    //  vlogf(LOG_DASH, "daygate proc PULSE");
-    for (t = rp->stuff; t; t = t2) {
-      t2 = t->nextThing;
-      if(!(to=dynamic_cast<TObj *>(t)))
-	continue;
-      if(obj_index[to->getItemIndex()].virt == ITEM_DAYGATE) {
-	found = true;
-	break;
-      }
-    }
-    //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-    //vlogf(LOG_DASH, "daygate proc: hmt: %d  suntime: %d", hourminTime(), sunTime(SUN_TIME_DAY));
-    if (hourminTime() > 50   || hourminTime() < 46) {
-      // code to remove gate
-      if (found && to) {
-	vlogf(LOG_DASH, "daygate proc found gate, removing");
-	act("<Y>The radiant portal flares up once and is gone.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-	--(*to);
-	delete to;
-      }
-    } else {
-      // code to place gate
-      if (!found) {
-	vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
-	if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
-	  vlogf(LOG_LOW, "Error loading daygate");
-	  return FALSE;;
-	}
-	obj = dynamic_cast<TPortal *>(to);
-	if(rp->number == 1303)
-	  obj->setTarget(5700);
-	if(rp->number == 5700)
-	  obj->setTarget(1303);
-	obj->setPortalNumCharges(-1);
-	obj->setPortalType(10);
-	*rp += *to;
-	act("<Y>A shimmering portal as bright as the noonday sun suddenly bursts into existance.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-      }
-      
-    }
-  } else if (QuestCode2) {
-    for (t = rp->stuff; t; t = t2) {
-      t2 = t->nextThing;
-      if(!(to=dynamic_cast<TObj *>(t)))
-        continue;
-      if(obj_index[to->getItemIndex()].virt == 9598) {
-        found = true;
-        break;
-      }
-    }
-    //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-    //vlogf(LOG_DASH, "daygate proc: hmt: %d  suntime: %d", hourminTime(), sunTime(SUN_TIME_DAY));
-    if (hourminTime() > 72   || hourminTime() < 24) {
-      // code to remove gate
-      if (found && to) {
-	
-	vlogf(LOG_DASH, "daygate proc found evilgate, removing");
-	act("<k>The dark portal of negative energy flickers once, and is gone.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-	--(*to);
-	delete to;
-      }
-    } else {
-      // code to place gate
-      if (!found) {
-	
-	vlogf(LOG_DASH, "daygate proc didn't find evilgate, placing");
-	if (!(to = read_object(9598, VIRTUAL))) {
-	  vlogf(LOG_LOW, "Error loading evilgate");
-	  return FALSE;;
-	}
-	obj = dynamic_cast<TPortal *>(to);
-	if(rp->number == 1303)
-	  obj->setTarget(5700);
-	if(rp->number == 5700)
-	  obj->setTarget(1303);
-	obj->setPortalNumCharges(-1);
-	obj->setPortalType(10);
-	*rp += *to;
-	act("<k>A dark portal of negative energy flickers into existance.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-      }
-
-    }
   } else {
-    if (::number(0,10))
-      return FALSE;
-    act("The <W>DayGate<1> flickers into existance momentarily, then is gone.<1>",
-        TRUE, 0, 0, 0, TO_ROOM);
+    // code to place gate
+    if (!found) {
+      vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
+      if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
+	vlogf(LOG_LOW, "Error loading daygate");
+	return FALSE;;
+      }
+      obj = dynamic_cast<TPortal *>(to);
+      if(rp->number == 1303)
+	obj->setTarget(5700);
+      if(rp->number == 5700)
+	obj->setTarget(1303);
+      obj->setPortalNumCharges(-1);
+      obj->setPortalType(10);
+      *rp += *to;
+      act("<Y>A shimmering portal as bright as the noonday sun suddenly bursts into existance.<1>",
+	  TRUE, to, 0, 0, TO_ROOM);
+    }
+    
   }
 
   return TRUE;
@@ -1919,31 +1823,8 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (t = rp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    if(!(to=dynamic_cast<TObj *>(t)))
-      continue;
-    if(obj_index[to->getItemIndex()].virt == 9598) {
-      found = true;
-      break;
-    }
-  }
-  //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-  //vlogf(LOG_DASH, "daygate proc: hmt: %d  suntime: %d", hourminTime(), sunTime(SUN_TIME_DAY));
-  if (hourminTime() > 72   || hourminTime() < 24) {
-    // code to remove gate
-    if (found && to) {
 
-      vlogf(LOG_DASH, "moongate proc found evilgate, removing");
-      act("<k>The dark portal of negative energy flickers once, and is gone.<1>",
-	  TRUE, to, 0, 0, TO_ROOM);
-      --(*to);
-      delete to;
-    }
-  }
-
-  found = false;
-
+  
   for (t = rp->stuff; t; t = t2) {
     t2 = t->nextThing;
     if(!(to=dynamic_cast<TObj *>(t)))
@@ -1953,10 +1834,9 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     }
   }
-  if ( hourminTime() > 2 || hourminTime() < 94) {
+  if ( hourminTime() > 2 && hourminTime() < 94) {
     // code to remove gate
     if (found && to) {
-      
       vlogf(LOG_DASH, "moongate proc found moongate, removing");
       
       act("<k>The dark portal silently disperses into nothingness.<1>",
@@ -1964,41 +1844,17 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       --(*to);
       delete to;
     }
-  } 
-
-  found = false;
-
-  if(QuestCode) {
-    for (t = rp->stuff; t; t = t2) {
-      t2 = t->nextThing;
-      if(!(to=dynamic_cast<TObj *>(t)))
-	continue;
-      if(obj_index[to->getItemIndex()].virt == ITEM_MOONGATE) {
-	found = true;
-	break;
+  } else {
+    // code to place gate
+    if (!found) {
+      return FALSE;
+      if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
+	vlogf(LOG_LOW, "Error loading moongate");
+	return FALSE;;
       }
-    }
-    if ( hourminTime() > 2 || hourminTime() < 94) {
-      // code to remove gate
-      if (found && to) {
-	vlogf(LOG_DASH, "moongate proc found moongate, removing");
-	
-	act("<k>The dark portal silently disperses into nothingness.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-	--(*to);
-	delete to;
-      }
-    } else {
-      // code to place gate
-      if (!found) {
-	return FALSE;
-	if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
-	  vlogf(LOG_LOW, "Error loading moongate");
-	  return FALSE;;
-	}
-	obj = dynamic_cast<TPortal *>(to);
-	if(rp->number == 5895)
-	  obj->setTarget(28800);
+      obj = dynamic_cast<TPortal *>(to);
+      if(rp->number == 5895)
+	obj->setTarget(28800);
 	if(rp->number == 28800)
 	  obj->setTarget(5895);
 	obj->setPortalNumCharges(-1);
@@ -2010,55 +1866,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	    TRUE, to, 0, 0, TO_ROOM);
       }
     }
-  } else if (QuestCode2) {
-    for (t = rp->stuff; t; t = t2) {
-      t2 = t->nextThing;
-      if(!(to=dynamic_cast<TObj *>(t)))
-        continue;
-      if(obj_index[to->getItemIndex()].virt == 9598) {
-        found = true;
-        break;
-      }
-    }
-    //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-    //vlogf(LOG_DASH, "daygate proc: hmt: %d  suntime: %d", hourminTime(), sunTime(SUN_TIME_DAY));
-    if (hourminTime() > 72   || hourminTime() < 24) {
-      // code to remove gate
-      if (found && to) {
-	
-	// vlogf(LOG_DASH, "moongate proc found evilgate, removing");
-	act("<k>The dark portal of negative energy flickers once, and is gone.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-	--(*to);
-	delete to;
-      }
-    } else {
-      // code to place gate
-      if (!found) {
-	//vlogf(LOG_DASH, "moongate proc didn't find evilgate, placing");
-	if (!(to = read_object(9598, VIRTUAL))) {
-	  vlogf(LOG_LOW, "Error loading evilgate");
-	  return FALSE;;
-	}
-	obj = dynamic_cast<TPortal *>(to);
-	if(rp->number == 5895)
-	  obj->setTarget(28800);
-	if(rp->number == 28800)
-	  obj->setTarget(5895);
-	obj->setPortalNumCharges(-1);
-	obj->setPortalType(10);
-	*rp += *to;
-	act("<k>A dark portal of negative energy flickers into existance.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
-      }
-
-    }
-  } else {
-    if (::number(0,10))
-      return FALSE;
-    act("The <k>MoonGate<1> flickers into existance momentarily, then is gone.<1>",
-	TRUE, 0, 0, 0, TO_ROOM);
-  }
+ 
   return TRUE;
 }
 

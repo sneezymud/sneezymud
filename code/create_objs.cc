@@ -3294,6 +3294,8 @@ void TObj::describeTreasure(const char *arg,int num, int price)
 // called on PULSE_MUDHOUR
 void do_other_obj_stuff(void)
 {
+
+#if 0
   TObj *to;
   TPortal *obj;
 
@@ -3342,6 +3344,7 @@ void do_other_obj_stuff(void)
     thing_to_room(obj,5895);
     act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
   }
+#endif
 }
 
 int TThing::editAverageMe(TBeing *tBeing, const char *)
