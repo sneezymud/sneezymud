@@ -165,7 +165,7 @@ void TPlant::updateDesc()
     setDescr(mud_str_dup(buf));
   }
 
-  if(plantindex>=3){
+  if(plantindex>=3 && !::number(0,3)){
     TThing *t;
     int count=0;
 
