@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_spirit.cc,v $
+// Revision 1.2  1999/09/13 01:51:51  cosmo
+// Fixed Crash Bug in Polylist--missing comma--Cos .
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -710,7 +713,7 @@ static struct PolyType PolyList[] =
   {"tiger"     , 40,  85, 23630, DISC_SPIRIT}, // L 24
   {"ettin"     , 45, 100,   916, DISC_SPIRIT}, // L 27
   {"arch"      , 60, 100, 28813, DISC_SPIRIT},  // L 70 (*god only*)
-  {"\n"          -1,  -1,    -1, DISC_SPIRIT}
+  {"\n"        , -1,  -1,    -1, DISC_SPIRIT}
 };
 
 int polymorph(TBeing *caster, int level, byte bKnown)
