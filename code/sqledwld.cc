@@ -99,6 +99,9 @@ int main(int argc, char **argv)
     }
   }
 
+  ssprintf(buf, "/bin/cp -f %s %s.backup", file, file);
+  system(buf.c_str());
+
 
   int i=0;
 
@@ -139,4 +142,5 @@ int main(int argc, char **argv)
   unlink(file);
 
   printf("Done.\n\r");
+  printf("Your backup file is %s.backup\n", file);
 }
