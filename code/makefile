@@ -649,6 +649,7 @@ objs/ai_responses.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/ai_responses.o: monster.h account.h extern.h handler.h obj_money.h
 objs/ai_responses.o: rent.h spec_mobs.h materials.h colorstring.h format.h
 objs/ai_responses.o: combat.h obj_symbol.h pathfinder.h
+objs/ai_responses.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/ai_utility.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ai_utility.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ai_utility.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -2059,6 +2060,7 @@ objs/cmd_low.o: /usr/local/include/postgres_ext.h obj_player_corpse.h
 objs/cmd_low.o: obj_base_corpse.h obj_base_container.h obj_smoke.h
 objs/cmd_low.o: obj_arrow.h obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/cmd_low.o: obj_base_clothing.h obj_worn.h pathfinder.h
+objs/cmd_low.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/cmd_mend_limb.o: stdsneezy.h /usr/include/g++/cstdio
 objs/cmd_mend_limb.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/cmd_mend_limb.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -5342,6 +5344,7 @@ objs/disc_ranger.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_ranger.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/disc_ranger.o: spec_mobs.h materials.h colorstring.h format.h combat.h
 objs/disc_ranger.o: disc_ranger.h obj_portal.h obj_seethru.h pathfinder.h
+objs/disc_ranger.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/disc_shaman.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_shaman.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_shaman.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6034,7 +6037,8 @@ objs/disc_survival.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/disc_survival.o: colorstring.h format.h combat.h disc_survival.h
 objs/disc_survival.o: obj_component.h obj_base_corpse.h obj_base_container.h
 objs/disc_survival.o: obj_tool.h obj_portal.h obj_seethru.h obj_drinkcon.h
-objs/disc_survival.o: obj_base_cup.h pathfinder.h
+objs/disc_survival.o: obj_base_cup.h pathfinder.h /usr/include/g++/deque
+objs/disc_survival.o: /usr/include/g++/stl_deque.h
 objs/disc_theology.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_theology.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_theology.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -8338,7 +8342,7 @@ objs/movement.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/movement.o: game_crazyeights.h game_drawpoker.h disc_looting.h
 objs/movement.o: obj_base_corpse.h obj_base_container.h obj_keyring.h
 objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
-objs/movement.o: obj_portal.h obj_seethru.h
+objs/movement.o: obj_portal.h obj_seethru.h pathfinder.h
 objs/multiclass.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/multiclass.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/multiclass.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -12120,6 +12124,7 @@ objs/pathfinder.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/pathfinder.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/pathfinder.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/pathfinder.o: materials.h colorstring.h format.h pathfinder.h
+objs/pathfinder.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/pathfinder.o: obj_portal.h obj_seethru.h obj_base_corpse.h
 objs/pathfinder.o: obj_base_container.h
 objs/peelpk.o: /usr/include/g++/ctime /usr/include/time.h
@@ -12418,7 +12423,8 @@ objs/range.o: materials.h colorstring.h format.h range.h combat.h
 objs/range.o: obj_quiver.h obj_expandable_container.h obj_open_container.h
 objs/range.o: obj_base_container.h obj_bow.h obj_portal.h obj_seethru.h
 objs/range.o: obj_arrow.h obj_base_weapon.h obj_gun.h obj_general_weapon.h
-objs/range.o: pathfinder.h
+objs/range.o: pathfinder.h /usr/include/g++/deque
+objs/range.o: /usr/include/g++/stl_deque.h
 objs/rent.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/rent.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/rent.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
@@ -13082,7 +13088,8 @@ objs/socket.o: colorstring.h format.h statistics.h database.h
 objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
-objs/socket.o: pathfinder.h
+objs/socket.o: pathfinder.h /usr/include/g++/deque
+objs/socket.o: /usr/include/g++/stl_deque.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13243,6 +13250,8 @@ objs/spec_mobs_bounty_hunter.o: person.h monster.h account.h extern.h
 objs/spec_mobs_bounty_hunter.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_bounty_hunter.o: materials.h colorstring.h format.h shop.h
 objs/spec_mobs_bounty_hunter.o: statistics.h pathfinder.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/deque
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_deque.h
 objs/spec_mobs_cityguard.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_cityguard.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_cityguard.o: /usr/include/machine/ansi.h
@@ -13358,6 +13367,7 @@ objs/spec_mobs_coroner.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_coroner.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_coroner.o: colorstring.h format.h obj_base_corpse.h
 objs/spec_mobs_coroner.o: obj_base_container.h pathfinder.h
+objs/spec_mobs_coroner.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/spec_mobs_corporate_assistant.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_corporate_assistant.o: /usr/include/stdio.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/sys/cdefs.h
@@ -13624,6 +13634,7 @@ objs/spec_mobs_fireman.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_fireman.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_fireman.o: colorstring.h format.h obj_base_corpse.h
 objs/spec_mobs_fireman.o: obj_base_container.h pathfinder.h
+objs/spec_mobs_fireman.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/spec_mobs_goring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_goring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_goring.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -14152,7 +14163,8 @@ objs/spec_objs.o: obj_base_clothing.h obj_trap.h obj_portal.h obj_seethru.h
 objs/spec_objs.o: obj_symbol.h obj_general_weapon.h obj_base_weapon.h
 objs/spec_objs.o: obj_drinkcon.h obj_base_cup.h obj_potion.h obj_staff.h
 objs/spec_objs.o: obj_magic_item.h obj_wand.h disc_fire.h obj_note.h
-objs/spec_objs.o: pathfinder.h
+objs/spec_objs.o: pathfinder.h /usr/include/g++/deque
+objs/spec_objs.o: /usr/include/g++/stl_deque.h
 objs/spec_objs_black_sun.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_black_sun.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_objs_black_sun.o: /usr/include/machine/ansi.h
@@ -14449,73 +14461,6 @@ objs/spec_objs_lightning_rod.o: person.h monster.h account.h extern.h
 objs/spec_objs_lightning_rod.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_objs_lightning_rod.o: materials.h colorstring.h format.h
 objs/spec_objs_lightning_rod.o: obj_base_weapon.h obj_base_clothing.h
-objs/spec_objs_sweeps.o: stdsneezy.h /usr/include/g++/cstdio
-objs/spec_objs_sweeps.o: /usr/include/stdio.h
-objs/spec_objs_sweeps.o: /usr/include/sys/cdefs.h
-objs/spec_objs_sweeps.o: /usr/include/machine/ansi.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cstdlib
-objs/spec_objs_sweeps.o: /usr/include/stdlib.h /usr/include/g++/ctime
-objs/spec_objs_sweeps.o: /usr/include/time.h
-objs/spec_objs_sweeps.o: /usr/include/sys/_posix.h
-objs/spec_objs_sweeps.o: /usr/include/sys/types.h
-objs/spec_objs_sweeps.o: /usr/include/sys/inttypes.h
-objs/spec_objs_sweeps.o: /usr/include/machine/types.h
-objs/spec_objs_sweeps.o: /usr/include/machine/endian.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cctype /usr/include/ctype.h
-objs/spec_objs_sweeps.o: /usr/include/runetype.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cassert
-objs/spec_objs_sweeps.o: /usr/include/assert.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cstring
-objs/spec_objs_sweeps.o: /usr/include/string.h /usr/include/stdarg.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/spec_objs_sweeps.o: /usr/include/g++/string
-objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cstddef
-objs/spec_objs_sweeps.o: /usr/include/stddef.h
-objs/spec_objs_sweeps.o: /usr/include/g++/std/straits.h
-objs/spec_objs_sweeps.o: /usr/include/g++/alloc.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_config.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_alloc.h
-objs/spec_objs_sweeps.o: /usr/include/g++/iostream.h
-objs/spec_objs_sweeps.o: /usr/include/g++/streambuf.h
-objs/spec_objs_sweeps.o: /usr/include/g++/libio.h
-objs/spec_objs_sweeps.o: /usr/include/g++/_G_config.h
-objs/spec_objs_sweeps.o: /usr/include/g++/iterator
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_relops.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_iterator.h
-objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.cc
-objs/spec_objs_sweeps.o: /usr/include/g++/vector
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_algobase.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_pair.h
-objs/spec_objs_sweeps.o: /usr/include/g++/type_traits.h
-objs/spec_objs_sweeps.o: /usr/include/limits.h
-objs/spec_objs_sweeps.o: /usr/include/machine/limits.h
-objs/spec_objs_sweeps.o: /usr/include/sys/syslimits.h
-objs/spec_objs_sweeps.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/spec_objs_sweeps.o: /usr/include/g++/exception
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_construct.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_uninitialized.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_vector.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_bvector.h
-objs/spec_objs_sweeps.o: /usr/include/g++/map
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_tree.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_function.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_map.h
-objs/spec_objs_sweeps.o: /usr/include/g++/stl_multimap.h
-objs/spec_objs_sweeps.o: /usr/include/g++/iostream
-objs/spec_objs_sweeps.o: /usr/include/g++/sstream sstring.h low.h
-objs/spec_objs_sweeps.o: enum.h spells.h structs.h parse.h immunity.h
-objs/spec_objs_sweeps.o: discipline.h spell2.h db.h ansi.h
-objs/spec_objs_sweeps.o: cmd_dissect.h client.h response.h faction.h
-objs/spec_objs_sweeps.o: comm.h toggle.h wiz_powers.h cmd_message.h
-objs/spec_objs_sweeps.o: stats.h limbs.h body.h race.h skills.h
-objs/spec_objs_sweeps.o: disease.h trap.h task.h weather.h sound.h
-objs/spec_objs_sweeps.o: create.h thing.h room.h obj.h spec_objs.h
-objs/spec_objs_sweeps.o: connect.h obj_drug.h charfile.h being.h
-objs/spec_objs_sweeps.o: person.h monster.h account.h extern.h
-objs/spec_objs_sweeps.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/spec_objs_sweeps.o: materials.h colorstring.h format.h
-objs/spec_objs_sweeps.o: spec_objs_sweeps.h
 objs/spec_objs_lottery_ticket.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_lottery_ticket.o: /usr/include/stdio.h
 objs/spec_objs_lottery_ticket.o: /usr/include/sys/cdefs.h
@@ -14709,6 +14654,60 @@ objs/spec_objs_poison_cutlass.o: person.h monster.h account.h extern.h
 objs/spec_objs_poison_cutlass.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_objs_poison_cutlass.o: materials.h colorstring.h format.h
 objs/spec_objs_poison_cutlass.o: obj_base_weapon.h
+objs/spec_objs_sweeps.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_objs_sweeps.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_objs_sweeps.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/spec_objs_sweeps.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/spec_objs_sweeps.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/spec_objs_sweeps.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/spec_objs_sweeps.o: /usr/include/machine/types.h
+objs/spec_objs_sweeps.o: /usr/include/machine/endian.h
+objs/spec_objs_sweeps.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_objs_sweeps.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_objs_sweeps.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_objs_sweeps.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_sweeps.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_objs_sweeps.o: /usr/include/g++/string
+objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.h
+objs/spec_objs_sweeps.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_sweeps.o: /usr/include/g++/std/straits.h
+objs/spec_objs_sweeps.o: /usr/include/g++/alloc.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_config.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_alloc.h
+objs/spec_objs_sweeps.o: /usr/include/g++/iostream.h
+objs/spec_objs_sweeps.o: /usr/include/g++/streambuf.h
+objs/spec_objs_sweeps.o: /usr/include/g++/libio.h
+objs/spec_objs_sweeps.o: /usr/include/g++/_G_config.h
+objs/spec_objs_sweeps.o: /usr/include/g++/iterator
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_relops.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_iterator.h
+objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.cc
+objs/spec_objs_sweeps.o: /usr/include/g++/vector
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_algobase.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_pair.h
+objs/spec_objs_sweeps.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/spec_objs_sweeps.o: /usr/include/machine/limits.h
+objs/spec_objs_sweeps.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/spec_objs_sweeps.o: /usr/include/g++/new /usr/include/g++/exception
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_construct.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_vector.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_tree.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_function.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_map.h
+objs/spec_objs_sweeps.o: /usr/include/g++/stl_multimap.h
+objs/spec_objs_sweeps.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs_sweeps.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/spec_objs_sweeps.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_objs_sweeps.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/spec_objs_sweeps.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_objs_sweeps.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_objs_sweeps.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_objs_sweeps.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_sweeps.o: person.h monster.h account.h extern.h handler.h
+objs/spec_objs_sweeps.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/spec_objs_sweeps.o: colorstring.h format.h spec_objs_sweeps.h
 objs/spec_objs_unholy_cutlass.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_unholy_cutlass.o: /usr/include/stdio.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/sys/cdefs.h
@@ -16817,7 +16816,8 @@ objs/task_track.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/task_track.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/task_track.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/task_track.o: materials.h colorstring.h format.h obj_portal.h
-objs/task_track.o: obj_seethru.h pathfinder.h
+objs/task_track.o: obj_seethru.h pathfinder.h /usr/include/g++/deque
+objs/task_track.o: /usr/include/g++/stl_deque.h
 objs/task_trance_of_blades.o: stdsneezy.h /usr/include/g++/cstdio
 objs/task_trance_of_blades.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/task_trance_of_blades.o: /usr/include/machine/ansi.h
