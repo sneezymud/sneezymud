@@ -864,7 +864,7 @@ void TBeing::edit_faction(const char * args) {
       strcpy(dname, values);
     int i;
     for(i = 0; i < MAX_DEITIES; i++) {
-      if(isname(lower(dname), lower(deities[i]))) {
+      if(isname(sstring(dname).lower(), sstring(deities[i]).lower())) {
         f->patron = deityTypeT(i);
         sprintf(buf, "The patron deity for %s<1> has been set to %s.\n\r", f->getName(), deities[i]);
 	sendTo(COLOR_BASIC, buf);
@@ -1135,7 +1135,7 @@ void TBeing::saveFactionStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
     vlogf(LOG_FILE, "Unable to open file (%s) for saving faction stats. (%d)", buf, errno);
@@ -1172,7 +1172,7 @@ void TBeing::loadFactionStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), sstring(name).lower().c_str());
 
 
   if (!(fp = fopen(buf, "r"))) {    // file may not exist
@@ -2373,7 +2373,7 @@ void TBeing::doAdjust(const char *arg)
         sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
         return;
       }
-      mud_str_copy(tmpbuf2, lower(tmpbuf2), 128);
+      mud_str_copy(tmpbuf2, sstring(tmpbuf2).lower(), 128);
       if (is_abbrev(tmpbuf2, "grimhaven")) {
         uamount = CARAVAN_DEST_GH;
       } else if (is_abbrev(tmpbuf2, "brightmoon")) {

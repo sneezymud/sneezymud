@@ -40,7 +40,7 @@ void holdemStatus(TMonster *me, holdemPlayerInfo *hpi)
 int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
 {
   holdemPlayerInfo *hpi;
-  sstring arg=lower(argument), buf;
+  sstring arg=sstring(argument).lower(), buf;
   TObj *obj;
 
   if(!me->act_ptr) {

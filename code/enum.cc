@@ -550,13 +550,13 @@ dirTypeT getDirFromChar(const sstring direction)
     return DIR_NONE;
 
   // KLUDGE for abbreviated directions - bat
-  if(lower(dirbuf) == "northeast")
+  if(dirbuf.lower() == "northeast")
     dirbuf = "ne";
-  else if (lower(dirbuf) == "northwest")
+  else if (dirbuf.lower() == "northwest")
     dirbuf = "nw";
-  else if (lower(dirbuf) == "southeast")
+  else if (dirbuf.lower() == "southeast")
     dirbuf = "se";
-  else if (lower(dirbuf) == "southwest")
+  else if (dirbuf.lower() == "southwest")
     dirbuf = "sw";
 
   int dr = search_block(dirbuf.c_str(), scandirs, false);

@@ -320,7 +320,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
 
     return FALSE;
   }
-  if (!tng && lower(arg)=="all"){
+  if (!tng && arg.lower()=="all"){
     for (t = getStuff(); t; t = n) {
       n = t->nextThing;
       if (t->canDrop()) {

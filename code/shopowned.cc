@@ -22,7 +22,7 @@ bool sameAccount(sstring buf, int shop_nr){
       continue;
 
     if(!strcmp(stthis.aname, st.aname)){
-      if(lower(buf) == lower(db["name"]))
+      if(buf.lower() == sstring(db["name"]).lower())
 	return FALSE;
       else
 	return TRUE;

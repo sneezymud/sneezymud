@@ -4375,7 +4375,7 @@ void TBeing::catchLostLink(TBeing *vict)
     sprintf(buf, "A linkbag containing %s's belongings sits here.", vict->getName());
     delete [] bag->getDescr();
     bag->setDescr(mud_str_dup(buf));
-    sprintf(buf, "linkbag %s", lower(vict->getName()).c_str());
+    sprintf(buf, "linkbag %s", sstring(vict->getName()).lower().c_str());
     delete [] bag->name;
     bag->name = mud_str_dup(buf);
 

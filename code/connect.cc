@@ -373,7 +373,7 @@ bool Descriptor::checkForMultiplay()
           cmd_buf = "account/";
           cmd_buf += LOWER(account->name[0]);
           cmd_buf += "/";
-          cmd_buf += lower(account->name);
+          cmd_buf += account->name.lower();
           cmd_buf += "/comment";
 
           FILE *fp;
@@ -402,8 +402,8 @@ bool Descriptor::checkForMultiplay()
       if (tChar != character && tChar->isLinkdead()) {
         sprintf(tAccount, "account/%c/%s/%s",
                 LOWER(account->name[0]),
-                lower(account->name).c_str(),
-                lower(tChar->getNameNOC(character).c_str()).c_str());
+                sstring(account->name).lower().c_str(),
+		tChar->getNameNOC(character).lower().c_str());
 
         if (tChar->isPc() && (tFile = fopen(tAccount, "r"))) {
           if (tChar->hasWizPower(POWER_MULTIPLAY))
@@ -2587,7 +2587,7 @@ int TPerson::genericLoadPC()
   loadRent();
   if (player.time.last_logon && (player.time.last_logon < Uptime)) {
     if ((time(0) - player.time.last_logon) > 36 * SECS_PER_REAL_HOUR)
-      wipeCorpseFile(lower(name).c_str());
+      wipeCorpseFile(sstring(name).lower().c_str());
     else
       assignCorpsesToRooms();
   }
@@ -4978,7 +4978,7 @@ int Descriptor::sendLogin(const char *arg)
       return (sendLogin("1"));
     }
     strcpy(account->name, arg);
-    sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), lower(arg).c_str());
+    sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
     // If account exists, open and copy password, otherwise set pwd to \0
     FILE * fp = fopen(buf, "r");
     if (fp) {
@@ -5021,7 +5021,7 @@ bool Descriptor::checkForAccount(char *arg, bool silent)
       writeToQ("Sorry, that is an illegal name for an account.\n\r");
     return TRUE;
   }
-  sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), lower(arg).c_str());
+  sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
   
   if (!stat(buf, &timestat)) {
     if (!silent)
@@ -5036,7 +5036,7 @@ bool Descriptor::checkForCharacter(char *arg)
   char buf[256];
   struct stat timestat;
 
-  sprintf(buf, "player/%c/%s", LOWER(arg[0]), lower(arg).c_str());
+  sprintf(buf, "player/%c/%s", LOWER(arg[0]), sstring(arg).lower().c_str());
  
   if (!stat(buf, &timestat)) {
     if (!m_bIsClient)
@@ -5334,10 +5334,10 @@ int Descriptor::doAccountStuff(char *arg)
       }
 
       // lower() returns static buf, so add one at a time
-      sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
-      sprintf(buf + strlen(buf), "/%s", lower(arg).c_str());
+      sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
+      sprintf(buf + strlen(buf), "/%s", sstring(arg).lower().c_str());
       // sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
-      //                                  lower(account->name), lower(arg));
+      //                                  account->name.lower(), arg.lower());
       if (stat(buf, &timestat)) {
         writeToQ("No such character.\n\r");
         account->status = TRUE;
@@ -5347,12 +5347,12 @@ int Descriptor::doAccountStuff(char *arg)
         break;
       }
 #if 0
-      strcpy(delname, lower(arg).c_str());
+      strcpy(delname, arg.lower().c_str());
 
       char charname[20];
    
       for (ch = character_list; ch; ch = ch->next) {
-        strcpy(charname, lower(ch->name).c_str());
+        strcpy(charname, ch->name.lower().c_str());
 	if (!strcmp(charname, delname)) {
 	  
 	  writeToQ("That character is still connected, so you'll have to\n\r");
@@ -5371,7 +5371,7 @@ int Descriptor::doAccountStuff(char *arg)
       writeToQ("monument.  Enter your password to verify or hit enter\n\r");
       writeToQ("to return to the account menu system\n\r-> ");
       EchoOff();
-      strcpy(delname, lower(arg).c_str());
+      strcpy(delname, sstring(arg).lower().c_str());
       
       connected = CON_CHARDELCNF;
       break;
@@ -5400,8 +5400,8 @@ int Descriptor::doAccountStuff(char *arg)
 #if 1
       // it's possible that char is in game (link-dead), check for this
       for (ch = character_list; ch; ch = ch->next) {
-	if(lower(ch->name) == delname){
-	  //        if (!strcmp(lower(ch->name).c_str(), delname)) {
+	if(sstring(ch->name).lower() == delname){
+	  //        if (!strcmp(ch->name.lower().c_str(), delname)) {
           writeToQ("Character is still connected.  Disconnect before deleting.\n\r");
           writeToQ("Which do you want to do?\n\r");
           writeToQ("1) Delete your account\n\r");
@@ -5433,7 +5433,7 @@ int Descriptor::doAccountStuff(char *arg)
       db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
       sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
-           lower(account->name).c_str(), delname);
+           sstring(account->name).lower().c_str(), delname);
       if (unlink(buf) != 0)
         vlogf(LOG_FILE, "error in unlink (3) (%s) %d", buf, errno);
       account->status = TRUE;
@@ -5753,15 +5753,15 @@ void Descriptor::saveAccount()
     vlogf(LOG_BUG, "Bad descriptor in saveAccount");
     return;
   }
-  sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), lower(account->name).c_str());
+  sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   if (!(fp = fopen(buf, "w"))) {
-    sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
+    sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
     if (mkdir(buf2, 0770)) {
-      vlogf(LOG_FILE, "Can't make directory for saveAccount (%s)", lower(account->name).c_str());
+      vlogf(LOG_FILE, "Can't make directory for saveAccount (%s)", sstring(account->name).lower().c_str());
       return;
     }
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(LOG_FILE, "Big problems in saveAccount (s)", lower(account->name).c_str());
+      vlogf(LOG_FILE, "Big problems in saveAccount (s)", sstring(account->name).lower().c_str());
       return;
     }
   }
@@ -5787,7 +5787,7 @@ void Descriptor::deleteAccount()
   struct dirent *dp;
   char buf[256];
 
-  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
+  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
     vlogf(LOG_FILE, "Unable to walk directory for delete account (%s account)", account->name);
     return;
@@ -5796,7 +5796,7 @@ void Descriptor::deleteAccount()
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
 
-    sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), lower(account->name).c_str(), dp->d_name);
+    sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str(), dp->d_name);
     if (unlink(buf) != 0)
       vlogf(LOG_FILE, "error in unlink (4) (%s) %d", buf, errno);
 
@@ -5809,7 +5809,7 @@ void Descriptor::deleteAccount()
     wipeRentFile(dp->d_name);
     wipeFollowersFile(dp->d_name);
   }
-  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
+  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   rmdir(buf);
   accStat.account_number--;
   closedir(dfd);
@@ -6204,7 +6204,7 @@ bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
     return TRUE;
   }
 
-  strcpy(host, lower(host).c_str());
+  strcpy(host, sstring(host).lower().c_str());
 
   if (strstr(host, "localhost") || strstr(host, "127.0.0.1")) {
     if (desc && !silent)

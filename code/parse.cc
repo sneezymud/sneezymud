@@ -1838,13 +1838,13 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
       // KLUDGE - for meditate and medit command
       // me == mend limb, so we need not check for shorter
       strcpy(arg1, "meditate");
-    } else if (!(lower(argument).substr(0,6).compare("southe"))){
+    } else if (!(argument.lower().substr(0,6).compare("southe"))){
       strcpy(arg1, "se");
-    } else if (!(lower(argument).substr(0,6).compare("northw"))){
+    } else if (!(argument.lower().substr(0,6).compare("northw"))){
       strcpy(arg1, "nw");
-    } else if (!(lower(argument).substr(0,6).compare("southw"))){
+    } else if (!(argument.lower().substr(0,6).compare("southw"))){
       strcpy(arg1, "sw");
-    } else if (!(lower(argument).substr(0,6).compare("northe"))){
+    } else if (!(argument.lower().substr(0,6).compare("northe"))){
       strcpy(arg1, "ne");
     }
 
@@ -2110,7 +2110,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
     split_string(carg2, " ", buf2);
 
     for(unsigned int i=0;i<buf1.size();++i){
-      if(lower(buf1[i]) != lower(buf2[i].substr(0,buf1[i].size())))
+      if(buf1[i].lower() != buf2[i].lower().substr(0,buf1[i].size()))
 	return false;
     }
 
@@ -2124,8 +2124,8 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
 
   // do case insenitive matching
   // we create carg2 "short" so that the compare will work properly
-  sstring carg1 = lower(arg1);
-  sstring carg2 = lower(arg2);
+  sstring carg1 = arg1.lower();
+  sstring carg2 = arg2.lower();
 
   // check for just garbage whitespace
   trimString(carg1);
@@ -2827,7 +2827,7 @@ bool _parse_name(const char *arg, char *name)
 
   for (i = 0; *illegalnames[i] != '\n'; i++) {
     if (*illegalnames[i] == '*') {
-      if (strstr(lower(arg).c_str(), illegalnames[i] + 1))
+      if (strstr(sstring(arg).lower().c_str(), illegalnames[i] + 1))
         return TRUE;
     } else {
       if (!strcasecmp(illegalnames[i], arg))
@@ -3029,32 +3029,6 @@ void sprinttype(int type, const char * const names[], char *result)
     strcpy(result, names[type]);
   else
     strcpy(result, "UNDEFINED");
-}
-
-sstring lower(sstring s)
-{
-  sstring::size_type iter;
-
-  do {
-    iter = s.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    if (iter != sstring::npos)
-      s.replace(iter, 1, tolower(s[iter]));
-  } while (iter != sstring::npos);
-
-  return s;
-}
-
-sstring upper(sstring s)
-{
-  sstring::size_type iter;
-
-  do {
-    iter = s.find_first_of("abcdefghijklmnopqrstuvwxyz");
-    if (iter != sstring::npos)
-      s.replace(iter, 1, toupper(s[iter]));
-  } while (iter != sstring::npos);
-
-  return s;
 }
 
 
@@ -3364,7 +3338,7 @@ void TBeing::makeOutputPaged()
   desc->page_string(str);
 }
 
-const sstring sstring::convertToCRLF()
+const sstring sstring::convertToCRLF() const
 {
   sstring dosstr = "";
   unsigned int len;
@@ -3379,3 +3353,32 @@ const sstring sstring::convertToCRLF()
   }
   return dosstr;
 }
+
+const sstring sstring::lower() const
+{
+  sstring::size_type iter;
+  sstring s=*this;
+
+  do {
+    iter = s.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    if (iter != sstring::npos)
+      s.replace(iter, 1, tolower(s[iter]));
+  } while (iter != sstring::npos);
+
+  return s;
+}
+
+const sstring sstring::upper() const
+{
+  sstring::size_type iter;
+  sstring s=*this;
+
+  do {
+    iter = s.find_first_of("abcdefghijklmnopqrstuvwxyz");
+    if (iter != sstring::npos)
+      s.replace(iter, 1, toupper(s[iter]));
+  } while (iter != sstring::npos);
+
+  return s;
+}
+

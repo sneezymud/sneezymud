@@ -7518,7 +7518,7 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
   if(cmd!=CMD_SAY && cmd!=CMD_SAY2 && cmd!=CMD_MOB_GIVEN_ITEM)
     return false;
 
-  if((cmd == CMD_SAY || cmd==CMD_SAY2) && lower(arg) == "hello"){
+  if((cmd == CMD_SAY || cmd==CMD_SAY2) && arg.lower() == "hello"){
     me->doSay("Bring me some beer and maybe I'll give you the key!");
     me->doAction("", CMD_LICK);
     return true;
@@ -7639,7 +7639,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   sstring sarg = arg;
   if ( (cmd == CMD_TELL && sarg.find(" ") > 0 && 
          !isname(sarg.substr(0,(int) sarg.find(" ")), tree->name)) ||
-       (cmd == CMD_SAY && lower(sarg).find("clue") == sstring::npos ))
+       (cmd == CMD_SAY && sarg.lower().find("clue") == sstring::npos ))
   {
     return FALSE;
   }
@@ -7648,7 +7648,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   if (tree->inRoom() != 24700)
     return FALSE;
     
-  if (cmd == CMD_OPEN && lower(sarg).find("vine") != sstring::npos) 
+  if (cmd == CMD_OPEN && sarg.lower().find("vine") != sstring::npos) 
   {
     act("$n blocks your way.", TRUE, tree, NULL, ch, TO_VICT);
     act("$N moves towards some vines, but $n blocks the way.", 
@@ -7712,7 +7712,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   vlogf(LOG_MAROR, "riddle = %s",riddles[whichRiddle].c_str());
   vlogf(LOG_MAROR, "answer = %s", answers[whichRiddle].c_str());
 
-  if (cmd == CMD_TELL && lower(sarg).find(answers[whichRiddle]) != 
+  if (cmd == CMD_TELL && sarg.lower().find(answers[whichRiddle]) != 
       sstring::npos) {
 // reset guessing
     firstGuessTime = NULL;
@@ -7732,7 +7732,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
     );
   }
   else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY) && 
-      lower(sarg).find("clue") != sstring::npos) 
+      sarg.lower().find("clue") != sstring::npos) 
   {
     act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"", 
       TRUE, tree, NULL, ch, TO_ROOM);
@@ -7747,7 +7747,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
  // control response to other tells to the tree 
   else 
 /*  if ((cmd == CMD_SAY && chancesLeft == 0 ) || (cmd == CMD_TELL &&*/
-/*      lower(sarg).find(answers[whichRiddle]) == sstring::npos))*/
+/*      sarg.lower().find(answers[whichRiddle]) == sstring::npos))*/
   {
     if (chancesLeft == 3) 
       firstGuessTime = time(0);

@@ -582,7 +582,7 @@ void TMessages::initialize()
 
   sprintf(tString, "player/%c/%s.strings",
           LOWER(tPlayer->name[0]),
-          lower(tPlayer->name).c_str());
+          sstring(tPlayer->name).lower().c_str());
 
   // They don't have a sstrings file, so just return.
   // Common for mortals.
@@ -625,7 +625,7 @@ void TMessages::savedown()
 
   sprintf(tString, "player/%c/%s.strings",
           LOWER(tPlayer->name[0]),
-          lower(tPlayer->name).c_str());
+          sstring(tPlayer->name).lower().c_str());
 
   if (!(tFile = fopen(tString, "w")))
     return;

@@ -80,14 +80,14 @@ void TBeing::doGuard(const sstring &argument)
       sendTo("You snap to attention.\n\r");
     }
   } else {
-    if(lower(argument) == "on"){
+    if(argument.lower() == "on"){
       if (!IS_SET(specials.act, ACT_GUARDIAN)) {
         SET_BIT(specials.act, ACT_GUARDIAN);
         act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
         act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
         sendTo("You snap to attention.\n\r");
       }
-    } else if (lower(argument) == "off"){
+    } else if (argument.lower() == "off"){
       if (IS_SET(specials.act, ACT_GUARDIAN)) {
         act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
         sendTo("You relax.\n\r");
@@ -4104,7 +4104,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
   }
   buf[j] = '\0';
 
-  sprintf(cmd_buf, "account/%c/%s/comment", LOWER(who[0]), lower(who).c_str());
+  sprintf(cmd_buf, "account/%c/%s/comment", LOWER(who[0]), sstring(who).lower().c_str());
 
   if (!(fp = fopen(cmd_buf, "a+"))) {
     perror("doComment");
@@ -4128,7 +4128,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
     character->sendTo("Could not create a note in add_comment, please tell a god.\n\r");
     return;
   }
-  sprintf(buf, "****** Comment on %s", lower(who).c_str());
+  sprintf(buf, "****** Comment on %s", sstring(who).lower().c_str());
   
   mynote->postMe(character, buf, FindBoardInRoom(8, "board"));
 

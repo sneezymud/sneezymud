@@ -1018,7 +1018,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
   if (pcorpse && (GetMaxLevel() <= MAX_MORT)) {
     pcorpse->setRoomNum(in_room);
     pcorpse->removeGlobalNext();
-    pcorpse->setOwner(lower(tmpbuf).c_str());
+    pcorpse->setOwner(sstring(tmpbuf).lower());
     pcorpse->addCorpseToLists();
     pcorpse->saveCorpseToFile();
     pcorpse->setExpLost(exp_lost);

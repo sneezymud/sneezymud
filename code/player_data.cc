@@ -278,7 +278,7 @@ bool raw_save_char(const char *name, charFile *char_element)
   FILE *fl;
   char buf[256];
 
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fl = fopen(buf, "w")))
     return FALSE;
@@ -298,7 +298,7 @@ bool load_char(const sstring &name, charFile *char_element)
   FILE *fl;
   char buf[256];
 
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s", LOWER(name[0]), name.lower().c_str());
 
   if (!(fl = fopen(buf, "r")))
     return FALSE;
@@ -840,11 +840,11 @@ void TBeing::saveChar(sh_int load_room)
     return;
   }
   if (!tmp) { 
-    strcpy(buf2, lower(name).c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), lower(desc->account->name).c_str(), buf2);
+    strcpy(buf2, sstring(name).lower().c_str());
+    sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
   } else {
-    strcpy(buf2, lower(tmp->name).c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), lower(tmp->desc->account->name).c_str(), buf2);
+    strcpy(buf2, sstring(tmp->name).lower().c_str());
+    sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
   fl = fopen(buf, "w");
   mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);
@@ -857,9 +857,9 @@ void TBeing::saveChar(sh_int load_room)
   // commands without needing to know account name.
 
   if (!tmp)
-    sprintf(buf2, "player/%c/%s", LOWER(name[0]), lower(name).c_str());
+    sprintf(buf2, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   else
-    sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), lower(tmp->name).c_str());
+    sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
   link(buf, buf2);
 
@@ -884,7 +884,7 @@ void TBeing::wipeChar(int)
 
   if (desc) {
     sprintf(abuf, "account/%c/%s/%s",
-       LOWER(desc->account->name[0]), lower(desc->account->name).c_str(), lower(name).c_str());
+       LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), sstring(name).lower().c_str());
 
     if (unlink(abuf) != 0)
       vlogf(LOG_FILE, "error in unlink (9) (%s) %d", abuf, errno);
@@ -905,7 +905,7 @@ time_t lastAccountLogin(sstring name)
   sstring fileName = "account/";
   fileName += LOWER(name[0]);
   fileName += "/";
-  fileName +=  lower(name);
+  fileName +=  name.lower();
   time_t ct = 0;
 
   DIR *dfd;
@@ -976,7 +976,7 @@ void do_the_player_stuff(const char *name)
   if (strlen(name) > 9 && !strcmp(&name[strlen(name) - 9], ".wizpower")) {
     char tString[256];
 
-    sprintf(tString, "player/%c/%s", LOWER(name[0]), lower(name).c_str());
+    sprintf(tString, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 
     strcpy(longbuf, good_cap(name).c_str());
     longbuf[(strlen(longbuf) - 9)] = '\0';
@@ -1066,7 +1066,7 @@ void do_the_player_stuff(const char *name)
     for (i = 0; i < MAX_SAVED_CLASSES; i++)
       max_level = max(max_level, st.level[i]);
 
-    if (lower(st.name) != name){
+    if (sstring(st.name).lower() != name){
       vlogf(LOG_BUG, "%s had a corrupt st.name (%s). Moving player file.", st.name, name);
       handleCorrupted(name, st.aname);
       return;
@@ -1167,19 +1167,19 @@ void do_the_player_stuff(const char *name)
 		max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	  wipePlayerFile(name);
 	  sprintf(buf, "rm account/%c/%s/%s",
-		  LOWER(st.aname[0]), lower(st.aname).c_str(), lower(name).c_str());
+		  LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(name).lower().c_str());
 	  vsystem(buf);
 	  wipeRentFile(name);
-	  wipeCorpseFile(lower(name).c_str());
+	  wipeCorpseFile(sstring(name).lower().c_str());
 	  return;
 	} else {
-	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), lower(name).c_str());
+	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 	  if ((fp = fopen(buf, "r"))) {
 	    fclose(fp);
 	    vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting rent.",
 		  name, max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	    wipeRentFile(name);
-	    wipeCorpseFile(lower(name).c_str());
+	    wipeCorpseFile(sstring(name).lower().c_str());
 
 	    sprintf(longbuf, "%s detected this character has been inactive for %ld days.  To avoid\n\r", MUD_NAME, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	    sprintf(longbuf + strlen(longbuf), "having equipment tied up on players that no longer play, players that have not\n\rconnected within a reasonable length of time have their rent files removed in\n\rorder for that equipment to go back into circulation.  Due to your inactivity,\n\ryour rent file has been wiped.  The %s administration apologizes\n\rfor any inconvenience this may cause.  Reimbursements for this eventuality\n\rare not typically granted since the item(s) in question have gone back into\n\rgeneral circulation, however an extremely basic set of equipment (newbie), and\n\rsimple adventuring supplies (lantern, food, drink) may be requested that you\n\rbe able to bootstrap your way back up the ladder.\n\r\n\rIf, however, you made arrangements prior to going inactive for things of\n\ryours to be preserved in stasis, then whatever deal was made at that time\n\rmay apply.  If such is the case, contact whichever 59+ immortal placed\n\ryour character into stasis.\n\r\n\rOn a final note, welcome back!\n\r", MUD_NAME);
@@ -1553,7 +1553,7 @@ void TBeing::doReset(sstring arg)
       sendTo("You lack the power to reset.\n\r");
       return;
     }
-    if(lower(buf) != "shops"){
+    if(buf.lower() != "shops"){
       sendTo("You must type out the whole word <r>shops<z> to use this.\n\r");
       return;
     }
@@ -1646,7 +1646,7 @@ void TBeing::saveTitle()
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), lower(name).c_str());
+  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf.c_str(), "w"))) {
     vlogf(LOG_FILE, "Unable to open file (%s) for saving title (%d)", 
@@ -1671,7 +1671,7 @@ void TBeing::loadTitle()
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), lower(name).c_str());
+  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf.c_str(), "r"))) {
     //    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)", buf.c_str(), errno);
@@ -1712,7 +1712,7 @@ void TBeing::saveDrugStats()
   if(!found)
     return;
 
-  sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
     vlogf(LOG_FILE, "Unable to open file (%s) for saving drug stats. (%d)", buf, errno);
@@ -1775,7 +1775,7 @@ void TBeing::loadDrugStats()
   }
 
 
-  sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), sstring(name).lower().c_str());
 
 
   if (!(fp = fopen(buf, "r"))) {
@@ -1852,7 +1852,7 @@ void TBeing::saveCareerStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
     vlogf(LOG_BUG, "Unable to open file (%s) for saving career stats. (%d)", buf, errno);
@@ -1962,7 +1962,7 @@ void TBeing::loadCareerStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
 
   // lets just set some common values first
   desc->career.setToZero();
@@ -2222,7 +2222,7 @@ int listAccount(sstring name, sstring &buf)
   sstring fileName = "account/";
   fileName += LOWER(name[0]);
   fileName += "/";
-  fileName +=  lower(name);
+  fileName +=  name.lower();
 
   DIR *dfd;
   struct dirent *dp;

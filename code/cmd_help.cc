@@ -248,7 +248,7 @@ void TBeing::doHelp(const char *arg)
         !strcasecmp(arg, "sharpen") ||
         !strcasecmp(arg, "bleed"))
       break;
-    if(lower(arg) == lower(helpIndex[i])){
+    if(sstring(arg).lower() == helpIndex[i].lower()){
       sprintf(helppath, "%s/%s", HELP_PATH, helpIndex[i].c_str());
       helpnum = i;
       found = TRUE;

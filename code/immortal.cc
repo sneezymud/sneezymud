@@ -3073,7 +3073,7 @@ void TPerson::doCutlink(const char *argument)
   } else {
     for (d = descriptor_list; d; d = d->next) {
       if (d->character) {
-        if (d->character->name && !(lower(d->character->name)).compare(name_buf)) {
+        if (d->character->name && !(sstring(d->character->name).lower()).compare(name_buf)) {
           if (d->character == this) {
             sendTo("You can't cut your own link, sorry.\n\r");
             return;
@@ -3481,7 +3481,7 @@ static void welcomeNewPlayer(const TPerson *ch)
   struct dirent *dp;
   unsigned int count = 0;
 
-  sprintf(buf, "account/%c/%s", LOWER(ch->name[0]), lower(ch->name).c_str());
+  sprintf(buf, "account/%c/%s", LOWER(ch->name[0]), sstring(ch->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
     return;
   }
@@ -4249,7 +4249,7 @@ void TBeing::doWipe(const char *argument)
   } else 
     sendTo("Player not online.  Hope you know what you are doing...\n\r");
 
-  if (!load_char(lower(namebuf), &st)) {
+  if (!load_char(sstring(namebuf).lower(), &st)) {
     sendTo("No such player exists.\n\r");
     return;
   }
@@ -4264,7 +4264,7 @@ void TBeing::doWipe(const char *argument)
   db.query("delete from player where lower(name)=lower('%s')", namebuf);
 
   sprintf(buf, "account/%c/%s/%s",
-         LOWER(st.aname[0]), lower(st.aname).c_str(), lower(namebuf).c_str());
+         LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
 
   if (unlink(buf) != 0)
     vlogf(LOG_FILE, "error in unlink (7) (%s) %d", buf, errno);
@@ -4362,11 +4362,11 @@ void TPerson::doAccess(const char *arg)
         *(pass + 10) = '\0';
         strcpy(st.pwd, pass);
       
-        if (!raw_save_char(lower(arg1).c_str(), &st)) {
+        if (!raw_save_char(arg1.lower().c_str(), &st)) {
           vlogf(LOG_MISC, "Ran into problems (#1) saving file in doAccess()");
           return;
         }
-        ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
+        ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), sstring(st.aname).lower().c_str());
         ssprintf(arg2, "%s/account", arg1.c_str());
         if (!(fp = fopen(arg2.c_str(), "r+"))) 
           sendTo("Cannot open account for player! Tell a coder!\n\r");
@@ -4396,7 +4396,7 @@ void TPerson::doAccess(const char *arg)
           sendTo("Class must be between 0 and 7.\n\r");
           return;
         }
-        if (!raw_save_char(lower(arg1).c_str(), &st)) {
+        if (!raw_save_char(arg1.lower().c_str(), &st)) {
           vlogf(LOG_MISC, "Ran into problems (#2) saving file in doAccess()");
           return;
         }
@@ -4457,7 +4457,7 @@ void TPerson::doAccess(const char *arg)
           st.height, st.weight);
     buf+=tmpbuf;
 
-    ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
+    ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), sstring(st.aname).lower().c_str());
     ssprintf(arg2, "%s/comment", arg1.c_str());
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
@@ -4570,7 +4570,7 @@ void TBeing::doReplace(const sstring &argument)
 
       sprintf(buf, "rm player/%c/%s", arg1[0], arg1.c_str());
       vsystem(buf);
-      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),lower(st.aname).c_str(),arg1.c_str());
+      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),sstring(st.aname).lower().c_str(),arg1.c_str());
       sprintf(dir2, "player/%c/%s",  arg1[0], arg1.c_str());
       link(buf, dir2); 
       sendTo("Done.\n\r");
@@ -6446,7 +6446,7 @@ void TBeing::doAccount(const char *arg)
     }
   }
 
-  sprintf(buf2, "account/%c/%s", LOWER(namebuf[0]), lower(namebuf).c_str());
+  sprintf(buf2, "account/%c/%s", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
   if (!(dfd = opendir(buf2))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
@@ -6454,7 +6454,7 @@ void TBeing::doAccount(const char *arg)
     return;
   }
   closedir(dfd);
-  sprintf(buf2, "account/%c/%s/account", LOWER(namebuf[0]), lower(namebuf).c_str());
+  sprintf(buf2, "account/%c/%s/account", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
   if (!(fp = fopen(buf2, "r+"))) {
     sendTo("Cannot open account for player! Tell a coder!\n\r");
     return;
@@ -6592,7 +6592,7 @@ void TBeing::doAccount(const char *arg)
 
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
-    sprintf(buf2, "account/%c/%s/comment", LOWER(namebuf[0]), lower(namebuf).c_str());
+    sprintf(buf2, "account/%c/%s/comment", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
     if ((fp = fopen(buf2, "r"))) {
       while (fgets(buf2, 255, fp))
         str += buf2;
@@ -6733,7 +6733,7 @@ static bool verifyName(const sstring tStString)
 
   // Knocks it to lower case then ups the first letter.
   sprintf(tString, "immortals/%s/wizdata",
-          good_cap(lower(tStString)).c_str());
+          good_cap(tStString.lower()).c_str());
 
   // Wizfile doesn't exist, not an immortal or something else.
   // this is a moot check, go back with a false.
@@ -6747,7 +6747,7 @@ static bool verifyName(const sstring tStString)
   fclose(tFile);
   sprintf(tString, "player/%c/%s.wizpower",
           LOWER((tStString.c_str())[0]),
-          lower(tStString).c_str());
+          tStString.lower().c_str());
 
   // Wizpowers file doesn't exist.  This is really getting bad.
   // Even tho they must be a god we MUST have this file to check
@@ -6796,7 +6796,7 @@ int TBeing::doAsOther(const sstring &tStString)
     return FALSE;
   }
 
-  if(lower(getName()) == lower(tStNewName)){
+  if(sstring(getName()).lower() == tStNewName.lower()){
     sendTo("If you want to do it that bad, just do it man!\n\r");
     return FALSE;
   }
@@ -6808,7 +6808,7 @@ int TBeing::doAsOther(const sstring &tStString)
 
   tStOriginalName = getName();
   delete [] name;
-  name = mud_str_dup(good_cap(lower(tStNewName)));
+  name = mud_str_dup(good_cap(tStNewName.lower()));
   tStCommand += " ";
   tStCommand += tStArguments;
 

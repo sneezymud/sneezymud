@@ -377,7 +377,7 @@ void TPerson::saveWizPowers()
   char caFilebuf[128];
   FILE *fp;
 
-  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), lower(name).c_str());
+  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
 
 // REMOVED by Cosmo 7/15/01-- cant figure out a reason why this should be in here
 //  if (hasWizPower(POWER_IDLED))
@@ -408,7 +408,7 @@ void TPerson::loadWizPowers()
   char caFilebuf[128];
   FILE *fp;
 
-  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), lower(name).c_str());
+  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(caFilebuf, "r")))
     return;
@@ -460,7 +460,7 @@ void TPerson::doPowers(const char *argument) const
 
       sprintf(tStPath, "player/%c/%s.wizpower",
               LOWER((tStName.c_str())[0]),
-              lower(tStName).c_str());
+              tStName.lower().c_str());
 
       if ((tFile = fopen(tStPath, "r"))) {
         sendTo("Player not logged in but file found.  Reading in...\n\r");

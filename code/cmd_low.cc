@@ -1247,7 +1247,8 @@ void TBeing::lowPath(const sstring &arg)
 
   while((dir=find_path(room, is_target_room_p, 
 		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
-    ssprintf(buf1, "{DIR_%s, %i},\n\r", upper(dirs[lastdir]).c_str(), room);
+    ssprintf(buf1, "{DIR_%s, %i},\n\r", 
+	     sstring(dirs[lastdir]).upper().c_str(), room);
     sendTo(buf1);
 
     room=real_roomp(room)->dir_option[dir]->to_room;

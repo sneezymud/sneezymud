@@ -149,7 +149,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
   /*
   if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
       !ch->isImmortal() &&
-      lower(ch->getName()) != tCorpse->getOwner()) {
+      ch->getName(.lower()) != tCorpse->getOwner()) {
     affectedData tAff;
 
     tAff.type     = AFFECT_PLAYERLOOT;
@@ -202,7 +202,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     /*
     if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
         !ch->isImmortal() &&
-        lower(ch->getName()) != tCorpse->getOwner()) {
+        ch->getName(.lower()) != tCorpse->getOwner()) {
       affectedData tAff;
 
       tAff.type     = AFFECT_PLAYERLOOT;
@@ -251,7 +251,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     /*
     if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
         !ch->isImmortal() &&
-        lower(ch->getName()) != tCorpse->getOwner()) {
+        ch->getName(.lower()) != tCorpse->getOwner()) {
       affectedData tAff;
 
       tAff.type     = AFFECT_PLAYERLOOT;

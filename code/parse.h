@@ -662,7 +662,10 @@ public:
   sstring() : string(){}
   sstring(const char *str) : string(str?str:"") {}
   sstring(const string &str) : string(str) {}
-  const sstring convertToCRLF();
+  const sstring convertToCRLF() const;
+  const sstring sstring::lower() const;
+  const sstring sstring::upper() const;
+  
 };
 
 

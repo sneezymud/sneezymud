@@ -154,7 +154,7 @@ void TBeing::doNameChange(const char *argument)
   }
   
   // check for corspse file
-  ssprintf(tmpbuf, "corpses/%s", lower(orig_name).c_str());
+  ssprintf(tmpbuf, "corpses/%s", sstring(orig_name).lower().c_str());
   if ((fp = fopen(tmpbuf.c_str(), "r"))) {
     fclose(fp);
     sendTo("That player has a corpse file.\n\r");
@@ -177,7 +177,7 @@ void TBeing::doNameChange(const char *argument)
 
 
   ssprintf(tmpbuf, "account/%c/%s/%s", LOWER(vict->desc->account->name[0]),
-                  lower(vict->desc->account->name).c_str(), lower(orig_name).c_str());
+                  sstring(vict->desc->account->name).lower().c_str(), sstring(orig_name).lower().c_str());
   if (unlink(tmpbuf.c_str()) != 0)
     vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf.c_str(), errno);
   

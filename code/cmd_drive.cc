@@ -34,7 +34,7 @@ void TBeing::doDrive(sstring arg)
   }
 
 
-  arg=lower(arg);
+  arg=arg.lower();
   arg=one_argument(arg, buf);
 
 

@@ -682,7 +682,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
           break;
         }
-        sprintf(buf2, "account/%c/%s/account", LOWER(buf[0]), lower(buf).c_str());
+        sprintf(buf2, "account/%c/%s/account", LOWER(buf[0]), sstring(buf).lower().c_str());
        
         if (!stat(buf2, &timestat)) {
           writeToQ("Account already exists, enter another name.\n\r");
@@ -699,7 +699,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           break;
         }
         strcpy(account->name, aname);
-        sprintf(buf2, "account/%c/%s/account", LOWER(aname[0]), lower(aname).c_str());
+        sprintf(buf2, "account/%c/%s/account", LOWER(aname[0]), sstring(aname).lower().c_str());
         // If account exists, open and copy password, otherwise set pwd to \0
         FILE * fp = fopen(buf2, "r");
         if (fp) {
@@ -862,15 +862,15 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       char buf[256], buf2[256];
       accountFile afp;
 
-      sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), lower(account->name).c_str());
+      sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), sstring(account->name).lower().c_str());
       if (!(fp = fopen(buf, "w"))) {
-        sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
+        sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
         if (mkdir(buf2, 0770)) {
-          vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)", lower(account->name).c_str());
+          vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)", sstring(account->name).lower().c_str());
           return FALSE;
         }
         if (!(fp = fopen(buf, "w"))) {
-          vlogf(LOG_CLIENT, "Big problems in saveAccount (s)", lower(account->name).c_str());
+          vlogf(LOG_CLIENT, "Big problems in saveAccount (s)", sstring(account->name).lower().c_str());
           return FALSE;
         }
       }
@@ -944,7 +944,7 @@ int Descriptor::client_nanny(char *arg)
   
   account = new TAccount();
   strcpy(account->name, login);
-  sprintf(buf, "account/%c/%s/account", LOWER(login[0]), lower(login).c_str());
+  sprintf(buf, "account/%c/%s/account", LOWER(login[0]), sstring(login).lower().c_str());
   // If account exists, open and copy password, otherwise set pwd to \0
   if ((fp = fopen(buf, "r"))) {
     fread(&afp, sizeof(afp), 1, fp);
@@ -1365,18 +1365,18 @@ int Descriptor::clientCreateAccount(char *arg)
   accountFile afp;
 
   sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]),
-lower(account->name).c_str());
+sstring(account->name).lower().c_str());
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "account/%c/%s", LOWER(account->name[0]),
-lower(account->name).c_str());
+sstring(account->name).lower().c_str());
     if (mkdir(buf2, 0770)) {
       vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)",
-lower(account->name).c_str());
+sstring(account->name).lower().c_str());
       return FALSE;
     }
     if (!(fp = fopen(buf, "w"))) {
       vlogf(LOG_CLIENT, "Big problems in saveAccount (s)",
-lower(account->name).c_str());
+sstring(account->name).lower().c_str());
       return FALSE;
     }
   }
