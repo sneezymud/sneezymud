@@ -31,6 +31,8 @@ void TDatabase::setDB(string tdb){
     db=database_connection.getSneezyDB();
   } else if(tdb=="immortal"){
     db=database_connection.getImmoDB();
+  } else if(tdb=="sneezyglobal"){
+    db=database_connection.getGlobalDB();
   } else {
     vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
     db=NULL;

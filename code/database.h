@@ -100,7 +100,7 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  MYSQL *sneezydb, *immodb;
+  MYSQL *sneezydb, *immodb, *globaldb;
 
  public:
   MYSQL *getSneezyDB(){
@@ -131,6 +131,22 @@ class TDatabaseConnection
       
     return sneezydb;
   }    
+
+  MYSQL *getGlobalDB(){
+    if(!globaldb){
+      vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
+      globaldb=mysql_init(NULL);
+
+      vlogf(LOG_DB, "Connecting to database.");
+      if(!mysql_real_connect(globaldb, NULL, "sneezy", NULL,
+                             "sneezyglobal", 0, NULL, 0)){
+        vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
+        return NULL;
+      }
+    }
+
+    return globaldb;
+  }
 
 
   MYSQL *getImmoDB(){

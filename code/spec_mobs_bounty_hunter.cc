@@ -154,6 +154,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
   }
 
+  vlogf(LOG_DASH, "hunter being called - proc = %d, generic pulse? %s", cmd, (cmd==CMD_GENERIC_PULSE ? "yes" : "no"));
+
   if ((cmd != CMD_GENERIC_PULSE)) {
     if ((cmd == CMD_RENT) || (cmd == CMD_DROP) || (cmd == CMD_GIVE)) {
       if (!arg)
@@ -183,13 +185,13 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
                   if (temp_obj->parent == myself) {
                     myself->doAction(fname(ch->name), CMD_SMILE);
                     myself->doSay("I'm glad you've come to your senses!  I would surely smite thee!");
-
+		    
                     myself->doSay("I will leave you alone now that I have my bounty. Goodbye!!");
 		    //                    return DELETE_THIS;
 		    // curious what they do if i take this line out, heh. - dash
 		    if (job->singletarg) 
 		      job->missionaccomplished = true;
-		      
+		    
 		    return TRUE;
                   }
                 } else {
@@ -203,7 +205,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
               // cmd == CMD_DROP
               sscanf(arg, " %s ", buf);
               if (isname(buf, temp_obj->name) &&
-                   searchLinkedListVis(ch, buf, ch->getStuff())) {
+		  searchLinkedListVis(ch, buf, ch->getStuff())) {
                 rc = ch->doDrop("", temp_obj);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete temp_obj;
@@ -256,15 +258,15 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
       return FALSE;
     } else if (((cmd == CMD_SAY) || (cmd == CMD_SAY2)) && 
-        (!ch || ch->isImmortal())) {
+	       (!ch || ch->isImmortal())) {
       if (!arg)
         return FALSE;
       for (; *arg == ' '; arg++);
-
+      
       // this !ch case is whenit gets set automatically
       if (strncasecmp(arg, HUNTER_ID, strlen(HUNTER_ID)))
         return FALSE;
-
+      
       arg += strlen(HUNTER_ID);
       job = (bounty_hunt_struct *) myself->act_ptr;
       if (!strncasecmp(arg, " status", 7)) {
@@ -291,23 +293,23 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
           }
         } else
           sprintf(buf2, "$n whispers 'Master $N, I am currently idle with memory allocated.'");
-
+	
         act(buf2, FALSE, myself, 0, ch, TO_VICT);
         if (job->num_chances >= -99 && job->num_chances <= -96)
           act("$n whispers 'I am showing no mercy.'", FALSE, myself, 0, ch, TO_VICT);
         else
           act("$n whispers 'I am showing mercy.  Do I *have* to?'", FALSE, myself, 0, ch, TO_VICT);
-
+	
 	if (job->singletarg) {
 	  if(job->missionaccomplished)
 	    act("$n whispers 'I was hunting a single target and my mission is complete.'", FALSE, myself, 0, ch, TO_VICT);
 	  else
 	    act("$n whispers 'I am hunting a single target and my mission is incomplete.'", FALSE, myself, 0, ch, TO_VICT);
 	}
-
+	
         sprintf(buf2, "$n whispers 'Master $N, I am using room %d as my base of operations.'", myself->oldRoom);
         act(buf2, FALSE, myself, 0, ch, TO_VICT);
-
+	
         return TRUE;
       }
       // below here is kill and repo commands, both need to alloc if needed

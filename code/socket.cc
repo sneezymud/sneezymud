@@ -381,6 +381,25 @@ int TSocket::gameLoop()
       wayslowpulse = (pulse % (PULSE_MUDHOUR * 24));
     }
 
+    if(!(pulse % (ONE_SECOND*10))) {
+      // every 10 RL seconds
+      TDatabase db("sneezyglobal");
+      db.query("delete from wholist where port=%i", gamePort);
+      TBeing *p;
+      TPerson *p2;
+      
+      //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
+      
+      for (p = character_list; p; p = p->next) {
+	if (p->isPc() && p->polyed == POLY_TYPE_NONE && !(p->getInvisLevel() > MAX_MORT)) {
+	  if ((p2 = dynamic_cast<TPerson *>(p))) {
+	    db.query("insert into wholist (name, title, port) VALUES('%s', '%s', %i)", p2->getName(), p2->title,  gamePort);
+	    
+	  }
+	}
+      }
+
+    }
     if(!wayslowpulse) {
       for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
         temp = tmp_ch->next; 
