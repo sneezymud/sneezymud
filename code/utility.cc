@@ -55,6 +55,11 @@ int ssprintf(string &s, const char *fmt, ...){
   va_start(ap, fmt);
   ret=vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
 
+  if(strlen(buf) == MAX_STRING_LENGTH - 1){
+    vlogf(LOG_BUG, "ssprintf(): buffer reached MAX_STRING_LENGTH");
+    vlogf(LOG_BUG, "ssprintf(): buffer=%s", buf);
+  }
+
   s = buf;
 
   return ret;
