@@ -329,7 +329,16 @@ int TShopOwned::setRates(sstring arg)
     if(buf == "all"){
       db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
       db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
+      db.query("delete from shopownedplayer where shop_nr=%i", shop_nr);
       keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
+      return TRUE;
+    } else if(buf == "player"){
+      arg = one_argument(arg, buf);
+
+      db.query("delete from shopownedplayer where shop_nr=%i and player='%s'",
+	       shop_nr, buf.c_str());
+      
+      keeper->doTell(ch->getName(), "Done.");
       return TRUE;
     } else if(buf == "match"){
       arg = one_argument(arg, buf);
