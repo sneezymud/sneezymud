@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: rent.cc,v $
+// Revision 1.2  1999/09/24 02:08:58  batopr
+// put Ilogs for iradel in ifdef for later use
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -696,8 +699,10 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
 
       return TRUE;
     }
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL: slot read %d", slot);
+#endif
 
     if (slot == CONTENTS_END)
       return FALSE;
@@ -707,8 +712,10 @@ vlogf(-1, "IRADEL: slot read %d", slot);
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL:        obj read %d", new_obj->objVnum());
+#endif
 
           *parent += *new_obj;
 
@@ -745,8 +752,10 @@ vlogf(-1, "IRADEL:        obj read %d", new_obj->objVnum());
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL:        obj read %d", new_obj->objVnum());
+#endif
           if (ch) {
             wearSlotT mapped_slot = mapFileToSlot( slot);
             if (!ch->canUseLimb(mapped_slot))
@@ -773,8 +782,10 @@ vlogf(-1, "IRADEL:        obj read %d", new_obj->objVnum());
         if ((new_obj = raw_read_item(fp, version))) {
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL:        obj read %d", new_obj->objVnum());
+#endif
           (*numread)++;
           if (ch)
             *ch += *new_obj;
@@ -853,14 +864,18 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch, bool d,
       return;
     }
     (st->number)++;
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL: slot write %d", slot);
+#endif
 
     if (!raw_write_item(fp, o, st->version)) 
       vlogf(10, "Rent error in %s's file", ((ch) ? ch->getName() : "UNKNOWN"));
 
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL:          obj write  %d", o->objVnum());
+#endif
 
     objsToStore(NORMAL_SLOT, (TObj *) o->stuff, st, ch, d, fp, corpse);
     slot = CONTENTS_END;
@@ -869,9 +884,10 @@ vlogf(-1, "IRADEL:          obj write  %d", o->objVnum());
          ((ch) ? ch->getName() : "UNKNOWN"));
       return;
     }
+#if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(-1, "IRADEL: slot write %d", slot);
-
+#endif
 
 //   objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp);
     if (o->nextThing) {
