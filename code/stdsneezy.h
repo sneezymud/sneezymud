@@ -32,7 +32,6 @@
 //#include </home/oldspasm/usr/include/mysql/mysql.h>
 
 #include "low.h"
-#include "mobAI.h"
 #include "enum.h"
 #include "spells.h"
 #include "structs.h"

@@ -50,11 +50,6 @@
 #endif
 
 #include "stdsneezy.h"
-#include "disc_alchemy.h"
-#include "disc_looting.h"
-#include "disc_survival.h"
-#include "disc_air.h"
-#include "disc_monk.h"
 
 //FYI: CMD_TASK_CONTINUE is checked once per PULSE_MOBACT
 

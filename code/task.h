@@ -2,44 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task.h,v $
-// Revision 5.6  2002/02/28 18:37:08  peel
-// added cooking
-// allowed putting of empty containers into other containers
-//
-// Revision 5.5  2002/01/16 05:40:29  peel
-// added plants
-//
-// Revision 5.4  2001/12/15 04:26:52  jesus
-// added in butcher skill under adventuring disc
-// will add more descs for races as time goes on 30 of about 125 races supported
-//
-// Revision 5.3  2001/07/05 21:25:54  peel
-// Trying to fix cvs
-// what a headache
-//
-// Revision 5.2  2001/04/26 22:23:57  peel
-// *** empty log message ***
-//
-// Revision 5.1.1.4  2001/04/17 03:32:55  peel
-// added TASK_FISHING
-//
-// Revision 5.1.1.3  2001/04/14 07:15:24  jesus
-// *** empty log message ***
-//
-// Revision 5.1.1.2  2000/12/27 08:27:35  dash
-// added code for 'defensive trance' warrior skill
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
