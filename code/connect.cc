@@ -42,7 +42,7 @@ const int FORCE_LOW_INVSTE = 1;
 // character traits are things that players pick at character creation,
 // such as cowardice and blindness.  each trait gives the player a few
 // bonus points that can be spent on stats.
-const int ALLOW_TRAITS = 0;
+const int ALLOW_TRAITS = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
@@ -66,6 +66,7 @@ const int MAX_TRAITS=10;
 //  {TOG_IS_ALCOHOLIC, 0, "alcoholic (not implemented)", // not implemented
 //   "You are a recovering alcoholic and have trouble resisting alcohol."}
 
+// keep this list ordered by point value (for cosmetics)
 struct {
   int tog, points;
   sstring name, desc;
@@ -75,8 +76,6 @@ struct {
    "You flee combat if you get below 1/2 hit points."},
   {TOG_IS_BLIND, 6, "blind",
    "Your vision has been damaged and you are permanently blind."},
-  {TOG_IS_MUTE, 1, "mute",
-   "Your throatbox has been damaged and you are unable to speak."},
   {TOG_IS_ASTHMATIC, 6, "asthma",
    "You have asthma and thus are easily winded."},
   {TOG_IS_NARCOLEPTIC, 3, "narcolepsy",
@@ -85,10 +84,12 @@ struct {
    "You are prone to spontaneous combustion."},
   {TOG_IS_HEMOPHILIAC, 3, "hemophiliac",
    "You have hemophilia and your wounds do not clot naturally."},
-  {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
-   "You are ambidextrous and are equally skilled with both hands."},
+  {TOG_IS_MUTE, 1, "mute",
+   "Your throatbox has been damaged and you are unable to speak."},
   {TOG_IS_HEALTHY, -3, "healthy",
    "You are particularly healthy and resistant to disease."},
+  {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
+   "You are able to use both hands with equal facility."},
   {TOG_HAS_NIGHTVISION, -10, "nightvision",
    "You have excellent nightvision."},
 };
@@ -2202,8 +2203,14 @@ int Descriptor::nanny(const char *arg)
 	  writeToQ("--> ");
 	  return FALSE;
       }
-      connected = CON_STATS_START;
-      sendStartStatList();
+
+      if(bonus_points.total != 0){
+	connected=CON_STATS_RULES;
+	sendStatRules(1);
+      } else {
+	connected = CON_STATS_START;
+	sendStartStatList();
+      }
       break;
     case CON_STATS_START:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
@@ -2224,7 +2231,7 @@ int Descriptor::nanny(const char *arg)
 	    character->chosenStats.values[STAT_CHA] =
 	    character->chosenStats.values[STAT_KAR] =
 	    character->chosenStats.values[STAT_SPE] = 0;
-	    
+
           connected = CON_ENTER_DONE;
           character->cls();
           sendDoneScreen();
@@ -3115,8 +3122,14 @@ void Descriptor::go_back_menu(connectStateT con_state)
       break;
     case CON_STAT_COMBAT:
       character->cls();
-      connected = CON_STATS_START;
-      sendStartStatList();
+
+      if(bonus_points.total != 0){
+	connected=CON_STATS_RULES;
+	sendStatRules(1);
+      } else {
+	connected = CON_STATS_START;
+	sendStartStatList();
+      }
       break;
     case CON_HOME_HUMAN:
     case CON_HOME_ELF:
@@ -3150,8 +3163,13 @@ void Descriptor::go_back_menu(connectStateT con_state)
       connected = CON_STAT_UTIL;
       break;
     case CON_ENTER_DONE:
-      sendStartStatList();
-      connected = CON_STATS_START;
+      if(bonus_points.total != 0){
+	connected=CON_STATS_RULES;
+	sendStatRules(1);
+      } else {
+	sendStartStatList();
+	connected = CON_STATS_START;
+      }
       break;
     case CON_STATS_START:
       character->cls();
@@ -3805,12 +3823,15 @@ void Descriptor::sendTraitsList()
   sstring buf;
 
   buf="You may choose some distinct traits for your character if you wish.\n\r\n\r";
+  buf+="You will receive bonus (or penalty) points to apply to your statistics.\n\r";
 
   for(int i=1;i<=MAX_TRAITS;++i){
-    buf+=fmt("[%c] %i. %s - %s\n\r") %
+    buf+=fmt("[%c] %2i. %-12s (%3i points)\n\r        %s\n\r") %
       (character->hasQuestBit(traits[i].tog)?'X': ' ') % i %
-      traits[i].name % traits[i].desc;
+      traits[i].name %
+      traits[i].points % traits[i].desc;
   }
+
 
   buf+="\n\r";
   buf+=fmt("Bonus points          [%3d]\n\r\n\r") % bonus_points.total;
@@ -3818,7 +3839,7 @@ void Descriptor::sendTraitsList()
   buf+="There are advantages and disadvantages to each choice.\n\r";
   buf+=fmt("Type %s/%s to go back a menu to redo things.\n\r") % 
     red() % norm();
-  buf+="(E)nd when you are done customizing your physical characteristics.\n\r";
+  buf+="(E)nd when you are done selecting traits.\n\r";
   buf+=fmt("Type %s~%s to disconnect.\n\r\n\r--> ") % red() % norm();
 
   writeToQ(buf);
