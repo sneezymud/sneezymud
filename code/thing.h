@@ -207,7 +207,7 @@ class TThing {
     virtual bool isRideable() const { return FALSE; }
     virtual int genericMovedIntoRoom(TRoom *, int, checkFallingT = CHECK_FALL_YES)
     { return FALSE; }
-    int genericTeleport(silentTypeT, bool keepZone = FALSE);
+    int genericTeleport(silentTypeT, bool keepZone = FALSE, bool unsafe=false);
     virtual bool isFlying() const { return FALSE; }
     virtual bool isLevitating() const { return FALSE; }
     virtual int trapSleep(int) { return FALSE; }

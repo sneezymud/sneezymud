@@ -11,6 +11,35 @@
 #include "stdsneezy.h"
 #include "obj_portal.h"
 
+
+
+TPortal::TPortal(const TRoom *rp) :
+  TSeeThru(),
+  charges(0),
+  portal_type(0),
+  trap_type(0),
+  trap_damage(0),
+  portal_state(0),
+  portal_key(-1)
+{
+  sstring buf;
+
+  swapToStrung();
+
+  name = mud_str_dup("portal");
+  shortDescr = mud_str_dup("a magic portal");
+  ssprintf(buf, "A portal going to %s is in the room.", rp->name);
+  setDescr(mud_str_dup(buf));
+  obj_flags.wear_flags = 0;
+  obj_flags.decay_time = 5;
+  setWeight(0);
+  obj_flags.cost = 1;
+  setPortalNumCharges(10);
+  setTarget(rp->number);
+}
+
+
+
 TPortal::TPortal() :
   TSeeThru(),
   charges(0),
@@ -49,6 +78,7 @@ TPortal & TPortal::operator=(const TPortal &a)
 TPortal::~TPortal()
 {
 }
+
 
 void TPortal::assignFourValues(int x1, int x2, int x3, int x4)
 {

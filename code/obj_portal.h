@@ -58,6 +58,7 @@ class TPortal : public TSeeThru {
     TPortal * findMatchingPortal() const;
 
     TPortal();
+    TPortal(const TRoom *);
     TPortal(const TPortal &a);
     TPortal & operator=(const TPortal &a);
     virtual ~TPortal();

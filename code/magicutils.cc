@@ -999,7 +999,7 @@ void TBeing::addAffects(const TObj *o)
 }
 
 // returns DELETE_THIS
-int TThing::genericTeleport(silentTypeT silent, bool keepZone)
+int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe=false)
 {
   int to_room;
   TRoom *rp;
@@ -1026,16 +1026,19 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone)
     }
     if (!(rp = real_roomp(to_room)))
       continue;
-    if (rp->isRoomFlag(ROOM_PRIVATE))
-      continue;
-    if (rp->isRoomFlag(ROOM_HAVE_TO_WALK))
-      continue;
-    if (rp->isRoomFlag(ROOM_DEATH))
-      continue;
-    if (rp->isFlyingSector())
-      continue;
     if (zone_table[rp->getZoneNum()].enabled == FALSE)
       continue;
+
+    if(!unsafe){
+      if (rp->isRoomFlag(ROOM_PRIVATE))
+	continue;
+      if (rp->isRoomFlag(ROOM_HAVE_TO_WALK))
+	continue;
+      if (rp->isRoomFlag(ROOM_DEATH))
+	continue;
+      if (rp->isFlyingSector())
+	continue;
+    }
 
     break;
   }

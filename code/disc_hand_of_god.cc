@@ -833,18 +833,8 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
 
 
   if (bSuccess(caster,bKnown,caster->getPerc(),SPELL_PORTAL)) {
-    TPortal * tmp_obj = new TPortal();
-
-    tmp_obj->name = mud_str_dup("portal");
-    tmp_obj->shortDescr = mud_str_dup("a magic portal");
-    sprintf(buf, "A portal going to %s is in the room.", rp->name);
-    tmp_obj->setDescr(mud_str_dup(buf));
-    tmp_obj->obj_flags.wear_flags = 0;
-    tmp_obj->obj_flags.decay_time = 5;
-    tmp_obj->setWeight(0);
-    tmp_obj->obj_flags.cost = 1;
+    TPortal * tmp_obj = new TPortal(rp);
     tmp_obj->setPortalNumCharges(1*((level/5)+1));
-    tmp_obj->setTarget(location);
 
     if (critSuccess(caster, SPELL_PORTAL)) {
       CS(SPELL_PORTAL);
@@ -858,16 +848,7 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
 
     caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
-    TPortal * next_tmp_obj = new TPortal();
-    next_tmp_obj->name = mud_str_dup("portal");
-    next_tmp_obj->shortDescr = mud_str_dup("a magic portal");
-    sprintf(buf, "A portal going to %s is in the room.", caster->roomp->name);
-    next_tmp_obj->setDescr(mud_str_dup(buf));
-    next_tmp_obj->obj_flags.wear_flags = 0;
-    next_tmp_obj->obj_flags.decay_time =  tmp_obj->obj_flags.decay_time;
-    next_tmp_obj->setWeight(1);
-    next_tmp_obj->obj_flags.cost = 1;
-    next_tmp_obj->setTarget(caster->in_room);
+    TPortal * next_tmp_obj = new TPortal(caster->roomp);
     *rp += *next_tmp_obj;
 
     if (tPerson)

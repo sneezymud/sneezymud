@@ -13,6 +13,7 @@
 #include "disc_wrath.h"
 #include "disc_aegis.h"
 #include "disease.h"
+#include "obj_portal.h"
 
 void TBeing::doEgoTrip(const char *arg)
 {
@@ -24,17 +25,76 @@ void TBeing::doEgoTrip(const char *arg)
     return;
   }
 
-  sstring badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | 
-\"stupidity\" | \"sanctuary\" | \"enliven\" >\n\r";
+  sstring badsyn;
+  badsyn  = "Syntax: egotrip <command>\n\r";
+  badsyn += "deity - forces a global MOB_ALIGN_PULSE for checkSpec\n\r";
+  badsyn += "bless - blesses all players\n\r";
+  badsyn += "blast - removes 50% hp from one player\n\r";
+  badsyn += "damn - curses and faerie fires one player\n\r";
+  badsyn += "hate - causes all mobs in the room to hate one player\n\r";
+  badsyn += "cleanse - removes all disease in the world\n\r";
+  badsyn += "wander - forces a wander pulse for all mobs in the room\n\r";
+  badsyn += "stupidity - casts the stupidity spell on all players\n\r";
+  badsyn += "sanctuary - casts the sanctuary prayer on all players\n\r";
+  badsyn += "enliven - casts the enliven spell on all players\n\r";
+  badsyn += "crit - forces a target mob to do the number crit if fighting\n\r";
+  badsyn += "portal - creates a portal to the target mob/player\n\r";
+  badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
 
-//  char argument[256];
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
   if (!argument.length()) {
     sendTo(badsyn);
     return;
   }
-  if (is_abbrev(argument, "deity")) {
+  if(is_abbrev(argument, "teleport")){
+    sstring target, buf;
+    restarg = one_argument(restarg, target);
+    if (target.empty()) {
+      sendTo("Syntax: egotrip teleport <target>\n\r");
+      return;
+    }
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    if (!ch) {
+      sendTo("Could not locate character.\n\r");
+      sendTo("Syntax: egotrip teleport <target>\n\r");
+      return;
+    }
+    
+    sendTo("You teleport %s\n\r", ch->getName());
+    
+    ch->genericTeleport(SILENT_NO, false, true);
+  } else if(is_abbrev(argument, "portal")){
+    sstring target, buf;
+    restarg = one_argument(restarg, target);
+    if (target.empty()) {
+      sendTo("Syntax: egotrip portal <target>\n\r");
+      return;
+    }
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    if (!ch) {
+      sendTo("Could not locate character.\n\r");
+      sendTo("Syntax: egotrip portal <target>\n\r");
+      return;
+    }
+
+    TPortal * tmp_obj = new TPortal(ch->roomp);
+    *roomp += *tmp_obj;
+    roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+
+    TPortal * next_tmp_obj = new TPortal(roomp);
+    *ch->roomp += *next_tmp_obj;
+    ch->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
+
+    ssprintf(buf, "%s suddenly appears out of a swirling mist.",
+	     sstring(next_tmp_obj->shortDescr).cap().c_str());
+    sendToRoom(buf.c_str(), next_tmp_obj->roomp->number);
+
+    return;
+  } else if (is_abbrev(argument, "deity")) {
     sendTo("Forcing a deity pulse to occur.\n\r");
     TBeing *ch, *ch2;
     bool found = false;
@@ -359,10 +419,9 @@ void TBeing::doEgoTrip(const char *arg)
                        DiseaseInfo[affToDisease(*tAff)].name);
 
 
-        if (!strcmp("Jesus", getName()))
-          sendTo(COLOR_BASIC, "Your cure %s of: %s.\n\r",
-                 tBeing->getName(),
-                 DiseaseInfo[affToDisease(*tAff)].name);
+	sendTo(COLOR_BASIC, "Your cure %s of: %s.\n\r",
+	       tBeing->getName(),
+	       DiseaseInfo[affToDisease(*tAff)].name);
 
         if (tAff->modifier == DISEASE_POISON) {
           tBeing->affectFrom(SPELL_POISON);
