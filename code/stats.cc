@@ -108,6 +108,9 @@ const sstring Stats::printRawStats(const TBeing *) const
 
 int age_mod_for_stat(int age_num, statTypeT whichStat)
 {
+  // disabled
+  return 0;
+
   // age_num is the "human" age, realize non-humans have been adjusted
   // to the human age, so no need to modify for race.
   switch (whichStat) {

@@ -519,9 +519,12 @@ int TBeing::rawMove(dirTypeT dir)
         need_movement += 8;
     }
     // old people move harder  (kicks in around age 50 (human))
+    // disabled
+#if 0
     if (age()->year - getBaseAge() >= 35)
       need_movement += (age()->year - getBaseAge() - 30)/5;
- 
+#endif 
+
     if (isFlying())
       need_movement = min(1, need_movement/4);
 
