@@ -1057,8 +1057,9 @@ void TPerson::doLow(const char *arg)
   }
 
   arg = one_argument(arg, buf);
+  char usage[] = "Syntax: low <mob | race | statbonus | statcharts | tasks> ...\n\r";
   if (!*buf) {
-    sendTo("Syntax: low <mob | race | statbonus> ...\n\r");
+    sendTo(usage);
     return;
   } else if (is_abbrev(buf, "objs") ||
 	     is_abbrev(buf, "weapons")) {
@@ -1218,7 +1219,7 @@ void TPerson::doLow(const char *arg)
     
 
   } else {
-    sendTo("Syntax: low <mob | obj | weapon> ...\n\r");
+    sendTo(usage);
     return;
   }
 }
