@@ -46,7 +46,7 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
 
   if (vict) {
     victim = vict;
-    if (!canSee(victim)) {
+    if (!canSee(victim) && (victim != fight())) {
       sendTo("Just whom do you want to hit?\n\r");
       return FALSE;
     }
