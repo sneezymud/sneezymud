@@ -53,6 +53,10 @@ bool TMonster::addHated(TBeing *hatee)
   if (isPc() || !hatee->isPc())
     return FALSE;
 
+  // We need to make sure an immortal mobile will not gain a player hatred, period.
+  if (IS_SET(specials.act, ACT_IMMORTAL))
+    return FALSE;
+
   if (hatee) {
     if (Hates(hatee, NULL))	/* hate someone only once - SG */
       return FALSE;
