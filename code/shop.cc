@@ -123,14 +123,12 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
   int cost;
   float profit_buy=shop_index[shop_nr].profit_buy;
   
-  if(shop_index[shop_nr].isOwned()){
-    TDatabase db("sneezy");
+  TDatabase db("sneezy");
 
-    db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-
-    if(db.fetchRow())
-      profit_buy=atof(db.getColumn(0));
-  }
+  db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+  
+  if(db.fetchRow())
+    profit_buy=atof(db.getColumn(0));
 
   if (chr != -1)
     cost = (int) ((adjPrice(discount) * profit_buy) * chr);
@@ -1398,6 +1396,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   string sb;
   int rc;
   bool hasComponents = false;
+  bool owned=shop_index[shop_nr].isOwned();
 
 #if 0
   if (gamePort != PROD_GAMEPORT) {
@@ -1559,7 +1558,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
           continue;
         }
         // pawn shop shouldn't junk
-        if (shop_index[shop_nr].in_room != 562 || shop_index[shop_nr].isOwned()) {
+        if (shop_index[shop_nr].in_room != 562 || owned) {
           keeper->doSay("How did I get this piece of junk?!?!");
           rc = keeper->doJunk("", i);
           // doJunk might fail (cursed, etc), delete regardless
