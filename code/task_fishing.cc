@@ -45,9 +45,26 @@ TObj *catch_a_fish(TRoom *rp){
 
   //  vlogf(LOG_PEEL, "weightmod=%f", weightmod);
 
-  if(!::number(0,100)){
-    weightmod=3;  // big one
+  if(!::number(0,99)){  // 1 in 100
+    // big one
+    weightmod = 2 + (::number(0,100)/100); // 2-3
+    
+    if(!::number(0,99)){ // 1 in 10000
+      // real big one
+      weightmod = 3 + (::number(0,100)/100); // 3-4
+
+      if(!::number(0,99)){ // 1 in 1000000
+	// REAL big one
+	weightmod = 4 + (::number(0,100)/100); // 4-5
+
+	if(!::number(0,99)){ // 1 in 100000000
+	  // freak of nature
+	  weightmod = 5 + (::number(0,500)/100); // 5-10
+	}
+      }
+    }
   }
+
   
 
   if(rp->isOceanSector()){

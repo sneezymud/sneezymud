@@ -6191,10 +6191,33 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       
       mysql_free_result(res);
 
-      sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one!", 
-	      o->getWeight());
-      myself->doSay(buf);
+      // check for largest
+      if((rc=dbquery(&res, "sneezy", "fishkeeper(large1)", "select weight from fishlargest where type='%s'", o->shortDescr))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in fishkeeper");	
+      }
+      row=mysql_fetch_row(res);
+      mysql_free_result(res);
 
+      if(o->getWeight() > atoi(row[0])){
+	if((rc=dbquery(&res, "sneezy", "fishkeeper(large2)", "update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr))){
+	  if(rc==-1)
+	    vlogf(LOG_BUG, "Database error in fishkeeper");		  
+	}
+	mysql_free_result(res);
+
+	sprintf(buf, "Oh my, you've set a record!  This the largest %s I've seen, weighing in at %f!  Very nice!",
+		o->shortDescr, o->getWeight());
+	myself->doSay(buf);
+      } else {
+	sprintf(buf, "Ok, I tallied your fish, weighing in at %f.  Nice one!", 
+		o->getWeight());
+	myself->doSay(buf);
+      }
+
+
+      // heh why'd I do this instead of returning DELETE_ ??
+      // beats me, I ain't gonna touch it now though
       for(t=myself->getStuff();t;t=t->nextThing){
 	if(isname("caughtfish", t->name)){
 	  delete t;
@@ -6211,18 +6234,27 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       arg = one_argument(arg, buf);
 
+      if(!strcmp(buf, "records")){
+	rc=dbquery(&res, "sneezy", "fishKeeper", "select name, type, weight from fishlargest order by weight desc");
 
-      if(!strcmp(buf, "topten")){
-	rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper order by weight desc limit 10");
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%s caught %s weighing in at %f.",
+		  row[0], row[1], atof(row[2]));
+	  myself->doSay(buf);
+	}      
       } else {
-	rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper where name='%s'", buf);
+	if(!strcmp(buf, "topten")){
+	  rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper order by weight desc limit 10");
+	} else {
+	  rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper where name='%s'", buf);
+	}
+	
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%s has caught fish weighing in at a total of %f.",
+		  row[0], atof(row[1]));
+	  myself->doSay(buf);
+	}      
       }
-      
-      while((row=mysql_fetch_row(res))){
-	sprintf(buf, "%s has caught fish weighing in at a total of %f.",
-		row[0], atof(row[1]));
-	myself->doSay(buf);
-      }      
 
       break;
     default:
