@@ -91,10 +91,6 @@ int TTrap::detonateGrenade()
       return FALSE;
     }
 
-    // don't explode in noheal
-    if (rp->isRoomFlag(ROOM_NO_HEAL))
-      return FALSE;
-
     if (equippedBy) {
       dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
     } else if (stuckIn) {
@@ -112,8 +108,11 @@ int TTrap::detonateGrenade()
     *rp += *this;
   } 
   // don't explode in noheal
-  if (roomp->isRoomFlag(ROOM_NO_HEAL))
-    return FALSE;
+  if (roomp->isRoomFlag(ROOM_NO_HEAL)){
+    act("A muffled explosion is heard as $n begins to detonate, but is suppressed by a magical field.",
+	FALSE, this, 0, 0, TO_ROOM);      
+    return DELETE_THIS;
+  }
 
   dirTypeT door;
   for (door = MIN_DIR; door < MAX_DIR; door++) {
