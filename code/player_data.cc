@@ -1838,7 +1838,7 @@ void TBeing::saveCareerStats()
 {
   FILE *fp;
   char buf[160];
-  int current_version = 19;
+  int current_version = 20;
 // version 9  : 7/3/98
 // version 10 : 8/17/98
 // version 11 : 10/06/98
@@ -2220,7 +2220,17 @@ if (current_version < 13) {
    desc->career.crit_tooth_suff=num2;
  }
 
- if(current_version >= 19){
+ if(current_version == 19){
+   if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
+     vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+     fclose(fp);
+     return;
+   }
+   desc->career.crit_ripped_out_heart=0;
+   desc->career.crit_ripped_out_heart_suff=0;
+ }
+
+ if(current_version >= 20){
    if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
      vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
      fclose(fp);
@@ -2229,6 +2239,7 @@ if (current_version < 13) {
    desc->career.crit_ripped_out_heart=num1;
    desc->career.crit_ripped_out_heart_suff=num2;
  }
+
 
   fclose(fp);
 }
