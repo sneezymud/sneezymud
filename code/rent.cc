@@ -637,6 +637,7 @@ TObj *ItemLoad::raw_read_item()
   TObj *o;
   char *name = NULL, *shortDescr = NULL, *description = NULL,
   *action_description = NULL;
+  unsigned char oldversion=CURRENT_RENT_VERSION;
 
   if (!raw_read_rentObject(fp, &item, &name, &shortDescr, &description, &action_description, version)) {
     vlogf(LOG_BUG, "Error reading object from rent.");
@@ -662,6 +663,8 @@ TObj *ItemLoad::raw_read_item()
   }
 
   // update these items - maror, 12-29-03
+  // this isn't really a good way to do this
+  // there's an if statement below to set back to current version
   if ((item.item_number >= 1120 && item.item_number <= 1131) || //admantium
       (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
       (item.item_number >= 9600 && item.item_number <= 9611) || //whale
@@ -671,6 +674,7 @@ TObj *ItemLoad::raw_read_item()
       (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
       (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
       (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
+    oldversion=version;
     version = 6;
   }
 
@@ -682,17 +686,9 @@ TObj *ItemLoad::raw_read_item()
   }
 
 // old items should reflect current tiny file
-#if 0
-  if (version >= 7 || 
-      // symbols lose attuning, components given by GM loss 0 value, repair tickets
-      (dynamic_cast<TComponent *>(o) ||
-       dynamic_cast<TNote *>(o) ||
-       dynamic_cast<TSymbol *>(o))) {
-#else
   if (version >= 7 || 
       // discard 0-cost components and symbols due to overhaul
       dynamic_cast<TNote *>(o)) {
-#endif
 
 
     if(version<9 && dynamic_cast<TOpenContainer *>(o)){
@@ -752,8 +748,8 @@ TObj *ItemLoad::raw_read_item()
     // deal with structure
     o->setStructPoints(min(item.struct_points, (int) obj_index[o->getItemIndex()].max_struct));
     
-  if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
-    o->addObjStat(ITEM_CHARRED); // preserve charred
+    if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
+      o->addObjStat(ITEM_CHARRED); // preserve charred
   }
     
   if (o->isObjStat(ITEM_STRUNG)) {
@@ -838,6 +834,19 @@ TObj *ItemLoad::raw_read_item()
   // if they had a lantern lit, set light appropriately
   o->adjustLight();
   
+  if ((item.item_number >= 1120 && item.item_number <= 1131) || //admantium
+      (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
+      (item.item_number >= 9600 && item.item_number <= 9611) || //whale
+      (item.item_number == 9624) || // whale hood
+      (item.item_number == 27109) || // hawk ring
+      (item.item_number >= 10049 && item.item_number <= 10062) || //emerald
+      (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
+      (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
+      (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
+    version=oldversion;
+  }
+
+
   return o;
 }
   
@@ -2091,6 +2100,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   is.st.original_gold = (int) getMoney();
   is.st.total_cost = (int) cost->total_cost;
   is.st.first_update = is.st.last_update = (long) time(0);
+
 
   if(!is.writeHeader()){
     vlogf(LOG_BUG, fmt("Error writing rent header for %s.") %  getName());
