@@ -935,9 +935,7 @@ void TPerson::doToggle(const char *arg2)
     sendTo("You have now %s turbo mode.\n\r", TurboMode ? "activated" : "deactivated");
     vlogf(LOG_MISC, "%s has turned turbomode mode %s.", getName(), TurboMode ? "on" : "off");
   } else {
-    sendTo("Syntax : toggle <silence | sleep | testcode | wiznet | pcmobs | client>\n\r");
-    sendTo("Syntax : toggle <questcode | questcode2 | turbomode | nuke |
-newbie_protect>\n\r");
+    sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
     return;
   }
 }
