@@ -202,9 +202,6 @@ void doStocks(){
       price-=amt;
     }
 
-    vlogf(LOG_PEEL, "%i: %f -> %f (%f)",
-	  shop_nr, prevprice, price, amt);
-
 
     dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
 
