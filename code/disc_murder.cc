@@ -274,7 +274,7 @@ int backstab(TBeing *thief, TBeing * victim)
     thief->sendTo("There's no way to reach that back while you're fighting!\n\r");
     return FALSE;
   }
-  if (!obj->canBackstab()) {
+  if (!obj->canBackstab() || dynamic_cast<TGun *>(obj)) {
     act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
