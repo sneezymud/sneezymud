@@ -7185,7 +7185,6 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   fortune->shortDescr = mud_str_dup("<W>a fortune<1>"); 
   delete [] fortune->getDescr();
   fortune->setDescr(mud_str_dup("<W>A small strip of paper lies here.<1>"));
-  *ch += *fortune;
   
   // convert cookie to food
   TObj *cookie = makeNewObj(ITEM_FOOD);  // new food object
@@ -7193,7 +7192,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   *cookie = *o;  // TObj assignment, copy values
   delete o; // remove old object
   cookie->assignFourValues(3,0,0,0); // 3 food value, no flags
-  *ch += *cookie;  // give back to owner
+
+  *ch += *cookie;
+  *ch += *fortune;
 
   ssprintf(buf, "$n tears open $p and pulls out %s.", fortune->shortDescr);
   act(buf.c_str(),TRUE,ch,cookie,NULL, TO_ROOM,NULL);
