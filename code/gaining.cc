@@ -526,6 +526,13 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
       }
       break;
     case SHAMAN_LEVEL_IND:
+      if (getLevel(Class)==6) {
+	if(!silent){
+	  gm->doSay("<Y>Your status as a newbie has been removed.<1>");
+	  gm->doSay("<B>You will now be subject to penalty if you let<1>");
+	  gm->doSay("<B>your lifeforce fall to 0.<1>");
+	}
+      }
       if (getLevel(Class)>=15 &&
             !hasQuestBit(TOG_ELIGABLE_JUJU) &&
             !hasQuestBit(TOG_GET_THONG) &&

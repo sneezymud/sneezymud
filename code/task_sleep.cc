@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_sleep.cc,v $
+// Revision 5.6  2001/08/16 22:10:29  jesus
+// fixed a bug with newbie protection for shamans
+//
 // Revision 5.5  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -58,7 +61,7 @@ int task_sleep(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TO
       if (!ch->task->status) {
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
-	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT)) {
+	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT) && (ch->GetMaxLevel() > 5)) {
 	    if (1 > ch->getLifeforce()) {
 	      ch->updateHalfTickStuff();
 	    } else {
