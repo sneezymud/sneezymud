@@ -206,8 +206,8 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
     isPoly = TRUE;
   
   if (GetMaxLevel() < commandArray[cmd]->minLevel &&
-       ((cmd != CMD_WIZNET) || !desc || !desc->original ||
-          desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
+      ((cmd != CMD_WIZNET) || !desc || !desc->original ||
+       desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
     incorrectCommand();
     return FALSE;
   }
@@ -235,1563 +235,1561 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 
   // ADDED THIS TO MAKE SURE POSITIONS ARE UPDATED ON SHAMAN
 
-  if (1) {
-    if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()){
-      sendTo("You can't concentrate enough while fighting!\n\r");
-      return FALSE;
-    } else if (getPosition() < commandArray[cmd]->minPosition) {
-      switch (getPosition()) {
-        case POSITION_DEAD:
-          sendTo("You cannot do that while dead!\n\r");
-          break;
-        case POSITION_INCAP:
-        case POSITION_MORTALLYW:
-          sendTo("You cannot do that while mortally wounded!\n\r");
-          break;
-        case POSITION_STUNNED:
-          sendTo("You cannot do that while stunned!!\n\r");
-          break;
-        case POSITION_SLEEPING:
-          sendTo("You cannot do that while sleeping!\n\r");
-          break;
-        case POSITION_RESTING:
-          sendTo("You cannot do that while resting!\n\r");
-          break;
-        case POSITION_SITTING:
-          sendTo("You cannot do that while sitting!?\n\r");
-          break;
-        case POSITION_CRAWLING:
-          sendTo("You cannot do that while crawling!\n\r");
-          break;
-        case POSITION_ENGAGED:
-          sendTo("You cannot do that while engaged!\n\r");
-          break;
-        case POSITION_FIGHTING:
-          sendTo("You cannot do that while fighting!\n\r");
-          break;
-        case POSITION_STANDING:
-          sendTo("You cannot do that while standing!\n\r");
-          break;
-        case POSITION_MOUNTED:
-          sendTo("You cannot do that while mounted!\n\r");
-          break;
-        case POSITION_FLYING:
-          sendTo("You cannot do that while flying!\n\r");
-          break;
+  if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()){
+    sendTo("You can't concentrate enough while fighting!\n\r");
+    return FALSE;
+  } else if (getPosition() < commandArray[cmd]->minPosition) {
+    switch (getPosition()) {
+      case POSITION_DEAD:
+	sendTo("You cannot do that while dead!\n\r");
+	break;
+      case POSITION_INCAP:
+      case POSITION_MORTALLYW:
+	sendTo("You cannot do that while mortally wounded!\n\r");
+	break;
+      case POSITION_STUNNED:
+	sendTo("You cannot do that while stunned!!\n\r");
+	break;
+      case POSITION_SLEEPING:
+	sendTo("You cannot do that while sleeping!\n\r");
+	break;
+      case POSITION_RESTING:
+	sendTo("You cannot do that while resting!\n\r");
+	break;
+      case POSITION_SITTING:
+	sendTo("You cannot do that while sitting!?\n\r");
+	break;
+      case POSITION_CRAWLING:
+	sendTo("You cannot do that while crawling!\n\r");
+	break;
+      case POSITION_ENGAGED:
+	sendTo("You cannot do that while engaged!\n\r");
+	break;
+      case POSITION_FIGHTING:
+	sendTo("You cannot do that while fighting!\n\r");
+	break;
+      case POSITION_STANDING:
+	sendTo("You cannot do that while standing!\n\r");
+	break;
+      case POSITION_MOUNTED:
+	sendTo("You cannot do that while mounted!\n\r");
+	break;
+      case POSITION_FLYING:
+	sendTo("You cannot do that while flying!\n\r");
+	break;
+    }
+  } else {
+    ch = ((desc && desc->original) ? desc->original : this);
+    if (should_be_logged(ch) && ch->isPc()){
+      TPerson * tPerson = dynamic_cast<TPerson *>(ch);
+
+      if (ch == this) {
+	vlogf(LOG_SILENT, fmt("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
+
+	if (tPerson)
+	  tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg);
+      } else {
+	vlogf(LOG_SILENT, fmt("%s (%s) (%i):%s %s") %  name % desc->original->name % 
+	      in_room % commandArray[cmd]->name % newarg);
+
+	if (tPerson)
+	  tPerson->logf("%s:%s %s", name,
+			commandArray[cmd]->name, newarg);
       }
-    } else {
-      ch = ((desc && desc->original) ? desc->original : this);
-      if (should_be_logged(ch) && ch->isPc()){
-        TPerson * tPerson = dynamic_cast<TPerson *>(ch);
-
-        if (ch == this) {
-          vlogf(LOG_SILENT, fmt("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
-
-          if (tPerson)
-            tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg);
-        } else {
-          vlogf(LOG_SILENT, fmt("%s (%s) (%i):%s %s") %  name % desc->original->name % 
-                in_room % commandArray[cmd]->name % newarg);
-
-          if (tPerson)
-            tPerson->logf("%s:%s %s", name,
-                           commandArray[cmd]->name, newarg);
-        }
-      } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))
-        vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
-      else if (numberLogHosts && desc) {
-        for (int a = 0; a < numberLogHosts; a++) {
-          if (strcasestr(desc->host, hostLogList[a]))
-            vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
-        }
-      }
-
-      if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
-        REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-
-      rc = triggerSpecial(NULL, cmd, newarg);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) 
-        return DELETE_THIS;
-      else if (rc) 
-        return FALSE;
-
-      // slowly switching to sstrings over char *
-      const sstring stringarg = newarg;
-
-      switch(cmd) {
-        case CMD_UNSADDLE:
-          doUnsaddle(stringarg);
-          break;
-        case CMD_SPRINGLEAP:
-          doSpringleap(stringarg, true, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SADDLE:
-          doSaddle(stringarg);
-          break;
-        case CMD_CONCEAL:
-          doConceal(stringarg);
-          break;
-        case CMD_RESTRING:
-          doRestring(stringarg);
-          break;
-        case CMD_RESET:
-          doReset(stringarg);
-	  addToLifeforce(1);
-          break;
-	case CMD_BOOT:
-	  doBoot(stringarg);
-	  break;
-        case CMD_RELEASE:
-	  if (!hasWizPower(POWER_WIZARD)) {
-	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-	    break;
-	  }	  
-	  doRelease(stringarg);
-          break;
-        case CMD_CRIT:
-          rc = doCrit(stringarg);
-          break;
-        case CMD_CLIENTS:
-          doClients();
-	  addToLifeforce(1);
-          break;
-        case CMD_CAPTURE:
-	  if (!hasWizPower(POWER_WIZARD)) {
-	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-	    break;
-	  }
-	  doCapture(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_HEAVEN:
-          doHeaven(stringarg);
-          break;
-        case CMD_REFUEL:
-          doRefuel(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_REPLY:
-          doReply(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_USE:
-          rc = doUse(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DRAG:
-          doDrag(stringarg);
-          break;
-        case CMD_MOVE:
-          doRoll(stringarg);
-          break;
-        case CMD_DISSECT:
-          rc = doDissect(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DISARM:
-          rc = doDisarm(stringarg, vict);
-          break;
-        case CMD_EXEC:
-          rc = doExec();
-          break;
-        case CMD_QUAFF:
-          rc = doQuaff(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_GUARD:
-        case CMD_PROTECT:
-          doGuard(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_ORDER:
-          rc = doOrder(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_HISTORY:
-          doHistory();
-	  addToLifeforce(1);
-          break;
-        case CMD_PEEK:
-          doPeek();
-	  addToLifeforce(1);
-          break;
-        case CMD_BUG:
-          doBug(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_IDEA:
-          doIdea(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TYPO:
-          doTypo(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_NORTH:
-        case CMD_SOUTH:
-        case CMD_WEST:
-        case CMD_EAST:
-        case CMD_UP:
-        case CMD_DOWN:
-        case CMD_NE:
-        case CMD_SW:
-        case CMD_SE:
-        case CMD_NW:
-          rc = doMove(cmd);
-          break;
-        case CMD_TRACEROUTE:
-          doSysTraceroute(stringarg);
-          break;
-        case CMD_MID:
-          doSysMid();
-          break;
-        case CMD_VIEWOUTPUT:
-          doSysViewoutput();
-          break;
-        case CMD_TASKS:
-          doSysTasks(stringarg);
-          break;
-        case CMD_SAY:
-        case CMD_SAY2:
-          rc = doSay(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LOOK:
-          doLook(newarg, cmd);
-	  addToLifeforce(1);
-          break;
-        case CMD_ADJUST:
-          doAdjust(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_FACTIONS:
-          doFactions(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LIST:
-          if ((rc = handleMobileResponse(this, cmd, stringarg)))
-            break;
-
-          doList(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_RENT:
-          rc = doRent(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BUY:
-          if ((rc = handleMobileResponse(this, cmd, stringarg)))
-	  addToLifeforce(1);
-            break;
-        case CMD_TWIST:
-        case CMD_PRESS:
-        case CMD_PUSH:
-        case CMD_SELL:
-        case CMD_VALUE:
-        case CMD_OFFER:
-        case CMD_BALANCE:
-        case CMD_WITHDRAW:
-        case CMD_DEPOSIT:
-        case CMD_CHECK:
-        case CMD_RECEIVE:
-        case CMD_MAIL:
-        case CMD_PULL:
-        case CMD_POST:
-        case CMD_BREAK:
-        case CMD_GAIN:
-        case CMD_CLIMB:
-        case CMD_DESCEND:
-        case CMD_CHIP:
-        case CMD_DIG:
-        case CMD_COVER:
-        case CMD_OPERATE:
-        case CMD_ABORT:
-          doNotHere();
-	  addToLifeforce(1);
-          break;
-        case CMD_MEND_LIMB:
-          rc = doMendLimb(stringarg);
-          break;
-        case CMD_TITHE:
-          rc = doTithe();
-          break;
-        case CMD_ACCOUNT:
-          doAccount(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_FILL:
-          doFill(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BOUNCE:
-        case CMD_DANCE:
-        case CMD_SMILE:
-        case CMD_CACKLE:
-        case CMD_LAUGH:
-        case CMD_GIGGLE:
-        case CMD_SHAKE:
-        case CMD_PUKE:
-        case CMD_GROWL:
-        case CMD_SCREAM:
-        case CMD_COMFORT:
-        case CMD_NOD:
-        case CMD_SIGH:
-        case CMD_SULK:
-        case CMD_HUG:
-        case CMD_SNUGGLE:
-        case CMD_CUDDLE:
-        case CMD_NUZZLE:
-        case CMD_CRY:
-        case CMD_ACCUSE:
-        case CMD_GRIN:
-        case CMD_BOW:
-        case CMD_APPLAUD:
-        case CMD_BLUSH:
-        case CMD_BURP:
-        case CMD_CHUCKLE:
-        case CMD_CLAP:
-        case CMD_COUGH:
-        case CMD_CURTSEY:
-        case CMD_FART:
-        case CMD_FLIP:
-        case CMD_FONDLE:
-        case CMD_FROWN:
-        case CMD_GASP:
-        case CMD_GLARE:
-        case CMD_GROAN:
-        case CMD_GROPE:
-        case CMD_HICCUP:
-        case CMD_LICK:
-        case CMD_LOVE:
-        case CMD_MOAN:
-        case CMD_NIBBLE:
-        case CMD_POUT:
-        case CMD_PURR:
-        case CMD_RUFFLE:
-        case CMD_SHIVER:
-        case CMD_SHRUG:
-        case CMD_SING:
-        case CMD_SLAP:
-        case CMD_SMIRK:
-        case CMD_SNAP:
-        case CMD_SNEEZE:
-        case CMD_SNICKER:
-        case CMD_SNIFF:
-        case CMD_SNORE:
-        case CMD_SPIT:
-        case CMD_SQUEEZE:
-        case CMD_STARE:
-        case CMD_STRUT:
-        case CMD_THANK:
-        case CMD_TWIDDLE:
-        case CMD_WAVE:
-        case CMD_WHISTLE:
-        case CMD_WIGGLE:
-        case CMD_WINK:
-        case CMD_YAWN:
-        case CMD_SNOWBALL:
-        case CMD_FRENCH:
-        case CMD_COMB:
-        case CMD_MASSAGE:
-        case CMD_TICKLE:
-        case CMD_PAT:
-        case CMD_CURSE:
-        case CMD_BEG:
-        case CMD_BLEED:
-        case CMD_CRINGE:
-        case CMD_DAYDREAM:
-        case CMD_FUME:
-        case CMD_GROVEL:
-        case CMD_HOP:
-        case CMD_NUDGE:
-        case CMD_PEER:
-        case CMD_PONDER:
-        case CMD_PUNCH:
-        case CMD_SNARL:
-        case CMD_SPANK:
-        case CMD_STEAM:
-        case CMD_TACKLE:
-        case CMD_TAUNT:
-        case CMD_WHINE:
-        case CMD_WORSHIP:
-        case CMD_YODEL:
-        case CMD_THINK:
-        case CMD_WHAP:
-        case CMD_BEAM:
-        case CMD_CHORTLE:
-        case CMD_BONK:
-        case CMD_SCOLD:
-        case CMD_DROOL:
-        case CMD_RIP:
-        case CMD_STRETCH:
-        case CMD_PIMP:
-        case CMD_BELITTLE:
-        case CMD_TAP:
-        case CMD_PILEDRIVE:
-        case CMD_FLIPOFF:
-        case CMD_MOON:
-        case CMD_PINCH:
-        case CMD_KISS:
-        case CMD_CHEER:
-        case CMD_WOO:
-        case CMD_GRUMBLE:
-        case CMD_APOLOGIZE:
-        case CMD_AGREE:
-        case CMD_DISAGREE:
-        case CMD_SPAM:
-        case CMD_ARCH:
-        case CMD_ROLL:
-        case CMD_BLINK:
-        case CMD_FAINT:
-        case CMD_GREET:
-        case CMD_BOP:
-        case CMD_WHIMPER:
-        case CMD_SNEER:
-        case CMD_MOO:
-        case CMD_BOGGLE:
-        case CMD_SNORT:
-        case CMD_TANGO:
-        case CMD_ROAR:
-        case CMD_FLEX:
-        case CMD_TUG:
-        case CMD_CROSS:
-        case CMD_HOWL:
-        case CMD_GRUNT:
-        case CMD_WEDGIE:
-        case CMD_SCUFF:
-        case CMD_NOOGIE:
-        case CMD_BRANDISH:
-        case CMD_DUCK:
-        case CMD_BECKON:
-        case CMD_WINCE:
-        case CMD_HUM:
-        case CMD_RAZZ:
-        case CMD_GAG:
-        case CMD_AVERT:
-        case CMD_SALUTE:
-        case CMD_PET:
-        case CMD_GRIMACE:
-          rc = doAction(stringarg, cmd);
-	  addToLifeforce(1);
-          break;
-        case CMD_JUMP:
-          rc = doJump(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TIP:
-	  doTip(stringarg);
-	  break;
-        case CMD_POKE:
-	  doPoke(stringarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_POINT:
-          doPoint(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BITE:
-	  rc = doBite(stringarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_AS:
-          rc = doAs(newarg);
-          break;
-        case CMD_AT:
-          rc = doAt(newarg, false);
-          break;
-        case CMD_GIVE:
-          rc = doGive(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TAKE:
-        case CMD_GET:
-          rc = doGet(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DROP:
-          rc = doDrop(newarg, vict);
-	  addToLifeforce(1);
-          break;
-        case CMD_SAVE:
-          doSave(SILENT_NO, newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DEATHCHECK:
-          doDeathcheck(stringarg);
-          break;
-        case CMD_CHECKLOG:
-          doSysChecklog(stringarg);
-          break;
-        case CMD_RECITE:
-          rc = doRecite(newarg);
-          break;
-        case CMD_RESTORE:
-          doRestore(newarg);
-          break;
-        case CMD_EMOTE:
-        case CMD_EMOTE2:
-        case CMD_EMOTE3:
-          rc = doEmote(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_ECHO: 
-          doEcho(newarg);
-          break;
-        case CMD_SHOW:
-          doShow(newarg);
-          break;
-        case CMD_HIGHFIVE:
-          doHighfive(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TOGGLE:
-          doToggle(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WIZLOCK:
-          doWizlock(newarg);
-          break;
-        case CMD_FLAG:
-          doFlag(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SYSTEM:
-          doSystem(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TRANSFER:
-          doTrans(newarg);
-          break;
-        case CMD_SWITCH:
-          doSwitch(newarg);
-          break;
-        case CMD_CUTLINK:
-          doCutlink(newarg);
-          break;
-        case CMD_WIZNEWS:
-          doWiznews();
-          break;
-        case CMD_NOSHOUT:
-          doNoshout(argument);
-	  addToLifeforce(1);
-          break;
-        case CMD_STEAL:
-          rc = doSteal(stringarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_INVISIBLE:
-          doInvis(newarg);
-          break;
-        case CMD_VISIBLE:
-          doVisible(newarg, false);
-	  addToLifeforce(1);
-          break;
-        case CMD_LOGLIST:
-          doSysLoglist();
-          break;
-        case CMD_LEAVE:
-          rc = doLeave(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_EXITS:
-          rc = doExits(newarg, cmd);
-	  addToLifeforce(1);
-          break;
-        case CMD_WIPE:
-          doWipe(newarg);
-          break;
-        case CMD_ACCESS:
-          doAccess(newarg);
-          break;
-        case CMD_CLONE:
-          doClone(newarg);
-          break;
-        case CMD_OFFICE:
-          doOffice(newarg);
-          break;
-        case CMD_REPLACE:
-          doReplace(newarg);
-          break;
-        case CMD_SETSEV:
-          doSetsev(newarg);
-          break;
-        case CMD_INFO:
-          doInfo(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TIMESHIFT:
-          doTimeshift(newarg);
-          break;
-        case CMD_LOG:
-          doLog(newarg);
-          break;
-        case CMD_HOSTLOG:
-          doHostlog(newarg);
-          break;
-        case CMD_ASSIST:
-          rc = doAssist(newarg, dynamic_cast<TBeing *>(vict));
-	  addToLifeforce(1);
-          break;
-        case CMD_WHO:
-          doWho(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BRUTTEST:
-          doBruttest(newarg);
-          break;
-        case CMD_PEELPK:
-	  doPeelPk(newarg);
-	  break;
-        case CMD_SHUTDOW:
-          doShutdow();
-          break;
-        case CMD_SHUTDOWN:
-          doShutdown(newarg);
-          break;
-        case CMD_LOAD:
-          doLoad(newarg);
-          break;
-        case CMD_GOTO:
-          rc = doGoto(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SHOUT:
-          doShout(argument);
-	  addToLifeforce(1);
-          break;
-        case CMD_CLIENTMESSAGE:
-          doClientMessage(argument);
-	  addToLifeforce(1);
-          break;
-        case CMD_GT:
-          doGrouptell(argument);
-	  addToLifeforce(1);
-          break;
-        case CMD_SIGN:
-          doSign(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TELL:
-	  buf=stringarg;
-	  buf=one_argument(buf, bufname);
-	  
-          rc = doTell(bufname, buf);
-	  addToLifeforce(1);
-          break;
-        case CMD_WHISPER:
-          rc = doWhisper(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_ASK:
-          rc = doAsk(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WRITE:
-          doWrite(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WHOZONE:
-          doWhozone();
-	  addToLifeforce(1);
-          break;
-        case CMD_EXAMINE:
-          doExamine(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SCORE:
-          doScore();
-	  addToLifeforce(1);
-          break;
-        case CMD_WIZHELP:
-          doWizhelp();
-          break;
-        case CMD_WIZLIST:
-          doWizlist();
-          break;
-        case CMD_INVENTORY:
-          doInventory(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_STAND:
-          doStand();
-	  addToLifeforce(1);
-          break;
-        case CMD_SIT:
-          doSit(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_RAISE:
-        case CMD_LIFT:
-          rc = doRaise(newarg, cmd);
-	  addToLifeforce(1);
-          break;
-        case CMD_OPEN:
-          rc = doOpen(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_REST:
-          doRest(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LOWER:
-          rc = doLower(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_CLOSE:
-          doClose(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LOCK:
-          doLock(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_UNLOCK:
-          doUnlock(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SLEEP:
-          doSleep(stringarg);
-          break;
-        case CMD_WAKE:
-          doWake(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TIME:
-          doTime(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WEATHER:
-          doWeather(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_USERS:
-          doUsers(newarg);
-          break;
-        case CMD_EQUIPMENT:
-          doEquipment(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_QUIT:
-          doQuit();
-	  addToLifeforce(1);
-          break;
-        case CMD_QUIT2:
-          rc = doQuit2();
-	  addToLifeforce(1);
-          break;
-        case CMD_CREDITS:
-          doCredits();
-	  addToLifeforce(1);
-          break;
-        case CMD_NEWS:
-          doNews(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WHERE:
-          doWhere(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LEVELS:
-          doLevels(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_CONSIDER:
-          doConsider(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WORLD:
-          doWorld();
-	  addToLifeforce(1);
-          break;
-        case CMD_ATTRIBUTE:
-          doAttribute(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_CLEAR:
-          doClear(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_ALIAS:
-          doAlias(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_GLANCE:
-          doGlance(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_MOTD:
-          doMotd(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_LIMBS:
-          doLimbs(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BREATH:
-          doBreath(newarg);
-          break;
-        case CMD_CHANGE:
-          doChange(newarg);
-          break;
-        case CMD_PROMPT:
-          doPrompt(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_REMOVE:
-          rc = doRemove(newarg, vict);
-	  addToLifeforce(1);
-          break;
-        case CMD_WEAR:
-          doWear(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_STAT:
-          doStat(newarg);
-          break;
-        case CMD_PURGE:
-          doPurge(newarg);
-          break;
-        case CMD_SET:
-          doSet(newarg);
-          break;
-        case CMD_COMMAND:
-          doCommand(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_WIZNET:
-          doCommune(stringarg);
-          break;
-        case CMD_WIELD:
-          doWield(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_GRAB:
-        case CMD_HOLD:
-          doGrab(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_PUT:
-          rc = doPut(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_KILL:
-        case CMD_SLAY:
-          rc = doKill(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_HIT:
-          rc = doHit(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_ENGAGE:
-          rc = doEngage(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_DISENGAGE:
-          rc = doDisengage();
-          break;
-        case CMD_QUEST:
-          doQuest(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TESTCODE:
-          doTestCode(newarg);
-          break;
-        case CMD_FOLLOW:
-          doFollow(newarg);
-          break;
-        case CMD_RETURN:
-          doReturn(newarg, WEAR_NOWHERE, true);
-          break;
-        case CMD_REPORT:
-          doReport(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_PRAY:
-          rc = doPray(newarg);
-          break;
-        case CMD_CAST:
-          rc = doCast(newarg);
-          break;
-        case CMD_CONTINUE:
-          doContinue(newarg);
-          break;
-        case CMD_READ:
-          doRead(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_EAT:
-          doEat(newarg);
-          break;
-        case CMD_DRINK:
-          rc = doDrink(newarg);
-          break;
-        case CMD_POUR:
-          rc = doPour(newarg);
-          break;
-        case CMD_SIP:
-          doSip(newarg);
-          break;
-        case CMD_TASTE:
-          doTaste(newarg);
-          break;
-        case CMD_BERSERK:
-          rc = doBerserk();
-          break;
-        case CMD_SHOVE:
-          rc = doShove(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_GRAPPLE:
-          rc = doGrapple(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_RESCUE:
-          rc = doRescue(newarg);
-          break;
-        case CMD_DEATHSTROKE:
-          rc = doDeathstroke(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_BODYSLAM:
-          rc = doBodyslam(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SPIN:
-          rc = doSpin(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_STOMP:
-          rc = doStomp(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_EMAIL:
-          doEmail(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_HEADBUTT:
-          rc = doHeadbutt(newarg, dynamic_cast<TBeing *>(vict));
-          break;
- 	case CMD_KNEESTRIKE:
-	  rc = doKneestrike(newarg, dynamic_cast<TBeing *>(vict));
- 	  break;
-        case CMD_DOORBASH:
-          rc = doDoorbash(stringarg);
-          break;
-        case CMD_TRANCE_OF_BLADES:
-	  doTranceOfBlades(newarg);
-	  break;
-        case CMD_ATTUNE:
-          doAttune(newarg);
-          break;
-        case CMD_AFK:
-          doAfk();
-	  addToLifeforce(1);
-          break;
-        case CMD_SHARPEN:
-          doSharpen(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DULL:
-          doDull(newarg);
-	  addToLifeforce(1);
-          break;
-	case CMD_MEND:     // just aliasing this to repair
-        case CMD_REPAIR:
-          doRepair(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SACRIFICE:
-          doSacrifice(newarg);
-          break;
-        case CMD_BANDAGE:
-          doBandage(newarg);
-          break;
-        case CMD_SET_TRAP:
-          rc = doSetTraps(newarg);
-          break;
-        case CMD_PICK:
-          rc = doPick(newarg);
-          break;
-        case CMD_SEARCH:
-          rc = doSearch(newarg);
-          break;
-        case CMD_SPY:
-          rc = doSpy();
-          break;
-        case CMD_PARRY:
-	  rc = doParry();
-	  break;
-        case CMD_DODGE:
-          rc = doDodge();
-          break;
-        case CMD_INSULT:
-          doInsult(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SCRATCH:
-          doScratch(newarg);
-          break;
-        case CMD_PEE:
-          doPee(newarg);
-          break;
-        case CMD_POOP:
-          doPoop();
-          break;
-        case CMD_COMBINE:
-          doCombine(newarg);
-          break;
-        case CMD_EDIT:
-          doEdit(newarg);
-          break;
-	case CMD_FADD:
-	  add_faction(newarg);
-	  break;
-	case CMD_FEDIT:
-	  edit_faction(newarg);
-	  break;
-	case CMD_JOIN:
-	  doJoin(newarg);
-	  break;
-	case CMD_DEFECT:
-	  doDefect(newarg);
-	  break;
-	case CMD_RECRUIT:
-	  doRecruit(newarg);
-	  break;
-        case CMD_RLOAD:
-          doRload(newarg);
-          break;
-        case CMD_RSAVE:
-          doRsave(newarg);
-          break;
-        case CMD_REDIT:
-          doRedit(newarg);
-          break;
-        case CMD_GROUP:
-          doGroup(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_FLEE:
-          rc = doFlee(newarg);
-          break;
-        case CMD_BREW:
-          doBrew(newarg);
-          break;
-        case CMD_SCRIBE:
-          doScribe(newarg);
-          break;
-        case CMD_TURN:
-          doTurn(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_YOGINSA:
-          doYoginsa();
-          break;
-        case CMD_MEDITATE:
-          doMeditate();
-          break;
-        case CMD_PENANCE:
-          doPenance();
-          break;
-        case CMD_PRACTICE:
-          doPractice(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BLOAD:
-          doBload(newarg);
-          break;
-	case CMD_GLOAD:
-	  doGload(stringarg);
-	  break;
-        case CMD_THROW:
-          doThrow(newarg);
-          break;
-        case CMD_SHOOT:
-          rc = doShoot(newarg);
-          break;
-        case CMD_TRACK:
-          doTrack(newarg);
-          break;
-        case CMD_SEEKWATER:
-          doSeekwater();
-          break;
-        case CMD_MEDIT:
-          doMedit(newarg);
-          break;
-        case CMD_SEDIT:
-          doSEdit(newarg);
-          break;
-        case CMD_LAYHANDS:
-          rc = doLayHands(newarg);
-          break;
-        case CMD_STAY:
-          doStay();
-	  addToLifeforce(1);
-          break;
-        case CMD_PASS:
-          doPass(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_DEAL:
-          doDeal(newarg);
-          break;
-        case CMD_ATTACK:
-          doAttack(newarg);
-          break;
-        case CMD_BET:
-          doBet(newarg);
-	  addToLifeforce(1);
-          break;
-	case CMD_CALL:
-	  doCall(stringarg);
-	  break;
-	case CMD_FOLD:
-	  doFold(stringarg);
-	  break;
-        case CMD_OEDIT:
-          doOEdit(newarg);
-          break;
-        case CMD_MAKELEADER:
-          doMakeLeader(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_NEWMEMBER:
-          doNewMember(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SEND:
-          doSend(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_RMEMBER:
-          doRMember(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_HELP:
-          doHelp(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_PLAY:
-          doPlay(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_SORT:
-          doSort(newarg);
-          break;
-        case CMD_GAMESTATS:
-          doGamestats(newarg);
-          break;
-        case CMD_SCAN:
-          doScan(newarg);
-          break;
-        case CMD_FEIGNDEATH:
-          rc = doFeignDeath();
-          break;
-        case CMD_JUNK:
-          rc = doJunk(newarg, dynamic_cast<TObj *>(vict));
-          break;
-	case CMD_NOJUNK:
-	  rc = doNoJunk(newarg, dynamic_cast<TObj *>(vict));
-	  break;
-        case CMD_KICK:
-          rc = doKick(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SHOULDER_THROW:
-          rc = doShoulderThrow(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_CHOP:
-          rc = doChop(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_HURL:
-	  rc = doHurl(newarg, dynamic_cast<TBeing *>(vict));
-	  break;
-        case CMD_CHI:
-	  rc = doChi(newarg, vict);
-	  break;
-        case CMD_LEAP:
-	  rc = doLeap(stringarg);
-	  break;
-        case CMD_EVALUATE:
-          doEvaluate(newarg);
-          break;
-        case CMD_TITLE:
-          doTitle(newarg);
-          break;
-        case CMD_SNOOP:
-          doSnoop(newarg);
-          break;
-        case CMD_QUIVPALM:
-          rc = doQuiveringPalm(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_RIDE:
-        case CMD_MOUNT:
-        case CMD_DISMOUNT:
-          rc = doMount(newarg, cmd, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_FORCE:
-          doForce(newarg);
-          break;
-        case CMD_COLOR:
-          doColor(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_CLS:
-          doCls(true);
-	  addToLifeforce(1);
-          break;
-        case CMD_LIGHT:
-          doLight(stringarg);
-	  addToLifeforce(1);
-          break;
-	case CMD_FISH:
-	  doFish(stringarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_LOW:
-          doLow(stringarg);
-          break;
-        case CMD_ENTER:
-          rc = doEnter(newarg, NULL);
-	  addToLifeforce(1);
-          break;
-        case CMD_RESIZE:
-          doResize(newarg);
-          break;
-        case CMD_DISBAND:
-          doDisband();
-	  addToLifeforce(1);
-          break;
-        case CMD_EXTINGUISH:
-          doExtinguish(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_BASH:
-          rc = doBash(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_BACKSTAB:
-          rc = doBackstab(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SLIT:
-          rc = doThroatSlit(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_HIDE:
-          rc = doHide();
-          break;
-        case CMD_SNEAK:
-          rc = doSneak(newarg);
-          break;
-        case CMD_CRAWL:
-          doCrawl();
-          break;
-        case CMD_SUBTERFUGE:
-          rc = doSubterfuge(newarg);
-          break;
-        case CMD_RENAME:
-          doNameChange(newarg);
-          break;
-        case CMD_MARGINS:
-          doResetMargins();
-	  addToLifeforce(1);
-          break;
-        case CMD_DISGUISE:
-          rc = doDisguise(newarg);
-          break;
-        case CMD_DESCRIPTION:
-	  addToLifeforce(1);
-          doDescription();
-          break;
-        case CMD_POISON_WEAPON:
-          rc = doPoisonWeapon(newarg);
-          break;
-        case CMD_GARROTTE:
-          rc = doGarrotte(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_STAB:
-          rc = doStab(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_CUDGEL:
-          rc = doCudgel(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_CHARGE:
-          rc = doCharge(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SPLIT:
-          doSplit(newarg, true);
-	  addToLifeforce(1);
-          break;
-        case CMD_TRIP:
-          rc = doTrip(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_SMITE:
-          rc = doSmite(newarg, dynamic_cast<TBeing *>(vict));
-          break;
-        case CMD_FORAGE:
-          doForage();
-          break;
-        case CMD_APPLY_HERBS:
-          rc = doApplyHerbs(newarg);
-          break;
-        case CMD_BUTCHER:
-          doButcher(newarg);
-          break;
-        case CMD_SKIN:
-          doSkin(newarg);
-          break;
-        case CMD_TAN:
-          doTan();
-          break;
-	case CMD_PLANT:
-	  doPlant(stringarg);
-	  break;
-	case CMD_COOK:
-	  doCook(stringarg);
-	  break;
-	case CMD_DRIVE:
-	  doDrive(stringarg);
-	  break;
-        case CMD_WHITTLE:
-          doWhittle(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_MESSAGE:
-          doMessage(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_FINDEMAIL:
-          doFindEmail(newarg);
-          break;
-        case CMD_COMMENT:
-          doComment(newarg);
-          break;
-        case CMD_CAMP:
-          rc = doEncamp();
-          break;
-        case CMD_SOOTH:
-          rc = doSoothBeast(newarg);
-          break;
-        case CMD_SUMMON:
-          rc = doSummonBeast(newarg);
-          break;
-        case CMD_CHARM:
-          rc = doCharmBeast(newarg);
-          break;
-        case CMD_RETRAIN:
-          rc = doRetrainPet(newarg, dynamic_cast<TBeing *>(vict));
-	  addToLifeforce(1);
-          break;
-        case CMD_BEFRIEND:
-          rc = doBefriendBeast(newarg);
-          break;
-        case CMD_TRANSFIX:
-          rc = doTransfix(newarg);
-          break;
-        case CMD_BARKSKIN:
-          rc = doBarkskin(newarg);
-          break;
-	case CMD_FERAL_WRATH:
-	  rc = doFeralWrath(newarg);
-	  break;
-	case CMD_SKY_SPIRIT:
-	  rc = doSkySpirit(newarg);
-	  break;
-	case CMD_EARTHMAW:
-	  rc = doEarthmaw(newarg);
-	  break;
-        case CMD_FLY:
-          doFly();
-          break;
-        case CMD_LAND:
-          doLand();
-          break;
-        case CMD_DIVINE:
-          doDivine(newarg);
-          break;
-        case CMD_OUTFIT:
-          doOutfit(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TRANSFORM:
-          rc = doTransform(newarg);
-          break;
-        case CMD_EGOTRIP:
-          doEgoTrip(newarg);
-          break;
-        case CMD_SPELLS:
-	  doSpells(newarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_RITUALS:
-	  doRituals(newarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_COMPARE:
-	  doCompare(newarg);
-	  addToLifeforce(1);
-	  break;
-        case CMD_TEST_FIGHT:
-	  doTestFight(newarg);
-	  break;
-        case CMD_DONATE:
-          doDonate(newarg);
-          break;
-        case CMD_ZONES:
-          doZones(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_CREATE:
-          rc = doCreate(newarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_POWERS:
-          doPowers(newarg);
-          break;
-	case CMD_SMOKE:
-	  doSmoke(newarg);
-	  addToLifeforce(1);
-	  break;
-	case CMD_STOP:
-	  doStop(stringarg);
-	  addToLifeforce(1);
-	  break;
-	case CMD_TRIGGER:
-	  doTrigger(newarg);
-	  addToLifeforce(1);
-	  break;
-	case CMD_STORE:
-	  doStore(newarg);
-	  break;
-        case CMD_ZONEFILE:
-          doZonefile(stringarg);
-          break;
-        case CMD_LOOT:
-          doLoot(stringarg);
-	  addToLifeforce(1);
-          break;
-        case CMD_TROPHY:
-	  doTrophy(newarg);
-	  addToLifeforce(1);
-	  break;
-	case CMD_PTELL:
-	  doPTell(argument, TRUE);
-	  break;
-	case CMD_PSAY:
-	  doPSay(argument);
-	  break;
-	case CMD_PSHOUT:
-	  doPShout(argument);
-	  break;
-	case CMD_TELEVISION:
-	  doTelevision(newarg);
-	  break;
-	case CMD_MINDFOCUS:
-	  doMindfocus(newarg);
-	  break;
-	case CMD_PSIBLAST:
-	  rc = doPsiblast(newarg);
-	  break;
-	case CMD_MINDTHRUST:
-	  rc = doMindthrust(newarg);
-	  break;
-	case CMD_PSYCRUSH:
-	  rc = doPsycrush(newarg);
-	  break;
-	case CMD_KWAVE:
-	  rc = doKwave(newarg);
-	  break;
-        case CMD_PSIDRAIN:
-	  rc = doPsidrain(newarg);
-	  break;
-        case MAX_CMD_LIST:
-        case CMD_RESP_TOGGLE:
-        case CMD_RESP_UNTOGGLE:
-        case CMD_RESP_CHECKTOG:
-        case CMD_RESP_PERSONALIZE:
-        case CMD_RESP_ROOM_ENTER:
-        case CMD_RESP_UNFLAG:
-        case CMD_RESP_TOROOM:
-        case CMD_RESP_TOVICT:
-        case CMD_RESP_TONOTVICT:
-        case CMD_RESP_CHECKUNTOG:
-        case CMD_RESP_CHECKMAX:
-        case CMD_RESP_LINK:
-        case CMD_RESP_CODE_SEGMENT:
-        case CMD_RESP_RESIZE:
-        case CMD_RESP_CHECKLOAD:
-        case CMD_RESP_LOADMOB:
-        case CMD_RESP_PACKAGE:
-        case CMD_RESP_PULSE:
-        case CMD_RESP_CHECKROOM:
-	case CMD_RESP_CHECKNROOM:
-        case CMD_RESP_CHECKZONE:
-        case CMD_RESP_CHECKNOTZONE:
-	case CMD_RESP_MOVETO:
-	case CMD_RESP_DESTINATION:
-	case CMD_RESP_CHECKPERSON:
-	case CMD_RESP_RANDOM:
-	case CMD_RESP_RANDOPTION:
-	case CMD_RESP_DONERAND:
-        case CMD_GENERIC_PULSE:
-        case CMD_GENERIC_QUICK_PULSE:
-        case CMD_GENERIC_CREATED:
-        case CMD_GENERIC_RESET:
-        case CMD_GENERIC_INIT:
-        case CMD_GENERIC_DESTROYED:
-        case CMD_ROOM_ENTERED:
-        case CMD_ROOM_ATTEMPTED_EXIT:
-        case CMD_OBJ_HITTING:
-        case CMD_OBJ_HIT:
-        case CMD_OBJ_MISS:
-        case CMD_OBJ_BEEN_HIT:
-        case CMD_OBJ_THROWN:
-        case CMD_OBJ_PUT_INSIDE_SOMETHING:
-        case CMD_OBJ_HAVING_SOMETHING_PUT_INTO:
-        case CMD_OBJ_STUCK_IN:
-        case CMD_OBJ_PULLED_OUT:
-        case CMD_OBJ_USED:
-        case CMD_OBJ_TOLD_TO_PLAYER:
-        case CMD_OBJ_GOTTEN:
-        case CMD_OBJ_WEATHER_TIME:
-        case CMD_OBJ_WAGON_INIT:
-        case CMD_OBJ_WAGON_UNINIT:
-        case CMD_OBJ_MOVEMENT:
-        case CMD_OBJ_MOVE_IN:
-        case CMD_OBJ_SATON:
-        case CMD_OBJ_EXPELLED:
-        case CMD_OBJ_START_TO_FALL:
-	case CMD_OBJ_OPENED:
-	case CMD_ARROW_GLANCE:
-	case CMD_ARROW_MISSED:
-	case CMD_ARROW_EMBED:
-	case CMD_ARROW_RIPPED:
-	case CMD_ARROW_DODGED:
-	case CMD_ARROW_HIT_OBJ:
-	case CMD_ARROW_INTO_ROOM:
-	case CMD_ARROW_SHOT:
-	case CMD_MOB_GIVEN_ITEM:
-        case CMD_MOB_GIVEN_COINS:
-        case CMD_MOB_ALIGN_PULSE:
-        case CMD_MOB_KILLED_NEARBY:
-        case CMD_MOB_MOVED_INTO_ROOM:
-        case CMD_MOB_VIOLENCE_PEACEFUL:
-        case CMD_MOB_COMBAT:
-        case CMD_TASK_FIGHTING:
-        case CMD_TASK_CONTINUE:
-	case CMD_OBJ_OWNER_HIT:
-          incorrectCommand();
-          return FALSE;
+    } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))
+      vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
+    else if (numberLogHosts && desc) {
+      for (int a = 0; a < numberLogHosts; a++) {
+	if (strcasestr(desc->host, hostLogList[a]))
+	  vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
       }
     }
 
-    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, false))
+    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
-    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-      // switch it to vict
-      ADD_DELETE(rc, DELETE_VICT);
-      REM_DELETE(rc, DELETE_ITEM);
-    }
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      if (isPoly && !desc) {
-        delete this;
-      }
-      return rc;
-    }
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      return rc;
-    }
+    rc = triggerSpecial(NULL, cmd, newarg);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      return DELETE_THIS;
+    else if (rc) 
+      return FALSE;
 
-    return FALSE;
+    // slowly switching to sstrings over char *
+    const sstring stringarg = newarg;
+
+    switch(cmd) {
+      case CMD_UNSADDLE:
+	doUnsaddle(stringarg);
+	break;
+      case CMD_SPRINGLEAP:
+	doSpringleap(stringarg, true, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SADDLE:
+	doSaddle(stringarg);
+	break;
+      case CMD_CONCEAL:
+	doConceal(stringarg);
+	break;
+      case CMD_RESTRING:
+	doRestring(stringarg);
+	break;
+      case CMD_RESET:
+	doReset(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BOOT:
+	doBoot(stringarg);
+	break;
+      case CMD_RELEASE:
+	if (!hasWizPower(POWER_WIZARD)) {
+	  sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+	  break;
+	}	  
+	doRelease(stringarg);
+	break;
+      case CMD_CRIT:
+	rc = doCrit(stringarg);
+	break;
+      case CMD_CLIENTS:
+	doClients();
+	addToLifeforce(1);
+	break;
+      case CMD_CAPTURE:
+	if (!hasWizPower(POWER_WIZARD)) {
+	  sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+	  break;
+	}
+	doCapture(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_HEAVEN:
+	doHeaven(stringarg);
+	break;
+      case CMD_REFUEL:
+	doRefuel(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_REPLY:
+	doReply(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_USE:
+	rc = doUse(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DRAG:
+	doDrag(stringarg);
+	break;
+      case CMD_MOVE:
+	doRoll(stringarg);
+	break;
+      case CMD_DISSECT:
+	rc = doDissect(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DISARM:
+	rc = doDisarm(stringarg, vict);
+	break;
+      case CMD_EXEC:
+	rc = doExec();
+	break;
+      case CMD_QUAFF:
+	rc = doQuaff(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_GUARD:
+      case CMD_PROTECT:
+	doGuard(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_ORDER:
+	rc = doOrder(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_HISTORY:
+	doHistory();
+	addToLifeforce(1);
+	break;
+      case CMD_PEEK:
+	doPeek();
+	addToLifeforce(1);
+	break;
+      case CMD_BUG:
+	doBug(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_IDEA:
+	doIdea(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TYPO:
+	doTypo(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_NORTH:
+      case CMD_SOUTH:
+      case CMD_WEST:
+      case CMD_EAST:
+      case CMD_UP:
+      case CMD_DOWN:
+      case CMD_NE:
+      case CMD_SW:
+      case CMD_SE:
+      case CMD_NW:
+	rc = doMove(cmd);
+	break;
+      case CMD_TRACEROUTE:
+	doSysTraceroute(stringarg);
+	break;
+      case CMD_MID:
+	doSysMid();
+	break;
+      case CMD_VIEWOUTPUT:
+	doSysViewoutput();
+	break;
+      case CMD_TASKS:
+	doSysTasks(stringarg);
+	break;
+      case CMD_SAY:
+      case CMD_SAY2:
+	rc = doSay(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LOOK:
+	doLook(newarg, cmd);
+	addToLifeforce(1);
+	break;
+      case CMD_ADJUST:
+	doAdjust(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_FACTIONS:
+	doFactions(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LIST:
+	if ((rc = handleMobileResponse(this, cmd, stringarg)))
+	  break;
+
+	doList(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_RENT:
+	rc = doRent(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BUY:
+	if ((rc = handleMobileResponse(this, cmd, stringarg)))
+	  addToLifeforce(1);
+	break;
+      case CMD_TWIST:
+      case CMD_PRESS:
+      case CMD_PUSH:
+      case CMD_SELL:
+      case CMD_VALUE:
+      case CMD_OFFER:
+      case CMD_BALANCE:
+      case CMD_WITHDRAW:
+      case CMD_DEPOSIT:
+      case CMD_CHECK:
+      case CMD_RECEIVE:
+      case CMD_MAIL:
+      case CMD_PULL:
+      case CMD_POST:
+      case CMD_BREAK:
+      case CMD_GAIN:
+      case CMD_CLIMB:
+      case CMD_DESCEND:
+      case CMD_CHIP:
+      case CMD_DIG:
+      case CMD_COVER:
+      case CMD_OPERATE:
+      case CMD_ABORT:
+	doNotHere();
+	addToLifeforce(1);
+	break;
+      case CMD_MEND_LIMB:
+	rc = doMendLimb(stringarg);
+	break;
+      case CMD_TITHE:
+	rc = doTithe();
+	break;
+      case CMD_ACCOUNT:
+	doAccount(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_FILL:
+	doFill(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BOUNCE:
+      case CMD_DANCE:
+      case CMD_SMILE:
+      case CMD_CACKLE:
+      case CMD_LAUGH:
+      case CMD_GIGGLE:
+      case CMD_SHAKE:
+      case CMD_PUKE:
+      case CMD_GROWL:
+      case CMD_SCREAM:
+      case CMD_COMFORT:
+      case CMD_NOD:
+      case CMD_SIGH:
+      case CMD_SULK:
+      case CMD_HUG:
+      case CMD_SNUGGLE:
+      case CMD_CUDDLE:
+      case CMD_NUZZLE:
+      case CMD_CRY:
+      case CMD_ACCUSE:
+      case CMD_GRIN:
+      case CMD_BOW:
+      case CMD_APPLAUD:
+      case CMD_BLUSH:
+      case CMD_BURP:
+      case CMD_CHUCKLE:
+      case CMD_CLAP:
+      case CMD_COUGH:
+      case CMD_CURTSEY:
+      case CMD_FART:
+      case CMD_FLIP:
+      case CMD_FONDLE:
+      case CMD_FROWN:
+      case CMD_GASP:
+      case CMD_GLARE:
+      case CMD_GROAN:
+      case CMD_GROPE:
+      case CMD_HICCUP:
+      case CMD_LICK:
+      case CMD_LOVE:
+      case CMD_MOAN:
+      case CMD_NIBBLE:
+      case CMD_POUT:
+      case CMD_PURR:
+      case CMD_RUFFLE:
+      case CMD_SHIVER:
+      case CMD_SHRUG:
+      case CMD_SING:
+      case CMD_SLAP:
+      case CMD_SMIRK:
+      case CMD_SNAP:
+      case CMD_SNEEZE:
+      case CMD_SNICKER:
+      case CMD_SNIFF:
+      case CMD_SNORE:
+      case CMD_SPIT:
+      case CMD_SQUEEZE:
+      case CMD_STARE:
+      case CMD_STRUT:
+      case CMD_THANK:
+      case CMD_TWIDDLE:
+      case CMD_WAVE:
+      case CMD_WHISTLE:
+      case CMD_WIGGLE:
+      case CMD_WINK:
+      case CMD_YAWN:
+      case CMD_SNOWBALL:
+      case CMD_FRENCH:
+      case CMD_COMB:
+      case CMD_MASSAGE:
+      case CMD_TICKLE:
+      case CMD_PAT:
+      case CMD_CURSE:
+      case CMD_BEG:
+      case CMD_BLEED:
+      case CMD_CRINGE:
+      case CMD_DAYDREAM:
+      case CMD_FUME:
+      case CMD_GROVEL:
+      case CMD_HOP:
+      case CMD_NUDGE:
+      case CMD_PEER:
+      case CMD_PONDER:
+      case CMD_PUNCH:
+      case CMD_SNARL:
+      case CMD_SPANK:
+      case CMD_STEAM:
+      case CMD_TACKLE:
+      case CMD_TAUNT:
+      case CMD_WHINE:
+      case CMD_WORSHIP:
+      case CMD_YODEL:
+      case CMD_THINK:
+      case CMD_WHAP:
+      case CMD_BEAM:
+      case CMD_CHORTLE:
+      case CMD_BONK:
+      case CMD_SCOLD:
+      case CMD_DROOL:
+      case CMD_RIP:
+      case CMD_STRETCH:
+      case CMD_PIMP:
+      case CMD_BELITTLE:
+      case CMD_TAP:
+      case CMD_PILEDRIVE:
+      case CMD_FLIPOFF:
+      case CMD_MOON:
+      case CMD_PINCH:
+      case CMD_KISS:
+      case CMD_CHEER:
+      case CMD_WOO:
+      case CMD_GRUMBLE:
+      case CMD_APOLOGIZE:
+      case CMD_AGREE:
+      case CMD_DISAGREE:
+      case CMD_SPAM:
+      case CMD_ARCH:
+      case CMD_ROLL:
+      case CMD_BLINK:
+      case CMD_FAINT:
+      case CMD_GREET:
+      case CMD_BOP:
+      case CMD_WHIMPER:
+      case CMD_SNEER:
+      case CMD_MOO:
+      case CMD_BOGGLE:
+      case CMD_SNORT:
+      case CMD_TANGO:
+      case CMD_ROAR:
+      case CMD_FLEX:
+      case CMD_TUG:
+      case CMD_CROSS:
+      case CMD_HOWL:
+      case CMD_GRUNT:
+      case CMD_WEDGIE:
+      case CMD_SCUFF:
+      case CMD_NOOGIE:
+      case CMD_BRANDISH:
+      case CMD_DUCK:
+      case CMD_BECKON:
+      case CMD_WINCE:
+      case CMD_HUM:
+      case CMD_RAZZ:
+      case CMD_GAG:
+      case CMD_AVERT:
+      case CMD_SALUTE:
+      case CMD_PET:
+      case CMD_GRIMACE:
+	rc = doAction(stringarg, cmd);
+	addToLifeforce(1);
+	break;
+      case CMD_JUMP:
+	rc = doJump(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TIP:
+	doTip(stringarg);
+	break;
+      case CMD_POKE:
+	doPoke(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_POINT:
+	doPoint(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BITE:
+	rc = doBite(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_AS:
+	rc = doAs(newarg);
+	break;
+      case CMD_AT:
+	rc = doAt(newarg, false);
+	break;
+      case CMD_GIVE:
+	rc = doGive(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TAKE:
+      case CMD_GET:
+	rc = doGet(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DROP:
+	rc = doDrop(newarg, vict);
+	addToLifeforce(1);
+	break;
+      case CMD_SAVE:
+	doSave(SILENT_NO, newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DEATHCHECK:
+	doDeathcheck(stringarg);
+	break;
+      case CMD_CHECKLOG:
+	doSysChecklog(stringarg);
+	break;
+      case CMD_RECITE:
+	rc = doRecite(newarg);
+	break;
+      case CMD_RESTORE:
+	doRestore(newarg);
+	break;
+      case CMD_EMOTE:
+      case CMD_EMOTE2:
+      case CMD_EMOTE3:
+	rc = doEmote(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_ECHO: 
+	doEcho(newarg);
+	break;
+      case CMD_SHOW:
+	doShow(newarg);
+	break;
+      case CMD_HIGHFIVE:
+	doHighfive(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TOGGLE:
+	doToggle(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WIZLOCK:
+	doWizlock(newarg);
+	break;
+      case CMD_FLAG:
+	doFlag(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SYSTEM:
+	doSystem(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TRANSFER:
+	doTrans(newarg);
+	break;
+      case CMD_SWITCH:
+	doSwitch(newarg);
+	break;
+      case CMD_CUTLINK:
+	doCutlink(newarg);
+	break;
+      case CMD_WIZNEWS:
+	doWiznews();
+	break;
+      case CMD_NOSHOUT:
+	doNoshout(argument);
+	addToLifeforce(1);
+	break;
+      case CMD_STEAL:
+	rc = doSteal(stringarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_INVISIBLE:
+	doInvis(newarg);
+	break;
+      case CMD_VISIBLE:
+	doVisible(newarg, false);
+	addToLifeforce(1);
+	break;
+      case CMD_LOGLIST:
+	doSysLoglist();
+	break;
+      case CMD_LEAVE:
+	rc = doLeave(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_EXITS:
+	rc = doExits(newarg, cmd);
+	addToLifeforce(1);
+	break;
+      case CMD_WIPE:
+	doWipe(newarg);
+	break;
+      case CMD_ACCESS:
+	doAccess(newarg);
+	break;
+      case CMD_CLONE:
+	doClone(newarg);
+	break;
+      case CMD_OFFICE:
+	doOffice(newarg);
+	break;
+      case CMD_REPLACE:
+	doReplace(newarg);
+	break;
+      case CMD_SETSEV:
+	doSetsev(newarg);
+	break;
+      case CMD_INFO:
+	doInfo(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TIMESHIFT:
+	doTimeshift(newarg);
+	break;
+      case CMD_LOG:
+	doLog(newarg);
+	break;
+      case CMD_HOSTLOG:
+	doHostlog(newarg);
+	break;
+      case CMD_ASSIST:
+	rc = doAssist(newarg, dynamic_cast<TBeing *>(vict));
+	addToLifeforce(1);
+	break;
+      case CMD_WHO:
+	doWho(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BRUTTEST:
+	doBruttest(newarg);
+	break;
+      case CMD_PEELPK:
+	doPeelPk(newarg);
+	break;
+      case CMD_SHUTDOW:
+	doShutdow();
+	break;
+      case CMD_SHUTDOWN:
+	doShutdown(newarg);
+	break;
+      case CMD_LOAD:
+	doLoad(newarg);
+	break;
+      case CMD_GOTO:
+	rc = doGoto(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SHOUT:
+	doShout(argument);
+	addToLifeforce(1);
+	break;
+      case CMD_CLIENTMESSAGE:
+	doClientMessage(argument);
+	addToLifeforce(1);
+	break;
+      case CMD_GT:
+	doGrouptell(argument);
+	addToLifeforce(1);
+	break;
+      case CMD_SIGN:
+	doSign(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TELL:
+	buf=stringarg;
+	buf=one_argument(buf, bufname);
+	  
+	rc = doTell(bufname, buf);
+	addToLifeforce(1);
+	break;
+      case CMD_WHISPER:
+	rc = doWhisper(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_ASK:
+	rc = doAsk(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WRITE:
+	doWrite(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WHOZONE:
+	doWhozone();
+	addToLifeforce(1);
+	break;
+      case CMD_EXAMINE:
+	doExamine(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SCORE:
+	doScore();
+	addToLifeforce(1);
+	break;
+      case CMD_WIZHELP:
+	doWizhelp();
+	break;
+      case CMD_WIZLIST:
+	doWizlist();
+	break;
+      case CMD_INVENTORY:
+	doInventory(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_STAND:
+	doStand();
+	addToLifeforce(1);
+	break;
+      case CMD_SIT:
+	doSit(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_RAISE:
+      case CMD_LIFT:
+	rc = doRaise(newarg, cmd);
+	addToLifeforce(1);
+	break;
+      case CMD_OPEN:
+	rc = doOpen(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_REST:
+	doRest(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LOWER:
+	rc = doLower(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CLOSE:
+	doClose(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LOCK:
+	doLock(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_UNLOCK:
+	doUnlock(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SLEEP:
+	doSleep(stringarg);
+	break;
+      case CMD_WAKE:
+	doWake(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TIME:
+	doTime(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WEATHER:
+	doWeather(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_USERS:
+	doUsers(newarg);
+	break;
+      case CMD_EQUIPMENT:
+	doEquipment(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_QUIT:
+	doQuit();
+	addToLifeforce(1);
+	break;
+      case CMD_QUIT2:
+	rc = doQuit2();
+	addToLifeforce(1);
+	break;
+      case CMD_CREDITS:
+	doCredits();
+	addToLifeforce(1);
+	break;
+      case CMD_NEWS:
+	doNews(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WHERE:
+	doWhere(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LEVELS:
+	doLevels(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CONSIDER:
+	doConsider(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WORLD:
+	doWorld();
+	addToLifeforce(1);
+	break;
+      case CMD_ATTRIBUTE:
+	doAttribute(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CLEAR:
+	doClear(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_ALIAS:
+	doAlias(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_GLANCE:
+	doGlance(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_MOTD:
+	doMotd(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LIMBS:
+	doLimbs(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BREATH:
+	doBreath(newarg);
+	break;
+      case CMD_CHANGE:
+	doChange(newarg);
+	break;
+      case CMD_PROMPT:
+	doPrompt(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_REMOVE:
+	rc = doRemove(newarg, vict);
+	addToLifeforce(1);
+	break;
+      case CMD_WEAR:
+	doWear(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_STAT:
+	doStat(newarg);
+	break;
+      case CMD_PURGE:
+	doPurge(newarg);
+	break;
+      case CMD_SET:
+	doSet(newarg);
+	break;
+      case CMD_COMMAND:
+	doCommand(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_WIZNET:
+	doCommune(stringarg);
+	break;
+      case CMD_WIELD:
+	doWield(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_GRAB:
+      case CMD_HOLD:
+	doGrab(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_PUT:
+	rc = doPut(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_KILL:
+      case CMD_SLAY:
+	rc = doKill(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_HIT:
+	rc = doHit(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_ENGAGE:
+	rc = doEngage(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_DISENGAGE:
+	rc = doDisengage();
+	break;
+      case CMD_QUEST:
+	doQuest(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TESTCODE:
+	doTestCode(newarg);
+	break;
+      case CMD_FOLLOW:
+	doFollow(newarg);
+	break;
+      case CMD_RETURN:
+	doReturn(newarg, WEAR_NOWHERE, true);
+	break;
+      case CMD_REPORT:
+	doReport(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_PRAY:
+	rc = doPray(newarg);
+	break;
+      case CMD_CAST:
+	rc = doCast(newarg);
+	break;
+      case CMD_CONTINUE:
+	doContinue(newarg);
+	break;
+      case CMD_READ:
+	doRead(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_EAT:
+	doEat(newarg);
+	break;
+      case CMD_DRINK:
+	rc = doDrink(newarg);
+	break;
+      case CMD_POUR:
+	rc = doPour(newarg);
+	break;
+      case CMD_SIP:
+	doSip(newarg);
+	break;
+      case CMD_TASTE:
+	doTaste(newarg);
+	break;
+      case CMD_BERSERK:
+	rc = doBerserk();
+	break;
+      case CMD_SHOVE:
+	rc = doShove(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_GRAPPLE:
+	rc = doGrapple(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_RESCUE:
+	rc = doRescue(newarg);
+	break;
+      case CMD_DEATHSTROKE:
+	rc = doDeathstroke(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_BODYSLAM:
+	rc = doBodyslam(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SPIN:
+	rc = doSpin(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_STOMP:
+	rc = doStomp(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_EMAIL:
+	doEmail(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_HEADBUTT:
+	rc = doHeadbutt(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_KNEESTRIKE:
+	rc = doKneestrike(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_DOORBASH:
+	rc = doDoorbash(stringarg);
+	break;
+      case CMD_TRANCE_OF_BLADES:
+	doTranceOfBlades(newarg);
+	break;
+      case CMD_ATTUNE:
+	doAttune(newarg);
+	break;
+      case CMD_AFK:
+	doAfk();
+	addToLifeforce(1);
+	break;
+      case CMD_SHARPEN:
+	doSharpen(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DULL:
+	doDull(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_MEND:     // just aliasing this to repair
+      case CMD_REPAIR:
+	doRepair(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SACRIFICE:
+	doSacrifice(newarg);
+	break;
+      case CMD_BANDAGE:
+	doBandage(newarg);
+	break;
+      case CMD_SET_TRAP:
+	rc = doSetTraps(newarg);
+	break;
+      case CMD_PICK:
+	rc = doPick(newarg);
+	break;
+      case CMD_SEARCH:
+	rc = doSearch(newarg);
+	break;
+      case CMD_SPY:
+	rc = doSpy();
+	break;
+      case CMD_PARRY:
+	rc = doParry();
+	break;
+      case CMD_DODGE:
+	rc = doDodge();
+	break;
+      case CMD_INSULT:
+	doInsult(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SCRATCH:
+	doScratch(newarg);
+	break;
+      case CMD_PEE:
+	doPee(newarg);
+	break;
+      case CMD_POOP:
+	doPoop();
+	break;
+      case CMD_COMBINE:
+	doCombine(newarg);
+	break;
+      case CMD_EDIT:
+	doEdit(newarg);
+	break;
+      case CMD_FADD:
+	add_faction(newarg);
+	break;
+      case CMD_FEDIT:
+	edit_faction(newarg);
+	break;
+      case CMD_JOIN:
+	doJoin(newarg);
+	break;
+      case CMD_DEFECT:
+	doDefect(newarg);
+	break;
+      case CMD_RECRUIT:
+	doRecruit(newarg);
+	break;
+      case CMD_RLOAD:
+	doRload(newarg);
+	break;
+      case CMD_RSAVE:
+	doRsave(newarg);
+	break;
+      case CMD_REDIT:
+	doRedit(newarg);
+	break;
+      case CMD_GROUP:
+	doGroup(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_FLEE:
+	rc = doFlee(newarg);
+	break;
+      case CMD_BREW:
+	doBrew(newarg);
+	break;
+      case CMD_SCRIBE:
+	doScribe(newarg);
+	break;
+      case CMD_TURN:
+	doTurn(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_YOGINSA:
+	doYoginsa();
+	break;
+      case CMD_MEDITATE:
+	doMeditate();
+	break;
+      case CMD_PENANCE:
+	doPenance();
+	break;
+      case CMD_PRACTICE:
+	doPractice(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BLOAD:
+	doBload(newarg);
+	break;
+      case CMD_GLOAD:
+	doGload(stringarg);
+	break;
+      case CMD_THROW:
+	doThrow(newarg);
+	break;
+      case CMD_SHOOT:
+	rc = doShoot(newarg);
+	break;
+      case CMD_TRACK:
+	doTrack(newarg);
+	break;
+      case CMD_SEEKWATER:
+	doSeekwater();
+	break;
+      case CMD_MEDIT:
+	doMedit(newarg);
+	break;
+      case CMD_SEDIT:
+	doSEdit(newarg);
+	break;
+      case CMD_LAYHANDS:
+	rc = doLayHands(newarg);
+	break;
+      case CMD_STAY:
+	doStay();
+	addToLifeforce(1);
+	break;
+      case CMD_PASS:
+	doPass(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_DEAL:
+	doDeal(newarg);
+	break;
+      case CMD_ATTACK:
+	doAttack(newarg);
+	break;
+      case CMD_BET:
+	doBet(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CALL:
+	doCall(stringarg);
+	break;
+      case CMD_FOLD:
+	doFold(stringarg);
+	break;
+      case CMD_OEDIT:
+	doOEdit(newarg);
+	break;
+      case CMD_MAKELEADER:
+	doMakeLeader(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_NEWMEMBER:
+	doNewMember(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SEND:
+	doSend(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_RMEMBER:
+	doRMember(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_HELP:
+	doHelp(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_PLAY:
+	doPlay(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_SORT:
+	doSort(newarg);
+	break;
+      case CMD_GAMESTATS:
+	doGamestats(newarg);
+	break;
+      case CMD_SCAN:
+	doScan(newarg);
+	break;
+      case CMD_FEIGNDEATH:
+	rc = doFeignDeath();
+	break;
+      case CMD_JUNK:
+	rc = doJunk(newarg, dynamic_cast<TObj *>(vict));
+	break;
+      case CMD_NOJUNK:
+	rc = doNoJunk(newarg, dynamic_cast<TObj *>(vict));
+	break;
+      case CMD_KICK:
+	rc = doKick(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SHOULDER_THROW:
+	rc = doShoulderThrow(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_CHOP:
+	rc = doChop(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_HURL:
+	rc = doHurl(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_CHI:
+	rc = doChi(newarg, vict);
+	break;
+      case CMD_LEAP:
+	rc = doLeap(stringarg);
+	break;
+      case CMD_EVALUATE:
+	doEvaluate(newarg);
+	break;
+      case CMD_TITLE:
+	doTitle(newarg);
+	break;
+      case CMD_SNOOP:
+	doSnoop(newarg);
+	break;
+      case CMD_QUIVPALM:
+	rc = doQuiveringPalm(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_RIDE:
+      case CMD_MOUNT:
+      case CMD_DISMOUNT:
+	rc = doMount(newarg, cmd, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_FORCE:
+	doForce(newarg);
+	break;
+      case CMD_COLOR:
+	doColor(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CLS:
+	doCls(true);
+	addToLifeforce(1);
+	break;
+      case CMD_LIGHT:
+	doLight(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_FISH:
+	doFish(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_LOW:
+	doLow(stringarg);
+	break;
+      case CMD_ENTER:
+	rc = doEnter(newarg, NULL);
+	addToLifeforce(1);
+	break;
+      case CMD_RESIZE:
+	doResize(newarg);
+	break;
+      case CMD_DISBAND:
+	doDisband();
+	addToLifeforce(1);
+	break;
+      case CMD_EXTINGUISH:
+	doExtinguish(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_BASH:
+	rc = doBash(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_BACKSTAB:
+	rc = doBackstab(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SLIT:
+	rc = doThroatSlit(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_HIDE:
+	rc = doHide();
+	break;
+      case CMD_SNEAK:
+	rc = doSneak(newarg);
+	break;
+      case CMD_CRAWL:
+	doCrawl();
+	break;
+      case CMD_SUBTERFUGE:
+	rc = doSubterfuge(newarg);
+	break;
+      case CMD_RENAME:
+	doNameChange(newarg);
+	break;
+      case CMD_MARGINS:
+	doResetMargins();
+	addToLifeforce(1);
+	break;
+      case CMD_DISGUISE:
+	rc = doDisguise(newarg);
+	break;
+      case CMD_DESCRIPTION:
+	addToLifeforce(1);
+	doDescription();
+	break;
+      case CMD_POISON_WEAPON:
+	rc = doPoisonWeapon(newarg);
+	break;
+      case CMD_GARROTTE:
+	rc = doGarrotte(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_STAB:
+	rc = doStab(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_CUDGEL:
+	rc = doCudgel(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_CHARGE:
+	rc = doCharge(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SPLIT:
+	doSplit(newarg, true);
+	addToLifeforce(1);
+	break;
+      case CMD_TRIP:
+	rc = doTrip(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_SMITE:
+	rc = doSmite(newarg, dynamic_cast<TBeing *>(vict));
+	break;
+      case CMD_FORAGE:
+	doForage();
+	break;
+      case CMD_APPLY_HERBS:
+	rc = doApplyHerbs(newarg);
+	break;
+      case CMD_BUTCHER:
+	doButcher(newarg);
+	break;
+      case CMD_SKIN:
+	doSkin(newarg);
+	break;
+      case CMD_TAN:
+	doTan();
+	break;
+      case CMD_PLANT:
+	doPlant(stringarg);
+	break;
+      case CMD_COOK:
+	doCook(stringarg);
+	break;
+      case CMD_DRIVE:
+	doDrive(stringarg);
+	break;
+      case CMD_WHITTLE:
+	doWhittle(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_MESSAGE:
+	doMessage(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_FINDEMAIL:
+	doFindEmail(newarg);
+	break;
+      case CMD_COMMENT:
+	doComment(newarg);
+	break;
+      case CMD_CAMP:
+	rc = doEncamp();
+	break;
+      case CMD_SOOTH:
+	rc = doSoothBeast(newarg);
+	break;
+      case CMD_SUMMON:
+	rc = doSummonBeast(newarg);
+	break;
+      case CMD_CHARM:
+	rc = doCharmBeast(newarg);
+	break;
+      case CMD_RETRAIN:
+	rc = doRetrainPet(newarg, dynamic_cast<TBeing *>(vict));
+	addToLifeforce(1);
+	break;
+      case CMD_BEFRIEND:
+	rc = doBefriendBeast(newarg);
+	break;
+      case CMD_TRANSFIX:
+	rc = doTransfix(newarg);
+	break;
+      case CMD_BARKSKIN:
+	rc = doBarkskin(newarg);
+	break;
+      case CMD_FERAL_WRATH:
+	rc = doFeralWrath(newarg);
+	break;
+      case CMD_SKY_SPIRIT:
+	rc = doSkySpirit(newarg);
+	break;
+      case CMD_EARTHMAW:
+	rc = doEarthmaw(newarg);
+	break;
+      case CMD_FLY:
+	doFly();
+	break;
+      case CMD_LAND:
+	doLand();
+	break;
+      case CMD_DIVINE:
+	doDivine(newarg);
+	break;
+      case CMD_OUTFIT:
+	doOutfit(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TRANSFORM:
+	rc = doTransform(newarg);
+	break;
+      case CMD_EGOTRIP:
+	doEgoTrip(newarg);
+	break;
+      case CMD_SPELLS:
+	doSpells(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_RITUALS:
+	doRituals(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_COMPARE:
+	doCompare(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TEST_FIGHT:
+	doTestFight(newarg);
+	break;
+      case CMD_DONATE:
+	doDonate(newarg);
+	break;
+      case CMD_ZONES:
+	doZones(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_CREATE:
+	rc = doCreate(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_POWERS:
+	doPowers(newarg);
+	break;
+      case CMD_SMOKE:
+	doSmoke(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_STOP:
+	doStop(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TRIGGER:
+	doTrigger(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_STORE:
+	doStore(newarg);
+	break;
+      case CMD_ZONEFILE:
+	doZonefile(stringarg);
+	break;
+      case CMD_LOOT:
+	doLoot(stringarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TROPHY:
+	doTrophy(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_PTELL:
+	doPTell(argument, TRUE);
+	break;
+      case CMD_PSAY:
+	doPSay(argument);
+	break;
+      case CMD_PSHOUT:
+	doPShout(argument);
+	break;
+      case CMD_TELEVISION:
+	doTelevision(newarg);
+	break;
+      case CMD_MINDFOCUS:
+	doMindfocus(newarg);
+	break;
+      case CMD_PSIBLAST:
+	rc = doPsiblast(newarg);
+	break;
+      case CMD_MINDTHRUST:
+	rc = doMindthrust(newarg);
+	break;
+      case CMD_PSYCRUSH:
+	rc = doPsycrush(newarg);
+	break;
+      case CMD_KWAVE:
+	rc = doKwave(newarg);
+	break;
+      case CMD_PSIDRAIN:
+	rc = doPsidrain(newarg);
+	break;
+      case MAX_CMD_LIST:
+      case CMD_RESP_TOGGLE:
+      case CMD_RESP_UNTOGGLE:
+      case CMD_RESP_CHECKTOG:
+      case CMD_RESP_PERSONALIZE:
+      case CMD_RESP_ROOM_ENTER:
+      case CMD_RESP_UNFLAG:
+      case CMD_RESP_TOROOM:
+      case CMD_RESP_TOVICT:
+      case CMD_RESP_TONOTVICT:
+      case CMD_RESP_CHECKUNTOG:
+      case CMD_RESP_CHECKMAX:
+      case CMD_RESP_LINK:
+      case CMD_RESP_CODE_SEGMENT:
+      case CMD_RESP_RESIZE:
+      case CMD_RESP_CHECKLOAD:
+      case CMD_RESP_LOADMOB:
+      case CMD_RESP_PACKAGE:
+      case CMD_RESP_PULSE:
+      case CMD_RESP_CHECKROOM:
+      case CMD_RESP_CHECKNROOM:
+      case CMD_RESP_CHECKZONE:
+      case CMD_RESP_CHECKNOTZONE:
+      case CMD_RESP_MOVETO:
+      case CMD_RESP_DESTINATION:
+      case CMD_RESP_CHECKPERSON:
+      case CMD_RESP_RANDOM:
+      case CMD_RESP_RANDOPTION:
+      case CMD_RESP_DONERAND:
+      case CMD_GENERIC_PULSE:
+      case CMD_GENERIC_QUICK_PULSE:
+      case CMD_GENERIC_CREATED:
+      case CMD_GENERIC_RESET:
+      case CMD_GENERIC_INIT:
+      case CMD_GENERIC_DESTROYED:
+      case CMD_ROOM_ENTERED:
+      case CMD_ROOM_ATTEMPTED_EXIT:
+      case CMD_OBJ_HITTING:
+      case CMD_OBJ_HIT:
+      case CMD_OBJ_MISS:
+      case CMD_OBJ_BEEN_HIT:
+      case CMD_OBJ_THROWN:
+      case CMD_OBJ_PUT_INSIDE_SOMETHING:
+      case CMD_OBJ_HAVING_SOMETHING_PUT_INTO:
+      case CMD_OBJ_STUCK_IN:
+      case CMD_OBJ_PULLED_OUT:
+      case CMD_OBJ_USED:
+      case CMD_OBJ_TOLD_TO_PLAYER:
+      case CMD_OBJ_GOTTEN:
+      case CMD_OBJ_WEATHER_TIME:
+      case CMD_OBJ_WAGON_INIT:
+      case CMD_OBJ_WAGON_UNINIT:
+      case CMD_OBJ_MOVEMENT:
+      case CMD_OBJ_MOVE_IN:
+      case CMD_OBJ_SATON:
+      case CMD_OBJ_EXPELLED:
+      case CMD_OBJ_START_TO_FALL:
+      case CMD_OBJ_OPENED:
+      case CMD_ARROW_GLANCE:
+      case CMD_ARROW_MISSED:
+      case CMD_ARROW_EMBED:
+      case CMD_ARROW_RIPPED:
+      case CMD_ARROW_DODGED:
+      case CMD_ARROW_HIT_OBJ:
+      case CMD_ARROW_INTO_ROOM:
+      case CMD_ARROW_SHOT:
+      case CMD_MOB_GIVEN_ITEM:
+      case CMD_MOB_GIVEN_COINS:
+      case CMD_MOB_ALIGN_PULSE:
+      case CMD_MOB_KILLED_NEARBY:
+      case CMD_MOB_MOVED_INTO_ROOM:
+      case CMD_MOB_VIOLENCE_PEACEFUL:
+      case CMD_MOB_COMBAT:
+      case CMD_TASK_FIGHTING:
+      case CMD_TASK_CONTINUE:
+      case CMD_OBJ_OWNER_HIT:
+	incorrectCommand();
+	return FALSE;
+    }
   }
+
+  if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, false))
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+
+  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+    // switch it to vict
+    ADD_DELETE(rc, DELETE_VICT);
+    REM_DELETE(rc, DELETE_ITEM);
+  }
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    if (isPoly && !desc) {
+      delete this;
+    }
+    return rc;
+  }
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    return rc;
+  }
+
+  return FALSE;
 }
 
 
