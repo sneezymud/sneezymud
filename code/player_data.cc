@@ -559,7 +559,7 @@ void TPerson::loadFromSt(charFile *st)
     setLimbFlags(mapped_slot, st->body_flags[iw]);
   }
   for (;iw < MAX_WEAR;iw++) {
-    setCurLimbHealth(iw, getMaxLimbHealth(iw));
+    setCurLimbHealth(iw, 255);
     setLimbFlags(iw, 0);
   }
 
