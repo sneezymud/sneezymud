@@ -139,6 +139,7 @@ extern int noise(const TBeing *);
 extern void change_hands(TBeing *, const char *);
 extern void SwitchStuff(TBeing *, TBeing *);
 extern void DisguiseStuff(TBeing *, TBeing *);
+extern void ShapeshiftStuff(TBeing *, TBeing *);
 extern void CreateOneRoom(int);
 extern void gain_exp(TBeing *, double gain, int rawdamage);
 extern int check_sinking_obj(TObj *obj, int room);

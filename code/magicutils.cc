@@ -162,6 +162,20 @@ void DisguiseStuff(TBeing *giver, TBeing *taker)
   taker->setMaxMana(giver->manaLimit());
 }
 
+
+void ShapeshiftStuff(TBeing *giver, TBeing *taker)
+{
+  // do the generic polymorph stuff first */
+  SwitchStuff(giver, taker);
+
+  taker->setHit(giver->getHit());
+  taker->setMaxHit(giver->hitLimit());
+  taker->setMove(giver->getMove());
+  taker->setMaxMove(giver->getMaxMove());
+  taker->setLifeforce(giver->getLifeforce());
+}
+
+
 void TMonster::failCharm(TBeing *ch)
 {
   sendTo("You feel charmed, but the feeling fades.\n\r");

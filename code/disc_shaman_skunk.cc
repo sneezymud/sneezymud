@@ -207,6 +207,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
   int vit = dice(number(1,level),4);
   int lfmod = ::number(20,(level*5));
+  int hpgain = ::number(30,(level*2));
 
   if (victim->isImmune(IMMUNE_DRAIN, level)) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -220,6 +221,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
     caster->addToLifeforce(lfmod);
+    caster->addToHit(hpgain);
     caster->updatePos();
     TPerson *pers;
     switch (critSuccess(caster, SPELL_LICH_TOUCH)) {

@@ -55,7 +55,7 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
   // knot...jesus
     if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
         victim->affectedBySpell(AFFECT_PLAYERKILL)){
-      act("$d will not provide refuge to a murderer.",
+      act("The Knot will not provide refuge to a murderer.",
           TRUE, caster, NULL, NULL, TO_CHAR);
       act("Nothing seems to happen.",
           FALSE, caster, NULL, NULL, TO_ROOM);
