@@ -4942,10 +4942,10 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
     return FALSE;     
 
   t=((!weapon || (weapon->eq_pos==HOLD_RIGHT))?WEAR_HAND_R:WEAR_HAND_L);
-  chance = ::number(0, 9);
-  result = ::number(5, 15);
+  chance = ::number(0, 99);
+  result = ::number(5, 16);
 
-  if (chance >= 5) {
+  if (chance >= 65) {
     // do nothing
   } else {
     act("<r>The eyes of $o <r>glow blood red as life force is channeled from your body.<1>"
