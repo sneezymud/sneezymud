@@ -2343,7 +2343,8 @@ void TBeing::doEquipment(const char *argument)
       tattoos[convertTo<int>(db["location"])]=db["tattoo"];
     }
 
-    sendTo("You are using:\n\r");
+    sendTo("You are using %i pounds of equipment:\n\r", 
+	   (int)equipment.getWeight());
     found = FALSE;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j]) {

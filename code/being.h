@@ -522,6 +522,16 @@ class equipmentData {
     return this->equipment[slot]; 
   }
 
+  float getWeight(){
+    float total=0;
+    for(wearSlotT i=MIN_WEAR;i<MAX_WEAR;i++){
+      if(equipment[i])
+	total+=equipment[i]->getWeight();
+    }
+    return total;
+  }
+
+
   TThing *remove(enum wearSlotT slot){
     TThing *t=equipment[slot];
 
