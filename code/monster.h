@@ -79,8 +79,8 @@ class TMonster : public TBeing {
     opinionData hates;
     opinionData fears;
     sh_int persist;
-    sh_int oldRoom;
-    sh_int brtRoom;
+    int oldRoom;
+    int brtRoom;
     unsigned short hatefield;
     unsigned short fearfield;
     ubyte moneyConst;

@@ -327,7 +327,7 @@ TMonster::~TMonster()
   if (brtRoom == ROOM_NOWHERE)
     ; // Do nothing.  This triggers on immortal loaded mobs so is cool.
   else if (!(tRoom = real_roomp(brtRoom)))
-    vlogf(LOG_BUG, "Mobile being destroyed with empty birth room! [%s]", getName());
+    vlogf(LOG_BUG, "Mobile being destroyed with empty birth room! [%s][%i]", getName(), brtRoom);
   else
     *tRoom >> *this;
 }
