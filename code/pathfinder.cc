@@ -310,7 +310,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       // check for portals that might lead to target
       // return 10 if its the 1st portal in the room, 11 for 2nd, etc
       // 0-9 are obviously real exits (see above)
-      if (thru_doors || use_portals) {
+      if (use_portals) {
         dir = dirTypeT(MAX_DIR-1);
         TThing *t;
         for (t = rp->getStuff(); t; t = t->nextThing) {
