@@ -7599,9 +7599,18 @@ void deleteChips(TMonster *me)
 }
 
 
-int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
+int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
-  if(cmd != CMD_GENERIC_QUICK_PULSE)
+  static bool enabled=false;
+
+  if((cmd == CMD_SAY || cmd==CMD_SAY2) && lower(arg) == "gogogambler2000" &&
+     ch->isImmortal()){
+    me->doSay("Gambler 2000 powering up!  All systems nominal.");
+    enabled=true;
+    return false;
+  }
+
+  if(cmd != CMD_GENERIC_QUICK_PULSE || !enabled)
     return false;
   
   deleteChips(me);
