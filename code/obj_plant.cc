@@ -99,7 +99,7 @@ void TPlant::updateDesc()
     "<r>red<1> rose bush",
     "<r>apple<1> tree",
     "<W>white<1> rose bush",
-    "<Y>white<1> rose bush",
+    "<Y>yellow<1> rose bush",
     "<o>orange<1> tree",
     "<g>money<1> tree",
   };
