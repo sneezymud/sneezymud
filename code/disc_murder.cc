@@ -911,7 +911,7 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   addToToolUses(-1);
 
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
-  if (0 && bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
+  if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->oneSwing[j].type == SPELL_POISON) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
@@ -940,7 +940,8 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       affectedData aff[5];
       addPoison(aff, objVnum(), level, duration);
       for(int i=0;i<5;++i){
-	ch->affectTo(&aff[i], -1);
+	if(aff[i].type != TYPE_UNDEFINED)
+	  ch->affectTo(&aff[i], -1);
       }
     } else {
       weapon->oneSwing[0].location = APPLY_NONE;
