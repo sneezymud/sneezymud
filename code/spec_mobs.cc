@@ -7256,10 +7256,8 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   const int elevatornum=2360;
   static int timer;
   TObj *elevator=NULL;
-  TRoom *elevatorroom=real_roomp(2370);
   int *job=NULL;
   int i;
-  TThing *tt;
   TVehicle *vehicle=NULL;
 
   if(cmd != CMD_GENERIC_PULSE)
@@ -7282,19 +7280,6 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
     return FALSE;
   }
 
-
-  // wait until we have passengers before we leave the docks
-  if(elevator->in_room == 2352 && timer<=0 && vehicle->getSpeed()==0){
-    for(tt=elevatorroom->getStuff();tt;tt=tt->nextThing){
-      if(dynamic_cast<TPerson *>(tt))
-	break;
-    }
-    if(!tt)
-      return FALSE;
-    else
-      timer=10;
-  }
-
   if((--timer)>0)
     return FALSE;
 
@@ -7314,6 +7299,7 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
     myself->doDrive("stop");
 
     if(*job==2352){
+      timer=10;
       *job=2362;
     } else {
       timer=10;
@@ -7345,7 +7331,7 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   
 
   if(cmd == CMD_ENTER){
-    myself->doSay("Enter the elevator requires a 10 talen chip.");
+    myself->doSay("Entering the elevator requires a 10 talen chip.");
     myself->doEmote("stretches out his hand expectantly.");
     return true;
   }
