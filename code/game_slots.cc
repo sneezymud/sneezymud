@@ -158,25 +158,14 @@ void TBeing::doPlay(const char *arg)
     }
     if (!*options) {
       sendTo("Slot machine options :\n\r");
-      sendTo("1) Play the cheap slots, and bet a 10 talen chip.\n\r");
-      sendTo("2) Play the cheap slots, and bet a 100 talen chip.\n\r");
-      sendTo("3) Play the cheap slots, and bet a 500 talen chip.\n\r");
-      sendTo("4) Play the expensive slots and bet a 1000 talen chip.\n\r");
-      sendTo("5) Play the expensive slots and bet a 5000 talen chip.\n\r");
-      sendTo("6) Play the expensive slots and bet 10000 talen chip.\n\r");
+      sendTo("1) Play the cheap slots, and bet a 100 talen chip.\n\r");
+      sendTo("2) Play the cheap slots, and bet a 500 talen chip.\n\r");
+      sendTo("3) Play the cheap slots, and bet a 1000 talen chip.\n\r");
+      sendTo("4) Play the expensive slots and bet a 5000 talen chip.\n\r");
+      sendTo("5) Play the expensive slots and bet a 10000 talen chip.\n\r");
+      sendTo("6) Play the expensive slots and bet 50000 talen chip.\n\r");
     } else {
       if (!strcmp(options, "1")) {
-	if((chip=find_chip(this, CHIP_10))){
-	  d->bet.slot = CHIP_10;
-	  (*chip)--;
-	  delete chip;
-
-	  spin_slot(this);
-	} else {
-	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
-	  return;
-	}
-      } else if (!strcmp(options, "2")) {
 	if((chip=find_chip(this, CHIP_100))){
 	  d->bet.slot = CHIP_100;
 	  (*chip)--;
@@ -187,7 +176,7 @@ void TBeing::doPlay(const char *arg)
 	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
-      } else if (!strcmp(options, "3")) {
+      } else if (!strcmp(options, "2")) {
 	if((chip=find_chip(this, CHIP_500))){
 	  d->bet.slot = CHIP_500;
 	  (*chip)--;
@@ -198,7 +187,7 @@ void TBeing::doPlay(const char *arg)
 	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
-      } else if (!strcmp(options, "4")) {
+      } else if (!strcmp(options, "3")) {
 	if((chip=find_chip(this, CHIP_1000))){
 	  d->bet.slot = CHIP_1000;
 	  (*chip)--;
@@ -209,7 +198,7 @@ void TBeing::doPlay(const char *arg)
 	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
-      } else if (!strcmp(options, "5")) {
+      } else if (!strcmp(options, "4")) {
 	if((chip=find_chip(this, CHIP_5000))){
 	  d->bet.slot = CHIP_5000;
 	  (*chip)--;
@@ -220,9 +209,20 @@ void TBeing::doPlay(const char *arg)
 	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
-      } else if (!strcmp(options, "6")) {
+      } else if (!strcmp(options, "5")) {
 	if((chip=find_chip(this, CHIP_10000))){
 	  d->bet.slot = CHIP_10000;
+	  (*chip)--;
+	  delete chip;
+
+	  spin_slot(this);
+	} else {
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
+	  return;
+	}
+      } else if (!strcmp(options, "6")) {
+	if((chip=find_chip(this, CHIP_50000))){
+	  d->bet.slot = CHIP_50000;
 	  (*chip)--;
 	  delete chip;
 

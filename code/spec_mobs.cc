@@ -58,6 +58,7 @@
 #include "obj_table.h"
 #include "obj_drinkcon.h"
 #include "obj_vehicle.h"
+#include "games.h"
 
 #include <fstream.h>
 
@@ -7339,7 +7340,7 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   if(!ch || !o) // something weird going on if this happens
     return false;
 
-  if(o->objVnum() != 2359){
+  if(o->objVnum() != CHIP_100){
     myself->doSay("What the hell is this?");
     myself->doDrop("", o);
     return false;
@@ -7350,6 +7351,8 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
     if((elevator=dynamic_cast<TVehicle *>(tt)) && elevator->objVnum()==2360){
       myself->doSay("Thank you, enjoy your stay!");
       ch->doEnter("", elevator);
+      (*o)--;
+      delete o;
       return true;
     }
   }

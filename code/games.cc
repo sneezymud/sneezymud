@@ -26,8 +26,6 @@ void payout(TBeing *ch, int talens)
       chip=read_object(CHIP_500, VIRTUAL);
     else if(talens >= 100)
       chip=read_object(CHIP_100, VIRTUAL);
-    else if(talens >= 10)
-      chip=read_object(CHIP_10, VIRTUAL);
     else
       return;
 

@@ -15,7 +15,6 @@ const int CARD_EARTH = 32;
 const int CARD_ETHER = 16;
 
 
-const int CHIP_10     = 2359;
 const int CHIP_100    = 2350;
 const int CHIP_500    = 2351;
 const int CHIP_1000   = 2352;
