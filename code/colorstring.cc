@@ -7,11 +7,30 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+
+
+string stripColorCodes(string s)
+{
+  char buf[strlen(s.c_str())+1];
+  int j=0;
+
+  for(int i=0;s.c_str()[i];++i){
+    if(s.c_str()[i] == '<')
+      while(s.c_str()[i-1]!='>')
+	++i;
+    
+    buf[j++]=s.c_str()[i];
+  }
+  buf[j]='\0';
+
+  return buf;
+}
+
 
 bool hasColorStrings(const TBeing *mob, const char *arg, int field)
 {
   const char *s = NULL;
-  int found = 0;
 
   if (!arg || !*arg)
     return FALSE;
@@ -75,8 +94,7 @@ bool hasColorStrings(const TBeing *mob, const char *arg, int field)
         case 'z':
         case 'Z':
         case '1':
-          found = 1;
-          break;
+          return true;
         case 'h':
         case 'H':
         case 'n':
@@ -86,11 +104,7 @@ bool hasColorStrings(const TBeing *mob, const char *arg, int field)
       }
     }
   }
-  if (found)
-    return TRUE;
-  else
-    return FALSE;
-
+  return FALSE;
 }
 
 // takes the string given by arg, replaces any <m> or <M> in it with
@@ -207,9 +221,6 @@ string nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, c
   unsigned int len, s;
   string buf;
   char tmp[256];
-
-  if (!ch)
-    return arg;
           
   len = strlen(arg);
   buf = "";
