@@ -536,7 +536,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (!count)
     return -1;
 
-  keeper->doTell(ch->name, shop_index[shop_nr].message_buy,
+  keeper->doTell(ch->name, fmt(shop_index[shop_nr].message_buy) %
           (cost * count));
 
   ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d).\n\r") % 
@@ -740,7 +740,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
-  keeper->doTell(ch->getName(), shop_index[shop_nr].message_sell, cost);
+  keeper->doTell(ch->getName(), fmt(shop_index[shop_nr].message_sell)% cost);
 
   ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
