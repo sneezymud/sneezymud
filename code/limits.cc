@@ -812,7 +812,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
     // : should never happen except for 1time conversion this also
     // verifies first timers get the practices they deserve - dash
     // oct 2003
-    if (isPc() && ch->getMaxExp() == 0) {
+    if (ch->isPc() && ch->getMaxExp() == 0) {
       vlogf(LOG_DASH, fmt("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(Class, 50) % curr);
       ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
       ch->setMaxExp(curr);
