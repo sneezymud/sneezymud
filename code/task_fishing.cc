@@ -227,10 +227,10 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  }
 
 
-	  sprintf(buf, "You bait %s with $p.", pole->shortDescr);
+	  snprintf(buf, 256, "You bait %s with $p.", pole->shortDescr);
 	  act(buf, FALSE, ch, bait, 0, TO_CHAR);
 
-	  sprintf(buf, "$n baits %s with $p.", pole->shortDescr);
+	  snprintf(buf, 256, "$n baits %s with $p.", pole->shortDescr);
           act(buf, TRUE, ch, bait, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
