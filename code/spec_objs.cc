@@ -3946,6 +3946,42 @@ int healingNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   return TRUE;
 }
 
+int blessingHoldItem(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
+{
+  TBeing *tmp;
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if (!(tmp = dynamic_cast<TBeing *>(me->equippedBy)))
+    return FALSE;
+
+  if (!tmp->roomp)
+    return FALSE;
+
+  if (!tmp->isPc())
+    return FALSE;
+
+  if (tmp->hasClass(CLASS_SHAMAN)) {
+    genericBless(tmp, tmp, 5, false);
+    act("The power of the loa blesses you through $p!", 0, tmp, me, 0, TO_CHAR);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+  } else {
+    int rc;
+    rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_DRAIN);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears! OW!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete tmp;
+      tmp = NULL;
+    }
+  }
+  return TRUE;
+}
+
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
@@ -4758,6 +4794,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon}, //75
   {FALSE, "Mana Burn Robe", manaBurnRobe},
-  {FALSE, "Chrism Item", healingNeckwear}
+  {FALSE, "Chrism: minor heal", healingNeckwear},
+  {FALSE, "Chrism: bless hold item", blessingHoldItem}
 };
 
