@@ -5796,17 +5796,17 @@ int starfire(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   int hitterLev = ch->GetMaxLevel();
   dam = (::number((hitterLev / 10 + 1),(hitterLev / 3 + 4)));
-  act("<c>The sapphires on your $o begins to radiate a soft blue light as you strike $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
-  act("<c>The sapphires on $n's $o begins to radiate a soft blue light as $e strikes $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
-  act("<c>The sapphires on $n's $o begins to radiate a soft blue light as $e strikes you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+  act("<c>The sapphires on your $o begin to radiate a soft blue light as you strike $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("<c>The sapphires on $n's $o begin to radiate a soft blue light as $e strikes $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("<c>The sapphires on $n's $o begin to radiate a soft blue light as $e strikes you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
 
   if (dam >= ( ( ((hitterLev/3+4)-(hitterLev/10+1))*4 )/5 + (hitterLev/10+1))) {
     act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
     act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
     act("<W>$p<W> emits an <Y>enourmously<1><W> dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
  
-    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
-    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $M!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $M!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
     act("<W>You scream in pain as the heated metal burns you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
 
 
@@ -5815,8 +5815,8 @@ int starfire(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     act("<W>$p<W> emits a dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
     act("<W>$p<W> emits a dazzling burst of light and heat!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
 
-    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
-    act("<W>$N<W> screams in pain as the heated metal burns $m!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $M!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<W>$N<W> screams in pain as the heated metal burns $M!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
     act("<W>You scream in pain as the heated metal burns you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
 
   }
