@@ -61,8 +61,8 @@ void corpListing(TBeing *ch, TMonster *me)
     shopval=convertTo<int>(db["shopcount"]) * 1000000;
     val=gold+getAssets(corp_id)+shopval;
    
-    m.insert(pair<int,sstring>(val,fmt("%-2i| %s") % corp_id % db["name"]));
-    m.insert(pair<int,sstring>(val,fmt("  |   %s talens, %s in assets") %
+    m.insert(pair<int,sstring>(val,fmt("%-2i| <r>%s<1>") % corp_id % db["name"]));
+    m.insert(pair<int,sstring>(val,fmt("  | %s talens, %s in assets") %
 			       talenDisplay(gold) % 
 			       talenDisplay(getAssets(corp_id)+shopval)));
   }
