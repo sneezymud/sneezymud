@@ -847,7 +847,7 @@ void roomDirData::wardDoor(dirTypeT dir, int room)
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == room)) {
     SET_BIT(back->condition, EX_WARDED);
-    sendrpf(rp, "You hear a sooft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir[dir]]);
+    sendrpf(rp, "You hear a soft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir[dir]]);
   }
   return;
 }

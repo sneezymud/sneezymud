@@ -202,7 +202,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
         break;
       case SPELL_CARDIAC_STRESS:
       case DAMAGE_HEMORRAGE:
-        sprintf(buf, "The skin of %s corpse is bright red, but no wound presents itself.",getName());
+        sprintf(buf, "The skin of %s's corpse is bright red, but no wound presents itself.",getName());
         break;
       case DAMAGE_IMPALE:
         sprintf(buf, "The torso of %s's corpse has a hole going all the way through.  Something must have impaled %s.",getName(),hmhr());
