@@ -7463,6 +7463,50 @@ int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
   return FALSE;
 }
 
+int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+{
+  sstring argument=arg;
+  TObj *o;
+
+  if(cmd != CMD_SAY && cmd != CMD_SAY2)
+    return FALSE;
+
+  if(argument!="I need a receipt")
+    return FALSE;
+
+  if(!ch || !myself)
+    return FALSE;
+
+  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
+    if((o=dynamic_cast<TObj *>(t))){
+      if(o->objVnum() == 90){
+	myself->doEmote("looks the crate over carefully.");
+	myself->doSay("Ok, this looks good.");
+	myself->doEmote("signals a worker, who drags the crate into the warehouse.");
+
+	delete o;
+
+	o=read_object(91, VIRTUAL);
+
+	if(!o){
+	  vlogf(LOG_BUG, "couldn't load receipt in shippingOfficial()");
+	  myself->doSay("Hmm, I seem to be out of receipts, sorry.");
+	  return TRUE;
+	}
+
+	*myself += *o;
+
+	sstring giveBuf = fmt("%s %s") % 
+	  add_bars(o->name) % add_bars(ch->name);
+	myself->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
+
+	return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
 
 extern int statSurgeon(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7672,6 +7716,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "peddler", flaskPeddler}, // 185
   {FALSE, "limb disposer", limbDispo},
   {FALSE, "stat surgeon", statSurgeon},
+  {FALSE, "shipping official", shippingOfficial},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

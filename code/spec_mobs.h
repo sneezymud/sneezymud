@@ -170,7 +170,8 @@ const int SPEC_ARCHER             =184;
 const int SPEC_FLASK_PEDDLER      =185;
 const int SPEC_LIMB_DISPO         =186;
 const int SPEC_STAT_SURG          =187;
-const int NUM_MOB_SPECIALS        =187;
+const int SPEC_SHIPPING_OFFICIAL  =188;
+const int NUM_MOB_SPECIALS        =188;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
