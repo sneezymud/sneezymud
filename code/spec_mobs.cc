@@ -5807,6 +5807,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       ch->doSave(SILENT_YES);
 
       break;
+
+    case CMD_ASK:
     case CMD_WHISPER:
       arg = one_argument(arg, buf);
       
@@ -5822,7 +5824,31 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 	  buf=fmt("%s caught %s weighing in at %f.") %
 	    db["name"] % db["type"] % convertTo<float>(db["weight"]);
 	  myself->doSay(buf);
-	}      
+	}
+
+      } else if (buf == "score") {
+        int iTotCount = 0,
+	    iPerCount = 0;
+
+        db.query("select name, type, weight from fishlargest order by weight desc");
+
+        while (db.fetchRow()) {
+          if (db["name"] == ch->getName()) {
+            buf = fmt("You caught %s weighing in at %f.") % db["type"] % convertTo<float>(db["weight"]);
+            myself->doSay(buf);
+            iPerCount++;
+          }
+
+          iTotCount++;
+        }
+
+        if (!iPerCount)
+          myself->doSay("You do not hold any records at this time, go out there and land the big one that got away!");
+        else {
+          buf = fmt("Out of %d records you hold %d.") % iTotCount % iPerCount;
+          myself->doSay(buf);
+        }
+
       } else {
 	if(buf=="topten"){
 	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
