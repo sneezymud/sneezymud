@@ -272,7 +272,7 @@ void handleCorrupted(const char *name, char *account)
          LOWER(name[0]), lower(name).c_str());
   vsystem(buf);
 
-  sprintf(buf, "mv player/%c/%s.sstrings player/corrupt/.",
+  sprintf(buf, "mv player/%c/%s.strings player/corrupt/.",
           LOWER(name[0]), lower(name).c_str());
   vsystem(buf);
 
@@ -328,7 +328,7 @@ void wipePlayerFile(const char *name)
   unlink(buf);
 
   // nuke sstrings, ignore errors
-  sprintf(buf, "player/%c/%s.sstrings", LOWER(name[0]), lower(name).c_str());
+  sprintf(buf, "player/%c/%s.strings", LOWER(name[0]), lower(name).c_str());
   unlink(buf);
 
   // nuke toggles, ignore errors

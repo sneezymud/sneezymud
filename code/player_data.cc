@@ -956,7 +956,7 @@ void do_the_player_stuff(const char *name)
     return;
 
   // skip sstrings data.
-  if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".sstrings"))
+  if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".strings"))
     return;
 
   // skip drug data
