@@ -239,7 +239,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     if (!v->isPc() && (v->getHit() <= -2))
       dam = 11 + v->getHit();
 
-    if(!v->isPc()){
+    if(isPc() && !v->isPc()){
       followData *f;
       TBeing *k;
       int groupcount=1;
