@@ -762,6 +762,7 @@ void doGlobalRoomStuff(void)
       continue;
     
     // trash pile creation
+    count=0;
     for(TThing *t=rp->getStuff();t;t=t->nextThing){
       if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
 	count++;
@@ -777,8 +778,9 @@ void doGlobalRoomStuff(void)
       if(!(pile=dynamic_cast<TTrashPile *>(o))){
 	vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
 	delete o;
-      } else 
+      } else {
 	*rp += *pile;
+      }
     }
 
     //weather noise
