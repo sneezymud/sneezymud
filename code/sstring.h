@@ -10,11 +10,11 @@ public:
 
   // extension functions
   const sstring toCRLF() const;
-  const sstring sstring::lower() const;
-  const sstring sstring::upper() const;
-  const sstring sstring::cap() const;
-  const sstring sstring::uncap() const;
-  
+  const sstring lower() const;
+  const sstring upper() const;
+  const sstring cap() const;
+  const sstring uncap() const;
+  const sstring word(int) const;
 };
 
 

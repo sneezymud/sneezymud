@@ -1,6 +1,9 @@
 #include "stdsneezy.h"
 #include "sstring.h"
 
+// converts newlines in the string to CRLF if possible
+// this is for preparation for sending out to a player
+// for cross platform compatibility
 const sstring sstring::toCRLF() const
 {
   sstring dosstr = "";
@@ -17,6 +20,7 @@ const sstring sstring::toCRLF() const
   return dosstr;
 }
 
+// converts A-Z to lower case a-z
 const sstring sstring::lower() const
 {
   sstring::size_type iter;
@@ -31,6 +35,7 @@ const sstring sstring::lower() const
   return s;
 }
 
+// converts a-z to upper case A-Z
 const sstring sstring::upper() const
 {
   sstring::size_type iter;
@@ -45,6 +50,7 @@ const sstring sstring::upper() const
   return s;
 }
 
+// capitalizes first letter, skipping color codes
 const sstring sstring::cap() const
 {
   int counter = 0;
@@ -71,7 +77,7 @@ const sstring sstring::cap() const
 }
 
 
-
+// uncapitalizes first letter, skipping color codes
 const sstring sstring::uncap() const
 {
   int counter = 0;
@@ -98,3 +104,31 @@ const sstring sstring::uncap() const
   return s;
 }
 
+// splits the string up by whitespace and returns the i'th "word"
+const sstring sstring::word(int i) const
+{
+  unsigned int copy_begin=0, copy_end=0;
+  sstring whitespace=" \f\n\r\t\v"; // taken from isspace() man page
+  
+  while(1){
+    // find first non-whitespace past our last working point
+    copy_begin=find_first_not_of(whitespace, copy_end);
+    
+    // if nothing found, no more words, return
+    if(copy_begin == sstring::npos)
+      return "";
+    
+    // find our first whitespace past last non-whitespace
+    copy_end=find_first_of(whitespace, copy_begin);
+    
+    if(!i--){
+      // if nothing found, we're on the last word, no trailing whitespace
+      if(copy_end == sstring::npos)
+	return substr(copy_begin);
+      else
+	return substr(copy_begin, copy_end-copy_begin);
+    }
+  }
+
+  return "";
+}
