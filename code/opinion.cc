@@ -505,7 +505,7 @@ void TMonster::setHunting(TBeing *tch)
   dist = 50 + GetMaxLevel();
 
   if (Hates(tch, NULL))
-    dist *= -2;  // further, and through doors and stuff
+    dist *= 2;
 
   SET_BIT(specials.act, ACT_HUNTING);
   specials.hunting = tch;
