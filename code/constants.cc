@@ -588,7 +588,11 @@ void assign_item_info()
      "Portal type  See HELP PORTAL INFO", 12, 0,
      "Special: trap type", 0, 0,
      "Special: portal states & key number", 0, 0);
-				     
+  ItemInfo[ITEM_CASINO_CHIP] = new itemInfo("Casino Chip","a casino chip",
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0);
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

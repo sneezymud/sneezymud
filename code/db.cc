@@ -80,6 +80,7 @@
 #include "obj_plant.h"
 #include "obj_cookware.h"
 #include "obj_vehicle.h"
+#include "obj_casino_chip.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -2600,6 +2601,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TCookware();
     case ITEM_VEHICLE:
       return new TVehicle();
+    case ITEM_CASINO_CHIP:
+      return new TCasinoChip();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

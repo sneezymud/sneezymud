@@ -2549,6 +2549,7 @@ void assign_rooms(void)
     {27828, SecretDoors},
     {27890, SecretDoors},
     {28800, moonGateRoom},
+    {2351, bank},
     {2375, theKnot},
     {2376, theKnot},
     {2377, theKnot},

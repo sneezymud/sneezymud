@@ -230,7 +230,8 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_general_weapon.o	obj_wand.o		\
 	obj_gun.o		obj_window.o		\
 	obj_jewelry.o		obj_worn.o		\
-	obj_key.o		obj.o
+	obj_key.o		obj.o			\
+	obj_casino_chip.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -4448,7 +4449,7 @@ objs/db.o: obj_pool.h obj_drinkcon.h obj_armor.h obj_base_clothing.h
 objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
-objs/db.o: obj_vehicle.h
+objs/db.o: obj_vehicle.h obj_casino_chip.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10483,6 +10484,63 @@ objs/obj_bow.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_bow.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/obj_bow.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/obj_bow.o: range.h obj_bow.h obj_arrow.h obj_base_weapon.h
+objs/obj_casino_chip.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/obj_casino_chip.o: /usr/include/stdio.h /usr/include/features.h
+objs/obj_casino_chip.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_casino_chip.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_casino_chip.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_casino_chip.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_casino_chip.o: /usr/include/bits/stdio_lim.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/obj_casino_chip.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_casino_chip.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/obj_casino_chip.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/obj_casino_chip.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_casino_chip.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/obj_casino_chip.o: /usr/include/g++-3/std/bastring.h
+objs/obj_casino_chip.o: /usr/include/g++-3/cstddef
+objs/obj_casino_chip.o: /usr/include/g++-3/std/straits.h
+objs/obj_casino_chip.o: /usr/include/g++-3/alloc.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_config.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_casino_chip.o: /usr/include/g++-3/iostream.h
+objs/obj_casino_chip.o: /usr/include/g++-3/streambuf.h
+objs/obj_casino_chip.o: /usr/include/g++-3/iterator
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_relops.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_casino_chip.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_casino_chip.o: /usr/include/g++-3/vector
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_algobase.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_pair.h
+objs/obj_casino_chip.o: /usr/include/g++-3/type_traits.h
+objs/obj_casino_chip.o: /usr/include/limits.h
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_casino_chip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_construct.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_vector.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_bvector.h
+objs/obj_casino_chip.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_function.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_map.h
+objs/obj_casino_chip.o: /usr/include/g++-3/stl_multimap.h low.h enum.h
+objs/obj_casino_chip.o: spells.h structs.h immunity.h discipline.h spell2.h
+objs/obj_casino_chip.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_casino_chip.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_casino_chip.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/obj_casino_chip.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/obj_casino_chip.o: room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/obj_casino_chip.o: charfile.h being.h person.h monster.h account.h
+objs/obj_casino_chip.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/obj_casino_chip.o: materials.h obj_casino_chip.h
 objs/obj_chest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_chest.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_chest.o: /usr/include/gnu/stubs.h
