@@ -433,7 +433,7 @@ void list_thing_on_heap(const TThing *list, TBeing *ch, bool show_all)
 static string displayShowApprox(const TBeing *looked, const TBeing *looker, spellNumT tSkill, float tDiff)
 {
   // This function is still experimental.  Don't use it in the main world yet.
-  if (strcmp(looker->getName(), "Lapsos") != 0 || !looker->isImmortal())
+  if (strcmp(looker->getName(), "Jesus") != 0 || !looker->isImmortal())
     return ("");
 
   if (!looker->doesKnowSkill(tSkill))

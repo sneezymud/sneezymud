@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_whittle.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
 
   SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
@@ -63,51 +48,76 @@ void initWhittle()
 
   // Arrows
   whittleItems[i++]("hunting-arrow arrow long",
-                    CLASS_RANGER, 30, -1, true, WHITTLE_TIMECONSUMING);
+                    CLASS_RANGER, 30, 166, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("fighting-arrow arrow short",
-                    CLASS_RANGER, 30, -1, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("melee-quarrel quarrel bow long",
-                    CLASS_RANGER, 30, -1, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("common-quarrel quarrel bow short",
-                    CLASS_RANGER, 30, -1, true, WHITTLE_TIMECONSUMING);
+                    CLASS_RANGER, 30, 167, true, WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("melee-quarrel quarrel long",
+                    CLASS_RANGER, 30, 168, true, WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("common-quarrel quarrel short",
+                    CLASS_RANGER, 30, 169, true, WHITTLE_TIMECONSUMING);
 
   // Bows
   whittleItems[i++]("hunting-bow bow long",
-                    CLASS_RANGER, 70, -1, true, WHITTLE_STANDARD);
+                    CLASS_RANGER, 70, 170, true, WHITTLE_STANDARD);
   whittleItems[i++]("fighting-bow bow short",
-                    CLASS_RANGER, 70, -1, true, WHITTLE_STANDARD);
-  whittleItems[i++]("melee-crossbow crossbow bow long",
-                    CLASS_RANGER, 70, -1, true, WHITTLE_STANDARD);
-  whittleItems[i++]("common-crossbow crossbow bow short",
-                    CLASS_RANGER, 70, -1, true, WHITTLE_STANDARD);
+                    CLASS_RANGER, 70, 171, true, WHITTLE_STANDARD);
+  whittleItems[i++]("melee-crossbow crossbow long",
+                    CLASS_RANGER, 70, 172, true, WHITTLE_STANDARD);
+  whittleItems[i++]("common-crossbow crossbow short",
+                    CLASS_RANGER, 70, 173, true, WHITTLE_STANDARD);
 
   // Other
   whittleItems[i++]("small-boat simple boat toy",
-                    -1,  1,  -1, false, WHITTLE_DELICATE);
+                    -1,  1,  188, false, WHITTLE_DELICATE);
   whittleItems[i++]("wooden-staff training staff",
-                    -1, 10,  -1, false, WHITTLE_GENERAL);
+                    -1, 10,  177, false, WHITTLE_GENERAL);
   whittleItems[i++]("wooden-sword training sword",
                     -1, 10, 329, false, WHITTLE_GENERAL);
   whittleItems[i++]("chair-wooden sturdy wooden",
-                    -1, 40,  -1, false, WHITTLE_EASY);
+                    -1, 40,  174, false, WHITTLE_EASY);
   whittleItems[i++]("wooden-chest small simple chest",
-                    -1, 20,  -1, false, WHITTLE_GENERAL);
+                    -1, 20,  185, false, WHITTLE_GENERAL);
   whittleItems[i++]("wooden-shield small simple shield",
-                    -1, 70,  -1, false, WHITTLE_HARD);
+                    -1, 70,  178, false, WHITTLE_HARD);
   whittleItems[i++]("small-wood-canister carved wood canister",
                     CLASS_RANGER, 45, -1  /* 556 */, false, WHITTLE_GENERAL);
   whittleItems[i++]("large-wood-canister carved wood canister",
                     CLASS_RANGER, 45, -1 /* 557 */, false, WHITTLE_GENERAL);
   whittleItems[i++]("small-box box container wood",
-                    -1,  1,  -1, false, WHITTLE_EASY);
+                    -1,  1,  186, false, WHITTLE_EASY);
   whittleItems[i++]("wood-ring ring small simple",
-                    -1,  8,  -1, false, WHITTLE_EASY);
+                    -1,  8,  179, false, WHITTLE_VALUABLE);
   whittleItems[i++]("wood-club light small",
-                    -1, 50,  -1, false, WHITTLE_HARD);
+                    -1, 50,  176, false, WHITTLE_HARD);
   whittleItems[i++]("minature-figurine figurine small delicate",
-                    -1, 99,  -1, false, WHITTLE_DELICATE);
+                    -1, 99,  191, false, WHITTLE_DELICATE);
   whittleItems[i++]("tiny-statuette statuette small declicate",
-                    -1, 99,  -1, false, WHITTLE_INVOLVED);
+                    -1, 99,  190, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("simple-dart dart wooden",
+                    -1, 30,  175, false, WHITTLE_VALUABLE);
+  whittleItems[i++]("simple-pipe pipe wooden",
+                    -1, 40,  180, false, WHITTLE_HARD);
+  whittleItems[i++]("wooden-pen pen",
+                    -1, 20,  181, false, WHITTLE_VALUABLE);
+  whittleItems[i++]("toothpick",
+                    -1,  1,  182, false, WHITTLE_VALUABLE);
+  whittleItems[i++]("wood length sturdy",
+                    -1, 20,  189, false, WHITTLE_EASY);
+  whittleItems[i++]("stick walking",
+                    -1, 40,  183, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("totem wooden",
+                    -1, 80,  184, false, WHITTLE_DELICATE);
+  whittleItems[i++]("wooden-dagger dagger small",
+                    -1, 20,  187, false, WHITTLE_HARD);
+  whittleItems[i++]("miniature-idol-moath",
+                    -1, 99, 192, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-lapsos",
+                    -1, 99, 193, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-mithros",
+                    -1, 99, 194, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-gringar",
+                    -1, 99, 195, false, WHITTLE_INVOLVED);
+
   whittleItems[i++]("elongated-strip strip wood", // For 'create splint' later on
                     -1, 30,  -1, false, WHITTLE_EASY);
 }
@@ -194,7 +204,7 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tArrow->setWeapDamDev(tTemp);
       break;
     default:
-      vlogf(7, "task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]",
+      vlogf(LOG_BUG, "task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]",
             tWhitLevel);
       break;
   }
@@ -245,7 +255,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       tBow->setMaxRange((tValue + tBow->getMaxRange()));
       break;
     default:
-      vlogf(7, "task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]",
+      vlogf(LOG_BUG, "task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]",
             tWhitLevel);
       break;
   }
@@ -387,13 +397,15 @@ bool task_whittleCreateNew(TBeing *ch, string tStWood, int tIndex)
           tWood->setVolume(-(newVolume));
           act("You cut a chunk of wood off of $p to create the object.",
               FALSE, ch, tWood, NULL, TO_CHAR);
+
+          break;
         }
       }
     }
 
     if (!(ch->task->obj = read_object(real_object(whittleItems[tIndex].itemVnum), REAL))) {
       ch->sendTo("Something bad happened.  Tell a god.\n\r");
-      vlogf(7, "Player in whittle got to item that doesn't exist!  [%d]",
+      vlogf(LOG_BUG, "Player in whittle got to item that doesn't exist!  [%d]",
             whittleItems[tIndex].itemVnum);
       return false;
     }
@@ -551,14 +563,6 @@ int task_whittleObject(TBeing *ch, string tStWood)
 // whittle <object> <wood>
 void TBeing::doWhittle(const char *tArg)
 {
-  /*
-  if (strcmp(getName(), "Lapsos") != 0 &&
-      strcmp(getName(), "Mithros") != 0) {
-    sendTo("How did you get here??  You shouldn't BE Here.  This code is unstable.\n\r");
-    return;
-  }
-  */
-
   if (!doesKnowSkill(SKILL_WHITTLE)) {
     sendTo("I bet you wish you knew how to whittle.\n\r");
     return;
@@ -777,8 +781,8 @@ string taskWhittleEntry::getName(bool showSecond)
 
   if (showSecond) {
     tStString = two_arg(tStString, tStName, tStExcess);
-    tStString = two_arg(tStString, tStName, tStExcess);
-    strcpy(tName, tStName.c_str());
+    //    tStString = two_arg(tStString, tStName, tStExcess);
+    strcpy(tName, tStExcess.c_str());
   } else {
     two_arg(tStString, tStName, tStExcess);
     strcpy(tName, tStName.c_str());
@@ -819,7 +823,7 @@ void taskWhittleEntry::operator()(string tString, int newtClass,
     weiSize *= 1.10;
     weaSize = max(400.0, ((volSize + weiSize) / 10));
 
-    vlogf(7, "Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]",
+    vlogf(LOG_MISC, "Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]",
           volSize, tObj->getVolume(), (tObj->getVolume() * 1.10),
           weiSize, tObj->getWeight(), (tObj->getWeight() * 1.10));
 

@@ -5,7 +5,8 @@ int weaponJambiyaSpecial(TBeing *tVictim, cmdTypeT tCmd, const char *tArg, TObj 
   if (tCmd != CMD_STAB && tCmd != CMD_BACKSTAB)
     return FALSE;
 
-  if (strcmp(tArg, "-special-") || !tVictim || !tObj)
+  if (strcmp(tArg, "-special-") ||
+      !tVictim || !tObj)
     return FALSE;
 
   TBaseWeapon *tWeapon;
@@ -19,7 +20,7 @@ int weaponJambiyaSpecial(TBeing *tVictim, cmdTypeT tCmd, const char *tArg, TObj 
       !(tThief  = dynamic_cast<TBeing  *>(tObj->equippedBy)))
     return FALSE;
 
-  bool forceSuccess = !strcmp(tThief->getName(), "Lapsos");
+  bool forceSuccess = !strcmp(tThief->getName(), "Jesus");
 
   if (::number(0, 100) && !forceSuccess)
     return FALSE;

@@ -3014,8 +3014,6 @@ int TPerson::genericLoadPC()
         rp = real_roomp(46);
       else if (!strcmp(name, "Staffa"))
         rp = real_roomp(47);
-      else if (!strcmp(name, "Lapsos"))
-        rp = real_roomp(48);
       else if (!strcmp(name, "Alyria"))
         rp = real_roomp(50);
       else if (!strcmp(name, "Syl"))

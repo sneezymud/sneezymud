@@ -326,7 +326,7 @@ void TPerson::doEdit(const char *arg)
       if (*tBuf && is_abbrev(tBuf, "copy")) {
         int toRoom = atoi(tBuf);  // from the <to-room> block
 
-        if (strcmp(getName(), "Lapsos") != 0) {
+        if (strcmp(getName(), "Jesus") != 0) {
           sendTo("Don't use this option yet.  It is still under development.\n\r");
           return;
         }
@@ -725,7 +725,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case  7: // Line
       /*
-      if (strcmp(getName(), "Lapsos")) {
+      if (strcmp(getName(), "Jesus")) {
         sendTo("This option is not yet coded.  Soon...\n\r");
         return;
       }
@@ -970,7 +970,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case 13: // Copy
       /*
-      if (strcmp("Lapsos", getName())) {
+      if (strcmp("Jesus", getName())) {
         sendTo("Please don't use this option yet, it is still being tested.\n\r");
         return;
       }
@@ -1111,7 +1111,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case 14: // edit replace <desc/extra> <"extra"/"text"> <"text"> <"text">
       /*
-      if (strcmp("Lapsos", getName())) {
+      if (strcmp("Jesus", getName())) {
         sendTo("Please don't use this option yet, it is still being tested.\n\r");
         return;
       }

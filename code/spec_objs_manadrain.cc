@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs_manadrain.cc,v $
+// Revision 5.2  2001/06/18 21:01:40  jesus
+// few standard updates blah blah blah
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -42,7 +48,7 @@ int weaponManaDrainer(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, 
   if (!(ch = dynamic_cast<TBeing *>(tObj->equippedBy)))
     return FALSE;
 
-  if (!strcmp(ch->getName(), "Lapsos") && ch->isImmortal())
+  if (!strcmp(ch->getName(), "Jesus") && ch->isImmortal())
     forceSuccess = true;
 
   if (::number(0, 50) && !forceSuccess)

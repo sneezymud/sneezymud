@@ -1,30 +1,7 @@
+
 //////////////////////////////////////////////////////////////////////////
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: create_objs.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.4  1999/10/09 05:04:23  batopr
-// Fixed errmsgs in obj_applys
-//
-// Revision 1.3  1999/10/09 04:57:06  batopr
-// Fixed change_obj_apply to deal with apply numbers properly
-//
-// Revision 1.2  1999/10/09 04:37:42  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD      (c) 1993 SneezyMUD Coding Team.   All Rights Reserved. 
 //
 // create_objs.c : Online object creation/saving/loading for builders.
 //
@@ -39,37 +16,114 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
-#include "create.h"
 #include "components.h"
 #include "dirsort.h"
+#include "statistics.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {
-  const char *obj_edit_menu = " 1) Name                         2) Short Description\n\r"
-" 3) Item Type                    4) Long Description\n\r"
-" 5) Weight                       6) Volume\n\r"
-" 7) Extra Flags                  8) Take Flags\n\r"
-" 9) Unused                      10) Cost/Value\n\r"
-"11) Four Values                 12) Decay time\n\r"
-"13) Max struct points           14) Struct points\n\r"
-"15) Extra Description           16) Material type\n\r"
-"17) Applys                      18) Can be seen\n\r"
-"19) Delete all extra descs      20) Change Object Special Proc\n\r"
-"21) Set item max_exist\n\r"
-"\n\r";
+  const char *obj_edit_menu_basic =
+ "%s 1)%s Name                        %s 2)%s Short Description\n\r"
+ "%s 3)%s Item Type                   %s 4)%s Long Description\n\r"
+ "%s 5)%s Weight                      %s 6)%s Volume\n\r"
+ "%s 7)%s Extra Flags                 %s 8)%s Take Flags\n\r"
+ "%s 9)%s Unused                      %s10)%s Cost/Value\n\r"
+ "%s11)%s Four Values                 %s12)%s Decay time\n\r"
+ "%s13)%s Max struct points           %s14)%s Struct points\n\r"
+ "%s15)%s Extra Description           %s16)%s Material type\n\r"
+ "%s17)%s Applys                      %s18)%s Can be seen\n\r"
+ "%s19)%s Delete all extra descs      %s20)%s Change Object Special Proc\n\r"
+ "%s21)%s Set item max_exist\n\r"
+ "\n\r";
+  const char *obj_edit_menu_advanced =
+ "%s 1)%s %-20s  %s 2)%s %s\n\r"
+ "%s 3)%s %-20s  %s 4)%s %s\n\r"
+ "%s 5)%s %sWeight%s: %-12s  %s 6)%s %sVolume%s: %s\n\r"
+ "%s 7)%s %sExtra Flags%s           %s 8)%s %sTake Flags%s\n\r"
+ "%s 9)%s %sUnused%s                %s10)%s %sCost%s: %s\n\r"
+ "%s11)%s %sFour Values%s           %s12)%s %sDecay%s: %s\n\r"
+ "%s13)%s %sMax-Str%s: %-11s  %s14)%s %sCur-Str%s: %s\n\r"
+ "%s15)%s %sExtra Description%s     %s16)%s %s\n\r"
+ "%s17)%s %sApplys%s                %s18)%s %sCBS%s: %s\n\r"
+ "%s19)%s %sDelete extra descs%s    %s20)%s %s\n\r"
+ "%s21)%s %sMax-Exist%s: %s\n\r"
+ "\n\r";
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(VT_CURSPOS, 1, 1);
   ch->sendTo("%sObject Name:%s %s", ch->cyan(), ch->norm(), obj->name);
   ch->sendTo(VT_CURSPOS, 2, 1);
-  ch->sendTo("%sItem Type :%s %s", ch->purple(), ch->norm(), ItemInfo[obj->itemType()]->name);
+
+  itemTypeT itt = obj->itemType();
+  ch->sendTo("%sItem Type :%s %s", ch->purple(), ch->norm(), ItemInfo[itt]->name);
 
   // this possibly adds item-specific stuff on line 3
   obj->objMenu(ch);
 
   ch->sendTo(VT_CURSPOS, 6, 1);
   ch->sendTo("Editing Menu:\n\r");
-  ch->sendTo(obj_edit_menu);
+
+  if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
+    char tStringOut[14][256];
+
+    strcpy(tStringOut[0], (obj->name ? obj->name : "Unknown"));
+    strcpy(tStringOut[1], (obj->shortDescr ? obj->shortDescr : "Unknown"));
+    strcpy(tStringOut[2], ItemInfo[itt]->name);
+    strcpy(tStringOut[3], (obj->descr ? obj->descr : "Unknown"));
+    sprintf(tStringOut[4], "%.0f", obj->getWeight());
+    sprintf(tStringOut[5], "%d", obj->getVolume());
+    sprintf(tStringOut[6], "%d", obj->obj_flags.cost);
+    sprintf(tStringOut[7], "%d", obj->obj_flags.decay_time);
+    sprintf(tStringOut[8], "%d", obj->getMaxStructPoints());
+    sprintf(tStringOut[9], "%d", obj->getStructPoints());
+    strcpy(tStringOut[10], material_nums[obj->getMaterial()].mat_name);
+    sprintf(tStringOut[11], "%d", obj->canBeSeen);
+    strcpy(tStringOut[12], ((obj->spec < NUM_OBJ_SPECIALS) ? (obj->spec <= 0 ? "Proc: none" : objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name) : "Confused..."));
+    sprintf(tStringOut[13], "%d", obj->max_exist);
+
+    for (int tMsgIndex = 0; tMsgIndex < 14; tMsgIndex++)
+      if (strlen(tStringOut[tMsgIndex]) > 20) {
+        tStringOut[tMsgIndex][16] = '\0';
+        strcat(tStringOut[tMsgIndex], "...");
+      }
+
+    ch->sendTo(obj_edit_menu_advanced,
+               ch->cyan()  , ch->norm(),                           tStringOut[0],
+               ch->purple(), ch->norm(),                           tStringOut[1],
+               ch->cyan()  , ch->norm(),                           tStringOut[2],
+               ch->purple(), ch->norm(),                           tStringOut[3],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[4],
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[5],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(),
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[6],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[7],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[8],
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[9],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(),                           tStringOut[10],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[11],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+               ch->purple(), ch->norm(),                           tStringOut[12],
+               ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[13]);
+  } else
+    ch->sendTo(obj_edit_menu_basic,
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm());
+
+
   ch->sendTo("--> ");
 }
 
@@ -80,6 +134,7 @@ void TBeing::doOEdit(const char *)
   sendTo("Mobs may not edit.\n\r");
 }
 
+#if !USE_SQL
 void ObjLoad(TBeing *ch, int vnum)
 {
   TObj *o;
@@ -206,7 +261,127 @@ void ObjLoad(TBeing *ch, int vnum)
 
   *ch += *o;
 }
+#else
+void ObjLoad(TBeing *ch, int vnum)
+{
+  TObj *o;
+  TBaseClothing *tbc;
+  int i, rc;
+  extraDescription *new_descr;
+  MYSQL_ROW row;
+  MYSQL_RES *res;
 
+  if((rc=dbquery(&res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name))){
+    if(rc==1)
+      ch->sendTo("Object not found\n\r");
+    else if(rc==-1)
+      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+  if(!(row=mysql_fetch_row(res)))
+    return;
+
+  ch->sendTo("Loading saved object number %d\n\r", vnum);
+
+  o = makeNewObj(mapFileToItemType(atoi(row[0])));
+  o->snum   = vnum;
+  o->number = -1;
+
+  o->name = mud_str_dup(row[1]);
+  o->shortDescr = mud_str_dup(row[2]);
+  o->setDescr(mud_str_dup(row[3]));
+
+  o->setObjStat(atoi(row[4]));
+  o->obj_flags.wear_flags = atoi(row[5]);
+
+  o->assignFourValues(atoi(row[6]), atoi(row[7]), atoi(row[8]), atoi(row[9]));
+
+  o->setWeight(atof(row[10]));
+  o->obj_flags.cost = atoi(row[11]);
+  o->canBeSeen = atoi(row[12]);
+  o->spec = atoi(row[13]);
+  o->obj_flags.max_struct_points = atoi(row[14]);
+  o->obj_flags.struct_points = atoi(row[15]);
+  o->obj_flags.decay_time = atoi(row[16]);
+  o->setVolume(atoi(row[17]));
+  o->setMaterial(atoi(row[18]));
+  o->max_exist = atoi(row[19]);
+  if(strcmp(row[20], "")) o->action_description=mud_str_dup(row[20]);
+  else o->action_description=NULL;
+
+  o->ex_description = NULL;
+
+  mysql_free_result(res);
+
+
+  if((dbquery(&res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+  
+  while((row=mysql_fetch_row(res))){
+    new_descr = new extraDescription();
+    new_descr->keyword = mud_str_dup(row[0]);
+    new_descr->description = mud_str_dup(row[1]);
+    new_descr->next = o->ex_description;
+    o->ex_description = new_descr;
+  }
+  mysql_free_result(res);
+
+  o->setLight(0);
+  i=0;
+
+
+  if((dbquery(&res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+  while((row=mysql_fetch_row(res))){
+    o->affected[i].location = mapFileToApply(atoi(row[0]));
+
+    if (applyTypeShouldBeSpellnum(o->affected[i].location))
+      o->affected[i].modifier = mapFileToSpellnum(atoi(row[1]));
+    else
+      o->affected[i].modifier = atoi(row[1]);
+ 
+    o->affected[i].modifier2 = atoi(row[2]);
+
+    if (o->affected[i].location == APPLY_LIGHT)
+      o->addToLight(o->affected[i].modifier);
+    o->affected[i].type = TYPE_UNDEFINED;
+    o->affected[i].level = 0;
+    o->affected[i].bitvector = 0;
+
+    o->affected[i].checkForBadness(o);
+    i++;
+  }
+  mysql_free_result(res);
+  for (i++; (i < MAX_OBJ_AFFECT); i++) {
+    o->affected[i].location = APPLY_NONE;
+    o->affected[i].modifier = 0;
+    o->affected[i].modifier2 = 0;
+    o->affected[i].type = TYPE_UNDEFINED;
+    o->affected[i].level = 0;
+    o->affected[i].bitvector = 0;
+  }
+
+  o->addObjStat(ITEM_STRUNG);
+  if (!ch->hasWizPower(POWER_OEDIT_NOPROTOS))
+    o->addObjStat(ITEM_PROTOTYPE);
+
+  if(o->obj_flags.cost == -1){
+    if((tbc=dynamic_cast<TBaseClothing *>(o))){
+      o->obj_flags.cost = tbc->suggestedPrice();
+    }
+  }
+  act("You just loaded $p.", TRUE, ch, o, 0, TO_CHAR);
+  act(ch->msgVariables(MSG_OEDIT, o).c_str(), TRUE, ch, 0, 0, TO_ROOM);
+
+  *ch += *o;
+}
+#endif
+
+#if !USE_SQL
 static void ObjSave(TBeing *ch, TObj *o, int vnum)
 {
   FILE *fp;
@@ -235,6 +410,78 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   raw_write_out_object(o, fp, vnum);
   fclose(fp);
 }
+#else
+static void ObjSave(TBeing *ch, TObj *o, int vnum)
+{
+  ch->sendTo("Saving.\n\r");
+
+  int tmp1, tmp2, tmp3, tmp4;
+  o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
+
+  if(dbquery(NULL, "immortal", "ObjSave(1)", "replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
+	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
+	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
+	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
+	  o->max_exist, o->obj_flags.struct_points, 
+	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
+		 o->getVolume(), o->getMaterial(), ch->name, 
+	  o->action_description?o->action_description:"")){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+
+  if(dbquery(NULL, "immortal", "ObjSave(2)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+
+
+  int i, j, k;
+  char temp[2048];
+  extraDescription *exdes;
+  for (exdes = o->ex_description; exdes; exdes = exdes->next) {
+    j = 0;
+    if (exdes->description) {
+      for (k = 0; k <= (int) strlen(exdes->description); k++) {
+	if (exdes->description[k] != 13)
+	  temp[j++] = exdes->description[k];
+      }
+      temp[j] = '\0';
+
+      if(dbquery(NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
+	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+	return;
+      }           
+    } else {
+      if(dbquery(NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
+	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+	return;
+      }
+    }
+  }
+
+  if(dbquery(NULL, "immortal", "ObjSave(5)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
+  
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+    if (o->affected[i].location == APPLY_LIGHT)
+      continue;
+    
+    if (o->affected[i].location != APPLY_NONE) {
+      if(dbquery(NULL, "immortal", "ObjSave(6)", "replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
+		 mapApplyToFile(o->affected[i].location), 
+		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
+		 o->affected[i].modifier2, ch->name, vnum)){
+	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+	return;
+      }
+    }
+  }
+
+}
+#endif
 
 static void osave(TBeing *ch, const char *argument)
 {
@@ -263,6 +510,7 @@ static void osave(TBeing *ch, const char *argument)
   }
 }
 
+#if !USE_SQL
 static void olist(TPerson *ch)
 {
   char buf[256];
@@ -298,6 +546,34 @@ static void olist(TPerson *ch)
   generic_dirlist(buf, ch);
 #endif
 }
+#else
+static void olist(TPerson *ch)
+{
+  string longstr;
+  MYSQL_ROW row;
+  MYSQL_RES *res;
+  int rc;
+
+  if((rc=dbquery(&res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->name))){
+    if(rc==-1)
+      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    else if(rc==1)
+      ch->sendTo("No objects saved.\n\r");
+    return;
+  }
+    
+
+  while((row=mysql_fetch_row(res))){
+    longstr += row[0];
+    longstr += " ";
+    longstr += row[1];
+    longstr += "\n\r";
+  }
+  mysql_free_result(res);
+
+  ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+}
+#endif
 
 static void ocreate(TBeing *ch)
 {
@@ -339,6 +615,14 @@ static void oedit(TBeing *ch, const char *arg)
     ch->sendTo("You can't edit an object unless it's empty and standalone.\n\r");
     return;
   }
+
+  if (!ch->limitPowerCheck(CMD_OEDIT, o->getSnum())) {
+    ch->sendTo("You are not allowed to edit that object, sorry.\n\r");
+    return;
+  }
+
+
+
   if (!o->isObjStat(ITEM_PROTOTYPE) && !ch->hasWizPower(POWER_OEDIT_NOPROTOS)) {
     // Turn objects into prototype to curb cheating
     o->addObjStat(ITEM_PROTOTYPE);
@@ -357,6 +641,22 @@ static void oedit(TBeing *ch, const char *arg)
 
 void oremove(TBeing *ch, int vnum)
 {
+#if USE_SQL
+  MYSQL_RES *res;
+  if(dbquery(&res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->name)==1){
+    ch->sendTo("Object not found.\n\r");
+    mysql_free_result(res);
+    return;
+  }
+    
+  if(dbquery(NULL, "immortal", "oremove(1)", "delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
+     dbquery(NULL, "immortal", "oremove(2)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
+     dbquery(NULL, "immortal", "oremove(3)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  } else
+    ch->sendTo("Removed.\n\r");
+#else
   char buf[256];
 
   sprintf(buf, "immortals/%s/objects/%d", ch->getName(), vnum);
@@ -364,16 +664,20 @@ void oremove(TBeing *ch, int vnum)
     ch->sendTo("Unable to remove that object.  Sure you got the # right?\n\r");
   else
     ch->sendTo("Successfully removed object #%d.\n\r", vnum);
+#endif
 }
 
 // This is the main function that controls all the object stuff - Russ 
 void TPerson::doOEdit(const char *argument)
 {
   const char *tString = NULL;
-  int vnum, field, zGot, oValue, ac_orig, str_orig, price_orig;
+  int vnum, field, zGot, oValue/*, ac_orig, str_orig, price_orig*/;
   float oFValue;
   TObj *cObj = NULL;
   string tStr;
+  string tStString(""),
+         tStBuffer(""),
+         tStArg("");
   char string[256],
        object[80],
        Buf[256],
@@ -383,10 +687,63 @@ void TPerson::doOEdit(const char *argument)
     sendTo("You do not have the power to edit objects.\n\r");
     return;
   }
+
   bisect_arg(argument, &field, string, editor_types_oedit);
 
   switch (field) {
+    case 21:
+      if (!*string)
+        sendTo("Syntax: oed resave <object>\n\r");
+      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, string, stuff))))
+	sendTo("Unable to find %s...Sorry...\n\r", string);
+      else if (cObj->getSnum() == cObj->objVnum() && !hasWizPower(POWER_OEDIT_IMP_POWER))
+        sendTo("Unknown value on this object.  resave only usable on oed loaded objects...\n\r");
+
+      else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum()))
+	sendTo("You are not allowed to oedit that object, sorry.\n\r");
+
+      else {
+        sprintf(string, "%s %d", string, cObj->getSnum());
+        osave(this, string);
+      }
+      return;
+      break;
     case 1:			// save 
+#if 1
+      tStArg = string;
+      tStArg = two_arg(tStArg, tStString, tStBuffer);
+
+      if (tStString.empty() || tStBuffer.empty())
+        sendTo("Syntax: oed save <object> <vnum>\n\r");
+      else {
+        if (is_abbrev(tStBuffer, "resave")) {
+          if (!hasWizPower(POWER_OEDIT_IMP_POWER))
+            sendTo("Syntax: oed save <object> <vnum>\n\r");
+          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString.c_str(), stuff))))
+            sendTo("Unable to find %s...Sorry...\n\r", tStString.c_str());
+          else if (cObj->getSnum() <= 0)
+            sendTo("That object has a bad snum.  Sorry.  Can not resave.\n\r");
+
+	  else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum()))
+	    sendTo("You are not allowed to oedit that object, sorry.\n\r");
+
+	  else {
+            sprintf(string, "%s %d", tStString.c_str(), cObj->getSnum());
+
+            osave(this, string);
+#if 1
+            --(*cObj);
+            delete cObj;
+            cObj = NULL;
+#else
+            doJunk(tStString.c_str(), cObj);
+#endif
+            doSave(SILENT_YES);
+          }
+        } else
+          osave(this, string);
+      }
+#else
       // zGot, cObj, tString are additions for Mithros for:
       //   load obj 100
       //   **modify obj_100**
@@ -407,9 +764,17 @@ void TPerson::doOEdit(const char *argument)
           sprintf(string, "%s %d", object, cObj->objVnum());
       }
       osave(this, string);
-      if (zGot == 1)
+      if (zGot == 1) {
+#if 1
+        --(*cObj);
+        delete cObj;
+        cObj = NULL;
+#else
         doJunk(object, cObj);
+#endif
+      }
       doSave(SILENT_YES);
+#endif
       return;
       break;
     case 2:			// load 
@@ -464,6 +829,11 @@ void TPerson::doOEdit(const char *argument)
     if (!cObj->isObjStat(ITEM_STRUNG))
       cObj->addObjStat(ITEM_STRUNG);
   */
+
+  else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum())) {
+    sendTo("You are not allowed to oedit that object, sorry.\n\r");
+    return;
+  }
 
   switch (field) {
     case 7: // Name
@@ -585,7 +955,7 @@ void TPerson::doOEdit(const char *argument)
         }
       }
       sendTo("Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
-      if (desc->client)
+      if (desc->m_bIsClient)
         desc->clientf("%d", CLIENT_STARTEDIT, 4000);
       if (*desc->str)
         delete [] (*desc->str);
@@ -612,6 +982,12 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 19:
+#if 1
+      if (!*string)
+        sendTo("Syntax: oed average <object> <value>\n\r");
+      else
+        cObj->editAverageMe(this, string);
+#else
       if ((sscanf(string, "%f", &oFValue)) != 1 || oValue < 0){
 	sendTo("Syntax : oed default_ac_str <object> <level>\n\r");
 	return;
@@ -633,11 +1009,12 @@ void TPerson::doOEdit(const char *argument)
              tbc->armorLevel(ARMOR_LEV_REAL),
              tbc->armorLevel(ARMOR_LEV_AC),
              tbc->armorLevel(ARMOR_LEV_STR));
+#endif
       return;
       break;
     case 20: // oedit replace <long/extra> <"extra"/"text"> <"text"> <"text">
       /*
-      if (strcmp("Lapsos", getName())) {
+      if (strcmp("Jesus", getName())) {
         sendTo("Please don't use this option yet, it is still being tested.\n\r");
         return;
       }
@@ -1228,18 +1605,18 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
 
       int i;
       for (i = 0; (!done && (i < MAX_OBJ_AFFECT)); i++) {
-        if (att == APPLY_ARMOR && o->affected[i].location == APPLY_ARMOR) {
-          o->affected[i].modifier = number1;
-          o->affected[i].modifier2 = number2;
-          done = TRUE;
-	} else if (num == 2 && !number1) {
+	if (num == 2 && !number1) {
 	  if (o->affected[i].location == att) {
 	    o->affected[i].location = APPLY_NONE;
 	    o->affected[i].modifier = 0;
             o->affected[i].modifier2 = 0;
 	    done = TRUE;
 	  }
-        } else if (!number2 && num == 3) {
+        } else if (att == APPLY_ARMOR && o->affected[i].location == APPLY_ARMOR) {
+	  o->affected[i].modifier = number1;
+	  o->affected[i].modifier2 = number2;
+	  done = TRUE;
+	} else if (!number2 && num == 3) {
 	  if (o->affected[i].location == att) {
 	    o->affected[i].location = APPLY_NONE;
 	    o->affected[i].modifier = 0;
@@ -1781,9 +2158,11 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
   ch->sendTo("Select a new special procedure (0 = no procedure).\n\r--> ");
 }
 
-void change_chest_value2(TBeing *ch, TRealContainer *o, const char *arg, editorEnterTypeT type)
+void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorEnterTypeT type)
 {
-  int loc_update, row, i;
+  unsigned int loc_update;
+  int row;
+  unsigned int i;
   char buf[256];
 
   if (type != ENTER_CHECK) {
@@ -1817,10 +2196,17 @@ void change_chest_value2(TBeing *ch, TRealContainer *o, const char *arg, editorE
       loc_update--;
 
       if (type != ENTER_CHECK) {
-	if (loc_update < 0 || loc_update > 4)
+	if (loc_update < 0 || loc_update >= MAX_CONTAINER_FLAG)
 	  return;
 	i = 1 << loc_update;
 
+        if (i == CONT_TRAPPED ||
+            i == CONT_EMPTYTRAP ||
+            i == CONT_GHOSTTRAP) {
+          ch->sendTo("This flag is set automatically and can not be changed.\n\r"); 
+          return;
+        }
+     
 	if (o->isContainerFlag(i))
 	  o->remContainerFlag(i);
 	else
@@ -1828,7 +2214,7 @@ void change_chest_value2(TBeing *ch, TRealContainer *o, const char *arg, editorE
       }
       ch->sendTo(VT_HOMECLR);
       row = 0;
-      for (i = 0; i < 5; i++) {
+      for (i = 0; i < MAX_CONTAINER_FLAG; i++) {
 	sprintf(buf, VT_CURSPOS, row + 4, ((i & 1) ? 45 : 5));
 	if (i & 1)
 	  row++;
@@ -1851,7 +2237,7 @@ void change_chest_value2(TBeing *ch, TRealContainer *o, const char *arg, editorE
         }
         if (loc_update == 0) {
           o->remContainerFlag( CONT_TRAPPED);
-          o->setContainerTrapType(0);
+          o->setContainerTrapType(DOOR_TRAP_NONE);
           o->setContainerTrapDam(0);
           ch->specials.edit = CHANGE_OBJ_VALUES;
           change_obj_values(ch, o, "", ENTER_CHECK);
@@ -1859,7 +2245,7 @@ void change_chest_value2(TBeing *ch, TRealContainer *o, const char *arg, editorE
         }
         o->addContainerFlag(CONT_TRAPPED);
 
-        o->setContainerTrapType(loc_update);
+        o->setContainerTrapType(doorTrapT(loc_update));
         ch->specials.edit = CHANGE_OBJ_VALUES;
         change_obj_values(ch, o, "", ENTER_CHECK);
         return;
@@ -1914,11 +2300,23 @@ void change_trap_value2(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT t
   o->changeTrapValue2(ch, arg, type);
 }
 
+
 void change_weapon_value1(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
 {
   o->changeBaseWeaponValue1(ch, arg, type);
 }
 
+#if 1
+void change_weapon_value2(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
+{
+  //o->changeBaseWeaponValue2(ch, arg, type);
+}
+
+void change_weapon_value3(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
+{
+  //  o->changeBaseWeaponValue3(ch, arg, type);
+}
+#endif
 void change_trap_value3(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
 {
   o->changeTrapValue3(ch, arg, type);
@@ -2419,7 +2817,7 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_CHEST_CONT_FLAGS:
     case CHANGE_CHEST_TRAP_TYPE:
     case CHANGE_CHEST_TRAP_DAM:
-      change_chest_value2(ch, dynamic_cast<TRealContainer *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_chest_value2(ch, dynamic_cast<TOpenContainer *>(ch->desc->obj), arg, ENTER_REENTRANT);
       return;
     case CHANGE_TRAP_VALUE2:
       change_trap_value2(ch, ch->desc->obj, arg, ENTER_REENTRANT);
@@ -2431,6 +2829,16 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_WEAPON_MAX_SHARP:
     case CHANGE_WEAPON_SHARP:
       change_weapon_value1(ch, ch->desc->obj, arg, ENTER_REENTRANT);
+      return;
+    case CHANGE_WEAPON_VALUE2:
+    case CHANGE_WEAPON_DAMAGE_LEV:
+    case CHANGE_WEAPON_TYPE:
+      change_weapon_value2(ch, ch->desc->obj, arg, ENTER_REENTRANT);
+      return;
+    case CHANGE_WEAPON_VALUE3:
+    case CHANGE_WEAPON_DAMAGE_PREC:
+    case CHANGE_WEAPON_QUALITY:
+      change_weapon_value3(ch, ch->desc->obj, arg, ENTER_REENTRANT);
       return;
     case CHANGE_MAGICITEM_LEVEL:
     case CHANGE_MAGICITEM_LEARNEDNESS:
@@ -2468,7 +2876,7 @@ void obj_edit(TBeing *ch, const char *arg)
       change_arrow_value4(ch, dynamic_cast<TArrow *>(ch->desc->obj), arg, ENTER_REENTRANT);
       return;
     default:
-      vlogf(9, "Got to bad spot in obj_edit.  char: %s   case: %d",ch->getName(),ch->specials.edit);
+      vlogf(LOG_EDIT, "Got to bad spot in obj_edit.  char: %s   case: %d",ch->getName(),ch->specials.edit);
       return;
   }
 }
@@ -2588,7 +2996,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   DIR *dfd;
 
   if (!(dfd = opendir(buf))) {
-    vlogf(10, "Unable to dirwalk directory %s", buf);
+    vlogf(LOG_FILE, "Unable to dirwalk directory %s", buf);
     return;
   }
   unsigned int totcnt = 0;
@@ -2642,7 +3050,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
     longstr += "Nothing found.\n\r";
 
   closedir(dfd);
-  ch->desc->page_string(longstr.c_str(), 0, true);
+  ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 }
 
 int TObj::addApply(TBeing *ch, applyTypeT apply)
@@ -2764,7 +3172,7 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
 void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
 { 
   int i, row;
-  trap_t loc_update;
+  doorTrapT loc_update;
   char buf[256];
  
   if (type != ENTER_CHECK) {
@@ -2774,7 +3182,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
       return;
     }
   }
-  loc_update = (trap_t) (atoi(arg) - 1);
+  loc_update = doorTrapT(atoi(arg) - 1);
 
   if (type != ENTER_CHECK) {
     if (loc_update <= 0 || loc_update > MAX_TRAP_TYPES) {
@@ -2813,7 +3221,7 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   char buf[160];
 
   if (num == 0) {
-    vlogf(5,"Bogus obj in describeTreasure, %s, %s", arg, getName());
+    vlogf(LOG_EDIT, "Bogus obj in describeTreasure, %s, %s", arg, getName());
     return;  
   } else if (num <= 2) 
     sprintf(type,"bit");
@@ -2860,15 +3268,16 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   setWeight((float) (num + 0.5)/10.0);
 }
 
+// called on PULSE_MUDHOUR
 void do_other_obj_stuff(void)
 {
   TObj *to;
   TPortal *obj;
 
-  if (time_info.hours == 23) {
-    // create day gates
+  if (time_info.hours == 12) {
+    // create day gates at noon
     if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
-      vlogf(3, "Error loading day gate");
+      vlogf(LOG_LOW, "Error loading day gate");
       return;
     }
     obj = dynamic_cast<TPortal *>(to);
@@ -2878,7 +3287,7 @@ void do_other_obj_stuff(void)
     thing_to_room(obj,1303);
     act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
     if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
-      vlogf(3, "Error loading day gate");
+      vlogf(LOG_LOW, "Error loading day gate");
       return;
     }
     obj = dynamic_cast<TPortal *>(to);
@@ -2888,9 +3297,9 @@ void do_other_obj_stuff(void)
     thing_to_room(obj,5700);
     act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
   } else if (time_info.hours == 0) {
-    // create moon gates
+    // create moon gates at midnight
     if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
-      vlogf(3, "Error loading moon gate");
+      vlogf(LOG_LOW, "Error loading moon gate");
       return;
     }
     obj = dynamic_cast<TPortal *>(to);
@@ -2900,7 +3309,7 @@ void do_other_obj_stuff(void)
     thing_to_room(obj,28800);
     act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
     if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
-      vlogf(3, "Error loading moon gate");
+      vlogf(LOG_LOW, "Error loading moon gate");
       return;
     }
     obj = dynamic_cast<TPortal *>(to);
@@ -2911,4 +3320,296 @@ void do_other_obj_stuff(void)
     act("$n appears suddenly!", TRUE, obj, 0, 0, TO_ROOM);
   }
 }
+
+int TThing::editAverageMe(TBeing *tBeing, const char *)
+{
+  tBeing->sendTo("Can not average this.  Sorry.\n\r");
+  return FALSE;
+}
+
+int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
+{
+  string tStString(""),
+         tStBuffer(""),
+         tStArg(tString);
+
+  if (!tString || !*tString) {
+    tBeing->sendTo("Syntax: med average %s <level[1.0-60.0]> <class>\n\r");
+    return FALSE;
+  }
+
+  tStArg = two_arg(tStArg, tStString, tStBuffer);
+
+  classIndT tClass;
+  int tStr, tBra, tCon, tDex, tAgi, tInt, tWis, tFoc, tPer, tCha, tKar, tSpe;
+  double tLevel = atof(tStString.c_str());
+
+  if (tLevel <= 0 || tLevel > 60) {
+    tBeing->sendTo("Level must be between 1 and 60.\n\r");
+    return FALSE;
+  }
+
+  TMonster *tMonster;
+
+  if (!(tMonster = dynamic_cast<TMonster *>(this))) {
+    tBeing->sendTo("Target is not a monster.  Cannot do this, sorry.\n\r");
+    return FALSE;
+  }
+
+  if (tStBuffer.empty()) {
+    for (tClass = MIN_CLASS_IND; tClass < MAX_CLASSES; tClass++)
+      if (hasClass((1 << tClass))) {
+        tBeing->sendTo("Setting class to current: %s\n\r", classNames[tClass].capName);
+        break;
+      }
+
+    if (tClass == MAX_CLASSES || !hasClass((1 << tClass))) {
+      tBeing->sendTo("Something went wrong, tell a coder!\n\r");
+      return FALSE;
+    }
+
+    tStr = getStat(STAT_CHOSEN, STAT_STR);
+    tBra = getStat(STAT_CHOSEN, STAT_BRA);
+    tCon = getStat(STAT_CHOSEN, STAT_CON);
+    tDex = getStat(STAT_CHOSEN, STAT_DEX);
+    tAgi = getStat(STAT_CHOSEN, STAT_AGI);
+    tInt = getStat(STAT_CHOSEN, STAT_INT);
+    tWis = getStat(STAT_CHOSEN, STAT_WIS);
+    tFoc = getStat(STAT_CHOSEN, STAT_FOC);
+    tPer = getStat(STAT_CHOSEN, STAT_PER);
+    tCha = getStat(STAT_CHOSEN, STAT_CHA);
+    tKar = getStat(STAT_CHOSEN, STAT_KAR);
+    tSpe = getStat(STAT_CHOSEN, STAT_SPE);
+  } else {
+    tClass = getClassIndNum(tStBuffer.c_str(), EXACT_YES);
+
+    switch (tClass) {
+      case MAGE_LEVEL_IND:
+        tStr = -10;
+        tBra = -20;
+        tCon = -10;
+        tDex = -10;
+        tAgi = -20;
+        tInt = +20;
+        tWis = +20;
+        tFoc = +20;
+        tPer = - 5;
+        tCha = - 5;
+        tKar = +20;
+        tSpe = -10;
+        break;
+      case CLERIC_LEVEL_IND:
+        tStr =   0;
+        tBra = -10;
+        tCon = -10;
+        tDex = +10;
+        tAgi =   0;
+        tInt = +10;
+        tWis =   0;
+        tFoc = +10;
+        tPer = -20;
+        tCha =   0;
+        tKar = +20;
+        tSpe =   0;
+        break;
+      case WARRIOR_LEVEL_IND:
+        tStr = +20;
+        tBra = +10;
+        tCon = +20;
+        tDex = + 5;
+        tAgi = + 5;
+        tInt = -20;
+        tWis = -20;
+        tFoc = -10;
+        tPer = -10;
+        tCha = -10;
+        tKar = +10;
+        tSpe = +10;
+        break;
+      case THIEF_LEVEL_IND:
+        tStr = -10;
+        tBra = +10;
+        tCon = -10;
+        tDex = +10;
+        tAgi = +20;
+        tInt = -22;
+        tWis = -23;
+        tFoc = +10;
+        tPer = +20;
+        tCha = +10;
+        tKar =   0;
+        tSpe = +25;
+        break;
+      case SHAMAN_LEVEL_IND:
+        tStr = 0;
+        tBra = 0;
+        tCon = 0;
+        tDex = 0;
+        tAgi = 0;
+        tInt = 0;
+        tWis = 0;
+        tFoc = 0;
+        tPer = 0;
+        tCha = 0;
+        tKar = 0;
+        tSpe = 0;
+        break;
+      case DEIKHAN_LEVEL_IND:
+        tStr = +10;
+        tBra = -10;
+        tCon = -20;
+        tDex = -10;
+        tAgi =   0;
+        tInt = +10;
+        tWis = +20;
+        tFoc = +20;
+        tPer = -10;
+        tCha = -10;
+        tKar =   0;
+        tSpe =   0;
+        break;
+      case MONK_LEVEL_IND:
+        tStr = +10;
+        tBra =   0;
+        tCon = -20;
+        tDex = +10;
+        tAgi = +20;
+        tInt = -20;
+        tWis = -20;
+        tFoc = +20;
+        tPer = -20;
+        tCha =   0;
+        tKar =   0;
+        tSpe = +20;
+        break;
+      case RANGER_LEVEL_IND:
+        tStr = +20;
+        tBra = -20;
+        tCon = -20;
+        tDex = +10;
+        tAgi = +10;
+        tInt = -10;
+        tWis = -10;
+        tFoc = +20;
+        tPer = +20;
+        tCha = -20;
+        tKar = +10;
+        tSpe = -10;
+        break;
+      default:
+        tStr = 0;
+        tBra = 0;
+        tCon = 0;
+        tDex = 0;
+        tAgi = 0;
+        tInt = 0;
+        tWis = 0;
+        tFoc = 0;
+        tPer = 0;
+        tCha = 0;
+        tKar = 0;
+        tSpe = 0;
+        break;
+    }
+  }
+
+  setStat(STAT_CHOSEN, STAT_STR, tStr);
+  setStat(STAT_CHOSEN, STAT_BRA, tBra);
+  setStat(STAT_CHOSEN, STAT_CON, tCon);
+  setStat(STAT_CHOSEN, STAT_DEX, tDex);
+  setStat(STAT_CHOSEN, STAT_AGI, tAgi);
+  setStat(STAT_CHOSEN, STAT_INT, tInt);
+  setStat(STAT_CHOSEN, STAT_WIS, tWis);
+  setStat(STAT_CHOSEN, STAT_FOC, tFoc);
+  setStat(STAT_CHOSEN, STAT_PER, tPer);
+  setStat(STAT_CHOSEN, STAT_CHA, tCha);
+  setStat(STAT_CHOSEN, STAT_KAR, tKar);
+  setStat(STAT_CHOSEN, STAT_SPE, tSpe);
+
+  setClass((1 << tClass));
+
+  for (classIndT tNewClass = MIN_CLASS_IND; tNewClass < MAX_CLASSES; tNewClass++)
+    setLevel(tNewClass, 0);
+
+  setLevel(tClass, (int) tLevel);
+
+  tMonster->setHPLevel(tLevel);
+  tMonster->setHPFromHPLevel();
+  tMonster->setDamLevel(tLevel);
+  tMonster->setACLevel(tLevel);
+  tMonster->setACFromACLevel();
+  //tMonster->setHitroll(10.0 * tLevel);
+  tMonster->setHitroll(0); // hitroll is a bonus ABOVE your level
+
+  return FALSE;
+}
+
+int TBaseWeapon::editAverageMe(TBeing *tBeing, const char *tString)
+{
+  if (!tBeing->hasWizPower(POWER_OEDIT_WEAPONS)) {
+    tBeing->sendTo("You don't have the power to modify weapons, thus you can not use this.\n\r");
+    return FALSE;
+  }
+
+  if (!tString || !*tString) {
+    tBeing->sendTo("Syntax: oed average %s <level[1.0-60.0]>\n\r");
+    return FALSE;
+  }
+
+  double tLevel = atof(tString);
+
+  if (tLevel <= 0.0 || tLevel > 60.0) {
+    tBeing->sendTo("Level must be between 1 and 60.\n\r");
+    return FALSE;
+  }
+
+  double tNewStr = ((tLevel * 3.0) / 2.0) + 10;
+  double tNewDam = 4.0 * tLevel;
+  double tNewShr = ((tLevel * 3.0) / 2.0) + 10;
+  double tNewAvg = 10 - ((tLevel / 60) * 10);
+
+  tBeing->sendTo(COLOR_OBJECTS, "Setting %s to:  [Level: %6.2f]\n\r", getName(), tLevel);
+  tBeing->sendTo("Strength : %6.2f\n\r", tNewStr);
+  tBeing->sendTo("Damage   : %6.2f\n\r", tNewDam);
+  tBeing->sendTo("Shrapness: %6.2f\n\r", tNewShr);
+  tBeing->sendTo("Precison : %6.2f\n\r", tNewAvg);
+
+  setMaxSharp((int) tNewShr);
+  setCurSharp((int) tNewShr);
+  setWeapDamLvl((int) tNewDam);
+  setWeapDamDev((int) tNewAvg);
+  setStructPoints((int) tNewStr);
+  setMaxStructPoints((int) tNewStr);
+  obj_flags.cost = suggestedPrice();
+
+  return FALSE;
+}
+
+int TBaseClothing::editAverageMe(TBeing *tBeing, const char *tString)
+{
+  if (!tBeing->hasWizPower(POWER_OEDIT_APPLYS)) {
+    tBeing->sendTo("You can not set applies, AC is based off this.  Sorry.\n\r");
+    return FALSE;
+  }
+
+  if (!tString || !*tString) {
+    tBeing->sendTo("Syntax: oed average %s <level[1.0-60.0]>\n\r");
+    return FALSE;
+  }
+
+  double tLevel = atof(tString);
+
+  if (tLevel <= 0.0 || tLevel > 60.0) {
+    tBeing->sendTo("Level must be between 1 and 60.\n\r");
+    return FALSE;
+  }
+
+  setDefArmorLevel(tLevel);
+  obj_flags.cost = suggestedPrice();
+
+  return FALSE;
+}
+
+
+
 

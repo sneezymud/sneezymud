@@ -172,19 +172,6 @@ bool TBeing::validMove(dirTypeT cmd)
       sendTo("You make yourself ethereal to pass through the barrier.\n\r");
       return TRUE;
     }
-    if (isAffected(AFF_SHADOW_WALK) && !riding) {
-      int chnum = ::number(0,3);
-      if (chnum == 1) {
-      act( "$n's transparent body passes through the barrier!",
-          TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
-      sendTo("You walk directly through the barrier!\n\r");
-      return TRUE;
-      } else {
-	sendTo("You attempt to walk through a solid barrier and fail.\n\r");
-        notLegalMove();
-        return FALSE;
-      }
-    }
     if (exitp->keyword) {
       if (!IS_SET(exitp->condition, EX_SECRET)) {
         char doorbuf[64];
@@ -275,7 +262,21 @@ bool TBeing::validMove(dirTypeT cmd)
       return FALSE;
     }
   }
-
+  if (IS_SET(exitp->condition, EX_CLOSED)) {
+    if (isAffected(AFF_SHADOW_WALK) && !riding) {
+      int chnum = ::number(0,3);
+      if (chnum == 1) {
+      act( "$n's transparent body passes through the barrier!",
+          TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
+      sendTo("You walk directly through the barrier!\n\r");
+      return TRUE;
+      } else {
+	sendTo("You attempt to walk through a solid barrier and fail.\n\r");
+        notLegalMove();
+        return FALSE;
+      }
+    }
+  }
   return TRUE;
 }
 
@@ -1045,6 +1046,9 @@ int TBeing::moveGroup(dirTypeT dir)
             if (!tb)
               continue;
             act("You follow $N.", FALSE, tb, 0, this, TO_CHAR);
+	    if (hasClass(CLASS_SHAMAN)) {
+	      addToLifeforce(-1);
+	    }
             if (tb->followers) {
               // move followers of other riders
               rc = tb->moveGroup(dir);
@@ -1109,6 +1113,9 @@ int TBeing::moveGroup(dirTypeT dir)
             continue;
           }
           act("You follow $N.", FALSE, tft, 0, this, TO_CHAR);
+	  if (hasClass(CLASS_SHAMAN)) {
+	    addToLifeforce(-1);
+	  }
           if (tft->followers) {
             rc = tft->moveGroup(dir);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3408,8 +3415,8 @@ int TBeing::doMortalGoto(const string & argument)
              is_abbrev(arg, "focused-trainer") ||
              is_abbrev(arg, "barehand-trainer") ||
              is_abbrev(arg, "poisons-trainer") ||
-             is_abbrev(arg, "healing-trainer") ||
-             is_abbrev(arg, "undead-trainer") ||
+             is_abbrev(arg, "frog-trainer") ||
+             is_abbrev(arg, "spider-trainer") ||
              is_abbrev(arg, "totemism-trainer") ||
              is_abbrev(arg, "stealth-trainer") ||
              is_abbrev(arg, "traps-trainer")) {

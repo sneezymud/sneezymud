@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: flame.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -356,7 +348,7 @@ void TFFlame::updateFlameInfo()
       lFound = true;
     }
   if (!lFound)
-    vlogf(9, "TFFlame object with No extra slots for lighting [%s].",
+    vlogf(LOG_BUG, "TFFlame object with No extra slots for lighting [%s].",
           (shortDescr ? shortDescr : "BAD OBJECT!"));
 }
 
@@ -570,13 +562,6 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
 // Non-Class Specific functions
 void TBeing::igniteObject(const char *argument, TThing *fObj)
 {
-  /*
-  if (strcmp(name, "Lapsos") != 0 &&
-      strcmp(name, "Mithros") != 0) {
-    sendTo("This code is still being tested, please don't use it.\n\r");
-    return;
-  }
-  */
 
   TThing *tStuff;
   TFFlame *newFlame = NULL;
@@ -603,7 +588,7 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 
   // must be new, so lets create it and make sure it got created.
   if (!(newFlame = new TFFlame())) {
-    vlogf(10, "Was unable to allocate for new Flame item.  User[%s]", getName());
+    vlogf(LOG_BUG, "Was unable to allocate for new Flame item.  User[%s]", getName());
     sendTo("Something bad occured, tell a god.\n\r");
     return;
   }
@@ -622,7 +607,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   TDrinkCon *dContainer;
 
   if (!(dContainer = dynamic_cast<TDrinkCon *>(sObj)))
-    return false; // let doPour continue it's run, we don't do this.
+    return false; // let doPour continue its run, we don't do this.
 
   if ((size = dContainer->getDrinkUnits()) <= 0) {
     ch->sendTo("I'm afraid that container is empty.\n\r");
@@ -697,6 +682,21 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
         TRUE, ch, 0, this, TO_NOTVICT);
 
     rc = reconcileDamage(this, ::number(5, max(2, min(5, (int) (size/20)))), DAMAGE_FROST);
+  } else if ((type != LIQ_WHISKY) && (type != LIQ_FIREBRT) &&
+	     (type != LIQ_VODKA) && (type != LIQ_RUM) &&
+	     (type != LIQ_BRANDY)){
+    TThing *t;
+    TObj *obj = NULL;
+    int i;
+    
+    for (i = MIN_WEAR;i < MAX_WEAR;i++) {
+      if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t)) ||
+	  !obj->isObjStat(ITEM_BURNING) || ::number(0,3))
+	continue;
+      obj->remBurning(ch);
+      act("Your $p is extinguished.", FALSE, this, obj, 0, TO_CHAR);
+      act("$n's $p is extinguished.", FALSE, this, obj, 0, TO_ROOM);
+    }
   }
 
   dContainer->setDrinkUnits(0);  
@@ -716,4 +716,31 @@ void TFFlame::putLightOut()
   // You are correct.  This really messes up the flame and will
   // cause it to go -light.
   //  TBaseLight::putLightOut();
+}
+
+int TFFlame::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this.\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus your chi, causing $p to bursts momentarily!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n stares at $p, causing it to burst momentarily",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  obj_flags.decay_time += 10;
+
+  return true;
 }

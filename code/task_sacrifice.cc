@@ -11,8 +11,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int clev = ch->GetMaxLevel();
   int percent = ::number(1, 100);
-  int factor = ::number(1, ((clev + learning) / 2));
-  int factor2 = ((::number(1, (clev + learning)) / 20) * 4);
+  int factor = ::number(5, (((clev + learning) + percent) / 2));
+  int factor2 = ::number(5, (((clev + learning) + percent) / 5));
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_sedit.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
 
   SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
@@ -33,7 +18,6 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
-#include "create.h"
 #include "combat.h"
 #include "dirsort.h"
 
@@ -160,9 +144,9 @@ void TPerson::doSEdit(const char *tArg)
     return;
   }
 
-  if (strcmp(getName(), "Lapsos" ) != 0 &&
-      strcmp(getName(), "Mithros") != 0) {
-    sendTo("You are not Lapsos, this is still experimental.  You do not use it.\n\r");
+  if (strcmp(getName(), "Jesus" ) != 0 &&
+      strcmp(getName(), "Damescena") != 0) {
+    sendTo("This code is under development...do not use.\n\r");
     return;
   }
 
@@ -562,10 +546,8 @@ void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent = false)
     sprintf(tValue, "# Created by %s\n", good_cap(ch->getNameNOC(ch)).c_str());
     fputs(tValue, tFile);
 
-    // This makes it correct up until the year 2090.  If that isn't long enough
-    // for this to get replaced by something Much better then we got big probs.
-    sprintf(tValue, "# Copyright %s%d, SneezyMUD Dev Team.  All rights reserved.\n\n",
-            (localtime(&tTime)->tm_year > 90 ? "19" : "20"), localtime(&tTime)->tm_year);
+    sprintf(tValue, "# Copyright %d, SneezyMUD Dev Team.  All rights reserved.\n\n",
+            localtime(&tTime)->tm_year + 1900);
     fputs(tValue, tFile);
 
     for (resp *respIndex = tMonster->resps->respList; respIndex; respIndex = respIndex->next)
@@ -913,7 +895,7 @@ void sedit(TBeing *ch, TMonster *tMonster)
     if (beingIndex)
       beingIndex->next = tMonster->next;
     else {
-      vlogf(10, "Trying to remove ?? from character_list.");
+      vlogf(LOG_EDIT, "Trying to remove ?? from character_list.");
       abort();
     }
   }
@@ -1013,7 +995,7 @@ void seditList(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(10, "Unable to dirwalk directory %s", tString);
+    vlogf(LOG_EDIT, "Unable to dirwalk directory %s", tString);
     return;
   }
 
@@ -1050,7 +1032,7 @@ void seditList(TBeing *ch)
     tStString += "Nothing found.\n\r";
 
   closedir(tDirInfo);
-  ch->desc->page_string(tStString.c_str(), 0);
+  ch->desc->page_string(tStString.c_str());
 }
 
 void seditPurge(TBeing *ch)
@@ -1067,7 +1049,7 @@ void seditPurge(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(10, "Unable to dirwalk directory %s", tString);
+    vlogf(LOG_EDIT, "Unable to dirwalk directory %s", tString);
     return;
   }
 
@@ -1095,7 +1077,7 @@ void seditCore(TBeing *ch, char *tArg)
   }
 
   if (ch->desc->showstr_head) {
-    ch->desc->show_string(tArg, TRUE, TRUE);
+    ch->desc->show_string(tArg, SHOWNOW_YES, ALLOWREP_YES);
 
     if (!ch->desc->showstr_head &&
         ch->specials.edit == SEDIT_DISPLAY &&
@@ -1148,7 +1130,7 @@ void seditCore(TBeing *ch, char *tArg)
               *ch->roomp += *ch->desc->mob;
               ch->desc->mob = NULL;
             } else
-              vlogf(1, "seditCore returning to main game with no mobile in queue.");
+              vlogf(LOG_EDIT, "seditCore returning to main game with no mobile in queue.");
 
             if (ch->vt100() || ch->ansi())
               ch->doCls(false);
@@ -1173,7 +1155,7 @@ void seditCore(TBeing *ch, char *tArg)
       seditDisplayMenu(ch, ch->desc->mob, tArg, 0);
       break;
     default:
-      vlogf(9, "Got to bad place in seditCore() [%d]", ch->specials.edit);
+      vlogf(LOG_EDIT, "Got to bad place in seditCore() [%d]", ch->specials.edit);
       break;
   }
 }
@@ -1329,7 +1311,7 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
             tForm = false;
           } while ((respIndex = seditFindResponse(respIndex->next, tCommand, &tForm, -1)));
 
-          ch->desc->page_string(tStOutput.c_str(), 0);
+          ch->desc->page_string(tStOutput.c_str());
         } else {
           ch->sendTo("No Matches.\n\r");
           ch->specials.editFriend = 0;

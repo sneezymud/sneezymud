@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_stavecharge.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -166,8 +158,8 @@ int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCou
 void TBeing::doChargeStave(string tStString)
 {
   /*
-  if (strcmp("Lapsos", getName()) != 0) {
-    sendTo("You are not Lapsos.  This command is still experimental.\n\r");
+  if (strcmp("Jesus", getName()) != 0) {
+    sendTo("This command is still experimental.\n\r");
     return;
   }
   */
@@ -413,7 +405,7 @@ int TStaff::taskChargeMe(TBeing *ch, spellNumT tSpell, int & tCharge)
 
   int tManaCost = min(ch->getMana(), tManaReq);
 
-  ch->addToMana(-tManaCost);
+  ch->reconcileMana(TYPE_UNDEFINED, 0, tManaCost);
 
   tManaCost = tManaReq - tManaCost;
 

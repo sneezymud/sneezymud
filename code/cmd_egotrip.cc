@@ -283,7 +283,8 @@ void TBeing::doEgoTrip(const char *arg)
                        good_cap(getName()).c_str(),
                        DiseaseInfo[affToDisease(*tAff)].name);
 
-        if (!strcmp("Lapsos", getName()))
+
+        if (!strcmp("Jesus", getName()))
           sendTo(COLOR_BASIC, "Your cure %s of: %s.\n\r",
                  tBeing->getName(),
                  DiseaseInfo[affToDisease(*tAff)].name);
