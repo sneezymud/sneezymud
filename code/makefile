@@ -445,14 +445,15 @@ objs/actions.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/actions.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/actions.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/actions.o: /usr/include/g++/cstring /usr/include/string.h
-objs/actions.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/actions.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/actions.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/actions.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/actions.o: /usr/include/errno.h /usr/include/g++/string
 objs/actions.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/actions.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/actions.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/actions.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/actions.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/actions.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/actions.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/actions.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/actions.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/actions.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/actions.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/actions.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/actions.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -465,7 +466,8 @@ objs/actions.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/actions.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/actions.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/actions.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/actions.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/actions.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/actions.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/actions.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/actions.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/actions.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -487,17 +489,18 @@ objs/ai_assignskills.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ai_assignskills.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ai_assignskills.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ai_assignskills.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ai_assignskills.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/ai_assignskills.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ai_assignskills.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ai_assignskills.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/ai_assignskills.o: /usr/include/errno.h /usr/include/g++/string
 objs/ai_assignskills.o: /usr/include/g++/std/bastring.h
-objs/ai_assignskills.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/ai_assignskills.o: /usr/include/g++/cstddef
 objs/ai_assignskills.o: /usr/include/g++/std/straits.h
 objs/ai_assignskills.o: /usr/include/g++/alloc.h
 objs/ai_assignskills.o: /usr/include/g++/stl_config.h
 objs/ai_assignskills.o: /usr/include/g++/stl_alloc.h
 objs/ai_assignskills.o: /usr/include/g++/iostream.h
 objs/ai_assignskills.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ai_assignskills.o: /usr/include/g++/_G_config.h
 objs/ai_assignskills.o: /usr/include/g++/iterator
 objs/ai_assignskills.o: /usr/include/g++/stl_relops.h
 objs/ai_assignskills.o: /usr/include/g++/stl_iterator.h
@@ -518,6 +521,7 @@ objs/ai_assignskills.o: /usr/include/g++/stl_function.h
 objs/ai_assignskills.o: /usr/include/g++/stl_map.h
 objs/ai_assignskills.o: /usr/include/g++/stl_multimap.h
 objs/ai_assignskills.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/ai_assignskills.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/ai_assignskills.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/ai_assignskills.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/ai_assignskills.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -541,15 +545,16 @@ objs/ai_commands.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ai_commands.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ai_commands.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ai_commands.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ai_commands.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/ai_commands.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ai_commands.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ai_commands.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/ai_commands.o: /usr/include/errno.h /usr/include/g++/string
 objs/ai_commands.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/ai_commands.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/ai_commands.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/ai_commands.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/ai_commands.o: /usr/include/g++/stl_config.h
 objs/ai_commands.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/ai_commands.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ai_commands.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/ai_commands.o: /usr/include/g++/stl_relops.h
+objs/ai_commands.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/ai_commands.o: /usr/include/g++/stl_iterator.h
 objs/ai_commands.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/ai_commands.o: /usr/include/g++/stl_algobase.h
@@ -566,15 +571,17 @@ objs/ai_commands.o: /usr/include/g++/stl_tree.h
 objs/ai_commands.o: /usr/include/g++/stl_function.h
 objs/ai_commands.o: /usr/include/g++/stl_map.h
 objs/ai_commands.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/ai_commands.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/ai_commands.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/ai_commands.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/ai_commands.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/ai_commands.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/ai_commands.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/ai_commands.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/ai_commands.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/ai_commands.o: spec_mobs.h materials.h colorstring.h format.h combat.h
+objs/ai_commands.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/ai_commands.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/ai_commands.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/ai_commands.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/ai_commands.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/ai_commands.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/ai_commands.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/ai_commands.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/ai_commands.o: person.h monster.h account.h extern.h handler.h
+objs/ai_commands.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/ai_commands.o: format.h combat.h
 objs/ai_reactions.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ai_reactions.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ai_reactions.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -585,15 +592,16 @@ objs/ai_reactions.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ai_reactions.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ai_reactions.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ai_reactions.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ai_reactions.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/ai_reactions.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ai_reactions.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ai_reactions.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/ai_reactions.o: /usr/include/errno.h /usr/include/g++/string
 objs/ai_reactions.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/ai_reactions.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/ai_reactions.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/ai_reactions.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/ai_reactions.o: /usr/include/g++/stl_config.h
 objs/ai_reactions.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/ai_reactions.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ai_reactions.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/ai_reactions.o: /usr/include/g++/stl_relops.h
+objs/ai_reactions.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/ai_reactions.o: /usr/include/g++/stl_iterator.h
 objs/ai_reactions.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/ai_reactions.o: /usr/include/g++/stl_algobase.h
@@ -611,6 +619,7 @@ objs/ai_reactions.o: /usr/include/g++/stl_function.h
 objs/ai_reactions.o: /usr/include/g++/stl_map.h
 objs/ai_reactions.o: /usr/include/g++/stl_multimap.h
 objs/ai_reactions.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/ai_reactions.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/ai_reactions.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/ai_reactions.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/ai_reactions.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -631,15 +640,16 @@ objs/ai_responses.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ai_responses.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ai_responses.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ai_responses.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ai_responses.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/ai_responses.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ai_responses.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ai_responses.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/ai_responses.o: /usr/include/errno.h /usr/include/g++/string
 objs/ai_responses.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/ai_responses.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/ai_responses.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/ai_responses.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/ai_responses.o: /usr/include/g++/stl_config.h
 objs/ai_responses.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/ai_responses.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ai_responses.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/ai_responses.o: /usr/include/g++/stl_relops.h
+objs/ai_responses.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/ai_responses.o: /usr/include/g++/stl_iterator.h
 objs/ai_responses.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/ai_responses.o: /usr/include/g++/stl_algobase.h
@@ -657,6 +667,7 @@ objs/ai_responses.o: /usr/include/g++/stl_function.h
 objs/ai_responses.o: /usr/include/g++/stl_map.h
 objs/ai_responses.o: /usr/include/g++/stl_multimap.h
 objs/ai_responses.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/ai_responses.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/ai_responses.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/ai_responses.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/ai_responses.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -679,14 +690,15 @@ objs/ai_utility.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ai_utility.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ai_utility.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ai_utility.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ai_utility.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/ai_utility.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ai_utility.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ai_utility.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/ai_utility.o: /usr/include/errno.h /usr/include/g++/string
 objs/ai_utility.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/ai_utility.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/ai_utility.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/ai_utility.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/ai_utility.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ai_utility.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/ai_utility.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/ai_utility.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/ai_utility.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/ai_utility.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/ai_utility.o: /usr/include/g++/stl_relops.h
 objs/ai_utility.o: /usr/include/g++/stl_iterator.h
 objs/ai_utility.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -702,7 +714,8 @@ objs/ai_utility.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/ai_utility.o: /usr/include/g++/stl_tree.h
 objs/ai_utility.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/ai_utility.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/ai_utility.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/ai_utility.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/ai_utility.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/ai_utility.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/ai_utility.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/ai_utility.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -722,17 +735,18 @@ objs/alignment_deity.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/alignment_deity.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/alignment_deity.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/alignment_deity.o: /usr/include/g++/cstring /usr/include/string.h
-objs/alignment_deity.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/alignment_deity.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/alignment_deity.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/alignment_deity.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/alignment_deity.o: /usr/include/errno.h /usr/include/g++/string
 objs/alignment_deity.o: /usr/include/g++/std/bastring.h
-objs/alignment_deity.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/alignment_deity.o: /usr/include/g++/cstddef
 objs/alignment_deity.o: /usr/include/g++/std/straits.h
 objs/alignment_deity.o: /usr/include/g++/alloc.h
 objs/alignment_deity.o: /usr/include/g++/stl_config.h
 objs/alignment_deity.o: /usr/include/g++/stl_alloc.h
 objs/alignment_deity.o: /usr/include/g++/iostream.h
 objs/alignment_deity.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/alignment_deity.o: /usr/include/g++/_G_config.h
 objs/alignment_deity.o: /usr/include/g++/iterator
 objs/alignment_deity.o: /usr/include/g++/stl_relops.h
 objs/alignment_deity.o: /usr/include/g++/stl_iterator.h
@@ -753,6 +767,7 @@ objs/alignment_deity.o: /usr/include/g++/stl_function.h
 objs/alignment_deity.o: /usr/include/g++/stl_map.h
 objs/alignment_deity.o: /usr/include/g++/stl_multimap.h
 objs/alignment_deity.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/alignment_deity.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/alignment_deity.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/alignment_deity.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/alignment_deity.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -790,23 +805,24 @@ objs/amap.o: /usr/include/machine/param.h /usr/include/dirent.h
 objs/amap.o: /usr/include/sys/dirent.h stdsneezy.h /usr/include/g++/cstdio
 objs/amap.o: /usr/include/g++/cstdlib /usr/include/g++/ctime
 objs/amap.o: /usr/include/g++/cctype /usr/include/g++/cassert
-objs/amap.o: /usr/include/g++/cstring /usr/include/g++/cerrno
-objs/amap.o: /usr/include/errno.h /usr/include/g++/string
-objs/amap.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/amap.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/amap.o: /usr/include/g++/stl_config.h /usr/include/g++/iterator
-objs/amap.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/amap.o: /usr/include/g++/std/bastring.cc /usr/include/g++/iostream
-objs/amap.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/amap.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
-objs/amap.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
-objs/amap.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
-objs/amap.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/amap.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/amap.o: being.h person.h monster.h account.h extern.h handler.h
-objs/amap.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
-objs/amap.o: format.h lowtools.h database.h /usr/local/include/libpq-fe.h
-objs/amap.o: /usr/local/include/postgres_ext.h
+objs/amap.o: /usr/include/g++/cstring /usr/include/g++/cmath
+objs/amap.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/amap.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/amap.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/amap.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/amap.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/amap.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/amap.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/amap.o: /usr/include/g++/fstream /usr/include/g++/fstream.h sstring.h
+objs/amap.o: low.h enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/amap.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
+objs/amap.o: comm.h toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/amap.o: body.h race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/amap.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/amap.o: charfile.h being.h person.h monster.h account.h extern.h
+objs/amap.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
+objs/amap.o: colorstring.h format.h lowtools.h database.h
+objs/amap.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
 objs/ansi.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ansi.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ansi.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -817,27 +833,29 @@ objs/ansi.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/ansi.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/ansi.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/ansi.o: /usr/include/g++/cstring /usr/include/string.h
-objs/ansi.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/ansi.o: /usr/include/errno.h /usr/include/g++/string
-objs/ansi.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/ansi.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/ansi.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/ansi.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/ansi.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/ansi.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/ansi.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/ansi.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/ansi.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/ansi.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/ansi.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/ansi.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/ansi.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/ansi.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/ansi.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/ansi.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/ansi.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/ansi.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/ansi.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/ansi.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/ansi.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/ansi.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/ansi.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/ansi.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/ansi.o: /usr/include/g++/new /usr/include/g++/exception
+objs/ansi.o: /usr/include/g++/stl_construct.h
 objs/ansi.o: /usr/include/g++/stl_uninitialized.h
 objs/ansi.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/ansi.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/ansi.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/ansi.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/ansi.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/ansi.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/ansi.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/ansi.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/ansi.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/ansi.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -856,14 +874,15 @@ objs/being.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/being.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/being.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/being.o: /usr/include/g++/cstring /usr/include/string.h
-objs/being.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/being.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/being.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/being.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/being.o: /usr/include/errno.h /usr/include/g++/string
 objs/being.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/being.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/being.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/being.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/being.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/being.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/being.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/being.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/being.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/being.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/being.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/being.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/being.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -876,7 +895,8 @@ objs/being.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/being.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/being.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/being.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/being.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/being.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/being.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/being.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/being.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/being.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -884,7 +904,8 @@ objs/being.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/being.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/being.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/being.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/being.o: colorstring.h format.h
+objs/being.o: colorstring.h format.h database.h /usr/local/include/libpq-fe.h
+objs/being.o: /usr/local/include/postgres_ext.h
 objs/body.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/body.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/body.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -895,27 +916,29 @@ objs/body.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/body.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/body.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/body.o: /usr/include/g++/cstring /usr/include/string.h
-objs/body.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/body.o: /usr/include/errno.h /usr/include/g++/string
-objs/body.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/body.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/body.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/body.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/body.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/body.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/body.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/body.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/body.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/body.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/body.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/body.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/body.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/body.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/body.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/body.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/body.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/body.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/body.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/body.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/body.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/body.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/body.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/body.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/body.o: /usr/include/g++/new /usr/include/g++/exception
+objs/body.o: /usr/include/g++/stl_construct.h
 objs/body.o: /usr/include/g++/stl_uninitialized.h
 objs/body.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/body.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/body.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/body.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/body.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/body.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/body.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/body.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/body.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/body.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -923,7 +946,7 @@ objs/body.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/body.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/body.o: being.h person.h monster.h account.h extern.h handler.h
 objs/body.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
-objs/body.o: format.h /usr/include/g++/fstream.h
+objs/body.o: format.h
 objs/breath.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/breath.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/breath.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -934,14 +957,15 @@ objs/breath.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/breath.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/breath.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/breath.o: /usr/include/g++/cstring /usr/include/string.h
-objs/breath.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/breath.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/breath.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/breath.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/breath.o: /usr/include/errno.h /usr/include/g++/string
 objs/breath.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/breath.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/breath.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/breath.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/breath.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/breath.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/breath.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/breath.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/breath.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/breath.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/breath.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/breath.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/breath.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -954,7 +978,8 @@ objs/breath.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/breath.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/breath.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/breath.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/breath.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/breath.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/breath.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/breath.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/breath.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/breath.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -975,13 +1000,14 @@ objs/bwiz.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/bwiz.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/bwiz.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/bwiz.o: /usr/include/g++/cstring /usr/include/stdarg.h
+objs/bwiz.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/bwiz.o: /usr/include/stddef.h /usr/include/math.h
 objs/bwiz.o: /usr/include/g++/cerrno /usr/include/g++/string
 objs/bwiz.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/bwiz.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/bwiz.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/bwiz.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/bwiz.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/bwiz.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/bwiz.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/bwiz.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/bwiz.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/bwiz.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/bwiz.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/bwiz.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/bwiz.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -994,7 +1020,8 @@ objs/bwiz.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/bwiz.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/bwiz.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/bwiz.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/bwiz.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/bwiz.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/bwiz.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/bwiz.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/bwiz.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/bwiz.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -1016,13 +1043,14 @@ objs/client.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/client.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/client.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/client.o: /usr/include/g++/cstring /usr/include/string.h
+objs/client.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/client.o: /usr/include/stddef.h /usr/include/math.h
 objs/client.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/client.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/client.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/client.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/client.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/client.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/client.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/client.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/client.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/client.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/client.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/client.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/client.o: /usr/include/g++/stl_iterator.h
 objs/client.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1036,7 +1064,8 @@ objs/client.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/client.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/client.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/client.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/client.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/client.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/client.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/client.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/client.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/client.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -1056,17 +1085,17 @@ objs/cmd_attribute.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_attribute.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_attribute.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_attribute.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_attribute.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_attribute.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_attribute.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_attribute.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_attribute.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_attribute.o: /usr/include/g++/std/bastring.h
-objs/cmd_attribute.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/cmd_attribute.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/cmd_attribute.o: /usr/include/g++/stl_config.h
+objs/cmd_attribute.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/cmd_attribute.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_attribute.o: /usr/include/g++/stl_alloc.h
 objs/cmd_attribute.o: /usr/include/g++/iostream.h
 objs/cmd_attribute.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_attribute.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_attribute.o: /usr/include/g++/stl_relops.h
+objs/cmd_attribute.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_attribute.o: /usr/include/g++/stl_iterator.h
 objs/cmd_attribute.o: /usr/include/g++/std/bastring.cc
 objs/cmd_attribute.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -1084,6 +1113,7 @@ objs/cmd_attribute.o: /usr/include/g++/stl_function.h
 objs/cmd_attribute.o: /usr/include/g++/stl_map.h
 objs/cmd_attribute.o: /usr/include/g++/stl_multimap.h
 objs/cmd_attribute.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_attribute.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_attribute.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_attribute.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_attribute.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1104,14 +1134,15 @@ objs/cmd_bash.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_bash.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_bash.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_bash.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_bash.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_bash.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_bash.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_bash.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_bash.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_bash.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_bash.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_bash.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_bash.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_bash.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_bash.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_bash.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_bash.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_bash.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_bash.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_bash.o: /usr/include/g++/stl_relops.h
 objs/cmd_bash.o: /usr/include/g++/stl_iterator.h
 objs/cmd_bash.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1125,7 +1156,8 @@ objs/cmd_bash.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_bash.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_bash.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_bash.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_bash.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_bash.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_bash.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_bash.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_bash.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_bash.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1145,15 +1177,16 @@ objs/cmd_bodyslam.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_bodyslam.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_bodyslam.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_bodyslam.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_bodyslam.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_bodyslam.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_bodyslam.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_bodyslam.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_bodyslam.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_bodyslam.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_bodyslam.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_bodyslam.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_bodyslam.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_bodyslam.o: /usr/include/g++/stl_config.h
 objs/cmd_bodyslam.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_bodyslam.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_bodyslam.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_bodyslam.o: /usr/include/g++/stl_relops.h
+objs/cmd_bodyslam.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_bodyslam.o: /usr/include/g++/stl_iterator.h
 objs/cmd_bodyslam.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_bodyslam.o: /usr/include/g++/stl_algobase.h
@@ -1171,6 +1204,7 @@ objs/cmd_bodyslam.o: /usr/include/g++/stl_function.h
 objs/cmd_bodyslam.o: /usr/include/g++/stl_map.h
 objs/cmd_bodyslam.o: /usr/include/g++/stl_multimap.h
 objs/cmd_bodyslam.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_bodyslam.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_bodyslam.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_bodyslam.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_bodyslam.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1191,14 +1225,15 @@ objs/cmd_charge.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_charge.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_charge.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_charge.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_charge.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_charge.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_charge.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_charge.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_charge.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_charge.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_charge.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_charge.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_charge.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_charge.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_charge.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_charge.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_charge.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_charge.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_charge.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_charge.o: /usr/include/g++/stl_relops.h
 objs/cmd_charge.o: /usr/include/g++/stl_iterator.h
 objs/cmd_charge.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1214,7 +1249,8 @@ objs/cmd_charge.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_charge.o: /usr/include/g++/stl_tree.h
 objs/cmd_charge.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_charge.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_charge.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_charge.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_charge.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_charge.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_charge.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_charge.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1233,14 +1269,15 @@ objs/cmd_chop.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_chop.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_chop.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_chop.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_chop.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_chop.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_chop.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_chop.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_chop.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_chop.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_chop.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_chop.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_chop.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_chop.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_chop.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_chop.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_chop.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_chop.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_chop.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_chop.o: /usr/include/g++/stl_relops.h
 objs/cmd_chop.o: /usr/include/g++/stl_iterator.h
 objs/cmd_chop.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1254,7 +1291,8 @@ objs/cmd_chop.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_chop.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_chop.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_chop.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_chop.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_chop.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_chop.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_chop.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_chop.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_chop.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1273,15 +1311,16 @@ objs/cmd_compare.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_compare.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_compare.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_compare.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_compare.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_compare.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_compare.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_compare.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_compare.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_compare.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_compare.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_compare.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_compare.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_compare.o: /usr/include/g++/stl_config.h
 objs/cmd_compare.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_compare.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_compare.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_compare.o: /usr/include/g++/stl_relops.h
+objs/cmd_compare.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_compare.o: /usr/include/g++/stl_iterator.h
 objs/cmd_compare.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_compare.o: /usr/include/g++/stl_algobase.h
@@ -1298,17 +1337,19 @@ objs/cmd_compare.o: /usr/include/g++/stl_tree.h
 objs/cmd_compare.o: /usr/include/g++/stl_function.h
 objs/cmd_compare.o: /usr/include/g++/stl_map.h
 objs/cmd_compare.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_compare.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_compare.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_compare.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_compare.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_compare.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_compare.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_compare.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_compare.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_compare.o: spec_mobs.h materials.h colorstring.h format.h shop.h
-objs/cmd_compare.o: obj_bow.h obj_symbol.h obj_food.h obj_opal.h obj_arrow.h
-objs/cmd_compare.o: obj_base_weapon.h obj_base_light.h obj_base_clothing.h
+objs/cmd_compare.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_compare.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_compare.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_compare.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_compare.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_compare.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_compare.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_compare.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_compare.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_compare.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_compare.o: format.h shop.h obj_bow.h obj_symbol.h obj_food.h
+objs/cmd_compare.o: obj_opal.h obj_arrow.h obj_base_weapon.h obj_base_light.h
+objs/cmd_compare.o: obj_base_clothing.h
 objs/cmd_consider.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/cmd_consider.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/cmd_consider.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h
@@ -1346,6 +1387,7 @@ objs/cmd_consider.o: /usr/include/g++/stl_function.h
 objs/cmd_consider.o: /usr/include/g++/stl_map.h
 objs/cmd_consider.o: /usr/include/g++/stl_multimap.h
 objs/cmd_consider.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_consider.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_consider.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_consider.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_consider.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1367,17 +1409,18 @@ objs/cmd_deathstroke.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_deathstroke.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_deathstroke.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_deathstroke.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_deathstroke.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_deathstroke.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_deathstroke.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_deathstroke.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_deathstroke.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_deathstroke.o: /usr/include/g++/std/bastring.h
-objs/cmd_deathstroke.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/cmd_deathstroke.o: /usr/include/g++/cstddef
 objs/cmd_deathstroke.o: /usr/include/g++/std/straits.h
 objs/cmd_deathstroke.o: /usr/include/g++/alloc.h
 objs/cmd_deathstroke.o: /usr/include/g++/stl_config.h
 objs/cmd_deathstroke.o: /usr/include/g++/stl_alloc.h
 objs/cmd_deathstroke.o: /usr/include/g++/iostream.h
 objs/cmd_deathstroke.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_deathstroke.o: /usr/include/g++/_G_config.h
 objs/cmd_deathstroke.o: /usr/include/g++/iterator
 objs/cmd_deathstroke.o: /usr/include/g++/stl_relops.h
 objs/cmd_deathstroke.o: /usr/include/g++/stl_iterator.h
@@ -1398,6 +1441,7 @@ objs/cmd_deathstroke.o: /usr/include/g++/stl_function.h
 objs/cmd_deathstroke.o: /usr/include/g++/stl_map.h
 objs/cmd_deathstroke.o: /usr/include/g++/stl_multimap.h
 objs/cmd_deathstroke.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_deathstroke.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_deathstroke.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_deathstroke.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_deathstroke.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1418,14 +1462,15 @@ objs/cmd_disarm.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_disarm.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_disarm.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_disarm.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_disarm.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_disarm.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_disarm.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_disarm.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_disarm.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_disarm.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_disarm.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_disarm.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_disarm.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_disarm.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_disarm.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_disarm.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_disarm.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_disarm.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_disarm.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_disarm.o: /usr/include/g++/stl_relops.h
 objs/cmd_disarm.o: /usr/include/g++/stl_iterator.h
 objs/cmd_disarm.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1441,7 +1486,8 @@ objs/cmd_disarm.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_disarm.o: /usr/include/g++/stl_tree.h
 objs/cmd_disarm.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_disarm.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_disarm.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_disarm.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_disarm.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_disarm.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_disarm.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_disarm.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1461,15 +1507,16 @@ objs/cmd_dissect.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_dissect.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_dissect.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_dissect.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_dissect.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_dissect.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_dissect.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_dissect.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_dissect.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_dissect.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_dissect.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_dissect.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_dissect.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_dissect.o: /usr/include/g++/stl_config.h
 objs/cmd_dissect.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_dissect.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_dissect.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_dissect.o: /usr/include/g++/stl_relops.h
+objs/cmd_dissect.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_dissect.o: /usr/include/g++/stl_iterator.h
 objs/cmd_dissect.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_dissect.o: /usr/include/g++/stl_algobase.h
@@ -1486,17 +1533,18 @@ objs/cmd_dissect.o: /usr/include/g++/stl_tree.h
 objs/cmd_dissect.o: /usr/include/g++/stl_function.h
 objs/cmd_dissect.o: /usr/include/g++/stl_map.h
 objs/cmd_dissect.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_dissect.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_dissect.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_dissect.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_dissect.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_dissect.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_dissect.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_dissect.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_dissect.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_dissect.o: spec_mobs.h materials.h colorstring.h format.h
-objs/cmd_dissect.o: obj_component.h disc_adventuring.h obj_base_corpse.h
-objs/cmd_dissect.o: obj_base_container.h
+objs/cmd_dissect.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_dissect.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_dissect.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_dissect.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_dissect.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_dissect.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_dissect.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_dissect.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_dissect.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_dissect.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_dissect.o: format.h obj_component.h disc_adventuring.h
+objs/cmd_dissect.o: obj_base_corpse.h obj_base_container.h
 objs/cmd_doorbash.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_doorbash.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/cmd_doorbash.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -1507,15 +1555,16 @@ objs/cmd_doorbash.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_doorbash.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_doorbash.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_doorbash.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_doorbash.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_doorbash.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_doorbash.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_doorbash.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_doorbash.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_doorbash.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_doorbash.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_doorbash.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_doorbash.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_doorbash.o: /usr/include/g++/stl_config.h
 objs/cmd_doorbash.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_doorbash.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_doorbash.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_doorbash.o: /usr/include/g++/stl_relops.h
+objs/cmd_doorbash.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_doorbash.o: /usr/include/g++/stl_iterator.h
 objs/cmd_doorbash.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_doorbash.o: /usr/include/g++/stl_algobase.h
@@ -1533,6 +1582,7 @@ objs/cmd_doorbash.o: /usr/include/g++/stl_function.h
 objs/cmd_doorbash.o: /usr/include/g++/stl_map.h
 objs/cmd_doorbash.o: /usr/include/g++/stl_multimap.h
 objs/cmd_doorbash.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_doorbash.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_doorbash.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_doorbash.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_doorbash.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1553,14 +1603,15 @@ objs/cmd_drive.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_drive.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_drive.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_drive.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_drive.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_drive.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_drive.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_drive.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_drive.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_drive.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_drive.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_drive.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_drive.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_drive.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_drive.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_drive.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_drive.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_drive.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_drive.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_drive.o: /usr/include/g++/stl_relops.h
 objs/cmd_drive.o: /usr/include/g++/stl_iterator.h
 objs/cmd_drive.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1575,6 +1626,7 @@ objs/cmd_drive.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_drive.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_drive.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_drive.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_drive.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_drive.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_drive.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_drive.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -1594,15 +1646,16 @@ objs/cmd_egotrip.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_egotrip.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_egotrip.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_egotrip.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_egotrip.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_egotrip.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_egotrip.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_egotrip.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_egotrip.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_egotrip.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_egotrip.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_egotrip.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_egotrip.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_egotrip.o: /usr/include/g++/stl_config.h
 objs/cmd_egotrip.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_egotrip.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_egotrip.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_egotrip.o: /usr/include/g++/stl_relops.h
+objs/cmd_egotrip.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_egotrip.o: /usr/include/g++/stl_iterator.h
 objs/cmd_egotrip.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_egotrip.o: /usr/include/g++/stl_algobase.h
@@ -1619,16 +1672,17 @@ objs/cmd_egotrip.o: /usr/include/g++/stl_tree.h
 objs/cmd_egotrip.o: /usr/include/g++/stl_function.h
 objs/cmd_egotrip.o: /usr/include/g++/stl_map.h
 objs/cmd_egotrip.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_egotrip.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_egotrip.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_egotrip.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_egotrip.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_egotrip.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_egotrip.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_egotrip.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_egotrip.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_egotrip.o: spec_mobs.h materials.h colorstring.h format.h
-objs/cmd_egotrip.o: disc_shaman.h disc_shaman_healing.h disc_fire.h
+objs/cmd_egotrip.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_egotrip.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_egotrip.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_egotrip.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_egotrip.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_egotrip.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_egotrip.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_egotrip.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_egotrip.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_egotrip.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_egotrip.o: format.h disc_shaman.h disc_shaman_healing.h disc_fire.h
 objs/cmd_egotrip.o: disc_wrath.h disc_aegis.h obj_portal.h obj_seethru.h
 objs/cmd_feigndeath.o: stdsneezy.h /usr/include/g++/cstdio
 objs/cmd_feigndeath.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -1641,16 +1695,18 @@ objs/cmd_feigndeath.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_feigndeath.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_feigndeath.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_feigndeath.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_feigndeath.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_feigndeath.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_feigndeath.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_feigndeath.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_feigndeath.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_feigndeath.o: /usr/include/g++/std/bastring.h
-objs/cmd_feigndeath.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/cmd_feigndeath.o: /usr/include/g++/cstddef
 objs/cmd_feigndeath.o: /usr/include/g++/std/straits.h
 objs/cmd_feigndeath.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_feigndeath.o: /usr/include/g++/stl_alloc.h
 objs/cmd_feigndeath.o: /usr/include/g++/iostream.h
 objs/cmd_feigndeath.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_feigndeath.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_feigndeath.o: /usr/include/g++/iterator
 objs/cmd_feigndeath.o: /usr/include/g++/stl_relops.h
 objs/cmd_feigndeath.o: /usr/include/g++/stl_iterator.h
 objs/cmd_feigndeath.o: /usr/include/g++/std/bastring.cc
@@ -1670,6 +1726,7 @@ objs/cmd_feigndeath.o: /usr/include/g++/stl_function.h
 objs/cmd_feigndeath.o: /usr/include/g++/stl_map.h
 objs/cmd_feigndeath.o: /usr/include/g++/stl_multimap.h
 objs/cmd_feigndeath.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_feigndeath.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_feigndeath.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_feigndeath.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_feigndeath.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1690,14 +1747,15 @@ objs/cmd_get.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_get.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_get.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_get.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_get.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_get.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_get.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_get.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_get.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_get.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_get.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_get.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_get.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_get.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_get.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_get.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_get.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_get.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_get.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_get.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/cmd_get.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_get.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -1710,7 +1768,8 @@ objs/cmd_get.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_get.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_get.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_get.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_get.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_get.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_get.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_get.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_get.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_get.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1734,15 +1793,16 @@ objs/cmd_grapple.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_grapple.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_grapple.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_grapple.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_grapple.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_grapple.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_grapple.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_grapple.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_grapple.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_grapple.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_grapple.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_grapple.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_grapple.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_grapple.o: /usr/include/g++/stl_config.h
 objs/cmd_grapple.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_grapple.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_grapple.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_grapple.o: /usr/include/g++/stl_relops.h
+objs/cmd_grapple.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_grapple.o: /usr/include/g++/stl_iterator.h
 objs/cmd_grapple.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_grapple.o: /usr/include/g++/stl_algobase.h
@@ -1759,16 +1819,17 @@ objs/cmd_grapple.o: /usr/include/g++/stl_tree.h
 objs/cmd_grapple.o: /usr/include/g++/stl_function.h
 objs/cmd_grapple.o: /usr/include/g++/stl_map.h
 objs/cmd_grapple.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_grapple.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_grapple.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_grapple.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_grapple.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_grapple.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_grapple.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_grapple.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_grapple.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_grapple.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/cmd_grapple.o: obj_base_clothing.h
+objs/cmd_grapple.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_grapple.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_grapple.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_grapple.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_grapple.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_grapple.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_grapple.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_grapple.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_grapple.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_grapple.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_grapple.o: format.h combat.h obj_base_clothing.h
 objs/cmd_headbutt.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_headbutt.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/cmd_headbutt.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -1779,15 +1840,16 @@ objs/cmd_headbutt.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_headbutt.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_headbutt.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_headbutt.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_headbutt.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_headbutt.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_headbutt.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_headbutt.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_headbutt.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_headbutt.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_headbutt.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_headbutt.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_headbutt.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_headbutt.o: /usr/include/g++/stl_config.h
 objs/cmd_headbutt.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_headbutt.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_headbutt.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_headbutt.o: /usr/include/g++/stl_relops.h
+objs/cmd_headbutt.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_headbutt.o: /usr/include/g++/stl_iterator.h
 objs/cmd_headbutt.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_headbutt.o: /usr/include/g++/stl_algobase.h
@@ -1805,6 +1867,7 @@ objs/cmd_headbutt.o: /usr/include/g++/stl_function.h
 objs/cmd_headbutt.o: /usr/include/g++/stl_map.h
 objs/cmd_headbutt.o: /usr/include/g++/stl_multimap.h
 objs/cmd_headbutt.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_headbutt.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_headbutt.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_headbutt.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_headbutt.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -1825,14 +1888,15 @@ objs/cmd_help.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_help.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_help.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_help.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_help.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_help.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_help.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_help.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_help.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_help.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_help.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_help.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_help.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_help.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_help.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_help.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_help.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_help.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_help.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_help.o: /usr/include/g++/stl_relops.h
 objs/cmd_help.o: /usr/include/g++/stl_iterator.h
 objs/cmd_help.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1846,7 +1910,8 @@ objs/cmd_help.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_help.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_help.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_help.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_help.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_help.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_help.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_help.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_help.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_help.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1870,14 +1935,15 @@ objs/cmd_jump.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_jump.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_jump.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_jump.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_jump.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_jump.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_jump.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_jump.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_jump.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_jump.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_jump.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_jump.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_jump.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_jump.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_jump.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_jump.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_jump.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_jump.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_jump.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_jump.o: /usr/include/g++/stl_relops.h
 objs/cmd_jump.o: /usr/include/g++/stl_iterator.h
 objs/cmd_jump.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1891,7 +1957,8 @@ objs/cmd_jump.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_jump.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_jump.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_jump.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_jump.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_jump.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_jump.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_jump.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_jump.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_jump.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1910,14 +1977,15 @@ objs/cmd_kick.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_kick.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_kick.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_kick.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_kick.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_kick.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_kick.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_kick.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_kick.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_kick.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_kick.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_kick.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_kick.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_kick.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_kick.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_kick.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_kick.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_kick.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_kick.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_kick.o: /usr/include/g++/stl_relops.h
 objs/cmd_kick.o: /usr/include/g++/stl_iterator.h
 objs/cmd_kick.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -1931,7 +1999,8 @@ objs/cmd_kick.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_kick.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_kick.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_kick.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_kick.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_kick.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_kick.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_kick.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_kick.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_kick.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -1951,16 +2020,18 @@ objs/cmd_kneestrike.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_kneestrike.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_kneestrike.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_kneestrike.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_kneestrike.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_kneestrike.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_kneestrike.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_kneestrike.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_kneestrike.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_kneestrike.o: /usr/include/g++/std/bastring.h
-objs/cmd_kneestrike.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/cmd_kneestrike.o: /usr/include/g++/cstddef
 objs/cmd_kneestrike.o: /usr/include/g++/std/straits.h
 objs/cmd_kneestrike.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_kneestrike.o: /usr/include/g++/stl_alloc.h
 objs/cmd_kneestrike.o: /usr/include/g++/iostream.h
 objs/cmd_kneestrike.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_kneestrike.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_kneestrike.o: /usr/include/g++/iterator
 objs/cmd_kneestrike.o: /usr/include/g++/stl_relops.h
 objs/cmd_kneestrike.o: /usr/include/g++/stl_iterator.h
 objs/cmd_kneestrike.o: /usr/include/g++/std/bastring.cc
@@ -1980,6 +2051,7 @@ objs/cmd_kneestrike.o: /usr/include/g++/stl_function.h
 objs/cmd_kneestrike.o: /usr/include/g++/stl_map.h
 objs/cmd_kneestrike.o: /usr/include/g++/stl_multimap.h
 objs/cmd_kneestrike.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_kneestrike.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_kneestrike.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_kneestrike.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_kneestrike.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -2000,14 +2072,15 @@ objs/cmd_look.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_look.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_look.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_look.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_look.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_look.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_look.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_look.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_look.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_look.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_look.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_look.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_look.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_look.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_look.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_look.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_look.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_look.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_look.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_look.o: /usr/include/g++/stl_relops.h
 objs/cmd_look.o: /usr/include/g++/stl_iterator.h
 objs/cmd_look.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2021,7 +2094,8 @@ objs/cmd_look.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_look.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_look.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_look.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_look.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_look.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_look.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_look.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_look.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_look.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2069,7 +2143,8 @@ objs/cmd_low.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_low.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_low.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_low.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_low.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_low.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_low.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_low.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_low.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_low.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2095,17 +2170,17 @@ objs/cmd_mend_limb.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_mend_limb.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_mend_limb.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_mend_limb.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_mend_limb.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_mend_limb.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_mend_limb.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_mend_limb.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_mend_limb.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_mend_limb.o: /usr/include/g++/std/bastring.h
-objs/cmd_mend_limb.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/cmd_mend_limb.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/cmd_mend_limb.o: /usr/include/g++/stl_config.h
+objs/cmd_mend_limb.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/cmd_mend_limb.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_mend_limb.o: /usr/include/g++/stl_alloc.h
 objs/cmd_mend_limb.o: /usr/include/g++/iostream.h
 objs/cmd_mend_limb.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_mend_limb.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_mend_limb.o: /usr/include/g++/stl_relops.h
+objs/cmd_mend_limb.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_mend_limb.o: /usr/include/g++/stl_iterator.h
 objs/cmd_mend_limb.o: /usr/include/g++/std/bastring.cc
 objs/cmd_mend_limb.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -2123,6 +2198,7 @@ objs/cmd_mend_limb.o: /usr/include/g++/stl_function.h
 objs/cmd_mend_limb.o: /usr/include/g++/stl_map.h
 objs/cmd_mend_limb.o: /usr/include/g++/stl_multimap.h
 objs/cmd_mend_limb.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_mend_limb.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_mend_limb.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_mend_limb.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_mend_limb.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -2145,15 +2221,15 @@ objs/cmd_message.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/cmd_message.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/cmd_message.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/cmd_message.o: /usr/include/string.h /usr/include/stdarg.h
+objs/cmd_message.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/cmd_message.o: /usr/include/stddef.h /usr/include/math.h
 objs/cmd_message.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/cmd_message.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/cmd_message.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/cmd_message.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/cmd_message.o: /usr/include/g++/stl_config.h
+objs/cmd_message.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/cmd_message.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_message.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_message.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_message.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_message.o: /usr/include/g++/stl_relops.h
+objs/cmd_message.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_message.o: /usr/include/g++/stl_iterator.h
 objs/cmd_message.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_message.o: /usr/include/g++/stl_algobase.h
@@ -2170,15 +2246,17 @@ objs/cmd_message.o: /usr/include/g++/stl_tree.h
 objs/cmd_message.o: /usr/include/g++/stl_function.h
 objs/cmd_message.o: /usr/include/g++/stl_map.h
 objs/cmd_message.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_message.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_message.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_message.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_message.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_message.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_message.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_message.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_message.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_message.o: spec_mobs.h materials.h colorstring.h format.h
+objs/cmd_message.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_message.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_message.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_message.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_message.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_message.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_message.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_message.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_message.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_message.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_message.o: format.h
 objs/cmd_news.o: /usr/include/sys/types.h /usr/include/sys/cdefs.h
 objs/cmd_news.o: /usr/include/sys/inttypes.h /usr/include/machine/ansi.h
 objs/cmd_news.o: /usr/include/machine/types.h /usr/include/machine/endian.h
@@ -2197,12 +2275,13 @@ objs/cmd_news.o: /usr/include/g++/_G_config.h /usr/include/stdarg.h
 objs/cmd_news.o: /usr/include/g++/stl_construct.h
 objs/cmd_news.o: /usr/include/g++/stl_uninitialized.h
 objs/cmd_news.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
-objs/cmd_news.o: /usr/include/g++/stl_heap.h /usr/include/g++/fstream.h
-objs/cmd_news.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/cmd_news.o: /usr/include/g++/stl_heap.h stdsneezy.h
+objs/cmd_news.o: /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_news.o: /usr/include/g++/cstdlib /usr/include/g++/ctime
 objs/cmd_news.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/cmd_news.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/cmd_news.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/cmd_news.o: /usr/include/g++/cmath /usr/include/math.h
 objs/cmd_news.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/cmd_news.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
 objs/cmd_news.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
@@ -2215,7 +2294,8 @@ objs/cmd_news.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_news.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_news.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_news.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_news.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_news.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_news.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_news.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_news.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_news.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2234,14 +2314,15 @@ objs/cmd_quest.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_quest.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_quest.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_quest.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_quest.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_quest.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_quest.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_quest.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_quest.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_quest.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_quest.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_quest.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_quest.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_quest.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_quest.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_quest.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_quest.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_quest.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_quest.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_quest.o: /usr/include/g++/stl_relops.h
 objs/cmd_quest.o: /usr/include/g++/stl_iterator.h
 objs/cmd_quest.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2256,6 +2337,7 @@ objs/cmd_quest.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_quest.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_quest.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_quest.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_quest.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_quest.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_quest.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_quest.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -2275,15 +2357,16 @@ objs/cmd_quivpalm.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_quivpalm.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_quivpalm.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_quivpalm.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_quivpalm.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_quivpalm.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_quivpalm.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_quivpalm.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_quivpalm.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_quivpalm.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_quivpalm.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_quivpalm.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_quivpalm.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_quivpalm.o: /usr/include/g++/stl_config.h
 objs/cmd_quivpalm.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_quivpalm.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_quivpalm.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_quivpalm.o: /usr/include/g++/stl_relops.h
+objs/cmd_quivpalm.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_quivpalm.o: /usr/include/g++/stl_iterator.h
 objs/cmd_quivpalm.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_quivpalm.o: /usr/include/g++/stl_algobase.h
@@ -2301,6 +2384,7 @@ objs/cmd_quivpalm.o: /usr/include/g++/stl_function.h
 objs/cmd_quivpalm.o: /usr/include/g++/stl_map.h
 objs/cmd_quivpalm.o: /usr/include/g++/stl_multimap.h
 objs/cmd_quivpalm.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_quivpalm.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_quivpalm.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_quivpalm.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_quivpalm.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -2323,13 +2407,14 @@ objs/cmd_rename.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/cmd_rename.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/cmd_rename.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/cmd_rename.o: /usr/include/string.h /usr/include/stdarg.h
+objs/cmd_rename.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/cmd_rename.o: /usr/include/stddef.h /usr/include/math.h
 objs/cmd_rename.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/cmd_rename.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/cmd_rename.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/cmd_rename.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/cmd_rename.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/cmd_rename.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/cmd_rename.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/cmd_rename.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/cmd_rename.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_rename.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/cmd_rename.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/cmd_rename.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_rename.o: /usr/include/g++/stl_iterator.h
 objs/cmd_rename.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2345,7 +2430,8 @@ objs/cmd_rename.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_rename.o: /usr/include/g++/stl_tree.h
 objs/cmd_rename.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_rename.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_rename.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_rename.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_rename.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_rename.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_rename.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_rename.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2366,14 +2452,15 @@ objs/cmd_rescue.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_rescue.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_rescue.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_rescue.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_rescue.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_rescue.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_rescue.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_rescue.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_rescue.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_rescue.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_rescue.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_rescue.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_rescue.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_rescue.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_rescue.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_rescue.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_rescue.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_rescue.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_rescue.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_rescue.o: /usr/include/g++/stl_relops.h
 objs/cmd_rescue.o: /usr/include/g++/stl_iterator.h
 objs/cmd_rescue.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2389,7 +2476,8 @@ objs/cmd_rescue.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_rescue.o: /usr/include/g++/stl_tree.h
 objs/cmd_rescue.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_rescue.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_rescue.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_rescue.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_rescue.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_rescue.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_rescue.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_rescue.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2408,14 +2496,15 @@ objs/cmd_save.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_save.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_save.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_save.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_save.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_save.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_save.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_save.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_save.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_save.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_save.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_save.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_save.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_save.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_save.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_save.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_save.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_save.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_save.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_save.o: /usr/include/g++/stl_relops.h
 objs/cmd_save.o: /usr/include/g++/stl_iterator.h
 objs/cmd_save.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2429,7 +2518,8 @@ objs/cmd_save.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_save.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_save.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_save.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_save.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_save.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_save.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_save.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_save.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_save.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2448,14 +2538,15 @@ objs/cmd_score.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_score.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_score.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_score.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_score.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_score.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_score.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_score.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_score.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_score.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_score.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_score.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_score.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_score.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_score.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_score.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_score.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_score.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_score.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_score.o: /usr/include/g++/stl_relops.h
 objs/cmd_score.o: /usr/include/g++/stl_iterator.h
 objs/cmd_score.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2470,6 +2561,7 @@ objs/cmd_score.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_score.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_score.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_score.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_score.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_score.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_score.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_score.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -2504,6 +2596,7 @@ objs/cmd_sedit.o: /usr/include/g++/cstdlib /usr/include/g++/ctime
 objs/cmd_sedit.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/cmd_sedit.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/cmd_sedit.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/cmd_sedit.o: /usr/include/g++/cmath /usr/include/math.h
 objs/cmd_sedit.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/cmd_sedit.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
 objs/cmd_sedit.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
@@ -2517,6 +2610,7 @@ objs/cmd_sedit.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_sedit.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_sedit.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_sedit.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_sedit.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_sedit.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_sedit.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_sedit.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -2536,14 +2630,15 @@ objs/cmd_set.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_set.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_set.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_set.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_set.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_set.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_set.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_set.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_set.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_set.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_set.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_set.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_set.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_set.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_set.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_set.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_set.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_set.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_set.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_set.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/cmd_set.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_set.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -2556,7 +2651,8 @@ objs/cmd_set.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_set.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_set.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_set.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_set.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_set.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_set.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_set.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_set.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_set.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2576,14 +2672,15 @@ objs/cmd_show.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_show.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_show.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_show.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_show.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_show.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_show.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_show.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_show.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_show.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_show.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_show.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_show.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_show.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_show.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_show.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_show.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_show.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_show.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_show.o: /usr/include/g++/stl_relops.h
 objs/cmd_show.o: /usr/include/g++/stl_iterator.h
 objs/cmd_show.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2597,7 +2694,8 @@ objs/cmd_show.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_show.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_show.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_show.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_show.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_show.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_show.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_show.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_show.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_show.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2618,14 +2716,15 @@ objs/cmd_spin.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_spin.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_spin.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_spin.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_spin.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_spin.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_spin.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_spin.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_spin.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_spin.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_spin.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_spin.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_spin.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_spin.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_spin.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_spin.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_spin.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_spin.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_spin.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_spin.o: /usr/include/g++/stl_relops.h
 objs/cmd_spin.o: /usr/include/g++/stl_iterator.h
 objs/cmd_spin.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2639,7 +2738,8 @@ objs/cmd_spin.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_spin.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_spin.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_spin.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_spin.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_spin.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_spin.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_spin.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_spin.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_spin.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2658,14 +2758,15 @@ objs/cmd_stab.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_stab.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_stab.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_stab.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_stab.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_stab.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_stab.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_stab.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_stab.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_stab.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_stab.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_stab.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_stab.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_stab.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_stab.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_stab.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_stab.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_stab.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_stab.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_stab.o: /usr/include/g++/stl_relops.h
 objs/cmd_stab.o: /usr/include/g++/stl_iterator.h
 objs/cmd_stab.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2679,7 +2780,8 @@ objs/cmd_stab.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_stab.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_stab.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_stab.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_stab.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_stab.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_stab.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_stab.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_stab.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_stab.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2699,14 +2801,15 @@ objs/cmd_stat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_stat.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_stat.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_stat.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_stat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_stat.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_stat.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_stat.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_stat.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_stat.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_stat.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_stat.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_stat.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_stat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_stat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_stat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_stat.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_stat.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_stat.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_stat.o: /usr/include/g++/stl_relops.h
 objs/cmd_stat.o: /usr/include/g++/stl_iterator.h
 objs/cmd_stat.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2720,7 +2823,8 @@ objs/cmd_stat.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_stat.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_stat.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_stat.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_stat.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_stat.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_stat.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_stat.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_stat.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_stat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2739,14 +2843,15 @@ objs/cmd_steal.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_steal.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_steal.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_steal.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_steal.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_steal.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_steal.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_steal.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_steal.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_steal.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_steal.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_steal.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_steal.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_steal.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_steal.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_steal.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_steal.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_steal.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_steal.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_steal.o: /usr/include/g++/stl_relops.h
 objs/cmd_steal.o: /usr/include/g++/stl_iterator.h
 objs/cmd_steal.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2761,6 +2866,7 @@ objs/cmd_steal.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_steal.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_steal.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_steal.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_steal.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_steal.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_steal.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_steal.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -2781,14 +2887,15 @@ objs/cmd_stomp.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_stomp.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_stomp.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_stomp.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_stomp.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_stomp.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_stomp.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_stomp.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_stomp.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_stomp.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_stomp.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_stomp.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_stomp.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_stomp.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_stomp.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_stomp.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_stomp.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_stomp.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_stomp.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_stomp.o: /usr/include/g++/stl_relops.h
 objs/cmd_stomp.o: /usr/include/g++/stl_iterator.h
 objs/cmd_stomp.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2803,6 +2910,7 @@ objs/cmd_stomp.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_stomp.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_stomp.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_stomp.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_stomp.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_stomp.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_stomp.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_stomp.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -2822,15 +2930,16 @@ objs/cmd_testcode.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_testcode.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_testcode.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_testcode.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_testcode.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_testcode.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_testcode.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_testcode.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_testcode.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_testcode.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_testcode.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_testcode.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_testcode.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_testcode.o: /usr/include/g++/stl_config.h
 objs/cmd_testcode.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_testcode.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_testcode.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_testcode.o: /usr/include/g++/stl_relops.h
+objs/cmd_testcode.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_testcode.o: /usr/include/g++/stl_iterator.h
 objs/cmd_testcode.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_testcode.o: /usr/include/g++/stl_algobase.h
@@ -2848,6 +2957,7 @@ objs/cmd_testcode.o: /usr/include/g++/stl_function.h
 objs/cmd_testcode.o: /usr/include/g++/stl_map.h
 objs/cmd_testcode.o: /usr/include/g++/stl_multimap.h
 objs/cmd_testcode.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_testcode.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_testcode.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_testcode.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_testcode.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -2869,17 +2979,17 @@ objs/cmd_testfight.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_testfight.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_testfight.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_testfight.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_testfight.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_testfight.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_testfight.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_testfight.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_testfight.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_testfight.o: /usr/include/g++/std/bastring.h
-objs/cmd_testfight.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/cmd_testfight.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/cmd_testfight.o: /usr/include/g++/stl_config.h
+objs/cmd_testfight.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/cmd_testfight.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/cmd_testfight.o: /usr/include/g++/stl_alloc.h
 objs/cmd_testfight.o: /usr/include/g++/iostream.h
 objs/cmd_testfight.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_testfight.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_testfight.o: /usr/include/g++/stl_relops.h
+objs/cmd_testfight.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_testfight.o: /usr/include/g++/stl_iterator.h
 objs/cmd_testfight.o: /usr/include/g++/std/bastring.cc
 objs/cmd_testfight.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -2897,6 +3007,7 @@ objs/cmd_testfight.o: /usr/include/g++/stl_function.h
 objs/cmd_testfight.o: /usr/include/g++/stl_map.h
 objs/cmd_testfight.o: /usr/include/g++/stl_multimap.h
 objs/cmd_testfight.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_testfight.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_testfight.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_testfight.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_testfight.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -2917,14 +3028,15 @@ objs/cmd_trip.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_trip.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_trip.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_trip.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_trip.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_trip.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_trip.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_trip.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_trip.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_trip.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_trip.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_trip.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_trip.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_trip.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_trip.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_trip.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_trip.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_trip.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_trip.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_trip.o: /usr/include/g++/stl_relops.h
 objs/cmd_trip.o: /usr/include/g++/stl_iterator.h
 objs/cmd_trip.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2938,7 +3050,8 @@ objs/cmd_trip.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_trip.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_trip.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_trip.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_trip.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_trip.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_trip.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_trip.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_trip.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_trip.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -2958,14 +3071,15 @@ objs/cmd_trophy.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_trophy.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_trophy.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_trophy.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_trophy.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_trophy.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_trophy.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_trophy.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_trophy.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_trophy.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_trophy.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_trophy.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_trophy.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_trophy.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_trophy.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_trophy.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_trophy.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_trophy.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_trophy.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_trophy.o: /usr/include/g++/stl_relops.h
 objs/cmd_trophy.o: /usr/include/g++/stl_iterator.h
 objs/cmd_trophy.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -2981,7 +3095,8 @@ objs/cmd_trophy.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_trophy.o: /usr/include/g++/stl_tree.h
 objs/cmd_trophy.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_trophy.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_trophy.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_trophy.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_trophy.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_trophy.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_trophy.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_trophy.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -3002,15 +3117,16 @@ objs/cmd_visible.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_visible.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_visible.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_visible.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_visible.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_visible.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_visible.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_visible.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_visible.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_visible.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_visible.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_visible.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_visible.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_visible.o: /usr/include/g++/stl_config.h
 objs/cmd_visible.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_visible.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_visible.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_visible.o: /usr/include/g++/stl_relops.h
+objs/cmd_visible.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_visible.o: /usr/include/g++/stl_iterator.h
 objs/cmd_visible.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_visible.o: /usr/include/g++/stl_algobase.h
@@ -3027,15 +3143,17 @@ objs/cmd_visible.o: /usr/include/g++/stl_tree.h
 objs/cmd_visible.o: /usr/include/g++/stl_function.h
 objs/cmd_visible.o: /usr/include/g++/stl_map.h
 objs/cmd_visible.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_visible.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/cmd_visible.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/cmd_visible.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/cmd_visible.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/cmd_visible.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/cmd_visible.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/cmd_visible.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/cmd_visible.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/cmd_visible.o: spec_mobs.h materials.h colorstring.h format.h
+objs/cmd_visible.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_visible.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/cmd_visible.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/cmd_visible.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/cmd_visible.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/cmd_visible.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/cmd_visible.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/cmd_visible.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/cmd_visible.o: person.h monster.h account.h extern.h handler.h
+objs/cmd_visible.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/cmd_visible.o: format.h
 objs/cmd_who.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_who.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/cmd_who.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3046,14 +3164,15 @@ objs/cmd_who.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_who.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_who.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_who.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_who.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_who.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_who.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_who.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_who.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_who.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_who.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_who.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/cmd_who.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/cmd_who.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_who.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/cmd_who.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_who.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/cmd_who.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/cmd_who.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/cmd_who.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/cmd_who.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_who.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -3066,7 +3185,8 @@ objs/cmd_who.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/cmd_who.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/cmd_who.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/cmd_who.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/cmd_who.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/cmd_who.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/cmd_who.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/cmd_who.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/cmd_who.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/cmd_who.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -3091,15 +3211,16 @@ objs/cmd_zonefile.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_zonefile.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_zonefile.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/cmd_zonefile.o: /usr/include/g++/cstring /usr/include/string.h
-objs/cmd_zonefile.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/cmd_zonefile.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/cmd_zonefile.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/cmd_zonefile.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_zonefile.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_zonefile.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/cmd_zonefile.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/cmd_zonefile.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/cmd_zonefile.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/cmd_zonefile.o: /usr/include/g++/stl_config.h
 objs/cmd_zonefile.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/cmd_zonefile.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/cmd_zonefile.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/cmd_zonefile.o: /usr/include/g++/stl_relops.h
+objs/cmd_zonefile.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/cmd_zonefile.o: /usr/include/g++/stl_iterator.h
 objs/cmd_zonefile.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/cmd_zonefile.o: /usr/include/g++/stl_algobase.h
@@ -3117,6 +3238,7 @@ objs/cmd_zonefile.o: /usr/include/g++/stl_function.h
 objs/cmd_zonefile.o: /usr/include/g++/stl_map.h
 objs/cmd_zonefile.o: /usr/include/g++/stl_multimap.h
 objs/cmd_zonefile.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_zonefile.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_zonefile.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_zonefile.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/cmd_zonefile.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -3147,7 +3269,8 @@ objs/cmd_zones.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
 objs/cmd_zones.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/cmd_zones.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/cmd_zones.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/cmd_zones.o: /usr/include/g++/cstring /usr/include/g++/cerrno
+objs/cmd_zones.o: /usr/include/g++/cstring /usr/include/g++/cmath
+objs/cmd_zones.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/cmd_zones.o: /usr/include/errno.h /usr/include/g++/string
 objs/cmd_zones.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
 objs/cmd_zones.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
@@ -3160,6 +3283,7 @@ objs/cmd_zones.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/cmd_zones.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/cmd_zones.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/cmd_zones.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/cmd_zones.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/cmd_zones.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/cmd_zones.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/cmd_zones.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -3179,14 +3303,15 @@ objs/color.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/color.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/color.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/color.o: /usr/include/g++/cstring /usr/include/string.h
-objs/color.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/color.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/color.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/color.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/color.o: /usr/include/errno.h /usr/include/g++/string
 objs/color.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/color.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/color.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/color.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/color.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/color.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/color.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/color.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/color.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/color.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/color.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/color.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/color.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -3199,7 +3324,8 @@ objs/color.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/color.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/color.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/color.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/color.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/color.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/color.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/color.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/color.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/color.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -3218,15 +3344,16 @@ objs/colorstring.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/colorstring.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/colorstring.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/colorstring.o: /usr/include/g++/cstring /usr/include/string.h
-objs/colorstring.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/colorstring.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/colorstring.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/colorstring.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/colorstring.o: /usr/include/errno.h /usr/include/g++/string
 objs/colorstring.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/colorstring.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/colorstring.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/colorstring.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/colorstring.o: /usr/include/g++/stl_config.h
 objs/colorstring.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/colorstring.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/colorstring.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/colorstring.o: /usr/include/g++/stl_relops.h
+objs/colorstring.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/colorstring.o: /usr/include/g++/stl_iterator.h
 objs/colorstring.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/colorstring.o: /usr/include/g++/stl_algobase.h
@@ -3243,15 +3370,17 @@ objs/colorstring.o: /usr/include/g++/stl_tree.h
 objs/colorstring.o: /usr/include/g++/stl_function.h
 objs/colorstring.o: /usr/include/g++/stl_map.h
 objs/colorstring.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/colorstring.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/colorstring.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/colorstring.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/colorstring.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/colorstring.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/colorstring.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/colorstring.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/colorstring.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/colorstring.o: spec_mobs.h materials.h colorstring.h format.h
+objs/colorstring.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/colorstring.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/colorstring.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/colorstring.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/colorstring.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/colorstring.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/colorstring.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/colorstring.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/colorstring.o: person.h monster.h account.h extern.h handler.h
+objs/colorstring.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/colorstring.o: format.h
 objs/combat.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/combat.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/combat.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h
@@ -3283,7 +3412,8 @@ objs/combat.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/combat.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/combat.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/combat.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/combat.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/combat.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/combat.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/combat.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/combat.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/combat.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -3307,27 +3437,29 @@ objs/comm.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/comm.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/comm.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/comm.o: /usr/include/g++/cstring /usr/include/string.h
-objs/comm.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/comm.o: /usr/include/errno.h /usr/include/g++/string
-objs/comm.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/comm.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/comm.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/comm.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/comm.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/comm.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/comm.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/comm.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/comm.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/comm.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/comm.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/comm.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/comm.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/comm.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/comm.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/comm.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/comm.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/comm.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/comm.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/comm.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/comm.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/comm.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/comm.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/comm.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/comm.o: /usr/include/g++/new /usr/include/g++/exception
+objs/comm.o: /usr/include/g++/stl_construct.h
 objs/comm.o: /usr/include/g++/stl_uninitialized.h
 objs/comm.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/comm.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/comm.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/comm.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/comm.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/comm.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/comm.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/comm.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/comm.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/comm.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -3357,9 +3489,6 @@ objs/connect.o: /usr/include/sys/time.h /usr/include/sys/types.h
 objs/connect.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
 objs/connect.o: /usr/include/machine/endian.h /usr/include/time.h
 objs/connect.o: /usr/include/g++/cstdarg /usr/include/stdarg.h
-objs/connect.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/connect.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
-objs/connect.o: /usr/include/stddef.h /usr/include/g++/fstream.h
 objs/connect.o: /usr/include/dirent.h /usr/include/sys/dirent.h
 objs/connect.o: /usr/include/unistd.h /usr/include/sys/unistd.h
 objs/connect.o: /usr/include/sys/socket.h /usr/include/machine/param.h
@@ -3375,13 +3504,16 @@ objs/connect.o: /usr/include/stdlib.h /usr/include/g++/ctime
 objs/connect.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/connect.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/connect.o: /usr/include/assert.h /usr/include/g++/cstring
-objs/connect.o: /usr/include/string.h /usr/include/g++/cerrno
+objs/connect.o: /usr/include/string.h /usr/include/g++/cmath
+objs/connect.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/connect.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/connect.o: /usr/include/errno.h /usr/include/g++/string
 objs/connect.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
 objs/connect.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
 objs/connect.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/connect.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
-objs/connect.o: /usr/include/g++/stl_iterator.h
+objs/connect.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/connect.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/connect.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/connect.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/connect.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
 objs/connect.o: /usr/include/g++/type_traits.h /usr/include/limits.h
@@ -3392,7 +3524,8 @@ objs/connect.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/connect.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/connect.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/connect.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/connect.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/connect.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/connect.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/connect.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/connect.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/connect.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -3417,14 +3550,15 @@ objs/constants.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/constants.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/constants.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/constants.o: /usr/include/g++/cstring /usr/include/string.h
-objs/constants.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/constants.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/constants.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/constants.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/constants.o: /usr/include/errno.h /usr/include/g++/string
 objs/constants.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/constants.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/constants.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/constants.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/constants.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/constants.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/constants.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/constants.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/constants.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/constants.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/constants.o: /usr/include/g++/stl_relops.h
 objs/constants.o: /usr/include/g++/stl_iterator.h
 objs/constants.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -3439,6 +3573,7 @@ objs/constants.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/constants.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/constants.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/constants.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/constants.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/constants.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/constants.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/constants.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -3458,15 +3593,16 @@ objs/corporation.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/corporation.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/corporation.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/corporation.o: /usr/include/g++/cstring /usr/include/string.h
-objs/corporation.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/corporation.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/corporation.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/corporation.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/corporation.o: /usr/include/errno.h /usr/include/g++/string
 objs/corporation.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/corporation.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/corporation.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/corporation.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/corporation.o: /usr/include/g++/stl_config.h
 objs/corporation.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/corporation.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/corporation.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/corporation.o: /usr/include/g++/stl_relops.h
+objs/corporation.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/corporation.o: /usr/include/g++/stl_iterator.h
 objs/corporation.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/corporation.o: /usr/include/g++/stl_algobase.h
@@ -3483,16 +3619,17 @@ objs/corporation.o: /usr/include/g++/stl_tree.h
 objs/corporation.o: /usr/include/g++/stl_function.h
 objs/corporation.o: /usr/include/g++/stl_map.h
 objs/corporation.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/corporation.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/corporation.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/corporation.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/corporation.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/corporation.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/corporation.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/corporation.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/corporation.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/corporation.o: spec_mobs.h materials.h colorstring.h format.h database.h
-objs/corporation.o: /usr/local/include/libpq-fe.h
+objs/corporation.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/corporation.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/corporation.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/corporation.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/corporation.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/corporation.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/corporation.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/corporation.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/corporation.o: person.h monster.h account.h extern.h handler.h
+objs/corporation.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/corporation.o: format.h database.h /usr/local/include/libpq-fe.h
 objs/corporation.o: /usr/local/include/postgres_ext.h corporation.h
 objs/create_engine.o: stdsneezy.h /usr/include/g++/cstdio
 objs/create_engine.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -3505,17 +3642,17 @@ objs/create_engine.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/create_engine.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/create_engine.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/create_engine.o: /usr/include/g++/cstring /usr/include/string.h
-objs/create_engine.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/create_engine.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/create_engine.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/create_engine.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/create_engine.o: /usr/include/errno.h /usr/include/g++/string
 objs/create_engine.o: /usr/include/g++/std/bastring.h
-objs/create_engine.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/create_engine.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/create_engine.o: /usr/include/g++/stl_config.h
+objs/create_engine.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/create_engine.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/create_engine.o: /usr/include/g++/stl_alloc.h
 objs/create_engine.o: /usr/include/g++/iostream.h
 objs/create_engine.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/create_engine.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/create_engine.o: /usr/include/g++/stl_relops.h
+objs/create_engine.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/create_engine.o: /usr/include/g++/stl_iterator.h
 objs/create_engine.o: /usr/include/g++/std/bastring.cc
 objs/create_engine.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -3533,6 +3670,7 @@ objs/create_engine.o: /usr/include/g++/stl_function.h
 objs/create_engine.o: /usr/include/g++/stl_map.h
 objs/create_engine.o: /usr/include/g++/stl_multimap.h
 objs/create_engine.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/create_engine.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/create_engine.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/create_engine.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/create_engine.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -3555,15 +3693,16 @@ objs/create_mobs.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/create_mobs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/create_mobs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/create_mobs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/create_mobs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/create_mobs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/create_mobs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/create_mobs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/create_mobs.o: /usr/include/errno.h /usr/include/g++/string
 objs/create_mobs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/create_mobs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/create_mobs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/create_mobs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/create_mobs.o: /usr/include/g++/stl_config.h
 objs/create_mobs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/create_mobs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/create_mobs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/create_mobs.o: /usr/include/g++/stl_relops.h
+objs/create_mobs.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/create_mobs.o: /usr/include/g++/stl_iterator.h
 objs/create_mobs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/create_mobs.o: /usr/include/g++/stl_algobase.h
@@ -3580,16 +3719,17 @@ objs/create_mobs.o: /usr/include/g++/stl_tree.h
 objs/create_mobs.o: /usr/include/g++/stl_function.h
 objs/create_mobs.o: /usr/include/g++/stl_map.h
 objs/create_mobs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/create_mobs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/create_mobs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/create_mobs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/create_mobs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/create_mobs.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/create_mobs.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/create_mobs.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/create_mobs.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/create_mobs.o: spec_mobs.h materials.h colorstring.h format.h mail.h
-objs/create_mobs.o: combat.h statistics.h
+objs/create_mobs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/create_mobs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/create_mobs.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/create_mobs.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/create_mobs.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/create_mobs.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/create_mobs.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/create_mobs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/create_mobs.o: person.h monster.h account.h extern.h handler.h
+objs/create_mobs.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/create_mobs.o: format.h mail.h combat.h statistics.h
 objs/create_objs.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/create_objs.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/create_objs.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
@@ -3616,6 +3756,7 @@ objs/create_objs.o: /usr/include/g++/cstdlib /usr/include/g++/ctime
 objs/create_objs.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/create_objs.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/create_objs.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/create_objs.o: /usr/include/g++/cmath /usr/include/math.h
 objs/create_objs.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/create_objs.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
 objs/create_objs.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
@@ -3630,17 +3771,18 @@ objs/create_objs.o: /usr/include/g++/stl_tree.h
 objs/create_objs.o: /usr/include/g++/stl_function.h
 objs/create_objs.o: /usr/include/g++/stl_map.h
 objs/create_objs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/create_objs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/create_objs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/create_objs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/create_objs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/create_objs.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/create_objs.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/create_objs.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/create_objs.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/create_objs.o: spec_mobs.h materials.h colorstring.h format.h
-objs/create_objs.o: obj_component.h dirsort.h statistics.h database.h
-objs/create_objs.o: /usr/local/include/libpq-fe.h
+objs/create_objs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/create_objs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/create_objs.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/create_objs.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/create_objs.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/create_objs.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/create_objs.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/create_objs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/create_objs.o: person.h monster.h account.h extern.h handler.h
+objs/create_objs.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/create_objs.o: format.h obj_component.h dirsort.h statistics.h
+objs/create_objs.o: database.h /usr/local/include/libpq-fe.h
 objs/create_objs.o: /usr/local/include/postgres_ext.h obj_open_container.h
 objs/create_objs.o: obj_base_container.h obj_trash.h obj_book.h obj_trap.h
 objs/create_objs.o: obj_portal.h obj_seethru.h obj_arrow.h obj_base_weapon.h
@@ -3657,15 +3799,16 @@ objs/create_rooms.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/create_rooms.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/create_rooms.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/create_rooms.o: /usr/include/g++/cstring /usr/include/string.h
-objs/create_rooms.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/create_rooms.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/create_rooms.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/create_rooms.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/create_rooms.o: /usr/include/errno.h /usr/include/g++/string
 objs/create_rooms.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/create_rooms.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/create_rooms.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/create_rooms.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/create_rooms.o: /usr/include/g++/stl_config.h
 objs/create_rooms.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/create_rooms.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/create_rooms.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/create_rooms.o: /usr/include/g++/stl_relops.h
+objs/create_rooms.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/create_rooms.o: /usr/include/g++/stl_iterator.h
 objs/create_rooms.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/create_rooms.o: /usr/include/g++/stl_algobase.h
@@ -3683,6 +3826,7 @@ objs/create_rooms.o: /usr/include/g++/stl_function.h
 objs/create_rooms.o: /usr/include/g++/stl_map.h
 objs/create_rooms.o: /usr/include/g++/stl_multimap.h
 objs/create_rooms.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/create_rooms.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/create_rooms.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/create_rooms.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/create_rooms.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -3705,15 +3849,16 @@ objs/crit_combat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/crit_combat.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/crit_combat.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/crit_combat.o: /usr/include/g++/cstring /usr/include/string.h
-objs/crit_combat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/crit_combat.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/crit_combat.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/crit_combat.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/crit_combat.o: /usr/include/errno.h /usr/include/g++/string
 objs/crit_combat.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/crit_combat.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/crit_combat.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/crit_combat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/crit_combat.o: /usr/include/g++/stl_config.h
 objs/crit_combat.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/crit_combat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/crit_combat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/crit_combat.o: /usr/include/g++/stl_relops.h
+objs/crit_combat.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/crit_combat.o: /usr/include/g++/stl_iterator.h
 objs/crit_combat.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/crit_combat.o: /usr/include/g++/stl_algobase.h
@@ -3730,19 +3875,20 @@ objs/crit_combat.o: /usr/include/g++/stl_tree.h
 objs/crit_combat.o: /usr/include/g++/stl_function.h
 objs/crit_combat.o: /usr/include/g++/stl_map.h
 objs/crit_combat.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/crit_combat.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/crit_combat.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/crit_combat.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/crit_combat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/crit_combat.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/crit_combat.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/crit_combat.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/crit_combat.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/crit_combat.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/crit_combat.o: statistics.h obj_corpse.h obj_base_corpse.h
-objs/crit_combat.o: obj_base_container.h obj_gun.h obj_general_weapon.h
-objs/crit_combat.o: obj_base_weapon.h obj_trash.h obj_drinkcon.h
-objs/crit_combat.o: obj_base_cup.h
+objs/crit_combat.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/crit_combat.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/crit_combat.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/crit_combat.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/crit_combat.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/crit_combat.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/crit_combat.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/crit_combat.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/crit_combat.o: person.h monster.h account.h extern.h handler.h
+objs/crit_combat.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/crit_combat.o: format.h combat.h statistics.h obj_corpse.h
+objs/crit_combat.o: obj_base_corpse.h obj_base_container.h obj_gun.h
+objs/crit_combat.o: obj_general_weapon.h obj_base_weapon.h obj_trash.h
+objs/crit_combat.o: obj_drinkcon.h obj_base_cup.h
 objs/damage.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/damage.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/damage.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3753,14 +3899,15 @@ objs/damage.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/damage.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/damage.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/damage.o: /usr/include/g++/cstring /usr/include/string.h
-objs/damage.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/damage.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/damage.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/damage.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/damage.o: /usr/include/errno.h /usr/include/g++/string
 objs/damage.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/damage.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/damage.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/damage.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/damage.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/damage.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/damage.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/damage.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/damage.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/damage.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/damage.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/damage.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/damage.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -3773,7 +3920,8 @@ objs/damage.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/damage.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/damage.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/damage.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/damage.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/damage.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/damage.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/damage.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/damage.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/damage.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -3794,14 +3942,15 @@ objs/database.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/database.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/database.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/database.o: /usr/include/g++/cstring /usr/include/string.h
-objs/database.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/database.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/database.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/database.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/database.o: /usr/include/errno.h /usr/include/g++/string
 objs/database.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/database.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/database.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/database.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/database.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/database.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/database.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/database.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/database.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/database.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/database.o: /usr/include/g++/stl_relops.h
 objs/database.o: /usr/include/g++/stl_iterator.h
 objs/database.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -3815,7 +3964,8 @@ objs/database.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/database.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/database.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/database.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/database.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/database.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/database.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/database.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/database.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/database.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -3837,13 +3987,14 @@ objs/db.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/db.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/db.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/db.o: /usr/include/g++/cstring /usr/include/string.h
-objs/db.o: /usr/include/stdarg.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/db.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/db.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/db.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
 objs/db.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/db.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/db.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/db.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/db.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/db.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/db.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/db.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/db.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/db.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/db.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/db.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
 objs/db.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -3856,11 +4007,12 @@ objs/db.o: /usr/include/g++/stl_uninitialized.h /usr/include/g++/stl_vector.h
 objs/db.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/db.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/db.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
-objs/db.o: /usr/include/g++/iostream /usr/include/g++/sstream sstring.h low.h
-objs/db.o: enum.h spells.h structs.h parse.h immunity.h discipline.h spell2.h
-objs/db.o: db.h ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/db.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
-objs/db.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
+objs/db.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/db.o: /usr/include/g++/fstream /usr/include/g++/fstream.h sstring.h
+objs/db.o: low.h enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/db.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
+objs/db.o: comm.h toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/db.o: race.h skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/db.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/db.o: being.h person.h monster.h account.h extern.h handler.h
 objs/db.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h format.h
@@ -3897,19 +4049,19 @@ objs/disc_adventuring.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_adventuring.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_adventuring.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_adventuring.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_adventuring.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/disc_adventuring.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_adventuring.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_adventuring.o: /usr/include/g++/string
 objs/disc_adventuring.o: /usr/include/g++/std/bastring.h
-objs/disc_adventuring.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_adventuring.o: /usr/include/g++/cstddef
 objs/disc_adventuring.o: /usr/include/g++/std/straits.h
 objs/disc_adventuring.o: /usr/include/g++/alloc.h
 objs/disc_adventuring.o: /usr/include/g++/stl_config.h
 objs/disc_adventuring.o: /usr/include/g++/stl_alloc.h
 objs/disc_adventuring.o: /usr/include/g++/iostream.h
 objs/disc_adventuring.o: /usr/include/g++/streambuf.h
-objs/disc_adventuring.o: /usr/include/g++/libio.h
-objs/disc_adventuring.o: /usr/include/g++/_G_config.h
-objs/disc_adventuring.o: /usr/include/g++/iterator
+objs/disc_adventuring.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_adventuring.o: /usr/include/g++/stl_relops.h
 objs/disc_adventuring.o: /usr/include/g++/stl_iterator.h
 objs/disc_adventuring.o: /usr/include/g++/std/bastring.cc
@@ -3929,6 +4081,7 @@ objs/disc_adventuring.o: /usr/include/g++/stl_function.h
 objs/disc_adventuring.o: /usr/include/g++/stl_map.h
 objs/disc_adventuring.o: /usr/include/g++/stl_multimap.h
 objs/disc_adventuring.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_adventuring.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_adventuring.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_adventuring.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_adventuring.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -3949,14 +4102,15 @@ objs/disc_aegis.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_aegis.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_aegis.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_aegis.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_aegis.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_aegis.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_aegis.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_aegis.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_aegis.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_aegis.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_aegis.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_aegis.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_aegis.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_aegis.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_aegis.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_aegis.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_aegis.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_aegis.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_aegis.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_aegis.o: /usr/include/g++/stl_relops.h
 objs/disc_aegis.o: /usr/include/g++/stl_iterator.h
 objs/disc_aegis.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -3972,7 +4126,8 @@ objs/disc_aegis.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_aegis.o: /usr/include/g++/stl_tree.h
 objs/disc_aegis.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_aegis.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_aegis.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_aegis.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_aegis.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_aegis.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_aegis.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_aegis.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -3995,19 +4150,19 @@ objs/disc_afflictions.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_afflictions.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_afflictions.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_afflictions.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_afflictions.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/disc_afflictions.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_afflictions.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_afflictions.o: /usr/include/g++/string
 objs/disc_afflictions.o: /usr/include/g++/std/bastring.h
-objs/disc_afflictions.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_afflictions.o: /usr/include/g++/cstddef
 objs/disc_afflictions.o: /usr/include/g++/std/straits.h
 objs/disc_afflictions.o: /usr/include/g++/alloc.h
 objs/disc_afflictions.o: /usr/include/g++/stl_config.h
 objs/disc_afflictions.o: /usr/include/g++/stl_alloc.h
 objs/disc_afflictions.o: /usr/include/g++/iostream.h
 objs/disc_afflictions.o: /usr/include/g++/streambuf.h
-objs/disc_afflictions.o: /usr/include/g++/libio.h
-objs/disc_afflictions.o: /usr/include/g++/_G_config.h
-objs/disc_afflictions.o: /usr/include/g++/iterator
+objs/disc_afflictions.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_afflictions.o: /usr/include/g++/stl_relops.h
 objs/disc_afflictions.o: /usr/include/g++/stl_iterator.h
 objs/disc_afflictions.o: /usr/include/g++/std/bastring.cc
@@ -4027,6 +4182,7 @@ objs/disc_afflictions.o: /usr/include/g++/stl_function.h
 objs/disc_afflictions.o: /usr/include/g++/stl_map.h
 objs/disc_afflictions.o: /usr/include/g++/stl_multimap.h
 objs/disc_afflictions.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_afflictions.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_afflictions.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_afflictions.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_afflictions.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4048,14 +4204,15 @@ objs/disc_air.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_air.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_air.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_air.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_air.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_air.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_air.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_air.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_air.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_air.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_air.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_air.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_air.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_air.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_air.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_air.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_air.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_air.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_air.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_air.o: /usr/include/g++/stl_relops.h
 objs/disc_air.o: /usr/include/g++/stl_iterator.h
 objs/disc_air.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4069,7 +4226,8 @@ objs/disc_air.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/disc_air.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/disc_air.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_air.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_air.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_air.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_air.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_air.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_air.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_air.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -4089,15 +4247,16 @@ objs/disc_alchemy.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_alchemy.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_alchemy.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_alchemy.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_alchemy.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_alchemy.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_alchemy.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_alchemy.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_alchemy.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_alchemy.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_alchemy.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_alchemy.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_alchemy.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_alchemy.o: /usr/include/g++/stl_config.h
 objs/disc_alchemy.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_alchemy.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_alchemy.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_alchemy.o: /usr/include/g++/stl_relops.h
+objs/disc_alchemy.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_alchemy.o: /usr/include/g++/stl_iterator.h
 objs/disc_alchemy.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_alchemy.o: /usr/include/g++/stl_algobase.h
@@ -4115,6 +4274,7 @@ objs/disc_alchemy.o: /usr/include/g++/stl_function.h
 objs/disc_alchemy.o: /usr/include/g++/stl_map.h
 objs/disc_alchemy.o: /usr/include/g++/stl_multimap.h
 objs/disc_alchemy.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_alchemy.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_alchemy.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_alchemy.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_alchemy.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4136,15 +4296,16 @@ objs/disc_animal.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_animal.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_animal.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_animal.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_animal.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_animal.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_animal.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_animal.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_animal.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_animal.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_animal.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_animal.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_animal.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_animal.o: /usr/include/g++/stl_config.h
 objs/disc_animal.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_animal.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_animal.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_animal.o: /usr/include/g++/stl_relops.h
+objs/disc_animal.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_animal.o: /usr/include/g++/stl_iterator.h
 objs/disc_animal.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_animal.o: /usr/include/g++/stl_algobase.h
@@ -4161,16 +4322,17 @@ objs/disc_animal.o: /usr/include/g++/stl_tree.h
 objs/disc_animal.o: /usr/include/g++/stl_function.h
 objs/disc_animal.o: /usr/include/g++/stl_map.h
 objs/disc_animal.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_animal.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_animal.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_animal.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_animal.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_animal.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_animal.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_animal.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_animal.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_animal.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_animal.o: disc_animal.h obj_magic_item.h
+objs/disc_animal.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_animal.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_animal.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_animal.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_animal.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_animal.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_animal.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_animal.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_animal.o: person.h monster.h account.h extern.h handler.h
+objs/disc_animal.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_animal.o: format.h combat.h disc_animal.h obj_magic_item.h
 objs/disc_blunt.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_blunt.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_blunt.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -4181,14 +4343,15 @@ objs/disc_blunt.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_blunt.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_blunt.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_blunt.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_blunt.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_blunt.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_blunt.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_blunt.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_blunt.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_blunt.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_blunt.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_blunt.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_blunt.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_blunt.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_blunt.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_blunt.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_blunt.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_blunt.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_blunt.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_blunt.o: /usr/include/g++/stl_relops.h
 objs/disc_blunt.o: /usr/include/g++/stl_iterator.h
 objs/disc_blunt.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4204,7 +4367,8 @@ objs/disc_blunt.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_blunt.o: /usr/include/g++/stl_tree.h
 objs/disc_blunt.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_blunt.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_blunt.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_blunt.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_blunt.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_blunt.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_blunt.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_blunt.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -4224,17 +4388,17 @@ objs/disc_brawling.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_brawling.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_brawling.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_brawling.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_brawling.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_brawling.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_brawling.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_brawling.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_brawling.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_brawling.o: /usr/include/g++/std/bastring.h
-objs/disc_brawling.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_brawling.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_brawling.o: /usr/include/g++/stl_config.h
+objs/disc_brawling.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_brawling.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_brawling.o: /usr/include/g++/stl_alloc.h
 objs/disc_brawling.o: /usr/include/g++/iostream.h
 objs/disc_brawling.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_brawling.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_brawling.o: /usr/include/g++/stl_relops.h
+objs/disc_brawling.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_brawling.o: /usr/include/g++/stl_iterator.h
 objs/disc_brawling.o: /usr/include/g++/std/bastring.cc
 objs/disc_brawling.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -4252,6 +4416,7 @@ objs/disc_brawling.o: /usr/include/g++/stl_function.h
 objs/disc_brawling.o: /usr/include/g++/stl_map.h
 objs/disc_brawling.o: /usr/include/g++/stl_multimap.h
 objs/disc_brawling.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_brawling.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_brawling.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_brawling.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_brawling.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4272,15 +4437,16 @@ objs/disc_cleric.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_cleric.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_cleric.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_cleric.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_cleric.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_cleric.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_cleric.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_cleric.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_cleric.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_cleric.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_cleric.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_cleric.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_cleric.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_cleric.o: /usr/include/g++/stl_config.h
 objs/disc_cleric.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_cleric.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_cleric.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_cleric.o: /usr/include/g++/stl_relops.h
+objs/disc_cleric.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_cleric.o: /usr/include/g++/stl_iterator.h
 objs/disc_cleric.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_cleric.o: /usr/include/g++/stl_algobase.h
@@ -4297,16 +4463,17 @@ objs/disc_cleric.o: /usr/include/g++/stl_tree.h
 objs/disc_cleric.o: /usr/include/g++/stl_function.h
 objs/disc_cleric.o: /usr/include/g++/stl_map.h
 objs/disc_cleric.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_cleric.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_cleric.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_cleric.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_cleric.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_cleric.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_cleric.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_cleric.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_cleric.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_cleric.o: spec_mobs.h materials.h colorstring.h format.h
-objs/disc_cleric.o: disc_cleric.h
+objs/disc_cleric.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_cleric.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_cleric.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_cleric.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_cleric.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_cleric.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_cleric.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_cleric.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_cleric.o: person.h monster.h account.h extern.h handler.h
+objs/disc_cleric.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_cleric.o: format.h disc_cleric.h
 objs/disc_combat.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_combat.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_combat.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -4317,15 +4484,16 @@ objs/disc_combat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_combat.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_combat.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_combat.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_combat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_combat.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_combat.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_combat.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_combat.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_combat.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_combat.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_combat.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_combat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_combat.o: /usr/include/g++/stl_config.h
 objs/disc_combat.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_combat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_combat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_combat.o: /usr/include/g++/stl_relops.h
+objs/disc_combat.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_combat.o: /usr/include/g++/stl_iterator.h
 objs/disc_combat.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_combat.o: /usr/include/g++/stl_algobase.h
@@ -4342,16 +4510,18 @@ objs/disc_combat.o: /usr/include/g++/stl_tree.h
 objs/disc_combat.o: /usr/include/g++/stl_function.h
 objs/disc_combat.o: /usr/include/g++/stl_map.h
 objs/disc_combat.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_combat.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_combat.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_combat.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_combat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_combat.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_combat.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_combat.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_combat.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_combat.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_combat.o: obj_component.h disc_combat.h obj_tool.h
+objs/disc_combat.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_combat.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_combat.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_combat.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_combat.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_combat.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_combat.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_combat.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_combat.o: person.h monster.h account.h extern.h handler.h
+objs/disc_combat.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_combat.o: format.h combat.h obj_component.h disc_combat.h
+objs/disc_combat.o: obj_tool.h
 objs/disc_cure.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_cure.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_cure.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -4362,14 +4532,15 @@ objs/disc_cure.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_cure.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_cure.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_cure.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_cure.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_cure.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_cure.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_cure.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_cure.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_cure.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_cure.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_cure.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_cure.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_cure.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_cure.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_cure.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_cure.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_cure.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_cure.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_cure.o: /usr/include/g++/stl_relops.h
 objs/disc_cure.o: /usr/include/g++/stl_iterator.h
 objs/disc_cure.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4384,6 +4555,7 @@ objs/disc_cure.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_cure.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/disc_cure.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/disc_cure.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_cure.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_cure.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_cure.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_cure.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -4404,15 +4576,16 @@ objs/disc_defense.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_defense.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_defense.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_defense.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_defense.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_defense.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_defense.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_defense.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_defense.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_defense.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_defense.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_defense.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_defense.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_defense.o: /usr/include/g++/stl_config.h
 objs/disc_defense.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_defense.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_defense.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_defense.o: /usr/include/g++/stl_relops.h
+objs/disc_defense.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_defense.o: /usr/include/g++/stl_iterator.h
 objs/disc_defense.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_defense.o: /usr/include/g++/stl_algobase.h
@@ -4430,6 +4603,7 @@ objs/disc_defense.o: /usr/include/g++/stl_function.h
 objs/disc_defense.o: /usr/include/g++/stl_map.h
 objs/disc_defense.o: /usr/include/g++/stl_multimap.h
 objs/disc_defense.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_defense.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_defense.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_defense.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_defense.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4450,15 +4624,16 @@ objs/disc_deikhan.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_deikhan.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_deikhan.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_deikhan.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_deikhan.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_deikhan.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_deikhan.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_deikhan.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_deikhan.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_deikhan.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_deikhan.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_deikhan.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_deikhan.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_deikhan.o: /usr/include/g++/stl_config.h
 objs/disc_deikhan.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_deikhan.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_deikhan.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_deikhan.o: /usr/include/g++/stl_relops.h
+objs/disc_deikhan.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_deikhan.o: /usr/include/g++/stl_iterator.h
 objs/disc_deikhan.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_deikhan.o: /usr/include/g++/stl_algobase.h
@@ -4476,6 +4651,7 @@ objs/disc_deikhan.o: /usr/include/g++/stl_function.h
 objs/disc_deikhan.o: /usr/include/g++/stl_map.h
 objs/disc_deikhan.o: /usr/include/g++/stl_multimap.h
 objs/disc_deikhan.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_deikhan.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_deikhan.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_deikhan.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_deikhan.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4496,14 +4672,15 @@ objs/disc_earth.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_earth.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_earth.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_earth.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_earth.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_earth.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_earth.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_earth.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_earth.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_earth.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_earth.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_earth.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_earth.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_earth.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_earth.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_earth.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_earth.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_earth.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_earth.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_earth.o: /usr/include/g++/stl_relops.h
 objs/disc_earth.o: /usr/include/g++/stl_iterator.h
 objs/disc_earth.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4519,7 +4696,8 @@ objs/disc_earth.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_earth.o: /usr/include/g++/stl_tree.h
 objs/disc_earth.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_earth.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_earth.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_earth.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_earth.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_earth.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_earth.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_earth.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -4540,17 +4718,17 @@ objs/disc_fattacks.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_fattacks.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_fattacks.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_fattacks.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_fattacks.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_fattacks.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_fattacks.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_fattacks.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_fattacks.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_fattacks.o: /usr/include/g++/std/bastring.h
-objs/disc_fattacks.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_fattacks.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_fattacks.o: /usr/include/g++/stl_config.h
+objs/disc_fattacks.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_fattacks.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_fattacks.o: /usr/include/g++/stl_alloc.h
 objs/disc_fattacks.o: /usr/include/g++/iostream.h
 objs/disc_fattacks.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_fattacks.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_fattacks.o: /usr/include/g++/stl_relops.h
+objs/disc_fattacks.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_fattacks.o: /usr/include/g++/stl_iterator.h
 objs/disc_fattacks.o: /usr/include/g++/std/bastring.cc
 objs/disc_fattacks.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -4568,6 +4746,7 @@ objs/disc_fattacks.o: /usr/include/g++/stl_function.h
 objs/disc_fattacks.o: /usr/include/g++/stl_map.h
 objs/disc_fattacks.o: /usr/include/g++/stl_multimap.h
 objs/disc_fattacks.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_fattacks.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_fattacks.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_fattacks.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_fattacks.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4588,14 +4767,15 @@ objs/disc_fire.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_fire.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_fire.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_fire.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_fire.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_fire.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_fire.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_fire.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_fire.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_fire.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_fire.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_fire.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_fire.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_fire.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_fire.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_fire.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_fire.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_fire.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_fire.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_fire.o: /usr/include/g++/stl_relops.h
 objs/disc_fire.o: /usr/include/g++/stl_iterator.h
 objs/disc_fire.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4610,6 +4790,7 @@ objs/disc_fire.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_fire.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/disc_fire.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/disc_fire.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_fire.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_fire.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_fire.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_fire.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -4632,19 +4813,19 @@ objs/disc_hand_of_god.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_hand_of_god.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_hand_of_god.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_hand_of_god.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_hand_of_god.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/disc_hand_of_god.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_hand_of_god.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_hand_of_god.o: /usr/include/g++/string
 objs/disc_hand_of_god.o: /usr/include/g++/std/bastring.h
-objs/disc_hand_of_god.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_hand_of_god.o: /usr/include/g++/cstddef
 objs/disc_hand_of_god.o: /usr/include/g++/std/straits.h
 objs/disc_hand_of_god.o: /usr/include/g++/alloc.h
 objs/disc_hand_of_god.o: /usr/include/g++/stl_config.h
 objs/disc_hand_of_god.o: /usr/include/g++/stl_alloc.h
 objs/disc_hand_of_god.o: /usr/include/g++/iostream.h
 objs/disc_hand_of_god.o: /usr/include/g++/streambuf.h
-objs/disc_hand_of_god.o: /usr/include/g++/libio.h
-objs/disc_hand_of_god.o: /usr/include/g++/_G_config.h
-objs/disc_hand_of_god.o: /usr/include/g++/iterator
+objs/disc_hand_of_god.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_hand_of_god.o: /usr/include/g++/stl_relops.h
 objs/disc_hand_of_god.o: /usr/include/g++/stl_iterator.h
 objs/disc_hand_of_god.o: /usr/include/g++/std/bastring.cc
@@ -4664,6 +4845,7 @@ objs/disc_hand_of_god.o: /usr/include/g++/stl_function.h
 objs/disc_hand_of_god.o: /usr/include/g++/stl_map.h
 objs/disc_hand_of_god.o: /usr/include/g++/stl_multimap.h
 objs/disc_hand_of_god.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_hand_of_god.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_hand_of_god.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_hand_of_god.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_hand_of_god.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4687,14 +4869,15 @@ objs/disc_hth.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_hth.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_hth.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_hth.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_hth.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_hth.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_hth.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_hth.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_hth.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_hth.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_hth.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_hth.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_hth.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_hth.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_hth.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_hth.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_hth.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_hth.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_hth.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_hth.o: /usr/include/g++/stl_relops.h
 objs/disc_hth.o: /usr/include/g++/stl_iterator.h
 objs/disc_hth.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4708,7 +4891,8 @@ objs/disc_hth.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/disc_hth.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/disc_hth.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_hth.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_hth.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_hth.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_hth.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_hth.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_hth.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_hth.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -4729,17 +4913,17 @@ objs/disc_leverage.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_leverage.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_leverage.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_leverage.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_leverage.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_leverage.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_leverage.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_leverage.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_leverage.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_leverage.o: /usr/include/g++/std/bastring.h
-objs/disc_leverage.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_leverage.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_leverage.o: /usr/include/g++/stl_config.h
+objs/disc_leverage.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_leverage.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_leverage.o: /usr/include/g++/stl_alloc.h
 objs/disc_leverage.o: /usr/include/g++/iostream.h
 objs/disc_leverage.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_leverage.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_leverage.o: /usr/include/g++/stl_relops.h
+objs/disc_leverage.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_leverage.o: /usr/include/g++/stl_iterator.h
 objs/disc_leverage.o: /usr/include/g++/std/bastring.cc
 objs/disc_leverage.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -4757,6 +4941,7 @@ objs/disc_leverage.o: /usr/include/g++/stl_function.h
 objs/disc_leverage.o: /usr/include/g++/stl_map.h
 objs/disc_leverage.o: /usr/include/g++/stl_multimap.h
 objs/disc_leverage.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_leverage.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_leverage.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_leverage.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_leverage.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4777,15 +4962,16 @@ objs/disc_looting.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_looting.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_looting.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_looting.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_looting.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_looting.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_looting.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_looting.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_looting.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_looting.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_looting.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_looting.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_looting.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_looting.o: /usr/include/g++/stl_config.h
 objs/disc_looting.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_looting.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_looting.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_looting.o: /usr/include/g++/stl_relops.h
+objs/disc_looting.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_looting.o: /usr/include/g++/stl_iterator.h
 objs/disc_looting.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_looting.o: /usr/include/g++/stl_algobase.h
@@ -4803,6 +4989,7 @@ objs/disc_looting.o: /usr/include/g++/stl_function.h
 objs/disc_looting.o: /usr/include/g++/stl_map.h
 objs/disc_looting.o: /usr/include/g++/stl_multimap.h
 objs/disc_looting.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_looting.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_looting.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_looting.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_looting.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4824,14 +5011,15 @@ objs/disc_mage.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_mage.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_mage.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_mage.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_mage.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_mage.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_mage.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_mage.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_mage.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_mage.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_mage.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_mage.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_mage.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_mage.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_mage.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_mage.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_mage.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_mage.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_mage.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_mage.o: /usr/include/g++/stl_relops.h
 objs/disc_mage.o: /usr/include/g++/stl_iterator.h
 objs/disc_mage.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4846,6 +5034,7 @@ objs/disc_mage.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_mage.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/disc_mage.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/disc_mage.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_mage.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_mage.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_mage.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_mage.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -4866,17 +5055,18 @@ objs/disc_meditation.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_meditation.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_meditation.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_meditation.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_meditation.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_meditation.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_meditation.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_meditation.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_meditation.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_meditation.o: /usr/include/g++/std/bastring.h
-objs/disc_meditation.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_meditation.o: /usr/include/g++/cstddef
 objs/disc_meditation.o: /usr/include/g++/std/straits.h
 objs/disc_meditation.o: /usr/include/g++/alloc.h
 objs/disc_meditation.o: /usr/include/g++/stl_config.h
 objs/disc_meditation.o: /usr/include/g++/stl_alloc.h
 objs/disc_meditation.o: /usr/include/g++/iostream.h
 objs/disc_meditation.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_meditation.o: /usr/include/g++/_G_config.h
 objs/disc_meditation.o: /usr/include/g++/iterator
 objs/disc_meditation.o: /usr/include/g++/stl_relops.h
 objs/disc_meditation.o: /usr/include/g++/stl_iterator.h
@@ -4897,6 +5087,7 @@ objs/disc_meditation.o: /usr/include/g++/stl_function.h
 objs/disc_meditation.o: /usr/include/g++/stl_map.h
 objs/disc_meditation.o: /usr/include/g++/stl_multimap.h
 objs/disc_meditation.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_meditation.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_meditation.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_meditation.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_meditation.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4918,17 +5109,17 @@ objs/disc_mindbody.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_mindbody.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_mindbody.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_mindbody.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_mindbody.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_mindbody.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_mindbody.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_mindbody.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_mindbody.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_mindbody.o: /usr/include/g++/std/bastring.h
-objs/disc_mindbody.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_mindbody.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_mindbody.o: /usr/include/g++/stl_config.h
+objs/disc_mindbody.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_mindbody.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_mindbody.o: /usr/include/g++/stl_alloc.h
 objs/disc_mindbody.o: /usr/include/g++/iostream.h
 objs/disc_mindbody.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_mindbody.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_mindbody.o: /usr/include/g++/stl_relops.h
+objs/disc_mindbody.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_mindbody.o: /usr/include/g++/stl_iterator.h
 objs/disc_mindbody.o: /usr/include/g++/std/bastring.cc
 objs/disc_mindbody.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -4946,6 +5137,7 @@ objs/disc_mindbody.o: /usr/include/g++/stl_function.h
 objs/disc_mindbody.o: /usr/include/g++/stl_map.h
 objs/disc_mindbody.o: /usr/include/g++/stl_multimap.h
 objs/disc_mindbody.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_mindbody.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_mindbody.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_mindbody.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_mindbody.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -4966,14 +5158,15 @@ objs/disc_monk.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_monk.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_monk.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_monk.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_monk.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_monk.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_monk.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_monk.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_monk.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_monk.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_monk.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_monk.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_monk.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_monk.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_monk.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_monk.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_monk.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_monk.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_monk.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_monk.o: /usr/include/g++/stl_relops.h
 objs/disc_monk.o: /usr/include/g++/stl_iterator.h
 objs/disc_monk.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -4988,6 +5181,7 @@ objs/disc_monk.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_monk.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/disc_monk.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/disc_monk.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_monk.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_monk.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_monk.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_monk.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -5008,15 +5202,16 @@ objs/disc_mounted.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_mounted.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_mounted.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_mounted.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_mounted.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_mounted.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_mounted.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_mounted.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_mounted.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_mounted.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_mounted.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_mounted.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_mounted.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_mounted.o: /usr/include/g++/stl_config.h
 objs/disc_mounted.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_mounted.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_mounted.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_mounted.o: /usr/include/g++/stl_relops.h
+objs/disc_mounted.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_mounted.o: /usr/include/g++/stl_iterator.h
 objs/disc_mounted.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_mounted.o: /usr/include/g++/stl_algobase.h
@@ -5034,6 +5229,7 @@ objs/disc_mounted.o: /usr/include/g++/stl_function.h
 objs/disc_mounted.o: /usr/include/g++/stl_map.h
 objs/disc_mounted.o: /usr/include/g++/stl_multimap.h
 objs/disc_mounted.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_mounted.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_mounted.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_mounted.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_mounted.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5054,15 +5250,16 @@ objs/disc_murder.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_murder.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_murder.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_murder.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_murder.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_murder.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_murder.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_murder.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_murder.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_murder.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_murder.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_murder.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_murder.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_murder.o: /usr/include/g++/stl_config.h
 objs/disc_murder.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_murder.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_murder.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_murder.o: /usr/include/g++/stl_relops.h
+objs/disc_murder.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_murder.o: /usr/include/g++/stl_iterator.h
 objs/disc_murder.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_murder.o: /usr/include/g++/stl_algobase.h
@@ -5079,17 +5276,19 @@ objs/disc_murder.o: /usr/include/g++/stl_tree.h
 objs/disc_murder.o: /usr/include/g++/stl_function.h
 objs/disc_murder.o: /usr/include/g++/stl_map.h
 objs/disc_murder.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_murder.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_murder.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_murder.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_murder.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_murder.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_murder.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_murder.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_murder.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_murder.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_murder.o: spelltask.h disc_murder.h obj_tool.h obj_general_weapon.h
-objs/disc_murder.o: obj_base_weapon.h obj_base_cup.h obj_arrow.h
+objs/disc_murder.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_murder.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_murder.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_murder.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_murder.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_murder.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_murder.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_murder.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_murder.o: person.h monster.h account.h extern.h handler.h
+objs/disc_murder.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_murder.o: format.h combat.h spelltask.h disc_murder.h obj_tool.h
+objs/disc_murder.o: obj_general_weapon.h obj_base_weapon.h obj_base_cup.h
+objs/disc_murder.o: obj_arrow.h
 objs/disc_nature.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_nature.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_nature.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5100,15 +5299,16 @@ objs/disc_nature.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_nature.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_nature.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_nature.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_nature.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_nature.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_nature.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_nature.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_nature.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_nature.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_nature.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_nature.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_nature.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_nature.o: /usr/include/g++/stl_config.h
 objs/disc_nature.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_nature.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_nature.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_nature.o: /usr/include/g++/stl_relops.h
+objs/disc_nature.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_nature.o: /usr/include/g++/stl_iterator.h
 objs/disc_nature.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_nature.o: /usr/include/g++/stl_algobase.h
@@ -5125,16 +5325,18 @@ objs/disc_nature.o: /usr/include/g++/stl_tree.h
 objs/disc_nature.o: /usr/include/g++/stl_function.h
 objs/disc_nature.o: /usr/include/g++/stl_map.h
 objs/disc_nature.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_nature.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_nature.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_nature.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_nature.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_nature.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_nature.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_nature.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_nature.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_nature.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_nature.o: spelltask.h disc_nature.h obj_magic_item.h
+objs/disc_nature.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_nature.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_nature.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_nature.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_nature.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_nature.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_nature.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_nature.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_nature.o: person.h monster.h account.h extern.h handler.h
+objs/disc_nature.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_nature.o: format.h combat.h spelltask.h disc_nature.h
+objs/disc_nature.o: obj_magic_item.h
 objs/disc_physical.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_physical.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_physical.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -5146,17 +5348,17 @@ objs/disc_physical.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_physical.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_physical.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_physical.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_physical.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_physical.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_physical.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_physical.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_physical.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_physical.o: /usr/include/g++/std/bastring.h
-objs/disc_physical.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_physical.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_physical.o: /usr/include/g++/stl_config.h
+objs/disc_physical.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_physical.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_physical.o: /usr/include/g++/stl_alloc.h
 objs/disc_physical.o: /usr/include/g++/iostream.h
 objs/disc_physical.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_physical.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_physical.o: /usr/include/g++/stl_relops.h
+objs/disc_physical.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_physical.o: /usr/include/g++/stl_iterator.h
 objs/disc_physical.o: /usr/include/g++/std/bastring.cc
 objs/disc_physical.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -5174,6 +5376,7 @@ objs/disc_physical.o: /usr/include/g++/stl_function.h
 objs/disc_physical.o: /usr/include/g++/stl_map.h
 objs/disc_physical.o: /usr/include/g++/stl_multimap.h
 objs/disc_physical.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_physical.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_physical.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_physical.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_physical.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5194,15 +5397,16 @@ objs/disc_pierce.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_pierce.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_pierce.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_pierce.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_pierce.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_pierce.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_pierce.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_pierce.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_pierce.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_pierce.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_pierce.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_pierce.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_pierce.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_pierce.o: /usr/include/g++/stl_config.h
 objs/disc_pierce.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_pierce.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_pierce.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_pierce.o: /usr/include/g++/stl_relops.h
+objs/disc_pierce.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_pierce.o: /usr/include/g++/stl_iterator.h
 objs/disc_pierce.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_pierce.o: /usr/include/g++/stl_algobase.h
@@ -5219,16 +5423,17 @@ objs/disc_pierce.o: /usr/include/g++/stl_tree.h
 objs/disc_pierce.o: /usr/include/g++/stl_function.h
 objs/disc_pierce.o: /usr/include/g++/stl_map.h
 objs/disc_pierce.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_pierce.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_pierce.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_pierce.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_pierce.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_pierce.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_pierce.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_pierce.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_pierce.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_pierce.o: spec_mobs.h materials.h colorstring.h format.h
-objs/disc_pierce.o: disc_pierce.h
+objs/disc_pierce.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_pierce.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_pierce.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_pierce.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_pierce.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_pierce.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_pierce.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_pierce.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_pierce.o: person.h monster.h account.h extern.h handler.h
+objs/disc_pierce.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_pierce.o: format.h disc_pierce.h
 objs/disc_psionics.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_psionics.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_psionics.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -5240,17 +5445,17 @@ objs/disc_psionics.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_psionics.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_psionics.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_psionics.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_psionics.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_psionics.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_psionics.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_psionics.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_psionics.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_psionics.o: /usr/include/g++/std/bastring.h
-objs/disc_psionics.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_psionics.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_psionics.o: /usr/include/g++/stl_config.h
+objs/disc_psionics.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_psionics.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_psionics.o: /usr/include/g++/stl_alloc.h
 objs/disc_psionics.o: /usr/include/g++/iostream.h
 objs/disc_psionics.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_psionics.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_psionics.o: /usr/include/g++/stl_relops.h
+objs/disc_psionics.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_psionics.o: /usr/include/g++/stl_iterator.h
 objs/disc_psionics.o: /usr/include/g++/std/bastring.cc
 objs/disc_psionics.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -5268,6 +5473,7 @@ objs/disc_psionics.o: /usr/include/g++/stl_function.h
 objs/disc_psionics.o: /usr/include/g++/stl_map.h
 objs/disc_psionics.o: /usr/include/g++/stl_multimap.h
 objs/disc_psionics.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_psionics.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_psionics.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_psionics.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_psionics.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5288,15 +5494,16 @@ objs/disc_ranged.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_ranged.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_ranged.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_ranged.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_ranged.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_ranged.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_ranged.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_ranged.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_ranged.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_ranged.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_ranged.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_ranged.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_ranged.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_ranged.o: /usr/include/g++/stl_config.h
 objs/disc_ranged.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_ranged.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_ranged.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_ranged.o: /usr/include/g++/stl_relops.h
+objs/disc_ranged.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_ranged.o: /usr/include/g++/stl_iterator.h
 objs/disc_ranged.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_ranged.o: /usr/include/g++/stl_algobase.h
@@ -5313,16 +5520,17 @@ objs/disc_ranged.o: /usr/include/g++/stl_tree.h
 objs/disc_ranged.o: /usr/include/g++/stl_function.h
 objs/disc_ranged.o: /usr/include/g++/stl_map.h
 objs/disc_ranged.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_ranged.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_ranged.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_ranged.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_ranged.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_ranged.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_ranged.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_ranged.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_ranged.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_ranged.o: spec_mobs.h materials.h colorstring.h format.h
-objs/disc_ranged.o: disc_ranged.h obj_bow.h obj_tool.h
+objs/disc_ranged.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_ranged.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_ranged.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_ranged.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_ranged.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_ranged.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_ranged.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_ranged.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_ranged.o: person.h monster.h account.h extern.h handler.h
+objs/disc_ranged.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_ranged.o: format.h disc_ranged.h obj_bow.h obj_tool.h
 objs/disc_ranger.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_ranger.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_ranger.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5333,15 +5541,16 @@ objs/disc_ranger.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_ranger.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_ranger.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_ranger.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_ranger.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_ranger.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_ranger.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_ranger.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_ranger.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_ranger.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_ranger.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_ranger.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_ranger.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_ranger.o: /usr/include/g++/stl_config.h
 objs/disc_ranger.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_ranger.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_ranger.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_ranger.o: /usr/include/g++/stl_relops.h
+objs/disc_ranger.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_ranger.o: /usr/include/g++/stl_iterator.h
 objs/disc_ranger.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_ranger.o: /usr/include/g++/stl_algobase.h
@@ -5358,17 +5567,19 @@ objs/disc_ranger.o: /usr/include/g++/stl_tree.h
 objs/disc_ranger.o: /usr/include/g++/stl_function.h
 objs/disc_ranger.o: /usr/include/g++/stl_map.h
 objs/disc_ranger.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_ranger.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_ranger.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_ranger.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_ranger.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_ranger.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_ranger.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_ranger.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_ranger.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_ranger.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_ranger.o: disc_ranger.h obj_portal.h obj_seethru.h pathfinder.h
-objs/disc_ranger.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/disc_ranger.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_ranger.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_ranger.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_ranger.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_ranger.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_ranger.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_ranger.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_ranger.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_ranger.o: person.h monster.h account.h extern.h handler.h
+objs/disc_ranger.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_ranger.o: format.h combat.h disc_ranger.h obj_portal.h
+objs/disc_ranger.o: obj_seethru.h pathfinder.h /usr/include/g++/deque
+objs/disc_ranger.o: /usr/include/g++/stl_deque.h
 objs/disc_shaman.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_shaman.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_shaman.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5379,15 +5590,16 @@ objs/disc_shaman.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_shaman.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_shaman.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_shaman.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_shaman.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_shaman.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_shaman.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_shaman.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_shaman.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_shaman.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_shaman.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_shaman.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_shaman.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_shaman.o: /usr/include/g++/stl_config.h
 objs/disc_shaman.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_shaman.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_shaman.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_shaman.o: /usr/include/g++/stl_relops.h
+objs/disc_shaman.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_shaman.o: /usr/include/g++/stl_iterator.h
 objs/disc_shaman.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_shaman.o: /usr/include/g++/stl_algobase.h
@@ -5404,17 +5616,19 @@ objs/disc_shaman.o: /usr/include/g++/stl_tree.h
 objs/disc_shaman.o: /usr/include/g++/stl_function.h
 objs/disc_shaman.o: /usr/include/g++/stl_map.h
 objs/disc_shaman.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_shaman.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_shaman.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_shaman.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_shaman.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_shaman.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_shaman.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_shaman.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_shaman.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_shaman.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_shaman.o: disc_shaman.h spelltask.h obj_base_corpse.h
-objs/disc_shaman.o: obj_base_container.h obj_tool.h obj_magic_item.h
+objs/disc_shaman.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_shaman.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_shaman.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_shaman.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_shaman.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_shaman.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_shaman.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_shaman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_shaman.o: person.h monster.h account.h extern.h handler.h
+objs/disc_shaman.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_shaman.o: format.h combat.h disc_shaman.h spelltask.h
+objs/disc_shaman.o: obj_base_corpse.h obj_base_container.h obj_tool.h
+objs/disc_shaman.o: obj_magic_item.h
 objs/disc_shaman_alchemy.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_shaman_alchemy.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_shaman_alchemy.o: /usr/include/machine/ansi.h
@@ -5429,10 +5643,13 @@ objs/disc_shaman_alchemy.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_alchemy.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_alchemy.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_alchemy.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_shaman_alchemy.o: /usr/include/g++/cmath
+objs/disc_shaman_alchemy.o: /usr/include/g++/_G_config.h
+objs/disc_shaman_alchemy.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/string
 objs/disc_shaman_alchemy.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_alchemy.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_alchemy.o: /usr/include/g++/cstddef
 objs/disc_shaman_alchemy.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/alloc.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/stl_config.h
@@ -5440,7 +5657,6 @@ objs/disc_shaman_alchemy.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/iostream.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/streambuf.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/libio.h
-objs/disc_shaman_alchemy.o: /usr/include/g++/_G_config.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/iterator
 objs/disc_shaman_alchemy.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/stl_iterator.h
@@ -5463,7 +5679,8 @@ objs/disc_shaman_alchemy.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_alchemy.o: /usr/include/g++/iostream
-objs/disc_shaman_alchemy.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/disc_shaman_alchemy.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_shaman_alchemy.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/disc_shaman_alchemy.o: spells.h structs.h parse.h immunity.h
 objs/disc_shaman_alchemy.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_shaman_alchemy.o: client.h response.h faction.h comm.h toggle.h
@@ -5490,10 +5707,13 @@ objs/disc_shaman_armadillo.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_armadillo.o: /usr/include/runetype.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_shaman_armadillo.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/disc_shaman_armadillo.o: /usr/include/errno.h /usr/include/g++/string
+objs/disc_shaman_armadillo.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_shaman_armadillo.o: /usr/include/g++/_G_config.h
+objs/disc_shaman_armadillo.o: /usr/include/stddef.h /usr/include/math.h
+objs/disc_shaman_armadillo.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/disc_shaman_armadillo.o: /usr/include/g++/string
 objs/disc_shaman_armadillo.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_armadillo.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_armadillo.o: /usr/include/g++/cstddef
 objs/disc_shaman_armadillo.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/alloc.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/stl_config.h
@@ -5501,7 +5721,6 @@ objs/disc_shaman_armadillo.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/iostream.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/streambuf.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/libio.h
-objs/disc_shaman_armadillo.o: /usr/include/g++/_G_config.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/iterator
 objs/disc_shaman_armadillo.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/stl_iterator.h
@@ -5525,8 +5744,10 @@ objs/disc_shaman_armadillo.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_armadillo.o: /usr/include/g++/iostream
-objs/disc_shaman_armadillo.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/disc_shaman_armadillo.o: spells.h structs.h parse.h immunity.h
+objs/disc_shaman_armadillo.o: /usr/include/g++/sstream
+objs/disc_shaman_armadillo.o: /usr/include/g++/fstream
+objs/disc_shaman_armadillo.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/disc_shaman_armadillo.o: enum.h spells.h structs.h parse.h immunity.h
 objs/disc_shaman_armadillo.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_shaman_armadillo.o: client.h response.h faction.h comm.h toggle.h
 objs/disc_shaman_armadillo.o: wiz_powers.h cmd_message.h stats.h limbs.h
@@ -5552,10 +5773,13 @@ objs/disc_shaman_control.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_control.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_control.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_control.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_shaman_control.o: /usr/include/g++/cmath
+objs/disc_shaman_control.o: /usr/include/g++/_G_config.h
+objs/disc_shaman_control.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_shaman_control.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_shaman_control.o: /usr/include/g++/string
 objs/disc_shaman_control.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_control.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_control.o: /usr/include/g++/cstddef
 objs/disc_shaman_control.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_control.o: /usr/include/g++/alloc.h
 objs/disc_shaman_control.o: /usr/include/g++/stl_config.h
@@ -5563,7 +5787,6 @@ objs/disc_shaman_control.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_control.o: /usr/include/g++/iostream.h
 objs/disc_shaman_control.o: /usr/include/g++/streambuf.h
 objs/disc_shaman_control.o: /usr/include/g++/libio.h
-objs/disc_shaman_control.o: /usr/include/g++/_G_config.h
 objs/disc_shaman_control.o: /usr/include/g++/iterator
 objs/disc_shaman_control.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_control.o: /usr/include/g++/stl_iterator.h
@@ -5586,7 +5809,8 @@ objs/disc_shaman_control.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_control.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_control.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_control.o: /usr/include/g++/iostream
-objs/disc_shaman_control.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/disc_shaman_control.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_shaman_control.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/disc_shaman_control.o: spells.h structs.h parse.h immunity.h
 objs/disc_shaman_control.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_shaman_control.o: client.h response.h faction.h comm.h toggle.h
@@ -5612,19 +5836,19 @@ objs/disc_shaman_frog.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_frog.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_frog.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_frog.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_shaman_frog.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/disc_shaman_frog.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_shaman_frog.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_shaman_frog.o: /usr/include/g++/string
 objs/disc_shaman_frog.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_frog.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_frog.o: /usr/include/g++/cstddef
 objs/disc_shaman_frog.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_frog.o: /usr/include/g++/alloc.h
 objs/disc_shaman_frog.o: /usr/include/g++/stl_config.h
 objs/disc_shaman_frog.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_frog.o: /usr/include/g++/iostream.h
 objs/disc_shaman_frog.o: /usr/include/g++/streambuf.h
-objs/disc_shaman_frog.o: /usr/include/g++/libio.h
-objs/disc_shaman_frog.o: /usr/include/g++/_G_config.h
-objs/disc_shaman_frog.o: /usr/include/g++/iterator
+objs/disc_shaman_frog.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_shaman_frog.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_frog.o: /usr/include/g++/stl_iterator.h
 objs/disc_shaman_frog.o: /usr/include/g++/std/bastring.cc
@@ -5644,6 +5868,7 @@ objs/disc_shaman_frog.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_frog.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_frog.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_frog.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_shaman_frog.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_shaman_frog.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_shaman_frog.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_shaman_frog.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5669,10 +5894,13 @@ objs/disc_shaman_healing.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_healing.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_healing.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_healing.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_shaman_healing.o: /usr/include/g++/cmath
+objs/disc_shaman_healing.o: /usr/include/g++/_G_config.h
+objs/disc_shaman_healing.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_shaman_healing.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_shaman_healing.o: /usr/include/g++/string
 objs/disc_shaman_healing.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_healing.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_healing.o: /usr/include/g++/cstddef
 objs/disc_shaman_healing.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_healing.o: /usr/include/g++/alloc.h
 objs/disc_shaman_healing.o: /usr/include/g++/stl_config.h
@@ -5680,7 +5908,6 @@ objs/disc_shaman_healing.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_healing.o: /usr/include/g++/iostream.h
 objs/disc_shaman_healing.o: /usr/include/g++/streambuf.h
 objs/disc_shaman_healing.o: /usr/include/g++/libio.h
-objs/disc_shaman_healing.o: /usr/include/g++/_G_config.h
 objs/disc_shaman_healing.o: /usr/include/g++/iterator
 objs/disc_shaman_healing.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_healing.o: /usr/include/g++/stl_iterator.h
@@ -5703,7 +5930,8 @@ objs/disc_shaman_healing.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_healing.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_healing.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_healing.o: /usr/include/g++/iostream
-objs/disc_shaman_healing.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/disc_shaman_healing.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_shaman_healing.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/disc_shaman_healing.o: spells.h structs.h parse.h immunity.h
 objs/disc_shaman_healing.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/disc_shaman_healing.o: client.h response.h faction.h comm.h toggle.h
@@ -5729,19 +5957,19 @@ objs/disc_shaman_skunk.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_skunk.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_skunk.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_skunk.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_shaman_skunk.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/disc_shaman_skunk.o: /usr/include/stddef.h /usr/include/math.h
 objs/disc_shaman_skunk.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/disc_shaman_skunk.o: /usr/include/g++/string
 objs/disc_shaman_skunk.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_skunk.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_skunk.o: /usr/include/g++/cstddef
 objs/disc_shaman_skunk.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_skunk.o: /usr/include/g++/alloc.h
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_config.h
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_skunk.o: /usr/include/g++/iostream.h
 objs/disc_shaman_skunk.o: /usr/include/g++/streambuf.h
-objs/disc_shaman_skunk.o: /usr/include/g++/libio.h
-objs/disc_shaman_skunk.o: /usr/include/g++/_G_config.h
-objs/disc_shaman_skunk.o: /usr/include/g++/iterator
+objs/disc_shaman_skunk.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_iterator.h
 objs/disc_shaman_skunk.o: /usr/include/g++/std/bastring.cc
@@ -5761,6 +5989,7 @@ objs/disc_shaman_skunk.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_skunk.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_skunk.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_shaman_skunk.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_shaman_skunk.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_shaman_skunk.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_shaman_skunk.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5785,19 +6014,19 @@ objs/disc_shaman_spider.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/disc_shaman_spider.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/disc_shaman_spider.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/disc_shaman_spider.o: /usr/include/string.h /usr/include/stdarg.h
-objs/disc_shaman_spider.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/disc_shaman_spider.o: /usr/include/g++/string
+objs/disc_shaman_spider.o: /usr/include/g++/cmath
+objs/disc_shaman_spider.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_shaman_spider.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/disc_shaman_spider.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_shaman_spider.o: /usr/include/g++/std/bastring.h
-objs/disc_shaman_spider.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/disc_shaman_spider.o: /usr/include/g++/cstddef
 objs/disc_shaman_spider.o: /usr/include/g++/std/straits.h
 objs/disc_shaman_spider.o: /usr/include/g++/alloc.h
 objs/disc_shaman_spider.o: /usr/include/g++/stl_config.h
 objs/disc_shaman_spider.o: /usr/include/g++/stl_alloc.h
 objs/disc_shaman_spider.o: /usr/include/g++/iostream.h
 objs/disc_shaman_spider.o: /usr/include/g++/streambuf.h
-objs/disc_shaman_spider.o: /usr/include/g++/libio.h
-objs/disc_shaman_spider.o: /usr/include/g++/_G_config.h
-objs/disc_shaman_spider.o: /usr/include/g++/iterator
+objs/disc_shaman_spider.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_shaman_spider.o: /usr/include/g++/stl_relops.h
 objs/disc_shaman_spider.o: /usr/include/g++/stl_iterator.h
 objs/disc_shaman_spider.o: /usr/include/g++/std/bastring.cc
@@ -5819,17 +6048,19 @@ objs/disc_shaman_spider.o: /usr/include/g++/stl_function.h
 objs/disc_shaman_spider.o: /usr/include/g++/stl_map.h
 objs/disc_shaman_spider.o: /usr/include/g++/stl_multimap.h
 objs/disc_shaman_spider.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/disc_shaman_spider.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/disc_shaman_spider.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/disc_shaman_spider.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_shaman_spider.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/disc_shaman_spider.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/disc_shaman_spider.o: task.h weather.h sound.h create.h thing.h room.h
-objs/disc_shaman_spider.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/disc_shaman_spider.o: being.h person.h monster.h account.h extern.h
-objs/disc_shaman_spider.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_shaman_spider.o: materials.h colorstring.h format.h combat.h
-objs/disc_shaman_spider.o: spelltask.h disc_shaman_spider.h obj_magic_item.h
+objs/disc_shaman_spider.o: /usr/include/g++/fstream
+objs/disc_shaman_spider.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_shaman_spider.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_shaman_spider.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/disc_shaman_spider.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/disc_shaman_spider.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/disc_shaman_spider.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/disc_shaman_spider.o: create.h thing.h room.h obj.h spec_objs.h
+objs/disc_shaman_spider.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/disc_shaman_spider.o: monster.h account.h extern.h handler.h obj_money.h
+objs/disc_shaman_spider.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_shaman_spider.o: format.h combat.h spelltask.h disc_shaman_spider.h
+objs/disc_shaman_spider.o: obj_magic_item.h
 objs/disc_slash.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_slash.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_slash.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5840,14 +6071,15 @@ objs/disc_slash.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_slash.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_slash.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_slash.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_slash.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_slash.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_slash.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_slash.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_slash.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_slash.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_slash.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_slash.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_slash.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_slash.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_slash.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_slash.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_slash.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_slash.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_slash.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_slash.o: /usr/include/g++/stl_relops.h
 objs/disc_slash.o: /usr/include/g++/stl_iterator.h
 objs/disc_slash.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -5863,7 +6095,8 @@ objs/disc_slash.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_slash.o: /usr/include/g++/stl_tree.h
 objs/disc_slash.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_slash.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_slash.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_slash.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_slash.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_slash.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_slash.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_slash.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -5882,15 +6115,16 @@ objs/disc_smythe.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_smythe.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_smythe.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_smythe.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_smythe.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_smythe.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_smythe.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_smythe.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_smythe.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_smythe.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_smythe.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_smythe.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_smythe.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_smythe.o: /usr/include/g++/stl_config.h
 objs/disc_smythe.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_smythe.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_smythe.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_smythe.o: /usr/include/g++/stl_relops.h
+objs/disc_smythe.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_smythe.o: /usr/include/g++/stl_iterator.h
 objs/disc_smythe.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_smythe.o: /usr/include/g++/stl_algobase.h
@@ -5907,16 +6141,17 @@ objs/disc_smythe.o: /usr/include/g++/stl_tree.h
 objs/disc_smythe.o: /usr/include/g++/stl_function.h
 objs/disc_smythe.o: /usr/include/g++/stl_map.h
 objs/disc_smythe.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_smythe.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_smythe.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_smythe.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_smythe.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_smythe.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_smythe.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_smythe.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_smythe.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_smythe.o: spec_mobs.h materials.h colorstring.h format.h
-objs/disc_smythe.o: disc_smythe.h
+objs/disc_smythe.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_smythe.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_smythe.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_smythe.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_smythe.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_smythe.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_smythe.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_smythe.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_smythe.o: person.h monster.h account.h extern.h handler.h
+objs/disc_smythe.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_smythe.o: format.h disc_smythe.h
 objs/disc_sorcery.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/disc_sorcery.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/disc_sorcery.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h
@@ -5954,6 +6189,7 @@ objs/disc_sorcery.o: /usr/include/g++/stl_function.h
 objs/disc_sorcery.o: /usr/include/g++/stl_map.h
 objs/disc_sorcery.o: /usr/include/g++/stl_multimap.h
 objs/disc_sorcery.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_sorcery.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_sorcery.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_sorcery.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_sorcery.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -5975,15 +6211,16 @@ objs/disc_spirit.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_spirit.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_spirit.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_spirit.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_spirit.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_spirit.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_spirit.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_spirit.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_spirit.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_spirit.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_spirit.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_spirit.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_spirit.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_spirit.o: /usr/include/g++/stl_config.h
 objs/disc_spirit.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_spirit.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_spirit.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_spirit.o: /usr/include/g++/stl_relops.h
+objs/disc_spirit.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_spirit.o: /usr/include/g++/stl_iterator.h
 objs/disc_spirit.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_spirit.o: /usr/include/g++/stl_algobase.h
@@ -6000,16 +6237,18 @@ objs/disc_spirit.o: /usr/include/g++/stl_tree.h
 objs/disc_spirit.o: /usr/include/g++/stl_function.h
 objs/disc_spirit.o: /usr/include/g++/stl_map.h
 objs/disc_spirit.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_spirit.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/disc_spirit.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/disc_spirit.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/disc_spirit.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/disc_spirit.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/disc_spirit.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/disc_spirit.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/disc_spirit.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/disc_spirit.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_spirit.o: spelltask.h disc_spirit.h obj_magic_item.h
+objs/disc_spirit.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_spirit.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_spirit.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_spirit.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_spirit.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_spirit.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_spirit.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_spirit.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_spirit.o: person.h monster.h account.h extern.h handler.h
+objs/disc_spirit.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/disc_spirit.o: format.h combat.h spelltask.h disc_spirit.h
+objs/disc_spirit.o: obj_magic_item.h
 objs/disc_survival.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_survival.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_survival.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6021,17 +6260,17 @@ objs/disc_survival.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_survival.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_survival.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_survival.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_survival.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_survival.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_survival.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_survival.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_survival.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_survival.o: /usr/include/g++/std/bastring.h
-objs/disc_survival.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_survival.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_survival.o: /usr/include/g++/stl_config.h
+objs/disc_survival.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_survival.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_survival.o: /usr/include/g++/stl_alloc.h
 objs/disc_survival.o: /usr/include/g++/iostream.h
 objs/disc_survival.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_survival.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_survival.o: /usr/include/g++/stl_relops.h
+objs/disc_survival.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_survival.o: /usr/include/g++/stl_iterator.h
 objs/disc_survival.o: /usr/include/g++/std/bastring.cc
 objs/disc_survival.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -6049,6 +6288,7 @@ objs/disc_survival.o: /usr/include/g++/stl_function.h
 objs/disc_survival.o: /usr/include/g++/stl_map.h
 objs/disc_survival.o: /usr/include/g++/stl_multimap.h
 objs/disc_survival.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_survival.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_survival.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_survival.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_survival.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6074,17 +6314,17 @@ objs/disc_theology.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_theology.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_theology.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_theology.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_theology.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_theology.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_theology.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_theology.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_theology.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_theology.o: /usr/include/g++/std/bastring.h
-objs/disc_theology.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/disc_theology.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_theology.o: /usr/include/g++/stl_config.h
+objs/disc_theology.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/disc_theology.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/disc_theology.o: /usr/include/g++/stl_alloc.h
 objs/disc_theology.o: /usr/include/g++/iostream.h
 objs/disc_theology.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_theology.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_theology.o: /usr/include/g++/stl_relops.h
+objs/disc_theology.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_theology.o: /usr/include/g++/stl_iterator.h
 objs/disc_theology.o: /usr/include/g++/std/bastring.cc
 objs/disc_theology.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -6102,6 +6342,7 @@ objs/disc_theology.o: /usr/include/g++/stl_function.h
 objs/disc_theology.o: /usr/include/g++/stl_map.h
 objs/disc_theology.o: /usr/include/g++/stl_multimap.h
 objs/disc_theology.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_theology.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_theology.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_theology.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_theology.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6123,14 +6364,15 @@ objs/disc_thief.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_thief.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_thief.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_thief.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_thief.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_thief.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_thief.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_thief.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_thief.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_thief.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_thief.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_thief.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_thief.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_thief.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_thief.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_thief.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_thief.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_thief.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_thief.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_thief.o: /usr/include/g++/stl_relops.h
 objs/disc_thief.o: /usr/include/g++/stl_iterator.h
 objs/disc_thief.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -6146,7 +6388,8 @@ objs/disc_thief.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_thief.o: /usr/include/g++/stl_tree.h
 objs/disc_thief.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_thief.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_thief.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_thief.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_thief.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_thief.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_thief.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_thief.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6170,15 +6413,16 @@ objs/disc_warrior.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_warrior.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_warrior.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_warrior.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_warrior.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_warrior.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_warrior.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_warrior.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_warrior.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_warrior.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_warrior.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_warrior.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/disc_warrior.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_warrior.o: /usr/include/g++/stl_config.h
 objs/disc_warrior.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/disc_warrior.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_warrior.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/disc_warrior.o: /usr/include/g++/stl_relops.h
+objs/disc_warrior.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/disc_warrior.o: /usr/include/g++/stl_iterator.h
 objs/disc_warrior.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disc_warrior.o: /usr/include/g++/stl_algobase.h
@@ -6196,6 +6440,7 @@ objs/disc_warrior.o: /usr/include/g++/stl_function.h
 objs/disc_warrior.o: /usr/include/g++/stl_map.h
 objs/disc_warrior.o: /usr/include/g++/stl_multimap.h
 objs/disc_warrior.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/disc_warrior.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/disc_warrior.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/disc_warrior.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/disc_warrior.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6216,14 +6461,15 @@ objs/disc_water.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_water.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_water.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_water.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_water.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_water.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_water.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_water.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_water.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_water.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_water.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_water.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_water.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_water.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_water.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_water.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_water.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_water.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_water.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_water.o: /usr/include/g++/stl_relops.h
 objs/disc_water.o: /usr/include/g++/stl_iterator.h
 objs/disc_water.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -6239,7 +6485,8 @@ objs/disc_water.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_water.o: /usr/include/g++/stl_tree.h
 objs/disc_water.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_water.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_water.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_water.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_water.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_water.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_water.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_water.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6259,14 +6506,15 @@ objs/disc_wrath.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disc_wrath.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disc_wrath.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disc_wrath.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_wrath.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disc_wrath.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_wrath.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_wrath.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disc_wrath.o: /usr/include/errno.h /usr/include/g++/string
 objs/disc_wrath.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_wrath.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disc_wrath.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_wrath.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_wrath.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_wrath.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disc_wrath.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_wrath.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disc_wrath.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disc_wrath.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disc_wrath.o: /usr/include/g++/stl_relops.h
 objs/disc_wrath.o: /usr/include/g++/stl_iterator.h
 objs/disc_wrath.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -6282,7 +6530,8 @@ objs/disc_wrath.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/disc_wrath.o: /usr/include/g++/stl_tree.h
 objs/disc_wrath.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disc_wrath.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disc_wrath.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disc_wrath.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_wrath.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disc_wrath.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disc_wrath.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disc_wrath.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6326,7 +6575,8 @@ objs/discipline.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/discipline.o: /usr/include/g++/stl_tree.h
 objs/discipline.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/discipline.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/discipline.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/discipline.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/discipline.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/discipline.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/discipline.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/discipline.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6367,14 +6617,15 @@ objs/disease.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/disease.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/disease.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/disease.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disease.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/disease.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disease.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disease.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/disease.o: /usr/include/errno.h /usr/include/g++/string
 objs/disease.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disease.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/disease.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disease.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disease.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disease.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/disease.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disease.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/disease.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/disease.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/disease.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/disease.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/disease.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -6387,7 +6638,8 @@ objs/disease.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/disease.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/disease.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/disease.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/disease.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/disease.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disease.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/disease.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/disease.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/disease.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6406,14 +6658,15 @@ objs/doors.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/doors.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/doors.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/doors.o: /usr/include/g++/cstring /usr/include/string.h
-objs/doors.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/doors.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/doors.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/doors.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/doors.o: /usr/include/errno.h /usr/include/g++/string
 objs/doors.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/doors.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/doors.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/doors.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/doors.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/doors.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/doors.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/doors.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/doors.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/doors.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/doors.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/doors.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/doors.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -6426,7 +6679,8 @@ objs/doors.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/doors.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/doors.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/doors.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/doors.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/doors.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/doors.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/doors.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/doors.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/doors.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -6445,27 +6699,29 @@ objs/edit.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/edit.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/edit.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/edit.o: /usr/include/g++/cstring /usr/include/string.h
-objs/edit.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/edit.o: /usr/include/errno.h /usr/include/g++/string
-objs/edit.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/edit.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/edit.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/edit.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/edit.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/edit.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/edit.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/edit.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/edit.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/edit.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/edit.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/edit.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/edit.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/edit.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/edit.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/edit.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/edit.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/edit.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/edit.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/edit.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/edit.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/edit.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/edit.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/edit.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/edit.o: /usr/include/g++/new /usr/include/g++/exception
+objs/edit.o: /usr/include/g++/stl_construct.h
 objs/edit.o: /usr/include/g++/stl_uninitialized.h
 objs/edit.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/edit.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/edit.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/edit.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/edit.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/edit.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/edit.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/edit.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/edit.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/edit.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -6491,27 +6747,29 @@ objs/enum.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/enum.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/enum.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/enum.o: /usr/include/g++/cstring /usr/include/string.h
-objs/enum.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/enum.o: /usr/include/errno.h /usr/include/g++/string
-objs/enum.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/enum.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/enum.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/enum.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/enum.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/enum.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/enum.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/enum.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/enum.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/enum.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/enum.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/enum.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/enum.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/enum.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/enum.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/enum.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/enum.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/enum.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/enum.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/enum.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/enum.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/enum.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/enum.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/enum.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/enum.o: /usr/include/g++/new /usr/include/g++/exception
+objs/enum.o: /usr/include/g++/stl_construct.h
 objs/enum.o: /usr/include/g++/stl_uninitialized.h
 objs/enum.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/enum.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/enum.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/enum.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/enum.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/enum.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/enum.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/enum.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/enum.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/enum.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -6530,14 +6788,15 @@ objs/equip.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/equip.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/equip.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/equip.o: /usr/include/g++/cstring /usr/include/string.h
-objs/equip.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/equip.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/equip.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/equip.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/equip.o: /usr/include/errno.h /usr/include/g++/string
 objs/equip.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/equip.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/equip.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/equip.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/equip.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/equip.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/equip.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/equip.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/equip.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/equip.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/equip.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/equip.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/equip.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -6550,7 +6809,8 @@ objs/equip.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/equip.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/equip.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/equip.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/equip.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/equip.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/equip.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/equip.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/equip.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/equip.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -6560,7 +6820,6 @@ objs/equip.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/equip.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/equip.o: colorstring.h format.h obj_base_container.h obj_bandaid.h
 objs/equip.o: obj_base_weapon.h obj_armor.h obj_base_clothing.h obj_jewelry.h
-objs/equip.o: obj_worn.h
 objs/faction.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/faction.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/faction.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
@@ -6594,7 +6853,8 @@ objs/faction.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/faction.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/faction.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/faction.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/faction.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/faction.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/faction.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/faction.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/faction.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/faction.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6615,14 +6875,15 @@ objs/format.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/format.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/format.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/format.o: /usr/include/g++/cstring /usr/include/string.h
-objs/format.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/format.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/format.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/format.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/format.o: /usr/include/errno.h /usr/include/g++/string
 objs/format.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/format.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/format.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/format.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/format.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/format.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/format.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/format.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/format.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/format.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/format.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/format.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/format.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -6635,7 +6896,8 @@ objs/format.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/format.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/format.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/format.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/format.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/format.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/format.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/format.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/format.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/format.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -6675,7 +6937,8 @@ objs/gaining.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/gaining.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/gaining.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/gaining.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/gaining.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/gaining.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/gaining.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/gaining.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/gaining.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/gaining.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6697,17 +6960,17 @@ objs/game_baccarat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_baccarat.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_baccarat.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_baccarat.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_baccarat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_baccarat.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_baccarat.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_baccarat.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_baccarat.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_baccarat.o: /usr/include/g++/std/bastring.h
-objs/game_baccarat.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/game_baccarat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/game_baccarat.o: /usr/include/g++/stl_config.h
+objs/game_baccarat.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/game_baccarat.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/game_baccarat.o: /usr/include/g++/stl_alloc.h
 objs/game_baccarat.o: /usr/include/g++/iostream.h
 objs/game_baccarat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_baccarat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/game_baccarat.o: /usr/include/g++/stl_relops.h
+objs/game_baccarat.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/game_baccarat.o: /usr/include/g++/stl_iterator.h
 objs/game_baccarat.o: /usr/include/g++/std/bastring.cc
 objs/game_baccarat.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -6725,6 +6988,7 @@ objs/game_baccarat.o: /usr/include/g++/stl_function.h
 objs/game_baccarat.o: /usr/include/g++/stl_map.h
 objs/game_baccarat.o: /usr/include/g++/stl_multimap.h
 objs/game_baccarat.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_baccarat.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/game_baccarat.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/game_baccarat.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/game_baccarat.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6751,16 +7015,18 @@ objs/game_blackjack.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_blackjack.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_blackjack.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_blackjack.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_blackjack.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_blackjack.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_blackjack.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_blackjack.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_blackjack.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_blackjack.o: /usr/include/g++/std/bastring.h
-objs/game_blackjack.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/game_blackjack.o: /usr/include/g++/cstddef
 objs/game_blackjack.o: /usr/include/g++/std/straits.h
 objs/game_blackjack.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/game_blackjack.o: /usr/include/g++/stl_alloc.h
 objs/game_blackjack.o: /usr/include/g++/iostream.h
 objs/game_blackjack.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_blackjack.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_blackjack.o: /usr/include/g++/iterator
 objs/game_blackjack.o: /usr/include/g++/stl_relops.h
 objs/game_blackjack.o: /usr/include/g++/stl_iterator.h
 objs/game_blackjack.o: /usr/include/g++/std/bastring.cc
@@ -6780,6 +7046,7 @@ objs/game_blackjack.o: /usr/include/g++/stl_function.h
 objs/game_blackjack.o: /usr/include/g++/stl_map.h
 objs/game_blackjack.o: /usr/include/g++/stl_multimap.h
 objs/game_blackjack.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_blackjack.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/game_blackjack.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/game_blackjack.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/game_blackjack.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6806,14 +7073,15 @@ objs/game_cards.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_cards.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_cards.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_cards.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_cards.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_cards.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_cards.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_cards.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_cards.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_cards.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_cards.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_cards.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_cards.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_cards.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_cards.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_cards.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_cards.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_cards.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_cards.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_cards.o: /usr/include/g++/stl_relops.h
 objs/game_cards.o: /usr/include/g++/stl_iterator.h
 objs/game_cards.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -6829,7 +7097,8 @@ objs/game_cards.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/game_cards.o: /usr/include/g++/stl_tree.h
 objs/game_cards.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/game_cards.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_cards.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/game_cards.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_cards.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/game_cards.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/game_cards.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_cards.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6852,14 +7121,15 @@ objs/game_craps.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_craps.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_craps.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_craps.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_craps.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_craps.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_craps.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_craps.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_craps.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_craps.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_craps.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_craps.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_craps.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_craps.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_craps.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_craps.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_craps.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_craps.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_craps.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_craps.o: /usr/include/g++/stl_relops.h
 objs/game_craps.o: /usr/include/g++/stl_iterator.h
 objs/game_craps.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -6875,7 +7145,8 @@ objs/game_craps.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/game_craps.o: /usr/include/g++/stl_tree.h
 objs/game_craps.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/game_craps.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_craps.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/game_craps.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_craps.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/game_craps.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/game_craps.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_craps.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -6900,19 +7171,19 @@ objs/game_crazyeights.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/game_crazyeights.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/game_crazyeights.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/game_crazyeights.o: /usr/include/string.h /usr/include/stdarg.h
+objs/game_crazyeights.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/game_crazyeights.o: /usr/include/stddef.h /usr/include/math.h
 objs/game_crazyeights.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/game_crazyeights.o: /usr/include/g++/string
 objs/game_crazyeights.o: /usr/include/g++/std/bastring.h
-objs/game_crazyeights.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/game_crazyeights.o: /usr/include/g++/cstddef
 objs/game_crazyeights.o: /usr/include/g++/std/straits.h
 objs/game_crazyeights.o: /usr/include/g++/alloc.h
 objs/game_crazyeights.o: /usr/include/g++/stl_config.h
 objs/game_crazyeights.o: /usr/include/g++/stl_alloc.h
 objs/game_crazyeights.o: /usr/include/g++/iostream.h
 objs/game_crazyeights.o: /usr/include/g++/streambuf.h
-objs/game_crazyeights.o: /usr/include/g++/libio.h
-objs/game_crazyeights.o: /usr/include/g++/_G_config.h
-objs/game_crazyeights.o: /usr/include/g++/iterator
+objs/game_crazyeights.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_crazyeights.o: /usr/include/g++/stl_relops.h
 objs/game_crazyeights.o: /usr/include/g++/stl_iterator.h
 objs/game_crazyeights.o: /usr/include/g++/std/bastring.cc
@@ -6932,6 +7203,7 @@ objs/game_crazyeights.o: /usr/include/g++/stl_function.h
 objs/game_crazyeights.o: /usr/include/g++/stl_map.h
 objs/game_crazyeights.o: /usr/include/g++/stl_multimap.h
 objs/game_crazyeights.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_crazyeights.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/game_crazyeights.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/game_crazyeights.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/game_crazyeights.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -6959,16 +7231,18 @@ objs/game_drawpoker.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_drawpoker.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_drawpoker.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_drawpoker.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_drawpoker.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_drawpoker.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_drawpoker.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_drawpoker.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_drawpoker.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_drawpoker.o: /usr/include/g++/std/bastring.h
-objs/game_drawpoker.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/game_drawpoker.o: /usr/include/g++/cstddef
 objs/game_drawpoker.o: /usr/include/g++/std/straits.h
 objs/game_drawpoker.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/game_drawpoker.o: /usr/include/g++/stl_alloc.h
 objs/game_drawpoker.o: /usr/include/g++/iostream.h
 objs/game_drawpoker.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_drawpoker.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_drawpoker.o: /usr/include/g++/iterator
 objs/game_drawpoker.o: /usr/include/g++/stl_relops.h
 objs/game_drawpoker.o: /usr/include/g++/stl_iterator.h
 objs/game_drawpoker.o: /usr/include/g++/std/bastring.cc
@@ -6988,6 +7262,7 @@ objs/game_drawpoker.o: /usr/include/g++/stl_function.h
 objs/game_drawpoker.o: /usr/include/g++/stl_map.h
 objs/game_drawpoker.o: /usr/include/g++/stl_multimap.h
 objs/game_drawpoker.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_drawpoker.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/game_drawpoker.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/game_drawpoker.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/game_drawpoker.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -7014,14 +7289,15 @@ objs/game_gin.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_gin.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_gin.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_gin.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_gin.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_gin.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_gin.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_gin.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_gin.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_gin.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_gin.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_gin.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_gin.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_gin.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_gin.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_gin.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_gin.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_gin.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_gin.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_gin.o: /usr/include/g++/stl_relops.h
 objs/game_gin.o: /usr/include/g++/stl_iterator.h
 objs/game_gin.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7035,7 +7311,8 @@ objs/game_gin.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/game_gin.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/game_gin.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/game_gin.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_gin.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/game_gin.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_gin.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/game_gin.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/game_gin.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_gin.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7058,15 +7335,16 @@ objs/game_hearts.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_hearts.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_hearts.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_hearts.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_hearts.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_hearts.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_hearts.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_hearts.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_hearts.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_hearts.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_hearts.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_hearts.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/game_hearts.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_hearts.o: /usr/include/g++/stl_config.h
 objs/game_hearts.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/game_hearts.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_hearts.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/game_hearts.o: /usr/include/g++/stl_relops.h
+objs/game_hearts.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/game_hearts.o: /usr/include/g++/stl_iterator.h
 objs/game_hearts.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/game_hearts.o: /usr/include/g++/stl_algobase.h
@@ -7083,16 +7361,18 @@ objs/game_hearts.o: /usr/include/g++/stl_tree.h
 objs/game_hearts.o: /usr/include/g++/stl_function.h
 objs/game_hearts.o: /usr/include/g++/stl_map.h
 objs/game_hearts.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_hearts.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/game_hearts.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/game_hearts.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/game_hearts.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/game_hearts.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/game_hearts.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/game_hearts.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/game_hearts.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/game_hearts.o: spec_mobs.h materials.h colorstring.h format.h games.h
-objs/game_hearts.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_hearts.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_hearts.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/game_hearts.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/game_hearts.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/game_hearts.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/game_hearts.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/game_hearts.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/game_hearts.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/game_hearts.o: person.h monster.h account.h extern.h handler.h
+objs/game_hearts.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/game_hearts.o: format.h games.h /usr/include/g++/algorithm
+objs/game_hearts.o: /usr/include/g++/stl_tempbuf.h
 objs/game_hearts.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
 objs/game_hearts.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/game_hearts.o: game_crazyeights.h game_drawpoker.h
@@ -7106,14 +7386,15 @@ objs/game_hilo.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_hilo.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_hilo.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_hilo.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_hilo.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_hilo.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_hilo.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_hilo.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_hilo.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_hilo.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_hilo.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_hilo.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_hilo.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_hilo.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_hilo.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_hilo.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_hilo.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_hilo.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_hilo.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_hilo.o: /usr/include/g++/stl_relops.h
 objs/game_hilo.o: /usr/include/g++/stl_iterator.h
 objs/game_hilo.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7128,6 +7409,7 @@ objs/game_hilo.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/game_hilo.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/game_hilo.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/game_hilo.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_hilo.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/game_hilo.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/game_hilo.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/game_hilo.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -7151,15 +7433,16 @@ objs/game_holdem.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_holdem.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_holdem.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_holdem.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_holdem.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_holdem.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_holdem.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_holdem.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_holdem.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_holdem.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_holdem.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_holdem.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/game_holdem.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_holdem.o: /usr/include/g++/stl_config.h
 objs/game_holdem.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/game_holdem.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_holdem.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/game_holdem.o: /usr/include/g++/stl_relops.h
+objs/game_holdem.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/game_holdem.o: /usr/include/g++/stl_iterator.h
 objs/game_holdem.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/game_holdem.o: /usr/include/g++/stl_algobase.h
@@ -7176,16 +7459,18 @@ objs/game_holdem.o: /usr/include/g++/stl_tree.h
 objs/game_holdem.o: /usr/include/g++/stl_function.h
 objs/game_holdem.o: /usr/include/g++/stl_map.h
 objs/game_holdem.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_holdem.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/game_holdem.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/game_holdem.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/game_holdem.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/game_holdem.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/game_holdem.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/game_holdem.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/game_holdem.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/game_holdem.o: spec_mobs.h materials.h colorstring.h format.h games.h
-objs/game_holdem.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_holdem.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_holdem.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/game_holdem.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/game_holdem.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/game_holdem.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/game_holdem.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/game_holdem.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/game_holdem.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/game_holdem.o: person.h monster.h account.h extern.h handler.h
+objs/game_holdem.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/game_holdem.o: format.h games.h /usr/include/g++/algorithm
+objs/game_holdem.o: /usr/include/g++/stl_tempbuf.h
 objs/game_holdem.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
 objs/game_holdem.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/game_holdem.o: game_crazyeights.h game_drawpoker.h
@@ -7199,14 +7484,15 @@ objs/game_poker.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_poker.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_poker.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_poker.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_poker.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_poker.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_poker.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_poker.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_poker.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_poker.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_poker.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_poker.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_poker.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_poker.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_poker.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_poker.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_poker.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_poker.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_poker.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_poker.o: /usr/include/g++/stl_relops.h
 objs/game_poker.o: /usr/include/g++/stl_iterator.h
 objs/game_poker.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7222,7 +7508,8 @@ objs/game_poker.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/game_poker.o: /usr/include/g++/stl_tree.h
 objs/game_poker.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/game_poker.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_poker.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/game_poker.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_poker.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/game_poker.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/game_poker.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_poker.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7245,14 +7532,15 @@ objs/game_slots.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/game_slots.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/game_slots.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/game_slots.o: /usr/include/g++/cstring /usr/include/string.h
-objs/game_slots.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_slots.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/game_slots.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/game_slots.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/game_slots.o: /usr/include/errno.h /usr/include/g++/string
 objs/game_slots.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/game_slots.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/game_slots.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/game_slots.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/game_slots.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/game_slots.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_slots.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_slots.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/game_slots.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/game_slots.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/game_slots.o: /usr/include/g++/stl_relops.h
 objs/game_slots.o: /usr/include/g++/stl_iterator.h
 objs/game_slots.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7268,7 +7556,8 @@ objs/game_slots.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/game_slots.o: /usr/include/g++/stl_tree.h
 objs/game_slots.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/game_slots.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/game_slots.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/game_slots.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/game_slots.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/game_slots.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/game_slots.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/game_slots.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7291,14 +7580,15 @@ objs/games.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/games.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/games.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/games.o: /usr/include/g++/cstring /usr/include/string.h
-objs/games.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/games.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/games.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/games.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/games.o: /usr/include/errno.h /usr/include/g++/string
 objs/games.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/games.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/games.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/games.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/games.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/games.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/games.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/games.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/games.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/games.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/games.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/games.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/games.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -7311,7 +7601,8 @@ objs/games.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/games.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/games.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/games.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/games.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/games.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/games.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/games.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/games.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/games.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -7336,13 +7627,14 @@ objs/handler.o: /usr/include/time.h /usr/include/g++/cctype
 objs/handler.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/handler.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/handler.o: /usr/include/g++/cstring /usr/include/string.h
+objs/handler.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/handler.o: /usr/include/stddef.h /usr/include/math.h
 objs/handler.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/handler.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/handler.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/handler.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/handler.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/handler.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/handler.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/handler.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/handler.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/handler.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/handler.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/handler.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/handler.o: /usr/include/g++/stl_iterator.h
 objs/handler.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7356,7 +7648,8 @@ objs/handler.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/handler.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/handler.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/handler.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/handler.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/handler.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/handler.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/handler.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/handler.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/handler.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7378,14 +7671,15 @@ objs/hospital.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/hospital.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/hospital.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/hospital.o: /usr/include/g++/cstring /usr/include/string.h
-objs/hospital.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/hospital.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/hospital.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/hospital.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/hospital.o: /usr/include/errno.h /usr/include/g++/string
 objs/hospital.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/hospital.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/hospital.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/hospital.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/hospital.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/hospital.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/hospital.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/hospital.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/hospital.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/hospital.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/hospital.o: /usr/include/g++/stl_relops.h
 objs/hospital.o: /usr/include/g++/stl_iterator.h
 objs/hospital.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7399,7 +7693,8 @@ objs/hospital.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/hospital.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/hospital.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/hospital.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/hospital.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/hospital.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/hospital.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/hospital.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/hospital.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/hospital.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7418,14 +7713,15 @@ objs/immortal.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/immortal.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/immortal.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/immortal.o: /usr/include/g++/cstring /usr/include/string.h
-objs/immortal.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/immortal.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/immortal.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/immortal.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/immortal.o: /usr/include/errno.h /usr/include/g++/string
 objs/immortal.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/immortal.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/immortal.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/immortal.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/immortal.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/immortal.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/immortal.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/immortal.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/immortal.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/immortal.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/immortal.o: /usr/include/g++/stl_relops.h
 objs/immortal.o: /usr/include/g++/stl_iterator.h
 objs/immortal.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7439,7 +7735,8 @@ objs/immortal.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/immortal.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/immortal.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/immortal.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/immortal.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/immortal.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/immortal.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/immortal.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/immortal.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/immortal.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7475,14 +7772,15 @@ objs/immunity.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/immunity.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/immunity.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/immunity.o: /usr/include/g++/cstring /usr/include/string.h
-objs/immunity.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/immunity.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/immunity.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/immunity.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/immunity.o: /usr/include/errno.h /usr/include/g++/string
 objs/immunity.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/immunity.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/immunity.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/immunity.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/immunity.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/immunity.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/immunity.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/immunity.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/immunity.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/immunity.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/immunity.o: /usr/include/g++/stl_relops.h
 objs/immunity.o: /usr/include/g++/stl_iterator.h
 objs/immunity.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7496,7 +7794,8 @@ objs/immunity.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/immunity.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/immunity.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/immunity.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/immunity.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/immunity.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/immunity.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/immunity.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/immunity.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/immunity.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7515,14 +7814,15 @@ objs/indexdata.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/indexdata.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/indexdata.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/indexdata.o: /usr/include/g++/cstring /usr/include/string.h
-objs/indexdata.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/indexdata.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/indexdata.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/indexdata.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/indexdata.o: /usr/include/errno.h /usr/include/g++/string
 objs/indexdata.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/indexdata.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/indexdata.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/indexdata.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/indexdata.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/indexdata.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/indexdata.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/indexdata.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/indexdata.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/indexdata.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/indexdata.o: /usr/include/g++/stl_relops.h
 objs/indexdata.o: /usr/include/g++/stl_iterator.h
 objs/indexdata.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7537,6 +7837,7 @@ objs/indexdata.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/indexdata.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/indexdata.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/indexdata.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/indexdata.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/indexdata.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/indexdata.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/indexdata.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -7558,27 +7859,29 @@ objs/info.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/info.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/info.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/info.o: /usr/include/g++/cstring /usr/include/string.h
-objs/info.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/info.o: /usr/include/errno.h /usr/include/g++/string
-objs/info.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/info.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/info.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/info.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/info.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/info.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/info.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/info.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/info.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/info.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/info.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/info.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/info.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/info.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/info.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/info.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/info.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/info.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/info.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/info.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/info.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/info.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/info.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/info.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/info.o: /usr/include/g++/new /usr/include/g++/exception
+objs/info.o: /usr/include/g++/stl_construct.h
 objs/info.o: /usr/include/g++/stl_uninitialized.h
 objs/info.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/info.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/info.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/info.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/info.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/info.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/info.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/info.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/info.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/info.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -7609,14 +7912,15 @@ objs/inventory.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/inventory.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/inventory.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/inventory.o: /usr/include/g++/cstring /usr/include/string.h
-objs/inventory.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/inventory.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/inventory.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/inventory.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/inventory.o: /usr/include/errno.h /usr/include/g++/string
 objs/inventory.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/inventory.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/inventory.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/inventory.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/inventory.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/inventory.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/inventory.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/inventory.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/inventory.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/inventory.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/inventory.o: /usr/include/g++/stl_relops.h
 objs/inventory.o: /usr/include/g++/stl_iterator.h
 objs/inventory.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7631,6 +7935,7 @@ objs/inventory.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/inventory.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/inventory.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/inventory.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/inventory.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/inventory.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/inventory.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/inventory.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -7659,14 +7964,15 @@ objs/limbs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/limbs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/limbs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/limbs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/limbs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/limbs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/limbs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/limbs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/limbs.o: /usr/include/errno.h /usr/include/g++/string
 objs/limbs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/limbs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/limbs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/limbs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/limbs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/limbs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/limbs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/limbs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/limbs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/limbs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/limbs.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/limbs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/limbs.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -7679,7 +7985,8 @@ objs/limbs.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/limbs.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/limbs.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/limbs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/limbs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/limbs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/limbs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/limbs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/limbs.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/limbs.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -7687,8 +7994,7 @@ objs/limbs.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/limbs.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/limbs.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/limbs.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/limbs.o: colorstring.h format.h /usr/include/g++/cmath
-objs/limbs.o: /usr/include/math.h
+objs/limbs.o: colorstring.h format.h
 objs/limits.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/limits.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/limits.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
@@ -7721,7 +8027,8 @@ objs/limits.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/limits.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/limits.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/limits.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/limits.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/limits.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/limits.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/limits.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/limits.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/limits.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -7745,14 +8052,15 @@ objs/loadset.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/loadset.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/loadset.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/loadset.o: /usr/include/g++/cstring /usr/include/string.h
-objs/loadset.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/loadset.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/loadset.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/loadset.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/loadset.o: /usr/include/errno.h /usr/include/g++/string
 objs/loadset.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/loadset.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/loadset.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/loadset.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/loadset.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/loadset.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/loadset.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/loadset.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/loadset.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/loadset.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/loadset.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/loadset.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/loadset.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -7765,7 +8073,8 @@ objs/loadset.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/loadset.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/loadset.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/loadset.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/loadset.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/loadset.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/loadset.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/loadset.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/loadset.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/loadset.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7785,14 +8094,15 @@ objs/lowtools.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/lowtools.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/lowtools.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/lowtools.o: /usr/include/g++/cstring /usr/include/string.h
-objs/lowtools.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/lowtools.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/lowtools.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/lowtools.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/lowtools.o: /usr/include/errno.h /usr/include/g++/string
 objs/lowtools.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/lowtools.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/lowtools.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/lowtools.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/lowtools.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/lowtools.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/lowtools.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/lowtools.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/lowtools.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/lowtools.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/lowtools.o: /usr/include/g++/stl_relops.h
 objs/lowtools.o: /usr/include/g++/stl_iterator.h
 objs/lowtools.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7806,7 +8116,8 @@ objs/lowtools.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/lowtools.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/lowtools.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/lowtools.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/lowtools.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/lowtools.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/lowtools.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/lowtools.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/lowtools.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/lowtools.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7816,7 +8127,7 @@ objs/lowtools.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/lowtools.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/lowtools.o: materials.h colorstring.h format.h database.h
 objs/lowtools.o: /usr/local/include/libpq-fe.h
-objs/lowtools.o: /usr/local/include/postgres_ext.h /usr/include/g++/fstream.h
+objs/lowtools.o: /usr/local/include/postgres_ext.h
 objs/luck.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/luck.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/luck.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -7827,27 +8138,29 @@ objs/luck.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/luck.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/luck.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/luck.o: /usr/include/g++/cstring /usr/include/string.h
-objs/luck.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/luck.o: /usr/include/errno.h /usr/include/g++/string
-objs/luck.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/luck.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/luck.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/luck.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/luck.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/luck.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/luck.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/luck.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/luck.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/luck.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/luck.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/luck.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/luck.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/luck.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/luck.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/luck.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/luck.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/luck.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/luck.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/luck.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/luck.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/luck.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/luck.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/luck.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/luck.o: /usr/include/g++/new /usr/include/g++/exception
+objs/luck.o: /usr/include/g++/stl_construct.h
 objs/luck.o: /usr/include/g++/stl_uninitialized.h
 objs/luck.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/luck.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/luck.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/luck.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/luck.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/luck.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/luck.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/luck.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/luck.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/luck.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -7866,14 +8179,15 @@ objs/magic_off.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/magic_off.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/magic_off.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/magic_off.o: /usr/include/g++/cstring /usr/include/string.h
-objs/magic_off.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/magic_off.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/magic_off.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/magic_off.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/magic_off.o: /usr/include/errno.h /usr/include/g++/string
 objs/magic_off.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/magic_off.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/magic_off.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/magic_off.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/magic_off.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/magic_off.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/magic_off.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/magic_off.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/magic_off.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/magic_off.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/magic_off.o: /usr/include/g++/stl_relops.h
 objs/magic_off.o: /usr/include/g++/stl_iterator.h
 objs/magic_off.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7888,6 +8202,7 @@ objs/magic_off.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/magic_off.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/magic_off.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/magic_off.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/magic_off.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/magic_off.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/magic_off.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/magic_off.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -7907,15 +8222,16 @@ objs/magic_skills.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/magic_skills.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/magic_skills.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/magic_skills.o: /usr/include/g++/cstring /usr/include/string.h
-objs/magic_skills.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/magic_skills.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/magic_skills.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/magic_skills.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/magic_skills.o: /usr/include/errno.h /usr/include/g++/string
 objs/magic_skills.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/magic_skills.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/magic_skills.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/magic_skills.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/magic_skills.o: /usr/include/g++/stl_config.h
 objs/magic_skills.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/magic_skills.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/magic_skills.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/magic_skills.o: /usr/include/g++/stl_relops.h
+objs/magic_skills.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/magic_skills.o: /usr/include/g++/stl_iterator.h
 objs/magic_skills.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/magic_skills.o: /usr/include/g++/stl_algobase.h
@@ -7933,6 +8249,7 @@ objs/magic_skills.o: /usr/include/g++/stl_function.h
 objs/magic_skills.o: /usr/include/g++/stl_map.h
 objs/magic_skills.o: /usr/include/g++/stl_multimap.h
 objs/magic_skills.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/magic_skills.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/magic_skills.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/magic_skills.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/magic_skills.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -7953,14 +8270,15 @@ objs/magicutils.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/magicutils.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/magicutils.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/magicutils.o: /usr/include/g++/cstring /usr/include/string.h
-objs/magicutils.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/magicutils.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/magicutils.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/magicutils.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/magicutils.o: /usr/include/errno.h /usr/include/g++/string
 objs/magicutils.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/magicutils.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/magicutils.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/magicutils.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/magicutils.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/magicutils.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/magicutils.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/magicutils.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/magicutils.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/magicutils.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/magicutils.o: /usr/include/g++/stl_relops.h
 objs/magicutils.o: /usr/include/g++/stl_iterator.h
 objs/magicutils.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -7976,7 +8294,8 @@ objs/magicutils.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/magicutils.o: /usr/include/g++/stl_tree.h
 objs/magicutils.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/magicutils.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/magicutils.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/magicutils.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/magicutils.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/magicutils.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/magicutils.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/magicutils.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -7996,27 +8315,29 @@ objs/mail.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/mail.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/mail.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/mail.o: /usr/include/g++/cstring /usr/include/string.h
-objs/mail.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/mail.o: /usr/include/errno.h /usr/include/g++/string
-objs/mail.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/mail.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/mail.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/mail.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/mail.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/mail.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/mail.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/mail.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/mail.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/mail.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/mail.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/mail.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/mail.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/mail.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/mail.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/mail.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/mail.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/mail.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/mail.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/mail.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/mail.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/mail.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/mail.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/mail.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/mail.o: /usr/include/g++/new /usr/include/g++/exception
+objs/mail.o: /usr/include/g++/stl_construct.h
 objs/mail.o: /usr/include/g++/stl_uninitialized.h
 objs/mail.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/mail.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/mail.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/mail.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/mail.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/mail.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/mail.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/mail.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/mail.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/mail.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -8036,27 +8357,29 @@ objs/main.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/main.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/main.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/main.o: /usr/include/g++/cstring /usr/include/string.h
-objs/main.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/main.o: /usr/include/errno.h /usr/include/g++/string
-objs/main.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/main.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/main.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/main.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/main.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/main.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/main.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/main.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/main.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/main.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/main.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/main.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/main.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/main.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/main.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/main.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/main.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/main.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/main.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/main.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/main.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/main.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/main.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/main.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/main.o: /usr/include/g++/new /usr/include/g++/exception
+objs/main.o: /usr/include/g++/stl_construct.h
 objs/main.o: /usr/include/g++/stl_uninitialized.h
 objs/main.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/main.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/main.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/main.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/main.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/main.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/main.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/main.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/main.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/main.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -8076,14 +8399,15 @@ objs/makecorpse.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/makecorpse.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/makecorpse.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/makecorpse.o: /usr/include/g++/cstring /usr/include/string.h
-objs/makecorpse.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/makecorpse.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/makecorpse.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/makecorpse.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/makecorpse.o: /usr/include/errno.h /usr/include/g++/string
 objs/makecorpse.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/makecorpse.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/makecorpse.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/makecorpse.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/makecorpse.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/makecorpse.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/makecorpse.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/makecorpse.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/makecorpse.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/makecorpse.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/makecorpse.o: /usr/include/g++/stl_relops.h
 objs/makecorpse.o: /usr/include/g++/stl_iterator.h
 objs/makecorpse.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8099,7 +8423,8 @@ objs/makecorpse.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/makecorpse.o: /usr/include/g++/stl_tree.h
 objs/makecorpse.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/makecorpse.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/makecorpse.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/makecorpse.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/makecorpse.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/makecorpse.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/makecorpse.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/makecorpse.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8120,14 +8445,15 @@ objs/materials.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/materials.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/materials.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/materials.o: /usr/include/g++/cstring /usr/include/string.h
-objs/materials.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/materials.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/materials.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/materials.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/materials.o: /usr/include/errno.h /usr/include/g++/string
 objs/materials.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/materials.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/materials.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/materials.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/materials.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/materials.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/materials.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/materials.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/materials.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/materials.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/materials.o: /usr/include/g++/stl_relops.h
 objs/materials.o: /usr/include/g++/stl_iterator.h
 objs/materials.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8142,6 +8468,7 @@ objs/materials.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/materials.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/materials.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/materials.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/materials.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/materials.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/materials.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/materials.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -8161,14 +8488,15 @@ objs/meeting.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/meeting.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/meeting.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/meeting.o: /usr/include/g++/cstring /usr/include/string.h
-objs/meeting.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/meeting.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/meeting.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/meeting.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/meeting.o: /usr/include/errno.h /usr/include/g++/string
 objs/meeting.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/meeting.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/meeting.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/meeting.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/meeting.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/meeting.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/meeting.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/meeting.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/meeting.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/meeting.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/meeting.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/meeting.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/meeting.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -8181,7 +8509,8 @@ objs/meeting.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/meeting.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/meeting.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/meeting.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/meeting.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/meeting.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/meeting.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/meeting.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/meeting.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/meeting.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8201,14 +8530,15 @@ objs/mob_loader.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/mob_loader.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/mob_loader.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/mob_loader.o: /usr/include/g++/cstring /usr/include/string.h
-objs/mob_loader.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/mob_loader.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/mob_loader.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/mob_loader.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/mob_loader.o: /usr/include/errno.h /usr/include/g++/string
 objs/mob_loader.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/mob_loader.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/mob_loader.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/mob_loader.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/mob_loader.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/mob_loader.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/mob_loader.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/mob_loader.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/mob_loader.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/mob_loader.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/mob_loader.o: /usr/include/g++/stl_relops.h
 objs/mob_loader.o: /usr/include/g++/stl_iterator.h
 objs/mob_loader.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8224,7 +8554,8 @@ objs/mob_loader.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/mob_loader.o: /usr/include/g++/stl_tree.h
 objs/mob_loader.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/mob_loader.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/mob_loader.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/mob_loader.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/mob_loader.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/mob_loader.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/mob_loader.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/mob_loader.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8245,14 +8576,15 @@ objs/mobact.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/mobact.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/mobact.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/mobact.o: /usr/include/g++/cstring /usr/include/string.h
-objs/mobact.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/mobact.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/mobact.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/mobact.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/mobact.o: /usr/include/errno.h /usr/include/g++/string
 objs/mobact.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/mobact.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/mobact.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/mobact.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/mobact.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/mobact.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/mobact.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/mobact.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/mobact.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/mobact.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/mobact.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/mobact.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/mobact.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -8265,7 +8597,8 @@ objs/mobact.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/mobact.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/mobact.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/mobact.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/mobact.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/mobact.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/mobact.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/mobact.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/mobact.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/mobact.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -8290,14 +8623,15 @@ objs/monster.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/monster.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/monster.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/monster.o: /usr/include/g++/cstring /usr/include/string.h
-objs/monster.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/monster.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/monster.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/monster.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/monster.o: /usr/include/errno.h /usr/include/g++/string
 objs/monster.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/monster.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/monster.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/monster.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/monster.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/monster.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/monster.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/monster.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/monster.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/monster.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/monster.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/monster.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/monster.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -8310,7 +8644,8 @@ objs/monster.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/monster.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/monster.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/monster.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/monster.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/monster.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/monster.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/monster.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/monster.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/monster.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8331,14 +8666,15 @@ objs/movement.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/movement.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/movement.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/movement.o: /usr/include/g++/cstring /usr/include/string.h
-objs/movement.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/movement.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/movement.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/movement.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/movement.o: /usr/include/errno.h /usr/include/g++/string
 objs/movement.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/movement.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/movement.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/movement.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/movement.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/movement.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/movement.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/movement.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/movement.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/movement.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/movement.o: /usr/include/g++/stl_relops.h
 objs/movement.o: /usr/include/g++/stl_iterator.h
 objs/movement.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8352,7 +8688,8 @@ objs/movement.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/movement.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/movement.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/movement.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/movement.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/movement.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/movement.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/movement.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/movement.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/movement.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8378,14 +8715,15 @@ objs/multiclass.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/multiclass.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/multiclass.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/multiclass.o: /usr/include/g++/cstring /usr/include/string.h
-objs/multiclass.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/multiclass.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/multiclass.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/multiclass.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/multiclass.o: /usr/include/errno.h /usr/include/g++/string
 objs/multiclass.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/multiclass.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/multiclass.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/multiclass.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/multiclass.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/multiclass.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/multiclass.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/multiclass.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/multiclass.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/multiclass.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/multiclass.o: /usr/include/g++/stl_relops.h
 objs/multiclass.o: /usr/include/g++/stl_iterator.h
 objs/multiclass.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8401,7 +8739,8 @@ objs/multiclass.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/multiclass.o: /usr/include/g++/stl_tree.h
 objs/multiclass.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/multiclass.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/multiclass.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/multiclass.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/multiclass.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/multiclass.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/multiclass.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/multiclass.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8420,14 +8759,15 @@ objs/newbie.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/newbie.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/newbie.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/newbie.o: /usr/include/g++/cstring /usr/include/string.h
-objs/newbie.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/newbie.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/newbie.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/newbie.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/newbie.o: /usr/include/errno.h /usr/include/g++/string
 objs/newbie.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/newbie.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/newbie.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/newbie.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/newbie.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/newbie.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/newbie.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/newbie.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/newbie.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/newbie.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/newbie.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/newbie.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/newbie.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -8440,7 +8780,8 @@ objs/newbie.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/newbie.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/newbie.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/newbie.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/newbie.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/newbie.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/newbie.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/newbie.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/newbie.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/newbie.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -8459,27 +8800,29 @@ objs/obj.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/obj.o: /usr/include/errno.h /usr/include/g++/string
-objs/obj.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/obj.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/obj.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/obj.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/obj.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/obj.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/obj.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/obj.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/obj.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/obj.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/obj.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/obj.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/obj.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/obj.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/obj.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/obj.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/obj.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/obj.o: /usr/include/g++/new /usr/include/g++/exception
+objs/obj.o: /usr/include/g++/stl_construct.h
 objs/obj.o: /usr/include/g++/stl_uninitialized.h
 objs/obj.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/obj.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h skills.h
@@ -8499,16 +8842,18 @@ objs/obj_appliedsub.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_appliedsub.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_appliedsub.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_appliedsub.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_appliedsub.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_appliedsub.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_appliedsub.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_appliedsub.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_appliedsub.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_appliedsub.o: /usr/include/g++/std/bastring.h
-objs/obj_appliedsub.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_appliedsub.o: /usr/include/g++/cstddef
 objs/obj_appliedsub.o: /usr/include/g++/std/straits.h
 objs/obj_appliedsub.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_appliedsub.o: /usr/include/g++/stl_alloc.h
 objs/obj_appliedsub.o: /usr/include/g++/iostream.h
 objs/obj_appliedsub.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_appliedsub.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_appliedsub.o: /usr/include/g++/iterator
 objs/obj_appliedsub.o: /usr/include/g++/stl_relops.h
 objs/obj_appliedsub.o: /usr/include/g++/stl_iterator.h
 objs/obj_appliedsub.o: /usr/include/g++/std/bastring.cc
@@ -8528,6 +8873,7 @@ objs/obj_appliedsub.o: /usr/include/g++/stl_function.h
 objs/obj_appliedsub.o: /usr/include/g++/stl_map.h
 objs/obj_appliedsub.o: /usr/include/g++/stl_multimap.h
 objs/obj_appliedsub.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_appliedsub.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_appliedsub.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_appliedsub.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_appliedsub.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -8552,14 +8898,15 @@ objs/obj_armor.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_armor.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_armor.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_armor.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_armor.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_armor.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_armor.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_armor.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_armor.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_armor.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_armor.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_armor.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_armor.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_armor.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_armor.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_armor.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_armor.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_armor.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_armor.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_armor.o: /usr/include/g++/stl_relops.h
 objs/obj_armor.o: /usr/include/g++/stl_iterator.h
 objs/obj_armor.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8574,6 +8921,7 @@ objs/obj_armor.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_armor.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_armor.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_armor.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_armor.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_armor.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_armor.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_armor.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -8594,16 +8942,18 @@ objs/obj_armor_wand.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_armor_wand.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_armor_wand.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_armor_wand.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_armor_wand.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_armor_wand.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_armor_wand.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_armor_wand.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_armor_wand.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_armor_wand.o: /usr/include/g++/std/bastring.h
-objs/obj_armor_wand.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_armor_wand.o: /usr/include/g++/cstddef
 objs/obj_armor_wand.o: /usr/include/g++/std/straits.h
 objs/obj_armor_wand.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_armor_wand.o: /usr/include/g++/stl_alloc.h
 objs/obj_armor_wand.o: /usr/include/g++/iostream.h
 objs/obj_armor_wand.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_armor_wand.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_armor_wand.o: /usr/include/g++/iterator
 objs/obj_armor_wand.o: /usr/include/g++/stl_relops.h
 objs/obj_armor_wand.o: /usr/include/g++/stl_iterator.h
 objs/obj_armor_wand.o: /usr/include/g++/std/bastring.cc
@@ -8623,6 +8973,7 @@ objs/obj_armor_wand.o: /usr/include/g++/stl_function.h
 objs/obj_armor_wand.o: /usr/include/g++/stl_map.h
 objs/obj_armor_wand.o: /usr/include/g++/stl_multimap.h
 objs/obj_armor_wand.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_armor_wand.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_armor_wand.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_armor_wand.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_armor_wand.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -8644,14 +8995,15 @@ objs/obj_arrow.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_arrow.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_arrow.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_arrow.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_arrow.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_arrow.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_arrow.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_arrow.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_arrow.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_arrow.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_arrow.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_arrow.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_arrow.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_arrow.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_arrow.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_arrow.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_arrow.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_arrow.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_arrow.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_arrow.o: /usr/include/g++/stl_relops.h
 objs/obj_arrow.o: /usr/include/g++/stl_iterator.h
 objs/obj_arrow.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8666,6 +9018,7 @@ objs/obj_arrow.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_arrow.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_arrow.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_arrow.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_arrow.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_arrow.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_arrow.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_arrow.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -8686,14 +9039,15 @@ objs/obj_audio.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_audio.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_audio.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_audio.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_audio.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_audio.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_audio.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_audio.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_audio.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_audio.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_audio.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_audio.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_audio.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_audio.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_audio.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_audio.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_audio.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_audio.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_audio.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_audio.o: /usr/include/g++/stl_relops.h
 objs/obj_audio.o: /usr/include/g++/stl_iterator.h
 objs/obj_audio.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -8708,6 +9062,7 @@ objs/obj_audio.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_audio.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_audio.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_audio.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_audio.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_audio.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_audio.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_audio.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -8727,14 +9082,15 @@ objs/obj_bag.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_bag.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_bag.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_bag.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_bag.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_bag.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_bag.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_bag.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_bag.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_bag.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_bag.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_bag.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_bag.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_bag.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_bag.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_bag.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_bag.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_bag.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_bag.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_bag.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_bag.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_bag.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -8747,7 +9103,8 @@ objs/obj_bag.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_bag.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_bag.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_bag.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_bag.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_bag.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_bag.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_bag.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_bag.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_bag.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -8767,15 +9124,16 @@ objs/obj_bandaid.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_bandaid.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_bandaid.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_bandaid.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_bandaid.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_bandaid.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_bandaid.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_bandaid.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_bandaid.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_bandaid.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_bandaid.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_bandaid.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_bandaid.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_bandaid.o: /usr/include/g++/stl_config.h
 objs/obj_bandaid.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_bandaid.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_bandaid.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_bandaid.o: /usr/include/g++/stl_relops.h
+objs/obj_bandaid.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_bandaid.o: /usr/include/g++/stl_iterator.h
 objs/obj_bandaid.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_bandaid.o: /usr/include/g++/stl_algobase.h
@@ -8792,16 +9150,17 @@ objs/obj_bandaid.o: /usr/include/g++/stl_tree.h
 objs/obj_bandaid.o: /usr/include/g++/stl_function.h
 objs/obj_bandaid.o: /usr/include/g++/stl_map.h
 objs/obj_bandaid.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_bandaid.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_bandaid.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_bandaid.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_bandaid.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_bandaid.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_bandaid.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_bandaid.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_bandaid.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_bandaid.o: spec_mobs.h materials.h colorstring.h format.h
-objs/obj_bandaid.o: obj_bandaid.h
+objs/obj_bandaid.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_bandaid.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_bandaid.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_bandaid.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_bandaid.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_bandaid.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_bandaid.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_bandaid.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_bandaid.o: person.h monster.h account.h extern.h handler.h
+objs/obj_bandaid.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_bandaid.o: format.h obj_bandaid.h
 objs/obj_base_clothing.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/obj_base_clothing.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/obj_base_clothing.o: /usr/include/math.h /usr/include/sys/cdefs.h
@@ -8847,6 +9206,7 @@ objs/obj_base_clothing.o: /usr/include/g++/stl_function.h
 objs/obj_base_clothing.o: /usr/include/g++/stl_map.h
 objs/obj_base_clothing.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_clothing.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_base_clothing.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_base_clothing.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_base_clothing.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_base_clothing.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -8871,19 +9231,19 @@ objs/obj_base_container.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/obj_base_container.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/obj_base_container.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/obj_base_container.o: /usr/include/string.h /usr/include/stdarg.h
-objs/obj_base_container.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/obj_base_container.o: /usr/include/g++/string
+objs/obj_base_container.o: /usr/include/g++/cmath
+objs/obj_base_container.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_base_container.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_base_container.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_base_container.o: /usr/include/g++/std/bastring.h
-objs/obj_base_container.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_base_container.o: /usr/include/g++/cstddef
 objs/obj_base_container.o: /usr/include/g++/std/straits.h
 objs/obj_base_container.o: /usr/include/g++/alloc.h
 objs/obj_base_container.o: /usr/include/g++/stl_config.h
 objs/obj_base_container.o: /usr/include/g++/stl_alloc.h
 objs/obj_base_container.o: /usr/include/g++/iostream.h
 objs/obj_base_container.o: /usr/include/g++/streambuf.h
-objs/obj_base_container.o: /usr/include/g++/libio.h
-objs/obj_base_container.o: /usr/include/g++/_G_config.h
-objs/obj_base_container.o: /usr/include/g++/iterator
+objs/obj_base_container.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_base_container.o: /usr/include/g++/stl_relops.h
 objs/obj_base_container.o: /usr/include/g++/stl_iterator.h
 objs/obj_base_container.o: /usr/include/g++/std/bastring.cc
@@ -8905,17 +9265,18 @@ objs/obj_base_container.o: /usr/include/g++/stl_function.h
 objs/obj_base_container.o: /usr/include/g++/stl_map.h
 objs/obj_base_container.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_container.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/obj_base_container.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/obj_base_container.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/obj_base_container.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_base_container.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/obj_base_container.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/obj_base_container.o: task.h weather.h sound.h create.h thing.h room.h
-objs/obj_base_container.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/obj_base_container.o: being.h person.h monster.h account.h extern.h
-objs/obj_base_container.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_base_container.o: materials.h colorstring.h format.h
-objs/obj_base_container.o: obj_base_container.h obj_player_corpse.h
+objs/obj_base_container.o: /usr/include/g++/fstream
+objs/obj_base_container.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_base_container.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_base_container.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_base_container.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_base_container.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_base_container.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_base_container.o: create.h thing.h room.h obj.h spec_objs.h
+objs/obj_base_container.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_base_container.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_base_container.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_base_container.o: format.h obj_base_container.h obj_player_corpse.h
 objs/obj_base_container.o: obj_base_corpse.h obj_open_container.h obj_food.h
 objs/obj_base_container.o: obj_opal.h
 objs/obj_base_corpse.o: stdsneezy.h /usr/include/g++/cstdio
@@ -8929,17 +9290,18 @@ objs/obj_base_corpse.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_base_corpse.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_base_corpse.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_base_corpse.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_base_corpse.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_base_corpse.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_base_corpse.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_base_corpse.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_base_corpse.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_base_corpse.o: /usr/include/g++/std/bastring.h
-objs/obj_base_corpse.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_base_corpse.o: /usr/include/g++/cstddef
 objs/obj_base_corpse.o: /usr/include/g++/std/straits.h
 objs/obj_base_corpse.o: /usr/include/g++/alloc.h
 objs/obj_base_corpse.o: /usr/include/g++/stl_config.h
 objs/obj_base_corpse.o: /usr/include/g++/stl_alloc.h
 objs/obj_base_corpse.o: /usr/include/g++/iostream.h
 objs/obj_base_corpse.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_base_corpse.o: /usr/include/g++/_G_config.h
 objs/obj_base_corpse.o: /usr/include/g++/iterator
 objs/obj_base_corpse.o: /usr/include/g++/stl_relops.h
 objs/obj_base_corpse.o: /usr/include/g++/stl_iterator.h
@@ -8960,6 +9322,7 @@ objs/obj_base_corpse.o: /usr/include/g++/stl_function.h
 objs/obj_base_corpse.o: /usr/include/g++/stl_map.h
 objs/obj_base_corpse.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_corpse.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_base_corpse.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_base_corpse.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_base_corpse.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_base_corpse.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -8982,15 +9345,16 @@ objs/obj_base_cup.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_base_cup.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_base_cup.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_base_cup.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_base_cup.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_base_cup.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_base_cup.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_base_cup.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_base_cup.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_base_cup.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_base_cup.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_base_cup.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_base_cup.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_base_cup.o: /usr/include/g++/stl_config.h
 objs/obj_base_cup.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_base_cup.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_base_cup.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_base_cup.o: /usr/include/g++/stl_relops.h
+objs/obj_base_cup.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_base_cup.o: /usr/include/g++/stl_iterator.h
 objs/obj_base_cup.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_base_cup.o: /usr/include/g++/stl_algobase.h
@@ -9008,6 +9372,7 @@ objs/obj_base_cup.o: /usr/include/g++/stl_function.h
 objs/obj_base_cup.o: /usr/include/g++/stl_map.h
 objs/obj_base_cup.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_cup.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_base_cup.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_base_cup.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_base_cup.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_base_cup.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9029,16 +9394,18 @@ objs/obj_base_light.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_base_light.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_base_light.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_base_light.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_base_light.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_base_light.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_base_light.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_base_light.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_base_light.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_base_light.o: /usr/include/g++/std/bastring.h
-objs/obj_base_light.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_base_light.o: /usr/include/g++/cstddef
 objs/obj_base_light.o: /usr/include/g++/std/straits.h
 objs/obj_base_light.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_base_light.o: /usr/include/g++/stl_alloc.h
 objs/obj_base_light.o: /usr/include/g++/iostream.h
 objs/obj_base_light.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_base_light.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_base_light.o: /usr/include/g++/iterator
 objs/obj_base_light.o: /usr/include/g++/stl_relops.h
 objs/obj_base_light.o: /usr/include/g++/stl_iterator.h
 objs/obj_base_light.o: /usr/include/g++/std/bastring.cc
@@ -9058,6 +9425,7 @@ objs/obj_base_light.o: /usr/include/g++/stl_function.h
 objs/obj_base_light.o: /usr/include/g++/stl_map.h
 objs/obj_base_light.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_light.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_base_light.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_base_light.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_base_light.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_base_light.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9079,17 +9447,18 @@ objs/obj_base_weapon.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_base_weapon.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_base_weapon.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_base_weapon.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_base_weapon.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_base_weapon.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_base_weapon.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_base_weapon.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_base_weapon.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_base_weapon.o: /usr/include/g++/std/bastring.h
-objs/obj_base_weapon.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_base_weapon.o: /usr/include/g++/cstddef
 objs/obj_base_weapon.o: /usr/include/g++/std/straits.h
 objs/obj_base_weapon.o: /usr/include/g++/alloc.h
 objs/obj_base_weapon.o: /usr/include/g++/stl_config.h
 objs/obj_base_weapon.o: /usr/include/g++/stl_alloc.h
 objs/obj_base_weapon.o: /usr/include/g++/iostream.h
 objs/obj_base_weapon.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_base_weapon.o: /usr/include/g++/_G_config.h
 objs/obj_base_weapon.o: /usr/include/g++/iterator
 objs/obj_base_weapon.o: /usr/include/g++/stl_relops.h
 objs/obj_base_weapon.o: /usr/include/g++/stl_iterator.h
@@ -9110,6 +9479,7 @@ objs/obj_base_weapon.o: /usr/include/g++/stl_function.h
 objs/obj_base_weapon.o: /usr/include/g++/stl_map.h
 objs/obj_base_weapon.o: /usr/include/g++/stl_multimap.h
 objs/obj_base_weapon.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_base_weapon.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_base_weapon.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_base_weapon.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_base_weapon.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9132,14 +9502,15 @@ objs/obj_bed.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_bed.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_bed.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_bed.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_bed.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_bed.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_bed.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_bed.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_bed.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_bed.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_bed.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_bed.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_bed.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_bed.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_bed.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_bed.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_bed.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_bed.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_bed.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_bed.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_bed.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_bed.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -9152,7 +9523,8 @@ objs/obj_bed.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_bed.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_bed.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_bed.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_bed.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_bed.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_bed.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_bed.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_bed.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_bed.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9175,14 +9547,15 @@ objs/obj_board.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_board.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_board.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_board.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_board.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_board.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_board.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_board.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_board.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_board.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_board.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_board.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_board.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_board.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_board.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_board.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_board.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_board.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_board.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_board.o: /usr/include/g++/stl_relops.h
 objs/obj_board.o: /usr/include/g++/stl_iterator.h
 objs/obj_board.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9197,6 +9570,7 @@ objs/obj_board.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_board.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_board.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_board.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_board.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_board.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_board.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_board.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -9216,14 +9590,15 @@ objs/obj_boat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_boat.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_boat.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_boat.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_boat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_boat.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_boat.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_boat.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_boat.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_boat.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_boat.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_boat.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_boat.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_boat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_boat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_boat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_boat.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_boat.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_boat.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_boat.o: /usr/include/g++/stl_relops.h
 objs/obj_boat.o: /usr/include/g++/stl_iterator.h
 objs/obj_boat.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9237,7 +9612,8 @@ objs/obj_boat.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_boat.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_boat.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_boat.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_boat.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_boat.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_boat.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_boat.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_boat.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_boat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9257,14 +9633,15 @@ objs/obj_book.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_book.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_book.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_book.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_book.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_book.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_book.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_book.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_book.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_book.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_book.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_book.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_book.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_book.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_book.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_book.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_book.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_book.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_book.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_book.o: /usr/include/g++/stl_relops.h
 objs/obj_book.o: /usr/include/g++/stl_iterator.h
 objs/obj_book.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9278,7 +9655,8 @@ objs/obj_book.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_book.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_book.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_book.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_book.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_book.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_book.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_book.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_book.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_book.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9297,14 +9675,15 @@ objs/obj_bow.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_bow.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_bow.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_bow.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_bow.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_bow.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_bow.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_bow.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_bow.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_bow.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_bow.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_bow.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_bow.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_bow.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_bow.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_bow.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_bow.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_bow.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_bow.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_bow.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_bow.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_bow.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -9317,7 +9696,8 @@ objs/obj_bow.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_bow.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_bow.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_bow.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_bow.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_bow.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_bow.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_bow.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_bow.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_bow.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9337,14 +9717,15 @@ objs/obj_cannon.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_cannon.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_cannon.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_cannon.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_cannon.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_cannon.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_cannon.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_cannon.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_cannon.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_cannon.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_cannon.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_cannon.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_cannon.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_cannon.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_cannon.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_cannon.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_cannon.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_cannon.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_cannon.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_cannon.o: /usr/include/g++/stl_relops.h
 objs/obj_cannon.o: /usr/include/g++/stl_iterator.h
 objs/obj_cannon.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9360,7 +9741,8 @@ objs/obj_cannon.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_cannon.o: /usr/include/g++/stl_tree.h
 objs/obj_cannon.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_cannon.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_cannon.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_cannon.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_cannon.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_cannon.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_cannon.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_cannon.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9382,17 +9764,18 @@ objs/obj_casino_chip.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_casino_chip.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_casino_chip.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_casino_chip.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_casino_chip.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_casino_chip.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_casino_chip.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_casino_chip.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_casino_chip.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_casino_chip.o: /usr/include/g++/std/bastring.h
-objs/obj_casino_chip.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_casino_chip.o: /usr/include/g++/cstddef
 objs/obj_casino_chip.o: /usr/include/g++/std/straits.h
 objs/obj_casino_chip.o: /usr/include/g++/alloc.h
 objs/obj_casino_chip.o: /usr/include/g++/stl_config.h
 objs/obj_casino_chip.o: /usr/include/g++/stl_alloc.h
 objs/obj_casino_chip.o: /usr/include/g++/iostream.h
 objs/obj_casino_chip.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_casino_chip.o: /usr/include/g++/_G_config.h
 objs/obj_casino_chip.o: /usr/include/g++/iterator
 objs/obj_casino_chip.o: /usr/include/g++/stl_relops.h
 objs/obj_casino_chip.o: /usr/include/g++/stl_iterator.h
@@ -9413,6 +9796,7 @@ objs/obj_casino_chip.o: /usr/include/g++/stl_function.h
 objs/obj_casino_chip.o: /usr/include/g++/stl_map.h
 objs/obj_casino_chip.o: /usr/include/g++/stl_multimap.h
 objs/obj_casino_chip.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_casino_chip.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_casino_chip.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_casino_chip.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_casino_chip.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9433,14 +9817,15 @@ objs/obj_chest.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_chest.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_chest.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_chest.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_chest.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_chest.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_chest.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_chest.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_chest.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_chest.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_chest.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_chest.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_chest.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_chest.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_chest.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_chest.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_chest.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_chest.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_chest.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_chest.o: /usr/include/g++/stl_relops.h
 objs/obj_chest.o: /usr/include/g++/stl_iterator.h
 objs/obj_chest.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9455,6 +9840,7 @@ objs/obj_chest.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_chest.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_chest.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_chest.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_chest.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_chest.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_chest.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_chest.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -9476,17 +9862,17 @@ objs/obj_commodity.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_commodity.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_commodity.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_commodity.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_commodity.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_commodity.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_commodity.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_commodity.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_commodity.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_commodity.o: /usr/include/g++/std/bastring.h
-objs/obj_commodity.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/obj_commodity.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/obj_commodity.o: /usr/include/g++/stl_config.h
+objs/obj_commodity.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/obj_commodity.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_commodity.o: /usr/include/g++/stl_alloc.h
 objs/obj_commodity.o: /usr/include/g++/iostream.h
 objs/obj_commodity.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_commodity.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_commodity.o: /usr/include/g++/stl_relops.h
+objs/obj_commodity.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_commodity.o: /usr/include/g++/stl_iterator.h
 objs/obj_commodity.o: /usr/include/g++/std/bastring.cc
 objs/obj_commodity.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -9504,6 +9890,7 @@ objs/obj_commodity.o: /usr/include/g++/stl_function.h
 objs/obj_commodity.o: /usr/include/g++/stl_map.h
 objs/obj_commodity.o: /usr/include/g++/stl_multimap.h
 objs/obj_commodity.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_commodity.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_commodity.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_commodity.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_commodity.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9525,17 +9912,17 @@ objs/obj_component.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_component.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_component.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_component.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_component.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_component.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_component.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_component.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_component.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_component.o: /usr/include/g++/std/bastring.h
-objs/obj_component.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/obj_component.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/obj_component.o: /usr/include/g++/stl_config.h
+objs/obj_component.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/obj_component.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_component.o: /usr/include/g++/stl_alloc.h
 objs/obj_component.o: /usr/include/g++/iostream.h
 objs/obj_component.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_component.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_component.o: /usr/include/g++/stl_relops.h
+objs/obj_component.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_component.o: /usr/include/g++/stl_iterator.h
 objs/obj_component.o: /usr/include/g++/std/bastring.cc
 objs/obj_component.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -9553,6 +9940,7 @@ objs/obj_component.o: /usr/include/g++/stl_function.h
 objs/obj_component.o: /usr/include/g++/stl_map.h
 objs/obj_component.o: /usr/include/g++/stl_multimap.h
 objs/obj_component.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_component.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_component.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_component.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_component.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9578,15 +9966,16 @@ objs/obj_cookware.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_cookware.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_cookware.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_cookware.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_cookware.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_cookware.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_cookware.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_cookware.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_cookware.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_cookware.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_cookware.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_cookware.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_cookware.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_cookware.o: /usr/include/g++/stl_config.h
 objs/obj_cookware.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_cookware.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_cookware.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_cookware.o: /usr/include/g++/stl_relops.h
+objs/obj_cookware.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_cookware.o: /usr/include/g++/stl_iterator.h
 objs/obj_cookware.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_cookware.o: /usr/include/g++/stl_algobase.h
@@ -9604,6 +9993,7 @@ objs/obj_cookware.o: /usr/include/g++/stl_function.h
 objs/obj_cookware.o: /usr/include/g++/stl_map.h
 objs/obj_cookware.o: /usr/include/g++/stl_multimap.h
 objs/obj_cookware.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_cookware.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_cookware.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_cookware.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_cookware.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9625,14 +10015,15 @@ objs/obj_corpse.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_corpse.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_corpse.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_corpse.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_corpse.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_corpse.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_corpse.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_corpse.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_corpse.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_corpse.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_corpse.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_corpse.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_corpse.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_corpse.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_corpse.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_corpse.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_corpse.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_corpse.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_corpse.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_corpse.o: /usr/include/g++/stl_relops.h
 objs/obj_corpse.o: /usr/include/g++/stl_iterator.h
 objs/obj_corpse.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9648,7 +10039,8 @@ objs/obj_corpse.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_corpse.o: /usr/include/g++/stl_tree.h
 objs/obj_corpse.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_corpse.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_corpse.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_corpse.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_corpse.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_corpse.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_corpse.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_corpse.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9668,15 +10060,16 @@ objs/obj_drinkcon.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_drinkcon.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_drinkcon.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_drinkcon.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_drinkcon.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_drinkcon.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_drinkcon.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_drinkcon.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_drinkcon.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_drinkcon.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_drinkcon.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_drinkcon.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_drinkcon.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_drinkcon.o: /usr/include/g++/stl_config.h
 objs/obj_drinkcon.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_drinkcon.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_drinkcon.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_drinkcon.o: /usr/include/g++/stl_relops.h
+objs/obj_drinkcon.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_drinkcon.o: /usr/include/g++/stl_iterator.h
 objs/obj_drinkcon.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_drinkcon.o: /usr/include/g++/stl_algobase.h
@@ -9694,6 +10087,7 @@ objs/obj_drinkcon.o: /usr/include/g++/stl_function.h
 objs/obj_drinkcon.o: /usr/include/g++/stl_map.h
 objs/obj_drinkcon.o: /usr/include/g++/stl_multimap.h
 objs/obj_drinkcon.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_drinkcon.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_drinkcon.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_drinkcon.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_drinkcon.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -9714,14 +10108,15 @@ objs/obj_drug.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_drug.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_drug.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_drug.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_drug.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_drug.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_drug.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_drug.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_drug.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_drug.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_drug.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_drug.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_drug.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_drug.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_drug.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_drug.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_drug.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_drug.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_drug.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_drug.o: /usr/include/g++/stl_relops.h
 objs/obj_drug.o: /usr/include/g++/stl_iterator.h
 objs/obj_drug.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9735,7 +10130,8 @@ objs/obj_drug.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_drug.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_drug.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_drug.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_drug.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_drug.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_drug.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_drug.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_drug.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_drug.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9757,19 +10153,19 @@ objs/obj_drug_container.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/obj_drug_container.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/obj_drug_container.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/obj_drug_container.o: /usr/include/string.h /usr/include/stdarg.h
-objs/obj_drug_container.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/obj_drug_container.o: /usr/include/g++/string
+objs/obj_drug_container.o: /usr/include/g++/cmath
+objs/obj_drug_container.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_drug_container.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_drug_container.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_drug_container.o: /usr/include/g++/std/bastring.h
-objs/obj_drug_container.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_drug_container.o: /usr/include/g++/cstddef
 objs/obj_drug_container.o: /usr/include/g++/std/straits.h
 objs/obj_drug_container.o: /usr/include/g++/alloc.h
 objs/obj_drug_container.o: /usr/include/g++/stl_config.h
 objs/obj_drug_container.o: /usr/include/g++/stl_alloc.h
 objs/obj_drug_container.o: /usr/include/g++/iostream.h
 objs/obj_drug_container.o: /usr/include/g++/streambuf.h
-objs/obj_drug_container.o: /usr/include/g++/libio.h
-objs/obj_drug_container.o: /usr/include/g++/_G_config.h
-objs/obj_drug_container.o: /usr/include/g++/iterator
+objs/obj_drug_container.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_drug_container.o: /usr/include/g++/stl_relops.h
 objs/obj_drug_container.o: /usr/include/g++/stl_iterator.h
 objs/obj_drug_container.o: /usr/include/g++/std/bastring.cc
@@ -9791,17 +10187,18 @@ objs/obj_drug_container.o: /usr/include/g++/stl_function.h
 objs/obj_drug_container.o: /usr/include/g++/stl_map.h
 objs/obj_drug_container.o: /usr/include/g++/stl_multimap.h
 objs/obj_drug_container.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/obj_drug_container.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/obj_drug_container.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/obj_drug_container.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_drug_container.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/obj_drug_container.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/obj_drug_container.o: task.h weather.h sound.h create.h thing.h room.h
-objs/obj_drug_container.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/obj_drug_container.o: being.h person.h monster.h account.h extern.h
-objs/obj_drug_container.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_drug_container.o: materials.h colorstring.h format.h
-objs/obj_drug_container.o: obj_drug_container.h
+objs/obj_drug_container.o: /usr/include/g++/fstream
+objs/obj_drug_container.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_drug_container.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_drug_container.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_drug_container.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_drug_container.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_drug_container.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_drug_container.o: create.h thing.h room.h obj.h spec_objs.h
+objs/obj_drug_container.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_drug_container.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_drug_container.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_drug_container.o: format.h obj_drug_container.h
 objs/obj_egg.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/obj_egg.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/obj_egg.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h
@@ -9833,7 +10230,8 @@ objs/obj_egg.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_egg.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_egg.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_egg.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_egg.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_egg.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_egg.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_egg.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_egg.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_egg.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -9860,11 +10258,13 @@ objs/obj_expandable_container.o: /usr/include/g++/cassert
 objs/obj_expandable_container.o: /usr/include/assert.h
 objs/obj_expandable_container.o: /usr/include/g++/cstring
 objs/obj_expandable_container.o: /usr/include/string.h /usr/include/stdarg.h
+objs/obj_expandable_container.o: /usr/include/g++/cmath
+objs/obj_expandable_container.o: /usr/include/g++/_G_config.h
+objs/obj_expandable_container.o: /usr/include/stddef.h /usr/include/math.h
 objs/obj_expandable_container.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/obj_expandable_container.o: /usr/include/g++/string
 objs/obj_expandable_container.o: /usr/include/g++/std/bastring.h
 objs/obj_expandable_container.o: /usr/include/g++/cstddef
-objs/obj_expandable_container.o: /usr/include/stddef.h
 objs/obj_expandable_container.o: /usr/include/g++/std/straits.h
 objs/obj_expandable_container.o: /usr/include/g++/alloc.h
 objs/obj_expandable_container.o: /usr/include/g++/stl_config.h
@@ -9872,7 +10272,6 @@ objs/obj_expandable_container.o: /usr/include/g++/stl_alloc.h
 objs/obj_expandable_container.o: /usr/include/g++/iostream.h
 objs/obj_expandable_container.o: /usr/include/g++/streambuf.h
 objs/obj_expandable_container.o: /usr/include/g++/libio.h
-objs/obj_expandable_container.o: /usr/include/g++/_G_config.h
 objs/obj_expandable_container.o: /usr/include/g++/iterator
 objs/obj_expandable_container.o: /usr/include/g++/stl_relops.h
 objs/obj_expandable_container.o: /usr/include/g++/stl_iterator.h
@@ -9896,7 +10295,9 @@ objs/obj_expandable_container.o: /usr/include/g++/stl_function.h
 objs/obj_expandable_container.o: /usr/include/g++/stl_map.h
 objs/obj_expandable_container.o: /usr/include/g++/stl_multimap.h
 objs/obj_expandable_container.o: /usr/include/g++/iostream
-objs/obj_expandable_container.o: /usr/include/g++/sstream sstring.h low.h
+objs/obj_expandable_container.o: /usr/include/g++/sstream
+objs/obj_expandable_container.o: /usr/include/g++/fstream
+objs/obj_expandable_container.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/obj_expandable_container.o: enum.h spells.h structs.h parse.h immunity.h
 objs/obj_expandable_container.o: discipline.h spell2.h db.h ansi.h
 objs/obj_expandable_container.o: cmd_dissect.h client.h response.h faction.h
@@ -9920,14 +10321,15 @@ objs/obj_flame.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_flame.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_flame.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_flame.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_flame.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_flame.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_flame.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_flame.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_flame.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_flame.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_flame.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_flame.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_flame.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_flame.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_flame.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_flame.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_flame.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_flame.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_flame.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_flame.o: /usr/include/g++/stl_relops.h
 objs/obj_flame.o: /usr/include/g++/stl_iterator.h
 objs/obj_flame.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -9942,6 +10344,7 @@ objs/obj_flame.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_flame.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_flame.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_flame.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_flame.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_flame.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_flame.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_flame.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -9985,7 +10388,8 @@ objs/obj_food.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_food.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_food.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_food.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_food.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_food.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_food.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_food.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_food.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_food.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10006,14 +10410,15 @@ objs/obj_fuel.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_fuel.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_fuel.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_fuel.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_fuel.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_fuel.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_fuel.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_fuel.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_fuel.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_fuel.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_fuel.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_fuel.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_fuel.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_fuel.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_fuel.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_fuel.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_fuel.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_fuel.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_fuel.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_fuel.o: /usr/include/g++/stl_relops.h
 objs/obj_fuel.o: /usr/include/g++/stl_iterator.h
 objs/obj_fuel.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10027,7 +10432,8 @@ objs/obj_fuel.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_fuel.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_fuel.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_fuel.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_fuel.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_fuel.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_fuel.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_fuel.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_fuel.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_fuel.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10047,15 +10453,16 @@ objs/obj_gemstone.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_gemstone.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_gemstone.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_gemstone.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_gemstone.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_gemstone.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_gemstone.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_gemstone.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_gemstone.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_gemstone.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_gemstone.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_gemstone.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_gemstone.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_gemstone.o: /usr/include/g++/stl_config.h
 objs/obj_gemstone.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_gemstone.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_gemstone.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_gemstone.o: /usr/include/g++/stl_relops.h
+objs/obj_gemstone.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_gemstone.o: /usr/include/g++/stl_iterator.h
 objs/obj_gemstone.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_gemstone.o: /usr/include/g++/stl_algobase.h
@@ -10073,6 +10480,7 @@ objs/obj_gemstone.o: /usr/include/g++/stl_function.h
 objs/obj_gemstone.o: /usr/include/g++/stl_map.h
 objs/obj_gemstone.o: /usr/include/g++/stl_multimap.h
 objs/obj_gemstone.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_gemstone.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_gemstone.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_gemstone.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_gemstone.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -10096,19 +10504,19 @@ objs/obj_general_weapon.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/obj_general_weapon.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/obj_general_weapon.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/obj_general_weapon.o: /usr/include/string.h /usr/include/stdarg.h
-objs/obj_general_weapon.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/obj_general_weapon.o: /usr/include/g++/string
+objs/obj_general_weapon.o: /usr/include/g++/cmath
+objs/obj_general_weapon.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_general_weapon.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_general_weapon.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_general_weapon.o: /usr/include/g++/std/bastring.h
-objs/obj_general_weapon.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_general_weapon.o: /usr/include/g++/cstddef
 objs/obj_general_weapon.o: /usr/include/g++/std/straits.h
 objs/obj_general_weapon.o: /usr/include/g++/alloc.h
 objs/obj_general_weapon.o: /usr/include/g++/stl_config.h
 objs/obj_general_weapon.o: /usr/include/g++/stl_alloc.h
 objs/obj_general_weapon.o: /usr/include/g++/iostream.h
 objs/obj_general_weapon.o: /usr/include/g++/streambuf.h
-objs/obj_general_weapon.o: /usr/include/g++/libio.h
-objs/obj_general_weapon.o: /usr/include/g++/_G_config.h
-objs/obj_general_weapon.o: /usr/include/g++/iterator
+objs/obj_general_weapon.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_general_weapon.o: /usr/include/g++/stl_relops.h
 objs/obj_general_weapon.o: /usr/include/g++/stl_iterator.h
 objs/obj_general_weapon.o: /usr/include/g++/std/bastring.cc
@@ -10130,18 +10538,19 @@ objs/obj_general_weapon.o: /usr/include/g++/stl_function.h
 objs/obj_general_weapon.o: /usr/include/g++/stl_map.h
 objs/obj_general_weapon.o: /usr/include/g++/stl_multimap.h
 objs/obj_general_weapon.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/obj_general_weapon.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/obj_general_weapon.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/obj_general_weapon.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_general_weapon.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/obj_general_weapon.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/obj_general_weapon.o: task.h weather.h sound.h create.h thing.h room.h
-objs/obj_general_weapon.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/obj_general_weapon.o: being.h person.h monster.h account.h extern.h
-objs/obj_general_weapon.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_general_weapon.o: materials.h colorstring.h format.h
-objs/obj_general_weapon.o: obj_general_weapon.h obj_base_weapon.h obj_gun.h
-objs/obj_general_weapon.o: shop.h shopowned.h
+objs/obj_general_weapon.o: /usr/include/g++/fstream
+objs/obj_general_weapon.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_general_weapon.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_general_weapon.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_general_weapon.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_general_weapon.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_general_weapon.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_general_weapon.o: create.h thing.h room.h obj.h spec_objs.h
+objs/obj_general_weapon.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_general_weapon.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_general_weapon.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_general_weapon.o: format.h obj_general_weapon.h obj_base_weapon.h
+objs/obj_general_weapon.o: obj_gun.h shop.h shopowned.h
 objs/obj_gun.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_gun.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_gun.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -10152,14 +10561,15 @@ objs/obj_gun.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_gun.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_gun.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_gun.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_gun.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_gun.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_gun.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_gun.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_gun.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_gun.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_gun.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_gun.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_gun.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_gun.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_gun.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_gun.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_gun.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_gun.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_gun.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_gun.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_gun.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_gun.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -10172,7 +10582,8 @@ objs/obj_gun.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_gun.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_gun.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_gun.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_gun.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_gun.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_gun.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_gun.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_gun.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_gun.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10193,17 +10604,17 @@ objs/obj_handgonne.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_handgonne.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_handgonne.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_handgonne.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_handgonne.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_handgonne.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_handgonne.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_handgonne.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_handgonne.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_handgonne.o: /usr/include/g++/std/bastring.h
-objs/obj_handgonne.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/obj_handgonne.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/obj_handgonne.o: /usr/include/g++/stl_config.h
+objs/obj_handgonne.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/obj_handgonne.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_handgonne.o: /usr/include/g++/stl_alloc.h
 objs/obj_handgonne.o: /usr/include/g++/iostream.h
 objs/obj_handgonne.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_handgonne.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_handgonne.o: /usr/include/g++/stl_relops.h
+objs/obj_handgonne.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_handgonne.o: /usr/include/g++/stl_iterator.h
 objs/obj_handgonne.o: /usr/include/g++/std/bastring.cc
 objs/obj_handgonne.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -10221,6 +10632,7 @@ objs/obj_handgonne.o: /usr/include/g++/stl_function.h
 objs/obj_handgonne.o: /usr/include/g++/stl_map.h
 objs/obj_handgonne.o: /usr/include/g++/stl_multimap.h
 objs/obj_handgonne.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_handgonne.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_handgonne.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_handgonne.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_handgonne.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -10243,15 +10655,16 @@ objs/obj_jewelry.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_jewelry.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_jewelry.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_jewelry.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_jewelry.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_jewelry.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_jewelry.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_jewelry.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_jewelry.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_jewelry.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_jewelry.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_jewelry.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_jewelry.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_jewelry.o: /usr/include/g++/stl_config.h
 objs/obj_jewelry.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_jewelry.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_jewelry.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_jewelry.o: /usr/include/g++/stl_relops.h
+objs/obj_jewelry.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_jewelry.o: /usr/include/g++/stl_iterator.h
 objs/obj_jewelry.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_jewelry.o: /usr/include/g++/stl_algobase.h
@@ -10268,16 +10681,17 @@ objs/obj_jewelry.o: /usr/include/g++/stl_tree.h
 objs/obj_jewelry.o: /usr/include/g++/stl_function.h
 objs/obj_jewelry.o: /usr/include/g++/stl_map.h
 objs/obj_jewelry.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_jewelry.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_jewelry.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_jewelry.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_jewelry.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_jewelry.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_jewelry.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_jewelry.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_jewelry.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_jewelry.o: spec_mobs.h materials.h colorstring.h format.h
-objs/obj_jewelry.o: obj_base_clothing.h obj_jewelry.h
+objs/obj_jewelry.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_jewelry.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_jewelry.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_jewelry.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_jewelry.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_jewelry.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_jewelry.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_jewelry.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_jewelry.o: person.h monster.h account.h extern.h handler.h
+objs/obj_jewelry.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_jewelry.o: format.h obj_base_clothing.h obj_jewelry.h
 objs/obj_key.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_key.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_key.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -10288,14 +10702,15 @@ objs/obj_key.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_key.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_key.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_key.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_key.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_key.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_key.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_key.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_key.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_key.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_key.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_key.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_key.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_key.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_key.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_key.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_key.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_key.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_key.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_key.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_key.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_key.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -10308,7 +10723,8 @@ objs/obj_key.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_key.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_key.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_key.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_key.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_key.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_key.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_key.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_key.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_key.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10329,15 +10745,16 @@ objs/obj_keyring.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_keyring.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_keyring.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_keyring.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_keyring.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_keyring.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_keyring.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_keyring.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_keyring.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_keyring.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_keyring.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_keyring.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_keyring.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_keyring.o: /usr/include/g++/stl_config.h
 objs/obj_keyring.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_keyring.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_keyring.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_keyring.o: /usr/include/g++/stl_relops.h
+objs/obj_keyring.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_keyring.o: /usr/include/g++/stl_iterator.h
 objs/obj_keyring.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_keyring.o: /usr/include/g++/stl_algobase.h
@@ -10354,16 +10771,17 @@ objs/obj_keyring.o: /usr/include/g++/stl_tree.h
 objs/obj_keyring.o: /usr/include/g++/stl_function.h
 objs/obj_keyring.o: /usr/include/g++/stl_map.h
 objs/obj_keyring.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_keyring.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_keyring.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_keyring.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_keyring.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_keyring.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_keyring.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_keyring.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_keyring.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_keyring.o: spec_mobs.h materials.h colorstring.h format.h
-objs/obj_keyring.o: obj_keyring.h obj_expandable_container.h
+objs/obj_keyring.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_keyring.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_keyring.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_keyring.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_keyring.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_keyring.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_keyring.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_keyring.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_keyring.o: person.h monster.h account.h extern.h handler.h
+objs/obj_keyring.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_keyring.o: format.h obj_keyring.h obj_expandable_container.h
 objs/obj_keyring.o: obj_open_container.h obj_base_container.h obj_key.h
 objs/obj_light.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_light.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -10375,14 +10793,15 @@ objs/obj_light.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_light.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_light.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_light.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_light.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_light.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_light.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_light.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_light.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_light.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_light.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_light.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_light.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_light.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_light.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_light.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_light.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_light.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_light.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_light.o: /usr/include/g++/stl_relops.h
 objs/obj_light.o: /usr/include/g++/stl_iterator.h
 objs/obj_light.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10397,6 +10816,7 @@ objs/obj_light.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_light.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_light.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_light.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_light.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_light.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_light.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_light.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -10417,16 +10837,18 @@ objs/obj_magic_item.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_magic_item.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_magic_item.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_magic_item.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_magic_item.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_magic_item.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_magic_item.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_magic_item.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_magic_item.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_magic_item.o: /usr/include/g++/std/bastring.h
-objs/obj_magic_item.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_magic_item.o: /usr/include/g++/cstddef
 objs/obj_magic_item.o: /usr/include/g++/std/straits.h
 objs/obj_magic_item.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_magic_item.o: /usr/include/g++/stl_alloc.h
 objs/obj_magic_item.o: /usr/include/g++/iostream.h
 objs/obj_magic_item.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_magic_item.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_magic_item.o: /usr/include/g++/iterator
 objs/obj_magic_item.o: /usr/include/g++/stl_relops.h
 objs/obj_magic_item.o: /usr/include/g++/stl_iterator.h
 objs/obj_magic_item.o: /usr/include/g++/std/bastring.cc
@@ -10446,6 +10868,7 @@ objs/obj_magic_item.o: /usr/include/g++/stl_function.h
 objs/obj_magic_item.o: /usr/include/g++/stl_map.h
 objs/obj_magic_item.o: /usr/include/g++/stl_multimap.h
 objs/obj_magic_item.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_magic_item.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_magic_item.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_magic_item.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_magic_item.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -10466,14 +10889,15 @@ objs/obj_money.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_money.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_money.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_money.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_money.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_money.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_money.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_money.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_money.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_money.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_money.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_money.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_money.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_money.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_money.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_money.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_money.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_money.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_money.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_money.o: /usr/include/g++/stl_relops.h
 objs/obj_money.o: /usr/include/g++/stl_iterator.h
 objs/obj_money.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10488,6 +10912,7 @@ objs/obj_money.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_money.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_money.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_money.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_money.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_money.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_money.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_money.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -10508,14 +10933,15 @@ objs/obj_note.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_note.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_note.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_note.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_note.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_note.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_note.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_note.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_note.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_note.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_note.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_note.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_note.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_note.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_note.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_note.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_note.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_note.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_note.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_note.o: /usr/include/g++/stl_relops.h
 objs/obj_note.o: /usr/include/g++/stl_iterator.h
 objs/obj_note.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10529,7 +10955,8 @@ objs/obj_note.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_note.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_note.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_note.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_note.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_note.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_note.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_note.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_note.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_note.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10549,14 +10976,15 @@ objs/obj_opal.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_opal.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_opal.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_opal.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_opal.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_opal.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_opal.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_opal.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_opal.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_opal.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_opal.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_opal.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_opal.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_opal.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_opal.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_opal.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_opal.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_opal.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_opal.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_opal.o: /usr/include/g++/stl_relops.h
 objs/obj_opal.o: /usr/include/g++/stl_iterator.h
 objs/obj_opal.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10570,7 +10998,8 @@ objs/obj_opal.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_opal.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_opal.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_opal.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_opal.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_opal.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_opal.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_opal.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_opal.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_opal.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10592,19 +11021,19 @@ objs/obj_open_container.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/obj_open_container.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/obj_open_container.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/obj_open_container.o: /usr/include/string.h /usr/include/stdarg.h
-objs/obj_open_container.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/obj_open_container.o: /usr/include/g++/string
+objs/obj_open_container.o: /usr/include/g++/cmath
+objs/obj_open_container.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_open_container.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/obj_open_container.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_open_container.o: /usr/include/g++/std/bastring.h
-objs/obj_open_container.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_open_container.o: /usr/include/g++/cstddef
 objs/obj_open_container.o: /usr/include/g++/std/straits.h
 objs/obj_open_container.o: /usr/include/g++/alloc.h
 objs/obj_open_container.o: /usr/include/g++/stl_config.h
 objs/obj_open_container.o: /usr/include/g++/stl_alloc.h
 objs/obj_open_container.o: /usr/include/g++/iostream.h
 objs/obj_open_container.o: /usr/include/g++/streambuf.h
-objs/obj_open_container.o: /usr/include/g++/libio.h
-objs/obj_open_container.o: /usr/include/g++/_G_config.h
-objs/obj_open_container.o: /usr/include/g++/iterator
+objs/obj_open_container.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_open_container.o: /usr/include/g++/stl_relops.h
 objs/obj_open_container.o: /usr/include/g++/stl_iterator.h
 objs/obj_open_container.o: /usr/include/g++/std/bastring.cc
@@ -10626,17 +11055,19 @@ objs/obj_open_container.o: /usr/include/g++/stl_function.h
 objs/obj_open_container.o: /usr/include/g++/stl_map.h
 objs/obj_open_container.o: /usr/include/g++/stl_multimap.h
 objs/obj_open_container.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/obj_open_container.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/obj_open_container.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/obj_open_container.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_open_container.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/obj_open_container.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/obj_open_container.o: task.h weather.h sound.h create.h thing.h room.h
-objs/obj_open_container.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/obj_open_container.o: being.h person.h monster.h account.h extern.h
-objs/obj_open_container.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_open_container.o: materials.h colorstring.h format.h disc_looting.h
-objs/obj_open_container.o: obj_open_container.h obj_base_container.h
+objs/obj_open_container.o: /usr/include/g++/fstream
+objs/obj_open_container.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_open_container.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_open_container.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_open_container.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_open_container.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_open_container.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_open_container.o: create.h thing.h room.h obj.h spec_objs.h
+objs/obj_open_container.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_open_container.o: monster.h account.h extern.h handler.h obj_money.h
+objs/obj_open_container.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_open_container.o: format.h disc_looting.h obj_open_container.h
+objs/obj_open_container.o: obj_base_container.h
 objs/obj_organic.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_organic.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_organic.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -10647,15 +11078,16 @@ objs/obj_organic.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_organic.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_organic.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_organic.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_organic.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_organic.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_organic.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_organic.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_organic.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_organic.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_organic.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_organic.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_organic.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_organic.o: /usr/include/g++/stl_config.h
 objs/obj_organic.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_organic.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_organic.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_organic.o: /usr/include/g++/stl_relops.h
+objs/obj_organic.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_organic.o: /usr/include/g++/stl_iterator.h
 objs/obj_organic.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_organic.o: /usr/include/g++/stl_algobase.h
@@ -10672,16 +11104,18 @@ objs/obj_organic.o: /usr/include/g++/stl_tree.h
 objs/obj_organic.o: /usr/include/g++/stl_function.h
 objs/obj_organic.o: /usr/include/g++/stl_map.h
 objs/obj_organic.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_organic.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_organic.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_organic.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_organic.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_organic.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_organic.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_organic.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_organic.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_organic.o: spec_mobs.h materials.h colorstring.h format.h shop.h
-objs/obj_organic.o: obj_organic.h obj_flame.h obj_base_light.h
+objs/obj_organic.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_organic.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_organic.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_organic.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_organic.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_organic.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_organic.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_organic.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_organic.o: person.h monster.h account.h extern.h handler.h
+objs/obj_organic.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_organic.o: format.h shop.h obj_organic.h obj_flame.h
+objs/obj_organic.o: obj_base_light.h
 objs/obj_other_obj.o: stdsneezy.h /usr/include/g++/cstdio
 objs/obj_other_obj.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/obj_other_obj.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -10693,17 +11127,17 @@ objs/obj_other_obj.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_other_obj.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_other_obj.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_other_obj.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_other_obj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_other_obj.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_other_obj.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_other_obj.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_other_obj.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_other_obj.o: /usr/include/g++/std/bastring.h
-objs/obj_other_obj.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/obj_other_obj.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/obj_other_obj.o: /usr/include/g++/stl_config.h
+objs/obj_other_obj.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/obj_other_obj.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/obj_other_obj.o: /usr/include/g++/stl_alloc.h
 objs/obj_other_obj.o: /usr/include/g++/iostream.h
 objs/obj_other_obj.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_other_obj.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_other_obj.o: /usr/include/g++/stl_relops.h
+objs/obj_other_obj.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_other_obj.o: /usr/include/g++/stl_iterator.h
 objs/obj_other_obj.o: /usr/include/g++/std/bastring.cc
 objs/obj_other_obj.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -10721,6 +11155,7 @@ objs/obj_other_obj.o: /usr/include/g++/stl_function.h
 objs/obj_other_obj.o: /usr/include/g++/stl_map.h
 objs/obj_other_obj.o: /usr/include/g++/stl_multimap.h
 objs/obj_other_obj.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_other_obj.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_other_obj.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_other_obj.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_other_obj.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -10741,14 +11176,15 @@ objs/obj_pen.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_pen.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_pen.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_pen.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_pen.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_pen.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_pen.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_pen.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_pen.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_pen.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_pen.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_pen.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_pen.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_pen.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_pen.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_pen.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_pen.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_pen.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_pen.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_pen.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/obj_pen.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_pen.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -10761,7 +11197,8 @@ objs/obj_pen.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_pen.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_pen.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_pen.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_pen.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_pen.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_pen.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_pen.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_pen.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_pen.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10780,14 +11217,15 @@ objs/obj_plant.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_plant.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_plant.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_plant.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_plant.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_plant.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_plant.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_plant.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_plant.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_plant.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_plant.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_plant.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_plant.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_plant.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_plant.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_plant.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_plant.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_plant.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_plant.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_plant.o: /usr/include/g++/stl_relops.h
 objs/obj_plant.o: /usr/include/g++/stl_iterator.h
 objs/obj_plant.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10802,6 +11240,7 @@ objs/obj_plant.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_plant.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_plant.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_plant.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_plant.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_plant.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_plant.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_plant.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -10825,19 +11264,19 @@ objs/obj_player_corpse.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/obj_player_corpse.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/obj_player_corpse.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/obj_player_corpse.o: /usr/include/string.h /usr/include/stdarg.h
+objs/obj_player_corpse.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/obj_player_corpse.o: /usr/include/stddef.h /usr/include/math.h
 objs/obj_player_corpse.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/obj_player_corpse.o: /usr/include/g++/string
 objs/obj_player_corpse.o: /usr/include/g++/std/bastring.h
-objs/obj_player_corpse.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_player_corpse.o: /usr/include/g++/cstddef
 objs/obj_player_corpse.o: /usr/include/g++/std/straits.h
 objs/obj_player_corpse.o: /usr/include/g++/alloc.h
 objs/obj_player_corpse.o: /usr/include/g++/stl_config.h
 objs/obj_player_corpse.o: /usr/include/g++/stl_alloc.h
 objs/obj_player_corpse.o: /usr/include/g++/iostream.h
 objs/obj_player_corpse.o: /usr/include/g++/streambuf.h
-objs/obj_player_corpse.o: /usr/include/g++/libio.h
-objs/obj_player_corpse.o: /usr/include/g++/_G_config.h
-objs/obj_player_corpse.o: /usr/include/g++/iterator
+objs/obj_player_corpse.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_player_corpse.o: /usr/include/g++/stl_relops.h
 objs/obj_player_corpse.o: /usr/include/g++/stl_iterator.h
 objs/obj_player_corpse.o: /usr/include/g++/std/bastring.cc
@@ -10857,6 +11296,7 @@ objs/obj_player_corpse.o: /usr/include/g++/stl_function.h
 objs/obj_player_corpse.o: /usr/include/g++/stl_map.h
 objs/obj_player_corpse.o: /usr/include/g++/stl_multimap.h
 objs/obj_player_corpse.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_player_corpse.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_player_corpse.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_player_corpse.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_player_corpse.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -10878,14 +11318,15 @@ objs/obj_poison.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_poison.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_poison.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_poison.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_poison.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_poison.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_poison.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_poison.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_poison.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_poison.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_poison.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_poison.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_poison.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_poison.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_poison.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_poison.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_poison.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_poison.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_poison.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_poison.o: /usr/include/g++/stl_relops.h
 objs/obj_poison.o: /usr/include/g++/stl_iterator.h
 objs/obj_poison.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10901,7 +11342,8 @@ objs/obj_poison.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_poison.o: /usr/include/g++/stl_tree.h
 objs/obj_poison.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_poison.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_poison.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_poison.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_poison.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_poison.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_poison.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_poison.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10921,14 +11363,15 @@ objs/obj_pool.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_pool.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_pool.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_pool.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_pool.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_pool.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_pool.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_pool.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_pool.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_pool.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_pool.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_pool.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_pool.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_pool.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_pool.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_pool.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_pool.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_pool.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_pool.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_pool.o: /usr/include/g++/stl_relops.h
 objs/obj_pool.o: /usr/include/g++/stl_iterator.h
 objs/obj_pool.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10942,7 +11385,8 @@ objs/obj_pool.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_pool.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_pool.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_pool.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_pool.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_pool.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_pool.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_pool.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_pool.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_pool.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -10961,14 +11405,15 @@ objs/obj_portal.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_portal.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_portal.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_portal.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_portal.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_portal.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_portal.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_portal.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_portal.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_portal.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_portal.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_portal.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_portal.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_portal.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_portal.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_portal.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_portal.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_portal.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_portal.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_portal.o: /usr/include/g++/stl_relops.h
 objs/obj_portal.o: /usr/include/g++/stl_iterator.h
 objs/obj_portal.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -10984,7 +11429,8 @@ objs/obj_portal.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_portal.o: /usr/include/g++/stl_tree.h
 objs/obj_portal.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_portal.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_portal.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_portal.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_portal.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_portal.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_portal.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_portal.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11004,14 +11450,15 @@ objs/obj_potion.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_potion.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_potion.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_potion.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_potion.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_potion.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_potion.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_potion.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_potion.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_potion.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_potion.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_potion.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_potion.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_potion.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_potion.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_potion.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_potion.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_potion.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_potion.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_potion.o: /usr/include/g++/stl_relops.h
 objs/obj_potion.o: /usr/include/g++/stl_iterator.h
 objs/obj_potion.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11027,7 +11474,8 @@ objs/obj_potion.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_potion.o: /usr/include/g++/stl_tree.h
 objs/obj_potion.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_potion.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_potion.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_potion.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_potion.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_potion.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_potion.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_potion.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11047,14 +11495,15 @@ objs/obj_quiver.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_quiver.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_quiver.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_quiver.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_quiver.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_quiver.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_quiver.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_quiver.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_quiver.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_quiver.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_quiver.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_quiver.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_quiver.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_quiver.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_quiver.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_quiver.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_quiver.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_quiver.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_quiver.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_quiver.o: /usr/include/g++/stl_relops.h
 objs/obj_quiver.o: /usr/include/g++/stl_iterator.h
 objs/obj_quiver.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11070,7 +11519,8 @@ objs/obj_quiver.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_quiver.o: /usr/include/g++/stl_tree.h
 objs/obj_quiver.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_quiver.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_quiver.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_quiver.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_quiver.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_quiver.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_quiver.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_quiver.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11091,14 +11541,15 @@ objs/obj_scroll.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_scroll.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_scroll.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_scroll.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_scroll.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_scroll.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_scroll.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_scroll.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_scroll.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_scroll.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_scroll.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_scroll.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_scroll.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_scroll.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_scroll.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_scroll.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_scroll.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_scroll.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_scroll.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_scroll.o: /usr/include/g++/stl_relops.h
 objs/obj_scroll.o: /usr/include/g++/stl_iterator.h
 objs/obj_scroll.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11114,7 +11565,8 @@ objs/obj_scroll.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_scroll.o: /usr/include/g++/stl_tree.h
 objs/obj_scroll.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_scroll.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_scroll.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_scroll.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_scroll.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_scroll.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_scroll.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_scroll.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11134,15 +11586,16 @@ objs/obj_seethru.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_seethru.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_seethru.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_seethru.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_seethru.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_seethru.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_seethru.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_seethru.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_seethru.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_seethru.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_seethru.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_seethru.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_seethru.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_seethru.o: /usr/include/g++/stl_config.h
 objs/obj_seethru.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_seethru.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_seethru.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_seethru.o: /usr/include/g++/stl_relops.h
+objs/obj_seethru.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_seethru.o: /usr/include/g++/stl_iterator.h
 objs/obj_seethru.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_seethru.o: /usr/include/g++/stl_algobase.h
@@ -11159,16 +11612,17 @@ objs/obj_seethru.o: /usr/include/g++/stl_tree.h
 objs/obj_seethru.o: /usr/include/g++/stl_function.h
 objs/obj_seethru.o: /usr/include/g++/stl_map.h
 objs/obj_seethru.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_seethru.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_seethru.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_seethru.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_seethru.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_seethru.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_seethru.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_seethru.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_seethru.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_seethru.o: spec_mobs.h materials.h colorstring.h format.h
-objs/obj_seethru.o: obj_seethru.h obj_window.h
+objs/obj_seethru.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_seethru.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_seethru.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_seethru.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_seethru.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_seethru.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_seethru.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_seethru.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_seethru.o: person.h monster.h account.h extern.h handler.h
+objs/obj_seethru.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_seethru.o: format.h obj_seethru.h obj_window.h
 objs/obj_smoke.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_smoke.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_smoke.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -11179,14 +11633,15 @@ objs/obj_smoke.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_smoke.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_smoke.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_smoke.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_smoke.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_smoke.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_smoke.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_smoke.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_smoke.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_smoke.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_smoke.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_smoke.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_smoke.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_smoke.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_smoke.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_smoke.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_smoke.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_smoke.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_smoke.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_smoke.o: /usr/include/g++/stl_relops.h
 objs/obj_smoke.o: /usr/include/g++/stl_iterator.h
 objs/obj_smoke.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11201,6 +11656,7 @@ objs/obj_smoke.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_smoke.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_smoke.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_smoke.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_smoke.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_smoke.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_smoke.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_smoke.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -11221,15 +11677,16 @@ objs/obj_spellbag.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_spellbag.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_spellbag.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_spellbag.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_spellbag.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_spellbag.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_spellbag.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_spellbag.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_spellbag.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_spellbag.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_spellbag.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_spellbag.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_spellbag.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_spellbag.o: /usr/include/g++/stl_config.h
 objs/obj_spellbag.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_spellbag.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_spellbag.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_spellbag.o: /usr/include/g++/stl_relops.h
+objs/obj_spellbag.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_spellbag.o: /usr/include/g++/stl_iterator.h
 objs/obj_spellbag.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_spellbag.o: /usr/include/g++/stl_algobase.h
@@ -11247,6 +11704,7 @@ objs/obj_spellbag.o: /usr/include/g++/stl_function.h
 objs/obj_spellbag.o: /usr/include/g++/stl_map.h
 objs/obj_spellbag.o: /usr/include/g++/stl_multimap.h
 objs/obj_spellbag.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_spellbag.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_spellbag.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_spellbag.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_spellbag.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -11269,14 +11727,15 @@ objs/obj_staff.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_staff.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_staff.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_staff.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_staff.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_staff.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_staff.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_staff.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_staff.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_staff.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_staff.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_staff.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_staff.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_staff.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_staff.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_staff.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_staff.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_staff.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_staff.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_staff.o: /usr/include/g++/stl_relops.h
 objs/obj_staff.o: /usr/include/g++/stl_iterator.h
 objs/obj_staff.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11291,6 +11750,7 @@ objs/obj_staff.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_staff.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_staff.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_staff.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_staff.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_staff.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_staff.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_staff.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -11310,14 +11770,15 @@ objs/obj_statue.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_statue.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_statue.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_statue.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_statue.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_statue.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_statue.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_statue.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_statue.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_statue.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_statue.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_statue.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_statue.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_statue.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_statue.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_statue.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_statue.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_statue.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_statue.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_statue.o: /usr/include/g++/stl_relops.h
 objs/obj_statue.o: /usr/include/g++/stl_iterator.h
 objs/obj_statue.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11333,7 +11794,8 @@ objs/obj_statue.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_statue.o: /usr/include/g++/stl_tree.h
 objs/obj_statue.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_statue.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_statue.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_statue.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_statue.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_statue.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_statue.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_statue.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11352,14 +11814,15 @@ objs/obj_symbol.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_symbol.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_symbol.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_symbol.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_symbol.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_symbol.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_symbol.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_symbol.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_symbol.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_symbol.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_symbol.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_symbol.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_symbol.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_symbol.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_symbol.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_symbol.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_symbol.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_symbol.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_symbol.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_symbol.o: /usr/include/g++/stl_relops.h
 objs/obj_symbol.o: /usr/include/g++/stl_iterator.h
 objs/obj_symbol.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11375,7 +11838,8 @@ objs/obj_symbol.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_symbol.o: /usr/include/g++/stl_tree.h
 objs/obj_symbol.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_symbol.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_symbol.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_symbol.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_symbol.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_symbol.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_symbol.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_symbol.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11395,14 +11859,15 @@ objs/obj_table.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_table.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_table.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_table.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_table.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_table.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_table.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_table.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_table.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_table.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_table.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_table.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_table.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_table.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_table.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_table.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_table.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_table.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_table.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_table.o: /usr/include/g++/stl_relops.h
 objs/obj_table.o: /usr/include/g++/stl_iterator.h
 objs/obj_table.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11417,6 +11882,7 @@ objs/obj_table.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_table.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_table.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_table.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_table.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_table.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_table.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_table.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -11436,14 +11902,15 @@ objs/obj_tool.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_tool.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_tool.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_tool.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_tool.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_tool.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_tool.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_tool.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_tool.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_tool.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_tool.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_tool.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_tool.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_tool.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_tool.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_tool.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_tool.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_tool.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_tool.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_tool.o: /usr/include/g++/stl_relops.h
 objs/obj_tool.o: /usr/include/g++/stl_iterator.h
 objs/obj_tool.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11457,7 +11924,8 @@ objs/obj_tool.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_tool.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_tool.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_tool.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_tool.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_tool.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_tool.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_tool.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_tool.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_tool.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11476,14 +11944,15 @@ objs/obj_trap.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_trap.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_trap.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_trap.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_trap.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_trap.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_trap.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_trap.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_trap.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_trap.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_trap.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_trap.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_trap.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_trap.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_trap.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_trap.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_trap.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_trap.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_trap.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_trap.o: /usr/include/g++/stl_relops.h
 objs/obj_trap.o: /usr/include/g++/stl_iterator.h
 objs/obj_trap.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11497,7 +11966,8 @@ objs/obj_trap.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_trap.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_trap.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_trap.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_trap.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_trap.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_trap.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_trap.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_trap.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_trap.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11516,14 +11986,15 @@ objs/obj_trash.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_trash.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_trash.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_trash.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_trash.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_trash.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_trash.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_trash.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_trash.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_trash.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_trash.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_trash.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_trash.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_trash.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_trash.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_trash.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_trash.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_trash.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_trash.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_trash.o: /usr/include/g++/stl_relops.h
 objs/obj_trash.o: /usr/include/g++/stl_iterator.h
 objs/obj_trash.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11538,6 +12009,7 @@ objs/obj_trash.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_trash.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/obj_trash.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/obj_trash.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_trash.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_trash.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_trash.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/obj_trash.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -11557,15 +12029,16 @@ objs/obj_treasure.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_treasure.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_treasure.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_treasure.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_treasure.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_treasure.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_treasure.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_treasure.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_treasure.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_treasure.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_treasure.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_treasure.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_treasure.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_treasure.o: /usr/include/g++/stl_config.h
 objs/obj_treasure.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_treasure.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_treasure.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_treasure.o: /usr/include/g++/stl_relops.h
+objs/obj_treasure.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_treasure.o: /usr/include/g++/stl_iterator.h
 objs/obj_treasure.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_treasure.o: /usr/include/g++/stl_algobase.h
@@ -11583,6 +12056,7 @@ objs/obj_treasure.o: /usr/include/g++/stl_function.h
 objs/obj_treasure.o: /usr/include/g++/stl_map.h
 objs/obj_treasure.o: /usr/include/g++/stl_multimap.h
 objs/obj_treasure.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_treasure.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/obj_treasure.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/obj_treasure.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/obj_treasure.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -11603,14 +12077,15 @@ objs/obj_tree.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_tree.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_tree.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_tree.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_tree.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_tree.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_tree.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_tree.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_tree.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_tree.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_tree.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_tree.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_tree.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_tree.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_tree.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_tree.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_tree.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_tree.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_tree.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_tree.o: /usr/include/g++/stl_relops.h
 objs/obj_tree.o: /usr/include/g++/stl_iterator.h
 objs/obj_tree.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11624,7 +12099,8 @@ objs/obj_tree.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_tree.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_tree.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_tree.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_tree.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_tree.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_tree.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_tree.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_tree.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_tree.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11643,15 +12119,16 @@ objs/obj_vehicle.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_vehicle.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_vehicle.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_vehicle.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_vehicle.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_vehicle.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_vehicle.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_vehicle.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_vehicle.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_vehicle.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_vehicle.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_vehicle.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/obj_vehicle.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_vehicle.o: /usr/include/g++/stl_config.h
 objs/obj_vehicle.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/obj_vehicle.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_vehicle.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/obj_vehicle.o: /usr/include/g++/stl_relops.h
+objs/obj_vehicle.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/obj_vehicle.o: /usr/include/g++/stl_iterator.h
 objs/obj_vehicle.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/obj_vehicle.o: /usr/include/g++/stl_algobase.h
@@ -11668,16 +12145,17 @@ objs/obj_vehicle.o: /usr/include/g++/stl_tree.h
 objs/obj_vehicle.o: /usr/include/g++/stl_function.h
 objs/obj_vehicle.o: /usr/include/g++/stl_map.h
 objs/obj_vehicle.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_vehicle.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/obj_vehicle.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/obj_vehicle.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/obj_vehicle.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_vehicle.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/obj_vehicle.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/obj_vehicle.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/obj_vehicle.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/obj_vehicle.o: spec_mobs.h materials.h colorstring.h format.h
-objs/obj_vehicle.o: obj_vehicle.h obj_portal.h obj_seethru.h
+objs/obj_vehicle.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_vehicle.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/obj_vehicle.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_vehicle.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_vehicle.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_vehicle.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_vehicle.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_vehicle.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_vehicle.o: person.h monster.h account.h extern.h handler.h
+objs/obj_vehicle.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/obj_vehicle.o: format.h obj_vehicle.h obj_portal.h obj_seethru.h
 objs/obj_vial.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_vial.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_vial.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -11688,14 +12166,15 @@ objs/obj_vial.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_vial.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_vial.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_vial.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_vial.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_vial.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_vial.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_vial.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_vial.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_vial.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_vial.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_vial.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_vial.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_vial.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_vial.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_vial.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_vial.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_vial.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_vial.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_vial.o: /usr/include/g++/stl_relops.h
 objs/obj_vial.o: /usr/include/g++/stl_iterator.h
 objs/obj_vial.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11709,7 +12188,8 @@ objs/obj_vial.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_vial.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_vial.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_vial.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_vial.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_vial.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_vial.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_vial.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_vial.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_vial.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11728,14 +12208,15 @@ objs/obj_wand.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_wand.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_wand.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_wand.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_wand.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_wand.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_wand.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_wand.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_wand.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_wand.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_wand.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_wand.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_wand.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_wand.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_wand.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_wand.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_wand.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_wand.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_wand.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_wand.o: /usr/include/g++/stl_relops.h
 objs/obj_wand.o: /usr/include/g++/stl_iterator.h
 objs/obj_wand.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11749,7 +12230,8 @@ objs/obj_wand.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_wand.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_wand.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_wand.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_wand.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_wand.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_wand.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_wand.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_wand.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_wand.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11769,14 +12251,15 @@ objs/obj_window.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_window.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_window.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_window.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_window.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_window.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_window.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_window.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_window.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_window.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_window.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_window.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_window.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_window.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_window.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_window.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_window.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_window.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_window.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_window.o: /usr/include/g++/stl_relops.h
 objs/obj_window.o: /usr/include/g++/stl_iterator.h
 objs/obj_window.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11792,7 +12275,8 @@ objs/obj_window.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/obj_window.o: /usr/include/g++/stl_tree.h
 objs/obj_window.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_window.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_window.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_window.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_window.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_window.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_window.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_window.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11812,14 +12296,15 @@ objs/obj_worn.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/obj_worn.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/obj_worn.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/obj_worn.o: /usr/include/g++/cstring /usr/include/string.h
-objs/obj_worn.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_worn.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/obj_worn.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/obj_worn.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/obj_worn.o: /usr/include/errno.h /usr/include/g++/string
 objs/obj_worn.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/obj_worn.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/obj_worn.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/obj_worn.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/obj_worn.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/obj_worn.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_worn.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_worn.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_worn.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_worn.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/obj_worn.o: /usr/include/g++/stl_relops.h
 objs/obj_worn.o: /usr/include/g++/stl_iterator.h
 objs/obj_worn.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11833,7 +12318,8 @@ objs/obj_worn.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/obj_worn.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/obj_worn.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/obj_worn.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/obj_worn.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/obj_worn.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/obj_worn.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/obj_worn.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/obj_worn.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/obj_worn.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11853,14 +12339,15 @@ objs/offense.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/offense.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/offense.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/offense.o: /usr/include/g++/cstring /usr/include/string.h
-objs/offense.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/offense.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/offense.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/offense.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/offense.o: /usr/include/errno.h /usr/include/g++/string
 objs/offense.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/offense.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/offense.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/offense.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/offense.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/offense.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/offense.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/offense.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/offense.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/offense.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/offense.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/offense.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/offense.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -11873,7 +12360,8 @@ objs/offense.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/offense.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/offense.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/offense.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/offense.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/offense.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/offense.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/offense.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/offense.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/offense.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11900,14 +12388,15 @@ objs/oldlimbs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/oldlimbs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/oldlimbs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/oldlimbs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/oldlimbs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/oldlimbs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/oldlimbs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/oldlimbs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/oldlimbs.o: /usr/include/errno.h /usr/include/g++/string
 objs/oldlimbs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/oldlimbs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/oldlimbs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/oldlimbs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/oldlimbs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/oldlimbs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/oldlimbs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/oldlimbs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/oldlimbs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/oldlimbs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/oldlimbs.o: /usr/include/g++/stl_relops.h
 objs/oldlimbs.o: /usr/include/g++/stl_iterator.h
 objs/oldlimbs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -11921,7 +12410,8 @@ objs/oldlimbs.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/oldlimbs.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/oldlimbs.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/oldlimbs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/oldlimbs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/oldlimbs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/oldlimbs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/oldlimbs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/oldlimbs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/oldlimbs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11941,14 +12431,15 @@ objs/oldrace.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/oldrace.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/oldrace.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/oldrace.o: /usr/include/g++/cstring /usr/include/string.h
-objs/oldrace.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/oldrace.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/oldrace.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/oldrace.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/oldrace.o: /usr/include/errno.h /usr/include/g++/string
 objs/oldrace.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/oldrace.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/oldrace.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/oldrace.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/oldrace.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/oldrace.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/oldrace.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/oldrace.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/oldrace.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/oldrace.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/oldrace.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/oldrace.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/oldrace.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -11961,7 +12452,8 @@ objs/oldrace.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/oldrace.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/oldrace.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/oldrace.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/oldrace.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/oldrace.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/oldrace.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/oldrace.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/oldrace.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/oldrace.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -11969,7 +12461,7 @@ objs/oldrace.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/oldrace.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/oldrace.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/oldrace.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/oldrace.o: colorstring.h format.h /usr/include/g++/fstream.h
+objs/oldrace.o: colorstring.h format.h
 objs/opinion.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/opinion.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/opinion.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -11980,14 +12472,15 @@ objs/opinion.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/opinion.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/opinion.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/opinion.o: /usr/include/g++/cstring /usr/include/string.h
-objs/opinion.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/opinion.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/opinion.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/opinion.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/opinion.o: /usr/include/errno.h /usr/include/g++/string
 objs/opinion.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/opinion.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/opinion.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/opinion.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/opinion.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/opinion.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/opinion.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/opinion.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/opinion.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/opinion.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/opinion.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/opinion.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/opinion.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12000,7 +12493,8 @@ objs/opinion.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/opinion.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/opinion.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/opinion.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/opinion.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/opinion.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/opinion.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/opinion.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/opinion.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/opinion.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12031,6 +12525,7 @@ objs/other.o: /usr/include/g++/ctime /usr/include/time.h
 objs/other.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/other.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/other.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/other.o: /usr/include/g++/cmath /usr/include/math.h
 objs/other.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/other.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
 objs/other.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
@@ -12042,7 +12537,8 @@ objs/other.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/other.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/other.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/other.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/other.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/other.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/other.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/other.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/other.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/other.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12079,13 +12575,14 @@ objs/parse.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/parse.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/parse.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/parse.o: /usr/include/string.h /usr/include/stdarg.h
+objs/parse.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/parse.o: /usr/include/stddef.h /usr/include/math.h
 objs/parse.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/parse.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/parse.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/parse.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/parse.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/parse.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/parse.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/parse.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/parse.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/parse.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/parse.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/parse.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/parse.o: /usr/include/g++/stl_iterator.h
 objs/parse.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12099,7 +12596,8 @@ objs/parse.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/parse.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/parse.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/parse.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/parse.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/parse.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/parse.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/parse.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/parse.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/parse.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12118,14 +12616,15 @@ objs/pathfinder.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/pathfinder.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/pathfinder.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/pathfinder.o: /usr/include/g++/cstring /usr/include/string.h
-objs/pathfinder.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/pathfinder.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/pathfinder.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/pathfinder.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/pathfinder.o: /usr/include/errno.h /usr/include/g++/string
 objs/pathfinder.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/pathfinder.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/pathfinder.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/pathfinder.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/pathfinder.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/pathfinder.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/pathfinder.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/pathfinder.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/pathfinder.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/pathfinder.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/pathfinder.o: /usr/include/g++/stl_relops.h
 objs/pathfinder.o: /usr/include/g++/stl_iterator.h
 objs/pathfinder.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12141,7 +12640,8 @@ objs/pathfinder.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/pathfinder.o: /usr/include/g++/stl_tree.h
 objs/pathfinder.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/pathfinder.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/pathfinder.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/pathfinder.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/pathfinder.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/pathfinder.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/pathfinder.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/pathfinder.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12163,14 +12663,15 @@ objs/peelpk.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/peelpk.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/peelpk.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/peelpk.o: /usr/include/g++/cstring /usr/include/string.h
-objs/peelpk.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/peelpk.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/peelpk.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/peelpk.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/peelpk.o: /usr/include/errno.h /usr/include/g++/string
 objs/peelpk.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/peelpk.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/peelpk.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/peelpk.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/peelpk.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/peelpk.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/peelpk.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/peelpk.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/peelpk.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/peelpk.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/peelpk.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/peelpk.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/peelpk.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12183,7 +12684,8 @@ objs/peelpk.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/peelpk.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/peelpk.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/peelpk.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/peelpk.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/peelpk.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/peelpk.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/peelpk.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/peelpk.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/peelpk.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12203,14 +12705,15 @@ objs/periodic.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/periodic.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/periodic.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/periodic.o: /usr/include/g++/cstring /usr/include/string.h
-objs/periodic.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/periodic.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/periodic.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/periodic.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/periodic.o: /usr/include/errno.h /usr/include/g++/string
 objs/periodic.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/periodic.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/periodic.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/periodic.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/periodic.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/periodic.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/periodic.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/periodic.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/periodic.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/periodic.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/periodic.o: /usr/include/g++/stl_relops.h
 objs/periodic.o: /usr/include/g++/stl_iterator.h
 objs/periodic.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12224,7 +12727,8 @@ objs/periodic.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/periodic.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/periodic.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/periodic.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/periodic.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/periodic.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/periodic.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/periodic.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/periodic.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/periodic.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12247,27 +12751,29 @@ objs/pets.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/pets.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/pets.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/pets.o: /usr/include/g++/cstring /usr/include/string.h
-objs/pets.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/pets.o: /usr/include/errno.h /usr/include/g++/string
-objs/pets.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/pets.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/pets.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/pets.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/pets.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/pets.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/pets.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/pets.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/pets.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/pets.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/pets.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/pets.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/pets.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/pets.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/pets.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/pets.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/pets.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/pets.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/pets.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/pets.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/pets.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/pets.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/pets.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/pets.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/pets.o: /usr/include/g++/new /usr/include/g++/exception
+objs/pets.o: /usr/include/g++/stl_construct.h
 objs/pets.o: /usr/include/g++/stl_uninitialized.h
 objs/pets.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/pets.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/pets.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/pets.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/pets.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/pets.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/pets.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/pets.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/pets.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/pets.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12286,14 +12792,15 @@ objs/physics.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/physics.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/physics.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/physics.o: /usr/include/g++/cstring /usr/include/string.h
-objs/physics.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/physics.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/physics.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/physics.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/physics.o: /usr/include/errno.h /usr/include/g++/string
 objs/physics.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/physics.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/physics.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/physics.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/physics.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/physics.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/physics.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/physics.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/physics.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/physics.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/physics.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/physics.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/physics.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12306,7 +12813,8 @@ objs/physics.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/physics.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/physics.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/physics.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/physics.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/physics.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/physics.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/physics.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/physics.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/physics.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12328,15 +12836,15 @@ objs/player_data.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/player_data.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/player_data.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/player_data.o: /usr/include/string.h /usr/include/stdarg.h
+objs/player_data.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/player_data.o: /usr/include/stddef.h /usr/include/math.h
 objs/player_data.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/player_data.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/player_data.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/player_data.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/player_data.o: /usr/include/g++/stl_config.h
+objs/player_data.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/player_data.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/player_data.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/player_data.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/player_data.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/player_data.o: /usr/include/g++/stl_relops.h
+objs/player_data.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/player_data.o: /usr/include/g++/stl_iterator.h
 objs/player_data.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/player_data.o: /usr/include/g++/stl_algobase.h
@@ -12353,16 +12861,17 @@ objs/player_data.o: /usr/include/g++/stl_tree.h
 objs/player_data.o: /usr/include/g++/stl_function.h
 objs/player_data.o: /usr/include/g++/stl_map.h
 objs/player_data.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/player_data.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/player_data.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/player_data.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/player_data.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/player_data.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/player_data.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/player_data.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/player_data.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/player_data.o: spec_mobs.h materials.h colorstring.h format.h shop.h
-objs/player_data.o: mail.h statistics.h combat.h database.h
+objs/player_data.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/player_data.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/player_data.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/player_data.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/player_data.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/player_data.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/player_data.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/player_data.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/player_data.o: person.h monster.h account.h extern.h handler.h
+objs/player_data.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/player_data.o: format.h shop.h mail.h statistics.h combat.h database.h
 objs/player_data.o: /usr/local/include/libpq-fe.h
 objs/player_data.o: /usr/local/include/postgres_ext.h
 objs/race.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
@@ -12375,27 +12884,29 @@ objs/race.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/race.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/race.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/race.o: /usr/include/g++/cstring /usr/include/string.h
-objs/race.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/race.o: /usr/include/errno.h /usr/include/g++/string
-objs/race.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/race.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/race.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/race.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/race.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/race.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/race.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/race.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/race.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/race.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/race.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/race.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/race.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/race.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/race.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/race.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/race.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/race.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/race.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/race.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/race.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/race.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/race.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/race.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/race.o: /usr/include/g++/new /usr/include/g++/exception
+objs/race.o: /usr/include/g++/stl_construct.h
 objs/race.o: /usr/include/g++/stl_uninitialized.h
 objs/race.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/race.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/race.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/race.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/race.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/race.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/race.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/race.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/race.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/race.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12404,7 +12915,7 @@ objs/race.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/race.o: being.h person.h monster.h account.h extern.h handler.h
 objs/race.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/race.o: format.h obj_player_corpse.h obj_base_corpse.h
-objs/race.o: obj_base_container.h obj_corpse.h /usr/include/g++/fstream.h
+objs/race.o: obj_base_container.h obj_corpse.h
 objs/range.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/range.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/range.o: /usr/include/math.h /usr/include/sys/cdefs.h
@@ -12437,7 +12948,8 @@ objs/range.o: /usr/include/g++/stl_iterator.h
 objs/range.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/range.o: /usr/include/g++/stl_uninitialized.h
 objs/range.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
-objs/range.o: /usr/include/g++/iostream /usr/include/g++/sstream sstring.h
+objs/range.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/range.o: /usr/include/g++/fstream /usr/include/g++/fstream.h sstring.h
 objs/range.o: low.h enum.h spells.h structs.h parse.h immunity.h discipline.h
 objs/range.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
 objs/range.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h stats.h
@@ -12464,27 +12976,29 @@ objs/rent.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/rent.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/rent.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/rent.o: /usr/include/g++/cstring /usr/include/string.h
-objs/rent.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/rent.o: /usr/include/errno.h /usr/include/g++/string
-objs/rent.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/rent.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/rent.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/rent.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/rent.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/rent.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/rent.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/rent.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/rent.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/rent.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/rent.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/rent.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/rent.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/rent.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/rent.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/rent.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/rent.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/rent.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/rent.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/rent.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/rent.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/rent.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/rent.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/rent.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/rent.o: /usr/include/g++/new /usr/include/g++/exception
+objs/rent.o: /usr/include/g++/stl_construct.h
 objs/rent.o: /usr/include/g++/stl_uninitialized.h
 objs/rent.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/rent.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/rent.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/rent.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/rent.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/rent.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/rent.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/rent.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/rent.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/rent.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12511,14 +13025,15 @@ objs/repair.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/repair.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/repair.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/repair.o: /usr/include/g++/cstring /usr/include/string.h
-objs/repair.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/repair.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/repair.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/repair.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/repair.o: /usr/include/errno.h /usr/include/g++/string
 objs/repair.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/repair.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/repair.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/repair.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/repair.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/repair.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/repair.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/repair.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/repair.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/repair.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/repair.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/repair.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/repair.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12531,7 +13046,8 @@ objs/repair.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/repair.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/repair.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/repair.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/repair.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/repair.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/repair.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/repair.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/repair.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/repair.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12552,14 +13068,15 @@ objs/response.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/response.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/response.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/response.o: /usr/include/g++/cstring /usr/include/string.h
-objs/response.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/response.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/response.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/response.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/response.o: /usr/include/errno.h /usr/include/g++/string
 objs/response.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/response.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/response.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/response.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/response.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/response.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/response.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/response.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/response.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/response.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/response.o: /usr/include/g++/stl_relops.h
 objs/response.o: /usr/include/g++/stl_iterator.h
 objs/response.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12573,7 +13090,8 @@ objs/response.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/response.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/response.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/response.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/response.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/response.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/response.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/response.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/response.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/response.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12594,19 +13112,19 @@ objs/rewrite_obj_file.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/rewrite_obj_file.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/rewrite_obj_file.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/rewrite_obj_file.o: /usr/include/string.h /usr/include/stdarg.h
+objs/rewrite_obj_file.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/rewrite_obj_file.o: /usr/include/stddef.h /usr/include/math.h
 objs/rewrite_obj_file.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/rewrite_obj_file.o: /usr/include/g++/string
 objs/rewrite_obj_file.o: /usr/include/g++/std/bastring.h
-objs/rewrite_obj_file.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/rewrite_obj_file.o: /usr/include/g++/cstddef
 objs/rewrite_obj_file.o: /usr/include/g++/std/straits.h
 objs/rewrite_obj_file.o: /usr/include/g++/alloc.h
 objs/rewrite_obj_file.o: /usr/include/g++/stl_config.h
 objs/rewrite_obj_file.o: /usr/include/g++/stl_alloc.h
 objs/rewrite_obj_file.o: /usr/include/g++/iostream.h
 objs/rewrite_obj_file.o: /usr/include/g++/streambuf.h
-objs/rewrite_obj_file.o: /usr/include/g++/libio.h
-objs/rewrite_obj_file.o: /usr/include/g++/_G_config.h
-objs/rewrite_obj_file.o: /usr/include/g++/iterator
+objs/rewrite_obj_file.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/rewrite_obj_file.o: /usr/include/g++/stl_relops.h
 objs/rewrite_obj_file.o: /usr/include/g++/stl_iterator.h
 objs/rewrite_obj_file.o: /usr/include/g++/std/bastring.cc
@@ -12626,6 +13144,7 @@ objs/rewrite_obj_file.o: /usr/include/g++/stl_function.h
 objs/rewrite_obj_file.o: /usr/include/g++/stl_map.h
 objs/rewrite_obj_file.o: /usr/include/g++/stl_multimap.h
 objs/rewrite_obj_file.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/rewrite_obj_file.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/rewrite_obj_file.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/rewrite_obj_file.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/rewrite_obj_file.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -12647,14 +13166,15 @@ objs/riding.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/riding.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/riding.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/riding.o: /usr/include/g++/cstring /usr/include/string.h
-objs/riding.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/riding.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/riding.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/riding.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/riding.o: /usr/include/errno.h /usr/include/g++/string
 objs/riding.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/riding.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/riding.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/riding.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/riding.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/riding.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/riding.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/riding.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/riding.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/riding.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/riding.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/riding.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/riding.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12667,7 +13187,8 @@ objs/riding.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/riding.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/riding.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/riding.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/riding.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/riding.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/riding.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/riding.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/riding.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/riding.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12687,27 +13208,29 @@ objs/room.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/room.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/room.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/room.o: /usr/include/g++/cstring /usr/include/string.h
-objs/room.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/room.o: /usr/include/errno.h /usr/include/g++/string
-objs/room.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/room.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/room.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/room.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/room.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/room.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/room.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/room.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/room.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/room.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/room.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/room.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/room.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/room.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/room.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/room.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/room.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/room.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/room.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/room.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/room.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/room.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/room.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/room.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/room.o: /usr/include/g++/new /usr/include/g++/exception
+objs/room.o: /usr/include/g++/stl_construct.h
 objs/room.o: /usr/include/g++/stl_uninitialized.h
 objs/room.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/room.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/room.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/room.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/room.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/room.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/room.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/room.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/room.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/room.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12750,7 +13273,8 @@ objs/shop.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/shop.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/shop.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/shop.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/shop.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/shop.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/shop.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/shop.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/shop.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/shop.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12775,15 +13299,16 @@ objs/shoplog.cgi.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/shoplog.cgi.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/shoplog.cgi.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/shoplog.cgi.o: /usr/include/g++/cstring /usr/include/string.h
-objs/shoplog.cgi.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/shoplog.cgi.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/shoplog.cgi.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/shoplog.cgi.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/shoplog.cgi.o: /usr/include/errno.h /usr/include/g++/string
 objs/shoplog.cgi.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/shoplog.cgi.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/shoplog.cgi.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/shoplog.cgi.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_config.h
 objs/shoplog.cgi.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/shoplog.cgi.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/shoplog.cgi.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/shoplog.cgi.o: /usr/include/g++/stl_relops.h
+objs/shoplog.cgi.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/shoplog.cgi.o: /usr/include/g++/stl_iterator.h
 objs/shoplog.cgi.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/shoplog.cgi.o: /usr/include/g++/stl_algobase.h
@@ -12800,23 +13325,23 @@ objs/shoplog.cgi.o: /usr/include/g++/stl_tree.h
 objs/shoplog.cgi.o: /usr/include/g++/stl_function.h
 objs/shoplog.cgi.o: /usr/include/g++/stl_map.h
 objs/shoplog.cgi.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/shoplog.cgi.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/shoplog.cgi.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/shoplog.cgi.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/shoplog.cgi.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/shoplog.cgi.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/shoplog.cgi.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/shoplog.cgi.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/shoplog.cgi.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/shoplog.cgi.o: spec_mobs.h materials.h colorstring.h format.h database.h
-objs/shoplog.cgi.o: /usr/local/include/libpq-fe.h
+objs/shoplog.cgi.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/shoplog.cgi.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/shoplog.cgi.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/shoplog.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/shoplog.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/shoplog.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/shoplog.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/shoplog.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/shoplog.cgi.o: person.h monster.h account.h extern.h handler.h
+objs/shoplog.cgi.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/shoplog.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
 objs/shoplog.cgi.o: /usr/local/include/postgres_ext.h shop.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/FormEntry.h
 objs/shoplog.cgi.o: /usr/include/g++/climits /usr/include/g++/cfloat
 objs/shoplog.cgi.o: /usr/include/float.h /usr/local/include/cgicc/CgiUtils.h
-objs/shoplog.cgi.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/FormFile.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiInput.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
@@ -12842,14 +13367,15 @@ objs/shopowned.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/shopowned.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/shopowned.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/shopowned.o: /usr/include/g++/cstring /usr/include/string.h
-objs/shopowned.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/shopowned.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/shopowned.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/shopowned.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/shopowned.o: /usr/include/errno.h /usr/include/g++/string
 objs/shopowned.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/shopowned.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/shopowned.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/shopowned.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/shopowned.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/shopowned.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/shopowned.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/shopowned.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/shopowned.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/shopowned.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/shopowned.o: /usr/include/g++/stl_relops.h
 objs/shopowned.o: /usr/include/g++/stl_iterator.h
 objs/shopowned.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12864,6 +13390,7 @@ objs/shopowned.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/shopowned.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/shopowned.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/shopowned.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/shopowned.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/shopowned.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/shopowned.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/shopowned.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -12886,27 +13413,29 @@ objs/show.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/show.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/show.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/show.o: /usr/include/g++/cstring /usr/include/string.h
-objs/show.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/show.o: /usr/include/errno.h /usr/include/g++/string
-objs/show.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/show.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/show.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/show.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/show.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/show.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/show.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/show.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/show.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/show.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/show.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/show.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/show.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/show.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/show.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/show.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/show.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/show.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/show.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/show.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/show.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/show.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/show.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/show.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/show.o: /usr/include/g++/new /usr/include/g++/exception
+objs/show.o: /usr/include/g++/stl_construct.h
 objs/show.o: /usr/include/g++/stl_uninitialized.h
 objs/show.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/show.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/show.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/show.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/show.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/show.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/show.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/show.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/show.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/show.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -12933,14 +13462,15 @@ objs/signals.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/signals.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/signals.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/signals.o: /usr/include/g++/cstring /usr/include/string.h
-objs/signals.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/signals.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/signals.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/signals.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/signals.o: /usr/include/errno.h /usr/include/g++/string
 objs/signals.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/signals.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/signals.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/signals.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/signals.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/signals.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/signals.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/signals.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/signals.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/signals.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/signals.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/signals.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/signals.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -12953,7 +13483,8 @@ objs/signals.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/signals.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/signals.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/signals.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/signals.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/signals.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/signals.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/signals.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/signals.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/signals.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -12972,14 +13503,15 @@ objs/skill_dam.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/skill_dam.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/skill_dam.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/skill_dam.o: /usr/include/g++/cstring /usr/include/string.h
-objs/skill_dam.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/skill_dam.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/skill_dam.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/skill_dam.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/skill_dam.o: /usr/include/errno.h /usr/include/g++/string
 objs/skill_dam.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/skill_dam.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/skill_dam.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/skill_dam.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/skill_dam.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/skill_dam.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/skill_dam.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/skill_dam.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/skill_dam.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/skill_dam.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/skill_dam.o: /usr/include/g++/stl_relops.h
 objs/skill_dam.o: /usr/include/g++/stl_iterator.h
 objs/skill_dam.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -12994,6 +13526,7 @@ objs/skill_dam.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/skill_dam.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/skill_dam.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/skill_dam.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/skill_dam.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/skill_dam.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/skill_dam.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/skill_dam.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -13013,14 +13546,15 @@ objs/skills.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/skills.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/skills.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/skills.o: /usr/include/g++/cstring /usr/include/string.h
-objs/skills.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/skills.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/skills.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/skills.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/skills.o: /usr/include/errno.h /usr/include/g++/string
 objs/skills.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/skills.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/skills.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/skills.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/skills.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/skills.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/skills.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/skills.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/skills.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/skills.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/skills.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/skills.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/skills.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -13033,7 +13567,8 @@ objs/skills.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/skills.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/skills.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/skills.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/skills.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/skills.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/skills.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/skills.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/skills.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/skills.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -13083,13 +13618,14 @@ objs/socket.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/socket.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/socket.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/socket.o: /usr/include/g++/cstring /usr/include/string.h
+objs/socket.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/socket.o: /usr/include/stddef.h /usr/include/math.h
 objs/socket.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/socket.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/socket.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/socket.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/socket.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/socket.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/socket.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/socket.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/socket.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/socket.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/socket.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/socket.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/socket.o: /usr/include/g++/stl_iterator.h
 objs/socket.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -13102,7 +13638,8 @@ objs/socket.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/socket.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/socket.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/socket.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/socket.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/socket.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/socket.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/socket.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/socket.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/socket.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -13126,14 +13663,15 @@ objs/sound.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sound.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sound.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sound.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sound.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sound.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sound.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sound.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sound.o: /usr/include/errno.h /usr/include/g++/string
 objs/sound.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sound.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sound.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sound.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sound.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sound.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sound.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sound.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sound.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sound.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sound.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/sound.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/sound.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -13146,7 +13684,8 @@ objs/sound.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/sound.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/sound.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sound.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sound.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sound.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sound.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sound.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/sound.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/sound.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -13165,14 +13704,15 @@ objs/spec_mobs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spec_mobs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spec_mobs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_mobs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spec_mobs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spec_mobs.o: /usr/include/errno.h /usr/include/g++/string
 objs/spec_mobs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spec_mobs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spec_mobs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spec_mobs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spec_mobs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spec_mobs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spec_mobs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spec_mobs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spec_mobs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spec_mobs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -13187,6 +13727,7 @@ objs/spec_mobs.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spec_mobs.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/spec_mobs.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/spec_mobs.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_mobs.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -13210,7 +13751,6 @@ objs/spec_mobs.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
 objs/spec_mobs.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/spec_mobs.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/spec_mobs.o: game_drawpoker.h corporation.h shopowned.h pathfinder.h
-objs/spec_mobs.o: /usr/include/g++/fstream.h
 objs/spec_mobs_archer.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_archer.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_archer.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -13223,19 +13763,19 @@ objs/spec_mobs_archer.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_archer.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_archer.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_archer.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_archer.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_archer.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_archer.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_archer.o: /usr/include/g++/string
 objs/spec_mobs_archer.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_archer.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_archer.o: /usr/include/g++/cstddef
 objs/spec_mobs_archer.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_archer.o: /usr/include/g++/alloc.h
 objs/spec_mobs_archer.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_archer.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_archer.o: /usr/include/g++/iostream.h
 objs/spec_mobs_archer.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_archer.o: /usr/include/g++/libio.h
-objs/spec_mobs_archer.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_archer.o: /usr/include/g++/iterator
+objs/spec_mobs_archer.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs_archer.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_archer.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_archer.o: /usr/include/g++/std/bastring.cc
@@ -13255,6 +13795,7 @@ objs/spec_mobs_archer.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_archer.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_archer.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_archer.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_archer.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_archer.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_archer.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_archer.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -13284,11 +13825,13 @@ objs/spec_mobs_bounty_hunter.o: /usr/include/g++/cassert
 objs/spec_mobs_bounty_hunter.o: /usr/include/assert.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/cstring
 objs/spec_mobs_bounty_hunter.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/cmath
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/string
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/cstddef
-objs/spec_mobs_bounty_hunter.o: /usr/include/stddef.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/alloc.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_config.h
@@ -13296,7 +13839,6 @@ objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/iostream.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/libio.h
-objs/spec_mobs_bounty_hunter.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/iterator
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_iterator.h
@@ -13320,7 +13862,9 @@ objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++/iostream
-objs/spec_mobs_bounty_hunter.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/sstream
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/fstream
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_bounty_hunter.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_bounty_hunter.o: discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_bounty_hunter.o: cmd_dissect.h client.h response.h faction.h
@@ -13349,10 +13893,13 @@ objs/spec_mobs_cityguard.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_cityguard.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_cityguard.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_cityguard.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_cityguard.o: /usr/include/g++/cmath
+objs/spec_mobs_cityguard.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_cityguard.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/string
 objs/spec_mobs_cityguard.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_cityguard.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_cityguard.o: /usr/include/g++/cstddef
 objs/spec_mobs_cityguard.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/alloc.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/stl_config.h
@@ -13360,7 +13907,6 @@ objs/spec_mobs_cityguard.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/iostream.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/libio.h
-objs/spec_mobs_cityguard.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/iterator
 objs/spec_mobs_cityguard.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/stl_iterator.h
@@ -13383,7 +13929,8 @@ objs/spec_mobs_cityguard.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_cityguard.o: /usr/include/g++/iostream
-objs/spec_mobs_cityguard.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_mobs_cityguard.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_mobs_cityguard.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/spec_mobs_cityguard.o: spells.h structs.h parse.h immunity.h
 objs/spec_mobs_cityguard.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_mobs_cityguard.o: client.h response.h faction.h comm.h toggle.h
@@ -13407,19 +13954,19 @@ objs/spec_mobs_coroner.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_coroner.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_coroner.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_coroner.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_coroner.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_coroner.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_coroner.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_coroner.o: /usr/include/g++/string
 objs/spec_mobs_coroner.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_coroner.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_coroner.o: /usr/include/g++/cstddef
 objs/spec_mobs_coroner.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_coroner.o: /usr/include/g++/alloc.h
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_coroner.o: /usr/include/g++/iostream.h
 objs/spec_mobs_coroner.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_coroner.o: /usr/include/g++/libio.h
-objs/spec_mobs_coroner.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_coroner.o: /usr/include/g++/iterator
+objs/spec_mobs_coroner.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_coroner.o: /usr/include/g++/std/bastring.cc
@@ -13439,6 +13986,7 @@ objs/spec_mobs_coroner.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_coroner.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_coroner.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_coroner.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_coroner.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_coroner.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_coroner.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -13472,12 +14020,15 @@ objs/spec_mobs_corporate_assistant.o: /usr/include/assert.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cstring
 objs/spec_mobs_corporate_assistant.o: /usr/include/string.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/stdarg.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cmath
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/stddef.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/math.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cerrno
 objs/spec_mobs_corporate_assistant.o: /usr/include/errno.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/string
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cstddef
-objs/spec_mobs_corporate_assistant.o: /usr/include/stddef.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/alloc.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_config.h
@@ -13485,7 +14036,6 @@ objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iostream.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/libio.h
-objs/spec_mobs_corporate_assistant.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iterator
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_iterator.h
@@ -13510,7 +14060,9 @@ objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iostream
-objs/spec_mobs_corporate_assistant.o: /usr/include/g++/sstream sstring.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/sstream
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/fstream
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/fstream.h sstring.h
 objs/spec_mobs_corporate_assistant.o: low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_corporate_assistant.o: immunity.h discipline.h spell2.h db.h
 objs/spec_mobs_corporate_assistant.o: ansi.h cmd_dissect.h client.h
@@ -13542,10 +14094,13 @@ objs/spec_mobs_doppleganger.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_doppleganger.o: /usr/include/runetype.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_doppleganger.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/spec_mobs_doppleganger.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_mobs_doppleganger.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_doppleganger.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_doppleganger.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_doppleganger.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_doppleganger.o: /usr/include/g++/string
 objs/spec_mobs_doppleganger.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_doppleganger.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_doppleganger.o: /usr/include/g++/cstddef
 objs/spec_mobs_doppleganger.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/alloc.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_config.h
@@ -13553,7 +14108,6 @@ objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/iostream.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/libio.h
-objs/spec_mobs_doppleganger.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/iterator
 objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_iterator.h
@@ -13577,7 +14131,9 @@ objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++/iostream
-objs/spec_mobs_doppleganger.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_doppleganger.o: /usr/include/g++/sstream
+objs/spec_mobs_doppleganger.o: /usr/include/g++/fstream
+objs/spec_mobs_doppleganger.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_doppleganger.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_doppleganger.o: discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_doppleganger.o: cmd_dissect.h client.h response.h faction.h
@@ -13610,12 +14166,14 @@ objs/spec_mobs_earthquake_digger.o: /usr/include/assert.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/cstring
 objs/spec_mobs_earthquake_digger.o: /usr/include/string.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/stdarg.h
+objs/spec_mobs_earthquake_digger.o: /usr/include/g++/cmath
+objs/spec_mobs_earthquake_digger.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_earthquake_digger.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/cerrno
 objs/spec_mobs_earthquake_digger.o: /usr/include/errno.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/string
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/cstddef
-objs/spec_mobs_earthquake_digger.o: /usr/include/stddef.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/alloc.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_config.h
@@ -13623,7 +14181,6 @@ objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/iostream.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/libio.h
-objs/spec_mobs_earthquake_digger.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/iterator
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_iterator.h
@@ -13648,8 +14205,10 @@ objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++/iostream
-objs/spec_mobs_earthquake_digger.o: /usr/include/g++/sstream sstring.h low.h
-objs/spec_mobs_earthquake_digger.o: enum.h spells.h structs.h parse.h
+objs/spec_mobs_earthquake_digger.o: /usr/include/g++/sstream
+objs/spec_mobs_earthquake_digger.o: /usr/include/g++/fstream
+objs/spec_mobs_earthquake_digger.o: /usr/include/g++/fstream.h sstring.h
+objs/spec_mobs_earthquake_digger.o: low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_earthquake_digger.o: immunity.h discipline.h spell2.h db.h
 objs/spec_mobs_earthquake_digger.o: ansi.h cmd_dissect.h client.h response.h
 objs/spec_mobs_earthquake_digger.o: faction.h comm.h toggle.h wiz_powers.h
@@ -13674,19 +14233,19 @@ objs/spec_mobs_fireman.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_fireman.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_fireman.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_fireman.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_fireman.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_fireman.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_fireman.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_fireman.o: /usr/include/g++/string
 objs/spec_mobs_fireman.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_fireman.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_fireman.o: /usr/include/g++/cstddef
 objs/spec_mobs_fireman.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_fireman.o: /usr/include/g++/alloc.h
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_fireman.o: /usr/include/g++/iostream.h
 objs/spec_mobs_fireman.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_fireman.o: /usr/include/g++/libio.h
-objs/spec_mobs_fireman.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_fireman.o: /usr/include/g++/iterator
+objs/spec_mobs_fireman.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_fireman.o: /usr/include/g++/std/bastring.cc
@@ -13706,6 +14265,7 @@ objs/spec_mobs_fireman.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_fireman.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_fireman.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_fireman.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_fireman.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_fireman.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_fireman.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -13732,10 +14292,13 @@ objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/runetype.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_flaskPeddler.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/spec_mobs_flaskPeddler.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_mobs_flaskPeddler.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_flaskPeddler.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/string
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/cstddef
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/alloc.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_config.h
@@ -13743,7 +14306,6 @@ objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/iostream.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/libio.h
-objs/spec_mobs_flaskPeddler.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/iterator
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_iterator.h
@@ -13767,7 +14329,9 @@ objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/g++/iostream
-objs/spec_mobs_flaskPeddler.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/sstream
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/fstream
+objs/spec_mobs_flaskPeddler.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_flaskPeddler.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_flaskPeddler.o: discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_flaskPeddler.o: cmd_dissect.h client.h response.h faction.h
@@ -13791,19 +14355,19 @@ objs/spec_mobs_goring.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_goring.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_goring.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_goring.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_goring.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_goring.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_goring.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_goring.o: /usr/include/g++/string
 objs/spec_mobs_goring.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_goring.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_goring.o: /usr/include/g++/cstddef
 objs/spec_mobs_goring.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_goring.o: /usr/include/g++/alloc.h
 objs/spec_mobs_goring.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_goring.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_goring.o: /usr/include/g++/iostream.h
 objs/spec_mobs_goring.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_goring.o: /usr/include/g++/libio.h
-objs/spec_mobs_goring.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_goring.o: /usr/include/g++/iterator
+objs/spec_mobs_goring.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs_goring.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_goring.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_goring.o: /usr/include/g++/std/bastring.cc
@@ -13823,6 +14387,7 @@ objs/spec_mobs_goring.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_goring.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_goring.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_goring.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_goring.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_goring.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_goring.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_goring.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -13849,11 +14414,13 @@ objs/spec_mobs_holdem_player.o: /usr/include/g++/cassert
 objs/spec_mobs_holdem_player.o: /usr/include/assert.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/cstring
 objs/spec_mobs_holdem_player.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cmath
+objs/spec_mobs_holdem_player.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_holdem_player.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/string
 objs/spec_mobs_holdem_player.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/cstddef
-objs/spec_mobs_holdem_player.o: /usr/include/stddef.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/alloc.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_config.h
@@ -13861,7 +14428,6 @@ objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/iostream.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/libio.h
-objs/spec_mobs_holdem_player.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/iterator
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_iterator.h
@@ -13885,7 +14451,9 @@ objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/iostream
-objs/spec_mobs_holdem_player.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/sstream
+objs/spec_mobs_holdem_player.o: /usr/include/g++/fstream
+objs/spec_mobs_holdem_player.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_holdem_player.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_holdem_player.o: discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_holdem_player.o: cmd_dissect.h client.h response.h faction.h
@@ -13919,10 +14487,13 @@ objs/spec_mobs_limbDispo.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_limbDispo.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_limbDispo.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_limbDispo.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cmath
+objs/spec_mobs_limbDispo.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_limbDispo.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/string
 objs/spec_mobs_limbDispo.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_limbDispo.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cstddef
 objs/spec_mobs_limbDispo.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/alloc.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_config.h
@@ -13930,7 +14501,6 @@ objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/iostream.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/libio.h
-objs/spec_mobs_limbDispo.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/iterator
 objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_iterator.h
@@ -13953,7 +14523,8 @@ objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_limbDispo.o: /usr/include/g++/iostream
-objs/spec_mobs_limbDispo.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_mobs_limbDispo.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/spec_mobs_limbDispo.o: spells.h structs.h parse.h immunity.h
 objs/spec_mobs_limbDispo.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_mobs_limbDispo.o: client.h response.h faction.h comm.h toggle.h
@@ -13986,12 +14557,14 @@ objs/spec_mobs_lottery_redeemer.o: /usr/include/assert.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/cstring
 objs/spec_mobs_lottery_redeemer.o: /usr/include/string.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/stdarg.h
+objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/cmath
+objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_lottery_redeemer.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/cerrno
 objs/spec_mobs_lottery_redeemer.o: /usr/include/errno.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/string
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/cstddef
-objs/spec_mobs_lottery_redeemer.o: /usr/include/stddef.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/alloc.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_config.h
@@ -13999,7 +14572,6 @@ objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/iostream.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/libio.h
-objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/iterator
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_iterator.h
@@ -14024,7 +14596,9 @@ objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/iostream
-objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/sstream
+objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/fstream
+objs/spec_mobs_lottery_redeemer.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_lottery_redeemer.o: enum.h spells.h structs.h parse.h
 objs/spec_mobs_lottery_redeemer.o: immunity.h discipline.h spell2.h db.h
 objs/spec_mobs_lottery_redeemer.o: ansi.h cmd_dissect.h client.h response.h
@@ -14052,10 +14626,13 @@ objs/spec_mobs_money_train.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_money_train.o: /usr/include/runetype.h
 objs/spec_mobs_money_train.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_money_train.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_money_train.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/spec_mobs_money_train.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_mobs_money_train.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_money_train.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_money_train.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_money_train.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_money_train.o: /usr/include/g++/string
 objs/spec_mobs_money_train.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_money_train.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_money_train.o: /usr/include/g++/cstddef
 objs/spec_mobs_money_train.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_money_train.o: /usr/include/g++/alloc.h
 objs/spec_mobs_money_train.o: /usr/include/g++/stl_config.h
@@ -14063,7 +14640,6 @@ objs/spec_mobs_money_train.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_money_train.o: /usr/include/g++/iostream.h
 objs/spec_mobs_money_train.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_money_train.o: /usr/include/g++/libio.h
-objs/spec_mobs_money_train.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_money_train.o: /usr/include/g++/iterator
 objs/spec_mobs_money_train.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_money_train.o: /usr/include/g++/stl_iterator.h
@@ -14087,8 +14663,10 @@ objs/spec_mobs_money_train.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_money_train.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_money_train.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_money_train.o: /usr/include/g++/iostream
-objs/spec_mobs_money_train.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/spec_mobs_money_train.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_money_train.o: /usr/include/g++/sstream
+objs/spec_mobs_money_train.o: /usr/include/g++/fstream
+objs/spec_mobs_money_train.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/spec_mobs_money_train.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_money_train.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_mobs_money_train.o: client.h response.h faction.h comm.h toggle.h
 objs/spec_mobs_money_train.o: wiz_powers.h cmd_message.h stats.h limbs.h
@@ -14109,17 +14687,18 @@ objs/spec_mobs_posse.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spec_mobs_posse.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spec_mobs_posse.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_posse.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_posse.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_mobs_posse.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_posse.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spec_mobs_posse.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spec_mobs_posse.o: /usr/include/errno.h /usr/include/g++/string
 objs/spec_mobs_posse.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_posse.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_posse.o: /usr/include/g++/cstddef
 objs/spec_mobs_posse.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_posse.o: /usr/include/g++/alloc.h
 objs/spec_mobs_posse.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_posse.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_posse.o: /usr/include/g++/iostream.h
 objs/spec_mobs_posse.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spec_mobs_posse.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_posse.o: /usr/include/g++/iterator
 objs/spec_mobs_posse.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_posse.o: /usr/include/g++/stl_iterator.h
@@ -14140,6 +14719,7 @@ objs/spec_mobs_posse.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_posse.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_posse.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_posse.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_posse.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_posse.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_posse.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_posse.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -14163,19 +14743,19 @@ objs/spec_mobs_postman.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_postman.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_mobs_postman.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_mobs_postman.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_postman.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_postman.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_postman.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_postman.o: /usr/include/g++/string
 objs/spec_mobs_postman.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_postman.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_postman.o: /usr/include/g++/cstddef
 objs/spec_mobs_postman.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_postman.o: /usr/include/g++/alloc.h
 objs/spec_mobs_postman.o: /usr/include/g++/stl_config.h
 objs/spec_mobs_postman.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_postman.o: /usr/include/g++/iostream.h
 objs/spec_mobs_postman.o: /usr/include/g++/streambuf.h
-objs/spec_mobs_postman.o: /usr/include/g++/libio.h
-objs/spec_mobs_postman.o: /usr/include/g++/_G_config.h
-objs/spec_mobs_postman.o: /usr/include/g++/iterator
+objs/spec_mobs_postman.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_mobs_postman.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_postman.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_postman.o: /usr/include/g++/std/bastring.cc
@@ -14195,6 +14775,7 @@ objs/spec_mobs_postman.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_postman.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_postman.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_postman.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_postman.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_postman.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_postman.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_postman.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -14219,10 +14800,13 @@ objs/spec_mobs_statSurgeon.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_mobs_statSurgeon.o: /usr/include/runetype.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_statSurgeon.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/spec_mobs_statSurgeon.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_mobs_statSurgeon.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_statSurgeon.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/string
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstddef
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/alloc.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_config.h
@@ -14230,7 +14814,6 @@ objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/iostream.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/libio.h
-objs/spec_mobs_statSurgeon.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/iterator
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_iterator.h
@@ -14254,8 +14837,10 @@ objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_statSurgeon.o: /usr/include/g++/iostream
-objs/spec_mobs_statSurgeon.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/spec_mobs_statSurgeon.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/sstream
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/fstream
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/spec_mobs_statSurgeon.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_statSurgeon.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_mobs_statSurgeon.o: client.h response.h faction.h comm.h toggle.h
 objs/spec_mobs_statSurgeon.o: wiz_powers.h cmd_message.h stats.h limbs.h
@@ -14281,11 +14866,13 @@ objs/spec_mobs_tattoo_artist.o: /usr/include/g++/cassert
 objs/spec_mobs_tattoo_artist.o: /usr/include/assert.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/cstring
 objs/spec_mobs_tattoo_artist.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++/cmath
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/string
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/std/bastring.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/cstddef
-objs/spec_mobs_tattoo_artist.o: /usr/include/stddef.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/alloc.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_config.h
@@ -14293,7 +14880,6 @@ objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/iostream.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/streambuf.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/libio.h
-objs/spec_mobs_tattoo_artist.o: /usr/include/g++/_G_config.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/iterator
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_iterator.h
@@ -14317,7 +14903,9 @@ objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/g++/iostream
-objs/spec_mobs_tattoo_artist.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++/sstream
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++/fstream
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_mobs_tattoo_artist.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_mobs_tattoo_artist.o: discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_tattoo_artist.o: cmd_dissect.h client.h response.h faction.h
@@ -14342,16 +14930,18 @@ objs/spec_mobs_tudy.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spec_mobs_tudy.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spec_mobs_tudy.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_mobs_tudy.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_mobs_tudy.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_mobs_tudy.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_mobs_tudy.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spec_mobs_tudy.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spec_mobs_tudy.o: /usr/include/errno.h /usr/include/g++/string
 objs/spec_mobs_tudy.o: /usr/include/g++/std/bastring.h
-objs/spec_mobs_tudy.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_tudy.o: /usr/include/g++/cstddef
 objs/spec_mobs_tudy.o: /usr/include/g++/std/straits.h
 objs/spec_mobs_tudy.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/spec_mobs_tudy.o: /usr/include/g++/stl_alloc.h
 objs/spec_mobs_tudy.o: /usr/include/g++/iostream.h
 objs/spec_mobs_tudy.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spec_mobs_tudy.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spec_mobs_tudy.o: /usr/include/g++/iterator
 objs/spec_mobs_tudy.o: /usr/include/g++/stl_relops.h
 objs/spec_mobs_tudy.o: /usr/include/g++/stl_iterator.h
 objs/spec_mobs_tudy.o: /usr/include/g++/std/bastring.cc
@@ -14371,6 +14961,7 @@ objs/spec_mobs_tudy.o: /usr/include/g++/stl_function.h
 objs/spec_mobs_tudy.o: /usr/include/g++/stl_map.h
 objs/spec_mobs_tudy.o: /usr/include/g++/stl_multimap.h
 objs/spec_mobs_tudy.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_tudy.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_mobs_tudy.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_mobs_tudy.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_mobs_tudy.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -14391,14 +14982,15 @@ objs/spec_objs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spec_objs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spec_objs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_objs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_objs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_objs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_objs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spec_objs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spec_objs.o: /usr/include/errno.h /usr/include/g++/string
 objs/spec_objs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spec_objs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spec_objs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spec_objs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spec_objs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spec_objs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spec_objs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spec_objs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spec_objs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spec_objs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_objs.o: /usr/include/g++/stl_relops.h
 objs/spec_objs.o: /usr/include/g++/stl_iterator.h
 objs/spec_objs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -14413,6 +15005,7 @@ objs/spec_objs.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spec_objs.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/spec_objs.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/spec_objs.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_objs.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_objs.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_objs.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -14444,10 +15037,13 @@ objs/spec_objs_black_sun.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_objs_black_sun.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_objs_black_sun.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_objs_black_sun.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_black_sun.o: /usr/include/g++/cmath
+objs/spec_objs_black_sun.o: /usr/include/g++/_G_config.h
+objs/spec_objs_black_sun.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_black_sun.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_black_sun.o: /usr/include/g++/string
 objs/spec_objs_black_sun.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_black_sun.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_black_sun.o: /usr/include/g++/cstddef
 objs/spec_objs_black_sun.o: /usr/include/g++/std/straits.h
 objs/spec_objs_black_sun.o: /usr/include/g++/alloc.h
 objs/spec_objs_black_sun.o: /usr/include/g++/stl_config.h
@@ -14455,7 +15051,6 @@ objs/spec_objs_black_sun.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_black_sun.o: /usr/include/g++/iostream.h
 objs/spec_objs_black_sun.o: /usr/include/g++/streambuf.h
 objs/spec_objs_black_sun.o: /usr/include/g++/libio.h
-objs/spec_objs_black_sun.o: /usr/include/g++/_G_config.h
 objs/spec_objs_black_sun.o: /usr/include/g++/iterator
 objs/spec_objs_black_sun.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_black_sun.o: /usr/include/g++/stl_iterator.h
@@ -14478,7 +15073,8 @@ objs/spec_objs_black_sun.o: /usr/include/g++/stl_function.h
 objs/spec_objs_black_sun.o: /usr/include/g++/stl_map.h
 objs/spec_objs_black_sun.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_black_sun.o: /usr/include/g++/iostream
-objs/spec_objs_black_sun.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_objs_black_sun.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_objs_black_sun.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/spec_objs_black_sun.o: spells.h structs.h parse.h immunity.h
 objs/spec_objs_black_sun.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_objs_black_sun.o: client.h response.h faction.h comm.h toggle.h
@@ -14500,17 +15096,18 @@ objs/spec_objs_blind.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spec_objs_blind.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spec_objs_blind.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_objs_blind.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_objs_blind.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_objs_blind.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_objs_blind.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spec_objs_blind.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spec_objs_blind.o: /usr/include/errno.h /usr/include/g++/string
 objs/spec_objs_blind.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_blind.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_blind.o: /usr/include/g++/cstddef
 objs/spec_objs_blind.o: /usr/include/g++/std/straits.h
 objs/spec_objs_blind.o: /usr/include/g++/alloc.h
 objs/spec_objs_blind.o: /usr/include/g++/stl_config.h
 objs/spec_objs_blind.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_blind.o: /usr/include/g++/iostream.h
 objs/spec_objs_blind.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spec_objs_blind.o: /usr/include/g++/_G_config.h
 objs/spec_objs_blind.o: /usr/include/g++/iterator
 objs/spec_objs_blind.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_blind.o: /usr/include/g++/stl_iterator.h
@@ -14531,6 +15128,7 @@ objs/spec_objs_blind.o: /usr/include/g++/stl_function.h
 objs/spec_objs_blind.o: /usr/include/g++/stl_map.h
 objs/spec_objs_blind.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_blind.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs_blind.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_objs_blind.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_objs_blind.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_objs_blind.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -14557,11 +15155,13 @@ objs/spec_objs_deikhan_sword.o: /usr/include/g++/cassert
 objs/spec_objs_deikhan_sword.o: /usr/include/assert.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/cstring
 objs/spec_objs_deikhan_sword.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++/cmath
+objs/spec_objs_deikhan_sword.o: /usr/include/g++/_G_config.h
+objs/spec_objs_deikhan_sword.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/string
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/cstddef
-objs/spec_objs_deikhan_sword.o: /usr/include/stddef.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/std/straits.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/alloc.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_config.h
@@ -14569,7 +15169,6 @@ objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/iostream.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/streambuf.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/libio.h
-objs/spec_objs_deikhan_sword.o: /usr/include/g++/_G_config.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/iterator
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_iterator.h
@@ -14593,7 +15192,9 @@ objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_function.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_map.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_deikhan_sword.o: /usr/include/g++/iostream
-objs/spec_objs_deikhan_sword.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++/sstream
+objs/spec_objs_deikhan_sword.o: /usr/include/g++/fstream
+objs/spec_objs_deikhan_sword.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_deikhan_sword.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_deikhan_sword.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_deikhan_sword.o: cmd_dissect.h client.h response.h faction.h
@@ -14622,11 +15223,13 @@ objs/spec_objs_graffitiMaker.o: /usr/include/g++/cassert
 objs/spec_objs_graffitiMaker.o: /usr/include/assert.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/cstring
 objs/spec_objs_graffitiMaker.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_graffitiMaker.o: /usr/include/g++/cmath
+objs/spec_objs_graffitiMaker.o: /usr/include/g++/_G_config.h
+objs/spec_objs_graffitiMaker.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/string
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/cstddef
-objs/spec_objs_graffitiMaker.o: /usr/include/stddef.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/std/straits.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/alloc.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_config.h
@@ -14634,7 +15237,6 @@ objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/iostream.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/streambuf.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/libio.h
-objs/spec_objs_graffitiMaker.o: /usr/include/g++/_G_config.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/iterator
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_iterator.h
@@ -14658,7 +15260,9 @@ objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_function.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_map.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_graffitiMaker.o: /usr/include/g++/iostream
-objs/spec_objs_graffitiMaker.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_graffitiMaker.o: /usr/include/g++/sstream
+objs/spec_objs_graffitiMaker.o: /usr/include/g++/fstream
+objs/spec_objs_graffitiMaker.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_graffitiMaker.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_graffitiMaker.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_graffitiMaker.o: cmd_dissect.h client.h response.h faction.h
@@ -14669,7 +15273,7 @@ objs/spec_objs_graffitiMaker.o: create.h thing.h room.h obj.h spec_objs.h
 objs/spec_objs_graffitiMaker.o: connect.h obj_drug.h charfile.h being.h
 objs/spec_objs_graffitiMaker.o: person.h monster.h account.h extern.h
 objs/spec_objs_graffitiMaker.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/spec_objs_graffitiMaker.o: materials.h colorstring.h format.h
+objs/spec_objs_graffitiMaker.o: materials.h colorstring.h format.h obj_tool.h
 objs/spec_objs_graffitiObj.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_graffitiObj.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_objs_graffitiObj.o: /usr/include/machine/ansi.h
@@ -14684,10 +15288,13 @@ objs/spec_objs_graffitiObj.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_objs_graffitiObj.o: /usr/include/runetype.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spec_objs_graffitiObj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/spec_objs_graffitiObj.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_objs_graffitiObj.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spec_objs_graffitiObj.o: /usr/include/g++/_G_config.h
+objs/spec_objs_graffitiObj.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_objs_graffitiObj.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_objs_graffitiObj.o: /usr/include/g++/string
 objs/spec_objs_graffitiObj.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_graffitiObj.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_graffitiObj.o: /usr/include/g++/cstddef
 objs/spec_objs_graffitiObj.o: /usr/include/g++/std/straits.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/alloc.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_config.h
@@ -14695,7 +15302,6 @@ objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/iostream.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/streambuf.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/libio.h
-objs/spec_objs_graffitiObj.o: /usr/include/g++/_G_config.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/iterator
 objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_iterator.h
@@ -14719,8 +15325,10 @@ objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_function.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_map.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_graffitiObj.o: /usr/include/g++/iostream
-objs/spec_objs_graffitiObj.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/spec_objs_graffitiObj.o: spells.h structs.h parse.h immunity.h
+objs/spec_objs_graffitiObj.o: /usr/include/g++/sstream
+objs/spec_objs_graffitiObj.o: /usr/include/g++/fstream
+objs/spec_objs_graffitiObj.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/spec_objs_graffitiObj.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_graffitiObj.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_objs_graffitiObj.o: client.h response.h faction.h comm.h toggle.h
 objs/spec_objs_graffitiObj.o: wiz_powers.h cmd_message.h stats.h limbs.h
@@ -14743,19 +15351,19 @@ objs/spec_objs_jambiya.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_objs_jambiya.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_objs_jambiya.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_objs_jambiya.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_jambiya.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_objs_jambiya.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_jambiya.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_jambiya.o: /usr/include/g++/string
 objs/spec_objs_jambiya.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_jambiya.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_jambiya.o: /usr/include/g++/cstddef
 objs/spec_objs_jambiya.o: /usr/include/g++/std/straits.h
 objs/spec_objs_jambiya.o: /usr/include/g++/alloc.h
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_config.h
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_jambiya.o: /usr/include/g++/iostream.h
 objs/spec_objs_jambiya.o: /usr/include/g++/streambuf.h
-objs/spec_objs_jambiya.o: /usr/include/g++/libio.h
-objs/spec_objs_jambiya.o: /usr/include/g++/_G_config.h
-objs/spec_objs_jambiya.o: /usr/include/g++/iterator
+objs/spec_objs_jambiya.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_iterator.h
 objs/spec_objs_jambiya.o: /usr/include/g++/std/bastring.cc
@@ -14775,6 +15383,7 @@ objs/spec_objs_jambiya.o: /usr/include/g++/stl_function.h
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_map.h
 objs/spec_objs_jambiya.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_jambiya.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs_jambiya.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_objs_jambiya.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_objs_jambiya.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_objs_jambiya.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -14801,11 +15410,13 @@ objs/spec_objs_lightning_rod.o: /usr/include/g++/cassert
 objs/spec_objs_lightning_rod.o: /usr/include/assert.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/cstring
 objs/spec_objs_lightning_rod.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_lightning_rod.o: /usr/include/g++/cmath
+objs/spec_objs_lightning_rod.o: /usr/include/g++/_G_config.h
+objs/spec_objs_lightning_rod.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/string
 objs/spec_objs_lightning_rod.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/cstddef
-objs/spec_objs_lightning_rod.o: /usr/include/stddef.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/std/straits.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/alloc.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_config.h
@@ -14813,7 +15424,6 @@ objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/iostream.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/streambuf.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/libio.h
-objs/spec_objs_lightning_rod.o: /usr/include/g++/_G_config.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/iterator
 objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_iterator.h
@@ -14837,7 +15447,9 @@ objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_function.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_map.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++/iostream
-objs/spec_objs_lightning_rod.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_lightning_rod.o: /usr/include/g++/sstream
+objs/spec_objs_lightning_rod.o: /usr/include/g++/fstream
+objs/spec_objs_lightning_rod.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_lightning_rod.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_lightning_rod.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_lightning_rod.o: cmd_dissect.h client.h response.h faction.h
@@ -14868,11 +15480,13 @@ objs/spec_objs_lottery_ticket.o: /usr/include/g++/cassert
 objs/spec_objs_lottery_ticket.o: /usr/include/assert.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/cstring
 objs/spec_objs_lottery_ticket.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_lottery_ticket.o: /usr/include/g++/cmath
+objs/spec_objs_lottery_ticket.o: /usr/include/g++/_G_config.h
+objs/spec_objs_lottery_ticket.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/string
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/cstddef
-objs/spec_objs_lottery_ticket.o: /usr/include/stddef.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/std/straits.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/alloc.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_config.h
@@ -14880,7 +15494,6 @@ objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/iostream.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/streambuf.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/libio.h
-objs/spec_objs_lottery_ticket.o: /usr/include/g++/_G_config.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/iterator
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_iterator.h
@@ -14904,7 +15517,9 @@ objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_function.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_map.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_lottery_ticket.o: /usr/include/g++/iostream
-objs/spec_objs_lottery_ticket.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_lottery_ticket.o: /usr/include/g++/sstream
+objs/spec_objs_lottery_ticket.o: /usr/include/g++/fstream
+objs/spec_objs_lottery_ticket.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_lottery_ticket.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_lottery_ticket.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_lottery_ticket.o: cmd_dissect.h client.h response.h faction.h
@@ -14931,10 +15546,13 @@ objs/spec_objs_manadrain.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_objs_manadrain.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_objs_manadrain.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_objs_manadrain.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_manadrain.o: /usr/include/g++/cmath
+objs/spec_objs_manadrain.o: /usr/include/g++/_G_config.h
+objs/spec_objs_manadrain.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_manadrain.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_manadrain.o: /usr/include/g++/string
 objs/spec_objs_manadrain.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_manadrain.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_manadrain.o: /usr/include/g++/cstddef
 objs/spec_objs_manadrain.o: /usr/include/g++/std/straits.h
 objs/spec_objs_manadrain.o: /usr/include/g++/alloc.h
 objs/spec_objs_manadrain.o: /usr/include/g++/stl_config.h
@@ -14942,7 +15560,6 @@ objs/spec_objs_manadrain.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_manadrain.o: /usr/include/g++/iostream.h
 objs/spec_objs_manadrain.o: /usr/include/g++/streambuf.h
 objs/spec_objs_manadrain.o: /usr/include/g++/libio.h
-objs/spec_objs_manadrain.o: /usr/include/g++/_G_config.h
 objs/spec_objs_manadrain.o: /usr/include/g++/iterator
 objs/spec_objs_manadrain.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_manadrain.o: /usr/include/g++/stl_iterator.h
@@ -14965,7 +15582,8 @@ objs/spec_objs_manadrain.o: /usr/include/g++/stl_function.h
 objs/spec_objs_manadrain.o: /usr/include/g++/stl_map.h
 objs/spec_objs_manadrain.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_manadrain.o: /usr/include/g++/iostream
-objs/spec_objs_manadrain.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_objs_manadrain.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_objs_manadrain.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/spec_objs_manadrain.o: spells.h structs.h parse.h immunity.h
 objs/spec_objs_manadrain.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_objs_manadrain.o: client.h response.h faction.h comm.h toggle.h
@@ -14994,11 +15612,13 @@ objs/spec_objs_poison_cutlass.o: /usr/include/g++/cassert
 objs/spec_objs_poison_cutlass.o: /usr/include/assert.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/cstring
 objs/spec_objs_poison_cutlass.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++/cmath
+objs/spec_objs_poison_cutlass.o: /usr/include/g++/_G_config.h
+objs/spec_objs_poison_cutlass.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/string
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/cstddef
-objs/spec_objs_poison_cutlass.o: /usr/include/stddef.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/std/straits.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/alloc.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_config.h
@@ -15006,7 +15626,6 @@ objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/iostream.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/streambuf.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/libio.h
-objs/spec_objs_poison_cutlass.o: /usr/include/g++/_G_config.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/iterator
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_iterator.h
@@ -15030,7 +15649,9 @@ objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_function.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_map.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_poison_cutlass.o: /usr/include/g++/iostream
-objs/spec_objs_poison_cutlass.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++/sstream
+objs/spec_objs_poison_cutlass.o: /usr/include/g++/fstream
+objs/spec_objs_poison_cutlass.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_poison_cutlass.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_poison_cutlass.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_poison_cutlass.o: cmd_dissect.h client.h response.h faction.h
@@ -15055,19 +15676,19 @@ objs/spec_objs_sweeps.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_objs_sweeps.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_objs_sweeps.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_objs_sweeps.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_sweeps.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_objs_sweeps.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_sweeps.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_sweeps.o: /usr/include/g++/string
 objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.h
-objs/spec_objs_sweeps.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_objs_sweeps.o: /usr/include/g++/cstddef
 objs/spec_objs_sweeps.o: /usr/include/g++/std/straits.h
 objs/spec_objs_sweeps.o: /usr/include/g++/alloc.h
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_config.h
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_sweeps.o: /usr/include/g++/iostream.h
 objs/spec_objs_sweeps.o: /usr/include/g++/streambuf.h
-objs/spec_objs_sweeps.o: /usr/include/g++/libio.h
-objs/spec_objs_sweeps.o: /usr/include/g++/_G_config.h
-objs/spec_objs_sweeps.o: /usr/include/g++/iterator
+objs/spec_objs_sweeps.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_iterator.h
 objs/spec_objs_sweeps.o: /usr/include/g++/std/bastring.cc
@@ -15087,6 +15708,7 @@ objs/spec_objs_sweeps.o: /usr/include/g++/stl_function.h
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_map.h
 objs/spec_objs_sweeps.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_sweeps.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_objs_sweeps.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spec_objs_sweeps.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spec_objs_sweeps.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spec_objs_sweeps.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -15116,11 +15738,13 @@ objs/spec_objs_unholy_cutlass.o: /usr/include/g++/cassert
 objs/spec_objs_unholy_cutlass.o: /usr/include/assert.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/cstring
 objs/spec_objs_unholy_cutlass.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++/cmath
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++/_G_config.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/string
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/std/bastring.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/cstddef
-objs/spec_objs_unholy_cutlass.o: /usr/include/stddef.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/std/straits.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/alloc.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_config.h
@@ -15128,7 +15752,6 @@ objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_alloc.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/iostream.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/streambuf.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/libio.h
-objs/spec_objs_unholy_cutlass.o: /usr/include/g++/_G_config.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/iterator
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_relops.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_iterator.h
@@ -15152,7 +15775,9 @@ objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_function.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_map.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/stl_multimap.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/g++/iostream
-objs/spec_objs_unholy_cutlass.o: /usr/include/g++/sstream sstring.h low.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++/sstream
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++/fstream
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/spec_objs_unholy_cutlass.o: enum.h spells.h structs.h parse.h immunity.h
 objs/spec_objs_unholy_cutlass.o: discipline.h spell2.h db.h ansi.h
 objs/spec_objs_unholy_cutlass.o: cmd_dissect.h client.h response.h faction.h
@@ -15199,7 +15824,8 @@ objs/spec_rooms.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spec_rooms.o: /usr/include/g++/stl_tree.h
 objs/spec_rooms.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/spec_rooms.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/spec_rooms.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/spec_rooms.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_rooms.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/spec_rooms.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/spec_rooms.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/spec_rooms.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15223,10 +15849,13 @@ objs/spec_rooms_sleeptag.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/spec_rooms_sleeptag.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/spec_rooms_sleeptag.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/spec_rooms_sleeptag.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_rooms_sleeptag.o: /usr/include/g++/cmath
+objs/spec_rooms_sleeptag.o: /usr/include/g++/_G_config.h
+objs/spec_rooms_sleeptag.o: /usr/include/stddef.h /usr/include/math.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/string
 objs/spec_rooms_sleeptag.o: /usr/include/g++/std/bastring.h
-objs/spec_rooms_sleeptag.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_rooms_sleeptag.o: /usr/include/g++/cstddef
 objs/spec_rooms_sleeptag.o: /usr/include/g++/std/straits.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/alloc.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_config.h
@@ -15234,7 +15863,6 @@ objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_alloc.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/iostream.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/streambuf.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/libio.h
-objs/spec_rooms_sleeptag.o: /usr/include/g++/_G_config.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/iterator
 objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_relops.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_iterator.h
@@ -15257,7 +15885,8 @@ objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_function.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_map.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/stl_multimap.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++/iostream
-objs/spec_rooms_sleeptag.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_rooms_sleeptag.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_rooms_sleeptag.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
 objs/spec_rooms_sleeptag.o: spells.h structs.h parse.h immunity.h
 objs/spec_rooms_sleeptag.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spec_rooms_sleeptag.o: client.h response.h faction.h comm.h toggle.h
@@ -15279,14 +15908,15 @@ objs/spell_info.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spell_info.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spell_info.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spell_info.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spell_info.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spell_info.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spell_info.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spell_info.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spell_info.o: /usr/include/errno.h /usr/include/g++/string
 objs/spell_info.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spell_info.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spell_info.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spell_info.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spell_info.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spell_info.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spell_info.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spell_info.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spell_info.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spell_info.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spell_info.o: /usr/include/g++/stl_relops.h
 objs/spell_info.o: /usr/include/g++/stl_iterator.h
 objs/spell_info.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15302,7 +15932,8 @@ objs/spell_info.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spell_info.o: /usr/include/g++/stl_tree.h
 objs/spell_info.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/spell_info.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/spell_info.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/spell_info.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spell_info.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/spell_info.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/spell_info.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/spell_info.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15321,14 +15952,15 @@ objs/spell_num.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spell_num.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spell_num.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spell_num.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spell_num.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spell_num.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spell_num.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spell_num.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spell_num.o: /usr/include/errno.h /usr/include/g++/string
 objs/spell_num.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spell_num.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spell_num.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spell_num.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spell_num.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spell_num.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spell_num.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spell_num.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spell_num.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spell_num.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spell_num.o: /usr/include/g++/stl_relops.h
 objs/spell_num.o: /usr/include/g++/stl_iterator.h
 objs/spell_num.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15343,6 +15975,7 @@ objs/spell_num.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spell_num.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/spell_num.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/spell_num.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spell_num.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spell_num.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spell_num.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spell_num.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -15362,15 +15995,16 @@ objs/spell_parser.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spell_parser.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spell_parser.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spell_parser.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spell_parser.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spell_parser.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spell_parser.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spell_parser.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spell_parser.o: /usr/include/errno.h /usr/include/g++/string
 objs/spell_parser.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spell_parser.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spell_parser.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/spell_parser.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spell_parser.o: /usr/include/g++/stl_config.h
 objs/spell_parser.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/spell_parser.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spell_parser.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/spell_parser.o: /usr/include/g++/stl_relops.h
+objs/spell_parser.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/spell_parser.o: /usr/include/g++/stl_iterator.h
 objs/spell_parser.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/spell_parser.o: /usr/include/g++/stl_algobase.h
@@ -15388,6 +16022,7 @@ objs/spell_parser.o: /usr/include/g++/stl_function.h
 objs/spell_parser.o: /usr/include/g++/stl_map.h
 objs/spell_parser.o: /usr/include/g++/stl_multimap.h
 objs/spell_parser.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spell_parser.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spell_parser.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spell_parser.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/spell_parser.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -15416,14 +16051,15 @@ objs/spellstore.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spellstore.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spellstore.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spellstore.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spellstore.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spellstore.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spellstore.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spellstore.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spellstore.o: /usr/include/errno.h /usr/include/g++/string
 objs/spellstore.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spellstore.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spellstore.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spellstore.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spellstore.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spellstore.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spellstore.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spellstore.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spellstore.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spellstore.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spellstore.o: /usr/include/g++/stl_relops.h
 objs/spellstore.o: /usr/include/g++/stl_iterator.h
 objs/spellstore.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15439,7 +16075,8 @@ objs/spellstore.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spellstore.o: /usr/include/g++/stl_tree.h
 objs/spellstore.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/spellstore.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/spellstore.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/spellstore.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spellstore.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/spellstore.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/spellstore.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/spellstore.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15458,14 +16095,15 @@ objs/spelltask.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/spelltask.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/spelltask.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/spelltask.o: /usr/include/g++/cstring /usr/include/string.h
-objs/spelltask.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spelltask.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/spelltask.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/spelltask.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/spelltask.o: /usr/include/errno.h /usr/include/g++/string
 objs/spelltask.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/spelltask.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/spelltask.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/spelltask.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/spelltask.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/spelltask.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/spelltask.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/spelltask.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/spelltask.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/spelltask.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/spelltask.o: /usr/include/g++/stl_relops.h
 objs/spelltask.o: /usr/include/g++/stl_iterator.h
 objs/spelltask.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15480,6 +16118,7 @@ objs/spelltask.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/spelltask.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/spelltask.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/spelltask.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spelltask.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/spelltask.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/spelltask.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/spelltask.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -15507,14 +16146,15 @@ objs/sqladdobjs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sqladdobjs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sqladdobjs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sqladdobjs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sqladdobjs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sqladdobjs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sqladdobjs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqladdobjs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sqladdobjs.o: /usr/include/errno.h /usr/include/g++/string
 objs/sqladdobjs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sqladdobjs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sqladdobjs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sqladdobjs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sqladdobjs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sqladdobjs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sqladdobjs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sqladdobjs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sqladdobjs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sqladdobjs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sqladdobjs.o: /usr/include/g++/stl_relops.h
 objs/sqladdobjs.o: /usr/include/g++/stl_iterator.h
 objs/sqladdobjs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15530,7 +16170,8 @@ objs/sqladdobjs.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/sqladdobjs.o: /usr/include/g++/stl_tree.h
 objs/sqladdobjs.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sqladdobjs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sqladdobjs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sqladdobjs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sqladdobjs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sqladdobjs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/sqladdobjs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/sqladdobjs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15554,19 +16195,19 @@ objs/sqladdobjs_builder.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/sqladdobjs_builder.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/sqladdobjs_builder.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/sqladdobjs_builder.o: /usr/include/string.h /usr/include/stdarg.h
-objs/sqladdobjs_builder.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/sqladdobjs_builder.o: /usr/include/g++/string
+objs/sqladdobjs_builder.o: /usr/include/g++/cmath
+objs/sqladdobjs_builder.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqladdobjs_builder.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/sqladdobjs_builder.o: /usr/include/errno.h /usr/include/g++/string
 objs/sqladdobjs_builder.o: /usr/include/g++/std/bastring.h
-objs/sqladdobjs_builder.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/sqladdobjs_builder.o: /usr/include/g++/cstddef
 objs/sqladdobjs_builder.o: /usr/include/g++/std/straits.h
 objs/sqladdobjs_builder.o: /usr/include/g++/alloc.h
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_config.h
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_alloc.h
 objs/sqladdobjs_builder.o: /usr/include/g++/iostream.h
 objs/sqladdobjs_builder.o: /usr/include/g++/streambuf.h
-objs/sqladdobjs_builder.o: /usr/include/g++/libio.h
-objs/sqladdobjs_builder.o: /usr/include/g++/_G_config.h
-objs/sqladdobjs_builder.o: /usr/include/g++/iterator
+objs/sqladdobjs_builder.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_relops.h
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_iterator.h
 objs/sqladdobjs_builder.o: /usr/include/g++/std/bastring.cc
@@ -15588,17 +16229,18 @@ objs/sqladdobjs_builder.o: /usr/include/g++/stl_function.h
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_map.h
 objs/sqladdobjs_builder.o: /usr/include/g++/stl_multimap.h
 objs/sqladdobjs_builder.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/sqladdobjs_builder.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/sqladdobjs_builder.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/sqladdobjs_builder.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/sqladdobjs_builder.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/sqladdobjs_builder.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/sqladdobjs_builder.o: task.h weather.h sound.h create.h thing.h room.h
-objs/sqladdobjs_builder.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/sqladdobjs_builder.o: being.h person.h monster.h account.h extern.h
-objs/sqladdobjs_builder.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/sqladdobjs_builder.o: materials.h colorstring.h format.h database.h
-objs/sqladdobjs_builder.o: /usr/local/include/libpq-fe.h
+objs/sqladdobjs_builder.o: /usr/include/g++/fstream
+objs/sqladdobjs_builder.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/sqladdobjs_builder.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/sqladdobjs_builder.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/sqladdobjs_builder.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/sqladdobjs_builder.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/sqladdobjs_builder.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/sqladdobjs_builder.o: create.h thing.h room.h obj.h spec_objs.h
+objs/sqladdobjs_builder.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/sqladdobjs_builder.o: monster.h account.h extern.h handler.h obj_money.h
+objs/sqladdobjs_builder.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/sqladdobjs_builder.o: format.h database.h /usr/local/include/libpq-fe.h
 objs/sqladdobjs_builder.o: /usr/local/include/postgres_ext.h lowtools.h
 objs/sqledimmobj.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqledimmobj.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -15610,15 +16252,16 @@ objs/sqledimmobj.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sqledimmobj.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sqledimmobj.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sqledimmobj.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sqledimmobj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sqledimmobj.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sqledimmobj.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqledimmobj.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sqledimmobj.o: /usr/include/errno.h /usr/include/g++/string
 objs/sqledimmobj.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sqledimmobj.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sqledimmobj.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/sqledimmobj.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sqledimmobj.o: /usr/include/g++/stl_config.h
 objs/sqledimmobj.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/sqledimmobj.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sqledimmobj.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/sqledimmobj.o: /usr/include/g++/stl_relops.h
+objs/sqledimmobj.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/sqledimmobj.o: /usr/include/g++/stl_iterator.h
 objs/sqledimmobj.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/sqledimmobj.o: /usr/include/g++/stl_algobase.h
@@ -15635,16 +16278,17 @@ objs/sqledimmobj.o: /usr/include/g++/stl_tree.h
 objs/sqledimmobj.o: /usr/include/g++/stl_function.h
 objs/sqledimmobj.o: /usr/include/g++/stl_map.h
 objs/sqledimmobj.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sqledimmobj.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/sqledimmobj.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/sqledimmobj.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/sqledimmobj.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/sqledimmobj.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/sqledimmobj.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/sqledimmobj.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/sqledimmobj.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/sqledimmobj.o: spec_mobs.h materials.h colorstring.h format.h database.h
-objs/sqledimmobj.o: /usr/local/include/libpq-fe.h
+objs/sqledimmobj.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sqledimmobj.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/sqledimmobj.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/sqledimmobj.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/sqledimmobj.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/sqledimmobj.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/sqledimmobj.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/sqledimmobj.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/sqledimmobj.o: person.h monster.h account.h extern.h handler.h
+objs/sqledimmobj.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/sqledimmobj.o: format.h database.h /usr/local/include/libpq-fe.h
 objs/sqledimmobj.o: /usr/local/include/postgres_ext.h lowtools.h
 objs/sqledimmobj.o: /usr/include/unistd.h /usr/include/sys/unistd.h
 objs/sqledobj.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
@@ -15657,14 +16301,15 @@ objs/sqledobj.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sqledobj.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sqledobj.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sqledobj.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sqledobj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sqledobj.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sqledobj.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqledobj.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sqledobj.o: /usr/include/errno.h /usr/include/g++/string
 objs/sqledobj.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sqledobj.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sqledobj.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sqledobj.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sqledobj.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sqledobj.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sqledobj.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sqledobj.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sqledobj.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sqledobj.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sqledobj.o: /usr/include/g++/stl_relops.h
 objs/sqledobj.o: /usr/include/g++/stl_iterator.h
 objs/sqledobj.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15678,7 +16323,8 @@ objs/sqledobj.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/sqledobj.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/sqledobj.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sqledobj.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sqledobj.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sqledobj.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sqledobj.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sqledobj.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/sqledobj.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/sqledobj.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15702,19 +16348,19 @@ objs/sqledobj_builder.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/sqledobj_builder.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/sqledobj_builder.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/sqledobj_builder.o: /usr/include/string.h /usr/include/stdarg.h
+objs/sqledobj_builder.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/sqledobj_builder.o: /usr/include/stddef.h /usr/include/math.h
 objs/sqledobj_builder.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/sqledobj_builder.o: /usr/include/g++/string
 objs/sqledobj_builder.o: /usr/include/g++/std/bastring.h
-objs/sqledobj_builder.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/sqledobj_builder.o: /usr/include/g++/cstddef
 objs/sqledobj_builder.o: /usr/include/g++/std/straits.h
 objs/sqledobj_builder.o: /usr/include/g++/alloc.h
 objs/sqledobj_builder.o: /usr/include/g++/stl_config.h
 objs/sqledobj_builder.o: /usr/include/g++/stl_alloc.h
 objs/sqledobj_builder.o: /usr/include/g++/iostream.h
 objs/sqledobj_builder.o: /usr/include/g++/streambuf.h
-objs/sqledobj_builder.o: /usr/include/g++/libio.h
-objs/sqledobj_builder.o: /usr/include/g++/_G_config.h
-objs/sqledobj_builder.o: /usr/include/g++/iterator
+objs/sqledobj_builder.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sqledobj_builder.o: /usr/include/g++/stl_relops.h
 objs/sqledobj_builder.o: /usr/include/g++/stl_iterator.h
 objs/sqledobj_builder.o: /usr/include/g++/std/bastring.cc
@@ -15734,6 +16380,7 @@ objs/sqledobj_builder.o: /usr/include/g++/stl_function.h
 objs/sqledobj_builder.o: /usr/include/g++/stl_map.h
 objs/sqledobj_builder.o: /usr/include/g++/stl_multimap.h
 objs/sqledobj_builder.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/sqledobj_builder.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/sqledobj_builder.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/sqledobj_builder.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/sqledobj_builder.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -15757,14 +16404,15 @@ objs/sqledwld.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sqledwld.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sqledwld.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sqledwld.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sqledwld.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sqledwld.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sqledwld.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqledwld.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sqledwld.o: /usr/include/errno.h /usr/include/g++/string
 objs/sqledwld.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sqledwld.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sqledwld.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sqledwld.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sqledwld.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sqledwld.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sqledwld.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sqledwld.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sqledwld.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sqledwld.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sqledwld.o: /usr/include/g++/stl_relops.h
 objs/sqledwld.o: /usr/include/g++/stl_iterator.h
 objs/sqledwld.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15778,7 +16426,8 @@ objs/sqledwld.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/sqledwld.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/sqledwld.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sqledwld.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sqledwld.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sqledwld.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sqledwld.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sqledwld.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/sqledwld.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/sqledwld.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15800,14 +16449,15 @@ objs/sstring.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sstring.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sstring.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sstring.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sstring.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sstring.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sstring.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sstring.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sstring.o: /usr/include/errno.h /usr/include/g++/string
 objs/sstring.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sstring.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sstring.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sstring.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sstring.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sstring.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sstring.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sstring.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sstring.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sstring.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sstring.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/sstring.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/sstring.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -15820,7 +16470,8 @@ objs/sstring.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/sstring.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/sstring.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sstring.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sstring.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sstring.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sstring.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sstring.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/sstring.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/sstring.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15839,14 +16490,15 @@ objs/statistics.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/statistics.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/statistics.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/statistics.o: /usr/include/g++/cstring /usr/include/string.h
-objs/statistics.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/statistics.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/statistics.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/statistics.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/statistics.o: /usr/include/errno.h /usr/include/g++/string
 objs/statistics.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/statistics.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/statistics.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/statistics.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/statistics.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/statistics.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/statistics.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/statistics.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/statistics.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/statistics.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/statistics.o: /usr/include/g++/stl_relops.h
 objs/statistics.o: /usr/include/g++/stl_iterator.h
 objs/statistics.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15862,7 +16514,8 @@ objs/statistics.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/statistics.o: /usr/include/g++/stl_tree.h
 objs/statistics.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/statistics.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/statistics.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/statistics.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/statistics.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/statistics.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/statistics.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/statistics.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15882,14 +16535,15 @@ objs/stats.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/stats.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/stats.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/stats.o: /usr/include/g++/cstring /usr/include/string.h
-objs/stats.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/stats.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/stats.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/stats.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/stats.o: /usr/include/errno.h /usr/include/g++/string
 objs/stats.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/stats.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/stats.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/stats.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/stats.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/stats.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/stats.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/stats.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/stats.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/stats.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/stats.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/stats.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/stats.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -15902,7 +16556,8 @@ objs/stats.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/stats.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/stats.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/stats.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/stats.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/stats.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/stats.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/stats.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/stats.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/stats.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -15910,8 +16565,7 @@ objs/stats.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/stats.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/stats.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/stats.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/stats.o: colorstring.h format.h /usr/include/g++/cmath
-objs/stats.o: /usr/include/math.h
+objs/stats.o: colorstring.h format.h
 objs/structs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/structs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/structs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -15922,14 +16576,15 @@ objs/structs.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/structs.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/structs.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/structs.o: /usr/include/g++/cstring /usr/include/string.h
-objs/structs.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/structs.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/structs.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/structs.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/structs.o: /usr/include/errno.h /usr/include/g++/string
 objs/structs.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/structs.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/structs.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/structs.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/structs.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/structs.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/structs.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/structs.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/structs.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/structs.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/structs.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/structs.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/structs.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -15942,7 +16597,8 @@ objs/structs.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/structs.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/structs.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/structs.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/structs.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/structs.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/structs.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/structs.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/structs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/structs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -15968,14 +16624,15 @@ objs/sys_loot.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/sys_loot.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/sys_loot.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/sys_loot.o: /usr/include/g++/cstring /usr/include/string.h
-objs/sys_loot.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sys_loot.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sys_loot.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sys_loot.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/sys_loot.o: /usr/include/errno.h /usr/include/g++/string
 objs/sys_loot.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/sys_loot.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/sys_loot.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/sys_loot.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/sys_loot.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/sys_loot.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sys_loot.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sys_loot.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sys_loot.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sys_loot.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/sys_loot.o: /usr/include/g++/stl_relops.h
 objs/sys_loot.o: /usr/include/g++/stl_iterator.h
 objs/sys_loot.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -15989,7 +16646,8 @@ objs/sys_loot.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/sys_loot.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/sys_loot.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/sys_loot.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/sys_loot.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sys_loot.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/sys_loot.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/sys_loot.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/sys_loot.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/sys_loot.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -16013,14 +16671,15 @@ objs/systemtask.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/systemtask.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/systemtask.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/systemtask.o: /usr/include/g++/cstring /usr/include/string.h
-objs/systemtask.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/systemtask.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/systemtask.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/systemtask.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/systemtask.o: /usr/include/errno.h /usr/include/g++/string
 objs/systemtask.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/systemtask.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/systemtask.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/systemtask.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/systemtask.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/systemtask.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/systemtask.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/systemtask.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/systemtask.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/systemtask.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/systemtask.o: /usr/include/g++/stl_relops.h
 objs/systemtask.o: /usr/include/g++/stl_iterator.h
 objs/systemtask.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16036,7 +16695,8 @@ objs/systemtask.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/systemtask.o: /usr/include/g++/stl_tree.h
 objs/systemtask.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/systemtask.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/systemtask.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/systemtask.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/systemtask.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/systemtask.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/systemtask.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/systemtask.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -16055,27 +16715,29 @@ objs/talk.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/talk.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/talk.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/talk.o: /usr/include/g++/cstring /usr/include/string.h
-objs/talk.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/talk.o: /usr/include/errno.h /usr/include/g++/string
-objs/talk.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/talk.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/talk.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/talk.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/talk.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/talk.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/talk.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/talk.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/talk.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/talk.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/talk.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/talk.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/talk.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/talk.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/talk.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/talk.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/talk.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/talk.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/talk.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/talk.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/talk.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/talk.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/talk.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/talk.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/talk.o: /usr/include/g++/new /usr/include/g++/exception
+objs/talk.o: /usr/include/g++/stl_construct.h
 objs/talk.o: /usr/include/g++/stl_uninitialized.h
 objs/talk.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/talk.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/talk.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/talk.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/talk.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/talk.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/talk.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/talk.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/talk.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/talk.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -16095,27 +16757,29 @@ objs/task.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/task.o: /usr/include/errno.h /usr/include/g++/string
-objs/task.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/task.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/task.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/task.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/task.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/task.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/task.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/task.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/task.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/task.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/task.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/task.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/task.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/task.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/task.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/task.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/task.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/task.o: /usr/include/g++/new /usr/include/g++/exception
+objs/task.o: /usr/include/g++/stl_construct.h
 objs/task.o: /usr/include/g++/stl_uninitialized.h
 objs/task.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/task.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/task.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/task.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/task.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -16134,15 +16798,16 @@ objs/task_attune.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_attune.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_attune.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_attune.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_attune.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_attune.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_attune.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_attune.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_attune.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_attune.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_attune.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_attune.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_attune.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_attune.o: /usr/include/g++/stl_config.h
 objs/task_attune.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_attune.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_attune.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_attune.o: /usr/include/g++/stl_relops.h
+objs/task_attune.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_attune.o: /usr/include/g++/stl_iterator.h
 objs/task_attune.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_attune.o: /usr/include/g++/stl_algobase.h
@@ -16159,16 +16824,17 @@ objs/task_attune.o: /usr/include/g++/stl_tree.h
 objs/task_attune.o: /usr/include/g++/stl_function.h
 objs/task_attune.o: /usr/include/g++/stl_map.h
 objs/task_attune.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_attune.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/task_attune.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/task_attune.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_attune.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/task_attune.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_attune.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/task_attune.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/task_attune.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/task_attune.o: spec_mobs.h materials.h colorstring.h format.h
-objs/task_attune.o: obj_symbol.h obj_vial.h obj_base_cup.h
+objs/task_attune.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_attune.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_attune.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_attune.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_attune.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_attune.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_attune.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/task_attune.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/task_attune.o: person.h monster.h account.h extern.h handler.h
+objs/task_attune.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/task_attune.o: format.h obj_symbol.h obj_vial.h obj_base_cup.h
 objs/task_brew.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/task_brew.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/task_brew.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -16179,14 +16845,15 @@ objs/task_brew.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_brew.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_brew.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_brew.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_brew.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_brew.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_brew.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_brew.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_brew.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_brew.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_brew.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_brew.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_brew.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_brew.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_brew.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_brew.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_brew.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_brew.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_brew.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_brew.o: /usr/include/g++/stl_relops.h
 objs/task_brew.o: /usr/include/g++/stl_iterator.h
 objs/task_brew.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16201,6 +16868,7 @@ objs/task_brew.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_brew.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_brew.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_brew.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_brew.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_brew.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_brew.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_brew.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -16220,15 +16888,16 @@ objs/task_butcher.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_butcher.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_butcher.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_butcher.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_butcher.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_butcher.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_butcher.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_butcher.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_butcher.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_butcher.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_butcher.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_butcher.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_butcher.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_butcher.o: /usr/include/g++/stl_config.h
 objs/task_butcher.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_butcher.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_butcher.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_butcher.o: /usr/include/g++/stl_relops.h
+objs/task_butcher.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_butcher.o: /usr/include/g++/stl_iterator.h
 objs/task_butcher.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_butcher.o: /usr/include/g++/stl_algobase.h
@@ -16246,6 +16915,7 @@ objs/task_butcher.o: /usr/include/g++/stl_function.h
 objs/task_butcher.o: /usr/include/g++/stl_map.h
 objs/task_butcher.o: /usr/include/g++/stl_multimap.h
 objs/task_butcher.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_butcher.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_butcher.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_butcher.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_butcher.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16267,15 +16937,16 @@ objs/task_charge.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_charge.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_charge.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_charge.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_charge.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_charge.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_charge.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_charge.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_charge.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_charge.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_charge.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_charge.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_charge.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_charge.o: /usr/include/g++/stl_config.h
 objs/task_charge.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_charge.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_charge.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_charge.o: /usr/include/g++/stl_relops.h
+objs/task_charge.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_charge.o: /usr/include/g++/stl_iterator.h
 objs/task_charge.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_charge.o: /usr/include/g++/stl_algobase.h
@@ -16292,15 +16963,17 @@ objs/task_charge.o: /usr/include/g++/stl_tree.h
 objs/task_charge.o: /usr/include/g++/stl_function.h
 objs/task_charge.o: /usr/include/g++/stl_map.h
 objs/task_charge.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_charge.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/task_charge.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/task_charge.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_charge.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/task_charge.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_charge.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/task_charge.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/task_charge.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/task_charge.o: spec_mobs.h materials.h colorstring.h format.h
+objs/task_charge.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_charge.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_charge.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_charge.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_charge.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_charge.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_charge.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/task_charge.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/task_charge.o: person.h monster.h account.h extern.h handler.h
+objs/task_charge.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/task_charge.o: format.h
 objs/task_cook.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/task_cook.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/task_cook.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -16311,14 +16984,15 @@ objs/task_cook.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_cook.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_cook.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_cook.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_cook.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_cook.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_cook.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_cook.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_cook.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_cook.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_cook.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_cook.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_cook.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_cook.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_cook.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_cook.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_cook.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_cook.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_cook.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_cook.o: /usr/include/g++/stl_relops.h
 objs/task_cook.o: /usr/include/g++/stl_iterator.h
 objs/task_cook.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16333,6 +17007,7 @@ objs/task_cook.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_cook.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_cook.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_cook.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_cook.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_cook.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_cook.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_cook.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -16354,14 +17029,15 @@ objs/task_dull.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_dull.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_dull.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_dull.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_dull.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_dull.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_dull.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_dull.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_dull.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_dull.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_dull.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_dull.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_dull.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_dull.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_dull.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_dull.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_dull.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_dull.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_dull.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_dull.o: /usr/include/g++/stl_relops.h
 objs/task_dull.o: /usr/include/g++/stl_iterator.h
 objs/task_dull.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16376,6 +17052,7 @@ objs/task_dull.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_dull.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_dull.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_dull.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_dull.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_dull.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_dull.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_dull.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -16399,10 +17076,13 @@ objs/task_extinguish_my_ass.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/task_extinguish_my_ass.o: /usr/include/runetype.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_extinguish_my_ass.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/task_extinguish_my_ass.o: /usr/include/errno.h /usr/include/g++/string
+objs/task_extinguish_my_ass.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_extinguish_my_ass.o: /usr/include/g++/_G_config.h
+objs/task_extinguish_my_ass.o: /usr/include/stddef.h /usr/include/math.h
+objs/task_extinguish_my_ass.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/task_extinguish_my_ass.o: /usr/include/g++/string
 objs/task_extinguish_my_ass.o: /usr/include/g++/std/bastring.h
-objs/task_extinguish_my_ass.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_extinguish_my_ass.o: /usr/include/g++/cstddef
 objs/task_extinguish_my_ass.o: /usr/include/g++/std/straits.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/alloc.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/stl_config.h
@@ -16410,7 +17090,6 @@ objs/task_extinguish_my_ass.o: /usr/include/g++/stl_alloc.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/iostream.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/streambuf.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/libio.h
-objs/task_extinguish_my_ass.o: /usr/include/g++/_G_config.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/iterator
 objs/task_extinguish_my_ass.o: /usr/include/g++/stl_relops.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/stl_iterator.h
@@ -16434,7 +17113,9 @@ objs/task_extinguish_my_ass.o: /usr/include/g++/stl_function.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/stl_map.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/stl_multimap.h
 objs/task_extinguish_my_ass.o: /usr/include/g++/iostream
-objs/task_extinguish_my_ass.o: /usr/include/g++/sstream sstring.h low.h
+objs/task_extinguish_my_ass.o: /usr/include/g++/sstream
+objs/task_extinguish_my_ass.o: /usr/include/g++/fstream
+objs/task_extinguish_my_ass.o: /usr/include/g++/fstream.h sstring.h low.h
 objs/task_extinguish_my_ass.o: enum.h spells.h structs.h parse.h immunity.h
 objs/task_extinguish_my_ass.o: discipline.h spell2.h db.h ansi.h
 objs/task_extinguish_my_ass.o: cmd_dissect.h client.h response.h faction.h
@@ -16456,15 +17137,16 @@ objs/task_fishing.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_fishing.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_fishing.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_fishing.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_fishing.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_fishing.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_fishing.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_fishing.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_fishing.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_fishing.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_fishing.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_fishing.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_fishing.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_fishing.o: /usr/include/g++/stl_config.h
 objs/task_fishing.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_fishing.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_fishing.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_fishing.o: /usr/include/g++/stl_relops.h
+objs/task_fishing.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_fishing.o: /usr/include/g++/stl_iterator.h
 objs/task_fishing.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_fishing.o: /usr/include/g++/stl_algobase.h
@@ -16482,6 +17164,7 @@ objs/task_fishing.o: /usr/include/g++/stl_function.h
 objs/task_fishing.o: /usr/include/g++/stl_map.h
 objs/task_fishing.o: /usr/include/g++/stl_multimap.h
 objs/task_fishing.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_fishing.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_fishing.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_fishing.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_fishing.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16502,14 +17185,15 @@ objs/task_get.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_get.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_get.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_get.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_get.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_get.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_get.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_get.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_get.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_get.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_get.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_get.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_get.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_get.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_get.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_get.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_get.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_get.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_get.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_get.o: /usr/include/g++/stl_relops.h
 objs/task_get.o: /usr/include/g++/stl_iterator.h
 objs/task_get.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16523,7 +17207,8 @@ objs/task_get.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/task_get.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/task_get.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task_get.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_get.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task_get.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_get.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task_get.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/task_get.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_get.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -16544,16 +17229,18 @@ objs/task_lightfire.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_lightfire.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_lightfire.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_lightfire.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_lightfire.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_lightfire.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_lightfire.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_lightfire.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_lightfire.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_lightfire.o: /usr/include/g++/std/bastring.h
-objs/task_lightfire.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_lightfire.o: /usr/include/g++/cstddef
 objs/task_lightfire.o: /usr/include/g++/std/straits.h
 objs/task_lightfire.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task_lightfire.o: /usr/include/g++/stl_alloc.h
 objs/task_lightfire.o: /usr/include/g++/iostream.h
 objs/task_lightfire.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_lightfire.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_lightfire.o: /usr/include/g++/iterator
 objs/task_lightfire.o: /usr/include/g++/stl_relops.h
 objs/task_lightfire.o: /usr/include/g++/stl_iterator.h
 objs/task_lightfire.o: /usr/include/g++/std/bastring.cc
@@ -16573,6 +17260,7 @@ objs/task_lightfire.o: /usr/include/g++/stl_function.h
 objs/task_lightfire.o: /usr/include/g++/stl_map.h
 objs/task_lightfire.o: /usr/include/g++/stl_multimap.h
 objs/task_lightfire.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_lightfire.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_lightfire.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_lightfire.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_lightfire.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16594,17 +17282,17 @@ objs/task_meditate.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_meditate.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_meditate.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_meditate.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_meditate.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_meditate.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_meditate.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_meditate.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_meditate.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_meditate.o: /usr/include/g++/std/bastring.h
-objs/task_meditate.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/task_meditate.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/task_meditate.o: /usr/include/g++/stl_config.h
+objs/task_meditate.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/task_meditate.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task_meditate.o: /usr/include/g++/stl_alloc.h
 objs/task_meditate.o: /usr/include/g++/iostream.h
 objs/task_meditate.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_meditate.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_meditate.o: /usr/include/g++/stl_relops.h
+objs/task_meditate.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_meditate.o: /usr/include/g++/stl_iterator.h
 objs/task_meditate.o: /usr/include/g++/std/bastring.cc
 objs/task_meditate.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -16622,6 +17310,7 @@ objs/task_meditate.o: /usr/include/g++/stl_function.h
 objs/task_meditate.o: /usr/include/g++/stl_map.h
 objs/task_meditate.o: /usr/include/g++/stl_multimap.h
 objs/task_meditate.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_meditate.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_meditate.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_meditate.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_meditate.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16642,15 +17331,16 @@ objs/task_penance.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_penance.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_penance.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_penance.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_penance.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_penance.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_penance.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_penance.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_penance.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_penance.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_penance.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_penance.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_penance.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_penance.o: /usr/include/g++/stl_config.h
 objs/task_penance.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_penance.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_penance.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_penance.o: /usr/include/g++/stl_relops.h
+objs/task_penance.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_penance.o: /usr/include/g++/stl_iterator.h
 objs/task_penance.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_penance.o: /usr/include/g++/stl_algobase.h
@@ -16668,6 +17358,7 @@ objs/task_penance.o: /usr/include/g++/stl_function.h
 objs/task_penance.o: /usr/include/g++/stl_map.h
 objs/task_penance.o: /usr/include/g++/stl_multimap.h
 objs/task_penance.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_penance.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_penance.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_penance.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_penance.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16688,17 +17379,17 @@ objs/task_picklock.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_picklock.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_picklock.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_picklock.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_picklock.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_picklock.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_picklock.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_picklock.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_picklock.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_picklock.o: /usr/include/g++/std/bastring.h
-objs/task_picklock.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/task_picklock.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/task_picklock.o: /usr/include/g++/stl_config.h
+objs/task_picklock.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/task_picklock.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task_picklock.o: /usr/include/g++/stl_alloc.h
 objs/task_picklock.o: /usr/include/g++/iostream.h
 objs/task_picklock.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_picklock.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_picklock.o: /usr/include/g++/stl_relops.h
+objs/task_picklock.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_picklock.o: /usr/include/g++/stl_iterator.h
 objs/task_picklock.o: /usr/include/g++/std/bastring.cc
 objs/task_picklock.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
@@ -16716,6 +17407,7 @@ objs/task_picklock.o: /usr/include/g++/stl_function.h
 objs/task_picklock.o: /usr/include/g++/stl_map.h
 objs/task_picklock.o: /usr/include/g++/stl_multimap.h
 objs/task_picklock.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_picklock.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_picklock.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_picklock.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_picklock.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16736,14 +17428,15 @@ objs/task_plant.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_plant.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_plant.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_plant.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_plant.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_plant.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_plant.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_plant.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_plant.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_plant.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_plant.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_plant.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_plant.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_plant.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_plant.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_plant.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_plant.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_plant.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_plant.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_plant.o: /usr/include/g++/stl_relops.h
 objs/task_plant.o: /usr/include/g++/stl_iterator.h
 objs/task_plant.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16759,7 +17452,8 @@ objs/task_plant.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_plant.o: /usr/include/g++/stl_tree.h
 objs/task_plant.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task_plant.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_plant.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task_plant.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_plant.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task_plant.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/task_plant.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_plant.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -16780,14 +17474,15 @@ objs/task_rest.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_rest.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_rest.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_rest.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_rest.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_rest.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_rest.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_rest.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_rest.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_rest.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_rest.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_rest.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_rest.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_rest.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_rest.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_rest.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_rest.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_rest.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_rest.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_rest.o: /usr/include/g++/stl_relops.h
 objs/task_rest.o: /usr/include/g++/stl_iterator.h
 objs/task_rest.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -16802,6 +17497,7 @@ objs/task_rest.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_rest.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_rest.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_rest.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_rest.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_rest.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_rest.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_rest.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -16822,16 +17518,18 @@ objs/task_sacrifice.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_sacrifice.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_sacrifice.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_sacrifice.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_sacrifice.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_sacrifice.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_sacrifice.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_sacrifice.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_sacrifice.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_sacrifice.o: /usr/include/g++/std/bastring.h
-objs/task_sacrifice.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_sacrifice.o: /usr/include/g++/cstddef
 objs/task_sacrifice.o: /usr/include/g++/std/straits.h
 objs/task_sacrifice.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task_sacrifice.o: /usr/include/g++/stl_alloc.h
 objs/task_sacrifice.o: /usr/include/g++/iostream.h
 objs/task_sacrifice.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_sacrifice.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_sacrifice.o: /usr/include/g++/iterator
 objs/task_sacrifice.o: /usr/include/g++/stl_relops.h
 objs/task_sacrifice.o: /usr/include/g++/stl_iterator.h
 objs/task_sacrifice.o: /usr/include/g++/std/bastring.cc
@@ -16851,6 +17549,7 @@ objs/task_sacrifice.o: /usr/include/g++/stl_function.h
 objs/task_sacrifice.o: /usr/include/g++/stl_map.h
 objs/task_sacrifice.o: /usr/include/g++/stl_multimap.h
 objs/task_sacrifice.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_sacrifice.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_sacrifice.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_sacrifice.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_sacrifice.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -16872,15 +17571,16 @@ objs/task_scribe.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_scribe.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_scribe.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_scribe.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_scribe.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_scribe.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_scribe.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_scribe.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_scribe.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_scribe.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_scribe.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_scribe.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_scribe.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_scribe.o: /usr/include/g++/stl_config.h
 objs/task_scribe.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_scribe.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_scribe.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_scribe.o: /usr/include/g++/stl_relops.h
+objs/task_scribe.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_scribe.o: /usr/include/g++/stl_iterator.h
 objs/task_scribe.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_scribe.o: /usr/include/g++/stl_algobase.h
@@ -16897,16 +17597,17 @@ objs/task_scribe.o: /usr/include/g++/stl_tree.h
 objs/task_scribe.o: /usr/include/g++/stl_function.h
 objs/task_scribe.o: /usr/include/g++/stl_map.h
 objs/task_scribe.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_scribe.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/task_scribe.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/task_scribe.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_scribe.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/task_scribe.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_scribe.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/task_scribe.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/task_scribe.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/task_scribe.o: spec_mobs.h materials.h colorstring.h format.h
-objs/task_scribe.o: obj_scroll.h obj_magic_item.h
+objs/task_scribe.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_scribe.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_scribe.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_scribe.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_scribe.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_scribe.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_scribe.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/task_scribe.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/task_scribe.o: person.h monster.h account.h extern.h handler.h
+objs/task_scribe.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/task_scribe.o: format.h obj_scroll.h obj_magic_item.h
 objs/task_search.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/task_search.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/task_search.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -16917,15 +17618,16 @@ objs/task_search.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_search.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_search.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_search.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_search.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_search.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_search.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_search.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_search.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_search.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_search.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_search.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_search.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_search.o: /usr/include/g++/stl_config.h
 objs/task_search.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_search.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_search.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_search.o: /usr/include/g++/stl_relops.h
+objs/task_search.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_search.o: /usr/include/g++/stl_iterator.h
 objs/task_search.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_search.o: /usr/include/g++/stl_algobase.h
@@ -16942,15 +17644,17 @@ objs/task_search.o: /usr/include/g++/stl_tree.h
 objs/task_search.o: /usr/include/g++/stl_function.h
 objs/task_search.o: /usr/include/g++/stl_map.h
 objs/task_search.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_search.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/task_search.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/task_search.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_search.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/task_search.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_search.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/task_search.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/task_search.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/task_search.o: spec_mobs.h materials.h colorstring.h format.h
+objs/task_search.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_search.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_search.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_search.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_search.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_search.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_search.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/task_search.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/task_search.o: person.h monster.h account.h extern.h handler.h
+objs/task_search.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/task_search.o: format.h
 objs/task_seekwater.o: stdsneezy.h /usr/include/g++/cstdio
 objs/task_seekwater.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/task_seekwater.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -16962,16 +17666,18 @@ objs/task_seekwater.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_seekwater.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_seekwater.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_seekwater.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_seekwater.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_seekwater.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_seekwater.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_seekwater.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_seekwater.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_seekwater.o: /usr/include/g++/std/bastring.h
-objs/task_seekwater.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_seekwater.o: /usr/include/g++/cstddef
 objs/task_seekwater.o: /usr/include/g++/std/straits.h
 objs/task_seekwater.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/task_seekwater.o: /usr/include/g++/stl_alloc.h
 objs/task_seekwater.o: /usr/include/g++/iostream.h
 objs/task_seekwater.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_seekwater.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_seekwater.o: /usr/include/g++/iterator
 objs/task_seekwater.o: /usr/include/g++/stl_relops.h
 objs/task_seekwater.o: /usr/include/g++/stl_iterator.h
 objs/task_seekwater.o: /usr/include/g++/std/bastring.cc
@@ -16991,6 +17697,7 @@ objs/task_seekwater.o: /usr/include/g++/stl_function.h
 objs/task_seekwater.o: /usr/include/g++/stl_map.h
 objs/task_seekwater.o: /usr/include/g++/stl_multimap.h
 objs/task_seekwater.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_seekwater.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_seekwater.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_seekwater.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_seekwater.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -17011,15 +17718,16 @@ objs/task_sharpen.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_sharpen.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_sharpen.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_sharpen.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_sharpen.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_sharpen.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_sharpen.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_sharpen.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_sharpen.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_sharpen.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_sharpen.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_sharpen.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_sharpen.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_sharpen.o: /usr/include/g++/stl_config.h
 objs/task_sharpen.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_sharpen.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_sharpen.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_sharpen.o: /usr/include/g++/stl_relops.h
+objs/task_sharpen.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_sharpen.o: /usr/include/g++/stl_iterator.h
 objs/task_sharpen.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_sharpen.o: /usr/include/g++/stl_algobase.h
@@ -17037,6 +17745,7 @@ objs/task_sharpen.o: /usr/include/g++/stl_function.h
 objs/task_sharpen.o: /usr/include/g++/stl_map.h
 objs/task_sharpen.o: /usr/include/g++/stl_multimap.h
 objs/task_sharpen.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_sharpen.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_sharpen.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_sharpen.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_sharpen.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -17057,14 +17766,15 @@ objs/task_sit.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_sit.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_sit.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_sit.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_sit.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_sit.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_sit.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_sit.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_sit.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_sit.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_sit.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_sit.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_sit.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_sit.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_sit.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_sit.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_sit.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_sit.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_sit.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_sit.o: /usr/include/g++/stl_relops.h
 objs/task_sit.o: /usr/include/g++/stl_iterator.h
 objs/task_sit.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17078,7 +17788,8 @@ objs/task_sit.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/task_sit.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/task_sit.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task_sit.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_sit.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task_sit.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_sit.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task_sit.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/task_sit.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_sit.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17097,14 +17808,15 @@ objs/task_skin.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_skin.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_skin.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_skin.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_skin.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_skin.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_skin.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_skin.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_skin.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_skin.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_skin.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_skin.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_skin.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_skin.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_skin.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_skin.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_skin.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_skin.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_skin.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_skin.o: /usr/include/g++/stl_relops.h
 objs/task_skin.o: /usr/include/g++/stl_iterator.h
 objs/task_skin.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17119,6 +17831,7 @@ objs/task_skin.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_skin.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_skin.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_skin.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_skin.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_skin.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_skin.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_skin.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -17139,14 +17852,15 @@ objs/task_sleep.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_sleep.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_sleep.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_sleep.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_sleep.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_sleep.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_sleep.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_sleep.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_sleep.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_sleep.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_sleep.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_sleep.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_sleep.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_sleep.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_sleep.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_sleep.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_sleep.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_sleep.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_sleep.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_sleep.o: /usr/include/g++/stl_relops.h
 objs/task_sleep.o: /usr/include/g++/stl_iterator.h
 objs/task_sleep.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17162,7 +17876,8 @@ objs/task_sleep.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_sleep.o: /usr/include/g++/stl_tree.h
 objs/task_sleep.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task_sleep.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_sleep.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task_sleep.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_sleep.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task_sleep.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/task_sleep.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_sleep.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17181,15 +17896,16 @@ objs/task_smythe.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_smythe.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_smythe.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_smythe.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_smythe.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_smythe.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_smythe.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_smythe.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_smythe.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_smythe.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_smythe.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_smythe.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_smythe.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_smythe.o: /usr/include/g++/stl_config.h
 objs/task_smythe.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_smythe.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_smythe.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_smythe.o: /usr/include/g++/stl_relops.h
+objs/task_smythe.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_smythe.o: /usr/include/g++/stl_iterator.h
 objs/task_smythe.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_smythe.o: /usr/include/g++/stl_algobase.h
@@ -17206,15 +17922,17 @@ objs/task_smythe.o: /usr/include/g++/stl_tree.h
 objs/task_smythe.o: /usr/include/g++/stl_function.h
 objs/task_smythe.o: /usr/include/g++/stl_map.h
 objs/task_smythe.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_smythe.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/task_smythe.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/task_smythe.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_smythe.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
-objs/task_smythe.o: body.h race.h skills.h disease.h trap.h task.h weather.h
-objs/task_smythe.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/task_smythe.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/task_smythe.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/task_smythe.o: spec_mobs.h materials.h colorstring.h format.h obj_tool.h
+objs/task_smythe.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_smythe.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_smythe.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_smythe.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_smythe.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_smythe.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_smythe.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/task_smythe.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/task_smythe.o: person.h monster.h account.h extern.h handler.h
+objs/task_smythe.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/task_smythe.o: format.h obj_tool.h
 objs/task_spell_friends.o: stdsneezy.h /usr/include/g++/cstdio
 objs/task_spell_friends.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/task_spell_friends.o: /usr/include/machine/ansi.h
@@ -17228,19 +17946,19 @@ objs/task_spell_friends.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/task_spell_friends.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/task_spell_friends.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/task_spell_friends.o: /usr/include/string.h /usr/include/stdarg.h
-objs/task_spell_friends.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/task_spell_friends.o: /usr/include/g++/string
+objs/task_spell_friends.o: /usr/include/g++/cmath
+objs/task_spell_friends.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_spell_friends.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/task_spell_friends.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_spell_friends.o: /usr/include/g++/std/bastring.h
-objs/task_spell_friends.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_spell_friends.o: /usr/include/g++/cstddef
 objs/task_spell_friends.o: /usr/include/g++/std/straits.h
 objs/task_spell_friends.o: /usr/include/g++/alloc.h
 objs/task_spell_friends.o: /usr/include/g++/stl_config.h
 objs/task_spell_friends.o: /usr/include/g++/stl_alloc.h
 objs/task_spell_friends.o: /usr/include/g++/iostream.h
 objs/task_spell_friends.o: /usr/include/g++/streambuf.h
-objs/task_spell_friends.o: /usr/include/g++/libio.h
-objs/task_spell_friends.o: /usr/include/g++/_G_config.h
-objs/task_spell_friends.o: /usr/include/g++/iterator
+objs/task_spell_friends.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_spell_friends.o: /usr/include/g++/stl_relops.h
 objs/task_spell_friends.o: /usr/include/g++/stl_iterator.h
 objs/task_spell_friends.o: /usr/include/g++/std/bastring.cc
@@ -17262,16 +17980,18 @@ objs/task_spell_friends.o: /usr/include/g++/stl_function.h
 objs/task_spell_friends.o: /usr/include/g++/stl_map.h
 objs/task_spell_friends.o: /usr/include/g++/stl_multimap.h
 objs/task_spell_friends.o: /usr/include/g++/iostream /usr/include/g++/sstream
-objs/task_spell_friends.o: sstring.h low.h enum.h spells.h structs.h parse.h
-objs/task_spell_friends.o: immunity.h discipline.h spell2.h db.h ansi.h
-objs/task_spell_friends.o: cmd_dissect.h client.h response.h faction.h comm.h
-objs/task_spell_friends.o: toggle.h wiz_powers.h cmd_message.h stats.h
-objs/task_spell_friends.o: limbs.h body.h race.h skills.h disease.h trap.h
-objs/task_spell_friends.o: task.h weather.h sound.h create.h thing.h room.h
-objs/task_spell_friends.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
-objs/task_spell_friends.o: being.h person.h monster.h account.h extern.h
-objs/task_spell_friends.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/task_spell_friends.o: materials.h colorstring.h format.h
+objs/task_spell_friends.o: /usr/include/g++/fstream
+objs/task_spell_friends.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/task_spell_friends.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/task_spell_friends.o: spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/task_spell_friends.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/task_spell_friends.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/task_spell_friends.o: skills.h disease.h trap.h task.h weather.h sound.h
+objs/task_spell_friends.o: create.h thing.h room.h obj.h spec_objs.h
+objs/task_spell_friends.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/task_spell_friends.o: monster.h account.h extern.h handler.h obj_money.h
+objs/task_spell_friends.o: rent.h spec_mobs.h materials.h colorstring.h
+objs/task_spell_friends.o: format.h
 objs/task_stavecharge.o: stdsneezy.h /usr/include/g++/cstdio
 objs/task_stavecharge.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/task_stavecharge.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -17284,19 +18004,19 @@ objs/task_stavecharge.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/task_stavecharge.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/task_stavecharge.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/task_stavecharge.o: /usr/include/string.h /usr/include/stdarg.h
+objs/task_stavecharge.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/task_stavecharge.o: /usr/include/stddef.h /usr/include/math.h
 objs/task_stavecharge.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/task_stavecharge.o: /usr/include/g++/string
 objs/task_stavecharge.o: /usr/include/g++/std/bastring.h
-objs/task_stavecharge.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_stavecharge.o: /usr/include/g++/cstddef
 objs/task_stavecharge.o: /usr/include/g++/std/straits.h
 objs/task_stavecharge.o: /usr/include/g++/alloc.h
 objs/task_stavecharge.o: /usr/include/g++/stl_config.h
 objs/task_stavecharge.o: /usr/include/g++/stl_alloc.h
 objs/task_stavecharge.o: /usr/include/g++/iostream.h
 objs/task_stavecharge.o: /usr/include/g++/streambuf.h
-objs/task_stavecharge.o: /usr/include/g++/libio.h
-objs/task_stavecharge.o: /usr/include/g++/_G_config.h
-objs/task_stavecharge.o: /usr/include/g++/iterator
+objs/task_stavecharge.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_stavecharge.o: /usr/include/g++/stl_relops.h
 objs/task_stavecharge.o: /usr/include/g++/stl_iterator.h
 objs/task_stavecharge.o: /usr/include/g++/std/bastring.cc
@@ -17316,6 +18036,7 @@ objs/task_stavecharge.o: /usr/include/g++/stl_function.h
 objs/task_stavecharge.o: /usr/include/g++/stl_map.h
 objs/task_stavecharge.o: /usr/include/g++/stl_multimap.h
 objs/task_stavecharge.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_stavecharge.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_stavecharge.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_stavecharge.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_stavecharge.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -17337,14 +18058,15 @@ objs/task_track.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_track.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_track.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_track.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_track.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_track.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_track.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_track.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_track.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_track.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_track.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_track.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_track.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_track.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_track.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_track.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_track.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_track.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_track.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_track.o: /usr/include/g++/stl_relops.h
 objs/task_track.o: /usr/include/g++/stl_iterator.h
 objs/task_track.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17360,7 +18082,8 @@ objs/task_track.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_track.o: /usr/include/g++/stl_tree.h
 objs/task_track.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/task_track.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/task_track.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/task_track.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/task_track.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/task_track.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/task_track.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/task_track.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17385,10 +18108,13 @@ objs/task_trance_of_blades.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/task_trance_of_blades.o: /usr/include/runetype.h
 objs/task_trance_of_blades.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_trance_of_blades.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_trance_of_blades.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/task_trance_of_blades.o: /usr/include/errno.h /usr/include/g++/string
+objs/task_trance_of_blades.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_trance_of_blades.o: /usr/include/g++/_G_config.h
+objs/task_trance_of_blades.o: /usr/include/stddef.h /usr/include/math.h
+objs/task_trance_of_blades.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/task_trance_of_blades.o: /usr/include/g++/string
 objs/task_trance_of_blades.o: /usr/include/g++/std/bastring.h
-objs/task_trance_of_blades.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/task_trance_of_blades.o: /usr/include/g++/cstddef
 objs/task_trance_of_blades.o: /usr/include/g++/std/straits.h
 objs/task_trance_of_blades.o: /usr/include/g++/alloc.h
 objs/task_trance_of_blades.o: /usr/include/g++/stl_config.h
@@ -17396,7 +18122,6 @@ objs/task_trance_of_blades.o: /usr/include/g++/stl_alloc.h
 objs/task_trance_of_blades.o: /usr/include/g++/iostream.h
 objs/task_trance_of_blades.o: /usr/include/g++/streambuf.h
 objs/task_trance_of_blades.o: /usr/include/g++/libio.h
-objs/task_trance_of_blades.o: /usr/include/g++/_G_config.h
 objs/task_trance_of_blades.o: /usr/include/g++/iterator
 objs/task_trance_of_blades.o: /usr/include/g++/stl_relops.h
 objs/task_trance_of_blades.o: /usr/include/g++/stl_iterator.h
@@ -17420,8 +18145,10 @@ objs/task_trance_of_blades.o: /usr/include/g++/stl_function.h
 objs/task_trance_of_blades.o: /usr/include/g++/stl_map.h
 objs/task_trance_of_blades.o: /usr/include/g++/stl_multimap.h
 objs/task_trance_of_blades.o: /usr/include/g++/iostream
-objs/task_trance_of_blades.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/task_trance_of_blades.o: spells.h structs.h parse.h immunity.h
+objs/task_trance_of_blades.o: /usr/include/g++/sstream
+objs/task_trance_of_blades.o: /usr/include/g++/fstream
+objs/task_trance_of_blades.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/task_trance_of_blades.o: enum.h spells.h structs.h parse.h immunity.h
 objs/task_trance_of_blades.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_trance_of_blades.o: client.h response.h faction.h comm.h toggle.h
 objs/task_trance_of_blades.o: wiz_powers.h cmd_message.h stats.h limbs.h
@@ -17442,14 +18169,15 @@ objs/task_trap.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_trap.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_trap.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_trap.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_trap.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_trap.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_trap.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_trap.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_trap.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_trap.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_trap.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_trap.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/task_trap.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/task_trap.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_trap.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/task_trap.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_trap.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/task_trap.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/task_trap.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/task_trap.o: /usr/include/g++/stl_relops.h
 objs/task_trap.o: /usr/include/g++/stl_iterator.h
 objs/task_trap.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17464,6 +18192,7 @@ objs/task_trap.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/task_trap.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
 objs/task_trap.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
 objs/task_trap.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_trap.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_trap.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_trap.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
 objs/task_trap.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
@@ -17484,15 +18213,16 @@ objs/task_whittle.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/task_whittle.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/task_whittle.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/task_whittle.o: /usr/include/g++/cstring /usr/include/string.h
-objs/task_whittle.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/task_whittle.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/task_whittle.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/task_whittle.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/task_whittle.o: /usr/include/errno.h /usr/include/g++/string
 objs/task_whittle.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/task_whittle.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/task_whittle.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/task_whittle.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/task_whittle.o: /usr/include/g++/stl_config.h
 objs/task_whittle.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/task_whittle.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/task_whittle.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/task_whittle.o: /usr/include/g++/stl_relops.h
+objs/task_whittle.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/task_whittle.o: /usr/include/g++/stl_iterator.h
 objs/task_whittle.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/task_whittle.o: /usr/include/g++/stl_algobase.h
@@ -17510,6 +18240,7 @@ objs/task_whittle.o: /usr/include/g++/stl_function.h
 objs/task_whittle.o: /usr/include/g++/stl_map.h
 objs/task_whittle.o: /usr/include/g++/stl_multimap.h
 objs/task_whittle.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/task_whittle.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
 objs/task_whittle.o: sstring.h low.h enum.h spells.h structs.h parse.h
 objs/task_whittle.o: immunity.h discipline.h spell2.h db.h ansi.h
 objs/task_whittle.o: cmd_dissect.h client.h response.h faction.h comm.h
@@ -17531,14 +18262,15 @@ objs/thing.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/thing.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/thing.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/thing.o: /usr/include/g++/cstring /usr/include/string.h
-objs/thing.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/thing.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/thing.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/thing.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/thing.o: /usr/include/errno.h /usr/include/g++/string
 objs/thing.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/thing.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/thing.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/thing.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/thing.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/thing.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/thing.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/thing.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/thing.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/thing.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/thing.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/thing.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/thing.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -17551,7 +18283,8 @@ objs/thing.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/thing.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/thing.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/thing.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/thing.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/thing.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/thing.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/thing.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/thing.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/thing.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -17576,14 +18309,15 @@ objs/toggle.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/toggle.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/toggle.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/toggle.o: /usr/include/g++/cstring /usr/include/string.h
-objs/toggle.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/toggle.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/toggle.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/toggle.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/toggle.o: /usr/include/errno.h /usr/include/g++/string
 objs/toggle.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/toggle.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/toggle.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/toggle.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/toggle.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/toggle.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/toggle.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/toggle.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/toggle.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/toggle.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/toggle.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/toggle.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/toggle.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -17596,7 +18330,8 @@ objs/toggle.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/toggle.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/toggle.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/toggle.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/toggle.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/toggle.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/toggle.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/toggle.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/toggle.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/toggle.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -17615,27 +18350,29 @@ objs/trap.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/trap.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/trap.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/trap.o: /usr/include/g++/cstring /usr/include/string.h
-objs/trap.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/trap.o: /usr/include/errno.h /usr/include/g++/string
-objs/trap.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/trap.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/trap.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/trap.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/trap.o: /usr/include/math.h /usr/include/g++/cerrno /usr/include/errno.h
+objs/trap.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
+objs/trap.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
 objs/trap.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
 objs/trap.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
 objs/trap.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/trap.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/trap.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/trap.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/trap.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/trap.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/trap.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/trap.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/trap.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/trap.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/trap.o: /usr/include/g++/stl_iterator.h /usr/include/g++/std/bastring.cc
+objs/trap.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/trap.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/trap.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/trap.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/trap.o: /usr/include/g++/new /usr/include/g++/exception
+objs/trap.o: /usr/include/g++/stl_construct.h
 objs/trap.o: /usr/include/g++/stl_uninitialized.h
 objs/trap.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/trap.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/trap.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/trap.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/trap.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/trap.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/trap.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/trap.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
 objs/trap.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
 objs/trap.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
@@ -17655,14 +18392,15 @@ objs/utility.o: /usr/include/machine/endian.h /usr/include/g++/cctype
 objs/utility.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/utility.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/utility.o: /usr/include/g++/cstring /usr/include/string.h
-objs/utility.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/utility.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/utility.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/utility.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/utility.o: /usr/include/errno.h /usr/include/g++/string
 objs/utility.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/utility.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/utility.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/utility.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/utility.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/utility.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/utility.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/utility.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/utility.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/utility.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/utility.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
 objs/utility.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
 objs/utility.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
@@ -17675,7 +18413,8 @@ objs/utility.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/utility.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/utility.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/utility.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/utility.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/utility.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/utility.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/utility.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/utility.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/utility.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17694,8 +18433,7 @@ objs/utility.o: /usr/include/sys/wait.h /usr/include/netinet/in.h
 objs/utility.o: /usr/include/netinet6/in6.h /usr/include/netdb.h
 objs/utility.o: /usr/include/fcntl.h /usr/include/arpa/telnet.h
 objs/utility.o: /usr/include/sys/resource.h /usr/include/sys/syscall.h
-objs/utility.o: /usr/include/sys/param.h /usr/include/g++/cmath
-objs/utility.o: /usr/include/math.h /usr/include/dirent.h
+objs/utility.o: /usr/include/sys/param.h /usr/include/dirent.h
 objs/utility.o: /usr/include/sys/dirent.h /usr/include/sys/stat.h shop.h
 objs/utility.o: combat.h statistics.h socket.h games.h
 objs/utility.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
@@ -17735,7 +18473,8 @@ objs/weather.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/weather.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/weather.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/weather.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/weather.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/weather.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/weather.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/weather.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/weather.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/weather.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17756,14 +18495,15 @@ objs/wiz_data.o: /usr/include/g++/ctime /usr/include/g++/cctype
 objs/wiz_data.o: /usr/include/ctype.h /usr/include/runetype.h
 objs/wiz_data.o: /usr/include/g++/cassert /usr/include/assert.h
 objs/wiz_data.o: /usr/include/g++/cstring /usr/include/string.h
-objs/wiz_data.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/wiz_data.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/wiz_data.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/wiz_data.o: /usr/include/math.h /usr/include/g++/cerrno
 objs/wiz_data.o: /usr/include/errno.h /usr/include/g++/string
 objs/wiz_data.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/wiz_data.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/wiz_data.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/wiz_data.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/wiz_data.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/wiz_data.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/wiz_data.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/wiz_data.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/wiz_data.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/wiz_data.o: /usr/include/g++/libio.h /usr/include/g++/iterator
 objs/wiz_data.o: /usr/include/g++/stl_relops.h
 objs/wiz_data.o: /usr/include/g++/stl_iterator.h
 objs/wiz_data.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17777,7 +18517,8 @@ objs/wiz_data.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
 objs/wiz_data.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
 objs/wiz_data.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/wiz_data.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/wiz_data.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/wiz_data.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/wiz_data.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/wiz_data.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/wiz_data.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/wiz_data.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
@@ -17798,13 +18539,14 @@ objs/wiz_powers.o: /usr/include/g++/cctype /usr/include/ctype.h
 objs/wiz_powers.o: /usr/include/runetype.h /usr/include/g++/cassert
 objs/wiz_powers.o: /usr/include/assert.h /usr/include/g++/cstring
 objs/wiz_powers.o: /usr/include/string.h /usr/include/stdarg.h
+objs/wiz_powers.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/wiz_powers.o: /usr/include/stddef.h /usr/include/math.h
 objs/wiz_powers.o: /usr/include/g++/cerrno /usr/include/errno.h
 objs/wiz_powers.o: /usr/include/g++/string /usr/include/g++/std/bastring.h
-objs/wiz_powers.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/wiz_powers.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/wiz_powers.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
-objs/wiz_powers.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
-objs/wiz_powers.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/wiz_powers.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
+objs/wiz_powers.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/wiz_powers.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/wiz_powers.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
 objs/wiz_powers.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
 objs/wiz_powers.o: /usr/include/g++/stl_iterator.h
 objs/wiz_powers.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
@@ -17820,7 +18562,8 @@ objs/wiz_powers.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
 objs/wiz_powers.o: /usr/include/g++/stl_tree.h
 objs/wiz_powers.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/wiz_powers.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/wiz_powers.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/wiz_powers.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/wiz_powers.o: /usr/include/g++/fstream.h sstring.h low.h enum.h spells.h
 objs/wiz_powers.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
 objs/wiz_powers.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
 objs/wiz_powers.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
