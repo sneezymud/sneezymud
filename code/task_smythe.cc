@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.8  2002/03/14 15:43:13  jesus
+// *** empty log message ***
+//
 // Revision 5.7  2002/03/14 15:30:38  jesus
 // *** empty log message ***
 //
@@ -95,7 +98,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
 {
   TTool *forge = NULL, *anvil = NULL;
   int percent;
-  int movemod = ::number(5,22);
+  int movemod = ::number(10,25);
   int movebonus = ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10)));
   const int HEATING_TIME = 3;
 
@@ -108,7 +111,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
   }
 
   if (movebonus > movemod) {
-    movebonus = 0;
+    movebonus = 5;
   }
 
   if (ch->getRace() == RACE_DWARF) {
