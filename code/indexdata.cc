@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "statistics.h"
+#include "database.h"
 
 extern FILE *obj_f;
 extern FILE *mob_f;
@@ -246,9 +247,6 @@ void generate_obj_index()
 void generate_obj_index()
 {
   objIndexData *tmpi = NULL;
-  MYSQL_RES *res, *extra_res, *affect_res;
-  MYSQL_ROW row, extra_row, affect_row;
-  MYSQL *extra_db, *affect_db;
   extraDescription *new_descr;
   int i=0;
 
@@ -257,54 +255,32 @@ void generate_obj_index()
   obj_index.reserve(8192);
 
   /****** extra ******/
-  extra_db=mysql_init(NULL);
-  if(!mysql_real_connect(extra_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
-
-  if(mysql_query(extra_db, "select vnum, name, description from objextra order by vnum")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(extra_db));
-    exit(0);
-  }
-  extra_res=mysql_use_result(extra_db);
-  extra_row=mysql_fetch_row(extra_res);
+  TDatabase extra_db("sneezy");
+  extra_db.query("select vnum, name, description from objextra order by vnum");
+  extra_db.fetchRow();
 
   /****** affect ******/
-  affect_db=mysql_init(NULL);
-  if(!mysql_real_connect(affect_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
+  TDatabase affect_db("sneezy");
+  affect_db.query("select vnum, type, mod1, mod2 from objaffect order by vnum");
+  affect_db.fetchRow();
 
-  if(mysql_query(affect_db, "select vnum, type, mod1, mod2 from objaffect order by vnum")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(affect_db));
-    exit(0);
-  }
-  affect_res=mysql_use_result(affect_db);
-  affect_row=mysql_fetch_row(affect_res);
   /********************/
 
+  TDatabase db("sneezy");
+  db.query("select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum");
 
-  if(dbquery(TRUE, &res, "sneezy", "generate_obj_index", "select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum")){
-    vlogf(LOG_BUG, "Database error: generate_obj_index");
-    exit(0);
-  }
-
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     tmpi = new objIndexData();
     if (!tmpi) {
       perror("indexData");
       exit(0);
     }
     
-    tmpi->virt=atoi(row[0]);
-    tmpi->name=mud_str_dup(row[1]);
-    tmpi->short_desc=mud_str_dup(row[2]);
-    tmpi->long_desc=mud_str_dup(row[3]);
-    tmpi->max_exist=atoi(row[4]);
+    tmpi->virt=atoi(db.getColumn(0));
+    tmpi->name=mud_str_dup(db.getColumn(1));
+    tmpi->short_desc=mud_str_dup(db.getColumn(2));
+    tmpi->long_desc=mud_str_dup(db.getColumn(3));
+    tmpi->max_exist=atoi(db.getColumn(4));
 
     // use 327 so we don't go over 32765 in calculation
     if (tmpi->max_exist < 327) {
@@ -315,53 +291,46 @@ void generate_obj_index()
       tmpi->max_exist = max(tmpi->max_exist, (short int) (gamePort == BETA_GAMEPORT ? 9999 : 1));
     
 
-    tmpi->spec=atoi(row[5]);
-    tmpi->weight=atof(row[6]);
-    tmpi->max_struct=atoi(row[7]);
-    tmpi->where_worn=atoi(row[8]);
-    tmpi->itemtype=atoi(row[9]);
-    tmpi->value=atoi(row[10]);
-    if(strcmp(row[11], "")) tmpi->description=mud_str_dup(row[11]);
+    tmpi->spec=atoi(db.getColumn(5));
+    tmpi->weight=atof(db.getColumn(6));
+    tmpi->max_struct=atoi(db.getColumn(7));
+    tmpi->where_worn=atoi(db.getColumn(8));
+    tmpi->itemtype=atoi(db.getColumn(9));
+    tmpi->value=atoi(db.getColumn(10));
+    if(strcmp(db.getColumn(11), "")) tmpi->description=mud_str_dup(db.getColumn(11));
     else tmpi->description=NULL;
 
-    while(extra_row && atoi(extra_row[0])==tmpi->virt){
+    while(extra_db.getColumn(0) && atoi(extra_db.getColumn(0))==tmpi->virt){
       new_descr = new extraDescription();
-      new_descr->keyword = mud_str_dup(extra_row[1]);
-      new_descr->description = mud_str_dup(extra_row[2]);
+      new_descr->keyword = mud_str_dup(extra_db.getColumn(1));
+      new_descr->description = mud_str_dup(extra_db.getColumn(2));
       new_descr->next = tmpi->ex_description;
       tmpi->ex_description = new_descr;
 
-      extra_row=mysql_fetch_row(extra_res);
+      extra_db.fetchRow();
     }
 
     i=0;
-    while(affect_row && atoi(affect_row[0])==tmpi->virt){
-      tmpi->affected[i].location = mapFileToApply(atoi(affect_row[1]));
+    while(affect_db.getColumn(0) && atoi(affect_db.getColumn(0))==tmpi->virt){
+      tmpi->affected[i].location = mapFileToApply(atoi(affect_db.getColumn(1)));
 
       if (tmpi->affected[i].location == APPLY_SPELL)
-	tmpi->affected[i].modifier = mapFileToSpellnum(atoi(affect_row[2]));
+	tmpi->affected[i].modifier = mapFileToSpellnum(atoi(affect_db.getColumn(2)));
       else
-	tmpi->affected[i].modifier = atoi(affect_row[2]);
+	tmpi->affected[i].modifier = atoi(affect_db.getColumn(2));
       
-      tmpi->affected[i].modifier2 = atoi(affect_row[3]);
+      tmpi->affected[i].modifier2 = atoi(affect_db.getColumn(3));
       tmpi->affected[i].type = TYPE_UNDEFINED;
       tmpi->affected[i].level = 0;
       tmpi->affected[i].bitvector = 0;      
 
-      affect_row=mysql_fetch_row(affect_res);
+      affect_db.fetchRow();
       i++;
     }
 
     obj_index.push_back(*tmpi);
     delete tmpi;
   }
-
-  mysql_free_result(res);
-
-  mysql_free_result(extra_res);
-  mysql_close(extra_db);
-  mysql_free_result(affect_res);
-  mysql_close(affect_db);
 
   return;
 }

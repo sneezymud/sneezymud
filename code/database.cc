@@ -18,12 +18,12 @@ TDatabase::TDatabase(string tdb) :
   db(NULL)
 {
   setDB(tdb);
-    vlogf(LOG_DB, "constructor setDB");
+  //    vlogf(LOG_DB, "constructor setDB");
 }
 
 TDatabase::~TDatabase(){
   mysql_free_result(res);
-    vlogf(LOG_DB, "query results freed");
+  //    vlogf(LOG_DB, "query results freed");
 }
 
 void TDatabase::setDB(string tdb){
@@ -64,14 +64,14 @@ char *TDatabase::getColumn(unsigned int i){
 bool TDatabase::query(const char *query,...){
   va_list ap;
   string buf;
-  int fromlen=0, tolen=(512*2)+1;
-  char *from=NULL, to[tolen], numbuf[32];
+  int fromlen=0, tolen=(512*2)+1, numlen=32;
+  char *from=NULL, to[tolen], numbuf[numlen];
   MYSQL_RES *restmp;
   
   // no db set yet
   if(!db)
     return FALSE;
-  
+
   va_start(ap, query);
   do {
     if(*query=='%'){
@@ -92,11 +92,11 @@ bool TDatabase::query(const char *query,...){
 	  buf += to;
 	  break;
 	case 'i':
-	  snprintf(numbuf, strlen(numbuf)-1, "%i", va_arg(ap, int));
+	  snprintf(numbuf, numlen-1, "%i", va_arg(ap, int));
 	  buf += numbuf;
 	  break;
 	case 'f':
-	  snprintf(numbuf, strlen(numbuf)-1, "%f", va_arg(ap, double));
+	  snprintf(numbuf, numlen-1, "%f", va_arg(ap, double));
 	  buf += numbuf;
 	  break;
 	case '%':
@@ -129,8 +129,8 @@ bool TDatabase::query(const char *query,...){
     res=restmp;
   }
 
-  if(res)
-    vlogf(LOG_DB, "New query results stored.");
+  //  if(res)
+  //    vlogf(LOG_DB, "New query results stored.");
   
   return TRUE;
 }
