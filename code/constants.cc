@@ -641,7 +641,7 @@ const char * const extra_bits[] =
   "Float",
   "No purge",
   "Newbie",
-  "*Do Not Use*", // now unused
+  "No-Junk (Player)", // now unused
   "*Do Not Use*", // now unused
   "*Do Not Use*", // now unused
   "Item Attached",

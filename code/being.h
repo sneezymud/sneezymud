@@ -1740,6 +1740,7 @@ class TBeing : public TThing {
     int doGive(const char *, giveTypeT = GIVE_FLAG_DEF);
     int doMount(const char *, cmdTypeT, TBeing *);
     int doJunk(const char *, TObj *);
+    int doNoJunk(const char *, TObj *);
     int doDonate(const char *);
     int doSteal(const char *, TBeing *);
     void doRestore(const char *);

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: parse.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*************************************************************************
 
       SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -292,10 +277,13 @@ enum cmdTypeT {
      CMD_REFUEL,
      CMD_SHOW,
      CMD_BODYSLAM,
+     CMD_SPIN,
+     CMD_TRANCE_OF_BLADES,
      CMD_INVISIBLE,
      CMD_GAIN,
      CMD_TIMESHIFT,
      CMD_DISARM,
+     CMD_PARRY,
      CMD_THINK,
      CMD_ENTER,
      CMD_FILL,
@@ -358,10 +346,9 @@ enum cmdTypeT {
      CMD_RECEIVE,
      CMD_CLS,
      CMD_REPAIR,
+     CMD_SACRIFICE,
      CMD_TERMINAL,
      CMD_PROMPT,
-     CMD_BAMFIN,
-     CMD_BAMFOUT,
      CMD_GLANCE,
      CMD_CHECKLOG,
      CMD_LOGLIST,
@@ -459,6 +446,7 @@ enum cmdTypeT {
      CMD_BOP,
      CMD_JUMP,
      CMD_JUNK,
+     CMD_NOJUNK,
      CMD_WHIMPER,
      CMD_SNEER,
      CMD_MOON,
@@ -536,7 +524,6 @@ enum cmdTypeT {
      CMD_DIG,
      CMD_COVER,
      CMD_OPERATE,
-     CMD_LONGDESCR,
      CMD_SPELLS,
      CMD_COMPARE,
      CMD_TEST_FIGHT,
@@ -552,6 +539,12 @@ enum cmdTypeT {
      CMD_SEDIT,
      CMD_RETRAIN,
      CMD_VISIBLE,
+     CMD_TRIGGER,
+     CMD_STORE,
+     CMD_ZONEFILE,
+     CMD_LOOT,
+     CMD_TROPHY,
+     CMD_FISH,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow
@@ -574,9 +567,13 @@ enum cmdTypeT {
        CMD_RESP_PACKAGE,
        CMD_RESP_PULSE,
        CMD_RESP_CHECKROOM,
+       CMD_RESP_CHECKNROOM,
        CMD_RESP_CHECKZONE,
+       CMD_RESP_MOVETO,
+       CMD_RESP_DESTINATION,
 
        CMD_GENERIC_PULSE,
+       CMD_GENERIC_QUICK_PULSE,
        CMD_GENERIC_CREATED,
        CMD_GENERIC_RESET,
        CMD_GENERIC_INIT,

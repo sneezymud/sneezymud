@@ -2,21 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_egotrip.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////// 
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
 //      "egotrip.cc" - The egotrip command
 //  
 //////////////////////////////////////////////////////////////////////////
@@ -37,7 +22,7 @@ void TBeing::doEgoTrip(const char *arg)
     return;
   }
 
-  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\">\n\r";
+  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\">\n\r";
 
 //  char argument[256];
   string argument, sarg = arg, restarg;
@@ -65,7 +50,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (rc)
         found = true;
     }
-    vlogf(5, "%s egotripped deities", getName());
+    vlogf(LOG_MISC, "%s egotripped deities", getName());
     if (!found)
       sendTo("No deities in The World.\n\r");
     return;
@@ -76,13 +61,16 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(5, "%s egotripped bless", getName());
+    vlogf(LOG_MISC, "%s egotripped bless", getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
         continue;
+
       TBeing *ch = d->character;
-      if (!ch)
+
+      // Try and ditch some of the un-needed spam/waste.
+      if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
 #if 0
 // doesn't work if not in room
@@ -94,6 +82,40 @@ void TBeing::doEgoTrip(const char *arg)
 #endif
       bless(this, ch);
     }
+    return;
+  } else if (is_abbrev(argument, "crit")) {
+    string target;
+    restarg = one_argument(restarg, target);
+    if (target.empty()) {
+      sendTo("Syntax: egotrip crit <target> <crit>\n\r");
+      return;
+    }
+    TBeing *ch = get_char_vis_world(this, target.c_str(), NULL, EXACT_NO);
+    if (!ch) {
+      sendTo("Could not locate character.\n\r");
+      sendTo("Syntax: egotrip crit <target> <crit>\n\r");
+      return;
+    }
+    string whichcrit;
+    one_argument(restarg, whichcrit);
+    if (whichcrit.empty()) {
+      sendTo("Syntax: egotrip crit <target> <crit>\n\r");
+      return;
+    }
+    int crit = atoi(whichcrit);
+    if (crit > 100 || crit < 1) {
+      sendTo("Crit is outside of range. Must be 1-100.\n\r");
+      sendTo("Syntax: egotrip crit <target> <crit>\n\r");
+      return;
+    }
+    affectedData aff;
+    aff.type = AFFECT_DUMMY;
+    aff.level = 60;
+    aff.duration = 5;
+    aff.modifier2 = crit;
+    ch->affectTo(&aff);
+    sendTo("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r",ch->getName());
+    vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit)
     return;
   } else if (is_abbrev(argument, "blast")) {
     string target;
@@ -108,7 +130,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip blast <target>\n\r");
       return;
     }
-    vlogf(5, "%s egotrip blasted %s", getName(), ch->getName());
+    vlogf(LOG_MISC, "%s egotrip blasted %s", getName(), ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -160,7 +182,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    vlogf(5, "%s egotrip damned %s", getName(), ch->getName());
+    vlogf(LOG_MISC, "%s egotrip damned %s", getName(), ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -207,13 +229,31 @@ void TBeing::doEgoTrip(const char *arg)
       act("$N now hates $p.", false, this, ch, tmon, TO_CHAR);
     }
     return;
+  } else if (is_abbrev(argument, "wander")) {
+    TThing *t, *t2;
+    for (t = roomp->stuff; t; t = t2) {
+      t2 = t->nextThing;
+      TMonster *tmon = dynamic_cast<TMonster *>(t);
+      if (!tmon)
+        continue;
+      if (IS_SET(tmon->specials.act, ACT_SENTINEL)) {
+        act("$n is set sentinel.", false, tmon, 0, this, TO_VICT);
+        continue;
+      }
+      int rc = tmon->wanderAround();
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete tmon;
+        tmon = NULL;
+      }
+    }
+    return;
   } else if (is_abbrev(argument, "cleanse")) {
     if (!isImmortal() || !desc) {
       sendTo("You must be immortal to do this.\n\r");
       return;
     }
 
-    vlogf(5, "%s egotripped cleanse", getName());
+    vlogf(LOG_MISC, "%s egotripped cleanse", getName());
 
     TBeing       *tBeing;
     affectedData *tAff = NULL,
@@ -221,7 +261,7 @@ void TBeing::doEgoTrip(const char *arg)
 
     for (tBeing = character_list; tBeing; tBeing = tBeing->next) {
       if (!tBeing->name) {
-        vlogf(10, "Something with NULL name in world being list.");
+        vlogf(LOG_BUG, "Something with NULL name in world being list.");
         continue;
       }
 
@@ -236,12 +276,12 @@ void TBeing::doEgoTrip(const char *arg)
 
         tBeing->sendTo("%s has cured your %s.\n\r",
                        good_cap(getName()).c_str(),
-                       DiseaseInfo[DISEASE_INDEX(tAff->modifier)].name);
+                       DiseaseInfo[affToDisease(*tAff)].name);
 
         if (!strcmp("Lapsos", getName()))
           sendTo(COLOR_BASIC, "Your cure %s of: %s.\n\r",
                  tBeing->getName(),
-                 DiseaseInfo[DISEASE_INDEX(tAff->modifier)].name);
+                 DiseaseInfo[affToDisease(*tAff)].name);
 
         if (tAff->modifier == DISEASE_POISON) {
           tBeing->affectFrom(SPELL_POISON);
