@@ -857,8 +857,13 @@ int TSocket::gameLoop()
 	      act("$n drifts in from below.",
 		  FALSE, smoke, 0, 0, TO_ROOM); 
 	    } else {
-	      // otherwise find the nearest outdoor room
-	      dirTypeT dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, true);
+	      dirTypeT dir;
+	      // check portals first
+	      
+	      dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, true);
+	      
+	      if(dir == -1)
+		dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 10, 0, NULL, false);
 
 	      if(dir >= MAX_DIR){
 		dir=dirTypeT(dir-MAX_DIR+1);

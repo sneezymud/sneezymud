@@ -1259,57 +1259,59 @@ dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, b
         vlogf(LOG_BUG, "Problem iterating path map.");
         continue;
       }
-      for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        roomDirData *exitp = rp->dir_option[dir];
-        TRoom *hp = NULL;
-        if (exitp && 
-            (hp = real_roomp(exitp->to_room)) &&
-            (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
-          // check in_zone criteria
-          if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
-            continue;
-          }
+      if(!use_portals){
+	for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+	  roomDirData *exitp = rp->dir_option[dir];
+	  TRoom *hp = NULL;
+	  if (exitp && 
+	      (hp = real_roomp(exitp->to_room)) &&
+	      (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
+	    // check in_zone criteria
+	    if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
+	      continue;
+	    }
 
-          // do we have this room already?
-          map<int, pathData *>::const_iterator CT;
-          CT = path_map.find(exitp->to_room);
-          if (CT != path_map.end())
-            continue;
-          CT = next_map.find(exitp->to_room);
-          if (CT != next_map.end())
-            continue;
+	    // do we have this room already?
+	    map<int, pathData *>::const_iterator CT;
+	    CT = path_map.find(exitp->to_room);
+	    if (CT != path_map.end())
+	      continue;
+	    CT = next_map.find(exitp->to_room);
+	    if (CT != next_map.end())
+	      continue;
 
-          // is this our target?
-          if ((pred) (exitp->to_room, data)) {
-            // found our target, walk our list backwards
-            if (answer)
-              *answer = exitp->to_room;
-            pd = CI->second;
-            for (;;) {
-              if (pd->source == -1) {
-                // clean up allocated memory
-                for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-                  pathData *tpd = CI->second;
-                  delete tpd;
-                }
-                for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-                  pathData *tpd = CI->second;
-                  delete tpd;
-                }
+	    // is this our target?
+	    if ((pred) (exitp->to_room, data)) {
+	      // found our target, walk our list backwards
+	      if (answer)
+		*answer = exitp->to_room;
+	      pd = CI->second;
+	      for (;;) {
+		if (pd->source == -1) {
+		  // clean up allocated memory
+		  for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
+		    pathData *tpd = CI->second;
+		    delete tpd;
+		  }
+		  for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
+		    pathData *tpd = CI->second;
+		    delete tpd;
+		  }
 
-                return dir;
-              }
-              dir = pd->direct;
-              pd = path_map[pd->source];
-            }
-          }
-          // it's not our target, and we don't have this room yet
-          pd = new pathData();
-          pd->source = CI->first; 
-          pd->direct = dir; 
-          pd->checked = false; 
-          next_map[exitp->to_room] = pd;
-        }
+		  return dir;
+		}
+		dir = pd->direct;
+		pd = path_map[pd->source];
+	      }
+	    }
+	    // it's not our target, and we don't have this room yet
+	    pd = new pathData();
+	    pd->source = CI->first; 
+	    pd->direct = dir; 
+	    pd->checked = false; 
+	    next_map[exitp->to_room] = pd;
+	  }
+	}
       }
       // check for portals that might lead to target
       // return 10 if its the 1st portal in the room, 11 for 2nd, etc
