@@ -61,7 +61,7 @@ bool check_ingredients(TCookware *pot, int recipe){
 TCookware *find_pot(TBeing *ch, const char *cookware){
   TThing *tpot=NULL;
   TCookware *pot=NULL;
-  int count;
+  int count=0;
 
   if((tpot=searchLinkedListVis(ch, cookware, ch->getStuff(), &count))){
     pot=dynamic_cast<TCookware *>(tpot);
