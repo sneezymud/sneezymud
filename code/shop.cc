@@ -92,7 +92,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
     db.query("select profit_sell from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
     
     if(db.fetchRow())
-      profit_sell += (convertTo<float>(db["profit_sell"]) - 1.0);
+      profit_sell = convertTo<float>(db["profit_sell"]);
 
   }
 
@@ -193,7 +193,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
     if(cached_shop_nr==shop_nr){
       for(iter=player_cache.begin();iter!=player_cache.end();++iter){
 	if((*iter).first == (sstring) ch->name){
-	  profit_buy += ((*iter).second - 1.0);
+	  profit_buy = ((*iter).second);
 	  break;
 	}
       }
@@ -201,7 +201,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
       db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
       
       if(db.fetchRow()){
-	profit_buy += (convertTo<float>(db["profit_buy"]) - 1.0);
+	profit_buy = convertTo<float>(db["profit_buy"]);
       }
     }
   }
