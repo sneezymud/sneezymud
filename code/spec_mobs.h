@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.12  2002/02/11 06:26:17  dash
+// *** empty log message ***
+//
 // Revision 5.11  2001/11/25 00:56:55  jesus
 // beginning of mage thief as a single class
 //
@@ -210,8 +213,9 @@ const int SPEC_STOCK_BROKER       =161;
 const int SPEC_TRAINER_PSIONICS   =162;
 const int SPEC_DIVMAN             =163;
 const int SPEC_GM_MAGE_THIEF      =164;
-
-const int NUM_MOB_SPECIALS        =165;
+const int SPEC_PLANTER            =165;
+const int SPEC_BMARCHER           =166;
+const int NUM_MOB_SPECIALS        =167;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

@@ -1968,7 +1968,6 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   }
 }
 
-
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);

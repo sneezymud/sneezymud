@@ -482,6 +482,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_KINETIC_WAVE:
       dam = genericDam(victim, skill, DISC_PSIONICS, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SPELL_SKY_SPIRIT:
+    case SPELL_EARTHMAW:
+      dam = genericDam(victim, skill, DISC_ANIMAL, level, adv_learn, 0.529 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
     default:
       vlogf(LOG_BUG, "Unknown skill %d in call to getSkillDam", skill);
       dam = 0;

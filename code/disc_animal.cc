@@ -174,6 +174,233 @@ int TBeing::doBefriendBeast(const char *argument)
 #endif
 }
 
+int TBeing::doSkySpirit(const char *argument)
+{
+  if (!doesKnowSkill(SPELL_SKY_SPIRIT)) {
+    sendTo("You do not know how to summon the spirits of the sky.\n\r");
+    return FALSE;
+  }
+  if (this->roomp->isIndoorSector()) {
+    sendTo("You cannot summon the spirits of the sky unless you are outdoors!\n\r");
+    return FALSE;
+  }
+
+  char    tTarget[256];
+  TObj   *tObj    = NULL;
+  TBeing *victim = NULL;
+  char    spirit[256];
+  
+  if (checkBusy(NULL))
+    return FALSE;
+
+
+  if (getMana() < 0) {
+    sendTo("You lack mana to summon the spirits of the sky.\n\r");
+    return FALSE;
+  }
+
+  if (argument && *argument) {
+    only_argument(argument, tTarget);
+    generic_find(tTarget, FIND_CHAR_ROOM, this, &victim, &tObj);
+  } else {
+    if (!fight()) {
+      sendTo("Upon whom do you wish to unleash the spirit of the sky?\n\r");
+      return FALSE;
+    } else
+      victim = fight();
+  }
+
+  if (victim == NULL) {
+    sendTo("There is no one by that name here.\n\r");
+    return FALSE;
+  } else if (victim == this) {
+    this->sendTo("Do you really want to summon the spirits of the sky to attack you?\n\r");
+    return FALSE;
+  }
+
+  int lev = getSkillLevel(SPELL_SKY_SPIRIT);
+  int bKnown= getSkillValue(SPELL_SKY_SPIRIT);
+  
+  int percent = bKnown + ::number(-5,5);
+
+  if (percent <= 0)
+    strcpy(spirit, "<k>gnat");
+  else if (percent <= 5)
+    strcpy(spirit, "pigeon");
+  else if (percent <= 10)
+    strcpy(spirit, "sparrow");
+  else if (percent <= 15)
+    strcpy(spirit, "<k>crow");
+  else if (percent <= 20)
+    strcpy(spirit, "<k>raven");
+  else if (percent <= 25)
+    strcpy(spirit, "<r>vulture");
+  else if (percent <= 30)
+    strcpy(spirit, "<W>owl");
+  else if (percent <= 40)
+    strcpy(spirit, "<B>couatl");
+  else if (percent <= 49)
+    strcpy(spirit, "<o>falcon");
+  else if (percent <= 55)
+    strcpy(spirit, "<g>hawk");
+  else if (percent <= 60)
+    strcpy(spirit, "<Y>dragonne");
+  else if (percent <= 70)
+    strcpy(spirit, "<o>condor");
+  else if (percent <= 75)
+    strcpy(spirit, "<W>eagle");
+  else if (percent <= 80)
+    strcpy(spirit, "<o>roc");
+  else if (percent <= 85)
+    strcpy(spirit, "<G>wyvern");
+  else if (percent <= 90)
+    strcpy(spirit, "<Y>drake");
+  else if (percent >= MAX_SKILL_LEARNEDNESS)
+    strcpy(spirit, "<Y>dragon");
+  else
+    strcpy(spirit, "<R>phoenix");
+
+
+
+  int dam = getSkillDam(victim, SPELL_SKY_SPIRIT, lev, getAdvLearning(SPELL_SKY_SPIRIT));
+
+
+  if (!useComponent(findComponent(SPELL_SKY_SPIRIT), this, CHECK_ONLY_NO))
+    return FALSE;
+
+  addToWait((int)combatRound(discArray[SPELL_SKY_SPIRIT]->lag));
+  reconcileHurt(victim,discArray[SPELL_SKY_SPIRIT]->alignMod);
+  if (bSuccess(this, bKnown, SPELL_SKY_SPIRIT)) {
+    
+    if (critSuccess(this, SPELL_SKY_SPIRIT) == CRIT_S_DOUBLE) {
+      CS(SPELL_SKY_SPIRIT);
+      dam *= 2;
+      sprintf(spirit, "%s of incredible size", spirit);
+    }
+    
+    act("You summon a spirit of the sky!", FALSE, this, NULL, victim, TO_CHAR);
+    act("$n summons a spirit of the sky!", FALSE, this, NULL, victim, TO_ROOM);
+    char buf[256];
+
+    sprintf(buf, "<c>A phantasmal %s<1><c> swoops down from above and strikes $N!<1>", spirit);
+
+    act(buf, FALSE, this, NULL, victim, TO_CHAR);
+    act(buf, FALSE, this, NULL, victim, TO_NOTVICT);
+
+    sprintf(buf, "<C>A phantasmal %s<1><c> swoops down from above and strikes you!<1>", spirit);
+
+    act(buf, FALSE, this, NULL, victim, TO_VICT);
+
+
+    if (this->reconcileDamage(victim, dam, SPELL_SKY_SPIRIT) == -1) {
+      delete victim;
+      return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;
+    }
+    return SPELL_SUCCESS;
+
+  } else {
+    
+    act("You fail to summon a spirit of the sky.", FALSE, this, NULL, victim, TO_CHAR);
+    act("$n fails to summon a spirit of the sky.", FALSE, this, NULL, victim, TO_ROOM);
+
+    return SPELL_FAIL;
+  }
+
+
+  return SPELL_FAIL;
+}
+
+
+int TBeing::doFeralWrath(const char *argument)
+{
+  if (!doesKnowSkill(SPELL_FERAL_WRATH)) {
+    sendTo("You do not know the secrets of feral wrath.\n\r");
+    return FALSE;
+  }
+
+  if (affectedBySpell(SPELL_FERAL_WRATH)) {
+    sendTo("You are already affected by feral wrath.\n\r");
+    return FALSE;
+  }
+
+  int level = getSkillLevel(SPELL_FERAL_WRATH);
+  int bKnown = getSkillValue(SPELL_FERAL_WRATH);
+
+  // not technically a spell, but needs a component anyway
+  if (!useComponent(findComponent(SPELL_FERAL_WRATH), this, CHECK_ONLY_NO))
+    return FALSE;
+
+  int which = ::number(1,4);
+
+  affectedData aff, aff2;
+  aff.type = SPELL_FERAL_WRATH;
+  aff.location = APPLY_ARMOR;
+  aff.duration = max(min(level/5, 5), 1) * UPDATES_PER_MUDHOUR;
+  aff.bitvector = 0;
+  aff.modifier = 200;
+
+  int modifier = (level * ::number(80,125))/100;
+
+  switch (which) {
+    case 1:
+      aff2.location = APPLY_STR;
+      aff2.modifier = modifier;
+      break;
+    case 2:
+      aff2.location = APPLY_DEX;
+      aff2.modifier = modifier;
+      break;
+    case 3:
+      aff2.location = APPLY_SPE;
+      aff2.modifier = modifier;
+      break;
+    case 4:
+      aff2.location = APPLY_HIT;
+      aff2.modifier = modifier * 2;
+      break;
+  }
+  aff2.type = SPELL_FERAL_WRATH;
+  aff2.duration = aff.duration;
+  aff2.bitvector = 0;
+
+  if (bSuccess(this, bKnown, this->getPerc(), SPELL_FERAL_WRATH)) {
+    if (critSuccess(this, SPELL_FERAL_WRATH)) {
+      CS(SPELL_FERAL_WRATH);
+      aff2.modifier *= 2;
+      aff.duration *= 2;
+      aff2.duration *= 2;
+    }
+
+    if (!this->affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      return SPELL_FALSE;
+    }
+
+    if (!this->affectJoin(this, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
+      return SPELL_FALSE;
+    }
+
+
+    act("Your blood boils with feral rage!",
+        FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n's eyes narrow with anger as $e takes on an aura of feral rage.",
+        TRUE, this, NULL, NULL, TO_ROOM);
+
+    return SPELL_SUCCESS;
+  } else {
+    if (critFail(this, SPELL_FERAL_WRATH)) {
+      CF(SPELL_FERAL_WRATH);
+      act("You feel the rage build inside you, and then suddenly you get a peaceful, easy feeling...", FALSE, this, NULL, NULL, TO_CHAR);
+      act("$n looks angry for a moment, then suddenly becomes extremely relaxed.", TRUE, this, NULL, NULL, TO_ROOM);
+      this->affectTo(&aff);
+    } else {
+      this->sendTo("Nothing seems to happen.\n\r");
+      act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
+    }
+    return SPELL_FAIL;
+  }
+}
+
+
 int TBeing::doCharmBeast(const char *argument)
 {
   if (!doesKnowSkill(SKILL_BEAST_CHARM)) {

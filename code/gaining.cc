@@ -1813,7 +1813,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
           dynamic_cast<TComponent *>(obj)->setComponentMaxCharges(15); 
           obj->obj_flags.decay_time = -1;
           *ch += *obj;
-          sprintf(buf, "%s Here is a component (%s) for you to help in your learning of %s.", fname(ch->getName()).c_str(), obj->getName(), discArray[i]->name);
+          sprintf(buf, "%s Here is %s for you to help in your learning of %s.", fname(ch->getName()).c_str(), obj->getName(), discArray[i]->name);
           me->doTell(buf);
         }
       } else if (ch->doesKnowSkill(i)) {

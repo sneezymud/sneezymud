@@ -4116,7 +4116,8 @@ int TMonster::findABetterWeapon()
 
   // remove "bad" stuff, and wield the best stuff
   if (best->parent == this) {
-    if ((t = heldInPrimHand()) && canSee(t)) {
+    if ((t = heldInPrimHand()) && canSee(t) && (mobVnum()!=18576 && mobVnum()!=18577)) {
+      //brightmoon archers tend to do this to their bows, which is bad.
       doSay("What a hunk of junk.");
       rc = doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {

@@ -53,7 +53,7 @@
 #include "obj_general_weapon.h"
 #include "obj_pool.h"
 #include "obj_base_clothing.h"
-
+#include "obj_bow.h"
 
 #include <fstream.h>
 
@@ -7126,6 +7126,274 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 }
 
 
+int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
+{
+
+  if (cmd != CMD_GENERIC_QUICK_PULSE || ::number(0,3)) 
+    return FALSE;
+  
+  int arrownum = 0, bownum = 0;
+
+  switch(ch->mobVnum()) {
+    case 18576:
+      bownum = 18576;
+      arrownum = 18578;
+      break;
+    case 18577:
+      bownum = 18577;
+      arrownum = 18579;
+      break;
+  }
+
+  TBow *bow = NULL;
+  TObj *arrow = NULL;
+  bool nobow = FALSE;
+  int rm = 0, new_rm = 0;
+  TThing *t;
+  char temp[256];
+  const char *directions[][2] =
+  {
+    {"north", "south"},
+    {"east", "west"},
+    {"south", "north"},
+    {"west", "east"},
+    {"up", "below"},
+    {"down", "above"},
+    {"northeast", "southwest"},
+    {"northwest", "southeast"},
+    {"southeast", "northwest"},
+    {"southwest", "northeast"}
+  };
+
+
+
+  if(!(bow = dynamic_cast<TBow *>(ch->equipment[HOLD_RIGHT])))
+    nobow = TRUE;
+  else if (obj_index[bow->getItemIndex()].virt != bownum) {
+    delete bow;
+    nobow = TRUE;
+  }
+
+  if (nobow) {
+    vlogf(LOG_DASH, "archer loading a new bow");
+    if (!(bow = dynamic_cast<TBow *>(read_object(bownum, VIRTUAL)))) {
+      vlogf(LOG_PROC, "Archer couldn't load his bow %d.  DASH!!!", bownum);
+      return TRUE;
+    }
+    strcpy(temp, bow->name);
+    add_bars(temp);
+    ch->doJunk(temp, NULL); // just in case its loaded, no point making tons
+    act("You quickly unpack $p.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$n quickly unpacks $p.", FALSE, ch, bow, 0, TO_ROOM);
+    ch->equipChar(bow, ch->getPrimaryHold(), SILENT_YES);
+    return TRUE;
+  }
+
+
+  if (!bow->getStuff()) {
+    vlogf(LOG_DASH, "archer loading an arrow");
+
+    if (!(arrow = read_object(arrownum, VIRTUAL))) {
+      vlogf(LOG_PROC, "Archer couldn't load his arrow %d.  DASH!!!", arrownum);
+      return TRUE;
+    }
+    *bow += *arrow;
+    act("You quickly load $N into $p.", FALSE, ch, bow, arrow, TO_CHAR);
+    act("$n quickly loads $N into $p.", FALSE, ch, bow, arrow, TO_ROOM);
+    return TRUE;
+  }
+
+  if (bow->isBowFlag(BOW_STRING_BROKE)) {
+    vlogf(LOG_DASH, "archer fixing a bowstring");
+
+    
+    act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
+
+    bow->remBowFlags(BOW_STRING_BROKE);
+    return TRUE;
+  }
+
+  char buf[256], buf2[256];
+  int count;
+  int which;
+  int Hi = 0, Hf = 0; //hp initial, hp final
+  dirTypeT i;
+  TBeing *tbt = NULL;
+
+  for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
+    rm = ch->in_room;
+    if (clearpath(rm, i)) {
+      
+      new_rm = real_roomp(rm)->dir_option[i]->to_room;
+      if (new_rm == rm)
+	break;
+      else
+	rm = new_rm;
+      count = 0;
+      
+      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+	tbt = dynamic_cast<TBeing *>(t);
+	if (!tbt)
+	  continue;
+	if (!tbt->isCult())
+	  continue;
+	if (!ch->canSee(tbt))
+          continue;
+
+	//ok we have a mob and he's a logrite - tally him the pick a random one.
+	count++;
+      }
+      
+      if (count == 0)
+	return TRUE;
+      
+
+      which = ::number(1,count);// which target to pick on the next pass
+      count = 0;
+      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        tbt = dynamic_cast<TBeing *>(t);
+        if (!tbt)
+          continue;
+        if (!tbt->isCult())
+          continue;
+	if (!ch->canSee(tbt))
+	  continue;
+        //ok we have a mob and he's a logrite - is he the one we want?.
+        count++;
+	if (count == which)
+	  break;
+      }
+	
+      Hi = tbt->getHit();
+
+
+      sprintf(buf, "From up on the %s tower, $N aims a $o down at you.", directions[i][1]);
+      act(buf,FALSE, tbt, bow, ch, TO_CHAR);
+      sprintf(buf, "From up on the %s tower, $N aims a $o down at $n.", directions[i][1]);
+      act(buf,FALSE, tbt, bow, ch, TO_ROOM);
+      sprintf(buf, "You aim a $o down through the %s arrow slit at $N", directions[i][0]);
+      act(buf,FALSE, ch, bow, tbt, TO_CHAR);
+      sprintf(buf, "$n aims a $o down through the %s arrow slit at $N", directions[i][0]);
+      act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+
+      strcpy(temp, tbt->name);
+      add_bars(temp);
+      sprintf(buf, "%s %s 1", directions[i][0], temp);
+      vlogf(LOG_DASH, "archer doing this: shoot %s", buf);
+
+      strcpy(temp, tbt->getName());
+
+      int rc = ch->doShoot(buf);
+      vlogf(LOG_DASH, "archer shooting at a target");
+
+      Hf = tbt->getHit();
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        switch(::number(1,7)) {
+          case 1:
+            ch->doShout("Woo Woo!  I got a confirmed kill, yeah!");
+            break;
+          case 2:
+            ch->doShout("How's that for Brightmoon hospitality, you Logrite bastards!");
+            break;
+          case 3:
+            ch->doShout("And another one gone, another one gone, another one bites the dust, yeah!");
+            break;
+          case 4:
+            ch->doShout("Who's yo daddy!");
+            break;
+          case 5:
+            sprintf(buf, "Cleanup on aisle 9 - we got %s splattered all over the place!", temp);
+            ch->doShout(buf);
+            break;
+          case 6:
+            sprintf(buf, "I hope you brought your recall scrolls with you, %s, because... oops, too late.", temp);
+            ch->doShout(buf);
+            break;
+          case 7:
+            sprintf(buf, "Good luck getting your corpse, %s - you'll need it!", temp);
+            ch->doShout(buf);
+            break;
+        }
+        delete tbt;
+        return TRUE;
+      } else if (Hi > Hf) {
+	if (!tbt || Hf < -9 || strcmp(tbt->getName(), temp)) {
+	  switch(::number(1,7)) {
+	    case 1:
+	      ch->doShout("Woo Hoo!  I got a confirmed kill, yeah!");
+	      break;
+	    case 2:
+	      ch->doShout("How's that for Brightmoon hospitality, you Logrite bastards!");
+	      break;
+	    case 3:
+	      ch->doShout("And another one gone, another one gone, another one bites the dust, yeah!");
+	      break;
+	    case 4:
+	      ch->doShout("Who's yo daddy!");
+	      break;
+	    case 5:
+	      sprintf(buf, "Cleanup on aisle 9 - we got %s splattered all over the place!", temp);
+	      ch->doShout(buf);
+	      break;
+	    case 6:
+	      sprintf(buf, "I hope you brought your recall scrolls with you, %s, because... oops, too late.", temp);
+	      ch->doShout(buf);
+	      break;
+	    case 7:
+	      sprintf(buf, "Good luck getting your corpse, %s - you'll need it!", temp);
+	      ch->doShout(buf);
+	      break;
+	  }
+	} else {
+	  // we hit them, so lets shout some catcalls down
+	  switch (::number(1,7)) {
+	    case 1:
+	      sprintf(buf2, "How 'bout DEM apples!");
+	      break;
+	    case 2:
+	      sprintf(buf2, "Why don't you go on a diet you fat bastard, I couldn't miss you if I tried!");
+	      break;
+	    case 3:
+	      sprintf(buf2, "U-G-L-Y, you ain't got no ALIBI, you UGLY!");
+	      break;
+	    case 4:
+	      sprintf(buf2, "Hey, I didn't know Logrus was enlisting pincusions!");
+	      break;
+	    case 5:
+	      sprintf(buf2, "Why don't you go home, you dirty whores!");
+	      break;
+	    case 6:
+	      sprintf(buf2, "You like it this way?  UNGH!  You like that??  UNGH!  UNGH!  Take that!  UNGH!");
+	      break;
+	    case 7:
+	      sprintf(buf2, "Eat some of that!");
+	      break;
+	    case 8:
+	      sprintf(buf2, "Straight from my heart to yours!");
+	      break;
+	    case 9:
+	      sprintf(buf2, "Wa-hey, bitch!");
+	      break;
+	  }
+	  
+	  
+	  sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
+	  act(buf,FALSE, tbt, bow, ch, TO_CHAR);
+	  sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
+	  act(buf,FALSE, tbt, bow, ch, TO_ROOM);
+	  sprintf(buf, "<c>You yell,<1> \"%s\"", buf2);
+	  act(buf,FALSE, ch, bow, tbt, TO_CHAR);
+	  sprintf(buf, "<c>$n yells,<1> \"%s\"", buf2);
+	  act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+	}
+	return TRUE;
+      }
+    }
+  }
+  return TRUE;
+}
+
 
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7302,6 +7570,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "Divination Man", divman},
   {FALSE,"Trainer: mage/thief", CDGenericTrainer},           // 164
   {FALSE, "Gardener", gardener}, // 165
+  {FALSE, "Brightmoon Archer", bmarcher},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

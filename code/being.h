@@ -1334,6 +1334,9 @@ class TBeing : public TThing {
     int doTransfix(const char *);
     int doSummonBeast(const char *);
     int doBarkskin(const char *);
+    int doFeralWrath(const char *);
+    int doSkySpirit(const char *);
+    int doEarthmaw(const char *);
     int doTransform(const char *);
     void playsound(soundNumT, const string &, int vol = 100, int prior = 50, int loop = 1);
     void playmusic(musicNumT, const string &, int vol = 100, int cont = 1, int loop = 1);

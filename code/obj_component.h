@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.3  2002/02/11 06:26:17  dash
+// *** empty log message ***
+//
 // Revision 5.2  2002/01/10 00:45:49  peel
 // more splitting up of obj2.h
 //
@@ -229,7 +232,7 @@ const int COMP_FLIGHT           =275;
 const int COMP_STICKS_TO_SNAKES =284;
 const int COMP_PROT_EARTH       =293;
 const int COMP_TRANSFORM_LIMB   =298;
-#if 0
+#if 1
 const int COMP_EARTHMAW         =343;
 const int COMP_CREEPING_DOOM    =344;
 const int COMP_FERAL_WRATH      =345;

@@ -861,5 +861,114 @@ int treeWalk(TBeing * caster, const char * arg)
 
 // END TREE WALK
 
+int TBeing::doEarthmaw(const char *argument)
+{
+  if (!doesKnowSkill(SPELL_EARTHMAW)) {
+    sendTo("You do no know the secrets of the earthmaw spell.\n\r");
+    return FALSE;
+  }
+  if (this->roomp->notRangerLandSector()) {
+    sendTo("You must be in a wilderness landscape for the earthmaw spell to be effective!\n\r");
+    return FALSE;
+  }
+  char    tTarget[256];
+  TObj   *tObj    = NULL;
+  TBeing *victim = NULL;
+  TBeing *horsie = NULL;
 
+
+  if (checkBusy(NULL))
+    return FALSE;
+
+
+  if (getMana() < 0) {
+    sendTo("You lack the mana to split the earth.\n\r");
+    return FALSE;
+  }
+
+  if (argument && *argument) {
+    only_argument(argument, tTarget);
+    generic_find(tTarget, FIND_CHAR_ROOM, this, &victim, &tObj);
+  } else {
+    if (!fight()) {
+      sendTo("Who do you want to call the earthmaw upon?\n\r");
+      return FALSE;
+    } else
+      victim = fight();
+  }
+
+  if (victim == NULL) {
+    sendTo("There is no one by that name here.\n\r");
+    return FALSE;
+  } else if (victim == this) {
+    this->sendTo("Do you really want to call the earthmaw upon yourself??\n\r");
+    return FALSE;
+  } else if (victim->isFlying()) {
+    sendTo("You cannot call the earthmaw upon someone in the air.");
+    return FALSE;
+  }
+
+  int lev = getSkillLevel(SPELL_EARTHMAW);
+  int bKnown= getSkillValue(SPELL_EARTHMAW);
+
+  int dam = getSkillDam(victim, SPELL_EARTHMAW, lev, getAdvLearning(SPELL_EARTHMAW));
+
+
+  if (!useComponent(findComponent(SPELL_EARTHMAW), this, CHECK_ONLY_NO))
+    return FALSE;
+
+  addToWait((int)combatRound(discArray[SPELL_EARTHMAW]->lag));
+  reconcileHurt(victim,discArray[SPELL_EARTHMAW]->alignMod);
+  
+  if (bSuccess(this, bKnown, SPELL_EARTHMAW)) {
+    
+    if (critSuccess(this, SPELL_EARTHMAW) == CRIT_S_DOUBLE) {
+      CS(SPELL_EARTHMAW);
+      dam *= 2;
+      act("<Y>An incredibly large fissure opens up in the ground below you!<1>", FALSE, this, NULL, victim, TO_VICT);
+      act("<Y>An incredibly large fissure opens up in the ground below $N<Y><o>!<1>", FALSE, this, NULL, victim, TO_NOTVICT);
+      act("<Y>An incredibly large fissure opens up in the ground below $N<Y><o>!<1>", FALSE, this, NULL, victim, TO_CHAR);
+    } else {
+      act("<o>A large fissure opens up in the ground below you!<1>", FALSE, this, NULL, victim, TO_VICT);
+      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", FALSE, this, NULL, victim, TO_NOTVICT);
+      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", FALSE, this, NULL, victim, TO_CHAR);
+    }
+
+    if ((horsie = dynamic_cast<TBeing *> (victim->riding))) {
+      act("$N collapses beneath $n as the $g gives way!",
+          TRUE, victim, 0, horsie, TO_ROOM);
+      act("$N collapses beneath you as the $g gives way!",
+          TRUE, victim, 0, horsie, TO_CHAR);
+      victim->fallOffMount(victim->riding, POSITION_SITTING);
+
+      act("<o>$N<1><o> tumbles into the fissure!<1>", FALSE, this, NULL, horsie, TO_CHAR);
+      act("<o>$N<1><o> tumbles into the fissure!<1>", FALSE, this, NULL, horsie, TO_NOTVICT);
+      act("<o>You tumble into the fissure!<1>", FALSE, this, NULL, horsie, TO_VICT);
+
+    }
+    
+    act("<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>" , FALSE, this, NULL, victim, TO_CHAR);
+    act("<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>", FALSE, this, NULL, victim, TO_NOTVICT);
+    act("<o>You tumble into the fissure, which collapses on top of you!<1>", FALSE, this, NULL, victim, TO_VICT);
+    
+    if (horsie && this->reconcileDamage(horsie, dam, SPELL_EARTHMAW) == -1) {
+      delete horsie;
+    }
+    if (this->reconcileDamage(victim, dam, SPELL_EARTHMAW) == -1) {
+      delete victim;
+      return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;
+    }
+    return SPELL_SUCCESS;
+    
+  } else {
+    
+    act("You fail to call the earthmaw.", FALSE, this, NULL, victim, TO_CHAR);
+    act("$n fails to call the earthmaw.", FALSE, this, NULL, victim, TO_ROOM);
+    
+    return SPELL_FAIL;
+  }
+  
+  
+  return SPELL_FAIL;
+}
 

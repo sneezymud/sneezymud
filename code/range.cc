@@ -1409,7 +1409,7 @@ int TBeing::doShoot(const char *arg)
  
   // Prevent: order elemental shoot <blah>
   // for Free xp.
-  if (!desc || (!isPc() && !orig))
+  if ((!desc || (!isPc() && !orig)) && !(spec)) //added spec for the BM archers.. hopefully wont cause problems - Dash
     return FALSE;
 
 #if 0

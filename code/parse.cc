@@ -1586,6 +1586,15 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_BARKSKIN:
           rc = doBarkskin(newarg);
           break;
+	case CMD_FERAL_WRATH:
+	  rc = doFeralWrath(newarg);
+	  break;
+	case CMD_SKY_SPIRIT:
+	  rc = doSkySpirit(newarg);
+	  break;
+	case CMD_EARTHMAW:
+	  rc = doEarthmaw(newarg);
+	  break;
         case CMD_FLY:
           doFly();
           break;
@@ -2835,6 +2844,9 @@ void buildCommandArray(void)
   commandArray[CMD_BEFRIEND] = new commandInfo("befriend", POSITION_STANDING, 0);
   commandArray[CMD_TRANSFIX] = new commandInfo("transfix", POSITION_STANDING, 0);
   commandArray[CMD_BARKSKIN] = new commandInfo("barkskin", POSITION_STANDING, 0);
+  commandArray[CMD_FERAL_WRATH] = new commandInfo("feral", POSITION_STANDING, 0);
+  commandArray[CMD_SKY_SPIRIT] = new commandInfo("sky", POSITION_FIGHTING, 0);
+  commandArray[CMD_EARTHMAW] = new commandInfo("earthmaw", POSITION_FIGHTING, 0);
   commandArray[CMD_TRANSFORM] = new commandInfo("transform", POSITION_STANDING, 0);
   commandArray[CMD_EGOTRIP] = new commandInfo("egotrip", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_CHIP] = new commandInfo("chip", POSITION_STANDING, 0);

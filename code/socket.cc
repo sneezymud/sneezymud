@@ -366,7 +366,7 @@ int TSocket::gameLoop()
       pulse_mudhour = (pulse % PULSE_MUDHOUR);
       mobstuff = (pulse % PULSE_MOBACT);
       pulse_tick = (pulse % PULSE_UPDATE);
-      quickpulse = (pulse % ONE_SECOND);
+      quickpulse = (pulse % ONE_SECOND/5);
     } else {
       teleport = (pulse % (PULSE_TELEPORT/2));
       combat = (pulse % (PULSE_COMBAT/2));
@@ -376,7 +376,7 @@ int TSocket::gameLoop()
       pulse_mudhour = (pulse % (PULSE_MUDHOUR/2));
       mobstuff = (pulse % (PULSE_MOBACT/2));
       pulse_tick = (pulse % (PULSE_UPDATE/2));
-      quickpulse = (pulse % ONE_SECOND);
+      quickpulse = (pulse % ONE_SECOND/10);
     }
 
     if (!pulse_tick) {
@@ -783,6 +783,20 @@ int TSocket::gameLoop()
             continue;
           }
         }
+        if (!quickpulse) {
+          if (tmp_ch->spec) {
+            rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
+            if (IS_SET_DELETE(rc, DELETE_THIS)) {
+              if (!tmp_ch) continue;
+	      
+	      temp = tmp_ch->next;
+              delete tmp_ch;
+              tmp_ch = NULL;
+              continue;
+            }
+          }
+        }
+
         if (tmp_ch->desc && (tmp_ch->vt100() || tmp_ch->ansi())) {
           time_t t1;
           struct tm *tptr;

@@ -1325,10 +1325,7 @@ void TBeing::lowTasks(const char *arg)
     str =  "ID  | P |  Assigned To  |  Task Description (Status)\n\r";
     str += "---------------------------------------------------------\n\r";
 
-    while(1){
-      if(!db.fetchRow()){
-	break;
-      }
+    while(db.fetchRow()){
       id = atoi(db.getColumn(0));
       priority = atoi(db.getColumn(2));
       sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn(2), db.getColumn(3), db.getColumn(4));      

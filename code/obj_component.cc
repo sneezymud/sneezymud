@@ -1796,8 +1796,8 @@ void buildComponentArray()
 			      "You grind $p into the ground.",
 			      "$n grinds $p into the ground.",
 			      "$n grinds $p into the ground.",
-			      "",
-			      "",
+			      "You drive $p into the ground.",
+			      "$n drives $p into the ground.",
 			      "",
 			      ""));
   CompInfo.push_back(compInfo(SPELL_CREEPING_DOOM,
@@ -1817,11 +1817,11 @@ void buildComponentArray()
                               "",
                               ""));
   CompInfo.push_back(compInfo(SPELL_SKY_SPIRIT,
-                              "You toss $p at $N.",
-                              "$n tosses $p at $N.",
-                              "$n tosses $p at you.",
-                              "You toss $p into the air.",
-                              "$n tosses $p into the air..",
+                              "You toss some seeds from $p at $N.",
+                              "$n tosses some seeds from $p at $N.",
+                              "$n tosses some seeds from $p at you.",
+                              "You toss some seeds from $p into the air.",
+                              "$n tosses some seeds from $p into the air.",
                               "",
                               ""));
 #endif
