@@ -842,8 +842,10 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
             (amount == 1) ? "" : "s", pers(vict));
     sprintf(buf, "$n gives you %d talen%s.\n\r", amount,
             (amount == 1) ? "" : "s");
-    act(buf, TRUE, this, NULL, vict, TO_VICT);
-    act("$n gives some money to $N.", 1, this, 0, vict, TO_NOTVICT);
+    if(flags != GIVE_FLAG_SILENT_VICT){
+      act(buf, TRUE, this, NULL, vict, TO_VICT);
+      act("$n gives some money to $N.", 1, this, 0, vict, TO_NOTVICT);
+    }
 
     if (!hasWizPower(POWER_GOD))
       addToMoney(-amount, GOLD_XFER);
@@ -1025,10 +1027,12 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           else {
 	    if(!isImmortal()){
 	      act("$N seems to have $S hands full.", 0, this, 0, vict, TO_CHAR);
-	      act("$n offers $p to you, but your hands are full.",
-		  TRUE, this, obj, vict, TO_VICT);
-	      act("$n offers $p to $N, but $E is too encumbered to accept it.",
-		  TRUE, this, obj, vict, TO_NOTVICT);
+	      if(flags != GIVE_FLAG_SILENT_VICT){
+		act("$n offers $p to you, but your hands are full.",
+		    TRUE, this, obj, vict, TO_VICT);
+		act("$n offers $p to $N, but $E is too encumbered to accept it.",
+		    TRUE, this, obj, vict, TO_NOTVICT);
+	      }
 	      
 	      return FALSE;
 	    } else {
@@ -1043,10 +1047,12 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           } else {
 	    if(!isImmortal()){
 	      act("$E can't carry that much weight.", 0, this, 0, vict, TO_CHAR);
-	      act("$n offers $p to you, but you can't carry that much weight.",
-		  TRUE, this, obj, vict, TO_VICT);
-	      act("$n offers $p to $N, but $E is too wimpy to carry it.",
-		  TRUE, this, obj, vict, TO_NOTVICT);
+	      if(flags != GIVE_FLAG_SILENT_VICT){
+		act("$n offers $p to you, but you can't carry that much weight.",
+		    TRUE, this, obj, vict, TO_VICT);
+		act("$n offers $p to $N, but $E is too wimpy to carry it.",
+		    TRUE, this, obj, vict, TO_NOTVICT);
+	      }
 	      return FALSE;
 	    } else {
 	      act("$E can't carry that much weight, but you don't let that stop you.", 0, this, 0, vict, TO_CHAR);
@@ -1060,8 +1066,10 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
         *vict += *obj;
         logItem(obj, CMD_GIVE);
         vict->logItem(obj, CMD_EAST);    // kludge to acknowledge receive
-        act("$n gives $p to $N.", 1, this, obj, vict, TO_NOTVICT);
-        act("$n gives you $p.", 0, this, obj, vict, TO_VICT);
+	if(flags != GIVE_FLAG_SILENT_VICT){
+	  act("$n gives $p to $N.", 1, this, obj, vict, TO_NOTVICT);
+	  act("$n gives you $p.", 0, this, obj, vict, TO_VICT);
+	}
         act("You give $p to $N.", 0, this, obj, vict, TO_CHAR);
       } else if (flags == GIVE_FLAG_IGN_DEX_NOTEXT)  {
         --(*obj);

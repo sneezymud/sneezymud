@@ -124,6 +124,7 @@ enum giveTypeT {
     GIVE_FLAG_IGN_DEX_TEXT,
     GIVE_FLAG_IGN_DEX_NOTEXT,
     GIVE_FLAG_DROP_ON_FAIL,
+    GIVE_FLAG_SILENT_VICT,
 };
 
 enum doorIntentT {
