@@ -10,19 +10,27 @@
 
 #include "obj_portal.h"
 
+const int VEHICLE_NONE = 0;
+const int VEHICLE_BOAT = 1;
 
 class TVehicle : public TPortal {
  private:
   dirTypeT dir;
   int speed;
-  
+  int type;
+
  public:
   void setSpeed(int s) { speed=s; }
   int getSpeed() const { return speed; }
+  void setType(int s) { type=s; }
+  int getType() const { return type; }
   void setDir(dirTypeT d) { dir=d; }
   dirTypeT getDir() const { return dir; };
 
+  virtual void assignFourValues(int, int, int, int);
+  virtual void getFourValues(int *, int *, int *, int *) const;
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }
+  unsigned char getPortalType() const;
   char getPortalNumCharges() const;
   void driveSpeed(TBeing *, string);
   void driveDir(TBeing *, dirTypeT);

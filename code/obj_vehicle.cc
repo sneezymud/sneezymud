@@ -4,6 +4,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+// this code sucks and should be rewritten from scratch at some point
 
 #include "stdsneezy.h"
 #include "obj_vehicle.h"
@@ -36,6 +37,38 @@ TVehicle::~TVehicle()
 }
 
 
+
+void TVehicle::assignFourValues(int x1, int x2, int x3, int x4)
+{
+    
+  setTarget(x1);
+  setType(x2);
+
+
+  setPortalKey(GET_BITS(x4, 23, 24));
+  setPortalFlags(GET_BITS(x4, 31, 8));
+}
+
+void TVehicle::getFourValues(int *x1, int *x2, int *x3, int *x4) const
+{
+  *x1=getTarget();
+  *x2=getType();
+
+  int r = *x4;
+  SET_BITS(r, 23, 24, getPortalKey());
+  SET_BITS(r, 31, 8, getPortalFlags());
+  *x4 = r;
+}
+
+
+
+
+unsigned char TVehicle::getPortalType() const
+{
+  return 0;
+}
+
+
 char TVehicle::getPortalNumCharges() const
 {
   return -1;
@@ -65,10 +98,17 @@ void TVehicle::driveSpeed(TBeing *ch, string arg)
     if(is_abbrev(arg, vehicle_speed[i])){
       if(vehicle_speed[i] == "stop"){
 	if(vehicle_speed[getSpeed()] == "fast"){
-	  act("$n slams on the brakes, bringing $p to a skidding halt.",
-	      0, ch, this, 0, TO_ROOM);
-	  act("You slam on the brakes, bringing $p to a skidding halt.", 
-	      0, ch, this, 0, TO_CHAR);
+	  if(getType()==VEHICLE_BOAT){
+	    act("$n throws the anchor overboard, bringing $p to a rough halt.",
+		0, ch, this, 0, TO_ROOM);
+	    act("You throw the anchor overboard, bringing $p to a rough halt.",
+		0, ch, this, 0, TO_CHAR);
+	  } else {
+	    act("$n slams on the brakes, bringing $p to a skidding halt.",
+		0, ch, this, 0, TO_ROOM);
+	    act("You slam on the brakes, bringing $p to a skidding halt.", 
+		0, ch, this, 0, TO_CHAR);
+	  }
 	} else if(vehicle_speed[getSpeed()] == "stop"){
 	  act("$p is already stopped.", 0, ch, this, 0, TO_CHAR);
 	} else {
@@ -181,16 +221,37 @@ void TVehicle::vehiclePulse(int pulse)
       return; // otherwise just stop
   }
 
+  // we let them go one room into non-water, like "beaching" the boat
+  // or entering docks.
+  TRoom *dest=real_roomp(troom->dir_option[getDir()]->to_room);
+  if(getType() == VEHICLE_BOAT && !dest->isWaterSector() && 
+     !roomp->isWaterSector()){
+    return;
+  }
+
   // send message to people in old room here
-  if(vehicle_speed[getSpeed()] == "fast"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s speeds off to the %s.\n\r",
-	    shortdescr, dirs[getDir()]);
-  } else if(vehicle_speed[getSpeed()] == "medium"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s rolls off to the %s.\n\r",
-	    shortdescr, dirs[getDir()]);
-  } else if(vehicle_speed[getSpeed()] == "slow"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s creeps off to the %s.\n\r",
-	    shortdescr, dirs[getDir()]);
+  if(getType()==VEHICLE_BOAT){
+    if(vehicle_speed[getSpeed()] == "fast"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s sails rapidly to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "medium"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s sails to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "slow"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s drifts to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    }
+  } else {
+    if(vehicle_speed[getSpeed()] == "fast"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s speeds off to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "medium"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s rolls off to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "slow"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s creeps off to the %s.\n\r",
+	      shortdescr, dirs[getDir()]);
+    }
   }
 
 
@@ -198,18 +259,34 @@ void TVehicle::vehiclePulse(int pulse)
   thing_to_room(this, troom->dir_option[getDir()]->to_room);
 
   // send message to people in new room here
-  if(vehicle_speed[getSpeed()] == "fast"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s speeds in from the %s.\n\r",
-	    shortdescr, dirs[rev_dir[getDir()]]);
-    ssprintf(buf, "$p speeds %s.", dirs[getDir()]);
-  } else if(vehicle_speed[getSpeed()] == "medium"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s rolls in from the %s.\n\r",
-	    shortdescr, dirs[rev_dir[getDir()]]);
-    ssprintf(buf, "$p rolls %s.", dirs[getDir()]);
-  } else if(vehicle_speed[getSpeed()] == "slow"){
-    sendrpf(COLOR_OBJECTS, roomp, "%s creeps in from the %s.\n\r",
-	    shortdescr, dirs[rev_dir[getDir()]]);
-    ssprintf(buf, "$p creeps %s.", dirs[getDir()]);
+  if(getType() == VEHICLE_BOAT){
+    if(vehicle_speed[getSpeed()] == "fast"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s sails rapidly in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p speeds %s.", dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "medium"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s sails in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p rolls %s.", dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "slow"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s drifts in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p creeps %s.", dirs[getDir()]);
+    }
+  } else {
+    if(vehicle_speed[getSpeed()] == "fast"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s speeds in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p speeds %s.", dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "medium"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s rolls in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p rolls %s.", dirs[getDir()]);
+    } else if(vehicle_speed[getSpeed()] == "slow"){
+      sendrpf(COLOR_OBJECTS, roomp, "%s creeps in from the %s.\n\r",
+	      shortdescr, dirs[rev_dir[getDir()]]);
+      ssprintf(buf, "$p creeps %s.", dirs[getDir()]);
+    }
   }
   
   // send message to people in vehicle
