@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_quest.cc,v $
+// Revision 1.2  1999/09/27 14:12:24  lapsos
+// Fixed typo that was preventing execution.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -112,7 +115,7 @@ void TBeing::doMortalQuest(const char *tArg)
   }
 
   sendTo("You have %d total current quest goals.\n\r", totFound);
-  if (questRes != -1) {
+  if (questRes == -1) {
     sendTo("You don't seem to have a quest goal #%d\n\r", questNumber);
     return;
   }
