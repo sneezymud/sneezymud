@@ -70,8 +70,6 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  scroll_obj->setSpell(2, TYPE_UNDEFINED);
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
-	  scroll_obj->obj_flags.cost = scroll_obj->suggestedPrice();
-
           if (bSuccess(ch, knowledge, SKILL_SCRIBE)) {
             ch->sendTo("You have successfully scribed your scroll%s.\n\r",
 		       (how_many == 1 ? "" : "s"));
@@ -89,6 +87,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
             scroll_obj->setMagicLearnedness(0);
           }
 
+	  scroll_obj->obj_flags.cost = scroll_obj->suggestedPrice();
           *ch += *scroll_obj;
 
           sprintf(buf, "You now have %d scroll%s of %s.\n\r",
@@ -105,7 +104,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
             s2->setMagicLevel(scroll_obj->getMagicLevel());
             s2->setMagicLearnedness(scroll_obj->getMagicLearnedness());
 	    s2->addObjStat(ITEM_NORENT);
-	    s2->obj_flags.cost = 0;
+	    s2->obj_flags.cost = s2->suggestedPrice();
             *ch += *s2;
           }
           ch->stopTask();
