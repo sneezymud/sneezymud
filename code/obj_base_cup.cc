@@ -394,7 +394,7 @@ void TBaseCup::updateDesc()
   long_desc=obj_index[getItemIndex()].long_desc;
 
   if(getDrinkUnits()<=0){
-    liquid="nothing";
+    liquid="empty";
   } else {
     liquid=DrinkInfo[getDrinkType()]->color;
   }
