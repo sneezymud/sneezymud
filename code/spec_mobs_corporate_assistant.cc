@@ -10,7 +10,7 @@ sstring talenDisplay(int talens)
     return fmt("%.1fM") % (t/10.0);
   } else if(talens > 1000){
     t=(int)(talens/1000);
-    return fmt("%fM") % t;
+    return fmt("%ik") % (int)t;
   }
 
   return fmt("%i") % talens;
