@@ -10,20 +10,22 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "disease.h"
+#include "shop.h"
+#include "shopowned.h"
 
-int poison_price(TBeing *, affectedData *)
+int poison_price(TBeing *ch, affectedData *, int shop_nr)
 {
   // get more exotic later
-  return 500;
+  return (int)(500.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
-int syphilis_price(TBeing *, affectedData *)
+int syphilis_price(TBeing *ch, affectedData *, int shop_nr)
 {
   // get more exotic later
-  return 10000;
+  return (int)(10000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
-int limb_heal_price(TBeing *ch, wearSlotT pos)
+int limb_heal_price(TBeing *ch, wearSlotT pos, int shop_nr)
 {
   int basenum;
 
@@ -32,6 +34,8 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
 
   if (ch->GetMaxLevel() < 6)
     basenum = 1;
+
+  basenum = (int)((float)basenum * shop_index[shop_nr].getProfitBuy(NULL, ch));
 
   basenum = max(1,basenum);
 
@@ -72,7 +76,7 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
   return (basenum * 10);
 }
 
-int limb_expel_price(TBeing *ch, wearSlotT pos)
+int limb_expel_price(TBeing *ch, wearSlotT pos, int shop_nr)
 {
   TThing *stuck;
 
@@ -80,7 +84,7 @@ int limb_expel_price(TBeing *ch, wearSlotT pos)
     vlogf(LOG_BUG, fmt("VERY BAD! limb_expel_price called with pos(%d) char(%s) with no item stuck in!") %  pos % ch->getName());
     return (-1);
   }
-  return stuck->expelPrice(ch, pos);
+  return (int)((float)stuck->expelPrice(ch, pos) * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
 int TThing::expelPrice(const TBeing *ch, int pos) const
@@ -89,7 +93,7 @@ int TThing::expelPrice(const TBeing *ch, int pos) const
   return (1000000);
 }
 
-int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
+int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound, int shop_nr)
 {
   int price = ch->GetMaxLevel() * ch->GetMaxLevel();
 
@@ -115,6 +119,8 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
 
   if (ch->GetMaxLevel() < 6)
     price /= 4;
+
+  price = (int)((float)price * shop_index[shop_nr].getProfitBuy(NULL, ch));
 
   switch (pos) {
     case WEAR_FINGER_R:
@@ -149,10 +155,10 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
       break;
   }
   vlogf(LOG_BUG, fmt("Bad pos (%d) in limb_wound_price!") %  pos);
-  return (1000000);
+  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
-int spell_regen_price(TBeing *ch, spellNumT spell)
+int spell_regen_price(TBeing *ch, spellNumT spell, int shop_nr)
 {
   int price = 1;
 
@@ -160,12 +166,14 @@ int spell_regen_price(TBeing *ch, spellNumT spell)
     price = ch->GetMaxLevel() * max((int) ch->GetMaxLevel(), 20) * 1;
   }
 
-  return price;
+  return (int)((float)price * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
-int limb_regen_price(TBeing *ch, wearSlotT pos)
+int limb_regen_price(TBeing *ch, wearSlotT pos, int shop_nr)
 {
   int price = ch->GetMaxLevel() * max(20, (int) ch->GetMaxLevel()) * 3;
+
+  price = (int)((float) price * shop_index[shop_nr].getProfitBuy(NULL, ch));
 
   switch (pos) {
     case WEAR_FINGER_R:
@@ -200,22 +208,34 @@ int limb_regen_price(TBeing *ch, wearSlotT pos)
       break;
   }
   vlogf(LOG_BUG, fmt("Bad pos (%d) in limb_regen_price!") %  pos);
-  return (1000000);
+  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
 int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   int j, count = 0, bought, res;
+  unsigned int shop_nr;
   wearSlotT i;
   sstring buf;
   TThing *stuck;
   int cost;
 
-  if (cmd == CMD_GENERIC_PULSE)
+  if (cmd == CMD_GENERIC_PULSE){
     me->aiMaintainCalm();
+    return false;
+  }
 
   if (!ch->isPc())
     return FALSE;
+
+  if(cmd != CMD_LIST && cmd != CMD_BUY && cmd != CMD_WHISPER)
+    return false;
+
+  shop_nr=find_shop_nr(me->number);
+
+  if(cmd == CMD_WHISPER)
+    return shopWhisper(ch, me, shop_nr, arg);
+
 
  /* Go thru and print out what ails the person. */
   if (cmd == CMD_LIST) {
@@ -227,7 +247,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
         continue;
       if (ch->isLimbFlags(i, PART_MISSING)) {
         me->doTell(ch->getName(), fmt("%d) Your %s is missing! (%d talens)") %
-		   ++count % ch->describeBodySlot(i) % limb_regen_price(ch, i));
+		   ++count % ch->describeBodySlot(i) % limb_regen_price(ch, i, shop_nr));
         continue;
       } else {
         for (j = 0; j < MAX_PARTS; j++) {
@@ -236,17 +256,17 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           if (ch->isLimbFlags(i, 1 << j)) {
             me->doTell(ch->getName(), fmt("%d) Your %s is %s. (%d talens)") %
 		       ++count % ch->describeBodySlot(i) % body_flags[j] %
-		       limb_wound_price(ch, i, 1 << j));
+		       limb_wound_price(ch, i, 1 << j, shop_nr));
           }
         }
         if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
           double perc = (double) ch->getCurLimbHealth(i) / (double) ch->getMaxLimbHealth(i);
           me->doTell(ch->getName(), fmt("%d) Your %s is %s. (%d talens)") %
 		     ++count % ch->describeBodySlot(i) %
-		     LimbHealth(perc) % limb_heal_price(ch, i));
+		     LimbHealth(perc) % limb_heal_price(ch, i, shop_nr));
         }
         if ((stuck = ch->getStuckIn(i))) {
-          me->doTell(ch->getName(), fmt("%d) You have %s stuck in your %s. (%d talens)") % ++count % stuck->shortDescr % ch->describeBodySlot(i) % limb_expel_price(ch, i));
+          me->doTell(ch->getName(), fmt("%d) You have %s stuck in your %s. (%d talens)") % ++count % stuck->shortDescr % ch->describeBodySlot(i) % limb_expel_price(ch, i, shop_nr));
         }
       }
     }
@@ -280,7 +300,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             continue;
           me->doTell(ch->getName(), fmt("%d) Affect: %s. (%d talens).\n\r") %
                     ++count % discArray[aff->type]->name %
-                    spell_regen_price(ch, SPELL_BLINDNESS));
+                    spell_regen_price(ch, SPELL_BLINDNESS, shop_nr));
 	}
       }  // affects loop
     }
@@ -322,7 +342,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
         continue;
       if (ch->isLimbFlags(i, PART_MISSING)) {
         if (++count == bought) {
-          if ((ch->getMoney() + ch->getBank()) < (cost = limb_regen_price(ch, i))) {
+          if ((ch->getMoney()) < (cost = limb_regen_price(ch, i, shop_nr))) {
             me->doTell(ch->getName(), fmt("You don't have enough money to regenerate your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
@@ -332,11 +352,10 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             }
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-            if (cashCost != cost) {
-              cashCost = (ch->getBank() - (cost - cashCost));
-              ch->setBank(cashCost);
-            }
+	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+		    cashCost, "regenerating");
 
             buf=fmt("$n waves $s hands, utters many magic phrases and regenerates $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -362,17 +381,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
           if (ch->isLimbFlags(i, 1 << j)) {
             if (++count == bought) {
-              if ((ch->getMoney() + ch->getBank()) < (cost = limb_wound_price(ch, i, 1 << j))) {
+              if ((ch->getMoney()) < (cost = limb_wound_price(ch, i, 1 << j, shop_nr))) {
                 me->doTell(ch->getName(), "You don't have enough money to do that!");
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
                 ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-                if (cashCost != cost) {
-                  cashCost = (ch->getBank() - (cost - cashCost));
-                  ch->setBank(cashCost);
-                }
+		me->addToMoney(cashCost, GOLD_HOSPITAL);
+		me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+		shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+			cashCost, "mending");
 
                 buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
                 act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -396,17 +414,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
       if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
         if (++count == bought) {
-          if ((ch->getMoney() + ch->getBank()) < (cost = limb_heal_price(ch, i))) {
+          if ((ch->getMoney()) < (cost = limb_heal_price(ch, i, shop_nr))) {
             me->doTell(ch->getName(), fmt("You don't have enough money to heal your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-            if (cashCost != cost) {
-              cashCost = (ch->getBank() - (cost - cashCost));
-              ch->setBank(cashCost);
-            }
+	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+		    cashCost, "healing");
 
             buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -426,17 +443,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
       if ((stuck = ch->getStuckIn(i))) {
         if (++count == bought) {
-          if ((ch->getMoney() + ch->getBank()) < (cost = limb_expel_price(ch, i))) {
+          if ((ch->getMoney()) < (cost = limb_expel_price(ch, i, shop_nr))) {
             me->doTell(ch->getName(), fmt("You don't have enough money to expel %s from your %s!") % stuck->shortDescr % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-            if (cashCost != cost) {
-              cashCost = (ch->getBank() - (cost - cashCost));
-              ch->setBank(cashCost);
-            }
+	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+		    cashCost, "expelling");
 
             buf=fmt("$n skillfully removes $p from $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, stuck, ch, TO_NOTVICT);
@@ -471,17 +487,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    else 
 	      cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
 	    
-	    if ((ch->getMoney() + ch->getBank()) < cost) {
+	    if ((ch->getMoney()) < cost) {
 	      me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
 	      return TRUE;
 	    } else {
 	      int cashCost = min(ch->getMoney(), cost);
 	      ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	      
-	      if (cashCost != cost) {
-		cashCost = (ch->getBank() - (cost - cashCost));
-		ch->setBank(cashCost);
-	      }
+	      me->addToMoney(cashCost, GOLD_HOSPITAL);
+	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	      shoplog(shop_nr, ch, me, DiseaseInfo[affToDisease(*aff)].name, 
+		      cashCost, "disease");
 	      
 	      act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
 	      act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
@@ -500,19 +515,18 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	  }
         } else if (aff->type == SPELL_BLINDNESS) {
           if (++count == bought) {
-            cost = spell_regen_price(ch, SPELL_BLINDNESS);
+            cost = spell_regen_price(ch, SPELL_BLINDNESS, shop_nr);
 
-            if ((ch->getMoney() + ch->getBank()) < cost) {
+            if ((ch->getMoney()) < cost) {
               me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % discArray[aff->type]->name);
               return TRUE;
             } else {
               int cashCost = min(ch->getMoney(), cost);
               ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-              if (cashCost != cost) {
-                cashCost = (ch->getBank() - (cost - cashCost));
-                ch->setBank(cashCost);
-              }
+	      me->addToMoney(cashCost, GOLD_HOSPITAL);
+	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	      shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+		      cashCost, "blindness");
 
               act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
               act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
