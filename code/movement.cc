@@ -2552,8 +2552,8 @@ void TBeing::doRest(const string & argument)
     if (!riding) {
       TBeing *dummy = NULL;
       TObj *obj = NULL;
-      generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj);
-      if (!obj) {
+      if(!generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj) ||
+	 !obj) {
         sendTo("You don't see that here.\n\r");
         return;
       }
@@ -2645,8 +2645,8 @@ void TBeing::doSleep(const string & argument)
     if (!riding) {
       TBeing *dummy;
       TObj *obj = NULL;
-      generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj);
-      if (!obj) {
+      if(!generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj) ||
+	 !obj) {
         sendTo("You don't see that here.\n\r");
         return;
       }
