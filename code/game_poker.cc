@@ -325,26 +325,31 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
 void PokerGame::discard(TBeing *ch, sstring arg)
 {
   sstring buf;
-  int i=convertTo<int>(arg);
+  vector <sstring> args;
+  int j=argument_parser(arg, args);
+  int i;
 
-  if(!i || i<1 || i>5){
-    ch->sendTo("You need to enter the number of the card to discard.\n\r");
-    return;
-  }
-   
-  if(!card[--i]){
-    ch->sendTo("You've already discarded that card.\n\r");
-    return;
-  }
+  while(j--){
+    i=convertTo<int>(args[j]);
 
-  
-  ch->sendTo(COLOR_BASIC, "You discard %s.\n\r",
+    if(!i || i<1 || i>5)
+      continue;
+    
+    
+    if(!card[--i]){
+      ch->sendTo("You've already discarded that card.\n\r");
+      return;
+    }
+    
+    
+    ch->sendTo(COLOR_BASIC, "You discard %s.\n\r",
+	       pretty_card_printout(ch, card[i]).c_str());
+    ssprintf(buf, "$n discards %s.",
 	     pretty_card_printout(ch, card[i]).c_str());
-  ssprintf(buf, "$n discards %s.",
-	   pretty_card_printout(ch, card[i]).c_str());
-  act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
 
-  card[i]=0;
+    card[i]=0;
+  }
   return;
 }
 
