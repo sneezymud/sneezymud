@@ -627,15 +627,19 @@ void TBeing::statBeing(TBeing *k)
       break;
   }
 
+  bool is_player=dynamic_cast<const TPerson *>(k);
+
   if (km)
     sprintf(buf + strlen(buf), "%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] Birth-Room[%d] V-Number[%d]\n\r",
-            (dynamic_cast<const TPerson *>(k) ? "PC" : "NPC"),
+            (is_player ? "PC" : "NPC"),
             k->name, k->number, k->in_room, km->oldRoom, km->brtRoom,
             k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
   else
-    sprintf(buf + strlen(buf), "%s - Name : %s [M-Num: %d] Room[%d]\n\r",
-            (dynamic_cast<const TPerson *>(k) ? "PC" : "NPC"),
-            k->name, k->number, k->in_room);
+    sprintf(buf + strlen(buf), "%s - Name : %s [%s: %d] Room[%d]\n\r",
+            (is_player ? "PC" : "NPC"),
+            k->name, (is_player ? "PID  " : "M-Num"),
+	    (is_player ? k->getPlayerID() : k->number), k->in_room);
+
 
   sprintf(buf + strlen(buf),"-----------------------------------------------------------------------------\n\r");
   if (km) {
