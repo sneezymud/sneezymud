@@ -354,7 +354,7 @@ int HoldemGame::nextPlayer(int b)
 {
   // find the next better that isn't all in
   for(int i=b+1;i!=firstbetter;i=(i+1)%MAX_HOLDEM_PLAYERS){
-    if(players[i] && players[i]->ch){
+    if(i < MAX_HOLDEM_PLAYERS && i>=0 && players[i] && players[i]->ch){
       return i;
     }
   }
