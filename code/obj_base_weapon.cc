@@ -1521,7 +1521,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
             }
           }
         }
-#if 1
+#if RANGE_DEBUG
         vlogf(LOG_MISC, "Range debug: (1) %s damaging %s with %s for %d dam",
                  ch->getName(), tb->getName(), getName(), d);
 #endif
