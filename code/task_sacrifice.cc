@@ -35,8 +35,6 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       act("You can't find the object of the ritual! Wasn't there a corpse here?", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops singing and looks confused.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
-      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       return FALSE;
     }
   }
