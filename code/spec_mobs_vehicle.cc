@@ -40,6 +40,9 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return FALSE;
   }
 
+  vehicle->unlockMe(myself);
+  vehicle->openMe(myself);
+
   if((--timer)>0)
     return FALSE;
 
@@ -155,6 +158,8 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return FALSE;
   }
 
+  vehicle->unlockMe(myself);
+  vehicle->openMe(myself);
 
   // wait until we have passengers before we leave the docks
   if(boat->in_room == 15150 && timer<=0 && vehicle->getSpeed()==0){
@@ -288,6 +293,10 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   if(!has_key(myself, vehicle->getPortalKey())){
     return FALSE;
   }
+
+  vehicle->unlockMe(myself);
+  vehicle->openMe(myself);
+
 
   if((--timer)>0)
     return FALSE;
