@@ -3159,10 +3159,12 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         case 33:
         case 34:
         case 35:
+	  strcpy(buf, "DIIIIIIIIIIIEEEEEEEEE SUCKAHHHHH!!!!!!!");
+          break;
         case 36:
         case 37:
         case 38:
-                 strcpy(buf, "It's butt-kicking time!!");
+	  strcpy(buf, "It's butt-kicking time!!");
           break;
         case 39:
         case 40:
@@ -7099,6 +7101,29 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   }
   return FALSE;
 }
+int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
+{
+  TThing *t;
+  //  static unsigned int pulse;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  //  ++pulse;
+  //  if(pulse%75)
+  //    return FALSE;
+
+  if (ch->task)
+    return FALSE;
+
+  if (!(t = get_thing_char_using(ch, "seed", 0, FALSE, FALSE))) {
+    return FALSE;
+  }
+
+  ch->doAction("", CMD_WHISTLE);
+  ch->doPlant("seed");
+  return TRUE;
+}
 
 
 
@@ -7276,6 +7301,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
   {FALSE,"Trainer: mage/thief", CDGenericTrainer},           // 164
+  {FALSE, "Gardener", gardener}, // 165
 // replace non-zero, bogus_mob_procs above before adding
 };
 
