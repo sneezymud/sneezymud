@@ -92,6 +92,8 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       myself->doTell(ch->getName(), "Thank you.");
       ch->addToMoney(money, GOLD_XFER);
       myself->addToMoney(-money, GOLD_XFER);
+      myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+
       
       db.query("update shopownedbank set talens=talens-%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
 
@@ -123,6 +125,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     myself->doTell(ch->getName(), "Thank you.");
     ch->addToMoney(-money, GOLD_XFER);
     myself->addToMoney(money, GOLD_XFER);
+    myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
     
     db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
 
