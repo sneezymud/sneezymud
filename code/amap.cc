@@ -178,7 +178,7 @@ NODE *read_room(TDatabase *db, TDatabase *dbexits)
 
   do {
     if(!db->fetchRow()){
-	fprintf(stderr, "read_room(): couldn't find a room\n");
+      //	fprintf(stderr, "read_room(): couldn't find a room\n");
 	return NULL;      
     }
 
@@ -278,8 +278,9 @@ void consolidate_nodes(bool quiet=false){
   int i, j=0;
  
   for(t=head;t;t=t->next){
-    if(!quiet)
-      printf("\rConsolidating %i", ++j);
+    ++j;
+    if(!quiet && !(j % 10))
+      printf("\rConsolidating %i", j);
     for(i=0;i<10;++i){
       t->pdirs[i]=find_node(t->idirs[i]);
     }
@@ -826,7 +827,7 @@ int main(int argc, char **argv)
     if(use_range && roomrange.count(t->num)==0)
       continue;
 
-    if(!quiet)
+    if(!quiet && !(rcount%10))
       printf("\rReading room %i (%i)", rcount, t->num);
     t->next=head;
     head=t;
