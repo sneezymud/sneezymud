@@ -8,9 +8,9 @@
 int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 {
   TDatabase db(DB_SNEEZY);
-  sstring arg=argument;
 
   if(cmd==CMD_LIST){
+    sstring arg=argument;
     if(arg.empty()){
       /////////// list all polls
       ch->sendTo(COLOR_BASIC, fmt("You have a look at %s...\n\r") % 
@@ -73,6 +73,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     }
     return true;
   } else if(cmd==CMD_VOTE){
+    sstring arg=argument;
     sstring usage="Usage: vote <poll_id> <option_id>";
     int poll_id, option_id;
     sstring tmp;
