@@ -210,6 +210,7 @@ void TBeing::doGload(const char *arg)
     arrow=dynamic_cast<TThing *>(ammo);
 
     if(ammo->getRounds() == 0){
+      ammo->parent=NULL;
       *roomp += *ammo;
 
       act("You unload $N and drop $p.", TRUE, this, ammo, gun, TO_CHAR);
