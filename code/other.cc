@@ -1700,6 +1700,21 @@ void TBeing::doGroup(const char *argument)
 
     sprintf(buf, "I have just set the group name to %s.", argument);
     doGrouptell(buf);
+  } else if (is_abbrev(namebuf, "lots")) {
+    if (!isAffected(AFF_GROUP) || master) {
+      sendTo("Only the master of a group may throw lots.");
+      return;
+    }
+    vector <sstring> gnames;
+    gnames.push_back(name);
+    for (f = followers; f; f = f->next) {
+      if (!f->follower->isPc()) continue;
+      gnames.push_back(f->follower->name);
+    }
+    int rnum = ::number(1,gnames.size()) -1;
+    sstring sbuf = fmt("%s throws lots.  <Y>%s<z> is chosen.") % name % gnames[rnum];
+    doGrouptell(sbuf.c_str());
+    return;
   } else if (is_abbrev(namebuf, "share")) {
     int amt;
 
