@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_penance.cc,v $
+// Revision 5.5  2002/07/03 18:39:22  peel
+// penning will put your piety at 100% rather than randomizing, if the
+// piety gain without randomization would be 100%.  er yeah.
+//
 // Revision 5.4  2001/09/25 13:28:55  jesus
 // *** empty log message ***
 //
@@ -71,10 +75,13 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           learn = ch->getSkillValue(SKILL_PENANCE);
           if (bSuccess(ch, learn, ch->getPerc(), SKILL_PENANCE)) {
             amt = ch->pietyGain(val);
-            // we want the value to vary by +-10%   number(-amt/10, amt/10)
-            // can't randomize a double, so mult by 100 then divide by same
-            randomizer = (double) (::number((int) (-10 * amt), (int) (10 * amt)) / 100.0);
-            amt += randomizer;
+	    
+	    if ((ch->getPiety() + amt) < 100.0){
+	      // we want the value to vary by +-10%   number(-amt/10, amt/10)
+	      // can't randomize a double, so mult by 100 then divide by same
+	      randomizer = (double) (::number((int) (-10 * amt), (int) (10 * amt)) / 100.0);
+	      amt += randomizer;
+	    }
 
             your_deity_val = SKILL_PENANCE;
             if (amt > 0.0) {
