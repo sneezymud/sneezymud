@@ -1,28 +1,11 @@
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//  SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
 //
-// $Log: cmd_message.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
+//  "cmd_message.cc"
+//  All functions and routines related to the various message modifiers.
 //
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-/*****************************************************************************
-
-  SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
-
-  "cmd_message.cc"
-  All functions and routines related to the various message modifiers.
-
-  Created 6/ 1/99 - Lapsos(William A. Perrotto III)
-
-******************************************************************************/
+/////////////////////////////////////////
 
 #include <unistd.h>
 #include "stdsneezy.h"
@@ -36,36 +19,9 @@ messageTypeT & operator++ (messageTypeT &c, int)
 }
 
 const char * messageCommandFormat =
-"Syntax: message <field> <message>  Where field is one of:
-\r\t        title -  - Immortal Title, special [] text.
-\r\t        purge -n - When you do a general purge.
-\r\t purge-target -nN- When purge a specific being.
-\r\t        rload -  - Message people get when you rload a room there in.
-\r\t  load-object -nN- When you load an object.
-\r\t  load-mobile -nN- When you load a mobile.
-\r\t        medit -nN- When you medit load a mobile.
-\r\t        oedit -nN- When you oedit load an object.
-\r\tswitch-target -nN- When you use the 'switch load <mobile>' syntax.
-\r\t      move-in -d - When you move in: north, southeast, up, down
-\r\t         ***What people see when you Leave a room by walking.
-\r\t     move-out -d - When you move out: the north, the southeast, above, below
-\r\t         ***What people see when you Enter a room by walking.
-\r\t         slay -nN- When you slay a creature. (what others see)
-\r\t  slay-target -n - When you slay a creature. (what They see)
-\r\t        force -na- What a person sees when you force them to do something.
-\r\tmessage <field> <default>   -   will reset the type to the standard.
+"Syntax: message <field> <message>
+\r\tmessage <field> default   -   will reset the type to the standard.
 \r\tmessage <field>  -  will display that fields current setting.
-\r\t---------------^^- Required Items:
-\r\t<n> = Your name.  (can be substituted with such)
-\r\t<N> = Object/Mobile/Player name.
-\r\t<a> = Arguments associated with the command in question.
-\r\t<d> = Direction of movement.
-\r\t<m> = Your sex. (him/her/it)
-\r\t<M> = Targets sex. (him/her/it)
-\r\t<e> = Your sex. (he/she/it)
-\r\t<E> = Targets sex. (he/she/it)
-\r\t<s> = Your sex. (his/her/its)
-\r\t<S> = Targets sex. (his/her/its)
 ";
 
 const unsigned short int messageCommandSwitches[][3] =
@@ -87,6 +43,9 @@ const unsigned short int messageCommandSwitches[][3] =
   {200, (MSG_REQ_GNAME | MSG_REQ_ONAME ), POWER_WIZARD},
   {200, (MSG_REQ_GNAME                 ), POWER_WIZARD},
   {200, (MSG_REQ_GNAME | MSG_REQ_STRING), POWER_FORCE},
+  {200, (0                             ), POWER_GOTO},
+  {200, (0                             ), POWER_GOTO},
+  {200, (0                             ), POWER_LONGDESC},
 };
 
 const char * messageCommandTypes[] =
@@ -105,6 +64,9 @@ const char * messageCommandTypes[] =
   "slay",          // 12
   "slay-target",   // 13
   "force",         // 14
+  "bamfin",        // 15
+  "bamfout",       // 16
+  "longdescr",     // 17
   "\n"
 };
 
@@ -130,7 +92,7 @@ void TBeing::doMessage(const char *tArg)
   else {
     bisect_arg(tStCommand.c_str(), &tValue, tString, messageCommandTypes);
 
-    if (tValue < 1 || tValue > 14)
+    if (tValue < 1 || tValue >= MSG_TYPE_MAX)
       sendTo("Incorrect message type.\n\r");
     else if (messageCommandSwitches[tValue][2] &&
              !hasWizPower(wizPowerT(messageCommandSwitches[tValue][2])))
@@ -167,6 +129,12 @@ void TBeing::doMessage(const char *tArg)
         sendTo("You Can NOT use newlines in the god title, Bad Bad.\n\r");
         return;
       }
+
+      // string has the extra \n\r from the input attached, so strip that off
+      while (tStString.find("\n") != string::npos)
+        tStString.replace(tStString.find("\n"), 1, "");
+      while (tStString.find("\r") != string::npos)
+        tStString.replace(tStString.find("\r"), 1, "");
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_GNAME) &&
           !isNamed && (tStString.find("<n>") == string::npos)) {
@@ -278,10 +246,10 @@ string TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
       return "<n> calls up <N> then quickly melds with <M>";
       break;
     case MSG_MOVE_IN: // Move In
-      return "<n> quickly jets <d>.";
+      return "<n> quickly struts <d>.";
       break;
     case MSG_MOVE_OUT: // Move Out
-      return "<n> jets in from <d>.";
+      return "<n> struts in from <d>.";
       break;
     case MSG_SLAY: // Slay
       return "<n> brutally slays <N>!";
@@ -291,6 +259,15 @@ string TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
       break;
     case MSG_FORCE: // Force
       return "<n> has forced you to '<a>'.";
+      break;
+    case MSG_BAMFIN: // goto <room>
+      return "<n> appears with an explosion of rose-petals";
+      break;
+    case MSG_BAMFOUT: // goto <room> when leaving a room
+      return "<n> disappears in a cloud of mushrooms.";
+      break;
+    case MSG_LONGDESCR: // Long Description
+      return "<n> is here.";
       break;
     default:
       return "ERROR";
@@ -308,8 +285,13 @@ bool TMessages::operator==(messageTypeT tValue)
   return true;
 }
 
-TMessages & TMessages::operator()(messageTypeT tValue, string tStString)
+// TMessages & TMessages::operator()(messageTypeT tValue, string tStString)
+void TMessages::operator()(messageTypeT tValue, string tStString)
 {
+  // look for "~R" and replace with newlines
+  while (tStString.find("~R") != string::npos)
+    tStString.replace(tStString.find("~R"), 2, "\n\r");
+  
   switch (tValue)
   {
     case MSG_IMM_TITLE: // Immortal Title
@@ -396,8 +378,27 @@ TMessages & TMessages::operator()(messageTypeT tValue, string tStString)
       tMessages.msgForce = new char[tStString.length() + 1];
       strcpy(tMessages.msgForce, tStString.c_str());
       break;
-    default:
-      vlogf(7, "TMessages::operator()(int, string) got invalid tValue.  [%d]",
+    case MSG_BAMFIN: // bamfin
+      delete [] tMessages.msgBamfin;
+      tMessages.msgBamfin = NULL;
+      tMessages.msgBamfin = new char[tStString.length() + 1];
+      strcpy(tMessages.msgBamfin, tStString.c_str());
+      break;
+    case MSG_BAMFOUT: // bamfout
+      delete [] tMessages.msgBamfout;
+      tMessages.msgBamfout = NULL;
+      tMessages.msgBamfout = new char[tStString.length() + 1];
+      strcpy(tMessages.msgBamfout, tStString.c_str());
+      break;
+    case MSG_LONGDESCR: // Long Description
+      delete [] tMessages.msgLongDescr;
+      tMessages.msgLongDescr = NULL;
+      tMessages.msgLongDescr = new char[tStString.length() + 1];
+      strcpy(tMessages.msgLongDescr, tStString.c_str());
+      break;
+    case MSG_ERROR:
+    case MSG_MAX:
+      vlogf(LOG_BUG, "TMessages::operator()(int, string) got invalid tValue.  [%d]",
             tValue);
   }
 }
@@ -426,7 +427,7 @@ string TMessages::operator()(messageTypeT tValue,
   {
     {"her", "him", "it"},
     {"she", "he" , "it"},
-    {"her", "him", "it"}
+    {"her", "his", "its"}
   };
 
   tMessage = (*this)[tValue];
@@ -435,24 +436,6 @@ string TMessages::operator()(messageTypeT tValue,
     tMessage = getDefaultMessage(tValue, tPlayer);
 
   if (sendFiltered) {
-    if (tPlayer)
-      findAndReplace(tMessage, "<n>", (tPlayer->getName() ? tPlayer->getName() : "ERROR"));
-    else
-      findAndReplace(tMessage, "<n>", "Someone");
-
-    findAndReplace(tMessage, "<m>", sexTypes[0][tSexP]);
-    findAndReplace(tMessage, "<e>", sexTypes[1][tSexP]);
-    findAndReplace(tMessage, "<s>", sexTypes[2][tSexP]);
-
-    if (tThing)
-      findAndReplace(tMessage, "<N>", (tThing->getName() ? tThing->getName() : "ERROR"));
-    else
-      findAndReplace(tMessage, "<N>", "Someone");
-
-    findAndReplace(tMessage, "<M>", sexTypes[0][tSexM]);
-    findAndReplace(tMessage, "<E>", sexTypes[1][tSexM]);
-    findAndReplace(tMessage, "<S>", sexTypes[2][tSexM]);
-
     if (tString && *tString) {
       findAndReplace(tMessage, "<d>", tString);
       findAndReplace(tMessage, "<a>", tString);
@@ -460,6 +443,14 @@ string TMessages::operator()(messageTypeT tValue,
       findAndReplace(tMessage, "<d>", "somewhere");
       findAndReplace(tMessage, "<a>", "to do something");
     }
+
+    findAndReplace(tMessage, "<m>", sexTypes[0][tSexP]);
+    findAndReplace(tMessage, "<e>", sexTypes[1][tSexP]);
+    findAndReplace(tMessage, "<s>", sexTypes[2][tSexP]);
+
+    findAndReplace(tMessage, "<M>", sexTypes[0][tSexM]);
+    findAndReplace(tMessage, "<E>", sexTypes[1][tSexM]);
+    findAndReplace(tMessage, "<S>", sexTypes[2][tSexM]);
 
     findAndReplace(tMessage, "~R", "\n\r");
 
@@ -470,6 +461,16 @@ string TMessages::operator()(messageTypeT tValue,
     findAndReplace(tMessage, "<A>", "");
     findAndReplace(tMessage, "<h>", "");
     findAndReplace(tMessage, "<H>", "");
+
+    if (tPlayer)
+      findAndReplace(tMessage, "<n>", (tPlayer->getName() ? tPlayer->getName() : "ERROR"));
+    else
+      findAndReplace(tMessage, "<n>", "Someone");
+
+    if (tThing)
+      findAndReplace(tMessage, "<N>", (tThing->getName() ? tThing->getName() : "ERROR"));
+    else
+      findAndReplace(tMessage, "<N>", "Someone");
   } else {
     findAndReplace(tMessage, "<d>", "<-d>");
     findAndReplace(tMessage, "<a>", "<-a>");
@@ -524,8 +525,17 @@ string TMessages::operator[](messageTypeT tValue) const
     case MSG_FORCE: // force
       return tMessages.msgForce;
       break;
+    case MSG_BAMFIN: // bamfin
+      return tMessages.msgBamfin;
+      break;
+    case MSG_BAMFOUT: // bamfout
+      return tMessages.msgBamfout;
+      break;
+    case MSG_LONGDESCR: // Long Description
+      return tMessages.msgLongDescr;
+      break;
     default:
-      vlogf(7, "TMessages::operator[](int) got invalid tValue.  [%d]",
+      vlogf(LOG_BUG, "TMessages::operator[](int) got invalid tValue.  [%d]",
             tValue);
   }
 
@@ -561,7 +571,7 @@ string fread_tilTilde(FILE *tFile)
 void TMessages::initialize()
 {
   if (!tPlayer || !tPlayer->name) {
-    vlogf(7, "TMessages::initialize() called by Invalid player.");
+    vlogf(LOG_BUG, "TMessages::initialize() called by Invalid player.");
     return;
   }
 
@@ -604,7 +614,7 @@ void TMessages::savedown()
     return;
 
   if (!tPlayer->name) {
-    vlogf(7, "TMessages::savedown() called by Invalid player.");
+    vlogf(LOG_BUG, "TMessages::savedown() called by Invalid player.");
     return;
   }
 
@@ -683,3 +693,6 @@ string mapMessageToFile(TMessages *tMsgStore, messageTypeT tType)
   sprintf(tString, "%c%s~", tType, (*tMsgStore)[tType].c_str());
   return tString;
 }
+
+
+
