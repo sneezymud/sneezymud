@@ -588,7 +588,9 @@ int TMainSocket::gameLoop()
     pulse_mudhour = (pulse % PULSE_MUDHOUR);
     mobstuff = (pulse % PULSE_MOBACT);
     pulse_tick = (pulse % PULSE_UPDATE);
-    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
+    //    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
+    // pulse wraps around at 2400, so 2400 is the largest possible here
+    wayslowpulse = (pulse % 2400);
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
