@@ -65,14 +65,10 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   if(cmd != CMD_WHISPER && cmd != CMD_LIST && cmd != CMD_BUY &&
      cmd != CMD_MOB_GIVEN_COINS)
-   return false;
-
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != me->number); shop_nr++);
-
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % me->number);
-    return FALSE;
-  }
+    return false;
+  
+  if(!(shop_nr=find_shop_nr(me->number)))
+    return false;
     
   if(cmd==CMD_WHISPER)
     return shopWhisper(ch, me, shop_nr, arg);
@@ -170,6 +166,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     ch->addToMoney(amt, GOLD_SHOP);
 
     me->doSay(fmt("There you go.  Remember, I need the money back, plus interest, within %i months.") % term);
+    
+    shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
   }
 
 
@@ -189,6 +187,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if(coins>=amt){
 	me->doSay("Alright, everything appears to be in order here.  Consider your loan paid off!");
 	db.query("delete from shopownedloans where player_id=%i", ch->getPlayerID());
+	shoplog(shop_nr, ch, me, "talens", -amt, "receiving");
       } else {
 	// how much of the amount owed is the principle
 	float perc=(float)principle / (float)amt;
@@ -198,6 +197,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 		 principle, ch->getPlayerID());
 
 	me->doSay(fmt("Thanks for the payment.  You still owe %i on the principle.") % principle);
+	shoplog(shop_nr, ch, me, "talens", -amt, "receiving");
       }
     } else {
       me->doSay("Uhh... thanks!");

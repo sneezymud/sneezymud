@@ -48,6 +48,20 @@ bool shopData::isOwned(){
 }
 
 
+unsigned int find_shop_nr(int mobvnum)
+{
+  unsigned int shop_nr=0;
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != mobvnum); shop_nr++);
+
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % mobvnum);
+    return 0;
+  }   
+
+  return shop_nr;
+}
+
 
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
