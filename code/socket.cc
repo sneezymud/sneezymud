@@ -723,7 +723,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	  act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
 	      FALSE, tmp_ch, NULL, NULL, TO_ROOM);
 	      
-	  rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), DAMAGE_FIRE);
+	  rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), SPELL_RAZE);
 	      
 	  if(IS_SET_DELETE(rc, DELETE_THIS)) {
 	    if (!tmp_ch) continue;
