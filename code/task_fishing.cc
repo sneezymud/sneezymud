@@ -83,7 +83,8 @@ TObj *catch_a_fish(TRoom *rp){
     }
   }
 
-
+  
+  bool adjustsize=true;
   if(rp->getSectorType() == SECT_ICEFLOW){
     num=::number(0,nmarine+nice-1);
     if(num<nice)
@@ -93,13 +94,15 @@ TObj *catch_a_fish(TRoom *rp){
   } else if(rp->isOceanSector()){
     if(!::number(0,nmarine)){
       fish=read_object(12445, VIRTUAL); // some random crap item
+      adjustsize=false;
     } else {
       fish=read_object(marinefishes[::number(0,nmarine-1)], VIRTUAL);
-      fish->setWeight((float)((float)fish->getWeight()*(float)weightmod));
-      fish->setVolume(fish->getWeight()*200);
     }
   } else { // if(rp->isRiverSector()){  // river or pond or lake or whatever
     fish=read_object(freshfishes[::number(0,nfresh-1)], VIRTUAL);
+  }
+
+  if(adjustsize){
     fish->setWeight(fish->getWeight()*weightmod);
     fish->setVolume(fish->getWeight()*200);
   }
