@@ -725,7 +725,8 @@ TThing& TThing::operator += (TThing& t)
             rp = parent->parent->roomp;
           }
         } else {
-          rp = tComp->roomp;
+          if (tComp)
+            rp = tComp->roomp;
         }
       }
       vlogf(LOG_ANGUS, "TThing::operator+= found component to merge!");
