@@ -592,7 +592,7 @@ int TShopOwned::doLogs(string arg)
     
     /////////
     if (ch->desc)
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   } else if(arg==" balance"){
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
@@ -635,7 +635,7 @@ int TShopOwned::doLogs(string arg)
     
     /////////
     if (ch->desc)
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   } else {
     if(!arg.empty()){
       db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg.c_str());      
@@ -653,7 +653,7 @@ int TShopOwned::doLogs(string arg)
     }
     
     if (ch->desc)
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
     
     
   }

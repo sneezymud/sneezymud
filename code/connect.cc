@@ -1046,7 +1046,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-            page_string(str.c_str(), SHOWNOW_YES);
+            page_string(str, SHOWNOW_YES);
             connected = CON_QRACE;
             break;
 	  case 'X':
@@ -1568,7 +1568,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1637,7 +1637,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1696,7 +1696,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1750,7 +1750,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -1799,7 +1799,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("Ugh!  Choice BAD!\n\r");
@@ -1863,7 +1863,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-          page_string(str.c_str(), SHOWNOW_YES);
+          page_string(str, SHOWNOW_YES);
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
@@ -2000,7 +2000,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-            page_string(str.c_str(), SHOWNOW_YES);
+            page_string(str, SHOWNOW_YES);
             connected = CON_QCLASS;
             break;
           default:
@@ -2176,7 +2176,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), SHOWNOW_YES);
+        page_string(str, SHOWNOW_YES);
         break;
       } else {
 //        writeToQ("You typed in an incorrect command at this point.\n\r");
@@ -2267,7 +2267,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), SHOWNOW_YES);
+        page_string(str, SHOWNOW_YES);
         break;
       } else {
         sendStatList(4, FALSE);
@@ -2360,7 +2360,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), SHOWNOW_YES);
+        page_string(str, SHOWNOW_YES);
         break;
       } else {
         sendStatList(2, FALSE);
@@ -2457,7 +2457,7 @@ int Descriptor::nanny(const char *arg)
       // swap color strings
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
-        page_string(str.c_str(), SHOWNOW_YES);
+        page_string(str, SHOWNOW_YES);
         break;
       } else {
         sendStatList(3, FALSE);
@@ -3709,10 +3709,10 @@ bool Descriptor::page_file(const char *the_input)
 // allow will permit the string to parse for %n in the colorstring
 // the chief problem with this is you can make a board message look like the
 // reader's name is in it.  (it is default TRUE)
-void Descriptor::page_string(const char *strs, showNowT shownow, allowReplaceT allowRep)
+void Descriptor::page_string(const string strs, showNowT shownow, allowReplaceT allowRep)
 {
   delete [] showstr_head;
-  showstr_head = mud_str_dup(strs);
+  showstr_head = mud_str_dup(strs.c_str());
   mud_assert(showstr_head != NULL, "Bad alloc in page_string");
 
   cur_page = 0;
@@ -4943,7 +4943,7 @@ int Descriptor::sendLogin(const char *arg)
     if (WizLock) {
       writeToQ("The game is currently wiz-locked.\n\r");
       if (!lockmess.empty()) {
-        page_string(lockmess.c_str(), SHOWNOW_YES);
+        page_string(lockmess, SHOWNOW_YES);
       } else {
         FILE *signFile;
 
@@ -4951,7 +4951,7 @@ int Descriptor::sendLogin(const char *arg)
           fclose(signFile);
           string iostring;
           file_to_string(SIGN_MESS, iostring);
-          page_string(iostring.c_str(), SHOWNOW_YES);
+          page_string(iostring, SHOWNOW_YES);
         }
       }
       writeToQ("Wiz-Lock password: ");
@@ -5271,7 +5271,7 @@ int Descriptor::doAccountStuff(char *arg)
       if (WizLock && !IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
         writeToQ("The game is currently wiz-locked.\n\r");
         if (!lockmess.empty()) {
-          page_string(lockmess.c_str(), SHOWNOW_YES);
+          page_string(lockmess, SHOWNOW_YES);
         } else {
 #if 0
           ifstream op(SIGN_MESS, ios::in | ios::nocreate);
@@ -5279,7 +5279,7 @@ int Descriptor::doAccountStuff(char *arg)
             op.close();
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), SHOWNOW_YES);
+            page_string(iostring, SHOWNOW_YES);
           }
 #else
           FILE *signFile;
@@ -5288,7 +5288,7 @@ int Descriptor::doAccountStuff(char *arg)
             fclose(signFile);
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), SHOWNOW_YES);
+            page_string(iostring, SHOWNOW_YES);
           }
 #endif
         }
@@ -5299,7 +5299,7 @@ int Descriptor::doAccountStuff(char *arg)
         // wizlock is on, but I am an IMM, just notify me
         writeToQ("The game is currently wiz-locked.\n\r");
         if (!lockmess.empty()) {
-          page_string(lockmess.c_str(), SHOWNOW_YES);
+          page_string(lockmess, SHOWNOW_YES);
         } else {
 #if 0
           ifstream opp(SIGN_MESS, ios::in | ios::nocreate);
@@ -5307,7 +5307,7 @@ int Descriptor::doAccountStuff(char *arg)
             opp.close();
             string iosstring;
             file_to_string(SIGN_MESS, iosstring);
-            page_string(iosstring.c_str(), SHOWNOW_YES);
+            page_string(iosstring, SHOWNOW_YES);
           }
 #else
           FILE *signFile;
@@ -5316,7 +5316,7 @@ int Descriptor::doAccountStuff(char *arg)
             fclose(signFile);
             string iostring;
             file_to_string(SIGN_MESS, iostring);
-            page_string(iostring.c_str(), SHOWNOW_YES);
+            page_string(iostring, SHOWNOW_YES);
           }
 #endif
         }
@@ -5730,7 +5730,7 @@ int Descriptor::doAccountMenu(const char *arg)
             string fileBuf;
             if (file_to_string(ANSI_MENU_3, fileBuf)) {
                fileBuf += "\n\r";
-               page_string(fileBuf.c_str());
+               page_string(fileBuf);
             }
           }
           screen_size = tss;

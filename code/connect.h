@@ -478,7 +478,7 @@ class Descriptor
     void writeToQ(const char *arg);
     void clientf(const char *msg,...);
     bool page_file(const char *);
-    void page_string(const char *, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
+    void page_string(const string, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
     void show_string(const char *, showNowT, allowReplaceT);
     const string badClassMessage(int Class, bool multi = FALSE, bool triple = FALSE);
 #if 0

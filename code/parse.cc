@@ -3351,5 +3351,5 @@ void TBeing::makeOutputPaged()
     memset(buf, '\0', sizeof(buf));
   }
 
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }

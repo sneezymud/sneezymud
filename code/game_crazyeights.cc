@@ -179,7 +179,7 @@ void CrazyEightsGame::peek(const TBeing *ch) const
     tString += tArg;
   }
 
-  ch->desc->page_string(tString.c_str());
+  ch->desc->page_string(tString);
 }
 
 int CrazyEightsGame::move_card(TBeing *ch, const char *tArg)

@@ -435,7 +435,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     str += buffer;
   }
 
-  ch->desc->page_string(str.c_str());
+  ch->desc->page_string(str);
   return;
 }
 

@@ -1289,7 +1289,7 @@ void TBeing::lowRace(const char *arg)
 
   str += "\n\r";
 
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 void TBeing::lowTasks(const char *arg)
@@ -1338,7 +1338,7 @@ void TBeing::lowTasks(const char *arg)
     }
 
     if (desc)
-      desc->page_string(str.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
 
 
     return;
@@ -1503,7 +1503,7 @@ void TBeing::lowMobs(const char *arg)
     mob = NULL;
   }
   str += "\n\r";
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 class lowObjSort {
@@ -1747,7 +1747,7 @@ norm());
     delete tbc;
     tbc = NULL;
   }
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 class lowWeapSort {
@@ -1916,7 +1916,7 @@ void TBeing::lowWeaps(const char *arg)
     delete weap;
     weap = NULL;
   }
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 int getSpellCasttime(spellNumT spell)

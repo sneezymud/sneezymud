@@ -1596,7 +1596,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
     sb += buf2;
 
     if (ch->desc)
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 
     keeper->autoCreateShop(shop_nr);
     sprintf(buf2, "%s/%d", SHOPFILE_PATH, shop_nr);
@@ -1605,9 +1605,9 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   }
   if (ch->desc) {
     if (!ch->desc->m_bIsClient)
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
     else 
-      ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   }
   return;
 }

@@ -216,7 +216,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
           }
 
           if (isPc() && isImmortal() && desc)
-            desc->page_string(StString.c_str());
+            desc->page_string(StString);
 
           return;
         }
@@ -471,7 +471,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         StString += "\n\r";
 
       if (isPc() && isImmortal() && desc)
-        desc->page_string(StString.c_str());
+        desc->page_string(StString);
 
       return;
     } else {
@@ -514,7 +514,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         StString += "\n\r";
 
       if (isPc() && isImmortal() && desc)
-        desc->page_string(StString.c_str());
+        desc->page_string(StString);
 
       return;
     }

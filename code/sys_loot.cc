@@ -417,7 +417,7 @@ void TBeing::doLoot(const string & tStString)
     sprintf(tString, "%d\n\r", tTotalCount);
     tStOutput += tString;
 
-    desc->page_string(tStOutput.c_str());
+    desc->page_string(tStOutput);
     return;
   } else if (is_abbrev(tStCommand, "load")) {
     tStArg = one_argument(tStArg, tStLevelMin);

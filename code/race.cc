@@ -718,7 +718,7 @@ void Race::showTo(TBeing *caller)
 
   str += baseStats.showStats(caller);
 
-  caller->desc->page_string(str.c_str());
+  caller->desc->page_string(str);
   return;
 }
 

@@ -1032,7 +1032,7 @@ void seditList(TBeing *ch)
     tStString += "Nothing found.\n\r";
 
   closedir(tDirInfo);
-  ch->desc->page_string(tStString.c_str());
+  ch->desc->page_string(tStString);
 }
 
 void seditPurge(TBeing *ch)
@@ -1311,7 +1311,7 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
             tForm = false;
           } while ((respIndex = seditFindResponse(respIndex->next, tCommand, &tForm, -1)));
 
-          ch->desc->page_string(tStOutput.c_str());
+          ch->desc->page_string(tStOutput);
         } else {
           ch->sendTo("No Matches.\n\r");
           ch->specials.editFriend = 0;

@@ -91,7 +91,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
   // now print the file
   file_to_string(helppath, str, CONCAT_YES);
   str += "\n\r";
-  desc->page_string(str.c_str());
+  desc->page_string(str);
   return;
 
 }
@@ -147,7 +147,7 @@ void TBeing::doHelp(const char *arg)
     }
     pclose(index);
     
-    desc->page_string(str.c_str());
+    desc->page_string(str);
 
     return;
   }
@@ -189,7 +189,7 @@ void TBeing::doHelp(const char *arg)
       str = buf2;
       file_to_string(helppath, str, CONCAT_YES);
       str += "\n\r";
-      desc->page_string(str.c_str());
+      desc->page_string(str);
       return;
     }
   }
@@ -229,7 +229,7 @@ void TBeing::doHelp(const char *arg)
       str = buf2;
       file_to_string(helppath, str, CONCAT_YES);
       str += "\n\r";
-      desc->page_string(str.c_str());
+      desc->page_string(str);
       return;
     }
   }
@@ -546,7 +546,7 @@ void TBeing::doHelp(const char *arg)
 
     file_to_string(helppath, str, CONCAT_YES);
     str += "\n\r";
-    desc->page_string(str.c_str());
+    desc->page_string(str);
     return;
   }
   for (i = 0; i < skillIndex.size(); i++) {
@@ -699,7 +699,7 @@ void TBeing::doHelp(const char *arg)
     str += "\n\r";
     file_to_string(helppath, str, CONCAT_YES);
     str += "\n\r";
-    desc->page_string(str.c_str());
+    desc->page_string(str);
     return;
   }
 

@@ -38,7 +38,7 @@ void TNote::showMe(TBeing *ch) const
     sb += action_description;
     if (ch->desc && !ch->desc->m_bIsClient) {
       if (ch->desc)
-        ch->desc->page_string(sb.c_str());
+        ch->desc->page_string(sb);
     } else {
       processStringForClient(sb);
       ch->desc->clientf("%d", CLIENT_NOTE);

@@ -149,7 +149,7 @@ void TBeing::doPrompt(const char *arg)
     tStString += string;
     tStString += "--------------------\n\r";
 
-    desc->page_string(tStString.c_str());
+    desc->page_string(tStString);
 
     return;
   }

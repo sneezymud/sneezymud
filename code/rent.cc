@@ -4299,7 +4299,7 @@ int TBeing::doRent(const char *argument)
 	sb += "\n\r";
       }
       if (desc)
-        desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
       return TRUE;
     } else {
       sendTo("Syntax: rent credit\n\r");

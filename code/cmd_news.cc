@@ -238,7 +238,7 @@ void TBeing::doNews(const char *argument)
 
   if (desc) {
     news_used_num++;
-    desc->page_string(str.c_str());
+    desc->page_string(str);
   }
 
 #else

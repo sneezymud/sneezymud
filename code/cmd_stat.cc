@@ -141,7 +141,7 @@ void TBeing::statZone(const char *zoneNumber)
     sb += tString;
   }
 
-  desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+  desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 void TBeing::statRoom(TRoom *rmp)
@@ -309,7 +309,7 @@ void TBeing::statRoom(TRoom *rmp)
         str += "UNDEFINED\n\r";
     }
   }
-  desc->page_string(str.c_str());
+  desc->page_string(str);
   return;
 }
 
@@ -475,7 +475,7 @@ void TBeing::statObj(const TObj *j)
       str += buf;
     }
   }
-  desc->page_string(str.c_str());
+  desc->page_string(str);
   return;
 }
 
@@ -581,7 +581,7 @@ void TBeing::statObjForDivman(const TObj *j)
   }
   str += "\n\r";
   str += "The cloud of smoke is quickly dispersed and the air is clear.\n\r";
-  desc->page_string(str.c_str());
+  desc->page_string(str);
   return;
 }
 

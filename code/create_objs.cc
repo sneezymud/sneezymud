@@ -378,7 +378,7 @@ static void olist(TPerson *ch, bool zone=false)
     longstr += "\n\r";
   }
 
-  ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+  ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 
@@ -2869,7 +2869,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
     longstr += "Nothing found.\n\r";
 
   closedir(dfd);
-  ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+  ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 int TObj::addApply(TBeing *ch, applyTypeT apply)

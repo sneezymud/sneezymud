@@ -427,7 +427,7 @@ void TBeing::doCommand(const char *arg)
   sprintf(buf, "\n\r\n\rTotal number of commands: %u\n\r", cmdVec.size());
   str += buf;
 
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 static int splitShares(const TBeing *ch, const TBeing *k)
@@ -894,7 +894,7 @@ void TBeing::doPractice(const char *argument)
     }
 
     tOutput += describe_practices(tC).c_str();
-    desc->page_string(tOutput.c_str());
+    desc->page_string(tOutput);
 
     return;
   }
@@ -942,7 +942,7 @@ void TBeing::doPractice(const char *argument)
     }
 
     tOutput += describe_practices(tC).c_str();
-    desc->page_string(tOutput.c_str());
+    desc->page_string(tOutput);
 
     return;
   }

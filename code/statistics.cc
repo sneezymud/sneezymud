@@ -439,7 +439,7 @@ void TBeing::doGamestats(const string arg)
     ssprintf(buf, "Mobiles have aggro'd        : %d times.\n\r", stats.aggro_successes);
     str += buf;
     if (desc)
-      desc->page_string(str.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(buf, "equipment")) {
     sendTo("Current Equipment Load Modifier : %4.2f\n\r", stats.equip);

@@ -1212,7 +1212,7 @@ void TPerson::doEdit(const char *arg)
           }
 	}
 
-        desc->page_string(tStr.c_str());
+        desc->page_string(tStr);
       }
       return;
       break;

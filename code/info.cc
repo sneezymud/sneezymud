@@ -2202,7 +2202,7 @@ void TPerson::doUsers(const string argument)
     sprintf(buf2, "\n\rTotal Descriptors : %d\n\r", count);
     sb += buf2;
     if (desc)
-      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(arg1, "site")) {
     if(arg2.empty()){
@@ -2501,7 +2501,7 @@ void TBeing::doWizlist()
       wizlist_used_num++;
 
       file_to_string(WIZLIST_FILE, tStString);
-      desc->page_string(tStString.c_str());
+      desc->page_string(tStString);
       fclose(tFile);
     }
   }
@@ -2741,7 +2741,7 @@ void TBeing::doWhere(const char *argument)
     if (sb.empty())
       sendTo("Couldn't find any such object.\n\r");
     else if (desc)
-      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 
     return;
   }
@@ -2776,7 +2776,7 @@ void TBeing::doWhere(const char *argument)
         }
       }
       if (desc)
-        desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
       return;
     }
   }
@@ -2855,7 +2855,7 @@ void TBeing::doWhere(const char *argument)
     sendTo("Couldn't find any such thing.\n\r");
   else {
     if (desc)
-      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+      desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   }
 }
 
@@ -2909,7 +2909,7 @@ void TBeing::doLevels(const char *argument)
   tStString += "\n\r";
 
   if (desc)
-    desc->page_string(tStString.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+    desc->page_string(tStString, SHOWNOW_NO, ALLOWREP_YES);
 #else
   int i;
   classIndT Class;
@@ -3026,7 +3026,7 @@ void TBeing::doLevels(const char *argument)
   }
   sb += "\n\r";
   if (desc)
-    desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+    desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   return;
 #endif
 }
@@ -3228,7 +3228,7 @@ void TBeing::doWorld()
          purple(), stats.act_101_127, norm());
   str += buf;
 
-  desc->page_string(str.c_str());
+  desc->page_string(str);
 }
 
 const char *DescRatio(double f)
