@@ -375,6 +375,9 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         break;
       }
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
+      // for unlimited items, charge the shopkeeper for production
+      keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
+      
 
       *ch += *temp1;
       ch->logItem(temp1, CMD_BUY);
@@ -1908,7 +1911,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   }
 #endif
 
-  if(cmd == CMD_WHISPER && ch->isImmortal()){
+  if(cmd == CMD_WHISPER /*&& ch->isImmortal()*/ ){
     char buf[256], buf2[256];
     TThing *tt;
     int count=0, value=0, price=0, discount=100, rc;
@@ -2021,6 +2024,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
       }
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////
+      if(strcmp(ch->getName(), "Fitz") && !ch->isImmortal()){
+	sprintf(buf, "%s Shop ownership is in beta testing right now, you can not purchase this shop.", ch->getName());
+	myself->doTell(buf);
+	return TRUE;
+      }
+
       if(owned){
 	sprintf(buf, "%s Sorry, this shop isn't for sale.", ch->getName());
 	myself->doTell(buf);
@@ -2180,7 +2189,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	mysql_free_result(res);
       }
     } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
-      if(owned && !(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_LOGS)){
+      if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_LOGS)){
 	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
 	myself->doTell(buf);
 	return FALSE;
@@ -2191,7 +2200,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       string sb;
       char buf[256];
 
-      rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i", shop_nr);
+      rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime", shop_nr);
       
       while((row=mysql_fetch_row(res))){
 	sprintf(buf, "%s\tTalens: %10i\tValue: %10i\n\r", row[6], atoi(row[4]), atoi(row[5]));
