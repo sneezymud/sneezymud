@@ -1096,10 +1096,10 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
     }
   }
 
-  
-  equipment.wear(obj, pos);
+
   obj->equippedBy = this;
-  obj->eq_pos = pos;
+  obj->eq_pos = pos;  
+  equipment.wear(obj, pos);
 
   int origamt = specials.affectedBy;
 
