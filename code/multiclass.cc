@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: multiclass.cc,v $
+// Revision 5.5  2002/10/01 02:51:01  glint
+// Fixed floating flares and flare renaming in water rooms.
+// Added Glint as a Lvl 57 autogod
+//
 // Revision 5.4  2002/08/08 16:42:46  dash
 // ooh lets see... calm no longer keeps mobs from using moves if they're already fighting
 // put int repair obj.
@@ -414,7 +418,8 @@ void TPerson::startLevels()
     calcMaxLevel();
 #endif
     // Other Mudadmin
-  } else if (!strcmp(name, "Dolgan")) {
+  } else if (!strcmp(name, "Dolgan") || 
+	     !strcmp(name, "Glint")) {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 3);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 3);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 3);

@@ -239,6 +239,9 @@ int TObj::riverFlow(int)
   if (roomp->getRiverSpeed() <= 0) 
     return FALSE;
 
+  if (this->objVnum() == GENERIC_FLARE)
+    return FALSE;
+
   if (::number(0,roomp->getRiverSpeed()) && ::number(0,roomp->getRiverSpeed()))
     return FALSE;
 
