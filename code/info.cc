@@ -1281,7 +1281,6 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_ATTUNE:
       case SKILL_STAVECHARGE:
       case SKILL_MANA:
-
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
@@ -2986,7 +2985,7 @@ void TBeing::doLevels(const char *argument)
     int m = i + 3*(MAX_MORT/4+1);
 
     if (i <= MAX_MORT) {
-      sprintf(tString, "%d", (int) getExpClassLevel(Class, i));
+      sprintf(tString, "%.0f", getExpClassLevel(Class, i));
       comify(tString);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
@@ -2995,7 +2994,7 @@ void TBeing::doLevels(const char *argument)
       sb += buf;
     }
     if (j <= MAX_MORT) {
-      sprintf(tString, "%d", (int) getExpClassLevel(Class, j));
+      sprintf(tString, "%.0f", getExpClassLevel(Class, j));
       comify(tString);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
@@ -3004,7 +3003,7 @@ void TBeing::doLevels(const char *argument)
       sb += buf;
     }
     if (k <= MAX_MORT) {
-      sprintf(tString, "%d", (int) getExpClassLevel(Class, k));
+      sprintf(tString, "%.0f", getExpClassLevel(Class, k));
       comify(tString);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
@@ -3013,7 +3012,7 @@ void TBeing::doLevels(const char *argument)
       sb += buf;
     }
     if (m <= MAX_MORT) {
-      sprintf(tString, "%d", (int) getExpClassLevel(Class, m));
+      sprintf(tString, "%.0f", getExpClassLevel(Class, m));
       comify(tString);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),

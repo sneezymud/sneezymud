@@ -2462,10 +2462,5 @@ double getExpClassLevel(classIndT Class, int level)
   // and round it up to closest int
   exp_amt += 0.5;
 
-  return (int) exp_amt;
+  return exp_amt;
 }
-
-
-
-
-
