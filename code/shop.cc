@@ -1908,6 +1908,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if (cmd == CMD_EVALUATE) {
     return shopping_evaluate(arg, ch, myself, shop_nr);
   }
+  if (cmd == CMD_GIVE && arg) {
+    // log this but don't intercept it
+    // kinda klugey, whatever
+    myself->addToMoney(atoi(arg), GOLD_SHOP);
+    shoplog(shop_nr, ch, myself, "talens", atoi(arg), "giving");
+    myself->addToMoney(-atoi(arg), GOLD_SHOP);
+  }
+
 #if 0
   // the sweepers should be reasonably efficient about cleaning up, so this
   // probably isn't needed.  Non-GH might still suffer though....
@@ -2121,6 +2129,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	ch->setMoney(ch->getMoney()+amount);
 	ch->saveChar(ROOM_AUTO_RENT);
 
+	shoplog(shop_nr, ch, myself, "talens", amount, "receiving");
+
 	sprintf(buf, "$n gives you %d talen%s.\n\r", amount,
 		(amount == 1) ? "" : "s");
 	act(buf, TRUE, myself, NULL, ch, TO_VICT);
@@ -2207,30 +2217,71 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       MYSQL_RES *res;
       int rc;
       string sb;
-      char buf[256];
 
-      rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime desc", shop_nr);
-      
-      while((row=mysql_fetch_row(res))){
-	sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", row[6], atoi(row[4]), atoi(row[5]), atoi(row[4])+atoi(row[5]));
-	sb += buf;
+      if(!strcmp(arg, " clear")){
+	dbquery(NULL, "sneezy", "shop_keeper logs clear", "delete from shoplog where shop_nr=%i", shop_nr);
+	ch->sendTo("Done.\n\r");
+      } else if(!strcmp(arg, " summaries")){
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select name, action, sum(talens) from shoplog where shop_nr=%i group by name, action", shop_nr);
 
-	sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
-		row[0], row[1], row[2], atoi(row[3]));
-	sb += buf;
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
+		  row[0], row[1], atoi(row[2]));
+	  sb += buf;
+	}
+	mysql_free_result(res);
+
+	//////////
+	sb += "\n\r";
+
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select item, action, sum(talens) from shoplog where shop_nr=%i group by item, action", shop_nr);
+
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
+		  row[0], row[1], atoi(row[2]));
+	  sb += buf;
+	}
+	mysql_free_result(res);
+
+	/////////
+	sb += "\n\r";
+
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select action, sum(talens) from shoplog where shop_nr=%i group by action", shop_nr);
+
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%-12.12s %8i\n\r", 
+		  row[0], atoi(row[1]));
+	  sb += buf;
+	}
+
+	if (ch->desc)
+	  ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+
+	mysql_free_result(res);
+      } else {
+	rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime desc, shoptalens+shopvalue desc", shop_nr);
+	
+	while((row=mysql_fetch_row(res))){
+	  sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", row[6], atoi(row[4]), atoi(row[5]), atoi(row[4])+atoi(row[5]));
+	  sb += buf;
+	  
+	  sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
+		  row[0], row[1], row[2], atoi(row[3]));
+	  sb += buf;
+	}
+	
+	if (ch->desc)
+	  ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+	
+	mysql_free_result(res);
       }
-
-      if (ch->desc)
-	ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
-
-      mysql_free_result(res);
     } else {
       myself->doTell("Read 'help shop owner' for assistance.");
     }
 
+
     return TRUE;
   }
-
 
   return FALSE;
 }
@@ -2253,7 +2304,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
 
   if((rc=dbquery(&res, "sneezy", "shoplog", "insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now())", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value))){
     if(rc==-1){
-      vlogf(LOG_BUG, "Database error in TBaseClothing::purchaseMe");
+      vlogf(LOG_BUG, "Database error in shoplog");
     }
   }
   mysql_free_result(res);      

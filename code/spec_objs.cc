@@ -4711,7 +4711,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Randomizer", randomizer},
   {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon} //75
-  {FALSE, "Mana Burn Robe", manaBurnRobe}
+  //  {FALSE, "Mana Burn Robe", manaBurnRobe}
 };
 
 
