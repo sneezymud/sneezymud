@@ -337,6 +337,16 @@ void bootDb(void)
   }
   bootPulse(NULL, true);
 
+
+  for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
+    for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+      if(mob_index[mobnum].virt <= zone_table[zone].top)
+	mob_index[mobnum].setMaxNumber(mob_index[mobnum].getNumber());
+    }
+  }
+
+
+
   // after boot time object loading is minimal, so the cache isn't needed
   //  obj_cache.clear();
 
@@ -1296,6 +1306,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
     mob->setStuckIn(j, NULL);
   }
   mob_index[nr].addToNumber(1);
+  
 
   mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
 

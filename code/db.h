@@ -127,6 +127,7 @@ class indexData {
   long pos;  
  private:
   int number;
+  int max_num;
  public:
   const char *name;
   const char *short_desc;
@@ -143,8 +144,16 @@ class indexData {
     number+=n;
   }
 
+  void setMaxNumber(const short int n){
+    max_num=n;
+  }
+
   int getNumber(){
     return number;
+  }
+
+  int getMaxNumber(){
+    return max_num;
   }
   
   
