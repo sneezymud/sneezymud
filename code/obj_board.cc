@@ -256,6 +256,8 @@ int TBoard::boardHandler(TBeing *ch, cmdTypeT cmd, const char *arg)
   if (!ch->desc)
     return FALSE;
 
+  board_load_board(nb);  // so that boards update between ports (Maror)
+  
   switch (cmd) {
     case CMD_LOOK:		
       return (board_show_board(ch, arg, this, nb));

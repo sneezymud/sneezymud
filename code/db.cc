@@ -1173,8 +1173,8 @@ void bootZones(void)
 	    zd.zone_nr % check);
       exit(0);
     }
-
     for (;;) {
+      
       resetCom rs;
 
       fscanf(fl, " ");                
@@ -1185,7 +1185,7 @@ void bootZones(void)
         break;
       }
 
-      if (rs.command == '*') {
+      if (rs.command == '*' || gamePort == GAMMA_GAMEPORT) {
         fgets(buf, 255, fl);        
         continue;
       }
@@ -1265,7 +1265,6 @@ continue;
 
       fgets(buf, 255, fl);        
     }
-
     zone_table.push_back(zd);
 
     fclose(fl);

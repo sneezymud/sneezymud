@@ -2052,6 +2052,7 @@ const int PROD_GAMEPORT = 7900;
 const int BETA_GAMEPORT = 5678;
 const int ALPHA_GAMEPORT = 6969;
 const int BUILDER_GAMEPORT = 8900;
+const int GAMMA_GAMEPORT = 6961; // Maror - quick boot! (skips zones)
 const int ITEM_DAMAGE_RATE = 1;
 const int RENT_CREDIT_VAL = 75;
 const bool RENT_SELL_TO_PAWN = false;
