@@ -186,6 +186,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
 		(getRate(shop_nr, ch->getName()) * 100) % '%');
       me->doTell(ch->getName(), fmt("The term length I can offer is %i years.") % term);
+      me->doTell(ch->getName(), "One mud year is about 2 weeks in real time.");
       me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
 		(getPenalty(shop_nr, ch->getName()) * 100) % '%');
       me->doTell(ch->getName(), "Do \"buy loan\" to take out the loan.");
@@ -217,7 +218,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     ch->addToMoney(amt, GOLD_SHOP);
 
     me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
-    
+    me->doTell(ch->getName(), fmt("Do 'list' again at anytime to see how much you owe with interest included."));
+
     shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
   }
 
