@@ -963,20 +963,26 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	buf = fmt("$n's %s connects with $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
-	TTrash *corpse;
-	      
-	corpse = new TTrash();
-        buf = fmt("tooth %s [%d]") % v->name % v_vnum;
+	TObj *corpse;
+	
+	// 39 is generic tooth
+	corpse = read_object(39, VIRTUAL);
+	corpse->swapToStrung();
+
+	buf = fmt("tooth %s [%d]") % v->name % v_vnum;
 
         if (dynamic_cast<TPerson *>(this))
           buf = fmt("%s [%s]") % buf % getName();
 
+	delete corpse->name;
 	corpse->name = mud_str_dup(buf);
 	      
 	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
+	delete corpse->shortDescr;
 	corpse->shortDescr = mud_str_dup(buf);
 	      
 	buf = fmt("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
+	delete corpse->descr;
 	corpse->setDescr(mud_str_dup(buf));
 	      
 	corpse->setStuff(NULL);
@@ -1070,7 +1076,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
               dropPool(9, LIQ_BLOOD);
             }
 
-	    *this += *corpse;
+	    equipChar(corpse, getPrimaryHold(), SILENT_YES);
 	  }
 
 	  if (desc)
