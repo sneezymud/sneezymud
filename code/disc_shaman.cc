@@ -281,7 +281,6 @@ int castResurrection(TBeing * caster, TObj * obj)
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     return FALSE;
   }
-
   if (dynamic_cast<TPCorpse *>(corpse)) {
      /* corpse is a pc */
     caster->sendTo("Resurrection of players is not currently supported.\n\r");

@@ -16,15 +16,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
-  if (ch->getPosition() != POSITION_STANDING) {
-    act("You can't sacrifice $p while fighting!", FALSE, ch, corpse, 0, TO_CHAR);
-    ch->stopTask();
-    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-      corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return FALSE;
-  }
-
-  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || (ch->getPosition() < POSITION_RESTING)) {
     act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n stops trying to sacrifice $p.", TRUE, ch, corpse, 0, TO_ROOM);
     ch->stopTask();
