@@ -1,4 +1,4 @@
-12-03-99 - Lapsos
+12-03-99 / 12-04-99 - Lapsos
 - Added 'arrowType' output to 'eval bow'
 - Added 'arrowType' output to 'eval arrow'
 - Changed mobile transform-limb to also check for Held objects first.
@@ -8,6 +8,14 @@
 - Doorbash will no longer stun immortals.
 - Fumble will now initiate combat on success or crit-failure.
 - Added rent cost to 'value <mob>' when in pet-shop.
+- Made some slight cosmetic changes to 'info gold'
+- Added: 'info gold <level>' for the level-by-level output.
+- Added a new specificCode number(6) for Onslaught's zone.
+- Added check in TSmoke::decayMe.  Was ending up without a
+  room and crashing us somehow.
+- Started work on the first of my automated-games list.
+  Sleeptag will now auto-control most of the old immortal
+  stuff for game running.
 
 11-05-99 - Peel
 - Added checknroom, moveto and destination response script actions.
