@@ -1282,11 +1282,13 @@ int Descriptor::nanny(const char *arg)
               vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).", 
                      character->getName(), host, account->name);
             }
-	    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-	    character->mudMessage(character, 16, wizbuf);
             character->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
           }
+	  if (character->isImmortal()) {
+	    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
+	    character->mudMessage(character, 16, wizbuf);
+	  }
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
@@ -1304,8 +1306,6 @@ int Descriptor::nanny(const char *arg)
         } else {
           vlogf(LOG_PIO, "%s[%s] has connected  (account: %s).", character->getName(), host, account->name);
         }
-	sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just logged onto port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-	character->mudMessage(character, 16, wizbuf);
       }
       
       character->cls();
@@ -1402,10 +1402,12 @@ int Descriptor::nanny(const char *arg)
                 
                 tmp_ch->recepOffer(NULL, &cost);
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
-		sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", tmp_ch->cyan(), tmp_ch->norm(), tmp_ch->getName(), gamePort);
-		tmp_ch->mudMessage(tmp_ch, 16, wizbuf);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	      if (tmp_ch->isImmortal()) {
+		sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", tmp_ch->cyan(), tmp_ch->norm(), tmp_ch->getName(), gamePort);
+		tmp_ch->mudMessage(tmp_ch, 16, wizbuf);
+	      }
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
 	      tmp_ch->loadFactionStats();
@@ -1850,9 +1852,6 @@ int Descriptor::nanny(const char *arg)
       character->convertAbilities();
       character->affectTotal();
       vlogf(LOG_PIO, "%s [%s] new player.", character->getName(), host);
-      sprintf(wizbuf, "[%sINTERPORT INFO%s] New Character %s created on port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-      character->mudMessage(character, 16, wizbuf);
-
       character->saveChar(ROOM_AUTO_RENT);
       accStat.player_count++;
       character->cls();

@@ -1944,7 +1944,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 {
   rentHeader st;
   signed char i;
-  char buf[256], wizbuf[256];
+  char buf[256];
   FILE *fp;
   TPerson *tmp;
   TObj *obj;
@@ -2010,14 +2010,10 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     vlogf(LOG_PIO, "Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]", 
         getName(), getMoney(), getBank(), getExp(), st.number, 
         age_mod, st.total_cost);
-    sprintf(wizbuf, "[%sINTERPORT INFO%s] Saving %s on port %d.\n\r", cyan(), norm(), getName(), gamePort);
-    mudMessage(this, 16, wizbuf); 
   } else if (msgStatus == 2 && desc) {
     vlogf(LOG_PIO, "Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]", 
         getName(), getMoney(), getBank(), getExp(), st.number, 
         age_mod, st.total_cost);
-    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just rented on port %d.\n\r", cyan(), norm(), getName(), gamePort);
-    mudMessage(this, 16, wizbuf); 
   }
   last_rent = st.total_cost;
   fclose(fp);

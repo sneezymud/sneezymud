@@ -583,10 +583,12 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
 
             ch->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
-            sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
-	    ch->mudMessage(ch, 16, wizbuf); 
           }
           act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
+	  if (ch->isImmortal()) {
+            sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
+	    ch->mudMessage(ch, 16, wizbuf); 
+	  }
           ch->loadCareerStats();
           ch->loadDrugStats();
 	  ch->loadFactionStats();
@@ -1187,8 +1189,6 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
           vlogf(LOG_PIO, "%s[%s] has reconnected (client 2)  (account: %s).",
                      character->getName(), host, account->name);
         }
-	sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-	character->mudMessage(character, 16, wizbuf); 
         character->recepOffer(NULL, &cost);
         dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
       }
@@ -1225,8 +1225,10 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
       vlogf(LOG_PIO, "%s[%s] has connected (client)  (account: %s).",
                  character->getName(), host, account->name);
     }
-    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-    character->mudMessage(character, 16, wizbuf); 
+    if (character->isImmortal()) {
+      sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
+      character->mudMessage(character, 16, wizbuf); 
+    }
   }
   sendMotd(character->GetMaxLevel() > MAX_MORT);
   if (character->hasClass(CLASS_CLERIC) || character->hasClass(CLASS_DEIKHAN))
