@@ -6,27 +6,29 @@ void payout(TBeing *ch, int talens)
 {
   TObj *chip;
   sstring buf;
+  map <sstring, int> chipout;
+  map <sstring, int>::iterator iter;
 
   while(talens>0){
-    if(talens >= 1000000)
+    if(talens >= 1000000){
       chip=read_object(CHIP_1000000, VIRTUAL);
-    else if(talens >= 500000)
+    } else if(talens >= 500000){
       chip=read_object(CHIP_500000, VIRTUAL);
-    else if(talens >= 100000)
+    } else if(talens >= 100000){
       chip=read_object(CHIP_100000, VIRTUAL);
-    else if(talens >= 50000)
+    } else if(talens >= 50000){
       chip=read_object(CHIP_50000, VIRTUAL);
-    else if(talens >= 10000)
+    } else if(talens >= 10000){
       chip=read_object(CHIP_10000, VIRTUAL);
-    else if(talens >= 5000)
+    } else if(talens >= 5000){
       chip=read_object(CHIP_5000, VIRTUAL);
-    else if(talens >= 1000)
+    } else if(talens >= 1000){
       chip=read_object(CHIP_1000, VIRTUAL);
-    else if(talens >= 500)
+    } else if(talens >= 500){
       chip=read_object(CHIP_500, VIRTUAL);
-    else if(talens >= 100)
+    } else if(talens >= 100){
       chip=read_object(CHIP_100, VIRTUAL);
-    else {
+    } else {
       ssprintf(buf, "You receive %i talens.", talens);
       act(buf, TRUE, ch, 0, 0, TO_CHAR);
       ssprintf(buf, "$n receives %i talens.", talens);
@@ -42,12 +44,19 @@ void payout(TBeing *ch, int talens)
 
     talens -= chip->obj_flags.cost;
 
-    ssprintf(buf, "You receive %s.", chip->getName());
-    act(buf, TRUE, ch, 0, 0, TO_CHAR);
-    ssprintf(buf, "$n receives %s.", chip->getName());
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    chipout[chip->getName()]++;
 
     *ch += *chip;
+  }
+
+
+  for(iter=chipout.begin();iter!=chipout.end();++iter){
+    ssprintf(buf, "You receive %s. [%i]",
+	     (*iter).first.c_str(), (*iter).second);
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
+    ssprintf(buf, "$n receives %s. [%i]", 
+	     (*iter).first.c_str(), (*iter).second);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
   }
 }
 

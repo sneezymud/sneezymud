@@ -38,129 +38,102 @@ void HoldemGame::nextRound(TBeing *ch)
 
 
 int HoldemGame::handValue(HoldemPlayer *hp){
-  // this code jacked and modified from fish.c by Roy T. Hashimoto
-  int i;/* loop variable */
-  int s_len = 0;/* straight length */
-  int sf_accum = 0;/* straight flush status */
-  int f_accum = 0x3333;/* flush status */
-  int state = 0;/* match state */
-  int rval = 0;/* return value */
-  int rank[13];
-  int c;
-  int t[4] = { 0x1, 0x2, 0x4, 0x8 };
-
-  /* spreads four bits into four nybbles for adding up flushes */
-  unsigned int f_table[] = {
-    0x0000, 0x0001, 0x0010, 0x0011,
-    0x0100, 0x0101, 0x0110, 0x0111,
-    0x1000, 0x1001, 0x1010, 0x1011,
-    0x1100, 0x1101, 0x1110, 0x1111,
-  };
+  int rank[4][15];
+  int i, tmp;
+  int straight=0, flush[4], pairs=0, triplets=0;
+  int score[10];
   
-  /*
-    finite state machine for matches (pairs, trips, etc.)
+  for(i=0;i<10;++i)
+    score[i]=0;
+
+  for(i=0;i<15;++i)
+    for(int j=0;j<4;++j)
+      rank[j][i]=0;
+
+  for(i=0;i<4;++i)
+    flush[i]=0;
+
+  for(i=0;i<2;++i)
+    rank[hp->hand[i]->getSuit()][hp->hand[i]->getValAceHi()]=1;
+  
+  for(i=0;i<5;++i)
+    rank[community[i]->getSuit()][community[i]->getValAceHi()]=1;
+
+  
+  for(i=0;i<15;++i){
+    if(!rank[0][i] && !rank[1][i] && !rank[2][i] && !rank[3][i]){
+      straight=0;
+      continue;
+    }
+
+
+    for(int j=0;j<4;++j){
+      // get highcard
+      if(rank[j][i])
+	score[0]=i;
+
+      // check for flush
+      if((flush[j]+=rank[j][i]) > 5){
+	score[5]=i;
+	// flush
+      }
+    }
+
+    tmp=rank[0][i]+rank[1][i]+rank[2][i]+rank[3][i];
+    if(tmp == 4){
+      score[7]=i;
+      // four of a kind
+    } else if(tmp==3){
+      score[3]=i;
+      // three of a kind
+    } else if(tmp==2){
+      score[1]=i;
+      // pair
+    }
+
+    if(tmp==3 && triplets){
+      pairs++;
+    } else if(tmp==3)
+      triplets++;
+    else if(tmp==2){
+      pairs++;
+      if(pairs >= 2){
+	// 2 pair
+	score[2]=i;
+      }
+    }
+
+    if(pairs && triplets){
+      // full house
+      score[6]=i; 
+    }
     
-    m_table[current state][rank multiplicity] := next state
-    
-    There are six achieveable states (rags, one pair, two pair, trips,
-    full house, four of a kind) and 0-4 cards of any particular rank.
-    All hand ranks are included for a small time-for space tradeoff
-    in making the state value equal the return value.
-  */
-  int m_table[9][16] = {
-    {0, 0, 0, 1, 0, 1, 1, 3, 0, 1, 1, 3, 1, 3, 3, 7},
-    {1, 1, 1, 2, 1, 2, 2, 6, 1, 2, 2, 6, 2, 6, 6, 7},
-    {2, 2, 2, 2, 2, 2, 2, 6, 2, 2, 2, 6, 2, 6, 6, 7},
-    {3, 3, 3, 6, 3, 6, 6, 6, 3, 6, 6, 6, 6, 6, 6, 7},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7},
-    {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  };
 
 
-  // initialize rank
-  for(i=0;i<13;++i) rank[i]=0;
-  for(i=0;i<5;++i){
-    c=((community[i]->getValAceHi()-2)*4) + community[i]->getSuit();
-
-    if(!(rank[c >> 2] & t[c & 3]))
-      rank[c >> 2] |= t[c & 3];
-  }
-  for(i=0;i<2;++i){
-    c=((hp->hand[i]->getValAceHi()-2)*4) + hp->hand[i]->getSuit();
-    
-    if(!(rank[c >> 2] & t[c & 3]))
-      rank[c >> 2] |= t[c & 3];
-  }
-
-
-  i = 13;
-  while ( i-- )
-    {
-      if ( !rank[i] )/* loop again if no instances */
-	{
-	  s_len = 0; /* the next card will not be contiguous */
-	  continue;
-	}
-
-
-      if ( ++s_len >= 5 )/* made a straight */
-	{
-	  int tmp;
-
-	  /* see if the suit matches the last four */
-	  if ( (tmp = rank[i] & sf_accum) &&
-	       (tmp &= sf_accum >> 4) &&
-	       (tmp &= sf_accum >> 8) &&
-	       (tmp & sf_accum >> 12) )
-	    {
-	      rval = 8;
-	      break;/* why look further? */
-	    }
-	  else if ( rval < 4 )
-	    rval = 4;
-	}
+    if(++straight == 5){
+      // straight
+      score[4]=i;
       
-      /* remember the suit(s) of this rank */
-      sf_accum = (sf_accum << 4) | rank[i];
-
-      /*
-	The number of cards in a suit is incremented in
-	parallel here.  The result is held in 4 bits.  The
-	count starts at 3 so the test for the flush can be
-	made against the fourth bit (3+5=8, 1000b).
-      */
-      if ( ((f_accum += f_table[rank[i]]) & 0x8888) && rval < 5 )
-	{
-	  f_accum = 0;/* to avoid further success */
-	  rval = 5;
+      for(int j=0;j<4;++j){
+	if(rank[j][i] && rank[j][i-1] && rank[j][i-2] &&
+	   rank[j][i-3] && rank[j][i-4]){
+	  // straight flush
+	  score[8]=i;
+	  if(i==14){
+	    // royal flush
+	    score[9]=i;
+	  }
 	}
-
-      /* Run the state machine for the other hand rankings */
-      state = m_table[state][rank[i]];
+      }
     }
+  }
 
-  /* special case aces (can be used high or low in straights) */
-  if ( rank[12] && ++s_len >= 5 )
-    {
-      int tmp;
-
-      if ( (tmp = rank[12] & sf_accum) &&
-	   (tmp &= sf_accum >> 4) &&
-	   (tmp &= sf_accum >> 8) &&
-	   (tmp & sf_accum >> 12) )
-	rval = 8;
-      else if ( rval < 4 )
-	rval = 4;
-    }
-
-  /* see if the state machine result is better than the other results */
-  if ( rval < state )
-    rval = state;
-
-  return rval;
+  for(i=9;i>=0;--i){
+    if(score[i])
+      return score[i]+(i*15);
+  }
+  
+  return 0;
 }
 
 
@@ -174,7 +147,7 @@ void HoldemGame::showdown(TBeing *ch)
   if (!ch->checkHoldem())
     return;
 
-  if(playerCount() < 2){
+  if(playerHandCount() < 2){
     act("$n wins by default.", TRUE, ch, 0, 0, TO_ROOM);
     act("You win by default.", TRUE, ch, 0, 0, TO_CHAR);
     payout(ch, bet);
@@ -183,6 +156,13 @@ void HoldemGame::showdown(TBeing *ch)
       hands[i]=-1;
       if(players[i]){
 	hands[i]=handValue(players[i]);
+
+	act("$n's hand was:", TRUE, players[i]->ch, 0, 0, TO_ROOM);
+	ssprintf(buf, "%s", players[i]->hand[0]->getName());
+	act(buf.c_str(), TRUE, players[i]->ch, 0, 0, TO_ROOM);
+	ssprintf(buf, "%s\n\r", players[i]->hand[1]->getName());
+	act(buf.c_str(), TRUE, players[i]->ch, 0, 0, TO_ROOM);
+
       }
     }
     for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
@@ -193,8 +173,8 @@ void HoldemGame::showdown(TBeing *ch)
       if(hands[i] == hands[highest])
 	winners.push_back(i);
     }
-    
-    switch(hands[highest]){
+
+    switch((int)(hands[highest]/15)){
       case 0:
 	msg="high card";
 	break;
@@ -345,7 +325,7 @@ int HoldemGame::exitGame(const TBeing *ch)
     }
   }
 
-  if(playerCount() < 2){
+  if(playerHandCount() == 1){
     showdown(players[firstPlayer()]->ch);
   }
   
@@ -465,17 +445,16 @@ void HoldemGame::call(TBeing *ch)
     chipl.push_back(chip);
   }
 
-  for(unsigned int i=0;i<chipl.size();++i){
-    ssprintf(buf, "$n calls with %s.", chipl[i]->getName());
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    ssprintf(buf, "You call with %s.", chipl[i]->getName());
-    act(buf, TRUE, ch, 0, 0, TO_CHAR);
+  ssprintf(buf, "$n calls with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  ssprintf(buf, "You call with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_CHAR);
+  bet += chip->obj_flags.cost * chipl.size();
 
-    bet += chip->obj_flags.cost;
-
+  for(unsigned int i=0;i<chipl.size();++i)
     delete chipl[i];
-  }
-
 
   ch->doSave(SILENT_YES);
    
@@ -526,21 +505,21 @@ void HoldemGame::raise(TBeing *ch)
       }
       return;
     }
-    bet += chip->obj_flags.cost;
 
     (*chip)--;
     chipl.push_back(chip);
   }
 
-  for(unsigned int i=0;i<chipl.size();++i){
-    ssprintf(buf, "$n raises with %s.", chipl[i]->getName());
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    ssprintf(buf, "You raises with %s.", chipl[i]->getName());
-    act(buf, TRUE, ch, 0, 0, TO_CHAR);
-    bet += chip->obj_flags.cost;
-  
+  ssprintf(buf, "$n raises with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  ssprintf(buf, "You raises with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_CHAR);
+  bet += chip->obj_flags.cost * chipl.size();
+
+  for(unsigned int i=0;i<chipl.size();++i)
     delete chipl[i];
-  }
 
   
   ch->doSave(SILENT_YES);
