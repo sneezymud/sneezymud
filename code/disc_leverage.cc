@@ -32,8 +32,7 @@ int TBeing::doHurl(const char *argument, TBeing *vict)
   }
   rc = hurl(this,victim,obje);
 
-  if (rc)
-    addSkillLag(SKILL_HURL, rc);
+  addSkillLag(SKILL_HURL, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
