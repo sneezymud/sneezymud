@@ -992,7 +992,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_SHAMAN_SPIDER, "spider", "about the Abilities of the Spider", DISC_SHAMAN_SPIDER, CLASS_SHAMAN},
   {SPEC_TRAINER_SHAMAN_CONTROL, "control", "about Being Controling", DISC_SHAMAN_CONTROL, CLASS_SHAMAN},
   {SPEC_TRAINER_RITUALISM, "ritualism", "about Rituals", DISC_RITUALISM, CLASS_SHAMAN},
-  {SPEC_BOGUS1, "bogus", "bogus", DISC_BOGUS1, 0},
+  {SPEC_PALADIN_PATROL, "bogus", "bogus", DISC_BOGUS1, 0},
   {SPEC_TRAINER_STEALTH, "stealth", "about Stealthiness", DISC_STEALTH, CLASS_THIEF},
   {SPEC_TRAINER_TRAPS, "traps", "about Locks and Traps", DISC_TRAPS, CLASS_THIEF},
   {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGE},
