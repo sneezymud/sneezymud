@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: ai_responses.cc,v $
+// Revision 5.1  1999/10/16 04:29:21  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/09/30 03:34:17  lapsos
 // Added special 5 for mithros on the script stuff.
 //
