@@ -42,29 +42,11 @@ else
 endif
 echo "Reviewing for: '$dateTime'"
 
-set fileList = `ls -1 *.cc *.h makefile README`
-
-@ iter = 1
-
-while (1)
-  # this check prevents overflowing the array
-  if ($iter > ${#fileList}) then
-    exit
-  endif
-
-  set fileName = $fileList[$iter]
-
-  # A sanity check, probably not needed
-  if ("$fileName" == "") then
-    exit
-  endif
-
-  @ iter = $iter + 1
-
-  set revLine = `rlog -N -d"$dateTime<" $fileName | grep "selected revisions"`
+foreach file (*.cc *.h makefile README)
+  set revLine = `rlog -N -d"$dateTime<" $file | grep "selected revisions"`
   set revNum = $revLine[6]
   if ($revNum > 0) then
-    rlog -N -d"$dateTime<" $fileName
+    rlog -N -d"$dateTime<" $file
     echo "<### Hit Return ###>"
     set input = $<
   endif
