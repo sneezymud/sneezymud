@@ -459,6 +459,10 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
         act("You growl at $n then goes back home.",
             FALSE, this, NULL, m, TO_CHAR);
       }
+
+      doDrop("all" , NULL);
+
+
       return DELETE_THIS;
     }
 
