@@ -1385,7 +1385,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 50, 0, 0, 55, 101, 101, 0, 30, 1, 1, 0, 42,   107,   54, repairMetal,"electrum"},
   {30, 20, 5, 20, 55, 101, 101, 0, 37, 1, 1, 0, 10,   13095,   58, repairMetal,"athanor"},
   {0, 85, 0, 0, 40, 101, 101, 0, 33, 1, 1, 0, 77,   3,   61, repairMetal, "tin"},
-  {0, 47, 0, 3, 47, 101, 101, 0, 35, 1, 1, 0, 70,   6948,   0, repairMetal,"tungstan"},
+  {0, 47, 0, 3, 47, 101, 101, 0, 35, 1, 1, 0, 70,   6948,   0, repairMetal,"tungsten"},
   {0, 50, 0, 20, 65, 101, 101, 0, 10, 1, 1, 0, 70,   3750,   0, repairMetal,"admintite"},
   {0, 25, 0,  0, 50,   0,  25, 0, 10, 1, 0, 0, 89,   6440,   0, repairMetal, "terbium"},
   {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   1500,   0, repairMetal,"mithril"},
