@@ -1227,7 +1227,7 @@ int rombler(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 	  if (i->character->hasClass(CLASS_SHAMAN) || i->character->isImmortal()) {
-            i->character->sendTo(COLOR_SPELLS, "<P>%s<z> rombles, \"<c>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
+            i->character->sendTo(COLOR_SPELLS, "<Y>%s<z> rombles, \"<o>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
           } else {
 	    int num = ::number(0,3);
 	    if (num == 0) {
