@@ -1297,15 +1297,6 @@ TO_CHAR);
       victim->addPlayerAction(PLR_SOLOQUEST);
       act("You just set $N's solo quest flag.", FALSE, this, 0, victim, TO_CHAR);
       act("$n just set your solo quest flag.", FALSE, this, 0, victim, TO_VICT);
-      victim->dieFollower();
-
-      if (dynamic_cast<TBeing *>(victim->riding)) {
-        rc = victim->fallOffMount(victim->riding, POSITION_STANDING);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete victim;
-          victim = NULL;
-        }
-      }
     }
   } else if (is_abbrev(buf2, "group")) {
     if (victim->isPlayerAction(PLR_GRPQUEST)) {
