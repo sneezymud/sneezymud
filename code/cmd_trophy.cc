@@ -101,7 +101,7 @@ const char *TTrophy::getExpModDescr(float count)
 void TBeing::doTrophy(const sstring &arg)
 {
   int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
-  int zonesearch=0, processrow=1;
+  int zonesearch=0, processrow=1, active_zcount=0;
   bool summary=false;
   float count;
   sstring buf, sb, arg1, arg2;
@@ -161,10 +161,6 @@ void TBeing::doTrophy(const sstring &arg)
 	continue;
       }
 
-      if(!mob_index[rnum].doesLoad)
-	continue;
-
-
       if(zonesearch==-1){
 	if(!isname(arg1, zd.name))
 	  continue;
@@ -196,6 +192,9 @@ void TBeing::doTrophy(const sstring &arg)
       ++mcount;
       ++zcount;
 
+      if(mob_index[rnum].doesLoad)
+	++active_zcount;
+
       processrow=1; // ok to get the next row
     }
 
@@ -207,16 +206,17 @@ void TBeing::doTrophy(const sstring &arg)
       unsigned int objnx;
       for (objnx = 0; objnx < mob_index.size(); objnx++) {
 	if(mob_index[objnx].virt >= bottom &&
-	   mob_index[objnx].virt <= zd.top){
+	   mob_index[objnx].virt <= zd.top &&
+	   mob_index[objnx].doesLoad){
 	  ++zcountt;
 	}
       }
 
-      ssprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)zcount/(float)zcountt)*100.0));
+      ssprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)active_zcount/(float)zcountt)*100.0));
       sb += buf;
     }
 
-    header=zcount=zcountt=0;
+    header=zcount=zcountt=active_zcount=0;
     bottom=zd.top+1;
   }
 
