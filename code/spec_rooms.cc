@@ -1774,8 +1774,8 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   int i=0;
   bool found=false;
   Descriptor *d;
-  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,
-  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,-1};  
+  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31760, 31764,
+  31788, 31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,-1};
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
