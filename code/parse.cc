@@ -2032,13 +2032,6 @@ string one_argument(string argument, string & first_arg)
   return argument;
 }
 
-void only_argument(const char *argument, char *dest)
-{
-  while (*argument && isspace(*argument))
-    argument++;
-  strcpy(dest, argument);
-}
-
 bool is_abbrev(const char *arg1, const char *arg2, multipleTypeT multiple, exactTypeT exact)
 {
   const string str1 = arg1;

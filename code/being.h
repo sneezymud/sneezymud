@@ -1798,7 +1798,7 @@ class TBeing : public TThing {
     int doUnsaddle(string);
     int doSaddle(string);
     int doChop(const char *, TBeing *);
-    int doHurl(const char *, TBeing *);
+    int doHurl(const string, TBeing *);
     int doChi(const char *, TThing *);
     int doLayHands(const char *);
     int doSmoke(const char *);
