@@ -218,8 +218,9 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     ch->addToMoney(amt, GOLD_SHOP);
 
     me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
-    me->doTell(ch->getName(), fmt("Do 'list' again at anytime to see how much you owe with interest included."));
-
+    me->doTell(ch->getName(), "Do 'list' again at anytime to see how much you owe with interest included.");
+    me->doTell(ch->getName(), "You can give me talens at any time to make a payment on your loan.");
+    
     shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
   }
 
