@@ -27,7 +27,7 @@
 #include "obj_keyring.h"
 #include "obj_key.h"
 #include "obj_portal.h"
-
+#include "pathfinder.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {
@@ -3501,7 +3501,12 @@ int TBeing::doMortalGoto(const sstring & argument)
       return FALSE;
     }
 
-    dir = choose_exit_global(in_room, targ_rm, 1000);
+    vlogf(LOG_PEEL, fmt("in_room=%i, targ_rm=%i") % in_room % targ_rm);
+
+    TPathFinder path;
+    path.setNoMob(false);
+    dir=path.findPath(in_room, findRoom(targ_rm));
+
     if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
       // thieves guild is behind a secret door
       // if not with jennica track to jennica
@@ -3516,6 +3521,8 @@ int TBeing::doMortalGoto(const sstring & argument)
 	return doMortalGoto("thief-entrance");
       }
 
+
+      vlogf(LOG_PEEL, fmt("dir=%i") % dir);
 
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
