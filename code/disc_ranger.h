@@ -33,7 +33,6 @@ public:
 
 //Level 15
     CSkill skBefriendBeast;
-    CSkill skTransfix;
 
 // Level 17
 
@@ -60,7 +59,6 @@ public:
       skBashRanger(),
       skRescueRanger(),
       skBefriendBeast(),
-      skTransfix(),
       skSwitchRanger(),
       skDualWield(),
       skBeastSummon(),
@@ -74,7 +72,6 @@ public:
       skBashRanger(a.skBashRanger),
       skRescueRanger(a.skRescueRanger),
       skBefriendBeast(a.skBefriendBeast),
-      skTransfix(a.skTransfix),
       skSwitchRanger(a.skSwitchRanger),
       skDualWield(a.skDualWield),
       skBeastSummon(a.skBeastSummon),
@@ -89,7 +86,6 @@ public:
       skBashRanger = a.skBashRanger;
       skRescueRanger = a.skRescueRanger;
       skBefriendBeast = a.skBefriendBeast;
-      skTransfix = a.skTransfix;
       skSwitchRanger = a.skSwitchRanger;
       skDualWield = a.skDualWield;
       skBeastSummon = a.skBeastSummon;

@@ -9,6 +9,9 @@ public:
     CSkill skControlUndead;
     CSkill skHypnosis;
     CSkill skRaze;
+    CSkill skRootControl;
+    CSkill skLivingVines;
+    CSkill skTransfix;
     CSkill skClarity;
 
     CDShamanSpider()
@@ -17,6 +20,9 @@ public:
       skControlUndead(),
       skHypnosis(),
       skRaze(),
+      skRootControl(),
+      skLivingVines(),
+      skTransfix(),
       skClarity() { 
     }
     CDShamanSpider(const CDShamanSpider &a)
@@ -25,6 +31,9 @@ public:
       skControlUndead(a.skControlUndead),
       skHypnosis(a.skHypnosis),
       skRaze(a.skRaze),
+      skRootControl(a.skRootControl),
+      skLivingVines(a.skLivingVines),
+      skTransfix(a.skTransfix),
       skClarity(a.skClarity) {
     }
     CDShamanSpider & operator=(const CDShamanSpider &a) {
@@ -34,6 +43,9 @@ public:
       skControlUndead = a.skControlUndead;
       skHypnosis = a.skHypnosis;
       skRaze = a.skRaze;
+      skRootControl = a.skRootControl;
+      skLivingVines = a.skLivingVines;
+      skTransfix = a.skTransfix;
       skClarity = a.skClarity;
       return *this;
     }
@@ -41,6 +53,17 @@ public:
     virtual CDShamanSpider * cloneMe() { return new CDShamanSpider(*this); }
 private:
 };
+
+    int transfix(TBeing *, TBeing *);
+    int transfix(TBeing *, TBeing *, int, byte);
+ 
+    void livingVines(TBeing *, TBeing *);
+    void livingVines(TBeing *, TBeing *, TMagicItem *);
+    int livingVines(TBeing *, TBeing *, int, byte);
+    
+    int rootControl(TBeing *, TBeing *, int, int, byte);
+    int rootControl(TBeing *, TBeing *, TMagicItem *);
+    int rootControl(TBeing *, TBeing *);
 
     int controlUndead(TBeing *, TBeing *);
     int castControlUndead(TBeing *, TBeing *);

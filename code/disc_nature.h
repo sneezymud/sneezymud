@@ -8,29 +8,21 @@
 class CDNature : public CDiscipline
 {
 public:
-    CSkill skRootControl;
-    CSkill skLivingVines;
     CSkill skTreeWalk;
 
 
 
     CDNature() 
       : CDiscipline(),
-      skRootControl(),
-      skLivingVines(),
       skTreeWalk() {
     }
     CDNature(const CDNature &a) 
       : CDiscipline(a),
-      skRootControl(a.skRootControl),
-      skLivingVines(a.skLivingVines),
       skTreeWalk(a.skTreeWalk) {
     }
     CDNature & operator=(const CDNature &a)  {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skRootControl = a.skRootControl;
-      skLivingVines = a.skLivingVines;
       skTreeWalk = a.skTreeWalk;
       return *this;
     }
@@ -39,10 +31,6 @@ public:
 private:
 };
 
-    void livingVines(TBeing *, TBeing *);
-    void livingVines(TBeing *, TBeing *, TMagicItem *);
-    int livingVines(TBeing *, TBeing *, int, byte);
-    
     int treeWalk(TBeing *, const char *, int, byte);
     int treeWalk(TBeing *, const char *);
 
@@ -50,10 +38,6 @@ private:
     int castBarkskin(TBeing *, TBeing *);
     int barkskin(TBeing *, TBeing *, TMagicItem *);
     int barkskin(TBeing *, TBeing *, int, byte);
-
-    int rootControl(TBeing *, TBeing *, int, int, byte);
-    int rootControl(TBeing *, TBeing *, TMagicItem *);
-    int rootControl(TBeing *, TBeing *);
 
 
 

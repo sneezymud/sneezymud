@@ -561,8 +561,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRanger *) cd)->skRescueRanger;
     case SKILL_BEFRIEND_BEAST:  //             344
       return &((CDRanger *) cd)->skBefriendBeast;
-    case SKILL_TRANSFIX:  //                   345
-      return &((CDRanger *) cd)->skTransfix;
     case SKILL_DUAL_WIELD:  //                 347
       return &((CDRanger *) cd)->skDualWield;
     case SKILL_BEAST_SUMMON:  //               349
@@ -908,11 +906,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SPELL_TREE_WALK:
       return &((CDNature *) cd)->skTreeWalk;
 
-    case SPELL_ROOT_CONTROL:  //               340
-      return &((CDNature *) cd)->skRootControl;
-    case SPELL_LIVING_VINES:  //               348
-      return &((CDNature *) cd)->skLivingVines;
-
       // SHAMAN **********************************************************
 
       // basic shaman----------------------
@@ -980,6 +973,13 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanSpider *) cd)->skHypnosis;
     case SPELL_CONTROL_UNDEAD: // 403
       return &((CDShamanSpider *) cd)->skControlUndead;
+    case SKILL_TRANSFIX:  //                   345
+      return &((CDShamanSpider *) cd)->skTransfix;
+    case SPELL_ROOT_CONTROL:  //               340
+      return &((CDShamanSpider *) cd)->skRootControl;
+    case SPELL_LIVING_VINES:  //               348
+      return &((CDShamanSpider *) cd)->skLivingVines;
+
 
       // skunk abilities------------------------
 
