@@ -1976,8 +1976,10 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		}
 		if (desc)
 		  desc->career.crit_crushed_skull++;
+
 		if (v->desc)
 		  v->desc->career.crit_crushed_skull_suff++;
+
 		applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
 		return DELETE_VICT;
 	      }
