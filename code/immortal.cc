@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.3  1999/10/01 16:45:52  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/09/16 20:59:29  batopr
 // added drain info to rent economy log
 //
@@ -4202,7 +4205,7 @@ void TBeing::doInfo(const char *arg)
       sprintf(buf2, "ARMR SHOP ECONOMY: pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_shop_arm, net_gold_shop_arm, tot_gold_shop_arm - net_gold_shop_arm, 100.0 * (tot_gold_shop_arm - net_gold_shop_arm) / tot_drain);
       buf += buf2;
 
-      sprintf(buf2, "PETS SHOP ECONOMY: pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_shop_pet, net_gold_shop_pet, tot_gold_shop_pet - net_gold_shop_pet, 100.0 * (tot_gold_shop_pet - net_gold_shop_pet) / tot_drain);
+      sprintf(buf2, "PETS SHOP ECONOMY: pos %u, net gold = %d (bad drain: %d : %.2f%%)\n\r", tot_gold_shop_pet, net_gold_shop_pet, tot_gold_shop_pet - net_gold_shop_pet, 100.0 * (tot_gold_shop_pet - net_gold_shop_pet) / tot_drain);
       buf += buf2;
 
       sprintf(buf2, "RESP SHOP ECONOMY: pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_shop_resp, net_gold_shop_resp, tot_gold_shop_resp - net_gold_shop_resp, 100.0 * ((int) tot_gold_shop_resp - net_gold_shop_resp) / (int) tot_drain);
