@@ -1334,7 +1334,14 @@ void bootZones(void)
        !strcmp(dp->d_name, ".."))
       continue;
 
-    files.insert(pair<int,sstring>(convertTo<int>(dp->d_name), dp->d_name));
+    zon=convertTo<int>(dp->d_name);
+
+    // convertTo returns 0 on failure, so this means some random file
+    // in the zonefiles directory.  Just ignore it.
+    if(zon==0 && strcmp(dp->d_name, "0"))
+      continue;
+
+    files.insert(pair<int,sstring>(zon, dp->d_name));
   }
 
   for(it=files.begin();it!=files.end();++it){
