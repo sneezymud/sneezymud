@@ -7664,6 +7664,8 @@ extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, T
 extern int lotteryTicket(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 // assign special procedures to objects
@@ -7805,5 +7807,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Gnath well bucket", fillBucket},
   {FALSE, "sweeps scratch", sweepsScratch},
   {FALSE, "sweeps split join", sweepsSplitJoin},
+  {FALSE, "graffiti maker", graffitiMaker}, // 135
+  {FALSE, "graffiti object", graffitiObject},
   {FALSE, "last proc", bogusObjProc}
 };

@@ -11,8 +11,9 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   sstring buf;
-  buf = sstring(arg).word(0);
-
+//  buf = sstring(arg).word(0);
+  buf = sstring(arg);
+    
   if (!o || !ch)
     return FALSE;
 
@@ -27,10 +28,12 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   }
 
-  buf = buf.upper();
+//  buf = buf.upper();
 
-  if (!buf.isWord() || buf.length() > GRAFFITI_MAX) {
-    ch->sendTo("You can't write that.\n\r");
+//  if (!buf.isWord() || buf.length() > GRAFFITI_MAX) {
+  if (buf.length() > GRAFFITI_MAX) {
+    ch->sendTo("You can't write that - try something shorter.\n\r");
+    return TRUE;
   } 
     
   TObj * gfti = read_object(GRAFFITI_OBJ, VIRTUAL);
@@ -43,7 +46,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
 
   sstring newName = fmt("%s message [graffiti]") % buf;
-  sstring newShort = fmt("the word '<W>%s<z>'") % buf;
+  sstring newShort = fmt("the message '<W>%s<z>'") % buf;
   sstring newLong = fmt("Some vandal has left a message: '<W>%s<z>'.") % buf;
   gfti->swapToStrung();
   gfti->name = mud_str_dup(newName);

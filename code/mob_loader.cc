@@ -102,6 +102,7 @@ void loadRepairItems(TMonster *tmons)
   int tool2 = 0;
   int tool3 = 0;
   int tool4 = 0;
+  int tool5 = 0;
 
 
   if(tmons->GetMaxLevel() > 40) {
@@ -110,6 +111,7 @@ void loadRepairItems(TMonster *tmons)
       tool2 = 580;
       tool3 = 582;
       tool4 = 584;
+      tool5 = 572; // chalk
     }
     if(tmons->hasClass(CLASS_CLERIC)) {
       tool = 2347;
@@ -148,6 +150,7 @@ void loadRepairItems(TMonster *tmons)
       tool2 = 579;
       tool3 = 581;
       tool4 = 582;
+      tool5 = 571; // chalk
     }
     if(tmons->hasClass(CLASS_CLERIC)) {
       tool = 2346;
@@ -197,6 +200,10 @@ void loadRepairItems(TMonster *tmons)
     tmons->logItem(obj, CMD_LOAD);
   }
   if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL))){
+    *tmons += *obj;
+    tmons->logItem(obj, CMD_LOAD);
+  }
+  if (tool5 && !::number(0,19) && (obj = read_object(tool5,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
