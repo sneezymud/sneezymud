@@ -434,7 +434,8 @@ void TBeing::statObj(const TObj *j)
   else {
     str += "Contains :\n\r";
     for (t = j->getStuff(); t; t = t->nextThing) {
-      str += fname(t->name);
+      //      str += fname(t->name);
+      str += t->shortDescr;
       str += "\n\r";
     }
   }
