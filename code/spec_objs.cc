@@ -6141,11 +6141,11 @@ int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       affectedData aff1;
 
       act("$n closes $s eyes and whispers, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
-      act("<o>$p becomes covered in searing flames, <R>complete engulfing<1><r> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>complete engulfing<1><o> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("The $o slowly stops burning, but $n remains wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
 
       act("You close your eyes and whipser, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
-      act("<o>$p becomes covered in searing flames, <R>complete engulfing<1><r> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>complete engulfing<1><o> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("The $o slowly stops burning, but you remain wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
 
@@ -6168,7 +6168,7 @@ int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 
   if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
     return FALSE;
-  if(::number(0, 8))
+  if(::number(0, 5))
     return FALSE;
  
 
@@ -6180,12 +6180,12 @@ int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 	, 0, v, o, ch, TO_CHAR);
 
   } else {
-    act("$p<o> emits a <Y>dazzling<1> shower of <R>incandescent<1><o> sparks at $n!<1>"
+    act("$p<o> emits a <Y>dazzling<1><o> shower of <R>incandescent<1><o> sparks at $n!<1>"
 	, 0, v, o, 0, TO_ROOM);
     act("$n is <r>burned<1> by the <o>fireworks<1> from the $o!<1>"
 	, 0, v, o, ch, TO_ROOM);
     
-    act("$p<o> glows <R>red hot<1><o> and releases a burst of <R>fire<1><o> at you!<1>"
+    act("$p<o> emits a <Y>dazzling<1><o> shower of <R>incandescent<1><o> sparks at you!<1>"
 	, 0, v, o, ch, TO_CHAR);
     act("You are <r>burned<1> by the <o>fireworks<1> from the $o!<1>"
 	, 0, v, o, ch, TO_CHAR);
