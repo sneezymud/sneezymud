@@ -303,8 +303,6 @@ bool load_char(const sstring &name, charFile *char_element)
   if (!(fl = fopen(buf, "r")))
     return FALSE;
 
-  vlogf(LOG_PEEL, "size=%i", sizeof(charFile));
-
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
 
