@@ -14,12 +14,16 @@ string stripColorCodes(string s)
 {
   string buf;
   
-  for(int i=0;s[i];++i){
-    if(s[i] == '<')
-      i+=3;
+  for(unsigned int i=0;i<s.length();++i){
+    if(s[i] == '<'){
+      i+=2;
+      continue;
+    }
     
     buf += s[i];
   }
+
+  vlogf(LOG_PEEL, "s=%s, buf=%s", s.c_str(), buf.c_str());
 
   return buf;
 }
