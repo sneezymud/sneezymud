@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: ai_responses.cc,v $
+// Revision 1.2  1999/09/30 03:34:17  lapsos
+// Added special 5 for mithros on the script stuff.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1206,7 +1209,8 @@ resp * TMonster::readCommand( FILE *fp)
 // return DELETE_VICT for ch
 int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
 {
-  string tmpstr;
+  string   tmpstr;
+  TSymbol *tSymbol;
 
   switch (which) {
     case 1:
@@ -1299,6 +1303,30 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
       tmpstr += FactionInfo[ch->getFaction()].faction_name;
       tmpstr += "!";
       mob->doSay(tmpstr.c_str());
+
+      return FALSE;
+    case 5:
+      if (mob->mobVnum() != 27105) {
+        vlogf(LOW_ERROR, "Bad mob (%s:%d) calling specificCode(%d)",
+          mob->getName(), mob->mobVnum(), which);
+        return RET_STOP_PARSING;
+      }
+
+      if (!(tSymbol = dynamic_cast<TSymbol *>(read_object(504, VIRTUAL)))) {
+        act("$n looks befuddled and says, \"I'm sorry...I can not seem to find a symbol for you.\"", TRUE, mob, 0, ch, TO_ROOM);
+        vlogf(0, "Was unable to load object 504.");
+      } else {
+        tSymbol->setSymbolFaction(ch->getFaction());
+        act("$n reaches into his grey smock and pulls a symbol from beneath.",
+            TRUE, mob, 0, ch, TO_ROOM);
+        act("$n utters something barely audible and passes his hand above the symbol.",
+            TRUE, mob, 0, ch, TO_ROOM);
+        act("$n grins with delight as the symbol shines with power.",
+            TRUE, mob, 0, ch, TO_ROOM);
+
+        *mob += *tSymbol;
+        mob->doGiveObj(ch, tSymbol, GIVE_FLAG_DROP_ON_FAIL);
+      }
 
       return FALSE;
     default:
