@@ -582,8 +582,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         hp *= 2;
         act("A healing fountain of beautiful colors pours forth from $n's hands!",
              FALSE, caster, NULL, NULL, TO_ROOM);
-        act("A healing fountain of beautiful colors pours forth from your hands!
-",
+        act("A healing fountain of beautiful colors pours forth from your hands!",
              FALSE, caster, NULL, NULL, TO_CHAR);
         break;
       case CRIT_S_NONE:

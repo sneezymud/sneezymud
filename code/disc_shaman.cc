@@ -1198,8 +1198,7 @@ int castChrism(TBeing *caster, const char * name)
   
   act("$n places $s hands on $s head and howls at the sky.", TRUE, caster, NULL, NULL, 
 TO_ROOM);
-  act("You place your hands on the sides of your head and call unto the loa to hear your 
-plea.", TRUE, caster, NULL, NULL, TO_CHAR);
+  act("You place your hands on the sides of your head and call unto the loa to hear your plea.", TRUE, caster, NULL, NULL, TO_CHAR);
 
   chrism(caster, &obj, level, name, caster->getSkillValue(SPELL_CHRISM));
   return TRUE;
