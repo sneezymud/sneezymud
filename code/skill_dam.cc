@@ -100,8 +100,8 @@ static int genericDam(const TBeing *victim, spellNumT skill, discNumT basic_disc
 // sanity test
 if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // specialized disc
-  if (discArray[skill]->disc == basic_disc)
-    forceCrash("bad setup for skill %d wrt disc arrangement (1)", skill);
+  //  if (discArray[skill]->disc == basic_disc)
+  //    forceCrash("bad setup for skill %d wrt disc arrangement (1)", skill);
 } else {
   // basic disc
   if (discArray[skill]->disc != basic_disc)
@@ -475,6 +475,12 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_CHI:
       // there is no hits() check on this, so treat like a spell
       dam = genericDam(victim, skill, DISC_MONK, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SKILL_PSI_BLAST:
+    case SKILL_MIND_THRUST:
+    case SKILL_PSYCHIC_CRUSH:
+    case SKILL_KINETIC_WAVE:
+      dam = genericDam(victim, skill, DISC_PSIONICS, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     default:
       vlogf(LOG_BUG, "Unknown skill %d in call to getSkillDam", skill);

@@ -1676,16 +1676,16 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doMindfocus(newarg);
 	  break;
 	case CMD_PSIBLAST:
-	  doPsiblast(newarg);
+	  rc = doPsiblast(newarg);
 	  break;
 	case CMD_MINDTHRUST:
-	  doMindthrust(newarg);
+	  rc = doMindthrust(newarg);
 	  break;
 	case CMD_PSYCRUSH:
-	  doPsycrush(newarg);
+	  rc = doPsycrush(newarg);
 	  break;
 	case CMD_KWAVE:
-	  doKwave(newarg);
+	  rc = doKwave(newarg);
 	  break;
         case MAX_CMD_LIST:
         case CMD_RESP_TOGGLE:
@@ -2866,6 +2866,10 @@ void buildCommandArray(void)
   commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_RESTING, 0);
   commandArray[CMD_TELEVISION] = new commandInfo("television", POSITION_RESTING, 0);
   commandArray[CMD_MINDFOCUS] = new commandInfo("mindfocus", POSITION_RESTING, 0);
+  commandArray[CMD_PSIBLAST] = new commandInfo("psiblast", POSITION_RESTING, 0);
+  commandArray[CMD_MINDTHRUST] = new commandInfo("mindthrust", POSITION_RESTING, 0);
+  commandArray[CMD_PSYCRUSH] = new commandInfo("psycrush", POSITION_RESTING, 0);
+  commandArray[CMD_KWAVE] = new commandInfo("kwave", POSITION_RESTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

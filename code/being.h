@@ -1852,10 +1852,10 @@ class TBeing : public TThing {
     void doPShout(const char *);
     void doTelevision(const char *);
     void doMindfocus(const char *);
-    void doPsiblast(const char *);
-    void doMindthrust(const char *);
-    void doPsycrush(const char *);
-    void doKwave(const char *);
+    int doPsiblast(const char *);
+    int doMindthrust(const char *);
+    int doPsycrush(const char *);
+    int doKwave(const char *);
 
 
     // Monk Skills

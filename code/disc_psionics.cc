@@ -525,19 +525,318 @@ void TBeing::doMindfocus(const char *){
   return;
 }
 
-void TBeing::doPsiblast(const char *){
-  return;
+TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
+  char tTarget[256];
+  TObj *tobj=NULL;
+  TBeing *tVictim=NULL;
+
+  if (caster->checkBusy(NULL))
+    return NULL;
+
+  if (!caster->doesKnowSkill(sk)) {
+    caster->sendTo("You do not have the skill to use %s.\n\r", 
+		   discArray[sk]->name);
+    return NULL;
+  }
+
+
+  if (tString && *tString){
+    only_argument(tString, tTarget);
+    generic_find(tTarget, FIND_CHAR_ROOM, caster, &tVictim, &tobj);
+  } else if (caster->fight()) {
+    tVictim = caster->fight();
+  }
+
+  if(!tVictim){
+    caster->sendTo("Who do you want to use %s on?\n\r", discArray[sk]->name);
+    return NULL;
+  }
+
+  if (caster->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r") 
+      || tVictim->isImmortal() || tVictim->inGroup(*caster))
+    return NULL;
+
+  return tVictim;
 }
 
-void TBeing::doMindthrust(const char *){
-  return;
+void psiAttackFailMsg(TBeing *ch, TBeing *tVictim){
+  act("You fail to breach $N's mind with your psionic powers.",
+      FALSE, ch, NULL, tVictim, TO_CHAR);
+  act("You feel a malevolent psionic power emanating from $n towards you, but it quickly dissipates.",
+      TRUE, ch, NULL, tVictim, TO_VICT);
 }
 
-void TBeing::doPsycrush(const char *){
-  return;
+int TBeing::doPsiblast(const char *tString){
+  // decreases int/wis/foc
+  TBeing *tVictim=NULL;
+
+  if(!(tVictim=psiAttackChecks(this, SKILL_PSI_BLAST, tString)))
+    return FALSE;
+  
+  int bKnown=getSkillValue(SKILL_PSI_BLAST);
+  int tDamage=0;
+
+  if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+    act("You send a blast of psionic power towards $N!",
+        FALSE, this, NULL, tVictim, TO_CHAR);
+    
+    act("...$N screws up $S face in agony.",
+	TRUE, this, NULL, tVictim, TO_CHAR);
+    act("$n sends a blast of psionic power into your mind.",
+	TRUE, this, NULL, tVictim, TO_VICT);
+    act("A look of shocked pain appear on $N's face as $n glares at $M.",
+	TRUE, this, NULL, tVictim, TO_NOTVICT);
+
+    if (!tVictim->affectedBySpell(SKILL_PSI_BLAST)) {
+      affectedData aff;
+      int count=0;
+
+      // I do a success roll for each affect to mix things up a bit
+
+      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+	aff.type      = SKILL_PSI_BLAST;
+	aff.level     = bKnown;
+	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.location  = APPLY_INT;
+	aff.modifier   = -10;
+	tVictim->affectTo(&aff, -1);
+	++count;
+      }
+
+      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+	aff.type      = SKILL_PSI_BLAST;
+	aff.level     = bKnown;
+	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.location  = APPLY_WIS;
+	aff.modifier   = -10;
+	tVictim->affectTo(&aff, -1);
+	++count;
+      }
+
+      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+	aff.type      = SKILL_PSI_BLAST;
+	aff.level     = bKnown;
+	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.location  = APPLY_FOC;
+	aff.modifier   = -10;
+	tVictim->affectTo(&aff, -1);
+	++count;
+      }
+
+      if(count){
+	act("$N seems to have suffered a temporary disorientation.",
+	    TRUE, this, NULL, tVictim, TO_CHAR);
+	act("You seem to be suffering from a temporary disorientation.",
+	    TRUE, this, NULL, tVictim, TO_VICT);
+	act("$N seems to have suffered a temporary disorientation.",
+	    TRUE, this, NULL, tVictim, TO_NOTVICT);
+      }
+
+    }
+
+    tDamage = getSkillDam(tVictim, SKILL_PSI_BLAST,
+                          getSkillLevel(SKILL_PSI_BLAST),
+                          getAdvLearning(SKILL_PSI_BLAST));
+  } else {
+    psiAttackFailMsg(this, tVictim);
+  }
+
+
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+
+  addSkillLag(SKILL_PSI_BLAST, rc);
+
+  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+    delete tVictim;
+    tVictim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+  
+
+  return TRUE;
 }
 
-void TBeing::doKwave(const char *){
-  return;
+int TBeing::doMindthrust(const char *tString){
+  // drains mana
+  TBeing *tVictim=NULL;
+
+  if(!(tVictim=psiAttackChecks(this, SKILL_MIND_THRUST, tString)))
+    return FALSE;
+  
+  int bKnown=getSkillValue(SKILL_MIND_THRUST);
+  int tDamage=0;
+
+  if (bSuccess(this, bKnown, SKILL_MIND_THRUST)) {
+    act("You use your psionic powers to stab at $N's mind!",
+        FALSE, this, NULL, tVictim, TO_CHAR);
+    
+    act("...$N screws up $S face in agony.",
+	TRUE, this, NULL, tVictim, TO_CHAR);
+    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
+	TRUE, this, NULL, tVictim, TO_VICT);
+    act("$N screws up $S face in agony.",
+	TRUE, this, NULL, tVictim, TO_NOTVICT);
+    tDamage = getSkillDam(tVictim, SKILL_MIND_THRUST,
+                          getSkillLevel(SKILL_MIND_THRUST),
+                          getAdvLearning(SKILL_MIND_THRUST));
+  } else {
+    psiAttackFailMsg(this, tVictim);
+  }
+
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  addSkillLag(SKILL_MIND_THRUST, rc);
+
+  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+    delete tVictim;
+    tVictim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+
+  return TRUE;
+}
+
+int TBeing::doPsycrush(const char *tString){
+  // blindness and/or flee
+  TBeing *tVictim=NULL;
+  int doflee=0;
+
+  if(!(tVictim=psiAttackChecks(this, SKILL_PSYCHIC_CRUSH, tString)))
+    return FALSE;
+  
+  int bKnown=getSkillValue(SKILL_PSYCHIC_CRUSH);
+  int tDamage=0;
+  int level = getSkillLevel(SKILL_PSYCHIC_CRUSH);
+
+  if (bSuccess(this, bKnown, SKILL_PSYCHIC_CRUSH)) {
+    act("You reach out with your psionic powers and CRUSH $N's psyche!",
+        FALSE, this, NULL, tVictim, TO_CHAR);
+
+    if(bSuccess(this, bKnown/4, SKILL_PSYCHIC_CRUSH) && 
+       !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
+       !tVictim->isAffected(AFF_TRUE_SIGHT) &&
+       !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)){
+				     
+      act("$N's eyes open wide in shock.",
+	  TRUE, this, NULL, tVictim, TO_CHAR);
+      act("$n' psychic crush is too much for you to bear and your vision goes blank.",
+	  TRUE, this, NULL, tVictim, TO_VICT);
+      act("$N's eyes open wide in shock as $n glares at $m.",
+	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+
+      // very short duration
+      int duration = PULSE_COMBAT * 2;
+
+      tVictim->rawBlind(level, duration, SAVE_NO);
+
+    } else {
+      act("$N winces in pain.",
+	  TRUE, this, NULL, tVictim, TO_CHAR);
+      act("$n crushes your psyche.",
+	  TRUE, this, NULL, tVictim, TO_VICT);
+      act("$N winces in pain as $n glares at $m.",
+	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+    }
+
+    if(bSuccess(this, bKnown, SKILL_PSYCHIC_CRUSH) &&
+       !isNotPowerful(tVictim, level, SPELL_FEAR, SILENT_YES)){ // flee
+      doflee=1;
+    }
+
+    
+    tDamage = getSkillDam(tVictim, SKILL_PSYCHIC_CRUSH,
+			  getSkillLevel(SKILL_PSYCHIC_CRUSH),
+			  getAdvLearning(SKILL_PSYCHIC_CRUSH));
+    
+  } else {
+    psiAttackFailMsg(this, tVictim);
+  }
+
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  addSkillLag(SKILL_PSYCHIC_CRUSH, rc);
+
+  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+    delete tVictim;
+    tVictim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+  
+  if(doflee && tVictim)
+    tVictim->doFlee("");
+
+
+  return TRUE;
+}
+
+int TBeing::doKwave(const char *tString){
+  // bash
+  TBeing *tVictim=NULL;
+
+  if(!(tVictim=psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
+    return FALSE;
+  
+  int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
+  int tDamage=0;
+
+  if (bSuccess(this, bKnown, SKILL_KINETIC_WAVE)) {
+    act("You unleash a psionic blast upon $N!",
+        FALSE, this, NULL, tVictim, TO_CHAR);
+
+    if(1){
+      if (tVictim->riding) {
+	act("You knock $N off $p.", 
+	    FALSE, this, tVictim->riding, tVictim, TO_CHAR);
+	act("$n knocks $N off $p.", 
+	    FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
+	act("$n knocks you off $p.", 
+	    FALSE, this, tVictim->riding, tVictim, TO_VICT);
+	tVictim->dismount(POSITION_STANDING);
+      }
+
+
+      act("$n knocks $N on $S butt!", FALSE, this, 0, tVictim, TO_NOTVICT);
+      act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
+      act("You tumble as $n knocks you over",
+	  FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
+
+      int rc = tVictim->crashLanding(POSITION_SITTING);
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+	delete tVictim;
+	tVictim = NULL;
+	REM_DELETE(rc, DELETE_VICT);
+      }
+
+      float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
+      wt = (wt * 100.0 / getSkillDiffModifier(SKILL_KINETIC_WAVE));
+      wt += 1;
+      tVictim->addToWait((int) wt);
+      
+      if (tVictim->spelltask) 
+	tVictim->addToDistracted(1, FALSE);
+    } else {
+      act("...$N screws up $S face in agony.",
+	  TRUE, this, NULL, tVictim, TO_CHAR);
+      act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
+	  TRUE, this, NULL, tVictim, TO_VICT);
+      act("$N screws up $S face in agony.",
+	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+    }
+
+    tDamage = getSkillDam(tVictim, SKILL_KINETIC_WAVE,
+			  getSkillLevel(SKILL_KINETIC_WAVE),
+                          getAdvLearning(SKILL_KINETIC_WAVE));
+  } else {
+    psiAttackFailMsg(this, tVictim);
+  }
+
+  int rc = reconcileDamage(tVictim, tDamage, SKILL_CHI);
+  addSkillLag(SKILL_KINETIC_WAVE, rc);
+
+  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+    delete tVictim;
+    tVictim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+
+  return TRUE;
 }
 

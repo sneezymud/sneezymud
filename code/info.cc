@@ -1495,7 +1495,15 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
       case SKILL_MIND_FOCUS:
 	if(show){
-	  sprintf(buf, "Affected: mind focus.  Approx, duration : %s\n\r",
+	  sprintf(buf, "Affected: mind focus.  Approx. duration : %s\n\r",
+		  describeDuration(this, aff->duration).c_str());
+	  str += buf;
+	}
+	break;
+
+      case SKILL_PSI_BLAST:
+	if(show && aff->shouldGenerateText()){
+	  sprintf(buf, "Affected: psionic blast.  Approx. duration : %s\n\r",
 		  describeDuration(this, aff->duration).c_str());
 	  str += buf;
 	}
@@ -1605,7 +1613,6 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_PSITELEPATHY:
       case SKILL_TELE_SIGHT:
       case SKILL_TELE_VISION:
-      case SKILL_PSI_BLAST:
       case SKILL_MIND_THRUST:
       case SKILL_PSYCHIC_CRUSH:
       case SKILL_KINETIC_WAVE:
