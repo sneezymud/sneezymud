@@ -1,27 +1,18 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_hand_of_god.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/06 00:54:43  batopr
-// Added new case statement for astral-walk success
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "spelltask.h"
 #include "combat.h"
 #include "disc_hand_of_god.h"
 #include "being.h"
+
+static void moveLoss(TBeing &ch)
+{ 
+  // used by recall and summon
+
+  // take up to 100 move
+  // however, leave them with at least 10 mv
+  ch.addToMove(max(-100, -(ch.getMove()-10)));
+}
 
 int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
@@ -34,7 +25,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
   room = real_roomp(location);
 
   if (!room) {
-    vlogf(7,"Attempt to astral to a NULL room.");
+    vlogf(LOG_BUG, "Attempt to astral to a NULL room.");
     return SPELL_FAIL;
   }
 
@@ -337,6 +328,15 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
+  
+  if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
+      victim->affectedBySpell(AFFECT_PLAYERKILL)){
+    act("$d will not provide refuge to a murderer.",
+	TRUE, caster, NULL, NULL, TO_CHAR);
+    act("Nothing seems to happen.",
+	FALSE, caster, NULL, NULL, TO_ROOM);
+    return SPELL_FAIL;
+  }
 
   if (victim->isImmortal()) {
     caster->sendTo("I don't think that is a good idea...\n\r");
@@ -421,7 +421,9 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
     act("You hear a small \"pop\" as $n appears in the middle of the room.", 
         TRUE, victim, NULL, NULL, TO_ROOM);
     victim->doLook("", CMD_LOOK);
-    victim->addToMove(max(-100, -victim->getMove()));
+
+    moveLoss(*victim);
+
     victim->updatePos();
     act("You are exhausted from interplanar travel.", 
         FALSE, victim, NULL, NULL, TO_CHAR);
@@ -476,6 +478,37 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
     act("You feel unable to summon $N.", FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
+  }
+
+  /* M = Max-Exist / PL = Player Level / ML = Monster Level
+   *
+   * M9999 : PL 10 : ML 10 : ( 0) - (  0) =  0
+   * M 100 : PL 10 : ML 10 : ( 0) - (  0) =  0
+   * M  10 : PL 10 : ML 10 : (40) - (  0) =  0
+   * M   1 : PL 10 : ML 10 : (49) - (  0) =  0
+   * M   1 : PL 50 : ML 10 : (49) - ( 40) =  9
+   * M   1 : PL 10 : ML 50 : (49) - (-40) = 89
+   *
+   * The higher the result, the harder it is to summon
+   */
+  if (tmon && (!tmon->master || !tmon->isAffected(AFF_CHARM) ||
+               !tmon->master->isPc()) && !caster->isImmortal()) {
+    if (mob_index[tmon->getMobIndex()].max_exist < 10) {
+      int tDiff = ((50 - min((short) 10, mob_index[tmon->getMobIndex()].max_exist)) + (caster->GetMaxLevel() - victim->GetMaxLevel()));
+
+      if ((tDiff > 0) && ::number(0, tDiff)) {
+        caster->sendTo("Your prayer meets opposition and fails!\n\r");
+        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        return SPELL_FAIL;
+      }
+    }
+
+    if (caster->inGrimhaven() &&
+        (tmon->anger() >= 20 || IS_SET(tmon->specials.act, ACT_AGGRESSIVE))) {
+      caster->sendTo("Your deity prohibits this mob being summoned here!\n\r");
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      return SPELL_FAIL;
+    }
   }
 
   if (caster == victim) {
@@ -601,7 +634,9 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
           rc = caster->genericTeleport(SILENT_YES);
 
           caster->doLook("", CMD_LOOK);
-          caster->addToMove(-100);
+
+          moveLoss(*caster);
+
           caster->setMove(max(0, caster->getMove()));
           caster->updatePos();
           act("You hear a small \"pop\" as $n appears in the middle of the room.",
@@ -683,7 +718,7 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(caster) && (tch->getPosition() > POSITION_SLEEPING)) 
+      if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING)) 
         tch->sendTo("You partake of a magnificent feast!\n\r");
       
       if (tch->getCond(FULL) >= 0)
@@ -703,7 +738,7 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
           tch = dynamic_cast<TBeing *>(t);
           if (!tch)
             continue;
-          if (tch->inGroup(caster) && (tch->getPosition() > POSITION_SLEEPING)) {
+          if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING)) {
             tch->sendTo("You feel weakened! Something went horribly wrong!\n\r");
 
             if (tch->getCond(FULL) >= 0)
@@ -744,23 +779,39 @@ void heroesFeast(TBeing * caster)
   }
 }
 
-int portal(TBeing * caster, TBeing * victim, int level, byte bKnown)
+struct portalRoomT {
+      int roomnum;
+      const char *name;
+};
+
+portalRoomT portalRooms[] =
+{
+  {15346, "grimhaven"},
+  {15347, "brightmoon"},
+  {15348, "logrus"},
+};
+
+const int NUM_PORTAL_ROOMS = 3;
+
+
+int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
 {
   char buf[256];
-  TMonster *tmon;
+  TPerson *tPerson = dynamic_cast<TPerson *>(caster);
+  int i, location=0;
 
-  int location = victim->in_room;
-  TRoom * rp = victim->roomp;
 
-  if (!rp) {
-    caster->sendTo("You can't seem to portal to that location.\n\r");
-    vlogf(9,"Attempt to portal to room %d",location);
-    return SPELL_FAIL;
+  for(i=0;i<NUM_PORTAL_ROOMS;++i){
+    if(is_abbrev(portalroom, portalRooms[i].name)){
+      location=portalRooms[i].roomnum;
+    }
   }
+ 
+  TRoom * rp = real_roomp(location);
 
-  if (victim->isImmortal() && !caster->isImmortal()) {
-    caster->sendTo("Portalling to a God could be hazardous to your health.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+  if (!rp || !location) {
+    caster->sendTo("You can't seem to portal to that location.\n\r");
+    //    vlogf(LOG_BUG, "Attempt to portal to room %d",location);
     return SPELL_FAIL;
   }
 
@@ -771,22 +822,6 @@ int portal(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if ((victim->GetMaxLevel() > MAX_MORT ||
-       rp->isRoomFlag(ROOM_NO_SUM) ||
-       rp->isRoomFlag(ROOM_HAVE_TO_WALK) ||
-       rp->isRoomFlag(ROOM_NO_MAGIC)) &&
-	!caster->isImmortal()) {
-    caster->sendTo("You can't seem to penetrate the defenses of that area.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;
-  }
-
-  if((tmon=dynamic_cast<TMonster *>(victim)) && 
-     ((tmon->mobVnum()==MOB_TIGER_SHARK) || tmon->mobVnum()==MOB_ELEPHANT)){
-    caster->sendTo("You can't seem to penetrate the defenses of that area.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;  
-  }
 
   if (bSuccess(caster,bKnown,caster->getPerc(),SPELL_PORTAL)) {
     TPortal * tmp_obj = new TPortal();
@@ -809,6 +844,9 @@ int portal(TBeing * caster, TBeing * victim, int level, byte bKnown)
     }
     *caster->roomp += *tmp_obj;
 
+    if (tPerson)
+      tmp_obj->checkOwnersList(tPerson);
+
     caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
     TPortal * next_tmp_obj = new TPortal();
@@ -823,19 +861,25 @@ int portal(TBeing * caster, TBeing * victim, int level, byte bKnown)
     next_tmp_obj->setTarget(caster->in_room);
     *rp += *next_tmp_obj;
 
+    if (tPerson)
+      next_tmp_obj->checkOwnersList(tPerson);
+
     rp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_CHAR);
-    act("$p suddenly appears out of a swirling mist.", TRUE, victim, next_tmp_obj, NULL, TO_ROOM);
-    act("$p suddenly appears out of a swirling mist.", TRUE, victim, next_tmp_obj, NULL, TO_CHAR);
+
+    sprintf(buf, "%s suddenly appears out of a swirling mist.", next_tmp_obj->shortDescr);
+    sendToRoom(buf, location);
+
     return SPELL_SUCCESS;
   } else {
     return SPELL_FAIL;
   }
 }
 
-void portal(TBeing * caster, TBeing * victim)
+
+void portal(TBeing * caster, const char * portalroom)
 {
   int ret,level;
 
@@ -844,7 +888,7 @@ void portal(TBeing * caster, TBeing * victim)
 
   level = caster->getSkillLevel(SPELL_PORTAL);
 
-  ret=portal(caster,victim,level,caster->getSkillValue(SPELL_PORTAL));
+  ret=portal(caster,portalroom,level,caster->getSkillValue(SPELL_PORTAL));
   if (ret==SPELL_SUCCESS) {
   } else  {
     caster->sendTo("Nothing seems to happen.\n\r");
