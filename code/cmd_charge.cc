@@ -139,7 +139,8 @@ vict->getName());
 
   int dam = ch->getSkillDam(vict, SKILL_CHARGE, ch->getSkillLevel(SKILL_CHARGE), ch->getAdvLearning(SKILL_CHARGE));
 
-#if 1  // added charge crit per popular request
+#if 1  
+  // added charge crit per popular request
   // this is not the right way to do this.  - bat
   // New Damage Formula for Charge
   //if (gamePort != PROD_GAMEPORT) 

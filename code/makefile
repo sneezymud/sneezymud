@@ -788,7 +788,29 @@ objs/amap.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
 objs/amap.o: /usr/include/g++/stl_multimap.h /usr/include/g++/vector
 objs/amap.o: /usr/include/g++/stl_uninitialized.h
 objs/amap.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
-objs/amap.o: /usr/include/ctype.h /usr/include/runetype.h lowtools.h
+objs/amap.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/amap.o: /usr/include/unistd.h /usr/include/sys/types.h
+objs/amap.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/amap.o: /usr/include/machine/endian.h /usr/include/sys/unistd.h
+objs/amap.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/g++/cstdlib
+objs/amap.o: /usr/include/g++/ctime /usr/include/time.h
+objs/amap.o: /usr/include/g++/cctype /usr/include/g++/cassert
+objs/amap.o: /usr/include/g++/cstring /usr/include/g++/cerrno
+objs/amap.o: /usr/include/errno.h /usr/include/g++/string
+objs/amap.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/amap.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/amap.o: /usr/include/g++/stl_config.h /usr/include/g++/iterator
+objs/amap.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
+objs/amap.o: /usr/include/g++/std/bastring.cc /usr/include/g++/iostream
+objs/amap.o: /usr/include/g++/sstream low.h enum.h spells.h structs.h parse.h
+objs/amap.o: immunity.h discipline.h spell2.h argument.h db.h ansi.h
+objs/amap.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
+objs/amap.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
+objs/amap.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
+objs/amap.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/amap.o: being.h person.h monster.h account.h extern.h handler.h
+objs/amap.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/amap.o: lowtools.h
 objs/ansi.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ansi.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ansi.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3302,7 +3324,7 @@ objs/combat.o: colorstring.h range.h combat.h statistics.h mail.h shop.h
 objs/combat.o: database.h /usr/local/include/libpq-fe.h
 objs/combat.o: /usr/local/include/postgres_ext.h obj_trash.h obj_arrow.h
 objs/combat.o: obj_base_weapon.h obj_general_weapon.h obj_gun.h
-objs/combat.o: obj_base_clothing.h cmd_trophy.h
+objs/combat.o: obj_handgonne.h obj_base_clothing.h cmd_trophy.h
 objs/comm.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/comm.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/comm.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3453,6 +3475,7 @@ objs/constants.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/constants.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/constants.o: being.h person.h monster.h account.h extern.h handler.h
 objs/constants.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
+objs/constants.o: obj_gun.h obj_general_weapon.h obj_base_weapon.h
 objs/create_engine.o: stdsneezy.h /usr/include/g++/cstdio
 objs/create_engine.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/create_engine.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -3838,7 +3861,7 @@ objs/db.o: obj_pool.h obj_drinkcon.h obj_armor.h obj_base_clothing.h
 objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
-objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h
+objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_adventuring.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -9976,7 +9999,58 @@ objs/obj_gun.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_gun.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/obj_gun.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/obj_gun.o: colorstring.h obj_general_weapon.h obj_base_weapon.h
-objs/obj_gun.o: obj_gun.h range.h obj_arrow.h
+objs/obj_gun.o: obj_gun.h range.h obj_arrow.h obj_handgonne.h
+objs/obj_handgonne.o: stdsneezy.h /usr/include/g++/cstdio
+objs/obj_handgonne.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/obj_handgonne.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/obj_handgonne.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/obj_handgonne.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/obj_handgonne.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/obj_handgonne.o: /usr/include/machine/types.h
+objs/obj_handgonne.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/obj_handgonne.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/obj_handgonne.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/obj_handgonne.o: /usr/include/g++/cstring /usr/include/string.h
+objs/obj_handgonne.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_handgonne.o: /usr/include/errno.h /usr/include/g++/string
+objs/obj_handgonne.o: /usr/include/g++/std/bastring.h
+objs/obj_handgonne.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/obj_handgonne.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_handgonne.o: /usr/include/g++/stl_config.h
+objs/obj_handgonne.o: /usr/include/g++/stl_alloc.h
+objs/obj_handgonne.o: /usr/include/g++/iostream.h
+objs/obj_handgonne.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/obj_handgonne.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/obj_handgonne.o: /usr/include/g++/stl_relops.h
+objs/obj_handgonne.o: /usr/include/g++/stl_iterator.h
+objs/obj_handgonne.o: /usr/include/g++/std/bastring.cc
+objs/obj_handgonne.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/obj_handgonne.o: /usr/include/g++/stl_pair.h
+objs/obj_handgonne.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/obj_handgonne.o: /usr/include/machine/limits.h
+objs/obj_handgonne.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/obj_handgonne.o: /usr/include/g++/new /usr/include/g++/exception
+objs/obj_handgonne.o: /usr/include/g++/stl_construct.h
+objs/obj_handgonne.o: /usr/include/g++/stl_uninitialized.h
+objs/obj_handgonne.o: /usr/include/g++/stl_vector.h
+objs/obj_handgonne.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/obj_handgonne.o: /usr/include/g++/stl_tree.h
+objs/obj_handgonne.o: /usr/include/g++/stl_function.h
+objs/obj_handgonne.o: /usr/include/g++/stl_map.h
+objs/obj_handgonne.o: /usr/include/g++/stl_multimap.h
+objs/obj_handgonne.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/obj_handgonne.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/obj_handgonne.o: discipline.h spell2.h argument.h db.h ansi.h
+objs/obj_handgonne.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/obj_handgonne.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/obj_handgonne.o: body.h race.h skills.h disease.h trap.h task.h
+objs/obj_handgonne.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/obj_handgonne.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/obj_handgonne.o: person.h monster.h account.h extern.h handler.h
+objs/obj_handgonne.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/obj_handgonne.o: colorstring.h obj_handgonne.h obj_gun.h
+objs/obj_handgonne.o: obj_general_weapon.h obj_base_weapon.h range.h
+objs/obj_handgonne.o: obj_arrow.h obj_tool.h
 objs/obj_jewelry.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_jewelry.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_jewelry.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13253,6 +13327,77 @@ objs/spec_mobs_goring.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_goring.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_goring.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_goring.o: colorstring.h
+objs/spec_mobs_holdem_player.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_holdem_player.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_holdem_player.o: /usr/include/machine/ansi.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cstdlib
+objs/spec_mobs_holdem_player.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/spec_mobs_holdem_player.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/spec_mobs_holdem_player.o: /usr/include/sys/types.h
+objs/spec_mobs_holdem_player.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_holdem_player.o: /usr/include/machine/types.h
+objs/spec_mobs_holdem_player.o: /usr/include/machine/endian.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_holdem_player.o: /usr/include/runetype.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cassert
+objs/spec_mobs_holdem_player.o: /usr/include/assert.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cstring
+objs/spec_mobs_holdem_player.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/string
+objs/spec_mobs_holdem_player.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/cstddef
+objs/spec_mobs_holdem_player.o: /usr/include/stddef.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/alloc.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/iostream.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/libio.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/iterator
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_holdem_player.o: /usr/include/g++/vector
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_holdem_player.o: /usr/include/limits.h
+objs/spec_mobs_holdem_player.o: /usr/include/machine/limits.h
+objs/spec_mobs_holdem_player.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/spec_mobs_holdem_player.o: /usr/include/g++/exception
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/map
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/iostream
+objs/spec_mobs_holdem_player.o: /usr/include/g++/sstream low.h enum.h
+objs/spec_mobs_holdem_player.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_holdem_player.o: discipline.h spell2.h argument.h db.h ansi.h
+objs/spec_mobs_holdem_player.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_mobs_holdem_player.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_holdem_player.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_mobs_holdem_player.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_mobs_holdem_player.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_holdem_player.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_holdem_player.o: person.h monster.h account.h extern.h
+objs/spec_mobs_holdem_player.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_holdem_player.o: materials.h colorstring.h obj_casino_chip.h
+objs/spec_mobs_holdem_player.o: games.h /usr/include/g++/algorithm
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_tempbuf.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_algo.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_heap.h
+objs/spec_mobs_holdem_player.o: /usr/include/g++/deque
+objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_deque.h
+objs/spec_mobs_holdem_player.o: game_crazyeights.h game_drawpoker.h
 objs/spec_mobs_lottery_redeemer.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_lottery_redeemer.o: /usr/include/stdio.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/sys/cdefs.h
@@ -13436,6 +13581,61 @@ objs/spec_mobs_posse.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_posse.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_posse.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_posse.o: colorstring.h paths.h
+objs/spec_mobs_postman.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_postman.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_postman.o: /usr/include/machine/ansi.h
+objs/spec_mobs_postman.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/spec_mobs_postman.o: /usr/include/g++/ctime /usr/include/time.h
+objs/spec_mobs_postman.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/spec_mobs_postman.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_postman.o: /usr/include/machine/types.h
+objs/spec_mobs_postman.o: /usr/include/machine/endian.h
+objs/spec_mobs_postman.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_postman.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_mobs_postman.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_mobs_postman.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_postman.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_postman.o: /usr/include/g++/string
+objs/spec_mobs_postman.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_postman.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_postman.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_postman.o: /usr/include/g++/alloc.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_postman.o: /usr/include/g++/iostream.h
+objs/spec_mobs_postman.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_postman.o: /usr/include/g++/libio.h
+objs/spec_mobs_postman.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_postman.o: /usr/include/g++/iterator
+objs/spec_mobs_postman.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_postman.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_postman.o: /usr/include/g++/vector
+objs/spec_mobs_postman.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_postman.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_postman.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/spec_mobs_postman.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/spec_mobs_postman.o: /usr/include/g++/new /usr/include/g++/exception
+objs/spec_mobs_postman.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/spec_mobs_postman.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_postman.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_postman.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_postman.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/spec_mobs_postman.o: discipline.h spell2.h argument.h db.h ansi.h
+objs/spec_mobs_postman.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/spec_mobs_postman.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_mobs_postman.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_mobs_postman.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_postman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_postman.o: person.h monster.h account.h extern.h handler.h
+objs/spec_mobs_postman.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/spec_mobs_postman.o: colorstring.h
 objs/spec_mobs_tattoo_artist.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_tattoo_artist.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/machine/ansi.h
