@@ -164,8 +164,6 @@ extern unsigned int news_used_num;
 extern unsigned int wizlist_used_num;
 extern unsigned int wiznews_used_num;
 
-extern unsigned int max_player_since_reboot;
-extern unsigned int player_num;
 extern unsigned int total_help_number;
 extern unsigned int total_deaths;
 extern unsigned int total_player_kills;
