@@ -608,14 +608,13 @@ void TBeing::doWhozone()
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
         (rp->getZoneNum() == roomp->getZoneNum())) {
-      ssprintf(buf, "%-25s - %s ", person->getName(), rp->name);
-      sbuf+=buf;
+      ssprintf(sbuf, "%-25s - %s ", person->getName(), rp->name);
       if (GetMaxLevel() > MAX_MORT){
         ssprintf(buf, "[%d]", person->in_room);
 	sbuf+=buf;
       }
-      buf += "\n\r";
-      sendTo(COLOR_BASIC, buf.c_str());
+      sbuf += "\n\r";
+      sendTo(COLOR_BASIC, sbuf);
       count++;
     }
   }
