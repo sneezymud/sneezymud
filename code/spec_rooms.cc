@@ -2276,6 +2276,8 @@ void assign_rooms(void)
     {15992, SecretDoors},
     {15996, SecretDoors},
     {16173, SecretPortalDoors},
+    {16206, healing_room},
+    {16231, emergency_room},
     {16238, SecretDoors},
     {16249, SecretDoors},
     {17106, wierdCircle},

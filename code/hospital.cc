@@ -573,7 +573,10 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       shop_nr=147; // bm
       break;
     case 3736:
-      shop_nr=145; // logrus
+      shop_nr=146; // logrus
+      break;
+    case 16206:
+      shop_nr=145; // amber
       break;
   }
   for(doctor=character_list;shop_nr>=0 && doctor;doctor=doctor->next){
@@ -620,6 +623,10 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
             --(*healed);
             thing_to_room(healed, 3710);
             break;
+	  case 16206:
+	    --(*healed);
+	    thing_to_room(healed, 16239);
+	    break;
           default:
             vlogf(LOG_PROC, fmt("Undefined room %d in healing_room") %  healed->in_room);
         }
@@ -652,6 +659,9 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   switch(rp->number){
     case 418:
       shop_nr=144; // gh
+      break;
+    case 16231:
+      shop_nr=145; // amber
       break;
   }
 
