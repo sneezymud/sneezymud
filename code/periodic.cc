@@ -750,7 +750,6 @@ int TBeing::updateHalfTickStuff()
 	setLifeforce(0);
 	addToHit(-2);
 	updatePos();
-	sendTo("The ancestors are not pleased with you.\n\r");
 	sendTo("Your ancestors demand you gather lifeforce.\n\r");
       } else {
 	addToLifeforce(-1);

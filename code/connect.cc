@@ -598,7 +598,7 @@ Descriptor::~Descriptor()
       character->desc = NULL;
       if((!character->affectedBySpell(AFFECT_PLAYERKILL) &&
           !character->affectedBySpell(AFFECT_PLAYERLOOT)) ||
-	  character->isImmortal()){
+	  character->isImmortal()) {
 	character->setInvisLevel(GOD_LEVEL1);
       }
 
@@ -1009,7 +1009,7 @@ int Descriptor::nanny(const char *arg)
             connected = CON_QRACE;
             break;
 	  case 'X':
-	    if(IS_SET(account->flags, ACCOUNT_IMMORTAL)){
+	    if(IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
 	      int racenum=atoi((arg+1));
 	      character->setRace(race_t(racenum));
 	      character->cls();
@@ -1824,7 +1824,7 @@ int Descriptor::nanny(const char *arg)
       writeToQ("\n\r\n*** PRESS RETURN: ");
       connected = CON_RMOTD;
       break;
-    case CON_QCLASS:{
+    case CON_QCLASS: {
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
       for (; isspace(*arg); arg++);
       character->setClass(0);
@@ -4145,11 +4145,6 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
     return TRUE;
   }
 
-  if (Class & CLASS_SHAMAN) {
-    return TRUE;
-  }
-  // boggle...why is this here if its also above about 10 lines up?
-
   if (Class & CLASS_THIEF) {
     return TRUE;
   }
@@ -5999,7 +5994,7 @@ int Descriptor::doAccountStuff(char *arg)
       // remove trophy entries so they do not carry over if the character is recreated
       wipeTrophy(delname);
 
-      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->getName()))==-1){
+      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->getName()))==-1) {
       //vlogf(LOG_BUG, "Database error for trophy character delete");
       //}
     

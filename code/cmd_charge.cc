@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_charge.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "combat.h"
 
@@ -33,7 +18,7 @@ static int charge(TBeing *ch, TBeing *vict)
   }
   if(ch->doesKnowSkill(mount->mountSkillType()) &&
      ch->advancedRidingBonus(mount)<50
-     && mount->getRace() != RACE_HORSE){
+     && mount->getRace() != RACE_HORSE) {
     ch->sendTo("You lack the skill to charge with this mount.\n\r");
     return FALSE;
   }
@@ -66,13 +51,17 @@ static int charge(TBeing *ch, TBeing *vict)
          false, ch, mount, NULL, TO_CHAR);
     return FALSE;
   }
-
+  if (!mount->isFlying() && vict->isFlying()) {
+    act("That would be hard, considering $N is flying, and your $o is not.", 
+	FALSE,ch,mount,vict, TO_CHAR);
+    return FALSE;
+  }
   if (ch->checkPeaceful("This room is too peaceful to contemplate violence in.\n\r"))
     return FALSE;
 
   // if there are a lot of attackers, just plain deny
   if (vict->attackers > 4) {
-    act("There isn't enough room to charge $N.",
+    act("Too many people are fighting $N.  Charging is prohibited.",
           FALSE, ch, 0, vict, TO_CHAR);
     return FALSE;
   }
@@ -85,7 +74,7 @@ static int charge(TBeing *ch, TBeing *vict)
       continue;
 
     if (tbt->fight() == vict) {
-      if (!tbt->inGroup(ch)) {
+      if (!tbt->inGroup(*ch)) {
         act("An innocent $o in the vicinity of $N prevents you from charging!",
             FALSE, ch, tbt, vict, TO_CHAR);
         return FALSE;
@@ -94,10 +83,12 @@ static int charge(TBeing *ch, TBeing *vict)
   }
   
   // very hard to tank and charge. Charge should be opening move
-  if ((vict->getPosition() > POSITION_SITTING) && ::number(0,2) && ch->isTanking()) {
-    ch->sendTo(COLOR_MOBS, "You try to get in position to take a charge at %s.",
+  if ((vict->getPosition() > POSITION_SITTING) &&
+      ::number(0,2) &&
+      ch->isTanking()) {
+    ch->sendTo(COLOR_MOBS, "You try to get in position to take a charge at %s.\n\r",
 vict->getName());
-    ch->sendTo(COLOR_MOBS, "However, %s does not give you enough room to effect a charge!\n\r", vict->getName());
+    ch->sendTo(COLOR_MOBS, "However, %s stays close to you.\n\rYou can't get the space needed to charge!\n\r", vict->getName());
     ch->cantHit += ch->loseRound(1);
     return FALSE;
   }
@@ -148,34 +139,34 @@ vict->getName());
 
   int dam = ch->getSkillDam(vict, SKILL_CHARGE, ch->getSkillLevel(SKILL_CHARGE), ch->getAdvLearning(SKILL_CHARGE));
 
-#if 0
+#if 1  // added charge crit per popular request
   // this is not the right way to do this.  - bat
   // New Damage Formula for Charge
-  if (gamePort != PROD_GAMEPORT) {
-    float newDam        = (100 + ((float) mount->GetMaxLevel() -
-                                  (float) ch->GetMaxLevel())) / 100;
-    float crossValue    = (float) dam * newDam;
-    int   initialDamage = dam;
-    bool  didCrit       = false;
+  //if (gamePort != PROD_GAMEPORT) 
+    //float newDam        = (100 + ((float) mount->GetMaxLevel() -
+  // (float) ch->GetMaxLevel())) / 100;
+    //float crossValue    = (float) dam * newDam;
+    //int   initialDamage = dam;
+    //bool  didCrit       = false;
 
-    dam = (int) crossValue;
-
+    //    dam = (int) crossValue;
+  
     TThing *prim = ch->heldInPrimHand();
-    if (prim && (bKnown > ::number(0, 400))) {
-      act("A splitsecond before the charge you brace $o to strike.",
+    if (prim && !(::number(0, 25))) {
+      act("A split second before the charge you brace your $o to strike.",
           TRUE, ch, prim, vict, TO_CHAR);
-      act("$n holds $o in preparation.",
+      act("$n braces $s $o in preparation for the strike.",
           TRUE, ch, prim, vict, TO_VICT);
-      act("$n holds $o and glances towards $N",
+      act("$n braces $s $o in preperation for $s charge at $N.",
           TRUE, ch, prim, vict, TO_NOTVICT);
 
-      dam += ::number(5, max(7, (ch->GetMaxLevel() / 2)));
-      didCrit = true;
+      dam += ::number(5, ch->GetMaxLevel() / 2);
+      //   didCrit = true;
     }
-
-    vlogf(1, "Charge Damage Formula [%s][%.2f / %.2f|%d / %s]", ch->getName(),
-          newDam, crossValue, initialDamage, (didCrit ? "Critical" : "Normal"));
-  }
+	
+    // vlogf(LOG_MISC, "Charge Damage Formula [%s][%.2f / %.2f|%d / %s]", ch->getName(),
+    //      newDam, crossValue, initialDamage, (didCrit ? "Critical" : "Normal"));
+    //  }
 #endif
 
   act("You charge $N, striking $M with a mighty blow.",  
@@ -289,14 +280,14 @@ int TBeing::doCharge(const char *arg, TBeing *victim)
   if (noHarmCheck(vict))
     return FALSE;
 
-  if (!sameRoom(vict)) {
+  if (!sameRoom(*vict)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
 
   rc = charge(this, vict);
   if (rc)
-    addSkillLag(SKILL_CHARGE);
+    addSkillLag(SKILL_CHARGE, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (victim)
       return rc;
