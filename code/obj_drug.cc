@@ -375,9 +375,12 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
       // roughly, we say a cigarette is 5 drug units, so a pack a day
       // is 20*5=100 units, divided by 24 hours = about 4
 
-      if(severity<4){
+      if(ch->desc->drugs[DRUG_PIPEWEED].current_consumed > (unsigned)(severity/2))
+	break;
+
+      if(severity<20){
 	ch->sendTo("You could use some %s right now.\n\r", drugTypes[drug].name);
-      } else if(severity<8){
+      } else if(severity<40){
 	ch->sendTo("You feel queasy and your hands are trembling, you really need some %s.\n\r", drugTypes[drug].name);
 
 	aff.type = AFFECT_DRUG;

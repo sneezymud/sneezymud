@@ -1069,9 +1069,10 @@ int TBeing::updateHalfTickStuff()
 	  if(hours_last && hours_first){
 	    // this should be average amount of the drug in their body since
 	    // they first used it.  We give them 24 extra hours, so you don't
-            // get addicted right off the bat
-	    severity=desc->drugs[i].total_consumed / 
-	      ((hours_last-hours_first)+24);
+            // get addicted right off the bat.  Multiply by 10 for a little
+            // extra precision.
+	    severity=(desc->drugs[i].total_consumed / 
+		      ((hours_last-hours_first)+24)) * 10;
 
 	    // old formula, not sure why I did this?
 	    //	    severity=(desc->drugs[i].total_consumed / hours_first) * hours_last;
