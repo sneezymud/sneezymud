@@ -1020,14 +1020,7 @@ class TBeing : public TThing {
     TBeing *findDiffZoneSameRace();
     int validEquipSlot(wearSlotT);
     void assignSkillsClass();
-    void assignSkillsMage();
-    void assignSkillsCleric();
-    void assignSkillsShaman();
-    void assignSkillsRanger();
-    void assignSkillsThief();
-    void assignSkillsWarrior();
-    void assignSkillsDeikhan();
-    void assignSkillsMonk();
+    void assignSkills(classIndT, discNumT, vector<discNumT>);
     void assignDisciplinesClass();
     const string bogus_slot(wearSlotT) const;
     const string bogus_slot_worn(wearSlotT) const;
