@@ -411,6 +411,18 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       resps->respMemory->next = tMem;
 
       break;
+    case CMD_RESP_CHECKPERSON:
+      TThing *tt;
+      TBeing *tb;
+
+      for(tt=roomp->stuff;tt;tt=tt->nextThing){
+	if((tb=dynamic_cast<TBeing *>(tt)) &&
+	   isname(tb->getName(), arg)){
+	  return RET_STOP_PARSING;
+	}
+      }
+
+      break;
     default:
       mud_assert(cmd >= 0, "Unhandled special command in modifiedDoCommand array %d", cmd);
 
@@ -1270,6 +1282,8 @@ resp * TMonster::readCommand( FILE *fp)
       newCmd = new command(CMD_RESP_MOVETO, args);
     else if (is_abbrev(buf, "destination"))
       newCmd = new command(CMD_RESP_DESTINATION, args);
+    else if (is_abbrev(buf, "checkperson"))
+      newCmd = new command(CMD_RESP_CHECKPERSON, args);
     else {
       if ((cmd=searchForCommandNum( buf)) >= MAX_CMD_LIST) {
         vlogf(LOG_MOB_RS,"Responses::readCommand(): Parse error in %s. Unknown command %s.",
