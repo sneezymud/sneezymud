@@ -37,7 +37,7 @@ void calcBankInterest()
       in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
 	       shop_nr);
       if(in.fetchRow())
-	posttalens+==convertTo<int>(in["talens"]);
+	posttalens+=convertTo<int>(in["talens"]);
 
 
 
