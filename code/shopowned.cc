@@ -438,8 +438,18 @@ void TShopOwned::showInfo()
     TCorporation corp(getCorpID());
     keeper->doTell(ch->getName(), fmt("This shop is owned by %s.") %
 		   corp.getName());
-
   }
+
+  
+  db.query("select r.name as name from room r, shopownedtax st, shop s where r.vnum=s.in_room and s.shop_nr=st.tax_nr and st.shop_nr=%i", shop_nr);
+
+  if(db.fetchRow()){
+    keeper->doTell(ch->getName(), fmt("This shop is taxed by %s.") % 
+		   db["name"]);
+  } else {
+    keeper->doTell(ch->getName(), "This shop is untaxed.");
+  }
+  
 
   // repair stuff
   if((getQuality() >= 0 && getQuality() != 1) ||
