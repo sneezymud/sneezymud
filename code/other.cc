@@ -57,6 +57,7 @@ extern "C" {
 #include "obj_magic_item.h"
 #include "obj_potion.h"
 #include "obj_scroll.h"
+#include "database.h"
 
 void TBeing::doGuard(const char *argument)
 {
@@ -3390,6 +3391,16 @@ void TBeing::doHistory()
   sendTo("Your command history :\n\r\n\r");
   for (i = 0; i < 10; i++)
     sendTo("[%d] %s\n\r", i, d->history[i]);
+
+  TDatabase db("sneezy");
+  sendTo("\n\rYour tell history :\n\r\n\r");
+  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc", getName());
+  for(i=0;i<25 && db.fetchRow();i++){
+    sendTo(COLOR_BASIC, "[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r",
+	   i, db.getColumn(0), db.getColumn(1));
+  }
+  
+
 }
 
 

@@ -10,6 +10,8 @@
 #include "disease.h"
 #include "obj_pen.h"
 #include "obj_note.h"
+#include "database.h"
+
 // many of the talk features colorize the says/tells/etc for easier viewing
 // If I do "say this <r>color<z> is cool", I would expect to see color in
 // red, and "this ", " is cool" be the 'normal' say color.
@@ -849,6 +851,14 @@ int TBeing::doTell(const char *arg, bool visible)
   convertStringColor("<c>", garbed);
   vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
             nameBuf, garbed.c_str());
+
+  TDatabase db("sneezy");
+  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", nameBuf, vict->getName(), garbed.c_str());
+
+  // this is probably too slow, cron job or something would be better
+  //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());
+
+
 
   Descriptor *d = vict->desc;
   if (d->m_bIsClient) {
