@@ -71,6 +71,8 @@ bool TBeing::canSeeWho(const TBeing *o) const
   if (inRoom() < 0 || o->inRoom() < 0)
     return FALSE;
 
+  int illum = o->roomp->getLight();
+
   if (isImmortal()) {
     if (GetMaxLevel() < o->getInvisLevel())
       return FALSE;
@@ -83,7 +85,7 @@ bool TBeing::canSeeWho(const TBeing *o) const
   if (!isImmortal() && (o->getInvisLevel() >= GOD_LEVEL1))
     return FALSE;   // link deads 
 
-  if (o->isAffected(AFF_INVISIBLE) || o->isAffected(AFF_SHADOW_WALK)) {
+  if (o->isAffected(AFF_INVISIBLE) || (illum < 14 && o->isAffected(AFF_SHADOW_WALK))) {
     if (o->isImmortal())
       return FALSE;
     if (!isAffected(AFF_DETECT_INVISIBLE))
@@ -811,7 +813,9 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
   if (this == ch)
     return TRUE;
 
-  if (isAffected(AFF_INVISIBLE) || isAffected(AFF_SHADOW_WALK)) {
+  int illum = roomp->getLight();
+
+  if (isAffected(AFF_INVISIBLE) || (illum < 14 && isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
@@ -940,7 +944,10 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
     if (victim->getInvisLevel() >= GOD_LEVEL1)
       return FALSE;
   }
-  if (victim->isAffected(AFF_INVISIBLE) || victim->isAffected(AFF_SHADOW_WALK)) {
+
+  int illum = victim->roomp->getLight();
+
+  if (victim->isAffected(AFF_INVISIBLE) || (illum < 14 && victim->isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
