@@ -279,8 +279,10 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
     if (dynamic_cast<TArrow *>(o)) {
       // shot objects are here
       // ranged spec basically allows arrow to do extra damage...
-      q = 100 + ch->getSkillValue(SKILL_RANGED_PROF);
-      q += 2 * ch->getSkillValue(SKILL_RANGED_SPEC);
+      q = 100;
+      q += (ch->getSkillValue(SKILL_RANGED_PROF)/2);
+      q += (ch->getSkillValue(SKILL_RANGED_SPEC)/2);
+
       dam *= q;
       dam /= 200;
     } else {
