@@ -137,6 +137,13 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
     gen_corpse->setMaterial(getMaterial());
   }
 
+  if(!isname("corpse", gen_corpse->name)){
+    sprintf(buf, "%s corpse", gen_corpse->name);
+    delete gen_corpse->name;
+    gen_corpse->name=mud_str_dup(buf);
+  }
+
+
   if (!specialCorpse && roomp && 
       (roomp->isUnderwaterSector() || roomp->isWaterSector())) {
     sprintf(buf, "The bloated, water-filled corpse of %s is floating here.", getName());
