@@ -1015,7 +1015,12 @@ void TBeing::doScan(const char *argument)
       if (t == this)
         continue;
       if (canSee(t)) {
-        sendTo(COLOR_MOBS, fmt("%30s : right here\n\r") % t->getNameNOC(this));
+        sstring nc_name = fmt("%30s") % t->getNameNOC(this);
+        int name_pos = nc_name.find_first_not_of(" ");
+
+        nc_name.replace(name_pos, nc_name.length()-name_pos, t->getName());
+
+        sendTo(COLOR_MOBS, fmt("%s : right here\n\r") % nc_name);
         found = TRUE;
       } else if (canSee(t, INFRA_YES)) {
         sendTo(COLOR_MOBS, fmt("%30s : right here\n\r") % "A blob of heat");
@@ -1065,7 +1070,11 @@ void TBeing::doScan(const char *argument)
           if (!tbt)
             continue;
           if (can_see_char_other_room(this, tbt, real_roomp(rm))) {
-            sendTo(COLOR_MOBS, fmt("%30s : %s %s\n\r") % tbt->getNameNOC(this) % rng_desc[range] % dirs_to_blank[i]);
+            sstring nc_name = fmt("%30s") % tbt->getNameNOC(this);
+            int name_pos = nc_name.find_first_not_of(" ");
+
+            nc_name.replace(name_pos, nc_name.length()-name_pos, tbt->getName());
+            sendTo(COLOR_MOBS, fmt("%s : %s %s\n\r") % nc_name % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
