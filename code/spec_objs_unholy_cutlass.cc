@@ -43,7 +43,7 @@ int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   TBeing *ch;
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(::number(0,29)){
+    if(!::number(0,29)){
       if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
 	return FALSE;       // weapon not equipped (carried or on ground)
 
