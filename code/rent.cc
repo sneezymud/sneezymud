@@ -615,7 +615,13 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 
 
     if(version<8 && dynamic_cast<TComponent *>){
-      o->assignFourValues(item.value[0],item.value[1],item.value[3],0);
+      int x;
+      
+      // damage level and deviation are now merged
+      SET_BITS(x, 7, 8, item.value[1]);
+      SET_BITS(x, 15, 8, item.value[2]);
+
+      o->assignFourValues(item.value[0],x,item.value[3],0);
     } else {
       o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
     }
