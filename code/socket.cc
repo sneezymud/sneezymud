@@ -199,16 +199,16 @@ void updateStocks(){
 // returns the count of players logged in now
 int updateWholist()
 {
-  TBeing *p;
+  Descriptor *p;
   TPerson *p2;
   int count = 0;
   static int last_count;
   static sstring wholist_last;
   sstring wholist = "";
 
-  for (p = character_list; p; p = p->next) {
-    if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
-      if ((p2 = dynamic_cast<TPerson *>(p))) {
+  for (p = descriptor_list; p; p = p->next) {
+    if (p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE) {
+      if ((p2 = dynamic_cast<TPerson *>(p->character))) {
 	wholist += p2->getName();
       }
     }
@@ -223,10 +223,10 @@ int updateWholist()
     db.query("delete from wholist where port=%i", gamePort);
     
     //  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
-    for (p = character_list; p; p = p->next) {
-      if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
-	if ((p2 = dynamic_cast<TPerson *>(p))) {
-	  db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
+  for (p = descriptor_list; p; p = p->next) {
+    if (p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE) {
+      if ((p2 = dynamic_cast<TPerson *>(p->character))) {
+	  db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p2->getInvisLevel() >MAX_MORT)?1:0);
 	  count++;
 	}
       }

@@ -2143,7 +2143,7 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
     rp2 = real_roomp(24643);
 
   }
-  *rp += *ch;
+  *rp2 += *ch;
 
   if (ch->reconcileDamage(ch, dam, TYPE_CRUSH) == -1) {
     delete ch;
