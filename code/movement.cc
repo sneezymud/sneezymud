@@ -2018,6 +2018,14 @@ bool has_key(TBeing *ch, int key)
       return (1);
   }
 
+  for(wearSlotT i=WEAR_HEAD;i<MAX_WEAR;i++){
+    if(ch->equipment[i]){
+      o = dynamic_cast<TObj *>(ch->equipment[i]);
+      if(keyCheck(o, key))
+	return (1);
+    }
+  }
+  
   return (0);
 }
 
