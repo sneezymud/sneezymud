@@ -46,11 +46,11 @@ void TBeing::doTrophy(const char *arg)
 {
   MYSQL_ROW row;
   MYSQL_RES *res;
-  int rc, mcount=0;
+  int rc, mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
   float count;
   char buf[256];
   string sb;
-
+  unsigned int zone;
 
   if(!isPc()){
     sendTo("Mobs can't use this command!\n\r");
@@ -60,31 +60,85 @@ void TBeing::doTrophy(const char *arg)
   for (; isspace(*arg); arg++);
 
 
-  rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by count", getName());
+  rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
-  while((row=mysql_fetch_row(res))){
-    if(atoi(row[0])==0){
-      continue;
-    }
-    int rnum = real_mobile(atoi(row[0]));
-    if (rnum < 0) {
-      vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
-           atoi(row[0]), getName());
-      continue;
-    }
+  for (zone = 0; zone < zone_table.size(); zone++) {
+    zoneData &zd = zone_table[zone];
+    
+    while((row=mysql_fetch_row(res))){
+      vlogf(LOG_PEEL, "mob=%i, top=%i", atoi(row[0]), zd.top);
 
-    if(*arg && !isname(arg, mob_index[rnum].name))
-      continue;
+      // sometimes we get an entry of 0 for med mobs I think
+      vnum=atoi(row[0]);
+      if(vnum==0)
+	continue;
+      
+      // this mob doesn't belong to this zone, so break out to the zone loop
+      if(vnum>zd.top)
+	break;
 
-    count=atof(row[1]);
-    sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
-	    describe_trophy_exp(count),
-	    mob_index[rnum].short_desc);
-    ++mcount;
+      // print the zone header if we haven't already
+      // we do it here, so we can prevent printing headers for empty zones
+      if(!header){
+	sprintf(buf, "\n--%s\n", zd.name);
+	sb += buf; 
+	header=1;
+      }
+
+      int rnum = real_mobile(atoi(row[0]));
+      if (rnum < 0) {
+	vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
+	      atoi(row[0]), getName());
+	continue;
+      }
+      
+      if(*arg && !isname(arg, mob_index[rnum].name))
+	continue;
+      
+      count=atof(row[1]);
+      sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
+	      describe_trophy_exp(count),
+	      mob_index[rnum].short_desc);
+      ++mcount;
+      ++zcount;
+      sb += buf;
+      
+      
+#if 0
+    sprintf(buf, "%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r", 
+	    zone, buf2, zd.lifespan, zd.age, bottom, zd.top, 
+	    zd.zone_value,
+	    (zd.num_mobs ? zd.mob_levels/zd.num_mobs : 0));
     sb += buf;
+#endif
+    }
+
+    // we have some mobs for this zone, so do some tallies
+    if(header){
+      sprintf(buf, "Total mobs: %i\n\r", zcount);
+      sb += buf;
+
+      unsigned int objnx;
+      for (objnx = 0; objnx < mob_index.size(); objnx++) {
+	if(mob_index[objnx].virt >= bottom &&
+	   mob_index[objnx].virt <= zd.top){
+	  ++zcountt;
+	}
+      }
+
+      sprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)zcount/(float)zcountt)*100.0));
+      sb += buf;
+    }
+
+    header=zcount=zcountt=0;
+    bottom=zd.top+1;
   }
 
-  sprintf(buf, "Total mobs: %i\n\r", mcount);
+
+
+
+
+  sprintf(buf, "\n--\nTotal mobs: %i\n\r", mcount);
   sb += buf;
   if(mcount>0){
     sprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)mob_index.size())*100.0));
