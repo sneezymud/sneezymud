@@ -967,11 +967,13 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	      // don't need this anymore since no hard cap - dash
 	      if (gain < newgain)
 		newgain = gain;
+#if 0
 	      vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)    (%5.2f soft <- %5.2f hard)",
                     ch->getName(), ch->getLevel(i),(ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
                     (ch->specials.fighting)?ch->specials.fighting->GetMaxLevel() : -1, (gain/newgain), (gain/oldcap));
 	      vlogf(LOG_DASH, "   gain: %6.2f   oldc: %6.2f   newc: %6.2f   softm: %6.2f",
 		    gain, oldcap, softmod, newgain);
+#endif
 	      gain = newgain;
             }
             // intentionally avoid having L50's get this message

@@ -4855,7 +4855,7 @@ int selfRepairing(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  if(!::number(0,9))
+  if(::number(0,9))
     return false;
 
   if (cmd == CMD_GENERIC_PULSE && o->getStructPoints() < o->getMaxStructPoints()) {
@@ -4916,7 +4916,7 @@ int AKAmulet(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
        act("You regenerate slightly.",TRUE,ch,o,NULL,TO_CHAR,NULL);
        ch->addToHit(dam);
        return FALSE;
-    } else {
+    } else if (!ch->isUndead()) {
       int dam = ::number(25,100);
       act("$n screams in pain as $p drains the life from $s body!",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("You scream in pain as $p drains the life from your body!",TRUE,ch,o,NULL,TO_CHAR,NULL);

@@ -1847,8 +1847,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   } else {
     // code to place gate
     if (!found) {
-      return FALSE;
-      if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
+        if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading moongate");
 	return FALSE;;
       }
