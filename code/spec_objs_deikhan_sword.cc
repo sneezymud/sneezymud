@@ -103,11 +103,11 @@ int doHarm(TBeing *ch, TBeing *vict, TObj *o)
 
   switch(o->objVnum()){
     case AVENGER:
-      dam+=::number(2,6);
+      dam+=::number(1,3);
     case VINDICATOR:
-      dam+=::number(4,8);
+      dam+=::number(2,4);
     case DEVASTATOR:
-      dam+=::number(6,10);
+      dam+=::number(3,5);
   }
 
 
