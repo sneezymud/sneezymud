@@ -93,7 +93,7 @@ void HiLoGame::stay(TBeing *ch)
       TRUE, ch, 0, 0, TO_ROOM);
 
   const Card *next_card=deck.draw();
-  vlogf(LOG_PEEL, "drew %s", next_card->getName());
+  //  vlogf(LOG_PEEL, "drew %s", next_card->getName());
 
   sstring buf;
   ch->sendTo(COLOR_BASIC,"The next card was the %s.\n\r",next_card->getName());
@@ -124,7 +124,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     if (bet > 0) {
       if(arg=="hi" || arg=="lo"){
 	new_card=deck.draw();
-	vlogf(LOG_PEEL, "drew %s", new_card->getName());
+	//	vlogf(LOG_PEEL, "drew %s", new_card->getName());
 	
 	ssprintf(buf, "$n bets %s.", arg.c_str());
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
@@ -178,7 +178,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_ROOM);
 
     card=deck.draw();
-    vlogf(LOG_PEEL, "drew %s", card->getName());
+    //    vlogf(LOG_PEEL, "drew %s", card->getName());
 
     ch->sendTo(COLOR_BASIC, "You are dealt:\n\r%s\n\r", card->getName());
 
