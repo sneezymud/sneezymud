@@ -124,7 +124,7 @@ void TPool::updateDesc()
     action_description = NULL;
   } else {
     addObjStat(ITEM_STRUNG);
-    name = mud_str_dup(obj_index[getItemIndex()].name);
+    name=mud_str_dup(obj_index[getItemIndex()].name);
     ex_description = NULL;
     action_description = NULL;
   }
@@ -218,10 +218,10 @@ void TPool::initPool(int amt, liqTypeT liq)
   setDrinkType(liq);
   canBeSeen = 1;
   setMaterial(MAT_WATER);
-  
+
   ssprintf(buf, "pool puddle %s %s", 
-	   DrinkInfo[liq]->name,
-	   DrinkInfo[liq]->color);
+	   stripColorCodes(DrinkInfo[liq]->name).c_str(),
+	   stripColorCodes(DrinkInfo[liq]->color).c_str());
   delete [] name;
   name = mud_str_dup(buf.c_str());
   
