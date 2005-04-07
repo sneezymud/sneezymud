@@ -15,14 +15,20 @@ cd $PROD_MUD_ROOT/lib/zonefiles
 svn update
 )
 
+echo Updating response and rumor data
+(
+cd $PROD_MUD_ROOT/lib/mobdata
+svn update
+)
+
 #cp $BUILD_MUD_ROOT/lib/zonefiles/* $PROD_MUD_ROOT/lib/zonefiles
 #cd $PROD_MUD_ROOT/lib/zonefiles
 #cvs update
 
 # copy latest Crier Response File
-echo Copying town crier response file
+#echo Copying town crier response file
 
-cp $BUILD_MUD_ROOT/lib/mobdata/responses/crier.new $PROD_MUD_ROOT/lib/mobdata/responses/crier
+#cp $BUILD_MUD_ROOT/lib/mobdata/responses/crier.new $PROD_MUD_ROOT/lib/mobdata/responses/crier
 
 
 # note that we've removed indexes from sneezyq for speed, so pg_restore 
