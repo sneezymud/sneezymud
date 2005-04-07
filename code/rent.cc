@@ -2997,9 +2997,8 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     if (ch->recepOffer(recep, &cost)) {
       if (ch->desc && !ch->desc->m_bIsClient) {
 	if (ch->GetMaxLevel() > 5) {
-	  int shopNum = find_shop_nr(recep->mobVnum());
-	  TShopOwned tso(shopNum, recep, ch);
-	  float multiplier = (shop_index[shopNum].getProfitBuy(NULL, ch));
+	  TShopOwned tso(shop_nr, recep, ch);
+	  float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
           db.query("select taxrate, innmessage from innkeeptaxation where mobvnum=%i", recep->mobVnum());
 	  db.fetchRow();
 	  float tmpTax = (ch->GetMaxLevel() * convertTo<int>(db["taxrate"]) * multiplier);
