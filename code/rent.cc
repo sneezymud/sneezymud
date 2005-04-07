@@ -19,6 +19,8 @@
 #include "obj_wand.h"
 #include "obj_general_weapon.h"
 #include "obj_open_container.h"
+#include "corporation.h"
+#include "shopowned.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
@@ -2805,8 +2807,15 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   char buf[256];
   dirTypeT dir;
   roomDirData *exitp;
+  TDatabase db(DB_SNEEZY);
+  TCorporation corp(21);
 
-  if (cmd == CMD_GENERIC_PULSE){
+  int shop_nr = find_shop_nr(recep->number);
+
+  if (cmd == CMD_WHISPER)
+    return shopWhisper(ch, recep, shop_nr, arg);
+
+  if (cmd == CMD_GENERIC_PULSE) {
     TThing *t;
     TBeing *tbt;
 
@@ -2985,9 +2994,44 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
       ch->sendTo("----------\n\r");
     }
-
     if (ch->recepOffer(recep, &cost)) {
       if (ch->desc && !ch->desc->m_bIsClient) {
+	if (ch->GetMaxLevel() > 5) {
+	  int shopNum = find_shop_nr(recep->mobVnum());
+	  TShopOwned tso(shopNum, recep, ch);
+	  float multiplier = (shop_index[shopNum].getProfitBuy(NULL, ch));
+          db.query("select taxrate, innmessage from innkeeptaxation where mobvnum=%i", recep->mobVnum());
+	  db.fetchRow();
+	  float tmpTax = (ch->GetMaxLevel() * convertTo<int>(db["taxrate"]) * multiplier);
+	  int tax = int(tmpTax);
+	  sstring msg = db["innmessage"];
+	  if (ch->getMoney() < tax) {
+	    recep->doTell(ch->getName(), 
+			  fmt("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
+			  % tax);
+	    recep->doAction("", CMD_SIGH);
+	    recep->doTell(ch->getName(), fmt("Sorry. Come back when you can pay your taxes."));
+	    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+	      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
+		act("$n throws you from the inn.",
+		    FALSE, recep, 0, ch, TO_VICT);
+		act("$n throws $N from the inn.",
+		    FALSE, recep, 0, ch, TO_NOTVICT);
+		recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
+
+		return TRUE;
+	      }
+	    }
+	  } else {
+	    recep->doTell(ch->getName(), fmt("%s.") % msg);
+	    recep->doAction("", CMD_SIGH);
+	    recep->doTell(ch->getName(), fmt("Your hospice tax comes to %d talens.") % tax);
+  	    ch->giveMoney(recep, tax, GOLD_SHOP);
+	    tso.doBuyTransaction(tax, "Renting", "Inkeeper Taxation");
+	    vlogf(LOG_JESUS, fmt("%s renting and being charged %d talens tax (%d * %d * %.2f)") % ch->getName() % tax % ch->GetMaxLevel() % convertTo<int>(db["taxrate"]) % multiplier);
+	    shoplog(shopNum, ch, recep, "talens", tax, " rent taxation");
+	  }
+	}
         act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
         act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
     
@@ -2995,7 +3039,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
         save_room = ch->in_room;        // backup what room the PC was in 
         ch->saveChar(save_room);
         ch->in_room = save_room;
-
         ch->cls();
         ch->fullscreen();
 
@@ -3022,6 +3065,9 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
     ch->makeRentNote(ch);
     recep->doTell(ch->getName(), "Here is a note with your items listed.");
+    if ((recep->mobVnum() == 164) && (ch->GetMaxLevel() > 5)) {
+      recep->doTell(ch->getName(), "Don't forget about the hospice tax from the Kingdom of Grimhaven.");
+    }
   }
   return TRUE;
 }
