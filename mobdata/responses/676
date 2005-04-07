@@ -1,0 +1,28 @@
+# Stable Hand
+# Object Mob - Sells saddles
+# Created by Cosmo
+# Copyright 1997, by SneezyMUD Development Team.  All rights reserved.
+
+say { "hello";
+	smile %n; 
+	say Hello %n, You looking for a horse or a saddle?;
+	}
+
+say { "horse";
+	say You will find them south of here...;
+	say unless they have been taken again.;
+	say They are fine horses but slightly wild.;
+	say I can sell you a saddle if you need one.;
+	}
+
+say { "saddle";
+	say Our saddles are of the finest quality.;
+	say They only cost #OBJCOST(1013, 20)# talens.;
+	}
+
+# saddle may have been given to him in zone file, this is OK - bat
+give { "-#OBJCOST(1013, 20)#";
+	checkload 1013;
+	say Here you go %n, this looks like the right one for you.;
+	give saddle %n;
+	}
