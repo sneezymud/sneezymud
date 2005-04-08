@@ -3766,7 +3766,7 @@ void TBeing::doSetsev(const char *arg)
     "faction"      , "mobile"  , "mobai" , "mobresp", "object",
     "editor"       , "\n"
   };
-  const char *tHelp[] =
+  const sstring tHelp[] =
   {
     "Anything not found in the others",
     "L.O.W Errors",
@@ -3799,10 +3799,13 @@ void TBeing::doSetsev(const char *arg)
   if (!tMatch) {
     sendTo("Leg Severity Options:\n\r______________________________\n\r");
 
-    for (tMatch = 0; tFields[tMatch][0] != '\n'; tMatch++)
-      sendTo(fmt("%s: %-15s: %s\n\r") %
-             ((d->severity & (1 << tMatch)) ? "On " : "Off") %
-             tFields[tMatch] % tHelp[tMatch]);
+    for (tMatch = 0; tFields[tMatch][0] != '\n'; tMatch++) {
+      if (tMatch == LOG_LOW || hasWizPower(POWER_SETSEV_IMM)) {
+        sendTo(fmt("%s: %-15s: %s\n\r") %
+               ((d->severity & (1 << tMatch)) ? "On " : "Off") %
+               tFields[tMatch] % tHelp[tMatch]);
+      }
+    }
 
     return;
   }
@@ -3879,7 +3882,7 @@ void TBeing::doSetsev(const char *arg)
     } else
       sendTo("Incorrect Log Type.\n\r");
   } else {
-    if ((tMatch - 1) == LOG_LOW && powerCheck(POWER_SETSEV_IMM))
+    if ((tMatch - 1) != LOG_LOW && powerCheck(POWER_SETSEV_IMM))
       return;
 
     if ((d->severity & (1 << (tMatch - 1))))
