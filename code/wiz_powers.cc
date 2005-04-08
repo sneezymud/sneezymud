@@ -118,12 +118,14 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_POWERS);
     ch->setWizPower(POWER_GOTO);
     ch->setWizPower(POWER_IMMORTAL_HELP);
+    ch->setWizPower(POWER_SETSEV);
   } else if (is_abbrev(arg, "rembasic")) {
     ch->remWizPower(POWER_BUILDER);
     ch->remWizPower(POWER_WIZNET);
     ch->remWizPower(POWER_POWERS);
     ch->remWizPower(POWER_GOTO);
     ch->remWizPower(POWER_IMMORTAL_HELP);
+    ch->remWizPower(POWER_SETSEV);
   } else if (is_abbrev(arg, "rooms")) {
     ch->setWizPower(POWER_REDIT);  
     ch->setWizPower(POWER_RSAVE);
