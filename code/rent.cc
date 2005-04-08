@@ -3025,7 +3025,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	    recep->doTell(ch->getName(), fmt("%s.") % msg);
 	    recep->doAction("", CMD_SIGH);
 	    recep->doTell(ch->getName(), fmt("Your hospice tax comes to %d talens.") % tax);
-	    tso.doBuyTransaction(tax, "Renting", "Inkeeper Taxation");
+	    tso.doBuyTransaction(tax, "rent", "paying");
             vlogf(LOG_PIO, fmt("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
 	  }
 	}
