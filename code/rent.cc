@@ -2800,6 +2800,7 @@ void TBeing::makeRentNote(TBeing *recip)
   return;
 }
 
+
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
   objCost cost;
@@ -2998,18 +2999,19 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       if (ch->desc && !ch->desc->m_bIsClient) {
 	if (ch->GetMaxLevel() > 5) {
 	  TShopOwned tso(shop_nr, recep, ch);
+	  
 	  float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-          db.query("select taxrate, innmessage from innkeeptaxation where mobvnum=%i", recep->mobVnum());
-	  db.fetchRow();
-	  float tmpTax = (ch->GetMaxLevel() * convertTo<int>(db["taxrate"]) * multiplier);
-	  int tax = int(tmpTax);
-	  sstring msg = db["innmessage"];
+	  int tax = (int)((float) ch->GetMaxLevel() * multiplier);
+
+	  sstring msg = shop_index[shop_nr].message_buy;
+
 	  if (ch->getMoney() < tax) {
 	    recep->doTell(ch->getName(), 
 			  fmt("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
 			  % tax);
 	    recep->doAction("", CMD_SIGH);
-	    recep->doTell(ch->getName(), fmt("Sorry. Come back when you can pay your taxes."));
+	    recep->doTell(ch->getName(), 
+			  fmt("Sorry. Come back when you can pay your taxes."));
 	    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
 	      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
 		act("$n throws you from the inn.",
@@ -3022,9 +3024,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	      }
 	    }
 	  } else {
-	    recep->doTell(ch->getName(), fmt("%s.") % msg);
-	    recep->doAction("", CMD_SIGH);
-	    recep->doTell(ch->getName(), fmt("Your hospice tax comes to %d talens.") % tax);
+	    recep->doTell(ch->getName(), fmt(msg) % tax);
 	    tso.doBuyTransaction(tax, "rent", "paying");
             vlogf(LOG_PIO, fmt("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
 	  }
@@ -3056,15 +3056,21 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       if (vict) {
         vict->makeRentNote(ch);
         recep->doTell(ch->getName(), fmt("Here is a note with %s's items listed.") % vict->getName());
-        return TRUE;
+	TShopOwned tso(shop_nr, recep, vict);	
+	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
+	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
+
+	recep->doTell(ch->getName(), fmt("In addition to any fees listed on that note, there is a tax of %i talens.") % tax);
+	return TRUE;
       }
     }
+    TShopOwned tso(shop_nr, recep, ch);	
+    float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
+    int tax = (int)((float) ch->GetMaxLevel() * multiplier);
 
     ch->makeRentNote(ch);
     recep->doTell(ch->getName(), "Here is a note with your items listed.");
-    if ((recep->mobVnum() == 164) && (ch->GetMaxLevel() > 5)) {
-      recep->doTell(ch->getName(), "Don't forget about the hospice tax from the Kingdom of Grimhaven.");
-    }
+    recep->doTell(ch->getName(), fmt("In addition to any fees listed on that note, there is a tax of %i talens.") % tax);
   }
   return TRUE;
 }
