@@ -661,13 +661,6 @@ void TBeing::doPee(const sstring &argument)
 
   TBeing *mob;
 
-  for (mob = character_list;mob;mob = mob->next) {
-    if (mob->spec == 27) {
-      vlogf(LOG_JESUS, fmt("%d - %s") % mob->mobVnum() % mob->getName());
-    }
-  } 
-
-
   if (in_room < 0)
     return;
   
