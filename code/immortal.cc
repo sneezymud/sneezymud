@@ -3458,6 +3458,7 @@ void TPerson::doAccess(const sstring &arg)
   struct time_info_data playing_time;
   FILE *fp;
   accountFile afp;
+  TDatabase db(DB_SNEEZY);
 
   if (powerCheck(POWER_ACCESS))
     return;
@@ -3616,6 +3617,12 @@ void TPerson::doAccess(const sstring &arg)
       st.stats[STAT_KAR] %
       st.stats[STAT_SPE];
     buf+=tmpbuf;
+
+    db.query("select sum(sob.talens) as bankmoney from shopownedbank sob, player p where sob.player_id=p.id and lower(p.name)=lower('%s')", st.name);
+    
+    if(db.fetchRow()){
+      st.bankmoney=convertTo<int>(db["bankmoney"]);
+    }
 
     tmpbuf = fmt("Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r") %
           st.money % st.bankmoney % st.exp;
