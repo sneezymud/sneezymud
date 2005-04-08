@@ -659,8 +659,6 @@ void TBeing::doPee(const sstring &argument)
   int amt=::number(1,10);
   sstring whitespace=" \f\n\r\t\v";
 
-  TBeing *mob;
-
   if (in_room < 0)
     return;
   
