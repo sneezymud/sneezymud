@@ -7,7 +7,7 @@
 void calcBankInterest()
 {
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
-  float profit_sell;
+  double profit_sell;
   unsigned int shop_nr;
   int pretalens=0, posttalens=0;
 
@@ -24,19 +24,30 @@ void calcBankInterest()
       in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
 	       shop_nr);
       if(in.fetchRow())
-	pretalens=convertTo<int>(in["talens"]);
-	
+	pretalens=convertTo<int>(in["talens"]);	
 
       in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
 	       shop_nr);
       if(in.fetchRow())
 	pretalens+=convertTo<int>(in["talens"]);
 
-      
-      in.query("update shopownedbank set talens=talens * %f where shop_nr=%i", 
-	       1.0+(profit_sell/365.0), shop_nr);
-      in.query("update shopownedcorpbank set talens=talens * %f where shop_nr=%i", 
-	       1.0+(profit_sell/365.0), shop_nr);
+
+      // calculate interest
+      in.query("update shopownedbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
+
+      // doll out earned interest that isn't fractional
+      in.query("update shopownedbank set talens=talens + trunc(earned_interest), earned_interest=earned_interest - trunc(earned_interest) where shop_nr=%i", shop_nr);
+
+
+
+      // calculate interest
+      in.query("update shopownedcorpbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
+
+      // doll out earned interest that isn't fractional
+      in.query("update shopownedcorpbank set talens=talens + trunc(earned_interest), earned_interest=earned_interest - trunc(earned_interest) where shop_nr=%i", shop_nr);
+
+
+
 
       in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
 	       shop_nr);
