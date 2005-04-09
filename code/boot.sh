@@ -10,6 +10,9 @@ case $USER in
   jesus)
     PORT=7000
     ;;
+  damescena)
+    PORT=6969
+    ;;
 esac
 
 if [ "$1" = "" ]
