@@ -309,7 +309,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_objs_weapons.o             spec_mobs_signmaker.o		\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
 	spec_objs_ballot_box.o		spec_objs_casting.o		\
-	spec_mobs_property_clerk.o	spec_mobs_leper_hunter.o
+	spec_mobs_property_clerk.o	spec_mobs_leper_hunter.o	\
+	spec_mobs_auctioneer.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -30270,7 +30271,8 @@ objs/rent.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
 objs/rent.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
 objs/rent.o: obj_bag.h obj_expandable_container.h obj_open_container.h
 objs/rent.o: obj_symbol.h obj_component.h obj_note.h obj_magic_item.h
-objs/rent.o: obj_wand.h obj_general_weapon.h obj_base_weapon.h
+objs/rent.o: obj_wand.h obj_general_weapon.h obj_base_weapon.h corporation.h
+objs/rent.o: shopowned.h
 objs/repair.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/repair.o: /usr/include/sys/types.h /usr/include/machine/endian.h
 objs/repair.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -32060,6 +32062,135 @@ objs/spec_mobs_archer.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/spec_mobs_archer.o: format.h obj_bow.h obj_arrow.h obj_base_weapon.h
 objs/spec_mobs_archer.o: obj_quiver.h obj_expandable_container.h
 objs/spec_mobs_archer.o: obj_open_container.h obj_base_container.h
+objs/spec_mobs_auctioneer.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/c++config.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cstddef
+objs/spec_mobs_auctioneer.o: /usr/include/stddef.h /usr/include/sys/cdefs.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/_null.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/_types.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/_types.h
+objs/spec_mobs_auctioneer.o: /usr/include/stdio.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cstdlib
+objs/spec_mobs_auctioneer.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/spec_mobs_auctioneer.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/types.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/endian.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/select.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/_sigset.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/_timeval.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
+objs/spec_mobs_auctioneer.o: /usr/include/_ctype.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cassert
+objs/spec_mobs_auctioneer.o: /usr/include/assert.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cstring
+objs/spec_mobs_auctioneer.o: /usr/include/string.h /usr/include/strings.h
+objs/spec_mobs_auctioneer.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/spec_mobs_auctioneer.o: /usr/include/math.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/_limits.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/string
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/climits
+objs/spec_mobs_auctioneer.o: /usr/include/limits.h /usr/include/sys/limits.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/new
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/exception
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/iosfwd
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/clocale
+objs/spec_mobs_auctioneer.o: /usr/include/locale.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/c++io.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/gthr.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/spec_mobs_auctioneer.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/spec_mobs_auctioneer.o: /usr/include/sys/signal.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/signal.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/spec_mobs_auctioneer.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/postypes.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/spec_mobs_auctioneer.o: /usr/include/stdint.h
+objs/spec_mobs_auctioneer.o: /usr/include/machine/_stdint.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/exception_defines.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/debug/debug.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/memory
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/allocator.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/algorithm
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/vector
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/map
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/list
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/list.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/iostream
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/ostream
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/ios
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/streambuf
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/cwctype
+objs/spec_mobs_auctioneer.o: /usr/include/wctype.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/locale
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/limits
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/typeinfo
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/istream
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/sstream
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/fstream
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h
+objs/spec_mobs_auctioneer.o: low.h enum.h spells.h structs.h parse.h
+objs/spec_mobs_auctioneer.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_mobs_auctioneer.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_mobs_auctioneer.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_auctioneer.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/spec_mobs_auctioneer.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/spec_mobs_auctioneer.o: room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/spec_mobs_auctioneer.o: charfile.h being.h person.h monster.h paths.h
+objs/spec_mobs_auctioneer.o: account.h extern.h handler.h obj_money.h
+objs/spec_mobs_auctioneer.o: spec_mobs.h materials.h colorstring.h format.h
+objs/spec_mobs_auctioneer.o: database.h /usr/local/include/libpq-fe.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/postgres_ext.h shop.h
+objs/spec_mobs_auctioneer.o: shopowned.h rent.h
 objs/spec_mobs_banker.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/os_defines.h
