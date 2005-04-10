@@ -60,7 +60,9 @@ void calcBankInterest()
 	posttalens+=convertTo<int>(in["talens"]);
 
       if((posttalens-pretalens) !=0)
-	in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
+	in.query("insert into shoplog values (%i, '%s', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, 
+		 mob_index[real_mobile(convertTo<int>(db["keeper"]))].short_desc,
+		 posttalens-pretalens);
 
     }
   }
