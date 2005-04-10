@@ -438,6 +438,7 @@ extern void recvTextHandler(const char *);
 extern void mudRecvMessage();
 extern const sstring RandomWord();
 extern void calcBankInterest();
+extern void auctionUpdate();
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib

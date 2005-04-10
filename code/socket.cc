@@ -1049,7 +1049,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  bool doneBankInterest=false;
+  bool doneBankInterest=false, doneAuctionUpdate=false;
   TTiming t;
 
   avail_descs = 150;		
@@ -1118,12 +1118,19 @@ int TMainSocket::gameLoop()
 
     // once per mud day
     if(time_info.seconds==0 && time_info.hours==0 && time_info.minutes==0){
+      if(!doneAuctionUpdate){
+	auctionUpdate();
+	pulseLog("auctionUpdate", t, pulse);
+	doneAuctionUpdate=true;
+      }
+
       if(!doneBankInterest){
 	calcBankInterest();
 	pulseLog("calcBankInterest", t, pulse);
 	doneBankInterest=true;
       }
     } else {
+      doneAuctionUpdate=false;
       doneBankInterest=false;
     }
 
