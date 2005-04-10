@@ -60,7 +60,6 @@ void auctionList(TBeing *ch, TMonster *myself)
   } else
     myself->doTell(ch->getName(), "I don't have anything up for auction right now");
 
-
   return;
 }
 
@@ -81,13 +80,12 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   int buyout=convertTo<int>(arg.word(3));
 
   if(min_bid <= 0 || days <= 0 || (buyout && buyout < min_bid)){
-    myself->doTell(ch->getName(), "You have to specify a minimum bid, the number of days to run and optionally a buyout price.");
-    myself->doTell(ch->getName(), "The minimum bid has to be greater than zero, and if you specify a buyout price it has to be higher than the minimum bid.");
-    myself->doTell(ch->getName(), "For example: sell sword 100 30 1000 would sell a sword with a minimum bid of 100 and a buyout for 300 with the auction running for 30 mud days.");
-    myself->doTell(ch->getName(), fmt("There is a listing fee of %i talens, as well as a fee of %f%% of the final sale price.") %
+    myself->doTell(ch->getName(), "Usage: sell <item> <minimum bid> <mud days to run auction> <buyout bid>");
+    myself->doTell(ch->getName(), "");
+    myself->doTell(ch->getName(), fmt("There is a listing fee of %i talens per mud day, as well as a fee of %f%% of the final sale price, if the item sells.") %
 		   (int)shop_index[shop_nr].getProfitBuy(NULL, ch) %
 		   (shop_index[shop_nr].getProfitSell(NULL, ch) * 100));
-		   
+    myself->doTell(ch->getName(), "The proceeds will be automatically deposited to your bank account when the buyer pays for the item.");
     return;
   }
 
@@ -96,7 +94,6 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
     myself->doTell(ch->getName(), "You don't have that!");
     return;
   }
-  
 
   // make sure they have a bank account at our bank
   db.query("select 1 from shopownedbank where player_id=%i and shop_nr=%i",
@@ -125,8 +122,8 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   db.query("insert into shopownedauction (shop_nr, ticket, current_bid, max_bid, bidder, buyout, days, seller) values (%i, %i, %i, %i, %i, %i, %i, %i)",
 	   shop_nr, ticket, min_bid, min_bid, ch->getPlayerID(), buyout, days, ch->getPlayerID());
 
-  tso.doBuyTransaction((int)shop_index[shop_nr].getProfitBuy(obj, ch), 
-		       "listing fee", "paying");
+  int fee=(int)shop_index[shop_nr].getProfitBuy(obj, ch) * days;
+  tso.doBuyTransaction(fee, "listing fee", "paying");
 
   delete obj;
   

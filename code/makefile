@@ -32190,7 +32190,7 @@ objs/spec_mobs_auctioneer.o: account.h extern.h handler.h obj_money.h
 objs/spec_mobs_auctioneer.o: spec_mobs.h materials.h colorstring.h format.h
 objs/spec_mobs_auctioneer.o: database.h /usr/local/include/libpq-fe.h
 objs/spec_mobs_auctioneer.o: /usr/local/include/postgres_ext.h shop.h
-objs/spec_mobs_auctioneer.o: shopowned.h rent.h
+objs/spec_mobs_auctioneer.o: shopowned.h rent.h corporation.h
 objs/spec_mobs_banker.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/os_defines.h
