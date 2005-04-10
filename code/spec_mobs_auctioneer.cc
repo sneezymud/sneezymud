@@ -82,7 +82,7 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   if(min_bid <= 0 || days <= 0 || (buyout && buyout < min_bid)){
     myself->doTell(ch->getName(), "Usage: sell <item> <minimum bid> <mud days to run auction> <buyout bid>");
     myself->doTell(ch->getName(), "");
-    myself->doTell(ch->getName(), fmt("There is a listing fee of %i talens per mud day, as well as a fee of %f%% of the final sale price, if the item sells.") %
+    myself->doTell(ch->getName(), fmt("There is a listing fee of %i talens per mud day, as well as a fee of %f percent of the final sale price, if the item sells.") %
 		   (int)shop_index[shop_nr].getProfitBuy(NULL, ch) %
 		   (shop_index[shop_nr].getProfitSell(NULL, ch) * 100));
     myself->doTell(ch->getName(), "The proceeds will be automatically deposited to your bank account when the buyer pays for the item.");
@@ -94,6 +94,13 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
     myself->doTell(ch->getName(), "You don't have that!");
     return;
   }
+  if (!(shop_index[shop_nr].willBuy(obj))) {
+    myself->doTell(ch->name, shop_index[shop_nr].do_not_buy);
+    return;
+  }
+  if (will_not_buy(ch, myself, obj, shop_nr)) 
+    return;
+
 
   // make sure they have a bank account at our bank
   db.query("select 1 from shopownedbank where player_id=%i and shop_nr=%i",
@@ -104,6 +111,7 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
     myself->doTell(ch->getName(), fmt("You need to have a bank account at %s in order to sell items here.") % tr->getName());
     return;
   }
+
 
   // get the next free ticket number
   db.query("select max(ticket)+1 as ticket from shopownedauction");
