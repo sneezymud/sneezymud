@@ -702,7 +702,7 @@ int main(int argc, char **argv)
 {
   FILE *tiny=NULL, *logf=NULL;
   FILE *zone;
-  DIR *dfd=opendir("/mud/code/lib/zonefiles");
+  DIR *dfd=opendir("/mud/build/lib/zonefiles");
   struct dirent *dp;
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
@@ -795,7 +795,7 @@ int main(int argc, char **argv)
   while ((dp = readdir(dfd))) {
     if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..") &&
 	strcmp(dp->d_name, "CVS")){
-      buf=fmt("/mud/code/lib/zonefiles/%s") % dp->d_name;
+      buf=fmt("/mud/build/lib/zonefiles/%s") % dp->d_name;
 
       if((zone=fopen(buf.c_str(), "rt"))){
 	makezonelist(zone);
