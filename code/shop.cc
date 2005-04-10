@@ -71,19 +71,21 @@ float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
   if(shop_index[shop_nr].isOwned()){
     TDatabase db(DB_SNEEZY);
 
-    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
-
-    if(db.fetchRow())
-      profit_sell=convertTo<float>(db["profit_sell"]);
-    else {
-      // ok, shop is owned and there is no ratio set for this specific object
-      // so check keywords
-      db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
-
-      while(db.fetchRow()){
-	if(isname(db["match"], obj->name)){
-	  profit_sell=convertTo<float>(db["profit_sell"]);
-	  break;
+    if(obj){
+      db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
+      
+      if(db.fetchRow())
+	profit_sell=convertTo<float>(db["profit_sell"]);
+      else {
+	// ok, shop is owned and there is no ratio set for this specific object
+	// so check keywords
+	db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
+	
+	while(db.fetchRow()){
+	  if(isname(db["match"], obj->name)){
+	    profit_sell=convertTo<float>(db["profit_sell"]);
+	    break;
+	  }
 	}
       }
     }

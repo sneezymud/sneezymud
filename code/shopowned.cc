@@ -676,7 +676,9 @@ int TShopOwned::setRates(sstring arg)
     argc++;
 
   if(keeper->spec != SPEC_REPAIRMAN &&
-     keeper->spec != SPEC_LOAN_SHARK){
+     keeper->spec != SPEC_LOAN_SHARK &&
+     keeper->spec != SPEC_RECEPTIONIST &&
+     keeper->spec != SPEC_AUCTIONEER){
     if(profit_buy>5 || profit_buy<0 ||
        profit_sell>5 || profit_sell<0){
       keeper->doTell(ch->getName(), "Due to fraud regulations, I cannot set my profit_sell or profit_buy to more than 5 or less than 0.");
