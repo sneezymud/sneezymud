@@ -157,6 +157,7 @@ B 0 88 3 7392     Logs
 
 
 *O 0 0 1 13	BEGIN SHOPKEEPER LOADS
+M 0 18678 1 62		auctioneer test, temporary
 M 0 150 1 559 		Weaponsmith GH 			(shop 0)
 M 0 151 1 550 		Lumor (Lights GH)		(shop 1)
 M 0 152 1 555 		Armourer GH			(shop 2)
