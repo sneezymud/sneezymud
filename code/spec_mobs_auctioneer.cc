@@ -6,16 +6,60 @@
 #include "corporation.h"
 
 
-void endAuction(int ticket, int bidder, int seller)
+sstring getPlayerName(int id)
 {
-  // should send a mail here or something
-
-  if(bidder==seller){
-    // failed auction
-  } else {
-
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("select name from player where id=%i", id);
+  if(!db.fetchRow()){
+    vlogf(LOG_BUG, fmt("Couldn't find player name for %i in getPlayerName()!")%
+	  id);
+    return "unknown";
   }
 
+  return db["name"];
+}
+
+void endAuction(int ticket, int bidder, int seller)
+{
+  TDatabase db(DB_SNEEZY);
+  sstring auctioneer, msg;
+  ItemLoad il;
+  TObj *obj;
+
+  db.query("select s.keeper as keeper, r.name as name from room r, shop s, shopownedauction soa where r.vnum=s.in_room and s.shop_nr=soa.shop_nr and soa.ticket=%i", ticket);
+
+  if(!db.fetchRow()){
+    vlogf(LOG_BUG, "Couldn't find auctioneer name in endAuction()!");
+    return;
+  }
+
+  auctioneer=db["name"];
+  
+
+  il.openFile(fmt("mobdata/auction/%d/%d") % convertTo<int>(db["keeper"]) %
+	      ticket);
+  il.readVersion();
+  obj=il.raw_read_item();
+
+
+  if(bidder==seller){
+    msg=fmt("Your auction %i for %s did not sell.\n\r") % 
+      ticket % obj->getName();
+    msg+="You will have to come by to pick up your object.";
+
+    store_mail(getPlayerName(seller).c_str(), auctioneer.c_str(), msg.c_str());
+
+    db.query("update shopownedauction set current_bid=0 where ticket=%i",
+	     ticket);
+  } else {
+    msg=fmt("Your auction %i for %s was sold.") % ticket % obj->getName();
+    msg+="Your money will be deposited to your bank account as soon as the buyer pays.";
+    store_mail(getPlayerName(seller).c_str(), auctioneer.c_str(), msg.c_str());
+  }
+
+
+  return;
 }
 
 
@@ -61,6 +105,32 @@ void auctionList(TBeing *ch, TMonster *myself)
   TObj *obj;
   int shop_nr=find_shop_nr(myself->number);
 
+
+  db.query("select ticket, current_bid, days, buyout from shopownedauction where shop_nr=%i and seller=%i", shop_nr, ch->getPlayerID());
+  
+  if(db.fetchRow()){
+    myself->doTell(ch->getName(), "These are your auctions:");
+  
+    do {
+      ticket=convertTo<int>(db["ticket"]);
+      
+      il.openFile(fmt("mobdata/auction/%d/%d") % myself->mobVnum() % ticket);
+      il.readVersion();
+      obj=il.raw_read_item();
+
+
+      ch->sendTo(COLOR_BASIC, listItem(ticket, obj, 
+				       convertTo<int>(db["current_bid"]),
+				       convertTo<int>(db["buyout"]),
+				       convertTo<int>(db["days"])));
+
+      delete obj;
+    } while(db.fetchRow());
+
+    ch->sendTo("\n\r");
+  }
+  
+
   db.query("select ticket, current_bid from shopownedauction where shop_nr=%i and bidder=%i and days <= 0", shop_nr, ch->getPlayerID());
   
   if(db.fetchRow()){
@@ -78,9 +148,12 @@ void auctionList(TBeing *ch, TMonster *myself)
 				       convertTo<int>(db["current_bid"]), 0));
       delete obj;
     } while(db.fetchRow());
+
+    ch->sendTo("\n\r");
   }
 
   
+
   db.query("select ticket, current_bid, days, buyout from shopownedauction where shop_nr=%i and days>0", shop_nr);
   
   if(db.fetchRow()){
@@ -163,6 +236,9 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   
   if(db.fetchRow())
     ticket=convertTo<int>(db["ticket"]);
+
+  if(!ticket)
+    ticket=1;
 
   // save the item
   --(*obj);
@@ -248,7 +324,7 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
 {
   int ticket=convertTo<int>(arg.word(0));
   int my_bid=convertTo<int>(arg.word(1));
-  int current_bid, buyout, max_bid, bidder;
+  int current_bid, buyout, max_bid, bidder, seller;
   TDatabase db(DB_SNEEZY);
   int shop_nr=find_shop_nr(myself->number);
 
@@ -257,7 +333,7 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
     return;
   }
 
-  db.query("select sller, bidder, current_bid, max_bid, buyout from shopownedauction where ticket=%i", ticket);
+  db.query("select seller, bidder, current_bid, max_bid, buyout from shopownedauction where ticket=%i", ticket);
 
   if(!db.fetchRow()){
     myself->doTell(ch->getName(), "I don't have that item.");
@@ -268,6 +344,7 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
   max_bid=convertTo<int>(db["max_bid"]);
   buyout=convertTo<int>(db["buyout"]);
   bidder=convertTo<int>(db["bidder"]);
+  seller=convertTo<int>(db["seller"]);
 
   if(my_bid >= buyout){
     myself->doTell(ch->getName(), "Congratulations, you've won the auction.");
@@ -275,7 +352,7 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
 	     my_bid, ch->getPlayerID(), ticket);
     shoplog(shop_nr, ch, myself, fmt("ticket %i, bid %i") % ticket % my_bid, 
 	    0, "buyout");
-    endAuction(ticket, ch->getPlayerID(), convertTo<int>(db["seller"]));
+    endAuction(ticket, ch->getPlayerID(), seller);
   } else  if((bidder == ch->getPlayerID()) && my_bid < max_bid){
     myself->doTell(ch->getName(), "You're already the high bidder!");
     myself->doTell(ch->getName(), "Your bid must be greater than your previous max bid if you want to increase it.");
