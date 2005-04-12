@@ -226,8 +226,15 @@ void TTrashPile::attractVermin()
   path.setUsePortals(true);
   path.setNoMob(false);
   path.setThruDoors(true);
+  
+  vlogf(LOG_PEEL, fmt("attractVermin: checking path, here=%i") % inRoom());
+
   if(path.findPath(inRoom(), findOutdoors())==DIR_NONE)
     return;
+
+  vlogf(LOG_PEEL, fmt("attractVermin: found path from %i to %i, dist=%i") %
+	inRoom() % path.getDest() % path.getDist());
+
 
   switch(::number(3, max(8,index))){
     case 3: // rats
