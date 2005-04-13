@@ -11,6 +11,12 @@ void calcBankInterest()
   unsigned int shop_nr;
   int pretalens=0, posttalens=0;
 
+  db.query("update shopownedbank set earned_interest=0 where earned_interest is null");
+  db.query("update shopownedcorpbank set earned_interest=0 where earned_interest is null");
+  db.query("update shopownedbank set talens=0 where talens is null");
+  db.query("update shopownedcorpbank set talens=0 where talens is null");
+
+
   db.query("select shop_nr, keeper from shop");
   
   while(db.fetchRow()){
