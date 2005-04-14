@@ -503,6 +503,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    else 
 	      cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
 	    
+	    cost = (int)((float) cost * shop_index[shop_nr].getProfitBuy(NULL, ch));
+
 	    if ((ch->getMoney()) < cost) {
 	      me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
 	      return TRUE;
