@@ -167,7 +167,8 @@ LIBSYS=	ansi.o		database.o   	socket.o		\
 	colorstring.o  	handler.o    	timing.o		\
 	comm.o         	indexdata.o				\
 	connect.o      	signals.o    	sstring.o		\
-	format.o	pathfinder.o
+	format.o	pathfinder.o	process.o		\
+	proc_check_mail.o		proc_check_repo.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 
@@ -8875,7 +8876,7 @@ objs/db.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/db.o: spec_mobs.h materials.h colorstring.h format.h
 objs/db.o: /usr/include/dirent.h /usr/include/sys/dirent.h socket.h
 objs/db.o: statistics.h help.h mail.h obj_component.h loadset.h sys_loot.h
-objs/db.o: shop.h database.h /usr/local/include/libpq-fe.h
+objs/db.o: shop.h process.h database.h /usr/local/include/libpq-fe.h
 objs/db.o: /usr/local/include/postgres_ext.h obj_spellbag.h
 objs/db.o: obj_expandable_container.h obj_open_container.h
 objs/db.o: obj_base_container.h obj_player_corpse.h obj_base_corpse.h
@@ -15444,7 +15445,7 @@ objs/faction.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/faction.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/faction.o: materials.h colorstring.h format.h database.h
 objs/faction.o: /usr/local/include/libpq-fe.h
-objs/faction.o: /usr/local/include/postgres_ext.h corporation.h
+objs/faction.o: /usr/local/include/postgres_ext.h corporation.h process.h
 objs/format.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/format.o: /usr/include/c++/3.4/bits/c++config.h
 objs/format.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -29632,6 +29633,7 @@ objs/periodic.o: disc_monk.h obj_component.h obj_player_corpse.h
 objs/periodic.o: obj_base_corpse.h obj_base_container.h obj_opal.h
 objs/periodic.o: obj_seethru.h obj_plant.h obj_expandable_container.h
 objs/periodic.o: obj_open_container.h obj_egg.h obj_food.h obj_trash_pile.h
+objs/periodic.o: process.h
 objs/pets.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/pets.o: /usr/include/c++/3.4/bits/c++config.h
 objs/pets.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -29953,6 +29955,341 @@ objs/player_data.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/player_data.o: format.h shop.h mail.h statistics.h combat.h database.h
 objs/player_data.o: /usr/local/include/libpq-fe.h
 objs/player_data.o: /usr/local/include/postgres_ext.h
+objs/proc_check_mail.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/c++config.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/proc_check_mail.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/proc_check_mail.o: /usr/include/sys/_types.h
+objs/proc_check_mail.o: /usr/include/machine/_types.h /usr/include/stdio.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/ctime /usr/include/time.h
+objs/proc_check_mail.o: /usr/include/sys/timespec.h /usr/include/sys/types.h
+objs/proc_check_mail.o: /usr/include/machine/endian.h
+objs/proc_check_mail.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/proc_check_mail.o: /usr/include/sys/_timeval.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
+objs/proc_check_mail.o: /usr/include/_ctype.h /usr/include/c++/3.4/cassert
+objs/proc_check_mail.o: /usr/include/assert.h /usr/include/c++/3.4/cstring
+objs/proc_check_mail.o: /usr/include/string.h /usr/include/strings.h
+objs/proc_check_mail.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/proc_check_mail.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/string
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/proc_check_mail.o: /usr/include/sys/limits.h
+objs/proc_check_mail.o: /usr/include/sys/syslimits.h /usr/include/c++/3.4/new
+objs/proc_check_mail.o: /usr/include/c++/3.4/exception
+objs/proc_check_mail.o: /usr/include/c++/3.4/iosfwd
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/c++io.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/gthr.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/proc_check_mail.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/proc_check_mail.o: /usr/include/sys/signal.h
+objs/proc_check_mail.o: /usr/include/machine/signal.h
+objs/proc_check_mail.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/proc_check_mail.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/postypes.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/proc_check_mail.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/exception_defines.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/debug/debug.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/memory
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/allocator.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/algorithm
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/vector
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/map
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/list
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/list.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/iostream
+objs/proc_check_mail.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/streambuf
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/locale
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/limits
+objs/proc_check_mail.o: /usr/include/c++/3.4/typeinfo
+objs/proc_check_mail.o: /usr/include/c++/3.4/istream
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/sstream
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.4/fstream
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/proc_check_mail.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/proc_check_mail.o: enum.h spells.h structs.h parse.h immunity.h
+objs/proc_check_mail.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/proc_check_mail.o: client.h response.h faction.h comm.h toggle.h
+objs/proc_check_mail.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/proc_check_mail.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/proc_check_mail.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/proc_check_mail.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/proc_check_mail.o: monster.h paths.h account.h extern.h handler.h
+objs/proc_check_mail.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/proc_check_mail.o: format.h process.h mail.h
+objs/proc_check_repo.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/c++config.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/proc_check_repo.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/proc_check_repo.o: /usr/include/sys/_types.h
+objs/proc_check_repo.o: /usr/include/machine/_types.h /usr/include/stdio.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/ctime /usr/include/time.h
+objs/proc_check_repo.o: /usr/include/sys/timespec.h /usr/include/sys/types.h
+objs/proc_check_repo.o: /usr/include/machine/endian.h
+objs/proc_check_repo.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/proc_check_repo.o: /usr/include/sys/_timeval.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
+objs/proc_check_repo.o: /usr/include/_ctype.h /usr/include/c++/3.4/cassert
+objs/proc_check_repo.o: /usr/include/assert.h /usr/include/c++/3.4/cstring
+objs/proc_check_repo.o: /usr/include/string.h /usr/include/strings.h
+objs/proc_check_repo.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/proc_check_repo.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/string
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/proc_check_repo.o: /usr/include/sys/limits.h
+objs/proc_check_repo.o: /usr/include/sys/syslimits.h /usr/include/c++/3.4/new
+objs/proc_check_repo.o: /usr/include/c++/3.4/exception
+objs/proc_check_repo.o: /usr/include/c++/3.4/iosfwd
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/c++io.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/gthr.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/proc_check_repo.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/proc_check_repo.o: /usr/include/sys/signal.h
+objs/proc_check_repo.o: /usr/include/machine/signal.h
+objs/proc_check_repo.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/proc_check_repo.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/postypes.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/proc_check_repo.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/exception_defines.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/debug/debug.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/memory
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/allocator.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/algorithm
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/vector
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/map
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/list
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/list.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/iostream
+objs/proc_check_repo.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/streambuf
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/locale
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/limits
+objs/proc_check_repo.o: /usr/include/c++/3.4/typeinfo
+objs/proc_check_repo.o: /usr/include/c++/3.4/istream
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/sstream
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.4/fstream
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/proc_check_repo.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/proc_check_repo.o: enum.h spells.h structs.h parse.h immunity.h
+objs/proc_check_repo.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/proc_check_repo.o: client.h response.h faction.h comm.h toggle.h
+objs/proc_check_repo.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/proc_check_repo.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/proc_check_repo.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/proc_check_repo.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/proc_check_repo.o: monster.h paths.h account.h extern.h handler.h
+objs/proc_check_repo.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/proc_check_repo.o: format.h process.h
+objs/process.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/process.o: /usr/include/c++/3.4/bits/c++config.h
+objs/process.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/process.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/process.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/process.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/process.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/process.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/process.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/process.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/process.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/process.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/process.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/process.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/process.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/process.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/process.o: /usr/include/c++/3.4/cmath
+objs/process.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/process.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/process.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/process.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/process.o: /usr/include/c++/3.4/string
+objs/process.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/process.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/process.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/process.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/process.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/process.o: /usr/include/c++/3.4/iosfwd
+objs/process.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/process.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/process.o: /usr/include/c++/3.4/bits/c++io.h
+objs/process.o: /usr/include/c++/3.4/bits/gthr.h
+objs/process.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/process.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/process.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/process.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/process.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/process.o: /usr/include/c++/3.4/bits/postypes.h
+objs/process.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/process.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/process.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/process.o: /usr/include/c++/3.4/exception_defines.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/process.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/process.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/process.o: /usr/include/c++/3.4/debug/debug.h
+objs/process.o: /usr/include/c++/3.4/memory
+objs/process.o: /usr/include/c++/3.4/bits/allocator.h
+objs/process.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/process.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/process.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/process.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/process.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/process.o: /usr/include/c++/3.4/algorithm
+objs/process.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/process.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/process.o: /usr/include/c++/3.4/vector
+objs/process.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/process.o: /usr/include/c++/3.4/bits/vector.tcc /usr/include/c++/3.4/map
+objs/process.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/process.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/process.o: /usr/include/c++/3.4/list
+objs/process.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/process.o: /usr/include/c++/3.4/bits/list.tcc
+objs/process.o: /usr/include/c++/3.4/iostream /usr/include/c++/3.4/ostream
+objs/process.o: /usr/include/c++/3.4/ios
+objs/process.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/process.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/process.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/process.o: /usr/include/c++/3.4/streambuf
+objs/process.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/process.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/process.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/process.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/process.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/process.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/process.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/process.o: /usr/include/c++/3.4/locale
+objs/process.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/process.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/process.o: /usr/include/c++/3.4/istream
+objs/process.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/process.o: /usr/include/c++/3.4/sstream
+objs/process.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/process.o: /usr/include/c++/3.4/fstream
+objs/process.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/process.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h enum.h
+objs/process.o: spells.h structs.h parse.h immunity.h discipline.h spell2.h
+objs/process.o: db.h ansi.h cmd_dissect.h client.h response.h faction.h
+objs/process.o: comm.h toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/process.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/process.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/process.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
+objs/process.o: account.h extern.h handler.h obj_money.h spec_mobs.h
+objs/process.o: materials.h colorstring.h format.h process.h timing.h
 objs/race.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/race.o: /usr/include/c++/3.4/bits/c++config.h
 objs/race.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31722,7 +32059,7 @@ objs/socket.o: obj_trash_pile.h obj_expandable_container.h
 objs/socket.o: obj_open_container.h obj_base_container.h pathfinder.h
 objs/socket.o: /usr/include/c++/3.4/deque
 objs/socket.o: /usr/include/c++/3.4/bits/stl_deque.h
-objs/socket.o: /usr/include/c++/3.4/bits/deque.tcc timing.h
+objs/socket.o: /usr/include/c++/3.4/bits/deque.tcc timing.h process.h
 objs/sound.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sound.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sound.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -32190,7 +32527,7 @@ objs/spec_mobs_auctioneer.o: account.h extern.h handler.h obj_money.h
 objs/spec_mobs_auctioneer.o: spec_mobs.h materials.h colorstring.h format.h
 objs/spec_mobs_auctioneer.o: database.h /usr/local/include/libpq-fe.h
 objs/spec_mobs_auctioneer.o: /usr/local/include/postgres_ext.h shop.h
-objs/spec_mobs_auctioneer.o: shopowned.h rent.h corporation.h
+objs/spec_mobs_auctioneer.o: shopowned.h rent.h corporation.h process.h
 objs/spec_mobs_banker.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -32308,6 +32645,7 @@ objs/spec_mobs_banker.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs_banker.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/spec_mobs_banker.o: format.h database.h /usr/local/include/libpq-fe.h
 objs/spec_mobs_banker.o: /usr/local/include/postgres_ext.h shop.h shopowned.h
+objs/spec_mobs_banker.o: process.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -34127,6 +34465,141 @@ objs/spec_mobs_limbDispo.o: spec_mobs.h materials.h colorstring.h format.h
 objs/spec_mobs_limbDispo.o: obj_corpse.h obj_base_corpse.h
 objs/spec_mobs_limbDispo.o: obj_base_container.h obj_drinkcon.h
 objs/spec_mobs_limbDispo.o: obj_base_cup.h obj_trash.h mail.h
+objs/spec_mobs_loan_manager.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/c++config.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cstddef
+objs/spec_mobs_loan_manager.o: /usr/include/stddef.h /usr/include/sys/cdefs.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/_null.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/_types.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/_types.h
+objs/spec_mobs_loan_manager.o: /usr/include/stdio.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cstdlib
+objs/spec_mobs_loan_manager.o: /usr/include/stdlib.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/ctime /usr/include/time.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/timespec.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/types.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/endian.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/select.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/_sigset.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/_timeval.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cctype
+objs/spec_mobs_loan_manager.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cassert
+objs/spec_mobs_loan_manager.o: /usr/include/assert.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cstring
+objs/spec_mobs_loan_manager.o: /usr/include/string.h /usr/include/strings.h
+objs/spec_mobs_loan_manager.o: /usr/include/stdarg.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cmath
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/spec_mobs_loan_manager.o: /usr/include/math.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/_limits.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cerrno
+objs/spec_mobs_loan_manager.o: /usr/include/errno.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/string
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/climits
+objs/spec_mobs_loan_manager.o: /usr/include/limits.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/limits.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/new
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/exception
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/iosfwd
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/clocale
+objs/spec_mobs_loan_manager.o: /usr/include/locale.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/c++io.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/gthr.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/spec_mobs_loan_manager.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/signal.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/signal.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/trap.h
+objs/spec_mobs_loan_manager.o: /usr/include/sched.h /usr/include/unistd.h
+objs/spec_mobs_loan_manager.o: /usr/include/sys/unistd.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/postypes.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cwchar
+objs/spec_mobs_loan_manager.o: /usr/include/wchar.h /usr/include/stdint.h
+objs/spec_mobs_loan_manager.o: /usr/include/machine/_stdint.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/exception_defines.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/debug/debug.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/memory
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/allocator.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/algorithm
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/vector
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/map
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/list
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/list.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/iostream
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/ostream
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/ios
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/streambuf
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/cwctype
+objs/spec_mobs_loan_manager.o: /usr/include/wctype.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/locale
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/limits
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/typeinfo
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/istream
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/sstream
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/fstream
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.4/bits/fstream.tcc
+objs/spec_mobs_loan_manager.o: sstring.h low.h enum.h spells.h structs.h
+objs/spec_mobs_loan_manager.o: parse.h immunity.h discipline.h spell2.h db.h
+objs/spec_mobs_loan_manager.o: ansi.h cmd_dissect.h client.h response.h
+objs/spec_mobs_loan_manager.o: faction.h comm.h toggle.h wiz_powers.h
+objs/spec_mobs_loan_manager.o: cmd_message.h stats.h limbs.h body.h race.h
+objs/spec_mobs_loan_manager.o: skills.h disease.h trap.h task.h weather.h
+objs/spec_mobs_loan_manager.o: sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_loan_manager.o: spec_objs.h connect.h obj_drug.h charfile.h
+objs/spec_mobs_loan_manager.o: being.h person.h monster.h paths.h account.h
+objs/spec_mobs_loan_manager.o: extern.h handler.h obj_money.h spec_mobs.h
+objs/spec_mobs_loan_manager.o: materials.h colorstring.h format.h database.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/libpq-fe.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/postgres_ext.h shop.h
+objs/spec_mobs_loan_manager.o: shopowned.h corporation.h
 objs/spec_mobs_loanshark.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -39618,7 +40091,7 @@ objs/statistics.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/statistics.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/statistics.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/statistics.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/statistics.o: statistics.h systemtask.h
+objs/statistics.o: statistics.h systemtask.h process.h
 objs/stats.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/stats.o: /usr/include/c++/3.4/bits/c++config.h
 objs/stats.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -41278,7 +41751,7 @@ objs/task_fishing.o: disease.h trap.h task.h weather.h sound.h create.h
 objs/task_fishing.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/task_fishing.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/task_fishing.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/task_fishing.o: colorstring.h format.h obj_tool.h
+objs/task_fishing.o: colorstring.h format.h obj_tool.h process.h
 objs/task_get.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/task_get.o: /usr/include/c++/3.4/bits/c++config.h
 objs/task_get.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -44184,7 +44657,7 @@ objs/weather.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/weather.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/weather.o: materials.h colorstring.h format.h obj_trash_pile.h
 objs/weather.o: obj_expandable_container.h obj_open_container.h
-objs/weather.o: obj_base_container.h
+objs/weather.o: obj_base_container.h process.h
 objs/wiz_data.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/wiz_data.o: /usr/include/sys/types.h /usr/include/machine/endian.h
 objs/wiz_data.o: /usr/include/sys/_types.h /usr/include/machine/_types.h

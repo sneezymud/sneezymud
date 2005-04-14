@@ -19,12 +19,88 @@
 #include "obj_plant.h"
 #include "obj_egg.h"
 #include "obj_trash_pile.h"
+#include "process.h"
 
+
+// procGlobalRoomStuff
+procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
+{
+  trigger_pulse=p;
+  name="procGlobalRoomStuff";
+}
+
+
+void procGlobalRoomStuff::run(int pulse) const
+{
+  int i;
+  TRoom *rp;
+  TTrashPile *pile;
+  int count=0;
+  TObj *o;
+
+  for (i = 0; i < WORLD_SIZE; i++) {
+    rp = real_roomp(i);
+    if (!rp)
+      continue;
+    
+    // trash pile creation
+    // this is kind of cpu intensive, so let's spread it out
+    if(!::number(0,9)){
+      count=0;
+      for(TThing *t=rp->getStuff();t;t=t->nextThing){
+	if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
+	  count++;
+	
+	if(dynamic_cast<TTrashPile *>(t)){
+	  count=0;
+	  break;
+	}
+      }
+      
+      if(count >= 9){
+	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
+	if(!(pile=dynamic_cast<TTrashPile *>(o))){
+	  vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
+	  delete o;
+	} else {
+	  *rp += *pile;
+	}
+      }
+    }
+
+    //weather noise
+    if (rp->getWeather() == WEATHER_LIGHTNING) {
+      if (!::number(0,9)) {
+        TThing *in_room;
+
+        soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
+        for (in_room = rp->getStuff(); in_room; in_room = in_room->nextThing) {
+          TBeing *ch = dynamic_cast<TBeing *>(in_room);
+          if (!ch || !ch->desc)
+            continue;
+
+          act("A flash of lightning illuminates the land.", FALSE, ch, 0, 0, TO_CHAR, ANSI_YELLOW);
+          ch->playsound(snd, SOUND_TYPE_NOISE);
+        } 
+      }
+    }
+  }
+}
+
+
+
+// procDeityCheck
+procDeityCheck::procDeityCheck(const int &p)
+{
+  trigger_pulse=p;
+  name="procDeityCheck";
+}
+
+void procDeityCheck::run(int pulse) const
+{
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
 // based on various condition
-void deityCheck(int)
-{
   // deities are currently whacky, disable auto-load for time being.
   // Bat 9/9/98
   return;
@@ -65,7 +141,14 @@ void deityCheck(int)
 #endif
 }
 
-void apocCheck()
+// procApocCheck
+procApocCheck::procApocCheck(const int &p)
+{
+  trigger_pulse=p;
+  name="procApocCheck";
+}
+
+void procApocCheck::run(int pulse) const
 {
   int num, rc;
   TMonster *mob;
@@ -100,10 +183,17 @@ void apocCheck()
   //vlogf(LOG_MISC,"Loading a horseman into the game.");
 }
 
+// procCallRoomSpec
+procCallRoomSpec::procCallRoomSpec(const int &p)
+{
+  trigger_pulse=p;
+  name="procCallRoomSpec";
+}
+
+void procCallRoomSpec::run(int pulse) const
+{
 // this simplifies room specials since we have a huge number of rooms
 // and only a handful have specs
-void call_room_specials(void)
-{
   unsigned int i;
 
   for (i = 0; i < roomspec_db.size(); i++) {
@@ -1697,29 +1787,6 @@ int TObj::updateBurning(void)
 
 
 
-void do_check_mail()
-{
-  Descriptor *d;
-
-  if (gamePort == BUILDER_GAMEPORT)
-    return;
-  
-  for (d = descriptor_list; d; d = d->next) {
-    TBeing *ch = d->character;
-    if (!no_mail && !d->connected && ch) {
-      char recipient[100], *tmp;
-
-      _parse_name(ch->getName(), recipient);
-      for (tmp = recipient; *tmp; tmp++)
-        if (isupper(*tmp))
-          *tmp = tolower(*tmp);
-      if (has_mail(recipient))
-        ch->sendTo(fmt("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
-    }
-    // d->checkForMultiplay();
-  }
-}
-
 // returns DELETE_THIS
 int TBeing::terrainSpecial()
 {
@@ -1989,7 +2056,14 @@ void TBeing::checkCharmMana()
   return;
 }
 
-void sendAutoTips()
+// procAutoTips
+procAutoTips::procAutoTips(const int &p)
+{
+  trigger_pulse=p;
+  name="procAutoTips";
+}
+
+void procAutoTips::run(int pulse) const
 {
   // first, get a tip...
   FILE *fp = fopen("tipsfile", "r");

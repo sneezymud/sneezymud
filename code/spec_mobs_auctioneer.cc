@@ -4,7 +4,7 @@
 #include "shopowned.h"
 #include "rent.h"
 #include "corporation.h"
-
+#include "process.h"
 
 sstring getPlayerName(int id)
 {
@@ -64,10 +64,16 @@ void endAuction(int ticket, int bidder, int seller)
 
 
 
-
-// called once per mud day
-void auctionUpdate()
+// procUpdateAuction
+procUpdateAuction::procUpdateAuction(const int &p)
 {
+  trigger_pulse=p;
+  name="procUpdateAuction";
+}
+
+void procUpdateAuction::run(int pulse) const
+{
+// called once per mud day
   TDatabase db(DB_SNEEZY);
 
   db.query("select shop_nr, ticket, bidder, seller from shopownedauction where days==1");

@@ -58,18 +58,21 @@ const int PULSE_TICK        =1;
 
 
 const int ONE_SECOND        =10;
+const int PULSE_EVERY       =1;
 const int PULSE_MOBACT      =(int)((float)ONE_SECOND * 1.2);
 const int PULSE_TELEPORT    =(int)((float)ONE_SECOND * 1.2);
 const int PULSE_COMBAT      =(int)((float)ONE_SECOND * 1.2);
 const int PULSE_DROWNING    =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_SPEC_PROCS  =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_NOISES      =(int)((float)ONE_SECOND * 4.8);
+const int PULSE_WAYSLOW     =2400;
 
 // Altering PULSE_UPDATES will speed up ticks, but also causes "mud time"
 // to totally recalculate (making it shorter will age people).
 // use caution!
 const int PULSE_UPDATE      =ONE_SECOND * 36;
 const int PULSE_MUDHOUR     =PULSE_UPDATE * 4;
+const int PULSE_MUDDAY      =PULSE_MUDHOUR * 24;
 
 const int SECS_PER_UPDATE  = PULSE_UPDATE/ONE_SECOND;
 const int SECS_PER_MUDHOUR  = PULSE_MUDHOUR/ONE_SECOND;

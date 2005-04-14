@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "systemtask.h"
+#include "process.h"
 
 GameStats stats;
 // statistics for info command 
@@ -672,7 +673,14 @@ float getPosGoldBudget()
   return pos_gold;
 }
 
-void checkGoldStats()
+// procCheckGoldStats
+procCheckGoldStats::procCheckGoldStats(const int &p)
+{
+  trigger_pulse=p;
+  name="procCheckGoldStats";
+}
+
+void procCheckGoldStats::run(int pulse)
 {
   // insure we have enough data to take accurate reading
   float pos_gold = getPosGoldGlobal();
@@ -920,7 +928,14 @@ unsigned int getPosGoldBudget()
   return pos_gold;
 }
 
-void checkGoldStats()
+// procCheckGoldStats
+procCheckGoldStats::procCheckGoldStats(const int &p)
+{
+  trigger_pulse=p;
+  name="procCheckGoldStats";
+}
+
+void procCheckGoldStats::run(int pulse) const
 {
   // insure we have enough data to take accurate reading
   unsigned int pos_gold = getPosGoldGlobal();

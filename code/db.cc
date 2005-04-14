@@ -20,6 +20,7 @@
 #include "loadset.h"
 #include "sys_loot.h"
 #include "shop.h"
+#include "process.h"
 #include "database.h"
 #include "obj_spellbag.h"
 #include "obj_player_corpse.h"
@@ -444,13 +445,22 @@ void reset_time(void)
 
 
 
-// update the time file 
-void update_time(void)
+// procUpdateTime
+procUpdateTime::procUpdateTime(const int &p)
+{
+  trigger_pulse=p;
+  name="procUpdateTime";
+}
+
+void procUpdateTime::run(int pulse) const
 {
   return;
 #if 0
   FILE *f1;
   long current_time;
+
+  if (time_info.hours != 1)
+    return;
 
   f1 = fopen(TIME_FILE, "w");
   if (!f1) {
@@ -1651,9 +1661,16 @@ void zoneData::closeDoors()
 }
 
 
-// update zone ages, queue for reset if necessary, and dequeue when possible
-void zone_update(void)
+// procZoneUpdate
+procZoneUpdate::procZoneUpdate(const int &p)
 {
+  trigger_pulse=p;
+  name="procZoneUpdate";
+}
+
+void procZoneUpdate::run(int pulse) const
+{
+// update zone ages, queue for reset if necessary, and dequeue when possible
   unsigned int i;
   resetQElement *update_u, *temp, *tmp2;
   const int ZO_DEAD = 999;

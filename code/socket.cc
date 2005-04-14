@@ -45,6 +45,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_trash_pile.h"
 #include "pathfinder.h"
 #include "timing.h"
+#include "process.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -264,38 +265,36 @@ void updateUsagelogs(int count)
   }
 }
 
-// check eq of all players online for repo
-void checkForRepo(){
-  TBeing *tmp_ch, *temp;
 
-  for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
-    temp = tmp_ch->next; 
-    int i;
-    TThing *repot, *repot2;
-    TObj *repoo;
-    // check worn equipment
-    for (i = MIN_WEAR;i < MAX_WEAR;i++) {
-      if (!(repot = tmp_ch->equipment[i]) || !(repoo = dynamic_cast<TObj *>(repot)))
-	continue;
-      
-      repoCheckForRent(tmp_ch, repoo, false);
-    }
-    // check inventory
-    for (repot = tmp_ch->getStuff(); repot; repot = repot2) {
-      repot2 = repot->nextThing;
-      repoo = dynamic_cast<TObj *>(repot);
-      if (!repoo)
-	continue;
-      
-      repoCheckForRent(tmp_ch, repoo, false);
-    }
-    
-  }
+// procWholistAndUsageLogs
+procWholistAndUsageLogs::procWholistAndUsageLogs(const int &p)
+{
+  trigger_pulse=p;
+  name="procWholistAndUsageLogs";
 }
 
-void nukeInactiveMobs()
+void procWholistAndUsageLogs::run(int pulse) const
+{
+  int count=updateWholist();
+  updateUsagelogs(count);
+}
+
+
+
+// procNukeInactiveMobs
+procNukeInactiveMobs::procNukeInactiveMobs(const int &p)
+{
+  trigger_pulse=p;
+  name="procNukeInactiveMobs";
+}
+
+void procNukeInactiveMobs::run(int pulse) const
 {
   unsigned int i;
+
+  if(!nuke_inactive_mobs)
+    return;
+
   for (i = 0; i < zone_table.size(); i++) {
     if (!zone_table[i].isEmpty())
       continue;
@@ -307,9 +306,17 @@ void nukeInactiveMobs()
   }
 }
 
-// update the average players displayed in "who"
-void updateAvgPlayers()
+
+// procUpdateAvgPlayers
+procUpdateAvgPlayers::procUpdateAvgPlayers(const int &p)
 {
+  trigger_pulse=p;
+  name="procUpdateAvgPlayers";
+}
+
+void procUpdateAvgPlayers::run(int pulse) const
+{
+// update the average players displayed in "who"
   // statistics stuff
   if (time(0) - stats.useage_timer > (1 * SECS_PER_REAL_MIN)) {
     // figure out average user load
@@ -322,6 +329,7 @@ void updateAvgPlayers()
     }
   }
 }
+
 
 ////////////////////////////////////////////
 // handle shutdown
@@ -1014,7 +1022,14 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
   return retcount-count;
 }
 
-void pingData()
+// procPingData
+procPingData::procPingData(const int &p)
+{
+  trigger_pulse=p;
+  name="procPingData";
+}
+
+void procPingData::run(int pulse) const
 {
   static FILE *p;
   Descriptor *d;
@@ -1040,6 +1055,55 @@ void pingData()
 }
 
 
+// procSetZoneEmpty
+procSetZoneEmpty::procSetZoneEmpty(const int &p)
+{
+  trigger_pulse=p;
+  name="procSetZoneEmpty";
+}
+
+void procSetZoneEmpty::run(int pulse) const 
+{
+  // set zone emptiness flags
+  for (unsigned int i = 0; i < zone_table.size(); i++)
+    zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
+}
+
+
+
+// procMobHate
+procMobHate::procMobHate(const int &p)
+{
+  trigger_pulse=p;
+  name="procMobHate";
+}
+
+void procMobHate::run(int pulse) const
+{
+  TBeing * b = NULL;
+  
+  for (b = character_list; b; b = b->next) {
+    TMonster *tmons = dynamic_cast<TMonster *>(b);
+    charList *list;
+    
+    if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) && tmons->hates.clist){
+      for (list = tmons->hates.clist; list; list = list->next){
+	if (list->name) {
+	  list->iHateStrength--;
+	  
+	  if (list->iHateStrength <= 0) {
+	    vlogf(LOG_LAPSOS, fmt("%s no longer hates %s") % 
+		  tmons->getName() % list->name);
+	    
+	    tmons->remHated(NULL, list->name);
+	  }
+	}
+      }
+    }
+  }
+}
+
+
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
@@ -1049,8 +1113,47 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  bool doneBankInterest=false, doneAuctionUpdate=false;
   TTiming t;
+  TProcessList proc_list;
+
+  // pulse every
+  proc_list.add(new procSetZoneEmpty(PULSE_EVERY));
+  proc_list.add(new procCallRoomSpec(PULSE_EVERY));
+
+  // pulse update
+  proc_list.add(new procGlobalRoomStuff(PULSE_UPDATE));
+  proc_list.add(new procDeityCheck(PULSE_UPDATE));
+  proc_list.add(new procApocCheck(PULSE_UPDATE));
+  proc_list.add(new procSaveFactions(PULSE_UPDATE));
+  proc_list.add(new procSaveNewFactions(PULSE_UPDATE));
+  proc_list.add(new procWeatherAndTime(PULSE_UPDATE));
+  proc_list.add(new procWholistAndUsageLogs(PULSE_UPDATE));
+
+  // pulse wayslow
+  proc_list.add(new procCheckForRepo(PULSE_WAYSLOW));
+  proc_list.add(new procCheckMail(PULSE_WAYSLOW));
+
+  // pulse combat
+  proc_list.add(new procPerformViolence(PULSE_COMBAT));
+
+  // pulse mudhour
+  proc_list.add(new procFishRespawning(PULSE_MUDHOUR));
+  proc_list.add(new procZoneUpdate(PULSE_MUDHOUR));
+  proc_list.add(new procLaunchCaravans(PULSE_MUDHOUR));
+  proc_list.add(new procUpdateAvgPlayers(PULSE_MUDHOUR));
+  proc_list.add(new procCheckGoldStats(PULSE_MUDHOUR));
+  proc_list.add(new procAutoTips(PULSE_MUDHOUR));
+  proc_list.add(new procPingData(PULSE_MUDHOUR));
+  proc_list.add(new procRecalcFactionPower(PULSE_MUDHOUR));
+  proc_list.add(new procNukeInactiveMobs(PULSE_MUDHOUR));
+  proc_list.add(new procUpdateTime(PULSE_MUDHOUR));
+  proc_list.add(new procMobHate(PULSE_MUDHOUR));
+  proc_list.add(new procDoComponents(PULSE_MUDHOUR));
+  
+  // pulse mudday
+  proc_list.add(new procUpdateAuction(PULSE_MUDDAY));
+  proc_list.add(new procBankInterest(PULSE_MUDDAY));
+
 
   avail_descs = 150;		
 
@@ -1077,138 +1180,8 @@ int TMainSocket::gameLoop()
     pulse++;
     pl.init(pulse);
 
-    // interport communication
-    //mudRecvMessage();
-    //pulseLog("mudRecvMessage", t, pulse);
 
-    if(pl.wayslowpulse){
-      checkForRepo();
-      do_check_mail();
-    }
-
-    pulseLog("wayslowpulse", t, pulse);
-
-    if (pl.pulse_tick) {
-      // these are done per tick (15 mud minutes)
-      doGlobalRoomStuff();
-      pulseLog("doGlobalRoomStuff", t, pulse);
-
-      deityCheck(FALSE);
-      pulseLog("deityCheck", t, pulse);
-
-      apocCheck();
-      pulseLog("apocCheck", t, pulse);
-
-      save_factions();
-      pulseLog("save_factions", t, pulse);
-
-      save_newfactions();
-      pulseLog("save_newfactions", t, pulse);
-
-      weatherAndTime(1);
-      pulseLog("weatherAndTime", t, pulse);
-
-      count=updateWholist();
-      pulseLog("updateWholist", t, pulse);
-
-      updateUsagelogs(count);
-      pulseLog("updateUsagelogs", t, pulse);
-    }
-
-
-    // once per mud day
-    if(time_info.seconds==0 && time_info.hours==0 && time_info.minutes==0){
-      if(!doneAuctionUpdate){
-	auctionUpdate();
-	pulseLog("auctionUpdate", t, pulse);
-	doneAuctionUpdate=true;
-      }
-
-      if(!doneBankInterest){
-	calcBankInterest();
-	pulseLog("calcBankInterest", t, pulse);
-	doneBankInterest=true;
-      }
-    } else {
-      doneAuctionUpdate=false;
-      doneBankInterest=false;
-    }
-
-    if (pl.combat){
-      perform_violence(pulse);
-      pulseLog("perform_violence", t, pulse);
-    }
-
-    if (pl.pulse_mudhour) {
-      // these are done per mud hour
-      recalcFactionPower();
-      pulseLog("recalcFactionPower", t, pulse);
-
-      pulseLog("Dealing with mob hate.", t, pulse);
-      TBeing * b = NULL;
-
-      for (b = character_list; b; b = b->next) {
-        TMonster *tmons = dynamic_cast<TMonster *>(b);
-        charList *list;
-
-        if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) && tmons->hates.clist)
-          for (list = tmons->hates.clist; list; list = list->next)
-            if (list->name) {
-              list->iHateStrength--;
-
-              if (list->iHateStrength <= 0) {
-                vlogf(LOG_LAPSOS, fmt("%s no longer hates %s") % tmons->getName() % list->name);
-
-                tmons->remHated(NULL, list->name);
-              }
-            }
-      }
-
-      // adjust zones for nuking
-      if (nuke_inactive_mobs){
-	nukeInactiveMobs();
-	pulseLog("nukeInactiveMobs", t, pulse);
-      }
-
-      // weather and time stuff
-      if (time_info.hours == 1){
-	update_time();
-	pulseLog("update_time", t, pulse);
-      }
-
-      zone_update();
-      pulseLog("zone_update", t, pulse);
-
-      do_components(-1);
-      pulseLog("do_components", t, pulse);
-
-      launch_caravans();
-      pulseLog("launch_caravans", t, pulse);
-
-      updateAvgPlayers();
-      pulseLog("updateAvgPlayers", t, pulse);
-
-      checkGoldStats();
-      pulseLog("checkGoldStats", t, pulse);
-
-      sendAutoTips();
-      pulseLog("sendAutoTips", t, pulse);
-
-      pingData();
-      pulseLog("pingData", t, pulse);
-
-      handleFishRespawning();
-      pulseLog("handleFishRespawning", t, pulse);
-    }
-
-
-    // set zone emptiness flags
-    for (unsigned int i = 0; i < zone_table.size(); i++)
-      zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
-
-    // room procs
-    call_room_specials();
-    pulseLog("call_room_specials", t, pulse);
+    proc_list.run(pulse);
 
 
     if(gameLoopTiming)

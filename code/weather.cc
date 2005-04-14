@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "obj_trash_pile.h"
+#include "process.h"
 
 // what stage is moon in?  (0 - 31) 
 int moontype;
@@ -93,13 +94,20 @@ int sunTime(sunTimeT stt)
   return 0;
 }
 
-void weatherAndTime(int mode)
+// procWeatherAndTime
+procWeatherAndTime::procWeatherAndTime(const int &p)
+{
+  trigger_pulse=p;
+  name="procWeatherAndTime";
+}
+
+void procWeatherAndTime::run(int pulse) const
 {
   anotherHour();
-  if (mode)
-    weatherChange();
+  weatherChange();
   sunriseAndSunset();
 }
+
 
 const sstring describeTime(void)
 {
@@ -746,63 +754,6 @@ void sunriseAndSunset(void)
   for (i = 0; i < WORLD_SIZE; i++) 
     if ((rp = real_roomp(i)) != NULL)
       rp->initLight();
-}
-
-void doGlobalRoomStuff(void)
-{
-  int i;
-  TRoom *rp;
-  TTrashPile *pile;
-  int count=0;
-  TObj *o;
-
-  for (i = 0; i < WORLD_SIZE; i++) {
-    rp = real_roomp(i);
-    if (!rp)
-      continue;
-    
-    // trash pile creation
-    // this is kind of cpu intensive, so let's spread it out
-    if(!::number(0,9)){
-      count=0;
-      for(TThing *t=rp->getStuff();t;t=t->nextThing){
-	if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
-	  count++;
-	
-	if(dynamic_cast<TTrashPile *>(t)){
-	  count=0;
-	  break;
-	}
-      }
-      
-      if(count >= 9){
-	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
-	if(!(pile=dynamic_cast<TTrashPile *>(o))){
-	  vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
-	  delete o;
-	} else {
-	  *rp += *pile;
-	}
-      }
-    }
-
-    //weather noise
-    if (rp->getWeather() == WEATHER_LIGHTNING) {
-      if (!::number(0,9)) {
-        TThing *in_room;
-
-        soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
-        for (in_room = rp->getStuff(); in_room; in_room = in_room->nextThing) {
-          TBeing *ch = dynamic_cast<TBeing *>(in_room);
-          if (!ch || !ch->desc)
-            continue;
-
-          act("A flash of lightning illuminates the land.", FALSE, ch, 0, 0, TO_CHAR, ANSI_YELLOW);
-          ch->playsound(snd, SOUND_TYPE_NOISE);
-        } 
-      }
-    }
-  }
 }
 
 void TBeing::describeWeather(int room)

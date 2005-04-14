@@ -2,9 +2,17 @@
 #include "database.h"
 #include "shop.h"
 #include "shopowned.h"
+#include "process.h"
 
 
-void calcBankInterest()
+// procBankInterest
+procBankInterest::procBankInterest(const int &p)
+{
+  trigger_pulse=p;
+  name="procBankInterest";
+}
+
+void procBankInterest::run(int pulse) const 
 {
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
   double profit_sell;

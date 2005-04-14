@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
+#include "process.h"
 
 map <int, bool> mRoomsFished;
 
@@ -331,7 +332,14 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   return TRUE;
 }
 
-void handleFishRespawning()
+// procFishRespawning
+procFishRespawning::procFishRespawning(const int &p)
+{
+  trigger_pulse=p;
+  name="procFishRespawning";
+}
+
+void procFishRespawning::run(int pulse) const
 {
   map <int, bool> ::iterator tIter     = mRoomsFished.begin(),
                              tLastGood = mRoomsFished.begin();
