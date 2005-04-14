@@ -81,8 +81,8 @@ bool TShopOwned::doExpenses(int cashCost, TObj *obj)
   if(t && (sba=dynamic_cast<TMonster *>(t))){
     value=((double)cashCost/profit_buy) * ratio;
     
-    sba->addToMoney((int)value, GOLD_SHOP);
-    shoplog(shop_nr, keeper, sba, "talens", (int)-value, "expenses");
+    keeper->giveMoney(sba, (int)value, GOLD_SHOP);
+    shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
     shoplog(sba_nr, keeper, sba, "talens", (int)value, "expenses");
     sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   }
