@@ -613,6 +613,19 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 
+
+  unsigned int counter=0;
+  for(TThing *tt=keeper->getStuff();tt;tt=tt->nextThing)
+    ++counter;
+
+  if(counter >= MAX_SHOP_INVENTORY){
+    keeper->doTell(ch->getName(), "My inventory is full, I can't buy anything!");
+    return TRUE;
+  }
+
+
+
+
   return FALSE;
 }
 

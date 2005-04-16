@@ -24,6 +24,9 @@ const char * const SHOP_PRICING  = "shop_pricing.dat";
 
 const unsigned int SHOP_FLAG_RECYCLE             = (1<<0);
 const unsigned int SHOP_FLAG_MAT_RESTRICTED      = (1<<1);
+
+const unsigned int MAX_SHOP_INVENTORY = 2500;
+
 struct shop_pricing {
   int obj_vnum;
   int num_sold;
