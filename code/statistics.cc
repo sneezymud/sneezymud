@@ -281,7 +281,7 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_RESPONSES].getVal(),
          gold_modifier[GOLD_DUMP].getVal());
 
-    fprintf(fp, "%.2f\n", stats.equip);
+    fprintf(fp, "%f\n", stats.equip);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
@@ -680,8 +680,6 @@ void procCheckGoldStats::run(int pulse) const
   int net_gold = getNetGoldGlobal();
   int net_gold_all_shops = getNetGoldShops();
   int net_gold_budget = getNetGoldBudget();
-  unsigned int pos_gold_shop_arm = getPosGold(GOLD_SHOP_ARMOR);
-  unsigned int pos_gold_shop_weap = getPosGold(GOLD_SHOP_WEAPON);
   unsigned int pos_gold_all_shops = getPosGoldShops();
   unsigned int pos_gold_budget = getPosGoldBudget();
 
@@ -748,9 +746,12 @@ void procCheckGoldStats::run(int pulse) const
     should_reset = true;
   }
 
+#if 0
   // desire money from eq be no more than 25% of total
   // that is, most money comes from raw loads on mobs (commods, gold, etc)
   const double target_eq = 0.25;
+  unsigned int pos_gold_shop_arm = getPosGold(GOLD_SHOP_ARMOR);
+  unsigned int pos_gold_shop_weap = getPosGold(GOLD_SHOP_WEAPON);
   double eq_factor = (double) (pos_gold_shop_arm + pos_gold_shop_weap) /
                      pos_gold;
   if (eq_factor < (target_eq - 0.05)) {
@@ -762,6 +763,7 @@ void procCheckGoldStats::run(int pulse) const
     stats.equip -= 0.01;
     should_reset = true;
   }
+#endif
 
   if (should_reset) {
     memset(&gold_statistics, 0, sizeof(gold_statistics));
