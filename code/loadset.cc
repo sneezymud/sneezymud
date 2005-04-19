@@ -138,7 +138,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   }
 
   if ( ((::number(0,99) < chance) &&
-	(::number(0,99) < (int) (100 * stats.equip))) ||
+	(::number(0,999) < (int) (1000 * stats.equip))) ||
        gamePort == BETA_GAMEPORT) {
     TObj *obj = read_object(rob, REAL);
     if (obj) {

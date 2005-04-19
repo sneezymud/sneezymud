@@ -2517,7 +2517,7 @@ void zoneData::resetZone(bool bootTime)
           break;
         case 'E':                
           if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-              (::number(0,99) < (int) (100 * stats.equip)) &&  
+              (::number(0,999) < (int) (1000 * stats.equip)) &&  
               (obj = read_object(rs.arg1, REAL))) {
             if (!mob) {
               vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%s)") %  obj->getName());
