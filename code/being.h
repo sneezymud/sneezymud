@@ -2001,7 +2001,7 @@ class TBeing : public TThing {
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);
     int doAsk(const sstring &);
-    void doSign(const sstring &);
+    int doSign(const sstring &);
     void doGrouptell(const sstring &);
     void doWrite(const char *);
     void doExamine(const char *, TThing *specific = NULL);

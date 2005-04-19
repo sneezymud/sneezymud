@@ -460,7 +460,7 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBein
     return false;
   resp *tResp;
 
-  if (tCmd == CMD_WHISPER || tCmd == CMD_ASK)
+  if (tCmd == CMD_WHISPER || tCmd == CMD_ASK || tCmd == CMD_SIGN)
     tCmd = CMD_SAY;
 
 
@@ -653,21 +653,155 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
   if (fight())
     return FALSE;
 
-  if (trig_cmd == CMD_WHISPER || trig_cmd == CMD_ASK)
+  if (trig_cmd == CMD_WHISPER || trig_cmd == CMD_ASK || trig_cmd == CMD_SIGN)
     trig_cmd = CMD_SAY;
 
   for (respo=resps->respList; respo && !found; respo=respo->next) {
     if (respo->cmd == trig_cmd) {
 
-     switch(trig_cmd) {
-       case CMD_SAY:
-        case CMD_WHISPER:
-        case CMD_ASK:
-          if (strcasestr(said.c_str(), respo->args)) {
+    switch(trig_cmd) {
+      case CMD_SAY:
+        if (strcasestr(said.c_str(), respo->args)) {
+          for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
+            parsedArgs = parseResponse( speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
+            found = TRUE;
+            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
+            if (IS_SET_DELETE(rc, DELETE_THIS) ||
+                IS_SET_DELETE(rc, DELETE_VICT)) {
+              // either mob or speaker has been whacked
+              return rc;
+            } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
+              found = FALSE;
+              break;
+            } 
+          }
+        }
+        break;
+      case CMD_RESP_PACKAGE:
+        // "package" commands are not accessible directly, but is a way
+        // to give duplicate functionality to multiple commands.  That
+        // is  Trigger#1 with checktog 1, and Trigger #2 with checktog 2
+        // could both call the same package
+        said_int = convertTo<int>(said);
+        arg_int = convertTo<int>(respo->args);
+        if (said_int != arg_int)
+          break;
+
+        for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
+          parsedArgs = parseResponse( speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
+          found = TRUE;
+          rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
+          if (IS_SET_DELETE(rc, DELETE_THIS) ||
+                IS_SET_DELETE(rc, DELETE_VICT)) {
+            // either mob or speaker has been whacked
+            return rc;
+          } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
+            found = FALSE;
+            break;
+          } 
+        }
+        break;
+      case CMD_RESP_ROOM_ENTER:
+        said_int = convertTo<int>(said);
+        arg_int = convertTo<int>(respo->args);
+        if (arg_int && said_int != arg_int) {
+          break;
+        }
+
+        // skip wizinvis, pisses off newbie imms
+        if (speaker->isImmortal() && !canSee(speaker, INFRA_YES))
+          break;
+
+        for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
+          parsedArgs = parseResponse( speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
+          found = TRUE;
+          rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
+          if (IS_SET_DELETE(rc, DELETE_THIS) ||
+                IS_SET_DELETE(rc, DELETE_VICT)) {
+            // either mob or speaker has been whacked
+            return rc;
+          } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
+            found = FALSE;
+            break;
+          } 
+        }
+        break;
+      case CMD_GIVE:
+        if (!(value = convertTo<int>(respo->args))) {
+          vlogf(LOG_MOB_RS, fmt("Bad arguments for %s for Give") %  getName());
+          break; 
+        }
+        if (value > 0) {
+          TObj *to = NULL;
+          if (resp_targ && (to = dynamic_cast<TObj *>(resp_targ)) &&
+              to->objVnum() == value) {
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
+              found = TRUE;
+              rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
+              if (IS_SET_DELETE(rc, DELETE_THIS) ||
+                  IS_SET_DELETE(rc, DELETE_VICT)) {
+                // either mob or speaker has been whacked
+                return rc | DELETE_ITEM;
+              } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
+                found = FALSE;
+                break;
+              } 
+            }
+            if (found) {
+              // I gave the obj to the mob, so I ought to destroy it
+              // however, some quests have the item given back, so in these 
+              // situations, don't delete it
+              if (to->parent == this) {
+                // notify for delete
+                return DELETE_ITEM;
+              }
+            }
+          }
+          // not an item I need *
+        } else if (value < 0) {
+          if (!said.empty())
+            said_int = convertTo<int>(said);
+          else
+            said_int = 0;
+
+          for (RespMemory *rMem = resps->respMemory,
+                          *lMem = resps->respMemory;
+               rMem; rMem = rMem->next) {
+            if (rMem->cmd == CMD_GIVE && rMem->name &&
+                (speaker->getNameNOC(speaker) == rMem->name)){
+              storedCash = convertTo<int>(rMem->args);
+
+              if (rMem == resps->respMemory)
+                resps->respMemory = rMem->next;
+              else
+                lMem->next = rMem->next;
+
+              delete rMem;
+
+              break;
+            }
+
+            lMem = rMem;
+          }
+
+          if (beenPassed)
+            storedCash -= said_int;
+
+          if ((storedCash + said_int) >= -value) {
+            for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
+              parsedArgs = parseResponse( speaker, cmd->args);
               skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
+              if (skip != 0) 
+                continue;
               found = TRUE;
               rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -679,26 +813,35 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
                 break;
               } 
             }
-          }
-          break;
-        case CMD_RESP_PACKAGE:
-          // "package" commands are not accessible directly, but is a way
-          // to give duplicate functionality to multiple commands.  That
-          // is  Trigger#1 with checktog 1, and Trigger #2 with checktog 2
-          // could both call the same package
-          said_int = convertTo<int>(said);
-          arg_int = convertTo<int>(respo->args);
-          if (said_int != arg_int)
-            break;
 
-          for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
-            parsedArgs = parseResponse( speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
+            responseTransaction(speaker, this, -value);
+
+            said_int += value;
+          }
+
+          if ((storedCash + said_int) > 0) {
+            RespMemory *tMem = resps->respMemory;
+            char tString[256];
+
+            sprintf(tString, "%d", (storedCash + said_int));
+            resps->respMemory = new RespMemory(CMD_GIVE, speaker, tString);
+            resps->respMemory->next = tMem;
+            beenPassed = true;
+          }
+
+          // not enough money given 
+        }
+        break;
+      case CMD_LIST:
+        if (strcasestr(said.c_str(), respo->args)) {
+          for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
+            parsedArgs = parseResponse(speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
             found = TRUE;
-            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
+            rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                  IS_SET_DELETE(rc, DELETE_VICT)) {
+                IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
               return rc;
             } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
@@ -706,140 +849,50 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               break;
             } 
           }
-          break;
-        case CMD_RESP_ROOM_ENTER:
-          said_int = convertTo<int>(said);
-          arg_int = convertTo<int>(respo->args);
-          if (arg_int && said_int != arg_int) {
+        }
+        break;
+      case CMD_RESP_PULSE:
+        for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
+          parsedArgs = parseResponse(speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
+          found = TRUE;
+          rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
+          if (IS_SET_DELETE(rc, DELETE_THIS) ||
+              IS_SET_DELETE(rc, DELETE_VICT)) {
+            // either mob or speaker has been whacked
+            return rc;
+          } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
+            found = FALSE;
             break;
-          }
+          } 
+        }
+        break;
+      case CMD_BUY:
+        // Format: buy { "cost item name";
+        //     Ex: buy { "1000 1 smoked-ham";
+        tStString=sstring(respo->args).word(0);
+        tStBuffer=sstring(respo->args).word(1);
+        tStArg=sstring(respo->args).word(2);
 
-          // skip wizinvis, pisses off newbie imms
-          if (speaker->isImmortal() && !canSee(speaker, INFRA_YES))
-            break;
+        strcpy(tString, said.c_str());
 
-          for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
-            parsedArgs = parseResponse( speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
-            found = TRUE;
-            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
-            if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                  IS_SET_DELETE(rc, DELETE_VICT)) {
-              // either mob or speaker has been whacked
-              return rc;
-            } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-              found = FALSE;
-              break;
-            } 
-          }
-          break;
-        case CMD_GIVE:
-          if (!(value = convertTo<int>(respo->args))) {
-            vlogf(LOG_MOB_RS, fmt("Bad arguments for %s for Give") %  getName());
-            break; 
-          }
-          if (value > 0) {
-            TObj *to = NULL;
-            if (resp_targ && (to = dynamic_cast<TObj *>(resp_targ)) &&
-                to->objVnum() == value) {
-              for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
-                parsedArgs = parseResponse( speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
-                found = TRUE;
-                rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
-                if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                    IS_SET_DELETE(rc, DELETE_VICT)) {
-                  // either mob or speaker has been whacked
-                  return rc | DELETE_ITEM;
-                } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
-                  break;
-                } 
-              }
-              if (found) {
-                // I gave the obj to the mob, so I ought to destroy it
-                // however, some quests have the item given back, so in these 
-                // situations, don't delete it
-                if (to->parent == this) {
-                  // notify for delete
-                  return DELETE_ITEM;
-                }
-              }
-            }
-            // not an item I need *
-          } else if (value < 0) {
-            if (!said.empty())
-              said_int = convertTo<int>(said);
-            else
-              said_int = 0;
+        if ((is_number(tString) ?
+             convertTo<int>(said) == convertTo<int>(tStBuffer) :
+             isname(said, tStArg))) {
+          value = convertTo<int>(tStString);
 
-            for (RespMemory *rMem = resps->respMemory,
-                            *lMem = resps->respMemory;
-                 rMem; rMem = rMem->next) {
-              if (rMem->cmd == CMD_GIVE && rMem->name &&
-		  (speaker->getNameNOC(speaker) == rMem->name)){
-                storedCash = convertTo<int>(rMem->args);
+          if (speaker->getMoney() < value) {
+            doTell(speaker->getNameNOC(this), "I'm afraid you don't have enough for that.");
 
-                if (rMem == resps->respMemory)
-                  resps->respMemory = rMem->next;
-                else
-                  lMem->next = rMem->next;
+            return TRUE;
+          } else {
+            speaker->addToMoney(-value, GOLD_SHOP);
 
-                delete rMem;
-
-                break;
-              }
-
-              lMem = rMem;
-            }
-
-            if (beenPassed)
-              storedCash -= said_int;
-
-            if ((storedCash + said_int) >= -value) {
-              for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
-                parsedArgs = parseResponse( speaker, cmd->args);
-		skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-		if (skip != 0) 
-		  continue;
-                found = TRUE;
-                rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
-                if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                    IS_SET_DELETE(rc, DELETE_VICT)) {
-                  // either mob or speaker has been whacked
-                  return rc;
-                } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
-                  break;
-                } 
-              }
-
-	      responseTransaction(speaker, this, -value);
-
-              said_int += value;
-            }
-
-            if ((storedCash + said_int) > 0) {
-              RespMemory *tMem = resps->respMemory;
-              char tString[256];
-
-              sprintf(tString, "%d", (storedCash + said_int));
-              resps->respMemory = new RespMemory(CMD_GIVE, speaker, tString);
-              resps->respMemory->next = tMem;
-              beenPassed = true;
-            }
-
-            // not enough money given 
-          }
-          break;
-        case CMD_LIST:
-          if (strcasestr(said.c_str(), respo->args)) {
             for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
               parsedArgs = parseResponse(speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
               found = TRUE;
               rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -852,14 +905,174 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               } 
             }
           }
-          break;
-        case CMD_RESP_PULSE:
-          for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
-            parsedArgs = parseResponse(speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
+        }
+        break;
+      case CMD_BOUNCE:
+      case CMD_DANCE:
+      case CMD_SMILE:
+      case CMD_CACKLE:
+      case CMD_LAUGH:
+      case CMD_GIGGLE:
+      case CMD_SHAKE:
+      case CMD_PUKE:
+      case CMD_GROWL:
+      case CMD_SCREAM:
+      case CMD_COMFORT:
+      case CMD_NOD:
+      case CMD_SIGH:
+      case CMD_SULK:
+      case CMD_HUG:
+      case CMD_SNUGGLE:
+      case CMD_CUDDLE:
+      case CMD_NUZZLE:
+      case CMD_CRY:
+      case CMD_POKE:
+      case CMD_ACCUSE:
+      case CMD_GRIN:
+      case CMD_BOW:
+      case CMD_APPLAUD:
+      case CMD_BLUSH:
+      case CMD_BURP:
+      case CMD_CHUCKLE:
+      case CMD_CLAP:
+      case CMD_COUGH:
+      case CMD_CURTSEY:
+      case CMD_FART:
+      case CMD_FLIP:
+      case CMD_FONDLE:
+      case CMD_FROWN:
+      case CMD_GASP:
+      case CMD_GLARE:
+      case CMD_GROAN:
+      case CMD_GROPE:
+      case CMD_HICCUP:
+      case CMD_LICK:
+      case CMD_LOVE:
+      case CMD_MOAN:
+      case CMD_NIBBLE:
+      case CMD_POUT:
+      case CMD_PURR:
+      case CMD_RUFFLE:
+      case CMD_SHIVER:
+      case CMD_SHRUG:
+      case CMD_SING:
+      case CMD_SLAP:
+      case CMD_SMIRK:
+      case CMD_SNAP:
+      case CMD_SNEEZE:
+      case CMD_SNICKER:
+      case CMD_SNIFF:
+      case CMD_SNORE:
+      case CMD_SPIT:
+      case CMD_SQUEEZE:
+      case CMD_STARE:
+      case CMD_STRUT:
+      case CMD_THANK:
+      case CMD_TWIDDLE:
+      case CMD_WAVE:
+      case CMD_WHISTLE:
+      case CMD_WIGGLE:
+      case CMD_WINK:
+      case CMD_YAWN:
+      case CMD_SNOWBALL:
+      case CMD_FRENCH:
+      case CMD_COMB:
+      case CMD_MASSAGE:
+      case CMD_TICKLE:
+      case CMD_PAT:
+      case CMD_CURSE:
+      case CMD_BEG:
+      case CMD_BLEED:
+      case CMD_CRINGE:
+      case CMD_DAYDREAM:
+      case CMD_FUME:
+      case CMD_GROVEL:
+      case CMD_HOP:
+      case CMD_NUDGE:
+      case CMD_PEER:
+      case CMD_POINT:
+      case CMD_PONDER:
+      case CMD_PUNCH:
+      case CMD_SNARL:
+      case CMD_SPANK:
+      case CMD_STEAM:
+      case CMD_TACKLE:
+      case CMD_TAUNT:
+      case CMD_WHINE:
+      case CMD_WORSHIP:
+      case CMD_YODEL:
+      case CMD_THINK:
+      case CMD_WHAP:
+      case CMD_BEAM:
+      case CMD_CHORTLE:
+      case CMD_BONK:
+      case CMD_SCOLD:
+      case CMD_DROOL:
+      case CMD_RIP:
+      case CMD_STRETCH:
+      case CMD_PIMP:
+      case CMD_BELITTLE:
+      case CMD_TAP:
+      case CMD_PILEDRIVE:
+      case CMD_FLIPOFF:
+      case CMD_MOON:
+      case CMD_PINCH:
+      case CMD_BITE:
+      case CMD_KISS:
+      case CMD_CHEER:
+      case CMD_WOO:
+      case CMD_GRUMBLE:
+      case CMD_APOLOGIZE:
+      case CMD_AGREE:
+      case CMD_DISAGREE:
+      case CMD_SPAM:
+      case CMD_ARCH:
+      case CMD_ROLL:
+      case CMD_BLINK:
+      case CMD_FAINT:
+      case CMD_GREET:
+      case CMD_TIP:
+      case CMD_BOP:
+      case CMD_JUMP:
+      case CMD_WHIMPER:
+      case CMD_SNEER:
+      case CMD_MOO:
+      case CMD_BOGGLE:
+      case CMD_SNORT:
+      case CMD_TANGO:
+      case CMD_ROAR:
+      case CMD_FLEX:
+      case CMD_TUG:
+      case CMD_CROSS:
+      case CMD_HOWL:
+      case CMD_GRUNT:
+      case CMD_WEDGIE:
+      case CMD_SCUFF:
+      case CMD_NOOGIE:
+      case CMD_BRANDISH:
+      case CMD_TRIP:
+      case CMD_DUCK:
+      case CMD_BECKON:
+      case CMD_WINCE:
+      case CMD_HUM:
+      case CMD_RAZZ:
+      case CMD_GAG:
+      case CMD_AVERT:
+      case CMD_SALUTE:
+      case CMD_PET:
+      case CMD_GRIMACE:
+       if ((isname( "none", respo->args) && (resp_targ == NULL)) ||
+           (isname( "self", respo->args) && (resp_targ == speaker)) ||
+           (isname( "me", respo->args) && (resp_targ == this)) ||
+           (isname( "other", respo->args) &&
+                     (resp_targ != this) &&
+                     (resp_targ != speaker) && resp_targ)) {
+          for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
+            parsedArgs = parseResponse( speaker, cmd->args);
+            skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+            if (skip != 0) continue;
             found = TRUE;
-            rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
+            rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                 IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
@@ -869,226 +1082,11 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
               break;
             } 
           }
-          break;
-        case CMD_BUY:
-          // Format: buy { "cost item name";
-          //     Ex: buy { "1000 1 smoked-ham";
-	  tStString=sstring(respo->args).word(0);
-	  tStBuffer=sstring(respo->args).word(1);
-	  tStArg=sstring(respo->args).word(2);
-
-          strcpy(tString, said.c_str());
-
-          if ((is_number(tString) ?
-               convertTo<int>(said) == convertTo<int>(tStBuffer) :
-               isname(said, tStArg))) {
-            value = convertTo<int>(tStString);
-
-            if (speaker->getMoney() < value) {
-              doTell(speaker->getNameNOC(this), "I'm afraid you don't have enough for that.");
-
-              return TRUE;
-            } else {
-              speaker->addToMoney(-value, GOLD_SHOP);
-
-              for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
-                parsedArgs = parseResponse(speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
-                found = TRUE;
-                rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
-                if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                    IS_SET_DELETE(rc, DELETE_VICT)) {
-                  // either mob or speaker has been whacked
-                  return rc;
-                } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
-                  break;
-                } 
-              }
-            }
-          }
-          break;
-        case CMD_BOUNCE:
-        case CMD_DANCE:
-        case CMD_SMILE:
-        case CMD_CACKLE:
-        case CMD_LAUGH:
-        case CMD_GIGGLE:
-        case CMD_SHAKE:
-        case CMD_PUKE:
-        case CMD_GROWL:
-        case CMD_SCREAM:
-        case CMD_COMFORT:
-        case CMD_NOD:
-        case CMD_SIGH:
-        case CMD_SULK:
-        case CMD_HUG:
-        case CMD_SNUGGLE:
-        case CMD_CUDDLE:
-        case CMD_NUZZLE:
-        case CMD_CRY:
-        case CMD_POKE:
-        case CMD_ACCUSE:
-        case CMD_GRIN:
-        case CMD_BOW:
-        case CMD_APPLAUD:
-        case CMD_BLUSH:
-        case CMD_BURP:
-        case CMD_CHUCKLE:
-        case CMD_CLAP:
-        case CMD_COUGH:
-        case CMD_CURTSEY:
-        case CMD_FART:
-        case CMD_FLIP:
-        case CMD_FONDLE:
-        case CMD_FROWN:
-        case CMD_GASP:
-        case CMD_GLARE:
-        case CMD_GROAN:
-        case CMD_GROPE:
-        case CMD_HICCUP:
-        case CMD_LICK:
-        case CMD_LOVE:
-        case CMD_MOAN:
-        case CMD_NIBBLE:
-        case CMD_POUT:
-        case CMD_PURR:
-        case CMD_RUFFLE:
-        case CMD_SHIVER:
-        case CMD_SHRUG:
-        case CMD_SING:
-        case CMD_SLAP:
-        case CMD_SMIRK:
-        case CMD_SNAP:
-        case CMD_SNEEZE:
-        case CMD_SNICKER:
-        case CMD_SNIFF:
-        case CMD_SNORE:
-        case CMD_SPIT:
-        case CMD_SQUEEZE:
-        case CMD_STARE:
-        case CMD_STRUT:
-        case CMD_THANK:
-        case CMD_TWIDDLE:
-        case CMD_WAVE:
-        case CMD_WHISTLE:
-        case CMD_WIGGLE:
-        case CMD_WINK:
-        case CMD_YAWN:
-        case CMD_SNOWBALL:
-        case CMD_FRENCH:
-        case CMD_COMB:
-        case CMD_MASSAGE:
-        case CMD_TICKLE:
-        case CMD_PAT:
-        case CMD_CURSE:
-        case CMD_BEG:
-        case CMD_BLEED:
-        case CMD_CRINGE:
-        case CMD_DAYDREAM:
-        case CMD_FUME:
-        case CMD_GROVEL:
-        case CMD_HOP:
-        case CMD_NUDGE:
-        case CMD_PEER:
-        case CMD_POINT:
-        case CMD_PONDER:
-        case CMD_PUNCH:
-        case CMD_SNARL:
-        case CMD_SPANK:
-        case CMD_STEAM:
-        case CMD_TACKLE:
-        case CMD_TAUNT:
-        case CMD_WHINE:
-        case CMD_WORSHIP:
-        case CMD_YODEL:
-        case CMD_THINK:
-        case CMD_WHAP:
-        case CMD_BEAM:
-        case CMD_CHORTLE:
-        case CMD_BONK:
-        case CMD_SCOLD:
-        case CMD_DROOL:
-        case CMD_RIP:
-        case CMD_STRETCH:
-        case CMD_PIMP:
-        case CMD_BELITTLE:
-        case CMD_TAP:
-        case CMD_PILEDRIVE:
-        case CMD_FLIPOFF:
-        case CMD_MOON:
-        case CMD_PINCH:
-        case CMD_BITE:
-        case CMD_KISS:
-        case CMD_CHEER:
-        case CMD_WOO:
-        case CMD_GRUMBLE:
-        case CMD_APOLOGIZE:
-        case CMD_AGREE:
-        case CMD_DISAGREE:
-        case CMD_SPAM:
-        case CMD_ARCH:
-        case CMD_ROLL:
-        case CMD_BLINK:
-        case CMD_FAINT:
-        case CMD_GREET:
-        case CMD_TIP:
-        case CMD_BOP:
-        case CMD_JUMP:
-        case CMD_WHIMPER:
-        case CMD_SNEER:
-        case CMD_MOO:
-        case CMD_BOGGLE:
-        case CMD_SNORT:
-        case CMD_TANGO:
-        case CMD_ROAR:
-        case CMD_FLEX:
-        case CMD_TUG:
-        case CMD_CROSS:
-        case CMD_HOWL:
-        case CMD_GRUNT:
-        case CMD_WEDGIE:
-        case CMD_SCUFF:
-        case CMD_NOOGIE:
-        case CMD_BRANDISH:
-        case CMD_TRIP:
-        case CMD_DUCK:
-        case CMD_BECKON:
-        case CMD_WINCE:
-        case CMD_HUM:
-        case CMD_RAZZ:
-        case CMD_GAG:
-        case CMD_AVERT:
-        case CMD_SALUTE:
-        case CMD_PET:
-        case CMD_GRIMACE:
-         if ((isname( "none", respo->args) && (resp_targ == NULL)) ||
-             (isname( "self", respo->args) && (resp_targ == speaker)) ||
-             (isname( "me", respo->args) && (resp_targ == this)) ||
-             (isname( "other", respo->args) &&
-                       (resp_targ != this) &&
-                       (resp_targ != speaker) && resp_targ)) {
-            for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
-              parsedArgs = parseResponse( speaker, cmd->args);
-              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
-              if (skip != 0) continue;
-              found = TRUE;
-              rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
-              if (IS_SET_DELETE(rc, DELETE_THIS) ||
-                  IS_SET_DELETE(rc, DELETE_VICT)) {
-                // either mob or speaker has been whacked
-                return rc;
-              } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                found = FALSE;
-                break;
-              } 
-            }
-          }
-          break;
-        default:
-          vlogf(LOG_MOB_RS, fmt("Unknown command is checkResponse: %d") %  trig_cmd);
-          break;
+        }
+        break;
+      default:
+        vlogf(LOG_MOB_RS, fmt("Unknown command is checkResponse: %d") %  trig_cmd);
+        break;
       } // end of switch 
     } 
   }

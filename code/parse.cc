@@ -887,7 +887,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	addToLifeforce(1);
 	break;
       case CMD_SIGN:
-	doSign(newarg);
+	rc = doSign(newarg);
 	addToLifeforce(1);
 	break;
       case CMD_TELL:
