@@ -19,6 +19,12 @@ class TProcess {
 
 //// processes
 
+class procTweakLoadRate : public TProcess {
+ public:
+  void run(int) const;
+  procTweakLoadRate(const int &);
+};
+
 class procGlobalRoomStuff : public TProcess {
  public:
   void run(int) const;

@@ -69,6 +69,8 @@ void TProcessList::add(TProcess *p)
 }
 
 
+// we have some legacy code here, in that many processes expect pulse
+// to be mod 2400.  So we use the real pulse, but pass mod 2400.
 void TProcessList::run(int pulse)
 {
   TTiming timer;
@@ -78,12 +80,12 @@ void TProcessList::run(int pulse)
       if(gameLoopTiming)
 	timer.start();
 
-      procs[i]->run(pulse);
+      procs[i]->run(pulse % 2400);
       
       if(gameLoopTiming){
 	timer.end();
 	vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
-	      pulse % (pulse%12) % procs[i]->name % 
+	      (pulse % 2400) % (pulse%12) % procs[i]->name % 
 	      (int)(timer.getElapsed()*1000000));
       }
     }

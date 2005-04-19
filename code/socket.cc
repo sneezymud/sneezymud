@@ -523,7 +523,8 @@ void pulseLog(sstring name, TTiming timer, int pulse)
     return;
 
   vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
-	pulse % (pulse%12) % name % (int)(timer.getElapsedReset()*1000000));
+	(pulse % 2400) % (pulse%12) % name % 
+	(int)(timer.getElapsedReset()*1000000));
 }
 
 
@@ -1104,6 +1105,38 @@ void procMobHate::run(int pulse) const
 }
 
 
+// Mudadmin Resolution, April 19th 2005
+// 217.) Global load rates will be lowered by 1% per day for 3
+// consecutive months, achieving an end result of 1/10th of the
+// former rates. An additional period of 3 months with no global
+// load rate changes will be observed in order to monitor the
+// results of this change.
+//
+// The global load rate modifier is currently at 0.46, so we will
+// decrease it by 1% (0.0046) per real day. until we arrive at 0.0460
+
+// procTweakLoadRate
+procTweakLoadRate::procTweakLoadRate(const int &p)
+{
+  trigger_pulse=p;
+  name="procTweakLoadRate";
+}
+
+void procTweakLoadRate::run(int) const
+{
+  if(stats.equip <= 0.046){
+    vlogf(LOG_BUG, "procTweakLoadRate: desired load rate achieved.");
+    return;
+  }
+
+  stats.equip -= 0.0046;
+  save_game_stats();
+  vlogf(LOG_LOW, fmt("procTweakLoadRate: adjusted load rate to %f") %
+	stats.equip);
+}
+
+
+
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
@@ -1154,6 +1187,8 @@ int TMainSocket::gameLoop()
   proc_list.add(new procUpdateAuction(PULSE_MUDDAY));
   proc_list.add(new procBankInterest(PULSE_MUDDAY));
 
+  // pulse realday
+  proc_list.add(new procTweakLoadRate(PULSE_REALDAY));
 
   avail_descs = 150;		
 
@@ -1163,8 +1198,6 @@ int TMainSocket::gameLoop()
     if (!point->m_bIsClient)
       point->sendLogin("1");
 
-  time_t ticktime = time(0);
-
   while (!handleShutdown()) {
     timespent=handleTimeAndSockets();
     
@@ -1172,7 +1205,7 @@ int TMainSocket::gameLoop()
       count=((timespent.tv_sec*1000000)+timespent.tv_usec);
       
       vlogf(LOG_MISC, fmt("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
-	    pulse % (pulse%12) % 
+	    (pulse % 2400) % (pulse%12) % 
 	    (int)((t.getElapsedReset()*1000000)-count) % count);
     }
     
@@ -1206,19 +1239,19 @@ int TMainSocket::gameLoop()
     }
 
     // handle pulse stuff for objects
-    count=objectPulse(pl, pulse);
+    count=objectPulse(pl, (pulse % 2400));
 
     if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
-	    oldpulse % (oldpulse%12) % 
+	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
     
     // handle pulse stuff for mobs and players
-    count=characterPulse(pl, pulse);
+    count=characterPulse(pl, (pulse % 2400));
 
     if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
-	    oldpulse % (oldpulse%12) % 
+	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
 
     // reset the old values from the artifical pulse
@@ -1240,15 +1273,6 @@ int TMainSocket::gameLoop()
       lag_info.low = min(lag_info.lagtime[which], lag_info.low);
     }
 
-    if (pulse >= 2400) {
-      ticktime = time(0);
-
-      // THIS PULSE = 0 IS NOT SIMPLY FOR LOGGING PURPOSES.
-      // if it gets removed all tasks go into hyper mode. So don't.
-      // (appears to be true: some functions above take the pulse as
-      //  an argument - peel 04/20/04)
-      pulse = 0;
-    }
     pulseLog("lag_info", t, pulse);
 
     systask->CheckTask();
