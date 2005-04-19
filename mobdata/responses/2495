@@ -12,18 +12,18 @@ say { "holy Devastator";
 	checktoggle 187;
 	toggle 46;
 	say You wish to seek your Holy Devastator, eh?;
-        think
+        think;
         say Indeed....Well no matter, many have come before me;
 	say only to have fallen prey to these mystical lands.;
 	say Not only will I test your skills;
-	say and your knowledge of The World,  but; 
+	say and your knowledge of The World,  but;
 	say in this quest you will learn more of your inner-self,;
 	say and more of the way of the Deikhans - those few that;
         say touch the lives of many.;
-        beam
+        beam;
 	say Only then shall you receive the Holy Devastator.;
 	say Do you understand what I am saying?  Please say;
-	say you understand.;              
+	say you understand.;
 	}
 
 say { "understand";
@@ -39,9 +39,9 @@ say { "understand";
 	say for all eternity, as well...;
 	say The road to victory is long...;
 	say and there is no shame in failing your task;
-	say as long as you stand steadfast.; 
-	smilek
-	say If you need to rest from this quest; 
+	say as long as you stand steadfast.;
+	smile;
+	say If you need to rest from this quest;
 	say come to me or <p>any<1> of the many;
 	say travelers you will meet and;
 	say you can be free from this quest by saying;
@@ -128,7 +128,7 @@ say { "service";
 	tonotvict $n raises his hands summoning a small wave that brushes over %n's feet.;
 	say There, you have been bathed in the waters of the river.;
 	say Bring me the large opal and then after you have done so...;
-	say tell me you wish to continue.; 
+	say tell me you wish to continue.;
 	}
 
 say { "continue";
@@ -174,7 +174,7 @@ say { "repeat";
 say { "book";
 	checktoggle 49;
 	say Correct!  It is nice to know your are well read, at least!;
-	tovict $n summons a large wave from the river that topples on top of you.; 
+	tovict $n summons a large wave from the river that topples on top of you.;
 	tonotvict $n summons a large wave from the river that topples %n.;
 	say You are no done with your penance!;
 	chortle;
@@ -274,7 +274,7 @@ say { "I have failed";
 	say No matter...;
 	say This time I will forgive you for your foolish actions.;
 	toroom $n utters the word "Falibrum!" that sends a shock through you.;
-	tell %n, There, now go back and agree with Spartagus and do as he asks.; 
+	tell %n, There, now go back and agree with Spartagus and do as he asks.;
 	tell %n There are proper times to kill evil...;
 	tell %n to kill them before hand causes unbalance in The World.;
 	unflag %n;
@@ -312,7 +312,3 @@ say { "I have failed";
 	say to pay for your cowardly act...;
 	say You must start all over again with the winery worker.;
 	}
-
-
-
-
