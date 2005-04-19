@@ -10,7 +10,7 @@
 #include "loadset.h"
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
-
+#include "statistics.h"
 
 extern int  GetItemClassRestrictions(const TObj *);
 extern bool IsRestricted(unsigned short int, unsigned short int);
@@ -137,8 +137,9 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
     }
   }
 
-  if (::number(0,99) < chance ||
-     gamePort == BETA_GAMEPORT) {
+  if ( ((::number(0,99) < chance) &&
+	(::number(0,99) < (int) (100 * stats.equip))) ||
+       gamePort == BETA_GAMEPORT) {
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
@@ -191,7 +192,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
     tArg = one_argument(tArg, tString);
   }
 
-  if (tChance == 101)
+  if (tChance == 101){
     if (*arg && !is_abbrev(tString, "information")) {
       const char *pString;
             char  zString[256] = "\0",
@@ -518,7 +519,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
 
       return;
     }
-
+  }
   if (num < 0 && !*tString)
     return;
 
@@ -530,7 +531,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
   if (!suitSets.suitLoad(tString, this, tPiece, tChance, num))
     return;
 
-  if (tChance == 101)
+  if (tChance == 101){
     if (tPiece == LST_ALL) {
       sendTo("You load a set of armor.\n\r");
       act("$n loads a set of armor.", TRUE, this, 0, 0, TO_ROOM);
@@ -538,6 +539,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
       sendTo(fmt("You load a %s piece from a suit of armor.\n\r") % suitPieceNames[tPiece]);
       act("$n loads a piece of armor.", TRUE, this, 0, 0, TO_ROOM);
     }
+  }
 }
 
 void loadSetClass::SetupLoadSetSuits()
