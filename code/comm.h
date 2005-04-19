@@ -66,6 +66,7 @@ const int PULSE_DROWNING    =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_SPEC_PROCS  =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_NOISES      =(int)((float)ONE_SECOND * 4.8);
 const int PULSE_WAYSLOW     =2400;
+const int PULSE_REALDAY     =ONE_SECOND * 60 * 60 * 24;
 
 // Altering PULSE_UPDATES will speed up ticks, but also causes "mud time"
 // to totally recalculate (making it shorter will age people).
@@ -75,9 +76,8 @@ const int PULSE_MUDHOUR     =PULSE_UPDATE * 4;
 const int PULSE_MUDDAY      =PULSE_MUDHOUR * 24;
 
 const int SECS_PER_UPDATE  = PULSE_UPDATE/ONE_SECOND;
-const int SECS_PER_MUDHOUR  = PULSE_MUDHOUR/ONE_SECOND;
 
-// currently, there are 4 partial calls per hour
+const int SECS_PER_MUDHOUR  = PULSE_MUDHOUR/ONE_SECOND;
 const int SECS_PER_MUD_DAY   = (24*SECS_PER_MUDHOUR);
 const int SECS_PER_MUD_MONTH = (28*SECS_PER_MUD_DAY);
 const int SECS_PER_MUD_YEAR  = (12*SECS_PER_MUD_MONTH);
