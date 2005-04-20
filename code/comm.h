@@ -66,6 +66,7 @@ const int PULSE_DROWNING    =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_SPEC_PROCS  =(int)((float)ONE_SECOND * 3.6);
 const int PULSE_NOISES      =(int)((float)ONE_SECOND * 4.8);
 const int PULSE_WAYSLOW     =2400;
+const int PULSE_REALHOUR    =ONE_SECOND * 60 * 60;
 const int PULSE_REALDAY     =ONE_SECOND * 60 * 60 * 24;
 
 // Altering PULSE_UPDATES will speed up ticks, but also causes "mud time"

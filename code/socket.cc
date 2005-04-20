@@ -1114,6 +1114,7 @@ void procMobHate::run(int pulse) const
 //
 // The global load rate modifier is currently at 0.46, so we will
 // decrease it by 1% (0.0046) per real day. until we arrive at 0.0460
+// but we'll do it per hour (.00019166666666666666)
 
 // procTweakLoadRate
 procTweakLoadRate::procTweakLoadRate(const int &p)
@@ -1129,7 +1130,7 @@ void procTweakLoadRate::run(int) const
     return;
   }
 
-  stats.equip -= 0.0046;
+  stats.equip -= 0.00019166666666666666;
   save_game_stats();
   vlogf(LOG_LOW, fmt("procTweakLoadRate: adjusted load rate to %f") %
 	stats.equip);
@@ -1187,8 +1188,8 @@ int TMainSocket::gameLoop()
   proc_list.add(new procUpdateAuction(PULSE_MUDDAY));
   proc_list.add(new procBankInterest(PULSE_MUDDAY));
 
-  // pulse realday
-  proc_list.add(new procTweakLoadRate(PULSE_REALDAY));
+  // pulse realhour
+  proc_list.add(new procTweakLoadRate(PULSE_REALHOUR));
 
   avail_descs = 150;		
 
