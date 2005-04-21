@@ -1190,7 +1190,7 @@ int disease_leprosy(TBeing *victim, int message, affectedData * af)
         vaf.bitvector = 0;
         spread_affect(victim, 20, false, false, &vaf);
       }
-      victim->bodySpread(750,af);
+      victim->bodySpread(500,af);
       break;
     case DISEASE_BEGUN:
       if (slot)
@@ -1289,7 +1289,7 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] =
   {disease_lung,"a punctured lung",2750},
   {disease_stomach,"a stomach wound",3300},
   {disease_hemorraging,"internal bleeding",3500},
-  {disease_leprosy,"leprosy",6100},
+  {disease_leprosy,"leprosy",1220},
   {disease_plague,"THE PLAGUE!", 10220},
   {disease_suffocate,"a breathing problem",10000},
   {disease_food_poison, "food poisoning", 2450},
