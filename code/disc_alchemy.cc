@@ -605,7 +605,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind)
     return FALSE;
 
 //  if (caster->affectedBySpell(SPELL_BLINDNESS)) {
-  if (caster->isAffected(AFF_BLIND)) {
+  if (caster->isAffected(AFF_BLIND) && !caster->isAffected(AFF_TRUE_SIGHT)) {
     act("How do you expect to see while you are blind?",
         FALSE, caster, NULL, NULL, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
