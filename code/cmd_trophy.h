@@ -58,6 +58,7 @@ class TTrophy {
   const char *getExpModDescr(float, int);
   void addToCount(int, double);
   float getCount(int);
+  float getTotalCount(int);
 
   void wipe();
   

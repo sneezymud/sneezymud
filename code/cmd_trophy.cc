@@ -8,7 +8,7 @@
 #include "stdsneezy.h"
 #include "cmd_trophy.h"
 #include "database.h"
-
+#include "process.h"
 
 TTrophy::TTrophy(sstring n) :
   db(new TDatabase(DB_SNEEZY)),
@@ -43,6 +43,28 @@ void TTrophy::setName(sstring n){
   name=n;
 }
 
+// procTrophyDecay
+procTrophyDecay::procTrophyDecay(const int &p)
+{
+  trigger_pulse=p;
+  name="procTrophyDecay";
+}
+
+void procTrophyDecay::run(int) const
+{
+  TDatabase db(DB_SNEEZY);
+  float dec=0.25;
+
+  for(TBeing *tb=character_list;tb;tb=tb->next){
+    if(tb->isPc()){
+      db.query("update trophy set count=count-%f where player_id=%i and count > %f",
+	       dec, tb->getPlayerID(), dec);
+    }
+  }
+}
+
+
+
 void TTrophy::addToCount(int vnum, double add){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
@@ -51,11 +73,11 @@ void TTrophy::addToCount(int vnum, double add){
   db->query("select * from trophy where player_id=%i and mobvnum=%i",
 	    player_id, vnum);
   if(!db->fetchRow()){
-    db->query("insert into trophy values (%i, %i, %f)",
-	      player_id, vnum, add);
+    db->query("insert into trophy values (%i, %i, %f, %f)",
+	      player_id, vnum, add, (add>0 ? add : 0));
   } else {
-    db->query("update trophy set count=count+%f where player_id=%i and mobvnum=%i",
-	      add, player_id, vnum);
+    db->query("update trophy set count=count+%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
+	      add, (add>0 ? add : 0), player_id, vnum);
   }
 
   db->query("update trophyplayer set total=total+%f where player_id=%i",
@@ -72,6 +94,17 @@ float TTrophy::getCount(int vnum)
   else 
     return 0.0;
 }
+
+float TTrophy::getTotalCount(int vnum)
+{
+  db->query("select totalcount from trophy where player_id=%i and mobvnum=%i",
+	   parent->getPlayerID(), vnum);
+  if(db->fetchRow())
+    return convertTo<float>((*db)["totalcount"]);
+  else 
+    return 0.0;
+}
+
 
 
 float TTrophy::getExpModVal(float count, int mobvnum)

@@ -19,6 +19,12 @@ class TProcess {
 
 //// processes
 
+class procTrophyDecay: public TProcess {
+ public:
+  void run(int) const;
+  procTrophyDecay(const int &);
+};
+
 class procTweakLoadRate : public TProcess {
  public:
   void run(int) const;

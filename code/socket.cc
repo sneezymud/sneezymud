@@ -1190,6 +1190,7 @@ int TMainSocket::gameLoop()
 
   // pulse realhour
   proc_list.add(new procTweakLoadRate(PULSE_REALHOUR));
+  proc_list.add(new procTrophyDecay(PULSE_REALHOUR));
 
   avail_descs = 150;		
 
