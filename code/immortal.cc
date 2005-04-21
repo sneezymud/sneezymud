@@ -387,6 +387,10 @@ int TBeing::doEmote(const sstring &argument)
     sendTo("You have been sanctioned by the gods and can't emote!!\n\r");
     return FALSE;
   }
+  if (hasQuestBit(TOG_IS_MUTE)) {
+    sendTo("You're mute.  You can't emote.\n\r");
+    return FALSE;
+  }
   if (getCond(DRUNK) > plotStat(STAT_CURRENT, STAT_CON, 0, 9, 6)) {
     act("You're way too drunk to attempt that.", FALSE, this, 0, 0, TO_CHAR);
     return FALSE;
