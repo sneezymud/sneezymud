@@ -74,18 +74,19 @@ void TProcessList::add(TProcess *p)
 void TProcessList::run(int pulse)
 {
   TTiming timer;
+  vector<TProcess *>::iterator iter;
 
-  for(unsigned int i=0;i<procs.size();++i){
-    if(procs[i]->should_run(pulse)){
+  for(iter=procs.begin();iter!=procs.end();++iter){
+    if((*iter)->should_run(pulse)){
       if(gameLoopTiming)
 	timer.start();
 
-      procs[i]->run(pulse % 2400);
+      (*iter)->run(pulse % 2400);
       
       if(gameLoopTiming){
 	timer.end();
 	vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
-	      (pulse % 2400) % (pulse%12) % procs[i]->name % 
+	      (pulse % 2400) % (pulse%12) % (*iter)->name % 
 	      (int)(timer.getElapsed()*1000000));
       }
     }
