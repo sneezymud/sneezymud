@@ -2668,7 +2668,7 @@ bool zoneData::doGenericReset(void)
   top = zone_table[zone_nr].top;
 
   TObj *o;
-  TTrashPile *pile;
+  //  TTrashPile *pile;
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
     o=*iter;
     if (o->objVnum() >= bottom && o->objVnum() <= top)
@@ -2683,8 +2683,9 @@ bool zoneData::doGenericReset(void)
         }
       }
 
-      if((pile=dynamic_cast<TTrashPile *>(o)))
-	pile->attractVermin();
+      // disabled via mudadmin resolution 222, April 20th, 2005
+      //      if((pile=dynamic_cast<TTrashPile *>(o)))
+      //	pile->attractVermin();
     }
   }
   return TRUE;
