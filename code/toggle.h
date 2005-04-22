@@ -400,7 +400,9 @@ const int TOG_HAS_NIGHTVISION                  = 289;
 const int TOG_IS_ALCOHOLIC                     = 290;
 const int TOG_HAS_TOURETTES                    = 291;
 
-const int MAX_TOG_INDEX       = 292;  // move and change
+const int TOG_IS_PK_CHAR                       = 292;
+
+const int MAX_TOG_INDEX       = 293;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

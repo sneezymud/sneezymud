@@ -1148,49 +1148,49 @@ int TMainSocket::gameLoop()
   int count;
   struct timeval timespent;
   TTiming t;
-  TProcessList proc_list;
+  TScheduler scheduler;
 
   // pulse every
-  proc_list.add(new procSetZoneEmpty(PULSE_EVERY));
-  proc_list.add(new procCallRoomSpec(PULSE_EVERY));
+  scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
+  scheduler.add(new procCallRoomSpec(PULSE_EVERY));
 
   // pulse update
-  proc_list.add(new procGlobalRoomStuff(PULSE_UPDATE));
-  proc_list.add(new procDeityCheck(PULSE_UPDATE));
-  proc_list.add(new procApocCheck(PULSE_UPDATE));
-  proc_list.add(new procSaveFactions(PULSE_UPDATE));
-  proc_list.add(new procSaveNewFactions(PULSE_UPDATE));
-  proc_list.add(new procWeatherAndTime(PULSE_UPDATE));
-  proc_list.add(new procWholistAndUsageLogs(PULSE_UPDATE));
+  scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));
+  scheduler.add(new procDeityCheck(PULSE_UPDATE));
+  scheduler.add(new procApocCheck(PULSE_UPDATE));
+  scheduler.add(new procSaveFactions(PULSE_UPDATE));
+  scheduler.add(new procSaveNewFactions(PULSE_UPDATE));
+  scheduler.add(new procWeatherAndTime(PULSE_UPDATE));
+  scheduler.add(new procWholistAndUsageLogs(PULSE_UPDATE));
 
   // pulse wayslow
-  proc_list.add(new procCheckForRepo(PULSE_WAYSLOW));
-  proc_list.add(new procCheckMail(PULSE_WAYSLOW));
+  scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));
+  scheduler.add(new procCheckMail(PULSE_WAYSLOW));
 
   // pulse combat
-  proc_list.add(new procPerformViolence(PULSE_COMBAT));
+  scheduler.add(new procPerformViolence(PULSE_COMBAT));
 
   // pulse mudhour
-  proc_list.add(new procFishRespawning(PULSE_MUDHOUR));
-  proc_list.add(new procZoneUpdate(PULSE_MUDHOUR));
-  proc_list.add(new procLaunchCaravans(PULSE_MUDHOUR));
-  proc_list.add(new procUpdateAvgPlayers(PULSE_MUDHOUR));
-  proc_list.add(new procCheckGoldStats(PULSE_MUDHOUR));
-  proc_list.add(new procAutoTips(PULSE_MUDHOUR));
-  proc_list.add(new procPingData(PULSE_MUDHOUR));
-  proc_list.add(new procRecalcFactionPower(PULSE_MUDHOUR));
-  proc_list.add(new procNukeInactiveMobs(PULSE_MUDHOUR));
-  proc_list.add(new procUpdateTime(PULSE_MUDHOUR));
-  proc_list.add(new procMobHate(PULSE_MUDHOUR));
-  proc_list.add(new procDoComponents(PULSE_MUDHOUR));
+  scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
+  scheduler.add(new procZoneUpdate(PULSE_MUDHOUR));
+  scheduler.add(new procLaunchCaravans(PULSE_MUDHOUR));
+  scheduler.add(new procUpdateAvgPlayers(PULSE_MUDHOUR));
+  scheduler.add(new procCheckGoldStats(PULSE_MUDHOUR));
+  scheduler.add(new procAutoTips(PULSE_MUDHOUR));
+  scheduler.add(new procPingData(PULSE_MUDHOUR));
+  scheduler.add(new procRecalcFactionPower(PULSE_MUDHOUR));
+  scheduler.add(new procNukeInactiveMobs(PULSE_MUDHOUR));
+  scheduler.add(new procUpdateTime(PULSE_MUDHOUR));
+  scheduler.add(new procMobHate(PULSE_MUDHOUR));
+  scheduler.add(new procDoComponents(PULSE_MUDHOUR));
   
   // pulse mudday
-  proc_list.add(new procUpdateAuction(PULSE_MUDDAY));
-  proc_list.add(new procBankInterest(PULSE_MUDDAY));
+  scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
+  scheduler.add(new procBankInterest(PULSE_MUDDAY));
 
   // pulse realhour
-  proc_list.add(new procTweakLoadRate(PULSE_REALHOUR));
-  proc_list.add(new procTrophyDecay(PULSE_REALHOUR));
+  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR));
+  scheduler.add(new procTrophyDecay(PULSE_REALHOUR));
 
   avail_descs = 150;		
 
@@ -1216,7 +1216,7 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
 
-    proc_list.run(pulse);
+    scheduler.run(pulse);
 
 
     if(gameLoopTiming)

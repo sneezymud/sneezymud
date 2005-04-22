@@ -182,6 +182,7 @@ const unsigned long PLR_UNUSED5    = (1<<27);
 const unsigned long PLR_KILLABLE   = (1<<28);   // switch off newbie pro
 const unsigned long PLR_ANONYMOUS  = (1<<29);
 const unsigned long PLR_SHOW_SAVES = (1<<30);
+const unsigned long PLR_ALLOW_LOOT = (1<<31);
 
 const unsigned short int PART_BLEEDING     = (1<<0);
 const unsigned short int PART_INFECTED     = (1<<1);
@@ -703,6 +704,9 @@ class TBeing : public TThing {
     attack_mode_t getCombatMode() const;
     bool isCombatMode(attack_mode_t n) const;
     bool inQuest() const;
+    bool isPkChar() const;
+    bool isPking() const;
+    bool isValidPkTarget(const TBeing *) const;
     bool banished() const;
     bool isRightHanded() const;
     bool isPlayerAction(unsigned long num) const;

@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_player_corpse.h"
 
 TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
 {
@@ -304,6 +305,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Trait: Nightvision", MOB_NONE},
   {"Trait: Alcoholic", MOB_NONE},
   {"Trait: Tourettes", MOB_NONE},
+  {"PK Character", MOB_NONE},
   {"", MOB_NONE}, 
 };
 
@@ -315,6 +317,22 @@ const char *on_or_off(bool tog){
   else
     return "<R>off<1>";
 }
+
+void updateCorpseLootFlags(const sstring &name, bool lootable)
+{
+  TPCorpse *pcorpse;
+
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((pcorpse=dynamic_cast<TPCorpse *>(*iter))){
+      vlogf(LOG_PEEL, fmt("name=%s") % pcorpse->name);
+      
+      if((sstring)pcorpse->name == fmt("corpse %s pcorpse") % name){
+	pcorpse->setLootable(lootable);
+      }
+    }
+  }
+}
+
 
 void TBeing::doToggle(const char *arg2)
 {
@@ -362,10 +380,13 @@ void TBeing::doToggle(const char *arg2)
     
 
     if(getWimpy())
-      sendTo(COLOR_BASIC, fmt("Wimpy             : <G>%-4i<1>\n\r") %
+      sendTo(COLOR_BASIC, fmt("Wimpy             : <G>%-4i<1> | ") %
 	     getWimpy());
     else
-      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>\n\r");
+      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1> | ");
+
+    
+    sendTo(COLOR_BASIC, fmt("Corpse Looting    : %s\n\r") % on_or_off(isPlayerAction(PLR_ALLOW_LOOT)));
 
     sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s  | ") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
@@ -440,7 +461,16 @@ void TBeing::doToggle(const char *arg2)
     }      
 
     return;
-
+  } else if(is_abbrev(arg, "corpse-looting")){
+    if (isPlayerAction(PLR_ALLOW_LOOT)) {
+      sendTo("No one may loot your corpse now, except you.\n\r");
+      remPlayerAction(PLR_ALLOW_LOOT);
+      updateCorpseLootFlags(getName(), false);
+    } else {
+      sendTo("Anyone may loot your corpse now.\n\r");
+      addPlayerAction(PLR_ALLOW_LOOT);
+      updateCorpseLootFlags(getName(), true);
+    }
   } else if(is_abbrev(arg, "compact")){
     if (isPlayerAction(PLR_COMPACT)) {
       sendTo("You are now in the uncompacted mode.\n\r");

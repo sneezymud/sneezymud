@@ -63,7 +63,7 @@ bool TProcess::should_run(int p) const
     return false;
 }
 
-void TProcessList::add(TProcess *p)
+void TScheduler::add(TProcess *p)
 {
   procs.push_back(p);
 }
@@ -71,7 +71,7 @@ void TProcessList::add(TProcess *p)
 
 // we have some legacy code here, in that many processes expect pulse
 // to be mod 2400.  So we use the real pulse, but pass mod 2400.
-void TProcessList::run(int pulse)
+void TScheduler::run(int pulse)
 {
   TTiming timer;
   vector<TProcess *>::iterator iter;

@@ -191,7 +191,7 @@ class procDoComponents : public TProcess {
 
 /////////////////////
 
-class TProcessList {
+class TScheduler {
   vector<TProcess *>procs;
 
  public:

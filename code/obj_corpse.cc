@@ -40,6 +40,8 @@ sstring TCorpse::statObjInfo() const
        getCorpseFlags(), getCorpseRace(), RaceNames[getCorpseRace()]);
   sprintf(buf + strlen(buf), "Corpse Level: %d, Corpse Vnum: %d\n\r", 
        getCorpseLevel(), getCorpseVnum());
+  sprintf(buf + strlen(buf), "Lootable: %s\n\r",
+	  (isLootable() ? "yes" : "no"));
 
   sstring a(buf);
   return a;

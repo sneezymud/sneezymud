@@ -179,6 +179,8 @@ sstring TPCorpse::statObjInfo() const
        getCorpseLevel(), getCorpseVnum());
   sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",
 	  getExpLost());
+  sprintf(buf + strlen(buf), "Lootable: %s\n\r",
+	  (isLootable() ? "yes" : "no"));
 
   sstring a(buf);
   return a;

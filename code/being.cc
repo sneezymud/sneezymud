@@ -1260,6 +1260,33 @@ void TBeing::setSexUnsafe(int sex)
   setSex(sexTypeT(sex));
 }
 
+bool TBeing::isPkChar() const
+{
+  if(GetMaxLevel() >= 5 && hasQuestBit(TOG_IS_PK_CHAR))
+    return true;
+  else
+    return false;
+}
+
+bool TBeing::isPking() const
+{
+  return false;
+}
+
+bool TBeing::isValidPkTarget(const TBeing *attacker) const
+{
+  int level_diff=5;
+
+  if(attacker->isPkChar() && isPkChar() && 
+     (attacker->GetMaxLevel() >= (GetMaxLevel()-level_diff)) &&
+     (attacker->GetMaxLevel() <= (GetMaxLevel()+level_diff)))
+    return true;
+  else
+    return false;
+}
+
+
+
 void TBeing::setSex(sexTypeT sex)
 {
   player.sex = sex;

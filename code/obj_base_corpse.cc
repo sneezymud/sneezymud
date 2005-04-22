@@ -20,6 +20,7 @@ TBaseCorpse::TBaseCorpse() :
   corpse_race(RACE_NORACE),
   corpse_level(0),
   corpse_vnum(-1),
+  lootable(true),
   tDissections(NULL)
 {
 }
@@ -30,6 +31,7 @@ TBaseCorpse::TBaseCorpse(const TBaseCorpse &a) :
   corpse_race(a.corpse_race),
   corpse_level(a.corpse_level),
   corpse_vnum(a.corpse_vnum),
+  lootable(a.lootable),
   tDissections(a.tDissections)
 {
 }
@@ -42,6 +44,7 @@ TBaseCorpse & TBaseCorpse::operator=(const TBaseCorpse &a)
   corpse_race = a.corpse_race;
   corpse_level = a.corpse_level;
   corpse_vnum = a.corpse_vnum;
+  lootable = a.lootable;
   tDissections = a.tDissections;
   return *this;
 }
@@ -378,4 +381,14 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
 
     return true;
    
+}
+
+bool TBaseCorpse::isLootable() const
+{
+  return lootable;
+}
+
+void TBaseCorpse::setLootable(bool l)
+{
+  lootable=l;
 }
