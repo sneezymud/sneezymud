@@ -155,7 +155,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     // sendrpf(COLOR_NONE, roomp, "arg2=[%s]\n\r", arg2.c_str());
     found = FALSE;
     o = NULL;
-    tmp_char = NULL;
     tmp_desc = NULL;
 
     switch (keyword_no) {
