@@ -169,7 +169,8 @@ LIBSYS=	ansi.o		database.o   	socket.o		\
 	comm.o         	indexdata.o				\
 	connect.o      	signals.o    	sstring.o		\
 	format.o	pathfinder.o	process.o		\
-	proc_check_mail.o		proc_check_repo.o
+	proc_check_mail.o		proc_check_repo.o	\
+	rewrite_obj_file.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 
