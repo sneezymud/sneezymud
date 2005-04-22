@@ -28,8 +28,14 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
 	return false;
       }
 
-      if(s>e)
-	s^=e^=s^=e; // swap
+      if(s>e){
+	int tmp;
+	tmp=s;
+	s=e;
+	e=tmp;
+
+	//	s^=e^=s^=e; // swap
+      }
 
       while(s<=e){
 	vnums.push_back(s++);
