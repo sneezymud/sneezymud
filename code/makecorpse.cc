@@ -53,9 +53,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     pcorpse->addCorpseFlag(CORPSE_NO_REGEN);
 
     if(isPlayerAction(PLR_ALLOW_LOOT))
-      pcorpse->setLootable(true);
+      pcorpse->addCorpseFlag(CORPSE_LOOTABLE);
     else
-      pcorpse->setLootable(false);
+      pcorpse->remCorpseFlag(CORPSE_LOOTABLE);
 
   } else {
     corpse = race->makeCorpse();

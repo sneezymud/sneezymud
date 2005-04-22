@@ -116,6 +116,7 @@ TPCorpse::TPCorpse() :
   on_lists(0),
   corpse_in_room(0),
   num_corpses_in_room(0),
+  exp_lost(0),
   fileName(""),
   nextGlobalCorpse(NULL),
   nextCorpse(NULL),
@@ -128,6 +129,7 @@ TPCorpse::TPCorpse(const TPCorpse &a) :
   on_lists(a.on_lists),
   corpse_in_room(a.corpse_in_room),
   num_corpses_in_room(a.num_corpses_in_room),
+  exp_lost(a.exp_lost),
   fileName(a.fileName),
   nextGlobalCorpse(a.nextGlobalCorpse),
   nextCorpse(a.nextCorpse),
@@ -141,6 +143,7 @@ TPCorpse & TPCorpse::operator=(const TPCorpse &a)
   TBaseCorpse::operator=(a);
   on_lists = a.on_lists;
   corpse_in_room = a.corpse_in_room;
+  exp_lost = a.exp_lost;
   num_corpses_in_room = a.num_corpses_in_room;
   fileName = a.fileName;
   nextGlobalCorpse = a.nextGlobalCorpse;
@@ -180,7 +183,7 @@ sstring TPCorpse::statObjInfo() const
   sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",
 	  getExpLost());
   sprintf(buf + strlen(buf), "Lootable: %s\n\r",
-	  (isLootable() ? "yes" : "no"));
+	  (isCorpseFlag(CORPSE_LOOTABLE) ? "yes" : "no"));
 
   sstring a(buf);
   return a;

@@ -397,8 +397,9 @@ const unsigned int CORPSE_SACRIFICE      = (1<<5);
 const unsigned int CORPSE_NO_BUTCHER     = (1<<6);
 const unsigned int CORPSE_HALF_BUTCHERED = (1<<7);
 const unsigned int CORPSE_PC_BUTCHERING  = (1<<8);
+const unsigned int CORPSE_LOOTABLE       = (1<<9);
 
-const int MAX_CORPSE_FLAGS     = 9;  // move and change
+const int MAX_CORPSE_FLAGS     = 10;  // move and change
 
 /* for containers  - value[1] */
 

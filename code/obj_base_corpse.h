@@ -17,7 +17,6 @@ class TBaseCorpse : public TBaseContainer {
     race_t corpse_race;
     unsigned int corpse_level;
     int corpse_vnum;
-    bool lootable;
   public:
     dissectInfo *tDissections;
 
@@ -36,9 +35,8 @@ class TBaseCorpse : public TBaseContainer {
     virtual int putSomethingInto(TBeing *, TThing *);
     virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual void describeObjectSpecifics(const TBeing *) const {}
+    void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
 
-    bool isLootable() const;
-    void setLootable(bool);
     void setCorpseFlags(unsigned int);
     unsigned int getCorpseFlags() const;
     void addCorpseFlag(unsigned int);

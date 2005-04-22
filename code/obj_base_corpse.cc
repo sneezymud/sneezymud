@@ -20,7 +20,6 @@ TBaseCorpse::TBaseCorpse() :
   corpse_race(RACE_NORACE),
   corpse_level(0),
   corpse_vnum(-1),
-  lootable(true),
   tDissections(NULL)
 {
 }
@@ -31,7 +30,6 @@ TBaseCorpse::TBaseCorpse(const TBaseCorpse &a) :
   corpse_race(a.corpse_race),
   corpse_level(a.corpse_level),
   corpse_vnum(a.corpse_vnum),
-  lootable(a.lootable),
   tDissections(a.tDissections)
 {
 }
@@ -44,7 +42,6 @@ TBaseCorpse & TBaseCorpse::operator=(const TBaseCorpse &a)
   corpse_race = a.corpse_race;
   corpse_level = a.corpse_level;
   corpse_vnum = a.corpse_vnum;
-  lootable = a.lootable;
   tDissections = a.tDissections;
   return *this;
 }
@@ -383,12 +380,29 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
    
 }
 
-bool TBaseCorpse::isLootable() const
+void TBaseCorpse::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType, bool tFirst)
 {
-  return lootable;
-}
+  TPCorpse * tCorpse;
 
-void TBaseCorpse::setLootable(bool l)
-{
-  lootable=l;
+
+  if((tCorpse=dynamic_cast<TPCorpse *>(this)) &&
+     ((sstring)tBeing->getName()).lower() == tCorpse->getOwner()){
+    // allow loot
+  } else if(!isCorpseFlag(CORPSE_LOOTABLE) &&
+	    !tBeing->isImmortal()){
+    act("Looting $p isn't allowed.",
+	TRUE, tBeing, this, NULL, TO_CHAR);
+    return;
+  }
+
+
+
+
+  act("You take $p from $P.",
+      FALSE, tBeing, tThing, this, TO_CHAR);
+  act("$n takes $p from $P.",
+      TRUE, tBeing, tThing, this, TO_ROOM);
+
+  --(*tThing);
+  *tBeing += *tThing;
 }
