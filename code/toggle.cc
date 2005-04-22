@@ -327,10 +327,10 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
       vlogf(LOG_PEEL, fmt("name=%s") % pcorpse->name);
       
       if((sstring)pcorpse->name == fmt("corpse %s pcorpse") % name){
-	if(lootable)
-	  pcorpse->addCorpseFlag(CORPSE_LOOTABLE);
+	if(!lootable)
+	  pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
 	else
-	  pcorpse->remCorpseFlag(CORPSE_LOOTABLE);
+	  pcorpse->remCorpseFlag(CORPSE_DENY_LOOT);
       }
     }
   }
@@ -389,7 +389,7 @@ void TBeing::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Wimpy             : <R>off <1> | ");
 
     
-    sendTo(COLOR_BASIC, fmt("Corpse Looting    : %s\n\r") % on_or_off(isPlayerAction(PLR_ALLOW_LOOT)));
+    sendTo(COLOR_BASIC, fmt("Deny Corpse Loot  : %s\n\r") % on_or_off(isPlayerAction(PLR_DENY_LOOT)));
 
     sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s  | ") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
@@ -464,14 +464,14 @@ void TBeing::doToggle(const char *arg2)
     }      
 
     return;
-  } else if(is_abbrev(arg, "corpse-looting")){
-    if (isPlayerAction(PLR_ALLOW_LOOT)) {
+  } else if(is_abbrev(arg, "deny-corpse-loot")){
+    if (isPlayerAction(PLR_DENY_LOOT)) {
       sendTo("No one may loot your corpse now, except you.\n\r");
-      remPlayerAction(PLR_ALLOW_LOOT);
+      addPlayerAction(PLR_DENY_LOOT);
       updateCorpseLootFlags(getName(), false);
     } else {
       sendTo("Anyone may loot your corpse now.\n\r");
-      addPlayerAction(PLR_ALLOW_LOOT);
+      remPlayerAction(PLR_DENY_LOOT);
       updateCorpseLootFlags(getName(), true);
     }
   } else if(is_abbrev(arg, "compact")){

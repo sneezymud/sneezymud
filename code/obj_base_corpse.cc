@@ -388,7 +388,7 @@ void TBaseCorpse::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tTyp
   if((tCorpse=dynamic_cast<TPCorpse *>(this)) &&
      ((sstring)tBeing->getName()).lower() == tCorpse->getOwner()){
     // allow loot
-  } else if(!isCorpseFlag(CORPSE_LOOTABLE) &&
+  } else if(isCorpseFlag(CORPSE_DENY_LOOT) &&
 	    !tBeing->isImmortal()){
     act("Looting $p isn't allowed.",
 	TRUE, tBeing, this, NULL, TO_CHAR);

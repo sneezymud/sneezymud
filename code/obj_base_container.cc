@@ -145,7 +145,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
      ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
     // allow loot
   } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-	    !corpse->isCorpseFlag(CORPSE_LOOTABLE) &&
+	    corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
 	    !ch->isImmortal()){
     act("Looting $p isn't allowed.",
 	TRUE, ch, this, NULL, TO_CHAR);
@@ -215,7 +215,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
        ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
       // allow loot
     } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-       !corpse->isCorpseFlag(CORPSE_LOOTABLE) &&
+       corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
        !ch->isImmortal()){
       act("Looting $p isn't allowed.",
 	  TRUE, ch, this, NULL, TO_CHAR);
@@ -275,7 +275,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
        ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
       // allow loot
     } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-       !corpse->isCorpseFlag(CORPSE_LOOTABLE) &&
+       corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
        !ch->isImmortal()){
       act("Looting $p isn't allowed.",
 	  TRUE, ch, this, NULL, TO_CHAR);

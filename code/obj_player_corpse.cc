@@ -183,7 +183,7 @@ sstring TPCorpse::statObjInfo() const
   sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",
 	  getExpLost());
   sprintf(buf + strlen(buf), "Lootable: %s\n\r",
-	  (isCorpseFlag(CORPSE_LOOTABLE) ? "yes" : "no"));
+	  (isCorpseFlag(CORPSE_DENY_LOOT) ? "no" : "yes"));
 
   sstring a(buf);
   return a;
