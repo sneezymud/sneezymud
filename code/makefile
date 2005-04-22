@@ -19,7 +19,8 @@ VERSION_FILE = lib/txt/version.new
 # GPROFF=1    # Use with care, mud stays up for about 45 minutes with this on.
 # USECRYPT=1  # Uncomment to have all the crypt stuff
 
-CC = /usr/local/bin/g++40
+CC = /usr/bin/g++
+#CC = /usr/local/bin/g++40
 
 ###############################################################################
 #                    Base Values (Do Not Modify/Add Here)                     #
