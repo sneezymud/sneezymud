@@ -606,7 +606,7 @@ int Teleporter(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 int MSwarmer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TObj *stone;
-  int ret, rc;
+  int ret, rc=0;
 
   if (!me || cmd != CMD_MOB_COMBAT)
     return FALSE;
@@ -641,7 +641,7 @@ int MSwarmer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
 int IceStormer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
-  int ret, rc;
+  int ret, rc=0;
 
   if (!me || cmd != CMD_MOB_COMBAT)
     return FALSE;
@@ -715,7 +715,7 @@ int Edrain(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
 int LBolter(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
-  int ret, rc;
+  int ret, rc=0;
   if (!me || cmd != CMD_MOB_COMBAT)
     return FALSE;
 
@@ -749,7 +749,7 @@ int LBolter(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
 int Disser(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
-  int rc, ret;
+  int rc=0, ret;
 
   if (!me || cmd != CMD_MOB_COMBAT)
     return FALSE;
@@ -865,7 +865,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 int AcidBlaster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TObj *obj;
-  int rc, ret;
+  int rc=0, ret;
 
   if (!me || cmd != CMD_MOB_COMBAT)
     return FALSE;

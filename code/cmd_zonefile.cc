@@ -48,7 +48,9 @@ void TBeing::doZonefile(const sstring & tStArg)
   }
 }
 
+#ifdef MAIL_ZONEFILE
 const char SAVEZONEFILE_REPLYTO[] = "damescena@spasm.stanford.edu";
+#endif
 
 void doSaveZoneFile(TBeing *ch, const sstring & tArg)
 {

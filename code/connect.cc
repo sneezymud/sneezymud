@@ -63,7 +63,7 @@ const int MAX_TRAITS=13;
 //   "Your eardrums have been damaged and you are unable to hear."},
 
 // keep this list ordered by point value (for cosmetics)
-struct {
+struct TTraits {
   int tog, points;
   sstring name, desc;
 } traits[MAX_TRAITS+1] = {

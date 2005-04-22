@@ -9,9 +9,6 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 
-const char WP_OPMAN[] = "Damescena";
-const char WP_LOW[]   = "Damescena";
-
 void TBeing::doSet(const char *)
 {
   sendTo("You can't, you're a mob.\n\r");
@@ -249,38 +246,17 @@ void TPerson::doSet(const char *argument)
     // this number is simply 1 larger than the enum in use
     wizPowerT wpt = wizPowerT(prm-1);
     if (mob->isPc() || mob->GetMaxLevel() <= MAX_MORT) {
-#if 1
       if (wpt == POWER_IDLED && !hasWizPower(POWER_WIZARD)) {
         sendTo("You do not have the authority to modify this power.\n\r");
         return;
       }
-#else
-      if (wpt == POWER_IDLED &&
-          (!hasWizPower(POWER_WIZARD) ||
-           (mob->hasWizPower(POWER_GOD) && strcmp(getName(), WP_OPMAN)) ||
-           (mob->hasWizPower(POWER_BUILDER) && strcmp(getName(), WP_LOW)))) {
-        sendTo("You do not have the authority to modify this power.\n\r");
-        return;
-      }
-#endif
-
       if (!mob->hasWizPower(wpt)) {
         sendTo(fmt("Wiz-Power Set: %s\n\r") % getWizPowerName(wpt));
         mob->setWizPower(wpt);
-#if 0
-        mob->sendTo(fmt("You have been granted the following Wiz-Power: %s\n\r") %
-                getWizPowerName(wpt));
-        vlogf(LOG_MISC, fmt("%s given %s by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
-#endif
         mob->doSave(SILENT_NO);
       } else {
         sendTo(fmt("Wiz-Power Removed: %s\n\r") % getWizPowerName(wpt));
         mob->remWizPower(wpt);
-#if 0
-        mob->sendTo(fmt("The following Wiz-Power has been revoked: %s\n\r") %
-                getWizPowerName(wpt));
-        vlogf(LOG_MISC, fmt("%s had %s revoked by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
-#endif
       }
     } else {
       sendTo("You can't toggle Wiz-Powers for non-immortals.\n\r");

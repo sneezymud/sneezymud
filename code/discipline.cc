@@ -1985,6 +1985,8 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
     logSkillSuccess(caster, spell, SKILL_SUCCESS_NORMAL);
     return TRUE;
   }
+  
+  return FALSE;
 }
 
 bool TBeing::bSuccess(int ubCompetence, double dPiety, spellNumT spell)
@@ -2123,12 +2125,12 @@ bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
   if (roll < iLimit) {
     // success
     return bSucCounter(this, skillType, spell, roll, ubCompetence);
-
   } else {
     // fail
     logSkillFail(this, spell, FAIL_GENERAL);
     return false;
   }
+
 }
 
 byte defaultProficiency(byte uLearned, byte uStart, byte uLearn)

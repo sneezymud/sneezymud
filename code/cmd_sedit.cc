@@ -453,11 +453,12 @@ void seditReadUntil(sstring & tStOrig, sstring & tStStore, char tChar)
   char tString[256];
   int  tMarker;
 
-  for (tMarker = 0; (tStOrig.c_str())[tMarker] &&
-                    (tStOrig.c_str())[tMarker] != tChar; tMarker++)
-    tString[tMarker] = (tStOrig.c_str())[tMarker];
+  for (tMarker = 0; tStOrig[tMarker] &&
+                    tStOrig[tMarker] != tChar; tMarker++)
+    tString[tMarker] = tStOrig[tMarker];
 
-  tString[tMarker] = (tStOrig.c_str())[tMarker++];
+  tString[tMarker] = tStOrig[tMarker];
+  tMarker++;
   tString[tMarker] = '\0';
 
   tStOrig.replace(tStOrig.find(tString), strlen(tString), "");

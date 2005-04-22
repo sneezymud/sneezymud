@@ -202,7 +202,7 @@ int init_game_stats(void)
       }
     }
 
-    if (fscanf(fp, "%ld\n", &stats.first_login) != 1) {
+    if (fscanf(fp, "%ld\n", (long *) &stats.first_login) != 1) {
       vlogf(LOG_BUG, "Bad first_login info, resetting.");
       time_t tnow;
       time(&tnow);
@@ -290,7 +290,7 @@ void save_game_stats(void)
       fprintf(fp, "\n");
     }
 
-    fprintf(fp, "%ld\n", stats.first_login);
+    fprintf(fp, "%ld\n", (long) stats.first_login);
  
     fclose(fp);
   } else {

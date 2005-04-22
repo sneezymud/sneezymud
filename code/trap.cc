@@ -16,25 +16,6 @@
 extern const char * const GRENADE_EX_DESC = "__grenade_puller";
 extern const char * const TRAP_EX_DESC = "__trap_setter";
 
-const int trap_dam_type[] =
-{
-  -1,
-  DAMAGE_TRAP_POISON,
-  DAMAGE_TRAP_PIERCE,
-  DAMAGE_TRAP_SLEEP,
-  DAMAGE_TRAP_TNT,
-  DAMAGE_TRAP_SLASH,
-  DAMAGE_TRAP_FIRE,
-  DAMAGE_TRAP_ACID,
-  DAMAGE_TRAP_DISEASE,
-  DAMAGE_TRAP_BLUNT,
-  DAMAGE_TRAP_FROST,
-  DAMAGE_TRAP_TELEPORT,
-  DAMAGE_TRAP_ENERGY,
-  DAMAGE_TRAP_PIERCE,  // bolt
-  DAMAGE_TRAP_SLASH,   // disk
-  DAMAGE_TRAP_BLUNT,   // pebble
-};
 
 const sstring trap_types[] =
 {

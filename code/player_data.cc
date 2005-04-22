@@ -1885,8 +1885,8 @@ void TBeing::saveCareerStats()
       desc->career.pets_bought,
       desc->career.pet_levels_bought);
   fprintf(fp, "%lu %lu\n", 
-      desc->career.hit_level40,
-      desc->career.hit_level50);
+	  (unsigned long) desc->career.hit_level40,
+	  (unsigned long) desc->career.hit_level50);
   fprintf(fp, "%u %u\n",
       desc->career.stuck_in_foot,
       desc->career.ounces_of_blood);
