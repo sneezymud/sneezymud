@@ -465,7 +465,7 @@ void TBeing::doToggle(const char *arg2)
 
     return;
   } else if(is_abbrev(arg, "deny-corpse-loot")){
-    if (isPlayerAction(PLR_DENY_LOOT)) {
+    if (!isPlayerAction(PLR_DENY_LOOT)) {
       sendTo("No one may loot your corpse now, except you.\n\r");
       addPlayerAction(PLR_DENY_LOOT);
       updateCorpseLootFlags(getName(), false);
