@@ -327,10 +327,13 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
       vlogf(LOG_PEEL, fmt("name=%s") % pcorpse->name);
       
       if((sstring)pcorpse->name == fmt("corpse %s pcorpse") % name){
-	if(!lootable)
+	if(!lootable){
 	  pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
-	else
+	  pcorpse->remObjStat(ITEM_TAKE);
+	} else {
 	  pcorpse->remCorpseFlag(CORPSE_DENY_LOOT);
+	  pcorpse->addObjStat(ITEM_TAKE);
+	}
       }
     }
   }
