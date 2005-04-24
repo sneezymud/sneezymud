@@ -2000,6 +2000,14 @@ class TBeing : public TThing {
     sstring PG13filter(const sstring &)const;
     sstring blahblah(const sstring &) const;
     void doLook(const sstring &, cmdTypeT, TThing *specific = NULL);
+    void lookDark();
+    void lookDir(int);
+    void lookInObj(sstring, TThing *, unsigned int, const sstring &, cmdTypeT);
+    void lookRoom();
+    void lookAtRoom();
+    void lookAtBeing(sstring, TThing *);
+    void lookingAtObj(TThing *);
+    void lookRead(sstring, unsigned int &);
     void doShout(const char *);
     int doWhisper(const sstring &);
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
