@@ -114,16 +114,14 @@ void TBeing::lookDir(int keyword_no)
 	else if ((exitp->condition & EX_SLOPED_DOWN))
 	  sendTo("The way seems sloped down in that direction.\n\r");
 
-      if(1){
-	if (!(rp = real_roomp(exitp->to_room)))
-	  sendTo("You see swirling chaos.\n\r");
-	else {
-	  if (!isPlayerAction(PLR_BRIEF))
-	    sendRoomDesc(rp);
+      if (!(rp = real_roomp(exitp->to_room)))
+        sendTo("You see swirling chaos.\n\r");
+      else {
+        if (!isPlayerAction(PLR_BRIEF))
+          sendRoomDesc(rp);
 
-	  listExits(rp);
-	  list_thing_in_room(rp->getStuff(), this);
-	}
+        listExits(rp);
+        list_thing_in_room(rp->getStuff(), this);
       }
     } else if (!(exitp->condition & EX_SECRET))
       sendTo(fmt("The %s is closed.\n\r") % exitp->getName());
