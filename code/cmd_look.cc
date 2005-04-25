@@ -366,11 +366,12 @@ void TBeing::lookRead(sstring arg2, unsigned int &bits)
   }
 }
 
-void TBeing::lookAtBeing(sstring arg1, TThing *specific)
+void TBeing::lookAtBeing(TThing *specific)
 {
   TBeing *tmpBeing = dynamic_cast<TBeing *> (specific);
   bool   bIsSpying = (isAffected(AFF_SCRYING) ? !::number(0, (getSkillValue(SKILL_SPY) * 10)) : false);
   TThing *t;
+  sstring arg1;
 
   showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);
 
@@ -406,10 +407,12 @@ void TBeing::lookingAtObj(TThing *specific)
   const char *tmp_desc;
   int found;
   TObj *tmpObj = dynamic_cast<TObj *> (specific);
+
   if (!canSee(tmpObj)) {
     sendTo("Look at what?\n\r");
     return;
   }
+ 
   if (tmpObj->ex_description) {
     if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
       sstring tmp_desc_str = tmp_desc;
@@ -567,38 +570,22 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 
 
 	if (dynamic_cast<TBeing *> (specific)) {
-	  lookAtBeing(arg1, specific);
+	  lookAtBeing(specific);
 	  return;
-	} else if (dynamic_cast<TObj *> (specific)) {
+	} 
+
+	if (dynamic_cast<TObj *> (specific)) {
 	  lookingAtObj(specific);
 	  return;
 	}
+
 	if (tmp_char) {
-	  showTo(tmp_char, SHOW_MODE_SHORT_PLUS);
-	  if (this != tmp_char && !affectedBySpell(SKILL_SPY) &&
-	      !tmp_char->isImmortal()) {
-	    act("$n looks at you.", TRUE, this, 0, tmp_char, TO_VICT);
-	    act("$n looks at $N.", TRUE, this, 0, tmp_char, TO_NOTVICT);
-	    if (!tmp_char->isPc() && !isname("[clone]", tmp_char->name))
-	      dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
-	  } else if (tmp_char != this && !tmp_char->isImmortal()) {
-	    // Thieves in the room will be able to detect spying looks.
-	    TBeing *bOther;
-	    for (t = roomp->getStuff(); t; t = t->nextThing)
-	      if ((bOther = dynamic_cast<TBeing *>(t)) &&
-		  (bOther->affectedBySpell(SKILL_SPY) ||
-		   bOther->isAffected(AFF_SCRYING)) &&
-		  bOther->GetMaxLevel() >= GetMaxLevel() &&
-		  bOther != this) {
-		arg1 = fmt("You detect $n looking at %s with spying eyes.") % (bOther == tmp_char ? "you" : tmp_char->getName());
-		act(arg1, TRUE, this, 0, bOther, TO_VICT);
-		if (bOther == tmp_char && !tmp_char->isPc() 
-		    && !isname("[clone]", tmp_char->name))
-		  dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
-	      }
-	  }
+	  lookAtBeing(tmp_char);
 	  return;
 	}
+
+
+
 	char tmpname[MAX_INPUT_LENGTH];
 	strcpy(tmpname, arg2.c_str());
 	tmp = tmpname;

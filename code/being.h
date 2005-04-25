@@ -2005,7 +2005,7 @@ class TBeing : public TThing {
     void lookInObj(sstring, TThing *, unsigned int, const sstring &, cmdTypeT);
     void lookRoom();
     void lookAtRoom();
-    void lookAtBeing(sstring, TThing *);
+    void lookAtBeing(TThing *);
     void lookingAtObj(TThing *);
     void lookRead(sstring, unsigned int &);
     void doShout(const char *);
