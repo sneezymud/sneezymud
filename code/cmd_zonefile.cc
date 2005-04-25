@@ -61,7 +61,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
   char          tString[256],
                 tBuffer[256];
   TRoom        *tRoom;
-  sstring        tStString("");
+  sstring       tStString("");
 
   if (!ch->isImmortal() || !ch->desc || !ch->isPc())
     return;
@@ -72,7 +72,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     return;
   }
 
-  if (zone_table[zValue].enabled) {
+  if (zone_table[zValue].enabled && !ch->hasWizPower(POWER_WIZARD)) {
     ch->sendTo("I'm sorry, this zone is enabled so you cannot do this for it.\n\r");
     return;
   }
@@ -139,8 +139,11 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing *tThing;
-    TObj   *tObj;
+    TThing *tThing,
+           *tThing2;
+    TObj   *tObj,
+           *tObj2;
+    int     iMaxExist = 0;
 
     for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
@@ -148,23 +151,44 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
           tObj->canWear(ITEM_TAKE))
         continue;
 
+      for (tThing2 = tRoom->getStuff(); tThing2; tThing2 = tThing2->nextThing) {
+        if (!(tObj2 = dynamic_cast<TObj *>(tThing2)) ||
+            tObj2->canWear(ITEM_TAKE) ||
+            tObj2->getSnum() != tObj->getSnum())
+          continue;
+
+        iMaxExist++;
+      }
+
       sprintf(tString, "O 0 %d %d %d",
-              tObj->getSnum(), tObj->max_exist, roomIndex);
+              tObj->getSnum(), min(iMaxExist, tObj->max_exist), roomIndex);
       sprintf(tBuffer, "%-23s %s\n", tString,
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
       if (tObj->getStuff()) {
-        TThing *sThing;
-        TObj   *sObj;
+        TThing *sThing,
+               *sThing2;
+        TObj   *sObj,
+               *sObj2;
+
+        iMaxExist = 0;
 
         for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
 
+          for (sThing2 = tObj->getStuff(); sThing2; sThing2 = sThing2->nextThing) {
+            if (!(sObj2 = dynamic_cast<TObj *>(sThing2)) ||
+                sObj2->getSnum() != sObj->getSnum())
+              continue;
+
+            iMaxExist++;
+          }
+
           sprintf(tString, "P 1 %d %d %d",
-                  sObj->getSnum(), sObj->max_exist, tObj->getSnum());
+                  sObj->getSnum(), min(iMaxExist, sObj->max_exist), tObj->getSnum());
           sprintf(tBuffer, "%-25s %s\n", tString,
                   (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"));
           fputs(tBuffer, tFile);
@@ -181,8 +205,11 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing *tThing;
-    TObj   *tObj;
+    TThing *tThing,
+           *tThing2;
+    TObj   *tObj,
+           *tObj2;
+    int     iMaxExist = 0;
 
     for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
@@ -190,23 +217,44 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
           !tObj->canWear(ITEM_TAKE))
         continue;
 
+      for (tThing2 = tRoom->getStuff(); tThing2; tThing2 = tThing2->nextThing) {
+        if (!(tObj2 = dynamic_cast<TObj *>(tThing2)) ||
+            !tObj2->canWear(ITEM_TAKE) ||
+            tObj2->getSnum() != tObj->getSnum())
+          continue;
+
+        iMaxExist++;
+      }
+
       sprintf(tString, "B 0 %d %d %d",
-              tObj->getSnum(), tObj->max_exist, roomIndex);
+              tObj->getSnum(), min(iMaxExist, tObj->max_exist), roomIndex);
       sprintf(tBuffer, "%-23s %s\n", tString,
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
       if (tObj->getStuff()) {
-        TThing *sThing;
-        TObj   *sObj;
+        TThing *sThing, 
+               *sThing2;
+        TObj   *sObj, 
+               *sObj2;
+
+        iMaxExist = 0;
 
         for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
 
+          for (sThing2 = tObj->getStuff(); sThing2; sThing2 = sThing2->nextThing) {
+            if (!(sObj2 = dynamic_cast<TObj *>(sThing2)) ||
+                sObj2->getSnum() != sObj->getSnum())
+              continue;
+
+            iMaxExist++;
+          }
+
           sprintf(tString, "P 1 %d %d %d",
-                  sObj->getSnum(), sObj->max_exist, tObj->getSnum());
+                  sObj->getSnum(), min(iMaxExist, sObj->max_exist), tObj->getSnum());
           sprintf(tBuffer, "%-25s %s\n", tString,
                   (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"));
           fputs(tBuffer, tFile);
@@ -223,16 +271,27 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing   *tThing;
-    TMonster *tMob;
+    TThing   *tThing,
+             *tThing2;
+    TMonster *tMob,
+             *tMob2;
+    int       iMaxExist = 0;
 
     for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tMob = dynamic_cast<TMonster *>(tThing)) ||
           tMob->getSnum() < 0)
         continue;
 
+      for (tThing2 = tRoom->getStuff(); tThing2; tThing2 = tThing2->nextThing) {
+        if (!(tMob2 = dynamic_cast<TMonster *>(tThing2)) ||
+            tMob2->getSnum() != tMob->getSnum())
+          continue;
+
+        iMaxExist++;
+      }
+
       sprintf(tString, "M 0 %d %d %d",
-              tMob->getSnum(), tMob->max_exist, roomIndex);
+              tMob->getSnum(), min(iMaxExist, tMob->max_exist), roomIndex);
       sprintf(tBuffer, "%-23s %s\n", tString,
               (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
