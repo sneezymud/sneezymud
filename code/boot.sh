@@ -27,6 +27,8 @@ then
     rm -f file
     echo "Booting ./sneezy $PORT."
     ./sneezy $PORT >& file &
+    pid=$(pgrep -U $USER -f "sneezy $PORT")
+    echo "Running as process $pid.";
   else
     echo "Sneezy already running on port $PORT."
   fi
