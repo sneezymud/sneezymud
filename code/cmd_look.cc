@@ -487,14 +487,17 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 
 
   // check position and blindness
-  if (getPosition() < POSITION_SLEEPING)
+  if (getPosition() < POSITION_SLEEPING){
     sendTo("You can't see anything but stars!\n\r");
-  else if (getPosition() == POSITION_SLEEPING)
+    return;
+  } else if (getPosition() == POSITION_SLEEPING){
     sendTo("You can't see anything -- you're sleeping!\n\r");
-  else if (isAffected(AFF_BLIND) && !isImmortal() && 
-	   !isAffected(AFF_TRUE_SIGHT))
+    return;
+  } else if (isAffected(AFF_BLIND) && !isImmortal() && 
+	   !isAffected(AFF_TRUE_SIGHT)){
     sendTo("You can't see a damn thing -- you're blinded!\n\r");
-  else if (roomp->pitchBlackDark() && !isImmortal() &&
+    return;
+  } else if (roomp->pitchBlackDark() && !isImmortal() &&
            (visionBonus <= 0) &&
            !(roomp->getRoomFlags() & ROOM_ALWAYS_LIT) &&
            !isAffected(AFF_TRUE_SIGHT)) {
