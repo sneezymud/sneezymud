@@ -316,54 +316,6 @@ void TBeing::lookAtRoom()
   list_thing_in_room(roomp->getStuff(), this);
 }
 
-void TBeing::lookRead(sstring arg2, unsigned int &bits)
-{
-  //const char *tempArg = NULL;
-  TObj *o2 = NULL;
-  TBeing *tmp_char = NULL;
-  sstring tempArg, tempArg2;
-  tempArg = one_argument(arg2, tempArg2);
-  if (is_abbrev(tempArg2, "chapter") ||
-      is_abbrev(tempArg2, "section")) {
-    sstring tempArg3;
-    if (!(tempArg.empty()))
-      tempArg = one_argument(tempArg, tempArg3);
-    if (!(tempArg.empty()) || !convertTo<int>(tempArg3)) {
-      bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
-    } else if (convertTo<int>(tempArg3)) {
-      TObj * tempObj = NULL;
-      if ((tempObj = dynamic_cast<TBook *> (heldInPrimHand()))) {
-	o2 = tempObj;
-	bits = FIND_OBJ_EQUIP;
-      } else if ((tempObj = dynamic_cast<TBook *> (heldInSecHand()))) {
-	o2 = tempObj;
-	bits = FIND_OBJ_EQUIP;
-      }
-      if (!bits) {
-	TThing * tempThing = NULL;
-	for (tempThing = getStuff(); tempThing; tempThing = tempThing->nextThing) {
-	  if (!dynamic_cast<TBook *> (tempThing)) {
-	    continue;
-	  } else {
-	    o2 = dynamic_cast<TBook *> (tempThing);
-	    if (o2) {
-	      bits = FIND_OBJ_INV;
-	      break;
-	    }
-	  }
-	}
-      }
-      if (!bits)
-	bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
-    } else {
-      bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
-    }
-  } else {
-    bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP,
-			this, &tmp_char, &o2);
-  }
-}
-
 void TBeing::lookAtBeing(TThing *specific)
 {
   TBeing *tmpBeing = dynamic_cast<TBeing *> (specific);
@@ -563,7 +515,47 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     case 7:{
       if (!(arg2.empty()) || specific) {
 	if (cmd == CMD_READ) {
-	  lookRead(arg2, bits);
+	  sstring tempArg, tempArg2;
+	  tempArg = one_argument(arg2, tempArg2);
+	  if (is_abbrev(tempArg2, "chapter") ||
+	      is_abbrev(tempArg2, "section")) {
+	    sstring tempArg3;
+	    if (!(tempArg.empty()))
+	      tempArg = one_argument(tempArg, tempArg3);
+	    if (!(tempArg.empty()) || !convertTo<int>(tempArg3)) {
+	      bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
+	    } else if (convertTo<int>(tempArg3)) {
+	      TObj * tempObj = NULL;
+	      if ((tempObj = dynamic_cast<TBook *> (heldInPrimHand()))) {
+		o2 = tempObj;
+		bits = FIND_OBJ_EQUIP;
+	      } else if ((tempObj = dynamic_cast<TBook *> (heldInSecHand()))) {
+		o2 = tempObj;
+		bits = FIND_OBJ_EQUIP;
+	      }
+	      if (!bits) {
+		TThing * tempThing = NULL;
+		for (tempThing = getStuff(); tempThing; tempThing = tempThing->nextThing) {
+		  if (!dynamic_cast<TBook *> (tempThing)) {
+		    continue;
+		  } else {
+		    o2 = dynamic_cast<TBook *> (tempThing);
+		    if (o2) {
+		      bits = FIND_OBJ_INV;
+		      break;
+		    }
+		  }
+		}
+	      }
+	      if (!bits)
+		bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
+	    } else {
+	      bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
+	    }
+	  } else {
+	    bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP,
+				this, &tmp_char, &o2);
+	  }
 	} else {
 	  bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM |
 			      FIND_OBJ_EQUIP | FIND_CHAR_ROOM, this, &tmp_char, &o2);

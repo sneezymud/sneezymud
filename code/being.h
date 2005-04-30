@@ -2007,7 +2007,6 @@ class TBeing : public TThing {
     void lookAtRoom();
     void lookAtBeing(TThing *);
     void lookingAtObj(TThing *);
-    void lookRead(sstring, unsigned int &);
     void doShout(const char *);
     int doWhisper(const sstring &);
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
