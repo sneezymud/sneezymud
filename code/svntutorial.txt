@@ -48,12 +48,12 @@ production code, for compiling.
 ---
 
 The lib directory is linked to /mud/build/lib.  You don't have your own
-copy of lib, so be aware that cvs doesn't have any affect on those
+copy of lib, so be aware that svn doesn't have any affect on those
 files EXCEPT for /mud/build/lib/zonefiles.
 
 ---
 
 The zonefiles in /mud/build/lib/zonefiles are in SVN.  If you make
-changes to those files you must do a cvs commit from that directory to
+changes to those files you must do a svn commit from that directory to
 check in your changes.  The mvlow script automatically handles the
 transfer to prod, after your changes are checked into SVN.
