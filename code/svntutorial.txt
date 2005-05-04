@@ -36,7 +36,8 @@ use another port if 6969 is being used.
 To do a code move:
 cd /mud/build
 svn update
-./bmake.csh
+./build.sh start
+<wait for build to finish>
 ./mvcode.csh
 
 ---
