@@ -76,7 +76,7 @@ void procUpdateAuction::run(int pulse) const
 // called once per mud day
   TDatabase db(DB_SNEEZY);
 
-  db.query("select shop_nr, ticket, bidder, seller from shopownedauction where days==1");
+  db.query("select shop_nr, ticket, bidder, seller from shopownedauction where days=1");
   
   while(db.fetchRow()){
     endAuction(convertTo<int>(db["ticket"]), convertTo<int>(db["bidder"]),
