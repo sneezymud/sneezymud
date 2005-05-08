@@ -52,55 +52,26 @@ togTypeT & operator++(togTypeT &c, int)
   return c = (c == MAX_TOG_TYPES) ? TOG_NONE : togTypeT(c+1);
 }
 
-
 togInfoT::~togInfoT()
 {
 }
 
 togInfoT::togInfoT()
 {
+  TDatabase db(DB_SNEEZY);
+
   toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");
-  toggles[TOG_SHOUTING] = new togEntry(true, false, "Shouting", 
-				       "allow shouting");
-  toggles[TOG_SLEEP]    = new togEntry(true, false, "Sleep offensive", 
-				       "sleep spell offensive");
-  toggles[TOG_NEWBIEPK] = new togEntry(false, false, "Newbie PK", 
-				       "allow PKing of newbies");
-  toggles[TOG_GRAVITY]  = new togEntry(true, false, "Gravity", "gravity");
-  toggles[TOG_CLIENTS]  = new togEntry(true, false, "Clients", 
-				  "allow connections with SneezyMUD client");
-  toggles[TOG_WIZBUILD] = new togEntry(true, false, "Builder Wiznet", 
-				       "allow builders to hear wiznet");
-  toggles[TOG_MOBNAMES] = new togEntry(true, false, "PCs w/mob names",
-				       "allow PCs with mob names");
-  toggles[TOG_TWINK]    = new togEntry(false, false, "Twinky Combat",
-				       "twinky combat messages");
-  toggles[TOG_DBTIMING] = new togEntry(false, false, "Time DB Queries",
-				       "time database queries");
-  toggles[TOG_GAMELOOP] = new togEntry(false, false, "Game Loop Timing",
-				       "print timing info for game loop");
-  toggles[TOG_DOUBLEEXP]= new togEntry(false, false, "Double Exp",
-				       "turn on double exp (use sparingly)");
-  toggles[TOG_TESTCODE1]= new togEntry(false, true, "Test Code 1",
-				       "not currently used");
-  toggles[TOG_TESTCODE2]= new togEntry(false, true, "Test Code 2",
-				       "allow players to see item levels");
-  toggles[TOG_TESTCODE3]= new togEntry(false, true,  "Test Code 3",
-				       "not currently used");
-  toggles[TOG_TESTCODE4]= new togEntry(false, true,  "Test Code 4",
-				       "not currently used");
-  toggles[TOG_TESTCODE5]= new togEntry(false, true,  "Test Code 5",
-	     "disable/enable certain aspects of the new faction code - dash");
-  toggles[TOG_TESTCODE6]= new togEntry(false, true,  "Test Code 6",
-				       "not currently used");
-  toggles[TOG_QUESTCODE1]=new togEntry(false, true,  "Quest Code 1",
-				       "unknown");
-  toggles[TOG_QUESTCODE2]=new togEntry(false, true,  "Quest Code 2",
-				       "unknown");
-  toggles[TOG_QUESTCODE3]=new togEntry(false, true,  "Quest Code 3",
-				       "unknown");
-  toggles[TOG_QUESTCODE4]=new togEntry(false, true,  "Quest Code 4",
-				       "unknown");
+
+  db.query("select tog_id, toggle, testcode, name, descr from globaltoggles order by name");
+
+
+  while(db.fetchRow()){
+    togTypeT tog_id=(togTypeT) convertTo<int>(db["tog_id"]);
+    bool toggle=(db["toggle"]=="t") ? true : false;
+    bool testcode=(db["testcode"]=="t") ? true : false;
+
+    toggles[tog_id] = new togEntry(toggle, testcode, db["name"], db["descr"]);
+  }
 }  
 
 
