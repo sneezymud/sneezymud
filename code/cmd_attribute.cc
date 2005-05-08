@@ -547,7 +547,7 @@ void TBeing::doAttribute(const char *arg)
     buf+=buf2;
     buf+="\n\r";
     sendTo(buf);
-    if (TestCode5) {
+    if (toggleInfo[TOG_TESTCODE5]->toggle){
       sendTo(COLOR_BASIC, fmt("You are a member of %s<1>, and have a rank of %s<1>.\n\r") %
 	     newfaction()->getName() % rank());
     } else {

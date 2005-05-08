@@ -108,7 +108,6 @@ const int ADD           = 1;
 
 extern bool is_client_sstring(char *str);
 
-extern bool Clients;
 
 #endif
 

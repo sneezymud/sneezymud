@@ -115,7 +115,7 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
 
     sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
     TFaction *f = NULL;
-    if((f = p->newfaction()) && TestCode5) {
+    if((f = p->newfaction()) && toggleInfo[TOG_TESTCODE5]->toggle) {
       if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
 	  (!IS_SET(f->flags, FACT_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
 	  (!p->isImmortal() || ch->isImmortal())) {
@@ -452,9 +452,9 @@ void TBeing::doWho(const char *argument)
                   if (!align) {
                     // show factions of everyone to immorts
                     // mortal version will show non-imms that are in same fact
-                    if(TestCode5) {
+                    if(toggleInfo[TOG_TESTCODE5]->toggle) {
 		      TFaction *f = NULL;
-		      if((f = p->newfaction()) && TestCode5) {
+		      if((f = p->newfaction()) && toggleInfo[TOG_TESTCODE5]->toggle) {
 			if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || newfaction()== p->newfaction()||isImmortal()) &&
 			    (!IS_SET(f->flags, FACT_HIDDEN) || newfaction() == p->newfaction() || isImmortal()) &&
 			    (!p->isImmortal() || isImmortal())) {

@@ -160,7 +160,7 @@ bool TDatabase::query(const char *query,...)
 
   // this saves the queries (without args) and the execution time
   // it slows things down pretty significantly though
-  if(timeQueries){
+  if(toggleInfo[TOG_DBTIMING]->toggle){
     query=qsave;
     buf="";
 

@@ -519,7 +519,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
 
 void pulseLog(sstring name, TTiming timer, int pulse)
 {
-  if(!gameLoopTiming)
+  if(!toggleInfo[TOG_GAMELOOP]->toggle)
     return;
 
   vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
@@ -604,7 +604,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
 
     if (pl.mobstuff) {
-      if (Gravity) {
+      if (toggleInfo[TOG_GRAVITY]->toggle) {
 	tmp_ch->checkSinking(tmp_ch->in_room);
 
 	rc = tmp_ch->checkFalling();
@@ -850,7 +850,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
-    if(gameLoopTiming){
+    if(toggleInfo[TOG_GAMELOOP]->toggle){
       rc=(int)(t.getElapsedReset()*1000000);
       
       if(rc>1000){
@@ -1203,7 +1203,7 @@ int TMainSocket::gameLoop()
   while (!handleShutdown()) {
     timespent=handleTimeAndSockets();
     
-    if(gameLoopTiming){
+    if(toggleInfo[TOG_GAMELOOP]->toggle){
       count=((timespent.tv_sec*1000000)+timespent.tv_usec);
       
       vlogf(LOG_MISC, fmt("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
@@ -1219,7 +1219,7 @@ int TMainSocket::gameLoop()
     scheduler.run(pulse);
 
 
-    if(gameLoopTiming)
+    if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, fmt("%i %i) normal pulses: %s") % 
 	    pulse % (pulse%12) % pl.showPulses());
 
@@ -1233,7 +1233,7 @@ int TMainSocket::gameLoop()
     // reset the pulse flags
     pl.init(pulse);
 
-    if(gameLoopTiming){
+    if(toggleInfo[TOG_GAMELOOP]->toggle){
       vlogf(LOG_MISC, fmt("%i %i) split pulses: %s") % 
 	    oldpulse % (oldpulse%12) % pl.showPulses());
 
@@ -1243,7 +1243,7 @@ int TMainSocket::gameLoop()
     // handle pulse stuff for objects
     count=objectPulse(pl, (pulse % 2400));
 
-    if(gameLoopTiming)
+    if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
@@ -1251,7 +1251,7 @@ int TMainSocket::gameLoop()
     // handle pulse stuff for mobs and players
     count=characterPulse(pl, (pulse % 2400));
 
-    if(gameLoopTiming)
+    if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);

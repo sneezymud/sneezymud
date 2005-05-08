@@ -36,44 +36,97 @@ extern "C" {
 #include "database.h"
 #include "rent.h"
 
-bool Silence = FALSE;
-bool Sleep = TRUE;
 
-// please document what each testcode does if you use it!!!!!
-bool TestCode1 = false;
-// code1 vlogf's main loop pulse times
-bool TestCode2 = false;       // unfinished code 
-  // code2 in use, lets players see level on items
-bool TestCode3 = true;       // unfinished code 
-  // code3 in use, hiding new spell
-bool TestCode4 = true;       // unfinished code 
-  // code4 in use, hiding new spell
-bool TestCode5 = false;
-  // code5 is to disable/enable certain aspects of the new faction code - dash 6/24/01
-bool TestCode6 = false;
-  // not in use
+togEntry *togInfoT::operator[] (const togTypeT i)
+{
+  if(toggles.find(i) == toggles.end()){
+    vlogf(LOG_BUG, fmt("invalid toggle detected: %i") % i);
+    return toggles[TOG_NONE];
+  } else {
+    return toggles[i];
+  }
+}
 
-bool NewbiePK = FALSE;
-bool QuestCode = false;       // spec-procs for quests 
-bool Gravity = TRUE;         // Do we allow gravity, fallen objects etc.
-bool QuestCode2 = FALSE;     // spec-procs for quests 
-bool QuestCode3 = FALSE;     // spec-procs for quests
-bool QuestCode4 = FALSE;     // spec-procs for quests
+togTypeT & operator++(togTypeT &c, int)
+{
+  return c = (c == MAX_TOG_TYPES) ? TOG_NONE : togTypeT(c+1);
+}
 
-bool Clients = true;         // Do we allow clients? 
-bool WizBuild = true;         // can builders hear wiznet
-bool WizInvis = FALSE;
-bool WizShout = FALSE;
-bool WizGoto = FALSE;
-bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
-bool Twink = FALSE; // combat twink fun stuff
-bool timeQueries = false; // store db query speeds THIS IS SLOW
-bool gameLoopTiming = false; // spit out game loop info, very spammy
 
-int QuestVar1 = 0; // varibles for changing constants in the code in-game
+togInfoT::~togInfoT()
+{
+}
+
+togInfoT::togInfoT()
+{
+  toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");
+  toggles[TOG_SHOUTING] = new togEntry(true, false, "Shouting", 
+				       "allow shouting");
+  toggles[TOG_SLEEP]    = new togEntry(true, false, "Sleep offensive", 
+				       "sleep spell offensive");
+  toggles[TOG_NEWBIEPK] = new togEntry(false, false, "Newbie PK", 
+				       "allow PKing of newbies");
+  toggles[TOG_GRAVITY]  = new togEntry(true, false, "Gravity", "gravity");
+  toggles[TOG_CLIENTS]  = new togEntry(true, false, "Clients", 
+				  "allow connections with SneezyMUD client");
+  toggles[TOG_WIZBUILD] = new togEntry(true, false, "Builder Wiznet", 
+				       "allow builders to hear wiznet");
+  toggles[TOG_MOBNAMES] = new togEntry(true, false, "PCs w/mob names",
+				       "allow PCs with mob names");
+  toggles[TOG_TWINK]    = new togEntry(false, false, "Twinky Combat",
+				       "twinky combat messages");
+  toggles[TOG_DBTIMING] = new togEntry(false, false, "Time DB Queries",
+				       "time database queries");
+  toggles[TOG_GAMELOOP] = new togEntry(false, false, "Game Loop Timing",
+				       "print timing info for game loop");
+  toggles[TOG_DOUBLEEXP]= new togEntry(false, false, "Double Exp",
+				       "turn on double exp (use sparingly)");
+  toggles[TOG_TESTCODE1]= new togEntry(false, true, "Test Code 1",
+				       "not currently used");
+  toggles[TOG_TESTCODE2]= new togEntry(false, true, "Test Code 2",
+				       "allow players to see item levels");
+  toggles[TOG_TESTCODE3]= new togEntry(false, true,  "Test Code 3",
+				       "not currently used");
+  toggles[TOG_TESTCODE4]= new togEntry(false, true,  "Test Code 4",
+				       "not currently used");
+  toggles[TOG_TESTCODE5]= new togEntry(false, true,  "Test Code 5",
+	     "disable/enable certain aspects of the new faction code - dash");
+  toggles[TOG_TESTCODE6]= new togEntry(false, true,  "Test Code 6",
+				       "not currently used");
+  toggles[TOG_QUESTCODE1]=new togEntry(false, true,  "Quest Code 1",
+				       "unknown");
+  toggles[TOG_QUESTCODE2]=new togEntry(false, true,  "Quest Code 2",
+				       "unknown");
+  toggles[TOG_QUESTCODE3]=new togEntry(false, true,  "Quest Code 3",
+				       "unknown");
+  toggles[TOG_QUESTCODE4]=new togEntry(false, true,  "Quest Code 4",
+				       "unknown");
+}  
+
+
+togEntry::togEntry(bool t, bool t2, const sstring n, const sstring d) :
+  toggle(t),
+  testcode(t2),
+  name(n),
+  descr(d)
+{
+}
+
+togEntry::~togEntry()
+{
+}
+
+
+togInfoT toggleInfo;
+
+
+int QuestVar1 = 0; // variables for changing constants in the code in-game
 int QuestVar2 = 0;
 int QuestVar3 = 0;
 int QuestVar4 = 0;
+
+
+
 
 void TBeing::doChange(const char *argument)
 {

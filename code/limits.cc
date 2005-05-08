@@ -777,7 +777,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
     return;
   }
 
-  if(TestCode1)
+  if(toggleInfo[TOG_DOUBLEEXP]->toggle)
     gain *= 2;
   
   gain /= ch->howManyClasses();

@@ -1871,7 +1871,7 @@ int TBeing::terrainSpecial()
     affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
   }
 
-  if (QuestCode4) {
+  if (toggleInfo[TOG_QUESTCODE4]->toggle) {
     if (affectedBySpell(AFFECT_WAS_INDOORS) || hasDisease(DISEASE_FROSTBITE)) return FALSE;  // make it only hit em if they sit outside for a while
     if (weather_info.sky != SKY_RAINING && weather_info.sky != SKY_CLOUDY && weather_info.sky != SKY_LIGHTNING)
       return FALSE;

@@ -287,7 +287,8 @@ void TBeing::failSleep(TBeing *ch)
 {
   sendTo("You feel sleepy for a moment, but then you recover.\n\r");
   if (dynamic_cast<TMonster *>(this))
-    if (Sleep && !fight() && (getPosition() > POSITION_SLEEPING))
+    if (toggleInfo[TOG_SLEEP]->toggle && !fight() && 
+	(getPosition() > POSITION_SLEEPING))
       setCharFighting(ch);
 }
 
@@ -320,7 +321,7 @@ void TBeing::spellWearOffSoon(spellNumT s)
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
     return;
 
-  if (s == AFFECT_WAS_INDOORS && QuestCode4) {
+  if (s == AFFECT_WAS_INDOORS && toggleInfo[TOG_QUESTCODE4]->toggle) {
     sendTo("You begin to shiver and wonder how much longer you can stay outdoors before catching frostbite.\n\r");
     act("$n's teeth begin to chatter.", TRUE, this, 0, 0, TO_ROOM);
   }
@@ -355,7 +356,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
     return 0;
 
-  if (s == AFFECT_WAS_INDOORS && QuestCode4) {
+  if (s == AFFECT_WAS_INDOORS && toggleInfo[TOG_QUESTCODE4]->toggle) {
     sendTo("You're getting really cold now, and can barely feel your limbs.\n\r");
     act("$n begins to shiver violently, and looks pale.", TRUE, this, 0, 0, TO_ROOM);
   }

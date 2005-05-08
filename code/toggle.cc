@@ -340,6 +340,23 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
 }
 
 
+void closeClientConnections(TBeing *me)
+{
+  me->sendTo("Severing current client connections.\n\r");
+  Descriptor *d, *dn;
+  for (d = descriptor_list; d; d = dn) {
+    dn = d->next;
+    if (d->m_bIsClient) {
+      d->writeToQ("Link severed by admin.\n\r");
+      me->sendTo(COLOR_MOBS, fmt("Disconnecting client use by %s.\n\r") % 
+		 (d->character ? d->character->getName() : "Unknown"));
+      delete d;
+    }
+  }
+}
+
+
+
 void TBeing::doToggle(const char *arg2)
 {
   char arg[256];
@@ -437,34 +454,37 @@ void TBeing::doToggle(const char *arg2)
     if (hasWizPower(POWER_TOGGLE)){
       sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
+      int i=0;
+      for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
+	if(toggleInfo[t]->testcode || t==TOG_NONE)
+	  continue;
 
-      sendTo(COLOR_BASIC, fmt("Shouting          : %s  | ") % on_or_off(!Silence));
-      sendTo(COLOR_BASIC, fmt("Clients           : %s  | ") % on_or_off(Clients));
-      sendTo(COLOR_BASIC, fmt("PCs w/mob names   : %s\n\r") %on_or_off(AllowPcMobs));
-      sendTo(COLOR_BASIC, fmt("Sleep offensive   : %s  | ") % on_or_off(Sleep));
-      sendTo(COLOR_BASIC, fmt("Gravity           : %s\n\r") % on_or_off(Gravity));
-      sendTo(COLOR_BASIC, fmt("Allow Wiz-Invis   : %s  | ") % on_or_off(WizInvis));
-      sendTo(COLOR_BASIC, fmt("Nuke Inactive     : %s  | ") % on_or_off(nuke_inactive_mobs));
-      sendTo(COLOR_BASIC, fmt("NewbiePK          : %s\n\r") % on_or_off(NewbiePK));
-      sendTo(COLOR_BASIC, fmt("Time DB Queries   : %s  | ") %on_or_off(timeQueries));
-      sendTo(COLOR_BASIC, fmt("Twinky Combat     : %s  | ") % on_or_off(Twink));
-      sendTo(COLOR_BASIC, fmt("Game Loop Timing  : %s\n\r") % on_or_off(gameLoopTiming));
+	sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	       toggleInfo[t]->name %
+	       on_or_off(toggleInfo[t]->toggle) %
+	       ((++i%3) ? "  | " : "\n\r"));
+      }
+      if(i%3)
+	sendTo("\n\r");
 
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
-      sendTo(COLOR_BASIC, fmt("Test code #1      : %s  | ") %on_or_off(TestCode1));
-      sendTo(COLOR_BASIC, fmt("Test code #2      : %s  | ") % on_or_off(TestCode2));
-      sendTo(COLOR_BASIC, fmt("Test code #3      : %s\n\r") % on_or_off(TestCode3));
-      sendTo(COLOR_BASIC, fmt("Test code #4      : %s  | ") % on_or_off(TestCode4));
-      sendTo(COLOR_BASIC, fmt("Test code #5      : %s  | ") % on_or_off(TestCode5));
-      sendTo(COLOR_BASIC, fmt("Test code #6      : %s\n\r") % on_or_off(TestCode6));
-      sendTo(COLOR_BASIC, fmt("Quest code #1     : %s  | ") % on_or_off(QuestCode));
-      sendTo(COLOR_BASIC, fmt("Quest code #2     : %s  | ") % on_or_off(QuestCode2));
-      sendTo(COLOR_BASIC, fmt("Quest code #3     : %s\n\r") % on_or_off(QuestCode3));
-      sendTo(COLOR_BASIC, fmt("Quest code #4     : %s  | ") % on_or_off(QuestCode4));
-    }      
+      i=0;
+      for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
+	if(!toggleInfo[t]->testcode || t==TOG_NONE)
+	  continue;
+
+	sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	       toggleInfo[t]->name %
+	       on_or_off(toggleInfo[t]->toggle) %
+	       ((++i%3) ? "  | " : "\n\r"));
+      }
+      if(i%3)
+	sendTo("\n\r");
+
+    }
 
     return;
   } else if(is_abbrev(arg, "deny-corpse-loot")){
@@ -586,7 +606,7 @@ void TBeing::doToggle(const char *arg2)
   } else if (is_abbrev(arg, "invisibility") && isImmortal()){
     int level;
 
-    if (!WizInvis && !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
+    if (!hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("The invis command has been disabled due to overuse.\n\r");
       sendTo("Talk to a more powerful god if you need this power enabled temporarily.\n\r");
       return;
@@ -935,191 +955,6 @@ void TBeing::doToggle(const char *arg2)
       sendTo("You will now head automatically toward things you are hunting.\n\r");
       SET_BIT(desc->autobits, AUTO_HUNT);
     }
-  } else if (is_abbrev(arg, "silence") && hasWizPower(POWER_TOGGLE)) {
-    Silence = !Silence;
-    sendTo(fmt("You have now %s shouting.\n\r") % (Silence ? "disallowed" : "allowed"));
-    vlogf(LOG_MISC, fmt("%s has turned player shouting %s.") %  getName() % 
-	  (Silence ? "off" : "on"));
-  } else if (is_abbrev(arg, "gravity") && hasWizPower(POWER_TOGGLE)) {
-    Gravity = !Gravity;
-    sendTo(fmt("You have now turned gravity %s.\n\r") % 
-	   (!Gravity ? "off" : "on"));
-    vlogf(LOG_MISC, fmt("%s has turned gravity %s.") %  getName() % 
-	  (!Gravity ? "off" : "on"));
-  } else if (is_abbrev(arg, "sleep") && hasWizPower(POWER_TOGGLE)) {
-    Sleep = !Sleep;
-    sendTo(fmt("You have now turned offensive sleep %s.\n\r") % (!Sleep ? "off": "on"));
-    vlogf(LOG_MISC, fmt("%s has turned offensive sleep %s.") %  getName() % 
-	  (!Sleep ? "off"   : "on"));
-  } else if (is_abbrev(arg, "wiznet") && hasWizPower(POWER_TOGGLE)) {
-    WizBuild = ! WizBuild;
-    sendTo(fmt("Builders can now %s the wiznet.\n\r") % (WizBuild ? "hear" : "not hear"));
-    vlogf(LOG_MISC,fmt("%s has turned wiznet %s for builders.") % getName() %
-	  (WizBuild ? "on" : "off"));
-  } else if (is_abbrev(arg, "wizgoto") && hasWizPower(POWER_TOGGLE)) {
-    WizGoto = ! WizGoto;
-    sendTo(fmt("Immortals can now %s the enabled zones.\n\r") % (WizGoto ? "goto" : "not goto"));
-    vlogf(LOG_MISC,fmt("%s has turned goto %s for immortals.") % getName() %
-	  (WizGoto ? "on" : "off"));
-  } else if (is_abbrev(arg, "wizshout") && hasWizPower(POWER_TOGGLE)) {
-    WizShout = ! WizShout;
-    sendTo(fmt("Immortals can now %s.\n\r") % 
-	   (WizShout ? "shout" : "not shout"));
-    vlogf(LOG_MISC,fmt("%s has turned shout %s for immortals.") % getName() %
-	  (WizShout ? "on" : "off"));
-  } else if (is_abbrev(arg, "twink") && hasWizPower(POWER_TOGGLE)) {
-    Twink = ! Twink;
-    sendTo(fmt("Twink combat mode is now %s.\n\r") % (Twink ? "on" : "off"));
-    vlogf(LOG_MISC,fmt("%s has turned Twink combat mode %s.") % getName() %
-	  (Twink ? "on" : "off"));
-  } else if (is_abbrev(arg, "wizinvis") && hasWizPower(POWER_TOGGLE)) {
-    if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
-      sendTo("Invisibility use has been restricted due to overuse.\n\r");
-      return;
-    }
-    WizInvis = ! WizInvis;
-    sendTo(fmt("Immortals can now %s invisible.\n\r") % (WizInvis ? "go" : "not go"));
-    vlogf(LOG_MISC,fmt("%s has turned invisibility %s.") % getName() %
-	  (WizInvis? "on" : "off"));
-  } else if ((is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk"))  && hasWizPower(POWER_TOGGLE)) {
-      NewbiePK = ! NewbiePK;
-      sendTo(fmt("Newbie Pk toggle is now %s.\n\r") % (NewbiePK ? "in use" : "off"));
-      vlogf(LOG_MISC,fmt("%s has now %s newbie pk.") % getName() %
-	    (NewbiePK ? "enabled" : "disabled"));
-      if (NewbiePK)
-        vlogf(LOG_MISC,"Newbies can now be killed by anyone.");
-  } else if (is_abbrev(arg, "gamelooptiming") && hasWizPower(POWER_TOGGLE)) {
-    gameLoopTiming = ! gameLoopTiming;
-    sendTo(fmt("game loop timing is now %s.\n\r") % (gameLoopTiming ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s game loop timing.") % getName() %
-	  (gameLoopTiming ? "enabled" : "disabled"));    
-  } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
-#if 0
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode1 = ! TestCode1;
-    sendTo(fmt("TestCode #1 is now %s.\n\r") % (TestCode1 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #1.") % getName() %
-	  (TestCode1 ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "testcode2") && hasWizPower(POWER_TOGGLE)) {
-#if 0
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode2 = ! TestCode2;
-    sendTo(fmt("TestCode #2 is now %s.\n\r") % (TestCode2 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #2.") % getName() %
-	  (TestCode2 ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "testcode3") && hasWizPower(POWER_TOGGLE)) {
-#if 0
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode3 = ! TestCode3;
-    sendTo(fmt("TestCode #3 is now %s.\n\r") % (TestCode3 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #3.") % getName() %
-	  (TestCode3 ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "testcode4") && hasWizPower(POWER_TOGGLE)) {
-#if 0
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode4 = ! TestCode4;
-    sendTo(fmt("TestCode #4 is now %s.\n\r") % (TestCode4 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #5.") % getName() %
-	  (TestCode4 ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "testcode5") && hasWizPower(POWER_TOGGLE)) {
-#if 1
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Dash")) {
-      sendTo("Sorry, this is only for Dash's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode5 = ! TestCode5;
-    sendTo(fmt("TestCode #5 is now %s.\n\r") % (TestCode5 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #5.") % getName() %
-	  (TestCode5 ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "testcode6") && hasWizPower(POWER_TOGGLE)) {
-#if 0
-    // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
-      return;
-    }
-#endif
-    TestCode6 = ! TestCode6;
-    sendTo(fmt("TestCode #6 is now %s.\n\r") % (TestCode6 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #6.") % getName() %
-	  (TestCode6 ? "enabled" : "disabled"));
-    
-  } else if (is_abbrev(arg, "questcode") && hasWizPower(POWER_TOGGLE)) {
-    QuestCode = !QuestCode;
-    sendTo(fmt("Questcode is now %s.\n\r") % (QuestCode ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s questcode.") % getName() %
-	  (QuestCode ? "enabled" : "disabled"));
-
-  } else if ((is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2")) && hasWizPower(POWER_TOGGLE)) {
-    QuestCode2 = !QuestCode2;
-    sendTo(fmt("Questcode 2 is now %s.\n\r") % (QuestCode2 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s questcode 2.") % getName() %
-	  (QuestCode2 ? "enabled" : "disabled"));
-
-  } else if ((is_abbrev(arg, "questcode3") || is_abbrev(arg, "quest3")) && hasWizPower(POWER_TOGGLE)) {
-    QuestCode3 = !QuestCode3;
-    sendTo(fmt("Questcode 3 is now %s.\n\r") % (QuestCode3 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s questcode 3.") % getName() %
-	  (QuestCode3 ? "enabled" : "disabled"));
-
-  } else if ((is_abbrev(arg, "questcode4") || is_abbrev(arg, "quest4")) && hasWizPower(POWER_TOGGLE)) {
-    QuestCode4 = !QuestCode4;
-    sendTo(fmt("Questcode 4 is now %s.\n\r") % (QuestCode4 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s questcode 4.") % getName() %
-	  (QuestCode4 ? "enabled" : "disabled"));
-
-  } else if(is_abbrev(arg, "timequeries") && hasWizPower(POWER_TOGGLE)){
-    timeQueries = !timeQueries;
-    sendTo(fmt("DB query timing is now %s.\n\r") % (timeQueries ? "activated" : "deactivated"));
-    vlogf(LOG_MISC,fmt("%s has %s DB query timing.") % getName() %
-	  (timeQueries ? "enabled" : "disabled"));
-  } else if (is_abbrev(arg, "pcmobs") && hasWizPower(POWER_TOGGLE)) {
-    AllowPcMobs = !AllowPcMobs;
-    sendTo(fmt("You have now %s mob-named pcs.\n\r") %
-              (AllowPcMobs ? "allowed" : "disallowed"));
-    vlogf(LOG_MISC, fmt("%s has turned mob/pcs mode %s.") %  getName() % 
-              (AllowPcMobs ? "on" : "off"));
-  } else if (is_abbrev(arg, "clients") && hasWizPower(POWER_TOGGLE)) {
-    Clients = !Clients;
-    sendTo(fmt("You have now %s clients.\n\r") % (Clients ? "allowed" : "disallowed"));
-    vlogf(LOG_MISC, fmt("%s has turned client mode %s.") %  getName() % 
-	  (Clients ? "on" : "off"));
-
-    if (!Clients) {
-      sendTo("Severing current client connections.\n\r");
-      Descriptor *d, *dn;
-      for (d = descriptor_list; d; d = dn) {
-        dn = d->next;
-        if (d->m_bIsClient) {
-          d->writeToQ("Link severed by admin.\n\r");
-          sendTo(COLOR_MOBS, fmt("Disconnecting client use by %s.\n\r") % (d->character ? d->character->getName() : "Unknown"));
-          delete d;
-        }
-      }
-    }
-  
   } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo(fmt("Mobs in inactive zones are now %s.\n\r") % 
@@ -1130,6 +965,24 @@ void TBeing::doToggle(const char *arg2)
     for (zone = 1; zone < zone_table.size(); zone++) {
       zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
     }
+  } else if(hasWizPower(POWER_TOGGLE)){  // check global toggles
+    for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
+      if(is_abbrev(arg, toggleInfo[t]->name)){
+	toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
+
+	sendTo(fmt("%s is now %s.\n\r") % 
+	       toggleInfo[t]->name %
+	       (toggleInfo[t]->toggle ? "on" : "off"));
+	vlogf(LOG_MISC, fmt("%s has turned %s %s") % getName() %
+	      toggleInfo[t]->name % on_or_off(toggleInfo[t]->toggle));
+	vlogf(LOG_MISC, fmt("- %s") % toggleInfo[t]->descr);
+
+	if(t==TOG_CLIENTS)
+	  closeClientConnections(this);
+	return;
+      }
+    }
+    sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
   } else {
     sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
     return;

@@ -78,12 +78,12 @@ void TScheduler::run(int pulse)
 
   for(iter=procs.begin();iter!=procs.end();++iter){
     if((*iter)->should_run(pulse)){
-      if(gameLoopTiming)
+      if(toggleInfo[TOG_GAMELOOP]->toggle)
 	timer.start();
 
       (*iter)->run(pulse % 2400);
       
-      if(gameLoopTiming){
+      if(toggleInfo[TOG_GAMELOOP]->toggle){
 	timer.end();
 	vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
 	      (pulse % 2400) % (pulse%12) % (*iter)->name % 

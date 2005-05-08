@@ -824,7 +824,7 @@ void TBeing::statBeing(TBeing *k)
 	    
 
   }
-  if (TestCode5 && k->newfaction()) {
+  if (toggleInfo[TOG_TESTCODE5]->toggle && k->newfaction()) {
     if(k->isPc()) {
       sprintf(buf + strlen(buf), "%sFaction :%s %s%s,   %sRank :%s %s%s\n\r",
 	      cyan(), norm(), k->newfaction()->getName(), norm(),

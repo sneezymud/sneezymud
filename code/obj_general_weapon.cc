@@ -134,7 +134,7 @@ sstring TGenWeapon::statObjInfo() const
            (int) damageLevel());
   a += buf;
 
-  if (Twink == 1) {
+  if (toggleInfo[TOG_TWINK]->toggle) {
     sprintf(buf, "Type : %s (%d)\n\r",
 	    attack_hit_text_twink[(getWtype() - TYPE_MIN_HIT)].singular,
 	    getWeaponType());

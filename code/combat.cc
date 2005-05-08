@@ -2927,7 +2927,7 @@ const char *describe_dam(int dam, int dam_capacity, spellNumT wtype)
 
   p = ((double) dam) / ((double) dam_capacity);
 
-  if (Twink == 1) {
+  if (toggleInfo[TOG_TWINK]->toggle) {
     if ((p >= 1) || (dam_capacity < 0)) {
       if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
 	return "into <Y>-=><1><R>BLOODY GOREY SHREDS<1><Y><=-<1>";
@@ -3024,7 +3024,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
       strcpy(namebuf, other->pers(this)); 
       strcpy(victbuf, other->pers(v)); 
       strcpy(buf, sstring(namebuf).cap().c_str());
-      if (Twink == 1) {
+      if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf + strlen(buf), " %s ", attack_hit_text_twink[w_type].plural);
       } else {
 	sprintf(buf + strlen(buf), " %s ", attack_hit_text[w_type].plural);
@@ -3051,7 +3051,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
     else
       strcpy(colorBuf, green());
 
-    if (Twink == 1) {
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf, attack_hit_text_twink[w_type].singular,
 	      norm(),
 	      colorBuf,
@@ -3082,7 +3082,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
     else
       strcpy(colorBuf, v->red());
 
-    if (Twink == 1) {
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.",
 	      colorBuf, attack_hit_text_twink[w_type].plural, v->norm(),
 	      colorBuf, v->describeBodySlot(part_hit).c_str(), v->norm(),

@@ -1554,9 +1554,11 @@ bool hideThisSpell(spellNumT spell)
   if (spell == SPELL_ENSORCER)
     return true;
 
-if (TestCode3 && spell == SPELL_GARMULS_TAIL)
-return true;
-if (TestCode4 && spell == SPELL_ETHER_GATE)
-return true;
+  if (spell == SPELL_GARMULS_TAIL)
+    return true;
+
+  if (spell == SPELL_ETHER_GATE)
+    return true;
+
   return false;
 }

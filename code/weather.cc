@@ -896,7 +896,7 @@ void weatherChange()
   // lets keep this from changing WAY too radically
   weather_info.pressure += weather_info.change/10;
 
-  if(QuestCode3) {
+  if(toggleInfo[TOG_QUESTCODE3]->toggle) {
     weather_info.change = -5;
   }
 

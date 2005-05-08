@@ -54,7 +54,8 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
       room->isRoomFlag(ROOM_PRIVATE) ||
       room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
       (zone_table[room->getZoneNum()].enabled == FALSE) ||
-      (QuestCode2 && room->number >= 5700 && room->number < 5900) ||
+      (toggleInfo[TOG_QUESTCODE2]->toggle && 
+       room->number >= 5700 && room->number < 5900) ||
       room->isRoomFlag(ROOM_NO_MAGIC)) {
     act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);

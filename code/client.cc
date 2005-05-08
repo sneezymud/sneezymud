@@ -250,7 +250,7 @@ int Descriptor::read_client(char *str2)
     case CLIENT_INIT:
       m_bIsClient = TRUE;
 
-      if (!Clients) {
+      if (!toggleInfo[TOG_CLIENTS]->toggle) {
         clientf(fmt("%d|Clients not allowed at this time. Try later!|%d") % 
                 CLIENT_ERROR % ERR_NOT_ALLOWED);
         outputProcessing();

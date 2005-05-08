@@ -264,7 +264,7 @@ sstring TSymbol::showModifier(showModeT mode, const TBeing *ch) const
        mode == SHOW_MODE_SHORT_PLUS_INV ||
        mode == SHOW_MODE_SHORT) {
     if ((ch->isImmortal() && ch->hasWizPower(POWER_IMM_EVAL)) ||
-        TestCode2) {
+        toggleInfo[TOG_TESTCODE2]->toggle) {
       char buf[256];
       sprintf(buf, " (L%d)", (int) (getSymbolLevel() + 0.5));
       a += buf;

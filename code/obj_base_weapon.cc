@@ -1552,7 +1552,7 @@ sstring TBaseWeapon::showModifier(showModeT mode, const TBeing *ch) const
     a = " (";
     a += equip_condition(-1);
     a += ")";
-    if (ch->hasWizPower(POWER_IMM_EVAL) || TestCode2) {
+    if (ch->hasWizPower(POWER_IMM_EVAL) || toggleInfo[TOG_TESTCODE2]->toggle) {
       char buf[256];
       sprintf(buf, " (L%d)", (int) (weaponLevel() + 0.5));
       a += buf;

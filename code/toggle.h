@@ -11,10 +11,71 @@
 
 // Toggles
 
+// quest toggles on individual players
 typedef struct {
   const sstring name;
   int togmob;
 } TOGINFO;
+
+
+
+// stuff for global toggles
+
+enum togTypeT {
+  TOG_NONE = 0,
+  TOG_SHOUTING,
+  TOG_SLEEP,
+  TOG_NEWBIEPK,
+  TOG_GRAVITY,
+  TOG_CLIENTS,
+  TOG_WIZBUILD,
+  TOG_MOBNAMES,
+  TOG_TWINK,
+  TOG_DBTIMING,
+  TOG_GAMELOOP,
+  TOG_DOUBLEEXP,
+  TOG_TESTCODE1,
+  TOG_TESTCODE2,
+  TOG_TESTCODE3,
+  TOG_TESTCODE4,
+  TOG_TESTCODE5,
+  TOG_TESTCODE6,
+  TOG_QUESTCODE1,
+  TOG_QUESTCODE2,
+  TOG_QUESTCODE3,
+  TOG_QUESTCODE4,
+  MAX_TOG_TYPES
+};
+
+extern togTypeT & operator++(togTypeT &c, int);
+
+
+class togEntry {
+  public:
+  bool toggle;
+  bool testcode; // is this a test/quest code?
+  const sstring name;
+  const sstring descr;
+
+  togEntry(bool, bool, const sstring, const sstring);
+  ~togEntry();
+
+  private:
+  togEntry();  // deny usage in this format
+};
+
+
+class togInfoT {
+  map<togTypeT, togEntry *>toggles;
+
+ public:
+  togEntry *operator[] (const togTypeT);
+
+  togInfoT();
+  ~togInfoT();  
+};
+
+
 
 // defines for avenger quest
 
@@ -405,6 +466,7 @@ const int TOG_IS_PK_CHAR                       = 292;
 const int MAX_TOG_INDEX       = 293;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
+extern togInfoT toggleInfo;
 
 #endif
 

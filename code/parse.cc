@@ -2885,7 +2885,7 @@ bool _parse_name(const char *arg, char *name)
         return TRUE;
     }
   }
-  if (!AllowPcMobs) {
+  if (!toggleInfo[TOG_MOBNAMES]->toggle) {
     for (i= 0; i < mob_index.size(); i++) {
       sprintf(buf, fname(mob_index[i].name).c_str());
       if (!strcasecmp(buf, arg))

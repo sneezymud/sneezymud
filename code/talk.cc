@@ -545,7 +545,8 @@ void TBeing::doShout(const char *arg)
     }
     return;
   }
-  if (!dynamic_cast<TMonster *>(this) && (Silence == 1) && !isImmortal()) {
+  if (!dynamic_cast<TMonster *>(this) && toggleInfo[TOG_SHOUTING]->toggle && 
+      !isImmortal()) {
     sendTo("Shouting has been banned.\n\r");
     return;
   }
@@ -743,7 +744,8 @@ void TBeing::doCommune(const sstring &arg)
       if (!levnum) {
         str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
         convertStringColor("<c>", str);
-        if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild) {
+        if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
+	    toggleInfo[TOG_WIZBUILD]->toggle) {
           buf = fmt ("%s$n: %s%s%s") %
                  i->purple() % i->cyan() %
                  str % i->norm();
@@ -766,7 +768,8 @@ void TBeing::doCommune(const sstring &arg)
           NULL, COLOR_COMM, FALSE);
         convertStringColor("<c>", str);
         
-        if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild &&
+        if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
+	    toggleInfo[TOG_WIZBUILD]->toggle &&
             critter->GetMaxLevel() >= levnum) {
           buf = fmt ("%s[builders] (level: %d) $n: %s%s%s") %
                  i->purple() % levnum % i->cyan() %
