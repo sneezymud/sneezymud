@@ -58,6 +58,12 @@ togInfoT::~togInfoT()
 
 togInfoT::togInfoT()
 {
+}
+
+// can't do this in the constructor, because gamePort isn't defined
+// and TDatabase needs that to know what database to go to.
+void togInfoT::loadToggles()
+{
   TDatabase db(DB_SNEEZY);
 
   toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");

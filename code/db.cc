@@ -243,6 +243,9 @@ void bootDb(void)
     vlogf(LOG_MISC, "bad result from init_game_stats");
 //    exit(0);
   }
+  bootPulse("Loading global toggles.");
+  toggleInfo.loadToggles();
+
   bootPulse("Loading Races.");
   for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
     Races[rindex] = new Race(rindex);
