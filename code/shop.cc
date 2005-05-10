@@ -2036,10 +2036,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	myself->addToMoney(val, GOLD_SHOP);
 	shoplog(shop_nr, myself, myself, obj->getName(), val, "recycling");
-	delete obj;
 
 	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
 
+	delete obj;
 	continue;
       }
 
