@@ -126,6 +126,10 @@ const int GOD_LEVEL9    = 59;
 const int GOD_LEVEL10   = 60;
 const int MAX_IMMORT    = 60;
 
+// this is the parameter for various newbie protection things, like pk
+// protection, food praying at CS, etc
+const int MAX_NEWBIE_LEVEL = 5;
+
 const unsigned int AUTO_NOSPAM         = (1<<0);
 const unsigned int AUTO_EAT            = (1<<1);
 const unsigned int AUTO_KILL           = (1<<2);

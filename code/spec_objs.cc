@@ -603,7 +603,7 @@ int statue_of_feeding(TBeing *ch, cmdTypeT cmd, const char *argum, TObj *me, TOb
          TRUE, ch, me, NULL, TO_ROOM);
     act("$p spits on you and calls you a twit.",
          TRUE, ch, me, NULL, TO_CHAR);
-  } else if (ch->GetMaxLevel() > 5)
+  } else if (ch->GetMaxLevel() > MAX_NEWBIE_LEVEL)
     ch->sendTo("A statue lacks the power to help you any longer.\n\r");
   else if (ch->getCond(FULL) == 24)
     ch->sendTo("Nothing happens.\n\r");

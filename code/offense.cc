@@ -1879,7 +1879,7 @@ bool TBeing::noHarmCheck(TBeing *vict)
   
   if (desc && !isImmortal() && isPc() && 
           vict->desc && vict->isPc() &&
-          (vict->GetMaxLevel() < 5) && 
+          (vict->GetMaxLevel() <= MAX_NEWBIE_LEVEL) && 
           !vict->isPlayerAction(PLR_KILLABLE) && 
       !toggleInfo[TOG_NEWBIEPK]->toggle) {
     sendTo("Your victim is a newbie and protected.\n\r");

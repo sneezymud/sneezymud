@@ -1260,14 +1260,18 @@ void TBeing::setSexUnsafe(int sex)
   setSex(sexTypeT(sex));
 }
 
+// is this character a pk character, 
+// did they choose the pk option when creating etc
 bool TBeing::isPkChar() const
 {
-  if(GetMaxLevel() >= 5 && hasQuestBit(TOG_IS_PK_CHAR))
+  if(GetMaxLevel() >= MAX_NEWBIE_LEVEL && hasQuestBit(TOG_IS_PK_CHAR))
     return true;
   else
     return false;
 }
 
+// is this character actively pking, have they been involved in a pk
+// conflict just recently etc
 bool TBeing::isPking() const
 {
   return false;
@@ -1275,11 +1279,9 @@ bool TBeing::isPking() const
 
 bool TBeing::isValidPkTarget(const TBeing *attacker) const
 {
-  int level_diff=5;
-
   if(attacker->isPkChar() && isPkChar() && 
-     (attacker->GetMaxLevel() >= (GetMaxLevel()-level_diff)) &&
-     (attacker->GetMaxLevel() <= (GetMaxLevel()+level_diff)))
+     (attacker->GetMaxLevel() >= (GetMaxLevel()-MAX_NEWBIE_LEVEL)) &&
+     (attacker->GetMaxLevel() <= (GetMaxLevel()+MAX_NEWBIE_LEVEL)))
     return true;
   else
     return false;

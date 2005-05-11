@@ -647,8 +647,9 @@ void TBeing::doTitle(const char *)
 
 void TPerson::doTitle(const char *argument)
 {
-  if (GetMaxLevel() < 5) {
-    sendTo("You must be level 5 before you can change your title.\n\r");
+  if (GetMaxLevel() < MAX_NEWBIE_LEVEL) {
+    sendTo(fmt("You must be level %i before you can change your title.\n\r") %
+	   MAX_NEWBIE_LEVEL);
     return;
   }
 
