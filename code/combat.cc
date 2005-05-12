@@ -5478,7 +5478,7 @@ double TBeing::deathExp()
   amt = min( 1*getExp()/5,  amt);
 
   if(isPking())
-    amt /= 10;
+    amt /= 10.0;
 
   return amt;
 }
