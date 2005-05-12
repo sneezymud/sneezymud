@@ -458,6 +458,18 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
   }
 
+  if(isPc() && v->isPc() && this!=v && this->roomp && 
+     !this->roomp->isRoomFlag(ROOM_ARENA) &&
+     !this->inPkZone() && v->isValidPkTarget(this)){
+
+    affectedData aff;
+    aff.type = AFFECT_PLAYERKILL;
+    aff.duration = ONE_SECOND * 60 * 15;
+    affectTo(&aff);
+    v->affectTo(&aff);
+  }
+
+
   // this save was moved from gain_exp()
   doSave(SILENT_YES);
 
@@ -734,16 +746,6 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
                 ((v->GetMaxLevel() <= 5 && v != this) ? "NEWBIE " : ""));
 #endif
           total_player_kills++;
-
-#if 0
-	  if(this!=v && this->roomp && !this->roomp->isRoomFlag(ROOM_ARENA) &&
-	     !this->inPkZone()){
-	    affectedData aff;
-	    aff.type = AFFECT_PLAYERKILL;
-	    aff.duration = 24 * UPDATES_PER_MUDHOUR;
-	    affectTo(&aff);
-	  }
-#endif
         }
 
         // create grave marker

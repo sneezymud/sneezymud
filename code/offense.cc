@@ -1872,7 +1872,7 @@ bool TBeing::noHarmCheck(TBeing *vict)
     }
   }
   
-  if(!isImmortal() && !vict->isValidPkTarget(this)){
+  if(isPc() && vict->isPc() && !isImmortal() && !vict->isValidPkTarget(this)){
     sendTo("Your victim is not a valid PK target.\n\r");
     return TRUE;
   }

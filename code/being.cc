@@ -1270,16 +1270,20 @@ bool TBeing::isPkChar() const
     return false;
 }
 
+
 // is this character actively pking, have they been involved in a pk
 // conflict just recently etc
 bool TBeing::isPking() const
 {
-  return false;
+  if(affectedBySpell(AFFECT_PLAYERKILL))
+    return true;
+  else
+    return false;
 }
 
 bool TBeing::isValidPkTarget(const TBeing *attacker) const
 {
-  if(attacker->isPkChar() && isPkChar() && 
+  if(isPc() && attacker->isPc() && attacker->isPkChar() && isPkChar() && 
      (attacker->GetMaxLevel() >= (GetMaxLevel()-MAX_NEWBIE_LEVEL)) &&
      (attacker->GetMaxLevel() <= (GetMaxLevel()+MAX_NEWBIE_LEVEL)))
     return true;

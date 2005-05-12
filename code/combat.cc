@@ -5473,6 +5473,9 @@ double TBeing::deathExp()
   amt = 25.0 * mob_exp((float) GetMaxLevel());
   amt = min( 1*getExp()/5,  amt);
 
+  if(isPking())
+    amt /= 10;
+
   return amt;
 }
 
