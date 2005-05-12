@@ -441,6 +441,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
   }
 
+
+  ///// pkill stuff
+  // catch linkdead player killers
   if (v->isPc() && !v->desc) {
     if (this != v && !v->affectedBySpell(AFFECT_PLAYERKILL) &&
 	!v->affectedBySpell(AFFECT_PLAYERLOOT)){
@@ -458,6 +461,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
   }
 
+  // set pkilling flag on pkillers
   if(isPc() && v->isPc() && this!=v && this->roomp && 
      !this->roomp->isRoomFlag(ROOM_ARENA) &&
      !this->inPkZone() && v->isValidPkTarget(this)){
@@ -469,6 +473,17 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     v->affectTo(&aff);
   }
 
+  // flag the mob as having been hit by a pker
+  if(isPking() && !v->isPc()){
+    SET_BIT(v->specials.act, ACT_HIT_BY_PK);
+    v->setExp(0);
+  }
+
+  if(v->isPking() && !isPc()){
+    SET_BIT(specials.act, ACT_HIT_BY_PK);
+    setExp(0);
+  }
+  
 
   // this save was moved from gain_exp()
   doSave(SILENT_YES);
@@ -484,7 +499,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     v->sendTo(COLOR_BASIC, "<W>You begin to wonder if this endless nothingness will ever pass.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>Finally, a dark power comes over you.  Your body jerks to life.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>You rise slowly, as your old familiar world returns to you, in a different light.<1>\n\r");
-    v->sendTo(COLOR_BASIC, "<k>You have joined the ranks of risen, you are undead.  You are a vampire.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<k>You have joined the ranks of the risen, you are undead.  You are a vampire.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>You thirst... for <1><r>blood<1>.\n\r");
 
     act("$n rises from the dead!",

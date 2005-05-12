@@ -92,8 +92,8 @@ const unsigned long ACT_GHOST     = (1<<18);         // 262144
 const unsigned long ACT_DIURNAL   = (1<<19);         // 524288
 const unsigned long ACT_NOCTURNAL = (1<<20);         // 1048576
 const unsigned long ACT_PROTECTOR = (1<<21);         // 2097152
-
 const unsigned long ACT_PROTECTEE = (1<<22);         // 4194304
+const unsigned long ACT_HIT_BY_PK = (1<<23);
 
 const int MAX_MOB_ACTS    = 24;
 

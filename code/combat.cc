@@ -524,7 +524,11 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
     setStuff(NULL);
     setMoney(0);
   }
-  makeCorpse(dmg_type, tKiller, exp_lost);
+
+  if(!IS_SET(specials.act, ACT_HIT_BY_PK))
+    makeCorpse(dmg_type, tKiller, exp_lost);
+
+
   deathCry();
   genericKillFix();
 
