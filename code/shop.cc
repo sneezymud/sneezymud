@@ -1944,18 +1944,23 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     vector<int>::iterator iter;
     TObj *o;
+    bool found=false;
 
     for(iter=shop_index[shop_nr].producing.begin();
 	iter!=shop_index[shop_nr].producing.end();++iter){
       if(*iter <= -1)
 	continue;
       
+      found=false;
       for(TThing *t=myself->getStuff();t;t=t->nextThing){
-	if(t->number == *iter)
+	vlogf(LOG_PEEL, fmt("number=%i iter=%i") % t->number % *iter);
+	if(t->number == *iter){
+	  found=true;
 	  break;
+	}
       }
 
-      if(*iter)
+      if(found)
 	continue;
 
       if (!(o = read_object(*iter, REAL))) {
