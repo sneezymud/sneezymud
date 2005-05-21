@@ -2030,7 +2030,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
         continue;
 
       if(IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_RECYCLE) &&
-	 !::number(0,249)){
+	 !shop_index[shop_nr].isProducing(obj) && !::number(0,249)){
 	// resolution 220, the fun restoration initiative
 	int val=(int)(obj->getValue() * 0.25);
 
