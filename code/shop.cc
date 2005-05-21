@@ -1953,7 +1953,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       
       found=false;
       for(TThing *t=myself->getStuff();t;t=t->nextThing){
-	vlogf(LOG_PEEL, fmt("number=%i iter=%i") % t->number % *iter);
 	if(t->number == *iter){
 	  found=true;
 	  break;
