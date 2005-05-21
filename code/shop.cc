@@ -1941,6 +1941,36 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       pawnman = myself;
     }
     myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+
+    vector<int>::iterator iter;
+    TObj *o;
+
+    for(iter=shop_index[shop_nr].producing.begin();
+	iter!=shop_index[shop_nr].producing.end();++iter){
+      if(*iter <= -1)
+	continue;
+      
+      for(TThing *t=myself->getStuff();t;t=t->nextThing){
+	if(t->number == *iter)
+	  break;
+      }
+
+      if(*iter)
+	continue;
+
+      if (!(o = read_object(*iter, REAL))) {
+        vlogf(LOG_BUG, fmt("Shopkeeper %d couldn't load produced item.") %  
+	      shop_nr);
+        return FALSE;
+      }
+
+      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
+	    myself->getName() % o->getName());
+
+      
+      *myself += *o;
+    }
+
     return FALSE;
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
