@@ -2383,7 +2383,7 @@ int lightSaber(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
   } else if(cmd==CMD_GENERIC_QUICK_PULSE && !ch){
     lightSaberRetract(ch, weapon);
     return TRUE;
-  } else if(cmd=CMD_GENERIC_PULSE && ch && 
+  } else if(cmd==CMD_GENERIC_PULSE && ch && 
 	    (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())){
     lightSaberRetract(ch, weapon);
     return TRUE;
