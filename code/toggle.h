@@ -465,7 +465,13 @@ const int TOG_HAS_TOURETTES                    = 291;
 
 const int TOG_IS_PK_CHAR                       = 292;
 
-const int MAX_TOG_INDEX       = 293;  // move and change
+const int TOG_PSI_RUBY                         = 293;
+const int TOG_PSI_BLUESTEEL                    = 294;
+const int TOG_PSI_ESSENCE                      = 295;
+const int TOG_PSI_ROCKFISH                     = 296;
+const int TOG_PSI_TALENS                       = 297;
+
+const int MAX_TOG_INDEX       = 298;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

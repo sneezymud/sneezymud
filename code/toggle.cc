@@ -306,6 +306,11 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Trait: Alcoholic", MOB_NONE},
   {"Trait: Tourettes", MOB_NONE},
   {"PK Character", MOB_NONE},
+  {"Lightsaber quest: gave ruby", 13745},
+  {"Lightsaber quest: gave bluesteel", 13745},
+  {"Lightsaber quest: gave essence", 13745},
+  {"Lightsaber quest: gave rockfish", 13745},
+  {"Lightsaber quest: gave essence", 13745},
   {"", MOB_NONE}, 
 };
 
