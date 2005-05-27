@@ -131,21 +131,21 @@ give { "525";
 }
 
 # bluesteel knife
-give { "238";
+give { "9576";
        checkuntoggle 294;
        toggle 294;
 	toroom $n telepaths, 'Yes, this will do.';
 }
 
 # essence
-give { "238";
+give { "9572";
        checkuntoggle 295;
        toggle 295;
 	toroom $n telepaths, 'Excellent, this should contain the magic.';
 }
 
 # rockfish
-give { "238";
+give { "13896";
        checkuntoggle 296;
        toggle 296;
 	toroom $n telepaths, 'Fascinating creature.  It will do.';
