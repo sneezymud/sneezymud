@@ -9,6 +9,8 @@ int main(int argc, char **argv)
   sstring immortal;
   vector<int>vnums;
   int action_flag;
+
+  toggleInfo.loadToggles();
   
   if((argc-1) < 2){
     printf("Usage: %s <immortal> <obj list>\n", argv[0]);;
