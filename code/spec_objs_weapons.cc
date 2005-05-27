@@ -2305,11 +2305,11 @@ void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
   weapon->setWeapDamDev(8);
   weapon->swapToStrung();
 
-  buf=fmt("A brilliant blade of %s%s<1> light springs forth from $p.") %
+  buf=fmt("A brilliant blade of %s%s<o> light springs forth from $p.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
 
-  buf=fmt("A brilliant blade of %s%s<1> light springs forth from $n's $o.") %
+  buf=fmt("A brilliant blade of %s%s<o> light springs forth from $n's $o.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 
@@ -2348,25 +2348,29 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
   delete weapon->shortDescr;
   weapon->shortDescr = mud_str_dup(buf);
 
-  buf=fmt("A brilliant blade of %s%s<1> light retracts into $p.") %
+  buf=fmt("A brilliant blade of %s%s<o> light retracts into $p.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
 
-  buf=fmt("A brilliant blade of %s%s<1> light retracts into $n's $o.") %
+  buf=fmt("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 }  
 
 
-int lightSaber(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
+int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   TGenWeapon *weapon;
   TBeing *ch;
+  int crits[20]={67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,91,92,98,99};
+  wearSlotT part;
+  int dam, rc=0;
+  spellNumT wtype;
 
   if(!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  if(!ch || !o)
+  if(!o)
     return FALSE;
   
   if(!(weapon = dynamic_cast<TGenWeapon *>(o)))
@@ -2387,10 +2391,39 @@ int lightSaber(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
 	    (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())){
     lightSaberRetract(ch, weapon);
     return TRUE;
-  } else if(cmd==CMD_OBJ_HITTING && ch->hasQuestBit(TOG_PSIONICIST)){
+  } else if(cmd==CMD_OBJ_HITTING && ch && ch->hasQuestBit(TOG_PSIONICIST)){
     lightSaberExtend(ch, weapon);
     return FALSE;
+  } else if(cmd==CMD_OBJ_HIT && ch && ch->hasQuestBit(TOG_PSIONICIST)){
+    if(::number(0,10000))
+      return FALSE;
+
+    act("$p <W>flashes brightly!<1>", 0, vict, o, 0, TO_ROOM);
+
+    part = vict->getPartHit(ch, TRUE);
+    dam = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
+
+    if(!vict)
+      return FALSE;
+    
+    if (weapon)
+      wtype = ch->getAttackType(weapon);
+    else
+      wtype = TYPE_HIT;
+    
+    rc = ch->critSuccessChance(vict, weapon, &part, wtype, &dam, crits[::number(0,20)]);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      return DELETE_VICT;
+    }
+    rc = ch->applyDamage(vict, dam, wtype);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      return DELETE_VICT;
+    }
   }
 
   return FALSE;
 }
+
+
+
+
