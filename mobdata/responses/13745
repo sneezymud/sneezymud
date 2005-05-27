@@ -76,7 +76,7 @@ roomenter { "";
 }
 
 say { "something else";
-  	toroom $n telepaths, 'Yessss.  I find the presence of psionics in non-illithids to be fascinating.'
+  	toroom $n telepaths, 'Yessss.  I find the presence of psionics in non-illithids to be fascinating.';
 	toroom $n telepaths, 'As such, I enjoy offering my services as a mentor.';
 	toroom $n telepaths, 'In addition to training, I can fashion unique weapons.';
 	toroom $n telepaths, 'These weapons are controlled by the mind and useless to non-psionicists.';
@@ -124,7 +124,7 @@ say { "essence";
 
 
 # ruby
-give { "525";
+give { "515";
        checkuntoggle 293;
        toggle 293;
        toroom $n telepaths, 'This will work perfectly.';
@@ -156,6 +156,12 @@ give { "-1000000";
 	toggle 297;
 	toroom $n telepaths, 'I will be able to afford many fine slaves to drain with this.  Thank you.';
 }
+
+say { "make the weapon";
+      toroom $n telepaths, 'You haven't given me everything I need yet.';
+}
+
+
 
 say { "make the weapon";
 	checktoggle 293;
