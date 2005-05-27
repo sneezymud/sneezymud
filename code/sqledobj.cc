@@ -13,6 +13,9 @@ int main(int argc, char **argv)
   sstring buf, sbuf;
   int answer;
 
+  toggleInfo.loadToggles();
+
+
   if(argc<=1){
     printf("Usage: sqledobj <vnum list>\n");
     printf("Example: sqledobj 13700-13780 13791 13798\n");
