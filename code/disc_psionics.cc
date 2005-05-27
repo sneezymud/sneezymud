@@ -701,7 +701,11 @@ int TBeing::doMindthrust(const char *tString){
 
     
     if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
-      tVictim->addToDistracted(::number(1,2), FALSE);
+      tVictim->addToDistracted(::number(3,7), FALSE);
+    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(3,7), FALSE);
+    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(3,7), FALSE);
   } else {
     psiAttackFailMsg(this, tVictim);
   }
