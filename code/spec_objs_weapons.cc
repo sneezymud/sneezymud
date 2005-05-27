@@ -2282,3 +2282,115 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
   }
   return TRUE;
 }
+
+void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
+{
+  sstring buf;
+  sstring colornames[]={"red", "yellow", "green", "blue", "purple", "white"};
+  sstring colorcodes[]={"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
+  int which_color=0;
+
+  // this is just a way to get a random but consistent color
+  buf=ch->getName();
+  for(unsigned int i=0;i<buf.length();++i){
+    which_color += (int) buf[i];
+  }
+  which_color=which_color % 6;
+
+  if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE)
+    return;
+
+  weapon->setWeaponType(WEAPON_TYPE_SLICE);
+  weapon->setWeapDamLvl(38);
+  weapon->setWeapDamDev(8);
+  weapon->swapToStrung();
+
+  buf=fmt("A brilliant blade of %s%s<1> light springs forth from $p.") %
+    colorcodes[which_color] % colornames[which_color];
+  act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+
+  buf=fmt("A brilliant blade of %s%s<1> light springs forth from $n's $o.") %
+    colorcodes[which_color] % colornames[which_color];
+  act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+
+
+  buf = fmt("%s with a brilliant %s%s<1> blade of light") %
+    obj_index[weapon->getItemIndex()].short_desc %
+    colorcodes[which_color] % colornames[which_color];
+  delete weapon->shortDescr;
+  weapon->shortDescr = mud_str_dup(buf);
+}
+
+void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
+{
+  sstring buf;
+  sstring colornames[]={"red", "yellow", "green", "blue", "purple", "white"};
+  sstring colorcodes[]={"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
+  int which_color=0;
+
+  // this is just a way to get a random but consistent color
+  buf=ch->getName();
+  for(unsigned int i=0;i<buf.length();++i){
+    which_color += (int) buf[i];
+  }
+  which_color=which_color % 6;
+
+  if(weapon->getWeaponType(0)==WEAPON_TYPE_BLUDGEON)
+    return;
+
+  weapon->setWeaponType(WEAPON_TYPE_BLUDGEON);
+  weapon->setWeapDamLvl(1);
+  weapon->setWeapDamDev(1);
+  weapon->swapToStrung();
+
+  // restore to original description
+  buf=obj_index[weapon->getItemIndex()].short_desc;
+  delete weapon->shortDescr;
+  weapon->shortDescr = mud_str_dup(buf);
+
+  buf=fmt("A brilliant blade of %s%s<1> light retracts into $p.") %
+    colorcodes[which_color] % colornames[which_color];
+  act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+
+  buf=fmt("A brilliant blade of %s%s<1> light retracts into $n's $o.") %
+    colorcodes[which_color] % colornames[which_color];
+  act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+}  
+
+
+int lightSaber(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TGenWeapon *weapon;
+  TBeing *ch;
+
+  if(!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if(!ch || !o)
+    return FALSE;
+  
+  if(!(weapon = dynamic_cast<TGenWeapon *>(o)))
+    return FALSE;
+
+  if(cmd==CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)){
+    if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE){
+      lightSaberRetract(ch, weapon);
+    } else {
+      lightSaberExtend(ch, weapon);
+    }
+
+    return TRUE;
+  } else if(cmd==CMD_GENERIC_QUICK_PULSE && !ch){
+    lightSaberRetract(ch, weapon);
+    return TRUE;
+  } else if(cmd=CMD_GENERIC_PULSE && ch && 
+	    (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())){
+    lightSaberRetract(ch, weapon);
+    return TRUE;
+  } else if(cmd==CMD_OBJ_HITTING && ch->hasQuestBit(TOG_PSIONICIST)){
+    lightSaberExtend(ch, weapon);
+    return FALSE;
+  }
+
+  return FALSE;
+}

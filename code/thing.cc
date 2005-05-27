@@ -103,6 +103,11 @@ int TThing::swungObjectDamage(const TBeing *, const TBeing *) const
 
 int TThing::useMe(TBeing *ch, const char *)
 {
+  TObj *o=dynamic_cast<TObj *>(this);
+
+  if(o && o->spec && o->checkSpec(ch, CMD_OBJ_USED, "", NULL))
+      return TRUE;
+
   ch->sendTo("Use is normally only for wands and magic staves.\n\r");
   return FALSE;
 }
