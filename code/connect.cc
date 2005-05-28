@@ -5977,6 +5977,8 @@ int Descriptor::doAccountMenu(const char *arg)
   int count = 1;
   int tss = screen_size;
 
+  bonus_points.total= bonus_points.combat= bonus_points.combat2= bonus_points.learn= bonus_points.util=0;
+
   if (m_bIsClient) {
     clientf(fmt("%d") % CLIENT_MENU);
     return DELETE_THIS;
