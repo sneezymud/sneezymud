@@ -4732,7 +4732,7 @@ void TWand::descMagicSpells(TBeing *ch) const
       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   return;
@@ -4751,7 +4751,7 @@ void TStaff::descMagicSpells(TBeing *ch) const
       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   return;
@@ -4771,7 +4771,7 @@ void TScroll::descMagicSpells(TBeing *ch) const
       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   spell = getSpell(1);
@@ -4781,7 +4781,7 @@ void TScroll::descMagicSpells(TBeing *ch) const
       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
   }
 
   spell = getSpell(2);
@@ -4791,7 +4791,7 @@ void TScroll::descMagicSpells(TBeing *ch) const
       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
   }
 
   return;

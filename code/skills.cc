@@ -87,6 +87,7 @@
 #include "disc_shaman_armadillo.h"
 #include "disc_nature.h"
 #include "disc_psionics.h"
+#include "disc_commoner.h"
 
 static bool doesKnow(byte know)
 {
@@ -1179,6 +1180,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPsionics *) cd)->skTelekinesis;
     case SKILL_PSIDRAIN:
       return &((CDPsionics *) cd)->skPsiDrain;
+
+
 
 
   // disc_combat

@@ -1405,7 +1405,7 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       return;
     } else if ((att == APPLY_DISCIPLINE) &&
          ((number1 < 0) || (number1 >= MAX_DISCS)  || 
-          !(*discNames[number1].practice))) {
+          !(*discNames[number1].name))) {
       ch->sendTo("Illegal Discipline!\n\r");
       return;
     } else if ((att == APPLY_IMMUNITY) && (number1 < 0 || number1 >= MAX_IMMUNES)) {

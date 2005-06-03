@@ -345,6 +345,8 @@ int mapDiscToFile(discNumT dn)
       return 68;
     case DISC_ADVANCED_ADVENTURING:
       return 69;
+    case DISC_COMMONER:
+      return 70;
     case MAX_DISCS:
     case MAX_SAVED_DISCS:
     case DISC_NONE:

@@ -72,6 +72,7 @@
 #include "disc_adv_adventuring.h"
 #include "spelltask.h"
 #include "obj_symbol.h"
+#include "disc_commoner.h"
 
 #define DISC_DEBUG  0
 
@@ -2584,6 +2585,8 @@ void TBeing::assignDisciplinesClass()
  
     discs->disc[DISC_PSIONICS] = new CDPsionics();
 
+    discs->disc[DISC_COMMONER] = new CDCommoner();
+
     // only players get psionics
     if(hasQuestBit(TOG_PSIONICIST) || isImmortal())
       getDiscipline(DISC_PSIONICS)->ok_for_class |= getClass();
@@ -2599,13 +2602,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_RANGED] = new CDRanged();
   }
 
-  getDiscipline(DISC_ADVENTURING)->ok_for_class = (1<<MAX_CLASSES) - 1;
-  getDiscipline(DISC_COMBAT)->ok_for_class = (1<<MAX_CLASSES) - 1;
-  getDiscipline(DISC_ADVANCED_ADVENTURING)->ok_for_class = (1<<MAX_CLASSES)- 1;
-  getDiscipline(DISC_BLUNT)->ok_for_class = (1<<MAX_CLASSES) - 1;
-  getDiscipline(DISC_SLASH)->ok_for_class = (1<<MAX_CLASSES) - 1;
-  getDiscipline(DISC_PIERCE)->ok_for_class = (1<<MAX_CLASSES) - 1;
-  getDiscipline(DISC_RANGED)->ok_for_class = (1<<MAX_CLASSES) - 1;
+
     
   if (!player.Class) {
     vlogf(LOG_BUG,fmt("call to assignDisciplinesClass without a valid Class (%s)") %  getName());
@@ -2711,6 +2708,12 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
       discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
       discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+    }
+  }
+
+  if(hasClass(CLASS_COMMONER)){
+    if(!isPc()){
+      discs->disc[DISC_COMMONER] = new CDCommoner();
     }
   }
 
@@ -2991,6 +2994,9 @@ int TBeing::getSkillLevel(spellNumT skill) const
   }
 
   switch(disc_num) {
+    case DISC_COMMONER:
+      lev = getClassLevel(CLASS_COMMONER);
+      break;
     case DISC_CLERIC:
     case DISC_AEGIS:
     case DISC_WRATH:
@@ -3510,7 +3516,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       discipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % disc_names[(discArray[sknum]->assDisc)] % discLearn); 
+      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
 #endif
     }
   }
@@ -3527,7 +3533,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       assDiscipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % disc_names[(discArray[sknum]->assDisc)] % discLearn); 
+      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
 #endif
     }
   }

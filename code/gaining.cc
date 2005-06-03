@@ -1426,12 +1426,12 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
 
   // all classes uses combat as a base requirement
   combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-  tmp_buf = sstring(discNames[DISC_COMBAT].practice).cap();
+  tmp_buf = sstring(discNames[DISC_COMBAT].name).cap();
   
   if(classInfo[accclass].sec_disc != DISC_NONE){
     combat+=getDiscipline(classInfo[accclass].sec_disc)->getNatLearnedness();
     tmp_buf += " or ";
-    tmp_buf += sstring(discNames[classInfo[accclass].sec_disc].practice).cap();
+    tmp_buf += sstring(discNames[classInfo[accclass].sec_disc].name).cap();
   }
 
 
@@ -2022,13 +2022,13 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   int combatReq=(((35*getLevel(Class)) /10) - 4);
 
   combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-  tmp_buf=sstring(discNames[DISC_COMBAT].practice).cap();
+  tmp_buf=sstring(discNames[DISC_COMBAT].name).cap();
   
   if(classInfo[Class].sec_disc != DISC_NONE){
     combat+=getDiscipline(classInfo[Class].sec_disc)->getNatLearnedness();
     tmp_buf += " or ";
-    tmp_buf += sstring(discNames[classInfo[Class].sec_disc].practice).cap();
-    tmp_buf2 = sstring(discNames[classInfo[Class].sec_disc].practice).cap();
+    tmp_buf += sstring(discNames[classInfo[Class].sec_disc].name).cap();
+    tmp_buf2 = sstring(discNames[classInfo[Class].sec_disc].name).cap();
   }
 
   basic = getDiscipline(classInfo[Class].base_disc)->getNatLearnedness();

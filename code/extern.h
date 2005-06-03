@@ -86,7 +86,6 @@ extern const char * const trap_effects[MAX_TRAP_EFF];
 extern const char * const chest_bits[];
 extern const char * const door_types[];
 extern const char * const color_options[10];
-extern const char * const disc_names[];
 extern const char * const auto_name[MAX_AUTO];
 extern const char * const exits[];
 extern const char * const corpse_flags[MAX_CORPSE_FLAGS];

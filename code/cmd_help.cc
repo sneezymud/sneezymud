@@ -351,7 +351,7 @@ void TBeing::doHelp(const char *arg)
       str += purple();
       str += "Discipline       : ";
       str += norm();
-      str += disc_names[disc_num];
+      str += discNames[disc_num].properName;
       str += purple();
       if (isImmortal()) {
         sprintf(buf2, "    (disc: %d, spell %d)", mapDiscToFile(disc_num), skill);
@@ -363,7 +363,7 @@ void TBeing::doHelp(const char *arg)
     str += purple();
     str += "\n\rSpecialization   : ";
     str += norm();
-    str += disc_names[(discArray[skill]->assDisc)];
+    str += discNames[(discArray[skill]->assDisc)].properName;
     str += purple();
     if (isImmortal()) {
       sprintf(buf2, "    (disc: %d)", mapDiscToFile(discArray[skill]->assDisc));
@@ -638,7 +638,7 @@ void TBeing::doHelp(const char *arg)
       str += purple();
       str += "Discipline       : ";
       str += norm();
-      str += disc_names[disc_num];
+      str += discNames[disc_num].properName;
       str += purple();
       if (isImmortal()) {
         sprintf(buf2, "    (disc: %d, skill %d)", mapDiscToFile(disc_num), skill);
@@ -650,7 +650,7 @@ void TBeing::doHelp(const char *arg)
     str += purple();
     str += "\n\rSpecialization   : ";
     str += norm();
-    str += disc_names[(discArray[skill]->assDisc)];
+    str += discNames[(discArray[skill]->assDisc)].properName;
     str += purple();
     if (isImmortal()) {
       sprintf(buf2, "    (disc: %d)", mapDiscToFile(discArray[skill]->assDisc));

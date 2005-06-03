@@ -282,10 +282,10 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
             vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %
                   obj->getName());
         } else if (obj->affected[i].location == APPLY_DISCIPLINE) {
-          if (discNames[obj->affected[i].modifier].practice)
+          if (discNames[obj->affected[i].modifier].name)
             caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
                 apply_types[obj->affected[i].location].name %
-                discNames[obj->affected[i].modifier].practice %
+                discNames[obj->affected[i].modifier].name %
                 obj->affected[i].modifier2);
           else
             vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %

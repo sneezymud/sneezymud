@@ -884,6 +884,9 @@ const struct class_info classInfo[MAX_CLASSES] =
 
   {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
    DISC_RANGER, DISC_NONE, 0.46, 7},
+
+  {false, COMMONER_LEVEL_IND, CLASS_COMMONER, "commoner",
+   DISC_ADVENTURING, DISC_NONE, 0.40, 5}
 };
 
 
@@ -1744,146 +1747,142 @@ const char * const auto_name[MAX_AUTO] =
 // COSMO CLASS MARKER
 const struct disc_names_data discNames[MAX_DISCS] =
 {
-  {DISC_MAGE, CLASS_MAGE, "mage abilities"},   // 0 
-  {DISC_AIR, CLASS_MAGE, "air magic"},         // 1
-  {DISC_ALCHEMY, CLASS_MAGE, "alchemy"},
-  {DISC_EARTH, CLASS_MAGE, "earth magic"},
-  {DISC_FIRE, CLASS_MAGE, "fire magic"},
-  {DISC_SORCERY, CLASS_MAGE, "sorcery"},        // 5
-  {DISC_SPIRIT, CLASS_MAGE, "spirit magic"},
-  {DISC_WATER, CLASS_MAGE, "water magic"},
-  {DISC_CLERIC, CLASS_CLERIC, "clerical abilities"},
-  {DISC_WRATH, CLASS_CLERIC, "wrath of the deities"},
-  {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions"},   // 10
-  {DISC_AEGIS, CLASS_CLERIC, "aegis"},
-  {DISC_CURES, CLASS_CLERIC, "cures"},
-  {DISC_HAND_OF_GOD, CLASS_CLERIC, "hand of the deities"},
-  {DISC_WARRIOR, CLASS_WARRIOR, "warrior abilities"},
-  {DISC_DUELING, CLASS_WARRIOR, "dueling"},  //15
-  {DISC_BRAWLING, CLASS_WARRIOR, "brawling skills"},
-  {DISC_SOLDIERING, CLASS_WARRIOR, "soldiering skills"},
-  {DISC_BLACKSMITHING, CLASS_WARRIOR, "blacksmithing"},
-  {DISC_RANGER, CLASS_RANGER, "ranger abilities"},
-  {DISC_BOGUS1, 0, "bogus1"},  //20
-  {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities"},
-  {DISC_ANIMAL, CLASS_RANGER, "animals"},
-  {DISC_PLANTS, CLASS_RANGER, "plants"},
-  {DISC_BOGUS2, 0, "bogus2"}, 
-  {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities"},   // 25
-  {DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN, "fighting skills"},
-  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted skills"},
-  {DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN, "aegis"},
-  {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures"},
-  {DISC_DEIKHAN_WRATH, CLASS_DEIKHAN, "wrath of the deities"},  // 30
-  {DISC_MONK, CLASS_MONK, "monk abilities"},
-  {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities"},
-  {DISC_LEVERAGE, CLASS_MONK, "balance and leverage skill"},
-  {DISC_MINDBODY, CLASS_MONK, "mind and body control"},
-  {DISC_FOCUSED_ATTACKS, CLASS_MONK, "focused attacks"},
-  {DISC_BAREHAND, CLASS_MONK, "barehand"},
-  {DISC_THIEF, CLASS_THIEF, "thief abilities"},          // 40
-  {DISC_THIEF_FIGHT, CLASS_THIEF, "fighting skills"},
-  {DISC_MURDER, CLASS_THIEF, "murder"},
-  {DISC_LOOTING, CLASS_THIEF, "looting"},
-  {DISC_POISONS, CLASS_THIEF, "poisons"},
-  {DISC_STEALTH, CLASS_THIEF, "stealth"},               // 45
-  {DISC_TRAPS, CLASS_THIEF, "traps"},
-  {DISC_SHAMAN, CLASS_SHAMAN, "shaman abilities"},      
-  {DISC_SHAMAN_FROG, CLASS_SHAMAN, "frog abilities"},
-  {DISC_SHAMAN_ALCHEMY, CLASS_SHAMAN, "alchemy"},
-  {DISC_SHAMAN_SKUNK, CLASS_SHAMAN, "skunk abilities"},       // 50
-  {DISC_SHAMAN_SPIDER, CLASS_SHAMAN, "spider abilities"},
-  {DISC_SHAMAN_CONTROL, CLASS_SHAMAN, "control"},            
-  {DISC_RITUALISM, CLASS_SHAMAN, "ritualism"},
-  {DISC_WIZARDRY, CLASS_MAGE, "wizardry"},
-  {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith"},  // 55
-  {DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "slash"},
-  {DISC_BLUNT, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "blunt"},
-  {DISC_PIERCE, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "pierce"},
-  {DISC_RANGED, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "ranged"},
-  {DISC_COMBAT, 0, "combat"},                           // 60
-  {DISC_ADVENTURING, 0, "adventuring"},                  
-  {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology"},   
-  {DISC_LORE, CLASS_MAGE, "lore"},
-  {DISC_NATURE, CLASS_RANGER, "nature"},
-  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense"},
-  {DISC_PSIONICS, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN, "psionics"},
-  {DISC_SHAMAN_HEALING, CLASS_SHAMAN, "healing"},
-  {DISC_IRON_BODY, CLASS_MONK, "iron body"},
-  {DISC_ADVANCED_ADVENTURING, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "advanced adventuring"},
-};
-
-const char * const disc_names[MAX_DISCS] =
-{
-// COSMO CLASS MARKER
-
-  "Mage Abilities",           // 0 
-  "Air Magic",                // 1
-  "Alchemy",
-  "Earth Magic",
-  "Fire Magic",
-  "Sorcery",                   // 5
-  "Spirit Magic",
-  "Water Magic",
-  "Clerical Abilities",
-  "Wrath of the Deities",
-  "Afflictions",               // 10
-  "Aegis of the Deities",
-  "Cures",
-  "Hand Of the Deities",
-  "Warrior Abilities",
-  "Dueling Skills",     // 15
-  "Brawling Skills",
-  "Soldiering Skills",
-  "Blacksmithing Skills",
-  "Ranger Abilities",
-  "Fighting Skills",            // 20
-  "Armadillo Abilities",
-  "Animal Abilities",
-  "Plant Abilities",
-  "Survival Skills",
-  "Deikhan Abilities",          // 25
-  "Fighting Skills",
-  "Mounted Skills",
-  "Aegis of the Deities",
-  "Cures",
-  "Wrath of the Deities",        // 30
-  "Monk Abilities",
-  "Meditation/Internal Abilities",
-  "Balance and Leverage Skill",
-  "Mind and Body Control",
-  "Focused Attacks",
-  "Barehand Specialization",
-  "Thief Abilities",              // 40
-  "Fighting Skills",
-  "Murder",
-  "Looting Skills",
-  "Poisons",
-  "Stealth",                     // 45
-  "Traps",
-  "Shaman Abilities",
-  "Frog Abilities",
-  "Alchemy Abilities",
-  "Skunk Abilities",           // 50
-  "Spider Abilities",
-  "Control Abilities",
-  "Ritualism",
-  "Wizardry",
-  "Faith",                        // 55
-  "Slash Weapons",
-  "Blunt Weapons",
-  "Pierce Weapons",
-  "Ranged Weapons",
-  "Combat Skills",               // 60
-  "Adventuring Skills",  
-  "Theological Learning",
-  "Magic Lore",
-  "Nature",
-  "Defensive Abilities",         // 65
-  "Psionic Abilities",
-  "Healing Abilities",
-  "Iron Body",
-  "Advanced Adventuring",
+  {DISC_MAGE, CLASS_MAGE, "mage abilities", 
+   "Mage Abilities"},   // 0 
+  {DISC_AIR, CLASS_MAGE, "air magic", 
+   "Air Magic"},         // 1
+  {DISC_ALCHEMY, CLASS_MAGE, "alchemy", 
+   "Alchemy"},
+  {DISC_EARTH, CLASS_MAGE, "earth magic", 
+   "Earth Magic"},
+  {DISC_FIRE, CLASS_MAGE, "fire magic", 
+   "Fire Magic"},
+  {DISC_SORCERY, CLASS_MAGE, "sorcery", 
+   "Sorcery"},        // 5
+  {DISC_SPIRIT, CLASS_MAGE, "spirit magic", 
+   "Spirit Magic"},
+  {DISC_WATER, CLASS_MAGE, "water magic", 
+   "Water Magic"},
+  {DISC_CLERIC, CLASS_CLERIC, "clerical abilities", 
+   "Clerical Abilities"},
+  {DISC_WRATH, CLASS_CLERIC, "wrath of the deities", 
+   "Weath of the Deities"},
+  {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions", 
+   "Afflictions"},   // 10
+  {DISC_AEGIS, CLASS_CLERIC, "aegis", 
+   "Aegis of the Deities"},
+  {DISC_CURES, CLASS_CLERIC, "cures", 
+   "Cures"},
+  {DISC_HAND_OF_GOD, CLASS_CLERIC, "hand of the deities", 
+   "Hand of the Deities"},
+  {DISC_WARRIOR, CLASS_WARRIOR, "warrior abilities", 
+   "Warrior Abilities"},
+  {DISC_DUELING, CLASS_WARRIOR, "dueling", 
+   "Dueling Skills"},  //15
+  {DISC_BRAWLING, CLASS_WARRIOR, "brawling skills", 
+   "Brawling Skills"},
+  {DISC_SOLDIERING, CLASS_WARRIOR, "soldiering skills", 
+   "Soldiering Skills"},
+  {DISC_BLACKSMITHING, CLASS_WARRIOR, "blacksmithing", 
+   "Blacksmithing Skills"},
+  {DISC_RANGER, CLASS_RANGER, "ranger abilities", 
+   "Ranger Abilities"},
+  {DISC_BOGUS1, 0, "bogus1", 
+   "Bogus1 (Tell a god)"},  //20
+  {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities", 
+   "Armadillo Abilities"},
+  {DISC_ANIMAL, CLASS_RANGER, "animals", 
+   "Animal Abilities"},
+  {DISC_PLANTS, CLASS_RANGER, "plants", 
+   "Plant Abilities"},
+  {DISC_BOGUS2, 0, "bogus2", 
+   "Bogus2 (Tell a god)"}, 
+  {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities", 
+   "Deikhan Abilities"},   // 25
+  {DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN, "fighting skills", 
+   "Fighting Skills"},
+  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted skills", 
+   "Mounted Skills"},
+  {DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN, "aegis", 
+   "Aegis of the Deities"},
+  {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures", 
+   "Cures"},
+  {DISC_DEIKHAN_WRATH, CLASS_DEIKHAN, "wrath of the deities", 
+   "Wrath of the Deities"},  // 30
+  {DISC_MONK, CLASS_MONK, "monk abilities", 
+   "Monk Abilities"},
+  {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities", 
+   "Meditation/Internal Abilities"},
+  {DISC_LEVERAGE, CLASS_MONK, "balance and leverage skill", 
+   "Balanced and Leverage Skill"},
+  {DISC_MINDBODY, CLASS_MONK, "mind and body control", 
+   "Mind and Body Control"},
+  {DISC_FOCUSED_ATTACKS, CLASS_MONK, "focused attacks", 
+   "Focused Attacks"},
+  {DISC_BAREHAND, CLASS_MONK, "barehand", 
+   "Barehand Specialization"},
+  {DISC_THIEF, CLASS_THIEF, "thief abilities", 
+   "Thief Abilities"},          // 40
+  {DISC_THIEF_FIGHT, CLASS_THIEF, "fighting skills",
+   "Fighting Skills"},
+  {DISC_MURDER, CLASS_THIEF, "murder",
+   "Murder"},
+  {DISC_LOOTING, CLASS_THIEF, "looting",
+   "Looting Skills"},
+  {DISC_POISONS, CLASS_THIEF, "poisons",
+   "Poisons"},
+  {DISC_STEALTH, CLASS_THIEF, "stealth",
+   "Stealth"},               // 45
+  {DISC_TRAPS, CLASS_THIEF, "traps",
+   "Traps"},
+  {DISC_SHAMAN, CLASS_SHAMAN, "shaman abilities",
+   "Shaman Abilities"},
+  {DISC_SHAMAN_FROG, CLASS_SHAMAN, "frog abilities",
+   "Frog Abilities"},
+  {DISC_SHAMAN_ALCHEMY, CLASS_SHAMAN, "alchemy",
+   "Alchemy Abilities"},
+  {DISC_SHAMAN_SKUNK, CLASS_SHAMAN, "skunk abilities",
+   "Skunk Abilities"},       // 50
+  {DISC_SHAMAN_SPIDER, CLASS_SHAMAN, "spider abilities",
+   "Spider Abilities"},
+  {DISC_SHAMAN_CONTROL, CLASS_SHAMAN, "control",
+   "Control Abilities"},
+  {DISC_RITUALISM, CLASS_SHAMAN, "ritualism",
+   "Ritualism"},
+  {DISC_WIZARDRY, CLASS_MAGE, "wizardry",
+   "Wizardry"},
+  {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith",
+   "Faith"},  // 55
+  {DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "slash",
+   "Slash Weapons"},
+  {DISC_BLUNT, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "blunt",
+   "Blunt Weapons"},
+  {DISC_PIERCE, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "pierce",
+   "Pierce Weapons"},
+  {DISC_RANGED, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "ranged",
+   "Ranged Weapons"},
+  {DISC_COMBAT, CLASS_ALL, "combat",
+   "Combat Skills"},                           // 60
+  {DISC_ADVENTURING, CLASS_ALL, "adventuring",
+   "Adventuring Skills"},
+  {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology",
+   "Theological Learning"},
+  {DISC_LORE, CLASS_MAGE, "lore",
+   "Magic Lore"},
+  {DISC_NATURE, CLASS_RANGER, "nature",
+   "Nature"},
+  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense",
+   "Defensive Abilities"},
+  {DISC_PSIONICS, 0, "psionics",
+   "Psionic Abilities"},
+  {DISC_SHAMAN_HEALING, CLASS_SHAMAN, "healing",
+   "Healing Abilities"},
+  {DISC_IRON_BODY, CLASS_MONK, "iron body",
+   "Iron Body"},
+  {DISC_ADVANCED_ADVENTURING, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_SHAMAN, "advanced adventuring",
+   "Advanced Adventuring"},
+  {DISC_COMMONER, CLASS_COMMONER, "commoner abilities",
+   "Commoner Abilities"},
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

@@ -460,7 +460,7 @@ class spellInfo {
   private:
     spellInfo() {}  // prevent default constructor from being used
   public:
-    spellInfo(skillUseClassT styp, 
+    spellInfo(
          discNumT discipline, 
          discNumT assDiscipline, 
          const char *n,

@@ -844,13 +844,13 @@ void TBeing::doPractice(const char *argument)
         if (cd->getLearnedness()) {
           if (cd->getLearnedness() == cd->getNatLearnedness()) {
             sprintf(buf + strlen(buf), "%30s : Learnedness: %3d%%\n\r",
-                disc_names[i], cd->getLearnedness());
+                discNames[i].properName, cd->getLearnedness());
           } else {
-            sprintf(buf + strlen(buf), "%30s : Learnedness: Current (%3d%%) Natural (%3d%%)\n\r", disc_names[i], cd->getLearnedness(), cd->getNatLearnedness());
+            sprintf(buf + strlen(buf), "%30s : Learnedness: Current (%3d%%) Natural (%3d%%)\n\r", discNames[i].properName, cd->getLearnedness(), cd->getNatLearnedness());
           }
         } else {
           sprintf(buf + strlen(buf), "%30s : Learnedness: Unlearned\n\r",
-                  disc_names[i]);
+                  discNames[i].properName);
         }
       }
     }
@@ -879,9 +879,9 @@ void TBeing::doPractice(const char *argument)
 
     sprintf(buf, "The following disciplines are valid:\n\r");
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
-      if (!strcmp(disc_names[i], "unused")) 
+      if (!strcmp(discNames[i].properName, "unused")) 
         continue;
-      if (!strcmp(disc_names[i], "Psionic Abilities"))
+      if (!strcmp(discNames[i].properName, "Psionic Abilities"))
 	continue;
       if (!(cd = getDiscipline(i))) {
         vlogf(LOG_BUG, fmt("Somehow %s was not assigned a discipline (%d), used prac class (%d).") % getName() % i % which);
@@ -889,10 +889,10 @@ void TBeing::doPractice(const char *argument)
       if ((discNames[i].class_num == 0) || (IS_SET(discNames[i].class_num, which))) {
         if (cd && cd->getLearnedness() >= 0) {
           sprintf(buf + strlen(buf), "%30s : (Learnedness: %3d%%)\n\r",
-              disc_names[i], cd->getLearnedness());
+              discNames[i].properName, cd->getLearnedness());
         } else {
           sprintf(buf + strlen(buf), "%30s : (Learnedness: unlearned)\n\r",
-                  disc_names[i]);
+                  discNames[i].properName);
         }
       }
     }
@@ -952,7 +952,7 @@ void TBeing::doPractice(const char *argument)
 
   discNumT dnt = DISC_NONE;
   for (i=MIN_DISC; i < MAX_DISCS; i++) {
-    strcpy(skillbuf, discNames[i].practice);
+    strcpy(skillbuf, discNames[i].name);
     classNum = discNames[i].class_num;
     if (is_abbrev(arg, skillbuf, MULTIPLE_YES)) {
       match = TRUE;
@@ -1428,10 +1428,10 @@ void TBeing::doPracDisc(const char *arg, int classNum)
 //  arg = one_argument(arg, buf);
 
   for (discNumT i = MIN_DISC; (i < MAX_DISCS); i++) {
-    if (!*disc_names[i] || !(*discNames[i].practice)) {
+    if (!*discNames[i].properName || !(*discNames[i].name)) {
       continue;
     }
-    if (!is_abbrev(arg, discNames[i].practice, MULTIPLE_YES)) {
+    if (!is_abbrev(arg, discNames[i].name, MULTIPLE_YES)) {
       continue;
     } else {
       if (classNum) {

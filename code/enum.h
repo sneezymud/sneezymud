@@ -109,9 +109,9 @@ enum classIndT {
      DEIKHAN_LEVEL_IND,
      MONK_LEVEL_IND,
      RANGER_LEVEL_IND,
+     COMMONER_LEVEL_IND,
      UNUSED1_LEVEL_IND,
      UNUSED2_LEVEL_IND,
-     UNUSED3_LEVEL_IND,
      MAX_SAVED_CLASSES
 };
 // this affects charFile size

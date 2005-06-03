@@ -1806,7 +1806,7 @@ void TBeing::lowObjs(const char *arg)
         sprintf(buf2,"   %s%s by %ld%s", red(),
         discArray[tbc->affected[i].modifier]->name, tbc->affected[i].modifier2, norm());
       } else if (tbc->affected[i].location == APPLY_DISCIPLINE) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[tbc->affected[i].location].name, discNames[tbc->affected[i].modifier].practice, tbc->affected[i].modifier2,
+        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[tbc->affected[i].location].name, discNames[tbc->affected[i].modifier].name, tbc->affected[i].modifier2,
 norm());
       } else if (tbc->affected[i].location == APPLY_IMMUNITY) {
         sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[tbc->affected[i].location].name,
@@ -1982,7 +1982,7 @@ void TBeing::lowWeaps(const char *arg)
         sprintf(buf2,"   %s%s by %ld%s", red(),
           discArray[weap->affected[i].modifier]->name, weap->affected[i].modifier2, norm());
       } else if (weap->affected[i].location == APPLY_DISCIPLINE) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[weap->affected[i].location].name, discNames[weap->affected[i].modifier].practice, weap->affected[i].modifier2, norm());
+        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[weap->affected[i].location].name, discNames[weap->affected[i].modifier].name, weap->affected[i].modifier2, norm());
       } else if (weap->affected[i].location == APPLY_IMMUNITY) {
         sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[weap->affected[i].location].name,
           immunity_names[weap->affected[i].modifier], weap->affected[i].modifier2, norm());

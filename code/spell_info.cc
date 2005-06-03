@@ -13,7 +13,7 @@
 
 spellInfo *discArray[MAX_SKILL+1];
 
-spellInfo::spellInfo(skillUseClassT styp, 
+spellInfo::spellInfo(skillUseClassT styp,
   discNumT discipline, 
   discNumT assDiscipline, 
   const char *n, taskDiffT cast_diff, lag_t l, positionTypeT pos, 
