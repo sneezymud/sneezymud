@@ -5704,6 +5704,7 @@ extern int frostWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *
 extern int dragonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int boneStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int bloodspike(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int brokenBottle(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_obj);
 extern int poisonSap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int daySword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
@@ -5880,5 +5881,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "gnome tenderizer", gnomeTenderizer}, // 140
   {FALSE, "Marukalia", marukalia},
   {FALSE, "lightsaber", lightSaber},
+  {FALSE, "broken bottle", brokenBottle},
   {FALSE, "last proc", bogusObjProc}
 };
