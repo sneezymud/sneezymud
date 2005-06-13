@@ -1455,8 +1455,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
                   discipline == DISC_BAREHAND ||
                   discipline == DISC_DEFENSE ||
                   discipline == DISC_ADVENTURING ||
-                  discipline == DISC_ADVANCED_ADVENTURING ||
-                  discipline == DISC_PSIONICS) {
+                  discipline == DISC_ADVANCED_ADVENTURING){
     // No restrictions on these disciplines if prof maxxed see first checks
     return FALSE;
   } else {  // needs basic skills for class
