@@ -1408,10 +1408,8 @@ int brokenBottle(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if(!(ch=genericWeaponProcCheck(vict, cmd, o, 3)))
     return FALSE;
 
-  if(!::number(0,3)){
-    o->setMaxStructPoints(o->getMaxStructPoints()-1);
-    o->setStructPoints(o->getStructPoints()-1);
-  }    
+  o->setMaxStructPoints(o->getMaxStructPoints()-1);
+  o->setStructPoints(o->getStructPoints()-1);
 
   slot=pickRandomLimb();
 
