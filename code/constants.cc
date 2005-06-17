@@ -1766,7 +1766,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_CLERIC, CLASS_CLERIC, "clerical abilities", 
    "Clerical Abilities"},
   {DISC_WRATH, CLASS_CLERIC, "wrath of the deities", 
-   "Weath of the Deities"},
+   "Wrath of the Deities"},
   {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions", 
    "Afflictions"},   // 10
   {DISC_AEGIS, CLASS_CLERIC, "aegis", 
