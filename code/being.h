@@ -1154,7 +1154,7 @@ class TBeing : public TThing {
     int useLifeforce(spellNumT);
     double usePiety(spellNumT);
     int reconcileDamage(TBeing *, int, spellNumT);
-    int doRent(const sstring &);
+    virtual int doRent(const sstring &);
     void doRestring(const sstring &);
     void doRelease(const sstring &);
     void doCapture(const sstring &);

@@ -4398,6 +4398,12 @@ void TPerson::saveToggles()
 
 int TBeing::doRent(const sstring &argument)
 {
+  sendTo("You're a mob.  You can't rent!\n\r");
+  return FALSE;
+}
+
+int TPerson::doRent(const sstring &argument)
+{
   if (!argument.empty()) {
     if (is_abbrev(argument, "credit")) {
       int lev;

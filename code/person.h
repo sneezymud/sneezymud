@@ -98,6 +98,7 @@ class TPerson : public TBeing {
     virtual void doSwitch(const char *);
     virtual void doForce(const char *);
     virtual void doLoad(const char *);
+    virtual int doRent(const sstring &);
     virtual void doCutlink(const char *);
     virtual void doPurge(const char *);
     virtual short int manaLimit() const;
