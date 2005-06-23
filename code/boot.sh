@@ -13,6 +13,9 @@ case $USER in
   damescena)
     PORT=6969
     ;;
+  maror)
+    PORT=6961
+    ;;
 esac
 
 if [ "$1" = "" ]
