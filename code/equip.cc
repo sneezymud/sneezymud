@@ -2239,6 +2239,12 @@ void TBeing::doOutfit(const sstring &arg)
     // immortal equipping
     // use less restrictive rules for holding
     // if can't be worn, put in inventory
+    if (obj->isObjStat(ITEM_PROTOTYPE) &&
+        mob->isPc() &&
+        !mob->isImmortal()) {
+      act("You can't outfit prototype objects onto that being!", FALSE, this, obj, 0, TO_CHAR);
+      return;
+    }
     if (keyword == WEAR_KEY_HOLD) {
       TBaseClothing * tWorn = dynamic_cast<TBaseClothing *>(obj);
   
