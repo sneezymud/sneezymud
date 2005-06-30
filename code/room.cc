@@ -276,6 +276,16 @@ void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_
 
 sectorTypeT TRoom::getSectorType() const
 {
+  if((roomFlags & ROOM_ON_FIRE) != 0){
+    if(sectorType==SECT_TROPICAL_ATMOSPHERE ||
+       sectorType==SECT_TEMPERATE_ATMOSPHERE ||
+       sectorType==SECT_ARCTIC_ATMOSPHERE ||
+       sectorType==SECT_FIRE_ATMOSPHERE)
+      return SECT_FIRE_ATMOSPHERE;
+    else
+      return SECT_FIRE;
+  }
+
   return sectorType;
 }
 

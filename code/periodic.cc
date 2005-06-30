@@ -21,6 +21,9 @@
 #include "obj_trash_pile.h"
 #include "process.h"
 
+// cubic inches of burning material where room itself burns
+const int ROOM_FIRE_THRESHOLD=20000;
+
 
 // procGlobalRoomStuff
 procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
@@ -35,7 +38,7 @@ void procGlobalRoomStuff::run(int pulse) const
   int i;
   TRoom *rp;
   TTrashPile *pile;
-  int count=0;
+  int trash_count=0, fire_count=0;
   TObj *o;
 
   for (i = 0; i < WORLD_SIZE; i++) {
@@ -43,21 +46,32 @@ void procGlobalRoomStuff::run(int pulse) const
     if (!rp)
       continue;
     
-    // trash pile creation
+    // per object processing
     // this is kind of cpu intensive, so let's spread it out
     if(!::number(0,9)){
-      count=0;
+      trash_count=fire_count=0;
       for(TThing *t=rp->getStuff();t;t=t->nextThing){
-	if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
-	  count++;
+	o=dynamic_cast<TObj *>(t);
+
+	// count volume on fire
+	if(o && o->isObjStat(ITEM_BURNING))
+	  fire_count+=o->getVolume();
+
+	// count trash
+	if(trash_count>=0 && o && o->isTrash())
+	  trash_count++;
 	
-	if(dynamic_cast<TTrashPile *>(t)){
-	  count=0;
-	  break;
-	}
+	// don't create any trash piles if we already have one
+	if(dynamic_cast<TTrashPile *>(t))
+	  trash_count=-1;
       }
       
-      if(count >= 9){
+      // not much burning in room, so let fire die out
+      if(fire_count < ROOM_FIRE_THRESHOLD)
+	rp->removeRoomFlagBit(ROOM_ON_FIRE);
+
+      // trash pile creation
+      if(trash_count >= 9){
 	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
 	if(!(pile=dynamic_cast<TTrashPile *>(o))){
 	  vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
@@ -68,7 +82,7 @@ void procGlobalRoomStuff::run(int pulse) const
       }
     }
 
-    //weather noise
+    // weather noise
     if (rp->getWeather() == WEATHER_LIGHTNING) {
       if (!::number(0,9)) {
         TThing *in_room;
@@ -1764,6 +1778,7 @@ int TObj::updateBurning(void)
 
     // spread to other items
     TRoom *tr=real_roomp(this->in_room);
+    int fire_count=0;
     
     if(tr && tr->getStuff()){
       for(TThing *tt=tr->getStuff();tt;tt=tt->nextThing){
@@ -1777,14 +1792,20 @@ int TObj::updateBurning(void)
 	  act("The <Y>fire<1> spreads to $n and it begins to <r>burn<1>!",
 	      FALSE, to, 0, 0, TO_ROOM);	  
 	  to->setBurning(NULL);
+
+	  // now count up burning volume
+	  if(to && to->isObjStat(ITEM_BURNING))
+	    fire_count+=to->getVolume();
 	}
       }
     }
+
+    if(tr && fire_count >= ROOM_FIRE_THRESHOLD && !tr->isWaterSector())
+      tr->setRoomFlagBit(ROOM_ON_FIRE);
   }
 
   return FALSE;
 }
-
 
 
 // returns DELETE_THIS
