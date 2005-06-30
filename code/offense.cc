@@ -1719,11 +1719,16 @@ int TBeing::chlorineEngulfed()
 
 void TBeing::flameRoom()
 {
+  roomp->flameRoom();
+}
+
+void TRoom::flameRoom()
+{
   TObj *obj = NULL;
   int rc;
 
   TThing *t, *t2;
-  for (t = roomp->getStuff(); t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1737,6 +1742,7 @@ void TBeing::flameRoom()
   }
   return;
 }
+
 
 void TBeing::freezeRoom()
 {

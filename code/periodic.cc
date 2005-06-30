@@ -20,10 +20,11 @@
 #include "obj_egg.h"
 #include "obj_trash_pile.h"
 #include "process.h"
+#include "obj_pool.h"
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD=20000;
-
+const int ROOM_FLOOD_THRESHOLD=30000;
 
 // procGlobalRoomStuff
 procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
@@ -38,20 +39,39 @@ void procGlobalRoomStuff::run(int pulse) const
   int i;
   TRoom *rp;
   TTrashPile *pile;
-  int trash_count=0, fire_count=0;
+  int trash_count=0, fire_count=0, water_count=0;
   TObj *o;
+  TPool *pool;
 
   for (i = 0; i < WORLD_SIZE; i++) {
     rp = real_roomp(i);
     if (!rp)
       continue;
-    
-    // per object processing
-    // this is kind of cpu intensive, so let's spread it out
+
+
+    if(!::number(0,8)){
+      // spread fire to adjacent rooms
+      if(rp->isRoomFlag(ROOM_ON_FIRE)){
+	// we really need a getRandomExit function or something
+	dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+	TRoom *spread_to;
+	if((rp->exitDir(dir) && 
+	    (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
+	    !(rp->exitDir(dir)->condition & EX_CLOSED) && 
+	    !spread_to->isWaterSector())){
+	  spread_to->setRoomFlagBit(ROOM_ON_FIRE);
+	}
+      }
+    }
+
     if(!::number(0,9)){
-      trash_count=fire_count=0;
+      trash_count=fire_count=water_count=0;
       for(TThing *t=rp->getStuff();t;t=t->nextThing){
 	o=dynamic_cast<TObj *>(t);
+
+	// count volume on liquids
+	if((pool=dynamic_cast<TPool *>(t)))
+	  water_count+=pool->getDrinkUnits();
 
 	// count volume on fire
 	if(o && o->isObjStat(ITEM_BURNING))
@@ -65,11 +85,19 @@ void procGlobalRoomStuff::run(int pulse) const
 	if(dynamic_cast<TTrashPile *>(t))
 	  trash_count=-1;
       }
-      
+
+      // not enough water in room, so no more flooding
+       if(water_count < ROOM_FLOOD_THRESHOLD)
+	rp->removeRoomFlagBit(ROOM_FLOODED);
+      else
+	rp->setRoomFlagBit(ROOM_FLOODED);
+
       // not much burning in room, so let fire die out
       if(fire_count < ROOM_FIRE_THRESHOLD)
 	rp->removeRoomFlagBit(ROOM_ON_FIRE);
-
+      else
+	rp->setRoomFlagBit(ROOM_ON_FIRE);
+      
       // trash pile creation
       if(trash_count >= 9){
 	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
@@ -80,8 +108,9 @@ void procGlobalRoomStuff::run(int pulse) const
 	  *rp += *pile;
 	}
       }
-    }
 
+    }
+    
     // weather noise
     if (rp->getWeather() == WEATHER_LIGHTNING) {
       if (!::number(0,9)) {
@@ -93,7 +122,8 @@ void procGlobalRoomStuff::run(int pulse) const
           if (!ch || !ch->desc)
             continue;
 
-          act("A flash of lightning illuminates the land.", FALSE, ch, 0, 0, TO_CHAR, ANSI_YELLOW);
+          act("A flash of lightning illuminates the land.", 
+	      FALSE, ch, 0, 0, TO_CHAR, ANSI_YELLOW);
           ch->playsound(snd, SOUND_TYPE_NOISE);
         } 
       }
@@ -1633,6 +1663,17 @@ int TObj::objectTickUpdate(int pulse)
     }
   }
   
+  if(roomp && roomp->isRoomFlag(ROOM_ON_FIRE) && 
+     !dynamic_cast<TSeeThru *>(this)) {
+
+    int rc = burnObject(NULL, 30);
+    if (IS_SET_ONLY(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+  }
+
+  
+  
   // Incubate eggs
   if ((egg = dynamic_cast<TEgg *>(this))) {
     if (egg->getEggTouched()) {
@@ -1779,7 +1820,7 @@ int TObj::updateBurning(void)
     // spread to other items
     TRoom *tr=real_roomp(this->in_room);
     int fire_count=0;
-    
+  
     if(tr && tr->getStuff()){
       for(TThing *tt=tr->getStuff();tt;tt=tt->nextThing){
 	int cf=40; // chance factor: flammability/cf = percent chance
@@ -1796,12 +1837,14 @@ int TObj::updateBurning(void)
 	  // now count up burning volume
 	  if(to && to->isObjStat(ITEM_BURNING))
 	    fire_count+=to->getVolume();
+
 	}
       }
     }
 
     if(tr && fire_count >= ROOM_FIRE_THRESHOLD && !tr->isWaterSector())
       tr->setRoomFlagBit(ROOM_ON_FIRE);
+    
   }
 
   return FALSE;

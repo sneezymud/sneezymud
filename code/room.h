@@ -59,8 +59,9 @@ const unsigned int ROOM_SAVE_ROOM     = (1<<17);    // 131072
 const unsigned int ROOM_NO_AUTOFORMAT = (1<<18);    // 262144
 const unsigned int ROOM_BEING_EDITTED = (1<<19);    // 524288
 const unsigned int ROOM_ON_FIRE       = (1<<20);  
+const unsigned int ROOM_FLOODED       = (1<<21);
 
-const int MAX_ROOM_BITS      = 21;          /* move and change */
+const int MAX_ROOM_BITS      = 22;          /* move and change */
 
 const unsigned int EX_CLOSED       = (1<<0);   // 1
 const unsigned int EX_LOCKED       = (1<<1);   // 2
@@ -218,6 +219,7 @@ class TRoom : public TThing {
     void setDescr(const char *);
     const char * getDescr();
 
+    void flameRoom();
     virtual int chiMe(TBeing *);
     int checkPointroll();
     virtual void sendTo(colorTypeT, const sstring &) const;

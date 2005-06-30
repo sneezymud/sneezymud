@@ -739,7 +739,8 @@ const char * const room_bits[MAX_ROOM_BITS] =
   "SAVE ROOMS",
   "NO-AUTOFORMAT",
   "BEING EDITED",
-  "ON-FIRE"
+  "ON-FIRE",
+  "FLOODED"
 };
 
 

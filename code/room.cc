@@ -276,6 +276,13 @@ void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_
 
 sectorTypeT TRoom::getSectorType() const
 {
+  // it would be nice if this was non-const, and we could just call
+  // some function like "makeRiver()", so we could get tropical/arctic
+  // rivers and so on.  we'll have to settle for this for now.
+
+  if((roomFlags & ROOM_FLOODED) != 0)
+    return SECT_TEMPERATE_RIVER_SURFACE;
+
   if((roomFlags & ROOM_ON_FIRE) != 0){
     if(sectorType==SECT_TROPICAL_ATMOSPHERE ||
        sectorType==SECT_TEMPERATE_ATMOSPHERE ||
