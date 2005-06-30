@@ -49,18 +49,16 @@ void procGlobalRoomStuff::run(int pulse) const
       continue;
 
 
-    if(!::number(0,3)){
-      // spread fire to adjacent rooms
-      if(rp->isRoomFlag(ROOM_ON_FIRE)){
-	// we really need a getRandomExit function or something
-	dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-	TRoom *spread_to;
-	if((rp->exitDir(dir) && 
-	    (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
-	    !(rp->exitDir(dir)->condition & EX_CLOSED) && 
-	    !spread_to->isWaterSector())){
-	  spread_to->setRoomFlagBit(ROOM_ON_FIRE);
-	}
+    // spread fire to adjacent rooms
+    if(rp->isRoomFlag(ROOM_ON_FIRE)){
+      // we really need a getRandomExit function or something
+      dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+      TRoom *spread_to;
+      if((rp->exitDir(dir) && 
+	  (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
+	  !(rp->exitDir(dir)->condition & EX_CLOSED) && 
+	  !spread_to->isWaterSector())){
+	spread_to->setRoomFlagBit(ROOM_ON_FIRE);
       }
     }
 
