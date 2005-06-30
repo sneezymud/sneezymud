@@ -49,7 +49,7 @@ void procGlobalRoomStuff::run(int pulse) const
       continue;
 
 
-    if(!::number(0,8)){
+    if(!::number(0,3)){
       // spread fire to adjacent rooms
       if(rp->isRoomFlag(ROOM_ON_FIRE)){
 	// we really need a getRandomExit function or something
