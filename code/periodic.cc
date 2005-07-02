@@ -48,17 +48,18 @@ void procGlobalRoomStuff::run(int pulse) const
     if (!rp)
       continue;
 
-
-    // spread fire to adjacent rooms
-    if(rp->isRoomFlag(ROOM_ON_FIRE)){
-      // we really need a getRandomExit function or something
-      dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-      TRoom *spread_to;
-      if((rp->exitDir(dir) && 
-	  (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
-	  !(rp->exitDir(dir)->condition & EX_CLOSED) && 
-	  !spread_to->isWaterSector())){
-	spread_to->setRoomFlagBit(ROOM_ON_FIRE);
+    if(::number(0,3)){
+      // spread fire to adjacent rooms
+      if(rp->isRoomFlag(ROOM_ON_FIRE)){
+	// we really need a getRandomExit function or something
+	dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+	TRoom *spread_to;
+	if((rp->exitDir(dir) && 
+	    (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
+	    !(rp->exitDir(dir)->condition & EX_CLOSED) && 
+	    !spread_to->isWaterSector())){
+	  spread_to->setRoomFlagBit(ROOM_ON_FIRE);
+	}
       }
     }
 
@@ -1865,6 +1866,8 @@ int TBeing::terrainSpecial()
       if (!desc && isPc())
         return FALSE;
       dam = ::number(2,6);
+      if(roomp->isRoomFlag(ROOM_PEACEFUL))
+	dam=0;
       sendTo("Flames lick about you, scorching your skin.\n\r");
       act("Flames lick about $n and scorch $s skin.",TRUE,this,0,0,TO_ROOM);
       return reconcileDamage(this,dam,SPELL_FIREBALL);
