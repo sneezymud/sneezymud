@@ -73,7 +73,27 @@ static int findAFire(TMonster *myself)
 
 
 
+void firemanSay(TBeing *myself)
+{
+  if(!myself)
+    return;
 
+  switch(::number(0,5)){
+    case 0:
+      myself->doSay("Whew that was a close one!");
+      break;
+    case 1:
+      myself->doSay("Is there an arsonist around here?!");
+      myself->doAction("", CMD_PEER);
+      break;
+    case 2:
+      myself->doSay("Good thing that didn't spread.");
+      break;
+    case 3:
+      myself->doSay("I didn't need those eyebrows anyway.");
+      break;
+  }
+}
 
 
 int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
@@ -105,25 +125,17 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	      0, myself, 0, 0, TO_ROOM);
 	} else {
 	  t->extinguishMe(myself);
-	
-	  switch(::number(0,5)){
-	    case 0:
-	      myself->doSay("Whew that was a close one!");
-	      break;
-	    case 1:
-	      myself->doSay("Is there an arsonist around here?!");
-	      myself->doAction("", CMD_PEER);
-	      break;
-	    case 2:
-	      myself->doSay("Good thing that didn't spread.");
-	      break;
-	    case 3:
-	      myself->doSay("I didn't need those eyebrows anyway.");
-	      break;
-	  }
+	  firemanSay(myself);
 	}
 	return TRUE;
       }
+    }
+
+    if(myself->roomp->isRoomFlag(ROOM_ON_FIRE)){
+      act("$n extinguishes the burning room.",
+	  0, myself, 0, 0, TO_ROOM);
+      myself->roomp->removeRoomFlagBit(ROOM_ON_FIRE);
+      firemanSay(myself);
     }
   }
 
