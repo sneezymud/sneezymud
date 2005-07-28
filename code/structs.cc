@@ -908,6 +908,11 @@ TThing& TThing::operator -- ()
     if(dynamic_cast<TToothNecklace *>(t_in)){
       dynamic_cast<TToothNecklace *>(t_in)->updateDesc();
     }
+
+    if (t_in->roomp &&
+        t_in->roomp->isRoomFlag(ROOM_SAVE_ROOM))
+      t_in->roomp->saveItems("");
+
   } else if ((rp = dynamic_cast<TRoom *> (roomp))) {
     // obj from room
     // char from room
