@@ -468,7 +468,7 @@ class Descriptor
     int inputProcessing();
     void flush();
     void flushInput();
-    int sendLogin(const char *);
+    int sendLogin(const sstring &arg);
     bool checkForMultiplay();
     bool checkForAccount(char *, bool silent = FALSE);
     bool checkForCharacter(char *);
