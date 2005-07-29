@@ -5345,7 +5345,7 @@ int Descriptor::sendLogin(const sstring &arg)
       return (sendLogin("1"));
     }
     strcpy(account->name, my_arg.c_str());
-    sprintf(buf, "account/%s/%s/account", my_arg.lower().substr(0,0).c_str(), my_arg.lower().c_str());
+    sprintf(buf, "account/%s/%s/account", my_arg.lower().substr(0,1).c_str(), my_arg.lower().c_str());
     // If account exists, open and copy password, otherwise set pwd to \0
     FILE * fp = fopen(buf, "r");
     if (fp) {
