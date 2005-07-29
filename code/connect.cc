@@ -5264,17 +5264,18 @@ int bogusAccountName(const char *arg)
 }
 
 // return DELETE_THIS
-int Descriptor::sendLogin(const char *arg)
+int Descriptor::sendLogin(const sstring &arg)
 {
   char buf[160], buf2[4096] = "\0\0\0";
+  sstring my_arg = arg.substr(0,20);
   accountFile afp;
 
   if (m_bIsClient)
     return FALSE;
 
-  if (!*arg)
+  if (my_arg.empty())
     return DELETE_THIS;
-  else if (*arg == '?') {
+  else if (my_arg == "?") {
     writeToQ("Accounts are used to store all characters belonging to a given person.\n\r");
     writeToQ("One account can hold multiple characters.  Creating more than one account\n\r");
     sprintf(buf, "for yourself is a violation of %s multiplay rules and will lead to\n\r", MUD_NAME);
@@ -5289,7 +5290,7 @@ int Descriptor::sendLogin(const char *arg)
     writeToQ("Type NEW to generate a new account.\n\r");
     writeToQ("Login:");
     return FALSE;
-  } else if (*arg == '1') {
+  } else if (my_arg == "1") {
     FILE * fp = fopen("txt/version", "r");
     if (!fp) {
       vlogf(LOG_FILE, "No version file found");
@@ -5307,7 +5308,7 @@ int Descriptor::sendLogin(const char *arg)
     sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
     output.putInQ(buf2);
     return FALSE;
-  } else if (!strcasecmp(arg, "new")) {
+  } else if (my_arg == "NEW") {
     if (WizLock) {
       writeToQ("The game is currently wiz-locked.\n\r");
       if (!lockmess.empty()) {
@@ -5334,17 +5335,17 @@ int Descriptor::sendLogin(const char *arg)
     return FALSE;
   } else {
     account = new TAccount();
-    if (*arg == '#')   // NCSA telnet put # when first logging in.
-       arg++;
+    if (my_arg == "#")   // NCSA telnet put # when first logging in.
+      my_arg = my_arg.substr(1);
 
-    if (bogusAccountName(arg)) {
+    if (bogusAccountName(my_arg.c_str())) {
       output.putInQ("Illegal account name.\n\r");
       delete account;
       account = NULL;
       return (sendLogin("1"));
     }
-    strcpy(account->name, arg);
-    sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
+    strcpy(account->name, my_arg.c_str());
+    sprintf(buf, "account/%s/%s/account", my_arg.lower().substr(0,0).c_str(), my_arg.lower().c_str());
     // If account exists, open and copy password, otherwise set pwd to \0
     FILE * fp = fopen(buf, "r");
     if (fp) {
