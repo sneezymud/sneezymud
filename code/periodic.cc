@@ -47,7 +47,7 @@ void procGlobalRoomStuff::run(int pulse) const
     rp = real_roomp(i);
     if (!rp)
       continue;
-
+    
     if(::number(0,3)){
       // spread fire to adjacent rooms
       if(rp->isRoomFlag(ROOM_ON_FIRE)){
@@ -241,10 +241,42 @@ void procCallRoomSpec::run(int pulse) const
 
   for (i = 0; i < roomspec_db.size(); i++) {
     TRoom *rp = roomspec_db[i];
-    if (rp)
+    if (rp){
       rp->checkSpec(NULL, CMD_GENERIC_PULSE, NULL, rp);
+    }
   }
 }
+
+// procDoRoomSaves
+procDoRoomSaves::procDoRoomSaves(const int &p)
+{
+  trigger_pulse=p;
+  name="procDoRoomSaves";
+}
+
+void procDoRoomSaves::run(int pulse) const
+{
+  // this is not a very good implementation of this idea, but I don't have time
+  // to work on it - this is an emergency patch for a dupe bug
+  unsigned int i;
+  TRoom *rp=NULL;
+
+  for (i = 0; i < roomsave_db.size(); i++) {
+    // usually, you'll get several saves queued up in a row,
+    // so skip the duplicates
+    if(rp == roomsave_db[i])
+      continue;
+
+    rp = roomsave_db[i];
+
+    if (rp){
+      rp->saveItems("");
+    }
+  }
+
+  roomsave_db.clear();
+}
+
 
 // returns DELETE_THIS
 int TBeing::riverFlow(int)

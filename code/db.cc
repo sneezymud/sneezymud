@@ -132,6 +132,7 @@ int faction_number = 0;
 FILE *mob_f = NULL;        // file containing mob prototypes  
 
 vector<TRoom *>roomspec_db(0);
+vector<TRoom *>roomsave_db(0);
 
 //struct cached_object { int number; sstring s[17]; };
 struct cached_object { int number;map <sstring, sstring> s; };

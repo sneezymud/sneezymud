@@ -909,9 +909,10 @@ TThing& TThing::operator -- ()
       dynamic_cast<TToothNecklace *>(t_in)->updateDesc();
     }
 
-    //    if (t_in->roomp &&
-    //        t_in->roomp->isRoomFlag(ROOM_SAVE_ROOM))
-    //      t_in->roomp->saveItems("");
+    if (t_in->roomp &&
+	t_in->roomp->isRoomFlag(ROOM_SAVE_ROOM)){
+      roomsave_db.push_back(t_in->roomp);
+    }
 
   } else if ((rp = dynamic_cast<TRoom *> (roomp))) {
     // obj from room

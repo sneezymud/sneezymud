@@ -17,6 +17,7 @@ extern vector<zoneData>zone_table;
 // cycling through all the rooms takes too long so just store which rooms
 // actually  have special procs
 extern vector<TRoom *>roomspec_db;
+extern vector<TRoom *>roomsave_db;
 
 // this is used for track range
 const unsigned int MAX_ROOMS   = 5000;

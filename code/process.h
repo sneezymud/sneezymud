@@ -37,6 +37,12 @@ class procGlobalRoomStuff : public TProcess {
   procGlobalRoomStuff(const int &);
 };
 
+class procDoRoomSaves : public TProcess {
+ public:
+  void run(int) const;
+  procDoRoomSaves(const int &);
+};
+
 
 class procDeityCheck : public TProcess {
  public:
