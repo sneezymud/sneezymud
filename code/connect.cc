@@ -5271,7 +5271,8 @@ int Descriptor::sendLogin(const sstring &arg)
   accountFile afp;
 
   if (arg.length() > 20) {
-    vlogf(LOG_MISC, fmt("Buffer overflow attempt.  Account = '%s'") % arg);
+    vlogf(LOG_MISC, fmt("Buffer overflow attempt from [%s]") % host);
+    vlogf(LOG_MISC, fmt("Login = '%s'") % arg);
   }
 
   if (m_bIsClient)
