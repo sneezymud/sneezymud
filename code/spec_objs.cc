@@ -3623,31 +3623,37 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   if(!found)
     return FALSE;
 
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select name, level, died, killer from permadeath order by level desc limit 10");
-
-  if(!db.isResults()){
-    ch->sendTo("The plaque is empty.\n\r");
-    return TRUE;
-  }
+  TDatabase db_dead(DB_SNEEZY);
+  TDatabase db_living(DB_SNEEZY);
 
   ch->sendTo("You examine the plaque:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
   ch->sendTo("-     This monument commemorates the bravest of heroes     -\n\r");
   ch->sendTo("-                 who risk permanent death.                -\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("Living:             Dead:\n\r");
+
+  db_dead.query("select name, level, died, killer from permadeath where died=1 order by level desc limit 25");
+  db_living.query("select name, level, died, killer from permadeath where died=0 order by level desc limit 25");
 
   int i=1;
-  while(db.fetchRow()){
-    if(convertTo<int>(db["died"])==1){
-      ch->sendTo(COLOR_BASIC, fmt("%i) %s perished bravely at level %s, killed by %s.\n\r") % i % db["name"] % db["level"] % db["killer"]);
+  while(i<=25){
+    if(db_living.fetchRow()){
+      ch->sendTo(COLOR_BASIC, fmt("%2s| %-13s | ") %
+		 db_living["level"] % db_living["name"]);
     } else {
-      ch->sendTo(COLOR_BASIC, fmt("%i) %s lives on at level %s\n\r") % i % db["name"] % db["level"]);
+      ch->sendTo(COLOR_BASIC, fmt(" 0) %-13s | ") % "no one");
     }
+
+    if(db_dead.fetchRow()){
+      ch->sendTo(COLOR_BASIC, fmt("%2s| %-13s killed by %s.\n\r")%
+		 db_dead["level"] % db_dead["name"] % db_dead["killer"]);
+    } else {
+      ch->sendTo(COLOR_BASIC, fmt(" 0) %-13s\n\r") % "no one");
+    }
+
     ++i;
   }
-
 
   return TRUE;
 }
