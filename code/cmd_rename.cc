@@ -170,7 +170,7 @@ void TBeing::doNameChange(const char *argument)
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("update player set name='%s' where name='%s'", 
+  db.query("update player set name=lower('%s') where name=lower('%s')", 
 	   tmp_name, orig_name);
 
   tmpbuf=fmt("account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
