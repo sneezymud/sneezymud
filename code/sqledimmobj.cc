@@ -13,6 +13,8 @@ int main(int argc, char **argv)
   sstring buf, sbuf, immortal;
   int answer;
 
+  toggleInfo.loadToggles();
+
   if(argc<=1){
     printf("Usage: sqledimmobj <immortal> <vnum list>\n");
     printf("Example: sqledimmobj Peel 13700-13780 13791 13798\n");
