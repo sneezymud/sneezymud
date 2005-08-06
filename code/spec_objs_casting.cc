@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_money.h"
 #include "obj_table.h"
+#include "obj_portal.h"
 
 int objCastFaerieFire(TObj *o, TBeing *targ)
 {
@@ -125,4 +126,546 @@ int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   
 }
+
+/* The following proc is meant for a worn object that is personalized,
+ * lest things get out of control
+ * NOTE: the proc uses the the 4th value of 4 values, which works for 
+ * armor and worn object... check first for other types
+ */
+int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc;
+  affectedData aff;
+  sstring buf=sstring(arg).word(0);
+  int location;
+  TRoom *room = NULL;
+  sstring new_name, name_end, old_name;
+  int i = 1;
+  
+  if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_USE)
+  {
+    act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+    act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+    
+
+    if (ch->checkForSkillAttempt(SPELL_ASTRAL_WALK)) {
+      act("The $o's powers can only be used once per day.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    }
+    
+    old_name = sstring(o->name);
+    while(old_name.word(i+1) != "") {
+      i++;
+    }
+    name_end = old_name.word(i);
+    location = atoi(name_end.substr(1,name_end.length()-2).c_str());
+    if (location == 0) {
+      location = ROOM_TOP_OF_TREE;
+    }
+    room = real_roomp(location);
+    
+    if (!room) {
+      room = real_roomp(ROOM_TOP_OF_TREE);
+      if (!room) {
+        vlogf(LOG_BUG, "Attempt to astral to NULL room in objWornAstralWalk.");
+        act("Something went wrong with the $o and you don't go anywhere. [BUG]",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return TRUE;
+      }
+    }
+
+    if (room->isFlyingSector() || ch->roomp->isFlyingSector()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if (ch->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
+        !ch->isImmortal()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if ( room->isRoomFlag(ROOM_PRIVATE) ||
+        room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+        (zone_table[room->getZoneNum()].enabled == FALSE) ||
+        (toggleInfo[TOG_QUESTCODE2]->toggle &&
+         room->number >= 5700 && room->number < 5900) ||
+        room->isRoomFlag(ROOM_NO_MAGIC)) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+    
+    // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
+    aff.type = AFFECT_SKILL_ATTEMPT;
+    aff.level = 0;
+    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.location = APPLY_NONE;
+    aff.modifier = SPELL_ASTRAL_WALK;
+    
+    act("$n opens a door to another dimension and steps through.",
+      TRUE, ch,o,NULL,TO_ROOM,NULL);
+    act("You open a door to another dimension and step through.",
+      TRUE, ch,o,NULL,TO_CHAR,NULL);
+    ch->roomp->playsound(SOUND_SPELL_ASTRAL_WALK, SOUND_TYPE_MAGIC);
+
+    --(*ch);
+    *room += *ch;
+    ch->doLook("", CMD_LOOK);
+
+    act("You are blinded for a moment as $n appears in a flash of light!",
+            FALSE, ch, NULL, NULL, TO_ROOM);
+
+    if (ch->riding) {
+      rc = ch->riding->genericMovedIntoRoom(room, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete ch->riding;
+        ch->riding = NULL;
+      }
+    } else {
+      rc = ch->genericMovedIntoRoom(room, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      {
+        ch->reformGroup();
+        delete ch;
+        ch = NULL;
+        return TRUE;
+      }
+    }
+
+    if (!(ch->isImmortal())) ch->affectTo(&aff);
+    
+    ch->addToWait(combatRound(3));
+    
+    return TRUE;
+    
+  } else if (cmd == CMD_WHISPER) {
+    
+    if (buf == "whence")
+    {
+
+      act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+      act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+
+      old_name = sstring(o->name);
+      new_name = old_name.word(0);
+      while(old_name.word(i+1) != "") {
+        new_name += fmt(" %s") % old_name.word(i);
+        i++;
+      }
+      name_end = old_name.word(i);
+      
+        
+      if (!(atoi(name_end.substr(1,name_end.length()-2).c_str())))
+      {
+        new_name += fmt(" %s") % name_end;
+      }
+    
+      location = ch->in_room;
+      
+      room = real_roomp(location);
+      
+      if (!room) {
+        vlogf(LOG_BUG, "Attempt to astral to NULL room in objWornAstralWalk.");
+        act("Something went wrong with the $o and you don't go anywhere. [BUG]",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return TRUE;
+      }
+
+      if (room->isFlyingSector() || ch->roomp->isFlyingSector()) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+
+      if (ch->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
+          !ch->isImmortal()) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+
+      if ( room->isRoomFlag(ROOM_PRIVATE) ||
+          room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+          (zone_table[room->getZoneNum()].enabled == FALSE) ||
+          (toggleInfo[TOG_QUESTCODE2]->toggle &&
+           room->number >= 5700 && room->number < 5900) ||
+          room->isRoomFlag(ROOM_NO_MAGIC)) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+   
+      o->swapToStrung();
+      delete [] o->name;
+      new_name += fmt(" [%d]") % location;
+      o->name = mud_str_dup(new_name);
+      act("Your $o throbs.", 
+          TRUE, ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    } else if (buf == "whither") {
+
+      act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+      act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+      
+      old_name = sstring(o->name);
+      while(old_name.word(i+1) != "") {
+        i++;
+      }
+      name_end = old_name.word(i);
+      location = atoi(name_end.substr(1,name_end.length()-2).c_str());
+      
+      act("Another place drifts across your perception...", 
+          TRUE, ch,o,NULL,TO_CHAR,NULL);
+      if (location == 0)
+        location = ROOM_TOP_OF_TREE;
+      room = real_roomp(location);
+      ch->sendTo(fmt("%s\n") % room->getName());
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  return FALSE;
+
+}
+
+/* The following proc is meant for a worn object that is personalized,
+ * lest things get out of control
+ * NOTE: the proc uses the the 4th value of 4 values, which works for 
+ * armor and worn object... check first for other types
+ */
+int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc;
+  affectedData aff;
+  sstring buf=sstring(arg).word(0);
+  int location;
+  TRoom *room = NULL;
+  sstring new_name, name_end, old_name;
+  
+  if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_USE)
+  {
+    act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+    act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+    
+
+    if (ch->checkForSkillAttempt(SPELL_ASTRAL_WALK)) {
+      act("The $o's powers can only be used once per day.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    }
+    
+    location = ROOM_TOP_OF_TREE;
+    room = real_roomp(location);
+    
+    if (!room) {
+      vlogf(LOG_BUG, "Attempt to astral to NULL room in objWornMinorAstralWalk.");
+      act("Something went wrong with the $o and you don't go anywhere. [BUG]",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    }
+
+    if (room->isFlyingSector() || ch->roomp->isFlyingSector()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if (ch->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
+        !ch->isImmortal()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if ( room->isRoomFlag(ROOM_PRIVATE) ||
+        room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+        (zone_table[room->getZoneNum()].enabled == FALSE) ||
+        (toggleInfo[TOG_QUESTCODE2]->toggle &&
+         room->number >= 5700 && room->number < 5900) ||
+        room->isRoomFlag(ROOM_NO_MAGIC)) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+    
+    // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
+    aff.type = AFFECT_SKILL_ATTEMPT;
+    aff.level = 0;
+    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.location = APPLY_NONE;
+    aff.modifier = SPELL_ASTRAL_WALK;
+    
+    act("$n opens a door to another dimension and steps through.",
+      TRUE, ch,o,NULL,TO_ROOM,NULL);
+    act("You open a door to another dimension and step through.",
+      TRUE, ch,o,NULL,TO_CHAR,NULL);
+    ch->roomp->playsound(SOUND_SPELL_ASTRAL_WALK, SOUND_TYPE_MAGIC);
+
+    --(*ch);
+    *room += *ch;
+    ch->doLook("", CMD_LOOK);
+
+    act("You are blinded for a moment as $n appears in a flash of light!",
+            FALSE, ch, NULL, NULL, TO_ROOM);
+
+    if (ch->riding) {
+      rc = ch->riding->genericMovedIntoRoom(room, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete ch->riding;
+        ch->riding = NULL;
+      }
+    } else {
+      rc = ch->genericMovedIntoRoom(room, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      {
+        ch->reformGroup();
+        delete ch;
+        ch = NULL;
+        return TRUE;
+      }
+    }
+
+    if (!(ch->isImmortal())) ch->affectTo(&aff);
+    
+    ch->addToWait(combatRound(3));
+    
+    return TRUE;
+  } 
+  return FALSE;
+
+}
+
+/* The following proc is meant for a worn object that is personalized,
+ * lest things get out of control
+ * NOTE: the proc uses the the 4th value of 4 values, which works for 
+ * armor and worn object... check first for other types
+ */
+int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  affectedData aff;
+  sstring buf2, buf=sstring(arg).word(0);
+  int location;
+  TRoom *room = NULL;
+  sstring new_name, name_end, old_name;
+  int i = 1;
+  
+  if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_USE)
+  {
+    act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+    act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+    
+
+    if (ch->checkForSkillAttempt(SPELL_PORTAL)) {
+      act("The $o's powers can only be used once per day.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    }
+    
+    old_name = sstring(o->name);
+    while(old_name.word(i+1) != "") {
+      i++;
+    }
+    name_end = old_name.word(i);
+    location = atoi(name_end.substr(1,name_end.length()-2).c_str());
+    if (location == 0) {
+      location = ROOM_TOP_OF_TREE;
+    }
+    room = real_roomp(location);
+    
+    if (!room) {
+      room = real_roomp(ROOM_TOP_OF_TREE);
+      if (!room) {
+        vlogf(LOG_BUG, "Attempt to portal to NULL room in objWornPortal.");
+        act("Something went wrong with the $o and you don't go anywhere. [BUG]",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return TRUE;
+      }
+    }
+
+    if (room->isFlyingSector() || ch->roomp->isFlyingSector()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if (ch->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
+        !ch->isImmortal()) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+
+    if ( room->isRoomFlag(ROOM_PRIVATE) ||
+        room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+        (zone_table[room->getZoneNum()].enabled == FALSE) ||
+        (toggleInfo[TOG_QUESTCODE2]->toggle &&
+         room->number >= 5700 && room->number < 5900) ||
+        room->isRoomFlag(ROOM_NO_MAGIC)) {
+      act("The room's magic prevents the $o from functioning.",
+          TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+      return TRUE;
+    }
+    
+    // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
+    aff.type = AFFECT_SKILL_ATTEMPT;
+    aff.level = 0;
+    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.location = APPLY_NONE;
+    aff.modifier = SPELL_PORTAL;
+
+    TPerson *tPerson = dynamic_cast<TPerson *>(ch);
+    TPortal * tmp_obj = new TPortal(room);
+    tmp_obj->setPortalNumCharges(11);
+    *ch->roomp += *tmp_obj;
+
+    if (tPerson)
+      tmp_obj->checkOwnersList(tPerson);
+
+    ch->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+
+    TPortal * next_tmp_obj = new TPortal(ch->roomp);
+    *room += *next_tmp_obj;
+
+    if (tPerson)
+      next_tmp_obj->checkOwnersList(tPerson);
+
+    room->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+
+    act("$p suddenly appears out of a swirling mist.", TRUE, ch, tmp_obj, NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, ch, tmp_obj, NULL, TO_CHAR);
+
+    buf2 = fmt("%s suddenly appears out of a swirling mist.\n\r") % 
+      sstring(next_tmp_obj->shortDescr).cap();
+    sendToRoom(buf2.c_str(), location);
+
+ 
+    if (!(ch->isImmortal())) ch->affectTo(&aff);
+    
+    ch->addToWait(combatRound(3));
+    
+    return TRUE;
+    
+  } else if (cmd == CMD_WHISPER) {
+    
+    if (buf == "whence")
+    {
+
+      act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+      act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+
+      old_name = sstring(o->name);
+      new_name = old_name.word(0);
+      while(old_name.word(i+1) != "") {
+        new_name += fmt(" %s") % old_name.word(i);
+        i++;
+      }
+      name_end = old_name.word(i);
+      
+        
+      if (!(atoi(name_end.substr(1,name_end.length()-2).c_str())))
+      {
+        new_name += fmt(" %s") % name_end;
+      }
+    
+      location = ch->in_room;
+      
+      room = real_roomp(location);
+      
+      if (!room) {
+        vlogf(LOG_BUG, "Attempt to astral to NULL room in objPortalWalk.");
+        act("Something went wrong with the $o and you don't go anywhere. [BUG]",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return TRUE;
+      }
+
+      if (room->isFlyingSector() || ch->roomp->isFlyingSector()) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+
+      if (ch->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
+          !ch->isImmortal()) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+
+      if ( room->isRoomFlag(ROOM_PRIVATE) ||
+          room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+          (zone_table[room->getZoneNum()].enabled == FALSE) ||
+          (toggleInfo[TOG_QUESTCODE2]->toggle &&
+           room->number >= 5700 && room->number < 5900) ||
+          room->isRoomFlag(ROOM_NO_MAGIC)) {
+        act("The room's magic prevents the $o from functioning.",
+            TRUE,ch,o,NULL,TO_CHAR,NULL);
+        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+        return TRUE;
+      }
+   
+      o->swapToStrung();
+      delete [] o->name;
+      new_name += fmt(" [%d]") % location;
+      o->name = mud_str_dup(new_name);
+      act("Your $o throbs.", 
+          TRUE, ch,o,NULL,TO_CHAR,NULL);
+      return TRUE;
+    } else if (buf == "whither") {
+
+      act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
+      act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
+      
+      old_name = sstring(o->name);
+      while(old_name.word(i+1) != "") {
+        i++;
+      }
+      name_end = old_name.word(i);
+      location = atoi(name_end.substr(1,name_end.length()-2).c_str());
+      
+      act("Another place drifts across your perception...", 
+          TRUE, ch,o,NULL,TO_CHAR,NULL);
+      if (location == 0)
+        location = ROOM_TOP_OF_TREE;
+      room = real_roomp(location);
+      ch->sendTo(fmt("%s\n") % room->getName());
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  return FALSE;
+
+}
+
 

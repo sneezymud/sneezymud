@@ -5738,7 +5738,9 @@ extern int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TO
 extern int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int demonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
-
+extern int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 // assign special procedures to objects
@@ -5890,5 +5892,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "lightsaber", lightSaber},
   {FALSE, "broken bottle", brokenBottle},
   {FALSE, "Demon Slayer", demonSlayer},
+  {FALSE, "Astral Walk", objWornAstralWalk}, //145
+  {FALSE, "Minor Astral Walk", objWornMinorAstralWalk},
+  {FALSE, "Portal", objWornPortal},
   {FALSE, "last proc", bogusObjProc}
 };
