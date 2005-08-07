@@ -333,7 +333,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
       if (location == 0)
         location = ROOM_TOP_OF_TREE;
       room = real_roomp(location);
-      ch->sendTo(fmt("%s\n") % room->getName());
+      ch->sendTo(fmt("%s\n\r") % room->getName());
       return TRUE;
     } else
       return FALSE;
@@ -658,7 +658,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       if (location == 0)
         location = ROOM_TOP_OF_TREE;
       room = real_roomp(location);
-      ch->sendTo(fmt("%s\n") % room->getName());
+      ch->sendTo(fmt("%s\n\r") % room->getName());
       return TRUE;
     } else
       return FALSE;
