@@ -105,10 +105,10 @@ const sstring Stats::printRawStats(const TBeing *) const
   return rawStats;
 }
 
-int age_mod_for_stat(int age_num, statTypeT whichStat)
+int age_mod_for_stat(const TBeing *tb, int age_num, statTypeT whichStat)
 {
-  // disabled
-  return 0;
+  if(!tb->hasQuestBit(TOG_REAL_AGING))
+    return 0;
 
   // age_num is the "human" age, realize non-humans have been adjusted
   // to the human age, so no need to modify for race.
@@ -877,7 +877,7 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
       // and add on age modifiers
       my_age = age()->year - getBaseAge() + 17;
       if(!isVampire())
-	amount += age_mod_for_stat(my_age, whichStat);
+	amount += age_mod_for_stat(this, my_age, whichStat);
     
       amount += territory_adjustment(player.hometerrain, whichStat);
 
@@ -900,7 +900,7 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
       return race->baseStats.get(whichStat);
     case(STAT_AGE):
       if(!isVampire())
-	return age_mod_for_stat((age()->year - getBaseAge() + 17), whichStat);
+	return age_mod_for_stat(this, (age()->year - getBaseAge() + 17), whichStat);
       else
 	return 0;
     case(STAT_TERRITORY):

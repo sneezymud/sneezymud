@@ -520,10 +520,11 @@ int TBeing::rawMove(dirTypeT dir)
     }
     // old people move harder  (kicks in around age 50 (human))
     // disabled
-#if 0
-    if (age()->year - getBaseAge() >= 35)
-      need_movement += (age()->year - getBaseAge() - 30)/5;
-#endif 
+
+    if(hasQuestBit(TOG_REAL_AGING)){
+      if (age()->year - getBaseAge() >= 35)
+	need_movement += (age()->year - getBaseAge() - 30)/5;
+    }
 
     if (isFlying())
       need_movement = min(1, need_movement/4);
@@ -670,12 +671,14 @@ int TBeing::rawMove(dirTypeT dir)
       need_movement = 1;    
 
     // old people move harder
-/*    if (age()->year - getBaseAge() >= 50) {
-      need_movement += (age()->year - getBaseAge() - 50)/10;
-      if (((age()->year - getBaseAge() - 50)%10) >= ::number(1,10))
-        need_movement++;
+    if(hasQuestBit(TOG_REAL_AGING)){
+      if (age()->year - getBaseAge() >= 50) {
+	need_movement += (age()->year - getBaseAge() - 50)/10;
+	if (((age()->year - getBaseAge() - 50)%10) >= ::number(1,10))
+	  need_movement++;
+      }
     }
-*/ 
+ 
     if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL) || affectedBySpell(SPELL_CELERITE))
       need_movement = max(0, need_movement/2);
 

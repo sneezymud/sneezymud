@@ -33,23 +33,25 @@ static const sstring ClassTitles(const TBeing *ch)
 }
 #endif
 
-int graf(int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
+int graf(const TBeing *tb, int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
 {
   // age disabled - treat everyone as a 35 year old
+  if(!tb->hasQuestBit(TOG_REAL_AGING)){
     return (int) (p2 + (((35 - 30) * (p3 - p2)) / 15));        /* 30..44 */
-    
-  if (age < 15)
-    return (p0);
-  else if (age <= 29)
-    return (int) (p1 + (((age - 15) * (p2 - p1)) / 15));        /* 15..29 */
-  else if (age <= 44)
-    return (int) (p2 + (((age - 30) * (p3 - p2)) / 15));        /* 30..44 */
-  else if (age <= 59)
-    return (int) (p3 + (((age - 45) * (p4 - p3)) / 15));        /* 45..59 */
-  else if (age <= 79)
-    return (int) (p4 + (((age - 60) * (p5 - p4)) / 20));        /* 60..79 */
-  else
-    return (p6);
+  } else {
+    if (age < 15)
+      return (p0);
+    else if (age <= 29)
+      return (int) (p1 + (((age - 15) * (p2 - p1)) / 15));        /* 15..29 */
+    else if (age <= 44)
+      return (int) (p2 + (((age - 30) * (p3 - p2)) / 15));        /* 30..44 */
+    else if (age <= 59)
+      return (int) (p3 + (((age - 45) * (p4 - p3)) / 15));        /* 45..59 */
+    else if (age <= 79)
+      return (int) (p4 + (((age - 60) * (p5 - p4)) / 20));        /* 60..79 */
+    else
+      return (p6);
+  }
 }
 
 void TPerson::setMaxHit(int newhit)
@@ -105,7 +107,7 @@ float classHpPerLevel(const TPerson *tp){
 int ageHpMod(const TPerson *tp){
     // age disabled - graf modified to always return age 30-44
   if (!tp) return 0;
-  return graf((tp->age()->year - tp->getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
+  return graf(tp, (tp->age()->year - tp->getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
   
 }
 
@@ -169,10 +171,13 @@ short int TPerson::manaLimit() const
 int TPerson::getMaxMove() const
 {
   // age disabled
-  return 100 + 15 + GetTotLevel() +
+  if(!hasQuestBit(TOG_REAL_AGING)){
+    return 100 + 15 + GetTotLevel() +
       plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
-  return 100 + age()->year - getBaseAge() + 15 + GetTotLevel() +
+  } else {
+    return 100 + age()->year - getBaseAge() + 15 + GetTotLevel() +
       plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
+  }
 }
 
 short int TBeing::moveLimit() const
@@ -313,7 +318,7 @@ int TPerson::manaGain()
     return 0;
 
     // age disabled - graf modified to always return age 30-44
-  gain = graf((age()->year - getBaseAge() + 15), 2, 4, 6, 8, 10, 12, 14);
+  gain = graf(this, (age()->year - getBaseAge() + 15), 2, 4, 6, 8, 10, 12, 14);
 
   // arbitrary multiplier
   // at 1.0 : Average mana regen            :  5.69  (attempts : 15624)
@@ -417,7 +422,7 @@ int TPerson::hitGain()
     gain = 0;
   else {
     // age disabled - graf modified to always return age 30-44
-    gain = graf((age()->year - getBaseAge() + 15), 2, 4, 5, 9, 4, 3, 2);
+    gain = graf(this, (age()->year - getBaseAge() + 15), 2, 4, 5, 9, 4, 3, 2);
     gain += 4;
     gain = (int)((double)(gain)*plotStat(STAT_CURRENT,STAT_CON,.80,1.25,1.00));
   }

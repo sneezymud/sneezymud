@@ -56,8 +56,7 @@ static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
-const int MAX_TRAITS=14;
-
+const int MAX_TRAITS=15;
 
 //  {TOG_IS_DEAF, 0, "deaf (not implemented)",   // not implemented
 //   "Your eardrums have been damaged and you are unable to hear."},
@@ -76,6 +75,8 @@ struct TTraits {
    "You have asthma and thus are easily winded."},
   {TOG_IS_MUTE, 6, "mute",
    "Your throatbox has been damaged and you are unable to speak."},
+  {TOG_REAL_AGING, 6, "real aging",
+   "You will suffer the affects of old age as you get older."},
   {TOG_IS_NARCOLEPTIC, 3, "narcolepsy",
    "You have narcolepsy and fall asleep uncontrollably."},
   {TOG_IS_COMBUSTIBLE, 3, "combustible",
