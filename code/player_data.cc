@@ -89,6 +89,8 @@ void TPerson::resetChar()
 
   *desc->last_teller = '\0';
 
+  desc->playerID=0;
+
   if (!getRace())
     setRace(RACE_HUMAN);
 
