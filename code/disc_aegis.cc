@@ -1071,6 +1071,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, byte learn)
 
     switch  (critSuccess(c, SPELL_SANCTUARY)) {
       case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SANCTUARY);
         aff.duration = ((level <= MAX_MORT) ? 5 : level) * UPDATES_PER_MUDHOUR;
