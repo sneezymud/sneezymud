@@ -169,7 +169,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
 
   percent = 0;
   percent += caster->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 5;
+  percent -= victim->getAgiReaction() * 5;
 
   // if my hands are empty, make it easy  
   if (!caster->heldInPrimHand() &&

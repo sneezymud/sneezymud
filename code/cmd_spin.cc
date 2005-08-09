@@ -251,7 +251,7 @@ static int spin(TBeing *caster, TBeing *victim)
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     } else if (((caster->getDexReaction() - 
-                victim->getDexReaction()) > ::number(-10,20)) &&
+                victim->getAgiReaction()) > ::number(-10,20)) &&
                victim->awake() && victim->getPosition() >= POSITION_STANDING) {
       CS(SKILL_SPIN);
       rc = spinMiss(caster, victim, TYPE_DEX);

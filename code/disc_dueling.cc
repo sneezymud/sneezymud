@@ -150,7 +150,7 @@ int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
   level = caster->getSkillLevel(skill);
   percent = 0;
   percent += caster->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 5;
+  percent -= victim->getAgiReaction() * 5;
   percent += (level - victim->GetMaxLevel());
 
   int bKnown = caster->getSkillValue(skill);

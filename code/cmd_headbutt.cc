@@ -265,7 +265,7 @@ static int headbutt(TBeing *caster, TBeing *victim)
 
   percent = ((10 - (victim->getArmor() / 100)) << 1);
   percent += caster->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 5;
+  percent -= victim->getAgiReaction() * 5;
   
   int bKnown = caster->getSkillValue(SKILL_HEADBUTT);
 

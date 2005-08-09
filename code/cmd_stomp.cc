@@ -198,7 +198,7 @@ static int stomp(TBeing *c, TBeing *victim)
 
   percent = ((10 - (victim->getArmor() / 100)) << 1);
   percent += c->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 5;
+  percent -= victim->getAgiReaction() * 5;
   
   int bKnown = c->getSkillValue(SKILL_STOMP);
 

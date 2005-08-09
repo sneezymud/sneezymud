@@ -51,7 +51,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   /* AC makes a big difference here ... */
   percent = ((10 - (victim->getArmor() / 50)) << 1);
   percent += caster->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 5;
+  percent -= victim->getAgiReaction() * 5;
   
   if (!caster->isImmortal())
     caster->addToMove(-DEATHSTROKE_MOVE);
@@ -99,8 +99,8 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     }
     /* with great failure, comes great sorrow *grin* */
     percent = ((10 - (caster->getArmor() / 50)) << 1);
-    percent -= victim->getDexReaction() * 5;
     percent += caster->getDexReaction() * 5;
+    percent -= victim->getAgiReaction() * 5;
     // what happens here is that the mob gets a shot at the players vitals
     // ... fair is fair right? 
     int bKnown2 = victim->getSkillValue(SKILL_DEATHSTROKE);

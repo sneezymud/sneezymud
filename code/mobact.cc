@@ -990,7 +990,7 @@ static bool mobBSlamCheck(TMonster &mob, TBeing &vict)
   // weight
   return ((compareWeights(vict.getTotalWeight(TRUE), mob.carryWeightLimit()) != -1) &&
   // dex
-          (mob.getDexReaction() > vict.getDexReaction()));
+          (mob.getDexReaction() > vict.getAgiReaction()));
 }
 
 int TMonster::fighterMove(TBeing &vict)

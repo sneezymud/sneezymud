@@ -62,7 +62,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
   percent = 0;
 
   percent += c->getDexReaction() * 5;
-  percent -= victim->getDexReaction() * 10;
+  percent -= victim->getAgiReaction() * 10;
 
   if (victim->riding) {
     // difficult
