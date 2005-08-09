@@ -56,7 +56,7 @@ static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
-const int MAX_TRAITS=15;
+const int MAX_TRAITS=16;
 
 //  {TOG_IS_DEAF, 0, "deaf (not implemented)",   // not implemented
 //   "Your eardrums have been damaged and you are unable to hear."},
@@ -67,35 +67,37 @@ struct TTraits {
   sstring name, desc;
 } traits[MAX_TRAITS+1] = {
   {0,0}, 
-  {TOG_IS_COWARD, 10, "cowardice", 
+  {TOG_IS_COWARD, 10,       "cowardice", 
    "You flee combat if you get below 1/2 hit points."},
-  {TOG_IS_BLIND, 6, "blindness",
+  {TOG_IS_BLIND, 6,         "blindness",
    "Your vision has been damaged and you are permanently blind."},
-  {TOG_IS_ASTHMATIC, 6, "asthma",
+  {TOG_IS_ASTHMATIC, 6,     "asthma",
    "You have asthma and thus are easily winded."},
-  {TOG_IS_MUTE, 6, "mute",
+  {TOG_IS_MUTE, 6,          "mute",
    "Your throatbox has been damaged and you are unable to speak."},
-  {TOG_IS_NARCOLEPTIC, 3, "narcolepsy",
+  {TOG_IS_NARCOLEPTIC, 3,   "narcolepsy",
    "You have narcolepsy and fall asleep uncontrollably."},
-  {TOG_IS_COMBUSTIBLE, 3, "combustible",
+  {TOG_IS_COMBUSTIBLE, 3,   "combustible",
    "You are prone to spontaneous combustion."},
-  {TOG_IS_HEMOPHILIAC, 3, "hemophilia",
+  {TOG_IS_HEMOPHILIAC, 3,   "hemophilia",
    "You have hemophilia and your wounds do not clot naturally."},
-  {TOG_IS_NECROPHOBIC, 3, "necrophobia",
+  {TOG_IS_NECROPHOBIC, 3,   "necrophobia",
    "You have necrophobia and are terrified at the sight of dead things."},
-  {TOG_IS_ALCOHOLIC, 3, "alcoholism",
+  {TOG_IS_ALCOHOLIC, 3,     "alcoholism",
    "You are an alcoholic and feel a constant urge to drink booze."},
-  {TOG_HAS_TOURETTES, 1, "tourettes",
+  {TOG_HAS_TOURETTES, 1,    "tourettes",
    "You involuntarily insult other people."},
-  {TOG_REAL_AGING, 0, "real aging",
+  {TOG_PERMA_DEATH_CHAR, 0, "perma-death",
+   "You only have one life to live and if you die your game is over."},
+  {TOG_REAL_AGING, 0,       "real aging",
    "You will suffer the affects of old age as you get older."},
-  {TOG_IS_HEALTHY, -3, "healthy",
+  {TOG_IS_HEALTHY, -3,      "healthy",
    "You are particularly healthy and resistant to disease."},
   {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
    "You are able to use both hands with equal facility."},
-  {TOG_HAS_NIGHTVISION, -10, "nightvision",
+  {TOG_HAS_NIGHTVISION, -10,"nightvision",
    "You have excellent nightvision."},
-  {TOG_PSIONICIST, -200, "psionics",
+  {TOG_PSIONICIST, -200,    "psionics",
    "You have innate psionic abilities."}
 };
 
@@ -2181,12 +2183,16 @@ int Descriptor::nanny(const char *arg)
 
 
       if (go2next) {
-        connected = CON_PERMA_DEATH;
-	writeToQ("If you select the Perma Death option this character will only be able to die\n\r");
-	writeToQ("once.  After that, the character will no longer be accessible.  This option\n\r");
-	writeToQ("is for experienced and/or insane players only.\n\r\n\r");
-	writeToQ("Perma Death? [Y/N]\n\r");
-	writeToQ("--> ");
+	if(bonus_points.combat != 0 ||
+	   bonus_points.combat2 != 0 ||
+	   bonus_points.learn != 0 ||
+	   bonus_points.util != 0){
+	  connected=CON_STATS_RULES;
+	  sendStatRules(1);
+	} else {
+	  connected = CON_STATS_START;
+	  sendStartStatList();
+	}
       }
       break;
     }
@@ -2216,37 +2222,6 @@ int Descriptor::nanny(const char *arg)
       }
       sendRaceList();
       connected = CON_QRACE;
-      break;
-    case CON_PERMA_DEATH:
-      switch (*arg) {
-	case 'Y':
-	case 'y':
-	  writeToQ("Ok, this will be a perma death character.\n\r");
-	  character->setQuestBit(TOG_PERMA_DEATH_CHAR);
-	  break;
-	case 'N':
-	case 'n':
-	  writeToQ("Ok, this will be a normal death character.\n\r");
-	  break;
-	default:
-          writeToQ("If you select the Perma Death option this character will only be able to die\n\r");
-          writeToQ("once.  After that, the character will no longer be accessible.  This option\n\r");
-	  writeToQ("is for experienced and/or insane players only.\n\r\n\r");
-	  writeToQ("Perma Death? [Y/N]\n\r");
-	  writeToQ("--> ");
-	  return FALSE;
-      }
-
-      if(bonus_points.combat != 0 ||
-	 bonus_points.combat2 != 0 ||
-	 bonus_points.learn != 0 ||
-	 bonus_points.util != 0){
-	connected=CON_STATS_RULES;
-	sendStatRules(1);
-      } else {
-	connected = CON_STATS_START;
-	sendStartStatList();
-      }
       break;
     case CON_STATS_START:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
@@ -3185,10 +3160,6 @@ void Descriptor::go_back_menu(connectStateT con_state)
       }
       break;
     case CON_STATS_START:
-      character->cls();
-      connected = CON_PERMA_DEATH;
-      break;
-    case CON_PERMA_DEATH:
       character->cls();
       connected = CON_QCLASS;
       sendClassList(FALSE);
@@ -5952,7 +5923,6 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_STAT_UTIL:
     case CON_CREATE_DONE:
     case CON_STATS_START:
-    case CON_PERMA_DEATH:
     case CON_ENTER_DONE:
     case CON_STATS_RULES:
     case CON_STATS_RULES2:

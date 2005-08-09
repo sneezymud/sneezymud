@@ -80,7 +80,6 @@ enum connectStateT {
        CON_HOME_GNOME,
        CON_HOME_OGRE,
        CON_HOME_HOBBIT,
-       CON_PERMA_DEATH,
        CON_MULTIWARN,
        CON_TRAITS,
 // if adding more here, update connected_types array as well
