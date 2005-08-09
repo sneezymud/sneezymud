@@ -2407,7 +2407,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	vict->age_mod -= ::number(1, 2);
       break;
     case LIQ_POT_STAT:
-      whichStat = statTypeT(number(0, MAX_STATS - 1));
+      whichStat = statTypeT(number(0, MAX_STATS_USED - 1));
       vict->addToStat(STAT_CHOSEN, whichStat, amt);
       
       switch (whichStat) {
@@ -4423,5 +4423,34 @@ void TBeing::doRoll(const sstring &arg)
   }
 
   return;
+}
+
+// adds to stats randomly, but in a weighted function that favours the first
+// stats to which points are added
+// ** also does some subtractions -- the idea here is to mix things up 
+// a bit **
+void TBeing::addToRandomStat(int extra_points) {
+  statTypeT whichStat;
+  int amt;
+  unsigned i=0;
+  bool firstPass=TRUE;
+  vector<statTypeT>stats;
+  for (whichStat=MIN_STAT;whichStat<MAX_STATS_USED;whichStat++){
+    stats.push_back(whichStat);
+  }
+  std::random_shuffle(stats.begin(), stats.end());
+  while(extra_points > 0) {
+    if (i == stats.size()) {
+      vlogf(LOG_MAROR, fmt("i %d length %d") % i % stats.size());
+      i = 0;
+      firstPass=FALSE;
+    }
+    whichStat = stats[i++];
+    if (firstPass) {
+      amt = min(25,::number(-5,extra_points));
+    } else amt = min(25,::number(0,extra_points));
+    addToStat(STAT_CHOSEN, whichStat, amt);
+    extra_points -= amt;
+  }
 }
 

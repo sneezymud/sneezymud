@@ -471,9 +471,10 @@ const int TOG_PSI_ESSENCE                      = 295;
 const int TOG_PSI_ROCKFISH                     = 296;
 const int TOG_PSI_TALENS                       = 297;
 
-const int TOG_REAL_AGING                       = 298;
+const int TOG_FAE_TOUCHED                      = 298;
+const int TOG_REAL_AGING                       = 299;
 
-const int MAX_TOG_INDEX       = 299;  // move and change
+const int MAX_TOG_INDEX       = 300;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

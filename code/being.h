@@ -2112,6 +2112,8 @@ class TBeing : public TThing {
     int get_sew_tools(TTool **, TTool **);
     int get_ceramic_tools(TTool **);
     int get_spirit_tools(TTool **, TTool **, TTool **);
+
+    void addToRandomStat(int);
 };
 
 #endif

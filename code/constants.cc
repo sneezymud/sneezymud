@@ -1031,56 +1031,59 @@ const sstring position_types[] =
 
 const char * const connected_types[MAX_CON_STATUS] =
 {
-  "Playing",    // 0
+  "Playing",                  // 0
   "Get name",
   "Confirm name",
   "Read Password",
-  "Confirm password",    // 5
-  "Get sex",
+  "Confirm password", 
+  "Get sex",                  // 5
   "Read motd",
-  "Get class",     // 10
+  "Get class",    
   "Confirm changed pword",
   "Wizlock",
-  "Get race",    // 15
+  "Get race",                 // 10
   "General Delete",
   "Physical Stats",
-  "Choose handedness",   // 20
-  "Disconnection",
-  "New account",
+  "Physical Stats",
+  "Choose handedness",   
+  "Disconnection",            //15
+  "New account", 
   "Account Password",
   "New login",
-  "New account Password",   // 25
-  "Account email",
-  "Account terminal",
+  "New account Password",   
+  "Account email",            // 20
+  "Account terminal", 
   "Account connection",
   "Account change password",
-  "Account change password",   // 30
-  "Account change password",
-  "Account delete character",
+  "Account change password",   
+  "Account change password",  // 25
+  "Account delete character", 
   "Account delete account",
   "Editing",
-  "Disclaimer",   // 35
-  "Timezone",
+  "Disclaimer",   
+  "Timezone",                 // 30
   "Delete confirmation",
   "Disclaimer page 2",
-  "Disclaimer page 3",    // 40
+  "Disclaimer page 3",    
   "Wizlock New",
-  "Mental Stats",
+  "Mental Stats",             // 35
   "Utility Stats",
   "Done Creation",
-  "Stats Start",   // 45
+  "Stats Start",   
   "Done Enter",
-  "Stats rules",
+  "Stats rules",              // 40
   "Stats rules 2",
   "Hometown : human",
-  "Hometown : elf",
+  "Hometown : elf", 
   "Hometown : dwarf",
-  "Hometown : gnome",
-  "Hometown : ogre",
+  "Hometown : gnome",         // 45
+  "Hometown : ogre", 
   "Hometown : hobbit",
-  "Perma Death Choice",
-  "Multiplay Rules Prompt",
-  "Special Traits",
+  "Multiplay Rules Prompt", 
+  "Traits 1",
+  "Traits 2",                 // 50
+  "Traits 3",
+  "Fae-Touched",
 };
 
 

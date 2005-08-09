@@ -820,7 +820,10 @@ void gain_exp(TBeing *ch, double gain, int dam)
       gain = newgain;
     }
       
-
+// Fae touched characters gain xp at half the normal rate
+    if (ch->hasQuestBit(TOG_FAE_TOUCHED))
+      gain /= 2;
+    
     // reset 50th levelers to 1bil exp if their Max Exp is unset (0)
     // : should never happen except for 1time conversion this also
     // verifies first timers get the practices they deserve - dash

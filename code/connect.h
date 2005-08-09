@@ -81,7 +81,10 @@ enum connectStateT {
        CON_HOME_OGRE,
        CON_HOME_HOBBIT,
        CON_MULTIWARN,
-       CON_TRAITS,
+       CON_TRAITS1,
+       CON_TRAITS2,
+       CON_TRAITS3,
+       CON_FAE_TOUCHED,
 // if adding more here, update connected_types array as well
        MAX_CON_STATUS,
 // these are intentionally higher than MAX_CON
@@ -482,7 +485,7 @@ class Descriptor
     int doAccountMenu(const char *);
     void add_to_history_list(const char *);
     int getFreeStat(connectStateT);
-    int nanny(const char *);
+    int nanny(sstring);
     void sendMotd(int);
     void go_back_menu(connectStateT);
     void EchoOn();
@@ -490,12 +493,14 @@ class Descriptor
     void sendHomeList();
     void sendStartStatList();
     void sendDoneScreen();
+    void sendFaeMessage(int, bool);
+    void sendPermaDeathMessage();
     const char *getStatDescription(int);
     void sendStatList(int, int);
     void sendStatRules(int);
     void sendRaceList();
     void sendClassList(int);
-    void sendTraitsList();
+    void sendTraitsList(int);
     bool start_page_file(const char *, const char *);
     bool canChooseClass(int, bool multi = FALSE, bool triple = FALSE);
     int client_nanny(char *);

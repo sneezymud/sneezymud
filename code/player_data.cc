@@ -103,10 +103,12 @@ void TPerson::resetChar()
     SET_BIT(specials.affectedBy, AFF_BLIND);
   }
 
+  // can't do this here - hp are based on skills, and they aren't assigned yet
+  /*
   if(hasQuestBit(TOG_IS_COWARD)){
     wimpy=maxWimpy();
   }
-
+  */
   if ((getRace() == RACE_HOBBIT) && getNatSkillValue(SKILL_STEAL) < 23) {
     setNatSkillValue(SKILL_STEAL,23);
     setSkillValue(SKILL_STEAL,23);
@@ -2235,5 +2237,75 @@ int listAccount(sstring name, sstring &buf)
   }
   closedir(dfd);
   return count;
+}
+
+int numFifties(race_t race, bool perma, sstring account_name)
+{
+  int num, num_fifties = 0;
+  charFile st;
+//  accountFile afp;
+  FILE *fp;
+  DIR *dfd;
+  struct dirent *dp;
+  sstring account_path = fmt("account/%c/%s") % LOWER(account_name[0]) %
+          account_name.lower();
+  sstring togfile_name;
+  char tog_file_name[128];
+  bool char_is_perma;
+
+/*  if (!(fp = fopen(account_path.c_str(), "r"))) {
+    vlogf(LOG_BUG, fmt("Account file not found for account %s in numFifties.")
+        % account_name);
+    return 0;
+  } else {
+    fread(&afp, sizeof(afp), 1, fp);
+    fclose(fp);
+  }*/
+  if (!(dfd = opendir(account_path.c_str()))) {
+    vlogf(LOG_BUG, fmt("Unable to walk directory in numFifties (%s account)") 
+        % account_name);
+    return 0;
+  }
+  while ((dp = readdir(dfd))) {
+    if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
+        !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
+      continue;
+
+    charFile st;
+
+    load_char(dp->d_name, &st);
+    byte max_level = 0;
+
+    // perma death characters only get the bonus from perma 50's
+    sprintf(tog_file_name, "player/%c/%s.toggle", LOWER(dp->d_name[0]),
+      dp->d_name);
+    if(!(fp = fopen(tog_file_name, "r"))) {
+      vlogf(LOG_BUG, fmt("Error loading toggles for player %s in numFifties.")
+        % dp->d_name);
+      continue;
+    }
+
+    char_is_perma = FALSE;
+    while (fscanf(fp, "%d ", &num) == 1) {
+      if (num == TOG_PERMA_DEATH_CHAR) {
+        char_is_perma = TRUE;
+        break;
+      }
+    }
+    fclose(fp);
+    
+    if (perma && !char_is_perma)
+     continue; 
+    // end of permadeath section
+    
+    for (classIndT i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++)
+      max_level = max(max_level, st.level[i]);
+
+    if (max_level == 50 && st.race == race)
+      num_fifties += 1;
+  }
+  closedir(dfd);
+
+  return num_fifties;
 }
 

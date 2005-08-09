@@ -346,6 +346,7 @@ extern void generate_obj_index();
 extern void generate_mob_index();
 extern void generic_cleanup();
 extern int listAccount(sstring, sstring &);
+extern int numFifties(race_t, bool, sstring);
 extern bool genericBless(TBeing *, TBeing *, int, bool);
 extern bool genericDisease(TBeing *, int);
 extern void genericCurse(TBeing *, TBeing *, int, spellNumT);

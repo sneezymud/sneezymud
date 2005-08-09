@@ -57,6 +57,8 @@ static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
 const int MAX_TRAITS=16;
+// 3 groups, hard-coded, have to add another if more traits are added
+const int TRAIT_GROUP_SIZE=MAX_TRAITS/3+(MAX_TRAITS%3>0?1:0); 
 
 //  {TOG_IS_DEAF, 0, "deaf (not implemented)",   // not implemented
 //   "Your eardrums have been damaged and you are unable to hear."},
@@ -1040,7 +1042,7 @@ int Descriptor::getFreeStat(connectStateT which){
 }
 
 // if descriptor is to be deleted, DELETE_THIS
-int Descriptor::nanny(const char *arg)
+int Descriptor::nanny(sstring arg)
 {
   char buf[256];
   //char wizbuf[256];
@@ -1055,10 +1057,13 @@ int Descriptor::nanny(const char *arg)
   TRoom *rp;
   sstring str;
   TDatabase db(DB_SNEEZY);
+  int num_fifties=0, bonus_pts=0;
+  sstring aw = arg.word(0); // first word of argument, space delimited
+  char ac = aw[0];
 
   switch (connected) {
     case CON_MULTIWARN:
-      switch (*arg) {
+      switch (ac) {
 	case 'Y':
 	case 'y':
 	  writeToQ("\n\rOk, you have agreed to follow the rules concerning multiplay.\n\r");
@@ -1095,12 +1100,11 @@ int Descriptor::nanny(const char *arg)
       // jesus
     case CON_QRACE:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
 
-      if (!*arg)
+      if (!ac)
         sendRaceList();
       else {
-        switch (*arg) {
+        switch (ac) {
           case '1':
             character->setRace(RACE_HUMAN);
             character->cls();
@@ -1156,7 +1160,7 @@ int Descriptor::nanny(const char *arg)
             break;
 	  case 'X':
 	    if(IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-	      int racenum=convertTo<int>((arg+1));
+	      int racenum=atoi(&ac+1);//convertTo<int>(ac+1); // was arg+1
 	      character->setRace(race_t(racenum));
 	      character->cls();
 	      writeToQ("Ok, race set.\n\r\n\r");
@@ -1187,10 +1191,10 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_NME:                // wait for input of name   
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      if (!*arg) 
+      if (!ac) 
         return DELETE_THIS;   // notify calling proc to delete me
        
-      if (_parse_name(arg, tmp_name)) {
+      if (_parse_name(aw.c_str(), tmp_name)) {
         writeToQ("Illegal name, please try another.\n\r");
         writeToQ("Name -> ");
         return FALSE;
@@ -1240,13 +1244,14 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_DISCLAIMER3:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
+      character->cls();
       writeToQ("Now you pick your gender.\n\r");
       writeToQ("What is your gender?\n\r1. Male\n\r2. Female?\n\r");
       writeToQ("--> ");
       connected = CON_QSEX;
       break;
     case CON_CONN:
-      if (!*arg) {
+      if (!ac) {
         rp = real_roomp(ROOM_VOID);
         *rp += *character;
         delete character;
@@ -1261,7 +1266,7 @@ int Descriptor::nanny(const char *arg)
         break;
       }
       
-      if (_parse_name(arg, tmp_name)) {
+      if (_parse_name(aw.c_str(), tmp_name)) {
         writeToQ("Illegal name, please try another.\n\r");
         writeToQ("Name -> ");
         return FALSE;
@@ -1489,13 +1494,12 @@ int Descriptor::nanny(const char *arg)
       connected = CON_RMOTD;
       break;
     case CON_DISCON:
-      for (; isspace(*arg); arg++);
 
-      if (!*arg) {
+      if (!ac) {
         writeToQ("Please enter 'Y' or 'N'\n\rReconnect? :");
         break;
       }
-      switch(*arg) {
+      switch(ac) {
         case 'Y':
         case 'y':
           for (k = descriptor_list; k; k = k2) {
@@ -1634,8 +1638,7 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_QSEX:                // query sex of new user    
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      switch (*arg) {
+      switch (ac) {
         case '1':
         case 'm':
         case 'M':
@@ -1671,17 +1674,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_HUMAN:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("OK, you were an urban youth.\n\r");
@@ -1736,12 +1738,13 @@ int Descriptor::nanny(const char *arg)
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -1750,17 +1753,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_ELF:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("OK, you were an urban elfling.\n\r");
@@ -1810,12 +1812,13 @@ int Descriptor::nanny(const char *arg)
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -1824,17 +1827,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_DWARF:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("OK, you were an urban dwarfling.\n\r");
@@ -1874,12 +1876,13 @@ int Descriptor::nanny(const char *arg)
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -1888,17 +1891,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_GNOME:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("OK, you were an urban gnomelet.\n\r");
@@ -1933,12 +1935,13 @@ int Descriptor::nanny(const char *arg)
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -1947,17 +1950,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_OGRE:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("Ugh!  Me villager ogreling!\n\r");
@@ -1991,8 +1993,8 @@ int Descriptor::nanny(const char *arg)
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -2001,17 +2003,16 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_HOME_HOBBIT:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (!ac) {
         sendHomeList();
         return FALSE;
-      } else if (*arg == '/') {
+      } else if (ac == '/') {
         go_back_menu(connected);
         return FALSE;
-      } else if (*arg == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
       }
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("OK, you were an urban hobbit youth.\n\r");
@@ -2056,12 +2057,13 @@ int Descriptor::nanny(const char *arg)
           return FALSE;
         default:
           writeToQ("That's not a valid choice.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
 
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
-	sendTraitsList();
+	connected = CON_TRAITS1;
+	sendTraitsList(1);
       } else {
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
@@ -2070,8 +2072,7 @@ int Descriptor::nanny(const char *arg)
       break;
     case CON_ENTER_DONE:
     case CON_CREATE_DONE:
-      for (; isspace(*arg); arg++);
-      switch (*arg) {
+      switch (ac) {
         case 'e':
         case 'E':
           break;
@@ -2086,6 +2087,15 @@ int Descriptor::nanny(const char *arg)
       }
       character->convertAbilities();
       character->affectTotal();
+      if (character->hasQuestBit(TOG_FAE_TOUCHED)) {
+        num_fifties = numFifties(character->race->getRace(),
+            character->hasQuestBit(TOG_PERMA_DEATH_CHAR),
+            character->desc->account->name);
+        if (num_fifties > 0) {
+          bonus_pts = 50+(num_fifties-1)*2;
+          character->addToRandomStat(bonus_pts);
+        }
+      }
       vlogf(LOG_PIO, fmt("%s [%s] new player.") %  character->getName() % host);
       character->saveChar(ROOM_AUTO_RENT);
       db.query("insert into player (name) values (lower('%s'))", character->getName());
@@ -2095,64 +2105,133 @@ int Descriptor::nanny(const char *arg)
       writeToQ("\n\r\n*** PRESS RETURN: ");
       connected = CON_RMOTD;
       break;
-    case CON_TRAITS:
+
+    case CON_TRAITS1:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
 
-      if(*arg == '~'){
-	return DELETE_THIS;
-      } else if(*arg == '/'){
-	go_back_menu(connected);
-      } else if(*arg == 'E' || *arg == 'e'){
-        if (bonus_points.total) {
-  	  int limit=(bonus_points.total/4) + (bonus_points.total>0?1:-1);
-
-	  bonus_points.combat+=limit;
-	  bonus_points.total-=limit;
-
-	  bonus_points.combat2+=limit;
-	  bonus_points.total-=limit;
-
-  	  bonus_points.learn+=limit;
-	  bonus_points.total-=limit;
-
-	  bonus_points.util+=limit;
-	  bonus_points.total-=limit;
-
-	  if(bonus_points.total != 0){
-	    bonus_points.util+=bonus_points.total;
-	    bonus_points.total=0;
-	  }
-        }
-
-	connected = CON_QCLASS;
-	sendClassList(FALSE);
-      } else if(convertTo<int>(arg) < 1 || convertTo<int>(arg) > MAX_TRAITS){
-	character->cls();
-	sendTraitsList();
+      if(ac == '~'){
+        return DELETE_THIS;
+      } else if(ac == '/'){
+        go_back_menu(connected);
+      } else if(ac == 'C' || ac == 'c'){
+        character->cls();
+        connected = CON_TRAITS2;
+        sendTraitsList(2);
+      } else if(atoi(&ac) < 1 || atoi(&ac) > MAX_TRAITS){
+        character->cls();
+        sendTraitsList(1);
       } else {
-	if(character->hasQuestBit(traits[convertTo<int>(arg)].tog)){
-	  character->remQuestBit(traits[convertTo<int>(arg)].tog);
-	  bonus_points.total-=traits[convertTo<int>(arg)].points;
-	} else {
-	  character->setQuestBit(traits[convertTo<int>(arg)].tog);
-	  bonus_points.total+=traits[convertTo<int>(arg)].points;
-	}
-	sendTraitsList();
+        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
+          character->remQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        } else {
+          character->setQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total+=traits[convertTo<int>(aw)].points;
+        }
+        character->cls();
+        sendTraitsList(1);
       }
 
       break;
+      
+    case CON_TRAITS2:
+      mud_assert(character != NULL, "Character NULL where it shouldn't be");
+
+      if(ac == '~'){
+        return DELETE_THIS;
+      } else if(ac == '/'){
+        go_back_menu(connected);
+      } else if(ac == 'C' || ac == 'c'){
+        character->cls();
+        connected = CON_TRAITS3;
+        sendTraitsList(3);
+      } else if(atoi(&ac) < 1 || atoi(& ac) > MAX_TRAITS){
+        character->cls();
+        sendTraitsList(2);
+      } else {
+        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
+          character->remQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        } else {
+          character->setQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total+=traits[convertTo<int>(aw)].points;
+        }
+        character->cls();
+        sendTraitsList(2);
+      }
+
+      break;
+
+
+    case CON_TRAITS3:
+      mud_assert(character != NULL, "Character NULL where it shouldn't be");
+
+      if(ac == '~'){
+        return DELETE_THIS;
+      } else if(ac == '/'){
+        go_back_menu(connected);
+      } else if(ac == 'E' || ac == 'e'){
+        if (bonus_points.total) {
+          int temp = bonus_points.total;
+          int limit=(temp/4);
+          int remainder = temp%4;
+          
+          bonus_points.combat=limit;
+          temp-=limit;
+          if (remainder > 0) {
+            bonus_points.combat += 1;
+            remainder -= 1;
+          }
+
+          bonus_points.combat2=limit;
+          temp-=limit;
+          if (remainder > 0) {
+            bonus_points.combat2 += 1;
+            remainder -= 1;
+          }
+
+          bonus_points.learn=limit;
+          temp-=limit;
+          if (remainder > 0) {
+            bonus_points.learn += 1;
+            remainder -= 1;
+          }
+
+          bonus_points.util=limit;
+          temp-=limit;
+        }
+        character->cls();
+        connected = CON_QCLASS;
+        sendClassList(FALSE);
+      } else if(atoi(&ac) < 1 || atoi(&ac) > MAX_TRAITS){
+        character->cls();
+        sendTraitsList(3);
+      } else {
+        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
+          character->remQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        } else {
+          character->setQuestBit(traits[convertTo<int>(aw)].tog);
+          bonus_points.total+=traits[convertTo<int>(aw)].points;
+        }
+        character->cls();
+        sendTraitsList(3);
+      }
+
+      break;
+
+
+
     case CON_QCLASS: {
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      for (; isspace(*arg); arg++);
       character->setClass(0);
       count = 0;
 
-      if(*arg == '~'){
+      if(ac == '~'){
 	return DELETE_THIS;
-      } else if(*arg == '/'){
+      } else if(ac == '/'){
 	go_back_menu(connected);
-      } else if(*arg == '?'){
+      } else if(ac == '?'){
 	character->cls();
 	file_to_sstring(CLASSHELP, str);
 	character->fullscreen();
@@ -2162,13 +2241,13 @@ int Descriptor::nanny(const char *arg)
 	
 	page_string(str, SHOWNOW_YES);
 	connected = CON_QCLASS;
-      } else if(convertTo<int>(arg) < 1 || convertTo<int>(arg) > MAX_CLASSES){
+      } else if(atoi(&ac) < 1 || atoi(&ac) > MAX_CLASSES){
 	character->cls();
 	sendClassList(FALSE);
 	connected = CON_QCLASS;
       } else {
 	for(int i=0;i<MAX_CLASSES;++i){
-	  if((convertTo<int>(arg)-1) == i){
+	  if((atoi(&ac)-1) == i){
 	    if(canChooseClass(classInfo[i].class_num)){
 	      character->setClass(classInfo[i].class_num);
 	      go2next = TRUE;
@@ -2181,24 +2260,36 @@ int Descriptor::nanny(const char *arg)
 	}
       }
 
-
       if (go2next) {
-	if(bonus_points.combat != 0 ||
-	   bonus_points.combat2 != 0 ||
-	   bonus_points.learn != 0 ||
-	   bonus_points.util != 0){
-	  connected=CON_STATS_RULES;
-	  sendStatRules(1);
-	} else {
-	  connected = CON_STATS_START;
-	  sendStartStatList();
-	}
+              // ANY CHANGES HERE MUST BE COPIED TO FAE_TOUCHED
+         num_fifties = numFifties(character->race->getRace(),
+             character->hasQuestBit(TOG_PERMA_DEATH_CHAR),
+             character->desc->account->name);
+         if (num_fifties > 0) {
+           character->cls();
+           sendFaeMessage(num_fifties, character->hasQuestBit(TOG_PERMA_DEATH_CHAR));
+           connected = CON_FAE_TOUCHED;
+
+         } else {
+           character->cls();
+           if(bonus_points.combat != 0 ||
+                bonus_points.combat2 != 0 ||
+                bonus_points.learn != 0 ||
+                bonus_points.util != 0){
+                connected=CON_STATS_RULES;
+             sendStatRules(1);
+           } else {
+             connected = CON_STATS_START;
+             sendStartStatList();
+           }
+         } // END OF SECTION MIRRORED IN FAE_TOUCHED
+
       }
       break;
     }
     case CON_QHANDS:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      switch (*arg) {
+      switch (ac) {
         case '1':
           character->cls();
           writeToQ("Ok, you are now right handed!\n\r\n\r");
@@ -2218,14 +2309,49 @@ int Descriptor::nanny(const char *arg)
           writeToQ("Please pick either 1 or 2.\n\r");
           writeToQ("To go back a menu type '/'.\n\r");
           writeToQ("To disconnect type '~'.\n\r");
+          writeToQ("--> ");
           return FALSE;
       }
       sendRaceList();
       connected = CON_QRACE;
       break;
+    case CON_FAE_TOUCHED:
+      switch(ac) {
+        case 'Y':
+        case 'y':
+          writeToQ("Ok, this will be a Fae-Touched character.\n\r");
+          character->setQuestBit(TOG_FAE_TOUCHED);
+          break;
+        case 'N':
+        case 'n':
+          writeToQ("Ok, this will be a standard character.\n\r");
+          character->remQuestBit(TOG_FAE_TOUCHED);
+          break;
+        case '/':
+          go_back_menu(connected);
+          return FALSE;
+        default:
+       num_fifties = numFifties(character->race->getRace(),
+         character->hasQuestBit(TOG_PERMA_DEATH_CHAR),
+         character->desc->account->name);
+         sendFaeMessage(num_fifties, character->hasQuestBit(TOG_PERMA_DEATH_CHAR));
+         return FALSE;
+      }
+      character->cls();
+      if(bonus_points.combat != 0 ||
+          bonus_points.combat2 != 0 ||
+          bonus_points.learn != 0 ||
+          bonus_points.util != 0){
+        connected=CON_STATS_RULES;
+        sendStatRules(1);
+      } else {
+        connected = CON_STATS_START;
+        sendStartStatList();
+      }
+      break;
     case CON_STATS_START:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-      switch (*arg) {
+      switch (ac) {
         case 'E':
         case 'e':
           // prevent players from setting stats, then backing out and 
@@ -2277,37 +2403,35 @@ int Descriptor::nanny(const char *arg)
       sendStatList(1, TRUE);
       break;
     case CON_STAT_COMBAT:
-      if (!*arg) {
+      if (!ac) {
         sendStatList(1, FALSE);
         break;
       }
-      for (; isspace(*arg); arg++);
       local_stats = 0;
 
-      arg = one_argument(arg, buf);
-
-      if ((*buf == '-') || (*buf == '+')) {
-        if (strchr(buf, 's') || strchr(buf, 'S')) {
+      if ((ac == '-') || (ac == '+')) {
+        if (aw.lower().find('s') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_STR),
           which = STAT_STR;
           found = TRUE;
-        } else if (strchr(buf, 'c') || strchr(buf, 'C')) {
+        } else if (aw.lower().find('c') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_CON),
           which = STAT_CON;
           found = TRUE;
-        } else if (strchr(buf, 'b') || strchr(buf, 'B')) {
+        } else if (aw.lower().find('b') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_BRA),
           which = STAT_BRA;
           found = TRUE;
-	} else if (strchr(buf, 'x') || strchr(buf, 'X')) {
+	} else if (tolower(ac) == 'x') {
 	  which = -1;
 	  found = TRUE;
         } else {
+          character->cls();
           writeToQ("You must specify a valid characteristic.\n\r");
           writeToQ("\n\rPress return....");
           break;
         }
-      } else if (*buf == 'e' || *buf == 'E') {
+      } else if (ac == 'e' || ac == 'E') {
         free_stat = getFreeStat(CON_STAT_COMBAT);
         if (free_stat != 0) {
           character->cls();
@@ -2319,20 +2443,12 @@ int Descriptor::nanny(const char *arg)
           sendStatList(4, TRUE);
           break;       
         }
-      } else if (*buf == '/') {
-        free_stat = getFreeStat(CON_STAT_COMBAT);
-        if (free_stat != 0) {
-          character->cls();
-          writeToQ("You may only continue with 0 free points.\n\r");
-          writeToQ("\n\rPress return....");
-          break;
-	} else {
-	  go_back_menu(connected);
-	}
+      } else if (ac == '/') {
+        go_back_menu(connected);
         break;
-      } else if (*buf == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
-      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+      } else if (ac == '?' || tolower(ac) == 'h') {
         character->cls();
         file_to_sstring(STATHELP, str);
         character->fullscreen();
@@ -2343,7 +2459,6 @@ int Descriptor::nanny(const char *arg)
         page_string(str, SHOWNOW_YES);
         break;
       } else {
-//        writeToQ("You typed in an incorrect command at this point.\n\r");
         sendStatList(1, FALSE);
         break;
       }
@@ -2352,14 +2467,13 @@ int Descriptor::nanny(const char *arg)
         int amt = 0;
         character->cls();
 
-        // buf should have form -9s or whatever
+        // aw should have form -9s or whatever
         // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = convertTo<int>(buf)))
-          amt = (*buf == '+' ? +1 : -1);
+        if (!(amt = convertTo<int>(aw)))
+          amt = (ac == '+' ? +1 : -1);
         character->sendTo(fmt("amount was: %d\n\r") % amt);
-        // Need to initialize buf or they can cheat 
-        memset(buf, '\0', sizeof(buf));
+
         if (local_stats + amt < -25) {
           writeToQ("You can't go below -25 on any characteristic.\n\r");
           writeToQ("\n\rPress return....");
@@ -2371,10 +2485,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
 
-	if(which == -1){
-	  bonus_points.combat -= amt;
-	  bonus_points.total += amt;
-	} else {
+	if(which != -1){
 	  character->chosenStats.values[which] += amt;
 	}
       }
@@ -2384,36 +2495,35 @@ int Descriptor::nanny(const char *arg)
       }
       break;
     case CON_STAT_COMBAT2:
-      if (!*arg) {
+      if (!ac) {
         sendStatList(4, FALSE);
         break;
       }
-      for (; isspace(*arg); arg++);
       local_stats = 0;
 
-      arg = one_argument(arg, buf);
-      if ((*buf == '-') || (*buf == '+')) {
-        if (strchr(buf, 'd') || strchr(buf, 'D')) {
+      if ((ac == '-') || (ac == '+')) {
+        if (aw.lower().find('d') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_DEX),
           which = STAT_DEX;
           found = TRUE;
-        } else if (strchr(buf, 'a') || strchr(buf, 'A')) {
+        } else if (aw.lower().find('a') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_AGI),
           which = STAT_AGI;
           found = TRUE;
-        } else if (strchr(buf, 's') || strchr(buf, 'S')) {
+        } else if (aw.lower().find('s') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_SPE),
           which = STAT_SPE;
           found = TRUE;
-	} else if (strchr(buf, 'x') || strchr(buf, 'X')) {
+	} else if (tolower(ac) == 'x') {
 	  which = -1;
 	  found = TRUE;
         } else {
+          character->cls();
           writeToQ("You must specify a valid characteristic.\n\r");
           writeToQ("\n\rPress return....");
           break;
         }
-      } else if (*buf == 'e' || *buf == 'E') {
+      } else if (tolower(ac) == 'e') {
         free_stat = getFreeStat(CON_STAT_COMBAT2);
 
         if (free_stat != 0) {
@@ -2426,20 +2536,12 @@ int Descriptor::nanny(const char *arg)
           sendStatList(2, TRUE);
           break;
         }
-      } else if (*buf == '/') {
-        free_stat = getFreeStat(CON_STAT_COMBAT2);
-        if (free_stat != 0) {
-          character->cls();
-          writeToQ("You may only continue with 0 free points.\n\r");
-          writeToQ("\n\rPress return....");
-          break;
-	} else {
-	  go_back_menu(connected);
-	}
+      } else if (ac == '/') {
+        go_back_menu(connected);
         break;
-      } else if (*buf == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
-      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+      } else if (ac == '?' || tolower(ac) == 'h') {
         character->cls();
         file_to_sstring(STATHELP, str);
         character->fullscreen();
@@ -2451,7 +2553,6 @@ int Descriptor::nanny(const char *arg)
         break;
       } else {
         sendStatList(4, FALSE);
-//        writeToQ("You typed in an incorrect command at this point.\n\r");
         break;
       }
 
@@ -2459,15 +2560,12 @@ int Descriptor::nanny(const char *arg)
         int amt = 0;
         character->cls();
 
-        // buf should have form -9s or whatever
+        // aw should have form -9s or whatever
         // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = convertTo<int>(buf)))
-          amt = (*buf == '+' ? +1 : -1);
+        if (!(amt = convertTo<int>(aw)))
+          amt = (ac == '+' ? +1 : -1);
         character->sendTo(fmt("amount was: %d\n\r") % amt);
-
-        // Need to initialize buf or they can cheat
-        memset(buf, '\0', sizeof(buf));
 
         if (local_stats + amt < -25) {
           writeToQ("You can't go below -25 on any characteristic.\n\r");
@@ -2479,10 +2577,7 @@ int Descriptor::nanny(const char *arg)
           writeToQ("\n\rPress return....");
           break;
         }
-	if(which == -1){
-	  bonus_points.combat2 -= amt;
-	  bonus_points.total += amt;
-	} else {
+	if(which != -1){
 	  character->chosenStats.values[which] += amt;
 	}
       }
@@ -2492,36 +2587,35 @@ int Descriptor::nanny(const char *arg)
       }
       break;
     case CON_STAT_LEARN:
-      if (!*arg) {
+      if (!ac) {
         sendStatList(2, FALSE);
         break;
       }
-      for (; isspace(*arg); arg++);
       local_stats = 0;
 
-      arg = one_argument(arg, buf);
-      if ((*buf == '-') || (*buf == '+')) {
-        if (strchr(buf, 'i') || strchr(buf, 'I')) {
+      if ((ac == '-') || (ac == '+')) {
+        if (aw.lower().find('i') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_INT),
           which = STAT_INT;
           found = TRUE;
-        } else if (strchr(buf, 'w') || strchr(buf, 'W')) {
+        } else if (aw.lower().find('w') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_WIS),
           which = STAT_WIS;
           found = TRUE;
-        } else if (strchr(buf, 'f') || strchr(buf, 'F')) {
+        } else if (aw.lower().find('f') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_FOC),
           which = STAT_FOC;
           found = TRUE;
-	} else if (strchr(buf, 'x') || strchr(buf, 'X')) {
+	} else if (tolower(ac) == 'x') {
 	  which = -1;
 	  found = TRUE;
         } else {
+          character->cls();
           writeToQ("You must specify a valid characteristic.\n\r");
           writeToQ("\n\rPress return....");
           break;
         }
-      } else if (*buf == 'e' || *buf == 'E') {
+      } else if (tolower(ac) == 'e') {
         free_stat = getFreeStat(CON_STAT_LEARN);
 
         if (free_stat != 0) {
@@ -2534,20 +2628,12 @@ int Descriptor::nanny(const char *arg)
           sendStatList(3, TRUE);
           break;
         }
-      } else if (*buf == '/') {
-        free_stat = getFreeStat(CON_STAT_LEARN);
-        if (free_stat != 0) {
-          character->cls();
-          writeToQ("You may only continue with 0 free points.\n\r");
-          writeToQ("\n\rPress return....");
-          break;
-	} else {
-	  go_back_menu(connected);
-	}
+      } else if (ac == '/') {
+        go_back_menu(connected);
         break;
-      } else if (*buf == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
-      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+      } else if (ac == '?' || tolower(ac) == 'h') {
         character->cls();
         file_to_sstring(STATHELP, str);
         character->fullscreen();
@@ -2559,7 +2645,6 @@ int Descriptor::nanny(const char *arg)
         break;
       } else {
         sendStatList(2, FALSE);
-//        writeToQ("You typed in an incorrect command at this point.\n\r");
         break;
       }
 
@@ -2567,15 +2652,12 @@ int Descriptor::nanny(const char *arg)
         int amt = 0;
         character->cls();
 
-        // buf should have form -9s or whatever
+      // aw should have form -9s or whatever
         // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = convertTo<int>(buf)))
-          amt = (*buf == '+' ? +1 : -1);
+        if (!(amt = convertTo<int>(aw)))
+          amt = (ac == '+' ? +1 : -1);
         character->sendTo(fmt("amount was: %d\n\r") % amt);
-
-        // Need to initialize buf or they can cheat
-        memset(buf, '\0', sizeof(buf));
 
         if (local_stats + amt < -25) {
           writeToQ("You can't go below -25 on any characteristic.\n\r");
@@ -2587,10 +2669,7 @@ int Descriptor::nanny(const char *arg)
           writeToQ("\n\rPress return....");
           break;
         }
-	if(which == -1){
-	  bonus_points.learn -= amt;
-	  bonus_points.total += amt;
-	} else {
+	if(which != -1){
 	  character->chosenStats.values[which] += amt;
 	}
       }
@@ -2600,40 +2679,35 @@ int Descriptor::nanny(const char *arg)
       }
       break;
     case CON_STAT_UTIL:
-      if (!*arg) {
+      if (!ac) {
         sendStatList(3, FALSE);
         break;
       }
-      for (; isspace(*arg); arg++);
       local_stats = 0;
 
-      arg = one_argument(arg, buf);
-      if ((*buf == '-') || (*buf == '+')) {
-        if (strchr(buf, 'p') || strchr(buf, 'P')) {
+      if ((ac == '-') || (ac == '+')) {
+        if (aw.lower().find('p') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_PER),
           which = STAT_PER;
           found = TRUE;
-        } else if (strchr(buf, 'k') || strchr(buf, 'K')) {
+        } else if (aw.lower().find('k') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_KAR),
           which = STAT_KAR;
           found = TRUE;
-        } else if (strchr(buf, 'c') || strchr(buf, 'C')) {
+        } else if (aw.lower().find('c') != sstring::npos) {
           local_stats = character->chosenStats.get(STAT_CHA),
           which = STAT_CHA;
           found = TRUE;
-        } else if (strchr(buf, 's') || strchr(buf, 'S')) {
-          local_stats = character->chosenStats.get(STAT_SPE),
-          which = STAT_SPE;
-          found = TRUE;
-	} else if (strchr(buf, 'x') || strchr(buf, 'X')) {
+	} else if (tolower(ac) == 'x') {
 	  which = -1;
 	  found = TRUE;
         } else {
+          character->cls();
           writeToQ("You must specify a valid characteristic.\n\r");
           writeToQ("\n\rPress return....");
           break;
         }
-      } else if (*buf == 'e' || *buf == 'E') {
+      } else if (tolower(ac) == 'e') {
         free_stat = getFreeStat(CON_STAT_UTIL);
 
         if (free_stat != 0) {
@@ -2646,20 +2720,12 @@ int Descriptor::nanny(const char *arg)
           connected = CON_CREATE_DONE;
           break;
         }
-      } else if (*buf == '/') {
-        free_stat = getFreeStat(CON_STAT_UTIL);
-        if (free_stat != 0) {
-          character->cls();
-          writeToQ("You may only continue with 0 free points.\n\r");
-          writeToQ("\n\rPress return....");
-          break;
-	} else {
-	  go_back_menu(connected);
-	}
+      } else if (ac == '/') {
+        go_back_menu(connected);
         break;
-      } else if (*buf == '~') {
+      } else if (ac == '~') {
         return DELETE_THIS;
-      } else if (*buf == '?' || *buf == 'h' || *buf == 'H') {
+      } else if (ac == '?' || tolower(ac) == 'h') {
         character->cls();
         file_to_sstring(STATHELP, str);
         character->fullscreen();
@@ -2671,7 +2737,6 @@ int Descriptor::nanny(const char *arg)
         break;
       } else {
         sendStatList(3, FALSE);
-//        writeToQ("You typed in an incorrect command at this point.\n\r");
         break;
       }
 
@@ -2679,15 +2744,12 @@ int Descriptor::nanny(const char *arg)
         int amt = 0;
         character->cls();
 
-        // buf should have form -9s or whatever
+        // aw should have form -9s or whatever
         // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = convertTo<int>(buf)))
-          amt = (*buf == '+' ? +1 : -1);
+        if (!(amt = convertTo<int>(aw)))
+          amt = (ac == '+' ? +1 : -1);
         character->sendTo(fmt("amount was: %d\n\r") % amt);
-
-        // Need to initialize buf or they can cheat
-        memset(buf, '\0', sizeof(buf));
 
         if (local_stats + amt < -25) {
           writeToQ("You can't go below -25 on any characteristic.\n\r");
@@ -2699,10 +2761,7 @@ int Descriptor::nanny(const char *arg)
           writeToQ("\n\rPress return....");
           break;
         }
-	if(which == -1){
-	  bonus_points.util -= amt;
-	  bonus_points.total += amt;
-	} else {
+	if(which != -1){
 	  character->chosenStats.values[which] += amt;
 	}
       }
@@ -2765,6 +2824,12 @@ int Descriptor::nanny(const char *arg)
 	  }
 	}
       }
+
+  // this has to be set AFTER skill assignment, which happens somewhere
+  // between genericLoadPC and here
+  if(character->hasQuestBit(TOG_IS_COWARD)){
+    character->wimpy=character->maxWimpy();
+  }
 
       break;
     case CON_PLYNG:
@@ -3043,6 +3108,8 @@ int TPerson::genericLoadPC()
 
 void Descriptor::go_back_menu(connectStateT con_state)
 {
+  int num_fifties=0;
+
   switch (con_state) {
     case CON_DELCHAR:
 // character is NULL, do this another way.
@@ -3055,11 +3122,13 @@ void Descriptor::go_back_menu(connectStateT con_state)
       break;
     case CON_QCLASS:
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS;
+	connected = CON_TRAITS3;
+  character->cls();
+  sendTraitsList(3);
 	break;
       }
       // fall through
-    case CON_TRAITS:
+    case CON_TRAITS1:
       sendHomeList();
       switch (character->getRace()) {
         case RACE_HUMAN:
@@ -3091,7 +3160,18 @@ void Descriptor::go_back_menu(connectStateT con_state)
       connected = CON_QRACE;
       break;
 #endif
+    case CON_TRAITS2:
+      connected = CON_TRAITS1;
+      character->cls();
+      sendTraitsList(1);
+      break;
+    case CON_TRAITS3:
+      connected = CON_TRAITS2;
+      character->cls();
+      sendTraitsList(2);
+      break;
     case CON_QRACE:
+      
       character->cls();
       writeToQ("Now you get to pick your handedness. The hand you pick\n\r");
       writeToQ("as your primary hand will be the strongest, and be able to\n\r")
@@ -3109,8 +3189,24 @@ void Descriptor::go_back_menu(connectStateT con_state)
 	 bonus_points.combat2 != 0 ||
 	 bonus_points.learn != 0 ||
 	 bonus_points.util != 0){
-	connected=CON_STATS_RULES;
-	sendStatRules(1);
+        
+      character->cls();
+      num_fifties = numFifties(character->race->getRace(),
+         character->hasQuestBit(TOG_PERMA_DEATH_CHAR),
+         character->desc->account->name);
+      if (num_fifties > 0) {
+        connected = CON_FAE_TOUCHED;
+        character->cls();
+        sendFaeMessage(num_fifties, character->hasQuestBit(TOG_PERMA_DEATH_CHAR));
+      } else {
+        character->cls();
+        connected = CON_QCLASS;
+        sendClassList(FALSE);
+      }
+ 
+
+//	connected=CON_STATS_RULES;
+//	sendStatRules(1);
       } else {
 	connected = CON_STATS_START;
 	sendStartStatList();
@@ -3148,6 +3244,7 @@ void Descriptor::go_back_menu(connectStateT con_state)
       connected = CON_STAT_UTIL;
       break;
     case CON_ENTER_DONE:
+      character->cls();
       if(bonus_points.combat != 0 ||
 	 bonus_points.combat2 != 0 ||
 	 bonus_points.learn != 0 ||
@@ -3160,6 +3257,19 @@ void Descriptor::go_back_menu(connectStateT con_state)
       }
       break;
     case CON_STATS_START:
+      character->cls();
+      num_fifties = numFifties(character->race->getRace(),
+         character->hasQuestBit(TOG_PERMA_DEATH_CHAR),
+         character->desc->account->name);
+      if (num_fifties > 0) {
+        connected = CON_FAE_TOUCHED;
+        sendFaeMessage(num_fifties, character->hasQuestBit(TOG_PERMA_DEATH_CHAR));
+      } else {
+        connected = CON_QCLASS;
+        sendClassList(FALSE);
+      }
+      break;
+    case CON_FAE_TOUCHED:
       character->cls();
       connected = CON_QCLASS;
       sendClassList(FALSE);
@@ -3427,7 +3537,26 @@ const char *Descriptor::getStatDescription(int local_stat)
     return "ERROR/REPORT";
   }
 }
- 
+
+void Descriptor::sendFaeMessage(int num_fifties, bool perma)
+{
+  int bonus_pts = 50+(num_fifties-1)*2;
+
+  writeToQ(fmt("Congratulations!  You've managed to make %d level 50 character%s of this race.\n\r\n\r") 
+     % num_fifties % (num_fifties == 1?"":"s"));
+  if (perma) {
+   writeToQ("You are probably both experienced and insane to have any level 50 perma death\n\rcharacters.\n\r\n\r");
+  } 
+  writeToQ(fmt("Since the dawn of The World, the Faeries have taken an interest in its\n\rdevelopment.  The elves are their descendents, the gnomes their creation,\n\rand many of the other races are the creations of the gnomes.  All along,\n\rvarious influences and tinkerings have taken place and continue even to this\n\rday.  As a result, some individuals are weakened and cast away.  Others find\n\rgreater strengths than the common stock.  These rare individuals, both\n\rblessed and cursed, are known as Fae-Touched.  You have the option of\n\rcreating a character of the ilk blessed with greater gifts.  Be warned,\n\rhowever, that such individuals tend to take their gifts for granted and\n\rblame their mistakes on others.  As a result, they learn rather slowly.\n\rThe special abilities of these offshoots also tend to be rather random.\n\r\n\r"));
+  writeToQ(fmt("If you select the Fae-Touched option this character will have %d bonus stat\n\r") % bonus_pts);
+  writeToQ("points distributed randomly upon creation.  However, the character will gain\n\r");
+  writeToQ("experience at half the normal rate.\n\r\n\r");
+  writeToQ("Would you like to make this character Fae-Touched? [Y/N]\n\r");
+  writeToQ(fmt("Type %s/%s to go back a menu to redo things.\n\r")
+          % red() % norm());
+  writeToQ("--> ");
+}
+
 void Descriptor::sendStatRules(int num)
 {
   char buf[1024];
@@ -3453,12 +3582,9 @@ void Descriptor::sendStatList(int group, int)
 {
   char buf[1024];
   char buf1[80];
-  // char buf2[80];
   char pc_race[80];
-  int stat1;//, stat2;
+  int stat1;
   int free_stat;
-  // buf2 = "";
-  // stat2 = 0;
   // get the race description
   strcpy(pc_race, character->getMyRace()->getSingularName().c_str());
   switch (group) {
@@ -3762,14 +3888,16 @@ static const char CCC(Descriptor *d, int Class, int multi = FALSE, int triple = 
   return (d->canChooseClass(Class, multi, triple) ? 'X' : ' ');
 }
 
-void Descriptor::sendTraitsList()
+void Descriptor::sendTraitsList(int group)
 {
   sstring buf;
+  int startval = max((group-1)*TRAIT_GROUP_SIZE+1,0);
+  int endval = min(startval+TRAIT_GROUP_SIZE-1, MAX_TRAITS);
 
   buf="You may choose some distinct traits for your character if you wish.\n\r\n\r";
   buf+="You will receive bonus (or penalty) points to apply to your statistics.\n\r";
 
-  for(int i=1;i<=MAX_TRAITS;++i){
+  for(int i=startval;i<=endval;++i){
     buf+=fmt("[%c] %2i. %-12s (%3i points)\n\r        %s\n\r") %
       (character->hasQuestBit(traits[i].tog)?'X': ' ') % i %
       traits[i].name %
@@ -3782,7 +3910,10 @@ void Descriptor::sendTraitsList()
 
   buf+=fmt("Type %s/%s to go back a menu to redo things.\n\r") % 
     red() % norm();
-  buf+="(E)nd when you are done selecting traits.\n\r";
+  if (endval == MAX_TRAITS)
+    buf+="(E)nd when you are done selecting traits.\n\r";
+  else
+    buf+="(C)ontinue to go to the next list of traits.\n\r";
   buf+=fmt("Type %s~%s to disconnect.\n\r\n\r--> ") % red() % norm();
 
   writeToQ(buf);
@@ -5904,7 +6035,9 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_PWDNRM:
     case CON_QSEX:
     case CON_RMOTD:
-    case CON_TRAITS:
+    case CON_TRAITS1:
+    case CON_TRAITS2:
+    case CON_TRAITS3:
     case CON_QCLASS:
     case CON_PWDNCNF:
     case CON_QRACE:
@@ -5923,6 +6056,7 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_STAT_UTIL:
     case CON_CREATE_DONE:
     case CON_STATS_START:
+    case CON_FAE_TOUCHED:
     case CON_ENTER_DONE:
     case CON_STATS_RULES:
     case CON_STATS_RULES2:
