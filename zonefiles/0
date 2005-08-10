@@ -110,52 +110,6 @@ M 0 1200 1 1336 Town Crier (Brightlaughter Tavern)
 M 0 3708 1 3770 Town Crier (Logrus Tavern)
 M 0 8736 1 8797 Town Crier (Amber Tavern)
 
-* LOG COMMODITY
-B 0 75 3 23276    Cedar Logs
-B 0 80 3 7070     Pine Logs
-B 0 81 3 15280    Ash Logs
-B 0 77 3 4708     Redwood Logs
-B 0 85 3 14150    Oak Logs
-B 0 85 3 5331     Oak Logs
-B 0 86 3 10119    Hickory Logs
-B 0 76 3 9587     Logs
-B 0 78 3 25283     Logs
-B 0 79 3 10914     Logs
-B 0 82 3 28086     Logs
-B 0 83 3 28961     Logs
-B 0 84 3 28081     Logs
-
-B 0 75 3 28080     Logs
-B 0 76 3 28075     Logs
-B 0 77 3 28074     Logs
-B 0 78 3 28069     Logs
-B 0 79 3 28063     Logs
-B 0 80 3 27324     Logs
-B 0 81 3 27324     Logs
-B 0 82 3 27344     Logs
-B 0 83 3 27163     Logs
-B 0 84 3 27164     Logs
-B 0 85 3 27165     Logs
-B 0 86 3 14432     Logs
-B 0 87 3 14433     Logs
-B 0 88 3 7728     Logs
-
-B 0 75 3 14377     Logs
-B 0 76 3 10246     Logs
-B 0 77 3 10244     Logs
-B 0 78 3 10243     Logs
-B 0 79 3 10242     Logs
-B 0 80 3 9962     Logs
-B 0 81 3 9407     Logs
-B 0 82 3 7728     Logs
-B 0 83 3 7729     Logs
-B 0 84 3 6794     Logs
-B 0 85 3 6794     Logs
-B 0 86 3 451     Logs
-B 0 87 3 3724     Logs
-B 0 88 3 7392     Logs
-
-
 *O 0 0 1 13	BEGIN SHOPKEEPER LOADS
 M 0 150 1 559 		Weaponsmith GH 			(shop 0)
 M 0 151 1 550 		Lumor (Lights GH)		(shop 1)
