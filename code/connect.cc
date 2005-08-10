@@ -370,17 +370,13 @@ bool Descriptor::checkForMultiplay()
 
     if (!strcmp(d->account->name, account->name)) {
       total += 1;
-      if (total > max_multiplay_chars) {
+      if (total > max_multiplay_chars &&
+	  gamePort == PROD_GAMEPORT){
         vlogf(LOG_CHEAT, fmt("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
 #if FORCE_MULTIPLAY_COMPLIANCE
-        character->sendTo(fmt("Player Load: %d, Current MultiPlay Limit: %d\n\r") %
-             tot_descs % max_multiplay_chars);
-        if (diff < (30 * SECS_PER_REAL_MIN))
-          character->sendTo(fmt("No MultiPlay allowed during first 30 mins after reboot.  Please wait %d mins.\n\r") % (diff/SECS_PER_REAL_MIN + 1));
-
         character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-        character->sendTo("Access denied.  Please log one (or more) of your other characters off and then\n\r");
+        character->sendTo("Access denied.  Please log off your other characters and then\n\r");
         character->sendTo("try again.\n\r");
         outputProcessing();  // gotta write this to them, before we sever  :)
 #endif
