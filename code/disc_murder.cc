@@ -852,8 +852,8 @@ bool addPoison(affectedData aff[5],
       break;
     case LIQ_POISON_GLOW_FISH:
       addPoisonDefaults(&aff[0], level, duration);
-      aff[0].location=APPLY_LIGHT;
-      aff[0].modifier=10;
+      aff[0].location=APPLY_CAN_BE_SEEN;
+      aff[0].modifier=-10;
       break;
     case LIQ_POISON_SCORPION:
       addPoisonDefaults(&aff[0], level, duration);
