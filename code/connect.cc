@@ -56,7 +56,6 @@ static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
-const int MAX_TRAITS=16;
 // 3 groups, hard-coded, have to add another if more traits are added
 const int TRAIT_GROUP_SIZE=MAX_TRAITS/3+(MAX_TRAITS%3>0?1:0); 
 
@@ -64,10 +63,7 @@ const int TRAIT_GROUP_SIZE=MAX_TRAITS/3+(MAX_TRAITS%3>0?1:0);
 //   "Your eardrums have been damaged and you are unable to hear."},
 
 // keep this list ordered by point value (for cosmetics)
-struct TTraits {
-  int tog, points;
-  sstring name, desc;
-} traits[MAX_TRAITS+1] = {
+TTraits traits[MAX_TRAITS+1] = {
   {0,0}, 
   {TOG_IS_COWARD, 10,       "cowardice", 
    "You flee combat if you get below 1/2 hit points."},

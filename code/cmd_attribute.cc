@@ -567,7 +567,17 @@ void TBeing::doAttribute(const char *arg)
       sendTo("You have no Body!\n\r");
     vlogf(LOG_MISC, "I tried to show a body.");
 #endif
- 
+
+    buf="";
+    for(int i=0;i<MAX_TRAITS;++i){
+      if(hasQuestBit(traits[i].tog)){
+	buf+=traits[i].name;
+	buf+=" ";
+      }
+    }
+    if(buf != "")
+      sendTo(fmt("Your character traits are: %s\n\r") % buf);
+    
     return;
   } else if (is_abbrev(cmdbuf, "condition")) {
     if (GetMaxLevel() > 10) {

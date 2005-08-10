@@ -13574,115 +13574,6 @@ objs/disc_slash.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/disc_slash.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/disc_slash.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/disc_slash.o: disc_slash.h
-objs/disc_smythe.o: stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/c++config.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/disc_smythe.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-objs/disc_smythe.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
-objs/disc_smythe.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
-objs/disc_smythe.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
-objs/disc_smythe.o: /usr/include/time.h /usr/include/sys/timespec.h
-objs/disc_smythe.o: /usr/include/sys/types.h /usr/include/machine/endian.h
-objs/disc_smythe.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
-objs/disc_smythe.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
-objs/disc_smythe.o: /usr/include/ctype.h /usr/include/_ctype.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cstring /usr/include/string.h
-objs/disc_smythe.o: /usr/include/strings.h /usr/include/stdarg.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cmath
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
-objs/disc_smythe.o: /usr/include/math.h /usr/include/machine/_limits.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/cmath.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
-objs/disc_smythe.o: /usr/include/c++/3.4/string
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/disc_smythe.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/disc_smythe.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-objs/disc_smythe.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
-objs/disc_smythe.o: /usr/include/c++/3.4/iosfwd
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/disc_smythe.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/c++io.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/gthr.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/gthr-default.h
-objs/disc_smythe.o: /usr/include/pthread.h /usr/include/sys/time.h
-objs/disc_smythe.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
-objs/disc_smythe.o: /usr/include/machine/trap.h /usr/include/sched.h
-objs/disc_smythe.o: /usr/include/unistd.h /usr/include/sys/unistd.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/postypes.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/disc_smythe.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/disc_smythe.o: /usr/include/c++/3.4/exception_defines.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/disc_smythe.o: /usr/include/c++/3.4/debug/debug.h
-objs/disc_smythe.o: /usr/include/c++/3.4/memory
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/allocator.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/disc_smythe.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/disc_smythe.o: /usr/include/c++/3.4/algorithm
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/vector
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/vector.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/map
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/disc_smythe.o: /usr/include/c++/3.4/list
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/stl_list.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/list.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/iostream
-objs/disc_smythe.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/disc_smythe.o: /usr/include/c++/3.4/streambuf
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/disc_smythe.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/locale
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
-objs/disc_smythe.o: /usr/include/c++/3.4/istream
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/sstream
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/disc_smythe.o: /usr/include/c++/3.4/fstream
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/disc_smythe.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
-objs/disc_smythe.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
-objs/disc_smythe.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
-objs/disc_smythe.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
-objs/disc_smythe.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
-objs/disc_smythe.o: task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/disc_smythe.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/disc_smythe.o: person.h monster.h paths.h account.h extern.h handler.h
-objs/disc_smythe.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_smythe.o: format.h disc_smythe.h
 objs/disc_soldiering.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_soldiering.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_soldiering.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -14819,7 +14710,7 @@ objs/discipline.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
 objs/discipline.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
 objs/discipline.o: disc_barehand.h disc_animal.h disc_nature.h
 objs/discipline.o: disc_psionics.h disc_adv_adventuring.h spelltask.h
-objs/discipline.o: obj_symbol.h
+objs/discipline.o: obj_symbol.h disc_commoner.h
 objs/disease.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disease.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disease.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -29635,7 +29526,7 @@ objs/periodic.o: disc_monk.h obj_component.h obj_player_corpse.h
 objs/periodic.o: obj_base_corpse.h obj_base_container.h obj_opal.h
 objs/periodic.o: obj_seethru.h obj_plant.h obj_expandable_container.h
 objs/periodic.o: obj_open_container.h obj_egg.h obj_food.h obj_trash_pile.h
-objs/periodic.o: process.h
+objs/periodic.o: process.h obj_pool.h obj_base_cup.h
 objs/pets.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/pets.o: /usr/include/c++/3.4/bits/c++config.h
 objs/pets.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31941,7 +31832,7 @@ objs/skills.o: disc_adv_adventuring.h disc_wizardry.h disc_lore.h
 objs/skills.o: disc_theology.h disc_faith.h disc_slash.h disc_blunt.h
 objs/skills.o: disc_pierce.h disc_ranged.h disc_barehand.h disc_brawling.h
 objs/skills.o: disc_warrior.h disc_animal.h disc_shaman_armadillo.h
-objs/skills.o: disc_nature.h disc_psionics.h
+objs/skills.o: disc_nature.h disc_psionics.h disc_commoner.h
 objs/socket.o: /usr/include/c++/3.4/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/sys/cdefs.h /usr/include/sys/_types.h
 objs/socket.o: /usr/include/machine/_types.h /usr/include/sys/signal.h
@@ -36863,7 +36754,7 @@ objs/spec_objs_casting.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/spec_objs_casting.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_objs_casting.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_objs_casting.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/spec_objs_casting.o: format.h obj_table.h
+objs/spec_objs_casting.o: format.h obj_table.h obj_portal.h obj_seethru.h
 objs/spec_objs_deikhan_sword.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -44323,7 +44214,8 @@ objs/toggle.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/toggle.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/toggle.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/toggle.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/toggle.o: colorstring.h format.h
+objs/toggle.o: colorstring.h format.h obj_player_corpse.h obj_base_corpse.h
+objs/toggle.o: obj_base_container.h
 objs/trap.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/trap.o: /usr/include/c++/3.4/bits/c++config.h
 objs/trap.o: /usr/include/c++/3.4/bits/os_defines.h

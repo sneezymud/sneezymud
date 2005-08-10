@@ -25,6 +25,13 @@ const unsigned int PROMPT_LIFEFORCE         = (1<<17);
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (1<<31);
 
+const int MAX_TRAITS=16;
+
+struct TTraits {
+  int tog, points;
+  sstring name, desc;
+};
+
 enum termTypeT {
      TERM_NONE,  //         = 0;
      TERM_VT100,  //        = 1;
