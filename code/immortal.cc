@@ -2778,18 +2778,18 @@ void TPerson::doStart()
   TObj *obj;
   char buf[256];
 
-  if (desc->account->term == TERM_ANSI) {
-    doToggle("term none");
-    doCls(false);
-    // I'm leaving rooms off this list intentionally - bat
-    // I'm using = here (rather than set_bit) since I want to know
-    // that PLR_COLOR_CODES and PLR_COLOR_LOGS are off
-    desc->plr_color = PLR_COLOR_BASIC | PLR_COLOR_ALL | 
-       PLR_COLOR_BASIC | PLR_COLOR_COMM | PLR_COLOR_OBJECTS | PLR_COLOR_MOBS |
-       PLR_COLOR_ROOM_NAME | PLR_COLOR_SHOUTS | PLR_COLOR_SPELLS;
-    addPlayerAction(PLR_COLOR);
-    SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
-  }
+  
+  doToggle("term none");
+  doCls(false);
+  // I'm leaving rooms off this list intentionally - bat
+  // I'm using = here (rather than set_bit) since I want to know
+  // that PLR_COLOR_CODES and PLR_COLOR_LOGS are off
+  desc->plr_color = PLR_COLOR_BASIC | PLR_COLOR_ALL | 
+    PLR_COLOR_BASIC | PLR_COLOR_COMM | PLR_COLOR_OBJECTS | PLR_COLOR_MOBS |
+    PLR_COLOR_ROOM_NAME | PLR_COLOR_SHOUTS | PLR_COLOR_SPELLS;
+  addPlayerAction(PLR_COLOR);
+  SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
+  
   if (!desc->m_bIsClient)
     sendTo(COLOR_BASIC, "<R>Initializing your Character<1> ...\n\r");
 
