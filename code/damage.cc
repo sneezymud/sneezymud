@@ -469,6 +469,21 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     affectedData aff;
     aff.type = AFFECT_PLAYERKILL;
     aff.duration = ONE_SECOND * 60 * 15;
+    aff.level = 0;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = 0;
+
+    if(!isPking())
+      vlogf(LOG_MISC, fmt("%s being flagged as PK participant.") % getName());
+    if(!v->isPking())
+      vlogf(LOG_MISC, fmt("%s being flagged as PK participant.")%v->getName());
+
+    if(affectedBySpell(AFFECT_PLAYERKILL))
+      affectFrom(AFFECT_PLAYERKILL);
+    if(v->affectedBySpell(AFFECT_PLAYERKILL))
+      v->affectFrom(AFFECT_PLAYERKILL);
+
     affectTo(&aff);
     v->affectTo(&aff);
   }
