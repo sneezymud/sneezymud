@@ -24,7 +24,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
   TBaseWeapon *tobj;
   int  learning = ch->getSkillValue(SKILL_BUTCHER),
     Ceffect = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1),
-    maxUnitsP = max(0, (int)((corpse->getWeight()*.10)/2)-1);
+    maxUnitsP = max(0, (int)(corpse->getWeight()*.10)-1);
   //  char msg   [256],
   //       gl_msg[256];
 
@@ -126,8 +126,10 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
   int totalUnits = ch->task->flags;
   ch->stopTask();
   if (!corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED) && totalUnits <= (int)(maxUnitsP / 2))
+  {
     corpse->addCorpseFlag(CORPSE_HALF_BUTCHERED);
-  else
+    Ceffect = 2;
+  } else
     corpse->addCorpseFlag(CORPSE_NO_BUTCHER);
   if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING))
     corpse->remCorpseFlag(CORPSE_PC_BUTCHERING);
@@ -188,7 +190,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       namebuf[0]=toupper(namebuf[0]);
     }
     
-    int FoodUnits = max(0,min(100,(maxUnitsP/Ceffect)/2));
+    int FoodUnits = max(0,min(100,(maxUnitsP/Ceffect)));
     steak->setFoodFill(FoodUnits);
     steak->setWeight((float)FoodUnits / 10.0);
     steak->setVolume(FoodUnits * 10);
