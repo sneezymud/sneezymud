@@ -236,6 +236,9 @@ sstring nameColorString(TBeing *me, Descriptor *ch, const sstring &arg, int *fla
         case 'N':
           if (me) {
             buf += sstring(me->getName()).cap();
+	    if(me->isPkChar())
+	      buf+=" (PK)";
+
             if (flag)
               *flag = TRUE;
             s += 2;
