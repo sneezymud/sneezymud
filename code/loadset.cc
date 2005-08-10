@@ -70,8 +70,13 @@ wearSlotT getSlotFromLST(loadSetTypeT tPiece, TBeing *ch, bool isFirst)
 bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiece,
                            int tChance, int sCount)
 {
+  vlogf(LOG_PEEL, fmt("suitload: %s %i %i") % argument % tChance % sCount);
+  // soft 101 -1
+
   if (sCount <= 0 && (!argument || !*argument))
     return false;
+
+  vlogf(LOG_PEEL, "got here 1");
 
   for (unsigned short int suitIndex = 0; suitIndex < suits.size(); suitIndex++)
     if ((suits[suitIndex].name &&
@@ -138,7 +143,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   }
 
   if ( ((::number(0,99) < chance) &&
-	(::number(0,999) < (int) (1000 * stats.equip))) ||
+	(chance >= 100 || (::number(0,999) < (int) (1000 * stats.equip)))) ||
        gamePort == BETA_GAMEPORT) {
     TObj *obj = read_object(rob, REAL);
     if (obj) {
