@@ -149,6 +149,9 @@ int conceal(TBeing *caster, TBeing *vict)
 
 int TBeing::doDisguise(const char *arg)
 {
+  sendTo("This skill has been temporarily disabled.\n\r");
+  return FALSE;
+  
   char name_buf[MAX_INPUT_LENGTH];
   int rc;
 

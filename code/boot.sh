@@ -14,7 +14,7 @@ case $USER in
     PORT=6969
     ;;
   maror)
-    PORT=6960
+    PORT=6961
     ;;
 esac
 

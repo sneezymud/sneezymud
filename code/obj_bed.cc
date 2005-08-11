@@ -100,6 +100,14 @@ void TBed::changeObjValue1(TBeing *ch)
 
 int TBed::putSomethingInto(TBeing *ch, TThing *tThing)
 {
+  ch->sendTo("That's made for you to rest on, not as a storage spot for your junk.\n\r");
+  /*
+   * ALLOWING OBJECTS TO BE PUT IN A BED CAUSES A CRASH IF THE OBJECTS ARE HELD
+   * ALSO, THERE IS NO FUNCTION TO GET THINGS FROM A BED
+   *
+   * BEFORE THIS CODE IS PUT BACK IN, BOTH OF THOSE ISSUES NEED TO BE ADDRESSED
+   */
+  /*
   TBaseCorpse *corpse;
 
   if(!(corpse=dynamic_cast<TBaseCorpse *>(tThing))){
@@ -118,7 +126,7 @@ int TBed::putSomethingInto(TBeing *ch, TThing *tThing)
 
   act("You prop up $p on $N.", TRUE, ch, tThing, this, TO_CHAR);
   act("$N props up $p on $N.", TRUE, ch, tThing, this, TO_ROOM);
-
+*/
 
   return 0;
 }

@@ -2280,7 +2280,7 @@ int numFifties(race_t race, bool perma, sstring account_name)
     sprintf(tog_file_name, "player/%c/%s.toggle", LOWER(dp->d_name[0]),
       dp->d_name);
     if(!(fp = fopen(tog_file_name, "r"))) {
-      vlogf(LOG_BUG, fmt("Error loading toggles for player %s in numFifties.")
+      vlogf(LOG_MAROR, fmt("Error loading toggles for player %s in numFifties.")
         % dp->d_name);
       continue;
     }

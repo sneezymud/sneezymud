@@ -4439,16 +4439,15 @@ void TBeing::addToRandomStat(int extra_points) {
     stats.push_back(whichStat);
   }
   std::random_shuffle(stats.begin(), stats.end());
-  while(extra_points > 0) {
-    if (i == stats.size()) {
-      vlogf(LOG_MAROR, fmt("i %d length %d") % i % stats.size());
+  while(extra_points != 0) {
+    if (i >= stats.size()) {
       i = 0;
       firstPass=FALSE;
     }
     whichStat = stats[i++];
     if (firstPass) {
-      amt = min(25,::number(-5,extra_points));
-    } else amt = min(25,::number(0,extra_points));
+      amt = ::number(-10,extra_points)/2;
+    } else amt = max(1,::number(0,extra_points)/2);
     addToStat(STAT_CHOSEN, whichStat, amt);
     extra_points -= amt;
   }
