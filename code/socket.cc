@@ -1191,7 +1191,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procBankInterest(PULSE_MUDDAY));
 
   // pulse realhour
-  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR));
+//  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved
   scheduler.add(new procTrophyDecay(PULSE_REALHOUR));
 
   avail_descs = 150;		
