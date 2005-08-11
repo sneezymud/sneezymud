@@ -214,12 +214,13 @@ TaskEntry tasks[NUM_TASKS] =
   {"in a defensive trance", "Not while you're in a defensive trance!\n\r", task_trance_of_blades},
   {"sacrificing", "Not while you are performing the sacrificial ritual of life!\n\r", task_sacrifice},
   {"fishing", "You are too busy fishing.\n\r", task_fishing},
+  {"logging", "You are too busy logging.\n\r", task_logging},
   {"extinguishing", "You are too busy putting a fire out.\n\r", task_extinguish_my_ass},
   {"butchering", "You are too busy butchering a corpse.\n\r", task_butchering},
   {"cooking", "You are too busy cooking.\n\r", task_cook},
   {"loading a handgonne", "You are too busy loading your handgonne.\n\r", task_handgonne_load},
   {"loading a cannon", "You are too busy loading your cannon.\n\r", task_handgonne_load},
-  {"trapping an arrow", "You are too busy trapping your arrow.\n\r", task_trap_arrow}
+  {"trapping an arrow", "You are too busy trapping your arrow.\n\r", task_trap_arrow},
 };
 
 bool TBeing::nobrainerTaskCommand(cmdTypeT cmd)

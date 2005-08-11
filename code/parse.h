@@ -545,6 +545,7 @@ enum cmdTypeT {
      CMD_LOOT,
      CMD_TROPHY,
      CMD_FISH,
+     CMD_DEFORESTATION,
      CMD_GLOAD,
      CMD_PTELL,
      CMD_PSAY,

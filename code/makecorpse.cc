@@ -882,6 +882,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case LAST_ODDBALL_AFFECT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
+      case SKILL_LOGGING:
       case SKILL_ADVANCED_DEFENSE:
       case SKILL_PSITELEPATHY:
       case SKILL_TELE_SIGHT:

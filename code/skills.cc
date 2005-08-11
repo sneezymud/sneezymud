@@ -1109,6 +1109,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdventuring *) cd)->skMend;
     case SKILL_BUTCHER:
       return &((CDAdventuring *) cd)->skButcher;
+    case SKILL_LOGGING:
+      return &((CDAdventuring *) cd)->skLogging;
 
   // disc_wizardry
     case SKILL_WIZARDRY: // 960

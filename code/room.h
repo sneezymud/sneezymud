@@ -200,6 +200,8 @@ class TRoom : public TThing {
     long descPos;           // File offset for the description.
     int x, y, z;            // x,y,z location in the world
     ubyte fished;           // how fished out the room is
+    ubyte logsHarvested;           // how deforested the room is
+    int treetype;          // the kind of tree growing in the room
 
   public:
     TThing *tBornInsideMe;  // List of mobs born inside me.
@@ -319,6 +321,18 @@ class TRoom : public TThing {
     }
     void setFished(int newfished) {
       fished=newfished;
+    }
+    int getLogsHarvested() const {
+      return logsHarvested;
+    }
+    void setLogsHarvested(int newLogsHarvested) {
+      logsHarvested=newLogsHarvested;
+    }
+    int getTreetype() const {
+      return treetype;
+    }
+    void setTreetype(int newtreetype) {
+      treetype = newtreetype;
     }
 
 

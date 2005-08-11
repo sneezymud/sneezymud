@@ -1169,6 +1169,7 @@ int TMainSocket::gameLoop()
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
+  scheduler.add(new procReforestation(PULSE_MUDHOUR));
   scheduler.add(new procZoneUpdate(PULSE_MUDHOUR));
   scheduler.add(new procLaunchCaravans(PULSE_MUDHOUR));
   scheduler.add(new procUpdateAvgPlayers(PULSE_MUDHOUR));

@@ -1716,6 +1716,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case TYPE_MAX_HIT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
+      case SKILL_LOGGING:
       case SKILL_PSITELEPATHY:
       case SKILL_TELE_SIGHT:
       case SKILL_TELE_VISION:

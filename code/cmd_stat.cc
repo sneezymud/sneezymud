@@ -221,6 +221,9 @@ void TBeing::statRoom(TRoom *rmp)
     str += fmt("Fish caught : %i\n\r") % rmp->getFished();
 
   }
+  if (rmp->isForestSector())
+    str += fmt("Number of logs harvested : %i\n\r")
+      % rmp->getLogsHarvested();
   if ((rmp->getTeleTarg() > 0) && (rmp->getTeleTime() > 0)) {
     str += fmt("Teleport speed : Every %d heartbeats. To room : %d. Look? %s.\n\r") %
       rmp->getTeleTime() % rmp->getTeleTarg() %
@@ -1428,6 +1431,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_RIDE:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
+      case SKILL_LOGGING:
       case SKILL_CALM_MOUNT:
       case SKILL_TRAIN_MOUNT:
       case SKILL_ADVANCED_RIDING:

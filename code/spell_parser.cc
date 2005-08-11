@@ -2468,6 +2468,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case AFFECT_BITTEN_BY_VAMPIRE:
     case SKILL_ALCOHOLISM:
     case SKILL_FISHING:
+    case SKILL_LOGGING:
     case SKILL_PSITELEPATHY:
     case SKILL_TELE_SIGHT:
     case SKILL_TELE_VISION:

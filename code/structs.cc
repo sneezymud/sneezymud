@@ -443,6 +443,8 @@ TRoom::TRoom(int r) :
   roomFlags(0),
   descPos(-1),
   fished(0),
+  logsHarvested(0),
+  treetype(0),
   tBornInsideMe(NULL)
 {
   funct = NULL;

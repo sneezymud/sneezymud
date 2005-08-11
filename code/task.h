@@ -66,6 +66,7 @@ extern int task_stavecharging (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_trance_of_blades(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_sacrifice      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_fishing     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_logging     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_extinguish_my_ass (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_handgonne_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -121,6 +122,7 @@ enum taskTypeT {
      TASK_TRANCE_OF_BLADES,
      TASK_SACRIFICE,
      TASK_FISHING,
+     TASK_LOGGING,
      TASK_EXTINGUISH_MY_ASS,
      TASK_BUTCHER,
      TASK_COOK,

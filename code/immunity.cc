@@ -809,6 +809,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case LAST_ODDBALL_AFFECT:
     case SKILL_ALCOHOLISM:
     case SKILL_FISHING:
+    case SKILL_LOGGING:
     case SKILL_PSITELEPATHY:
     case SKILL_TELE_SIGHT:
     case SKILL_TELE_VISION:

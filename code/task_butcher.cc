@@ -252,7 +252,7 @@ int TTool::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
         // a doubele failure
         CF(SKILL_BUTCHER);  // failure
-        act("You slip up and destory a part of the carcass.",
+        act("You slip up and destroy a part of the carcass.",
              FALSE, ch, 0, 0, TO_CHAR);
         act("$n really slips up and mangles part of the carcass.",
              FALSE, ch, 0, 0, TO_ROOM);

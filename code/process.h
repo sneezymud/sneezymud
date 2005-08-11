@@ -105,6 +105,12 @@ class procFishRespawning : public TProcess {
   procFishRespawning(const int &);
 };
 
+class procReforestation : public TProcess {
+ public:
+  void run(int) const;
+  procReforestation(const int &);
+};
+
 class procZoneUpdate : public TProcess {
  public:
   void run(int) const;

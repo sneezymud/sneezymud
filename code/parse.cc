@@ -805,6 +805,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	doVisible(newarg.c_str(), false);
 	addToLifeforce(1);
 	break;
+      case CMD_DEFORESTATION:
+	doLogging();
+	addToLifeforce(1);
+	break;
       case CMD_LOGLIST:
 	doSysLoglist();
 	break;
@@ -2581,6 +2585,7 @@ void buildCommandArray(void)
   commandArray[CMD_BREATH] = new commandInfo("breathe", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_GT] = new commandInfo("gtell", POSITION_RESTING, 0);
   commandArray[CMD_WHAP] = new commandInfo("whap", POSITION_RESTING, 0);
+  commandArray[CMD_DEFORESTATION] = new commandInfo("cutlog", POSITION_RESTING, 0);
   commandArray[CMD_LOG] = new commandInfo("log", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_BEAM] = new commandInfo("beam", POSITION_SLEEPING, 0);
   commandArray[CMD_CHORTLE] = new commandInfo("chortle", POSITION_RESTING, 0);

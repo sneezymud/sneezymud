@@ -286,7 +286,8 @@ LIBTASK=task_attune.o	       	task_sacrifice.o	\
 	task_penance.o	       	task_track.o		\
 	task_picklock.o	       	task_trance_of_blades.o	\
 	task_plant.o	       	task_trap.o		\
-	task_rest.o	       	task_whittle.o
+	task_rest.o	       	task_whittle.o \
+	task_logging.o
 LIBTASK := $(sort $(addprefix $(OBJDIR), $(LIBTASK)))
 
 LIBSPEC=spec_mobs.o		    	spec_objs.o			\
@@ -41868,6 +41869,116 @@ objs/task_lightfire.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/task_lightfire.o: monster.h paths.h account.h extern.h handler.h
 objs/task_lightfire.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/task_lightfire.o: format.h obj_tool.h
+objs/task_logging.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/task_logging.o: /usr/include/c++/3.4/bits/c++config.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/task_logging.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/task_logging.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/task_logging.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/task_logging.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/task_logging.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/task_logging.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/task_logging.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/task_logging.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/task_logging.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/task_logging.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/task_logging.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/task_logging.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/task_logging.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/task_logging.o: /usr/include/c++/3.4/cmath
+objs/task_logging.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/task_logging.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/task_logging.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/task_logging.o: /usr/include/c++/3.4/string
+objs/task_logging.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/task_logging.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/task_logging.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/task_logging.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/task_logging.o: /usr/include/c++/3.4/iosfwd
+objs/task_logging.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/task_logging.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/c++io.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/gthr.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/task_logging.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/task_logging.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/task_logging.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/task_logging.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/postypes.h
+objs/task_logging.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/task_logging.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/task_logging.o: /usr/include/c++/3.4/exception_defines.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/task_logging.o: /usr/include/c++/3.4/debug/debug.h
+objs/task_logging.o: /usr/include/c++/3.4/memory
+objs/task_logging.o: /usr/include/c++/3.4/bits/allocator.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/task_logging.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/task_logging.o: /usr/include/c++/3.4/algorithm
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/task_logging.o: /usr/include/c++/3.4/vector
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/task_logging.o: /usr/include/c++/3.4/map
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/task_logging.o: /usr/include/c++/3.4/list
+objs/task_logging.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/list.tcc
+objs/task_logging.o: /usr/include/c++/3.4/iostream
+objs/task_logging.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/task_logging.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/task_logging.o: /usr/include/c++/3.4/streambuf
+objs/task_logging.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/task_logging.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/task_logging.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/task_logging.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/task_logging.o: /usr/include/c++/3.4/locale
+objs/task_logging.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/task_logging.o: /usr/include/c++/3.4/limits
+objs/task_logging.o: /usr/include/c++/3.4/typeinfo
+objs/task_logging.o: /usr/include/c++/3.4/istream
+objs/task_logging.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/task_logging.o: /usr/include/c++/3.4/sstream
+objs/task_logging.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/task_logging.o: /usr/include/c++/3.4/fstream
+objs/task_logging.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/task_logging.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/task_logging.o: enum.h spells.h structs.h parse.h immunity.h
+objs/task_logging.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/task_logging.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/task_logging.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/task_logging.o: disease.h trap.h task.h weather.h sound.h create.h
+objs/task_logging.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/task_logging.o: charfile.h being.h person.h monster.h paths.h account.h
+objs/task_logging.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/task_logging.o: colorstring.h format.h process.h obj_base_weapon.h
 objs/task_meditate.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/task_meditate.o: /usr/include/c++/3.4/bits/c++config.h
 objs/task_meditate.o: /usr/include/c++/3.4/bits/os_defines.h
