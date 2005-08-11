@@ -70,13 +70,10 @@ wearSlotT getSlotFromLST(loadSetTypeT tPiece, TBeing *ch, bool isFirst)
 bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiece,
                            int tChance, int sCount)
 {
-  vlogf(LOG_PEEL, fmt("suitload: %s %i %i") % argument % tChance % sCount);
   // soft 101 -1
 
   if (sCount <= 0 && (!argument || !*argument))
     return false;
-
-  vlogf(LOG_PEEL, "got here 1");
 
   for (unsigned short int suitIndex = 0; suitIndex < suits.size(); suitIndex++)
     if ((suits[suitIndex].name &&
