@@ -24,7 +24,7 @@ int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   act("You direct a stream of urine at $p, dissolving it completely.", TRUE,
     ch, o, NULL, TO_CHAR, NULL);
 
-  delete o;
-  o = NULL;
-  return TRUE;
+//  delete o;
+//  o = NULL;
+  return DELETE_THIS;
 }
