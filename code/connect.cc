@@ -368,7 +368,7 @@ bool Descriptor::checkForMultiplay()
     if (!strcmp(character->name, ch->name))
       continue;
 
-    if (!strcmp(d->account->name, account->name)) {
+    if (d->account->name==account->name) {
       total += 1;
       if (total > max_multiplay_chars &&
 	  gamePort == PROD_GAMEPORT){
@@ -451,7 +451,8 @@ bool Descriptor::checkForMultiplay()
 #endif
   }
 
-  if (character && account && account->name && !character->hasWizPower(POWER_MULTIPLAY)) {
+  if (character && account && !account->name.empty() && 
+      !character->hasWizPower(POWER_MULTIPLAY)) {
     TBeing *tChar = NULL,
            *oChar = NULL;
     char tAccount[256];
@@ -1268,7 +1269,7 @@ int Descriptor::nanny(sstring arg)
         // too bad they can't do this from the menu, but they won't get this
         // far if this was set anyway
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
-        sprintf(buf, "You entered an email address of: %s\n\r", account->email);
+        sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
         writeToQ(buf);
         sprintf(buf, "If this address is truly valid, please send a mail from it to: %s", MUDADMIN_EMAIL);
         writeToQ(buf);
@@ -1295,7 +1296,7 @@ int Descriptor::nanny(sstring arg)
         return FALSE;
       }
 
-      if (strcasecmp(account->name, st.aname)) {
+      if (strcasecmp(account->name.c_str(), st.aname)) {
         writeToQ("No such character, please enter another name.\n\r");
         writeToQ("Name -> ");
         // character existed, but wasn't in my account
@@ -5444,15 +5445,15 @@ int Descriptor::sendLogin(const sstring &arg)
       account = NULL;
       return (sendLogin("1"));
     }
-    strcpy(account->name, my_arg.c_str());
+    account->name=my_arg;
     sprintf(buf, "account/%s/%s/account", my_arg.lower().substr(0,1).c_str(), my_arg.lower().c_str());
     // If account exists, open and copy password, otherwise set pwd to \0
     FILE * fp = fopen(buf, "r");
     if (fp) {
       fread(&afp, sizeof(afp), 1, fp);
-      strcpy(account->name, afp.name);
-      strcpy(account->passwd, afp.passwd);
-      strcpy(account->email, afp.email);
+      account->name=afp.name;
+      account->passwd=afp.passwd;
+      account->email=afp.email;
       account->term = termTypeT(afp.term);
       if (account->term == TERM_ANSI) 
         plr_act = PLR_COLOR;
@@ -5548,7 +5549,7 @@ int Descriptor::doAccountStuff(char *arg)
         output.putInQ("Please enter a login name -> ");
         return FALSE;
       }
-      strcpy(account->name, arg);
+      account->name=arg;
       output.putInQ("Now enter a password for your new account\n\r-> ");
       EchoOff();
 
@@ -5569,7 +5570,7 @@ int Descriptor::doAccountStuff(char *arg)
         writeToQ("Password -> ");
         return FALSE;
       }
-      crypted =(char *) crypt(arg, account->name);
+      crypted =(char *) crypt(arg, account->name.c_str());
       strncpy(pwd, crypted, 10);
       *(pwd + 10) = '\0';
       writeToQ("Retype your password for verification -> ");
@@ -5583,7 +5584,7 @@ int Descriptor::doAccountStuff(char *arg)
         connected = CON_NEWACTPWD;
         return FALSE;
       } else {
-        strcpy(account->passwd, pwd);
+        account->passwd=pwd;
         EchoOn();
         writeToQ("Enter your email address.\n\r");
         writeToQ("E-mail addresses are used strictly for administrative purposes, or for\n\r");
@@ -5602,7 +5603,7 @@ int Descriptor::doAccountStuff(char *arg)
         writeToQ("Address -> ");
         break;
       }
-      strcpy(account->email, arg);
+      account->email=arg;
 
       sprintf(buf, "%s is presently based in California (Pacific Time)\n\r", MUD_NAME);
       writeToQ(buf);
@@ -5700,7 +5701,7 @@ int Descriptor::doAccountStuff(char *arg)
       }
       if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
-        sprintf(buf, "You entered an email address of: %s\n\r", account->email);
+        sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
         writeToQ(buf);
         sprintf(buf,"To regain access to your account, please send an email\n\rto: %s\n\r",
               MUDADMIN_EMAIL);
@@ -5998,7 +5999,7 @@ int Descriptor::doAccountStuff(char *arg)
         EchoOff();
         return FALSE;
       }
-      crypted = (char *) crypt(arg, account->name);
+      crypted = (char *) crypt(arg, account->name.c_str());
       strncpy(pwd, crypted, 10);
       *(pwd + 10) = '\0';
       writeToQ("Retype your password for verification -> ");
@@ -6014,7 +6015,7 @@ int Descriptor::doAccountStuff(char *arg)
         connected = CON_NEWPWD;
         EchoOff();
       } else {
-        strcpy(account->passwd, pwd);
+        account->passwd=pwd;
         account->status = TRUE;
         saveAccount();
         writeToQ("Password changed successfully.\n\r");
@@ -6217,7 +6218,7 @@ void Descriptor::saveAccount()
   char buf[256], buf2[256];
   accountFile afp;
 
-  if (!account || !account->name) {
+  if (!account || account->name.empty()) {
     vlogf(LOG_BUG, "Bad descriptor in saveAccount");
     return;
   }
@@ -6236,9 +6237,9 @@ void Descriptor::saveAccount()
   // If we get here, fp should be valid
   memset(&afp, '\0', sizeof(afp));
 
-  strcpy(afp.email, account->email);
-  strcpy(afp.passwd, account->passwd);
-  strcpy(afp.name, account->name);
+  strcpy(afp.email, account->email.c_str());
+  strcpy(afp.passwd, account->passwd.c_str());
+  strcpy(afp.name, account->name.c_str());
 
   afp.birth = account->birth;
   afp.term = account->term;

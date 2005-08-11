@@ -2272,7 +2272,7 @@ void TPerson::doUsers(const sstring &argument)
 	}
 
         buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
-        buf4=fmt("[%s]") % ((d->account && d->account->name) ? d->account->name : "UNDEFINED");
+        buf4=fmt("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
         line += fmt("%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r") %
 	  red() % buf2 % norm() % green() % buf3 %
 	  norm() % cyan() % buf4 % norm();
@@ -2312,7 +2312,7 @@ void TPerson::doUsers(const sstring &argument)
           } else {
             buf2=fmt("[%s]") % (!(d->host.empty()) ? d->host : "????");
             buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
-            buf4=fmt("[%s]") % ((d->account && d->account->name) ? d->account->name : "UNDEFINED");
+            buf4=fmt("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
             line += fmt("%-34.34s %-10.10s %s\n\r") % buf2 % buf3 % buf4;
           }
           sendTo(line);

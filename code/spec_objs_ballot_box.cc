@@ -171,7 +171,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	option_id=convertTo<int>(tmp);
 
 	db.query("select 1 from poll_vote where poll_id=%i and account='%s'",
-		 poll_id, ch->desc->account->name);
+		 poll_id, ch->desc->account->name.c_str());
 
 	if(db.fetchRow()){
 	  ch->sendTo("You've already voted in that poll.\n\r");
@@ -196,10 +196,10 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 
 	
 	db.query("insert into poll_vote values ('%s', %i, %i)",
-		 ch->desc->account->name, poll_id, option_id);
+		 ch->desc->account->name.c_str(), poll_id, option_id);
 
 
-	db.query("select po.descr as descr from poll_option po, poll_vote pv where po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and pv.option_id=%i and pv.account='%s'", poll_id, option_id, poll_id, option_id, ch->desc->account->name);
+	db.query("select po.descr as descr from poll_option po, poll_vote pv where po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and pv.option_id=%i and pv.account='%s'", poll_id, option_id, poll_id, option_id, ch->desc->account->name.c_str());
 	
 	if(db.fetchRow()){
 	  ch->sendTo(fmt("You cast your vote for %s.\n\r") % 

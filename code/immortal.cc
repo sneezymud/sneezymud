@@ -5600,7 +5600,7 @@ void TBeing::doAccount(const sstring &arg)
 
   if (!hasWizPower(POWER_ACCOUNT)) {
     // person isn't an imm, only let them check their own account
-    if (!desc->account || !desc->account->name ||
+    if (!desc->account || desc->account->name.empty() ||
         desc->account->name == namebuf) {
       sendTo("You may only check your own account.\n\r");
       sendTo("Syntax: account <account name>\n\r");

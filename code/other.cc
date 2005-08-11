@@ -3914,7 +3914,7 @@ void TBeing::doEmail(const char *arg)
   }
   sendTo(fmt("Changing email address from %s to %s.\n\r") %
            desc->account->email % buf);
-  strcpy(desc->account->email, buf);
+  desc->account->email=buf;
   desc->saveAccount();
 }
 

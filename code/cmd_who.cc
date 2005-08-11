@@ -521,7 +521,7 @@ void TBeing::doWho(const char *argument)
                 case 'a':
                   if (isImmortal() && hasWizPower(POWER_WIZARD)) {
                     if (p->desc && p->desc->account)
-                      sprintf(tString, " Account[%s]", p->desc->account->name);
+                      sprintf(tString, " Account[%s]", p->desc->account->name.c_str());
                     else
                       sprintf(tString, " Account[Unknown]");
 

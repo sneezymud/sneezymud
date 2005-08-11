@@ -351,7 +351,7 @@ void TPerson::storeToSt(charFile *st)
   st->flags = 0;
 
   if (desc && desc->account) 
-    strcpy(st->aname, desc->account->name);
+    strcpy(st->aname, desc->account->name.c_str());
   else {
     vlogf(LOG_BUG, fmt("storeToSt for %s with no account info") %  getName());
   }

@@ -554,7 +554,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
       if (!load_char(indiv, &st))
         continue;
 
-      if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name, st.aname)) {
+      if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name.c_str(), st.aname)) {
         TMoney *tTalens;
         isCheat = true;
 

@@ -37,16 +37,16 @@ class TAccount
 {
   public:
     byte status;
-    char email[80];
-    char passwd[11];
-    char name[10];
+    sstring email;
+    sstring passwd;
+    sstring name;
     long birth;
     long login;
     termTypeT term;
     Descriptor *desc;
     byte time_adjust;
     unsigned int flags;
-
+    
     TAccount();
     TAccount(const TAccount &a);
     TAccount & operator=(const TAccount &a);

@@ -685,7 +685,7 @@ void TBeing::statBeing(TBeing *k)
         !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
       sprintf(buf + strlen(buf), "\tAccount : *** Information Concealed ***\n\r");
     } else {
-      sprintf(buf + strlen(buf), "\t%sAccount : %s%s\n\r", purple(), k->desc->account->name, norm());
+      sprintf(buf + strlen(buf), "\t%sAccount : %s%s\n\r", purple(), k->desc->account->name.c_str(), norm());
     }
   } else
     strcat(buf, "\n\r");

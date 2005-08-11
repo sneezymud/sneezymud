@@ -596,9 +596,9 @@ TAccount::TAccount() :
   time_adjust(0),
   flags(0)
 {
-  *name = '\0';
-  *passwd = '\0';
-  *email = '\0';
+  name = "";
+  passwd = "";
+  email = "";
 }
 
 TAccount::TAccount(const TAccount &a) :
@@ -610,17 +610,17 @@ TAccount::TAccount(const TAccount &a) :
   time_adjust(a.time_adjust),
   flags(a.flags)
 {
-  strcpy(name, a.name);
-  strcpy(passwd, a.passwd);
-  strcpy(email, a.email);
+  name=a.name;
+  passwd=a.passwd;
+  email=a.email;
 }
 
 TAccount & TAccount::operator=(const TAccount &a)
 {
   if (this == &a) return *this;
-  strcpy(name, a.name);
-  strcpy(passwd, a.passwd);
-  strcpy(email, a.email);
+  name=a.name;
+  passwd=a.passwd;
+  email=a.email;
   birth = a.birth;
   login = a.login;
   desc = a.desc;

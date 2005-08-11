@@ -728,15 +728,15 @@ int Descriptor::read_client(char *str2)
           clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
         }
-        strcpy(account->name, aname);
+	account->name=aname;
         sprintf(buf2, "account/%c/%s/account", LOWER(aname[0]), sstring(aname).lower().c_str());
         // If account exists, open and copy password, otherwise set pwd to \0
         FILE * fp = fopen(buf2, "r");
         if (fp) {
           fread(&afp, sizeof(afp), 1, fp);
-          strcpy(account->name, afp.name);
-          strcpy(account->passwd, afp.passwd);
-          strcpy(account->email, afp.email);
+          account->name=afp.name;
+          account->passwd=afp.passwd;
+          account->email=afp.email;
           account->term = TERM_NONE;
           plr_act = PLR_COLOR;
 
@@ -772,7 +772,7 @@ int Descriptor::read_client(char *str2)
         }
         if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
           writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
-          sprintf(buf, "You entered an email address of: %s\n\r", account->email);
+          sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
           writeToQ(buf);
           sprintf(buf,"To regain access to your account, please send an email\n\rto: %s\n\r",
               MUDADMIN_EMAIL);
@@ -839,7 +839,7 @@ int Descriptor::read_client(char *str2)
         account = NULL;
         return FALSE;
       }
-      strcpy(account->name, aname);
+      account->name=aname;
 
       if (strlen(apassword) < 5) {
         clientf(fmt("%d|Password must be longer than 5 characters.") % CLIENT_ERROR);
@@ -858,9 +858,8 @@ int Descriptor::read_client(char *str2)
         account = NULL;
         return FALSE;
       }
-      crypted =(char *) crypt(apassword, account->name);
-      strncpy(account->passwd, crypted, 10);
-      *(account->passwd + 10) = '\0';
+      crypted =(char *) crypt(apassword, account->name.c_str());
+      account->passwd=sstring(crypted).substr(0,10);
 
       if (illegalEmail(email, this, SILENT_YES)) {
         clientf(fmt("%d|The email address you entered failed validity tests, please try another one.") % CLIENT_ERROR);
@@ -868,7 +867,7 @@ int Descriptor::read_client(char *str2)
         account = NULL;
         return FALSE;
       }
-      strcpy(account->email, email);
+      account->email=email;
 
       if (!*timezone || (convertTo<int>(timezone) > 23) || (convertTo<int>(timezone) < -23)) {
         clientf(fmt("%d|Invalid timezone please enter a number between 23 and -23!") % CLIENT_ERROR);
@@ -907,9 +906,9 @@ int Descriptor::read_client(char *str2)
       // If we get here, fp should be valid
       memset(&afp, '\0', sizeof(afp));
     
-      strcpy(afp.email, account->email);
-      strcpy(afp.passwd, account->passwd);
-      strcpy(afp.name, account->name);
+      strcpy(afp.email, account->email.c_str());
+      strcpy(afp.passwd, account->passwd.c_str());
+      strcpy(afp.name, account->name.c_str());
     
       afp.birth = account->birth;
       afp.term = account->term;
@@ -974,14 +973,14 @@ int Descriptor::client_nanny(char *arg)
     return DELETE_THIS;
   
   account = new TAccount();
-  strcpy(account->name, login);
+  account->name=login;
   sprintf(buf, "account/%c/%s/account", LOWER(login[0]), sstring(login).lower().c_str());
   // If account exists, open and copy password, otherwise set pwd to \0
   if ((fp = fopen(buf, "r"))) {
     fread(&afp, sizeof(afp), 1, fp);
-    strcpy(account->name, afp.name);
-    strcpy(account->passwd, afp.passwd);
-    strcpy(account->email, afp.email);
+    account->name=afp.name;
+    account->passwd=afp.passwd;
+    account->email=afp.email;
     account->term = termTypeT(afp.term);
     account->birth = afp.birth;
     account->login = time(0);
@@ -1078,7 +1077,7 @@ int Descriptor::client_nanny(char *arg)
     account = NULL;
     return FALSE;
   }
-  if (strcmp(account->name, st.aname)) {
+  if (account->name!=st.aname) {
     clientf(fmt("%d|That character isn't in the listed account.|%d") % 
               CLIENT_ERROR % ERR_BAD_NAME);
 
@@ -1370,17 +1369,17 @@ int Descriptor::clientCreateAccount(char *arg)
   account= new TAccount;
 
   // Account name
-  strcpy(account->name, "TestAccd");
+  account->name="TestAccd";
 
   // Account password
-  crypted =(char *) crypt("Test123", account->name);
+  crypted =(char *) crypt("Test123", account->name.c_str());
   strncpy(pwd, crypted, 10);
   *(pwd + 10) = '\0';
 
-  strcpy(account->passwd, pwd);
+  account->passwd=pwd;
 
   // Account email
-  strcpy(account->email, "bogus@bogus.com");
+  account->email="bogus@bogus.com";
 
   // Something with listserver
 
@@ -1396,27 +1395,27 @@ int Descriptor::clientCreateAccount(char *arg)
   accountFile afp;
 
   sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]),
-sstring(account->name).lower().c_str());
+	  account->name.lower().c_str());
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "account/%c/%s", LOWER(account->name[0]),
-sstring(account->name).lower().c_str());
+	    account->name.lower().c_str());
     if (mkdir(buf2, 0770)) {
       vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") % 
-sstring(account->name).lower());
+	    account->name.lower());
       return FALSE;
     }
     if (!(fp = fopen(buf, "w"))) {
       vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") % 
-sstring(account->name).lower());
+	    account->name.lower());
       return FALSE;
     }
   }
   // If we get here, fp should be valid
   memset(&afp, '\0', sizeof(afp));
 
-  strcpy(afp.email, account->email);
-  strcpy(afp.passwd, account->passwd);
-  strcpy(afp.name, account->name);
+  strcpy(afp.email, account->email.c_str());
+  strcpy(afp.passwd, account->passwd.c_str());
+  strcpy(afp.name, account->name.c_str());
 
   afp.birth = account->birth;
   afp.term = account->term;
