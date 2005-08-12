@@ -927,7 +927,7 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if (is_abbrev(arg, "engage") ) {
     if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
-      sendTo("You will now default to fighting back if attacked or if casting.\n\r");
+      sendTo(COLOR_BASIC, fmt("You will now default to %sfighting back%s if attacked or if casting.\n\r") % redBold() % norm());
       sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_ENGAGE);
     } else {
@@ -936,20 +936,20 @@ void TBeing::doToggle(const char *arg2)
 
       } else {
 
-        sendTo("You will now engage if you start a fight by casting or praying.\n\r");
+        sendTo(COLOR_BASIC, fmt("You will now %sengage%s if you start a fight by casting or praying.\n\r") % greenBold() % norm());
         SET_BIT(desc->autobits, AUTO_ENGAGE);
       }
     }
   } else if (is_abbrev(arg, "engage-all") || is_abbrev(arg, "no-fight") || is_abbrev(arg, "engage-always") ) {
     if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
-      sendTo("You will now default to fighting back if attacked and when you cast.\n\r");
+      sendTo(COLOR_BASIC, fmt("You will now default to %sfighting back%s if attacked and when you cast.\n\r") % redBold() % norm());
       sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
     } else {
       if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
         sendTo("You can not both auto engage and engage-all.\n\r");
       } else {
-        sendTo("You will now default to engaging if attacked and when you cast to start a fight.\n\r");
+        sendTo(COLOR_BASIC, fmt("You will now default to %sengaging%s if attacked and when you cast to start a fight.\n\r") % greenBold() % norm());
         sendTo("You are free to fight rather than engage by using the hit command in battle.\n\r");
         SET_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
       }
