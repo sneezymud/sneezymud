@@ -735,7 +735,8 @@ int TPerson::doQuit2()
 
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
   act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
-  vlogf(LOG_PIO, fmt("%s quit the game.") %  getName());
+  vlogf(LOG_PIO, fmt("%s quit the game at %s (%d).") %  
+       getName() % roomp->name % inRoom());
   if (!isImmortal() && getMoney()) {
     *roomp += *create_money(getMoney());
     addToMoney(-getMoney(), GOLD_INCOME);
