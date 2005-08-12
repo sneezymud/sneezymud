@@ -2192,6 +2192,26 @@ int Descriptor::nanny(sstring arg)
 
           bonus_points.util=limit;
           temp-=limit;
+
+          if (remainder < 0) {
+            bonus_points.util -= 1;
+            remainder += 1;
+          }
+
+          if (remainder < 0) {
+            bonus_points.learn -= 1;
+            remainder += 1;
+          }
+
+          if (remainder < 0) {
+            bonus_points.combat2 -= 1;
+            remainder += 1;
+          }
+
+          if (remainder != 0)
+            vlogf(LOG_BUG, fmt("Making character %s with %d extra points.")
+                % character->getName() % remainder);
+ 
         }
         character->cls();
         connected = CON_QCLASS;
