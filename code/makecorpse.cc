@@ -1033,7 +1033,11 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     pcorpse->setOwner(sstring(tmpbuf).lower());
     pcorpse->addCorpseToLists();
     pcorpse->saveCorpseToFile();
-    pcorpse->setExpLost(exp_lost);
+    if (hasQuestBit(TOG_PERMA_DEATH_CHAR)) {
+      pcorpse->setExpLost(0);
+    } else {
+      pcorpse->setExpLost(exp_lost);
+    }
   }
 
   if (gamePort != PROD_GAMEPORT)
