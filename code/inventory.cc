@@ -25,6 +25,7 @@
 #include "obj_portal.h"
 #include "obj_arrow.h"
 #include "obj_tooth_necklace.h"
+#include "obj_potion.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -332,7 +333,6 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
           tobj = NULL;
           continue;
         }
-
         rc = genericItemCheck(t);
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
           delete t;
@@ -442,6 +442,21 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
             num--;
           continue;
         }
+	// Added this to make potions poof if empty --Jesus
+	TPotion *tpot = dynamic_cast<TPotion *>(tmp);
+	if (tpot && tpot->potIsEmpty()) {
+          sendrpf(roomp, "The %s shatters into a million peices!\n\r", fname(tobj->name).c_str());
+          if (tpot == tng)
+            return DELETE_ITEM;
+          else {
+            delete tpot;
+            tpot = NULL;
+          }
+          test = TRUE;;
+          if (num > 0)
+            num--;
+          continue;
+	}
 
         rc = genericItemCheck(tmp);
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {

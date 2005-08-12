@@ -20,6 +20,9 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "obj_tooth_necklace.h"
+#include "obj_potion.h"
+#include "obj_base_cup.h"
+//#include "liquids.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -754,7 +757,7 @@ TThing& TRoom::operator += (TThing& t)
   TThing::operator += (t);
 
   // Thing put into is a TRoom
-
+  // jesus
   // obj to room
   // char to room
   t.nextThing = getStuff();
@@ -783,6 +786,7 @@ TThing& TRoom::operator += (TThing& t)
     }
     incrementWindow();
   }
+
   if (dynamic_cast<TObj *>(&t) && isRoomFlag(ROOM_SAVE_ROOM))
     saveItems("");
 
@@ -856,7 +860,6 @@ TThing& TRoom::operator += (TThing& t)
     }
 #endif
   }
-
   return *this;
 }
 

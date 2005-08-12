@@ -19,6 +19,7 @@ class TPotion : public TBaseCup {
     virtual int getValue() const; 
     virtual int objectSell(TBeing *, TMonster *);
     virtual bool isSimilar(const TThing *) const;
+    virtual bool potIsEmpty() const;
 
     TPotion();
     TPotion(const TPotion &a);

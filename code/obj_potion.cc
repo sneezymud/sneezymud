@@ -35,6 +35,12 @@ TPotion::~TPotion()
 }
 
 
+bool TPotion::potIsEmpty() const {
+  if (getDrinkUnits() <= 0)
+    return TRUE;
+  return FALSE;
+}
+  
 bool TPotion::isSimilar(const TThing *t) const
 {
   const TPotion *pot = dynamic_cast<const TPotion *>(t);
