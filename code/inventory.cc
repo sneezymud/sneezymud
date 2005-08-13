@@ -445,7 +445,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
 	// Added this to make potions poof if empty --Jesus
 	TPotion *tpot = dynamic_cast<TPotion *>(tmp);
 	if (tpot && tpot->potIsEmpty()) {
-          sendrpf(roomp, "The %s shatters into a million peices!\n\r", fname(tobj->name).c_str());
+          sendrpf(roomp, "The %s shatters into a million pieces!\n\r", fname(tobj->name).c_str());
           if (tpot == tng)
             return DELETE_ITEM;
           else {

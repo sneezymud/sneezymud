@@ -12,6 +12,7 @@
 #include "disc_fire.h"
 #include "disc_wrath.h"
 #include "disc_aegis.h"
+#include "disc_spirit.h"
 #include "disease.h"
 #include "obj_portal.h"
 
@@ -40,6 +41,7 @@ void TBeing::doEgoTrip(const char *arg)
   badsyn += "crit - forces a target mob to do the number crit if fighting\n\r";
   badsyn += "portal - creates a portal to the target mob/player\n\r";
   badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
+  badsyn += "haste - A level 25 haste for all players, please use sparingly\n\r";
 
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
@@ -160,7 +162,7 @@ void TBeing::doEgoTrip(const char *arg)
 
       TBeing *ch = d->character;
 
-      if (ch->hasClass(CLASS_THIEF))
+      if (ch->hasClass(CLASS_THIEF) && ch->GetMaxLevel() < MAX_MORT)
 	ch->sendTo(fmt("%s would have given you sanctuary but you're a thief and not deserving!\n\r") % sstring(ch->pers(this)).cap());
 
       // Try and ditch some of the un-needed spam/waste.
@@ -198,6 +200,43 @@ void TBeing::doEgoTrip(const char *arg)
       ch->sendTo(fmt("%s has reconfirmed %s suspicions.\n\r") %
             sstring(ch->pers(this)).cap() % hshr());
       castStupidity(this, ch);
+    }
+    return;
+  } else if (is_abbrev(argument, "haste")) {
+    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
+      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
+      return;
+    }
+
+    vlogf(LOG_MISC, fmt("%s has given everyone in the game a level 25 haste.") %  getName());
+    this->sendTo(fmt("Please use egotrip haste very sparingly.\n\r"));
+    Descriptor *d;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected != CON_PLYNG)
+        continue;
+
+      TBeing *ch = d->character;
+
+      // Try and ditch some of the un-needed spam/waste.
+      if (!ch || ch->GetMaxLevel() > MAX_MORT)
+        continue;
+
+#if 0
+// doesn't work if not in room
+      act("$N has given you extra speed in your movements.",
+            FALSE, ch, 0, this, TO_CHAR);
+#else
+      ch->sendTo(fmt("%s has given you extra speed in your movements.\n\r") %
+            sstring(ch->pers(this)).cap());
+#endif
+      affectedData aff;
+      aff.type = SPELL_HASTE;
+      aff.level = 25; // made it lower level to reduce duration
+      aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+      aff.modifier = 0;
+      aff.location = APPLY_NONE;
+      aff.bitvector = 0;
+      ch->affectTo(&aff);
     }
     return;
   } else if (is_abbrev(argument, "enliven")) {
