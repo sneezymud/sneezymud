@@ -229,7 +229,7 @@ void TBeing::doWho(const char *argument)
           sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-	  sb += "[-] [x]Perma Death [c]ports\n\r";
+	  sb += "[-] [x]Perma Death [!]Fae-touched [c]ports\n\r";
 
           if (hasWizPower(POWER_WIZARD))
             sb += "[-] [a]ccount\n\r";
@@ -356,6 +356,7 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, 'w') || p->getRace() == RACE_DWARF) &&
               (!strchr(arg, 'r') || p->getRace() == RACE_OGRE) &&
               (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT) &&
+              (!strchr(arg, '!') || p->hasQuestBit(TOG_FAE_TOUCHED)) &&
 	      (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
             if (p->isLinkdead() && isImmortal())
               buf = fmt("[%-12s] ") % pers(p);
