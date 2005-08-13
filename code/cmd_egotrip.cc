@@ -160,9 +160,13 @@ void TBeing::doEgoTrip(const char *arg)
 
       TBeing *ch = d->character;
 
+      if (ch->hasClass(CLASS_THIEF))
+	ch->sendTo(fmt("%s would have given you sanctuary but you're a thief and not deserving!\n\r") % sstring(ch->pers(this)).cap());
+
       // Try and ditch some of the un-needed spam/waste.
-      if (!ch || ch->GetMaxLevel() > MAX_MORT)
+      if (!ch || ch->GetMaxLevel() > MAX_MORT || ch->hasClass(CLASS_THIEF))
         continue;
+
 #if 0
 // doesn't work if not in room
       act("$N has given you sanctuary.",
