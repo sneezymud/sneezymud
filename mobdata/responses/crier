@@ -16,6 +16,13 @@ roomenter { "";
 
 say { "latest news";
 	tonotvict $n says something to %n.;
+        tell %n It is said that some mining has taken place under the volcano!;
+	say Sorry...that's all the news for now.;
+	shrug;	
+}
+
+say { "0705";
+	tonotvict $n says something to %n.;
         tell %n Brightmoon is now allowing public access to the library north of town!;
 	say Also...;
         tell %n Hobbits from the Shire have reported ghostly happenings!;
