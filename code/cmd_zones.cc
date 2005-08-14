@@ -80,8 +80,8 @@ void TBeing::doZonesSingle(sstring tStString)
 
     if (isPc() && trophy) {
       // { -- Deduce zone size --
-        int iRCount = ((zd.top - zd.bottom) + 1);
 /* removed at Damescena's request
+        int iRCount = ((zd.top - zd.bottom) + 1);
         strcpy(tStats, "This zone is ");
 
         if (iRCount > 500)
