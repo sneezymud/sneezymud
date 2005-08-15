@@ -269,7 +269,8 @@ LIBCMD =cmd_attribute.o		cmd_headbutt.o    	cmd_sedit.o	\
 	cmd_egotrip.o		cmd_rename.o      	cmd_who.o	\
 	cmd_feigndeath.o	cmd_rescue.o      	cmd_zonefile.o	\
 	cmd_get.o		cmd_save.o        	cmd_zones.o	\
-	cmd_grapple.o		cmd_score.o		cmd_trip.o
+	cmd_grapple.o		cmd_score.o		cmd_trip.o \
+	cmd_pracInfo.o
 LIBCMD := $(sort $(addprefix $(OBJDIR), $(LIBCMD)))
 
 LIBTASK=task_attune.o	       	task_sacrifice.o	\
@@ -4829,6 +4830,116 @@ objs/cmd_news.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_news.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/cmd_news.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/cmd_news.o: materials.h colorstring.h format.h statistics.h
+objs/cmd_pracInfo.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/c++config.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/cmd_pracInfo.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/cmd_pracInfo.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/cmd_pracInfo.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/cmd_pracInfo.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/cmd_pracInfo.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/cmd_pracInfo.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/cmd_pracInfo.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/cmd_pracInfo.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/cmd_pracInfo.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/cmd_pracInfo.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cmath
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/cmd_pracInfo.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/string
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/cmd_pracInfo.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/iosfwd
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/c++io.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/gthr.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/cmd_pracInfo.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/cmd_pracInfo.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/cmd_pracInfo.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/cmd_pracInfo.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/postypes.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/cmd_pracInfo.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/exception_defines.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/debug/debug.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/memory
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/allocator.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/algorithm
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/vector
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/map
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/list
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/list.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/iostream
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/streambuf
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/locale
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/limits
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/typeinfo
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/istream
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/sstream
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/fstream
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/cmd_pracInfo.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/cmd_pracInfo.o: enum.h spells.h structs.h parse.h immunity.h
+objs/cmd_pracInfo.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/cmd_pracInfo.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/cmd_pracInfo.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/cmd_pracInfo.o: disease.h trap.h task.h weather.h sound.h create.h
+objs/cmd_pracInfo.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/cmd_pracInfo.o: charfile.h being.h person.h monster.h paths.h account.h
+objs/cmd_pracInfo.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/cmd_pracInfo.o: colorstring.h format.h
 objs/cmd_quest.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_quest.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_quest.o: /usr/include/c++/3.4/bits/os_defines.h

@@ -180,7 +180,9 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
   i_inc = min(i_inc, MAX_DISC_LEARNEDNESS - L);
 
   // people report practicing and getting no gain, trap this event.
-  mud_assert(i_inc >= 1, "Bad discipline increase");
+  if (i_inc <= 0)
+    vlogf(LOG_BUG, fmt("Bad discipline increase - did %s prac and get nothing from it?")
+      % getName());
 
   return i_inc;
 }

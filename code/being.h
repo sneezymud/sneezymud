@@ -1679,6 +1679,9 @@ class TBeing : public TThing {
     ush_int getClass() const;
     void setClass(ush_int num);
 
+    sh_int TBeing::pracsSoFar();
+    sh_int TBeing::expectedPracs();
+
     bool isLinkdead() const;
     double deathExp();
     double deathSkillLoss();
@@ -1897,6 +1900,7 @@ class TBeing : public TThing {
     virtual void doClone(const sstring &);
     virtual void doAccess(const sstring &);
     virtual void doOffice(sstring);
+    virtual void doPracInfo(sstring);
     void doWizlock(const char *);
     void doFlag(const char *);
     void doSystem(const sstring &);

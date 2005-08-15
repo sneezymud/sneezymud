@@ -563,7 +563,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
 
   num = pracsPerLevel(Class, forceBasic);
 
-  float temp = (int) num; // save for logging
+//  float temp = (int) num; // save for logging
   prac = (int) num;
   num = num - prac;
 
@@ -584,10 +584,11 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
     prac++;
   }
   
-  if(isPc()) {
+    // spammy with new functions
+/*  if(isPc()) {
     vlogf(LOG_DASH, fmt("%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d") %  getName() %
 	  prac % roll % (int)temp % num % getLevel(Class));
-  }
+  }*/
 
   return prac;
 }
@@ -705,6 +706,87 @@ void TBeing::dropLevel(classIndT Class)
     points.exp = 0;
 }
 
+sh_int TBeing::pracsSoFar(){
+  classIndT Class;
+  sh_int pracs = 0;
+  discNumT dnt;
+  CDiscipline *cd;
+  int learn, raiseBy;
+
+  for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+    if (!hasClass(1<<Class))
+      continue;
+    pracs += getPracs(Class);
+    for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
+      if (dnt == DISC_ADVENTURING || dnt == DISC_RITUALISM || dnt == DISC_WIZARDRY || dnt == DISC_FAITH)
+        continue;
+      cd = getDiscipline(dnt);
+      if (cd && (cd->getNatLearnedness() > 0)) {
+        learn = cd->getNatLearnedness();
+        cd->setLearnedness(0);
+        cd->setNatLearnedness(0);
+        while(cd->getNatLearnedness() < learn) {
+          raiseBy = calcRaiseDisc(dnt, FALSE);
+          cd->setLearnedness(cd->getLearnedness() + raiseBy);
+          cd->setNatLearnedness(cd->getNatLearnedness() + raiseBy);
+          pracs += 1;
+        }
+        // set it back
+        cd->setLearnedness(learn);
+        cd->setNatLearnedness(learn);
+        if (isPc() || desc)
+          affectTotal();
+      }
+    }  
+  }
+  return pracs;
+}
+
+sh_int TBeing::expectedPracs(){
+  int i, level;
+  double lvlStart, lvlEnd, fraction;
+  double pracs = 0;
+  classIndT Class;
+  
+  for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+    if (!hasClass(1<<Class))
+      continue;
+    player.doneBasic[Class] = 0;
+//    level = getLevel(Class);
+//    if(level>=MAX_MORT){
+      // for level 50's we need to calculate what level they would
+      // be
+      // arbitrarily cutting loop off at 127
+//      for(int i=50;i<127;++i){
+//      just do this for everyone so that it works on @set exp folks too
+      for(i=1;i<127;i++){
+        if(getExpClassLevel(Class,i) > getExp()){
+          level = i-1;
+          break;
+        }
+      }
+//    }
+    lvlStart = getExpClassLevel(Class,level);
+    lvlEnd = getExpClassLevel(Class,level+1);
+    fraction = (getExp()-lvlStart)/(lvlEnd-lvlStart);
+    vlogf(LOG_MAROR, fmt("level is %d") % level);
+    for (i = 0; i <= level; i++) {
+      if (pracs <= 200) {
+        if (i==level)
+          pracs += pracsPerLevel(Class, true)*fraction;
+        else
+          pracs += pracsPerLevel(Class, true);
+      } else {
+        if (i==level)
+          pracs += pracsPerLevel(Class, false)*fraction;
+        else
+          pracs += pracsPerLevel(Class, false);
+      }
+    }
+  }
+  return (sh_int) pracs;
+}
+
 // tForm == false = update title
 // tForm == true  = replace title
 void TPerson::setTitle(bool tForm)
@@ -764,6 +846,8 @@ void gain_exp(TBeing *ch, double gain, int dam)
   double newgain = 0;
   double oldcap = 0;
   bool been_here = false;
+  double j;
+  bool fae_reduction_done = false;
 
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA)) {
     // do nothing, these rooms safe
@@ -789,12 +873,12 @@ void gain_exp(TBeing *ch, double gain, int dam)
     gain *= 2;
   
   gain /= ch->howManyClasses();
-
+  
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
     if(!ch->getLevel(Class))
       continue;
 
-    const double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
+//    const double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
     const double peak = getExpClassLevel(Class,ch->getLevel(Class) + 1);
     const double curr = getExpClassLevel(Class,ch->getLevel(Class));
     const double gainmod = ((1.15*ch->getLevel(Class)) );
@@ -818,12 +902,18 @@ void gain_exp(TBeing *ch, double gain, int dam)
       if (gain < newgain)
 	newgain = gain;
       gain = newgain;
-    }
       
-// Fae touched characters gain xp at half the normal rate
-    if (ch->hasQuestBit(TOG_FAE_TOUCHED))
-      gain /= 2;
     
+    }
+    
+    // Fae touched characters gain xp at half the normal rate
+    // Leave this here, if it is moved up they will get more than half because
+    // the cap will be applied to a lower value
+    if (ch->hasQuestBit(TOG_FAE_TOUCHED) and !fae_reduction_done) {
+      fae_reduction_done = true; // only do this once (multis)
+      gain /= 2;
+    }
+
     // reset 50th levelers to 1bil exp if their Max Exp is unset (0)
     // : should never happen except for 1time conversion this also
     // verifies first timers get the practices they deserve - dash
@@ -844,65 +934,93 @@ void gain_exp(TBeing *ch, double gain, int dam)
       double t_exp=0;
       double new_exp = ch->getExp() + gain;
 
-      if(ch->getMaxExp() < peak){
-	// getting some exp in the current level
-	t_curr=curr;            // beginning of this level
-	t_peak=peak;            // end of this level
-	delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
-	exp = ch->getMaxExp();  // gain pracs only past this exp
-	new_exp = min(t_peak, ch->getExp() + gain);
 
-	// loop through this levels exp, stepping by the delta_exp, ie
-	// the amount needed for each practice.
-	for(t_exp=t_curr+delta_exp;t_exp<=new_exp && t_exp<=t_peak;t_exp+=delta_exp){
-	  // if this exp step is past our max exp and is under the exp
-	  // we've gained, then get a prac
-	  if(t_exp > exp && t_exp <= new_exp){
-	    vlogf(LOG_SILENT, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
-	    gain_pracs++;
-	  }
-	}
+//// BEGIN GAIN IN CURRENT LEVEL BLOCK
 
-	// crossing the threshold into the next level
-	if(new_exp >= peak){
-	  // roll for extra prac
-	  if(::number(1,(int)delta_exp) < (delta_exp - (t_peak - t_exp))){
-	    vlogf(LOG_SILENT, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp);
-	    gain_pracs++;
-	  }
-	}
-      }
+// do this step always - you are always gaining exp in the current level!
+//if(ch->getMaxExp() < peak)
+if (ch->getLevel(Class) < MAX_MORT)
+{
+  // getting some exp in the current level
+  t_curr=curr;            // beginning of this level
+  t_peak=peak;            // end of this level
+  delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
+  exp = ch->getMaxExp();  // gain pracs only past this exp
+  new_exp = min(t_peak, ch->getExp() + gain);
 
-      if(new_exp > peak){
-	// getting exp in the next level
+  // special case:  experience is higher than it should be
+  // happens with use of set command
+  if (ch->getMaxExp() > t_peak) {
+    vlogf(LOG_MAROR, fmt("%s has more experience than normal for level, gaining pracs for a whole level to make up for it.") % ch->getName());
+    exp = t_curr;
+  }
 
-	if(ch->getLevel(Class)>=MAX_MORT){
-	  // for level 50's we need to calculate what level they would
-	  // be with the exp they have and use that for peak and peak2
-	  // arbitrarily cutting loop off at 127
-	  for(int i=50;i<127;++i){
-	    if(getExpClassLevel(Class,i) > ch->getExp()){
-	      t_curr=getExpClassLevel(Class,i-1);
-	      t_peak=getExpClassLevel(Class,i);
-	      break;
-	    }
-	  }
-	} else {
-	  t_curr=peak;
-	  t_peak=peak2;
-	}
+  // loop through this levels exp, stepping by the delta_exp, ie
+  // the amount needed for each practice.
+  for(t_exp=t_curr+delta_exp;t_exp<=new_exp && t_exp<=t_peak;t_exp+=delta_exp){
+    // if this exp step is past our max exp and is under the exp
+    // we've gained, then get a prac
+    if(t_exp > exp && t_exp <= new_exp){
+      vlogf(LOG_SILENT, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
+      gain_pracs++;
+    }
+  }
 
-	delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
-	exp = max(ch->getMaxExp(),t_curr+1);
-	new_exp = ch->getExp() + gain;
+  vlogf(LOG_MAROR, fmt("delta_exp %f t_peak %f t_exp %f")
+      % delta_exp % t_peak % t_exp);
+  // crossing the threshold into the next level
+  if(new_exp >= peak){ // peak is the amount of exp required to level
+    // roll for extra prac
+    double overshoot = t_exp-t_peak; // amount of delta that is not part of this level
+    if(::number(1,(int)delta_exp) < (delta_exp - overshoot)){
+      vlogf(LOG_SILENT, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, overshoot=%f") 
+          %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % overshoot);
+      gain_pracs++;
+    }
+  }
+}
 
-	for(double j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
-	  if(j > exp && j < new_exp){
-	    vlogf(LOG_SILENT, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
-	    gain_pracs++;
-	  }
-	}
-      }
+//// BEGIN GAIN IN NEXT LEVEL BLOCK
+
+//if(new_exp > peak)
+else
+{ 
+  // peak is the amount of exp required to level
+  // (if someone's experience is set high you go through this)
+
+//  if(ch->getLevel(Class)>=MAX_MORT) {
+  // for level 50's we need to calculate what level they would
+  // be with the exp they have and use that for peak and peak2
+  // arbitrarily cutting loop off at 127
+  for(int i=MAX_MORT;i<127;++i){
+    if(getExpClassLevel(Class,i) > ch->getExp()){
+      t_curr=getExpClassLevel(Class,i-1);
+      t_peak=getExpClassLevel(Class,i);
+      break;
+    }
+  }
+//  } else {
+//    t_curr=peak;
+//    t_peak=peak2;
+//  }
+
+  delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
+  // max to min
+  //  if (ch->getLevel(Class) >= MAX_MORT)
+  exp = ch->getMaxExp(); // setting min exp required to get a prac in this level, for the loop
+  vlogf(LOG_MAROR, fmt("start gaining exp at %f exp") % exp);
+  new_exp = ch->getExp() + gain; // setting bumped exp from xp gain
+  for(j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
+    if(j > exp && j < new_exp){
+      vlogf(LOG_SILENT, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, j=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % j); ;
+      gain_pracs++;
+    }
+  }
+
+}
+
+
+//// ADD PRACTICES
 
       if(gain_pracs > 0){
 	ch->addPracs(gain_pracs, Class);
@@ -913,13 +1031,20 @@ void gain_exp(TBeing *ch, double gain, int dam)
 		     gain_pracs);
 	}
       }
-    }
 
+  }
 
+//// GAIN A LEVEL
+
+   // (the function is sometimes called with zero damage, should not gain experience in these cases, and therefore no level)
     // check for level gain
     // do this last, so as not to mess up predefined values
-    if ((ch->getExp() >= peak) &&
-	(ch->GetMaxLevel() < MAX_MORT)) {
+  if (gain  > 0) {
+    vlogf(LOG_MAROR, fmt("getExp %f gain %f peak %f getMaxExp %f")
+      % ch->getExp() % gain % peak % ch->getMaxExp());
+    ch->addToExp(gain);
+    if ((ch->getExp() >= peak) && (ch->getExp() >= ch->getMaxExp()) &&
+      (ch->GetMaxLevel() < MAX_MORT)) {
       TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
       ch->raiseLevel(Class);
@@ -929,17 +1054,16 @@ void gain_exp(TBeing *ch, double gain, int dam)
         tPerson->setSelectToggles(NULL, Class, SILENT_YES);
 
       if(ch->hasClass(CLASS_MONK))
-	ch->remQuestBit(TOG_MONK_PAID_TABUDA);
+        ch->remQuestBit(TOG_MONK_PAID_TABUDA);
     }
   }
 
-  ch->addToExp(gain);
-
+}
 
   // update max exp
   if(ch->getExp() > ch->getMaxExp())
     ch->setMaxExp(ch->getExp());
-
+  
 }
 
 void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *cont) 

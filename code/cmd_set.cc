@@ -650,6 +650,33 @@ mob->getName());
           mob->setLevel(classIndT(parm2), parm);
           mob->calcMaxLevel();
           sendTo(COLOR_MOBS, fmt("Setting char %s to level %d in class %s.\n\r") % mob->getName() % parm % classInfo[parm2].name);
+
+          
+          mob->setExp(1+getExpClassLevel(classIndT(parm2), parm));
+          mob->setMaxExp(1+getExpClassLevel(classIndT(parm2), parm));
+          sendTo(COLOR_MOBS, fmt("Setting experience to %.1f.\n\r") %
+              mob->getExp());
+          int oldPracs = mob->practices.prac[parm2];
+          // set to zero then recover as necessary
+          mob->practices.prac[parm2] = 0;
+          int expectedPracs = mob->expectedPracs();
+          int actualPracs = 0;
+          for (int j=0;j<10;j++)
+            actualPracs += mob->pracsSoFar();
+          actualPracs /= 10; // taking a mean to get a better number
+          int extraPracs = max(0,expectedPracs-actualPracs);
+          mob->practices.prac[parm2] = (sh_int) extraPracs;
+          sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
+              % mob->getName() % mob->practices.prac[parm2] % 
+              oldPracs % classInfo[parm2].name);
+          actualPracs = 0;
+          for (int j=0;j<10;j++)
+            actualPracs += mob->pracsSoFar();
+          actualPracs /= 10; // taking a mean to get a better number
+          if (expectedPracs-actualPracs < 0)
+            sendTo(COLOR_MOBS, fmt("Char %s has %d pracs more than expected for level %d.\n\r") %
+                mob->getName() % (actualPracs-expectedPracs) % parm);
+
         }
       } else {
         if (parm > MAX_MORT) {
@@ -660,6 +687,33 @@ mob->getName());
           mob->setLevel(classIndT(parm2), parm);
           mob->calcMaxLevel();
           sendTo(COLOR_MOBS, fmt("Setting char %s to level %d in class %s.\n\r") % mob->getName() % parm % classInfo[parm2].name);
+
+          mob->setExp(1+getExpClassLevel(classIndT(parm2), parm));
+          mob->setMaxExp(1+getExpClassLevel(classIndT(parm2), parm));
+          sendTo(COLOR_MOBS, fmt("Setting experience to %.1f.\n\r") %
+              mob->getExp());
+          int oldPracs = mob->practices.prac[parm2];
+          // set to zero then recover as necessary
+          mob->practices.prac[parm2] = 0;
+          int expectedPracs = mob->expectedPracs();
+          int actualPracs = 0;
+          for (int j=0;j<10;j++)
+            actualPracs += mob->pracsSoFar();
+          actualPracs /= 10; // taking a mean to get a better number
+          int extraPracs = max(0,expectedPracs-actualPracs);
+          mob->practices.prac[parm2] = (sh_int) extraPracs;
+          sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
+              % mob->getName() % mob->practices.prac[parm2] % 
+              oldPracs % classInfo[parm2].name);
+          actualPracs = 0;
+          for (int j=0;j<10;j++)
+            actualPracs += mob->pracsSoFar();
+          actualPracs /= 10; // taking a mean to get a better number
+          if (expectedPracs-actualPracs < 0)
+            sendTo(COLOR_MOBS, fmt("Char %s has %d pracs more than expected for level %d.\n\r") %
+                mob->getName() % (actualPracs-expectedPracs) % parm);
+
+
         }
       }
     } else {

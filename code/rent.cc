@@ -2312,6 +2312,7 @@ void TPerson::loadRent()
   TPerson *tmp;
   sstring lbuf;
   ItemLoad il;
+  int j, actual = 0;
 
   if (desc && desc->original)
     tmp = desc->original;
@@ -2329,8 +2330,15 @@ void TPerson::loadRent()
   if(!il.openFile(buf)){
     if (should_be_logged(this)) {
       vlogf(LOG_PIO, fmt("%s has no equipment.") %  getName());
-      vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent]") %  
-         getName() % getMoney() % getBank() % getExp() % age_mod);
+
+      actual = 0;
+      for (j=0;j<10;j++)
+        actual += pracsSoFar();
+      actual /= 10;
+  
+      vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %  
+         getName() % getMoney() % getBank() % getExp() % age_mod %
+         (actual-expectedPracs()) % actual % expectedPracs());
     }
     return;
   }
@@ -2472,9 +2480,15 @@ void TPerson::loadRent()
       }
     }
   }
-  vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
+  actual = 0;
+  for (j=0;j<10;j++)
+    actual += pracsSoFar();
+  actual /= 10;
+    
+  vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
        getName() % getMoney() % getBank() % getExp() % il.st.number % 
-       age_mod % il.st.total_cost);
+       age_mod % il.st.total_cost % (actual - expectedPracs()) % 
+       actual % expectedPracs());
 
   // silly kludge
   // because of the way the "stuff" list is saved, it essentially reverses

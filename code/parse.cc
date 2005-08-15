@@ -1464,6 +1464,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	doFish(newarg);
 	addToLifeforce(1);
 	break;
+      case CMD_PRAC_INFO:
+  doPracInfo(newarg);
+  break;
       case CMD_LOW:
 	doLow(newarg);
 	break;
@@ -2029,27 +2032,18 @@ bool is_number(const sstring &str)
 
 const char *one_argument(const char *argument, char *first_arg)
 {
-  char * temp;
+ // char * temp;
   sstring s;
   sstring tmp_fa;
   try {
-    s = one_argument(argument, tmp_fa);
+    s = one_argument(sstring(argument), tmp_fa);
     strcpy(first_arg, tmp_fa.c_str());
   
     // we should return a pointer into argument equivalent to s.c_str
     if (s.empty())
       return &argument[strlen(argument)];  // return pointer to the NULL
     else {
-#if 0
-      // has problems with " 50 5"
-      return strstr(argument, s.c_str());
-#else
-      // start looking at the spot denoted by "first_arg", for "s"
-      temp = strstr(argument, first_arg);
-      return strstr(temp, s.c_str());
-//    return strstr(strstr(argument, first_arg), s.c_str());
-//  COSMO STRING FIX 2/9/01
-#endif
+     return strstr(argument+strlen(first_arg), s.c_str());
     }
   } catch (...) {
     mud_assert(0, "Bat's expirimental code don't work - exception caught");
@@ -2092,7 +2086,6 @@ sstring one_argument(sstring argument, sstring & first_arg)
     a2 = argument.substr(bgin);
     argument = a2;
   }
-
   return argument;
 }
 
@@ -2603,6 +2596,7 @@ void buildCommandArray(void)
   commandArray[CMD_PIMP] = new commandInfo("pimp", POSITION_STANDING, 0);
   commandArray[CMD_LIGHT] = new commandInfo("light", POSITION_RESTING, 0);
   commandArray[CMD_FISH] = new commandInfo("fish", POSITION_RESTING, 0);
+  commandArray[CMD_PRAC_INFO] = new commandInfo("pracinfo", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_BELITTLE] = new commandInfo("belittle", POSITION_RESTING, 0);
   commandArray[CMD_PILEDRIVE]=new commandInfo("piledrive",POSITION_STANDING, 0);
   commandArray[CMD_TAP] = new commandInfo("tap", POSITION_CRAWLING, 0);
