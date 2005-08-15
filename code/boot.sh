@@ -18,9 +18,14 @@ case $USER in
     ;;
 esac
 
+if [ "$2" = "beta" ]
+then
+  PORT=5678;
+fi
+
 if [ "$1" = "" ]
 then
-  echo "Usage: $0 <start|stop>";
+  echo "Usage: $0 <start|stop> <beta (optional)>";
 elif [ "$1" = "start" ]
 then
   pid=$(pgrep -U $USER -f "sneezy $PORT")
