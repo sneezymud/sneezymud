@@ -3385,7 +3385,8 @@ objs/cmd_egotrip.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_egotrip.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/cmd_egotrip.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/cmd_egotrip.o: format.h disc_shaman.h disc_shaman_healing.h disc_fire.h
-objs/cmd_egotrip.o: disc_wrath.h disc_aegis.h obj_portal.h obj_seethru.h
+objs/cmd_egotrip.o: disc_wrath.h disc_aegis.h disc_spirit.h obj_portal.h
+objs/cmd_egotrip.o: obj_seethru.h
 objs/cmd_feigndeath.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_feigndeath.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_feigndeath.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17919,6 +17920,7 @@ objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
 objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
 objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
+objs/inventory.o: obj_potion.h obj_base_cup.h
 objs/limbs.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/limbs.o: /usr/include/c++/3.4/bits/c++config.h
 objs/limbs.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40312,7 +40314,7 @@ objs/structs.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/structs.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
 objs/structs.o: obj_table.h obj_seethru.h cmd_trophy.h obj_open_container.h
 objs/structs.o: obj_component.h obj_tooth_necklace.h
-objs/structs.o: obj_expandable_container.h
+objs/structs.o: obj_expandable_container.h obj_potion.h obj_base_cup.h
 objs/sys_loot.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sys_loot.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sys_loot.o: /usr/include/c++/3.4/bits/os_defines.h
