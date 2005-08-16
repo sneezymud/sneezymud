@@ -3183,7 +3183,7 @@ void printLimitedInRent(void)
             obj_index[i].max_exist, obj_index[i].getNumber());
 	// these have to be lower case
         // autoMail(NULL, "jesus", buf);
-        autoMail(NULL, "damescena", buf);
+        // autoMail(NULL, "damescena", buf);
 
       }
     }
