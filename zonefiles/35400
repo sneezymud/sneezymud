@@ -252,6 +252,21 @@ M 0 35421 1 35472       Freyda
 M 0 35419 1 35472       Frit
 M 0 35420 1 35473       Greta
 M 0 35413 1 35474       Elayda
+M 0 35431 1 35449       Harry Tinyturnips
+? 0 2 0 E
+E 1 35486 4 18
+? 0 50 0 G
+G 1 35485 1
+? 0 50 0 G
+G 1 35499 1
+? 0 75 0 G
+G 1 33600 1
+? 0 75 0 G
+G 1 33600 1
+? 0 50 0 G
+G 1 35499 1
+? 0 50 0 G
+G 1 35485 1
 M 0 35428 1 35475       the captain of the guard
 ? 0 2 0 E
 E 1 35413 4 18            a topaz warhammer [hold-right]
