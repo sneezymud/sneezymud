@@ -56,6 +56,7 @@
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_tool.h"
+#include "obj_plant.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -5357,7 +5358,7 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
   else
     REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
 
-  if(::number(0,149))
+  if(::number(0,100))
     return FALSE;
 
   for(TThing *t=mob->getStuff();t;t=t->nextThing){
@@ -5369,6 +5370,18 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
   }
   if(!tool)
     return FALSE;
+  TThing *tcount;
+  int count;
+  for (tcount = mob->roomp->getStuff(), count=0; tcount; tcount = tcount->nextThing) {
+    if (dynamic_cast<TPlant *>(tcount))
+      ++count;
+  }
+  if (count >= 8) {
+    REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
+    mob->doAction("", CMD_GRUMBLE);
+    return FALSE;
+  }
+
   
   // don't wander around while planting
   SET_BIT(mob->specials.act, ACT_SENTINEL);
