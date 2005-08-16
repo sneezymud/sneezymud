@@ -229,14 +229,20 @@ void TBeing::doEgoTrip(const char *arg)
       ch->sendTo(fmt("%s has given you extra speed in your movements.\n\r") %
             sstring(ch->pers(this)).cap());
 #endif
-      affectedData aff;
-      aff.type = SPELL_HASTE;
-      aff.level = 25; // made it lower level to reduce duration
-      aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
-      aff.modifier = 0;
-      aff.location = APPLY_NONE;
-      aff.bitvector = 0;
-      ch->affectTo(&aff);
+      // this check to avoid stacking haste
+      if (ch->affectedBySpell(SPELL_HASTE)) {
+	ch->sendTo(fmt("%s's attempt to grant you haste fails!\n\r") % sstring(ch->pers(this)).cap());
+      } else {
+	ch->sendTo(fmt("%s has given you the speed of the wind!\n\r") % sstring(ch->pers(this)).cap());
+	affectedData aff;
+	aff.type = SPELL_HASTE;
+        aff.level = 25; // made it lower level to reduce duration
+        aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+        aff.modifier = 0;
+        aff.location = APPLY_NONE;
+        aff.bitvector = 0;
+        ch->affectTo(&aff);
+      }
     }
     return;
   } else if (is_abbrev(argument, "enliven")) {
