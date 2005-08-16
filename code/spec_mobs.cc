@@ -6433,6 +6433,22 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   return TRUE;
 }
 
+int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *) {
+  TBeing *vict;
+  if (!ch->fight())
+    return FALSE;
+  vict = ch->fight();
+  
+  if (number(0,10) > 7) {
+    act("$n darts directly toward your head!",TRUE,ch,NULL,vict,TO_VICT,NULL);  
+    act("$n misses and smacks into the ground.",TRUE,ch,NULL,vict,TO_VICT,NULL);
+    act("$n flies directly at $N's head, misses, and smacks into the ground.",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
+    act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_ROOM,NULL);
+    act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_CHAR,NULL);  
+    ch->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
+  }
+  return TRUE;
+}
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
 extern int janitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6710,7 +6726,8 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "butler", receptionist},
   {FALSE, "leper hunter", leperHunter},
   {FALSE, "auctioneer", auctioneer},
-  {FALSE, "loan manager", loanManager}
+  {FALSE, "loan manager", loanManager},
+  {TRUE, "bee death", beeDeath}
 // replace non-zero, bogus_mob_procs above before adding
 };
 

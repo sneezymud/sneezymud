@@ -188,7 +188,8 @@ const int SPEC_BUTLER             =201;
 const int SPEC_LEPER_HUNTER       =202;
 const int SPEC_AUCTIONEER         =203;
 const int SPEC_LOAN_MANAGER       =204;
-const int NUM_MOB_SPECIALS        =204;
+const int SPEC_BEE_DEATH          =205;
+const int NUM_MOB_SPECIALS        =205;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
