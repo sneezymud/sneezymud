@@ -16,6 +16,7 @@ enum drugTypeT {
      DRUG_NONE,
      DRUG_PIPEWEED,
      DRUG_OPIUM,
+     DRUG_POT,
      MAX_DRUG
 };
 const drugTypeT MIN_DRUG = drugTypeT(1);

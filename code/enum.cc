@@ -1323,6 +1323,8 @@ int mapDrugToFile(drugTypeT d)
       return 1;
     case DRUG_OPIUM:
       return 2;
+    case DRUG_POT:
+      return 3;
     case MAX_DRUG:
       break;
   }
@@ -1339,6 +1341,8 @@ drugTypeT mapFileToDrug(int d)
       return DRUG_PIPEWEED;
     case 2:
       return DRUG_OPIUM;
+    case 3:
+      return DRUG_POT;
     default:
       break;
   }
