@@ -181,7 +181,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           act("You chop at the tree with your $o.",
                     FALSE, ch, tool, 0, TO_CHAR);
           act("$n chops at a tree with $s $o.",
-                    TRUE, ch, NULL, 0, TO_ROOM);
+                    TRUE, ch, tool, 0, TO_ROOM);
           if (!::number(0,3)) {
             if (tool->getCurSharp() > 1)
               tool->addToCurSharp(-1);
