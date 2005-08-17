@@ -151,6 +151,15 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 	act("$n delivers $p to $N.",
 	    FALSE, me, obj, tm, TO_ROOM);
 	delete obj;
+	if (!::number(0,2)) {
+	  TObj *o2;
+	  o2=read_object(33601, VIRTUAL);
+	  *me += *o2;
+	  me->doSay("You can go ahead and pay me later...");
+	  me->doGive(tm,o2,GIVE_FLAG_IGN_DEX_TEXT);
+	  me->doAction("", CMD_LICK);
+	  me->doAction(add_bars(tm->name), CMD_WINK);
+	}
 	break;
       }
     }
