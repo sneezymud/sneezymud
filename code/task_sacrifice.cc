@@ -31,7 +31,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     vlogf(LOG_BUG,
         fmt("task_sacrifice.cc: sacrifice task entered by %s without a corpse!") 
         % ch->getName());
-    return FALSE;
+    return TRUE;
   }
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || 
@@ -41,7 +41,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return FALSE;
+    return TRUE;
   }
 
   if (!(t = get_thing_char_using(ch, "totem", 0, FALSE, FALSE)) || 
@@ -50,7 +50,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return FALSE;
+    return TRUE;
   }
 
   for (t = ch->roomp->getStuff(); t; t = t2) {
@@ -82,22 +82,23 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return FALSE;
+    return TRUE;
   }
 
   if (ch->task->timeLeft < 0){
     act("You have completed the sacrifice of $p.", 
         FALSE, ch, corpse, 0, TO_CHAR);
     act("$n has completed $s ritual sacrifice of $p.", 
-        FALSE, ch, corpse, 0, TO_ROOM);
+        TRUE, ch, corpse, 0, TO_ROOM);
     act("Some <r>blood<z> from $p has been left behind.", 
         FALSE, ch, corpse, 0, TO_ROOM);
     act("Some <r>blood<z> from $p has been left behind for the dogs!", 
-        FALSE, ch, corpse, 0, TO_CHAR);
+        TRUE, ch, corpse, 0, TO_CHAR);
     ch->dropPool(1, LIQ_BLOOD);
     ch->stopTask();
     delete corpse;
-    return FALSE;
+    corpse = NULL;
+    return TRUE;
   }
 
   switch (cmd) {
@@ -124,12 +125,13 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       if (totem->getToolUses() <= 0) {
         act("Your $o has been confiscated by the loa! It must have been too weak.", 
             FALSE, ch, totem, 0, TO_CHAR);
-        act("$n looks pale as $s $o shatters.", FALSE, ch, totem, 0, TO_ROOM);
+        act("$n looks pale as $s $o shatters.", TRUE, ch, totem, 0, TO_ROOM);
         ch->stopTask();
         delete totem;
+        totem = NULL;
         if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
           corpse->remCorpseFlag(CORPSE_SACRIFICE);
-        return FALSE;
+        return TRUE;
       }
       if (10 >= corpse->obj_flags.decay_time)
         corpse->obj_flags.decay_time = 10;
@@ -155,17 +157,19 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 	        act("You continue to sing the rada song over $p.", 
               FALSE, ch, corpse, 0, TO_CHAR);
 	        act("$n's ritual sacrifice causes $p's face to glow <G>pale green<1>.", 
-              FALSE, ch, corpse, 0, TO_ROOM);
+              TRUE, ch, corpse, 0, TO_ROOM);
           if (ch->bSuccess(learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
         case -1:
           act("You feel the loa ignoring your vain attempt and feel completed to stop.",
               false, ch, 0, 0, TO_CHAR);
+          act("$n has stopped $s ritual sacrifice of $p.", 
+              TRUE, ch, corpse, 0, TO_ROOM);
           ch->stopTask();
           if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
             corpse->remCorpseFlag(CORPSE_SACRIFICE);
-	  break;
+          break;
         default:
           // BUG - somehow you land here if you run your life force down
           // when sacrificing and the loa forces you to stop
@@ -183,19 +187,23 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       // don't put a break in here
     case CMD_ABORT:
     case CMD_STOP:
+      act("You stop your sacrifice of $p.", 
+          FALSE, ch, corpse, 0, TO_CHAR);
+      act("$n has stopped $s ritual sacrifice of $p.", 
+          TRUE, ch, corpse, 0, TO_ROOM);
       act("Some <r>blood<z> from $p has been left behind.", 
           FALSE, ch, corpse, 0, TO_ROOM);
       act("Some <r>blood<z> from $p has been left behind for the dogs!", 
-          FALSE, ch, corpse, 0, TO_CHAR);
+          TRUE, ch, corpse, 0, TO_CHAR);
       ch->dropPool(1, LIQ_BLOOD);
       ch->stopTask();
       delete corpse;
-      return FALSE;
+      corpse = NULL;
       break;
     default:
       if (cmd < MAX_CMD_LIST) {
         ch->addToLifeforce(-factor * 2);
-        ch->sendTo("The loa are upset with your flagrant disregard for the houngan ways and punishes you!\n\r");
+        ch->sendTo("The loa are upset with your flagrant disregard for the houngan ways and punish you!\n\r");
       }
 
       warn_busy(ch);
