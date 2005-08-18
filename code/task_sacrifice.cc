@@ -120,7 +120,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         }
       }
 
-      ch->task->calcNextUpdate(pulse, 2);
+      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
       totem->addToToolUses(-1);
       if (totem->getToolUses() <= 0) {
         act("Your $o has been confiscated by the loa! It must have been too weak.", 
