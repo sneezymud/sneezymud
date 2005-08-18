@@ -233,7 +233,7 @@ NODE *read_room(FILE *tiny){
     }
     
     fscanf(tiny, "%i", &tmp->num);
-  } while(!isEnabled(tmp->num));
+  } while(isEnabled(tmp->num));
 
   
 
