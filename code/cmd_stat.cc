@@ -14,8 +14,7 @@ extern int baseHp();
 extern float classHpPerLevel(const TPerson *);
 extern int ageHpMod(const TPerson *);
 
-
-void TBeing::statZone(const char *zoneNumber)
+void TBeing::statZone(const sstring &zoneNumber)
 {
   int zNum,
     cnDesc[3]  = {0, 0, 0},
@@ -24,20 +23,19 @@ void TBeing::statZone(const char *zoneNumber)
     cnFlags[7] = {0, 0, 0, 0, 0, 0, 0},
     rzCount    = 0;
   sstring sb("");
-  unsigned long int rNums[2] = {0, 0},
-                    Runner = 0;
-  char tString[256];
+  unsigned long int rNums[2] = {0, 0}, Runner = 0;
   TRoom *curRoomCntr;
 
-  if (!zoneNumber || !*zoneNumber) {
+  if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
 
     zNum = roomp->getZoneNum();
-  } else
+  } else {
     zNum = convertTo<int>(zoneNumber);
+  }
 
   if (zNum < 0 || zNum >= (signed int) zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
@@ -50,9 +48,8 @@ void TBeing::statZone(const char *zoneNumber)
   rNums[1] = zne.top;
 
   sb += "Basic Information:\n\r--------------------\n\r";
-  sprintf(tString, "Zone Num: %3d     Active: %s\n\r",
-          zNum, (zne.enabled ? "Enabled" : "Disabled"));
-  sb += tString;
+  sb += fmt("Zone Num: %3d     Active: %s\n\r") %
+    zNum % (zne.enabled ? "Enabled" : "Disabled");
 
   for (; Runner < (rNums[1] + 1); Runner++)
     if ((curRoomCntr = real_roomp(Runner))) {
@@ -61,20 +58,25 @@ void TBeing::statZone(const char *zoneNumber)
       if (curRoomCntr->getDescr()) {// Count Descriptions
         cnDesc[0]++;
 
-        if (!strncmp(curRoomCntr->getDescr(), "Empty", 5))
+        if (!strncmp(curRoomCntr->getDescr(), "Empty", 5)) {
           cnDesc[2]++;
-      } else
+        }
+      } else {
         cnDesc[1]++;
+      }
 
       if (curRoomCntr->name) {// Count Titles
+        sstring tString;
+
         cnTitle[0]++;
+        tString = fmt("%d") % curRoomCntr->number;
 
-        sprintf(tString, "%d", curRoomCntr->number);
-
-        if (strstr(curRoomCntr->name, tString))
+        if (tString.find(curRoomCntr->name) != sstring::npos) {
           cnTitle[2]++;
-      } else
+        }
+      } else {
         cnTitle[1]++;
+      }
 
       if (curRoomCntr->ex_description)// Count Rooms with extra descriptions
         cnExtra[0]++;
@@ -98,47 +100,37 @@ void TBeing::statZone(const char *zoneNumber)
         cnFlags[6]++;
     }
 
-  sprintf(tString, "S-Room: %5lu     E-Room: %5lu     Total:(%lu/%d)\n\r",
-          rNums[0], rNums[1], (rNums[1] - rNums[0] + 1), rzCount);
-  sb += tString;
+  sb += fmt("S-Room: %5lu     E-Room: %5lu     Total:(%lu/%d)\n\r") %
+    rNums[0] % rNums[1] % (rNums[1] - rNums[0] + 1) % rzCount;
   sb += "Key Information:\n\r--------------------\n\r";
-  sprintf(tString, "DescrCount: %3d     NoDescr: %3d     InDescr: %3d\n\r",
-          cnDesc[0], cnDesc[1], cnDesc[2]);
-  sb += tString;
-  sprintf(tString, "TitleCount: %3d     NoTitle: %3d     InTitle: %3d\n\r",
-          cnTitle[0], cnTitle[1], cnTitle[2]);
-  sb += tString;
-  sprintf(tString, "ExtraCount: %3d     NoExtra: %3d     (Room Counts)\n\r",
-          cnExtra[0], cnExtra[1]);
-  sb += tString;
+  sb += fmt("DescrCount: %3d     NoDescr: %3d     InDescr: %3d\n\r") %
+    cnDesc[0] % cnDesc[1] % cnDesc[2];
+  sb += fmt("TitleCount: %3d     NoTitle: %3d     InTitle: %3d\n\r") %
+    cnTitle[0] % cnTitle[1] % cnTitle[2];
+  sb += fmt("ExtraCount: %3d     NoExtra: %3d     (Room Counts)\n\r") %
+    cnExtra[0] % cnExtra[1];
   sb += "Key Flags:\n\r--------------------\n\r";
   if (cnFlags[0]) {
-    sprintf(tString, "Death-Rooms: %3d\n\r", cnFlags[0]);
-    sb += tString;
+    sb += fmt("Death-Rooms: %3d\n\r") % cnFlags[0];
   }
   if (cnFlags[1]) {
-    sprintf(tString, "No-Flee    : %3d\n\r", cnFlags[1]);
-    sb += tString;
+    sb += fmt("No-Flee    : %3d\n\r") % cnFlags[1];
   }
   if (cnFlags[2]) {
-    sprintf(tString, "Peaceful   : %3d\n\r", cnFlags[2]);
-    sb += tString;
+    sb += fmt("Peaceful   : %3d\n\r") % cnFlags[2];
   }
   if (cnFlags[3]) {
-    sprintf(tString, "No-Heal    : %3d\n\r", cnFlags[3]);
-    sb += tString;
+    sb += fmt("No-Heal    : %3d\n\r") % cnFlags[3];
   }
   if (cnFlags[6]) {
-    sprintf(tString, "...CRITICAL: +Peaceful !No-Heal: %3d\n\r", cnFlags[6]);
-    sb += tString;
+    sb += fmt("...CRITICAL: +Peaceful !No-Heal: %3d\n\r") % cnFlags[6];
   }
   if (cnFlags[4]) {
-    sprintf(tString, "Save-Room%c : %3d\n\r", (cnFlags[4] > 1 ? 's' : ' '), cnFlags[4]);
-    sb += tString;
+    sb += fmt("Save-Room%c : %3d\n\r") %
+      (cnFlags[4] > 1 ? 's' : ' ') % cnFlags[4];
   }
   if (cnFlags[5]) {
-    sprintf(tString, "Indoors    : %3d\n\r", cnFlags[5]);
-    sb += tString;
+    sb += fmt("Indoors    : %3d\n\r") % cnFlags[5];
   }
 
   desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -148,8 +140,7 @@ void TBeing::statRoom(TRoom *rmp)
 {
   sstring str;
   sstring tmp_str;
-  sstring buf2;
-  char buf3[80], buf4[80];
+  sstring buf2, buf3, buf4;
   extraDescription *e;
   TThing *t;
   int counter = 0, volume;
@@ -160,28 +151,33 @@ void TBeing::statRoom(TRoom *rmp)
   }
 
 
-  str = fmt("Room name: %s, Of zone : %d. V-Number : %d, R-number : %d\n\r") %
-    rmp->name % rmp->getZoneNum() % rmp->number % in_room;
+  str = fmt("%sRoom name:%s %s, %sOf zone:%s %d. %sV-Number:%s %d, %sR-number:%s %d\n\r") %
+    cyan() % norm() % rmp->name %
+    cyan() % norm() % rmp->getZoneNum() %
+    cyan() % norm() % rmp->number %
+    cyan() % norm() % in_room;
 
-  str += fmt("Room Coords: %d, %d, %d\n\r") %
+  str += fmt("%sRoom Coords:%s %d, %d, %d\n\r") %
+    cyan() % norm() %
     rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
 
-  str += fmt("Sector type : %s ") % TerrainInfo[rmp->getSectorType()]->name;
+  str += fmt("%sSector type:%s %s") %
+    cyan() % norm() % TerrainInfo[rmp->getSectorType()]->name;
 
-  str += "Special procedure : ";
+  str += fmt("  %sSpecial procedure:%s ") % cyan() % norm();
 
   str += fmt("%s") % ((rmp->funct) ? "Exists\n\r" : "No\n\r");
 
-  str += "Room flags: ";
+  str += fmt("%sRoom flags:%s ") % cyan() % norm();
 
-  str += sprintbit((long) rmp->getRoomFlags(), room_bits);;
+  str += sprintbit((long) rmp->getRoomFlags(), room_bits);
   str += "\n\r";
 
-  str += "Room flag bit vector: ";
+  str += fmt("%sRoom flag bit vector:%s ") % cyan() % norm();
 
   str += fmt("%d\n\r") % ((unsigned int) rmp->getRoomFlags());
 
-  str += "Description:\n\r";
+  str += fmt("%sDescription:%s\n\r") % cyan() % norm();
   tmp_str = rmp->getDescr();
   if (tmp_str.empty()) {
     str += "NO DESCRIPTION\n\r";
@@ -189,7 +185,7 @@ void TBeing::statRoom(TRoom *rmp)
     str += tmp_str.toCRLF();
   }
 
-  str += "Extra description keywords(s): ";
+  str += fmt("%sExtra description keywords(s):%s") % cyan() % norm();
   if (rmp->ex_description) {
     str += "\n\r";
     for (e = rmp->ex_description; e; e = e->next) {
@@ -198,38 +194,42 @@ void TBeing::statRoom(TRoom *rmp)
     }
     str += "\n\r";
   } else {
-    str += "None.\n\r";
+    str += " NONE\n\r";
   }
 
-  sprintf(buf3, "%d", rmp->getRoomHeight());
-  sprintf(buf4, "%d", rmp->getMoblim());
-  str += fmt("Light : %d   Room Height : %s    Maximum capacity : %s\n\r") %
-    rmp->getLight() %
-    ((rmp->getRoomHeight() <= 0) ? "unlimited" : buf3) %
-    ((rmp->getMoblim()) ? buf4 : "Infinite");
+  buf3 = fmt("%d") % rmp->getRoomHeight();
+  buf4 = fmt("%d") % rmp->getMoblim();
+  str += fmt("%sLight:%s %d   %sRoom Height:%s %s    %sMaximum capacity:%s %s\n\r") %
+    cyan() % norm() % rmp->getLight() %
+    cyan() % norm() % ((rmp->getRoomHeight() <= 0) ? "Unlimited" : buf3) %
+    cyan() % norm() % ((rmp->getMoblim()) ? buf4 : "Infinite");
 
   if (rmp->isWaterSector() || rmp->isUnderwaterSector()) {
-    str += fmt("River direction : %s") % 
+    str += fmt("%sRiver direction:%s %s") % 
+      cyan() % norm() %
       ((rmp->getRiverDir() < 0) ? "None" : dirs[rmp->getRiverDir()]);
 
+    str += fmt("   %sRiver speed:%s ") % cyan() % norm();
     if (rmp->getRiverSpeed() >= 1)
-      str += fmt("   River speed : Every %d heartbeat%s\n\r") %
+      str += fmt("Every %d heartbeat%s\n\r") %
 	rmp->getRiverSpeed() % ((rmp->getRiverSpeed() != 1) ? "s." : ".");
     else
-      str += fmt("   River speed : no current.\n\r");
+      str += fmt("no current.\n\r");
 
-    str += fmt("Fish caught : %i\n\r") % rmp->getFished();
+    str += fmt("%sFish caught:%s %i\n\r") %
+      cyan() % norm() % rmp->getFished();
 
   }
   if (rmp->isForestSector())
-    str += fmt("Number of logs harvested : %i\n\r")
+    str += fmt("Number of logs harvested: %i\n\r")
       % rmp->getLogsHarvested();
   if ((rmp->getTeleTarg() > 0) && (rmp->getTeleTime() > 0)) {
-    str += fmt("Teleport speed : Every %d heartbeats. To room : %d. Look? %s.\n\r") %
-      rmp->getTeleTime() % rmp->getTeleTarg() %
-      (rmp->getTeleLook() ? "yes" : "no");
+    str += fmt("%sTeleport speed:%s Every %d heartbeats.  %sTo room:%s %d  %sLook?%s %s.\n\r") %
+      cyan() % norm() % rmp->getTeleTime() %
+      cyan() % norm() % rmp->getTeleTarg() %
+      cyan() % norm() % (rmp->getTeleLook() ? "yes" : "no");
   }
-  str += "------- Chars present -------\n\r";
+  str += fmt("%s------- Chars present -------%s\n\r") % cyan() % norm();
   counter = 0;
   for (t = rmp->getStuff(); t; t = t->nextThing) {
     // canSee prevents seeing invis gods of higher level
@@ -245,7 +245,7 @@ void TBeing::statRoom(TRoom *rmp)
       }
     }
   }
-  str += "--------- Born Here ---------\n\r";
+  str += fmt("%s--------- Born Here ---------%s\n\r") % cyan() % norm();
   counter = 0;
   for (t = rmp->tBornInsideMe; t; t = t->nextBorn) {
     TMonster *tMonster;
@@ -261,7 +261,7 @@ void TBeing::statRoom(TRoom *rmp)
       }
     }
   }
-  str += "--------- Contents ---------\n\r";
+  str += fmt("%s--------- Contents ---------%s\n\r") % cyan() % norm();
   counter = 0;
   volume = 0;
   buf2="";
@@ -269,7 +269,7 @@ void TBeing::statRoom(TRoom *rmp)
     if (!dynamic_cast<TBeing *>(t)) {
       volume += t->getVolume();
       counter++;
-      if (counter > 20) {
+      if (counter > 30) {
         buf2 += "Too Many In Room to Stat More\n\r";
         break;
       } else {
@@ -277,43 +277,59 @@ void TBeing::statRoom(TRoom *rmp)
       }
     }
   }
-  str += fmt("Total Volume: %s\n\r") % volumeDisplay(volume);
+  str += fmt("%sTotal Volume:%s %s\n\r") %
+    cyan() % norm() % volumeDisplay(volume);
   str += buf2;
 
-  str += "------- Exits defined -------\n\r";
+  str += fmt("%s------- Exits defined -------%s\n\r") % cyan() % norm();
   dirTypeT dir;
   for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-    if (!rmp->dir_option[dir])
+    if (!rmp->dir_option[dir]) {
       continue;
-    else {
-      str+=fmt("Direction : %-10s    Door Type : %-12s     To-Room : %d\n\r") %
-	dirs[dir] % door_types[rmp->dir_option[dir]->door_type] %
+    } else {
+      str+=fmt("%sDirection:%s %-10s    %sDoor Type:%s %-12s     %sTo-Room:%s %d\n\r") %
+        cyan() % norm() %
+	dirs[dir] %
+        cyan() % norm() %
+        door_types[rmp->dir_option[dir]->door_type] %
+        cyan() % norm() %
 	rmp->dir_option[dir]->to_room;
       if (rmp->dir_option[dir]->door_type != DOOR_NONE) {
-        str += fmt("Weight : %d      Exit Flags : %s\n\rKeywords : %s\n\r") %
-              rmp->dir_option[dir]->weight % 
-	  sprintbit(rmp->dir_option[dir]->condition, exit_bits) %
+        str += fmt("%sWeight:%s %d      %sExit Flags:%s %s\n\r%sKeywords:%s %s\n\r") %
+          cyan() % norm() %
+          rmp->dir_option[dir]->weight % 
+          cyan() % norm() %
+          sprintbit(rmp->dir_option[dir]->condition, exit_bits) %
+          cyan() % norm() %
 	  rmp->dir_option[dir]->keyword;
         if ((rmp->dir_option[dir]->key > 0) || 
              (rmp->dir_option[dir]->lock_difficulty >= 0)) {
-          str += fmt("Key Number : %d     Lock Difficulty: %d\n\r") %
-	    rmp->dir_option[dir]->key % rmp->dir_option[dir]->lock_difficulty;
+          str += fmt("%sKey Number:%s %d     %sLock Difficulty:%s %d\n\r") %
+            cyan() % norm() %
+	    rmp->dir_option[dir]->key %
+            cyan() % norm() %
+            rmp->dir_option[dir]->lock_difficulty;
         }
         if (IS_SET(rmp->dir_option[dir]->condition, EX_TRAPPED)) {
-          sprinttype(rmp->dir_option[dir]->trap_info, trap_types, buf3);
-          str += fmt("Trap type : %s,  Trap damage : %d (d8)\n\r") % 
-	    buf3 % rmp->dir_option[dir]->trap_dam;
+          buf2 = sprinttype(rmp->dir_option[dir]->trap_info, trap_types);
+          str += fmt("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") % 
+            cyan() % norm() %
+	    buf2 %
+            cyan() % norm() %
+            rmp->dir_option[dir]->trap_dam;
         }
       } else if (IS_SET(rmp->dir_option[dir]->condition, EX_SLOPED_UP)) {
-        str += "Sloped: Up\n\r";
+        str += fmt("%sSloped:%s Up\n\r") % cyan() % norm();
       } else if (IS_SET(rmp->dir_option[dir]->condition, EX_SLOPED_DOWN)) {
-        str += "Sloped: Down\n\r";
+        str += fmt("%sSloped:%s Down\n\r") % cyan() % norm();
       }
-      str += "Description:\n\r  ";
-      if (rmp->dir_option[dir]->description)
-        str += rmp->dir_option[dir]->description;
-      else
+      str += fmt("%sDescription:%s\n\r") % cyan() % norm();
+      tmp_str = rmp->dir_option[dir]->description;
+      if (tmp_str.empty()) {
         str += "UNDEFINED\n\r";
+      } else {
+        str += tmp_str.toCRLF();
+      }
     }
   }
   desc->page_string(str);
@@ -322,7 +338,6 @@ void TBeing::statRoom(TRoom *rmp)
 
 void TBeing::statObj(const TObj *j)
 {
-  char buf[256];
   extraDescription *e;
   TThing *t;
   int i;
@@ -333,26 +348,22 @@ void TBeing::statObj(const TObj *j)
     return;
   }
 
-  
-  sprintf(buf, "Object name: [%s], R-number: [%d], V-number: [%d] Item type: ",
-       j->name, j->number, obj_index[j->getItemIndex()].virt);
-  str = buf;
+  str = fmt("Object name: [%s], R-number: [%d], V-number: [%d] Item type: ") %
+    j->name % j->number % obj_index[j->getItemIndex()].virt;
 
   str += ItemInfo[j->itemType()]->name;
   str += "\n\r";
 
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
     if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
-      sprintf(buf, "Zone: %s\n\r", zone_table[zone].name);
+      str += fmt("Zone: %s\n\r") % zone_table[zone].name;
       break;
     }    
   }
-  str += buf;
 
-  sprintf(buf, "Short description: %s\n\rLong description:\n\r%s\n\r",
-        ((j->shortDescr) ? j->shortDescr : "None"),
-        ((j->getDescr()) ? j->getDescr() : "None"));
-  str += buf;
+  str += fmt("Short description: %s\n\rLong description:\n\r%s\n\r") %
+    ((j->shortDescr) ? j->shortDescr : "None") %
+    ((j->getDescr()) ? j->getDescr() : "None");
 
   if (j->action_description) {
     str += "Action Description: ";
@@ -360,8 +371,7 @@ void TBeing::statObj(const TObj *j)
     str += "\n\r";
   }
 
-  sprintf(buf, "Action pointer: %s\n\r", (j->act_ptr ? "YES" : "no") );
-  str += buf;
+  str += fmt("Action pointer: %s\n\r") % (j->act_ptr ? "YES" : "no");
 
   if (j->ex_description) {
     str += "Extra description keyword(s):\n\r----------\n\r";
@@ -376,62 +386,53 @@ void TBeing::statObj(const TObj *j)
   }
 
   if (j->owners) {
-    sprintf(buf, "Owners: [%s]\n\r", j->owners);
-    str += buf;
+    str += fmt("Owners: [%s]\n\r") % j->owners;
   }
 
-  str += "Can be worn on :";
+  str += "Can be worn on: ";
   str += sprintbit(j->obj_flags.wear_flags, wear_bits);
   str += "\n\r";
 
-  str += "Set char bits  :";
+  str += "Set char bits : ";
   str += sprintbit(j->obj_flags.bitvector, affected_bits);
   str += "\n\r";
 
-  str += "Extra flags: ";
+  str += "Extra flags   : ";
   str += sprintbit(j->getObjStat(), extra_bits);
   str += "\n\r";
 
-  sprintf(buf, "Can be seen : %d\n\r", j->canBeSeen);
-  str += buf;
+  str += fmt("Can be seen   : %d\n\r") % j->canBeSeen;
 
-  sprintf(buf, "Volume: %d, Weight: %.1f, Value: %d, Cost/day: %d\n\r",
-    j->getVolume(),
-    j->getWeight(), j->obj_flags.cost,
-    j->rentCost());
-  str += buf;
+  str += fmt("Volume: %d, Weight: %.1f, Value: %d, Cost/day: %d\n\r") %
+    j->getVolume() % j->getWeight() %
+    j->obj_flags.cost % j->rentCost();
 
-  sprintf(buf, "Decay :%d, Max Struct :%d, Struct Left %d, Depreciation %d\n\r",
-    j->obj_flags.decay_time,
-    j->getMaxStructPoints(),
-    j->getStructPoints(),
-    j->getDepreciation());
-  str += buf;
+  str += fmt("Decay: %d, Max Struct: %d, Struct Left: %d, Depreciation: %d\n\r") %
+    j->obj_flags.decay_time % j->getMaxStructPoints() %
+    j->getStructPoints() % j->getDepreciation();
 
-  sprintf(buf, "Light: %3d          Material Type : %s\n\r",
-       j->getLight(),  material_nums[j->getMaterial()].mat_name);
-  str += buf;
+  str += fmt("Light: %3d          Material Type: %s\n\r") %
+    j->getLight() % material_nums[j->getMaterial()].mat_name;
 
   if (j->inRoom() != ROOM_NOWHERE)
-    sprintf(buf, "In Room: %d\n\r", j->inRoom());
+    str += fmt("In Room: %d\n\r") % j->inRoom();
   else if (j->parent)
-    sprintf(buf, "Inside: %s\n\r", j->parent->getName());
+    str += fmt("Inside: %s\n\r") % j->parent->getName();
   else if (j->stuckIn)
-    sprintf(buf, "Stuck-In: %s (slot=%d)\n\r", j->stuckIn->getName(), j->eq_stuck);
+    str += fmt("Stuck-In: %s (slot=%d)\n\r") %
+      j->stuckIn->getName() % j->eq_stuck;
   else if (j->equippedBy)
-    sprintf(buf, "Equipped-by: %s (slot=%d)\n\r", j->equippedBy->getName(), j->eq_pos);
+    str += fmt("Equipped-by: %s (slot=%d)\n\r") %
+      j->equippedBy->getName() % j->eq_pos;
   else
-    sprintf(buf, "UNKNOWN LOCATION !!!!!!\n\r");
-  str += buf;
+    str += "UNKNOWN LOCATION !!!!!!\n\r";
 
-  sprintf(buf, "Carried weight: %.1f   Carried volume: %d\n\r",
-          j->getCarriedWeight(), j->getCarriedVolume());
-  str += buf;
+  str += fmt("Carried weight: %.1f   Carried volume: %d\n\r") %
+    j->getCarriedWeight() % j->getCarriedVolume();
 
   str += j->statObjInfo();
 
-  sprintf(buf, "\n\rSpecial procedure : %s   ", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");;
-  str += buf;
+  str += fmt("\n\rSpecial procedure: %s   ") % (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");
 
   if (!j->getStuff())
     str += "Contains : Nothing\n\r";
@@ -447,36 +448,37 @@ void TBeing::statObj(const TObj *j)
     }
   }
 
-  str += "Can affect char :\n\r";
+  str += "Can affect char:\n\r";
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        sprintf(buf, "   Affects:  %s: %s by %ld\n\r",
-            apply_types[j->affected[i].location].name,
-            discArray[j->affected[i].modifier]->name,
-            j->affected[i].modifier2);
-        str += buf;
-      } else
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier % 
-              j->getName());
+        str += fmt("   Affects:  %s: %s by %ld\n\r") %
+          apply_types[j->affected[i].location].name %
+          discArray[j->affected[i].modifier]->name %
+          j->affected[i].modifier2;
+      } else {
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
+          j->affected[i].modifier % j->getName());
+      }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
-     if (discNames[j->affected[i].modifier].disc_num) {
-        sprintf(buf, "   Affects:  %s: %s by %ld\n\r",
-            apply_types[j->affected[i].location].name,
-            discNames[j->affected[i].modifier].name,
-            j->affected[i].modifier2);
-        str += buf;
-      } else
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier %
-              j->getName());
+      if (discNames[j->affected[i].modifier].disc_num) {
+        str += fmt("   Affects:  %s: %s by %ld\n\r") %
+          apply_types[j->affected[i].location].name %
+          discNames[j->affected[i].modifier].name %
+          j->affected[i].modifier2;
+      } else {
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
+          j->affected[i].modifier % j->getName());
+      }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      sprintf(buf, "   Affects:  %s: %s by %ld\n\r",apply_types[j->affected[i].location].name,
-        immunity_names[j->affected[i].modifier], j->affected[i].modifier2);
-      str += buf;
+      str += fmt("   Affects:  %s: %s by %ld\n\r") %
+        apply_types[j->affected[i].location].name %
+        immunity_names[j->affected[i].modifier] %
+        j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
-      sprintf(buf, "   Affects:  %s by %ld\n\r",apply_types[j->affected[i].location].name,
-        j->affected[i].modifier);
-      str += buf;
+      str += fmt("   Affects:  %s by %ld\n\r") %
+        apply_types[j->affected[i].location].name %
+        j->affected[i].modifier;
     }
   }
   desc->page_string(str);
@@ -485,22 +487,22 @@ void TBeing::statObj(const TObj *j)
 
 void TBeing::statObjForDivman(const TObj *j)
 {
-  char buf[256];
   TThing *t;
   int i;
-  sstring str;
+  sstring str = "";
 
 
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
     if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
-      sprintf(buf, "The item is from %s.\n\r", zone_table[zone].name);
+      str += fmt("The item is from %s.\n\r") % zone_table[zone].name;
       break;
     }    
   }
-  str += buf;
 
-  sprintf(buf, "\n\r%s is a %s.", j->shortDescr, ItemInfo[j->itemType()]->name);
-  str += buf;
+  str += "\n\r";
+  str += j->shortDescr;
+  str += " is a ";
+  str += ItemInfo[j->itemType()]->name;
   str += "\n\r";
 
   str += "It can be worn on: ";
@@ -515,28 +517,23 @@ void TBeing::statObjForDivman(const TObj *j)
   str += sprintbit(j->getObjStat(), extra_bits);
   str += ".\n\r";
 
-  sprintf(buf, "%s modifies can be seen by %d.\n\r", j->shortDescr, j->canBeSeen);
-  str += buf;
+  str += j->shortDescr;
+  str += fmt(" modifies can be seen by %d.\n\r") % j->canBeSeen;
 
-  sprintf(buf, "It has a volume of %d, it weighs %.1f, and has a value of %d talens.\n\r",
-    j->getVolume(),
-    j->getWeight(), j->obj_flags.cost);
-  str += buf;
+  str += fmt("It has a volume of %d, it weighs %.1f, and has a value of %d talens.\n\r") %
+    j->getVolume() % j->getWeight() % j->obj_flags.cost;
 
-  sprintf(buf, "It will decay in %d, and it's structure is %d/%d.\n\r",
-    j->obj_flags.decay_time,
-    j->getStructPoints(),
-    j->getMaxStructPoints());
-  str += buf;
+  str += fmt("It will decay in %d, and its structure is %d/%d.\n\r") %
+    j->obj_flags.decay_time % j->getStructPoints() %
+    j->getMaxStructPoints();
 
-  sprintf(buf, "Light is modified by %3d and %s is made of %s.\n\r",
-       j->getLight(),  j->shortDescr, material_nums[j->getMaterial()].mat_name);
-  str += buf;
+  str += fmt("Light is modified by %3d and %s is made of %s.\n\r") %
+    j->getLight() % j->shortDescr % material_nums[j->getMaterial()].mat_name;
 
   str += j->statObjInfo();
 
-  sprintf(buf, "\n\rIt has %s for a special procedure.\n\r", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");;
-  str += buf;
+  str += fmt("\n\rIt has %s for a special procedure.\n\r") %
+    (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");
 
   if (!j->getStuff())
     str += "It contains nothing...\n\r";
@@ -552,32 +549,33 @@ void TBeing::statObjForDivman(const TObj *j)
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        sprintf(buf, "   Affects:  %s: %s by %ld.\n\r",
-            apply_types[j->affected[i].location].name,
-            discArray[j->affected[i].modifier]->name,
-            j->affected[i].modifier2);
-        str += buf;
-      } else
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier % 
-              j->getName());
+        str += fmt("   Affects:  %s: %s by %ld.\n\r") %
+          apply_types[j->affected[i].location].name %
+          discArray[j->affected[i].modifier]->name %
+          j->affected[i].modifier2;
+      } else {
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
+          j->affected[i].modifier % j->getName());
+      }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
-        sprintf(buf, "   Affects:  %s: %s by %ld.\n\r",
-            apply_types[j->affected[i].location].name,
-            discNames[j->affected[i].modifier].name,
-            j->affected[i].modifier2);
-        str += buf;
-      } else
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier %
-              j->getName());
+        str += fmt("   Affects:  %s: %s by %ld.\n\r") %
+          apply_types[j->affected[i].location].name %
+          discNames[j->affected[i].modifier].name %
+          j->affected[i].modifier2;
+      } else {
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
+          j->affected[i].modifier % j->getName());
+      }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      sprintf(buf, "   Affects:  %s: %s by %ld.\n\r",apply_types[j->affected[i].location].name,
-        immunity_names[j->affected[i].modifier], j->affected[i].modifier2);
-      str += buf;
+      str += fmt("   Affects:  %s: %s by %ld.\n\r") %
+        apply_types[j->affected[i].location].name %
+        immunity_names[j->affected[i].modifier] %
+        j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
-      sprintf(buf, "   Affects:  %s by %ld.\n\r",apply_types[j->affected[i].location].name,
-        j->affected[i].modifier);
-      str += buf;
+      str += fmt("   Affects:  %s by %ld.\n\r") %
+        apply_types[j->affected[i].location].name %
+        j->affected[i].modifier;
     }
   }
   str += "\n\r";
@@ -588,15 +586,10 @@ void TBeing::statObjForDivman(const TObj *j)
 
 void TBeing::statBeing(TBeing *k)
 {
-  affectedData *aff, *af2;
-  char buf[MAX_STRING_LENGTH];
-  char buf2[256];
-  char buf3[256];
-  TBeing *x1;
+  sstring str = "";
+  sstring buf2, buf3;
   TFaction *f = NULL;
-   const TMonster *km = dynamic_cast<const TMonster *>(k);
-  char *birth, *logon;
-  char birth_buf[40], logon_buf[40];
+  const TMonster *km = dynamic_cast<const TMonster *>(k);
   resp *respy;
   followData *fol;
   charList *list;
@@ -609,196 +602,220 @@ void TBeing::statBeing(TBeing *k)
     return;
   }
 
-
-  *buf = *buf2 = *buf3 = *birth_buf = *logon_buf = '\0';
-
   switch (k->player.sex) {
     case SEX_NEUTER:
-      sprintf(buf + strlen(buf),"<c>NEUTRAL-SEX<z> ");
+      str = fmt("%sNEUTRAL-SEX%s ") % cyan() % norm();
       break;
     case SEX_MALE:
-      sprintf(buf + strlen(buf),"<c>MALE<z> ");
+      str = fmt("%sMALE%s ") % cyan() % norm();
       break;
     case SEX_FEMALE:
-      sprintf(buf + strlen(buf),"<c>FEMALE<z> ");
+      str = fmt("%sFEMALE%s ") % cyan() % norm();
       break;
   }
 
   bool is_player=dynamic_cast<const TPerson *>(k);
 
-  if (km)
-    sprintf(buf + strlen(buf), "%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] Birth-Room[%d] V-Number[%d]\n\r",
-            (is_player ? "PC" : "NPC"),
-            k->name, k->number, k->in_room, km->oldRoom, km->brtRoom,
-            k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
-  else
-    sprintf(buf + strlen(buf), "%s - Name : %s [%s: %d] Room[%d]\n\r",
-            (is_player ? "PC" : "NPC"),
-            k->name, (is_player ? "PID  " : "M-Num"),
-	    (is_player ? k->getPlayerID() : k->number), k->in_room);
-
-
-  sprintf(buf + strlen(buf),"-----------------------------------------------------------------------------\n\r");
   if (km) {
-    sprintf(buf + strlen(buf),"Short description: %s\n\r",
-	   (km->shortDescr ? km->shortDescr : "None"));
-    sprintf(buf + strlen(buf),"Long description: %s",
-    	   (km->player.longDescr ? km->player.longDescr : "None"));
+    str += fmt("%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] Birth-Room[%d] V-Number[%d]\n\r") %
+      (is_player ? "PC" : "NPC") %
+      k->name % k->number % k->in_room % km->oldRoom % km->brtRoom %
+      (k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
+  } else {
+    str += fmt("%s - Name : %s [%s: %d] Room[%d]\n\r") %
+      (is_player ? "PC" : "NPC") %
+      k->name % (is_player ? "PID  " : "M-Num") %
+      (is_player ? k->getPlayerID() : k->number) % k->in_room;
+  }
 
+  str += "-----------------------------------------------------------------------------\n\r";
+  if (km) {
+    str += fmt("%sShort description:%s %s\n\r") %
+      cyan() % norm() %
+      (km->shortDescr ? km->shortDescr : "NONE");
+    str += fmt("%sLong description:%s\n\r%s") %
+      cyan() % norm() %
+      (km->player.longDescr ? km->player.longDescr : "NONE");
   } else {
     Descriptor *d = k->desc;
 
     if (d && k->isPc() && k->GetMaxLevel() > MAX_MORT) {
-      sprintf(buf + strlen(buf), "IMM: Office: %d\n\r", d->office);
+      str += fmt("%sIMM Office  :%s %d\n\r") % cyan() % norm() % d->office;
 
-      if (d->blockastart)
-        sprintf(buf + strlen(buf), "IMM: BlockA: %d - %d\n\r", d->blockastart, d->blockaend);
+      if (d->blockastart) {
+        str += fmt("%sIMM Block A :%s %d - %d\n\r") % cyan() % norm() % d->blockastart % d->blockaend;
+      }
 
-      if (d->blockbstart)
-        sprintf(buf + strlen(buf), "IMM: BlockB: %d - %d\n\r", d->blockbstart, d->blockbend);
+      if (d->blockbstart) {
+        str += fmt("%sIMM Block B :%s %d - %d\n\r") % cyan() % norm() % d->blockbstart % d->blockbend;
+      }
     }
   }
 
-  *buf2 = '\0';
-  for (classIndT ijc = MIN_CLASS_IND; ijc < MAX_CLASSES; ijc++)
-    if (k->hasClass(1<<ijc))
-      sprintf(buf2 + strlen(buf2), "%s ", classInfo[ijc].name.cap().c_str());
-
-  sprintf(buf + strlen(buf),"<c>Class :<z> %-28s\n\r", buf2);
-
-  sprintf(buf + strlen(buf), "<c>Level :<z> [");
-  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
-    sprintf(buf + strlen(buf), "%c%c:%d ",
-	    classInfo[i].name.cap()[0], classInfo[i].name.cap()[1],
-	    k->getLevel(i));
+  buf2 = "";
+  for (classIndT ijc = MIN_CLASS_IND; ijc < MAX_CLASSES; ijc++) {
+    if (k->hasClass(1<<ijc)) {
+      buf2 += classInfo[ijc].name.cap();
+      buf2 += " ";
+    }
   }
-  strcat(buf, "]\n\r");
 
-  strcat(buf, "<c>Race  :<z> ");
-  strcat(buf, k->getMyRace()->getSingularName().c_str());
+  str += fmt("%sClass       :%s %-28s\n\r") % cyan() % norm() % buf2;
 
-  sprintf(buf + strlen(buf), "\t%sHome :%s %s", 
-          cyan(), home_terrains[k->player.hometerrain], norm());
+  str += fmt("%sLevel       :%s [") % cyan() % norm();
+  for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
+    str += fmt("%c%c:%d ") %
+      classInfo[i].name.cap()[0] % classInfo[i].name.cap()[1] %
+      k->getLevel(i);
+  }
+  str += "]\n\r";
+
+  str += fmt("%sRace        :%s %-10s") %
+    cyan() % norm() % k->getMyRace()->getSingularName();
+
+  str += fmt("%sHome:%s %-17s") % 
+    cyan() % norm() % home_terrains[k->player.hometerrain];
 
   if (k->desc && k->desc->account) {
     if (IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) &&
         !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-      sprintf(buf + strlen(buf), "\tAccount : *** Information Concealed ***\n\r");
+      str += "Account : *** Information Concealed ***\n\r";
     } else {
-      sprintf(buf + strlen(buf), "\t%sAccount : %s%s\n\r", purple(), k->desc->account->name.c_str(), norm());
+      str += fmt("%sAccount: %s%s\n\r") % purple() %
+        k->desc->account->name % norm();
     }
-  } else
-    strcat(buf, "\n\r");
+  } else {
+    str += "\n\r";
+  }
 
   if (k->isPc()) {
-    birth = asctime(localtime(&(k->player.time.birth)));
-    *(birth + strlen(birth) - 1) = '\0';
-    strcpy(birth_buf, birth);
-    logon = asctime(localtime(&(k->player.time.logon)));
-    *(logon + strlen(logon) - 1) = '\0';
-    strcpy(logon_buf, logon);
+    sstring birth_buf, logon_buf;
+
+    birth_buf = asctime(localtime(&(k->player.time.birth)));
+    // Chop off trailing \n from the output of localtime
+    birth_buf = birth_buf.substr(0, birth_buf.length() - 1);
+
+    logon_buf = asctime(localtime(&(k->player.time.logon)));
+    // Chop off trailing \n from the output of localtime
+    logon_buf = logon_buf.substr(0, logon_buf.length() - 1);
+
     realTimePassed((time(0) - k->player.time.logon) +
                     k->player.time.played, 0, &playing_time);
-    sprintf(buf + strlen(buf), "%sBirth :%s %s    %sLogon   :%s %s\n\r",
-       cyan(), norm(), birth_buf, cyan(), norm(), logon_buf);
-    sprintf(buf + strlen(buf), "%sPlaying time :%s %d days, %d hours.     <c>Base age:<z> %d    Age Mod: %d\n\r",
-        cyan(), norm(), playing_time.day, playing_time.hours,
-                k->getBaseAge(), k->age_mod);
-    if (!k->desc)
-      sprintf(buf + strlen(buf), "%sWARNING%s, player is offline, age will not be accurate.\n\r", red(), norm());
+    str += fmt("%sBirth       : %s%s     %sLogon:%s %s\n\r") %
+      cyan() % norm() % birth_buf % cyan() % norm() % logon_buf;
+    str += fmt("%sPlaying time:%s %d days, %d hours.      %sBase age:%s %d    %sAge Mod:%s %d\n\r") %
+      cyan() % norm() % playing_time.day % playing_time.hours %
+      cyan() % norm() % k->getBaseAge() %
+      cyan() % norm() % k->age_mod;
+    if (!k->desc) {
+      str += fmt("%sWARNING%s, player is offline, age will not be accurate.\n\r") % red() % norm();
+    }
 
-    sprintf(buf + strlen(buf), "%sPlayer age   :%s %d years, %d months, %d days, %d hours\n\r\n\r",
-        cyan(), norm(),
-        k->age()->year, k->age()->month, k->age()->day, k->age()->hours);
+    str += fmt("%sPlayer age  :%s %d years, %d months, %d days, %d hours\n\r\n\r") %
+      cyan() % norm() % k->age()->year % k->age()->month %
+      k->age()->day % k->age()->hours;
   }
-  sprintf(buf3, "[%.2f]", k->getExp());
-  sprintf(buf2, "[%.2f]", k->getMaxExp());
-  sprintf(buf + strlen(buf), "%sDefRnd:%s [%3d]  %sExp    :%s %-10s  %sMax Exp:%s %-10s\n\r",
-          cyan(), norm(), k->defendRound(NULL),  cyan(), norm(), buf3, cyan(), norm(), buf2);
-  sprintf(buf2, "[%d]", k->getMoney());
-  sprintf(buf3, "[%d]", k->getBank());
-  sprintf(buf + strlen(buf), "%sVision:%s [%3d]  %sTalens :%s %-10s  %sBank    :%s %-10s\n\r",
-              cyan(), norm(), k->visionBonus,
-              cyan(), norm(), buf2, cyan(), norm(), buf3);
 
-  sprintf(buf2, "[%d]", k->getHitroll());
-  sprintf(buf3, "[%d]", k->getDamroll());
-  sprintf(buf + strlen(buf), "%sAttRnd:%s [%3d]  %sHitroll:%s %-10s  %sDamroll :%s %-10s\n\r",
-          cyan(), norm(),
-          k->attackRound(NULL),
-          cyan(), norm(), buf2, cyan(), norm(), buf3);
-  sprintf(buf2, "[%d]", k->getHit());
-  sprintf(buf3, "[%d]", k->getMove());
-  if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN))
-    sprintf(buf + strlen(buf), "%sPiety :%s [%5.1f]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
-      cyan(), norm(), k->getPiety(),
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
-  else if (k->hasClass(CLASS_SHAMAN))
-    sprintf(buf + strlen(buf), "%sLifef.:%s[%6d]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
-      cyan(), norm(), k->getLifeforce(),
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
-  else
-    sprintf(buf + strlen(buf), "%sMana  :%s [%3d]  %sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
-      cyan(), norm(), k->getMana(),
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
-  sprintf(buf2, "[%d]", k->hitLimit());
-  sprintf(buf3, "[%d]", k->moveLimit());
-  sprintf(buf + strlen(buf), "%sMxMana:%s [%3d]  %sMaxHit :%s %-10s  %sMaxMove :%s %-10s\n\r",
-      cyan(), norm(), k->manaLimit(),
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
-  sprintf(buf2, "[%d]", ageHpMod(dynamic_cast<TPerson *>(k)));
+  buf3 = fmt("[%5.2f]") % k->getExp();
+  buf2 = fmt("[%5.2f]") % k->getMaxExp();
+  str += fmt("%sDef Rnd:%s [%5d]   %sExp      :%s %-16s %sMax Exp :%s %-13s\n\r") %
+    cyan() % norm() % k->defendRound(NULL) %
+    cyan() % norm() % buf3 %
+    cyan() % norm() % buf2;
+
+  buf2 = fmt("[%5d]") % k->getMoney();
+  buf3 = fmt("[%5d]") % k->getBank();
+  str += fmt("%sVision :%s [%5d]   %sTalens   :%s %-16s %sBank Bal:%s %-13s\n\r") %
+    cyan() % norm() % k->visionBonus %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
+
+  buf2 = fmt("[%5d]") % k->getHitroll();
+  buf3 = fmt("[%5d]") % k->getDamroll();
+  str += fmt("%sAtt Rnd:%s [%5d]   %sHitroll  :%s %-16s %sDamroll :%s %-13s\n\r") %
+    cyan() % norm() % k->attackRound(NULL) %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
+
+  str += fmt("%sPiety  :%s [%5.1f]   %sLifeForce:%s [%5d]\n\r") %
+    cyan() % norm() % k->getPiety() %
+    cyan() % norm() % k->getLifeforce();
+
+  buf2 = fmt("[%5d]") % k->getHit();
+  buf3 = fmt("[%5d]") % k->getMove();
+  str += fmt("%sMana   :%s [%5d]   %sHP       :%s %-16s %sMove    :%s %-13s\n\r") %
+    cyan() % norm() % k->getMana() %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
+
+  buf2 = fmt("[%5d]") % k->hitLimit();
+  buf3 = fmt("[%5d]") % k->moveLimit();
+  str += fmt("%sMaxMana:%s [%5d]   %sMax HP   :%s %-16s %sMax Move:%s %-13s\n\r") %
+    cyan() % norm() % k->manaLimit() %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
 
   if(dynamic_cast<TPerson *>(k)){
-    sprintf(buf3, "[%f]", k->getConHpModifier());
-    sprintf(buf + strlen(buf), "%sEqHp  :%s [%3d]  %sAgeHp  :%s %-10s  %sConHpMod:%s %-10s\n\r",
-	    cyan(), norm(), eqHpBonus(dynamic_cast<TPerson *>(k)),
-	    cyan(), norm(), buf2, cyan(), norm(), buf3);
+    buf2 = fmt("[%5d]") % ageHpMod(dynamic_cast<TPerson *>(k));
+    buf3 = fmt("[%f]") % k->getConHpModifier();
+    str += fmt("%sEq HP  :%s [%5d]   %sAge HP   :%s %-16s %sConHpMod:%s %-13s\n\r") %
+      cyan() % norm() % eqHpBonus(dynamic_cast<TPerson *>(k)) %
+      cyan() % norm() % buf2 %
+      cyan() % norm() % buf3;
   }
 
-  sprintf(buf2, "[%d]", k->visibility());
-  sprintf(buf3, "[%5.1f lbs]", k->getWeight());
-  sprintf(buf + strlen(buf), "%sHeight:%s [%3d]  %sWeight :%s %-11s %sVisibility :%s %-10s\n\r",
-      cyan(), norm(), k->getHeight(),
-      cyan(), norm(), buf3, cyan(), norm(), buf2);
-  sprintf(buf2, "[%d]", k->specials.conditions[FULL]);
-  sprintf(buf3, "[%d]", k->specials.conditions[DRUNK]);
-  sprintf(buf + strlen(buf), "%sThirst:%s [%3d]  %sHunger :%s %-10s  %sDrunk   :%s %-10s\n\r",
-      cyan(), norm(), k->specials.conditions[THIRST],
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
+  buf2 = fmt("[%5d]") % k->visibility();
+  buf3 = fmt("[%5.1f]") % k->getWeight();
+  str += fmt("%sHeight :%s [%5d]   %sWt. (lbs):%s %-14s %sVisibility:%s %-13s\n\r") %
+    cyan() % norm() % k->getHeight() %
+    cyan() % norm() % buf3 %
+    cyan() % norm() % buf2;
 
-  sprintf(buf3, "[%d]", k->specials.conditions[POOP]);
-  sprintf(buf + strlen(buf), "%sPee   :%s [%3d]  %sPoop   :%s %-10s\n\r",
-	  cyan(), norm(), k->specials.conditions[PEE], 
-	  cyan(), norm(), buf3);
+  buf2 = fmt("[%5d]") % k->specials.conditions[FULL];
+  buf3 = fmt("[%5d]") % k->specials.conditions[DRUNK];
+  str += fmt("%sThirst :%s [%5d]   %sHunger   :%s %-16s %sDrunk   :%s %-13s\n\r") %
+    cyan() % norm() % k->specials.conditions[THIRST] %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
 
-  sprintf(buf2, "[%d]", k->getArmor());
-  sprintf(buf3, "[%d]", noise(k));
-  sprintf(buf + strlen(buf), "%sLight :%s [%3d]  %sNoise  :%s %-10s  %sArmor   :%s %-10s\n\r",
-      cyan(), norm(), k->getLight(),
-      cyan(), norm(), buf3, cyan(), norm(), buf2);
-  sprintf(buf2, "[%d]", k->eyeSight(k->roomp));
-  sprintf(buf3, "[%d]", k->getSpellHitroll());
-  sprintf(buf + strlen(buf), "%sProt. :%s [%3d]  %sEyesight:%s %-10s %sSpell Hitroll: %s %-10s\n\r",
-      cyan(), norm(), k->getProtection(),
-      cyan(), norm(), buf2, cyan(), norm(), buf3);
+  str += fmt("%sPee    :%s [%5d]   %sPoop     :%s [%5d]\n\r") %
+    cyan() % norm() % k->specials.conditions[PEE] %
+    cyan() % norm() % k->specials.conditions[POOP];
+
+  buf2 = fmt("[%5d]") % k->getArmor();
+  buf3 = fmt("[%5d]") % noise(k);
+  str += fmt("%sLight  :%s [%5d]   %sNoise    :%s %-16s %sArmor   :%s %-13s\n\r") %
+    cyan() % norm() % k->getLight() %
+    cyan() % norm() % buf3 %
+    cyan() % norm() % buf2;
+
+  buf2 = fmt("[%5d]") % k->eyeSight(k->roomp);
+  buf3 = fmt("[%5d]") % k->getSpellHitroll();
+  str += fmt("%sProt.  :%s [%5d]   %sEyesight :%s %-11s %sSpell Hitroll:%s %-13s\n\r") %
+    cyan() % norm() % k->getProtection() %
+    cyan() % norm() % buf2 %
+    cyan() % norm() % buf3;
 
   if (km && !(polyed == POLY_TYPE_DISGUISE)) {
-    sprintf(buf + strlen(buf), "Number of attacks : %.1f", km->getMult());
-    sprintf(buf + strlen(buf), "        NPC Damage: %.1f+%d%%.\n\r",
-        km->getDamLevel(), km->getDamPrecision());
+    str += fmt("%sNumber of attacks :%s %.1f") %
+      cyan() % norm() % km->getMult();
+    str += fmt("        %sNPC Damage:%s %.1f+%d%%.\n\r") %
+      cyan() % norm() % km->getDamLevel() % km->getDamPrecision();
     double bd = km->baseDamage();
     int chg = (int) (bd * km->getDamPrecision() / 100);
-    sprintf(buf + strlen(buf), "  NPC Damage range: %d-%d.\n\r",
-        max(1, (int) bd-chg), max(1, (int) bd+chg));
+    str += fmt("%sNPC Damage range  :%s %d-%d.\n\r") % cyan() % norm() %
+      max(1, (int) bd-chg) % max(1, (int) bd+chg);
   } else {
     if (k->hasClass(CLASS_MONK)) {
-      sprintf(buf + strlen(buf), "Number of attacks : %.2f\n\r", k->getMult());
+      str += fmt("%sNumber of attacks:%s %.2f\n\r") %
+        cyan() % norm() % k->getMult();
     }
 
     float fx, fy;
     k->blowCount(false, fx, fy);
-    sprintf(buf + strlen(buf), "Prim attacks: %.2f, Off attacks: %.2f\n\r",
-          fx, fy);
+    str += fmt("%sPrim attacks:%s %.2f, %sOff attacks:%s %.2f\n\r") %
+      cyan() % norm() % fx %
+      cyan() % norm() % fy;
 
     int dam=0;
     int prim_min=9999, prim_max=0;
@@ -817,323 +834,342 @@ void TBeing::statBeing(TBeing *k)
 	sec_max=dam;
     }
 
-    sprintf(buf + strlen(buf),"Prim damage: %i-%i, Off damage: %i-%i\n\r",
-	    prim_min, prim_max, sec_min, sec_max);
+    str += fmt("%sPrim damage:%s %i-%i, %sOff damage:%s %i-%i\n\r") %
+      cyan() % norm() % prim_min % prim_max %
+      cyan() % norm() % sec_min % sec_max;
 
-
-    sprintf(buf + strlen(buf), "Approximate damage per round: %i-%i\n\r",
-	    (int)((fx*(float)prim_min)+((fy*(float)sec_min))),
-	    (int)((fx*(float)prim_max)+((fy*(float)sec_max))));
-	    
-
+    str += fmt("%sApproximate damage per round:%s %i-%i\n\r") %
+      cyan() % norm() %
+      (int)((fx*(float)prim_min)+((fy*(float)sec_min))) %
+      (int)((fx*(float)prim_max)+((fy*(float)sec_max)));
   }
   if (toggleInfo[TOG_TESTCODE5]->toggle && k->newfaction()) {
     if(k->isPc()) {
-      sprintf(buf + strlen(buf), "%sFaction :%s %s%s,   %sRank :%s %s%s\n\r",
-	      cyan(), norm(), k->newfaction()->getName(), norm(),
-	      cyan(), norm(), k->rank(), norm());
+      str += fmt("%sFaction:%s %s%s,   %sRank :%s %s%s\n\r") %
+        cyan() % norm() % k->newfaction()->getName() % norm() %
+        cyan() % norm() % k->rank() % norm();
     }
   } else {
-    
-    sprintf(buf + strlen(buf), "%sFaction :%s %s,   %sFaction Percent :%s %.4f\n\r",
-	    cyan(), norm(), FactionInfo[k->getFaction()].faction_name,
-	    cyan(), norm(), k->getPerc());
+    str += fmt("%sFaction:%s %s,   %sFaction Percent:%s %.4f\n\r") %
+      cyan() % norm() % FactionInfo[k->getFaction()].faction_name %
+      cyan() % norm() % k->getPerc();
 #if FACTIONS_IN_USE
-    sprintf(buf + strlen(buf), "%sPerc_0 :%s %.4f   %sPerc_1 :%s %.4f   %sPerc_2 :%s %.4f   %sPerc_3 :%s %.4f\n\r",
-	    cyan(), norm(), k->getPercX(FACT_NONE),
-	    cyan(), norm(), k->getPercX(FACT_BROTHERHOOD),
-	    cyan(), norm(), k->getPercX(FACT_CULT),
-	    cyan(), norm(), k->getPercX(FACT_SNAKE));
+    str += fmt("%sPerc_0:%s %.4f   %sPerc_1:%s %.4f   %sPerc_2:%s %.4f   %sPerc_3:%s %.4f\n\r") %
+      cyan() % norm() % k->getPercX(FACT_NONE) %
+      cyan() % norm() % k->getPercX(FACT_BROTHERHOOD) %
+      cyan() % norm() % k->getPercX(FACT_CULT) %
+      cyan() % norm() % k->getPercX(FACT_SNAKE);
 #endif
   }
-//  sprintf(buf + strlen(buf), "%sFaction :%s %s\n\r",
-//    cyan(), norm(), FactionInfo[k->getFaction()].faction_name);
+//  str += fmt("%sFaction :%s %s\n\r") %
+//    cyan() % norm() % FactionInfo[k->getFaction()].faction_name;
 
-  sprintf(buf + strlen(buf),"Stats    :");
-  sprintf(buf + strlen(buf),k->chosenStats.printStatHeader().c_str());
+  str += "Stats    :";
+  str += k->chosenStats.printStatHeader();
 
-    statTypeT ik;
+  statTypeT ik;
 
-    sprintf(buf + strlen(buf),"Race     :");
-    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_RACE, ik));
-    }
-    strcat(buf, "\n\r");
+  str += "Race     :";
+  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_RACE, ik);
+  }
+  str += "\n\r";
 
-    sprintf(buf + strlen(buf),"Chosen   :");
-    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_CHOSEN, ik));
-    }
-    strcat(buf, "\n\r");
+  str += "Chosen   :";
+  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_CHOSEN, ik);
+  }
+  str += "\n\r";
 
-    sprintf(buf + strlen(buf),"Age      :");
-    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_AGE, ik));
-    }
-    strcat(buf, "\n\r");
+  str += "Age      :";
+  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_AGE, ik);
+  }
+  str += "\n\r";
 
-    sprintf(buf + strlen(buf),"Territory:");
-    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_TERRITORY, ik));
-    }
-    strcat(buf, "\n\r");
+  str += "Territory:";
+  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_TERRITORY, ik);
+  }
+  str += "\n\r";
 
-    sprintf(buf + strlen(buf),"Natural  :");
-
-    for(ik=MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_NATURAL, ik));
-    }
-    strcat(buf, "\n\r");
+  str += "Natural  :";
+  for(ik=MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_NATURAL, ik);
+  }
+  str += "\n\r";
     
-    sprintf(buf + strlen(buf),"Current  :");
-    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
-      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_CURRENT, ik));
-    }
-    strcat(buf, "\n\r");
-
+  str += "Current  :";
+  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+    str += fmt(" %3d ") % k->getStat(STAT_CURRENT, ik);
+  }
+  str += "\n\r";
 
   // only show captive info when needed
   if (k->getCaptiveOf() || k->getCaptive()) {
-    sprintf(buf + strlen(buf), "%sCaptive Of:%s %s         %sCaptives :%s ",
-       cyan(), norm(),
-       (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE"),
-       cyan(), norm());
+    str += fmt("%sCaptive Of:%s %s         %sCaptives :%s ") %
+       cyan() % norm() %
+       (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE") %
+       cyan() % norm();
     if (!k->getCaptive())
-      strcat(buf, "NONE\n\r");
+      str += "NONE\n\r";
     else {
+      TBeing *x1;
       for (x1 = k->getCaptive(); x1; x1 = x1->getNextCaptive()) {
-        strcat(buf, x1->getName());
-        strcat(buf, " ");
+        str += x1->getName();
+        str += " ";
       }
-      strcat(buf, "\n\r");
+      str += "\n\r";
     }
   }
-  sprintf(buf + strlen(buf), "Master is '%s'",
-          ((k->master) ? k->master->getName() : "NOBODY"));
-  strcat(buf, "           Followers are:");
-  for (fol = k->followers; fol; fol = fol->next)
-    strcat(buf, fol->follower->getName());
-  strcat(buf,"\n\r");
+  str += fmt("Master is '%s'") %
+          ((k->master) ? k->master->getName() : "NOBODY");
+  str += "           Followers are:";
+  for (fol = k->followers; fol; fol = fol->next) {
+    str += fol->follower->getName();
+  }
+  str += "\n\r";
 
   if (km) {
-    sprinttype(km->getPosition(), position_types, buf2);
-    sprinttype((km->default_pos), position_types, buf3);
-    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s, %sDefault Position :%s %s\n\r",
-          cyan(), norm(), buf2, cyan(), norm(),
-          (km->fight() ? km->fight()->getName() : "Nobody"),
-          cyan(), norm(), buf3);
+    buf2 = sprinttype(km->getPosition(), position_types);
+    buf3 = sprinttype((km->default_pos), position_types);
+    str += fmt("%sPosition:%s %s  %sFighting:%s %s  %sDefault Position:%s %s\n\r") %
+      cyan() % norm() % buf2 %
+      cyan() % norm() % (km->fight() ? km->fight()->getName() : "Nobody") %
+      cyan() % norm() % buf3;
 
-    strcat(buf, "NPC flags: ");
+    str += fmt("%sNPC flags:%s ") % cyan() % norm();
     if (km->specials.act) {
-      strcat(buf, sprintbit(km->specials.act, action_bits).c_str());
-      strcat(buf, "\n\r");
+      str += sprintbit(km->specials.act, action_bits);
+      str += "\n\r";
     } else {
-      strcat(buf, "None\n\r");
+      str += "None\n\r";
     }
   } else {
-    sprinttype(k->getPosition(), position_types, buf2);
-    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s\n\r",
-          cyan(), norm(), buf2, cyan(), norm(),
-          (k->fight() ? k->fight()->getName() : "Nobody"));
+    buf2 = sprinttype(k->getPosition(), position_types);
+    str += fmt("%sPosition:%s %s  %sFighting:%s %s\n\r") %
+          cyan() % norm() % buf2 %
+          cyan() % norm() % (k->fight() ? k->fight()->getName() : "Nobody");
   } 
   if (k->desc) {
-    strcat(buf, "\n\rFlags (Specials Act): ");
-    strcat(buf, sprintbit(k->desc->plr_act, player_bits).c_str());
-    strcat(buf, "\n\r");
+    str += fmt("\n\r%sFlags (Specials Act):%s ") % cyan() % norm();
+    str += sprintbit(k->desc->plr_act, player_bits);
+    str += "\n\r";
   }
 
-  sprintf(buf + strlen(buf), "Carried weight: %.1f   Carried volume: %d\n\r",
-          k->getCarriedWeight(), k->getCarriedVolume());
+  str += fmt("%sCarried weight:%s %.1f   %sCarried volume:%s %d\n\r") %
+          cyan() % norm() % k->getCarriedWeight() %
+          cyan() % norm() % k->getCarriedVolume();
 
   immuneTypeT ij;
   for (ij = MIN_IMMUNE;ij < MAX_IMMUNES; ij++) {
     if (k->getImmunity(ij) == 0 || !*immunity_names[ij])
       continue;
     if (k->getImmunity(ij) > 0)
-      sprintf(buf2,"%d%% resistant to %s.\n\r", k->getImmunity(ij),
-         immunity_names[ij]);
+      buf2 = fmt("%d%% resistant to %s.\n\r") %
+        k->getImmunity(ij) % immunity_names[ij];
     if (k->getImmunity(ij) < 0)
-      sprintf(buf2,"%d%% susceptible to %s.\n\r", -k->getImmunity(ij),
-         immunity_names[ij]);
-    strcat(buf, buf2);
+      buf2 = fmt("%d%% susceptible to %s.\n\r") %
+        -k->getImmunity(ij) % immunity_names[ij];
+    str += buf2;
   }
 
   if (!k->isPc()) {
     const TMonster *tmons = dynamic_cast<const TMonster *>(k);
-    sprintf(buf + strlen(buf), "  Action pointer: %s", 
-         (tmons->act_ptr ? "YES" : "no") );
-    sprintf(buf + strlen(buf), "    Special Procedure:  %s\n\r",
-         (tmons->spec) ? mob_specials[GET_MOB_SPE_INDEX(tmons->spec)].name : "none");
-    sprintf(buf + strlen(buf), "Anger: %d/%d     Malice: %d/%d     Suspicion: %d/%d   Greed: %d/%d\n\r",
-         tmons->anger(), tmons->defanger(),
-         tmons->malice(), tmons->defmalice(),
-         tmons->susp(), tmons->defsusp(),
-         tmons->greed(), tmons->defgreed());
-    sprintf(buf + strlen(buf), "Hates: ");
+    str += fmt("%sAction pointer:%s %s") % 
+      cyan() % norm() %
+      ((tmons->act_ptr ? "YES" : "no") );
+    str += fmt("    %sSpecial Procedure:%s %s\n\r") %
+      cyan() % norm() %
+      ((tmons->spec) ? mob_specials[GET_MOB_SPE_INDEX(tmons->spec)].name : "none");
+    str += fmt("%sAnger:%s %d/%d     %sMalice:%s %d/%d     %sSuspicion:%s %d/%d   %sGreed:%s %d/%d\n\r") %
+      cyan() % norm() %
+      tmons->anger() % tmons->defanger() %
+      cyan() % norm() %
+      tmons->malice() % tmons->defmalice() %
+      cyan() % norm() %
+      tmons->susp() % tmons->defsusp() %
+      cyan() % norm() %
+      tmons->greed() % tmons->defgreed();
+    str += fmt("%sHates:%s " ) % cyan() % norm();
     if (IS_SET(tmons->hatefield, HATE_CHAR)) {
       if (tmons->hates.clist) {
         for (list = tmons->hates.clist; list; list = list->next) {
-          if (list->name)
-            strcat(buf, list->name);
+          if (list->name) {
+            str += list->name;
+            str += " ";
+          }
         }
       }
     }
     if (IS_SET(tmons->hatefield, HATE_RACE)) {
       if (tmons->hates.race != -1) {
-        strcat(buf, Races[tmons->hates.race]->getSingularName().c_str());
-        strcat(buf, "(Race) ");
+        str += Races[tmons->hates.race]->getSingularName();
+        str += "(Race) ";
       }
     }
     if (IS_SET(tmons->hatefield, HATE_SEX)) {
       switch (tmons->hates.sex) {
         case SEX_NEUTER:
-          strcat(buf, "SEX_NEUTER ");
+          str += "SEX_NEUTER ";
           break;
         case SEX_MALE:
-          strcat(buf, "SEX_MALE ");
+          str += "SEX_MALE ";
           break;
         case SEX_FEMALE:
-          strcat(buf, "SEX_FEMALE ");
+          str += "SEX_FEMALE ";
           break;
       }
     }
-    strcat(buf, "    ");
+    str += "    ";
 
-    sprintf(buf + strlen(buf), "Fears: ");
+    str += fmt("%sFears:%s " ) % cyan() % norm();
     if (IS_SET(tmons->fearfield, FEAR_CHAR)) {
       if (tmons->fears.clist) {
         for (list = tmons->fears.clist; list; list = list->next) {
-          if (list->name)
-            strcat(buf, list->name);
+          if (list->name) {
+            str += list->name;
+            str += " ";
+          }
         }
       }
     }
     if (IS_SET(tmons->fearfield, FEAR_RACE)) {
       if (tmons->fears.race != -1) {
-        strcat(buf, Races[tmons->fears.race]->getSingularName().c_str());
-        strcat(buf, "(Race) ");
+        str += Races[tmons->fears.race]->getSingularName();
+        str += "(Race) ";
       }
     }
     if (IS_SET(tmons->fearfield, FEAR_SEX)) {
       switch (tmons->fears.sex) {
         case SEX_NEUTER:
-          strcat(buf, "SEX_NEUTER ");
+          str += "SEX_NEUTER ";
           break;
         case SEX_MALE:
-          strcat(buf, "SEX_MALE ");
+          str += "SEX_MALE ";
           break;
         case SEX_FEMALE:
-          strcat(buf, "SEX_FEMALE ");
+          str += "SEX_FEMALE ";
           break;
       }
     }
     if (IS_SET(tmons->fearfield, FEAR_CLASS)) {
-       sprintf(buf + strlen(buf), "CLASS=%d ", tmons->fears.Class);
+       str += fmt("CLASS=%d ") % tmons->fears.Class;
     }
     if (IS_SET(tmons->fearfield, FEAR_VNUM)) {
-       sprintf(buf + strlen(buf), "VNUM=%d ", tmons->fears.vnum);
+       str += fmt("VNUM=%d ") % tmons->fears.vnum;
     }
     if (IS_SET(tmons->specials.act, ACT_HUNTING)) {
-      sprintf(buf + strlen(buf),
-            "\n\rHunting: %s, persist: %d, origin: %d, hunt distance: %d",
-            tmons->specials.hunting ? tmons->specials.hunting->getName() : "Unknown",
-            tmons->persist,
-            tmons->oldRoom, tmons->hunt_dist);
+      str += fmt("\n\r%sHunting:%s %s  %spersist:%s %d  %sorigin:%s %d  %shunt distance:%s %d") %
+        cyan() % norm() %
+        (tmons->specials.hunting ? tmons->specials.hunting->getName() : "Unknown") %
+        cyan() % norm() %
+        tmons->persist %
+        cyan() % norm() %
+        tmons->oldRoom %
+        cyan() % norm() %
+        tmons->hunt_dist;
     } else if (tmons->specials.hunting) {
-      sprintf(buf + strlen(buf),
-                 "\n\rTracking: %s, persist: %d, origin: %d, range: %d",
-                 tmons->specials.hunting->getName(), tmons->persist,
-                 tmons->oldRoom, tmons->hunt_dist);
+      str += fmt("\n\r%sTracking:%s %s  %spersist:%s %d  %sorigin:%s %d  %srange:%s %d") %
+        cyan() % norm() %
+        tmons->specials.hunting->getName() %
+        cyan() % norm() %
+        tmons->persist %
+        cyan() % norm() %
+        tmons->oldRoom %
+        cyan() % norm() %
+        tmons->hunt_dist;
     }
-    sprintf(buf + strlen(buf), "\n\rAI Target: %s, Random: %s",
-       tmons->targ() ? tmons->targ()->getName() : "-",
-       tmons->opinion.random ? tmons->opinion.random->getName() : "-");
-    strcat(buf, "\n\r");
+    str += fmt("\n\r%sAI Target:%s %s  %sRandom:%s %s") %
+      cyan() % norm() %
+      (tmons->targ() ? tmons->targ()->getName() : "-") %
+      cyan() % norm() %
+      (tmons->opinion.random ? tmons->opinion.random->getName() : "-");
+    str += "\n\r";
   } else {
     // PCs only
     if (k->specials.hunting) {
-      sprintf(buf + strlen(buf), "Hunting: %s\n\r",
-                 k->specials.hunting->getName());
+      str += fmt("%sHunting:%s %s\n\r") %
+        cyan() % norm() %
+        k->specials.hunting->getName();
     }
     const TPerson *tper = dynamic_cast<const TPerson *>(k);
     if (tper) {
-      char tbf[256], *gt;
-      // to prevent the titel from colorizing, mangle it slightly
-      strcpy(tbf, tper->title);
-      for(gt = tbf; *gt; gt++) {
-        if (*gt == '>')
-          *gt = '|';
-      }
-  
-      sprintf(buf + strlen(buf), "Title:\n\r%s\n\r", tbf);
+      str += fmt("%sTitle:%s\n\r%s%s\n\r") %
+        cyan() % norm() % tper->title % norm();
     }
   }
 
-  strcat(buf, "Affected by: ");
-  strcat(buf, sprintbit(k->specials.affectedBy, affected_bits).c_str());
-  strcat(buf, "\n\r");
+  str += fmt("%sAffected by:%s ") % cyan() % norm();
+  str += sprintbit(k->specials.affectedBy, affected_bits);
+  str += "\n\r\n\r";
 
-  strcat(buf, "\n\rBody part          Hth Max Flgs StuckIn\n\r");
-  strcat(buf, "-----------------------------------\n\r");
+  str += fmt("%sBody part          Hth Max Flgs  StuckIn%s\n\r") %
+    cyan() % norm();
+  str += fmt("%s----------------------------------------%s\n\r") %
+    cyan() % norm();
   wearSlotT il;
   for (il = MIN_WEAR; il < MAX_WEAR; il++) {
     if (il == HOLD_RIGHT || il == HOLD_LEFT)
       continue;
     if (k->slotChance(il)) {
-      sprintf(buf2, "[%s]", k->describeBodySlot(il).c_str());
-      sprintf(buf + strlen(buf), "%-18s %-3d %-3d %-5d %s\n\r",
-          buf2, k->getCurLimbHealth(il), k->getMaxLimbHealth(il),
-                  k->getLimbFlags(il),
-          (k->getStuckIn(il) ?
-                       k->getStuckIn(il)->getName():
-                       "None"));
+      buf2 = fmt("[%s]") % k->describeBodySlot(il);
+      str += fmt("%-18s %-3d %-3d %-5d %s\n\r") %
+        buf2 % k->getCurLimbHealth(il) %
+        k->getMaxLimbHealth(il) %
+        k->getLimbFlags(il) %
+        (k->getStuckIn(il) ? k->getStuckIn(il)->getName() : "None");
     }
   }
 
   if (km) {
     if (km->resps && km->resps->respList) {
-      sprintf(buf + strlen(buf),"Response(s):\n\r----------\n\r");
+      str += fmt("%sResponse(s):\n\r------------%s\n\r") % cyan() % norm();
       for (respy = km->resps->respList; respy; respy = respy->next) {
         if (respy->cmd < MAX_CMD_LIST) {
-          sprintf(buf + strlen(buf),"%s %s\n\r", commandArray[respy->cmd]->name, respy->args);
+          str += fmt("%s %s\n\r") % commandArray[respy->cmd]->name %
+            respy->args;
         } else if (respy->cmd == CMD_RESP_ROOM_ENTER) {
-          sprintf(buf + strlen(buf),"roomenter\n\r");
+          str += "roomenter\n\r";
         } else if (respy->cmd == CMD_RESP_PACKAGE) {
-          sprintf(buf + strlen(buf),"package %s\n\r", respy->args);
+          str += fmt("package %s\n\r") % respy->args;
         } else {
-          sprintf(buf + strlen(buf),"%d %s\n\r", respy->cmd, respy->args);
+          str += fmt("%d %s\n\r") % respy->cmd % respy->args;
         }
       }
-      sprintf(buf + strlen(buf),"----------\n\r");
+      str += fmt("%s------------%s\n\r") % cyan() % norm();
 
       if (km->resps->respMemory) {
-        sprintf(buf + strlen(buf), "Response Memory:\n\r----------\n\r");
+        str += fmt("%sResponse Memory:\n\r----------------\n\r%s") %
+          cyan() % norm();
 
         for (RespMemory *rMem = km->resps->respMemory; rMem; rMem = rMem->next)
           if (rMem->cmd < MAX_CMD_LIST) {
-            sprintf(buf + strlen(buf), "%s %s %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    commandArray[rMem->cmd]->name,
-                    (rMem->args ? rMem->args : ""));
+            str += fmt("%s %s %s\n\r") %
+              (rMem->name ? rMem->name : "Unknown") %
+              commandArray[rMem->cmd]->name %
+              (rMem->args ? rMem->args : "");
 	  } else if (rMem->cmd == CMD_RESP_ROOM_ENTER) {
-            sprintf(buf + strlen(buf), "%s %s %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    "roomenter",
-                    (rMem->args ? rMem->args : ""));
+            str += fmt("%s %s %s\n\r") %
+              (rMem->name ? rMem->name : "Unknown") %
+              "roomenter" %
+              (rMem->args ? rMem->args : "");
           } else {
-            sprintf(buf + strlen(buf), "%s %d %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    rMem->cmd,
-                    (rMem->args ? rMem->args : ""));
+            str += fmt("%s %d %s\n\r") %
+              (rMem->name ? rMem->name : "Unknown") %
+              rMem->cmd %
+              (rMem->args ? rMem->args : "");
           }
 
-        sprintf(buf + strlen(buf),"----------\n\r");
+        str += fmt("----------------\n\r%s") % cyan() % norm();
       }
     } else
-      sprintf(buf + strlen(buf),"Response(s): None.\n\r");
+      str += fmt("%sResponse(s):%s None.\n\r") % cyan() % norm();
   }
 
-  strcat(buf, "\n\rAffecting Spells:\n\r--------------\n\r");
+  str += fmt("\n\r%sAffecting Spells:\n\r-----------------%s\n\r") %
+    cyan() % norm();
+  affectedData *aff, *af2;
   for (aff = k->affected; aff; aff = af2) {
     // technically, shouldn't need to save next, but apparently
     // some operations below "might" cause aff to be deleted
@@ -1574,198 +1610,195 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SKY_SPIRIT:
 #endif
         if (!discArray[aff->type]) {
-          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  aff->type % k->getName());
+          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
+            aff->type % k->getName());
           k->affectRemove(aff);
           break;
         }
 
-        sprintf(buf + strlen(buf), "Spell : '%s'\n\r", 
-                    discArray[aff->type]->name);
-        if (aff->location == APPLY_IMMUNITY)
-          sprintf(buf + strlen(buf), "     Modifies %s to %s by %ld points\n\r",
-            apply_types[aff->location].name, 
-              immunity_names[aff->modifier], aff->modifier2);
-        else if (aff->location == APPLY_SPELL)
-          sprintf(buf + strlen(buf), "     Modifies %s (%s) by %ld points\n\r", apply_types[aff->location].name, (discArray[aff->modifier] ? discArray[aff->modifier]->name : "BOGUS"), aff->modifier2);
-        else if (aff->location == APPLY_DISCIPLINE)
-          sprintf(buf + strlen(buf), "     Modifies %s (%s) by %ld points\n\r" , apply_types[aff->location].name,  (discNames[aff->modifier].disc_num ? discNames[aff->modifier].name : "BOGUS"), aff->modifier2);
-        else
-          sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-            apply_types[aff->location].name, aff->modifier);
-        sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
-          aff->duration);
-        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
-        strcat(buf2, "\n\r");
-        strcat(buf, buf2);
+        str += fmt("Spell : '%s'\n\r") % discArray[aff->type]->name;
+        if (aff->location == APPLY_IMMUNITY) {
+          str += fmt("     Modifies %s to %s by %ld points\n\r") %
+            apply_types[aff->location].name %
+            immunity_names[aff->modifier] %
+            aff->modifier2;
+        } else if (aff->location == APPLY_SPELL) {
+          str += fmt("     Modifies %s (%s) by %ld points\n\r") %
+            apply_types[aff->location].name %
+            (discArray[aff->modifier] ? discArray[aff->modifier]->name : "BOGUS") %
+            aff->modifier2;
+        } else if (aff->location == APPLY_DISCIPLINE) {
+          str += fmt("     Modifies %s (%s) by %ld points\n\r" ) %
+            apply_types[aff->location].name %
+            (discNames[aff->modifier].disc_num ? discNames[aff->modifier].properName : "BOGUS") %
+            aff->modifier2;
+        } else {
+          str += fmt("     Modifies %s by %ld points\n\r") %
+            apply_types[aff->location].name % aff->modifier;
+        }
+        str += fmt("     Expires in %6d updates, Bits set: %s\n\r\n\r") %
+          aff->duration % sprintbit(aff->bitvector, affected_bits);
+        break;
 
-        break;
       case AFFECT_DISEASE:
-        sprintf(buf + strlen(buf), "Disease: '%s'\n\r",
-                DiseaseInfo[affToDisease(*aff)].name);
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("Disease: '%s'\n\r") % DiseaseInfo[affToDisease(*aff)].name;
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_DUMMY:
-        sprintf(buf + strlen(buf), "Dummy Affect: \n\r");
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += "Dummy Affect: \n\r";
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_WAS_INDOORS:
-        sprintf(buf + strlen(buf), "Was indoors (immune to frostbite): \n\r");
-        sprintf(buf + strlen(buf),
-		"     Expires in %d updates.  Status = %d.\n\r",
-		aff->duration , aff->level);
+        str += "Was indoors (immune to frostbite): \n\r";
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_FREE_DEATHS:
-        sprintf(buf + strlen(buf), "Free Deaths: \n\r");
-        sprintf(buf + strlen(buf), 
-                  "     Remaining %ld.  Status = %d.\n\r",
-            aff->modifier, aff->level);
+        str += "Free Deaths: \n\r";
+        str += fmt("     Remaining %ld.  Status = %d.\n\r") %
+          aff->modifier % aff->level;
         break;
+
       case AFFECT_HORSEOWNED:
-        sprintf(buf + strlen(buf), "Horse-owned: \n\r");
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.\n\r",
-            aff->duration);
+        str += "Horse-owned: \n\r";
+        str += fmt("     Expires in %d updates.\n\r") %
+          aff->duration;
         break;
+
       case AFFECT_PLAYERKILL:
-        sprintf(buf + strlen(buf), "Player-Killer: \n\r");
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.\n\r",
-            aff->duration);
+        str += "Player-Killer: \n\r";
+        str += fmt("     Expires in %d updates.\n\r") %
+          aff->duration;
         break;
+
       case AFFECT_PLAYERLOOT:
-        sprintf(buf + strlen(buf), "Player-Looter: \n\r");
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.\n\r",
-                aff->duration);
+        str += "Player-Looter: \n\r";
+        str += fmt("     Expires in %d updates.\n\r") %
+          aff->duration;
         break;
+
       case AFFECT_TEST_FIGHT_MOB:
-        sprintf(buf + strlen(buf), "Test Fight Mob: \n\r");
-        sprintf(buf + strlen(buf), 
-                  "     Remaining %ld.  Status = %d.\n\r",
-            aff->modifier, aff->level);
+        str += "Test Fight Mob: \n\r";
+        str += fmt("     Remaining %ld.  Status = %d.\n\r") %
+          aff->modifier % aff->level;
         break;
+
       case AFFECT_SKILL_ATTEMPT:
-        sprintf(buf + strlen(buf), "Skill Attempt: \n\r");
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.  Skill = %d.\n\r",
-             aff->duration , (int) aff->bitvector); 
+        str += "Skill Attempt: \n\r";
+        str += fmt("     Expires in %d updates.  Skill = %d.\n\r") %
+          aff->duration % (int) aff->bitvector; 
         break;
+
       case AFFECT_NEWBIE:
-        sprintf(buf + strlen(buf), "Got Newbie Equipment: \n\r");
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += "Got Newbie Equipment: \n\r";
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_DRUNK:
-        sprintf(buf + strlen(buf), "Drunken slumber: \n\r");
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += "Drunken slumber: \n\r";
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_DRUG:
-        sprintf(buf + strlen(buf), "%s: \n\r", drugTypes[aff->modifier2].name);
-        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-        	apply_types[aff->location].name, aff->modifier);
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.  Status = %d.\n\r",
-        	aff->duration, aff->level);
-        sprintf(buf + strlen(buf), "renew %i\n\r", aff->renew);
+        str += fmt("%s: \n\r") % drugTypes[aff->modifier2].name;
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
+        str += fmt("renew %i\n\r") % aff->renew;
         break;
+
       case AFFECT_COMBAT:
-        sprintf(buf + strlen(buf), "Combat: '%s'\n\r", 
-            aff->be ? aff->be->getName() : "No aff->be!");
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("Combat: '%s'\n\r") % 
+          (aff->be ? aff->be->getName() : "No aff->be!");
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_PET:
-        sprintf(buf + strlen(buf), "pet of: '%s'\n\r", ((char *) aff->be));
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("pet of: '%s'\n\r") % aff->be->getName();
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_CHARM:
-        sprintf(buf + strlen(buf), "charm of: '%s'\n\r", ((char *) aff->be));
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("charm of: '%s'\n\r") % aff->be->getName();
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_THRALL:
-        sprintf(buf + strlen(buf), "thrall of: '%s'\n\r", ((char *) aff->be));
-        sprintf(buf + strlen(buf), 
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("thrall of: '%s'\n\r") % aff->be->getName();
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_ORPHAN_PET:
-        sprintf(buf + strlen(buf), "orphan pet of: '%s'\n\r", ((char *) aff->be));
-        sprintf(buf + strlen(buf),
-                  "     Expires in %d updates.  Status = %d.\n\r",
-            aff->duration , aff->level);
+        str += fmt("orphan pet of: '%s'\n\r") % aff->be->getName();
+        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
+          aff->duration % aff->level;
         break;
+
       case AFFECT_TRANSFORMED_ARMS:
       case AFFECT_TRANSFORMED_HANDS:
       case AFFECT_TRANSFORMED_LEGS:
       case AFFECT_TRANSFORMED_HEAD:
       case AFFECT_TRANSFORMED_NECK:
-        sprintf(buf + strlen(buf), "Spell : 'Transformed Limb'\n\r");
-        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-                    apply_types[aff->location].name, aff->modifier);
-        sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
-                    aff->duration);
-        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
-        strcat(buf2, "\n\r");
-        strcat(buf, buf2);
+        str += "Spell : 'Transformed Limb'\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += fmt("     Expires in %6d updates, Bits set: %s\n\r") %
+          aff->duration % sprintbit(aff->bitvector, affected_bits);
         break;
 
       case AFFECT_GROWTH_POTION:
-        sprintf(buf + strlen(buf), "Spell : 'Growth'\n\r");
-        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-                apply_types[aff->location].name, aff->modifier);
-        sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
-                aff->duration);
-        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
-        strcat(buf2, "\n\r");
-        strcat(buf, buf2);
+        str += "Spell : 'Growth'\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += fmt("     Expires in %6d updates, Bits set: %s\n\r") %
+          aff->duration % sprintbit(aff->bitvector, affected_bits);
         break;
 	
       case AFFECT_WARY:
-	sprintf(buf + strlen(buf), "State: Wary\n\r");
-	sprintf(buf + strlen(buf), "     Decreases chance of multiple cudgels\n\r");
+	str += "State: Wary\n\r";
+	str += "     Decreases chance of multiple cudgels\n\r";
 	break;
 
       case AFFECT_DEFECTED:
-	sprintf(buf + strlen(buf), "Player recently defected from a faction.\n\r");
-	sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+	str += "Player recently defected from a faction.\n\r";
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
 	
       case AFFECT_OFFER:
- 
 	f = get_faction_by_ID(aff->modifier);
 	if (!f) {
 	  vlogf(LOG_FACT, "char had faction offer from non-existant faction in cmd_stat");
 	  break;
 	}
-	sprintf(buf + strlen(buf), "Received offer to join %s (%d).\n\r",f->getName(), f->ID);
-	sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+	str += fmt("Received offer to join %s (%d).\n\r") %
+          f->getName() % f->ID;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
 	
       case AFFECT_OBJECT_USED:
         objused = aff->modifier;
 
-	sprintf(buf + strlen(buf), "Used magical object: %s\n\r", obj_index[objused].short_desc);
-        sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+	str += fmt("Used magical object: %s\n\r") %
+          obj_index[objused].short_desc;
+        str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
         break;
 
-
       case AFFECT_BITTEN_BY_VAMPIRE:
-	sprintf(buf+strlen(buf), "Bitten by vampire.\n\r");
-	sprintf(buf+strlen(buf), "Expires in %6d updates.\n\r", aff->duration);
+	str += "Bitten by vampire.\n\r";
+	str += fmt("Expires in %6d updates.\n\r") % aff->duration;
 	break;
-
 
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
@@ -1866,53 +1899,65 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
       case ABSOLUTE_MAX_SKILL:
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  aff->type % k->getName());
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") % aff->type % k->getName());
         k->affectRemove(aff);
         break;
     }
   }
   if (k->task) {
-    sprintf(buf + strlen(buf), "Player is busy '%s'.\n\r", tasks[k->task->task].name);
-    sprintf(buf + strlen(buf), "Time left:    %6d updates     Orignal argument:  %s\n\r",
-        k->task->timeLeft, k->task->orig_arg);
-    sprintf(buf + strlen(buf), "Was in room:  %6d             Status/Flags:      %6d/%6d\n\r",
-        k->task->wasInRoom, k->task->status, k->task->flags);
+    str += fmt("Player is busy '%s'.\n\r") % tasks[k->task->task].name;
+    str += fmt("Time left:    %6d updates     Orignal argument:  %s\n\r") %
+      k->task->timeLeft % k->task->orig_arg;
+    str += fmt("Was in room:  %6d             Status/Flags:      %6d/%6d\n\r") %
+      k->task->wasInRoom % k->task->status % k->task->flags;
   }
   for (i = 1; i < MAX_TOG_INDEX;i++) {
-    if (k->hasQuestBit(i)) 
-      sprintf(buf + strlen(buf), "Toggle Set: (%d) %s\n\r", i, TogIndex[i].name.c_str());
+    if (k->hasQuestBit(i))  {
+      str += fmt("%sToggle Set:%s (%d) %s\n\r") %
+        cyan() % norm() %
+        i % TogIndex[i].name;
+    }
   }
 #if 0
   // spams too much, use "powers xxx" instead
   wizPowerT ipow;
   for (ipow = MIN_POWER_INDEX; ipow < MAX_POWER_INDEX;ipow++) {
-    if (k->hasWizPower(ipow)) 
-      sprintf(buf + strlen(buf), "Wiz-Power Set: (%d) %s\n\r", mapWizPowerToFile(ipow), getWizPowerName(ipow).c_str());
+    if (k->hasWizPower(ipow))  {
+      str += fmt("Wiz-Power Set: (%d) %s\n\r") % mapWizPowerToFile(ipow) % getWizPowerName(ipow);
+    }
   }
 #endif
-  if (k->desc)
-    sprintf(buf + strlen(buf), "Client : %s\n\r", k->desc->m_bIsClient ? "Yes" : "No");
+  if (k->desc) {
+    str += fmt("%sClient:%s %s\n\r") %
+      cyan() % norm() %
+      (k->desc->m_bIsClient ? "Yes" : "No");
+  }
   
   if (km) {
-    if (km->sounds)
-      sprintf(buf + strlen(buf), "Local Sound:\n\r%s", km->sounds);
-    if (km->distantSnds)
-      sprintf(buf + strlen(buf), "Distant Sound:\n\r%s", km->distantSnds);
+    if (km->sounds) {
+      str += fmt("%sLocal Sound:%s\n\r%s") %
+        cyan() % norm() %
+        km->sounds;
+    }
+    if (km->distantSnds) {
+      str += fmt("%sDistant Sound:%s\n\r%s") %
+        cyan() % norm() %
+        km->distantSnds;
+    }
   }
-  desc->page_string(buf);
+  desc->page_string(str);
   return;
 }
 
-void TBeing::doStat(const char *)
+void TBeing::doStat(const sstring &)
 {
   return;
 }
 
-
-void TPerson::doStat(const char *argument)
+void TPerson::doStat(const sstring &argument)
 {
-  char arg1[256], buf[256], buf2[256], skbuf[80], namebuf[80];
-  const char *tmp_arg;
+  sstring arg1, buf, buf2, skbuf, namebuf;
+  sstring tmp_arg;
   TBeing *k = NULL;
   TObj *j = NULL;
   int count, parm = 0;
@@ -1933,9 +1978,9 @@ void TPerson::doStat(const char *argument)
   tmp_arg = one_argument(tmp_arg, buf);
   tmp_arg = one_argument(tmp_arg, skbuf);
   tmp_arg = one_argument(tmp_arg, namebuf);
-  strcpy(arg1, argument);
+  arg1 = argument;
 
-  if (!*arg1) {
+  if (arg1.empty()) {
     sendTo("Stats on who or what?\n\r");
     return;
   } else if (is_abbrev(skbuf, "skill")) {
@@ -1943,7 +1988,7 @@ void TPerson::doStat(const char *argument)
       sendTo("You can not type stat <argument> <skill>.\n\r");
       return;
     }
-    if (!namebuf) {
+    if (namebuf.empty()) {
       sendTo("Syntax: stat <char name> <skill> <value>\n\r");
       return;
     }
@@ -1965,32 +2010,39 @@ void TPerson::doStat(const char *argument)
     } else {
       foundNum = FALSE;
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
-        if (hideThisSpell(snt))
+        if (hideThisSpell(snt)) {
           continue;
+        }
         if (is_exact_name(namebuf, discArray[snt]->name)) {
-          if (!(k->getSkill(snt)))
+          if (!(k->getSkill(snt))) {
             continue;
+          }
           foundNum = TRUE;
           break;
         }
       }
       if (!foundNum) {
         for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
-          if (hideThisSpell(snt))
+          if (hideThisSpell(snt)) {
             continue;
-          strcpy(buf2,discArray[snt]->name);
+          }
+          buf2 = discArray[snt]->name;
           // kludge since chivalry < chi  in discarray
-          if (!strcmp(namebuf, "chi") && strcmp(buf2, "chi"))
+          if ((namebuf == "chi") && (buf2 != "chi")) {
             continue;
+          }
           // kludge since stealth < steal in discarray
-          if (!strcmp(namebuf, "steal") && strcmp(buf2, "steal"))
+          if ((namebuf == "steal") && (buf2 != "steal")) {
             continue;
+          }
           // kludge since paralyze limb < paralyze in discarray
-          if (!strcmp(namebuf, "paralyze") && strcmp(buf2, "paralyze"))
-             continue;
+          if ((namebuf == "paralyze") && (buf2 != "paralyze")) {
+            continue;
+          }
           if (isname(namebuf, discArray[snt]->name)) {
-            if (!(k->getSkill(snt))) 
+            if (!(k->getSkill(snt))) {
               continue;
+            }
             break;
           }
         } 
@@ -2003,25 +2055,27 @@ void TPerson::doStat(const char *argument)
     }
 
     if (!k->doesKnowSkill(snt)) {
-      if (discArray[snt])
+      if (discArray[snt]) {
         sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
-      else
+      } else {
         sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
+      }
       return;
     }
     CSkill *sk = k->getSkill(snt);
     if (!sk) {
-      if (discArray[snt])
+      if (discArray[snt]) {
         sendTo(COLOR_MOBS, fmt("%s doesnt appear to have that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
-      else
+      } else {
         sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
-       return;
+      }
+      return;
     }
     sendTo(COLOR_MOBS, fmt("%s's %s Raw (stored) Learning: Current (%d) Natural (%d).\n\r") % k->getName() % discArray[snt]->name % k->getRawSkillValue(snt) % k->getRawNatSkillValue(snt));
     sendTo(COLOR_MOBS, fmt("%s's %s Actual (used) Learning: Current (%d) Natural (%d) Max (%d).\n\r") % k->getName() % discArray[snt]->name % k->getSkillValue(snt) % k->getNatSkillValue(snt) % k->getMaxSkillValue(snt));
 
     time_t ct = sk->lastUsed;
-    char * tmstr = (char *) asctime(localtime(&ct));
+    char *tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
     sendTo(COLOR_MOBS, fmt("%s's %s Last Increased: %s\n\r") % k->getName() % discArray[snt]->name % tmstr);
 
@@ -2045,16 +2099,17 @@ void TPerson::doStat(const char *argument)
 
     CDiscipline *cd;
     
-    if (!namebuf && !k->isPc() && !k->desc) {
+    if (namebuf.empty() && !k->isPc() && !k->desc) {
       sendTo(COLOR_MOBS, fmt("%s has the following disciplines:\n\r\n\r") % k->getName());
       discNumT dnt;
       for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
-        if (!(cd = k->getDiscipline(dnt)))
+        if (!(cd = k->getDiscipline(dnt))) {
           break;
+        }
         sendTo(COLOR_MOBS, fmt("Discpline %20.20s : Current (%d) Natural (%d).\n\r") % discNames[dnt].name % cd->getLearnedness()  % cd->getNatLearnedness());
       }
       return;
-    } else if (!namebuf) {
+    } else if (namebuf.empty()) {
       sendTo("Syntax: stat <char name> <discipline> <value>\n\r");
       return;
     }
@@ -2081,7 +2136,7 @@ void TPerson::doStat(const char *argument)
       sendTo("You can not type stat <argument> <donebasic>.\n\r");
       return;
     }
-    if (!namebuf) {
+    if (namebuf.empty()) {
       sendTo("Syntax: stat <char name> <donebasic>\n\r");
       return;
     }
@@ -2098,17 +2153,17 @@ void TPerson::doStat(const char *argument)
       sendTo(fmt("%-25.25s  :  %d\n\r") % classInfo[count].name.cap() % k->player.doneBasic[count]);
     }
     return;
-  } else if (!strcmp("room", arg1)) {
+  } else if (arg1 == "room") {
     statRoom(roomp);
     return;
-  } else if (!strcmp("zone", buf)) {
+  } else if (buf == "zone") {
     statZone(skbuf);
     return;
   } else {
     count = 1;
 
     if (((j = get_obj_vis_accessible(this, arg1)) ||
-          (j = get_obj_vis(this, arg1, &count, EXACT_NO))) &&
+          (j = get_obj_vis(this, arg1.c_str(), &count, EXACT_NO))) &&
           ((k = get_char_room(arg1, in_room)) == NULL) &&
           ((k = get_pc_world(this, arg1, EXACT_NO)) == NULL)) {
       if (!hasWizPower(POWER_STAT_OBJECT)) {
@@ -2158,7 +2213,3 @@ void TPerson::doStat(const char *argument)
     sendTo("No mobile or object by that name in The World.\n\r");
   }
 }
-
-
-
-

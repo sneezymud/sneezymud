@@ -1069,7 +1069,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	addToLifeforce(1);
 	break;
       case CMD_STAT:
-	doStat(newarg.c_str());
+	doStat(newarg);
 	break;
       case CMD_PURGE:
 	doPurge(newarg.c_str());
@@ -3070,16 +3070,19 @@ sstring sprintbit(unsigned long vektor, const char * const names[])
   return result;
 }
 
-void sprinttype(int type, const sstring names[], char *result)
+sstring sprinttype(int type, const sstring names[])
 {
   int nr;
+  sstring result;
 
   for (nr = 0; (names[nr] != "\n"); nr++);
 
-  if (type < nr)
-    strcpy(result, names[type].c_str());
-  else
-    strcpy(result, "UNDEFINED");
+  if (type < nr) {
+    result = names[type];
+  } else {
+    result = "UNDEFINED";
+  }
+  return result;
 }
 
 #if (!defined SUN && !defined LINUX && !defined(SOLARIS))

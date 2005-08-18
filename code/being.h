@@ -1509,9 +1509,9 @@ class TBeing : public TThing {
     void doBreath(const char *);
     void doQuest(const char *);
     void doMortalQuest(const char *);
-    virtual void doStat(const char *);
+    virtual void doStat(const sstring &);
     void statRoom(TRoom *);
-    void statZone(const char *);
+    void statZone(const sstring &);
     void statObj(const TObj *);
     void statObjForDivman(const TObj *);
     void statBeing(TBeing *);

@@ -106,7 +106,7 @@ extern int personalize_object(TBeing *deity, TBeing *, int virt, int decay);
 extern int resize_personalize_object(TBeing *deity, TBeing *, int virt, int decay);
 extern bool safe_to_save_shop_stuff(TMonster *);
 extern bool safe_to_be_in_system(const sstring &);
-extern void sprinttype(int type, const sstring names[], char *result);
+sstring sprinttype(int type, const sstring names[]);
 extern int vsystem(const sstring &);
 extern bool load_char(const sstring &name, charFile *);
 extern int game_loop(int s);

@@ -125,7 +125,7 @@ class TPerson : public TBeing {
     void loadWizPowers();
     virtual void doColor(const char *);
     virtual void doChange(const char *);
-    virtual void doStat(const char *);
+    virtual void doStat(const sstring &argument);
     virtual void doShow(const char *);
     virtual bool isPc() const { return TRUE; }
     virtual void logf(const char *, ...);
