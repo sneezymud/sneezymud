@@ -715,6 +715,8 @@ int main(int argc, char **argv)
   sstring logfile="/mud/prod/lib/logs/logcurrent";
   TDatabase db(DB_SNEEZYBETA), dbexits(DB_SNEEZYBETA);
 
+  toggleInfo.loadToggles();
+
   while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:xl:p")) != -1){
     switch (ch) {
       case 'r':
