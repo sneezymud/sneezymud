@@ -741,6 +741,8 @@ const sstring getWizPowerName(wizPowerT wpt)
       return "Inactive";
     case POWER_NO_LIMITS:
       return "No Limitations";
+    case POWER_CLONE:
+      return "Clone";
     case MAX_POWER_INDEX:
       break;
   }

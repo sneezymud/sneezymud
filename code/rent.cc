@@ -4646,6 +4646,10 @@ void TBeing::doClone(const sstring &arg)
   int ci, num_read = 0;
   ItemLoad il;
 
+  if (powerCheck(POWER_CLONE)) {
+    return;
+  }
+
   if (!isImmortal())
     return;
 
@@ -4659,7 +4663,7 @@ void TBeing::doClone(const sstring &arg)
     return;
   }
 
-  for(ci = 0;ci <= RANGER_LEVEL_IND;ci++) {
+  for(ci = 0;ci <= MAX_SAVED_CLASSES;ci++) {
     if(st1.level[ci] > GetMaxLevel()) {
       sendTo("You can't clone a player of higher level than you.\n\r");
       return;
