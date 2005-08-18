@@ -84,7 +84,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   {
     ch->sendTo("You need to hold a slash weapon in your primary hand to engage in deforestation!\n\r");
     ch->stopTask();
-    return FALSE;
+    return TRUE;
   }
 
   /*
@@ -96,13 +96,13 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     vlogf(LOG_BUG, "Somehow chopping wood in an unforested area.");
     ch->sendTo("Forests are said to be a good place to find trees.  Maybe you should find one?\n\r");
     ch->stopTask();
-    return FALSE;
+    return TRUE;
   }
 
   if (ch->task && ch->task->timeLeft < 0){
     ch->sendTo("You give up on your deforestation activities.\n\r");
     ch->stopTask();
-    return FALSE;
+    return TRUE;
   }
 
   switch (cmd) {
@@ -127,7 +127,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             act("$n doesn't seem to have found whatever $e was looking for.",
               TRUE, ch, NULL, 0, TO_ROOM);
             ch->stopTask();
-            return FALSE;
+            return TRUE;
           }
           break;
         case 2:
@@ -144,7 +144,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
               act("$n doesn't seem to have found whatever $e was looking for.",
                 TRUE, ch, tool, 0, TO_ROOM);
               ch->stopTask();
-              return FALSE;
+              return TRUE;
             }
             ch->sendTo(fmt("You've found a %s tree!\n\r") 
                 % sstring(log->getName()).word(1));
@@ -163,7 +163,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             act("$n doesn't seem to have found whatever $e was looking for.",
               TRUE, ch, NULL, 0, TO_ROOM);
             ch->stopTask();
-            return FALSE;
+            return TRUE;
           }
           ch->task->timeLeft--;
           break;
@@ -175,7 +175,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             act("$n stops chopping, and wipes sweat from $s brow.", 
                 TRUE, ch, tool, 0, TO_ROOM);
             ch->stopTask();
-            return FALSE;
+            return TRUE;
           }
           
           act("You chop at the tree with your $o.",
