@@ -743,7 +743,7 @@ sh_int TBeing::pracsSoFar(){
 }
 
 sh_int TBeing::expectedPracs(){
-  int i, level;
+  int i, level=0;
   double lvlStart, lvlEnd, fraction;
   double pracs = 0;
   classIndT Class;
@@ -751,7 +751,7 @@ sh_int TBeing::expectedPracs(){
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
     if (!hasClass(1<<Class))
       continue;
-    player.doneBasic[Class] = 0;
+//    player.doneBasic[Class] = 0;
 //    level = getLevel(Class);
 //    if(level>=MAX_MORT){
       // for level 50's we need to calculate what level they would
@@ -760,18 +760,22 @@ sh_int TBeing::expectedPracs(){
 //      for(int i=50;i<127;++i){
 //      just do this for everyone so that it works on @set exp folks too
       for(i=1;i<127;i++){
-        if(getExpClassLevel(Class,i) > getExp()){
+        if(getExpClassLevel(Class,i) > getMaxExp()){
           level = i-1;
           break;
         }
       }
 //    }
+    if (!level)
+      vlogf(LOG_BUG, "Level exceeded 127 in expectedPracs.");
     lvlStart = getExpClassLevel(Class,level);
     lvlEnd = getExpClassLevel(Class,level+1);
-    fraction = (getExp()-lvlStart)/(lvlEnd-lvlStart);
-    vlogf(LOG_MAROR, fmt("level is %d") % level);
+    fraction = (getMaxExp()-lvlStart)/(lvlEnd-lvlStart);
+    double advancedlevel = 30.0 / getIntModForPracs();
+//    vlogf(LOG_MAROR, fmt("level is %d, exp is %f, fraction is %f, advancedlevel is %f") 
+ //       % level % getMaxExp() % fraction % advancedlevel );
     for (i = 0; i <= level; i++) {
-      if (pracs <= 200) {
+      if (i < advancedlevel || i > 50) {
         if (i==level)
           pracs += pracsPerLevel(Class, true)*fraction;
         else
@@ -966,8 +970,8 @@ if (ch->getLevel(Class) < MAX_MORT)
     }
   }
 
-  vlogf(LOG_MAROR, fmt("delta_exp %f t_peak %f t_exp %f")
-      % delta_exp % t_peak % t_exp);
+  //vlogf(LOG_MAROR, fmt("delta_exp %f t_peak %f t_exp %f")
+ //     % delta_exp % t_peak % t_exp);
   // crossing the threshold into the next level
   if(new_exp >= peak){ // peak is the amount of exp required to level
     // roll for extra prac
@@ -1008,7 +1012,7 @@ else
   // max to min
   //  if (ch->getLevel(Class) >= MAX_MORT)
   exp = ch->getMaxExp(); // setting min exp required to get a prac in this level, for the loop
-  vlogf(LOG_MAROR, fmt("start gaining exp at %f exp") % exp);
+ // vlogf(LOG_MAROR, fmt("start gaining exp at %f exp") % exp);
   new_exp = ch->getExp() + gain; // setting bumped exp from xp gain
   for(j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
     if(j > exp && j < new_exp){
@@ -1040,8 +1044,8 @@ else
     // check for level gain
     // do this last, so as not to mess up predefined values
   if (gain  > 0) {
-    vlogf(LOG_MAROR, fmt("getExp %f gain %f peak %f getMaxExp %f")
-      % ch->getExp() % gain % peak % ch->getMaxExp());
+//    vlogf(LOG_MAROR, fmt("getExp %f gain %f peak %f getMaxExp %f")
+//      % ch->getExp() % gain % peak % ch->getMaxExp());
     ch->addToExp(gain);
     if ((ch->getExp() >= peak) && (ch->getExp() >= ch->getMaxExp()) &&
       (ch->GetMaxLevel() < MAX_MORT)) {
