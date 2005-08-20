@@ -99,7 +99,7 @@ void TBeing::doZonesSingle(sstring tStString)
 */
       // }
 
-      // { -- Deduce mobiles fought in this zone, by this player, for both distict fight count and average xp gain --
+      // { -- Deduce mobiles fought in this zone, by this player, for both distinct fight count and average xp gain --
         unsigned int iCount  = 0,
                      iFought = 0;
         float        fXPAvg  = 0.0; // 1.00 = 100%
@@ -150,7 +150,7 @@ void TBeing::doZonesSingle(sstring tStString)
           if (fXPAvg)
             fXPAvg /= iCount;
 
-          sprintf(&tStats[strlen(tStats)], "You have fought %u distict creatures in this zone\n\r", iFought);
+          sprintf(&tStats[strlen(tStats)], "You have fought %u distinct creatures in this zone\n\r", iFought);
           sprintf(&tStats[strlen(tStats)], "...which equates to %.0f%% of all the creatures found within it.\n\r", fFPer);
           strcat(tStats, "All in all you will get ");
 
