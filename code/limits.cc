@@ -751,21 +751,13 @@ sh_int TBeing::expectedPracs(){
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
     if (!hasClass(1<<Class))
       continue;
-//    player.doneBasic[Class] = 0;
-//    level = getLevel(Class);
-//    if(level>=MAX_MORT){
-      // for level 50's we need to calculate what level they would
-      // be
-      // arbitrarily cutting loop off at 127
-//      for(int i=50;i<127;++i){
-//      just do this for everyone so that it works on @set exp folks too
-      for(i=1;i<127;i++){
-        if(getExpClassLevel(Class,i) > getMaxExp()){
-          level = i-1;
-          break;
-        }
+      // find level based on experience
+    for(i=1;i<127;i++){
+      if(getExpClassLevel(Class,i) > getMaxExp()){
+        level = i-1;
+        break;
       }
-//    }
+    }
     if (!level)
       vlogf(LOG_BUG, "Level exceeded 127 in expectedPracs.");
     lvlStart = getExpClassLevel(Class,level);
