@@ -171,7 +171,7 @@ M 0 3707 1 3737         Kludge Half-Ear - Logrus Petguy
 M 0 3727 1 3727         Momar (Logrus armourer)		(shop 26)
 M 0 3728 1 3728     	Rogar (Logrus weaponer)		(shop 27)
 M 0 3741 1 3741     	Rednow (Logrus Food)		(shop 28)
-M 0 3742 1 3742     	Nekcihc (Logrus magic)		(shop 29)
+M 0 3742 1 3742     	Nekcihc (Logrus magic)		(shop 217)
 M 0 3743 1 3743     	Hsif (Logrus General)		(shop 30)
 M 0 3755 1 3755		banker				(shop 141)
 M 0 8756 1 8756		banker				(shop 142)
@@ -216,6 +216,7 @@ M 0 611 1 608 		Fred Sanford			(shop 184)
 M 0 31767 1 31757    SBA rep
 M 0 4614 1 4614      (shop 214)
 M 0 4612 1 4612      (shop 215)
+M 0 4504 1 4504      Wiwina's (shop 29)
 
 **
 * Fishing Shop
