@@ -216,15 +216,6 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!ch || !cmd || !myself)
     return FALSE;
   
-  if (cmd == CMD_RENT) {
-    myself->stopFollower(FALSE);
-    act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
-    --(*myself);
-    // reinsert at birth room
-    thing_to_room(myself, myself->brtRoom);
-    return FALSE;
-  }
-
   if (!login && cmd != CMD_GENERIC_PULSE)
     return FALSE;
 

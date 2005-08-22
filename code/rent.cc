@@ -4016,6 +4016,10 @@ bool TBeing::isSaveMob(const TBeing *) const
   if (mob->spec == SPEC_BOUNTY_HUNTER)
     return FALSE;
 
+  // no renting of hero faeries
+  if (mob->spec == SPEC_HERO_FAERIE)
+    return FALSE;
+
   return TRUE;
 }
 
