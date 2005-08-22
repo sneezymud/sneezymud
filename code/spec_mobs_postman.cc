@@ -154,7 +154,7 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 	act("$n delivers $p to $N.",
 	    FALSE, me, obj, tm, TO_ROOM);
 	delete obj;
-	if (!::number(0,8)) {
+	if (!::number(0,800)) {
 	  TObj *o2;
 	  o2=read_object(33601, VIRTUAL);
 	  *me += *o2;
