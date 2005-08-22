@@ -315,7 +315,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
 	spec_objs_ballot_box.o		spec_objs_casting.o		\
 	spec_mobs_property_clerk.o	spec_mobs_leper_hunter.o	\
-	spec_mobs_auctioneer.o		spec_mobs_loan_manager.o
+	spec_mobs_auctioneer.o		spec_mobs_loan_manager.o \
+	spec_mobs_herofaeries.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -32287,7 +32288,8 @@ objs/spec_mobs.o: pathfinder.h /usr/include/c++/3.4/deque
 objs/spec_mobs.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/spec_mobs.o: /usr/include/c++/3.4/bits/deque.tcc shop.h
 objs/spec_mobs.o: obj_base_corpse.h obj_base_container.h obj_player_corpse.h
-objs/spec_mobs.o: obj_tool.h
+objs/spec_mobs.o: obj_tool.h obj_plant.h obj_expandable_container.h
+objs/spec_mobs.o: obj_open_container.h
 objs/spec_mobs_archer.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_archer.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_archer.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -33945,6 +33947,139 @@ objs/spec_mobs_goring.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_goring.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs_goring.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/spec_mobs_goring.o: format.h
+objs/spec_mobs_herofaeries.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/c++config.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cstddef
+objs/spec_mobs_herofaeries.o: /usr/include/stddef.h /usr/include/sys/cdefs.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/_null.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/_types.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/_types.h
+objs/spec_mobs_herofaeries.o: /usr/include/stdio.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cstdlib
+objs/spec_mobs_herofaeries.o: /usr/include/stdlib.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/ctime /usr/include/time.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/timespec.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/types.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/endian.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/select.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/_sigset.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/_timeval.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cctype
+objs/spec_mobs_herofaeries.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cassert
+objs/spec_mobs_herofaeries.o: /usr/include/assert.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cstring
+objs/spec_mobs_herofaeries.o: /usr/include/string.h /usr/include/strings.h
+objs/spec_mobs_herofaeries.o: /usr/include/stdarg.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cmath
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/spec_mobs_herofaeries.o: /usr/include/math.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/_limits.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cerrno
+objs/spec_mobs_herofaeries.o: /usr/include/errno.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/string
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/climits
+objs/spec_mobs_herofaeries.o: /usr/include/limits.h /usr/include/sys/limits.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/new
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/exception
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/iosfwd
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/clocale
+objs/spec_mobs_herofaeries.o: /usr/include/locale.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/c++io.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/gthr.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/spec_mobs_herofaeries.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/signal.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/signal.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/trap.h
+objs/spec_mobs_herofaeries.o: /usr/include/sched.h /usr/include/unistd.h
+objs/spec_mobs_herofaeries.o: /usr/include/sys/unistd.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/postypes.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cwchar
+objs/spec_mobs_herofaeries.o: /usr/include/wchar.h /usr/include/stdint.h
+objs/spec_mobs_herofaeries.o: /usr/include/machine/_stdint.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/exception_defines.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/debug/debug.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/memory
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/allocator.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/algorithm
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/vector
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/map
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/list
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/list.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/iostream
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/ostream
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/ios
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/streambuf
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/cwctype
+objs/spec_mobs_herofaeries.o: /usr/include/wctype.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/locale
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/limits
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/typeinfo
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/istream
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/sstream
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/fstream
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h
+objs/spec_mobs_herofaeries.o: low.h enum.h spells.h structs.h parse.h
+objs/spec_mobs_herofaeries.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_mobs_herofaeries.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_mobs_herofaeries.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_herofaeries.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_mobs_herofaeries.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_mobs_herofaeries.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_herofaeries.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_herofaeries.o: person.h monster.h paths.h account.h extern.h
+objs/spec_mobs_herofaeries.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/spec_mobs_herofaeries.o: colorstring.h format.h database.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/libpq-fe.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/postgres_ext.h
 objs/spec_mobs_holdem_player.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.4/bits/os_defines.h

@@ -189,7 +189,8 @@ const int SPEC_LEPER_HUNTER       =202;
 const int SPEC_AUCTIONEER         =203;
 const int SPEC_LOAN_MANAGER       =204;
 const int SPEC_BEE_DEATH          =205;
-const int NUM_MOB_SPECIALS        =205;
+const int SPEC_HERO_FAERIE        =206;
+const int NUM_MOB_SPECIALS        =206;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -239,6 +240,8 @@ extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int shopWhisper(TBeing *, TMonster *, int, const char *);
 extern int archer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *, bool login);
+extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
 
 class attune_struct {
   public:

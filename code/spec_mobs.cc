@@ -6530,6 +6530,7 @@ extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int lotteryRedeemer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *);
+extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
 
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
@@ -6735,12 +6736,13 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "amber janitor", amberJanitor},
   {FALSE, "brightmoon janitor", brightmoonJanitor},
   {FALSE, "garbage convoy", garbageConvoy},
-  {FALSE, "signmaker", signMaker},
+  {FALSE, "signmaker", signMaker}, // 200
   {TRUE, "butler", receptionist},
   {FALSE, "leper hunter", leperHunter},
   {FALSE, "auctioneer", auctioneer},
   {FALSE, "loan manager", loanManager},
-  {TRUE, "bee death", beeDeath}
+  {TRUE, "bee death", beeDeath}, // 205
+  {FALSE, "hero faerie", heroFaerie},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
