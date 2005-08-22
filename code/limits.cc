@@ -717,28 +717,28 @@ sh_int TBeing::pracsSoFar(){
     if (!hasClass(1<<Class))
       continue;
     pracs += getPracs(Class);
-    for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
-      if (dnt == DISC_ADVENTURING || dnt == DISC_RITUALISM || dnt == DISC_WIZARDRY || dnt == DISC_FAITH)
-        continue;
-      cd = getDiscipline(dnt);
-      if (cd && (cd->getNatLearnedness() > 0)) {
-        learn = cd->getNatLearnedness();
-        cd->setLearnedness(0);
-        cd->setNatLearnedness(0);
-        while(cd->getNatLearnedness() < learn) {
-          raiseBy = calcRaiseDisc(dnt, FALSE);
-          cd->setLearnedness(cd->getLearnedness() + raiseBy);
-          cd->setNatLearnedness(cd->getNatLearnedness() + raiseBy);
-          pracs += 1;
-        }
-        // set it back
-        cd->setLearnedness(learn);
-        cd->setNatLearnedness(learn);
-        if (isPc() || desc)
-          affectTotal();
-      }
-    }  
   }
+  for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
+    if (dnt == DISC_ADVENTURING || dnt == DISC_RITUALISM || dnt == DISC_WIZARDRY || dnt == DISC_FAITH)
+      continue;
+    cd = getDiscipline(dnt);
+    if (cd && (cd->getNatLearnedness() > 0)) {
+      learn = cd->getNatLearnedness();
+      cd->setLearnedness(0);
+      cd->setNatLearnedness(0);
+      while(cd->getNatLearnedness() < learn) {
+        raiseBy = calcRaiseDisc(dnt, FALSE);
+        cd->setLearnedness(cd->getLearnedness() + raiseBy);
+        cd->setNatLearnedness(cd->getNatLearnedness() + raiseBy);
+        pracs += 1;
+      }
+      // set it back
+      cd->setLearnedness(learn);
+      cd->setNatLearnedness(learn);
+      if (isPc() || desc)
+        affectTotal();
+    }
+  }  
   return pracs;
 }
 
