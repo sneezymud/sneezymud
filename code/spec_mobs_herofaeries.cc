@@ -221,7 +221,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
     // reinsert at birth room
-    *real_roomp(myself->brtRoom) += *myself;
+    thing_to_room(myself, myself->brtRoom);
     return FALSE;
   }
 
@@ -330,7 +330,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
     // reinsert at birth room
-    *real_roomp(myself->brtRoom) += *myself;
+    thing_to_room(myself, myself->brtRoom);
     return TRUE;
   } else if (myself->master != newMaster) {
     if (myself->master)
