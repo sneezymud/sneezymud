@@ -3752,7 +3752,8 @@ int TMonster::mobileActivity(int pulse)
   }
 
 
-  if (!awake() || desc || IS_SET(specials.act, ACT_POLYSELF))
+  if ( !awake() || desc || IS_SET(specials.act, ACT_POLYSELF) || 
+      spec == SPEC_HERO_FAERIE )
     return FALSE;
 
   // yank out stuck-in

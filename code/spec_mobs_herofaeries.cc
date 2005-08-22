@@ -203,7 +203,8 @@ int clearPermaDeathEffects(TBeing *faerie, TBeing *targ)
 
 // wrapper function
 int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
-  TMonster *myself, TObj *) {
+  TMonster *myself, TObj *)
+{
   return heroFaerie(ch, cmd, arg, myself, NULL, FALSE);
 } 
 
@@ -219,7 +220,8 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!login && cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  if (myself->master && ::number(0,119)) // on most of the time but !spammy
+  if (myself->master && myself->roomp == myself->master->roomp 
+      && ::number(0,119)) // want it on most of the time but not too spammy
     return FALSE;
 
   if (login)
@@ -229,19 +231,19 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     myself->doWake("");
 
   myself->doFly();
-  
+
   // put faerie and master in the same room
   if (myself->master && myself->roomp != myself->master->roomp) {
     act("$N left without you!  Can't have that!.  *pop*", 
         FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
-    *myself->master->roomp += *myself;
+    thing_to_room(myself, myself->master->roomp->number); 
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", 
         TRUE, myself, 0, myself->master, TO_VICT);
-    myself->master->addFollower(myself);
+    return TRUE;
   }
 
  
@@ -295,7 +297,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
 
     switch(myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
-        if ( !newMaster || 
+        if ( (getUniqueTrophyRank(targ) > 0 && !newMaster) || 
             getUniqueTrophyRank(targ) > getUniqueTrophyRank(newMaster)) {
           newMaster = targ;
         }
@@ -319,22 +321,41 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     act("You can't find a master, so you go on your way. *pop*", 
         FALSE, myself, 0, NULL, TO_CHAR);
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
+    if (myself->master)
+      myself->stopFollower(FALSE);
     --(*myself);
     // reinsert at birth room
     thing_to_room(myself, myself->brtRoom);
     return TRUE;
   } else if (myself->master != newMaster) {
-    if (myself->master)
+    if (myself->master) {
       act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
           TRUE, myself, 0, myself->master, TO_VICT);
+      myself->stopFollower(FALSE);
+    }
+      
+    if (myself->circleFollow(newMaster)) {
+      vlogf(LOG_BUG, fmt("Sprite %s following %s in a circle, bugging out.") 
+          % myself->name % newMaster->name);
+      return TRUE;
+    }
+
+    if (myself == newMaster) {
+      vlogf(LOG_BUG, fmt("Sprite %s is trying to follow itself, bugging out.")
+          % myself->name);
+      return TRUE;
+    }
+    
     act("You go to $N, your new master.  *pop*", 
         FALSE, myself, 0, newMaster, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
-    *newMaster->roomp += *myself;
+    thing_to_room(myself, newMaster->roomp->number); 
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
-    
+
+    newMaster->addFollower(myself);
+   
     switch(myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
         uniqueTrophyIntro(myself, newMaster);
@@ -345,20 +366,18 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
       default:
         break;
     }
-    myself->stopFollower(FALSE);
-    newMaster->addFollower(myself);
+   
   } else if (myself->roomp != myself->master->roomp) {
     vlogf(LOG_BUG, "Master and heroFaerie in different rooms - this should not happen at this point.");
     act("$N left without you!  Can't have that!.  *pop*", 
         FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
-    *myself->master->roomp += *myself;
+    thing_to_room(myself, myself->master->roomp->number); 
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop", TRUE, myself, 0, NULL, TO_ROOM);
     act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", 
         TRUE, myself, 0, myself->master, TO_VICT);
-    myself->master->addFollower(myself);
   }
   
   act("$n claps $s hands twice and sprinkles you with glittery dust.",

@@ -240,7 +240,7 @@ extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int shopWhisper(TBeing *, TMonster *, int, const char *);
 extern int archer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
-extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *, bool login);
+extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *, bool login=false);
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
 
 class attune_struct {

@@ -6530,8 +6530,6 @@ extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int lotteryRedeemer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *);
-extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
-
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
 TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
