@@ -4,6 +4,11 @@ BUILD_MUD_ROOT="/mud/build"
 PROD_MUD_ROOT="/mud/prod"
 
 umask 0002
+if [ 0 = 1 ]; then
+  echo "LOW move aborted at request of Maror."
+  echo "...busy screwing stuff up, please don't move LOW."
+  exit
+fi
 
 # copy the latest tiny files
 echo Copying tinyworld.mob
