@@ -225,7 +225,7 @@ void TBeing::addFollower(TBeing *foll, bool textLimits) // default argument
              *followIndex;
 
   if (foll->master) {
-    vlogf(LOG_BUG, fmt("add_folower error: this: %s, leader %s, master %s.") %  
+    vlogf(LOG_BUG, fmt("add_follower error: this: %s, leader %s, master %s.") %  
           foll->getName() % getName() % foll->master->getName());
     foll->master = NULL;
   }
