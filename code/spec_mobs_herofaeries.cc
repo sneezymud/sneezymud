@@ -74,7 +74,7 @@ void addUniqueTrophyEffects(TBeing *faerie, TBeing *targ)
       break;
   }
   aff2.type = SPELL_FERAL_WRATH;
-  aff2.duration = UPDATES_PER_MUDHOUR;
+  aff2.duration = 2*UPDATES_PER_MUDHOUR;
   aff2.bitvector = 0;
 
   if (!targ->affectJoin(targ, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
@@ -163,7 +163,7 @@ void addPermaDeathEffects(TBeing *faerie, TBeing *targ)
  
   aff.type = SKILL_BARKSKIN;
   aff.location = APPLY_ARMOR;
-  aff.duration = UPDATES_PER_MUDHOUR;
+  aff.duration = 2*UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = -90;
 
@@ -215,11 +215,20 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   
   if (!ch || !cmd || !myself)
     return FALSE;
+  
+  if (cmd == CMD_RENT) {
+    myself->stopFollower(FALSE);
+    act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
+    --(*myself);
+    // reinsert at birth room
+    *real_roomp(myself->brtRoom) += *myself;
+    return FALSE;
+  }
 
   if (!login && cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  if (myself->master && ::number(0,119))
+  if (myself->master && ::number(0,119)) // on most of the time but !spammy
     return FALSE;
 
   if (login)
@@ -325,7 +334,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     return TRUE;
   } else if (myself->master != newMaster) {
     if (myself->master)
-      act("<p>$n<1> tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
+      act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
           TRUE, myself, 0, myself->master, TO_VICT);
     act("You go to $N, your new master.  *pop*", 
         FALSE, myself, 0, newMaster, TO_CHAR);
@@ -356,7 +365,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     *myself->master->roomp += *myself;
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop", TRUE, myself, 0, NULL, TO_ROOM);
-    act("<p>$n<1> tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", 
+    act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", 
         TRUE, myself, 0, myself->master, TO_VICT);
     myself->master->addFollower(myself);
   }
