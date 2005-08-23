@@ -1802,6 +1802,13 @@ void TBeing::doGroup(const char *argument)
           (victim == riding))
         continue;
 
+      if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc() 
+          && victim->master == this && this != victim )
+      {
+        sendTo(COLOR_MOBS, fmt("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
+        continue;
+      }
+      
       if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)
           && (victim->master == this)) {
         sendTo(COLOR_MOBS, fmt("%s is on a quest! No grouping allowed!\n\r") % victim->getName());
@@ -1881,6 +1888,14 @@ void TBeing::doGroup(const char *argument)
   } else if (!(victim = get_char_room_vis(this, namebuf)))
     sendTo("No one here by that name.\n\r");
   else {
+
+    if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc()
+          && victim->master == this && this != victim )
+    {
+      sendTo(COLOR_MOBS, fmt("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
+      return;
+    }
+
     if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)) {
       sendTo("That person is on a quest! No grouping allowed!\n\r");
       return;
