@@ -140,7 +140,7 @@ bool TDatabase::query(const char *query,...)
   if(!(restmp=PQexec(db, buf.c_str())) ||
      (PQresultStatus(restmp) != PGRES_COMMAND_OK &&
       PQresultStatus(restmp) != PGRES_TUPLES_OK)){
-    vlogf(LOG_DB, fmt("query failed: %s") %  PQresStatus(PQresultStatus(restmp)));
+    vlogf(LOG_DB, fmt("query failed: %s") %  PQresultErrorMessage(restmp));
     vlogf(LOG_DB, fmt("%s") %  buf);
     return FALSE;
   }
