@@ -230,7 +230,8 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!myself->awake())
     myself->doWake("");
 
-  myself->doFly();
+  if (myself->canFly() && !myself->isFlying()) 
+    myself->doFly();
 
   // put faerie and master in the same room
   if (myself->master && myself->roomp != myself->master->roomp) {
@@ -327,6 +328,8 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     --(*myself);
     // reinsert at birth room
     thing_to_room(myself, myself->brtRoom);
+    myself->doLook("",CMD_LOOK);
+    act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     return TRUE;
   } else if (myself->master != newMaster) {
     if (myself->master) {
