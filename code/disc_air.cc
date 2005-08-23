@@ -1002,9 +1002,14 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
       if (!vict)
         continue;
       if ((caster == vict) || (caster->inGroup(*vict))) {
-        if (vict->isAffected(AFF_FLYING) || vict->isAffected(AFF_LEVITATING)) {
-          sprintf(buf, "%s is already affected by a flight spell of some sort!\n\r",vict->getName());
-	  caster->sendTo(buf);
+        if ( vict->isAffected(AFF_LEVITATING) || vict->canFly()) {
+          
+          if (caster == vict)
+            sprintf(buf, "You are already capable of some form of flight!\n\r");
+          else
+            sprintf(buf, "%s is already capable of some form of flight!\n\r",vict->getName());
+          
+          caster->sendTo(buf);
           caster->nothingHappens(SILENT_YES);
           continue;
         }
