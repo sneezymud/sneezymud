@@ -556,6 +556,7 @@ bool UtilProcs(int spec)
     case SPEC_HORSE_DEATH:
     case SPEC_HORSE_PESTILENCE:
     case SPEC_FACTION_FAERY:
+    case SPEC_HERO_FAERIE:
       return TRUE;
     default:
       return FALSE;
