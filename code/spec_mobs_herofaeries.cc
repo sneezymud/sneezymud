@@ -298,7 +298,8 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     switch(myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
         if ( (getUniqueTrophyRank(targ) > 0 && !newMaster) || 
-            getUniqueTrophyRank(targ) > getUniqueTrophyRank(newMaster)) {
+            ( newMaster &&
+              getUniqueTrophyRank(targ) > getUniqueTrophyRank(newMaster))) {
           newMaster = targ;
         }
         break;
