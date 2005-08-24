@@ -223,6 +223,10 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
     return FALSE;
   }
 
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
+    sendTo("Your backstab attempt has no effect on your immortal target.\n\r");
+    return TRUE;
+  }
   if ((rc = backstab(this, victim))) {
     if (!victim->isPc())
       dynamic_cast<TMonster *>(victim)->US(25);
@@ -569,6 +573,10 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
+  }
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
+    sendTo("Your slit attempt has no effect on your immortal target.\n\r");
+    return TRUE;
   }
 
   if ((rc = throatSlit(this, victim))) {
@@ -1169,6 +1177,10 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
+  }
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
+    sendTo("Your cudgel attempt has no effect on your immortal target.\n\r");
+    return TRUE;
   }
   rc = cudgel(this, victim);
   if (rc)

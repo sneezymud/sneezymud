@@ -569,6 +569,10 @@ int TBeing::doStab(const char * argument, TBeing *vict)
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
+    sendTo("Your stab attempt has no effect on your immortal target.\n\r");
+    return TRUE;
+  }
   rc = stab(this, victim);
   if (rc)
     addSkillLag(SKILL_STABBING, rc);
