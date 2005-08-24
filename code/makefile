@@ -326,8 +326,11 @@ LIBS =	libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so \
 PRODLIBS := $(sort $(addprefix /mud/prod/objs/, $(LIBS)))
 LIBS := $(sort $(addprefix $(OBJDIR), $(LIBS)))
 
-all: $(LIBS) $(NAME)
+all: libs exe
 
+libs:	$(LIBS)
+
+exe: $(NAME)
 
 # normal executable
 $(NAME) : $(OBJDIR)main.o
