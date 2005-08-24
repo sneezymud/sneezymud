@@ -225,7 +225,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
 
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     sendTo("Your backstab attempt has no effect on your immortal target.\n\r");
-    return TRUE;
+    return FALSE;
   }
   if ((rc = backstab(this, victim))) {
     if (!victim->isPc())
@@ -576,7 +576,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
   }
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     sendTo("Your slit attempt has no effect on your immortal target.\n\r");
-    return TRUE;
+    return FALSE;
   }
 
   if ((rc = throatSlit(this, victim))) {
@@ -1014,8 +1014,8 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
-  if (victim->isImmortal()) {
-    sendTo("Sorry....that shit don't fly anymore.\n\r");
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
+    sendTo("Your pathetic garrotte attack fails against your immortal opponent.\n\r");
     return FALSE;
   }
   if (victim->isUndead()) {
@@ -1180,7 +1180,7 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
   }
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     sendTo("Your cudgel attempt has no effect on your immortal target.\n\r");
-    return TRUE;
+    return FALSE;
   }
   rc = cudgel(this, victim);
   if (rc)

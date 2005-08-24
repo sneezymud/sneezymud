@@ -571,7 +571,7 @@ int TBeing::doStab(const char * argument, TBeing *vict)
   }
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     sendTo("Your stab attempt has no effect on your immortal target.\n\r");
-    return TRUE;
+    return FALSE;
   }
   rc = stab(this, victim);
   if (rc)
