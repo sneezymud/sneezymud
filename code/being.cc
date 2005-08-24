@@ -10,6 +10,9 @@
 #include "database.h"
 #include "obj_opal.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 extern bool affectShouldApply(const TObj *obj, wearSlotT pos);
 
 
@@ -634,6 +637,162 @@ TAccount & TAccount::operator=(const TAccount &a)
 TAccount::~TAccount()
 {
 }
+
+bool TAccount::read(const sstring &aname)
+{
+  sstring filename;
+  char buf[1024];
+  FILE *fp;
+
+  filename=(fmt("account/%c/%s/account") % aname[0] % aname).lower();
+  
+  fp=fopen(filename.c_str(), "r");
+
+  if(!fp){
+    vlogf(LOG_BUG, fmt("Couldn't open %s for reading.") % filename);
+    return false;
+  }
+
+  if(!fread(buf, 80, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading email from %s.") % filename);
+    return false;
+  }
+  email=buf;
+  
+  if(!fread(buf, 11, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading passwd from %s.") % filename);
+    return false;
+  }
+  passwd=buf;
+
+  if(!fread(buf, 10, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading name from %s.") % filename);
+    return false;
+  }
+  name=buf;
+
+  if(!fread(buf, 3, 1, fp)){ 
+    vlogf(LOG_BUG, fmt("Error reading mystery bytes (1) from %s.") % filename);
+    return false;
+  }
+  
+  if(!fread(&birth, sizeof(long), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading birth from %s.") % filename);
+    return false;
+  }
+  if(!fread(&term, sizeof(byte), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading term from %s.") % filename);
+    return false;
+  }
+  if(!fread(&time_adjust, sizeof(byte), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading time_adjust from %s.") % filename);
+    return false;
+  }
+
+  if(!fread(buf, 2, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading mystery bytes (2) from %s.") % filename);
+    return false;
+  }
+
+  if(!fread(&flags, sizeof(unsigned int), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading flags from %s.") % filename);
+    return false;
+  }
+  if(!fread(&last_logon, sizeof(time_t), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error reading last_logon from %s.") % filename);
+    return false;
+  }
+
+  login = time(0);
+  status = FALSE;
+
+  fclose(fp);
+
+  return true;
+}
+
+bool TAccount::write(const sstring &aname)
+{
+  sstring filename, path;
+  char buf[1024];
+  FILE *fp;
+
+  path=(fmt("account/%c/%s") % aname[0] % aname).lower();
+  filename=(fmt("%s/account") % path).lower();
+  
+  fp=fopen(filename.c_str(), "w");
+
+  if(!fp){
+    if (mkdir(path.c_str(), 0770)) {
+      vlogf(LOG_FILE, fmt("Can't make directory for TAccount::write (%s)") %
+	    path);
+      return false;
+    }
+    fp=fopen(filename.c_str(), "w");
+  }
+
+  if(!fp){
+    vlogf(LOG_BUG, fmt("Couldn't open %s for writing.") % filename);
+    return false;
+  }
+
+  strncpy(buf, email.c_str(), 80);
+  if(!fwrite(buf, 80, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing email to %s.") % filename);
+    return false;
+  }
+
+  strncpy(buf, passwd.c_str(), 11);
+  if(!fwrite(buf, 11, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing passwd to %s.") % filename);
+    return false;
+  }
+
+  strncpy(buf, name.c_str(), 10);
+  if(!fwrite(buf, 10, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing name to %s.") % filename);
+    return false;
+  }
+
+  buf[0]=buf[1]=buf[2]=0;
+  if(!fwrite(buf, 3, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing mystery bytes (1) to %s.") % filename);
+    return false;
+  }
+  
+  if(!fwrite(&birth, sizeof(long), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing birth to %s.") % filename);
+    return false;
+  }
+  if(!fwrite(&term, sizeof(byte), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing term to %s.") % filename);
+    return false;
+  }
+  if(!fwrite(&time_adjust, sizeof(byte), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing time_adjust to %s.") % filename);
+    return false;
+  }
+
+  buf[0]=buf[1]=buf[2]=0;
+  if(!fwrite(buf, 2, 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing mystery bytes (2) to %s.") % filename);
+    return false;
+  }
+
+  if(!fwrite(&flags, sizeof(unsigned int), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing flags to %s.") % filename);
+    return false;
+  }
+  if(!fwrite(&last_logon, sizeof(time_t), 1, fp)){
+    vlogf(LOG_BUG, fmt("Error writing last_logon to %s.") % filename);
+    return false;
+  }
+
+  fclose(fp);
+
+  return true;
+}
+
 
 const char * TBeing::getName() const
 {

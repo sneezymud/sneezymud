@@ -5384,7 +5384,6 @@ int Descriptor::sendLogin(const sstring &arg)
 {
   char buf[160], buf2[4096] = "\0\0\0";
   sstring my_arg = arg.substr(0,20);
-  accountFile afp;
 
   if (arg.length() > 20) {
     vlogf(LOG_MISC, fmt("Buffer overflow attempt from [%s]") % host);
@@ -5465,26 +5464,11 @@ int Descriptor::sendLogin(const sstring &arg)
       account = NULL;
       return (sendLogin("1"));
     }
-    account->name=my_arg;
-    sprintf(buf, "account/%s/%s/account", my_arg.lower().substr(0,1).c_str(), my_arg.lower().c_str());
-    // If account exists, open and copy password, otherwise set pwd to \0
-    FILE * fp = fopen(buf, "r");
-    if (fp) {
-      fread(&afp, sizeof(afp), 1, fp);
-      account->name=afp.name;
-      account->passwd=afp.passwd;
-      account->email=afp.email;
-      account->term = termTypeT(afp.term);
+    if(account->read(my_arg)){
       if (account->term == TERM_ANSI) 
-        plr_act = PLR_COLOR;
-      account->birth = afp.birth;
-      account->login = time(0);
-      account->status = FALSE;
-      account->flags = afp.flags;
-      account->time_adjust = afp.time_adjust;
+	plr_act = PLR_COLOR;
       account->desc = this;
-      strcpy(pwd, afp.passwd); 
-      fclose(fp);
+      strcpy(pwd, account->passwd.c_str()); 
     } else 
       *pwd = '\0';
  
@@ -6234,41 +6218,10 @@ int Descriptor::doAccountMenu(const char *arg)
 
 void Descriptor::saveAccount()
 {
-  FILE *fp;
-  char buf[256], buf2[256];
-  accountFile afp;
-
-  if (!account || account->name.empty()) {
-    vlogf(LOG_BUG, "Bad descriptor in saveAccount");
-    return;
+  if(!account->write(account->name)){
+    vlogf(LOG_FILE, fmt("Big problems in saveAccount (%s)") % 
+	  account->name.lower());
   }
-  sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-  if (!(fp = fopen(buf, "w"))) {
-    sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-    if (mkdir(buf2, 0770)) {
-      vlogf(LOG_FILE, fmt("Can't make directory for saveAccount (%s)") %  sstring(account->name).lower());
-      return;
-    }
-    if (!(fp = fopen(buf, "w"))) {
-      vlogf(LOG_FILE, fmt("Big problems in saveAccount (s)") %  sstring(account->name).lower());
-      return;
-    }
-  }
-  // If we get here, fp should be valid
-  memset(&afp, '\0', sizeof(afp));
-
-  strcpy(afp.email, account->email.c_str());
-  strcpy(afp.passwd, account->passwd.c_str());
-  strcpy(afp.name, account->name.c_str());
-
-  afp.birth = account->birth;
-  afp.term = account->term;
-  afp.time_adjust = account->time_adjust;
-  afp.flags = account->flags;
-  afp.last_logon = account->login;
-
-  fwrite(&afp, sizeof(accountFile), 1, fp);
-  fclose(fp);
 }
 
 void Descriptor::deleteAccount()

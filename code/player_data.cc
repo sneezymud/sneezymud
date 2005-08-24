@@ -967,21 +967,15 @@ void TBeing::wipeChar(int)
 
 time_t lastAccountLogin(sstring name)
 {
-  sstring buf = fmt("account/%c/%s/account") %
-    LOWER(name[0]) % name.lower();
+  TAccount account;
 
-  FILE * fp = fopen(buf.c_str(), "r");
-  accountFile afp;
-
-  if(!fp){
-    vlogf(LOG_BUG, fmt("couldn't open %s for reading!") % buf);
+  if(!account.read(name)){
+    vlogf(LOG_PEEL, fmt("error reading account in lastAccountLogin for %s") %
+	  name);
     return time(0);
   }
-  
-  fread(&afp, sizeof(afp), 1, fp);
-  fclose(fp);
 
-  return afp.last_logon;
+  return account.last_logon;
 }
 
 
@@ -2243,7 +2237,6 @@ int numFifties(race_t race, bool perma, sstring account_name)
 {
   int num, num_fifties = 0;
   charFile st;
-//  accountFile afp;
   FILE *fp;
   DIR *dfd;
   struct dirent *dp;
@@ -2253,14 +2246,6 @@ int numFifties(race_t race, bool perma, sstring account_name)
   char tog_file_name[128];
   bool char_is_perma;
 
-/*  if (!(fp = fopen(account_path.c_str(), "r"))) {
-    vlogf(LOG_BUG, fmt("Account file not found for account %s in numFifties.")
-        % account_name);
-    return 0;
-  } else {
-    fread(&afp, sizeof(afp), 1, fp);
-    fclose(fp);
-  }*/
   if (!(dfd = opendir(account_path.c_str()))) {
     vlogf(LOG_BUG, fmt("Unable to walk directory in numFifties (%s account)") 
         % account_name);

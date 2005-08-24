@@ -700,7 +700,7 @@ int Descriptor::read_client(char *str2)
       break;
     case CLIENT_CHECKACCOUNTNAME: {
       static char *crypted;
-      accountFile afp;
+      TAccount *account;
       struct stat timestat;
       char aname[256];
       char apassword[256];
@@ -728,26 +728,13 @@ int Descriptor::read_client(char *str2)
           clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
         }
-	account->name=aname;
-        sprintf(buf2, "account/%c/%s/account", LOWER(aname[0]), sstring(aname).lower().c_str());
-        // If account exists, open and copy password, otherwise set pwd to \0
-        FILE * fp = fopen(buf2, "r");
-        if (fp) {
-          fread(&afp, sizeof(afp), 1, fp);
-          account->name=afp.name;
-          account->passwd=afp.passwd;
-          account->email=afp.email;
+	if(account->read(aname)){
           account->term = TERM_NONE;
           plr_act = PLR_COLOR;
-
-          account->birth = afp.birth;
           account->login = time(0);
           account->status = FALSE;
-          account->flags = afp.flags;
-          account->time_adjust = afp.time_adjust;
           account->desc = this;
-          strcpy(pwd, afp.passwd);
-          fclose(fp);
+          strcpy(pwd, account->passwd.c_str());
         } else
           *pwd = '\0';
 
@@ -887,37 +874,7 @@ int Descriptor::read_client(char *str2)
       account->term = TERM_NONE;
 
       // Save all information
-      FILE *fp;
-      char buf[256], buf2[256];
-      accountFile afp;
-
-      sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-      if (!(fp = fopen(buf, "w"))) {
-        sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-        if (mkdir(buf2, 0770)) {
-          vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") %  sstring(account->name).lower());
-          return FALSE;
-        }
-        if (!(fp = fopen(buf, "w"))) {
-          vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") %  sstring(account->name).lower());
-          return FALSE;
-        }
-      }
-      // If we get here, fp should be valid
-      memset(&afp, '\0', sizeof(afp));
-    
-      strcpy(afp.email, account->email.c_str());
-      strcpy(afp.passwd, account->passwd.c_str());
-      strcpy(afp.name, account->name.c_str());
-    
-      afp.birth = account->birth;
-      afp.term = account->term;
-      afp.time_adjust = account->time_adjust;
-      afp.flags = account->flags;
-    
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
-    
+      account->write(aname);    
       accStat.account_number++;
     
       vlogf(LOG_MISC, fmt("New Client Account: '%s' with email '%s'") %  account->name % account->email);
@@ -957,9 +914,7 @@ int Descriptor::client_nanny(char *arg)
   TBeing *tmp_ch;
   Descriptor *k;
   //char login[20], passwd[40], charname[20], buf[512], tmp_name[40], wizbuf[256];
-  char login[20], passwd[40], charname[20], buf[512], tmp_name[40];
-  FILE *fp;
-  accountFile afp;
+  char login[20], passwd[40], charname[20], tmp_name[40];
   charFile st;
   TRoom *rp;
   int rc;
@@ -974,22 +929,9 @@ int Descriptor::client_nanny(char *arg)
   
   account = new TAccount();
   account->name=login;
-  sprintf(buf, "account/%c/%s/account", LOWER(login[0]), sstring(login).lower().c_str());
-  // If account exists, open and copy password, otherwise set pwd to \0
-  if ((fp = fopen(buf, "r"))) {
-    fread(&afp, sizeof(afp), 1, fp);
-    account->name=afp.name;
-    account->passwd=afp.passwd;
-    account->email=afp.email;
-    account->term = termTypeT(afp.term);
-    account->birth = afp.birth;
-    account->login = time(0);
-    account->status = FALSE;
-    account->time_adjust = afp.time_adjust;
+  if(account->read(login)){
     account->desc = this;
-    account->flags = afp.flags;
-    strcpy(pwd, afp.passwd);
-    fclose(fp);
+    strcpy(pwd, account->passwd.c_str());
   } else
     *pwd = '\0';
 
@@ -1390,40 +1332,11 @@ int Descriptor::clientCreateAccount(char *arg)
   account->term = TERM_NONE;
 
   // Save all information
-  FILE *fp;
-  char buf[256], buf2[256];
-  accountFile afp;
-
-  sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]),
-	  account->name.lower().c_str());
-  if (!(fp = fopen(buf, "w"))) {
-    sprintf(buf2, "account/%c/%s", LOWER(account->name[0]),
-	    account->name.lower().c_str());
-    if (mkdir(buf2, 0770)) {
-      vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") % 
-	    account->name.lower());
-      return FALSE;
-    }
-    if (!(fp = fopen(buf, "w"))) {
-      vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") % 
-	    account->name.lower());
-      return FALSE;
-    }
+  if(!account->write(account->name)){
+    vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") % 
+	  account->name.lower());
+    return FALSE;
   }
-  // If we get here, fp should be valid
-  memset(&afp, '\0', sizeof(afp));
-
-  strcpy(afp.email, account->email.c_str());
-  strcpy(afp.passwd, account->passwd.c_str());
-  strcpy(afp.name, account->name.c_str());
-
-  afp.birth = account->birth;
-  afp.term = account->term;
-  afp.time_adjust = account->time_adjust;
-  afp.flags = account->flags;
-
-  fwrite(&afp, sizeof(accountFile), 1, fp);
-  fclose(fp);
 
   accStat.account_number++;
 

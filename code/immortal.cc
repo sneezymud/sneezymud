@@ -3491,8 +3491,8 @@ void TPerson::doAccess(const sstring &arg)
   time_t ct;
   struct time_info_data playing_time;
   FILE *fp;
-  accountFile afp;
   TDatabase db(DB_SNEEZY);
+  TAccount account;
 
   if (powerCheck(POWER_ACCESS))
     return;
@@ -3569,17 +3569,11 @@ void TPerson::doAccess(const sstring &arg)
           vlogf(LOG_MISC, "Ran into problems (#1) saving file in doAccess()");
           return;
         }
-        arg1 = fmt("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
-        arg2 = fmt("%s/account") % arg1;
-        if (!(fp = fopen(arg2.c_str(), "r+"))) 
-          sendTo("Cannot open account for player! Tell a coder!\n\r");
-        else {
-          fread(&afp, sizeof(afp), 1, fp);
-          strcpy(afp.passwd,pass);
-          rewind(fp);
-          fwrite(&afp, sizeof(accountFile), 1, fp);
-          fclose(fp);
-        } 
+
+	account.read(st.aname);
+	account.passwd=pass;
+	account.write(st.aname);
+
         sendTo("Password changed successfully.\n\r");
         vlogf(LOG_MISC, fmt("%s changed password on %s account") %  getName() % st.aname);
         return;
@@ -3674,28 +3668,24 @@ void TPerson::doAccess(const sstring &arg)
       fclose(fp);
     }
 
-    arg2 = fmt("%s/account") % arg1;
-    if (!(fp = fopen(arg2.c_str(), "r"))) {
+    if(!account.read(st.aname)){
       buf+="Cannot open account for player! Tell a coder!\n\r";
-    } else {
-      fread(&afp, sizeof(afp), 1, fp);
-      fclose(fp);
     } 
-    if ((afp.flags & ACCOUNT_IMMORTAL) &&
+    if ((account.flags & ACCOUNT_IMMORTAL) &&
           !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
       buf+="Account name: ***, Account email address : ***\n\r";
       buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
     } else {
-      tmpbuf = fmt("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % afp.name % norm() % cyan() % afp.email % norm();
+      tmpbuf = fmt("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % account.name % norm() % cyan() % account.email % norm();
       buf+=tmpbuf;
 
       sstring lStr = "";
-      if (IS_SET(afp.flags, ACCOUNT_BANISHED))
+      if (IS_SET(account.flags, ACCOUNT_BANISHED))
         lStr += "<R><f>Account is banished<z>\n\r";
-      if (IS_SET(afp.flags, ACCOUNT_EMAIL))
+      if (IS_SET(account.flags, ACCOUNT_EMAIL))
         lStr += "<R><f>Account is email-banished<z>\n\r";
 
-      listAccount(afp.name, lStr);
+      listAccount(account.name, lStr);
       buf+=lStr;
     }
     desc->page_string(buf.toCRLF());
@@ -5580,8 +5570,7 @@ void TBeing::doAccount(const sstring &arg)
   DIR *dfd;
   sstring my_arg, buf2;
   int count = 1;
-  accountFile afp;
-  FILE *fp;
+  TAccount account;
   sstring str;
 
   if (!desc)
@@ -5608,6 +5597,7 @@ void TBeing::doAccount(const sstring &arg)
     }
   }
 
+
   buf2 = fmt("account/%c/%s") % namebuf.lower()[0] % namebuf.lower();
   if (!(dfd = opendir(buf2.c_str()))) {
     sendTo("No account by that name exists.\n\r");
@@ -5616,89 +5606,76 @@ void TBeing::doAccount(const sstring &arg)
     return;
   }
   closedir(dfd);
-  buf2 = fmt("account/%c/%s/account") % namebuf.lower()[0] % namebuf.lower();
-  if (!(fp = fopen(buf2.c_str(), "r+"))) {
+
+  if(!account.read(namebuf)){
     sendTo("Cannot open account for player! Tell a coder!\n\r");
     return;
   }
-
-  fread(&afp, sizeof(afp), 1, fp);
 
   // only let imms do this
   if (hasWizPower(POWER_ACCOUNT)) {
     my_arg = one_argument(arg, buf2);
     if (is_abbrev(my_arg, "banished")) {
-      if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
-        REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
-        sendTo(fmt("You have unbanished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") % getName() % afp.name);
+      if (IS_SET(account.flags, ACCOUNT_BANISHED)) {
+        REMOVE_BIT(account.flags, ACCOUNT_BANISHED);
+        sendTo(fmt("You have unbanished the %s account.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") % getName() % account.name);
       } else {
-        SET_BIT(afp.flags, ACCOUNT_BANISHED);
-        sendTo(fmt("You have set the %s account banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s banished account '%s'") % getName() % afp.name);
+        SET_BIT(account.flags, ACCOUNT_BANISHED);
+        sendTo(fmt("You have set the %s account banished.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s banished account '%s'") % getName() % account.name);
       }
-      
-      rewind(fp);
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
+
+      account.write(namebuf);
       return;
     } else if (is_abbrev(my_arg, "email")) {
-      if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
-        REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
-        sendTo(fmt("You have un-email-banished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") % getName() % afp.name);
+      if (IS_SET(account.flags, ACCOUNT_EMAIL)) {
+        REMOVE_BIT(account.flags, ACCOUNT_EMAIL);
+        sendTo(fmt("You have un-email-banished the %s account.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") % getName() % account.name);
       } else {
-        SET_BIT(afp.flags, ACCOUNT_EMAIL);
-        sendTo(fmt("You have set the %s account email-banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") % getName() % afp.name);
+        SET_BIT(account.flags, ACCOUNT_EMAIL);
+        sendTo(fmt("You have set the %s account email-banished.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") % getName() % account.name);
       }
       
-      rewind(fp);
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
+      account.write(namebuf);
       return;
     } else if (is_abbrev(my_arg, "double")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
-        fclose(fp);
         return;
       }
   
-      if (IS_SET(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-        REMOVE_BIT(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS);
-        sendTo(fmt("You revoke the %s account's ability to double-class.\n\r") % afp.name);
+      if (IS_SET(account.flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
+        REMOVE_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+        sendTo(fmt("You revoke the %s account's ability to double-class.\n\r") % account.name);
       } else {
-        SET_BIT(afp.flags, ACCOUNT_ALLOW_DOUBLECLASS);
-        sendTo(fmt("You grant the %s account the ability to double-class.\n\r") % afp.name);
+        SET_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+        sendTo(fmt("You grant the %s account the ability to double-class.\n\r") % account.name);
       }
       
-      rewind(fp);
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
+      account.write(namebuf);
       return;
     } else if (is_abbrev(my_arg, "triple")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
-        fclose(fp);
         return;
       }
   
-      if (IS_SET(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
-        REMOVE_BIT(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS);
-        sendTo(fmt("You revoke the %s account's ability to triple-class.\n\r") % afp.name);
+      if (IS_SET(account.flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
+        REMOVE_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+        sendTo(fmt("You revoke the %s account's ability to triple-class.\n\r") % account.name);
       } else {
-        SET_BIT(afp.flags, ACCOUNT_ALLOW_TRIPLECLASS);
-        sendTo(fmt("You grant the %s account the ability to triple-class.\n\r") % afp.name);
+        SET_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+        sendTo(fmt("You grant the %s account the ability to triple-class.\n\r") % account.name);
       }
-      
-      rewind(fp);
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
+
+      account.write(namebuf);
       return;
     } else if (is_abbrev(my_arg, "immortal")) {
       // this is not something that should be done (manually) unless a 
       // god has left immortality entirely
 
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
-        fclose(fp);
         return;
       }
 
@@ -5722,54 +5699,51 @@ void TBeing::doAccount(const sstring &arg)
         return;
       }
   
-      if (IS_SET(afp.flags, ACCOUNT_IMMORTAL)) {
-        REMOVE_BIT(afp.flags, ACCOUNT_IMMORTAL);
-        sendTo(fmt("You un-flag the %s account immortal.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s making account='%s' non-immortal") %  getName() % afp.name);
+      if (IS_SET(account.flags, ACCOUNT_IMMORTAL)) {
+        REMOVE_BIT(account.flags, ACCOUNT_IMMORTAL);
+        sendTo(fmt("You un-flag the %s account immortal.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s making account='%s' non-immortal") %  getName() % account.name);
       } else {
-        SET_BIT(afp.flags, ACCOUNT_IMMORTAL);
-        sendTo(fmt("You flag the %s account as immortal.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s making account='%s' immortal") %  getName() % afp.name);
+        SET_BIT(account.flags, ACCOUNT_IMMORTAL);
+        sendTo(fmt("You flag the %s account as immortal.\n\r") % account.name);
+        vlogf(LOG_MISC, fmt("%s making account='%s' immortal") %  getName() % account.name);
       }
-      
-      rewind(fp);
-      fwrite(&afp, sizeof(accountFile), 1, fp);
-      fclose(fp);
+      account.write(namebuf);
       return;
     }
   }
 
-  fclose(fp);
 
-  buf2 = fmt("Account email address : %s%s%s\n\r") % cyan() % afp.email % norm();
+  buf2 = fmt("Account email address : %s%s%s\n\r") % cyan() % account.email % norm();
   str += buf2;
 
-  char *tmstr = (char *) asctime(localtime(&afp.last_logon));
+  char *tmstr = (char *) asctime(localtime(&account.last_logon));
   *(tmstr + strlen(tmstr) - 1) = '\0';
   sstring tmpbuf = fmt("Last login : %s%s%s\n\r") %
     green() % tmstr % norm();
   str += tmpbuf;
   
 
-  if ((afp.flags & ACCOUNT_IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
+  if ((account.flags & ACCOUNT_IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
     str += "This account belongs to an immortal.\n\r";
     str += "*** Information Concealed ***\n\r";
     desc->page_string(str);
     return;
   }
 
-  if (IS_SET(afp.flags, ACCOUNT_BANISHED))
+  if (IS_SET(account.flags, ACCOUNT_BANISHED))
     str += "<R><f>Account is banished<z>\n\r";
-  if (IS_SET(afp.flags, ACCOUNT_EMAIL))
+  if (IS_SET(account.flags, ACCOUNT_EMAIL))
     str += "<R><f>Account is email-banished<z>\n\r";
 
-  listAccount(afp.name, str);
+  listAccount(account.name, str);
   if (count == 0)
     str += "No characters in account.\n\r";
   str += "\n\r";
 
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
+    FILE *fp;
     buf2 = fmt("account/%c/%s/comment") % namebuf.lower()[0] % namebuf.lower();
     if ((fp = fopen(buf2.c_str(), "r"))) {
       char buf3[256];

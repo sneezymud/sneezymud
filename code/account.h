@@ -46,6 +46,10 @@ class TAccount
     Descriptor *desc;
     byte time_adjust;
     unsigned int flags;
+    time_t last_logon;
+
+    bool read(const sstring &);
+    bool write(const sstring &);
     
     TAccount();
     TAccount(const TAccount &a);
@@ -62,17 +66,4 @@ const unsigned int ACCOUNT_MSP      = (1<<4);
 const unsigned int ACCOUNT_ALLOW_DOUBLECLASS      = (1<<5);
 const unsigned int ACCOUNT_ALLOW_TRIPLECLASS      = (1<<6);
 
-
-// This file is saved as "account".  Do not alter structure size
-class accountFile {
-  public:
-    char email[80];
-    char passwd[11];
-    char name[10];
-    long birth;
-    byte term;
-    byte time_adjust;
-    unsigned int flags;
-    time_t last_logon;
-};
 #endif

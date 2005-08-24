@@ -3768,9 +3768,9 @@ void chargeRent(const char *who)
   char fileName[128];
   rentHeader h;
   long days_passed, secs_lost, total;
-  FILE *fp, *afp;
+  FILE *fp;
   charFile pd;
-  accountFile acc;
+  TAccount account;
   bool immortal;
 
   mud_assert(who != NULL, "chargeRent called with NULL player name!");
@@ -3811,21 +3811,12 @@ void chargeRent(const char *who)
     return;
   }
 
-  sprintf(fileName, "account/%c/%s/account", LOWER(pd.aname[0]), 
-        sstring(pd.aname).lower().c_str());
-  if (!(afp = fopen(fileName, "r"))) {
-    vlogf(LOG_FILE, fmt("Error opening %s's account file!") %  who);
-    fclose(fp);
-    return;
-  }
-  if ((fread(&acc, sizeof(accountFile), 1, afp)) != 1) {
+  if(!account.read(pd.aname)){
     vlogf(LOG_BUG, fmt("  Cannot read account file for %s") %  who);
-    fclose(afp);
     fclose(fp);
     return;
   }
-  fclose(afp);
-  immortal = IS_SET(acc.flags, ACCOUNT_IMMORTAL);
+  immortal = IS_SET(account.flags, ACCOUNT_IMMORTAL);
 
   days_passed = ((time(0) - h.last_update) / SECS_PER_REAL_DAY);
   secs_lost = ((time(0) - h.last_update) % SECS_PER_REAL_DAY);
