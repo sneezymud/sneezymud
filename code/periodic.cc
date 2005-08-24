@@ -49,8 +49,23 @@ void procGlobalRoomStuff::run(int pulse) const
       continue;
     
     if(::number(0,3)){
-      // spread fire to adjacent rooms
       if(rp->isRoomFlag(ROOM_ON_FIRE)){
+	// alert firemen if needed
+	if(rp->inGrimhaven() && !fireInGrimhaven){
+	  TRoom *rp;
+	  for(unsigned int zone = 0; zone < zone_table.size(); zone++) {
+	    if((rp=real_roomp(zone_table[zone].top)) && rp->inGrimhaven()){
+	      zone_table[zone].sendTo("<R>Loud firebells begin clanging in the distance!<1>\n\r", 4673);
+	    }
+	  }
+	  
+	  if((rp=real_roomp(4673))){
+	    rp->sendTo(COLOR_BASIC, "<R>The firebells begin to clang hysterically!<1>\n\r");
+	  }
+	  fireInGrimhaven=true;
+	}
+
+	// spread fire to adjacent rooms
 	// we really need a getRandomExit function or something
 	dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 	TRoom *spread_to;

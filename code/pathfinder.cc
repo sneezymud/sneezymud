@@ -215,6 +215,9 @@ bool findFire::isTarget(int room) const
   if (!rp->inGrimhaven())
     return FALSE;
 
+  if(rp->isRoomFlag(ROOM_ON_FIRE))
+    return TRUE;
+
   TThing *t;
   for (t = rp->getStuff(); t; t = t->nextThing) {
     if((o=dynamic_cast<TObj *>(t)) && o->isObjStat(ITEM_BURNING))
