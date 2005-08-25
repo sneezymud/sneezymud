@@ -660,22 +660,18 @@ mob->getName());
           // set to zero then recover as necessary
           mob->practices.prac[parm2] = 0;
           int expectedPracs = mob->expectedPracs();
-          int actualPracs = 0;
-          for (int j=0;j<10;j++)
-            actualPracs += mob->pracsSoFar();
-          actualPracs /= 10; // taking a mean to get a better number
-          int extraPracs = max(0,expectedPracs-actualPracs);
-          mob->practices.prac[parm2] = (sh_int) extraPracs;
-          sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
-              % mob->getName() % mob->practices.prac[parm2] % 
-              oldPracs % classInfo[parm2].name);
-          actualPracs = 0;
-          for (int j=0;j<10;j++)
-            actualPracs += mob->pracsSoFar();
-          actualPracs /= 10; // taking a mean to get a better number
-          if (expectedPracs-actualPracs < 0)
+          int actualPracs = mob->meanPracsSoFar();
+          
+          int diff = expectedPracs-actualPracs;
+          if (diff >= 0) {
+            mob->practices.prac[parm2] = (sh_int) diff;
+            sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
+                % mob->getName() % mob->practices.prac[parm2] % 
+                oldPracs % classInfo[parm2].name);
+          } else {
             sendTo(COLOR_MOBS, fmt("Char %s has %d pracs more than expected for level %d.\n\r") %
                 mob->getName() % (actualPracs-expectedPracs) % parm);
+          }
 
         }
       } else {
@@ -696,24 +692,19 @@ mob->getName());
           // set to zero then recover as necessary
           mob->practices.prac[parm2] = 0;
           int expectedPracs = mob->expectedPracs();
-          int actualPracs = 0;
-          for (int j=0;j<10;j++)
-            actualPracs += mob->pracsSoFar();
-          actualPracs /= 10; // taking a mean to get a better number
-          int extraPracs = max(0,expectedPracs-actualPracs);
-          mob->practices.prac[parm2] = (sh_int) extraPracs;
-          sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
-              % mob->getName() % mob->practices.prac[parm2] % 
-              oldPracs % classInfo[parm2].name);
-          actualPracs = 0;
-          for (int j=0;j<10;j++)
-            actualPracs += mob->pracsSoFar();
-          actualPracs /= 10; // taking a mean to get a better number
-          if (expectedPracs-actualPracs < 0)
+          int actualPracs = mob->meanPracsSoFar();
+
+          int diff = expectedPracs-actualPracs;
+          if (diff >= 0) {
+            mob->practices.prac[parm2] = (sh_int) diff;
+            sendTo(COLOR_MOBS, fmt("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
+                % mob->getName() % mob->practices.prac[parm2] % 
+                oldPracs % classInfo[parm2].name);
+          } else {
             sendTo(COLOR_MOBS, fmt("Char %s has %d pracs more than expected for level %d.\n\r") %
                 mob->getName() % (actualPracs-expectedPracs) % parm);
-
-
+          }
+          
         }
       }
     } else {

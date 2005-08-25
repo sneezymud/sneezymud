@@ -2312,7 +2312,7 @@ void TPerson::loadRent()
   TPerson *tmp;
   sstring lbuf;
   ItemLoad il;
-  int j, actual = 0;
+  int actual = 0;
 
   if (desc && desc->original)
     tmp = desc->original;
@@ -2331,11 +2331,8 @@ void TPerson::loadRent()
     if (should_be_logged(this)) {
       vlogf(LOG_PIO, fmt("%s has no equipment.") %  getName());
 
-      actual = 0;
-      for (j=0;j<10;j++)
-        actual += pracsSoFar();
-      actual /= 10;
-  
+      actual = meanPracsSoFar();
+
       vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %  
          getName() % getMoney() % getBank() % getExp() % age_mod %
          (actual-expectedPracs()) % actual % expectedPracs());
@@ -2480,10 +2477,7 @@ void TPerson::loadRent()
       }
     }
   }
-  actual = 0;
-  for (j=0;j<10;j++)
-    actual += pracsSoFar();
-  actual /= 10;
+  actual = meanPracsSoFar();
     
   vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
        getName() % getMoney() % getBank() % getExp() % il.st.number % 

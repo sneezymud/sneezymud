@@ -1680,6 +1680,7 @@ class TBeing : public TThing {
     void setClass(ush_int num);
 
     sh_int TBeing::pracsSoFar();
+    sh_int TBeing::meanPracsSoFar();
     sh_int TBeing::expectedPracs();
 
     bool isLinkdead() const;

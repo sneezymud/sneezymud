@@ -4,7 +4,7 @@
 void TBeing::doPracInfo(sstring arg) {
   TBeing *ch;
   sstring buf;
-  int i, count = 1;
+  int count = 1;
 
   if (!(ch = get_char_room(arg, in_room))) {
     if (!(ch = get_pc_world(this, arg, EXACT_NO))) {
@@ -23,10 +23,7 @@ void TBeing::doPracInfo(sstring arg) {
   if (powerCheck(POWER_ACCESS) || powerCheck(POWER_SET))
     return;
   sh_int expected = ch->expectedPracs();
-  int actual = 0;
-  for (i=0;i<10;i++)
-    actual += ch->pracsSoFar();
-  actual /= 10; // trying to get a better single number here
+  sh_int actual = ch->meanPracsSoFar();
   buf = fmt("Practice info for %s:\n\r") % ch->getName();
   buf += fmt("\tExpected pracs for level: %d \n\r")
     % expected;

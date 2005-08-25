@@ -64,6 +64,7 @@ class TPerson : public TBeing {
     void resetChar();
     int genericLoadPC();
     void loadFromSt(charFile *);
+    void fixPracs();
     void initChar();
     void doStart();
     void setDimensions();

@@ -313,6 +313,8 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Lightsaber quest: gave essence", 13745},
   {"Creation Choice: Fae Touched", MOB_NONE}, 
   {"Trait: Real Aging", MOB_NONE},
+  {"No Experience Gain", MOB_NONE},
+  {"Practices Fixed", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

@@ -1223,6 +1223,7 @@ int Descriptor::client_nanny(char *arg)
   character->doLook("", CMD_LOOK);
   prompt_mode = 1;
   character->fixClientPlayerLists(FALSE);
+  dynamic_cast<TPerson *>(character)->fixPracs();
   return TRUE;
 }
 
