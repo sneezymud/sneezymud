@@ -1546,6 +1546,7 @@ objs/being.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/being.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/being.o: colorstring.h format.h database.h /usr/local/include/libpq-fe.h
 objs/being.o: /usr/local/include/postgres_ext.h obj_opal.h
+objs/being.o: /usr/include/sys/stat.h
 objs/body.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/body.o: /usr/include/c++/3.4/bits/c++config.h
 objs/body.o: /usr/include/c++/3.4/bits/os_defines.h
