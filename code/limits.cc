@@ -743,12 +743,19 @@ void TPerson::fixPracs()
     setQuestBit(TOG_PRACS_FIXED);
     doSave(SILENT_YES);
   } else if (-diff > max(5,level/2)) {
-  // flip on a toggle to fix the account
-    vlogf(LOG_BUG, fmt("%s has %d pracs too many and has had the no experience toggle set.  Prepare for unrest.") % getName() % -diff);
-    sendTo(fmt("%sSomething has gone drastically wrong with your practice allocation.  Experience gain has been disabled for this player.  Contact a creator.%s\n\r")
-        % redBold() % norm() );
-    setQuestBit(TOG_NO_XP_GAIN);
-    doSave(SILENT_YES);
+    if (getMaxExp() > 1) {
+    // flip on a toggle to fix the account
+      vlogf(LOG_BUG, fmt("%s has %d pracs too many and has had the no experience toggle set.  Prepare for unrest.") % getName() % -diff);
+      sendTo(fmt("%sSomething has gone drastically wrong with your practice allocation.  Experience gain has been disabled for this player.  Contact a creator.%s\n\r")
+          % redBold() % norm() );
+      setQuestBit(TOG_NO_XP_GAIN);
+      doSave(SILENT_YES);
+    } else {
+      vlogf(LOG_BUG, fmt("%s may or may not have excess pracs.  Max XP was zero.  %s has been instructed to kill something then rent and come back.")
+          % getName() % getName());
+      sendTo(fmt("%sThis character is old and needs to be updated before practices can be evaluated.  You can cause this to happen automatically.  Please go kill something (anything, e.g. a fuzzy mouse), then rent, and come back.  Thanks for your help.%s\n\r")
+          % redBold() % norm() );
+    }
   }
     
 }
