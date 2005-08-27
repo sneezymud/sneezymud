@@ -967,10 +967,6 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   if (!isImmortal() && applySoundproof())
     return FALSE;
 
-  if(hasQuestBit(TOG_IS_MUTE)){
-    sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
-  }
 
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
@@ -1002,6 +998,12 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     sendTo("You try to tell yourself something.\n\r");
     return FALSE;
   }
+
+  if(hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+  
   if ((vict->getPosition() == POSITION_SLEEPING) && !isImmortal()) {
     act("$E is asleep, shhh.", FALSE, this, 0, vict, TO_CHAR);
     return FALSE;
@@ -1140,11 +1142,6 @@ int TBeing::doWhisper(const sstring &arg)
   if (applySoundproof())
     return FALSE;
 
-  if(hasQuestBit(TOG_IS_MUTE)){
-    sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
-  }
-
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
     return FALSE;
@@ -1156,10 +1153,16 @@ int TBeing::doWhisper(const sstring &arg)
     sendTo("Whom do you want to whisper to.. and what??\n\r");
     return FALSE;
   }
+
   if (!(vict = get_char_room_vis(this, name))) {
     sendTo("No-one by that name here..\n\r");
     return FALSE;
   }
+  if(hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   if (vict == this) {
     act("$n whispers quietly to $mself.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You can't seem to get your mouth close enough to your ear...\n\r");
@@ -1226,11 +1229,6 @@ int TBeing::doAsk(const sstring &arg)
   }
   if (applySoundproof())
     return FALSE;
-  if(hasQuestBit(TOG_IS_MUTE)){
-    sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
-  }
-
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
     return FALSE;
@@ -1243,6 +1241,12 @@ int TBeing::doAsk(const sstring &arg)
     sendTo("Whom do you want to ask something...and what??\n\r");
   else if (!(vict = get_char_room_vis(this, name)))
     sendTo("No-one by that name here...\n\r");
+
+  else if(hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   else if (vict == this) {
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
