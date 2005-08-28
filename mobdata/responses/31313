@@ -41,10 +41,12 @@ say { "gandolfo";
 	say Consider it well before you answer me. If you are not willing to do;
 	say this deed your quest will come to an end. And the quest for this;
 	say knowledge is not repeatable.; 
-	say Will you kill the Baron Samedi? Yes or No.;
+	say Will you kill the Baron Samedi?;
+  say If yes, say that you will kill the Baron.;
+  say If no, say that you will not kill the Baron.;
 } 
 
-say {"yes";
+say {"will kill the Baron";
 	checktoggle 241;
 	tell %n Excellent. The Baron frequents a great hall in the ruins of spirits.;
 	tell %n He confides in his friends there and has a very influential power with;
@@ -55,7 +57,7 @@ say {"yes";
 	tell %n Good luck and I hope to see you soon.;
 } 
 
-say {"no";
+say {"will not kill the Baron";
 	checktoggle 241;
 	untoggle 241;
 	untoggle 233;
