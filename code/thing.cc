@@ -55,7 +55,8 @@ bool TThing::inImperia() const
 
 bool TThing::inGrimhaven() const
 {
-  return ((inRoom() >= 100 && inRoom() < 950) ||
+  return ((inRoom() >= 100 && inRoom() < 650) ||
+          (inRoom() >= 750 && inRoom() < 950) ||
           (inRoom() >= 25400 && inRoom() <= 25499) ||
 	  (inRoom() >= 4400 && inRoom() <= 4699));
 }
