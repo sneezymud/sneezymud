@@ -640,6 +640,51 @@ TAccount::~TAccount()
 
 bool TAccount::read(const sstring &aname)
 {
+  TDatabase db(DB_SNEEZY);
+  bool res;
+
+  res=db.query("select email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
+
+  db.fetchRow();
+
+  email=db["email"];
+  passwd=db["passwd"];
+  name=db["name"];
+  birth=convertTo<int>(db["birth"]);
+  term=(termTypeT)convertTo<int>(db["term"]);
+  time_adjust=convertTo<int>(db["time_adjust"]);
+  flags=convertTo<int>(db["flags"]);
+  last_logon=convertTo<int>(db["last_logon"]);
+
+  login = time(0);
+  status = FALSE;
+
+  return res;
+}
+
+bool TAccount::write(const sstring &aname)
+{
+  TDatabase db(DB_SNEEZY);
+  bool res;
+
+  db.query("select 1 from account where name=lower('%s')", aname.c_str());
+
+  if(!db.fetchRow()){
+    res=db.query("insert into account (email, passwd, name, birth, term, time_adjust, flags, last_logon) values ('%s', '%s', lower('%s'), %i, %i, %i, %i, %i)",
+	     email.c_str(), passwd.c_str(), name.c_str(), birth, term,
+	     time_adjust, flags, last_logon);
+  } else {
+    res=db.query("update account set email='%s', passwd='%s', birth=%i, term=%i, time_adjust=%i, flags=%i, last_logon=%i where name=lower('%s')",
+	     email.c_str(), passwd.c_str(), birth, term,
+	     time_adjust, flags, last_logon, name.c_str());
+  }
+  return res;
+}
+
+// this is here for legacy purposes only.  this information is stored in
+// the database now and you should use TAccount::read instead
+bool TAccount::fileRead(const sstring &aname)
+{
   sstring filename;
   char buf[1024];
   FILE *fp;
@@ -711,7 +756,9 @@ bool TAccount::read(const sstring &aname)
   return true;
 }
 
-bool TAccount::write(const sstring &aname)
+// this is here for legacy purposes only.  this information is stored in
+// the database now and you should use TAccount::write instead
+bool TAccount::fileWrite(const sstring &aname)
 {
   sstring filename, path;
   char buf[1024];
@@ -724,7 +771,7 @@ bool TAccount::write(const sstring &aname)
 
   if(!fp){
     if (mkdir(path.c_str(), 0770)) {
-      vlogf(LOG_FILE, fmt("Can't make directory for TAccount::write (%s)") %
+      vlogf(LOG_FILE, fmt("Can't make directory for TAccount::fileWrite (%s)")%
 	    path);
       return false;
     }

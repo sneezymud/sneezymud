@@ -18,6 +18,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "combat.h"
+#include "database.h"
 
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
@@ -701,10 +702,9 @@ int Descriptor::read_client(char *str2)
     case CLIENT_CHECKACCOUNTNAME: {
       static char *crypted;
       TAccount *account;
-      struct stat timestat;
+      TDatabase db(DB_SNEEZY);
       char aname[256];
       char apassword[256];
-      char buf2[256];
       strcpy(aname, nextToken('|', 255, str2).c_str());
       int iNew = convertTo<int>(nextToken('|', 255, str2));
       if (iNew) {
@@ -712,9 +712,10 @@ int Descriptor::read_client(char *str2)
           clientf(fmt("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
         }
-        sprintf(buf2, "account/%c/%s/account", LOWER(buf[0]), sstring(buf).lower().c_str());
-       
-        if (!stat(buf2, &timestat)) {
+
+	db.query("select 1 from account where name=lower('%s')", buf);
+
+	if(db.fetchRow()){
           writeToQ("Account already exists, enter another name.\n\r");
           return TRUE;
         }

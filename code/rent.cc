@@ -3248,9 +3248,9 @@ void countAccounts(const char *arg)
     // delete this empty account 
 
     vlogf(LOG_MISC, fmt("Empty Account: %s, deleting it.") %  buf);
-    sprintf(buf2, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
-    if (unlink(buf2) != 0)
-      vlogf(LOG_FILE, fmt("error in unlink (13) (%s) %d") %  buf2 % errno);
+    
+    TDatabase db(DB_SNEEZY);
+    db.query("delete from account where name=lower('%s')", arg);
 
     sprintf(buf2, "account/%c/%s/comment", LOWER(arg[0]), sstring(arg).lower().c_str());
     unlink(buf2);  // probably doesn't exist, so no error...

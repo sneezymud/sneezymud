@@ -48,8 +48,11 @@ class TAccount
     unsigned int flags;
     time_t last_logon;
 
+    bool fileRead(const sstring &);
+    bool fileWrite(const sstring &);
     bool read(const sstring &);
     bool write(const sstring &);
+
     
     TAccount();
     TAccount(const TAccount &a);

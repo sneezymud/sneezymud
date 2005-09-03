@@ -5482,17 +5482,16 @@ int Descriptor::sendLogin(const sstring &arg)
 
 bool Descriptor::checkForAccount(char *arg, bool silent)
 {
-  char buf[256];
-  struct stat timestat;
+  TDatabase db(DB_SNEEZY);
 
   if (bogusAccountName(arg)) {
     if (!silent)
       writeToQ("Sorry, that is an illegal name for an account.\n\r");
     return TRUE;
   }
-  sprintf(buf, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
   
-  if (!stat(buf, &timestat)) {
+  db.query("select 1 from account where name=lower('%s')", arg);
+  if(db.fetchRow()){
     if (!silent)
       writeToQ("Account already exists, enter another name.\n\r");
     return TRUE;
@@ -6219,9 +6218,17 @@ int Descriptor::doAccountMenu(const char *arg)
 
 void Descriptor::saveAccount()
 {
+  sstring path;
+
   if(!account->write(account->name)){
     vlogf(LOG_FILE, fmt("Big problems in saveAccount (%s)") % 
 	  account->name.lower());
+  }
+
+  path=(fmt("account/%c/%s") % account->name[0] % account->name).lower();
+  if (mkdir(path.c_str(), 0770) && errno != EEXIST){
+    vlogf(LOG_FILE, fmt("Can't make directory for Descriptor::saveAccount (%s) (%i)") %
+	  path % errno);
   }
 }
 
