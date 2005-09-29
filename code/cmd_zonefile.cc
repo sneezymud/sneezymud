@@ -49,7 +49,7 @@ void TBeing::doZonefile(const sstring & tStArg)
 }
 
 #ifdef MAIL_ZONEFILE
-const char SAVEZONEFILE_REPLYTO[] = "damescena@spasm.stanford.edu";
+const char SAVEZONEFILE_REPLYTO[] = "damescena@sneezy.saw.net";
 #endif
 
 void doSaveZoneFile(TBeing *ch, const sstring & tArg)

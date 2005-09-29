@@ -269,11 +269,11 @@ int Descriptor::read_client(char *str2)
       strcpy(buf, nextToken('|', 255, str2).c_str());
       vers = convertTo<int>(buf);
       if (vers <= BAD_VERSION) {
-        clientf(fmt("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d") % CLIENT_ERROR % CURRENT_VERSION % ERR_BAD_VERSION);
+        clientf(fmt("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.saw.net/client/client.html.|%d") % CLIENT_ERROR % CURRENT_VERSION % ERR_BAD_VERSION);
         outputProcessing();
         return FALSE;
       } else if (vers < CURRENT_VERSION) {
-        clientf(fmt("%d|You client is an old version. You can continue playing with the current version, but upgrade is recommended. The latest version is %d and can be received from http://sneezy.stanford.edu/client.|%d") % CLIENT_ERROR % CURRENT_VERSION % 7); //ERR_CUR_VERSION);
+        clientf(fmt("%d|You client is an old version. You can continue playing with the current version, but upgrade is recommended. The latest version is %d and can be received from http://sneezy.saw.net/client.|%d") % CLIENT_ERROR % CURRENT_VERSION % 7); //ERR_CUR_VERSION);
         outputProcessing();
       }
 
@@ -1291,7 +1291,7 @@ int TBeing::doClientMessage(const char *arg)
 
 #if 0
   if (!desc->m_bIsClient) {
-    sendTo("This command is only available for users of the SneezyMUD client (http://sneezy.stanford.edu/client).\n\r");
+    sendTo("This command is only available for users of the SneezyMUD client (http://sneezy.saw.net/client).\n\r");
     return FALSE;
   }
 #endif

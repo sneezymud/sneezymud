@@ -193,7 +193,7 @@ void TBeing::stopmusic()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sstring url = "http://sneezy.stanford.edu/sounds/";
+      sstring url = "http://sneezy.saw.net/sounds/";
       sendTo(fmt("!!MUSIC(Off U=%s)\n\r") % url);
     }
   }
@@ -249,7 +249,7 @@ void TBeing::stopsound()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sstring url = "http://sneezy.stanford.edu/sounds/";
+      sstring url = "http://sneezy.saw.net/sounds/";
       sendTo(fmt("!!SOUND(Off U=%s)\n\r") % url);
     }
   }
