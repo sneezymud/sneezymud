@@ -66,6 +66,7 @@ void TBeing::doPrompt(const char *arg)
     "lifeforce",
     "client-prompt",
     "classic-ansi-bar",
+    "time",
     "\n"
   };
 
@@ -95,6 +96,7 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE),
       IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT),
       IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR),
+      IS_SET(desc->prompt_d.type, PROMPT_TIME),
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -120,6 +122,19 @@ void TBeing::doPrompt(const char *arg)
     strcpy(caStat, displayExp().comify().c_str());
 
     sprintf(str, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
+    tStString += str;
+
+    // we need some sort of standard time handling function
+    time_t ct;
+    if (desc->account)
+      ct = time(0) + 3600 * desc->account->time_adjust;
+    else
+      ct = time(0);
+    struct tm *tm=localtime(&ct);
+
+    sprintf(str, "Time       : (%s): t:%i:%i:%i\n\r", 
+	    (tPrompts[20] ? "yes" : " no"),
+	    tm->tm_hour, tm->tm_min, tm->tm_sec);
     tStString += str;
 
     for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES; tClassIndex++)
@@ -242,6 +257,15 @@ void TBeing::doPrompt(const char *arg)
         SET_BIT(desc->prompt_d.type, PROMPT_OPPONENT);
       }
       break;
+    case 21:
+      if(IS_SET(desc->prompt_d.type, PROMPT_TIME)){
+	sendTo("Taking time out of prompt.\n\r");
+	REMOVE_BIT(desc->prompt_d.type, PROMPT_TIME);
+      } else {
+	sendTo("Adding time to prompt.\n\r");
+	SET_BIT(desc->prompt_d.type, PROMPT_TIME);
+      }
+      break;
     case 7:
       sscanf(str, "%s %s ", caStat, caColor);
       if (is_abbrev(caStat, "off")) {
@@ -257,6 +281,7 @@ void TBeing::doPrompt(const char *arg)
         *desc->prompt_d.tankColor = '\0';
         *desc->prompt_d.pietyColor = '\0';
         *desc->prompt_d.lifeforceColor = '\0';
+	*desc->prompt_d.timeColor = '\0';
         return;
       }
       statnum = old_search_block(caStat, 0, strlen(caStat), stat_fields, 0);
@@ -318,6 +343,12 @@ void TBeing::doPrompt(const char *arg)
           return;
         } else
           setColor(SET_COL_FIELD_LIFEFORCE, kolor);
+      } else if (statnum == 21) {
+	if(!IS_SET(desc->prompt_d.type, PROMPT_TIME)){
+	  sendTo("You can't color time, without it in your prompt.\n\r");
+	  return;
+	} else
+	  setColor(SET_COL_FIELD_TIME, kolor);
       } else if (statnum == 3) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_MOVE)) {
           sendTo("You can't color movement points, without them in your prompt.\n\r");
@@ -391,7 +422,7 @@ void TBeing::doPrompt(const char *arg)
       desc->prompt_d.type = PROMPT_HIT | PROMPT_MOVE | PROMPT_MANA |
                     PROMPT_GOLD | PROMPT_EXP | PROMPT_OPPONENT |
                     PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
-	            PROMPT_PIETY | PROMPT_LIFEFORCE |
+	            PROMPT_PIETY | PROMPT_LIFEFORCE | PROMPT_TIME |
                     (isImmortal() ? PROMPT_ROOM : 0);
       break;
     case 11:

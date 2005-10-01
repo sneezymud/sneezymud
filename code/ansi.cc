@@ -98,6 +98,9 @@ void TBeing::setColor(setColorFieldT num, setColorKolorT col)
     case SET_COL_FIELD_HIT:
       strcpy(desc->prompt_d.hpColor, buf.c_str());
       break;
+    case SET_COL_FIELD_TIME:
+      strcpy(desc->prompt_d.timeColor, buf.c_str());
+      break;
     case SET_COL_FIELD_MANA:
       strcpy(desc->prompt_d.manaColor, buf.c_str());
       break;

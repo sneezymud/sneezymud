@@ -519,17 +519,6 @@ void TPerson::storeToSt(charFile *st)
 
   st->fatigue = 0;
   st->hero_num = getHeroNum();
-  st->p_type = desc->prompt_d.type;
-  strcpy(st->hpColor, desc->prompt_d.hpColor);
-  strcpy(st->manaColor, desc->prompt_d.manaColor);
-  strcpy(st->moveColor, desc->prompt_d.moveColor);
-  strcpy(st->moneyColor, desc->prompt_d.moneyColor);
-  strcpy(st->expColor, desc->prompt_d.expColor);
-  strcpy(st->roomColor, desc->prompt_d.roomColor);
-  strcpy(st->oppColor, desc->prompt_d.oppColor);
-  strcpy(st->tankColor, desc->prompt_d.tankColor);
-  strcpy(st->pietyColor, desc->prompt_d.pietyColor);
-  strcpy(st->lifeforceColor, desc->prompt_d.lifeforceColor);
 
   st->plr_act = desc->plr_act;
   st->plr_color = desc->plr_color;
@@ -760,18 +749,29 @@ void TPerson::loadFromSt(charFile *st)
   // fatigue = st->fatigue;
   setHeroNum(st->hero_num);
 
-  desc->prompt_d.type = st->p_type;
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("select p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time from playerprompt where player_id=%i", getPlayerID());
+  
+  if(db.fetchRow()){
+    desc->prompt_d.type = convertTo<int>(db["p_type"]);
+    
+    strcpy(desc->prompt_d.hpColor, db["hp"].c_str());
+    strcpy(desc->prompt_d.manaColor, db["mana"].c_str());
+    strcpy(desc->prompt_d.moveColor, db["move"].c_str());
+    strcpy(desc->prompt_d.moneyColor, db["money"].c_str());
+    strcpy(desc->prompt_d.expColor, db["exp"].c_str());
+    strcpy(desc->prompt_d.roomColor, db["room"].c_str());
+    strcpy(desc->prompt_d.oppColor, db["opp"].c_str());
+    strcpy(desc->prompt_d.tankColor, db["tank"].c_str());
+    strcpy(desc->prompt_d.pietyColor, db["piety"].c_str());
+    strcpy(desc->prompt_d.lifeforceColor, db["lifeforce"].c_str());
+    strcpy(desc->prompt_d.timeColor, db["time"].c_str());
+  } else {
+    db.query("insert into playerprompt (player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) values (%i, 267869, '', '', '', '', '', '', '', '', '', '', '')", getPlayerID());
+  }
 
-  strcpy(desc->prompt_d.hpColor, st->hpColor);
-  strcpy(desc->prompt_d.manaColor, st->manaColor);
-  strcpy(desc->prompt_d.moveColor, st->moveColor);
-  strcpy(desc->prompt_d.moneyColor, st->moneyColor);
-  strcpy(desc->prompt_d.expColor, st->expColor);
-  strcpy(desc->prompt_d.roomColor, st->roomColor);
-  strcpy(desc->prompt_d.oppColor, st->oppColor);
-  strcpy(desc->prompt_d.tankColor, st->tankColor);
-  strcpy(desc->prompt_d.pietyColor, st->pietyColor);
-  strcpy(desc->prompt_d.lifeforceColor, st->lifeforceColor);
+
 
 
   desc->plr_act = st->plr_act;
@@ -904,11 +904,22 @@ void TBeing::saveChar(sh_int load_room)
     sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
   TDatabase db(DB_SNEEZY);
-
+  Descriptor *mydesc=tmp?tmp->desc:desc;
+    
   if(!isImmortal()){
-    db.query("update player set talens=%i, account_id=account.account_id where id=%i and account.name='%s'",
-	     st.money, getPlayerID(), tmp?tmp->desc->account->name.c_str():desc->account->name.c_str());
+    db.query("update player set talens=%i, account_id=account.account_id,  where id=%i and account.name='%s'",
+	     st.money, getPlayerID(), mydesc->account->name.c_str());
   }
+
+
+  db.query("update playerprompt set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id=%i", 
+	   mydesc->prompt_d.type, mydesc->prompt_d.hpColor, 
+	   mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
+	   mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
+	   mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
+	   mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
+	   mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
+	   getPlayerID());
 	   
 
   fl = fopen(buf, "w");

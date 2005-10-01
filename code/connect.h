@@ -21,6 +21,7 @@ const unsigned int PROMPT_EXPTONEXT_LEVEL   = (1<<14);
 const unsigned int PROMPT_VTANSI_BAR        = (1<<15);
 const unsigned int PROMPT_PIETY             = (1<<16);
 const unsigned int PROMPT_LIFEFORCE         = (1<<17);
+const unsigned int PROMPT_TIME              = (1<<18);
 // Add new prompt options here.
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (1<<31);
@@ -381,6 +382,7 @@ class promptData
     char tankColor[20];
     char pietyColor[20];
     char lifeforceColor[20];
+    char timeColor[20];
     char *prompt;
 //    double xptnl[MAX_CLASSES];  getExpClassLevel is same for all classes
     double xptnl;

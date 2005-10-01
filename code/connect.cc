@@ -5040,8 +5040,9 @@ void setPrompts(fd_set out)
               "%sN:%s%s ",           // Exp Tnl
               "%s%s<%s%s=%s>%s ",    // Opponent
               "%s%s<%s/tank=%s>%s ", // Tank / Tank-Other
-              "%s<%.1f%s> ",          // Lockout
-              "%sLF:%d%s "         // Lifeforce
+              "%s<%.1f%s> ",         // Lockout
+              "%sLF:%d%s ",          // Lifeforce
+	      "%s%02i:%02i:%02i%s "            // time
             };
 
             if (ch->isImmortal() && IS_SET(d->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
@@ -5054,6 +5055,21 @@ void setPrompts(fd_set out)
                       ch->roomp->getMoblim(),
                       TerrainInfo[ch->roomp->getSectorType()]->name);
             }
+	    
+	    time_t ct;
+	    if (ch->desc->account)
+	      ct = time(0) + 3600 * ch->desc->account->time_adjust;
+	    else
+	      ct = time(0);
+	    struct tm *tm=localtime(&ct);
+	    
+	    if (IS_SET(d->prompt_d.type, PROMPT_TIME))
+	      sprintf(promptbuf + strlen(promptbuf),
+		      StPrompts[13],
+		      (hasColor ? d->prompt_d.timeColor : ""),
+		      tm->tm_hour, tm->tm_min, tm->tm_sec,
+		      ch->norm());
+
             if (IS_SET(d->prompt_d.type, PROMPT_HIT))
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[1],
@@ -6821,7 +6837,7 @@ promptData::promptData() :
   xptnl(0.0)
 {
   *hpColor = *moneyColor = *manaColor = *moveColor = *expColor = '\0';
-  *roomColor = *oppColor = *tankColor = '\0';
+  *roomColor = *oppColor = *tankColor = *timeColor = '\0';
   *pietyColor = *lifeforceColor = '\0';
 
 //  for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++)
