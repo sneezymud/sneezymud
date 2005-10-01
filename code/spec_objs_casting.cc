@@ -137,7 +137,6 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
   TBeing *ch;
   int rc;
   affectedData aff;
-  sstring buf=sstring(arg).word(0);
   int location;
   TRoom *room = NULL;
   sstring new_name, name_end, old_name;
@@ -145,9 +144,17 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
   
   if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
+  if (!arg)
+    return FALSE;
+
+  sstring buf2, buf=sstring(arg).word(0);
 
   if (cmd == CMD_USE)
   {
+    if (!isname(buf, o->getName())) {
+      return FALSE;
+    }
+ 
     act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
     act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
     
@@ -353,16 +360,23 @@ int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o,
   TBeing *ch;
   int rc;
   affectedData aff;
-  sstring buf=sstring(arg).word(0);
   int location;
   TRoom *room = NULL;
   sstring new_name, name_end, old_name;
   
   if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
+  if (!arg)
+    return FALSE;
+
+  sstring buf=sstring(arg).word(0);
 
   if (cmd == CMD_USE)
   {
+    if (!isname(buf, o->getName())) {
+      return FALSE;
+    }
+ 
     act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
     act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
     
@@ -466,7 +480,6 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
   affectedData aff;
-  sstring buf2, buf=sstring(arg).word(0);
   int location;
   TRoom *room = NULL;
   sstring new_name, name_end, old_name;
@@ -475,12 +488,20 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!o or !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
+  if (!arg)
+    return FALSE;
+
+  sstring buf2, buf=sstring(arg).word(0);
+
   if (cmd == CMD_USE)
   {
+    if (!isname(buf, o->getName())) {
+      return FALSE;
+    }
+
     act("$n wraps $s fingers around $p.", TRUE, ch,o,NULL,TO_ROOM,NULL);
     act("You wrap your fingers around $p.", TRUE, ch,o,NULL,TO_CHAR,NULL);
     
-
     if (ch->checkForSkillAttempt(SPELL_PORTAL)) {
       act("The $o's powers can only be used once per day.",
           TRUE,ch,o,NULL,TO_CHAR,NULL);
