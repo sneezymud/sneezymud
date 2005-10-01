@@ -35,16 +35,12 @@ class charFile {
 
    char description[500];
    char lastHost[40];
-   char hpColor[20], manaColor[20], moveColor[20];
-   char moneyColor[20], expColor[20];
-   char roomColor[20], oppColor[20];
-   char tankColor[20];
-   char pietyColor[20], lifeforceColor[20];
+   char obsolete_prompt_colors[200];
    sh_int hometown;
    ubyte hometerrain;
    sh_int load_room;            /* Which room to place char in  */
    sh_int body_health[MAX_HUMAN_WEAR];
-   unsigned int p_type;
+   unsigned int obsolete_p_type;
    sh_int bad_login;
    ush_int base_age;
    sh_int age_mod;

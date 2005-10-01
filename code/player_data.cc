@@ -1127,46 +1127,6 @@ void do_the_player_stuff(const char *name)
       vlogf(LOG_BUG, fmt("%s had a corrupt st.lastHost. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
-    } else if (strlen(st.hpColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.hpColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.manaColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.manaColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.moveColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.moveColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.moneyColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.moneyColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.oppColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.oppColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.roomColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.roomColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.expColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.expColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.tankColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.tankColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.pietyColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.pietyColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
-    } else if (strlen(st.lifeforceColor) > 20) {
-      vlogf(LOG_BUG, fmt("%s had a corrupt st.lifeforceColor. Moving player file.") %  name);
-      handleCorrupted(name, st.aname);
-      return;
 #if 0
     } else if ((max_level <= MAX_MORT) && ((st.money < 0) || (st.money > 2500000000))) {
       vlogf(LOG_BUG, fmt("%s had a bad talens number(< 0 or > 25billion). Moving player file.") %  name);

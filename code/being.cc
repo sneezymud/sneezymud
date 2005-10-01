@@ -484,7 +484,7 @@ charFile::charFile() :
   hometown(0),
   hometerrain(0),
   load_room(0),
-  p_type(0),
+  obsolete_p_type(0),
   bad_login(0),
   base_age(0),
   age_mod(0),
@@ -550,16 +550,7 @@ charFile::charFile() :
 
   memset(description, '\0', sizeof(description));
   memset(lastHost, '\0', sizeof(lastHost));
-  memset(hpColor, '\0', sizeof(hpColor));
-  memset(manaColor, '\0', sizeof(manaColor));
-  memset(moveColor, '\0', sizeof(moveColor));
-  memset(moneyColor, '\0', sizeof(moneyColor));
-  memset(expColor, '\0', sizeof(expColor));
-  memset(roomColor, '\0', sizeof(roomColor));
-  memset(oppColor, '\0', sizeof(oppColor));
-  memset(tankColor, '\0', sizeof(tankColor));
-  memset(pietyColor, '\0', sizeof(pietyColor));
-  memset(lifeforceColor, '\0', sizeof(lifeforceColor));
+  memset(obsolete_prompt_colors, '\0', sizeof(obsolete_prompt_colors));
 
   statTypeT ij;
   for (ij=MIN_STAT;ij<MAX_STATS;ij++) {
