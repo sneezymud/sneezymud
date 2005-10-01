@@ -750,7 +750,8 @@ void TPerson::loadFromSt(charFile *st)
   setHeroNum(st->hero_num);
 
   TDatabase db(DB_SNEEZY);
-  
+
+  desc->playerID=0;
   db.query("select p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time from playerprompt where player_id=%i", getPlayerID());
   
   if(db.fetchRow()){
@@ -907,7 +908,7 @@ void TBeing::saveChar(sh_int load_room)
   Descriptor *mydesc=tmp?tmp->desc:desc;
     
   if(!isImmortal()){
-    db.query("update player set talens=%i, account_id=account.account_id,  where id=%i and account.name='%s'",
+    db.query("update player set talens=%i, account_id=account.account_id where id=%i and account.name='%s'",
 	     st.money, getPlayerID(), mydesc->account->name.c_str());
   }
 
