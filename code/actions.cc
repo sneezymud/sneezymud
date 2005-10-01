@@ -219,6 +219,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       case CMD_FLEX:
       case CMD_BECKON:
       case CMD_SALUTE:
+      case CMD_JUGGLE:
         if (fight())  {
           sendTo("You cannot perform that action while fighting!\n\r");
           return FALSE;
@@ -792,6 +793,13 @@ void TBeing::doPoke(const sstring &arg)
   // If we got here, the person pointed at something that wasnt in the room
   sendTo("You look for something to poke, but come up disappointed.\n\r");
 }
+
+
+void TBeing::doJuggle(const sstring &arg)
+{
+  sendTo("Not yet implemented.\n\r");
+}
+
 
 void TBeing::doPoint(const sstring &arg)
 {

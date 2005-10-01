@@ -709,6 +709,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	doPoint(newarg);
 	addToLifeforce(1);
 	break;
+      case CMD_JUGGLE:
+	doJuggle(newarg);
+	addToLifeforce(1);
+	break;
       case CMD_BITE:
 	rc = doBite(newarg);
 	addToLifeforce(1);
@@ -2863,6 +2867,7 @@ void buildCommandArray(void)
   commandArray[CMD_TRIP] = new commandInfo("trip", POSITION_FIGHTING, 0);
   commandArray[CMD_POOP] = new commandInfo("poop", POSITION_STANDING, 0);
   commandArray[CMD_COMBINE] = new commandInfo("combine", POSITION_RESTING, 0);
+  commandArray[CMD_JUGGLE] = new commandInfo("juggle", POSITION_RESTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)
