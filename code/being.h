@@ -1416,6 +1416,7 @@ class TBeing : public TThing {
     void doPoint(const sstring &);
     void doPoke(const sstring &);
     void doTip(const sstring &);
+    void doJuggle(const sstring &);
     int doBite(const sstring &);
     int doJump(const sstring &);
     int doPick(const char *);
