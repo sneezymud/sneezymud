@@ -19,6 +19,8 @@ int main(int argc, char **argv)
     exit(0);
   }
 
+  toggleInfo.loadToggles();
+
   if(!parse_num_args(argc-1, argv+1, vnums))
     exit(0);
 
