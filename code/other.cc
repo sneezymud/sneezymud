@@ -2481,6 +2481,85 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       
       vict->sendTo("You feel ready to learn more.\n\r");
       break;
+    case LIQ_POT_MYSTERY:
+      switch (::number(0,12)) {
+	case 1:
+	  ch->genericRestore(RESTORE_FULL);
+	  ch->sendTo("You have been healed.\n\r");
+	  break;
+	case 2:
+	  aff.type = SPELL_STONE_SKIN;
+	  aff.level = 30;
+	  aff.duration = 8 * UPDATES_PER_MUDHOUR;
+	  aff.location = APPLY_ARMOR;
+	  aff.modifier = -75;
+	  ch->affectTo(&aff);
+	  aff.type = SPELL_STONE_SKIN;
+	  aff.level = 30;
+	  aff.duration = 8 * UPDATES_PER_MUDHOUR;
+	  aff.location = APPLY_IMMUNITY;
+	  aff.modifier = IMMUNE_PIERCE;
+	  aff.modifier2 = 15;
+	  ch->affectTo(&aff);
+	  aff.type = AFFECT_SKILL_ATTEMPT;
+	  aff.level = 0;
+	  aff.duration = 24 * UPDATES_PER_MUDHOUR;
+	  aff.location = APPLY_NONE;
+	  aff.modifier = SPELL_STONE_SKIN;
+	  ch->sendTo("Your skin becomes as hard as stone!\n\r");
+	  if (!(ch->isImmortal())) ch->affectTo(&aff);
+	  break;
+	case 10:
+	  ch->age_mod += 1;
+	  ch->sendTo("You feel a tiny bit older.\n\r");
+	  break;
+	case 3:
+	  for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+	    if (ch->hasClass(1<<Class)) {
+	      ch->addPracs(1, Class);
+	      break;
+	    }
+	  }
+	  ch->sendTo("You feel ready to learn more.\n\r");
+	  break;
+	case 4:
+	  aff.type = SPELL_POISON;
+	  aff.level = 10;
+	  aff.duration = (20) * UPDATES_PER_MUDHOUR;
+	  aff.modifier = -20;
+	  aff.location = APPLY_STR;
+	  aff.bitvector = AFF_POISON;
+	  ch->affectTo(&aff);	  
+	  aff.type = AFFECT_DISEASE;
+	  aff.level = 0;
+	  aff.duration = aff.duration;
+	  aff.modifier = DISEASE_POISON;
+	  aff.location = APPLY_NONE;
+	  aff.bitvector = AFF_POISON;
+	  ch->sendTo("You have been poisoned!\n\r");
+	  ch->affectTo(&aff);
+	  disease_start(ch, &aff);
+	  break;
+	case 5:
+	case 11:
+	  ch->age_mod -= 5;
+	  ch->sendTo("You feel a bit younger.\n\r");
+	  break;
+	case 6:
+	  ch->age_mod += 3;
+	  ch->sendTo("You feel a bit older.\n\r");
+	  break;
+	case 7:
+	case 8:
+	case 9:
+	  ch->age_mod -= 3;
+	  ch->sendTo("You feel a tiny bit younger.\n\r");
+	  break;
+	default:
+	  ch->sendTo("Nothing seems to have happened.\n\r");
+	  break;
+      }
+      break;
     case LIQ_MAGICAL_ELIXIR:
       vict->sendTo("A warm tingle runs through your body.\n\r");
       vict->addToMana(amt);
