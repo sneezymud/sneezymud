@@ -167,6 +167,8 @@ double getLevMod(unsigned short int Class, unsigned int lev)
     lev_mod = max(lev_mod, 10.0);
   if (IS_SET(Class, CLASS_RANGER))
     lev_mod = max(lev_mod, 3.0);
+  if (IS_SET(Class, CLASS_SHAMAN))
+    lev_mod = max(lev_mod, 10.0);
 
   // phase in rent credit loss over few levels
   // this is mostly here so all newbies are essentially the same
