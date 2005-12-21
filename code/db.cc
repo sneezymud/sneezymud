@@ -128,6 +128,8 @@ int mob_tick_count = 0;
 int repair_number = 0;
 unsigned int total_help_number = 0;
 int faction_number = 0;
+// load rate percentage, overrides rates defined in zonefiles
+int fixed_chance = 1;
 
 FILE *mob_f = NULL;        // file containing mob prototypes  
 
@@ -2167,7 +2169,10 @@ void zoneData::resetZone(bool bootTime)
                 (mobload && (rs.character != 'P'))) {
 
               int tmp = dice(1, 100);
-              if (tmp <= rs.arg1 || gamePort == BETA_GAMEPORT) {
+
+              // if (tmp <= rs.arg1 || gamePort == BETA_GAMEPORT) {
+              if (rs.arg1 >= 98 || tmp <= fixed_chance ||
+                  gamePort == BETA_GAMEPORT) {
                 last_cmd = 1;
               } else {
                 last_cmd = 0;
@@ -2474,15 +2479,18 @@ void zoneData::resetZone(bool bootTime)
 	    wearSlotT i;
 	    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
 	      if (local_armor[rs.arg1].slots[i]) {
-		loadsetCheck(mob, local_armor[rs.arg1].slots[i], rs.arg2, 
-			     i, "(null... for now)");
+                // loadsetCheck(mob, local_armor[rs.arg1].slots[i], rs.arg2, 
+                //   i, "(null... for now)");
+                loadsetCheck(mob, local_armor[rs.arg1].slots[i], fixed_chance, 
+                  i, "(null... for now)");
 	      }
 	    }
 	  }
 	  break;
         case 'Y':
           if (mob && mobload) {
-            mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
+            // mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
+            mob->loadSetEquipment(rs.arg1, NULL, fixed_chance);
 
             if (mob->hasClass(CLASS_MAGE)) {
               TSpellBag *tBagA = NULL,
