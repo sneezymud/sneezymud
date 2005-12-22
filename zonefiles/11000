@@ -650,9 +650,5 @@ M 0 11062 1 11050 	Kwiz'on
 E 1 10046 10 7			Studded leather leg wrappings
 C 1 11063 1 11050	Kiefer
 
-* Temp load of Ryoken Captian until Ryoken is re-enabled
-M 0 11113 1 11100   CAPT GUARDS
-G 1 29022 25       RED ORE
-
 S
 
