@@ -14,7 +14,7 @@ O 0 20 1 31480       a chair
 O 0 31484 4 31480    a chair
 
 O 0 31482 1 31480    a table
-O 0 31480 1 31480    a small iron fireplace
+*O 0 31480 1 31480    a small iron fireplace
 O 0 31484 1 31482    a chair
 O 0 31485 2 31484    a weapon rack
 O 0 31486 3 31485    a training dummy
