@@ -491,6 +491,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
             obj->objVnum() == STATS_POTION ||
             obj->objVnum() == MYSTERY_POTION ||
 	    obj->objVnum() == LEARNING_POTION ||
+	    obj->objVnum() == 23091 || // for brick quest
             obj->parent    == caster       ||
             (tMon && tMon->isShopkeeper()))
 	  continue;

@@ -3170,7 +3170,6 @@ int TMonster::takeFirstHit(TBeing &vict)
 	    //            rc = backstabHit(&vict, stabber);
 	    //            addSkillLag(SKILL_BACKSTAB, 0);
 	      rc=doBackstab("", &vict);
-	      vlogf(LOG_JESUS, "Backstab called in takeFirstHit");
 	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
 		return DELETE_VICT;
 	      }
@@ -3195,7 +3194,6 @@ int TMonster::takeFirstHit(TBeing &vict)
 	      return TRUE;
 	    } else {
 	      rc=doThroatSlit("", &vict);
-	      vlogf(LOG_JESUS, "Slit called in takeFirstHit");
 	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
 		return DELETE_VICT;
 	      }
