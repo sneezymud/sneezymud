@@ -3831,7 +3831,7 @@ int brickScorecard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2
   int i=1;
   while(i<=25){
     if(db_brickquest.fetchRow()){
-      ch->sendTo(COLOR_BASIC, fmt("%-13s has %4s bricks collected so far.\r\n") %
+      ch->sendTo(COLOR_BASIC, fmt("%s has %s bricks collected so far.\r\n") %
 		 db_brickquest["name"] % db_brickquest["numbricks"]);
     }
     ++i;
