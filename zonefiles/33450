@@ -34,9 +34,9 @@ E 1 33463 9999 19
 Y 0 136 5
 M 0 33479 2 33453       a hired solder
 Y 0 136 5
-M 0 33478 4 33453       a hired solder
+M 0 33478 2 33453       a hired solder
 Y 0 136 5
-M 0 33478 6 33453       a hired solder
+M 0 33478 1 33453       a hired solder
 Y 0 136 5
 M 0 33480 1 33454       a drunk soldier
 E 1 33463 9999 19
@@ -44,37 +44,37 @@ E 1 33463 9999 19
 Y 0 136 5
 M 0 33479 2 33454       a hired solder
 Y 0 136 5
-M 0 33478 4 33454       a hired solder
+M 0 33478 2 33454       a hired solder
 Y 0 136 5
-M 0 33478 6 33454       a hired solder
+M 0 33478 1 33454       a hired solder
 Y 0 136 5
-M 0 33479 3 33455       a hired solder
+M 0 33479 1 33455       a hired solder
 Y 0 136 5
-M 0 33480 4 33455       a drunk soldier
+M 0 33480 2 33455       a drunk soldier
 E 1 33463 9999 19
 ? 0 10 0 E
 Y 0 136 5
-M 0 33479 7 33455       a hired solder
+M 0 33479 2 33455       a hired solder
 Y 0 136 5
 M 0 33479 10 33455      a hired solder
 Y 0 136 5
-M 0 33478 12 33455      a hired solder
+M 0 33478 1 33455      a hired solder
 Y 0 136 5
-M 0 33478 14 33455      a hired solder
+M 0 33478 1 33455      a hired solder
 Y 0 136 5
-M 0 33479 3 33456       a hired solder
+M 0 33479 2 33456       a hired solder
 Y 0 136 5
-M 0 33480 4 33456       a drunk soldier
+M 0 33480 1 33456       a drunk soldier
 E 1 33463 9999 19
 ? 0 10 0 E
 Y 0 136 5
-M 0 33479 7 33456       a hired solder
+M 0 33479 2 33456       a hired solder
 Y 0 136 5
-M 0 33479 10 33456      a hired solder
+M 0 33479 1 33456      a hired solder
 Y 0 136 5
-M 0 33478 12 33456      a hired solder
+M 0 33478 2 33456      a hired solder
 Y 0 136 5
-M 0 33478 14 33456      a hired solder
+M 0 33478 2 33456      a hired solder
 Y 0 135 5
 M 0 33473 1 33460       a packrat
 M 0 33450 2 33465       a steadfast guardian
