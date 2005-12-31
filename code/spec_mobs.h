@@ -190,7 +190,8 @@ const int SPEC_AUCTIONEER         =203;
 const int SPEC_LOAN_MANAGER       =204;
 const int SPEC_BEE_DEATH          =205;
 const int SPEC_HERO_FAERIE        =206;
-const int NUM_MOB_SPECIALS        =206;
+const int SPEC_BRICK_COLLECTOR    =207;
+const int NUM_MOB_SPECIALS        =207;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -242,6 +243,7 @@ extern int shopWhisper(TBeing *, TMonster *, int, const char *);
 extern int archer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *, bool login=false);
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
+extern int brickCollector(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 class attune_struct {
   public:

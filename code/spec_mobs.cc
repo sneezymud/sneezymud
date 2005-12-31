@@ -6463,6 +6463,48 @@ int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *) {
   return TRUE;
 }
 
+
+int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself, TObj *o) {
+  sstring buf, arg=argument;
+  TDatabase db(DB_SNEEZY);
+
+  if(!ch || !ch->awake() || ch->fight())
+    return FALSE;
+
+  
+  switch(cmd){
+    case CMD_MOB_GIVEN_ITEM:
+      if(!o || !isname("foundbrick", o->name)){
+	return FALSE;
+      }
+
+      db.query("select 1 from brickquest where name='%s'", ch->name);
+      if(!db.fetchRow()){
+	db.query("insert into brickquest values (1, '%s')", 
+		 ch->name);
+      } else {
+	db.query("update brickquest set numbricks=numbricks+1 where name='%s'", ch->name);
+      }
+      db.query("select name, numbricks from brickquest where name='%s'", ch->name);
+      while (db.fetchRow()) {
+	buf = fmt("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] % 
+convertTo<int>(db["numbricks"]);
+	myself->doSay(buf);
+        vlogf(LOG_JESUS, fmt("%s turned in another brick for a total of %i") % ch->name % convertTo<int>(db["numbricks"]));
+      }
+      ch->doSave(SILENT_YES);
+      return DELETE_ITEM;
+      break;
+    default:
+      return FALSE;
+  }
+
+  return TRUE;
+}
+
+
+
+
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
 extern int janitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int prisonJanitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6741,6 +6783,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "loan manager", loanManager},
   {TRUE, "bee death", beeDeath}, // 205
   {FALSE, "hero faerie", heroFaerie},
+  {FALSE,"Brick Collector", brickCollector},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

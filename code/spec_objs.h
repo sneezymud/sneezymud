@@ -29,7 +29,7 @@ const int SPEC_HIGHROLLERS_BOARD = 96;
 const int SPEC_FACTIONSCORE_BOARD = 97;
 const int SPEC_GRAFFITI=135;
 const int SPEC_STOCK_BOARD  = 138;
-
+const int SPEC_BRICKQUEST = 148;
 const int NUM_OBJ_SPECIALS = 151;
 
 struct TObjSpecs {

@@ -3797,6 +3797,49 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 }
 
 
+
+int brickScorecard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2) {
+  int found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_BRICKQUEST &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+  TDatabase db_brickquest(DB_SNEEZY);
+
+  ch->sendTo("You examine the buletin board:\n\r");
+  ch->sendTo("+------------------------------------------------+\n\r");
+  ch->sendTo("| The players with the most collected bricks for |\n\r");
+  ch->sendTo("|        the brick house quest are....           |\n\r");
+  ch->sendTo("+------------------------------------------------+\n\r\n\r");
+
+  db_brickquest.query("select * from brickquest order by numbricks desc limit 25");
+
+  int i=1;
+  while(i<=25){
+    if(db_brickquest.fetchRow()){
+      ch->sendTo(COLOR_BASIC, fmt("%-13s has %4s bricks collected so far.\r\n") %
+		 db_brickquest["name"] % db_brickquest["numbricks"]);
+    }
+    ++i;
+  }
+  return TRUE;
+}
+
+
 // Dash stuff - dec 2001
 
 int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
@@ -5803,5 +5846,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Astral Walk", objWornAstralWalk}, //145
   {FALSE, "Minor Astral Walk", objWornMinorAstralWalk},
   {FALSE, "Portal", objWornPortal},
+  {FALSE, "brick quest scorecard", brickScorecard},
   {FALSE, "last proc", bogusObjProc}
 };
