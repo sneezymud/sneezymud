@@ -1196,7 +1196,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
   // brick quest
-  if (!::number(0,749) && wealth > 0) {
+  if (!::number(0,999) && wealth > 0) {
     TObj *brick = read_object(23091, VIRTUAL);
     if (brick)
       *this += *brick;
