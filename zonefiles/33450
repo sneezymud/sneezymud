@@ -56,7 +56,7 @@ E 1 33463 9999 19
 Y 0 136 5
 M 0 33479 2 33455       a hired solder
 Y 0 136 5
-M 0 33479 10 33455      a hired solder
+M 0 33479 2 33455      a hired solder
 Y 0 136 5
 M 0 33478 1 33455      a hired solder
 Y 0 136 5
@@ -155,6 +155,15 @@ Y 0 135 5
 M 0 33450 1 33477       a steadfast guardian
 Y 0 135 5
 M 0 33482 1 33481       Aziel, prince of hidden treasures
+M 0 33483 1 33483       Nelchael
+E 1 33469 9999 15        bat skin belt
+? 0 5 0 E
+E 0 33470 9999 19        zweihander
+M 0 33472 1 33484       Behir
+M 0 33451 1 33458     hulking guardian
+Y 0 135 5
+M 0 33451 1 33458     hulking guardian
+Y 0 135 5
 M 0 33484 1 33479       Chwast
 E 1 33484 9999 11         a wrapped length of beads [hand-left]
 ? 0 10 0 E
