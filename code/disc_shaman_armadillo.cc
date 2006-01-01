@@ -411,7 +411,13 @@ ANSI_GREEN);
 int celerite(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;
-
+  if (victim->affectedBySpell(SPELL_HASTE)) {
+    victim->sendTo("Your insolence is NOT appreciated by the loa! OUCH!!\n\r");
+    victim->setLifeforce((victim->getLifeforce() / 4) * 3);
+    victim->reconcileDamage(victim, ::number(5,20), DAMAGE_DRAIN);
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }  
   caster->reconcileHelp(victim, discArray[SPELL_CELERITE]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_CELERITE)) {

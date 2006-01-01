@@ -661,6 +661,14 @@ int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;
 
+  if (victim->isAffected(AFF_TRUE_SIGHT)) {
+    victim->sendTo("Your insolence is NOT appreciated by the loa! OUCH!!\n\r");
+    victim->setLifeforce((victim->getLifeforce() / 4) * 3);
+    victim->reconcileDamage(victim, ::number(5,20), DAMAGE_DRAIN);
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+
   caster->reconcileHelp(victim, discArray[SPELL_CLARITY]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_CLARITY)) {
@@ -685,7 +693,6 @@ int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
       caster->nothingHappens();
       return SPELL_FALSE;
     }
-
 
     victim->sendTo("Your eyes flash.\n\r");
     act("$n's eyes glow <G>green<1>.", FALSE, victim, 0, 0, TO_ROOM);
