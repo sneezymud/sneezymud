@@ -282,7 +282,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    double exp=mob_exp(lvl);
 	    exp *= (1.0+((::number(0,20)-10)/100.0));
 	    
-	    gain_exp(ch, exp, -1);
+	    gain_exp(ch, exp/50, -1);
 
 	    ch->doSave(SILENT_YES);
 
