@@ -33,6 +33,7 @@ typedef list<TObj *>::iterator TObjIter;
 extern TObjList object_list;
 
 extern TObj *read_object(int nr, readFileTypeT type);
+extern void log_object(TObj *obj);
 
 extern liqInfoT liquidInfo;
 

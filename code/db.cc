@@ -1511,6 +1511,12 @@ int cache_object(int nr)
   return -1;
 }
 
+void log_object(TObj *obj)
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("insert into objlog values (%i, now(), %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
+}
+
 TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
@@ -1928,7 +1934,7 @@ void zoneData::resetZone(bool bootTime)
     if (rs.command == 'S')
       break;
 
-    if (last_cmd || !rs.if_flag)
+    if (last_cmd || !rs.if_flag) {
       switch (rs.command) {
         case 'A':
           for (count = 0; count < 10; count++) {
@@ -2170,7 +2176,6 @@ void zoneData::resetZone(bool bootTime)
 
               int tmp = dice(1, 100);
 
-              // if (tmp <= rs.arg1 || gamePort == BETA_GAMEPORT) {
               if (rs.arg1 >= 98 || tmp <= fixed_chance ||
                   gamePort == BETA_GAMEPORT) {
                 last_cmd = 1;
@@ -2394,10 +2399,12 @@ void zoneData::resetZone(bool bootTime)
               *obj_to += *obj;
               obj->onObjLoad();
               last_cmd = 1;
+              log_object(obj);
             } else if (obj_to && obj && dynamic_cast<TTable *>(obj_to)) {
               obj->mount(obj_to);
               obj->onObjLoad();
               last_cmd = 1;
+              log_object(obj);
             } else 
               last_cmd = 0;
           } else
@@ -2451,6 +2458,7 @@ void zoneData::resetZone(bool bootTime)
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
               (obj = read_object(rs.arg1, REAL))) {
+
             *mob += *obj;
             obj->onObjLoad();
             mob->logItem(obj, CMD_LOAD);
@@ -2577,6 +2585,7 @@ void zoneData::resetZone(bool bootTime)
               // OK, actually do the equip
               mob->equipChar(obj, realslot);
               mob->logItem(obj, CMD_LOAD);
+              log_object(obj);
 
               // for items without levels, objLevel = 0 so this logic is OK
               double al = obj->objLevel();
@@ -2658,10 +2667,12 @@ void zoneData::resetZone(bool bootTime)
         default:
           vlogf(LOG_BUG, fmt("Undefd cmd in reset table; zone %d cmd %d.\n\r") %  zone_nr % cmd_no);
           break;
-    } else
+      }
+    } else {
       last_cmd = 0;
+    }
   }
- doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
+  doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
   this->age = 0;
 }
 

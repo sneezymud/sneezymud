@@ -145,6 +145,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
+      log_object(obj);
       if (obj->isPaired() && slot == WEAR_LEGS_L)
         delete obj;  // avoid double loads of pants
       else if (chance == 101 || ch->equipment[slot])

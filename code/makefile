@@ -427,9 +427,14 @@ shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
 	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip shoplog.cgi
 
+objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: objlog.cgi
+	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o $(PRODLIBS) $(LDFLAGS) -lcgicc
+	@/usr/bin/strip objlog.cgi
+
 
 # make all cgi programs
-cgi:	shoplog.cgi
+cgi:	shoplog.cgi objlog.cgi
 	@/bin/cp -f shoplog.cgi /mud/web
 	@echo Finished making cgi programs
 
@@ -1960,7 +1965,9 @@ objs/client.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/client.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/client.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/client.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/client.o: colorstring.h format.h statistics.h combat.h
+objs/client.o: colorstring.h format.h statistics.h combat.h database.h
+objs/client.o: /usr/local/include/libpq-fe.h
+objs/client.o: /usr/local/include/postgres_ext.h
 objs/cmd_attribute.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_attribute.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_attribute.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -28656,6 +28663,136 @@ objs/obj_worn.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/obj_worn.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_worn.o: materials.h colorstring.h format.h obj_base_clothing.h
 objs/obj_worn.o: obj_worn.h
+objs/objlog.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/objlog.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/objlog.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/objlog.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/objlog.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/objlog.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/objlog.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/objlog.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/objlog.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/objlog.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/objlog.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cmath
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/objlog.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/string
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/objlog.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/objlog.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/objlog.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/objlog.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/objlog.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/objlog.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/objlog.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/memory
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/algorithm
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/vector
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/map
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/list
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/iostream /usr/include/c++/3.4/ostream
+objs/objlog.cgi.o: /usr/include/c++/3.4/ios
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/streambuf
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/locale
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/objlog.cgi.o: /usr/include/c++/3.4/istream
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/sstream
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.4/fstream
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/objlog.cgi.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/objlog.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/objlog.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/objlog.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/objlog.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/objlog.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/objlog.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/objlog.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
+objs/objlog.cgi.o: database.h /usr/local/include/libpq-fe.h
+objs/objlog.cgi.o: /usr/local/include/postgres_ext.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/objlog.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/objlog.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
 objs/offense.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/offense.o: /usr/include/c++/3.4/bits/c++config.h
 objs/offense.o: /usr/include/c++/3.4/bits/os_defines.h
