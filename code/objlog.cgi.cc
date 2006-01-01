@@ -13,8 +13,8 @@ using namespace cgicc;
 
 int main(int argc, char **argv){
   Cgicc cgi;
-  // TDatabase db(DB_SNEEZYPROD);
-  TDatabase db(DB_SNEEZYBETA);
+  TDatabase db(DB_SNEEZYPROD);
+  // TDatabase db(DB_SNEEZYBETA);
   toggleInfo.loadToggles();
 
   form_iterator name = cgi.getElement("name");
