@@ -1154,6 +1154,11 @@ int ret,level;
 int haste(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;
+  if (victim->affectedBySpell(SPELL_CELERITE)) {
+    victim->sendTo("You can't do this twice.\n\r");
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
 
   caster->reconcileHelp(victim, discArray[SPELL_HASTE]->alignMod);
 
@@ -1653,7 +1658,11 @@ int castDetectInvisibility(TBeing *caster, TBeing *victim)
 int trueSight(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;
-
+  if (victim->affectedBySpell(SPELL_CLARITY)) {
+    victim->sendTo("You can't do this twice.\n\r");
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
   caster->reconcileHelp(victim, discArray[SPELL_TRUE_SIGHT]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_TRUE_SIGHT)) {
