@@ -110,6 +110,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         ch->updatePos();
       } else {
         ch->addToLifeforce(-factor2);
+        act("Your sacrificial attempts aren't pleasing the loa.", 
+            FALSE, ch, 0, 0, TO_CHAR);
         if (0 >= ch->getLifeforce()) {
           ch->setLifeforce(0);
           act("The loa demands that you cease this vain sacrifice, and you comply.", 
