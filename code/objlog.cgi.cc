@@ -52,25 +52,28 @@ int main(int argc, char **argv)
     cout << "<table border=1>" << endl;
     cout << "  <tr>" << endl;
     cout << "    <th align center>VNum</th>" << endl;
+    cout << "    <th align center>Object Type</th>" << endl;
     cout << "    <th align center>Object Name</th>" << endl;
     cout << "    <th align center>Loadtime</th>" << endl;
     cout << "    <th align center>Count</th>" << endl;
     cout << "  </tr>" << endl;
 
-    my_query = "select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum";
+    // my_query = "SELECT l.vnum, i.name AS objtype, o.name, l.loadtime::TIMESTAMP(0), l.objcount FROM objlog l, obj o, itemtypes i WHERE l.vnum = o.vnum AND o.\"type\" = i.\"type\"";
+    my_query = "SELECT l.vnum, i.name AS objtype, o.name, l.loadtime::TIMESTAMP(0), l.objcount FROM objlog l LEFT OUTER JOIN obj o USING (vnum) LEFT OUTER JOIN itemtypes i USING (\"type\")";
     if ((**vnum).empty() && (**name).empty()) {
-      my_query += " order by l.loadtime";
+      my_query += " ORDER BY l.loadtime";
       db.query(my_query.c_str());
     } else if ((**name).empty()) {
-      my_query += " and l.vnum=%i order by l.loadtime";
+      my_query += " WHERE l.vnum=%i ORDER BY l.loadtime";
       db.query(my_query.c_str(), convertTo<int>(**vnum));
     } else {
-      my_query += " and o.name like '%s' order by l.loadtime";
+      my_query += " WHERE lower(o.name) LIKE lower('%s') ORDER BY l.loadtime";
       db.query(my_query.c_str(), (**name).c_str());
     }
     while(db.fetchRow()){
       cout << "  <tr valign=top>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["vnum"]) << "</td>" << endl;
+      cout << "    <td align=right>" << stripColorCodes(db["objtype"]) << "</td>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["name"]) << "</td>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["loadtime"]) << "</td>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["objcount"]) << "</td>" << endl;
