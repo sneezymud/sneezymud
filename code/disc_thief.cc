@@ -493,7 +493,7 @@ void TBeing::doTrack(const char *argument)
   if (roomp && !isImmortal() &&
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT)) {
+      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("You can't see well enough to track.\n\r");
     return;
   }
@@ -679,7 +679,7 @@ int TBeing::track(TBeing *vict)
   if (roomp && !isImmortal() && 
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT)) {
+      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     return TRUE;
   }
   if (!vict) {
@@ -762,7 +762,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
   if (roomp && !isImmortal() && 
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT)) {
+      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("You can't see well enough to find a trail.\n\r");
     return DIR_NONE;
   }

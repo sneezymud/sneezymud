@@ -164,7 +164,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         if (ch->roomp && !ch->isImmortal() &&
             (ch->roomp->getLight() + ch->visionBonus <= 0) &&
             !ch->roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-            !ch->isAffected(AFF_TRUE_SIGHT)) {
+            !ch->isAffected(AFF_TRUE_SIGHT) && !ch->isAffected(AFF_CLARITY)) {
           if (ch->task->flags != 100) {
             ch->task->flags = 100;
             ch->sendTo(fmt("You can't see well enough to %s.\n\r") %

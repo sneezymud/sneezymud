@@ -47,6 +47,7 @@ int weaponBlinder(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, TObj
 
   if (tVictim->affectedBySpell(SPELL_BLINDNESS) ||
       tVictim->isAffected(AFF_TRUE_SIGHT) ||
+      tVictim->isAffected(AFF_CLARITY) ||
       ch->isNotPowerful(tVictim, (int)tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
     return FALSE;
 

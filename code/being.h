@@ -253,6 +253,7 @@ const unsigned long AFF_DRAGON_RIDE       = (1<<27);       // 134217728
 const unsigned long AFF_SILENT            = (1<<28);       // 268435456
 const unsigned long AFF_ENGAGER           = (1<<29);       // 436870912
 const unsigned long AFF_AGGRESSOR         = (1<<30);       // 873741824 (set automatically)
+const unsigned long AFF_CLARITY           = (1<<31);
 
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done

@@ -446,13 +446,13 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     sendTo("You can't see anything -- you're sleeping!\n\r");
     return;
   } else if (isAffected(AFF_BLIND) && !isImmortal() && 
-	   !isAffected(AFF_TRUE_SIGHT)){
+	   !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("You can't see a damn thing -- you're blinded!\n\r");
     return;
   } else if (roomp->pitchBlackDark() && !isImmortal() &&
            (visionBonus <= 0) &&
            !(roomp->getRoomFlags() & ROOM_ALWAYS_LIT) &&
-           !isAffected(AFF_TRUE_SIGHT)) {
+           !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     lookDark();
     return;
   }

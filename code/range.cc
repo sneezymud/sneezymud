@@ -1003,7 +1003,7 @@ void TBeing::doScan(const char *argument)
   if (!inLethargica())
     addToMove(all ? -10 : -2);
 
-  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT)) {
+  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("Nothing, you are blind.\n\r");
     return;
   }

@@ -2374,7 +2374,7 @@ void TBeing::doInventory(const char *argument)
       sendTo("No such being exists.\n\r");
     }
   } else {
-    if (isAffected(AFF_TRUE_SIGHT) || !isAffected(AFF_BLIND)) {
+    if (isAffected(AFF_TRUE_SIGHT) || isAffected(AFF_CLARITY) || !isAffected(AFF_BLIND)) {
       sendTo("You are carrying:\n\r");
       list_in_heap(getStuff(), this, 0, 100);
 
@@ -3823,7 +3823,7 @@ void TBeing::doEvaluate(const char *argument)
     if (!roomp)
       return;
 
-    if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT)) {
+    if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
       sendTo("You can't see a damn thing -- you're blinded!\n\r");
       return;
     }

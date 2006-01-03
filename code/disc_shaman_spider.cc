@@ -661,22 +661,14 @@ int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;
 
-  if (victim->isAffected(AFF_TRUE_SIGHT)) {
-    victim->sendTo("Your insolence is NOT appreciated by the loa! OUCH!!\n\r");
-    victim->setLifeforce((victim->getLifeforce() / 4) * 3);
-    victim->reconcileDamage(victim, ::number(5,20), DAMAGE_DRAIN);
-    caster->nothingHappens();
-    return SPELL_FAIL;
-  }
-
   caster->reconcileHelp(victim, discArray[SPELL_CLARITY]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_CLARITY)) {
     aff.type = SPELL_CLARITY;
     aff.duration = 6+level / 3 * UPDATES_PER_MUDHOUR;
-    aff.modifier = 0;
-    aff.location = APPLY_NONE;
-    aff.bitvector = AFF_TRUE_SIGHT;
+    aff.modifier = 10;
+    aff.location = APPLY_VISION;
+    aff.bitvector = AFF_CLARITY;
 
     switch (critSuccess(caster, SPELL_CLARITY)) {
       case CRIT_S_DOUBLE:

@@ -70,7 +70,7 @@ bool TBeing::canSeeWho(const TBeing *o) const
     if (!isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
-  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT))
+  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY))
     return FALSE;
 
   return TRUE;
@@ -778,6 +778,9 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
   if (ch->isAffected(AFF_TRUE_SIGHT))
     return TRUE;
 
+  if (ch->isAffected(AFF_CLARITY))
+    return TRUE;
+
   if (ch->isAffected(AFF_BLIND))
     return FALSE;
 
@@ -849,6 +852,9 @@ bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
   if (ch->isAffected(AFF_TRUE_SIGHT))
     return TRUE;
 
+  if (ch->isAffected(AFF_CLARITY))
+    return TRUE;
+
   if (ch->isAffected(AFF_BLIND))
     return FALSE;
 
@@ -910,6 +916,9 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
     return FALSE;
 
   if (ch->isAffected(AFF_TRUE_SIGHT))
+    return TRUE;
+
+  if (ch->isAffected(AFF_CLARITY))
     return TRUE;
 
   if (ch->isAffected(AFF_BLIND))
@@ -1328,7 +1337,7 @@ int TBeing::eyeSight(TRoom *rp) const
   if (!rp)
     rp = roomp;
 
-  if (isAffected(AFF_TRUE_SIGHT)) 
+  if ((isAffected(AFF_TRUE_SIGHT)) || (isAffected(AFF_CLARITY))) 
     vision += 25;
   
   if (rp) {

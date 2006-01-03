@@ -870,7 +870,7 @@ int TBeing::rawMove(dirTypeT dir)
   }
   if (getPosition() == POSITION_CRAWLING) 
     sendTo(fmt("You crawl %s.\n\r") %dirs[dir]);
-  else if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT)) {
+  else if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     if (dir == DIR_UP || dir == DIR_DOWN) {
       // say nothing on these
     } else if (isSwimming()) {
@@ -3235,7 +3235,7 @@ int TBeing::doMortalGoto(const sstring & argument)
   if (roomp && 
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT)) {
+      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("You can't see well enough to get your bearings.\n\r");
     return FALSE;
   }

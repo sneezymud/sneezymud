@@ -55,6 +55,7 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
 
   if (vict->affectedBySpell(SPELL_BLINDNESS) ||
       vict->isAffected(AFF_TRUE_SIGHT) ||
+      vict->isAffected(AFF_CLARITY) ||
       ch->isNotPowerful(vict, (int)tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
     return;
 

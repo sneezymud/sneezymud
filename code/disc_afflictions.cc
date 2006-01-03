@@ -450,7 +450,7 @@ int blindness(TBeing * caster, TBeing * victim, int level, byte bKnown)
     caster->deityIgnore(SILENT_YES);
     return SPELL_FALSE;
   }
-  if (victim->isAffected(AFF_TRUE_SIGHT)) {
+  if (victim->isAffected(AFF_TRUE_SIGHT) || victim->isAffected(AFF_CLARITY)) {
     act("$N's vision is much too clear to be blinded!",FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
     return SPELL_FALSE;

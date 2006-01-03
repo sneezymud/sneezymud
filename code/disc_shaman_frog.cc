@@ -170,7 +170,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
       break;
     case WEAR_HEAD:
       aff.type = AFFECT_TRANSFORMED_HEAD;
-      aff.bitvector = AFF_SILENT | AFF_TRUE_SIGHT;
+      aff.bitvector = AFF_SILENT | AFF_CLARITY;
       multi = FALSE;
       break;
     case WEAR_HAND_R:

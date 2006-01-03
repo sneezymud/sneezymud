@@ -741,6 +741,7 @@ int TBeing::doPsycrush(const char *tString){
     if(bSuccess(bKnown/4, SKILL_PSYCHIC_CRUSH) && 
        !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
        !tVictim->isAffected(AFF_TRUE_SIGHT) &&
+       !tVictim->isAffected(AFF_CLARITY) &&
        !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)){
 				     
       act("$N's eyes open wide in shock.",

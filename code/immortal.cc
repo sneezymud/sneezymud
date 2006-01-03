@@ -3299,7 +3299,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   sendTo("Obvious exits:\n\r");
   if (roomp) {
     if (!isImmortal() && isAffected(AFF_BLIND) &&
-        !isAffected(AFF_TRUE_SIGHT)) {
+        !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
       sendTo("Blindness makes it impossible to tell.\n\r");
       return FALSE;
     }
@@ -3308,7 +3308,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
         (visionBonus <= 0) &&
         !isAffected(AFF_INFRAVISION) &&
         !isAffected(AFF_SCRYING) &&  // room name shows on look x, duplicate
-        !isAffected(AFF_TRUE_SIGHT)) {
+        !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
       darkhere = TRUE;
     }
   }
@@ -3323,7 +3323,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
                      (canSeeThruDoor(exitdata) || isImmortal())) {
         if (rp->pitchBlackDark() &&
              !rp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-             !isImmortal() && !isAffected(AFF_TRUE_SIGHT)) {
+             !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
           if (!darkhere) {
               sendTo(fmt("%s - Too dark to tell\n\r") % exits[door]);
               found = TRUE;
