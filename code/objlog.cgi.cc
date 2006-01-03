@@ -27,8 +27,10 @@ void print_form()
 int main(int argc, char **argv)
 {
   Cgicc cgi;
+  string my_query;
   TDatabase db(DB_SNEEZYPROD);
   // TDatabase db(DB_SNEEZYBETA);
+
   toggleInfo.loadToggles();
 
   form_iterator name = cgi.getElement("name");
@@ -55,12 +57,16 @@ int main(int argc, char **argv)
     cout << "    <th align center>Count</th>" << endl;
     cout << "  </tr>" << endl;
 
+    my_query = "select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum";
     if ((**vnum).empty() && (**name).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum order by l.loadtime");
-    } else if ((**vnum).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum and o.name like '%s' order by l.loadtime", (**name).c_str());
+      my_query += " order by l.loadtime";
+      db.query(my_query.c_str());
     } else if ((**name).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum and l.vnum=%i order by l.loadtime", convertTo<int>(**vnum));
+      my_query += " and l.vnum=%i order by l.loadtime";
+      db.query(my_query.c_str(), convertTo<int>(**vnum));
+    } else {
+      my_query += " and o.name like '%s' order by l.loadtime";
+      db.query(my_query.c_str(), (**name).c_str());
     }
     while(db.fetchRow()){
       cout << "  <tr valign=top>" << endl;
