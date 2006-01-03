@@ -56,11 +56,11 @@ int main(int argc, char **argv)
     cout << "  </tr>" << endl;
 
     if ((**vnum).empty() && (**name).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime, l.objcount from objlog l, obj o where l.vnum = o.vnum order by l.loadtime");
+      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum order by l.loadtime");
     } else if ((**vnum).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime, l.objcount from objlog l, obj o where l.vnum = o.vnum and o.name like '%s' order by l.loadtime", (**name).c_str());
+      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum and o.name like '%s' order by l.loadtime", (**name).c_str());
     } else if ((**name).empty()) {
-      db.query("select l.vnum, o.name, l.loadtime, l.objcount from objlog l, obj o where l.vnum = o.vnum and l.vnum=%i order by l.loadtime", convertTo<int>(**vnum));
+      db.query("select l.vnum, o.name, l.loadtime::timestamp(0), l.objcount from objlog l, obj o where l.vnum = o.vnum and l.vnum=%i order by l.loadtime", convertTo<int>(**vnum));
     }
     while(db.fetchRow()){
       cout << "  <tr valign=top>" << endl;
