@@ -2,7 +2,7 @@
 #include "database.h"
 
 #include <vector>
-#include <string>
+#include "sstring.h"
 
 #include "cgicc/Cgicc.h"
 #include "cgicc/HTTPHTMLHeader.h"
@@ -27,7 +27,8 @@ void print_form()
 int main(int argc, char **argv)
 {
   Cgicc cgi;
-  string my_query;
+  sstring my_query;
+  unsigned int count = 0;
   TDatabase db(DB_SNEEZYPROD);
   // TDatabase db(DB_SNEEZYBETA);
 
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
       db.query(my_query.c_str(), (**name).c_str());
     }
     while(db.fetchRow()){
+      count++;
       cout << "  <tr valign=top>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["vnum"]) << "</td>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["objtype"]) << "</td>" << endl;
@@ -80,6 +82,7 @@ int main(int argc, char **argv)
       cout << "  </tr>" << endl;
     }
     cout << "</table>" << endl;
+    cout << fmt("Number of objects queried:  %i") % count;
     cout << body() << endl;
   }
   cout << html() << endl;
