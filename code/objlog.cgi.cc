@@ -1,7 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
 
-#include <vector>
+#include <map>
 #include "sstring.h"
 
 #include "cgicc/Cgicc.h"
@@ -74,6 +74,7 @@ int main(int argc, char **argv)
     cout << "    <th align center>Object Name</th>" << endl;
     cout << "    <th align center>Loadtime</th>" << endl;
     cout << "    <th align center>Count</th>" << endl;
+    cout << "    <th align center>Delta</th>" << endl;
     cout << "  </tr>" << endl;
 
     // my_query = "SELECT l.vnum, i.name AS objtype, o.name, l.loadtime::TIMESTAMP(0), l.objcount FROM objlog l, obj o, itemtypes i WHERE l.vnum = o.vnum AND o.\"type\" = i.\"type\"";
@@ -97,15 +98,31 @@ int main(int argc, char **argv)
       my_query += fmt(" AND l.vnum = %i ORDER BY l.loadtime") % convertTo<int>(**vnum);
       db.query(my_query.c_str());
     }
+
+    std::map<int, int> objtable;
+
     while(db.fetchRow()){
+      int myvnum = convertTo<int>(db["vnum"]);
+      int myobjcount = convertTo<int>(db["objcount"]);
+      std::map<int, int>::iterator check_vnum = objtable.find(myvnum);
+      int delta = 0;
+
       count++;
       cout << "  <tr valign=top>" << endl;
-      cout << "    <td align=right>" << stripColorCodes(db["vnum"]) << "</td>" << endl;
-      cout << "    <td align=right>" << stripColorCodes(db["objtype"]) << "</td>" << endl;
+      cout << "    <td align=right>" << db["vnum"] << "</td>" << endl;
+      cout << "    <td align=right>" << db["objtype"] << "</td>" << endl;
       cout << "    <td align=right>" << stripColorCodes(db["name"]) << "</td>" << endl;
-      cout << "    <td align=right>" << stripColorCodes(db["loadtime"]) << "</td>" << endl;
-      cout << "    <td align=right>" << stripColorCodes(db["objcount"]) << "</td>" << endl;
+      cout << "    <td align=right>" << db["loadtime"] << "</td>" << endl;
+      cout << "    <td align=right>" << db["objcount"] << "</td>" << endl;
+      if (check_vnum != objtable.end()) {
+        delta = myobjcount - (check_vnum->second);
+      } else {
+        delta = 0;
+      }
+      cout << "    <td align=right>" << fmt("%i") % delta << "</td>" << endl;
       cout << "  </tr>" << endl;
+
+      objtable[myvnum] = myobjcount;
     }
     cout << "</table><br>" << endl;
     cout << fmt("Number of objects queried:  %i") % count;
