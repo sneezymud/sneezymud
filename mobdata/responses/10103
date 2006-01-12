@@ -60,8 +60,8 @@ give {"2853";
 
 say {"brew";
  say I think not...;
- say My brew is my own concern and you'll not be getting it's recipe.;
- say Not fit for one of your kind anyways, yer stomachs too weak.;
+ say My brew is my own concern and you'll not be getting its recipe.;
+ say Not fit for one of your kind anyways, yer stomach's too weak.;
 }
 
 say {"recipe";
