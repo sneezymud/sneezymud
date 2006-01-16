@@ -3162,6 +3162,10 @@ int TBeing::doRecite(const char *argument)
     }
   }
 
+  if (nomagic("Sorry, you can't recite that here.")) {
+    return FALSE;
+  }
+
   setQuaffUse(true);
   rc = t->reciteMe(this, argument);
   setQuaffUse(false);
