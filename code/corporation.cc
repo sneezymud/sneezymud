@@ -120,6 +120,9 @@ int TCorporation::getAssets()
   while(db.fetchRow()){
     room=real_roomp(convertTo<int>(db["in_room"]));
     keepernum=convertTo<int>(db["keeper"]);
+    
+    if(!room)
+      continue;
 
     for(TThing *tt=room->getStuff();tt;tt=tt->nextThing){
       if((keeper=dynamic_cast<TMonster *>(tt)) &&
