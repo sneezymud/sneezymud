@@ -13,6 +13,7 @@ class TCorporation {
   void setBank(int);
   int getCorpID();
   sstring getName();
+  int getAssets();
 
   void corpLog(const sstring &name, const sstring &action, int talens);
 
@@ -20,7 +21,16 @@ class TCorporation {
   ~TCorporation();
 };
 
+// this corp listing stuff is kind of a hack to avoid doing a ton of db queries
+struct corp_list_data {
+  int rank;
+  int corp_id;
+  sstring name;
+  int gold;
+  int assets;
+};
 
+vector <corp_list_data> getCorpListingData(void);
 
 const unsigned int CORPACCESS_PARTNER   = (1<<0);
 const unsigned int CORPACCESS_INFO    = (1<<1);

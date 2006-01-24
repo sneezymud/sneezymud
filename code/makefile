@@ -422,6 +422,9 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdo
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
+# - This will cause problems if you are developing and your libraries
+#   are not the same as prod.  For the moment, the best thing to do is to 
+#   change PRODLIBS to LIBS temporarily for development. - peel, Jan '06
 shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
 	@echo \*\*\* Making Final Link: shoplog.cgi
 	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
@@ -432,9 +435,14 @@ objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
 	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip objlog.cgi
 
+corp_info.cgi:	$(LIBS) objs/corp_info.cgi.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: corp_info.cgi
+	@$(CC) -o corp_info.cgi objs/corp_info.cgi.o $(LIBS) $(LDFLAGS) -lcgicc
+	@/usr/bin/strip corp_info.cgi
 
-# make all cgi programs
-cgi:	shoplog.cgi objlog.cgi
+
+# make all cgi program
+cgi:	shoplog.cgi objlog.cgi corp_info.cgi
 	@/bin/cp -f shoplog.cgi /mud/web
 	@echo Finished making cgi programs
 
@@ -8019,6 +8027,138 @@ objs/constants.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/constants.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/constants.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/constants.o: obj_gun.h obj_general_weapon.h obj_base_weapon.h
+objs/corp_info.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/corp_info.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/corp_info.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/corp_info.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/corp_info.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/corp_info.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/corp_info.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/corp_info.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/corp_info.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/corp_info.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/corp_info.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cmath
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/corp_info.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/string
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/corp_info.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/corp_info.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/corp_info.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/corp_info.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/corp_info.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/corp_info.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/corp_info.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/memory
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/algorithm
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/vector
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/map
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/list
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/iostream
+objs/corp_info.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/streambuf
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/locale
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/limits
+objs/corp_info.cgi.o: /usr/include/c++/3.4/typeinfo
+objs/corp_info.cgi.o: /usr/include/c++/3.4/istream
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/sstream
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/corp_info.cgi.o: /usr/include/c++/3.4/fstream
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/corp_info.cgi.o: enum.h spells.h structs.h parse.h immunity.h
+objs/corp_info.cgi.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/corp_info.cgi.o: client.h response.h faction.h comm.h toggle.h
+objs/corp_info.cgi.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/corp_info.cgi.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/corp_info.cgi.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/corp_info.cgi.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/corp_info.cgi.o: monster.h paths.h account.h extern.h handler.h
+objs/corp_info.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/corp_info.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
+objs/corp_info.cgi.o: /usr/local/include/postgres_ext.h corporation.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/corp_info.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/corp_info.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
 objs/corporation.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/corporation.o: /usr/include/c++/3.4/bits/c++config.h
 objs/corporation.o: /usr/include/c++/3.4/bits/os_defines.h

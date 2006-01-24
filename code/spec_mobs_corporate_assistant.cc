@@ -3,64 +3,21 @@
 #include "corporation.h"
 #include "shop.h"
 
-int getAssets(int corp_id)
-{
-  int value=0, keepernum=0;
-  TDatabase db(DB_SNEEZY);
-  TObj *o=NULL;
-  TRoom *room;
-  TMonster *keeper;
-
-  db.query("select in_room, keeper from shop where shop_nr in (select shop_nr from shopowned where corp_id=%i)", corp_id);
-  
-  while(db.fetchRow()){
-    room=real_roomp(convertTo<int>(db["in_room"]));
-    keepernum=convertTo<int>(db["keeper"]);
-
-    for(TThing *tt=room->getStuff();tt;tt=tt->nextThing){
-      if((keeper=dynamic_cast<TMonster *>(tt)) &&
-	 keeper->mobVnum() == keepernum){
-	for(TThing *t=keeper->getStuff();t;t=t->nextThing){
-	  o=dynamic_cast<TObj *>(t);
-	  value+=o->obj_flags.cost;
-	}
-        break;
-      }
-    }
-  }
-
-  return value;
-}
-
-
 void corpListing(TBeing *ch, TMonster *me)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0, val=0, gold=0, shopval=0, bankowner=0, bankgold=0;
   multimap <int, sstring, std::greater<int> > m;
   multimap <int, sstring, std::greater<int> >::iterator it;
+  vector <corp_list_data> corp_list;
 
-  db.query("select c.corp_id, c.name, sum(s.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from (((corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id and c.bank=b.shop_nr)) left outer join shopowned sob on (sob.shop_nr=c.bank)) left outer join shopowned so on (c.corp_id=so.corp_id)) left outer join shop s on (so.shop_nr=s.shop_nr) group by c.corp_id, c.name, b.talens, sob.corp_id order by sum(s.gold)+b.talens desc");
-  
-  while(db.fetchRow()){
-    corp_id=convertTo<int>(db["corp_id"]);
-    gold=convertTo<int>(db["gold"]);
-    bankgold=convertTo<int>(db["bankgold"]);
-    shopval=convertTo<int>(db["shopcount"]) * 1000000;
-    bankowner=convertTo<int>(db["bankowner"]);
-   
-    // if we don't own the bank, record our gold that's in the bank
-    // otherwise we end up counting it twice
-    if(bankowner!=corp_id)
-      gold += bankgold;
+  corp_list=getCorpListingData();
 
-    val=gold+getAssets(corp_id)+shopval;
+  for(unsigned int i=0;i<corp_list.size();++i){
+    m.insert(pair<int,sstring>(corp_list[i].rank,fmt("%-2i| <r>%s<1>") % corp_list[i].corp_id % corp_list[i].name));
+    m.insert(pair<int,sstring>(corp_list[i].rank,fmt("  | %s talens, %s in assets") %
+			       talenDisplay(corp_list[i].gold) % 
+			       talenDisplay(corp_list[i].assets)));
 
-
-    m.insert(pair<int,sstring>(val,fmt("%-2i| <r>%s<1>") % corp_id % db["name"]));
-    m.insert(pair<int,sstring>(val,fmt("  | %s talens, %s in assets") %
-			       talenDisplay(gold) % 
-			       talenDisplay(getAssets(corp_id)+shopval)));
   }
 
   me->doTell(ch->getName(), "I know about the following corporations:");
@@ -177,7 +134,8 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   bankowner=convertTo<int>(db["bankowner"]);
   banktalens=convertTo<int>(db["banktalens"]);
   gold=convertTo<int>(db["gold"]);
-  value=getAssets(corp_id);
+  TCorporation corp(corp_id);
+  value=corp.getAssets();
   shopcount=convertTo<int>(db["shops"]);
 
   // we own the bank, so don't count our money twice
