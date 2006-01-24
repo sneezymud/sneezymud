@@ -3593,8 +3593,8 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
   //  db.query("select name, count from trophyplayer order by count desc limit 25");
-  db.query("select p.name, t.count from player p, trophyplayer t where t.player_id=p.id order by count desc limit 25");
-  db2.query("select p.name, t.total from player p, trophyplayer t where t.player_id=p.id and t.total is not null order by t.total desc limit 25");
+  db.query("select p.name, t.count, t.player_id from player p, trophyplayer t where t.player_id=p.id order by count desc limit 25");
+  db2.query("select p.name, t.total, t.player_id from player p, trophyplayer t where t.player_id=p.id and t.total is not null order by t.total desc limit 25");
 
   if(!db.isResults() || !db2.isResults()){
     ch->sendTo("The board is empty.\n\r");
@@ -3624,15 +3624,65 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     mostkilled=convertTo<float>(db2["total"]);
     
   int i=1;
+  bool found1=false, found2=false;
+  bool is_me1=false, is_me2=false;
   do {
-    ch->sendTo(COLOR_BASIC, fmt("%2i) %-13s - %i (%3d%c) | %2i) %-13s - %i (%3d%c)\n\r") % 
-	       i % db["name"] % convertTo<int>(db["count"]) % 
+    is_me1=is_me2=false;
+    if(ch->getPlayerID()==convertTo<int>(db["player_id"])){
+      found1=true;
+      is_me1=true;
+    }
+    if(ch->getPlayerID()==convertTo<int>(db2["player_id"])){
+      found2=true;
+      is_me2=true;
+    }
+
+    ch->sendTo(COLOR_BASIC, fmt("%2i) %s%-13s<1> - %i (%3d%c) | %2i) %s%-13s<1> - %i (%3d%c)\n\r") % 
+	       i % 
+	       (is_me1?"<r>":"") %
+	       db["name"] % 
+	       convertTo<int>(db["count"]) % 
 	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%' %
-	       i % db2["name"] % (int)(convertTo<float>(db2["total"])) %
+	       i % 
+	       (is_me2?"<r>":"") %
+	       db2["name"] % (int)(convertTo<float>(db2["total"])) %
 	       (int)((convertTo<float>(db2["total"])/mostkilled)*100) % '%');
 	       
     ++i;
   } while(db.fetchRow() && db2.fetchRow());
+
+
+  if(!found1 || !found2){
+    if(!found1){
+      db.query("select p.name, t.count, t.player_id from player p, trophyplayer t where t.player_id=p.id and p.id=%i", ch->getPlayerID());
+      if(db.fetchRow()){
+	ch->sendTo(COLOR_BASIC, fmt("XX) <r>%-13s<1> - %i (%3d%c) ") % 
+		   db["name"] % 
+		   convertTo<int>(db["count"]) % 
+		   (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%');
+      } else {
+	ch->sendTo(COLOR_BASIC, fmt("                                "));   
+      }
+    } else {
+      ch->sendTo(COLOR_BASIC, fmt("                                "));
+    }
+
+    if(!found2){
+      db2.query("select p.name, t.total, t.player_id from player p, trophyplayer t where t.player_id=p.id and t.total is not null and p.id=%i", ch->getPlayerID());
+      if(db2.fetchRow()){
+	ch->sendTo(COLOR_BASIC, fmt("| XX) %s%-13s<1> - %i (%3d%c)\n\r") % 
+		   (!found2?"<r>":"") %
+		   db2["name"] % (int)(convertTo<float>(db2["total"])) %
+		   (int)((convertTo<float>(db2["total"])/mostkilled)*100) % '%');
+      } else {
+	ch->sendTo(COLOR_BASIC, "\n\r");
+      }
+    } else {
+      ch->sendTo(COLOR_BASIC, "\n\r");
+    }
+    
+    
+  }
 
 
   return TRUE;
