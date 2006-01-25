@@ -845,6 +845,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 602;
     case SKILL_SLASH_SPEC:
       return 611;
+    case SKILL_RIPOSTE:
+      return 612;
     case SKILL_BLUNT_SPEC:
       return 630;
     case SKILL_PIERCE_SPEC:
@@ -1872,6 +1874,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_PENANCE;
     case 611:
       return SKILL_SLASH_SPEC;
+    case 612:
+      return SKILL_RIPOSTE;
     case 630:
       return SKILL_BLUNT_SPEC;
     case 640:

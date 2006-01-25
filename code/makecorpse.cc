@@ -684,6 +684,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_SACRIFICE:
       case SKILL_DISARM:
       case SKILL_PARRY_WARRIOR:
+      case SKILL_RIPOSTE:
       case SKILL_POWERMOVE:
       case SKILL_BERSERK:
       case SKILL_SWITCH_OPP:

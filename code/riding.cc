@@ -796,8 +796,6 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
                     (int) ch->plotStat(STAT_CURRENT, STAT_CHA, 4.5, 27.0, 15.0));
     if (horse->getPosition() <= POSITION_SLEEPING)
       check -= 2;
-    if (ch->isAffected(AFF_DRAGON_RIDE))
-      check -= 3;
 #if 0
     if (ch->isSameAlign(horse))
       check -= 2;
@@ -823,8 +821,6 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
                     (int) ch->plotStat(STAT_CURRENT, STAT_CHA, 4.5, 27.0, 15.0));
     if (horse->getPosition() <= POSITION_SLEEPING)
       check -= 2;
-    if (ch->isAffected(AFF_DRAGON_RIDE))
-      check -= 3;
     check *= max(0,horse->getHit());
     check /= max(1,(int) horse->hitLimit());
     check *= ch->hitLimit();

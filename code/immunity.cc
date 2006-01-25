@@ -458,6 +458,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       break;
     case SKILL_POWERMOVE:
     case SKILL_PARRY_WARRIOR:
+    case SKILL_RIPOSTE:
     case SKILL_QUIV_PALM:
     case SKILL_SPRINGLEAP:
     case SKILL_SMITE:

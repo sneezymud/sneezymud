@@ -1500,6 +1500,7 @@ void TBeing::stopFighting()
 
   REMOVE_BIT(specials.affectedBy, AFF_AGGRESSOR);
   REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
+  REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
 
   if (gCombatList == this)
     gCombatList = next_fighting;
@@ -2127,6 +2128,13 @@ int TBeing::hit(TBeing *target, int pulse)
     }
   }
   /////
+
+
+  // this affect is added after a successful parry
+  if(isAffected(AFF_RIPOSTE)){
+    fx++;
+    REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
+  }    
 
   while (fx > 0.999) {
     checkLearnFromHit(this, tarLevel, o, true, w_type);
@@ -3727,8 +3735,22 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         mess_sent |= ONEHIT_MESS_DODGE;
       else if (thiefDodge(vict, weapon, &dam, w_type, part_hit))
 	mess_sent |= ONEHIT_MESS_DODGE;
-      else if (parryWarrior(vict, weapon, &dam, w_type, part_hit))
+      else if (parryWarrior(vict, weapon, &dam, w_type, part_hit)){
+	if(doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
+	 (::number(0,99) < 50) &&                // only 50% of the time
+	 bSuccess(SKILL_RIPOSTE)){
+	  act("$n uses $s parry to execute a riposte.",
+	      FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
+	  act("You use your parry to execute a riposte.", 
+	      FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
+	  act("$n uses $s parry to execute a riposte.",
+	      FALSE, this, 0, vict, TO_NOTVICT);
+	  // actual ripose attack is added in hit().  Klugey, but
+	  // easier than trying to create a seperate attack here.
+	  SET_BIT(vict->specials.affectedBy, AFF_RIPOSTE);
+	}
 	mess_sent |= ONEHIT_MESS_DODGE;
+      }
     }
     loseSneak();
 

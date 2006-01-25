@@ -423,8 +423,7 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdo
 
 # this links against prod libs for cgi execution
 # - This will cause problems if you are developing and your libraries
-#   are not the same as prod.  For the moment, the best thing to do is to 
-#   change PRODLIBS to LIBS temporarily for development. - peel, Jan '06
+#   are not the same as prod.
 shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
 	@echo \*\*\* Making Final Link: shoplog.cgi
 	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
@@ -437,7 +436,7 @@ objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
 
 corp_info.cgi:	$(LIBS) objs/corp_info.cgi.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: corp_info.cgi
-	@$(CC) -o corp_info.cgi objs/corp_info.cgi.o $(LIBS) $(LDFLAGS) -lcgicc
+	@$(CC) -o corp_info.cgi objs/corp_info.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip corp_info.cgi
 
 

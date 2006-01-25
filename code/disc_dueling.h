@@ -18,6 +18,7 @@ public:
     CSkill skParryWarrior;
     CSkill skTranceOfBlades;
     CSkill skWeaponRetention;
+    CSkill skRiposte;
 
     CDDueling()
       : CDiscipline(),
@@ -25,7 +26,8 @@ public:
       skRetreat(),
       skParryWarrior(),
       skTranceOfBlades(),
-      skWeaponRetention(){
+      skWeaponRetention(),
+      skRiposte(){
     }      
     CDDueling(const CDDueling &a)
       : CDiscipline(a),
@@ -33,7 +35,8 @@ public:
       skRetreat(a.skRetreat),
       skParryWarrior(a.skParryWarrior),
       skTranceOfBlades(a.skTranceOfBlades),
-      skWeaponRetention(a.skWeaponRetention){
+      skWeaponRetention(a.skWeaponRetention),
+      skRiposte(a.skRiposte){
     }
     CDDueling & operator=(const CDDueling &a) {
       if (this == &a) return *this;
@@ -43,6 +46,7 @@ public:
       skParryWarrior = a.skParryWarrior;
       skTranceOfBlades = a.skTranceOfBlades;
       skWeaponRetention = a.skWeaponRetention;
+      skRiposte = a.skRiposte;
       return *this;
     } 
     //    CDDueling();

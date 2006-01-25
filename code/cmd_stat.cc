@@ -1405,6 +1405,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_DUAL_WIELD:
       case SKILL_POWERMOVE:
       case SKILL_PARRY_WARRIOR:
+      case SKILL_RIPOSTE:
       case SKILL_BERSERK:
       case SKILL_SWITCH_OPP:
       case SKILL_KNEESTRIKE:

@@ -871,9 +871,9 @@ int TMonster::aiWimpSwitch(TBeing *vict)
 
   tank = fight();
 
-  // Lets see if the current tank is in a position, and if so would Want to, to prevent
-  // the switch.  The mobs current target MUST be in the 'to be switched to' persons
-  // Group.  And Both must be PCs.
+  // Lets see if the current tank is in a position, and if so would
+  // Want to, to prevent the switch.  The mobs current target MUST be
+  // in the 'to be switched to' persons Group.  And Both must be PCs.
   // Main Checks:
   //   1. Has tank(current monster target)
   //   2. tank is a pc and victim is a pc

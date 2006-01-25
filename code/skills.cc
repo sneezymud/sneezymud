@@ -519,6 +519,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDueling *) cd)->skTranceOfBlades;
     case SKILL_WEAPON_RETENTION:
       return &((CDDueling *) cd)->skWeaponRetention;
+    case SKILL_RIPOSTE:
+      return &((CDDueling *) cd)->skRiposte;
 //disc_brawling
 
     case SKILL_GRAPPLE:

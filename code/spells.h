@@ -356,6 +356,7 @@ enum spellNumT {
      SKILL_WEAPON_RETENTION,
      SKILL_BLACKSMITHING_ADVANCED,
      SKILL_CLOSE_QUARTERS_FIGHTING,
+     SKILL_RIPOSTE,
 
      // end of warrior
 
