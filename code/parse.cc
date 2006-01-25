@@ -631,7 +631,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_SPANK:
       case CMD_STEAM:
       case CMD_TACKLE:
-      case CMD_TAUNT:
       case CMD_WHINE:
       case CMD_WORSHIP:
       case CMD_YODEL:
@@ -703,6 +702,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	break;
       case CMD_POKE:
 	doPoke(newarg);
+	addToLifeforce(1);
+	break;
+      case CMD_TAUNT:
+	doTaunt(newarg);
 	addToLifeforce(1);
 	break;
       case CMD_POINT:

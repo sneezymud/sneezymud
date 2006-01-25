@@ -1264,6 +1264,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_REMOVE_CURSE_DEIKHAN:
       case SPELL_CURSE_DEIKHAN:
       case SKILL_RESCUE_DEIKHAN:
+      case SKILL_TAUNT:
       case SPELL_CURE_DISEASE_DEIKHAN:
       case SPELL_CREATE_FOOD_DEIKHAN:
       case SPELL_HEAL_SERIOUS_DEIKHAN:

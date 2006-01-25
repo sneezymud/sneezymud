@@ -654,6 +654,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_ENCAMP:
     case SKILL_CHIVALRY:
     case SKILL_RESCUE_DEIKHAN:
+    case SKILL_TAUNT:
     case SKILL_SWITCH_DEIKHAN:
     case SKILL_RETREAT_DEIKHAN:
     case SKILL_RIDE:

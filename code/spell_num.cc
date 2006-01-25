@@ -449,6 +449,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 238;
     case SKILL_DEATHSTROKE:
       return 239;
+    case SKILL_TAUNT:
+      return 240;
     case SKILL_HIKING:
       return 266;
     case SKILL_FORAGE:
@@ -1478,6 +1480,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_DOORBASH;
     case 239:
       return SKILL_DEATHSTROKE;
+    case 240:
+      return SKILL_TAUNT;
     case 266:
       return SKILL_HIKING;
     case 268:

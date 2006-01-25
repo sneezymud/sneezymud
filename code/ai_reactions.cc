@@ -868,8 +868,9 @@ int TMonster::aiWimpSwitch(TBeing *vict)
   int tSkill = 0, // Tank Rescue-Switch Skill Average
       mSkill = 0, // Monster Rescue-Switch Skill Average
       cLevel = 0;
-
   tank = fight();
+  affectedData *hjp=NULL;
+      
 
   // Lets see if the current tank is in a position, and if so would
   // Want to, to prevent the switch.  The mobs current target MUST be
@@ -913,6 +914,13 @@ int TMonster::aiWimpSwitch(TBeing *vict)
     // [monster] Get Switch Skill
     if (doesKnowSkill(getSkillNum(SKILL_SWITCH_OPP)))
       mSkill += getSkillValue(getSkillNum(SKILL_SWITCH_OPP));
+    // [monster] Get Taunted affect
+    if (affectedBySpell(SKILL_TAUNT)){
+      for (hjp = affected; hjp; hjp = hjp->next) {
+	if (hjp->type == SKILL_TAUNT)
+	  mSkill -= hjp->level;
+      }
+    }
     // [monster] Get Level for a difference, higher the better in favor of the switcher.
     cLevel = 40-GetMaxLevel(); // l1 = 39,...,-39, l50 = -10,...,10, l127 = -87,...,87
     mSkill += ::number(cLevel, -cLevel);
@@ -950,6 +958,9 @@ int TMonster::aiWimpSwitch(TBeing *vict)
 
     // If they got here, they failed the block so the monster switched.
   }
+
+  // remove taunt affect
+  affectFrom(SKILL_TAUNT);
 
   switch (::number(1,7)) {
     case 1:
