@@ -250,6 +250,10 @@ bool TRoom::notRangerLandSector() const
 
 roomDirData * TRoom::exitDir(dirTypeT door) const
 {
+  // door>=MAX_DIR would mean a portal, sometimes we pass this by accident
+  if(door >= MAX_DIR || door <0)
+    return NULL;
+
   return (dir_option[door]);
 }
 
