@@ -555,7 +555,7 @@ void TBeing::doToggle(const char *arg2)
       sendTo("You are now immortal.\n\r");
     else
       sendTo("Playing as a mortal now.\n\r");
-  } else if(is_abbrev(arg, "nohassle") && hasWizPower(POWER_TOGGLE)){
+  } else if(is_abbrev(arg, "nohassle") && isImmortal()){
     TBeing *vict;
     TObj *dummy;
 
@@ -575,7 +575,7 @@ void TBeing::doToggle(const char *arg2)
       act("$E might object to that.. better not.", 0, this, 0, vict, TO_CHAR);
     } else
       sendTo("The implementor won't let you set this on mortals...\n\r");
-  } else if(is_abbrev(arg, "stealth") && hasWizPower(POWER_TOGGLE)){
+  } else if(is_abbrev(arg, "stealth") && isImmortal()){
     if (isPlayerAction(PLR_STEALTH)) {
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
