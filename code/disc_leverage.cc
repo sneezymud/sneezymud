@@ -724,10 +724,8 @@ int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
   // find window
   TObj *o=NULL;
   TWindow *window;
-  if(direction.empty()){
-    caster->sendTo("Through what window?\n\r");
-    return FALSE;
-  }
+  if(direction.empty())
+    direction="window";
   if(!(o=generic_find_obj(direction, FIND_OBJ_ROOM, caster))){
     caster->sendTo("You can't find that window.\n\r");
     return FALSE;
