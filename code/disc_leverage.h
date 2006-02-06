@@ -47,7 +47,7 @@ private:
 
   int shoulderThrow(TBeing *, TBeing *);
   int hurl(TBeing *, TBeing *, char *);
-  int defenestrate(TBeing *, TBeing *, char *);
+  int defenestrate(TBeing *, TBeing *, sstring);
 
 #endif
 

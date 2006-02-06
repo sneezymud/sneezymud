@@ -544,7 +544,6 @@ int TBeing::doDefenestrate(const char *argument, TBeing *vict)
       }
     }
   }
-
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
@@ -643,7 +642,7 @@ static int defenestrateHit(TBeing *caster, TBeing *victim, int to_room, TWindow 
 }
 
 
-int defenestrate(TBeing *caster, TBeing *victim, char *direction)
+int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
 {
   int percent;
   int i = 0,level;
@@ -725,6 +724,10 @@ int defenestrate(TBeing *caster, TBeing *victim, char *direction)
   // find window
   TObj *o=NULL;
   TWindow *window;
+  if(direction.empty()){
+    caster->sendTo("Through what window?\n\r");
+    return FALSE;
+  }
   if(!(o=generic_find_obj(direction, FIND_OBJ_ROOM, caster))){
     caster->sendTo("You can't find that window.\n\r");
     return FALSE;
