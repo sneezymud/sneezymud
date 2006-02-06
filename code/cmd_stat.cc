@@ -1506,6 +1506,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_BLUR:
       case SKILL_CHAIN_ATTACK:
       case SKILL_HURL:
+      case SKILL_DEFENESTRATE:
       case SKILL_SWINDLE:
       case SKILL_SNEAK:
       case SKILL_RETREAT_THIEF:

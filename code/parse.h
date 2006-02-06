@@ -570,6 +570,7 @@ enum cmdTypeT {
      CMD_BID,
      CMD_PRAC_INFO,
      CMD_JUGGLE,
+     CMD_DEFENESTRATE,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

@@ -1310,6 +1310,85 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
   }
 }
 
+void TBeing::throwChar(TBeing *v, int to_room, bool also, silentTypeT silent, bool forceStand)
+{
+  TRoom *rp;
+  int oldr;
+  char buf[256];
+
+  rp = v->roomp;
+  if (rp && to_room != ROOM_NOWHERE) {
+    if (v->fight() && !silent) {
+      sendTo("Not while fighting!\n\r");
+      return;
+    }
+
+    if (forceStand && v->isFlying()) {
+      act("You bat $N out of the air.",
+	  false, this, 0, v, TO_CHAR);
+      act("$n bats you out of the air.",
+	  false, this, 0, v, TO_VICT);
+      act("$n bats $N out of the air..",
+	  false, this, 0, v, TO_NOTVICT);
+      v->setPosition(POSITION_STANDING);
+    }
+
+    if (forceStand && v->riding) {
+      act("You knock $N off $S mount.",
+          false, this, 0, v, TO_CHAR);
+      act("$n knocks you off your mount.",
+          false, this, 0, v, TO_VICT);
+      act("$n knock $N off $S mount.",
+          false, this, 0, v, TO_NOTVICT);
+      v->fallOffMount(v->riding, POSITION_SITTING);
+    }
+
+
+    if (forceStand && v->getPosition() < POSITION_STANDING) {
+      act("You drag $N to $S feet.",
+                false, this, 0, v, TO_CHAR);
+      act("$n drags you to your feet.",
+                false, this, 0, v, TO_VICT);
+      act("$n drags $N to $S feet.",
+                false, this, 0, v, TO_NOTVICT);
+      v->setPosition(POSITION_STANDING);
+    }
+
+    if (v->getPosition() != POSITION_STANDING && !silent) {
+      sendTo("You can't throw someone who's not standing.\n\r");
+      return;
+    }
+    if(!silent){
+      sendTo(COLOR_MOBS, fmt("You push %s out of the room.\n\r") % v->getName());
+      v->sendTo(COLOR_MOBS, fmt("%s pushes you out of the room.\n\r") % sstring(getName()).cap());
+      sprintf(buf, "$N is pushed out of the room by $n.");
+      act(buf, TRUE, this, 0, v, TO_NOTVICT);
+    }
+    oldr = v->in_room;
+    --(*v);
+    if (also) {
+      --(*this);
+      thing_to_room(this, to_room);
+    }
+    thing_to_room(v, to_room);
+
+    if(!silent){
+      act("$n is pushed into the room.", TRUE, v, 0, 0, TO_ROOM);
+    }
+    v->doLook("", CMD_LOOK);
+    if (also)
+      doLook("", CMD_LOOK);
+    v->addToWait(combatRound(1));
+  } else {
+    if(!silent){
+      act("You slam $N into the wall!", FALSE, this, 0, v, TO_CHAR);
+      act("$n slams you into the wall!", FALSE, this, 0, v, TO_VICT);
+      act("$N is slammed into the wall by $n!", TRUE, this, 0, v, TO_NOTVICT);
+    }
+  }
+}
+
+
 // Bulge's proc
 int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {

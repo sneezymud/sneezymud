@@ -1599,6 +1599,7 @@ class TBeing : public TThing {
     int damageEpilog(TBeing *, spellNumT);
     void catchLostLink(TBeing *);
     void throwChar(TBeing *v, dirTypeT dir, bool throwerMove, silentTypeT silent, bool forceStand);
+    void throwChar(TBeing *v, int to_room, bool throwerMove, silentTypeT silent, bool forceStand);
     bool checkPeaceful(const sstring &) const;
     bool checkPeacefulVictim(const sstring &, const TThing *) const;
     int extraDam(const TBeing *, const TBaseWeapon *) const;
@@ -1869,6 +1870,7 @@ class TBeing : public TThing {
     int doSaddle(sstring);
     int doChop(const char *, TBeing *);
     int doHurl(const char *, TBeing *);
+    int doDefenestrate(const char *, TBeing *);
     int doChi(const char *, TThing *);
     int doLeap(const sstring &);
     int doVote(const sstring &);

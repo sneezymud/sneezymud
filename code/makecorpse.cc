@@ -776,6 +776,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_FEIGN_DEATH:
       case SKILL_BLUR:
       case SKILL_CHAIN_ATTACK:
+      case SKILL_DEFENESTRATE:
       case SKILL_HURL:
       case SKILL_SWINDLE:
       case SKILL_SNEAK:

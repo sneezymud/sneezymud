@@ -1426,6 +1426,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_HURL:
 	rc = doHurl(newarg.c_str(), dynamic_cast<TBeing *>(vict));
 	break;
+      case CMD_DEFENESTRATE:
+	rc = doDefenestrate(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+	break;
       case CMD_CHI:
 	rc = doChi(newarg.c_str(), vict);
 	break;
@@ -2791,6 +2794,7 @@ void buildCommandArray(void)
   commandArray[CMD_SHOULDER_THROW] = new commandInfo("shoulder throw", POSITION_FIGHTING, 0);
   commandArray[CMD_CHOP] = new commandInfo("chop", POSITION_FIGHTING, 0);
   commandArray[CMD_HURL] = new commandInfo("hurl", POSITION_FIGHTING, 0);
+  commandArray[CMD_DEFENESTRATE] = new commandInfo("DEFENESTRATE", POSITION_FIGHTING, 0);
   commandArray[CMD_CHI] = new commandInfo("chi", POSITION_FIGHTING, 0);
   commandArray[CMD_LEAP] = new commandInfo("leap", POSITION_STANDING, 0);
   commandArray[CMD_VOTE] = new commandInfo("vote", POSITION_STANDING, 0);

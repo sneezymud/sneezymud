@@ -446,6 +446,7 @@ enum spellNumT {
      SKILL_REPAIR_MONK,
      SKILL_CHAIN_ATTACK,
      SKILL_CATLEAP,
+     SKILL_DEFENESTRATE,
 
      // end of monk
      // start of thief
