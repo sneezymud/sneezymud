@@ -49,21 +49,111 @@ void TBeing::doFish(sstring direction){
   start_task(this, NULL, rp, TASK_FISHING, "", 2, inRoom(), 0, 0, 5);
 }
 
+vector <int> freshfishes()
+{
+  vector <int> f;
 
-TObj *catch_a_fish(TRoom *rp){
+  f.push_back(13800);
+  f.push_back(13801);
+  f.push_back(13802);
+  f.push_back(13803);
+  f.push_back(13804);
+  f.push_back(13805);
+  f.push_back(13806);
+  f.push_back(13807);
+  f.push_back(13816);
+  f.push_back(13817);
+  f.push_back(13818);
+  f.push_back(13819);
+  f.push_back(13820);
+  f.push_back(13821);
+  f.push_back(13822);
+  f.push_back(13823);
+  f.push_back(13824);
+  f.push_back(13896);
+  f.push_back(617);
+  f.push_back(620);
+  f.push_back(621);
+  f.push_back(622);
+  f.push_back(13814);
+
+  return f;
+}
+
+vector <int> marinefishes()
+{
+  vector <int> f;
+
+  f.push_back(12445);
+  f.push_back(13808);
+  f.push_back(13809);
+  f.push_back(13810);
+  f.push_back(13811);
+  f.push_back(13812);
+  f.push_back(13813);
+  f.push_back(13815);
+  f.push_back(13825);
+  f.push_back(13826);
+  f.push_back(13827);
+  f.push_back(13828);
+  f.push_back(13829);
+  f.push_back(13830);
+  f.push_back(13831);
+  f.push_back(13832);
+  f.push_back(13833);
+  f.push_back(13834);
+  f.push_back(13835);
+  f.push_back(13836);
+  f.push_back(13837);
+  f.push_back(13838);
+  f.push_back(13839);
+  f.push_back(13840);
+  f.push_back(13897);
+  f.push_back(607);
+  f.push_back(608);
+  f.push_back(609);
+  f.push_back(610);
+  f.push_back(611);
+  f.push_back(612);
+  f.push_back(613);
+  f.push_back(614);
+  f.push_back(615);
+  f.push_back(616);
+
+  return f;
+}
+
+vector <int> icefishes()
+{
+  vector <int> f;
+  f.push_back(13875);
+  f.push_back(13876);
+  f.push_back(13877);
+  f.push_back(13878);
+  f.push_back(13879);
+  f.push_back(618);
+  f.push_back(619);
+
+  return f;
+}
+
+
+vector <int> fishworldfishes()
+{
+  vector <int> f;
+  f.push_back(31870);
+  return f;
+}
+
+
+TObj *catch_a_fish(TRoom *rp)
+{
   TObj *fish=NULL;
-  int nfresh=23, nmarine=34, nice=7;
-  int num=0;
-  const int freshfishes[]={13800, 13801, 13802, 13803, 13804, 13805, 13806,
-			   13807, 13816, 13817, 13818, 13819, 13820, 13821,
-			   13822, 13823, 13824, 13896, 617, 620, 621, 622,
-                           13814};
-  const int marinefishes[]={13808, 13809, 13810, 13811, 13812, 13813,
-			    13815, 13825, 13826, 13827, 13828, 13829, 13830,
-			    13831, 13832, 13833, 13834, 13835, 13836, 13837,
-			    13838, 13839, 13840, 13897, 607, 608, 609, 610,
-                            611, 612, 613, 614, 615, 616};
-  const int icefishes[]={13875, 13876, 13877, 13878, 13879, 618, 619};
+  unsigned int num=0;
+  vector <int> freshfish=freshfishes();
+  vector <int> marinefish=marinefishes();
+  vector <int> icefish=icefishes();
+  vector <int> fishworld=fishworldfishes();
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
   //  vlogf(LOG_PEEL, fmt("weightmod=%f") %  weightmod);
@@ -88,26 +178,30 @@ TObj *catch_a_fish(TRoom *rp){
     }
   }
 
-  
-  bool adjustsize=true;
-  if(rp->getSectorType() == SECT_ICEFLOW){
-    num=::number(0,nmarine+nice-1);
-    if(num<nice)
-      fish=read_object(icefishes[num], VIRTUAL);
-    else
-      fish=read_object(marinefishes[num-nice], VIRTUAL);
-  } else if(rp->isOceanSector()){
-    if(!::number(0,nmarine)){
-      fish=read_object(12445, VIRTUAL); // some random crap item
-      adjustsize=false;
-    } else {
-      fish=read_object(marinefishes[::number(0,nmarine-1)], VIRTUAL);
-    }
-  } else { // if(rp->isRiverSector()){  // river or pond or lake or whatever
-    fish=read_object(freshfishes[::number(0,nfresh-1)], VIRTUAL);
+  vector <int> fishlist;
+
+  if(rp->number >= 31800 || rp->number <= 31899){ // fish world
+    for(unsigned int i=0;i<fishworld.size();++i)
+      fishlist.push_back(fishworld[i]);
   }
 
-  if(adjustsize){
+  if(rp->getSectorType() == SECT_ICEFLOW){
+    for(unsigned int i=0;i<icefish.size();++i)
+      fishlist.push_back(icefish[i]);    
+    for(unsigned int i=0;i<marinefish.size();++i)
+      fishlist.push_back(marinefish[i]);    
+  } else if(rp->isOceanSector()){
+    for(unsigned int i=0;i<marinefish.size();++i)
+      fishlist.push_back(marinefish[i]);    
+  } else {
+    for(unsigned int i=0;i<freshfish.size();++i)
+      fishlist.push_back(freshfish[i]);    
+  }
+
+  num=::number(0, fishlist.size()-1);
+  fish=read_object(fishlist[num], VIRTUAL);
+
+  if(num != 12445){ // don't do this for seaweed
     fish->setWeight(fish->getWeight()*weightmod);
     fish->setVolume((int)(fish->getWeight()*200));
   }
