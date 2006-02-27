@@ -6,9 +6,37 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
   sstring arg=argument;
   TDatabase db(DB_SNEEZY);
 
-  if(cmd!=CMD_LIST || !me || !ch)
+  if(!me || !ch)
     return false;
 
+  if(cmd==CMD_BUY){
+    if(arg.empty()){
+      me->doTell(ch->getName(), "Which property do you want to buy a replacement key for?");
+    } else {
+      db.query("select p.owner as owner_id, p.key as key from property p, obj o where p.key=o.vnum and p.id=%s", arg.word(0).c_str());
+
+      db.fetchRow();
+
+      if(ch->getPlayerID() != convertTo<int>(db["owner_id"])){
+	me->doTell(ch->getName(), "Hey, you don't own that property!");
+	return true;
+      } else {
+	if(ch->getMoney() < 25000){
+	  me->doTell(ch->getName(), "It costs 25000 talens to mint a new high security key.  You don't have enough!");
+	  return true;
+	} else {
+	  me->doTell(ch->getName(), "That will be 25000 talens to mint a new high security key.");
+	  ch->addToMoney(-25000, GOLD_SHOP);
+	}
+
+	TObj *key=read_object(convertTo<int>(db["key"]), VIRTUAL);
+	*ch += *key;
+	me->doTell(ch->getName(), "Here you go!");
+	act("$n gives you $p.", 0, me, key, ch, TO_VICT);
+      }
+    }
+  }
+  
 
   if(cmd==CMD_LIST){
     if(arg.empty()){
