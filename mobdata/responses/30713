@@ -30,10 +30,10 @@ give { "30749";
      tell %n and a glowing <W>white<1> scabbard.;
      }
 say { "jewel";
-	checktoggle 223;
     checktoggle 219;
+	checktoggle 223;
     tell %n An excellent choice, may it serve you well.;
-    resize "30754";
+    resize 30754;
     tell %n Go now, and thank you for helping us.;
     untoggle 219;
     }
@@ -41,7 +41,7 @@ say { "darkened";
     checktoggle 219;
 	checktoggle 223;
     tell %n An excellent choice, may it serve you well.;
-    resize "30755";
+    resize 30755;
     tell %n Go now, and thank you for helping us.;
     untoggle 219;
     }
@@ -49,7 +49,7 @@ say { "white";
     checktoggle 219;
 	checktoggle 223;
     tell %n An excellent choice, may it serve you well.;
-    resize "30756";
+    resize 30756;
     tell %n Go now, and thank you for helping us.;
     untoggle 219;
     }
