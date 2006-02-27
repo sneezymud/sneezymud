@@ -5465,7 +5465,8 @@ void TBeing::doResize(const char *arg)
 {
   TBeing *targ;
   TObj *obj = NULL;
-  char buf[160], objbuf[80], charbuf[80], racebuf[80];
+  char objbuf[80], charbuf[80], racebuf[80];
+  sstring buf;
   int race=0;
 
   if (!hasWizPower(POWER_RESIZE)) {
@@ -5479,7 +5480,7 @@ void TBeing::doResize(const char *arg)
     sendTo("Syntax: resize <object> <character>\n\r");
     return;
   }
-  if(!strcmp(charbuf, "race")){
+  if (!strcmp(charbuf, "race")) {
     arg = one_argument(arg,racebuf);
     race=convertTo<int>(racebuf);
     if(race >= MAX_RACIAL_TYPES || race < 0){
@@ -5498,41 +5499,39 @@ void TBeing::doResize(const char *arg)
     sendTo(fmt("I can't seem to find %s.\n\r") %charbuf);
     return;
   }
-  if (!dynamic_cast<TBaseClothing *>(obj)) {
-    sendTo(COLOR_OBJECTS, fmt("Umm... %s is not a piece of equipment and can't be resized.\n\r") %
-         obj->getName());
-    return;
-  }
   if (obj->objVnum() != -1 &&
       obj_index[obj->getItemIndex()].max_exist <= 10){
     sendTo("Sorry, that artifact is too rare to be resized.\n\r");
     return;
   }
-  wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
+  if (dynamic_cast<TBaseClothing *>(obj)) {
+    wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
 
-  if(race_vol_constants[mapSlotToFile(slot)])
-    obj->setVolume((int)((double)getHeight() * race_vol_constants[mapSlotToFile(slot)]));
-  
-  // disassociate from global memory
-  obj->swapToStrung();
+    if (race_vol_constants[mapSlotToFile(slot)]) {
+      obj->setVolume((int)((double)getHeight() * race_vol_constants[mapSlotToFile(slot)]));
+    }
+    
+    // disassociate from global memory
+    obj->swapToStrung();
 
-  //  Remake the obj name.  
-  if(obj->objVnum() != -1){
-    sprintf(buf, "%s [resized]", obj->name);
-    delete [] obj->name;
-    obj->name = mud_str_dup(buf);
+    //  Remake the obj name.  
+    if (obj->objVnum() != -1) {
+      buf = fmt("%s [resized]") % obj->name;
+      delete [] obj->name;
+      obj->name = mud_str_dup(buf.c_str());
+    }
   }
 
 
   // Personalize it
-  if(!race){
-    sprintf(buf, "This is the personalized object of %s", targ->getName());
+  if (!race) {
+    buf = fmt("This is the personalized object of %s") % targ->getName();
     delete [] obj->action_description;
-    obj->action_description = mud_str_dup(buf);
+    obj->action_description = mud_str_dup(buf.c_str());
     
     act("You just resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
   } else {
-    sprintf(buf, "You just resized $p for race %i.", race);
+    buf = fmt("You just resized $p for race %i.") % race;
     act(buf, FALSE, this, obj, 0, TO_CHAR);
   }
 }
