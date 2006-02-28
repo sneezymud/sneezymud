@@ -27,7 +27,6 @@ static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char
   }
 }
 
-
 void potionLoader(TMonster *tmons)
 {
   vector<int>potions;
@@ -75,7 +74,6 @@ void potionLoader(TMonster *tmons)
   pot=min(pot, (int)potions.size());
   pot=max(pot, 0);
   
-
   TObj *obj;
   TPotion *tpot;
 
@@ -95,7 +93,6 @@ void potionLoader(TMonster *tmons)
     delete obj;
 }
 
-
 void loadRepairItems(TMonster *tmons)
 {
   int tool = 0;
@@ -103,7 +100,6 @@ void loadRepairItems(TMonster *tmons)
   int tool3 = 0;
   int tool4 = 0;
   int tool5 = 0;
-
 
   if(tmons->GetMaxLevel() > 40) {
     if(tmons->hasClass(CLASS_MAGE)) {
@@ -281,8 +277,8 @@ void TMonster::createWealth(void)
     shamanComponentLoader();
   if (hasClass(CLASS_MAGE))
     mageComponentLoader();
-  if (hasClass(CLASS_RANGER))
-    rangerComponentLoader();
+  // if (hasClass(CLASS_RANGER))
+  //   rangerComponentLoader();
   if (hasClass(CLASS_CLERIC)) {
     // which ever one is on top will take precedence (shortages in the other)
     // so....
@@ -1229,16 +1225,3 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 
   return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
