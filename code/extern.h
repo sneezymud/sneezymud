@@ -268,7 +268,7 @@ extern void portal_flag_change(TPortal *, unsigned int, const char *, setRemT);
 extern const sstring numberAsString(int);
 extern void readStringNoAlloc(FILE *);
 extern void reset_zone(int, bool);
-extern void loadsetCheck(TBeing *, int, int, wearSlotT, const sstring &);
+extern void loadsetCheck(TBeing *, int, int, wearSlotT, const sstring &, bool findLoadPotential = false);
 extern void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &, void *);
 extern void do_where_thing(const TBeing *, const TThing *, bool, sstring &);
 extern bool canSeeThruDoor(const roomDirData *);

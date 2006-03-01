@@ -105,7 +105,7 @@ class zoneData
     double max_mob_level;
 
     bool isEmpty(void);
-    void resetZone(bool);
+    void resetZone(bool bootTime, bool findLoadPotential=false);
     void closeDoors(void);
     void logError(char, const char *, int, int);
     void nukeMobs(void);

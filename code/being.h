@@ -1000,7 +1000,7 @@ class TBeing : public TThing {
     bool isColdBlooded() const;
     bool isHumanoid() const { return race->isHumanoid(); }
     bool noHarmCheck(TBeing *);
-    void loadSetEquipment(int, char *, int);
+    void loadSetEquipment(int, char *, int, bool findLoadPotential = false);
     bool doesKnowSkill(spellNumT) const;
     int getSkillLevel(spellNumT) const;
     byte getMaxSkillValue(spellNumT) const;

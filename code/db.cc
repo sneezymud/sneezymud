@@ -146,6 +146,9 @@ struct time_info_data time_info;        // the infomation about the time
 struct weather_data weather_info;        // the infomation about the weather 
 class lag_data lag_info;
 
+// count of the number of mobs that can load an object
+map<int, int> obj_load_potential;
+
 // local procedures
 static void bootZones(void);
 static void bootWorld(void);
@@ -156,6 +159,18 @@ struct reset_q_type
   resetQElement *head;
   resetQElement *tail;
 } r_q;
+
+void tallyObjLoadPotential(const int obj_num)
+{
+  map<int, int>::iterator tIter;
+
+  tIter = obj_load_potential.find(obj_num);
+  if (tIter != obj_load_potential.end()) {
+    obj_load_potential[obj_num] = (tIter->second) + 1;
+  } else {
+    obj_load_potential[obj_num] = 1;
+  }
+}
 
 void bootPulse(const char *str, bool end_str)
 {
@@ -356,22 +371,41 @@ void bootDb(void)
   bootPulse("Creating Loot List.");
   sysLootBoot();
 
+  bootPulse("Calculating object load potentials:", false);
   for (i = 0; i < zone_table.size(); i++) {
-    char *s;
     int d, e;
-    s = zone_table[i].name;
     d = (i ? (zone_table[i - 1].top + 1) : 0);
     e = zone_table[i].top;
 
-    if(i==0){
+    vlogf(LOG_MISC, fmt("Calculating object load potentials of %s (rooms %d-%d).") % zone_table[i].name % d % e);
+    zone_table[i].resetZone(true, true);
+
+    if (i%10 == 0)
+      bootPulse(".", false);
+  }
+  bootPulse(NULL, true);
+
+  vlogf(LOG_MISC, fmt("Object load potentials:"));
+  map<int, int>::iterator tIter = obj_load_potential.begin();
+  while (tIter != obj_load_potential.end()) {
+    vlogf(LOG_MISC, fmt("VNum[%d] = %d") % tIter->first % tIter->second);
+    ++tIter;
+  }
+
+  for (i = 0; i < zone_table.size(); i++) {
+    int d, e;
+    d = (i ? (zone_table[i - 1].top + 1) : 0);
+    e = zone_table[i].top;
+
+    if (i==0) {
       // all shopkeepers should load in zone 0
       bootPulse("Loading shops.", false);
-    } else if(i==1){
+    } else if (i==1) {
       bootPulse(NULL, true);
       bootPulse("Resetting zones:", false);
     }
 
-    vlogf(LOG_MISC, fmt("Performing boot-time reset of %s (rooms %d-%d).") %  s % d % e);
+    vlogf(LOG_MISC, fmt("Performing boot-time reset of %s (rooms %d-%d).") % zone_table[i].name % d % e);
     zone_table[i].resetZone(TRUE);
 
     // stagger reset times
@@ -1903,7 +1937,7 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
   mob->quickieDefend();
 }
 
-void zoneData::resetZone(bool bootTime)
+void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 {
   int cmd_no;
   bool last_cmd = 1;
@@ -1917,6 +1951,9 @@ void zoneData::resetZone(bool bootTime)
   TThing *t;
   int count;
   wearSlotT realslot;
+  int obj_lp = 0;
+  map<int, int>::iterator check_obj_lp;
+  double obj_lp_ratio, adj_obj_lp_ratio;
 
   struct armor_set_struct {
     int slots[MAX_WEAR];
@@ -1937,6 +1974,9 @@ void zoneData::resetZone(bool bootTime)
     if (last_cmd || !rs.if_flag) {
       switch (rs.command) {
         case 'A':
+          if (findLoadPotential) {
+            break;
+          }
           for (count = 0; count < 10; count++) {
             if ((random_room = real_roomp(::number(rs.arg1, rs.arg2))))
               break;
@@ -1947,6 +1987,9 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'M':
+          if (findLoadPotential) {
+            break;
+          }
           // check if zone is disabled or if mob exceeds absolute max
           if (rs.arg1 < 0 || rs.arg1 >= (signed int) mob_index.size()) {
             vlogf(LOG_LOW, fmt("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") %  rs.arg1 % rs.arg3);
@@ -2032,6 +2075,9 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'C':
+          if (findLoadPotential) {
+            break;
+          }
           // a charmed follower of the previous mob
 
           // check if zone is disabled or if mob exceeds absolute max
@@ -2099,6 +2145,9 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'K':
+          if (findLoadPotential) {
+            break;
+          }
           // a grouped follower of the previous mob
 
           // check if zone is disabled or if mob exceeds absolute max
@@ -2174,7 +2223,12 @@ void zoneData::resetZone(bool bootTime)
                 (objload && (rs.character == 'P')) ||
                 (mobload && (rs.character != 'P'))) {
 
-              int tmp = dice(1, 100);
+              int tmp;
+              if (findLoadPotential) {
+                tmp = 1;
+              } else {
+                tmp = dice(1, 100);
+              }
 
               if (rs.arg1 >= 98 || tmp <= fixed_chance ||
                   gamePort == BETA_GAMEPORT) {
@@ -2191,6 +2245,9 @@ void zoneData::resetZone(bool bootTime)
             vlogf(LOG_BUG, "No rs. character in ? command");
           break;
         case 'R':
+          if (findLoadPotential) {
+            break;
+          }
           // check if zone is disabled or if mob exceeds absolute max
           if ((this->zone_value != 0) && mobload &&
               mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
@@ -2289,6 +2346,9 @@ void zoneData::resetZone(bool bootTime)
           break;
 
         case 'O':                
+          if (findLoadPotential) {
+            break;
+          }
 	  if(bootTime){
 	    // check conditions
 	    if (rs.arg3 != ZONE_ROOM_RANDOM) 
@@ -2342,6 +2402,9 @@ void zoneData::resetZone(bool bootTime)
 	  }
 	  break;
         case 'B':               
+          if (findLoadPotential) {
+            break;
+          }
           if (obj_index[rs.arg1].getNumber() <
                  obj_index[rs.arg1].max_exist) {
             if (rs.arg3 != ZONE_ROOM_RANDOM) {
@@ -2392,6 +2455,9 @@ void zoneData::resetZone(bool bootTime)
 	  }
           break;
         case 'P':                
+          if (findLoadPotential) {
+            break;
+          }
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
             obj = read_object(rs.arg1, REAL);
             obj_to = get_obj_num(rs.arg3);
@@ -2411,6 +2477,9 @@ void zoneData::resetZone(bool bootTime)
             last_cmd = 0;
           break;
         case 'V':    // Change ONE value of the four values upon reset- Russ 
+          if (findLoadPotential) {
+            break;
+          }
           if (obj) {
             int tmp, tmp2, tmp3, tmp4;
             obj->getFourValues(&tmp, &tmp2, &tmp3, &tmp4);
@@ -2436,6 +2505,9 @@ void zoneData::resetZone(bool bootTime)
             last_cmd = 0;
           break;
         case 'T':        // Set traps for doors and containers - Russ 
+          if (findLoadPotential) {
+            break;
+          }
           // if_flag-->0 : trap door, else trap previous object 
           if (!rs.if_flag) {
             rp = real_roomp(rs.arg1);
@@ -2455,6 +2527,10 @@ void zoneData::resetZone(bool bootTime)
           last_cmd = 1;
           break;
         case 'G':        
+          if (findLoadPotential) {
+            tallyObjLoadPotential(obj_index[rs.arg1].virt);
+            break;
+          }
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
               (obj = read_object(rs.arg1, REAL))) {
@@ -2471,6 +2547,9 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'H':                
+          if (findLoadPotential) {
+            break;
+          }
           if (mob->addHatred(zoneHateT(rs.arg1), rs.arg2))
             last_cmd = 1;
           else
@@ -2483,6 +2562,15 @@ void zoneData::resetZone(bool bootTime)
 	  }
 	  break;
 	case 'Z': // Z <if flag> <set num> <perc chance>
+          if (findLoadPotential) {
+	    wearSlotT i;
+	    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
+	      if (local_armor[rs.arg1].slots[i]) {
+                tallyObjLoadPotential(local_armor[rs.arg1].slots[i]);
+	      }
+	    }
+            break;
+          }
 	  if (mob && mobload && rs.arg1 >=0) {
 	    wearSlotT i;
 	    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -2496,6 +2584,10 @@ void zoneData::resetZone(bool bootTime)
 	  }
 	  break;
         case 'Y':
+          if (findLoadPotential) {
+            mob->loadSetEquipment(rs.arg1, NULL, fixed_chance, true);
+            break;
+          }
           if (mob && mobload) {
             // mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
             mob->loadSetEquipment(rs.arg1, NULL, fixed_chance);
@@ -2530,15 +2622,36 @@ void zoneData::resetZone(bool bootTime)
           }
           break;
         case 'F':                
+          if (findLoadPotential) {
+            break;
+          }
           if (mob->addFears(zoneHateT(rs.arg1), rs.arg2))
             last_cmd = 1;
           else
             last_cmd = 0;
           break;
         case 'E':                
+          if (findLoadPotential) {
+            tallyObjLoadPotential(obj_index[rs.arg1].virt);
+            break;
+          }
+          check_obj_lp = obj_load_potential.find(obj_index[rs.arg1].virt);
+          if (check_obj_lp != obj_load_potential.end()) {
+            obj_lp = check_obj_lp->second;
+          } else {
+            vlogf(LOG_MISC, fmt("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
+            obj_lp = 1;
+          }
+          // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
+          // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
+          // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
+          obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
+          adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
           if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-              (::number(0,999) < (int) (1000 * stats.equip)) &&  
+              (::number(0, 999) < (int) (1000*100 * adj_obj_lp_ratio / fixed_chance)) &&  
+              (::number(0, 999) < (int) (1000 * stats.equip)) &&  
               (obj = read_object(rs.arg1, REAL))) {
+            vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
             if (!mob) {
               vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%s)") %  obj->getName());
               delete obj;
@@ -2553,7 +2666,7 @@ void zoneData::resetZone(bool bootTime)
             if (!mob->equipment[realslot]) {
               // these are just safety logs, equipping will be done regardless
               if (!mob->canUseEquipment(obj, SILENT_YES)) {
-                vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") %  obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
+                vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
               }
               TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
               if (tbc && tbc->canWear(ITEM_WEAR_FINGER) && gamePort != PROD_GAMEPORT) {
@@ -2563,7 +2676,7 @@ void zoneData::resetZone(bool bootTime)
 
               }
               if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle()) {
-                vlogf(LOG_LOW, fmt("'E' command for %s equipping item (%s) on nonvalid slot %d.") %  mob->getName() % tbc->getName() % realslot);
+                vlogf(LOG_LOW, fmt("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
               }
               if (!check_size_restrictions(mob, obj, realslot, mob) &&
                   realslot != HOLD_RIGHT && realslot != HOLD_LEFT) {
@@ -2617,6 +2730,9 @@ void zoneData::resetZone(bool bootTime)
           
           break;
         case 'D':                
+          if (findLoadPotential) {
+            break;
+          }
           rp = real_roomp(rs.arg1);
           if (rp) {
             roomDirData * exitp = rp->dir_option[rs.arg2];
@@ -2659,6 +2775,9 @@ void zoneData::resetZone(bool bootTime)
           }  // check for dest room
           break;
         case 'L':
+          if (findLoadPotential) {
+            break;
+          }
           if (bootTime)
             last_cmd = sysLootLoad(rs, mob, obj, false);
           else

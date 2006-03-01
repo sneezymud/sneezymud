@@ -56,7 +56,7 @@ class loadSetClass {
   public:
     map<unsigned short int, loadSetStruct>suits;
 
-    bool suitLoad(const char *, TBeing *, loadSetTypeT, int, int);
+    bool suitLoad(const char *, TBeing *, loadSetTypeT, int, int, bool findLoadPotential=false);
     void SetupLoadSetSuits();
     void suitAdd(const char *, int, int, int, int, int, int,
                  int, int, int, int, int, int, race_t);

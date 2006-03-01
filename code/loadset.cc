@@ -15,6 +15,9 @@
 extern int  GetItemClassRestrictions(const TObj *);
 extern bool IsRestricted(unsigned short int, unsigned short int);
 
+extern map<int, int> obj_load_potential;
+extern void tallyObjLoadPotential(const int obj_num);
+
 loadSetClass suitSets;
 
 const char * suitFilePath = "objdata/suitsets";
@@ -68,7 +71,7 @@ wearSlotT getSlotFromLST(loadSetTypeT tPiece, TBeing *ch, bool isFirst)
 }
 
 bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiece,
-                           int tChance, int sCount)
+                           int tChance, int sCount, bool findLoadPotential)
 {
   // soft 101 -1
 
@@ -82,24 +85,36 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
         for (int pieceIndex = 0; pieceIndex < LST_MAX; pieceIndex++) {
           // This is so hobbits will not load feet where in suits meant
           // for Gnome or Hobbit&Gnome.  Safty catch is all.
-          if (ch->getRace() == RACE_HOBBIT && pieceIndex == LST_BOOT)
+          if (ch && ch->getRace() == RACE_HOBBIT && pieceIndex == LST_BOOT)
             continue;
 
-          loadsetCheck(ch, suits[suitIndex].equipment[pieceIndex],
-                       tChance, getSlotFromLST(loadSetTypeT(pieceIndex), ch, false),
-                       suitPieceNames[pieceIndex]);
+          if (findLoadPotential) {
+            tallyObjLoadPotential(suits[suitIndex].equipment[pieceIndex]);
+          } else {
+            loadsetCheck(ch, suits[suitIndex].equipment[pieceIndex],
+                         tChance, getSlotFromLST(loadSetTypeT(pieceIndex), ch, false),
+                         suitPieceNames[pieceIndex]);
+          }
 
           if (pieceIndex == LST_SLEEVE   || pieceIndex == LST_GLOVE   ||
               pieceIndex == LST_BRACELET || pieceIndex == LST_LEGGING ||
               pieceIndex == LST_BOOT     || pieceIndex == LST_RING)
-            loadsetCheck(ch, suits[suitIndex].equipment[pieceIndex],
-                         tChance, getSlotFromLST(loadSetTypeT(pieceIndex), ch, true),
-                         suitPieceNames[pieceIndex]);
+            if (findLoadPotential) {
+              tallyObjLoadPotential(suits[suitIndex].equipment[pieceIndex]);
+            } else {
+              loadsetCheck(ch, suits[suitIndex].equipment[pieceIndex],
+                           tChance, getSlotFromLST(loadSetTypeT(pieceIndex), ch, true),
+                           suitPieceNames[pieceIndex]);
+            }
         }
       } else
+        if (findLoadPotential) {
+          tallyObjLoadPotential(suits[suitIndex].equipment[tPiece]);
+        } else {
         loadsetCheck(ch, suits[suitIndex].equipment[tPiece],
                      tChance, getSlotFromLST(loadSetTypeT(tPiece), ch, false),
                      suitPieceNames[tPiece]);
+        }
 
       return true;
     }
@@ -108,11 +123,16 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
   return false;
 }
 
-void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname)
+void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname, bool findLoadPotential)
 {
   if (vnum < 0) {
     if (chance > 100)
       ch->sendTo(fmt("No %s exists in that set.\n\r") % slotname);
+    return;
+  }
+
+  if (findLoadPotential) {
+    tallyObjLoadPotential(vnum);
     return;
   }
 
@@ -139,9 +159,23 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
     }
   }
 
-  if ( ((::number(0,99) < chance) &&
-	(chance >= 99 || (::number(0,999) < (int) (1000 * stats.equip)))) ||
+  int obj_lp = 0;
+  map<int, int>::iterator check_obj_load_potential;
+  check_obj_load_potential = obj_load_potential.find(vnum);
+  if (check_obj_load_potential != obj_load_potential.end()) {
+    obj_lp = check_obj_load_potential->second;
+  } else {
+    obj_lp = 1;
+  }
+  // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
+  // obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
+  // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
+  double obj_lp_ratio = 1 - pow((1 - (double)chance/100), (double)obj_lp);
+  double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
+  if ( ((::number(0,99999) < (int) (100000 * adj_obj_lp_ratio * chance)) &&
+	(chance >= 99 || (::number(0,999) < (int) (1000 * stats.equip)))) ||  
        gamePort == BETA_GAMEPORT) {
+    vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
@@ -176,7 +210,7 @@ bool is_floatVal(const char *str)
   return true;
 }
 
-void TBeing::loadSetEquipment(int num, char *arg, int tChance)
+void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPotential)
 {
   char          tString[256] = "\0",
                 suitClasses[256];
@@ -531,7 +565,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
     tString[0] = '\0';
   }
 
-  if (!suitSets.suitLoad(tString, this, tPiece, tChance, num))
+  if (!suitSets.suitLoad(tString, this, tPiece, tChance, num, findLoadPotential))
     return;
 
   if (tChance == 101){
