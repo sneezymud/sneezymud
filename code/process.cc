@@ -92,3 +92,15 @@ void TScheduler::run(int pulse)
     }
   }
 }
+
+procSeedRandom::procSeedRandom(const int &p)
+{
+  trigger_pulse=p;
+  name="procSeedRandom";
+}
+
+void procSeedRandom::run(int) const
+{
+  srandomdev();
+  vlogf(LOG_SILENT, fmt("procSeedRandom: Generated new seed."));
+}

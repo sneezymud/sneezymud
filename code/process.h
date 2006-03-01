@@ -25,6 +25,12 @@ class procTrophyDecay: public TProcess {
   procTrophyDecay(const int &);
 };
 
+class procSeedRandom : public TProcess {
+ public:
+  void run(int) const;
+  procSeedRandom(const int &);
+};
+
 class procTweakLoadRate : public TProcess {
  public:
   void run(int) const;
@@ -43,13 +49,11 @@ class procDoRoomSaves : public TProcess {
   procDoRoomSaves(const int &);
 };
 
-
 class procDeityCheck : public TProcess {
  public:
   void run(int) const;
   procDeityCheck(const int &);
 };
-
 
 class procApocCheck : public TProcess {
  public:

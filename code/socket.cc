@@ -1136,8 +1136,6 @@ void procTweakLoadRate::run(int) const
 	stats.equip);
 }
 
-
-
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
@@ -1193,6 +1191,7 @@ int TMainSocket::gameLoop()
   // pulse realhour
 //  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved
   scheduler.add(new procTrophyDecay(PULSE_REALHOUR));
+  scheduler.add(new procSeedRandom(PULSE_REALHOUR));
 
   avail_descs = 150;		
 
