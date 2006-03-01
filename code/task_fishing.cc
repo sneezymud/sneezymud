@@ -180,7 +180,7 @@ TObj *catch_a_fish(TRoom *rp)
 
   vector <int> fishlist;
 
-  if(rp->number >= 31800 || rp->number <= 31899){ // fish world
+  if(rp->number >= 31800 && rp->number <= 31899){ // fish world
     for(unsigned int i=0;i<fishworld.size();++i)
       fishlist.push_back(fishworld[i]);
   }
