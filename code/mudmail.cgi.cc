@@ -19,12 +19,15 @@ using namespace cgicc;
 Cgicc cgi;
 
 sstring getSessionID();
-void sendLogin();
-void sendLoginCheck();
 sstring generateSessionID();
 int validateSessionID(sstring);
-void sendPickPlayer(int);
+
 void sendJavaScript();
+
+void sendLogin();
+void sendLoginCheck();
+void sendPickPlayer(int);
+void sendMessageList(int);
 
 int main(int argc, char **argv)
 {
@@ -37,7 +40,7 @@ int main(int argc, char **argv)
   int account_id=validateSessionID(session_id);
 
   // this if statement sucks
-  if(session_id.empty()){
+  if(session_id.empty() || account_id < 0){
     if(state_form == cgi.getElements().end() ||
        **state_form != "logincheck"){
       sendLogin();
@@ -46,12 +49,18 @@ int main(int argc, char **argv)
       sendLoginCheck();
       return 0;
     }
-  } else if(account_id < 0){
-    sendLogin();
-    return 0;
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
       sendPickPlayer(account_id);
+      return 0;
+    } else if(**state_form == "listmessages"){
+      sendMessageList(account_id);
+      return 0;
+    } else if(**state_form == "logout"){
+      TDatabase db(DB_SNEEZY);
+      db.query("delete from cgisession where session_id='%s'", 
+	       session_id.c_str());
+      sendLogin();
       return 0;
     }
 
@@ -73,6 +82,32 @@ int main(int argc, char **argv)
   cout << body() << endl;
   cout << html() << endl;
 
+}
+
+void sendMessageList(int account_id)
+{
+  int player_id=convertTo<int>(**(cgi.getElement("player")));
+  TDatabase db(DB_SNEEZY);
+
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Mudmail") << endl;
+  cout << head() << body() << endl;
+
+  db.query("select m.mailfrom, m.timesent, m.content from mail m, player p where m.mailto=p.name and p.id=%i", player_id);
+  
+  cout << "<table border=1>" << endl;
+
+  while(db.fetchRow()){
+    cout << "<tr><td>" << db["mailfrom"] << endl;
+    cout << "</td><td>" << db["timesent"] << endl;
+    cout << "</td></tr><tr><td colspan=2>" << db["content"] << endl;
+    cout << "</td></tr>" << endl;
+  }
+
+  cout << "</table>" << endl;
+
+  cout << body() << endl;
+  cout << html() << endl;
 }
 
 int validateSessionID(sstring session_id)
@@ -211,6 +246,7 @@ void sendPickPlayer(int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   sendJavaScript();
   cout << head() << body() << endl;
+  cout << "<a href=\"mudmail.cgi?state=logout\">Logout</a><p>" << endl;
 
   // get a list of players in this account
   db.query("select p.id, p.name, count(m.*) as count from player p left outer join mail m on (p.name=m.mailto) where account_id=%i group by p.id, p.name order by p.name",
