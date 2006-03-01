@@ -1037,7 +1037,7 @@ int Descriptor::getFreeStat(connectStateT which){
 // if descriptor is to be deleted, DELETE_THIS
 int Descriptor::nanny(sstring arg)
 {
-  char buf[256];
+  sstring buf;
   //char wizbuf[256];
   int count = 0, local_stats = 0;
   charFile st;
@@ -1269,9 +1269,9 @@ int Descriptor::nanny(sstring arg)
         // too bad they can't do this from the menu, but they won't get this
         // far if this was set anyway
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
-        sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
+        buf = fmt("You entered an email address of: %s\n\r") % account->email;
         writeToQ(buf);
-        sprintf(buf, "If this address is truly valid, please send a mail from it to: %s", MUDADMIN_EMAIL);
+        buf = fmt("If this address is truly valid, please send a mail from it to: %s") % MUDADMIN_EMAIL;
         writeToQ(buf);
         writeToQ("Otherwise, please change your account email address.\n\r");
         rp = real_roomp(ROOM_VOID);
@@ -1444,26 +1444,26 @@ int Descriptor::nanny(sstring arg)
 
           if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 	    Descriptor *d;
-	    char buf[256] = "\0";
+	    sstring buf2;
 
 	    tmp_ch->desc->send_client_prompt(TRUE, 16383);
 
 	    for (d = descriptor_list; d; d = d->next) {
 	      if (d->character) {
 		if (d->character->isLinkdead() && tmp_ch->isImmortal())
-		  sprintf(buf, "[%s]", d->character->getName());
+		  buf2 = fmt("[%s]") % d->character->getName();
 		else
-		  strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+		  buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
 
 		if (tmp_ch->canSeeWho(d->character)) {
 		  tmp_ch->desc->prompt_mode = -1;
-		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);
 		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
 
 		  if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
-		    tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+		    tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
 		  else
-		    tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+		    tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
 		}
 	      }
 	    }
@@ -1592,26 +1592,26 @@ int Descriptor::nanny(sstring arg)
 
 	      if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 		Descriptor *d;
-		char buf[256] = "\0";  
+		sstring buf2;  
 
 		tmp_ch->desc->send_client_prompt(TRUE, 16383);
 
 		for (d = descriptor_list; d; d = d->next) {
 		  if (d->character) {
 		    if (d->character->isLinkdead() && tmp_ch->isImmortal())
-		      sprintf(buf, "[%s]", d->character->getName());
+		      buf2 = fmt("[%s]") % d->character->getName();
 		    else
-		      strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+		      buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
 
 		    if (tmp_ch->canSeeWho(d->character)) {
 		      tmp_ch->desc->prompt_mode = -1;
-		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);                    
+		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);                    
 		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
 
 		      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
-			tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+			tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
 		      else
-			tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+			tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
 		    }
 		  }
 		}
@@ -2814,26 +2814,26 @@ int Descriptor::nanny(sstring arg)
 
       if (character->desc && !character->desc->m_bIsClient && IS_SET(character->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 	Descriptor *d;
-	char buf[256] = "\0";  
+	sstring buf2;  
 
 	character->desc->send_client_prompt(TRUE, 16383);
 
 	for (d = descriptor_list; d; d = d->next) {
 	  if (d->character) {
 	    if (d->character->isLinkdead() && character->isImmortal())
-	      sprintf(buf, "[%s]", d->character->getName());
+	      buf2 = fmt("[%s]") % d->character->getName();
 	    else
-	      strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+	      buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
 
 	    if (character->canSeeWho(d->character)) {
 	      character->desc->prompt_mode = -1;
-	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);                    
+	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);                    
 	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
 
 	      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !character->isImmortal())
-		character->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+		character->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
 	      else
-		character->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+		character->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
 	    }
 	  }
 	}
@@ -3470,48 +3470,45 @@ void Descriptor::sendHomeList()
 
 void Descriptor::sendStartStatList()
 {
-  char buf[256];
+  sstring buf;
 
   character->cls();
   writeToQ("\n\rCongratulations, you have finished the basic character creation process.\n\r\n\rThe only remaining step is to determine your character's characteristics.\n\r");
 
-  sprintf(buf, "%s uses a unique system of characteristics.  In essence though, based\n\r", MUD_NAME);
+  buf = fmt("%s uses a unique system of characteristics.  In essence though, based\n\r") % MUD_NAME;
   writeToQ(buf);
 
   writeToQ("on your character's race, characteristics have already been assigned to\n\ryour character.  You are free to adjust these characteristics somewhat above\n\ror below the racial average to suit your particular likings, or, you may\n\rbypass this step, and proceed right into the game.\n\r\n\r");
 
-  sprintf(buf, "%sThis is the only opportunity you will have to adjust these characteristics.%s\n\r\n\r", orange(), norm());
+  buf = fmt("%sThis is the only opportunity you will have to adjust these characteristics.%s\n\r\n\r") % orange() % norm();
   writeToQ(buf);
 
-  sprintf(buf, "Choose:\n\r(%sE%s)%snter the game%s accepting the characteristics assigned by race, or\n\r",
-        cyan(), norm(), cyan(), norm());
+  buf = fmt("Choose:\n\r(%sE%s)%snter the game%s accepting the characteristics assigned by race, or\n\r") % cyan() % norm() % cyan() % norm();
   writeToQ(buf);
 
-  sprintf(buf, "(%sC%s)%sustomize your characteristics%s.\n\r",
-        cyan(), norm(), cyan(), norm());
+  buf = fmt("(%sC%s)%sustomize your characteristics%s.\n\r") % cyan() % norm() % cyan() % norm();
   writeToQ(buf);
 
-  sprintf(buf, "Or type '%s/%s' %sto go back to basic character creation%s.\n\r\n\r--> ",
-        cyan(), norm(), cyan(), norm());
+  buf = fmt("Or type '%s/%s' %sto go back to basic character creation%s.\n\r\n\r--> ") % cyan() % norm() % cyan() % norm();
   writeToQ(buf);
 }
 
 void Descriptor::sendDoneScreen()
 {
-  char buf[256];
+  sstring buf;
 
   character->cls();
   writeToQ("\n\rCongratulations, you have finished the character creation process.\n\r");
-  sprintf(buf, "If you are a newcomer to %s, %stake a minute to read this screen%s.\n\r\n\r", MUD_NAME, orange(), norm());
+  buf = fmt("If you are a newcomer to %s, %stake a minute to read this screen%s.\n\r\n\r") % MUD_NAME % orange() % norm();
   writeToQ(buf);
 
   writeToQ("Upon connecting, you will want to check your initial terminal options.\n\r");
   writeToQ("Know that the game will automatically set some of these options for you.\n\r");
   writeToQ("These include: prompts, automatic actions, terminal size, color.\n\r");
   writeToQ("Your initial settings are just defaults and you can change them easily.\n\r");
-  sprintf(buf, "Good help files to read are <%sCOLOR%s>, <%sPROMPTS%s> and <%sAUTO%s>.\n\r\n\r", orange(), norm(), orange(), norm(), orange(), norm());
+  buf = fmt("Good help files to read are <%sCOLOR%s>, <%sPROMPTS%s> and <%sAUTO%s>.\n\r\n\r") % orange() % norm() % orange() % norm() % orange() % norm();
   writeToQ(buf);
-  sprintf(buf, "You should also %sread the newbie guide%s and %swear your equipment%s.\n\r", orange(), norm(), orange(), norm());
+  buf = fmt("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % orange() % norm() % orange() % norm();
   writeToQ(buf);
 
   writeToQ("For further orientation, use the help system, newbie helpers and immortal staff.\n\r");
@@ -3519,11 +3516,10 @@ void Descriptor::sendDoneScreen()
   writeToQ("allowed to help you discover The World.  However, they are allowed\n\r");
   writeToQ("and encouraged to help you with command problems and general orientation.\n\r\n\r");
 
-  sprintf(buf, "The gods and implementors of %s hope that you enjoy your stay.\n\r", MUD_NAME);
+  buf = fmt("The gods and implementors of %s hope that you enjoy your stay.\n\r") % MUD_NAME;
   writeToQ(buf);
   writeToQ("You may also wish to check out our mud client, web site and listserver.\n\r\n\r");
-  sprintf(buf, "When you are ready, (%sE%s)%snter%s the game or '%s/%s' %sto go back a menu%s.\n\r\n\r--> ",
-        cyan(), norm(), cyan(), norm(), cyan(), norm(), cyan(), norm());
+  buf = fmt("When you are ready, (%sE%s)%snter%s the game or '%s/%s' %sto go back a menu%s.\n\r\n\r--> ") % cyan() % norm() % cyan() % norm() % cyan() % norm() % cyan() % norm();
   writeToQ(buf);
 }
 
@@ -5259,7 +5255,7 @@ void processAllInput()
 
     // this is where PC wait gets handled
     if (!d->getHostResolved()) {
-      d->output.putInQ("\n\rWaiting for DNS resolution...");
+      d->output.putInQ("\n\rWaiting for DNS resolution...\n\r");
       continue;
     }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
