@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
   }
   vlogf(LOG_MISC, fmt("Using %s as data directory.") %  dir);
 
-  srandom(time(0));
+  srandomdev();
 
   WizLock = false;
 
