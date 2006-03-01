@@ -533,7 +533,7 @@ class Descriptor
     void fdSocketClose(int);
     void saveAll();
     void worldSend(const sstring &, TBeing *);
-    void sendShout(TBeing *, const char *);
+    void sendShout(TBeing *, const sstring &);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
     int move(int, int);
