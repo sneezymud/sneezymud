@@ -438,11 +438,11 @@ int TBeing::doSay(const sstring &arg)
   return FALSE;
 }
 
-void Descriptor::sendShout(TBeing *ch, const char *arg)
+void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 {
   Descriptor *i;
-  char capbuf[256];
-  char namebuf[100];
+  sstring capbuf;
+  sstring namebuf;
   bool blah=false;
  
 
@@ -472,35 +472,42 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
     if (dynamic_cast<TMonster *>(b) ||
         (!b->isImmortal() && ch->isImmortal()) ||
         (b->desc && !IS_SET(i->autobits, AUTO_NOSHOUT))) {
-      mud_str_copy(capbuf, b->pers(ch), 256);
-      if (!capbuf) {
+      capbuf = b->pers(ch);
+      if (capbuf.empty()) {
         vlogf(LOG_BUG, "No capbuf in sendShout!");
         continue;
       }
-      sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
-      sprintf(namebuf, "<g>%s<z>", sstring(capbuf).cap().c_str());
+      capbuf = capbuf.cap();
+      namebuf = fmt("%s%s%s") % green() % capbuf % norm();
       sstring nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
+
+      sstring argbuf = arg;
+      argbuf += norm();
+      argbuf = colorString(b, i, argbuf, NULL, COLOR_NONE, FALSE);
+
       if(IS_SET(i->autobits, AUTO_PG13)) 
 	argbuf = b->PG13filter(argbuf);
+
       if(hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          sstring tmpbuf = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE);
-          sstring tmpbuf2 = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE);
+          sstring tmpbuf = colorString(b, i, capbuf, NULL, COLOR_MOBS, FALSE);
+          sstring tmpbuf2 = colorString(b, i, capbuf, NULL, COLOR_NONE, FALSE);
 
           if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % tmpbuf2 % argbuf);
-          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s<1>\"\n\r") %tmpbuf % (blah ? "whines" : "shouts") % arg);
+
+          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % tmpbuf % (blah ? "whines" : "shouts") % argbuf);
         } else {
           if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
+          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % namebuf % (blah ? "whines" : "shouts") % argbuf);
         }
       } else {
         if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
           i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
+        b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % namebuf % (blah ? "whines" : "shouts") % argbuf);
       }
     }
   }
