@@ -18,14 +18,34 @@ using namespace cgicc;
 
 Cgicc cgi;
 
-sstring getSessionID();
-sstring generateSessionID();
-int validateSessionID(sstring);
+
+class TSessionID {
+  sstring session_id;
+  int account_id;
+
+  sstring cookiename;
+
+  sstring getSessionCookie();
+  sstring generateSessionID();
+  int validateSessionID();
+
+public:
+  void createSession(int account_id);
+
+  bool isValid();
+  void logout();
+
+  int getAccountID(){ return account_id; }
+  sstring getSessionID(){ return session_id; }
+
+  TSessionID(sstring);
+};
+
 
 void sendJavaScript();
 
 void sendLogin();
-void sendLoginCheck();
+void sendLoginCheck(TSessionID);
 void sendPickPlayer(int);
 void sendMessageList(int);
 
@@ -35,31 +55,26 @@ int main(int argc, char **argv)
   gamePort = PROD_GAMEPORT;
   toggleInfo.loadToggles();
   form_iterator state_form=cgi.getElement("state");
+  TSessionID session("mudmail");
 
-  sstring session_id=getSessionID();
-  int account_id=validateSessionID(session_id);
-
-  // this if statement sucks
-  if(session_id.empty() || account_id < 0){
+  if(!session.isValid()){
     if(state_form == cgi.getElements().end() ||
        **state_form != "logincheck"){
       sendLogin();
       return 0;
     } else {
-      sendLoginCheck();
+      sendLoginCheck(session);
       return 0;
     }
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
-      sendPickPlayer(account_id);
+      sendPickPlayer(session.getAccountID());
       return 0;
     } else if(**state_form == "listmessages"){
-      sendMessageList(account_id);
+      sendMessageList(session.getAccountID());
       return 0;
     } else if(**state_form == "logout"){
-      TDatabase db(DB_SNEEZY);
-      db.query("delete from cgisession where session_id='%s'", 
-	       session_id.c_str());
+      session.logout();
       sendLogin();
       return 0;
     }
@@ -110,36 +125,7 @@ void sendMessageList(int account_id)
   cout << html() << endl;
 }
 
-int validateSessionID(sstring session_id)
-{
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select account_id from cgisession where session_id='%s'", 
-	   session_id.c_str());
-
-  if(!db.fetchRow())
-    return -1;
-
-  return convertTo<int>(db["account_id"]);
-}
-
-// gets the value of the "mudmail" cookie and returns it
-sstring getSessionID()
-{
-  CgiEnvironment env = cgi.getEnvironment();
-  vector<HTTPCookie> cookies = env.getCookieList();
-
-  if(!cookies.size())
-    return "";
-  
-  for(unsigned int i=0;i<cookies.size();++i){
-    if(cookies[i].getName() == "mudmail")
-      return cookies[i].getValue();
-  }
-  return "";
-}
-
-void sendLoginCheck()
+void sendLoginCheck(TSessionID session)
 {
   // validate, create session cookie + db entry, redirect to main
   TDatabase db(DB_SNEEZY);
@@ -175,43 +161,15 @@ void sendLoginCheck()
   }
 
   // ok, login is good, create session db entry and cookie
-  sstring session_id=generateSessionID();
-  int account_id=convertTo<int>(db["account_id"]);
-
-  db.query("delete from cgisession where account_id=%i", account_id);
-  db.query("insert into cgisession values ('%s', %i)", 
-	   session_id.c_str(), account_id);
-
-  cout << HTTPRedirectHeader("mudmail.cgi").setCookie(HTTPCookie("mudmail",session_id.c_str()));
+  session.createSession(convertTo<int>(db["account_id"]));
+  
+  cout << HTTPRedirectHeader("mudmail.cgi").setCookie(HTTPCookie("mudmail",session.getSessionID().c_str()));
   cout << endl;
   cout << html() << head() << title("Mudmail") << endl;
   cout << head() << body() << endl;
   cout << "Good job, you logged in.<p><hr><p>" << endl;
   cout << body() << endl;
   cout << html() << endl;
-}
-
-sstring generateSessionID()
-{
-  unsigned char data[16];
-  int length=16;
-  int seed[4];
-
-  srandomdev();
-
-  seed[0]=time(NULL);
-  seed[1]=random();
-  seed[2]=getpid();
-  seed[3]=(int)&seed;
-
-  int c=0;
-  for(int i=0;i<4;++i){
-    for(int j=0;j<4;++j){
-      data[c++]=(&seed[i])[j];
-    }
-  }
-
-  return MD5Data(data, length, NULL);
 }
 
 
@@ -289,5 +247,112 @@ void sendJavaScript()
   cout << "}" << endl;
   cout << "-->" << endl;
   cout << "</script>" << endl;
+}
+
+
+
+
+
+////////////////////////////
+
+
+
+
+
+
+
+
+void TSessionID::logout()
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("delete from cgisession where session_id='%s'", 
+	   session_id.c_str());
+}
+
+bool TSessionID::isValid()
+{
+  if(session_id.empty() || account_id < 0){
+    return false;
+  }
+  return true;
+}
+
+TSessionID::TSessionID(sstring cn)
+{
+  session_id="";
+  account_id=-1;
+  cookiename=cn;
+
+  session_id=getSessionCookie();
+
+  if(!session_id.empty()){
+    account_id=validateSessionID();
+  }
+}
+
+
+int TSessionID::validateSessionID()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select account_id from cgisession where session_id='%s'", 
+	   session_id.c_str());
+
+  if(!db.fetchRow())
+    return -1;
+
+  int a=convertTo<int>(db["account_id"]);
+
+  return (a ? a : -1);
+}
+
+// gets the value of the "mudmail" cookie and returns it
+sstring TSessionID::getSessionCookie()
+{
+  cgicc::CgiEnvironment env = cgi.getEnvironment();
+  vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+
+  if(!cookies.size())
+    return "";
+  
+  for(unsigned int i=0;i<cookies.size();++i){
+    if(cookies[i].getName() == cookiename)
+      return cookies[i].getValue();
+  }
+  return "";
+}
+
+void TSessionID::createSession(int account_id)
+{
+  session_id=generateSessionID();
+  TDatabase db(DB_SNEEZY);
+
+  db.query("delete from cgisession where account_id=%i", account_id);
+  db.query("insert into cgisession values ('%s', %i)", 
+	   session_id.c_str(), account_id);
+}
+
+
+sstring TSessionID::generateSessionID()
+{
+  unsigned char data[16];
+  int length=16;
+  int seed[4];
+
+  srandomdev();
+
+  seed[0]=time(NULL);
+  seed[1]=random();
+  seed[2]=getpid();
+  seed[3]=(int)&seed;
+
+  int c=0;
+  for(int i=0;i<4;++i){
+    for(int j=0;j<4;++j){
+      data[c++]=(&seed[i])[j];
+    }
+  }
+
+  return MD5Data(data, length, NULL);
 }
 
