@@ -2645,8 +2645,12 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
           // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
           // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-          obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
           adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
+          // obj_lp_ratio = 1 - pow((1 - 0.01*(double)fixed_chance), (double)obj_lp);
+          obj_lp_ratio = 0.01*(double)fixed_chance;
+          // getting to this point means we've already beat the 1% chance of
+          // loading an object.  This has to be taken into account when
+          // computing the odds of the normalized load potential.
           if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
               (::number(0, 999) < (int) (1000*100 * adj_obj_lp_ratio / fixed_chance)) &&  
               (::number(0, 999) < (int) (1000 * stats.equip)) &&  
