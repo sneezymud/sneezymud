@@ -173,10 +173,10 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
   // double obj_lp_ratio = 1 - pow((1 - (double)chance/100), (double)obj_lp);
   double obj_lp_ratio = (double)chance/100;
+  // vlogf(LOG_MISC, fmt("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
   if ((gamePort == BETA_GAMEPORT) ||
       (chance >= 99) ||
-      ((::number(0,9999999) < (int) (100000 * adj_obj_lp_ratio * chance)) &&
-       (::number(0,999) < (int) (1000 * stats.equip)))) {
+      (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * stats.equip))) {
     vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     TObj *obj = read_object(rob, REAL);
     if (obj) {

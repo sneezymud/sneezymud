@@ -2645,15 +2645,15 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
           // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
           // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-          adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
-          // obj_lp_ratio = 1 - pow((1 - 0.01*(double)fixed_chance), (double)obj_lp);
-          obj_lp_ratio = 0.01*(double)fixed_chance;
-          // getting to this point means we've already beat the 1% chance of
-          // loading an object.  This has to be taken into account when
-          // computing the odds of the normalized load potential.
+          adj_obj_lp_ratio = 1 - pow((1 - cbrt((double)obj_lp)/100), 1/(double)obj_lp);
+          // obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
+          obj_lp_ratio = (double)fixed_chance/100;
+          // getting to this point means we've already beat the fixed_chance%
+          // chance of loading an object.  This has to be taken into account
+          // when computing the odds of the normalized load potential.
+          // vlogf(LOG_MISC, fmt("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
           if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-              (::number(0, 999) < (int) (1000*100 * adj_obj_lp_ratio / fixed_chance)) &&  
-              (::number(0, 999) < (int) (1000 * stats.equip)) &&  
+              (::number(0, 9999999) < (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip)) &&  
               (obj = read_object(rs.arg1, REAL))) {
             vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
             if (!mob) {
