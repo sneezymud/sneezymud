@@ -493,10 +493,9 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
         }
       } else {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          shouter = fmt("%s%s%s") % green() % shouter.cap() % norm();
-          namebuf = colorString(b, i, shouter, NULL, COLOR_MOBS, FALSE);
+          namebuf = fmt("%s%s%s") % green() % shouter.cap() % norm();
         } else {
-          namebuf = colorString(b, i, shouter.cap(), NULL, COLOR_NONE, FALSE);
+          namebuf = shouter;
         }
       }
 
