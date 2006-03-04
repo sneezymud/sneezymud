@@ -444,7 +444,6 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
   sstring capbuf;
   sstring namebuf;
   bool blah=false;
- 
 
   for (i = descriptor_list; i; i = i->next) {
     if (i->connected != CON_PLYNG)
@@ -477,41 +476,47 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
         vlogf(LOG_BUG, "No capbuf in sendShout!");
         continue;
       }
-      capbuf = capbuf.cap();
-      namebuf = fmt("%s%s%s") % green() % capbuf % norm();
+      sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
+      namebuf = fmt("%s%s%s") % green() % capbuf.cap() % norm();
       sstring nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
-
-      sstring argbuf = arg;
-      argbuf += norm();
-      argbuf = colorString(b, i, argbuf, NULL, COLOR_NONE, FALSE);
 
       if(IS_SET(i->autobits, AUTO_PG13)) 
 	argbuf = b->PG13filter(argbuf);
 
       if(hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          sstring tmpbuf = colorString(b, i, capbuf, NULL, COLOR_MOBS, FALSE);
-          sstring tmpbuf2 = colorString(b, i, capbuf, NULL, COLOR_NONE, FALSE);
+          sstring tmpbuf = colorString(b, i, capbuf.cap(), NULL, COLOR_MOBS, FALSE);
+          sstring tmpbuf2 = colorString(b, i, capbuf.cap(), NULL, COLOR_NONE, FALSE);
 
           if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % tmpbuf2 % argbuf);
 
-          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % tmpbuf % (blah ? "whines" : "shouts") % argbuf);
+          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s%s\"\n\r") %
+            tmpbuf %
+            (blah ? "whines" : "shouts") %
+            arg % norm());
         } else {
           if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-          b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % namebuf % (blah ? "whines" : "shouts") % argbuf);
+          b->sendTo(COLOR_SHOUTS, fmt("%s%s%s %s, \"%s%s\"\n\r") %
+            green() % namebuf % norm() %
+            (blah ? "whines" : "shouts") %
+            argbuf % norm());
         }
       } else {
         if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
           i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-        b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s\"\n\r") % namebuf % (blah ? "whines" : "shouts") % argbuf);
+        b->sendTo(COLOR_SHOUTS, fmt("%s%s%s %s, \"%s%s\"\n\r") %
+          green() % namebuf % norm() %
+          (blah ? "whines" : "shouts") %
+          argbuf % norm());
       }
     }
   }
 }
+
 void TBeing::doShout(const char *arg)
 {
   char garbed[254];
