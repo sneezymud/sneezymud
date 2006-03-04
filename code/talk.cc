@@ -441,7 +441,6 @@ int TBeing::doSay(const sstring &arg)
 void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 {
   Descriptor *i;
-  sstring namebuf;
   bool blah=false;
 
   for (i = descriptor_list; i; i = i->next) {
