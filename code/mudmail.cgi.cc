@@ -101,6 +101,7 @@ void sendMessageList(Cgicc cgi, int account_id)
 {
   int player_id=convertTo<int>(**(cgi.getElement("player")));
   TDatabase db(DB_SNEEZY);
+  sstring content;
 
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Mudmail") << endl;
@@ -121,7 +122,20 @@ void sendMessageList(Cgicc cgi, int account_id)
     cout << "</td></tr>" << endl;
     cout << "<tr bgcolor=#DDDDFF><td>Date:</td><td>" << db["timesent"];
     cout << "</td></tr>" << endl;
-    cout << "<tr bgcolor=#DDDDFF><td colspan=2><pre>" << db["content"];
+    cout << "<tr bgcolor=#DDDDFF><td colspan=2><pre>" << endl;
+    
+    content=db["content"];
+    unsigned int loc;
+    for(loc=content.find("&");loc!=sstring::npos;loc=content.find("&"))
+      content.replace(loc, 1, "&amp;");
+    for(loc=content.find("<");loc!=sstring::npos;loc=content.find("<"))
+      content.replace(loc, 1, "&lt;");
+    for(loc=content.find(">");loc!=sstring::npos;loc=content.find(">"))
+      content.replace(loc, 1, "&gt;");
+
+    cout << content;
+
+
     cout << "</pre></td></tr>" << endl;
     cout << "</table>";
     cout << "<button name=delete value=" << db["mailid"] << " type=submit>";
