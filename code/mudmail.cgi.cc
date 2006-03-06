@@ -24,7 +24,7 @@ void sendLogin();
 void sendLoginCheck(Cgicc cgi, TSession);
 void sendPickPlayer(int);
 void sendMessageList(Cgicc cgi, int);
-void sendComposeMail(Cgicc cgi);
+void sendComposeMail(sstring, sstring, sstring);
 
 void deleteMessage(int, int);
 void sendMail(Cgicc cgi, TSession);
@@ -62,14 +62,46 @@ int main(int argc, char **argv)
       return 0;
     } else if(**state_form == "messageaction"){
       form_iterator delete_form=cgi.getElement("delete");
+      form_iterator reply_form=cgi.getElement("reply");
       
       if(delete_form != cgi.getElements().end()){
 	deleteMessage(convertTo<int>(**delete_form), session.getAccountID());
 	sendMessageList(cgi, session.getAccountID());
+      } else if(reply_form != cgi.getElements().end()){
+	form_iterator from=cgi.getElement("fromplayer");
+
+	TDatabase db(DB_SNEEZY);
+	db.query("select mailfrom, content from mail m, player p where m.mailid=%s and m.mailto=p.name and p.account_id=%i",
+		 (**reply_form).c_str(), session.getAccountID());
+	if(db.fetchRow()){
+	  sstring content="> " + db["content"];
+	  for(unsigned int loc=content.find("\n",0);
+	      loc!=sstring::npos;
+	      loc=content.find("\n",loc+1))
+	    content.replace(loc, 1, "\n> ");
+
+	  sendComposeMail(**from, db["mailfrom"], content);
+	} else {
+	  cout << "secret pwipe code received. full pwipe initiating in 3.. 2.. 1..";
+	}
       }
       return 0;
     } else if(**state_form == "compose"){
-      sendComposeMail(cgi);
+      form_iterator player_form=cgi.getElement("playername");
+      form_iterator from=cgi.getElement("fromplayer");
+      sstring send_to, send_from;
+
+      if(player_form == cgi.getElements().end())
+	send_to="";
+      else
+	send_to=**player_form;
+
+      if(from == cgi.getElements().end())
+	send_from="";
+      else
+	send_from=**from;
+      
+      sendComposeMail(send_from, send_to, "");
       return 0;
     } else if(**state_form == "sendmail"){
       sendMail(cgi, session);
@@ -124,18 +156,15 @@ void sendMail(Cgicc cgi, TSession session)
   cout << body() << endl;
   cout << html() << endl;
 
-
-
 }
 
 
-void sendComposeMail(Cgicc cgi)
+void sendComposeMail(sstring from, sstring to, sstring content)
 {
-  form_iterator player_form=cgi.getElement("playername");
-  form_iterator from=cgi.getElement("fromplayer");
   TDatabase db(DB_SNEEZY);
 
-  if(player_form == cgi.getElements().end()){
+
+  if(to.empty()){
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mudmail") << endl;
     cout << head() << body() << endl;
@@ -146,7 +175,7 @@ void sendComposeMail(Cgicc cgi)
   }
 
   db.query("select name from player where name like lower('%s')",
-	   (**player_form).c_str());
+	   to.c_str());
 
   if(!db.fetchRow()){
     cout << HTTPHTMLHeader() << endl;
@@ -166,14 +195,14 @@ void sendComposeMail(Cgicc cgi)
   cout << "<form method=post action=mudmail.cgi>" << endl;
   cout << "<input type=hidden name=state value=sendmail>" << endl;
   cout << "<input type=hidden name=playername value=" << db["name"] << ">";
-  cout << "<input type=hidden name=fromname value=" << **from << ">";
+  cout << "<input type=hidden name=fromname value=" << from << ">";
   cout << "<table width=50%>" << endl;
   cout << "<tr bgcolor=#DDDDFF><td>To:</td><td>" << db["name"];
   cout << "</td></tr>" << endl;
-  cout << "<tr bgcolor=#DDDDFF><td>From:</td><td>" << **from;
+  cout << "<tr bgcolor=#DDDDFF><td>From:</td><td>" << from;
   cout << "</td></tr>" << endl;
   cout << "<tr bgcolor=#DDDDFF><td colspan=2>" << endl;
-  cout << "<textarea name=content rows=20 cols=75></textarea>";
+  cout << "<textarea name=content rows=20 cols=75>" << content <<"</textarea>";
   cout << "</td></tr>" << endl;
   cout << "</table>";
   cout << "<button name=send type=submit>";
@@ -222,6 +251,7 @@ void sendMessageList(Cgicc cgi, int account_id)
 
   cout << "<form method=post action=mudmail.cgi>" << endl;
   cout << "<input type=hidden name=player value=" << player_id << endl;
+  cout << "<input type=hidden name=fromplayer value=" << fromplayer << ">";
   cout << "<input type=hidden name=state value=messageaction>" << endl;
   
   while(db.fetchRow()){
@@ -246,7 +276,10 @@ void sendMessageList(Cgicc cgi, int account_id)
     cout << "</pre></td></tr>" << endl;
     cout << "</table>";
     cout << "<button name=delete value=" << db["mailid"] << " type=submit>";
-    cout << "delete</button><hr>";
+    cout << "delete</button>";
+    cout << "<button name=reply value=" << db["mailid"] << " type=submit>";
+    cout << "reply</button>";
+    cout << "<hr>";
   }
 
   cout << "</table>" << endl;
