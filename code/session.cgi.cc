@@ -11,7 +11,9 @@
 
 cgicc::HTTPCookie TSession::getCookie()
 {
-  return cgicc::HTTPCookie(cookiename, getSessionID());
+  cgicc::HTTPCookie cookie(cookiename, getSessionID());
+  cookie.setMaxAge(cookieduration);
+  return cookie;
 }
 
 bool TSession::checkPasswd(sstring name, sstring passwd)
@@ -67,6 +69,7 @@ TSession::TSession(cgicc::Cgicc c, sstring cn)
   session_id="";
   account_id=-1;
   cookiename=cn;
+  cookieduration=0;
 
   cgi=&c;
   session_id=getSessionCookie();
@@ -81,8 +84,8 @@ int TSession::validateSessionID()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select account_id from cgisession where session_id='%s'", 
-	   session_id.c_str());
+  db.query("select account_id from cgisession where session_id='%s' and (timeset+duration) > %i", 
+	   session_id.c_str(), time(NULL));
 
   if(!db.fetchRow())
     return -1;
@@ -108,14 +111,16 @@ sstring TSession::getSessionCookie()
   return "";
 }
 
-void TSession::createSession()
+void TSession::createSession(int duration)
 {
   session_id=generateSessionID();
   TDatabase db(DB_SNEEZY);
 
+  cookieduration=duration;
+
   db.query("delete from cgisession where account_id=%i", account_id);
-  db.query("insert into cgisession values ('%s', %i)", 
-	   session_id.c_str(), account_id);
+  db.query("insert into cgisession values ('%s', %i, %i, %i)", 
+	   session_id.c_str(), account_id, duration, time(NULL));
 }
 
 

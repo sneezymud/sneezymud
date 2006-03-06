@@ -4,7 +4,6 @@
 #include <cgicc/Cgicc.h>
 
 // TODO:
-// add date/time info to session storage in db, so we can expire them
 // check for duplicates before trying to use a session id
 // add option for persistent logins rather than current-session
 
@@ -22,7 +21,7 @@
 // if(!session.isValid()){
 //   // send them to a login form, and when you get a name and password:
 //   if(session.checkPasswd(name, passwd)){
-//     session.createSession();
+//     session.createSession(60*60); // 1 hour duration
 //     cout<< HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
 //   } else {
 //     // bad login
@@ -33,13 +32,11 @@
 
 
 class TSession {
-  // contents of the cookie we send
   sstring session_id;
-  // sneezy account id
   int account_id;
 
-  // name of the cookie we store on the user machine, eg "mudmail"
   sstring cookiename;
+  int cookieduration;
 
   // probably a better way to deal with this cgi stuff but I'm too lazy to
   // figure it out.  we use it in this class to get the cookie info.
@@ -56,7 +53,8 @@ class TSession {
 
 public:
   // creates a new session id string and inserts/replaces it into the database
-  void createSession();
+  // duration is both the cookie expiration and time duration saved in db
+  void createSession(int duration);
 
   // returns false if there is no session id or account id set in the class
   bool isValid();

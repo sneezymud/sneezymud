@@ -121,7 +121,7 @@ void sendLoginCheck(Cgicc cgi, TSession session)
 
 
   // ok, login is good, create session db entry and cookie
-  session.createSession();
+  session.createSession(60*60);
   
   cout << HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
   cout << endl;
