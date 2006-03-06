@@ -24,9 +24,10 @@ void sendLogin();
 void sendLoginCheck(Cgicc cgi, TSession);
 void sendPickPlayer(int);
 void sendMessageList(Cgicc cgi, int);
+void sendComposeMail(Cgicc cgi);
 
 void deleteMessage(int, int);
-
+void sendMail(Cgicc cgi, TSession);
 
 int main(int argc, char **argv)
 {
@@ -67,6 +68,12 @@ int main(int argc, char **argv)
 	sendMessageList(cgi, session.getAccountID());
       }
       return 0;
+    } else if(**state_form == "compose"){
+      sendComposeMail(cgi);
+      return 0;
+    } else if(**state_form == "sendmail"){
+      sendMail(cgi, session);
+      return 0;
     }
 
     cout << HTTPHTMLHeader() << endl;
@@ -89,6 +96,97 @@ int main(int argc, char **argv)
 
 }
 
+void sendMail(Cgicc cgi, TSession session)
+{
+  TDatabase db(DB_SNEEZY);
+  form_iterator player_name=cgi.getElement("playername");
+  form_iterator content=cgi.getElement("content");
+  form_iterator from=cgi.getElement("fromname");
+
+  db.query("select p.id from player p, account a where a.account_id=%i and p.name='%s' and p.account_id=a.account_id", session.getAccountID(), (**from).c_str());
+
+  if(!db.fetchRow()){
+    cout << "secret pwipe code received. full pwipe initiating in 3.. 2.. 1..";
+    return;
+  }
+
+  store_mail((**player_name).c_str(), (**from).c_str(), (**content).c_str());
+
+
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Mudmail") << endl;
+  cout << head() << body() << endl;
+  cout << "Mail sent." << endl;
+  cout << "<form method=post action=mudmail.cgi>" << endl;
+  cout << "<input type=hidden name=state value=listmessages>" << endl;
+  cout << "<input type=hidden name=player value=" << db["id"] << ">";
+  cout << "<button type=submit>go back</button></form>";
+  cout << body() << endl;
+  cout << html() << endl;
+
+
+
+}
+
+
+void sendComposeMail(Cgicc cgi)
+{
+  form_iterator player_form=cgi.getElement("playername");
+  form_iterator from=cgi.getElement("fromplayer");
+  TDatabase db(DB_SNEEZY);
+
+  if(player_form == cgi.getElements().end()){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Mudmail") << endl;
+    cout << head() << body() << endl;
+    cout << "You need to enter a player name to send mail to." << endl;
+    cout << body() << endl;
+    cout << html() << endl;    
+    return;
+  }
+
+  db.query("select name from player where name like lower('%s')",
+	   (**player_form).c_str());
+
+  if(!db.fetchRow()){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Mudmail") << endl;
+    cout << head() << body() << endl;
+    cout << "No such player to mail to!" << endl;
+    cout << body() << endl;
+    cout << html() << endl;    
+    return;
+  }
+
+  
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Mudmail") << endl;
+  cout << head() << body() << endl;
+  
+  cout << "<form method=post action=mudmail.cgi>" << endl;
+  cout << "<input type=hidden name=state value=sendmail>" << endl;
+  cout << "<input type=hidden name=playername value=" << db["name"] << ">";
+  cout << "<input type=hidden name=fromname value=" << **from << ">";
+  cout << "<table width=50%>" << endl;
+  cout << "<tr bgcolor=#DDDDFF><td>To:</td><td>" << db["name"];
+  cout << "</td></tr>" << endl;
+  cout << "<tr bgcolor=#DDDDFF><td>From:</td><td>" << **from;
+  cout << "</td></tr>" << endl;
+  cout << "<tr bgcolor=#DDDDFF><td colspan=2>" << endl;
+  cout << "<textarea name=content rows=20 cols=75></textarea>";
+  cout << "</td></tr>" << endl;
+  cout << "</table>";
+  cout << "<button name=send type=submit>";
+  cout << "send</button>";
+
+  
+  cout << "</form>";
+  
+  cout << body() << endl;
+  cout << html() << endl;
+}
+
+
 void deleteMessage(int mail_id, int account_id)
 {
   TDatabase db(DB_SNEEZY);
@@ -107,10 +205,19 @@ void sendMessageList(Cgicc cgi, int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   cout << head() << body() << endl;
 
+  db.query("select name from player where id=%i", player_id);
+  db.fetchRow();
+  sstring fromplayer=db["name"];
+
   db.query("select m.mailid, m.mailfrom, m.timesent, m.content from mail m, player p where m.mailto=p.name and p.id=%i order by m.timesent desc", player_id);
 
-  cout << "<form method=post action=mudmail.cgi>";
-  cout << "<button type=submit>go back</button></form>";
+  cout << "<form method=post action=mudmail.cgi>" << endl;
+  cout << "<input type=hidden name=fromplayer value=" << fromplayer << ">";
+  cout << "<button type=submit>go back</button>" << endl;
+  cout << "<button type=submit name=state value=compose>" << endl;
+  cout << "compose mail:</button>";
+  cout << "<input type=text name=playername>";
+  cout << "</form>";
   cout << "<hr>" << endl;
 
   cout << "<form method=post action=mudmail.cgi>" << endl;
