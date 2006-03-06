@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mudmail") << endl;
     cout << head() << body() << endl;
-    cout << "Fell through state switch.<p><hr><p>" << endl;
+    cout << "Fell through state switch.  Bad.<p><hr><p>" << endl;
     cout << body() << endl;
     cout << html() << endl;
 
@@ -109,7 +109,8 @@ void sendMessageList(Cgicc cgi, int account_id)
 
   db.query("select m.mailid, m.mailfrom, m.timesent, m.content from mail m, player p where m.mailto=p.name and p.id=%i order by m.timesent desc", player_id);
 
-  cout << "<a href=mudmail.cgi>go back</a><br>" << endl;
+  cout << "<form method=post action=mudmail.cgi>";
+  cout << "<button type=submit>go back</button></form>";
   cout << "<hr>" << endl;
 
   cout << "<form method=post action=mudmail.cgi>" << endl;
@@ -126,13 +127,12 @@ void sendMessageList(Cgicc cgi, int account_id)
     
     content=db["content"];
     unsigned int loc;
-    for(loc=content.find("&");loc!=sstring::npos;loc=content.find("&"))
+    for(loc=content.find("&",0);loc!=sstring::npos;loc=content.find("&",loc+1))
       content.replace(loc, 1, "&amp;");
-    for(loc=content.find("<");loc!=sstring::npos;loc=content.find("<"))
+    for(loc=content.find("<",0);loc!=sstring::npos;loc=content.find("<",loc+1))
       content.replace(loc, 1, "&lt;");
-    for(loc=content.find(">");loc!=sstring::npos;loc=content.find(">"))
+    for(loc=content.find(">",0);loc!=sstring::npos;loc=content.find(">",loc+1))
       content.replace(loc, 1, "&gt;");
-
     cout << content;
 
 
@@ -217,7 +217,10 @@ void sendPickPlayer(int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   sendJavaScript();
   cout << head() << body() << endl;
-  cout << "<a href=\"mudmail.cgi?state=logout\">logout</a><p>" << endl;
+  
+  cout << "<form method=post action=mudmail.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<p></form>" << endl;
 
   // get a list of players in this account
   db.query("select p.id, p.name, count(m.*) as count from player p left outer join mail m on (p.name=m.mailto) where account_id=%i group by p.id, p.name order by p.name",
