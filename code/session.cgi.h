@@ -51,6 +51,7 @@ public:
   // creates a new session id string and inserts/replaces it into the database
   // duration is both the cookie expiration and time duration saved in db
   void createSession(int duration);
+  void createSession();
 
   // returns false if there is no session id or account id set in the class
   bool isValid();

@@ -53,7 +53,8 @@ int main(int argc, char **argv)
       return 0;
     } else if(**state_form == "logout"){
       session.logout();
-      sendLogin();
+      cout << HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
+      cout << endl;
       return 0;
     }
 
@@ -108,6 +109,7 @@ void sendLoginCheck(Cgicc cgi, TSession session)
   // validate, create session cookie + db entry, redirect to main
   sstring name=**(cgi.getElement("account"));
   sstring passwd=**(cgi.getElement("passwd"));
+  form_iterator autologin=cgi.getElement("autologin");
 
   if(!session.checkPasswd(name, passwd)){
     cout << HTTPHTMLHeader() << endl;
@@ -119,9 +121,13 @@ void sendLoginCheck(Cgicc cgi, TSession session)
     return;
   }
 
+  if(autologin == cgi.getElements().end()){
+    session.createSession();
+  } else {
+    // log them in for a year or so
+    session.createSession(60*60*24*365);
+  }
 
-  // ok, login is good, create session db entry and cookie
-  session.createSession(60*60);
   
   cout << HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
   cout << endl;
@@ -145,6 +151,8 @@ void sendLogin()
   cout << "<td><input type=text name=account></td></tr>" << endl;
   cout << "<tr><td>Password</td>" << endl;
   cout << "<td><input type=password name=passwd></td></tr>" << endl;
+  cout << "<tr><td><input type=checkbox name=autologin></td>" << endl;
+  cout << "<td>Log me on automatically each visit.</td></tr>" << endl;
   cout << "<tr><td colspan=2><input type=submit value=Login></td></tr>" <<endl;
   cout << "</table>" << endl;
   cout << "<input type=hidden name=state value=logincheck>" << endl;

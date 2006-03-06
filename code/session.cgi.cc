@@ -12,7 +12,8 @@
 cgicc::HTTPCookie TSession::getCookie()
 {
   cgicc::HTTPCookie cookie(cookiename, getSessionID());
-  cookie.setMaxAge(cookieduration);
+  if(cookieduration>=0)
+    cookie.setMaxAge(cookieduration);
   return cookie;
 }
 
@@ -54,6 +55,7 @@ void TSession::logout()
   TDatabase db(DB_SNEEZY);
   db.query("delete from cgisession where session_id='%s'", 
 	   session_id.c_str());
+  cookieduration=0;
 }
 
 bool TSession::isValid()
@@ -110,6 +112,13 @@ sstring TSession::getSessionCookie()
   }
   return "";
 }
+
+void TSession::createSession()
+{
+  createSession(60*60);
+  cookieduration=-1;
+}
+
 
 void TSession::createSession(int duration)
 {
