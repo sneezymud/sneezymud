@@ -18,10 +18,10 @@ bool check_ingredients(TCookware *pot, int recipe){
     if(ingredients[i].recipe!=recipe)
       continue;
     
+    nfound=0;
 
     for(int j=i;ingredients[j].recipe>=0 && ingredients[j].ingredient==ingredients[i].ingredient;++j){
       // look for this ingredient
-      nfound=0;
       for(t=pot->getStuff();t;t=t->nextThing){
 	switch(ingredients[i].type){
 	  case TYPE_VNUM:
