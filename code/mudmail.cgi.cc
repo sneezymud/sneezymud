@@ -106,42 +106,24 @@ void sendMessageList(Cgicc cgi, int account_id)
 void sendLoginCheck(Cgicc cgi, TSession session)
 {
   // validate, create session cookie + db entry, redirect to main
-  TDatabase db(DB_SNEEZY);
   sstring name=**(cgi.getElement("account"));
   sstring passwd=**(cgi.getElement("passwd"));
-  
-  //// make sure the account exists, and pull out the encrypted password
-  db.query("select account_id, passwd from account where name='%s'", 
-	   name.c_str());
-  
-  if(!db.fetchRow()){
+
+  if(!session.checkPasswd(name, passwd)){
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mudmail") << endl;
     cout << head() << body() << endl;
-    cout << "Account not found.<p><hr><p>" << endl;
-    cout << body() << endl;
-    cout << html() << endl;
-    return;
-  }
-  
-  //// validate password
-  sstring crypted=crypt(passwd.c_str(), name.c_str());
-  
-  // for some retarded reason the mud truncates the crypted portion to 10 chars
-  if(crypted.substr(0,10) != db["passwd"]){
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head() << title("Mudmail") << endl;
-    cout << head() << body() << endl;
-    cout << "Password incorrect.<p><hr><p>" << endl;
+    cout << "Password incorrect or account not found.<p><hr><p>" << endl;
     cout << body() << endl;
     cout << html() << endl;
     return;
   }
 
+
   // ok, login is good, create session db entry and cookie
-  session.createSession(convertTo<int>(db["account_id"]));
+  session.createSession();
   
-  cout << HTTPRedirectHeader("mudmail.cgi").setCookie(HTTPCookie("mudmail",session.getSessionID().c_str()));
+  cout << HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
   cout << endl;
   cout << html() << head() << title("Mudmail") << endl;
   cout << head() << body() << endl;

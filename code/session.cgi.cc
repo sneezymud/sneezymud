@@ -9,6 +9,43 @@
 #include <sys/types.h>
 #include <md5.h>
 
+cgicc::HTTPCookie TSession::getCookie()
+{
+  return cgicc::HTTPCookie(cookiename, getSessionID());
+}
+
+bool TSession::checkPasswd(sstring name, sstring passwd)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select account_id, passwd from account where name='%s'", 
+	   name.c_str());
+
+  // account not found.  I debated whether or not we should let users know
+  // about this and decided it's bad to let them figure out what account
+  // names exist.
+  if(!db.fetchRow())
+    return false;
+
+  // get the encrypted form.
+  sstring crypted=crypt(passwd.c_str(), name.c_str());
+  // sneezy truncates the encrypted password for some reason
+  crypted=crypted.substr(0,10);
+
+  // bad password
+  if(crypted != db["passwd"])
+    return false;
+
+  account_id=convertTo<int>(db["account_id"]);
+  if(!account_id){
+    account_id=-1;
+    return -1;
+  }
+  
+
+  return true;
+}
+
 
 void TSession::logout()
 {
@@ -71,7 +108,7 @@ sstring TSession::getSessionCookie()
   return "";
 }
 
-void TSession::createSession(int account_id)
+void TSession::createSession()
 {
   session_id=generateSessionID();
   TDatabase db(DB_SNEEZY);

@@ -11536,7 +11536,10 @@ objs/disc_leverage.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/disc_leverage.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_leverage.o: monster.h paths.h account.h extern.h handler.h
 objs/disc_leverage.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_leverage.o: format.h combat.h disc_leverage.h range.h
+objs/disc_leverage.o: format.h combat.h disc_leverage.h range.h obj_window.h
+objs/disc_leverage.o: obj_seethru.h pathfinder.h /usr/include/c++/3.4/deque
+objs/disc_leverage.o: /usr/include/c++/3.4/bits/stl_deque.h
+objs/disc_leverage.o: /usr/include/c++/3.4/bits/deque.tcc
 objs/disc_looting.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_looting.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_looting.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -20019,6 +20022,138 @@ objs/movement.o: game_drawpoker.h disc_looting.h obj_base_corpse.h
 objs/movement.o: obj_base_container.h obj_keyring.h
 objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
 objs/movement.o: obj_portal.h obj_seethru.h pathfinder.h
+objs/mudmail.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/mudmail.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/mudmail.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/mudmail.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/mudmail.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/mudmail.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/mudmail.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/mudmail.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/mudmail.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/mudmail.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/mudmail.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cmath
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/mudmail.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/string
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/mudmail.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/mudmail.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/mudmail.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/mudmail.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/mudmail.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/mudmail.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/mudmail.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/memory
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/algorithm
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/vector
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/map
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/list
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/iostream
+objs/mudmail.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/streambuf
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/locale
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/mudmail.cgi.o: /usr/include/c++/3.4/istream
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/sstream
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.4/fstream
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/mudmail.cgi.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/mudmail.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/mudmail.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/mudmail.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/mudmail.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/mudmail.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/mudmail.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/mudmail.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/mudmail.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
+objs/mudmail.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/mudmail.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
+objs/mudmail.cgi.o: /usr/local/include/cgicc/HTTPRedirectHeader.h
+objs/mudmail.cgi.o: /usr/include/md5.h /usr/include/sys/md5.h
 objs/multiclass.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/multiclass.o: /usr/include/c++/3.4/bits/c++config.h
 objs/multiclass.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31441,6 +31576,127 @@ objs/room.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/room.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/room.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/room.o: format.h
+objs/session.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/session.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/session.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/session.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/session.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/session.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/session.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/session.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/session.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/session.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/session.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/session.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/session.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/session.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/session.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/session.cgi.o: /usr/include/c++/3.4/cmath
+objs/session.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/session.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/session.cgi.o: /usr/include/c++/3.4/string
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/session.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/session.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/session.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/session.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/session.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/session.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/session.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/session.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/session.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/session.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/session.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/session.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/session.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/session.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/session.cgi.o: /usr/include/c++/3.4/memory
+objs/session.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/session.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/session.cgi.o: /usr/include/c++/3.4/algorithm
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/vector
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/map
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/session.cgi.o: /usr/include/c++/3.4/list
+objs/session.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/iostream
+objs/session.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/session.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/session.cgi.o: /usr/include/c++/3.4/streambuf
+objs/session.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/session.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/locale
+objs/session.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/session.cgi.o: /usr/include/c++/3.4/istream
+objs/session.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/sstream
+objs/session.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/session.cgi.o: /usr/include/c++/3.4/fstream
+objs/session.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/session.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/session.cgi.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/session.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/session.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/session.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/session.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/session.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/session.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/session.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/session.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
+objs/session.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/session.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/session.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/session.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/session.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/session.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/session.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/session.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/session.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/session.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/session.cgi.o: /usr/local/include/cgicc/MStreamable.h /usr/include/md5.h
+objs/session.cgi.o: /usr/include/sys/md5.h
 objs/shop.o: /usr/include/c++/3.4/cmath /usr/include/c++/3.4/bits/c++config.h
 objs/shop.o: /usr/include/c++/3.4/bits/os_defines.h
 objs/shop.o: /usr/include/c++/3.4/bits/cpp_type_traits.h /usr/include/math.h
