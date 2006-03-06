@@ -439,9 +439,9 @@ corp_info.cgi:	$(LIBS) objs/corp_info.cgi.o objs/lowtools.o
 	@$(CC) -o corp_info.cgi objs/corp_info.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip corp_info.cgi
 
-mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o
+mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: mudmail.cgi
-	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip mudmail.cgi
 
 

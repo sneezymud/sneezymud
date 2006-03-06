@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "session.cgi.h"
 
 #include <map>
 #include "sstring.h"
@@ -17,33 +18,10 @@
 using namespace cgicc;
 
 
-class TSessionID {
-  sstring session_id;
-  int account_id;
-
-  sstring cookiename;
-
-  sstring getSessionCookie(Cgicc cgi);
-  sstring generateSessionID();
-  int validateSessionID();
-
-public:
-  void createSession(int account_id);
-
-  bool isValid();
-  void logout();
-
-  int getAccountID(){ return account_id; }
-  sstring getSessionID(){ return session_id; }
-
-  TSessionID(Cgicc, sstring);
-};
-
-
 void sendJavaScript();
 
 void sendLogin();
-void sendLoginCheck(Cgicc cgi, TSessionID);
+void sendLoginCheck(Cgicc cgi, TSession);
 void sendPickPlayer(int);
 void sendMessageList(Cgicc cgi, int);
 
@@ -55,7 +33,7 @@ int main(int argc, char **argv)
 
   Cgicc cgi;
   form_iterator state_form=cgi.getElement("state");
-  TSessionID session(cgi, "mudmail");
+  TSession session(cgi, "mudmail");
 
   if(!session.isValid()){
     if(state_form == cgi.getElements().end() ||
@@ -125,7 +103,7 @@ void sendMessageList(Cgicc cgi, int account_id)
   cout << html() << endl;
 }
 
-void sendLoginCheck(Cgicc cgi, TSessionID session)
+void sendLoginCheck(Cgicc cgi, TSession session)
 {
   // validate, create session cookie + db entry, redirect to main
   TDatabase db(DB_SNEEZY);
@@ -261,98 +239,4 @@ void sendJavaScript()
 
 
 
-
-void TSessionID::logout()
-{
-  TDatabase db(DB_SNEEZY);
-  db.query("delete from cgisession where session_id='%s'", 
-	   session_id.c_str());
-}
-
-bool TSessionID::isValid()
-{
-  if(session_id.empty() || account_id < 0){
-    return false;
-  }
-  return true;
-}
-
-TSessionID::TSessionID(Cgicc cgi, sstring cn)
-{
-  session_id="";
-  account_id=-1;
-  cookiename=cn;
-
-  session_id=getSessionCookie(cgi);
-
-  if(!session_id.empty()){
-    account_id=validateSessionID();
-  }
-}
-
-
-int TSessionID::validateSessionID()
-{
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select account_id from cgisession where session_id='%s'", 
-	   session_id.c_str());
-
-  if(!db.fetchRow())
-    return -1;
-
-  int a=convertTo<int>(db["account_id"]);
-
-  return (a ? a : -1);
-}
-
-// gets the value of the "mudmail" cookie and returns it
-sstring TSessionID::getSessionCookie(Cgicc cgi)
-{
-  cgicc::CgiEnvironment env = cgi.getEnvironment();
-  vector<cgicc::HTTPCookie> cookies = env.getCookieList();
-
-  if(!cookies.size())
-    return "";
-  
-  for(unsigned int i=0;i<cookies.size();++i){
-    if(cookies[i].getName() == cookiename)
-      return cookies[i].getValue();
-  }
-  return "";
-}
-
-void TSessionID::createSession(int account_id)
-{
-  session_id=generateSessionID();
-  TDatabase db(DB_SNEEZY);
-
-  db.query("delete from cgisession where account_id=%i", account_id);
-  db.query("insert into cgisession values ('%s', %i)", 
-	   session_id.c_str(), account_id);
-}
-
-
-sstring TSessionID::generateSessionID()
-{
-  unsigned char data[16];
-  int length=16;
-  int seed[4];
-
-  srandomdev();
-
-  seed[0]=time(NULL);
-  seed[1]=random();
-  seed[2]=getpid();
-  seed[3]=(int)&seed;
-
-  int c=0;
-  for(int i=0;i<4;++i){
-    for(int j=0;j<4;++j){
-      data[c++]=(&seed[i])[j];
-    }
-  }
-
-  return MD5Data(data, length, NULL);
-}
 
