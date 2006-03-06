@@ -16,8 +16,6 @@
 
 using namespace cgicc;
 
-Cgicc cgi;
-
 
 class TSessionID {
   sstring session_id;
@@ -25,7 +23,7 @@ class TSessionID {
 
   sstring cookiename;
 
-  sstring getSessionCookie();
+  sstring getSessionCookie(Cgicc cgi);
   sstring generateSessionID();
   int validateSessionID();
 
@@ -38,24 +36,26 @@ public:
   int getAccountID(){ return account_id; }
   sstring getSessionID(){ return session_id; }
 
-  TSessionID(sstring);
+  TSessionID(Cgicc, sstring);
 };
 
 
 void sendJavaScript();
 
 void sendLogin();
-void sendLoginCheck(TSessionID);
+void sendLoginCheck(Cgicc cgi, TSessionID);
 void sendPickPlayer(int);
-void sendMessageList(int);
+void sendMessageList(Cgicc cgi, int);
 
 int main(int argc, char **argv)
 {
   // trick the db code into using the prod database
   gamePort = PROD_GAMEPORT;
   toggleInfo.loadToggles();
+
+  Cgicc cgi;
   form_iterator state_form=cgi.getElement("state");
-  TSessionID session("mudmail");
+  TSessionID session(cgi, "mudmail");
 
   if(!session.isValid()){
     if(state_form == cgi.getElements().end() ||
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
       sendLogin();
       return 0;
     } else {
-      sendLoginCheck(session);
+      sendLoginCheck(cgi, session);
       return 0;
     }
   } else {
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
       sendPickPlayer(session.getAccountID());
       return 0;
     } else if(**state_form == "listmessages"){
-      sendMessageList(session.getAccountID());
+      sendMessageList(cgi, session.getAccountID());
       return 0;
     } else if(**state_form == "logout"){
       session.logout();
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
 }
 
-void sendMessageList(int account_id)
+void sendMessageList(Cgicc cgi, int account_id)
 {
   int player_id=convertTo<int>(**(cgi.getElement("player")));
   TDatabase db(DB_SNEEZY);
@@ -125,7 +125,7 @@ void sendMessageList(int account_id)
   cout << html() << endl;
 }
 
-void sendLoginCheck(TSessionID session)
+void sendLoginCheck(Cgicc cgi, TSessionID session)
 {
   // validate, create session cookie + db entry, redirect to main
   TDatabase db(DB_SNEEZY);
@@ -277,13 +277,13 @@ bool TSessionID::isValid()
   return true;
 }
 
-TSessionID::TSessionID(sstring cn)
+TSessionID::TSessionID(Cgicc cgi, sstring cn)
 {
   session_id="";
   account_id=-1;
   cookiename=cn;
 
-  session_id=getSessionCookie();
+  session_id=getSessionCookie(cgi);
 
   if(!session_id.empty()){
     account_id=validateSessionID();
@@ -307,7 +307,7 @@ int TSessionID::validateSessionID()
 }
 
 // gets the value of the "mudmail" cookie and returns it
-sstring TSessionID::getSessionCookie()
+sstring TSessionID::getSessionCookie(Cgicc cgi)
 {
   cgicc::CgiEnvironment env = cgi.getEnvironment();
   vector<cgicc::HTTPCookie> cookies = env.getCookieList();
