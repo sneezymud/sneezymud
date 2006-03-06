@@ -25,6 +25,9 @@ void sendLoginCheck(Cgicc cgi, TSession);
 void sendPickPlayer(int);
 void sendMessageList(Cgicc cgi, int);
 
+void deleteMessage(int, int);
+
+
 int main(int argc, char **argv)
 {
   // trick the db code into using the prod database
@@ -56,6 +59,14 @@ int main(int argc, char **argv)
       cout << HTTPRedirectHeader("mudmail.cgi").setCookie(session.getCookie());
       cout << endl;
       return 0;
+    } else if(**state_form == "messageaction"){
+      form_iterator delete_form=cgi.getElement("delete");
+      
+      if(delete_form != cgi.getElements().end()){
+	deleteMessage(convertTo<int>(**delete_form), session.getAccountID());
+	sendMessageList(cgi, session.getAccountID());
+      }
+      return 0;
     }
 
     cout << HTTPHTMLHeader() << endl;
@@ -78,6 +89,14 @@ int main(int argc, char **argv)
 
 }
 
+void deleteMessage(int mail_id, int account_id)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // make sure they aren't trying to delete someone elses messages
+  db.query("delete from mail where mail.mailid=%i and mail.mailto=player.name and player.account_id=%i", mail_id, account_id);
+}
+
 void sendMessageList(Cgicc cgi, int account_id)
 {
   int player_id=convertTo<int>(**(cgi.getElement("player")));
@@ -87,18 +106,30 @@ void sendMessageList(Cgicc cgi, int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   cout << head() << body() << endl;
 
-  db.query("select m.mailfrom, m.timesent, m.content from mail m, player p where m.mailto=p.name and p.id=%i", player_id);
-  
-  cout << "<table border=1>" << endl;
+  db.query("select m.mailid, m.mailfrom, m.timesent, m.content from mail m, player p where m.mailto=p.name and p.id=%i order by m.timesent desc", player_id);
 
+  cout << "<a href=mudmail.cgi>go back</a><br>" << endl;
+  cout << "<hr>" << endl;
+
+  cout << "<form method=post action=mudmail.cgi>" << endl;
+  cout << "<input type=hidden name=player value=" << player_id << endl;
+  cout << "<input type=hidden name=state value=messageaction>" << endl;
+  
   while(db.fetchRow()){
-    cout << "<tr><td>" << db["mailfrom"] << endl;
-    cout << "</td><td>" << db["timesent"] << endl;
-    cout << "</td></tr><tr><td colspan=2>" << db["content"] << endl;
+    cout << "<table width=50%>";
+    cout << "<tr bgcolor=#DDDDFF><td>From:</td><td>" << db["mailfrom"];
     cout << "</td></tr>" << endl;
+    cout << "<tr bgcolor=#DDDDFF><td>Date:</td><td>" << db["timesent"];
+    cout << "</td></tr>" << endl;
+    cout << "<tr bgcolor=#DDDDFF><td colspan=2><pre>" << db["content"];
+    cout << "</pre></td></tr>" << endl;
+    cout << "</table>";
+    cout << "<button name=delete value=" << db["mailid"] << " type=submit>";
+    cout << "delete</button><hr>";
   }
 
   cout << "</table>" << endl;
+  cout << "</form>" << endl;
 
   cout << body() << endl;
   cout << html() << endl;
@@ -172,7 +203,7 @@ void sendPickPlayer(int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   sendJavaScript();
   cout << head() << body() << endl;
-  cout << "<a href=\"mudmail.cgi?state=logout\">Logout</a><p>" << endl;
+  cout << "<a href=\"mudmail.cgi?state=logout\">logout</a><p>" << endl;
 
   // get a list of players in this account
   db.query("select p.id, p.name, count(m.*) as count from player p left outer join mail m on (p.name=m.mailto) where account_id=%i group by p.id, p.name order by p.name",
@@ -216,17 +247,3 @@ void sendJavaScript()
   cout << "-->" << endl;
   cout << "</script>" << endl;
 }
-
-
-
-
-
-////////////////////////////
-
-
-
-
-
-
-
-
