@@ -3,10 +3,6 @@
 
 #include <cgicc/Cgicc.h>
 
-// TODO:
-// check for duplicates before trying to use a session id
-// add option for persistent logins rather than current-session
-
 
 // TSession is a class for handling session authentication in cgi
 // scripts.  The idea is that the user can login using their sneezy

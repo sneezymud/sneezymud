@@ -113,10 +113,14 @@ sstring TSession::getSessionCookie()
 
 void TSession::createSession(int duration)
 {
-  session_id=generateSessionID();
+  cookieduration=duration;
   TDatabase db(DB_SNEEZY);
 
-  cookieduration=duration;
+  do {
+    session_id=generateSessionID();
+    db.query("select 1 from cgisession where session_id='%s'",
+	     session_id.c_str());
+  } while(db.fetchRow());
 
   db.query("delete from cgisession where account_id=%i", account_id);
   db.query("insert into cgisession values ('%s', %i, %i, %i)", 
