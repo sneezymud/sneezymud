@@ -476,6 +476,17 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
         continue;
       }
 
+      // Somehow color codes are creeping into the names of pc's when they
+      // shout.  We'll forcibly remove color codes from players's names.
+      if (ch->isPc()) {
+        sstring tmp_shouter;
+        tmp_shouter = stripColorCodes(shouter);
+        if (tmp_shouter != shouter) {
+          vlogf(LOG_BUG, fmt("sendShout: shouter %s had an embedded color code") % shouter);
+          shouter = tmp_shouter;
+        }
+      }
+
       sstring namebuf, namebufc, argbuf, messagebuf;
 
       if (IS_SET(i->autobits, AUTO_PG13)) {
