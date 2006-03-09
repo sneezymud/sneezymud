@@ -446,8 +446,9 @@ mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o objs/session.cgi.o
 
 
 # make all cgi program
-cgi:	shoplog.cgi objlog.cgi corp_info.cgi
+cgi:	shoplog.cgi objlog.cgi corp_info.cgi mudmail.cgi
 	@/bin/cp -f shoplog.cgi /mud/web
+	@/bin/cp -f mudmail.cgi /mud/web
 	@echo Finished making cgi programs
 
 
