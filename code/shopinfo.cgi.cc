@@ -93,7 +93,7 @@ select \
   c.name as corpname, p.name as playername \
 from \
   shop s left outer join shopownedtax sot on (sot.shop_nr=s.shop_nr) \
-         left outer join shop stax on (stax.shop_nr=sot.shop_nr) \
+         left outer join shop stax on (stax.shop_nr=sot.tax_nr) \
          left outer join room rtax on (rtax.vnum=stax.in_room), \
   corporation c, room r, \
   shopowned so left outer join shopownedaccess soa on \
