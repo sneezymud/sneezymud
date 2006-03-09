@@ -2223,14 +2223,23 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
                 (objload && (rs.character == 'P')) ||
                 (mobload && (rs.character != 'P'))) {
 
-              int tmp;
+              int tmp, my_chance;
               if (findLoadPotential) {
                 tmp = 1;
               } else {
                 tmp = dice(1, 100);
               }
 
-              if (rs.arg1 >= 98 || tmp <= fixed_chance ||
+              // If we are putting certain objects into the world or
+              // giving certain objects to mobs, follow the chance defined
+              // in the zonefile.  Otherwise, set the chance to fixed_chance.
+              if ((objload && (rs.character == 'P')) ||
+                 (mobload && (rs.character == 'G'))) {
+                my_chance = rs.arg1;
+              } else {
+                my_chance = fixed_chance;
+              }
+              if (rs.arg1 >= 98 || tmp <= my_chance ||
                   gamePort == BETA_GAMEPORT) {
                 last_cmd = 1;
               } else {
