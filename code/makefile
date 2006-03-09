@@ -444,6 +444,11 @@ mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o objs/session.cgi.o
 	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip mudmail.cgi
 
+shopinfo.cgi:	$(LIBS) objs/shopinfo.cgi.o objs/lowtools.o objs/session.cgi.o
+	@echo \*\*\* Making Final Link: shopinfo.cgi
+	@$(CC) -o shopinfo.cgi objs/shopinfo.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@/usr/bin/strip shopinfo.cgi
+
 
 # make all cgi program
 cgi:	shoplog.cgi objlog.cgi corp_info.cgi mudmail.cgi
