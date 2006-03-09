@@ -131,7 +131,8 @@ void TSession::createSession(int duration)
 	     session_id.c_str());
   } while(db.fetchRow());
 
-  db.query("delete from cgisession where account_id=%i", account_id);
+  db.query("delete from cgisession where account_id=%i and name=%s", 
+	   account_id, cookiename.c_str());
   db.query("insert into cgisession values ('%s', %i, %i, %i, '%s')", 
 	   session_id.c_str(), account_id, duration, 
 	   time(NULL), cookiename.c_str());
