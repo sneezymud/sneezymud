@@ -564,7 +564,6 @@ void TPerson::doShow(const sstring &argument)
     } else {
       sb += " VNUM count max_exist LdPtl str  AC value names\n\r";
     }
-    sb += fmt("zonenum = [%s], zone = [%d]\n\r") % zonenum % zone;
     unsigned int objnx;
     for (objnx = 0; objnx < obj_index.size(); objnx++) {
 
@@ -928,13 +927,13 @@ void TPerson::doShow(const sstring &argument)
     unsigned long int shFrTotalCount = 0;
 
     if (my_arg.empty()) {
-      sb += "Syntax: show free <mob/obj> <#> <#>\n\r";
+      sb += "Syntax: show free (mobiles | objects) (zone# | all) <zone#>\n\r";
       shFrError = true;
     } else {
       my_arg = one_argument(my_arg, buf2); // get <mob/obj>
 
       if (!is_abbrev(buf2, "mobiles") && !is_abbrev(buf2, "objects")) {
-        sb += "Syntax: show free <mob/obj> <#> <#>\n\r";
+        sb += "Syntax: show free (mobiles | objects) (zone# | all) <zone#>\n\r";
         shFrError = true;
       } else {
         if (is_abbrev(buf2, "objects"))
@@ -945,7 +944,7 @@ void TPerson::doShow(const sstring &argument)
 
           if (is_abbrev(buf2, "all")) {
             if (!hasWizPower(POWER_SHOW_TRUSTED)) {
-              sb += "Syntax: show free <mob/obj> <#> <#>\n\r";
+              sb += "Syntax: show free (mobiles | objects) (zone# | all) <zone#>\n\r";
               shFrError = true;
             } else {
               bottom = 0;
@@ -1017,7 +1016,7 @@ void TPerson::doShow(const sstring &argument)
     if (tStType.empty() ||
         (!is_abbrev(tStType, "materialize") &&
          !is_abbrev(tStType, "spontaneous")))
-      sb = "Syntax: show created <materialize/spontaneous>\n\r";
+      sb = "Syntax: show created (materialize | spontaneous) <itemtype>\n\r";
     else {
       int maxCost = (is_abbrev(tStType, "materialize") ? MATERIALIZE_PRICE : SPONT_PRICE),
           minCost = (is_abbrev(tStType, "materialize") ? -1 : MATERIALIZE_PRICE);
@@ -1122,20 +1121,19 @@ void TPerson::doShow(const sstring &argument)
     show_faction(my_arg.c_str());
   } else {
     sb += "Usage:\n\r";
-    sb += "  show zones (<zonename> | \"disabled\")\n\r";
-    sb += "  show objects (zone#|name|maxed)\n\r";
-    sb += "  show (maxed|overmax)\n\r";
-    sb += "  show mobiles (zone#|name|\"pets\"|\"hunters\"|\"bounty\"|\"response\")\n\r";
-
-    sb += "  show free (mobiles|objects) (zone#/all) <zone#>\n\r";
-
+    sb += "  show zones (<zonename> | disabled)\n\r";
+    sb += "  show objects (<zone#> | <name> | type <itemtype>)\n\r";
+    sb += "  show (maxed | overmax)\n\r";
+    sb += "  show mobiles (zone# | <name> | pets | hunters | bounty | response | race <race>)\n\r";
+    sb += "  show free (mobiles | objects) (zone# | all) <zone#>\n\r";
     sb += "  show rooms (zone#)\n\r";
-    sb += "  show rooms (\"death\"|\"saverooms\"|\"lit\"|\"noflee\"|\"private\"|\"hospital\"|\"noheal\")\n\r";
-    sb += "  show <races | factions | trapped | fights >\n\r";
-    sb += "  show materials (<material number>)\n\r";
-    sb += "  show created <materialize/spontaneous> <itemtype>\n\r";
+    sb += "  show rooms (death | saverooms | lit | noflee | private | hospital | noheal)\n\r";
+    sb += "  show (races | factions | trapped | fights)\n\r";
+    sb += "  show materials <material number>\n\r";
+    sb += "  show created (materialize | spontaneous) <itemtype>\n\r";
     sb += "  show components <spellname>\n\r";
-    sb += "  show factions [<faction name> | <faction ID>]\n\r";
+    sb += "  show factions <faction name | faction ID>\n\r";
+    sb += "  show newfactions <faction name | faction ID>\n\r";
   }
 
   if (desc)
