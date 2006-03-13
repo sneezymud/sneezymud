@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
 #include "session.cgi.h"
+#include "shop.h"
 
 #include <map>
 #include "sstring.h"
@@ -167,8 +168,32 @@ order by r.name",
     cout << "<tr><td>message_sell</td><td colspan=2>" << db["message_sell"];
     cout << "</td></tr>" << endl;
   }
-
   
+  cout << "</table>" << endl;
+
+  db.query("select name, access from shopownedaccess where shop_nr=%i",
+	   shop_nr);
+
+  cout << "<table border=1><tr><td>Shop Access</td>";
+  cout << "<td>owner</td><td>info</td><td>rates</td><td>give</td><td>";
+  cout << "sell</td><td>access</td><td>logs</td><td>dividend</td></tr>";
+
+  while(db.fetchRow()){
+    cout << "<tr><td>" << db["name"] << "</td>" << endl;
+
+    int access=convertTo<int>(db["access"]);
+    
+    cout << "<td>" << ((access & SHOPACCESS_OWNER)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_INFO)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_RATES)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_GIVE)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_SELL)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_ACCESS)?"true":"false") << "</td>";
+    cout << "<td>" << ((access & SHOPACCESS_LOGS)?"true":"false") << "</td>";
+    cout << "<td>" << ((access&SHOPACCESS_DIVIDEND)?"true":"false") << "</td>";
+    
+  }
+
   cout << "</table>" << endl;
   
 
