@@ -15,8 +15,8 @@
 extern int  GetItemClassRestrictions(const TObj *);
 extern bool IsRestricted(unsigned short int, unsigned short int);
 
-extern map<int, int> obj_load_potential;
 extern void tallyObjLoadPotential(const int obj_num);
+extern int getObjLoadPotential(const int obj_num);
 
 loadSetClass suitSets;
 
@@ -160,11 +160,9 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   }
 
   int obj_lp = 0;
-  map<int, int>::iterator check_obj_load_potential;
-  check_obj_load_potential = obj_load_potential.find(vnum);
-  if (check_obj_load_potential != obj_load_potential.end()) {
-    obj_lp = check_obj_load_potential->second;
-  } else {
+  obj_lp = getObjLoadPotential(vnum);
+  if (obj_lp == 0) {
+    vlogf(LOG_MISC, fmt("Didn't find suitset load potential of [%d].") % vnum);
     obj_lp = 1;
   }
   // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate

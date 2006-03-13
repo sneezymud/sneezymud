@@ -160,6 +160,20 @@ struct reset_q_type
   resetQElement *tail;
 } r_q;
 
+int getObjLoadPotential(const int obj_num)
+{
+  map<int, int>::iterator tIter;
+  int obj_lp;
+
+  tIter = obj_load_potential.find(obj_num);
+  if (tIter != obj_load_potential.end()) {
+    obj_lp = tIter->second;
+  } else {
+    obj_lp = 0;
+  }
+  return obj_lp;
+}
+
 void tallyObjLoadPotential(const int obj_num)
 {
   map<int, int>::iterator tIter;
@@ -2644,10 +2658,8 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
             tallyObjLoadPotential(obj_index[rs.arg1].virt);
             break;
           }
-          check_obj_lp = obj_load_potential.find(obj_index[rs.arg1].virt);
-          if (check_obj_lp != obj_load_potential.end()) {
-            obj_lp = check_obj_lp->second;
-          } else {
+          obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
+          if (obj_lp == 0) {
             vlogf(LOG_MISC, fmt("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
             obj_lp = 1;
           }

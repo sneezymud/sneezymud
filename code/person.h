@@ -127,7 +127,7 @@ class TPerson : public TBeing {
     virtual void doColor(const char *);
     virtual void doChange(const char *);
     virtual void doStat(const sstring &argument);
-    virtual void doShow(const char *);
+    virtual void doShow(const sstring &argument);
     virtual bool isPc() const { return TRUE; }
     virtual void logf(const char *, ...);
     virtual int manaGain();

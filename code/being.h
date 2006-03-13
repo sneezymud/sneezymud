@@ -1923,7 +1923,7 @@ class TBeing : public TThing {
     void doInfo(const char *);
     void doLog(const char *);
     void doHostlog(const char *);
-    virtual void doShow(const char *);
+    virtual void doShow(const sstring &);
     void doChecklog(const char *, int);
     void doDeathcheck(const sstring &);
     int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
