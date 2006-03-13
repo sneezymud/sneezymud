@@ -2971,9 +2971,6 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   int roll = ::number(1,10000);
   if (levelDiff >= 0 && chance < roll) {
     if (!silent) {
-      if(isname("Sephie", name)) {
-        act("Other clerics can do it, dunno what's wrong with you.", FALSE, this, 0, vict, TO_CHAR);
-      } else
         act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
 
       act("$n is unable to get past your defenses.", TRUE, this, 0, vict, TO_VICT);
