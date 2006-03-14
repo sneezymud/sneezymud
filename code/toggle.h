@@ -67,9 +67,12 @@ class togEntry {
 
 class togInfoT {
   map<togTypeT, togEntry *>toggles;
+  bool loaded;
 
  public:
   void loadToggles();
+
+  bool isLoaded(){ return loaded; }
 
   togEntry *operator[] (const togTypeT);
 

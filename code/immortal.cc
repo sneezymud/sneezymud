@@ -58,6 +58,7 @@ togInfoT::~togInfoT()
 
 togInfoT::togInfoT()
 {
+  loaded=false;
 }
 
 // can't do this in the constructor, because gamePort isn't defined
@@ -66,10 +67,10 @@ void togInfoT::loadToggles()
 {
   TDatabase db(DB_SNEEZY);
 
-  toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");
 
   db.query("select tog_id, toggle, testcode, name, descr from globaltoggles order by name");
 
+  toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");
 
   while(db.fetchRow()){
     togTypeT tog_id=(togTypeT) convertTo<int>(db["tog_id"]);
@@ -78,6 +79,7 @@ void togInfoT::loadToggles()
 
     toggles[tog_id] = new togEntry(toggle, testcode, db["name"], db["descr"]);
   }
+  loaded=true;
 }  
 
 
