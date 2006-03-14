@@ -234,6 +234,7 @@ void sendMessageList(Cgicc cgi, int account_id)
   cout << html() << head() << title("Mudmail") << endl;
   cout << head() << body() << endl;
 
+
   db.query("select name from player where id=%i", player_id);
   db.fetchRow();
   sstring fromplayer=db["name"];
@@ -355,6 +356,7 @@ void sendPickPlayer(int account_id)
 
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Mudmail") << endl;
+  cout << "<meta http-equiv=refresh content=120>" << endl;
   sendJavaScript();
   cout << head() << body() << endl;
   
