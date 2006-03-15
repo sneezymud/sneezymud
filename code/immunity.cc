@@ -388,7 +388,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
       break;
     case SPELL_POISON_DEIKHAN:
     case SPELL_POISON:
-    case SPELL_DEATH_MIST:
     case SPELL_CHLORINE_BREATH:
     case DAMAGE_TRAP_POISON:
       bit = IMMUNE_POISON;
@@ -450,6 +449,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DISEASE:
     case SPELL_INFECT_DEIKHAN:
     case SPELL_INFECT:
+    case SPELL_DEATH_MIST:
     case DAMAGE_TRAP_DISEASE:
       bit = IMMUNE_DISEASE;
       break;

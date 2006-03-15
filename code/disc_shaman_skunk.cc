@@ -21,9 +21,9 @@ int deathMist(TBeing *caster, int level, byte bKnown)
   affectedData aff, aff2;
   int found = FALSE;
 
-
   if (caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
-    caster->sendTo("<g>A misty cloud escapes your open mouth.<1>\n\r");
+    act("<g>A misty cloud escapes your open mouth.<1>",
+        FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n opens $s mouth and a chilling green mist pours out.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
 
@@ -46,25 +46,47 @@ int deathMist(TBeing *caster, int level, byte bKnown)
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
-      if (caster != tmp_victim && !tmp_victim->isImmortal()) {
-	//        if (caster->inGroup(*tmp_victim)) {
-          if (!tmp_victim->isAffected(AFF_SYPHILIS)) {
+      if (caster != tmp_victim && !tmp_victim->isImmortal() &&
+          !tmp_victim->isImmune(IMMUNE_DISEASE) &&
+          !tmp_victim->isAffected(AFF_SYPHILIS)) {
+	      if (caster->inGroup(*tmp_victim)) {
+          if (!caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
             caster->reconcileHelp(tmp_victim,discArray[SPELL_DEATH_MIST]->alignMod);
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
             tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
             found = TRUE;
+            act("You feel a stinging in your waist.",
+                FALSE, caster, NULL, tmp_victim, TO_VICT);
+            act("$n starts to look a little uncomfortable.",
+                TRUE, tmp_victim, NULL, NULL, TO_ROOM);
           }
-	  // }
+        } else {
+          caster->reconcileHelp(tmp_victim,discArray[SPELL_DEATH_MIST]->alignMod);
+          tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+          tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+          found = TRUE;
+          act("You feel a stinging in your waist.",
+              FALSE, caster, NULL, tmp_victim, TO_VICT);
+          act("$n starts to look a little uncomfortable.",
+              TRUE, tmp_victim, NULL, NULL, TO_ROOM);
+        }
       } 
     }
-    if (!caster->isAffected(AFF_SYPHILIS)) {
+    if (!caster->isAffected(AFF_SYPHILIS) &&
+        !caster->bSuccess(bKnown, SPELL_DEATH_MIST) &&
+        !caster->isImmune(IMMUNE_DISEASE) &&
+        !caster->isImmortal()) {
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       caster->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
+      act("You feel a stinging in your waist.",
+          FALSE, caster, NULL, NULL, TO_CHAR);
+      act("$n starts to look a little uncomfortable.",
+          TRUE, caster, NULL, NULL, TO_ROOM);
     }
     if (!found) {
-      caster->sendTo("Everything here seems to be diseased.\n\r");
-      return SPELL_FAIL;
+      caster->sendTo("Nothing in the vicinity appears to have been further discomfited by your ritual.\n\r");
+    //  return SPELL_FAIL;
     }
     return SPELL_SUCCESS;
   } else {
