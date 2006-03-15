@@ -263,14 +263,7 @@ void sendMessageList(Cgicc cgi, int account_id)
     cout << "</td></tr>" << endl;
     cout << "<tr bgcolor=#DDDDFF><td colspan=2><pre>" << endl;
     
-    content=db["content"];
-    unsigned int loc;
-    for(loc=content.find("&",0);loc!=sstring::npos;loc=content.find("&",loc+1))
-      content.replace(loc, 1, "&amp;");
-    for(loc=content.find("<",0);loc!=sstring::npos;loc=content.find("<",loc+1))
-      content.replace(loc, 1, "&lt;");
-    for(loc=content.find(">",0);loc!=sstring::npos;loc=content.find(">",loc+1))
-      content.replace(loc, 1, "&gt;");
+    content=escape_html(db["content"]);
     cout << content;
 
 

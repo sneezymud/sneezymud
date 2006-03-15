@@ -47,11 +47,13 @@ int main(int argc, char **argv)
     }
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
-      sendShoplist(session.getAccountID());
+            sendShoplist(session.getAccountID());
+      //sendShoplist(664);
       return 0;
     } else if(**state_form == "showshop"){
       form_iterator shop_nr=cgi.getElement("shop_nr");
-      sendShowShop(session.getAccountID(), convertTo<int>(**shop_nr));
+            sendShowShop(session.getAccountID(), convertTo<int>(**shop_nr));
+      //      sendShowShop(664, convertTo<int>(**shop_nr));
       return 0;
     } else if(**state_form == "logout"){
       session.logout();
@@ -85,6 +87,37 @@ void sendShowShop(int account_id, int shop_nr)
 {
   TDatabase db(DB_SNEEZY);
 
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Shopinfo") << endl;
+  cout << head() << body() << endl;
+
+
+  // check permissions first
+  db.query("\
+select 1 \
+from \
+  shop s, \
+  corporation c, \
+  shopowned so left outer join shopownedaccess soa on \
+  (so.shop_nr=soa.shop_nr), \
+  player p, corpaccess ca \
+where \
+  ca.corp_id=so.corp_id and \
+  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
+  s.shop_nr=so.shop_nr and \
+  c.corp_id=ca.corp_id and \
+  so.shop_nr=%i and \
+  p.account_id=%i",
+	   shop_nr, account_id);
+
+  if(!db.fetchRow()){
+    cout << "Shop not found or you don't have permission.";
+    cout << body() << endl;
+    cout << html() << endl; 
+    return;
+  }
+
+
   db.query("\
 select \
   distinct so.shop_nr, so.no_such_item1, so.no_such_item2, so.do_not_buy, \
@@ -97,21 +130,14 @@ from \
          left outer join shop stax on (stax.shop_nr=sot.tax_nr) \
          left outer join room rtax on (rtax.vnum=stax.in_room), \
   corporation c, room r, \
-  shopowned so left outer join shopownedaccess soa on \
-  (so.shop_nr=soa.shop_nr), \
-  player p, corpaccess ca \
+  shopowned so, \
+  player p \
 where \
-  ca.corp_id=so.corp_id and p.account_id=%i and \
-  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
-  r.vnum=s.in_room and s.shop_nr=so.shop_nr and so.shop_nr=%i and \
-  c.corp_id=ca.corp_id \
+  p.account_id=%i and so.corp_id=c.corp_id and \
+  r.vnum=s.in_room and s.shop_nr=so.shop_nr and so.shop_nr=%i \
 order by r.name",
 	   account_id, shop_nr);
 
-
-  cout << HTTPHTMLHeader() << endl;
-  cout << html() << head() << title("Shopinfo") << endl;
-  cout << head() << body() << endl;
 
   if(!db.fetchRow()){
     cout << "Shop not found or you don't have permission.";
@@ -125,7 +151,8 @@ order by r.name",
   cout << "<tr><td>Shop #" << db["shop_nr"] << "</td><td>" << db["shopname"];
   cout << "</td><td>" << db["corpname"] << "</td></tr>" << endl;
 
-  cout << "<tr><td>Cash</td><td>" << db["gold"] << "</td>";
+  cout << "<tr><td>Cash</td><td>" << talenDisplay(convertTo<int>(db["gold"]));
+  cout << "</td>";
   cout << "<td>Taxed by: " << db["taxedby"] << "</td></tr>" << endl;
 
   cout << "<tr><td>Ratios</td><td>Buy: " << db["profit_buy"];
@@ -171,10 +198,12 @@ order by r.name",
   
   cout << "</table>" << endl;
 
+
+  /////// shop access
   db.query("select name, access from shopownedaccess where shop_nr=%i",
 	   shop_nr);
 
-  cout << "<table border=1><tr><td>Shop Access</td>";
+  cout << "<hr><table border=1><tr><td>Shop Access</td>";
   cout << "<td>owner</td><td>info</td><td>rates</td><td>give</td><td>";
   cout << "sell</td><td>access</td><td>logs</td><td>dividend</td></tr>";
 
@@ -193,7 +222,22 @@ order by r.name",
     cout << "<td>" << ((access&SHOPACCESS_DIVIDEND)?"true":"false") << "</td>";
     
   }
+  cout << "</table>" << endl;
 
+
+  /////////// shop ratios
+  db.query("select o.short_desc, sor.profit_buy, sor.profit_sell, sor.max_num from obj o, shopownedratios sor where sor.shop_nr=%i and o.vnum=sor.obj_nr", shop_nr);
+
+  cout << "<hr><table border=1><tr><td colspan=4>Shop Ratios</td></tr>";
+  cout << "<tr><td>object</td><td>buy</td><td>sell</td><td>max</td></tr>";
+
+  while(db.fetchRow()){
+    cout << "<tr><td>" << escape_html(db["short_desc"]) << "</td>" << endl;
+    cout << "<td>" << db["profit_buy"] << "</td>" << endl;
+    cout << "<td>" << db["profit_sell"] << "</td>" << endl;
+    cout << "<td>" << db["max_num"] << "</td>" << endl;
+    cout << "</tr>";
+  }
   cout << "</table>" << endl;
   
 
@@ -230,11 +274,11 @@ void sendShoplist(int account_id){
   cout << "<tr><td>Shop</td><td>Player</td><td>Corporation</td></tr>";
 
   do {
-    cout << "<tr><td>" << endl;
-    cout << "<a href=javascript:pickshop('" << db["shop_nr"] << "')>";
-    cout << db["shopname"] << "</a></td><td>" << endl;
-    cout << db["playername"] << "</td><td>";
-    cout << db["corpname"] << "</td></tr>";
+      cout << "<tr><td>" << endl;
+      cout << "<a href=javascript:pickshop('" << db["shop_nr"] << "')>";
+      cout << db["shopname"] << "</a></td><td>" << endl;
+      cout << db["playername"] << "</td><td>";
+      cout << db["corpname"] << "</td></tr>";
   } while(db.fetchRow());
 
   cout << "</form>" << endl;

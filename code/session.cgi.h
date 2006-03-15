@@ -69,4 +69,6 @@ public:
   TSession(cgicc::Cgicc, sstring);
 };
 
+sstring escape_html(sstring);
+
 #endif
