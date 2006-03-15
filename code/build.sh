@@ -2,10 +2,7 @@
 
 whoami=`whoami`
 
-if [ "$1" = "" ]
-then
-  echo "Usage: $0 <start|stop>";
-elif [ "$1" = "start" ]
+if [ "$1" = "start" ]
 then
   pid=`pgrep -U $whoami -f "gmake"`
   if [ "$pid" == "" ]
@@ -34,5 +31,7 @@ then
   else
     echo "Make process not found."
   fi
+else
+  echo "Usage: $0 <start|stop>";
 fi
 
