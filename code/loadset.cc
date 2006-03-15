@@ -175,11 +175,15 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   if ((gamePort == BETA_GAMEPORT) ||
       (chance >= 99) ||
       (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * stats.equip))) {
-    vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
+    if (chance < 101) {
+      vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
+    }
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
-      log_object(obj);
+      if (chance < 101) {
+        log_object(obj);
+      }
       if (obj->isPaired() && slot == WEAR_LEGS_L)
         delete obj;  // avoid double loads of pants
       else if (chance == 101 || ch->equipment[slot])
