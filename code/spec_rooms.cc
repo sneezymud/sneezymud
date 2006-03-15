@@ -1781,7 +1781,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     return FALSE;
 
   ++pulse;
-  if(pulse%3000)
+  if(pulse%7200)
     return FALSE;
 
   // first, let's close entrance doors
