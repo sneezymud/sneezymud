@@ -1689,7 +1689,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  if(::number(0,14))
+  if(::number(0,100))
     return FALSE;
 
   // close and lock vault doors
