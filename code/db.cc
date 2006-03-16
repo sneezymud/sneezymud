@@ -1959,7 +1959,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   bool objload = FALSE;
   TMonster *mob = NULL;
   TMonster *old_mob = NULL;
-  TObj *obj = NULL, *obj_to = NULL;
+  TObj *obj = NULL, *newobj = NULL;
   TRoom *rp = NULL, *storageRoom = NULL;
   TRoom *random_room = NULL;
   TThing *t;
@@ -2389,14 +2389,14 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 	    
 	    count=0;
 	    for(t=rp->getStuff();t;t=t->nextThing){
-	      TObj *o = dynamic_cast<TObj *>(t);
-	      if(o && o->objVnum() == obj_index[rs.arg1].virt)
+	      obj = dynamic_cast<TObj *>(t);
+	      if(obj && obj->objVnum() == obj_index[rs.arg1].virt)
 		count++;
 	    }
 
             if (count >= rs.arg2) {
-              last_cmd = 0;
-              objload = 0;
+	      last_cmd = 1;
+	      objload = TRUE;
               continue;
             }
 
@@ -2481,20 +2481,22 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
             break;
           }
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
-            obj = read_object(rs.arg1, REAL);
-            obj_to = get_obj_num(rs.arg3);
-            if (obj_to && obj && dynamic_cast<TBaseContainer *>(obj_to)) {
-              *obj_to += *obj;
-              obj->onObjLoad();
+            newobj = read_object(rs.arg1, REAL);
+	    // we're relying on obj being preserved from the previous 'O'
+	    //            obj = get_obj_num(rs.arg3);
+            if (obj && newobj && dynamic_cast<TBaseContainer *>(obj)) {
+              *obj += *newobj;
+              newobj->onObjLoad();
               last_cmd = 1;
-              log_object(obj);
-            } else if (obj_to && obj && dynamic_cast<TTable *>(obj_to)) {
-              obj->mount(obj_to);
-              obj->onObjLoad();
+              log_object(newobj);
+            } else if (obj && newobj && dynamic_cast<TTable *>(obj)) {
+              newobj->mount(obj);
+              newobj->onObjLoad();
               last_cmd = 1;
-              log_object(obj);
-            } else 
+              log_object(newobj);
+            } else {
               last_cmd = 0;
+	    }
           } else
             last_cmd = 0;
           break;
