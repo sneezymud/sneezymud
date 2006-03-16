@@ -1966,7 +1966,6 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   int count;
   wearSlotT realslot;
   int obj_lp = 0;
-  map<int, int>::iterator check_obj_lp;
   double obj_lp_ratio, adj_obj_lp_ratio;
 
   struct armor_set_struct {
@@ -2816,7 +2815,9 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
       last_cmd = 0;
     }
   }
-  doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
+  if (!findLoadPotential) {
+    doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
+  }
   this->age = 0;
 }
 
