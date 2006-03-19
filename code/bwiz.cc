@@ -69,7 +69,7 @@ void mudSendMessage(int mtype, int ctype, const char *arg)
   snprintf(qbuf.mtext, MAX_MSGBUF_LENGTH, "%d %s", ctype, arg);
   qbuf.mtype = mtype;
   
-  if ((ret = msgsnd(qid, (struct msgbuf *)&qbuf, strlen(qbuf.mtext)+1, 0)) == -1)
+  if ((ret = msgsnd(qid, (struct mud_msgbuf *)&qbuf, strlen(qbuf.mtext)+1, 0)) == -1)
     vlogf(LOG_BUG, fmt("mudSendMessage: errno: %d ret: %d") %  errno % ret);
 }
 
@@ -115,7 +115,7 @@ void mudRecvMessage()
   if (openQueue() < 0)
     return;
 
-  while ((ret = msgrcv(qid, (struct msgbuf *)&qbuf, MAX_MSGBUF_LENGTH, my_ipc_id, IPC_NOWAIT)) > 0)
+  while ((ret = msgrcv(qid, (struct mud_msgbuf *)&qbuf, MAX_MSGBUF_LENGTH, my_ipc_id, IPC_NOWAIT)) > 0)
     recvTextHandler(qbuf.mtext);
   
   if (ret==-1 && errno!=ENOMSG)
