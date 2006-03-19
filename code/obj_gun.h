@@ -110,13 +110,13 @@ class TGun : public TGenWeapon {
     bool canBackstab() const { return false; }
     int shootMeBow(TBeing *, TBeing *, unsigned int, dirTypeT, int);
     virtual int suggestedPrice() const;
-    virtual weaponT TGun::getWeaponType(int) const { return WEAPON_TYPE_SHOOT; }
+    virtual weaponT getWeaponType(int) const { return WEAPON_TYPE_SHOOT; }
     virtual itemTypeT itemType() const { return ITEM_GUN; }
     virtual int getCurSharp() const { return 100; }
     virtual int getMaxSharp() const { return 100; }
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual void TGun::changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
+    virtual void changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void describeContains(const TBeing *) const;
 

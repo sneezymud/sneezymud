@@ -186,7 +186,7 @@ const unsigned long PLR_UNUSED5    = (1<<27);
 const unsigned long PLR_KILLABLE   = (1<<28);   // switch off newbie pro
 const unsigned long PLR_ANONYMOUS  = (1<<29);
 const unsigned long PLR_SHOW_SAVES = (1<<30);
-const unsigned long PLR_DENY_LOOT  = (1<<31);
+const unsigned long PLR_DENY_LOOT  = (unsigned)(1<<31);
 
 const unsigned short int PART_BLEEDING     = (1<<0);
 const unsigned short int PART_INFECTED     = (1<<1);
@@ -253,7 +253,7 @@ const unsigned long AFF_RIPOSTE           = (1<<27);       // 134217728
 const unsigned long AFF_SILENT            = (1<<28);       // 268435456
 const unsigned long AFF_ENGAGER           = (1<<29);       // 436870912
 const unsigned long AFF_AGGRESSOR         = (1<<30);       // 873741824 (set automatically)
-const unsigned long AFF_CLARITY           = (1<<31);
+const unsigned long AFF_CLARITY           = (unsigned)(1<<31);
 
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done
@@ -1683,9 +1683,9 @@ class TBeing : public TThing {
     ush_int getClass() const;
     void setClass(ush_int num);
 
-    sh_int TBeing::pracsSoFar();
-    sh_int TBeing::meanPracsSoFar();
-    sh_int TBeing::expectedPracs();
+    sh_int pracsSoFar();
+    sh_int meanPracsSoFar();
+    sh_int expectedPracs();
 
     bool isLinkdead() const;
     double deathExp();

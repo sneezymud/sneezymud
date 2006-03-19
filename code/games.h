@@ -222,9 +222,9 @@ class BjGame : public CardGame {
     void stay(TBeing *ch);
     void bj_shuffle(int inx, const TBeing *ch);
     int exitGame(const TBeing *);
-    int BjGame::min_score();
-    int BjGame::best_dealer();
-    int BjGame::best_score();
+    int min_score();
+    int best_dealer();
+    int best_score();
     void Hit(const TBeing *);
     int check_for_bet() {
       return bet;
