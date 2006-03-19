@@ -466,7 +466,7 @@ const unsigned int ITEM_NOT_USED3       = (1<<27);    // 134217728  USE THIS SPO
 const unsigned int ITEM_ATTACHED        = (1<<28);    // 268435456 
 const unsigned int ITEM_BURNING         = (1<<29);    // 536870912
 const unsigned int ITEM_CHARRED         = (1<<30);    // 1073741824
-const long int ITEM_NOLOCATE            = (1<<31);    // returns negitive int
+const unsigned int ITEM_NOLOCATE        = (unsigned) (1<<31);    // returns negitive int
 
 const int MAX_OBJ_STAT        = 32;        // move and change
 

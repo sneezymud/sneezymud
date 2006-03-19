@@ -202,7 +202,8 @@ int init_game_stats(void)
       }
     }
 
-    if (fscanf(fp, "%ld\n", (long *) &stats.first_login) != 1) {
+    long fl=(long)stats.first_login;
+    if (fscanf(fp, "%ld\n", &fl) != 1) {
       vlogf(LOG_BUG, "Bad first_login info, resetting.");
       time_t tnow;
       time(&tnow);
