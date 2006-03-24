@@ -6,7 +6,7 @@ LD=gcc
 CFLAGS = -g -DSITELOCK -DNODUPLICATES -DLIMITED_ITEMS
 ##
 ##
-DIKU = /cis/santa0/jdb/diku
+#DIKU = /cis/santa0/jdb/diku
 ##
 ##
 ##  To make some optimizations, you need to add things to the line above.
@@ -62,8 +62,6 @@ dmserver.next : ${OBJS}
 ##	makedepend ${SRCS}
 clean:
 	- /bin/rm *.o > /dev/null 2>&1
-install_stuff:
-	./NEW/install_stuff
 
 
 

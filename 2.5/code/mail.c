@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <time.h>
 #include "mail.h"
 #include "structs.h"
