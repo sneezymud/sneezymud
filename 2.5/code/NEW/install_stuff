@@ -1,0 +1,35 @@
+#!/bin/sh
+
+DIR=/mud/home/sneezy/sun
+NEW=$DIR/NEW
+OLD=$DIR/OLD
+LIB=$DIR/lib
+ARE=$DIR/lib/areas
+TINY=$LIB/tinyworld.next
+
+cd $NEW
+FILES=`ls`
+
+mkdir -p $NEW
+mkdir -p $OLD
+
+for FILE in $FILES
+do
+  if [ -f $DIR/$FILE ]; then
+    cp $DIR/$FILE $OLD
+    mv $NEW/$FILE $DIR
+  elif [ -f $LIB/$FILE ]; then
+    mv $NEW/$FILE $TINY
+  elif [ -f $ARE/$FILE ]; then
+    mv $NEW/$FILE ${ARE}.next
+  elif [ "$FILE" = "help.tar.Z" ]; then
+    (
+      echo Installing new Help doco.
+      cd ../lib
+      zcat $NEW/$FILE | tar -xf -
+      rm -f $NEW/$FILE
+      chown sneezy.mud ../lib/help/* ../lib/help/_immortal/*\
+		../lib/help/_builder/*
+    )
+  fi
+done

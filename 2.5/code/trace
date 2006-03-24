@@ -1,0 +1,160 @@
+Script started on Mon Mar 29 12:13:52 1993
+sprinkle% dbx dmserver crash/core.03291210
+Reading symbolic information...
+Read 52804 symbols
+program terminated by signal BUS (alignment error)
+(dbx) where
+do_who(ch = 0x71b038, argument = 0xfefffa6b "", cmd = 39), line 156 in "act.informative.c"
+command_interpreter(ch = 0x71b038, argument = 0xfefffa68 "who"), line 751 in "interpreter.c"
+game_loop(s = 3), line 385 in "comm.c"
+run_the_game(port = 7900), line 251 in "comm.c"
+main(argc = 2, argv = 0xfeffff2c), line 212 in "comm.c"
+(dbx) p ch  *ch
+*`act.informative`do_who`ch = {
+        nr            = 0
+        in_room       = 3008
+        immune        = 0
+        M_immune      = 0
+        susc          = 0
+        mult_att      = 1.0
+        attackers     = 0
+        fallspeed     = 0
+        race          = 1
+        hunt_dist     = 0
+        hatefield     = 0
+        fearfield     = 0
+        hates         = {
+                clist = (nil)
+                sex   = 0
+                race  = 0
+                class = 0
+                vnum  = 0
+                evil  = 0
+                good  = 0
+        }
+        fears         = {
+                clist = (nil)
+                sex   = 0
+                race  = 0
+                class = 0
+                vnum  = 0
+                evil  = 0
+                good  = 0
+        }
+        persist       = 0
+        old_room      = 0
+        act_ptr       = (nil)
+        player        = {
+                name         = 0x96ddc0 "BaneWolf"
+                short_descr  = (nil)
+                long_descr   = (nil)
+                description  = 0x4e6dd0 "You see a man about 5'6".  Blue eyes and long dirty blonde hair.  He stands proud with shiny armour.  He is rather muscular.  He is very\n^MEVIL.\n^M"
+                title        = 0x96e648 "the Human 6"
+                sounds       = (nil)
+                distant_snds = (nil)
+                sex          = 1
+                class        = 16
+                level        = (0, 0, 0, 0, 6, 0, 0, 0)
+                hometown     = 3008
+                talks        = ""
+                time         = {
+                        birth  = 732992121
+                        logon  = 733428356
+                        played = 31698
+                }
+                weight       = 174
+                height       = 191
+        }
+        abilities     = {
+                str     = 17
+                str_add = 0
+                intel   = 5
+                wis     = 13
+                dex     = 7
+                con     = 12
+        }
+        tmpabilities  = {
+                str     = 18
+                str_add = 10
+                intel   = 6
+                wis     = 14
+                dex     = 8
+                con     = 13
+        }
+        points        = {
+                mana     = 118
+                max_mana = 0
+                hit      = 75
+                max_hit  = 70
+                move     = 136
+                max_move = 0
+                armor    = 33
+                gold     = 5093
+                bankgold = 0
+                exp      = 25986
+                hitroll  = 5
+                damroll  = 5
+        }
+        specials      = {
+                zone               = 0
+                fighting           = (nil)
+                hunting            = (nil)
+                affected_by        = 133376
+                tick               = 23
+                position           = 4
+                default_pos        = 8
+                act                = 644
+                spells_to_learn    = 0
+                carry_weight       = 115
+                carry_items        = 5
+                timer              = 0
+                was_in_room        = -1
+                apply_saving_throw = (17, 17, 17, 17, 17)
+                conditions         = (0, 8, 4)
+                damnodice          = 0
+                damsizedice        = 0
+                last_direction     = 0
+                attack_type        = 0
+                alignment          = -490
+        }
+        skills        = 0x86cd40
+        affected      = 0x9e1310
+        equipment     = (0x96cd18, (nil), (nil), 0x7361e0, (nil), 0x936458, 0x99ec58, 0x710c98, 0x710d40, 0x710de8, 0x62b2e0, 0x815588, 0x815630, (nil), (nil), (nil), 0x8156d8, 0x628260, (nil), (nil), (nil), (nil), (nil), (nil), (nil))
+        carrying      = 0x96d608
+        desc          = 0x842ad0
+        orig          = (nil)
+        next_in_room  = 0x884460
+        next          = 0x9bbdf0
+        next_fighting = (nil)
+        followers     = (nil)
+        master        = 0x7ebed8
+        invis_level   = 0
+        wimpy         = 0
+        point_roll    = 0
+        bet           = {
+                come       = 0
+                crap       = 0
+                slot       = 0
+                eleven     = 0
+                twelve     = 0
+                two        = 0
+                three      = 0
+                horn_bet   = 0
+                field_bet  = 0
+                hard_eight = 0
+                hard_six   = 0
+                hard_ten   = 0
+                hard_four  = 0
+                seven      = 0
+                one_craps  = 0
+        }
+        bet_opt       = {
+                craps_options = 0
+                one_roll      = 0
+                roul_options  = 0
+        }
+}
+(dbx) quit
+sprinkle% exit
+
+script done on Mon Mar 29 12:14:12 1993

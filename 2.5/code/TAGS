@@ -1,0 +1,3037 @@
+
+Heap.c,168
+#define TRUE 5,70
+#define FALSE 6,85
+void SmartStrCpy(11,159
+void StringHeap(29,416
+struct StrHeap *InitHeap(60,1226
+void DisplayStringHeap75,1526
+main(115,2463
+
+Opinion.c,438
+int FreeHates(25,320
+int FreeFears(36,463
+int RemHated(48,607
+int AddHated(101,1717
+int AddHatred(130,2405
+int RemHatred(170,3442
+int Hates(179,3638
+int Fears(234,4845
+int RemFeared(300,6357
+int AddFeared(355,7601
+int AddFears(381,8227
+struct char_data *FindAHatee(421,9245
+struct char_data *FindAFearee(444,9725
+void ZeroHatred(471,10279
+void ZeroFeared(488,10566
+void DeleteHatreds(508,10926
+void DeleteFears(522,11138
+
+Sound.c,68
+int RecGetObjRoom(23,341
+void MakeNoise(39,651
+MakeSound(64,1244
+
+Teleport.c,19
+void Teleport(1,0
+
+Thief.c,116
+struct Extra Extra1,0
+#define TH_WANDERING 7,62
+int Thief(9,86
+int GetDamage(94,2073
+int GetDamBonus(120,2620
+
+Trap.c,325
+void do_settrap(16,243
+int CheckForMoveTrap(28,451
+int CheckForInsideTrap(42,820
+int CheckForAnyTrap(56,1138
+int CheckForGetTrap(67,1325
+int TriggerTrap(79,1567
+void FindTrapDamage(113,2420
+void TrapDamage(127,2682
+void TrapDam(174,3721
+void TrapTeleport(238,5113
+void TrapSleep(267,5880
+void InformMess(292,6449
+
+act.bak.c,1423
+void argument_split_2(77,2102
+struct obj_data *get_object_in_equip_vis(104,2976
+char *find_ex_description(116,3303
+void show_obj_to_char(128,3523
+void show_mult_obj_to_char(175,5080
+void list_obj_in_room(228,6758
+void list_obj_in_heap(294,8454
+void list_obj_to_char(342,9602
+void show_char_to_char(363,10094
+void show_mult_char_to_char(558,15849
+void list_char_in_room(756,21650
+void list_char_to_char(806,22882
+void do_look(819,23198
+void do_read(1179,32469
+void do_examine(1190,32664
+void do_exits(1229,33577
+void do_score(1279,34730
+void do_time(1386,38692
+void do_weather(1433,39741
+void do_help(1455,40324
+do_wizhelp(1525,41605
+void do_who(1555,42391
+void do_users(1838,54868
+void do_inventory(1862,55529
+void do_equipment(1869,55686
+void do_credits(1896,56295
+void do_atlas(1902,56404
+void do_news(1933,57194
+void do_info(1939,57297
+void do_wizlist(1945,57400
+static int which_number_mobile(1950,57508
+char *numbered_person(1967,57865
+static void do_where_person(1979,58178
+static void do_where_object(1994,58613
+void do_where(2034,59971
+void do_levels(2136,62537
+void do_consider(2214,63984
+void do_spells(2390,69515
+void do_world(2422,70413
+void do_attribute(2469,71824
+    for(aff = ch->affected; aff;2527,73685
+    for(aff = ch->affected; aff; aff 2527,73685
+void do_scan(2566,75134
+char *DescRatio(2699,80060
+char *DescDamage(2718,80557
+char *DescAttacks(2739,81056
+
+act.comm.c,303
+void do_say(25,721
+void do_shout(56,1470
+void do_grouptell(118,2941
+void do_commune(153,3948
+char *RandomWord(180,4899
+void do_sign(240,5786
+void do_send(310,7439
+void do_tell(364,9281
+void do_whisper(432,11292
+void do_ask(472,12542
+#define MAX_NOTE_LENGTH 513,13725
+void do_write(515,13776
+
+act.informative.c,1611
+void argument_split_2(71,1879
+struct obj_data *get_object_in_equip_vis(98,2753
+char *find_ex_description(110,3081
+void do_whozone(121,3306
+void do_who(146,4168
+#define HEADER_TXT_NOTE 366,16285
+#define DRINKCON_TXT_NOTE 367,16355
+void show_obj_to_char(368,16416
+void show_mult_obj_to_char(408,18081
+void list_obj_in_room(463,19784
+void list_obj_in_heap(529,21547
+void list_obj_to_char(578,22727
+void show_char_to_char(599,23229
+void show_mult_char_to_char(795,29234
+void list_char_in_room(993,35181
+void list_char_to_char(1043,36479
+void do_look(1055,36802
+void do_read(1502,51110
+void do_examine(1513,51305
+void do_exits(1552,52232
+void do_score(1594,53314
+void do_time(1701,57311
+void do_weather(1748,58372
+void do_help(1770,58963
+do_wizhelp(1809,60150
+void do_users(1842,60949
+void do_inventory(1866,61580
+void do_equipment(1873,61737
+void do_credits(1900,62354
+void do_atlas(1907,62516
+void do_news(1945,63405
+void do_info(1952,63554
+void do_wizlist(1959,63702
+static int which_number_mobile(1964,63870
+char *numbered_person(1981,64237
+static void do_where_person(1993,64552
+static void do_where_object(2008,64989
+void do_where(2048,66373
+void do_levels(2150,69047
+void do_consider(2226,70444
+void do_spells(2402,75840
+void do_world(2434,76733
+void do_attribute(2481,78150
+    for(aff = ch->affected; aff;2540,80309
+    for(aff = ch->affected; aff; aff 2540,80309
+void do_scan(2579,81766
+char *DescRatio(2712,86297
+char *DescDamage(2731,86794
+char *DescAttacks(2752,87293
+char *DescMoves(2769,87597
+char *ac_for_score(2784,87860
+void read_book(2807,88361
+
+act.move.c,708
+raw_open_door(50,1492
+void raw_unlock_door(83,2535
+void NotLegalMove(104,3128
+int ValidMove(110,3233
+int RawMove(156,4505
+int MoveOne(323,8318
+int MoveGroup(336,8533
+int DisplayOneMove(385,9727
+int DisplayGroupMove(390,9829
+void do_move(396,9949
+int DisplayMove(429,10496
+int AddToCharHeap(489,12094
+int find_door(519,12659
+open_door(571,13844
+void do_open(614,15074
+void do_close(666,16738
+int has_key(730,18729
+void do_lock(746,19050
+void do_unlock(815,21381
+void do_pick(884,23636
+void do_enter(967,26529
+void do_leave(1029,28622
+void do_stand(1050,29183
+void do_sit(1084,30299
+void do_rest(1124,31522
+void do_sleep(1158,32639
+void do_wake(1192,33651
+void do_follow(1257,35596
+
+act.obj1.c,141
+struct room_data *world;29,831
+void get(35,973
+void do_get(79,2370
+void do_drop(404,10733
+void do_put(521,13681
+void do_give(671,18001
+
+act.obj2.c,512
+void weight_change_object(36,1017
+void name_from_drinkcon(62,1637
+void name_to_drinkcon(78,1913
+void do_drink(91,2190
+void do_eat(205,5460
+void do_pour(266,7028
+void do_sip(373,9817
+void do_taste(459,12130
+perform_wear(520,13498
+int IsRestricted(581,15237
+void wear(612,15867
+} break;895,25090
+ } break;910,25613
+  } break;925,26136
+  } break;928,26190
+  } break;932,26321
+  } break;935,26386
+void do_wear(940,26405
+void do_wield(1042,29845
+void do_grab(1065,30418
+void do_remove(1091,31018
+
+act.offensive.c,402
+void do_hit(33,908
+void do_kill(112,3122
+void do_backstab(145,4002
+void do_order(232,6028
+void do_flee(299,7938
+void do_bash(452,13034
+void do_rescue(529,14742
+void do_assist(610,16778
+void do_kick(668,18119
+do_wimpy(728,19439
+funcp bweapons[760,20203
+void do_breath(765,20340
+void do_fire(831,21919
+void do_shoot(865,22801
+void do_springleap(905,23818
+void do_quivering_palm(991,25948
+
+act.other.c,927
+void do_gain(41,1297
+void do_guard(46,1363
+void do_junk(89,2784
+void do_command(154,4351
+void do_qui(182,4995
+void do_split(188,5136
+void do_report(269,7247
+void do_title(296,7866
+void do_pray(314,8210
+void do_quit(318,8275
+void do_save(347,9011
+void do_not_here(418,11061
+void do_sneak(425,11193
+void do_hide(469,12350
+void do_bload(504,13151
+void do_reload(554,14278
+void do_steal(610,15658
+void do_practice(760,20165
+void do_idea(971,26619
+void do_typo(1014,27453
+void do_bug(1055,28263
+void do_monitor(1093,29029
+void do_channel(1133,30098
+void do_prompt(1188,31616
+void do_terminal(1212,32116
+void do_cls(1292,34790
+void do_brief(1308,35156
+void do_mess(1322,35491
+void do_log(1328,35559
+void do_color(1361,36422
+void do_compact(1384,36898
+void do_group(1399,37277
+void do_quaff(1500,40243
+void do_recite(1577,42137
+void do_use(1645,43972
+do_plr_noshout(1732,46952
+do_teams(1756,47502
+
+act.social.c,346
+struct social_messgsocial_messg30,828
+} *soc_mess_list 51,1319
+struct pose_typepose_type55,1344
+} pose_messages[60,1518
+static int list_top 62,1550
+char *fread_action(67,1580
+void boot_social_messages(92,1947
+int find_action(153,3338
+void do_action(183,3659
+void do_insult(238,4857
+void boot_pose_messages(292,6382
+do_pose(320,6901
+
+act.wizard.c,1524
+void CreateOneRoom(64,1984
+void do_auth(96,2655
+do_demote(153,3941
+void do_imptest(178,4431
+void do_passwd(200,4905
+void dsearch(266,6180
+void do_bamfin(294,6797
+void do_bamfout(344,8125
+void do_instazone(394,9423
+do_highfive(510,12104
+do_addhost(538,12939
+do_removehost(546,13061
+do_listhosts(557,13229
+do_silence(567,13370
+do_wizlock(588,13967
+do_rload(747,17685
+do_rsave(771,18170
+do_emote(792,18659
+void do_flag(817,19092
+void do_echo(871,21008
+void do_system(888,21330
+void do_trans(908,21661
+void do_at(953,22968
+void do_goto(1012,24413
+void do_stat(1144,28127
+void do_set(1764,46858
+void do_shutdow(1944,52424
+void do_shutdown(1951,52565
+void do_snoop(1976,53099
+void do_switch(2042,54534
+void do_return(2087,55488
+void do_force(2125,56332
+void do_load(2170,57690
+static void purge_one_room(2300,61101
+void do_link(2336,62094
+void do_purge(2372,62836
+void roll_abilities(2494,66019
+void do_reroll(2596,68432
+void do_start(2606,68576
+void do_advance(2684,70563
+void do_wiznews(2816,73702
+void do_restore(2825,73922
+do_noshout(2883,75317
+void do_nohassle(2923,76685
+void do_stealth(2957,77642
+static print_room(2990,78562
+static void print_death_room(3019,79268
+static void print_private_room(3025,79423
+struct show_room_zone_struct show_room_zone_struct3031,79582
+static void show_room_zone(3038,79705
+void do_show(3071,80674
+void do_debug(3194,84124
+void do_invis(3216,84580
+void do_loglist(3243,85231
+void do_checklog(3260,85656
+void do_deathcheck(3306,86981
+
+alias.c,635
+#define MAX_ALIASES	14,220
+#define MAX_IMMORTAL_ALIASES 15,246
+#define MAX_LEN_ALIAS_RES	16,278
+#define ALIAS_FILENAME 19,350
+struct alias_data_type alias_data_type21,385
+struct alias_type alias_type28,508
+struct alias_data_type *alias_base;34,590
+char alias_result[35,626
+void do_alias(46,924
+struct alias_data_type *init_alias(90,1954
+int fgetline(111,2403
+int fputline(128,2614
+struct alias_data_type *load_aliases(143,2790
+void save_aliases(174,3479
+struct alias_data_type *get_alias_ch(198,3979
+void add_alias(214,4285
+void remove_alias(277,5885
+void delete_aliases(312,6778
+char *substitute_aliases(336,7323
+
+blk_save.c,114
+char *path[16,259
+struct blk_saveblk_save22,303
+void pput(28,358
+void blk_read(33,422
+void blk_save(85,1603
+
+board.c,587
+#define MAX_MSGS 11,156
+#define MAX_MESSAGE_LENGTH 12,230
+  struct Board Board14,308
+struct char_data *board_kludge_char;24,555
+struct Board *board_list;25,592
+void InitBoards(46,1375
+void InitABoard(58,1554
+void OpenBoardFile(108,2521
+struct Board *FindBoardInRoom(118,2674
+int board(139,3117
+void board_write_msg(167,3658
+int board_remove_msg(222,5010
+void board_save_board(265,6095
+void board_load_board(299,6864
+void board_reset_board(340,7893
+void error_log(356,8188
+int board_display_msg(363,8412
+void board_fix_long_desc(396,9204
+int board_show_board(405,9268
+
+casino.c,595
+#define BLACKJACK 14,309
+#define MAX_BLACKJACK 15,367
+#define HEARTS 16,433
+#define DIAMONDS 17,452
+#define CLUBS 18,472
+#define SPADES 19,489
+struct bj_players bj_players21,508
+static struct bj_players bj_data[29,641
+char *card_names[31,691
+int check_blackjack 47,848
+void bj_shuffle 57,963
+int do_blackjack_enter 94,1704
+int do_blackjack_exit 125,2403
+void do_bj_bet 145,2747
+void do_stay 241,5451
+void do_peek 325,7460
+void do_bj_hit 369,8448
+int bj_index 404,9220
+int add_suit 416,9410
+int min_bj_score 428,9690
+int best_bj_dealer 446,9931
+int best_bj_score 469,10305
+
+class.c,91
+int GetClassLevel(23,401
+int CountBits(32,563
+int OnlyClass(42,711
+int HasClass(56,894
+
+comm.c,1466
+#define DFLT_PORT 33,1027
+#define PACKET_BUFFER_SIZE 34,1076
+#define MAX_NAME_LENGTH 35,1109
+#define MAX_HOSTNAME 36,1136
+#define OPT_USEC 37,1163
+#define STATE(STATE39,1241
+struct descriptor_data *descriptor_list,59,1723
+struct descriptor_data *descriptor_list, *next_to_process;59,1723
+int lawful 61,1783
+int slow_death 62,1839
+int Shutdown 63,1910
+int rebootmud 64,1955
+int no_specials 65,2021
+long Uptime;66,2085
+char hostlist[69,2160
+int numberhosts;70,2232
+int maxdesc,73,2257
+int maxdesc, avail_descs;73,2257
+int tics 74,2283
+int __main 120,3841
+int main 125,3873
+#define PROFILE(PROFILE217,5709
+int run_the_game(221,5780
+int game_loop(270,6574
+int get_from_q(710,23851
+void write_to_q(731,24135
+struct timeval timediff(762,24613
+void flush_queues(787,25019
+int init_socket(807,25378
+int new_connection(860,26361
+static void printhost(897,26909
+static void printhostaddr(922,27463
+int new_descriptor(940,27919
+int process_output(1030,30182
+int write_to_descriptor(1069,31306
+int process_input(1097,31706
+void close_sockets(1199,34207
+void close_socket(1213,34353
+void nonblock(1281,36150
+#define COMA_SIGN 1293,36270
+void coma(1304,36516
+void send_to_char(1373,37935
+void save_all(1382,38088
+void send_to_all(1391,38262
+void send_to_outdoor(1402,38462
+void send_to_except(1414,38708
+void send_to_room(1426,38951
+void send_to_room_except(1439,39178
+void send_to_room_except_two1449,39425
+void act(1465,39753
+
+constants.c,2007
+const struct QuestItem QuestList[11,442
+const char *spell_wear_off_msg[237,16152
+const char *spell_wear_off_soon_msg[442,19789
+const char *spell_wear_off_room_msg[647,22922
+const char *spell_wear_off_soon_room_msg[852,26609
+const int rev_dir[1059,29718
+const int TrapDir[1069,29772
+const int corpse_volume[1079,29898
+const int vol_mult[1129,30670
+const int movement_loss[1299,32621
+const  char *exits[1313,32902
+const char *dirs[1323,33033
+const char *ItemDamType[1335,33122
+const char *weekdays[1344,33219
+const char *month_name[1353,33343
+const int sharp[1373,33836
+const char *where[1387,33985
+const char *drinks[1411,34581
+const char *drinknames[1432,34814
+const int RacialMax[1453,35013
+int ItemSaveThrows[1466,35518
+const int drink_aff[1491,36205
+const char *color_liquid[1511,36614
+const char *fullness[1532,36816
+const struct title_type titles[1539,36907
+const char *RaceName[2043,52800
+const char *material_types[2092,53395
+const char *item_types[2261,55642
+const char *wear_bits[2292,56000
+const char *extra_bits[2315,56249
+const char *room_bits[2344,56702
+const char *exit_bits[2364,56972
+const char *sector_types[2374,57103
+const char *equipment_types[2388,57278
+const char *affected_bits[2410,57679
+const char *immunity_names[2446,58161
+const char *apply_types[2468,58409
+const char *pc_class_types[2518,59037
+const char *npc_class_types[2530,59211
+const char *action_bits[2536,59277
+const char *player_bits[2558,59553
+const char *attr_player_bits[2580,59826
+const char *position_types[2602,60307
+const char *connected_types[2615,60473
+const int thaco[2631,60745
+const struct str_app_type str_app[2643,62401
+const struct dex_skill_type dex_app_skill[2678,63336
+const byte single_backstab_mult[2708,64319
+const byte backstab_mult[2782,65321
+struct dex_app_type dex_app[2857,65958
+struct con_app_type con_app[2887,66452
+struct int_app_type int_app[2917,66850
+struct wis_app_type wis_app[2947,67104
+const struct QuestItem QuestList[2979,67340
+
+craps.c,217
+#define CRAP_TABLE 15,306
+#define MAX_CRAPS 16,330
+struct crap_players crap_players18,352
+static struct crap_players crap_data[24,435
+int check_craps(26,491
+int do_craps_enter(36,617
+int do_craps_exit 67,1346
+
+db.c,2129
+#define NEW_ZONE_SYSTEM23,650
+int top_of_world 29,904
+struct hash_header	room_db;31,989
+struct room_data        *room_db[33,1023
+struct obj_data  *object_list 36,1077
+struct char_data *character_list 37,1153
+struct zone_data *zone_table;39,1230
+int top_of_zone_table 40,1306
+struct message_list fight_messages[41,1333
+struct player_index_element *player_table 42,1409
+int top_of_p_table 43,1485
+int top_of_p_file 44,1561
+long total_bc 45,1584
+long room_count=46,1603
+long mob_count=47,1622
+int obj_count=48,1640
+long total_mbc=49,1657
+int no_mail=50,1675
+long total_obc=51,1690
+int mob_tick_count=56,1745
+char motd[58,1768
+char ansi[59,1844
+FILE *mob_f,61,1875
+     *obj_f;62,1951
+struct index_data *mob_index;64,2028
+struct index_data *obj_index;65,2104
+int top_of_mobt 67,2181
+int top_of_objt 68,2257
+struct time_info_data time_info;70,2334
+struct weather_data weather_info;71,2405
+void boot_db(117,3951
+void reset_time(221,6023
+void update_time(316,7791
+void build_player_index(347,8303
+struct index_data *generate_indices(404,9434
+void cleanout_room(446,10314
+void completely_cleanout_room(469,10825
+void load_one_room(490,11342
+void boot_world(615,14436
+void allocate_room(651,15021
+void setup_dir(668,15270
+#define LOG_ZONE_ERROR(LOG_ZONE_ERROR708,16286
+void renum_zone_table(713,16460
+void boot_zones(775,18066
+struct char_data *read_mobile(886,20822
+struct obj_data *read_object(1322,31611
+#define ZO_DEAD 1459,35202
+void zone_update(1462,35304
+#define ZCMD 1535,36875
+void reset_zone(1538,36972
+int is_empty(1693,40669
+int load_char(1714,41145
+void store_to_char(1747,41761
+void char_to_store(1829,43767
+int create_entry(1945,46770
+void save_char(1977,47484
+int compare(2033,48395
+char *fread_string(2048,48812
+void free_char(2102,49918
+void free_obj(2138,50593
+int file_to_string(2170,51222
+void ClearDeadBit(2211,51781
+void reset_char(2242,52510
+void clear_char(2418,56521
+void clear_object(2431,56832
+void init_char(2444,57056
+int real_room(2571,60212
+struct room_data *real_roomp(2598,60721
+int real_mobile(2609,60971
+int real_object(2638,61397
+
+fight.c,2060
+struct char_data *combat_list 22,619
+struct char_data *missile_list 23,698
+struct char_data *combat_next_dude 24,778
+struct char_data *missile_next_dude 25,857
+struct attack_hit_type attack_hit_text[62,2119
+void setKillerFlag(90,2989
+void appear(151,4821
+void load_messages(163,5076
+void update_pos(219,6608
+int check_peaceful(245,7317
+int check_no_order(257,7529
+void set_fighting(270,7818
+void stop_fighting(296,8369
+#define MAX_NPC_CORPSE_TIME 334,9236
+#define MAX_PC_CORPSE_TIME 335,9266
+void make_corpse(337,9297
+void change_alignment(439,12239
+void death_cry(460,12929
+void raw_kill(481,13402
+void die(514,14027
+void group_gain(558,15004
+char *replace_string(626,16616
+void dam_message(658,17085
+  static struct dam_weapon_type dam_weapon_type667,17295
+int DamCheckDeny(776,20450
+int DamDetailsOk(791,20841
+int SetCharFighting(803,21054
+int SetVictFighting(818,21330
+int DamageTrivia(833,21648
+int DoDamage(861,22246
+int DamageMessages(879,22590
+int DamageEpilog(997,26459
+int MissileDamage(1072,28264
+int GunMissileDamage(1097,28813
+int BowMissileDamage(1142,29854
+int damage(1175,30581
+    char	buf[1221,31706
+  dam 1227,31842
+  dam 1291,33446
+  dam 1293,33493
+  dam=1295,33544
+int GetWeaponType(1461,38932
+int Getw_type(1484,39399
+int HitCheckDeny(1507,40076
+int CalcThaco(1573,41684
+int HitOrMiss(1594,42234
+int MissVictim(1617,42749
+int GetWeaponDam(1625,42927
+int HitVictim(1671,44216
+void root_hit(1714,45356
+void MissileHit(1763,46651
+void BowHit(1768,46779
+void hit(1773,46903
+void perform_violence(1781,47050
+struct char_data *FindVictim(1916,50556
+struct char_data *FindAnyVictim(2040,54583
+int BreakLifeSaverObj(2153,58046
+int PreProcDam(2209,59199
+int ItemSave(2297,60871
+int WeaponCheck(2337,61673
+int GetItemDamageType(2390,62796
+int SkipImmortals(2428,63461
+int WeaponSpell(2444,63756
+struct char_data *FindAnAttacker(2463,64275
+void fire(2552,66579
+void shoot(2573,67110
+struct char_data *FindMetaVictim(2605,67896
+int GetFormType(2651,68863
+int MonkDodge(2720,70040
+
+games.c,1119
+char *ChooseFirstFruit(32,786
+char *ChooseSecondFruit(57,1185
+char *ChooseThirdFruit(81,1583
+void lose_dice(105,1980
+void get_dice(120,2303
+int check_for_dice_held(145,3017
+int check_for_dice_in_inv(157,3215
+int check_pointroll(169,3415
+int check_slots(183,3682
+int check_slot_player(191,3825
+void do_bet(206,4131
+void do_play(341,8947
+void clear_bets(457,12741
+int can_bet_craps(477,13161
+void check_craps(498,13544
+int CheckForPoint(532,14479
+void check_seven(552,14884
+void check_eleven(597,16375
+void set_point(629,17304
+void check_oneroll_seven(642,17643
+void check_horn(655,18005
+void check_field(673,18562
+void check_hard_four(703,19447
+void check_hard_six(709,19571
+void check_hard_eight(713,19636
+void check_hard_ten(717,19703
+void check_hardrolls(721,19768
+void check_two(726,19835
+void check_three(742,20311
+void check_oneroll_eleven(758,20806
+void check_twelve(774,21319
+void check_oneroll_craps(788,21733
+void check_onerolls(811,22658
+void WinLoseCraps(847,23545
+void roll_dice(875,24492
+void spin_slot(954,26461
+#define DICE 1050,28980
+int craps_table_man(1052,28999
+
+handler.c,1836
+char *fname(42,1151
+int split_string(56,1367
+int isname(76,1660
+void init_string_block(113,2395
+void append_to_string_block(119,2510
+void page_string_block(131,2790
+void destroy_string_block(136,2903
+void affect_modify(142,2996
+void affect_total(365,7883
+void affect_to_char(438,9858
+void affect_remove(458,10440
+void affect_from_char(496,11277
+bool affected_by_spell(510,11631
+void affect_join(523,11853
+void char_from_room(550,12445
+void char_to_room(597,13703
+void obj_to_char(620,14199
+void obj_from_char(642,14737
+int apply_ac(700,16039
+void equip_char(729,16858
+  ch->equipment[786,18851
+  obj->equipped_by 787,18879
+  obj->eq_pos 788,18904
+  for(j=0; j<MAX_OBJ_AFFECT;793,19008
+int GiveMinStrToWield(808,19378
+struct obj_data *unequip_char(824,19711
+struct obj_data *unequip_char_for_save(857,20475
+int get_number(887,21132
+struct obj_data *get_obj_in_list(910,21568
+struct obj_data *get_obj_in_list_num(937,22076
+struct obj_data *get_obj(953,22351
+struct obj_data *get_obj_num(980,22817
+struct char_data *get_char_room(996,23057
+struct char_data *get_char(1023,23574
+struct char_data *get_char_num(1048,24053
+void obj_to_room(1063,24253
+void obj_from_room(1084,24707
+void obj_to_obj(1120,25612
+void obj_from_obj(1148,26454
+void object_list_new_owner(1211,28391
+void extract_obj(1222,28651
+void update_object(1285,30096
+void update_char_objects(1294,30386
+void extract_char(1314,30901
+struct char_data *get_char_room_vis(1490,34957
+struct char_data *get_char_vis_world(1517,35545
+struct char_data *get_char_vis(1543,36063
+struct obj_data *get_obj_in_list_vis(1559,36288
+struct obj_data *get_obj_vis_world(1584,36768
+struct obj_data *get_obj_vis(1612,37395
+struct obj_data *get_obj_vis_accessible(1627,37744
+struct obj_data *create_money(1658,38404
+int generic_find(1739,41245
+
+hash.c,452
+#define	HASH_KEY(HASH_KEY5,59
+void init_hash_table(7,137
+void init_world(17,451
+void destroy_hash_table(25,590
+static void _hash_enter(42,917
+struct room_data *room_find(67,1557
+void *hash_find(72,1681
+int room_enter(84,1897
+int hash_enter(96,2090
+struct room_data *room_find_or_create(107,2267
+void *hash_find_or_create(125,2563
+int room_remove(138,2782
+void *hash_remove(152,2962
+void room_iterate(186,3554
+void hash_iterate(200,3801
+
+interpreter.c,788
+#define COMMANDO(COMMANDO29,724
+#define NOT 34,983
+#define AND 35,997
+#define OR 36,1012
+#define STATE(STATE38,1027
+#define MAX_CMD_LIST 39,1061
+struct command_info cmd_info[56,1591
+char echo_on[58,1636
+char echo_off[59,1698
+int WizLock;60,1748
+int Silence 61,1761
+int plr_tick_count=62,1778
+char *command[284,14152
+char *fill[616,20365
+int search_block(627,20469
+int old_search_block(651,20960
+void command_interpreter(682,21709
+void argument_interpreter(823,25576
+int is_number(868,26632
+char *one_argument(898,27442
+void only_argument(927,28036
+int fill_word(937,28175
+int is_abbrev(947,28329
+void half_chop(963,28576
+int special(976,28849
+void assign_command_pointers 1029,30227
+int find_name(1366,45534
+int _parse_name(1380,45709
+void nanny(1402,46043
+
+limits.c,454
+char *ClassTitles(33,1123
+int graf(58,1836
+int mana_limit(78,2528
+int hit_limit(105,3080
+int move_limit(124,3367
+int mana_gain(153,3916
+int hit_gain(199,4828
+int move_gain(251,5729
+void advance_level(297,6618
+void drop_level(399,8972
+void set_title(487,10848
+void gain_exp(498,11031
+void gain_exp_regardless(556,12757
+void gain_condition(584,13352
+void check_idling(624,14091
+int ObjFromCorpse(666,15165
+int ClassSpecificStuff(695,15887
+
+magic.c,2346
+void spell_magic_missile(49,1713
+void spell_chill_touch(67,2083
+void spell_burning_hands(92,2645
+void spell_shocking_grasp(128,3810
+void spell_lightning_bolt(146,4151
+void spell_colour_spray(164,4495
+void spell_energy_drain(183,4884
+void spell_fireball(226,6207
+void spell_earthquake(270,7548
+void spell_dispel_evil(310,8748
+void spell_call_lightning(343,9709
+void spell_harm(366,10175
+void spell_armor(391,10663
+void spell_astral_walk(413,11232
+void spell_teleport(448,12131
+void spell_bless(499,13518
+void spell_blindness(536,14529
+void spell_clone(571,15354
+void spell_create_water(643,17136
+void spell_cure_blind(685,18283
+void spell_cure_critic(700,18627
+void spell_cure_light(721,19072
+void spell_curse(747,19519
+void spell_detect_evil(788,20684
+void spell_detect_invisibility(813,21263
+void spell_detect_magic(837,21868
+void spell_detect_poison(860,22378
+void spell_enchant_weapon(890,23286
+void spell_synostodweomer(939,24763
+void spell_heal(968,25434
+void spell_vampiric_touch(985,25820
+void spell_life_leech(1028,26888
+void spell_heal_spray(1060,28049
+void spell_full_heal(1082,28637
+void spell_invisibility(1100,29032
+void spell_locate_object(1130,29908
+void spell_poison(1177,31186
+void spell_protection_from_evil(1239,32872
+void spell_protection_from_good(1262,33492
+void spell_remove_curse(1286,34099
+void spell_remove_poison(1309,34778
+void spell_fireshield(1332,35413
+void spell_sanctuary(1351,35930
+void spell_silence(1372,36514
+void spell_sleep(1400,37261
+void spell_strength(1443,38288
+void spell_ventriloquate(1484,39265
+void spell_word_of_recall(1492,39418
+void spell_summon(1538,40437
+void RawSummon(1578,41514
+void spell_charm_person(1633,42951
+void spell_control_undead(1709,44797
+void spell_charm_monster(1784,46628
+void spell_sense_life(1856,48401
+void spell_identify(1883,49159
+void spell_fire_breath(2065,54580
+void spell_frost_breath(2104,55539
+void spell_acid_breath(2139,56441
+void spell_gas_breath(2161,56877
+void spell_lightning_breath(2181,57242
+#define WOOD_GOLEM 2201,57617
+#define ROCK_GOLEM 2202,57646
+#define IRON_GOLEM 2203,57675
+#define DIAMOND_GOLEM 2204,57704
+#define WOOD_COMPONENT 2205,57733
+#define ROCK_COMPONENT 2206,57762
+#define IRON_COMPONENT 2207,57791
+#define DIAMOND_COMPONENT 2208,57820
+void spell_create_golem(2210,57850
+
+magic2.c,2136
+void spell_resurrection(45,1346
+void spell_vitalize_mana(127,3599
+void spell_cause_light(134,3772
+void spell_cause_critical(148,4038
+void spell_cause_serious(162,4314
+void spell_cure_serious(176,4588
+void spell_mana(197,5012
+void spell_second_wind(215,5358
+void spell_flamestrike(236,5776
+void spell_dispel_good(255,6111
+void spell_turn(285,7069
+void spell_remove_paralysis(322,8268
+void spell_holy_word(340,8655
+void spell_unholy_word(345,8766
+void spell_farlook(350,8879
+void spell_dispel_invisible(379,9787
+void spell_succor(402,10564
+void spell_well_of_knowledge(415,10888
+void spell_detect_charm(428,11223
+void spell_true_seeing(434,11338
+void spell_track(468,12160
+void spell_poly_self(502,12931
+void spell_minor_create(613,15464
+void spell_stone_skin(629,15907
+void spell_infravision(660,16656
+void spell_shield(686,17349
+void spell_weakness(711,18136
+void spell_invis_group(737,18899
+void spell_acid_blast(767,19760
+void spell_cone_of_cold(785,20097
+void spell_ice_storm(820,21172
+void spell_poison_cloud(849,22017
+void spell_chain_lightning(857,22134
+void spell_major_create(862,22251
+void spell_summon_obj(867,22365
+void spell_pword_blind(872,22477
+void spell_pword_kill(877,22590
+void spell_sending(883,22703
+void spell_meteor_swarm(888,22812
+void spell_disintegrate(904,23150
+void spell_Create_Monster(920,23482
+void spell_light(1005,25304
+void spell_portal(1056,26617
+void spell_fly(1132,29040
+void spell_fly_group(1155,29715
+void spell_refresh(1187,30596
+void spell_water_breath(1208,31030
+void spell_cont_light(1234,31610
+void spell_animate_dead(1283,32885
+void spell_know_alignment(1356,34686
+void spell_dispel_magic(1394,35869
+void spell_paralyze(1605,44111
+void spell_fear(1650,45218
+void spell_prot_align_group(1679,45821
+void spell_calm(1684,45939
+void spell_web(1706,46486
+void spell_heroes_feast(1731,46977
+void spell_conjure_elemental(1759,47624
+void spell_faerie_fire 1804,48793
+void spell_faerie_fog 1831,49536
+void spell_cacaodemon(1874,50846
+void spell_improved_identify(1917,52036
+void spell_geyser(1924,52157
+void spell_green_slime(1956,53022
+
+magicutils.c,98
+SwitchStuff(34,945
+FailCharm(102,2263
+FailSleep(114,2515
+FailPara(124,2794
+FailCalm(132,3025
+
+mail.c,582
+#define MAIL_FILE 18,462
+mail_index_type		*mail_index 31,893
+position_list_type 	*free_list 32,964
+long			file_end_pos 33,1038
+void push_free_list(36,1087
+long pop_free_list(46,1300
+mail_index_type *find_char_in_index(63,1560
+void write_to_file(80,1868
+void read_from_file(104,2272
+void index_mail(124,2590
+int scan_file(167,3912
+int has_mail(212,4979
+void store_mail(224,5268
+char *read_delete(319,8696
+int postmaster(431,11952
+int mail_ok(456,12395
+void postmaster_send_mail(470,12574
+void postmaster_check_mail(528,14161
+void postmaster_receive_mail(551,14741
+
+mobact.c,361
+void mobile_guardian(44,1498
+void mobile_wander(76,2165
+void MobHunt(103,2873
+void MobScavenge(159,4344
+void check_mobile_activity(187,4964
+void mobile_activity(211,5426
+int SameRace(349,9207
+int AssistFriend(373,9659
+FindABetterWeapon(430,10692
+int GetDamage(509,12378
+int GetDamBonus(533,12895
+int GetHandDamage(547,13210
+int MobFriend(579,13816
+
+modify.c,823
+#define REBOOT_AT 20,580
+#define TP_MOB 23,660
+#define TP_OBJ	24,680
+#define TP_ERROR 25,700
+struct room_data *world;28,722
+char *string_fields[36,923
+char *room_fields[47,1036
+int length[62,1256
+int room_length[72,1304
+char *skill_fields[85,1400
+int max_value[94,1488
+void string_add(108,1833
+void quad_arg(169,3387
+void do_string(204,4059
+void bisect_arg(404,9165
+void do_edit(422,9519
+void do_setskill(696,17463
+char *one_word(716,17891
+int start_page_file(753,18623
+int page_file(775,19248
+void page_string(818,20268
+void show_string(836,20593
+void night_watchman(878,21612
+void check_reboot(905,22228
+#define GR953,23321
+#define NEW954,23332
+int workhours(960,23358
+int load(985,23960
+	struct syslinfo syslinfo987,23977
+char *nogames(1037,24866
+void coma(1056,25097
+void gr(1088,25544
+
+multiclass.c,420
+int GetClassLevel(37,528
+int CountBits(46,690
+int OnlyClass(60,962
+int IsSingleClass(73,1144
+int HasClass(84,1293
+int HowManyClasses(99,1512
+int BestFightingClass(139,2208
+int BestThiefClass(166,2901
+int BestMagicClass(193,3590
+int GetSecMaxLev(221,4282
+int GetALevel(232,4544
+int GetThirdMaxLev(259,5008
+int GetMaxLevel(264,5083
+int GetTotLevel(276,5287
+void StartLevels(284,5482
+int BestClass(314,6283
+
+new.c,1391
+#define WIND_POTION 21,507
+#define HEAL_POTION 22,532
+#define SANC_POTION 23,557
+#define FULL_POTION 24,583
+#define FLY_POTION 25,609
+#define TRUE_POTION 26,635
+#define FIRE_POTION 27,661
+#define SAC1_FOR_HEAL 28,687
+#define SAC2_FOR_HEAL 29,715
+#define SAC3_FOR_HEAL 30,743
+#define SAC1_FOR_SANC 31,771
+#define SAC2_FOR_SANC 32,799
+#define SAC3_FOR_SANC 33,827
+#define SAC1_FOR_FULL 34,855
+#define SAC2_FOR_FULL 35,883
+#define SAC3_FOR_FULL 36,911
+#define SAC1_FOR_FLY 37,939
+#define SAC2_FOR_FLY 38,967
+#define SAC3_FOR_FLY 39,995
+#define SAC1_FOR_TRUE 40,1023
+#define SAC2_FOR_TRUE 41,1051
+#define SAC3_FOR_TRUE 42,1079
+#define SAC1_FOR_FIRE 43,1107
+#define SAC2_FOR_FIRE 44,1135
+#define SAC3_FOR_FIRE 45,1163
+#define SAC1_FOR_WIND 46,1191
+#define SAC2_FOR_WIND 47,1219
+#define SAC3_FOR_WIND 48,1247
+void do_brew(50,1276
+void do_search(167,4423
+void do_set_traps(219,6341
+void do_grapple(225,6449
+#define PAPER 302,8746
+#define PEN 303,8766
+#define HEAL_SCROLL 304,8784
+#define SANC_SCROLL 305,8810
+#define FLY_SCROLL 306,8836
+#define WIND_SCROLL 307,8861
+#define TRUE_SCROLL 308,8887
+#define SAC_FOR_HEAL 309,8913
+#define SAC_FOR_SANC 310,8940
+#define SAC_FOR_FLY 311,8967
+#define SAC_FOR_WIND 312,8993
+#define SAC_FOR_TRUE 313,9020
+void do_scribe(315,9048
+void do_glance(409,11539
+void do_deathstroke(458,13142
+void do_bodyslam(548,15981
+
+oset.c,240
+struct oset_field_data oset_field_data20,410
+struct oset_field_data oset_field[26,484
+void set_oedesc(76,2319
+void set_mtype(116,3334
+void set_oflags(192,5244
+void set_otype(249,7077
+void set_oaffect(305,8023
+void do_oset(396,9868
+
+rec.c,594
+#define OBJ_SAVE_FILE 18,565
+#define OBJ_FILE_FREE 19,600
+void add_obj_cost(47,1463
+bool recep_offer(81,2421
+void update_file(115,3309
+void obj_store_to_char(144,3915
+void load_char_objs(194,5800
+void put_obj_in_store(272,7659
+static int contained_weight(330,9233
+void obj_to_store(341,9514
+void save_obj(391,10798
+void update_obj_file(427,11697
+void CountLimitedItems(527,14136
+void PrintLimitedItems(555,14932
+int receptionist(575,15400
+int receptionist_for_outlaws(657,17578
+void zero_rent(742,19839
+void ZeroRent(752,19942
+int ReadObjs(769,20154
+int WriteObjs(835,21674
+
+reception.c,628
+#define OBJ_SAVE_FILE 18,565
+#define OBJ_FILE_FREE 19,600
+void add_obj_cost(47,1463
+bool recep_offer(81,2421
+void update_file(115,3309
+void obj_store_to_char(144,3931
+void load_char_objs(197,5905
+void put_obj_in_store(271,7662
+static int contained_weight(328,9194
+void obj_to_store(339,9475
+void save_obj(389,10759
+void save_obj_for_save(421,11488
+void update_obj_file(455,12394
+void CountLimitedItems(555,14836
+void PrintLimitedItems(583,15632
+int receptionist(603,16100
+int receptionist_for_outlaws(685,18278
+void zero_rent(770,20539
+void ZeroRent(780,20642
+int ReadObjs(797,20854
+int WriteObjs(862,22325
+
+saved.c,58
+void get_objs_from_file(17,350
+void update_file(59,1154
+
+shop.c,494
+#define SHOP_FILE 17,543
+#define MAX_TRADE 18,577
+#define MAX_PROD 19,597
+struct shop_datashop_data31,859
+struct shop_data *shop_index;60,2157
+int number_of_shops;61,2187
+int is_ok(63,2209
+int trade_with(93,2963
+int shop_producing(105,3226
+void shopping_buy(117,3485
+void shopping_sell(239,6370
+void shopping_value(346,9105
+void shopping_list(390,10069
+void shopping_kill(434,11245
+int shop_keeper(459,11704
+void boot_the_shops(536,13653
+void assign_the_shopkeepers(634,16136
+
+sign.c,165
+main(25,459
+void watch(71,1127
+void wave(94,1439
+int new_connection(108,1588
+int init_socket(147,2036
+int write_to_descriptor(199,2889
+void nonblock(224,3207
+
+signals.c,127
+void signal_setup(19,575
+void checkpointing(46,1101
+void shutdown_request(60,1259
+void hupsig(71,1404
+void logsig(81,1586
+
+skills.c,735
+struct hunting_data hunting_data25,590
+void do_disarm(45,944
+int named_mobile_in_room(198,5039
+void do_track(210,5329
+int track(307,7703
+int dir_track(342,8578
+#define IS_DIR 389,9801
+#define GO_OK 390,9864
+#define GO_OK_SMARTER 392,9954
+static void donothing(395,10053
+int find_path(400,10092
+int choose_exit_global(516,13397
+int choose_exit_in_zone(521,13537
+int go_direction(526,13678
+void do_headbutt(541,13992
+void do_subterfuge(595,15354
+void do_swim(640,16582
+int SpyCheck(693,17827
+void slam_into_wall(707,18005
+void do_doorbash(738,18862
+void do_spy(868,22097
+int remove_trap(913,23317
+void do_throw(940,24124
+void do_feign_death(1008,25804
+void do_first_aid(1060,27141
+void do_lay_hands(1092,27997
+
+spec_assign.c,142
+struct special_proc_entry special_proc_entry21,668
+void assign_mobiles(31,1021
+void assign_objects(961,25991
+void assign_rooms(985,26993
+
+spec_procs.c,8214
+#define INQ_SHOUT 25,697
+#define INQ_LOOSE 26,717
+#define SWORD_ANCIENTS 28,738
+#define Elf_Home 32,794
+#define Bakery 33,820
+#define Dump 34,846
+#define Ivory_Gate 35,872
+struct social_type social_type70,2031
+#define MAX_NPC_CORPSE_TIME 75,2086
+#define MAX_PC_CORPSE_TIME 76,2116
+void make_head(77,2146
+int is_target_room_p(118,3458
+int named_object_on_ground(123,3542
+int MakeQuest(134,3772
+char *how_good(194,5261
+int GainLevel(220,5818
+struct char_data *FindMobInRoomWithFunction(240,6277
+int AntiGuildMaster(261,6696
+int MageGuildMaster(475,13888
+int PaladinGuildMaster(614,18352
+int RangerGuildMaster(826,25387
+int ClericGuildMaster(1072,33397
+int ThiefGuildMaster(1204,37652
+int WarriorGuildMaster(1361,42786
+int no_order(1566,49781
+int mag_room(1574,49910
+#define INC18(INC181593,50275
+#define COST 1594,50315
+#define COST_FOR_HIGHER_STATS 1595,50336
+#define COST_FOR_HUNGER 1596,50375
+int metahospital(1597,50407
+int dump(1770,57185
+int mayor(1821,58641
+int andy_wilcox(1928,61258
+#define THE_PUB	1930,61318
+#define ACT_OVER_21 1931,61339
+#define ACT_SNICKER 1932,61361
+  static struct pub_beers pub_beers1939,61608
+struct char_data *find_mobile_here_with_spec_proc(2147,67674
+int eric_johnson(2159,68000
+#define	E_HACKING	2164,68175
+#define	E_SLEEPING	2165,68195
+#define	E_SHORT_BEER_RUN 2166,68216
+#define	E_LONG_BEER_RUN	2167,68243
+#define E_STOCK_FRIDGE	2168,68269
+#define	E_SKYDIVING	2169,68294
+#define Erics_Lair	2170,68316
+#define DanjerKitchen	2171,68340
+#define DanjerLiving	2172,68367
+#define DanjerPorch	2173,68393
+void exec_social(2535,79603
+void npc_steal(2638,81820
+int sheriff(2659,82388
+int bow_shooter(2694,83412
+int snake(2730,84516
+int ninja_master(2751,85166
+#define PGShield 2848,87557
+int PaladinGuildGuard(2850,87581
+int AbyssGateKeeper(2873,88135
+int blink(2895,88655
+int MidgaardCitizen(2912,88964
+int ghoul(2938,89525
+int CarrionCrawler(2964,90238
+int WizardGuard(2991,90944
+int vampire(3030,91820
+int arch_vampire(3054,92622
+int wraith(3078,93482
+int shadow(3098,94098
+int geyser(3125,94982
+int green_slime(3143,95389
+struct breath_victim breath_victim3160,95892
+struct breath_victim *choose_victims(3166,95996
+void free_victims(3196,96969
+int breath_weapon(3207,97131
+int use_breath_weapon(3249,98257
+static funcp breaths[3267,98751
+struct breather breath_monsters[3273,98939
+int BreathWeapon(3305,99775
+int DracoLich(3347,100670
+int Drow(3350,100730
+int Leader(3353,100785
+int thief(3358,100844
+int Astraller(3374,101218
+int Summoner(3421,102324
+int nightcrawler(3478,103606
+int magic_user(3501,104183
+int cleric(3859,114874
+int guild_guard(4052,120519
+int Inquisitor(4093,121507
+int puff(4104,121685
+int regenerator(4395,129324
+int mega_regenerator(4409,129606
+int replicant(4424,129930
+#define TYT_NONE 4443,130395
+#define TYT_CIT 4444,130414
+#define TYT_WHAT 4445,130433
+#define TYT_TELL 4446,130452
+#define TYT_HIT 4447,130471
+int Tytan(4449,130492
+int AbbarachDragon(4524,132482
+int fido(4546,132963
+int janitor(4591,134068
+int tormentor(4612,134591
+int magneto(4625,134771
+int RustMonster(4703,136736
+int temple_labrynth_liar(4758,138017
+int temple_labrynth_sentry(4801,139109
+#define WW_LOOSE 4840,140279
+#define WW_FOLLOW 4841,140298
+int Whirlwind 4843,140319
+#define NN_LOOSE 4874,141226
+#define NN_FOLLOW 4875,141246
+#define NN_STOP 4876,141266
+int NudgeNudge(4878,141287
+int AGGRESSIVE(4990,144764
+int citizen(5008,145120
+int aunt_bee(5027,145528
+int cityguard(5045,146023
+#define ONE_RING 5119,147917
+int Ringwraith(5121,147940
+  struct wraith_hunt wraith_hunt5127,148105
+int WarrenGuard(5252,151490
+int zm_tired(5294,152362
+int zm_stunned_followers(5300,152489
+zm_init_combat(5309,152713
+int zm_kill_fidos(5324,153256
+int zm_kill_aggressor(5339,153631
+#define ZM_MANA	5366,154457
+#define ZM_NEMESIS 5367,154476
+int zombie_master(5365,154397
+int pet_shops(5446,156664
+int Fountain(5511,158430
+int bank 5585,160424
+int pray_for_items(5665,163034
+#define CHAL_ACT 5719,164473
+int vorpal(5725,164685
+int chalice(5776,165962
+int kings_hall(5847,167753
+int Donation(5869,168226
+int hospital(5888,168572
+int hospital_entrance(5935,169783
+int board_room_entrance(5954,170221
+int mirror_room(5977,170791
+int House(6017,171607
+#define SISYPHUS_MAX_LEVEL 6049,172357
+int sisyphus(6055,172571
+int jabberwocky(6090,173442
+int flame(6105,173730
+int banana(6119,174009
+int paramedics(6139,174557
+static char *elf_comm[6191,175940
+int delivery_elf(6211,176701
+#define ELF_INIT 6213,176762
+#define ELF_RESTING 6214,176785
+#define ELF_GETTING 6215,176808
+#define ELF_DELIVERY 6216,176831
+#define ELF_DUMP 6217,176854
+#define ELF_RETURN_TOWER 6218,176873
+#define ELF_RETURN_HOME 6219,176902
+int delivery_beast(6352,179990
+int Keftab(6376,180503
+int StormGiant(6423,181483
+int Manticore(6450,182105
+int Kraken(6454,182166
+int fighter(6459,182225
+int web_slinger(6475,182503
+int juggernaut(6490,182909
+void BlowChar(6508,183361
+void BouncerThrow(6522,183602
+int prof_x(6540,184131
+int elektro(6655,186995
+int iceman(6676,187616
+int cyclops(6702,188169
+int storm(6709,188315
+#define NTMOFFICE 6777,189929
+#define NTMNGATE 6778,189954
+#define NTMEGATE 6779,189978
+#define NTMSGATE 6780,190002
+#define NTMWGATE 6781,190026
+#define NTMWMORN 6783,190051
+#define NTMSTARTM 6784,190073
+#define NTMGOALNM 6785,190095
+#define NTMGOALEM 6786,190117
+#define NTMGOALSM 6787,190139
+#define NTMGOALWM 6788,190161
+#define NTMGOALOM 6789,190183
+#define NTMWNIGHT 6790,190205
+#define NTMSTARTN 6791,190228
+#define NTMGOALNN 6792,190250
+#define NTMGOALEN 6793,190272
+#define NTMGOALSN 6794,190295
+#define NTMGOALWN 6795,190318
+#define NTMGOALON 6796,190341
+#define NTMSUSP 6797,190364
+#define NTM_FIX 6798,190387
+int NewThalosMayor(6800,190411
+int SultanGuard(7033,195558
+int NewThalosCitizen(7088,196835
+int NewThalosGuildGuard(7114,197404
+int magic_user2(7147,198159
+int MordGuard(7254,201251
+int MordCitizen(7309,202527
+int MordGuildGuard(7335,203071
+int Devil(7366,203829
+int Demon(7371,203922
+int CaravanGuildGuard(7377,204016
+int StatTeller(7407,204776
+void ThrowChar(7467,206237
+int ThrowerMob(7504,207555
+Thief(7549,208330
+Tyrannosaurus_swallower(7563,208457
+int soap(7616,209690
+int nodrop(7654,210717
+char *lattimore_descs[7793,214345
+struct memory memory7803,214752
+int lattimore(7811,214846
+#define Lattimore_Initialize 7813,214904
+#define Lattimore_Lockers 7814,214936
+#define Lattimore_FoodRun 7815,214968
+#define Lattimore_Eating 7816,215000
+#define Lattimore_GoHome 7817,215032
+#define Lattimore_Hiding 7818,215064
+#define Lattimore_Sleeping 7819,215096
+#define Lattimore_Run 7820,215128
+#define Lattimore_Item 7821,215160
+#define Kitchen 7823,215193
+#define Barracks 7824,215217
+#define Storeroom 7825,215241
+#define Conf 7826,215265
+#define Trap 7827,215289
+#define EarthQ 7828,215313
+#define CrowBar 7830,215338
+#define PostKey 7831,215362
+int affect_status(8173,225514
+int coldcaster(8202,226291
+int trapper(8237,227059
+int trogcook(8285,228733
+int shaman(8316,229658
+#define DEITY 8318,229713
+#define DEITY_NAME 8319,229733
+int golgar(8347,230551
+#define SHAMAN_NAME 8349,230606
+int troguard(8388,231721
+int keystone(8438,232899
+#define START_ROOM 8440,232956
+#define END_ROOM 8441,232986
+#define GhostSoldier 8442,233016
+#define GhostLieutenant 8443,233046
+#define Identifier 8445,233142
+int ghostsoldier(8492,234485
+char *quest_one[8550,236103
+char *quest_two[8558,236493
+char *quest_three[8568,236881
+char *necklace[8576,237219
+char *nonecklace[8586,237646
+char *quest_intro[8596,238084
+int Valik(8608,238636
+#define Valik_Wandering 8611,238695
+#define Valik_Meditating 8612,238723
+#define Valik_Qone 8613,238751
+#define Valik_Qtwo 8614,238779
+#define Valik_Qthree 8615,238807
+#define Valik_Qfour 8616,238835
+#define Shield 8617,238863
+#define Ring 8618,238895
+#define Chalice 8619,238927
+#define Circlet 8620,238959
+#define Necklace 8621,238991
+#define Med_Chambers 8622,239023
+int guardian(8864,246621
+#define RHYODIN_FILE 8866,246678
+#define Necklace 8867,246709
+  struct Names Names8877,246921
+
+spec_procs2.c,1605
+int bouncer(61,2022
+int gilbert(83,2611
+int toilet_thing(125,3761
+int zombie_hater(152,4497
+int dishboy(171,5114
+int game_wizard(194,5792
+int monk(224,6517
+int monk_master(236,6697
+#define NOD 456,13710
+#define MONK_MOB 457,13726
+#define FLEE 458,13748
+int monk_challenge_room(459,13765
+int monk_challenge_prep_room(520,15366
+#define Bandits_Path 591,17239
+#define BASIL_GATEKEEPER_MAX_LEVEL 592,17267
+#define Fountain_Level 593,17305
+#define DEMON 594,17331
+int ghost(596,17354
+int Magic_Fountain(617,17986
+typedef struct T1000_data T1000_data875,27417
+} T1000_data;T1000_data878,27486
+#define T1000_SEARCHING 881,27508
+#define T1000_HUNTING 882,27536
+int T1000(884,27565
+int jive_box(932,28545
+int new_ninja_master(956,29205
+int RepairGuy(1090,32732
+int Samah(1286,38898
+int BitterBlade(1426,44620
+#define GIVE 1613,51612
+#define GAIN 1614,51628
+int MakeQuest(1616,51646
+int creeping_death(1691,53830
+int shanty_town_kids(1809,57104
+int GenericCityguardHateUndead(1860,58119
+int GenericCityguard(1941,60224
+int loremaster(1997,61522
+void station(2143,65760
+int train_station(2198,67725
+int dragon(2227,68836
+int hunter(2261,70317
+int scraps(2367,72954
+struct char_data *char_with_name(2392,73614
+int adjacent_room(2407,73957
+#define HUNTER_ID 2422,74229
+int bounty_hunter(2424,74259
+int potentially_annoying(2839,93721
+int utility_irritable(2871,95142
+int i_am_irritable(2896,96070
+void PoliceHunt(2901,96189
+int utilityPolice(2916,96610
+int i_am_police(2952,98415
+void obj_act(2957,98518
+int warMaker(2967,98770
+int orbOfDestruction(3120,107767
+
+spell_parser.c,1035
+#define MANA_MU 18,568
+#define MANA_CL 19,586
+#define SPELLO(SPELLO21,605
+#define USE_MANA(USE_MANA36,1337
+struct spell_info_type spell_info[244,17329
+char *spells[246,17379
+const byte saving_throws[468,21174
+int SPELL_LEVEL(519,28092
+void affect_update(536,28644
+void clone_char(763,37084
+void clone_obj(770,37185
+bool circle_follow(779,37354
+void stop_follower(795,37674
+void die_follower(837,39012
+void add_follower(854,39368
+say_spell(878,39900
+   struct syllable syllable887,40083
+bool saves_spell(963,41873
+bool ImpSaveSpell(983,42324
+char *skip_spaces(1008,42846
+void do_cast(1019,43027
+void assign_spell_pointers(1341,53476
+void SpellWearOffSoon(1833,70714
+void SpellWearOff(1851,71119
+void check_decharm(1877,71642
+void check_drowning(1891,71907
+int perform_gestural(1922,72641
+struct obj_data *find_component(1943,73239
+int use_component(1961,73769
+#define BASE_CF 1978,74226
+#define BASE_CS 1979,74246
+int task_check(1980,74265
+int can_do_verbal(2017,75506
+int enforce_verbal(2026,75722
+
+spells1.c,809
+void cast_burning_hands(30,745
+void cast_call_lightning(47,1206
+void cast_chill_touch(87,2402
+void cast_vampiric_touch(101,2751
+void cast_life_leech(114,3121
+void cast_shocking_grasp(128,3450
+void cast_colour_spray(142,3783
+void cast_earthquake(166,4421
+void cast_energy_drain(182,4794
+void cast_fireball(216,5808
+void cast_harm(260,6676
+void cast_lightning_bolt(284,7315
+void cast_acid_blast(308,7960
+void cast_cone_of_cold(332,8578
+void cast_ice_storm(350,8967
+void cast_meteor_swarm(367,9343
+void cast_disintegrate(392,9967
+void cast_flamestrike(417,10614
+void cast_magic_missile(441,11268
+void cast_cause_light(466,11923
+void cast_cause_serious(489,12603
+void cast_cause_critic(517,13419
+void cast_geyser(551,14369
+void cast_green_slime(568,14756
+void cast_create_golem(592,15391
+
+spells2.c,4217
+const struct PolyType PolyList[47,1490
+#define LAST_POLY_MOB 87,2586
+void cast_resurrection(89,2612
+void cast_major_track(111,3061
+void cast_minor_track(145,3881
+void cast_mana(179,4701
+void cast_armor(202,5269
+void cast_stone_skin(240,6251
+void cast_vitalize_mana(274,7153
+void cast_astral_walk(298,7739
+void cast_farlook(317,8222
+void cast_portal(337,8721
+void cast_teleport(355,9116
+void cast_bless(386,9829
+void cast_infravision(452,11645
+void cast_true_seeing(498,12858
+void cast_blindness(542,14035
+void cast_light(587,15236
+void cast_cont_light(608,15711
+void cast_calm(629,16221
+void cast_web(657,16942
+void cast_clone(665,17164
+void cast_control_weather(706,18209
+void cast_create_food(784,20937
+void cast_create_water(804,21463
+void cast_water_breath(824,21920
+void cast_flying(847,22438
+void cast_fly_group(870,22914
+void cast_heroes_feast(889,23362
+void cast_synostodweomer(906,23745
+void cast_heal_spray(918,24072
+void cast_cure_blind(935,24449
+void cast_cure_critic(959,25078
+void cast_cure_light(991,25903
+void cast_cure_serious(1022,26843
+void cast_refresh(1048,27594
+void cast_second_wind(1074,28315
+void cast_shield(1103,29127
+void cast_curse(1131,29844
+void cast_dispel_invisible(1176,31095
+void cast_detect_evil(1198,31660
+void cast_detect_invisibility(1229,32550
+void cast_detect_magic(1266,33753
+void cast_detect_poison(1297,34654
+void cast_dispel_evil(1323,35289
+void cast_dispel_good(1354,36176
+void cast_faerie_fire(1385,37064
+void cast_enchant_weapon(1418,37954
+void cast_enchant_armor(1437,38389
+void cast_heal(1457,38829
+void cast_full_heal(1485,39673
+void cast_invisibility(1510,40426
+void cast_locate_object(1567,42175
+void cast_poison(1581,42506
+void cast_protection_from_evil(1605,43155
+void cast_protection_from_good(1632,44007
+void cast_remove_curse(1659,44950
+void cast_remove_poison(1691,45821
+void cast_remove_paralysis(1714,46491
+void cast_sanctuary(1742,47311
+void cast_silence(1773,48130
+void cast_fireshield(1805,48938
+void cast_sleep(1836,49763
+void cast_strength(1868,50642
+void cast_ventriloquate(1897,51450
+void cast_word_of_recall(1937,52583
+void cast_summon(1970,53521
+void cast_charm_person(1986,53832
+void cast_charm_monster(2009,54535
+void cast_control_undead(2033,55260
+void cast_sense_life(2056,55989
+void cast_identify(2083,56781
+#define MAX_BREATHS 2096,57084
+struct pbreath pbreath2097,57106
+} breath_potions[2099,57155
+void cast_dragon_breath(2108,57301
+void cast_fire_breath(2153,58798
+void cast_frost_breath(2166,59169
+void cast_acid_breath(2179,59543
+void cast_gas_breath(2192,59914
+void cast_lightning_breath(2206,60263
+void cast_knock(2221,60651
+void cast_know_alignment(2298,63565
+void cast_weakness(2318,64099
+void cast_dispel_magic(2337,64567
+void cast_animate_dead(2371,65478
+void cast_succor(2412,66453
+void cast_well_of_knowledge(2425,66726
+void cast_paralyze(2438,67020
+void cast_fear(2470,67919
+void cast_turn(2503,68738
+void cast_faerie_fog(2533,69596
+void cast_poly_self(2549,70016
+#define LONG_SWORD 2604,71065
+#define SHIELD 2605,71091
+#define RAFT 2606,71122
+#define BAG 2607,71148
+#define WATER_BARREL 2608,71174
+#define BREAD 2609,71200
+void cast_minor_creation(2611,71227
+#define FIRE_ELEMENTAL 2655,72223
+#define WATER_ELEMENTAL 2656,72250
+#define AIR_ELEMENTAL 2657,72277
+#define EARTH_ELEMENTAL 2658,72304
+#define RED_STONE 2660,72332
+#define PALE_BLUE_STONE 2661,72361
+#define GREY_STONE 2662,72390
+#define CLEAR_STONE 2663,72418
+void cast_conjure_elemental(2665,72449
+#define DEMON_TYPE_I 2725,73953
+#define DEMON_TYPE_II 2726,73981
+#define DEMON_TYPE_III 2727,74009
+#define DEMON_TYPE_IV 2728,74037
+#define DEMON_TYPE_V 2729,74065
+#define DEMON_TYPE_VI 2730,74093
+#define SWORD_ANCIENTS 2732,74122
+#define SHADOWSHIV 2733,74153
+#define FIRE_SWORD 2734,74184
+#define SILVER_TRIDENT 2735,74215
+#define JEWELLED_DAGGER 2736,74246
+#define SWORD_SHARPNESS 2737,74277
+void cast_cacaodemon(2739,74309
+void cast_mon_sum1(2810,76125
+void cast_mon_sum2(2827,76534
+void cast_mon_sum3(2844,76943
+void cast_mon_sum4(2861,77352
+void cast_mon_sum5(2878,77762
+void cast_mon_sum6(2895,78172
+void cast_mon_sum7(2912,78582
+
+stuff.c,0
+
+syntax_check.c,791
+FILE *mob_f,24,955
+*obj_f,25,1026
+*wld_f,26,1097
+*zon_f;27,1168
+struct edge edge29,1177
+struct room_graph room_graph34,1222
+struct room_graph *world;41,1315
+struct index_data *mob_index;43,1342
+struct index_data *obj_index;44,1418
+struct index_data *wld_index;45,1494
+int top_of_mobt 47,1525
+int top_of_objt 48,1601
+int top_of_wldt 49,1677
+int firstroom;50,1698
+struct time_data time_info;52,1714
+void assume(58,1920
+struct index_data *generate_indices(70,2232
+int exist_index(110,3233
+int rnum_from_vnum(126,3540
+init_node(144,3909
+void check_world(154,4062
+void setup_dir(218,5664
+void check_zones(253,6881
+void check_mobile(392,10667
+void check_objects(594,15939
+char *fread_string(704,18785
+check_reach(750,19713
+check_one_way(826,21659
+int main(848,22233
+
+table.c,35
+struct room_data *world_data[6,65
+
+test.c,75
+  *buf 39,761
+  for (no = 1, i = 0; *command[41,779
+void do_who(54,1120
+
+utility.c,2331
+void SetRacialStuff(45,1314
+int MIN(85,2113
+int MAX(91,2162
+int GetItemClassRestrictions(96,2210
+int CAN_SEE_FOR_WHO(129,3048
+int CAN_SEE(176,4364
+void LoseStuff(223,5613
+int LearnFromMistake(235,5827
+int exit_ok(251,6367
+int MobVnum(264,6611
+int ObjVnum(273,6737
+void Zwrite 282,6874
+void RecZwriteObj(296,7209
+FILE *MakeZoneFile(311,7558
+int WeaponImmune(325,7756
+int IsImmune(338,8042
+int IsResist(343,8128
+int IsSusc(348,8212
+int number(354,8344
+int dice(365,8505
+int scan_number(378,8694
+int str_cmp(390,8937
+int strn_cmp(411,9339
+void log(428,9623
+void slog(450,10130
+void sprintbit(464,10316
+void sprinttype(491,10780
+struct time_info_data real_time_passed(504,11042
+struct time_info_data mud_time_passed(526,11509
+struct time_info_data age(549,12033
+char in_group 561,12265
+char getall(617,13162
+int getabunch(646,13695
+int DetermineExp(671,14056
+void down_river(867,17984
+void RoomSave(929,19892
+void RoomLoad(1081,23302
+void fake_setup_dir(1139,24672
+int IsHumanoid(1155,24940
+int IsAnimal(1189,25521
+int IsUndead(1208,25787
+int IsVeggie(1224,25970
+int IsOther(1243,26239
+int IsGiantish(1260,26492
+int IsLycanthrope(1276,26742
+int IsDiabolic(1289,26910
+int IsReptile(1305,27112
+int HasHands(1319,27332
+int IsPerson(1334,27589
+int IsExtraPlanar(1356,27856
+void SetHunting(1381,28269
+void CallForGuard1416,29031
+void StandUp 1478,30215
+void FighterMove(1493,30693
+void MonkMove(1522,31622
+void DevelopHatred(1564,33071
+void Teleport(1592,33540
+int HasObject(1688,35792
+int room_of_object(1717,36277
+struct char_data *char_holding(1731,36602
+int RecCompObjNum(1746,36909
+void RestoreChar(1763,37224
+void RemAllAffects(1772,37374
+int ObjLevelCheck(1778,37465
+int CheckForBlockedMove1794,38055
+void TeleportPulseStuff(1823,38685
+void RiverPulseStuff(1943,41474
+int apply_soundproof(2048,44277
+int check_nomagic(2064,44606
+struct char_data *FindMobDiffZoneSameRace(2079,44915
+int NumCharmedFollowersInRoom(2098,45345
+int check_soundproof(2120,45764
+int MobCountInRoom(2135,46013
+void *Mymalloc(2147,46178
+int SpaceForSkills(2152,46234
+int CountLims(2167,46485
+char *lower(2184,46785
+char *strstr(2199,46958
+char *strcasestr(2210,47185
+int GetApprox(2221,47420
+int num_classes(2244,47762
+void logf(2254,47906
+int safe_to_be_in_system(2267,48201
+
+weather.c,170
+unsigned char moontype;31,846
+void weather_and_time(35,901
+void another_hour(44,991
+void weather_change(129,3090
+void ChangeWeather(212,4661
+void GetMonth(274,6310
+
+area.h,188
+#define _AREA_2,15
+#define MIDGAARD 8,92
+#define NEWTHALOS 9,112
+#define MORDILNIA 11,133
+#define CARAVAN 12,153
+#define TROGCAVES 13,173
+#define OUTPOST 14,193
+#define BEE 15,213
+
+c_f_u_new.h,45
+struct char_file_u_newchar_file_u_new8,481
+
+comm.h,1001
+#define TO_ROOM 21,998
+#define TO_VICT 22,1019
+#define TO_NOTVICT 23,1040
+#define TO_CHAR 24,1061
+#define SEND_TO_Q(SEND_TO_Q28,1178
+#define ANSI_NORMAL 30,1248
+#define ANSI_BLACK 31,1278
+#define ANSI_RED 32,1308
+#define ANSI_RED2 33,1336
+#define ANSI_GREEN 34,1364
+#define ANSI_ORANGE 35,1394
+#define ANSI_BLUE 36,1425
+#define ANSI_VIOLET 37,1454
+#define ANSI_CYAN 38,1485
+#define ANSI_WHITE 39,1514
+#define ANSI_BK_ON_BK 41,1545
+#define ANSI_BK_ON_WH 42,1615
+#define ANSI_WH_ON_BL 43,1685
+#define ANSI_WH_ON_CY 44,1755
+#define ANSI_WH_ON_GR 45,1824
+#define ANSI_WH_ON_OR 46,1894
+#define ANSI_WH_ON_PR 47,1965
+#define ANSI_WH_ON_RD 48,2036
+#define VT_GRAPHBR 50,2105
+#define VT_INITSEQ 51,2174
+#define VT_CURSPOS 52,2241
+#define VT_CURSRIG 53,2311
+#define VT_CURSLEF 54,2380
+#define VT_CLENSEQ 55,2448
+#define VT_INVERTT 56,2523
+#define VT_BOLDTEX 57,2587
+#define VT_NORMALT 58,2647
+#define VT_MARGSET 59,2709
+#define VT_CURSAVE 60,2772
+#define VT_CURREST 61,2844
+
+db.h,1166
+#define DFLT_DIR 9,349
+#define WORLD_FILE 11,425
+#define MOB_FILE 12,500
+#define OBJ_FILE 13,575
+#define ATLAS1_FILE 14,650
+#define ATLAS2_FILE 15,726
+#define ATLAS3_FILE 16,760
+#define ATLAS4_FILE 17,794
+#define ZONE_FILE 18,828
+#define CREDITS_FILE 19,903
+#define NEWS_FILE 20,978
+#define WIZNEWS_FILE	21,1053
+#define MOTD_FILE 22,1086
+#define ANSI_FILE 23,1161
+#define PLAYER_FILE 24,1194
+#define TIME_FILE 25,1269
+#define IDEA_FILE 26,1344
+#define TYPO_FILE 27,1419
+#define BUG_FILE 28,1494
+#define MESS_FILE 29,1569
+#define SOCMESS_FILE 30,1644
+#define HELP_PATH	31,1719
+#define IMMORTAL_HELP_PATH 32,1786
+#define BUILDER_HELP_PATH 33,1830
+#define HELP_PAGE_FILE 34,1872
+#define INFO_FILE 35,1947
+#define WIZLIST_FILE 36,2022
+#define POSEMESS_FILE 37,2097
+#define REAL 55,2665
+#define VIRTUAL 56,2680
+struct reset_comreset_com63,2837
+struct zone_datazone_data86,3461
+struct index_dataindex_data108,4132
+struct reset_q_elementreset_q_element121,4466
+struct reset_q_typereset_q_type130,4624
+} reset_q;134,4708
+struct player_index_elementplayer_index_element138,4722
+struct help_index_elementhelp_index_element145,4779
+
+debug.h,20
+#define __DEBUG2,1
+
+games.h,684
+#define BET_OPTIONS 3,75
+#define R_TABLE 15,577
+#define CRAPS_OPTIONS 36,1370
+#define ONEROLL_OPTIONS 48,2016
+#define COME_OUT 62,2622
+#define CRAP_OUT 63,2645
+#define ELEVEN 67,2726
+#define TWELVE 68,2749
+#define HARD_EIGHT 69,2772
+#define HARD_TEN 70,2795
+#define HARD_SIX 71,2818
+#define HARD_FOUR 72,2842
+#define CRAPS 73,2867
+#define HORN_BET 74,2891
+#define FIELD_BET 75,2916
+#define TWO2 76,2941
+#define THREE3 77,2966
+#define SEVEN 78,2992
+#define START_BETS 82,3080
+#define SECOND_CALL 83,3104
+#define LAST_CALL 84,3128
+#define ONE 88,3158
+#define TWO 95,3259
+#define THREE 102,3360
+#define FOUR 109,3463
+#define FIVE 116,3565
+#define SIX 123,3667
+
+handler.h,190
+#define FIND_CHAR_ROOM 71,2786
+#define FIND_CHAR_WORLD 72,2815
+#define FIND_OBJ_INV 73,2844
+#define FIND_OBJ_ROOM 74,2873
+#define FIND_OBJ_WORLD 75,2902
+#define FIND_OBJ_EQUIP 76,2931
+
+hash.h,96
+struct hash_link hash_link2,1
+struct hash_header hash_header8,75
+#define WORLD_SIZE 26,730
+
+heap.h,68
+struct StrHeapList StrHeapList5,29
+struct StrHeap StrHeap10,146
+
+interpreter.h,218
+struct command_infocommand_info19,870
+#define MENU 26,1015
+#define CLASSHELP 38,1305
+#define  RACEHELP 56,2225
+#define OLDONE 65,2714
+#define GREETINGS 72,2972
+#define WELC_MESSG 82,3459
+#define STORY 87,3571
+
+limits.h,36
+struct title_typetitle_type11,444
+
+mail.h,915
+#define MIN_MAIL_LEVEL 11,414
+#define STAMP_PRICE 14,484
+#define MAX_MAIL_SIZE 17,557
+#define NAME_SIZE 20,618
+#define BLOCK_SIZE 23,684
+#define INT_SIZE 43,1417
+#define CHAR_SIZE 44,1447
+#define LONG_SIZE 45,1478
+#define HEADER_BLOCK_DATASIZE 47,1511
+#define DATA_BLOCK_DATASIZE 50,1648
+#define HEADER_BLOCK 56,1852
+#define LAST_BLOCK 57,1877
+#define DELETED_BLOCK 58,1902
+struct header_block_type_dheader_block_type_d60,1929
+struct data_block_type_ddata_block_type_d75,2552
+typedef struct header_block_type_d header_block_type;header_block_type82,2756
+typedef struct data_block_type_d   data_block_type;data_block_type83,2810
+struct position_list_type_dposition_list_type_d85,2864
+typedef struct position_list_type_d position_list_type;position_list_type91,2958
+struct mail_index_type_dmail_index_type_d93,3016
+typedef struct mail_index_type_d mail_index_type;mail_index_type100,3210
+
+multiclass.h,0
+
+opinion.h,0
+
+poly.h,31
+struct PolyType PolyType6,40
+
+race.h,1244
+#define RACE_NORACE 2,29
+#define RACE_HUMAN 3,98
+#define RACE_ELVEN 4,123
+#define RACE_DWARF 5,148
+#define RACE_HOBBIT 6,173
+#define RACE_GNOME 7,198
+#define RACE_OGRE 8,223
+#define RACE_SPECIAL 12,276
+#define RACE_LYCANTH 13,300
+#define RACE_DRAGON 14,324
+#define RACE_UNDEAD 15,348
+#define RACE_ORC 16,373
+#define RACE_INSECT 17,398
+#define RACE_ARACHNID 18,423
+#define RACE_DINOSAUR 19,448
+#define RACE_FISH 20,473
+#define RACE_BIRD 21,498
+#define RACE_GIANT 22,523
+#define RACE_PREDATOR 23,548
+#define RACE_PARASITE 24,573
+#define RACE_SLIME 25,598
+#define RACE_DEMON 26,623
+#define RACE_SNAKE 27,648
+#define RACE_HERBIV 28,673
+#define RACE_TREE 29,698
+#define RACE_VEGGIE 30,723
+#define RACE_ELEMENT 31,748
+#define RACE_PLANAR 32,773
+#define RACE_DEVIL 33,798
+#define RACE_GHOST 34,823
+#define RACE_GOBLIN 35,848
+#define RACE_TROLL 36,873
+#define RACE_VEGMAN 37,898
+#define RACE_MFLAYER 38,923
+#define RACE_PRIMATE 39,948
+#define RACE_ENFAN 40,973
+#define RACE_DROW 41,998
+#define RACE_GOLEM 42,1023
+#define RACE_SKEXIE 43,1048
+#define RACE_TROGMAN 44,1073
+#define RACE_PATRYN 45,1098
+#define RACE_LABRAT 46,1123
+#define RACE_SARTAN 47,1148
+#define RACE_TYTAN 48,1173
+#define RACE_MONK 49,1198
+
+s_list.h,24
+#define __S_LIST_H2,19
+
+spells.h,7948
+#define MAX_BUF_LENGTH 6,306
+#define TYPE_UNDEFINED 8,347
+#define SPELL_RESERVED_DBC 9,387
+#define SPELL_ARMOR 10,452
+#define SPELL_TELEPORT 11,529
+#define SPELL_BLESS 12,606
+#define SPELL_BLINDNESS 13,683
+#define SPELL_BURNING_HANDS 14,760
+#define SPELL_CALL_LIGHTNING 15,837
+#define SPELL_CHARM_PERSON 16,914
+#define SPELL_CHILL_TOUCH 17,991
+#define SPELL_CLONE 18,1068
+#define SPELL_COLOUR_SPRAY 19,1145
+#define SPELL_CONTROL_WEATHER 20,1222
+#define SPELL_CREATE_FOOD 21,1299
+#define SPELL_CREATE_WATER 22,1376
+#define SPELL_CURE_BLIND 23,1453
+#define SPELL_CURE_CRITIC 24,1530
+#define SPELL_CURE_LIGHT 25,1607
+#define SPELL_CURSE 26,1684
+#define SPELL_DETECT_EVIL 27,1761
+#define SPELL_DETECT_INVISIBLE 28,1838
+#define SPELL_DETECT_MAGIC 29,1915
+#define SPELL_DETECT_POISON 30,1992
+#define SPELL_DISPEL_EVIL 31,2069
+#define SPELL_EARTHQUAKE 32,2146
+#define SPELL_ENCHANT_WEAPON 33,2223
+#define SPELL_ENERGY_DRAIN 34,2300
+#define SPELL_FIREBALL 35,2377
+#define SPELL_HARM 36,2454
+#define SPELL_HEAL 37,2531
+#define SPELL_INVISIBLE 38,2608
+#define SPELL_LIGHTNING_BOLT 39,2685
+#define SPELL_LOCATE_OBJECT 40,2762
+#define SPELL_MAGIC_MISSILE 41,2839
+#define SPELL_POISON 42,2916
+#define SPELL_PROTECT_FROM_EVIL 43,2993
+#define SPELL_REMOVE_CURSE 44,3070
+#define SPELL_SANCTUARY 45,3147
+#define SPELL_SHOCKING_GRASP 46,3224
+#define SPELL_SLEEP 47,3301
+#define SPELL_STRENGTH 48,3378
+#define SPELL_SUMMON 49,3455
+#define SPELL_VENTRILOQUATE 50,3532
+#define SPELL_WORD_OF_RECALL 51,3609
+#define SPELL_REMOVE_POISON 52,3686
+#define SPELL_SENSE_LIFE 53,3763
+#define SKILL_SNEAK 57,3913
+#define SKILL_HIDE 58,3990
+#define SKILL_STEAL 59,4067
+#define SKILL_BACKSTAB 60,4144
+#define SKILL_PICK_LOCK 61,4221
+#define SKILL_KICK 63,4299
+#define SKILL_BASH 64,4376
+#define SKILL_RESCUE 65,4453
+#define SPELL_IDENTIFY 71,4612
+#define SPELL_INFRAVISION 72,4652
+#define SPELL_CAUSE_LIGHT 73,4692
+#define SPELL_CAUSE_CRITICAL 74,4732
+#define SPELL_FLAMESTRIKE 75,4772
+#define SPELL_DISPEL_GOOD 76,4812
+#define SPELL_WEAKNESS 77,4852
+#define SPELL_DISPEL_MAGIC 78,4892
+#define SPELL_KNOCK 79,4932
+#define SPELL_KNOW_ALIGNMENT 80,4972
+#define SPELL_ANIMATE_DEAD 81,5012
+#define SPELL_PARALYSIS 82,5052
+#define SPELL_REMOVE_PARALYSIS 83,5092
+#define SPELL_FEAR 84,5132
+#define SPELL_ACID_BLAST 85,5172
+#define SPELL_WATER_BREATH 86,5212
+#define SPELL_FLY 87,5252
+#define SPELL_CONE_OF_COLD 88,5292
+#define SPELL_METEOR_SWARM 89,5332
+#define SPELL_ICE_STORM 90,5372
+#define SPELL_SHIELD 91,5412
+#define SPELL_MON_SUM_1 92,5452
+#define SPELL_MON_SUM_2 93,5504
+#define SPELL_MON_SUM_3 94,5544
+#define SPELL_MON_SUM_4 95,5584
+#define SPELL_MON_SUM_5 96,5624
+#define SPELL_MON_SUM_6 97,5664
+#define SPELL_MON_SUM_7 98,5704
+#define SPELL_FIRESHIELD 99,5757
+#define SPELL_CHARM_MONSTER 100,5797
+#define SPELL_CURE_SERIOUS 101,5838
+#define SPELL_CAUSE_SERIOUS 102,5878
+#define SPELL_REFRESH 103,5918
+#define SPELL_SECOND_WIND 104,5958
+#define SPELL_TURN 105,5998
+#define SPELL_SUCCOR 106,6038
+#define SPELL_LIGHT 107,6078
+#define SPELL_CONT_LIGHT 108,6118
+#define SPELL_CALM 109,6158
+#define SPELL_STONE_SKIN 110,6198
+#define SPELL_CONJURE_ELEMENTAL 111,6238
+#define SPELL_TRUE_SIGHT 112,6278
+#define SPELL_MINOR_CREATE 113,6318
+#define SPELL_FAERIE_FIRE 114,6358
+#define SPELL_FAERIE_FOG 115,6398
+#define SPELL_CACAODEMON 116,6438
+#define SPELL_POLY_SELF 117,6478
+#define SPELL_MANA 118,6518
+#define SPELL_ASTRAL_WALK 119,6558
+#define SPELL_RESURRECTION 120,6598
+#define SPELL_H_FEAST 122,6639
+#define SPELL_FLY_GROUP 123,6679
+#define SPELL_DRAGON_BREATH 124,6719
+#define SPELL_WEB 125,6759
+#define SPELL_MINOR_TRACK 126,6799
+#define SPELL_MAJOR_TRACK 127,6839
+#define SPELL_FULL_HEAL 128,6879
+#define SPELL_VITALIZE_MANA 129,6919
+#define SPELL_PORTAL 130,6959
+#define SPELL_SILENCE 131,6999
+#define SPEC_SHOOT	132,7039
+#define SPELL_HEAL_SPRAY 133,7070
+#define SPELL_VAMPIRIC_TOUCH 134,7110
+#define SPELL_SYNOSTODWEOMER 135,7150
+#define SPELL_LIFE_LEECH 136,7190
+#define SPELL_CONTROL_UNDEAD 137,7230
+#define SPELL_WELL_OF_KNOWLEDGE 138,7270
+#define SPELL_FARLOOK 139,7310
+#define SPELL_DISPEL_INVISIBLE 140,7350
+#define SPEC_BOW 141,7390
+#define SPELL_PROTECT_GOOD 142,7430
+#define SPELL_DISINTEGRATE 143,7470
+#define SPELL_GOLEM	144,7510
+#define MAX_EXIST_SPELL 146,7540
+#define SPELL_PWORD_KILL 148,7612
+#define SPELL_PWORD_BLIND 149,7649
+#define SPELL_SUMMON_OBJ 150,7686
+#define SPELL_FAMILIAR 151,7723
+#define SPELL_CHAIN_LIGHTNING 152,7760
+#define SPELL_SCARE 153,7797
+#define SPELL_SENDING 154,7834
+#define SPELL_HOLY_WORD 155,7871
+#define SPELL_UNHOLY_WORD 156,7908
+#define SPELL_AID 157,7945
+#define SPELL_COMMAND 158,7998
+#define SKILL_SIGN 164,8132
+#define SKILL_SWIM 165,8173
+#define SKILL_CONS_UNDEAD 166,8215
+#define SKILL_CONS_VEGGIE 167,8256
+#define SKILL_CONS_DEMON 168,8298
+#define SKILL_CONS_ANIMAL 169,8339
+#define SKILL_CONS_REPTILE 170,8380
+#define SKILL_CONS_PEOPLE 171,8421
+#define SKILL_CONS_GIANT 172,8462
+#define SKILL_CONS_OTHER 173,8503
+#define SKILL_SWITCH_OPP 174,8544
+#define SKILL_FEIGN_DEATH 175,8585
+#define SKILL_FIRST_AID 176,8626
+#define SKILL_DODGE 177,8667
+#define SKILL_QUIV_PALM 178,8708
+#define SKILL_SPRING_LEAP 179,8749
+#define SKILL_LAY_HANDS 180,8790
+#define SKILL_REMOVE_TRAP 181,8831
+#define SKILL_FIND_TRAP 182,8872
+#define SKILL_RETREAT 183,8913
+#define SKILL_HUNT 184,8954
+#define SKILL_SET_TRAP 185,8995
+#define SKILL_DISARM 186,9036
+#define SKILL_READ_MAGIC 187,9077
+#define SKILL_GRAPPLE 188,9118
+#define SKILL_HEADBUTT 189,9159
+#define SKILL_SUBTERFUGE 190,9200
+#define SKILL_THROW 191,9241
+#define SKILL_BREW 192,9282
+#define SKILL_SCRIBE 193,9323
+#define SKILL_DOUBLE_ATTACK 194,9364
+#define SKILL_DEATHSTROKE 195,9405
+#define SKILL_BODYSLAM 196,9446
+#define SKILL_DETECT_SECRET 197,9487
+#define SKILL_SPY 198,9528
+#define SKILL_DOORBASH 199,9569
+#define SPELL_GREEN_SLIME 201,9611
+#define FIRST_BREATH_WEAPON	203,9653
+#define SPELL_GEYSER 204,9690
+#define SPELL_FIRE_BREATH 205,9731
+#define SPELL_GAS_BREATH 206,9772
+#define SPELL_FROST_BREATH 207,9813
+#define SPELL_ACID_BREATH 208,9854
+#define SPELL_LIGHTNING_BREATH 209,9895
+#define LAST_BREATH_WEAPON	210,9936
+#define TYPE_HIT 213,9974
+#define TYPE_BLUDGEON 214,10015
+#define TYPE_PIERCE 215,10056
+#define TYPE_SLASH 216,10097
+#define TYPE_WHIP 217,10138
+#define TYPE_CLAW 218,10193
+#define TYPE_BITE 219,10266
+#define TYPE_STING 220,10339
+#define TYPE_CRUSH 221,10412
+#define TYPE_CLEAVE 222,10485
+#define TYPE_STAB 223,10526
+#define TYPE_SMASH 224,10567
+#define TYPE_SMITE 225,10608
+#define TYPE_SUFFERING 227,10650
+#define MAX_TYPES 235,10767
+#define SAVING_PARA 237,10789
+#define SAVING_ROD 238,10813
+#define SAVING_PETRI 239,10837
+#define SAVING_BREATH 240,10861
+#define SAVING_SPELL 241,10885
+#define MAX_SPL_LIST	244,10911
+#define TAR_IGNORE	247,10938
+#define TAR_CHAR_ROOM	248,10967
+#define TAR_CHAR_WORLD	249,10998
+#define TAR_FIGHT_SELF	250,11030
+#define TAR_FIGHT_VICT	251,11062
+#define TAR_SELF_ONLY	252,11094
+#define TAR_SELF_NONO	253,11172
+#define TAR_OBJ_INV	254,11250
+#define TAR_OBJ_ROOM	255,11279
+#define TAR_OBJ_WORLD	256,11309
+#define TAR_OBJ_EQUIP	257,11340
+#define TAR_NAME	258,11371
+#define TAR_VIOLENT	259,11397
+#define TAR_ROOM 260,11426
+#define TAR_SINGLE 261,11496
+struct spell_info_typespell_info_type263,11581
+#define SPELL_TYPE_SPELL 295,12784
+#define SPELL_TYPE_POTION 296,12813
+#define SPELL_TYPE_WAND 297,12842
+#define SPELL_TYPE_STAFF 298,12871
+#define SPELL_TYPE_SCROLL 299,12900
+struct attack_hit_type attack_hit_type304,12963
+#define TASK_TRIVIAL 309,13026
+#define TASK_EASY 310,13050
+#define TASK_NORMAL 311,13074
+#define TASK_DIFFICULT	312,13098
+#define TASK_DANGEROUS 313,13123
+#define CRITICAL_FAILURE 314,13149
+#define CRITICAL_SUCCESS 315,13177
+#define NORMAL_RESULT 316,13204
+
+structs.h,15998
+typedef signed char sbyte;sbyte8,330
+typedef unsigned char ubyte;ubyte9,357
+typedef short int sh_int;sh_int10,386
+typedef unsigned short int ush_int;ush_int11,412
+typedef char bool;bool12,448
+typedef signed char byte;byte13,467
+#define PULSE_COMMAND 19,519
+#define PULSE_TICK 20,543
+#define MAX_STAT 22,565
+#define BIT_POOF_IN 24,585
+#define BIT_POOF_OUT 25,608
+struct QuestItem QuestItem31,654
+#define LIMITED_ITEMS 39,728
+#define PLAYER_AUTH 40,753
+#define SITELOCK 41,778
+#define MIN_GLOB_TRACK_LEV 46,827
+#define MAX_BAN_HOSTS 50,951
+#define NEWBIE_REQUEST 56,1015
+#define NEWBIE_START 57,1040
+#define NEWBIE_AXE 58,1067
+#define NEWBIE_CHANCES 59,1092
+#define LIM_ITEM_COST_MIN 65,1148
+#define TICK_WRAP_COUNT 71,1261
+#define PLR_TICK_WRAP 79,1647
+struct bet_data bet_data84,1743
+struct char_bet_data char_bet_data102,1998
+#define MAGE_LEVEL_IND 112,2115
+#define CLERIC_LEVEL_IND 113,2147
+#define WARRIOR_LEVEL_IND 114,2179
+#define THIEF_LEVEL_IND 115,2211
+#define ANTIPALADIN_LEVEL_IND 116,2243
+#define PALADIN_LEVEL_IND 117,2275
+#define MONK_LEVEL_IND 118,2307
+#define RANGER_LEVEL_IND 119,2339
+#define FIRE_DAMAGE 122,2373
+#define COLD_DAMAGE 123,2395
+#define ELEC_DAMAGE 124,2417
+#define BLOW_DAMAGE 125,2439
+#define ACID_DAMAGE 126,2461
+#define HATE_SEX 128,2484
+#define HATE_RACE 129,2505
+#define HATE_CHAR 130,2526
+#define HATE_CLASS 131,2547
+#define HATE_EVIL 132,2568
+#define HATE_GOOD 133,2590
+#define HATE_VNUM 134,2612
+#define FEAR_SEX 136,2635
+#define FEAR_RACE 137,2656
+#define FEAR_CHAR 138,2677
+#define FEAR_CLASS 139,2698
+#define FEAR_EVIL 140,2719
+#define FEAR_GOOD 141,2741
+#define FEAR_VNUM 142,2763
+#define OP_SEX 144,2786
+#define OP_RACE 145,2805
+#define OP_CHAR 146,2824
+#define OP_CLASS 147,2843
+#define OP_EVIL 148,2862
+#define OP_GOOD 149,2881
+#define OP_VNUM 150,2900
+#define ABS_MAX_LVL 152,2920
+#define MAX_MORT 153,2944
+#define LOW_IMMORTAL 154,2968
+#define IMMORTAL 155,2992
+#define CREATOR 156,3016
+#define SAINT 157,3040
+#define DEMIGOD 158,3064
+#define LESSER_GOD 159,3088
+#define GOD 160,3112
+#define GREATER_GOD 161,3136
+#define SILLYLORD 162,3160
+#define IMPLEMENTOR 163,3184
+#define BRUTIUS 164,3208
+#define MAX_IMMORT 165,3232
+#define IMM_FIRE 167,3257
+#define IMM_COLD 168,3283
+#define IMM_ELEC 169,3309
+#define IMM_ENERGY 170,3335
+#define IMM_BLUNT 171,3361
+#define IMM_PIERCE 172,3387
+#define IMM_SLASH 173,3413
+#define IMM_ACID 174,3439
+#define IMM_POISON 175,3465
+#define IMM_DRAIN 176,3491
+#define IMM_SLEEP 177,3517
+#define IMM_CHARM 178,3543
+#define IMM_HOLD 179,3569
+#define IMM_NONMAG 180,3595
+#define IMM_PLUS1 181,3621
+#define IMM_PLUS2 182,3647
+#define IMM_PLUS3 183,3673
+#define IMM_PLUS4 184,3699
+#define PULSE_RIVER 186,3726
+#define PULSE_TELEPORT 187,3752
+#define MAX_ROOMS 189,3784
+struct nodesnodes191,3810
+struct room_qroom_q197,3860
+struct string_block string_block203,3920
+struct char_list char_list213,3996
+}  Opinion;227,4422
+#define PULSE_ZONE 236,4459
+#define PULSE_MOBILE 237,4486
+#define PULSE_VIOLENCE 238,4513
+#define WAIT_SEC 239,4540
+#define WAIT_ROUND 240,4565
+#define MAX_STRING_LENGTH 242,4591
+#define MAX_INPUT_LENGTH 243,4624
+#define MAX_MESSAGES 244,4657
+#define MAX_ITEMS 245,4690
+#define MESS_ATTACKER 247,4724
+#define MESS_VICTIM 248,4748
+#define MESS_ROOM 249,4772
+#define SECS_PER_REAL_MIN 251,4797
+#define SECS_PER_REAL_HOUR 252,4827
+#define SECS_PER_REAL_DAY 253,4877
+#define SECS_PER_REAL_YEAR 254,4928
+#define SECS_PER_MUD_HOUR 256,4980
+#define SECS_PER_MUD_DAY 257,5010
+#define SECS_PER_MUD_MONTH 258,5060
+#define SECS_PER_MUD_YEAR 259,5109
+#define ITEM_LIGHT 265,5228
+#define ITEM_SCROLL 266,5254
+#define ITEM_WAND 267,5280
+#define ITEM_STAFF 268,5306
+#define ITEM_WEAPON 269,5332
+#define ITEM_FIREWEAPON 270,5358
+#define ITEM_MISSILE 271,5384
+#define ITEM_TREASURE 272,5410
+#define ITEM_ARMOR 273,5436
+#define ITEM_POTION 274,5462
+#define ITEM_WORN 275,5489
+#define ITEM_OTHER 276,5515
+#define ITEM_TRASH 277,5541
+#define ITEM_TRAP 278,5567
+#define ITEM_CONTAINER 279,5593
+#define ITEM_NOTE 280,5619
+#define ITEM_DRINKCON 281,5645
+#define ITEM_KEY 282,5671
+#define ITEM_FOOD 283,5697
+#define ITEM_MONEY 284,5723
+#define ITEM_PEN 285,5749
+#define ITEM_BOAT 286,5775
+#define ITEM_AUDIO 287,5801
+#define ITEM_BOARD 288,5827
+#define ITEM_BOW 289,5853
+#define ITEM_ARROW 290,5879
+#define ITEM_RADIO 291,5905
+#define ITEM_CORPSE 292,5931
+#define ITEM_SPELLBAG 293,5957
+#define ITEM_COMPONENT 294,5983
+#define ITEM_BOOK 295,6009
+#define ITEM_TAKE 299,6070
+#define ITEM_WEAR_FINGER 300,6104
+#define ITEM_WEAR_NECK 301,6137
+#define ITEM_WEAR_BODY 302,6170
+#define ITEM_WEAR_HEAD 303,6203
+#define ITEM_WEAR_LEGS 304,6236
+#define ITEM_WEAR_FEET 305,6269
+#define ITEM_WEAR_HANDS 306,6302
+#define ITEM_WEAR_ARMS 307,6336
+#define ITEM_WEAR_SHIELD 308,6369
+#define ITEM_WEAR_ABOUT 309,6402
+#define ITEM_WEAR_WAISTE 310,6436
+#define ITEM_WEAR_WRIST 311,6469
+#define ITEM_WIELD 312,6502
+#define ITEM_HOLD 313,6535
+#define ITEM_THROW 314,6568
+#define ITEM_WEAR_EAR 316,6675
+#define ITEM_WEAR_FACE 317,6708
+#define ITEM_WORN_AS_RADIO 318,6746
+#define ITEM_GLOW 322,6816
+#define ITEM_HUM 323,6847
+#define ITEM_LEVEL15 324,6878
+#define ITEM_LEVEL25 325,6930
+#define ITEM_LEVEL35 326,6982
+#define ITEM_INVISIBLE 327,7034
+#define ITEM_MAGIC 328,7065
+#define ITEM_NODROP 329,7096
+#define ITEM_BLESS 330,7127
+#define ITEM_ANTI_GOOD 331,7158
+#define ITEM_ANTI_EVIL 332,7224
+#define ITEM_ANTI_NEUTRAL 333,7290
+#define ITEM_ANTI_CLERIC 334,7356
+#define ITEM_ANTI_MAGE 335,7387
+#define ITEM_ANTI_THIEF 336,7418
+#define ITEM_ANTI_FIGHTER 337,7450
+#define ITEM_BRITTLE 338,7482
+#define ITEM_LEVEL10 340,7620
+#define ITEM_LEVEL20 341,7686
+#define ITEM_LEVEL30 342,7752
+#define ITEM_ANTI_ANTI 343,7818
+#define ITEM_ANTI_PALA 344,7852
+#define ITEM_ANTI_RANGER 345,7886
+#define ITEM_ANTI_MONK 346,7920
+#define ITEM_LEVEL40 347,7954
+#define ITEM_HOLDING 348,7988
+#define LIQ_WATER 351,8060
+#define LIQ_BEER 352,8085
+#define LIQ_WINE 353,8110
+#define LIQ_ALE 354,8135
+#define LIQ_DARKALE 355,8160
+#define LIQ_WHISKY 356,8185
+#define LIQ_LEMONADE 357,8210
+#define LIQ_FIREBRT 358,8235
+#define LIQ_LOCALSPC 359,8260
+#define LIQ_SLIME 360,8285
+#define LIQ_MILK 361,8310
+#define LIQ_TEA 362,8336
+#define LIQ_COFFE 363,8362
+#define LIQ_BLOOD 364,8388
+#define LIQ_SALTWATER 365,8414
+#define LIQ_COKE 366,8440
+#define DRINK_POISON 369,8501
+#define DRINK_PERM 370,8530
+#define CONT_CLOSEABLE 375,8595
+#define CONT_PICKPROOF 376,8625
+#define CONT_CLOSED 377,8655
+#define CONT_LOCKED 378,8685
+struct extra_descr_dataextra_descr_data382,8718
+#define MAX_OBJ_AFFECT 389,8961
+#define OBJ_NOTIMER 390,9038
+struct obj_flag_dataobj_flag_data392,9071
+struct obj_affected_type obj_affected_type411,9816
+struct obj_dataobj_data417,10061
+#define NOWHERE 447,11555
+#define AUTO_RENT 448,11623
+#define DARK 452,11726
+#define DEATH 453,11751
+#define NO_MOB 454,11776
+#define INDOORS 455,11801
+#define PEACEFUL 456,11826
+#define NOSTEAL 457,11870
+#define NO_SUM 458,11914
+#define NO_MAGIC 459,11959
+#define TUNNEL 460,11984
+#define PRIVATE 461,12017
+#define SILENCE 462,12042
+#define NO_ORDER 463,12068
+#define ANARCHY 464,12094
+#define HAVE_TO_WALK 465,12120
+#define ARENA 466,12146
+#define NO_HEAL 467,12173
+#define HOSPITAL 468,12200
+#define NORTH 472,12252
+#define EAST 473,12277
+#define SOUTH 474,12302
+#define WEST 475,12327
+#define UP 476,12352
+#define DOWN 477,12377
+#define EX_ISDOOR 479,12403
+#define EX_CLOSED 480,12429
+#define EX_LOCKED 481,12455
+#define EX_SECRET	482,12481
+#define EX_RSLOCKED	483,12501
+#define EX_PICKPROOF 484,12524
+#define SECT_INSIDE 488,12578
+#define SECT_CITY 489,12609
+#define SECT_FIELD 490,12640
+#define SECT_FOREST 491,12671
+#define SECT_HILLS 492,12702
+#define SECT_MOUNTAIN 493,12733
+#define SECT_WATER_SWIM 494,12764
+#define SECT_WATER_NOSWIM 495,12795
+#define SECT_AIR 496,12826
+#define SECT_UNDERWATER 497,12857
+#define SECT_DESERT 498,12888
+struct room_direction_dataroom_direction_data500,12921
+struct room_dataroom_data510,13387
+#define WEAR_LIGHT 542,14926
+#define WEAR_FINGER_R 543,14952
+#define WEAR_FINGER_L 544,14978
+#define WEAR_NECK_1 545,15004
+#define WEAR_NECK_2 546,15030
+#define WEAR_BODY 547,15056
+#define WEAR_HEAD 548,15082
+#define WEAR_LEGS 549,15108
+#define WEAR_FEET 550,15134
+#define WEAR_HANDS 551,15160
+#define WEAR_ARMS 552,15186
+#define WEAR_SHIELD 553,15212
+#define WEAR_ABOUT 554,15238
+#define WEAR_WAISTE 555,15264
+#define WEAR_WRIST_R 556,15290
+#define WEAR_WRIST_L 557,15316
+#define WIELD 558,15342
+#define HOLD 559,15368
+#define WEAR_EAR 560,15394
+#define WEAR_FACE 561,15420
+#define WEAR_RADIO 562,15446
+#define MAX_TOUNGE 572,15664
+#define MAX_SKILLS 575,15734
+#define MAX_WEAR 576,15802
+#define MAX_AFFECT 577,15825
+#define DRUNK 580,15923
+#define FULL 581,15946
+#define THIRST 582,15969
+#define AFF_BLIND 585,16027
+#define AFF_INVISIBLE 586,16069
+#define AFF_DETECT_EVIL 587,16111
+#define AFF_DETECT_INVISIBLE 588,16153
+#define AFF_DETECT_MAGIC 589,16195
+#define AFF_SENSE_LIFE 590,16237
+#define AFF_LIFE_PROT 591,16279
+#define AFF_SANCTUARY 592,16321
+#define AFF_GROUP 593,16363
+#define AFF_CURSE 596,16445
+#define AFF_FLYING 597,16487
+#define AFF_POISON 598,16529
+#define AFF_PROTECT_EVIL 599,16571
+#define AFF_PARALYSIS 600,16613
+#define AFF_INFRAVISION 601,16655
+#define AFF_WATERBREATH 602,16697
+#define AFF_SLEEP 603,16739
+#define AFF_KILLABLE 604,16781
+#define AFF_SNEAK 605,16823
+#define AFF_HIDE 606,16865
+#define AFF_PROTECT_FROM_GOOD 607,16907
+#define AFF_CHARM 608,16949
+#define AFF_FOLLOW 609,16991
+#define AFF_UNDEF_1 610,17033
+#define AFF_TRUE_SIGHT 611,17098
+#define AFF_BREWING 612,17140
+#define AFF_FIRESHIELD 613,17182
+#define AFF_SILENT 614,17224
+#define AFF_GRAPPLE 615,17266
+#define AFF_GRAPPLE2 616,17308
+#define AFF_SCRYING 617,17350
+#define APPLY_NONE 621,17430
+#define APPLY_STR 622,17464
+#define APPLY_DEX 623,17498
+#define APPLY_INT 624,17532
+#define APPLY_WIS 625,17566
+#define APPLY_CON 626,17600
+#define APPLY_SEX 627,17634
+#define APPLY_CLASS 628,17668
+#define APPLY_LEVEL 629,17702
+#define APPLY_AGE 630,17736
+#define APPLY_CHAR_WEIGHT 631,17770
+#define APPLY_CHAR_HEIGHT 632,17804
+#define APPLY_MANA 633,17838
+#define APPLY_HIT 634,17872
+#define APPLY_MOVE 635,17906
+#define APPLY_GOLD 636,17940
+#define APPLY_EXP 637,17974
+#define APPLY_AC 638,18008
+#define APPLY_ARMOR 639,18042
+#define APPLY_HITROLL 640,18076
+#define APPLY_DAMROLL 641,18110
+#define APPLY_SAVING_PARA 642,18144
+#define APPLY_SAVING_ROD 643,18178
+#define APPLY_SAVING_PETRI 644,18212
+#define APPLY_SAVING_BREATH 645,18246
+#define APPLY_SAVING_SPELL 646,18280
+#define APPLY_SAVE_ALL 647,18314
+#define APPLY_IMMUNE 648,18348
+#define APPLY_SUSC 649,18382
+#define APPLY_M_IMMUNE 650,18416
+#define APPLY_SPELL 651,18450
+#define APPLY_WEAPON_SPELL 652,18484
+#define APPLY_EAT_SPELL 653,18518
+#define APPLY_BACKSTAB 654,18552
+#define APPLY_KICK 655,18586
+#define APPLY_SNEAK 656,18620
+#define APPLY_HIDE 657,18654
+#define APPLY_BASH 658,18688
+#define APPLY_PICK 659,18722
+#define APPLY_STEAL 660,18756
+#define APPLY_TRACK 661,18790
+#define APPLY_HITNDAM 662,18824
+#define APPLY_DOUBLE_ATTACK 663,18858
+#define APPLY_DEATHSTROKE 664,18892
+#define APPLY_PARRY 665,18926
+#define APPLY_THROW 666,18960
+#define APPLY_GRAPPLE 667,18994
+#define CLASS_MAGIC_USER 670,19052
+#define CLASS_CLERIC 671,19081
+#define CLASS_WARRIOR 672,19110
+#define CLASS_THIEF 673,19139
+#define CLASS_ANTIPALADIN 674,19168
+#define CLASS_PALADIN 675,19197
+#define CLASS_MONK 676,19226
+#define CLASS_RANGER 677,19255
+#define SEX_NEUTRAL 679,19294
+#define SEX_MALE 680,19318
+#define SEX_FEMALE 681,19342
+#define POSITION_DEAD 684,19383
+#define POSITION_MORTALLYW 685,19413
+#define POSITION_INCAP 686,19443
+#define POSITION_STUNNED 687,19473
+#define POSITION_SLEEPING 688,19503
+#define POSITION_RESTING 689,19533
+#define POSITION_SITTING 690,19563
+#define POSITION_FIGHTING 691,19593
+#define POSITION_STANDING 692,19623
+#define ACT_SPEC 696,19694
+#define ACT_SENTINEL 697,19771
+#define ACT_SCAVENGER 698,19848
+#define ACT_ISNPC 699,19925
+#define ACT_NICE_THIEF 700,20002
+#define ACT_AGGRESSIVE 701,20079
+#define ACT_STAY_ZONE 702,20156
+#define ACT_WIMPY 703,20233
+#define ACT_ANNOYING 705,20387
+#define ACT_HATEFUL 707,20541
+#define ACT_AFRAID 709,20695
+#define ACT_IMMORTAL 711,20849
+#define ACT_HUNTING 712,20926
+#define ACT_DEADLY 713,21003
+#define ACT_POLYSELF 714,21080
+#define ACT_META_AGG 715,21157
+#define ACT_GUARDIAN 716,21234
+#define PLR_BRIEF 719,21345
+#define PLR_COMPACT 720,21374
+#define PLR_WIMPY 721,21403
+#define PLR_DONTSET 722,21481
+#define PLR_NOHASSLE 723,21510
+#define PLR_STEALTH 724,21589
+#define PLR_HUNTING 725,21675
+#define PLR_MAILING 726,21762
+#define PLR_LOGGED 727,21791
+#define PLR_KILLER 728,21820
+#define PLR_VT100 729,21849
+#define PLR_COLOR 730,21899
+#define PLR_OUTLAW 731,21929
+#define PLR_ANSI 732,21959
+#define PLR_NOSHOUT 733,21989
+#define PLR_BANISHED 734,22059
+struct time_info_datatime_info_data740,22269
+struct time_datatime_data747,22399
+struct char_player_datachar_player_data754,22647
+struct char_ability_datachar_ability_data775,23694
+struct char_point_datachar_point_data787,23898
+struct char_poofin_datachar_poofin_data807,24569
+struct char_special_datachar_special_data814,24658
+struct char_skill_datachar_skill_data847,26160
+struct affected_typeaffected_type856,26373
+struct follow_typefollow_type867,26775
+struct char_datachar_data874,26935
+#define SUN_DARK	941,29441
+#define SUN_RISE	942,29460
+#define SUN_LIGHT	943,29479
+#define SUN_SET	944,29499
+#define SKY_CLOUDLESS	948,29547
+#define SKY_CLOUDY	949,29571
+#define SKY_RAINING	950,29592
+#define SKY_LIGHTNING	951,29614
+struct weather_dataweather_data953,29639
+struct char_file_uchar_file_u967,30069
+struct obj_cost obj_cost1016,31120
+#define MAX_OBJ_SAVE 1023,31254
+struct obj_file_elem obj_file_elem1025,31321
+struct obj_file_uobj_file_u1045,31723
+#define MAX_OBJ_SAVE 1058,32124
+struct rental_header rental_header1060,32191
+struct obj_file_elem obj_file_elem1066,32308
+struct obj_file_uobj_file_u1077,32484
+struct txt_blocktxt_block1098,33161
+struct txt_qtxt_q1104,33222
+#define CON_PLYNG 1114,33323
+#define CON_NME	1115,33345
+#define CON_NMECNF 1116,33367
+#define CON_PWDNRM 1117,33389
+#define CON_PWDGET 1118,33411
+#define CON_PWDCNF 1119,33433
+#define CON_QSEX 1120,33455
+#define CON_RMOTD 1121,33477
+#define CON_SLCT 1122,33499
+#define CON_EXDSCR 1123,33521
+#define CON_QCLASS 1124,33543
+#define CON_LDEAD 1125,33566
+#define CON_PWDNEW 1126,33589
+#define CON_PWDNCNF 1127,33612
+#define CON_WIZLOCK 1128,33635
+#define CON_QRACE 1129,33658
+#define CON_RACPAR 1130,33681
+#define CON_AUTH 1132,33720
+#define CON_CITY_CHOICE 1134,33750
+#define CON_STAT_LIST 1135,33777
+#define CON_VT_ANSI 1136,33804
+#define CON_ANSI_NME 1137,33831
+#define CON_VT_NME 1138,33858
+#define CON_SCREEN_SIZE 1139,33885
+struct snoop_datasnoop_data1141,33913
+struct descriptor_datadescriptor_data1149,34071
+struct msg_type msg_type1180,35522
+struct message_typemessage_type1187,35689
+struct message_listmessage_list1197,36118
+struct dex_skill_typedex_skill_type1204,36323
+struct dex_app_typedex_app_type1214,36450
+struct str_app_typestr_app_type1221,36531
+struct wis_app_typewis_app_type1229,36797
+struct int_app_typeint_app_type1235,36943
+struct con_app_typecon_app_type1240,37035
+typedef void (*funcp)funcp1248,37154
+struct breather breather1250,37180
+typedef struct char_data Mob;Mob1256,37244
+typedef struct obj_data Obj;Obj1257,37274
+typedef struct room_data Room;Room1258,37303
+typedef struct descriptor_data Descriptor;Descriptor1259,37334
+#define OBJECT_HITTING 1261,37378
+
+trap.h,851
+#define TRAP_EFFECT_TYPE 1,0
+#define TRAP_DAM_TYPE 2,29
+#define TRAP_LEVEL 3,58
+#define TRAP_CHARGES 4,87
+#define TRAP_DAM_SLEEP 10,148
+#define TRAP_DAM_TELEPORT 11,178
+#define TRAP_DAM_FIRE 12,208
+#define TRAP_DAM_COLD 13,250
+#define TRAP_DAM_ACID 14,296
+#define TRAP_DAM_ENERGY 15,340
+#define TRAP_DAM_BLUNT 16,386
+#define TRAP_DAM_PIERCE 17,427
+#define TRAP_DAM_SLASH 18,466
+#define TRAP_EFF_MOVE 20,505
+#define TRAP_EFF_OBJECT 21,564
+#define TRAP_EFF_ROOM 22,623
+#define TRAP_EFF_NORTH 23,682
+#define TRAP_EFF_EAST 24,741
+#define TRAP_EFF_SOUTH 25,770
+#define TRAP_EFF_WEST 26,799
+#define TRAP_EFF_UP 27,828
+#define TRAP_EFF_DOWN 28,857
+#define GET_TRAP_LEV(GET_TRAP_LEV30,887
+#define GET_TRAP_EFF(GET_TRAP_EFF31,948
+#define GET_TRAP_CHARGES(GET_TRAP_CHARGES32,1015
+#define GET_TRAP_DAM_TYPE(GET_TRAP_DAM_TYPE33,1082
+
+utils.h,3644
+#define free(free10,373
+#define TRUE 15,466
+#define FALSE 17,483
+#define LOWER(LOWER19,500
+#define UPPER(UPPER21,570
+#define ISNEWL(ISNEWL23,641
+#define IS_WEAPON(IS_WEAPON25,693
+#define IF_STR(IF_STR27,755
+#define CAP(CAP29,796
+#define CREATE(CREATE31,841
+#define RECREATE(RECREATE36,1003
+#define IS_SET(IS_SET42,1180
+#define BANISHED(BANISHED44,1224
+#define IS_KILLER(IS_KILLER46,1286
+#define IS_OUTLAW(IS_OUTLAW48,1347
+#define SWITCH(SWITCH50,1408
+#define IS_AFFECTED(IS_AFFECTED54,1517
+#define IS_DARK(IS_DARK56,1596
+#define IS_LIGHT(IS_LIGHT58,1693
+#define SET_BIT(SET_BIT60,1791
+#define REMOVE_BIT(REMOVE_BIT62,1842
+#define RM_FLAGS(RM_FLAGS64,1898
+#define GET_LEVEL(GET_LEVEL66,1966
+#define GET_WIMPY(GET_WIMPY68,2020
+#define GET_CLASS_TITLE(GET_CLASS_TITLE70,2061
+#define GET_REQ(GET_REQ74,2262
+#define GET_WEAPON_DAMAGE(GET_WEAPON_DAMAGE78,2446
+#define HSHR(HSHR82,2637
+#define HSSH(HSSH85,2733
+#define HMHR(HMHR88,2827
+#define ANA(ANA91,2924
+#define SANA(SANA93,2993
+#define IS_NPC(IS_NPC95,3063
+#define IS_PC(IS_PC97,3124
+#define IS_MOB(IS_MOB99,3203
+#define GET_POS(GET_POS101,3282
+#define GET_COND(GET_COND103,3333
+#define GET_NAME(GET_NAME105,3391
+#define GET_TITLE(GET_TITLE107,3436
+#define GET_CLASS(GET_CLASS109,3482
+#define GET_HOME(GET_HOME111,3528
+#define GET_AGE(GET_AGE113,3574
+#define GET_POINT(GET_POINT115,3614
+#define GET_STR(GET_STR117,3658
+#define GET_ADD(GET_ADD119,3708
+#define GET_DEX(GET_DEX121,3762
+#define GET_RDEX(GET_RDEX123,3812
+#define GET_RSTR(GET_RSTR125,3859
+#define GET_RINT(GET_RINT127,3910
+#define GET_RCON(GET_RCON129,3963
+#define GET_RWIS(GET_RWIS131,4014
+#define GET_INT(GET_INT133,4065
+#define GET_WIS(GET_WIS135,4117
+#define GET_CON(GET_CON137,4167
+#define STRENGTH_APPLY_INDEX(STRENGTH_APPLY_INDEX139,4217
+#define GET_AC(GET_AC147,4519
+#define GET_HIT(GET_HIT149,4565
+#define GET_MAX_HIT(GET_MAX_HIT151,4609
+#define GET_PERC_HIT(GET_PERC_HIT153,4651
+#define GET_MOVE(GET_MOVE155,4741
+#define GET_MAX_MOVE(GET_MAX_MOVE157,4786
+#define GET_MANA(GET_MANA159,4829
+#define GET_MAX_MANA(GET_MAX_MANA161,4874
+#define GET_GOLD(GET_GOLD163,4917
+#define GET_BANK(GET_BANK165,4962
+#define GET_EXP(GET_EXP167,5011
+#define GET_HEIGHT(GET_HEIGHT169,5055
+#define GET_WEIGHT(GET_WEIGHT171,5102
+#define GET_SEX(GET_SEX173,5149
+#define GET_RACE(GET_RACE175,5193
+#define GET_HITROLL(GET_HITROLL177,5232
+#define GET_DAMROLL(GET_DAMROLL179,5280
+#define AWAKE(AWAKE181,5328
+#define WAIT_STATE(WAIT_STATE184,5424
+#define CAN_SEE_OBJ(CAN_SEE_OBJ191,5546
+#define GET_ITEM_TYPE(GET_ITEM_TYPE198,5940
+#define CAN_WEAR(CAN_WEAR200,5997
+#define GET_OBJ_WEIGHT(GET_OBJ_WEIGHT202,6069
+#define GET_OBJ_VOLUME(GET_OBJ_VOLUME204,6124
+#define CAN_CARRY_W(CAN_CARRY_W206,6179
+#define CAN_CARRY_N(CAN_CARRY_N208,6248
+#define IS_CARRYING_W(IS_CARRYING_W217,6533
+#define IS_CARRYING_N(IS_CARRYING_N219,6590
+#define CAN_CARRY_OBJ(CAN_CARRY_OBJ221,6646
+#define CAN_GET_OBJ(CAN_GET_OBJ225,6865
+#define IS_OBJ_STAT(IS_OBJ_STAT229,7002
+#define PERS(PERS235,7130
+#define OBJS(OBJS240,7347
+#define OBJN(OBJN243,7446
+#define OUTSIDE(OUTSIDE246,7538
+#define IS_IMMORTAL(IS_IMMORTAL248,7616
+#define IS_POLICE(IS_POLICE250,7678
+#define IS_CORPSE(IS_CORPSE260,8239
+#define EXIT(EXIT263,8340
+#define CAN_GO(CAN_GO267,8476
+#define CAN_GO_HUMAN(CAN_GO_HUMAN270,8631
+#define GET_ALIGNMENT(GET_ALIGNMENT274,8801
+#define IS_GOOD(IS_GOOD276,8855
+#define IS_EVIL(IS_EVIL277,8905
+#define IS_NEUTRAL(IS_NEUTRAL278,8956
+#define ITEM_TYPE(ITEM_TYPE280,9011
