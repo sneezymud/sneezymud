@@ -49,7 +49,7 @@ CFLAGS = # empty
 ##  -DSITELOCK
 ##
 ##  To modify some commands to make item duplication near impossible:
-##  -DNODUPLICATES
+CFLAGs +=-DNODUPLICATES
 ##
 #################################
 
