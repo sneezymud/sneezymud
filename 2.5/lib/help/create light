@@ -1,0 +1,11 @@
+CREATE LIGHT
+
+Useage      : cast 'create light' 
+Accumulative: No.
+Duration    : 24 + level hours.
+
+Will create a light of lasting duration.  Useful for when your torch runs out.
+
+See Also: -
+Related Topics: SPELL INFO
+

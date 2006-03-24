@@ -1,0 +1,4 @@
+
+  This command sends the text of its argument to everyone in the same
+room as the wizard.  The wizard gets no feedback and does not see the
+message.

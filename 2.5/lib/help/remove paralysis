@@ -1,0 +1,10 @@
+REMOVE PARALYSIS
+
+Usage       : cast 'remove paralysis' <victim>
+Accumulative: No
+Duration    : Instantaneous
+
+Will remove paralysis.
+
+See Also: PARALYZE
+Related Topics: SPELL INFO
