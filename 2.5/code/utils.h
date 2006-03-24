@@ -279,5 +279,5 @@ int exit_ok(struct room_direction_data *, struct room_data **);
 
 #define ITEM_TYPE(obj)  ((int)(obj)->obj_flags.type_flag)
 
-void log(char *str);
-void logf(char *errorMsg, ...) ;
+void vlog(char *str);
+void vlogf(char *errorMsg, ...) ;

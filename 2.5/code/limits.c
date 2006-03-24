@@ -304,7 +304,7 @@ void advance_level(struct char_data *ch, int class)
   if (GET_LEVEL(ch, class) > 0 && 
       GET_EXP(ch) < titles[class][GET_LEVEL(ch, class)+1].exp) {
     /*  they can't advance here */
-    log("Bad advance_level");
+    vlog("Bad advance_level");
     return;
   }
 
@@ -685,7 +685,7 @@ int ObjFromCorpse( struct obj_data *c)
 	     **  don't extract it.
 	     */
 	     c->contains = 0;
-             log("Memory lost in ObjFromCorpse.");
+             vlog("Memory lost in ObjFromCorpse.");
 	     return(TRUE);
 	   }
 	}

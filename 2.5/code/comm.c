@@ -97,7 +97,7 @@ void boot_db(void);
 void zone_update(void);
 void affect_update( int pulse ); /* In spell_parser.c */
 void free_char(struct char_data *ch);
-void log(char *str);
+void vlog(char *str);
 void check_mobile_activity(int pulse);
 void string_add(struct descriptor_data *d, char *str);
 void perform_violence(int pulse);
@@ -146,7 +146,7 @@ int main (int argc, char **argv)
      switch (*(argv[pos] + 1))  {
      case 'l':
         lawful = 1;
-        log("Lawful mode selected.");
+        vlog("Lawful mode selected.");
         break;
      case 'd':
         if (*(argv[pos] + 2))
@@ -154,18 +154,18 @@ int main (int argc, char **argv)
         else if (++pos < argc)
           dir = argv[pos];
       else     {
-   log("Directory arg expected after option -d.");
+   vlog("Directory arg expected after option -d.");
    exit(0);
       }
       break;
     case 's':
       no_specials = 1;
-      log("Suppressing assignment of special routines.");
+      vlog("Suppressing assignment of special routines.");
       break;
     default:
       sprintf(buf, "Unknown option -% in argument string.",
          *(argv[pos] + 1));
-      log(buf);
+      vlog(buf);
       break;
     }
     pos++;
@@ -184,7 +184,7 @@ int main (int argc, char **argv)
   Uptime = time(0);
   
   sprintf(buf, "Running game on port %d.", port);
-  log(buf);
+  vlog(buf);
   
   if (chdir(dir) < 0)   {
     perror("chdir");
@@ -192,13 +192,13 @@ int main (int argc, char **argv)
   }
   
   sprintf(buf, "Using %s as data directory.", dir);
-  log(buf);
+  vlog(buf);
   
   srandom(time(0));
   WizLock = FALSE;
 
 #if SITELOCK
-  log("Blanking denied hosts.");
+  vlog("Blanking denied hosts.");
   for(a = 0 ; a<= MAX_BAN_HOSTS ; a++) 
     strcpy(hostlist[a]," \0\0\0\0");
   numberhosts = 0;
@@ -231,21 +231,21 @@ int run_the_game(int port)
     
     descriptor_list = NULL;
   
-  log("Signal trapping.");
+  vlog("Signal trapping.");
   signal_setup();
   
-  log("Opening mother connection.");
+  vlog("Opening mother connection.");
   s = init_socket(port);
   
   if (lawful && load() >= 6)
     {
-      log("System load too high at startup.");
+      vlog("System load too high at startup.");
       coma(s);
     }
   
   boot_db();
   
-  log("Entering game loop.");
+  vlog("Entering game loop.");
   
   game_loop(s);
   
@@ -254,11 +254,11 @@ int run_the_game(int port)
   PROFILE(monitor(0);)
     
     if (rebootmud)  {
-   log("Rebooting.");
+   vlog("Rebooting.");
    exit(52);           /* what's so great about HHGTTG, anyhow? */
       }
   
-  log("Normal termination of game.");
+  vlog("Normal termination of game.");
 }
 
 
@@ -733,7 +733,7 @@ void write_to_q(char *txt, struct txt_q *queue)
    struct txt_block *new;
 
         if (!queue) {
-     log("Output message to non-existant queue");
+     vlog("Output message to non-existant queue");
      return;
    }
 
@@ -883,7 +883,7 @@ int new_connection(int s)
    {
       *(peer.sa_data + 49) = '\0';
       sprintf(buf, "New connection from addr %s.\n", peer.sa_data);
-      log(buf);
+      vlog(buf);
    }
 
    */
@@ -1117,7 +1117,7 @@ int process_input(struct descriptor_data *t)
      break;
    }
       } else {
-   log("EOF encountered on socket read.");
+   vlog("EOF encountered on socket read.");
    return(-1);
       }
     }
@@ -1198,7 +1198,7 @@ int process_input(struct descriptor_data *t)
 
 void close_sockets(int s)
 {
-   log("Closing all sockets.");
+   vlog("Closing all sockets.");
 
    while (descriptor_list)
       close_socket(descriptor_list);
@@ -1238,7 +1238,7 @@ void close_socket(struct descriptor_data *d)
        do_save(d->character, "", 0);
       act("$n has lost $s link.", TRUE, d->character, 0, 0, TO_ROOM);
       sprintf(buf, "Closing link to: %s.", GET_NAME(d->character));
-      log(buf);
+      vlog(buf);
       if (IS_NPC(d->character)) {
    if (d->character->desc)
      d->character->orig = d->character->desc->original;
@@ -1314,7 +1314,7 @@ void coma(int s)
    int workhours(void);
    int load(void);
 
-   log("Entering comatose state.");
+   vlog("Entering comatose state.");
 
    sigsetmask(sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
       sigmask(SIGPIPE) | sigmask(SIGALRM) | sigmask(SIGTERM) |
@@ -1337,7 +1337,7 @@ void coma(int s)
       {
          if (load() < 6)
          {
-            log("Leaving coma with visitor.");
+            vlog("Leaving coma with visitor.");
             sigsetmask(0);
             return;
          }
@@ -1352,13 +1352,13 @@ void coma(int s)
       tics = 1;
       if (workhours())
       {
-         log("Working hours collision during coma. Exit.");
+         vlog("Working hours collision during coma. Exit.");
          exit(0);
       }
    }
    while (load() >= 6);
 
-   log("Leaving coma.");
+   vlog("Leaving coma.");
    sigsetmask(0);
 }
 
@@ -1526,8 +1526,8 @@ void act(char *str, int hide_invisible, struct char_data *ch,
      case '$': i = "$"; 
        break;
      default:
-       log("Illegal $-code to act():");
-       log(str);
+       vlog("Illegal $-code to act():");
+       vlog(str);
        break;
      }
      

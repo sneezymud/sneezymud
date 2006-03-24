@@ -2805,7 +2805,7 @@ int ninja_master(struct char_data *ch, int cmd, char *arg)
 	break;
       default:
 	sprintf(buf, "Strangeness in ninjamaster (%d)", number);
-	log(buf);
+	vlog(buf);
 	return;
       }
     } 
@@ -3323,7 +3323,7 @@ int BreathWeapon(struct char_data *ch, int cmd, char *arg)
     if (scan->vnum < 0) {
       sprintf(buf, "monster %s tries to breath, but isn't listed.",
 	      ch->player.short_descr);
-      log(buf);
+      vlog(buf);
       return FALSE;
     }
     
@@ -3333,7 +3333,7 @@ int BreathWeapon(struct char_data *ch, int cmd, char *arg)
     if (count<1) {
       sprintf(buf, "monster %s has no breath weapons",
 	      ch->player.short_descr);
-      log(buf);
+      vlog(buf);
       return FALSE;
     }
     
@@ -5243,7 +5243,7 @@ int Ringwraith( struct char_data *ch, int cmd, char *arg)
     obj_to_char(ring, ch);
     act("$n gets the Ring.", FALSE, ch, NULL, 0, TO_ROOM);    
   } else {
-    log("a One Ring was completely disconnected!?");
+    vlog("a One Ring was completely disconnected!?");
     wh->ringnumber = 0;
   }
   return TRUE;
@@ -8856,7 +8856,7 @@ int Valik( struct char_data *ch, int cmd, char *arg )
     return(TRUE);
     break;
     default:
-    log("Ack! Foo! Heimdall screws up!");
+    vlog("Ack! Foo! Heimdall screws up!");
     return(FALSE);
   }
 }
@@ -8889,7 +8889,7 @@ int guardian(struct char_data *ch, int cmd, char *arg)
 
     /* Open the file, read the names into an array in the act pointer */
     if(!(pass = fopen(RHYODIN_FILE, "r"))) {
-      log("Rhyodin access file unreadable or non-existant");
+      vlog("Rhyodin access file unreadable or non-existant");
       return(FALSE);
     }
 
@@ -8958,7 +8958,7 @@ int guardian(struct char_data *ch, int cmd, char *arg)
 	
 	if(!IS_NPC(ch)) {
 	  if(!(pass = fopen(RHYODIN_FILE, "a"))) {
-	    log("Couldn't open file for writing permanent Rhyodin passlist.");
+	    vlog("Couldn't open file for writing permanent Rhyodin passlist.");
 	    return(FALSE);
 	  }
 	  /* Go to the end of the file and write the character's name */

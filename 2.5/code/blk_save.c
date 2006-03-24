@@ -42,7 +42,7 @@ void blk_read(struct char_data *ch)
 
   sprintf(buf,"%s%s.blk",path[0],GET_NAME(ch));
   if (!(fl=fopen(buf,"r"))) {
-    log("Has no wizard file.");
+    vlog("Has no wizard file.");
     return;
   }
 
@@ -77,7 +77,7 @@ void blk_read(struct char_data *ch)
       ch->poof.poofout = (char *)malloc(len+1);
   }
   strcpy(ch->poof.poofout,buf2);
-  log("Restoring wizard file.");
+  vlog("Restoring wizard file.");
    
   return;
 }
@@ -97,7 +97,7 @@ void blk_save(struct char_data *ch)
     sprintf(buf,"%s%s.blk",path[0],GET_NAME(ch));
     unlink(buf);
     if (!(fl = fopen(buf,"wa+"))) {
-      log("Couldn't write wizard file.");
+      vlog("Couldn't write wizard file.");
       return;
     }
     sprintf(buf,"%s\n",ch->poof.poofin);

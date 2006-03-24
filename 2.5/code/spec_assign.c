@@ -949,7 +949,7 @@ Marvel world
   for (i=0; specials[i].vnum>=0; i++)
      if ((rnum = real_mobile(specials[i].vnum)) < 0) {
         sprintf(buf, "mobile_assign: Mobile %d not found in database.", specials[i].vnum);
-        log(buf);
+        vlog(buf);
      } else
         mob_index[rnum].func = specials[i].proc;
 
@@ -1063,5 +1063,5 @@ void assign_rooms(void) {
      if (rp = real_roomp(specials[i].vnum))
         rp->funct = specials[i].proc;
      else 
-        log("assign_rooms: unknown room");
+        vlog("assign_rooms: unknown room");
 }

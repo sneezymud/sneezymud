@@ -190,7 +190,7 @@ void obj_store_to_char(struct char_data *ch, struct obj_file_u *st)
     }
   }
   sprintf(buf,"%s has [%d] items.", st->owner, st->number);
-  log(buf);
+  vlog(buf);
 }
 
 
@@ -208,7 +208,7 @@ void load_char_objs(struct char_data *ch)
   
   /* r+b is for Binary Reading/Writing */
   if (!(fl = fopen(buf, "r+b")))  {
-    log("Char has no equipment");
+    vlog("Char has no equipment");
     //fclose(fl);
     return;
   }
@@ -216,13 +216,13 @@ void load_char_objs(struct char_data *ch)
   rewind(fl);
  
   if (!ReadObjs(fl, &st)) {
-    log("No objects found");
+    vlog("No objects found");
     //fclose(fl);
     return;
   }
  
   if (str_cmp(st.owner, GET_NAME(ch)) != 0) {
-    log("Hmm.. bad item-file write. someone is losing thier objects");
+    vlog("Hmm.. bad item-file write. someone is losing thier objects");
     fclose(fl);
     return;
   }
@@ -245,7 +245,7 @@ void load_char_objs(struct char_data *ch)
     } else {
       char      buf[MAX_STRING_LENGTH];
       if (ch->in_room == NOWHERE)
-        log("Char reconnecting after autorent");
+        vlog("Char reconnecting after autorent");
       timegold = 0;
       found = TRUE;    
     }
@@ -303,7 +303,7 @@ void put_obj_in_store(struct obj_data *obj, struct obj_file_u *st)
          strcpy(oe->name, obj->name);
       else {
 	sprintf(buf, "object %d has no name!", obj_index[obj->item_number].virtual);
-	log(buf);
+	vlog(buf);
 	
       }
 	
@@ -479,11 +479,11 @@ void update_obj_file(void)
     if ((fl = fopen(buf, "r+b")) != NULL) {
       if (ReadObjs(fl, &st)) {
 	if (str_cmp(st.owner, player_table[i].name) != 0) {
-	  log("Ack!  wrong person written into object file!");
+	  vlog("Ack!  wrong person written into object file!");
 	  abort();
 	} else {
 	  sprintf(buf, "   Processing %s[%d].", st.owner, i);
-	  log(buf);
+	  vlog(buf);
 	  days_passed = ((time(0) - st.last_update) / SECS_PER_REAL_DAY);
 	  secs_lost = ((time(0) - st.last_update) % SECS_PER_REAL_DAY);
 	  
@@ -510,7 +510,7 @@ void update_obj_file(void)
 	      if ((st.total_cost*days_passed) > st.gold_left) {
 		
 		sprintf(buf, "   Dumping %s from object file.", ch_st.name);
-		log(buf);
+		vlog(buf);
 		
 		ch_st.points.gold = 0;
 		ch_st.load_room = NOWHERE;
@@ -524,7 +524,7 @@ void update_obj_file(void)
 	      } else {
 		
 		sprintf(buf, "   Updating %s", st.owner);
-		log(buf);
+		vlog(buf);
 		st.gold_left  -= (st.total_cost*days_passed);
 		st.last_update = time(0)-secs_lost;
 		rewind(fl);
@@ -588,7 +588,7 @@ void PrintLimitedItems(void)
   for (i=0;i<=top_of_objt;i++) {
     if (obj_index[i].number > 0) {
       sprintf(buf, "item> %d [%d]", obj_index[i].virtual, obj_index[i].number);
-      log(buf);
+      vlog(buf);
     }
   }
 }
@@ -623,7 +623,7 @@ int receptionist(struct char_data *ch, int cmd, char *arg)
 	recep = temp_char;
   
   if (!recep) {
-    log("No receptionist.\n\r");
+    vlog("No receptionist.\n\r");
     exit(1);
   }
   
@@ -705,7 +705,7 @@ int receptionist_for_outlaws(struct char_data *ch, int cmd, char *arg)
         recep = temp_char;
   
   if (!recep) {
-    log("No receptionist.\n\r");
+    vlog("No receptionist.\n\r");
     exit(1);
   }
   
@@ -877,6 +877,6 @@ int WriteObjs( FILE *fl, struct obj_file_u *st, int save)
   if (save==1) 
   {
     sprintf(buf,"%s rented out with [%d] items.", st->owner, st->number);
-    log(buf);
+    vlog(buf);
   }
 }

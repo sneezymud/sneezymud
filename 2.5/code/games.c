@@ -998,7 +998,7 @@ void spin_slot(struct char_data *ch)
        return;
      } else {
        sprintf(buf, "No slot machine in room %d", ch->in_room);
-       log(buf);
+       vlog(buf);
        return;
      }
    } else {
@@ -1010,7 +1010,7 @@ void spin_slot(struct char_data *ch)
        return;
      } else {
        sprintf(buf, "No slot machine in room %d", ch->in_room);
-       log(buf);
+       vlog(buf);
        return;
      }
    }
@@ -1024,7 +1024,7 @@ void spin_slot(struct char_data *ch)
        return;
      } else {
        sprintf(buf, "No slot machine in room %d", ch->in_room);
-       log(buf);
+       vlog(buf);
        return;
      }
   } else if (!strcmp(fruit3, "bally") && (fruit2 == fruit1)) {
@@ -1036,7 +1036,7 @@ void spin_slot(struct char_data *ch)
        return;
      } else {
        sprintf(buf, "No slot machine in room %d", ch->in_room);
-       log(buf);
+       vlog(buf);
        return;
      }
    } else {

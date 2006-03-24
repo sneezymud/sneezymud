@@ -350,8 +350,8 @@ void affect_modify(struct char_data *ch,byte loc, long mod, long bitv, bool add)
       ch->skills[SKILL_THROW].learned += mod;
       break;
     default:
-      log("Unknown apply adjust attempt (handler.c, affect_modify).");
-      log(ch->player.name);
+      vlog("Unknown apply adjust attempt (handler.c, affect_modify).");
+      vlog(ch->player.name);
       
       break;
       
@@ -460,8 +460,8 @@ void affect_remove( struct char_data *ch, struct affected_type *af )
   struct affected_type *hjp;
   
   if (!ch->affected) {
-    log("affect removed from char without affect");
-    log(GET_NAME(ch));
+    vlog("affect removed from char without affect");
+    vlog(GET_NAME(ch));
     return;
   }
   
@@ -479,7 +479,7 @@ void affect_remove( struct char_data *ch, struct affected_type *af )
     for(hjp = ch->affected; (hjp->next) && (hjp->next != af); hjp = hjp->next);
     
     if (hjp->next != af) {
-      log("Could not locate affected_type in ch->affected. (handler.c, affect_remove)");
+      vlog("Could not locate affected_type in ch->affected. (handler.c, affect_remove)");
       return;
     }
     hjp->next = af->next; /* skip the af element */
@@ -554,7 +554,7 @@ void char_from_room(struct char_data *ch)
   struct room_data *rp;
   
   if (ch->in_room == NOWHERE) {
-    log("NOWHERE extracting char from room (handler.c, char_from_room)");
+    vlog("NOWHERE extracting char from room (handler.c, char_from_room)");
     return;
   }
   
@@ -568,7 +568,7 @@ void char_from_room(struct char_data *ch)
     sprintf(buf, "ERROR: char_from_room: %s was not in a valid room (%d)",
 	    (!IS_NPC(ch) ? (ch)->player.name : (ch)->player.short_descr),
 	    ch->in_room);
-    log(buf);
+    vlog(buf);
     return;
   }
   
@@ -584,7 +584,7 @@ void char_from_room(struct char_data *ch)
       sprintf(buf, "SHIT, %s was not in people list of his room %d!",
 	      (!IS_NPC(ch) ? (ch)->player.name : (ch)->player.short_descr),
 	      ch->in_room);
-      log(buf);
+      vlog(buf);
     }
   }
   
@@ -644,28 +644,28 @@ void obj_from_char(struct obj_data *object)
   struct obj_data *tmp;
   
   if (!object) {
-    log("No object to be take from char.");
+    vlog("No object to be take from char.");
     abort();
   }
   
   
   if (!object->carried_by) {
-    log("this object is not carried by anyone");
+    vlog("this object is not carried by anyone");
     abort();
   }
   
   if (!object->carried_by->carrying) {
-    log("No one is carrying this object");
+    vlog("No one is carrying this object");
     abort();
   }
 
   if (object->in_obj) {
-    log("Obj in more than one place.");
+    vlog("Obj in more than one place.");
     abort();
   }
 
   if (object->equipped_by) {
-    log("Obj in more than one place.");
+    vlog("Obj in more than one place.");
     abort();
   }
   
@@ -679,7 +679,7 @@ void obj_from_char(struct obj_data *object)
 	   tmp = tmp->next_content); /* locate previous */
       
       if (!tmp) {
-	log("Couldn't find object on character");
+	vlog("Couldn't find object on character");
 	abort();
       }
       
@@ -734,12 +734,12 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos)
   assert(!(ch->equipment[pos]));
   
   if (obj->carried_by) {
-    log("EQUIP: Obj is carried_by when equip.");
+    vlog("EQUIP: Obj is carried_by when equip.");
     abort();
   }
   
   if (obj->in_room!=NOWHERE) {
-    log("EQUIP: Obj is in_room when equip.");
+    vlog("EQUIP: Obj is in_room when equip.");
     abort();
     return;
   }
@@ -778,7 +778,7 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos)
     return;
    } else {
 
-      log("ch->in_room = NOWHERE when equipping char.");
+      vlog("ch->in_room = NOWHERE when equipping char.");
       abort();
     }
   }
@@ -1089,7 +1089,7 @@ void obj_from_room(struct obj_data *object)
 
   if (object->in_room <= NOWHERE) {
     if (object->carried_by || object->equipped_by) {
-       log("Eek.. an object was just taken from a char, instead of a room");
+       vlog("Eek.. an object was just taken from a char, instead of a room");
        abort();
     }
     return;  /* its not in a room */
@@ -1106,7 +1106,7 @@ void obj_from_room(struct obj_data *object)
       if (i) {
          i->next_content = object->next_content;
       } else {
-	log("Couldn't find object in room");
+	vlog("Couldn't find object in room");
 	abort();
       }
     }
@@ -1236,9 +1236,9 @@ void extract_obj(struct obj_data *obj)
       obj->equipped_by->equipment[obj->eq_pos] = 0;
       
     } else {
-      log("Extract on equipped item in slot -1 on:");
-      log(obj->equipped_by->player.name);
-      log(obj->name);
+      vlog("Extract on equipped item in slot -1 on:");
+      vlog(obj->equipped_by->player.name);
+      vlog(obj->name);
       return;
     }
   } else if(obj->in_obj)	{
@@ -1270,7 +1270,7 @@ void extract_obj(struct obj_data *obj)
     if(temp1) {
       temp1->next = obj->next;
     } else {
-      log("Couldn't find object in object list.");
+      vlog("Couldn't find object in object list.");
       abort();
     }
   }
@@ -1333,7 +1333,7 @@ void extract_char(struct char_data *ch)
   }
   
   if (ch->in_room == NOWHERE) {
-    log("NOWHERE extracting char. (handler.c, extract_char)");
+    vlog("NOWHERE extracting char. (handler.c, extract_char)");
     /*
      **  problem from linkdeath
      */
@@ -1450,7 +1450,7 @@ void extract_char(struct char_data *ch)
       if(k)
 	k->next = ch->next;
       else {
-	log("Trying to remove ?? from character_list. (handler.c, extract_char)");
+	vlog("Trying to remove ?? from character_list. (handler.c, extract_char)");
 	abort();
 
       }
@@ -1663,7 +1663,7 @@ struct obj_data *create_money( int amount )
   
   
   if(amount<=0) {
-      log("ERROR: Try to create negative money.");
+      vlog("ERROR: Try to create negative money.");
       exit(1);
     }
   

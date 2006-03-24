@@ -632,7 +632,7 @@ void affect_update( int pulse )
              update_pos(i);
               if (GET_HIT(i) < -10) {
                 sprintf(buf, "%s killed by starving", GET_NAME(i));
-                log(buf);
+                vlog(buf);
                 die(i);
               }
          }
@@ -1910,7 +1910,7 @@ void check_drowning( struct char_data *ch)
       update_pos(ch);
       if (GET_HIT(ch) < -10) {
         sprintf(buf, "%s killed by drowning", GET_NAME(ch));
-        log(buf);
+        vlog(buf);
         if (!ch->desc)
           GET_GOLD(ch) = 0;
         die(ch);

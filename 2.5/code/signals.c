@@ -48,7 +48,7 @@ void checkpointing(int tmp)
   extern int tics;
 	
   if (!tics) {
-    log("CHECKPOINT shutdown: tics not updated");
+    vlog("CHECKPOINT shutdown: tics not updated");
     abort();
   } else
     tics = 0;
@@ -61,7 +61,7 @@ void shutdown_request(int tmp)
 {
 	extern int Shutdown;
 
-	log("Received USR2 - shutdown request");
+	vlog("Received USR2 - shutdown request");
 	Shutdown = 1;
 }
 
@@ -72,7 +72,7 @@ void hupsig(int tmp)
 {
 	extern int Shutdown;
 
-	log("Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
+	vlog("Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
 	exit(0);   /* something more elegant should perhaps be substituted */
 }
 
@@ -80,5 +80,5 @@ void hupsig(int tmp)
 
 void logsig(int tmp)
 {
-	log("Signal received. Ignoring.");
+	vlog("Signal received. Ignoring.");
 }

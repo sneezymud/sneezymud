@@ -2825,7 +2825,7 @@ void read_book(Mob *ch, Obj *o, char *arg) {
       sprintf(buf, "books/%d", vnum);
       if (!start_page_file(ch->desc, buf, "...oddly its blank!\n\r")) {
          sprintf(buf, "Object %d has no book file!", vnum);
-         log(buf);
+         vlog(buf);
       }
    }
 }

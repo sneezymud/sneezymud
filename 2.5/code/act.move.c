@@ -57,7 +57,7 @@ raw_open_door(struct char_data *ch, int dir)
   rp = real_roomp(ch->in_room);
   if (rp==NULL) {
     sprintf(buf, "NULL rp in open_door() for %s.", PERS(ch,ch));
-    log(buf);
+    vlog(buf);
   }
   
   exitp = rp->dir_option[dir];
@@ -97,7 +97,7 @@ void raw_unlock_door( struct char_data *ch,
   } else {
     sprintf(buf, "Inconsistent door locks in rooms %d->%d", 
             ch->in_room, exitp->to_room);
-    log(buf);
+    vlog(buf);
   }
 }
 
@@ -578,7 +578,7 @@ open_door(struct char_data *ch, int dir)
   rp = real_roomp(ch->in_room);
   if (rp==NULL) {
     sprintf(buf, "NULL rp in open_door() for %s.", PERS(ch,ch));
-    log(buf);
+    vlog(buf);
   }
   
   exitp = rp->dir_option[dir];

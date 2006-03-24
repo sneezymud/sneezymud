@@ -2241,7 +2241,7 @@ void spell_create_golem(byte level, struct char_data *ch,
    }
 
    if (!(golem = read_mobile(target, VIRTUAL))) {
-      log("Spell 'create golem' unable to load golem [bad!]...");
+      vlog("Spell 'create golem' unable to load golem [bad!]...");
       send_to_char("Unable to create the golem.  Please report this\n\r.", ch);
       return;
    }

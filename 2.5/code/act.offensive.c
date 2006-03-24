@@ -798,7 +798,7 @@ void do_breath(struct char_data *ch, char *argument, int cmd)
     if (count<1) {
       sprintf(buf, "monster %s has no breath weapons",
 	      ch->player.short_descr);
-      log(buf);
+      vlog(buf);
       send_to_char("Hey, why don't you have any breath weapons!?\n\r",ch);
       return;
     }

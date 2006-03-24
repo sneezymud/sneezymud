@@ -97,7 +97,7 @@ void load_messages(void);
 void weather_and_time ( int mode );
 void assign_command_pointers ( void );
 void assign_spell_pointers ( void );
-void log(char *str);
+void vlog(char *str);
 int dice(int number, int size);
 int number(int from, int to);
 void boot_social_messages(void);
@@ -119,16 +119,16 @@ void boot_db(void)
 	int i;
 	extern int no_specials;
 
-	log("Boot db -- BEGIN.");
+	vlog("Boot db -- BEGIN.");
 
-	log("Resetting the game time:");
+	vlog("Resetting the game time:");
 	reset_time();
 
-	log("Reading atlas, and motd.");
+	vlog("Reading atlas, and motd.");
         file_to_string(ANSI_FILE, ansi);
 	file_to_string(MOTD_FILE, motd);
 
-	log("Opening mobile, object and help files.");
+	vlog("Opening mobile, object and help files.");
 	if (!(mob_f = fopen(MOB_FILE, "r")))	{
 		perror("boot");
 		exit(0);
@@ -139,53 +139,53 @@ void boot_db(void)
 		exit(0);
 	}
 
-	log("Loading zone table.");
+	vlog("Loading zone table.");
 	boot_zones();
 
-	log("Loading rooms.");
+	vlog("Loading rooms.");
 	boot_world();
 
-	log("Generating index tables for mobile and object files.");
+	vlog("Generating index tables for mobile and object files.");
 	mob_index = generate_indices(mob_f, &top_of_mobt);
 	obj_index = generate_indices(obj_f, &top_of_objt);
 			
-	log("Renumbering zone table.");
+	vlog("Renumbering zone table.");
 	renum_zone_table();
 
-	log("Generating player index.");
+	vlog("Generating player index.");
 	build_player_index();
 
-	log("Loading fight messages.");
+	vlog("Loading fight messages.");
 	load_messages();
 
-	log("Loading social messages.");
+	vlog("Loading social messages.");
 	boot_social_messages();
 
-  log("Loading pose messages.");
+  vlog("Loading pose messages.");
 	boot_pose_messages();
 
-	log("Assigning function pointers:");
+	vlog("Assigning function pointers:");
 	if (!no_specials)	{
-		log("   Mobiles.");
+		vlog("   Mobiles.");
 		assign_mobiles();
-		log("   Objects.");
+		vlog("   Objects.");
 		assign_objects();
-		log("   Room.");
+		vlog("   Room.");
 		assign_rooms();
 	}
 
-	log("   Commands.");	
+	vlog("   Commands.");	
 	assign_command_pointers();
-	log("   Spells.");
+	vlog("   Spells.");
 	assign_spell_pointers();
 
-	log("Updating characters with saved items:");
+	vlog("Updating characters with saved items:");
 	update_obj_file();
  
-        log(" Booting mail system.");
+        vlog(" Booting mail system.");
         if (!scan_file())
         {
-               log("   Mail system error -- mail system disabled!");
+               vlog("   Mail system error -- mail system disabled!");
                no_mail = 1;
         }
 
@@ -213,7 +213,7 @@ void boot_db(void)
 
 	reset_q.head = reset_q.tail = 0;
 
-	log("Boot db -- DONE.");
+	vlog("Boot db -- DONE.");
 }
 
 
@@ -283,7 +283,7 @@ void reset_time(void)
 	sprintf(buf,"   Current Gametime: %dH %dD %dM %dY.",
 	        time_info.hours, time_info.day,
 	        time_info.month, time_info.year);
-	log(buf);
+	vlog(buf);
 
 	weather_info.pressure = 960;
 	if ((time_info.month>=7)&&(time_info.month<=12))
@@ -328,7 +328,7 @@ void update_time(void)
 	}
 
 	current_time = time(0);
-	log("Time update.");
+	vlog("Time update.");
 
 	fprintf(f1, "#\n");
 
@@ -603,7 +603,7 @@ void load_one_room(FILE *fl, struct room_data *rp)
     default:
       sprintf(buf,"unknown auxiliary code `%s' in room load of #%d",
 	      chk, rp->number);
-      log(buf);
+      vlog(buf);
       break;
     }
   }
@@ -629,7 +629,7 @@ void boot_world(void)
 
   if (!(fl = fopen(WORLD_FILE, "r")))	{
     perror("fopen");
-    log("World file not found");
+    vlog("World file not found");
     exit(0);
   }
   
@@ -708,7 +708,7 @@ void setup_dir(FILE *fl, int room, int dir)
 #define LOG_ZONE_ERROR(ch, type, zone, cmd) {\
 	sprintf(buf, "error in zone %s cmd %d (%c) resolving %s number", \
 		zone_table[zone].name, cmd, ch, type); \
-	log(buf); \
+	vlog(buf); \
 	}
 void renum_zone_table(void)
 {
@@ -1293,7 +1293,7 @@ struct char_data *read_mobile(int nr, int type)
     char buf[200];
     sprintf(buf, "%s has gold > level * 1500 (%d)", mob->player.short_descr,
 	    mob->points.gold);
-    log(buf);
+    vlog(buf);
   }
 
   SetRacialStuff(mob);
@@ -1592,7 +1592,7 @@ void reset_zone(int zone)
 		    last_cmd = 0;
 		} else if (obj = read_object(ZCMD.arg1, REAL)) {
 		  sprintf(buf, "Error finding room #%d", ZCMD.arg3);
-		  log(buf);
+		  vlog(buf);
 		  extract_obj(obj);
 		  last_cmd = 1;
 		}  else
@@ -1676,7 +1676,7 @@ void reset_zone(int zone)
 	  default:
 	    sprintf(buf, "Undefd cmd in reset table; zone %d cmd %d.\n\r",
 		    zone, cmd_no);
-	    log(buf);
+	    vlog(buf);
 	    break;
 	  }
       else
@@ -1861,7 +1861,7 @@ void char_to_store(struct char_data *ch, struct char_file_u *st)
 	}
 
 	if ((i >= MAX_AFFECT) && af && af->next)
-		log("WARNING: OUT OF STORE ROOM FOR AFFECTED TYPES!!!");
+		vlog("WARNING: OUT OF STORE ROOM FOR AFFECTED TYPES!!!");
 
 
 
@@ -2057,12 +2057,12 @@ char *fread_string(FILE *fl)
   do	{
     if (!fgets(tmp, MAX_STRING_LENGTH, fl))		{
       perror("fread_str");
-      log("File read error.");
+      vlog("File read error.");
       return("Empty");
     }
     
     if (strlen(tmp) + strlen(buf) + 1 > MAX_STRING_LENGTH) {
-      log("fread_string: string too large (db.c)");
+      vlog("fread_string: string too large (db.c)");
       exit(0);
     } else
       strcat(buf, tmp);
@@ -2189,7 +2189,7 @@ int file_to_string(char *name, char *buf)
 		{
 			if (strlen(buf) + strlen(tmp) + 2 > MAX_STRING_LENGTH)
 			{
-				log("fl->strng: string too big (db.c, file_to_string)");
+				vlog("fl->strng: string too big (db.c, file_to_string)");
 				*buf = '\0';
 				fclose(fl);
 				return(-1);
@@ -2353,11 +2353,11 @@ void reset_char(struct char_data *ch)
   
   if (GET_BANK(ch) > GetMaxLevel(ch)*100000) {
     sprintf(buf, "%s has %d coins in bank.", GET_NAME(ch), GET_BANK(ch));
-    log(buf);
+    vlog(buf);
   }
   if (GET_GOLD(ch) > GetMaxLevel(ch)*100000) {
     sprintf(buf, "%s has %d coins.", GET_NAME(ch), GET_GOLD(ch));
-    log(buf);
+    vlog(buf);
   }
 
   /*

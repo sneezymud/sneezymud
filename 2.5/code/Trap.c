@@ -157,7 +157,7 @@ void TrapDamage(struct char_data *v, int damtype, int amnt, struct obj_data *t)
        	     sprintf(buf, "%s killed by a trap at %s",
 	       		GET_NAME(v),
 	       		real_roomp(v->in_room)->name);
-	      log(buf);
+	      vlog(buf);
 
 			/* remove the hatreds of this character */
        	  }

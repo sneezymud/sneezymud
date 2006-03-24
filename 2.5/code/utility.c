@@ -425,7 +425,7 @@ int strn_cmp(char *arg1, char *arg2, int n)
 
 
 /* writes a string to the log */
-void log(char *str)
+void vlog(char *str)
 {
 	long ct;
 	char *tmstr;
@@ -678,7 +678,7 @@ char buf[200];
 
    if (exp_flags > 10) { 
      sprintf(buf, "Exp flags on %s are > 10 (%d)", GET_NAME(mob), exp_flags);
-     log(buf);
+     vlog(buf);
    }
 /* 
 reads in the monster, and adds the flags together 
@@ -1612,7 +1612,7 @@ void Teleport( int pulse )
 
       dest = real_roomp(rp->tele_targ);
       if (!dest) {
-	log("invalid tele_targ");
+	vlog("invalid tele_targ");
 	continue;
       }
       
@@ -1863,7 +1863,7 @@ void TeleportPulseStuff(int pulse)
 	
 	dest = real_roomp(rp->tele_targ);
 	if (!dest) {
-	  log("invalid tele_targ");
+	  vlog("invalid tele_targ");
 	  continue;
 	}
 	
@@ -2251,14 +2251,14 @@ int num_classes(struct char_data *ch) {
 }
 
 
-void logf(char *errorMsg, ...) {
+void vlogf(char *errorMsg, ...) {
    char messageBuffer[256];
    va_list ap;
 
    va_start(ap, errorMsg);
    vsprintf(messageBuffer, errorMsg, ap);
    va_end(ap);
-   log(messageBuffer);
+   vlog(messageBuffer);
 }
 
 

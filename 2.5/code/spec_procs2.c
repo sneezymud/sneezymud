@@ -397,7 +397,7 @@ int monk_master(struct char_data *ch, int cmd, char *arg)
  
       default:
         sprintf(buf, "Strangeness in monk master (%d)", number);
-        log(buf);
+        vlog(buf);
         send_to_char("'Ack!  I feel faint!'\n\r", ch);
         return(TRUE);
       }
@@ -1038,7 +1038,7 @@ int new_ninja_master(struct char_data *ch, int cmd, char *arg)
    break;
       default:
    sprintf(buf, "Strangeness in ninjamaster (%d)", number);
-   log(buf);
+   vlog(buf);
    send_to_char("'Ack!  I feel faint!'\n\r", ch);
    return(TRUE);
       }
@@ -2104,7 +2104,7 @@ int loremaster(struct char_data *ch, int cmd, char *arg)
  
       default:
         sprintf(buf, "Strangeness in loremaster (%d)", number);
-        log(buf);
+        vlog(buf);
         send_to_char("'Ack!  I feel faint!'\n\r", ch);
         return(TRUE);
       }
@@ -2322,7 +2322,7 @@ int hunter(struct char_data *ch, int cmd, char *arg)
    break;
       default:
    sprintf(buf, "Strangeness in hunter (%d)", number);
-   log(buf);
+   vlog(buf);
    send_to_char("'Ack!  I feel faint!'\n\r", ch);
    return(FALSE);
       }
@@ -2564,7 +2564,7 @@ int bounty_hunter( struct char_data *ch, int cmd, char *arg) {
         }
         job = (void *) me->act_ptr;
         if (!job) {
-           log("Unable to allocate memory for bounty hunter!  This is bad!");
+           vlog("Unable to allocate memory for bounty hunter!  This is bad!");
            return TRUE;
         }
         if (job->level_command > GetMaxLevel(ch)) {
@@ -2576,7 +2576,7 @@ int bounty_hunter( struct char_data *ch, int cmd, char *arg) {
               return TRUE;
            sprintf(buf2, "$n whispers 'Master $N, I will now reposess all %s.'", buf);
            act(buf2, FALSE, me, 0, ch, TO_VICT);
-           logf("%s just ordered %s to repo %s", GET_NAME(ch), me->player.short_descr, buf);
+           vlogf("%s just ordered %s to repo %s", GET_NAME(ch), me->player.short_descr, buf);
            *(job->hunted_victim) = '\0';
            strcpy(job->hunted_item, buf);
            job->level_command = GetMaxLevel(ch);
@@ -2589,7 +2589,7 @@ int bounty_hunter( struct char_data *ch, int cmd, char *arg) {
               return TRUE;
            sprintf(buf2, "$n whispers 'Master $N, I will now kill %s.'", buf);
            act(buf2, FALSE, me, 0, ch, TO_VICT);
-           logf("%s just sent out %s to kill %s", GET_NAME(ch), me->player.short_descr, buf);
+           vlogf("%s just sent out %s to kill %s", GET_NAME(ch), me->player.short_descr, buf);
            *(job->hunted_item) = '\0';
            strcpy(job->hunted_victim, buf);
            job->level_command = GetMaxLevel(ch);
@@ -2605,7 +2605,7 @@ int bounty_hunter( struct char_data *ch, int cmd, char *arg) {
         else if (!strncasecmp(arg, " no mercy", 9)) {
            act("$n whispers 'Master $N, I will have no mercy.'", FALSE, me, 0, ch, TO_VICT);
            job->num_chances = -99;
-           logf("%s just ordered %s to show no mercy! (and better have a damn good reason)", GET_NAME(ch), me->player.short_descr);
+           vlogf("%s just ordered %s to show no mercy! (and better have a damn good reason)", GET_NAME(ch), me->player.short_descr);
         }
         else if (!strncasecmp(arg, " show mercy", 11)) {
            act("$n whispers 'Master $N, I will now show mercy.'", FALSE, me, 0, ch, TO_VICT);
@@ -2786,7 +2786,7 @@ int bounty_hunter( struct char_data *ch, int cmd, char *arg) {
            act("$n picks up something quickly.", FALSE, ch, NULL, 0, TO_ROOM);
         } else {
            sprintf(buf, "Bounty hunter stuck looking for disconnected %s.", job->hunted_item);
-           log(buf);
+           vlog(buf);
            do_say(ch, "Damn am I confused!", 17);
            free(job);
            ch->act_ptr = NULL;

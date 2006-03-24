@@ -256,7 +256,7 @@ void do_split(struct char_data *ch, char *argument, int cmd)
     if (GetMaxLevel(ch) > 60 && no_members > 1) {
       sprintf(buf,"%s was kind enough to share %d coins with others...",
 	      GET_NAME(ch),amount);
-      log(buf);
+      vlog(buf);
     }
   }
   else {

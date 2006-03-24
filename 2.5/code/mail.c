@@ -65,7 +65,7 @@ mail_index_type *find_char_in_index(char *searchee)
 	mail_index_type *temp_rec;
 
 	if(!*searchee) {
-		log("Mail system -- non fatal error #1.");
+		vlog("Mail system -- non fatal error #1.");
 		return 0;
 	}
 
@@ -85,7 +85,7 @@ void write_to_file(void *buf, int size, long filepos)
  
 	if (filepos % BLOCK_SIZE)
 	{
-		log("Mail system -- fatal error #2!!!");
+		vlog("Mail system -- fatal error #2!!!");
 		no_mail = 1;
 		return;
 	}
@@ -109,7 +109,7 @@ void read_from_file(void *buf, int size, long filepos)
  
 	if (filepos % BLOCK_SIZE)
 	{
-		log("Mail system -- fatal error #3!!!");
+		vlog("Mail system -- fatal error #3!!!");
 		no_mail = 1;
 		return;
 	}
@@ -130,7 +130,7 @@ void index_mail(char *raw_name_to_index, long pos)
 	int		    i;
 
 	if (!raw_name_to_index || !*raw_name_to_index) {
-		log("Mail system -- non-fatal error #4.");
+		vlog("Mail system -- non-fatal error #4.");
 		return;
 	}
 
@@ -173,7 +173,7 @@ int scan_file(void)
 
 	if (!(mail_file = fopen(MAIL_FILE, "r")))
 	{
-		log("Mail file non-existant... creating new file.");
+		vlog("Mail file non-existant... creating new file.");
 		mail_file = fopen(MAIL_FILE, "w");
 		fclose(mail_file);
 		return 1;
@@ -194,15 +194,15 @@ int scan_file(void)
  
 	file_end_pos = ftell(mail_file);
 	sprintf(buf, "   %ld bytes read.", file_end_pos);
-	log(buf);
+	vlog(buf);
 	if (file_end_pos % BLOCK_SIZE)
 	{
-		log("Error booting mail system -- Mail file corrupt!");
-		log("Mail disabled!");
+		vlog("Error booting mail system -- Mail file corrupt!");
+		vlog("Mail disabled!");
 		return 0;
 	}
 	sprintf(buf, "   Mail file read -- %d messages.", total_messages);
-	log(buf);
+	vlog(buf);
 	return 1;
 } /* end of scan_file */
 
@@ -235,7 +235,7 @@ void store_mail(char *to, char *from, char *message_pointer)
 	assert(sizeof(header_block_type) == BLOCK_SIZE);
 
 	if (!*from || !*to || !*message_pointer) {
-		log("Mail system -- non-fatal error #5.");
+		vlog("Mail system -- non-fatal error #5.");
 		return;
 	}
 	memset(&header, 0, sizeof(header)); /* clear the record */
@@ -330,15 +330,15 @@ char *read_delete(char *recipient, char *recipient_formatted)
 	size_t			string_size;
 
 	if (!*recipient || !*recipient_formatted) {
-		log("Mail system -- non-fatal error #6.");
+		vlog("Mail system -- non-fatal error #6.");
 		return 0;
 	}
 	if (!(mail_pointer = find_char_in_index(recipient))) {
-		log("Stupid post-office-spec_proc-error");
+		vlog("Stupid post-office-spec_proc-error");
 		return 0;
 	}
 	if (!(position_pointer = mail_pointer->list_start)) {
-		log("Stupid Rasmussen error!");
+		vlog("Stupid Rasmussen error!");
 		return 0;
 	}
  
@@ -374,9 +374,9 @@ char *read_delete(char *recipient, char *recipient_formatted)
 	read_from_file(&header, BLOCK_SIZE, mail_address);
  
 	if (header.block_type != HEADER_BLOCK) {
-		log("Oh dear.");
+		vlog("Oh dear.");
 		no_mail = 1;
-		log("Mail system disabled!");
+		vlog("Mail system disabled!");
 		return 0;
 	}
 

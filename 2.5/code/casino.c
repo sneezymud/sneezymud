@@ -132,7 +132,7 @@ int do_blackjack_exit ( struct char_data *ch )
 	{
 		sprintf ( log_msg, "%s left a table he was not at!",
 			ch->player.name );
-		log (log_msg);
+		vlog(log_msg);
 		return 0;
 	}
 

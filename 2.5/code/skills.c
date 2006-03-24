@@ -417,7 +417,7 @@ int find_path(int in_room, int (*predicate)(), void *c_data, int depth, int in_z
 
 #if 0
    if (top_of_world > MAX_ROOMS) {
-     log("TRACK Is disabled, too many rooms.\n\rContact Loki soon.\n\r");
+     vlog("TRACK Is disabled, too many rooms.\n\rContact Loki soon.\n\r");
     return -1;
    }
 #endif

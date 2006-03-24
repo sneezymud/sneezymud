@@ -228,15 +228,15 @@ void mobile_activity(struct char_data *ch)
 #else
   if ((ch->in_room < 0) || !room_find(&room_db,ch->in_room)) {
 #endif
-      log("Char not in correct room.  moving to 50 ");
+      vlog("Char not in correct room.  moving to 50 ");
       char_from_room(ch);
       char_to_room(ch, 50);
   }
     
   if (IS_SET(ch->specials.act, ACT_SPEC) && !no_specials) {
     if (!mob_index[ch->nr].func) {
-      log("Attempting to call a non-existing MOB func. (mobact.c)");
-      log(ch->player.name);
+      vlog("Attempting to call a non-existing MOB func. (mobact.c)");
+      vlog(ch->player.name);
       REMOVE_BIT(ch->specials.act, ACT_SPEC);
     } else {
       if ((*mob_index[ch->nr].func)	(ch, 0, ""))

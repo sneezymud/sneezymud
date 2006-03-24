@@ -127,13 +127,13 @@ void setKillerFlag(Mob *ch, Mob *victim) {
   if (!IS_PC(ch)) {
     sprintf(buf, "%s's follower attacking %s.",
             GET_NAME(master), GET_NAME(victim));
-    log(buf);
+    vlog(buf);
  
     ch = master;
   }
   else {
     sprintf(buf, "%s is attacking %s.", (IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)), GET_NAME(victim));
-    log(buf);
+    vlog(buf);
   }
  
   if (IS_SET(ch->specials.act, PLR_KILLER) ||
@@ -186,7 +186,7 @@ void load_messages(void)
     fscanf(f1," %d\n", &type);
     
     if(i>=MAX_MESSAGES){
-      log("Too many combat messages.");
+      vlog("Too many combat messages.");
       exit(0);
     }
     
@@ -271,14 +271,14 @@ void set_fighting(struct char_data *ch, struct char_data *vict)
 {
   
   if (ch->specials.fighting) {
-    log("Fighting character set to fighting another.");
+    vlog("Fighting character set to fighting another.");
     return;
   }
   
   if (vict->attackers <= 5) {
     vict->attackers+=1;
   } else {
-    log("more than 6 people attacking one target");
+    vlog("more than 6 people attacking one target");
   }
   ch->next_fighting = combat_list;
   combat_list = ch;
@@ -298,13 +298,13 @@ void stop_fighting(struct char_data *ch)
   struct char_data *tmp;
   
   if (!ch->specials.fighting) {
-    log("Character not fighting at invocation of stop_fighting");
+    vlog("Character not fighting at invocation of stop_fighting");
     return;
   }
   
   ch->specials.fighting->attackers-=1;
   if (ch->specials.fighting->attackers < 0) {
-    log("too few people attacking");
+    vlog("too few people attacking");
     ch->specials.fighting->attackers = 0;
   }
   
@@ -317,7 +317,7 @@ void stop_fighting(struct char_data *ch)
     for (tmp = combat_list; tmp && (tmp->next_fighting != ch); 
 	 tmp = tmp->next_fighting);
     if (!tmp) {
-      log("Char fighting not found Error (fight.c, stop_fighting)");
+      vlog("Char fighting not found Error (fight.c, stop_fighting)");
       abort();
     }
     tmp->next_fighting = ch->next_fighting;
@@ -781,7 +781,7 @@ int DamCheckDeny(struct char_data *ch, struct char_data *victim, int type)
   rp = real_roomp(ch->in_room);
   if (rp && (rp->room_flags&PEACEFUL) && type!=SPELL_POISON) {
     sprintf(buf, "damage(,,,%d) called in PEACEFUL room", type);
-    log(buf);
+    vlog(buf);
     return(TRUE); /* true, they are denied from fighting */
   }
   return(FALSE);
@@ -1053,7 +1053,7 @@ int DamageEpilog(struct char_data *ch, struct char_data *victim)
 		GET_NAME(victim),
 		(IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)));
       }
-      log(buf);
+      vlog(buf);
     }
     die(victim);
     /*
@@ -1220,7 +1220,7 @@ int damage(struct char_data *ch, struct char_data *victim,
       ) {
     char	buf[MAX_INPUT_LENGTH];
     sprintf(buf, "damage(,,,%d) called in PEACEFUL room", attacktype);
-    log(buf);
+    vlog(buf);
     return;
   }
   
@@ -1443,7 +1443,7 @@ int damage(struct char_data *ch, struct char_data *victim,
 		GET_NAME(victim),
 		(IS_NPC(ch) ? ch->player.short_descr : GET_NAME(ch)));
       }
-      log(buf);
+      vlog(buf);
     }
     die(victim);
     /*
@@ -1512,14 +1512,14 @@ int HitCheckDeny(struct char_data *ch, struct char_data *victim, int type)
   rp = real_roomp(ch->in_room);
   if (rp && rp->room_flags&PEACEFUL) {
     sprintf(buf, "hit() called in PEACEFUL room");
-    log(buf);
+    vlog(buf);
     stop_fighting(ch);
     return(TRUE);
   }
   
   if (ch->in_room != victim->in_room) {
     sprintf(buf, "NOT in same room when fighting : %s, %s", ch->player.name, victim->player.name);
-    log(buf);
+    vlog(buf);
     stop_fighting(ch);
     return(TRUE);
   }

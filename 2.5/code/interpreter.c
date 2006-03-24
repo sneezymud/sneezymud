@@ -71,7 +71,7 @@ void store_to_char(struct char_file_u *st, struct char_data *ch);
 int create_entry(char *name);
 /* int special(struct char_data *ch, int cmd, char *arg);
  */
-void log(char *str);
+void vlog(char *str);
 
 void do_move(struct char_data *ch, char *argument, int cmd);
 void do_look(struct char_data *ch, char *argument, int cmd);
@@ -694,7 +694,7 @@ void command_interpreter(struct char_data *ch, char *argument)
   if (!IS_NPC(ch)) {
     int i, found=FALSE;
     if ((!ch->player.name[0]) || (ch->player.name[0]<' ')) {
-	log("Error in character name.  Changed to 'Error'");
+	vlog("Error in character name.  Changed to 'Error'");
 	free(ch->player.name);
 	ch->player.name = (char *)malloc(6);
 	strcpy(ch->player.name, "Error"); 
@@ -710,7 +710,7 @@ void command_interpreter(struct char_data *ch, char *argument)
       }
     }
     if (found) {
-	log("Error in character name.  Changed to 'Error'");
+	vlog("Error in character name.  Changed to 'Error'");
 	free(ch->player.name);
 	ch->player.name = (char *)malloc(6);
 	strcpy(ch->player.name, "Error");
@@ -1543,7 +1543,7 @@ void nanny(struct descriptor_data *d, char *arg)
 	  if (tmp_store.max_corpse > 3) {
 	  SEND_TO_Q("Too many corpses in game, can't connect\n\r", d);
 	  sprintf(buf, "%s: too many corpses.",tmp_name);
-	  log(buf);
+	  vlog(buf);
 	  STATE(d) = CON_WIZLOCK;
 	  break;
 	  }
@@ -1646,14 +1646,14 @@ void nanny(struct descriptor_data *d, char *arg)
 	  act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
 	  sprintf(buf, "%s[%s] has reconnected.", GET_NAME(
 							   d->character), d->host);
-	  log(buf);
+	  vlog(buf);
 	  return;
 	}
       
       
       sprintf(buf, "%s[%s] has connected.", GET_NAME(d->character),
 	      d->host);
-      log(buf);
+      vlog(buf);
       if ((IS_SET(d->character->specials.act, PLR_ANSI)) ||
           (IS_SET(d->character->specials.act, PLR_VT100))) {
           SEND_TO_Q(VT_CLENSEQ,d);
@@ -1909,7 +1909,7 @@ void nanny(struct descriptor_data *d, char *arg)
 #else
     if (STATE(d) != CON_QCLASS) {
       sprintf(buf, "%s [%s] new player.", GET_NAME(d->character), d->host);
-      log(buf);
+      vlog(buf);
        /*
        ** now that classes are set, initialize
        */
@@ -1958,7 +1958,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
         reset_char(d->character);
         sprintf(buf, "Loading %s's equipment", d->character->player.name);
-        log(buf);
+        vlog(buf);
         load_char_objs(d->character);
         set_title(d->character);
         save_char(d->character, AUTO_RENT);
@@ -1991,7 +1991,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
         reset_char(d->character);
         sprintf(buf, "Loading %s's equipment", d->character->player.name);
-        log(buf);
+        vlog(buf);
         load_char_objs(d->character);
         save_char(d->character, AUTO_RENT);
         send_to_char(WELC_MESSG, d->character);
@@ -2024,7 +2024,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
           reset_char(d->character);
           sprintf(buf, "Loading %s's equipment", d->character->player.name);
-          log(buf);
+          vlog(buf);
           load_char_objs(d->character);
           save_char(d->character, AUTO_RENT);
           send_to_char(WELC_MESSG, d->character);
@@ -2062,7 +2062,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
           reset_char(d->character);
           sprintf(buf, "Loading %s's equipment", d->character->player.name);
-          log(buf);
+          vlog(buf);
           load_char_objs(d->character);
           save_char(d->character, AUTO_RENT);
           send_to_char(WELC_MESSG, d->character);
@@ -2100,7 +2100,7 @@ void nanny(struct descriptor_data *d, char *arg)
 
           reset_char(d->character);
           sprintf(buf, "Loading %s's equipment", d->character->player.name);
-          log(buf);
+          vlog(buf);
           load_char_objs(d->character);
           save_char(d->character, AUTO_RENT);
           send_to_char(WELC_MESSG, d->character);
@@ -2152,7 +2152,7 @@ void nanny(struct descriptor_data *d, char *arg)
     case '1':
       reset_char(d->character);
       sprintf(buf, "Loading %s's equipment", d->character->player.name);
-      log(buf);
+      vlog(buf);
       load_char_objs(d->character);
       save_char(d->character, AUTO_RENT);
       send_to_char(WELC_MESSG, d->character);
@@ -2297,7 +2297,7 @@ void nanny(struct descriptor_data *d, char *arg)
     STATE(d) = CON_SLCT;
     break;
   default:
-    log("Nanny: illegal state of con'ness");
+    vlog("Nanny: illegal state of con'ness");
     abort();
     break;
   }
