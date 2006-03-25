@@ -399,7 +399,7 @@ void TPerson::storeToSt(charFile *st)
   }
 
   if ((j >= MAX_AFFECT) && af && af->next)
-    vlogf(LOG_BUG, fmt("WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!") %  getName());
+    vlogf(LOG_SILENT, fmt("WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!") %  getName());
 
   // Save the discipline learning
   // unused disc_learning values should be 0 from charFile ctor
