@@ -2169,13 +2169,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       
       rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-	if (vict == vict) {
-	  vict->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
-	} else {
-	  vict->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
-	}
+        act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
       } else {
 	vict->nothingHappens();
       }
@@ -2187,7 +2181,41 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       blindness(ch,vict,level,learn);
       break;
     case LIQ_POT_ARMOR:
-      armor(ch,vict,level,learn,SPELL_ARMOR);
+      rc = armor(ch,vict,level,learn,SPELL_ARMOR);
+      if (IS_SET(rc, SPELL_SUCCESS)) {
+        if (ch != vict) {
+          act("$N is now defended by $d!",
+            FALSE, ch, NULL, vict, TO_CHAR);
+          act("$N is now defended by $d!",
+            FALSE, ch, NULL, vict, TO_NOTVICT);
+          act("You are now defended by $d!",
+            FALSE, ch, NULL, vict, TO_VICT);
+        } else {
+          act("$n is now defended by $d!",
+            FALSE, ch, NULL, 0, TO_ROOM);
+          act("You are now defended by $d!",
+            FALSE, ch, NULL, 0, TO_CHAR);
+        }
+      } else if (IS_SET(rc, SPELL_CRIT_SUCCESS)) {
+        if (ch != vict) {
+          act("$N is now strongly defended by $d!",
+            FALSE, ch, NULL, vict, TO_CHAR);
+          act("$N is now strongly defended by $d!",
+            FALSE, ch, NULL, vict, TO_NOTVICT);
+          act("You are now strongly defended by $d!",
+            FALSE, ch, NULL, vict, TO_VICT);
+        } else {
+          act("$n is now strongly defended by $d!",
+            FALSE, ch, NULL, 0, TO_ROOM);
+          act("You are now strongly defended by $d!",
+            FALSE, ch, NULL, 0, TO_CHAR);
+        }
+      } else if (IS_SET(rc, SPELL_FAIL)) {
+        vict->sendTo("Your potion fails to bring forth any protection.\n\r");
+        act("$n's potion fails to bring forth any protection.", 
+          FALSE, ch, NULL, NULL, TO_ROOM);
+        ch->deityIgnore(SILENT_YES);
+      }
       break;
     case LIQ_POT_REFRESH:
       refresh(ch,vict,level,learn,SPELL_REFRESH);
@@ -2367,13 +2395,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       
       rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-	if (vict == vict) {
-	  vict->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
-	} else {
-	  vict->sendTo("You feel much \"lighter\"!\n\r");
-	  act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
-	}
+        act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
       } else {
 	vict->nothingHappens();
       }
