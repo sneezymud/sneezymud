@@ -678,7 +678,7 @@ TThing& TThing::operator += (TThing& t)
   if (rp2)
     vlogf(LOG_BUG, "Operator += trying to put a room somewhere");
 
-  mud_assert(t.parent == NULL, "TThing += : t.parent existed");
+  mud_assert(t.parent == NULL, (fmt("TThing += : t.parent existed: %s") % t.name).c_str());
   mud_assert(t.equippedBy == NULL, "TThing += : t.equippedBy existed");
   mud_assert(t.stuckIn == NULL, "TThing += : t.stuckIn existed");
   mud_assert(t.roomp == NULL, "TThing += : t.roomp existed");

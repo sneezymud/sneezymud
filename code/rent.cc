@@ -895,6 +895,65 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
   return false;
 }
 
+
+bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom *r, TBeing *ch)
+{
+  //  vlogf(LOG_PEEL, fmt("objToParent: %s") % new_obj->name);
+
+  if(slot != NORMAL_SLOT){
+    if (r)
+      vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %
+	    r->number % slot);
+    else if (ch)
+      vlogf(LOG_BUG, fmt("%s's objects.  Invalid slot %d.") %
+	    ch->getName() % slot);
+    vlogf(LOG_BUG, "Error in objsFromStore (3)");
+    return false;
+  }
+  
+  *parent += *new_obj;
+
+  return true;
+}
+
+
+bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
+{
+  //  vlogf(LOG_PEEL, fmt("objToEquipChar: %s") % new_obj->name);
+
+  if (ch) {
+    wearSlotT mapped_slot = mapFileToSlot( slot);
+    if (!ch->canUseLimb(mapped_slot))
+      *ch += *new_obj;
+    else
+      ch->equipChar(new_obj, mapped_slot, SILENT_YES);
+  } else {
+    vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
+	  ((r) ? r->number : -99));
+    return false;
+  }
+  return true;
+}
+
+
+bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
+{
+  //  vlogf(LOG_PEEL, fmt("objToTarg: %s") % new_obj->name);
+
+  if (ch)
+    *ch += *new_obj;
+  else if (r)
+    thing_to_room(new_obj, r->number);
+  else {
+    vlogf(LOG_BUG, "Yikes!  An object was read with no destination in objsFromStore()!");
+    return false;
+  }
+
+  return true;
+}
+    
+
+
 // read a list of items and their contents from storage 
 bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
 {
@@ -902,131 +961,70 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
   TObj *new_obj;
 
   while (!feof(fp)) {
+    //// read slot
     if (fread(&slot, sizeof(signed char), 1, fp) != 1) {
       if (r)
         vlogf(LOG_BUG, fmt("  Room %d.  Couldn't read slot.") %  r->number);
       else if (ch)
-        vlogf(LOG_BUG, fmt(" %s's objects.  Couldn't read slot.") %  ch->getName());
+        vlogf(LOG_BUG, fmt(" %s's objects.  Couldn't read slot.") %
+	      ch->getName());
       else
         vlogf(LOG_BUG, "Error in objsFromStore (1)");
 
-      return TRUE;
+      return true;
+    } else if (slot >= MAX_WEAR) {
+      if (ch)
+	vlogf(LOG_BUG, fmt("%s's objects.  Slot %d > MAX_WEAR.") %
+	      ch->getName() % slot);
+      else if (r)
+	vlogf(LOG_BUG, fmt("Room %d's objects.  Slot %d > MAX_WEAR.") %
+	      r->number % slot);
+      vlogf(LOG_BUG, "Error in objsFromStore (4)");
+      return true;
     }
     
     if (slot == CONTENTS_END)
-      return FALSE;
-    if (parent) {
-      if (slot == NORMAL_SLOT) {
-        if ((new_obj = raw_read_item())) {
-          (*numread)++;
-          if (ch)
-            ch->logItem(new_obj, CMD_WEST);  // rent in
-	  obj_index[new_obj->number].addToNumber(-1);
+      return false;
 
-          *parent += *new_obj;
 
-          if (objsFromStore(new_obj, numread, ch, r, corpse)) {
-            vlogf(LOG_BUG, "Error in objsFromStore (1)");
-            return TRUE;  // ERROR occured 
-          }
+    //// load the object
+    if(!(new_obj = raw_read_item())){
+      vlogf(LOG_BUG, "Error in objsFromStore (raw_read_item)");
+      return true;
+    }
 
-          if (immortalityNukeCheck(ch, new_obj, corpse))
-            continue;  // new_obj invalid if this was true
+    (*numread)++;
+    if(ch)
+      ch->logItem(new_obj, CMD_WEST); // rent in
+    obj_index[new_obj->number].addToNumber(-1);
 
-	  repoCheckForRent(ch, new_obj, corpse);
-
-        } else {
-          vlogf(LOG_BUG, "Error in objsFromStore (2)");
-          return TRUE;
-        }
-      } else {
-        if (r)
-          vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %  r->number % slot);
-        else if (ch)
-          vlogf(LOG_BUG, fmt("%s's objects.  Invalid slot %d.") %  ch->getName() % slot);
-        vlogf(LOG_BUG, "Error in objsFromStore (3)");
-        return TRUE;
-      }
+    //// place the object
+    if(parent){
+      if(!objToParent(slot, parent, new_obj, r, ch))
+	return true;
     } else {
-      if (slot >= MAX_WEAR) {
-        if (ch)
-          vlogf(LOG_BUG, fmt("%s's objects.  Slot %d > MAX_WEAR.") %  ch->getName() % slot);
-        else if (r)
-          vlogf(LOG_BUG, fmt("Room %d's objects.  Slot %d > MAX_WEAR.") %  r->number % slot);
-        vlogf(LOG_BUG, "Error in objsFromStore (4)");
-        return TRUE;
-      } else if (slot >= 0) {
-        if ((new_obj = raw_read_item())) {
-          (*numread)++;
-          if (ch)
-            ch->logItem(new_obj, CMD_WEST);  // rent in
-	  obj_index[new_obj->number].addToNumber(-1);
-
-          if (ch) {
-            wearSlotT mapped_slot = mapFileToSlot( slot);
-            if (!ch->canUseLimb(mapped_slot))
-              *ch += *new_obj;
-            else
-              ch->equipChar(new_obj, mapped_slot, SILENT_YES);
-
-          } else
-            vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
-		  ((r) ? r->number : -99));
-
-          if (objsFromStore(new_obj, numread, ch, r, corpse)) {
-            vlogf(LOG_BUG, "Error in objsFromStore (5)");
-            return TRUE;  // ERROR occured 
-          }
-
-          if (immortalityNukeCheck(ch, new_obj, corpse))
-            continue;  // new_obj invalid if this was true
-
-	  repoCheckForRent(ch, new_obj, corpse);
-
-        } else {
-          vlogf(LOG_BUG, "Error in objsFromStore (6)");
-          return TRUE;
-        }
-      } else if (slot == NORMAL_SLOT) {
-        if ((new_obj = raw_read_item())) {
-          if (ch)
-            ch->logItem(new_obj, CMD_WEST);  // rent in
-	  obj_index[new_obj->number].addToNumber(-1);
-
-          (*numread)++;
-          if (ch)
-            *ch += *new_obj;
-          else if (r)
-            thing_to_room(new_obj, r->number);
-          else
-            vlogf(LOG_BUG, "Yikes!  An object was read with no destination in objsFromStore()!");
-          if (objsFromStore(new_obj, numread, ch, r, FALSE)) {
-            vlogf(LOG_BUG, "Error in objsFromStore (7)");
-            return TRUE;            // ERROR occured 
-          }
-
-          if (immortalityNukeCheck(ch, new_obj, corpse))
-            continue;  // new_obj invalid if this was true
-
-	  repoCheckForRent(ch, new_obj, corpse);
-
-
-        } else {
-          vlogf(LOG_BUG, "Error in objsFromStore (8)");
-          return TRUE;
-        }
+      if(slot == NORMAL_SLOT){
+	if(!objToTarg(slot, ch, new_obj, r))
+	  return true;
       } else {
-        if (r)
-          vlogf(LOG_BUG, fmt(" Room %d.  Invalid slot %d.") %  r->number % slot);
-        else if (ch) 
-          vlogf(LOG_BUG, fmt(" %s's objects.  Invalid slot %d.") %  ch->getName() % slot);
-        
-        vlogf(LOG_BUG, "Error in objsFromStore (9)");
-        return TRUE;
+	if(!objToEquipChar(slot, ch, new_obj, r))
+	  return true;
       }
     }
+
+    // recursively load any contained objects
+    if (objsFromStore(new_obj, numread, ch, r, corpse)) {
+      vlogf(LOG_BUG, "Error in objsFromStore (1)");
+      return true;  // ERROR occured 
+    }
+    
+    if (immortalityNukeCheck(ch, new_obj, corpse))
+      continue;  // new_obj invalid if this was true
+    
+    repoCheckForRent(ch, new_obj, corpse);
   }
-  return FALSE;
+
+  return false;
 }
 
 void ItemSave::setFile(FILE *f)
