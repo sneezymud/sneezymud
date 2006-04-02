@@ -493,6 +493,14 @@ void TBeing::doToggle(const char *arg2)
       if(i%3)
 	sendTo("\n\r");
 
+    } else {
+      // mortals are always asking if double exp is on, so just let them see it
+      // in the toggle list
+      sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
+      sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
+	     toggleInfo[TOG_DOUBLEEXP]->name %
+	     on_or_off(toggleInfo[TOG_DOUBLEEXP]->toggle));
     }
 
     return;
