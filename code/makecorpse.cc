@@ -353,6 +353,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "The corpse of %s has a broken nose from falling down too hard.",getName());
         break;
       case SPELL_BONE_BREAKER:
+      case SKILL_BONEBREAK:
         sprintf(buf, "The twisted and mangled corpse of %s lies in a heap.",getName());
         break;
       case SPELL_PARALYZE:
@@ -776,7 +777,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_FEIGN_DEATH:
       case SKILL_BLUR:
       case SKILL_CHAIN_ATTACK:
-      case SKILL_BONEBREAK:
       case SKILL_DEFENESTRATE:
       case SKILL_HURL:
       case SKILL_SWINDLE:
