@@ -1420,6 +1420,49 @@ int TBeing::dropBloodLimb(wearSlotT limb)
   return TRUE;
 }
 
+int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
+{
+  affectedData aff;
+  char buf[256];
+
+  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR && 
+             pos != HOLD_RIGHT && pos != HOLD_LEFT &&
+             slotChance(pos), "Bogus slot on raw bruise");
+
+  // not sure what this is for???
+  if (immcheck) {
+    if (isImmune(IMMUNE_SKIN_COND))
+      return FALSE;
+  }
+
+  aff.type = AFFECT_DISEASE;
+  aff.level = pos;
+  aff.duration = duration;
+  aff.location = APPLY_NONE;
+  aff.modifier = DISEASE_BRUISED;
+  aff.bitvector = 0;
+
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - getImmunity(IMMUNE_SKIN_COND));
+  aff.duration /= 100;
+
+  if(hasQuestBit(TOG_IS_HEMOPHILIAC))
+    aff.duration*=10;
+
+  affectTo(&aff);
+  disease_start(this, &aff);
+
+  if (!silent) {
+    sendTo(fmt("%sYour %s is bruised!%s\n\r") % 
+        red() % describeBodySlot(pos) % norm());
+    sprintf(buf, "$n's %s has been bruised!", describeBodySlot(pos).c_str());
+    act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+  }
+
+  return TRUE;
+}
+
 // assumes you have already checked for immunites, etc
 int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
 {

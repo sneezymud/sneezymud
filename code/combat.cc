@@ -995,6 +995,15 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       // if the attacker is barehanded, then lets reduce chance  -- bat
       v->rawBleed(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
     }
+
+    // chance to bruise
+    if(!v->isLimbFlags(part_hit, PART_BRUISED) &&
+       !::number(0,6) && !v->isLucky(levelLuckModifier(5)) &&
+       !v->isLucky(levelLuckModifier(5))){
+      v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
+    }
+    
+    
   } else
     *dam = 0;
 

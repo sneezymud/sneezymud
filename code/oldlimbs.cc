@@ -16,7 +16,7 @@ void TBeing::setCurLimbHealth(wearSlotT slot, ubyte num)
 
 ubyte TBeing::getCurLimbHealth(wearSlotT slot) const
 {
-  return body_parts[slot].getHealth();
+  return min(getMaxLimbHealth(slot), body_parts[slot].getHealth());
 }
 
 void TBeing::addCurLimbHealth(wearSlotT slot, int num)
@@ -81,6 +81,10 @@ ubyte TBeing::getMaxLimbHealth(wearSlotT limb) const
   if (getRace() == RACE_HOBBIT) {
     if (limb == WEAR_FOOT_R || limb == WEAR_FOOT_L)
       health *= 2;
+  }
+
+  if(isLimbFlags(limb, PART_BRUISED)){
+    health /= 2;
   }
 
   health = min(max(1,health),255);

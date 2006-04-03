@@ -59,6 +59,7 @@ enum diseaseTypeT {
      DISEASE_GARROTTE,
      DISEASE_POISON,
      DISEASE_SYPHILIS,
+     DISEASE_BRUISED,
      MAX_DISEASE
 };
 

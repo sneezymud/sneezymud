@@ -351,6 +351,61 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
   return FALSE;
 }
 
+int disease_bruised(TBeing *victim, int message, affectedData *af)
+{
+  int j;
+  char buf[256];
+  // defines the limb that is bruised
+  wearSlotT i = wearSlotT(af->level);
+
+
+  if(i < MIN_WEAR || i >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_bruised called with bad slot: %i") % i);
+    return FALSE;
+  }
+
+
+  if (victim->isPc() && !victim->desc)
+    return FALSE;
+
+  switch (message) {
+    case DISEASE_BEGUN:
+      victim->addToLimbFlags(i, PART_BRUISED);
+      break;
+    case DISEASE_PULSE:
+      // defines the severity of the bruise
+      j = af->modifier2;
+
+      // check to see if somehow the bruised bit got taken off
+      if (!victim->slotChance(i) ||
+          !victim->isLimbFlags(i, PART_BRUISED) ||
+          victim->isLimbFlags(i, PART_MISSING)) {
+	af->duration = 0;
+	break;
+      }
+
+      if (!number(0, 50)) {
+	// just for fun, no damage or anything
+	victim->sendTo(fmt("You feel your %s throb and the bruise turns a deeper shade of purple.\n\r") % victim->describeBodySlot(i));
+      }
+      break;
+    case DISEASE_DONE:
+      if (victim->isLimbFlags(i, PART_BRUISED))
+	victim->remLimbFlags(i, PART_BRUISED);
+
+      if (victim->getPosition() > POSITION_DEAD) {
+        victim->sendTo(fmt("The bruise on your %s fades away!\n\r") % victim->describeBodySlot(i));
+        sprintf(buf, "The bruise on $n's %s fades away!", victim->describeBodySlot(i).c_str());
+        act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+      }
+
+      break;
+    default:
+      break;
+  }
+  return FALSE;
+}
+
 int disease_bleeding(TBeing *victim, int message, affectedData *af)
 {
   int j, dam, amt;
@@ -1297,5 +1352,6 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] =
   {disease_garrotte,"a breathing problem",100000},
   {disease_poison,"poison",450},
   {disease_syphilis,"syphilis",8500},
+  {disease_bruised,"bruised",200},
 };
 

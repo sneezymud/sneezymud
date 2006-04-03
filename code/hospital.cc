@@ -97,7 +97,7 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound, int sh
 {
   int price = ch->GetMaxLevel() * ch->GetMaxLevel();
 
-  if (IS_SET(wound, PART_BLEEDING))
+  if (IS_SET(wound, PART_BLEEDING) || IS_SET(wound, PART_BRUISED))
     price *= 3;
 
   else if (IS_SET(wound, PART_INFECTED))

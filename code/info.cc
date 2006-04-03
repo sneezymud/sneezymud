@@ -3701,6 +3701,12 @@ void TBeing::doLimbs(const sstring & argument)
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
+    if(v->isLimbFlags(i, PART_BRUISED)){
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <p>bruised<Z>!\n\r") %
+         who %red() %v->describeBodySlot(i) %
+         norm() % v->slotPlurality(i));
+      found = TRUE;      
+    }
     if (v->isLimbFlags(i, PART_BLEEDING)) {
       sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
          who %red() %v->describeBodySlot(i) %

@@ -199,6 +199,7 @@ const unsigned short int PART_USELESS      = (1<<7);
 const unsigned short int PART_LEPROSED     = (1<<8);
 const unsigned short int PART_TRANSFORMED  = (1<<9);
 const unsigned short int PART_ENTANGLED    = (1<<10);
+const unsigned short int PART_BRUISED      = (1<<11);
 
 const int MAX_PARTS          = 11;       // move and change
 
@@ -1141,6 +1142,7 @@ class TBeing : public TThing {
     void rawBlind(int, int, saveTypeT);
     int rawSleep(int, int, int, saveTypeT);
     int rawBleed(wearSlotT, int, silentTypeT, checkImmunityT);
+    int rawBruise(wearSlotT, int, silentTypeT, checkImmunityT);
     int dropPool(int, liqTypeT);
     int dropBloodLimb(wearSlotT);
     int rawInfect(wearSlotT, int, silentTypeT, checkImmunityT);
