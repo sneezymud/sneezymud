@@ -1871,6 +1871,7 @@ class TBeing : public TThing {
     int doChop(const char *, TBeing *);
     int doHurl(const char *, TBeing *);
     int doDefenestrate(const char *, TBeing *);
+    int doBoneBreak(const char *, TBeing *);
     int doChi(const char *, TThing *);
     int doLeap(const sstring &);
     int doVote(const sstring &);

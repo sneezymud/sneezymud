@@ -15,20 +15,24 @@ public:
     CSkill skHurl;
     CSkill skChainAttack;
     CSkill skDefenestrate;
+    CSkill skBoneBreak;
 
     CDLeverage()
       : CDiscipline(),
       skShoulderThrow(),
       skHurl(),
       skChainAttack(),
-      skDefenestrate(){
+      skDefenestrate(),
+      skBoneBreak(){
     }
     CDLeverage(const CDLeverage &a)
       : CDiscipline(a),
       skShoulderThrow(a.skShoulderThrow),
       skHurl(a.skHurl),
       skChainAttack(a.skChainAttack),
-      skDefenestrate(a.skDefenestrate){
+      skDefenestrate(a.skDefenestrate),
+      skBoneBreak(a.skBoneBreak){
+
     }
     CDLeverage & operator=(const CDLeverage &a) {
       if (this == &a) return *this;
@@ -37,6 +41,7 @@ public:
       skHurl = a.skHurl;
       skChainAttack = a.skChainAttack;
       skDefenestrate = a.skDefenestrate;
+      skBoneBreak = a.skBoneBreak;
       return *this;
     }
     virtual ~CDLeverage() {}
@@ -48,6 +53,7 @@ private:
   int shoulderThrow(TBeing *, TBeing *);
   int hurl(TBeing *, TBeing *, char *);
   int defenestrate(TBeing *, TBeing *, sstring);
+  int bonebreak(TBeing *, TBeing *);
 
 #endif
 

@@ -270,7 +270,7 @@ LIBCMD =cmd_attribute.o		cmd_headbutt.o    	cmd_sedit.o	\
 	cmd_feigndeath.o	cmd_rescue.o      	cmd_zonefile.o	\
 	cmd_get.o		cmd_save.o        	cmd_zones.o	\
 	cmd_grapple.o		cmd_score.o		cmd_trip.o \
-	cmd_pracInfo.o
+	cmd_pracInfo.o		cmd_bonebreak.o
 LIBCMD := $(sort $(addprefix $(OBJDIR), $(LIBCMD)))
 
 LIBTASK=task_attune.o	       	task_sacrifice.o	\
@@ -2316,6 +2316,117 @@ objs/cmd_bodyslam.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/cmd_bodyslam.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/cmd_bodyslam.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/cmd_bodyslam.o: colorstring.h format.h combat.h
+objs/cmd_bonebreak.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/c++config.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/cmd_bonebreak.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/cmd_bonebreak.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/cmd_bonebreak.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/cmd_bonebreak.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/cmd_bonebreak.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/cmd_bonebreak.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/cmd_bonebreak.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/cmd_bonebreak.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/cmd_bonebreak.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/cmd_bonebreak.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cmath
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/cmd_bonebreak.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/string
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/cmd_bonebreak.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/iosfwd
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/c++io.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/gthr.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/cmd_bonebreak.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/cmd_bonebreak.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/cmd_bonebreak.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/cmd_bonebreak.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/postypes.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/cmd_bonebreak.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/exception_defines.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/debug/debug.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/memory
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/allocator.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/algorithm
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/vector
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/map
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/list
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/list.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/iostream
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/streambuf
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/locale
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/limits
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/typeinfo
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/istream
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/sstream
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/fstream
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/cmd_bonebreak.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/cmd_bonebreak.o: enum.h spells.h structs.h parse.h immunity.h
+objs/cmd_bonebreak.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/cmd_bonebreak.o: client.h response.h faction.h comm.h toggle.h
+objs/cmd_bonebreak.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/cmd_bonebreak.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/cmd_bonebreak.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/cmd_bonebreak.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/cmd_bonebreak.o: monster.h paths.h account.h extern.h handler.h
+objs/cmd_bonebreak.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/cmd_bonebreak.o: format.h combat.h disc_monk.h disc_leverage.h
 objs/cmd_charge.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_charge.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_charge.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31808,6 +31919,140 @@ objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
 objs/shop.o: obj_component.h obj_potion.h obj_base_cup.h
+objs/shopinfo.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/shopinfo.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/shopinfo.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/shopinfo.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/shopinfo.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/shopinfo.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/shopinfo.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/shopinfo.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/shopinfo.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/shopinfo.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/shopinfo.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cmath
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/shopinfo.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/string
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/shopinfo.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/shopinfo.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/shopinfo.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/shopinfo.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/shopinfo.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/shopinfo.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/memory
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/algorithm
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/vector
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/map
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/list
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/iostream
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/streambuf
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/locale
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/limits
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/typeinfo
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/istream
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/sstream
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/fstream
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/shopinfo.cgi.o: enum.h spells.h structs.h parse.h immunity.h
+objs/shopinfo.cgi.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/shopinfo.cgi.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/shopinfo.cgi.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/shopinfo.cgi.o: disease.h trap.h task.h weather.h sound.h create.h
+objs/shopinfo.cgi.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/shopinfo.cgi.o: charfile.h being.h person.h monster.h paths.h account.h
+objs/shopinfo.cgi.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/shopinfo.cgi.o: colorstring.h format.h database.h
+objs/shopinfo.cgi.o: /usr/local/include/libpq-fe.h
+objs/shopinfo.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/shopinfo.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/MStreamable.h shop.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
+objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPRedirectHeader.h
+objs/shopinfo.cgi.o: /usr/include/md5.h /usr/include/sys/md5.h
 objs/shoplog.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/c++config.h
 objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
