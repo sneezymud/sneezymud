@@ -1247,7 +1247,7 @@ int TMainSocket::gameLoop()
   // pulse wayslow  (240 seconds (4 mins))
   scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));
   scheduler.add(new procCheckMail(PULSE_WAYSLOW));
-  scheduler.add(new procCheckTriggerUsers(PULSE_WAYSLOW));
+  //  scheduler.add(new procCheckTriggerUsers(PULSE_WAYSLOW));
   
   // pulse mudday   (3456 seconds (57.6 mins))
   scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
