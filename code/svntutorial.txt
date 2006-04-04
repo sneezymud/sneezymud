@@ -22,14 +22,13 @@ remove it and do 'svn update' to checkout the production version.
 ---
 
 To compile your own dev code:
-rm file.mak ; make >& file.mak &
+./build.sh start
 
 To boot your dev mud:
-./sneezy.2 6969 >& file &
+./boot.sh start
 
-I'll probably update bmake and alboot to work with the dev
-environments, right now you have to do it manually.  You may have to
-use another port if 6969 is being used.
+You may have to use another port if 6969 is being used.  You can
+modify boot.sh to include a port for you.
 
 ---
 
