@@ -1157,6 +1157,7 @@ void procCheckTriggerUsers::run(int) const
 
     // assign a byte code to each type of command
     count=0;
+    c='a';
     for(int i=0;i<128;++i){
       if(!d->history[i][0])
 	continue;
