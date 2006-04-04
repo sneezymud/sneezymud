@@ -1155,9 +1155,12 @@ void procCheckTriggerUsers::run(int) const
     if(!d->character)
       continue;
 
-    // assign a byte code to each type of command
     count=0;
     c='a';
+    cmds.clear();
+    str.clear();
+
+    // assign a byte code to each type of command
     for(int i=0;i<128;++i){
       if(!d->history[i][0])
 	continue;
