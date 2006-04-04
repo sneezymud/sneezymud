@@ -1172,24 +1172,20 @@ void procCheckTriggerUsers::run(int) const
     vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has %i unique commands") % 
 	  d->character->getName() % (c-'a'));
 
-    // possibly check size of cmds here, and don't bother checking
-    // for pattern if the size is large compared to the sample
     unsigned int longest=0;
 
-    for(int j=0;j<10;++j){
-      buf="";
-      for(unsigned int i=0;i<128;++i){
-	if(!d->history[i][0])
-	  continue;
-
-	buf+=cmds[d->history[i]];
-
-	if(find(str.begin(), str.end(), buf) == str.end()){
-	  if(buf.length() > longest)
-	    longest=buf.length();
-	  str.push_back(buf);
-	  buf="";
-	}
+    buf="";
+    for(unsigned int i=0;i<128;++i){
+      if(!d->history[i][0])
+	continue;
+      
+      buf+=cmds[d->history[i]];
+      
+      if(find(str.begin(), str.end(), buf) == str.end()){
+	if(buf.length() > longest)
+	  longest=buf.length();
+	str.push_back(buf);
+	buf="";
       }
     }
 
@@ -1227,7 +1223,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procSaveNewFactions(PULSE_UPDATE));
   scheduler.add(new procWeatherAndTime(PULSE_UPDATE));
   scheduler.add(new procWholistAndUsageLogs(PULSE_UPDATE));
-  scheduler.add(new procCheckTriggerUsers(PULSE_UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
@@ -1247,6 +1242,7 @@ int TMainSocket::gameLoop()
   // pulse wayslow  (240 seconds (4 mins))
   scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));
   scheduler.add(new procCheckMail(PULSE_WAYSLOW));
+  scheduler.add(new procCheckTriggerUsers(PULSE_WAYSLOW));
   
   // pulse mudday   (3456 seconds (57.6 mins))
   scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
