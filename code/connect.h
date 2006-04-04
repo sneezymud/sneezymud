@@ -443,7 +443,7 @@ class Descriptor
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     aliasData alias[16];          // aliases for players
-    char history[10][MAX_INPUT_LENGTH];
+    char history[128][MAX_INPUT_LENGTH];
     betData bet;
     cBetData bet_opt;
     byte screen_size;

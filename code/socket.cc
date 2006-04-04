@@ -1136,6 +1136,69 @@ void procTweakLoadRate::run(int) const
 	stats.equip);
 }
 
+procCheckTriggerUsers::procCheckTriggerUsers(const int &p)
+{
+  trigger_pulse=p;
+  name="procCheckTriggerUsers";
+}
+
+void procCheckTriggerUsers::run(int) const
+{
+  Descriptor *d;
+  sstring buf;
+  vector <sstring> str;
+  map <sstring, unsigned char> cmds;
+  unsigned char c='a';
+  int count=0;
+
+  for (d = descriptor_list; d; d = d->next) {
+    if(!d->character)
+      continue;
+
+    // assign a byte code to each type of command
+    for(int i=0;i<128;++i){
+      if(!d->history[i][0])
+	continue;
+      if(cmds.find(d->history[i]) == cmds.end()){
+	cmds[d->history[i]]=c++;
+      }
+      count++;
+    }
+
+    // don't bother if they don't have enough command history
+    if(count < 100)
+      return;
+
+    vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has %i unique commands") % 
+	  d->character->getName() % (c-'a'));
+
+    // possibly check size of cmds here, and don't bother checking
+    // for pattern if the size is large compared to the sample
+    unsigned int longest=0;
+
+    for(int j=0;j<10;++j){
+      buf="";
+      for(unsigned int i=0;i<128;++i){
+	if(!d->history[i][0])
+	  continue;
+
+	buf+=cmds[d->history[i]];
+
+	if(find(str.begin(), str.end(), buf) == str.end()){
+	  if(buf.length() > longest)
+	    longest=buf.length();
+	  str.push_back(buf);
+	  buf="";
+	}
+      }
+    }
+
+    vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has longest pattern of %i") % 
+	  d->character->getName() % longest);
+  }
+}
+
+
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
@@ -1164,6 +1227,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procSaveNewFactions(PULSE_UPDATE));
   scheduler.add(new procWeatherAndTime(PULSE_UPDATE));
   scheduler.add(new procWholistAndUsageLogs(PULSE_UPDATE));
+  scheduler.add(new procCheckTriggerUsers(PULSE_UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(PULSE_MUDHOUR));

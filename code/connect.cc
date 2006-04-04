@@ -173,7 +173,7 @@ Descriptor::Descriptor(TSocket *s) :
   *m_raw = '\0';
   *delname = '\0';
 
-  for (i = 0; i < 10; i++)
+  for (i = 0; i < 128; i++)
     *history[i] = '\0';
   
   descriptor_list = this;
@@ -239,7 +239,7 @@ Descriptor::Descriptor(const Descriptor &a) :
   strcpy(m_raw, a.m_raw);
   strcpy(delname, a.delname);
 
-  for (i = 0; i < 10; i++)
+  for (i = 0; i < 128; i++)
     strcpy(history[i], a.history[i]);
   
   descriptor_list = this;
@@ -310,7 +310,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   strcpy(m_raw, a.m_raw);
   strcpy(delname, a.delname);
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 128; i++)
     strcpy(history[i], a.history[i]);
   
   return *this;
@@ -796,7 +796,7 @@ void Descriptor::add_to_history_list(const char *arg)
   int i;
 
   unsigned int hist_size = sizeof(history[0]) * sizeof(char);
-  for (i = 9; i >= 1; i--) {
+  for (i = 127; i >= 1; i--) {
     strncpy(history[i], history[i - 1], hist_size - 1);
     history[i][hist_size-1] = '\0';
   }

@@ -19,7 +19,13 @@ class TProcess {
 
 //// processes
 
-class procTrophyDecay: public TProcess {
+class procCheckTriggerUsers : public TProcess {
+ public:
+  void run(int) const;
+  procCheckTriggerUsers(const int &);
+};
+
+class procTrophyDecay : public TProcess {
  public:
   void run(int) const;
   procTrophyDecay(const int &);
