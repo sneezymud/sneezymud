@@ -1152,7 +1152,7 @@ void procCheckTriggerUsers::run(int) const
   int count=0;
 
   for (d = descriptor_list; d; d = d->next) {
-    if(!d->character)
+    if(!d->character || d->connected)
       continue;
 
     count=0;
