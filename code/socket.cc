@@ -1172,7 +1172,7 @@ void procCheckTriggerUsers::run(int) const
 
     // don't bother if they don't have enough command history
     if(count < 100)
-      return;
+      continue;
 
     vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has %i unique commands") % 
 	  d->character->getName() % (c-'a'));
