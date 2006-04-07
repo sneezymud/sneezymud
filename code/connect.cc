@@ -5334,7 +5334,7 @@ void processAllInput()
               if (tempdesc == d || tempdesc == next_to_process)
                 break;
             }
-            if (tempdesc == d) {
+            if (d && tempdesc == d) {
               delete d->character;
               d->character = NULL;
             } else {
