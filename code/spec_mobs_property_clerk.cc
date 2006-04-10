@@ -13,7 +13,7 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
     if(arg.empty()){
       me->doTell(ch->getName(), "Which property do you want to buy a replacement key for?");
     } else {
-      db.query("select p.owner as owner_id, p.key as key from property p, obj o where p.key=o.vnum and p.id=%s", arg.word(0).c_str());
+      db.query("select p.owner as owner_id, p.key_vnum as key from property p, obj o where p.key_vnum=o.vnum and p.id=%s", arg.word(0).c_str());
 
       db.fetchRow();
 
@@ -47,7 +47,7 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 		   convertTo<int>(db["id"]) % db["name"]);
       }
     } else {
-      db.query("select p.id as id, p.name as name, p.owner as owner_id, pl.name as owner, p.key as key, o.short_desc as keyname, p.entrance as entrance_id, r.name as entrance from property p, player pl, obj o, room r where p.owner=pl.id and p.key=o.vnum and r.vnum=p.entrance and p.id=%s", arg.word(0).c_str());
+      db.query("select p.id as id, p.name as name, p.owner as owner_id, pl.name as owner, p.key_vnum as key, o.short_desc as keyname, p.entrance as entrance_id, r.name as entrance from property p, player pl, obj o, room r where p.owner=pl.id and p.key_vnum=o.vnum and r.vnum=p.entrance and p.id=%s", arg.word(0).c_str());
       
       while(db.fetchRow()){
 	if(ch->isImmortal()){
