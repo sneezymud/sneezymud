@@ -26,6 +26,8 @@ const unsigned int PROMPT_TIME              = (1<<18);
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);
 
+const int HISTORY_SIZE=128;
+
 const int MAX_TRAITS=16;
 
 struct TTraits {
@@ -443,7 +445,7 @@ class Descriptor
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     aliasData alias[16];          // aliases for players
-    char history[128][MAX_INPUT_LENGTH];
+    char history[HISTORY_SIZE][MAX_INPUT_LENGTH];
     betData bet;
     cBetData bet_opt;
     byte screen_size;
