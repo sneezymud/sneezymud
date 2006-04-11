@@ -375,6 +375,10 @@ $(OBJDIR)libsys.so:	$(LIBSYS)
 	@$(CC) -fPIC -shared -o $(OBJDIR)libsys.so $(LIBSYS) $(LDFLAGS)
 ###
 
+rebooter:
+	@echo \*\*\* Installing rebooter \*\*\*
+	@cp -f rebooter.sh rebooter.cfg rebooter-watchdog.sh /mud/prod
+
 # low tool
 sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqladdobjs
