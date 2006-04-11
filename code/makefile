@@ -377,7 +377,8 @@ $(OBJDIR)libsys.so:	$(LIBSYS)
 
 rebooter:
 	@echo \*\*\* Installing rebooter \*\*\*
-	@cp -f rebooter.sh rebooter.cfg rebooter-watchdog.sh /mud/prod
+	@cp -f rebooter.sh /mud/prod/rebooter.sh.2
+	@cp -f rebooter.cfg rebooter-watchdog.sh /mud/prod
 
 # low tool
 sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
