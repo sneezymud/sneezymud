@@ -79,10 +79,10 @@ float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
       else {
 	// ok, shop is owned and there is no ratio set for this specific object
 	// so check keywords
-	db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
+	db.query("select match_str, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
 	
 	while(db.fetchRow()){
-	  if(isname(db["match"], obj->name)){
+	  if(isname(db["match_str"], obj->name)){
 	    profit_sell=convertTo<float>(db["profit_sell"]);
 	    break;
 	  }
@@ -123,10 +123,10 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
     while(db.fetchRow())
       ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
 
-    db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
+    db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i",
 	     shop_nr);
     while(db.fetchRow())
-      matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
+      matches_cache[db["match_str"]]=convertTo<float>(db["profit_buy"]);
 
     db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
 	     shop_nr);
@@ -158,10 +158,10 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 	  }
 	}
       } else {
-	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+	db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
 	
 	while(db.fetchRow()){
-	  if(isname(db["match"], obj->name)){
+	  if(isname(db["match_str"], obj->name)){
 	    profit_buy=convertTo<float>(db["profit_buy"]);
 	    break;
 	  }

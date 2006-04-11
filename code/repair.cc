@@ -92,10 +92,10 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
       if(profit_buy==-1){
 	// ok, shop is owned and there is no ratio set for this specific object
 	// so check keywords
-	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+	db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
 	
 	while(db.fetchRow()){
-	  if(isname(db["match"], name)){
+	  if(isname(db["match_str"], name)){
 	    profit_buy=convertTo<float>(db["profit_buy"]);
 	    break;
 	  }

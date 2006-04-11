@@ -635,7 +635,7 @@ int TShopOwned::setRates(sstring arg)
     } else if(buf == "match"){
       arg = one_argument(arg, buf);
 
-      db.query("delete from shopownedmatch where shop_nr=%i and match='%s'",
+      db.query("delete from shopownedmatch where shop_nr=%i and match_str='%s'",
 	       shop_nr, buf.c_str());
       
       keeper->doTell(ch->getName(), "Done.");
@@ -702,14 +702,14 @@ int TShopOwned::setRates(sstring arg)
 		     obj_index[real_object(convertTo<int>(db["obj_nr"]))].short_desc);
     }
 
-    db.query("select match, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
+    db.query("select match_str, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
       keeper->doTell(ch->getName(),fmt( "%f %f %i match %s") %
 		     convertTo<float>(db["profit_buy"]) % 
 		     convertTo<float>(db["profit_sell"]) % 
 		     convertTo<int>(db["max_num"]) %
-		     db["match"]);
+		     db["match_str"]);
     }    
 
     db.query("select player, profit_buy, profit_sell, max_num from shopownedplayer where shop_nr=%i", shop_nr);
@@ -741,14 +741,14 @@ int TShopOwned::setRates(sstring arg)
   } else if(buf == "match"){ /////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
-    db.query("select 1 from shopownedmatch where shop_nr=%i and match='%s'",
+    db.query("select 1 from shopownedmatch where shop_nr=%i and match_str='%s'",
 	     shop_nr, buf.c_str());
     
     if(!db.fetchRow()){
       db.query("insert into shopownedmatch values (%i, '%s', %f, %f, %i)",
 	       shop_nr, buf.c_str(), profit_buy, profit_sell, max_num);
     } else {
-      db.query("update shopownedmatch set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and match='%s'", profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
+      db.query("update shopownedmatch set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and match_str='%s'", profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
     }
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.") %
@@ -1249,10 +1249,10 @@ int TShopOwned::getMaxNum(const TObj *o)
   TDatabase db(DB_SNEEZY);
   
   if(o){
-    db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);
+    db.query("select match_str, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      if(isname(db["match"], o->name))
+      if(isname(db["match_str"], o->name))
 	return convertTo<int>(db["max_num"]);
     }
     
