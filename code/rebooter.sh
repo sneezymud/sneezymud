@@ -111,6 +111,7 @@ EOF
 
   /usr/local/bin/psql sneezy<<EOF
 update shop set gold=shopgoldtmp.gold where shop_nr=shopgoldtmp.shop_nr;
+drop table shopgoldtmp;
 EOF
 
   # Copy the binary
