@@ -1,5 +1,5 @@
 CREATE TABLE talenhistory (
-    logtime timestamp without time zone,
+    logtime timestamp,
     total integer,
     player integer,
     corp integer,

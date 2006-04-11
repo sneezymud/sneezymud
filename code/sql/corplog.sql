@@ -4,5 +4,5 @@ CREATE TABLE corplog (
     action varchar(80),
     talens integer,
     corptalens integer,
-    logtime timestamp without time zone
+    logtime timestamp
 );
