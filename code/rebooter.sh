@@ -95,13 +95,13 @@ rotate_files()
            room roomexit roomextra itemtype;
   do 
     echo Copying $i table.
-    pg_dump -F c -t $i sneezyq | pg_restore -c -d sneezy
+    mysqldump sneezy $i | mysql sneezy
   done
 
 
 
-  /usr/local/bin/psql sneezy<<EOF
-drop table shopgoldtmp;
+  mysql sneezy<<EOF
+drop table if exists shopgoldtmp;
 create table shopgoldtmp (shop_nr int, gold int);
 insert into shopgoldtmp select shop_nr, gold from shop;
 truncate shop;
@@ -109,8 +109,8 @@ EOF
 
   pg_dump -F c -t shop sneezyq | pg_restore -c -d sneezy
 
-  /usr/local/bin/psql sneezy<<EOF
-update shop set gold=shopgoldtmp.gold where shop_nr=shopgoldtmp.shop_nr;
+  mysql sneezy<<EOF
+update shop, shopgoldtmp set shop.gold=shopgoldtmp.gold where shop.shop_nr=shopgoldtmp.shop_nr;
 drop table shopgoldtmp;
 EOF
 
