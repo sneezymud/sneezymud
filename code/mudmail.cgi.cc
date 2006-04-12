@@ -221,7 +221,7 @@ void deleteMessage(int mail_id, int account_id)
   TDatabase db(DB_SNEEZY);
 
   // make sure they aren't trying to delete someone elses messages
-  db.query("delete from mail where mail.mailid=%i and mail.mailto=player.name and player.account_id=%i", mail_id, account_id);
+  db.query("delete mail from mail, player where mail.mailid=%i and mail.mailto=player.name and player.account_id=%i", mail_id, account_id);
 }
 
 void sendMessageList(Cgicc cgi, int account_id)
@@ -358,7 +358,7 @@ void sendPickPlayer(int account_id)
   cout << "<p></form>" << endl;
 
   // get a list of players in this account
-  db.query("select p.id, p.name, count(m.*) as count from player p left outer join mail m on (p.name=m.mailto) where account_id=%i group by p.id, p.name order by p.name",
+  db.query("select p.id, p.name, count(m.mailid) as count from player p left outer join mail m on (p.name=m.mailto) where account_id=%i group by p.id, p.name order by p.name",
 	   account_id);
 
   if(!db.fetchRow()){
