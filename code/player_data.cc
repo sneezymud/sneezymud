@@ -302,7 +302,7 @@ bool raw_save_char(const char *name, charFile *char_element)
   fclose(fl);
 
   TDatabase db(DB_SNEEZY);
-  db.query("update player set talens=%i, account_id=account.account_id where lower(name)=lower('%s') and account.name='%s'",
+  db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id where lower(p.name)=lower('%s') and a.name='%s'",
 	   char_element->money, name, char_element->aname);
 
   return TRUE;
@@ -908,7 +908,7 @@ void TBeing::saveChar(sh_int load_room)
   Descriptor *mydesc=tmp?tmp->desc:desc;
     
   if(!isImmortal()){
-    db.query("update player set talens=%i, account_id=account.account_id where id=%i and account.name='%s'",
+    db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id where p.id=%i and a.name='%s'",
 	     st.money, getPlayerID(), mydesc->account->name.c_str());
   }
 

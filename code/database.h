@@ -1,7 +1,7 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
-#include <libpq-fe.h>
+#include <mysql/mysql.h>
 
 // TDatabase is a class for interacting with the sql database.
 //
@@ -82,7 +82,6 @@ enum dbTypeT {
   DB_SNEEZYBETA,
   DB_IMMORTAL,
   DB_SNEEZYGLOBAL,
-  DB_SNEEZYBUILDER,
   DB_SNEEZYPROD,
 };
 
@@ -92,9 +91,9 @@ const sstring empty="";
 
 class TDatabase
 {
-  PGresult *res;
-  int row;
-  PGconn *db;
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  MYSQL *db;
   
  public:
   void setDB(dbTypeT);
@@ -112,29 +111,36 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  PGconn *sneezydb, *immodb, *sneezyglobaldb, *sneezybetadb, *sneezybuilderdb;
-  PGconn *sneezyproddb;
+  MYSQL *sneezydb;
+  MYSQL *immodb;
+  MYSQL *sneezyglobaldb;
+  MYSQL *sneezybetadb;
+  MYSQL *sneezyproddb;
 
  public:
-  PGconn *getSneezyDB(){
+  MYSQL *getSneezyDB(){
     if(!sneezydb){
       const char * dbconnectstr = NULL;
       
       if(gamePort == PROD_GAMEPORT){
-	dbconnectstr="dbname=sneezy";
+	dbconnectstr="sneezy";
       } else if(gamePort == BUILDER_GAMEPORT){
-	dbconnectstr="dbname=sneezybuilder";
+	dbconnectstr="sneezybuilder";
       } else {
-	dbconnectstr="dbname=sneezybeta";
+	dbconnectstr="sneezybeta";
       }
             
       vlogf(LOG_DB, fmt("Initializing database '%s'.") % 
 	    dbconnectstr);
+      sneezydb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezydb=PQconnectdb(dbconnectstr))){
-	vlogf(LOG_DB, fmt("Could not connect to database '%s'.") % 
+      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL, 
+			     dbconnectstr, 0, NULL, 0)){
+	vlogf(LOG_DB, fmt("Could not connect to database '%s'.") %
 	      dbconnectstr);
+	vlogf(LOG_DB, fmt("%s") % mysql_error(sneezydb));
+
 	return NULL;
       }
     }
@@ -142,12 +148,14 @@ class TDatabaseConnection
     return sneezydb;
   }
 
-  PGconn *getSneezyProdDB(){
+  MYSQL *getSneezyProdDB(){
     if(!sneezyproddb){
       vlogf(LOG_DB, "Initializing database 'sneezy'.");
-      
+      sneezyproddb=mysql_init(NULL);
+
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezyproddb=PQconnectdb("dbname=sneezy"))){
+      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL,
+                             "sneezy", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'sneezy'.");
 	return NULL;
       }
@@ -156,28 +164,15 @@ class TDatabaseConnection
     return sneezyproddb;
   }
 
-
-  PGconn *getSneezyBuilderDB(){
-    if(!sneezybuilderdb){
-      vlogf(LOG_DB, "Initializing database 'sneezybuilder'.");
-      
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezybuilderdb=PQconnectdb("dbname=sneezybuilder"))){
-	vlogf(LOG_DB, "Could not connect to database 'sneezybuilder'.");
-	return NULL;
-      }
-    }
-    
-    return sneezybuilderdb;
-  }
-
-  PGconn *getSneezyBetaDB(){
+  MYSQL *getSneezyBetaDB(){
     if(!sneezybetadb){
       vlogf(LOG_DB, "Initializing database 'sneezybeta'.");
+      sneezybetadb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezybetadb=PQconnectdb("dbname=sneezybeta"))){
-	vlogf(LOG_DB, "Could not connect to database 'sneezybeta'.");
+      if(!mysql_real_connect(sneezybetadb, NULL, "sneezy", NULL,
+                             "sneezybeta", 0, NULL, 0)){
+      	vlogf(LOG_DB, "Could not connect to database 'sneezybeta'.");
 	return NULL;
       }
     }
@@ -186,12 +181,14 @@ class TDatabaseConnection
   }
 
 
-  PGconn *getImmoDB(){
+  MYSQL *getImmoDB(){
     if(!immodb){
       vlogf(LOG_DB, "Initializing database 'immortal'.");
-      
+      immodb=mysql_init(NULL);
+
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(immodb=PQconnectdb("dbname=immortal"))){
+      if(!mysql_real_connect(immodb, NULL, "sneezy", NULL,
+                             "immortal", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'immortal'.");
 	return NULL;
       }
@@ -200,12 +197,14 @@ class TDatabaseConnection
     return immodb;
   }
 
-  PGconn *getSneezyGlobalDB(){
+  MYSQL *getSneezyGlobalDB(){
     if(!sneezyglobaldb){
       vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
+      sneezyglobaldb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezyglobaldb=PQconnectdb("dbname=sneezyglobal"))){
+      if(!mysql_real_connect(sneezyglobaldb, NULL, "sneezy", NULL,
+                             "sneezyglobal", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
 	return NULL;
       }

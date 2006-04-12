@@ -273,27 +273,6 @@ void TBeing::doWho(const char *argument)
 	}
 	
         buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
-        buf = fmt("%sBuilder (Port 8900)\n\r") % buf;
-        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
-
-        TDatabase db2(DB_SNEEZYBUILDER);
-        db2.query("select title, port, name from wholist order by port");
-
-        while(db2.fetchRow()){
-          stmp=db2["title"];
-
-          if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db2["name"]);
-
-          if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db2["name"]);
-
-
-          buf = fmt("%s[%s] %s<1>\n\r") % buf %
-                   db2["port"] % stmp;
-        }
-	
-        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
         buf = fmt("%sTesting (Other Ports)\n\r") % buf;
         buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
 

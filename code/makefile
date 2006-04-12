@@ -119,8 +119,11 @@ LDFLAGS += -L/usr/local/lib
 #LDFLAGS +=-fhandle-exceptions
 # postgresql database lib
 #LDFLAGS +=-lpq++
-LDFLAGS +=-lpq -lares
+#LDFLAGS +=-lpq
+LDFLAGS += -L/usr/local/lib/mysql
+LDFLAGS += -lmysqlclient
 
+LDFLAGS +=-lares
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
 ###############################################################################
