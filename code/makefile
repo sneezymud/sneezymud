@@ -414,19 +414,10 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@$(CC) -o amap objs/amap.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip amap
 
-sqladdobjs_builder: $(LIBS) objs/sqladdobjs_builder.o objs/lowtools.o
-	@echo \*\*\* Making Final Link: sqladdobjs_builder
-	@$(CC) -o sqladdobjs_builder objs/sqladdobjs_builder.o objs/lowtools.o $(LIBS) $(LDFLAGS)
-	@/usr/bin/strip sqladdobjs_builder
-
-sqledobj_builder: $(LIBS) objs/sqledobj_builder.o objs/lowtools.o
-	@echo \*\*\* Making Final Link: sqledobj_builder
-	@$(CC) -o sqledobj_builder objs/sqledobj_builder.o objs/lowtools.o $(LIBS) $(LDFLAGS)
-	@/usr/bin/strip sqledobj_builder
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdobjs_builder sqledshop
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqladdobjs_builder sqledobj_builder sqledshop /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
@@ -1370,8 +1361,13 @@ objs/amap.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/amap.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/amap.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/amap.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
-objs/amap.o: format.h lowtools.h database.h /usr/local/include/libpq-fe.h
-objs/amap.o: /usr/local/include/postgres_ext.h
+objs/amap.o: format.h lowtools.h database.h /usr/local/include/mysql/mysql.h
+objs/amap.o: /usr/local/include/mysql/mysql_com.h
+objs/amap.o: /usr/local/include/mysql/mysql_time.h
+objs/amap.o: /usr/local/include/mysql/mysql_version.h
+objs/amap.o: /usr/local/include/mysql/typelib.h
+objs/amap.o: /usr/local/include/mysql/my_list.h
+objs/amap.o: /usr/local/include/mysql/my_alloc.h
 objs/ansi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/ansi.o: /usr/include/c++/3.4/bits/c++config.h
 objs/ansi.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -1575,8 +1571,14 @@ objs/being.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/being.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/being.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/being.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/being.o: colorstring.h format.h database.h /usr/local/include/libpq-fe.h
-objs/being.o: /usr/local/include/postgres_ext.h obj_opal.h
+objs/being.o: colorstring.h format.h database.h
+objs/being.o: /usr/local/include/mysql/mysql.h
+objs/being.o: /usr/local/include/mysql/mysql_com.h
+objs/being.o: /usr/local/include/mysql/mysql_time.h
+objs/being.o: /usr/local/include/mysql/mysql_version.h
+objs/being.o: /usr/local/include/mysql/typelib.h
+objs/being.o: /usr/local/include/mysql/my_list.h
+objs/being.o: /usr/local/include/mysql/my_alloc.h obj_opal.h
 objs/being.o: /usr/include/sys/stat.h
 objs/body.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/body.o: /usr/include/c++/3.4/bits/c++config.h
@@ -1992,8 +1994,13 @@ objs/client.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/client.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/client.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/client.o: colorstring.h format.h statistics.h combat.h database.h
-objs/client.o: /usr/local/include/libpq-fe.h
-objs/client.o: /usr/local/include/postgres_ext.h
+objs/client.o: /usr/local/include/mysql/mysql.h
+objs/client.o: /usr/local/include/mysql/mysql_com.h
+objs/client.o: /usr/local/include/mysql/mysql_time.h
+objs/client.o: /usr/local/include/mysql/mysql_version.h
+objs/client.o: /usr/local/include/mysql/typelib.h
+objs/client.o: /usr/local/include/mysql/my_list.h
+objs/client.o: /usr/local/include/mysql/my_alloc.h
 objs/cmd_attribute.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_attribute.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_attribute.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -4644,8 +4651,13 @@ objs/cmd_low.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_low.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/cmd_low.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/cmd_low.o: materials.h colorstring.h format.h statistics.h combat.h
-objs/cmd_low.o: database.h /usr/local/include/libpq-fe.h
-objs/cmd_low.o: /usr/local/include/postgres_ext.h obj_player_corpse.h
+objs/cmd_low.o: database.h /usr/local/include/mysql/mysql.h
+objs/cmd_low.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_low.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_low.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_low.o: /usr/local/include/mysql/typelib.h
+objs/cmd_low.o: /usr/local/include/mysql/my_list.h
+objs/cmd_low.o: /usr/local/include/mysql/my_alloc.h obj_player_corpse.h
 objs/cmd_low.o: obj_base_corpse.h obj_base_container.h obj_smoke.h
 objs/cmd_low.o: obj_arrow.h obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/cmd_low.o: obj_base_clothing.h obj_worn.h pathfinder.h
@@ -5416,8 +5428,13 @@ objs/cmd_rename.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/cmd_rename.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_rename.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/cmd_rename.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/cmd_rename.o: database.h /usr/local/include/libpq-fe.h
-objs/cmd_rename.o: /usr/local/include/postgres_ext.h
+objs/cmd_rename.o: database.h /usr/local/include/mysql/mysql.h
+objs/cmd_rename.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_rename.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_rename.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_rename.o: /usr/local/include/mysql/typelib.h
+objs/cmd_rename.o: /usr/local/include/mysql/my_list.h
+objs/cmd_rename.o: /usr/local/include/mysql/my_alloc.h
 objs/cmd_rescue.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_rescue.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_rescue.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -7052,8 +7069,13 @@ objs/cmd_trophy.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/cmd_trophy.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_trophy.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/cmd_trophy.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/cmd_trophy.o: cmd_trophy.h database.h /usr/local/include/libpq-fe.h
-objs/cmd_trophy.o: /usr/local/include/postgres_ext.h process.h
+objs/cmd_trophy.o: cmd_trophy.h database.h /usr/local/include/mysql/mysql.h
+objs/cmd_trophy.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_trophy.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_trophy.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_trophy.o: /usr/local/include/mysql/typelib.h
+objs/cmd_trophy.o: /usr/local/include/mysql/my_list.h
+objs/cmd_trophy.o: /usr/local/include/mysql/my_alloc.h process.h
 objs/cmd_visible.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_visible.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_visible.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -7273,8 +7295,13 @@ objs/cmd_who.o: materials.h colorstring.h format.h statistics.h games.h
 objs/cmd_who.o: /usr/include/c++/3.4/deque
 objs/cmd_who.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/cmd_who.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
-objs/cmd_who.o: game_drawpoker.h database.h /usr/local/include/libpq-fe.h
-objs/cmd_who.o: /usr/local/include/postgres_ext.h
+objs/cmd_who.o: game_drawpoker.h database.h /usr/local/include/mysql/mysql.h
+objs/cmd_who.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_who.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_who.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_who.o: /usr/local/include/mysql/typelib.h
+objs/cmd_who.o: /usr/local/include/mysql/my_list.h
+objs/cmd_who.o: /usr/local/include/mysql/my_alloc.h
 objs/cmd_zonefile.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_zonefile.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_zonefile.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -7493,8 +7520,13 @@ objs/cmd_zones.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/cmd_zones.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_zones.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/cmd_zones.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/cmd_zones.o: database.h /usr/local/include/libpq-fe.h
-objs/cmd_zones.o: /usr/local/include/postgres_ext.h cmd_trophy.h
+objs/cmd_zones.o: database.h /usr/local/include/mysql/mysql.h
+objs/cmd_zones.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_zones.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_zones.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_zones.o: /usr/local/include/mysql/typelib.h
+objs/cmd_zones.o: /usr/local/include/mysql/my_list.h
+objs/cmd_zones.o: /usr/local/include/mysql/my_alloc.h cmd_trophy.h
 objs/color.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/color.o: /usr/include/c++/3.4/bits/c++config.h
 objs/color.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -7810,8 +7842,13 @@ objs/combat.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/combat.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/combat.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/combat.o: colorstring.h format.h range.h combat.h statistics.h mail.h
-objs/combat.o: shop.h database.h /usr/local/include/libpq-fe.h
-objs/combat.o: /usr/local/include/postgres_ext.h obj_trash.h obj_arrow.h
+objs/combat.o: shop.h database.h /usr/local/include/mysql/mysql.h
+objs/combat.o: /usr/local/include/mysql/mysql_com.h
+objs/combat.o: /usr/local/include/mysql/mysql_time.h
+objs/combat.o: /usr/local/include/mysql/mysql_version.h
+objs/combat.o: /usr/local/include/mysql/typelib.h
+objs/combat.o: /usr/local/include/mysql/my_list.h
+objs/combat.o: /usr/local/include/mysql/my_alloc.h obj_trash.h obj_arrow.h
 objs/combat.o: obj_base_weapon.h obj_general_weapon.h obj_gun.h
 objs/combat.o: obj_handgonne.h obj_base_clothing.h cmd_trophy.h
 objs/combat.o: obj_base_cup.h
@@ -8045,8 +8082,13 @@ objs/connect.o: mail.h games.h /usr/include/c++/3.4/deque
 objs/connect.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/connect.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/connect.o: game_drawpoker.h cmd_trophy.h database.h
-objs/connect.o: /usr/local/include/libpq-fe.h
-objs/connect.o: /usr/local/include/postgres_ext.h
+objs/connect.o: /usr/local/include/mysql/mysql.h
+objs/connect.o: /usr/local/include/mysql/mysql_com.h
+objs/connect.o: /usr/local/include/mysql/mysql_time.h
+objs/connect.o: /usr/local/include/mysql/mysql_version.h
+objs/connect.o: /usr/local/include/mysql/typelib.h
+objs/connect.o: /usr/local/include/mysql/my_list.h
+objs/connect.o: /usr/local/include/mysql/my_alloc.h
 objs/constants.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/constants.o: /usr/include/c++/3.4/bits/c++config.h
 objs/constants.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -8266,8 +8308,13 @@ objs/corp_info.cgi.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/corp_info.cgi.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/corp_info.cgi.o: monster.h paths.h account.h extern.h handler.h
 objs/corp_info.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/corp_info.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/corp_info.cgi.o: /usr/local/include/postgres_ext.h corporation.h
+objs/corp_info.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/typelib.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/my_list.h
+objs/corp_info.cgi.o: /usr/local/include/mysql/my_alloc.h corporation.h
 objs/corp_info.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/corp_info.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/corp_info.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -8396,8 +8443,13 @@ objs/corporation.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/corporation.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/corporation.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/corporation.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/corporation.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/corporation.o: /usr/local/include/postgres_ext.h corporation.h
+objs/corporation.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/corporation.o: /usr/local/include/mysql/mysql_com.h
+objs/corporation.o: /usr/local/include/mysql/mysql_time.h
+objs/corporation.o: /usr/local/include/mysql/mysql_version.h
+objs/corporation.o: /usr/local/include/mysql/typelib.h
+objs/corporation.o: /usr/local/include/mysql/my_list.h
+objs/corporation.o: /usr/local/include/mysql/my_alloc.h corporation.h
 objs/create_engine.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/create_engine.o: /usr/include/c++/3.4/bits/c++config.h
 objs/create_engine.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -8729,8 +8781,13 @@ objs/create_objs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/create_objs.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/create_objs.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/create_objs.o: format.h obj_component.h dirsort.h statistics.h
-objs/create_objs.o: database.h /usr/local/include/libpq-fe.h
-objs/create_objs.o: /usr/local/include/postgres_ext.h obj_open_container.h
+objs/create_objs.o: database.h /usr/local/include/mysql/mysql.h
+objs/create_objs.o: /usr/local/include/mysql/mysql_com.h
+objs/create_objs.o: /usr/local/include/mysql/mysql_time.h
+objs/create_objs.o: /usr/local/include/mysql/mysql_version.h
+objs/create_objs.o: /usr/local/include/mysql/typelib.h
+objs/create_objs.o: /usr/local/include/mysql/my_list.h
+objs/create_objs.o: /usr/local/include/mysql/my_alloc.h obj_open_container.h
 objs/create_objs.o: obj_base_container.h obj_trash.h obj_book.h obj_trap.h
 objs/create_objs.o: obj_portal.h obj_seethru.h obj_arrow.h obj_base_weapon.h
 objs/create_objs.o: obj_gun.h obj_general_weapon.h obj_base_clothing.h
@@ -8846,8 +8903,13 @@ objs/create_rooms.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/create_rooms.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/create_rooms.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/create_rooms.o: colorstring.h format.h obj_table.h obj_seethru.h
-objs/create_rooms.o: database.h /usr/local/include/libpq-fe.h
-objs/create_rooms.o: /usr/local/include/postgres_ext.h
+objs/create_rooms.o: database.h /usr/local/include/mysql/mysql.h
+objs/create_rooms.o: /usr/local/include/mysql/mysql_com.h
+objs/create_rooms.o: /usr/local/include/mysql/mysql_time.h
+objs/create_rooms.o: /usr/local/include/mysql/mysql_version.h
+objs/create_rooms.o: /usr/local/include/mysql/typelib.h
+objs/create_rooms.o: /usr/local/include/mysql/my_list.h
+objs/create_rooms.o: /usr/local/include/mysql/my_alloc.h
 objs/crit_combat.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/crit_combat.o: /usr/include/c++/3.4/bits/c++config.h
 objs/crit_combat.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -9064,8 +9126,14 @@ objs/damage.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/damage.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/damage.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/damage.o: colorstring.h format.h combat.h statistics.h obj_base_corpse.h
-objs/damage.o: obj_base_container.h database.h /usr/local/include/libpq-fe.h
-objs/damage.o: /usr/local/include/postgres_ext.h cmd_trophy.h
+objs/damage.o: obj_base_container.h database.h
+objs/damage.o: /usr/local/include/mysql/mysql.h
+objs/damage.o: /usr/local/include/mysql/mysql_com.h
+objs/damage.o: /usr/local/include/mysql/mysql_time.h
+objs/damage.o: /usr/local/include/mysql/mysql_version.h
+objs/damage.o: /usr/local/include/mysql/typelib.h
+objs/damage.o: /usr/local/include/mysql/my_list.h
+objs/damage.o: /usr/local/include/mysql/my_alloc.h cmd_trophy.h
 objs/database.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/database.o: /usr/include/c++/3.4/bits/c++config.h
 objs/database.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -9174,8 +9242,130 @@ objs/database.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/database.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/database.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/database.o: materials.h colorstring.h format.h database.h
-objs/database.o: /usr/local/include/libpq-fe.h
-objs/database.o: /usr/local/include/postgres_ext.h timing.h
+objs/database.o: /usr/local/include/mysql/mysql.h
+objs/database.o: /usr/local/include/mysql/mysql_com.h
+objs/database.o: /usr/local/include/mysql/mysql_time.h
+objs/database.o: /usr/local/include/mysql/mysql_version.h
+objs/database.o: /usr/local/include/mysql/typelib.h
+objs/database.o: /usr/local/include/mysql/my_list.h
+objs/database.o: /usr/local/include/mysql/my_alloc.h timing.h
+objs/database.old.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/database.old.o: /usr/include/c++/3.4/bits/c++config.h
+objs/database.old.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/database.old.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/database.old.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/database.old.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/database.old.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/database.old.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/database.old.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/database.old.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/database.old.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/database.old.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/database.old.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/database.old.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/database.old.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/database.old.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/database.old.o: /usr/include/c++/3.4/cmath
+objs/database.old.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/database.old.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/database.old.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/database.old.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/database.old.o: /usr/include/c++/3.4/string
+objs/database.old.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/database.old.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/database.old.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/database.old.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/database.old.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/database.old.o: /usr/include/c++/3.4/iosfwd
+objs/database.old.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/database.old.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/database.old.o: /usr/include/c++/3.4/bits/c++io.h
+objs/database.old.o: /usr/include/c++/3.4/bits/gthr.h
+objs/database.old.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/database.old.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/database.old.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/database.old.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/database.old.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/database.old.o: /usr/include/c++/3.4/bits/postypes.h
+objs/database.old.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/database.old.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/database.old.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/database.old.o: /usr/include/c++/3.4/exception_defines.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/database.old.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/database.old.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/database.old.o: /usr/include/c++/3.4/debug/debug.h
+objs/database.old.o: /usr/include/c++/3.4/memory
+objs/database.old.o: /usr/include/c++/3.4/bits/allocator.h
+objs/database.old.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/database.old.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/database.old.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/database.old.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/database.old.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/database.old.o: /usr/include/c++/3.4/algorithm
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/database.old.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/database.old.o: /usr/include/c++/3.4/vector
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/database.old.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/database.old.o: /usr/include/c++/3.4/map
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/database.old.o: /usr/include/c++/3.4/list
+objs/database.old.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/database.old.o: /usr/include/c++/3.4/bits/list.tcc
+objs/database.old.o: /usr/include/c++/3.4/iostream
+objs/database.old.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/database.old.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/database.old.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/database.old.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/database.old.o: /usr/include/c++/3.4/streambuf
+objs/database.old.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/database.old.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/database.old.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/database.old.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/database.old.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/database.old.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/database.old.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/database.old.o: /usr/include/c++/3.4/locale
+objs/database.old.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/database.old.o: /usr/include/c++/3.4/limits
+objs/database.old.o: /usr/include/c++/3.4/typeinfo
+objs/database.old.o: /usr/include/c++/3.4/istream
+objs/database.old.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/database.old.o: /usr/include/c++/3.4/sstream
+objs/database.old.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/database.old.o: /usr/include/c++/3.4/fstream
+objs/database.old.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/database.old.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/database.old.o: enum.h spells.h structs.h parse.h immunity.h
+objs/database.old.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/database.old.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/database.old.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/database.old.o: disease.h trap.h task.h weather.h sound.h create.h
+objs/database.old.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/database.old.o: charfile.h being.h person.h monster.h paths.h account.h
+objs/database.old.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/database.old.o: colorstring.h format.h database.h
+objs/database.old.o: /usr/local/include/mysql/mysql.h
+objs/database.old.o: /usr/local/include/mysql/mysql_com.h
+objs/database.old.o: /usr/local/include/mysql/mysql_time.h
+objs/database.old.o: /usr/local/include/mysql/mysql_version.h
+objs/database.old.o: /usr/local/include/mysql/typelib.h
+objs/database.old.o: /usr/local/include/mysql/my_list.h
+objs/database.old.o: /usr/local/include/mysql/my_alloc.h
 objs/db.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/db.o: /usr/include/c++/3.4/bits/c++config.h
 objs/db.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -9272,8 +9462,13 @@ objs/db.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/db.o: spec_mobs.h materials.h colorstring.h format.h
 objs/db.o: /usr/include/dirent.h /usr/include/sys/dirent.h socket.h
 objs/db.o: statistics.h help.h mail.h obj_component.h loadset.h sys_loot.h
-objs/db.o: shop.h process.h database.h /usr/local/include/libpq-fe.h
-objs/db.o: /usr/local/include/postgres_ext.h obj_spellbag.h
+objs/db.o: shop.h process.h database.h /usr/local/include/mysql/mysql.h
+objs/db.o: /usr/local/include/mysql/mysql_com.h
+objs/db.o: /usr/local/include/mysql/mysql_time.h
+objs/db.o: /usr/local/include/mysql/mysql_version.h
+objs/db.o: /usr/local/include/mysql/typelib.h
+objs/db.o: /usr/local/include/mysql/my_list.h
+objs/db.o: /usr/local/include/mysql/my_alloc.h obj_spellbag.h
 objs/db.o: obj_expandable_container.h obj_open_container.h
 objs/db.o: obj_base_container.h obj_player_corpse.h obj_base_corpse.h
 objs/db.o: obj_corpse.h obj_quiver.h obj_keyring.h obj_chest.h obj_bag.h
@@ -15734,8 +15929,13 @@ objs/faction.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/faction.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/faction.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/faction.o: materials.h colorstring.h format.h database.h
-objs/faction.o: /usr/local/include/libpq-fe.h
-objs/faction.o: /usr/local/include/postgres_ext.h corporation.h process.h
+objs/faction.o: /usr/local/include/mysql/mysql.h
+objs/faction.o: /usr/local/include/mysql/mysql_com.h
+objs/faction.o: /usr/local/include/mysql/mysql_time.h
+objs/faction.o: /usr/local/include/mysql/mysql_version.h
+objs/faction.o: /usr/local/include/mysql/typelib.h
+objs/faction.o: /usr/local/include/mysql/my_list.h
+objs/faction.o: /usr/local/include/mysql/my_alloc.h corporation.h process.h
 objs/format.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/format.o: /usr/include/c++/3.4/bits/c++config.h
 objs/format.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -15947,8 +16147,13 @@ objs/gaining.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/gaining.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/gaining.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/gaining.o: materials.h colorstring.h format.h statistics.h
-objs/gaining.o: obj_component.h database.h /usr/local/include/libpq-fe.h
-objs/gaining.o: /usr/local/include/postgres_ext.h
+objs/gaining.o: obj_component.h database.h /usr/local/include/mysql/mysql.h
+objs/gaining.o: /usr/local/include/mysql/mysql_com.h
+objs/gaining.o: /usr/local/include/mysql/mysql_time.h
+objs/gaining.o: /usr/local/include/mysql/mysql_version.h
+objs/gaining.o: /usr/local/include/mysql/typelib.h
+objs/gaining.o: /usr/local/include/mysql/my_list.h
+objs/gaining.o: /usr/local/include/mysql/my_alloc.h
 objs/game_baccarat.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/game_baccarat.o: /usr/include/c++/3.4/bits/c++config.h
 objs/game_baccarat.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17755,8 +17960,13 @@ objs/immortal.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/immortal.o: game_drawpoker.h disc_shaman_frog.h disc_shaman_armadillo.h
 objs/immortal.o: systemtask.h socket.h shop.h cmd_trophy.h obj_note.h
 objs/immortal.o: obj_portal.h obj_seethru.h obj_base_clothing.h database.h
-objs/immortal.o: /usr/local/include/libpq-fe.h
-objs/immortal.o: /usr/local/include/postgres_ext.h rent.h
+objs/immortal.o: /usr/local/include/mysql/mysql.h
+objs/immortal.o: /usr/local/include/mysql/mysql_com.h
+objs/immortal.o: /usr/local/include/mysql/mysql_time.h
+objs/immortal.o: /usr/local/include/mysql/mysql_version.h
+objs/immortal.o: /usr/local/include/mysql/typelib.h
+objs/immortal.o: /usr/local/include/mysql/my_list.h
+objs/immortal.o: /usr/local/include/mysql/my_alloc.h rent.h
 objs/immunity.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/immunity.o: /usr/include/c++/3.4/bits/c++config.h
 objs/immunity.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17973,8 +18183,13 @@ objs/indexdata.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/indexdata.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/indexdata.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/indexdata.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/indexdata.o: statistics.h database.h /usr/local/include/libpq-fe.h
-objs/indexdata.o: /usr/local/include/postgres_ext.h
+objs/indexdata.o: statistics.h database.h /usr/local/include/mysql/mysql.h
+objs/indexdata.o: /usr/local/include/mysql/mysql_com.h
+objs/indexdata.o: /usr/local/include/mysql/mysql_time.h
+objs/indexdata.o: /usr/local/include/mysql/mysql_version.h
+objs/indexdata.o: /usr/local/include/mysql/typelib.h
+objs/indexdata.o: /usr/local/include/mysql/my_list.h
+objs/indexdata.o: /usr/local/include/mysql/my_alloc.h
 objs/info.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/info.o: /usr/include/c++/3.4/bits/c++config.h
 objs/info.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -18080,8 +18295,13 @@ objs/info.o: format.h /usr/include/dirent.h /usr/include/sys/dirent.h games.h
 objs/info.o: /usr/include/c++/3.4/deque /usr/include/c++/3.4/bits/stl_deque.h
 objs/info.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/info.o: game_drawpoker.h combat.h statistics.h obj_component.h
-objs/info.o: database.h /usr/local/include/libpq-fe.h
-objs/info.o: /usr/local/include/postgres_ext.h shop.h liquids.h skillsort.h
+objs/info.o: database.h /usr/local/include/mysql/mysql.h
+objs/info.o: /usr/local/include/mysql/mysql_com.h
+objs/info.o: /usr/local/include/mysql/mysql_time.h
+objs/info.o: /usr/local/include/mysql/mysql_version.h
+objs/info.o: /usr/local/include/mysql/typelib.h
+objs/info.o: /usr/local/include/mysql/my_list.h
+objs/info.o: /usr/local/include/mysql/my_alloc.h shop.h liquids.h skillsort.h
 objs/info.o: obj_open_container.h obj_base_container.h obj_corpse.h
 objs/info.o: obj_base_corpse.h obj_bow.h obj_symbol.h obj_food.h obj_tool.h
 objs/info.o: obj_trap.h obj_arrow.h obj_base_weapon.h obj_general_weapon.h
@@ -18738,8 +18958,13 @@ objs/lowtools.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/lowtools.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/lowtools.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/lowtools.o: materials.h colorstring.h format.h database.h
-objs/lowtools.o: /usr/local/include/libpq-fe.h
-objs/lowtools.o: /usr/local/include/postgres_ext.h
+objs/lowtools.o: /usr/local/include/mysql/mysql.h
+objs/lowtools.o: /usr/local/include/mysql/mysql_com.h
+objs/lowtools.o: /usr/local/include/mysql/mysql_time.h
+objs/lowtools.o: /usr/local/include/mysql/mysql_version.h
+objs/lowtools.o: /usr/local/include/mysql/typelib.h
+objs/lowtools.o: /usr/local/include/mysql/my_list.h
+objs/lowtools.o: /usr/local/include/mysql/my_alloc.h
 objs/luck.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/luck.o: /usr/include/c++/3.4/bits/c++config.h
 objs/luck.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -19271,8 +19496,13 @@ objs/mail.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/mail.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/mail.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/mail.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
-objs/mail.o: format.h mail.h database.h /usr/local/include/libpq-fe.h
-objs/mail.o: /usr/local/include/postgres_ext.h shop.h shopowned.h
+objs/mail.o: format.h mail.h database.h /usr/local/include/mysql/mysql.h
+objs/mail.o: /usr/local/include/mysql/mysql_com.h
+objs/mail.o: /usr/local/include/mysql/mysql_time.h
+objs/mail.o: /usr/local/include/mysql/mysql_version.h
+objs/mail.o: /usr/local/include/mysql/typelib.h
+objs/mail.o: /usr/local/include/mysql/my_list.h
+objs/mail.o: /usr/local/include/mysql/my_alloc.h shop.h shopowned.h
 objs/main.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/main.o: /usr/include/c++/3.4/bits/c++config.h
 objs/main.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -19917,8 +20147,13 @@ objs/mobact.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/mobact.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/mobact.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/mobact.o: colorstring.h format.h range.h statistics.h shop.h database.h
-objs/mobact.o: /usr/local/include/libpq-fe.h
-objs/mobact.o: /usr/local/include/postgres_ext.h obj_spellbag.h
+objs/mobact.o: /usr/local/include/mysql/mysql.h
+objs/mobact.o: /usr/local/include/mysql/mysql_com.h
+objs/mobact.o: /usr/local/include/mysql/mysql_time.h
+objs/mobact.o: /usr/local/include/mysql/mysql_version.h
+objs/mobact.o: /usr/local/include/mysql/typelib.h
+objs/mobact.o: /usr/local/include/mysql/my_list.h
+objs/mobact.o: /usr/local/include/mysql/my_alloc.h obj_spellbag.h
 objs/mobact.o: obj_expandable_container.h obj_open_container.h
 objs/mobact.o: obj_base_container.h obj_base_corpse.h obj_player_corpse.h
 objs/mobact.o: obj_bow.h obj_treasure.h obj_component.h obj_arrow.h
@@ -20030,8 +20265,13 @@ objs/monster.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/monster.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/monster.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/monster.o: materials.h colorstring.h format.h statistics.h shop.h
-objs/monster.o: database.h /usr/local/include/libpq-fe.h
-objs/monster.o: /usr/local/include/postgres_ext.h
+objs/monster.o: database.h /usr/local/include/mysql/mysql.h
+objs/monster.o: /usr/local/include/mysql/mysql_com.h
+objs/monster.o: /usr/local/include/mysql/mysql_time.h
+objs/monster.o: /usr/local/include/mysql/mysql_version.h
+objs/monster.o: /usr/local/include/mysql/typelib.h
+objs/monster.o: /usr/local/include/mysql/my_list.h
+objs/monster.o: /usr/local/include/mysql/my_alloc.h
 objs/movement.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/movement.o: /usr/include/c++/3.4/bits/c++config.h
 objs/movement.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -20255,8 +20495,13 @@ objs/mudmail.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/mudmail.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/mudmail.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/mudmail.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/mudmail.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/mudmail.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/mudmail.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/typelib.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/my_list.h
+objs/mudmail.cgi.o: /usr/local/include/mysql/my_alloc.h session.cgi.h
 objs/mudmail.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/mudmail.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/mudmail.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -23169,8 +23414,13 @@ objs/obj_component.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/obj_component.o: monster.h paths.h account.h extern.h handler.h
 objs/obj_component.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/obj_component.o: format.h shop.h database.h
-objs/obj_component.o: /usr/local/include/libpq-fe.h
-objs/obj_component.o: /usr/local/include/postgres_ext.h obj_spellbag.h
+objs/obj_component.o: /usr/local/include/mysql/mysql.h
+objs/obj_component.o: /usr/local/include/mysql/mysql_com.h
+objs/obj_component.o: /usr/local/include/mysql/mysql_time.h
+objs/obj_component.o: /usr/local/include/mysql/mysql_version.h
+objs/obj_component.o: /usr/local/include/mysql/typelib.h
+objs/obj_component.o: /usr/local/include/mysql/my_list.h
+objs/obj_component.o: /usr/local/include/mysql/my_alloc.h obj_spellbag.h
 objs/obj_component.o: obj_expandable_container.h obj_open_container.h
 objs/obj_component.o: obj_base_container.h obj_component.h shopowned.h
 objs/obj_component.o: corporation.h
@@ -26751,8 +27001,13 @@ objs/obj_potion.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/obj_potion.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_potion.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/obj_potion.o: obj_base_container.h obj_potion.h obj_base_cup.h shop.h
-objs/obj_potion.o: database.h /usr/local/include/libpq-fe.h
-objs/obj_potion.o: /usr/local/include/postgres_ext.h liquids.h
+objs/obj_potion.o: database.h /usr/local/include/mysql/mysql.h
+objs/obj_potion.o: /usr/local/include/mysql/mysql_com.h
+objs/obj_potion.o: /usr/local/include/mysql/mysql_time.h
+objs/obj_potion.o: /usr/local/include/mysql/mysql_version.h
+objs/obj_potion.o: /usr/local/include/mysql/typelib.h
+objs/obj_potion.o: /usr/local/include/mysql/my_list.h
+objs/obj_potion.o: /usr/local/include/mysql/my_alloc.h liquids.h
 objs/obj_quiver.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_quiver.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_quiver.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -29175,8 +29430,13 @@ objs/objlog.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/objlog.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/objlog.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/objlog.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/objlog.cgi.o: database.h /usr/local/include/libpq-fe.h
-objs/objlog.cgi.o: /usr/local/include/postgres_ext.h
+objs/objlog.cgi.o: database.h /usr/local/include/mysql/mysql.h
+objs/objlog.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/objlog.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/objlog.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/objlog.cgi.o: /usr/local/include/mysql/typelib.h
+objs/objlog.cgi.o: /usr/local/include/mysql/my_list.h
+objs/objlog.cgi.o: /usr/local/include/mysql/my_alloc.h
 objs/objlog.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/objlog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/objlog.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -29753,7 +30013,13 @@ objs/other.o: disc_shaman_control.h disc_murder.h obj_trap.h obj_light.h
 objs/other.o: obj_base_light.h obj_armor.h obj_base_clothing.h
 objs/other.o: obj_armor_wand.h obj_wand.h obj_magic_item.h spelltask.h
 objs/other.o: obj_potion.h obj_base_cup.h obj_scroll.h database.h
-objs/other.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
+objs/other.o: /usr/local/include/mysql/mysql.h
+objs/other.o: /usr/local/include/mysql/mysql_com.h
+objs/other.o: /usr/local/include/mysql/mysql_time.h
+objs/other.o: /usr/local/include/mysql/mysql_version.h
+objs/other.o: /usr/local/include/mysql/typelib.h
+objs/other.o: /usr/local/include/mysql/my_list.h
+objs/other.o: /usr/local/include/mysql/my_alloc.h
 objs/parse.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/parse.o: /usr/include/sys/types.h /usr/include/machine/endian.h
 objs/parse.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -30506,8 +30772,13 @@ objs/player_data.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/player_data.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/player_data.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/player_data.o: format.h shop.h mail.h statistics.h combat.h database.h
-objs/player_data.o: /usr/local/include/libpq-fe.h
-objs/player_data.o: /usr/local/include/postgres_ext.h
+objs/player_data.o: /usr/local/include/mysql/mysql.h
+objs/player_data.o: /usr/local/include/mysql/mysql_com.h
+objs/player_data.o: /usr/local/include/mysql/mysql_time.h
+objs/player_data.o: /usr/local/include/mysql/mysql_version.h
+objs/player_data.o: /usr/local/include/mysql/typelib.h
+objs/player_data.o: /usr/local/include/mysql/my_list.h
+objs/player_data.o: /usr/local/include/mysql/my_alloc.h
 objs/proc_check_mail.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/proc_check_mail.o: /usr/include/c++/3.4/bits/c++config.h
 objs/proc_check_mail.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31157,12 +31428,17 @@ objs/rent.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/rent.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/rent.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/rent.o: format.h rent.h statistics.h mail.h shop.h database.h
-objs/rent.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
-objs/rent.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
-objs/rent.o: obj_bag.h obj_expandable_container.h obj_open_container.h
-objs/rent.o: obj_symbol.h obj_component.h obj_note.h obj_magic_item.h
-objs/rent.o: obj_wand.h obj_general_weapon.h obj_base_weapon.h corporation.h
-objs/rent.o: shopowned.h
+objs/rent.o: /usr/local/include/mysql/mysql.h
+objs/rent.o: /usr/local/include/mysql/mysql_com.h
+objs/rent.o: /usr/local/include/mysql/mysql_time.h
+objs/rent.o: /usr/local/include/mysql/mysql_version.h
+objs/rent.o: /usr/local/include/mysql/typelib.h
+objs/rent.o: /usr/local/include/mysql/my_list.h
+objs/rent.o: /usr/local/include/mysql/my_alloc.h obj_player_corpse.h
+objs/rent.o: obj_base_corpse.h obj_base_container.h obj_bag.h
+objs/rent.o: obj_expandable_container.h obj_open_container.h obj_symbol.h
+objs/rent.o: obj_component.h obj_note.h obj_magic_item.h obj_wand.h
+objs/rent.o: obj_general_weapon.h obj_base_weapon.h corporation.h shopowned.h
 objs/repair.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/repair.o: /usr/include/sys/types.h /usr/include/machine/endian.h
 objs/repair.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
@@ -31268,8 +31544,13 @@ objs/repair.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/repair.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/repair.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/repair.o: colorstring.h format.h statistics.h obj_note.h shop.h
-objs/repair.o: database.h /usr/local/include/libpq-fe.h
-objs/repair.o: /usr/local/include/postgres_ext.h shopowned.h rent.h
+objs/repair.o: database.h /usr/local/include/mysql/mysql.h
+objs/repair.o: /usr/local/include/mysql/mysql_com.h
+objs/repair.o: /usr/local/include/mysql/mysql_time.h
+objs/repair.o: /usr/local/include/mysql/mysql_version.h
+objs/repair.o: /usr/local/include/mysql/typelib.h
+objs/repair.o: /usr/local/include/mysql/my_list.h
+objs/repair.o: /usr/local/include/mysql/my_alloc.h shopowned.h rent.h
 objs/response.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/response.o: /usr/include/c++/3.4/bits/c++config.h
 objs/response.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -31809,8 +32090,13 @@ objs/session.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/session.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/session.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/session.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/session.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/session.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/session.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/session.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/session.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/session.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/session.cgi.o: /usr/local/include/mysql/typelib.h
+objs/session.cgi.o: /usr/local/include/mysql/my_list.h
+objs/session.cgi.o: /usr/local/include/mysql/my_alloc.h session.cgi.h
 objs/session.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/session.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/session.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -31921,8 +32207,14 @@ objs/shop.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/shop.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/shop.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/shop.o: format.h shop.h statistics.h database.h
-objs/shop.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
-objs/shop.o: obj_spellbag.h obj_expandable_container.h obj_open_container.h
+objs/shop.o: /usr/local/include/mysql/mysql.h
+objs/shop.o: /usr/local/include/mysql/mysql_com.h
+objs/shop.o: /usr/local/include/mysql/mysql_time.h
+objs/shop.o: /usr/local/include/mysql/mysql_version.h
+objs/shop.o: /usr/local/include/mysql/typelib.h
+objs/shop.o: /usr/local/include/mysql/my_list.h
+objs/shop.o: /usr/local/include/mysql/my_alloc.h obj_spellbag.h
+objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
@@ -32037,8 +32329,13 @@ objs/shopinfo.cgi.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/shopinfo.cgi.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/shopinfo.cgi.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/shopinfo.cgi.o: colorstring.h format.h database.h
-objs/shopinfo.cgi.o: /usr/local/include/libpq-fe.h
-objs/shopinfo.cgi.o: /usr/local/include/postgres_ext.h session.cgi.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/mysql.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/typelib.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/my_list.h
+objs/shopinfo.cgi.o: /usr/local/include/mysql/my_alloc.h session.cgi.h
 objs/shopinfo.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/shopinfo.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/shopinfo.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -32169,8 +32466,13 @@ objs/shoplog.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/shoplog.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/shoplog.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/shoplog.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/shoplog.cgi.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/shoplog.cgi.o: /usr/local/include/postgres_ext.h shop.h
+objs/shoplog.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/typelib.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/my_list.h
+objs/shoplog.cgi.o: /usr/local/include/mysql/my_alloc.h shop.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/Cgicc.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
 objs/shoplog.cgi.o: /usr/local/include/cgicc/FormEntry.h
@@ -32299,8 +32601,13 @@ objs/shopowned.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/shopowned.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/shopowned.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/shopowned.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/shopowned.o: shopowned.h database.h /usr/local/include/libpq-fe.h
-objs/shopowned.o: /usr/local/include/postgres_ext.h shop.h corporation.h
+objs/shopowned.o: shopowned.h database.h /usr/local/include/mysql/mysql.h
+objs/shopowned.o: /usr/local/include/mysql/mysql_com.h
+objs/shopowned.o: /usr/local/include/mysql/mysql_time.h
+objs/shopowned.o: /usr/local/include/mysql/mysql_version.h
+objs/shopowned.o: /usr/local/include/mysql/typelib.h
+objs/shopowned.o: /usr/local/include/mysql/my_list.h
+objs/shopowned.o: /usr/local/include/mysql/my_alloc.h shop.h corporation.h
 objs/show.o: /usr/include/dirent.h /usr/include/sys/cdefs.h
 objs/show.o: /usr/include/sys/dirent.h /usr/include/sys/_types.h
 objs/show.o: /usr/include/machine/_types.h /usr/include/sys/_null.h
@@ -32406,8 +32713,13 @@ objs/show.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/show.o: format.h disc_looting.h combat.h obj_component.h disc_alchemy.h
 objs/show.o: obj_table.h obj_note.h obj_trap.h obj_window.h obj_seethru.h
 objs/show.o: obj_potion.h obj_base_cup.h obj_scroll.h obj_magic_item.h
-objs/show.o: obj_staff.h database.h /usr/local/include/libpq-fe.h
-objs/show.o: /usr/local/include/postgres_ext.h
+objs/show.o: obj_staff.h database.h /usr/local/include/mysql/mysql.h
+objs/show.o: /usr/local/include/mysql/mysql_com.h
+objs/show.o: /usr/local/include/mysql/mysql_time.h
+objs/show.o: /usr/local/include/mysql/mysql_version.h
+objs/show.o: /usr/local/include/mysql/typelib.h
+objs/show.o: /usr/local/include/mysql/my_list.h
+objs/show.o: /usr/local/include/mysql/my_alloc.h
 objs/signals.o: /usr/include/c++/3.4/csignal /usr/include/signal.h
 objs/signals.o: /usr/include/sys/cdefs.h /usr/include/sys/_types.h
 objs/signals.o: /usr/include/machine/_types.h /usr/include/sys/signal.h
@@ -32860,8 +33172,13 @@ objs/socket.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/socket.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/socket.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/socket.o: colorstring.h format.h statistics.h database.h
-objs/socket.o: /usr/local/include/libpq-fe.h
-objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
+objs/socket.o: /usr/local/include/mysql/mysql.h
+objs/socket.o: /usr/local/include/mysql/mysql_com.h
+objs/socket.o: /usr/local/include/mysql/mysql_time.h
+objs/socket.o: /usr/local/include/mysql/mysql_version.h
+objs/socket.o: /usr/local/include/mysql/typelib.h
+objs/socket.o: /usr/local/include/mysql/my_list.h
+objs/socket.o: /usr/local/include/mysql/my_alloc.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
 objs/socket.o: obj_trash_pile.h obj_expandable_container.h
 objs/socket.o: obj_open_container.h obj_base_container.h pathfinder.h
@@ -33079,12 +33396,17 @@ objs/spec_mobs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/spec_mobs.o: combat.h disc_aegis.h disc_wrath.h disc_alchemy.h
-objs/spec_mobs.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_mobs.o: /usr/local/include/postgres_ext.h obj_symbol.h obj_window.h
-objs/spec_mobs.o: obj_seethru.h obj_general_weapon.h obj_base_weapon.h
-objs/spec_mobs.o: obj_base_clothing.h obj_bow.h obj_trap.h obj_table.h
-objs/spec_mobs.o: obj_drinkcon.h obj_base_cup.h corporation.h shopowned.h
-objs/spec_mobs.o: pathfinder.h /usr/include/c++/3.4/deque
+objs/spec_mobs.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_mobs.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs.o: /usr/local/include/mysql/my_alloc.h obj_symbol.h
+objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
+objs/spec_mobs.o: obj_base_weapon.h obj_base_clothing.h obj_bow.h obj_trap.h
+objs/spec_mobs.o: obj_table.h obj_drinkcon.h obj_base_cup.h corporation.h
+objs/spec_mobs.o: shopowned.h pathfinder.h /usr/include/c++/3.4/deque
 objs/spec_mobs.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/spec_mobs.o: /usr/include/c++/3.4/bits/deque.tcc shop.h
 objs/spec_mobs.o: obj_base_corpse.h obj_base_container.h obj_player_corpse.h
@@ -33334,8 +33656,13 @@ objs/spec_mobs_auctioneer.o: room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/spec_mobs_auctioneer.o: charfile.h being.h person.h monster.h paths.h
 objs/spec_mobs_auctioneer.o: account.h extern.h handler.h obj_money.h
 objs/spec_mobs_auctioneer.o: spec_mobs.h materials.h colorstring.h format.h
-objs/spec_mobs_auctioneer.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_mobs_auctioneer.o: /usr/local/include/postgres_ext.h shop.h
+objs/spec_mobs_auctioneer.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_auctioneer.o: /usr/local/include/mysql/my_alloc.h shop.h
 objs/spec_mobs_auctioneer.o: shopowned.h rent.h corporation.h process.h
 objs/spec_mobs_banker.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_banker.o: /usr/include/c++/3.4/bits/c++config.h
@@ -33452,9 +33779,14 @@ objs/spec_mobs_banker.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/spec_mobs_banker.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_banker.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs_banker.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/spec_mobs_banker.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/spec_mobs_banker.o: /usr/local/include/postgres_ext.h shop.h shopowned.h
-objs/spec_mobs_banker.o: process.h
+objs/spec_mobs_banker.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_banker.o: /usr/local/include/mysql/my_alloc.h shop.h
+objs/spec_mobs_banker.o: shopowned.h process.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -34101,8 +34433,13 @@ objs/spec_mobs_corporate_assistant.o: monster.h paths.h account.h extern.h
 objs/spec_mobs_corporate_assistant.o: handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_corporate_assistant.o: materials.h colorstring.h format.h
 objs/spec_mobs_corporate_assistant.o: database.h
-objs/spec_mobs_corporate_assistant.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_corporate_assistant.o: /usr/local/include/postgres_ext.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/mysql.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_corporate_assistant.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_mobs_corporate_assistant.o: corporation.h shop.h
 objs/spec_mobs_doppleganger.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.4/bits/c++config.h
@@ -34878,8 +35215,13 @@ objs/spec_mobs_herofaeries.o: connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_herofaeries.o: person.h monster.h paths.h account.h extern.h
 objs/spec_mobs_herofaeries.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/spec_mobs_herofaeries.o: colorstring.h format.h database.h
-objs/spec_mobs_herofaeries.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_herofaeries.o: /usr/local/include/postgres_ext.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/mysql.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_herofaeries.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_mobs_holdem_player.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -35539,8 +35881,13 @@ objs/spec_mobs_loan_manager.o: spec_objs.h connect.h obj_drug.h charfile.h
 objs/spec_mobs_loan_manager.o: being.h person.h monster.h paths.h account.h
 objs/spec_mobs_loan_manager.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_loan_manager.o: materials.h colorstring.h format.h database.h
-objs/spec_mobs_loan_manager.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_loan_manager.o: /usr/local/include/postgres_ext.h shop.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/mysql.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_loan_manager.o: /usr/local/include/mysql/my_alloc.h shop.h
 objs/spec_mobs_loan_manager.o: shopowned.h corporation.h
 objs/spec_mobs_loanshark.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.4/bits/c++config.h
@@ -35667,8 +36014,13 @@ objs/spec_mobs_loanshark.o: room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/spec_mobs_loanshark.o: charfile.h being.h person.h monster.h paths.h
 objs/spec_mobs_loanshark.o: account.h extern.h handler.h obj_money.h
 objs/spec_mobs_loanshark.o: spec_mobs.h materials.h colorstring.h format.h
-objs/spec_mobs_loanshark.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_mobs_loanshark.o: /usr/local/include/postgres_ext.h shop.h
+objs/spec_mobs_loanshark.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_loanshark.o: /usr/local/include/mysql/my_alloc.h shop.h
 objs/spec_mobs_loanshark.o: shopowned.h
 objs/spec_mobs_lottery_redeemer.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.4/bits/c++config.h
@@ -36448,8 +36800,13 @@ objs/spec_mobs_property_clerk.o: obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_property_clerk.o: monster.h paths.h account.h extern.h
 objs/spec_mobs_property_clerk.o: handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_property_clerk.o: materials.h colorstring.h format.h
-objs/spec_mobs_property_clerk.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_mobs_property_clerk.o: /usr/local/include/postgres_ext.h
+objs/spec_mobs_property_clerk.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_mobs_signmaker.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -36842,8 +37199,13 @@ objs/spec_mobs_tattoo_artist.o: spec_objs.h connect.h obj_drug.h charfile.h
 objs/spec_mobs_tattoo_artist.o: being.h person.h monster.h paths.h account.h
 objs/spec_mobs_tattoo_artist.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_tattoo_artist.o: materials.h colorstring.h format.h database.h
-objs/spec_mobs_tattoo_artist.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_tattoo_artist.o: /usr/local/include/postgres_ext.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/mysql.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_tattoo_artist.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_mobs_taxman.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_taxman.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_taxman.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -36960,8 +37322,13 @@ objs/spec_mobs_taxman.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_taxman.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs_taxman.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/spec_mobs_taxman.o: format.h shop.h database.h
-objs/spec_mobs_taxman.o: /usr/local/include/libpq-fe.h
-objs/spec_mobs_taxman.o: /usr/local/include/postgres_ext.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/mysql.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/typelib.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/my_list.h
+objs/spec_mobs_taxman.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_mobs_tudy.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_mobs_tudy.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_mobs_tudy.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -37308,9 +37675,14 @@ objs/spec_objs.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/spec_objs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_objs.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/spec_objs.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/spec_objs.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_objs.o: /usr/local/include/postgres_ext.h shop.h obj_base_corpse.h
-objs/spec_objs.o: obj_base_container.h obj_open_container.h
+objs/spec_objs.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_objs.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_objs.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_objs.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_objs.o: /usr/local/include/mysql/typelib.h
+objs/spec_objs.o: /usr/local/include/mysql/my_list.h
+objs/spec_objs.o: /usr/local/include/mysql/my_alloc.h shop.h
+objs/spec_objs.o: obj_base_corpse.h obj_base_container.h obj_open_container.h
 objs/spec_objs.o: obj_base_clothing.h obj_trap.h obj_portal.h obj_seethru.h
 objs/spec_objs.o: obj_symbol.h obj_general_weapon.h obj_base_weapon.h
 objs/spec_objs.o: obj_drinkcon.h obj_base_cup.h obj_potion.h obj_staff.h
@@ -37444,8 +37816,13 @@ objs/spec_objs_ballot_box.o: room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/spec_objs_ballot_box.o: charfile.h being.h person.h monster.h paths.h
 objs/spec_objs_ballot_box.o: account.h extern.h handler.h obj_money.h
 objs/spec_objs_ballot_box.o: spec_mobs.h materials.h colorstring.h format.h
-objs/spec_objs_ballot_box.o: database.h /usr/local/include/libpq-fe.h
-objs/spec_objs_ballot_box.o: /usr/local/include/postgres_ext.h
+objs/spec_objs_ballot_box.o: database.h /usr/local/include/mysql/mysql.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/mysql_com.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/mysql_time.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/mysql_version.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/typelib.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/my_list.h
+objs/spec_objs_ballot_box.o: /usr/local/include/mysql/my_alloc.h
 objs/spec_objs_black_sun.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_objs_black_sun.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_objs_black_sun.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40139,8 +40516,13 @@ objs/sqladdobjs.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/sqladdobjs.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/sqladdobjs.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/sqladdobjs.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/sqladdobjs.o: database.h /usr/local/include/libpq-fe.h
-objs/sqladdobjs.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqladdobjs.o: database.h /usr/local/include/mysql/mysql.h
+objs/sqladdobjs.o: /usr/local/include/mysql/mysql_com.h
+objs/sqladdobjs.o: /usr/local/include/mysql/mysql_time.h
+objs/sqladdobjs.o: /usr/local/include/mysql/mysql_version.h
+objs/sqladdobjs.o: /usr/local/include/mysql/typelib.h
+objs/sqladdobjs.o: /usr/local/include/mysql/my_list.h
+objs/sqladdobjs.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqladdobjs_builder.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40259,8 +40641,14 @@ objs/sqladdobjs_builder.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/sqladdobjs_builder.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/sqladdobjs_builder.o: monster.h paths.h account.h extern.h handler.h
 objs/sqladdobjs_builder.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/sqladdobjs_builder.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/sqladdobjs_builder.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqladdobjs_builder.o: format.h database.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_com.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_time.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_version.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/typelib.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/my_list.h
+objs/sqladdobjs_builder.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledimmobj.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledimmobj.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledimmobj.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40369,8 +40757,13 @@ objs/sqledimmobj.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/sqledimmobj.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/sqledimmobj.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/sqledimmobj.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/sqledimmobj.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/sqledimmobj.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledimmobj.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/sqledimmobj.o: /usr/local/include/mysql/mysql_com.h
+objs/sqledimmobj.o: /usr/local/include/mysql/mysql_time.h
+objs/sqledimmobj.o: /usr/local/include/mysql/mysql_version.h
+objs/sqledimmobj.o: /usr/local/include/mysql/typelib.h
+objs/sqledimmobj.o: /usr/local/include/mysql/my_list.h
+objs/sqledimmobj.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledobj.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledobj.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledobj.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40479,8 +40872,13 @@ objs/sqledobj.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/sqledobj.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/sqledobj.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/sqledobj.o: materials.h colorstring.h format.h database.h
-objs/sqledobj.o: /usr/local/include/libpq-fe.h
-objs/sqledobj.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledobj.o: /usr/local/include/mysql/mysql.h
+objs/sqledobj.o: /usr/local/include/mysql/mysql_com.h
+objs/sqledobj.o: /usr/local/include/mysql/mysql_time.h
+objs/sqledobj.o: /usr/local/include/mysql/mysql_version.h
+objs/sqledobj.o: /usr/local/include/mysql/typelib.h
+objs/sqledobj.o: /usr/local/include/mysql/my_list.h
+objs/sqledobj.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledobj_builder.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40596,8 +40994,13 @@ objs/sqledobj_builder.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/sqledobj_builder.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/sqledobj_builder.o: monster.h paths.h account.h extern.h handler.h
 objs/sqledobj_builder.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/sqledobj_builder.o: format.h database.h /usr/local/include/libpq-fe.h
-objs/sqledobj_builder.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledobj_builder.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_com.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_time.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_version.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/typelib.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/my_list.h
+objs/sqledobj_builder.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledshop.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledshop.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledshop.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40706,8 +41109,13 @@ objs/sqledshop.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/sqledshop.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/sqledshop.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/sqledshop.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/sqledshop.o: database.h /usr/local/include/libpq-fe.h
-objs/sqledshop.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledshop.o: database.h /usr/local/include/mysql/mysql.h
+objs/sqledshop.o: /usr/local/include/mysql/mysql_com.h
+objs/sqledshop.o: /usr/local/include/mysql/mysql_time.h
+objs/sqledshop.o: /usr/local/include/mysql/mysql_version.h
+objs/sqledshop.o: /usr/local/include/mysql/typelib.h
+objs/sqledshop.o: /usr/local/include/mysql/my_list.h
+objs/sqledshop.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledwld.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledwld.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledwld.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40816,8 +41224,13 @@ objs/sqledwld.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/sqledwld.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/sqledwld.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/sqledwld.o: materials.h colorstring.h format.h database.h
-objs/sqledwld.o: /usr/local/include/libpq-fe.h
-objs/sqledwld.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledwld.o: /usr/local/include/mysql/mysql.h
+objs/sqledwld.o: /usr/local/include/mysql/mysql_com.h
+objs/sqledwld.o: /usr/local/include/mysql/mysql_time.h
+objs/sqledwld.o: /usr/local/include/mysql/mysql_version.h
+objs/sqledwld.o: /usr/local/include/mysql/typelib.h
+objs/sqledwld.o: /usr/local/include/mysql/my_list.h
+objs/sqledwld.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sstring.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sstring.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sstring.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -41571,7 +41984,13 @@ objs/talk.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/talk.o: charfile.h being.h person.h monster.h paths.h account.h extern.h
 objs/talk.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
 objs/talk.o: format.h obj_pen.h obj_note.h database.h
-objs/talk.o: /usr/local/include/libpq-fe.h /usr/local/include/postgres_ext.h
+objs/talk.o: /usr/local/include/mysql/mysql.h
+objs/talk.o: /usr/local/include/mysql/mysql_com.h
+objs/talk.o: /usr/local/include/mysql/mysql_time.h
+objs/talk.o: /usr/local/include/mysql/mysql_version.h
+objs/talk.o: /usr/local/include/mysql/typelib.h
+objs/talk.o: /usr/local/include/mysql/my_list.h
+objs/talk.o: /usr/local/include/mysql/my_alloc.h
 objs/task.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/task.o: /usr/include/c++/3.4/bits/c++config.h
 objs/task.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -45600,8 +46019,14 @@ objs/utility.o: /usr/include/c++/3.4/deque
 objs/utility.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/utility.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/utility.o: game_drawpoker.h mail.h database.h
-objs/utility.o: /usr/local/include/libpq-fe.h
-objs/utility.o: /usr/local/include/postgres_ext.h obj_seethru.h corporation.h
+objs/utility.o: /usr/local/include/mysql/mysql.h
+objs/utility.o: /usr/local/include/mysql/mysql_com.h
+objs/utility.o: /usr/local/include/mysql/mysql_time.h
+objs/utility.o: /usr/local/include/mysql/mysql_version.h
+objs/utility.o: /usr/local/include/mysql/typelib.h
+objs/utility.o: /usr/local/include/mysql/my_list.h
+objs/utility.o: /usr/local/include/mysql/my_alloc.h obj_seethru.h
+objs/utility.o: corporation.h
 objs/weather.o: /usr/include/c++/3.4/cmath
 objs/weather.o: /usr/include/c++/3.4/bits/c++config.h
 objs/weather.o: /usr/include/c++/3.4/bits/os_defines.h
