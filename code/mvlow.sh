@@ -44,7 +44,7 @@ for i in obj objextra objaffect \
          room roomexit roomextra itemtypes;
 do 
   echo Copying $i table.
-  mysqldump $i sneezybeta | mysql sneezyq
+  mysqldump sneezybeta $i | mysql sneezyq
 done
 
 
