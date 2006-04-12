@@ -95,7 +95,7 @@ rotate_files()
            room roomexit roomextra itemtype;
   do 
     echo Copying $i table.
-    mysqldump sneezy $i | mysql sneezy
+    mysqldump sneezyq $i | mysql sneezy
   done
 
 
@@ -107,7 +107,7 @@ insert into shopgoldtmp select shop_nr, gold from shop;
 truncate shop;
 EOF
 
-  pg_dump -F c -t shop sneezyq | pg_restore -c -d sneezy
+  mysqldump sneezyq shop | mysql sneezy
 
   mysql sneezy<<EOF
 update shop, shopgoldtmp set shop.gold=shopgoldtmp.gold where shop.shop_nr=shopgoldtmp.shop_nr;
