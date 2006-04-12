@@ -67,7 +67,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
   }
 
   if(arg == "daily"){
-    db.query("select name, action, sum(talens) as talens, round(avg(corptalens)) as corptalens, date_trunc('day', logtime) as logtime from corplog where  corp_id = %i group by date_trunc('day', logtime), name, action order by date_trunc('day', logtime) desc, talens desc", corp_id);
+    db.query("select name, action, sum(talens) as talens, round(avg(corptalens)) as corptalens, concat(extract(year from logtime),'-',extract(month from logtime),'-',extract(day from logtime)) as logtime from corplog where  corp_id = %i group by concat(extract(year from logtime),'-',extract(month from logtime),'-',extract(day from logtime)), name, action order by concat(extract(year from logtime),'-',extract(month from logtime),'-',extract(day from logtime)) desc, talens desc", corp_id);
 
     sstring last_date="", color_code="<r>";
     int total=0;
