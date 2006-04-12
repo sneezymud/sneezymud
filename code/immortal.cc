@@ -74,8 +74,8 @@ void togInfoT::loadToggles()
 
   while(db.fetchRow()){
     togTypeT tog_id=(togTypeT) convertTo<int>(db["tog_id"]);
-    bool toggle=(db["toggle"]=="t") ? true : false;
-    bool testcode=(db["testcode"]=="t") ? true : false;
+    bool toggle=(db["toggle"]=="1") ? true : false;
+    bool testcode=(db["testcode"]=="1") ? true : false;
 
     toggles[tog_id] = new togEntry(toggle, testcode, db["name"], db["descr"]);
   }
