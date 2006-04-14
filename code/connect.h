@@ -26,7 +26,7 @@ const unsigned int PROMPT_TIME              = (1<<18);
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);
 
-const int HISTORY_SIZE=128;
+const int HISTORY_SIZE=10;
 
 const int MAX_TRAITS=16;
 
