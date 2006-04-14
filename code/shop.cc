@@ -2222,7 +2222,7 @@ void bootTheShops()
 
   /****** is owned ******/
   TDatabase isowned_db(DB_SNEEZY);
-  isowned_db.query("select distinct shop_nr from shopowned");
+  isowned_db.query("select distinct shop_nr from shopowned order by shop_nr asc");
   isowned_db.fetchRow();
 
   
