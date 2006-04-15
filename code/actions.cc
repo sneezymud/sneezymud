@@ -795,6 +795,33 @@ void TBeing::doPoke(const sstring &arg)
 }
 
 
+void TBeing::doPunch(const sstring &arg)
+{
+  TThing *t;
+  TBeing *b;
+
+  doAction(arg, CMD_PUNCH);
+
+  if(!isImmortal())
+    return;
+
+
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
+    if (isname(arg, t->name)) {
+      b = dynamic_cast<TBeing *>(t);
+      if (b) {
+	for (wearSlotT slot = pickRandomLimb();; slot = pickRandomLimb()) {
+	  if (!b->slotChance(slot) || 
+	      b->isLimbFlags(slot, PART_BRUISED))
+	    continue;
+	  b->rawBruise(slot, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+	  return;
+	}
+      }
+    }
+  }
+}
+
 void TBeing::doJuggle(const sstring &arg)
 {
   sendTo("Not yet implemented.\n\r");
