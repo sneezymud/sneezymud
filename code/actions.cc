@@ -805,20 +805,27 @@ void TBeing::doPunch(const sstring &arg)
   if(!isImmortal())
     return;
 
+  vector <wearSlotT> slots;
+
+  for(wearSlotT slot=MIN_WEAR;slot<MAX_WEAR;slot++){
+    slots.push_back(slot);
+  }
+  std::random_shuffle(slots.begin(), slots.end());
 
   for (t = roomp->getStuff(); t; t = t->nextThing) {
     if (isname(arg, t->name)) {
       b = dynamic_cast<TBeing *>(t);
       if (b) {
-	for (wearSlotT slot = pickRandomLimb();; slot = pickRandomLimb()) {
-	  if (!b->slotChance(slot) || 
-	      b->isLimbFlags(slot, PART_BRUISED) ||
-	      slot >= MIN_WEAR || slot < MAX_WEAR ||
-	      slot != HOLD_RIGHT || slot != HOLD_LEFT)
+	for(unsigned int i=0;i<slots.size();++i){
+	  if (!b->slotChance(slots[i]) || 
+	      b->isLimbFlags(slots[i], PART_BRUISED) ||
+	      slots[i] == HOLD_RIGHT || slots[i] == HOLD_LEFT)
 	    continue;
-	  b->rawBruise(slot, 100, SILENT_NO, CHECK_IMMUNITY_NO);
-	  return;
+
+	  b->rawBruise(slots[i], 100, SILENT_NO, CHECK_IMMUNITY_NO);
+	  break;
 	}
+	return;
       }
     }
   }
