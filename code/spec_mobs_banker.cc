@@ -50,7 +50,7 @@ void procBankInterest::run(int pulse) const
       in.query("update shopownedbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
 
       // doll out earned interest that isn't fractional
-      in.query("update shopownedbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - trunc(earned_interest) where shop_nr=%i", shop_nr);
+      in.query("update shopownedbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
 
 
 
