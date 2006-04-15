@@ -96,8 +96,14 @@ int TBeing::doTaunt(const sstring &arg)
     victim->affectFrom(SKILL_TAUNT);
     victim->affectTo(&af, -1);
 
-    addSkillLag(SKILL_TAUNT, 0);
+  } else {
+    act("You taunt yourself ruthlessly, confusing yourself.",
+	FALSE, this, 0, this, TO_CHAR);
+    act("$n taunts $mself ruthlessly, confusing $mself.",
+	FALSE, this, 0, this, TO_NOTVICT);
   }
+
+  addSkillLag(SKILL_TAUNT, 0);
 
   return TRUE;
 }
