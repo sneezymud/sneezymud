@@ -153,6 +153,8 @@ map<int, int> obj_load_potential;
 static void bootZones(void);
 static void bootWorld(void);
 static void reset_time(void);
+static void preload_cache();
+
 
 struct reset_q_type
 {
@@ -318,6 +320,9 @@ void bootDb(void)
 
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
+
+  bootPulse("Pre-loading object cache.");
+  preload_cache();
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
@@ -1563,6 +1568,37 @@ void log_object(TObj *obj)
 {
   TDatabase db(DB_SNEEZY);
   db.query("insert into objlog values (%i, now(), %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
+}
+
+void preload_cache()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select vnum, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj");
+
+  while(db.fetchRow()){
+    cached_object *c=new cached_object;
+    c->number=real_object(convertTo<int>(db["vnum"]));
+    c->s["type"]=db["type"];
+    c->s["action_flag"]=db["action_flag"];
+    c->s["wear_flag"]=db["wear_flag"];
+    c->s["val0"]=db["val0"];
+    c->s["val1"]=db["val1"];
+    c->s["val2"]=db["val2"];
+    c->s["val3"]=db["val3"];
+    c->s["weight"]=db["weight"];
+    c->s["price"]=db["price"];
+    c->s["can_be_seen"]=db["can_be_seen"];
+    c->s["spec_proc"]=db["spec_proc"];
+    c->s["max_struct"]=db["max_struct"];
+    c->s["cur_struct"]=db["cur_struct"];
+    c->s["decay"]=db["decay"];
+    c->s["volume"]=db["volume"];
+    c->s["material"]=db["material"];
+    c->s["max_exist"]=db["max_exist"];
+    
+    obj_cache.push_back(c);
+  }
 }
 
 TObj *read_object(int nr, readFileTypeT type)
