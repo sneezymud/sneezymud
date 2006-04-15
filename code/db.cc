@@ -136,9 +136,18 @@ FILE *mob_f = NULL;        // file containing mob prototypes
 vector<TRoom *>roomspec_db(0);
 vector<TRoom *>roomsave_db(0);
 
-//struct cached_object { int number; sstring s[17]; };
+
 struct cached_object { int number;map <sstring, sstring> s; };
-vector<cached_object *>obj_cache(0);
+
+class TObjectCache {
+public:
+  vector<cached_object *>cache;
+
+  void preload(void);
+  cached_object *operator[](int);
+
+} obj_cache;
+
 
 bool bootTime=false;
 
@@ -153,7 +162,6 @@ map<int, int> obj_load_potential;
 static void bootZones(void);
 static void bootWorld(void);
 static void reset_time(void);
-static void preload_cache();
 
 
 struct reset_q_type
@@ -322,7 +330,7 @@ void bootDb(void)
   generate_obj_index();
 
   bootPulse("Pre-loading object cache.");
-  preload_cache();
+  obj_cache.preload();
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
@@ -1554,14 +1562,14 @@ TMonster *read_mobile(int nr, readFileTypeT type)
 }
 
 
-int cache_object(int nr)
+cached_object *TObjectCache::operator[](int nr)
 {
-  for(int i=obj_cache.size()-1;i>=0;--i){
-    if(obj_cache[i]->number == nr)
-      return i;
+  for(int i=cache.size()-1;i>=0;--i){
+    if(cache[i]->number == nr)
+      return cache[i];
   }
 
-  return -1;
+  return NULL;
 }
 
 void log_object(TObj *obj)
@@ -1570,7 +1578,7 @@ void log_object(TObj *obj)
   db.query("insert into objlog values (%i, now(), %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
 }
 
-void preload_cache()
+void TObjectCache::preload()
 {
   TDatabase db(DB_SNEEZY);
 
@@ -1597,7 +1605,7 @@ void preload_cache()
     c->s["material"]=db["material"];
     c->s["max_exist"]=db["max_exist"];
     
-    obj_cache.push_back(c);
+    cache.push_back(c);
   }
 }
 
@@ -1616,8 +1624,8 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-  if(/*bootTime &&*/ cache_object(nr)!=-1){
-    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s["type"])));
+  if(/*bootTime &&*/ obj_cache[nr]!=NULL){
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[nr]->s["type"])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1627,21 +1635,21 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->ex_description=obj_index[nr].ex_description;
     }
 
-    obj->setObjStat(convertTo<int>(obj_cache[cache_object(nr)]->s["action_flag"]));
-    obj->obj_flags.wear_flags = convertTo<int>(obj_cache[cache_object(nr)]->s["wear_flag"]);
-    obj->assignFourValues(convertTo<int>(obj_cache[cache_object(nr)]->s["val0"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val1"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val2"]), convertTo<int>(obj_cache[cache_object(nr)]->s["val3"]));
-    obj->setWeight(convertTo<float>(obj_cache[cache_object(nr)]->s["weight"]));
-    obj->obj_flags.cost = convertTo<int>(obj_cache[cache_object(nr)]->s["price"]);
-    obj->canBeSeen = convertTo<int>(obj_cache[cache_object(nr)]->s["can_be_seen"]);
-    obj->spec = convertTo<int>(obj_cache[cache_object(nr)]->s["spec_proc"]);
-    obj->setMaxStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s["max_struct"]));
-    obj->setStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s["cur_struct"]));
+    obj->setObjStat(convertTo<int>(obj_cache[nr]->s["action_flag"]));
+    obj->obj_flags.wear_flags = convertTo<int>(obj_cache[nr]->s["wear_flag"]);
+    obj->assignFourValues(convertTo<int>(obj_cache[nr]->s["val0"]), convertTo<int>(obj_cache[nr]->s["val1"]), convertTo<int>(obj_cache[nr]->s["val2"]), convertTo<int>(obj_cache[nr]->s["val3"]));
+    obj->setWeight(convertTo<float>(obj_cache[nr]->s["weight"]));
+    obj->obj_flags.cost = convertTo<int>(obj_cache[nr]->s["price"]);
+    obj->canBeSeen = convertTo<int>(obj_cache[nr]->s["can_be_seen"]);
+    obj->spec = convertTo<int>(obj_cache[nr]->s["spec_proc"]);
+    obj->setMaxStructPoints(convertTo<int>(obj_cache[nr]->s["max_struct"]));
+    obj->setStructPoints(convertTo<int>(obj_cache[nr]->s["cur_struct"]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(obj_cache[cache_object(nr)]->s["decay"]);
-    obj->setVolume(convertTo<int>(obj_cache[cache_object(nr)]->s["volume"]));
-    obj->setMaterial(convertTo<int>(obj_cache[cache_object(nr)]->s["material"]));
+    obj->obj_flags.decay_time=convertTo<int>(obj_cache[nr]->s["decay"]);
+    obj->setVolume(convertTo<int>(obj_cache[nr]->s["volume"]));
+    obj->setMaterial(convertTo<int>(obj_cache[nr]->s["material"]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[cache_object(nr)]->s["max_exist"]));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[nr]->s["max_exist"]));
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
@@ -1709,7 +1717,7 @@ TObj *read_object(int nr, readFileTypeT type)
 
   obj->checkObjStats();
 
-  if(/*bootTime &&*/ cache_object(nr)==-1){
+  if(/*bootTime &&*/ obj_cache[nr]==NULL){
     //    vlogf(LOG_PEEL, fmt("caching object - %s") %  obj->shortDescr);
     cached_object *c=new cached_object;
     
@@ -1732,7 +1740,7 @@ TObj *read_object(int nr, readFileTypeT type)
     c->s["material"]=db["material"];
     c->s["max_exist"]=db["max_exist"];
 
-    obj_cache.push_back(c);
+    obj_cache.cache.push_back(c);
 
   }
 
