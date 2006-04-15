@@ -812,7 +812,9 @@ void TBeing::doPunch(const sstring &arg)
       if (b) {
 	for (wearSlotT slot = pickRandomLimb();; slot = pickRandomLimb()) {
 	  if (!b->slotChance(slot) || 
-	      b->isLimbFlags(slot, PART_BRUISED))
+	      b->isLimbFlags(slot, PART_BRUISED) ||
+	      slot >= MIN_WEAR || slot < MAX_WEAR ||
+	      slot != HOLD_RIGHT || slot != HOLD_LEFT)
 	    continue;
 	  b->rawBruise(slot, 100, SILENT_NO, CHECK_IMMUNITY_NO);
 	  return;
