@@ -48,6 +48,20 @@ void TBeing::doScore()
       sendTo(fmt("Your most exp before your last death was: %s%s%s\n\r") % cyan() % tString % norm());
     }
 
+    int total=0, count=0;
+    for (spellNumT tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++){
+      if(getDisciplineNumber(tSpell, FALSE)!=DISC_NONE &&
+	 doesKnowSkill(tSpell)){
+	total += getSkillValue(tSpell);
+	++count;
+      }
+    }
+    sendTo(fmt("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") % 
+	   cyan() % total % norm() %
+	   cyan() % (int)(total/count) % norm());
+
+
+
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
