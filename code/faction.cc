@@ -1925,6 +1925,12 @@ void TBeing::doSend(sstring arg)
     return;
   }
 
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return;
+  }
+
+
   if (desc)
     desc->talkCount = time(0);
 
