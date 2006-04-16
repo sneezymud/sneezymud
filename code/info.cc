@@ -3066,50 +3066,71 @@ void TBeing::doLevels(const char *argument)
   }
   //RaceMax = RacialMax[race->getRace()][Class];
 
+  sb += fmt("The highest possible mortal level is %i.\n\r") % MAX_MORT;
   sprintf(buf, "Experience needed for level in class %s:\n\r\n\r",
       classInfo[Class].name.cap().c_str());
   sb += buf;
 
+
   ubyte cLvl = getLevel(Class);
 
-  for (i = 1; i <= MAX_MORT/4 + 1; i++) {
-    int j = i + 1*(MAX_MORT/4+1);
-    int k = i + 2*(MAX_MORT/4+1);
-    int m = i + 3*(MAX_MORT/4+1);
+  int nlevels=100;  // = MAX_MORT
+  sstring color=norm();
 
-    if (i <= MAX_MORT) {
+  for (i = 1; i <= nlevels/4 + 1; i++) {
+    int j = i + 1*(nlevels/4+1);
+    int k = i + 2*(nlevels/4+1);
+    int m = i + 3*(nlevels/4+1);
+
+    if (i <= nlevels) {
+      if(i > MAX_MORT) color = blue();
+      else if(i > cLvl) color = orange();
+      else color = green();
+
       sprintf(tString, "%.0f", getExpClassLevel(Class, i));
       strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
-            ((i > cLvl) ? orange() : green()), tString, norm(),
+            color.c_str(), tString, norm(),
             " ");
       sb += buf;
     }
-    if (j <= MAX_MORT) {
+    if (j <= nlevels) {
+      if(j > MAX_MORT) color = blue();
+      else if(j > cLvl) color = orange();
+      else color = green();
+
       sprintf(tString, "%.0f", getExpClassLevel(Class, j));
       strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
-            ((j > cLvl) ? orange() : green()), tString, norm(),
+            color.c_str(), tString, norm(),
               " ");
       sb += buf;
     }
-    if (k <= MAX_MORT) {
+    if (k <= nlevels) {
+      if(k > MAX_MORT) color = blue();
+      else if(k > cLvl) color = orange();
+      else color = green();
+
       sprintf(tString, "%.0f", getExpClassLevel(Class, k));
       strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
-            ((k > cLvl) ? orange() : green()), tString, norm(),
+            color.c_str(), tString, norm(),
             " ");
       sb += buf;
     }
-    if (m <= MAX_MORT) {
+    if (m <= nlevels) {
+      if(m > MAX_MORT) color = blue();
+      else if(m > cLvl) color = orange();
+      else color = green();
+
       sprintf(tString, "%.0f", getExpClassLevel(Class, m));
       strcpy(tString, sstring(tString).comify().c_str());
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),
-            ((m > cLvl) ? orange() : green()), tString, norm(),
+            color.c_str(), tString, norm(),
             "\n\r");
       sb += buf;
     } else {
