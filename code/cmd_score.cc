@@ -56,10 +56,11 @@ void TBeing::doScore()
 	++count;
       }
     }
-    sendTo(fmt("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") % 
-	   cyan() % total % norm() %
-	   cyan() % (int)(total/count) % norm());
-
+    if(count > 0){
+      sendTo(fmt("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") % 
+	     cyan() % total % norm() %
+	     cyan() % (int)(total/count) % norm());
+    }
 
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
