@@ -111,15 +111,15 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  MYSQL *sneezydb;
   MYSQL *immodb;
   MYSQL *sneezyglobaldb;
   MYSQL *sneezybetadb;
   MYSQL *sneezyproddb;
+  MYSQL *sneezydb;
 
  public:
   MYSQL *getSneezyDB(){
-    if(!sneezydb){
+    if(!sneezydb || mysql_ping(sneezydb)){
       const char * dbconnectstr = NULL;
       
       if(gamePort == PROD_GAMEPORT){
@@ -149,7 +149,7 @@ class TDatabaseConnection
   }
 
   MYSQL *getSneezyProdDB(){
-    if(!sneezyproddb){
+    if(!sneezyproddb || mysql_ping(sneezyproddb)){
       vlogf(LOG_DB, "Initializing database 'sneezy'.");
       sneezyproddb=mysql_init(NULL);
 
@@ -165,7 +165,7 @@ class TDatabaseConnection
   }
 
   MYSQL *getSneezyBetaDB(){
-    if(!sneezybetadb){
+    if(!sneezybetadb || mysql_ping(sneezybetadb)){
       vlogf(LOG_DB, "Initializing database 'sneezybeta'.");
       sneezybetadb=mysql_init(NULL);
       
@@ -182,7 +182,7 @@ class TDatabaseConnection
 
 
   MYSQL *getImmoDB(){
-    if(!immodb){
+    if(!immodb || mysql_ping(immodb)){
       vlogf(LOG_DB, "Initializing database 'immortal'.");
       immodb=mysql_init(NULL);
 
@@ -198,7 +198,7 @@ class TDatabaseConnection
   }
 
   MYSQL *getSneezyGlobalDB(){
-    if(!sneezyglobaldb){
+    if(!sneezyglobaldb || mysql_ping(sneezyglobaldb)){
       vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
       sneezyglobaldb=mysql_init(NULL);
       
