@@ -220,6 +220,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       case CMD_BECKON:
       case CMD_SALUTE:
       case CMD_JUGGLE:
+      case CMD_SHUFFLE:
         if (fight())  {
           sendTo("You cannot perform that action while fighting!\n\r");
           return FALSE;

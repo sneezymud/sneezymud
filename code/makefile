@@ -225,7 +225,7 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_casino_chip.o	obj_poison.o            \
 	obj_handgonne.o         obj_egg.o               \
 	obj_cannon.o		obj_tooth_necklace.o	\
-	obj_trash_pile.o
+	obj_trash_pile.o	obj_card_deck.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -9249,123 +9249,6 @@ objs/database.o: /usr/local/include/mysql/mysql_version.h
 objs/database.o: /usr/local/include/mysql/typelib.h
 objs/database.o: /usr/local/include/mysql/my_list.h
 objs/database.o: /usr/local/include/mysql/my_alloc.h timing.h
-objs/database.old.o: stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/database.old.o: /usr/include/c++/3.4/bits/c++config.h
-objs/database.old.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/database.old.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/database.old.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-objs/database.old.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
-objs/database.old.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
-objs/database.old.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
-objs/database.old.o: /usr/include/time.h /usr/include/sys/timespec.h
-objs/database.old.o: /usr/include/sys/types.h /usr/include/machine/endian.h
-objs/database.old.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
-objs/database.old.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
-objs/database.old.o: /usr/include/ctype.h /usr/include/_ctype.h
-objs/database.old.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
-objs/database.old.o: /usr/include/c++/3.4/cstring /usr/include/string.h
-objs/database.old.o: /usr/include/strings.h /usr/include/stdarg.h
-objs/database.old.o: /usr/include/c++/3.4/cmath
-objs/database.old.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
-objs/database.old.o: /usr/include/math.h /usr/include/machine/_limits.h
-objs/database.old.o: /usr/include/c++/3.4/bits/cmath.tcc
-objs/database.old.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
-objs/database.old.o: /usr/include/c++/3.4/string
-objs/database.old.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/database.old.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/database.old.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/database.old.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-objs/database.old.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
-objs/database.old.o: /usr/include/c++/3.4/iosfwd
-objs/database.old.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/database.old.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/database.old.o: /usr/include/c++/3.4/bits/c++io.h
-objs/database.old.o: /usr/include/c++/3.4/bits/gthr.h
-objs/database.old.o: /usr/include/c++/3.4/bits/gthr-default.h
-objs/database.old.o: /usr/include/pthread.h /usr/include/sys/time.h
-objs/database.old.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
-objs/database.old.o: /usr/include/machine/trap.h /usr/include/sched.h
-objs/database.old.o: /usr/include/unistd.h /usr/include/sys/unistd.h
-objs/database.old.o: /usr/include/c++/3.4/bits/postypes.h
-objs/database.old.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/database.old.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-objs/database.old.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/database.old.o: /usr/include/c++/3.4/exception_defines.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/database.old.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/database.old.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/database.old.o: /usr/include/c++/3.4/debug/debug.h
-objs/database.old.o: /usr/include/c++/3.4/memory
-objs/database.old.o: /usr/include/c++/3.4/bits/allocator.h
-objs/database.old.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/database.old.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/database.old.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/database.old.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/database.old.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/database.old.o: /usr/include/c++/3.4/algorithm
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/database.old.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/database.old.o: /usr/include/c++/3.4/vector
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/database.old.o: /usr/include/c++/3.4/bits/vector.tcc
-objs/database.old.o: /usr/include/c++/3.4/map
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/database.old.o: /usr/include/c++/3.4/list
-objs/database.old.o: /usr/include/c++/3.4/bits/stl_list.h
-objs/database.old.o: /usr/include/c++/3.4/bits/list.tcc
-objs/database.old.o: /usr/include/c++/3.4/iostream
-objs/database.old.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
-objs/database.old.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/database.old.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/database.old.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/database.old.o: /usr/include/c++/3.4/streambuf
-objs/database.old.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/database.old.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/database.old.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/database.old.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/database.old.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/database.old.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/database.old.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/database.old.o: /usr/include/c++/3.4/locale
-objs/database.old.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/database.old.o: /usr/include/c++/3.4/limits
-objs/database.old.o: /usr/include/c++/3.4/typeinfo
-objs/database.old.o: /usr/include/c++/3.4/istream
-objs/database.old.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/database.old.o: /usr/include/c++/3.4/sstream
-objs/database.old.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/database.old.o: /usr/include/c++/3.4/fstream
-objs/database.old.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/database.old.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
-objs/database.old.o: enum.h spells.h structs.h parse.h immunity.h
-objs/database.old.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
-objs/database.old.o: response.h faction.h comm.h toggle.h wiz_powers.h
-objs/database.old.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
-objs/database.old.o: disease.h trap.h task.h weather.h sound.h create.h
-objs/database.old.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
-objs/database.old.o: charfile.h being.h person.h monster.h paths.h account.h
-objs/database.old.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/database.old.o: colorstring.h format.h database.h
-objs/database.old.o: /usr/local/include/mysql/mysql.h
-objs/database.old.o: /usr/local/include/mysql/mysql_com.h
-objs/database.old.o: /usr/local/include/mysql/mysql_time.h
-objs/database.old.o: /usr/local/include/mysql/mysql_version.h
-objs/database.old.o: /usr/local/include/mysql/typelib.h
-objs/database.old.o: /usr/local/include/mysql/my_list.h
-objs/database.old.o: /usr/local/include/mysql/my_alloc.h
 objs/db.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/db.o: /usr/include/c++/3.4/bits/c++config.h
 objs/db.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -9486,7 +9369,7 @@ objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
-objs/db.o: liquids.h
+objs/db.o: liquids.h obj_card_deck.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -18424,7 +18307,7 @@ objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
 objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
 objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
-objs/inventory.o: obj_potion.h obj_base_cup.h
+objs/inventory.o: obj_potion.h obj_base_cup.h obj_card_deck.h
 objs/limbs.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/limbs.o: /usr/include/c++/3.4/bits/c++config.h
 objs/limbs.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -22969,6 +22852,119 @@ objs/obj_cannon.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_cannon.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/obj_cannon.o: obj_cannon.h obj_gun.h obj_general_weapon.h
 objs/obj_cannon.o: obj_base_weapon.h range.h obj_arrow.h obj_tool.h
+objs/obj_card_deck.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/c++config.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/obj_card_deck.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/obj_card_deck.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/obj_card_deck.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/obj_card_deck.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/obj_card_deck.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/obj_card_deck.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/obj_card_deck.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/obj_card_deck.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/obj_card_deck.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/obj_card_deck.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cmath
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/obj_card_deck.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/string
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/obj_card_deck.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/obj_card_deck.o: /usr/include/c++/3.4/iosfwd
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/c++io.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/gthr.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/obj_card_deck.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/obj_card_deck.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/obj_card_deck.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/obj_card_deck.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/postypes.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/obj_card_deck.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/exception_defines.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/debug/debug.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/memory
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/allocator.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/algorithm
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/vector
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/map
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/list
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/list.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/iostream
+objs/obj_card_deck.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/streambuf
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/locale
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/limits
+objs/obj_card_deck.o: /usr/include/c++/3.4/typeinfo
+objs/obj_card_deck.o: /usr/include/c++/3.4/istream
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/sstream
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.4/fstream
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/obj_card_deck.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_card_deck.o: enum.h spells.h structs.h parse.h immunity.h
+objs/obj_card_deck.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/obj_card_deck.o: client.h response.h faction.h comm.h toggle.h
+objs/obj_card_deck.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/obj_card_deck.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/obj_card_deck.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/obj_card_deck.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/obj_card_deck.o: monster.h paths.h account.h extern.h handler.h
+objs/obj_card_deck.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/obj_card_deck.o: format.h obj_tooth_necklace.h
+objs/obj_card_deck.o: obj_expandable_container.h obj_open_container.h
+objs/obj_card_deck.o: obj_base_container.h obj_card_deck.h
 objs/obj_casino_chip.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_casino_chip.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_casino_chip.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40523,132 +40519,6 @@ objs/sqladdobjs.o: /usr/local/include/mysql/mysql_version.h
 objs/sqladdobjs.o: /usr/local/include/mysql/typelib.h
 objs/sqladdobjs.o: /usr/local/include/mysql/my_list.h
 objs/sqladdobjs.o: /usr/local/include/mysql/my_alloc.h lowtools.h
-objs/sqladdobjs_builder.o: stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/c++config.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/sqladdobjs_builder.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-objs/sqladdobjs_builder.o: /usr/include/sys/_types.h
-objs/sqladdobjs_builder.o: /usr/include/machine/_types.h /usr/include/stdio.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/ctime /usr/include/time.h
-objs/sqladdobjs_builder.o: /usr/include/sys/timespec.h
-objs/sqladdobjs_builder.o: /usr/include/sys/types.h
-objs/sqladdobjs_builder.o: /usr/include/machine/endian.h
-objs/sqladdobjs_builder.o: /usr/include/sys/select.h
-objs/sqladdobjs_builder.o: /usr/include/sys/_sigset.h
-objs/sqladdobjs_builder.o: /usr/include/sys/_timeval.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
-objs/sqladdobjs_builder.o: /usr/include/_ctype.h /usr/include/c++/3.4/cassert
-objs/sqladdobjs_builder.o: /usr/include/assert.h /usr/include/c++/3.4/cstring
-objs/sqladdobjs_builder.o: /usr/include/string.h /usr/include/strings.h
-objs/sqladdobjs_builder.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
-objs/sqladdobjs_builder.o: /usr/include/math.h /usr/include/machine/_limits.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/cmath.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/string
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/sqladdobjs_builder.o: /usr/include/sys/limits.h
-objs/sqladdobjs_builder.o: /usr/include/sys/syslimits.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/new
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/exception
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/iosfwd
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/c++io.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/gthr.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/gthr-default.h
-objs/sqladdobjs_builder.o: /usr/include/pthread.h /usr/include/sys/time.h
-objs/sqladdobjs_builder.o: /usr/include/sys/signal.h
-objs/sqladdobjs_builder.o: /usr/include/machine/signal.h
-objs/sqladdobjs_builder.o: /usr/include/machine/trap.h /usr/include/sched.h
-objs/sqladdobjs_builder.o: /usr/include/unistd.h /usr/include/sys/unistd.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/postypes.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/sqladdobjs_builder.o: /usr/include/stdint.h
-objs/sqladdobjs_builder.o: /usr/include/machine/_stdint.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/exception_defines.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/debug/debug.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/memory
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/allocator.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/algorithm
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/vector
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/vector.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/map
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/list
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/stl_list.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/list.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/iostream
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/ostream
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/ios
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/streambuf
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/locale
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/limits
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/typeinfo
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/istream
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/sstream
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/fstream
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/sqladdobjs_builder.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h
-objs/sqladdobjs_builder.o: low.h enum.h spells.h structs.h parse.h immunity.h
-objs/sqladdobjs_builder.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
-objs/sqladdobjs_builder.o: client.h response.h faction.h comm.h toggle.h
-objs/sqladdobjs_builder.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
-objs/sqladdobjs_builder.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/sqladdobjs_builder.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/sqladdobjs_builder.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/sqladdobjs_builder.o: monster.h paths.h account.h extern.h handler.h
-objs/sqladdobjs_builder.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/sqladdobjs_builder.o: format.h database.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_com.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_time.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/mysql_version.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/typelib.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/my_list.h
-objs/sqladdobjs_builder.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledimmobj.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledimmobj.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledimmobj.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -40879,128 +40749,6 @@ objs/sqledobj.o: /usr/local/include/mysql/mysql_version.h
 objs/sqledobj.o: /usr/local/include/mysql/typelib.h
 objs/sqledobj.o: /usr/local/include/mysql/my_list.h
 objs/sqledobj.o: /usr/local/include/mysql/my_alloc.h lowtools.h
-objs/sqledobj_builder.o: stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/c++config.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/sqledobj_builder.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-objs/sqledobj_builder.o: /usr/include/sys/_types.h
-objs/sqledobj_builder.o: /usr/include/machine/_types.h /usr/include/stdio.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/ctime /usr/include/time.h
-objs/sqledobj_builder.o: /usr/include/sys/timespec.h /usr/include/sys/types.h
-objs/sqledobj_builder.o: /usr/include/machine/endian.h
-objs/sqledobj_builder.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
-objs/sqledobj_builder.o: /usr/include/sys/_timeval.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
-objs/sqledobj_builder.o: /usr/include/_ctype.h /usr/include/c++/3.4/cassert
-objs/sqledobj_builder.o: /usr/include/assert.h /usr/include/c++/3.4/cstring
-objs/sqledobj_builder.o: /usr/include/string.h /usr/include/strings.h
-objs/sqledobj_builder.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
-objs/sqledobj_builder.o: /usr/include/math.h /usr/include/machine/_limits.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/cmath.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/string
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/sqledobj_builder.o: /usr/include/sys/limits.h
-objs/sqledobj_builder.o: /usr/include/sys/syslimits.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/new
-objs/sqledobj_builder.o: /usr/include/c++/3.4/exception
-objs/sqledobj_builder.o: /usr/include/c++/3.4/iosfwd
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/c++io.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/gthr.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/gthr-default.h
-objs/sqledobj_builder.o: /usr/include/pthread.h /usr/include/sys/time.h
-objs/sqledobj_builder.o: /usr/include/sys/signal.h
-objs/sqledobj_builder.o: /usr/include/machine/signal.h
-objs/sqledobj_builder.o: /usr/include/machine/trap.h /usr/include/sched.h
-objs/sqledobj_builder.o: /usr/include/unistd.h /usr/include/sys/unistd.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/postypes.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/sqledobj_builder.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/exception_defines.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/debug/debug.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/memory
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/allocator.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/algorithm
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/vector
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/vector.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/map
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/list
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/stl_list.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/list.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/iostream
-objs/sqledobj_builder.o: /usr/include/c++/3.4/ostream
-objs/sqledobj_builder.o: /usr/include/c++/3.4/ios
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/streambuf
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/locale
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/limits
-objs/sqledobj_builder.o: /usr/include/c++/3.4/typeinfo
-objs/sqledobj_builder.o: /usr/include/c++/3.4/istream
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/sstream
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/sqledobj_builder.o: /usr/include/c++/3.4/fstream
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/sqledobj_builder.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h
-objs/sqledobj_builder.o: low.h enum.h spells.h structs.h parse.h immunity.h
-objs/sqledobj_builder.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
-objs/sqledobj_builder.o: client.h response.h faction.h comm.h toggle.h
-objs/sqledobj_builder.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
-objs/sqledobj_builder.o: race.h skills.h disease.h trap.h task.h weather.h
-objs/sqledobj_builder.o: sound.h create.h thing.h room.h obj.h spec_objs.h
-objs/sqledobj_builder.o: connect.h obj_drug.h charfile.h being.h person.h
-objs/sqledobj_builder.o: monster.h paths.h account.h extern.h handler.h
-objs/sqledobj_builder.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/sqledobj_builder.o: format.h database.h /usr/local/include/mysql/mysql.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_com.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_time.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/mysql_version.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/typelib.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/my_list.h
-objs/sqledobj_builder.o: /usr/local/include/mysql/my_alloc.h lowtools.h
 objs/sqledshop.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/sqledshop.o: /usr/include/c++/3.4/bits/c++config.h
 objs/sqledshop.o: /usr/include/c++/3.4/bits/os_defines.h

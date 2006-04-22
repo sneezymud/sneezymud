@@ -629,6 +629,13 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume pile can hold", 10000000, 1);
+  
+  ItemInfo[ITEM_CARD_DECK] = new itemInfo("card deck", "a deck of cards",
+     "Weight bag can hold", 50000, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume bag can hold", 10000000, 1);
+     
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

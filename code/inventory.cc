@@ -26,6 +26,7 @@
 #include "obj_arrow.h"
 #include "obj_tooth_necklace.h"
 #include "obj_potion.h"
+#include "obj_card_deck.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -507,6 +508,14 @@ int TThing::putMeInto(TBeing *ch, TOpenContainer *sub)
   if (dynamic_cast<TQuiver *>(sub)) {
     act("Sorry, $p can only hold arrows.",
         FALSE, ch, sub, this, TO_CHAR);
+    return TRUE;
+  }
+  if (dynamic_cast<TCardDeck *>(sub) &&
+      dynamic_cast<TObj *>(this) &&
+      (dynamic_cast<TObj *>(this)->objVnum() < 7748 ||
+      dynamic_cast<TObj *>(this)->objVnum() > 7799)){
+    act("Sorry, $p can only hold cards.",
+	FALSE, ch, sub, this, TO_CHAR);
     return TRUE;
   }
 
@@ -1539,7 +1548,15 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   if (rc)
     return TRUE;
 
-  if(dynamic_cast<TToothNecklace *>(cont) &&
+  if(dynamic_cast<TCardDeck *>(cont) &&
+     dynamic_cast<TObj *>(this) &&
+     dynamic_cast<TObj *>(this)->objVnum()>=7748 &&
+     dynamic_cast<TObj *>(this)->objVnum()<=7799){
+    act("You insert $p into $P.",
+	TRUE, ch, this, cont, TO_CHAR);
+    act("$n inserts $p into $P.",
+	TRUE, ch, this, cont, TO_ROOM);
+  } else if(dynamic_cast<TToothNecklace *>(cont) &&
      dynamic_cast<TObj *>(this) &&
      dynamic_cast<TObj *>(this)->objVnum()==GENERIC_TOOTH){
     act("You attach $p to $P.",
@@ -1672,6 +1689,11 @@ void TObj::putMoneyInto(TBeing *ch, int)
 void TSpellBag::putMoneyInto(TBeing *ch, int amount)
 {
   ch->sendTo("You can't put money into that.\n\r");
+}
+
+void TCardDeck::putMoneyInto(TBeing *ch, int amount)
+{
+  ch->sendTo("You should go to the casino if you want to put money into cards.\n\r");
 }
 
 void TToothNecklace::putMoneyInto(TBeing *ch, int amount)

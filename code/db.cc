@@ -92,6 +92,7 @@
 #include "obj_tooth_necklace.h"
 #include "obj_trash_pile.h"
 #include "liquids.h"
+#include "obj_card_deck.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3207,6 +3208,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TCookware();
     case ITEM_VEHICLE:
       return new TVehicle();
+    case ITEM_CARD_DECK:
+      return new TCardDeck();
     case ITEM_CASINO_CHIP:
       return new TCasinoChip();
     case ITEM_POISON:
