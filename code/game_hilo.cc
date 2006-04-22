@@ -40,7 +40,7 @@ void HiLoGame::BetHi(TBeing *ch, const Card *new_card)
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 
-    if(win_perc > 10){
+    if(win_perc > 25){
       ch->sendTo("You've reach the win limit.\n\r");
       stay(ch);
     }
@@ -67,7 +67,7 @@ void HiLoGame::BetLo(TBeing *ch, const Card *new_card)
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 
-    if(win_perc > 10){
+    if(win_perc > 25){
       ch->sendTo("You've reach the win limit.\n\r");
       stay(ch);
     }
