@@ -8,6 +8,7 @@
 
 #include "cgicc/Cgicc.h"
 #include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTTPPlainHeader.h"
 #include "cgicc/HTMLClasses.h"
 #include <cgicc/HTTPCookie.h>
 #include <cgicc/CgiEnvironment.h>
@@ -25,6 +26,8 @@ void sendLoginCheck(Cgicc cgi, TSession);
 
 void sendShoplist(int);
 void sendShowShop(int, int);
+void sendShowLogs(int, int);
+void sendShowLogsRaw(int, int);
 
 int main(int argc, char **argv)
 {
@@ -48,12 +51,18 @@ int main(int argc, char **argv)
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
             sendShoplist(session.getAccountID());
-      //sendShoplist(664);
+      return 0;
+    } else if(**state_form == "showlogs"){
+      form_iterator shop_nr=cgi.getElement("shop_nr");
+      sendShowLogs(session.getAccountID(), convertTo<int>(**shop_nr));
+      return 0;
+    } else if(**state_form == "showlogsraw"){
+      form_iterator shop_nr=cgi.getElement("shop_nr");
+      sendShowLogsRaw(session.getAccountID(), convertTo<int>(**shop_nr));
       return 0;
     } else if(**state_form == "showshop"){
       form_iterator shop_nr=cgi.getElement("shop_nr");
-            sendShowShop(session.getAccountID(), convertTo<int>(**shop_nr));
-      //      sendShowShop(664, convertTo<int>(**shop_nr));
+      sendShowShop(session.getAccountID(), convertTo<int>(**shop_nr));
       return 0;
     } else if(**state_form == "logout"){
       session.logout();
@@ -66,6 +75,7 @@ int main(int argc, char **argv)
     cout << html() << head() << title("Shopinfo") << endl;
     cout << head() << body() << endl;
     cout << "Fell through state switch.  Bad.<p><hr><p>" << endl;
+    cout << **state_form << endl;
     cout << body() << endl;
     cout << html() << endl;
 
@@ -81,6 +91,122 @@ int main(int argc, char **argv)
   cout << html() << endl;
 
 }
+
+
+void sendShowLogsRaw(int account_id, int shop_nr)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // check permissions first
+  db.query("\
+select 1 \
+from \
+  shop s, \
+  corporation c, \
+  shopowned so left outer join shopownedaccess soa on \
+  (so.shop_nr=soa.shop_nr), \
+  player p, corpaccess ca \
+where \
+  ca.corp_id=so.corp_id and \
+  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
+  s.shop_nr=so.shop_nr and \
+  c.corp_id=ca.corp_id and \
+  so.shop_nr=%i and \
+  p.account_id=%i",
+	   shop_nr, account_id);
+
+
+  if(!db.fetchRow()){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Shopinfo") << endl;
+    cout << head() << body() << endl;
+    cout << "Shop not found or you don't have permission.";
+    cout << body() << endl;
+    cout << html() << endl; 
+    return;
+  }
+  
+
+  cout << HTTPPlainHeader() << endl;
+  
+  
+  db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
+  cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
+  
+  while(db.fetchRow()){
+    cout << stripColorCodes(db["shop_nr"]) << ", ";
+    cout << stripColorCodes(db["name"]) << ", ";
+    cout << stripColorCodes(db["action"]) << ", ";
+    cout << stripColorCodes(db["item"]) << ", ";
+    cout << stripColorCodes(db["talens"]) << ", ";
+    cout << stripColorCodes(db["shoptalens"]) << ", ";
+    cout << stripColorCodes(db["shopvalue"]) << ", ";
+    cout << stripColorCodes(db["logtime"]) << ", ";
+    cout << stripColorCodes(db["itemcount"]) << endl;
+  }
+}  
+
+
+void sendShowLogs(int account_id, int shop_nr)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // check permissions first
+  db.query("\
+select 1 \
+from \
+  shop s, \
+  corporation c, \
+  shopowned so left outer join shopownedaccess soa on \
+  (so.shop_nr=soa.shop_nr), \
+  player p, corpaccess ca \
+where \
+  ca.corp_id=so.corp_id and \
+  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
+  s.shop_nr=so.shop_nr and \
+  c.corp_id=ca.corp_id and \
+  so.shop_nr=%i and \
+  p.account_id=%i",
+	   shop_nr, account_id);
+  
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Shopinfo") << endl;
+  cout << head() << body() << endl;
+
+
+  if(!db.fetchRow()){
+    cout << "Shop not found or you don't have permission.";
+    cout << body() << endl;
+    cout << html() << endl; 
+    return;
+  }
+  
+
+  
+  db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
+
+  cout << "<table border=1><tr>";
+
+  cout << "<td>shop_nr</td><td>name</td><td>action</td><td>item</td><td>talens</td><td>shoptalens</td><td>shopvalue</td><td>logtime</td><td>itemcount</td></tr>" << endl;
+  
+  while(db.fetchRow()){
+    cout << "<tr>";
+    cout << "<td>" << stripColorCodes(db["shop_nr"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["name"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["action"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["item"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["talens"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["shoptalens"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["shopvalue"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["logtime"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["itemcount"]) << "</td></tr>" << endl;
+  }
+  cout << "</table>";
+
+  cout << body() << endl;
+  cout << html() << endl; 
+
+}  
 
 
 void sendShowShop(int account_id, int shop_nr)
@@ -269,16 +395,22 @@ void sendShoplist(int account_id){
 
   cout << "<form action=\"shopinfo.cgi\" method=post name=pickshop>" << endl;
   cout << "<input type=hidden name=shop_nr>" << endl;
-  cout << "<input type=hidden name=state value=showshop>" << endl;
+  //  cout << "<input type=hidden name=state value=showshop>" << endl;
+  cout << "<input type=hidden name=state value=foo>" << endl;
   cout << "<table border=1>" << endl;
-  cout << "<tr><td>Shop</td><td>Player</td><td>Corporation</td></tr>";
+  cout << "<tr><td>Shop</td><td>Player</td><td>Corporation</td><td>Logs</td><td>Export logs</td></tr>";
 
   do {
       cout << "<tr><td>" << endl;
       cout << "<a href=javascript:pickshop('" << db["shop_nr"] << "')>";
       cout << db["shopname"] << "</a></td><td>" << endl;
       cout << db["playername"] << "</td><td>";
-      cout << db["corpname"] << "</td></tr>";
+      cout << db["corpname"] << "</td><td>";
+      cout << "<a href=javascript:picklog('" << db["shop_nr"] << "')>";
+      cout << "logs" << "</td><td>";
+      cout << "<a href=javascript:picklograw('" << db["shop_nr"] << "')>";
+      cout << "logs" << "</td></tr>";
+
   } while(db.fetchRow());
 
   cout << "</form>" << endl;
@@ -355,9 +487,27 @@ void sendJavaScript()
   // this function is for making links emulate submits in shop selection
   cout << "function pickshop(shop_nr)" << endl;
   cout << "{" << endl;
+  cout << "document.pickshop.state.value = \"showshop\";" << endl;
   cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
   cout << "document.pickshop.submit();" << endl;
   cout << "}" << endl;
+
+  cout << "function picklograw(shop_nr)" << endl;
+  cout << "{" << endl;
+  cout << "document.pickshop.state.value = \"showlogsraw\";" << endl;
+  cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
+  cout << "document.pickshop.submit();" << endl;
+  cout << "}" << endl;
+
+  cout << "function picklog(shop_nr)" << endl;
+  cout << "{" << endl;
+  cout << "document.pickshop.state.value = \"showlogs\";" << endl;
+  cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
+  cout << "document.pickshop.submit();" << endl;
+  cout << "}" << endl;
+
   cout << "-->" << endl;
   cout << "</script>" << endl;
+
+
 }
