@@ -3,7 +3,6 @@ CREATE TABLE shopowned (
     profit_buy double precision DEFAULT '0.00' NOT NULL,
     profit_sell double precision DEFAULT '0.00' NOT NULL,
     max_num integer,
-    password varchar(32),
     corp_id integer,
     dividend double precision,
     reserve_max integer,
