@@ -425,26 +425,31 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop
 #   are not the same as prod.
 shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
 	@echo \*\*\* Making Final Link: shoplog.cgi
+	@echo \*\*\* Linking against prod libs!
 	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip shoplog.cgi
 
 objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: objlog.cgi
+	@echo \*\*\* Linking against prod libs!
 	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip objlog.cgi
 
 corp_info.cgi:	$(LIBS) objs/corp_info.cgi.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: corp_info.cgi
+	@echo \*\*\* Linking against prod libs!
 	@$(CC) -o corp_info.cgi objs/corp_info.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
 	@/usr/bin/strip corp_info.cgi
 
 mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: mudmail.cgi
+	@echo \*\*\* Linking against prod libs!
 	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip mudmail.cgi
 
 shopinfo.cgi:	$(LIBS) objs/shopinfo.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: shopinfo.cgi
+	@echo \*\*\* Linking against prod libs!
 	@$(CC) -o shopinfo.cgi objs/shopinfo.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip shopinfo.cgi
 
