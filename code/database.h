@@ -154,7 +154,7 @@ class TDatabaseConnection
       sneezyproddb=mysql_init(NULL);
 
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL,
+      if(!mysql_real_connect(sneezyproddb, NULL, "sneezy", NULL,
                              "sneezy", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'sneezy'.");
 	return NULL;
