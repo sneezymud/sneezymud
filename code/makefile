@@ -423,12 +423,6 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop
 # this links against prod libs for cgi execution
 # - This will cause problems if you are developing and your libraries
 #   are not the same as prod.
-shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
-	@echo \*\*\* Making Final Link: shoplog.cgi
-	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
-	@/usr/bin/strip shoplog.cgi
-
 objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: objlog.cgi
 	@echo \*\*\* Linking against prod libs!
@@ -455,8 +449,8 @@ shopinfo.cgi:	$(LIBS) objs/shopinfo.cgi.o objs/lowtools.o objs/session.cgi.o
 
 
 # make all cgi program
-cgi:	shoplog.cgi objlog.cgi corp_info.cgi mudmail.cgi
-	@/bin/cp -f shoplog.cgi /mud/web
+cgi:	objlog.cgi corp_info.cgi mudmail.cgi shopinfo.cgi
+	@/bin/cp -f shopinfo.cgi /mud/web
 	@/bin/cp -f mudmail.cgi /mud/web
 	@echo Finished making cgi programs
 
@@ -32359,141 +32353,6 @@ objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
 objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
 objs/shopinfo.cgi.o: /usr/local/include/cgicc/HTTPRedirectHeader.h
 objs/shopinfo.cgi.o: /usr/include/md5.h /usr/include/sys/md5.h
-objs/shoplog.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/c++config.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/shoplog.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
-objs/shoplog.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
-objs/shoplog.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
-objs/shoplog.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
-objs/shoplog.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
-objs/shoplog.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
-objs/shoplog.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
-objs/shoplog.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
-objs/shoplog.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
-objs/shoplog.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cmath
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
-objs/shoplog.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/string
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/shoplog.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
-objs/shoplog.cgi.o: /usr/include/c++/3.4/iosfwd
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/c++io.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/gthr.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
-objs/shoplog.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
-objs/shoplog.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
-objs/shoplog.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
-objs/shoplog.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/postypes.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/shoplog.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/exception_defines.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/debug/debug.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/memory
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/allocator.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/algorithm
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/vector
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/map
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/list
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/list.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/iostream
-objs/shoplog.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/streambuf
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/locale
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
-objs/shoplog.cgi.o: /usr/include/c++/3.4/istream
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/sstream
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/shoplog.cgi.o: /usr/include/c++/3.4/fstream
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
-objs/shoplog.cgi.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
-objs/shoplog.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
-objs/shoplog.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
-objs/shoplog.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
-objs/shoplog.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/shoplog.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/shoplog.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
-objs/shoplog.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/shoplog.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_com.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_time.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/mysql_version.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/typelib.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/my_list.h
-objs/shoplog.cgi.o: /usr/local/include/mysql/my_alloc.h shop.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/Cgicc.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/FormEntry.h
-objs/shoplog.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiUtils.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/FormFile.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiInput.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/MStreamable.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLElement.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
-objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
 objs/shopowned.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/shopowned.o: /usr/include/c++/3.4/bits/c++config.h
 objs/shopowned.o: /usr/include/c++/3.4/bits/os_defines.h
