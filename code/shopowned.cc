@@ -1047,15 +1047,10 @@ int TShopOwned::setAccess(sstring arg)
 
 
   if(!buf2.empty()){ // set value
-    if(buf=="password"){
-      db.query("update shopowned set password='%s' where shop_nr=%i", buf2.c_str(), shop_nr);
-      keeper->doTell(ch->getName(), "Ok, I changed the access password.");
-    } else {
-      db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
-      
-      if(convertTo<int>(buf2) != 0)
-	db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), convertTo<int>(buf2));
-    }
+    db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
+    
+    if(convertTo<int>(buf2) != 0)
+      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), convertTo<int>(buf2));
   } else {
     if(!buf.empty()){
       db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
