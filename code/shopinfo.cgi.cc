@@ -3,7 +3,9 @@
 #include "session.cgi.h"
 #include "shop.h"
 
+#include <vector>
 #include <map>
+#include <list>
 #include "sstring.h"
 
 #include "cgicc/Cgicc.h"
@@ -31,9 +33,8 @@ void sendShowLogsRaw(int, int);
 
 int main(int argc, char **argv)
 {
-  // trick the db code into using the prod database
-  gamePort = PROD_GAMEPORT;
-  toggleInfo.loadToggles();
+  // trick the DB code into use prod database
+  gamePort=PROD_GAMEPORT;
 
   Cgicc cgi;
   form_iterator state_form=cgi.getElement("state");
@@ -374,8 +375,6 @@ order by r.name",
 void sendShoplist(int account_id){
   TDatabase db(DB_SNEEZY);
 
-  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname, p.name as playername from corporation c, shop s, room r, shopowned so left outer join shopownedaccess soa on (so.shop_nr=soa.shop_nr), player p, corpaccess ca where ca.corp_id=so.corp_id and p.account_id=%i and (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and r.vnum=s.in_room and s.shop_nr=so.shop_nr and c.corp_id=ca.corp_id order by r.name", account_id);
-
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Shopinfo") << endl;
   sendJavaScript();
@@ -385,33 +384,84 @@ void sendShoplist(int account_id){
   cout << "<button name=state value=logout type=submit>logout</button>";
   cout << "<p></form>" << endl;
 
+  
+  db.query("select c.name as corpname, p.name as pname from player p, corporation c, corpaccess ca where p.account_id=%i and c.corp_id=ca.corp_id and ca.player_id=p.id order by c.name", account_id);
 
-  if(!db.fetchRow()){
-    cout << "You don't have access to any shops." << endl;
-    cout << body() << endl;
-    cout << html() << endl;
-    return;
+
+  std::map<sstring, sstring>name_list;
+
+  while(db.fetchRow()){
+    name_list[db["corpname"]]=name_list[db["corpname"]]+db["pname"];
+    name_list[db["corpname"]]=name_list[db["corpname"]]+" ";
   }
+
+  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname from corporation c, room r, shop s, shopowned so, corpaccess ca, player p where p.account_id=%i and ca.player_id=p.id and so.corp_id=ca.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and c.corp_id=ca.corp_id order by c.name, r.name", account_id);
+
+
 
   cout << "<form action=\"shopinfo.cgi\" method=post name=pickshop>" << endl;
   cout << "<input type=hidden name=shop_nr>" << endl;
-  //  cout << "<input type=hidden name=state value=showshop>" << endl;
   cout << "<input type=hidden name=state value=foo>" << endl;
+
+
+
+  cout << "Shops you have access to via corporations you belong to:<br>";
   cout << "<table border=1>" << endl;
-  cout << "<tr><td>Shop</td><td>Player</td><td>Corporation</td><td>Logs</td><td>Export logs</td></tr>";
+  cout << "<tr><td>Shop</td><td>Player(s)</td><td>Corporation</td><td>Logs</td><td>Export logs</td></tr>";
 
-  do {
+  while(db.fetchRow()){
       cout << "<tr><td>" << endl;
-      cout << "<a href=javascript:pickshop('" << db["shop_nr"] << "')>";
+      cout << fmt("<a href=javascript:pickshop('%s','showshop')>") %
+	db["shop_nr"];
       cout << db["shopname"] << "</a></td><td>" << endl;
-      cout << db["playername"] << "</td><td>";
+      cout << name_list[db["corpname"]] << "</td><td>";
       cout << db["corpname"] << "</td><td>";
-      cout << "<a href=javascript:picklog('" << db["shop_nr"] << "')>";
+      cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
+	db["shop_nr"];
       cout << "logs" << "</td><td>";
-      cout << "<a href=javascript:picklograw('" << db["shop_nr"] << "')>";
+      cout << fmt("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+	db["shop_nr"];
       cout << "logs" << "</td></tr>";
+  }
+  cout << "</table>";
 
-  } while(db.fetchRow());
+
+  db.query("select p.name as pname, r.name as shopname, soa.access  from shopownedaccess soa, room r, shop s, shopowned so, player p where p.account_id=%i and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by r.name", account_id);
+
+  name_list.clear();
+
+  while(db.fetchRow()){
+    name_list[db["shopname"]]+=fmt("%s (%s) ") % db["pname"] % db["access"];
+  }
+
+
+
+  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname from shopownedaccess soa, corporation c, room r, shop s, shopowned so, player p where p.account_id=%i and so.corp_id=c.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by c.name, r.name", account_id);
+
+
+  cout << "<p>";
+  cout << "Shops you have access to via individual shop permissions:<br>";
+  cout << "<table border=1>" << endl;
+  cout << "<tr><td>Shop</td><td>Player(s) (Access)</td><td>Corporation</td><td>Logs</td><td>Export logs</td></tr>";
+
+  while(db.fetchRow()){
+      cout << "<tr><td>" << endl;
+      cout << fmt("<a href=javascript:pickshop('%s','showshop')>") %
+	db["shop_nr"];
+      cout << db["shopname"] << "</a></td><td>" << endl;
+      cout << name_list[db["shopname"]] << "</td><td>";
+      cout << db["corpname"] << "</td><td>";
+      cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
+	db["shop_nr"];
+      cout << "logs" << "</td><td>";
+      cout << fmt("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+	db["shop_nr"];
+      cout << "logs" << "</td></tr>";
+  }
+
+
+
+  cout << "</table>" << endl;
 
   cout << "</form>" << endl;
 
@@ -485,23 +535,9 @@ void sendJavaScript()
   cout << "<!--" << endl;
 
   // this function is for making links emulate submits in shop selection
-  cout << "function pickshop(shop_nr)" << endl;
+  cout << "function pickshop(shop_nr, state)" << endl;
   cout << "{" << endl;
-  cout << "document.pickshop.state.value = \"showshop\";" << endl;
-  cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
-  cout << "document.pickshop.submit();" << endl;
-  cout << "}" << endl;
-
-  cout << "function picklograw(shop_nr)" << endl;
-  cout << "{" << endl;
-  cout << "document.pickshop.state.value = \"showlogsraw\";" << endl;
-  cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
-  cout << "document.pickshop.submit();" << endl;
-  cout << "}" << endl;
-
-  cout << "function picklog(shop_nr)" << endl;
-  cout << "{" << endl;
-  cout << "document.pickshop.state.value = \"showlogs\";" << endl;
+  cout << "document.pickshop.state.value = state;" << endl;
   cout << "document.pickshop.shop_nr.value = shop_nr;" << endl;
   cout << "document.pickshop.submit();" << endl;
   cout << "}" << endl;
