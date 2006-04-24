@@ -51,7 +51,8 @@ int main(int argc, char **argv)
     }
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
-            sendShoplist(session.getAccountID());
+      sendShoplist(session.getAccountID());
+	    //      sendShoplist(664);
       return 0;
     } else if(**state_form == "showlogs"){
       form_iterator shop_nr=cgi.getElement("shop_nr");
@@ -372,21 +373,11 @@ order by r.name",
   cout << html() << endl; 
 }
 
-void sendShoplist(int account_id){
+void sendCorpShopList(int account_id)
+{
   TDatabase db(DB_SNEEZY);
 
-  cout << HTTPHTMLHeader() << endl;
-  cout << html() << head() << title("Shopinfo") << endl;
-  sendJavaScript();
-  cout << head() << body() << endl;
-
-  cout << "<form method=post action=shopinfo.cgi>" << endl;
-  cout << "<button name=state value=logout type=submit>logout</button>";
-  cout << "<p></form>" << endl;
-
-  
   db.query("select c.name as corpname, p.name as pname from player p, corporation c, corpaccess ca where p.account_id=%i and c.corp_id=ca.corp_id and ca.player_id=p.id order by c.name", account_id);
-
 
   std::map<sstring, sstring>name_list;
 
@@ -395,15 +386,7 @@ void sendShoplist(int account_id){
     name_list[db["corpname"]]=name_list[db["corpname"]]+" ";
   }
 
-  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname from corporation c, room r, shop s, shopowned so, corpaccess ca, player p where p.account_id=%i and ca.player_id=p.id and so.corp_id=ca.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and c.corp_id=ca.corp_id order by c.name, r.name", account_id);
-
-
-
-  cout << "<form action=\"shopinfo.cgi\" method=post name=pickshop>" << endl;
-  cout << "<input type=hidden name=shop_nr>" << endl;
-  cout << "<input type=hidden name=state value=foo>" << endl;
-
-
+  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname, c.corp_id from corporation c, room r, shop s, shopowned so, corpaccess ca, player p where p.account_id=%i and ca.player_id=p.id and so.corp_id=ca.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and c.corp_id=ca.corp_id order by c.name, r.name", account_id);
 
   cout << "Shops you have access to via corporations you belong to:<br>";
   cout << "<table border=1>" << endl;
@@ -415,7 +398,8 @@ void sendShoplist(int account_id){
 	db["shop_nr"];
       cout << db["shopname"] << "</a></td><td>" << endl;
       cout << name_list[db["corpname"]] << "</td><td>";
-      cout << db["corpname"] << "</td><td>";
+      cout << "<a href=corp_info.cgi?corp_id=" << db["corp_id"] << ">";
+      cout << db["corpname"] << "</a></td><td>";
       cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
@@ -425,19 +409,21 @@ void sendShoplist(int account_id){
   }
   cout << "</table>";
 
+}
+
+void sendAccessShopList(int account_id)
+{
+  TDatabase db(DB_SNEEZY);
 
   db.query("select p.name as pname, r.name as shopname, soa.access  from shopownedaccess soa, room r, shop s, shopowned so, player p where p.account_id=%i and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by r.name", account_id);
 
-  name_list.clear();
+  std::map<sstring, sstring>name_list;
 
   while(db.fetchRow()){
     name_list[db["shopname"]]+=fmt("%s (%s) ") % db["pname"] % db["access"];
   }
 
-
-
-  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname from shopownedaccess soa, corporation c, room r, shop s, shopowned so, player p where p.account_id=%i and so.corp_id=c.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by c.name, r.name", account_id);
-
+  db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname, c.corp_id from shopownedaccess soa, corporation c, room r, shop s, shopowned so, player p where p.account_id=%i and so.corp_id=c.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by c.name, r.name", account_id);
 
   cout << "<p>";
   cout << "Shops you have access to via individual shop permissions:<br>";
@@ -450,7 +436,8 @@ void sendShoplist(int account_id){
 	db["shop_nr"];
       cout << db["shopname"] << "</a></td><td>" << endl;
       cout << name_list[db["shopname"]] << "</td><td>";
-      cout << db["corpname"] << "</td><td>";
+      cout << "<a href=corp_info.cgi?corp_id=" << db["corp_id"] << ">";
+      cout << db["corpname"] << "</a></td><td>";
       cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
@@ -459,9 +446,28 @@ void sendShoplist(int account_id){
       cout << "logs" << "</td></tr>";
   }
 
-
-
   cout << "</table>" << endl;
+}
+
+void sendShoplist(int account_id){
+  TDatabase db(DB_SNEEZY);
+
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Shopinfo") << endl;
+  sendJavaScript();
+  cout << head() << body() << endl;
+
+  cout << "<form method=post action=shopinfo.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<p></form>" << endl;
+
+  cout << "<form action=\"shopinfo.cgi\" method=post name=pickshop>" << endl;
+  cout << "<input type=hidden name=shop_nr>" << endl;
+  cout << "<input type=hidden name=state value=foo>" << endl;
+
+  sendCorpShopList(account_id);
+
+  sendAccessShopList(account_id);
 
   cout << "</form>" << endl;
 
