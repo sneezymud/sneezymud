@@ -11,9 +11,9 @@
 
 void TBeing::doShuffle(const sstring &arg)
 {
-  TObj *deck;
+  TObj *deck=NULL;
 
-  if(!(deck=generic_find_obj(arg, FIND_OBJ_INV, this))){
+  if(arg.empty() || !(deck=generic_find_obj(arg, FIND_OBJ_INV, this))){
     sendTo("Shuffle what?\n\r");
     return;
   }
