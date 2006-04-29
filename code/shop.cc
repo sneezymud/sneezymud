@@ -2233,11 +2233,6 @@ void bootTheShops()
   while(db.fetchRow()){
     shopData sd;
 
-    vlogf(LOG_PEEL, fmt("%s %s %s %s %s %s") %
-	  db["shop_nr"] % producing_db["shop_nr"] % type_db["shop_nr"] %
-	  material_db["shop_nr"] % owned_db["shop_nr"] %
-	  isowned_db["shop_nr"]);
-
     shop_nr=convertTo<int>(db["shop_nr"]);
     sd.shop_nr=shop_nr;
 
@@ -2292,9 +2287,6 @@ void bootTheShops()
       sd.profit_buy=convertTo<float>(owned_db["profit_buy"]);
       sd.profit_sell=convertTo<float>(owned_db["profit_sell"]);
       owned_db.fetchRow();
-
-      vlogf(LOG_PEEL, fmt("shop: %i, buy: %f sell: %f") %
-	    shop_nr % sd.profit_buy % sd.profit_sell);
     } else {
       sd.profit_buy=convertTo<float>(db["profit_buy"]);
       sd.profit_sell=convertTo<float>(db["profit_sell"]);
