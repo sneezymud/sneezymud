@@ -27,6 +27,7 @@ void sendLoginCheck(Cgicc cgi, TSession);
 
 void sendObjlist(int);
 void sendShowObj(int, int);
+void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
 
 bool checkPlayerName(int account_id, sstring name)
@@ -88,6 +89,14 @@ int main(int argc, char **argv)
       cout << head() << body() << endl;
 
       sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
+      return 0;
+    } else if(**state_form == "showextra"){
+      form_iterator vnum=cgi.getElement("vnum");
+      cout << HTTPHTMLHeader() << endl;
+      cout << html() << head() << title("Objeditor") << endl;
+      cout << head() << body() << endl;
+
+      sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
       return 0;
     } else if(**state_form == "saveobj"){
       form_iterator vnum=cgi.getElement("vnum");
@@ -169,10 +178,47 @@ void saveObj(Cgicc cgi, int account_id)
   cout << "Saved.<br>";
 }
 
+void sendShowExtra(int account_id, int vnum)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<button name=state value=main type=submit>go back</button>";
+  cout << "<p></form>" << endl;
+
+  cout << "<form action=\"objeditor.cgi\" method=post name=saveextra>" << endl;
+  cout << "<input type=hidden name=state value=saveextra>" << endl;
+
+  db.query("select owner, vnum, name, description from objextra where vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
+
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+
+
+  while(db.fetchRow()){
+    cout << "<table border=1>";
+
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+    cout << fmt("<tr><td>%s</td><td><textarea cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+    
+    cout << "</table>";    
+    cout << "<input type=submit value='save changes'><hr>";
+  }
+
+  cout << "</form>" << endl;
+
+  cout << body() << endl;
+  cout << html() << endl;
+
+}
+
 
 void sendShowObj(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
+
+  assign_item_info();
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=logout type=submit>logout</button>";
@@ -207,13 +253,13 @@ void sendShowObj(int account_id, int vnum)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "wear_flag" % "wear_flag" % db["wear_flag"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "val0" % "val0" % db["val0"];
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "val1" % "val1" % db["val1"];
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "val2" % "val2" % db["val2"];
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "val3" % "val3" % db["val3"];
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
 
@@ -250,6 +296,8 @@ void sendShowObj(int account_id, int vnum)
 
 void sendObjlist(int account_id){
   TDatabase db(DB_IMMORTAL);
+  TDatabase db_affects(DB_IMMORTAL);
+  TDatabase db_extras(DB_IMMORTAL);
 
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Objeditor") << endl;
@@ -265,15 +313,47 @@ void sendObjlist(int account_id){
   cout << "<input type=hidden name=state>" << endl;
 
   cout << "<table border=1>";
-  cout << "<tr><td>vnum</td><td>name</td></tr>";
+  cout << "<tr><td>vnum</td><td>name</td><td>extras</td><td>affects</td></tr>";
 
-  db.query("select vnum, name, short_desc from obj where lower(owner) in (%r)", 
-	   getPlayerNames(account_id).c_str());
+  db.query("select vnum, name from obj o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
+  
+  db_affects.query("select vnum, count(*) as count from objaffect where lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
+  db_affects.fetchRow();
 
+  db_extras.query("select vnum, count(*) as count from objextra where lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
+  db_extras.fetchRow();
+
+  int affcount=0, extracount=0;
   while(db.fetchRow()){
+    affcount=extracount=0;
+    while(convertTo<int>(db_affects["vnum"]) < 
+	  convertTo<int>(db["vnum"]))
+      if(!db_affects.fetchRow())
+	break;
+    while(convertTo<int>(db_extras["vnum"]) < 
+	  convertTo<int>(db["vnum"]))
+      if(!db_extras.fetchRow())
+	break;
+    
+    if(db_affects["vnum"]==db["vnum"]){
+      affcount=convertTo<int>(db_affects["count"]);
+      db_affects.fetchRow();
+    }
+    if(db_extras["vnum"]==db["vnum"]){
+      extracount=convertTo<int>(db_extras["count"]);
+      db_extras.fetchRow();
+    }
+
     cout << "<tr><td>" << "<a href=javascript:pickobj('" << db["vnum"];
     cout << "','showobj')>" << db["vnum"] << "</a>" << endl;
-    cout << "</td><td>" << db["name"] << "</td></tr>" << endl;
+    cout << "</td><td>" << db["name"] << "</td>"<< endl;
+    cout << "<td><a href=javascript:pickobj('" << db["vnum"];
+    cout << "','showextra')>" << extracount << "</a></td>" << endl;
+    cout << "<td><a href=javascript:pickobj('" << db["vnum"];
+    cout << "','showaffect')>" << affcount << "</a></td>" << endl;
+    
+    cout << "</tr>" << endl;
+
   }
 
   cout << "</table></form>" << endl;
