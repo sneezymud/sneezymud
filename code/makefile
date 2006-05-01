@@ -384,6 +384,11 @@ rebooter:
 	@cp -f rebooter.cfg rebooter-watchdog.sh /mud/prod
 
 # low tool
+sqladdwld: $(LIBS) objs/sqladdwld.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqladdwld
+	@$(CC) -o sqladdwld objs/sqladdwld.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqladdwld
+
 sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqladdobjs
 	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(LIBS) $(LDFLAGS)
@@ -416,8 +421,8 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
