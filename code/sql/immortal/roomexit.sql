@@ -1,6 +1,7 @@
 CREATE TABLE roomexit (
     vnum integer NOT NULL,
-    owner integer NOT NULL,
+    owner varchar(80) DEFAULT '' NOT NULL,
+    block integer NOT NULL,
     direction integer NOT NULL,
     name varchar(127) NOT NULL,
     description text NOT NULL,

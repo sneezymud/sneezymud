@@ -1,6 +1,7 @@
 CREATE TABLE room (
     vnum integer NOT NULL,
-    owner integer NOT NULL,
+    owner varchar(80) DEFAULT '' NOT NULL,
+    block integer NOT NULL,
     x integer NOT NULL,
     y integer NOT NULL,
     z integer NOT NULL,

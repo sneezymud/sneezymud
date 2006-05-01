@@ -1404,11 +1404,9 @@ void TBeing::doRload(const char *)
 
 void TPerson::doRload(const char *argument)
 {
-#if 1
   int    tStart = 0,
          tEnd = 0;
-  bool   tSec = false;
-  char   tString[256];
+  int   tSec = 1;
   sstring tStArg(argument),
          tStString(""),
          tStBuffer("");
@@ -1428,10 +1426,11 @@ void TPerson::doRload(const char *argument)
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
     tEnd   = desc->blockaend;
+    tSec=1;
   } else if (tStString[0] == '2') {
     tStart = desc->blockbstart;
     tEnd   = desc->blockbend;
-    tSec   = true;
+    tSec=2;
   } else if (is_abbrev(tStString, "backup")) {
     sstring tStExtra(""),
            tStStandard("");
@@ -1445,7 +1444,7 @@ void TPerson::doRload(const char *argument)
         if (!tStStandard.empty() && is_abbrev(tStStandard, "standard"))
           tStandard = true;
       } else if (tStExtra[0] == '2') {
-        tSec = true;
+	tSec=2;
 
         if (!tStStandard.empty() && is_abbrev(tStStandard, "standard"))
           tStandard = true;
@@ -1457,16 +1456,18 @@ void TPerson::doRload(const char *argument)
       }
     }
 
-    if (!tSec)
-      sprintf(tString, "cp immortals/%s/rooms.bak%s immortals/%s/rooms",
-              getName(), (!tStandard ? "2" : ""), getName());
-    else
-      sprintf(tString, "cp immortals/%s/rooms_2.bak%s immortals/%s/rooms_2",
-              getName(), (!tStandard ? "2" : ""), getName());
+    // backup is a normal save with block+100
+    if (!tSec){
+      tStart = desc->blockastart;
+      tEnd   = desc->blockaend;
+      tSec=101;
+    } else {
+      tStart = desc->blockbstart;
+      tEnd   = desc->blockbend;
+      tSec=102;
+    }
 
-    sendTo("Restoring Backup2 File.\n\r");
-    vsystem(tString);
-    return;
+    sendTo("Restoring backup.\n\r");
   } else {
     sendTo("Syntax: redit load <\"1\"/\"2\">\n\r");
     return;
@@ -1481,67 +1482,6 @@ void TPerson::doRload(const char *argument)
     sendTo("Your room block is messed up.  Talk with Head Low immediatly!\n\r");
   else
     RoomLoad(this, tStart, tEnd, tSec);
-#else
-  sstring stRoom(""),
-         enRoom(""),
-         tString("");
-  int  start = -1,
-       end   = -2;
-  char tBuffer[256];
-  bool useSecond = false;
-
-  if (!hasWizPower(POWER_RLOAD)) {
-    incorrectCommand();
-    return;
-  }
-  if (!isImmortal())
-    return;
-
-  for (; isspace(*argument); argument++);
-
-  if (!*argument) {
-    sendTo("Syntax: rload <first-room> <last-room>\n\r");
-    return;
-  }
-
-  stRoom=tString.word(0);
-  enRoom=tString.word(1);
-
-  if (stRoom.empty() || enRoom.empty()) {
-    sendTo("Syntax: rload <first-room> <last-room>\n\r");
-    return;
-  }
-
-  if (is_abbrev(stRoom, "backup")) {
-    bool useStandard = false;
-
-    if ((!enRoom.empty()  && convertTo<int>(enRoom)  == 2) ||
-        (!tString.empty() && convertTo<int>(tString) == 2))
-      useSecond = true;
-
-    if ((!enRoom.empty()  && is_abbrev(enRoom, "standard")) ||
-        (!tString.empty() && is_abbrev(tString, "standard")))
-      useStandard = true;
-
-    sprintf(tBuffer, "cp immortals/%s/rooms%s.bak%s immortals/%s/rooms%s",
-            getName(), (useSecond ? "_2" : ""),
-            (useStandard ? "" : "2"),
-            getName(), (useSecond ? "_2" : ""));
-    vsystem(tBuffer);
-    return;
-  }
-
-  if (!tString.empty() && convertTo<int>(tString) == 2)
-    useSecond = true;
-
-  start = convertTo<int>(stRoom);
-  end   = convertTo<int>(enRoom);
-
-  if ((start <= end) && (start != -1) && (end != -2))
-    RoomLoad(this, start, end, useSecond);
-  else
-    sendTo("Syntax: rload <first-room> <last-room>\n\r");
-#endif
 }
 
 void TBeing::doRsave(const char *)
@@ -2965,37 +2905,35 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
   return;
 }
 
-static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
+static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 {
   char temp[2048], dots[500];
-  char buf[255];
   int rstart, rend, i, k, x;
   extraDescription *exptr;
-  FILE *fp;
   TRoom *rp;
   roomDirData *rdd;
   char *newline;
+  TDatabase db(DB_IMMORTAL);
 
-  sprintf(buf, "immortals/%s/rooms%s", ch->name, (useSecond ? "_2" : ""));
-
-  if (!(fp = fopen(buf, "w"))) {
-    ch->sendTo("Can't write to disk now..try later.\n\r");
-    return;
-  }
   rstart = start;
   rend = end;
 
   if (((rstart <= -1) || (rend <= -1)) ||
       ((rstart > 40000) || (rend > 40000))) {
     ch->sendTo("I don't know those room #s.  Make sure they are all contiguous.\n\r");
-    fclose(fp);
     return;
   }
   ch->sendTo("Saving.\n\r");
   strcpy(dots, "\0");
 
-  for (i = rstart; i <= rend; i++) {
+  db.query("delete from room where owner='%s' and block=%i", 
+	   ch->getName(), useSecond);
+  db.query("delete from roomexit where owner='%s' and block=%i",
+	   ch->getName(), useSecond);
+  db.query("delete from roomextra where owner='%s' and block=%i", 
+	   ch->getName(), useSecond);
 
+  for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
     if (rp == NULL)
       continue;
@@ -3013,57 +2951,50 @@ static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
     }
     temp[x] = '\0';
 
-    fprintf(fp, "#%d\n%s~\n%s~\n", rp->number, rp->name,
-	    temp);
-    if (!rp->getTeleTarg())
-      fprintf(fp, "%d %d %d", rp->getZoneNum(), rp->getRoomFlags(),
-              mapSectorToFile(rp->getSectorType()));
-    else {
-      fprintf(fp, "%d %d -1 %d %d %d %d", rp->getZoneNum(), rp->getRoomFlags(),
-	      rp->getTeleTime(), rp->getTeleTarg(),
-	      rp->getTeleLook(), 
-              mapSectorToFile(rp->getSectorType()));
-    }
-    fprintf(fp, " %d %d", rp->getRiverSpeed(), rp->getRiverDir());
-    fprintf(fp, " %d %d", rp->getMoblim(), rp->getRoomHeight());
-    fprintf(fp, "\n");
+    db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+	     ch->getName(), useSecond,
+	     rp->number, 0, 0, 0, rp->name, temp?temp:"", 
+	     rp->getRoomFlags(),
+	     mapSectorToFile(rp->getSectorType()), 
+	     rp->getTeleTime(), rp->getTeleTarg(),
+	     rp->getTeleLook(), rp->getRiverSpeed(), rp->getRiverDir(),
+	     rp->getMoblim(), rp->getRoomHeight());
 
     dirTypeT j;
     for (j = MIN_DIR; j < MAX_DIR; j++) {
       rdd = rp->dir_option[j];
       if (rdd) {
-	fprintf(fp, "D%d\n", mapDirToFile(j));
-
+	temp[0]='\0';
 	if (rdd->description) {
 	  for (k = 0, x = 0; k <= (int) strlen(rdd->description); k++) {
 	    if (rdd->description[k] != 13)
 	      temp[x++] = rdd->description[k];
 	  }
 	  temp[x] = '\0';
-
-	  fprintf(fp, "%s~\n", temp);
-	} else
-	  fprintf(fp, "~\n");
+	}
 
 	if (rdd->keyword) {
 	  if (strlen(rdd->keyword) > 0) {
 	    // strip off unwanted carriage returns. - Russ 
 	    newline = strchr(rdd->keyword, '\n');
 	    newline = '\0';
-	    fprintf(fp, "%s~\n", rdd->keyword);
-	  } else
-	    fprintf(fp, "~\n");
-	} else
-	  fprintf(fp, "~\n");
+	  }
+	}
 
-        fprintf(fp, "%d", rdd->door_type);
-        fprintf(fp, " %d", rdd->condition);
-        fprintf(fp, " %d", rdd->lock_difficulty);
-        fprintf(fp, " %d", rdd->weight);
-	fprintf(fp, " %d", rdd->key);
-	fprintf(fp, " %d\n", rdd->to_room);
+	sstring keyword=rdd->keyword;
+	sstring descr=temp;
+
+	db.query("insert into roomexit (owner,block, vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values ('%s', %i, %i, %i,'%s','%s',%i,%i,%i,%i,%i,%i)", 
+		 ch->getName(), useSecond,
+		 rp->number, mapDirToFile(j), keyword.c_str(),
+		 descr.c_str(),
+		 rdd->door_type, rdd->condition, rdd->lock_difficulty,
+		 rdd->weight, rdd->key, rdd->to_room);
+
       }
     }
+
+
     for (exptr = rp->ex_description; exptr; exptr = exptr->next) {
       x = 0;
       if (exptr->description) {
@@ -3073,42 +3004,41 @@ static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
 	}
 	temp[x] = '\0';
 
-	fprintf(fp, "E\n%s~\n%s~\n", exptr->keyword, temp);
+	db.query("insert into roomextra (owner, block, vnum, name, description) values ('%s',%i, '%s','%s')", ch->getName(), useSecond, rp->number, exptr->keyword, temp);
       }
     }
 
-    fprintf(fp, "S\n");
   }
-  fclose(fp);
   ch->sendTo(dots);
   ch->sendTo("\n\rDone.\n\r");
 }
 
-void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
+void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 {
-  FILE   *fp;
-  int     vnum,
-          rc;
+  int     vnum;
   bool    found = FALSE;
-  char    buf[80],
-          tString[256];
   TRoom  *rp,
          *rp2;
   TThing *t;
+  int tmp;
+  extraDescription *new_descr;
 
-  sprintf(buf, "immortals/%s/rooms%s", ch->name, (useSecond ? "_2" : ""));
+  TDatabase db(DB_IMMORTAL);
+  TDatabase db_exits(DB_IMMORTAL);
+  TDatabase db_extras(DB_IMMORTAL);
 
-  if (!(fp = fopen(buf, "r"))) {
-    ch->sendTo("You don't appear to have an area...\n\r");
-    return;
-  }
   ch->sendTo("Searching and loading rooms\n\r");
 
-  while (!found && !feof(fp)) {
-    fgets(tString, 256, fp);
+  db.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
 
-    if ((rc = sscanf(tString, "#%d\n", &vnum)) != 1)
-      continue;
+  db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
+  db_exits.fetchRow();
+
+  db_extras.query("select vnum, name, description from roomextra where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
+  db_extras.fetchRow();
+
+  while(db.fetchRow()){
+    vnum=convertTo<int>(db["vnum"]);
 
     if ((vnum >= start) && (vnum <= end)) {
       if (vnum >= end)
@@ -3136,32 +3066,121 @@ void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
 	ch->sendTo("-");
       }
       rp2->number = vnum;
-      rp2->loadOne(fp, false);
+
+
+      rp2->setXCoord(convertTo<int>(db["x"]));
+      rp2->setYCoord(convertTo<int>(db["y"]));
+      rp2->setZCoord(convertTo<int>(db["z"]));
+
+      rp2->name=mud_str_dup(db["name"]);
+      rp2->setDescr(mud_str_dup(db["description"]));
+      
+      if (!zone_table.empty()) {
+	//      fscanf(fl, " %*d ");  // this is the "zone" value - unused?
+	unsigned int z;
+	for (z = 0; rp2->number>zone_table[z].top && z<zone_table.size(); z++);
+	
+	if (z >= zone_table.size()) {
+	  vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") % rp2->number);
+	  exit(0);
+	}
+	rp2->setZoneNum(z);
+      }
+      rp2->setRoomFlags(convertTo<int>(db["room_flag"]));
+      
+      rp2->setSectorType(mapFileToSector(convertTo<int>(db["sector"])));
+      rp2->setTeleTime(convertTo<int>(db["teleTime"]));
+      rp2->setTeleTarg(convertTo<int>(db["teleTarg"]));
+      rp2->setTeleLook(convertTo<int>(db["teleLook"]));
+      
+      rp2->setRiverSpeed(convertTo<int>(db["river_speed"]));
+      rp2->setRiverDir(mapFileToDir(convertTo<int>(db["river_dir"])));
+      rp2->setMoblim(convertTo<int>(db["capacity"]));
+      
+      rp2->setRoomHeight(convertTo<int>(db["height"]));
+      
+      rp2->funct = 0;
+      rp2->setLight(0);
+      rp2->setHasWindow(0);
+      
+      rp2->ex_description = NULL;
+
+      while(convertTo<int>(db_extras["vnum"]) == rp2->number){
+	new_descr = new extraDescription();
+	new_descr->keyword = mud_str_dup(db_extras["name"]);
+	if (!new_descr->keyword || !*new_descr->keyword)
+	  vlogf(LOG_EDIT, fmt("No keyword in room %d\n") %  rp2->number);
+
+	new_descr->description = mud_str_dup(db_extras["description"]);
+	if (!new_descr->description || !*new_descr->description)
+	  vlogf(LOG_LOW, fmt("No desc in room %d\n") %  rp2->number);
+
+	new_descr->next = rp2->ex_description;
+	rp2->ex_description = new_descr;
+	
+	if(!db_extras.fetchRow())
+	  break;
+      }
+
+      dirTypeT dir;
+      for (dir = MIN_DIR; dir < MAX_DIR; dir++)
+	rp2->dir_option[dir] = 0;
+
+      while(convertTo<int>(db_exits["vnum"]) == rp2->number){
+	dir=mapFileToDir(convertTo<int>(db_exits["direction"]));
+
+	rp2->dir_option[dir] = new roomDirData();
+
+	if(!db_exits["name"].empty())
+	  rp2->dir_option[dir]->keyword = mud_str_dup(db_exits["name"]);
+	else
+	  rp2->dir_option[dir]->keyword = NULL;
+
+	if(!db_exits["description"].empty())
+	  rp2->dir_option[dir]->description = mud_str_dup(db_exits["description"]);
+	else
+	  rp2->dir_option[dir]->description = NULL;
+
+	tmp=convertTo<int>(db_exits["type"]);
+	if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
+	  vlogf(LOG_LOW,fmt("bogus door type (%d) in room (%d) dir %d.") % 
+		tmp % rp2->number % dir);
+	  return;
+	}
+	rp2->dir_option[dir]->door_type = doorTypeT(tmp);
+	if ((tmp == DOOR_NONE) && (rp2->dir_option[dir]->keyword)){
+	  if (strcmp(rp2->dir_option[dir]->keyword, "_unique_door_"))
+	    vlogf(LOG_LOW,fmt("non-door with name in room %d") % rp2->number);
+	}
+	if ((tmp != DOOR_NONE) && !(rp2->dir_option[dir]->keyword)){
+	  vlogf(LOG_LOW,fmt("door with no name in room %d") % rp2->number);
+	}
+
+	rp2->dir_option[dir]->condition = convertTo<int>(db_exits["condition_flag"]);
+	rp2->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits["lock_difficulty"]);;
+	rp2->dir_option[dir]->weight= convertTo<int>(db_exits["weight"]);
+	rp2->dir_option[dir]->key = convertTo<int>(db_exits["key_num"]);
+
+	rp2->dir_option[dir]->to_room = convertTo<int>(db_exits["destination"]);
+
+	if (IS_SET(rp2->dir_option[dir]->condition, EX_SECRET) && 
+	    canSeeThruDoor(rp2->dir_option[dir])) {
+	  if (IS_SET(rp2->dir_option[dir]->condition, EX_CLOSED)){
+	    //vlogf(LOG_LOW, fmt("See thru door set secret. (%d, %d)") %  room % dir);
+	  } else
+	    vlogf(LOG_LOW, fmt("Secret door saved as open. (%d, %d)") % 
+		  rp2->number % dir);
+	}
+	if(!db_exits.fetchRow())
+	  break;
+      }
+      
       rp2->initLight();
-#if 0
-// new weather stuff, do not use - BAT
-      rp2->initWeather();
-#endif
     } else {
       ch->sendTo(fmt("Room %d found, but not in load range!  Skipping.\n\r") % vnum);
 
-#if 0
-      // create a dummy room just to advance the file pointer
-      rp = new TRoom(vnum);
-      rp->loadOne(fp, false);
-      delete rp;
-      rp = NULL;
-#else
-      // keep reading until we see the line with just 'S' on it
-      // denoting the end of the room
-      do {
-        fgets(tString, 256, fp);
-      } while (!strcmp(tString, "S\n"));
-   
-#endif
     }
   }
-  fclose(fp);
 
   if (!found) 
     ch->sendTo("The room number(s) that you specified could not all be found.\n\r");
@@ -3636,11 +3655,10 @@ void room_edit(TBeing *ch, const char *arg)
 
 void TPerson::doRsave(const char *argument)
 {
-#if 1
   int    tStart = 0,
          tEnd   = 0;
-  bool   tSec   = false;
-  char   tString[256];
+  int   tSec   = 1;
+  //  char   tString[256];
   sstring tStArg(argument),
          tStString(""),
          tStBuffer("");
@@ -3660,25 +3678,27 @@ void TPerson::doRsave(const char *argument)
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
     tEnd   = desc->blockaend;
+    tSec=1;
   } else if (tStString[0] == '2') {
     tStart = desc->blockbstart;
     tEnd   = desc->blockbend;
-    tSec   = true;
+    tSec   = 2;
   } else if (is_abbrev(tStString, "backup")) {
-    if (tStBuffer.empty() || tStBuffer[0] == '1')
-      sprintf(tString, "cp immortals/%s/rooms immortals/%s/rooms.bak2",
-              getName(), getName());
-    else if (tStBuffer[0] == '2')
-      sprintf(tString, "cp immortals/%s/rooms_2 immortals/%s/rooms_2.bak2",
-              getName(), getName());
-    else {
+    // backup save just does a normal save with block+100
+    if (tStBuffer.empty() || tStBuffer[0] == '1'){
+      tStart = desc->blockastart;
+      tEnd   = desc->blockaend;
+      tSec=101;
+    } else if (tStBuffer[0] == '2'){
+      tStart = desc->blockbstart;
+      tEnd   = desc->blockbend;
+      tSec   = 102;
+    } else {
       sendTo("Syntax: redit save backup <\"1\"/\"2\">\n\r");
       return;
     }
 
-    sendTo("Creating Backup2 File.\n\r");
-    vsystem(tString);
-    return;
+    sendTo("Creating backup.\n\r");
   } else {
     sendTo("Syntax: redit save <\"1\"1/\"2\">\n\r");
     return;
@@ -3703,68 +3723,7 @@ void TPerson::doRsave(const char *argument)
     if (!bHasRooms) {
       sendTo("No rooms within that range currently exist in the world, aborting rsave.\n\r");
     } else {
-      sprintf(tString, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
-              getName(), (tSec ? "_2" : ""), getName(), (tSec ? "_2" : ""));
-      vsystem(tString);
       RoomSave(this, tStart, tEnd, tSec);
     }
   }
-#else
-  sstring stRoom(""),
-         enRoom(""),
-         tString("");
-  char tBuffer[256];
-  int  start = -1,
-       end   = -2;
-  bool useSecond = false;
-
-  if (!hasWizPower(POWER_RSAVE)) {
-    incorrectCommand();
-    return;
-  }
-
-  if (!isImmortal())
-    return;
-
-  for (; isspace(*argument); argument++);
-
-  if (!*argument) {
-    sendTo("Syntax: rsave <first-room> <last-room>\n\r");
-    return;
-  }
-
-  stRoom=tString.word(0);
-  enRoom=tString.word(1);
-
-  if (stRoom.empty() || enRoom.empty()) {
-    sendTo("Syntax: rsave <first-room> <last-room>\n\r");
-    return;
-  }
-
-  if (is_abbrev(stRoom, "backup")) {
-    if (!enRoom.empty() && convertTo<int>(enRoom) == 2)
-      useSecond = true;
-
-    sprintf(tBuffer, "cp immortals/%s/rooms%s immortals/%s/rooms%s.bak2",
-            getName(), (useSecond ? "_2" : ""),
-            getName(), (useSecond ? "_2" : ""));
-    vsystem(tBuffer);
-    return;
-  }
-
-  if (!tString.empty() && convertTo<int>(tString) == 2)
-    useSecond = true;
-
-  start = convertTo<int>(stRoom);
-  end   = convertTo<int>(enRoom);
-
-  if ((start <= end) && (start != -1) && (end != -2)) {
-    sprintf(tBuffer, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
-            getName(), (useSecond ? "_2" : ""),
-            getName(), (useSecond ? "_2" : ""));
-    vsystem(tBuffer);
-    RoomSave(this, start, end, useSecond);
-  } else
-    sendTo("Syntax: rsave <first-room> <last-room>\n\r");
-#endif
 }

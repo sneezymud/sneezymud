@@ -2272,24 +2272,6 @@ void TPerson::doLoad(const char *argument)
 	}
       }
     }
-  } else if (is_abbrev(type, "room")) {
-    // a backdoor into rload?
-    int start, end;
-
-    if (!hasWizPower(POWER_RLOAD))
-      return;
-
-    switch (sscanf(num, "%d %d", &start, &end)) {
-      case 2:            // we got both numbers 
-        RoomLoad(this, start, end, false);
-        break;
-      case 1:            // we only got one, load it 
-        RoomLoad(this, start, start, false);
-        break;
-      default:
-        sendTo("Load? Fine!  Load we must, But what?\n\r");
-        break;
-    }
   } else if (is_abbrev(type, "set") || is_abbrev(type, "suit")) {
     if (!hasWizPower(POWER_LOAD_SET)) {
       sendTo("Sorry, you are not high enough to do this yet.\n\r");
