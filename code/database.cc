@@ -111,6 +111,18 @@ bool TDatabase::query(const char *query,...)
     if(*query=='%'){
       query++;
       switch(*query){
+	case 'r':
+	  // this is just like %s, but it doesn't do escaping
+	  // use with caution!  should not be used with user input
+	  from=va_arg(ap, char *);
+	 	  	  
+	  if(!from){
+	    vlogf(LOG_DB, "null argument for format specifier 'r'");
+	    vlogf(LOG_DB, fmt("%s") % qsave);	    
+	  }
+	  
+	  buf += from;
+	  break;
 	case 's':
 	  from=va_arg(ap, char *);
 	 	  	  
