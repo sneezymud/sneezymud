@@ -23,9 +23,6 @@ using namespace cgicc;
 
 void sendJavaScript();
 
-void sendLogin();
-void sendLoginCheck(Cgicc cgi, TSession);
-
 void sendShoplist(int);
 void sendShowShop(int, int);
 void sendShowLogs(int, int);
@@ -38,17 +35,11 @@ int main(int argc, char **argv)
 
   Cgicc cgi;
   form_iterator state_form=cgi.getElement("state");
-  TSession session(cgi, "shopinfo");
+  TSession session(cgi, "SneezyMUD");
 
   if(!session.isValid()){
-    if(state_form == cgi.getElements().end() ||
-       **state_form != "logincheck"){
-      sendLogin();
-      return 0;
-    } else {
-      sendLoginCheck(cgi, session);
-      return 0;
-    }
+    session.doLogin(cgi, "shopinfo.cgi");
+    return 0;
   } else {
     if(state_form == cgi.getElements().end() || **state_form == "main"){
       sendShoplist(session.getAccountID());
@@ -476,63 +467,6 @@ void sendShoplist(int account_id){
 }
 
 
-void sendLoginCheck(Cgicc cgi, TSession session)
-{
-  // validate, create session cookie + db entry, redirect to main
-  sstring name=**(cgi.getElement("account"));
-  sstring passwd=**(cgi.getElement("passwd"));
-  form_iterator autologin=cgi.getElement("autologin");
-
-  if(!session.checkPasswd(name, passwd)){
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head() << title("Shopinfo") << endl;
-    cout << head() << body() << endl;
-    cout << "Password incorrect or account not found.<p><hr><p>" << endl;
-    cout << body() << endl;
-    cout << html() << endl;
-    return;
-  }
-
-  if(autologin == cgi.getElements().end()){
-    session.createSession();
-  } else {
-    // log them in for a year or so
-    session.createSession(60*60*24*365);
-  }
-
-  
-  cout << HTTPRedirectHeader("shopinfo.cgi").setCookie(session.getCookie());
-  cout << endl;
-  cout << html() << head() << title("Shopinfo") << endl;
-  cout << head() << body() << endl;
-  cout << "Good job, you logged in.<p><hr><p>" << endl;
-  cout << body() << endl;
-  cout << html() << endl;
-}
-
-
-void sendLogin()
-{
-  cout << HTTPHTMLHeader() << endl;
-  cout << html() << head() << title("Shopinfo") << endl;
-  cout << head() << body() << endl;
-
-  cout << "<form action=\"shopinfo.cgi\" method=post>" << endl;
-  cout << "<table>" << endl;
-  cout << "<tr><td>Account</td>" << endl;
-  cout << "<td><input type=text name=account></td></tr>" << endl;
-  cout << "<tr><td>Password</td>" << endl;
-  cout << "<td><input type=password name=passwd></td></tr>" << endl;
-  cout << "<tr><td><input type=checkbox name=autologin></td>" << endl;
-  cout << "<td>Log me on automatically each visit.</td></tr>" << endl;
-  cout << "<tr><td colspan=2><input type=submit value=Login></td></tr>" <<endl;
-  cout << "</table>" << endl;
-  cout << "<input type=hidden name=state value=logincheck>" << endl;
-  cout << "</form>" << endl;
-
-  cout << body() << endl;
-  cout << html() << endl;
-}
 
 
 void sendJavaScript()

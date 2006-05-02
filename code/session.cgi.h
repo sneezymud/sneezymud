@@ -4,6 +4,7 @@
 #include <cgicc/Cgicc.h>
 
 
+
 // TSession is a class for handling session authentication in cgi
 // scripts.  The idea is that the user can login using their sneezy
 // account name and password, and we give them a cookie that we can
@@ -65,6 +66,12 @@ public:
 
   int getAccountID(){ return account_id; }
   sstring getSessionID(){ return session_id; }
+
+  // simple stubs for logging in
+  void doLogin(cgicc::Cgicc, sstring);
+  void sendLoginCheck(cgicc::Cgicc, sstring);
+  void sendLoginPage(sstring);
+
 
   TSession(cgicc::Cgicc, sstring);
 };

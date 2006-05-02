@@ -2,12 +2,94 @@
 #include "database.h"
 #include "session.cgi.h"
 
-#include <cgicc/Cgicc.h>
+#include "cgicc/Cgicc.h"
+#include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTTPPlainHeader.h"
+#include "cgicc/HTMLClasses.h"
 #include <cgicc/HTTPCookie.h>
 #include <cgicc/CgiEnvironment.h>
+#include <cgicc/HTTPRedirectHeader.h>
+
 
 #include <sys/types.h>
 #include <md5.h>
+
+using namespace cgicc;
+
+void TSession::sendLoginPage(sstring url)
+{
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("SneezyMUD Web Login") << endl;
+  cout << head() << body() << endl;
+
+  cout << "<form action=\"" << url << "\" method=post>" << endl;
+  cout << "<table>" << endl;
+  cout << "<tr><td colspan=2>" << endl;
+  cout << "<img src=\"http://sneezy.saw.net/sneezy_forum_logo.gif\">" << endl;
+  cout << "<tr><td>Account</td>" << endl;
+  cout << "<td><input type=text name=account></td></tr>" << endl;
+  cout << "<tr><td>Password</td>" << endl;
+  cout << "<td><input type=password name=passwd></td></tr>" << endl;
+  cout << "<tr><td><input type=checkbox name=autologin></td>" << endl;
+  cout << "<td>Log me on permanently.</td></tr>" << endl;
+  cout << "<tr><td colspan=2><input type=submit name=Login value=Login></td></tr>" <<endl;
+  cout << "</table>" << endl;
+  cout << "</form>" << endl;
+
+  cout << body() << endl;
+  cout << html() << endl;
+}
+
+void TSession::doLogin(Cgicc cgi, sstring url)
+{
+  form_iterator state_form=cgi.getElement("Login");
+  
+  if(state_form == cgi.getElements().end()){
+    sendLoginPage(url);
+  } else {
+    sendLoginCheck(cgi, url);
+  }
+}
+
+// I tried using the cgi that TSession stores, 
+// but it is unstable for some reason
+void TSession::sendLoginCheck(Cgicc cgi, sstring url)
+{
+  // validate, create session cookie + db entry, redirect to main
+  sstring name=**(cgi.getElement("account"));
+  sstring passwd=**(cgi.getElement("passwd"));
+  form_iterator autologin=cgi.getElement("autologin");
+
+  if(!checkPasswd(name, passwd)){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Login") << endl;
+    cout << head() << body() << endl;
+    cout << "Password incorrect or account not found.<p><hr><p>" << endl;
+    cout << body() << endl;
+    cout << html() << endl;
+    return;
+  }
+
+  if(autologin == cgi.getElements().end()){
+    createSession();
+  } else {
+    // log them in for a year or so
+    createSession(60*60*24*365);
+  }
+
+  
+  cout << HTTPRedirectHeader(url).setCookie(getCookie());
+  cout << endl;
+  cout << html() << head() << title("Login") << endl;
+  cout << head() << body() << endl;
+  cout << "Good job, you logged in.<p><hr><p>" << endl;
+  cout << body() << endl;
+  cout << html() << endl;
+}
+
+
+
+
 
 cgicc::HTTPCookie TSession::getCookie()
 {
