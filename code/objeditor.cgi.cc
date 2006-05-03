@@ -69,61 +69,63 @@ int main(int argc, char **argv)
   if(!session.isValid()){
     session.doLogin(cgi, "objeditor.cgi");
     return 0;
-  } else {
-    if(state_form == cgi.getElements().end() || **state_form == "main"){
-      sendObjlist(session.getAccountID());
-      return 0;
-    } else if(**state_form == "showobj"){
-      form_iterator vnum=cgi.getElement("vnum");
-      cout << HTTPHTMLHeader() << endl;
-      cout << html() << head() << title("Objeditor") << endl;
-      cout << head() << body() << endl;
+  }
 
-      sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
-      return 0;
-    } else if(**state_form == "showextra"){
-      form_iterator vnum=cgi.getElement("vnum");
-      cout << HTTPHTMLHeader() << endl;
-      cout << html() << head() << title("Objeditor") << endl;
-      cout << head() << body() << endl;
+  if(!session.hasWizPower(POWER_BUILDER)){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head(title("Object Load Logs")) << endl;
+    cout << body() << endl;
+    cout << "You don't have permission to use this.";
+    cout << body() << endl;
+    return 0;
+  }
 
-      sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
-      return 0;
-    } else if(**state_form == "saveobj"){
-      form_iterator vnum=cgi.getElement("vnum");
-      cout << HTTPHTMLHeader() << endl;
-      cout << html() << head() << title("Objeditor") << endl;
-      cout << head() << body() << endl;
+    
 
-      saveObj(cgi, session.getAccountID());
-      sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
-      return 0;
-    } else if(**state_form == "logout"){
-      session.logout();
-      cout << HTTPRedirectHeader("objeditor.cgi").setCookie(session.getCookie());
-      cout << endl;
-      return 0;
-    }
-
+  if(state_form == cgi.getElements().end() || **state_form == "main"){
+    sendObjlist(session.getAccountID());
+    return 0;
+  } else if(**state_form == "showobj"){
+    form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
-    cout << "Fell through state switch.  Bad.<p><hr><p>" << endl;
-    cout << **state_form << endl;
-    cout << body() << endl;
-    cout << html() << endl;
-
+    
+    sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
-  }  
-
-  // shouldn't get here
+  } else if(**state_form == "showextra"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+    
+    sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;
+  } else if(**state_form == "saveobj"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+    
+    saveObj(cgi, session.getAccountID());
+    sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;
+  } else if(**state_form == "logout"){
+    session.logout();
+    cout << HTTPRedirectHeader("objeditor.cgi").setCookie(session.getCookie());
+    cout << endl;
+    return 0;
+  }
+  
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Objeditor") << endl;
   cout << head() << body() << endl;
-  cout << "This is bad.<p><hr><p>" << endl;
+  cout << "Fell through state switch.  Bad.<p><hr><p>" << endl;
+  cout << **state_form << endl;
   cout << body() << endl;
   cout << html() << endl;
-
+  
+  return 0;
 }
 
 void saveObj(Cgicc cgi, int account_id)
