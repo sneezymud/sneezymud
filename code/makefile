@@ -428,10 +428,10 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld
 # this links against prod libs for cgi execution
 # - This will cause problems if you are developing and your libraries
 #   are not the same as prod.
-objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o
+objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: objlog.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o $(PRODLIBS) $(LDFLAGS) -lcgicc
+	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip objlog.cgi
 
 corp_info.cgi:	$(LIBS) objs/corp_info.cgi.o objs/lowtools.o
