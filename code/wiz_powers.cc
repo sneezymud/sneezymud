@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 #include "stdsneezy.h"
+#include "database.h"
 
 bool TBeing::powerCheck(wizPowerT wpt) const
 {
@@ -376,30 +377,17 @@ void TPerson::saveWizPowers()
   if (GetMaxLevel() <= MAX_MORT)
     return;
 
-  sstring caFilebuf;
-  FILE *fp;
+  TDatabase db(DB_SNEEZY);
 
-  caFilebuf = fmt("player/%c/%s.wizpower") % LOWER(name[0]) % sstring(name).lower();
+  db.query("delete from wizpower where player_id=%i", getPlayerID());
 
-// REMOVED by Cosmo 7/15/01-- cant figure out a reason why this should be in here
-//  if (hasWizPower(POWER_IDLED))
-//    return;
-
-  if (!(fp = fopen(caFilebuf.c_str(), "w")))
-    return;
-
-  unsigned int total = 0;
   wizPowerT num;
   for (num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
     if (hasWizPower(num)) {
-      total++;
-      fprintf(fp, "%u ", mapWizPowerToFile(num));
+      db.query("insert into wizpower (player_id, wizpower) values (%i, %i)",
+	       getPlayerID(), mapWizPowerToFile(num));
     }
   }
-  fclose(fp);
-
-  if (!total)
-    unlink(caFilebuf.c_str());
 }
 
 void TPerson::loadWizPowers()
@@ -407,19 +395,14 @@ void TPerson::loadWizPowers()
   if (GetMaxLevel() <= MAX_MORT)
     return;
 
-  sstring caFilebuf;
-  FILE *fp;
+  TDatabase db(DB_SNEEZY);
 
-  caFilebuf = fmt("player/%c/%s.wizpower") % LOWER(name[0]) % sstring(name).lower();
+  db.query("select wizpower from wizpower where player_id=%i",
+	   getPlayerID());
+  
+  while(db.fetchRow())
+    setWizPower(mapFileToWizPower(convertTo<int>(db["wizpower"])));
 
-  if (!(fp = fopen(caFilebuf.c_str(), "r")))
-    return;
-
-  unsigned int num;
-  while (fscanf(fp, "%u ", &num) == 1)
-    setWizPower(mapFileToWizPower(num));
-
-  fclose(fp);
 }
 
 void TBeing::doPowers(const sstring &) const
