@@ -59,6 +59,9 @@ public:
   // deletes the session id string from the database
   void logout();
 
+  // check if this wizpower is available on any player in their account
+  bool hasWizPower(wizPowerT);
+
   // validates name and passwd, user input.
   bool checkPasswd(sstring name, sstring passwd);
 

@@ -16,6 +16,18 @@
 
 using namespace cgicc;
 
+bool TSession::hasWizPower(wizPowerT wp)
+{
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("select 1 from wizpower w, player p where w.player_id=p.id and p.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(wp));
+
+  if(db.fetchRow())
+    return true;
+  return false;
+}
+
+
 void TSession::sendLoginPage(sstring url)
 {
   cout << HTTPHTMLHeader() << endl;
