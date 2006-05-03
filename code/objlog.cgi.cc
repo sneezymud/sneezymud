@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "session.cgi.h"
 
 #include <map>
 #include "sstring.h"
@@ -50,10 +51,24 @@ void print_form()
 
 int main(int argc, char **argv)
 {
+  gamePort=PROD_GAMEPORT;
   sstring my_query;
   unsigned int count = 0;
+  TSession session(cgi, "SneezyMUD");
 
-  toggleInfo.loadToggles();
+  if(!session.isValid()){
+    session.doLogin(cgi, "objlog.cgi");
+    return 0;
+  }
+
+  if(!session.hasWizPower(POWER_WIZARD)){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head(title("Object Load Logs")) << endl;
+    cout << body() << endl;
+    cout << "You don't have permission to use this.";
+    cout << body() << endl;
+    return 0;
+  }
 
   if (start == cgi.getElements().end()) {
     cout << HTTPHTMLHeader() << endl;
