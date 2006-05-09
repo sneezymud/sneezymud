@@ -137,13 +137,20 @@ void saveObj(Cgicc cgi, int account_id)
     return;
   }
 
+  // calculate action_flag value
+  int action_flag=0;
+  for(int i=0;i<MAX_OBJ_STAT;++i){
+    if(cgi.getElement(extra_bits[i]) != cgi.getElements().end()){
+      action_flag|=(1<<i);
+    }
+  }
+
 
   db.query("delete from obj where owner='%s' and vnum=%s",
-	   (**(cgi.getElement("owner"))).c_str(), 
-	   (**(cgi.getElement("vnum"))).c_str());
-
+  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("vnum"))).c_str());
   
-  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str(),
@@ -151,7 +158,7 @@ void saveObj(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("long_desc"))).c_str(),
 	   (**(cgi.getElement("action_desc"))).c_str(),
 	   (**(cgi.getElement("type"))).c_str(),
-	   (**(cgi.getElement("action_flag"))).c_str(),
+	   action_flag,
 	   (**(cgi.getElement("wear_flag"))).c_str(),
 	   (**(cgi.getElement("val0"))).c_str(),
 	   (**(cgi.getElement("val1"))).c_str(),
@@ -206,7 +213,6 @@ void sendShowExtra(int account_id, int vnum)
 
 }
 
-
 void sendShowObj(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
@@ -242,7 +248,22 @@ void sendShowObj(int account_id, int vnum)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "type" % "type" % db["type"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_flag" % "action_flag" % db["action_flag"];
+
+  // action flag
+  cout << "<tr><td>action_flag</td><td><table><tr>" << endl;
+  int count=0;
+  int action_flag=convertTo<int>(db["action_flag"]);
+  for(int i=0;i<MAX_OBJ_STAT;++i){
+    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+      ((action_flag & (1<<i))?"checked":"") % extra_bits[i] % extra_bits[i];
+
+    cout << "</td>";
+
+    if(!(++count % 6))
+      cout << "</tr><tr>";
+  }
+  cout <<"</tr></table></td></tr>";
+  //
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "wear_flag" % "wear_flag" % db["wear_flag"];
 
@@ -271,9 +292,28 @@ void sendShowObj(int account_id, int vnum)
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "decay" % "decay" % db["decay"];
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "volume" % "volume" % db["volume"];
-  
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "material" % "material" % db["material"];
-  
+
+
+  // all this stl stuff is so I can alphabetical sort material names
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  // stuff all the materials into the multimap
+  for(int i=0;i<200;++i){
+    if(material_nums[i].mat_name[0]){
+      m.insert(pair<sstring,int>(material_nums[i].mat_name, i));
+    }
+  }
+
+  int material=convertTo<int>(db["material"]);
+
+  cout << "<tr><td>material</td><td><select name=material>" << endl;  
+  for(it=m.begin();it!=m.end();++it){
+    cout << fmt("<option value=%i %s>%s</option>\n") %
+      (*it).second % (((*it).second==material)?"selected":"") % 
+      (*it).first;
+  }
+  cout << "</select>" << endl;
   
 
   cout << "</table>";
