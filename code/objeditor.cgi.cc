@@ -847,16 +847,27 @@ void sendObjlist(int account_id){
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=logout type=submit>logout</button>";
   cout << "<p></form>";
- 
+
+  sstring buildername;
+
   db.query("select owner, max(vnum)+1 as nvnum from obj where lower(owner) in (%r) group by owner",
 	   getPlayerNames(account_id).c_str());
-  db.fetchRow();
+  
+  if(db.fetchRow())
+    buildername=db["owner"];
+  else {
+    // no objects yet
+    TDatabase db_sneezy(DB_SNEEZY);
+    db_sneezy.query("select p.name as name from wizpower w, account a, player p where p.id=w.player_id and p.account_id=a.account_id and a.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(POWER_BUILDER));
+    db_sneezy.fetchRow();
+    buildername=db_sneezy["name"];
+  }
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=newobj type=submit>new obj</button>";
   cout << "vnum <input type=text name=vnum value=" << db["nvnum"] << ">";
   cout << "template <input type=text name=template value=1>";
-  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "</form>";
   cout << endl;
 
