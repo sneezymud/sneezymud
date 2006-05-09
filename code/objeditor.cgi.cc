@@ -20,6 +20,7 @@
 
 using namespace cgicc;
 
+
 void sendJavaScript();
 sstring mudColorToHTML(sstring);
 
@@ -27,6 +28,7 @@ void sendObjlist(int);
 void sendShowObj(int, int, bool);
 void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
+void saveExtra(Cgicc, int);
 
 bool checkPlayerName(int account_id, sstring name)
 {
@@ -103,6 +105,15 @@ int main(int argc, char **argv)
     
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
+  } else if(**state_form == "saveextra"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    saveExtra(cgi, session.getAccountID());
+    sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;
   } else if(**state_form == "saveobj"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -129,6 +140,29 @@ int main(int argc, char **argv)
   cout << html() << endl;
   
   return 0;
+}
+
+void saveExtra(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+  
+  db.query("delete from objextra where owner='%s' and vnum=%s and name='%s'",
+  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("name"))).c_str());
+
+  db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   (**(cgi.getElement("name"))).c_str(),
+	   (**(cgi.getElement("description"))).c_str());
+  
+  cout << "Saved for keyword " << (**(cgi.getElement("name"))) << ".<br>";
 }
 
 void saveObj(Cgicc cgi, int account_id)
@@ -194,31 +228,32 @@ void sendShowExtra(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
 
-  cout << "<form method=post action=objeditor.cgi>" << endl;
-  cout << "<button name=state value=logout type=submit>logout</button>";
-  cout << "<button name=state value=main type=submit>go back</button>";
-  cout << "<p></form>" << endl;
-
-  cout << "<form action=\"objeditor.cgi\" method=post name=saveextra>" << endl;
-  cout << "<input type=hidden name=state value=saveextra>" << endl;
-
-  db.query("select owner, vnum, name, description from objextra where vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
-
-  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
-
+  db.query("select owner, vnum, name, description from objextra where vnum=%i and owner in (%r) order by name", vnum, getPlayerNames(account_id).c_str());
 
   while(db.fetchRow()){
+    cout << "<form method=post action=objeditor.cgi>" << endl;
+    cout << "<button name=state value=logout type=submit>logout</button>";
+    cout << "<button name=state value=main type=submit>go back</button>";
+    cout << "<p></form>" << endl;
+    
+    cout << "<form action=\"objeditor.cgi\" method=post name=saveextra>" << endl;
+    cout << "<input type=hidden name=state value=saveextra>" << endl;
+
+    cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "<table border=1>";
 
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-    cout << fmt("<tr><td>%s</td><td><textarea cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+    cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+
+    cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+      mudColorToHTML(db["description"]);
     
     cout << "</table>";    
     cout << "<input type=submit value='save changes'><hr>";
+    cout << "</form>" << endl;
   }
 
-  cout << "</form>" << endl;
 
   cout << body() << endl;
   cout << html() << endl;
@@ -501,7 +536,7 @@ void sendJavaScript()
 
 }
 
-
+// candidate for inclusion in sstring
 void replaceString(sstring &str, sstring find, sstring replace)
 {
   while(str.find(find)!=sstring::npos){
@@ -509,16 +544,16 @@ void replaceString(sstring &str, sstring find, sstring replace)
   }
 }
 
-
+// candidate for some sort of global cgi tools library
 sstring mudColorToHTML(sstring str)
 {
 
+  replaceString(str, "\n", "<br>");
 
   replaceString(str, "<f>", "");
   replaceString(str, " ", "&nbsp;");
   replaceString(str, "<r>", "</span><span style=\"color:red\">");
   replaceString(str, "<R>", "</span><span style=\"color:red;font-weight:bold\">");
-
 
   replaceString(str, "<b>", "</span><span style=\"color:blue\">");
   replaceString(str, "<B>", "</span><span style=\"color:blue;font-weight:bold\">");
@@ -536,11 +571,13 @@ sstring mudColorToHTML(sstring str)
   replaceString(str, "<K>", "</span><span style=\"color:gray;font-weight:bold\">");
   replaceString(str, "<w>", "</span><span style=\"color:white\">");
   replaceString(str, "<W>", "</span><span style=\"color:white;font-weight:bold\">");
-  replaceString(str, "<Z>", "");
-  replaceString(str, "<z>", "");
-  replaceString(str, "<1>", "");
+  replaceString(str, "<Z>", "</span><span style=\"color:white\">");
+  replaceString(str, "<z>", "</span><span style=\"color:white\">");
+  replaceString(str, "<1>", "</span><span style=\"color:white\">");
 
- 
-  return str;
+  // to help builders line up text
+  sstring spacing_strip="01234567890123456789012345678901234567890123456789012345678901234567890123456789";
+
+  return fmt("<span style=\"color:white\"><font face=\"courier\">%s<br>%s</font></span>") % spacing_strip % str;
 }
 
