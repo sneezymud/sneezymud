@@ -410,10 +410,13 @@ void saveAffect(Cgicc cgi, int account_id)
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("type"))).c_str());
 
-  db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)",
+  int apply=convertTo<int>(**(cgi.getElement("type")));
+  int apply_file=mapApplyToFile((applyTypeT)apply);
+
+  db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %i, %s, %s)",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
-	   mapApplyToFile((applyTypeT)convertTo<int>((**(cgi.getElement("type"))))),
+	   apply_file,
 	   (**(cgi.getElement("mod1"))).c_str(),
 	   (**(cgi.getElement("mod2"))).c_str());
   
@@ -590,7 +593,7 @@ void sendShowAffect(int account_id, int vnum)
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=newaffect type=submit>new affect</button>";
-  cout << "<input type=text name=type>";
+  cout << getItemTypeForm(0);
   cout << "<input type=hidden name=vnum value=" << vnum << ">";
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
