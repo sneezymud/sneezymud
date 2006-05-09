@@ -191,6 +191,30 @@ void makeNewObj(Cgicc cgi, int account_id, bool power_load)
 	   db_sneezy["volume"].c_str(), 
 	   db_sneezy["material"].c_str());
 
+
+  db_sneezy.query("select vnum, name, description from objextra where vnum=%s", (**(cgi.getElement("template"))).c_str());
+
+  while(db_sneezy.fetchRow()){
+    db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')", 
+	     (**(cgi.getElement("vnum"))).c_str(),
+	     (**(cgi.getElement("owner"))).c_str(),
+	     db_sneezy["name"].c_str(),
+	     db_sneezy["description"].c_str());
+  }
+
+
+  db_sneezy.query("select vnum, type, mod1, mod2 from objaffect where vnum=%s", (**(cgi.getElement("template"))).c_str());
+
+  while(db_sneezy.fetchRow()){
+    db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)", 
+	     (**(cgi.getElement("vnum"))).c_str(),
+	     (**(cgi.getElement("owner"))).c_str(),
+	     db_sneezy["type"].c_str(),
+	     db_sneezy["mod1"].c_str(),
+	     db_sneezy["mod2"].c_str());
+  }
+
+
 }
 
 void saveExtra(Cgicc cgi, int account_id)
