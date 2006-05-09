@@ -26,13 +26,20 @@ sstring mudColorToHTML(sstring);
 
 void sendObjlist(int);
 void sendShowObj(int, int, bool);
-void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
-void saveExtra(Cgicc, int);
 void makeNewObj(Cgicc, int, bool);
+void delObj(Cgicc, int);
+
+void sendShowExtra(int, int);
+void saveExtra(Cgicc, int);
 void makeNewExtra(Cgicc, int);
 void delExtra(Cgicc, int);
-void delObj(Cgicc, int);
+
+void sendShowAffect(int, int);
+void saveAffect(Cgicc, int);
+void makeNewAffect(Cgicc, int);
+void delAffect(Cgicc, int);
+
 
 bool checkPlayerName(int account_id, sstring name)
 {
@@ -150,6 +157,41 @@ int main(int argc, char **argv)
     saveExtra(cgi, session.getAccountID());
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
+  } else if(**state_form == "delaffect"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    delAffect(cgi, session.getAccountID());
+    sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;    
+  } else if(**state_form == "newaffect"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    makeNewAffect(cgi, session.getAccountID());
+    sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;    
+  } else if(**state_form == "showaffect"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+    
+    sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;
+  } else if(**state_form == "saveaffect"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    saveAffect(cgi, session.getAccountID());
+    sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;
   } else if(**state_form == "saveobj"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -216,6 +258,23 @@ void delExtra(Cgicc cgi, int account_id)
            (**(cgi.getElement("name"))).c_str());
 }
 
+
+void delAffect(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+
+  db.query("delete from objaffect where vnum=%s and owner='%s' and type='%s'",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+           (**(cgi.getElement("type"))).c_str());
+}
+
+
 void makeNewExtra(Cgicc cgi, int account_id)
 {
   TDatabase db(DB_IMMORTAL);
@@ -229,6 +288,23 @@ void makeNewExtra(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str());
+
+}
+
+
+void makeNewAffect(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+  
+  db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, 0, 0)",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   (**(cgi.getElement("type"))).c_str());
 
 }
 
@@ -319,6 +395,31 @@ void saveExtra(Cgicc cgi, int account_id)
   
   cout << "Saved for keyword " << (**(cgi.getElement("name"))) << ".<br>";
 }
+
+void saveAffect(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+  
+  db.query("delete from objaffect where owner='%s' and vnum=%s and type=%s",
+  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("type"))).c_str());
+
+  db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   mapApplyToFile(convertTo<int>((**(cgi.getElement("type"))))),
+	   (**(cgi.getElement("mod1"))).c_str(),
+	   (**(cgi.getElement("mod2"))).c_str());
+  
+  cout << "Saved for type " << (**(cgi.getElement("type"))) << ".<br>";
+}
+
 
 void saveObj(Cgicc cgi, int account_id)
 {
@@ -438,6 +539,91 @@ void sendShowExtra(int account_id, int vnum)
   cout << html() << endl;
 
 }
+
+sstring getItemTypeForm(int selected)
+{
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  selected=mapFileToApply(selected);
+
+  for(int i=0;i<MAX_APPLY_TYPES;++i){
+    if(apply_types[i].assignable)
+      m.insert(pair<sstring,int>(apply_types[i].name, i));
+  }
+
+  sstring buf="<tr><td>type</td><td><select name=type>\n";
+  for(it=m.begin();it!=m.end();++it){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).first;
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+
+void sendShowAffect(int account_id, int vnum)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<button name=state value=main type=submit>go back</button>";
+  cout << "<p></form>" << endl;
+
+  db.query("select owner from obj where lower(owner) in (%r) and vnum=%i group by owner",
+	   getPlayerNames(account_id).c_str(), vnum);
+  db.fetchRow();
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=newaffect type=submit>new affect</button>";
+  cout << "<input type=text name=type>";
+  cout << "<input type=hidden name=vnum value=" << vnum << ">";
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "</form>";
+  cout << endl;
+  
+
+  db.query("select owner, vnum, type, mod1, mod2 from objaffect where vnum=%i and owner in (%r) order by type", vnum, getPlayerNames(account_id).c_str());
+
+  while(db.fetchRow()){
+    cout << "<form action=\"objeditor.cgi\" method=post name=saveaffect>" << endl;
+    cout << "<input type=hidden name=state value=saveaffect>" << endl;
+
+    cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+    cout << "<table border=1>";
+
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << getItemTypeForm(convertTo<int>(db["type"]));
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod1" % "mod1" % db["mod1"];
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod2" % "mod2" % db["mod2"];
+
+    
+    cout << "</table>";    
+    cout << "<table width=100%><tr><td align left>";
+    cout << "<input type=submit value='save changes'>";
+    cout << "</form></td><td width=100% align=right></td><td>";
+
+    cout << "<form method=post action=objeditor.cgi>";
+    cout << "<button name=state value=delaffect type=submit>delete</button>";
+    cout << "<input type=hidden name=type value='" << db["type"] << "'>";
+    cout << "<input type=hidden name=vnum value=" << vnum << ">";
+    cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+    cout << "</form></td></tr></table>";
+    
+
+    cout << "<hr>";
+  }
+
+
+  cout << body() << endl;
+  cout << html() << endl;
+
+}
+
 
 sstring getMaterialForm(int selected)
 {
