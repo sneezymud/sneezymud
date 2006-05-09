@@ -29,6 +29,7 @@ void sendShowObj(int, int, bool);
 void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
 void saveExtra(Cgicc, int);
+void makeNewObj(Cgicc, int, bool);
 
 bool checkPlayerName(int account_id, sstring name)
 {
@@ -88,6 +89,16 @@ int main(int argc, char **argv)
   if(state_form == cgi.getElements().end() || **state_form == "main"){
     sendObjlist(session.getAccountID());
     return 0;
+  } else if(**state_form == "newobj"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    makeNewObj(cgi, session.getAccountID(), session.hasWizPower(POWER_LOAD));
+    sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
+		session.hasWizPower(POWER_WIZARD));
+    return 0;    
   } else if(**state_form == "showobj"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -140,6 +151,46 @@ int main(int argc, char **argv)
   cout << html() << endl;
   
   return 0;
+}
+
+void makeNewObj(Cgicc cgi, int account_id, bool power_load)
+{
+  TDatabase db(DB_IMMORTAL);
+  TDatabase db_sneezy(DB_SNEEZY);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+  
+  db_sneezy.query("select name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material from obj where vnum=%s", (**(cgi.getElement("template"))).c_str());
+  db_sneezy.fetchRow();
+
+  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	   (**(cgi.getElement("owner"))).c_str(),
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   db_sneezy["name"].c_str(), 
+	   db_sneezy["short_desc"].c_str(), 
+	   db_sneezy["long_desc"].c_str(), 
+	   db_sneezy["action_desc"].c_str(), 
+	   db_sneezy["type"].c_str(), 
+	   db_sneezy["action_flag"].c_str(), 
+	   db_sneezy["wear_flag"].c_str(), 
+	   db_sneezy["val0"].c_str(), 
+	   db_sneezy["val1"].c_str(), 
+	   db_sneezy["val2"].c_str(), 
+	   db_sneezy["val3"].c_str(), 
+	   db_sneezy["weight"].c_str(), 
+	   db_sneezy["price"].c_str(), 
+	   db_sneezy["can_be_seen"].c_str(), 
+	   db_sneezy["spec_proc"].c_str(), 
+	   db_sneezy["max_exist"].c_str(), 
+	   db_sneezy["max_struct"].c_str(), 
+	   db_sneezy["cur_struct"].c_str(), 
+	   db_sneezy["decay"].c_str(), 
+	   db_sneezy["volume"].c_str(), 
+	   db_sneezy["material"].c_str());
+
 }
 
 void saveExtra(Cgicc cgi, int account_id)
@@ -461,7 +512,19 @@ void sendObjlist(int account_id){
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=logout type=submit>logout</button>";
-  cout << "<p></form>" << endl;
+  cout << "<p></form>";
+ 
+  db.query("select owner, max(vnum)+1 as nvnum from obj where lower(owner) in (%r) group by owner",
+	   getPlayerNames(account_id).c_str());
+  db.fetchRow();
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=newobj type=submit>new obj</button>";
+  cout << "vnum <input type=text name=vnum value=" << db["nvnum"] << ">";
+  cout << "template <input type=text name=template value=1>";
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "</form>";
+  cout << endl;
 
   cout << "<form action=\"objeditor.cgi\" method=post name=pickobj>" << endl;
   cout << "<input type=hidden name=vnum>" << endl;
