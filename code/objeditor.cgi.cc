@@ -484,14 +484,19 @@ void sendShowExtra(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
 
-  cout << "<form method=post action=objeditor.cgi>" << endl;
-  cout << "<button name=state value=logout type=submit>logout</button>";
-  cout << "<button name=state value=main type=submit>go back</button>";
-  cout << "<p></form>" << endl;
-
   db.query("select owner from obj where lower(owner) in (%r) and vnum=%i group by owner",
 	   getPlayerNames(account_id).c_str(), vnum);
   db.fetchRow();
+
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<button name=state value=main type=submit>object list</button>";
+  cout << "<button name=state value=showobj type=submit>edit object</button>";
+  cout << "<button name=state value=showaffect type=submit>edit affects</button>";
+  cout << "<input type=hidden name=vnum value=" << vnum << ">";
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "<p></form>" << endl;
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=newextra type=submit>new extra</button>";
@@ -569,14 +574,19 @@ void sendShowAffect(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
 
-  cout << "<form method=post action=objeditor.cgi>" << endl;
-  cout << "<button name=state value=logout type=submit>logout</button>";
-  cout << "<button name=state value=main type=submit>go back</button>";
-  cout << "<p></form>" << endl;
-
   db.query("select owner from obj where lower(owner) in (%r) and vnum=%i group by owner",
 	   getPlayerNames(account_id).c_str(), vnum);
   db.fetchRow();
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<button name=state value=main type=submit>object list</button>";
+  cout << "<button name=state value=showobj type=submit>edit object</button>";
+  cout << "<button name=state value=showextra type=submit>edit extras</button>";
+  cout << "<input type=hidden name=vnum value=" << vnum << ">";
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "<p></form>" << endl;
+
 
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<button name=state value=newaffect type=submit>new affect</button>";
@@ -714,7 +724,9 @@ void sendShowObj(int account_id, int vnum, bool wizard)
   cout << "<form method=post action=objeditor.cgi>" << endl;
   cout << "<table width=100%><tr>";
   cout << "<td align=left><button name=state value=logout type=submit>logout</button></td>";
-  cout << "<td align=left><button name=state value=main type=submit>go back</button></td>";
+  cout << "<td align=left><button name=state value=main type=submit>object list</button></td>";
+  cout << "<td align=left><button name=state value=showextra type=submit>edit extras</button></td>";
+  cout << "<td align=left><button name=state value=showaffect type=submit>edit affects</button></td>";
   cout << "<td width=100% align=right><button name=state value=delobj type=submit>delete</button></td>";
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "<input type=hidden name=vnum value='" << vnum << "'>";
