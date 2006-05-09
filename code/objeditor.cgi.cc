@@ -21,6 +21,7 @@
 using namespace cgicc;
 
 void sendJavaScript();
+sstring mudColorToHTML(sstring);
 
 void sendObjlist(int);
 void sendShowObj(int, int, bool);
@@ -329,7 +330,13 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % db["short_desc"];
 
+  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+    mudColorToHTML(db["short_desc"]);
+
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % db["long_desc"];
+
+  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+    mudColorToHTML(db["long_desc"]);
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
 
@@ -493,3 +500,47 @@ void sendJavaScript()
 
 
 }
+
+
+void replaceString(sstring &str, sstring find, sstring replace)
+{
+  while(str.find(find)!=sstring::npos){
+    str.replace(str.find(find), find.size(), replace);
+  }
+}
+
+
+sstring mudColorToHTML(sstring str)
+{
+
+
+  replaceString(str, "<f>", "");
+  replaceString(str, " ", "&nbsp;");
+  replaceString(str, "<r>", "</span><span style=\"color:red\">");
+  replaceString(str, "<R>", "</span><span style=\"color:red;font-weight:bold\">");
+
+
+  replaceString(str, "<b>", "</span><span style=\"color:blue\">");
+  replaceString(str, "<B>", "</span><span style=\"color:blue;font-weight:bold\">");
+  replaceString(str, "<g>", "</span><span style=\"color:green\">");
+  replaceString(str, "<G>", "</span><span style=\"color:green;font-weight:bold\">");
+  replaceString(str, "<c>", "</span><span style=\"color:cyan\">");
+  replaceString(str, "<C>", "</span><span style=\"color:cyan;font-weight:bold\">");
+  replaceString(str, "<p>", "</span><span style=\"color:purple\">");
+  replaceString(str, "<P>", "</span><span style=\"color:purple;font-weight:bold\">");
+  replaceString(str, "<o>", "</span><span style=\"color:orange\">");
+  replaceString(str, "<O>", "</span><span style=\"color:orange;font-weight:bold\">");
+  replaceString(str, "<y>", "</span><span style=\"color:yellow\">");
+  replaceString(str, "<Y>", "</span><span style=\"color:yellow;font-weight:bold\">");
+  replaceString(str, "<k>", "</span><span style=\"color:gray\">");
+  replaceString(str, "<K>", "</span><span style=\"color:gray;font-weight:bold\">");
+  replaceString(str, "<w>", "</span><span style=\"color:white\">");
+  replaceString(str, "<W>", "</span><span style=\"color:white;font-weight:bold\">");
+  replaceString(str, "<Z>", "");
+  replaceString(str, "<z>", "");
+  replaceString(str, "<1>", "");
+
+ 
+  return str;
+}
+
