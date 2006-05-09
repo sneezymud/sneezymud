@@ -413,7 +413,7 @@ void saveAffect(Cgicc cgi, int account_id)
   db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
-	   mapApplyToFile(convertTo<int>((**(cgi.getElement("type"))))),
+	   mapApplyToFile((applyTypeT)convertTo<int>((**(cgi.getElement("type"))))),
 	   (**(cgi.getElement("mod1"))).c_str(),
 	   (**(cgi.getElement("mod2"))).c_str());
   
