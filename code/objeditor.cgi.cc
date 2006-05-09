@@ -23,7 +23,7 @@ using namespace cgicc;
 void sendJavaScript();
 
 void sendObjlist(int);
-void sendShowObj(int, int);
+void sendShowObj(int, int, bool);
 void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
 
@@ -91,7 +91,8 @@ int main(int argc, char **argv)
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
     
-    sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
+    sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
+		session.hasWizPower(POWER_WIZARD));
     return 0;
   } else if(**state_form == "showextra"){
     form_iterator vnum=cgi.getElement("vnum");
@@ -108,7 +109,8 @@ int main(int argc, char **argv)
     cout << head() << body() << endl;
     
     saveObj(cgi, session.getAccountID());
-    sendShowObj(session.getAccountID(), convertTo<int>(**vnum));
+    sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
+		session.hasWizPower(POWER_WIZARD));
     return 0;
   } else if(**state_form == "logout"){
     session.logout();
@@ -145,12 +147,21 @@ void saveObj(Cgicc cgi, int account_id)
     }
   }
 
+  // calculate wear_flag value
+  int wear_flag=0;
+  for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
+    if(cgi.getElement(wear_bits[i]) != cgi.getElements().end()){
+      wear_flag|=(1<<i);
+    }
+  }
+
+
 
   db.query("delete from obj where owner='%s' and vnum=%s",
   	   (**(cgi.getElement("owner"))).c_str(), 
   	   (**(cgi.getElement("vnum"))).c_str());
   
-  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %i, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str(),
@@ -159,7 +170,7 @@ void saveObj(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("action_desc"))).c_str(),
 	   (**(cgi.getElement("type"))).c_str(),
 	   action_flag,
-	   (**(cgi.getElement("wear_flag"))).c_str(),
+	   wear_flag,
 	   (**(cgi.getElement("val0"))).c_str(),
 	   (**(cgi.getElement("val1"))).c_str(),
 	   (**(cgi.getElement("val2"))).c_str(),
@@ -213,7 +224,83 @@ void sendShowExtra(int account_id, int vnum)
 
 }
 
-void sendShowObj(int account_id, int vnum)
+sstring getMaterialForm(int selected)
+{
+  // all this stl stuff is so I can alphabetical sort material names
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  // stuff all the materials into the multimap
+  for(int i=0;i<200;++i){
+    if(material_nums[i].mat_name[0]){
+      m.insert(pair<sstring,int>(material_nums[i].mat_name, i));
+    }
+  }
+
+  sstring buf="<tr><td>material</td><td><select name=material>\n";
+  for(it=m.begin();it!=m.end();++it){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).first;
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+
+sstring getTypesForm(int selected)
+{
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  for(int i=0;i<MAX_OBJ_TYPES;++i){
+    m.insert(pair<sstring,int>(ItemInfo[i]->name, i));
+  }
+
+  sstring buf="<tr><td>type</td><td><select name=type>\n";
+  for(it=m.begin();it!=m.end();++it){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).first;
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+sstring getProcForm(int selected, bool wizard)
+{
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  m.insert(pair<sstring,int>("-- none", 0));
+
+  for(int i=1;i<NUM_OBJ_SPECIALS-1;++i){
+    if(objSpecials[i].name!="BOGUS")
+      m.insert(pair<sstring,int>(objSpecials[i].name, i));
+  }
+
+  sstring buf="<tr><td>spec_proc</td><td><select name=spec_proc>\n";
+  for(it=m.begin();it!=m.end();++it){
+    if(objSpecials[(*it).second].assignable || 
+       (*it).second==selected ||
+       wizard){
+      buf+=fmt("<option value=%i %s>%s</option>\n") %
+	(*it).second % (((*it).second==selected)?"selected":"") % 
+	(*it).first;
+    }
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+
+void sendShowObj(int account_id, int vnum, bool wizard)
 {
   TDatabase db(DB_IMMORTAL);
 
@@ -246,12 +333,10 @@ void sendShowObj(int account_id, int vnum)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "type" % "type" % db["type"];
-
+  cout << getTypesForm(convertTo<int>(db["type"]));
 
   // action flag
   cout << "<tr><td>action_flag</td><td><table><tr>" << endl;
-  int count=0;
   int action_flag=convertTo<int>(db["action_flag"]);
   for(int i=0;i<MAX_OBJ_STAT;++i){
     cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
@@ -259,13 +344,27 @@ void sendShowObj(int account_id, int vnum)
 
     cout << "</td>";
 
-    if(!(++count % 6))
+    if(!((i+1) % 6))
       cout << "</tr><tr>";
   }
   cout <<"</tr></table></td></tr>";
   //
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "wear_flag" % "wear_flag" % db["wear_flag"];
+
+  // wear flag
+  cout << "<tr><td>wear_flag</td><td><table><tr>" << endl;
+  int wear_flag=convertTo<int>(db["wear_flag"]);
+  for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
+    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+      ((wear_flag & (1<<i))?"checked":"") % wear_bits[i] % wear_bits[i];
+
+    cout << "</td>";
+
+    if(!((i+1) % 8))
+      cout << "</tr><tr>";
+  }
+  cout <<"</tr></table></td></tr>";
+  //
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
 
@@ -281,7 +380,7 @@ void sendShowObj(int account_id, int vnum)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "can_be_seen" % "can_be_seen" % db["can_be_seen"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "spec_proc" % "spec_proc" % db["spec_proc"];
+  cout << getProcForm(convertTo<int>(db["spec_proc"]), wizard);
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_exist" % "max_exist" % db["max_exist"];
 
@@ -294,26 +393,7 @@ void sendShowObj(int account_id, int vnum)
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "volume" % "volume" % db["volume"];
 
 
-  // all this stl stuff is so I can alphabetical sort material names
-  multimap <sstring, int, std::less<sstring> > m;
-  multimap <sstring, int, std::less<sstring> >::iterator it;
-
-  // stuff all the materials into the multimap
-  for(int i=0;i<200;++i){
-    if(material_nums[i].mat_name[0]){
-      m.insert(pair<sstring,int>(material_nums[i].mat_name, i));
-    }
-  }
-
-  int material=convertTo<int>(db["material"]);
-
-  cout << "<tr><td>material</td><td><select name=material>" << endl;  
-  for(it=m.begin();it!=m.end();++it){
-    cout << fmt("<option value=%i %s>%s</option>\n") %
-      (*it).second % (((*it).second==material)?"selected":"") % 
-      (*it).first;
-  }
-  cout << "</select>" << endl;
+  cout << getMaterialForm(convertTo<int>(db["material"]));
   
 
   cout << "</table>";
