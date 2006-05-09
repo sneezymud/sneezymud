@@ -125,7 +125,7 @@ bool TSession::checkPasswd(sstring name, sstring passwd)
     return false;
 
   // get the encrypted form.
-  sstring crypted=crypt(passwd.c_str(), name.c_str());
+  sstring crypted=crypt(passwd.c_str(), db["passwd"].c_str());
   // sneezy truncates the encrypted password for some reason
   crypted=crypted.substr(0,10);
 
