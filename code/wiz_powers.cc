@@ -437,21 +437,16 @@ void TPerson::doPowers(const sstring &argument) const
       ch = get_pc_world(this, tStName, EXACT_NO);
 
     if (!ch) {
-      sstring tStPath;
-      FILE *tFile;
-      unsigned int tValue;
+      TDatabase db(DB_SNEEZY);
 
-      tStPath = fmt("player/%c/%s.wizpower") %
-	LOWER(tStName[0]) %
-	tStName.lower();
+      db.query("select wizpower from wizpower w, player p where p.name='%s' and p.id=w.player_id", tStName.lower().c_str());
 
-      if ((tFile = fopen(tStPath.c_str(), "r"))) {
+      if(db.fetchRow()){
         sendTo("Player not logged in but file found.  Reading in...\n\r");
 
-        while (fscanf(tFile, "%u ", &tValue) == 1)
-          wizPowerList[mapFileToWizPower(tValue)] |= 0x1;
-
-        fclose(tFile);
+	do {
+          wizPowerList[mapFileToWizPower(convertTo<int>(db["wizpower"]))]|=0x1;
+	} while(db.fetchRow());
       } else {
         sendTo("Unable to locate them anywhere in the world or in the files.\n\r");
         return;

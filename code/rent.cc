@@ -269,11 +269,7 @@ void handleCorrupted(const char *name, char *account)
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
-  // wizpower
-  sprintf(buf, "mv player/%c/%s.wizpower player/corrupt/.", 
-         LOWER(name[0]), sstring(name).lower().c_str());
-  vsystem(buf);
-
+  // strings
   sprintf(buf, "mv player/%c/%s.strings player/corrupt/.",
           LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
@@ -324,10 +320,6 @@ void wipePlayerFile(const char *name)
   if (unlink(buf) != 0) {
     vlogf(LOG_FILE, fmt("error in unlink (0) (%s) %d") %  buf % errno);
   }
-
-  // nuke wizpowers, ignore errors
-  sprintf(buf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
-  unlink(buf);
 
   // nuke sstrings, ignore errors
   sprintf(buf, "player/%c/%s.strings", LOWER(name[0]), sstring(name).lower().c_str());

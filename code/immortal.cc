@@ -5856,7 +5856,6 @@ static bool verifyName(const sstring tStString)
 {
            FILE *tFile;
            char  tString[256];
-  unsigned int   tValue;
   // Now the 'isCreator' variable is reversed.  If they are a creator
   // it is set to false, if they are not then it's true.
            bool  isCreator = true;
@@ -5875,22 +5874,14 @@ static bool verifyName(const sstring tStString)
     return false;
 
   fclose(tFile);
-  sprintf(tString, "player/%c/%s.wizpower",
-          LOWER((tStString.c_str())[0]),
-          tStString.lower().c_str());
 
-  // Wizpowers file doesn't exist.  This is really getting bad.
-  // Even tho they must be a god we MUST have this file to check
-  // for there 'level' so we return false.
-  if (!(tFile = fopen(tString, "r")))
-    return false;
 
-  // Simply see if they have the creator power.
-  while (fscanf(tFile, "%d", &tValue) == 1)
-    if (mapFileToWizPower(tValue) == POWER_WIZARD)
-      isCreator = false;
+  TDatabase db(DB_SNEEZY);
+  db.query("select 1 from wizpower w, player p where p.id=w.player_id and p.name='%s' and w.wizpower=%i",
+	   tStString.lower().c_str(), mapWizPowerToFile(POWER_WIZARD));
+  if (!db.fetchRow())
+    isCreator = false;
 
-  fclose(tFile);
   return isCreator;
 }
 /*
