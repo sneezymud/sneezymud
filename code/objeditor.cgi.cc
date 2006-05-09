@@ -30,6 +30,8 @@ void sendShowExtra(int, int);
 void saveObj(Cgicc, int);
 void saveExtra(Cgicc, int);
 void makeNewObj(Cgicc, int, bool);
+void makeNewExtra(Cgicc, int);
+void delExtra(Cgicc, int);
 
 bool checkPlayerName(int account_id, sstring name)
 {
@@ -108,6 +110,24 @@ int main(int argc, char **argv)
     sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
     return 0;
+  } else if(**state_form == "delextra"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    delExtra(cgi, session.getAccountID());
+    sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;    
+  } else if(**state_form == "newextra"){
+    form_iterator vnum=cgi.getElement("vnum");
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Objeditor") << endl;
+    cout << head() << body() << endl;
+
+    makeNewExtra(cgi, session.getAccountID());
+    sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
+    return 0;    
   } else if(**state_form == "showextra"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -152,6 +172,38 @@ int main(int argc, char **argv)
   
   return 0;
 }
+
+void delExtra(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+
+  db.query("delete from objextra where vnum=%s and owner='%s' and name='%s'",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+           (**(cgi.getElement("name"))).c_str());
+}
+
+void makeNewExtra(Cgicc cgi, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
+    cout << "Owner name didn't match - security violation.";
+    return;
+  }
+  
+  db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '')",
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   (**(cgi.getElement("name"))).c_str());
+
+}
+
 
 void makeNewObj(Cgicc cgi, int account_id, bool power_load)
 {
@@ -303,14 +355,27 @@ void sendShowExtra(int account_id, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
 
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=logout type=submit>logout</button>";
+  cout << "<button name=state value=main type=submit>go back</button>";
+  cout << "<p></form>" << endl;
+
+  db.query("select owner from obj where lower(owner) in (%r) and vnum=%i group by owner",
+	   getPlayerNames(account_id).c_str(), vnum);
+  db.fetchRow();
+
+  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<button name=state value=newextra type=submit>new extra</button>";
+  cout << "<input type=text name=name>";
+  cout << "<input type=hidden name=vnum value=" << vnum << ">";
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "</form>";
+  cout << endl;
+  
+
   db.query("select owner, vnum, name, description from objextra where vnum=%i and owner in (%r) order by name", vnum, getPlayerNames(account_id).c_str());
 
   while(db.fetchRow()){
-    cout << "<form method=post action=objeditor.cgi>" << endl;
-    cout << "<button name=state value=logout type=submit>logout</button>";
-    cout << "<button name=state value=main type=submit>go back</button>";
-    cout << "<p></form>" << endl;
-    
     cout << "<form action=\"objeditor.cgi\" method=post name=saveextra>" << endl;
     cout << "<input type=hidden name=state value=saveextra>" << endl;
 
@@ -325,8 +390,19 @@ void sendShowExtra(int account_id, int vnum)
       mudColorToHTML(db["description"]);
     
     cout << "</table>";    
-    cout << "<input type=submit value='save changes'><hr>";
-    cout << "</form>" << endl;
+    cout << "<table><tr><td>";
+    cout << "<input type=submit value='save changes'>";
+    cout << "</form></td><td width=600></td><td>";
+
+    cout << "<form method=post action=objeditor.cgi>";
+    cout << "<button name=state value=delextra type=submit>delete</button>";
+    cout << "<input type=hidden name=name value=" << db["name"] << ">";
+    cout << "<input type=hidden name=vnum value=" << vnum << ">";
+    cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+    cout << "</form></td></tr></table>";
+    
+
+    cout << "<hr>";
   }
 
 
@@ -593,7 +669,6 @@ void sendObjlist(int account_id){
     cout << "','showextra')>" << extracount << "</a></td>" << endl;
     cout << "<td><a href=javascript:pickobj('" << db["vnum"];
     cout << "','showaffect')>" << affcount << "</a></td>" << endl;
-    
     cout << "</tr>" << endl;
 
   }
