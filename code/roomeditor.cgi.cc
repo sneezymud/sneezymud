@@ -309,14 +309,14 @@ void makeNewExit(Cgicc cgi, int account_id)
 void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
 {
   TDatabase db(DB_IMMORTAL);
-  TDatabase db_sneezy(DB_SNEEZY);
+  TDatabase db_sneezy(DB_IMMORTAL);
 
   if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
     cout << "Owner name didn't match - security violation.";
     return;
   }
   
-  db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s", (**(cgi.getElement("template"))).c_str());
+  db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
   db_sneezy.fetchRow();
 
   db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s)",
