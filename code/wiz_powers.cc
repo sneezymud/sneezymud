@@ -376,14 +376,26 @@ void TPerson::saveWizPowers()
 {
   if (GetMaxLevel() <= MAX_MORT)
     return;
+  wizPowerT num;
 
   TDatabase db(DB_SNEEZY);
 
+  sstring buf=fmt("%s (%i) has wizpowers: ") % getName() % getPlayerID();
+
+  for(num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
+    if(wizPowers[num])
+      buf += fmt(" %i") % num;
+    if(hasWizPower(num))
+      buf += fmt("(%i)") % num;
+  }
+  vlogf(LOG_PEEL, buf);
+
   db.query("delete from wizpower where player_id=%i", getPlayerID());
 
-  wizPowerT num;
   for (num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
     if (hasWizPower(num)) {
+      vlogf(LOG_PEEL, fmt("%s (%i) inserting power %i") % 
+	    getName() % getPlayerID() % num);
       db.query("insert into wizpower (player_id, wizpower) values (%i, %i)",
 	       getPlayerID(), mapWizPowerToFile(num));
     }
