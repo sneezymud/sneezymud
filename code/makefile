@@ -458,12 +458,19 @@ objeditor.cgi:	$(LIBS) objs/objeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@$(CC) -o objeditor.cgi objs/objeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip objeditor.cgi
 
+roomeditor.cgi:	$(LIBS) objs/roomeditor.cgi.o objs/lowtools.o objs/session.cgi.o
+	@echo \*\*\* Making Final Link: roomeditor.cgi
+	@echo \*\*\* Linking against prod libs!
+	@$(CC) -o roomeditor.cgi objs/roomeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@/usr/bin/strip roomeditor.cgi
+
 
 # make all cgi program
-cgi:	objlog.cgi corp_info.cgi mudmail.cgi shopinfo.cgi objeditor.cgi
+cgi:	objlog.cgi corp_info.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi
 	@/bin/cp -f shopinfo.cgi /mud/web
 	@/bin/cp -f mudmail.cgi /mud/web
 	@/bin/cp -f objeditor.cgi /mud/web
+	@/bin/cp -f roomeditor.cgi /mud/web
 	@echo Finished making cgi programs
 
 
