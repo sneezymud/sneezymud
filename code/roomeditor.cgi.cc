@@ -418,7 +418,7 @@ void saveExit(Cgicc cgi, int account_id)
 	     (**(cgi.getElement("key_num"))).c_str(),
 	     (**(cgi.getElement("destination"))).c_str());
   
-  cout << "Saved for type " << (**(cgi.getElement("type"))) << ".<br>";
+  cout << "Saved for direction " << (**(cgi.getElement("direction")))<<".<br>";
 }
 
 
@@ -524,6 +524,31 @@ void sendShowExtra(int account_id, int vnum)
 
 }
 
+sstring getDirectionForm(int selected)
+{
+  sstring buf="<tr><td>direction</td><td><select name=direction>\n";
+  for(int i=0;i<MAX_DIR;++i){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      i % ((i==selected)?"selected":"") % dirs[i];
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+sstring getTypeForm(int selected)
+{
+  sstring buf="<tr><td>type</td><td><select name=type>\n";
+  for(int i=0;i<MAX_DOOR_TYPES;++i){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      i % ((i==selected)?"selected":"") % door_types[i];
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
 
 void sendShowExit(int account_id, int vnum)
 {
@@ -545,7 +570,7 @@ void sendShowExit(int account_id, int vnum)
 
   cout << "<form method=post action=roomeditor.cgi>" << endl;
   cout << "<button name=state value=newexit type=submit>new exit</button>";
-  cout << "<input type=text name=direction>";
+  cout << getDirectionForm(0);
   cout << "<input type=hidden name=vnum value=" << vnum << ">";
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
@@ -564,10 +589,17 @@ void sendShowExit(int account_id, int vnum)
 
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "direction" % "direction" % db["direction"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "description" % "description" % db["description"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "type" % "type" % db["type"];
+    cout << getDirectionForm(convertTo<int>(db["direction"]));
+
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+    mudColorToHTML(db["name"]);
+
+  cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+    mudColorToHTML(db["description"]);
+
+    cout << getTypeForm(convertTo<int>(db["type"]));
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "condition_flag" % "condition_flag" % db["condition_flag"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "lock_difficulty" % "lock_difficulty" % db["lock_difficulty"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
