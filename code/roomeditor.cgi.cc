@@ -431,13 +431,23 @@ void saveRoom(Cgicc cgi, int account_id)
     return;
   }
 
+  // calculate room_flag value
+  int room_flag=0;
+  for(int i=0;i<MAX_ROOM_BITS;++i){
+    if(cgi.getElement(room_bits[i]) != cgi.getElements().end()){
+      room_flag|=(1<<i);
+    }
+  }
+
+  int terrain=convertTo<int>(**(cgi.getElement("sector")));
+  int terrain_file=mapSectorToFile((sectorTypeT)terrain);
 
   db.query("delete from room where owner='%s' and vnum=%s and block=1",
   	   (**(cgi.getElement("owner"))).c_str(), 
   	   (**(cgi.getElement("vnum"))).c_str());
-  
 
-  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+
+  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %i, %i, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("x"))).c_str(), 
@@ -445,8 +455,8 @@ void saveRoom(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("z"))).c_str(), 
 	   (**(cgi.getElement("name"))).c_str(), 
 	   (**(cgi.getElement("description"))).c_str(), 
-	   (**(cgi.getElement("room_flag"))).c_str(), 
-	   (**(cgi.getElement("sector"))).c_str(), 
+	   room_flag,
+	   terrain_file,
 	   (**(cgi.getElement("teletime"))).c_str(), 
 	   (**(cgi.getElement("teletarg"))).c_str(), 
 	   (**(cgi.getElement("telelook"))).c_str(), 
@@ -630,12 +640,55 @@ void sendShowExit(int account_id, int vnum)
 
 
 
+sstring getRiverDirForm(int selected)
+{
+  sstring buf="<tr><td>river_dir</td><td><select name=river_dir>\n";
+  buf+=fmt("<option value=%i %s>%s</option>\n") %
+   -1 % ((-1==selected)?"selected":"") % "none";
+  for(int i=0;i<MAX_DIR;++i){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      i % ((i==selected)?"selected":"") % dirs[i];
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+sstring getTerrainForm(int selected)
+{
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  selected = mapFileToSector(selected);
+
+  for (sectorTypeT i = MIN_SECTOR_TYPE; i < MAX_SECTOR_TYPES; i++) {
+    if (!*TerrainInfo[i]->name)
+      continue;
+    
+    m.insert(pair<sstring,int>(TerrainInfo[i]->name, i));
+  }
+
+  sstring buf="<tr><td>sector</td><td><select name=sector>\n";
+  for(it=m.begin();it!=m.end();++it){
+    buf+=fmt("<option value=%i %s>%s</option>\n") %
+      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).first;
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
+
+
 
 void sendShowRoom(int account_id, int vnum, bool wizard)
 {
   TDatabase db(DB_IMMORTAL);
 
   assign_item_info();
+  assignTerrainInfo();
 
   db.query("select owner, vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where block=1 and vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
   db.fetchRow();
@@ -676,13 +729,31 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
     mudColorToHTML(db["description"]);
 
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "room_flag" % "room_flag" % db["room_flag"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "sector" % "sector" % db["sector"];
+  // room flag
+  cout << "<tr><td>room_flag</td><td><table><tr>" << endl;
+  int room_flag=convertTo<int>(db["room_flag"]);
+  for(int i=0;i<MAX_ROOM_BITS;++i){
+    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+      ((room_flag & (1<<i))?"checked":"") % room_bits[i] % room_bits[i];
+
+    cout << "</td>";
+
+    if(!((i+1) % 6))
+      cout << "</tr><tr>";
+  }
+  cout <<"</tr></table></td></tr>";
+  //
+
+
+
+  cout << getTerrainForm(convertTo<int>(db["sector"]));
+
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletime" % "teletime" % db["teletime"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletarg" % "teletarg" % db["teletarg"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "telelook" % "telelook" % db["telelook"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "river_speed" % "river_speed" % db["river_speed"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "river_dir" % "river_dir" % db["river_dir"];
+  cout << getRiverDirForm(convertTo<int>(db["river_dir"]));
+
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "capacity" % "capacity" % db["capacity"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "height" % "height" % db["height"];
   
