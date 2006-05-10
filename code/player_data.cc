@@ -40,6 +40,7 @@ void TBeing::initDescStuff(charFile *st)
     d->last.exp = getExp();
     d->last.money = getMoney();
     d->bad_login = st->bad_login;
+    d->playerID = 0;
   } else {
     vlogf(LOG_BUG, fmt("Big ole problems. Player reconnected with no player file (%s)!") %  getName());
     return;
@@ -579,6 +580,8 @@ void TPerson::loadFromSt(charFile *st)
 
   for (i = 0; i < 16; i++) 
     desc->alias[i] = st->alias[i];
+
+  desc->playerID=0;
   
   setRace(race_t(st->race));
 
