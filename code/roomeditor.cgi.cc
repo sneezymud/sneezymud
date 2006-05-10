@@ -549,9 +549,9 @@ sstring getDestinationForm(int selected, int account_id)
 
   sstring buf="<tr><td>destination</td><td><select name=destination>\n";
   while(db.fetchRow()){
-    buf+=fmt("<option bgcolor=black value=%s %s>%s</option>\n") %
+    buf+=fmt("<option bgcolor=black value=%s %s>%s - %s</option>\n") %
        db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") % 
-      mudColorToHTML(db["name"], false);
+      mudColorToHTML(db["name"], false) % db["vnum"];
   }
   buf+="</select>\n";
 
