@@ -348,23 +348,6 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
   }
 
 
-  db_sneezy.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where vnum=%s", (**(cgi.getElement("template"))).c_str());
-
-  while(db_sneezy.fetchRow()){
-    db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
-	     (**(cgi.getElement("vnum"))).c_str(),
-	     (**(cgi.getElement("owner"))).c_str(),
-	     db_sneezy["direction"].c_str(),
-	     db_sneezy["name"].c_str(),
-	     db_sneezy["description"].c_str(),
-	     db_sneezy["type"].c_str(),
-	     db_sneezy["condition_flag"].c_str(),
-	     db_sneezy["lock_difficulty"].c_str(),
-	     db_sneezy["weight"].c_str(),
-	     db_sneezy["key_num"].c_str(),
-	     db_sneezy["destination"].c_str());
-  }
-
 
 }
 
@@ -801,7 +784,7 @@ void sendRoomlist(int account_id){
   cout << "<form method=post action=roomeditor.cgi>" << endl;
   cout << "<button name=state value=newroom type=submit>new room</button>";
   cout << "vnum <input type=text name=vnum value=" << db["nvnum"] << ">";
-  cout << "template <input type=text name=template value=1>";
+  cout << "template <input type=text name=template value=" << (convertTo<int>(db["nvnum"])-1) << ">";
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "</form>";
   cout << endl;
