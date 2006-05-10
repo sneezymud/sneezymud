@@ -541,6 +541,22 @@ sstring getTypeForm(int selected)
   return buf;
 }
 
+sstring getDestinationForm(int selected, int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  db.query("select vnum, name from room where block=1 and owner in (%r)", getPlayerNames(account_id).c_str());
+
+  sstring buf="<tr><td>destination</td><td><select name=destination>\n";
+  while(db.fetchRow()){
+    buf+=fmt("<option bgcolor=black value=%s %s>%s</option>\n") %
+       db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") % 
+      mudColorToHTML(db["name"], false);
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
 
 
 void sendShowExit(int account_id, int vnum)
@@ -597,7 +613,9 @@ void sendShowExit(int account_id, int vnum)
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "lock_difficulty" % "lock_difficulty" % db["lock_difficulty"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "key_num" % "key_num" % db["key_num"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "destination" % "destination" % db["destination"];
+
+
+    cout << getDestinationForm(convertTo<int>(db["destination"]), account_id);
     
     cout << "</table>";    
     cout << "<table width=100%><tr><td align left>";
@@ -669,6 +687,7 @@ sstring getTerrainForm(int selected)
 void sendShowRoom(int account_id, int vnum, bool wizard)
 {
   TDatabase db(DB_IMMORTAL);
+  TDatabase db_exits(DB_IMMORTAL);
 
   assign_item_info();
   assignTerrainInfo();
@@ -676,8 +695,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   db.query("select owner, vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where block=1 and vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
   db.fetchRow();
 
-
-  cout << "<form method=post action=roomeditor.cgi>" << endl;
+  cout << "<form method=post action=roomeditor.cgi name=pickroom>" << endl;
   cout << "<table width=100%><tr>";
   cout << "<td align=left><button name=state value=logout type=submit>logout</button></td>";
   cout << "<td align=left><button name=state value=main type=submit>room list</button></td>";
@@ -686,7 +704,74 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << "<td width=100% align=right><button name=state value=delroom type=submit>delete</button></td>";
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "<input type=hidden name=vnum value='" << vnum << "'>";
-  cout << "<p></form>" << endl;
+  cout << "</table><p></form>" << endl;
+
+  // exit navigation
+  
+  db_exits.query("select direction, destination from roomexit where vnum=%i and owner in (%r) and block=1 and destination in (select vnum from room where owner in (%r) and block=1)", vnum, getPlayerNames(account_id).c_str(), getPlayerNames(account_id).c_str());
+  int exits[MAX_DIR];
+
+  for(dirTypeT i=MIN_DIR;i<MAX_DIR;i++){
+    exits[i]=-1;
+  }
+  while(db_exits.fetchRow()){
+    exits[convertTo<int>(db_exits["direction"])]=convertTo<int>(db_exits["destination"]);
+  }
+
+
+  cout << "<form action=\"roomeditor.cgi\" method=post>" << endl;
+  cout << "<input type=hidden name=state value=showroom>" << endl;
+  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  
+  cout << "<table border=1>";
+  cout << "<tr><td><button name=vnum value="<< exits[DIR_NORTHWEST] << 
+    ((exits[DIR_NORTHWEST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_NORTHWEST] <<"</button></td>" << endl;
+
+  cout << "<td><button name=vnum value="<< exits[DIR_NORTH] << 
+    ((exits[DIR_NORTH]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_NORTH] <<"</button></td>";
+
+  cout << "<td><button name=vnum value="<< exits[DIR_NORTHEAST] << 
+    ((exits[DIR_NORTHEAST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_NORTHEAST] <<"</button></td>";
+
+  cout << "<td><button name=vnum value="<< exits[DIR_UP] << 
+    ((exits[DIR_UP]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_UP] <<"</button></td></tr>";
+
+  cout << "<tr><td align=right><button name=vnum value="<< exits[DIR_WEST] << 
+    ((exits[DIR_WEST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_WEST] <<"</button></td>" << endl;
+
+  cout << "<td></td>" << endl;
+
+  cout << "<td><button name=vnum value="<< exits[DIR_EAST] << 
+    ((exits[DIR_EAST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_EAST] <<"</button></td></tr>";
+
+  cout << "<tr><td><button name=vnum value="<< exits[DIR_SOUTHWEST] << 
+    ((exits[DIR_SOUTHWEST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_SOUTHWEST] <<"</button></td>" << endl;
+
+  cout << "<td><button name=vnum value="<< exits[DIR_SOUTH] << 
+    ((exits[DIR_SOUTH]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_SOUTH] <<"</button></td>";
+
+  cout << "<td><button name=vnum value="<< exits[DIR_SOUTHEAST] << 
+    ((exits[DIR_SOUTHEAST]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_SOUTHEAST] <<"</button></td>";
+
+  cout << "<td><button name=vnum value="<< exits[DIR_DOWN] << 
+    ((exits[DIR_DOWN]==-1)?" disabled> ":"> ") <<
+    dirs[DIR_DOWN] <<"</button></td></tr>";
+
+
+  cout << "</table>";
+
+  cout << "</form>";
+  /////
+
 
   cout << "<form action=\"roomeditor.cgi\" method=post name=saveroom>" << endl;
   cout << "<input type=hidden name=state value=saveroom>" << endl;
