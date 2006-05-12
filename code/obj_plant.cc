@@ -92,6 +92,8 @@ int seed_to_plant(int vnum)
       return 10;
     case 33600:
       return 11;
+    case 34738:
+      return 12;
   }
   
   return 0;
@@ -146,7 +148,8 @@ void TPlant::updateDesc()
     "<o>pumpkin<1> vine",
     "<g>turnip<1> plant",
     "<G>lettuce<1> plant",
-    "<g>marijuana<1> plant"
+    "<g>marijuana<1> plant",
+    "<p>catnip<1> <g>plant<1>"
   };
   const char *planttypeskeywords [] =
   {
@@ -161,7 +164,8 @@ void TPlant::updateDesc()
     "pumpkin vine",
     "turnip plant",
     "lettuce plant",
-    "marijuana plant"
+    "marijuana plant",
+    "catnip plant"
   };
   int plantfruits [] =
   {
@@ -176,7 +180,8 @@ void TPlant::updateDesc()
     33507,
     33508,
     33525,
-    33601
+    33601,
+    34737
   };
 
 
