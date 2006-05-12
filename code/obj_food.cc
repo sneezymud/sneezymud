@@ -440,8 +440,13 @@ void TBeing::doEat(const char *argument)
     sendTo("You are too busy fending off your foes!\n\r");
     return;
   }
+  
+  TThing *temp = generic_find_obj(buf, FIND_OBJ_INV | FIND_OBJ_EQUIP, this);
 
-  TThing *temp = get_thing_char_using(this, buf, -1, false, false);
+  if(!temp)
+    temp = generic_find_obj(buf, FIND_OBJ_ROOM, this);
+
+  //  TThing *temp = get_thing_char_using(this, buf, -1, false, false);
   if (!temp) {
     sendTo("You can't find it!\n\r");
     return;
