@@ -42,6 +42,21 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
     return FALSE;
 
+  // all this fighting really pisses us off
+  // but we're servants of the public good, stay friendly!
+  followData *f, *n;
+  for (f = myself->followers; f; f = n) {
+    n = f->next;
+    if((tm=dynamic_cast<TMonster *>(f->follower))&& tm->inGroup(*myself)){
+      tm->setAnger(0);
+      tm->setMalice(0);
+    }
+  }
+  tm=dynamic_cast<TMonster *>(myself);
+  tm->setAnger(0);
+  tm->setMalice(0);
+
+
   // look for cyclopses
   for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
     if((tm=dynamic_cast<TMonster *>(t)) && tm->getRace()==RACE_TYTAN){
@@ -66,7 +81,6 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       return tm->takeFirstHit(*myself);
     }
   }
-
 
   // Not doing anything yet, time to start a patrol
   if (!myself->act_ptr) {
