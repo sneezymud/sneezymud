@@ -1867,7 +1867,7 @@ int TObj::updateBurning(void)
     TRoom *tr=real_roomp(this->in_room);
     int fire_count=0;
   
-    if(tr && tr->getStuff()){
+    if(tr && material_nums[getMaterial()].flammability && tr->getStuff()){
       for(TThing *tt=tr->getStuff();tt;tt=tt->nextThing){
 	int cf=40; // chance factor: flammability/cf = percent chance
 	int chance=(int)(material_nums[tt->getMaterial()].flammability/cf);
