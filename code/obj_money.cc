@@ -189,8 +189,11 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
 
     if (!amt2)
       ch->sendTo(fmt("There were %d talens.\n\r") % amount);
-    else
+    else {
       ch->sendTo(fmt("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
+      // BUGFIX: tithing was creating money 
+      amount = amount - amt2;
+    }
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
