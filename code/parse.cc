@@ -217,7 +217,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
              cmd == CMD_WHISPER || cmd == CMD_PTELL || cmd == CMD_PSAY ||
              cmd == CMD_PSHOUT || cmd == CMD_ECHO || cmd == CMD_SYSTEM ||
              cmd == CMD_GT || cmd == CMD_ASK || cmd == CMD_TITLE ||
-             cmd == CMD_MESSAGE || cmd == CMD_WIZNET || cmd == CMD_GROUP) {
+             cmd == CMD_MESSAGE || cmd == CMD_WIZNET || cmd == CMD_GROUP ||
+             cmd == CMD_FORCE || cmd == CMD_SEND) {
     newarg = argument;
   } else if (tStNewArg.lower() == "self" || tStNewArg.lower() == "me") {
     newarg = getNameNOC(this);
