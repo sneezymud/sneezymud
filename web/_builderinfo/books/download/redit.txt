@@ -1,0 +1,470 @@
+REDIT and world creation
+
+World.doc : Documentation for making and editing The World databases
+            for <h>.
+
+World creation is primarily done through the use of the REDIT command, although
+simple changes can also be done by using the older EDIT line editor.  See
+HELP EDIT for a fairly decent treatment of that command.
+
+Created: Wednesday, 30 Mar 1994
+Modified: Tuesday, 6 Feb 1996
+
+Use command: READ CHAPTER (#) OF WORLD where (#) is one of:
+    1) Name                       2) Description
+    3) Flags                      4) Sector Type
+    5) Exits                      6) Extra Descriptions
+    7) Maximum Capacity           8) Room Height 
+    9) Delete an exit            10) Delete all extra descs
+   11) Building Doors
+        12) NOTE ON SECRET DOORS      
+        13) NOTE ON SAVING AND LOADING ROOMS
+        14) NOTE ON THE EXISTING MUD
+NAME
+
+This is the name or title of the room.  It is always shown, regardless of
+brief mode.  Additionally, the EXITS command displays the room name next
+to the room direction.
+
+The words in the room name should ALL be capitalized except for:
+a, an, the, of, to, in, on, and, out, or   (and other short prepositionals)
+
+The first word in the name is ALWAYS capitalized. No Period at end.
+
+examples:
+The Secret Cave of Batopr
+Up in a Tree
+Going out in Style
+The Town Square
+Delete all extra descriptions:
+
+All extra descriptions in a room will be erased.  
+
+NOTES:
+
+CHECK YOUR DELETION:  We've had problems with this option in the past, it
+may not work well.  Make sure you STAT room after you are done to make 
+sure the deletion took.
+
+Simple Doors:
+
+*** WARNING:  Using edit or REDIT to make a door between rooms creates
+both sides of the exit AND changes room flags in the target room.  SEE 
+NOTES BELOW. *********************************************************
+
+You will make doors in the REDIT editor or with the edit command.  Please 
+familiarize yourself with REDIT before you play with the edit command 
+(mostly so that you can fix anything you cause).
+ 
+The doors portion of the REDIT editor is easy to get to and for the most
+part self-explanatory. However, you will encounter some menu items that
+may not be immediately clear: name, weight, condition, wards, keys. Door
+type. 
+
+Door Name: This is the "name" of the door.  It will be used in conjunction
+with the doortype in setting the command to manipulate the door.  Most of 
+your doors will be named "door" so that players will type "open door".  
+If you want more than one name to open the door, you can add names.  Make 
+sure the first word is the one you want echoed to room.  For example 
+naming a door "door iron" will cause player to open door when he types 
+open iron.  Naming it "iron door" will cause him to open iron.  It is 
+recommended that you use "door" as the first keyword.
+
+Door type: Play around with these. For the most part these affect the 
+text players will see when they open and shut the door.  For example if 
+you use gate, the door will unlatch rather than open.  If you need a new 
+doortype, talk to Batopr or the LOW.
+
+Weight:  Door weight is related to the player strength attribute.  The
+weight of the door determines what strength is required to open the door. 
+For the most part up to weight=15 it is linear (i.e. a pc with strength=14
+can not open a door which you have set to 15).  After this the formula
+changes somewhat.  Please be thoughtful about making heavy doors.  In
+addition, although maybe coded in future, players can not at this time
+pool their strengths on a door so the max weight you should set on any
+door would be 19. 
+
+Key Number: If you make a locked door, you will encounter "Key Number". 
+This refers to the database number (vnum) of the key you will be making to
+open the door.  Only a key with that vnum will open the door.  You will
+make the key later but should assign it a number now.  You should use the
+number of the room for the key for simplicities sake.  For example, if
+your zone is rooms 1900-2100 and you are building a locked door from 1954
+to 1955, you should use key number 1954 or 1955.  Be aware that you will
+have to use this same number later when you make your objects. 
+
+Other options: You have a number of other exit choices available to you
+other than the simple exits you can make in the room editors.  If you have
+an object in the room which will be the same keyword as the door itself,
+you should see the LOW to get a unique door type made for that room.  In
+addition, subject to the availability of a coder, you can make word doors
+or have special room/exit procedures coded if you have an interesting door
+idea and a coder is willing to undertake the project. 
+
+Using the edit command:  After you have explored your options and have
+become comfortable with using the REDIT room editor, you might want to
+explore the edit command. The edit command is usually used by experienced
+builders to make exits fast without having to go through REDIT menus.  Do
+not use this command till you are comfortable with REDIT and can fix any
+problems you create using the edit command.  There is help edit to help
+you learn this command. 
+
+Teleport Rooms: The edit command is also the only way you can make
+teleport rooms which are another exit option.  Teleport rooms are
+described later in this book.  The other options you have for exits are to
+make a room only reachable by magic spells or reachable by flying,
+climbing, swimming, or water-breathing players. 
+
+NOTES:
+
+WARNING:  Using edit or REDIT to make a door to a room creates both sides
+of the exit AND changes room flags in the target room.  Although this
+feature is useful in building a zone, it can cause problems when 1) you
+make a mistake and open an unintended exit to The World or 2) you make an
+exit between dissimilar room types.  If you make a mistaken exit, fix the
+room flags and exits in both the room you were in and the room you made an
+exit too.  If you are uncertain, ask a higher level immortal for help or
+leave a note.  Please try not to leave weird room flags in world.  Mortals
+get pissed when The World is not as they expected. 
+
+OTHER CHAPTERS:  Later in this book, you will see chapters on doors, 
+secret doors, and teleport rooms that will give some further details.
+
+
+USUAL BUILDER ERRORS:
+               1. Builders forget to check room flags on 
+                  both sides of exit
+               2. Builders make exits to void
+               3. Builders forget to name Doors
+               4. Builders don't explore all exit options
+               
+SECRET DOORS:
+
+Secret doors have their place in a FRP environment, however, don't get
+carried away with these.  The ONLY way to detect these at present is via
+the thief SEARCH/DETECT SECRET command.  Secret doors are an option in 
+both the REDIT editor and the edit command.
+
+If you have a secret door, you MUST do the following if you want PC's to have
+any chance at all of finding your door.
+
+Something in the room description should be eyecatching or out of the
+ordinary.  "The walls are made of stucco."
+
+An extra description must be set up that reveals something a LOT out of the
+ordinary, or a series of descriptions must be set up.
+
+walls stucco:  "Millions of tiny bumps dot the wall.  The bumps on one part
+   of the wall seem to have been rubbed smooth."
+bumps smooth part: "The stucco here has been rubbed smooth.  Probably because
+   there is a button concealed nearby."
+button: "Pushing the button would OPEN THE STUCCO wall."
+---> the secret doors name would then be "stucco".
+
+You MUST have at bare minimum ONE extra description for each secret door.
+Also remember the "other" side of the door will be secret too, so you may
+want to say something in the room description on the far-side too like:
+"The secret passage through the stucco wall you passed through lies somewhere
+around here.  Now where did it go?"
+Saving and loading rooms
+
+The relevant commands are RSAVE and RLOAD.  (See the help files on each)
+These commands have some very important features/problem areas and 
+are responsible for the most common and costly builder errors.
+
+NOTES:
+
+OVERWRITING PREVIOUS WORK:  When you RSAVE your work, your former save
+file is deleted and replaced with your new save.  This means that if you
+screw up, you can and *will* easily wipe out a ton of work you have done.
+The most common errors come from not saving *all* of your built rooms (See
+Using a RSAVE Macro below) and trying to save a temporary building project
+before the LOW has told you that your rooms have been backed up and it is
+safe to save.  If the LOW gives you an assignment or you need to save
+rooms that you have built *and* you have been working on a zone, do not
+RSAVE these new rooms till the LOW has told you that it is safe to do so. 
+
+USE A RSAVE MACRO:  You should ALWAYS RLOAD and RSAVE all rooms in your
+zone.  <h> has on-line aliases and most people use clients.  You should
+only RSAVE and RLOAD using a macro/alias that does your save or load
+accurately each time so that an accidentally typo doesn't cost you. 
+
+The existing mud:
+
+Changing anything in the existing mud is something you should not contemplate
+until you are at least 54th level.  Players get awful upset if a room that
+has always been peaceful before suddenly changes, or a deathtrap strangely 
+appears in center-square.  Be EXTREMELY careful making exits.
+
+If you DO accidentally mess up the real mud, tell someone ASAP.  It is far
+better to have the problem corrected BEFORE it means doing a reimbursement,
+then to have to do the reimbursement and then have to go check the logs to
+see which dumb immortal screwed up the mud and didn't even bother to tell
+someone about it.
+
+This does mean though that you should NOT connect your work-in-progress zone
+to the existing mud.  The connection is normally done by the Lord of Worlds
+as the final act of zone making and corresponds to making the zone active.
+Until the zone is declared ready to be made active, it should not be hooked
+to the existing mud.
+ Description
+
+The description is the long textual portion of a room.  It can be toggled
+on and off with the brief command.  The editor does NOT format your text
+so remember to hit return before you enter your 81st character or you will get text that looks like this :)
+
+Initial spaces are ignored so if you want indentation, you must start your line
+with a ", hit the space bar once for each space you want, and then hit " again.
+The standard room indentation at the beginning of the description is TWO
+spaces: "  "This is how to start your rooms.  Note the quotation marks.
+
+Room descriptions should be all one paragraph.  The more you write, the more
+likely it is people will turn on brief mode.  The idea here is to be concise
+but to also give people the mood and feel of the place they are in.  Try 
+to bring a story for the zone to life in your descriptions.
+
+THINGS TO WATCH FOR:
+
+MENTION WINDOWS AND DOORS: Windows (object types) and all doors should be
+explicitly mentioned in the description.  Windows because they aren't
+displayed as objects, and doors because a closed door will not appear
+under the exits command.  Do avoid mentioning things like "a locked door"
+"a closed gate" as the actual position the door or gate is in will change
+while the room-text can not. 
+
+DO NOT MENTION NON-PERMANENT ITEMS AND CREATURES: Items and creatures in
+the room should NOT be mentioned.  The creature should be a mob, and the
+item would be an object each having appropriate descriptions of their own. 
+If you have something very trivial (like moss, lichen, gravel, etc) you
+can mention it in the description (rather than making a stupid obj for it)
+BUT you should make sure you set up an extra description (see below) for
+it so that if they look at something they see in the description it won't
+say "you don't see that here". 
+
+GIVE CLUES TO SECRET ROOMS: If you are designing secrets to be found by a
+pc, it is likely that you will have to put your first clue in the room
+description so make sure that rooms that should have clues, have
+appropriate clues. 
+
+
+NON-DIRECTIONAL DESCRIPTIONS: Also, it is BAD to assume that characters
+have entered from a given direction. Examples of this would be: "You come
+through a door and a cavern stretches away before you."  What if they are
+coming back?  Then you would want it to say "The cavern ends, but a simple
+door presents itself as a path onward." Since you can't have two
+descriptions, you must generalize your text. "This is the southern end of
+a large cavern that stretches northward out of sight.  There is a simple
+door in the south wall."  Now it doesn't matter if they are coming in or
+exiting, the description is still accurate. 
+
+Flags
+
+Room flags denote characteristics the room has.  They are mostly used
+internally by the code.  Do not think you have to make extensive use of
+these flags to build a good zone.  They should be used sparingly and in
+context.  In addition, some of the flags should not be used in your zone
+at all (private) and some only in conjunction with others
+(i.e..peaceful/noheal). 
+
+always lit:	AVOID setting - make lamps, torches etc if you want light
+death:		kills creatures that enter.   somewhat frowned upon
+nomob:		mobs won't wander into these rooms. They can ride or track into
+indoors:	no weather displayed, no ridden creatures may enter
+peaceful:	prevents combat
+nosteal:	prevents the steal command from working
+no_sum:		can not summon a creature OUT of this room
+no_portal:	no magical way to LEAVE this kind of room
+no_magic:	can not use magic in this room.  mob procs WILL work here
+private:	prevents a god from goto'ing this room if 2 creatures in it
+silence:	prevents say and shout
+no_order:	no ordering charms and mounts here
+no_flee:	prevents fleeing from the room
+have_to_walk:	no magical way to ENTER this kind of room
+arena:		characters will not lose xp for dying in this room
+noheal:		mana/hp regen does not occur  should be set if room is peaceful
+hospital:	accelerated healing and regeneration
+save_rooms:	items (& mobs?) will be stored and reload again after reboot
+Sector Types
+
+This represents the type of terrain the "room" is.  It affects movement cost,
+thickness (scan, ranged weapons), and fullness costs (hunger, thirst, drunk).
+Additionally, the movement-code looks closely at sector type to determine
+"how" people are moving (swimming, walking, climbing, flying, falling).
+
+Ultimately, this will also relate to weather/climate.
+
+If you have questions about this, or want a NEW type of terrain, talk to
+Batopr or the LOW.  You may want to brush up on your knowledge on swimming
+and gravity (as they relate to the mud) before setting some of these
+sector types. 
+
+NOTES: 
+
+INDOOR SECTOR TYPES AND ROOM FLAGS: setting a sector as a building/cave
+does NOT imply that it is indoors.  Remember to set this room flag or you
+will have it raining inside your cave. 
+
+AIR AND WATER ROOMS:  Be sparing and thoughtful in your use use of 
+gravity type and water rooms in places where newbies will frequent.  It 
+is ok to use but be aware, drops will mean deaths and complaints about 
+deathtraps.  Water rooms can trap newbies who are unlikely to have any 
+swimming skills.
+
+TELEPORTS: You can set up a TELEPORT room as well.  See HELP EDIT for how
+to do this, and it might be wise to talk to an experienced builder before
+you do this.  Teleport rooms CAN NOT be set up in the REDITer. 
+
+Exits:
+
+*** WARNING:  Using edit or REDIT to make an exit between rooms creates
+both sides of the exit AND changes room flags in the target room.  SEE 
+NOTES BELOW. *********************************************************
+
+Most of the rooms you build will have simple Euclidean exits and doors
+made with the REDIT room editor or the edit command.  These tools allow
+you to make simple and not so simple exits and doors between rooms. 
+Making good and thoughtful exits is one of the most important aspects of
+good zone building.  The main thing to realize is that <h>'s code gives
+you a lot of options in selecting exits.  Do not pin yourself down to
+something till you have looked at all of them. 
+
+The first thing you should do is have practice rooms assigned to you and
+start using the REDIT editor.  Typing "REDIT" will put you into a menued
+room editor.  Looking through the REDIT menus is probably the best way to
+learn the room and exit options available to you.  Do not use edit till 
+after you have familiarized yourself with REDIT and can fix any errors you 
+have made in The World.
+
+Most of REDIT is self explanatory.  The REDIT menus allow you to build
+without doors, to build secret, locked, or pick-only doors, or to make
+gates portcullis's or a variety of other door types.  Following the
+different menus you will be able to assign weights, keys, keywords,
+directions, and decide whether you want the door pick-able or bash-able. 
+Currently, ward doors are not open-able so should not be used.  Keywords on
+doors will be used by players so make them reasonable.  Other options,
+such as gravity rooms, teleporters, and portals will be described
+elsewhere but should be thought of as alternative exit types. 
+
+
+NOTES:
+
+WARNING:  Using edit or REDIT to make an exit between rooms creates both
+sides of the exit AND changes room flags in the target room.  Although
+this feature is useful in building a zone, it can cause problems when 1)
+you make a mistake and open an unintended exit to The World or 2) you make
+an exit between dissimilar room types.  If you make a mistaken exit, fix
+the room flags and exits in both the room you were in and the room you
+made an exit too.  If you are uncertain, ask a higher level immortal to
+help or leave a note.  Please try not to leave weird room flags in world. 
+Mortals get pissed when The World is not as they expected. 
+
+
+USUAL BUILDING ERRORS:
+ 
+               1. Builders forget to check room flags on both sides of exit
+               2. Builders make exits to void
+               3. Builders forget to name Doors
+               4. Builders don't explore all exit options
+               
+Extra Description
+
+The use of extra descriptions are what set off mediocre builders from good
+builders.  Extra descriptions are extra text that players read as they
+explore the room that they are in.  Usually builders build zone clues and
+the heart of their zone story into their extra descriptions.  Even if you
+are not telling a story or building in a quest, good zones will ALWAYS
+have things to look at.  However, what sets off a good zone from a great
+zone is the use of extra descriptions to tell a story and setup puzzles
+for the players to solve. 
+
+An extra description is referenced by players by typing "look at 
+(x)".   Builders build them in the REDIT menu. 
+
+Understand that you can build in layers.  You can have clues to an extra 
+description in the room description and clues to additional extra 
+descriptions embedded in that first extra description.  This is an
+especially useful in giving out clues to secret doors.
+
+Keywords: This is a space separated list where each word is one of the
+words that is substituted for (x) above.  Players can abbreviate so you
+don't need to have separate keywords for both "wall" and "walls", you should
+just set up the word "walls" as a keyword.  In selecting keywords, you 
+must be cognizant of what objects will be in room so that you don't embed 
+a keyword behind another keyword making it unusable.
+
+Extra Description Text: The text you type is what will be displayed when 
+someone types look <at> keyword. 
+
+NOTES:
+
+RECOMMENDED/REQUIRED EXTRA DESCRIPTIONS:  You almost always should use an 
+extra description in the following building situations:
+
+   Secret Doors: You should always put at least one extra descriptions in
+      a  room if you have a secret door in the room.  (See the long note 
+      on secret doors at the end of this volume.) 
+   Teleport Rooms: If your room is a teleport room, you can set up
+      an extra description with keyword: _tele_ This text will be shown
+      when the character is teleported. 
+
+
+REDUNDANT KEYWORDS: You do not need both picture and pictures or wall and 
+walls.  Just use the plural of all keywords.
+
+CHECK YOUR KEYWORDS FOR BLOCKAGES:  It is possible to have keywords block
+other keywords.  Room keywords can also interfere with object keywords. 
+It is also possible to not leave enough hints so that players can find the
+keyword.  Make sure after you build that all keywords are findable by the
+player. 
+
+Maximum capacity
+
+Default is 0 = unlimited.  Any positive number represents the maximum
+number of creatures that can be in the room at one time.  Mobs and mounts
+count as creatures, and obviously PC's too.  It's probably not worth the
+time to set if the number is >5.
+Room Height
+
+Room height is in inches.  Room height is used to make narrow spaces and 
+cause coded affects in players.   For example, a player can only crawl 
+into a room if he/she is 110% taller than the room height.  The code will 
+also cause tall players to bump their heads causing some damage if they 
+enter small rooms.  You must set outdoor rooms unlimited height (-1) 
+and set a room height for indoor heights (normal height is about 120).
+
+NOTES:
+
+RELATION TO MOB HEIGHT:  You must set your room heights in expectation of
+what mobs you are going to have occupy them and what players you want
+playing them.  Room height must also be set in relation to flee/track
+paths for large mobs and wander paths for large non-sentinel mobs.  For
+example, if you are going to have a dragon in a cave.  You must build the
+path to the inside cave of sufficient height so the dragon can get to the
+surface. 
+
+REQUIRED SETTINGS:   You must set outdoor rooms to unlimited room 
+heights. You must not have unlimited heights in indoor rooms.  
+
+RECOMMENDED SETTINGS:  The most common room heights are 120 for inside 
+rooms if you are not trying to have a restricted room and unlimited for 
+outdoor rooms.  
+Delete an exit:
+
+Fairly self explanatory.  It will eliminate an exit from a room and 
+delete any doors in that direction.  WARNING: SEE NOTE BELOW ON FIXING 
+ROOM FLAGS and EXITS IN BOTH ROOMS.
+
+NOTES:	
+
+FIXING ROOM FLAGS/RETURN EXITS:  Deleting an exit does not delete the
+return exit or the room flags in the target room.  This mean if you make
+and inadvertent exit/door to a room or want to delete an exit between
+rooms, you must do *more* than delete the exit to fix the error.  You must
+fix/delete both sides of an exit and fix room flags in both rooms.
+
+
+ONE-WAY EXITS AND DOORS:  One directional exits can be accomplished by
+creating an exit to and from rooms A and B, then deleting the exit on the
+bad side, thus leaving only the ONE-WAY exit you wanted. 
+
+

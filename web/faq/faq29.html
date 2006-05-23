@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<TITLE>FAQ: Why am I gaining 1 point of hp/mana/move every so often?</TITLE>
+</HEAD>
+<BODY>
+<BODY BACKGROUND="../graphics/marble5.gif" TEXT="#000000" LINK="#FF0000" VLINK="#666666">
+<CENTER>
+<HR>
+<H3>FAQ: Why am I gaining 1 point of hp/mana/move every so often?</H3>
+<H5><B><I>This page last modified: 12-13-97</B></I></H5>
+<HR>
+</CENTER>
+<P>
+(tasked regeneration)
+<P>
+On SneezyMUD, the actions of sitting, resting or sleeping are handled as
+tasks for purposes of increasing the regeneration rates.  The tick-time
+regeneration rate is independent of position (ie, you get a flat amount
+at tick time).  However, if you rest for a set amount of time, then you
+are awarded 1 point of mana/move and hp.  The time between these regenerative
+pulses is different for the various positions.  Sleeping will restore you
+very quickly, while sitting is less slow.
+<P>
+This method was instituted as one of the favorite tricks of clients is to
+keep track of when the regenerative pulses would occur.  If they could be
+sleeping at exactly the right second, it would treat them as if they had
+been sleeping for the entire tick.  Under tasked regeneration rules, this
+trick no longer exists.  Plus, it means you need not rest the entire tick
+if all you need is 1 or 2 hit points.
+<P>
+<HR>
+<A HREF="faq28.html">Previous Question</A> | <A HREF="faq30.html">Next Question</A> | <A HREF="index.html">Table of Contents</A></P>
+</BODY>
+</HTML>

@@ -1,0 +1,105 @@
+RANGER DISCIPLINES:
+              Ranger Abilities : Learnedness: Unlearned
+               Fighting Skills : Learnedness: Unlearned
+              Nature Abilities : Learnedness: Unlearned
+             Animals Abilities : Learnedness: Unlearned
+              Plants Abilities : Learnedness: Unlearned
+               Survival Skills : Learnedness: Unlearned
+                      Wizardry : Learnedness: Unlearned
+                 Slash Weapons : Learnedness: Unlearned
+                Pierce Weapons : Learnedness: Unlearned
+                Ranged Weapons : Learnedness: Unlearned
+                 Combat Skills : Learnedness: Unlearned
+            Adventuring Skills : Learnedness: Unlearned
+                    Magic Lore : Learnedness: Unlearned
+
+RANGER ABILITIES:
+mountain walk               (Learned: next practice) 
+forest walk                 (Learned: next practice) 
+swamp walk                  (Learned: next practice) 
+kick                        (Learned: next practice) 
+forage                      (Learned: next practice) 
+root control                (Learned: next practice) 
+bash                        (Learned: next practice) 
+seekwater                   (Learned: soon)          
+beast soother               (Learned: soon)          
+transform limb              (Learned: lot more training)
+transfix                    (Learned: lot more training)
+rescue                      (Learned: lot more training)
+befriend beast              (Learned: lot more training)
+skinning                    (Learned: lot more training)
+track                       (Learned: lot more training)
+barkskin                    (Learned: in awhile)     
+dual wield                  (Learned: some day)      
+living vines                (Learned: some day)      
+beast summon                (Learned: in the future) 
+
+FIGHTING SKILLS:
+switch opponents            (Learned: next practice) 
+retreat                     (Learned: next practice) 
+
+NATURE ABILITIES:
+sticks to snakes            (Learned: next practice) 
+stormy skies                (Learned: in awhile)     
+tree walk                   (Learned: way in the future)
+
+ANIMALS ABILITIES:
+beast charm                 (Learned: next practice) 
+shapeshift                  (Learned: in the future) 
+
+PLANTS ABILITIES:
+concealment                 (Learned: next practice) 
+apply herbs                 (Learned: next practice) 
+
+SURVIVAL SKILLS:
+tanning                     (Learned: next practice) 
+mass forage                 (Learned: lot more training)
+encamp                      (Learned: lot more training)
+divine                      (Learned: in the future) 
+
+WIZARDRY:
+wizardry                    (Learned: next practice)    component=right hand, left hand=free
+casting                     (Learned: next practice) 
+
+SLASH WEAPONS:
+slash specialization        (Learned: next practice) 
+
+PIERCE WEAPONS:
+pierce specialization       (Learned: next practice) 
+
+RANGED WEAPONS:
+ranged specialization       (Learned: next practice) 
+fast load                   (Learned: next practice) 
+
+COMBAT SKILLS:
+armor proficiency           (Learned: next practice) 
+slash proficiency           (Learned: next practice) 
+pierce proficiency          (Learned: next practice) 
+blunt proficiency           (Learned: next practice) 
+barehand proficiency        (Learned: next practice) 
+ranged proficiency          (Learned: in the future) 
+sharpen                     (Learned: in the future) 
+smooth                      (Learned: in the future) 
+
+ADVENTURING SKILLS:
+ride                        (Learned: next practice) 
+swim                        (Learned: next practice) 
+know animal                 (Learned: next practice) 
+know people                 (Learned: next practice) 
+read magic                  (Learned: next practice) 
+bandage                     (Learned: next practice) 
+climbing                    (Learned: next practice) 
+tactics                     (Learned: next practice) 
+know veggie                 (Learned: lot more training)
+sign                        (Learned: lot more training)
+know reptile                (Learned: in awhile)     
+know giant                  (Learned: some day)      
+know other                  (Learned: in the future) 
+evaluate                    (Learned: in the future) 
+know undead                 (Learned: way in the future)
+dissect                     (Learned: way in the future)
+know demon                  (Learned: way in the future)
+
+THEOLOGICAL LEARNING:
+meditate                    (Learned: next practice) 
+

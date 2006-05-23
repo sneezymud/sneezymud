@@ -1,0 +1,62 @@
+#Immortal Books
+#Armor Guidance
+ln -fs /mud/prod/lib/objdata/books/1462* /mud/web/_builderinfo/books/armor
+
+#Beginner's Guide
+ln -sf /mud/prod/lib/objdata/books/1453* /mud/web/_builderinfo/books/begin
+
+#Medit
+ln -sf /mud/prod/lib/objdata/books/1452* /mud/web/_builderinfo/books/medit
+
+#Oedit
+ln -sf /mud/prod/lib/objdata/books/1451* /mud/web/_builderinfo/books/oedit
+
+#Quest Responses
+ln -sf /mud/prod/lib/objdata/books/1461* /mud/web/_builderinfo/books/quest
+
+#Redit
+ln -sf /mud/prod/lib/objdata/books/1450* /mud/web/_builderinfo/books/redit
+
+#Time
+ln -sf /mud/prod/lib/objdata/books/1457* /mud/web/_builderinfo/books/time
+
+#Zonefile
+ln -sf /mud/prod/lib/objdata/books/1454* /mud/web/_builderinfo/books/zonefile
+
+ln -sf /mud/web/_builderinfo/books/* /mud/web/_immortinfo/books
+
+#Immortal Download Files
+rm /mud/web/_builderinfo/books/download/armor.txt
+rm /mud/web/_builderinfo/books/download/begin.txt
+rm /mud/web/_builderinfo/books/download/medit.txt
+rm /mud/web/_builderinfo/books/download/oedit.txt
+rm /mud/web/_builderinfo/books/download/quest.txt
+rm /mud/web/_builderinfo/books/download/redit.txt
+rm /mud/web/_builderinfo/books/download/time.txt
+rm /mud/web/_builderinfo/books/download/zonefile.txt
+cat /mud/prod/lib/objdata/books/1462* > /mud/web/_builderinfo/books/download/armor.txt
+cat /mud/prod/lib/objdata/books/1453* > /mud/web/_builderinfo/books/download/begin.txt
+cat /mud/prod/lib/objdata/books/1452* > /mud/web/_builderinfo/books/download/medit.txt
+cat /mud/prod/lib/objdata/books/1451* > /mud/web/_builderinfo/books/download/oedit.txt
+cat /mud/prod/lib/objdata/books/1461* > /mud/web/_builderinfo/books/download/quest.txt
+cat /mud/prod/lib/objdata/books/1450* > /mud/web/_builderinfo/books/download/redit.txt
+cat /mud/prod/lib/objdata/books/1457* > /mud/web/_builderinfo/books/download/time.txt
+cat /mud/prod/lib/objdata/books/1454* > /mud/web/_builderinfo/books/download/zonefile.txt
+
+# Mortal Books
+ln -sf /mud/prod/lib/objdata/books/1455* /mud/web/faq/faqlink
+ln -sf /mud/prod/lib/objdata/books/1458* /mud/web/newbie/newbielink
+ln -sf /mud/prod/lib/objdata/books/1459* /mud/web/quick/quicklink
+rm /mud/web/faq/faq.txt
+rm /mud/web/newbie/newbie.txt
+rm /mud/web/quick/quick.txt
+cat /mud/prod/lib/objdata/books/1455* > /mud/web/faq/faq.txt
+cat /mud/prod/lib/objdata/books/1458* > /mud/web/newbie/newbie.txt
+cat /mud/prod/lib/objdata/books/1459* > /mud/web/quick/quick.txt
+
+# Help Files
+ln -sf /mud/prod/lib/help/* /mud/web/helplink
+rm -r /mud/web/helplink/_builder
+rm -r /mud/web/helplink/_immortal
+
+webmod

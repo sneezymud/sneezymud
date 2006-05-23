@@ -1,0 +1,344 @@
+MOB FILE CREATION
+
+Created: Wednesday, 30 March 1994
+Modified: Monday, 30 June 1997
+
+MEDIT is the online monster editor for creating new mobs for use in
+the <h> world.  HELP MEDIT exists but may be poorly written or
+out of date.
+
+Use command: READ CHAPTER (#) OF MOB where (#) is one of:
+ 1) Name                         2) Short Description
+ 3) Long Description             4) Description
+ 5) Action flags                 6) Affect flags
+ 7) Alignment                    8) Number of attacks
+ 9) Level                       10) Hitroll
+11) Armor Class                 12) Hit point bonus
+13) Bare hand damage            14) Gold carried
+15) Exp Bonus                   16) Race
+17) Sex                         18) Resistances
+19) Default Position            20) Susceptibilities
+21) Immunities                  22) Skin type
+23) Class                       24) Stats
+25) Height                      26) Weight
+27) Special Procedure           28) Vision Bonus
+29) Can be seen                 30) Mobile sounds
+31) Scripts
+     32) EXP DETERMINATION - optional
+     33) TIPS ON SETTING STATS
+     34) Help for Resistance, Immunity, Susceptibility
+     35) BUILDING POLICIES AND GUIDELINES
+Name
+
+This is probably THE most confusing field on monsters so please be sure you
+read carefully in order for things to work properly.
+
+The name field is used internally in order to reference the creature.  This
+means that if you type "hit balrog", it looks for a match of "balrog" in the
+creature's name field.  However, the text shown (external use) comes from the
+short description (see below).
+
+The name field should be a space separated list of keywords for the mob.
+DO NOT include words like "a", "an", "the", "of" etc.
+DO NOT add punctuation.  Drop any quote marks, dashes, etc.
+DO NOT capitalize any word, except proper names.
+DO NOT include words that are abbreviations of other keywords already listed.
+If the mob is "the merchant's wife", its name should be "wife merchants" ("the"
+should be dropped, and "merchant" is an abbreviation of merchants).
+
+Additionally, the first keyword is sometimes used externally.  It is
+important that the first keyword identify the creature from those that will
+be around it to avoid player confusion.  For instance, if I am making elves,
+I would make "wife elven elf", "male elven elf", "husband elven elf", etc.
+(note that "elf" is not an abbreviation of "elven", so is necessary in this
+case).  In such situations, "wife", "male" and "husband" will be shown which
+is clearer than "elf", "elf" and "elf" if I had chosen some other order.
+Hitroll
+
+The mobs tohit bonus.  It is generally set to be level/10
+Armor class
+
+The mobs armor rating from +100 to -100
+Hit point bonus
+
+A mob is given hp_bonus + level d8 hit points.
+bare hand damage
+
+This is the amount of damage the mob does when hitting.  It is entered in
+the form XdY+Z.  That is, it will roll a die of size Y, X times and add to
+it a number Z.  Or, it generates a number from X+Z to XY+Z.  The number 
+represented by Z goes in the damage bonus field of the mob and will add 
+to the damage of wielded weapons.
+
+NOTES:
+
+MOBS WITH WEAPONS: If you intend for the mob to wield weapons, you need to
+insure that the mob does more damage with the weapon than with his hands or
+he will junk the weapon as his hands would be better. Thus you must make
+the roll low and the damage bonus high.  For example, 7d7+2 and 2d3+26 are
+the same average bare hand damage of 30.  However, a mob with the first
+barehand damage could only wield a weapon greater than 7d7 (not too
+likely) while the second mob could wield one with a damage greater than
+2d3.  Thus, if you wanted a mob to wield a weapon and have barehand
+damage of 30 you would go with the 2d3+26. 
+
+RELATION TO LEVEL:  The barehand damage and number of attacks is the 
+primary determinant of a mobs level although the level is affected by a 
+few other stat choices.
+Gold carried
+
+Not all mobs should carry gold, most animals should not.  The limits on gold
+amount are that it must be less then K * level * level where K is
+
+1.0 if the mob is in Grimhaven
+2.0 if nearby to Grimhaven or other civilization
+3.0 if far from civilization
+4.0 if very remote and in an area very difficult to get to  (aggro, etc)
+
+Under no circumstances can you give a mob more than 4 * level squared gold.
+
+Adjust the level down substantially if the mob has equipment, treasure or
+other booty.
+
+NOTES:
+
+ANIMALS:  You should not give an animal money, however you can load with 
+other treasures and sell-able equipment.
+
+CHECK YOUR LEVELS: Make sure your mobs' gold carried figures falls into the 
+above ranges.
+Exp bonus:
+
+The determine XP formula looks at a ton of criteria, there is virtually no
+reason this should be non-zero.
+
+NOTES:
+
+APPROVAL:  To set this number you need the consent of the LOW.
+Race
+
+Sets the creatures race.  Some races have special abilities (can be ridden,
+water breath, fly naturally, infravision, etc)  Set appropriately.  If you
+think a new race is needed, talk to Batopr.
+Sex
+
+Mobs gender.
+Resistances
+
+A resistant mob will suffer half as much damage as normal.
+
+You must get approval from the LOW before setting a mob resistant to 
+pierce, slash, blunt, non-magic or the various pluses
+Default Position
+
+This is the position the mob will load in.  It is also the mobs
+preferred position, ie, it will stand/sit/rest etc if it can in order
+to re-achieve this position.
+
+The creature's long description is shown only if its position is the same
+as its default position.
+Short Description
+
+The short description of the mob is the shortest display of text that will
+be used to indicate the monster.  The short description is used in places like
+"you hit (short description)"  "(short) slithers east."
+
+Don't confuse this with the name field.  Name is used to refer to the mob,
+short is used to display it.  eg
+> hit (name)    <-- looks for a match in the name field
+You hit (short) hard.  <-- displays short to tell player what was hit
+
+Make sure the short description starts with a lower case letter.  The code
+knows when to capitalize appropriately.
+
+Do not capitalize the words in a short description.  The only words that should 
+be capitalized are proper names and maybe some titles.  Also, don't put periods
+at the end of the short description.
+
+good shorts
+Batopr, Lord of Worlds
+a cityguard
+the raccoon of doom
+Susceptibility
+
+A susceptible mob will suffer twice as much damage as normal.
+
+You must get approval from the LOW before setting a mob susceptible to 
+pierce, slash, blunt, non-magic or the various pluses
+Immunities
+
+An immune mob will suffer no damage
+
+You ABSOLUTELY must get approval from the LOW before setting a mob immune to 
+pierce, slash, blunt, non-magic or the various pluses
+Skin Type
+
+The skin types utilize the various material types.  These material types
+are rated for susceptibility to slash, blunt, pierce style attacks so
+it is important to set appropriately.
+Class:
+
+The mobs class.  The code gets incredibly confused if you attempt to make
+a multi-class mob.  Please choose only 1.  Each class has a generic special
+proc for it so that warrior mobs will kick/bash, etc and mages will cast.
+Stats
+
+Various stats the mob has.  At present, all mobs have an 18 charisma.
+These do get used in various skills and spells, so avoid setting inaccurate
+values.  Also avoid setting lots of 18's and 3's, try and keep them balanced.
+Height
+
+Height in inches.  Please read the note on item size and character height in
+the OEDIT guide for a caveat.
+Weight
+
+Weight in pounds.
+Special Procedure
+
+Mobs are given the generic proc associated with their class automatically.
+If you want something different, use those listed here.
+
+Many of these are intended for specific mobs and should NOT be set willy-nilly.
+Vision bonus:
+
+Allows the mob to see as if the light in the room was that much higher.
+ie.  a vision bonus of 5 means it sees an extra 5 units of light in the room.
+Can be Seen
+
+This number is the minimum amount of light in the room required to see the mob.
+Long Description
+
+The mobs long description is what is shown when the mob is in its default
+position.
+
+It needs to be a complete sentence, starting with a capital letter and ending
+with a period.  The standard is to have it fit on one line, although you
+can certainly go over if need be, just make sure you allow for 80 character
+screenwidths.
+
+eg.
+Batopr is here typing stupid documentation.
+A large whale swims about here.
+A giant eagle circles overhead.
+Mobile sounds:
+
+This can be used to send text to the room the mob is in and/or to send other
+text to every room AROUND the room the mob is in.
+Scripts
+
+Russ hasn't gotten his lazy butt in gear and finished this yet.
+How code figures exp:  (this is confusing, sorry)
+
+hp modifier: # of hit points / 15.5    (double if sancted)
+AC modifier: MAX(0, 60 - AC) / 2
+
+barehand dam: XdY+Z
+avg dam per hit:  (Y+1)/2  * X  + Z
+avg dam per round:  avg_per_hit * number_of_attacks
+dam_modifier: avg_dam_per_round * 1.1
+  divide dam_modifier by MAX(1, 5 - level)    : only affects level 1-4 mobs
+---------------
+real_level = ((13 * dam_modifier) + (6 * hp_modifier) + armor_modifier) /20
+real_level is RAISED TO A POWER based on class:
+(warrior = 1.00,  thief = 1.04, monk = 1.02, ranger = 1.01
+ Deikhan = 1.03, azruzi = 1.06, cleric = 1.09, magic-user = 1.11)
+
+exp = real_level * real_level * MAX (20, real_level)
+
+Then there's a whole slew of adjustments for tohit bonus, being aggressive,
+immunities, resistances, susceptibilities and a bunch of other stuff.
+
+See next page for some tips
+These tips will work well as long as your mob is >= 5th level and is
+a warrior-class mob.
+
+step 1: pick the approximate level the mob should be
+step 2: set the mob's class to warrior and the mobs level
+step 3: set the AC as 60 - 2* level
+step 4: set the barehand dam and num of attacks so that the average dam
+        per round is    level/1.1
+step 5: give it 11 * level hp as a bonus
+  or
+step 5: give it a sanct and 3.25 * level hp as a bonus
+
+--------------
+You can get a feel for the level your mob is by using the following formula:
+if exp is less then 8000, its level should be:
+    level = square_root (xp/20)
+else
+    level = cube_root (xp)
+Resistance, Immunities, Susceptibilities
+
+IMM_FIRE        1
+IMM_COLD        2
+IMM_ELEC        4
+IMM_ENERGY      8
+IMM_BLUNT      16
+IMM_PIERCE     32
+IMM_SLASH      64
+IMM_ACID      128
+IMM_POISON    256
+IMM_DRAIN     512
+IMM_SLEEP    1024
+IMM_CHARM    2048
+IMM_HOLD     4096
+IMM_NONMAG   8192
+IMM_PLUS1   16384
+IMM_PLUS2   32768
+IMM_PLUS3   65536
+IMM_PLUS4  131072
+
+Each of these fields uses what is called a bitvector.  In order to have
+multiple resistances, you merely set the mob resistant to the sum of the
+various resistances.  For example, to create a char this is immune to
+fire (1), poison (256) and charm (2048), set immunity = 2305.  Likewise,
+if susceptibility = 2305, the mob would be susceptible to fire, poison and
+charm.
+
+Note: The bit for NONMAG prevents a weapon that is not at least +1 tohit from
+damaging, the PLUS1 bit prevents ONLY +1 tohit weapons from damaging, etc.
+Description
+
+A mobs description is what is displayed if you look at the mob.  Generally
+it should be 3-4 lines long.  Avoid discussing what the mob is wearing.
+If you feel its apparel is important, then make items to be worn by the mob.
+Action flags
+
+Tells the computer how the mob should behave.
+
+CHANGED_STRINGS: causes the mob to refer to heap instead of global memory.
+  Use caution when setting this, can mess up the entire mob index.
+SENTINEL: mob won't wander.
+SCAVENGER: Increases the mobs greed factor causing them to loot.
+STAY_ZONE: mob won't wander outside your area.
+WIMPY: mob will flee if hp falls below 1/6 of max.
+AGGRESSIVE: Increases anger and malice factors resulting in mob attacking
+  more often without provocation.
+ANNOYING:  A mob set aggressive will attack an annoying mob.
+PROTECTOR: Will protect (assist) in order 1. any protectee, 2. mobs of 
+  same faction against players of different factions 3. same faction and
+  race.  
+PROTECTEE: Will get assist from 1. Protectors, 2. Any mobs of same
+faction
+Affect flags:
+
+Basic affects the mob has.  Be advised that some races have affects set
+automatically.  eg, ichthyoid(fish) has waterbreath, avian has fly.
+
+Many of these have little affect on mobs - sense life, detects, etc. 
+Alignment
+
+A mobs alignment is a number from -1000 (pure evil) to +1000 (pure good)
+
+-350 and +350 are the cutoffs for neutrality. 
+Number of attacks
+
+A floating point number.  (ie 3.5 or 2.2)
+The number to the left of the decimal is the number of attacks it will get
+guaranteed each round.  The number to the right is the chance of receiving an
+additional attack.
+
+eg. 1.4 is 1 guaranteed attack and a 40% chance of a 2nd.
+Level
+
+The is the mobs level.

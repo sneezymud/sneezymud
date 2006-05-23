@@ -1,0 +1,1000 @@
+ZONEFILE CREATION
+
+Created: Saturday, 13 Nov 1993
+Modified: Friday, 10 July 1998
+
+Use command: READ CHAPTER (#) OF zone where (#) is one of:
+
+ 1: What is a zonefile?
+ 2: Zonefile header
+ 3: General format and layout
+ 4: Zonefile Commands
+ 5: Command D: doors
+ 6: Command O: objects
+ 7: Command B: booty
+ 8: Command P: put
+ 9: Command M: mob
+10: Command G: give
+11: Command E: equip
+12: Command R: ride
+13: Command C & K: charm and group
+14: Command H & F: hate and fear
+15: Command T: trap
+16: Command V: value change
+17: Command ?: randomizer
+18: Command Y: bulk (set) equipment load
+19: Command A: area randomizer
+20: Command X & Z: Define/Load local set
+21: A NOTE REGARDING MAX_EXIST
+22: A NOTE REGARDING PERCENTILE LOADS
+23: Appendix: slots for eq
+24: EXAMPLE ZONE FILE
+Making the zonefile is one of the last steps in making a zone.  You are
+ready to make a zonefile only after you have completed the rooms, mobs and 
+objects for your zone.
+
+Zonefiles use a scripting language which is fairly easy to read.  The main
+purpose is to inform the mud what to load and where to load it.  It also
+handles very simple tasks like making mobs ride each other or closing and
+locking of doors.
+
+Zonefiles are generally fairly long.  Additionally, there is no way (at 
+present) to do your zonefile online, so you have to write it in an offline
+text file for later submission to the Lord of Worlds.  It helps if you
+choose an offline editor that can cut and paste.
+The 'G' command
+
+This command is used to give an object to a mob.  As such it is used for 
+loading almost all key loads as well as loading things into a mobs 
+inventory.  You should not use this command to load armor or worn stuff 
+unless you have a reason.
+
+The 'G' command gives an item to the last mob referenced
+
+G <if_flag> <obj vnum> <max_exist>
+
+<if_flag> is typically 1   (only if the mob it should be given to exists)
+<obj vnum> is vnum obj is saved as
+<max_exist> see note on end for tips on setting
+
+M 0 100 4 102        orc
+G 1 101 1               brown key
+G 1 102 10              bag of garbage
+
+These commands would load an orc and then give him a bag of garbage.  It only
+tries the 'G' if the orc loaded and only if 9 or fewer bags of garbage exist.
+Note that the comment for the item to be given should be indented slightly from
+the comment of the mob to put it on.  
+
+NOTE:
+
+KEYS: Make sure if you are giving a key to a mob that the key command is
+the first conditional command to execute.  ie, if we did orc->garbage->key
+the key would not load if the garbage didn't. 
+
+The 'E' command
+Equip a mob with an object
+
+The 'E' command gives an item to the last mob referenced
+
+E <if_flag> <obj vnum> <max_exist> <slot>
+
+<if_flag> is typically 1   (only if the mob it should be given to exists)
+<obj vnum> is vnum obj is saved as
+<max_exist> load if fewer than this # of item in world 
+	- see note on end for tips on setting
+<slot> is the slot to put the item in.  see notes on slot at end
+
+M 0 100 4 102        orc
+E 1 105 10 1             aluminum ring
+
+These commands would load an orc and then put a ring on his finger (slot 1).
+See the list at the end for what slots are what.  It only will equip if the mob
+loaded.  Indent the comment for the object slightly from the comment regarding
+the mob.
+
+TIP: if you are using 'G' and 'E' in conjunction, put all the 'G's before you
+do 'E's.
+
+NOTE:   Mobs are LEFT handed, put weapons on left (unless paired), shields 
+        on right.
+NOTE:   All paired items go on RIGHT!
+NOTE:   Do not have a dual-wielding mob!  Dual-wield causes them to have
+        twice as many attacks as was defined on the mob.  (THIS IS BAD)
+NOTE:   Don't assign multiple items to the same slot.  You can not have
+        a mob pick (probably randomly via '?') from a set of weapons.
+        The exception to this rule is that you CAN mix bulk loads and general
+        loads so that a mob can wear a given helm (specific), and be
+        fleshed out on all other slots with chain (bulk).
+
+----------------
+slot:
+    Equipment position is one of:
+       WEAR_FINGER_R   1
+       WEAR_FINGER_L   2
+       WEAR_NECK       3
+       WEAR_BODY       4
+       WEAR_HEAD       5
+       WEAR_LEGS_R     6
+       WEAR_LEGS_L     7
+       WEAR_FOOT_R     8
+       WEAR_FOOT_L     9
+       WEAR_HAND_R     10
+       WEAR_HAND_L     11
+       WEAR_ARM_R      12
+       WEAR_ARM_L      13
+       WEAR_BACK       14
+       WEAR_WAISTE     15
+       WEAR_WRIST_R    16
+       WEAR_WRIST_L    17
+       HOLD_RIGHT      18
+       HOLD_LEFT       19
+The 'R' Command
+make a mob ride another mob
+
+The 'R' command loads a mob and causes it to ride the last mob referenced.
+
+R <if_flag> <mob vnum> <max_exist> <room vnum>
+
+<if_flag> is typically 1  (only load it if the previous "mount" loaded)
+<mob vnum> is vnum mob is saved as
+<max_exist> max# of mob allowed in room
+	- see note on end for tips on setting
+<room vnum> is the room to put the mob in
+
+M 0 101 4 102        horse
+R 1 100 4 102        orc riding
+
+Loads a horse into room 102 then puts an orc on it.  Note that if the max exist
+for the orc prevents the command, it will still make the horse (although it will
+be rider-less).
+
+This command is somewhat obsolete as there is code to cause humanoid creatures
+to attempt to ride any mountable creature they come across.  This command 
+forces the action though so you could conceivably force a creature to ride an 
+unmountable mount.  It does look stupid though, but you could do it.
+
+Also, avoid putting items onto the mount or the if_flag on the R will be 
+dependent on those items being loaded onto the mount.
+The 'C' and 'K' Commands
+make a mob be a charm or group member of another mob
+
+These commands load a mob and cause it to follow the last mob referenced.
+'C' makes the mob a charm, 'K' makes the mob a group member.
+
+C <if_flag> <mob vnum> <max_exist> <room vnum>
+K <if_flag> <mob vnum> <max_exist> <room vnum>
+
+<if_flag> is typically 1  (only load it if the previous "master" loaded)
+<mob vnum> is vnum mob is saved as
+<max_exist> see note on end for tips on setting
+<room vnum> is the room to put the mob in
+
+M 0 101 4 102        mage
+C 1 100 4 102        orc follower
+
+This makes a mage and then an orc to follow the mage.  The orc responds as if
+it was charmed.  Realize if the master has equipment then the if_flag=1 only
+loads the charm if all equipment on the master loaded.  This is somewhat 
+awkward.  A way around this is to place a percentage load of a Give
+command as the last command before Charm command.  Just give them a 
+basic unlimited item like a waterskin or a ration with a 99% chance to
+load it.  You have to use the ? command with a 99% chance to perform the G
+command.  Just the G command only won't satisfy the if-flag of the command.
+
+NOTE: These commands have not been heavily utilized.  They may have bugs.
+The 'H' & 'F' commands
+causes a mob to hate or fear another creature
+
+You may only assign 1 hate and 1 fear per mob.
+Hates cause the mob to attack, while fears will make them flee.
+
+H <if_flag> <type> <parameter>
+F <if_flag> <type> <parameter>
+
+<if_flag> should be 1 (only apply it if the mob to put it on loaded)
+<type> see the list at the end
+<parameter> is dependent on <type>
+
+M 0 100 1 101         orc
+H 1 1 2                  hate-female
+G 1 102 1                brown key
+
+Hates and fears should be directly under the command to make the mob before
+any commands dealing with inventory or equipment.
+
+<type>:
+#define OP_SEX   1
+   0 = other 1 = male  2 = female
+#define OP_RACE  2
+   same numbers from MEDIT (minus 1; so that race_unused = 0)
+#define OP_CHAR  3
+   ask LOW before using
+#define OP_CLASS 4
+   1=mage, 2=cleric, 3=warrior, 4=thief, 5=anti, 6=pal, 7=monk, 8=ranger
+#define OP_EVIL  5
+#define OP_GOOD  6
+   obsolete as of version 4.0
+#define OP_VNUM  7
+   ask LOW before using
+
+The 'T' command
+Trap a chest or door
+
+This command is atypical in terms of format so be careful.
+An if_flag of 0 means trap a door, otherwise it traps the last referenced
+object.  Remember to trap both sides of a door (2 zone commands).
+
+T 0 <room with door> <dir> <type> <damage>
+T 1 <type> <damage>
+
+<type>:
+#define DOOR_TRAP_POISON  1
+#define DOOR_TRAP_BLADE   2
+#define DOOR_TRAP_SLEEP   3
+#define DOOR_TRAP_TNT     4
+#define DOOR_TRAP_SLASH   5
+#define DOOR_TRAP_FIRE    6
+#define DOOR_TRAP_ACID    7
+#define DOOR_TRAP_DISEASE 8
+
+<damage>
+The amount of damage the trap causes in multiples of d8.  ie, if you enter "4"
+your trap will cause 4d8 damage.  You are only allowed to enter whole numbers
+and the d8 is fixed.
+
+NOTE: not extensively utilized, may have bugs
+The 'V' command
+Change an objects special values
+
+This allows you to set different 4-values onto an object at time of loading.
+The reason this is helpful is for items like windows that need to look into
+various rooms dependent on where the window is.  Rather than making 5
+different "windows", make one window and merely change the 4-value on each one
+so that they look into 5 separate rooms.  'V' is always applied to last
+object referenced.
+
+V <if_flag> <4-value> <new value>
+
+<if_flag> should be 1   (do not do it if obj did not load)
+<4-value> should be either 0, 1, 2 or 3
+<new value> is whatever new value should be
+
+O 0 110 1 104            window
+V 1 0 100                    looking into room 100
+The '?' command
+give following command a random probability
+
+This is a command you should use extensively, especially where equipment
+is concerned.
+
+? 0 <chance> 0 <command>
+
+Note that what is usually the if_flag is not important and can be ignored.
+Additionally, don't miss the 2nd 0.  This 2nd zero MUST be a 0.
+
+<chance> is how many chances out of 100 it has of occurring.
+    for equipment use values in the range 3-7 for restricted stuff
+                                          8-15 for plentiful items
+                                          20+ is exceptionally high
+<command> is what to apply it to
+
+M 0 100 0 103        orc
+? 0 10 0 E
+E 1 103 1 19            sword
+
+Loads the orc (vnum 100) into room 103 then gives it a 10% chance of having
+a sword (vnum 103) in its hand (slot 19).  Note the E command still needs to
+pass the check on max_exist as well.
+
+Note: ANY command that a '?' is operating on should have an if_flag of 1
+This is so the command does NOT operate if the ? didn't work.
+
+example 1:
+M ....
+? 0 10 0 E
+E 1 ....
+E 1 ....
+
+This causes it to look at the ? command.  If the ? passes, it will load all of
+the E below it.
+
+example 2:
+M ....
+? 0 10 0 E
+E 1 ....
+? 0 10 0 E
+E 1 ....
+
+This looks at the first ?, if it passes it will load the first piece of eq.
+Regardless of whether the first piece of eq loaded (successful 1st ? and
+sufficient max_exist) it will do a new roll for the second ?.  The chief 
+difference is example 1 will cause it to have a ton of stuff when the ? passes
+while the second example (preferred method) will give it a shot at everything
+possible  (1: all or nothing, 2: randomized)
+The 'Y' command
+Load a set of gear.  Bulk loader.
+
+This command is useful for quickly loading a complete set of a certain armor
+on a given creature.
+
+Y <if_flag> <macro-number> <percentage>
+
+<if_flag>       should be 0
+<macro-number>  Defines the type of set being loaded (see below)
+<percentage>    A percentage chance (recalculated for all slots)
+
+M 0 102 1 104            Elite
+Y 0 10 5                    5% chance at metal
+
+Note 1:
+if-flag should be 0.  This is so if equipment loads prior to the Y, the Y
+will not be bypassed if equipment prior to it fails to load.  You may still
+use an if-flag of 1 if you truly wish the load of the set of armor dependent
+on the previous command, although I can't see why you would want to do this.
+
+Note 2:
+Y re-rolls the <percentage> for all slots.  It is essentially the
+equivalent of doing multiple '?', 'E', '?', 'E', '?', 'E' commands
+
+Note 3:
+Y should be the LAST equipment command on a given mob.  Any slot that has
+already been equipped prior to the Y command execution will be skipped.
+This is so you can put specific single items on the creature and then flesh
+out all other slots with stock-equipment.
+
+Note 4:
+Be careful when setting load rates for armor. An acceptable load rate on a
+Y load should be 5 or less as we do not want players cashing in on load
+rates.  Speak with a LOW if you want armor above 5% chance load.
+
+Note 5:
+Y loads are still subject to max_exist.  If an item is at or over
+max_exist, it will not be loaded by a Y command.
+
+--------------
+Macro types:
+1   soft (leather)      2   dwarven (leather)      3   munchkin
+4   ogre                5   horsehair              6   repcloth
+7   hard (leather)      8   studded (leather)      9   chainmail
+10  metal               11  platemail              12  ivory
+13  jeweled             14  diamond                15  gleaming
+16  blackened           17  runic                  18  shark
+19  cyclops             20  whitescale             21  blackscale
+22  frogskin            23  laminated              24  bone
+25  mithril             26  runed (red)            27  mica
+28  turquoise           29  obsidian               30  onyx
+31  admantium           32  marble                 33  ionic
+34  emerald             35  banded                 36  steel (hard)
+37  spirit              38  crude (metal)          39  ornamented
+40  fishscale (silvery) 41  ring mail              42  field (plate)
+43  hobchain            44  gnome mail             45  wax
+46  supple (leather)    47  coral                  48  hobstud
+49  aluminum (elf)      50  bronze plate           51  torn leather
+52  orc mail            53  flowwhite(elf)         54  spiked metal(ogre)
+55  rawhide(ogre)       56  glowwhite(elf mage)    57  splint hide(gnome)
+58  goblin              59  dwarf stud             60  obs scale (human)
+61  elf stud            62  shiny metal(dwarf)     63  sturdy iron (ogre)
+64  mole skin (gnome)	65  toughened (dwarf)	   66  blue dragon
+67  battle (dwarf)      68  deerskin (elf)         69  dark blue (elf)
+70  exoskeleton (gnome) 71  sheepskin (elf)        72  Azurite (dwarf)
+73  white metal         74  dark grey (elf)        75  dark camo (hobbit)
+76  athanor             77  tungsten               78  sapphire (dwarf)
+79  ruffled             80  wide-leather           81  black-leather
+82  molten              83  green-scale (elf)       84  eel-skin (human)
+85  forest              86  brigantine (gnome)     87  splint-mail (gnome)
+The 'A' command
+Area randomizer.
+
+Declares the boundary of a random area.  For example, if you want something
+to load in a random spot within a block of rooms, you can use the 'A'
+command.
+
+Syntax: A 0 <start> <end>
+
+<Start> must be less than, and different from, <end>.
+
+The A command only DECLARES the random room.  To actually use the room
+declared, set -99 for the room in the pertinent command.
+
+example:
+A 0 100 245
+M 0 103 1 -99
+
+The mob #103 will be loaded somewhere in the range 100-245.
+
+Please note that once something is loaded using the random area declared, the
+area is "forgotten".  You will need to redeclare the range in order to reuse
+it (in which case a brand new room is chosen).
+
+Any room within the range is selected.  There is no way to skip certain rooms.
+Rooms that are blank will NOT be chosen.
+At the top of the zonefile are some very basic pieces of information.
+Start by writing the following three lines:
+
+#<zone number>
+<zone title>~
+<last room> <lifespan> <reset mode> <enabled>
+
+The <zone number> is the first room in your zone.
+So if your zone has rooms 10100 to 10399, your zone number is 10100
+
+<zone title> is whatever you want it to be.  Additionally, please put your
+immortal's character name so we know who did the zone later on.
+
+<Last room> is the highest assigned room in the zone regardless of
+whether you have used it or not.
+
+<Lifespan> of the zone is the number of ticks between calls to reset_zone.
+I recommend at least 20 and no more than 60.  between 30-40 is best.
+
+<Reset mode> is a number between 0 and 2.
+0:  never reset the zone
+1:  reset zone only if zone is deserted  (no players in area)
+2:  RECOMMENDED:  reset zone as soon as lifetime (time from last reset) exceed
+       lifespan.  Does not care if people are in it or not.
+
+<enabled> indicates whether the zone is actually "in the game".  Builders should
+always set this value to 0 until the LOW activates the zone.
+
+Example:
+#100
+Super Test Zone - Batopr~
+10099 27 2
+
+NOTES:
+
+USE RIGHT ZONE NUMBER:  This is not the same number as in "show zone".  
+Room numbers will be the same numbers that are in your world files.
+The 'X' and 'Z' commands
+Dynamic set creation/loading.
+
+The 'X' command defines a piece of a dynamic (local) eq set.
+
+X <local set number> <slot number> <vnum>
+
+The local set number is 0-15 and is local to your zone.  Sets can be partial
+or full, and they can be changed as many times as you wish in your zonefile.
+Once a local set has been defined, the 'Z' command is used to load it.  The
+'Z' command is identical to the 'Y' command, but operates on local sets only.
+
+Z <if_flag> <set number> <percentage>
+
+<if_flag>       should be 0
+<macro-number>  Defines the type of set being loaded (see below)
+<percentage>    A percentage chance (recalculated for all slots)
+
+X 10 4 1102              platemail suit
+X 10 6 1107              platemail legging
+X 10 7 1107              platemail legging
+M 0 102 1 104            Elite
+Z 0 10 5                 5% chance of our custom 3 piece platemail set
+
+Note 1:
+if-flag should be 0.  This is so if equipment loads prior to the Z, the Z
+will not be bypassed if equipment prior to it fails to load.  You may still
+use an if-flag of 1 if you truly wish the load of the set of armor dependent
+on the previous command, although I can't see why you would want to do this.
+
+Note 2:
+Z re-rolls the <percentage> for all slots.  It is essentially the
+equivalent of doing multiple '?', 'E', '?', 'E', '?', 'E' commands
+
+Note 3:
+Z should be the LAST equipment command on a given mob.  Any slot that has
+already been equipped prior to the Z command execution will be skipped.
+This is so you can put specific single items on the creature and then flesh
+out all other slots with stock-equipment.
+
+Note 4:
+Be careful when setting load rates for armor. An acceptable load rate on a
+Z load should be 5 or less as we do not want players cashing in on load
+rates.  Speak with a LOW if you want armor above 5% chance load.
+
+Note 5:
+Z loads are still subject to max_exist.  If an item is at or over
+max_exist, it will not be loaded by a Z command.
+NOTE regarding max_exist
+
+The <max_exist> field is a semi confusing field, especially in light of
+the fact that max_exists are declared separately on the individual mob and
+obj files as well.  Please make sure you understand the following before
+creating a zone file, or the Lord of Worlds may ask you to redo it.
+
+Max-Exist in mob/obj file:
+This number is the absolute, positive max for the item or creature.  It is
+a world wide total and includes what has been stored in rent.  There is no
+possible (outside of a bug) way for the number of creatures or items
+to exceed this value.
+
+Max-exist in the zone file (objects):
+This is also an absolute "world" limit.  The item will not load if there
+are more than this number of objects in The World.  Except for limited
+objects, or objects you want to control loading location, it should
+default to 9999.
+
+Max-exist in the zone file (mobs only):
+This represents a regional limit.  It is used to indicate the maximum
+number of the given mob that will be allowed to load in the indicated
+room.
+
+Example (mobs only):
+Lets say we want a dozen guards equally distributed to 4 city gates.  On
+the mob file, we define max = 12.  In the zone file, we have 4 'M'
+commands (one for each of the gates) loading that guard with a max defined
+of 3.  This allows a maximum of 12 total ever to exist, and no more than 3
+will repop in any given gate room.
+NOTE regarding percentile loads
+
+Percentile loads are an excellent way to control the amount of equipment
+that enters the game.  They also randomize what equipment a creature has to
+introduce variety into a creature's possession.  Percentile loads are done
+using the 'Y' command or some combination involving a '?' command.
+
+There is a tendency among inexperienced builders to avoid or use excessively
+high percentile loads.  This results in massive equipment buildups.  THIS
+SHOULD BE AVOIDED.  In general, all equipment loading should involve a
+percentile load of some sort (possible exception for keys).  That means all
+'E' commands should be paired with a '?' before it.
+
+Also, the correct <percent> chances are typically in the range 2-7.  Yes,
+I mean 7%.  Yes, really.  Below is a simple chart of the mob having ANY
+piece of equipment based on an X chance of equipment on all 17 slots.
+
+17 slots (full equipment minus 2 holds)
+1% load percentage --> 1-(0.99)^17  = 15.7% of having some sort of equipment
+2% load percentage --> 1-(0.98)^17  = 29.1% of having some sort of equipment
+3% load percentage --> 1-(0.97)^17  = 40.4% of having some sort of equipment
+4% load percentage --> 1-(0.96)^17  = 50.0% of having some sort of equipment
+5% load percentage --> 1-(0.95)^17  = 58.2% of having some sort of equipment
+6% load percentage --> 1-(0.94)^17  = 65.1% of having some sort of equipment
+7% load percentage --> 1-(0.93)^17  = 70.9% of having some sort of equipment
+
+Hopefully, you'll agree that setting percentage loads of 1-4% is probably
+what you want to do.  About the only time you should contemplate a double-digit
+percentage is if its for an item that loads on a single mob.
+    Equipment position is one of:
+       WEAR_FINGER_R   1
+       WEAR_FINGER_L   2
+       WEAR_NECK       3
+       WEAR_BODY       4
+       WEAR_HEAD       5
+       WEAR_LEGS_R     6
+       WEAR_LEGS_L     7
+       WEAR_FOOT_R     8
+       WEAR_FOOT_L     9
+       WEAR_HAND_R     10
+       WEAR_HAND_L     11
+       WEAR_ARM_R      12
+       WEAR_ARM_L      13
+       WEAR_BACK       14
+       WEAR_WAISTE     15
+       WEAR_WRIST_R    16
+       WEAR_WRIST_L    17
+       HOLD_RIGHT      18
+       HOLD_LEFT       19
+
+EXAMPLE ZONE FILE - Lionheart
+Note: not every tip was followed in this example, but it should give you
+a rough idea of how to do a zonefile.
+
+#32
+Lionheart - Minion~
+3299 20 2 2
+D 0 3166 1 1            Door into tavern
+D 0 3167 3 1
+D 0 3167 0 1            Door into peepshow
+D 0 3177 2 1
+D 0 3186 1 1            Door into theater
+D 0 3187 3 1
+D 0 3208 2 1            Door into jail
+D 0 3198 0 1
+D 0 3198 1 2            Door into east cell
+D 0 3199 3 2
+D 0 3198 3 2            Door into west cell
+D 0 3197 1 2
+D 0 3179 3 1            Door into dressing room
+D 0 3178 1 1
+O 0 3130 1 3101         Sign
+O 0 3131 1 3102         Sign
+O 0 3132 1 3177         Window
+O 0 3133 1 3168         Bar
+P 1 3134 5 3133           Ale
+O 0 3135 1 3100         Bed
+O 0 3139 1 3206         Sign
+O 0 3140 1 3206         Gibbet
+O 0 3141 1 3156         Sign
+O 0 3142 1 3166         Sign
+O 0 3143 1 3158         Table
+O 0 3143 1 3167         Table
+O 0 3143 3 3168         Table
+O 0 3144 1 3158         Chair
+O 0 3144 2 3158         Chair
+O 0 3144 3 3167         Chair
+O 0 3144 4 3167         Chair
+O 0 3144 5 3168         Chair
+O 0 3144 6 3168         Chair
+O 0 3144 7 3198         Chair
+O 0 3145 1 3198         Desk
+O 0 3146 1 3238         Throne
+O 0 3147 1 3285         Stone
+O 0 3148 1 3169         Gravestone
+O 0 3149 1 3149         Sign
+M 0 3100 1 3290        Hood the Bandit
+? 1 20 0 E
+E 1 3100 1 5             horned skull
+? 0 20 0 E
+E 1 3101 1 19            blade configuration
+? 0 15 0 E
+E 1 3150 1 4             blue armor
+M 0 3101 1 3178        Tuck the Bandit
+? 1 20 0 E
+E 1 3102 1 4             Skimpy Suit
+? 0 20 0 E
+E 1 3103 1 3             Heavy Cloak
+? 0 20 0 E
+E 1 3104 2 19            Paired Epee
+M 0 3102 1 3239        Major Oak
+? 1 20 0 E
+E 1 3105 1 18            Huge Sword
+? 0 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3103 1 3239        Wizard
+? 1 20 0 E
+E 1 3108 1 5             Terrifying Helmet
+? 0 20 0 E
+E 1 3109 1 4             Terrifying Armor
+? 0 20 0 E
+E 1 3110 2 8             Terrifying Boot
+? 0 20 0 E
+E 1 3110 2 9             Terrifying Boot
+M 0 3104 1 3285        Shadowfoot the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3105 1 3229        Falstaff the Huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3106 1 3285        Much the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3107 1 3159        Yorick the Undead
+? 1 20 0 E
+E 1 3126 3 3             Medallion of Aym
+M 0 3108 1 3285        OUNary the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3109 5 3234        old buck
+? 1 50 0 G
+G 1 3114 100             venison
+? 0 20 0 E
+E 1 3115 5              antlers
+M 0 3110 9 3206        dactyl
+M 0 3111 1 3285        Took the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3112 20 3216       a huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3112 20 3177       a huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3113 1 3228        Evelyn Necker
+? 1 10 0 E
+E 1 3123 4 4             Aym Armor
+? 0 10 0 E
+E 1 3124 8 12            Aym Sleeve
+? 0 10 0 E
+E 1 3124 8 13            Aym Sleeve
+? 0 10 0 E
+E 1 3129 4 6             Aym Leggings
+M 0 3114 20 3109       young buck
+? 1 50 0 G
+G 1 3114 100             venison
+M 0 3115 1 3100        tavern wench
+E 1 3136 5 15            warm blanket
+? 0 50 0 G
+G 1 3138 10              lionseed
+M 0 3116 9 3103        sister
+? 1 20 0 E
+E 1 3116 36 4            Nun Robe
+? 0 10 0 O
+O 1 3122 18 3103           Hassock
+M 0 3117 1 3187        Will Wavepyke
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3118 1 3189        Noah
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3119 10 3210       gangmember
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3119 10 3210       gangmember
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3120 10 3168       serving wench
+? 1 20 0 E
+E 1 3120 50 4            low-cut blouse
+? 0 20 0 E
+E 1 3121 50 6            short skirt
+M 0 3120 10 3168       serving wench
+? 1 20 0 E
+E 1 3120 50 4            low-cut blouse
+? 0 20 0 E
+E 1 3121 50 6            short skirt
+M 0 3121 4 3178        actress
+? 1 20 0 G
+G 1 3137 12              lionsblood
+M 0 3121 4 3178        actress
+? 1 20 0 G
+G 1 3137 12              lionsblood
+M 0 3122 1 3238        Roderick
+? 1 20 0 E
+E 1 3127 20 4            regal robes
+? 0 20 0 E
+E 1 3128 20 18           sceptre
+S
+The zonefile consists of the header (previous chapter), a long list of
+commands, and the EOF marker.
+
+In short, your file will look like the following with all your zone 
+instructions substituted in for <command>.  There is no limit to the  
+size of your file or the number of elements you can build into your zone.
+
+#<number>
+<name>
+<room> <lifespan> <reset> <enabled>
+
+<command>
+<command>
+.
+.
+.
+<command>
+S
+
+The 'S' at the end of the zonefile is critical as it marks the end of file
+(EOF marker).  Please remember to have it and make sure all the commands in
+your zone are between the header and the EOF.
+The actual commands in the zone file have to follow a strict format as
+the mud reads them in and a badly formatted command may cause strange results.
+
+Each command must be on its own line.   Each command will instruct the 
+mud to 1) reset an exit, 2) load and instruct a mob, or load and place an 
+object.
+
+Also, you will explain the intended purpose of each of your commands in a
+comment following your command (but on the same line) so that if changes
+are required later your zonefile can be read easier.  Otherwise it is just
+a list of numbers.  
+
+The last thing you zone file can contain are non executable comment lines.
+These can be instructions for the LOW, comments about the zone, or a
+command you would like put in later.  To have a non-executed line you need
+to start the line with a *, that line will be then be skipped by the code. 
+
+General format of a <command> is:
+<command_type> <if_flag> <arg> <arg> <arg> ...[explanation of command]
+
+COMMAND_TYPE:  Command_type is a single capital letter.  Each will be
+dealt with in depth in later chapters.  In general, it tells the processor
+what it will be doing eg. an M command loads a mob, a D command handles a
+door, an E command equips somebody with something, etc. 
+
+IF_FLAG:  The if_flag is somewhat confusing, so pay attention.  The
+if_flag determines the condition when the command will be operated.  
+
+	An if_flag of 0 means operate this command regardless of 
+                   circumstances each time the mud resets the zone.  
+	An if_flag of 1 means operate this command ONLY IF the 
+                   previous command was executed. 
+
+Why is this important?  For commands like adding mobs to the room you will
+probably always want to execute the command (if_flag 0).  But for commands
+like adding equipment, where you don't want execution to occur if the mob
+the equipment is on didn't load, use if_flag 1. Screwing up the if_flag
+may cause your equipment to load itself in strange places or crash the
+game. 
+
+ARGS:  The <args> depend on what command is being used. (See later chapters)
+
+The 'D' Command:
+
+D command handles door resetting.  Please put all door commands at the top
+of your zonefile right after the header.  Additionally, for any given door,
+there must be 2 *TWO* D commands (one command for each 'side' of the
+door). 
+
+D <if_flag> <room> <direction> <lock_arg>
+
+<if_flag> is generally always 0 for doors.
+<room> is the vnum of the room the door is in.
+<direction> is the direction the door leaves in.  The number IS DIFFERENT from
+  the REDITor.   (0 = N, 1 = E, 2 = S, 3 = W, 4 = U, 5 = D, 6 = NE,
+   7 = NW, 8 = SE, 9 = SW)
+<lock_arg> should be either 1 or 2:
+  1: close the door
+  2: close the door and lock it
+
+Example:
+
+D 0 100 0 2              Queen's Room
+D 0 110 2 2
+
+Assuming there was a door north from room 100 into room 110, these two commands
+would close both sides of the door and lock them.  Note that you should just
+comment/explain the pair of door commands once.
+
+NOTES:
+
+CONNECTION WITH WORLD FILE:  Every door in your zone (both sides) needs 
+to have a command in the zone file to tell the mud its condition.  If 
+they do not match the exit will be unusable.
+
+The 'O' command
+Load objects
+
+This command loads items directly into the room.  It is generally used to 
+insert furniture into the room.  All 'O' commands are only executed at
+boot_time  (when the game reboots).  All furniture loads should be 
+bunched together and follow your door (D) commands.  
+
+Sample usage:
+
+O <if_flag> <obj vnum> <max_exist> <room vnum>
+
+<if_flag> is generally 0  (always load)
+<obj vnum> is the vnum that you saved the object as.
+<max_exist> max # allowed in world - see note at end for tips on setting.
+<room vnum> is the vnum of the room to put the object in.
+
+example:
+O 0 100 9 103             guard's cots
+O 0 100 9 104
+O 0 100 9 105
+
+These commands load cots successively in rooms 103, 104, 105.  Comment the
+item (100) only once and keep all loads for the item together.  
+
+
+NOTES:
+
+USING OBJECTS FROM OTHER ZONES:  You are able to use simple objects from
+other zones in your zones.  However, you should not use *any* limited
+items from other zones in your zones.  Understand that your loading of
+such objects may interfere with loading in other zones if the items are
+limited.  Moreover, you should inform the LOW on zone file submission if 
+you are using items from other zones.
+
+*All new equipment created by the builder such as weapons and armor must be
+informed to the LOW _BEFORE_ it's creation.  You will save yourself a lot of
+work if you inform the LOW.  This is not to say new item's will be denied
+but this policy is to ensure balance within the game.
+
+The 'B' command
+Load Booty
+
+This command is identical in all respects to the 'O' command.  The only
+difference is that B commands will be executed at zone reset time.  Use
+this command EXTREMELY sparingly.  Loading an item in this manner is 
+equivalent to giving it away as it just lies on the ground free for the
+taking.
+
+B <if_flag> <obj vnum> <max_exist> <room vnum>
+
+See notes on 'O' command for more details on what the fields are.
+
+NOTES:
+
+LOW APPROVAL:  You should seek approval for the use of any B commands on 
+any items other than food stuffs or other perishables.
+The 'P' Command
+put an item in another item
+
+P commands should be grouped with the command that loaded the item to put
+the item into.
+
+P <if> <obj vnum> <max_exist> <container vnum>
+
+<if_flag> for 'P' commands is usually 1  (only execute it if the 
+    container loaded)
+<obj vnum> the vnum the object was saved under
+<max_exist> see appendix at end for tips on setting
+<container vnum> vnum the container is saved under
+
+O 0 100 1 101            chest
+P 1 101 2 100               black potions inside chest
+P 1 101 2 100               
+
+These command would load a chest (item 100) then put 2 black potions (item 101)
+into it.  The 'P' command looks for the last item with the proper <container
+vnum> and puts the stuff in it.  The second 'P' command only executes if
+the one above it it (due to if_flag) and the first only executes if the command
+that loaded the chest did.  This is why its important to group 'P' commands
+with their respective 'O' containers.
+
+NOTES:
+
+CONTAINERS: Only use put with containers.
+
+RESETTING ITEMS: You can reload items in containers (like locked chests)
+each zone reset by using an if_flag of 0.  Only do this if you carefully
+control the max_exist of the load so people can't just camp for items and 
+design your zone so that groups would have to kill the same mobs over 
+again to reach the same point. 
+
+The 'M' command
+load a mob in a room
+
+The 'M' command loads a mob in a room.
+
+M <if_flag> <mob vnum> <max_exist> <room vnum>
+
+<if_flag> is typically 0 (proper loads are controlled by use of max_exists)
+<mob vnum> is vnum mob is saved as
+<max_exist> loads a mob if there are fewer than this number IN THE ROOM.
+             see note on end for tips on setting
+<room vnum> is the room to put the mob in
+
+Simple load of a single mob:
+
+M 0 100 4 102        orc
+
+loads an orc (vnum 100) into room 102 provided there are 3 or less orcs 
+(vnum 100) in room 102.
+
+
+NOTES:
+  Total max_exist of a mob in The World is controlled by the Max_Exist
+number set on the mob itself.  Because your loads of mobs will effect
+max_exist numbers of mobs throughout The World, you should not load any
+mobs from any other zones without the express approval of the LOW. 
+
+

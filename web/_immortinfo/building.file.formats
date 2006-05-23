@@ -1,0 +1,181 @@
+
+Object format:
+Some of these values I'll have to get you the appropriate files so you know 
+what to set.  eg, the numerical values for the various material types.  if
+and when it becomes an issue, I'll let you know where you can find the info.
+
+#<obj vnum>
+<name>~
+<short>~
+<long>~
+~
+<obj type> <action flag bitvector> <wear flag bitvector>
+<value 0> <value 1> <value 2> <value 3>
+<weight> <price> <can be seen> <special procedure #> <max exist>
+<max struct> <cur struct> <decay time> <volume> <material type>
+A
+<affect type> <affect modifier 1> <affect modifier 2>
+E
+<extra description name>~
+<extra description>
+~
+#305
+dagger small~
+a small dagger~
+A small, thin dagger is here on the ground.~
+~
+5 0 49153
+3855 1 4 11
+5 266 10 0 9999
+15 15 -1 1000 159
+#10139
+glove mithril~
+a mithril glove~
+A mithril glove is here.~
+~
+9 8257 129
+0 0 0 0
+6 6985 -1 0 100
+20 20 -1 584 160
+E
+glove mithril~
+Sturdy as platemail, weight of chain armor - mithril can only be found
+and worked by an elf but they keep the process unnaturally secret.
+~
+A
+11 -3 0
+A
+8 1 0
+
+----------------------
+Mob Format:
+Ditto on getting you numerical translation for some fields.
+
+#<mob vnum>
+<mob name>~
+<mob short>~
+<long>
+~
+<desc>
+~
+<actions bvect> <affects bvect> <faction> <fact percent> <A | L> <# attacks>
+<class> <level> <tohit> <AC> <hp bonus> <damage>
+<gold> <race> <weight> <height>
+<str> <bra> <con> <dex> <agi> <int> <wis> <foc> <per> <cha> <kar> <spe>
+<default pos> <pos> <sex> <special proc>
+<2 lines of immunities>
+<skin type> <vision bonus> <cbs> <max_exist>
+<L style only: sound to local room>
+<L style only: a tilda>
+<L style only: sound to surrounding room>
+<L style only: a tilda>
+#100
+watchman city~
+a city watchman~
+A city watchman is here, keeping the town clean of criminals.
+~
+   This watchman looks more like a security guard than a policeman.
+He is rather small, and doesn't look happy with his job.
+~
+64 0 0 50 A 1.5
+4 10 1 34 65 2d2+4
+5 0 1 170 70
+-23 25 21 -22 -1 0 0 0 0 -4 -9 13
+9 9 1 14
+0 0 0 0 0 0 100 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+68 0 0 50
+#1362
+Hourne armorer Brightmoon~
+Hourne~
+Hourne, the great armorer, stands here watching his wares.
+~
+Hourne seems quite strong for a human.  His tremendous muscles flex
+tightly, and you know that this man can handle himself behind an anvil.
+~
+194 0 0 20 A 1.0
+4 51 30 -100 2000 10d10+50
+10 6 1 190 75
+-25 25 -1 -24 25 -12 -12 25 -14 -14 2 25
+9 9 1 25
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+68 0 0 1
+#28813
+vampire arch~
+the arch vampire~
+The arch vampire stands here, baring his fangs in warning.
+~
+His face white as death, this vampire's eyes attract and focus your
+attention.  You cannot help but to feel fearful as you notice his fangs are
+barbed.  Time to donate blood?
+~
+102 35227784 2 37 A 2.5
+16 119 12 -100 245 7d7+4
+9 0 10 200 70
+-16 25 12 -15 -6 -12 -13 25 7 6 -25 12
+9 9 1 2
+50 50 100 100 100 0 100 0 0 0 100 100 0 0 
+0 50 50 0 0 0 0 0 0 100 0 0 0 0 
+68 0 20 1
+
+----------------------------
+World file:
+Please note, each room has a terminator character ("S").
+
+#<room num>
+<room name>~
+<desc>
+~
+<zone (sorta)> <room flags> <sector type> <rvr spd> <rvr dir> <capacity> <room ht>
+E
+<extra desc name>~
+<extra desc>
+~
+D<exit dir>
+<exit desc>~
+<exit name>~
+<exit type> <condition bitvector> <lock difficulty> <weight> <key #> <to room>
+S
+#119
+West King's Way~
+  This is a wide and clean street which slopes gently downwards as it runs to
+the east. The wall of the casino is north while to the south is a fortified
+door leading into a large building; a sign hangs over the door.
+~
+2 0 21 0 0 0 -1
+E
+sign~
+      *******************
+      *                 *
+      *   Garrison of   *
+      *                 *
+      *      Chaos      *
+      *                 *
+      *******************
+~
+D1
+~
+~
+0 0 -1 -1 -1 118
+D2
+~
+door fortified~
+1 1 -1 3 -1 802
+D3
+~
+~
+0 0 -1 -1 -1 120
+S
+
+-------------------
+Zone file:
+Identical to file builder creates.  pretty straight forward.
+Notes: zone #0 never deactivates so all shopkeepers, guild guys etc should go
+   here.
+Some things you just have to tell me about and i will do (shopkeepers)
+
+------------------
+Shop file:
+Too complicated to explain.  See me sometime when it becomes important.
+

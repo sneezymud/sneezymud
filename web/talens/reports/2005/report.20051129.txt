@@ -1,0 +1,9 @@
+### Report data length:
+
+
+### Talen location:
+Held by shops                   :               0
+Held by banks                   :                
+Held by players                 :                
+Total                           :               0
+

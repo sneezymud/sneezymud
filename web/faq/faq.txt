@@ -1,0 +1,605 @@
+<h> FAQ
+-------------
+_____________________________________________
+  To read a chapter in this FAQ type:        |
+      read chapter <Chapter Number> of faq   |
+_____________________________________________|
+
+Generic Newbie Questions:
+1) What is a MUD?
+2) What is <h>?
+3) How do I play?
+4) What is a MOB?
+5) How do I tell the difference between a MOB and a PC?
+6) What are all these acronyms?
+7) What happens when I die?
+8) How do I refer to something when there is more than one in the room?
+9) How am I ever going to learn all these commands?
+10) What's the best way to start?
+11) Why is <h> so hard?
+12) What is a client? (TinTin)
+13) How fast do bugs and other things get fixed?
+14) Automatic character deletion 
+
+15-19) Intentionally left blank
+
+Player Questions:
+20) How come I can't pick something up?  (weight and volume)
+21) I got attacked for no reason, what happened? (AI and brawling)
+22) Where did my item go, I had it a minute ago?  (lighting and can be seen)
+23) How do I remove something in the dark?
+24) It won't let me move on the diagonals!?!   (TinTin and #speedwalk)
+25) Some PC just robbed/killed me.  What can I do?  (PK and PL rules)
+26) Ack, I lost all my goods, what's up with that?  (reimburse)
+27) How do people seem to enter commands so fast? (abbreviations)
+28) How come my stats aren't what I chose initially? (stat flux)
+29) Why am I gaining 1 point of hp/mana/move every so often? (tasked regen)
+30) What good is a spellbag? (spellbags)
+31) Sometimes I cast, and I still have the component? (component charges)
+32) What's with all these pieces of metal I keep finding?  (commodities)
+33) Why is this mob asking me for some equipment?  (hunters)
+34) What effect does my deities' potency have on me?  (potency)
+35) How do I raise my deities' potency?
+36) How do I raise my faction percentage?
+What is a MUD?
+--------------
+
+MUD or (Multi-User Dungeon) is essentially a computerized fantasy-roleplaying
+game.  What separates a MUD from other FRP's is the fact that it has multiple
+actual people playing concurrently in the same universe.  You WILL meet a
+wide multitude of other characters, each of whom is run by another human.
+For the most part, they are probably very much like yourself.  Please do
+realize that you are interacting with actual humans who have feelings and
+intelligence.  Be careful how you roleplay your character for they may feel 
+that roleplaying their own character means killing you.  The adage about
+treating others as you want to be treated holds equally well for MUDders.
+What's the best way to start?
+-----------------------------
+
+Chances are, the character you currently have will have to be redone.  I
+say this because most new players realize sooner or later the choices they
+made at the outset are not optimal for some reason or other.
+
+The first order of business is learning what stats to set.  Read through
+the help files on the classes (HELP CLASS) and races (HELP RACE).  Then
+talk to people about what they chose and what problems they have.
+
+If in doubt, a human warrior is a very easy class to fiddle around with
+to get your feet wet.  The non-human races have a lot of complex rules
+that go along with them (but some nice benefits too), while the other
+classes have a multitude of skills which often confuse the beginner.
+Why is <h> so hard?
+-------------------------
+
+You are not the only one to ask, believe me.  It was the opinion of the
+implementors and gods that there was a slew of MUDs on the Internet that
+had abandoned some of the core concepts of MUDs simply because they harmed
+players (no rent, no game balance, out of control items).  The end result
+of which was a re-markedly simple and easy mud where there was no feeling of
+accomplishment.  If you can conquer it in a week, why bother?
+
+<h> took the opposite course, hoping to attract serious players seeking a
+challenge.  Game balance is something the implementors watch closely, and
+no, we are not out to get the players, but we are out to offer them a 
+challenge.  No, <h> is not for every MUDder, we have tried to keep
+it "simple" in terms of ease of use, providing help and documenting changes,
+but "challenging" in terms of actual difficulty in improving your character.
+The god's opinion is that this strikes the proper balance between appealing
+to the long time MUDder tired of CheeseDIKU and the new player trying to learn
+the ropes.
+
+We will not apologize for offering a challenge.  If it's too much for you,
+we will gladly provide you a list of other muds you will find much easier
+but we doubt as rewarding.
+What is a Client?
+-----------------
+
+Clients are external programs that assist the player by handling tedious
+chores for them.  They typically offer aliases (the ability to substitute
+a pattern of keystrokes for a much longer series: eg: FOOD = get food bag,
+eat food, burp), actions (the ability to automatically perform some
+action when certain text is sent to the character: eg: "You are hungry" =
+eat bread) and other features (substitutions, highlights, gagging and
+ease of playing multiple characters from one terminal).
+
+The implementors do recommend their use although they do require some
+skill to use well and may just confuse the beginner.  UNIX users should
+probably use TinTin++ available via anonymous FTP from:
+   ftp.math.okstate.edu:/pub/muds/clients/UnixClients/
+other systems (VMS, DOS, ...) available from:
+   ftp.math.okstate.edu:/pub/mud/clients/
+How fast do bugs and other things get fixed?
+--------------------------------------------
+
+This really depends on what it is.  The implementation team does read through
+everything put into the BUG, IDEA and TYPO list, and we generally cull from
+that a to-do list.  Obviously, the bigger the problem (as decided by the
+imps), the higher priority it receives.  Also, simpler fixes generally get
+solved faster than long-complicated ones that require hours of debugging.
+This generally takes an average of a day or so from the time it was reported
+unless the problem is long and involved in which case it may have to wait until
+one of the coders decides they have free time and the inclination to fix 
+said problem.
+Automatic Character Deletion
+----------------------------
+
+<h> is rather space intensive easily requiring 70 MB of disk space
+for all of the files and databases.  Obviously, we try to keep this size
+in control, and one of the ways this is accomplished is by removing files
+of inactive characters.
+
+Additionally, since the <h> economy is driven by limited quantities of
+equipment, it is not fair to have certain items tied up on inactive
+players.
+
+All of this requires the game maintainers to delete old characters in order
+to conserve disk space and insure that items circulate.  We balance this
+need with the desire of players to have their files be preserved for when
+they want to play.  The following seems to be the fairest compromise:
+
+At boottime, the mud will automatically examine how long it has been since the
+character was last played.  A character is safe from deletion for level
+number of days, or 1 week, whichever is more.  Hence a 4th level player has
+7 days of inactivity before he will be deleted, while a 21st has 3 weeks.
+
+Since a large number of users are from colleges, this auto deletion code
+is automatically turned off between December 25th and January 15th (Christmas
+Break) and between May 1st and September 15th (Summer break).
+What is <h>?
+------------------
+
+<h> is a MUD similar in some ways to other muds on the Internet.  Our
+original source was SillyMUD DIKU code, but with the release of version
+4.1, all original code was put in place. Version 5.0 has added a number of new
+structures including full color, a new skill system and tasked spellcasting.
+
+<h> is written in C++ and utilizes object-oriented coding techniques.
+It has roughly 30 megabytes of code, 8 megabytes of database related
+information and 15 megabytes devoted to the player and rent files for the
+1000+ characters.  In total, more than 15000 manhours have been devoted to
+creating <h> by either the half dozen implementors or by one of the 80
+or 90 builders we have had since to first <h> went public in June of
+1992.  There are 215000 lines of code at present.
+
+All rights to the <h> code reside with the <h> Implementation
+Team.  At present, no version of <h> code is available to the public and
+all contributions become the property of the <h> Implementation Team.
+
+<h> remains committed to bringing the Internet the best possible mud
+without charge.  It runs on a machine offered to us by the great folks at 
+Stanford University.  <h>'s gods volunteer their time to improving the 
+mud.
+How come I can't pick something up?
+-----------------------------------
+(weight and volume)
+
+Every object in the game is rated for two qualities.  Its weight (a function
+of mass) and its volume (a function of size).
+
+You must be able to both lift the object (sufficient strength for the weight)
+and handle it (sufficient dexterity for the volume).  Failing either check
+will prevent you from getting an item.
+
+If something is too heavy, consider dropping something you are carrying that 
+is heavy.  Remember that items worn or held do NOT contribute to carried
+weight.  Hence, you can free up strength by putting items on otherwise, drop
+something heavy.
+
+If something is too bulky, free up volume by dropping something of large
+size.  Alternatively, items get compressed when put into containers depending
+on the material they are made from.  One note, having your hands tied up with
+weapons, shields, etc lessens the amount of volume you can manipulate.  You
+can sometimes solve volume problems simply by removing your weapon temporarily.
+I got attacked for no reason, what happened?
+--------------------------------------------
+(Artificial Interactions and Brawls)
+
+Implementor Batopr has taken upon the chore of making mobs behave more 
+intelligently.  Mobs will react to insulting, aggressive or suspicious
+behavior and often as a result will attack preemptively.  Obviously,
+if someone puked on you intentionally, this would piss you off, likewise
+with mobs.  To a limited degree, they have memories as well.  Just because
+it doesn't attack you at the time you upset it doesn't mean that a few 
+minutes later it won't decide you are some twit that needs to be taught a 
+lesson.  This sort of AI code continues to get more complex, but is a 
+leading cause of mobs becoming enraged and going on killing sprees, so
+be warned.
+
+Also, any given fight has the possibility of turning into a brawl unexpectedly.
+Watching a fight between two creatures may result in the spectator suddenly
+being caught up in the battle.  Likewise, fighting a given mob may cause
+other creatures in the room to either jump in on one side or the other or
+be caught up in it randomly.  Town and cityguards have the tendency to call for
+assistance from a distance - be careful if taking on the cops.
+Where did my item go, I had it a minute ago?
+--------------------------------------------
+(lighting and can be seen)
+
+<h> attempts to simulate real world lighting conditions as
+much as possible.  Since it can be confusing when what you know you
+possess does not show up, here are some basic facts about lighting:
+ 
+CBS: The can_be_seen value an item or creature has.  The higher the
+number, the harder it is to see.  Hence small tiny items are difficult
+to perceive, while bright, glowing objects are quite easy.  Obviously,
+if a monster is actively hiding, it will have a high CBS.  And likewise,
+having a rough idea of where something should be (inventory, equipment),
+will reduce its CBS.
+ 
+EYESIGHT: A value representing the alertness of the person looking.
+It is partially made up of how good their vision is and is adjusted for
+various spells or racial modifiers.
+ 
+LIGHTING: A number representing how illuminated the room is.  Any and all
+light sources contribute to the lighting in a room.  A bright sunny day
+yields quite a bit of lighting, while torches and lanterns add even more.
+Obviously, the interior of a building with no windows or light sources would
+be quite dark.  Weather (cloud cover, precipitation) also plays a role in
+lighting, and a full moon will yield a tiny amount of light.
+ 
+Provided that LIGHTING + EYESIGHT >= CBS, the item will be visible.
+----------------------
+Some exceptions to this rule are of course necessary.  Obviously being
+blind, you would be unable to see anything.  Additionally, a glowing
+or illuminated creature or item is immediately apparent regardless of
+the lighting conditions.
+
+Chances are, if something you know you possess is not visible, than the
+amount needed to see the object.  This is especially true in the wilderness
+or after dark where the lighting is dim at best.  Find somewhere nice and
+brightly lit like a shop and look again.
+
+The other possibility is that there is a thief in your midst going on
+a stealing spree.  You are left on your own to find and handle such a person.
+How do I remove something in the dark?
+--------------------------------------
+
+While you do need to be able to see an object on your body in order to
+remove it by name: "remove glove", "remove sword", you are able to
+remove whatever it is you are wearing on your "hand" simply because you
+know where your hand is.  Logical, no?
+
+To do this though, use the following syntax:
+remove (slot-name)
+
+eg:
+remove head
+remove waist
+remove hand-left        <-- for gloves
+remove leg-right
+remove hold-right       <-- for weapons/shields
+
+You should be able to remove some weapon, then hold your lantern and light it.
+This will hopefully make it no longer dark.
+It won't let me move on the diagonals!?!
+----------------------------------------
+(TinTin and #speedwalk)
+
+A common complaint typically traced to people using a client.  Standard
+DIKU's do not have the northeast, southeast, southwest, northwest directions,
+hence many clients interpret "ne" as "go north then go east".  This causes
+problems on <h> if you mean "ne" as "go northeast".
+
+Under TinTin, you can disable the problem feature by typing
+#speedwalk
+and turning it OFF.
+Alternatively, some people prefer to leave speedwalk on and walk on
+the diagonals by using "Ne", "nE" or "NE", etc.
+
+You should probably consult the help files that are with your client if
+this doesn't solve the problem.
+Some PC just robbed/killed me.  What can I do?
+----------------------------------------------
+(player killing, and player looting)
+
+<h> has tried various methods of dealing with these two problems in
+the past.  The current rules can be found in the newbie guide.
+
+We encourage players to handle their own affairs without the intervention
+of a god.  The exception to this rule is where a newbie (level 1-5) is
+concerned.  Newbies are HANDS OFF without the explicit ok of a god to
+deal with them.  This is so characters who are learning the rules are
+not turned off by some quick-to-retaliate player.  In the case where a
+newbie is on just causing havoc, gods will generally authorize their killing
+BUT you do need to get that authorization or face penalty.
+
+If the players are both over level 5, gods won't interfere except in extreme
+cases.  
+Ack, I lost all my goods, what's up with that?
+----------------------------------------------
+
+Refer to HELP REIMBURSE for starters.  In general, dying just before the
+game crashed or rebooted is not a valid reason to get a reimbursement
+since the game will save your corpse in the same room it was in before the
+crash.. If the game did not crash and you didn't die, then HELP LOSING LINK
+probably explains why you have no equipment.
+
+In any case, for item reimbursement questions,  you will need a 54+ level
+god. WHO -GL to see who's on.
+
+The other obvious alternative is that you couldn't afford your rent and
+the rent contingencies as detailed in HELP RENT occurred.
+How Do People Seem To Type So Fast?
+-----------------------------------
+(abbreviations)
+
+Without question, mudding improves your typing speed.  But more likely,
+they are only appearing to type faster because they are using fewer keystrokes.
+
+<h> utilizes a complex 'string completion' scheme so that instead of
+typing "look at the bird", you can probably get away with "l bird" or
+"l b".  You will want to learn the shortest form of certain often used
+verbs like consider (con), kill (k), look (l), etc...
+
+Do use some caution though, the mud can misinterpret your meaning fairly
+easily with abbreviations.  KICK DEM may hit the nasty slobbering DEMon
+about to tear you limb from limb or hit DEMocles who you are grouped with.
+How come my stats aren't what I chose initially?
+------------------------------------------------
+(stat flux)
+
+This question is commonly asked by players after they view their stats with the
+ATTRIBUTE command.  The short answer to this question is that they are.  The
+real answer is that the stats you set initially are used as a baseline.  
+However, a slight variation from this baseline is implemented based on the
+player's age.  For instance, a younger PC will have increased strength and
+karma, but lower intelligence and wisdom, while more elderly PC's essentially
+have the reverse of this.
+Why am I gaining 1 point of hp/mana/move every so often?
+--------------------------------------------------------
+(tasked regeneration)
+
+On <h>, the actions of sitting, resting or sleeping are handled as
+tasks for purposes of increasing the regeneration rates.  The tick-time
+regeneration rate is independent of position (ie, you get a flat amount
+at tick time).  However, if you rest for a set amount of time, then you
+are awarded 1 point of mana/move and hp.  The time between these regenerative
+pulses is different for the various positions.  Sleeping will restore you
+very quickly, while sitting is less slow.
+
+This method was instituted as one of the favorite tricks of clients is to
+keep track of when the regenerative pulses would occur.  If they could be
+sleeping at exactly the right second, it would treat them as if they had
+been sleeping for the entire tick.  Under tasked regeneration rules, this
+trick no longer exists.  Plus, it means you need not rest the entire tick
+if all you need is 1 or 2 hit points.
+How Do I Play?
+--------------
+
+The best way to learn to play is by actually playing.  Trial and error
+remains an essential learning technique on any MUD.  There are ways to get
+tips and clues as well as basic knowledge and how to utilize it.  The
+largest source of clues available is the index of help files.  HELP
+will list the general categories within the index, and the HELP
+command in general is quite useful.  Other sources of information you
+should acquaint yourself with are the Newbie Guide, this FAQ, the
+NEWS (version addendum) and the board.  Please refer to the Newbie
+Guide on Getting Help for more details on these.
+What good is a spellbag?
+------------------------
+(spellbags)
+
+Spellbags are special magical containers for components.  Since they cannot
+be used to hold regular (non-components) items, they are often thought of as
+being of little use.  However, they have two useful qualities.
+
+First, they protect components from decay.  Some components go bad over time,
+but the interior of a spellbag is magically shielded from the ravages of time.
+
+Secondly, they are magically attuned to the forces of thaumaturgy.  Thus, if
+a spell calls for you to hold a component in your secondary hand, you could
+either keep all the components separate, attempt to remember which one you need
+for a given spell and grab it at the proper time (in the thick of battle?), 
+or... throw all your components in a spellbag, and when you are ready to cast
+a given spell, merely grab the spellbag.  The spell will find the component
+it needs within the spellbag and utilize it properly.
+Sometimes I cast, and I still have the component when I am all done?
+--------------------------------------------------------------------
+
+Components have a number of uses (or charges).  Each casting of a spell
+will use up one charge, when all charges are used up, the component is
+typically discarded automatically.  However, if the component started
+with more than one charge when the spell was cast, it will still be in
+existence (minus one charge).  To view the charges a given component has,
+merely look at it.
+What's with all these pieces of metal I keep finding?
+-----------------------------------------------------
+
+The various creatures of <h> are no longer restricted purely to
+using and owning talens to reflect their personal wealth.  Various commodities
+have been obtained by some of them and you may soon find them for yourself as
+you explore.
+
+These commodities are considered raw materials and have little worth by 
+themselves.  No shopkeeper will accept them as currency.  But, they do have 
+value to certain peoples as they are useful commodities.  The raw materials are
+used in certain spells and skills as well as by the repair shops.  As such, a 
+commodities market has been created to trade specifically in these materials.  
+You can sell the metals that you obtain, or buy what the markets have for sale 
+for your own purposes.
+
+As you might expect, the better and more expensive metals are harder to come by
+and additionally certain creatures have a greater likelihood of having certain
+metals than others.
+Why is this mob asking me for some piece of my equipment?
+---------------------------------------------------------
+
+<h> has a special feature in which mobs will, from time to time,
+attempt to "re-possess" an item which once belonged to them.  Such creatures
+are affectionately referred to as hunters.  This is a semi-random function
+triggered automatically when certain conditions have been met and was 
+instituted to insure a fair and equitable turnover of equipment should some
+high powered item fall into a newbies hands.  If you are powerful enough, just
+re-kill the creature, otherwise, be creative and try to escape.
+What affect does my deities' potency have?
+------------------------------------------
+
+Your deities' potency represents the status of your faction in relation to
+the other factions, as well as how powerful your deities are compared to
+other faction's deities.  While it may seem like a trivial thing, it actually
+can have profound effects on the members of the faction.
+
+For instance, a potent faction will permit that faction's clerics to regenerate
+piety at an accelerated rate.  Additionally, interventions (fate rescuing from
+nasty effects) increase.
+
+It is a foolhardy faction that allows their potency to drop too low.
+How do I increase my deities' potency?
+---------------------------------------
+
+Your deities' potency is related to the performance of all members of 
+that faction.  For instance, as you do well (killing the enemies of the faction
+and aiding your allies), you not only raise your faction percentage, but also
+raise your deities potency.  Similarly, potency will drop if you allow your
+faction percentage to drop.  Realize though, faction percentage is specific
+to you, while all members of a faction contribute to the potency.
+
+Potency is drained somewhat each time the deity interferes in the mortal
+realms.  The most common way this happens is in the regeneration of piety
+to that faction's clerics, but Miracles and the like also have their effect
+on potency.
+How do I raise my faction percentage?
+-------------------------------------
+
+In general, this is done by aiding your faction's allies and harming your 
+faction's enemies.  The faction percentage is actually derived from how
+you have been behaving toward each of the other factions individually.
+While attacking the other enemy factions is a rather simple task for most
+adventurers, realize that unless you ALSO ASSIST your allies, your percentage
+will never rise very high.
+
+If you are in an organized faction, then you will no doubt be instructed by
+some superior as to which factions are considered an ally and which are
+enemies.
+
+The unaffiliated faction is committed to keeping the other factions in check.
+As such, its only allies are other unaffiliated, while all other factions
+are considered enemy.  Realize that attacking only one of the other factions
+(ignoring the others) will not raise you as fast as attacking them each 
+equally.  And remember to assist other unaffiliateds whenever possible.
+What is a MOB?
+--------------
+
+MOB is short for a "mobile".  Mobiles are everything in the game not another
+human being that moves.  In other words, mobs are all the monsters and 
+creatures of the <h> world.
+
+In general, you will want to seek out mobs and kill them in order to achieve 
+fame and fortune. Obviously there are smart and stupid ways to go about
+seeking and killing mobs.  For instance, fighting using a weapon as opposed
+to your bare hands is one of the obvious ones.  Learning these tricks is
+what the game is all about.
+
+Not all mobs are bad.  Some will teach you skills or spells that will help
+you against other mobs.  Others may sell you useful items, and still others
+may grant favors or wishes.  Deciding what mobs are beneficial, what mobs are
+to be killed and what mobs are just to fulfill needed jobs (like janitors)
+is another important skill.
+How do I tell the difference between a MOB and a PC?
+----------------------------------------------------
+
+You are a PC (player character), anything not a PC is a mob.  Like you,
+the other PC's are trying to kill mobs, earn treasure and obtain fame.
+Sometimes your goal may coincide with other PC's and you may wish to
+form a group to fulfill a common goal.
+
+The mobs, on the other hand, are your opponents.  They will try and kill
+you if you upset them to much.  They are controlled by the computer 99%
+of the time, but may be overtaken at any time by one of the gods in order
+to make the game more interesting.
+
+The simplest way to tell the difference is to look at the name.  PC's are
+limited to one word names, whereas mobs often have names like "a cityguard"
+although they may have proper names as well.  The second way to distinguish
+is to see how they react to stimuli.  PC's will behave rationally and
+sometimes even intelligently.  Mobs will react, although the functions
+controlling their reactions are limited and repetitive.
+What are all these abbreviations I keep seeing?
+------------------------------------------------
+(glossary)
+
+afk - away from keyboard.  person stepped away from computer (bathroom, food...)
+bbl - be back later.  disconnecting for indefinite amount of time
+bm - Brightmoon, Town of  (sometimes abbreviated bmoon)
+brb - be right back.  disconnecting for less then 5 mins usually.
+brt - be right there.
+char - character
+kar - karma (sometimes mistakenly called charisma)
+con - constitution, sometimes concentration
+cs - center square of Grimhaven
+dex - dexterity
+eq - equipment.  stuff you can use (carry, wield, wear)
+exp - experience points
+fp - faction percent.  (sometimes abbreviated f%)
+gh - Grimhaven, city of
+hp - hit points
+imp - an implementor of <h>.  The administrators or coders of the game
+int - intelligence
+lag - anything that slows down the game. shouted only by idiots
+lol - laughs out loud
+mob - mobile monster (see above)
+mv - movement or endurance
+MUD - multi user dungeon (see above)
+newbie - an inexperienced MUDder or a low level character on a MUD
+PC - player character (see above)
+RL - real life.  Stuff done between mudding sessions.
+rotfl - rolling on the floor laughing.   various derivations exist
+str - strength
+ttfn - ta ta, for now
+wis - wisdom
+xp - experience points
+:)  - smiley face on its side.  interpretation varies.  variations exist.
+What Happens When I Die?
+------------------------
+
+If I knew this, I'd be a theology major.  :)   But seriously, in terms of
+the mud, you "die" if your hit points goes to -11.  Below zero hp, you
+will become unconscious, but there is still a slim chance of recovery if
+aided in time.
+
+Should you die, a certain amount of the xp you have earned will be removed
+setting you back further from earning more fame.  Also, all the goods and
+gold you were carrying around will be put onto your corpse.  You (the
+now stark naked character) will be reincarnated and put in a central
+location.  Also, there is a slim chance that your character will age a few
+years.
+
+Your goal will be to get your corpse back in order to get your items back.
+You may need help in achieving this, for whatever killed you may just do
+it again if you rush in naked.  Do remember how to get to wherever you
+died, it doesn't pay to be stumbling around lost.  This task is often called
+doing a "corpse retrieval".
+
+Death does solve some problems.  Spell effects are removed, diseases go away,
+limbs regenerate, and poison is cleansed from the body.  Also you are given
+a hearty meal and a lot of water to quench any thirst.  Mobs that have a 
+specific hatred to you will also forget; don't assume that a mob you have
+enraged (by fighting, or otherwise) will automatically calm down though;
+they merely stop actively hunting you.
+How do I refer to something when there is more than one in the room?
+--------------------------------------------------------------------
+
+You will often see something like:
+A hard roll is here. [2]
+
+This denotes that there are 2 (number in brackets) of the item specified.
+Similarly:
+A barhopper wanders the streets.  [4]
+implies 4 barhoppers are in the room with you.
+
+The default reference is the first one in the room.  If you want to
+reference the 2nd, 3rd, ... object, use this format:
+
+(command) 2.(object)    <-- references the 2nd thing of type (object)
+eg.
+get 2.roll
+kick 3.guard
+buy 7.sword
+How am I ever going to learn all these commands?
+------------------------------------------------
+
+Thats what the help files are for.  There are some 500+ commands available
+but only about 25 are COMMONLY used.  Learn the important ones and worry
+about the rest later on.  A complete list of all commands you are able to
+use can be obtained by using the "command" command.  This list is not 
+organized, but gives you an idea of the breadth of the possible capabilities.
