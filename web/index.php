@@ -44,22 +44,22 @@ if (file_exists("pages/".$page.".php")) {
 
 //echo "dash debug: $section == \"".$section."\".";
 
-$HOME_JPG = "home.jpg";
-$NEWS_JPG = "news.jpg";
-$PLAY_JPG = "players.jpg";
-$RESO_JPG = "resources.jpg";
-$HIST_JPG = "histories.jpg";
+$HOME_JPG = "images/navbuttons/home.jpg";
+$NEWS_JPG = "images/navbuttons/news.jpg";
+$PLAY_JPG = "images/navbuttons/players.jpg";
+$RESO_JPG = "images/navbuttons/resources.jpg";
+$HIST_JPG = "images/navbuttons/histories.jpg";
 
 if ($section == "home")      $HOME_JPG = "homeo.jpg";
-if ($section == "news")      $NEWS_JPG = "newso.jpg";
-if ($section == "players")   $PLAY_JPG = "playerso.jpg";
-if ($section == "resources") $RESO_JPG = "resourceso.jpg";
+if ($section == "news")      $NEWS_JPG = "images/navbuttons/newso.jpg";
+if ($section == "players")   $PLAY_JPG = "images/navbuttons/playerso.jpg";
+if ($section == "resources") $RESO_JPG = "images/navbuttons/resourceso.jpg";
 if ($section == "histories") $HIST_JPG = "historieso.jpg";
 
 $HOME2_JPG = "homeo.jpg";
-$NEWS2_JPG = "newso.jpg";
-$PLAY2_JPG = "playerso.jpg";
-$RESO2_JPG = "resourceso.jpg";
+$NEWS2_JPG = "images/navbuttons/newso.jpg";
+$PLAY2_JPG = "images/navbuttons/playerso.jpg";
+$RESO2_JPG = "images/navbuttons/resourceso.jpg";
 $HIST2_JPG = "historieso.jpg";
 
 ?>
@@ -152,7 +152,7 @@ function MM_swapImage() { //v3.0
                           <table border="1" cellpadding="0" cellspacing="0" width="100%" bgcolor="#000000" bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0">
                             <tr>
                               <td width="100%">
-                                <p align="center"><a href="index.php?page=news" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('news','','newso.jpg',1)"><img name="news" border="0" src="<?=$NEWS_JPG?>" width="64" height="25"></a></p>
+                                <p align="center"><a href="index.php?page=news" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('news','','images/navbuttons/newso.jpg',1)"><img name="news" border="0" src="<?=$NEWS_JPG?>" width="64" height="25"></a></p>
                               </td>
                             </tr>
                           </table>
@@ -163,7 +163,7 @@ function MM_swapImage() { //v3.0
                           <table border="1" cellpadding="0" cellspacing="0" width="100%" bgcolor="#000000" bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0">
                             <tr>
                               <td width="100%">
-                                <p align="center"><a href="index.php?page=players" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('players','','playerso.jpg',1)"><img name="players" border="0" src="<?=$PLAY_JPG?>" width="90" height="25"></a></p>
+                                <p align="center"><a href="index.php?page=players" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('players','','images/navbuttons/playerso.jpg',1)"><img name="players" border="0" src="<?=$PLAY_JPG?>" width="90" height="25"></a></p>
                               </td>
                             </tr>
                           </table>
@@ -173,7 +173,7 @@ function MM_swapImage() { //v3.0
                         <div align="center">
                           <table border="1" cellpadding="0" cellspacing="0" width="100%" bgcolor="#000000" bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0">
                             <tr>
-                              <td width="100%" align="center"><a href="index.php?page=resources" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('resources','','resourceso.jpg',1)"><img name="resources" border="0" src="<?=$RESO_JPG?>" width="119" height="25"></a></td>
+                              <td width="100%" align="center"><a href="index.php?page=resources" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('resources','','images/navbuttons/resourceso.jpg',1)"><img name="resources" border="0" src="<?=$RESO_JPG?>" width="119" height="25"></a></td>
                             </tr>
                           </table>
                         </div>
