@@ -1,44 +1,0 @@
-help class
-CLASSES OVERVIEW               (Last Updated: Sat Nov  1 14:26:15 1997)
-
-SneezyMUD help for choosing your class :
-
-Class represents your character's profession.  It dictates what set of skills
-are possible, as well as influences what your character can and can not do.
-SneezyMUD strives to keep all classes balanced, however, that desired balance
-may be that a given class is easier and more enjoyable to play at given levels
-than others (usually balanced with a more difficult period as well).
-
-One important suggestion, choose a class that appeals to you as opposed to one
-you may have heard has a loophole that can be abused (in time, a loophole may be
-removed).
-
-Detailed information about these classes is available once you log in and type
-HELP <class>.  A brief summary:
-
-Warrior: Brute fighter, master of weapons.  SUGGESTED CLASS FOR NEW PLAYERS
-Thief:   Murdering scoundrals skilled with traps.
-Mage:    Casters of magic.
-Cleric:  Followers of the deities.
-
-
-[ Return to continue, (r)efresh, (b)ack, page (1/2), or any other key to quit ]
-
-
-Ranger:  Warrior subclass with emphasis on magical control over nature.
-Deikhan: Warrior subclass that champion their deities' will.
-Monk:    Fighters trained in fighting styles from the east.
-Shaman:  Secretive guild trained in espionage and diplomacy.
-
-Multiclassing (picking more than one class) tradeoffs:
-- attributes (hits, moves, mana, etc) will be some combination of the classes.
-- experience is gained at a reduced rate.
-- all skills of all classes owned are available.
-- equipment usable by any owned class can be used.
-
-
-R:28 > 
-
-
-
-
