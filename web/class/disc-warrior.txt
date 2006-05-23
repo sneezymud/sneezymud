@@ -1,0 +1,76 @@
+WARRIOR DISCIPLINES:
+             Warrior Abilities : Learnedness: Unlearned
+        Hand to Hand Abilities : Learnedness: Unlearned
+               Brawling Skills : Learnedness: Unlearned
+               Physical Skills : Learnedness: Unlearned
+                 Smythe Skills : Learnedness: Unlearned
+                 Slash Weapons : Learnedness: Unlearned
+                 Blunt Weapons : Learnedness: Unlearned
+                Pierce Weapons : Learnedness: Unlearned
+                 Combat Skills : Learnedness: Unlearned
+            Adventuring Skills : Learnedness: Unlearned
+
+WARRIOR ABILITIES:
+kick                        (Learned: next practice) 
+bash                        (Learned: next practice) 
+berserk                     (Learned: next practice) 
+rescue                      (Learned: fairly soon)   
+disarm                      (Learned: in awhile)     
+headbutt                    (Learned: some day)      
+kneestrike                  (Learned: way in the future)
+smythe                      (Learned: way in the future)
+switch opponents            (Learned: way in the future)
+
+HAND TO HAND:
+retreat                     (Learned: next practice) 
+shove                       (Learned: lot more training)
+
+BRAWLING:
+grapple                     (Learned: next practice) 
+bodyslam                    (Learned: lot more training)
+stomp                       (Learned: some day)      
+
+PHYSICAL ABILITIES:
+doorbash                    (Learned: next practice) 
+deathstroke                 (Learned: in the future) 
+
+SMYTHE:
+
+SLASH WEAPONS:
+slash specialization        (Learned: next practice) 
+
+BLUNT WEAPONS:
+blunt specialization        (Learned: next practice) 
+
+PIERCE WEAPONS
+pierce specialization       (Learned: next practice) 
+
+COMBAT ABILITIES:
+armor proficiency           (Learned: next practice) 
+slash proficiency           (Learned: next practice) 
+pierce proficiency          (Learned: next practice) 
+blunt proficiency           (Learned: next practice) 
+barehand proficiency        (Learned: next practice) 
+ranged proficiency          (Learned: in the future) 
+sharpen                     (Learned: in the future) 
+smooth                      (Learned: in the future) 
+
+ADVENTURING:
+ride                        (Learned: next practice) 
+swim                        (Learned: next practice) 
+know animal                 (Learned: next practice) 
+know people                 (Learned: next practice) 
+read magic                  (Learned: next practice) 
+bandage                     (Learned: next practice) 
+climbing                    (Learned: next practice) 
+tactics                     (Learned: next practice) 
+know veggie                 (Learned: lot more training)
+sign                        (Learned: lot more training)
+know reptile                (Learned: in awhile)     
+know giant                  (Learned: some day)      
+know other                  (Learned: in the future) 
+evaluate                    (Learned: in the future) 
+know undead                 (Learned: way in the future)
+dissect                     (Learned: way in the future)
+know demon                  (Learned: way in the future)
+

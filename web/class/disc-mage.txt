@@ -1,0 +1,160 @@
+MAGE DISCIPLINES:
+                Mage Abilities : Learnedness: Unlearned
+                     Air Magic : Learnedness: Unlearned
+                       Alchemy : Learnedness: Unlearned
+                   Earth Magic : Learnedness: Unlearned
+                    Fire Magic : Learnedness: Unlearned
+                       Sorcery : Learnedness: Unlearned
+                  Spirit Magic : Learnedness: Unlearned
+                   Water Magic : Learnedness: Unlearned
+                      Wizardry : Learnedness: Unlearned
+                Pierce Weapons : Learnedness: Unlearned
+                 Combat Skills : Learnedness: Unlearned
+            Adventuring Skills : Learnedness: Unlearned
+                    Magic Lore : Learnedness: Unlearned
+
+
+MAGE ABILITIES:
+You have knowledge of these abilities:
+gust                        (Learned: next practice) 
+sling shot                  (Learned: next practice) 
+gusher                      (Learned: next practice) 
+sorcerers globe             (Learned: very soon)     
+illuminate                  (Learned: very soon)     
+detect magic                (Learned: soon)          
+flare                       (Learned: soon)          
+hands of flame              (Learned: fairly soon)   
+mystic darts                (Learned: little more training)
+detect invisibility         (Learned: little more training)
+faerie fire                 (Learned: little more training)
+materialize                 (Learned: little more training)
+pebble spray                (Learned: little more training)
+arctic blast                (Learned: not too long now)
+feathery descent            (Learned: lot more training)
+protection from earth       (Learned: lot more training)
+sense life                  (Learned: lot more training)
+protection from air         (Learned: lot more training)
+protection from fire        (Learned: lot more training)
+gills of flesh              (Learned: lot more training)
+protection from water       (Learned: lot more training)
+protection from elements    (Learned: lot more training)
+granite fists               (Learned: in awhile)     
+accelerate                  (Learned: in awhile)     
+levitate                    (Learned: in awhile)     
+dust storm                  (Learned: in awhile)     
+stunning arrow              (Learned: in awhile)     
+color spray                 (Learned: in awhile)     
+conjure elemental air       (Learned: in awhile)     
+slumber                     (Learned: in awhile)     
+identify                    (Learned: some day)      
+icy grip                    (Learned: some day)      
+fireball                    (Learned: some day)      
+fear                        (Learned: some day)      
+tornado                     (Learned: some day)      
+ensorcer                    (Learned: some day)      
+infravision                 (Learned: some day)      
+stealth                     (Learned: some day)      
+telepathy                   (Learned: some day)      
+dispel invisible            (Learned: in the future) 
+invisibility                (Learned: in the future) 
+faerie fog                  (Learned: in the future) 
+falcon wings                (Learned: in the future) 
+powerstone                  (Learned: in the future) 
+galvanize                   (Learned: in the future) 
+flaming sword               (Learned: in the future) 
+conjure elemental fire      (Learned: in the future) 
+teleport                    (Learned: in the future) 
+calm                        (Learned: in the future) 
+sand blast                  (Learned: in the future) 
+ice storm                   (Learned: in the future) 
+dispel magic                (Learned: way in the future)
+conjure elemental earth     (Learned: way in the future)
+eyes of fertuman            (Learned: way in the future)
+haste                       (Learned: way in the future)
+copy                        (Learned: way in the future)
+conjure elemental water     (Learned: way in the future)
+enhance weapon              (Learned: way in the future)
+acid blast                  (Learned: way in the future)
+farlook                     (Learned: way in the future)
+
+AIR MAGIC:
+flight                      (Learned: in awhile)     
+immobilize                  (Learned: in awhile)     
+suffocate                   (Learned: way in the future)
+antigravity                 (Learned: way in the future)
+
+ALCHEMY:
+scribe                      (Learned: next practice) 
+shatter                     (Learned: fairly soon)   
+spontaneous generation      (Learned: lot more training)
+divination                  (Learned: way in the future)
+
+EARTH MAGIC:
+trail seek                  (Learned: next practice) 
+stone skin                  (Learned: lot more training)
+meteor swarm                (Learned: in the future) 
+lava stream                 (Learned: way in the future)
+
+FIRE MAGIC:
+flaming flesh               (Learned: next practice) 
+inferno                     (Learned: in the future) 
+hellfire                    (Learned: way in the future)
+
+SORCERY:
+animate                     (Learned: next practice) 
+bind                        (Learned: next practice) 
+blast of fury               (Learned: lot more training)
+energy drain                (Learned: some day)      
+atomize                     (Learned: way in the future)
+
+SPIRIT MAGIC:
+true sight                  (Learned: next practice) 
+cloud of concealment        (Learned: lot more training)
+polymorph                   (Learned: some day)      
+fumble                      (Learned: way in the future)
+silence                     (Learned: way in the future)
+
+WATER MAGIC:
+breath of sarahage          (Learned: next practice) 
+watery grave                (Learned: lot more training)
+tsunami                     (Learned: way in the future)
+
+WIZARDRY:
+wizardry                    (Learned: next practice)    component=right hand, left hand=free
+casting                     (Learned: next practice) 
+
+PIERCE WEAPONS:
+pierce specialization       (Learned: next practice) 
+
+COMBAT: MAGE
+armor proficiency           (Learned: next practice) 
+slash proficiency           (Learned: next practice) 
+pierce proficiency          (Learned: next practice) 
+blunt proficiency           (Learned: next practice) 
+barehand proficiency        (Learned: next practice) 
+ranged proficiency          (Learned: in the future) 
+sharpen                     (Learned: in the future) 
+smooth                      (Learned: in the future) 
+
+ADVENTURING SKILLS: MAGE:
+ride                        (Learned: next practice) 
+swim                        (Learned: next practice) 
+know animal                 (Learned: next practice) 
+know people                 (Learned: next practice) 
+read magic                  (Learned: next practice) 
+bandage                     (Learned: next practice) 
+climbing                    (Learned: next practice) 
+tactics                     (Learned: next practice) 
+know veggie                 (Learned: lot more training)
+sign                        (Learned: lot more training)
+know reptile                (Learned: in awhile)     
+know giant                  (Learned: some day)      
+know other                  (Learned: in the future) 
+evaluate                    (Learned: in the future) 
+know undead                 (Learned: way in the future)
+dissect                     (Learned: way in the future)
+know demon                  (Learned: way in the future)
+
+MAGE LORE:
+meditate                    (Learned: next practice) 
+

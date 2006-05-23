@@ -1,0 +1,42 @@
+### Report data length:
+163 days 14:00:00.9091660008
+
+### Talen location:
+Held by shops                   :     364,203,696
+Held by banks                   :     871,167,559
+Held by players                 :     122,432,581
+Total                           :   1,357,803,836
+
+### Talen inflow:
+Average daily income            :         852,370
+Income past 1 day               :         486,238
+Average monthly income          :      25,571,129
+Income past 30 days             :      26,912,475
+Highest hour income             :      10,232,102 on 2005-08-27 11:00:01.144315
+
+### Inflation:
+Average yearly inflation        :       22.599255%
+Average monthly inflation       :        1.883271%
+Inflation past 30 days          :        1.982059%
+
+### Bank equity totals:
+Total amount on books           :     926,419,886
+Total amount on hand            :     871,167,559
+Total discrepancy               :     -55,252,327
+
+### Bank equity values:
+Grimhaven First Kingdom Bank    :     -63,226,111
+Brightmoon Bank                 :       1,491,568
+The Logrus Bank                 :       6,490,228
+Second Bank of Amber            :          -8,012
+
+### Unclaimed talens:
+Player bank accounts            :      19,342,758
+Corporate accounts              :               0
+
+### Corporate wealth:
+Corporate owned shops           :      51,434,155
+Corporate bank accounts         :     343,378,223
+Corporate officers              :     253,706,657
+Total corporate wealth          :     648,519,035
+

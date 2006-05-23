@@ -1,0 +1,146 @@
+<HTML>
+<TITLE>4.x Disclipine System</TITLE>
+
+<BODY>
+<BODY BACKGROUND="./graphics/marble5.gif">
+
+<CENTER>
+<HR>
+<H2>Disclipine System</H2>
+<H5><B><I>This page last modified: 12-19-97</B></I></H5>
+<HR>
+</CENTER><P>
+
+<DD><I><B>Ahh so you have decided to inquire about our unique spells & skills discipline system.  This system was developed by the original SneezyMUD 3.X coding staff mainly consisting of Brutius, Batopr, & Dirk.  Since then the 4.X staff consisting of the above, less Dirk, plus Cosmo, Speef, Stonecold, & Rixanne have added welcome additions as well as all the  building / immortal staff. So please read on and hopefully you will either learn a new tid-bit of information or just find something to peak your interest.
+</B></I><BR>
+<IMG SRC = "./graphics/web_sig.gif">
+<P>
+
+<UL>
+<LI><A HREF="#summary">Summary of the Discipline System</A>
+<LI><A HREF="#all">All Disciplines</A>
+<UL>
+	<LI><A HREF="./class/mage.html">Mage</A>: <A HREF="./class/mage.html#disc">Disciplines</A>
+	<LI><A HREF="./class/cleric.html">Cleric</A>: <A HREF="./class/cleric.html#disc">Disciplines</A>
+	<LI><A HREF="./class/warrior.html">Warrior</A>: <A HREF="./class/warrior.html#disc">Disciplines</A>
+	<LI><A HREF="./class/thief.html">Thief</A>: <A HREF="./class/thief.html#disc">Disciplines</A>
+	<LI><A HREF="./class/deikhan.html">Deikhan</A>: <A HREF="./class/deikhan.html#disc">Disciplines</A>
+	<LI><A HREF="./class/shaman.html">Shaman</A>: <A HREF="./class/shaman.html#disc">Disciplines</A>
+	<LI><A HREF="./class/monk.html">Monk</A>: <A HREF="./class/monk.html#disc">Disciplines</A>
+	<LI><A HREF="./class/ranger.html">Ranger</A>: <A HREF="./class/ranger.html#disc">Disciplines</A>
+</UL>
+</UL>
+
+<HR>
+<A NAME="summary"><H3>Summary of the discipline system:</H3>
+
+<P>
+Unlike numerous MUDs Sneezy has pulled itself away from the cut and dry system of basing all skills and spells upon a characters level.  In Sneezy there is no "Level 40 Fireball spell", as well there is not even really the learning of one specific spell or skill.  Instead as a PC advances he learns "sets" of skills and/or spells which we call Disciplines.  
+<P>
+As a player earns the required experience to advance to the next level he seeks out his guildmaster (generally 3-4 guildmasters per class each able to advanced the PC a bit higher then the previous).  At this time the player receives their hitpoints, vitality, and mana points which will be added to their existing scores.  Also at this time the player gains a set number of practices based upon their class, intelligence, and wisdom scores.  Using these practices they must then seek out trainers of the appropriate level and practice specific disciplines (generally there are 3-5 trainers per discipline, each being able to teach the PC a bit more then the last).  As their learnedness in a discipline goes up so will their learnedness of the skills and/or spells within the disclipline.  Some skills may not even begin progressing until several practices have been used in a certain discipline, some may progress more rapidly then others as practices are used, some may reach a maximum learnedness level before the discipline is completely learned, while others may never reach maximum learnedness even when the discipline is completely learned.  (See Below for a detailed example) In cases of the later, many times those skills can be completely learned through the "learn by doing" system where a PC learns from their failures and/or successes. 
+<P>
+Each Discipline will require 60 practices to allow the PC to be fully trained in that area (95%).  The first practices used for each discipline will yield a greater advancment of knowledge while the later of the 60 practices will yield smaller percentages of the full 95%.  In this way the player is given a harder choice later on in their career of either gaining maybe 3-5% in a new discipline or that last 1-2% in a discipline they are already well versed in.
+<P>
+The following is an example of the progression through a generic discipline. 
+<P>
+disc_generic*
+<PRE>
+   Discipline     skill 1         skill 2        skill 3
+   learnedness  learnedness     learnedness    learnedness
+       10%          20              0               0
+       20%          40              0               0
+       30%          60              17              0
+       40%          80              35              0
+       50%          95              53              12
+       60%          95              70              25
+       70%          95              87              38 
+       80%          95              95              50
+       95%**        95**            95              63
+</PRE>
+<P>
+*Please note the above is an EXAMPLE who's numbers should not be construed  in anyway to reflect actual playing values.<BR>
+**No mortal PC is capable of learning anything to perfection, their is always some chance of failure.  Therfore 95% is the max learnedness any mortal PC is capable of learning any discipline, skill or spell to.
+<P>
+A set of Disciplines have been assigned to each of the classes.  Some disciplines may be learnable by several classes (Example: Adventuring Discipline). While others are specific to a certain classes (Example: Fire Magic).  Different classes may have more or less disciplines then other classes.  This is why the PC's class is looked at to determine the number of practices a PC gains upon gaining a level.  When designing each class and its disciplines a formula is created using an "average" intelligence and wisdom score for a specific class along with the number of total disciplines the class has. Also the minimum, average, and maximum number of desired disciplines learnable by the class are looked at.  Using this formula it is determined how many practices the PC receives each level. 
+<P>
+To clarify this a little better lets look at a generic class.  Lets say this class has 7 total disciplines.  Now its decided that an average character of this class should have about a 10 intelligence and a 12 wisdom.  Its also decided that a character with this average should be able to completely learn 4 of the 7 disciplines and partially learn a 5th.  Its also decided that even the stupidest character of this class (3 intelligence, 3 wisdom) should at least be able to learn 2 of the 7 total disciplines while the smartest character (18 intelligence, 18 wisdom) should never be able to learn more then 6 of the 7 total disciplines.  In this way a character of the class always has access to the most basic skills of his class yet the smartest character of this class can never learn everything.  
+<P>
+This system has been designed with the desire to create a boarder range of characters from each class.  In this manner no two PCs of the same class should ever be exact in character.  The system requires the PC to make choices as to which of their disciplines they will spend their practices on.
+<P>
+If a player has any questions on the Discipline system they may be able to answer their questions using Sneezy's online help files.  If something still appears confusing the immortal staff is always happy to answer any politely
+asked questions or lead the character on their way to finding the answer themselves. 
+<P>
+
+
+<HR>
+<A NAME="all"><H3>All Disciplines</H3>
+<UL>
+<LI><A HREF="disclist.html#adventure">Adventuring Skills</A>
+<LI><A HREF="disclist.html#aegis-cleric">Aegis of the Deities: Cleric</A>
+<LI><A HREF="disclist.html#aegis-deikhan">Aegis of the Deities: Deikhan</A>
+<LI><A HREF="disclist.html#afflictions">Afflictions</A>
+<LI><A HREF="disclist.html#air">Air Magic</A>
+<LI><A HREF="disclist.html#alchemy">Alchemy</A>
+<LI><A HREF="disclist.html#animal">Animals Abilities</A>
+<LI><A HREF="disclist.html#blunt">Blunt Weapons</A>
+<LI><A HREF="disclist.html#brawling">Brawling Skills</A>
+<LI><A HREF="disclist.html#cleric">Clerical Abilities</A>
+<LI><A HREF="disclist.html#combat">Combat Skills</A>
+<LI><A HREF="disclist.html#cures-cleric">Cures: Cleric</A>
+<LI><A HREF="disclist.html#cures-deikhan">Cures: Deikhan</A>
+<LI><A HREF="disclist.html#deikhan">Deikhan Abilities</A>
+<LI><A HREF="disclist.html#earth">Earth Magic</A>
+<LI><A HREF="disclist.html#faith">Faith</A>
+<LI><A HREF="disclist.html#fight-deikhan">Fighting Skills: Deikhan</A>
+<LI><A HREF="disclist.html#fight-thief">Fighting Skills: Thief</A>
+<LI><A HREF="disclist.html#fight-ranger">Fighting Skills: Ranger</A>
+<LI><A HREF="disclist.html#fire">Fire Magic</A>
+<LI><A HREF="disclist.html#hand">Hand of the Deities</A>
+<LI><A HREF="disclist.html#hth-warrior">Hand to Hand Abilities</A>
+<LI><A HREF="disclist.html#looting">Looting Skills</A>
+<LI><A HREF="disclist.html#lore">Magic Lore</A>
+<LI><A HREF="disclist.html#mage">Mage Abilities</A>
+<LI><A HREF="disclist.html#mounted">Mounted Skills</A>
+<LI><A HREF="disclist.html#murder">Murder</A>
+<LI><A HREF="disclist.html#nature">Nature Abilities</A>
+<LI><A HREF="disclist.html#physical">Physical Skills</A>
+<LI><A HREF="disclist.html#pierce">Piercing Weapons</A>
+<LI><A HREF="disclist.html#plant">Plants Abilities</A>
+<LI><A HREF="disclist.html#poisons">Poisons</A>
+<LI><A HREF="disclist.html#ranged">Ranged Weapons</A>
+<LI><A HREF="disclist.html#ranger">Ranger Abilities</A>
+<LI><A HREF="disclist.html#slash">Slash Weapons</A>
+<LI><A HREF="disclist.html#smythe">Smythe Skills</A>
+<LI><A HREF="disclist.html#sorcery">Sorcery</A>
+<LI><A HREF="disclist.html#spirit">Spirit Magic</A>
+<LI><A HREF="disclist.html#stealth">Stealth</A>
+<LI><A HREF="disclist.html#survival">Survival Skills</A>
+<LI><A HREF="disclist.html#theo">Theological Learning</A>
+<LI><A HREF="disclist.html#thief">Thief Abilities</A>
+<LI><A HREF="disclist.html#traps">Traps</A>
+<LI><A HREF="disclist.html#warrior">Warrior Abilities</A>
+<LI><A HREF="disclist.html#water">Water Magic</A>
+<LI><A HREF="disclist.html#wizardry">Wizardry</A>
+<LI><A HREF="disclist.html#wrath-cleric">Wrath of the Deities: Cleric</A>
+<LI><A HREF="disclist.html#wrath-deikhan">Wrath of the Deities: Deikhan</A>
+</UL>
+
+</CENTER>
+</BODY>
+</HTML>
+
+<COMMENT>
+<LI><A HREF="disclist.html#chidoki">Chidoki</A>
+<LI><A HREF="disclist.html#drain">Draining Abilities</A>
+<LI><A HREF="disclist.html#judoki">Judoki</A>
+<LI><A HREF="disclist.html#karoki">Karoki</A>
+<LI><A HREF="disclist.html#kendoki">Kendoki</A>
+<LI><A HREF="disclist.html#kuksoki">Kuksoki</A>
+<LI><A HREF="disclist.html#monk">Monk Abilities</A>
+<LI><A HREF="disclist.html#ninjoki">Ninjoki</A>
+<LI><A HREF="disclist.html#shaman">Shaman Abilities</A>
+<LI><A HREF="disclist.html#shogoki">Shogoki</A>
+<LI><A HREF="disclist.html#taedoki">Taedoki</A>
+<LI><A HREF="disclist.html#totemism">Totemism</A>
+<LI><A HREF="disclist.html#undead">Undead Control</A>
+</COMMENT>

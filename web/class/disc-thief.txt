@@ -1,0 +1,85 @@
+THIEF DISCIPLINES:
+               Thief Abilities : Learnedness: Unlearned
+               Fighting Skills : Learnedness: Unlearned
+                        Murder : Learnedness: Unlearned
+                Looting Skills : Learnedness: Unlearned
+                       Poisons : Learnedness: Unlearned
+                       Stealth : Learnedness: Unlearned
+                         Traps : Learnedness: Unlearned
+                 Slash Weapons : Learnedness: Unlearned
+                Pierce Weapons : Learnedness: Unlearned
+                 Combat Skills : Learnedness: Unlearned
+            Adventuring Skills : Learnedness: Unlearned
+
+THIEF ABILITIES:
+swindle                     (Learned: next practice) 
+sneak                       (Learned: next practice) 
+retreat                     (Learned: next practice) 
+kick                        (Learned: next practice) 
+backstab                    (Learned: next practice) 
+search                      (Learned: next practice) 
+steal                       (Learned: next practice) 
+detect trap                 (Learned: next practice) 
+switch opponents            (Learned: lot more training)
+picklock                    (Learned: in awhile)     
+stab                        (Learned: in awhile)     
+disarm trap                 (Learned: in awhile)     
+disarm                      (Learned: in awhile)     
+subterfuge                  (Learned: some day)      
+hide                        (Learned: in the future) 
+spy                         (Learned: way in the future)
+cudgel                      (Learned: way in the future)
+
+FIGHTING SKILLS:
+dodge                       (Learned: next practice) 
+garrotte                    (Learned: next practice) 
+dual wield                  (Learned: in the future) 
+
+MURDER:
+
+LOOTING SKILLS:
+
+POSIONS
+poison weapons              (Learned: next practice) 
+
+STEALTH:
+disguise                    (Learned: next practice) 
+
+TRAPS:
+set trap                    (Learned: next practice) 
+
+SLASH WEAPONS:
+slash specialization       (Learned: next practice) 
+
+PIERCE WEAPONS:
+pierce specialization       (Learned: next practice) 
+
+COMBAT SKILLS:
+armor proficiency           (Learned: next practice) 
+slash proficiency           (Learned: next practice) 
+pierce proficiency          (Learned: next practice) 
+blunt proficiency           (Learned: next practice) 
+barehand proficiency        (Learned: next practice) 
+ranged proficiency          (Learned: in the future) 
+sharpen                     (Learned: in the future) 
+smooth                      (Learned: in the future) 
+
+ADVENTURING SKILLS:
+ride                        (Learned: next practice) 
+swim                        (Learned: next practice) 
+know animal                 (Learned: next practice) 
+know people                 (Learned: next practice) 
+read magic                  (Learned: next practice) 
+bandage                     (Learned: next practice) 
+climbing                    (Learned: next practice) 
+tactics                     (Learned: next practice) 
+know veggie                 (Learned: lot more training)
+sign                        (Learned: lot more training)
+know reptile                (Learned: in awhile)     
+know giant                  (Learned: some day)      
+know other                  (Learned: in the future) 
+evaluate                    (Learned: in the future) 
+know undead                 (Learned: way in the future)
+dissect                     (Learned: way in the future)
+know demon                  (Learned: way in the future)
+

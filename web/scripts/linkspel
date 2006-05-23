@@ -1,0 +1,157 @@
+ln -s /mud/prod/lib/help/_spells/accelerate              accelerate
+ln -s /mud/prod/lib/help/_spells/"acid blast" acid_blast
+ln -s /mud/prod/lib/help/_spells/animate                 animate
+ln -s /mud/prod/lib/help/_spells/"animate dead" animate_dead
+ln -s /mud/prod/lib/help/_spells/antigravity             antigravity
+ln -s /mud/prod/lib/help/_spells/"arctic blast" arctic_blast
+ln -s /mud/prod/lib/help/_spells/armor                   armor
+ln -s /mud/prod/lib/help/_spells/"astral walk" astral_walk
+ln -s /mud/prod/lib/help/_spells/atomize                 atomize
+ln -s /mud/prod/lib/help/_spells/barkskin                barkskin
+ln -s /mud/prod/lib/help/_spells/"beast charm" beast_charm
+ln -s /mud/prod/lib/help/_spells/"beast soother" beast_soother
+ln -s /mud/prod/lib/help/_spells/"beast summon" beast_summon
+ln -s /mud/prod/lib/help/_spells/"befriend beast" befriend_beast
+ln -s /mud/prod/lib/help/_spells/bind                    bind
+ln -s /mud/prod/lib/help/_spells/"blast of fury" blast_of_fury
+ln -s /mud/prod/lib/help/_spells/bleed                   bleed
+ln -s /mud/prod/lib/help/_spells/bless                   bless
+ln -s /mud/prod/lib/help/_spells/blindness               blindness
+ln -s /mud/prod/lib/help/_spells/"bone breaker" bone_breaker
+ln -s /mud/prod/lib/help/_spells/"breath of sarahage" breath_of_sarahage
+ln -s /mud/prod/lib/help/_spells/cacaodemon              cacaodemon
+ln -s /mud/prod/lib/help/_spells/"call lightning" call_lightning
+ln -s /mud/prod/lib/help/_spells/calm                    calm
+ln -s /mud/prod/lib/help/_spells/clot                    clot
+ln -s /mud/prod/lib/help/_spells/"cloud of concealment" cloud_of_concealment
+ln -s /mud/prod/lib/help/_spells/"color spray" color_spray
+ln -s /mud/prod/lib/help/_spells/"conjure elemental air" conjure_elemental_air
+ln -s /mud/prod/lib/help/_spells/"conjure elemental earth" conjure_elemental_earth
+ln -s /mud/prod/lib/help/_spells/"conjure elemental fire" conjure_elemental_fire
+ln -s /mud/prod/lib/help/_spells/"conjure elemental water" conjure_elemental_water
+ln -s /mud/prod/lib/help/_spells/"control undead" control_undead
+ln -s /mud/prod/lib/help/_spells/copy                    copy
+ln -s /mud/prod/lib/help/_spells/"create food" create_food
+ln -s /mud/prod/lib/help/_spells/"create golem" create_golem
+ln -s /mud/prod/lib/help/_spells/"create water" create_water
+ln -s /mud/prod/lib/help/_spells/"cure blindness" cure_blindness
+ln -s /mud/prod/lib/help/_spells/"cure disease" cure_disease
+ln -s /mud/prod/lib/help/_spells/"cure paralysis" cure_paralysis
+ln -s /mud/prod/lib/help/_spells/"cure poison" cure_poison
+ln -s /mud/prod/lib/help/_spells/curse                   curse
+ln -s /mud/prod/lib/help/_spells/"dancing bones" dancing_bones
+ln -s /mud/prod/lib/help/_spells/"detect invisibility" detect_invisibility
+ln -s /mud/prod/lib/help/_spells/"detect magic" detect_magic
+ln -s /mud/prod/lib/help/_spells/disease                 disease
+ln -s /mud/prod/lib/help/_spells/"dispel invisible" dispel_invisible
+ln -s /mud/prod/lib/help/_spells/"dispel magic" dispel_magic
+ln -s /mud/prod/lib/help/_spells/divination              divination
+ln -s /mud/prod/lib/help/_spells/"dust storm" dust_storm
+ln -s /mud/prod/lib/help/_spells/earthquake              earthquake
+ln -s /mud/prod/lib/help/_spells/"energy drain" energy_drain
+ln -s /mud/prod/lib/help/_spells/"enhance weapon" enhance_weapon
+ln -s /mud/prod/lib/help/_spells/ensorcer                ensorcer
+ln -s /mud/prod/lib/help/_spells/expel                   expel
+ln -s /mud/prod/lib/help/_spells/"eyes of fertuman" eyes_of_fertuman
+ln -s /mud/prod/lib/help/_spells/"faerie fire" faerie_fire
+ln -s /mud/prod/lib/help/_spells/"faerie fog" faerie_fog
+ln -s /mud/prod/lib/help/_spells/"falcon wings" falcon_wings
+ln -s /mud/prod/lib/help/_spells/farlook                 farlook
+ln -s /mud/prod/lib/help/_spells/fear                    fear
+ln -s /mud/prod/lib/help/_spells/"feathery descent" feathery_descent
+ln -s /mud/prod/lib/help/_spells/fireball                fireball
+ln -s /mud/prod/lib/help/_spells/flamestrike             flamestrike
+ln -s /mud/prod/lib/help/_spells/"flaming flesh" flaming_flesh
+ln -s /mud/prod/lib/help/_spells/"flaming sword" flaming_sword
+ln -s /mud/prod/lib/help/_spells/flare                   flare
+ln -s /mud/prod/lib/help/_spells/fly                     fly
+ln -s /mud/prod/lib/help/_spells/fumble                  fumble
+ln -s /mud/prod/lib/help/_spells/galvanize               galvanize
+ln -s /mud/prod/lib/help/_spells/"granite fists" granite_fists
+ln -s /mud/prod/lib/help/_spells/"gills of flesh" gills_of_flesh
+ln -s /mud/prod/lib/help/_spells/gust                    gust
+ln -s /mud/prod/lib/help/_spells/"hands of flame" hands_of_flame
+ln -s /mud/prod/lib/help/_spells/harm                    harm
+ln -s /mud/prod/lib/help/_spells/"harm critical" harm_critical
+ln -s /mud/prod/lib/help/_spells/"harm light" harm_light
+ln -s /mud/prod/lib/help/_spells/"harm serious" harm_serious
+ln -s /mud/prod/lib/help/_spells/haste                   haste
+ln -s /mud/prod/lib/help/_spells/heal                    heal
+ln -s /mud/prod/lib/help/_spells/"heal critical" heal_critical
+ln -s /mud/prod/lib/help/_spells/"heal critical spray" heal_critical_spray
+ln -s /mud/prod/lib/help/_spells/"heal full" heal_full
+ln -s /mud/prod/lib/help/_spells/"heal full spray" heal_full_spray
+ln -s /mud/prod/lib/help/_spells/"heal light" heal_light
+ln -s /mud/prod/lib/help/_spells/"heal serious" heal_serious
+ln -s /mud/prod/lib/help/_spells/"heal spray" heal_spray
+ln -s /mud/prod/lib/help/_spells/hellfire                hellfire
+ln -s /mud/prod/lib/help/_spells/"heroes feast" heroes_feast
+ln -s /mud/prod/lib/help/_spells/"ice storm" ice_storm
+ln -s /mud/prod/lib/help/_spells/"icy grip" icy_grip
+ln -s /mud/prod/lib/help/_spells/identify                identify
+ln -s /mud/prod/lib/help/_spells/illuminate              illuminate
+ln -s /mud/prod/lib/help/_spells/immobilize              immobilize
+ln -s /mud/prod/lib/help/_spells/infect                  infect
+ln -s /mud/prod/lib/help/_spells/inferno                 inferno
+ln -s /mud/prod/lib/help/_spells/infravision             infravision
+ln -s /mud/prod/lib/help/_spells/invisibility            invisibility
+ln -s /mud/prod/lib/help/_spells/"knit bone" knit_bone
+ln -s /mud/prod/lib/help/_spells/"lava stream" lava_stream
+ln -s /mud/prod/lib/help/_spells/levitate                levitate
+ln -s /mud/prod/lib/help/_spells/"living vines" living_vines
+ln -s /mud/prod/lib/help/_spells/materialize             materialize
+ln -s /mud/prod/lib/help/_spells/"meteor swarm" meteor_swarm
+ln -s /mud/prod/lib/help/_spells/"mystic darts" mystic_darts
+ln -s /mud/prod/lib/help/_spells/numb                    numb
+ln -s /mud/prod/lib/help/_spells/paralyze                paralyze
+ln -s /mud/prod/lib/help/_spells/"paralyze limb" paralyze_limb
+ln -s /mud/prod/lib/help/_spells/"pebble spray" pebble_spray
+ln -s /mud/prod/lib/help/_spells/poison                  poison
+ln -s /mud/prod/lib/help/_spells/polymorph               polymorph
+ln -s /mud/prod/lib/help/_spells/portal                  portal
+ln -s /mud/prod/lib/help/_spells/powerstone              powerstone
+ln -s /mud/prod/lib/help/_spells/"protection from air" protection_from_air
+ln -s /mud/prod/lib/help/_spells/"protection from earth" protection_from_earth
+ln -s /mud/prod/lib/help/_spells/"protection from elements" protection_from_elements
+ln -s /mud/prod/lib/help/_spells/"protection from fire" protection_from_fire
+ln -s /mud/prod/lib/help/_spells/"protection from water" protection_from_water
+ln -s /mud/prod/lib/help/_spells/"rain brimstone"        rain_brimstone
+ln -s /mud/prod/lib/help/_spells/refresh                 refresh
+ln -s /mud/prod/lib/help/_spells/"remove curse" remove_curse
+ln -s /mud/prod/lib/help/_spells/"restore limb" restore_limb
+ln -s /mud/prod/lib/help/_spells/resurrection            resurrection
+ln -s /mud/prod/lib/help/_spells/"root control" root_control
+ln -s /mud/prod/lib/help/_spells/salve                   salve
+ln -s /mud/prod/lib/help/_spells/sanctuary               sanctuary
+ln -s /mud/prod/lib/help/_spells/"sand blast" sand_blast
+ln -s /mud/prod/lib/help/_spells/"second wind" second_wind
+ln -s /mud/prod/lib/help/_spells/"sense life" sense_life
+ln -s /mud/prod/lib/help/_spells/shapeshift              shapeshift
+ln -s /mud/prod/lib/help/_spells/shatter                 shatter
+ln -s /mud/prod/lib/help/_spells/silence                 silence
+ln -s /mud/prod/lib/help/_spells/"sling shot" sling_shot
+ln -s /mud/prod/lib/help/_spells/slumber                 slumber
+ln -s /mud/prod/lib/help/_spells/"sorcerers globe" sorcerers_globe
+ln -s /mud/prod/lib/help/_spells/"spontaneous combust" spontaneous_combust
+ln -s /mud/prod/lib/help/_spells/"spontaneous generation" spontaneous_generation
+ln -s /mud/prod/lib/help/_spells/stealth                 stealth
+ln -s /mud/prod/lib/help/_spells/sterilize               sterilize
+ln -s /mud/prod/lib/help/_spells/"sticks to snakes" sticks_to_snakes
+ln -s /mud/prod/lib/help/_spells/"stone skin" stone_skin
+ln -s /mud/prod/lib/help/_spells/"stormy skies" stormy_skies
+ln -s /mud/prod/lib/help/_spells/"stunning arrow" stunning_arrow
+ln -s /mud/prod/lib/help/_spells/suffocate               suffocate
+ln -s /mud/prod/lib/help/_spells/summon                  summon
+ln -s /mud/prod/lib/help/_spells/synostodweomer          synostodweomer
+ln -s /mud/prod/lib/help/_spells/telepathy               telepathy
+ln -s /mud/prod/lib/help/_spells/teleport                teleport
+ln -s /mud/prod/lib/help/_spells/tornado                 tornado
+ln -s /mud/prod/lib/help/_spells/"trail seek" trail_seek
+ln -s /mud/prod/lib/help/_spells/transfix                transfix
+ln -s /mud/prod/lib/help/_spells/"tree walk" tree_walk
+ln -s /mud/prod/lib/help/_spells/"true sight" true_sight
+ln -s /mud/prod/lib/help/_spells/tsunami                 tsunami
+ln -s /mud/prod/lib/help/_spells/voodoo                  voodoo
+ln -s /mud/prod/lib/help/_spells/"watery grave" watery_grave
+ln -s /mud/prod/lib/help/_spells/"wither limb" wither_limb
+ln -s /mud/prod/lib/help/_spells/"word of recall" word_of_recall

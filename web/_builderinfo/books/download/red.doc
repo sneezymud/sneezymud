@@ -1,0 +1,511 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}}{\colortbl;\red0\green0\blue0;
+\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;
+\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\nowidctlpar\widctlpar\adjustright \fs20\cgrid \snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}{\s15\nowidctlpar\widctlpar\adjustright 
+\f2\fs20\cgrid \sbasedon0 \snext15 Plain Text;}{\s16\nowidctlpar\widctlpar\tqc\tx4320\tqr\tx8640\adjustright \fs20\cgrid \sbasedon0 \snext16 footer;}{\*\cs17 \additive \sbasedon10 page number;}}{\info{\title COVER:}{\author Jason A. Carpenter}
+{\operator Jason A. Carpenter}{\creatim\yr1998\mo4\dy13\hr19\min46}{\revtim\yr1998\mo4\dy13\hr22\min3}{\version3}{\edmins1}{\nofpages11}{\nofwords3412}{\nofchars19454}{\*\company Realms of Sorrill}{\nofcharsws0}{\vern71}}
+\margl720\margr720\margt720\margb965 \widowctrl\ftnbj\aenddoc\hyphcaps0\formshade\viewkind1\viewscale114\viewzk2\pgbrdrhead\pgbrdrfoot \fet0\sectd \linex0\endnhere\sectdefaultcl {\footer \pard\plain \s16\nowidctlpar\widctlpar
+\tqc\tx4320\tqr\tx8640\pvpara\phmrg\posxc\posy0\adjustright \fs20\cgrid {\field{\*\fldinst {\cs17 PAGE  }}{\fldrslt {\cs17\lang1024 1}}}{\cs17 
+\par }\pard \s16\nowidctlpar\widctlpar\tqc\tx4320\tqr\tx8640\adjustright {
+\par }}{\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}
+{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8
+\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright \f2\fs20\cgrid {COVER:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {REDIT and world creation
+\par 
+\par World.doc : Documentation for making and editing The World databases
+\par             for SneezyMUD.
+\par 
+\par World creation is primarily done through the use of the REDIT command, although
+\par simple changes can also be done by using the older EDIT line editor.  See
+\par HELP EDIT for a fairly decent treatment of that command.
+\par 
+\par Created: Wednesday, 30 Mar 1994
+\par Modified: Tuesday, 6 Feb 1996
+\par 
+\par Use command: READ CHAPTER (#) OF WORLD where (#) is one of:
+\par 
+\par     \tab 1) Name                       \tab \tab \tab Page 1
+\par \tab 2) Description\tab \tab \tab \tab \tab \tab Page 2
+\par \tab 3) Flags                      \tab \tab \tab Page 3
+\par \tab 4) Sector Type\tab \tab \tab \tab \tab \tab Page 4
+\par     \tab 5) Exits                      \tab \tab \tab Page 5
+\par \tab 6) Extra Descriptions\tab \tab \tab \tab \tab Page 6
+\par     \tab 7) Maximum Capacity           \tab \tab \tab Page 7
+\par \tab 8) Room Height \tab \tab \tab \tab \tab \tab Page 7
+\par     \tab 9) Delete an exit            \tab \tab \tab \tab Page 7
+\par \tab 10) Delete all extra descs\tab \tab \tab \tab Page 8
+\par    \tab 11) Building Doors\tab \tab \tab \tab \tab Page 8
+\par    \tab 12) NOTE ON SECRET DOORS      \tab \tab \tab Page 10
+\par    \tab 13) NOTE ON SAVING AND LOADING ROOMS\tab \tab Page 10
+\par    \tab 14) NOTE ON THE EXISTING MUD\tab \tab \tab \tab Page 11
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {CHAPTER 1:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {NAME
+\par 
+\par This is the name or title of the room.  It is always shown, regardless of
+\par brief mode.  Additionally, the EXITS command displays the room name next
+\par to the room direction.
+\par 
+\par The words in the room name should ALL be capitalized except for:
+\par a, an, the, of, to, in, on, and, out, or   (and other short prepositionals)
+\par 
+\par The first word in the name is ALWAYS capitalized. No Period at end.
+\par 
+\par examples:
+\par The Secret Cave of Batopr
+\par Up in a Tree
+\par Going out in Style
+\par The Town Square
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 2:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Description
+\par 
+\par The description is the long textual portion of a room.  It can be toggled
+\par on and off with the brief command.  The editor does NOT format your text
+\par so remember to hit return before you enter your 81st character or you will get text that looks like this :)
+\par 
+\par Initial spaces are ignored so if you want indentation, you must start your line
+\par with a ", hit the space bar once for each space you want, and then hit " again.
+\par The standard room indentation at the beginning of the description is TWO
+\par spaces: "  "This is how to start your rooms.  Note the quotation marks.
+\par 
+\par Room descriptions should be all one paragraph.  The more you write, the more
+\par likely it is people will turn on brief mode.  The idea here is to be concise
+\par but to also give people the mood and feel of the place they are in.  Try 
+\par to bring a story for the zone to life in your descriptions.
+\par 
+\par THINGS TO WATCH FOR:
+\par 
+\par MENTION WINDOWS AND DOORS: Windows (object types) and all doors should be
+\par explicitly mentioned in the description.  Windows because they aren't
+\par displayed as objects, and doors because a closed door will not appear
+\par under the exits command.  Do avoid mentioning things like "a locked door"
+\par "a closed gate" as the actual position the door or gate is in will change
+\par while the room-text can not. 
+\par 
+\par DO NOT MENTION NON-PERMANENT ITEMS AND CREATURES: Items and creatures in
+\par the room should NOT be mentioned.  The creature should be a mob, and the
+\par item would be an object each having appropriate descriptions of their own. 
+\par If you have something very trivial (like moss, lichen, gravel, etc) you
+\par can mention it in the description (rather than making a stupid obj for it)
+\par BUT you should make sure you set up an extra description (see below) for
+\par it so that if they look at something they see in the description it won't
+\par say "you don't see that here". 
+\par 
+\par GIVE CLUES TO SECRET ROOMS: If you are designing secrets to be found by a
+\par pc, it is likely that you will have to put your first clue in the room
+\par description so make sure that rooms that should have clues, have
+\par appropriate clues. 
+\par 
+\par 
+\par NON-DIRECTIONAL DESCRIPTIONS: Also, it is BAD to assume that characters
+\par have entered from a given direction. Examples of this would be: "You come
+\par through a door and a cavern stretches away before you."  What if they are
+\par coming back?  Then you would want it to say "The cavern ends, but a simple
+\par door presents itself as a path onward." Since you can't have two
+\par descriptions, you must generalize your text. "This is the southern end of
+\par a large cavern that stretches northward out of sight.  There is a simple
+\par door in the south wall."  Now it doesn't matter if they are coming in or
+\par exiting, the description is still accurate. 
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 3:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Flags
+\par 
+\par Room flags denote characteristics the room has.  They are mostly used
+\par internally by the code.  Do not think you have to make extensive use of
+\par these flags to build a good zone.  They should be used sparingly and in
+\par context.  In addition, some of the flags should not be used in your zone
+\par at all (private) and some only in conjunction with others
+\par (i.e..peaceful/noheal). 
+\par 
+\par always lit:     AVOID setting - make lamps, torches etc if you want light
+\par death:          kills creatures that enter.   somewhat frowned upon
+\par nomob:          mobs won't wander into these rooms. They can ride or track into
+\par indoors:        no weather displayed, no ridden creatures may enter
+\par peaceful:       prevents combat
+\par nosteal:        prevents the steal command from working
+\par no_sum:         can not summon a creature OUT of this room
+\par no_portal:      no magical way to LEAVE this kind of room
+\par no_magic:       can not use magic in this room.  mob procs WILL work here
+\par private:        prevents a god from goto'ing this room if 2 creatures in it
+\par silence:        prevents say and shout
+\par no_order:       no ordering charms and mounts here
+\par no_flee:        prevents fleeing from the room
+\par have_to_walk:   no magical way to ENTER this kind of room
+\par arena:          characters will not lose xp for dying in this room
+\par noheal:         mana/hp regen does not occur  should be set if room is peaceful
+\par hospital:       accelerated healing and regeneration
+\par save_rooms:     items (& mobs?) will be stored and reload again after reboot
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 4:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Sector Types
+\par 
+\par This represents the type of terrain the "room" is.  It affects movement cost,
+\par thickness (scan, ranged weapons), and fullness costs (hunger, thirst, drunk).
+\par Additionally, the movement-code looks closely at sector type to determine
+\par "how" people are moving (swimming, walking, climbing, flying, falling).
+\par 
+\par Ultimately, this will also relate to weather/climate.
+\par 
+\par If you have questions about this, or want a NEW type of terrain, talk to
+\par Batopr or the LOW.  You may want to brush up on your knowledge on swimming
+\par and gravity (as they relate to the mud) before setting some of these
+\par sector types. 
+\par 
+\par NOTES: 
+\par 
+\par INDOOR SECTOR TYPES AND ROOM FLAGS: setting a sector as a building/cave
+\par does NOT imply that it is indoors.  Remember to set this room flag or you
+\par will have it raining inside your cave. 
+\par 
+\par AIR AND WATER ROOMS:  Be sparing and thoughtful in your use use of 
+\par gravity type and water rooms in places where newbies will frequent.  It 
+\par is ok to use but be aware, drops will mean deaths and complaints about 
+\par deathtraps.  Water rooms can trap newbies who are unlikely to have any 
+\par swimming skills.
+\par 
+\par TELEPORTS: You can set up a TELEPORT room as well.  See HELP EDIT for how
+\par to do this, and it might be wise to talk to an experienced builder before
+\par you do this.  Teleport rooms CAN NOT be set up in the REDITer. 
+\par 
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 5:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Exits:
+\par 
+\par *** WARNING:  Using edit or REDIT to make an exit between rooms creates
+\par both sides of the exit AND changes room flags in the target room.  SEE 
+\par NOTES BELOW. *********************************************************
+\par 
+\par Most of the rooms you build will have simple Euclidean exits and doors
+\par made with the REDIT room editor or the edit command.  These tools allow
+\par you to make simple and not so simple exits and doors between rooms. 
+\par Making good and thoughtful exits is one of the most important aspects of
+\par good zone building.  The main thing to realize is that SneezyMUD's code gives
+\par you a lot of options in selecting exits.  Do not pin yourself down to
+\par something till you have looked at all of them. 
+\par 
+\par The first thing you should do is have practice rooms assigned to you and
+\par start using the REDIT editor.  Typing "REDIT" will put you into a menued
+\par room editor.  Looking through the REDIT menus is probably the best way to
+\par learn the room and exit options available to you.  Do not use edit till 
+\par after you have familiarized yourself with REDIT and can fix any errors you 
+\par have made in The World.
+\par 
+\par Most of REDIT is self explanatory.  The REDIT menus allow you to build
+\par without doors, to build secret, locked, or pick-only doors, or to make
+\par gates portcullis's or a variety of other door types.  Following the
+\par different menus you will be able to assign weights, keys, keywords,
+\par directions, and decide whether you want the door pick-able or bash-able. 
+\par Currently, ward doors are not open-able so should not be used.  Keywords on
+\par doors will be used by players so make them reasonable.  Other options,
+\par such as gravity rooms, teleporters, and portals will be described
+\par elsewhere but should be thought of as alternative exit types. 
+\par 
+\par 
+\par NOTES:
+\par 
+\par WARNING:  Using edit or REDIT to make an exit between rooms creates both
+\par sides of the exit AND changes room flags in the target room.  Although
+\par this feature is useful in building a zone, it can cause problems when 1)
+\par you make a mistake and open an unintended exit to The World or 2) you make
+\par an exit between dissimilar room types.  If you make a mistaken exit, fix
+\par the room flags and exits in both the room you were in and the room you
+\par made an exit too.  If you are uncertain, ask a higher level immortal to
+\par help or leave a note.  Please try not to leave weird room flags in world. 
+\par Mortals get pissed when The World is not as they expected. 
+\par 
+\par 
+\par USUAL BUILDING ERRORS:
+\par  
+\par                1. Builders forget to check room flags on both sides of exit
+\par                2. Builders make exits to void
+\par                3. Builders forget to name Doors
+\par                4. Builders don't explore all exit options
+\par                
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 6:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Extra Description
+\par 
+\par The use of extra descriptions are what set off mediocre builders from good
+\par builders.  Extra descriptions are extra text that players read as they
+\par explore the room that they are in.  Usually builders build zone clues and
+\par the heart of their zone story into their extra descriptions.  Even if you
+\par are not telling a story or building in a quest, good zones will ALWAYS
+\par have things to look at.  However, what sets off a good zone from a great
+\par zone is the use of extra descriptions to tell a story and setup puzzles
+\par for the players to solve. 
+\par 
+\par An extra description is referenced by players by typing "look at 
+\par (x)".   Builders build them in the REDIT menu. 
+\par 
+\par Understand that you can build in layers.  You can have clues to an extra 
+\par description in the room description and clues to additional extra 
+\par descriptions embedded in that first extra description.  This is an
+\par especially useful in giving out clues to secret doors.
+\par 
+\par Keywords: This is a space separated list where each word is one of the
+\par words that is substituted for (x) above.  Players can abbreviate so you
+\par don't need to have separate keywords for both "wall" and "walls", you should
+\par just set up the word "walls" as a keyword.  In selecting keywords, you 
+\par must be cognizant of what objects will be in room so that you don't embed 
+\par a keyword behind another keyword making it unusable.
+\par 
+\par Extra Description Text: The text you type is what will be displayed when 
+\par someone types look <at> keyword. 
+\par 
+\par NOTES:
+\par 
+\par RECOMMENDED/REQUIRED EXTRA DESCRIPTIONS:  You almost always should use an 
+\par extra description in the following building situations:
+\par 
+\par    Secret Doors: You should always put at least one extra descriptions in
+\par       a  room if you have a secret door in the room.  (See the long note 
+\par       on secret doors at the end of this volume.) 
+\par    Teleport Rooms: If your room is a teleport room, you can set up
+\par       an extra description with keyword: _tele_ This text will be shown
+\par       when the character is teleported. 
+\par 
+\par 
+\par REDUNDANT KEYWORDS: You do not need both picture and pictures or wall and 
+\par walls.  Just use the plural of all keywords.
+\par 
+\par CHECK YOUR KEYWORDS FOR BLOCKAGES:  It is possible to have keywords block
+\par other keywords.  Room keywords can also interfere with object keywords. 
+\par It is also possible to not leave enough hints so that players can find the
+\par keyword.  Make sure after you build that all keywords are findable by the
+\par player. 
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 7:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Maximum capacity
+\par 
+\par Default is 0 = unlimited.  Any positive number represents the maximum
+\par number of creatures that can be in the room at one time.  Mobs and mounts
+\par count as creatures, and obviously PC's too.  It's probably not worth the
+\par time to set if the number is >5.
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {CHAPTER 8:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Room Height
+\par 
+\par Room height is in inches.  Room height is used to make narrow spaces and 
+\par cause coded affects in players.   For example, a player can only crawl 
+\par into a room if he/she is 110% taller than the room height.  The code will 
+\par also cause tall players to bump their heads causing some damage if they 
+\par enter small rooms.  You must set outdoor rooms unlimited height (-1) 
+\par and set a room height for indoor heights (normal height is about 120).
+\par 
+\par NOTES:
+\par 
+\par RELATION TO MOB HEIGHT:  You must set your room heights in expectation of
+\par what mobs you are going to have occupy them and what players you want
+\par playing them.  Room height must also be set in relation to flee/track
+\par paths for large mobs and wander paths for large non-sentinel mobs.  For
+\par example, if you are going to have a dragon in a cave.  You must build the
+\par path to the inside cave of sufficient height so the dragon can get to the
+\par surface. 
+\par 
+\par REQUIRED SETTINGS:   You must set outdoor rooms to unlimited room 
+\par heights. You must not have unlimited heights in indoor rooms.  
+\par 
+\par RECOMMENDED SETTINGS:  The most common room heights are 120 for inside 
+\par rooms if you are not trying to have a restricted room and unlimited for 
+\par outdoor rooms.  
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {CHAPTER 9:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Delete an exit:
+\par 
+\par Fairly self explanatory.  It will eliminate an exit from a room and 
+\par delete any doors in that direction.  WARNING: SEE NOTE BELOW ON FIXING 
+\par ROOM FLAGS and EXITS IN BOTH ROOMS.
+\par 
+\par NOTES:  
+\par 
+\par FIXING ROOM FLAGS/RETURN EXITS:  Deleting an exit does not delete the
+\par return exit or the room flags in the target room.  This mean if you make
+\par and inadvertent exit/door to a room or want to delete an exit between
+\par rooms, you must do *more* than delete the exit to fix the error.  You must
+\par fix/delete both sides of an exit and fix room flags in both rooms.
+\par 
+\par 
+\par ONE-WAY EXITS AND DOORS:  One directional exits can be accomplished by
+\par creating an exit to and from rooms A and B, then deleting the exit on the
+\par bad side, thus leaving only the ONE-WAY exit you wanted. 
+\par 
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 10:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Delete all extra descriptions:
+\par 
+\par All extra descriptions in a room will be erased.  
+\par 
+\par NOTES:
+\par 
+\par CHECK YOUR DELETION:  We've had problems with this option in the past, it
+\par may not work well.  Make sure you STAT room after you are done to make 
+\par sure the deletion took.
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {CHAPTER 11:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Simple Doors:
+\par 
+\par *** WARNING:  Using edit or REDIT to make a door between rooms creates
+\par both sides of the exit AND changes room flags in the target room.  SEE 
+\par NOTES BELOW. *********************************************************
+\par 
+\par You will make doors in the REDIT editor or with the edit command.  Please 
+\par familiarize yourself with REDIT before you play with the edit command 
+\par (mostly so that you can fix anything you cause).
+\par  
+\par The doors portion of the REDIT editor is easy to get to and for the most
+\par part self-explanatory. However, you will encounter some menu items that
+\par may not be immediately clear: name, weight, condition, wards, keys. Door
+\par type. 
+\par 
+\par Door Name: This is the "name" of the door.  It will be used in conjunction
+\par with the doortype in setting the command to manipulate the door.  Most of 
+\par your doors will be named "door" so that players will type "open door".  
+\par If you want more than one name to open the door, you can add names.  Make 
+\par sure the first word is the one you want echoed to room.  For example 
+\par naming a door "door iron" will cause player to open door when he types 
+\par open iron.  Naming it "iron door" will cause him to open iron.  It is 
+\par recommended that you use "door" as the first keyword.
+\par 
+\par Door type: Play around with these. For the most part these affect the 
+\par text players will see when they open and shut the door.  For example if 
+\par you use gate, the door will unlatch rather than open.  If you need a new 
+\par doortype, talk to Batopr or the LOW.
+\par 
+\par Weight:  Door weight is related to the player strength attribute.  The
+\par weight of the door determines what strength is required to open the door. 
+\par For the most part up to weight=15 it is linear (i.e. a pc with strength=14
+\par can not open a door which you have set to 15).  After this the formula
+\par changes somewhat.  Please be thoughtful about making heavy doors.  In
+\par addition, although maybe coded in future, players can not at this time
+\par pool their strengths on a door so the max weight you should set on any
+\par door would be 19. 
+\par 
+\par Key Number: If you make a locked door, you will encounter "Key Number". 
+\par This refers to the database number (vnum) of the key you will be making to
+\par open the door.  Only a key with that vnum will open the door.  You will
+\par make the key later but should assign it a number now.  You should use the
+\par number of the room for the key for simplicities sake.  For example, if
+\par your zone is rooms 1900-2100 and you are building a locked door from 1954
+\par to 1955, you should use key number 1954 or 1955.  Be aware that you will
+\par have to use this same number later when you make your objects. 
+\par 
+\par Other options: You have a number of other exit choices available to you
+\par other than the simple exits you can make in the room editors.  If you have
+\par an object in the room which will be the same keyword as the door itself,
+\par you should see the LOW to get a unique door type made for that room.  In
+\par addition, subject to the availability of a coder, you can make word doors
+\par or have special room/exit procedures coded if you have an interesting door
+\par idea and a coder is willing to undertake the project. 
+\par 
+\par Using the edit command:  After you have explored your options and have
+\par become comfortable with using the REDIT room editor, you might want to
+\par explore the edit command. The edit command is usually used by experienced
+\par builders to make exits fast without having to go through REDIT menus.  Do
+\par not use this command till you are comfortable with REDIT and can fix any
+\par problems you create using the edit command.  There is help edit to help
+\par you learn this command. 
+\par 
+\par Teleport Rooms: The edit command is also the only way you can make
+\par teleport rooms which are another exit option.  Teleport rooms are
+\par described later in this book.  The other options you have for exits are to
+\par make a room only reachable by magic spells or reachable by flying,
+\par climbing, swimming, or water-breathing players. 
+\par 
+\par NOTES:
+\par 
+\par WARNING:  Using edit or REDIT to make a door to a room creates both sides
+\par of the exit AND changes room flags in the target room.  Although this
+\par feature is useful in building a zone, it can cause problems when 1) you
+\par make a mistake and open an unintended exit to The World or 2) you make an
+\par exit between dissimilar room types.  If you make a mistaken exit, fix the
+\par room flags and exits in both the room you were in and the room you made an
+\par exit too.  If you are uncertain, ask a higher level immortal for help or
+\par leave a note.  Please try not to leave weird room flags in world.  Mortals
+\par get pissed when The World is not as they expected. 
+\par 
+\par OTHER CHAPTERS:  Later in this book, you will see chapters on doors, 
+\par secret doors, and teleport rooms that will give some further details.
+\par 
+\par 
+\par USUAL BUILDER ERRORS:
+\par                1. Builders forget to check room flags on 
+\par                   both sides of exit
+\par                2. Builders make exits to void
+\par                3. Builders forget to name Doors
+\par                4. Builders don't explore all exit options
+\par                
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 12:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {SECRET DOORS:
+\par 
+\par Secret doors have their place in a FRP environment, however, don't get
+\par carried away with these.  The ONLY way to detect these at present is via
+\par the thief SEARCH/DETECT SECRET command.  Secret doors are an option in 
+\par both the REDIT editor and the edit command.
+\par 
+\par If you have a secret door, you MUST do the following if you want PC's to have
+\par any chance at all of finding your door.
+\par 
+\par Something in the room description should be eyecatching or out of the
+\par ordinary.  "The walls are made of stucco."
+\par 
+\par An extra description must be set up that reveals something a LOT out of the
+\par ordinary, or a series of descriptions must be set up.
+\par 
+\par walls stucco:  "Millions of tiny bumps dot the wall.  The bumps on one part
+\par of the wall seem to have been rubbed smooth."
+\par bumps smooth part: "The stucco here has been rubbed smooth.  Probably because
+\par there is a button concealed nearby."
+\par button: "Pushing the button would OPEN THE STUCCO wall."
+\par ---> the secret doors name would then be "stucco".
+\par 
+\par You MUST have at bare minimum ONE extra description for each secret door.
+\par Also remember the "other" side of the door will be secret too, so you may
+\par want to say something in the room description on the far-side too like:
+\par "The secret passage through the stucco wall you passed through lies somewhere
+\par around here.  Now where did it go?"
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {CHAPTER 13:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {Saving and loading rooms
+\par 
+\par The relevant commands are RSAVE and RLOAD.  (See the help files on each)
+\par These commands have some very important features/problem areas and 
+\par are responsible for the most common and costly builder errors.
+\par 
+\par NOTES:
+\par 
+\par OVERWRITING PREVIOUS WORK:  When you RSAVE your work, your former save
+\par file is deleted and replaced with your new save.  This means that if you
+\par screw up, you can and *will* easily wipe out a ton of work you have done.
+\par The most common errors come from not saving *all* of your built rooms (See
+\par Using a RSAVE Macro below) and trying to save a temporary building project
+\par before the LOW has told you that your rooms have been backed up and it is
+\par safe to save.  If the LOW gives you an assignment or you need to save
+\par rooms that you have built *and* you have been working on a zone, do not
+\par RSAVE these new rooms till the LOW has told you that it is safe to do so. 
+\par 
+\par USE A RSAVE MACRO:  You should ALWAYS RLOAD and RSAVE all rooms in your
+\par zone.  SneezyMUD has on-line aliases and most people use clients.  You should
+\par only RSAVE and RLOAD using a macro/alias that does your save or load
+\par accurately each time so that an accidentally typo doesn't cost you. 
+\par 
+\par }\pard \s15\nowidctlpar\widctlpar\brdrb\brdrdb\brdrw15\brsp20 \adjustright {\page CHAPTER 14:
+\par }\pard \s15\nowidctlpar\widctlpar\adjustright {The existing mud:
+\par 
+\par Changing anything in the existing mud is something you should not contemplate
+\par until you are at least 54th level.  Players get awful upset if a room that
+\par has always been peaceful before suddenly changes, or a deathtrap strangely 
+\par appears in center-square.  Be EXTREMELY careful making exits.
+\par 
+\par If you DO accidentally mess up the real mud, tell someone ASAP.  It is far
+\par better to have the problem corrected BEFORE it means doing a reimbursement,
+\par then to have to do the reimbursement and then have to go check the logs to
+\par see which dumb immortal screwed up the mud and didn't even bother to tell
+\par someone about it.
+\par 
+\par This does mean though that you should NOT connect your work-in-progress zone
+\par to the existing mud.  The connection is normally done by the Lord of Worlds
+\par as the final act of zone making and corresponds to making the zone active.
+\par Until the zone is declared ready to be made active, it should not be hooked
+\par to the existing mud.
+\par 
+\par }}

@@ -1,0 +1,257 @@
+<h>-5.0-conversion Quickstart Guide
+-----------------------------------------
+ _____________________________________________________
+|  To read a chapter in this guide type:             |
+|      read chapter <Chapter Number> of quickstart   |
+|____________________________________________________|
+
+It's recommended you read this entire leaflet before
+attempting to play.  It'll answer a lot of questions
+and it's rather short.
+
+Chapters:
+1) Introduction 
+2) General Overview and Goals
+3) Classes, Races, and Player Power
+4) Attribute Types and the New Stat System 
+5) Learning By Doing and Disciplines
+6) Skill Sets, Diversity, and Pre-requisites
+7) Future Plans
+8) Afterword
+
+INTRODUCTION
+
+The main differences between earlier <h>s and this version are in the
+race, stat, skill learning, and discipline systems.  Additionally, there are
+geographical changes, and changes to the way some skills work, as well as
+modifications to mage damage, faction code, how lag applies to casters. 
+Other numerous smaller changes can be found listed in help files and in
+the news. Lastly, there have been upgrades to utility functions like
+color, auto, score and attribute. Combat formulas have been changed to
+eliminate the tie-in between damage and weapon weights.  Combat relies
+more on the players skill than the innate damage of the weapon he uses.
+
+The use of Rent to control inventory levels is back in the MUD, and
+factions will be implemented in full this version. High level experience
+has been lowered somewhat and the classes are more balanced. The Azruzi
+class has been taken out of the MUD and will be replaced by the Shaman
+class soon after opening. Some of the classes are being made to
+integrate better in groups than in past versions and there is an impetus
+to getting more warriors of various races.
+
+Most of the changes you will notice because they are obvious or because
+they are in the help files. The rest of this document will be devoted to
+general overview and to giving the rationales and reasons behind some of
+the new systems and answering some of the frequently asked questions about
+how and why we did things the way we did it. 
+
+Please understand that a lot has changed. You may or may not like all of
+the new structures although we hope you do.  All of them were designed to
+try to adjust for perceived flaws and inconsistencies in past versions. We
+believe that the new structures generally upgrade the MUD and respond to
+player raised complaints, wishes and gripes. It is a given that we won't
+please everyone with these changes, and we will have new problems, wishes
+and gripes (and hopefully some compliments). Our long beta period has
+worked through many of these problems which is the one thing we can thank
+about our long beta.  We are also sure that we will find things we wished
+we had implemented with this version as well. However, we hope and believe
+that you will find this version a lot of fun. 
+
+Last, we wish to again thank all the beta testers that have given
+invaluable assistance in working out bugs and inconsistencies over the last
+year.
+
+
+GENERAL OVERVIEW AND GOALS
+
+In general <h> 5.0 will differ from <h> 4.1 in that there will
+be an increase reliance on both race and skill learning in deciding what
+you can do and skill learning will be not just dependent on intelligence
+and level but how long or often you have used a skill. Stats are important
+but they are not an independent category.  They are majorly influenced by
+your choice of race.  There are planned racial skills and attributes that
+will further affect your character and which will help us to adjust
+balances if needed. 
+
+CLASSES, RACE, AND POWER
+
+Note that, with some exceptions, any race can try to be any class, but
+some of those combinations may not make good characters.  Your race gives
+you a range of stats and you can only modify compared to a generic member
+of your race.  Magic effect are no longer limited by racial maxes and
+there are no set stat limits for multi's.  Multi-classes also have no
+direct pre-reqs but will not be as powerful because of the relation of
+stats to race and some of the changes to learning and fighting vs engaged
+casting.  
+
+Multi-classing has been taken out of the game although the code has not
+been removed.  It is unlikely for them to come back in the game. The
+intention is to add more hybrid classes in.
+
+Hybrid classes such as Deikhan and Ranger have a number of overall
+improvements that improve their playability but also are more limited as
+casters now.  In fact, rangers no longer cast but have skills that border
+on magic. Clerics as a whole were slightly downgraded by losing the pet
+skills (put in the shaman class which will open after the mud goes into
+production) and some changes to fighting/engaged casting and mages were
+increased in power.  Monks and thieves were restructured.  Thieves have
+new trap skills and monks are going through a pretty through change in
+focus which may continue into 5.0 production. 
+
+ATTRIBUTES TYPES AND THE NEW STAT SYSTEM
+
+Stats are divided into Physical, Mental and Utility attributes.  There are
+more of them and the scale is much broader than past versions of <h>,
+growing by nearly a factor of 10.  This is a new system and will be unfamiliar.
+We implemented in this manner so as to obtain more diversity in stats and to
+make <h> more racial and skill based.  We also were highly motivated by
+past balance meetings in which mortals asked us to 1) make stat more diverse
+and 2) decrease the emphasis on warriors maxing their physical stats and
+casters only maxing their mental stats.  We had no actual diversity on 4.1
+even though theoretically it was possible.  The primary goal of our stat
+system design was to try to make tradeoff between stats between equal value
+stats.  Thus not every player would rob karma for strength or intelligence
+depending on their class.
+
+This area has been the most frequently asked question of the beta.  Why
+can't you trade between categories.  Understand that our decision was
+conscious and a decision not to allow it rather than something we didn't
+think about.  We consciously do not allow tradeoffs between categories
+because trade-offs between unequal stats was one of the major problems in
+obtaining diversity on 4.1 and earlier versions.  Every warrior was stupid
+and maxed their available strength, dex and con.  Every mage was smart and
+weak.  The only place where there were differences was between 18 and 19
+in a stat and a 12 was meaningless.  We are trying to eliminate that
+problem in this new system. We may or may not allow bonus stats during
+creation but will be unlikely to allow looting between categories of
+unequal stats. Note that strength for a mage may not help him that much
+but his trade off will be only against dex or con and be offset by race as
+well.  It will not be trading a meaningful stat versus a non-meaningful
+one.  If you want a certain type of character, look at the races first
+before selecting your trade-offs.
+
+One last note.  Physical stats are more important for warriors still but
+we have adjusted at the code level (or will if bugged) for the fact that
+warriors will not be maxed physically.  Mental stats do seem to affect
+all PC's. Intelligence sets practices, Wisdom learning rates and focus how
+well you perform a skill.  They are hopefully equal in importance and an
+intelligent race warrior may have some advantages that offset his
+detriments from his physical characteristics versus an ogre. That
+intelligence may come from his race or from his tradeoffs within the race.
+
+LEARNING BY DOING and DISCIPLINES
+
+Learning comes from two places.  You obtain a skill set using practices
+and you get actual learning by actually using the skills themselves.  This
+includes combat and other automatic skills like dodge.  How learned a
+person is will be a combination of the two systems and what combination
+depends on the individual skill.  Please understand that we do not
+consider learning rates structural.  If a learning rate seems to slow or
+fast that is a balance issue and is now easy to fix.  We want to hear
+about all balance issues without reservation.  Structural issues we want
+to hear about but we also know that you can not please everyone.  Our
+structures will only be modified if they are clearly not correct.  We are
+aware of the tradeoffs that we have made for 5.0 (see section on balance
+verse diversity) and believe we have gained more than we have lost in this
+area.
+
+Disciplines were re-organized into basic disciplines and advanced
+disciplines.  All pre reqs were moved into your basic disciplines which
+consist of 2-3 disciplines for each class.  One holds the basic skill of
+the class.  The other holds basic combat or casting skills or learning
+numbers.  You know learn adventuring and get your wizardry/faith level
+directly from your guildmaster although you can also use (waste) practices
+on them if you just have to get a skill early.  Tactics and evaluate are
+part of the adventuring discipline now and combat is reserved for combat
+skills.  Specialization comes after you have finished your basic
+disciplines and you will get different practices/level and learn the
+disciplines at different rates.  Again see separate section and help files
+for full explanations. 
+SKILL SETS, DIVERSITY, and PRE_REQUISITES
+
+Players pre requisites have been centralized and this has allowed the
+classes to be much more ordered and balanced at lower to mid levels.  This
+was the primary motivation for the changes in these areas.  
+
+In 4.1, a caster would get a spell that was designed for a level 15 mage
+at level 5.  He would learn a spell like gust after that one rather than
+before.  No spells were learned at the appropriate time except by
+coincidence.  This caused us to put in complex pre-requisites and to put
+weird things into classes to try to catch up to the weird skill sets. This
+meant that in general, <h> 4.1 casters were identical between levels 20
+and 25 because of pre requisites and unbalanced both before and after
+those levels.  
+
+Ultimately, the idea of full choice of skills at low levels is a balance
+nightmare and, ultimately, we never even saw the diversity that was the
+primary benefit desired by that system.  At low levels, there were clearly
+preferred paths for every class because not every discipline can be equal.
+The only people who didn't know were Newbies who didn't know better.  It is
+very difficult to both give choice and make everything equal and make it
+understandable.  We believe it is not possible to do that and maintain
+balance.
+
+We have substituted diversity in actual learning, racial diversity, and
+have added meaningful specialization in place of diversity in practices. 
+Specializations have meanings in the 5.0 systems where you do not max a
+discipline in 8 levels of practice but must both use the skill and pick
+the specialty when you get out of basic.  Every skill and spell is
+associated with advanced disciplines and specialization will change the
+affects of basic skills.  Some of these affects will be apparent (see help
+files for some affects) some invisible and structural.  Using a skill will
+increase your abilities of even basic skills in those specialties.  Know
+that there are diversities in identically practiced players based on their
+choices in using skills.  At higher levels, people will actually get
+different skill sets as they sink practices into the advanced disciplines.
+
+The above will explain why some advanced disciplines have no apparent
+skills.  We hope to eventually have skills in every one but the discipline
+learning has an independent affect.
+
+In any event, please understand the reason why your low level choices are
+more restricted.  It is so no character learns meaningless skills at
+inappropriate levels.  Restricting choice was not our goal but the
+trade-off for what we tried to accomplish.  It has allowed us to
+immediately make the ranger and mage classes playable and it will allow us
+to balance skills and classes easily against each other.
+
+We believe that this will be more understandable to new comers to <h>
+and increases the over-all enjoyability of the mud.  In looking at this
+system please be aware that there are different diversities in place in
+terms of what skills you use.  If you do not use bash versus kick, you
+will have no bash and be as diverse as a 4.1 fighter who never got bash. 
+There are less options but it will be more understandable and perhaps more
+diverse. 
+
+AFTERWORD
+
+In addition to continued general coding and world building, the
+implementors are aware of the following changes that can be expected
+within version 5.0:
+
+Shaman Class: The implementors plan on adding a shaman class to the mud
+which will have the following features: brewing, drain spells, undead
+pets, tasked healing.
+
+Mage Class: Mages will have more complexity coded into the class. Damage
+and duration amounts will be affected by weather and sector.  Mage
+protection spells will also become more important when fighting a casting
+mobile.
+
+Cleric Class: Offensive prayers will be converted to tasking. Afflictions
+will go through some changes in that most of the afflictions will be made
+of short term duration.
+
+Warrior Class: Smythe should finally be implemented although with some
+limits.
+
+Skills: Generally, we expect continued coding of detail into skills over
+the next year including taking even better advantage of our discipline and
+learning system.
+AFTERWORD
+
+All the Implementors, Coders, Immortals, and Builders of <h> welcome
+you to the new version.  We hope you find it enjoyable.  Feel free to
+consult us if you have questions that the help files and other books do
+not answer. 
+

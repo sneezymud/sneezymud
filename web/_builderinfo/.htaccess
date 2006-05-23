@@ -1,0 +1,6 @@
+ AuthName Builders
+ AuthType Basic
+ AuthUserFile /mud/web/_builderinfo/builder.pwd
+
+require valid-user
+

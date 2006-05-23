@@ -1,0 +1,6 @@
+ AuthName Immortals
+ AuthType Basic
+ AuthUserFile /mud/web/_immortinfo/immort.pwd
+
+require valid-user
+
