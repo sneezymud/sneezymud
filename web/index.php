@@ -54,13 +54,13 @@ if ($section == "home")      $HOME_JPG = "homeo.jpg";
 if ($section == "news")      $NEWS_JPG = "images/navbuttons/newso.jpg";
 if ($section == "players")   $PLAY_JPG = "images/navbuttons/playerso.jpg";
 if ($section == "resources") $RESO_JPG = "images/navbuttons/resourceso.jpg";
-if ($section == "histories") $HIST_JPG = "historieso.jpg";
+if ($section == "histories") $HIST_JPG = "images/navbuttons/historieso.jpg";
 
 $HOME2_JPG = "homeo.jpg";
 $NEWS2_JPG = "images/navbuttons/newso.jpg";
 $PLAY2_JPG = "images/navbuttons/playerso.jpg";
 $RESO2_JPG = "images/navbuttons/resourceso.jpg";
-$HIST2_JPG = "historieso.jpg";
+$HIST2_JPG = "images/navbuttons/historieso.jpg";
 
 ?>
 
@@ -183,7 +183,7 @@ function MM_swapImage() { //v3.0
                           <table border="1" cellpadding="0" cellspacing="0" width="100%" bgcolor="#000000" bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0">
                             <tr>
                               <td width="100%">
-                                <p align="center"><a href="index.php?page=histories" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('histories','','historieso.jpg',1)"><img name="histories" border="0" src="<?=$HIST_JPG?>" width="99" height="25"></a></p>
+                                <p align="center"><a href="index.php?page=histories" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('histories','','images/navbuttons/historieso.jpg',1)"><img name="histories" border="0" src="<?=$HIST_JPG?>" width="99" height="25"></a></p>
                               </td>
                             </tr>
                           </table>
