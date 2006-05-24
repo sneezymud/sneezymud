@@ -50,13 +50,13 @@ $PLAY_JPG = "images/navbuttons/players.jpg";
 $RESO_JPG = "images/navbuttons/resources.jpg";
 $HIST_JPG = "images/navbuttons/histories.jpg";
 
-if ($section == "home")      $HOME_JPG = "homeo.jpg";
+if ($section == "home")      $HOME_JPG = "images/navbuttons/homeo.jpg";
 if ($section == "news")      $NEWS_JPG = "images/navbuttons/newso.jpg";
 if ($section == "players")   $PLAY_JPG = "images/navbuttons/playerso.jpg";
 if ($section == "resources") $RESO_JPG = "images/navbuttons/resourceso.jpg";
 if ($section == "histories") $HIST_JPG = "images/navbuttons/historieso.jpg";
 
-$HOME2_JPG = "homeo.jpg";
+$HOME2_JPG = "images/navbuttons/homeo.jpg";
 $NEWS2_JPG = "images/navbuttons/newso.jpg";
 $PLAY2_JPG = "images/navbuttons/playerso.jpg";
 $RESO2_JPG = "images/navbuttons/resourceso.jpg";
