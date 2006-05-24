@@ -1,0 +1,149 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>SneezyMUD 5.2 Archives</title>
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#99ccff" vlink="#ccccff" alink="#99ffcc">
+<SCRIPT LANGUAGE="JavaScript">
+        <!--
+
+                function imgGreen(imgName)
+                {
+                        if (document.images) 
+                                document[imgName].src = 'images/menu/' + imgName + '_green.gif';
+                }
+                
+                function imgPurple(imgName)
+                {
+                        if (document.images) 
+                                document[imgName].src = 'images/menu/' + imgName + '_purple.gif';
+                }
+
+        
+                function imgBlue(imgName)
+                {
+                        if (document.images)
+                                document[imgName].src = 'images/menu/' + imgName + '_blue.gif';
+                }
+                
+                function imgRed(imgName)
+                {
+                        if (document.images)
+                                document[imgName].src = 'images/menu/' + imgName + '_red.gif';
+                }                
+        // -->
+</SCRIPT>
+
+<center><img src="images/sneezybanner.gif" border="0" align="center" alt="SneezyMUD 5.2" width="412" height="98"></center>
+<table width="100%" cellpadding="4">
+  <tr valign="top">
+    <td width="163" height="531"><img src="images/firebar_blue.jpg" border="0" width="160" height="4"><br>
+      <a href="index.html" onmouseover="imgGreen('main'); window.status=('SneezyMUD Home'); return true;" onmouseout="imgPurple('main')"><img src="images/menu/main_purple.gif" border="0" name="main" alt="Main" width="130" height="37"></a><br>
+      <a href="welcome/index.html" onmouseover="imgGreen('welcome'); window.status=('Intro/Thanks and Contents'); return true;" onmouseout="imgBlue('welcome')"><img src="images/menu/welcome_blue.gif" border="0" name="welcome" ; return true alt="Welcome" width="130" height="33"></a><br>
+      <a href="people/index.html" onmouseover="imgGreen('players'); window.status=('Race and Class info, Gameplay info, Client download'); return true;" onmouseout="imgBlue('players')"><img src="images/menu/players_blue.gif" border="0" name="players" alt="Players" width="130" height="33"><br>
+      </a><a href="game/index.html" onmouseover="imgGreen('game'); window.status=('Race and Class info, Gameplay info, Client download'); return true;" onmouseout="imgBlue('game')"><img src="images/menu/game_blue.gif" border="0" name="game" alt="[Game]" width="130" height="30"></a><br>
+      <a href="histories/index.html" onmouseover="imgGreen('histories'); window.status=('Quest records and World History (Grimoire)'); return true;" onmouseout="imgBlue('histories')"><img src="images/menu/histories_blue.gif" border="0" name="histories" alt="Histories" width="130" height="31"></a><br>
+      <a href="help/index.html" onmouseover="imgGreen('help'); window.status=('FAQ, Quickstart and Newbie guides, Online help files, Site Map'); return true;" onmouseout="imgBlue('help')"><img src="images/menu/help_blue.gif" border="0" name="help" alt="Help" width="130" height="35"></a><br>
+      <img src="images/firebar_blue.jpg" border="0" width="160" height="4"><br>
+    <p><br>
+					SneezyMUD code is developed with the help of <a href="http://www.parasoft.com/" target="_top">ParaSoft </a>products.</p>
+					<p>
+					<a href="http://www.debian.org">
+					<img src="images/debianswirl.jpg" align="right" border="0" width="76" height="91" alt="debian swirl"></a><br>
+					This site is running <a href="http://www.debian.org">Debian/GNU Linux </a>
+					<p>
+                    &nbsp;                    </td>
+    <td width="100%" height="531"><div align="right">	<h2>Grimhaven Main Page</h2>
+					</div>
+					<p>Greetings! I see you have stumbled upon our Archive of scrolls and tomes. I bid you, take a look around and see if perhaps something within our stores strikes an interest in your heart to join the adventure we call SneezyMUD! As always our thanks continue to go out to both <a href="http://www.stanford.edu">Stanford University</a> as well as Kane Spinato for their resources and time in providing a home for the MUD.&nbsp;</p>
+					<p><b> Now to join us in the fun by telneting to: <a href="telnet://sneezy.stanford.edu:7900">sneezy.stanford.edu 7900</a></b></p>
+					<div align="right">
+						<h2>Site Overview</h2>
+					</div>
+					<div align="right">
+                        <div align="left">
+                          <table border="0" cellpadding="0" width="100%">
+                            <tr>
+								<td width="50%" valign="top"><a href="index.html"><font size="5">Main:</font></a><br>
+									This is the front page. You are here.</td>
+								<td width="50%" valign="top"><a href="welcome/index.html">
+                                    <font size="5">Welcome:</font></a><br>
+                                  The welcome page has an introduction and thanks to MUD and web contributors.
+                                  You can also find an overview of the MUD's
+                                  feartures here.</td>
+                            </tr>
+                            <tr>
+								<td width="50%" valign="top"><a href="people/index.html">
+                                    <font size="5">Players:</font></a><br>
+									The people section has information on the real people behind the MUD's players and administrators. It has links to pictures and personal home
+                                  pages.</td>
+								<td width="50%" valign="top"><a href="game/index.html">
+                                    <font size="5">Game:</font></a><br>
+									The game section has all gameplay related info, including race and class descriptions, faction pages and the MUD client.</td>
+                            </tr>
+                            <tr>
+								<td width="50%" valign="top"><a href="histories/index.html">
+                                    <font size="5">Histories:</font></a><br>
+									The histories section has the MUD Grimoire (a history of the world and its people) and quest histories.</td>
+								<td width="50%" valign="top"><a href="help/index.html">
+                                    <font size="5">Help:</font></a><br>
+									This section has MUD help files and
+                                  information on this website.</td>
+                            </tr>
+                        
+                          </table>
+                        </div>
+					</div>
+    </td>
+  </tr>
+</table>
+
+<p>
+                    <img border="0" src="images/menu/game_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/game_purple.gif" width="1" height="1">
+                    <img border="0" src="images/menu/main_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/main_blue.gif" width="1" height="1">                    
+                    <img border="0" src="images/menu/histories_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/histories_purple.gif" width="1" height="1">                    
+                    <img border="0" src="images/menu/players_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/players_purple.gif" width="1" height="1">                    
+                    <img border="0" src="images/menu/help_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/help_purple.gif" width="1" height="1">                    
+                    <img border="0" src="images/menu/welcome_green.gif" width="1" height="1">
+                    <img border="0" src="images/menu/welcome_purple.gif" width="1" height="1">                    </p>
+
+<!-- Begin HTML comment
+NOTE: This is a generic, default HTMLfragment - modify me or remove this line.
+
+This is an HTMLfragment to be pasted at the bottom
+of your webpage for the The Mud Connector WebRing WebRing. It is what
+links you to the rest of the ring. :)
+
+End HTML comment -->
+
+<p>
+<center>
+This <a href="http://www.mudconnect.com/tmcring.html">The Mud Connector
+WebRing</a> site owned by <a href="mailto:katish@ig.com.br">SneezyMUD</a>.
+<br>
+
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;id=161;prev5">Previous 5 Sites</a>
+|
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;id=161;prev">Previous</a>
+|
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;id=161;next">Next</a>
+|
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;id=161;next5">Next 5 Sites</a>
+|
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;random">Random Site</a>
+|
+ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=tmcring;list">List Sites</a>
+</center>
+<p>
+</body>
+
+</html>

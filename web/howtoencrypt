@@ -1,0 +1,5 @@
+perl -e 'print crypt("password", "xx"), "/n";'
+
+Password = Password to use
+xx = any two random letters/numbers to randomize it
+
