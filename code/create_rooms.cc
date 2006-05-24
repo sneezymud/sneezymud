@@ -3004,7 +3004,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 	}
 	temp[x] = '\0';
 
-	db.query("insert into roomextra (owner, block, vnum, name, description) values ('%s',%i, '%s','%s')", ch->getName(), useSecond, rp->number, exptr->keyword, temp);
+	db.query("insert into roomextra (owner, block, vnum, name, description) values ('%s',%i,%i,'%s','%s')", ch->getName(), useSecond, rp->number, exptr->keyword, temp);
       }
     }
 
