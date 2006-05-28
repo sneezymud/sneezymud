@@ -880,11 +880,6 @@ void TPerson::doTrans(const char *argument)
   }
 }
 
-int TBeing::doAt(const char *, bool)
-{
-  sendTo("Mob's can't use this command.\n\r");
-  return FALSE;
-}
 
 // Add rooms here that should require a forceful entry.
 // Either by spam or some other reason.
@@ -909,9 +904,13 @@ bool isInt(const sstring &s)
   }
 }
 
+int TPerson::doAt(const char *argument, bool isFarlook)
+{
+  return TBeing::doAt(argument, isFarlook);
+}
 
 // returns DELETE_THIS if this dies
-int TPerson::doAt(const char *argument, bool isFarlook)
+int TBeing::doAt(const char *argument, bool isFarlook)
 {
   char com_buf[256], loc[256];
   int loc_nr, location, original_loc;
