@@ -160,14 +160,24 @@ TPCorpse::~TPCorpse()
 
 void TPCorpse::assignFourValues(int x1, int x2, int x3, int x4)
 {
-  TBaseCorpse::assignFourValues(x1, x2, x3,x4);
-
+  setCorpseFlags(x1);
+  setCorpseRace((race_t) GET_BITS(x2, 7, 8));
+  setCorpseLevel(GET_BITS(x2, 15, 8));
+  setExpLost(x3);
   setRoomNum(x4);
 }
 
 void TPCorpse::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
-  TBaseCorpse::getFourValues(x1, x2, x3,x4);
+  int x = 0;
+
+  *x1 = getCorpseFlags();
+
+  SET_BITS(x, 7, 8, getCorpseRace());
+  SET_BITS(x, 15, 8, getCorpseLevel());
+  *x2 = x;
+
+  *x3 = (int) getExpLost();
 
   *x4 = getRoomNum();
 }
