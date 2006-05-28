@@ -211,6 +211,28 @@ int limb_regen_price(TBeing *ch, wearSlotT pos, int shop_nr)
   return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
 }
 
+int doctorCost(int shop_nr, TBeing *ch, diseaseTypeT disease)
+{
+  int cost=0;
+
+  if(!ch)
+    return 0;
+
+  if (ch->GetMaxLevel() < 3) {
+    cost = DISEASE_PRICE_3;
+  } else if (ch->GetMaxLevel() < 6) {
+    cost = DISEASE_PRICE_6;
+  } else if (ch->GetMaxLevel() < 12) {
+    cost = DISEASE_PRICE_12;
+  } else {
+    cost = DiseaseInfo[disease].cure_cost;
+  }
+
+  cost = (int)((float) cost * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  
+  return cost;
+}
+
 int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   int j, count = 0, bought, res;
@@ -277,23 +299,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	  if (ch->GetMaxLevel() < 12) {
 	    me->doTell(ch->getName(), "Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r");
 	  }
-	  if (ch->GetMaxLevel() < 3) {
-	    buf=fmt("%d) You have %s (%d talens).\n\r") %
-                    ++count % DiseaseInfo[affToDisease(*aff)].name %
-                    DISEASE_PRICE_3;
-	  } else if (ch->GetMaxLevel() < 6) {
-	    buf=fmt("%d) You have %s (%d talens).\n\r") %
-                    ++count % DiseaseInfo[affToDisease(*aff)].name %
-                    DISEASE_PRICE_6;
-	  } else if (ch->GetMaxLevel() < 12) {
-	    buf=fmt("%d) You have %s (%d talens).\n\r") %
-                    ++count % DiseaseInfo[affToDisease(*aff)].name %
-                    DISEASE_PRICE_12;
-	  } else {
-	    buf=fmt("%d) You have %s (%d talens).\n\r") %
-                    ++count % DiseaseInfo[affToDisease(*aff)].name %
-                    DiseaseInfo[affToDisease(*aff)].cure_cost;
-	  }
+	  buf=fmt("%d) You have %s (%d talens).\n\r") %
+	    ++count % DiseaseInfo[affToDisease(*aff)].name %
+	    doctorCost(shop_nr, ch, affToDisease(*aff));
 	  me->doTell(ch->getName(), buf);
         } else if (aff->type == SPELL_BLINDNESS) {
           if (!aff->shouldGenerateText())
@@ -494,16 +502,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
         aff2 = aff->next;
         if (aff->type == AFFECT_DISEASE) {
 	  if (++count == bought) {
-	    if (ch->GetMaxLevel() < 3) 
-	      cost = DISEASE_PRICE_3;
-	    else if (ch->GetMaxLevel() < 6) 
-	      cost = DISEASE_PRICE_6;
-	    else if (ch->GetMaxLevel() < 12) 
-	      cost = DISEASE_PRICE_12;
-	    else 
-	      cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
-	    
-	    cost = (int)((float) cost * shop_index[shop_nr].getProfitBuy(NULL, ch));
+	    cost = doctorCost(shop_nr, ch, affToDisease(*aff));
 
 	    if ((ch->getMoney()) < cost) {
 	      me->doTell(fname(ch->name), fmt("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
