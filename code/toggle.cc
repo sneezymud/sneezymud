@@ -984,7 +984,16 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if(hasWizPower(POWER_TOGGLE)){  // check global toggles
     for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
-      if(is_abbrev(arg, toggleInfo[t]->name)){
+      unsigned int len=toggleInfo[t]->name.length();
+      sstring buf="";
+      for(unsigned int i=0;i<len;++i){
+	if(toggleInfo[t]->name[i] == ' ')
+	  continue;
+
+	buf += toggleInfo[t]->name[i];
+      }
+      
+      if(is_abbrev(arg, buf)){
 	toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
 
 	sendTo(fmt("%s is now %s.\n\r") % 
