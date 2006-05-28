@@ -1104,6 +1104,9 @@ int TBeing::updateHalfTickStuff()
 	if(tb==this)
 	  continue;
 
+	if(!canSee(tb))
+	  continue;
+
 	buf=getInsult(tb);
 	buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
 	act(buf2,TRUE,this,0,tb,TO_VICT);
