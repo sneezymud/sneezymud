@@ -25,7 +25,7 @@ procSaveNewFactions::procSaveNewFactions(const int &p)
 
 void procSaveNewFactions::run(int pulse) const
 {
-  save_newfactions();
+  save_guilds();
 }
 
 // procDoComponents

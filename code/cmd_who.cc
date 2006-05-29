@@ -114,10 +114,10 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
       tmpstring += " ";
 
     sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
-    TFaction *f = NULL;
+    TGuild *f = NULL;
     if((f = p->newfaction()) && toggleInfo[TOG_TESTCODE5]->toggle) {
-      if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
-	  (!IS_SET(f->flags, FACT_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
+      if (f->ID && (IS_SET(f->flags, GUILD_ACTIVE) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
+	  (!IS_SET(f->flags, GUILD_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
 	  (!p->isImmortal() || ch->isImmortal())) {
 	sprintf(tempbuf, "%s %s[<1>%s%s]<1>", tempbuf,
 		heraldcodes[p->newfaction()->colors[0]],
@@ -433,16 +433,16 @@ void TBeing::doWho(const char *argument)
                     // show factions of everyone to immorts
                     // mortal version will show non-imms that are in same fact
                     if(toggleInfo[TOG_TESTCODE5]->toggle) {
-		      TFaction *f = NULL;
+		      TGuild *f = NULL;
 		      if((f = p->newfaction()) && toggleInfo[TOG_TESTCODE5]->toggle) {
-			if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || newfaction()== p->newfaction()||isImmortal()) &&
-			    (!IS_SET(f->flags, FACT_HIDDEN) || newfaction() == p->newfaction() || isImmortal()) &&
+			if (f->ID && (IS_SET(f->flags, GUILD_ACTIVE) || newfaction()== p->newfaction()||isImmortal()) &&
+			    (!IS_SET(f->flags, GUILD_HIDDEN) || newfaction() == p->newfaction() || isImmortal()) &&
 			    (!p->isImmortal() || isImmortal())) {
 			  buf = fmt("%s%s[<1>%s%s]<1>") % buf %
 			    heraldcodes[p->newfaction()->colors[0]] %
 			    p->newfaction()->getName() %
 			    heraldcodes[p->newfaction()->colors[0]];
-			  if(!IS_SET(f->flags, FACT_HIDE_RANKS) || newfaction() == p->newfaction()
+			  if(!IS_SET(f->flags, GUILD_HIDE_RANKS) || newfaction() == p->newfaction()
 			     || isImmortal()) 
 			    buf = fmt("%s %s[<1>%s%s]<1>") % buf %
 			      heraldcodes[p->newfaction()->colors[1]] %

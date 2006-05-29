@@ -588,7 +588,7 @@ void TBeing::statBeing(TBeing *k)
 {
   sstring str = "";
   sstring buf2, buf3;
-  TFaction *f = NULL;
+  TGuild *f = NULL;
   const TMonster *km = dynamic_cast<const TMonster *>(k);
   resp *respy;
   followData *fol;
@@ -1781,7 +1781,7 @@ void TBeing::statBeing(TBeing *k)
 	break;
 	
       case AFFECT_OFFER:
-	f = get_faction_by_ID(aff->modifier);
+	f = get_guild_by_ID(aff->modifier);
 	if (!f) {
 	  vlogf(LOG_FACT, "char had faction offer from non-existant faction in cmd_stat");
 	  break;

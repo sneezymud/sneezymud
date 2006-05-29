@@ -174,13 +174,13 @@ void TPerson::doSet(const char *argument)
     return;
   } else if (is_abbrev(field, "newfaction")) {
     buf=fmt("%s%s") % parmstr % argument;
-    TFaction *f = NULL;
-    f = get_faction(buf.c_str());
+    TGuild *f = NULL;
+    f = get_guild(buf.c_str());
     if(!f) {
       sendTo("No such factions\n\r");
       return;
     }
-    mob->faction.whichfaction = f->ID;
+    mob->faction.whichguild = f->ID;
     mob->faction.rank = f->ranks;
     sendTo(COLOR_BASIC,fmt("%s faction set to %s (%d), rank set to %s. (lowest possible)\n\r") % mob->getName() %
 	   mob->newfaction()->getName() % mob->newfaction()->ID % mob->rank());

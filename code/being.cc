@@ -189,7 +189,7 @@ factionData::factionData() :
   actions(0),
   align_ge(0),
   align_lc(0),
-  whichfaction(0)
+  whichguild(0)
 {
 #if FACTIONS_IN_USE
   for (int i = 0; i < MAX_FACTIONS; i++)
@@ -207,7 +207,7 @@ factionData::factionData(const factionData &a) :
   actions(a.actions),
   align_ge(a.align_ge),
   align_lc(a.align_lc),
-  whichfaction(a.whichfaction)
+  whichguild(a.whichguild)
 {
 #if FACTIONS_IN_USE
   for (int i = 0; i < MAX_FACTIONS; i++)
@@ -514,7 +514,7 @@ charFile::charFile() :
   f_percent(0),
   f_type(0),
   f_actions(0),
-  whichfaction(0),
+  whichguild(0),
   align_ge(0),
   align_lc(0),
   practices(),

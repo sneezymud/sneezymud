@@ -1547,8 +1547,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	break;
       case AFFECT_OFFER:
 	if (ch == this) {
-	  TFaction *f = NULL;
-	  f = get_faction_by_ID(aff->modifier);
+	  TGuild *f = NULL;
+	  f = get_guild_by_ID(aff->modifier);
 	  if (!f) break;
 	  str+=fmt("You received an offer to join %s. (Good for %s.)\n\r") %
 		  f->getName() % describeDuration(this, aff->duration);

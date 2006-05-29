@@ -75,7 +75,7 @@ class charFile {
    byte   f_type;
    unsigned int f_actions;
    //new faction stuff
-   int whichfaction;
+   int whichguild;
    int align_ge;
    int align_lc;
    // end new faction

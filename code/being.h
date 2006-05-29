@@ -52,6 +52,7 @@
 #include "structs.h"
 #endif
 
+#include "guild.h"
 
 class TTrophy;
 class TWindow;
@@ -400,7 +401,7 @@ class factionData {
     unsigned long actions;
     int align_ge;              // alignment on good/evil axis
     int align_lc;              // alignment on chaotic/lawful axis
-    int whichfaction;
+    int whichguild;
     int rank;                  // rank in the newfaction system
     factionData();
     factionData(const factionData &a);
@@ -1474,9 +1475,9 @@ class TBeing : public TThing {
     void doJoin(const char *);
     void doRecruit(const char *);
     void doDefect(const char *);
-    bool hasOffer(TFaction *);
+    bool hasOffer(TGuild *);
     void removeOffers();
-    void addOffer(TFaction *);
+    void addOffer(TGuild *);
     bool recentlyDefected();
     void setDefected();
 
@@ -1773,7 +1774,7 @@ class TBeing : public TThing {
     }
     void addToHero(int num);
     // new faction functions - dash
-    TFaction * newfaction() const;
+    TGuild * newfaction() const;
     const char * rank();
     bool canCreateFaction(bool);
     bool hasPermission(unsigned int);

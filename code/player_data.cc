@@ -497,7 +497,7 @@ void TPerson::storeToSt(charFile *st)
 #endif
   st->align_ge = faction.align_ge;
   st->align_lc = faction.align_lc;
-  st->whichfaction = faction.whichfaction;
+  st->whichguild = faction.whichguild;
 
   st->f_type = getFaction();
   st->f_actions = getFactAct();
@@ -733,7 +733,7 @@ void TPerson::loadFromSt(charFile *st)
     setPercX(st->f_percx[ij], ij);
 #endif
 #if 0
-  faction.whichfaction = st->whichfaction;
+  faction.whichguild = st->whichguild;
   faction.align_ge = st->align_ge;
   faction.align_lc = st->align_lc;;
 #endif

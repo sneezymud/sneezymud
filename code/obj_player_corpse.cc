@@ -188,6 +188,8 @@ sstring TPCorpse::statObjInfo() const
 
   sprintf(buf, "Corpse Flags: %d, Corpse race: %d\n\r",
        getCorpseFlags(), getCorpseRace());
+  sprintf(buf, "Corpse Owner: %s\n\r",
+	  getOwner().c_str());
   sprintf(buf + strlen(buf), "Corpse Level: %d, Corpse Vnum: %d\n\r",
        getCorpseLevel(), getCorpseVnum());
   sprintf(buf + strlen(buf), "Corpse Experience: %f\n\r",

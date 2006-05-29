@@ -299,7 +299,7 @@ void bootDb(void)
     exit(0);
   }
 #if 1
-  if (!load_newfactions()) {
+  if (!load_guilds()) {
     vlogf(LOG_MISC, "Bad loading of new factions.");
     exit(0);
   }
