@@ -393,8 +393,8 @@ const int TOG_IMMORTAL_BLANK_9 = 95;
 const int TOG_IMMORTAL_BLANK_10 = 96;
 // end recycle
 
-const int TOG_HAS_PAID_FACT_FEE = 230;
-const int TOG_HAS_CREATED_FACTION = 231;
+const int TOG_HAS_PAID_GUILD_FEE = 230;
+const int TOG_HAS_CREATED_GUILD = 231;
 
 const int TOG_TOTEM_MASK_ELIGIBLE              = 232;
 const int TOG_TOTEM_MASK_STARTED               = 233;

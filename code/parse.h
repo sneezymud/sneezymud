@@ -348,7 +348,6 @@ enum cmdTypeT {
      CMD_REDIT,
      CMD_OEDIT,
      CMD_FEDIT,
-     CMD_FADD,
      CMD_JOIN,
      CMD_DEFECT,
      CMD_RECRUIT,

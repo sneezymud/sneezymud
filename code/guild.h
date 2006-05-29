@@ -112,7 +112,7 @@ extern bool remove_guild(const char *);
 extern bool remove_guild_by_ID(int);
 extern bool remove_guild_by_keywords(const char *);
 extern char * display_permission(unsigned int);
-extern char * display_faction_flags(unsigned int);
+extern char * display_guild_flags(unsigned int);
 
 
 #endif

@@ -948,7 +948,7 @@ void TBeing::saveChar(sh_int load_room)
 
   // save career stats, saves info on desc, no need to use tmp
   saveCareerStats();
-  saveFactionStats();
+  saveGuildStats();
   saveDrugStats();
   saveTitle();
 

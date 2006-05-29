@@ -623,7 +623,7 @@ int Descriptor::read_client(char *str2)
           */
           ch->loadCareerStats();
           ch->loadDrugStats();
-	  ch->loadFactionStats();
+	  ch->loadGuildStats();
 	  ch->loadTitle();
           if (ch->getHit() < 0) 
             dynamic_cast<TPerson *>(ch)->autoDeath();
@@ -1167,7 +1167,7 @@ int Descriptor::client_nanny(char *arg)
       act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
       tmp_ch->loadCareerStats();
       tmp_ch->loadDrugStats();
-      tmp_ch->loadFactionStats();
+      tmp_ch->loadGuildStats();
       tmp_ch->loadTitle();
       if (tmp_ch->getHit() < 0) 
         dynamic_cast<TPerson *>(tmp_ch)->autoDeath();

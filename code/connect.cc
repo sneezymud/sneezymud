@@ -1435,7 +1435,7 @@ int Descriptor::nanny(sstring arg)
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
-	  tmp_ch->loadFactionStats();
+	  tmp_ch->loadGuildStats();
 	  tmp_ch->loadTitle();
           if (tmp_ch->getHit() < 0) 
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
@@ -1583,7 +1583,7 @@ int Descriptor::nanny(sstring arg)
               */
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
-	      tmp_ch->loadFactionStats();
+	      tmp_ch->loadGuildStats();
 	      tmp_ch->loadTitle();
               if (tmp_ch->getHit() < 0) 
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
@@ -3111,7 +3111,7 @@ int TPerson::genericLoadPC()
   loadFollowers();
   loadCareerStats();
   loadDrugStats();
-  loadFactionStats();
+  loadGuildStats();
   loadTitle();
 
   stats.logins++;

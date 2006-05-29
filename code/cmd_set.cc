@@ -183,20 +183,20 @@ void TPerson::doSet(const char *argument)
     mob->faction.whichguild = f->ID;
     mob->faction.rank = f->ranks;
     sendTo(COLOR_BASIC,fmt("%s faction set to %s (%d), rank set to %s. (lowest possible)\n\r") % mob->getName() %
-	   mob->newfaction()->getName() % mob->newfaction()->ID % mob->rank());
+	   mob->newguild()->getName() % mob->newguild()->ID % mob->rank());
     mob->doSave(SILENT_NO);
-    mob->saveFactionStats();
+    mob->saveGuildStats();
     return;
   } else if (is_abbrev(field, "rank")) {
     sscanf(parmstr, "%d", &parm);
-    if (!mob->newfaction() || parm < 0 || parm >= mob->newfaction()->ranks) {
+    if (!mob->newguild() || parm < 0 || parm >= mob->newguild()->ranks) {
       sendTo("Target must have a valid faction, and rank must be a valid rank in that faction.\n\r");
       return;
     }
     mob->faction.rank = parm;
     sendTo(COLOR_MOBS, fmt("You set %s's rank to %s.\n\r") % mob->getName() % mob->rank());
     mob->doSave(SILENT_NO);
-    mob->saveFactionStats();
+    mob->saveGuildStats();
     return;
   } else if (is_abbrev(field, "title")) {
     TPerson *tper = dynamic_cast<TPerson *>(mob);

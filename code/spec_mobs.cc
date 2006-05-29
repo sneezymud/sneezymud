@@ -6646,7 +6646,7 @@ extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
-extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int guildRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int lotteryRedeemer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6813,7 +6813,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Bank Guard", bankGuard},               // 155
   {FALSE, "Fishing Boat Captain", fishingBoatCaptain},
   {FALSE, "Coroner", coroner},
-  {FALSE, "Faction Registrar", factionRegistrar},
+  {FALSE, "Guild Registrar", guildRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
   {FALSE, "Scared Kid", scaredKid},               // 160
   {TRUE, "Corporate Asistant", corporateAssistant},     

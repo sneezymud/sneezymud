@@ -3,33 +3,33 @@
 #include "corporation.h"
 #include "guild.h"
 
-// start new faction stuff
+// start new guild stuff
 vector<TGuild *>guild_table(0);
 
 
-// open recruitment factions in the office are taken care of by the registrar
+// open recruitment guilds in the office are taken care of by the registrar
 void TBeing::doJoin(const char * args) {
   char buf[256];
   TGuild *f = NULL;
 
   if(!toggleInfo[TOG_TESTCODE5]->toggle) {
-    sendTo("The new faction system is currently disabled.  You may not join a faction now.\n\r");
+    sendTo("The new guild system is currently disabled.  You may not join a guild now.\n\r");
     return;
   }
   if(!(f = get_guild(args)) || (IS_SET(f->flags, GUILD_HIDDEN) && !hasOffer(f)) || 
      (!IS_SET(f->flags, GUILD_ACTIVE))) {
-    // logic: faction doesn't exist, faction is hidden and hasn't extended an offer, or
-    // faction is inactive - deny.
-    sendTo("There is no such faction for you to join.\n\r");
+    // logic: guild doesn't exist, guild is hidden and hasn't extended an offer, or
+    // guild is inactive - deny.
+    sendTo("There is no such guild for you to join.\n\r");
     return;
   }
   if(faction.whichguild) {
-    sprintf(buf, "You are already a member of %s, you may not join a second faction.\n\r", f->getName());
+    sprintf(buf, "You are already a member of %s, you may not join a second guild.\n\r", f->getName());
     sendTo(COLOR_BASIC, buf);
     return;
   }
   if(recentlyDefected()) {
-    sprintf(buf, "You recently defected from your faction, you'll have to wait to join another.");
+    sprintf(buf, "You recently defected from your guild, you'll have to wait to join another.");
      sendTo(buf);
     return;
   }
@@ -38,39 +38,39 @@ void TBeing::doJoin(const char * args) {
     sprintf(buf,"%s has not extended a recruitment offer to you.\n\r", f->getName());
     sendTo(COLOR_BASIC, buf);
     if(IS_SET(f->flags, GUILD_OPEN_RECRUITMENT)) {
-      sendTo("However, you may join at the Grimhaven Bureau of Faction Affairs.\n\r");
+      sendTo("However, you may join at the Grimhaven Bureau of Guild Affairs.\n\r");
     }
     return;
   }
-  sprintf(buf,"You have accepted %s's offer and joined their faction!\n\r", f->getName());
+  sprintf(buf,"You have accepted %s's offer and joined their guild!\n\r", f->getName());
   faction.whichguild = f->ID;
   faction.rank = f->ranks - 1; // this starts them off as the lowest level rank
   sendTo(COLOR_BASIC, buf);
   removeOffers();
-  saveFactionStats();
+  saveGuildStats();
   return;
 }
 
 
 void TBeing::doDefect(const char * args) {
   if(!toggleInfo[TOG_TESTCODE5]->toggle) {
-    sendTo("The new faction system is currently disabled.  You may not defect now.\n\r");
+    sendTo("The new guild system is currently disabled.  You may not defect now.\n\r");
     return;
   }
 
   char buf[80];
   if(!faction.whichguild) {
-    sendTo("You are not a member of any faction - no need to defect.\n\r");
+    sendTo("You are not a member of any guild - no need to defect.\n\r");
     return;
   }
   sscanf(args, "%s", buf);
   if(!strcmp(buf, "yes")) {
-    sprintf(buf, "You have defected from %s.\n\r", newfaction()->getName());
+    sprintf(buf, "You have defected from %s.\n\r", newguild()->getName());
     sendTo(COLOR_BASIC, buf);
-    vlogf(LOG_FACT, fmt("%s defected from %s.") %  getName() % newfaction()->getName());
+    vlogf(LOG_FACT, fmt("%s defected from %s.") %  getName() % newguild()->getName());
     faction.whichguild = 0;
     faction.rank = 0;
-    saveFactionStats();
+    saveGuildStats();
     setDefected();
   } else {
     sendTo("In order to insure you really meant to defect, you have to type 'defect yes'.\n\r");
@@ -80,7 +80,7 @@ void TBeing::doDefect(const char * args) {
 
 void TBeing::doRecruit(const char * args) {
   if(!toggleInfo[TOG_TESTCODE5]->toggle) {
-    sendTo("The new faction system is currently disabled.  You may not recruit now.\n\r");
+    sendTo("The new guild system is currently disabled.  You may not recruit now.\n\r");
     return;
   }
   TBeing *targ;
@@ -92,10 +92,10 @@ void TBeing::doRecruit(const char * args) {
   }
   
   if(faction.whichguild == 0) {
-    sendTo("You are unaffiliated, you have no faction to recruit into!\n\r");
+    sendTo("You are unaffiliated, you have no guild to recruit into!\n\r");
     return;
   }
-  if(!IS_SET(newfaction()->permissions[faction.rank], PERM_RECRUIT)) {
+  if(!IS_SET(newguild()->permissions[faction.rank], PERM_RECRUIT)) {
     sendTo("You do not have permission to recruit new members.\n\r");
     return;
   }
@@ -108,11 +108,11 @@ void TBeing::doRecruit(const char * args) {
     return;
   }
   if(targ->faction.whichguild) {
-    sendTo("You cannot recruit players who are already in another faction.\n\r");
+    sendTo("You cannot recruit players who are already in another guild.\n\r");
     return;
   }
-  if (targ->hasOffer(newfaction())) {
-    sendTo("Your faction has already extended an offer of recruitment to them.\n\r");
+  if (targ->hasOffer(newguild())) {
+    sendTo("Your guild has already extended an offer of recruitment to them.\n\r");
     return;
   }
   char buf[256];
@@ -120,11 +120,11 @@ void TBeing::doRecruit(const char * args) {
   sendTo(buf);
   
   sprintf(buf, "<o>%s <o>has extended you an offer of recruitment into %s<o>.<1>\n\r",
-	  this->getName(), newfaction()->getName());
+	  this->getName(), newguild()->getName());
   targ->sendTo(COLOR_BASIC,buf);
-  sprintf(buf, "You may accept this offer by typing 'join <faction>'. It will expire in one day.\n\r");
+  sprintf(buf, "You may accept this offer by typing 'join <guild>'. It will expire in one day.\n\r");
   targ->sendTo(buf);
-  targ->addOffer(newfaction());
+  targ->addOffer(newguild());
 
   return;
 }
@@ -185,14 +185,14 @@ void TBeing::setDefected() {
 
 
 
-void TBeing::add_faction(const char * args) {
+void TBeing::add_guild(const char * args) {
   int idnum;
   idnum = get_unused_ID();
   TGuild *f = new TGuild;
   
   if (idnum == -1) {
-    sendTo("It appears there is no room for more factions - sorry.\n\r");
-    return; // no room for more factions
+    sendTo("It appears there is no room for more guilds - sorry.\n\r");
+    return;
   }
 
   if (f->keywords)
@@ -203,12 +203,11 @@ void TBeing::add_faction(const char * args) {
   int i;
  
   for (i = 0; i < NUM_MAX_RANK; i++) {
-
     switch(i) {
       case 0:
 	f->permissions[i] = 
-	  (PERM_RECRUIT | PERM_PROMOTE | PERM_TREASURER | PERM_EDIT | PERM_LOCK |
-	   PERM_AMBASSADOR | PERM_SCRIBE);
+	  (PERM_RECRUIT | PERM_PROMOTE | PERM_TREASURER | PERM_EDIT | 
+	   PERM_LOCK | PERM_AMBASSADOR | PERM_SCRIBE);
         if (f->rank[i])
           delete [] f->rank[i];
         f->rank[i] = mud_str_dup("Leader");
@@ -245,49 +244,49 @@ void TBeing::add_faction(const char * args) {
   guild_table.push_back(f);
   char buf[128];
   if (isImmortal()) {
-    sprintf(buf,"Faction: '%s' added with unique ID #%d\n\r", f->keywords, f->ID);
+    sprintf(buf,"Guild: '%s' added with unique ID #%d\n\r", f->keywords, f->ID);
     sendTo(buf);
   } else {
     faction.whichguild = f->ID;
     faction.rank = 0; // leader slot
-    saveFactionStats();
+    saveGuildStats();
   }  
-  vlogf(LOG_FACT, fmt("%s founded a new faction: [%s] (%d)") %  getName() % f->keywords % f->ID);
+  vlogf(LOG_FACT, fmt("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
   save_guilds();
   return;
 }
 
 
 
-bool TBeing::canCreateFaction(bool silent = false) {
+bool TBeing::canCreateGuild(bool silent = false) {
   char buf[256];
   if(isImmortal())
     return TRUE;
-  if(inRoom() != ROOM_FACTION_BUREAU) {
+  if(inRoom() != ROOM_GUILD_BUREAU) {
     if (!silent) {
-      sendTo("You must be in the Grimhaven Bureau of Factions to create a new faction\n\r");
+      sendTo("You must be in the Grimhaven Bureau of Guilds to create a new guild\n\r");
     }
     return FALSE;
   }
   if(faction.whichguild) {
     if (!silent) {
-      sprintf(buf, "You are already a member of %s.\n\r", newfaction()->getName());
+      sprintf(buf, "You are already a member of %s.\n\r", newguild()->getName());
       sendTo(COLOR_BASIC, buf);
-      sendTo("You must first disband from that faction before you may create another.\n\r");
+      sendTo("You must first disband from that guild before you may create another.\n\r");
     }      
     return FALSE;
   }
-  if(!hasQuestBit(TOG_HAS_PAID_FACT_FEE)) {
+  if(!hasQuestBit(TOG_HAS_PAID_GUILD_FEE)) {
     if (!silent) {
-      sendTo("You have not yet paid the fee to register a new faction.\n\r");
-      sendTo("Until that time, you may not create a faction.\n\r");
+      sendTo("You have not yet paid the fee to register a new guild.\n\r");
+      sendTo("Until that time, you may not create a guild.\n\r");
     }
     return FALSE;
   }
-  if(hasQuestBit(TOG_HAS_CREATED_FACTION)) {
+  if(hasQuestBit(TOG_HAS_CREATED_GUILD)) {
     if(!silent) {
-      sendTo("You have already created a faction!\n\r");
-      sendTo("The King forbids me to let players create more than one faction.\n\r");
+      sendTo("You have already created a guild!\n\r");
+      sendTo("The King forbids me to let players create more than one guild.\n\r");
     }
     return FALSE;
   }
@@ -295,7 +294,7 @@ bool TBeing::canCreateFaction(bool silent = false) {
 }
 
 // spec_mob proc for Miya in the bureau
-int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
   char field[80], values[80];
   char buf[256];
@@ -317,7 +316,7 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
       myself->doTell(fname(ch->name), "Try 'fedit create <keywords>'");
       return TRUE;
     }
-    myself->doTell(fname(ch->name), "Ah, so you wish to found a new faction?");
+    myself->doTell(fname(ch->name), "Ah, so you wish to found a new guild?");
     myself->doTell(fname(ch->name), "Let me just make sure your paperwork is in order.");
     
     
@@ -325,60 +324,60 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
       myself->doTell(fname(ch->name), "Actually... for an immortal I think I can skip the paperwork.");
       myself->doAction(fname(ch->name), CMD_SMILE);
     } else {
-      if(ch->inRoom() != ROOM_FACTION_BUREAU) {
+      if(ch->inRoom() != ROOM_GUILD_BUREAU) {
 	myself->doAction("", CMD_BLINK);
 	myself->doSay("Uh, it seem I've misplaced my office.");
 	myself->doTell(fname(ch->name), "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
 	act("$n hurries off back to $s office.", 0, myself, 0, 0, TO_ROOM);
 	--(*myself);
-	*real_roomp(ROOM_FACTION_BUREAU) += *myself;
+	*real_roomp(ROOM_GUILD_BUREAU) += *myself;
 	act("$n hurries into the office.", 0, myself, 0, 0, TO_ROOM); 
 	return TRUE;
       }
       act("$n gets a folder from a filing cabinet in the corner.", 0, myself, 0, 0, TO_ROOM);
       act("$n quickly scans a few of the pages from the file.", 0, myself, 0, 0, TO_ROOM);
       if(ch->GetMaxLevel() < GUILD_CREATE_LEVEL) {
-	myself->doSay("Awwww, I'm sorry, it appears you're too low level to create a faction.");
+	myself->doSay("Awwww, I'm sorry, it appears you're too low level to create a guild.");
 	myself->doAction(fname(ch->name), CMD_COMFORT);
 	myself->doSay("You can come back later when you've become more powerful.");
 	return TRUE;
       }
       if(ch->faction.whichguild) {
-	sprintf(buf, "Hmmmn.  %s, it appears you are already a member of a faction.", ch->getName());
+	sprintf(buf, "Hmmmn.  %s, it appears you are already a member of a guild.", ch->getName());
 	myself->doSay(buf);
 	myself->doAction("", CMD_SHAKE);
-	sprintf(buf, "You must first defect from your current faction before creating another.");
+	sprintf(buf, "You must first defect from your current guild before creating another.");
 	myself->doSay(buf);
 	sprintf(buf, "There is also a twenty-four hour wait period after you disband.");
 	myself->doSay(buf);
-	sprintf(buf, "After that, you may come back and create a faction.");
+	sprintf(buf, "After that, you may come back and create a guild.");
 	myself->doAction(fname(ch->name), CMD_SMILE);
 	
 	return TRUE;
       }
       if(ch->recentlyDefected()) {
 	myself->doAction("", CMD_FROWN);
-	sprintf(buf, "You recently defected from your faction, and wont be able to create another.");
+	sprintf(buf, "You recently defected from your guild, and wont be able to create another.");
 	myself->doSay(buf);
 	sprintf(buf, "Well, at least until the waiting period is over.");
 	myself->doSay(buf);
 	//	myself->doActiom("", CMD_SHRUG);
 	return TRUE;
       }
-      if(!ch->hasQuestBit(TOG_HAS_PAID_FACT_FEE)) {
+      if(!ch->hasQuestBit(TOG_HAS_PAID_GUILD_FEE)) {
 	myself->doAction("", CMD_FROWN);
-	sprintf(buf, "It appears you have not paid the factions registration fee.");
+	sprintf(buf, "It appears you have not paid the guilds registration fee.");
 	myself->doSay(buf);
 	sprintf(buf, "The fee is 100000 talens, payable to me.");
 	myself->doSay(buf);
 	
 	return TRUE;
       }
-      if(ch->hasQuestBit(TOG_HAS_CREATED_FACTION)) {
+      if(ch->hasQuestBit(TOG_HAS_CREATED_GUILD)) {
 	myself->doAction("", CMD_ARCH);
-	sprintf(buf, "My records show that you have already created a faction..");
+	sprintf(buf, "My records show that you have already created a guild..");
 	myself->doSay(buf);
-	sprintf(buf, "The King has forbidden us to let players create more than one faction.");
+	sprintf(buf, "The King has forbidden us to let players create more than one guild.");
 	myself->doSay(buf);
 	
 	return TRUE;
@@ -392,11 +391,11 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     myself->doSay(buf);
     act("$n gets a sheet of paper and a pen from the desk.",
 	FALSE, myself, 0, 0, TO_ROOM);
-    sprintf(buf, "The only thing I need from you are the keywords for your new faction.");
+    sprintf(buf, "The only thing I need from you are the keywords for your new guild.");
     myself->doSay(buf);
-    sprintf(buf, "Keywords will be used to identify your faction, and can be changed later.");
+    sprintf(buf, "Keywords will be used to identify your guild, and can be changed later.");
     myself->doSay(buf);
-    sprintf(buf, "What do you want the keywords for your new faction to be?");
+    sprintf(buf, "What do you want the keywords for your new guild to be?");
     myself->doSay(buf);
     ch->doSay(values);
     ch->removeOffers();
@@ -404,32 +403,32 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     myself->doSay(buf);
     act("$n jots down a few notes on $s paper.",
 	FALSE, myself, 0, 0, TO_ROOM);
-    ch->add_faction(values);
-    sprintf(buf, "Ok, I've created your faction with those keywords, and added you to the roster.");
+    ch->add_guild(values);
+    sprintf(buf, "Ok, I've created your guild with those keywords, and added you to the roster.");
     myself->doSay(buf);
     sprintf(buf, "Naturally, you have been given the top spot.");
     myself->doSay(buf);
     act("$n carefully places the paper into a folder, and files it away in one of the cabinets.",
 	FALSE, myself, 0, 0, TO_ROOM);
-    sprintf(buf, "The rest is up to you.  I suggest you read up on HELP FEDIT and HELP FACTIONS.");
+    sprintf(buf, "The rest is up to you.  I suggest you read up on HELP FEDIT and HELP GUILDS.");
     myself->doSay(buf);
     myself->doAction(fname(ch->name), CMD_SHAKE);
-    sprintf(buf, "Good luck with your new faction.");
+    sprintf(buf, "Good luck with your new guild.");
     myself->doSay(buf);
-    ch->saveFactionStats();
+    ch->saveGuildStats();
     return TRUE;
     
   } else if (cmd == CMD_JOIN) {
     
     
     if(!toggleInfo[TOG_TESTCODE5]->toggle) {
-      ch->sendTo("The new faction system is currently disabled.  You may not join a faction now.");
+      ch->sendTo("The new guild system is currently disabled.  You may not join a guild now.");
       return TRUE;
     }
     
     
     TGuild *f = NULL;
-    sprintf(buf, "You wish to join a faction?  Lets see....");
+    sprintf(buf, "You wish to join a guild?  Lets see....");
     myself->doSay(buf);
     act("$n gets a folder from a filing cabinet along the wall.", 0, myself, 0, 0, TO_ROOM);
     act("$n quickly scans a few of the pages from the file.", 0, myself, 0, 0, TO_ROOM);
@@ -438,21 +437,21 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     
     if(!(f = get_guild(arg)) || (IS_SET(f->flags, GUILD_HIDDEN) && !ch->hasOffer(f)) ||
        (!IS_SET(f->flags, GUILD_ACTIVE)) || f->ID == 0) {
-      // logic: faction doesn't exist, faction is hidden and hasn't extended an offer, or
-      // faction is inactive - deny.
+      // logic: guild doesn't exist, guild is hidden and hasn't extended an offer, or
+      // guild is inactive - deny.
       
-      myself->doTell(fname(ch->name), "I'm sorry, it appears that faction does not show up in any of my records.");
+      myself->doTell(fname(ch->name), "I'm sorry, it appears that guild does not show up in any of my records.");
       
       return TRUE;
     }
     if(ch->faction.whichguild) {
-      myself->doTell(fname(ch->name), "You are already a member of a faction... you'll have to disband before you join another.");
-      myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another faction.");
+      myself->doTell(fname(ch->name), "You are already a member of a guild... you'll have to disband before you join another.");
+      myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another guild.");
       
       return TRUE;
     }
     if(ch->recentlyDefected()) {
-      myself->doTell(fname(ch->name), "You recently defected from your faction, you'll have to wait to join another.");
+      myself->doTell(fname(ch->name), "You recently defected from your guild, you'll have to wait to join another.");
       return TRUE;
     }
     
@@ -479,21 +478,21 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
     ch->faction.whichguild = f->ID;
     ch->faction.rank = f->ranks - 1;
     myself->doAction(fname(ch->name), CMD_SHAKE);
-    ch->saveFactionStats();
+    ch->saveGuildStats();
     return TRUE;
    
     
   }
   if (cmd == CMD_LIST) {
-    myself->doTell(fname(ch->name), "I currently have these factions registered as active.");
+    myself->doTell(fname(ch->name), "I currently have these guilds registered as active.");
     act("$n gets a sheet of paper from $s desk and holds it out to you.\n\rIt reads as follows:\n\r",
         FALSE, myself, 0, ch, TO_VICT);
     act("$n says something to $N.\n\r$n gets a sheet of paper from $s desk and holds it out to $N.\n\r",
         FALSE, myself, 0, ch, TO_NOTVICT);
     
-    ch->show_faction("showallfactions");
+    ch->show_guild("showallguilds");
     ch->sendTo("\n\r");
-    myself->doTell(fname(ch->name), "I've marked the factions that have open recruitment with an [<R>X<1>].");
+    myself->doTell(fname(ch->name), "I've marked the guilds that have open recruitment with an [<R>X<1>].");
     return TRUE;
   }
   return FALSE;
@@ -501,7 +500,7 @@ int factionRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 
 
 // fedit command
-void TBeing::edit_faction(const char * args) {
+void TBeing::edit_guild(const char * args) {
   // there are two ways this will be called - god version and player
   // version of the command thus, we need a variable for all the
   // syntax stuff.
@@ -514,66 +513,66 @@ void TBeing::edit_faction(const char * args) {
   TGuild *f = NULL;
 
   // ok 'args' is going to be of the format:
-  // <faction> <field> <value(s)>
+  // <guild> <field> <value(s)>
   if (isImmortal()) {
-    strcpy(SYNTAX, "fedit <faction>");
+    strcpy(SYNTAX, "fedit <guild>");
     int count = sscanf(args, "%s %s %[0-9a-zA-Z '<>]", fact, field, values);
     if (!(*args)) {
-      show_faction(NULL);
+      show_guild(NULL);
       return;
     } else if (count == 1) {
       if(is_abbrev(fact, "save")) {
 	save_guilds();
-	sendTo("Factions saved.\n\r");
+	sendTo("Guilds saved.\n\r");
 	return;
       }
-      show_faction(fact);
+      show_guild(fact);
       return;
     } else if (count == 2) {
       if(is_abbrev(fact, "remove")){
 	if(!remove_guild(field)){
-	  sendTo(fmt("Unable to find faction '%s'\n\r") % field);
+	  sendTo(fmt("Unable to find guild '%s'\n\r") % field);
 	} else {
-	  sendTo("Faction removed.\n\r");
+	  sendTo("Guild removed.\n\r");
 	}
 	return;
       }
-      sendTo("Syntax: fedit <faction> [<field> <value(s)>]\n\r");
+      sendTo("Syntax: fedit <guild> [<field> <value(s)>]\n\r");
       return;
     }
     f = get_guild(fact);
     if (!f) {
-      sprintf(buf,"Unable to find faction '%s'\n\r", fact);
+      sprintf(buf,"Unable to find guild '%s'\n\r", fact);
       sendTo(buf);
       return;
     }
   } else {
     if(!toggleInfo[TOG_TESTCODE5]->toggle) {
-      sendTo("The new faction code is currently disabled.  You will not be able to use this command.\n\r");
+      sendTo("The new guild code is currently disabled.  You will not be able to use this command.\n\r");
       return;
     }
     strcpy(SYNTAX, "fedit");
     int count = sscanf(args, "%s %[0-9a-z-A-Z '<>]", field, values);
     if (is_abbrev(field, "create")) {
-      sendTo("You must speak to the Faction Registrar if you wish to create a faction.\n\r");
-      sendTo("She can be found in the Grimhaven Bureau of Factions.\n\r");
+      sendTo("You must speak to the Guild Registrar if you wish to create a guild.\n\r");
+      sendTo("She can be found in the Grimhaven Bureau of Guilds.\n\r");
       return;
     }
-    f = newfaction();
+    f = newguild();
     
     if (!f || f->ID == 0) {
-      sprintf(buf,"You are not a member of any faction.\n\r");
+      sprintf(buf,"You are not a member of any guild.\n\r");
       sendTo(buf);
       return;
     }
     if (!(*args)) {
       sprintf(buf,"%d", f->ID);
-      show_faction(buf);
+      show_guild(buf);
       return;
     } else if (count == 1) {
       if(is_abbrev(fact, "save")) {
         save_guilds();
-        sendTo("Faction saved.\n\r");
+        sendTo("Guild saved.\n\r");
 	return;
       }
       sendTo("Syntax: fedit [<field> <value(s)>]\n\r");
@@ -584,17 +583,17 @@ void TBeing::edit_faction(const char * args) {
   
 
   // ok, so we matched all 3 parts
-  // now we need to figure out which faction we have
+  // now we need to figure out which guild we have
   // fact will either be a number or keywords
   
   
-  // ok, we have the faction, lets determine which field to edit
+  // ok, we have the guild, lets determine which field to edit
   
   if (is_abbrev(field, "name")) {
     if(f->proper_name)
       delete [] f->proper_name;
     f->proper_name = mud_str_dup(values);
-    sprintf(buf,"Faction name changed to %s\n\r", values);
+    sprintf(buf,"Guild name changed to %s\n\r", values);
     sendTo(COLOR_BASIC, buf);
     return;
   } else if (is_abbrev(field, "save")) {
@@ -605,7 +604,7 @@ void TBeing::edit_faction(const char * args) {
     if(f->slang_name)
       delete [] f->slang_name;
     f->slang_name = mud_str_dup(values);
-    sprintf(buf,"Faction short name changed to %s\n\r", values);
+    sprintf(buf,"Guild short name changed to %s\n\r", values);
     sendTo(COLOR_BASIC, buf);
     return;
 
@@ -613,7 +612,7 @@ void TBeing::edit_faction(const char * args) {
     if(f->keywords)
       delete [] f->keywords;
     f->keywords = mud_str_dup(values);
-    sprintf(buf,"Faction keywords changed to %s\n\r", values);
+    sprintf(buf,"Guild keywords changed to %s\n\r", values);
     sendTo(buf);
     return;
 
@@ -624,14 +623,14 @@ void TBeing::edit_faction(const char * args) {
     if(f->password)
       delete [] f->password;
     f->password = mud_str_dup(values);
-    sprintf(buf,"Faction password changed to %s\n\r", passwd);
+    sprintf(buf,"Guild password changed to %s\n\r", passwd);
     sendTo(buf);
     return;
 
   } else if (is_abbrev(field, "numranks")) {
     int number;
     if(sscanf(values, "%d", &number) != 1) {
-      sprintf(buf,"Syntax: fedit <faction> numranks <ranks>\n\r");
+      sprintf(buf,"Syntax: fedit <guild> numranks <ranks>\n\r");
       sendTo(buf);
       return;
     }
@@ -641,12 +640,12 @@ void TBeing::edit_faction(const char * args) {
       return;
     }
     f->ranks = number;
-    sprintf(buf,"Number of ranks in faction changed to %d.\n\r", number);
+    sprintf(buf,"Number of ranks in guild changed to %d.\n\r", number);
     sendTo(buf);
     return;
 
   } else if (is_abbrev(field, "ranks")) {
-    // format: <faction> ranks <rank#> <title>
+    // format: <guild> ranks <rank#> <title>
     char title[80];
     int which;
     if(sscanf(values, "%d %[a-zA-Z '<>]", &which, title) != 2) {
@@ -667,7 +666,7 @@ void TBeing::edit_faction(const char * args) {
     return;
 
   } else if (is_abbrev(field, "permissions")) {
-    // format fedit <faction> permissions <rank> <rptelas>
+    // format fedit <guild> permissions <rank> <rptelas>
     unsigned int perms = 0;
     int which;
     char bits[20];
@@ -733,14 +732,14 @@ void TBeing::edit_faction(const char * args) {
     if (is_abbrev(values, "active")) {
       if(!isImmortal()) {
 	sendTo("Mortals are not allowed to change this setting.\n\r");
-	sendTo("Please speak to a god if your faction is ready to be activated.\n\r");
+	sendTo("Please speak to a god if your guild is ready to be activated.\n\r");
 	return;
       }
       whichbit = GUILD_ACTIVE;
     } else if (is_abbrev(values, "locked")) {
       if(!isImmortal()) {
         sendTo("Mortals are not allowed to change this setting.\n\r");
-        sendTo("Please speak to a god if your faction settings needs to be locked or unlocked.\n\r");
+        sendTo("Please speak to a god if your guild settings needs to be locked or unlocked.\n\r");
         return;
       }
       whichbit = GUILD_LOCKED;
@@ -758,7 +757,7 @@ void TBeing::edit_faction(const char * args) {
       if (!isImmortal())
 	sendTo("Syntax: fedit flags [ recruitment | hidden | members | ranks ]");
       else
-	sendTo("Syntax: fedit <faction> flags [ active | locked | recruitment | hidden | members | ranks ]");
+	sendTo("Syntax: fedit <guild> flags [ active | locked | recruitment | hidden | members | ranks ]");
       return;
     }
     
@@ -769,22 +768,22 @@ void TBeing::edit_faction(const char * args) {
       SET_BIT(f->flags, whichbit);
       sendTo("Flag added.\n\r");
     }
-    sprintf(buf, "<c>Faction Flags:<1>");
+    sprintf(buf, "<c>Guild Flags:<1>");
     sendTo(COLOR_BASIC, buf);
-    sendTo(COLOR_BASIC, display_faction_flags(f->flags));
+    sendTo(COLOR_BASIC, display_guild_flags(f->flags));
     sendTo("\n\r");
     return;
   } else if (is_abbrev(field, "relations")) {
     char fname[80];
     char frela[80];
     if(sscanf(values, "%s %s", fname, frela) != 2) {
-      sprintf(buf, "%s relations <faction> [ war | peace | none ]n\r", SYNTAX);
+      sprintf(buf, "%s relations <guild> [ war | peace | none ]n\r", SYNTAX);
       sendTo(buf);
       return;
     }
     TGuild *f2 = get_guild(fname);
     if (!f2) {
-      sendTo("Could not locate the target faction.\n\r");
+      sendTo("Could not locate the target guild.\n\r");
       return;
     }
     if (is_abbrev(frela, "war")) {
@@ -806,7 +805,7 @@ void TBeing::edit_faction(const char * args) {
       sendTo(COLOR_BASIC, buf);
       return;
     } 
-    sprintf(buf, "%s relations <faction> [ war | peace | none ]n\r", SYNTAX);
+    sprintf(buf, "%s relations <guild> [ war | peace | none ]n\r", SYNTAX);
     sendTo(buf);
     return;
   } else if (is_abbrev(field, "patron")) {
@@ -829,20 +828,20 @@ void TBeing::edit_faction(const char * args) {
   return;
 }
 
-void TBeing::show_faction(const char * args) {
+void TBeing::show_guild(const char * args) {
 #if 0
-  vlogf(LOG_DASH, fmt("show_faction() called with args = %s") %  args);
+  vlogf(LOG_DASH, fmt("show_guild() called with args = %s") %  args);
 #endif
   char buf[4096];
-  if (args && strcmp(args, "showallfactions")) {
+  if (args && strcmp(args, "showallguilds")) {
     TGuild *f = NULL;
     f = get_guild(args);
     if (!f) {
-      sendTo("Unable to find faction by that name or ID.\n\r");
+      sendTo("Unable to find guild by that name or ID.\n\r");
       return;
     } 
     
-    sprintf(buf, "<c>Faction ID:<1> %-5d <1><c>Keywords:<1> [%s]\n\r", 
+    sprintf(buf, "<c>Guild ID:<1> %-5d <1><c>Keywords:<1> [%s]\n\r", 
 	    f->ID, (f->keywords) ? f->keywords : "(null)");
     sendTo(COLOR_BASIC,buf);
     
@@ -855,10 +854,10 @@ void TBeing::show_faction(const char * args) {
 	    (f->password) ? f->password : "(null)");
     sendTo(COLOR_BASIC,buf);
     
-    sprintf(buf, "<1><c> Treasury:<1> %d talen%s \n\r<1><c>Faction Flags: <1>",
-	    f->treasury, (f->treasury == 1) ? "" : "s");//, display_faction_flags(f->flags));
+    sprintf(buf, "<1><c> Treasury:<1> %d talen%s \n\r<1><c>Guild Flags: <1>",
+	    f->treasury, (f->treasury == 1) ? "" : "s");//, display_guild_flags(f->flags));
     sendTo(COLOR_BASIC,buf);
-    sendTo(COLOR_BASIC, display_faction_flags(f->flags));
+    sendTo(COLOR_BASIC, display_guild_flags(f->flags));
     sendTo("\n\r");
 
     int j;
@@ -914,7 +913,7 @@ void TBeing::show_faction(const char * args) {
   sendTo(COLOR_BASIC, buf);
   vector<TGuild *>::iterator i;
   for(i = guild_table.begin();i != guild_table.end(); ++i) {
-    if (isImmortal() || (*i) == newfaction() ||
+    if (isImmortal() || (*i) == newguild() ||
 	!(IS_SET((*i)->flags, GUILD_HIDDEN) || (*i)->ID == 0 || !IS_SET((*i)->flags, GUILD_ACTIVE))) {
       sprintf(buf, "<1>%-4d%s%s<1>%s%s<1>%s%s<1> [<R>%s<1>] <1>%s%s<k>%s%s%s<1>\n\r", (*i)->ID, 
 	      heraldcodes[(*i)->colors[0]], ((*i)->colors[0]) ? "*" : " ",
@@ -934,16 +933,16 @@ void TBeing::show_faction(const char * args) {
   return;
 }
 
-TGuild * TBeing::newfaction() const {
+TGuild * TBeing::newguild() const {
   return get_guild_by_ID(faction.whichguild);
 }
 
 const char * TBeing::rank() {
-  return newfaction()->rank[faction.rank];
+  return newguild()->rank[faction.rank];
 }
 
 bool TBeing::hasPermission(unsigned int bit) {
-  return IS_SET(newfaction()->permissions[faction.rank-1], bit);
+  return IS_SET(newguild()->permissions[faction.rank-1], bit);
 }
 
 int TGuild::getRelation(TGuild * target) {
@@ -1069,28 +1068,28 @@ char * display_permission(unsigned int perms) {
   return mud_str_dup(buf);
 }
 
-char * display_faction_flags(unsigned int flags) {
+char * display_guild_flags(unsigned int flags) {
   char buf[256];
   sprintf(buf, "%s%s%s%s%s%s%s",
 	  (IS_SET(flags, GUILD_ACTIVE) ?  
-	   "\n\r This faction is activated." : "\n\r This faction is NOT activated."),
+	   "\n\r This guild is activated." : "\n\r This guild is NOT activated."),
 	  (IS_SET(flags, GUILD_LOCKED) ?    
-	   "\n\r This faction's attributes are locked." : ""),
+	   "\n\r This guild's attributes are locked." : ""),
 	  (IS_SET(flags, GUILD_OPEN_RECRUITMENT) ?
-	   "\n\r This faction is openly recruiting." : "\n\r New members must be recruited by hand."),
+	   "\n\r This guild is openly recruiting." : "\n\r New members must be recruited by hand."),
 	  (IS_SET(flags, GUILD_HIDDEN) ?      
-	   "\n\r The existance of this faction is hidden." : ""),
+	   "\n\r The existance of this guild is hidden." : ""),
 	  (IS_SET(flags, GUILD_HIDE_MEMBERS) ?
-	   "\n\r The members of this faction are hidden from the masses." : ""),
+	   "\n\r The members of this guild are hidden from the masses." : ""),
 	  (IS_SET(flags, GUILD_HIDE_LEADERS) ?
-	   "\n\r The leaders of this faction are hidden from the masses." : ""),
+	   "\n\r The leaders of this guild are hidden from the masses." : ""),
 	  (IS_SET(flags, GUILD_HIDE_RANKS) ? 
-	   "\n\r The ranks of those in this faction are hidden from the masses." : "" ));
+	   "\n\r The ranks of those in this guild are hidden from the masses." : "" ));
   return mud_str_dup(buf);
 }
 
-// get_unused_ID finds an unused faction ID (0 to MAX_GUILD_ID) and returns it.
-// if all ID's are currently taken (ie 200 factions - shouldn't happen)
+// get_unused_ID finds an unused guild ID (0 to MAX_GUILD_ID) and returns it.
+// if all ID's are currently taken (ie 200 guilds - shouldn't happen)
 // then it returns -1
 int get_unused_ID() {
   int i, j;
@@ -1110,8 +1109,8 @@ int get_unused_ID() {
 }
 
 
-// this function loads the faction info for the PLAYER.
-void TBeing::saveFactionStats()
+// this function loads the guild info for the PLAYER.
+void TBeing::saveGuildStats()
 {
   FILE *fp;
   char buf[160];
@@ -1120,21 +1119,21 @@ void TBeing::saveFactionStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "player/%c/%s.guild", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving faction stats. (%d)") %  buf % errno);
+    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving guild stats. (%d)") %  buf % errno);
     return;
   }
   if(!get_guild_by_ID(faction.whichguild)) {
-    vlogf(LOG_FACT, fmt("%s had bad faction during saveFactionStats() ... making unaffiliated") %  getName());
+    vlogf(LOG_FACT, fmt("%s had bad guild during saveGuildStats() ... making unaffiliated") %  getName());
     faction.whichguild = 0;
     faction.rank = 0;
   }
 
-  if(faction.rank < 0 || faction.rank >= newfaction()->ranks) {
-    vlogf(LOG_FACT, fmt("%s had bad rank - setting to lowest in faction.") %  getName());
-    faction.rank = newfaction()->ranks - 1;
+  if(faction.rank < 0 || faction.rank >= newguild()->ranks) {
+    vlogf(LOG_FACT, fmt("%s had bad rank - setting to lowest in guild.") %  getName());
+    faction.rank = newguild()->ranks - 1;
   }
   fprintf(fp, "%u\n",
 	  current_version);
@@ -1143,11 +1142,11 @@ void TBeing::saveFactionStats()
   fprintf(fp,"%d %d\n", faction.align_ge, faction.align_lc);
 
   if (fclose(fp))
-    vlogf(LOG_FILE, fmt("Problem closing %s's faction stats") %  name);
+    vlogf(LOG_FILE, fmt("Problem closing %s's guild stats") %  name);
 }
 
-//this loads the faction data for the PLAYER
-void TBeing::loadFactionStats()
+//this loads the guild data for the PLAYER
+void TBeing::loadGuildStats()
 {
   FILE *fp = NULL;
   char buf[160];
@@ -1157,7 +1156,7 @@ void TBeing::loadFactionStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "player/%c/%s.guild", LOWER(name[0]), sstring(name).lower().c_str());
 
 
   if (!(fp = fopen(buf, "r"))) {    // file may not exist
@@ -1166,30 +1165,30 @@ void TBeing::loadFactionStats()
 
   if (fscanf(fp, "%d\n",
 	     &current_version) != 1) {
-    vlogf(LOG_BUG, fmt("Bad data in faction stat read (%s)") %  getName());
+    vlogf(LOG_BUG, fmt("Bad data in guild stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
 
   if (fscanf(fp, "%d %d\n", &num1, &num2) != 2) {
-    vlogf(LOG_BUG, fmt("Bad data in factionss stat read (%s)") %  getName());
+    vlogf(LOG_BUG, fmt("Bad data in guilds stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
   faction.whichguild = num1;
   if(!get_guild_by_ID(faction.whichguild)) {
-    vlogf(LOG_FACT, fmt("%s had bad faction during loadFactionStats() ... making unaffiliated") %  getName());
+    vlogf(LOG_FACT, fmt("%s had bad guild during loadGuildStats() ... making unaffiliated") %  getName());
     faction.whichguild = 0;
     faction.rank = 0;
   }
   faction.rank = num2;
-  if(faction.rank < 0 || faction.rank >= newfaction()->ranks) {
-    vlogf(LOG_FACT, fmt("%s had bad rank during loadFactionStats - setting to lowest in faction.") %  getName());
-    faction.rank = newfaction()->ranks - 1;
+  if(faction.rank < 0 || faction.rank >= newguild()->ranks) {
+    vlogf(LOG_FACT, fmt("%s had bad rank during loadGuildStats - setting to lowest in guild.") %  getName());
+    faction.rank = newguild()->ranks - 1;
   }
 
   if (fscanf(fp, "%d %d\n", &num3, &num4) != 2) {
-    vlogf(LOG_BUG, fmt("Bad data in factionss stat read (%s)") %  getName());
+    vlogf(LOG_BUG, fmt("Bad data in guilds stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -1208,7 +1207,7 @@ int load_guilds() {
   int line = 0;
 
   if (!(fp = fopen(GUILD_FILE, "r"))) {
-    vlogf(LOG_FILE, "Couldn't open factionlist file in function load_guilds()!");
+    vlogf(LOG_FILE, "Couldn't open guildlist file in function load_guilds()!");
     return FALSE;
   }
 
@@ -1217,7 +1216,7 @@ int load_guilds() {
   while(fp) {
     TGuild *f = new TGuild;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
       fclose(fp);
       return FALSE;
     }
@@ -1227,7 +1226,7 @@ int load_guilds() {
     sscanf(buf, "#%d\n\r", &i1);
     f->ID = i1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1239,7 +1238,7 @@ int load_guilds() {
     sscanf(buf, "keywords: %[a-zA-Z '<>]\n\r", c1);
     f->keywords = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1250,7 +1249,7 @@ int load_guilds() {
     sscanf(buf, "name: %[a-zA-Z '<>]\n\r", c1);
     f->proper_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1262,7 +1261,7 @@ int load_guilds() {
     sscanf(buf, "shortname: %[a-zA-Z '<>]\n\r", c1);
     f->slang_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1271,7 +1270,7 @@ int load_guilds() {
     sscanf(buf, "password: %s\n\r", c1);
     f->password = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1284,7 +1283,7 @@ int load_guilds() {
     f->flags = (unsigned int)(i3);
     f->power = f1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1298,7 +1297,7 @@ int load_guilds() {
     f->acty = i4;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1311,7 +1310,7 @@ int load_guilds() {
     f->colors[2] = i3;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1322,7 +1321,7 @@ int load_guilds() {
     f->patron = deityTypeT(i1);
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+	vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
 	fclose(fp);
 	return FALSE;
@@ -1336,7 +1335,7 @@ int load_guilds() {
     }
     TRelation *r;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1351,7 +1350,7 @@ int load_guilds() {
       r->relation = i2;
       f->relations.push_back(r);
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
+	vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
         fclose(fp);
         return FALSE;
@@ -1374,7 +1373,7 @@ void save_guilds()
   FILE *fp;
   
   if (!(fp = fopen(GUILD_FILE, "w+"))) {
-    vlogf(LOG_FILE, "Couldn't open newfactions datafile in save_guilds()");
+    vlogf(LOG_FILE, "Couldn't open guilds datafile in save_guilds()");
     return;
   }
   vector<TGuild *>::iterator i;

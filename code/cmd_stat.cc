@@ -843,10 +843,10 @@ void TBeing::statBeing(TBeing *k)
       (int)((fx*(float)prim_min)+((fy*(float)sec_min))) %
       (int)((fx*(float)prim_max)+((fy*(float)sec_max)));
   }
-  if (toggleInfo[TOG_TESTCODE5]->toggle && k->newfaction()) {
+  if (toggleInfo[TOG_TESTCODE5]->toggle && k->newguild()) {
     if(k->isPc()) {
       str += fmt("%sFaction:%s %s%s,   %sRank :%s %s%s\n\r") %
-        cyan() % norm() % k->newfaction()->getName() % norm() %
+        cyan() % norm() % k->newguild()->getName() % norm() %
         cyan() % norm() % k->rank() % norm();
     }
   } else {

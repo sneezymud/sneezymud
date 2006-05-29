@@ -46,7 +46,7 @@ const int ROOM_WARD_1            = 13142;
 const int ROOM_WARD_2            = 9734;
 const int ROOM_TREE_BRIDGE       = 15277;
 const int ROOM_SLEEPTAG_CONTROL  = 23599;
-const int ROOM_FACTION_BUREAU    = 395;
+const int ROOM_GUILD_BUREAU    = 395;
 const int ROOM_TROLLEY           = 15344;
 
 // ------------------------- OBJS

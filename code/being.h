@@ -1346,8 +1346,8 @@ class TBeing : public TThing {
     void loadDrugStats();
     void saveTitle();
     void loadTitle();
-    void saveFactionStats();
-    void loadFactionStats();
+    void saveGuildStats();
+    void loadGuildStats();
     bool saveFollowers(bool);
     bool loadFollowers();
     void goThroughPortalMsg(const TPortal *) const;
@@ -1469,9 +1469,9 @@ class TBeing : public TThing {
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);
-    void edit_faction(const char *);
-    void show_faction(const char *);
-    void add_faction(const char *);
+    void edit_guild(const char *);
+    void show_guild(const char *);
+    void add_guild(const char *);
     void doJoin(const char *);
     void doRecruit(const char *);
     void doDefect(const char *);
@@ -1774,9 +1774,9 @@ class TBeing : public TThing {
     }
     void addToHero(int num);
     // new faction functions - dash
-    TGuild * newfaction() const;
+    TGuild * newguild() const;
     const char * rank();
-    bool canCreateFaction(bool);
+    bool canCreateGuild(bool);
     bool hasPermission(unsigned int);
 
     factionTypeT getFaction() const;

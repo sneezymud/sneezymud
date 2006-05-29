@@ -1118,7 +1118,7 @@ void TPerson::doShow(const sstring &argument)
           tComponent = NULL;
         }
   } else if (is_abbrev(buf, "newfactions")) {
-    show_faction(my_arg.c_str());
+    show_guild(my_arg.c_str());
   } else {
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | disabled)\n\r";

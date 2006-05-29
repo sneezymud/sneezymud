@@ -549,7 +549,7 @@ void TBeing::doAttribute(const char *arg)
     sendTo(buf);
     if (toggleInfo[TOG_TESTCODE5]->toggle){
       sendTo(COLOR_BASIC, fmt("You are a member of %s<1>, and have a rank of %s<1>.\n\r") %
-	     newfaction()->getName() % rank());
+	     newguild()->getName() % rank());
     } else {
 #if FACTIONS_IN_USE
       sendTo(fmt("You are allied to %s, and have a %.4f%c rating.\n\r") %
