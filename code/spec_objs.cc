@@ -5680,6 +5680,20 @@ int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }  
 
+
+int regeneration(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if (!o)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+
+  if(cmd == CMD_GENERIC_PULSE)
+    ch->addToHit(max(1, (int)(ch->hitGain()/10.0)));
+
+  return FALSE;
+}
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -5763,7 +5777,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Weapon: disruption", weaponDisruption},
   {TRUE, "Weapon: fumbler", weaponFumbler},
   {TRUE, "ladder", ladder},
-  {TRUE, "BOGUS", bogusObjProc},      // 15
+  {TRUE, "regeneration", regeneration},      // 15
   {TRUE, "Weapon: bonebreaker", weaponBreaker},
   {FALSE, "Glowing Cutlass", glowCutlass},
   {TRUE, "poison whip", poisonWhip},
