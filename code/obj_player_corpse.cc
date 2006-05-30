@@ -56,8 +56,16 @@ void TPCorpse::setOwner(const sstring &Name)
   fileName = Name;
 }
 
-const sstring & TPCorpse::getOwner() const
+sstring TPCorpse::getOwner() const
 {
+  sstring buf=name;
+
+  if(fileName.empty() &&
+     buf.word(0) == "corpse" &&
+     buf.word(2) == "pcorpse"){
+    return buf.word(1).lower();
+  }
+
   return fileName;
 }
 
