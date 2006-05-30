@@ -58,7 +58,14 @@ then
     echo "Killing process $pid."
     kill $pid
   else
-    echo "Sneezy process not found running on port $PORT."
+      pid=$(pgrep -U $USER -f "sneezy -t $PORT")
+      if [ "$pid" != "" ]
+	  then
+	  echo "Killing process $pid."
+	  kill $pid
+      else
+	  echo "Sneezy process not found running on port $PORT."
+      fi
   fi
 fi
 
