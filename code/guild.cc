@@ -1116,7 +1116,7 @@ void TBeing::saveGuildStats()
   char buf[160];
   int current_version = 1;
 
-  if (!isPc() || !desc)
+  if (!isPc() || !desc || faction.whichguild==-1)
     return;
 
   sprintf(buf, "player/%c/%s.guild", LOWER(name[0]), sstring(name).lower().c_str());
