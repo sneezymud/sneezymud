@@ -180,7 +180,7 @@ void TPerson::doSet(const char *argument)
       sendTo("No such factions\n\r");
       return;
     }
-    mob->faction.whichguild = f->ID;
+    mob->setGuildID(f->ID);
     mob->faction.rank = f->ranks;
     sendTo(COLOR_BASIC,fmt("%s faction set to %s (%d), rank set to %s. (lowest possible)\n\r") % mob->getName() %
 	   mob->newguild()->getName() % mob->newguild()->ID % mob->rank());

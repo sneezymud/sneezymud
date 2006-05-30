@@ -46,6 +46,7 @@ class TGuild {
   char * rank[NUM_MAX_RANK];
   unsigned int permissions[NUM_MAX_RANK];
   unsigned int flags;
+  factionTypeT faction_affiliation;
   int treasury;
   int ranks;
   int alignx;
@@ -74,6 +75,8 @@ class TGuild {
     slang_name = NULL;
     keywords = NULL;
     password = NULL;
+
+    faction_affiliation=FACT_NONE;
 
     for(i = 0; i < NUM_MAX_RANK; i++) {
       rank[i] = NULL;

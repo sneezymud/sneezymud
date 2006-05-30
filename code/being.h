@@ -1469,6 +1469,11 @@ class TBeing : public TThing {
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);
+
+    void setGuildID(int);
+    void setGuildRank(int);
+    int getGuildID() const;
+    int getGuildRank() const;
     void edit_guild(const char *);
     void show_guild(const char *);
     void add_guild(const char *);

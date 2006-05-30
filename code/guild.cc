@@ -6,6 +6,46 @@
 // start new guild stuff
 vector<TGuild *>guild_table(0);
 
+void TBeing::setGuildID(int id)
+{
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("update player set guild_id=%i where id=%i",
+	   id, getPlayerID());
+}
+
+void TBeing::setGuildRank(int rank)
+{
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("update player set guildrank=%i where id=%i",
+	   rank, getPlayerID());
+}
+
+int TBeing::getGuildID() const
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select guild_id from player where id=%i", getPlayerID());
+
+  if(!db.fetchRow())
+    return -1;
+
+  return convertTo<int>(db["guild_id"]);
+}
+
+int TBeing::getGuildRank() const
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select guildrank from player where id=%i", getPlayerID());
+
+  if(!db.fetchRow())
+    return 0;
+
+  return convertTo<int>(db["guildrank"]);
+}
+
 
 // open recruitment guilds in the office are taken care of by the registrar
 void TBeing::doJoin(const char * args) {
@@ -16,14 +56,15 @@ void TBeing::doJoin(const char * args) {
     sendTo("The new guild system is currently disabled.  You may not join a guild now.\n\r");
     return;
   }
-  if(!(f = get_guild(args)) || (IS_SET(f->flags, GUILD_HIDDEN) && !hasOffer(f)) || 
+  if(!(f = get_guild(args)) || 
+     (IS_SET(f->flags, GUILD_HIDDEN) && !hasOffer(f)) || 
      (!IS_SET(f->flags, GUILD_ACTIVE))) {
-    // logic: guild doesn't exist, guild is hidden and hasn't extended an offer, or
-    // guild is inactive - deny.
+    // logic: guild doesn't exist, guild is hidden and hasn't extended an 
+    // offer, or guild is inactive - deny.
     sendTo("There is no such guild for you to join.\n\r");
     return;
   }
-  if(faction.whichguild) {
+  if(getGuildID()>=0) {
     sprintf(buf, "You are already a member of %s, you may not join a second guild.\n\r", f->getName());
     sendTo(COLOR_BASIC, buf);
     return;
@@ -43,8 +84,8 @@ void TBeing::doJoin(const char * args) {
     return;
   }
   sprintf(buf,"You have accepted %s's offer and joined their guild!\n\r", f->getName());
-  faction.whichguild = f->ID;
-  faction.rank = f->ranks - 1; // this starts them off as the lowest level rank
+  setGuildID(f->ID);
+  setGuildRank(f->ranks - 1); // this starts them off as the lowest level rank
   sendTo(COLOR_BASIC, buf);
   removeOffers();
   saveGuildStats();
@@ -59,7 +100,7 @@ void TBeing::doDefect(const char * args) {
   }
 
   char buf[80];
-  if(!faction.whichguild) {
+  if(getGuildID()==-1) {
     sendTo("You are not a member of any guild - no need to defect.\n\r");
     return;
   }
@@ -68,8 +109,8 @@ void TBeing::doDefect(const char * args) {
     sprintf(buf, "You have defected from %s.\n\r", newguild()->getName());
     sendTo(COLOR_BASIC, buf);
     vlogf(LOG_FACT, fmt("%s defected from %s.") %  getName() % newguild()->getName());
-    faction.whichguild = 0;
-    faction.rank = 0;
+    setGuildID(-1);
+    setGuildRank(0);
     saveGuildStats();
     setDefected();
   } else {
@@ -91,11 +132,11 @@ void TBeing::doRecruit(const char * args) {
     return;
   }
   
-  if(faction.whichguild == 0) {
+  if(getGuildID() == -1) {
     sendTo("You are unaffiliated, you have no guild to recruit into!\n\r");
     return;
   }
-  if(!IS_SET(newguild()->permissions[faction.rank], PERM_RECRUIT)) {
+  if(!IS_SET(newguild()->permissions[getGuildRank()], PERM_RECRUIT)) {
     sendTo("You do not have permission to recruit new members.\n\r");
     return;
   }
@@ -107,7 +148,7 @@ void TBeing::doRecruit(const char * args) {
     sendTo("Mobiles can't recruit!\n\r");
     return;
   }
-  if(targ->faction.whichguild) {
+  if(targ->getGuildID()>=0) {
     sendTo("You cannot recruit players who are already in another guild.\n\r");
     return;
   }
@@ -247,8 +288,8 @@ void TBeing::add_guild(const char * args) {
     sprintf(buf,"Guild: '%s' added with unique ID #%d\n\r", f->keywords, f->ID);
     sendTo(buf);
   } else {
-    faction.whichguild = f->ID;
-    faction.rank = 0; // leader slot
+    setGuildID(f->ID);
+    setGuildRank(0); // leader slot
     saveGuildStats();
   }  
   vlogf(LOG_FACT, fmt("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
@@ -268,7 +309,7 @@ bool TBeing::canCreateGuild(bool silent = false) {
     }
     return FALSE;
   }
-  if(faction.whichguild) {
+  if(getGuildID()>=0) {
     if (!silent) {
       sprintf(buf, "You are already a member of %s.\n\r", newguild()->getName());
       sendTo(COLOR_BASIC, buf);
@@ -342,7 +383,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	myself->doSay("You can come back later when you've become more powerful.");
 	return TRUE;
       }
-      if(ch->faction.whichguild) {
+      if(ch->getGuildID()>=0) {
 	sprintf(buf, "Hmmmn.  %s, it appears you are already a member of a guild.", ch->getName());
 	myself->doSay(buf);
 	myself->doAction("", CMD_SHAKE);
@@ -444,7 +485,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
       
       return TRUE;
     }
-    if(ch->faction.whichguild) {
+    if(ch->getGuildID()>=0) {
       myself->doTell(fname(ch->name), "You are already a member of a guild... you'll have to disband before you join another.");
       myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another guild.");
       
@@ -475,8 +516,8 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     } else {
       myself->doSay(buf);
     }
-    ch->faction.whichguild = f->ID;
-    ch->faction.rank = f->ranks - 1;
+    ch->setGuildID(f->ID);
+    ch->setGuildRank(f->ranks - 1);
     myself->doAction(fname(ch->name), CMD_SHAKE);
     ch->saveGuildStats();
     return TRUE;
@@ -828,7 +869,8 @@ void TBeing::edit_guild(const char * args) {
   return;
 }
 
-void TBeing::show_guild(const char * args) {
+void TBeing::show_guild(const char * args)
+{
 #if 0
   vlogf(LOG_DASH, fmt("show_guild() called with args = %s") %  args);
 #endif
@@ -873,6 +915,12 @@ void TBeing::show_guild(const char * args) {
       heraldcodes[f->colors[1]], heraldcolors[f->colors[1]], 
       heraldcodes[f->colors[2]], heraldcolors[f->colors[2]]);
     sendTo(COLOR_BASIC,buf);
+
+    sendTo(COLOR_BASIC, fmt("<1><c>Faction Affiliation:<1> %s\n\r") %
+	   FactionInfo[f->faction_affiliation].faction_name);
+
+
+
     int relationcount = 0;
     sendTo(COLOR_BASIC, "<1><c>Relations:<1>\n\r");
     vector<TGuild *>::iterator i;
@@ -906,6 +954,35 @@ void TBeing::show_guild(const char * args) {
     if (!relationcount) {
       sendTo(" None!\n\r");
     }
+
+    TDatabase db(DB_SNEEZY);
+    int membercount=0;
+
+    if(getGuildID() == f->ID ||
+       !IS_SET(f->flags, GUILD_HIDE_MEMBERS)){
+      sendTo(COLOR_BASIC, "<1><c>Members:<1>\n\r");
+      
+      db.query("select name, guildrank from player where guild_id=%i order by guildrank", f->ID);
+      
+      while(db.fetchRow()){
+	if(getGuildID() == f->ID ||
+	   (!IS_SET(f->flags, GUILD_HIDE_RANKS) &&
+	   !IS_SET(f->flags, GUILD_HIDE_LEADERS))){
+	  sendTo(fmt("%s - %s\n\r") % 
+		 db["name"].cap() % (f->rank[convertTo<int>(db["guildrank"])] ? f->rank[convertTo<int>(db["guildrank"])] : "(null)"));
+	} else {
+	  sendTo(fmt("%s\n\r") % 
+		 db["name"].cap());
+	}
+	membercount++;
+      }
+      if(!membercount){
+	sendTo(" None!\n\r");
+      }
+    }
+    
+    
+
     return;
   }
 
@@ -934,15 +1011,15 @@ void TBeing::show_guild(const char * args) {
 }
 
 TGuild * TBeing::newguild() const {
-  return get_guild_by_ID(faction.whichguild);
+  return get_guild_by_ID(getGuildID());
 }
 
 const char * TBeing::rank() {
-  return newguild()->rank[faction.rank];
+  return newguild()->rank[getGuildRank()];
 }
 
 bool TBeing::hasPermission(unsigned int bit) {
-  return IS_SET(newguild()->permissions[faction.rank-1], bit);
+  return IS_SET(newguild()->permissions[getGuildRank()-1], bit);
 }
 
 int TGuild::getRelation(TGuild * target) {
@@ -1116,7 +1193,7 @@ void TBeing::saveGuildStats()
   char buf[160];
   int current_version = 1;
 
-  if (!isPc() || !desc || faction.whichguild==-1)
+  if (!isPc() || !desc || getGuildID()==-1)
     return;
 
   sprintf(buf, "player/%c/%s.guild", LOWER(name[0]), sstring(name).lower().c_str());
@@ -1125,20 +1202,20 @@ void TBeing::saveGuildStats()
     vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving guild stats. (%d)") %  buf % errno);
     return;
   }
-  if(!get_guild_by_ID(faction.whichguild)) {
+  if(!get_guild_by_ID(getGuildID())) {
     vlogf(LOG_FACT, fmt("%s had bad guild during saveGuildStats() ... making unaffiliated") %  getName());
-    faction.whichguild = 0;
-    faction.rank = 0;
+    setGuildID(-1);
+    setGuildRank(0);
   }
 
-  if(faction.rank < 0 || faction.rank >= newguild()->ranks) {
+  if(getGuildRank() < 0 || getGuildRank() >= newguild()->ranks) {
     vlogf(LOG_FACT, fmt("%s had bad rank - setting to lowest in guild.") %  getName());
-    faction.rank = newguild()->ranks - 1;
+    setGuildRank(newguild()->ranks - 1);
   }
   fprintf(fp, "%u\n",
 	  current_version);
 
-  fprintf(fp,"%d %d\n", faction.whichguild, faction.rank);
+  fprintf(fp,"%d %d\n", getGuildID(), getGuildRank());
   fprintf(fp,"%d %d\n", faction.align_ge, faction.align_lc);
 
   if (fclose(fp))
@@ -1175,16 +1252,16 @@ void TBeing::loadGuildStats()
     fclose(fp);
     return;
   }
-  faction.whichguild = num1;
-  if(!get_guild_by_ID(faction.whichguild)) {
+  setGuildID(num1);
+  if(!get_guild_by_ID(getGuildID())) {
     vlogf(LOG_FACT, fmt("%s had bad guild during loadGuildStats() ... making unaffiliated") %  getName());
-    faction.whichguild = 0;
-    faction.rank = 0;
+    setGuildID(-1);
+    setGuildRank(0);
   }
-  faction.rank = num2;
-  if(faction.rank < 0 || faction.rank >= newguild()->ranks) {
+  setGuildRank(num2);
+  if(getGuildRank() < 0 || getGuildRank() >= newguild()->ranks) {
     vlogf(LOG_FACT, fmt("%s had bad rank during loadGuildStats - setting to lowest in guild.") %  getName());
-    faction.rank = newguild()->ranks - 1;
+    setGuildRank(newguild()->ranks - 1);
   }
 
   if (fscanf(fp, "%d %d\n", &num3, &num4) != 2) {
