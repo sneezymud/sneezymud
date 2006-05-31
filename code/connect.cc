@@ -1426,12 +1426,6 @@ int Descriptor::nanny(sstring arg)
             character->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
           }
-          /*
-	  if (character->isImmortal()) {
-	    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-	    character->mudMessage(character, 16, wizbuf);
-	  }
-          */
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
@@ -1575,12 +1569,6 @@ int Descriptor::nanny(sstring arg)
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-              /*
-	      if (tmp_ch->isImmortal()) {
-		sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", tmp_ch->cyan(), tmp_ch->norm(), tmp_ch->getName(), gamePort);
-		tmp_ch->mudMessage(tmp_ch, 16, wizbuf);
-	      }
-              */
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
 	      tmp_ch->loadGuildStats();

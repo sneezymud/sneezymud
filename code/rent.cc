@@ -2490,13 +2490,6 @@ void TPerson::loadRent()
     tmp2 = t2;
   }
 
-  /*
-  if (isImmortal()) {
-    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just connected to port %d.\n\r", cyan(), norm(), getName(), gamePort);
-    mudMessage(this, 16, wizbuf); 
-  }
-  */
-
   recepOffer(NULL, &cost);
   saveRent(&cost, FALSE, 0);
   return;

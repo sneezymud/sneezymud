@@ -615,12 +615,6 @@ int Descriptor::read_client(char *str2)
             dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
           }
           act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
-          /*
-	  if (ch->isImmortal()) {
-            sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
-	    ch->mudMessage(ch, 16, wizbuf); 
-	  }
-          */
           ch->loadCareerStats();
           ch->loadDrugStats();
 	  ch->loadGuildStats();
@@ -1198,12 +1192,6 @@ int Descriptor::client_nanny(char *arg)
       vlogf(LOG_PIO, fmt("%s[%s] has connected (client)  (account: %s).") % 
                  character->getName() % host % account->name);
     }
-    /*
-    if (character->isImmortal()) {
-      sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
-      character->mudMessage(character, 16, wizbuf); 
-    }
-    */
   }
   sendMotd(character->GetMaxLevel() > MAX_MORT);
   if (character->hasClass(CLASS_CLERIC) || character->hasClass(CLASS_DEIKHAN))
@@ -1573,10 +1561,6 @@ int Descriptor::clientCreateChar(char *arg)
   ch->affectTotal();
   vlogf(LOG_PIO, fmt("%s [%s] new player.") %  ch->getName() % host);
   clientf(fmt("%d") % CLIENT_NEWCHAR);
-  /*
-  sprintf(wizbuf, "[%sINTERPORT INFO%s] New player %s just created on port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
-  ch->mudMessage(ch, 16, wizbuf); 
-  */
 
   enum connectStateT oldconnected = connected;
   connected = CON_PLYNG;

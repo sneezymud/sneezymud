@@ -741,12 +741,6 @@ int TPerson::doQuit2()
     *roomp += *create_money(getMoney());
     addToMoney(-getMoney(), GOLD_INCOME);
   }
-  /*
-  if (isImmortal()) {
-    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just quit on port %d.\n\r", cyan(), norm(), getName(), gamePort);
-    mudMessage(this, 16, wizbuf); 
-  }
-  */
   // this handles droping items to ground
   // it use to be in ~TPerson, but do it here since the one in ~TPerson is
   // now an error handler, while this is a known good case.

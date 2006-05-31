@@ -134,7 +134,7 @@ LDFLAGS +=-lares
 LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	ai_responses.o		ai_utility.o 		ai_assignskills.o  \
 	alignment_deity.o 	being.o 		body.o             \
-	breath.o 		bwiz.o 			combat.o           \
+	breath.o 					combat.o           \
 	constants.o 		create_engine.o		create_mobs.o      \
 	create_objs.o		create_rooms.o		crit_combat.o      \
 	damage.o 		discipline.o 		disease.o          \
@@ -1805,109 +1805,6 @@ objs/breath.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/breath.o: charfile.h being.h guild.h person.h monster.h paths.h
 objs/breath.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/breath.o: materials.h colorstring.h format.h
-objs/bwiz.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-objs/bwiz.o: /usr/include/sys/_null.h /usr/include/sys/_types.h
-objs/bwiz.o: /usr/include/machine/_types.h /usr/include/time.h
-objs/bwiz.o: /usr/include/sys/timespec.h /usr/include/sys/types.h
-objs/bwiz.o: /usr/include/machine/endian.h /usr/include/sys/select.h
-objs/bwiz.o: /usr/include/sys/_sigset.h /usr/include/sys/_timeval.h
-objs/bwiz.o: /usr/include/sys/ipc.h /usr/include/sys/msg.h
-objs/bwiz.o: /usr/include/errno.h /usr/include/string.h
-objs/bwiz.o: /usr/include/strings.h stdsneezy.h /usr/include/c++/3.4/cstdio
-objs/bwiz.o: /usr/include/c++/3.4/bits/c++config.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/os_defines.h
-objs/bwiz.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
-objs/bwiz.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
-objs/bwiz.o: /usr/include/c++/3.4/ctime /usr/include/c++/3.4/cctype
-objs/bwiz.o: /usr/include/ctype.h /usr/include/_ctype.h
-objs/bwiz.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
-objs/bwiz.o: /usr/include/c++/3.4/cstring /usr/include/stdarg.h
-objs/bwiz.o: /usr/include/c++/3.4/cmath
-objs/bwiz.o: /usr/include/c++/3.4/bits/cpp_type_traits.h /usr/include/math.h
-objs/bwiz.o: /usr/include/machine/_limits.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/cmath.tcc /usr/include/c++/3.4/cerrno
-objs/bwiz.o: /usr/include/c++/3.4/string
-objs/bwiz.o: /usr/include/c++/3.4/bits/stringfwd.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/char_traits.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_algobase.h
-objs/bwiz.o: /usr/include/c++/3.4/climits /usr/include/limits.h
-objs/bwiz.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
-objs/bwiz.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
-objs/bwiz.o: /usr/include/c++/3.4/iosfwd
-objs/bwiz.o: /usr/include/c++/3.4/bits/c++locale.h
-objs/bwiz.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/c++io.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/gthr.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/gthr-default.h /usr/include/pthread.h
-objs/bwiz.o: /usr/include/sys/time.h /usr/include/sys/signal.h
-objs/bwiz.o: /usr/include/machine/signal.h /usr/include/machine/trap.h
-objs/bwiz.o: /usr/include/sched.h /usr/include/unistd.h
-objs/bwiz.o: /usr/include/sys/unistd.h /usr/include/c++/3.4/bits/postypes.h
-objs/bwiz.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
-objs/bwiz.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/functexcept.h
-objs/bwiz.o: /usr/include/c++/3.4/exception_defines.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_pair.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/type_traits.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/concept_check.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_iterator.h
-objs/bwiz.o: /usr/include/c++/3.4/debug/debug.h /usr/include/c++/3.4/memory
-objs/bwiz.o: /usr/include/c++/3.4/bits/allocator.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/c++allocator.h
-objs/bwiz.o: /usr/include/c++/3.4/ext/new_allocator.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_construct.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_function.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/basic_string.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/atomicity.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/atomic_word.h
-objs/bwiz.o: /usr/include/c++/3.4/algorithm
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_algo.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_heap.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/basic_string.tcc
-objs/bwiz.o: /usr/include/c++/3.4/vector
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_vector.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_bvector.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/vector.tcc /usr/include/c++/3.4/map
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_tree.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_map.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/stl_multimap.h
-objs/bwiz.o: /usr/include/c++/3.4/list /usr/include/c++/3.4/bits/stl_list.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/list.tcc /usr/include/c++/3.4/iostream
-objs/bwiz.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
-objs/bwiz.o: /usr/include/c++/3.4/bits/localefwd.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/ios_base.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/locale_classes.h
-objs/bwiz.o: /usr/include/c++/3.4/streambuf
-objs/bwiz.o: /usr/include/c++/3.4/bits/streambuf.tcc
-objs/bwiz.o: /usr/include/c++/3.4/bits/basic_ios.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/locale_facets.h
-objs/bwiz.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/basic_ios.tcc
-objs/bwiz.o: /usr/include/c++/3.4/bits/ostream.tcc
-objs/bwiz.o: /usr/include/c++/3.4/locale
-objs/bwiz.o: /usr/include/c++/3.4/bits/locale_facets.tcc
-objs/bwiz.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
-objs/bwiz.o: /usr/include/c++/3.4/istream
-objs/bwiz.o: /usr/include/c++/3.4/bits/istream.tcc
-objs/bwiz.o: /usr/include/c++/3.4/sstream
-objs/bwiz.o: /usr/include/c++/3.4/bits/sstream.tcc
-objs/bwiz.o: /usr/include/c++/3.4/fstream
-objs/bwiz.o: /usr/include/c++/3.4/bits/basic_file.h
-objs/bwiz.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h enum.h
-objs/bwiz.o: spells.h structs.h parse.h immunity.h discipline.h spell2.h db.h
-objs/bwiz.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
-objs/bwiz.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
-objs/bwiz.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
-objs/bwiz.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
-objs/bwiz.o: charfile.h being.h guild.h person.h monster.h paths.h account.h
-objs/bwiz.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/bwiz.o: colorstring.h format.h
 objs/client.o: /usr/include/c++/3.4/cstdarg /usr/include/stdarg.h
 objs/client.o: /usr/include/sys/cdefs.h /usr/include/sys/_types.h
 objs/client.o: /usr/include/machine/_types.h /usr/include/sys/stat.h

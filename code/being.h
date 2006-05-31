@@ -2018,7 +2018,6 @@ class TBeing : public TThing {
     int doSay(const sstring &);
     virtual void doForce(const char *);
     void doCommune(const sstring &);
-    void mudMessage(TBeing *, int, const char *); 
     virtual void doShutdow();
     virtual void doShutdown(const char *);
     const sstring addColorRoom(TRoom *, int) const;
