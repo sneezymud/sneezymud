@@ -274,7 +274,6 @@ void TBeing::add_guild(const char * args) {
     f->colors[i] = 0;
   }
   f->flags = 0;
-  f->treasury = 0;
   f->alignx = 0;
   f->aligny = 0;
   f->actx = 0;
@@ -282,7 +281,15 @@ void TBeing::add_guild(const char * args) {
   f->ranks = DEFAULT_RANKS;
   f->power = 0.0;
   f->patron = deityTypeT(0);
+  f->faction_affiliation = FACT_NONE;
   guild_table.push_back(f);
+
+  TDatabase db(DB_SNEEZY);
+  db.query("insert into corporation (name, bank) values ('<None>', 4)");
+  db.query("select max(corp_id) as corp_id from corporation");
+  db.fetchRow();
+  f->corp_id=convertTo<int>(db["corp_id"]);
+
   char buf[128];
   if (isImmortal()) {
     sprintf(buf,"Guild: '%s' added with unique ID #%d\n\r", f->keywords, f->ID);
@@ -337,6 +344,7 @@ bool TBeing::canCreateGuild(bool silent = false) {
 // spec_mob proc for Miya in the bureau
 int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
+  TDatabase db(DB_SNEEZY);
   char field[80], values[80];
   char buf[256];
   char tell[256];
@@ -541,7 +549,8 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 
 
 // fedit command
-void TBeing::edit_guild(const char * args) {
+void TBeing::edit_guild(const char * args)
+{
   // there are two ways this will be called - god version and player
   // version of the command thus, we need a variable for all the
   // syntax stuff.
@@ -552,6 +561,7 @@ void TBeing::edit_guild(const char * args) {
   char field[80];
   char values[80];
   TGuild *f = NULL;
+  TDatabase db(DB_SNEEZY);
 
   // ok 'args' is going to be of the format:
   // <guild> <field> <value(s)>
@@ -634,6 +644,10 @@ void TBeing::edit_guild(const char * args) {
     if(f->proper_name)
       delete [] f->proper_name;
     f->proper_name = mud_str_dup(values);
+    vlogf(LOG_PEEL, fmt("corp_id=%i") % f->corp_id);
+    vlogf(LOG_PEEL, "update corporation set name='%s' where corp_id=%i");
+    db.query("update corporation set name='%s' where corp_id=%i",
+	     values, f->corp_id);
     sprintf(buf,"Guild name changed to %s\n\r", values);
     sendTo(COLOR_BASIC, buf);
     return;
@@ -648,7 +662,21 @@ void TBeing::edit_guild(const char * args) {
     sprintf(buf,"Guild short name changed to %s\n\r", values);
     sendTo(COLOR_BASIC, buf);
     return;
-
+  } else if (is_abbrev(field, "affiliation")){
+    sstring buf=values;
+    
+    if(buf=="logrus" || buf=="cult"){
+      f->faction_affiliation=FACT_CULT;
+    } else if(buf=="brightmoon" || buf=="galek" || buf=="brotherhood"){
+      f->faction_affiliation=FACT_BROTHERHOOD;
+    } else if(buf=="snakes" || buf=="amber" || 
+	      buf=="serpents" || buf=="order"){
+      f->faction_affiliation=FACT_SNAKE;
+    } else {
+      sendTo("Unrecognized faction.\n\r");
+      return;
+    }
+    sendTo(fmt("Faction affiliation changed to %s\n\r") % buf);
   } else if (is_abbrev(field, "keywords")) {
     if(f->keywords)
       delete [] f->keywords;
@@ -896,8 +924,9 @@ void TBeing::show_guild(const char * args)
 	    (f->password) ? f->password : "(null)");
     sendTo(COLOR_BASIC,buf);
     
+    TCorporation corp(f->corp_id);
     sprintf(buf, "<1><c> Treasury:<1> %d talen%s \n\r<1><c>Guild Flags: <1>",
-	    f->treasury, (f->treasury == 1) ? "" : "s");//, display_guild_flags(f->flags));
+	    corp.getMoney(), (corp.getMoney() == 1) ? "" : "s");//, display_guild_flags(f->flags));
     sendTo(COLOR_BASIC,buf);
     sendTo(COLOR_BASIC, display_guild_flags(f->flags));
     sendTo("\n\r");
@@ -1077,6 +1106,7 @@ bool remove_guild(const char *args)
 
 bool remove_guild_by_ID(int idnum) {
   vector<TGuild *>::iterator i;
+  TDatabase db(DB_SNEEZY);
   for (i = guild_table.begin();i != guild_table.end();++i) {
     if ((*i)->ID == idnum) {
       guild_table.erase(i);
@@ -1355,7 +1385,6 @@ int load_guilds() {
 
     line++;
     sscanf(buf, "%d %d %d %f\n\r", &i1, &i2, &i3, &f1);
-    f->treasury = i1;
     f->ranks = i2;
     f->flags = (unsigned int)(i3);
     f->power = f1;
@@ -1396,6 +1425,20 @@ int load_guilds() {
     line++;
     sscanf(buf, "%d\n\r", &i1);
     f->patron = deityTypeT(i1);
+
+    if(fgets(buf, 256, fp) == NULL) {
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+
+      fclose(fp);
+      return FALSE;
+    }
+
+    line++;
+    sscanf(buf, "%d %d\n\r", &i1, &i2);
+    f->faction_affiliation=factionTypeT(i1);
+    f->corp_id=i2;
+
+
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       if(fgets(buf, 256, fp) == NULL) {
 	vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
@@ -1462,10 +1505,11 @@ void save_guilds()
     fprintf(fp, "name: %s\n", f->proper_name);
     fprintf(fp, "shortname: %s\n", f->slang_name);
     fprintf(fp, "password: %s\n", f->password);
-    fprintf(fp, "%d %d %d %f\n", f->treasury, f->ranks, f->flags, f->power);
+    fprintf(fp, "0 %d %d %f\n", f->ranks, f->flags, f->power);
     fprintf(fp, "%d %d %d %d\n", f->alignx, f->aligny, f->actx, f->acty);
     fprintf(fp, "%d %d %d\n", f->colors[0], f->colors[1], f->colors[2]);
     fprintf(fp, "%d\n", (int)f->patron);
+    fprintf(fp, "%d %d\n",(int) f->faction_affiliation, f->corp_id);
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       fprintf(fp, "rank %d %d %s\n", j, f->permissions[j], f->rank[j]);
     }
@@ -1473,6 +1517,7 @@ void save_guilds()
     for(k = f->relations.begin(); k != f->relations.end(); ++k) {
       fprintf(fp, "R %d %d\n", (*k)->targ_fact, (*k)->relation);
     }
+
     fprintf(fp, "!\n");
   }
   fprintf(fp, "$\n");

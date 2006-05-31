@@ -47,6 +47,7 @@ class TGuild {
   unsigned int permissions[NUM_MAX_RANK];
   unsigned int flags;
   factionTypeT faction_affiliation;
+  int corp_id;
   int treasury;
   int ranks;
   int alignx;
