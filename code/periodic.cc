@@ -88,7 +88,8 @@ void procGlobalRoomStuff::run(int pulse) const
 	  water_count+=pool->getDrinkUnits();
 
 	// count volume on fire
-	if(o && o->isObjStat(ITEM_BURNING))
+	if(o && o->isObjStat(ITEM_BURNING) &&
+	   material_nums[o->getMaterial()].flammability)
 	  fire_count+=o->getVolume();
 
 	// count trash
