@@ -6260,6 +6260,11 @@ void Descriptor::deleteAccount()
     wipeRentFile(dp->d_name);
     wipeFollowersFile(dp->d_name);
   }
+
+  TDatabase db(DB_SNEEZY);
+  db.query("delete from account where name='%s'",
+	   sstring(account->name).lower().c_str());
+
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   rmdir(buf);
   accStat.account_number--;
