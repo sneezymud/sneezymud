@@ -774,7 +774,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_TO:
-      if(!myself->inRoom()==ROOM_TROLLEY){
+      if(myself->inRoom()==ROOM_TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
 	if(exitp->to_room == 1303){
