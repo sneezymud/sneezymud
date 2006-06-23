@@ -3944,7 +3944,8 @@ static int engraveCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
 
   cost *= max(1,obj->obj_flags.cost/10000);
 
-  cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
+  if(shop_nr)
+    cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
 
   return (int) cost;
 }
@@ -4282,6 +4283,10 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	ch->giveMoney(me, cost, GOLD_SHOP);
 	shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
 		cost, "engraving");
+	me->setMoney(me->getMoney()-engraveCost(item, ch, 0));
+	shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
+		engraveCost(item, ch, 0), "expenses");
+	
 
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
