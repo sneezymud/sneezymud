@@ -521,7 +521,12 @@ void sendShowExtra(int account_id, int vnum)
 
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-    cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+
+    sstring buf=db["description"];
+    while (buf.find("'") != sstring::npos)
+      buf.replace(buf.find("'"), 1, "&#146;");
+
+    cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
 
     cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
@@ -748,12 +753,20 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % db["short_desc"];
+  sstring buf=db["short_desc"];
+  while (buf.find("'") != sstring::npos)
+    buf.replace(buf.find("'"), 1, "&#146;");
+
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
 
   cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(db["short_desc"]);
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % db["long_desc"];
+  buf=db["long_desc"];
+  while (buf.find("'") != sstring::npos)
+    buf.replace(buf.find("'"), 1, "&#146;");
+
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
 
   cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(db["long_desc"]);
