@@ -1259,6 +1259,7 @@ void TBeing::loadGuildStats()
   char buf[160];
   int current_version;
   int num1, num2, num3, num4;
+  return;
 
   if (!isPc() || !desc)
     return;
