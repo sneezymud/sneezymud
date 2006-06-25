@@ -1223,6 +1223,8 @@ void TBeing::saveGuildStats()
   char buf[160];
   int current_version = 1;
 
+  return;
+
   if (!isPc() || !desc || getGuildID()==-1)
     return;
 
