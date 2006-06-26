@@ -16,7 +16,21 @@ M 0 33270 5 33271       trash collectors
 M 0 33270 5 33271       trash collectors
 
 
-M 0 33291 1 33291		butler
+M 0 33291 1 33291	butler
+O 0 14385 3 33291	lamp
+O 0 14365 1 33291	wardrobe
+O 0 185   1 33291	chest
+O 0 9059  1 33291	bed
+
+O 0 18689 1 33290	couch
+O 0 10934 1 33290	fireplace
+O 0 14385 3 33290	lamp
+
+O 0 14385 3 33292	lamp
+O 0 6467  1 33292	shelves
+O 0 185   1 33292 	chest
+O 0 22404 1 33292	chest
+O 0 18695 1 33292 	chest
 
 S
 
