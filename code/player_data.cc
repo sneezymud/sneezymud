@@ -804,7 +804,13 @@ void TPerson::loadFromSt(charFile *st)
         rentAffectTo(&st->affected[i]);
     } 
   }
-  in_room = st->load_room;
+
+  db.query("select load_room from player where player_id=%i", getPlayerID());
+  in_room = convertTo<int>(db["load_room"]);
+
+  if(!in_room && st->load_room)
+    in_room = st->load_room;
+
   affectTotal();
 
 }
@@ -841,7 +847,7 @@ void TBeing::convertAbilities()
 {
 }
 
-void TBeing::saveChar(sh_int load_room)
+void TBeing::saveChar(int load_room)
 {
   charFile st;
   FILE *fl;
@@ -885,7 +891,6 @@ void TBeing::saveChar(sh_int load_room)
   }
 
   memset(&st, 0, sizeof(charFile));
-  st.load_room = (sh_int) load_room;
 
   if (!tmp)
     dynamic_cast<TPerson *>(this)->storeToSt(&st);
@@ -911,8 +916,10 @@ void TBeing::saveChar(sh_int load_room)
   Descriptor *mydesc=tmp?tmp->desc:desc;
     
   if(!isImmortal()){
-    db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id where p.id=%i and a.name='%s'",
-	     st.money, getPlayerID(), mydesc->account->name.c_str());
+    db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id, p.load_room=%i where p.id=%i and a.name='%s'",
+	     st.money, load_room,
+	     getPlayerID(), mydesc->account->name.c_str());
+    st.load_room=0;
   }
 
 

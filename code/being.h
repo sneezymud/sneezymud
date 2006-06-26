@@ -1997,7 +1997,7 @@ class TBeing : public TThing {
     void doSave(silentTypeT, const char * = NULL);
     void doZonefile(const sstring &);
     void doLoot(const sstring &);
-    void saveChar(short int);
+    void saveChar(int);
     int doFlee(const char *);
     int doDisarm(sstring, TThing *);
     int dieReturn(const char *, spellNumT, int);
