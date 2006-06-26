@@ -5853,11 +5853,9 @@ static bool isSanctionedCommand(cmdTypeT tCmd)
 
 static bool verifyName(const sstring tStString)
 {
-           FILE *tFile;
-           char  tString[256];
-  // Now the 'isCreator' variable is reversed.  If they are a creator
-  // it is set to false, if they are not then it's true.
-           bool  isCreator = true;
+  FILE *tFile;
+  char  tString[256];
+  bool  isNotCreator = true;
 
   // Knocks it to lower case then ups the first letter.
   sprintf(tString, "immortals/%s/wizdata",
@@ -5879,7 +5877,7 @@ static bool verifyName(const sstring tStString)
   db.query("select 1 from wizpower w, player p where p.id=w.player_id and p.name='%s' and w.wizpower=%i",
 	   tStString.lower().c_str(), mapWizPowerToFile(POWER_WIZARD));
   if (!db.fetchRow())
-    isCreator = false;
+    isNotCreator = true;
 
   return isCreator;
 }
