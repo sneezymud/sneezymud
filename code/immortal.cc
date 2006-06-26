@@ -5879,7 +5879,7 @@ static bool verifyName(const sstring tStString)
   if (!db.fetchRow())
     isNotCreator = true;
 
-  return isCreator;
+  return isNotCreator;
 }
 /*
   All this does at the moment is renames us then performs the command
