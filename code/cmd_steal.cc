@@ -29,7 +29,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
     thief->sendTo("It is impossible to steal with your hand(s) already full!\n\r");
     return FALSE;
   }
-  if (victim->isImmortal()) {
+  if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     thief->sendTo("You can't steal from an immortal.\n\r");
     return FALSE;
   }
