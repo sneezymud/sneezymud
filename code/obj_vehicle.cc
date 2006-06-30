@@ -218,8 +218,18 @@ void TVehicle::vehiclePulse(int pulse)
   vector<TBeing *>tBeing(0);
   TRoom *vehicleroom;
 
-  if(!troom)
+  if(!troom){
+    if(parent && parent->roomp){
+      // update the exit even if we're being carried or something
+      vehicleroom=real_roomp(getTarget());
+      for(int i=MIN_DIR;i<MAX_DIR;++i){
+	if(vehicleroom->dir_option[i])
+	  vehicleroom->dir_option[i]->to_room=parent->roomp->number;
+      }
+    }
     return;
+  }
+
 
   // update exits
   // we update here just to be sure they are correct
