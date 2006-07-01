@@ -6574,7 +6574,9 @@ int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *mys
 	buf = fmt("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] % 
 convertTo<int>(db["numbricks"]);
 	myself->doSay(buf);
-        vlogf(LOG_JESUS, fmt("%s turned in another brick for a total of %i") % ch->name % convertTo<int>(db["numbricks"]));
+	buf = fmt("Gague has won the last brick quest on 7-1-2006. Yay!");
+	myself->doSay(buf);
+        // vlogf(LOG_JESUS, fmt("%s turned in another brick for a total of %i") % ch->name % convertTo<int>(db["numbricks"]));
       }
       ch->doSave(SILENT_YES);
       return DELETE_ITEM;
