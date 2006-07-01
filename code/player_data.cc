@@ -805,7 +805,8 @@ void TPerson::loadFromSt(charFile *st)
     } 
   }
 
-  db.query("select load_room from player where player_id=%i", getPlayerID());
+  db.query("select load_room from player where id=%i", getPlayerID());
+  db.fetchRow();
   in_room = convertTo<int>(db["load_room"]);
 
   if(!in_room && st->load_room)
@@ -891,6 +892,7 @@ void TBeing::saveChar(int load_room)
   }
 
   memset(&st, 0, sizeof(charFile));
+  st.load_room = (sh_int) load_room;
 
   if (!tmp)
     dynamic_cast<TPerson *>(this)->storeToSt(&st);
