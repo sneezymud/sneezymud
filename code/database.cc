@@ -94,7 +94,7 @@ bool TDatabase::query(const char *query,...)
 {
   va_list ap;
   sstring buf;
-  int fromlen=0, tolen=(512*2)+1;
+  int fromlen=0, tolen=(2048*2)+1;
   const char *qsave=query;
   char *from=NULL, to[tolen];
   MYSQL_RES *restmp;
