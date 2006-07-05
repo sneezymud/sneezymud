@@ -316,9 +316,14 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
     return;
   }
   
-  db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
+  if((**(cgi.getElement("template"))).empty()){
+    db_sneezy.setDB(DB_SNEEZY);
+    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=0");
+  } else {
+    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
+  }
   db_sneezy.fetchRow();
-
+    
   db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
@@ -337,7 +342,11 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
 	   db_sneezy["capacity"].c_str(), 
 	   db_sneezy["height"].c_str());
 
-  db_sneezy.query("select vnum, name, description from roomextra where vnum=%s", (**(cgi.getElement("template"))).c_str());
+  if((**(cgi.getElement("template"))).empty()){
+    db_sneezy.query("select vnum, name, description from roomextra where vnum=0");
+  } else {
+    db_sneezy.query("select vnum, name, description from roomextra where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
+  }
 
   while(db_sneezy.fetchRow()){
     db.query("insert into roomextra (vnum, owner, block, name, description) values (%s, '%s', 1, '%s', '%s')", 
