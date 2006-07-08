@@ -130,7 +130,8 @@ void TLight::lightDecay()
         act("$p flickers a bit, and then burns out.",
                 FALSE, parent, this, 0, TO_CHAR);
         parent->addToLight(-getLightAmt());
-        parent->roomp->addToLight(-getLightAmt());
+	if(parent->roomp)
+	  parent->roomp->addToLight(-getLightAmt());
       } else if (equippedBy) {
         act("$p flickers a bit, and then burns out.",
                 FALSE, equippedBy, this, 0, TO_CHAR);
