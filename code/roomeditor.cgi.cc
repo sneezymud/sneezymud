@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "extern.h"
 #include "database.h"
 #include "session.cgi.h"
 
@@ -19,7 +20,6 @@
 #include <md5.h>
 
 using namespace cgicc;
-
 
 void sendJavaScript();
 sstring mudColorToHTML(sstring, bool spacer=true);
@@ -698,6 +698,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 {
   TDatabase db(DB_IMMORTAL);
   TDatabase db_exits(DB_IMMORTAL);
+  sstring buf;
 
   assign_item_info();
   assignTerrainInfo();
@@ -799,12 +800,18 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "z" % "z" % db["z"];
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+  buf=fmt("%s%s") % 
+    getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+    db["name"];
   cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
-    mudColorToHTML(db["name"]);
+    mudColorToHTML(buf);
 
   cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+  buf=fmt("%s%s") % 
+    getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+    db["description"];
   cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
-    mudColorToHTML(db["description"]);
+    mudColorToHTML(buf);
 
 
   // room flag
@@ -847,10 +854,12 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   
 }
 
-void sendRoomlist(int account_id){
+void sendRoomlist(int account_id)
+{
   TDatabase db(DB_IMMORTAL);
   TDatabase db_exits(DB_IMMORTAL);
   TDatabase db_extras(DB_IMMORTAL);
+  sstring buf;
 
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("SneezyMUD Room Editor") << endl;
@@ -892,7 +901,7 @@ void sendRoomlist(int account_id){
   cout << "<table border=1>";
   cout << "<tr><td>vnum</td><td>name</td><td>extras</td><td>exits</td></tr>";
 
-  db.query("select vnum, name from room r where block=1 and lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
+  db.query("select vnum, name, sector from room r where block=1 and lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
   
   db_exits.query("select vnum, count(*) as count from roomexit where block=1 and lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
   db_exits.fetchRow();
@@ -923,7 +932,11 @@ void sendRoomlist(int account_id){
 
     cout << "<tr><td>" << "<a href=javascript:pickroom('" << db["vnum"];
     cout << "','showroom')>" << db["vnum"] << "</a>" << endl;
-    cout << "</td><td bgcolor=black>" << mudColorToHTML(db["name"], false) << "</td>"<< endl;
+    buf=fmt("%s%s") % 
+      getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+      db["name"];
+    cout << "</td><td bgcolor=black>" << mudColorToHTML(buf, false);
+    cout << "</td>"<< endl;
     cout << "<td><a href=javascript:pickroom('" << db["vnum"];
     cout << "','showextra')>" << extracount << "</a></td>" << endl;
     cout << "<td><a href=javascript:pickroom('" << db["vnum"];
