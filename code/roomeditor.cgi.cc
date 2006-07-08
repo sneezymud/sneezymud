@@ -316,7 +316,8 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
     return;
   }
   
-  if((**(cgi.getElement("template"))).empty()){
+  if((**(cgi.getElement("template"))).empty() ||
+     (**(cgi.getElement("template"))) == "0"){
     db_sneezy.setDB(DB_SNEEZY);
     db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=0");
   } else {
@@ -878,7 +879,8 @@ void sendRoomlist(int account_id){
   cout << "<form method=post action=roomeditor.cgi>" << endl;
   cout << "<button name=state value=newroom type=submit>new room</button>";
   cout << "vnum <input type=text name=vnum value=" << db["nvnum"] << ">";
-  cout << "template <input type=text name=template value=" << (convertTo<int>(db["nvnum"])-1) << ">";
+  cout << "template <input type=text name=template value=";
+  cout << max((convertTo<int>(db["nvnum"])-1),0) << ">";
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "</form>";
   cout << endl;
