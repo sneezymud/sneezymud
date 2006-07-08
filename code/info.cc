@@ -643,6 +643,383 @@ sstring TRoom::daynightColorRoom() const
   return("<z>");
 }
 
+const sstring getSectorDescrColor(sectorTypeT sector, TRoom *rp)
+{
+  sstring buf3="<z>";
+
+  switch (sector) {
+    case SECT_SUBARCTIC:
+      buf3="<p>";
+      break;
+    case SECT_ARCTIC_WASTE:
+      buf3="<W>";
+      break;
+    case SECT_ARCTIC_CITY:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_ARCTIC_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_TUNDRA:
+      buf3="<p>";
+      break;
+    case SECT_ARCTIC_MOUNTAINS:
+      buf3="<W>";
+      break;
+    case SECT_ARCTIC_FOREST:
+      buf3="<W>";
+      break;
+    case SECT_ARCTIC_MARSH:
+      buf3="<p>";
+      break;
+    case SECT_ARCTIC_RIVER_SURFACE:
+      buf3="<c>";
+      break;
+    case SECT_ICEFLOW:
+      buf3="<W>";
+      break;
+    case SECT_COLD_BEACH:
+      buf3="<P>";
+      break;
+    case SECT_SOLID_ICE:
+      buf3="<C>";
+      break;
+    case SECT_ARCTIC_BUILDING:
+      break;
+    case SECT_ARCTIC_CAVE:
+      buf3="<k>";
+      break;
+    case SECT_ARCTIC_ATMOSPHERE:
+      buf3="<C>";
+      break;
+    case SECT_ARCTIC_CLIMBING:
+    case SECT_ARCTIC_FOREST_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_PLAINS:
+      buf3="<g>";
+      break;
+    case SECT_TEMPERATE_CITY:
+    case SECT_TEMPERATE_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_GRASSLANDS:
+      buf3="<g>";
+      break;
+    case SECT_TEMPERATE_HILLS:
+      buf3="<g>";
+      break;
+    case SECT_TEMPERATE_MOUNTAINS:
+      buf3="<o>";
+      break;
+    case SECT_TEMPERATE_FOREST:
+      buf3="<g>";
+      break;
+    case SECT_TEMPERATE_SWAMP:
+      buf3="<p>";
+      break;
+    case SECT_TEMPERATE_OCEAN:
+      buf3="<c>";
+      break;
+    case SECT_TEMPERATE_RIVER_SURFACE:
+      buf3="<b>";
+      break;
+    case SECT_TEMPERATE_UNDERWATER:
+      buf3="<b>";
+      break;
+    case SECT_TEMPERATE_CAVE:
+      buf3="<k>";
+      break;
+    case SECT_TEMPERATE_ATMOSPHERE:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_TEMPERATE_CLIMBING:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_TEMPERATE_FOREST_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_DESERT:
+    case SECT_SAVANNAH:
+      buf3="<o>";
+      break;
+    case SECT_VELDT:
+      buf3="<o>";
+      break;
+    case SECT_TROPICAL_CITY:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_TROPICAL_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_JUNGLE:
+      buf3="<g>";
+      break;
+    case SECT_RAINFOREST:
+      buf3="<g>";
+      break;
+    case SECT_TROPICAL_HILLS:
+      buf3="<g>";
+      break;
+    case SECT_TROPICAL_MOUNTAINS:
+      buf3="<p>";
+      break;
+    case SECT_VOLCANO_LAVA:
+      buf3="<R>";
+      break;
+    case SECT_TROPICAL_SWAMP:
+      buf3="<g>";
+      break;
+    case SECT_TROPICAL_OCEAN:
+      buf3="<c>";
+      break;
+    case SECT_TROPICAL_RIVER_SURFACE:
+      buf3="<B>";
+      break;
+    case SECT_TROPICAL_UNDERWATER:
+      buf3="<b>";
+      break;
+    case SECT_TROPICAL_BEACH:
+      buf3="<y>";
+      break;
+    case SECT_TROPICAL_BUILDING:
+      break;
+    case SECT_TROPICAL_CAVE:
+      buf3="<k>";
+      break;
+    case SECT_TROPICAL_ATMOSPHERE:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_TROPICAL_CLIMBING:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_RAINFOREST_ROAD:
+      if(rp)
+	buf3=rp->daynightColorRoom();
+      break;
+    case SECT_ASTRAL_ETHREAL:
+      buf3="<c>";
+      break;
+    case SECT_SOLID_ROCK:
+      buf3="<w>";
+      break;
+    case SECT_FIRE:
+      buf3="<R>";
+      break;
+    case SECT_INSIDE_MOB:
+      buf3="<r>";
+      break;
+    case SECT_FIRE_ATMOSPHERE:
+      buf3="<R>";
+      break;
+    case SECT_DEAD_WOODS:
+      buf3="<k>";
+      break;
+    case SECT_TEMPERATE_BEACH:
+    case SECT_TEMPERATE_BUILDING:
+    case SECT_MAKE_FLY:
+    case MAX_SECTOR_TYPES:
+      break;
+  }
+
+  return buf3;
+}
+
+const sstring getSectorNameColor(sectorTypeT sector, TRoom *rp)
+{
+  sstring buf2;
+
+  switch (sector) {
+    case SECT_SUBARCTIC:
+      buf2="<P>";
+      break;
+    case SECT_ARCTIC_WASTE:
+      buf2="<w>";
+      break;
+    case SECT_ARCTIC_CITY:
+      buf2="<C>";
+      break;
+    case SECT_ARCTIC_ROAD:
+      buf2="<W>";
+      break;
+    case SECT_TUNDRA:
+      buf2="<o>";
+      break;
+    case SECT_ARCTIC_MOUNTAINS:
+      buf2="<o>";
+      break;
+    case SECT_ARCTIC_FOREST:
+      buf2="<G>";
+      break;
+    case SECT_ARCTIC_MARSH:
+      buf2="<B>";
+      break;
+    case SECT_ARCTIC_RIVER_SURFACE:
+      buf2="<C>";
+      break;
+    case SECT_ICEFLOW:
+      buf2="<C>";
+      break;
+    case SECT_COLD_BEACH:
+      buf2="<p>";
+      break;
+    case SECT_SOLID_ICE:
+      buf2="<c>";
+      break;
+    case SECT_ARCTIC_BUILDING:
+      buf2="<p>";
+      break;
+    case SECT_ARCTIC_CAVE:
+      buf2="<c>";
+      break;
+    case SECT_ARCTIC_ATMOSPHERE:
+      buf2="<C>";
+      break;
+    case SECT_ARCTIC_CLIMBING:
+    case SECT_ARCTIC_FOREST_ROAD:
+      buf2="<p>";
+      break;
+    case SECT_PLAINS:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_CITY:
+    case SECT_TEMPERATE_ROAD:
+      buf2="<p>";
+      break;
+    case SECT_GRASSLANDS:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_HILLS:
+      buf2="<o>";
+      break;
+    case SECT_TEMPERATE_MOUNTAINS:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_FOREST:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_SWAMP:
+      buf2="<P>";
+      break;
+    case SECT_TEMPERATE_OCEAN:
+      buf2="<C>";
+      break;
+    case SECT_TEMPERATE_RIVER_SURFACE:
+      buf2="<B>";
+      break;
+    case SECT_TEMPERATE_UNDERWATER:
+      buf2="<C>";
+      break;
+    case SECT_TEMPERATE_CAVE:
+      buf2="<o>";
+      break;
+    case SECT_TEMPERATE_ATMOSPHERE:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_CLIMBING:
+      buf2="<G>";
+      break;
+    case SECT_TEMPERATE_FOREST_ROAD:
+      buf2="<g>";
+      break;
+    case SECT_DESERT:
+    case SECT_SAVANNAH:
+      buf2="<y>";
+      break;
+    case SECT_VELDT:
+      buf2="<g>";
+      break;
+    case SECT_TROPICAL_CITY:
+      buf2="<G>";
+      break;
+    case SECT_TROPICAL_ROAD:
+      buf2="<g>";
+      break;
+    case SECT_JUNGLE:
+      buf2="<P>";
+      break;
+    case SECT_RAINFOREST:
+      buf2="<G>";
+      break;
+    case SECT_TROPICAL_HILLS:
+      buf2="<R>";
+      break;
+    case SECT_TROPICAL_MOUNTAINS:
+      buf2="<P>";
+      break;
+    case SECT_VOLCANO_LAVA:
+      buf2="<y>";
+      break;
+    case SECT_TROPICAL_SWAMP:
+      buf2="<G>";
+      break;
+    case SECT_TROPICAL_OCEAN:
+      buf2="<b>";
+      break;
+    case SECT_TROPICAL_RIVER_SURFACE:
+      buf2="<C>";
+      break;
+    case SECT_TROPICAL_UNDERWATER:
+      buf2="<B>";
+      break;
+    case SECT_TROPICAL_BEACH:
+      buf2="<P>";
+      break;
+    case SECT_TROPICAL_BUILDING:
+      buf2="<p>";
+      break;
+    case SECT_TROPICAL_CAVE:
+      buf2="<P>";
+      break;
+    case SECT_TROPICAL_ATMOSPHERE:
+      buf2="<P>";
+      break;
+    case SECT_TROPICAL_CLIMBING:
+      buf2="<P>";
+      break;
+    case SECT_RAINFOREST_ROAD:
+      buf2="<P>";
+      break;
+    case SECT_ASTRAL_ETHREAL:
+      buf2="<C>";
+      break;
+    case SECT_SOLID_ROCK:
+      buf2="<k>";
+      break;
+    case SECT_FIRE:
+      buf2="<y>";
+      break;
+    case SECT_INSIDE_MOB:
+      buf2="<R>";
+      break;
+    case SECT_FIRE_ATMOSPHERE:
+      buf2="<y>";
+      break;
+    case SECT_DEAD_WOODS:
+      buf2="<k>";
+      break;
+    case SECT_TEMPERATE_BEACH:
+    case SECT_TEMPERATE_BUILDING:
+    case SECT_MAKE_FLY:
+    case MAX_SECTOR_TYPES:
+      buf2="<p>";
+      break;
+  }
+
+  return buf2;
+}
+
 const sstring TBeing::addColorRoom(TRoom * rp, int title) const
 {
   sstring buf2, buf3;
@@ -652,235 +1029,8 @@ const sstring TBeing::addColorRoom(TRoom * rp, int title) const
 
   sectorTypeT sector = rp->getSectorType();
 
-  switch (sector) {
-    case SECT_SUBARCTIC:
-      buf2="<P>";
-      buf3="<p>";
-      break;
-    case SECT_ARCTIC_WASTE:
-      buf2="<w>";
-      buf3="<W>";
-      break;
-    case SECT_ARCTIC_CITY:
-      buf2="<C>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_ARCTIC_ROAD:
-      buf2="<W>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_TUNDRA:
-      buf2="<o>";
-      buf3="<p>";
-      break;
-    case SECT_ARCTIC_MOUNTAINS:
-      buf2="<o>";
-      buf3="<W>";
-      break;
-    case SECT_ARCTIC_FOREST:
-      buf2="<G>";
-      buf3="<W>";
-      break;
-    case SECT_ARCTIC_MARSH:
-      buf2="<B>";
-      buf3="<p>";
-      break;
-    case SECT_ARCTIC_RIVER_SURFACE:
-      buf2="<C>";
-      buf3="<c>";
-      break;
-    case SECT_ICEFLOW:
-      buf2="<C>";
-      buf3="<W>";
-      break;
-    case SECT_COLD_BEACH:
-      buf2="<p>";
-      buf3="<P>";
-      break;
-    case SECT_SOLID_ICE:
-      buf2="<c>";
-      buf3="<C>";
-      break;
-    case SECT_ARCTIC_BUILDING:
-      buf2="<p>";
-      break;
-    case SECT_ARCTIC_CAVE:
-      buf2="<c>";
-      buf3="<k>";
-      break;
-    case SECT_ARCTIC_ATMOSPHERE:
-      buf2="<C>";
-      buf3="<C>";
-      break;
-    case SECT_ARCTIC_CLIMBING:
-    case SECT_ARCTIC_FOREST_ROAD:
-      buf2="<p>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_PLAINS:
-      buf2="<G>";
-      buf3="<g>";
-      break;
-    case SECT_TEMPERATE_CITY:
-    case SECT_TEMPERATE_ROAD:
-      buf2="<p>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_GRASSLANDS:
-      buf2="<G>";
-      buf3="<g>";
-      break;
-    case SECT_TEMPERATE_HILLS:
-      buf2="<o>";
-      buf3="<g>";
-      break;
-    case SECT_TEMPERATE_MOUNTAINS:
-      buf2="<G>";
-      buf3="<o>";
-      break;
-    case SECT_TEMPERATE_FOREST:
-      buf2="<G>";
-      buf3="<g>";
-      break;
-    case SECT_TEMPERATE_SWAMP:
-      buf2="<P>";
-      buf3="<p>";
-      break;
-    case SECT_TEMPERATE_OCEAN:
-      buf2="<C>";
-      buf3="<c>";
-      break;
-    case SECT_TEMPERATE_RIVER_SURFACE:
-      buf2="<B>";
-      buf3="<b>";
-      break;
-    case SECT_TEMPERATE_UNDERWATER:
-      buf2="<C>";
-      buf3="<b>";
-      break;
-    case SECT_TEMPERATE_CAVE:
-      buf2="<o>";
-      buf3="<k>";
-      break;
-    case SECT_TEMPERATE_ATMOSPHERE:
-      buf2="<G>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_TEMPERATE_CLIMBING:
-      buf2="<G>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_TEMPERATE_FOREST_ROAD:
-      buf2="<g>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_DESERT:
-    case SECT_SAVANNAH:
-      buf2="<y>";
-      buf3="<o>";
-      break;
-    case SECT_VELDT:
-      buf2="<g>";
-      buf3="<o>";
-      break;
-    case SECT_TROPICAL_CITY:
-      buf2="<G>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_TROPICAL_ROAD:
-      buf2="<g>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_JUNGLE:
-      buf2="<P>";
-      buf3="<g>";
-      break;
-    case SECT_RAINFOREST:
-      buf2="<G>";
-      buf3="<g>";
-      break;
-    case SECT_TROPICAL_HILLS:
-      buf2="<R>";
-      buf3="<g>";
-      break;
-    case SECT_TROPICAL_MOUNTAINS:
-      buf2="<P>";
-      buf3="<p>";
-      break;
-    case SECT_VOLCANO_LAVA:
-      buf2="<y>";
-      buf3="<R>";
-      break;
-    case SECT_TROPICAL_SWAMP:
-      buf2="<G>";
-      buf3="<g>";
-      break;
-    case SECT_TROPICAL_OCEAN:
-      buf2="<b>";
-      buf3="<c>";
-      break;
-    case SECT_TROPICAL_RIVER_SURFACE:
-      buf2="<C>";
-      buf3="<B>";
-      break;
-    case SECT_TROPICAL_UNDERWATER:
-      buf2="<B>";
-      buf3="<b>";
-      break;
-    case SECT_TROPICAL_BEACH:
-      buf2="<P>";
-      buf3="<y>";
-      break;
-    case SECT_TROPICAL_BUILDING:
-      buf2="<p>";
-      break;
-    case SECT_TROPICAL_CAVE:
-      buf2="<P>";
-      buf3="<k>";
-      break;
-    case SECT_TROPICAL_ATMOSPHERE:
-      buf2="<P>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_TROPICAL_CLIMBING:
-      buf2="<P>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_RAINFOREST_ROAD:
-      buf2="<P>";
-      buf3=rp->daynightColorRoom();
-      break;
-    case SECT_ASTRAL_ETHREAL:
-      buf2="<C>";
-      buf3="<c>";
-      break;
-    case SECT_SOLID_ROCK:
-      buf2="<k>";
-      buf3="<w>";
-      break;
-    case SECT_FIRE:
-      buf2="<y>";
-      buf3="<R>";
-      break;
-    case SECT_INSIDE_MOB:
-      buf2="<R>";
-      buf3="<r>";
-      break;
-    case SECT_FIRE_ATMOSPHERE:
-      buf2="<y>";
-      buf3="<R>";
-      break;
-    case SECT_DEAD_WOODS:
-      buf2="<k>";
-      buf3="<k>";
-      break;
-    case SECT_TEMPERATE_BEACH:
-    case SECT_TEMPERATE_BUILDING:
-    case SECT_MAKE_FLY:
-    case MAX_SECTOR_TYPES:
-      buf2="<p>";
-      break;
-  }
+  buf2=getSectorNameColor(sector, rp);
+  buf3=getSectorDescrColor(sector, rp);
 
   if (title == 1) {
     if (rp->getName()) {
