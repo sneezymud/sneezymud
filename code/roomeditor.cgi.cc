@@ -799,14 +799,20 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "y" % "y" % db["y"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "z" % "z" % db["z"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+  buf=db["name"];
+  while (buf.find("'") != sstring::npos)
+    buf.replace(buf.find("'"), 1, "&#146;");
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % buf;
   buf=fmt("%s%s") % 
     getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["name"];
   cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(buf);
 
-  cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+  buf=db["description"];
+  while (buf.find("'") != sstring::npos)
+    buf.replace(buf.find("'"), 1, "&#146;");
+  cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
   buf=fmt("%s%s") % 
     getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["description"];
