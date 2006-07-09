@@ -687,12 +687,13 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
     int chance = item->getStructPoints() / dam;
     if (!(::number(0, chance))) {
       int dmgamt = max(dam/3, 1);
-      item->addToStructPoints(-dmgamt);
+      int rc=item->damageItem(dmgamt);
 
-      if (item->getStructPoints() <= 0) {
-        item->makeScraps();
-        delete item;
-        item = NULL;
+      if(rc){
+	if (IS_SET_DELETE(rc, DELETE_THIS)){
+	  delete item;
+	  item = NULL;
+	}
       } else {
         if (weapon)
 	  buf3=objn(weapon);
@@ -759,12 +760,13 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     int chance = item->getStructPoints() / dam;
     if (!(::number(0, chance))) {
       int dmgamt = max(dam/3, 1);
-      item->addToStructPoints(-dmgamt);
+      int rc=item->damageItem(dmgamt);
 
-      if (item->getStructPoints() <= 0) {
-        item->makeScraps();
-        delete item;
-        item = NULL;
+      if(rc){
+	if (IS_SET_DELETE(rc, DELETE_THIS)){
+	  delete item;
+	  item = NULL;
+	}
       } else {
         if (weapon)
           buf3=fname(weapon->name);
@@ -836,12 +838,13 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     int chance = item->getStructPoints() / dam;
     if (!(::number(0, chance))) {
       int dmgamt = max(dam/3, 1);
-      item->addToStructPoints(-dmgamt);
+      int rc=item->damageItem(dmgamt);
 
-      if (item->getStructPoints() <= 0) {
-        item->makeScraps();
-        delete item;
-        item = NULL;
+      if(rc){
+	if (IS_SET_DELETE(rc, DELETE_THIS)){
+	  delete item;
+	  item = NULL;
+	}
       } else {
         if (weapon)
           buf3=fname(weapon->name);
@@ -1050,6 +1053,129 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
     }
   }
   return FALSE;
+}
+
+int TObj::damageItem(sh_int amt)
+{
+  addToStructPoints(max(-amt, -getStructPoints()));
+
+  if(getStructPoints() <= 0){
+    // disabled for now
+    if(0 && isMonogrammed()){
+      scrapMonogrammed();
+      return TRUE;
+    } else {
+      makeScraps();
+      return DELETE_THIS;
+    }
+  }
+
+  return FALSE;
+}
+
+void TObj::scrapMonogrammed()
+{
+  TThing *x = NULL, *tmp = NULL, *ch = NULL;
+  char buf[256];
+  char buf2[256];
+  TBaseCup *tbc=dynamic_cast<TBaseCup *>(this);
+  TBeing *cht;
+
+  // if it's a liquid container, drop the liquid in the room
+  if(tbc){
+    if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
+      cht->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
+    }
+  }
+
+
+  if (getStuff()) {
+    if ((ch = parent)) {
+      while ((x = getStuff())) {
+        --(*x);
+        *ch += *x;
+      }
+    } else if ((ch = equippedBy)) {
+      while ((x = getStuff())) {
+        --(*x);
+        if (ch->roomp)
+          *ch->roomp += *x;
+        else
+          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") %
+		ch->getName());
+      }
+    }
+  }
+
+  if (((ch = parent) && parent->roomp) || 
+      (ch = equippedBy) || (ch = stuckIn)) {
+    act("$p falls to the $g.",
+	TRUE, ch, this, NULL, TO_ROOM);
+    act("Your $o falls to the $g.", 
+	FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
+
+    vlogf(LOG_COMBAT, fmt("%s's (monogrammed) %s just scrapped.") %
+	  ch->getName() % getName());
+  } else {
+    if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
+      sprintf(buf, "$p falls to the $g.");
+      sprintf(buf2, "Your $o falls to the $g.");
+      while (tmp) {
+        if (tmp->roomp) {
+          act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
+          act(buf, TRUE, tmp, this, NULL, TO_ROOM);
+          break;
+        }
+        tmp = tmp->parent;
+      }
+    } else if (roomp) {
+      sprintf(buf, "$n falls to the ground.");
+      act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+    } else 
+      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isnt in a room %s.") %  getName());
+  }
+
+  TBeing *chb;
+  if ((ch = parent)) {
+    --(*this);
+    if (ch->roomp)
+      *ch->roomp += *this;
+    else
+      *ch += *this;
+    return;
+  } else if ((chb = stuckIn)) {
+    chb->setStuckIn(eq_stuck, NULL);
+    if (chb->roomp)
+      *chb->roomp += *this;
+    else 
+      *chb += *this;
+    return;
+  } else if ((ch = equippedBy)) {
+    TBeing * tbt = dynamic_cast<TBeing *>(ch);
+    scrapMe(tbt);
+    TThing *o2 = NULL;
+    o2 = tbt->unequip(eq_pos);
+    // unequip deletes bandages
+    if (!o2)
+      return;
+
+    if (tbt->roomp) 
+      *tbt->roomp += *this;
+    else 
+      *tbt += *this;
+    
+    return;
+  }
+  // at this point, "this" is guaranteed to be in roomp
+
+  while (getStuff()) {
+    x = getStuff();
+    --(*x);
+    *roomp += *x;
+  }
+  if (roomp)
+    *roomp += *this;
+
 }
 
 // all calls to this function should delete obj afterwards
