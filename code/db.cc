@@ -1530,9 +1530,13 @@ TMonster *read_mobile(int nr, readFileTypeT type)
     mob->setStuckIn(j, NULL);
   }
   mob_index[nr].addToNumber(1);
-  
 
   mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
+
+  // Make all mobs level 70+ have DI and TS automatically
+  if (mob->GetMaxLevel() >= 70) {
+    SET_BIT(mob->specials.affectedBy, AFF_DETECT_INVISIBLE | AFF_TRUE_SIGHT);
+  }
 
   if (mob->GetMaxLevel() <= 5)
     stats.act_1_5++;
