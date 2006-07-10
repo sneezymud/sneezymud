@@ -101,9 +101,7 @@ X 6 16 2383         - chainmail bracer
 X 6 17 2383         - chainmail bracer
 X 6 8  2381         - chainmail boot
 X 6 9  2381         - chainmail boot
-* axe 2390
-
-
+X 6 18 2390         - axe
 
 
 **
@@ -194,19 +192,12 @@ M 0 13702 9999 -99   - giant killer frog
 **
 * Upper Dam
 **
-*M 0 13705 9999 13776 - headmaster, observation platform
-*G 1 13786 1          - key - 13776/13777
-*? 0 2 0 E
-*E 1 13725 9999 19    - ruby flanged mace
-*Y 0 89 2             - xorn scale set (13714-13724)
-*Z 0 6 100
-
 M 0 13705 9999 13776 - headmaster, observation platform
-Y 0 89 100
-
-M 0 13708 9999 13776   - warrior
-Y 0 88 100             - corundum set (13740-13751)
-
+G 1 13786 1          - key - 13776/13777
+? 0 2 0 E
+E 1 13725 9999 19    - ruby flanged mace
+Y 0 89 2             - xorn scale set (13714-13724)
+Z 0 6 100            - default dwarven chainmail
 
 
 A 0 13740 13754
@@ -253,24 +244,32 @@ E 1 13783 9999 3     - tags
 Y 0 88 2             - corundum set (13740-13751)
 ? 0 3 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13780 13785      - barracks and hallway of the dam
 M 0 13708 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 3 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13780 13785      - barracks and hallway of the dam
 M 0 13708 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 3 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13780 13785      - barracks and hallway of the dam
 M 0 13708 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 3 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13780 13785      - barracks and hallway of the dam
 M 0 13708 9999 -99   - warrior
 E 1 13783 9999 3     - tags
@@ -523,18 +522,23 @@ E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13855 13857      - town barracks
 M 0 13735 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13855 13857      - town barracks
 M 0 13735 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
 
 
 A 0 13814 13822      - south tunnel
@@ -543,54 +547,71 @@ E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 A 0 13814 13822      - south tunnel
 M 0 13744 9999 -99   - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
 
 
 M 0 13736 9999 13860 - miner
@@ -610,29 +631,38 @@ M 0 13730 9999 13865 - governor
 Y 0 90 2    - behir scale set (13700-13712)
 ? 0 2 0 E
 E 1 13711 9999 19    - bloodspike
+Z 0 6 100            - default dwarven chainmail
 
 M 0 13734 9999 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 M 0 13734 9999 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 M 0 13734 9999 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
+
 M 0 13734 9999 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
+Z 0 6 100            - default dwarven chainmail
 
 M 0 13731 9999 13858 - old warrior
+Z 0 6 100            - default dwarven chainmail
 
 M 0 13733 9999 13858 - citizen
 M 0 13733 9999 13858 - citizen
