@@ -186,9 +186,12 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       }
       if (obj->isPaired() && slot == WEAR_LEGS_L)
         delete obj;  // avoid double loads of pants
-      else if (chance == 101 || ch->equipment[slot])
+      else if (chance == 101)
         *ch += *obj;
-      else
+      else if (ch->equipment[slot]){
+	delete obj;
+	return;
+      } else
         ch->equipChar(obj, slot);
 
       // Most likely an immortal loading through loadset.
