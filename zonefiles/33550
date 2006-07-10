@@ -1,96 +1,96 @@
 #33550
 Jesus - Eastern Farmhouse~
 33609 30 2 1
-*D 0 33550 2 1        Outside a Pasture -> The Pasture
-*D 0 33559 1 1        The Front Porch -> Inside a Farmhouse
-*D 0 33560 2 1        Inside a Farmhouse -> A Bedroom
-*D 0 33560 3 1        Inside a Farmhouse -> The Front Porch
-*D 0 33562 0 1        A Bedroom -> Inside a Farmhouse
-*D 0 33563 2 1        A Hallway -> A Bedroom
-*D 0 33564 0 1        A Bedroom -> A Hallway
-*D 0 33567 1 1        The Second Floor -> A Bedroom
-*D 0 33568 3 1        A Bedroom -> The Second Floor
-*D 0 33569 1 1        The Second Floor -> A Small Bedroom
-*D 0 33570 3 1        A Small Bedroom -> The Second Floor
-*D 0 33571 0 1        The Pasture -> Outside a Pasture
-*D 0 33577 0 1        A Side Room Adjoining the Kitchen -> The Back Porch
-*D 0 33577 5 1        A Side Room Adjoining the Kitchen -> The Farmhouse Cellar
-*D 0 33578 4 1        The Farmhouse Cellar -> A Side Room Adjoining the Kitchen
-*D 0 33579 2 1        The Back Porch -> A Side Room Adjoining the Kitchen
-*D 0 33580 3 1        A Path Leading Towards the Barn -> Inside the Barn
-*D 0 33581 0 1        Inside the Barn -> An Empty Stall
-*D 0 33581 1 1        Inside the Barn -> A Path Leading Towards the Barn
-*D 0 33582 0 1        Inside the Barn -> An Empty Stall
-*D 0 33583 2 1        An Empty Stall -> Inside the Barn
-*D 0 33584 2 1        An Empty Stall -> Inside the Barn
-*D 0 33586 1 1        The Side of the Barn -> A Wheat Field
-*D 0 33587 3 1        A Wheat Field -> The Side of the Barn
-*O 0 20 2 33559          a chair
-*O 0 20 4 33559          a chair
-*O 0 33559 1 33560       a cedar chest
-*P 1 34213 2 33559         a small sack of pipeweed seeds
-*P 1 34213 4 33559         a small sack of pipeweed seeds
-*O 0 24 1 33582          a ladder
-*O 0 24 1 33585          a ladder
-*B 0 33551 2 33565       a slice of home-made apple pie
-*B 0 33551 4 33565       a slice of home-made apple pie
-*B 0 10030 1 33576       a stinking pile of offal
-*B 0 33563 1 33581       a bag of seeds
-*B 0 33566 1 33582       the lid of a large barrel
-*B 0 33555 2 33582       a farmer's pitchfork
-*M 0 33553 1 33551       a squirrel grey
-*M 0 33553 1 33553       a squirrel grey
-*M 0 33559 1 33559       the farmer
-*? 0 100 0 G
-*G 1 33560 9999           an iron key
-*? 0 3 0 E
-*E 1 33565 9999 5          a wide-brimmed straw hat [head]
-*? 0 3 0 E
-*E 1 33553 9999 4          a white muslin shirt [body]
-*? 0 3 0 E
-*E 1 33568 9999 13         a white muslin sleeve [arm-left]
-*? 0 3 0 E
-*E 1 33557 9999 11         a worn leather glove [hand-left]
-*? 0 3 0 E
-*E 1 33558 9999 15         a leather belt [waist]
-*? 0 3 0 E
-*E 1 33567 9999 9          a brown leather boot [foot-left]
-*M 0 33550 1 33565       the farmer's wife
-*? 0 3 0 E
-*E 1 33564 9999 5          a blue and white shawl [head]
-*? 0 3 0 E
-*E 1 33556 9999 4          a dark blue dress [body]
-*? 0 3 0 E
-*E 1 33552 9999 15         a cloth apron [waist]
-*? 0 3 0 E
-*E 1 33550 9999 19         a wooden rolling pin [hold-left]
-*M 0 33554 1 33568       the farmer's son
-*? 0 3 0 E
-*E 1 33554 9999 6          a pair of brown cotton pants [leg-right]
-*? 0 3 0 E
-*E 1 33554 9999 7          a pair of brown cotton pants [leg-left]
-*M 0 33560 1 33570       the farmer's daughter
-*? 0 3 0 E
-*E 1 33561 9999 17         an engraved silver bracelet [wrist-left]
-*? 0 3 0 E
-*E 1 33562 9999 2          an engraved silver ring [finger-left]
-*M 0 33552 1 33571       a cow
-*M 0 33557 1 33571       a bee
-*M 0 33556 1 33572       a young foal
-*M 0 33555 2 33572       one of the farmer's mares
-*M 0 33552 1 33573       a cow
-*M 0 33557 1 33574       a bee
-*M 0 33552 1 33575       a cow
-*M 0 33556 1 33576       a young foal
-*M 0 33555 2 33576       one of the farmer's mares
-*M 0 33551 1 33579       an orange tabby
-*M 0 33558 1 33588       a field mouse
-*M 0 33558 1 33591       a field mouse
-*M 0 33558 1 33592       a field mouse
-*M 0 33558 1 33593       a field mouse
-*M 0 33558 1 33594       a field mouse
-*M 0 33553 1 33596       a squirrel grey
-*M 0 33553 1 33598       a squirrel grey
-*M 0 33553 2 33603       a squirrel grey
-*M 0 33553 4 33603       a squirrel grey
+D 0 33550 2 1        Outside a Pasture -> The Pasture
+D 0 33559 1 1        The Front Porch -> Inside a Farmhouse
+D 0 33560 2 1        Inside a Farmhouse -> A Bedroom
+D 0 33560 3 1        Inside a Farmhouse -> The Front Porch
+D 0 33562 0 1        A Bedroom -> Inside a Farmhouse
+D 0 33563 2 1        A Hallway -> A Bedroom
+D 0 33564 0 1        A Bedroom -> A Hallway
+D 0 33567 1 1        The Second Floor -> A Bedroom
+D 0 33568 3 1        A Bedroom -> The Second Floor
+D 0 33569 1 1        The Second Floor -> A Small Bedroom
+D 0 33570 3 1        A Small Bedroom -> The Second Floor
+D 0 33571 0 1        The Pasture -> Outside a Pasture
+D 0 33577 0 1        A Side Room Adjoining the Kitchen -> The Back Porch
+D 0 33577 5 1        A Side Room Adjoining the Kitchen -> The Farmhouse Cellar
+D 0 33578 4 1        The Farmhouse Cellar -> A Side Room Adjoining the Kitchen
+D 0 33579 2 1        The Back Porch -> A Side Room Adjoining the Kitchen
+D 0 33580 3 1        A Path Leading Towards the Barn -> Inside the Barn
+D 0 33581 0 1        Inside the Barn -> An Empty Stall
+D 0 33581 1 1        Inside the Barn -> A Path Leading Towards the Barn
+D 0 33582 0 1        Inside the Barn -> An Empty Stall
+D 0 33583 2 1        An Empty Stall -> Inside the Barn
+D 0 33584 2 1        An Empty Stall -> Inside the Barn
+D 0 33586 1 1        The Side of the Barn -> A Wheat Field
+D 0 33587 3 1        A Wheat Field -> The Side of the Barn
+O 0 20 2 33559          a chair
+O 0 20 4 33559          a chair
+O 0 33559 1 33560       a cedar chest
+P 1 34213 2 33559         a small sack of pipeweed seeds
+P 1 34213 4 33559         a small sack of pipeweed seeds
+O 0 24 1 33582          a ladder
+O 0 24 1 33585          a ladder
+B 0 33551 2 33565       a slice of home-made apple pie
+B 0 33551 4 33565       a slice of home-made apple pie
+B 0 10030 1 33576       a stinking pile of offal
+B 0 33563 1 33581       a bag of seeds
+B 0 33566 1 33582       the lid of a large barrel
+B 0 33555 2 33582       a farmer's pitchfork
+M 0 33553 1 33551       a squirrel grey
+M 0 33553 1 33553       a squirrel grey
+M 0 33559 1 33559       the farmer
+? 0 100 0 G
+G 1 33560 9999           an iron key
+? 0 3 0 E
+E 1 33565 9999 5          a wide-brimmed straw hat [head]
+? 0 3 0 E
+E 1 33553 9999 4          a white muslin shirt [body]
+? 0 3 0 E
+E 1 33568 9999 13         a white muslin sleeve [arm-left]
+? 0 3 0 E
+E 1 33557 9999 11         a worn leather glove [hand-left]
+? 0 3 0 E
+E 1 33558 9999 15         a leather belt [waist]
+? 0 3 0 E
+E 1 33567 9999 9          a brown leather boot [foot-left]
+M 0 33550 1 33565       the farmer's wife
+? 0 3 0 E
+E 1 33564 9999 5          a blue and white shawl [head]
+? 0 3 0 E
+E 1 33556 9999 4          a dark blue dress [body]
+? 0 3 0 E
+E 1 33552 9999 15         a cloth apron [waist]
+? 0 3 0 E
+E 1 33550 9999 19         a wooden rolling pin [hold-left]
+M 0 33554 1 33568       the farmer's son
+? 0 3 0 E
+E 1 33554 9999 6          a pair of brown cotton pants [leg-right]
+? 0 3 0 E
+E 1 33554 9999 7          a pair of brown cotton pants [leg-left]
+M 0 33560 1 33570       the farmer's daughter
+? 0 3 0 E
+E 1 33561 9999 17         an engraved silver bracelet [wrist-left]
+? 0 3 0 E
+E 1 33562 9999 2          an engraved silver ring [finger-left]
+M 0 33552 1 33571       a cow
+M 0 33557 1 33571       a bee
+M 0 33556 1 33572       a young foal
+M 0 33555 2 33572       one of the farmer's mares
+M 0 33552 1 33573       a cow
+M 0 33557 1 33574       a bee
+M 0 33552 1 33575       a cow
+M 0 33556 1 33576       a young foal
+M 0 33555 2 33576       one of the farmer's mares
+M 0 33551 1 33579       an orange tabby
+M 0 33558 1 33588       a field mouse
+M 0 33558 1 33591       a field mouse
+M 0 33558 1 33592       a field mouse
+M 0 33558 1 33593       a field mouse
+M 0 33558 1 33594       a field mouse
+M 0 33553 1 33596       a squirrel grey
+M 0 33553 1 33598       a squirrel grey
+M 0 33553 2 33603       a squirrel grey
+M 0 33553 4 33603       a squirrel grey
 S
