@@ -85,6 +85,26 @@ X 5 4  13753         - green moss shirt
 X 5 14 13754         - green moss cape
 X 5 5  13755         - green moss baret
 
+* default set
+X 6 4  2387         - chainmail shirt
+X 6 14 2379         - chainmail cape
+X 6 5  2389         - chainmail helm
+X 6 6  2382         - chainmail legging
+X 6 7  2382         - chainmail legging
+X 6 12 2386         - chainmail sleeve
+X 6 13 2386         - chainmail sleeve
+X 6 10 2385         - chainmail gauntlet
+X 6 11 2385         - chainmail gauntlet
+X 6 15 2384         - chainmail skirt
+X 6 3  2388         - chainmail coif
+X 6 16 2383         - chainmail bracer
+X 6 17 2383         - chainmail bracer
+X 6 8  2381         - chainmail boot
+X 6 9  2381         - chainmail boot
+* axe 2390
+
+
+
 
 **
 * Bear Cave
@@ -174,11 +194,20 @@ M 0 13702 9999 -99   - giant killer frog
 **
 * Upper Dam
 **
+*M 0 13705 9999 13776 - headmaster, observation platform
+*G 1 13786 1          - key - 13776/13777
+*? 0 2 0 E
+*E 1 13725 9999 19    - ruby flanged mace
+*Y 0 89 2             - xorn scale set (13714-13724)
+*Z 0 6 100
+
 M 0 13705 9999 13776 - headmaster, observation platform
-G 1 13786 1          - key - 13776/13777
-? 0 2 0 E
-E 1 13725 9999 19    - ruby flanged mace
-Y 0 89 2             - xorn scale set (13714-13724)
+Y 0 89 100
+
+M 0 13708 9999 13776   - warrior
+Y 0 88 100             - corundum set (13740-13751)
+
+
 
 A 0 13740 13754
 M 0 13704 9999 -99   - dam worker
