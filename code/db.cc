@@ -2650,20 +2650,33 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 	      if (local_armor[rs.arg1].slots[i]) {
                 // loadsetCheck(mob, local_armor[rs.arg1].slots[i], rs.arg2, 
                 //   i, "(null... for now)");
-                loadsetCheck(mob, local_armor[rs.arg1].slots[i], fixed_chance, 
-                  i, "(null... for now)");
+		if(rs.arg2 >= 98){
+		  loadsetCheck(mob, local_armor[rs.arg1].slots[i], 
+			       rs.arg2, i, "(null... for now)");
+		} else {
+		  loadsetCheck(mob, local_armor[rs.arg1].slots[i], 
+			       fixed_chance, i, "(null... for now)");
+		}
 	      }
 	    }
 	  }
 	  break;
         case 'Y':
           if (findLoadPotential) {
-            mob->loadSetEquipment(rs.arg1, NULL, fixed_chance, true);
+	    if(rs.arg2 >= 98){
+	      mob->loadSetEquipment(rs.arg1, NULL, rs.arg2, true);
+	    } else {
+	      mob->loadSetEquipment(rs.arg1, NULL, fixed_chance, true);
+	    }
             break;
           }
           if (mob && mobload) {
             // mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
-            mob->loadSetEquipment(rs.arg1, NULL, fixed_chance);
+	    if(rs.arg2 >= 98){
+	      mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
+	    } else {
+	      mob->loadSetEquipment(rs.arg1, NULL, fixed_chance);
+	    }
 
             if (mob->hasClass(CLASS_MAGE)) {
               TSpellBag *tBagA = NULL,
@@ -3398,21 +3411,5 @@ extern void cleanUpMail();
   cleanUpMail();
 #endif
 }
-
-
-
-int find_shopnr(int number){
-  unsigned int shop_nr;
-
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
-  
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
-    return FALSE;
-  }
-
-  return shop_nr;
-}
-
 
 
