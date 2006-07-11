@@ -6542,7 +6542,8 @@ int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *) {
     act("$n flies directly at $N's head, misses, and smacks into the ground.",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
     act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_ROOM,NULL);
     act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_CHAR,NULL);  
-    ch->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
+    // for now disabled corpse generation, ch and vict are getting confused somewhere...
+    // ch->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
   }
   return TRUE;
 }
