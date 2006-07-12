@@ -6540,7 +6540,7 @@ int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *) {
   TBeing *vict;
   vict = ch->fight();
   
-  if (!vict->checkEngagementStatus() && number(0,10) > 7) {
+  if (!vict->isAffected(AFF_ENGAGER) && number(0,10) > 7) {
     act("$n darts directly toward your head!",TRUE,ch,NULL,vict,TO_VICT,NULL);  
     act("$n misses and smacks into the ground.",TRUE,ch,NULL,vict,TO_VICT,NULL);
     act("$n flies directly at $N's head, misses, and smacks into the ground.",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
