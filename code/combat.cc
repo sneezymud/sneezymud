@@ -1060,8 +1060,7 @@ int TObj::damageItem(sh_int amt)
   addToStructPoints(max(-amt, -getStructPoints()));
 
   if(getStructPoints() <= 0){
-    // disabled for now
-    if(0 && isMonogrammed()){
+    if(isMonogrammed()){
       scrapMonogrammed();
       return TRUE;
     } else {
