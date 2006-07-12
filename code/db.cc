@@ -1533,9 +1533,15 @@ TMonster *read_mobile(int nr, readFileTypeT type)
 
   mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
 
-  // Make all mobs level 70+ have DI and TS automatically
   if (mob->GetMaxLevel() >= 70) {
-    SET_BIT(mob->specials.affectedBy, AFF_DETECT_INVISIBLE | AFF_TRUE_SIGHT);
+    if (!::number(0, 2)) {
+      // Make all mobs level 70+ have TS automatically 1/3 of the time
+      SET_BIT(mob->specials.affectedBy, AFF_TRUE_SIGHT);
+    }
+    if (!::number(0, 2)) {
+      // Make all mobs level 70+ have DI automatically 1/3 of the time
+      SET_BIT(mob->specials.affectedBy, AFF_DETECT_INVISIBLE);
+    }
   }
 
   if (mob->GetMaxLevel() <= 5)
