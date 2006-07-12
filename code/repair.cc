@@ -65,6 +65,10 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   price *= maxFix(repair, dep_done) - getStructPoints();
   price /= getMaxStructPoints();
 
+  if(getStructPoints() <= 0)
+    price *= 5;
+
+
 #if FACTIONS_IN_USE
   if (!repair->isUnaff() && repair->isSameFaction(buyer)) {
     price *= (200 - (int) buyer->getPerc());
