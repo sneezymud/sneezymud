@@ -495,7 +495,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
     if (::number(0,999) >= chance) {
       // NOTE: this makes it easier to damage an item that is very damaged already
       if (::number(0, getMaxStructPoints()) >= getStructPoints()) {
-	int rc=item->damageItem(1);
+	int rc=damageItem(1);
 	
 	if(rc){
 	  if (IS_SET_DELETE(rc, DELETE_THIS))
