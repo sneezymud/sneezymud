@@ -55,15 +55,15 @@ E 1 33557 9999 11         a worn leather glove [hand-left]
 E 1 33558 9999 15         a leather belt [waist]
 ? 0 3 0 E
 E 1 33567 9999 9          a brown leather boot [foot-left]
-M 0 33550 1 33565       the farmer's wife
-? 0 3 0 E
-E 1 33564 9999 5          a blue and white shawl [head]
-? 0 3 0 E
-E 1 33556 9999 4          a dark blue dress [body]
-? 0 3 0 E
-E 1 33552 9999 15         a cloth apron [waist]
-? 0 3 0 E
-E 1 33550 9999 19         a wooden rolling pin [hold-left]
+*M 0 33550 1 33565       the farmer's wife
+*? 0 3 0 E
+*E 1 33564 9999 5          a blue and white shawl [head]
+*? 0 3 0 E
+*E 1 33556 9999 4          a dark blue dress [body]
+*? 0 3 0 E
+*E 1 33552 9999 15         a cloth apron [waist]
+*? 0 3 0 E
+*E 1 33550 9999 19         a wooden rolling pin [hold-left]
 M 0 33554 1 33568       the farmer's son
 ? 0 3 0 E
 E 1 33554 9999 6          a pair of brown cotton pants [leg-right]
