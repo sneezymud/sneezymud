@@ -1863,9 +1863,7 @@ void TBeing::wearNTear(void)
         continue;
       if (!::number(0,chance) && !::number(0,(100 * obj->getStructPoints()) / (max(1,(int)(obj->getMaxStructPoints()))))) {
         act("$p suffers damage from general wear and tear.",TRUE,this,obj,0,TO_CHAR);
-        obj->addToStructPoints(-1);
-        if (obj->getStructPoints() <= 0) {
-          obj->makeScraps();
+	if(IS_SET_DELETE(obj->damageItem(1), DELETE_THIS)){
           delete obj;
           obj = NULL;
         }

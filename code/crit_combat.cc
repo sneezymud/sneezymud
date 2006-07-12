@@ -414,7 +414,6 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 {
   TObj *damaged_item = dynamic_cast<TObj *>(obj);
 
-  damaged_item->addToStructPoints(eqdam);
   act("$N's $p is greatly damaged by the force of your hit.",
     FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
 
@@ -424,8 +423,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
   act("$N's $p suffers massive damage from $n's powerful hit.",
     FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
-  if (damaged_item->getStructPoints() <= 0) {
-    damaged_item->makeScraps();
+  if(IS_SET_DELETE(damaged_item->damageItem(eqdam), DELETE_THIS)){
     delete damaged_item;
     damaged_item = NULL;
   }

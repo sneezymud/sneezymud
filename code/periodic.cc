@@ -1858,13 +1858,10 @@ int TObj::updateBurning(void)
 
     // we let non-flammable things burn, but we don't 'decay' them
     if(material_nums[getMaterial()].flammability){
-      addToStructPoints(-burnamount);
-      
-      if (getStructPoints() <= 0) {
-	remBurning(ch);
-	makeScraps();
+      if(IS_SET_DELETE(damageItem(burnamount), DELETE_THIS)){
 	return DELETE_THIS;
       }
+      remBurning(ch);
     }
 
     // spread to other items

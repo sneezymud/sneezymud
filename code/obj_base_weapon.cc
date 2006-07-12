@@ -495,10 +495,12 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
     if (::number(0,999) >= chance) {
       // NOTE: this makes it easier to damage an item that is very damaged already
       if (::number(0, getMaxStructPoints()) >= getStructPoints()) {
-        addToStructPoints(-1);
-        if (getStructPoints() <= 0) {
-          makeScraps();
-          return DELETE_ITEM;
+	int rc=item->damageItem(1);
+	
+	if(rc){
+	  if (IS_SET_DELETE(rc, DELETE_THIS))
+	    return DELETE_ITEM;
+	  return FALSE;
         } else {
           sprintf(buf, "%s%s%s is %sdamaged%s by %s$N's %s.",
                ch->purple(), sstring(getName()).cap().c_str(), ch->norm(),
@@ -1507,11 +1509,9 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {
-            addToStructPoints(-1);
-            if (getStructPoints() <= 0) {
+	    if(IS_SET_DELETE(damageItem(1), DELETE_THIS)){
               if (!ch->sameRoom(*tb))
                 act("In the distance, $p is destroyed.",TRUE,ch,this,0,TO_CHAR);
-              makeScraps();
               ADD_DELETE(resCode, DELETE_ITEM);
             }
           }

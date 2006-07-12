@@ -100,11 +100,8 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    item->addToStructPoints(-amt);
-    if (item->getStructPoints() <= 0) {
-      item->makeScraps();
+    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    }
     return TRUE;
   }
   return FALSE;
@@ -154,11 +151,8 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    item->addToStructPoints(-amt);
-    if (item->getStructPoints() <= 0) {
-      item->makeScraps();
+    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    }
     return TRUE;
   }
   return FALSE;
@@ -208,11 +202,8 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    item->addToStructPoints(-amt);
-    if (item->getStructPoints() <= 0) {
-      item->makeScraps();
+    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    }
     return TRUE;
   }
   return FALSE;

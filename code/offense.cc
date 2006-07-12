@@ -1471,14 +1471,12 @@ int TObj::freezeObject(TBeing *ch, int perc)
       } else {
         act("The chill causes $n to freeze and crack severely.",TRUE,this,0,0,TO_ROOM);
       }
-      addToStructPoints(- ::number(1,12));
-      if (getStructPoints() <= 0) {
+      if(IS_SET_DELETE(damageItem(::number(1,12)), DELETE_THIS)){
         if (ch) {
           act("..The mineral splits and $p $q destroyed.",TRUE,ch,this,0,TO_CHAR, ANSI_GREEN);
         } else {
           act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
         }
-        makeScraps();
         return DELETE_THIS;
       }
       return TRUE;
@@ -1509,14 +1507,13 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
       act(buf,TRUE,this,0,0,TO_ROOM);
       act("$n is damaged serverely by the expanding ice!",TRUE,this,0,0,TO_ROOM);
     }
-    addToStructPoints(- ::number(1,12));
-    if (getStructPoints() <= 0) {
+
+    if(IS_SET_DELETE(damageItem(::number(1,12)), DELETE_THIS)){
       if (ch) {
         act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
       } else {
         act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
       }
-      makeScraps();
       return DELETE_THIS;
     }
   }
@@ -1597,17 +1594,13 @@ int TObj::meltObject(TBeing *ch, int perc)
     }
   }
   while (::number(0,101) <= material_nums[getMaterial()].acid_susc) {
-    addToStructPoints(-1);
-    if (::number(0,1))
-      addToMaxStructPoints(-1);
-    if (getStructPoints() <= 0) {
+    if(IS_SET_DELETE(damageItem(::number(0,2)), DELETE_THIS)){
       if (ch) {
         act("Your $o $q destroyed by the corrosive acid.",
                 TRUE,ch,this,0,TO_CHAR, ANSI_GREEN);
       } else {
         act("$n $r destroyed by acid.",TRUE,this,0,0,TO_ROOM);
       }
-      makeScraps();
       return DELETE_THIS;
     }
   }
