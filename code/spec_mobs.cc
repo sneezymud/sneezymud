@@ -6530,24 +6530,26 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   return TRUE;
 }
 
-int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *) {
-  TBeing *vict;
+int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *) {
+  if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
+    return FALSE;
+
   if (!ch->fight())
     return FALSE;
+
+  TBeing *vict;
   vict = ch->fight();
   
-  if (number(0,10) > 7) {
+  if (!vict->checkEngagementStatus() && number(0,10) > 7) {
     act("$n darts directly toward your head!",TRUE,ch,NULL,vict,TO_VICT,NULL);  
     act("$n misses and smacks into the ground.",TRUE,ch,NULL,vict,TO_VICT,NULL);
     act("$n flies directly at $N's head, misses, and smacks into the ground.",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
     act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_ROOM,NULL);
     act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_CHAR,NULL);  
-    // for now disabled corpse generation, ch and vict are getting confused somewhere...
-    // ch->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
+    myself->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
   }
   return TRUE;
 }
-
 
 int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself, TObj *o) {
   sstring buf, arg=argument;
@@ -6575,7 +6577,7 @@ int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *mys
 	buf = fmt("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] % 
 convertTo<int>(db["numbricks"]);
 	myself->doSay(buf);
-	buf = fmt("Gague has won the last brick quest on 7-1-2006. Yay!");
+	buf = fmt("Gauge has won the last brick quest on 7-1-2006. Yay!");
 	myself->doSay(buf);
         // vlogf(LOG_JESUS, fmt("%s turned in another brick for a total of %i") % ch->name % convertTo<int>(db["numbricks"]));
       }
