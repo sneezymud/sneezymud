@@ -997,8 +997,12 @@ bool TFood::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 
 int TFood::objectDecay()
 {
-  addFoodFlags(FOOD_SPOILED);
-  obj_flags.decay_time = -1;
+  if(isFoodFlag(FOOD_SPOILED)){
+    return FALSE;
+  } else {
+    addFoodFlags(FOOD_SPOILED);
+    obj_flags.decay_time = getVolume()*10;
+  }
   return TRUE;
 }
 
