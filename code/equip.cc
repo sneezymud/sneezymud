@@ -118,6 +118,11 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key) co
     held=true;
 
   if (!isImmortal()) {
+    if(o->getStructPoints() <= 0){
+      if(!silent)
+	sendTo("That item is too damaged to use.\n\r");
+      return FALSE;
+    }
     if (IsRestricted(GetItemClassRestrictions(o), getClass())) {
       if (!silent)
         sendTo("You are forbidden to do that.\n\r");
