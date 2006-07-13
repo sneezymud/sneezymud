@@ -49,6 +49,7 @@ sstring TKey::statObjInfo() const
 void TKey::lowCheck()
 {
   if ((obj_flags.cost >= 0) && isRentable() &&
+           isname("[housekey]", getName()) &&
            (obj_flags.decay_time <= 0))
     vlogf(LOG_LOW, fmt("rentable key (%s)!") %  getName());
 
