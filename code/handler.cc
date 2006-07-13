@@ -2127,8 +2127,8 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
 
 TObj *generic_find_obj(sstring arg, int bv, TBeing *ch)
 {
-  TBeing *tar_ch;
-  TObj *o;
+  TBeing *tar_ch=NULL;
+  TObj *o=NULL;
 
   generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
 
@@ -2137,8 +2137,8 @@ TObj *generic_find_obj(sstring arg, int bv, TBeing *ch)
 
 TBeing *generic_find_being(sstring arg, int bv, TBeing *ch)
 {
-  TBeing *tar_ch;
-  TObj *o;
+  TBeing *tar_ch=NULL;
+  TObj *o=NULL;
 
   generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
 
@@ -2164,6 +2164,10 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   char tmpname[MAX_INPUT_LENGTH];
   char *tmp;
 
+  *tar_ch = NULL;
+  *obj = NULL;
+
+
 //  strcpy(tmpname, name);
   strcpy(tmpname, arg);
   tmp = tmpname;
@@ -2186,9 +2190,6 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);
-
-  *tar_ch = NULL;
-  *obj = NULL;
 
   // please leave this ordering alone
   // look for beings first
