@@ -248,7 +248,6 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   int polemax=5000, polechance=0;
   int catchchance=0;
 
-
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 

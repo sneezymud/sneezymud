@@ -291,6 +291,11 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
   TBeing *horse;
 
   if (cmd == CMD_RIDE || cmd == CMD_MOUNT) {
+    if(!task && riding && (getDirFromChar(arg) != DIR_NONE)){
+      sendTo("You urge your mount forward.\n\r");
+      start_task(this, NULL, NULL, TASK_RIDE, arg, 2, inRoom(), 0, 0, 5);
+      return TRUE;
+    }
     if (!(horse = h)) {
       strcpy(caName, arg);
       if (!(horse = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES))) {
