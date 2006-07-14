@@ -546,11 +546,12 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
   if(!tmp_ch)
     tmp_ch=character_list;
 
-  retcount=count=(int)((float)mobCount/11.5);
+  retcount=count=max((int)((float)mobCount/11.5), 1);
 
 
   for (; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;  // just for safety
+
 
     if(!count--)
       break;
