@@ -387,11 +387,15 @@ void saveExtra(Cgicc cgi, int account_id)
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str());
 
+  sstring buf=(**(cgi.getElement("description")));
+  if(buf[buf.length()-1] != '\n')
+    buf+="\n";
+
   db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str(),
-	   (**(cgi.getElement("description"))).c_str());
+	   buf.c_str());
   
   cout << "Saved for keyword " << (**(cgi.getElement("name"))) << ".<br>";
 }
