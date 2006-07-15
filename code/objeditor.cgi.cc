@@ -22,7 +22,7 @@ using namespace cgicc;
 
 
 void sendJavaScript();
-sstring mudColorToHTML(sstring);
+sstring mudColorToHTML(sstring, bool spacer=true);
 
 void sendObjlist(int);
 void sendShowObj(int, int, bool);
@@ -889,9 +889,9 @@ void sendObjlist(int account_id){
   cout << "<input type=hidden name=state>" << endl;
 
   cout << "<table border=1>";
-  cout << "<tr><td>vnum</td><td>name</td><td>extras</td><td>affects</td></tr>";
+  cout << "<tr><td>vnum</td><td>name</td><td>short_desc</td><td>extras</td><td>affects</td></tr>";
 
-  db.query("select vnum, name from obj o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
+  db.query("select vnum, name, short_desc from obj o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
   
   db_affects.query("select vnum, count(*) as count from objaffect where lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
   db_affects.fetchRow();
@@ -923,6 +923,8 @@ void sendObjlist(int account_id){
     cout << "<tr><td>" << "<a href=javascript:pickobj('" << db["vnum"];
     cout << "','showobj')>" << db["vnum"] << "</a>" << endl;
     cout << "</td><td>" << db["name"] << "</td>"<< endl;
+    cout << "<td bgcolor=black>" << mudColorToHTML(db["short_desc"], false);
+    cout << "</td>" << endl;
     cout << "<td><a href=javascript:pickobj('" << db["vnum"];
     cout << "','showextra')>" << extracount << "</a></td>" << endl;
     cout << "<td><a href=javascript:pickobj('" << db["vnum"];
@@ -965,7 +967,7 @@ void replaceString(sstring &str, sstring find, sstring replace)
 }
 
 // candidate for some sort of global cgi tools library
-sstring mudColorToHTML(sstring str)
+sstring mudColorToHTML(sstring str, bool spacer)
 {
 
   replaceString(str, "\n", "<br>");
@@ -996,8 +998,11 @@ sstring mudColorToHTML(sstring str)
   replaceString(str, "<1>", "</span><span style=\"color:white\">");
 
   // to help builders line up text
-  sstring spacing_strip="01234567890123456789012345678901234567890123456789012345678901234567890123456789";
+  sstring spacing_strip="01234567890123456789012345678901234567890123456789012345678901234567890123456789<br>";
 
-  return fmt("<span style=\"color:white\"><font face=\"courier\">%s<br>%s</font></span>") % spacing_strip % str;
+  if(!spacer)
+    spacing_strip="";
+
+  return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 
