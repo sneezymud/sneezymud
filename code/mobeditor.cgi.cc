@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     sstring vnum_buf=**vnum;
     if(vnum_buf.find(".") != string::npos ||
        vnum_buf.find("/") != string::npos ||
-       vnum_buf.find("\") != string::npos){
+       vnum_buf.find("\\") != string::npos){
       cout << HTTPHTMLHeader() << endl;
       cout << html() << head() << title("Mobeditor") << endl;
       cout << head() << body() << endl;
@@ -237,6 +237,16 @@ void saveMob(Cgicc cgi, int account_id)
 }
 
 
+class mobSorter {
+public:
+  bool operator() (const sstring &, const sstring &) const;
+};
+
+bool mobSorter::operator()  (const sstring &x, const sstring &y) const
+{
+  return convertTo<int>(x) < convertTo<int>(y);
+}
+
 
 void sendShowMob(int account_id, int vnum, bool wizard)
 {
@@ -320,21 +330,28 @@ void sendMoblist(int account_id){
   struct dirent *entry;
   ifstream fp;
   sstring name, short_desc;
+  vector <sstring> filelist;
 
   while((entry = readdir(dir))){
     if((entry->d_name[0] == '.' && entry->d_name[1] == '\0') ||
        (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))
       continue;
-    
-    fp.open((fmt("/mud/prod/lib/immortals/%s/mobs/%s") % buildername % entry->d_name).c_str(), ios::in);
+
+    filelist.push_back(entry->d_name);
+  }
+
+  sort(filelist.begin(), filelist.end(), mobSorter());
+
+  for(unsigned int i=0;i<filelist.size();++i){
+    fp.open((fmt("/mud/prod/lib/immortals/%s/mobs/%s") % buildername % filelist[i]).c_str(), ios::in);
 
     getline(fp, name); // vnum, don't need
     getline(fp, name);
     getline(fp, short_desc);
     fp.close();
 
-    cout << "<tr><td>" << "<a href=javascript:pickmob('" << entry->d_name;
-    cout << "','showmob')>" << entry->d_name << "</a>" << endl;
+    cout << "<tr><td>" << "<a href=javascript:pickmob('" << filelist[i];
+    cout << "','showmob')>" << filelist[i] << "</a>" << endl;
     cout << "</td><td>" << name << "</td>"<< endl;
     cout << "<td bgcolor=black>" << mudColorToHTML(short_desc, false);
     cout << "</td>" << endl;
