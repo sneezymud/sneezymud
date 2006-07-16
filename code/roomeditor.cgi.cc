@@ -27,7 +27,7 @@ sstring mudColorToHTML(sstring, bool spacer=true);
 void sendRoomlist(int);
 void sendShowRoom(int, int, bool);
 void saveRoom(Cgicc, int);
-void makeNewRoom(Cgicc, int, bool);
+void makeNewRoom(Cgicc, int, sstring, sstring);
 void delRoom(Cgicc, int);
 
 void sendShowExtra(int, int);
@@ -70,6 +70,17 @@ sstring getPlayerNames(int account_id)
   return names;
 }
 
+sstring getNextVnum(int account_id)
+{
+  TDatabase db(DB_IMMORTAL);
+
+  db.query("select max(vnum)+1 as nvnum from room where block=1 and lower(owner) in (%r) group by owner",
+	   getPlayerNames(account_id).c_str());
+  db.fetchRow();
+
+  return db["nvnum"];
+}
+
 
 int main(int argc, char **argv)
 {
@@ -103,11 +114,12 @@ int main(int argc, char **argv)
     return 0;    
   } else if(**state_form == "newroom"){
     form_iterator vnum=cgi.getElement("vnum");
+    form_iterator templatevnum=cgi.getElement("template");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("SneezyMUD Room Editor") << endl;
     cout << head() << body() << endl;
 
-    makeNewRoom(cgi, session.getAccountID(), session.hasWizPower(POWER_LOAD));
+    makeNewRoom(cgi, session.getAccountID(), (**vnum), (**templatevnum));
     sendShowRoom(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
     return 0;    
@@ -306,7 +318,7 @@ void makeNewExit(Cgicc cgi, int account_id)
 }
 
 
-void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
+void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
 {
   TDatabase db(DB_IMMORTAL);
   TDatabase db_sneezy(DB_IMMORTAL);
@@ -316,18 +328,18 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
     return;
   }
   
-  if((**(cgi.getElement("template"))).empty() ||
-     (**(cgi.getElement("template"))) == "0"){
+  if(templatevnum.empty() ||
+     templatevnum == "0"){
     db_sneezy.setDB(DB_SNEEZY);
     db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=0");
   } else {
-    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
+    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", templatevnum.c_str(), getPlayerNames(account_id).c_str());
   }
   db_sneezy.fetchRow();
     
   db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
-	   (**(cgi.getElement("vnum"))).c_str(),
+	   vnum.c_str(),
 	   db_sneezy["x"].c_str(), 
 	   db_sneezy["y"].c_str(), 
 	   db_sneezy["z"].c_str(), 
@@ -343,22 +355,19 @@ void makeNewRoom(Cgicc cgi, int account_id, bool power_load)
 	   db_sneezy["capacity"].c_str(), 
 	   db_sneezy["height"].c_str());
 
-  if((**(cgi.getElement("template"))).empty()){
+  if(templatevnum.empty()){
     db_sneezy.query("select vnum, name, description from roomextra where vnum=0");
   } else {
-    db_sneezy.query("select vnum, name, description from roomextra where vnum=%s and block=1 and owner in (%r)", (**(cgi.getElement("template"))).c_str(), getPlayerNames(account_id).c_str());
+    db_sneezy.query("select vnum, name, description from roomextra where vnum=%s and block=1 and owner in (%r)", templatevnum.c_str(), getPlayerNames(account_id).c_str());
   }
 
   while(db_sneezy.fetchRow()){
     db.query("insert into roomextra (vnum, owner, block, name, description) values (%s, '%s', 1, '%s', '%s')", 
-	     (**(cgi.getElement("vnum"))).c_str(),
+	     vnum.c_str(),
 	     (**(cgi.getElement("owner"))).c_str(),
 	     db_sneezy["name"].c_str(),
 	     db_sneezy["description"].c_str());
   }
-
-
-
 }
 
 void saveExtra(Cgicc cgi, int account_id)
@@ -387,31 +396,64 @@ void saveExtra(Cgicc cgi, int account_id)
 void saveExit(Cgicc cgi, int account_id)
 {
   TDatabase db(DB_IMMORTAL);
+  sstring destination=(**(cgi.getElement("destination")));
 
   if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
     cout << "Owner name didn't match - security violation.";
     return;
   }
+
+  if((**(cgi.getElement("destination"))) == "new"){
+    destination=getNextVnum(account_id);
+    makeNewRoom(cgi, account_id, destination, 
+		(**(cgi.getElement("vnum"))));
+    cout << "Created new destination room " << destination << ".<br>";
+  }
+
+
   
   db.query("delete from roomexit where owner='%s' and vnum=%s and block=1 and direction=%s",
   	   (**(cgi.getElement("owner"))).c_str(), 
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("direction"))).c_str());
-
-    db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
-	     (**(cgi.getElement("vnum"))).c_str(),
-	     (**(cgi.getElement("owner"))).c_str(),
-	     (**(cgi.getElement("direction"))).c_str(),
-	     (**(cgi.getElement("name"))).c_str(),
-	     (**(cgi.getElement("description"))).c_str(),
-	     (**(cgi.getElement("type"))).c_str(),
-	     (**(cgi.getElement("condition_flag"))).c_str(),
-	     (**(cgi.getElement("lock_difficulty"))).c_str(),
-	     (**(cgi.getElement("weight"))).c_str(),
-	     (**(cgi.getElement("key_num"))).c_str(),
-	     (**(cgi.getElement("destination"))).c_str());
   
+  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
+	   (**(cgi.getElement("vnum"))).c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   (**(cgi.getElement("direction"))).c_str(),
+	   (**(cgi.getElement("name"))).c_str(),
+	   (**(cgi.getElement("description"))).c_str(),
+	   (**(cgi.getElement("type"))).c_str(),
+	   (**(cgi.getElement("condition_flag"))).c_str(),
+	   (**(cgi.getElement("lock_difficulty"))).c_str(),
+	   (**(cgi.getElement("weight"))).c_str(),
+	   (**(cgi.getElement("key_num"))).c_str(),
+	   destination.c_str());
+
   cout << "Saved for direction " << (**(cgi.getElement("direction")))<<".<br>";
+  
+  
+  ///
+  db.query("delete from roomexit where owner='%s' and vnum=%s and block=1 and direction=%i",
+  	   (**(cgi.getElement("owner"))).c_str(), 
+	   destination.c_str(),
+	   rev_dir[convertTo<int>((**(cgi.getElement("direction"))))]);
+
+  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %i, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
+	   destination.c_str(),
+	   (**(cgi.getElement("owner"))).c_str(),
+	   rev_dir[convertTo<int>((**(cgi.getElement("direction"))))],
+	   (**(cgi.getElement("name"))).c_str(),
+	   (**(cgi.getElement("description"))).c_str(),
+	   (**(cgi.getElement("type"))).c_str(),
+	   (**(cgi.getElement("condition_flag"))).c_str(),
+	   (**(cgi.getElement("lock_difficulty"))).c_str(),
+	   (**(cgi.getElement("weight"))).c_str(),
+	   (**(cgi.getElement("key_num"))).c_str(),
+	   (**(cgi.getElement("vnum"))).c_str());
+
+
+  cout << "Created opposite exit in " << destination <<".<br>";
 }
 
 
@@ -558,6 +600,7 @@ sstring getDestinationForm(int selected, int account_id)
   db.query("select vnum, name from room where block=1 and owner in (%r)", getPlayerNames(account_id).c_str());
 
   sstring buf="<tr><td>destination</td><td><select name=destination>\n";
+  buf+="<option bgcolor=black value=new>New Room</option>\n";
   while(db.fetchRow()){
     buf+=fmt("<option bgcolor=black value=%s %s>%s - %s</option>\n") %
        db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") % 
