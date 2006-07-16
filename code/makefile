@@ -476,6 +476,7 @@ cgi:	objlog.cgi corp_info.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.
 	@/bin/cp -f shopinfo.cgi /mud/web
 	@/bin/cp -f mudmail.cgi /mud/web
 	@/bin/cp -f objeditor.cgi /mud/web
+	@/bin/cp -f mobeditor.cgi /mud/web
 	@/bin/cp -f roomeditor.cgi /mud/web
 	@echo Finished making cgi programs
 
@@ -20092,6 +20093,148 @@ objs/mobact.o: obj_expandable_container.h obj_open_container.h
 objs/mobact.o: obj_base_container.h obj_base_corpse.h obj_player_corpse.h
 objs/mobact.o: obj_bow.h obj_treasure.h obj_component.h obj_arrow.h
 objs/mobact.o: obj_base_weapon.h obj_general_weapon.h obj_base_clothing.h
+objs/mobeditor.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/mobeditor.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/mobeditor.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/mobeditor.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/mobeditor.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/mobeditor.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/mobeditor.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/mobeditor.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/mobeditor.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/mobeditor.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/mobeditor.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cmath
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/mobeditor.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/string
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/mobeditor.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/mobeditor.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/mobeditor.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/mobeditor.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/mobeditor.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/mobeditor.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/memory
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/algorithm
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/vector
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/map
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/list
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/iostream
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/streambuf
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/locale
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/limits
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/typeinfo
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/istream
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/sstream
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/fstream
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/mobeditor.cgi.o: enum.h spells.h structs.h parse.h immunity.h
+objs/mobeditor.cgi.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/mobeditor.cgi.o: client.h response.h faction.h comm.h toggle.h
+objs/mobeditor.cgi.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/mobeditor.cgi.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/mobeditor.cgi.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/mobeditor.cgi.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/mobeditor.cgi.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/mobeditor.cgi.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/mobeditor.cgi.o: format.h database.h /usr/local/include/mysql/mysql.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/typelib.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/my_list.h
+objs/mobeditor.cgi.o: /usr/local/include/mysql/my_alloc.h session.cgi.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/mobeditor.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/mobeditor.cgi.o: /usr/include/dirent.h /usr/include/sys/dirent.h
+objs/mobeditor.cgi.o: /usr/include/sys/stat.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPPlainHeader.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
+objs/mobeditor.cgi.o: /usr/local/include/cgicc/HTTPRedirectHeader.h
+objs/mobeditor.cgi.o: /usr/include/md5.h /usr/include/sys/md5.h
 objs/monster.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/monster.o: /usr/include/c++/3.4/bits/c++config.h
 objs/monster.o: /usr/include/c++/3.4/bits/os_defines.h
