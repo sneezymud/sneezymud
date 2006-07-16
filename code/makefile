@@ -464,6 +464,12 @@ roomeditor.cgi:	$(LIBS) objs/roomeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@$(CC) -o roomeditor.cgi objs/roomeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
 	@/usr/bin/strip roomeditor.cgi
 
+mobeditor.cgi:	$(LIBS) objs/mobeditor.cgi.o objs/lowtools.o objs/session.cgi.o
+	@echo \*\*\* Making Final Link: mobeditor.cgi
+	@echo \*\*\* Linking against prod libs!
+	@$(CC) -o mobeditor.cgi objs/mobeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@/usr/bin/strip mobeditor.cgi
+
 
 # make all cgi program
 cgi:	objlog.cgi corp_info.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi
