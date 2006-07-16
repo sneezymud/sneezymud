@@ -299,13 +299,11 @@ void saveMob(Cgicc cgi, int account_id)
 
 void sendShowMob(int account_id, int vnum, bool wizard)
 {
-#if 0
-  TDatabase db(DB_IMMORTAL);
+  TDatabase db_sneezy(DB_SNEEZY);
+  db_sneezy.query("select p.name as name from wizpower w, account a, player p where p.id=w.player_id and p.account_id=a.account_id and a.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(POWER_BUILDER));
+  db_sneezy.fetchRow();
+  sstring buildername=db_sneezy["name"].cap();
 
-  assign_item_info();
-
-  db.query("select owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material from obj where vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
-  db.fetchRow();
 
 
   cout << "<form method=post action=mobeditor.cgi>" << endl;
@@ -315,114 +313,37 @@ void sendShowMob(int account_id, int vnum, bool wizard)
   cout << "<td align=left><button name=state value=showextra type=submit>edit extras</button></td>";
   cout << "<td align=left><button name=state value=showaffect type=submit>edit affects</button></td>";
   cout << "<td width=100% align=right><button name=state value=delobj type=submit>delete</button></td>";
-  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "<input type=hidden name=vnum value='" << vnum << "'>";
   cout << "<p></form>" << endl;
 
   cout << "<form action=\"mobeditor.cgi\" method=post name=saveobj>" << endl;
   cout << "<input type=hidden name=state value=saveobj>" << endl;
 
-  cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
+  cout << "<input type=hidden name=owner value='" << buildername << "'>";
 
 
   cout << "<table border=1>";
 
+  cout << "<textarea name=description cols=90 rows=25>" << endl;
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+  ifstream fp((fmt("/mud/prod/lib/immortals/%s/mobs/%i") %
+	      buildername % vnum).c_str());
+  sstring buf;
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-
-  sstring buf=db["short_desc"];
-  while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
-
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
-    mudColorToHTML(db["short_desc"]);
-
-  buf=db["long_desc"];
-  while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
-
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
-    mudColorToHTML(db["long_desc"]);
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
-
-  cout << getTypesForm(convertTo<int>(db["type"]));
-
-  // action flag
-  cout << "<tr><td>action_flag</td><td><table><tr>" << endl;
-  int action_flag=convertTo<int>(db["action_flag"]);
-  for(int i=0;i<MAX_OBJ_STAT;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
-      ((action_flag & (1<<i))?"checked":"") % extra_bits[i] % extra_bits[i];
-
-    cout << "</td>";
-
-    if(!((i+1) % 6))
-      cout << "</tr><tr>";
+  while(!fp.eof()){
+    getline(fp, buf);
+    cout << buf << endl;
   }
-  cout <<"</tr></table></td></tr>";
-  //
 
+  cout << "</textarea>" << endl;
 
-  // wear flag
-  cout << "<tr><td>wear_flag</td><td><table><tr>" << endl;
-  int wear_flag=convertTo<int>(db["wear_flag"]);
-  for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
-      ((wear_flag & (1<<i))?"checked":"") % wear_bits[i] % wear_bits[i];
-
-    cout << "</td>";
-
-    if(!((i+1) % 8))
-      cout << "</tr><tr>";
-  }
-  cout <<"</tr></table></td></tr>";
-  //
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "price" % "price" % db["price"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "can_be_seen" % "can_be_seen" % db["can_be_seen"];
-
-  cout << getProcForm(convertTo<int>(db["spec_proc"]), wizard);
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_exist" % "max_exist" % db["max_exist"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_struct" % "max_struct" % db["max_struct"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "cur_struct" % "cur_struct" % db["cur_struct"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "decay" % "decay" % db["decay"];
-
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "volume" % "volume" % db["volume"];
-
-
-  cout << getMaterialForm(convertTo<int>(db["material"]));
-  
-
-  cout << "</table>";
-
+  cout << "</table></table>";
   cout << "<input type=submit value='save changes'>";
   cout << "</form>" << endl;
 
   cout << body() << endl;
   cout << html() << endl;
-#endif  
   
 }
 
@@ -474,7 +395,7 @@ void sendMoblist(int account_id){
     fp.close();
 
     cout << "<tr><td>" << "<a href=javascript:pickmob('" << entry->d_name;
-    cout << "','showobj')>" << entry->d_name << "</a>" << endl;
+    cout << "','showmob')>" << entry->d_name << "</a>" << endl;
     cout << "</td><td>" << name << "</td>"<< endl;
     cout << "<td bgcolor=black>" << mudColorToHTML(short_desc, false);
     cout << "</td>" << endl;
