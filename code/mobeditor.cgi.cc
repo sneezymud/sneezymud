@@ -88,6 +88,24 @@ int main(int argc, char **argv)
     return 0;
   }
 
+
+  form_iterator vnum=cgi.getElement("vnum");
+  if(vnum != cgi.getElements().end()){
+    sstring vnum_buf=**vnum;
+    if(vnum_buf.find(".") != string::npos ||
+       vnum_buf.find("/") != string::npos ||
+       vnum_buf.find("\") != string::npos){
+      cout << HTTPHTMLHeader() << endl;
+      cout << html() << head() << title("Mobeditor") << endl;
+      cout << head() << body() << endl;
+      
+      cout << "You have been reported to the authorities." << endl;
+      
+      cout << body() << endl;
+      cout << html() << endl;
+      return 0;
+    }
+  }
     
 
   if(state_form == cgi.getElements().end() || **state_form == "main"){
@@ -98,7 +116,6 @@ int main(int argc, char **argv)
     sendMoblist(session.getAccountID());
     return 0;    
   } else if(**state_form == "newmob"){
-    form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mobeditor") << endl;
     cout << head() << body() << endl;
@@ -108,7 +125,6 @@ int main(int argc, char **argv)
 		session.hasWizPower(POWER_WIZARD));
     return 0;    
   } else if(**state_form == "showmob"){
-    form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mobeditor") << endl;
     cout << head() << body() << endl;
@@ -117,7 +133,6 @@ int main(int argc, char **argv)
 		session.hasWizPower(POWER_WIZARD));
     return 0;
   } else if(**state_form == "savemob"){
-    form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Mobeditor") << endl;
     cout << head() << body() << endl;
@@ -146,153 +161,79 @@ int main(int argc, char **argv)
 
 void delMob(Cgicc cgi, int account_id)
 {
-#if 0
-  TDatabase db(DB_IMMORTAL);
+  TDatabase db_sneezy(DB_SNEEZY);
+  db_sneezy.query("select p.name as name from wizpower w, account a, player p where p.id=w.player_id and p.account_id=a.account_id and a.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(POWER_BUILDER));
+  db_sneezy.fetchRow();
+  sstring buildername=db_sneezy["name"].cap();
 
   if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
     cout << "Owner name didn't match - security violation.";
     return;
   }
 
-  db.query("delete from obj where vnum=%s and owner='%s'",
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   (**(cgi.getElement("owner"))).c_str());
+  sstring path=(fmt("/mud/prod/lib/immortals/%s/mobs/%s") % buildername % (**(cgi.getElement("vnum"))));
 
-  db.query("delete from objextra where vnum=%s and owner='%s'",
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   (**(cgi.getElement("owner"))).c_str());
+  unlink(path.c_str());
 
-  db.query("delete from objaffect where vnum=%s and owner='%s'",
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   (**(cgi.getElement("owner"))).c_str());
-#endif
 }
 
 void makeNewMob(Cgicc cgi, int account_id, bool power_load)
 {
-#if 0
-  TDatabase db(DB_IMMORTAL);
-  TDatabase db_sneezy(DB_SNEEZY);
-
   if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
-  db_sneezy.query("select name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material from obj where vnum=%s", (**(cgi.getElement("template"))).c_str());
-  db_sneezy.fetchRow();
 
-  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-	   (**(cgi.getElement("owner"))).c_str(),
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   db_sneezy["name"].c_str(), 
-	   db_sneezy["short_desc"].c_str(), 
-	   db_sneezy["long_desc"].c_str(), 
-	   db_sneezy["action_desc"].c_str(), 
-	   db_sneezy["type"].c_str(), 
-	   db_sneezy["action_flag"].c_str(), 
-	   db_sneezy["wear_flag"].c_str(), 
-	   db_sneezy["val0"].c_str(), 
-	   db_sneezy["val1"].c_str(), 
-	   db_sneezy["val2"].c_str(), 
-	   db_sneezy["val3"].c_str(), 
-	   db_sneezy["weight"].c_str(), 
-	   db_sneezy["price"].c_str(), 
-	   db_sneezy["can_be_seen"].c_str(), 
-	   db_sneezy["spec_proc"].c_str(), 
-	   db_sneezy["max_exist"].c_str(), 
-	   db_sneezy["max_struct"].c_str(), 
-	   db_sneezy["cur_struct"].c_str(), 
-	   db_sneezy["decay"].c_str(), 
-	   db_sneezy["volume"].c_str(), 
-	   db_sneezy["material"].c_str());
+  ofstream fp((fmt("/mud/prod/lib/immortals/%s/mobs/%s") % (**(cgi.getElement("owner"))) % (**(cgi.getElement("vnum")))).c_str());
 
-
-  db_sneezy.query("select vnum, name, description from objextra where vnum=%s", (**(cgi.getElement("template"))).c_str());
-
-  while(db_sneezy.fetchRow()){
-    db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')", 
-	     (**(cgi.getElement("vnum"))).c_str(),
-	     (**(cgi.getElement("owner"))).c_str(),
-	     db_sneezy["name"].c_str(),
-	     db_sneezy["description"].c_str());
+  if(!fp.is_open()){
+    cout << "problems" << endl;
+    return;
   }
 
+  fp << "#" << (**(cgi.getElement("vnum"))) << endl;
+  fp << "~" << endl;
+  fp << "~" << endl;
+  fp << "~" << endl;
+  fp << "1 0 3 50.0 A 1.1" << endl;
+  fp << "4 1 1 28 5 1d5+2" << endl;
+  fp << "4 0 1 150 70" << endl;
+  fp << "3 14 -25 -6 14 12 -25 13 -25 -24 24 25" << endl;
+  fp << "9 9 1 0" << endl;
+  fp << "0 0 0 0 0 0 0 0 0 0 0 0 0 0" << endl;
+  fp << "0 0 0 0 0 0 0 0 0 0 0 0 0 0" << endl;
+  fp << "77 0 0 50" << endl;
 
-  db_sneezy.query("select vnum, type, mod1, mod2 from objaffect where vnum=%s", (**(cgi.getElement("template"))).c_str());
 
-  while(db_sneezy.fetchRow()){
-    db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)", 
-	     (**(cgi.getElement("vnum"))).c_str(),
-	     (**(cgi.getElement("owner"))).c_str(),
-	     db_sneezy["type"].c_str(),
-	     db_sneezy["mod1"].c_str(),
-	     db_sneezy["mod2"].c_str());
-  }
 
-#endif
+  fp.close();
+
+  system((fmt("chmod a+rwx /mud/prod/lib/immortals/%s/mobs/%s") % (**(cgi.getElement("owner"))) % (**(cgi.getElement("vnum")))).c_str());
+
+  cout << "Saved.<br>";
 }
 
 
 void saveMob(Cgicc cgi, int account_id)
 {
-#if 0
-  TDatabase db(DB_IMMORTAL);
+  TDatabase db_sneezy(DB_SNEEZY);
+  db_sneezy.query("select p.name as name from wizpower w, account a, player p where p.id=w.player_id and p.account_id=a.account_id and a.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(POWER_BUILDER));
+  db_sneezy.fetchRow();
+  sstring buildername=db_sneezy["name"].cap();
+
 
   if(!checkPlayerName(account_id, **(cgi.getElement("owner")))){
     cout << "Owner name didn't match - security violation.";
     return;
   }
 
-  // calculate action_flag value
-  int action_flag=0;
-  for(int i=0;i<MAX_OBJ_STAT;++i){
-    if(cgi.getElement(extra_bits[i]) != cgi.getElements().end()){
-      action_flag|=(1<<i);
-    }
-  }
+  ofstream fp((fmt("/mud/prod/lib/immortals/%s/mobs/%s") % buildername % (**(cgi.getElement("vnum")))).c_str());
 
-  // calculate wear_flag value
-  int wear_flag=0;
-  for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
-    if(cgi.getElement(wear_bits[i]) != cgi.getElements().end()){
-      wear_flag|=(1<<i);
-    }
-  }
-
-
-
-  db.query("delete from obj where owner='%s' and vnum=%s",
-  	   (**(cgi.getElement("owner"))).c_str(), 
-  	   (**(cgi.getElement("vnum"))).c_str());
-  
-  db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %i, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-	   (**(cgi.getElement("owner"))).c_str(),
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   (**(cgi.getElement("name"))).c_str(),
-	   (**(cgi.getElement("short_desc"))).c_str(),
-	   (**(cgi.getElement("long_desc"))).c_str(),
-	   (**(cgi.getElement("action_desc"))).c_str(),
-	   (**(cgi.getElement("type"))).c_str(),
-	   action_flag,
-	   wear_flag,
-	   (**(cgi.getElement("val0"))).c_str(),
-	   (**(cgi.getElement("val1"))).c_str(),
-	   (**(cgi.getElement("val2"))).c_str(),
-	   (**(cgi.getElement("val3"))).c_str(),
-	   (**(cgi.getElement("weight"))).c_str(),
-	   (**(cgi.getElement("price"))).c_str(),
-	   (**(cgi.getElement("can_be_seen"))).c_str(),
-	   (**(cgi.getElement("spec_proc"))).c_str(),
-	   (**(cgi.getElement("max_exist"))).c_str(),
-	   (**(cgi.getElement("max_struct"))).c_str(),
-	   (**(cgi.getElement("cur_struct"))).c_str(),
-	   (**(cgi.getElement("decay"))).c_str(),
-	   (**(cgi.getElement("volume"))).c_str(),
-	   (**(cgi.getElement("material"))).c_str());
+  fp << (**(cgi.getElement("description"))) << endl;
+  fp.close();
 
   cout << "Saved.<br>";
-#endif
+
 }
 
 
@@ -309,18 +250,17 @@ void sendShowMob(int account_id, int vnum, bool wizard)
   cout << "<form method=post action=mobeditor.cgi>" << endl;
   cout << "<table width=100%><tr>";
   cout << "<td align=left><button name=state value=logout type=submit>logout</button></td>";
-  cout << "<td align=left><button name=state value=main type=submit>object list</button></td>";
-  cout << "<td align=left><button name=state value=showextra type=submit>edit extras</button></td>";
-  cout << "<td align=left><button name=state value=showaffect type=submit>edit affects</button></td>";
-  cout << "<td width=100% align=right><button name=state value=delobj type=submit>delete</button></td>";
+  cout << "<td align=left><button name=state value=main type=submit>mobile list</button></td>";
+  cout << "<td width=100% align=right><button name=state value=delmob type=submit>delete</button></td>";
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "<input type=hidden name=vnum value='" << vnum << "'>";
   cout << "<p></form>" << endl;
 
-  cout << "<form action=\"mobeditor.cgi\" method=post name=saveobj>" << endl;
-  cout << "<input type=hidden name=state value=saveobj>" << endl;
+  cout << "<form action=\"mobeditor.cgi\" method=post name=savemob>" << endl;
+  cout << "<input type=hidden name=state value=savemob>" << endl;
 
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
+  cout << "<input type=hidden name=vnum value='" << vnum << "'>";
 
 
   cout << "<table border=1>";
@@ -366,7 +306,6 @@ void sendMoblist(int account_id){
   cout << "<form method=post action=mobeditor.cgi>" << endl;
   cout << "<button name=state value=newmob type=submit>new mob</button>";
   cout << "vnum <input type=text name=vnum>";
-  cout << "template <input type=text name=template value=1>";
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "</form>";
   cout << endl;
