@@ -1160,54 +1160,126 @@ int TMonster::monkMove(TBeing &vict)
       }
     }
 #endif
-    num = ::number(1, 14);
-    if ((num <= 2 ||
-        ((vict.hasClass(CLASS_MAGE) ||
-          vict.hasClass(CLASS_CLERIC) &&
-          vict.hasClass(CLASS_SHAMAN)) &&
-         vict.getPosition() > POSITION_SITTING)) &&
-         canBash(&vict, SILENT_YES) && (getPosition() >= POSITION_CRAWLING)) {
+    num = ::number(1, 6);
+    switch (num) {
+      case 1:
+        doSay("Got to hurl choice.");
+        if ((this->attackers > 2) &&
+           (getMove() >= 80) &&
+           (getPosition() == POSITION_STANDING) &&
+           (doesKnowSkill(SKILL_HURL)) &&
+           (getSkillValue(SKILL_HURL) > 66)) {
+          int i;
+
+          for (i = 0; i < 20; i++) {
+            dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+
+            if (this->canGo(hurlDir)) {
+              vlogf(LOG_ANGUS, fmt("monkMove: %s hurling %s, dir= %i") %  name %
+                vict.name % hurlDir);
+              return aiHurl(hurlDir, &vict);
+            }
+          }
+          return doChop("", &vict);
+          break;
+        }
+        doSay("Fell through hurl choice.");
+      case 2:
+        doSay("Got to bone break choice.");
+        if ((GetMaxLevel() > 75) &&
+           (doesKnowSkill(SKILL_BONEBREAK)) &&
+           (getMove() >= 80) &&
+           (!vict.isImmune(IMMUNE_BONE_COND))) {
+          return doBoneBreak("", &vict);
+          break;
+        }
+        doSay("Fell through bone break choice.");
+      case 3:
+        doSay("Got to shoulder throw choice.");
+        if (!vict.hasClass(CLASS_MONK) &&
+           (vict.getPosition() == POSITION_STANDING) &&
+           (getPosition() == POSITION_STANDING) &&
+           (doesKnowSkill(SKILL_SHOULDER_THROW)) &&
+           (getMove() >= 80)) {
+          return doShoulderThrow("", &vict);
+          break;
+        }
+        doSay("Fell through shoulder throw choice.");
+      case 4:
+        doSay("Got to disarm choice.");
+        if ((canDisarm(&vict, SILENT_YES)) &&
+           (getPosition() >= POSITION_CRAWLING) &&
+           (vict.heldInPrimHand() || 
+             (vict.heldInSecHand() && !secHandCloth) ||
+           (secHandCloth && !secHandCloth->isShield()) ||
+           // trying to account for disarm working 1/3 of time with shield
+           (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
+          return doDisarm("", &vict);
+          break;
+        }
+        doSay("Fell through disarm choice.");
+      case 5:
+        doSay("Got to chi choice.");
+        if ((getPosition() >= POSITION_STANDING) &&
+           (!vict.affectedBySpell(SKILL_CHI)) &&
+           (getMana() > 200)) {
+          return doChi("", &vict);
+          break;
+        }
+        doSay("Fell through chi choice.");
+      default:
+        doSay("Got to default (chop) choice.");
+        if (getMove() >= 80) {
+          return doChop("", &vict);
+          break;
+        }
+    }
+    /*
+    if (num <= 5 && GetMaxLevel() > 75 && doesKnowSkill(SKILL_BONEBREAK)) {
+      return doBoneBreak("", &vict);
+    } else if ((num <= 10) &&
+              (!vict.hasClass(CLASS_MONK)) &&
+              (vict.getPosition() > POSITION_SITTING) &&
+              (canBash(&vict, SILENT_YES)) &&
+              (getPosition() >= POSITION_CRAWLING) &&
+              (doesKnowSkill(SKILL_SHOULDER_THROW)) {
       return doShoulderThrow("", &vict);
-    } else if ((num <= 7) &&
-               canDisarm(&vict, SILENT_YES) &&
-               (getPosition() >= POSITION_CRAWLING) &&
-               (vict.heldInPrimHand() || 
+    } else if ((num <= 15) &&
+              (canDisarm(&vict, SILENT_YES)) &&
+              (getPosition() >= POSITION_CRAWLING) &&
+              (vict.heldInPrimHand() || 
                 (vict.heldInSecHand() && !secHandCloth) ||
-                (secHandCloth && !secHandCloth->isShield() )||
-        /// trying to account for disarm working 1/3 of time with shield
-                (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
+              (secHandCloth && !secHandCloth->isShield()) ||
+              // trying to account for disarm working 1/3 of time with shield
+              (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
       return doDisarm("", &vict);
     //else if (num <= 11 && (4 * getHit() < 3 * hitLimit()))
       //return doFeignDeath();
-    } else if ((num <= 10) &&
-	      (getPosition() == POSITION_STANDING)) {
-      if (!vict.affectedBySpell(SKILL_CHI)) {
-        return doChi("", &vict);
-      } else {
-        return doChop("", &vict);
-      }
-    } else if ((num <= 11) &&
-	       (this->attackers > 2) &&
-               (getPosition() == POSITION_STANDING)) {
-      if (doesKnowSkill(SKILL_HURL) && (getSkillValue(SKILL_HURL) > 66)) {
-        int i;
+    } else if ((num <= 20) &&
+              (getPosition() >= POSITION_STANDING) &&
+              (!vict.affectedBySpell(SKILL_CHI))) {
+      return doChi("", &vict);
+    } else if ((num <= 25) &&
+              (this->attackers > 2) &&
+              (getPosition() == POSITION_STANDING) &&
+              (doesKnowSkill(SKILL_HURL)) &&
+              (getSkillValue(SKILL_HURL) > 66)) {
+      int i;
 
-        for (i = 0; i < 20; i++) {
-          dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+      for (i = 0; i < 20; i++) {
+        dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 
-          if (this->canGo(hurlDir)) {
-            vlogf(LOG_ANGUS, fmt("monkMove: %s hurling %s, dir= %i") %  name %
-                  vict.name % hurlDir);
-            return aiHurl(hurlDir, &vict);
-          }
+        if (this->canGo(hurlDir)) {
+          vlogf(LOG_ANGUS, fmt("monkMove: %s hurling %s, dir= %i") %  name %
+                vict.name % hurlDir);
+          return aiHurl(hurlDir, &vict);
         }
-        return doChop("", &vict);
-      } else {
-        return doChop("", &vict);
       }
+      return doChop("", &vict);
     } else {
       return doChop("", &vict);
     }
+    */
   }
   return FALSE;
 }
@@ -1275,7 +1347,7 @@ int TMonster::deikhanMove(TBeing &vict)
 
 static bool faerieFireCheck(TBeing &ch, TBeing &vict, spellNumT spell)
 {
-  if (!vict.affectedBySpell(spell) && !::number(0, 6) &&
+  if (!vict.affectedBySpell(spell) && !::number(0, 9) &&
        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
     act("$n utters the words, 'Tingle all over!'",
              TRUE, &ch, 0, 0, TO_ROOM);
@@ -1429,7 +1501,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // offensive spells
     // hit um with the long-term effect ones first
     spell = SPELL_DISPEL_MAGIC;
-    if (!::number(0, 3) &&
+    if (!::number(0, 9) &&
        ch.doesKnowSkill(SPELL_DISPEL_MAGIC) &&
        (ch.getSkillValue(SPELL_DISPEL_MAGIC) > 66) &&
        (vict.affectedBySpell(SPELL_HASTE) ||
@@ -1450,7 +1522,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
 
     spell = SPELL_ICY_GRIP;
-    if (!::number(0, 3) && 
+    if (!::number(0, 9) && 
            (cutoff < discArray[spell]->start) &&
          ch.getSkillValue(spell) > 33 ) {
       act("$n utters the words, 'Cold Shoulder!'",
