@@ -1163,7 +1163,6 @@ int TMonster::monkMove(TBeing &vict)
     num = ::number(1, 6);
     switch (num) {
       case 1:
-        doSay("Got to hurl choice.");
         if ((this->attackers > 2) &&
            (getMove() >= 80) &&
            (getPosition() == POSITION_STANDING) &&
@@ -1183,9 +1182,7 @@ int TMonster::monkMove(TBeing &vict)
           return doChop("", &vict);
           break;
         }
-        doSay("Fell through hurl choice.");
       case 2:
-        doSay("Got to bone break choice.");
         if ((GetMaxLevel() > 75) &&
            (doesKnowSkill(SKILL_BONEBREAK)) &&
            (getMove() >= 80) &&
@@ -1193,9 +1190,7 @@ int TMonster::monkMove(TBeing &vict)
           return doBoneBreak("", &vict);
           break;
         }
-        doSay("Fell through bone break choice.");
       case 3:
-        doSay("Got to shoulder throw choice.");
         if (!vict.hasClass(CLASS_MONK) &&
            (vict.getPosition() == POSITION_STANDING) &&
            (getPosition() == POSITION_STANDING) &&
@@ -1204,9 +1199,7 @@ int TMonster::monkMove(TBeing &vict)
           return doShoulderThrow("", &vict);
           break;
         }
-        doSay("Fell through shoulder throw choice.");
       case 4:
-        doSay("Got to disarm choice.");
         if ((canDisarm(&vict, SILENT_YES)) &&
            (getPosition() >= POSITION_CRAWLING) &&
            (vict.heldInPrimHand() || 
@@ -1217,18 +1210,14 @@ int TMonster::monkMove(TBeing &vict)
           return doDisarm("", &vict);
           break;
         }
-        doSay("Fell through disarm choice.");
       case 5:
-        doSay("Got to chi choice.");
         if ((getPosition() >= POSITION_STANDING) &&
            (!vict.affectedBySpell(SKILL_CHI)) &&
            (getMana() > 200)) {
           return doChi("", &vict);
           break;
         }
-        doSay("Fell through chi choice.");
       default:
-        doSay("Got to default (chop) choice.");
         if (getMove() >= 80) {
           return doChop("", &vict);
           break;
