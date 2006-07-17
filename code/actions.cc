@@ -571,7 +571,7 @@ void TPlant::peeOnMe(const TBeing *ch)
 
 void TBeing::doCombine(const sstring &arg)
 {
-  sendTo("You don't even know where to being with that.\n\r");
+  sendTo("You don't even know where to begin with that.\n\r");
 }
 
 void TBeing::doPoop(void)
