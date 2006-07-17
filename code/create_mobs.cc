@@ -2049,8 +2049,20 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
   fscanf(fp, " %ld ", &tmp);
   specials.affectedBy = tmp;
 
-  if (isAffected(AFF_SANCTUARY))
-    setProtection(50);
+  if (isAffected(AFF_SANCTUARY)) {
+    REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
+
+    affectedData aff;
+
+    aff.type = SPELL_SANCTUARY;
+    aff.level = 50;
+    aff.duration = PERMANENT_DURATION;
+    aff.location = APPLY_PROTECTION;
+    aff.modifier = 50;
+    aff.bitvector = AFF_SANCTUARY;
+    affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // setProtection(50);
+  }
 
   fscanf(fp, " %ld ", &tmp);
   mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
