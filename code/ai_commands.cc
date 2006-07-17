@@ -3020,21 +3020,22 @@ int TMonster::aiSay(TBeing *doer, char *)
 // returns DELETE_THIS, or DELETE_VICT (thief)
 int TMonster::aiSteal(TBeing *thief)
 {
-  char buf[160];
+  sstring buf;
 
   if (isPc())
     return FALSE;
 
   US(25);
-  UM(22);
+  UM(38);
   UA(38);
   if (!pissed() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && canSee(thief, INFRA_YES) && thief->isPc()) {
     if (!hasClass(CLASS_THIEF)) {
-      sprintf(buf, "%s is a bloody thief.", thief->getName());
-      doShout(buf);
+      buf = fmt("%s is a bloody thief.") % thief->getName();
+      doShout(buf.c_str());
       CallForGuard(this, thief, 2);
     } else {
-      sprintf(buf, "Alright %s, you little punk, nice try but no dice.", thief->getName());
+      buf = fmt("Alright %s, you little punk, nice try but no dice.") %
+        thief->getName();
       doSay(buf);
     }
   } else
