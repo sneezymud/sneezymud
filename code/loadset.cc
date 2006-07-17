@@ -165,19 +165,21 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
     vlogf(LOG_MISC, fmt("Didn't find suitset load potential of [%d].") % vnum);
     obj_lp = 1;
   }
+
   // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
   // obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
   // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
   double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
-  // double obj_lp_ratio = 1 - pow((1 - (double)chance/100), (double)obj_lp);
-  double obj_lp_ratio = (double)chance/100;
   // vlogf(LOG_MISC, fmt("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
   if ((gamePort == BETA_GAMEPORT) ||
       (chance >= 99) ||
       (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * stats.equip))) {
+    /*
     if (chance < 101) {
+      double obj_lp_ratio = (double)chance/100;
       vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     }
+    */
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);

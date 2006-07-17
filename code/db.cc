@@ -2745,7 +2745,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
               (::number(0, 9999999) < (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip)) &&  
               (obj = read_object(rs.arg1, REAL))) {
-            vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
+            // vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
             if (!mob) {
               vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%s)") %  obj->getName());
               delete obj;
