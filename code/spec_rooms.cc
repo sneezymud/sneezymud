@@ -1781,7 +1781,13 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     return FALSE;
 
   ++pulse;
-  if(pulse%300 || ::number(0,7))
+  int r=1;
+  if(!(pulse%300)){
+    r=::number(0,7);
+  }
+
+
+  if(pulse%300 || r)
     return FALSE;
 
   // first, let's close entrance doors
@@ -1832,8 +1838,9 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     }
   }
 
-  
-  if(found){
+  // this should prevent multiple groups from loading
+  // ... unless they kill the group leader of course
+  if(found && !mob_index[real_mobile(31759)].getNumber()){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
 //QUEST - commented lines are for easier versions of mobs
     rp=real_roomp(31784);
