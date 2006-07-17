@@ -5083,8 +5083,8 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   Descriptor *i;
   int zone_nr=real_roomp(31750)->getZoneNum(), v=0;
   TBeing *victims[10], *vict;
-  int saferooms[19]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,
-  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799};  
+  int saferooms[20]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,
+  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,31760};  
 
   // only on pulse and only if we're not already hunting someone
   if(cmd != CMD_GENERIC_PULSE || IS_SET(myself->specials.act, ACT_HUNTING))
@@ -5111,7 +5111,8 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 	i->character->in_room != saferooms[15] &&
 	i->character->in_room != saferooms[16] &&
 	i->character->in_room != saferooms[17] &&
-	i->character->in_room != saferooms[18]){
+	i->character->in_room != saferooms[18] &&
+	i->character->in_room != saferooms[19]){
       victims[v]=i->character;
       ++v;
     }
