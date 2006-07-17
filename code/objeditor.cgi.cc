@@ -532,7 +532,7 @@ void sendShowExtra(int account_id, int vnum)
 
     cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
 
-    cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+    cout << fmt("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
     
     cout << "</table>";    
@@ -977,7 +977,7 @@ sstring mudColorToHTML(sstring str, bool spacer)
   replaceString(str, "\n", "<br>");
 
   replaceString(str, "<f>", "");
-  replaceString(str, " ", "&nbsp;");
+  //  replaceString(str, " ", "&nbsp;");
   replaceString(str, "<r>", "</span><span style=\"color:red\">");
   replaceString(str, "<R>", "</span><span style=\"color:red;font-weight:bold\">");
 
