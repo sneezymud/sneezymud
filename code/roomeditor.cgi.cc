@@ -859,7 +859,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   buf=fmt("%s%s") % 
     getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["description"];
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+  cout << fmt("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(buf);
 
 
@@ -1034,7 +1034,7 @@ sstring mudColorToHTML(sstring str, bool spacer)
   replaceString(str, "\n", "<br>");
 
   replaceString(str, "<f>", "");
-  replaceString(str, " ", "&nbsp;");
+  //  replaceString(str, " ", "&nbsp;");
   replaceString(str, "<r>", "</span><span style=\"color:red\">");
   replaceString(str, "<R>", "</span><span style=\"color:red;font-weight:bold\">");
 
