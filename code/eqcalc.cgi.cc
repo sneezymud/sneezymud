@@ -181,17 +181,166 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
   return min;
 }
 
+void getSlotData(int wear_flag, wearSlotT &slot, float &slot_c, float &slot_s, sstring &fav)
+{
+  switch(wear_flag){
+    case 3:   // finger
+      slot=WEAR_FINGER_R;
+      slot_c=0.01;
+      slot_s=0.0454;
+      break;
+    case 5:   // neck
+      slot=WEAR_NECK;
+      slot_c=0.04;
+      slot_s=0.0908;
+      break;
+    case 9:   // body
+      slot=WEAR_BODY;
+      slot_c=0.15;
+      slot_s=0.0908;
+      fav=fmt("%i,%i,%i") % mapApplyToFile(APPLY_STR) % mapApplyToFile(APPLY_BRA) % mapApplyToFile(APPLY_CON) ;
+      break;
+    case 17:  // head
+      slot=WEAR_HEAD;
+      slot_c=0.07;
+      slot_s=0.0908;
+      fav=fmt("%i,%i,%i,%i,%i") % mapApplyToFile(APPLY_INT) % mapApplyToFile(APPLY_FOC) % mapApplyToFile(APPLY_WIS) % mapApplyToFile(APPLY_PER) % mapApplyToFile(APPLY_VISION);
+      break;
+    case 33:  // legs
+      slot=WEAR_LEGS_R;
+      slot_c=0.05;
+      slot_s=0.0454;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_MOVE) ;
+      break;
+    case 65:  // feet
+      slot=WEAR_FOOT_R;
+      slot_c=0.02;
+      slot_s=0.0454;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_SPE) % mapApplyToFile(APPLY_MOVE) ;
+      break;
+    case 129: // hands
+      slot=WEAR_HAND_R;
+      slot_c=0.03;
+      slot_s=0.0454;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_SPE) ;
+      break;
+    case 257: // arms
+      slot=WEAR_ARM_R;
+      slot_c=0.04;
+      slot_s=0.0454;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_STR) ;
+      break;
+    case 1025: // back
+      slot=WEAR_BACK;
+      slot_c=0.07;
+      slot_s=0.0908;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_BRA) ;
+      break;
+    case 2049: // waist
+      slot=WEAR_WAISTE;
+      slot_c=0.08;
+      slot_s=0.0908;
+      fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_STR) ;
+      break;
+    case 4097: // wrist
+      slot=WEAR_WRIST_R;
+      slot_c=0.02;
+      slot_s=0.0454;
+      fav=fmt("%i,%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_SPE) ;
+      break;
+    case 16385: // hold
+      slot=HOLD_LEFT;
+      slot_c=0.25;
+      slot_s=0.0908;
+      break;
+  }
+
+  fav=fmt("%s,%i,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_MANA) % mapApplyToFile(APPLY_HIT) % mapApplyToFile(APPLY_NOISE) % mapApplyToFile(APPLY_AGE) % mapApplyToFile(APPLY_CHA) % mapApplyToFile(APPLY_KAR);
+}
+
+
+int getStatCount(sstring vnum, sstring owner, sstring fav)
+{
+  TDatabase db2(DB_IMMORTAL);
+
+    db2.query("select sum(mod1) as statcount from objaffect where vnum=%s and owner='%s' and type in (%s)", vnum.c_str(), owner.c_str(), fav.c_str());
+    db2.fetchRow();
+    int statcount=convertTo<int>(db2["statcount"]);
+
+    sstring unfav=fmt("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL) ;
+    db2.query("select sum(mod1) as statcount from objaffect where vnum=%s and owner='%s' and type not in (%s)", vnum.c_str(), owner.c_str(), unfav.c_str());
+    db2.fetchRow();
+    statcount+=convertTo<int>(db2["statcount"]);
+
+    db2.query("select sum(mod2)*2 as statcount from objaffect where vnum=%s and owner='%s' and type=%i and mod1 in (%i, %i, %i)",
+	      vnum.c_str(), owner.c_str(),
+	      mapApplyToFile(APPLY_IMMUNITY), IMMUNE_SLASH, IMMUNE_BLUNT, IMMUNE_PIERCE);
+    db2.fetchRow();
+    statcount += convertTo<int>(db2["statcount"]);
+
+    db2.query("select sum(mod2)*3 as statcount from objaffect where vnum=%s and owner='%s' and type=%i and mod1 in (%i)",
+	      vnum.c_str(), owner.c_str(),
+	      mapApplyToFile(APPLY_IMMUNITY), IMMUNE_NONMAGIC);
+    db2.fetchRow();
+    statcount += convertTo<int>(db2["statcount"]);
+
+    return statcount;
+}
+
+void lowerStats(sstring vnum, sstring owner, sstring fav, float maxes)
+{
+  TDatabase db2(DB_IMMORTAL);
+  sstring unfav=fmt("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL);
+  int count=0, lcount=0, breakout=0;
+
+  while(((count=getStatCount(vnum, owner, fav)) > maxes)){
+    if(count=lcount)
+      if((++breakout) > 10)
+	break;
+
+    switch(::number(0,3)){
+      case 0:
+	db2.query("update objaffect set mod1=mod1-1 where mod1 > 0 and vnum=%s and owner='%s' and type in (%s)", vnum.c_str(), owner.c_str(), fav.c_str());
+	db2.query("delete from objaffect where mod1=0 and vnum=%s and owner='%s' and type in (%s)", vnum.c_str(), owner.c_str(), fav.c_str());
+	break;
+      case 1:
+	db2.query("update objaffect set mod1=mod1-1 where mod1 > 0 and vnum=%s and owner='%s' and type not in (%s)", vnum.c_str(), owner.c_str(), unfav.c_str());
+	db2.query("delete from objaffect where mod1=0 and vnum=%s and owner='%s' and type not in (%s)", vnum.c_str(), owner.c_str(), unfav.c_str());
+	break;
+      case 2:
+	db2.query("update objaffect set mod2=mod2-1 where mod2 > 0 and vnum=%s and owner='%s' and type=%i and mod1 in (%i, %i, %i)",
+		  vnum.c_str(), owner.c_str(),
+		  mapApplyToFile(APPLY_IMMUNITY), IMMUNE_SLASH, IMMUNE_BLUNT, IMMUNE_PIERCE);
+	db2.query("delete from objaffect where mod2=0 and vnum=%s and owner='%s' and type=%i and mod1 in (%i, %i, %i)",
+		  vnum.c_str(), owner.c_str(),
+		  mapApplyToFile(APPLY_IMMUNITY), IMMUNE_SLASH, IMMUNE_BLUNT, IMMUNE_PIERCE);
+
+	break;
+      case 3:
+	db2.query("update objaffect set mod2=mod2-1 where mod2 > 0 and vnum=%s and owner='%s' and type=%i and mod1 in (%i)",
+		  vnum.c_str(), owner.c_str(),
+		  mapApplyToFile(APPLY_IMMUNITY) ,  IMMUNE_NONMAGIC);
+	db2.query("delete from objaffect where mod2=0  and vnum=%s and owner='%s' and type=%i and mod1 in (%i)",
+                  vnum.c_str(), owner.c_str(),
+                  mapApplyToFile(APPLY_IMMUNITY) , IMMUNE_NONMAGIC);
+	break;
+    }
+    lcount=count;
+  }
+}
+
 
 void adjustObjs(Cgicc cgi, int account_id)
 {
   TDatabase db(DB_IMMORTAL);
-  TDatabase db_update(DB_IMMORTAL);
+  TDatabase db2(DB_IMMORTAL);
   int moblevel=convertTo<int>((**(cgi.getElement("moblevel"))));
   vector <FormEntry> objlist;
   cgi.getElement("objlist", objlist);
   sstring buf;
   bool is_artifact, any_race;
   float volume, slot_c, slot_s;
+  sstring fav;
 
   if(!moblevel){
     cout << "You need to enter a valid mob level.<p>";
@@ -221,75 +370,15 @@ void adjustObjs(Cgicc cgi, int account_id)
     wearSlotT slot=MAX_WEAR;
     slot_c=0.0;
     slot_s=0.0;
-    
-    
-    switch(convertTo<int>(db["wear_flag"])){
-      case 3:   // finger
-	slot=WEAR_FINGER_R;
-	slot_c=0.01;
-	slot_s=0.0454;
-	break;
-      case 5:   // neck
-	slot=WEAR_NECK;
-	slot_c=0.04;
-	slot_s=0.0908;
-	break;
-      case 9:   // body
-	slot=WEAR_BODY;
-	slot_c=0.15;
-	slot_s=0.0908;
-	break;
-      case 17:  // head
-	slot=WEAR_HEAD;
-	slot_c=0.07;
-	slot_s=0.0908;
-	break;
-      case 33:  // legs
-	slot=WEAR_LEGS_R;
-	slot_c=0.05;
-	slot_s=0.0454;
-	break;
-      case 65:  // feet
-	slot=WEAR_FOOT_R;
-	slot_c=0.02;
-	slot_s=0.0454;
-	break;
-      case 129: // hands
-	slot=WEAR_HAND_R;
-	slot_c=0.03;
-	slot_s=0.0454;
-	break;
-      case 257: // arms
-	slot=WEAR_ARM_R;
-	slot_c=0.04;
-	slot_s=0.0454;
-	break;
-      case 1025: // back
-	slot=WEAR_BACK;
-	slot_c=0.07;
-	slot_s=0.0908;
-	break;
-      case 2049: // waist
-	slot=WEAR_WAISTE;
-	slot_c=0.08;
-	slot_s=0.0908;
-	break;
-      case 4097: // wrist
-	slot=WEAR_WRIST_R;
-	slot_c=0.02;
-	slot_s=0.0454;
-	break;
-      case 16385: // hold
-	slot=HOLD_LEFT;
-	slot_c=0.25;
-	slot_s=0.0908;
-	break;
-    }
 
+    getSlotData(convertTo<int>(db["wear_flag"]), slot, slot_c, slot_s, fav);
+
+    // initialize race data
     chdir("/mud/prod/lib");
     for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
       Races[rindex] = new Race(rindex);
 
+    // list of player usable races
     vector <race_t> player_races;
     player_races.push_back(RACE_HUMAN);
     player_races.push_back(RACE_ELVEN);
@@ -303,6 +392,8 @@ void adjustObjs(Cgicc cgi, int account_id)
     race_t eq_race=RACE_NORACE;
     any_race=false;
 
+
+    // figure out what player race can use this eq
     for(unsigned int i=0;i<player_races.size();++i){
       avg_height=Races[player_races[i]]->getBaseMaleHeight();
       avg_height+=(int)((float)Races[player_races[i]]->getMaleHtNumDice() * (float)((float)Races[player_races[i]]->getMaleHtDieSize() / 2.0));
@@ -311,7 +402,6 @@ void adjustObjs(Cgicc cgi, int account_id)
 
       if(volume <= (eq_size * 1.15) &&
 	 volume >= (eq_size *0.85)){
-	//	cout << "eq fits " << Races[player_races[i]]->getProperName() << "<br>";
 	eq_race=player_races[i];
 	break;
       }
@@ -332,7 +422,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     ////////
 
 
-    // ac
+    // calculate appropriate ac
     int action_flag=convertTo<int>(db["action_flag"]);
     float race_class=getRaceClassConstant(eq_race, action_flag);
     float aclevel = ceil(((float)moblevel * race_class));
@@ -344,25 +434,28 @@ void adjustObjs(Cgicc cgi, int account_id)
 
 
     // stats
-    //    float stats = ceil((moblevel * 0.5) * 0.86);
-    //    float maxes = ceil(slot_s * stats * 2);
-    
-    
+    float stats = ceil((moblevel * 0.5) * 0.86);
+    float maxes = ceil(slot_s * stats * 2);
 
-//     cout << db["short_desc"] << ":<br>" << endl; 
-//     cout << "This eq fits " << Races[eq_race]->getProperName() << "<br>";
-//     cout << "level " << aclevel << ", ac " << ac << "<br>";
-//     cout << "max stats " << maxes << "<br>";
-  
-
-    db_update.query("update objaffect set mod1=%i where type=11 and vnum=%s and owner='%s'", (int)-ac, db["vnum"].c_str(), db["owner"].c_str());
+    
+    // adjust the eq
+    db2.query("update objaffect set mod1=%i where type=11 and vnum=%s and owner='%s'", (int)-ac, db["vnum"].c_str(), db["owner"].c_str());
 
     cout << "Adjusted " << stripColorCodes(db["short_desc"]);
     cout << " (" << (any_race?"any":Races[eq_race]->getProperName()) << ")";
     if(convertTo<int>(db["type"]) == ITEM_JEWELRY)
       cout << "(jewelry)";
-    cout << ": AC = " << (int)-ac << " (L" << aclevel << ").<br>" << endl;
+    cout << ": AC = " << (int)-ac << " (L" << aclevel << ").";
 
+
+    if(getStatCount(db["vnum"], db["owner"], fav) > maxes){
+      lowerStats(db["vnum"], db["owner"], fav, maxes);
+      cout <<" Current stat total is now ";
+      cout << getStatCount(db["vnum"], db["owner"], fav);
+      cout << " (out of " << maxes << ").";
+    }
+
+    cout << "<br>" << endl;
 
   }
   
