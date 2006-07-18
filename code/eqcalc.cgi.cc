@@ -190,7 +190,7 @@ void adjustObjs(Cgicc cgi, int account_id)
   vector <FormEntry> objlist;
   cgi.getElement("objlist", objlist);
   sstring buf;
-  bool is_artifact;
+  bool is_artifact, any_race;
   float volume, slot_c, slot_s;
 
   if(!moblevel){
@@ -301,6 +301,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     int avg_height=0;
     float eq_size=0;
     race_t eq_race=RACE_NORACE;
+    any_race=false;
 
     for(unsigned int i=0;i<player_races.size();++i){
       avg_height=Races[player_races[i]]->getBaseMaleHeight();
@@ -315,8 +316,19 @@ void adjustObjs(Cgicc cgi, int account_id)
 	break;
       }
     }
-    if(eq_race==RACE_NORACE)
+
+    if(slot == WEAR_NECK || 
+       convertTo<int>(db["type"]) == ITEM_JEWELRY ||
+       slot == HOLD_LEFT){
       eq_race=RACE_HUMAN;
+      any_race=true;
+    }
+    if(eq_race==RACE_NORACE){
+      cout << "Couldn't find racial size for ";
+      cout << stripColorCodes(db["short_desc"]);
+      cout << ".  Skipping.<br>" << endl;
+    }
+
     ////////
 
 
@@ -346,7 +358,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     db_update.query("update objaffect set mod1=%i where type=11 and vnum=%s and owner='%s'", (int)-ac, db["vnum"].c_str(), db["owner"].c_str());
 
     cout << "Adjusted " << stripColorCodes(db["short_desc"]);
-    cout << " (" << Races[eq_race]->getProperName() << ")";
+    cout << " (" << (any_race?"any":Races[eq_race]->getProperName()) << ")";
     if(convertTo<int>(db["type"]) == ITEM_JEWELRY)
       cout << "(jewelry)";
     cout << ": AC = " << (int)-ac << " (L" << aclevel << ").<br>" << endl;
