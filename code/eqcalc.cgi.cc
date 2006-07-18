@@ -346,6 +346,9 @@ void adjustObjs(Cgicc cgi, int account_id)
     db_update.query("update objaffect set mod1=%i where type=11 and vnum=%s and owner='%s'", (int)-ac, db["vnum"].c_str(), db["owner"].c_str());
 
     cout << "Adjusted " << stripColorCodes(db["short_desc"]);
+    cout << " (" << Races[eq_race]->getProperName() << ")";
+    if(convertTo<int>(db["type"]) == ITEM_JEWELRY)
+      cout << "(jewelry)";
     cout << ": AC = " << (int)-ac << " (L" << aclevel << ").<br>" << endl;
 
 
