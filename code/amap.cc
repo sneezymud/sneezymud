@@ -94,16 +94,15 @@ int sector_colors[66][3]={
 
 class NODE {
 public:
-  int num, x, y, z, sector;
+  int num;
+  int x, y, z, sector;
   int done;
   char name[512];
   int idirs[10];
   NODE *pdirs[10];
   NODE *next;
 
-
   NODE();
-
 } *head;
 
 map <int, class NODE *> nodes;
@@ -272,7 +271,44 @@ NODE *read_room(FILE *tiny){
   return tmp;
 }
 
-void consolidate_nodes(bool quiet=false){
+
+void remove_one_way_exits(bool quiet=false, bool checkrooms_p=false)
+{
+  NODE *t, *room;
+  int i, j=0;
+  int notfound=0;
+  int removed=0;
+
+  for(t=head;t;t=t->next){
+    ++j;
+    for(i=0;i<10;++i){
+      if(t->idirs[i] == -1)
+	continue;
+
+      room=find_node(t->idirs[i]);
+      
+      if(!room){
+	notfound++;
+	//	if(checkrooms_p)
+	  printf("couldn't find room %i\n", t->idirs[i]);
+      }
+
+      if(room && room->idirs[rev_dir[i]] != t->num){
+	removed++;
+	//	if(checkrooms_p)
+	  printf("Found one-way exit - %i %i\n", room->num, t->num);
+	room->idirs[rev_dir[i]]=-1;
+	t->idirs[i]=-1;
+      }
+    }
+  }
+  if(!quiet)
+    printf("Couldn't find %i rooms.  Removed %i one way exits.\n",
+	   notfound, removed);
+}
+
+void consolidate_nodes(bool quiet=false)
+{
   NODE *t;
   int i, j=0;
  
@@ -796,7 +832,7 @@ int main(int argc, char **argv)
   printf("Making zone list.\n");
   while ((dp = readdir(dfd))) {
     if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..") &&
-	strcmp(dp->d_name, "CVS")){
+	strcmp(dp->d_name, "CVS") && strcmp(dp->d_name, ".svn")){
       buf=fmt("/mud/build/lib/zonefiles/%s") % dp->d_name;
 
       if((zone=fopen(buf.c_str(), "rt"))){
@@ -838,6 +874,10 @@ int main(int argc, char **argv)
   head=head->next;
   nodes[t->num]=NULL;
   delete t;
+
+  printf("\nRemoving one way exits\n");
+  remove_one_way_exits(quiet, checkrooms_p);
+
 
   // now we fill in the array of exits in each node to point to the nodes
   // that they lead to
