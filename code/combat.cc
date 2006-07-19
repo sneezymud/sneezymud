@@ -1057,6 +1057,13 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
 
 int TObj::damageItem(sh_int amt)
 {
+  if(amt < 0){
+    vlogf(LOG_BUG, fmt("%s::damageItem(%i) got passed a negative number!") %
+	  getName() % amt);
+    amt=-amt;
+  }
+  
+
   addToStructPoints(max(-amt, -getStructPoints()));
 
   if(getStructPoints() <= 0){
