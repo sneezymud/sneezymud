@@ -423,7 +423,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
   act("$N's $p suffers massive damage from $n's powerful hit.",
     FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
-  if(IS_SET_DELETE(damaged_item->damageItem(eqdam), DELETE_THIS)){
+  if(IS_SET_DELETE(damaged_item->damageItem(-eqdam), DELETE_THIS)){
     delete damaged_item;
     damaged_item = NULL;
   }
