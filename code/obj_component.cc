@@ -2244,7 +2244,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
   

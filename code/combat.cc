@@ -554,7 +554,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
 
     if (shop_nr >= shop_index.size()) 
-      vlogf(LOG_MISC, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
+      vlogf(LOG_MISC, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[number].virt);
     else {
       vlogf(LOG_COMBAT, fmt("Deleting shopkeeper file for shop #%d.") %  shop_nr);
       waste_shop_file(shop_nr);

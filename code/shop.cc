@@ -56,7 +56,7 @@ unsigned int find_shop_nr(int mobvnum)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != mobvnum); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % mobvnum);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[mobvnum].virt);
     return 0;
   }   
 
@@ -640,7 +640,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
   
@@ -1918,7 +1918,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (myself)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (myself)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[myself->number].virt);
     return FALSE;
   }
 

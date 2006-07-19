@@ -31,7 +31,7 @@ int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
     
     if (shop_nr >= shop_index.size()) {
-      vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+      vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
       return FALSE;
     }
     
@@ -83,7 +83,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
   
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
   } else {
     float profit_buy=-1;
 
@@ -150,7 +150,7 @@ static int repair_time(TBeing *keeper, const TObj *o)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
 
@@ -363,7 +363,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
   
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  repair->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[repair->number].virt);
   }
   shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), fixed_obj->getName(), tmp_cost, "repairing");
   TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(repair), buyer);
@@ -692,7 +692,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
   }
   shoplog(shop_nr, buyer, repair, getName(), 0, "receiving");
 
@@ -947,7 +947,7 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
 
       if (shop_nr >= shop_index.size()) {
-	vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % repair->number);
+	vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[repair->number].virt);
 	return FALSE;
       }
       
