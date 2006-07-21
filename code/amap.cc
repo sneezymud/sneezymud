@@ -49,7 +49,7 @@ int sector_colors[66][3]={
   {86,53,13},     // mountains
   {0,128,0},      // forest
   {0,128,0},      // swamp
-  {0,51,255},      // ocean
+  {0,20,155},      // ocean
   {0,51,255},      // river surface
   {0,51,255},      // underwater
   {255,255,102},   // beach
@@ -74,7 +74,7 @@ int sector_colors[66][3]={
   {86,53,13},     // mountains
   {255,0,0},      // lava
   {0,128,0},      // swamp
-  {0,51,255},      // ocean
+  {0,20,155},      // ocean
   {0,51,255},      // river surface
   {0,51,255},      // underwater
   {255,255,102},  // beach
@@ -289,13 +289,13 @@ void remove_one_way_exits(bool quiet=false, bool checkrooms_p=false)
       
       if(!room){
 	notfound++;
-	//	if(checkrooms_p)
+	if(checkrooms_p)
 	  printf("couldn't find room %i\n", t->idirs[i]);
       }
 
       if(room && room->idirs[rev_dir[i]] != t->num){
 	removed++;
-	//	if(checkrooms_p)
+	if(checkrooms_p)
 	  printf("Found one-way exit - %i %i\n", room->num, t->num);
 	room->idirs[rev_dir[i]]=-1;
 	t->idirs[i]=-1;
@@ -303,7 +303,7 @@ void remove_one_way_exits(bool quiet=false, bool checkrooms_p=false)
     }
   }
   if(!quiet)
-    printf("Couldn't find %i rooms.  Removed %i one way exits.\n",
+    printf("Couldn't find %i rooms.  Removed %i one way exits.",
 	   notfound, removed);
 }
 
@@ -524,7 +524,7 @@ map <int,int> makeroomcount(FILE *log, int &max){
 }
 
 
-void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool sideways, FILE *logf)
+void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool sideways, FILE *logf, bool gradient_exits)
 {
   NODE *t;
   int minx=0, maxx=0, miny=0, maxy=0, mapsize=0, mapwidth, mapheight, loc;
@@ -536,9 +536,11 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   map <int,int> roomcount;
   int max=0;
 
+  // count rooms for popularity
   if(logf)
     roomcount=makeroomcount(logf, max);
 
+  // swap y and z for a sideways map (note: exits won't map correctly)
   if(sideways){
     for(t=head;t;t=t->next){
       tmp=t->y;
@@ -547,6 +549,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     }
   }
 
+  // determine the map boundaries
   for(t=head;t;t=t->next){
     if(t->z<MINLEVEL || t->z>MAXLEVEL) continue;
     if(t->x<minx) minx=t->x;
@@ -555,6 +558,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     if(t->y>maxy) maxy=t->y;
   }
 
+  // determine map buffer size
   mapwidth=abs(minx-maxx)+1;
   mapwidth*=CELLSIZE;
   mapheight=abs(miny-maxy)+1;
@@ -617,7 +621,6 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
       mapdata[(loc*3)+2]=(int)blue;
     }
 
-
     // color the exits
     //0=n, 1=e, 2=s, 3=w, 4=u, 5=d 6=ne 7=nw 8=se 9=sw
     // map is upside down so north south are reversed
@@ -637,9 +640,26 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
 	  case 9: newloc=(mapwidth*(celly-1))+cellx-1; break;
 	}
 	if(newloc!=loc){
-	  mapdata[newloc*3]=102;
-	  mapdata[(newloc*3)+1]=102;
-	  mapdata[(newloc*3)+2]=102;
+	  int new_r=(sector_colors[t->sector][0] +
+		 sector_colors[t->pdirs[i]->sector][0]) / 2;
+	  int new_g=(sector_colors[t->sector][1] +
+		 sector_colors[t->pdirs[i]->sector][1]) / 2;
+	  int new_b=(sector_colors[t->sector][2] +
+		 sector_colors[t->pdirs[i]->sector][2]) / 2;
+
+	  new_r/=2;
+	  new_g/=2;
+	  new_b/=2;
+
+	  if(gradient_exits){
+	    mapdata[newloc*3]=new_r;
+	    mapdata[(newloc*3)+1]=new_g;
+	    mapdata[(newloc*3)+2]=new_b;
+	  } else {
+	    mapdata[newloc*3]=102;
+	    mapdata[(newloc*3)+1]=102;
+	    mapdata[(newloc*3)+2]=102;
+	  }
 	}
       }
     }
@@ -724,6 +744,8 @@ void usage(){
   printf("  -r <room range> - a list of room numbers to map, in the same\n");
   printf("                    format as the other tools.\n");
   printf("                    MUST BE THE LAST ARGUMENT\n");
+  printf("  -g              - colors exits as a gradient, looks nicer but\n");
+  printf("                    is more difficult to see details.\n");
   printf("\n");
   printf("You may attempt to map multiple zones if they are connected, by\n");
   printf("specifying both of their room ranges, ex: 2350-2374 600-649\n");
@@ -745,7 +767,7 @@ int main(int argc, char **argv)
   vector <int> roomrange_t;
   map <int, bool> roomrange;
   bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
-  bool popularity=false;
+  bool popularity=false, gradient_exits=false;
   int headroom=100;
   sstring infile, buf, outputfile="imageout.jpg";
   sstring logfile="/mud/prod/lib/logs/logcurrent";
@@ -799,6 +821,9 @@ int main(int argc, char **argv)
 	break;
       case 'l':
 	logfile=optarg;
+	break;
+      case 'g':
+	gradient_exits=true;
 	break;
       case '?':
       default:
@@ -909,7 +934,7 @@ int main(int argc, char **argv)
   if(checkrooms_p)
     check_rooms(rcount);
     
-  createmap(zmin, zmax, SCALEBY, outputfile, sideways, logf);
+  createmap(zmin, zmax, SCALEBY, outputfile, sideways, logf, gradient_exits);
 
   t=head;
   while(t){
