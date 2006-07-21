@@ -557,12 +557,18 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     if(t->y<miny) miny=t->y;
     if(t->y>maxy) maxy=t->y;
   }
-
+  
   // determine map buffer size
   mapwidth=abs(minx-maxx)+1;
   mapwidth*=CELLSIZE;
   mapheight=abs(miny-maxy)+1;
   mapheight*=CELLSIZE;
+
+  // make the image a multiple of 256  
+  while(mapwidth % 256) ++mapwidth;
+  while(mapheight % 256) ++mapheight;
+
+  
   mapsize=(mapwidth*mapheight);
   mapsize*=3; // for rgb
 
