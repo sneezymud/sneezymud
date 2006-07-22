@@ -781,7 +781,7 @@ int main(int argc, char **argv)
 
   toggleInfo.loadToggles();
 
-  while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:xl:p")) != -1){
+  while ((ch = getopt(argc, argv, "r:f:s:cgh:qz:o:xl:p")) != -1){
     switch (ch) {
       case 'r':
 	parse_num_args(argc-optind+1, argv+optind-1, roomrange_t);
