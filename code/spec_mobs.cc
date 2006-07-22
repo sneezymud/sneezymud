@@ -4095,12 +4095,15 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           TBaseClothing *tbc;
           if (final->canWear(ITEM_WEAR_BODY) || 
               ((tbc = dynamic_cast<TBaseClothing *>(final)) &&
-               tbc->isShield()))
-            sprintf(buf2, "%s with the coat of arms of %s",
-                 buf, job->char_name);
-          else
-            sprintf(buf2, "%s bearing the insignia of %s",
-                 buf, job->char_name);
+               tbc->isShield())){
+	    //            sprintf(buf2, "%s with the coat of arms of %s",
+	    //                 buf, job->char_name);
+	    sprintf(buf2, "%s {%s}", buf, job->char_name);
+	  } else {
+	    //            sprintf(buf2, "%s bearing the insignia of %s",
+	    //                 buf, job->char_name);
+	    sprintf(buf2, "%s {%s}", buf, job->char_name);
+	  }
           delete [] final->shortDescr;
           final->shortDescr = mud_str_dup(buf2);
 
