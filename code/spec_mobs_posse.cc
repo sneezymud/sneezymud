@@ -16,6 +16,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   const int criminals[3]={180, 134, 131};
   TThing *t=NULL;
   TMonster *tmons=NULL;
+  TBeing *tb=NULL;
   char buf[256], *tmp;
   followData *f, *n;
 
@@ -35,7 +36,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
       int cur_path;
       posseeStateT state;
       int arrest_state;
-      TMonster *criminal;
+      TBeing *criminal;
 
       hunt_struct() :
         cur_pos(0),
@@ -109,7 +110,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   // Make sure our criminal is still alive and in the same room
   if(job->criminal){
     for(t=myself->roomp->getStuff(); t; t=t->nextThing){
-      if((tmons=dynamic_cast<TMonster *>(t)) && tmons==job->criminal)
+      if((tb=dynamic_cast<TBeing *>(t)) && tb==job->criminal)
 	found=1;
     }
     if(!found){
@@ -170,7 +171,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	    if (IS_SET_DELETE(rc, DELETE_THIS))
 	      return DELETE_THIS;
 	    myself->doClose("cell w");
-	    if(job->criminal){
+	    if(job->criminal && dynamic_cast<TMonster *>(job->criminal)){
 	      act("$n slinks off into the shadows to serve out his term.",
 		  0, job->criminal, 0, 0, TO_ROOM);
 	      delete job->criminal;
@@ -184,7 +185,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	    for (f = myself->followers; f; f = n) {
 	      n = f->next;
 	      if((vict=f->follower)&& vict->inGroup(*myself) && !vict->fight()){
-		TMonster *tmons = dynamic_cast<TMonster *>(vict);
+		tmons = dynamic_cast<TMonster *>(vict);
 		if (!tmons)
 		  continue;
 		act("$N salutes $n briskly and goes back to normal duty.",
@@ -253,12 +254,14 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  if(job->state==STATE_TO_JAIL && !::number(0,2) && job->criminal){
 	    switch(::number(0,4)){
     	      case 0:
-		act("$n struggles to get free, but $N holds him tightly.",
-		    0, job->criminal, 0, myself, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal))
+		  act("$n struggles to get free, but $N holds him tightly.",
+		      0, job->criminal, 0, myself, TO_ROOM);
 		break;
 	      case 1:
-		act("$n looks at you pleadingly, with a panicked look in his eye.",
-		    0, job->criminal, 0, 0, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal))
+		  act("$n looks at you pleadingly, with a panicked look in his eye.",
+		      0, job->criminal, 0, 0, TO_ROOM);
 		act("$n jerks him around roughly.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
@@ -266,8 +269,10 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		myself->doSay("Clear the way, guards coming through, we've got a criminal.");
 		break;
               case 3:
-		act("$n whispers to you, \"Please you've got to help me!  I didn't do it, it's all a big setup!\"",
-		    0, job->criminal, 0, 0, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal)){
+		  act("$n whispers to you, \"Please you've got to help me!  I didn't do it, it's all a big setup!\"",
+		      0, job->criminal, 0, 0, TO_ROOM);
+		}
 		act("$n casts a reproving look your way.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
@@ -345,17 +350,27 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		    break;
 		  }
 		}
+	      } else if((tb=dynamic_cast<TBeing *>(t)) &&
+			tb->hasClass(CLASS_THIEF) &&
+			myself->canSee(tb) &&
+			!::number(0,3)){
+		job->criminal=tb;
+		job->state=STATE_ARREST_FAST;
+		break;
 	      }
+
 	    }
 	  } else if(job->state==STATE_BOOK_UM && !::number(0,2) && job->criminal){
 	    switch(::number(0,4)){
     	      case 0:
-		act("$n struggles to get free, but $N holds him tightly.",
-		    0, job->criminal, 0, myself, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal))
+		  act("$n struggles to get free, but $N holds him tightly.",
+		      0, job->criminal, 0, myself, TO_ROOM);
 		break;
 	      case 1:
-		act("$n looks at you pleadingly, with a panicked look in his eye.",
-		    0, job->criminal, 0, 0, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal))
+		  act("$n looks at you pleadingly, with a panicked look in his eye.",
+		      0, job->criminal, 0, 0, TO_ROOM);
 		act("$n jerks him around roughly.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
@@ -363,8 +378,10 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		myself->doSay("Clear the way, guards coming through, we've got a criminal.");
 		break;
               case 3:
-		act("$n whispers to you, \"Please you've got to help me!  I didn't do it, it's all a big setup!\"",
-		    0, job->criminal, 0, 0, TO_ROOM);
+		if(dynamic_cast<TMonster *>(job->criminal))
+		  act("$n whispers to you, \"Please you've got to help me!  I didn't do it, it's all a big setup!\"",
+		      0, job->criminal, 0, 0, TO_ROOM);
+		
 		act("$n casts a reproving look your way.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
@@ -390,16 +407,20 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  job->arrest_state=1;
 	  break;
         case 1:
-	  job->criminal->doSay("Wh-what?  I didn't do anything.");
-	  act("$n looks about innocently.",
-	      0, job->criminal, 0, 0, TO_ROOM);
+	  if(dynamic_cast<TMonster *>(job->criminal)){
+	    job->criminal->doSay("Wh-what?  I didn't do anything.");
+	    act("$n looks about innocently.",
+		0, job->criminal, 0, 0, TO_ROOM);
+	  }
 	  job->arrest_state=2;
 	  break;
         case 2:
-	  act("$n meets $N's cold hard eyes for a moment and then looks away.",
-	      0, job->criminal, 0, myself, TO_ROOM);
-	  act("$n panics and attempts to flee!",
-	      0, job->criminal, 0, 0, TO_ROOM);
+	  if(dynamic_cast<TMonster *>(job->criminal)){
+	    act("$n meets $N's cold hard eyes for a moment and then looks away.",
+		0, job->criminal, 0, myself, TO_ROOM);
+	    act("$n panics and attempts to flee!",
+		0, job->criminal, 0, 0, TO_ROOM);
+	  }
           act("With lightning fast reflexes, $n sticks a foot out and trips $N!",
 	      0, myself, 0, job->criminal, TO_ROOM);
 	  // sometimes they don't stand up fast enough...
