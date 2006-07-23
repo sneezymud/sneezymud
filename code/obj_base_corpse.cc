@@ -343,6 +343,12 @@ getName());
     }
   }
   ObjFromCorpse(this);
+
+  if(dynamic_cast<TPCorpse *>(this))
+    vlogf(LOG_MISC, fmt("PCorpse '%s' decayed in '%s' with %f exp.") %
+	  getName() % (roomp?roomp->getName():"(null roomp)") %
+	  dynamic_cast<TPCorpse *>(this)->getExpLost());
+
   return DELETE_THIS;
 }
 
