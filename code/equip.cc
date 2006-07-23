@@ -190,8 +190,6 @@ int TObj::personalizedCheck(TBeing *ch)
   char capbuf[256];
   char namebuf[256];
   TThing *t;
-  TBeing *orig = NULL;
-  Descriptor *d;
 
   if (action_description && strcmp(action_description, "")) {
     strcpy(capbuf, action_description);
@@ -203,7 +201,7 @@ int TObj::personalizedCheck(TBeing *ch)
       // skips for polys
       act("You shouldn't have $p! It isn't yours!", 0, ch, this, NULL, TO_CHAR);
       sendTo(fmt("It's the personalized item of %s!\n\r") % namebuf);
-      act("The gods have taken away $p!", FALSE, ch, this, NULL, TO_CHAR);
+      act("You are zapped by $p and drop it!", FALSE, ch, this, NULL, TO_CHAR);
       act("$n is zapped by $p!",TRUE,ch,this,0,TO_ROOM);
 
       vlogf(LOG_MISC, fmt("We got an illegal personalized item (%s) off of %s (was %s's item).") %  getName() % ch->getName() % namebuf);
@@ -222,26 +220,11 @@ int TObj::personalizedCheck(TBeing *ch)
         t = t->nextThing;
       }
 
-      // Search thru descriptors and try to find original owner - Russ 
-      for (d = descriptor_list; d; d = d->next) {
-        if ((d->connected == CON_PLYNG) && d->character && !strcmp(d->character->getName(), namebuf)) {
-          orig = d->character;
-          break;
-        }
-      }
-      if (orig) {
-        orig->sendTo(COLOR_BASIC, fmt("The gods found your personalized item (%s) on %s at %s.\n\r") % 
-           getName() % ch->getName() % (ch->roomp ? ch->roomp->name : "No Room"));
-        if (eq_pos != WEAR_NOWHERE) 
-          *ch->roomp += *ch->unequip(eq_pos);
-        else if (parent) {
-          --(*this);
-          *ch->roomp += *this;
-        }
-        vlogf(LOG_MISC, fmt("Found original owner(%s), causing item to zap.") %  orig->getName());
-      } else {
-        vlogf(LOG_MISC, "Couldn't find original owner, so extracting object.");
-        return DELETE_THIS;
+      if (eq_pos != WEAR_NOWHERE) 
+	*ch->roomp += *ch->unequip(eq_pos);
+      else if (parent) {
+	--(*this);
+	*ch->roomp += *this;
       }
     }
   }
