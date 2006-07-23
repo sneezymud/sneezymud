@@ -81,6 +81,14 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
               mode == SHOW_MODE_SHORT_PLUS_INV ||
               mode == SHOW_MODE_SHORT) && getName()) {
     buffer=sstring(getName()).cap();
+
+    if(isMonogrammed()){
+      char namebuf[256];
+      sscanf(action_description, "This is the personalized object of %s.", 
+	     namebuf);
+      buffer += fmt(" {%s}") % namebuf;
+    }
+
   } else if (mode == SHOW_MODE_TYPE) {
     showMe(ch);
     return;
@@ -89,6 +97,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   
   // this is an item-type-specific modifier
   buffer += showModifier(mode, ch);
+
 
   if (isObjStat(ITEM_INVISIBLE))
     buffer += " (invisible)";
