@@ -1953,6 +1953,8 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
         sendTo("You've been captured.  You aren't going anywhere until you get away.\n\r");
         return FALSE;
       case CMD_SAY:
+      case CMD_TELL:
+      case CMD_SHOUT:
       case CMD_LOOK:
       case CMD_LAUGH:
       case CMD_WHO:
