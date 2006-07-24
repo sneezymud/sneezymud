@@ -93,6 +93,7 @@
 #include "obj_trash_pile.h"
 #include "liquids.h"
 #include "obj_card_deck.h"
+#include "obj_suitcase.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3247,6 +3248,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TToothNecklace();
     case ITEM_TRASH_PILE:
       return new TTrashPile();
+    case ITEM_SUITCASE:
+      return new TSuitcase();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

@@ -27,6 +27,7 @@
 #include "obj_tooth_necklace.h"
 #include "obj_potion.h"
 #include "obj_card_deck.h"
+#include "obj_suitcase.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -490,9 +491,14 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
 
 int TThing::putMeInto(TBeing *ch, TOpenContainer *sub)
 {
+  if (dynamic_cast<TSuitcase *>(sub)) {
+    act("Sorry, $p can only hold clothing or armor.",
+	FALSE, ch, sub, this, TO_CHAR);
+    return TRUE;
+  }
   if (dynamic_cast<TSpellBag *>(sub)) {
     act("Sorry, $p can only hold spell components.",
-             FALSE, ch, sub, this, TO_CHAR);
+	FALSE, ch, sub, this, TO_CHAR);
     return TRUE;
   }
   if (dynamic_cast<TToothNecklace *>(sub)){
@@ -1704,6 +1710,11 @@ void TToothNecklace::putMoneyInto(TBeing *ch, int amount)
 void TKeyring::putMoneyInto(TBeing *ch, int amount)
 {
   ch->sendTo("You can't put money into that.\n\r");
+}
+
+void TSuitcase::putMoneyInto(TBeing *ch, int amount)
+{
+  ch->sendTo("But you might get busted by customs!\n\r");
 }
 
 void TQuiver::putMoneyInto(TBeing *ch, int)

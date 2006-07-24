@@ -7,6 +7,7 @@
 #include "obj_base_clothing.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "obj_suitcase.h"
 
 TBaseClothing::TBaseClothing() :
   TObj()
@@ -680,3 +681,69 @@ void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop
   }
 }
 
+int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
+{
+  TObj *o;
+  TThing *t;
+  int fingers=0, legs=0, feet=0, arms=0, wrists=0, hands=0;
+
+  for(t=container->getStuff(); t; t=t->nextThing){
+    o = dynamic_cast<TBaseClothing *>(t);
+
+    if (!o)
+      continue;
+
+    if(o->canWear(ITEM_WEAR_FINGER))
+      fingers++;
+    if(o->canWear(ITEM_WEAR_LEGS))
+      legs++;
+    if(o->canWear(ITEM_WEAR_FEET))
+      feet++;
+    if(o->canWear(ITEM_WEAR_ARMS))
+      arms++;
+    if(o->canWear(ITEM_WEAR_WRIST))
+      wrists++;
+    if(o->canWear(ITEM_WEAR_HANDS))
+      hands++;
+    
+    if((o->canWear(ITEM_WEAR_NECK) && canWear(ITEM_WEAR_NECK)) ||
+       (o->canWear(ITEM_WEAR_BODY) && canWear(ITEM_WEAR_BODY)) ||
+       (o->canWear(ITEM_WEAR_HEAD) && canWear(ITEM_WEAR_HEAD)) ||
+       (o->canWear(ITEM_WEAR_BACK) && canWear(ITEM_WEAR_BACK)) ||
+       (o->canWear(ITEM_WEAR_WAISTE) && canWear(ITEM_WEAR_WAISTE))){
+      ch->sendTo(fmt("You already have something that fits that slot in your %s.\n\r") % fname(container->name));
+      return TRUE;
+    }
+  }
+
+  if((canWear(ITEM_WEAR_FINGER) && fingers >= 2) ||
+     (canWear(ITEM_WEAR_LEGS) && legs >= 2) ||
+     (canWear(ITEM_WEAR_FEET) && feet >= 2) ||
+     (canWear(ITEM_WEAR_ARMS) && arms >= 2) ||
+     (canWear(ITEM_WEAR_WRIST) && wrists >= 2) ||
+     (canWear(ITEM_WEAR_HANDS) && hands >= 2)){
+    ch->sendTo(fmt("You already have two things that fit that slot in your %s.\n\r") % fname(container->name));
+    return TRUE;
+  }
+
+
+  if(!canWear(ITEM_WEAR_FINGER) &&
+     !canWear(ITEM_WEAR_NECK) &&
+     !canWear(ITEM_WEAR_BODY) &&
+     !canWear(ITEM_WEAR_HEAD) &&
+     !canWear(ITEM_WEAR_LEGS) &&
+     !canWear(ITEM_WEAR_FEET) &&
+     !canWear(ITEM_WEAR_HANDS) &&
+     !canWear(ITEM_WEAR_ARMS) &&
+     !canWear(ITEM_WEAR_BACK) &&
+     !canWear(ITEM_WEAR_WAISTE) &&
+     !canWear(ITEM_WEAR_WRIST)){
+    ch->sendTo("You can only put clothing or armor into that.\n\r");
+    return TRUE;
+  }
+
+
+
+
+  return FALSE;
+}

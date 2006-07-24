@@ -10,6 +10,7 @@
 
 #include "obj.h"
 
+
 class TBaseClothing : public virtual TObj
 {
   private:
@@ -34,6 +35,7 @@ class TBaseClothing : public virtual TObj
     virtual bool isPluralItem() const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
 
     int armorPriceStruct(armorLevT, double *) const;
     void setDefArmorLevel(float);

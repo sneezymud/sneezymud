@@ -630,7 +630,13 @@ void assign_item_info()
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume pile can hold", 10000000, 1);
   
-  ItemInfo[ITEM_CARD_DECK] = new itemInfo("card deck", "a deck of cards",
+  ItemInfo[ITEM_CARD_DECK] = new itemInfo("Card Deck", "a deck of cards",
+     "Weight bag can hold", 50000, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume bag can hold", 10000000, 1);
+
+  ItemInfo[ITEM_SUITCASE] = new itemInfo("Suitcase","a suitcase",
      "Weight bag can hold", 50000, 1,
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,

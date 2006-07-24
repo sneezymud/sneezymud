@@ -51,6 +51,7 @@ class TBaseCorpse;
 class TTable;
 class TBaseContainer;
 class TOpenContainer;
+class TSuitcase;
 class boardStruct;
 class liqInfoT;
 
