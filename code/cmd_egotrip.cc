@@ -125,7 +125,6 @@ void TBeing::doEgoTrip(const char *arg)
   badsyn += "crit - forces a target mob to do the number crit if fighting\n\r";
   badsyn += "portal - creates a portal to the target mob/player\n\r";
   badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
-  badsyn += "haste - A level 25 haste for all players, please use sparingly\n\r";
 
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
