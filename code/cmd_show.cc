@@ -16,6 +16,7 @@
 #include "disc_alchemy.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
+#include "liquids.h"
 
 extern int getObjLoadPotential(const int obj_num);
 
@@ -442,6 +443,23 @@ void TPerson::doShow(const sstring &argument)
     for (ch = gCombatList; ch; ch = ch->next_fighting) {
       sb += fmt("%-30s %-30s %d\n\r") %
         ch->getName() % ch->fight()->getName() % ch->inRoom();
+    }
+  } else if (is_abbrev(buf, "liquids")){
+    sb += fmt("%3s) %-30s%-8s%-10s%-8s%-8s%-8s\n\r") %
+      "No." % "Liquid" % "Drunk" % "Fullness" % "Thirst" % "Potion" % "Poison";
+    sb += "---------------------------------------------------------------------------\n\r";
+    for (liqTypeT i = (liqTypeT)(LIQ_NONE+1); i < MAX_DRINK_TYPES; i++) {
+      sb += fmt("%3i) %-30s%-8i%-10i%-8i%-8s%-8s\n\r")  %
+	i % stripColorCodes(liquidInfo[i]->name) % liquidInfo[i]->drunk % 
+	liquidInfo[i]->hunger % liquidInfo[i]->thirst %
+	(liquidInfo[i]->potion?"yes":"no") %
+	(liquidInfo[i]->poison?"yes":"no");
+    }
+  } else if (is_abbrev(buf, "toggles")){
+    sb += "Toggles\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i< MAX_TOG_INDEX; i++) {
+      sb += fmt("%i) %s\n\r") % i % TogIndex[i].name;
     }
   } else if (is_abbrev(buf, "trapped")) {
     sb += "Trapped Containers\n\r";
@@ -1134,6 +1152,8 @@ void TPerson::doShow(const sstring &argument)
     sb += "  show components <spellname>\n\r";
     sb += "  show factions <faction name | faction ID>\n\r";
     sb += "  show newfactions <faction name | faction ID>\n\r";
+    sb += "  show toggles\n\r";
+    sb += "  show liquids\n\r";
   }
 
   if (desc)
