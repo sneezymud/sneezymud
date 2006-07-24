@@ -5706,6 +5706,7 @@ extern int weaponJambiyaSpecial(TBeing *, cmdTypeT, const char *, TObj *, TObj *
 extern int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int holyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int lotteryTicket(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
@@ -5885,7 +5886,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "teleporting object", teleportingObject},
-  {FALSE, "BOGUS",  bogusObjProc},
+  {FALSE, "holy cutlass",  holyCutlass},
   {FALSE, "fortune cookie", fortuneCookie},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},

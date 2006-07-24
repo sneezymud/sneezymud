@@ -2490,3 +2490,31 @@ int demonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+int holyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
+  TBaseWeapon *cutlass;
+  TBeing *ch;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(::number(0,19))
+    return FALSE;
+
+  if(!(cutlass=dynamic_cast<TBaseWeapon *>(o)))
+    return FALSE;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+
+  cutlass->setPoison(LIQ_HOLYWATER);
+
+
+  act("<W>Holy water from $n's $o and drips to the $g.<1>",
+      0, ch, o, 0, TO_ROOM);
+  act("<W>Your $o oozes holy water, which runs down the length of the blade and drips to the $g.<1>",
+      0, ch, o, 0, TO_CHAR);
+
+  return TRUE;
+}
+
+

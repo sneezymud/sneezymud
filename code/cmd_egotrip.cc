@@ -16,6 +16,92 @@
 #include "disease.h"
 #include "obj_portal.h"
 
+void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
+{
+  affectedData aff;
+  
+  aff.level=level;
+  aff.duration=(1+level)*UPDATES_PER_MUDHOUR;
+
+  // each imm blessing is a spell affect + a stat modifier
+
+  if(which==AFFECT_IMMORTAL_BLESSING){
+    // default non-custom blessing
+    aff.type=AFFECT_IMMORTAL_BLESSING;
+
+    aff.location=APPLY_SPELL_HITROLL;
+    aff.modifier=10;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    
+    aff.location=APPLY_IMMUNITY;
+    aff.modifier=IMMUNE_NONMAGIC;
+    aff.modifier2=5;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_PEEL_BLESSING){
+    aff.type=SPELL_HASTE;
+    aff.location=APPLY_NONE;
+    aff.modifier=0;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    
+    aff.type=AFFECT_PEEL_BLESSING;
+    aff.location=APPLY_SPE;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_ANGUS_BLESSING){
+    aff.type=SPELL_SANCTUARY;
+    aff.location=APPLY_NONE;
+    aff.modifier=0;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    
+    aff.type=AFFECT_ANGUS_BLESSING;
+    aff.location=APPLY_WIS;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_DAMESCENA_BLESSING){
+    aff.type=SPELL_ENLIVEN;
+    aff.location=APPLY_NONE;
+    aff.modifier=0;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    
+    aff.type=AFFECT_DAMESCENA_BLESSING;
+    aff.location=APPLY_CON;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_JESUS_BLESSING){
+    aff.type=SPELL_ARMOR;
+    aff.location=APPLY_ARMOR;
+    aff.modifier=-200;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    
+    aff.type=AFFECT_JESUS_BLESSING;
+    aff.location=APPLY_INT;
+    aff.modifier=-19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  }
+}
+
+	
+
+
 void TBeing::doEgoTrip(const char *arg)
 {
   if (powerCheck(POWER_EGOTRIP))
@@ -36,8 +122,6 @@ void TBeing::doEgoTrip(const char *arg)
   badsyn += "cleanse - removes all disease in the world\n\r";
   badsyn += "wander - forces a wander pulse for all mobs in the room\n\r";
   badsyn += "stupidity - casts the stupidity spell on all players\n\r";
-  badsyn += "sanctuary - casts the sanctuary prayer on all players\n\r";
-  badsyn += "enliven - casts the enliven spell on all players\n\r";
   badsyn += "crit - forces a target mob to do the number crit if fighting\n\r";
   badsyn += "portal - creates a portal to the target mob/player\n\r";
   badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
@@ -137,47 +221,29 @@ void TBeing::doEgoTrip(const char *arg)
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
-#if 0
-// doesn't work if not in room
-      act("$N has graciously bestowned upon you $S blessing.",
-            FALSE, ch, 0, this, TO_CHAR);
-#else
-      ch->sendTo(fmt("%s has graciously bestowed upon you %s blessing.\n\r") %
-            sstring(ch->pers(this)).cap() % hshr());
-#endif
-      bless(this, ch);
-    }
-    return;
-  } else if (is_abbrev(argument, "sanctuary")) {
-    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
-      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
-      return;
-    }
 
-    vlogf(LOG_MISC, fmt("%s egotripped sanctuary") %  getName());
-    Descriptor *d;
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->connected != CON_PLYNG)
-        continue;
-
-      TBeing *ch = d->character;
-
-      if (ch->hasClass(CLASS_THIEF) && ch->GetMaxLevel() < MAX_MORT)
-	ch->sendTo(fmt("%s would have given you sanctuary but you're a thief and not deserving!\n\r") % sstring(ch->pers(this)).cap());
-
-      // Try and ditch some of the un-needed spam/waste.
-      if (!ch || ch->GetMaxLevel() > MAX_MORT || ch->hasClass(CLASS_THIEF))
-        continue;
-
-#if 0
-// doesn't work if not in room
-      act("$N has given you sanctuary.",
-            FALSE, ch, 0, this, TO_CHAR);
-#else
-      ch->sendTo(fmt("%s has given you sanctuary.\n\r") %
-            sstring(ch->pers(this)).cap());
-#endif
-      sanctuary(this, ch);
+      if(!strcmp(getName(), "Peel")){
+	egoAffect(this, ch, AFFECT_PEEL_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <r>speed<1>.\n\r") %
+		 sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Angus")){
+	egoAffect(this, ch, AFFECT_ANGUS_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>wisdom<1>.\n\r") %
+		   sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Jesus")){
+	egoAffect(this, ch, AFFECT_JESUS_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>bitterness<1>.\n\r") %
+		 sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Damescena")){
+	egoAffect(this, ch, AFFECT_DAMESCENA_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>healing<1>.\n\r") %
+		   sstring(ch->pers(this)).cap() % hshr());
+      } else {
+	// default blessing
+	egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing.\n\r") %
+		 sstring(ch->pers(this)).cap() % hshr());
+      }
     }
     return;
   } else if (is_abbrev(argument, "stupidity")) {
@@ -200,71 +266,6 @@ void TBeing::doEgoTrip(const char *arg)
       ch->sendTo(fmt("%s has reconfirmed %s suspicions.\n\r") %
             sstring(ch->pers(this)).cap() % hshr());
       castStupidity(this, ch);
-    }
-    return;
-  } else if (is_abbrev(argument, "haste")) {
-    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
-      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
-      return;
-    }
-
-    vlogf(LOG_MISC, fmt("%s has given everyone in the game a level 25 haste.") %  getName());
-    this->sendTo(fmt("Please use egotrip haste very sparingly.\n\r"));
-    Descriptor *d;
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->connected != CON_PLYNG)
-        continue;
-
-      TBeing *ch = d->character;
-
-      // Try and ditch some of the un-needed spam/waste.
-      if (!ch || ch->GetMaxLevel() > MAX_MORT)
-        continue;
-
-#if 0
-// doesn't work if not in room
-      act("$N has given you extra speed in your movements.",
-            FALSE, ch, 0, this, TO_CHAR);
-#else
-      ch->sendTo(fmt("%s has given you extra speed in your movements.\n\r") %
-            sstring(ch->pers(this)).cap());
-#endif
-      // this check to avoid stacking haste
-      if (ch->affectedBySpell(SPELL_HASTE)) {
-	ch->sendTo(fmt("%s's attempt to grant you haste fails!\n\r") % sstring(ch->pers(this)).cap());
-      } else {
-	ch->sendTo(fmt("%s has given you the speed of the wind!\n\r") % sstring(ch->pers(this)).cap());
-	affectedData aff;
-	aff.type = SPELL_HASTE;
-        aff.level = 25; // made it lower level to reduce duration
-        aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
-        aff.modifier = 0;
-        aff.location = APPLY_NONE;
-        aff.bitvector = 0;
-        ch->affectTo(&aff);
-      }
-    }
-    return;
-  } else if (is_abbrev(argument, "enliven")) {
-    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
-      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
-      return;
-    }
-
-    vlogf(LOG_MISC, fmt("%s has enlivened the game") %  getName());
-    Descriptor *d;
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->connected != CON_PLYNG)
-        continue;
-
-      TBeing *ch = d->character;
-
-      // Try and ditch some of the un-needed spam/waste.
-      if (!ch || ch->GetMaxLevel() > MAX_MORT)
-        continue;
-      ch->sendTo(fmt("%s has bestowed upon you enlivenment.\n\r") %
-            sstring(ch->pers(this)).cap());
-      castEnliven(this, ch);
     }
     return;
   } else if (is_abbrev(argument, "crit")) {

@@ -835,6 +835,11 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_IRON_WILL:
     case SKILL_PLANT:
     case SPELL_EMBALM:
+    case AFFECT_IMMORTAL_BLESSING:
+    case AFFECT_PEEL_BLESSING:
+    case AFFECT_ANGUS_BLESSING:
+    case AFFECT_JESUS_BLESSING:
+    case AFFECT_DAMESCENA_BLESSING:
     case ABSOLUTE_MAX_SKILL:
 #if 1
     case SPELL_EARTHMAW:

@@ -1801,9 +1801,40 @@ void TBeing::statBeing(TBeing *k)
 
       case AFFECT_BITTEN_BY_VAMPIRE:
 	str += "Bitten by vampire.\n\r";
-	str += fmt("Expires in %6d updates.\n\r") % aff->duration;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
 
+
+      case AFFECT_IMMORTAL_BLESSING:
+	str += "Immortal's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_PEEL_BLESSING:
+	str += "Peel's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_ANGUS_BLESSING:
+	str += "Angus's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_JESUS_BLESSING:
+	str += "Jesus's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_DAMESCENA_BLESSING:
+	str += "Damescena's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:
