@@ -5886,7 +5886,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "teleporting object", teleportingObject},
-  {FALSE, "holy cutlass",  holyCutlass},
+  {FALSE, "holy cutlass", holyCutlass},
   {FALSE, "fortune cookie", fortuneCookie},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},

@@ -2508,7 +2508,6 @@ int holyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
 
   cutlass->setPoison(LIQ_HOLYWATER);
 
-
   act("<W>Holy water from $n's $o and drips to the $g.<1>",
       0, ch, o, 0, TO_ROOM);
   act("<W>Your $o oozes holy water, which runs down the length of the blade and drips to the $g.<1>",
