@@ -24,6 +24,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   aff.duration=(1+level)*UPDATES_PER_MUDHOUR;
 
   // each imm blessing is a spell affect + a stat modifier
+  // some of the spell affects are set in TBeing::affectedBySpell
 
   if(which==AFFECT_IMMORTAL_BLESSING){
     // default non-custom blessing
@@ -41,13 +42,6 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_PEEL_BLESSING){
-    aff.type=SPELL_HASTE;
-    aff.location=APPLY_NONE;
-    aff.modifier=0;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    
     aff.type=AFFECT_PEEL_BLESSING;
     aff.location=APPLY_SPE;
     aff.modifier=19;
@@ -55,13 +49,6 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_ANGUS_BLESSING){
-    aff.type=SPELL_SANCTUARY;
-    aff.location=APPLY_NONE;
-    aff.modifier=0;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    
     aff.type=AFFECT_ANGUS_BLESSING;
     aff.location=APPLY_WIS;
     aff.modifier=19;
@@ -69,13 +56,6 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_DAMESCENA_BLESSING){
-    aff.type=SPELL_ENLIVEN;
-    aff.location=APPLY_NONE;
-    aff.modifier=0;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    
     aff.type=AFFECT_DAMESCENA_BLESSING;
     aff.location=APPLY_CON;
     aff.modifier=19;
@@ -83,7 +63,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_JESUS_BLESSING){
-    aff.type=SPELL_ARMOR;
+    aff.type=AFFECT_JESUS_BLESSING;
     aff.location=APPLY_ARMOR;
     aff.modifier=-200;
     aff.modifier2=0;
