@@ -687,6 +687,9 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
   TThing *t;
   int fingers=0, legs=0, feet=0, arms=0, wrists=0, hands=0;
 
+  if(!dynamic_cast<TSuitcase *>(container))
+    return FALSE;
+
   for(t=container->getStuff(); t; t=t->nextThing){
     o = dynamic_cast<TBaseClothing *>(t);
 
