@@ -531,10 +531,7 @@ class TObj : public TThing {
     virtual itemTypeT itemType() const = 0;
     // END VIRTUAL FUNCTIONS
 
-    // INLINE FUNCTIONS
-    bool isMonogrammed() const { return (action_description ? TRUE : FALSE); }
-    // END INLINE FUNCTIONS
-
+    bool isMonogrammed() const;
     int objectTickUpdate(int);
     int updateBurning(void);
     bool isObjStat(unsigned int num) const;

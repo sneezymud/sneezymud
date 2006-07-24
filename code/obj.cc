@@ -544,3 +544,14 @@ int TObj::galvanizeMe(TBeing *caster, byte bKnown)
 void TObj::onObjLoad()
 {
 }
+
+
+bool TObj::isMonogrammed() const 
+{
+  char namebuf[MAX_INPUT_LENGTH];
+
+  if(action_description && 
+     (sscanf(action_description, "This is the personalized object of %s.", namebuf) == 1))
+    return true;
+  return false;
+}
