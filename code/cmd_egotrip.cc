@@ -64,15 +64,8 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_JESUS_BLESSING){
     aff.type=AFFECT_JESUS_BLESSING;
-    aff.location=APPLY_ARMOR;
-    aff.modifier=-200;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    
-    aff.type=AFFECT_JESUS_BLESSING;
-    aff.location=APPLY_INT;
-    aff.modifier=-19;
+    aff.location=APPLY_STR;
+    aff.modifier=19;
     aff.modifier2=0;
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -211,7 +204,7 @@ void TBeing::doEgoTrip(const char *arg)
 		   sstring(ch->pers(this)).cap() % hshr());
       } else if(!strcmp(getName(), "Jesus")){
 	egoAffect(this, ch, AFFECT_JESUS_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>bitterness<1>.\n\r") %
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>power<1>.\n\r") %
 		 sstring(ch->pers(this)).cap() % hshr());
       } else if(!strcmp(getName(), "Damescena")){
 	egoAffect(this, ch, AFFECT_DAMESCENA_BLESSING, 5);
