@@ -1048,6 +1048,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 2532;
     case AFFECT_JESUS_BLESSING:
       return 2533;
+    case AFFECT_VASCO_BLESSING:
+      return 2534;
+    case AFFECT_CORAL_BLESSING:
+      return 2535;
     case SPELL_FIRE_BREATH:
     case SPELL_CHLORINE_BREATH:
     case SPELL_FROST_BREATH:
@@ -2075,6 +2079,10 @@ spellNumT mapFileToSpellnum(int stt)
       return AFFECT_DAMESCENA_BLESSING;
     case 2533:
       return AFFECT_JESUS_BLESSING;
+    case 2534:
+      return AFFECT_VASCO_BLESSING;
+    case 2535:
+      return AFFECT_CORAL_BLESSING;
     default:
       break;
   }

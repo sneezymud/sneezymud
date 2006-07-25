@@ -1529,6 +1529,7 @@ class TBeing : public TThing {
     void statObjForDivman(const TObj *);
     void statBeing(TBeing *);
     virtual void doChange(const char *);
+    void doChangeOutfit(const char *);
     void lowTasks(const sstring &);
     void lowRace(const char *);
     void lowMobs(const char *);

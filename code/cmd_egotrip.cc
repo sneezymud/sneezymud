@@ -48,6 +48,27 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.modifier2=0;
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_VASCO_BLESSING){
+    aff.type = AFFECT_VASCO_BLESSING;
+    aff.modifier = -40;
+    aff.modifier2=0;
+    aff.location = APPLY_NOISE;
+    aff.bitvector = 0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
+    aff.type=AFFECT_VASCO_BLESSING;
+    aff.location=APPLY_DEX;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_CORAL_BLESSING){
+    aff.type=AFFECT_CORAL_BLESSING;
+    aff.location=APPLY_PER;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector = AFF_LEVITATING;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_ANGUS_BLESSING){
     aff.type=AFFECT_ANGUS_BLESSING;
     aff.location=APPLY_WIS;
@@ -198,17 +219,25 @@ void TBeing::doEgoTrip(const char *arg)
 	egoAffect(this, ch, AFFECT_PEEL_BLESSING, 5);
 	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <r>speed<1>.\n\r") %
 		 sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Vasco")){
+	egoAffect(this, ch, AFFECT_VASCO_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <k>stealth<1>.\n\r") %
+		 sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Coral")){
+	egoAffect(this, ch, AFFECT_CORAL_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <B>exploration<1>.\n\r") %
+		 sstring(ch->pers(this)).cap() % hshr());
       } else if(!strcmp(getName(), "Angus")){
 	egoAffect(this, ch, AFFECT_ANGUS_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>wisdom<1>.\n\r") %
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <g>wisdom<1>.\n\r") %
 		   sstring(ch->pers(this)).cap() % hshr());
       } else if(!strcmp(getName(), "Jesus")){
 	egoAffect(this, ch, AFFECT_JESUS_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>power<1>.\n\r") %
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <w>power<1>.\n\r") %
 		 sstring(ch->pers(this)).cap() % hshr());
       } else if(!strcmp(getName(), "Damescena")){
 	egoAffect(this, ch, AFFECT_DAMESCENA_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <r>healing<1>.\n\r") %
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <W>healing<1>.\n\r") %
 		   sstring(ch->pers(this)).cap() % hshr());
       } else {
 	// default blessing
