@@ -425,9 +425,9 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       }
     }
     if (roomp && !roomp->isFlyingSector()) {
-      if (isFlying() || isLevitating()) {
+      if (isFlying()) {
         if (!horse->isFlying()) {
-          sendTo("Riding a grounded mount while flying or levitating is impossible.\n\r");
+          sendTo("Riding a grounded mount while flying is impossible.\n\r");
           return FALSE;
         }
       }
