@@ -6020,7 +6020,7 @@ objs/cmd_show.o: obj_drug.h charfile.h being.h guild.h person.h monster.h
 objs/cmd_show.o: paths.h account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/cmd_show.o: materials.h colorstring.h format.h disc_looting.h combat.h
 objs/cmd_show.o: obj_component.h disc_alchemy.h obj_open_container.h
-objs/cmd_show.o: obj_base_container.h
+objs/cmd_show.o: obj_base_container.h liquids.h
 objs/cmd_spin.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_spin.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_spin.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -9307,7 +9307,7 @@ objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
-objs/db.o: liquids.h obj_card_deck.h
+objs/db.o: liquids.h obj_card_deck.h obj_suitcase.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -15547,6 +15547,145 @@ objs/enum.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/enum.o: charfile.h being.h guild.h person.h monster.h paths.h account.h
 objs/enum.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/enum.o: colorstring.h format.h
+objs/eqcalc.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/c++config.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/eqcalc.cgi.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/eqcalc.cgi.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/eqcalc.cgi.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/eqcalc.cgi.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/eqcalc.cgi.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/eqcalc.cgi.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/eqcalc.cgi.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/eqcalc.cgi.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/eqcalc.cgi.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/eqcalc.cgi.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cmath
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/eqcalc.cgi.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/string
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/eqcalc.cgi.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/iosfwd
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/c++io.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/gthr.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/eqcalc.cgi.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/eqcalc.cgi.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/eqcalc.cgi.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/eqcalc.cgi.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/postypes.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/eqcalc.cgi.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/exception_defines.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/debug/debug.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/memory
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/allocator.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/algorithm
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/vector
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/map
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/list
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/list.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/iostream /usr/include/c++/3.4/ostream
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/ios
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/streambuf
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/locale
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/istream
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/sstream
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/fstream
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/eqcalc.cgi.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/eqcalc.cgi.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/eqcalc.cgi.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/eqcalc.cgi.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/eqcalc.cgi.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/eqcalc.cgi.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/eqcalc.cgi.o: guild.h person.h monster.h paths.h account.h extern.h
+objs/eqcalc.cgi.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/eqcalc.cgi.o: colorstring.h format.h database.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/mysql.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/mysql_com.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/mysql_time.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/mysql_version.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/typelib.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/my_list.h
+objs/eqcalc.cgi.o: /usr/local/include/mysql/my_alloc.h session.cgi.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/eqcalc.cgi.o: /usr/include/c++/3.4/cfloat /usr/include/float.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/CgiUtils.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPPlainHeader.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
+objs/eqcalc.cgi.o: /usr/local/include/cgicc/HTTPRedirectHeader.h
+objs/eqcalc.cgi.o: /usr/include/md5.h /usr/include/sys/md5.h
 objs/equip.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/equip.o: /usr/include/c++/3.4/bits/c++config.h
 objs/equip.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17905,7 +18044,9 @@ objs/immortal.o: /usr/local/include/mysql/mysql_time.h
 objs/immortal.o: /usr/local/include/mysql/mysql_version.h
 objs/immortal.o: /usr/local/include/mysql/typelib.h
 objs/immortal.o: /usr/local/include/mysql/my_list.h
-objs/immortal.o: /usr/local/include/mysql/my_alloc.h rent.h
+objs/immortal.o: /usr/local/include/mysql/my_alloc.h rent.h obj_suitcase.h
+objs/immortal.o: obj_expandable_container.h obj_open_container.h
+objs/immortal.o: obj_base_container.h
 objs/immunity.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/immunity.o: /usr/include/c++/3.4/bits/c++config.h
 objs/immunity.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -18364,7 +18505,7 @@ objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
 objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
 objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
-objs/inventory.o: obj_potion.h obj_base_cup.h obj_card_deck.h
+objs/inventory.o: obj_potion.h obj_base_cup.h obj_card_deck.h obj_suitcase.h
 objs/limbs.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/limbs.o: /usr/include/c++/3.4/bits/c++config.h
 objs/limbs.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -21822,7 +21963,9 @@ objs/obj_base_clothing.o: connect.h obj_drug.h charfile.h being.h guild.h
 objs/obj_base_clothing.o: person.h monster.h paths.h account.h extern.h
 objs/obj_base_clothing.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_base_clothing.o: colorstring.h format.h shop.h obj_base_clothing.h
-objs/obj_base_clothing.o: shopowned.h corporation.h
+objs/obj_base_clothing.o: shopowned.h corporation.h obj_suitcase.h
+objs/obj_base_clothing.o: obj_expandable_container.h obj_open_container.h
+objs/obj_base_clothing.o: obj_base_container.h
 objs/obj_base_container.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_base_container.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_base_container.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -27986,6 +28129,118 @@ objs/obj_statue.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/obj_statue.o: guild.h person.h monster.h paths.h account.h extern.h
 objs/obj_statue.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_statue.o: colorstring.h format.h obj_statue.h
+objs/obj_suitcase.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/c++config.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/obj_suitcase.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/obj_suitcase.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/obj_suitcase.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/obj_suitcase.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/obj_suitcase.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/obj_suitcase.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/obj_suitcase.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/obj_suitcase.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/obj_suitcase.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/obj_suitcase.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cmath
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/obj_suitcase.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/string
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/obj_suitcase.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/obj_suitcase.o: /usr/include/c++/3.4/iosfwd
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/c++io.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/gthr.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/obj_suitcase.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/obj_suitcase.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/obj_suitcase.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/obj_suitcase.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/postypes.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/obj_suitcase.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/exception_defines.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/debug/debug.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/memory
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/allocator.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/algorithm
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/vector
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/map
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/list
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/list.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/iostream
+objs/obj_suitcase.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/streambuf
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/locale
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/limits
+objs/obj_suitcase.o: /usr/include/c++/3.4/typeinfo
+objs/obj_suitcase.o: /usr/include/c++/3.4/istream
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/sstream
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.4/fstream
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/obj_suitcase.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_suitcase.o: enum.h spells.h structs.h parse.h immunity.h
+objs/obj_suitcase.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_suitcase.o: response.h faction.h comm.h toggle.h wiz_powers.h
+objs/obj_suitcase.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/obj_suitcase.o: disease.h trap.h task.h weather.h sound.h create.h
+objs/obj_suitcase.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/obj_suitcase.o: charfile.h being.h guild.h person.h monster.h paths.h
+objs/obj_suitcase.o: account.h extern.h handler.h obj_money.h spec_mobs.h
+objs/obj_suitcase.o: materials.h colorstring.h format.h obj_suitcase.h
+objs/obj_suitcase.o: obj_expandable_container.h obj_open_container.h
+objs/obj_suitcase.o: obj_base_container.h
 objs/obj_symbol.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_symbol.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_symbol.o: /usr/include/c++/3.4/bits/os_defines.h
