@@ -1,5 +1,69 @@
 #15450
-Coral's Area - Prison/Undead (50 rooms)~
+Coral's Area - Haon-Dor SW~
 15499 25 2 0
+
+D 0 15452 8 1  Narrow Trail Through Haon-Dor -> Deep in the Haon-Dor Forest
+D 0 15455 7 1  Deep in the Haon-Dor Forest -> Narrow Trail Through Haon-Dor
+D 0 15494 1 1  Deep in the Haon-Dor Forest -> Deep in the Haon-Dor Forest
+D 0 15495 3 1  Deep in the Haon-Dor Forest -> Deep in the Haon-Dor Forest
+
+O 0 15454 1 15452       a large branch
+O 0 15454 1 15455       a large branch
+O 0 15454 1 15465       a large branch
+O 0 15451 1 15475       a big pool of mud
+O 0 15454 1 15489       a large branch
+O 0 15454 1 15494       a large branch
+O 0 15454 1 15495       a large branch
+O 0 15455 1 15463       a tree root
+O 0 15455 1 15474       a tree root
+O 0 15455 1 15483       a tree root
+O 0 15455 1 15484       a tree root
+O 0 15455 1 15493       a tree root
+O 0 15455 1 15497       a tree root
+
+M 0 15450 1 15475       a mage conjurer
+Y 0 137 2                luna moth silk set
+
+A 0 15455 15499
+M 0 15452 1 -99       a lost trader
+Y 0 138 2                light weight set
+A 0 15455 15499
+M 0 15452 1 -99       a lost trader
+Y 0 138 2                light weight set
+A 0 15455 15499
+M 0 15452 1 -99       a lost trader
+Y 0 138 2                light weight set
+
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15455 15499
+M 0 15451 1 -99       a mud mass
+A 0 15450 15499
+M 0 15451 1 -99       a mud mass
+
+A 0 15455 15499
+M 0 15455 1 -99       a forest traveler
+
+A 0 15450 15499
+M 0 15454 1 -99       a large forest snake
+A 0 15450 15499
+M 0 15454 1 -99       a large forest snake
+A 0 15450 15499
+M 0 15454 1 -99       a large forest snake
+
+A 0 15450 15499
+M 0 15453 1 -99       a sparrow
+A 0 15450 15499
+M 0 15453 1 -99       a sparrow 
+A 0 15450 15499
+M 0 15453 1 -99       a sparrow 
 S
 
