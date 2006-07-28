@@ -69,7 +69,7 @@ say { "body";
 say { "thread";
       say The thread I use to create this armor can not be any ordinary thread.;
       say It must be incredibly strong and resistant to elements, as well as highly magical.;
-      say There is an illithid wizard in a cell not far from here.  He has outlived his usefullness, although the governor may disagree.;
+      say There is an illithid wizard in a cell not far from here.  He has outlived his usefulness, although the governor may disagree.;
       say Kill the illithid and cut the sinew from the body.  Illithid sinew makes an excellent magical thread.;
       say I will need to imbue the thread with the appropriate element.;
       say For green dragon armor I will need a vial of acid to prepare the thread.;
