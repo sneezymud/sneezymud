@@ -352,6 +352,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		}
 	      } else if((tb=dynamic_cast<TBeing *>(t)) &&
 			tb->hasClass(CLASS_THIEF) &&
+			tb->GetMaxLevel() >= 8 &&
 			myself->canSee(tb) &&
 			!::number(0,3)){
 		job->criminal=tb;
