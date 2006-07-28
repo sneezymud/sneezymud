@@ -284,11 +284,13 @@ void TPerson::doChange(const char *argument)
       return;
     } else {
       doChangeOutfit(argument);
+      doSave(SILENT_YES);
       return;
     }
   } else {
     if(generic_find_obj(argument, FIND_OBJ_INV|FIND_OBJ_ROOM, this)){
       doChangeOutfit(argument);
+      doSave(SILENT_YES);
       return;
     }
   }
