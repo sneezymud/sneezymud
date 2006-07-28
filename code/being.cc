@@ -1555,7 +1555,7 @@ int getIronFleshArmor(wearSlotT slot){
     case WEAR_FINGER_R:
     case WEAR_FINGER_L:
       return -12;
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       return -98;
     case WEAR_EX_LEG_R:
     case WEAR_EX_LEG_L:

@@ -180,8 +180,8 @@ wearSlotT getChangePos(TObj *o)
     case WEAR_KEY_BACK:
       pos=WEAR_BACK;
       break;
-    case WEAR_KEY_WAISTE:
-      pos=WEAR_WAISTE;
+    case WEAR_KEY_WAIST:
+      pos=WEAR_WAIST;
       break;
     case WEAR_KEY_WRIST:
       if(!wrists){
@@ -1799,8 +1799,8 @@ void TBeing::makeLimbTransformed(TBeing * victim, wearSlotT limb, bool paired)
           doTransformDrop(otherLimb);
           victim->addToLimbFlags(otherLimb, PART_TRANSFORMED);
         return;
-      case WEAR_WAISTE:
-        otherLimb = WEAR_WAISTE;
+      case WEAR_WAIST:
+        otherLimb = WEAR_WAIST;
           doTransformDrop(otherLimb);
           victim->addToLimbFlags(otherLimb, PART_TRANSFORMED);
         return;

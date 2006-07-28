@@ -1551,7 +1551,7 @@ const double race_vol_constants[MAX_WEAR] = {
   28.57,   // arm right
   28.57,   // arm left
   35.71,   // back
-  57.14,   // waiste
+  57.14,   // waist
   5.71,    // wrist right
   5.71,    // wrist left
   0,       // hold right

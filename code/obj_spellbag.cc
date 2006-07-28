@@ -58,7 +58,7 @@ bool TSpellBag::objectRepair(TBeing *, TMonster *, silentTypeT)
 
 bool TSpellBag::lowCheckSlots(silentTypeT silent)
 {
-  // spellbags should be (take hold) or (take waist) or (take hold waiste)
+  // spellbags should be (take hold) or (take waist) or (take hold waist)
   // no other combos allowed, although permit the throw flag too
   // neck for juju
   // wrist for wristpouches
@@ -67,7 +67,7 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
   REMOVE_BIT(value, ITEM_THROW);
   REMOVE_BIT(value, ITEM_TAKE);
   REMOVE_BIT(value, ITEM_HOLD);
-  REMOVE_BIT(value, ITEM_WEAR_WAISTE);
+  REMOVE_BIT(value, ITEM_WEAR_WAIST);
   REMOVE_BIT(value, ITEM_WEAR_NECK);
   REMOVE_BIT(value, ITEM_WEAR_WRIST);
 

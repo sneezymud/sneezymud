@@ -237,7 +237,7 @@ void getSlotData(int wear_flag, wearSlotT &slot, float &slot_c, float &slot_s, s
       fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_BRA) ;
       break;
     case 2049: // waist
-      slot=WEAR_WAISTE;
+      slot=WEAR_WAIST;
       slot_c=0.08;
       slot_s=0.0908;
       fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_STR) ;

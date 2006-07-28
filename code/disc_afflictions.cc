@@ -1222,7 +1222,7 @@ bool notBreakSlot(wearSlotT slot, bool avoid)
 {
   if (slot == WEAR_HEAD || slot == WEAR_NECK ||
           slot == WEAR_BACK || slot == WEAR_BODY ||
-          slot == WEAR_WAISTE ||
+          slot == WEAR_WAIST ||
           slot == HOLD_RIGHT || slot == HOLD_LEFT)
     return true;
   else if (!avoid)

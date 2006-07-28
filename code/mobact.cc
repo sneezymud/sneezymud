@@ -588,8 +588,8 @@ wearSlotT slot_from_bit(int wb)
     return WEAR_ARM_R;
   else if (wb & ITEM_WEAR_BACK)
     return WEAR_BACK;
-  else if (wb & ITEM_WEAR_WAISTE)
-    return WEAR_WAISTE;
+  else if (wb & ITEM_WEAR_WAIST)
+    return WEAR_WAIST;
   else if (wb & ITEM_WEAR_NECK)
     return WEAR_NECK;
   else if (wb & ITEM_WEAR_WRIST)

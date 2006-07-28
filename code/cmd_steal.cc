@@ -108,7 +108,7 @@ static int steal(TBeing * thief, TBeing * victim)
   int level = thief->getSkillLevel(SKILL_STEAL);
   spellNumT skill = thief->getSkillNum(SKILL_SNEAK);
 
-  if (victim->getPartMinHeight(ITEM_WEAR_WAISTE) > (thief->getPosHeight() + 5)) {
+  if (victim->getPartMinHeight(ITEM_WEAR_WAIST) > (thief->getPosHeight() + 5)) {
     // victim riding a tall creature...
     act("You can't quite reach $N's pockets from here.",
         FALSE, thief, 0, victim, TO_CHAR);

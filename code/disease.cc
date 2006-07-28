@@ -1099,7 +1099,7 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
         break;
       case WEAR_BODY:
         if (::number(0,2))
-          choice1 = WEAR_WAISTE;
+          choice1 = WEAR_WAIST;
         else
           choice1 = WEAR_NECK;
         if (::number(0,1))
@@ -1117,13 +1117,13 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
         break;
       case WEAR_LEGS_R:
         choice1 = WEAR_FOOT_R;
-        choice2 = WEAR_WAISTE;
+        choice2 = WEAR_WAIST;
         break;
       case WEAR_LEGS_L:
         choice1 = WEAR_FOOT_L;
-        choice2 = WEAR_WAISTE;
+        choice2 = WEAR_WAIST;
         break;
-      case WEAR_WAISTE:
+      case WEAR_WAIST:
         choice1 = WEAR_BODY;
         if (::number(0,1))
           choice2 = WEAR_LEGS_R;

@@ -284,7 +284,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     dam_type = DAMAGE_KNEESTRIKE_FOOT;
 
     for(i=0;i<3;++i) act(hit_msg[1][i], FALSE, c, 0, victim, msg_tgt[i]);
-  } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_WAISTE)) {
+  } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_WAIST)) {
     // target shin
     pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
     dam_type = DAMAGE_KNEESTRIKE_SHIN;
@@ -305,7 +305,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
   } else if (caster_hgt >= victim->getPartMinHeight(ITEM_WEAR_ARMS) &&
 	     victim_hgt >= c->getPartMinHeight(ITEM_WEAR_ARMS)) {
     // target crotch
-    pos = WEAR_WAISTE;
+    pos = WEAR_WAIST;
     dam_type = DAMAGE_KNEESTRIKE_CROTCH;
 
     for(i=1;i<3;++i) act(hit_msg[5][i], FALSE, c, 0, victim, msg_tgt[i]);
@@ -313,15 +313,15 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     if (victim->getSex() == SEX_MALE) {
       act("You jerk your knee into $N's crotch.  Felt like you got both of them.", 
 	  FALSE, c, 0, victim, TO_CHAR);
-      if (!victim->equipment[WEAR_WAISTE] || 
-	  isname("belt", victim->equipment[WEAR_WAISTE]->name)) {
+      if (!victim->equipment[WEAR_WAIST] || 
+	  isname("belt", victim->equipment[WEAR_WAIST]->name)) {
 	// no equipment or just a belt
 	victim->sendTo("Your voice just went up an octave.  Ouch!\n\r");
 	dam += 10;
 	victim->cantHit += victim->loseRound(0.25);
       } else {
 	victim->sendTo(fmt("Good thing you were wearing your %s.\n\r") %
-		       fname(victim->equipment[WEAR_WAISTE]->name));
+		       fname(victim->equipment[WEAR_WAIST]->name));
       }
     } else {
       act(hit_msg[5][0], FALSE, c, 0, victim, TO_CHAR);
@@ -333,7 +333,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     if ((rc = c->reconcileDamage(victim, 0,dam_type)) == -1)
       return DELETE_VICT;
     return TRUE;    
-  } else if (victim_hgt < c->getPartMinHeight(ITEM_WEAR_WAISTE)) {
+  } else if (victim_hgt < c->getPartMinHeight(ITEM_WEAR_WAIST)) {
     // target skull
     pos = WEAR_HEAD;
     dam_type = DAMAGE_KNEESTRIKE_FACE;

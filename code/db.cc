@@ -1881,7 +1881,7 @@ wearSlotT mapFileToSlot(int num)
       case 14:
         return WEAR_BACK;
       case 15:
-        return WEAR_WAISTE;
+        return WEAR_WAIST;
       case 16:
         return WEAR_WRIST_R;
       case 17:
@@ -1937,7 +1937,7 @@ int mapSlotToFile(wearSlotT num)
       return 13;
     case WEAR_BACK:
       return 14;
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       return 15;
     case WEAR_WRIST_R:
       return 16;

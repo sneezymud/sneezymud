@@ -138,19 +138,19 @@ bool TBeing::canUseLeg(primLegT primary) const
     case LEG_SECONDARY:
       return (canUseLimb(getSecondaryLeg()) &&
               canUseLimb(getSecondaryFoot()) &&
-              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+              (canUseLimb(WEAR_WAIST) || isFourLegged()));
     case LEG_PRIMARY:
       return (canUseLimb(getPrimaryLeg()) && 
               canUseLimb(getPrimaryFoot()) && 
-              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+              (canUseLimb(WEAR_WAIST) || isFourLegged()));
     case LEG_SECONDARY_BACK:
       return (canUseLimb(WEAR_EX_LEG_R) &&
               canUseLimb(WEAR_EX_FOOT_R) &&
-              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+              (canUseLimb(WEAR_WAIST) || isFourLegged()));
     case LEG_PRIMARY_BACK:
       return (canUseLimb(WEAR_EX_LEG_L) &&
               canUseLimb(WEAR_EX_FOOT_L) &&
-              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+              (canUseLimb(WEAR_WAIST) || isFourLegged()));
   }
   return TRUE;
 }
@@ -488,8 +488,8 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
             } else {
               break;
             }
-          case WEAR_WAISTE:
-            if (slot == WEAR_WAISTE) {
+          case WEAR_WAIST:
+            if (slot == WEAR_WAIST) {
               return FALSE;
             } else {
               break;
@@ -609,7 +609,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
         vlogf(LOG_BUG, fmt("There is a bad case 4 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
         vlogf(LOG_BUG, fmt("There is a bad case 5 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
@@ -689,7 +689,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
     case WEAR_FOOT_L:
     case WEAR_LEGS_L:
     case WEAR_BACK:
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
     case HOLD_RIGHT:
@@ -735,7 +735,7 @@ const sstring TBeing::describeTransLimb(wearSlotT i) const
     case WEAR_FOOT_L:
     case WEAR_LEGS_L:
     case WEAR_BACK:
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
     case HOLD_RIGHT:
@@ -823,7 +823,7 @@ const sstring TBeing::describeTransEquipSlot(wearSlotT i) const
     case WEAR_BACK:
       vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_WRIST_R:
@@ -893,7 +893,7 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
       real_slot_chance[WEAR_NECK] = 0;
       real_slot_chance[WEAR_BODY] = 0;
       real_slot_chance[WEAR_BACK] = 0;
-      real_slot_chance[WEAR_WAISTE] = 0;
+      real_slot_chance[WEAR_WAIST] = 0;
       real_slot_chance[WEAR_LEGS_R] = 0;
       real_slot_chance[WEAR_LEGS_L] = 0;
       real_slot_chance[WEAR_ARM_R] = 0;
@@ -903,7 +903,7 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
       real_slot_chance[WEAR_NECK] = 0;
       real_slot_chance[WEAR_BODY] = 0;
       real_slot_chance[WEAR_BACK] = 0;
-      real_slot_chance[WEAR_WAISTE] = 0;
+      real_slot_chance[WEAR_WAIST] = 0;
       real_slot_chance[WEAR_ARM_R] = 0;
       real_slot_chance[WEAR_ARM_L] = 0;
     } else if (compar < 0.4) {
@@ -988,7 +988,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_BODY:
       case ITEM_WEAR_BACK:
         return max(0, midline + (5 * hgt/100));
-      case ITEM_WEAR_WAISTE:
+      case ITEM_WEAR_WAIST:
         return max(0, midline - (0 * hgt/100));
       case ITEM_WEAR_LEGS:
         return max(0, midline - (40 * hgt/100));
@@ -1009,7 +1009,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_BODY:
       case ITEM_WEAR_BACK:
         return max(0, (55 * hgt/100));
-      case ITEM_WEAR_WAISTE:
+      case ITEM_WEAR_WAIST:
         return max(0, (50 * hgt/100));
       case ITEM_WEAR_LEGS:
         return max(0, (10 * hgt/100));

@@ -2748,7 +2748,7 @@ void TBeing::doEquipment(const sstring &arg)
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BACK :
-        case WEAR_WAISTE:
+        case WEAR_WAIST:
         case WEAR_WRIST_R:
         case WEAR_WRIST_L:
         case WEAR_EX_LEG_R:
@@ -3844,7 +3844,7 @@ const sstring TBeing::slotPlurality(int limb) const
   char buf[10];
 
   if ((race->getBodyType() == BODY_BIRD) &&
-      (limb == WEAR_WAISTE)) {
+      (limb == WEAR_WAIST)) {
     // tail feathers
     sprintf(buf, "are");
   } else if ((race->getBodyType() == BODY_TREE) &&
@@ -5330,7 +5330,7 @@ void TBeing::doSpells(const sstring &argument)
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
-  TThing *belt=equipment[WEAR_WAISTE];
+  TThing *belt=equipment[WEAR_WAIST];
   TThing *juju=equipment[WEAR_NECK];
   TThing *wristpouch=equipment[WEAR_WRIST_R];
   TThing *wristpouch2=equipment[WEAR_WRIST_L];
@@ -5570,7 +5570,7 @@ void TBeing::doRituals(const sstring &argument)
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
-  TThing *belt=equipment[WEAR_WAISTE];
+  TThing *belt=equipment[WEAR_WAIST];
   TThing *juju=equipment[WEAR_NECK];
   TThing *wristpouch=equipment[WEAR_WRIST_R];
   TThing *wristpouch2=equipment[WEAR_WRIST_L];
@@ -5811,7 +5811,7 @@ void TBeing::doPrayers(const sstring &argument)
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();
-  TThing *belt = equipment[WEAR_WAISTE];
+  TThing *belt = equipment[WEAR_WAIST];
   TThing *juju = equipment[WEAR_NECK];
   TThing *wristpouch = equipment[WEAR_WRIST_R];
   TThing *wristpouch2 = equipment[WEAR_WRIST_L];

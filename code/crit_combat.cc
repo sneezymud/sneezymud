@@ -1536,8 +1536,8 @@ buf=fmt("$n thrusts $s %s deep into $N's torso, impaling $M!") %
       case 85:
       case 86:
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-	    v->hasPart(WEAR_WAISTE) &&
-	    (obj = v->equipment[WEAR_WAISTE])) {
+	    v->hasPart(WEAR_WAIST) &&
+	    (obj = v->equipment[WEAR_WAIST])) {
 buf=fmt("You attempt to cleave $N in two with your %s, but $p saves $M from a hideous fate.") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
@@ -1550,8 +1550,8 @@ buf=fmt("$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!") %
 
 	  critHitEqDamage(v, obj, (::number(-55,-40)));
 
-	  *part_hit = WEAR_WAISTE;
-	  rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
+	  *part_hit = WEAR_WAIST;
+	  rc = damageLimb(v,WEAR_WAIST,weapon,dam);
 	  if (IS_SET_DELETE(rc, DELETE_VICT))
 	    return DELETE_VICT;
 	  return ONEHIT_MESS_CRIT_S;
@@ -1572,10 +1572,10 @@ buf=fmt("$n unleashes a mighty warcry and slashes you HARD down the center with 
 buf=fmt("$n gives a mighty warcry and slashes $N down the center with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	    if ((obj = v->equipment[WEAR_WAISTE]))
+	    if ((obj = v->equipment[WEAR_WAIST]))
 	      critHitEqDamage(v, obj, (::number(-45,-30)));
 
-	    *part_hit = WEAR_WAISTE;
+	    *part_hit = WEAR_WAIST;
 	    if (desc)
 	      desc->career.crit_cleave_two++;
 	    if (v->desc)
@@ -1591,11 +1591,11 @@ buf=fmt("$n unleashes a mighty warcry before cleaving you in two with $s %s!") %
 buf=fmt("$n gives a mighty warcry and cleaves $N in two with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	    if ((obj = v->equipment[WEAR_WAISTE]))
+	    if ((obj = v->equipment[WEAR_WAIST]))
 	      critHitEqDamage(v, obj, (::number(-45,-30)));
 
 	    applyDamage(v, 20 * v->hitLimit(),DAMAGE_HACKED);
-	    *part_hit = WEAR_WAISTE;
+	    *part_hit = WEAR_WAIST;
 	    if (desc)
 	      desc->career.crit_cleave_two++;
 	    if (v->desc)
@@ -1629,7 +1629,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	}
       case 91:
       case 92:
-	if (v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) && (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal()) && !IS_SET(v->specials.act, ACT_SKELETON) && !IS_SET(v->specials.act, ACT_GHOST)){
+	if (v->getSex()==SEX_MALE && v->hasPart(WEAR_WAIST) && (!(obj = v->equipment[WEAR_WAIST]) || !obj->isMetal()) && !IS_SET(v->specials.act, ACT_SKELETON) && !IS_SET(v->specials.act, ACT_GHOST)){
 	  buf = fmt("With a deft swing of your %s, you sever $N's genitals.") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
 	  buf = fmt("$n deftly severs your genitals with $s %s!  OWWWWW!") % limbStr;
@@ -1675,7 +1675,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  *v->roomp += *corpse;
 
 	  v->setSex(SEX_NEUTER);
-	  v->rawBleed(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	  v->rawBleed(WEAR_WAIST, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 
 	  if (desc)
 	    desc->career.crit_genitalia++;
@@ -2175,14 +2175,14 @@ buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	if (v->hasPart(WEAR_WAISTE))
-	  v->rawInfect(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	if (v->hasPart(WEAR_WAIST))
+	  v->rawInfect(WEAR_WAIST, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
 	af.type = AFFECT_DISEASE;
 	af.level = 0;   // for doctor to heal
 	af.duration = PERMANENT_DURATION;
 	af.modifier = DISEASE_STOMACH;
 	v->affectTo(&af);
-	*part_hit = WEAR_WAISTE;
+	*part_hit = WEAR_WAIST;
 	if (desc)
 	  desc->career.crit_eviscerate++;
 	if (v->desc)

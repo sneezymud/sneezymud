@@ -66,7 +66,7 @@ int limb_heal_price(TBeing *ch, wearSlotT pos, int shop_nr)
     case WEAR_BACK:
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       return (basenum * 4);
     case WEAR_NOWHERE:
     case MAX_WEAR:
@@ -146,7 +146,7 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound, int sh
     case WEAR_BACK:
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       return (price * 4);
     case WEAR_NOWHERE:
     case MAX_WEAR:
@@ -199,7 +199,7 @@ int limb_regen_price(TBeing *ch, wearSlotT pos, int shop_nr)
     case WEAR_BACK:
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       return (price * 4);
     case WEAR_NOWHERE:
     case MAX_WEAR:

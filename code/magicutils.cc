@@ -506,7 +506,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 
   primary = heldInPrimHand();
   secondary = heldInSecHand();
-  belt = equipment[WEAR_WAISTE];
+  belt = equipment[WEAR_WAIST];
   juju = equipment[WEAR_NECK];
   wristpouchL = equipment[WEAR_WRIST_L];
   wristpouchR = equipment[WEAR_WRIST_R];
@@ -1399,7 +1399,7 @@ int TBeing::dropBloodLimb(wearSlotT limb)
     case WEAR_HAND_L:    amt=3; break;
     case WEAR_FINGER_R:
     case WEAR_FINGER_L:  amt=1; break;
-    case WEAR_WAISTE:    amt=10; break;
+    case WEAR_WAIST:    amt=10; break;
     case WEAR_LEGS_R:
     case WEAR_LEGS_L:    amt=9; break;
     case WEAR_FOOT_R:

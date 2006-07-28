@@ -155,7 +155,7 @@ static int headbuttHit(TBeing *c, TBeing *victim)
                   0, victim, TO_CHAR);
     act("$n headbutts you, slamming $s head into your foot.", FALSE, c,
                   0, victim, TO_VICT);
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_WAISTE)) {
+  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_WAIST)) {
     pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
     dam_type = DAMAGE_HEADBUTT_LEG;
     act("$n headbutts $N, slamming $s head into $N's leg.", FALSE, c,
@@ -165,7 +165,7 @@ static int headbuttHit(TBeing *c, TBeing *victim)
     act("$n headbutts you, slamming $s head into your leg.", FALSE, c,
                   0, victim, TO_VICT);
   } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_BODY)) {
-    pos = WEAR_WAISTE;
+    pos = WEAR_WAIST;
     dam_type = DAMAGE_HEADBUTT_CROTCH;
     act("$n headbutts $N, slamming $s head into $N's crotch.", FALSE, c, 
                   0, victim, TO_NOTVICT);

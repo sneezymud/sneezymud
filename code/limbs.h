@@ -80,7 +80,7 @@ enum wearSlotT {
      WEAR_HAND_L,
      WEAR_FINGER_R,
      WEAR_FINGER_L,
-     WEAR_WAISTE,
+     WEAR_WAIST,
      WEAR_LEGS_R,
      WEAR_LEGS_L,
      WEAR_FOOT_R,

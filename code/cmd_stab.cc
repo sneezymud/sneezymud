@@ -21,7 +21,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     0.40, // Hand-L
     0.20, // Finger-R
     0.20, // Finger-L
-    1.20, // Waiste
+    1.20, // Waist
     1.10, // Leg-R
     1.10, // Leg-L
     0.30, // Foot-R
@@ -46,7 +46,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     case WEAR_BODY:
       tDamageType = DAMAGE_IMPALE;
       break;
-    case WEAR_WAISTE:
+    case WEAR_WAIST:
       tDamageType = DAMAGE_DISEMBOWLED_VR;
       break;
     case WEAR_BACK:
@@ -154,7 +154,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
 
         break;
 
-      case WEAR_WAISTE:
+      case WEAR_WAIST:
         tStringChar="You slice $N from love handle to love handle!";
         tStringVict="$n slices you from love handle to love handle!";
 	tStringOthr="$n slices $N from love handle to love handle!";
@@ -219,7 +219,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
           tLimb == WEAR_NECK ||
           tLimb == WEAR_BODY ||
           tLimb == WEAR_BACK ||
-          tLimb == WEAR_WAISTE)
+          tLimb == WEAR_WAIST)
         tNewDamage /= 10;
 
       tRc = tSucker->hurtLimb((unsigned int)tNewDamage, tLimb);
@@ -283,7 +283,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       // Body   :  1 (can not be whacked)
       // Back   :  1 (can not be whacked)
       // Arms   :  0 (can     be whacked)
-      // Waiste :  2 (can not be whacked)
+      // Waist :  2 (can not be whacked)
       // Legs   :  1 (can not be whacked)
       // Fingers: -4 (can     be whacked)
       if (::number(tNewSever, 500) <= 0 && !tSucker->isLucky(tSucker->GetMaxLevel())) {

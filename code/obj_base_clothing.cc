@@ -191,7 +191,7 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
   } else if (canWear(ITEM_WEAR_BACK)) {
     *ac_perc  = 0.07;
     *str_perc = 0.10;
-  } else if (canWear(ITEM_WEAR_WAISTE)) {
+  } else if (canWear(ITEM_WEAR_WAIST)) {
     *ac_perc  = 0.08;
     *str_perc = 0.05;
   } else if (canWear(ITEM_WEAR_ARMS)) {
@@ -713,7 +713,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
        (o->canWear(ITEM_WEAR_BODY) && canWear(ITEM_WEAR_BODY)) ||
        (o->canWear(ITEM_WEAR_HEAD) && canWear(ITEM_WEAR_HEAD)) ||
        (o->canWear(ITEM_WEAR_BACK) && canWear(ITEM_WEAR_BACK)) ||
-       (o->canWear(ITEM_WEAR_WAISTE) && canWear(ITEM_WEAR_WAISTE))){
+       (o->canWear(ITEM_WEAR_WAIST) && canWear(ITEM_WEAR_WAIST))){
       ch->sendTo(fmt("You already have something that fits that slot in your %s.\n\r") % fname(container->name));
       return TRUE;
     }
@@ -739,7 +739,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
      !canWear(ITEM_WEAR_HANDS) &&
      !canWear(ITEM_WEAR_ARMS) &&
      !canWear(ITEM_WEAR_BACK) &&
-     !canWear(ITEM_WEAR_WAISTE) &&
+     !canWear(ITEM_WEAR_WAIST) &&
      !canWear(ITEM_WEAR_WRIST)){
     ch->sendTo("You can only put clothing or armor into that.\n\r");
     return TRUE;

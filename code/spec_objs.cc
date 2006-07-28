@@ -4868,7 +4868,7 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
     delete o;
     return FALSE; 
   }
-  if(!(generator = dynamic_cast<TObj *>(ch->equipment[WEAR_WAISTE]))) {
+  if(!(generator = dynamic_cast<TObj *>(ch->equipment[WEAR_WAIST]))) {
     act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
     act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     delete o;
@@ -4978,7 +4978,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	  if(il == WEAR_HAND_L) bit = ITEM_WEAR_HANDS;
 	  if(il == WEAR_FINGER_R) bit = ITEM_WEAR_FINGER;
 	  if(il == WEAR_FINGER_L) bit = ITEM_WEAR_FINGER;
-	  if(il == WEAR_WAISTE) bit = ITEM_WEAR_WAISTE;
+	  if(il == WEAR_WAIST) bit = ITEM_WEAR_WAIST;
 	  if(il == WEAR_LEGS_R) bit = ITEM_WEAR_LEGS;
 	  if(il == WEAR_LEGS_L) bit = ITEM_WEAR_LEGS;
 	  if(il == WEAR_FOOT_R) bit = ITEM_WEAR_FEET;

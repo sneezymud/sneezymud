@@ -53,7 +53,7 @@ wearSlotT getSlotFromLST(loadSetTypeT tPiece, TBeing *ch, bool isFirst)
   if (tPiece == LST_GLOVE)
     return (isFirst ? WEAR_HAND_L : WEAR_HAND_R);
   if (tPiece == LST_BELT)
-    return WEAR_WAISTE;
+    return WEAR_WAIST;
   if (tPiece == LST_BRACELET)
     return (isFirst ? WEAR_WRIST_L : WEAR_WRIST_R);
   if (tPiece == LST_LEGGING)

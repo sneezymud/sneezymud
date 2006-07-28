@@ -1689,9 +1689,9 @@ void TBeing::lowObjs(const char *arg)
   } else if (is_abbrev(buf2, "hold") || is_abbrev(buf2, "held")) {
     worn = ITEM_HOLD;
     slot = HOLD_RIGHT;
-  } else if (is_abbrev(buf2, "waiste")) {
-    worn = ITEM_WEAR_WAISTE;
-    slot = WEAR_WAISTE;
+  } else if (is_abbrev(buf2, "waist")) {
+    worn = ITEM_WEAR_WAIST;
+    slot = WEAR_WAIST;
   } else if (is_abbrev(buf2, "back")) {
     worn = ITEM_WEAR_BACK;
     slot = WEAR_BACK;

@@ -869,38 +869,38 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
       }
 
       break;
-    case WEAR_KEY_WAISTE:
-      if (validEquipSlot(WEAR_WAISTE)) {
-        if (o->canWear(ITEM_WEAR_WAISTE)) {
-          if (!check_size_restrictions(this, o, WEAR_WAISTE, ch))
+    case WEAR_KEY_WAIST:
+      if (validEquipSlot(WEAR_WAIST)) {
+        if (o->canWear(ITEM_WEAR_WAIST)) {
+          if (!check_size_restrictions(this, o, WEAR_WAIST, ch))
             return FALSE;
 
-          if (equipment[WEAR_WAISTE]) {
+          if (equipment[WEAR_WAIST]) {
             sprintf(buf, "%s already %s something on %s %s.",
                    (ch == this ? "You" : "$N"),
                    (ch == this ? "wear" : "wears"),
                    (ch == this ? "your" : "$S"),
-                   describeBodySlot(WEAR_WAISTE).c_str());
+                   describeBodySlot(WEAR_WAIST).c_str());
             act(buf, FALSE, ch, o, this, TO_CHAR);
           } else {
             sprintf(buf, "You %s $p around %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
-                     describeBodySlot(WEAR_WAISTE).c_str());
+                     describeBodySlot(WEAR_WAIST).c_str());
             act(buf, FALSE, ch, o, this, TO_CHAR);
             sprintf(buf, "$n %s $p around %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "your"),
-                     describeBodySlot(WEAR_WAISTE).c_str());
+                     describeBodySlot(WEAR_WAIST).c_str());
             act(buf, FALSE, ch, o, this, TO_VICT);
             sprintf(buf, "$n %s $p around %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "$N's"),
-                     describeBodySlot(WEAR_WAISTE).c_str());
+                     describeBodySlot(WEAR_WAIST).c_str());
             act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
             --(*o);
-            equipChar(o, WEAR_WAISTE);
+            equipChar(o, WEAR_WAIST);
             // If fighting, make them lose a round or two. 
             loseRoundWear(0.90, TRUE, TRUE);
             aiWear(o);
@@ -909,7 +909,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
           sprintf(buf, "%s can't wear $p on %s %s.",
                  (ch == this ? "You" : "$N"),
                  (ch == this ? "your" : "$S"),
-                 describeBodySlot(WEAR_WAISTE).c_str());
+                 describeBodySlot(WEAR_WAIST).c_str());
           act(buf, FALSE, ch, o, this, TO_CHAR);
         }
       } else {
@@ -2320,8 +2320,8 @@ wearKeyT TObj::getWearKey() const
     return WEAR_KEY_NECK;
   if (canWear(ITEM_WEAR_WRIST))
     return WEAR_KEY_WRIST;
-  if (canWear(ITEM_WEAR_WAISTE))
-    return WEAR_KEY_WAISTE;
+  if (canWear(ITEM_WEAR_WAIST))
+    return WEAR_KEY_WAIST;
   if (canWear(ITEM_WEAR_ARMS))
     return WEAR_KEY_ARMS;
   if (canWear(ITEM_WEAR_HANDS))

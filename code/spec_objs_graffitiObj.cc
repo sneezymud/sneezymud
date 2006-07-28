@@ -13,7 +13,7 @@ int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!isname(buf, o->name))
     return FALSE;
 
-  if (ch->getSex() != SEX_MALE && (ch->equipment[WEAR_WAISTE]
+  if (ch->getSex() != SEX_MALE && (ch->equipment[WEAR_WAIST]
         || ch->equipment[WEAR_LEGS_R] || ch->equipment[WEAR_LEGS_L])) {
       ch->sendTo("You are not skilled enough to do this without removing the equipment that lies between you and your target.\n\r");
     return TRUE;

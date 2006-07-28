@@ -1527,7 +1527,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
        ((FitT & (1 << 11)) && canWear(ITEM_WEAR_HANDS)) ||
        ((FitT & (1 << 12)) && canWear(ITEM_WEAR_HEAD)) ||
        ((FitT & (1 << 13)) && canWear(ITEM_WEAR_BACK)) ||
-       ((FitT & (1 << 14)) && canWear(ITEM_WEAR_WAISTE)) ||
+       ((FitT & (1 << 14)) && canWear(ITEM_WEAR_WAIST)) ||
        ((FitT & (1 << 17)) && isPaired()) ||
        ((FitT - (FitT & ((1 << 0) | (1 << 15) | (1 << 16)))) == 0)))
     return buf;

@@ -109,7 +109,7 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
 enum kickSlotT {
   KICK_NONE,
   KICK_LEG,
-  KICK_WAISTE,
+  KICK_WAIST,
   KICK_BODY,
   KICK_HEAD
 };
@@ -123,7 +123,7 @@ static int kickMiss(TBeing *caster, TBeing *victim, kickSlotT slot, spellNumT sk
       act("You miss your kick at $N's solar plexus.", FALSE, caster, 0, victim, TO_CHAR);            
       act("Leaping backwards, you dodge $n's kick at your chest!", FALSE, caster, 0, victim, TO_VICT);            
       break;
-    case KICK_WAISTE:   // waist/crotch
+    case KICK_WAIST:   // waist/crotch
       act("$n misses a kick at $N's groin.", FALSE, caster, 0, victim, TO_NOTVICT);
       act("You miss your kick at $N's groin.", FALSE, caster, 0, victim, TO_CHAR);            
       act("Jumping out of the way, you avoid $n's kick at your crotch!", FALSE, caster, 0, victim, TO_VICT);            
@@ -191,10 +191,10 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
       return DELETE_VICT;
   
     return TRUE;
-  } else if (tmp < victim->getPartMinHeight(ITEM_WEAR_WAISTE))
+  } else if (tmp < victim->getPartMinHeight(ITEM_WEAR_WAIST))
     slot_i = KICK_LEG;   // shins
   else if (tmp < victim->getPartMinHeight(ITEM_WEAR_BODY))
-    slot_i = KICK_WAISTE;   // waist
+    slot_i = KICK_WAIST;   // waist
   else if (tmp < victim->getPartMinHeight(ITEM_WEAR_HEAD))
     slot_i = KICK_BODY;   // chest
   else
@@ -207,25 +207,25 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
 
   TObj *item;
   switch (slot_i) {
-    case KICK_WAISTE:
+    case KICK_WAIST:
       limb_dam = (level/5)+1;
       act("$n kicks $N in the crotch, yowch!.", FALSE, caster, 0, victim, TO_NOTVICT);
       act("You're kicked in the crotch by $n.", FALSE, caster, 0, victim, TO_VICT); 
       act("Your kick hits $N in the crotch.", FALSE, caster, 0, victim, TO_CHAR);
       if (victim->getSex() == SEX_MALE) {
-        if (!victim->equipment[WEAR_WAISTE] || 
-            isname("belt", victim->equipment[WEAR_WAISTE]->name)) {
+        if (!victim->equipment[WEAR_WAIST] || 
+            isname("belt", victim->equipment[WEAR_WAIST]->name)) {
           // no equipment or just a belt
           victim->sendTo("Your voice just went up an octave.  Ouch!\n\r");
           dam += 1;
           victim->cantHit += victim->loseRound(0.25);
         } else 
           victim->sendTo(fmt("Good thing you were wearing your %s.\n\r") %
-               fname(victim->equipment[WEAR_WAISTE]->name));
+               fname(victim->equipment[WEAR_WAIST]->name));
       }
-      item = dynamic_cast<TObj *>(victim->equipment[WEAR_WAISTE]);
+      item = dynamic_cast<TObj *>(victim->equipment[WEAR_WAIST]);
       if (!item) {
-        rc = caster->damageLimb(victim, WEAR_WAISTE, NULL, &limb_dam);
+        rc = caster->damageLimb(victim, WEAR_WAIST, NULL, &limb_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
       } else if (caster->dentItem(victim, item, 1, caster->getPrimaryFoot()) == DELETE_ITEM) {
