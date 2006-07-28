@@ -45,7 +45,7 @@ say { "warhammer";
       say It's a hammer carved from a single block of malachite.;
       say I'm not terribly familiar with this malachite material and I'm curious to test it's properties.;
       say A surfaced dwarf by the name of Dakinor is in the custom of carrying these.;
-      say I suggest you smite you him.;
+      say I suggest you smite him.;
 }
 
 say { "supplies";
