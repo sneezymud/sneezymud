@@ -35,7 +35,7 @@ extern "C" {
 #include "obj_base_clothing.h"
 #include "database.h"
 #include "rent.h"
-
+#include "obj_suitcase.h"
 
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
@@ -113,6 +113,164 @@ void TBeing::doChange(const char *argument)
   return;
 }
 
+
+wearSlotT getChangePos(TObj *o)
+{
+  static int arms=0, legs=0, fingers=0, wrists=0, hands=0, feet=0;
+  wearSlotT pos;
+
+  // klugey - pass NULL to reinit the paired counts
+  if(!o){
+    arms=legs=fingers=wrists=hands=feet=0;
+    return WEAR_NOWHERE;
+  }
+
+  switch(o->getWearKey()){
+    case WEAR_KEY_NONE:
+      pos=WEAR_NOWHERE;
+    case WEAR_KEY_FINGER:
+      if(!fingers){
+	fingers++;
+	pos=WEAR_FINGER_L;
+      } else {
+	pos=WEAR_FINGER_R;
+      }
+      break;
+    case WEAR_KEY_NECK:
+      pos=WEAR_NECK;
+      break;
+    case WEAR_KEY_BODY:
+      pos=WEAR_BODY;
+      break;
+    case WEAR_KEY_HEAD:
+      pos=WEAR_HEAD;
+      break;
+    case WEAR_KEY_LEGS:
+      if(!legs){
+	legs++;
+	pos=WEAR_LEGS_L;
+      } else {
+	pos=WEAR_LEGS_R;
+      }
+      break;
+    case WEAR_KEY_FEET:
+      if(!feet){
+	feet++;
+	pos=WEAR_FOOT_L;
+      } else {
+	pos=WEAR_FOOT_R;
+      }
+      break;
+    case WEAR_KEY_HANDS:
+      if(!hands){
+	++hands;
+	pos=WEAR_HAND_L;
+      } else {
+	pos=WEAR_HAND_R;
+      }
+      break;
+    case WEAR_KEY_ARMS:
+      if(!arms){
+	++arms;
+	pos=WEAR_ARM_L;
+      } else {
+	pos=WEAR_ARM_R;
+      }
+      break;
+    case WEAR_KEY_BACK:
+      pos=WEAR_BACK;
+      break;
+    case WEAR_KEY_WAISTE:
+      pos=WEAR_WAISTE;
+      break;
+    case WEAR_KEY_WRIST:
+      if(!wrists){
+	++wrists;
+	pos=WEAR_WRIST_L;
+      } else {
+	pos=WEAR_WRIST_R;
+      }
+      break;
+    case WEAR_KEY_HOLD:
+    case WEAR_KEY_HOLD_R:
+      pos=HOLD_RIGHT;
+      break;
+    case WEAR_KEY_HOLD_L:
+      pos=HOLD_LEFT;
+      break;
+    default:
+      pos=WEAR_NOWHERE;
+  }
+
+  return pos;
+}
+
+void TBeing::doChangeOutfit(const char *argument)
+{
+  sstring buf=argument;
+
+  // find suitcase object identified by buf
+  TObj *o=NULL;
+  TSuitcase *suitcase=NULL;
+  if(!(o=generic_find_obj(buf, FIND_OBJ_INV|FIND_OBJ_ROOM, this)) ||
+     !(suitcase=dynamic_cast<TSuitcase *>(o))){
+    sendTo("You can't seem to find that suitcase or wardrobe.\n\r");
+    return;
+  }
+
+  // kluge - resets slot counters
+  getChangePos(NULL);
+
+
+  // swap clothes  
+  TThing *removed, *t2, *first=NULL;
+  wearSlotT pos;
+  for(TThing *t=suitcase->getStuff(); t; t=t2){
+    t2=t->nextThing;
+
+    // first is the first item we removed and then put in the suitcase
+    // so it should be the end of the original items
+    if(t==first)
+      break;
+
+    if(!(o = dynamic_cast<TBaseClothing *>(t)))
+      continue;
+
+    if((pos=getChangePos(o))==WEAR_NOWHERE){
+      continue;
+    }
+
+    removed=NULL;
+    if(equipment[pos]){
+      removed = unequip(pos);
+      *suitcase += *removed;
+      sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+	     removed->getName() % suitcase->getName());
+
+      if(o->isPaired()){
+	if(pos==WEAR_LEGS_L && equipment[WEAR_LEGS_R]){
+	  removed = unequip(WEAR_LEGS_R);
+	  *suitcase += *removed;
+	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+		 removed->getName() % suitcase->getName());	
+	} else if(pos==WEAR_LEGS_R && equipment[WEAR_LEGS_L]){
+	  removed = unequip(WEAR_LEGS_L);
+	  *suitcase += *removed;
+	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+		 removed->getName() % suitcase->getName());
+	}
+      }
+    }
+
+
+    if(!first && removed){
+      first=removed;
+    }
+    
+    wear(o, o->getWearKey(), this);
+  }
+}
+
 void TPerson::doChange(const char *argument)
 {
   int new_lev;
@@ -120,13 +278,21 @@ void TPerson::doChange(const char *argument)
 
   half_chop(argument, buf, buf2);
 
-  if (!isImmortal() || !*buf) {
-    change_hands(this, argument);
-    return;
+  if (!isImmortal()) {
+    if(!*buf){
+      change_hands(this, argument);
+      return;
+    } else {
+      doChangeOutfit(argument);
+      return;
+    }
+  } else {
+    if(generic_find_obj(argument, FIND_OBJ_INV|FIND_OBJ_ROOM, this)){
+      doChangeOutfit(argument);
+      return;
+    }
   }
   
-
-
 
   if (is_abbrev(argument, "questvar1")) {
     argument = one_argument(argument, buf);
