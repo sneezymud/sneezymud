@@ -5757,7 +5757,7 @@ extern int demonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *
 extern int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
-
+extern int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 // assign special procedures to objects
 
@@ -5912,5 +5912,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Minor Astral Walk", objWornMinorAstralWalk},
   {FALSE, "Portal", objWornPortal},
   {FALSE, "brick quest scorecard", brickScorecard},
+  {FALSE, "EQ Combo Casting", comboEQCast},
   {FALSE, "last proc", bogusObjProc}
 };
