@@ -461,6 +461,18 @@ void TPerson::doShow(const sstring &argument)
     for (int i = 1; i< MAX_TOG_INDEX; i++) {
       sb += fmt("%i) %s\n\r") % i % TogIndex[i].name;
     }
+  } else if (is_abbrev(buf, "objspec")){
+    sb += "Object Specials\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i< NUM_OBJ_SPECIALS; i++) {
+      sb += fmt("%i) %s\n\r") % i % objSpecials[i].name;
+    }
+  } else if (is_abbrev(buf, "mobspec")){
+    sb += "Mobile Specials\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
+      sb += fmt("%i) %s\n\r") % i % mob_specials[i].name;
+    }
   } else if (is_abbrev(buf, "trapped")) {
     sb += "Trapped Containers\n\r";
     sb += "-------------------------------------\n\r";
