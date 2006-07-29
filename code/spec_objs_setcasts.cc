@@ -280,7 +280,7 @@ int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   if (cmd == CMD_GENERIC_PULSE) {
     // not too often...
-    if (!::number(0,5)) {
+    if (!::number(0,39)) {
       int which = ::number(1,3);
       switch (which) {
 	case 1:
