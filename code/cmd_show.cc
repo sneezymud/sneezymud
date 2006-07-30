@@ -1139,15 +1139,23 @@ void TPerson::doShow(const sstring &argument)
     show_guild(my_arg.c_str());
   } else if (is_abbrev(buf, "oproc")){
     sb += "Object Specials\n\r";
+    sb += "No.) Assignable  Name\n\r";
     sb += "------------------------------------\n\r";
     for (int i = 1; i< NUM_OBJ_SPECIALS; i++) {
-      sb += fmt("%i) %s\n\r") % i % objSpecials[i].name;
+      if(!is_abbrev(my_arg, "assignable") ||
+	 objSpecials[i].assignable)
+	sb += fmt("%i) [%s] %s\n\r") % 
+	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name;
     }
   } else if (is_abbrev(buf, "mproc")){
     sb += "Mobile Specials\n\r";
+    sb += "No.) Assignable  Name\n\r";
     sb += "------------------------------------\n\r";
     for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
-      sb += fmt("%i) %s\n\r") % i % mob_specials[i].name;
+      if(!is_abbrev(my_arg, "assignable") ||
+	 mob_specials[i].assignable)
+	sb += fmt("%i) [%s] %s\n\r") % 
+	  i % (mob_specials[i].assignable?"X":" ") % mob_specials[i].name;
     }
   } else if (is_abbrev(buf, "boobies")) {
     sb += "     (*)(*) <==== BOOBIES!!!\n\r";
@@ -1168,8 +1176,8 @@ void TPerson::doShow(const sstring &argument)
     sb += "  show newfactions <faction name | faction ID>\n\r";
     sb += "  show toggles\n\r";
     sb += "  show liquids\n\r";
-    sb += "  show oproc\n\r";
-    sb += "  show mproc\n\r";
+    sb += "  show oproc <assignable>\n\r";
+    sb += "  show mproc <assignable>\n\r";
     sb += "  show boobies\n\r";
   }
 
