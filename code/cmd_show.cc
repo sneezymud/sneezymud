@@ -461,18 +461,6 @@ void TPerson::doShow(const sstring &argument)
     for (int i = 1; i< MAX_TOG_INDEX; i++) {
       sb += fmt("%i) %s\n\r") % i % TogIndex[i].name;
     }
-  } else if (is_abbrev(buf, "oproc")){
-    sb += "Object Specials\n\r";
-    sb += "------------------------------------\n\r";
-    for (int i = 1; i< NUM_OBJ_SPECIALS; i++) {
-      sb += fmt("%i) %s\n\r") % i % objSpecials[i].name;
-    }
-  } else if (is_abbrev(buf, "mproc")){
-    sb += "Mobile Specials\n\r";
-    sb += "------------------------------------\n\r";
-    for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
-      sb += fmt("%i) %s\n\r") % i % mob_specials[i].name;
-    }
   } else if (is_abbrev(buf, "trapped")) {
     sb += "Trapped Containers\n\r";
     sb += "-------------------------------------\n\r";
@@ -1149,6 +1137,20 @@ void TPerson::doShow(const sstring &argument)
         }
   } else if (is_abbrev(buf, "newfactions")) {
     show_guild(my_arg.c_str());
+  } else if (is_abbrev(buf, "oproc")){
+    sb += "Object Specials\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i< NUM_OBJ_SPECIALS; i++) {
+      sb += fmt("%i) %s\n\r") % i % objSpecials[i].name;
+    }
+  } else if (is_abbrev(buf, "mproc")){
+    sb += "Mobile Specials\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
+      sb += fmt("%i) %s\n\r") % i % mob_specials[i].name;
+    }
+  } else if (is_abbrev(buf, "boobies")) {
+    sb += "     (*)(*) <==== BOOBIES!!!\n\r";
   } else {
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | disabled)\n\r";
@@ -1166,6 +1168,9 @@ void TPerson::doShow(const sstring &argument)
     sb += "  show newfactions <faction name | faction ID>\n\r";
     sb += "  show toggles\n\r";
     sb += "  show liquids\n\r";
+    sb += "  show oproc\n\r";
+    sb += "  show mproc\n\r";
+    sb += "  show boobies\n\r";
   }
 
   if (desc)
