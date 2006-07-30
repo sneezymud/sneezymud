@@ -17,6 +17,7 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "liquids.h"
+#include "database.h"
 
 extern int getObjLoadPotential(const int obj_num);
 
@@ -1138,14 +1139,24 @@ void TPerson::doShow(const sstring &argument)
   } else if (is_abbrev(buf, "newfactions")) {
     show_guild(my_arg.c_str());
   } else if (is_abbrev(buf, "oproc")){
+    TDatabase db(DB_SNEEZY);
+
+    db.query("select spec_proc, count(*) as count from obj where spec_proc > 0 group by spec_proc order by spec_proc");
+    db.fetchRow();
+
     sb += "Object Specials\n\r";
     sb += "No.) Assignable  Name\n\r";
     sb += "------------------------------------\n\r";
     for (int i = 1; i< NUM_OBJ_SPECIALS; i++) {
-      if(!is_abbrev(my_arg, "assignable") ||
-	 objSpecials[i].assignable)
-	sb += fmt("%i) [%s] %s\n\r") % 
-	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name;
+      if(!is_abbrev(my_arg, "assignable") || objSpecials[i].assignable){
+	while(convertTo<int>(db["spec_proc"]) < i)
+	  if(!db.fetchRow())
+	    break;
+
+	sb += fmt("%3i) [%s] %-30s (%-2s objects)\n\r") % 
+	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name % 
+	  ((convertTo<int>(db["spec_proc"])==i)?db["count"]:"0");
+      }
     }
   } else if (is_abbrev(buf, "mproc")){
     sb += "Mobile Specials\n\r";
