@@ -1847,6 +1847,12 @@ void TBeing::statBeing(TBeing *k)
           apply_types[aff->location].name % aff->modifier;
 	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
+      case AFFECT_BUMP_BLESSING:
+	str += "Bump's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:

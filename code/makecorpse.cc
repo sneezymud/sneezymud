@@ -912,6 +912,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case AFFECT_JESUS_BLESSING:
       case AFFECT_VASCO_BLESSING:
       case AFFECT_CORAL_BLESSING:
+      case AFFECT_BUMP_BLESSING:
       case ABSOLUTE_MAX_SKILL:
         break;
     }

@@ -1807,6 +1807,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	    describeDuration(this, aff->duration);
 	}
 	break;
+      case AFFECT_BUMP_BLESSING:
+        if(show){
+	  str+=fmt("Affected: Bump's Blessing.  Approx. duration : %s\n\r") %
+	    describeDuration(this, aff->duration);
+	}
+	break;
 
       case AFFECT_BITTEN_BY_VAMPIRE:
 	// secret!

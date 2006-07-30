@@ -90,6 +90,13 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.modifier2=0;
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_BUMP_BLESSING){
+    aff.type=AFFECT_BUMP_BLESSING;
+    aff.location=APPLY_AGI;
+    aff.modifier=19;
+    aff.modifier2=0;
+    aff.bitvector=0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   }
 }
 
@@ -238,6 +245,10 @@ void TBeing::doEgoTrip(const char *arg)
       } else if(!strcmp(getName(), "Damescena")){
 	egoAffect(this, ch, AFFECT_DAMESCENA_BLESSING, 5);
 	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <W>healing<1>.\n\r") %
+		   sstring(ch->pers(this)).cap() % hshr());
+      } else if(!strcmp(getName(), "Bump")){
+	egoAffect(this, ch, AFFECT_BUMP_BLESSING, 5);
+	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <W>flexibility<1>.\n\r") %
 		   sstring(ch->pers(this)).cap() % hshr());
       } else {
 	// default blessing
