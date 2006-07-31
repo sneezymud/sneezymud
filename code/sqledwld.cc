@@ -54,6 +54,7 @@ int main(int argc, char **argv)
       buf = fmt("river_dir: %s\n") % db["river_dir"];  sbuf+=buf;
       buf = fmt("capacity:  %s\n") % db["capacity"];  sbuf+=buf;
       buf = fmt("height:    %s\n") % db["height"];  sbuf+=buf;
+      buf = fmt("spec:    %s\n") % db["spec"];  sbuf+=buf;
       buf = fmt("\n"); sbuf+=buf;
     }
 
@@ -133,8 +134,8 @@ int main(int argc, char **argv)
 
   
       
-      db.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,zone) values (%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,-1)",
-	       val["vnum"].c_str(),val["x"].c_str(),val["y"].c_str(),val["z"].c_str(),val["name"].c_str(),val["description"].c_str(),val["room_flag"].c_str(),val["sector"].c_str(),val["teletime"].c_str(),val["teletarg"].c_str(),val["telelook"].c_str(),val["river_speed"].c_str(),val["river_dir"].c_str(),val["capacity"].c_str(),val["height"].c_str());
+      db.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,spec) values (%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+	       val["vnum"].c_str(),val["x"].c_str(),val["y"].c_str(),val["z"].c_str(),val["name"].c_str(),val["description"].c_str(),val["room_flag"].c_str(),val["sector"].c_str(),val["teletime"].c_str(),val["teletarg"].c_str(),val["telelook"].c_str(),val["river_speed"].c_str(),val["river_dir"].c_str(),val["capacity"].c_str(),val["height"].c_str(),val["spec"].c_str());
     } else if(val["DATATYPE"]=="roomextra"){
       printf("replacing roomextra %s\n", val["vnum"].c_str());
       
