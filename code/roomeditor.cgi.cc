@@ -2,6 +2,7 @@
 #include "extern.h"
 #include "database.h"
 #include "session.cgi.h"
+#include "spec_rooms.h"
 
 #include <vector>
 #include <map>
@@ -331,13 +332,13 @@ void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
   if(templatevnum.empty() ||
      templatevnum == "0"){
     db_sneezy.setDB(DB_SNEEZY);
-    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=0");
+    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where vnum=0");
   } else {
-    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where vnum=%s and block=1 and owner in (%r)", templatevnum.c_str(), getPlayerNames(account_id).c_str());
+    db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where vnum=%s and block=1 and owner in (%r)", templatevnum.c_str(), getPlayerNames(account_id).c_str());
   }
   db_sneezy.fetchRow();
     
-  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   vnum.c_str(),
 	   db_sneezy["x"].c_str(), 
@@ -353,7 +354,8 @@ void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
 	   db_sneezy["river_speed"].c_str(), 
 	   db_sneezy["river_dir"].c_str(), 
 	   db_sneezy["capacity"].c_str(), 
-	   db_sneezy["height"].c_str());
+	   db_sneezy["height"].c_str(),
+	   db_sneezy["spec"].c_str());
 
   if(templatevnum.empty()){
     db_sneezy.query("select vnum, name, description from roomextra where vnum=0");
@@ -482,7 +484,7 @@ void saveRoom(Cgicc cgi, int account_id)
   	   (**(cgi.getElement("vnum"))).c_str());
 
 
-  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %i, %i, %s, %s, %s, %s, %s, %s, %s)",
+  db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %i, %i, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("x"))).c_str(), 
@@ -498,7 +500,8 @@ void saveRoom(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("river_speed"))).c_str(), 
 	   (**(cgi.getElement("river_dir"))).c_str(), 
 	   (**(cgi.getElement("capacity"))).c_str(), 
-	   (**(cgi.getElement("height"))).c_str());
+	   (**(cgi.getElement("height"))).c_str(),
+	   (**(cgi.getElement("spec"))).c_str());
 
 
   cout << "Saved.<br>";
@@ -735,6 +738,33 @@ sstring getTerrainForm(int selected)
 }
 
 
+sstring getProcForm(int selected, bool wizard)
+{
+  multimap <sstring, int, std::less<sstring> > m;
+  multimap <sstring, int, std::less<sstring> >::iterator it;
+
+  m.insert(pair<sstring,int>("-- none", 0));
+
+  for(int i=1;i<NUM_ROOM_SPECIALS-1;++i){
+    if(roomSpecials[i].name!="BOGUS")
+      m.insert(pair<sstring,int>(roomSpecials[i].name, i));
+  }
+
+  sstring buf="<tr><td>spec_proc</td><td><select name=spec>\n";
+  for(it=m.begin();it!=m.end();++it){
+    if(roomSpecials[(*it).second].assignable || 
+       (*it).second==selected ||
+       wizard){
+      buf+=fmt("<option value=%i %s>%s</option>\n") %
+	(*it).second % (((*it).second==selected)?"selected":"") % 
+	(*it).first;
+    }
+  }
+  buf+="</select>\n";
+
+  return buf;
+}
+
 
 
 void sendShowRoom(int account_id, int vnum, bool wizard)
@@ -746,7 +776,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   assign_item_info();
   assignTerrainInfo();
 
-  db.query("select owner, vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where block=1 and vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
+  db.query("select owner, vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where block=1 and vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
   db.fetchRow();
 
   cout << "<form method=post action=roomeditor.cgi name=pickroom>" << endl;
@@ -891,6 +921,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "capacity" % "capacity" % db["capacity"];
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "height" % "height" % db["height"];
   
+  cout << getProcForm(convertTo<int>(db["spec"]), wizard);
 
   cout << "</table>";
 
