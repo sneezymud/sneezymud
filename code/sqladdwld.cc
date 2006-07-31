@@ -27,14 +27,14 @@ int main(int argc, char **argv)
   // loop through room nums
   for(unsigned int t=0;t<vnums.size();t++){
     //// room
-    db_immo.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where owner='%s' and vnum=%i and block=%s",
+    db_immo.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where owner='%s' and vnum=%i and block=%s",
 		  immortal.c_str(), vnums[t], block.c_str());
     
     if(db_immo.fetchRow()){
       printf("Adding %i ('%s')\n", vnums[t], db_immo["name"].c_str());
 
       db_beta.query("delete from room where vnum=%i", vnums[t]);
-      db_beta.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,zone) values (%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,-1)",
+      db_beta.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,spec) values (%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 		    db_immo["vnum"].c_str(), db_immo["x"].c_str(),
 		    db_immo["y"].c_str(), db_immo["z"].c_str(),
 		    db_immo["name"].c_str(), db_immo["description"].c_str(),
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 		    db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
 		    db_immo["telelook"].c_str(),db_immo["river_speed"].c_str(),
 		    db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
-		    db_immo["height"].c_str());
+		    db_immo["height"].c_str(), db_immo["spec"].c_str());
 
 
       //// roomextra
