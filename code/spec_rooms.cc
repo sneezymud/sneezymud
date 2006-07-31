@@ -2022,6 +2022,71 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
+int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  TPerson *player;
+  int rc;
+  TThing *t, *t2;
+  static unsigned int pulse;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // about 10 per second
+  ++pulse;
+  // we want to check every minute, but have a 90% of triggering over
+  // 5 minutes.  thus, 1-(1-x)^5 = 0.90
+  // x = .37
+  if(pulse%600 || (::number(0,99) >= 37))
+    return FALSE;
+
+  sendrpf(COLOR_BASIC, rp,
+	  "<c>A strong gust of wind swirls into the room kicking up <o>dust<1><c> and knocking the unwary off-guard.<1>\n\r");
+
+
+  for (t = rp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+  
+    if(!(player=dynamic_cast<TPerson *>(t)))
+      continue;
+
+    if(player->isImmortal())
+      continue;
+
+    // pick random direction
+    for (int i = 0; i < 20; i++) {
+      dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+
+      if (player->canGo(dir)){
+	act("You are blown out of the room!",
+	    FALSE, player, 0, 0, TO_CHAR);
+	act("$n is blown out of the room!",
+	    FALSE, player, 0, 0, TO_ROOM);
+
+	--(*player);
+	thing_to_room(player, rp->dir_option[dir]->to_room);
+	
+	player->doLook("", CMD_LOOK);
+	player->addToWait(combatRound(1));
+	break;
+      }
+    }
+
+    act("You land flat on your back.",
+	FALSE, player, 0, 0, TO_CHAR);
+    act("$n lands flat on $s back!",
+	FALSE, player, 0, 0, TO_ROOM);
+    
+    rc = player->crashLanding(POSITION_SITTING);
+    if (IS_SET_DELETE(rc, DELETE_THIS)){
+      delete player;
+      player = NULL;
+    }
+  }
+
+  return TRUE;
+}
+
 int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
@@ -2117,6 +2182,7 @@ void assign_rooms(void)
 {
   struct room_special_proc_entry specials[] =
   {
+    {63, windGustRoom},
     {416, healing_room},
     {418, emergency_room},
 #if 0
