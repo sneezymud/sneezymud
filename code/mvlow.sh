@@ -2,10 +2,11 @@
 
 BUILD_MUD_ROOT="/mud/build"
 PROD_MUD_ROOT="/mud/prod"
+TOUCHFILE=$BUILD_MUD_ROOT/mvlow.lock
 
-umask 0002
-if [ 0 = 1 ]; then
-  echo "LOW move aborted at request of Maror."
+umask 002
+if [ -a $TOUCHFILE ]; then
+  echo "LOW move aborted at request of Damescena."
   echo "...busy screwing stuff up, please don't move LOW."
   exit
 fi
