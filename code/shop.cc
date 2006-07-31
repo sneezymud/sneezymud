@@ -17,6 +17,7 @@
 #include "spec_objs_lottery_ticket.h"
 #include "obj_component.h"
 #include "obj_potion.h"
+#include "spec_rooms.h"
 
 vector<shopData>shop_index(0);
 int cached_shop_nr;
@@ -2160,10 +2161,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if ((cmd == CMD_DROP) && (ch->in_room == shop_index[shop_nr].in_room)) {
     TRoom * pRoom = real_roomp(ch->in_room);
 
-// This is just a quick fix so we can check it below.
-extern int grimhavenDump(TBeing *, cmdTypeT, const char *, TRoom *);
-
-    if (!pRoom || (pRoom->funct != grimhavenDump)) {
+    if (!pRoom || (pRoom->spec != SPEC_ROOM_GH_DUMP)) {
       // possible alternative would be to move dropped stuff to ROOM_DONATION
       act("$N tells you, 'HEY!  Don't clutter up my shop'.", FALSE, ch, 0, myself, TO_CHAR);
       return TRUE;

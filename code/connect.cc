@@ -5033,7 +5033,7 @@ void setPrompts(fd_set out)
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[0],
                       ch->roomp->getZoneNum(),
-                      (ch->roomp->funct ? "Y" : "N"),
+                      (ch->roomp->spec ? "Y" : "N"),
                       ch->roomp->getLight(),
                       ch->roomp->getRoomHeight(),
                       ch->roomp->getMoblim(),

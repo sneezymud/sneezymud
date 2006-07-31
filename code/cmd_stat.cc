@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "disease.h"
+#include "spec_rooms.h"
 
 extern int eqHpBonus(const TPerson *);
 extern int baseHp();
@@ -166,7 +167,7 @@ void TBeing::statRoom(TRoom *rmp)
 
   str += fmt("  %sSpecial procedure:%s ") % cyan() % norm();
 
-  str += fmt("%s") % ((rmp->funct) ? "Exists\n\r" : "No\n\r");
+  str += fmt("%s\n\r") % ((rmp->spec) ? roomSpecials[rmp->spec].name : "None");
 
   str += fmt("%sRoom flags:%s ") % cyan() % norm();
 

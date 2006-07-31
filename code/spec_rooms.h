@@ -5,6 +5,20 @@ extern int sleepTagControl(TBeing *, cmdTypeT, const char *, TRoom *);
 extern int sleepTagRoom(TBeing *, cmdTypeT, const char *, TRoom *);
 extern int bankRoom(TBeing *, cmdTypeT, const char *, TRoom *);
 
+struct TRoomSpecs {
+  bool assignable;
+  const char *name;
+  int (*proc) (TBeing *, cmdTypeT, const char *, TRoom *);
+};
+
+const int SPEC_ROOM_GH_DUMP=2;
+const int NUM_ROOM_SPECIALS = 33;
+
+extern const int GET_ROOM_SPE_INDEX(int d);
+
+extern TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1];
+
+
 
 /*************************************************************************
 

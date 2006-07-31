@@ -242,7 +242,6 @@ class TRoom : public TThing {
     int outdoorLight();
     int outdoorLightWindow();
     bool putInDb(int vnum);
-    int (*funct)(TBeing *, cmdTypeT, const char *, TRoom *);
     void setRoomFlags(unsigned int flag) {
       roomFlags = flag;
     }

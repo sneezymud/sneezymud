@@ -450,7 +450,7 @@ TRoom::TRoom(int r) :
   treetype(0),
   tBornInsideMe(NULL)
 {
-  funct = NULL;
+  spec=0;
   number = in_room = r;
 
   for (dirTypeT i = MIN_DIR; i < MAX_DIR; i++)

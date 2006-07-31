@@ -3099,7 +3099,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
       
       rp2->setRoomHeight(convertTo<int>(db["height"]));
       
-      rp2->funct = 0;
+      rp2->spec = 0;
       rp2->setLight(0);
       rp2->setHasWindow(0);
       
@@ -3283,7 +3283,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   moblim = tmp;
   fscanf(fl, " %d ", &tmp);
   setRoomHeight(tmp);
-  funct = 0;
+  spec = 0;
   setLight(0);
   hasWindow = 0;
 

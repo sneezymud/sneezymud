@@ -358,8 +358,10 @@ void bootDb(void)
 
   bootPulse("Initializing boards.");
   InitBoards();
-  bootPulse("Initializing room specials.");
-  assign_rooms();
+  //  bootPulse("Initializing room specials.");
+  //  assign_rooms();
+  roomspec_db.push_back(real_roomp(63));
+
   bootPulse("Initializing command array.");
   buildCommandArray();
 
@@ -610,7 +612,7 @@ void bootWorld(void)
 
     rp->setRoomHeight(convertTo<int>(db["height"]));
 
-    rp->funct = 0;
+    rp->spec = convertTo<int>(db["spec"]);
     rp->setLight(0);
     rp->setHasWindow(0);
 
