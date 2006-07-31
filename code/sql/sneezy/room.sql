@@ -14,5 +14,6 @@ CREATE TABLE room (
     river_speed integer NOT NULL,
     river_dir integer NOT NULL,
     capacity integer NOT NULL,
-    height integer NOT NULL
+    height integer NOT NULL,
+    spec integer NOT NULL,
 );
