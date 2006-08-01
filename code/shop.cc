@@ -1519,8 +1519,8 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
        ((FitT & (1 <<  2)) && isPierceWeapon()) ||
        ((FitT & (1 <<  3)) && isBluntWeapon()) ||
        ((FitT & (1 <<  4)) && canWear(ITEM_WEAR_BODY)) ||
-       ((FitT & (1 <<  5)) && canWear(ITEM_WEAR_FINGER)) ||
-       ((FitT & (1 <<  6)) && canWear(ITEM_WEAR_WRIST)) ||
+       ((FitT & (1 <<  5)) && canWear(ITEM_WEAR_FINGERS)) ||
+       ((FitT & (1 <<  6)) && canWear(ITEM_WEAR_WRISTS)) ||
        ((FitT & (1 <<  7)) && canWear(ITEM_WEAR_LEGS)) ||
        ((FitT & (1 <<  8)) && canWear(ITEM_WEAR_ARMS)) ||
        ((FitT & (1 <<  9)) && canWear(ITEM_WEAR_NECK)) ||

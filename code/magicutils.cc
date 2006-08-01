@@ -1400,8 +1400,8 @@ int TBeing::dropBloodLimb(wearSlotT limb)
     case WEAR_FINGER_R:
     case WEAR_FINGER_L:  amt=1; break;
     case WEAR_WAIST:    amt=10; break;
-    case WEAR_LEGS_R:
-    case WEAR_LEGS_L:    amt=9; break;
+    case WEAR_LEG_R:
+    case WEAR_LEG_L:    amt=9; break;
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:    amt=3; break;
     case WEAR_EX_LEG_R:

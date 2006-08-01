@@ -61,7 +61,7 @@ bool TObj::isPaired() const
 bool TObj::usedAsPaired() const
 {
   return (isPaired() &&
-          (eq_pos == WEAR_LEGS_L || eq_pos == WEAR_LEGS_R ||
+          (eq_pos == WEAR_LEG_L || eq_pos == WEAR_LEG_R ||
            eq_pos == WEAR_EX_LEG_R || eq_pos == WEAR_EX_LEG_L ||
            eq_pos == HOLD_RIGHT || eq_pos == HOLD_LEFT));
 }

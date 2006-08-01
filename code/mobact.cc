@@ -572,14 +572,14 @@ wearSlotT slot_from_bit(int wb)
 {
   if (wb & ITEM_HOLD)
     return HOLD_RIGHT;
-  else if (wb & ITEM_WEAR_FINGER)
+  else if (wb & ITEM_WEAR_FINGERS)
     return WEAR_FINGER_R;
   else if (wb & ITEM_WEAR_BODY)
     return WEAR_BODY;
   else if (wb & ITEM_WEAR_HEAD)
     return WEAR_HEAD;
   else if (wb & ITEM_WEAR_LEGS)
-    return WEAR_LEGS_R;
+    return WEAR_LEG_R;
   else if (wb & ITEM_WEAR_FEET)
     return WEAR_FOOT_R;
   else if (wb & ITEM_WEAR_HANDS)
@@ -592,7 +592,7 @@ wearSlotT slot_from_bit(int wb)
     return WEAR_WAIST;
   else if (wb & ITEM_WEAR_NECK)
     return WEAR_NECK;
-  else if (wb & ITEM_WEAR_WRIST)
+  else if (wb & ITEM_WEAR_WRISTS)
     return WEAR_WRIST_R;
   else
     return WEAR_NOWHERE;

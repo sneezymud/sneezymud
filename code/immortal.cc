@@ -128,7 +128,7 @@ wearSlotT getChangePos(TObj *o)
   switch(o->getWearKey()){
     case WEAR_KEY_NONE:
       pos=WEAR_NOWHERE;
-    case WEAR_KEY_FINGER:
+    case WEAR_KEY_FINGERS:
       if(!fingers){
 	fingers++;
 	pos=WEAR_FINGER_L;
@@ -148,9 +148,9 @@ wearSlotT getChangePos(TObj *o)
     case WEAR_KEY_LEGS:
       if(!legs){
 	legs++;
-	pos=WEAR_LEGS_L;
+	pos=WEAR_LEG_L;
       } else {
-	pos=WEAR_LEGS_R;
+	pos=WEAR_LEG_R;
       }
       break;
     case WEAR_KEY_FEET:
@@ -183,7 +183,7 @@ wearSlotT getChangePos(TObj *o)
     case WEAR_KEY_WAIST:
       pos=WEAR_WAIST;
       break;
-    case WEAR_KEY_WRIST:
+    case WEAR_KEY_WRISTS:
       if(!wrists){
 	++wrists;
 	pos=WEAR_WRIST_L;
@@ -248,13 +248,13 @@ void TBeing::doChangeOutfit(const char *argument)
 	     removed->getName() % suitcase->getName());
 
       if(o->isPaired()){
-	if(pos==WEAR_LEGS_L && equipment[WEAR_LEGS_R]){
-	  removed = unequip(WEAR_LEGS_R);
+	if(pos==WEAR_LEG_L && equipment[WEAR_LEG_R]){
+	  removed = unequip(WEAR_LEG_R);
 	  *suitcase += *removed;
 	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
 		 removed->getName() % suitcase->getName());	
-	} else if(pos==WEAR_LEGS_R && equipment[WEAR_LEGS_L]){
-	  removed = unequip(WEAR_LEGS_L);
+	} else if(pos==WEAR_LEG_R && equipment[WEAR_LEG_L]){
+	  removed = unequip(WEAR_LEG_L);
 	  *suitcase += *removed;
 	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
 		 removed->getName() % suitcase->getName());
@@ -1762,12 +1762,12 @@ void TBeing::makeLimbTransformed(TBeing * victim, wearSlotT limb, bool paired)
           doTransformDrop(otherLimb);
           victim->addToLimbFlags(otherLimb, PART_TRANSFORMED);
         return;
-      case WEAR_LEGS_R:
-      case WEAR_LEGS_L:
-        otherLimb = WEAR_LEGS_R;
+      case WEAR_LEG_R:
+      case WEAR_LEG_L:
+        otherLimb = WEAR_LEG_R;
           doTransformDrop(otherLimb);
           victim->addToLimbFlags(otherLimb, PART_TRANSFORMED);
-        otherLimb = WEAR_LEGS_L;
+        otherLimb = WEAR_LEG_L;
           doTransformDrop(otherLimb);
           victim->addToLimbFlags(otherLimb, PART_TRANSFORMED);
         otherLimb = WEAR_FOOT_R;
@@ -1899,7 +1899,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
       spell = AFFECT_TRANSFORMED_HANDS;
     if (limb == WEAR_ARM_R)
       spell = AFFECT_TRANSFORMED_ARMS;
-    if (limb == WEAR_LEGS_R)
+    if (limb == WEAR_LEG_R)
       spell = AFFECT_TRANSFORMED_LEGS;
     if (limb == WEAR_HEAD)
       spell = AFFECT_TRANSFORMED_HEAD;
@@ -2006,11 +2006,11 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
         affectFrom(AFFECT_TRANSFORMED_ARMS);
       }
       break;
-    case (WEAR_LEGS_R):
-      slot = WEAR_LEGS_R;
+    case (WEAR_LEG_R):
+      slot = WEAR_LEG_R;
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
-      slot = WEAR_LEGS_L;
+      slot = WEAR_LEG_L;
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       slot = WEAR_FOOT_R;

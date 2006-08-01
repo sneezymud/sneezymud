@@ -69,7 +69,7 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
   REMOVE_BIT(value, ITEM_HOLD);
   REMOVE_BIT(value, ITEM_WEAR_WAIST);
   REMOVE_BIT(value, ITEM_WEAR_NECK);
-  REMOVE_BIT(value, ITEM_WEAR_WRIST);
+  REMOVE_BIT(value, ITEM_WEAR_WRISTS);
 
   if (value != 0) {
     if (!silent)

@@ -58,7 +58,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
       myself->doTell(ch->getName(), "Where do you want the tattoo?");
       return FALSE;
     }
-    if(slot==WEAR_LEGS_R || slot==WEAR_LEGS_L){
+    if(slot==WEAR_LEG_R || slot==WEAR_LEG_L){
       myself->doTell(ch->getName(), "Sorry, it is against my policy to tattoo legs.");
       myself->doTell(ch->getName(), "It's not like you're gonna run around pantless to show it off anyway!");
       return FALSE;

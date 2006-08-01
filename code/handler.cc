@@ -481,7 +481,7 @@ void TBeing::affectTotal()
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
       if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEGS_L ||
+          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
           i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
         continue;
       if (!affectShouldApply(o, i))
@@ -548,7 +548,7 @@ void TBeing::affectTotal()
         for (i = MIN_WEAR; i < MAX_WEAR; i++) {
           if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
             if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-                 i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEGS_L ||
+                 i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
                  i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
               continue;
             if (!affectShouldApply(o, i))
@@ -709,7 +709,7 @@ void TBeing::affectTotal()
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
       if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEGS_L ||
+          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
           i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
         continue;
       if (!affectShouldApply(o, i))
@@ -1294,10 +1294,10 @@ TThing *get_thing_in_equip(TBeing *ch, const char *arg, equipmentData equipment,
         TObj *tobj = dynamic_cast<TObj *>(tt);
         if (tobj && tobj->isPaired()) {
           if (ch->isRightHanded()) {
-            if (((*j) == WEAR_LEGS_L) || ((*j) == HOLD_LEFT))
+            if (((*j) == WEAR_LEG_L) || ((*j) == HOLD_LEFT))
               continue;
           } else {
-            if (((*j) == WEAR_LEGS_L) || ((*j) == HOLD_RIGHT))
+            if (((*j) == WEAR_LEG_L) || ((*j) == HOLD_RIGHT))
             continue;
           }
         }
@@ -2095,10 +2095,10 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
         isname(tmp, obj->name) && ch->canSee(obj)) {
       if (obj->isPaired()) {
         if (ch->isRightHanded()) {
-          if ((k == HOLD_LEFT) || (k == WEAR_LEGS_L))
+          if ((k == HOLD_LEFT) || (k == WEAR_LEG_L))
             continue;
         } else {
-          if ((k == HOLD_RIGHT) || (k == WEAR_LEGS_L))
+          if ((k == HOLD_RIGHT) || (k == WEAR_LEG_L))
             continue;
         }
       }

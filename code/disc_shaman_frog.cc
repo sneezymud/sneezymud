@@ -83,7 +83,7 @@ struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] =
   {"hands", 6, 20, "bear claws", WEAR_HAND_R, AFFECT_TRANSFORMED_HANDS, DISC_RANGER},
   {"arms", 30, 75,"falcon wings", WEAR_ARM_R, AFFECT_TRANSFORMED_ARMS,
 DISC_ANIMAL},
-  {"legs", 20, 15, "a dolphin's tail", WEAR_LEGS_R, AFFECT_TRANSFORMED_LEGS, DISC_ANIMAL},
+  {"legs", 20, 15, "a dolphin's tail", WEAR_LEG_R, AFFECT_TRANSFORMED_LEGS, DISC_ANIMAL},
   {"neck", 15, 40, "some fish gills", WEAR_NECK, AFFECT_TRANSFORMED_NECK, DISC_ANIMAL},
   {"head", 12, 60, "an eagle's head", WEAR_HEAD, AFFECT_TRANSFORMED_HEAD, DISC_RANGER},
   {"all", 1, 1, "all your limbs", MAX_WEAR, TYPE_UNDEFINED, DISC_RANGER}
@@ -195,7 +195,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
       aff.type = AFFECT_TRANSFORMED_ARMS;
       aff.bitvector = AFF_FLYING;
       break;
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
       aff.type = AFFECT_TRANSFORMED_LEGS;
       aff.location = APPLY_SPELL;
       aff.modifier = SKILL_SWIM;

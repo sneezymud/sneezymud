@@ -1037,7 +1037,7 @@ bool TObj::shouldntBeShown(wearSlotT pos) const
   if (!isPaired())
     return FALSE;
 
-  if ((pos == WEAR_LEGS_L) || (pos == HOLD_LEFT) || (pos == WEAR_EX_LEG_L))
+  if ((pos == WEAR_LEG_L) || (pos == HOLD_LEFT) || (pos == WEAR_EX_LEG_L))
     return TRUE;
 
   return FALSE;

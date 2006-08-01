@@ -57,7 +57,7 @@ wearSlotT getSlotFromLST(loadSetTypeT tPiece, TBeing *ch, bool isFirst)
   if (tPiece == LST_BRACELET)
     return (isFirst ? WEAR_WRIST_L : WEAR_WRIST_R);
   if (tPiece == LST_LEGGING)
-    return (isFirst ? WEAR_LEGS_L : WEAR_LEGS_R);
+    return (isFirst ? WEAR_LEG_L : WEAR_LEG_R);
   if (tPiece == LST_BOOT)
     return (isFirst ? WEAR_FOOT_L : WEAR_FOOT_R);
   if (tPiece == LST_RING)
@@ -186,7 +186,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       if (chance < 101) {
         log_object(obj);
       }
-      if (obj->isPaired() && slot == WEAR_LEGS_L)
+      if (obj->isPaired() && slot == WEAR_LEG_L)
         delete obj;  // avoid double loads of pants
       else if (chance == 101)
         *ch += *obj;
@@ -737,7 +737,7 @@ void loadSetClass::suitAdd(const char *tName, int tHelm, int tCollar,
 
 		       /*
         if (classValue == CLASS_MONK &&
-            !tObj->canWear(ITEM_WEAR_FINGER) &&
+            !tObj->canWear(ITEM_WEAR_FINGERS) &&
             ((tObj->getMaterial() >= 100 && tObj->getMaterial() != MAT_BONE) ||
              tObj->getMaterial() == MAT_IRON ||
              dynamic_cast<TArmor *>(tObj)))
@@ -745,7 +745,7 @@ void loadSetClass::suitAdd(const char *tName, int tHelm, int tCollar,
 		       */
 
         if (classValue == CLASS_RANGER && tObj->isMetal() &&
-            dynamic_cast<TArmor *>(tObj) && !tObj->canWear(ITEM_WEAR_FINGER))
+            dynamic_cast<TArmor *>(tObj) && !tObj->canWear(ITEM_WEAR_FINGERS))
           otherClass = true;
 
         if (IsRestricted(GetItemClassRestrictions(tObj), classValue) || otherClass)

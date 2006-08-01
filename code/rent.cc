@@ -1234,7 +1234,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     obj = dynamic_cast<TObj *>(equipment[i]);
     if (!obj)
       continue;
-    if (!(((i == WEAR_LEGS_L) && obj->isPaired()) ||
+    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((i == HOLD_LEFT) && obj->isPaired()))) {
       addObjCost(recep, obj, cost, str);// equip
@@ -1286,7 +1286,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       obj = dynamic_cast<TObj *>(ch->equipment[i]);
       if (!obj)
         continue;
-      if (!(((i == WEAR_LEGS_L) && obj->isPaired()) ||
+      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
             ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
            ((i == HOLD_LEFT) && obj->isPaired()))) {
         addObjCost(recep, obj, cost, str);// equip
@@ -1458,7 +1458,7 @@ void TMonster::saveItems(const sstring &filepath)
     obj = dynamic_cast<TObj *>(equipment[ij]);
     if (!obj)
       continue;
-    if (!(((ij == WEAR_LEGS_L) && obj->isPaired()) ||
+    if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
       is.objsToStore(mapSlotToFile(ij), obj, this, FALSE);
@@ -2155,7 +2155,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
       is.objsToStore(mapSlotToFile(ij), obj, this, d);
     } else {
       // if they're wearing a paired item, don't save the other slot 
-      if (!(((ij == WEAR_LEGS_L) && obj->isPaired()) ||
+      if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
         is.objsToStore(mapSlotToFile(ij), obj, this, d);
@@ -2650,7 +2650,7 @@ void TBeing::makeRentNote(TBeing *recip)
     if (!(obj = dynamic_cast<TObj *>(equipment[i])))
       continue;
 
-    if (!(((i == WEAR_LEGS_L) && obj->isPaired()) ||
+    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((i == HOLD_LEFT) && obj->isPaired()))) {
       cost.total_cost += obj->noteMeForRent(longBuf, this, obj, &num);
@@ -2693,7 +2693,7 @@ void TBeing::makeRentNote(TBeing *recip)
       if (!(obj = dynamic_cast<TObj *>(ch->equipment[i])))
         continue;
 
-      if (!(((i == WEAR_LEGS_L) && obj->isPaired()) ||
+      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
            ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((i == HOLD_LEFT) && obj->isPaired()))) {
         cost.total_cost += obj->noteMeForRent(longBuf, this, obj, &num);

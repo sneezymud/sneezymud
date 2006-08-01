@@ -1672,7 +1672,7 @@ void TBeing::lowObjs(const char *arg)
     worn = ITEM_WEAR_NECK;
     slot = WEAR_NECK;
   } else if (is_abbrev(buf2, "fingers")) {
-    worn = ITEM_WEAR_FINGER;
+    worn = ITEM_WEAR_FINGERS;
     slot = WEAR_FINGER_R;
   } else if (is_abbrev(buf2, "body")) {
     worn = ITEM_WEAR_BODY;
@@ -1681,7 +1681,7 @@ void TBeing::lowObjs(const char *arg)
     worn = ITEM_WEAR_ARMS;
     slot = WEAR_ARM_R;
   } else if (is_abbrev(buf2, "wrists")) {
-    worn = ITEM_WEAR_WRIST;
+    worn = ITEM_WEAR_WRISTS;
     slot = WEAR_WRIST_R;
   } else if (is_abbrev(buf2, "hands")) {
     worn = ITEM_WEAR_HANDS;
@@ -1697,7 +1697,7 @@ void TBeing::lowObjs(const char *arg)
     slot = WEAR_BACK;
   } else if (is_abbrev(buf2, "legs")) {
     worn = ITEM_WEAR_LEGS;
-    slot = WEAR_LEGS_R;
+    slot = WEAR_LEG_R;
   } else if (is_abbrev(buf2, "foot") || is_abbrev(buf2, "feet")) {
     worn = ITEM_WEAR_FEET;
     slot = WEAR_FOOT_R;

@@ -986,12 +986,12 @@ wearSlotT TBeing::getSecondaryFoot() const
 
 wearSlotT TBeing::getPrimaryLeg() const
 {
-  return (isRightHanded() ? WEAR_LEGS_R : WEAR_LEGS_L);
+  return (isRightHanded() ? WEAR_LEG_R : WEAR_LEG_L);
 }
 
 wearSlotT TBeing::getSecondaryLeg() const
 {
-  return (isRightHanded() ? WEAR_LEGS_L : WEAR_LEGS_R);
+  return (isRightHanded() ? WEAR_LEG_L : WEAR_LEG_R);
 }
 
 int TBeing::maxWimpy()
@@ -1559,8 +1559,8 @@ int getIronFleshArmor(wearSlotT slot){
       return -98;
     case WEAR_EX_LEG_R:
     case WEAR_EX_LEG_L:
-    case WEAR_LEGS_R:
-    case WEAR_LEGS_L:
+    case WEAR_LEG_R:
+    case WEAR_LEG_L:
       return -61;
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:

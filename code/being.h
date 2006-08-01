@@ -544,7 +544,7 @@ class equipmentData {
 
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (tobj && tobj->usedAsPaired()) {
-      if (slot == WEAR_LEGS_R || 
+      if (slot == WEAR_LEG_R || 
 	  slot == HOLD_RIGHT || 
 	  slot == WEAR_EX_LEG_R)
 	equipment[slot + 1] = NULL;
@@ -559,7 +559,7 @@ class equipmentData {
   void wear(TThing *t, enum wearSlotT slot){
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (tobj && tobj->usedAsPaired()) {
-      if (slot == WEAR_LEGS_R ||
+      if (slot == WEAR_LEG_R ||
 	  slot == HOLD_RIGHT || 
 	  slot == WEAR_EX_LEG_R)
 	equipment[slot + 1] = t;

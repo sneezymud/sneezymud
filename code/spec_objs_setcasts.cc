@@ -130,8 +130,8 @@ int doFlyingEQCast(TBeing *ch, TObj *o) {
     act("Your $o glows with power.<1>", 0, ch, o, 0, TO_CHAR);
   }
 
-  leg1 = dynamic_cast<TObj *>(ch->equipment[WEAR_LEGS_L]);
-  leg2 = dynamic_cast<TObj *>(ch->equipment[WEAR_LEGS_R]);
+  leg1 = dynamic_cast<TObj *>(ch->equipment[WEAR_LEG_L]);
+  leg2 = dynamic_cast<TObj *>(ch->equipment[WEAR_LEG_R]);
   foot1 = dynamic_cast<TObj *>(ch->equipment[WEAR_FOOT_L]);
   foot2 = dynamic_cast<TObj *>(ch->equipment[WEAR_FOOT_R]);
   girth = dynamic_cast<TObj *>(ch->equipment[WEAR_WAIST]);

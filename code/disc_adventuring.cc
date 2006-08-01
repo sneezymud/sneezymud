@@ -182,8 +182,8 @@ void TBeing::doBandage(const sstring &arg)
     case WEAR_HAND_L:
       band_num = 2;
       break;
-    case WEAR_LEGS_L:
-    case WEAR_LEGS_R:
+    case WEAR_LEG_L:
+    case WEAR_LEG_R:
     case WEAR_EX_LEG_L:
     case WEAR_EX_LEG_R:
       band_num = 4;

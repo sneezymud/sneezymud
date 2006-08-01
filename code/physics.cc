@@ -177,8 +177,8 @@ bool TBeing::canSwim(dirTypeT dir)
   if (rp->getRiverSpeed())
     mass += (int) ((75 + rp->getRiverSpeed() * -70.0 / 99.0) * GRAMS_PER_POUND);
 
-  mass += (!canUseLimb(WEAR_LEGS_R)) ? 5 * GRAMS_PER_POUND : 0;
-  mass += (!canUseLimb(WEAR_LEGS_L)) ? 5 * GRAMS_PER_POUND : 0;
+  mass += (!canUseLimb(WEAR_LEG_R)) ? 5 * GRAMS_PER_POUND : 0;
+  mass += (!canUseLimb(WEAR_LEG_L)) ? 5 * GRAMS_PER_POUND : 0;
   
   // adjust for swimming with/against current
   if (rp->getRiverSpeed()) {
@@ -672,8 +672,8 @@ rp->isFlyingSector())) {
             act("$n *SLAMS* into the $g, looking rather pancake-like.", FALSE, this, 0, 0, TO_ROOM);
 
           if (!isAgile(-count*2)) {
-            break_bone(this, WEAR_LEGS_L);
-            break_bone(this, WEAR_LEGS_R);
+            break_bone(this, WEAR_LEG_L);
+            break_bone(this, WEAR_LEG_R);
             sendTo("You feel the bones in your legs splinter into a million pieces.\n\r");
             act("$n's legs twist beneath $m as $e screams in pain!.", FALSE, this, 0, 0, TO_ROOM);
           }

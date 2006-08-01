@@ -286,19 +286,19 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     for(i=0;i<3;++i) act(hit_msg[1][i], FALSE, c, 0, victim, msg_tgt[i]);
   } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_WAIST)) {
     // target shin
-    pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
+    pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
     dam_type = DAMAGE_KNEESTRIKE_SHIN;
 
     for(i=0;i<3;++i) act(hit_msg[2][i], FALSE, c, 0, victim, msg_tgt[i]);
   } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_BODY)) {
     // target knee
-    pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
+    pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
     dam_type = DAMAGE_KNEESTRIKE_KNEE;
     
     for(i=0;i<3;++i) act(hit_msg[3][i], FALSE, c, 0, victim, msg_tgt[i]);
   } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_ARMS)) {
     // target thigh
-    pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
+    pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
     dam_type = DAMAGE_KNEESTRIKE_THIGH;
 
     for(i=0;i<3;++i) act(hit_msg[4][i], FALSE, c, 0, victim, msg_tgt[i]);
@@ -363,7 +363,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
   //  dam += c->getAdvLearning(SKILL_KNEESTRIKE)/10;
   
   // apply damage to caster if no leg eq
-  caster_pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
+  caster_pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
   if (!(item = dynamic_cast<TObj *>(c->equipment[caster_pos]))) {
     rc = c->damageLimb(c, caster_pos, 0, &h_dam);
     if (IS_SET_DELETE(rc, DELETE_VICT))

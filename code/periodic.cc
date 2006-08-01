@@ -749,7 +749,7 @@ int TBeing::updateAffects()
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_LEGS_R, FALSE);
+          transformLimbsBack("", WEAR_LEG_R, FALSE);
         } else if (af->type == AFFECT_TRANSFORMED_HEAD) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
@@ -918,9 +918,9 @@ int TBeing::updateBodyParts()
 
     // Making transformed legs tranform back if not in water
     if (isLimbFlags(i, PART_TRANSFORMED)) {
-      if (((i == WEAR_LEGS_R) || (i==WEAR_LEGS_L) || (i==WEAR_FOOT_R) || (i==WEAR_FOOT_L)) && !(roomp->isWaterSector() || roomp->isUnderwaterSector())) {
+      if (((i == WEAR_LEG_R) || (i==WEAR_LEG_L) || (i==WEAR_FOOT_R) || (i==WEAR_FOOT_L)) && !(roomp->isWaterSector() || roomp->isUnderwaterSector())) {
         sendTo("Your dolphin's tail can't survive out of water.\n\r");
-        doReturn("", WEAR_LEGS_R, 0);
+        doReturn("", WEAR_LEG_R, 0);
       }
     }
 

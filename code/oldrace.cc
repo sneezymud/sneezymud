@@ -424,7 +424,7 @@ int TBeing::validEquipSlot(wearSlotT i)
     case BODY_FOUR_LEG:
     case BODY_WYVELIN:
 #if 0
-      return ((i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+      return ((i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
               (i == WEAR_EX_FOOT_R) || (i == WEAR_EX_FOOT_L) ||
               (i == WEAR_HAND_R) || (i == WEAR_HAND_L) ||
@@ -438,7 +438,7 @@ int TBeing::validEquipSlot(wearSlotT i)
 #endif
     case BODY_DRAGON:
       return ((i == WEAR_ARM_R) || (i == WEAR_ARM_L) ||
-              (i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+              (i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
               (i == WEAR_EX_FOOT_R) || (i == WEAR_EX_FOOT_L) ||
               (i == WEAR_HAND_R) || (i == WEAR_HAND_L) ||
@@ -449,7 +449,7 @@ int TBeing::validEquipSlot(wearSlotT i)
               (i == WEAR_FOOT_R) || (i == WEAR_FOOT_L));
     case BODY_KUOTOA:
       return ((i == WEAR_ARM_R) || (i == WEAR_ARM_L) ||
-              (i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+              (i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_BACK) ||
               (i == WEAR_BODY) || (i == WEAR_WAIST) ||
               (i == HOLD_RIGHT) || (i == HOLD_LEFT) ||
@@ -461,7 +461,7 @@ int TBeing::validEquipSlot(wearSlotT i)
       return ((i == WEAR_BODY) || (i == WEAR_HEAD));
     case BODY_MERMAID:
       return ((i == WEAR_HEAD) || (i == WEAR_BODY) ||
-              (i == WEAR_LEGS_R) || (i == WEAR_NECK) ||
+              (i == WEAR_LEG_R) || (i == WEAR_NECK) ||
               (i == WEAR_FOOT_R) ||
               (i == WEAR_HAND_R) || (i == WEAR_HAND_L) ||
               (i == WEAR_WRIST_R) || (i == WEAR_WRIST_L) ||
@@ -474,12 +474,12 @@ int TBeing::validEquipSlot(wearSlotT i)
       return ((i == WEAR_HEAD) || 
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
               (i == WEAR_EX_FOOT_R) || (i == WEAR_EX_FOOT_L) ||
-              (i == WEAR_LEGS_L) || (i == WEAR_LEGS_L) || (i == WEAR_FOOT_L) ||
+              (i == WEAR_LEG_L) || (i == WEAR_LEG_L) || (i == WEAR_FOOT_L) ||
               (i == WEAR_FOOT_R) || (i == HOLD_LEFT) || (i == HOLD_RIGHT) ||
               (i == WEAR_BODY));
     case BODY_CRUSTACEAN:
       return ((i == WEAR_ARM_L) || (i == WEAR_ARM_R) ||
-              (i == WEAR_LEGS_L) || (i == WEAR_LEGS_L) || (i == WEAR_HAND_L) ||
+              (i == WEAR_LEG_L) || (i == WEAR_LEG_L) || (i == WEAR_HAND_L) ||
               (i == WEAR_HAND_R) || (i == HOLD_LEFT) || (i == HOLD_RIGHT) ||
               (i == WEAR_BODY) || 
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
@@ -522,7 +522,7 @@ int TBeing::validEquipSlot(wearSlotT i)
               (i == WEAR_WRIST_R) || (i == WEAR_WRIST_L) ||
               (i == WEAR_ARM_R) || (i == WEAR_ARM_L) ||
               (i == WEAR_FINGER_R) || (i == WEAR_FINGER_L) ||
-              (i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+              (i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_FOOT_R) || (i == WEAR_FOOT_L) ||
               (i == HOLD_RIGHT) || (i == HOLD_LEFT) ||
               (i == WEAR_WAIST) ||
@@ -530,7 +530,7 @@ int TBeing::validEquipSlot(wearSlotT i)
               (i == WEAR_HEAD) || (i == WEAR_NECK));
     case BODY_OTYUGH:
       return ((i == WEAR_ARM_R) || (i == WEAR_ARM_L) ||
-              (i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+              (i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_FOOT_R) || (i == WEAR_FOOT_L) ||
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_FOOT_R) ||
               (i == WEAR_BACK) || (i == WEAR_BODY) || 
@@ -538,7 +538,7 @@ int TBeing::validEquipSlot(wearSlotT i)
     case BODY_FOUR_HOOF:
     case BODY_ELEPHANT:
 #if 0
-      return ((i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+      return ((i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
               (i == WEAR_EX_FOOT_R) || (i == WEAR_EX_FOOT_L) ||
               (i == WEAR_BACK) ||
@@ -552,7 +552,7 @@ int TBeing::validEquipSlot(wearSlotT i)
 #endif
     case BODY_PEGASUS:
 #if 0
-      return ((i == WEAR_LEGS_R) || (i == WEAR_LEGS_L) ||
+      return ((i == WEAR_LEG_R) || (i == WEAR_LEG_L) ||
               (i == WEAR_EX_LEG_R) || (i == WEAR_EX_LEG_L) ||
               (i == WEAR_EX_FOOT_R) || (i == WEAR_EX_FOOT_L) ||
               (i == WEAR_BACK) ||
@@ -592,13 +592,13 @@ const sstring TBeing::defaultEquipmentSlot(wearSlotT i) const
         return "Worn on back legs";
       else
         return "Worn on back, right leg";
-    case WEAR_LEGS_R:
-      if (equipment[i] == equipment[WEAR_LEGS_L])
+    case WEAR_LEG_R:
+      if (equipment[i] == equipment[WEAR_LEG_L])
         return "Worn on legs";
       else
         return "Worn on right leg";
-    case WEAR_LEGS_L:
-      if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+    case WEAR_LEG_L:
+      if (!(equipment[i] == equipment[WEAR_LEG_R]))
         return "Worn on left leg";
       else
         return bogus_slot_worn(i);
@@ -676,9 +676,9 @@ const sstring TBeing::default_body_slot(wearSlotT i) const
     case WEAR_EX_FOOT_R:
     case WEAR_EX_FOOT_L:
       return bogus_slot(i);
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
       return "right leg";
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
       return "left leg";
     case WEAR_FOOT_R:
       return "right foot";
@@ -740,9 +740,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
       switch (i) {
         case WEAR_BODY:
         case WEAR_BACK:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
         case WEAR_FOOT_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return default_body_slot(i);
         case WEAR_HEAD:
@@ -765,8 +765,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         // all major organs are in abdomen (rear section)
         case WEAR_HEAD:
         case WEAR_BACK:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
           return default_body_slot(i);
 	case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -821,8 +821,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "fish head";
         case WEAR_BODY:
         case WEAR_BACK:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
           return default_body_slot(i);
         default:
           return bogus_slot(i);
@@ -833,8 +833,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case WEAR_ARM_R:
           return "fore arm";
         case WEAR_BODY:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
           return default_body_slot(i);
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -851,10 +851,10 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
       }
     case BODY_DJINN:
       switch (i) {
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return bogus_slot(i);
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
         case WEAR_FOOT_R:
           return "smoke";
         default:
@@ -862,10 +862,10 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
       }
     case BODY_MERMAID:
       switch (i) {
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return bogus_slot(i);
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "tail";
         case WEAR_FOOT_R:
           return "tail fin";
@@ -893,9 +893,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, right, front leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, left, front leg";
         case WEAR_EX_LEG_R:
           return "lion-like, back, right leg";
@@ -932,9 +932,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "lion-like, back, right leg";
@@ -971,9 +971,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "bull-like, left hoof";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "bull-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "bull-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "bull-like, back, right leg";
@@ -1010,9 +1010,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "lion-like, back, right leg";
@@ -1053,9 +1053,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "front, right hoof";
         case WEAR_FOOT_L:
           return "front, left hoof";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -1102,9 +1102,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "front, right paw";
         case WEAR_FOOT_L:
           return "front, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -1151,9 +1151,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "front, right paw";
         case WEAR_FOOT_L:
           return "front, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -1196,9 +1196,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "lion-like, back, right leg";
@@ -1239,9 +1239,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "left talon";
         case WEAR_HAND_R:
           return "right talon";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "left leg";
         case WEAR_ARM_R:
           return "right wing";
@@ -1265,9 +1265,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left claw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -1301,9 +1301,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "horse-like, back, right leg";
@@ -1340,9 +1340,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_LEFT:
         case WEAR_FOOT_L:
           return "lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "goat-like, back, right leg";
@@ -1383,9 +1383,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "left talon";
         case WEAR_HAND_R:
           return "right talon";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_EX_LEG_R:
           return "back, right leg";
@@ -1431,8 +1431,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
     case BODY_SPIDER:
     case BODY_CENTIPEDE:
       switch (i) {
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
         case WEAR_EX_FOOT_R:
@@ -1453,8 +1453,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
       }
     case BODY_OCTOPUS:
       switch (i) {
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_ARM_L:
         case WEAR_ARM_R:
         case WEAR_FOOT_L:
@@ -1482,8 +1482,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "right talon";
         case WEAR_WAIST:
           return "tail feathers";
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_HEAD:
         case WEAR_NECK:
         case WEAR_BODY:
@@ -1503,8 +1503,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_RIGHT:
           return "right talon";
       case WEAR_WAIST:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_HEAD:
         case WEAR_NECK:
         case WEAR_BODY:
@@ -1559,9 +1559,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right paw";
         case WEAR_EX_FOOT_L:
           return "back, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left paw";
@@ -1595,9 +1595,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right paw";
         case WEAR_EX_FOOT_L:
           return "back, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
         case WEAR_HAND_L:
@@ -1629,9 +1629,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right foot";
         case WEAR_EX_FOOT_L:
           return "back, left foot";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left foot";
@@ -1661,9 +1661,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right claw";
         case WEAR_EX_FOOT_L:
           return "back, left claw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left claw";
@@ -1692,9 +1692,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right hoof";
         case WEAR_EX_FOOT_L:
           return "back, left hoof";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left hoof";
@@ -1729,9 +1729,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right hoof";
         case WEAR_EX_FOOT_L:
           return "back, left hoof";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left hoof";
@@ -1759,9 +1759,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
         case HOLD_RIGHT:
         case WEAR_HAND_R:
           return "right clawed hand";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "left leg";
         case WEAR_WAIST:
           return "tail";
@@ -1791,9 +1791,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "webbed, right foot";
         case WEAR_EX_FOOT_L:
           return "webbed, left foot";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_WAIST:
           return "tail";
@@ -1821,9 +1821,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "webbed, right foot";
         case WEAR_EX_FOOT_L:
           return "webbed, left foot";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case WEAR_HEAD:
         case WEAR_BODY:
@@ -1861,9 +1861,9 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "back, right paw";
         case WEAR_EX_FOOT_L:
           return "back, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "front, left leg";
         case HOLD_LEFT:
           return "left paw";
@@ -1907,9 +1907,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
       switch (i) {
         case WEAR_BODY:
         case WEAR_BACK:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
         case WEAR_FOOT_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return defaultEquipmentSlot(i);
         case WEAR_HEAD:
@@ -1929,8 +1929,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_ANT:
       switch (i) {
         case WEAR_HEAD:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
 	case WEAR_EX_LEG_R:
 	case WEAR_EX_LEG_L:
           return defaultEquipmentSlot(i);
@@ -1976,8 +1976,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in webbed, right claw";
         case WEAR_BODY:
         case WEAR_BACK:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
           return defaultEquipmentSlot(i);
         default:
           return bogus_slot_worn(i);
@@ -1988,8 +1988,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
         case WEAR_ARM_R:
           return "Worn about fore arm";
         case WEAR_BODY:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
           return defaultEquipmentSlot(i);
         case WEAR_EX_LEG_R:
           return "Worn on back, right leg";
@@ -2006,10 +2006,10 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
       }
     case BODY_DJINN:
       switch (i) {
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
         case WEAR_FOOT_R:
           return "Hanging in smoke";
         default:
@@ -2017,10 +2017,10 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
       }
     case BODY_MERMAID:
       switch (i) {
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
         case WEAR_FOOT_L:
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on tail";
         case WEAR_FOOT_R:
           return "Worn on tail fin";
@@ -2050,9 +2050,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on lion-like, back, right leg";
@@ -2091,9 +2091,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on lion-like, back, right leg";
@@ -2132,9 +2132,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in bull-like, left hoof";
         case WEAR_FOOT_L:
           return "Worn on bull-like, left hoof";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on bull-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on bull-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on bull-like, back, right leg";
@@ -2173,9 +2173,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on lion-like, back, right leg";
@@ -2207,21 +2207,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_CENTAUR:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2259,21 +2259,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_SIMAL:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2311,21 +2311,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_LAMIA:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2370,9 +2370,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on lion-like, back, right leg";
@@ -2415,9 +2415,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Worn on left talon";
         case WEAR_HAND_R:
           return "Worn on right talon";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on left leg";
         case WEAR_ARM_R:
           return "Worn on right wing";
@@ -2443,9 +2443,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Clutched in lion-like, left claw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left claw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on back, right leg";
@@ -2481,9 +2481,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on horse-like, back, right leg";
@@ -2522,9 +2522,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Held in lion-like, left paw";
         case WEAR_FOOT_L:
           return "Worn on lion-like, left paw";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on lion-like, front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on lion-like, front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on goat-like, back, right leg";
@@ -2567,9 +2567,9 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Worn on left talon";
         case WEAR_HAND_R:
           return "Worn on right talon";
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           return "Worn on front, right leg";
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           return "Worn on front, left leg";
         case WEAR_EX_LEG_R:
           return "Worn on back, right leg";
@@ -2619,8 +2619,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
         case WEAR_HEAD:
         case WEAR_BODY:
           return defaultEquipmentSlot(i);
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
         case WEAR_EX_FOOT_L:
@@ -2639,8 +2639,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
         case WEAR_HEAD:
         case WEAR_BODY:
           return defaultEquipmentSlot(i);
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_ARM_L:
         case WEAR_ARM_R:
         case WEAR_FOOT_L:
@@ -2668,8 +2668,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Worn on tail feathers";
         case WEAR_BODY:
         case WEAR_HEAD:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_NECK:
           return defaultEquipmentSlot(i);
         default:
@@ -2688,8 +2688,8 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
         case WEAR_WAIST:
         case WEAR_BODY:
         case WEAR_HEAD:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_NECK:
           return defaultEquipmentSlot(i);
         default:
@@ -2727,21 +2727,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_LION:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2774,21 +2774,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_FOUR_LEG:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2817,21 +2817,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_PIG:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2860,21 +2860,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_TURTLE:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2901,21 +2901,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_PEGASUS:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -2949,21 +2949,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_ELEPHANT:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -3001,21 +3001,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_AMPHIBEAN:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -3044,21 +3044,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_FROG:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -3099,21 +3099,21 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_WYVELIN:
       switch (i) {
         case WEAR_EX_LEG_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on back legs";
           else
             return "Worn on back, right leg";
         case WEAR_EX_LEG_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on back, left leg";
           return bogus_slot_worn(i);
-        case WEAR_LEGS_R:
-          if (equipment[i] == equipment[WEAR_LEGS_L])
+        case WEAR_LEG_R:
+          if (equipment[i] == equipment[WEAR_LEG_L])
             return "Worn on front legs";
           else
             return "Worn on front, right leg";
-        case WEAR_LEGS_L:
-          if (!(equipment[i] == equipment[WEAR_LEGS_R]))
+        case WEAR_LEG_L:
+          if (!(equipment[i] == equipment[WEAR_LEG_R]))
             return "Worn on front, left leg";
           return bogus_slot_worn(i);
         case WEAR_FOOT_R:
@@ -3214,8 +3214,8 @@ int TBeing::defaultLimbConnections(wearSlotT slot)
       else if (isLimbFlags(WEAR_HAND_R, flags))
         return FALSE;
       break;
-    case WEAR_LEGS_L:
-    case WEAR_LEGS_R:
+    case WEAR_LEG_L:
+    case WEAR_LEG_R:
     case WEAR_EX_LEG_R:
     case WEAR_EX_LEG_L:
       if (!defaultLimbConnections(WEAR_WAIST))
@@ -3236,15 +3236,15 @@ int TBeing::defaultLimbConnections(wearSlotT slot)
         return FALSE;
       break;
     case WEAR_FOOT_L:
-      if (!defaultLimbConnections(WEAR_LEGS_L))
+      if (!defaultLimbConnections(WEAR_LEG_L))
         return FALSE;
-      else if (isLimbFlags(WEAR_LEGS_L, flags))
+      else if (isLimbFlags(WEAR_LEG_L, flags))
         return FALSE;
       break;
     case WEAR_FOOT_R:
-      if (!defaultLimbConnections(WEAR_LEGS_R))
+      if (!defaultLimbConnections(WEAR_LEG_R))
         return FALSE;
-      else if (isLimbFlags(WEAR_LEGS_R, flags))
+      else if (isLimbFlags(WEAR_LEG_R, flags))
         return FALSE;
       break;
     default:
@@ -3287,8 +3287,8 @@ int TBeing::limbConnections(wearSlotT slot)
       switch (slot) {
         case WEAR_HEAD:
         case WEAR_BACK:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
         case WEAR_EX_FOOT_R:
@@ -3307,16 +3307,16 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_BACK:
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_EX_LEG_R:
           return limbConnections(WEAR_BODY);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
              getMyRace()->getSingularName() % slot);
@@ -3331,9 +3331,9 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_BACK:
           return limbConnections(WEAR_BODY);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case WEAR_HAND_L:
         case HOLD_LEFT:
           return limbConnections(WEAR_ARM_L);
@@ -3342,8 +3342,8 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_L);
         case WEAR_HEAD:
           return limbConnections(WEAR_NECK);
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
           return limbConnections(WEAR_WAIST);
         default:
           vlogf(LOG_BUG,fmt("bogus check on %s for slot %d") % 
@@ -3354,8 +3354,8 @@ int TBeing::limbConnections(wearSlotT slot)
       switch (slot) {
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
           return limbConnections(WEAR_BODY);
@@ -3400,15 +3400,15 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_R);
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
           return limbConnections(WEAR_BODY);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case WEAR_EX_FOOT_L:
           return limbConnections(WEAR_EX_LEG_L);
         default:
@@ -3441,15 +3441,15 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_WRIST_L:
           return limbConnections(WEAR_ARM_L);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
           return limbConnections(WEAR_EX_LEG_L);
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
           return limbConnections(WEAR_WAIST);
@@ -3473,11 +3473,11 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_ARM_L);
         case HOLD_RIGHT:
           return limbConnections(WEAR_ARM_R);
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
           return limbConnections(WEAR_BODY);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case WEAR_EX_FOOT_L:
           return limbConnections(WEAR_EX_LEG_L);
         default:
@@ -3489,8 +3489,8 @@ int TBeing::limbConnections(wearSlotT slot)
       switch (slot) {
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
@@ -3499,10 +3499,10 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
@@ -3530,8 +3530,8 @@ int TBeing::limbConnections(wearSlotT slot)
       switch (slot) {
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
@@ -3540,10 +3540,10 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
@@ -3585,8 +3585,8 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_EX_LEG_L:
         case WEAR_EX_FOOT_R:
         case WEAR_EX_FOOT_L:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_FOOT_L:
         case WEAR_FOOT_R:
         case HOLD_RIGHT:
@@ -3603,8 +3603,8 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
         case WEAR_FOOT_L:
@@ -3620,8 +3620,8 @@ int TBeing::limbConnections(wearSlotT slot)
     case BODY_BIRD:
     case BODY_BAT:
       switch (slot) {
-        case WEAR_LEGS_L:
-        case WEAR_LEGS_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case WEAR_ARM_R:
         case WEAR_ARM_L:
         case WEAR_NECK:
@@ -3666,13 +3666,13 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_BODY);
         case WEAR_HEAD:
           return limbConnections(WEAR_NECK);
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
           return limbConnections(WEAR_WAIST);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_HAND_L:
           return limbConnections(WEAR_ARM_L);
         case WEAR_HAND_R:
@@ -3686,8 +3686,8 @@ int TBeing::limbConnections(wearSlotT slot)
       switch (slot) {
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-        case WEAR_LEGS_R:
-        case WEAR_LEGS_L:
+        case WEAR_LEG_R:
+        case WEAR_LEG_L:
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
@@ -3696,10 +3696,10 @@ int TBeing::limbConnections(wearSlotT slot)
           return limbConnections(WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEGS_L);
+          return limbConnections(WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEGS_R);
+          return limbConnections(WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
           return limbConnections(WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:

@@ -643,10 +643,10 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	      TObj *tobj = dynamic_cast<TObj *>(t);
 	      if (tobj->isPaired()) {
 		if (isRightHanded()) {
-		  if ((j == WEAR_LEGS_L) || (j == HOLD_LEFT))
+		  if ((j == WEAR_LEG_L) || (j == HOLD_LEFT))
 		    continue;
 		} else {
-		  if ((j == WEAR_LEGS_L) || (j == HOLD_RIGHT))
+		  if ((j == WEAR_LEG_L) || (j == HOLD_RIGHT))
 		    continue;
 		}
 	      }

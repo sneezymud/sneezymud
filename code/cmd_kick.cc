@@ -256,7 +256,7 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
       act("You're kicked in the shin by $n.   Ouch!",
             FALSE, caster, 0, victim, TO_VICT);                        
       act("Your kick hits $N in the shin.", FALSE, caster, 0, victim, TO_CHAR);
-      slot = wearSlotT(::number(WEAR_LEGS_R, WEAR_LEGS_L));
+      slot = wearSlotT(::number(WEAR_LEG_R, WEAR_LEG_L));
       item = dynamic_cast<TObj *>(victim->equipment[slot]);
       if (!item) {
         rc = caster->damageLimb(victim, slot, NULL, &limb_dam);

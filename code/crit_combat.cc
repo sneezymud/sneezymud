@@ -814,16 +814,16 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
       case 77:
       case 78:
 	// break bones leg
-	if (!v->hasPart(WEAR_LEGS_L))
+	if (!v->hasPart(WEAR_LEG_L))
 	  return 0;
 	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
-        if (v->isLimbFlags(WEAR_LEGS_L, PART_BROKEN))
+        if (v->isLimbFlags(WEAR_LEG_L, PART_BROKEN))
           return 0;
 
-	*part_hit = WEAR_LEGS_L;
+	*part_hit = WEAR_LEG_L;
 buf=fmt("You shatter $N's femur with your %s!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
@@ -833,11 +833,11 @@ buf=fmt("$n's %s shatters your femur!") %
 buf=fmt("$n's %s shatters $N's femur!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	*part_hit = WEAR_LEGS_L;
-	v->addToLimbFlags(WEAR_LEGS_L, PART_BROKEN);
+	*part_hit = WEAR_LEG_L;
+	v->addToLimbFlags(WEAR_LEG_L, PART_BROKEN);
 	for (i=1;i<5;i++)
-	  if (v->equipment[WEAR_LEGS_L])
-	    v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
+	  if (v->equipment[WEAR_LEG_L])
+	    v->damageItem(this,WEAR_LEG_L,wtype,weapon,*dam);
 	rc = damageLimb(v,*part_hit,weapon,dam);
 	if (desc)
 	  desc->career.crit_broken_bones++;
@@ -849,16 +849,16 @@ buf=fmt("$n's %s shatters $N's femur!") %
       case 79:
       case 80:
 	// crush muscles in leg
-	if (!v->hasPart(WEAR_LEGS_L))
+	if (!v->hasPart(WEAR_LEG_L))
 	  return 0;
 
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
 
-        if (v->isLimbFlags(WEAR_LEGS_L, PART_USELESS))
+        if (v->isLimbFlags(WEAR_LEG_L, PART_USELESS))
           return 0;
 
-	*part_hit = WEAR_LEGS_L;
+	*part_hit = WEAR_LEG_L;
         buf=fmt("With your %s, you crush the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
@@ -868,12 +868,12 @@ buf=fmt("$n's %s shatters $N's femur!") %
         buf=fmt("$n's %s crushes the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	*part_hit = WEAR_LEGS_L;
-	v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
+	*part_hit = WEAR_LEG_L;
+	v->addToLimbFlags(WEAR_LEG_L, PART_USELESS);
 	v->addToLimbFlags(WEAR_FOOT_L, PART_USELESS);
 	for (i=1;i<5;i++)
-	  if (v->equipment[WEAR_LEGS_L])
-	    v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
+	  if (v->equipment[WEAR_LEG_L])
+	    v->damageItem(this,WEAR_LEG_L,wtype,weapon,*dam);
 	rc = damageLimb(v,*part_hit,weapon,dam);
 
 	if (desc)
@@ -1465,12 +1465,12 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		  v->describeBodySlot(WEAR_FOOT_R);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	  v->makePartMissing(WEAR_FOOT_R, FALSE, this);
-	  v->addToLimbFlags(WEAR_LEGS_R, PART_USELESS);
-	  if ((obj = v->equipment[WEAR_LEGS_R]))
+	  v->addToLimbFlags(WEAR_LEG_R, PART_USELESS);
+	  if ((obj = v->equipment[WEAR_LEG_R]))
 	    critHitEqDamage(v, obj, (::number(-35,-22)));
 
-	  v->rawBleed(WEAR_LEGS_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	  *part_hit = WEAR_LEGS_R;
+	  v->rawBleed(WEAR_LEG_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	  *part_hit = WEAR_LEG_R;
 	  if (desc)
 	    desc->career.crit_sev_limbs++;
 	  if (v->desc)
@@ -1495,12 +1495,12 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 		  v->describeBodySlot(WEAR_FOOT_L);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	  v->makePartMissing(WEAR_FOOT_L, FALSE, this);
-	  v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
-	  if ((obj = v->equipment[WEAR_LEGS_L]))
+	  v->addToLimbFlags(WEAR_LEG_L, PART_USELESS);
+	  if ((obj = v->equipment[WEAR_LEG_L]))
 	    critHitEqDamage(v, obj, (::number(-35,-22)));
 
-	  v->rawBleed(WEAR_LEGS_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	  *part_hit = WEAR_LEGS_L;
+	  v->rawBleed(WEAR_LEG_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	  *part_hit = WEAR_LEG_L;
 	  if (desc)
 	    desc->career.crit_sev_limbs++;
 	  if (v->desc)
@@ -1876,17 +1876,17 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
       case 71:
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	if (!v->hasPart(WEAR_LEGS_R))
+	if (!v->hasPart(WEAR_LEG_R))
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-	if ((obj = v->equipment[WEAR_LEGS_R])) {
+	if ((obj = v->equipment[WEAR_LEG_R])) {
 	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a tendon!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<5;i++)
-	    if (v->equipment[WEAR_LEGS_R])
-	      v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
-	  *part_hit = WEAR_LEGS_R;
+	    if (v->equipment[WEAR_LEG_R])
+	      v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
+	  *part_hit = WEAR_LEG_R;
 	  return ONEHIT_MESS_CRIT_S;
 	}
 	// an intentional drop through
@@ -1894,7 +1894,7 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 	// strike lower leg, rip tendons, vict at -25% move. 
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	if (!v->hasPart(WEAR_LEGS_R))
+	if (!v->hasPart(WEAR_LEG_R))
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
@@ -1909,11 +1909,11 @@ buf=fmt("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->setMove(v->getMove()/4);
 	for (i = 1; i < 5; i++) {
-	  if (v->equipment[WEAR_LEGS_R])
-	    v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
+	  if (v->equipment[WEAR_LEG_R])
+	    v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
 	}
-	*part_hit = WEAR_LEGS_R;
-	rc = damageLimb(v,WEAR_LEGS_R,weapon,dam);
+	*part_hit = WEAR_LEG_R;
+	rc = damageLimb(v,WEAR_LEG_R,weapon,dam);
 	if (IS_SET_DELETE(rc, DELETE_VICT))
 	  return DELETE_VICT;
 	return ONEHIT_MESS_CRIT_S;

@@ -197,13 +197,13 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
   } else if (canWear(ITEM_WEAR_ARMS)) {
     *ac_perc  = 0.04;
     *str_perc = 0.05;
-  } else if (canWear(ITEM_WEAR_WRIST)) {
+  } else if (canWear(ITEM_WEAR_WRISTS)) {
     *ac_perc  = 0.02;
     *str_perc = 0.03;
   } else if (canWear(ITEM_WEAR_HANDS)) {
     *ac_perc  = 0.03;
     *str_perc = 0.03;
-  } else if (canWear(ITEM_WEAR_FINGER)) {
+  } else if (canWear(ITEM_WEAR_FINGERS)) {
     *ac_perc  = 0.01;
     *str_perc = 0.01;
   } else if (canWear(ITEM_WEAR_LEGS)) {
@@ -511,11 +511,11 @@ int TBaseClothing::suggestedPrice() const
           amt -= (int) ((lev-num) * max(lev-num, 20.0)* 450/4);
       price += amt;
     }
-    if (canWear(ITEM_WEAR_FINGER)) {
+    if (canWear(ITEM_WEAR_FINGERS)) {
       if ((affected[i].location == APPLY_DAMROLL) ||
             (affected[i].location == APPLY_HITNDAM))
         adjustments += 6700 * num;
-    } else if ((canWear(ITEM_WEAR_HANDS)) || (canWear(ITEM_WEAR_WRIST))) {
+    } else if ((canWear(ITEM_WEAR_HANDS)) || (canWear(ITEM_WEAR_WRISTS))) {
       if ((affected[i].location == APPLY_DAMROLL) ||
             (affected[i].location == APPLY_HITNDAM))
         adjustments += 10800 * num;
@@ -696,7 +696,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
     if (!o)
       continue;
 
-    if(o->canWear(ITEM_WEAR_FINGER))
+    if(o->canWear(ITEM_WEAR_FINGERS))
       fingers++;
     if(o->canWear(ITEM_WEAR_LEGS))
       legs++;
@@ -704,7 +704,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
       feet++;
     if(o->canWear(ITEM_WEAR_ARMS))
       arms++;
-    if(o->canWear(ITEM_WEAR_WRIST))
+    if(o->canWear(ITEM_WEAR_WRISTS))
       wrists++;
     if(o->canWear(ITEM_WEAR_HANDS))
       hands++;
@@ -719,18 +719,18 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
     }
   }
 
-  if((canWear(ITEM_WEAR_FINGER) && fingers >= 2) ||
+  if((canWear(ITEM_WEAR_FINGERS) && fingers >= 2) ||
      (canWear(ITEM_WEAR_LEGS) && legs >= 2) ||
      (canWear(ITEM_WEAR_FEET) && feet >= 2) ||
      (canWear(ITEM_WEAR_ARMS) && arms >= 2) ||
-     (canWear(ITEM_WEAR_WRIST) && wrists >= 2) ||
+     (canWear(ITEM_WEAR_WRISTS) && wrists >= 2) ||
      (canWear(ITEM_WEAR_HANDS) && hands >= 2)){
     ch->sendTo(fmt("You already have two things that fit that slot in your %s.\n\r") % fname(container->name));
     return TRUE;
   }
 
 
-  if(!canWear(ITEM_WEAR_FINGER) &&
+  if(!canWear(ITEM_WEAR_FINGERS) &&
      !canWear(ITEM_WEAR_NECK) &&
      !canWear(ITEM_WEAR_BODY) &&
      !canWear(ITEM_WEAR_HEAD) &&
@@ -740,7 +740,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
      !canWear(ITEM_WEAR_ARMS) &&
      !canWear(ITEM_WEAR_BACK) &&
      !canWear(ITEM_WEAR_WAIST) &&
-     !canWear(ITEM_WEAR_WRIST)){
+     !canWear(ITEM_WEAR_WRISTS)){
     ch->sendTo("You can only put clothing or armor into that.\n\r");
     return TRUE;
   }

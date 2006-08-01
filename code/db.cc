@@ -1877,9 +1877,9 @@ wearSlotT mapFileToSlot(int num)
       case 5:
         return WEAR_HEAD;
       case 6:
-        return WEAR_LEGS_R;
+        return WEAR_LEG_R;
       case 7:
-        return WEAR_LEGS_L;
+        return WEAR_LEG_L;
       case 8:
         return WEAR_FOOT_R;
       case 9:
@@ -1933,9 +1933,9 @@ int mapSlotToFile(wearSlotT num)
       return 4;
     case WEAR_HEAD:
       return 5;
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
       return 6;
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
       return 7;
     case WEAR_FOOT_R:
       return 8;
@@ -2778,7 +2778,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
                 vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
               }
               TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-              if (tbc && tbc->canWear(ITEM_WEAR_FINGER) && gamePort != PROD_GAMEPORT) {
+              if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != PROD_GAMEPORT) {
                 vlogf(LOG_LOW, fmt("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
                       obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
                       mob->getName() % mob->GetMaxLevel());

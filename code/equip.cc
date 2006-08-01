@@ -293,9 +293,9 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
   }
 
   switch (keyword) {
-    case WEAR_KEY_FINGER:
+    case WEAR_KEY_FINGERS:
       if (validEquipSlot(WEAR_FINGER_L) && validEquipSlot(WEAR_FINGER_R)) {
-        if (o->canWear(ITEM_WEAR_FINGER)) {
+        if (o->canWear(ITEM_WEAR_FINGERS)) {
           if (equipment[WEAR_FINGER_L] && equipment[WEAR_FINGER_R]) {
             sprintf(buf, "%s are already wearing something on %s %s.",
                (ch == this ? "You" : "$N"),
@@ -503,21 +503,21 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
       break;
     case WEAR_KEY_LEGS:
-      if (validEquipSlot(WEAR_LEGS_L) && validEquipSlot(WEAR_LEGS_R)) {
+      if (validEquipSlot(WEAR_LEG_L) && validEquipSlot(WEAR_LEG_R)) {
         if (o->canWear(ITEM_WEAR_LEGS)) {
-          if (equipment[WEAR_LEGS_L] && equipment[WEAR_LEGS_R]) {
+          if (equipment[WEAR_LEG_L] && equipment[WEAR_LEG_R]) {
             sprintf(buf, "%s already %s something on %s legs.",
                    (ch == this ? "You" : "$N"),
                    (ch == this ? "wear" : "wears"),
                    (ch == this ? "your" : "$S"));
             act(buf, FALSE, ch, o, this, TO_CHAR);
           } else if (o->isPaired()) {
-            if (equipment[WEAR_LEGS_L] || equipment[WEAR_LEGS_R]) {
+            if (equipment[WEAR_LEG_L] || equipment[WEAR_LEG_R]) {
               sprintf(buf, "Both %slegs must be bare to wear $p.",
                      (ch == this ? "" : "of $N's "));
               act(buf, FALSE, ch, o, this, TO_CHAR);
             } else {
-              if (!check_size_restrictions(this, o, WEAR_LEGS_L, ch))
+              if (!check_size_restrictions(this, o, WEAR_LEG_L, ch))
                 return FALSE;
               sprintf(buf, "You %s $p on %s legs.",
                      (ch == this ? "wear" : "outfit"),
@@ -533,56 +533,56 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               --(*o);
-              equipChar(o, WEAR_LEGS_R);
+              equipChar(o, WEAR_LEG_R);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.60, TRUE, TRUE);
               aiWear(o);
             }
           } else {
-            if (equipment[WEAR_LEGS_L]) {
-              if (!check_size_restrictions(this, o, WEAR_LEGS_L, ch))
+            if (equipment[WEAR_LEG_L]) {
+              if (!check_size_restrictions(this, o, WEAR_LEG_L, ch))
                 return FALSE;
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
-                     describeBodySlot(WEAR_LEGS_R).c_str());
+                     describeBodySlot(WEAR_LEG_R).c_str());
               act(buf, FALSE, ch, o, this, TO_CHAR);
               sprintf(buf, "$n %s $p on %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "your"),
-                     describeBodySlot(WEAR_LEGS_R).c_str());
+                     describeBodySlot(WEAR_LEG_R).c_str());
               act(buf, FALSE, ch, o, this, TO_VICT);
               sprintf(buf, "$n %s $p on %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "$N's"),
-                     describeBodySlot(WEAR_LEGS_R).c_str());
+                     describeBodySlot(WEAR_LEG_R).c_str());
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               --(*o);
-              equipChar(o, WEAR_LEGS_R);
+              equipChar(o, WEAR_LEG_R);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.60, TRUE, TRUE);
             } else {
-              if (!check_size_restrictions(this, o, WEAR_LEGS_R, ch))
+              if (!check_size_restrictions(this, o, WEAR_LEG_R, ch))
                 return FALSE;
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
-                     describeBodySlot(WEAR_LEGS_L).c_str());
+                     describeBodySlot(WEAR_LEG_L).c_str());
               act(buf, FALSE, ch, o, this, TO_CHAR);
               sprintf(buf, "$n %s $p on %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "your"),
-                     describeBodySlot(WEAR_LEGS_L).c_str());
+                     describeBodySlot(WEAR_LEG_L).c_str());
               act(buf, FALSE, ch, o, this, TO_VICT);
               sprintf(buf, "$n %s $p on %s %s.",
                      (ch == this ? "wears" : "outfits"),
                      (ch == this ? "$s" : "$N's"),
-                     describeBodySlot(WEAR_LEGS_L).c_str());
+                     describeBodySlot(WEAR_LEG_L).c_str());
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               --(*o);
-              equipChar(o, WEAR_LEGS_L);
+              equipChar(o, WEAR_LEG_L);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.60, TRUE, TRUE);
             }
@@ -919,9 +919,9 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
       }
 
       break;
-    case WEAR_KEY_WRIST:
+    case WEAR_KEY_WRISTS:
       if (validEquipSlot(WEAR_WRIST_L) && validEquipSlot(WEAR_WRIST_R)) {
-        if (o->canWear(ITEM_WEAR_WRIST)) {
+        if (o->canWear(ITEM_WEAR_WRISTS)) {
           if (!check_size_restrictions(this, o, WEAR_WRIST_L, ch))
             return FALSE;
 
@@ -1821,9 +1821,9 @@ void TBeing::wearNTear(void)
 
   for (j=1;j <= 8;j++) {
     if (j == 1)
-       i = WEAR_LEGS_R;
+       i = WEAR_LEG_R;
     else if (j == 2)
-       i = WEAR_LEGS_L;
+       i = WEAR_LEG_L;
     else if (j == 3)
        i = WEAR_FOOT_R;
     else if (j == 4)
@@ -1896,7 +1896,7 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
   if (objVnum() == CRAPS_DICE)
     return FALSE;
 
-  if (canWear(ITEM_WEAR_FINGER))
+  if (canWear(ITEM_WEAR_FINGERS))
     return FALSE;
 
 #if 0
@@ -1953,7 +1953,7 @@ bool TObj::shamanRestrictedItem(const TBeing *ch) const
   if (objVnum() == MASK6)
     return FALSE;
 
-  if (canWear(ITEM_WEAR_FINGER))
+  if (canWear(ITEM_WEAR_FINGERS))
     return FALSE;
 
 #if 0
@@ -1983,7 +1983,7 @@ bool TObj::rangerRestrictedItem(const TBeing *ch) const
   if (ch && !ch->hasClass(CLASS_RANGER))
     return FALSE;
 
-  if (canWear(ITEM_WEAR_FINGER))
+  if (canWear(ITEM_WEAR_FINGERS))
     return FALSE;
 
   if (!dynamic_cast<const TArmor *>(this))
@@ -2314,12 +2314,12 @@ void TBeing::doOutfit(const sstring &arg)
 
 wearKeyT TObj::getWearKey() const
 {
-  if (canWear(ITEM_WEAR_FINGER))
-    return WEAR_KEY_FINGER;
+  if (canWear(ITEM_WEAR_FINGERS))
+    return WEAR_KEY_FINGERS;
   if (canWear(ITEM_WEAR_NECK))
     return WEAR_KEY_NECK;
-  if (canWear(ITEM_WEAR_WRIST))
-    return WEAR_KEY_WRIST;
+  if (canWear(ITEM_WEAR_WRISTS))
+    return WEAR_KEY_WRISTS;
   if (canWear(ITEM_WEAR_WAIST))
     return WEAR_KEY_WAIST;
   if (canWear(ITEM_WEAR_ARMS))

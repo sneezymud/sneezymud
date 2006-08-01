@@ -295,8 +295,8 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     ch->makeBodyPart(WEAR_HEAD);
     ch->makeBodyPart(WEAR_ARM_L);
     ch->makeBodyPart(WEAR_ARM_R);
-    ch->makeBodyPart(WEAR_LEGS_L);
-    ch->makeBodyPart(WEAR_LEGS_R);
+    ch->makeBodyPart(WEAR_LEG_L);
+    ch->makeBodyPart(WEAR_LEG_R);
     //muahaha corpse explodes... limbs fly EVERYWHERE!!
     if (IS_SET_DELETE(rc2, DELETE_VICT) || (ch->getHit() < -10))
       delete ch;

@@ -224,7 +224,7 @@ enum organicTypeT {
 /* Bitvector For 'wear_flags' */
 
 const unsigned int ITEM_TAKE              = (1<<0);    // 1
-const unsigned int ITEM_WEAR_FINGER       = (1<<1);    // 2
+const unsigned int ITEM_WEAR_FINGERS       = (1<<1);    // 2
 const unsigned int ITEM_WEAR_NECK         = (1<<2);    // 4
 const unsigned int ITEM_WEAR_BODY         = (1<<3);    // 8
 const unsigned int ITEM_WEAR_HEAD         = (1<<4);    // 16
@@ -235,7 +235,7 @@ const unsigned int ITEM_WEAR_ARMS         = (1<<8);    // 256
 const unsigned int ITEM_WEAR_UNUSED1      = (1<<9);    // 512
 const unsigned int ITEM_WEAR_BACK         = (1<<10);   // 1024
 const unsigned int ITEM_WEAR_WAIST       = (1<<11);   // 2048
-const unsigned int ITEM_WEAR_WRIST        = (1<<12);   // 4096
+const unsigned int ITEM_WEAR_WRISTS        = (1<<12);   // 4096
 const unsigned int ITEM_WEAR_UNUSED2      = (1<<13);   // 8192
 const unsigned int ITEM_HOLD              = (1<<14);   // 16384
 const unsigned int ITEM_THROW             = (1<<15);   // 32768

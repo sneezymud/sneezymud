@@ -2724,9 +2724,9 @@ void TBeing::doEquipment(const sstring &arg)
           trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
-        case WEAR_LEGS_L:
+        case WEAR_LEG_L:
           break;
-        case WEAR_LEGS_R:
+        case WEAR_LEG_R:
           trans=fmt("<%s>") % describeTransLimb(j);
           sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
@@ -4824,7 +4824,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
       !dynamic_cast<const TBow *>(obj))
     return;
 
-  if (obj->canWear(ITEM_HOLD) || obj->canWear(ITEM_WEAR_FINGER))
+  if (obj->canWear(ITEM_HOLD) || obj->canWear(ITEM_WEAR_FINGERS))
     return;
 
   int iNoise = GetApprox(material_nums[obj->getMaterial()].noise, learn);

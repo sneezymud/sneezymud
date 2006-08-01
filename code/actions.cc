@@ -595,7 +595,7 @@ void TBeing::doPoop(void)
     return;
   }
 
-  if(equipment[WEAR_WAIST]||equipment[WEAR_LEGS_R]||equipment[WEAR_LEGS_L]){
+  if(equipment[WEAR_WAIST]||equipment[WEAR_LEG_R]||equipment[WEAR_LEG_L]){
     sendTo("You can't go poop with pants or a belt on!\n\r");
     return;
   }
@@ -672,7 +672,7 @@ void TBeing::doPee(const sstring &argument)
     }
 
     if(getSex() == SEX_FEMALE && (equipment[WEAR_WAIST] ||
-       equipment[WEAR_LEGS_R] || equipment[WEAR_LEGS_L])){
+       equipment[WEAR_LEG_R] || equipment[WEAR_LEG_L])){
       sendTo("You can't go pee with pants or a belt on!\n\r");
       return;
     }

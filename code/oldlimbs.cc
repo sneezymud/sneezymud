@@ -460,9 +460,9 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
             } else {
               break;
             }
-          case WEAR_LEGS_R:
-          case WEAR_LEGS_L:
-            if ((slot == WEAR_LEGS_R) || (slot == WEAR_LEGS_L) || 
+          case WEAR_LEG_R:
+          case WEAR_LEG_L:
+            if ((slot == WEAR_LEG_R) || (slot == WEAR_LEG_L) || 
                 (slot == WEAR_FOOT_R) || (slot ==WEAR_FOOT_L)) {
               return FALSE;
             } else {
@@ -471,7 +471,7 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
           case WEAR_FOOT_R:
           case WEAR_FOOT_L:
             if ((slot == WEAR_FOOT_R) || (slot == WEAR_FOOT_L) || 
-                (slot == WEAR_LEGS_R) || (slot == WEAR_LEGS_L)) {
+                (slot == WEAR_LEG_R) || (slot == WEAR_LEG_L)) {
               return FALSE;
             } else {
               break;
@@ -509,8 +509,8 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
 
 bool TBeing::hasLegs() const
 {
-  if (!slotChance(WEAR_LEGS_L) &&
-       (!slotChance(WEAR_LEGS_R)) &&
+  if (!slotChance(WEAR_LEG_L) &&
+       (!slotChance(WEAR_LEG_R)) &&
        (!slotChance(WEAR_FOOT_L)) &&
        (!slotChance(WEAR_FOOT_R)) &&
        (!slotChance(WEAR_EX_LEG_R)) &&
@@ -584,9 +584,9 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
       return "bogus transformed body part";
     case WEAR_HEAD:
       return "eagle's head";
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
     case WEAR_FOOT_L:
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
     case WEAR_FOOT_R:
       return "dolphin's tail";
     case WEAR_HAND_R:
@@ -687,7 +687,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
     case WEAR_BODY:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
     case WEAR_BACK:
     case WEAR_WAIST:
     case WEAR_WRIST_R:
@@ -700,7 +700,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
     case WEAR_EX_FOOT_L:
       return FALSE;
     case WEAR_NECK:
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
     case WEAR_HEAD:
     case WEAR_ARM_R:
     case WEAR_ARM_L:
@@ -733,7 +733,7 @@ const sstring TBeing::describeTransLimb(wearSlotT i) const
     case WEAR_BODY:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
     case WEAR_BACK:
     case WEAR_WAIST:
     case WEAR_WRIST_R:
@@ -752,7 +752,7 @@ const sstring TBeing::describeTransLimb(wearSlotT i) const
       return "In place of a neck, you see a set of gills";
     case WEAR_HEAD:
       return "Sitting on the neck is an eagle's head";
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
       return "In place of legs you see the tail fins of a dolphin";
     case WEAR_HAND_R:
       if (isLimbFlags(WEAR_ARM_R, PART_TRANSFORMED)) {
@@ -797,9 +797,9 @@ const sstring TBeing::describeTransEquipSlot(wearSlotT i) const
     case WEAR_BODY:
       vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
-    case WEAR_LEGS_R:
+    case WEAR_LEG_R:
         return "In place of a legs, you see the tail fins of a dolphin";
-    case WEAR_LEGS_L:
+    case WEAR_LEG_L:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
       vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
@@ -876,8 +876,8 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
     if (compar > 1.5) {
       real_slot_chance[WEAR_FOOT_L] = 0;
       real_slot_chance[WEAR_FOOT_R] = 0;
-      real_slot_chance[WEAR_LEGS_R] = 0;
-      real_slot_chance[WEAR_LEGS_L] = 0;
+      real_slot_chance[WEAR_LEG_R] = 0;
+      real_slot_chance[WEAR_LEG_L] = 0;
       real_slot_chance[WEAR_EX_LEG_R] = 0;
       real_slot_chance[WEAR_EX_LEG_L] = 0;
       real_slot_chance[WEAR_EX_FOOT_R] = 0;
@@ -894,8 +894,8 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
       real_slot_chance[WEAR_BODY] = 0;
       real_slot_chance[WEAR_BACK] = 0;
       real_slot_chance[WEAR_WAIST] = 0;
-      real_slot_chance[WEAR_LEGS_R] = 0;
-      real_slot_chance[WEAR_LEGS_L] = 0;
+      real_slot_chance[WEAR_LEG_R] = 0;
+      real_slot_chance[WEAR_LEG_L] = 0;
       real_slot_chance[WEAR_ARM_R] = 0;
       real_slot_chance[WEAR_ARM_L] = 0;
     } else if (compar < 0.2) {

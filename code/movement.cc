@@ -398,7 +398,7 @@ int TBeing::rawMove(dirTypeT dir)
   has_boat = hasBoat();
 
   if (!(roomp->isUnderwaterSector() || roomp->isWaterSector())) {
-    if (isLimbFlags(WEAR_LEGS_R, PART_TRANSFORMED)) {
+    if (isLimbFlags(WEAR_LEG_R, PART_TRANSFORMED)) {
       sendTo("It's hard to walk without legs.\n\rMaybe crawling would help.\n\r");
       return FALSE;
     }
