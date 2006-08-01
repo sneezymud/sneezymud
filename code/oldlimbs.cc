@@ -217,6 +217,11 @@ bool TBeing::hasPart(wearSlotT part) const
     return FALSE;
   if (isLimbFlags(part, PART_MISSING))
     return FALSE;
+  if((hasQuestBit(TOG_PEGLEG_R) && part==WEAR_FOOT_R) ||
+     (hasQuestBit(TOG_PEGLEG_L) && part==WEAR_FOOT_L) ||
+     (hasQuestBit(TOG_HOOK_HAND_R) && part==WEAR_FINGER_R) ||
+     (hasQuestBit(TOG_HOOK_HAND_L) && part==WEAR_FINGER_L))
+    return FALSE;
   return TRUE;
 }
 
