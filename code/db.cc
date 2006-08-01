@@ -274,6 +274,18 @@ void object_stats()
 }
 
 
+void assign_rooms()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select vnum from room where spec!=0");
+  
+  while(db.fetchRow()){
+    TRoom *rp=real_roomp(convertTo<int>(db["vnum"]));
+    roomspec_db.push_back(rp);
+  }
+}
+
 
 void bootDb(void)
 {
@@ -358,9 +370,9 @@ void bootDb(void)
 
   bootPulse("Initializing boards.");
   InitBoards();
-  //  bootPulse("Initializing room specials.");
-  //  assign_rooms();
-  roomspec_db.push_back(real_roomp(63));
+  
+  bootPulse("Initializing room specials.");
+  assign_rooms();
 
   bootPulse("Initializing command array.");
   buildCommandArray();
