@@ -954,7 +954,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         continue;
       if (vict->isImmortal() ||
           (vict->getSex() != SEX_MALE) ||
-          vict->isImmune(IMMUNE_CHARM)) {
+          vict->isImmune(IMMUNE_CHARM, WEAR_BODY)) {
         vict->sendTo("You hear a siren song in the distance but are able to resist its allure...\n\r");
         continue;
       }
@@ -997,7 +997,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       continue;
       }
     }
-    if (vict->isImmune(IMMUNE_CHARM) ||
+    if (vict->isImmune(IMMUNE_CHARM, WEAR_BODY) ||
         (vict->getSex() != SEX_MALE)) {
       act("You are just barely able to resist being charmed by $N's song.",
           FALSE, vict, 0, myself, TO_CHAR);

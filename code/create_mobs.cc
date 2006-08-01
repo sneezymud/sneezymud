@@ -119,7 +119,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     sprintf(tStringOut[12], "%s", (!tMon->getSex() ? "Other" : (tMon->getSex() == 1 ? "Male" : "Female")));
     sprintf(tStringOut[13], "%d", tMon->max_exist);
     strcpy(tStringOut[14], position_types[tMon->default_pos].c_str());
-    strcpy(tStringOut[15], material_nums[tMon->getMaterial()].mat_name);
+    strcpy(tStringOut[15], material_nums[tMon->getMaterial(WEAR_BODY)].mat_name);
     strcpy(tStringOut[16], tMon->getProfName().c_str());
     int tHeight = (int)(tMon->getHeight() / 12);
     sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
@@ -341,7 +341,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   fprintf(fp,"\n");
 
   fprintf(fp, "%d %d %d %d\n",
-        mob->getMaterial(), mob->canBeSeen, mob->visionBonus, mob->max_exist);
+        mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist);
 
   if (mob->sounds || mob->distantSnds)
     fprintf(fp, "%s~\n%s~\n", mob->sounds ? mob->sounds : "", mob->distantSnds ? mob->distantSnds : "");
@@ -1584,7 +1584,7 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current skin type : %s\n\r\n\r") % material_nums[mob->getMaterial()].mat_name);
+  ch->sendTo(fmt("Current skin type : %s\n\r\n\r") % material_nums[mob->getMaterial(WEAR_BODY)].mat_name);
   for (i = 0; i <= 3; i++)
     ch->sendTo(fmt("%d) %s\n\r") % (i + 1) % material_groups[i]);
 

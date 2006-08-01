@@ -47,7 +47,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
       if (!tmp_victim)
         continue;
       if (caster != tmp_victim && !tmp_victim->isImmortal() &&
-          !tmp_victim->isImmune(IMMUNE_DISEASE) &&
+          !tmp_victim->isImmune(IMMUNE_DISEASE, WEAR_WAIST) &&
           !tmp_victim->isAffected(AFF_SYPHILIS)) {
 	      if (caster->inGroup(*tmp_victim)) {
           if (!caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
@@ -74,7 +74,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
     }
     if (!caster->isAffected(AFF_SYPHILIS) &&
         !caster->bSuccess(bKnown, SPELL_DEATH_MIST) &&
-        !caster->isImmune(IMMUNE_DISEASE) &&
+        !caster->isImmune(IMMUNE_DISEASE, WEAR_WAIST) &&
         !caster->isImmortal()) {
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       caster->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);

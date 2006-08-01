@@ -4100,7 +4100,7 @@ bool TBeing::saveFollowers(bool rent_time)
     
     fprintf(fp, "\n");
 
-    fprintf(fp, "%d %d %d\n", mob->getMaterial(), mob->canBeSeen, mob->visionBonus);
+    fprintf(fp, "%d %d %d\n", mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus);
 
     // store affects to preserve charm, etc
     affectedData *af;

@@ -48,7 +48,7 @@ void eggPoisoned(TEgg *egg, TBeing *ch, int dur)
 
   if (egg->isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON)) {
+    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act("That tasted rather strange, but you don't think it had any ill-effect!!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
       act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
@@ -68,7 +68,7 @@ void eggSpoiled(TEgg *egg, TBeing *ch, int dur)
   affectedData af;
 
   if (egg->isFoodFlag(FOOD_SPOILED)) {
-    if (ch->isImmune(IMMUNE_POISON)) {
+    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       ch->sendTo("BLAH!  That was a very rotten egg.  Hopefully you won't have any ill-effect.\n\r");
     } else {
       af.type = AFFECT_DISEASE;

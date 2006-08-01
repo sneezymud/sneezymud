@@ -1689,13 +1689,17 @@ int TBeing::chlorineEngulfed()
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;
 
-  if (isImmune(IMMUNE_POISON)) {
+  if (isImmune(IMMUNE_POISON, WEAR_BODY)) {
   } else {
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
   }
   for (i=MIN_WEAR;i < MAX_WEAR;i++) {
     if (!(t = equipment[i]) && slotChance(i)) {
       int dam = ::number(2,11);
+
+      if(isImmune(IMMUNE_POISON, i))
+	continue;
+
       if ((dam = getActualDamage(this, 0, dam, SPELL_CHLORINE_BREATH)))
         sendTo(fmt("The chlorine gas gives you a caustic burn on your %s.\n\r") %describeBodySlot(i));
       rc = applyDamage(this,dam,SPELL_CHLORINE_BREATH);

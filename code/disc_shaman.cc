@@ -1305,7 +1305,7 @@ int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
   caster->reconcileHurt(victim, discArray[SPELL_INTIMIDATE]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_INTIMIDATE)) {
-    if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR)) {
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR, WEAR_BODY)) {
       SV(SPELL_INTIMIDATE);
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
       act("You feel intimidated briefly.", FALSE, caster, NULL, victim, 

@@ -669,7 +669,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     return true;
   }
 
-  if (getMaterial() == MAT_FIRE) {
+  if (getMaterial(WEAR_BODY) == MAT_FIRE) {
     int drunk;
     if ((drunk = liquidInfo[type]->drunk) > 0) {
       act("$N suddenly flares up, but $E doesn't really look happy now.",
@@ -700,7 +700,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     
     rc = reconcileDamage(this, ::number(5, max(6, min(15, (int) (size/20)))), DAMAGE_DISRUPTION);
   } else if (roomp && roomp->isArcticSector() && type != LIQ_WARM_MEAD &&
-      getMaterial() != MAT_ICE) {
+      getMaterial(WEAR_BODY) != MAT_ICE) {
     act("$N looks very cold now, I think your going to have a bad day...",
         TRUE, ch, 0, this, TO_CHAR);
     act("BRRRRR!  That doesn't help much, now your REALLY cold!",

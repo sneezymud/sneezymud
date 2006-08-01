@@ -71,7 +71,7 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
   // use hardness of eq on slot, or use skintype for hardness
   hardness = equipment[slot] ? 
      material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial()].hardness;
+     material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willDent(hardness)) {
     if (item->isMineral()) {
@@ -121,7 +121,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
   // use hardness of eq on slot, or use skintype for hardness
   sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
      material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial()].hardness;
+     material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willTear(sharp)) {
     if (item->isMineral()) {
@@ -172,7 +172,7 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
   // use hardness of eq on slot, or use skintype for hardness
   sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
      material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial()].hardness;
+     material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willPuncture(sharp)) {
     if (item->isMineral()) {

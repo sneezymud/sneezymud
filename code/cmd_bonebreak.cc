@@ -78,19 +78,6 @@ int bonebreakHit(TBeing *c, TBeing *victim)
   int dam=::number(1,c->GetMaxLevel()), rc;
   char limb[256], buf[256];
 
-  if (victim->isImmune(IMMUNE_BONE_COND, c->GetMaxLevel())) {
-    act("You grab ahold of $N but you just can't seem to break any bones.",
-	FALSE, c, 0, victim, TO_CHAR);
-    act("$n grabs ahold of you, but is incapable of breaking your bones.", 
-	FALSE, c, 0, victim, TO_VICT);
-    act("$n grabs ahold of $N, but doesn't seem to be able to break any bones.", 
-	FALSE, c, 0, victim, TO_NOTVICT);
-
-    if ((rc = c->reconcileDamage(victim, 0,SKILL_BONEBREAK)) == -1)
-      return DELETE_VICT;    
-    return TRUE; // lag them anyway
-  }
-
   // find a suitable bone to break 
   for (slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1);; 
        slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1)) {
@@ -101,6 +88,19 @@ int bonebreakHit(TBeing *c, TBeing *victim)
     if(!victim->hasPart(slot))
       continue;
     break;
+  }
+
+  if (victim->isImmune(IMMUNE_BONE_COND, slot, c->GetMaxLevel())) {
+    act("You grab ahold of $N but you just can't seem to break any bones.",
+	FALSE, c, 0, victim, TO_CHAR);
+    act("$n grabs ahold of you, but is incapable of breaking your bones.", 
+	FALSE, c, 0, victim, TO_VICT);
+    act("$n grabs ahold of $N, but doesn't seem to be able to break any bones.", 
+	FALSE, c, 0, victim, TO_NOTVICT);
+
+    if ((rc = c->reconcileDamage(victim, 0,SKILL_BONEBREAK)) == -1)
+      return DELETE_VICT;    
+    return TRUE; // lag them anyway
   }
 
 

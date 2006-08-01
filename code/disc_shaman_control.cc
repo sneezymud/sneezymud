@@ -42,7 +42,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     act("$N slowly rises from the $g.", FALSE, caster, 0, victim, TO_ROOM);
     caster->reconcileHelp(victim,discArray[SPELL_RESURRECTION]->alignMod);
       
-    if (victim->isImmune(IMMUNE_CHARM, level)) {
+    if (victim->isImmune(IMMUNE_CHARM, WEAR_BODY, level)) {
       victim->setPosition(POSITION_STANDING);
       delete corpse;
       victim->doSay("Thank you soooooooo very much!");

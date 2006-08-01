@@ -638,7 +638,7 @@ int magicGills(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   if (tmp->roomp->isWaterSector() || tmp->roomp->isUnderwaterSector())
     return FALSE;
 
-  if (tmp->isImmune(IMMUNE_SUFFOCATION))
+  if (tmp->isImmune(IMMUNE_SUFFOCATION, WEAR_BODY))
     return FALSE;
 
   if (!tmp->isPc())
@@ -709,7 +709,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     ch->sendTo("It tastes as horrible as it looks!\n\r");
 
     int level = 5;
-    if (ch->isImmune(IMMUNE_DISEASE)) {
+    if (ch->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
       act("$n shakes off the effects as if immune.",
           FALSE, ch, 0, 0, TO_ROOM);
       act("You shake off the effects of that disease-spewing $o.",
@@ -1347,13 +1347,6 @@ int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
   if (cmd != CMD_SIT)
     return FALSE;
 
-  if (ch->isImmune(IMMUNE_BLEED))
-    return FALSE;
-
-  ch->doSit(me->getName());
-
-  ch->sendTo(fmt("Ouch that %shurt!%s\n\r") % ch->red() % ch->norm());
-
   // insure some limb can be bled first...
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBleedSlot(slot))
@@ -1364,6 +1357,14 @@ int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
       continue;
     break;
   }
+
+  if (ch->isImmune(IMMUNE_BLEED, slot))
+    return FALSE;
+
+  ch->doSit(me->getName());
+
+  ch->sendTo(fmt("Ouch that %shurt!%s\n\r") % ch->red() % ch->norm());
+
   if (slot >= MAX_WEAR) {
     // no slots to bleed...
     return TRUE;

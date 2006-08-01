@@ -1186,7 +1186,8 @@ int TMonster::monkMove(TBeing &vict)
         if ((GetMaxLevel() > 75) &&
            (doesKnowSkill(SKILL_BONEBREAK)) &&
            (getMove() >= 80) &&
-           (!vict.isImmune(IMMUNE_BONE_COND))) {
+           (!vict.isImmune(IMMUNE_BONE_COND, WEAR_BODY))) {
+	  // in theory we could do a per slot isImmune check here...
           return doBoneBreak("", &vict);
           break;
         }

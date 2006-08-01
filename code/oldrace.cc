@@ -727,6 +727,11 @@ const sstring TBeing::describeBodySlot(wearSlotT i) const
   return buf;
 }
 
+ubyte TBeing::getMaterial(wearSlotT pos) const
+{
+  return TThing::getMaterial();
+}
+
 const sstring TBeing::describeBodySlot2(wearSlotT i) const
 {
   switch (getMyRace()->getBodyType()) {

@@ -212,7 +212,7 @@ void TBeing::addToImmunity(immuneTypeT type, byte amt)
   immunities.immune_arr[type] = min(max(immunities.immune_arr[type] + amt, -100), 100);
 }
 
-bool TBeing::isImmune(immuneTypeT bit, int modifier) const
+bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
 {
   // 'modifier' is not required and defaults to 0
   // 'modifier' is subtracted from any resistance less than 100%

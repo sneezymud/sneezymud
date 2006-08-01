@@ -781,7 +781,7 @@ TO_ROOM, ANSI_RED_BOLD);
     return SPELL_FAIL;
   }
 #endif
-  if (victim->isImmune(IMMUNE_CHARM, level) || victim->GetMaxLevel() > caster->GetMaxLevel() ||
+  if (victim->isImmune(IMMUNE_CHARM, WEAR_BODY, level) || victim->GetMaxLevel() > caster->GetMaxLevel() ||
       (!victim->isPc() && dynamic_cast<TMonster *>(victim)->Hates(caster, NULL)) ||
       caster->isNotPowerful(victim, level, SPELL_HYPNOSIS, SILENT_YES) ||
       (victim->isLucky(caster->spellLuckModifier(SPELL_HYPNOSIS)))) {

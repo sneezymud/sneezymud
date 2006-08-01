@@ -1957,7 +1957,7 @@ int TBeing::terrainSpecial()
       act("A cold wind blows through, chilling you to the bone.",TRUE,this,0,0,TO_CHAR);
 // frostbite needs rethinking - bat 
 #if 0   
-      if (isImmune(IMMUNE_COLD))
+      if (isImmune(IMMUNE_COLD, WEAR_BODY))
         break;
       if (dynamic_cast<TMonster *>(this))
         break;
@@ -1989,7 +1989,7 @@ int TBeing::terrainSpecial()
     if (affectedBySpell(AFFECT_WAS_INDOORS) || hasDisease(DISEASE_FROSTBITE)) return FALSE;  // make it only hit em if they sit outside for a while
     if (weather_info.sky != SKY_RAINING && weather_info.sky != SKY_CLOUDY && weather_info.sky != SKY_LIGHTNING)
       return FALSE;
-    if (isImmune(IMMUNE_COLD))
+    if (isImmune(IMMUNE_COLD, WEAR_BODY))
       return FALSE;
     if (dynamic_cast<TMonster *>(this))
       return FALSE;

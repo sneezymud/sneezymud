@@ -1431,7 +1431,7 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
 
   // not sure what this is for???
   if (immcheck) {
-    if (isImmune(IMMUNE_SKIN_COND))
+    if (isImmune(IMMUNE_SKIN_COND, pos))
       return FALSE;
   }
 
@@ -1475,7 +1475,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
 
   // not sure what this is for???
   if (immcheck) {
-    if (isImmune(IMMUNE_BLEED))
+    if (isImmune(IMMUNE_BLEED, pos))
       return FALSE;
   }
 
@@ -1516,7 +1516,7 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   char buf[256];
 
   if (immcheck) {
-    if (isImmune(IMMUNE_DISEASE))
+    if (isImmune(IMMUNE_DISEASE, pos))
       return FALSE;
   }
 

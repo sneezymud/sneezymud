@@ -140,7 +140,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     sprintf(buf, "corpse %s%s", name, pcorpse ? " pcorpse" : "");
     gen_corpse->name = mud_str_dup(buf);
     // shortDescr and Desc are set below
-    gen_corpse->setMaterial(getMaterial());
+    gen_corpse->setMaterial(getMaterial(WEAR_BODY));
   }
 
   if(!isname("corpse", gen_corpse->name)){

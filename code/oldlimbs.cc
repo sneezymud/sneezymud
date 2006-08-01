@@ -285,7 +285,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     sbuf = fmt("%s lost limb [%s]") % sbuf % opp->getName();
   corpse->name = mud_str_dup(sbuf);
   
-  if (getMaterial() > MAT_GEN_MINERAL) {
+  if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
     sprintf(buf, "the mangled %s of %s", 
           describeBodySlot(pos).c_str(), getName());
@@ -295,7 +295,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
   }
   corpse->shortDescr = mud_str_dup(buf);
 
-  if (getMaterial() > MAT_GEN_MINERAL) {
+  if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
     sprintf(buf, "The mangled, severed %s of %s is lying here.",
           describeBodySlot(pos).c_str(), getName());
@@ -312,7 +312,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
   corpse->setWeight(getWeight() / 32.0);
   corpse->canBeSeen = canBeSeen;
   corpse->setVolume(getVolume() * slotChance(pos) / 100);
-  corpse->setMaterial(getMaterial());
+  corpse->setMaterial(getMaterial(pos));
 
   act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,this,corpse,0,TO_ROOM, ANSI_RED);
   *roomp += *corpse;
@@ -347,7 +347,9 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->setVolume(getHeight() * 122 / 100);
-  corpse->setMaterial(getMaterial());
+  // not slot is passed here
+  // as of this moment, this function is only used for eyeballs, so eh..
+  corpse->setMaterial(getMaterial(WEAR_BODY));
 
   corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
   corpse->setWeight(getWeight() / 64.0);
@@ -373,7 +375,7 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->obj_flags.decay_time = 15;
-  corpse->setMaterial(getMaterial());
+  corpse->setMaterial(getMaterial(pos));
   corpse->setVolume(getHeight() * 122 * slotChance(pos) / 100);
   corpse->canBeSeen = canBeSeen;
 

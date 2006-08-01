@@ -115,7 +115,7 @@ int poisonHit(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
   if (!vict->sameRoom(*myself))
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON))
+  if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -150,7 +150,7 @@ int poisonBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
   if (!vict->sameRoom(*myself))
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON))
+  if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -358,7 +358,7 @@ int paralyzeBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   act("$n spits out some noxious fumes at you!", TRUE, myself, NULL, v, TO_VICT);
   act("You spit some noxious fumes out at $N.", TRUE, myself, NULL, v, TO_CHAR);
 
-  if (v->isImmune(IMMUNE_PARALYSIS)) {
+  if (v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
     return FALSE;
@@ -411,7 +411,7 @@ int paralyzeBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   act("$n bites you!", 1, myself, 0, v, TO_VICT);
   act("$n bites $N!", 1, myself, 0, v, TO_NOTVICT);
 
-  if (v->isImmune(IMMUNE_PARALYSIS)) {
+  if (v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
     return FALSE;
@@ -833,7 +833,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return FALSE;
 
   if (v->isAffected(AFF_PARALYSIS) || 
-      v->isImmune(IMMUNE_PARALYSIS)) {
+      v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     return FALSE;
   }
 
@@ -974,7 +974,7 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   act("You fix $N with a penetrating gaze.", TRUE, myself, NULL, v, TO_CHAR);
 
   if (v->isAffected(AFF_PARALYSIS) || 
-      v->isImmune(IMMUNE_PARALYSIS)) {
+      v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_VICT);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
     return FALSE;

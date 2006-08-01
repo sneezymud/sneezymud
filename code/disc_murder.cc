@@ -1054,7 +1054,7 @@ int TTool::garotteMe(TBeing *thief, TBeing *victim)
         FALSE, thief, victim->equipment[WEAR_NECK], victim, TO_CHAR);
     return FALSE;
   }
-  if (victim->isImmune(IMMUNE_SUFFOCATION)) {
+  if (victim->isImmune(IMMUNE_SUFFOCATION, WEAR_BODY)) {
     act("You can't garrotte $N, $E doesn't seem to need to breathe.",
         false, thief, 0, victim, TO_CHAR);
     return FALSE;

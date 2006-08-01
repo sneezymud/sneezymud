@@ -447,7 +447,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   if (dynamic_cast<TGun *>(weapon))
     return FALSE;
 
-  if ((mod == -1) && v->isImmune(getTypeImmunity(wtype)))
+  if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), *part_hit))
     return FALSE;
 
   if(mod>100){
@@ -643,7 +643,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_FINGER_R))
 	  return 0;
         if (v->isLimbFlags(WEAR_FINGER_R, PART_BROKEN))
           return 0;
@@ -678,7 +678,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	//shatter bones in 1 hand
 	if (!v->hasPart(WEAR_HAND_R))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_HAND_R))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -715,7 +715,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// shatter bones other hand
 	if (!v->hasPart(WEAR_HAND_L))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_HAND_L))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -753,7 +753,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// break bones arm - broken
 	if (!v->hasPart(v->getPrimaryArm()))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, v->getPrimaryArm()))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -816,7 +816,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// break bones leg
 	if (!v->hasPart(WEAR_LEG_L))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_LEG_L))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -923,7 +923,7 @@ buf=fmt("$n's %s slams into $N's head, stunning $M completely!") %
       case 85:
       case 86:
 	//  shatter rib
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_BODY))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -952,7 +952,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       case 87:
       case 88:
 	//  shatter rib - internal damage, death if not healed
-	if (v->isImmune(IMMUNE_BONE_COND))
+	if (v->isImmune(IMMUNE_BONE_COND, WEAR_BODY))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -1114,7 +1114,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	    corpse->setWeight(0.1);
 	    corpse->canBeSeen = v->canBeSeen;
 	    corpse->setVolume(25);
-	    corpse->setMaterial(v->getMaterial());
+	    corpse->setMaterial(v->getMaterial(WEAR_BODY));
 
 	    corpse->setDrinkConFlags(0);
 	    corpse->setMaxDrinkUnits(5);
@@ -1646,7 +1646,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
       buf = fmt("%s [%s]") % buf % getName();
     corpse->name = mud_str_dup(buf);
 		
-	  if (v->getMaterial() > MAT_GEN_MINERAL) {
+	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
 	    buf = fmt("the mangled genitalia of %s") % v->getName();
 	  } else {
@@ -1654,7 +1654,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  }
 	  corpse->shortDescr = mud_str_dup(buf);
 		
-	  if (v->getMaterial() > MAT_GEN_MINERAL) {
+	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
 	    buf = fmt("The mangled, severed genitalia of %s is lying here.") % v->getName();
 	  } else {
@@ -1669,7 +1669,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  corpse->setWeight(v->getWeight() / 32.0);
 	  corpse->canBeSeen = v->canBeSeen;
 	  corpse->setVolume(v->getVolume() * 2/100);
-	  corpse->setMaterial(v->getMaterial());
+	  corpse->setMaterial(v->getMaterial(WEAR_WAIST));
 		
 	  act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
 	  *v->roomp += *corpse;

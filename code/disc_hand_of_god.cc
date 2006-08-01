@@ -555,7 +555,7 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
 #if 0 
   if (immun) {
-    if (isImmune(IMMUNE_SUMMON)) {
+    if (isImmune(IMMUNE_SUMMON), WEAR_BODY) {
       act("You feel great difficulty in summoning $N this time.", FALSE, caster, NULL, victim, TO_CHAR);
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
       return SPELL_FAIL;

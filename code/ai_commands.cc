@@ -499,7 +499,7 @@ int TMonster::aiGrowl (TBeing *doer, TBeing *, aiTarg cond)
       UA(3);
       UM(2);
       US(4);
-      if (getMaterial() == MAT_FUR_DOG)
+      if (getMaterial(WEAR_BACK) == MAT_FUR_DOG)
         act("The hair on $n's back bristles.",TRUE,this,0,doer,TO_ROOM);
       if (pissed()) {
         doAction("",CMD_SNARL);
@@ -519,7 +519,7 @@ int TMonster::aiGrowl (TBeing *doer, TBeing *, aiTarg cond)
       break;
     case TARGET_MOB:
       aiUpset(doer);
-      if (getMaterial() == MAT_FUR_DOG)
+      if (getMaterial(WEAR_BACK) == MAT_FUR_DOG)
         act("The hair on $n's back bristles.",TRUE,this,0,doer,TO_ROOM);
       if (pissed()) {
         return takeFirstHit(*doer);
@@ -2610,7 +2610,7 @@ int TMonster::aiKiss(TBeing *doer, TBeing *other, aiTarg cond)
     if (cond != TARGET_MOB)
       return FALSE;
 
-    switch (getMaterial()) {
+    switch (getMaterial(WEAR_HEAD)) {
       case MAT_FUR_DOG:
       case MAT_FUR_CAT:
       case MAT_FUR_RABBIT:

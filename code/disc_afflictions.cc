@@ -235,7 +235,7 @@ int poison(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 {
   affectedData aff, aff2;
 
-  if (victim->isImmune(IMMUNE_POISON)) {
+  if (victim->isImmune(IMMUNE_POISON, WEAR_BODY)) {
     act("Your prayer seems to have no affect on $N!", 
         FALSE, caster, NULL, victim, TO_CHAR);
     act("$n just tried to poison you. Luckily you are immune.", 
@@ -971,7 +971,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FALSE;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your prayer seems to have no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -997,7 +997,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FALSE;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your prayer seems to have little or no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1058,7 +1058,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_PARALYZE);
-        if (!caster->isImmune(IMMUNE_PARALYSIS)) {
+        if (!caster->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
           // we've made raw immunity check, but allow it to reduce effects too
           aff.duration *= (100 - caster->getImmunity(IMMUNE_PARALYSIS));
           aff.duration /= 100;
@@ -1324,8 +1324,17 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     }
     return SPELL_FALSE;
   }
+  
+  // find a suitable bone to break 
+  for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+    if (notBreakSlot(slot, true))
+      continue;
+    if (!victim->slotChance(slot) || victim->isLimbFlags(slot, PART_BROKEN))
+      continue;
+    break;
+  }
 
-  if (victim->isImmune(IMMUNE_BONE_COND)) {
+  if (victim->isImmune(IMMUNE_BONE_COND, slot)) {
     act("You see a glow around $N's limbs but it has no effect.", 
            FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1344,14 +1353,6 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
 
     caster->reconcileHurt(victim, discArray[SPELL_BONE_BREAKER]->alignMod);
 
-    // find a suitable bone to break 
-    for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
-      if (notBreakSlot(slot, true))
-        continue;
-      if (!victim->slotChance(slot) || victim->isLimbFlags(slot, PART_BROKEN))
-        continue;
-      break;
-    }
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_BROKEN);
@@ -1372,7 +1373,7 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       case CRIT_S_DOUBLE:
         CS(SPELL_BONE_BREAKER);
           dam *= 2;
-        if (!victim->isImmune(IMMUNE_PARALYSIS)) {
+        if (!victim->isImmune(IMMUNE_PARALYSIS, slot)) {
           victim->addToLimbFlags(slot, PART_PARALYZED);
           sprintf(buf, "In fact, you can't even move your %s! You fear it may be paralyzed!", limb);
           act(buf, FALSE, caster, NULL, victim, TO_VICT);
@@ -1399,15 +1400,15 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_BONE_BREAKER);
-        if (!caster->isImmune(IMMUNE_BONE_COND)) {
-          for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
-            if (notBreakSlot(slot, false))
-              continue;
-            if (!caster->slotChance(slot) ||
+	for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+	  if (notBreakSlot(slot, false))
+	    continue;
+	  if (!caster->slotChance(slot) ||
               caster->isLimbFlags(slot, PART_BROKEN))
-              continue;
-            break;
-          }
+	    continue;
+	  break;
+	}
+        if (!caster->isImmune(IMMUNE_BONE_COND, slot)) {
             
           act("Your prayer backfires on you!", FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(limb, "%s", caster->describeBodySlot(slot).c_str());
@@ -1526,7 +1527,22 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
     }
     return FALSE;
   }
-  if (victim->isImmune(IMMUNE_BLEED)) {
+
+
+  // check whether or not there is a slot left to bleed 
+  // Added check for paralyzed limb so only one limb can be
+  // bled on each mob to stop over abuse of this spell - Russ 11/03/96
+  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+    if (notBleedSlot(slot))
+      continue;
+    if (!victim->slotChance(slot))
+      continue;
+    if ((found = (victim->isLimbFlags(slot, PART_BLEEDING)))) {
+      break;
+    }
+  }
+
+  if (victim->isImmune(IMMUNE_BLEED, slot)) {
     act("Your prayer seems to have no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1547,19 +1563,6 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return FALSE; 
   }
   caster->reconcileHurt(victim, discArray[SPELL_BLEED]->alignMod);
-
-  // check whether or not there is a slot left to bleed 
-  // Added check for paralyzed limb so only one limb can be
-  // bled on each mob to stop over abuse of this spell - Russ 11/03/96
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (notBleedSlot(slot))
-      continue;
-    if (!victim->slotChance(slot))
-      continue;
-    if ((found = (victim->isLimbFlags(slot, PART_BLEEDING)))) {
-      break;
-    }
-  }
   if (slot < MAX_WEAR) {
     act("$N is already bleeding!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Your prayer goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
@@ -1939,7 +1942,19 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
     return SPELL_FAIL;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS)) {
+  // find a suitable limb to paralyze 
+  for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
+    if (notBreakSlot(slot, true))  // same ones, right?
+      continue;
+    if (!victim->slotChance(slot))
+      continue;
+    if (victim->isLimbFlags(slot, PART_PARALYZED))
+      continue;
+    break;
+  }
+
+
+  if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
     caster->deityIgnore();
     if (!victim->isPc()) {
       dynamic_cast<TMonster *>(victim)->addHated(caster);
@@ -1952,16 +1967,6 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   if (caster->bSuccess(bKnown, caster->getPerc(),SPELL_PARALYZE_LIMB)) {
     addTorment(victim, SPELL_PARALYZE_LIMB);
 
-    // find a suitable limb to paralyze 
-    for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
-      if (notBreakSlot(slot, true))  // same ones, right?
-        continue;
-      if (!victim->slotChance(slot))
-        continue;
-      if (victim->isLimbFlags(slot, PART_PARALYZED))
-        continue;
-      break;
-    }
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_PARALYZED);
@@ -2056,7 +2061,19 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     return SPELL_FAIL;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS)) {
+  // check whether or not there is a limb left to paralyze 
+  int found, ok;
+  found = ok = FALSE;
+  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+    if (notBreakSlot(slot, false))  // same ones, right?
+      continue;
+    if (!victim->slotChance(slot))
+      continue;
+    found |= victim->isLimbFlags(slot, PART_PARALYZED);
+    ok = TRUE;
+  }
+
+  if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
     caster->deityIgnore();
     if (!victim->isPc()) {
       dynamic_cast<TMonster *>(victim)->addHated(caster);
@@ -2074,17 +2091,6 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     return SPELL_FAIL;
   }
 
-  // check whether or not there is a limb left to paralyze 
-  int found, ok;
-  found = ok = FALSE;
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (notBreakSlot(slot, false))  // same ones, right?
-      continue;
-    if (!victim->slotChance(slot))
-      continue;
-    found |= victim->isLimbFlags(slot, PART_PARALYZED);
-    ok = TRUE;
-  }
 
   if (!ok) {
     act("Belatedly, you realize $N doesn't have a limb left to paralyze!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -2211,7 +2217,7 @@ int numb(TBeing *caster, TBeing *victim)
 
 int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
-  if (victim->isImmune(IMMUNE_DISEASE)) {
+  if (victim->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
     act("$N shakes off the effects as if immune.",
         FALSE, caster, 0, victim, TO_CHAR);
     act("You shake off the effects of that disease-spewing $n.",

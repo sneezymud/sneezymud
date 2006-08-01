@@ -215,15 +215,15 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
         act("The $g rumbles and an enormous pillar of salt erupts from the $g encasing $N!", FALSE, caster, NULL, victim, TO_CHAR);
         act("The $g rumbles and an enormous pillar of salt erupts from beneath your feet", FALSE, caster, NULL, victim, TO_VICT);
 
-        if (victim->isImmune(IMMUNE_PARALYSIS)) {
-          break;
-        }
         for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
           if (notBreakSlot(slot, false))
             continue;
           if (!victim->slotChance(slot) ||
             victim->isLimbFlags(slot, PART_MISSING))
             continue;
+          break;
+        }
+        if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
           break;
         }
 

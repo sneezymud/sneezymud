@@ -940,7 +940,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       return TRUE;
 
     // Check to see if skin type protects them       
-    hardness = material_nums[v->getMaterial()].hardness *
+    hardness = material_nums[v->getMaterial(part_hit)].hardness *
         v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
     if (hardness && (::number(1, 101) < (hardness / 2))) 
       return TRUE;
@@ -1033,7 +1033,7 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
       hardness = 0;
   } else {
     if (v->getMaxLimbHealth(part_hit))
-      hardness = material_nums[v->getMaterial()].hardness *
+      hardness = material_nums[v->getMaterial(part_hit)].hardness *
           v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
     else
       hardness = 0;

@@ -453,7 +453,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
   } else {
     int maxlim = v->getMaxLimbHealth(part_hit);
     if (maxlim)
-      hardness = material_nums[v->getMaterial()].hardness *
+      hardness = material_nums[v->getMaterial(part_hit)].hardness *
           v->getCurLimbHealth(part_hit) / maxlim;
     else
       hardness = 0;

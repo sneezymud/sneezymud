@@ -703,6 +703,8 @@ class TBeing : public TThing {
     
     sstring getInsult(TBeing *);
     
+    ubyte getMaterial(wearSlotT) const;
+
     ubyte GetMaxLevel() const;
     void setMaxLevel(ubyte num);
     sstring const getProfName() const;
@@ -938,7 +940,7 @@ class TBeing : public TThing {
     virtual byte getImmunity(immuneTypeT type) const;
     virtual void setImmunity(immuneTypeT type, byte amt);
     virtual void addToImmunity(immuneTypeT type, byte amt);
-    bool isImmune(immuneTypeT, int modifier = 0) const;
+    bool isImmune(immuneTypeT, wearSlotT, int modifier = 0) const;
     bool isLucky(int) const;
     int spellLuckModifier(spellNumT);
     void spellMessUp(spellNumT);

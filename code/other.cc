@@ -2594,7 +2594,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POISON_INFANT:
     case LIQ_POISON_PEA_SEED:
     case LIQ_POISON_ACACIA:
-      if(!vict->isImmune(IMMUNE_POISON)){
+      if(!vict->isImmune(IMMUNE_POISON, WEAR_BODY)){
 	addPoison(aff5, liq, level, duration);
 	
 	for(i=0;i<5;++i){

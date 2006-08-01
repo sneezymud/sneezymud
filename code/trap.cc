@@ -1760,7 +1760,7 @@ int TBeing::trapSleep(int amt)
 {
   int rc = FALSE;
 
-  if (isImmune(IMMUNE_SLEEP)) {
+  if (isImmune(IMMUNE_SLEEP, WEAR_BODY)) {
     sendTo("You yawn, but are otherwise immune to the sleep trap.\n\r");
     return FALSE;
   }
@@ -1786,7 +1786,7 @@ void TBeing::trapDisease(int amt)
   aff.duration = 4 * UPDATES_PER_MUDHOUR;
 
   if (isImmortal() ||
-      isImmune(IMMUNE_DISEASE)) {
+      isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.",
             FALSE, this, 0, 0, TO_CHAR);
     return;
@@ -1827,15 +1827,15 @@ void TBeing::trapPoison(int amt)
   // check immunity, each successive check is easier then last
   // each failure makes time longer
   if (isImmortal() ||
-      isImmune(IMMUNE_POISON)) {
+      isImmune(IMMUNE_POISON, WEAR_BODY)) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.", FALSE, this, 0, 0, TO_CHAR);
-  } else if (isImmune(IMMUNE_POISON)) {
+  } else if (isImmune(IMMUNE_POISON, WEAR_BODY)) {
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
     affectTo(&af2);
     act("You are able to shake off most of the effects, but you still feel somewhat sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
     disease_start(this, &af2);
-  } else if (isImmune(IMMUNE_POISON)) {
+  } else if (isImmune(IMMUNE_POISON, WEAR_BODY)) {
     af.duration *= 2;
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
     affectTo(&af2);

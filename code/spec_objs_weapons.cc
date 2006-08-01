@@ -839,7 +839,7 @@ int splinteredClub(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   vict->stickIn(obj, wearSlotT(slot));
 
-  if(!vict->isImmune(IMMUNE_BLEED)){
+  if(!vict->isImmune(IMMUNE_BLEED, slot)){
     vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
     vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
 
@@ -1161,7 +1161,7 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
  if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON))
+  if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -1268,7 +1268,7 @@ int poisonSap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON))
+  if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -1380,7 +1380,7 @@ int bloodspike(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   vict->stickIn(obj, wearSlotT(slot));
 
-  if(!vict->isImmune(IMMUNE_BLEED)){
+  if(!vict->isImmune(IMMUNE_BLEED, slot)){
     vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
     vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
 
@@ -1716,7 +1716,7 @@ int poisonWhip(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON))
+  if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -1793,12 +1793,6 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_BONE_COND) || vict->raceHasNoBones()) {
-    return FALSE;
-  }
-
-  if (!ch->canBoneBreak(vict, SILENT_YES))
-    return FALSE;
 
   wearSlotT slot;
   for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
@@ -1808,6 +1802,14 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
       continue;
     break;
   }
+
+
+  if (vict->isImmune(IMMUNE_BONE_COND, slot) || vict->raceHasNoBones()) {
+    return FALSE;
+  }
+
+  if (!ch->canBoneBreak(vict, SILENT_YES))
+    return FALSE;
 
   char limb[80];
   sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
@@ -1893,7 +1895,7 @@ int weaponDisruption(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   part = vict->getPartHit(ch, TRUE);
   if (!(obj = vict->equipment[part]))
-    hardness = material_nums[vict->getMaterial()].hardness;
+    hardness = material_nums[vict->getMaterial(part)].hardness;
   else
     hardness = material_nums[obj->getMaterial()].hardness;
   spellNumT w_type = o->getWtype();
@@ -2212,7 +2214,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
           false, vict, o, 0, TO_ROOM, ANSI_BLUE_BOLD);
     }
     
-    if (!o->isObjStat(ITEM_HUM) && !vict->isImmune(IMMUNE_SKIN_COND)) { 
+    if (!o->isObjStat(ITEM_HUM) && !vict->isImmune(IMMUNE_SKIN_COND, part)) { 
       // if it's not humming/glowing - low damage proc
       act("$N yelps in pain as you pull $p away, tearing off a neat circle of flesh.",
           false, ch, o, vict, TO_CHAR, ANSI_RED);
@@ -2227,7 +2229,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
         return DELETE_VICT;
       }
-      if (!vict->isImmune(IMMUNE_BLEED) && 
+      if (!vict->isImmune(IMMUNE_BLEED, part) && 
           !vict->isLimbFlags(part, PART_BLEEDING))
         vict->rawBleed(part, 100, SILENT_NO, CHECK_IMMUNITY_NO);
       return TRUE;
@@ -2237,7 +2239,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       act("A loud *BRRAAACK* sounds out as the bar makes contact.",
           false, ch, o, vict, TO_ROOM, ANSI_CYAN);
       
-      if(!vict->isImmune(IMMUNE_SKIN_COND)) {
+      if(!vict->isImmune(IMMUNE_SKIN_COND, part)) {
         act("$N wails as $p tenderizes their flesh.", 
             false, ch, o, vict, TO_CHAR, ANSI_RED);
         act("You erupt in pain as $n's $o tenderizes your flesh.", 
@@ -2252,7 +2254,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
        if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
           return DELETE_VICT;
         }
-        if (!vict->isImmune(IMMUNE_BLEED) && 
+        if (!vict->isImmune(IMMUNE_BLEED, part) && 
             !vict->isLimbFlags(part, PART_BLEEDING))
           vict->rawBleed(part, 250, SILENT_NO, CHECK_IMMUNITY_NO);
       }
@@ -2473,7 +2475,7 @@ int demonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   ch = genericWeaponProcCheck(vict, cmd, o, 3);
   if (!ch)
     return FALSE;
-  if(vict->getRace() != RACE_DEMON || vict->isImmune(IMMUNE_BLEED))
+  if(vict->getRace() != RACE_DEMON || vict->isImmune(IMMUNE_BLEED, WEAR_BODY))
     return FALSE;
 
   dam = ch->GetMaxLevel();
