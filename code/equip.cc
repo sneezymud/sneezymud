@@ -607,14 +607,16 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
           if (!check_size_restrictions(this, o, WEAR_FOOT_L, ch))
             return FALSE;
 
-          if (equipment[WEAR_FOOT_L] && equipment[WEAR_FOOT_R]) {
+          if ((equipment[WEAR_FOOT_L] || hasQuestBit(TOG_PEGLEG_L)) &&
+	      (equipment[WEAR_FOOT_R] || hasQuestBit(TOG_PEGLEG_R))){
             sprintf(buf, "%s already %s something on %s feet.",
                    (ch == this ? "You" : "$N"),
                    (ch == this ? "wear" : "wears"),
                    (ch == this ? "your" : "$S"));
             act(buf, FALSE, ch, o, this, TO_CHAR);
           } else {
-            if (equipment[WEAR_FOOT_L]) {
+            if ((equipment[WEAR_FOOT_L] || hasQuestBit(TOG_PEGLEG_L)) &&
+		!hasQuestBit(TOG_PEGLEG_R)){
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
@@ -635,7 +637,8 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               equipChar(o, WEAR_FOOT_R);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.45, TRUE, TRUE);
-            } else {
+	      aiWear(o);
+            } else if(!hasQuestBit(TOG_PEGLEG_L)){
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
@@ -656,8 +659,12 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               equipChar(o, WEAR_FOOT_L);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.45, TRUE, TRUE);
-            }
-            aiWear(o);
+	      aiWear(o);
+            } else {
+	      sprintf(buf, "%s can't wear $p on that body part.",
+		      (ch == this ? "You" : "$N"));
+	      act(buf, FALSE, ch, o, this, TO_CHAR);
+	    }
           }
         } else {
           sprintf(buf, "%s can't wear $p on %s feet.",
@@ -673,19 +680,23 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
       break;
     case WEAR_KEY_HANDS:
+      // the logic in here is horrible, and I just made it much worse
+      // with the hook hand toggles
       if (validEquipSlot(WEAR_HAND_L) && validEquipSlot(WEAR_HAND_R)) {
         if (o->canWear(ITEM_WEAR_HANDS)) {
           if (!check_size_restrictions(this, o, WEAR_HAND_L, ch))
             return FALSE;
 
-          if (equipment[WEAR_HAND_L] && equipment[WEAR_HAND_R]) {
+          if ((equipment[WEAR_HAND_L] || hasQuestBit(TOG_HOOK_HAND_L)) && 
+	      (equipment[WEAR_HAND_R] || hasQuestBit(TOG_HOOK_HAND_R))){
             sprintf(buf, "%s already %s something on %s hands.",
                    (ch == this ? "You" : "$N"),
                    (ch == this ? "wear" : "wears"),
                    (ch == this ? "your" : "$S"));
             act(buf, FALSE, ch, o, this, TO_CHAR);
           } else {
-            if (equipment[WEAR_HAND_L]) {
+            if ((equipment[WEAR_HAND_L] || hasQuestBit(TOG_HOOK_HAND_L)) &&
+		!hasQuestBit(TOG_HOOK_HAND_R)){
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
@@ -706,7 +717,8 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               equipChar(o, WEAR_HAND_R);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.25, TRUE, TRUE);
-            } else {
+	      aiWear(o);
+            } else if(!hasQuestBit(TOG_HOOK_HAND_L)){
               sprintf(buf, "You %s $p on %s %s.",
                      (ch == this ? "wear" : "outfit"),
                      (ch == this ? "your" : "$N's"),
@@ -727,8 +739,12 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               equipChar(o, WEAR_HAND_L);
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.25, TRUE, TRUE);
-            }
-            aiWear(o);
+	      aiWear(o);
+            } else {
+	      sprintf(buf, "%s can't wear $p on that body part.",
+		      (ch == this ? "You" : "$N"));
+	      act(buf, FALSE, ch, o, this, TO_CHAR);
+	    }
           }
         } else {
           sprintf(buf, "%s can't wear $p on %s hands.",

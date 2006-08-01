@@ -5979,7 +5979,7 @@ int TBeing::doCrit(sstring arg)
   dam = getWeaponDam(vict, weap, HAND_PRIMARY);
 
   if (weap)
-    wtype = getAttackType(weap);
+    wtype = getAttackType(weap, HAND_PRIMARY);
   else
     wtype = TYPE_HIT;
   

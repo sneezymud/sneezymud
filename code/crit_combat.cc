@@ -1754,7 +1754,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   affectedData af;
   wearSlotT new_slot;
 
-  weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce());
+  weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce(this));
   
   if(crit_num>100){
     vlogf(LOG_BUG, fmt("critPierce called with crit_num>100 (%i)") %  crit_num);
@@ -1792,7 +1792,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     return (ONEHIT_MESS_CRIT_S);
   } else {
     // better stuff 
-    limbStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce());
+    limbStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce(this));
 
     switch (crit_num) {
       case 67:

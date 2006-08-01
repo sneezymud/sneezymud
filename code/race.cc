@@ -669,7 +669,7 @@ void Race::showTo(TBeing *caller)
   str += sstring("Move Out: ") + moveMessageOut + sstring("\n\r");
 
   str += sstring("Limb for: slash: ") + getBodyLimbSlash();
-  str += sstring(", pierce: ") + getBodyLimbPierce();
+  str += sstring(", pierce: ") + getBodyLimbPierce(NULL);
   str += sstring(", blunt: ") + getBodyLimbBlunt() + sstring("\n\r");
 
   if(isDumbAnimal())
@@ -912,8 +912,13 @@ const sstring Race::getBodyLimbBlunt() const
   return "";
 }
 
-const sstring Race::getBodyLimbPierce() const
+const sstring Race::getBodyLimbPierce(TBeing *tb) const
 {
+  if(tb &&
+     (tb->hasQuestBit(TOG_HOOK_HAND_R) || tb->hasQuestBit(TOG_HOOK_HAND_L)))
+    return "hook";
+
+
   switch (bodyType) {
     case BODY_DEMON:
     case BODY_REPTILE:

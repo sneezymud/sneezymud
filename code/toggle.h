@@ -479,7 +479,12 @@ const int TOG_REAL_AGING                       = 299;
 const int TOG_NO_XP_GAIN                       = 300;
 const int TOG_PRACS_FIXED                      = 301;
 
-const int MAX_TOG_INDEX       = 302;  // move and change
+const int TOG_PEGLEG_R                         = 302;
+const int TOG_PEGLEG_L                         = 303;
+const int TOG_HOOK_HAND_R                      = 304;
+const int TOG_HOOK_HAND_L                      = 305;
+
+const int MAX_TOG_INDEX       = 306;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

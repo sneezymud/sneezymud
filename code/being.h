@@ -1594,7 +1594,7 @@ class TBeing : public TThing {
     int acForPos(wearSlotT) const;
     bool damCheckDeny(const TBeing *, spellNumT) const;
     bool damDetailsOk(const TBeing *, int, bool) const;
-    spellNumT getAttackType(const TThing *) const;
+    spellNumT getAttackType(const TThing *, primaryTypeT) const;
     spellNumT getFormType() const;
     bool isOppositeFaction(const TBeing *) const;
     int setCharFighting(TBeing *, int dam = 0);

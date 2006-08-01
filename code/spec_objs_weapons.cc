@@ -535,7 +535,7 @@ int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   dam = ch->getWeaponDam(vict, weap, HAND_PRIMARY);
 
   if (weap)
-    wtype = ch->getAttackType(weap);
+    wtype = ch->getAttackType(weap, HAND_PRIMARY);
   else
     wtype = TYPE_HIT;
 
@@ -2448,7 +2448,7 @@ int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
       return FALSE;
     
     if (weapon)
-      wtype = ch->getAttackType(weapon);
+      wtype = ch->getAttackType(weapon, HAND_PRIMARY);
     else
       wtype = TYPE_HIT;
     

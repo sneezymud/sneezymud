@@ -729,6 +729,14 @@ const sstring TBeing::describeBodySlot(wearSlotT i) const
 
 ubyte TBeing::getMaterial(wearSlotT pos) const
 {
+  if((hasQuestBit(TOG_PEGLEG_R) && pos==WEAR_LEG_R) ||
+     (hasQuestBit(TOG_PEGLEG_L) && pos==WEAR_LEG_L))
+    return MAT_WOOD;
+
+  if((hasQuestBit(TOG_HOOK_HAND_R) && pos==WEAR_HAND_R) ||
+     (hasQuestBit(TOG_HOOK_HAND_L) && pos==WEAR_HAND_L))
+    return MAT_STEEL;
+
   return TThing::getMaterial();
 }
 
@@ -740,6 +748,15 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
     case BODY_GOLEM:
     case BODY_OWLBEAR:
     case BODY_MINOTAUR:
+      if(hasQuestBit(TOG_PEGLEG_R) && i==WEAR_LEG_R)
+	return "right pegleg";
+      if(hasQuestBit(TOG_PEGLEG_L) && i==WEAR_LEG_L)
+	return "left pegleg";
+      if(hasQuestBit(TOG_HOOK_HAND_R) && i==WEAR_HAND_R)
+	return "right hook hand";
+      if(hasQuestBit(TOG_HOOK_HAND_L) && i==WEAR_HAND_L)
+	return "left hook hand";
+      
       return default_body_slot(i);
     case BODY_OTYUGH:
       switch (i) {
@@ -1907,6 +1924,15 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
     case BODY_GOLEM:
     case BODY_OWLBEAR:
     case BODY_MINOTAUR:
+      if(hasQuestBit(TOG_PEGLEG_R) && i==WEAR_LEG_R)
+	return "Worn on right pegleg";
+      if(hasQuestBit(TOG_PEGLEG_L) && i==WEAR_LEG_L)
+	return "Worn on left pegleg";
+      if(hasQuestBit(TOG_HOOK_HAND_R) && i==WEAR_HAND_R)
+	return "Worn on right hook hand";
+      if(hasQuestBit(TOG_HOOK_HAND_L) && i==WEAR_HAND_L)
+	return "Worn on left hook hand";
+      
       return defaultEquipmentSlot(i);
     case BODY_OTYUGH:
       switch (i) {

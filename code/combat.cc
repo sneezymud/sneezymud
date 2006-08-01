@@ -850,7 +850,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
           buf3=fname(weapon->name);
         buf = fmt("Your %s$o%s $q %spierced%s by $N's %s!") %
 	  blue() % norm() % purple() % norm() %
-	  (weapon ? buf3 : ch->getMyRace()->getBodyLimbPierce());
+	  (weapon ? buf3 : ch->getMyRace()->getBodyLimbPierce(ch));
         act(buf, TRUE, this, item, ch, TO_CHAR);
 
         for (t = roomp->getStuff(); t; t = t->nextThing) {
@@ -864,7 +864,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 	    (temp != ch ? "'s" : "");
 	  buf+=sbuf;
           buf+= (weapon ? temp->objn(weapon) :
-                 ch->getMyRace()->getBodyLimbPierce());
+                 ch->getMyRace()->getBodyLimbPierce(ch));
           buf+="!\n\r";
           act(buf, TRUE, this, item, temp, TO_VICT);
         }
@@ -2227,7 +2227,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   o = heldInPrimHand();
   o2 = heldInSecHand();
-  spellNumT w_type = getAttackType(o);
+  spellNumT w_type = getAttackType(o, HAND_PRIMARY);
 
   //// cosmo start learn from doing primary hand-- secondary below
   if (desc && !dynamic_cast<TMonster *>(this)) {
@@ -2306,7 +2306,7 @@ int TBeing::hit(TBeing *target, int pulse)
     }
   }
 // learn from doing off hand.
-  w_type = getAttackType(o2);
+  w_type = getAttackType(o2, HAND_SECONDARY);
 
   while (fy > 0.999) {
     checkLearnFromHit(this, tarLevel, o2, false, w_type);
@@ -3150,7 +3150,15 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
 
   char namebuf[256];
   char victbuf[256];
- 
+
+  if(w_type==TYPE_KICK){
+    if(hasQuestBit(TOG_PEGLEG_R) && hasQuestBit(TOG_PEGLEG_L))
+      w_type=TYPE_CLUB;
+    else if((hasQuestBit(TOG_PEGLEG_R) || hasQuestBit(TOG_PEGLEG_L)) &&
+	    ::number(0,1))
+      w_type=TYPE_CLUB;
+  }
+	    
   soundNumT snd = MIN_SOUND_NUM;
   if (!dam)
     snd = pickRandSound(SOUND_PATHETIC_01, SOUND_PATHETIC_04);
@@ -3659,7 +3667,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   // Update combat stats here.
   updateStatistics();
 
-  spellNumT w_type = getAttackType(weapon);
+  spellNumT w_type = getAttackType(weapon, isprimary);
 
   //   moved learn from doing for weapons and some monk passive skills to
   //   hit() to save resources 
@@ -4663,7 +4671,7 @@ int TBeing::checkEngagementStatus()
     return FALSE;
 }
 
-spellNumT TBeing::getAttackType(const TThing *wielded) const
+spellNumT TBeing::getAttackType(const TThing *wielded, primaryTypeT prim) const
 {
   if (wielded)
     return wielded->getWtype();
@@ -4671,6 +4679,9 @@ spellNumT TBeing::getAttackType(const TThing *wielded) const
     return TYPE_BEAR_CLAW;
   else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
     return TYPE_CLAW;
+  else if ((hasQuestBit(TOG_HOOK_HAND_R) && prim==HAND_PRIMARY) ||
+	   (hasQuestBit(TOG_HOOK_HAND_L) && prim==HAND_SECONDARY))
+    return TYPE_PIERCE;
   else if (doesKnowSkill(SKILL_KUBO))
     return monkDamType();
   else if (dynamic_cast<const TMonster *>(this))

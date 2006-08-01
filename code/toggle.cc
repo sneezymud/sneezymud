@@ -315,6 +315,10 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Trait: Real Aging", MOB_NONE},
   {"No Experience Gain", MOB_NONE},
   {"Practices Fixed", MOB_NONE},
+  {"Has Right Pegleg", MOB_NONE},
+  {"Has Left Pegleg", MOB_NONE},
+  {"Has Right Hook Hand", MOB_NONE},
+  {"Has Left Hook Hand", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

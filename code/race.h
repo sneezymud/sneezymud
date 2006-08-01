@@ -214,7 +214,7 @@ public:
   void setCorpseConst(float n);
 
   const sstring getBodyLimbBlunt() const;
-  const sstring getBodyLimbPierce() const;
+  const sstring getBodyLimbPierce(TBeing *) const;
   const sstring getBodyLimbSlash() const;
 
   unsigned int getTalents() const;
