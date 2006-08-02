@@ -11,7 +11,7 @@ struct TRoomSpecs {
   int (*proc) (TBeing *, cmdTypeT, const char *, TRoom *);
 };
 
-const int SPEC_ROOM_GH_DUMP=2;
+const int SPEC_ROOM_GH_DUMP=18;
 const int NUM_ROOM_SPECIALS = 33;
 
 extern const int GET_ROOM_SPE_INDEX(int d);
