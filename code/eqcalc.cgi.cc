@@ -124,7 +124,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
 {
   float min=0;
   if (eq_race==RACE_HUMAN) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.86;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.86;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.86;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.71;
     if (!(ITEM_ANTI_RANGER & action_flag))  min = 0.71;
@@ -133,7 +133,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
     if (!(ITEM_ANTI_SHAMAN & action_flag))  min = 0.57;
     if (!(ITEM_ANTI_MONK & action_flag))    min = 0.50;
   } else if (eq_race==RACE_DWARF) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.86;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.86;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.79;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.66;
     if (!(ITEM_ANTI_RANGER & action_flag))  min = 0.66;
@@ -142,7 +142,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
     if (!(ITEM_ANTI_SHAMAN & action_flag))  min = 0.52;
     if (!(ITEM_ANTI_MONK & action_flag))    min = 0.46;
   } else if (eq_race==RACE_ELVEN) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.71;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.71;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.71;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.60;
     if (!(ITEM_ANTI_RANGER & action_flag))  min = 0.60;
@@ -151,7 +151,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
     if (!(ITEM_ANTI_SHAMAN & action_flag))  min = 0.48;
     if (!(ITEM_ANTI_MONK & action_flag))    min = 0.43;
   } else if (eq_race==RACE_GNOME) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.71;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.71;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.71;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.71;
     if (!(ITEM_ANTI_RANGER & action_flag))  min = 0.60;
@@ -160,7 +160,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
     if (!(ITEM_ANTI_SHAMAN & action_flag))  min = 0.48;
     if (!(ITEM_ANTI_MONK & action_flag))    min = 0.43;
   } else if (eq_race==RACE_HOBBIT) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.64;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.64;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.64;
     if (!(ITEM_ANTI_THIEF & action_flag))   min = 0.64;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.52;
@@ -169,7 +169,7 @@ float getRaceClassConstant(race_t eq_race, int action_flag)
     if (!(ITEM_ANTI_SHAMAN & action_flag))  min = 0.43;
     if (!(ITEM_ANTI_MONK & action_flag))    min = 0.37;
   } else if (eq_race==RACE_OGRE) {
-    if (!(ITEM_ANTI_FIGHTER & action_flag)) min = 0.79;
+    if (!(ITEM_ANTI_WARRIOR & action_flag)) min = 0.79;
     if (!(ITEM_ANTI_DEIKHAN & action_flag)) min = 0.64;
     if (!(ITEM_ANTI_CLERIC & action_flag))  min = 0.52;
     if (!(ITEM_ANTI_RANGER & action_flag))  min = 0.52;

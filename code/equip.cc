@@ -22,7 +22,7 @@ int GetItemClassRestrictions(const TObj *obj)
     total += CLASS_MAGE;
   if (obj->isObjStat(ITEM_ANTI_THIEF))
     total += CLASS_THIEF;
-  if (obj->isObjStat(ITEM_ANTI_FIGHTER))
+  if (obj->isObjStat(ITEM_ANTI_WARRIOR))
     total += CLASS_WARRIOR;
   if (obj->isObjStat(ITEM_ANTI_CLERIC))
     total += CLASS_CLERIC;
