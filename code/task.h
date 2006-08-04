@@ -72,6 +72,7 @@ extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *,
 extern int task_handgonne_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_arrow(TBeing *, cmdTypeT cmd, const char *, int, TRoom *, TObj *);
 extern int task_ride          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_painting          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 
 typedef struct _tasks_entry {
   const char * const name;
@@ -130,6 +131,7 @@ enum taskTypeT {
      TASK_CANNON_LOAD,
      TASK_TRAP_ARROW,
      TASK_RIDE,
+     TASK_PAINT,
      NUM_TASKS  // keep this as max
 };
 

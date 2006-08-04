@@ -285,14 +285,15 @@ LIBTASK=task_attune.o	       	task_sacrifice.o	\
 	task_dull.o	       	task_sit.o		\
 	task_extinguish_my_ass.o  task_skin.o		\
 	task_fishing.o	       	task_sleep.o		\
-	task_get.o		task_blacksmithing.o		\
+	task_get.o		task_blacksmithing.o	\
 	task_lightfire.o	task_spell_friends.o	\
 	task_meditate.o	       	task_stavecharge.o	\
 	task_penance.o	       	task_track.o		\
 	task_picklock.o	       	task_trance_of_blades.o	\
 	task_plant.o	       	task_trap.o		\
-	task_rest.o	       	task_whittle.o \
-	task_logging.o		task_ride.o
+	task_rest.o	       	task_whittle.o 		\
+	task_logging.o		task_ride.o		\
+	task_painting.o
 LIBTASK := $(sort $(addprefix $(OBJDIR), $(LIBTASK)))
 
 LIBSPEC=spec_mobs.o		    	spec_objs.o			\
@@ -6020,7 +6021,14 @@ objs/cmd_show.o: obj_drug.h charfile.h being.h guild.h person.h monster.h
 objs/cmd_show.o: paths.h account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/cmd_show.o: materials.h colorstring.h format.h disc_looting.h combat.h
 objs/cmd_show.o: obj_component.h disc_alchemy.h obj_open_container.h
-objs/cmd_show.o: obj_base_container.h liquids.h
+objs/cmd_show.o: obj_base_container.h liquids.h database.h
+objs/cmd_show.o: /usr/local/include/mysql/mysql.h
+objs/cmd_show.o: /usr/local/include/mysql/mysql_com.h
+objs/cmd_show.o: /usr/local/include/mysql/mysql_time.h
+objs/cmd_show.o: /usr/local/include/mysql/mysql_version.h
+objs/cmd_show.o: /usr/local/include/mysql/typelib.h
+objs/cmd_show.o: /usr/local/include/mysql/my_list.h
+objs/cmd_show.o: /usr/local/include/mysql/my_alloc.h
 objs/cmd_spin.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_spin.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_spin.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -6345,7 +6353,7 @@ objs/cmd_stat.o: body.h race.h skills.h disease.h trap.h task.h weather.h
 objs/cmd_stat.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_stat.o: obj_drug.h charfile.h being.h guild.h person.h monster.h
 objs/cmd_stat.o: paths.h account.h extern.h handler.h obj_money.h spec_mobs.h
-objs/cmd_stat.o: materials.h colorstring.h format.h
+objs/cmd_stat.o: materials.h colorstring.h format.h spec_rooms.h
 objs/cmd_steal.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/cmd_steal.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_steal.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -32721,7 +32729,7 @@ objs/roomeditor.cgi.o: /usr/local/include/cgicc/FormFile.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/CgiInput.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
-objs/roomeditor.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/roomeditor.cgi.o: /usr/local/include/cgicc/MStreamable.h spec_rooms.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
 objs/roomeditor.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
@@ -32984,7 +32992,7 @@ objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
-objs/shop.o: obj_component.h obj_potion.h obj_base_cup.h
+objs/shop.o: obj_component.h obj_potion.h obj_base_cup.h spec_rooms.h
 objs/shopinfo.cgi.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/c++config.h
 objs/shopinfo.cgi.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -39882,6 +39890,125 @@ objs/spec_objs_poison_cutlass.o: person.h monster.h paths.h account.h
 objs/spec_objs_poison_cutlass.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_objs_poison_cutlass.o: materials.h colorstring.h format.h
 objs/spec_objs_poison_cutlass.o: obj_base_weapon.h
+objs/spec_objs_setcasts.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/c++config.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/spec_objs_setcasts.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/spec_objs_setcasts.o: /usr/include/sys/_types.h
+objs/spec_objs_setcasts.o: /usr/include/machine/_types.h /usr/include/stdio.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cstdlib /usr/include/stdlib.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/ctime /usr/include/time.h
+objs/spec_objs_setcasts.o: /usr/include/sys/timespec.h
+objs/spec_objs_setcasts.o: /usr/include/sys/types.h
+objs/spec_objs_setcasts.o: /usr/include/machine/endian.h
+objs/spec_objs_setcasts.o: /usr/include/sys/select.h
+objs/spec_objs_setcasts.o: /usr/include/sys/_sigset.h
+objs/spec_objs_setcasts.o: /usr/include/sys/_timeval.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cctype /usr/include/ctype.h
+objs/spec_objs_setcasts.o: /usr/include/_ctype.h /usr/include/c++/3.4/cassert
+objs/spec_objs_setcasts.o: /usr/include/assert.h /usr/include/c++/3.4/cstring
+objs/spec_objs_setcasts.o: /usr/include/string.h /usr/include/strings.h
+objs/spec_objs_setcasts.o: /usr/include/stdarg.h /usr/include/c++/3.4/cmath
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/spec_objs_setcasts.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/string
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/spec_objs_setcasts.o: /usr/include/sys/limits.h
+objs/spec_objs_setcasts.o: /usr/include/sys/syslimits.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/new
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/exception
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/iosfwd
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/c++io.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/gthr.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/spec_objs_setcasts.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/spec_objs_setcasts.o: /usr/include/sys/signal.h
+objs/spec_objs_setcasts.o: /usr/include/machine/signal.h
+objs/spec_objs_setcasts.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/spec_objs_setcasts.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/postypes.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/spec_objs_setcasts.o: /usr/include/stdint.h
+objs/spec_objs_setcasts.o: /usr/include/machine/_stdint.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/exception_defines.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/debug/debug.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/memory
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/allocator.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/algorithm
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/vector
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/map
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/list
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/list.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/iostream
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/ostream
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/ios
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/streambuf
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/locale
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/limits
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/typeinfo
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/istream
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/sstream
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/fstream
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/spec_objs_setcasts.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h
+objs/spec_objs_setcasts.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/spec_objs_setcasts.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/spec_objs_setcasts.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_objs_setcasts.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/spec_objs_setcasts.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/spec_objs_setcasts.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/spec_objs_setcasts.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/spec_objs_setcasts.o: person.h monster.h paths.h account.h extern.h
+objs/spec_objs_setcasts.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/spec_objs_setcasts.o: colorstring.h format.h obj_base_clothing.h
 objs/spec_objs_sweeps.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_objs_sweeps.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_objs_sweeps.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -44076,6 +44203,117 @@ objs/task_meditate.o: connect.h obj_drug.h charfile.h being.h guild.h
 objs/task_meditate.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/task_meditate.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/task_meditate.o: format.h
+objs/task_painting.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/task_painting.o: /usr/include/c++/3.4/bits/c++config.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/task_painting.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/task_painting.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/task_painting.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/task_painting.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/task_painting.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/task_painting.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/task_painting.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/task_painting.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/task_painting.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/task_painting.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/task_painting.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/task_painting.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/task_painting.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/task_painting.o: /usr/include/c++/3.4/cmath
+objs/task_painting.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/task_painting.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/task_painting.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/task_painting.o: /usr/include/c++/3.4/string
+objs/task_painting.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/task_painting.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/task_painting.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/task_painting.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/task_painting.o: /usr/include/c++/3.4/iosfwd
+objs/task_painting.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/task_painting.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/c++io.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/gthr.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/task_painting.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/task_painting.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/task_painting.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/task_painting.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/postypes.h
+objs/task_painting.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/task_painting.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/task_painting.o: /usr/include/c++/3.4/exception_defines.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/task_painting.o: /usr/include/c++/3.4/debug/debug.h
+objs/task_painting.o: /usr/include/c++/3.4/memory
+objs/task_painting.o: /usr/include/c++/3.4/bits/allocator.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/task_painting.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/task_painting.o: /usr/include/c++/3.4/algorithm
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/task_painting.o: /usr/include/c++/3.4/vector
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/vector.tcc
+objs/task_painting.o: /usr/include/c++/3.4/map
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/task_painting.o: /usr/include/c++/3.4/list
+objs/task_painting.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/list.tcc
+objs/task_painting.o: /usr/include/c++/3.4/iostream
+objs/task_painting.o: /usr/include/c++/3.4/ostream /usr/include/c++/3.4/ios
+objs/task_painting.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/task_painting.o: /usr/include/c++/3.4/streambuf
+objs/task_painting.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/task_painting.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/task_painting.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/task_painting.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/task_painting.o: /usr/include/c++/3.4/locale
+objs/task_painting.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/task_painting.o: /usr/include/c++/3.4/limits
+objs/task_painting.o: /usr/include/c++/3.4/typeinfo
+objs/task_painting.o: /usr/include/c++/3.4/istream
+objs/task_painting.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/task_painting.o: /usr/include/c++/3.4/sstream
+objs/task_painting.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/task_painting.o: /usr/include/c++/3.4/fstream
+objs/task_painting.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/task_painting.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h
+objs/task_painting.o: enum.h spells.h structs.h parse.h immunity.h
+objs/task_painting.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/task_painting.o: client.h response.h faction.h comm.h toggle.h
+objs/task_painting.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/task_painting.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/task_painting.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/task_painting.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/task_painting.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/task_painting.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/task_painting.o: format.h obj_tool.h
 objs/task_penance.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/task_penance.o: /usr/include/c++/3.4/bits/c++config.h
 objs/task_penance.o: /usr/include/c++/3.4/bits/os_defines.h
