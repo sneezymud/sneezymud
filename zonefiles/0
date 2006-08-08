@@ -35,8 +35,8 @@ Void~
 M 0 210 1 200
 M 0 211 1 215
 
-M 0 23090 1 240 		Brick Collector for quest
-O 0 23090 1 240           brick quest board
+*M 0 23090 1 240 		Brick Collector for quest
+*O 0 23090 1 240           brick quest board
 
 *O 0 1 1 13	  END OF QUEST LOADS
 
