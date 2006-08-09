@@ -6578,6 +6578,46 @@ convertTo<int>(db["numbricks"]);
   return TRUE;
 }
 
+int caretaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
+{
+  int vnums[3]={33775, 33775, 33777};
+  TObj *o;
+  bool found=false;
+
+  if(cmd!=CMD_GENERIC_PULSE || !me || !me->roomp)
+    return FALSE;
+
+  // pick stuff up
+  for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
+    if((o=dynamic_cast<TObj *>(t))){
+      for(int i=0;i<3;++i){
+	if(o->objVnum() == vnums[i]){
+	  if(me->doGet(add_bars(o->name).c_str()))
+	    found=true;
+	}
+      }
+    }
+  }
+  
+  // drop stuff
+  if(!found){
+    for(TThing *t=me->getStuff();t;t=t->nextThing){
+      if((o=dynamic_cast<TObj *>(t))){
+	for(int i=0;i<3;++i){
+	  if(o->objVnum() == vnums[i]){
+	    if(me->doDrop("", o))
+	      found=true;
+	  }
+	}
+      }
+    }
+  }
+
+  if(found)
+    me->wanderAround();
+
+  return TRUE;
+}
 
 
 
@@ -6860,6 +6900,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "bee death", beeDeath}, // 205
   {FALSE, "hero faerie", heroFaerie},
   {FALSE,"Brick Collector", brickCollector},
+  {FALSE, "caretaker", caretaker},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
