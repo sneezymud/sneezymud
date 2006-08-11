@@ -4266,13 +4266,9 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         job->wait = max(1, (int) (item->obj_flags.max_struct_points)/7);
         sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
         me->doSay(buf);
-	ch->giveMoney(me, cost, GOLD_SHOP);
-	shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
-		cost, "engraving");
-	me->setMoney(me->getMoney()-engraveCost(item, ch, 0));
-	shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
-		engraveCost(item, ch, 0), "expenses");
-	
+
+	TShopOwned tso(find_shop_nr(me->number), me, ch);
+	tso.doBuyTransaction(cost, item->getName(), "engraving");
 
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
