@@ -493,9 +493,14 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 	
 	if(t && (sba=dynamic_cast<TMonster *>(t))){
 	  keeper->giveMoney(sba, getValue(), GOLD_SHOP);
-	  shoplog(shop_nr, sba, keeper, "talens", -getValue(), "producing");
-	  shoplog(sba_nr, keeper, sba, "talens", getValue(), "producing");
+
+	  shoplog(shop_nr, sba, keeper, getName(), -getValue(), "producing");
+	  shoplog(sba_nr, keeper, sba, getName(), getValue(), "producing");
 	  sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+
+	  // just tax the profit
+	  TShopOwned tso(shop_nr, keeper, ch);
+	  tso.chargeTax(cost-getValue(), getName(), this);
 	}
       }
 
@@ -1935,12 +1940,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[myself->number].virt);
     return FALSE;
   }
-
-  //    if(shop_index[shop_nr].isOwned()){
-  //   vlogf(LOG_PEEL, fmt("shop_nr %i, charged tax") %  shop_nr);
-  //    }
-
-
 
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
