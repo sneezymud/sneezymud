@@ -482,8 +482,21 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       // for unlimited items, charge the shopkeeper for production
       if(!dynamic_cast<TCasinoChip *>(this) &&
 	 objVnum() != OBJ_LOTTERY_TICKET){
-	keeper->addToMoney(-getValue(), GOLD_SHOP);
-	shoplog(shop_nr, ch, keeper, temp1->getName(), -getValue(), "producing");
+	// find the sba shopkeeper
+	TBeing *t;
+	TMonster *sba;
+	int sba_nr=160;
+	for(t=character_list;t;t=t->next){
+	  if(t->number==shop_index[sba_nr].keeper)
+	    break;
+	}
+	
+	if(t && (sba=dynamic_cast<TMonster *>(t))){
+	  keeper->giveMoney(sba, getValue(), GOLD_SHOP);
+	  shoplog(shop_nr, sba, keeper, "talens", -getValue(), "producing");
+	  shoplog(sba_nr, keeper, sba, "talens", getValue(), "producing");
+	  sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+	}
       }
 
       ch->logItem(temp1, CMD_BUY);
