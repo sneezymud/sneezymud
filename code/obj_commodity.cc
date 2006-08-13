@@ -283,7 +283,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     return;
   }
 
-  keeper->doTell(ch->getName(), "Hmm, I'd give you %d talens for that.", price);
+  keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for that.") % price);
   return;
 }
 
