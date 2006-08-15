@@ -27,6 +27,8 @@ void sendShoplist(int);
 void sendShowShop(int, int);
 void sendShowLogs(int, int);
 void sendShowLogsRaw(int, int);
+void sendShowLogsArchive(int, int);
+void sendShowLogsRawArchive(int, int);
 
 int main(int argc, char **argv)
 {
@@ -52,6 +54,14 @@ int main(int argc, char **argv)
     } else if(**state_form == "showlogsraw"){
       form_iterator shop_nr=cgi.getElement("shop_nr");
       sendShowLogsRaw(session.getAccountID(), convertTo<int>(**shop_nr));
+      return 0;
+    } else if(**state_form == "showlogsarchive"){
+      form_iterator shop_nr=cgi.getElement("shop_nr");
+      sendShowLogsArchive(session.getAccountID(), convertTo<int>(**shop_nr));
+      return 0;
+    } else if(**state_form == "showlogsrawarchive"){
+      form_iterator shop_nr=cgi.getElement("shop_nr");
+      sendShowLogsRawArchive(session.getAccountID(), convertTo<int>(**shop_nr));
       return 0;
     } else if(**state_form == "showshop"){
       form_iterator shop_nr=cgi.getElement("shop_nr");
@@ -200,6 +210,124 @@ where \
   cout << html() << endl; 
 
 }  
+
+
+void sendShowLogsRawArchive(int account_id, int shop_nr)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // check permissions first
+  db.query("\
+select 1 \
+from \
+  shop s, \
+  corporation c, \
+  shopowned so left outer join shopownedaccess soa on \
+  (so.shop_nr=soa.shop_nr), \
+  player p, corpaccess ca \
+where \
+  ca.corp_id=so.corp_id and \
+  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
+  s.shop_nr=so.shop_nr and \
+  c.corp_id=ca.corp_id and \
+  so.shop_nr=%i and \
+  p.account_id=%i",
+	   shop_nr, account_id);
+
+
+  if(!db.fetchRow()){
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head() << title("Shopinfo") << endl;
+    cout << head() << body() << endl;
+    cout << "Shop not found or you don't have permission.";
+    cout << body() << endl;
+    cout << html() << endl; 
+    return;
+  }
+  
+
+  cout << HTTPPlainHeader() << endl;
+  
+  
+  db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplogarchive sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
+  cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
+  
+  while(db.fetchRow()){
+    cout << stripColorCodes(db["shop_nr"]) << ", ";
+    cout << stripColorCodes(db["name"]) << ", ";
+    cout << stripColorCodes(db["action"]) << ", ";
+    cout << stripColorCodes(db["item"]) << ", ";
+    cout << stripColorCodes(db["talens"]) << ", ";
+    cout << stripColorCodes(db["shoptalens"]) << ", ";
+    cout << stripColorCodes(db["shopvalue"]) << ", ";
+    cout << stripColorCodes(db["logtime"]) << ", ";
+    cout << stripColorCodes(db["itemcount"]) << endl;
+  }
+}  
+
+
+void sendShowLogsArchive(int account_id, int shop_nr)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // check permissions first
+  db.query("\
+select 1 \
+from \
+  shop s, \
+  corporation c, \
+  shopowned so left outer join shopownedaccess soa on \
+  (so.shop_nr=soa.shop_nr), \
+  player p, corpaccess ca \
+where \
+  ca.corp_id=so.corp_id and \
+  (lower(p.name)=lower(soa.name) or ca.player_id=p.id) and \
+  s.shop_nr=so.shop_nr and \
+  c.corp_id=ca.corp_id and \
+  so.shop_nr=%i and \
+  p.account_id=%i",
+	   shop_nr, account_id);
+  
+  cout << HTTPHTMLHeader() << endl;
+  cout << html() << head() << title("Shopinfo") << endl;
+  cout << head() << body() << endl;
+
+
+  if(!db.fetchRow()){
+    cout << "Shop not found or you don't have permission.";
+    cout << body() << endl;
+    cout << html() << endl; 
+    return;
+  }
+  
+
+  
+  db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplogarchive sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
+
+  cout << "<table border=1><tr>";
+
+  cout << "<td>shop_nr</td><td>name</td><td>action</td><td>item</td><td>talens</td><td>shoptalens</td><td>shopvalue</td><td>logtime</td><td>itemcount</td></tr>" << endl;
+  
+  while(db.fetchRow()){
+    cout << "<tr>";
+    cout << "<td>" << stripColorCodes(db["shop_nr"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["name"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["action"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["item"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["talens"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["shoptalens"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["shopvalue"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["logtime"]) << "</td>";
+    cout << "<td>" << stripColorCodes(db["itemcount"]) << "</td></tr>" << endl;
+  }
+  cout << "</table>";
+
+  cout << body() << endl;
+  cout << html() << endl; 
+
+}  
+
+
 
 
 void sendShowShop(int account_id, int shop_nr)
@@ -381,7 +509,7 @@ void sendCorpShopList(int account_id)
 
   cout << "Shops you have access to via corporations you belong to:<br>";
   cout << "<table border=1>" << endl;
-  cout << "<tr><td>Shop</td><td>Player(s)</td><td>Corporation</td><td>Logs</td><td>Export logs</td></tr>";
+  cout << "<tr><td>Shop</td><td>Player(s)</td><td>Corporation</td><td>Logs</td><td>Export Logs</td><td>Archived Logs</td><td>Export Archived Logs</td></tr>";
 
   while(db.fetchRow()){
       cout << "<tr><td>" << endl;
@@ -394,7 +522,16 @@ void sendCorpShopList(int account_id)
       cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
+
       cout << fmt("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+	db["shop_nr"];
+      cout << "logs" << "</td><td>";
+
+      cout << fmt("<a href=javascript:pickshop('%s','showlogsarchive')>") %
+	db["shop_nr"];
+      cout << "logs" << "</td><td>";
+
+      cout << fmt("<a href=javascript:pickshop('%s','showlogsrawarchive')>") % 
 	db["shop_nr"];
       cout << "logs" << "</td></tr>";
   }
