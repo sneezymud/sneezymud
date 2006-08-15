@@ -2325,9 +2325,6 @@ void TBeing::doStand()
       break;
     case POSITION_SITTING:
     case POSITION_CRAWLING:
-      if (removeAllCasinoGames())
-        return;
-
       act("You stand up.", FALSE, this, 0, 0, TO_CHAR);
       act("$n clambers to $s feet.", TRUE, this, 0, 0, TO_ROOM);
       if (riding)
@@ -2352,6 +2349,8 @@ void TBeing::doStand()
       act("$n stops floating around and puts $s feet on the $g.", TRUE, this, 0, 0, TO_ROOM);
       break;
   }
+
+  removeAllCasinoGames();
 }
 
 void TThing::sitMe(TBeing *ch)
@@ -2371,8 +2370,9 @@ static bool sitCasinoEnter(const TBeing *ch)
       return true;
   }
   if (ch->checkHoldem(true)) {
-    if (!gHoldem.enter(ch))
+    if (!gHoldem.enter(ch)){
       return true;
+    }
   }
   if (ch->checkHiLo(true)) {
     if (!gHiLo.enter(ch))
@@ -2505,12 +2505,16 @@ void TBeing::doSit(const sstring & argument)
       t = obj;
     } else 
       t = riding;
-    
-    if (sitCasinoEnter(this))
+
+    if (sitCasinoEnter(this)){
       return;
+    }
 
     t->sitMe(this);
   }
+  
+  if(getPosition() != POSITION_SITTING)
+    removeAllCasinoGames();
 }
 
 void TThing::restMe(TBeing *ch)
