@@ -341,7 +341,9 @@ void HoldemGame::linkPlayers()
 int HoldemGame::nextBetter(int b)
 {
   // find the next better that isn't all in
-  for(int i=b+1;i!=firstbetter;i=(i+1)%MAX_HOLDEM_PLAYERS){
+  for(int i=(b+1)%MAX_HOLDEM_PLAYERS;
+      i!=firstbetter;
+      i=(i+1)%MAX_HOLDEM_PLAYERS){
     if(players[i] && players[i]->ch && 
        players[i]->hand[0] && !players[i]->allin){
       return i;
@@ -353,7 +355,9 @@ int HoldemGame::nextBetter(int b)
 int HoldemGame::nextPlayer(int b)
 {
   // find the next better that isn't all in
-  for(int i=b+1;i!=firstbetter;i=(i+1)%MAX_HOLDEM_PLAYERS){
+  for(int i=(b+1)%MAX_HOLDEM_PLAYERS;
+      i!=firstbetter;
+      i=(i+1)%MAX_HOLDEM_PLAYERS){
     if(i < MAX_HOLDEM_PLAYERS && i>=0 && players[i] && players[i]->ch){
       return i;
     }
@@ -363,7 +367,9 @@ int HoldemGame::nextPlayer(int b)
 
 int HoldemGame::nextButton()
 {
-  for(int i=button+1;i!=button;i=(i+1)%MAX_HOLDEM_PLAYERS){
+  for(int i=(button+1)%MAX_HOLDEM_PLAYERS;
+      i!=button;
+      i=(i+1)%MAX_HOLDEM_PLAYERS){
     if(players[i] && players[i]->ch && players[i]->ch->isPc()){
       return i;
     }
@@ -511,6 +517,7 @@ void HoldemGame::peek(const TBeing *ch)
   if(ch->isImmortal() && !strcmp(ch->getName(), "Peel") && !ch->checkHoldem()){
     const Card *tc[5];
 
+    // 
     for(int i=0;i<5;++i){
       tc[i]=community[i];
       if(!community[i])
