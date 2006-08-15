@@ -1113,10 +1113,7 @@ int TShopOwned::doLogs(sstring arg)
   }
   sstring sb;
 
-  if(arg=="clear"){
-    db.query("delete from shoplog where shop_nr=%i", shop_nr);
-    ch->sendTo("Done.\n\r");
-  } else if(arg=="summaries" || arg=="balance"){
+  if(arg=="summaries" || arg=="balance"){
     if(arg=="summaries"){
       db.query("select name, sum(talens) as tsum from shoplog where shop_nr=%i group by name order by tsum desc", shop_nr);
       
