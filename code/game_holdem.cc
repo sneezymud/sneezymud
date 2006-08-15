@@ -498,6 +498,26 @@ HoldemPlayer *HoldemGame::getPlayer(const sstring &name) const
   return NULL;
 }
 
+sstring HoldemGame::stateToString()
+{
+  sstring buf;
+
+  switch(state){
+    case STATE_DEAL:
+      return "deal";
+    case STATE_FLOP:
+      return "flop";
+    case STATE_TURN:
+      return "turn";
+    case STATE_RIVER:
+      return "river";
+    case STATE_NONE:
+      return "none";
+    default:
+      return (fmt("unknown (%i)") % state);
+  }
+  return "can't get here";
+}
 
 void HoldemGame::peek(const TBeing *ch)
 {
@@ -517,11 +537,28 @@ void HoldemGame::peek(const TBeing *ch)
   if(ch->isImmortal() && !strcmp(ch->getName(), "Peel") && !ch->checkHoldem()){
     const Card *tc[5];
 
-    // 
+
+    ch->sendTo(COLOR_BASIC, fmt("Game state is <r>%s<1>\n\r\n\r") % 
+	       stateToString());
+
+    sstring buf="";
+    for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+      if(players[i]){
+	buf+=players[i]->name;
+	buf+=" ";
+      }
+    }
+    ch->sendTo(COLOR_BASIC, fmt("Players: %s\n\r\n\r") % 
+	       (buf.empty()?"none":buf));
+
+
     for(int i=0;i<5;++i){
       tc[i]=community[i];
-      if(!community[i])
+      if(!community[i]){
 	community[i]=deck.draw();
+	ch->sendTo(COLOR_BASIC, fmt("Community draw: %s\n\r") % 
+		   community[i]->getName());
+      }
     }
 
     for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
