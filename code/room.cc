@@ -259,12 +259,12 @@ roomDirData * TRoom::exitDir(dirTypeT door) const
 
 roomDirData * TBeing::exitDir(dirTypeT door) const
 {
-  return (roomp->dir_option[door]);
+  return (roomp?roomp->exitDir(door):NULL);
 }
 
 roomDirData * TObj::exitDir(dirTypeT door) const
 {
-  return (roomp->dir_option[door]);
+  return (roomp?roomp->exitDir(door):NULL);
 }
 
 void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &sbdata, void *srzdata)
