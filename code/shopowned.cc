@@ -1108,8 +1108,12 @@ int TShopOwned::doLogs(sstring arg)
   sstring buf;
 
   if(!hasAccess(SHOPACCESS_LOGS)){
-    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
+    if(keeper->spec == SPEC_BANKER){
+      arg = ch->name;
+    } else {
+      keeper->doTell(ch->getName(),"Sorry, you don't have access to do that.");
+      return FALSE;
+    }
   }
   sstring sb;
 
