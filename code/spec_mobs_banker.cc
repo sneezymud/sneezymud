@@ -14,10 +14,11 @@ procBankInterest::procBankInterest(const int &p)
 
 void procBankInterest::run(int pulse) const 
 {
-  TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
+  TDatabase db(DB_SNEEZY), in(DB_SNEEZY), out(DB_SNEEZY);
   double profit_sell;
   unsigned int shop_nr;
-  int pretalens=0, posttalens=0;
+  map <int, int> player_gain;
+  map <int, int> corp_gain;
 
   db.query("update shopownedbank set earned_interest=0 where earned_interest is null");
   db.query("update shopownedcorpbank set earned_interest=0 where earned_interest is null");
@@ -35,15 +36,18 @@ void procBankInterest::run(int pulse) const
       if(profit_sell==1.0)
 	continue;
 
-      in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
-	       shop_nr);
-      if(in.fetchRow())
-	pretalens=convertTo<int>(in["talens"]);	
 
-      in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
+      // make a list of current player talens
+      in.query("select player_id, talens from shopownedbank where shop_nr=%i",
 	       shop_nr);
-      if(in.fetchRow())
-	pretalens+=convertTo<int>(in["talens"]);
+      while(in.fetchRow())
+	player_gain[convertTo<int>(in["player_id"])]=convertTo<int>(in["talens"]);
+
+      // make a list of current corporate talens
+      in.query("select corp_id, talens from shopownedcorpbank where shop_nr=%i",
+	       shop_nr);
+      while(in.fetchRow())
+	corp_gain[convertTo<int>(in["corp_id"])]=convertTo<int>(in["talens"]);
 
 
       // calculate interest
@@ -61,23 +65,29 @@ void procBankInterest::run(int pulse) const
       in.query("update shopownedcorpbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
 
 
-
-
-      in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
+      // log player gains
+      in.query("select p.name as name, sob.player_id as player_id, sob.talens as talens from shopownedbank sob, player p where shop_nr=%i and sob.player_id=p.id",
 	       shop_nr);
-      if(in.fetchRow())
-	posttalens=convertTo<int>(in["talens"]);
+      while(in.fetchRow()){
+	if((convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])]) != 0){
+	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
+		    in["name"].c_str(),
+		    convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])],
+		    convertTo<int>(in["talens"]));
+	}
+      }
 
-      in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
+      // log corporate gains
+      in.query("select c.name, sob.corp_id, sob.talens from shopownedcorpbank sob, corporation c where c.corp_id=sob.corp_id and sob.shop_nr=%i",
 	       shop_nr);
-      if(in.fetchRow())
-	posttalens+=convertTo<int>(in["talens"]);
-
-      if((posttalens-pretalens) !=0)
-	in.query("insert into shoplog values (%i, '%s', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, 
-		 mob_index[real_mobile(convertTo<int>(db["keeper"]))].short_desc,
-		 posttalens-pretalens);
-
+      while(in.fetchRow()){
+	if((convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["player_id"])]) != 0){
+	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
+		    in["name"].c_str(),
+		    convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])],
+		    convertTo<int>(in["talens"]));
+	}	
+      }
     }
   }
 }
