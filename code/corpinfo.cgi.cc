@@ -141,7 +141,7 @@ void sendCorporationsList()
   cout << "<table border=1>" << endl;
   cout << "<tr><td>ID</td><td>Name</td><td>Gold</td></tr>" << endl;
   for(it=m.begin();it!=m.end();++it){
-    cout << (fmt("<tr><td>%i</td><td><a href=\"corp_info.cgi?corp_id=%i\">%s</a></td><td>%s</td></tr>") %
+    cout << (fmt("<tr><td>%i</td><td><a href=\"corpinfo.cgi?corp_id=%i\">%s</a></td><td>%s</td></tr>") %
 	     corp_list[(int)((*it).second)].corp_id %
 	     corp_list[(int)((*it).second)].corp_id %
 	     corp_list[(int)((*it).second)].name %
