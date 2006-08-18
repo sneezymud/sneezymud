@@ -500,7 +500,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
 	  // just tax the profit
 	  TShopOwned tso(shop_nr, keeper, ch);
-	  tso.chargeTax(cost-getValue(), getName(), this);
+	  tso.chargeTax(max(cost, cost-getValue()), getName(), this);
 	}
       }
 
