@@ -1,5 +1,49 @@
 #24675
-Lucifer - Forest Thing (25 rooms)~
-24699 25 2 0
+Lucifer - Dead Forest~
+24699 25 2 1
+
+D 0 24675 0 1        A Small Game Path -> A Dark Forest
+D 0 24683 2 1        A Dark Forest -> A Small Game Path
+D 0 24676 9 1        A Small Hut -> A Dark Forest
+D 0 24679 6 1        A Dark Forest -> A Small Hut
+D 0 24688 5 1        A Dark Forest -> The Lair of a Werewolf
+D 0 24689 4 1        The Lair of a Werewolf -> A Dark Forest
+D 0 24693 4 1        A Small Cave -> A Dead Section of Forest
+D 0 24694 0 1        A Dead Section of Forest -> A Dead Section of Forest
+D 0 24694 5 1        A Dead Section of Forest -> A Small Cave
+D 0 24697 2 1        A Dead Section of Forest -> A Dead Section of Forest
+
+M 0 24685 1 24676       an old withered shaman
+M 0 24688 1 24675       a fuzzy bunny
+
+M 0 24675 1 24677       a wilder elf
+Y 0 139   4
+E 1 24687 9999 19
+G 1 6 9999
+P 1 24688 1 6
+
+M 0 24689 1 24689       a grizzled old werewolf
+M 0 24699 1 24688       a corrupted forest spirit
+M 0 24699 1 24678       a corrupted forest spirit
+M 0 24699 1 24685       a corrupted forest spirit
+M 0 24699 1 24686       a corrupted forest spirit
+M 0 24699 1 24682       a corrupted forest spirit
+M 0 24699 1 24687       a corrupted forest spirit
+M 0 24679 1 24688       a spirit wraith
+M 0 24679 1 24678       a spirit wraith
+M 0 24679 1 24685       a spirit wraith
+M 0 24679 1 24686       a spirit wraith
+M 0 24679 1 24682       a spirit wraith
+M 0 24679 1 24687       a spirit wraith
+M 0 24696 1 24688       a forest imp
+E 1 24695 9999 18
+
+M 0 24695 2 24688       a forest imp
+M 0 24695 1 24687       a forest imp
+M 0 24695 2 24686       a forest imp
+M 0 24695 1 24685       a forest imp
+M 0 24695 2 24682       a forest imp
+M 0 24695 1 24678       a forest imp
+E 1 24695 9999 18
 S
 
