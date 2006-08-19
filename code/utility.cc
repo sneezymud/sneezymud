@@ -1179,8 +1179,8 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
 bool TBeing::canGetMe(const TBeing *ch, silentTypeT) const
 {
-  return ((ch->GetMaxLevel() == GOD_LEVEL10) && (ch != this) && !desc);
-  // return ((ch->GetMaxLevel() == GOD_LEVEL10) && (ch != this));
+  return ((ch->GetMaxLevel() == MAX_IMMORT) && (ch != this) && !desc);
+  // return ((ch->GetMaxLevel() == MAX_IMMORT) && (ch != this));
 }
 
 bool TThing::canGetMe(const TBeing *, silentTypeT) const

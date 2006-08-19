@@ -168,8 +168,8 @@ extern unsigned int total_help_number;
 extern unsigned int total_deaths;
 extern unsigned int total_player_kills;
 
-extern long gold_statistics[MAX_MONEY_TYPE][GOD_LEVEL10];
-extern long gold_positive[MAX_MONEY_TYPE][GOD_LEVEL10];
+extern long gold_statistics[MAX_MONEY_TYPE][MAX_IMMORT];
+extern long gold_positive[MAX_MONEY_TYPE][MAX_IMMORT];
 
 class TGoldModifier {
   private:

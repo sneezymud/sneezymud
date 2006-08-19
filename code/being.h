@@ -115,17 +115,8 @@ const unsigned short FEAR_UNUSED2  = (1<<5);
 const unsigned short FEAR_VNUM     = (1<<6);
 
 const int MAX_MORT      = 50;
-const int GOD_LEVEL1    = 51;
-const int GOD_LEVEL2    = 52;
-const int GOD_LEVEL3    = 53;
-const int GOD_LEVEL4    = 54;
-const int GOD_LEVEL5    = 55;
-const int GOD_LEVEL6    = 56;
-const int GOD_LEVEL7    = 57;
-const int GOD_LEVEL8    = 58;
-const int GOD_LEVEL9    = 59;
-const int GOD_LEVEL10   = 60;
-const int MAX_IMMORT    = 60;
+const int GOD_LEVEL1    = MAX_MORT + 1;
+const int MAX_IMMORT    = MAX_MORT + 10;
 
 // this is the parameter for various newbie protection things, like pk
 // protection, food praying at CS, etc

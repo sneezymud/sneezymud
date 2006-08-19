@@ -3808,7 +3808,7 @@ void TBeing::doMotd(const char *argument)
     return;
 #if 0
 sendTo("Feature disabled, bug Batopr.\n\r");
-  } else if (is_abbrev(argument, "message") && (GetMaxLevel() >= GOD_LEVEL4)) {
+  } else if (is_abbrev(argument, "message") && (GetMaxLevel() >= GOD_LEVEL1)) {
     TThing *t_note = searchLinkedListVis(this, "note", getStuff());
     TObj *note = dynamic_cast<TObj *>(t_note);
     if (note) {
