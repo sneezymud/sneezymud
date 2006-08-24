@@ -1942,42 +1942,12 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
     REMOVE_BIT(specials.affectedBy,AFF_HIDE);
 
   if (getCaptiveOf()) {
-    switch (cmd) {
-      case CMD_NORTH:
-      case CMD_EAST:
-      case CMD_SOUTH:
-      case CMD_WEST:
-      case CMD_UP:
-      case CMD_DOWN:
-      case CMD_NE:
-      case CMD_NW:
-      case CMD_SE:
-      case CMD_SW:
-      case CMD_FLEE:
-        sendTo("You've been captured.  You aren't going anywhere until you get away.\n\r");
-        return FALSE;
-      case CMD_SAY:
-      case CMD_TELL:
-      case CMD_SHOUT:
-      case CMD_LOOK:
-      case CMD_LAUGH:
-      case CMD_WHO:
-      case CMD_HELP:
-      case CMD_BUG:
-      case CMD_IDEA:
-      case CMD_TYPO:
-      case CMD_NOD:
-      case CMD_SAY2:
-      case CMD_SIGH:
-      case CMD_CRY:
-      case CMD_GIVE:
-      case CMD_REMOVE:
-      case CMD_DROP:
-      case CMD_RETURN:
-        break;
-      default:
-        sendTo("You are unable to do that while a captive.\n\r");
-        return FALSE;
+    if(!sameRoom(*getCaptiveOf())){
+      sendTo("Your capturer has left, so you deftly slip out of your bonds.\n\r");
+      getCaptiveOf()->remCaptive(this);
+    } else if(!utilityTaskCommand(cmd) && !nobrainerTaskCommand(cmd)){
+      sendTo("You are unable to do that while a captive.\n\r");
+      return FALSE;
     }
   }
   // LIFEFORCE DRAIN ON EVERY DAMN TICK
