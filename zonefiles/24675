@@ -17,10 +17,10 @@ M 0 24685 1 24676       an old withered shaman
 M 0 24688 1 24675       a fuzzy bunny
 
 M 0 24675 1 24677       a wilder elf
-Y 0 139   4
-E 1 24687 9999 19
-G 1 6 9999
-P 1 24688 1 6
+*Y 0 139   4
+*E 1 24687 9999 19
+*G 1 6 9999
+*P 1 24688 1 6
 
 M 0 24689 1 24689       a grizzled old werewolf
 M 0 24699 1 24688       a corrupted forest spirit
@@ -38,12 +38,12 @@ M 0 24679 1 24687       a spirit wraith
 M 0 24696 1 24688       a forest imp
 E 1 24695 9999 18
 
-*M 0 24695 2 24688       a forest imp
-*M 0 24695 1 24687       a forest imp
-*M 0 24695 2 24686       a forest imp
-*M 0 24695 1 24685       a forest imp
-*M 0 24695 2 24682       a forest imp
-*M 0 24695 1 24678       a forest imp
-*E 1 24695 9999 18
+M 0 24695 2 24688       a forest imp
+M 0 24695 1 24687       a forest imp
+M 0 24695 2 24686       a forest imp
+M 0 24695 1 24685       a forest imp
+M 0 24695 2 24682       a forest imp
+M 0 24695 1 24678       a forest imp
+E 1 24695 9999 18
 S
 
