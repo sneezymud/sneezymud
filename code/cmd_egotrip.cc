@@ -16,9 +16,75 @@
 #include "disease.h"
 #include "obj_portal.h"
 
+
+class ego_imm_blessing {
+public:
+  sstring name;
+  spellNumT aff_type;
+  applyTypeT prim_apply;
+  sstring msg;
+
+  // vector stuff
+  ego_imm_blessing(sstring n, spellNumT a, applyTypeT p, sstring m) :
+    name(n), aff_type(a), prim_apply(p), msg(m){}
+
+  ego_imm_blessing() {}
+};
+
+
+map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
+{
+  map <spellNumT,ego_imm_blessing> blessings;
+  
+  blessings[AFFECT_IMMORTAL_BLESSING]=
+    ego_imm_blessing("immortal",
+		     AFFECT_IMMORTAL_BLESSING,
+		     APPLY_SPELL_HITROLL,
+		     "immortals");
+
+  blessings[AFFECT_PEEL_BLESSING]=
+    ego_imm_blessing("Peel",
+		     AFFECT_PEEL_BLESSING,
+		     APPLY_SPE, 
+		     "<r>speed<1>");
+  blessings[AFFECT_VASCO_BLESSING]=
+    ego_imm_blessing("Vasco",
+		     AFFECT_VASCO_BLESSING,
+		     APPLY_DEX,
+		     "<k>stealth<1>");
+  blessings[AFFECT_CORAL_BLESSING]=
+    ego_imm_blessing("Coral",
+		     AFFECT_CORAL_BLESSING,
+		     APPLY_PER,
+		     "<B>exploration<1>");
+  blessings[AFFECT_ANGUS_BLESSING]=
+    ego_imm_blessing("Angus",
+		     AFFECT_ANGUS_BLESSING,
+		     APPLY_WIS,
+		     "<g>wisdom<1>");
+  blessings[AFFECT_DAMESCENA_BLESSING]=
+    ego_imm_blessing("Damescena",
+		     AFFECT_DAMESCENA_BLESSING,
+		     APPLY_CON,
+		     "<W>healing<1>");
+  blessings[AFFECT_JESUS_BLESSING]=
+    ego_imm_blessing("Jesus",
+		     AFFECT_JESUS_BLESSING,
+		     APPLY_STR,
+		     "<w>power<1>");
+  blessings[AFFECT_BUMP_BLESSING]=
+    ego_imm_blessing("Bump",
+		     AFFECT_BUMP_BLESSING,
+		     APPLY_AGI,
+		     "<W>flexibility<1>");
+
+  return blessings;
+}
+
 void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 {
   affectedData aff;
+  map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
   
   aff.level=level;
   aff.duration=(1+level)*UPDATES_PER_MUDHOUR;
@@ -26,28 +92,25 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   // each imm blessing is a spell affect + a stat modifier
   // some of the spell affects are set in TBeing::affectedBySpell
 
+  // apply stat modifier first
+  aff.type=which;
+  aff.location=blessings[which].prim_apply;
+  aff.modifier=13;
+  aff.modifier2=0;
+  aff.bitvector=0;
+  v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
+  // now do the second custom part
   if(which==AFFECT_IMMORTAL_BLESSING){
     // default non-custom blessing
     aff.type=AFFECT_IMMORTAL_BLESSING;
-
-    aff.location=APPLY_SPELL_HITROLL;
-    aff.modifier=10;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    
     aff.location=APPLY_IMMUNITY;
     aff.modifier=IMMUNE_NONMAGIC;
     aff.modifier2=5;
     aff.bitvector=0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_PEEL_BLESSING){
-    aff.type=AFFECT_PEEL_BLESSING;
-    aff.location=APPLY_SPE;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - haste
   } else if(which==AFFECT_VASCO_BLESSING){
     aff.type = AFFECT_VASCO_BLESSING;
     aff.modifier = -40;
@@ -55,49 +118,45 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-
-    aff.type=AFFECT_VASCO_BLESSING;
-    aff.location=APPLY_DEX;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_CORAL_BLESSING){
     aff.type=AFFECT_CORAL_BLESSING;
-    aff.location=APPLY_PER;
-    aff.modifier=19;
+    aff.location=APPLY_NONE;
+    aff.modifier=0;
     aff.modifier2=0;
     aff.bitvector = AFF_LEVITATING;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_ANGUS_BLESSING){
-    aff.type=AFFECT_ANGUS_BLESSING;
-    aff.location=APPLY_WIS;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - sanc
   } else if(which==AFFECT_DAMESCENA_BLESSING){
-    aff.type=AFFECT_DAMESCENA_BLESSING;
-    aff.location=APPLY_CON;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - enliven
   } else if(which==AFFECT_JESUS_BLESSING){
-    aff.type=AFFECT_JESUS_BLESSING;
-    aff.location=APPLY_STR;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - true sight
   } else if(which==AFFECT_BUMP_BLESSING){
-    aff.type=AFFECT_BUMP_BLESSING;
-    aff.location=APPLY_AGI;
-    aff.modifier=19;
-    aff.modifier2=0;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // none
   }
+
+  affectedData *afp;
+
+  // now, each time a blessing is applied, increase the power of all
+  // the other blessings.
+  for(afp = v->affected; afp; afp = afp->next){
+    if(afp->type==AFFECT_IMMORTAL_BLESSING ||
+       afp->type==AFFECT_PEEL_BLESSING ||
+       afp->type==AFFECT_VASCO_BLESSING ||
+       afp->type==AFFECT_CORAL_BLESSING ||
+       afp->type==AFFECT_DAMESCENA_BLESSING ||
+       afp->type==AFFECT_JESUS_BLESSING ||
+       afp->type==AFFECT_BUMP_BLESSING){
+      afp->modifier =(int)((float)afp->modifier * 1.5);
+
+      // increase the new spell too, but don't announce it - redundant
+      if(afp->type != which){
+	v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!")%
+		  blessings[afp->type].name);
+      }
+    }
+  }
+
 }
 
 	
@@ -212,6 +271,9 @@ void TBeing::doEgoTrip(const char *arg)
 
     vlogf(LOG_MISC, fmt("%s egotripped bless") %  getName());
     Descriptor *d;
+    map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
+    map <spellNumT,ego_imm_blessing>::iterator iter;
+    bool found=false;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
         continue;
@@ -222,39 +284,20 @@ void TBeing::doEgoTrip(const char *arg)
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
 
-      if(!strcmp(getName(), "Peel")){
-	egoAffect(this, ch, AFFECT_PEEL_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <r>speed<1>.\n\r") %
-		 sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Vasco")){
-	egoAffect(this, ch, AFFECT_VASCO_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <k>stealth<1>.\n\r") %
-		 sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Coral")){
-	egoAffect(this, ch, AFFECT_CORAL_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of <B>exploration<1>.\n\r") %
-		 sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Angus")){
-	egoAffect(this, ch, AFFECT_ANGUS_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <g>wisdom<1>.\n\r") %
-		   sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Jesus")){
-	egoAffect(this, ch, AFFECT_JESUS_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <w>power<1>.\n\r") %
-		 sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Damescena")){
-	egoAffect(this, ch, AFFECT_DAMESCENA_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <W>healing<1>.\n\r") %
-		   sstring(ch->pers(this)).cap() % hshr());
-      } else if(!strcmp(getName(), "Bump")){
-	egoAffect(this, ch, AFFECT_BUMP_BLESSING, 5);
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing of <W>flexibility<1>.\n\r") %
-		   sstring(ch->pers(this)).cap() % hshr());
-      } else {
+      for(iter=blessings.begin();iter!=blessings.end();++iter){
+	if(!strcmp(getName(), (*iter).second.name.c_str())){
+	  ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of %s.\n\r") %
+		     sstring(ch->pers(this)).cap() % hshr() %
+		     (*iter).second.msg);
+	  egoAffect(this, ch, (*iter).first, 5);
+	  found=true;
+	}
+      }
+      if(!found){
 	// default blessing
-	egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
 	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing.\n\r") %
-		 sstring(ch->pers(this)).cap() % hshr());
+		   sstring(ch->pers(this)).cap() % hshr());
+	egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
       }
     }
     return;
