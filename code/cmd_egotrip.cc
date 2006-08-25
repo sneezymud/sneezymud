@@ -85,7 +85,8 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 {
   affectedData aff;
   map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
-  
+  bool success=false;
+
   aff.level=level;
   aff.duration=(1+level)*UPDATES_PER_MUDHOUR;
 
@@ -98,7 +99,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   aff.modifier=13;
   aff.modifier2=0;
   aff.bitvector=0;
-  v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  success=v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
   // now do the second custom part
   if(which==AFFECT_IMMORTAL_BLESSING){
@@ -139,20 +140,22 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 
   // now, each time a blessing is applied, increase the power of all
   // the other blessings.
-  for(afp = v->affected; afp; afp = afp->next){
-    if(afp->type==AFFECT_IMMORTAL_BLESSING ||
-       afp->type==AFFECT_PEEL_BLESSING ||
-       afp->type==AFFECT_VASCO_BLESSING ||
-       afp->type==AFFECT_CORAL_BLESSING ||
-       afp->type==AFFECT_DAMESCENA_BLESSING ||
-       afp->type==AFFECT_JESUS_BLESSING ||
-       afp->type==AFFECT_BUMP_BLESSING){
-      afp->modifier =(int)((float)afp->modifier * 1.5);
-
-      // increase the new spell too, but don't announce it - redundant
-      if(afp->type != which){
-	v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!")%
-		  blessings[afp->type].name);
+  if(success){
+    for(afp = v->affected; afp; afp = afp->next){
+      if(afp->type==AFFECT_IMMORTAL_BLESSING ||
+	 afp->type==AFFECT_PEEL_BLESSING ||
+	 afp->type==AFFECT_VASCO_BLESSING ||
+	 afp->type==AFFECT_CORAL_BLESSING ||
+	 afp->type==AFFECT_DAMESCENA_BLESSING ||
+	 afp->type==AFFECT_JESUS_BLESSING ||
+	 afp->type==AFFECT_BUMP_BLESSING){
+	afp->modifier =(int)((float)afp->modifier * 1.5);
+	
+	// increase the new spell too, but don't announce it - redundant
+	if(afp->type != which){
+	  v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!")%
+		    blessings[afp->type].name);
+	}
       }
     }
   }
