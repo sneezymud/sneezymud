@@ -143,6 +143,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   if(success){
     for(afp = v->affected; afp; afp = afp->next){
       if(afp->type==AFFECT_IMMORTAL_BLESSING ||
+	 afp->type==AFFECT_ANGUS_BLESSING ||
 	 afp->type==AFFECT_PEEL_BLESSING ||
 	 afp->type==AFFECT_VASCO_BLESSING ||
 	 afp->type==AFFECT_CORAL_BLESSING ||
