@@ -786,24 +786,16 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	  eq=tmp_ch->equipment[HOLD_LEFT];
 	}
 
-	if(::number(0,4319)){
+
+	if(eq && ::number(0,4319)){
 	  // at this point, they're standing outside in a lightning storm,
-	  if(eq){
-	    // either holding something metal or wearing a metal helmet. zzzap.
-	    act(fmt("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
-		FALSE, tmp_ch, 0, 0, TO_CHAR);
-	    act("BZZZZZaaaaaappppp!!!!!",
-		FALSE, tmp_ch, 0, 0, TO_CHAR);
-	    act(fmt("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
-		FALSE, tmp_ch, 0, 0, TO_ROOM);
-	  } else {
-	    act("A bolt of lightning streaks down from the heavens and hits you!",
-		FALSE, tmp_ch, 0, 0, TO_CHAR);
-	    act("BZZZZZaaaaaappppp!!!!!",
-		FALSE, tmp_ch, 0, 0, TO_CHAR);
-	    act("A bolt of lightning streaks down from the heavens and hits $n!",
-		FALSE, tmp_ch, 0, 0, TO_ROOM);
-	  }
+	  // either holding something metal or wearing a metal helmet. zzzap.
+	  act(fmt("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
+	      FALSE, tmp_ch, 0, 0, TO_CHAR);
+	  act("BZZZZZaaaaaappppp!!!!!",
+	      FALSE, tmp_ch, 0, 0, TO_CHAR);
+	  act(fmt("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
+	      FALSE, tmp_ch, 0, 0, TO_ROOM);
 	  
 	  // stolen from ego blast
 	  if (tmp_ch->reconcileDamage(tmp_ch, tmp_ch->getHit()/2, DAMAGE_ELECTRIC) == -1) {
@@ -812,8 +804,6 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	    continue;
 	  }
 	  tmp_ch->setMove(tmp_ch->getMove()/2);
-
-
 	}
 
       }
