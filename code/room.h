@@ -238,7 +238,7 @@ class TRoom : public TThing {
     void computeNewWeather();
     void saveItems(const sstring &);
     void loadItems();
-    weatherT getWeather();
+    weatherT getWeather() const;
     int outdoorLight();
     int outdoorLightWindow();
     bool putInDb(int vnum);
@@ -260,7 +260,7 @@ class TRoom : public TThing {
     void removeRoomFlagBit(unsigned int i) {
       roomFlags = roomFlags & ~i;
     }
-    bool isRoomFlag(unsigned int i) {
+    bool isRoomFlag(unsigned int i) const {
       return ((roomFlags & i) != 0);
     }
     void clearRiverFields() {
@@ -359,6 +359,7 @@ class TRoom : public TThing {
     bool notRangerLandSector() const;
 
     sectorTypeT getSectorType() const;
+    sectorTypeT getArcticSectorType() const;
     void setSectorType(sectorTypeT type);
     dirTypeT getRiverDir() const;
     byte getRiverSpeed() const;
@@ -388,7 +389,9 @@ class TRoom : public TThing {
     virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
     sstring describeGround() const;
-
+    sstring describeGroundWeather() const;
+    sstring describeGroundType() const;
+    
     void playsound(soundNumT, const sstring &, int = 100, int = 50, int = 1) const;
     void stopsound() const;
     int brightSunlight() { return getLight() > 20; }

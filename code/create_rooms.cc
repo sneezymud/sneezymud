@@ -3378,7 +3378,28 @@ TRoom *room_find_or_create(int key)
   return rv;
 }
 
-sstring TRoom::describeGround() const
+sstring TRoom::describeGroundWeather() const
+{
+  if(!isUnderwaterSector() && !isWaterSector() && 
+     getWeather() == WEATHER_SNOWY){
+    // non-water sector in the snow
+    return "<W>snow-covered<1>";
+  } else if(isArcticSector()){
+    // non-snowing arctic sector OR water sector
+    return "<W>icy<1>";
+  }
+
+  if(!isUnderwaterSector() && !isWaterSector() &&
+     !isSwampSector() && !isBeachSector() &&
+     getWeather() == WEATHER_RAINY){
+    // non-water/mud/sand sector in the rain
+    return "<B>rain-slick<1>";
+  }
+
+  return "";
+}
+
+sstring TRoom::describeGroundType() const
 {
   if (isUnderwaterSector())
     return "ocean floor";
@@ -3396,6 +3417,12 @@ sstring TRoom::describeGround() const
     return "floor";
   else
     return "ground";
+}
+
+sstring TRoom::describeGround() const
+{
+  return fmt("%s%s%s") % describeGroundWeather() % 
+    (describeGroundWeather().empty()?"":" ") % describeGroundType();
 }
 
 dirTypeT mapFileToDir(int num)

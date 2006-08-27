@@ -201,8 +201,9 @@ void TBeing::lookRoom()
     sendRoomDesc(roomp);
 
   describeWeather(in_room);	
+  describeGround();
   describeRoomLight();
-  //	doEvaluate("room");
+  //  doEvaluate("room");
   listExits(roomp);
 
   if (dynamic_cast<TPerson *>(this)) {

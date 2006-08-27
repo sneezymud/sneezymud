@@ -1084,6 +1084,7 @@ class TBeing : public TThing {
     void describeNoise(const TObj *, int) const;
     void describeArmor(const TBaseClothing *, int);
     void describeRoomLight();
+    void describeGround();
     void describeWeaponDamage(const TBaseWeapon *, int) const;
     void describeMagicLevel(const TMagicItem *, int) const;
     void describeMagicLearnedness(const TMagicItem *, int) const;

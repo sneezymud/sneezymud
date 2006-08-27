@@ -278,6 +278,49 @@ void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_
   }
 }
 
+// returns the wintery equivalent of the current sector, if there is one
+sectorTypeT TRoom::getArcticSectorType() const
+{
+  // don't use getSectorType() here, or you'll get into a loop
+  switch(sectorType){
+    case SECT_PLAINS:
+      return SECT_SUBARCTIC;
+    case SECT_TEMPERATE_CITY:
+      return SECT_ARCTIC_CITY;
+    case SECT_TEMPERATE_ROAD:
+      return SECT_ARCTIC_ROAD;
+    case SECT_GRASSLANDS:
+      return SECT_TUNDRA;
+    case SECT_TEMPERATE_HILLS:
+    case SECT_TEMPERATE_MOUNTAINS:
+      return SECT_ARCTIC_MOUNTAINS;
+    case SECT_TEMPERATE_FOREST:
+      return SECT_ARCTIC_FOREST;
+    case SECT_TEMPERATE_SWAMP:
+      return SECT_ARCTIC_MARSH;
+    case SECT_TEMPERATE_OCEAN:
+      return SECT_ICEFLOW;
+    case SECT_TEMPERATE_RIVER_SURFACE:
+      return SECT_ARCTIC_RIVER_SURFACE;
+    case SECT_TEMPERATE_UNDERWATER:
+      return SECT_SOLID_ICE;
+    case SECT_TEMPERATE_BEACH:
+      return SECT_COLD_BEACH;
+    case SECT_TEMPERATE_BUILDING:
+      return SECT_ARCTIC_BUILDING;
+    case SECT_TEMPERATE_CAVE:
+      return SECT_ARCTIC_CAVE;
+    case SECT_TEMPERATE_ATMOSPHERE:
+      return SECT_ARCTIC_ATMOSPHERE;
+    case SECT_TEMPERATE_CLIMBING:
+      return SECT_ARCTIC_CLIMBING;
+    case SECT_TEMPERATE_FOREST_ROAD:
+      return SECT_ARCTIC_FOREST_ROAD;
+    default:
+      return sectorType;
+  }
+}
+
 sectorTypeT TRoom::getSectorType() const
 {
   // it would be nice if this was non-const, and we could just call
@@ -295,6 +338,19 @@ sectorTypeT TRoom::getSectorType() const
       return SECT_FIRE_ATMOSPHERE;
     else
       return SECT_FIRE;
+  }
+
+  // this is a really, really stupid kluge to avoid getting into a loop,
+  // as getWeather() calls getSectorType().  this is a way of making that
+  // getWeather() call (and any sub-calls) to ignore this code.
+  static bool looped=false;
+  if(!looped){
+    looped=true;
+    if(getWeather() == WEATHER_SNOWY){
+      looped=false;
+      return getArcticSectorType();
+    }
+    looped=false;
   }
 
   return sectorType;

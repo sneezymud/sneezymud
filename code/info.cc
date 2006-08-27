@@ -4865,6 +4865,14 @@ void TBeing::describeRoomLight()
                            "<Y>bright as day<1>"))))))))));
 }
 
+void TBeing::describeGround()
+{
+  if(!roomp->describeGroundWeather().empty()){
+    sendTo(COLOR_BASIC, fmt("The %s is %s.\n\r") %
+	   roomp->describeGroundType() % roomp->describeGroundWeather());
+  }
+}
+
 void TBeing::describeBowRange(const TBow *obj, int learn)
 {
   if (!hasClass(CLASS_RANGER))

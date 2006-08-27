@@ -767,6 +767,58 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	continue;
       }
     }
+
+    // lightning strikes
+    if(pl.teleport){
+      if(!tmp_ch->roomp->isIndoorSector() &&
+	 !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
+	 tmp_ch->roomp->getWeather() == WEATHER_LIGHTNING){
+	TThing *eq=NULL;
+
+	if(tmp_ch->equipment[WEAR_HEAD] &&
+	   tmp_ch->equipment[WEAR_HEAD]->isMetal()){
+	  eq=tmp_ch->equipment[WEAR_HEAD];
+	} else if(tmp_ch->equipment[HOLD_RIGHT] &&
+		  tmp_ch->equipment[HOLD_RIGHT]->isMetal()){
+	  eq=tmp_ch->equipment[HOLD_RIGHT];
+	} else if(tmp_ch->equipment[HOLD_LEFT] &&
+		  tmp_ch->equipment[HOLD_LEFT]->isMetal()){
+	  eq=tmp_ch->equipment[HOLD_LEFT];
+	}
+
+	if(::number(0,4319)){
+	  // at this point, they're standing outside in a lightning storm,
+	  if(eq){
+	    // either holding something metal or wearing a metal helmet. zzzap.
+	    act(fmt("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
+		FALSE, tmp_ch, 0, 0, TO_CHAR);
+	    act("BZZZZZaaaaaappppp!!!!!",
+		FALSE, tmp_ch, 0, 0, TO_CHAR);
+	    act(fmt("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
+		FALSE, tmp_ch, 0, 0, TO_ROOM);
+	  } else {
+	    act("A bolt of lightning streaks down from the heavens and hits you!",
+		FALSE, tmp_ch, 0, 0, TO_CHAR);
+	    act("BZZZZZaaaaaappppp!!!!!",
+		FALSE, tmp_ch, 0, 0, TO_CHAR);
+	    act("A bolt of lightning streaks down from the heavens and hits $n!",
+		FALSE, tmp_ch, 0, 0, TO_ROOM);
+	  }
+	  
+	  // stolen from ego blast
+	  if (tmp_ch->reconcileDamage(tmp_ch, tmp_ch->getHit()/2, DAMAGE_ELECTRIC) == -1) {
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
+	  tmp_ch->setMove(tmp_ch->getMove()/2);
+
+
+	}
+
+      }
+    }
+
 	
     // check for vampires in daylight
     if(pl.teleport){

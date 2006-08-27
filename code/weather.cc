@@ -177,11 +177,11 @@ void anotherHour()
     time_info.minutes = 0;
 
     if (time_info.hours == 12)
-      sendToOutdoor(COLOR_NONE, "It is noon.\n\r","It is noon.\n\r");
+      sendToOutdoor(COLOR_BASIC, "<Y>It is noon.<1>\n\r","<Y>It is noon.<1>\n\r");
 
     // check for new day
     if (time_info.hours >= 24) {
-      sendToOutdoor(COLOR_NONE, "It is midnight.\n\r","It is midnight.\n\r");
+      sendToOutdoor(COLOR_BASIC, "<k>It is midnight.<1>\n\r","<k>It is midnight.<1>\n\r");
       time_info.day++;
       time_info.hours = 0;
 
@@ -545,7 +545,7 @@ void AlterWeather(changeWeatherT *change)
   ChangeWeather(*change);
 }
 
-weatherT TRoom::getWeather()
+weatherT TRoom::getWeather() const
 {
   if (isRoomFlag(ROOM_INDOORS))
     return WEATHER_NONE;
