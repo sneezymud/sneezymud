@@ -1932,6 +1932,7 @@ int TBeing::terrainSpecial()
       if (!num)
         num = 1;
     case SECT_ARCTIC_ROAD:
+    case SECT_ARCTIC_CITY:
       if (!num)
         num = 3;
     case SECT_ARCTIC_MOUNTAINS:
@@ -1955,8 +1956,9 @@ int TBeing::terrainSpecial()
       if (::number(0,num))
         break;
       act("A cold wind blows through, chilling you to the bone.",TRUE,this,0,0,TO_CHAR);
-// frostbite needs rethinking - bat 
-#if 0   
+      if (affectedBySpell(AFFECT_WAS_INDOORS) || 
+	  hasDisease(DISEASE_FROSTBITE))
+	return FALSE;  // make it only hit em if they sit outside for a while
       if (isImmune(IMMUNE_COLD, WEAR_BODY))
         break;
       if (dynamic_cast<TMonster *>(this))
@@ -1971,7 +1973,7 @@ int TBeing::terrainSpecial()
       af.bitvector = 0;
       affectTo(&af);
       disease_start(this, &af);
-#endif
+
       break;
     default:
       break;

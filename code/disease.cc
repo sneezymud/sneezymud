@@ -623,20 +623,32 @@ int disease_frostbite(TBeing *victim, int message, affectedData *)
 
   switch (message) {
     case DISEASE_PULSE:
+      if (number(0,50))
+        return FALSE;
+      
+      for (i = MIN_WEAR; i < MAX_WEAR; i++) {
+	if (victim->validEquipSlot(i) && !(victim->equipment[i]) && !number(0, 3)) {
+	  victim->hurtLimb(victim->getMaxLimbHealth((wearSlotT)i) /
+			   ::number(1,5), 
+			   (wearSlotT)i);
+	  sprintf(buf, "$n's %s takes on a gray-blue color as frost-bite sets in.", victim->describeBodySlot(i).c_str());
+	  act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+	  victim->sendTo(fmt("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r") % victim->describeBodySlot(i));
+	}
+      }
+      
       if (number(0,15))
         break;
       victim->doAction("", CMD_SHIVER);
       break;
     case DISEASE_BEGUN:
-	for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-	  if (victim->validEquipSlot(i) && !(victim->equipment[i]) && !number(0, 3)) {
-	    victim->addToLimbFlags(i, PART_USELESS);
-	    sprintf(buf, "$n's %s takes on a gray-blue color as frost-bite sets in.", victim->describeBodySlot(i).c_str());
-	    act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
-	    victim->sendTo(fmt("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r") % victim->describeBodySlot(i));
-	  }
-        }
-	break;
+      act("$n looks very cold and has begun shivering involuntarily.",
+	  FALSE, victim, NULL, NULL, TO_ROOM);
+      act("Frostbite will likely set in soon.", 
+	  FALSE, victim, NULL, NULL, TO_ROOM);
+      victim->sendTo("You are very cold and have begun shivering involuntarily.\n\r");
+      victim->sendTo("Frostbite will likely set in soon.\n\r");
+      break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
         act("$n still looks cold, but the shivering has stopped.", FALSE, victim, NULL, NULL, TO_ROOM);
