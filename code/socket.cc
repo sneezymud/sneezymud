@@ -787,7 +787,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	}
 
 
-	if(eq && ::number(0,4319)){
+	if(eq && !::number(0,4319)){
 	  // at this point, they're standing outside in a lightning storm,
 	  // either holding something metal or wearing a metal helmet. zzzap.
 	  act(fmt("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
