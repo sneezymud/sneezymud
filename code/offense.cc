@@ -14,6 +14,7 @@
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "obj_base_cup.h"
+#include "obj_pool.h"
 #include "obj_base_clothing.h"
 #include "obj_bag.h"
 #include "liquids.h"
@@ -1400,6 +1401,127 @@ int TBeing::flameEngulfed()
   return 1;
 }
 
+int TBeing::thawEngulfed()
+{
+  TThing *t, *t2;
+  TObj *obj = NULL;
+  int i;
+  int res = 0;
+
+  for (i = MIN_WEAR;i < MAX_WEAR;i++) {
+    if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t))) 
+      continue;
+    
+    res = obj->thawObject(this, 0);
+    if (IS_SET_DELETE(res, DELETE_THIS)) {
+      delete obj;
+      obj = NULL;
+    }
+    if (IS_SET_DELETE(res, DELETE_VICT))
+      return DELETE_THIS;
+  }
+  for (t = getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+    res = obj->thawObject(this, 0);
+    if (IS_SET_DELETE(res, DELETE_THIS)) {
+      delete obj;
+      obj = NULL;
+    }
+    if (IS_SET_DELETE(res, DELETE_VICT))
+      return DELETE_THIS;
+  }
+  return 1;
+}
+
+int TObj::thawObject(TBeing *ch, int perc)
+{
+
+  return FALSE;
+}
+
+int TBaseContainer::thawObject(TBeing *ch, int perc)
+{
+  if(roomp && roomp->isArcticSector())
+    return FALSE;
+
+  if(ch && ch->roomp && ch->roomp->isArcticSector())
+    return FALSE;
+
+  for (TThing *t = getStuff(); t; t = t->nextThing) {
+    TObj * tot = dynamic_cast<TObj *>(t);
+
+    if (tot) {
+      tot->thawObject(ch, perc);
+    }
+  }
+  
+  return FALSE;
+}
+
+int TBaseCup::thawObject(TBeing *ch, int perc)
+{
+  if(!isDrinkConFlag(DRINK_FROZEN))
+    return FALSE;
+
+  if(roomp && roomp->isArcticSector())
+    return FALSE;
+  
+  if(ch && ch->roomp && ch->roomp->isArcticSector())
+    return FALSE;
+
+  // do recursive stuff first
+  int rc = TObj::thawObject(ch, perc);
+  if (IS_SET_DELETE(rc, DELETE_THIS | DELETE_VICT))
+    return rc;
+
+  if (ch) {
+    act(fmt("The warmth causes the %s in your $o to thaw.") %
+	liquidInfo[getDrinkType()]->name,
+	TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
+  } else {
+    act(fmt("The warmth causes the %s in $n to thaw.") %
+	liquidInfo[getDrinkType()]->name,
+	TRUE,this,0,0,TO_ROOM);
+  }
+  remDrinkConFlags(DRINK_FROZEN);
+
+  return FALSE;
+}
+
+int TPool::thawObject(TBeing *ch, int perc)
+{
+  if(!isDrinkConFlag(DRINK_FROZEN))
+    return FALSE;
+
+  if(roomp && roomp->isArcticSector())
+    return FALSE;
+  
+  if(ch && ch->roomp && ch->roomp->isArcticSector())
+    return FALSE;
+
+  // do recursive stuff first
+  int rc = TBaseCup::thawObject(ch, perc);
+  if (IS_SET_DELETE(rc, DELETE_THIS | DELETE_VICT))
+    return rc;
+
+
+  updateDesc();
+  if(ch){
+    // if it's in a bag or something, put it in inventory so they can drop it
+    --(*this);
+    *ch += *this;
+    ch->doDrop("", this, true);
+  }
+
+  return FALSE;
+}
+
+
+
 // return DELETE_THIS
 // return FALSE if item avoided frost, true otherwise
 // return DELETE_VICT if ch should be deleted
@@ -1486,6 +1608,27 @@ int TObj::freezeObject(TBeing *ch, int perc)
   return FALSE;
 }
 
+int TPool::freezeObject(TBeing *ch, int perc)
+{
+  if(isDrinkConFlag(DRINK_FROZEN))
+    return FALSE;
+  addDrinkConFlags(DRINK_FROZEN);
+
+  if (ch) {
+    act(fmt("The chill causes the %s in your $o to freeze.") %
+	liquidInfo[getDrinkType()]->name,
+	TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
+  } else {
+    act(fmt("The chill causes the %s in $n to freeze.") %
+	liquidInfo[getDrinkType()]->name,
+	TRUE,this,0,0,TO_ROOM);
+  }
+
+  updateDesc();
+
+  return FALSE;
+}
+
 int TBaseCup::freezeObject(TBeing *ch, int perc)
 {
   // do recursive stuff first
@@ -1493,26 +1636,49 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
   if (IS_SET_DELETE(rc, DELETE_THIS | DELETE_VICT))
     return rc;
   
-  // more than 1/2 full
-  if (2 * getDrinkUnits() >= getMaxDrinkUnits()) {
-    char buf [256];
-    if (ch) {
-      sprintf(buf, "The chill causes the %s in your $o to freeze.",
-           liquidInfo[getDrinkType()]->name);
-      act(buf,TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
-      act("$p is damaged serverely by the expanding ice!",TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
-    } else {
-      sprintf(buf, "The chill causes the %s in $n to freeze.",
-           liquidInfo[getDrinkType()]->name);
-      act(buf,TRUE,this,0,0,TO_ROOM);
-      act("$n is damaged serverely by the expanding ice!",TRUE,this,0,0,TO_ROOM);
-    }
+  char buf [256];
+  bool damage=false;
 
+  if(isDrinkConFlag(DRINK_FROZEN))
+    return FALSE;
+  
+  // figure anything that can compact can also expand a bit
+  // a glass bottle can't compact/expand, a leather waterskin can
+  // also, room to expand if it's less than half full
+  // and, only take damage if less than or as hard as glass, so things like
+  // a steel thermos wouldn't crack (neither would plastic, as it can stretch)
+  if((material_nums[getMaterial()].vol_mult <= 1) &&
+     (material_nums[getMaterial()].hardness <= 
+      material_nums[MAT_GLASS].hardness) &&
+     (2 * getDrinkUnits() >= getMaxDrinkUnits()))
+    damage=true;
+
+  addDrinkConFlags(DRINK_FROZEN);
+  
+  if (ch) {
+    sprintf(buf, "The chill causes the %s in your $o to freeze.",
+	    liquidInfo[getDrinkType()]->name);
+    act(buf,TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
+    
+    if(damage)
+      act("$p is damaged severely by the expanding ice!",
+	  TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
+  } else {
+    sprintf(buf, "The chill causes the %s in $n to freeze.",
+	    liquidInfo[getDrinkType()]->name);
+    act(buf,TRUE,this,0,0,TO_ROOM);
+    
+    if(damage)
+      act("$n is damaged severely by the expanding ice!",
+	  TRUE,this,0,0,TO_ROOM);
+  }
+  
+  if(damage){
     if(IS_SET_DELETE(damageItem(::number(1,12)), DELETE_THIS)){
       if (ch) {
-        act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
+	act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
       } else {
-        act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
+	act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
       }
       return DELETE_THIS;
     }

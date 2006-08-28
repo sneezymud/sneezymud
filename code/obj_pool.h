@@ -21,6 +21,8 @@ class TPool : public TBaseCup {
     virtual void setDrinkType(liqTypeT);
     virtual void weightChangeObject(float);
     virtual void peeMe(const TBeing *, liqTypeT);
+    virtual int freezeObject(TBeing *, int);
+    virtual int thawObject(TBeing *, int);
     virtual bool isPluralItem() const;
     virtual itemTypeT itemType() const { return ITEM_POOL; }
 

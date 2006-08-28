@@ -1187,6 +1187,7 @@ class TBeing : public TThing {
     int flameEngulfed();
     int frostEngulfed();
     int acidEngulfed();
+    int thawEngulfed();
     int lightningEngulfed();
     int chlorineEngulfed();
     void flameRoom();

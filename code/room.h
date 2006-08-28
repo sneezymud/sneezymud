@@ -222,6 +222,7 @@ class TRoom : public TThing {
     void setDescr(const char *);
     const char * getDescr();
 
+    int dropPool(int, liqTypeT);
     void flameRoom();
     virtual int chiMe(TBeing *);
     int checkPointroll();

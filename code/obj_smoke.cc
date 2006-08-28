@@ -307,7 +307,7 @@ int TThing::dropSmoke(int amt)
       return FALSE;
     }
     smoke->swapToStrung();
-    smoke->remObjStat(ITEM_TAKE);
+    REMOVE_BIT(smoke->obj_flags.wear_flags, ITEM_TAKE);
     smoke->canBeSeen = 1;
     smoke->setMaterial(MAT_GHOSTLY);
 

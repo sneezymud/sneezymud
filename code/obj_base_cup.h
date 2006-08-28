@@ -33,6 +33,7 @@ class TBaseCup : public TObj {
     virtual int chiMe(TBeing *);
     virtual bool poisonObject();
     virtual int freezeObject(TBeing *, int);
+    virtual int thawObject(TBeing *, int);
     virtual void nukeFood();
     virtual int drinkMe(TBeing *);
     virtual int quaffMe(TBeing *);

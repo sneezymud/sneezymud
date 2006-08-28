@@ -43,9 +43,12 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
 #include "obj_trash_pile.h"
+#include "obj_base_cup.h"
 #include "pathfinder.h"
 #include "timing.h"
 #include "process.h"
+#include "liquids.h"
+#include "obj_pool.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -768,6 +771,11 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
+    // thawing
+    if(pl.pulse_tick){
+      tmp_ch->thawEngulfed();
+    }
+
     // lightning strikes
     if(pl.teleport){
       if(!tmp_ch->roomp->isIndoorSector() &&
@@ -1002,7 +1010,10 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
     // end 12 pulse
 
     if (pl.special_procs) { // 36
+      // sinking
       check_sinking_obj(obj, obj->in_room);
+
+      // procs
       if (obj->spec) {
 	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
 	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1015,6 +1026,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	}
       }
 
+      // burning
       rc = obj->updateBurning();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	delete obj;
@@ -1052,6 +1064,52 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	
 
     }
+
+    if(pl.pulse_tick){
+      // freezing
+      // find base cups that are either in an arctic room, or in the inventory
+      // of a being in an arctic room, with < 10 drunk
+      // note we're avoid frostEngulfed() because it is a bit extreme for this
+      // thawing is done with thawEngulfed() in characterPulse
+      TBaseCup *cup=dynamic_cast<TBaseCup *>(obj);
+      if(cup){
+	TRoom *r=NULL;
+	TThing *t;
+	TBeing *ch=NULL;
+	
+	if((t = cup->equippedBy) || (t = cup->parent)){
+	  ch = dynamic_cast<TBeing *>(t);
+	  if(ch)
+	    r=ch->roomp;
+	} else
+	  r = cup->roomp;
+	
+	if(r){
+	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
+	     cup->getLiqDrunk() < 10 && !cup->isDrinkConFlag(DRINK_FROZEN)){
+	    int rc=cup->freezeObject(ch, 0);
+	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	      delete cup;
+	      cup = NULL;
+	      continue;
+	    }
+	    
+	    // freeze any pools that were dropped
+	    for(t=r->getStuff();t;t=t->nextThing){
+	      if(dynamic_cast<TPool *>(t))
+		dynamic_cast<TPool *>(t)->freezeObject(ch, 0);
+	    }
+	  }
+	}
+	
+	if(cup->roomp && !cup->roomp->isArcticSector() &&
+	   cup->isDrinkConFlag(DRINK_FROZEN)){
+	  cup->thawObject(ch, 0);
+	}
+      }
+
+    }
+
 
     if (pl.pulse_mudhour) { // 1440
       rc = obj->objectTickUpdate(realpulse);

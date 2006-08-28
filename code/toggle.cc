@@ -342,10 +342,10 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
       if((sstring)pcorpse->name == fmt("corpse %s pcorpse") % name){
 	if(!lootable){
 	  pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
-	  pcorpse->remObjStat(ITEM_TAKE);
+	  REMOVE_BIT(pcorpse->obj_flags.wear_flags, ITEM_TAKE);
 	} else {
 	  pcorpse->remCorpseFlag(CORPSE_DENY_LOOT);
-	  pcorpse->addObjStat(ITEM_TAKE);
+	  SET_BIT(pcorpse->obj_flags.wear_flags, ITEM_TAKE);
 	}
       }
     }

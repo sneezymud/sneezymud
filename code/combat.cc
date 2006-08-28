@@ -1091,6 +1091,8 @@ void TObj::scrapMonogrammed()
   if(tbc){
     if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
       cht->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
+    } else if(roomp){
+      roomp->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
     }
   }
 
@@ -1198,6 +1200,8 @@ void TObj::makeScraps()
   if(tbc){
     if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
       cht->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
+    } else if(roomp){
+      roomp->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
     }
   }
 

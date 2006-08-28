@@ -4174,7 +4174,10 @@ void TThing::describeContains(const TBeing *ch) const
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s liquid in it...\n\r") % sstring(getName()).cap() % liquidInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s%s liquid in it...\n\r") % 
+	       sstring(getName()).cap() % 
+	       (isDrinkConFlag(DRINK_FROZEN)?"<C>frozen<1> ":"") % 
+	       liquidInfo[getDrinkType()]->color);
 }
 
 void TFood::describeCondition(const TBeing *ch) const

@@ -138,6 +138,11 @@ int TBaseCup::drinkMe(TBeing *ch)
     ch->sendTo("You decide to skip this drink until you feel better.\n\r");
     return FALSE;
   }
+  if(isDrinkConFlag(DRINK_FROZEN)){
+    act("It's frozen solid, you can't drink from it.",
+	FALSE, ch, 0, 0, TO_CHAR);
+    return FALSE;
+  }
   if (getDrinkUnits() <= 0) {
     act("It's empty already.", FALSE, ch, 0, 0, TO_CHAR);
     return FALSE;
@@ -488,6 +493,11 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
     return;
   }
 
+  if(from_obj->isDrinkConFlag(DRINK_FROZEN)){
+    act("$p is frozen solid.", FALSE, ch, from_obj, 0, TO_CHAR);
+    return;
+  }
+
   if ((getDrinkUnits() != 0) &&
       (getDrinkType() != from_obj->getDrinkType())) {
     act("There is already another liquid in it!", FALSE, ch, 0, 0, TO_CHAR);
@@ -588,6 +598,10 @@ void TBaseCup::sipMe(TBeing *ch)
   if (ch->getCond(DRUNK) > 10) {    /* The pig is drunk ! */
     act("You simply fail to reach your mouth!", FALSE, ch, 0, 0, TO_CHAR);
     act("$n tries to sip, but fails!", TRUE, ch, 0, 0, TO_ROOM);
+    return;
+  }
+  if(isDrinkConFlag(DRINK_FROZEN)){
+    act("It's frozen solid, you can't sip it.", FALSE, ch, 0, 0, TO_CHAR);
     return;
   }
   if (!getDrinkUnits()) {

@@ -387,6 +387,7 @@ const liqTypeT MIN_DRINK_TYPES = liqTypeT(0);
 const unsigned int DRINK_POISON  = (1<<0);
 const unsigned int DRINK_PERM    = (1<<1);
 const unsigned int DRINK_SPILL   = (1<<2);
+const unsigned int DRINK_FROZEN  = (1<<3);
 
 /* special addition for drinks */
 const unsigned int FOOD_POISON   = (1<<0);
@@ -690,6 +691,7 @@ class TObj : public TThing {
     int burnObject(TBeing *, int);
     int meltObject(TBeing *, int);
     int freezeObject(TBeing *, int);
+    virtual int thawObject(TBeing *, int);
     virtual bool isRentable() const;
     virtual void peeMe(const TBeing *, liqTypeT);
     virtual bool engraveMe(TBeing *, TMonster *, bool);

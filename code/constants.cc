@@ -366,7 +366,7 @@ void assign_item_info()
      "Max drink units   (1 drink unit = 1.0 fl.oz., 1 gallon = 128 units)", 2560, 0,
      "Number of units left", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
-     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable, 8 = Frozen", 7, 0);
   ItemInfo[ITEM_KEY] = new itemInfo("Key","some sort of key",
      "unused?", 4, 0,
      "Unused", 0, 0,
@@ -511,7 +511,7 @@ void assign_item_info()
      "Max liquid units", 3000, 0,
      "Number of units left", 3000, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
-     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable, 8 = Frozen", 7, 0);
   ItemInfo[ITEM_PCORPSE] = new itemInfo("Player Corpse","a player's dead body",
      "Flags", 1<<MAX_CORPSE_FLAGS - 1, 0,
      "Former Race", MAX_RACIAL_TYPES -1, 1,
@@ -597,12 +597,12 @@ void assign_item_info()
      "Max drink units ", 2560, 0,
      "Number of units left", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
-     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable, 8 = Frozen", 7, 0);
   ItemInfo[ITEM_POISON] = new itemInfo("Poison","a poison container",
      "Max drink units ", 2560, 0,
      "Number of units left", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
-     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable, 8 = Frozen", 7, 0);
   ItemInfo[ITEM_HANDGONNE] = new itemInfo("Handgonne","a handgonne",
 				    "Rate of fire", 1, 1,
 				    "Damage Level * 4 and Damage Precision", 10000, 0,

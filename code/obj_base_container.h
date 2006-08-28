@@ -36,6 +36,8 @@ class TBaseContainer : public TObj {
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
     virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
+    virtual int thawObject(TBeing *, int perc);
+
 
     int isSaddle() const;
 
