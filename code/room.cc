@@ -282,7 +282,7 @@ void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_
 sectorTypeT TRoom::getArcticSectorType() const
 {
   // don't use getSectorType() here, or you'll get into a loop
-  switch(sectorType){
+  switch(getSectorType()){
     case SECT_PLAINS:
       return SECT_SUBARCTIC;
     case SECT_TEMPERATE_CITY:
@@ -317,7 +317,7 @@ sectorTypeT TRoom::getArcticSectorType() const
     case SECT_TEMPERATE_FOREST_ROAD:
       return SECT_ARCTIC_FOREST_ROAD;
     default:
-      return sectorType;
+      return getSectorType();
   }
 }
 
@@ -326,6 +326,22 @@ sectorTypeT TRoom::getSectorType() const
   // it would be nice if this was non-const, and we could just call
   // some function like "makeRiver()", so we could get tropical/arctic
   // rivers and so on.  we'll have to settle for this for now.
+
+  // this is a really, really stupid kluge to avoid getting into a loop,
+  // as getWeather() calls getSectorType().  this is a way of making that
+  // getWeather() call (and any sub-calls) to ignore this code.
+  static bool looped=false;
+  if(!looped){
+    vlogf(LOG_PEEL, "inside looped");
+    looped=true;
+    if(getWeather() == WEATHER_SNOWY){
+      vlogf(LOG_PEEL, "inside getweather");
+      sectorTypeT sec=getArcticSectorType();
+      looped=false;
+      return sec;
+    }
+    looped=false;
+  }
 
   if((roomFlags & ROOM_FLOODED) != 0)
     return SECT_TEMPERATE_RIVER_SURFACE;
@@ -340,18 +356,6 @@ sectorTypeT TRoom::getSectorType() const
       return SECT_FIRE;
   }
 
-  // this is a really, really stupid kluge to avoid getting into a loop,
-  // as getWeather() calls getSectorType().  this is a way of making that
-  // getWeather() call (and any sub-calls) to ignore this code.
-  static bool looped=false;
-  if(!looped){
-    looped=true;
-    if(getWeather() == WEATHER_SNOWY){
-      looped=false;
-      return getArcticSectorType();
-    }
-    looped=false;
-  }
 
   return sectorType;
 }
