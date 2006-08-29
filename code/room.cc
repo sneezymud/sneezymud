@@ -332,10 +332,8 @@ sectorTypeT TRoom::getSectorType() const
   // getWeather() call (and any sub-calls) to ignore this code.
   static bool looped=false;
   if(!looped){
-    vlogf(LOG_PEEL, "inside looped");
     looped=true;
     if(getWeather() == WEATHER_SNOWY){
-      vlogf(LOG_PEEL, "inside getweather");
       sectorTypeT sec=getArcticSectorType();
       looped=false;
       return sec;
