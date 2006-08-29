@@ -196,6 +196,7 @@ void TBaseCup::pourMeOut(TBeing *ch)
   if(isDrinkConFlag(DRINK_FROZEN)){
     act("$p is frozen solid, you can't get it out.",
 	FALSE, ch, this, 0, TO_CHAR);
+    return;
   }
 
   act("$n empties $p.", TRUE, ch, this, 0, TO_ROOM);

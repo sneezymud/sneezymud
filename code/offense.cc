@@ -1653,6 +1653,10 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
      (2 * getDrinkUnits() >= getMaxDrinkUnits()))
     damage=true;
 
+  if (::number(1,100) > perc)
+    damage=false;
+
+
   addDrinkConFlags(DRINK_FROZEN);
   
   if (ch) {
