@@ -1458,7 +1458,7 @@ int TBaseContainer::thawObject(TBeing *ch, int perc)
       tot->thawObject(ch, perc);
     }
   }
-  
+
   return FALSE;
 }
 
@@ -1488,6 +1488,8 @@ int TBaseCup::thawObject(TBeing *ch, int perc)
 	TRUE,this,0,0,TO_ROOM);
   }
   remDrinkConFlags(DRINK_FROZEN);
+
+  updateDesc();
 
   return FALSE;
 }
@@ -1658,6 +1660,7 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
 
 
   addDrinkConFlags(DRINK_FROZEN);
+  updateDesc();
   
   if (ch) {
     sprintf(buf, "The chill causes the %s in your $o to freeze.",
@@ -1687,6 +1690,7 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
       return DELETE_THIS;
     }
   }
+
   return FALSE;
 }
 

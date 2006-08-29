@@ -418,6 +418,9 @@ void TBaseCup::updateDesc()
 
   if(getDrinkUnits()<=0){
     liquid="empty";
+  } else if(isDrinkConFlag(DRINK_FROZEN)){
+    liquid = fmt("<C>frozen<1> %s") % liquidInfo[getDrinkType()]->color;
+  } else {
     liquid=liquidInfo[getDrinkType()]->color;
   }
 
