@@ -5,5 +5,7 @@ CREATE TABLE player (
     title varchar(80),
     account_id integer,
     guild_id integer,
-    guildrank integer
+    guildrank integer,
+    load_room integer,
+    last_logon integer
 );
