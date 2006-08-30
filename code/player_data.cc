@@ -918,8 +918,8 @@ void TBeing::saveChar(int load_room)
   Descriptor *mydesc=tmp?tmp->desc:desc;
     
   if(!isImmortal()){
-    db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id, p.load_room=%i where p.id=%i and a.name='%s'",
-	     st.money, load_room,
+    db.query("update player p, account a set p.talens=%i, p.account_id=a.account_id, p.load_room=%i, p.last_logon=%i where p.id=%i and a.name='%s'",
+	     st.money, load_room, st.last_logon,
 	     getPlayerID(), mydesc->account->name.c_str());
     st.load_room=0;
   }
