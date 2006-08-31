@@ -1956,6 +1956,7 @@ int TBeing::terrainSpecial()
       if (::number(0,num))
         break;
       act("A cold wind blows through, chilling you to the bone.",TRUE,this,0,0,TO_CHAR);
+#if 0
       if (affectedBySpell(AFFECT_WAS_INDOORS) || 
 	  hasDisease(DISEASE_FROSTBITE))
 	return FALSE;  // make it only hit em if they sit outside for a while
@@ -1973,7 +1974,7 @@ int TBeing::terrainSpecial()
       af.bitvector = 0;
       affectTo(&af);
       disease_start(this, &af);
-
+#endif
       break;
     default:
       break;
