@@ -1462,7 +1462,8 @@ void TBeing::setSexUnsafe(int sex)
 // did they choose the pk option when creating etc
 bool TBeing::isPkChar() const
 {
-  if(GetMaxLevel() >= MAX_NEWBIE_LEVEL && hasQuestBit(TOG_IS_PK_CHAR))
+  if((GetMaxLevel() >= MAX_NEWBIE_LEVEL && hasQuestBit(TOG_IS_PK_CHAR)) ||
+     isPlayerAction(PLR_KILLABLE))
     return true;
   else
     return false;
