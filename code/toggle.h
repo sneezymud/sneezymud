@@ -484,7 +484,9 @@ const int TOG_PEGLEG_L                         = 303;
 const int TOG_HOOK_HAND_R                      = 304;
 const int TOG_HOOK_HAND_L                      = 305;
 
-const int MAX_TOG_INDEX       = 306;  // move and change
+const int TOG_KILLED_PALADIN                   = 306;
+
+const int MAX_TOG_INDEX       = 307;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

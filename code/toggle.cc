@@ -319,6 +319,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Has Left Pegleg", MOB_NONE},
   {"Has Right Hook Hand", MOB_NONE},
   {"Has Left Hook Hand", MOB_NONE},
+  {"Cyclops Camp Quest: killed paladin", MOB_NONE},
   {"", MOB_NONE}, 
 };
 
