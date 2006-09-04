@@ -5695,9 +5695,26 @@ int regeneration(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return FALSE;
 }
 
+int stickerBush(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if (cmd != CMD_OBJ_MOVEMENT)
+    return FALSE;
+
+  act("You get scratched up by $p.", TRUE, ch, o, 0, TO_CHAR);
+  act("$n gets scratched up by $p.", TRUE, ch, o, 0, TO_ROOM);
+
+  int rc = ch->reconcileDamage(ch, ::number(1,3), DAMAGE_NORMAL);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+
+  return TRUE;
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 
+extern int stickerBush(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int ballotBox(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponBlinder(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -5902,7 +5919,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "graffiti maker", graffitiMaker}, // 135
   {FALSE, "graffiti object", graffitiObject},
   {FALSE, "statue arm twist", statueArmTwist},
-  {FALSE, "BOGUS", bogusObjProc},
+  {FALSE, "sticker bush", stickerBush},
   {FALSE, "switch object", switchObject},
   {FALSE, "gnome tenderizer", gnomeTenderizer}, // 140
   {FALSE, "Marukalia", marukalia},
