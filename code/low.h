@@ -410,6 +410,7 @@ const int MOB_ELRIC = 31313;
 const int MOB_SPIRIT_FATHER = 31314;
 const int MOB_GANDOLFO = 31315;
 const int MOB_STRANGE_LIZARD = 31316;
+const int MOB_ENSLAVED_PALADIN = 33805;
 #endif
 
 

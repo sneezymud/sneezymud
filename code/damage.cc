@@ -545,6 +545,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         vlogf(LOG_MISC, fmt("Removing combat bit (%d) from: %s") %  af->level % v->getName());
         v->affectRemove(af);
         switch (questmob) {
+	  case MOB_ENSLAVED_PALADIN:
+	    setQuestBit(TOG_KILLED_PALADIN);
+	    break;
           case MOB_TROLL_GIANT:
             setQuestBit(TOG_AVENGER_SOLO);
             remQuestBit(TOG_AVENGER_HUNTING);
