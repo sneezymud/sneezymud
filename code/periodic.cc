@@ -1798,7 +1798,7 @@ int TObj::updateBurning(void)
 			       material_nums[getMaterial()].flammability);
     burnamount=max(1, burnamount);
 
-    if((t = equippedBy) || (t = parent)){
+    if((t = equippedBy) || (t = parent) || (t = stuckIn)){
       ch = dynamic_cast<TBeing *>(t);
     } else
       ch = NULL;
@@ -1851,7 +1851,7 @@ int TObj::updateBurning(void)
 	break;
     }
 
-    if(equippedBy && ch){
+    if((equippedBy || stuckIn) && ch){
       act("Your $o burns you!",
 	  FALSE, ch, this, 0, TO_CHAR);
       ch->reconcileDamage(ch, ::number(1,7), DAMAGE_FIRE);
