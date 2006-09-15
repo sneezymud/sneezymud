@@ -83,10 +83,8 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
   static struct timeval null_time;
   Descriptor *point;
   static bool been_called = false;
+  static sigset_t mask;
 
-#ifndef SOLARIS
-  static int mask;
-#endif
 
   if (!been_called) {
     // prepare the time values 
@@ -99,15 +97,16 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 
     avail_descs = 150;
 
-#ifndef SOLARIS
-    mask = sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
-// blah, trapping PROF PREVENTS the timing signals from working!
-//        sigmask(SIGPROF) |  // needed for profile code
-// sigmask(SIGALRM) |
-        sigmask(SIGPIPE) | sigmask(SIGTERM) |
-        sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
-#endif
-
+    sigaddset(&mask, SIGUSR1);
+    sigaddset(&mask, SIGUSR2);
+    sigaddset(&mask, SIGINT);
+    sigaddset(&mask, SIGPIPE);
+    sigaddset(&mask, SIGTERM);
+    sigaddset(&mask, SIGURG);
+    sigaddset(&mask, SIGXCPU);
+    sigaddset(&mask, SIGHUP);
+    // don't trap SIG_PROF, it is needed for debugging.
+    
     been_called = true;
   }
 
@@ -125,9 +124,9 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
     FD_SET(point->socket->m_sock, &output_set);
   }
 
-#ifndef SOLARIS
-  sigsetmask(mask);
-#endif
+
+  sigprocmask(SIG_SETMASK, &mask, NULL);
+  
 #ifdef LINUX
   // linux uses a nonstandard style of "timedout" (the last parm of select)
   // it gets hosed each select() so must be reinited here
@@ -140,9 +139,8 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
   }
 
 
-#ifndef SOLARIS
-  sigsetmask(0);
-#endif
+  sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
 
   // establish any new connections 
   for(unsigned int i=0;i<m_sock.size();++i){
@@ -385,15 +383,22 @@ struct timeval TMainSocket::handleTimeAndSockets()
   static struct timeval last_time;
   struct timeval now, timespent, timeout, null_time, opt_time;
   Descriptor *point;
+  static sigset_t mask;
 
   null_time.tv_sec = 0;
   null_time.tv_usec = 0;
   opt_time.tv_usec = OPT_USEC;
   opt_time.tv_sec = 0;
   
-  int mask = sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
-    sigmask(SIGPIPE) | sigmask(SIGTERM) |
-    sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
+  sigaddset(&mask, SIGUSR1);
+  sigaddset(&mask, SIGUSR2);
+  sigaddset(&mask, SIGINT);
+  sigaddset(&mask, SIGPIPE);
+  sigaddset(&mask, SIGTERM);
+  sigaddset(&mask, SIGURG);
+  sigaddset(&mask, SIGXCPU);
+  sigaddset(&mask, SIGHUP);
+  // don't trap SIG_PROF, it is needed for debugging.
 
   ////////////////////////////////////////////
   // do some socket stuff or something
@@ -430,8 +435,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
     last_time.tv_sec++;
   }
 
-  sigsetmask(mask);
-
+  sigprocmask(SIG_SETMASK, &mask, NULL);
 
   // this gets our list of socket connections that are ready for handling
   if(select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0){
@@ -444,7 +448,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
     perror("Error in select (sleep)");
   }
 
-  sigsetmask(0);
+  sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
   ////////////////////////////////////////////
   ////////////////////////////////////////////
