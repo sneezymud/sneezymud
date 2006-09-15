@@ -2646,7 +2646,10 @@ void TBeing::doEquipment(const sstring &arg)
         }
       } else if(tattoos[j]!=""){
 	sstring slot = describeEquipmentSlot(j);
-	buf=fmt("<%s>") % (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed") : slot);
+	buf=fmt("<%s>") % 
+	  (slot.find("Worn") != sstring::npos ? 
+	   (sstring)slot.replace(slot.find("Worn"),4,"Tattooed") : 
+	   slot);
 	sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 	sendTo(COLOR_BASIC, tattoos[j]);
 	sendTo("\n\r");
@@ -2687,7 +2690,10 @@ void TBeing::doEquipment(const sstring &arg)
           }
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
-	  buf=fmt("<%s>") % (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed") : slot);
+	  buf=fmt("<%s>") % 
+	    (slot.find("Worn") != sstring::npos ? 
+	     (sstring)slot.replace(slot.find("Worn"),4,"Tattooed") : 
+	     slot);
 	  sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
