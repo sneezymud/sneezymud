@@ -1941,7 +1941,7 @@ void TPCorpse::addCorpseToLists()
 
 void TBeing::assignCorpsesToRooms() 
 {
-  #if 1 
+#if 1 
   TRoom *rp = NULL, *rp2 = NULL;
   TThing *tmp;
   TPCorpse *corpse = NULL;

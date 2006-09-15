@@ -331,10 +331,10 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         
       Hf = tbt->getHit();
   
-    #if 0
+#if 0
         vlogf(LOG_MAROR, fmt("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
             Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
-    #endif
+#endif
       return TRUE; 
     }
   }
