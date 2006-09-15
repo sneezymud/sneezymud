@@ -239,7 +239,7 @@ extern int strncasecmp(char *, char *, int);
 
 #ifndef _CRYPT_H
 #if defined(LINUX) || defined(SUN) || defined(SOLARIS)
-extern char *crypt(const char *, const char *);
+extern char *crypt(const char *, const char *) throw();
 #endif
 #endif
 
