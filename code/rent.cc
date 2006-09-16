@@ -543,8 +543,9 @@ bool ItemLoad::openFile(const sstring &filepath)
 bool ItemLoad::fileExists(const sstring &filepath)
 {
   int ret;
+  struct stat buf;
 
-  ret=stat(filepath.c_str(), NULL);
+  ret=stat(filepath.c_str(), &buf);
 
   if(ret==-1 and errno==ENOENT)
     return false;
