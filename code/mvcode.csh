@@ -1,48 +1,48 @@
-#!/bin/csh
+#!/bin/bash
 
-set CODE_MUD_ROOT = "/mud/build"
-set PROD_MUD_ROOT = "/mud/prod"
+CODE_MUD_ROOT="/mud/build"
+PROD_MUD_ROOT="/mud/prod"
 
-if (0) then
+if false; then
 echo "code move aborted at request of Lapsos"
 echo "Making changes to the show system, not usable atm."
 exit
-endif
+fi
 
-if (0) then
+if false; then
 echo "Please don't move code, working on some things, Brutius"
 exit
-endif
+fi
 
-if (0) then
+if false; then
 echo "The v5.0 mud is in a frozen state."
 echo "moving into beta v5.1 environment."
 set PROD_MUD_ROOT = "/mud/5.1"
-endif
+fi
 
-if (0) then
+if false; then
 echo "code move aborted at request of Batopr"
 echo untested code
 echo Messing with pet definitions
 exit
-endif
+fi
 
-if (0) then
+if false; then
 echo "code move aborted at request of Cosmo"
 echo "Just need to test some of my code. "
-echo "My code should not cause a problem so move despite this block.
+echo "My code should not cause a problem so move despite this block."
 echo "in case of emergency"
 exit
-endif
+fi
 
-if (0) then
+if false; then
 echo "code move aborted at request of Peel"
 echo "need to test after compile"
 echo "probably crashy"
 exit
-endif
+fi
 
-if (1) then
+if true; then
 echo "moving code to production"
 
 # copy the latest executable
@@ -59,4 +59,4 @@ cp -p $CODE_MUD_ROOT/lib/txt/wiznews.new $PROD_MUD_ROOT/lib/txt/wiznews.new
 rm $PROD_MUD_ROOT/lib/txt/version.new
 cp -p $CODE_MUD_ROOT/lib/txt/version.new $PROD_MUD_ROOT/lib/txt/version.new
 
-endif
+fi
