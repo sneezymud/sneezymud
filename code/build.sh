@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 whoami=`whoami`
 
@@ -8,7 +8,7 @@ then
   if [ "$pid" == "" ]
   then
     echo "Starting make, output to file.mak.";
-    (gmake -k -j 2 -l 3 libs && gmake exe) >& file.mak &
+    (gmake -k -j 1 -l 3 libs && gmake exe) >& file.mak &
   else
     echo "You are already running make."
   fi
