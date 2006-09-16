@@ -87,6 +87,7 @@ enum dbTypeT {
 
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
+const sstring dbhost="192.168.100.103";
 
 
 class TDatabase
@@ -135,7 +136,7 @@ class TDatabaseConnection
       sneezydb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL, 
+      if(!mysql_real_connect(sneezydb, dbhost.c_str(), "sneezy", NULL, 
 			     dbconnectstr, 0, NULL, 0)){
 	vlogf(LOG_DB, fmt("Could not connect to database '%s'.") %
 	      dbconnectstr);
@@ -154,7 +155,7 @@ class TDatabaseConnection
       sneezyproddb=mysql_init(NULL);
 
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezyproddb, NULL, "sneezy", NULL,
+      if(!mysql_real_connect(sneezyproddb, dbhost.c_str(), "sneezy", NULL,
                              "sneezy", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'sneezy'.");
 	return NULL;
@@ -170,7 +171,7 @@ class TDatabaseConnection
       sneezybetadb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezybetadb, NULL, "sneezy", NULL,
+      if(!mysql_real_connect(sneezybetadb, dbhost.c_str(), "sneezy", NULL,
                              "sneezybeta", 0, NULL, 0)){
       	vlogf(LOG_DB, "Could not connect to database 'sneezybeta'.");
 	return NULL;
@@ -187,7 +188,7 @@ class TDatabaseConnection
       immodb=mysql_init(NULL);
 
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(immodb, NULL, "sneezy", NULL,
+      if(!mysql_real_connect(immodb, dbhost.c_str(), "sneezy", NULL,
                              "immortal", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'immortal'.");
 	return NULL;
@@ -203,7 +204,7 @@ class TDatabaseConnection
       sneezyglobaldb=mysql_init(NULL);
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezyglobaldb, NULL, "sneezy", NULL,
+      if(!mysql_real_connect(sneezyglobaldb, dbhost.c_str(), "sneezy", NULL,
                              "sneezyglobal", 0, NULL, 0)){
 	vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
 	return NULL;
