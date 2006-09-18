@@ -653,6 +653,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	    case 'd': 
               per = ((to == t1) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
               strcpy(ibuf, t1->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str());
+	      i=ibuf;
               break;
 	    case 'D':
               if (!t3) {
