@@ -512,6 +512,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   register char *point;
   register const char *i = NULL;
   const TThing *ttto;
+  char ibuf[MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH];
   char namebuf[MAX_NAME_LENGTH];
   char lastColor[3];
@@ -592,7 +593,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
                 strcpy(namebuf, sstring(namebuf).cap().c_str());
                 i = namebuf;
               }
-              i = colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str();
+	      strcpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str());
+	      i=ibuf;
 	      break;
 	    case 'P':
 	    case 'N':
@@ -632,30 +634,33 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
                   i = tmp_buffer;
                 }
               }
-              i = colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str();
+              strcpy(ibuf,colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str());
+	      i=ibuf;
               
 	      break;
 	    case 'g':
-              i = t1->roomp->describeGround().c_str();
+              strcpy(ibuf, t1->roomp->describeGround().c_str());
+	      i=ibuf;
               break;
 	    case 'G':
               if (!t3) {
                 vlogf(LOG_BUG, fmt("Bad act G. '%s'") %  str);
                 return;
               }
-              i = t3->roomp->describeGround().c_str();
+              strcpy(ibuf, t3->roomp->describeGround().c_str());
+	      i=ibuf;
               break;
 	    case 'd': 
               per = ((to == t1) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
-              i = t1->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str();
+              strcpy(ibuf, t1->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str());
               break;
-            
 	    case 'D':
               if (!t3) {
                 vlogf(LOG_BUG, fmt("Bad act D. '%s'") %  str);
                 return;
               }
-              i = t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str();
+              strcpy(ibuf, t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str());
+	      i=ibuf;
               break;
             case 'q':
               // is/are based on plurality of $o, $p
@@ -760,14 +765,16 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
                 vlogf(LOG_BUG, fmt("Bad act o. '%s'") %  str);
                 return;
               }
-	      i = dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str();
+	      strcpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str());
+	      i=ibuf;
 	      break;
 	    case 'O':
               if (!t3) {
                 vlogf(LOG_BUG, fmt("Bad act O. '%s'") %  str);
                 return;
               }
-	      i = dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str();
+	      strcpy(ibuf, dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str());
+	      i=ibuf;
 	      break;
 	    case 'p':
               if (!obj) {
@@ -781,7 +788,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
                 strcpy(namebuf, sstring(namebuf).cap().c_str());
                 i = namebuf;
               }
-              i = colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str();
+              strcpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str());
+	      i=ibuf;
 	      break;
 	    case 'a':
               if (!obj) {
@@ -823,7 +831,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
           if (color) {
             catstr = i;
             catstr += to->ansi_color(color);
-            i = catstr.c_str();
+            strcpy(ibuf, catstr.c_str());
+	    i=ibuf;
           }
 	  while ((*point = *(i++)) != 0)
 	    ++point;
