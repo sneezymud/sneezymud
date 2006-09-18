@@ -43,14 +43,17 @@ exit
 fi
 
 if true; then
-echo "moving code to production"
+echo "Moving code to production."
 
 # copy the latest executable
-mv $CODE_MUD_ROOT/sneezy.2 $CODE_MUD_ROOT/sneezy
-cp $CODE_MUD_ROOT/sneezy $PROD_MUD_ROOT/sneezy.2
+echo "Copying binaries."
+mv -v $CODE_MUD_ROOT/sneezy.2 $CODE_MUD_ROOT/sneezy
+cp -v $CODE_MUD_ROOT/sneezy $PROD_MUD_ROOT/sneezy.2
 
-cp $CODE_MUD_ROOT/objs/*.so $PROD_MUD_ROOT/objs.2
+echo "Copying shared object files."
+cp -v $CODE_MUD_ROOT/objs/*.so $PROD_MUD_ROOT/objs.2
 
+echo "Copying news files."
 # move over text files  (preserve modification time)
 rm $PROD_MUD_ROOT/lib/txt/news.new
 cp -p $CODE_MUD_ROOT/lib/txt/news.new $PROD_MUD_ROOT/lib/txt/news.new
@@ -58,5 +61,7 @@ rm $PROD_MUD_ROOT/lib/txt/wiznews.new
 cp -p $CODE_MUD_ROOT/lib/txt/wiznews.new $PROD_MUD_ROOT/lib/txt/wiznews.new
 rm $PROD_MUD_ROOT/lib/txt/version.new
 cp -p $CODE_MUD_ROOT/lib/txt/version.new $PROD_MUD_ROOT/lib/txt/version.new
+
+echo "Finished."
 
 fi
