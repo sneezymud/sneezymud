@@ -37,12 +37,49 @@ void TShopOwned::journalize(sstring customer, sstring name, sstring action, int 
 {
   TDatabase db(DB_SNEEZY);
 
-  // player selling something, so shop is buying inventory
   if(action == "selling"){ 
+    // player selling something, so shop is buying inventory
     // inventory
     db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 130, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
     // cash
     db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+  } else if(action == "buying"){
+    // player buying something, shop is selling something
+
+    // first the easy part
+    // cash
+    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    // sales
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 500, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+
+    // now we have to calculate COGS for this item
+    // (COGS = cost of goods sold)
+    int COGS=0;
+
+    db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where post_ref=130 and debit > 0 and obj_name='%s'", name.c_str());
+    db.fetchRow();
+    
+    int bought_count=convertTo<int>(db["count"]);
+    int bought_sum=convertTo<int>(db["sum"]);
+
+    if(bought_count == 0){
+      COGS=0;
+    } else {
+      db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where post_ref=130 and credit > 0 and obj_name='%s'", name.c_str());
+      db.fetchRow();
+      
+      int sold_count=convertTo<int>(db["count"]);
+      int sold_sum=convertTo<int>(db["sum"]);
+      
+      COGS = (bought_sum - sold_sum) / (bought_count - sold_count);
+    }
+
+    // now log it
+    // COGS
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 600, %i, 0)", shop_nr, customer.c_str(), name.c_str(), COGS);
+    // inventory
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 130, 0, %i)", shop_nr, customer.c_str(), name.c_str(), COGS);
+    
   }
 
 }
@@ -61,6 +98,7 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
 
   // log the sale
   shoplog(shop_nr, ch, keeper, name, cashCost, action);
+  journalize(ch->getName(), name, action, cashCost);
 
   if(owned){
     doDividend(cashCost, name);
