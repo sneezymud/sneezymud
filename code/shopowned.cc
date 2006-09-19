@@ -37,7 +37,22 @@ void TShopOwned::journalize(sstring customer, sstring name, sstring action, int 
 {
   TDatabase db(DB_SNEEZY);
 
-  if(action == "selling"){ 
+  if(action == "receiving"){
+    // shop giving money to owner
+    // we might want to record this as salary or something?
+    // perhaps we need a way for owners to differentiate between PIC and salary
+    // withdrawals
+    // cash
+    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    // PIC
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 300, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+  } if(action == "giving"){
+    // owner giving money to the shop
+    // PIC
+    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 300, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    // cash
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+  } else if(action == "selling"){ 
     // player selling something, so shop is buying inventory
     // inventory
     db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 130, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
@@ -1083,6 +1098,7 @@ int TShopOwned::giveMoney(sstring arg){
     ch->saveChar(ROOM_AUTO_RENT);
     
     shoplog(shop_nr, ch, keeper, "talens", -amount, "receiving");
+    journalize(ch->getName(), "talens", "receiving", amount, 0);
     
     buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");

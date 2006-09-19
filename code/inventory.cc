@@ -11,6 +11,7 @@
 #include "statistics.h"
 #include "disc_looting.h"
 #include "shop.h"
+#include "shopowned.h"
 #include "obj_spellbag.h"
 #include "obj_keyring.h"
 #include "obj_base_corpse.h"
@@ -891,6 +892,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 	for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (vict)->number); shop_nr++);
 	
 	shoplog(shop_nr, this, dynamic_cast<TMonster *>(vict), "talens", amount, "giving");
+	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(vict), this);
+	tso.journalize(getName(), "talens", "giving", amount, 0);
       }
       
       // check reponses
