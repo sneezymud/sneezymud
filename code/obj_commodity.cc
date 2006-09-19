@@ -223,6 +223,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     shoplog(shop_nr, ch, keeper, obj2->getName(), -price, "selling");
 
     TShopOwned tso(shop_nr, keeper, ch);
+    tso.journalize(ch->getName(), getName(), "selling", price);
     tso.doReserve();
 
 

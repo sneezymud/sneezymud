@@ -45,6 +45,10 @@ class TShopOwned {
   int doLogs(sstring);
   int setString(sstring);
 
+  // accounting stuff
+  void journalize(sstring, sstring, sstring, int);
+
+
   TShopOwned(int, TMonster *, TBeing *);
   ~TShopOwned();
 };

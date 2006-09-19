@@ -32,6 +32,22 @@ bool sameAccount(sstring buf, int shop_nr){
   return FALSE;
 }
 
+
+void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt)
+{
+  TDatabase db(DB_SNEEZY);
+
+  // player selling something, so shop is buying inventory
+  if(action == "selling"){ 
+    // inventory
+    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 130, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    // cash
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+  }
+
+}
+
+
 // obj is optional
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
 			       const sstring &action, TObj *obj)

@@ -101,6 +101,6 @@ procSeedRandom::procSeedRandom(const int &p)
 
 void procSeedRandom::run(int) const
 {
-  srandomdev();
+  //  srandomdev();
   vlogf(LOG_SILENT, fmt("procSeedRandom: Generated new seed."));
 }
