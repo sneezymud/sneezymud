@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SVNROOT="file:///mud/source/trunk/code"
+SVNROOT="http://svn.sneezymud.com/repos/source/trunk/code"
 cd $HOME
 svn checkout $SVNROOT
 ln -s /mud/build/lib code/lib
