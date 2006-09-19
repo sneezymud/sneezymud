@@ -33,7 +33,7 @@ bool sameAccount(sstring buf, int shop_nr){
 }
 
 
-void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt)
+void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt, int tax)
 {
   TDatabase db(DB_SNEEZY);
 
@@ -79,8 +79,17 @@ void TShopOwned::journalize(sstring customer, sstring name, sstring action, int 
     db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 600, %i, 0)", shop_nr, customer.c_str(), name.c_str(), COGS);
     // inventory
     db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 130, 0, %i)", shop_nr, customer.c_str(), name.c_str(), COGS);
+
+    // now log the sales tax
+    // tax
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 700, %i, 0)", shop_nr, customer.c_str(), name.c_str(), tax);
+    // cash
+    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), tax);
+
+    
     
   }
+
 
 }
 
@@ -98,12 +107,12 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
 
   // log the sale
   shoplog(shop_nr, ch, keeper, name, cashCost, action);
-  journalize(ch->getName(), name, action, cashCost);
 
   if(owned){
     doDividend(cashCost, name);
     doReserve();
-    chargeTax(cashCost, name, obj);
+    int tax=chargeTax(cashCost, name, obj);
+    journalize(ch->getName(), name, action, cashCost, tax);
   }
   
   // save
@@ -197,20 +206,20 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   access=getShopAccess(shop_nr, ch);
 }
 
-void TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
+int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 {
   int tax_office;
   TDatabase db(DB_SNEEZY);
 
   // no tax for messing with inventory if you own the shop
   if(hasAccess(SHOPACCESS_OWNER))
-    return;
+    return 0;
 
   db.query("select tax_nr from shopownedtax where shop_nr=%i", shop_nr);
 
   // no entry, no tax
   if(!db.fetchRow())
-    return;
+    return 0;
 
   tax_office=convertTo<int>(db["tax_nr"]);
 
@@ -226,7 +235,7 @@ void TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   if(!t || !(taxman=dynamic_cast<TMonster *>(t))){
     vlogf(LOG_PEEL, fmt("taxman not found %i") % 
 	  shop_index[tax_office].keeper);
-    return;
+    return 0;
   }
 
   keeper->giveMoney(taxman, cost, GOLD_SHOP);
@@ -241,6 +250,8 @@ void TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
   TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
   tso.doReserve();
+
+  return cost;
 }
 
 

@@ -27,7 +27,7 @@ class TShopOwned {
   int getMinReserve();
   int getMaxReserve();
   void doReserve();
-  void chargeTax(int, const sstring &, TObj *);
+  int chargeTax(int, const sstring &, TObj *);
 
   // repair specific
   double getQuality();
@@ -46,7 +46,7 @@ class TShopOwned {
   int setString(sstring);
 
   // accounting stuff
-  void journalize(sstring, sstring, sstring, int);
+  void journalize(sstring, sstring, sstring, int, int);
 
 
   TShopOwned(int, TMonster *, TBeing *);
