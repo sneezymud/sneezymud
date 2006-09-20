@@ -4,6 +4,7 @@ create table shoplogaccountchart (
 );
 
 insert into shoplogaccountchart values (100, 'Cash');
+insert into shoplogaccountchart values (101, 'Corporate Cash');
 insert into shoplogaccountchart values (130, 'Inventory');
 insert into shoplogaccountchart values (300, 'Paid-in Capital');
 insert into shoplogaccountchart values (500, 'Sales');
