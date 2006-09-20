@@ -33,7 +33,7 @@ bool sameAccount(sstring buf, int shop_nr){
 }
 
 
-void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt, int tax)
+void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt, int tax, int corp_cash)
 {
   TDatabase db(DB_SNEEZY);
 
@@ -96,15 +96,30 @@ void TShopOwned::journalize(sstring customer, sstring name, sstring action, int 
     db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 130, 0, %i)", shop_nr, customer.c_str(), name.c_str(), COGS);
 
     // now log the sales tax
-    // tax
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 700, %i, 0)", shop_nr, customer.c_str(), name.c_str(), tax);
-    // cash
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), tax);
+    if(tax){
+      // tax
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 700, %i, 0)", shop_nr, customer.c_str(), name.c_str(), tax);
+      // cash
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), tax);
+    }      
 
-    
-    
+      // now log the corporate cash flow
+    if(corp_cash > 0){
+      // receiving money from corp
+      // cash
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), corp_cash);
+      // corp cash
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 101, 0, %i)", shop_nr, customer.c_str(), name.c_str(), corp_cash);
+
+    } else if (corp_cash < 0) {
+      // giving money to corp
+      // corp cash
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 101, %i, 0)", shop_nr, customer.c_str(), name.c_str(),-corp_cash);
+      // cash
+      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(),-corp_cash);
+      
+    }
   }
-
 
 }
 
@@ -124,10 +139,11 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   shoplog(shop_nr, ch, keeper, name, cashCost, action);
 
   if(owned){
-    doDividend(cashCost, name);
-    doReserve();
+    int corp_cash=0;
+    corp_cash+=doDividend(cashCost, name);
+    corp_cash+=doReserve();
     int tax=chargeTax(cashCost, name, obj);
-    journalize(ch->getName(), name, action, cashCost, tax);
+    journalize(ch->getName(), name, action, cashCost, tax, corp_cash);
   }
   
   // save
@@ -316,7 +332,7 @@ int TShopOwned::getMaxReserve()
   return 0;  
 }
 
-void TShopOwned::doReserve()
+int TShopOwned::doReserve()
 {
   TCorporation corp(getCorpID());
   int min=getMinReserve();
@@ -328,7 +344,7 @@ void TShopOwned::doReserve()
   int bank_nr=corp.getBank();
 
   if(min<=0 || max<=0 || min>max || (max-min)<100000)
-    return;
+    return 0;
 
   for(banker=character_list;banker;banker=banker->next){
     if(banker->number==shop_index[bank_nr].keeper)
@@ -336,7 +352,7 @@ void TShopOwned::doReserve()
   }
   if(!banker){
     vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % bank_nr);
-    return;
+    return 0;
   }
 
   if(money < min){
@@ -346,7 +362,7 @@ void TShopOwned::doReserve()
       amt=corp.getMoney();
 
     if(amt==0)
-      return;
+      return 0;
 
 
     corp.setMoney(corp.getMoney() - amt);
@@ -359,11 +375,13 @@ void TShopOwned::doReserve()
     shoplog(bank_nr, keeper, dynamic_cast<TMonster *>(banker), "talens", -amt, "reserve");
 
     shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
+
+    return amt;
   } else if(money > max){
     amt=money-even;
 
     if(amt==0)
-      return;
+      return 0;
 
     corp.setMoney(corp.getMoney() + amt);
     corp.corpLog(keeper->getName(), "reserve", amt);
@@ -376,7 +394,10 @@ void TShopOwned::doReserve()
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", amt, "reserve");
 
     shoplog(shop_nr, keeper, keeper, "talens", -amt, "reserve");
+
+    return -amt;
   }
+  return 0;
 }
 
 double TShopOwned::getQuality()
@@ -451,7 +472,7 @@ void TShopOwned::setSpeed(sstring arg)
 
 
 
-void TShopOwned::doDividend(int cost, const sstring &name)
+int TShopOwned::doDividend(int cost, const sstring &name)
 {
   if(getDividend()){
     int div=(int)((double)cost * getDividend());
@@ -466,7 +487,7 @@ void TShopOwned::doDividend(int cost, const sstring &name)
     }
     if(!banker){
       vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % bank_nr);
-      return;
+      return 0;
     }
 
     keeper->giveMoney(banker, div, GOLD_SHOP);
@@ -479,7 +500,10 @@ void TShopOwned::doDividend(int cost, const sstring &name)
 
     corp.setMoney(corp.getMoney() + div);
     corp.corpLog(keeper->getName(), "dividend", div);
+
+    return -div;
   }
+  return 0;
 }
 
 
@@ -1098,7 +1122,7 @@ int TShopOwned::giveMoney(sstring arg){
     ch->saveChar(ROOM_AUTO_RENT);
     
     shoplog(shop_nr, ch, keeper, "talens", -amount, "receiving");
-    journalize(ch->getName(), "talens", "receiving", amount, 0);
+    journalize(ch->getName(), "talens", "receiving", amount, 0, 0);
     
     buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");

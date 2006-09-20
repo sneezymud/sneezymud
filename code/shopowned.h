@@ -21,12 +21,12 @@ class TShopOwned {
 
   void setDividend(sstring);
   double getDividend();
-  void doDividend(int, const sstring &);
+  int doDividend(int, const sstring &);
 
   void setReserve(sstring);
   int getMinReserve();
   int getMaxReserve();
-  void doReserve();
+  int doReserve();
   int chargeTax(int, const sstring &, TObj *);
 
   // repair specific
@@ -46,7 +46,7 @@ class TShopOwned {
   int setString(sstring);
 
   // accounting stuff
-  void journalize(sstring, sstring, sstring, int, int);
+  void journalize(sstring, sstring, sstring, int, int, int);
 
 
   TShopOwned(int, TMonster *, TBeing *);

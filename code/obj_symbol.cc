@@ -305,8 +305,8 @@ void TSymbol::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 
   if(shop_index[shop_nr].isOwned()){
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.journalize(ch->getName(), getName(), "selling", cost, 0);
-    tso.doReserve();
+    int corp_cash=tso.doReserve();
+    tso.journalize(ch->getName(), getName(), "selling", cost, 0, corp_cash);
   }
 
 }
