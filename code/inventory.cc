@@ -893,7 +893,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 	
 	shoplog(shop_nr, this, dynamic_cast<TMonster *>(vict), "talens", amount, "giving");
 	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(vict), this);
-	tso.journalize(getName(), "talens", "giving", amount, 0, 0);
+	int corp_cash=tso.doReserve();
+	tso.journalize(getName(), "talens", "giving", amount, 0, corp_cash);
       }
       
       // check reponses
