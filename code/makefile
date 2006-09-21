@@ -21077,7 +21077,7 @@ objs/inventory.o: games.h /usr/include/c++/3.3.4/deque
 objs/inventory.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/inventory.o: /usr/include/c++/3.3.4/bits/deque.tcc game_crazyeights.h
 objs/inventory.o: game_drawpoker.h statistics.h disc_looting.h shop.h
-objs/inventory.o: obj_spellbag.h obj_expandable_container.h
+objs/inventory.o: shopowned.h obj_spellbag.h obj_expandable_container.h
 objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
 objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h

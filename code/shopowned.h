@@ -48,7 +48,8 @@ class TShopOwned {
   int setString(sstring);
 
   // accounting stuff
-  void journalize(sstring, sstring, sstring, int, int, int);
+  void journalize(const sstring &, const sstring &, const sstring &, 
+		  int, int, int);
 
 
   TShopOwned(int, TMonster *, TBeing *);

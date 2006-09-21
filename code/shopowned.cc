@@ -33,7 +33,9 @@ bool sameAccount(sstring buf, int shop_nr){
 }
 
 
-void TShopOwned::journalize(sstring customer, sstring name, sstring action, int amt, int tax, int corp_cash)
+void TShopOwned::journalize(const sstring &customer, const sstring &name, 
+			    const sstring &action, 
+			    int amt, int tax, int corp_cash)
 {
   TDatabase db(DB_SNEEZY);
 
