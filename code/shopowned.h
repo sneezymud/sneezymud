@@ -50,6 +50,10 @@ class TShopOwned {
   // accounting stuff
   void journalize(const sstring &, const sstring &, const sstring &, 
 		  int, int, int);
+  void journalize_debit(int post_ref, const sstring &customer,
+			const sstring &name, int amt, bool new_id=false);
+  void journalize_credit(int post_ref, const sstring &customer,
+			 const sstring &name, int amt, bool new_id=false);
 
 
   TShopOwned(int, TMonster *, TBeing *);

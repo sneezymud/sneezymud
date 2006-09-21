@@ -32,6 +32,22 @@ bool sameAccount(sstring buf, int shop_nr){
   return FALSE;
 }
 
+void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
+				  const sstring &name, int amt, bool new_id)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("insert into shoplogjournal values (%i, %s, '%s', '%s', now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), post_ref, amt);
+}
+				  
+void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
+				  const sstring &name, int amt, bool new_id)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("insert into shoplogjournal values (%i, %s, '%s', '%s', now(), %i, 0, %i)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), post_ref, amt);
+}
+				  
 
 void TShopOwned::journalize(const sstring &customer, const sstring &name, 
 			    const sstring &action, 
@@ -44,36 +60,37 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     // we might want to record this as salary or something?
     // perhaps we need a way for owners to differentiate between PIC and salary
     // withdrawals
+
     // cash
-    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_debit(100, customer, name, amt, true);
     // PIC
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 300, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_credit(300, customer, name, amt);
   } if(action == "giving"){
     // owner giving money to the shop
     // PIC
-    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 300, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_debit(300, customer, name, amt, true);
     // cash
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_credit(100, customer, name, amt);
   } else if(action == "selling"){ 
     // player selling something, so shop is buying inventory
     // inventory
-    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 130, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_debit(130, customer, name, amt, true);
     // cash
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_credit(100, customer, name, amt);
   } else if(action == "buying"){
     // player buying something, shop is selling something
 
     // first the easy part
     // cash
-    db.query("insert into shoplogjournal values (%i, NULL, '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_debit(100, customer, name, amt, true);
     // sales
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 500, 0, %i)", shop_nr, customer.c_str(), name.c_str(), amt);
+    journalize_credit(500, customer, name, amt);
 
     // now we have to calculate COGS for this item
     // (COGS = cost of goods sold)
     int COGS=0;
 
-    db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where post_ref=130 and debit > 0 and obj_name='%s'", name.c_str());
+    db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and debit > 0 and obj_name='%s'", shop_nr, name.c_str());
     db.fetchRow();
     
     int bought_count=convertTo<int>(db["count"]);
@@ -82,7 +99,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     if(bought_count == 0){
       COGS=0;
     } else {
-      db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where post_ref=130 and credit > 0 and obj_name='%s'", name.c_str());
+      db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and credit > 0 and obj_name='%s'", shop_nr, name.c_str());
       db.fetchRow();
       
       int sold_count=convertTo<int>(db["count"]);
@@ -93,33 +110,31 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 
     // now log it
     // COGS
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 600, %i, 0)", shop_nr, customer.c_str(), name.c_str(), COGS);
+    journalize_debit(600, customer, name, COGS);
     // inventory
-    db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 130, 0, %i)", shop_nr, customer.c_str(), name.c_str(), COGS);
+    journalize_credit(130, customer, name, COGS);
 
     // now log the sales tax
     if(tax){
       // tax
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 700, %i, 0)", shop_nr, customer.c_str(), name.c_str(), tax);
+      journalize_debit(700, customer, name, tax);
       // cash
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(), tax);
+      journalize_credit(100, customer, name, tax);
     }      
 
       // now log the corporate cash flow
     if(corp_cash > 0){
       // receiving money from corp
       // cash
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, %i, 0)", shop_nr, customer.c_str(), name.c_str(), corp_cash);
+      journalize_debit(100, customer, name, corp_cash);
       // corp cash
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 101, 0, %i)", shop_nr, customer.c_str(), name.c_str(), corp_cash);
-
+      journalize_credit(101, customer, name, corp_cash);
     } else if (corp_cash < 0) {
       // giving money to corp
       // corp cash
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 101, %i, 0)", shop_nr, customer.c_str(), name.c_str(),-corp_cash);
+      journalize_debit(101, customer, name, -corp_cash);
       // cash
-      db.query("insert into shoplogjournal values (%i, LAST_INSERT_ID(), '%s', '%s', now(), 100, 0, %i)", shop_nr, customer.c_str(), name.c_str(),-corp_cash);
-      
+      journalize_credit(100, customer, name, -corp_cash);
     }
   }
 
