@@ -2332,7 +2332,23 @@ void bootTheShops()
     sd.mat_type.push_back(MAX_OBJ_TYPES);
 
     shop_index.push_back(sd);
-  }  
+  }
+
+  db.query("select shop_nr from shop where shop_nr not in (select shop_nr from shopownedtax)");
+
+  while(db.fetchRow()){
+    vlogf(LOG_LOW, fmt("Shop %s is untaxed.") % db["shop_nr"]);
+  }
+
+
+  db.query("select shop_nr from shop where shop_nr not in (select shop_nr from shopowned)");
+
+  while(db.fetchRow()){
+    vlogf(LOG_LOW, fmt("Shop %s is unowned.") % db["shop_nr"]);
+  }
+
+
+
 }
 
 
