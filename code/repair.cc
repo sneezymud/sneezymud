@@ -353,7 +353,6 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
   obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
   fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
-  buyer->giveMoney(repair, tmp_cost, GOLD_REPAIR);
   
   *buyer += *fixed_obj;
   buyer->doSave(SILENT_YES);
@@ -365,9 +364,9 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   if (shop_nr >= shop_index.size()) {
     vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[repair->number].virt);
   }
-  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), fixed_obj->getName(), tmp_cost, "repairing");
+
   TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(repair), buyer);
-  tso.doReserve();
+  tso.doBuyTransaction(tmp_cost, fixed_obj->getName(), "repairing");
   
   
   // acknowledge the depreciation after all work is done
