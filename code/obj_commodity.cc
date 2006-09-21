@@ -219,12 +219,8 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     *keeper += *obj2;
     --(*this);
 
-    keeper->giveMoney(ch, price, GOLD_COMM);
-    shoplog(shop_nr, ch, keeper, obj2->getName(), -price, "selling");
-
     TShopOwned tso(shop_nr, keeper, ch);
-    int corp_cash=tso.doReserve();
-    tso.journalize(ch->getName(), getName(), "selling", price, 0, corp_cash);
+    tso.doSellTransaction(price, obj2->getName(), "selling", obj2);
 
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);

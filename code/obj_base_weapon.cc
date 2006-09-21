@@ -1649,17 +1649,8 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  keeper->giveMoney(ch, cost, GOLD_SHOP_WEAPON);
-
-  shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
-
-
-  if(shop_index[shop_nr].isOwned()){
-    TShopOwned tso(shop_nr, keeper, ch);
-    int corp_cash=tso.doReserve();
-    tso.journalize(ch->getName(), getName(), "selling", cost, 0, corp_cash);
-  }
-
+  TShopOwned tso(shop_nr, keeper, ch);
+  tso.doSellTransaction(cost, getName(), "selling", this);
 }
 
 bool TBaseWeapon::isPoisoned() const

@@ -298,17 +298,8 @@ void TSymbol::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 
 void TSymbol::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  keeper->giveMoney(ch, cost, GOLD_SHOP_SYMBOL);
-
-  shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
-
-
-  if(shop_index[shop_nr].isOwned()){
-    TShopOwned tso(shop_nr, keeper, ch);
-    int corp_cash=tso.doReserve();
-    tso.journalize(ch->getName(), getName(), "selling", cost, 0, corp_cash);
-  }
-
+  TShopOwned tso(shop_nr, keeper, ch);
+  tso.doSellTransaction(cost, getName(), "selling", this);
 }
 
 sstring TSymbol::getNameForShow(bool useColor, bool useName, const TBeing *ch) const

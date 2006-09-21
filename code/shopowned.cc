@@ -124,6 +124,27 @@ void TShopOwned::journalize(sstring customer, sstring name, sstring action, int 
 }
 
 
+// player selling to shop
+void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
+				   const sstring &action, TObj *obj)
+{
+  // sell gives money to the buyer
+  keeper->giveMoney(ch, cashCost, GOLD_SHOP);
+
+  // log the sale
+  shoplog(shop_nr, ch, keeper, name, -cashCost, action);
+
+  if(owned){
+    int corp_cash=doReserve();
+    journalize(ch->getName(), name, action, cashCost, 0, corp_cash);
+  }
+
+  // save
+  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  ch->doSave(SILENT_YES);
+}
+
+// player buying from shop
 // obj is optional
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
 			       const sstring &action, TObj *obj)
