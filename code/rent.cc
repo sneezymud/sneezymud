@@ -3601,7 +3601,7 @@ float old_ac_lev = mob->getACLevel();
         fp2_open = true;
       }
       ItemLoad il;
-      il.setFile(fp2);
+      il.setFile(fp2); // ItemLoad destructor will fclose this
       il.setVersion(version);
       if (tmp != -1 && (new_obj = il.raw_read_item())) {
         if (ch) {
@@ -3638,7 +3638,7 @@ float old_ac_lev = mob->getACLevel();
         fp2_open = true;
       }
       ItemLoad il;
-      il.setFile(fp2);
+      il.setFile(fp2); // the ItemLoad destructor will close this
       il.setVersion(version);
       if ((new_obj = il.raw_read_item())) {
         if (ch) {
@@ -3716,8 +3716,6 @@ float old_ac_lev = mob->getACLevel();
       delete mob;
     }
   }
-  if (fp2_open)
-    fclose(fp2);
 }
 
 // this routine simply tracks items and mobs held in rent by players.
