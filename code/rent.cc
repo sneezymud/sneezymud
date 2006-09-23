@@ -4272,10 +4272,6 @@ bool TBeing::saveFollowers(bool rent_time)
   }
   fclose(fp);
 
-  // don't close the follower rent file until after all followers written
-  if (fp2_open)
-    fclose(fp2);
-
   if (!found) {
     wipeFollowersFile(tmp->name);
     return FALSE;
