@@ -4677,21 +4677,26 @@ int TBeing::checkEngagementStatus()
 
 spellNumT TBeing::getAttackType(const TThing *wielded, primaryTypeT prim) const
 {
+  spellNumT dtype;
+
   if (wielded)
-    return wielded->getWtype();
+    dtype=wielded->getWtype();
   else if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
-    return TYPE_BEAR_CLAW;
+    dtype=TYPE_BEAR_CLAW;
   else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
-    return TYPE_CLAW;
+    dtype=TYPE_CLAW;
   else if ((hasQuestBit(TOG_HOOK_HAND_R) && prim==HAND_PRIMARY) ||
 	   (hasQuestBit(TOG_HOOK_HAND_L) && prim==HAND_SECONDARY))
-    return TYPE_PIERCE;
-  else if (doesKnowSkill(SKILL_KUBO))
-    return monkDamType();
-  else if (dynamic_cast<const TMonster *>(this))
-    return getFormType();
+    dtype=TYPE_PIERCE;
   else
-    return TYPE_HIT;
+    dtype=getFormType();
+
+  // use custom monk messages only if they are using default damage type
+  // in other words, if they have claws for example, let them claw
+  if(dtype==TYPE_HIT && doesKnowSkill(SKILL_KUBO))
+    dtype=monkDamType();
+
+  return dtype;
 }
 
 spellNumT TThing::getWtype() const
