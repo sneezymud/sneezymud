@@ -18,7 +18,7 @@ class TShopOwned {
   void doSellTransaction(int, const sstring &, const sstring &, TObj *obj=NULL);
 
   double getExpenseRatio();
-  bool doExpenses(int, TObj *);
+  int doExpenses(int, TObj *);
 
 
   void setDividend(sstring);
@@ -49,7 +49,7 @@ class TShopOwned {
 
   // accounting stuff
   void journalize(const sstring &, const sstring &, const sstring &, 
-		  int, int, int);
+		  int, int, int, int);
   void journalize_debit(int post_ref, const sstring &customer,
 			const sstring &name, int amt, bool new_id=false);
   void journalize_credit(int post_ref, const sstring &customer,

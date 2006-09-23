@@ -366,7 +366,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   }
 
   TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(repair), buyer);
-  tso.doBuyTransaction(tmp_cost, fixed_obj->getName(), "repairing");
+  tso.doBuyTransaction(tmp_cost, "repair", "buying service");
   
   
   // acknowledge the depreciation after all work is done

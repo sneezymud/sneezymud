@@ -51,7 +51,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 
 void TShopOwned::journalize(const sstring &customer, const sstring &name, 
 			    const sstring &action, 
-			    int amt, int tax, int corp_cash)
+			    int amt, int tax, int corp_cash, int expenses)
 {
   TDatabase db(DB_SNEEZY);
 
@@ -77,42 +77,48 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     journalize_debit(130, customer, name, amt, true);
     // cash
     journalize_credit(100, customer, name, amt);
-  } else if(action == "buying"){
-    // player buying something, shop is selling something
-
+  } else if(action == "buying service" || action == "buying"){
     // first the easy part
     // cash
     journalize_debit(100, customer, name, amt, true);
     // sales
     journalize_credit(500, customer, name, amt);
 
-    // now we have to calculate COGS for this item
-    // (COGS = cost of goods sold)
     int COGS=0;
 
-    db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and debit > 0 and obj_name='%s'", shop_nr, name.c_str());
-    db.fetchRow();
-    
-    int bought_count=convertTo<int>(db["count"]);
-    int bought_sum=convertTo<int>(db["sum"]);
-
-    if(bought_count == 0){
-      COGS=0;
-    } else {
-      db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and credit > 0 and obj_name='%s'", shop_nr, name.c_str());
+    if(action == "buying service"){
+      // expenses
+      journalize_debit(630, customer, name, expenses);
+      // cash
+      journalize_credit(100, customer, name, expenses);
+    } else if(action == "buying"){
+      // now we have to calculate COGS for this item
+      // (COGS = cost of goods sold)
+      
+      db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and debit > 0 and obj_name='%s'", shop_nr, name.c_str());
       db.fetchRow();
       
-      int sold_count=convertTo<int>(db["count"]);
-      int sold_sum=convertTo<int>(db["sum"]);
+      int bought_count=convertTo<int>(db["count"]);
+      int bought_sum=convertTo<int>(db["sum"]);
       
-      COGS = (bought_sum - sold_sum) / (bought_count - sold_count);
-    }
+      if(bought_count == 0){
+	COGS=0;
+      } else {
+	db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and credit > 0 and obj_name='%s'", shop_nr, name.c_str());
+	db.fetchRow();
+	
+	int sold_count=convertTo<int>(db["count"]);
+	int sold_sum=convertTo<int>(db["sum"]);
+	
+	COGS = (bought_sum - sold_sum) / (bought_count - sold_count);
+      }
 
-    // now log it
-    // COGS
-    journalize_debit(600, customer, name, COGS);
-    // inventory
-    journalize_credit(130, customer, name, COGS);
+      // now log it
+      // COGS
+      journalize_debit(600, customer, name, COGS);
+      // inventory
+      journalize_credit(130, customer, name, COGS);
+    }
 
     // now log the sales tax
     if(tax){
@@ -137,7 +143,6 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       journalize_credit(100, customer, name, -corp_cash);
     }
   }
-
 }
 
 
@@ -153,7 +158,7 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 
   if(owned){
     int corp_cash=doReserve();
-    journalize(ch->getName(), name, action, cashCost, 0, corp_cash);
+    journalize(ch->getName(), name, action, cashCost, 0, corp_cash, 0);
   }
 
   // save
@@ -166,8 +171,9 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
 			       const sstring &action, TObj *obj)
 {
+  int expenses=0;
   // take the expense cut out
-  if(!doExpenses(cashCost, obj))
+  if((expenses=doExpenses(cashCost, obj)) == -1)
     return;
 
   // buyer gives money to seller
@@ -181,7 +187,7 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
     corp_cash+=doDividend(cashCost, name);
     corp_cash+=doReserve();
     int tax=chargeTax(cashCost, name, obj);
-    journalize(ch->getName(), name, action, cashCost, tax, corp_cash);
+    journalize(ch->getName(), name, action, cashCost, tax, corp_cash, expenses);
   }
   
   // save
@@ -189,7 +195,8 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   ch->doSave(SILENT_YES);
 }
 
-bool TShopOwned::doExpenses(int cashCost, TObj *obj)
+// returns amount of expenses, or -1 if shopkeeper can't afford it
+int TShopOwned::doExpenses(int cashCost, TObj *obj)
 {
   double profit_buy=shop_index[shop_nr].getProfitBuy(obj, ch);
   double ratio=getExpenseRatio();
@@ -199,10 +206,7 @@ bool TShopOwned::doExpenses(int cashCost, TObj *obj)
   double value;
 
   if(ratio == 0)
-    return true;
-
-  if(keeper->getMoney() < cashCost)
-    return false;
+    return 0;
 
 // find the sba shopkeeper
   for(t=character_list;t;t=t->next){
@@ -212,14 +216,18 @@ bool TShopOwned::doExpenses(int cashCost, TObj *obj)
 
   if(t && (sba=dynamic_cast<TMonster *>(t))){
     value=((double)cashCost/profit_buy) * ratio;
+
+    if(keeper->getMoney() < value)
+      return -1;
     
     keeper->giveMoney(sba, (int)value, GOLD_SHOP);
     shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
     shoplog(sba_nr, keeper, sba, "talens", (int)value, "expenses");
     sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    return (int)value;
   }
 
-  return true;
+  return 0;
 }
 
 
@@ -1160,7 +1168,7 @@ int TShopOwned::giveMoney(sstring arg){
     ch->saveChar(ROOM_AUTO_RENT);
     
     shoplog(shop_nr, ch, keeper, "talens", -amount, "receiving");
-    journalize(ch->getName(), "talens", "receiving", amount, 0, 0);
+    journalize(ch->getName(), "talens", "receiving", amount, 0, 0, 0);
     
     buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");

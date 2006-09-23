@@ -5385,14 +5385,10 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
       me->doSay(buf);
-      ch->giveMoney(me, cost, GOLD_SHOP);
-      shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
-	      cost, "divinating");
+
       tso=new TShopOwned(find_shop_nr(me->number), 
 			 dynamic_cast<TMonster *>(me), ch);
-      tso->doReserve();
-      delete tso;
-
+      tso->doBuyTransaction(cost, "divination", "buying service");
 
       ch->sendTo(COLOR_BASIC, fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(fmt("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
