@@ -1153,7 +1153,9 @@ int Descriptor::nanny(sstring arg)
             break;
 	  case 'X':
 	    if(IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-	      int racenum=atoi(&ac+1);//convertTo<int>(ac+1); // was arg+1
+	      sstring race_str=aw;
+	      race_str[0]='0'; // turn the X into a 0, should convert to int ok
+	      int racenum=convertTo<int>(race_str);
 	      character->setRace(race_t(racenum));
 	      character->cls();
 	      writeToQ("Ok, race set.\n\r\n\r");
