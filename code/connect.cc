@@ -6407,7 +6407,9 @@ void Descriptor::sendMotd(int wiz)
 
   strcpy(motd, "/****************************************************************************/\n\r");
   sprintf(motd + strlen(motd), "     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
-  sprintf(motd + strlen(motd), "     Running on a dual processor FreeBSD machine at Saw.net.\n\r\n\r");
+  sprintf(motd + strlen(motd), "     Running on a dual processor Linux machine at sneezymud.com.\n\r\n\r"
+	                       "     We have recently moved from our old location at saw.net.\n\r\n\r"
+	                       "     Please update your clients and/or bookmarks to reflect this change.\n\r\n\r");
 
   file_to_sstring(MOTD_FILE, version);
   // swap color sstrings
