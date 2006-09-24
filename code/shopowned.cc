@@ -131,16 +131,16 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       // now log the corporate cash flow
     if(corp_cash > 0){
       // receiving money from corp
-      // cash
-      journalize_debit(100, customer, name, corp_cash);
       // corp cash
-      journalize_credit(101, customer, name, corp_cash);
+      journalize_debit(101, customer, name, corp_cash);
+      // cash
+      journalize_credit(100, customer, name, corp_cash);
     } else if (corp_cash < 0) {
       // giving money to corp
-      // corp cash
-      journalize_debit(101, customer, name, -corp_cash);
       // cash
-      journalize_credit(100, customer, name, -corp_cash);
+      journalize_debit(100, customer, name, -corp_cash);
+      // corp cash
+      journalize_credit(101, customer, name, -corp_cash);
     }
   }
 }
