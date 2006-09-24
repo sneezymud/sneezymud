@@ -130,14 +130,14 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 
       // now log the corporate cash flow
     if(corp_cash > 0){
-      // receiving money from corp
+      // receiving money from corp, this counts as PIC
       // cash
       journalize_debit(100, customer, name, corp_cash);
-      // corp cash
-      journalize_credit(101, customer, name, corp_cash);
+      // PIC
+      journalize_credit(300, customer, name, corp_cash);
     } else if (corp_cash < 0) {
-      // giving money to corp
-      // corp cash
+      // giving money to corp, this counts as dividends
+      // dividends
       journalize_debit(101, customer, name, -corp_cash);
       // cash
       journalize_credit(100, customer, name, -corp_cash);
