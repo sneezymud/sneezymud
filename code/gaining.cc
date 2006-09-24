@@ -715,7 +715,8 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
   }
 
   if (bHasQuestAvailable)
-    sendTo("You have a sinking feeling you need to see your guildmaster over something important...\n\r");
+    sendTo("You have a sinking feeling you need to see your guildmaster over something important...\n\r"
+	   "When you find your guildmaster use the \"gain\" command to get the information.\n\r");
 
   doSave(SILENT_YES);
 }
