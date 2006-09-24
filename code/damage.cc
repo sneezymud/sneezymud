@@ -758,37 +758,26 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // didn't want to write an information channel etc
 	  // should be fun to come up with new shouts
 	  int chance = ::number(1,9);
-	  switch (chance) {
-	    case 1:
-	      sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
-	      break;
-	    case 2:
-	      sprintf(nbuf, "Yeah! That moron %s just had to push it!", v->getName());
-	      break;
-	    case 3:
-	      sprintf(nbuf, "Someone help %s regen some hitpoints! *snort*", v->getName());
-	      break;
-	    case 4:
-	      sprintf(nbuf, "I didn't kill %s! Really!!", v->getName());
-	      break;
-	    case 5:
-	      sprintf(nbuf, "Creatures killed : Alone 45,687! Looks like %s makes that 45,688!", v->getName());
-	      break;
-	    case 6:
-	      sprintf(nbuf, "HAHAHA! Hey %s! How much to next level NOW?!?", v->getName());
-	      break;
-	    case 7:
-	      sprintf(nbuf, "It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!", v->getName());
-	      break;
-	    case 8:
-	      sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
-	      break;
-	    case 9:
-	      sprintf(nbuf, "The once was a player named %s...once...", v->getName());
-	      break;
-	    default:
-	      sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
-	      break;
+	  if (chance==1) {
+	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
+	  } else if (chance == 2) {
+	    sprintf(nbuf, "Yeah! That moron %s just had to push it!", v->getName());
+	  } else if (chance == 3) {
+	    sprintf(nbuf, "Someone help %s regen some hitpoints! *snort*", v->getName());
+	  } else if (chance == 4) {
+	    sprintf(nbuf, "I didn't kill %s! Really!!", v->getName());
+	  } else if (chance == 5) {
+	    sprintf(nbuf, "Creatures killed : Alone 45,687! Looks like %s makes that 45,688!", v->getName());
+	  } else if (chance == 6) {
+	    sprintf(nbuf, "HAHAHA! Hey %s! How much to next level NOW?!?", v->getName());
+	  } else if (chance == 7) {
+	    sprintf(nbuf, "It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!", v->getName());
+	  } else if (chance == 8) {
+	    sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
+	  } else if (chance == 9) {
+	    sprintf(nbuf, "The once was a player named %s...once...", v->getName());
+	  } else {
+	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
 	  }
 	  doShout(nbuf);
         } else {
