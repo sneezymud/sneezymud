@@ -390,7 +390,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 // DELETE_VICT or FALSE
 int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
-  char buf[256], buf2[256];
+  char buf[256], buf2[256], nbuf[256];
   int rc, questmob;
   TBeing *k=NULL;
   followData *f;
@@ -753,7 +753,44 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           else
             vlogf(LOG_MISC, fmt("%s killed by %s at %s (%d).  Method: %s") %  
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
-          
+	  // taunting shout
+	  // added for information to other players that haven't died but
+	  // didn't want to write an information channel etc
+	  // should be fun to come up with new shouts
+	  int chance = ::number(1,9);
+	  switch (chance) {
+	    case 1:
+	      sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
+	      break;
+	    case 2:
+	      sprintf(nbuf, "Yeah! That moron %s just had to push it!", v->getName());
+	      break;
+	    case 3:
+	      sprintf(nbuf, "Someone help %s regen some hitpoints! *snort*", v->getName());
+	      break;
+	    case 4:
+	      sprintf(nbuf, "I didn't kill %s! Really!!", v->getName());
+	      break;
+	    case 5:
+	      sprintf(nbuf, "Creatures killed : Alone 45,687! Looks like %s makes that 45,688!", v->getName());
+	      break;
+	    case 6:
+	      sprintf(nbuf, "HAHAHA! Hey %s! How much to next level NOW?!?", v->getName());
+	      break;
+	    case 7:
+	      sprintf(nbuf, "It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!", v->getName());
+	      break;
+	    case 8:
+	      sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
+	      break;
+	    case 9:
+	      sprintf(nbuf, "The once was a player named %s...once...", v->getName());
+	      break;
+	    default:
+	      sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
+	      break;
+	  }
+	  doShout(nbuf);
         } else {
 #if 1
           if (v == this && isPc())
