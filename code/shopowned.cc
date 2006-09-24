@@ -992,8 +992,8 @@ int TShopOwned::buyShop(sstring arg){
   }
   value=getPurchasePrice(keeper->getMoney(), value);
 
-  db.query("select corp_id from corpaccess where lower(name)='%s'",
-	   sstring(ch->getName()).lower().c_str());
+  db.query("select corp_id from corpaccess where player_id=%i",
+	   ch->getPlayerID());
 
   if(arg.empty()){
     if(db.fetchRow())
