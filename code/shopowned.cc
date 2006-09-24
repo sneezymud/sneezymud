@@ -61,16 +61,16 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     // perhaps we need a way for owners to differentiate between PIC and salary
     // withdrawals
 
-    // cash
-    journalize_debit(100, customer, name, amt, true);
-    // PIC
-    journalize_credit(300, customer, name, amt);
-  } if(action == "giving"){
-    // owner giving money to the shop
     // PIC
     journalize_debit(300, customer, name, amt, true);
     // cash
     journalize_credit(100, customer, name, amt);
+  } if(action == "giving"){
+    // owner giving money to the shop
+    // cash
+    journalize_debit(100, customer, name, amt, true);
+    // PIC
+    journalize_credit(300, customer, name, amt);
   } else if(action == "selling"){ 
     // player selling something, so shop is buying inventory
     // inventory
