@@ -757,8 +757,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // added for information to other players that haven't died but
 	  // didn't want to write an information channel etc
 	  // should be fun to come up with new shouts
-	  int chance = ::number(1,9);
-	  if (chance==1) {
+	  int chance = ::number(1,15);
+	  if (chance == 1) {
 	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
 	  } else if (chance == 2) {
 	    sprintf(nbuf, "Yeah! That moron %s just had to push it!", v->getName());
@@ -776,6 +776,18 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	    sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
 	  } else if (chance == 9) {
 	    sprintf(nbuf, "The once was a player named %s...once...", v->getName());
+	  } else if (chance == 10) {
+	    sprintf(nbuf, "Dime a dozen, %s failed, who's next to die to my hand?", v->getName());
+	  } else if (chance == 11) {
+	    sprintf(nbuf, "Tole %s once, Tole %s twice, did %s listen to my advise? R.I.P.", v->getName(), v->getName(), v->getName());
+	  } else if (chance == 12) {
+	    sprintf(nbuf, "Did %s bring a scroll of recall? Oooops, guess not!", v->getName());
+	  } else if (chance == 13) {
+	    sprintf(nbuf, "Hey %s, it's time to go back to Barbie and GI-Joe, they can't KILL you like I did!", v->getName());
+	  } else if (chance == 14) {
+	    sprintf(nbuf, "I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...", v->getName());
+	  } else if (chance == 15) {
+	    sprintf(nbuf, "Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"", v->getName());
 	  } else {
 	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
 	  }
