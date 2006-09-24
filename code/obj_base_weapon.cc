@@ -325,13 +325,10 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     job->wait += 1;   // gotta exit with at least 1
     sprintf(buf, "Thanks for your business, I'll take your %d talen%s payment in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
-    ch->giveMoney(me, cost, GOLD_REPAIR);
-    shoplog(find_shop_nr(me->number), ch, me, getName(), 
-	    cost, "sharpening");
-    me->saveChar(ROOM_AUTO_RENT);
-    ch->saveChar(ROOM_AUTO_RENT);
 
-
+    TShopOwned tso(find_shop_nr(me->number), 
+		   dynamic_cast<TMonster *>(me), ch);
+    tso.doBuyTransaction(cost, "sharpening", "buying service");
 
     job->cost = cost;
     job->char_name = mud_str_dup(ch->getName());
