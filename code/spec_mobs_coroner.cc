@@ -35,17 +35,6 @@ int goToMorgue(TBeing *myself)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    // chance to purge the room of objects
-    if (myself->roomp->roomIsEmpty(FALSE) && !::number(0,34)) {
-      TThing *t, *t2;
-      for (t = myself->roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
-        if (!dynamic_cast<TObj *> (t)) 
-          continue;
-        dynamic_cast<TObj *> (t)->purgeMe(myself);
-        // t is possibly invalid here.
-      }
-    }
     return TRUE;
   }
 }
@@ -88,9 +77,20 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (::number(0,3))
     return FALSE;
+
+  int found=0;
+  
+  // check if we have any corpses
+  if (myself->getStuff()) {
+    TThing *t;
+    for(t=myself->getStuff();t;t=t->nextThing){
+      if(dynamic_cast<TBaseCorpse *>(t))
+	found++;
+    }
+  }
   
   // pick up corpses
-  if(myself->inRoom() != ROOM_MORGUE){
+  if(myself->inRoom() != ROOM_MORGUE && found < 3){
 
     // look for a corpse
     for (t = myself->roomp->getStuff(); t; t = t2) {
@@ -110,20 +110,11 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	}
 	(*obj)--;
 	*myself += *obj;
+	return TRUE;
       }
     }
   }
 
-  bool found=FALSE;
-  
-  // check if we have any corpses
-  if (myself->getStuff()) {
-    TThing *t;
-    for(t=myself->getStuff();t;t=t->nextThing){
-      if(dynamic_cast<TBaseCorpse *>(t))
-	found=TRUE;
-    }
-  }
   
   // if we have corpses, head towards the morgue
   if(found){
