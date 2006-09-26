@@ -775,7 +775,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 8) {
 	    sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
 	  } else if (chance == 9) {
-	    sprintf(nbuf, "The once was a player named %s...once...", v->getName());
+	    sprintf(nbuf, "There once was a player named %s...once...", v->getName());
 	  } else if (chance == 10) {
 	    sprintf(nbuf, "Dime a dozen, %s failed, who's next to die to my hand?", v->getName());
 	  } else if (chance == 11) {
