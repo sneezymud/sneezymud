@@ -757,7 +757,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // added for information to other players that haven't died but
 	  // didn't want to write an information channel etc
 	  // should be fun to come up with new shouts
-	  int chance = ::number(1,15);
+	  int chance = ::number(1,20);
 	  if (chance == 1) {
 	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
 	  } else if (chance == 2) {
@@ -779,7 +779,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 10) {
 	    sprintf(nbuf, "Dime a dozen, %s failed, who's next to die to my hand?", v->getName());
 	  } else if (chance == 11) {
-	    sprintf(nbuf, "Tole %s once, Tole %s twice, did %s listen to my advise? R.I.P.", v->getName(), v->getName(), v->getName());
+	    sprintf(nbuf, "Told %s once, Told %s twice, did %s listen to my advise? R.I.P.", v->getName(), v->getName(), v->getName());
 	  } else if (chance == 12) {
 	    sprintf(nbuf, "Did %s bring a scroll of recall? Oooops, guess not!", v->getName());
 	  } else if (chance == 13) {
@@ -788,6 +788,16 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	    sprintf(nbuf, "I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...", v->getName());
 	  } else if (chance == 15) {
 	    sprintf(nbuf, "Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"", v->getName());
+	  } else if (chance == 16) {
+	    sprintf(nbuf, "Let us contemplate for a moment the very brave and often foolish deeds of %s. R.I.P.", v->getName());
+	  } else if (chance == 17) {
+	    sprintf(nbuf, "No, now go away %s or I shall kill you a second time.", v->getName());
+	  } else if (chance == 18) {
+	    sprintf(nbuf, "Sometimes I think I'd be better off dead. No, wait. Not me, %s.", v->getName());
+	  } else if (chance == 19) {
+	    sprintf(nbuf, "Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s", v->getName());
+	  } else if (chance == 20) {
+	    sprintf(nbuf, "This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.", v->getName());
 	  } else {
 	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
 	  }
