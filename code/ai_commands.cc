@@ -3031,7 +3031,7 @@ int TMonster::aiSteal(TBeing *thief)
   if (!pissed() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && canSee(thief, INFRA_YES) && thief->isPc()) {
     if (!hasClass(CLASS_THIEF)) {
       buf = fmt("%s is a bloody thief.") % thief->getName();
-      doShout(buf.c_str());
+      doShout(buf);
       CallForGuard(this, thief, 2);
     } else {
       buf = fmt("Alright %s, you little punk, nice try but no dice.") %

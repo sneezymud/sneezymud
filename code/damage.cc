@@ -802,7 +802,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else {
 	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  }
-	  doShout(taunt_buf.c_str());
+	  doShout(taunt_buf);
         } else {
 #if 1
           if (v == this && isPc())

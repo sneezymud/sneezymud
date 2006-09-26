@@ -349,7 +349,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     strcpy(buf, s.c_str());
 
     if (!number(0, 20))
-      ch->doShout(sstring(buf).cap().c_str());
+      ch->doShout(sstring(buf).cap());
     else if (::number(0,2)) {
       sprintf(buf2, "$n rears back %s head and shouts loudly.", ch->hshr());
       sprintf(buf3, "$n shouts, \"%s\"", sstring(buf).cap().c_str());

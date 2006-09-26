@@ -898,7 +898,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	addToLifeforce(1);
 	break;
       case CMD_SHOUT:
-	doShout(argument.c_str());
+	doShout(argument);
 	addToLifeforce(1);
 	break;
       case CMD_CLIENTMESSAGE:

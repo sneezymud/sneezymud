@@ -2031,7 +2031,7 @@ class TBeing : public TThing {
     void lookAtRoom();
     void lookAtBeing(TThing *);
     void lookingAtObj(TThing *);
-    void doShout(const char *);
+    void doShout(const sstring &);
     int doWhisper(const sstring &);
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);

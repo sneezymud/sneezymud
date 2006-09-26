@@ -531,9 +531,9 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
   }
 }
 
-void TBeing::doShout(const char *arg)
+void TBeing::doShout(const sstring &arg)
 {
-  char garbed[254];
+  sstring garbed;
 
   if (desc)
     desc->talkCount = time(0);
@@ -545,10 +545,12 @@ void TBeing::doShout(const char *arg)
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n waves $s hands and points silently toward $s mouth.", 
+	TRUE, this, 0, 0, TO_ROOM);
     return;
   }
-  if (isPc() && ((desc && IS_SET(desc->autobits, AUTO_NOSHOUT)) || isPlayerAction(PLR_GODNOSHOUT))) {
+  if (isPc() && ((desc && IS_SET(desc->autobits, AUTO_NOSHOUT)) || 
+		 isPlayerAction(PLR_GODNOSHOUT))) {
     sendTo("You can't shout!!\n\r");
     return;
   }
@@ -583,8 +585,6 @@ void TBeing::doShout(const char *arg)
   if (applySoundproof())
     return;
 
-  for (; isspace(*arg); arg++);
-
   if (master && isAffected(AFF_CHARM)) {
     master->sendTo("I don't think so :-)\n\r");
     return;
@@ -593,18 +593,19 @@ void TBeing::doShout(const char *arg)
     rider->sendTo("I don't think so :-)\n\r");
     return;
   }
-  if (!*arg) {
+  if (arg.empty()){
     sendTo("You generally shout SOMETHING!\n\r");
     //sendTo("Shout? Yes! Fine! Shout we must, but WHAT??\n\r");
     return;
   }
   if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
        !isImmortal())
-    mud_str_copy(garbed, "Glub glub glub.", 256);
+    garbed="Glub glub glub.";
   else
-    mud_str_copy(garbed, garble(arg, getCond(DRUNK)), 256);
+    garbed=garble(arg, getCond(DRUNK));
 
-  sendTo(COLOR_COMM, fmt("<g>You shout<Z>, \"%s%s\"\n\r") % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
+  sendTo(COLOR_COMM, fmt("<g>You shout<Z>, \"%s%s\"\n\r") % 
+	 colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
   act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
 
   loseSneak();
@@ -615,7 +616,7 @@ void TBeing::doShout(const char *arg)
   addToWait(combatRound(0.5));
 
   if (hasQuestBit(TOG_BLAHBLAH)) {
-    mud_str_copy(garbed, blahblah(arg), 256);
+    garbed=blahblah(arg);
     descriptor_list->sendShout(this, garbed);
   } else {
     descriptor_list->sendShout(this, garbed);
