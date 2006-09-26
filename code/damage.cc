@@ -390,7 +390,8 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 // DELETE_VICT or FALSE
 int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
-  char buf[256], buf2[256], nbuf[256];
+  char buf[256], buf2[256];
+  sstring taunt_buf;
   int rc, questmob;
   TBeing *k=NULL;
   followData *f;
@@ -759,49 +760,49 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // should be fun to come up with new shouts
 	  int chance = ::number(1,20);
 	  if (chance == 1) {
-	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
+	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  } else if (chance == 2) {
-	    sprintf(nbuf, "Yeah! That moron %s just had to push it!", v->getName());
+	    taunt_buf=fmt("Yeah! That moron %s just had to push it!") % v->getName();
 	  } else if (chance == 3) {
-	    sprintf(nbuf, "Someone help %s regen some hitpoints! *snort*", v->getName());
+	    taunt_buf=fmt("Someone help %s regen some hitpoints! *snort*") % v->getName();
 	  } else if (chance == 4) {
-	    sprintf(nbuf, "I didn't kill %s! Really!!", v->getName());
+	    taunt_buf=fmt("I didn't kill %s! Really!!") % v->getName();
 	  } else if (chance == 5) {
-	    sprintf(nbuf, "Creatures killed : Alone 45,687! Looks like %s makes that 45,688!", v->getName());
+	    taunt_buf=fmt("Creatures killed : Alone 45,687! Looks like %s makes that 45,688!") % v->getName();
 	  } else if (chance == 6) {
-	    sprintf(nbuf, "HAHAHA! Hey %s! How much to next level NOW?!?", v->getName());
+	    taunt_buf=fmt("HAHAHA! Hey %s! How much to next level NOW?!?") % v->getName();
 	  } else if (chance == 7) {
-	    sprintf(nbuf, "It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!", v->getName());
+	    taunt_buf=fmt("It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!") % v->getName();
 	  } else if (chance == 8) {
-	    sprintf(nbuf, "SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
+	    taunt_buf=fmt("SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...") % v->getName();
 	  } else if (chance == 9) {
-	    sprintf(nbuf, "There once was a player named %s...once...", v->getName());
+	    taunt_buf=fmt("There once was a player named %s...once...") % v->getName();
 	  } else if (chance == 10) {
-	    sprintf(nbuf, "Dime a dozen, %s failed, who's next to die to my hand?", v->getName());
+	    taunt_buf=fmt("Dime a dozen, %s failed, who's next to die to my hand?") % v->getName();
 	  } else if (chance == 11) {
-	    sprintf(nbuf, "Told %s once, Told %s twice, did %s listen to my advise? R.I.P.", v->getName(), v->getName(), v->getName());
+	    taunt_buf=fmt("Told %s once, Told %s twice, did %s listen to my advise? R.I.P.") % v->getName() % v->getName() % v->getName();
 	  } else if (chance == 12) {
-	    sprintf(nbuf, "Did %s bring a scroll of recall? Oooops, guess not!", v->getName());
+	    taunt_buf=fmt("Did %s bring a scroll of recall? Oooops, guess not!") % v->getName();
 	  } else if (chance == 13) {
-	    sprintf(nbuf, "Hey %s, it's time to go back to Barbie and GI-Joe, they can't KILL you like I did!", v->getName());
+	    taunt_buf=fmt("Hey %s, it's time to go back to Barbie and GI-Joe, they can't KILL you like I did!") % v->getName();
 	  } else if (chance == 14) {
-	    sprintf(nbuf, "I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...", v->getName());
+	    taunt_buf=fmt("I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...") % v->getName();
 	  } else if (chance == 15) {
-	    sprintf(nbuf, "Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"", v->getName());
+	    taunt_buf=fmt("Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"") % v->getName();
 	  } else if (chance == 16) {
-	    sprintf(nbuf, "Let us contemplate for a moment the very brave and often foolish deeds of %s. R.I.P.", v->getName());
+	    taunt_buf=fmt("Let us contemplate for a moment the very brave and often foolish deeds of %s. R.I.P.") % v->getName();
 	  } else if (chance == 17) {
-	    sprintf(nbuf, "No, now go away %s or I shall kill you a second time.", v->getName());
+	    taunt_buf=fmt("No, now go away %s or I shall kill you a second time.") % v->getName();
 	  } else if (chance == 18) {
-	    sprintf(nbuf, "Sometimes I think I'd be better off dead. No, wait. Not me, %s.", v->getName());
+	    taunt_buf=fmt("Sometimes I think I'd be better off dead. No, wait. Not me, %s.") % v->getName();
 	  } else if (chance == 19) {
-	    sprintf(nbuf, "Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s", v->getName());
+	    taunt_buf=fmt("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s") % v->getName();
 	  } else if (chance == 20) {
-	    sprintf(nbuf, "This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.", v->getName());
+	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName(), v->getName();
 	  } else {
-	    sprintf(nbuf, "WOO! And %s goes down! HA!", v->getName());
+	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  }
-	  doShout(nbuf);
+	  doShout(taunt_buf.c_str());
         } else {
 #if 1
           if (v == this && isPc())
