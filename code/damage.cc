@@ -773,7 +773,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 7) {
 	    sprintf(nbuf, "It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!", v->getName());
 	  } else if (chance == 8) {
-	    sprintf(nbuf, "SneezyMUD is _WAY_ too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
+	    sprintf(nbuf, "SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...", v->getName());
 	  } else if (chance == 9) {
 	    sprintf(nbuf, "There once was a player named %s...once...", v->getName());
 	  } else if (chance == 10) {
