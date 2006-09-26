@@ -798,7 +798,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 19) {
 	    taunt_buf=fmt("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s") % v->getName();
 	  } else if (chance == 20) {
-	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName(), v->getName();
+	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName();
 	  } else {
 	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  }
