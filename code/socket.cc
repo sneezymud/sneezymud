@@ -1090,7 +1090,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	
 	if(r){
 	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
-	     cup->getLiqDrunk() < 10 && !cup->isDrinkConFlag(DRINK_FROZEN)){
+	     cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
 	    int rc=cup->freezeObject(ch, 0);
 	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	      delete cup;
@@ -1099,9 +1099,11 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	    }
 	    
 	    // freeze any pools that were dropped
+	    TPool *tp;
 	    for(t=r->getStuff();t;t=t->nextThing){
-	      if(dynamic_cast<TPool *>(t))
-		dynamic_cast<TPool *>(t)->freezeObject(ch, 0);
+	      if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
+		 !tp->isDrinkConFlag(DRINK_FROZEN))
+		tp->freezeObject(ch, 0);
 	    }
 	  }
 	}
