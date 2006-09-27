@@ -47,7 +47,39 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 
   db.query("insert into shoplogjournal values (%i, %s, '%s', '%s', now(), %i, 0, %i)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), post_ref, amt);
 }
-				  
+
+void TShopOwned::COGS_add(const sstring &name, int amt)
+{
+  TDatabase db(DB_SNEEZY);
+
+
+  db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i", name.c_str(), shop_nr);
+
+  if(!db.fetchRow()){
+    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), 1, amt);
+  } else {
+    db.query("update shoplogcogs set count=count+1, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i", amt, name.c_str(), shop_nr);
+  }
+}
+
+void TShopOwned::COGS_remove(const sstring &name)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("update shoplogcogs set total_cost=total_cost-(total_cost/count), count=count-1 where obj_name='%s' and shop_nr=%i", name.c_str(), shop_nr);
+}
+
+int TShopOwned::COGS_get(const sstring &name)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select total_cost/count as cost from shoplogcogs where shop_nr=%i and obj_name='%s'", shop_nr, name.c_str());
+  
+  if(db.fetchRow())
+    return convertTo<int>(db["cost"]);
+  else
+    return 0;
+}
 
 void TShopOwned::journalize(const sstring &customer, const sstring &name, 
 			    const sstring &action, 
@@ -77,6 +109,10 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     journalize_debit(130, customer, name, amt, true);
     // cash
     journalize_credit(100, customer, name, amt);
+    
+    // record COGS
+    COGS_add(name, amt);
+
   } else if(action == "buying service" || action == "buying"){
     // first the easy part
     // cash
@@ -94,24 +130,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     } else if(action == "buying"){
       // now we have to calculate COGS for this item
       // (COGS = cost of goods sold)
-      
-      db.query("select count(*) as count, sum(debit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and debit > 0 and obj_name='%s'", shop_nr, name.c_str());
-      db.fetchRow();
-      
-      int bought_count=convertTo<int>(db["count"]);
-      int bought_sum=convertTo<int>(db["sum"]);
-      
-      if(bought_count == 0){
-	COGS=0;
-      } else {
-	db.query("select count(*) as count, sum(credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130 and credit > 0 and obj_name='%s'", shop_nr, name.c_str());
-	db.fetchRow();
-	
-	int sold_count=convertTo<int>(db["count"]);
-	int sold_sum=convertTo<int>(db["sum"]);
-	
-	COGS = (bought_sum - sold_sum) / (bought_count - sold_count);
-      }
+      COGS=COGS_get(name);
 
       // now log it
       // COGS
@@ -142,6 +161,9 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       // cash
       journalize_credit(100, customer, name, -corp_cash);
     }
+
+    // now log COGS
+    COGS_remove(name);
   }
 }
 
