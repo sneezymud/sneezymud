@@ -784,7 +784,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 12) {
 	    taunt_buf=fmt("Did %s bring a scroll of recall? Oooops, guess not!") % v->getName();
 	  } else if (chance == 13) {
-	    taunt_buf=fmt("Hey %s, it's time to go back to Barbie and GI-Joe, they can't KILL you like I did!") % v->getName();
+	    taunt_buf=fmt("Hey %s, it's time to go back to scrabbling in the dirt, it can't KILL you like I did!") % v->getName();
 	  } else if (chance == 14) {
 	    taunt_buf=fmt("I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...") % v->getName();
 	  } else if (chance == 15) {
@@ -798,7 +798,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 19) {
 	    taunt_buf=fmt("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s") % v->getName();
 	  } else if (chance == 20) {
-	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName();
+	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName() % v->getName();
 	  } else {
 	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  }
