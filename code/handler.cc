@@ -295,6 +295,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
     case APPLY_NOISE:
     case APPLY_LIGHT:
     case APPLY_SEX:
+    case APPLY_CRIT_FREQUENCY:
       return;
     case APPLY_SPELL:
       if (!discArray[mod]) {

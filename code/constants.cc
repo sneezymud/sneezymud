@@ -871,6 +871,7 @@ APP_type apply_types[MAX_APPLY_TYPES] =
   {TRUE, "Discipline"},
   {FALSE, "Spell Hitroll"},
   {FALSE, "Hit Points"},
+  {TRUE, "Crit. Frequency"},
 };
 
 

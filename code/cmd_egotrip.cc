@@ -77,6 +77,11 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		     AFFECT_BUMP_BLESSING,
 		     APPLY_AGI,
 		     "<W>flexibility<1>");
+  blessings[AFFECT_MAROR_BLESSING]=
+    ego_imm_blessing("Maror",
+        AFFECT_MAROR_BLESSING,
+        APPLY_KAR,
+        "<Y>luck<1>");
 
   return blessings;
 }
@@ -134,12 +139,22 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     // TBeing::affectedBySpell - true sight
   } else if(which==AFFECT_BUMP_BLESSING){
     // none
+  } else if(which==AFFECT_MAROR_BLESSING){
+    aff.type=AFFECT_MAROR_BLESSING;
+    aff.location=APPLY_CRIT_FREQUENCY;
+    aff.modifier = 2;
+    aff.modifier2 = 0;
+    aff.bitvector = 0;
+    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   }
 
   affectedData *afp;
 
   // now, each time a blessing is applied, increase the power of all
   // the other blessings.
+  // EXCEPTION: not Maror's blessing -- it is a multipler and gets too high
+  // ** this only appears to increase the generic blessing nonmagic immunity
+  // and vasco's noise modifier -- is that the intention?  almost irrelevant
   if(success){
     for(afp = v->affected; afp; afp = afp->next){
       if(afp->type==AFFECT_IMMORTAL_BLESSING ||
@@ -149,12 +164,13 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 	 afp->type==AFFECT_CORAL_BLESSING ||
 	 afp->type==AFFECT_DAMESCENA_BLESSING ||
 	 afp->type==AFFECT_JESUS_BLESSING ||
-	 afp->type==AFFECT_BUMP_BLESSING){
+	 afp->type==AFFECT_BUMP_BLESSING ||
+   (afp->type==AFFECT_MAROR_BLESSING && afp->location != APPLY_CRIT_FREQUENCY) ){
 	afp->modifier =(int)((float)afp->modifier * 1.5);
 	
 	// increase the new spell too, but don't announce it - redundant
 	if(afp->type != which){
-	  v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!")%
+	  v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!\n\r")%
 		    blessings[afp->type].name);
 	}
       }

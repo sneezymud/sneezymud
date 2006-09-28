@@ -80,6 +80,8 @@ int mapApplyToFile(applyTypeT att)
       return 39;
     case APPLY_CURRENT_HIT:
       return 40;
+    case APPLY_CRIT_FREQUENCY:
+      return 41;
     case MAX_APPLY_TYPES:
       break;
   }
@@ -166,6 +168,8 @@ applyTypeT mapFileToApply(int att)
       return APPLY_SPELL_HITROLL;
     case 40:
       return APPLY_CURRENT_HIT;
+    case 41:
+      return APPLY_CRIT_FREQUENCY;
     default:
       break;
   }

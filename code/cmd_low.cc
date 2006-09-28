@@ -1176,6 +1176,9 @@ void TPerson::doLow(const sstring &argument)
 	  break;
 	case APPLY_SPE:
 	  sendTo(fmt("Speed       : %s\n\r") % buf);
+    break;
+  case APPLY_CRIT_FREQUENCY:
+    sendTo(fmt("Crit. Chance: %s\n\r") % buf);
 	  break;
 	default:
 	  break;
