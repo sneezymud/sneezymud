@@ -1131,22 +1131,83 @@ int chromaticWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
-  TBeing *ch;
-  int chance;
+  TBeing *ch, *temp, *tmp_victim;
+  TRoom *rp;
+  int damage;
+  int chance, rc;
+  bool vict_alive = TRUE;
 
   ch = genericWeaponProcCheck(vict, cmd, o, 3);
   if (!ch)
     return FALSE;
 
-  chance = ::number(4,10);
-  if (chance < 8) {
+  rp = ch->roomp;
+  if (!rp) {
+    vlogf(LOG_BUG, "Returned NULL pointer to room in fireballWeapon.  Exiting.");
+    return FALSE;
+  }
+
+  chance = ::number(4,10); // .33 * .3 = 10% chance the proc will do damage
+  
+  if (chance < 8 || (rp &&  rp->isUnderwaterSector())) {
     act("$n's $p glows fire red.", 0, ch, o, 0, TO_ROOM, ANSI_RED);
     act("Your $p glows fire red.", 0, ch, o, 0, TO_CHAR, ANSI_RED);
   } else {
-    act("$n's $p glows fire red and channels energy into $n's hands.", 0, ch, o, 0, TO_ROOM, ANSI_RED_BOLD);
-    act("Your $p glows fire red and channels energy into your hands.", 0, ch, o, 0, TO_CHAR, ANSI_RED_BOLD);
-    fireball(ch, 100, 100, 100);
-  }
+    act("$n's $p glows fire red and shoots out a ball of fire!.", 0, ch, o, 0, TO_ROOM, ANSI_RED_BOLD);
+    act("Your $p glows fire red and shoots out a ball of fire!", 0, ch, o, 0, TO_CHAR, ANSI_RED_BOLD);
+
+
+    damage  = ::number(1,19); // +10 average damage for +1 average per hit
+    ch->flameRoom(); // this can kill and delete the victim.... need to make sure the victim is still around later in the proc
+
+    for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
+      temp = tmp_victim->next;
+      if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim)){
+        if (!ch->inGroup(*tmp_victim) && !tmp_victim->isImmortal()) {
+          if (tmp_victim->isLucky(ch->spellLuckModifier(SPELL_FIREBALL))) {
+            act("$N is able to dodge part of the explosion!", FALSE, ch, NULL, tmp_victim, TO_CHAR);
+            act("$N is able to dodge part of the explosion!", FALSE, ch, NULL, tmp_victim, TO_NOTVICT);
+            act("You are able to dodge part of the explosion!", FALSE, ch, NULL, tmp_victim, TO_VICT);
+            damage >>= 1;
+          } else {
+            act("$N had no hope of dodging the lashing flames!", FALSE, ch, NULL, tmp_victim, TO_CHAR);
+            act("$N had no hope of dodging the lashing flames!", FALSE, ch, NULL, tmp_victim, TO_NOTVICT);
+            act("You had no hope of dodging the lashing flames!", FALSE, ch, NULL, tmp_victim, TO_VICT);
+          }
+          if (ch->reconcileDamage(tmp_victim, damage, SPELL_FIREBALL) == -1) {
+            if (vict && tmp_victim == vict) {
+              vict_alive = FALSE;
+              continue;
+            } else {
+              delete tmp_victim;
+              tmp_victim = NULL;
+              continue;
+            }
+         }
+          rc = tmp_victim->flameEngulfed();
+          rc = 0;
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            if (vict && tmp_victim == vict) {
+              vict_alive = FALSE;
+              continue;
+            } else {
+              delete tmp_victim;
+              tmp_victim = NULL;
+              continue;
+            }
+          }
+        } else
+          act("You are able to avoid the flames!", FALSE, ch, NULL, tmp_victim, TO_VICT);
+      } else if ((ch != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
+                 (rp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
+        if (tmp_victim->awake())
+          tmp_victim->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
+      }
+    } // end for loop cycle through character list
+    
+  } // end weapon damaging effect
+  if (!vict_alive)
+    return DELETE_VICT;
   return TRUE;
 }
 
