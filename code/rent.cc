@@ -3241,6 +3241,9 @@ void countAccounts(const char *arg)
     sprintf(buf2, "account/%c/%s/comment", LOWER(arg[0]), sstring(arg).lower().c_str());
     unlink(buf2);  // probably doesn't exist, so no error...
 
+    sprintf(buf2, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
+    unlink(buf2);
+
     if (rmdir(buf) != 0)
       vlogf(LOG_FILE, fmt("error in rmdir (%s) %d") %  buf % errno);
 
