@@ -1743,7 +1743,7 @@ TObj *read_object(int nr, readFileTypeT type)
 
   obj->checkObjStats();
 
-  if(/*bootTime &&*/ obj_cache[nr]==NULL){
+  if(bootTime && obj_cache[nr]==NULL){
     //    vlogf(LOG_PEEL, fmt("caching object - %s") %  obj->shortDescr);
     cached_object *c=new cached_object;
     
