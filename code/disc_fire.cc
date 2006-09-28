@@ -1021,9 +1021,8 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
     caster->flameRoom();
     for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
       temp = tmp_victim->next;
-      if (caster->sameRoom(*tmp_victim) && (caster != tmp_victim) &&
-          (!tmp_victim->isImmortal())) {
-        if (!caster->inGroup(*tmp_victim)) {
+      if (caster->sameRoom(*tmp_victim) && (caster != tmp_victim)) {
+        if (!caster->inGroup(*tmp_victim) && !tmp_victim->isImmortal()) {
           caster->reconcileHurt(tmp_victim, discArray[SPELL_FIREBALL]->alignMod);
           if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_FIREBALL))) {
             act("$N is able to dodge part of the explosion!", FALSE, caster, NULL, tmp_victim, TO_CHAR);
@@ -1036,11 +1035,9 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
             act("You had no hope of dodging the lashing flames!", FALSE, caster, NULL, tmp_victim, TO_VICT);
           }
           if (caster->reconcileDamage(tmp_victim, damage, SPELL_FIREBALL) == -1) {
-	    /*
             delete tmp_victim;
             tmp_victim = NULL;
             continue;
-	    */
           }
           rc = tmp_victim->flameEngulfed();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
