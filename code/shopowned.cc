@@ -37,7 +37,7 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into shoplogjournal values (%i, %s, '%s', '%s', now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), post_ref, amt);
+  db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
 }
 				  
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
@@ -45,7 +45,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into shoplogjournal values (%i, %s, '%s', '%s', now(), %i, 0, %i)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), post_ref, amt);
+  db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
 }
 
 void TShopOwned::COGS_add(const sstring &name, int amt)
