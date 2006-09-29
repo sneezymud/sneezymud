@@ -515,14 +515,12 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     }
   }
 
-  vlogf(LOG_MAROR, fmt("crit chance %i") % crit_chance);
   // if affected by APPLY_CRIT_FREQUENCY then multiply out by modifier
   for (adp = affected; adp; adp = adp->next) {
     if (adp->location == APPLY_CRIT_FREQUENCY) {
       crit_chance *= adp->modifier;
     }
   }
-  vlogf(LOG_MAROR, fmt("--->crit chance %i") % crit_chance);
 
   if(mod == -1){
     // check the roll versus the chance
