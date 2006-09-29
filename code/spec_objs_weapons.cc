@@ -1856,7 +1856,11 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
 
   wearSlotT slot;
+  int count=0;
   for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+    count++;
+    if(count > 100)
+      return FALSE;
     if (notBreakSlot(slot, true))
       continue;
     if (!vict->slotChance(slot))
