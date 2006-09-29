@@ -1612,6 +1612,10 @@ static void ChangeRoomFlags(TRoom *rp, TBeing *ch, const char *arg, editorEnterT
     ch->sendTo(fmt("%-2d [%s] %s") % (j + 1) % ((rp->getRoomFlags() & (1 << j)) ? "X" : " ") % room_bits[j]);
   }
   ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+  // could have just made the saveroom flag an invalid option but someday someone will
+  // need it unset so i added a warning about keeping the flag set
+  ch->sendTo("Make sure the SAVE ROOM flag is set unless you KNOW you don't need it set.\n\r");
+  ch->sendTo("If you aren't sure that you want the SAVE ROOM flag on, then you do!\n\r");
   ch->sendTo("Select the number to toggle, <C/R> to return to main menu.\n\r--> ");
 }
 
