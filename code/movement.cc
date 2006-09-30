@@ -3153,7 +3153,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   if (force) {
 // option to force this
     setPosition(pos);
-    sendTo(fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
     act("$n tumbles end over end as $e crash lands!",
         TRUE, this, 0, 0, TO_ROOM);
   } else if (!isFlying()) {
@@ -3199,7 +3199,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   } else {
 // Flying person
     setPosition(pos);
-    sendTo(fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
     act("$n tumbles end over end as $e crash lands!",
         TRUE, this, 0, 0, TO_ROOM);
   }
