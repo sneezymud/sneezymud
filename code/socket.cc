@@ -848,7 +848,8 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	  nutrition-=2;
 
 	tmp_ch->addToNutrition(nutrition);
-	
+
+#if 0	
 	if(tmp_ch->getNutrition() > 1000){
 	  //	  tmp_ch->sendTo("You feel as though you've been putting on some weight.\n\r");
 	  //	  tmp_ch->setWeight(tmp_ch->getWeight()+1);
@@ -858,6 +859,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	  //	  tmp_ch->setWeight(tmp_ch->getWeight()-1);
 	  tmp_ch->setNutrition(0);
 	}
+#endif
 
       }
     }
