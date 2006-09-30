@@ -685,6 +685,11 @@ class TBeing : public TThing {
     // INLINE FUNCTIONS
     // END INLINE FUNCTIONS
 
+    int getNutrition();
+    void setNutrition(int);
+    void addToNutrition(int);
+
+
     // pets.cc
     int getAffectedDataFromType(spellNumT, double);
     int getPetOrderLevel();

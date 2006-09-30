@@ -821,6 +821,46 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
+    if(pl.update_stuff){
+      if(dynamic_cast<TPerson *>(tmp_ch)){
+	// nutrition is a measure of the amount of calories eaten subtracting
+	// the amount worked off
+	// if the balance gets out of wack far enough, you gain or lose
+	// a pound and the balance is reset
+
+	int nutrition=0;
+	if(tmp_ch->getCond(FULL) <= 5) // stomach growling
+	  nutrition--;
+	if(tmp_ch->getCond(FULL) >= 6) // little bite to eat
+	  nutrition++;
+	if(tmp_ch->getCond(FULL) >= 10) // slighly hungry
+	  nutrition++;
+	if(tmp_ch->getCond(FULL) >= 20) // full
+	  nutrition++;
+	
+	if(tmp_ch->getMove() < (tmp_ch->getMaxMove() * 0.25))
+	  nutrition-=2;
+	if(tmp_ch->getMove() < (tmp_ch->getMaxMove() * 0.50))
+	  nutrition-=2;
+	if(tmp_ch->getMove() < (tmp_ch->getMaxMove() * 0.75))
+	  nutrition-=2;
+	if(tmp_ch->getMove() > (tmp_ch->getMaxMove() * 0.90))
+	  nutrition-=2;
+
+	tmp_ch->addToNutrition(nutrition);
+	
+	if(tmp_ch->getNutrition() > 1000){
+	  //	  tmp_ch->sendTo("You feel as though you've been putting on some weight.\n\r");
+	  //	  tmp_ch->setWeight(tmp_ch->getWeight()+1);
+	  tmp_ch->setNutrition(0);
+	} else if(tmp_ch->getNutrition() <= -1000){
+	  //	  tmp_ch->sendTo("You feel as though you've been losing some weight.\n\r");
+	  //	  tmp_ch->setWeight(tmp_ch->getWeight()-1);
+	  tmp_ch->setNutrition(0);
+	}
+
+      }
+    }
 	
     // check for vampires in daylight
     if(pl.teleport){

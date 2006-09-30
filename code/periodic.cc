@@ -21,6 +21,7 @@
 #include "obj_trash_pile.h"
 #include "process.h"
 #include "obj_pool.h"
+#include "database.h"
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD=20000;
@@ -773,6 +774,31 @@ int TBeing::updateAffects()
   return 0;
 }
 
+int TBeing::getNutrition()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select nutrition from player where id=%i", getPlayerID());
+
+  return convertTo<int>(db["nutrition"]);
+}
+
+void TBeing::addToNutrition(int amt)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("update player set nutrition=nutrition+%i where id=%i", amt, getPlayerID());
+}
+
+void TBeing::setNutrition(int amt)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("update player set nutrition=%i where id=%i", amt, getPlayerID());
+}
+
+
+
 // this is called once per mud hour (about 144 real seconds)
 // returns DELETE_THIS
 int TBeing::updateTickStuff()
@@ -803,7 +829,6 @@ int TBeing::updateTickStuff()
       if (IS_SET_DELETE(rc, DELETE_THIS))
 	return DELETE_THIS;
     }
-
 
 
     if(hasQuestBit(TOG_IS_NARCOLEPTIC) && awake() && !::number(0,99)){
