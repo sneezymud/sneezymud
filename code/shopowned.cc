@@ -429,7 +429,7 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
   TBeing *taxman;
   if(!t || !(taxman=dynamic_cast<TMonster *>(t))){
-    vlogf(LOG_PEEL, fmt("taxman not found %i") % 
+    vlogf(LOG_BUG, fmt("taxman not found %i") % 
 	  shop_index[tax_office].keeper);
     return 0;
   }
@@ -456,8 +456,6 @@ void TShopOwned::giveStatements(sstring arg)
   int year=convertTo<int>(arg);
   if(!year)
     year=time_info.year;
-
-  vlogf(LOG_PEEL, fmt("arg=%s, year=%i") % arg % year);
 
   TShopJournal tsj(shop_nr, year);
   sstring keywords, short_desc, long_desc, buf, name;
