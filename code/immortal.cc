@@ -3979,7 +3979,7 @@ void TBeing::doSetsev(const char *arg)
   bisect_arg(arg, &tMatch, tString, tFields);
 
   if (!tMatch) {
-    sendTo("Leg Severity Options:\n\r______________________________\n\r");
+    sendTo("Log Severity Options:\n\r______________________________\n\r");
 
     for (tMatch = 0; tFields[tMatch][0] != '\n'; tMatch++) {
       if (tMatch == LOG_LOW || hasWizPower(POWER_SETSEV_IMM)) {

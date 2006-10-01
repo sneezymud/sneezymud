@@ -1294,6 +1294,9 @@ int TBeing::updateHalfTickStuff()
             vlogf(LOG_BUG, fmt("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+	    if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
+		(vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
+	      return DELETE_THIS; // do this before the check to cut down on hopper bug spam
             vlogf(LOG_BUG, fmt("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;

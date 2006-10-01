@@ -589,11 +589,53 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
   this_time = localtime(&lt);
 
   switch (tError) {
-    case LOG_LOW:
-      buf = "L.O.W. Error: ";
-      break;
-    case LOG_CHEAT:
-      buf = "Cheating: ";
+  case LOG_LOW:
+    buf = "L.O.W. Error: ";
+    break;
+  case LOG_MISC: 
+    buf = "Misc Error: ";
+    break;
+  case LOG_FILE:
+    buf = "File I/O: ";
+    break; 
+  case LOG_BUG:
+    buf = "BUG: ";
+    break;  
+  case LOG_PROC:
+    buf = "Proc: ";
+    break; 
+  case LOG_PIO:
+    buf = "Player I/O: ";
+    break;  
+  case LOG_IIO:
+    buf = "Imm I/O: ";
+    break;   
+  case LOG_CLIENT:
+    buf = "Client: ";
+    break;
+  case LOG_COMBAT:
+    buf = "Combat: ";
+    break;
+  case LOG_FACT:
+    buf = "Faction: ";
+    break;  
+  case LOG_MOB:
+    buf = "Mob: ";
+    break;   
+  case LOG_MOB_AI:
+    buf = "Mob AI: ";
+    break;
+  case LOG_MOB_RS:
+    buf = "Mob Response: ";
+    break;
+  case LOG_OBJ:
+    buf = "Object: ";
+    break;   
+  case LOG_EDIT:
+    buf = "Editor: ";
+    break;  
+  case LOG_CHEAT:
+    buf = "Cheating: ";
       break;
     case LOG_BATOPR:
       name = "Batopr";
