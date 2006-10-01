@@ -291,6 +291,18 @@ void TPerson::startLevels()
     calcMaxLevel();
   }
 
+  // so i can be a god on my beta mud. -d
+  if (!strcmp(name, "Dash")){
+    setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
+    setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
+    setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
+    setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT);
+    setExp(2000000000);
+    setWizPowers(this,this,"allpowers");
+    remWizPower(POWER_IDLED);
+    calcMaxLevel();
+  }
+
 
   if (GetMaxLevel() > MAX_MORT) {
     // basically, if we are an autoleveleded person
