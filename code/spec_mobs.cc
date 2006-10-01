@@ -6208,6 +6208,8 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
   
   if(!strcmp(buf, "info")){ /////////////////////////////////////////
     tso.showInfo();
+  } else if(!strcmp(buf, "statements")){
+    tso.giveStatements(arg);
   } else if(!strcmp(buf, "dividend")){
     tso.setDividend(arg);
   } else if(!strcmp(buf, "reserve")){

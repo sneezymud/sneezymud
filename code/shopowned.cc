@@ -3,6 +3,7 @@
 #include "database.h"
 #include "shop.h"
 #include "corporation.h"
+#include "obj_note.h"
 
 // this function relies on the fact that the db will return rows in the order
 // that they were created, chronologically.  I'm not sure if this is defined
@@ -37,7 +38,11 @@ TShopJournal::TShopJournal(int shop, int year)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", year, shop);
+  if(year == time_info.year){
+    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
+  } else {
+    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by a.name", year, shop);
+  }
 
   while(db.fetchRow()){
     values[db["name"]]=abs(convertTo<int>(db["amt"]));
@@ -445,6 +450,112 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   return cost;
 }
 
+
+void TShopOwned::giveStatements(sstring arg)
+{
+  int year=convertTo<int>(arg);
+  if(!year)
+    year=time_info.year;
+
+  vlogf(LOG_PEEL, fmt("arg=%s, year=%i") % arg % year);
+
+  TShopJournal tsj(shop_nr, year);
+  sstring keywords, short_desc, long_desc, buf, name;
+  
+  name=real_roomp(shop_index[shop_nr].in_room)->getName();
+  keywords=fmt("statement income financial %i %i %s") % 
+    shop_nr % year % name;
+  short_desc=fmt("an income statement for '<p>%s<1>', year <r>%i<1>") %
+    name % year;
+  long_desc="A crumpled up financial statement lies here.";
+
+  if(year == time_info.year)
+    buf=fmt("Income statement for '%s', current year %i.\n\r") % 
+      name % year;
+  else
+    buf=fmt("Income statement for '%s', year ending %i.\n\r") % 
+      name % year;
+
+  buf+="-----------------------------------------------------------------\n\r";
+  buf+=fmt("%-36s %10s %10i\n\r") % 
+    "Sales revenue" % "" % tsj.getValue("Sales");
+  buf+=fmt("  %-34s %10i\n\r") %
+    "Cost of goods sold" % tsj.getValue("COGS");
+  buf+=fmt("  %-34s %10i\n\r") %
+    "Sales tax" % tsj.getValue("Tax");
+  buf+=fmt("  %-34s %10i\n\r") %
+    "Service expenses" % tsj.getValue("Expenses");
+  buf+=fmt("%-36s %10s %10i\n\r") %
+    "Total expenses" % "" % tsj.getExpenses();
+  buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf+=fmt("%-36s %10s %10i\n\r") %
+    "Net income" % "" % tsj.getNetIncome();
+  buf+=fmt("%-36s %10s %10i\n\r") %
+    "Dividends" % "" % tsj.getValue("Dividends");
+  buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf+=fmt("%-36s %10s %10i\n\r") %
+    "Retained earnings" % "" % tsj.getRetainedEarnings();
+  
+  TNote *income_statement = createNote(mud_str_dup(buf));
+  delete [] income_statement->name;
+  income_statement->name = mud_str_dup(keywords);
+  delete [] income_statement->shortDescr;
+  income_statement->shortDescr = mud_str_dup(short_desc);
+  delete [] income_statement->getDescr();
+  income_statement->setDescr(mud_str_dup(long_desc));
+
+  *keeper += *income_statement;
+  keeper->doGive(ch, income_statement, GIVE_FLAG_DROP_ON_FAIL);
+
+
+  name=real_roomp(shop_index[shop_nr].in_room)->getName();
+  keywords=fmt("sheet balance financial statement %i %i %s") % 
+    shop_nr % year % name;
+  short_desc=fmt("a balance sheet for '<p>%s<1>', year <r>%i<1>") %
+    name % year;
+  long_desc="A crumpled up financial statement lies here.";
+
+
+  if(year == time_info.year)
+    buf=fmt("Balance sheet for '%s', current year %i.\n\r\n\r") % 
+      name % year;
+  else
+    buf=fmt("Balance sheet for '%s', year ending %i.\n\r\n\r") % 
+      name % year;
+
+  buf+=fmt("%-36s   %-36s\n\r") % 
+    "Assets" % "Liabilities";
+  buf+="-----------------------------------------------------------------\n\r";
+  buf+=fmt("%-36s | %-25s\n\r") %
+    "" % "Liabilities";
+  buf+=fmt("%-25s %10i | %31s\n") %
+    "Cash" % tsj.getValue("Cash") % "";
+  buf+=fmt("%-25s %10i | %-36s\n\r") %
+    "Inventory" % tsj.getValue("Inventory") % "Shareholders' equity";
+  buf+=fmt("%-36s | %-25s %10i\n\r") %
+    "" % "  Paid-in capital" % tsj.getValue("Paid-in Capital");
+  buf+=fmt("%-36s | %-25s %10i\n\r") %
+    "" % "  Retained earnings" % tsj.getRetainedEarnings();
+  buf+=fmt("%-25s %10s | %-25s %10s\n\r") %
+    "" % "----------" % "" % "----------";
+  buf+=fmt("%-25s %10i | %-25s %10i\n\r") %
+    "Total assets" % tsj.getAssets() %
+    "Total liabilities & SHE" % 
+    (tsj.getLiabilities()+tsj.getShareholdersEquity());
+
+  
+  TNote *balance_sheet = createNote(mud_str_dup(buf));
+  delete [] balance_sheet->name;
+  balance_sheet->name = mud_str_dup(keywords);
+  delete [] balance_sheet->shortDescr;
+  balance_sheet->shortDescr = mud_str_dup(short_desc);
+  delete [] balance_sheet->getDescr();
+  balance_sheet->setDescr(mud_str_dup(long_desc));
+
+  *keeper += *balance_sheet;
+  keeper->doGive(ch, balance_sheet, GIVE_FLAG_DROP_ON_FAIL);
+
+}
 
 
 void TShopOwned::setReserve(sstring arg)

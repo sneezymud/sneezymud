@@ -68,6 +68,7 @@ class TShopOwned {
   int setString(sstring);
 
   // accounting stuff
+  void giveStatements(sstring);
   void journalize(const sstring &, const sstring &, const sstring &, 
 		  int, int, int, int);
   void journalize_debit(int post_ref, const sstring &customer,
