@@ -4,6 +4,7 @@
 class TShopJournal {
   map <sstring, int> values;
   int shop_nr;
+  int year;
 
  public:
   int getValue(const sstring &);

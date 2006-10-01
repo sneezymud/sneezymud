@@ -34,14 +34,14 @@ bool sameAccount(sstring buf, int shop_nr){
 }
 
 // pull data from archive
-TShopJournal::TShopJournal(int shop, int year)
+TShopJournal::TShopJournal(int shop, int y)
 {
   TDatabase db(DB_SNEEZY);
 
-  if(year == time_info.year){
+  if(y == time_info.year){
     db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
   } else {
-    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by a.name", year, shop);
+    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by a.name", y, shop);
   }
 
   while(db.fetchRow()){
@@ -49,12 +49,14 @@ TShopJournal::TShopJournal(int shop, int year)
   }
 
   shop_nr=shop;
+  year=y;
 }
 
 // pull current data
 TShopJournal::TShopJournal(int shop)
 {
   TDatabase db(DB_SNEEZY);
+  year=time_info.year;
 
   db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
 
@@ -84,7 +86,7 @@ int TShopJournal::getPrevRetainedEarnings()
 {
   TDatabase db(DB_SNEEZY);
   
-  db.query("select retained_earnings from shoplog_retained_earnings where shop_nr=%i", shop_nr);
+  db.query("select retained_earnings from shoplog_retained_earnings where shop_nr=%i and sneezy_year=%i", shop_nr, year-1);
   db.fetchRow();
 
   return convertTo<int>(db["retained_earnings"]);
@@ -116,16 +118,9 @@ void TShopJournal::closeTheBooks()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select 1 from shoplog_retained_earnings where shop_nr=%i", shop_nr);
-  
-  if(db.fetchRow()){
-    db.query("update shoplog_retained_earnings set retained_earnings=%i where shop_nr=%i", getRetainedEarnings(), shop_nr);
-  } else {
-    db.query("insert into shoplog_retained_earnings (shop_nr, retained_earnings) values (%i, %i)", shop_nr, getRetainedEarnings());
-  }
-  
-  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i", shop_nr);
-  db.query("delete from shoplogjournal where shop_nr=%i", shop_nr);
+  db.query("insert into shoplog_retained_earnings (shop_nr, retained_earnings, sneezy_year) values (%i, %i, %i)", shop_nr, getRetainedEarnings(), year);  
+  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and year=%i", shop_nr, year);
+  db.query("delete from shoplogjournal where shop_nr=%i and year=%i", shop_nr, year);
 }
 
 

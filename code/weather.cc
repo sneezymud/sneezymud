@@ -204,7 +204,7 @@ void anotherHour()
 
 	  // close out the accounting year.
 	  for(unsigned int shop_nr=0;shop_nr<shop_index.size();shop_nr++){
-	    TShopJournal tsj(shop_nr);
+	    TShopJournal tsj(shop_nr, time_info.year-1);
 	    tsj.closeTheBooks();
 	  }
         }
