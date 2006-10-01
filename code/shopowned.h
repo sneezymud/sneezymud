@@ -15,6 +15,7 @@ class TShopJournal {
   int getAssets();
   int getLiabilities();
   int getShareholdersEquity();
+  void closeTheBooks();
 
   TShopJournal(int);
   TShopJournal(int,int);

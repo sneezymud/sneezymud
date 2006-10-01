@@ -107,6 +107,23 @@ int TShopJournal::getShareholdersEquity()
 }
 
 
+void TShopJournal::closeTheBooks()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select 1 from shoplog_retained_earnings where shop_nr=%i", shop_nr);
+  
+  if(db.fetchRow()){
+    db.query("update shoplog_retained_earnings set retained_earnings=%i where shop_nr=%i", getRetainedEarnings(), shop_nr);
+  } else {
+    db.query("insert into shoplog_retained_earnings (shop_nr, retained_earnings) values (%i, %i)", shop_nr, getRetainedEarnings());
+  }
+  
+  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i", shop_nr);
+  db.query("delete from shoplogjournal where shop_nr=%i", shop_nr);
+}
+
+
 void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 				  const sstring &name, int amt, bool new_id)
 {
