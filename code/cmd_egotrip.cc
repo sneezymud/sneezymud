@@ -79,9 +79,15 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		     "<W>flexibility<1>");
   blessings[AFFECT_MAROR_BLESSING]=
     ego_imm_blessing("Maror",
-        AFFECT_MAROR_BLESSING,
-        APPLY_KAR,
-        "<Y>luck<1>");
+		     AFFECT_MAROR_BLESSING,
+		     APPLY_KAR,
+		     "<Y>luck<1>");
+  blessings[AFFECT_DASH_BLESSING]=
+    ego_imm_blessing("Dash",
+		     AFFECT_DASH_BLESSING,
+		     APPLY_FOC,
+		     "<c>reflection<1>");
+
 
   return blessings;
 }
@@ -146,6 +152,8 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.modifier2 = 0;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  } else if(which==AFFECT_DASH_BLESSING){
+    // TBeing::affectedBySpell - plasma mirror
   }
 
   affectedData *afp;
@@ -153,11 +161,15 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   // now, each time a blessing is applied, increase the power of all
   // the other blessings.
   // EXCEPTION: not Maror's blessing -- it is a multipler and gets too high
+  // ANOTHER EXCEPTION: not the generic immunity blessing - this would change which
+  //                    immunity is applied, not the strength of it.
   // ** this only appears to increase the generic blessing nonmagic immunity
   // and vasco's noise modifier -- is that the intention?  almost irrelevant
+  // d: this should only increase the primary stat effects, not the 2ndary stuff
+
   if(success){
     for(afp = v->affected; afp; afp = afp->next){
-      if(afp->type==AFFECT_IMMORTAL_BLESSING ||
+      if( (afp->type==AFFECT_IMMORTAL_BLESSING && afp->location != APPLY_IMMUNITY) ||
 	 afp->type==AFFECT_ANGUS_BLESSING ||
 	 afp->type==AFFECT_PEEL_BLESSING ||
 	 afp->type==AFFECT_VASCO_BLESSING ||
@@ -165,6 +177,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 	 afp->type==AFFECT_DAMESCENA_BLESSING ||
 	 afp->type==AFFECT_JESUS_BLESSING ||
 	 afp->type==AFFECT_BUMP_BLESSING ||
+         afp->type==AFFECT_DASH_BLESSING ||
    (afp->type==AFFECT_MAROR_BLESSING && afp->location != APPLY_CRIT_FREQUENCY) ){
 	afp->modifier =(int)((float)afp->modifier * 1.5);
 	

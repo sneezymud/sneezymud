@@ -593,7 +593,7 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
     buf = "L.O.W. Error: ";
     break;
   case LOG_MISC: 
-    buf = "Misc Error: ";
+    buf = "Misc: ";
     break;
   case LOG_FILE:
     buf = "File I/O: ";

@@ -844,6 +844,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case AFFECT_CORAL_BLESSING:
     case AFFECT_BUMP_BLESSING:
     case AFFECT_MAROR_BLESSING:
+  case AFFECT_DASH_BLESSING:
     case ABSOLUTE_MAX_SKILL:
 #if 1
     case SPELL_EARTHMAW:

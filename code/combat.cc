@@ -3994,36 +3994,35 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
     
       // more absorbtion stuff..
-      affectedData *af;
-      for (af = vict->affected; af; af = af->next) {
-        if (af->type == SPELL_PLASMA_MIRROR) {
-          int dam_blocked = min(dam-1, 3);
-          dam_blocked = max(dam_blocked, 0);
-          dam -= dam_blocked;
-          if (dam_blocked) {
-            act("The swirls of plasma surrounding $n soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_NOTVICT);
-            act("The swirls of plasma surrounding you soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_CHAR);
-            act("The swirls of plasma surrounding $n soak up energy, sending it back toward you!", FALSE, vict, 0, this, TO_VICT);
-         
-            int rc = reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
-            if (rc == -1) 
-              retCode |= DELETE_THIS;
-          }
-        }
-        if (af->type == SPELL_THORNFLESH) {
-          int dam_blocked = min(dam-1, 3);
-          dam_blocked = max(dam_blocked, 0);
-          dam -= dam_blocked;
-          if (dam_blocked) {
-            act("<o>The thorns on $n's body hurt $N!<1>", FALSE, vict, 0, this, TO_NOTVICT);
-            act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE, vict, 0, this, TO_CHAR);
-            act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict, 0, this, TO_VICT);
-            int rc = reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
-            if (rc == -1) 
-              retCode |= DELETE_THIS;
-          }
-        }
+      //      affectedData *af;
+      if (vict->affectedBySpell(SPELL_PLASMA_MIRROR)) {
+	int dam_blocked = min(dam-1, 3);
+	dam_blocked = max(dam_blocked, 0);
+	dam -= dam_blocked;
+	if (dam_blocked) {
+	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_NOTVICT);
+	  act("The swirls of plasma surrounding you soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_CHAR);
+	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward you!", FALSE, vict, 0, this, TO_VICT);
+	  
+	  int rc = reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
+	  if (rc == -1) 
+	    retCode |= DELETE_THIS;
+	}
+      } else if (vict->affectedBySpell(SPELL_THORNFLESH)) {
+
+	int dam_blocked = min(dam-1, 3);
+	dam_blocked = max(dam_blocked, 0);
+	dam -= dam_blocked;
+	if (dam_blocked) {
+	  act("<o>The thorns on $n's body hurt $N!<1>", FALSE, vict, 0, this, TO_NOTVICT);
+	  act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE, vict, 0, this, TO_CHAR);
+	  act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict, 0, this, TO_VICT);
+	  int rc = reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
+	  if (rc == -1) 
+	    retCode |= DELETE_THIS;
+	}
       }
+
     }  // end check for SENT_MESS
 
     if (vict->equipment[part_hit])

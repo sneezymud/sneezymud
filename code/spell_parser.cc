@@ -2502,6 +2502,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case AFFECT_CORAL_BLESSING:
     case AFFECT_BUMP_BLESSING:
     case AFFECT_MAROR_BLESSING:
+    case AFFECT_DASH_BLESSING:
     case ABSOLUTE_MAX_SKILL:
         sendTo("Spell or discipline not yet implemented!\n\r");
         return FALSE;

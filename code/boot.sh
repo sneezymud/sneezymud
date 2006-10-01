@@ -18,6 +18,10 @@ case $USER in
   maror)
     PORT=6960
     ;;
+  dash)
+    PORT=6996
+    ;;
+
 esac
 
 if [ "$2" = "beta" ]
