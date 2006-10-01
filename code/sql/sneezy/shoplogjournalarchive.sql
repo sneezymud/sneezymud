@@ -1,4 +1,4 @@
-myslcreate table shoplogjournal (
+create table shoplogjournal (
   shop_nr int,
   journal_id int auto_increment,
   customer_name text,
