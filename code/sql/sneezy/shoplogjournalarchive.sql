@@ -1,4 +1,4 @@
-create table shoplogjournal (
+create table shoplogjournalarchive (
   shop_nr int,
   journal_id int auto_increment,
   customer_name text,
