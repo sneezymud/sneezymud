@@ -448,6 +448,11 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
 void TShopOwned::giveStatements(sstring arg)
 {
+  if(!hasAccess(SHOPACCESS_LOGS)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return;
+  }
+
   int year=convertTo<int>(arg);
   if(!year)
     year=time_info.year;
