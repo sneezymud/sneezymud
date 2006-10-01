@@ -32,6 +32,81 @@ bool sameAccount(sstring buf, int shop_nr){
   return FALSE;
 }
 
+// pull data from archive
+TShopJournal::TShopJournal(int shop, int year)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", year, shop);
+
+  while(db.fetchRow()){
+    values[db["name"]]=abs(convertTo<int>(db["amt"]));
+  }
+
+  shop_nr=shop;
+}
+
+// pull current data
+TShopJournal::TShopJournal(int shop)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
+
+  while(db.fetchRow()){
+    values[db["name"]]=abs(convertTo<int>(db["amt"]));
+  }
+  
+  shop_nr=shop;
+}
+
+int TShopJournal::getValue(const sstring &val)
+{
+  return values[val];
+}
+
+int TShopJournal::getExpenses()
+{
+  return values["COGS"]+values["Tax"]+values["Expenses"];
+}
+
+int TShopJournal::getNetIncome()
+{
+  return values["Sales"]-getExpenses();
+}
+
+int TShopJournal::getPrevRetainedEarnings()
+{
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("select retained_earnings from shoplog_retained_earnings where shop_nr=%i", shop_nr);
+  db.fetchRow();
+
+  return convertTo<int>(db["retained_earnings"]);
+}
+
+int TShopJournal::getRetainedEarnings()
+{
+  return (getNetIncome()+getPrevRetainedEarnings())-values["Dividends"];
+}
+
+int TShopJournal::getAssets()
+{
+  return values["Cash"]+values["Inventory"];
+}
+
+int TShopJournal::getLiabilities()
+{
+  // no debt or anything yet!  no liabilities
+  return 0;
+}
+
+int TShopJournal::getShareholdersEquity()
+{
+  return values["Paid-in Capital"]+getRetainedEarnings();
+}
+
+
 void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 				  const sstring &name, int amt, bool new_id)
 {

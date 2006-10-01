@@ -1,6 +1,25 @@
 #ifndef __SHOPOWNED_H
 #define __SHOPOWNED_H
 
+class TShopJournal {
+  map <sstring, int> values;
+  int shop_nr;
+
+ public:
+  int getValue(const sstring &);
+
+  int getExpenses();
+  int getNetIncome();
+  int getPrevRetainedEarnings();
+  int getRetainedEarnings();
+  int getAssets();
+  int getLiabilities();
+  int getShareholdersEquity();
+
+  TShopJournal(int);
+  TShopJournal(int,int);
+};
+
 class TShopOwned {
   int shop_nr;
   TMonster *keeper;
