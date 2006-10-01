@@ -610,6 +610,27 @@ void Race::initRace(const char *whichRace)
 
 }
 
+int Race::getMinWeight(sexTypeT sex) const
+{
+  if(sex==SEX_MALE){
+    return(baseMaleWeight + maleWtNumDice);
+  } else if(sex==SEX_FEMALE){
+    return(baseFemaleWeight + femaleWtNumDice);
+  }
+  return 0;
+}
+
+int Race::getMaxWeight(sexTypeT sex) const
+{
+  if(sex==SEX_MALE){
+    return(baseMaleWeight + (maleWtNumDice * maleWtDieSize));
+  } else if(sex==SEX_FEMALE){
+    return(baseFemaleWeight + (femaleWtNumDice * femaleWtDieSize));
+  }
+  return 0;
+}
+
+
 // showTo() is called by immortal.cc's doShow command.  It takes a single
 // argument which is a pointer to the person who called the show command.
 

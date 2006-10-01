@@ -821,12 +821,16 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
+
     if(pl.update_stuff){
-      if(dynamic_cast<TPerson *>(tmp_ch)){
+      if(dynamic_cast<TPerson *>(tmp_ch) && !tmp_ch->isImmortal()){
 	// nutrition is a measure of the amount of calories eaten subtracting
 	// the amount worked off
 	// if the balance gets out of wack far enough, you gain or lose
 	// a pound and the balance is reset
+
+	// threshold is the net balance required before weight gain or loss
+	int threshold=5000;
 
 	int nutrition=0;
 	if(tmp_ch->getCond(FULL) <= 5) // stomach growling
@@ -849,18 +853,22 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 
 	tmp_ch->addToNutrition(nutrition);
 
-#if 0	
-	if(tmp_ch->getNutrition() > 1000){
-	  //	  tmp_ch->sendTo("You feel as though you've been putting on some weight.\n\r");
-	  //	  tmp_ch->setWeight(tmp_ch->getWeight()+1);
+
+	if(tmp_ch->getNutrition() > threshold){
+	  if((tmp_ch->getWeight()+1) <= 
+	     tmp_ch->getMyRace()->getMaxWeight(tmp_ch->getSex())){
+	    tmp_ch->sendTo("You feel as though you've been putting on some weight.\n\r");
+	    tmp_ch->setWeight(tmp_ch->getWeight()+1);
+	  }
 	  tmp_ch->setNutrition(0);
-	} else if(tmp_ch->getNutrition() <= -1000){
-	  //	  tmp_ch->sendTo("You feel as though you've been losing some weight.\n\r");
-	  //	  tmp_ch->setWeight(tmp_ch->getWeight()-1);
+	} else if(tmp_ch->getNutrition() < -threshold){
+	  if((tmp_ch->getWeight()-1) >= 
+	     tmp_ch->getMyRace()->getMinWeight(tmp_ch->getSex())){
+	    tmp_ch->sendTo("You feel as though you've been losing some weight.\n\r");
+	    tmp_ch->setWeight(tmp_ch->getWeight()-1);
+	  }
 	  tmp_ch->setNutrition(0);
 	}
-#endif
-
       }
     }
 	

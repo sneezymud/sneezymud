@@ -779,6 +779,7 @@ int TBeing::getNutrition()
   TDatabase db(DB_SNEEZY);
 
   db.query("select nutrition from player where id=%i", getPlayerID());
+  db.fetchRow();
 
   return convertTo<int>(db["nutrition"]);
 }

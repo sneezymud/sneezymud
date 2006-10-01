@@ -197,6 +197,8 @@ public:
   int getBaseMaleHeight() const;
   int getMaleHtNumDice() const;
   int getMaleHtDieSize() const;
+  int getMinWeight(sexTypeT) const;
+  int getMaxWeight(sexTypeT) const;
   sstring getSingularName() const;
   sstring getPluralName() const;
   sstring getProperName() const;
