@@ -1212,6 +1212,10 @@ int TBeing::doGoto(const sstring & argument)
   buf=argument.word(0);
   tStString=argument.word(1);
 
+  // allow "goto shop #"
+  if(buf == "shop" && desc)
+    buf=fmt("%i") % shop_index[convertTo<int>(tStString)].in_room;
+
   if (buf.empty()) {
     char tString[10];
 
