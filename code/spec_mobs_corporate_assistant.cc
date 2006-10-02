@@ -119,12 +119,26 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
     return;
   }
   
-
-  db.query("select c.name, sum(s.gold) as gold, b.talens as banktalens, count(s.shop_nr) as shops, bank, sob.corp_id as bankowner from shopowned sob, corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where sob.shop_nr=c.bank and c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id order by c.corp_id", corp_id);
+  db.query("\
+  select c.name, sum(s.gold) as gold, b.talens as banktalens, \
+    count(s.shop_nr) as shops, bank, sob.corp_id as bankowner \
+  from shopowned sob, \
+    corporation c left outer join shopownedcorpbank b on(c.corp_id=b.corp_id),\
+    shopowned so, shop s \
+  where sob.shop_nr=c.bank and c.corp_id=so.corp_id and c.corp_id=%i and \
+    so.shop_nr=s.shop_nr \
+  group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id \
+  order by c.corp_id", corp_id);
   
   if(!db.fetchRow()){
-    me->doTell(ch->getName(), "I don't have any information for that corporation.");
-    return;
+    // they don't own any shops, so use a different query because I'm too
+    // lazy to put more outer joins in the one above
+    db.query("select c.name, 0 as gold, b.talens as banktalens, 0 as shops, bank, sob.corp_id as bankowner from shopowned sob, corporation c left outer join shopownedcorpbank b on(c.corp_id=b.corp_id) where sob.shop_nr=c.bank and c.corp_id=%i group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id order by c.corp_id", corp_id);
+
+    if(!db.fetchRow()){
+      me->doTell(ch->getName(), "I don't have any information for that corporation.");
+      return;
+    }
   }
   
   me->doTell(ch->getName(), fmt("%-3i| %s") %
