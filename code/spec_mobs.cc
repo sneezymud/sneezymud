@@ -2845,8 +2845,8 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     price = (int)((float) pet->petPrice() * 
 		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
-    me->doTell(ch->name, fmt("A pet %s will cost %d to purchase") % fname(pet->name) % price);
-    me->doTell(ch->name, fmt("and %d to rent.") % (pet->petPrice() / 4));
+    me->doTell(ch->name, fmt("A pet %s will cost %d to purchase.") % fname(pet->name) % price);
+    //    me->doTell(ch->name, fmt("and %d to rent.") % (pet->petPrice() / 4));
     if (ch->isImmortal()) {
     } else if (!ch->hasClass(CLASS_RANGER)) {
       if ((4 * petLevel) > (3 * pcLevel)) {
