@@ -51,6 +51,7 @@ class TShopOwned {
   int getMaxReserve();
   int doReserve();
   int chargeTax(int, const sstring &, TObj *);
+  int getTaxShopNr();
 
   // repair specific
   double getQuality();

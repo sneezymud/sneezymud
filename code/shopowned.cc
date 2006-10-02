@@ -397,6 +397,18 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   access=getShopAccess(shop_nr, ch);
 }
 
+int TShopOwned::getTaxShopNr()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select tax_nr from shopowned where shop_nr=%i", shop_nr);
+
+  if(!db.fetchRow())
+    return -1;
+
+  return convertTo<int>(db["tax_nr"]);
+}
+
 int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 {
   int tax_office;
@@ -406,13 +418,7 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   if(hasAccess(SHOPACCESS_OWNER))
     return 0;
 
-  db.query("select tax_nr from shopownedtax where shop_nr=%i", shop_nr);
-
-  // no entry, no tax
-  if(!db.fetchRow())
-    return 0;
-
-  tax_office=convertTo<int>(db["tax_nr"]);
+  tax_office=getTaxShopNr();
 
   cost = (int)((float)cost * shop_index[tax_office].getProfitBuy(o, ch));
   
@@ -898,7 +904,7 @@ void TShopOwned::showInfo()
   }
 
   
-  db.query("select r.name as name from room r, shopownedtax st, shop s where r.vnum=s.in_room and s.shop_nr=st.tax_nr and st.shop_nr=%i", shop_nr);
+  db.query("select r.name as name from room r, shopowned st, shop s where r.vnum=s.in_room and s.shop_nr=st.tax_nr and st.shop_nr=%i", shop_nr);
 
   if(db.fetchRow()){
     keeper->doTell(ch->getName(), fmt("This shop is taxed by %s.") % 

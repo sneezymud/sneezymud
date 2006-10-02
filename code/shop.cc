@@ -2334,7 +2334,7 @@ void bootTheShops()
     shop_index.push_back(sd);
   }
 
-  db.query("select shop_nr from shop where shop_nr not in (select shop_nr from shopownedtax)");
+  db.query("select shop_nr from shop where tax_nr is null");
 
   while(db.fetchRow()){
     vlogf(LOG_LOW, fmt("Shop %s is untaxed.") % db["shop_nr"]);
