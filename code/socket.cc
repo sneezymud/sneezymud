@@ -1137,8 +1137,8 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	    r=ch->roomp;
 	} else
 	  r = cup->roomp;
-	
-	if(r){
+
+	if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
 	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
 	     cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
 	    int rc=cup->freezeObject(ch, 0);

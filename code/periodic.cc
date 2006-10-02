@@ -2013,7 +2013,7 @@ int TBeing::terrainSpecial()
     affectedData aff;
     aff.type = AFFECT_WAS_INDOORS;
     aff.level = 50;
-    aff.duration = UPDATES_PER_MUDHOUR * 2;
+    aff.duration = UPDATES_PER_MUDHOUR * 12;
     affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
   }
 
