@@ -222,7 +222,7 @@ do
   echo -n "Booting ${SNEEZY} ${PROD_PORT} on $(date)" >> ${REBOOTER_LOG}
   {
     ${SNEEZY} ${PROD_PORT} > "${SNEEZY_LOG}" 2>&1 &
-  }
+  } >> ${REBOOTER_LOG} 2>&1
   PROD_PID="$!"
   echo ", pid=${PROD_PID}" >> ${REBOOTER_LOG}
   wait
