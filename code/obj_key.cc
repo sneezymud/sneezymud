@@ -4,6 +4,8 @@
 #include "obj_open_container.h"
 #include "obj_keyring.h"
 #include "obj_key.h"
+#include "database.h"
+
 TKey::TKey() :
   TObj()
 {
@@ -48,10 +50,14 @@ sstring TKey::statObjInfo() const
 
 void TKey::lowCheck()
 {
-  if ((obj_flags.cost >= 0) && isRentable() &&
-           isname("[housekey]", getName()) &&
-           (obj_flags.decay_time <= 0))
-    vlogf(LOG_LOW, fmt("rentable key (%s)!") %  getName());
+  TDatabase db(DB_SNEEZY);
+
+  if(isRentable()){
+    db.query("select 1 from property where key_vnum=%i", objVnum());
+    
+    if(!db.fetchRow())
+      vlogf(LOG_LOW, fmt("rentable key %i (%s)!") % objVnum() %  getName());
+  }
 
   TObj::lowCheck();
 }
