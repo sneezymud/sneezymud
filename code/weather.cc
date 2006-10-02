@@ -13,6 +13,7 @@
 #include "process.h"
 #include "shopowned.h"
 #include "shop.h"
+#include "shopaccounting.h"
 
 // what stage is moon in?  (0 - 31) 
 int moontype;

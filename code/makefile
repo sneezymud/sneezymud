@@ -161,7 +161,7 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	toggle.o 		trap.o  		utility.o          \
 	weather.o 		sys_loot.o 		wiz_data.o         \
 	wiz_powers.o 		shopowned.o		corporation.o	   \
-	liquids.o		guild.o
+	liquids.o		guild.o			shopaccounting.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
@@ -514,6 +514,165 @@ $(OBJDIR)%.o : %.cc
 
 # DO NOT DELETE
 
+objs/actions.accounting_convert.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/actions.accounting_convert.o: /usr/include/features.h
+objs/actions.accounting_convert.o: /usr/include/sys/cdefs.h
+objs/actions.accounting_convert.o: /usr/include/gnu/stubs.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstddef
+objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/actions.accounting_convert.o: /usr/include/stdio.h
+objs/actions.accounting_convert.o: /usr/include/bits/types.h
+objs/actions.accounting_convert.o: /usr/include/bits/wordsize.h
+objs/actions.accounting_convert.o: /usr/include/bits/typesizes.h
+objs/actions.accounting_convert.o: /usr/include/libio.h
+objs/actions.accounting_convert.o: /usr/include/_G_config.h
+objs/actions.accounting_convert.o: /usr/include/wchar.h
+objs/actions.accounting_convert.o: /usr/include/bits/wchar.h
+objs/actions.accounting_convert.o: /usr/include/gconv.h
+objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/actions.accounting_convert.o: /usr/include/bits/stdio_lim.h
+objs/actions.accounting_convert.o: /usr/include/bits/sys_errlist.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstdlib
+objs/actions.accounting_convert.o: /usr/include/stdlib.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ctime
+objs/actions.accounting_convert.o: /usr/include/time.h
+objs/actions.accounting_convert.o: /usr/include/bits/time.h
+objs/actions.accounting_convert.o: /usr/include/sys/types.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cctype
+objs/actions.accounting_convert.o: /usr/include/ctype.h /usr/include/endian.h
+objs/actions.accounting_convert.o: /usr/include/bits/endian.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cassert
+objs/actions.accounting_convert.o: /usr/include/assert.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstring
+objs/actions.accounting_convert.o: /usr/include/string.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cmath
+objs/actions.accounting_convert.o: /usr/include/math.h
+objs/actions.accounting_convert.o: /usr/include/bits/huge_val.h
+objs/actions.accounting_convert.o: /usr/include/bits/mathdef.h
+objs/actions.accounting_convert.o: /usr/include/bits/mathcalls.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cerrno
+objs/actions.accounting_convert.o: /usr/include/errno.h
+objs/actions.accounting_convert.o: /usr/include/bits/errno.h
+objs/actions.accounting_convert.o: /usr/include/linux/errno.h
+objs/actions.accounting_convert.o: /usr/include/asm/errno.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/string
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/actions.accounting_convert.o: /usr/include/pthread.h
+objs/actions.accounting_convert.o: /usr/include/sched.h
+objs/actions.accounting_convert.o: /usr/include/bits/sched.h
+objs/actions.accounting_convert.o: /usr/include/signal.h
+objs/actions.accounting_convert.o: /usr/include/bits/sigset.h
+objs/actions.accounting_convert.o: /usr/include/bits/pthreadtypes.h
+objs/actions.accounting_convert.o: /usr/include/bits/initspin.h
+objs/actions.accounting_convert.o: /usr/include/bits/sigthread.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cwchar
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/memory
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/climits
+objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/actions.accounting_convert.o: /usr/include/limits.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/new
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/exception
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/iosfwd
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/clocale
+objs/actions.accounting_convert.o: /usr/include/locale.h
+objs/actions.accounting_convert.o: /usr/include/bits/locale.h
+objs/actions.accounting_convert.o: /usr/include/langinfo.h
+objs/actions.accounting_convert.o: /usr/include/nl_types.h
+objs/actions.accounting_convert.o: /usr/include/iconv.h
+objs/actions.accounting_convert.o: /usr/include/libintl.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/algorithm
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/vector
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/map
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/list
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/iostream
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ostream
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ios
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/streambuf
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cwctype
+objs/actions.accounting_convert.o: /usr/include/wctype.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/locale
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/limits
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/typeinfo
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/istream
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/sstream
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/fstream
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/fstream.tcc
+objs/actions.accounting_convert.o: sstring.h low.h enum.h spells.h structs.h
+objs/actions.accounting_convert.o: parse.h immunity.h discipline.h spell2.h
+objs/actions.accounting_convert.o: db.h ansi.h cmd_dissect.h client.h
+objs/actions.accounting_convert.o: response.h faction.h comm.h toggle.h
+objs/actions.accounting_convert.o: wiz_powers.h cmd_message.h stats.h limbs.h
+objs/actions.accounting_convert.o: body.h race.h skills.h disease.h trap.h
+objs/actions.accounting_convert.o: task.h weather.h sound.h create.h thing.h
+objs/actions.accounting_convert.o: obj.h spec_objs.h room.h connect.h
+objs/actions.accounting_convert.o: obj_drug.h charfile.h being.h guild.h
+objs/actions.accounting_convert.o: person.h monster.h paths.h account.h
+objs/actions.accounting_convert.o: extern.h handler.h obj_money.h spec_mobs.h
+objs/actions.accounting_convert.o: materials.h colorstring.h format.h
+objs/actions.accounting_convert.o: obj_pool.h obj_base_cup.h obj_plant.h
+objs/actions.accounting_convert.o: obj_expandable_container.h
+objs/actions.accounting_convert.o: obj_open_container.h obj_base_container.h
+objs/actions.accounting_convert.o: disc_sorcery.h liquids.h shop.h
+objs/actions.accounting_convert.o: shopowned.h
 objs/actions.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/actions.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/actions.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -29122,7 +29281,12 @@ objs/obj_key.o: connect.h obj_drug.h charfile.h being.h guild.h person.h
 objs/obj_key.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/obj_key.o: spec_mobs.h materials.h colorstring.h format.h
 objs/obj_key.o: obj_open_container.h obj_base_container.h obj_keyring.h
-objs/obj_key.o: obj_expandable_container.h obj_key.h
+objs/obj_key.o: obj_expandable_container.h obj_key.h database.h
+objs/obj_key.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/obj_key.o: /usr/include/mysql/mysql_time.h
+objs/obj_key.o: /usr/include/mysql/mysql_version.h
+objs/obj_key.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/obj_key.o: /usr/include/mysql/my_alloc.h
 objs/obj_keyring.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_keyring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_keyring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -35359,7 +35523,12 @@ objs/periodic.o: mail.h disc_monk.h obj_component.h obj_player_corpse.h
 objs/periodic.o: obj_base_corpse.h obj_base_container.h obj_opal.h
 objs/periodic.o: obj_seethru.h obj_plant.h obj_expandable_container.h
 objs/periodic.o: obj_open_container.h obj_egg.h obj_food.h obj_trash_pile.h
-objs/periodic.o: process.h obj_pool.h obj_base_cup.h
+objs/periodic.o: process.h obj_pool.h obj_base_cup.h database.h
+objs/periodic.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/periodic.o: /usr/include/mysql/mysql_time.h
+objs/periodic.o: /usr/include/mysql/mysql_version.h
+objs/periodic.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/periodic.o: /usr/include/mysql/my_alloc.h
 objs/pets.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37560,6 +37729,144 @@ objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
 objs/shop.o: obj_component.h obj_potion.h obj_base_cup.h spec_rooms.h
+objs/shopaccounting.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/shopaccounting.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/shopaccounting.o: /usr/include/gnu/stubs.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cstddef
+objs/shopaccounting.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/shopaccounting.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/shopaccounting.o: /usr/include/bits/wordsize.h
+objs/shopaccounting.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+objs/shopaccounting.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/shopaccounting.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/shopaccounting.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/shopaccounting.o: /usr/include/bits/stdio_lim.h
+objs/shopaccounting.o: /usr/include/bits/sys_errlist.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/shopaccounting.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/shopaccounting.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/shopaccounting.o: /usr/include/bits/huge_val.h
+objs/shopaccounting.o: /usr/include/bits/mathdef.h
+objs/shopaccounting.o: /usr/include/bits/mathcalls.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/shopaccounting.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/shopaccounting.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/shopaccounting.o: /usr/include/pthread.h /usr/include/sched.h
+objs/shopaccounting.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/shopaccounting.o: /usr/include/bits/sigset.h
+objs/shopaccounting.o: /usr/include/bits/pthreadtypes.h
+objs/shopaccounting.o: /usr/include/bits/initspin.h
+objs/shopaccounting.o: /usr/include/bits/sigthread.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cwchar
+objs/shopaccounting.o: /usr/include/c++/3.3.4/memory
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/climits
+objs/shopaccounting.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/shopaccounting.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/shopaccounting.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/shopaccounting.o: /usr/include/c++/3.3.4/exception
+objs/shopaccounting.o: /usr/include/c++/3.3.4/iosfwd
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/shopaccounting.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/shopaccounting.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/shopaccounting.o: /usr/include/libintl.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/algorithm
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/vector
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/map
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/list
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/iostream
+objs/shopaccounting.o: /usr/include/c++/3.3.4/ostream
+objs/shopaccounting.o: /usr/include/c++/3.3.4/ios
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/streambuf
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/locale
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/limits
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/typeinfo
+objs/shopaccounting.o: /usr/include/c++/3.3.4/istream
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/sstream
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/fstream
+objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h
+objs/shopaccounting.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/shopaccounting.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/shopaccounting.o: client.h response.h faction.h comm.h toggle.h
+objs/shopaccounting.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/shopaccounting.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/shopaccounting.o: sound.h create.h thing.h obj.h spec_objs.h room.h
+objs/shopaccounting.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/shopaccounting.o: person.h monster.h paths.h account.h extern.h
+objs/shopaccounting.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/shopaccounting.o: colorstring.h format.h shopowned.h database.h
+objs/shopaccounting.o: /usr/include/mysql/mysql.h
+objs/shopaccounting.o: /usr/include/mysql/mysql_com.h
+objs/shopaccounting.o: /usr/include/mysql/mysql_time.h
+objs/shopaccounting.o: /usr/include/mysql/mysql_version.h
+objs/shopaccounting.o: /usr/include/mysql/typelib.h
+objs/shopaccounting.o: /usr/include/mysql/my_list.h
+objs/shopaccounting.o: /usr/include/mysql/my_alloc.h shop.h corporation.h
+objs/shopaccounting.o: obj_note.h shopaccounting.h
 objs/shopinfo.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37845,6 +38152,7 @@ objs/shopowned.o: /usr/include/mysql/mysql_time.h
 objs/shopowned.o: /usr/include/mysql/mysql_version.h
 objs/shopowned.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/shopowned.o: /usr/include/mysql/my_alloc.h shop.h corporation.h
+objs/shopowned.o: obj_note.h
 objs/show.o: /usr/include/dirent.h /usr/include/features.h
 objs/show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/show.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
@@ -53345,6 +53653,7 @@ objs/weather.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/weather.o: spec_mobs.h materials.h colorstring.h format.h
 objs/weather.o: obj_trash_pile.h obj_expandable_container.h
 objs/weather.o: obj_open_container.h obj_base_container.h process.h
+objs/weather.o: shopowned.h shop.h
 objs/wiz_data.o: /usr/include/unistd.h /usr/include/features.h
 objs/wiz_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/wiz_data.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
