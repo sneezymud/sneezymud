@@ -7,6 +7,7 @@ CREATE TABLE shopowned (
     dividend double precision,
     reserve_max integer,
     reserve_min integer,
+    tax_nr integer,
     no_such_item1 varchar(127),
     no_such_item2 varchar(127),
     do_not_buy varchar(127),
