@@ -293,7 +293,6 @@ TObj *loadRepairItem(TBeing *repair, int ticket,
   il.setFile(fp);
   il.setVersion(version);
   obj=il.raw_read_item();
-  fclose(fp);
 
   return obj;
 }
