@@ -4268,7 +4268,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         me->doSay(buf);
 
 	TShopOwned tso(find_shop_nr(me->number), me, ch);
-	tso.doBuyTransaction(cost, item->getName(), "engraving");
+	tso.doBuyTransaction(cost, fmt("engraving %s") % item->getName(), 
+			     "buying service");
 
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];

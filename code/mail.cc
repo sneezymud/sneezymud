@@ -158,7 +158,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   if (!imm) {
     me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") % amt);
     TShopOwned tso(shop_nr, me, this);
-    tso.doBuyTransaction(amt, recipient, "mailing");
+    tso.doBuyTransaction(amt, fmt("mailing %s") % recipient, "buying service");
   } else if (isImmortal()) {
     me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
   } else {
