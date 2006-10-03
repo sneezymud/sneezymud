@@ -501,6 +501,7 @@ ItemLoad::~ItemLoad()
 {
   if(fp)
     fclose(fp);
+  fp=NULL;
 }
 
 bool ItemLoad::readVersion()
@@ -521,6 +522,7 @@ ItemSave::~ItemSave()
 {
   if(fp)
     fclose(fp);
+  fp=NULL;
 }
 
 bool ItemSave::openFile(const sstring &filepath)
@@ -3274,6 +3276,7 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
   unsigned char version;
   TObj *new_obj;
   int rc;
+  ItemLoad il;
 
   bool fp2_open = false;
   FILE *fp2 = NULL;
@@ -3603,7 +3606,6 @@ float old_ac_lev = mob->getACLevel();
           break;
         fp2_open = true;
       }
-      ItemLoad il;
       il.setFile(fp2); // ItemLoad destructor will fclose this
       il.setVersion(version);
       if (tmp != -1 && (new_obj = il.raw_read_item())) {
@@ -3719,6 +3721,8 @@ float old_ac_lev = mob->getACLevel();
       delete mob;
     }
   }
+  if(fp2_open)
+    fclose(fp2);
 }
 
 // this routine simply tracks items and mobs held in rent by players.
@@ -4274,6 +4278,9 @@ bool TBeing::saveFollowers(bool rent_time)
     }
   }
   fclose(fp);
+
+  if(fp2_open)
+    fclose(fp2);
 
   if (!found) {
     wipeFollowersFile(tmp->name);
