@@ -191,7 +191,7 @@ handle_core()
       list
       bt
     EOF)
-    curl -F "SUBJ=Stacktrace of core.${DATE_STAMP};MSG=$DUMP" http://forums.sneezymud.com/smf/post-core.php
+    curl -F "SUBJ=Stacktrace of core.${DATE_STAMP}" -F "MSG=$DUMP" http://forums.sneezymud.com/smf/post-core.php
   fi
 
 }
