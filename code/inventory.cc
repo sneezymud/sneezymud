@@ -29,6 +29,7 @@
 #include "obj_potion.h"
 #include "obj_card_deck.h"
 #include "obj_suitcase.h"
+#include "obj_bed.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -1466,6 +1467,80 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
   return FALSE;
 }
 
+int TBed::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
+{
+  char newarg[100], capbuf[256];
+  int rc;
+  int p;
+
+  if (getall(arg1, newarg)) {
+    if (!get_thing_on_list_vis(ch, newarg, rider)) {
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      return TRUE;
+    }
+    if (ch->getPosition() <= POSITION_SITTING) {
+      ch->sendTo("You need to be standing to do that.\n\r");
+      if (!ch->awake())
+        return TRUE;   // sleeping
+      ch->doStand();
+ 
+      if (ch->fight())
+        return TRUE;  // don't fall through
+    }
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+      act("You can't get things from $p while mounted!", 
+           FALSE, ch, this, 0, TO_CHAR);
+      return TRUE;
+    }
+    sprintf(capbuf, "%s %s", newarg, arg2);
+    act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
+    act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
+    start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL,capbuf,350, ch->in_room,1,0, 0);
+    // this is a kludge, task_get still has a tiny delay on it
+    // this dumps around it and goes right to the guts
+    rc = (*(tasks[TASK_GET_ALL].taskf))
+        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_VICT;
+    }
+    return TRUE;
+  } else if ((p = getabunch(arg1, newarg))) {
+    if (!get_thing_on_list_vis(ch, newarg, rider)) {
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      return TRUE;
+    }
+    if (ch->getPosition() <= POSITION_SITTING) {
+      ch->sendTo("You need to be standing to do that.\n\r");
+      if (!ch->awake())
+        return TRUE;   // sleeping
+      ch->doStand();
+ 
+      if (ch->fight())
+        return TRUE;  // don't fall through
+    }
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+      act("You can't get things from $p while mounted!", 
+           FALSE, ch, this, 0, TO_CHAR);
+      return TRUE;
+    }
+    sprintf(capbuf, "%s %s", newarg, arg2);
+    act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
+    act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
+    start_task(ch, ch->roomp->getStuff(), ch->roomp,TASK_GET_ALL,capbuf,350, ch->in_room,0,p+1,0);
+    // this is a kludge, task_get still has a tiny delay on it
+    // this dumps around it and goes right to the guts
+    rc = (*(tasks[TASK_GET_ALL].taskf))
+        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_VICT;
+    }
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+
 // TRUE put ok, FALSE put failed, 2 failed and stop attempting further puts
 // DELETE_THIS, DELETE_ITEM(obj), DELETE_VICT(ch)
 int TThing::putSomethingInto(TBeing *ch, TThing *)
@@ -1750,6 +1825,28 @@ void TTable::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
     act("$n gets $p off $P.", 1, ch, obj, this, TO_ROOM);
   }
 }
+
+void TBed::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
+{
+  TBeing *tbt = dynamic_cast<TBeing *>(obj);
+  positionTypeT new_pos = POSITION_DEAD;
+  if (tbt)
+    new_pos = tbt->getPosition();
+  obj->dismount(new_pos);
+
+  --(*obj);
+  *ch += *obj;
+
+  TObj *tobj = dynamic_cast<TObj *>(obj);
+  if (tobj && tobj->isObjStat(ITEM_ATTACHED)) {
+    act("You detach $p from $P and get it.", 0, ch, tobj, this, TO_CHAR);
+    act("$n detachs $p from $P and gets it.", 1, ch, tobj, this, TO_ROOM);
+  } else {
+    act("You get $p off $P.", 0, ch, obj, this, TO_CHAR);
+    act("$n gets $p off $P.", 1, ch, obj, this, TO_ROOM);
+  }
+}
+
 
 void TThing::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
 {

@@ -98,19 +98,43 @@ void TBed::changeObjValue1(TBeing *ch)
   return;
 }
 
+int TBed::getAllFrom(TBeing *ch, const char *argument)
+{
+  int rc;
+
+  act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
+  act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
+  start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,0,0);
+  // this is a kludge, task_get still has a tiny delay on it
+  // this dumps around it and goes right to the guts
+  rc = (*(tasks[TASK_GET_ALL].taskf))
+      (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    return DELETE_VICT;
+  }
+  return FALSE;
+}
+
+bool TBed::isSimilar(const TThing *t) const
+{
+  // things on them should make them dissimilar
+  if (rider)
+    return FALSE;
+
+  const TBed *ttab = dynamic_cast<const TBed *>(t);
+  if (ttab && ttab->rider) {
+    return FALSE;
+  }
+  return TObj::isSimilar(t);
+}
+
+
 int TBed::putSomethingInto(TBeing *ch, TThing *tThing)
 {
-  ch->sendTo("That's made for you to rest on, not as a storage spot for your junk.\n\r");
-  /*
-   * ALLOWING OBJECTS TO BE PUT IN A BED CAUSES A CRASH IF THE OBJECTS ARE HELD
-   * ALSO, THERE IS NO FUNCTION TO GET THINGS FROM A BED
-   *
-   * BEFORE THIS CODE IS PUT BACK IN, BOTH OF THOSE ISSUES NEED TO BE ADDRESSED
-   */
-  /*
   TBaseCorpse *corpse;
 
-  if(!(corpse=dynamic_cast<TBaseCorpse *>(tThing))){
+  if(!(corpse=dynamic_cast<TBaseCorpse *>(tThing)) ||
+     this->parent){
     ch->sendTo("You cannot do that.\n\r");
     return 2;
   }
@@ -126,7 +150,7 @@ int TBed::putSomethingInto(TBeing *ch, TThing *tThing)
 
   act("You prop up $p on $N.", TRUE, ch, tThing, this, TO_CHAR);
   act("$N props up $p on $N.", TRUE, ch, tThing, this, TO_ROOM);
-*/
+
 
   return 0;
 }

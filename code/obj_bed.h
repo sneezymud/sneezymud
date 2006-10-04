@@ -37,6 +37,11 @@ class TBed : public TObj {
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void lowCheck();
     int putSomethingInto(TBeing *, TThing *);
+    virtual int getAllFrom(TBeing *, const char *);
+    virtual int getObjFrom(TBeing *, const char *, const char *);
+    virtual void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
+    virtual bool isSimilar(const TThing *t) const;
+
 
     int getMinPosUse() const;
     void setMinPosUse(int n);
