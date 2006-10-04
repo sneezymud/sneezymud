@@ -850,14 +850,22 @@ void TMonster::raiseLevel(classIndT Class)
   setLevel(Class, (int) getLevel(Class)+1);
   calcMaxLevel();
 
-  // set the hit and damage levels
-  setHPLevel(getHPLevel()+1);
-  setHPFromHPLevel();
-  setDamLevel(getDamLevel()+1);
-  setACLevel(getACLevel()+1);
-  setACFromACLevel();
 
-  assignSkillsClass();
+  if (desc && desc->original) { // polymorphed, level the PC in storage
+    //setLevel(Class, (int) getLevel(Class)+1);
+    desc->original->setExp(getExp());
+    desc->original->setMaxExp(getMaxExp());
+    desc->original->raiseLevel(Class);
+  } else { // level as mob
+    // set the hit and damage levels
+    setHPLevel(getHPLevel()+1);
+    setHPFromHPLevel();
+    setDamLevel(getDamLevel()+1);
+    setACLevel(getACLevel()+1);
+    setACFromACLevel();
+
+    assignSkillsClass();
+  }
 }
 
 

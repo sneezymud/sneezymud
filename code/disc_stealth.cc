@@ -149,8 +149,6 @@ int conceal(TBeing *caster, TBeing *vict)
 
 int TBeing::doDisguise(const char *arg)
 {
-  sendTo("This skill has been temporarily disabled.\n\r");
-  return FALSE;
   
   char name_buf[MAX_INPUT_LENGTH];
   int rc;
@@ -310,6 +308,8 @@ int disguise(TBeing *caster, char * buffer)
   if (caster->desc->original) {
     // implies they are switched, while already switched (as x disguise)
     caster->sendTo("You already seem to be switched.\n\r");
+    delete mob;
+    mob = NULL;
     return FALSE;
   }
 

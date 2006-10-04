@@ -1133,6 +1133,7 @@ if(gain_pracs > 0){
     // check for level gain
     // do this last, so as not to mess up predefined values
   if (gain  > 0) {
+
 //    vlogf(LOG_MAROR, fmt("getExp %f gain %f peak %f getMaxExp %f")
 //      % ch->getExp() % gain % peak % ch->getMaxExp());
     ch->addToExp(gain);

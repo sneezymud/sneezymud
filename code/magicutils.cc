@@ -64,6 +64,9 @@ void setCombatStats(TBeing *ch, TBeing *mob, PolyType shape, spellNumT skill)
   newHit *= critter->getConHpModifier();
   critter->setMaxHit((int) newHit); 
 
+  // set current hp
+  critter->setHit(ch->getHit() * critter->hitLimit() / ch->hitLimit());
+
   // set number of attacks
   critter->setMult(ch->getMult());
 
@@ -93,8 +96,9 @@ void setDisguiseCombatStats(TBeing *ch, TBeing *mob)
   critter->setACLevel(level);
   critter->setACFromACLevel();
 
-  // set max hp
+  // set max hp and hp
   critter->setMaxHit(ch->hitLimit()); 
+  critter->setHit(ch->getHit());
 
   // set number of attacks
   critter->setMult(ch->getMult());
@@ -139,6 +143,7 @@ void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
 void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
 {
   TThing *t, *next;
+  classIndT cit;  // used as iterator to pass through classes
 
   mud_assert(giver != NULL, "Something bogus in SwitchStuff()");
   mud_assert(taker != NULL, "Something bogus in SwitchStuff()");
@@ -175,11 +180,12 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
   }
   taker->setMoney(giver->getMoney());
 
-  if (taker->getHit() > giver->getHit())
-    taker->setHit(giver->getHit());
-
   taker->setExp(giver->getExp());
   taker->setMaxExp(giver->getMaxExp());
+
+  // set up practicess
+  for (cit = MIN_CLASS_IND; cit < MAX_CLASSES; cit++)
+    taker->setPracs(giver->getPracs(cit), cit);
 
  // this stuff is passed one way to the mob, shouldn't be stuff that doesn't
  // change
@@ -187,7 +193,6 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
   if (dynamic_cast<TMonster *>(taker)) {
     taker->setClass(giver->getClass());
 
-    classIndT cit;
     for (cit = MIN_CLASS_IND; cit < MAX_CLASSES; cit++)
       taker->setLevel(cit, giver->getLevel(cit));
     taker->calcMaxLevel();
