@@ -173,7 +173,8 @@ cleanup()
 
 handle_core()
 {
-  PROD_CORE=${PROD_LIB_DIR}/cores/core.${PROD_PID}
+  DATE_STAMP="$1"
+  PROD_CORE=${PROD_LIB_DIR}/cores/core.${DATE_STAMP}
 
   if [ -s ${PROD_LIB_DIR}/core.${PROD_PID} ]
   then
@@ -184,16 +185,14 @@ handle_core()
   fi
 
   # Post core analysis to forums
-#  if [ -f "${PROD_CORE}" ]
-#  then
-#    {
-#    echo "${PROD_CORE}"
-#    gdb "${SNEEZY}" "${PROD_CORE}" <<- EOF
-#      list
-#      bt
-#      EOF
-#    } | /mud/web/phpBB2/update_core.php
-#  fi
+  if [ -f "${PROD_CORE}" ]
+  then
+    DUMP=$(gdb "${SNEEZY}" "${PROD_CORE}" <<- EOF
+      list
+      bt
+    EOF)
+    curl -F "SUBJ=Stacktrace of core.${DATE_STAMP};MSG=$DUMP" http://forums.sneezymud.com/smf/post-core.php
+  fi
 
 }
 
@@ -226,10 +225,11 @@ do
   PROD_PID="$!"
   echo ", pid=${PROD_PID}" >> ${REBOOTER_LOG}
   wait
-  handle_core >> ${REBOOTER_LOG} 2>&1
+
+  DATE_STAMP=$(date +%Y%m%d.%H%M)
+  handle_core "${DATE_STAMP}" >> ${REBOOTER_LOG} 2>&1
 
   echo "${SNEEZY} ${PROD_PORT} ended on $(date), pid=${PROD_PID}" >> ${REBOOTER_LOG}
-  DATE_STAMP=$(date +%Y%m%d.%H%M)
   echo "" >> ${REBOOTER_LOG}
   PROD_PID=0
   sleep 10
