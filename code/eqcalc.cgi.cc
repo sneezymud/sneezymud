@@ -16,7 +16,7 @@
 #include <cgicc/HTTPRedirectHeader.h>
 
 #include <sys/types.h>
-#include <md5.h>
+#include <unistd.h>
 
 using namespace cgicc;
 
@@ -294,7 +294,7 @@ void lowerStats(sstring vnum, sstring owner, sstring fav, float maxes)
   int count=0, lcount=0, breakout=0;
 
   while(((count=getStatCount(vnum, owner, fav)) > maxes)){
-    if(count=lcount)
+    if(count==lcount)
       if((++breakout) > 10)
 	break;
 

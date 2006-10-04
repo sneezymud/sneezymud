@@ -12,7 +12,8 @@
 
 
 #include <sys/types.h>
-#include <md5.h>
+#include <unistd.h>
+#include <openssl/md5.h>
 
 using namespace cgicc;
 
@@ -239,7 +240,7 @@ sstring TSession::generateSessionID()
   int length=16;
   int seed[4];
 
-  srandomdev();
+  //  srandomdev();
 
   seed[0]=time(NULL);
   seed[1]=random();
@@ -253,7 +254,7 @@ sstring TSession::generateSessionID()
     }
   }
 
-  return MD5Data(data, length, NULL);
+  return (char *) MD5(data, length, NULL);
 }
 
 

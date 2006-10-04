@@ -433,7 +433,7 @@ lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld
 objlog.cgi:	$(LIBS) objs/objlog.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: objlog.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o objlog.cgi objs/objlog.cgi.o objs/lowtools.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip objlog.cgi
 
 corpinfo.cgi:	$(LIBS) objs/corpinfo.cgi.o objs/lowtools.o
@@ -445,36 +445,36 @@ corpinfo.cgi:	$(LIBS) objs/corpinfo.cgi.o objs/lowtools.o
 mudmail.cgi:	$(LIBS) objs/mudmail.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: mudmail.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o mudmail.cgi objs/mudmail.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip mudmail.cgi
 
 shopinfo.cgi:	$(LIBS) objs/shopinfo.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: shopinfo.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o shopinfo.cgi objs/shopinfo.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o shopinfo.cgi objs/shopinfo.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip shopinfo.cgi
 
 objeditor.cgi:	$(LIBS) objs/objeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: objeditor.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o objeditor.cgi objs/objeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o objeditor.cgi objs/objeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip objeditor.cgi
 
 eqcalc.cgi:	$(LIBS) objs/eqcalc.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: eqcalc.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o eqcalc.cgi objs/eqcalc.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o eqcalc.cgi objs/eqcalc.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip eqcalc.cgi
 
 roomeditor.cgi:	$(LIBS) objs/roomeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: roomeditor.cgi
 	@echo \*\*\* Linking against prod libs!
-	@$(CC) -o roomeditor.cgi objs/roomeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lmd
+	@$(CC) -o roomeditor.cgi objs/roomeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip roomeditor.cgi
 
 
 # make all cgi program
-cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi
+cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi eqcalc.cgi
 	@/bin/cp -f shopinfo.cgi /mud/web
 	@/bin/cp -f mudmail.cgi /mud/web
 	@/bin/cp -f objeditor.cgi /mud/web
@@ -18020,7 +18020,9 @@ objs/eqcalc.cgi.o: /usr/include/cgicc/HTMLAttributeList.h
 objs/eqcalc.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/eqcalc.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/eqcalc.cgi.o: /usr/include/cgicc/HTMLDoctype.h
-objs/eqcalc.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h /usr/include/md5.h
+objs/eqcalc.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
+objs/eqcalc.cgi.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/eqcalc.cgi.o: /usr/include/bits/confname.h
 objs/equip.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/equip.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/equip.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -23621,7 +23623,6 @@ objs/mudmail.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/mudmail.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/mudmail.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/mudmail.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
-objs/mudmail.cgi.o: /usr/include/md5.h
 objs/multiclass.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/multiclass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/multiclass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -34074,7 +34075,6 @@ objs/objeditor.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
-objs/objeditor.cgi.o: /usr/include/md5.h
 objs/objlog.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37277,7 +37277,6 @@ objs/roomeditor.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/roomeditor.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/roomeditor.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/roomeditor.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
-objs/roomeditor.cgi.o: /usr/include/md5.h
 objs/session.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/session.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/session.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37431,7 +37430,11 @@ objs/session.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/session.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/session.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/session.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
-objs/session.cgi.o: /usr/include/md5.h
+objs/session.cgi.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/session.cgi.o: /usr/include/bits/confname.h /usr/include/openssl/md5.h
+objs/session.cgi.o: /usr/include/openssl/e_os2.h
+objs/session.cgi.o: /usr/include/openssl/opensslconf.h
+objs/session.cgi.o: /usr/include/openssl/opensslconf-i386.h
 objs/shop.o: /usr/include/c++/3.3.4/cmath
 objs/shop.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/shop.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37856,7 +37859,6 @@ objs/shopinfo.cgi.o: /usr/include/cgicc/HTMLAttribute.h
 objs/shopinfo.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
 objs/shopinfo.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/shopinfo.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
-objs/shopinfo.cgi.o: /usr/include/md5.h
 objs/shopowned.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/shopowned.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/shopowned.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h

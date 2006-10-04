@@ -13,7 +13,6 @@
 #include <cgicc/HTTPRedirectHeader.h>
 
 #include <sys/types.h>
-#include <md5.h>
 
 using namespace cgicc;
 
