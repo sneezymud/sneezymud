@@ -1,5 +1,245 @@
 #33800
 Peel - Cyclops Encampment~
-33829 25 2 0
-S
+33829 30 2 0
 
+**
+* doors
+**
+D 0 33800 2 1        Chiefs Area -> Crude Portcullis
+D 0 33829 0 1        Crude Portcullis -> Chiefs Area
+
+
+**
+* local sets
+**
+X 0 5  33811           a thick cyclopshide hood [head]
+X 0 3  33800           a thick cyclopshide collar [neck]
+X 0 4  33810           a thick cyclopshide vest [body]
+X 0 14 33803           a cloak of thick cyclopshide [back]
+X 0 12 33809           a thick cyclopshide sleeve [arm-right]
+X 0 13 33809           a thick cyclopshide sleeve [arm-left]
+X 0 16 33806           a thick cyclopshide bracelet [wrist-right]
+X 0 17 33806           a thick cyclopshide bracelet [wrist-left]
+X 0 10 33808           a thick cyclopshide glove [hand-right]
+X 0 11 33808           a thick cyclopshide glove [hand-left]
+X 0 1  33801           a thick cyclopshide band [finger-right]
+X 0 2  33801           a thick cyclopshide band [finger-left]
+X 0 15 33807           a girth of thick cyclopshide [waist]
+X 0 6  33805           a thick cyclopshide legging [leg-right]
+X 0 7  33805           a thick cyclopshide legging [leg-left]
+X 0 8  33804           a boot of thick cyclopshide [foot-right]
+X 0 9  33804           a boot of thick cyclopshide [foot-left]
+X 0 19 33802           a thick cyclopshide shield [hold-left]
+
+X 1 5  33823         a trollhide coif [head]
+X 1 3  33812         a trollhide collar [neck]
+X 1 4  33822         a trollhide hauberk [body]
+X 1 14 33815         a cloak of trollhide [back]
+X 1 12 33821         a trollhide sleeve [arm-right]
+X 1 13 33821         a trollhide sleeve [arm-left]
+X 1 16 33818         a trollhide bracelet [wrist-right]
+X 1 17 33818         a trollhide bracelet [wrist-left]
+X 1 10 33820         a trollhide glove [hand-right]
+X 1 11 33820         a trollhide glove [hand-left]
+X 1 1  33813         a trollhide ring [finger-right]
+X 1 2  33813         a trollhide ring [finger-left]
+X 1 15 33819         a girth of trollhide [waist]
+X 1 6  33817         a trollhide legging [leg-right]
+X 1 7  33817         a trollhide legging [leg-left]
+X 1 8  33816         a boot of trollhide [foot-right]
+X 1 9  33816         a boot of trollhide [foot-left]
+X 1 19 33814         a trollhide shield [hold-left]
+
+X 2 5  34750         a monohog-hide hat [head]
+X 2 3  34739         a monohog-hide collar [neck]
+X 2 4  34749         a monohog-hide tunic [body]
+X 2 14 34742         a cloak of monohog-hide [back]
+X 2 12 34748         a monohog-hide sleeve [arm-right]
+X 2 13 34748         a monohog-hide sleeve [arm-left]
+X 2 16 34745         a monohog-hide bracelet [wrist-right]
+X 2 17 34745         a monohog-hide bracelet [wrist-left]
+X 2 10 34747         a monohog-hide glove [hand-right]
+X 2 11 34747         a monohog-hide glove [hand-left]
+X 2 1  34740         a monohog-hide ring [finger-right]
+X 2 2  34740         a monohog-hide ring [finger-left]
+X 2 15 34746         a thick belt of monohog-hide  [waist]
+X 2 6  34744         a monohog-hide legging [leg-right]
+X 2 7  34744         a monohog-hide legging [leg-left]
+X 2 8  34743         a boot of monohog-hide [foot-right]
+X 2 9  34743         a boot of monohog-hide [foot-left]
+X 2 19 34741         a monohog-hide buckler [hold-left]
+
+**
+* area loads
+**
+A 0 33808 33829
+M 0 33800 1 -99		a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+A 0 33808 33829
+M 0 33800 1 -99		a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+A 0 33808 33829
+M 0 33800 1 -99		a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+A 0 33808 33829
+M 0 33801 1 -99		a female cyclops
+A 0 33808 33829
+M 0 33801 1 -99		a female cyclops
+
+A 0 33808 33829
+M 0 33802 1 -99		a cyclops child
+A 0 33808 33829
+M 0 33802 1 -99		a cyclops child
+A 0 33808 33829
+M 0 33802 1 -99		a cyclops child
+
+A 0 33808 33829         a monohog
+M 0 33809 1 -99
+A 0 33808 33829         a monohog
+M 0 33809 1 -99
+
+**
+* entrance
+**
+O 0 34757 1 33801       a sticker bush
+O 0 34757 1 33802       a sticker bush
+O 0 34757 1 33803       a sticker bush
+O 0 34757 1 33804       a sticker bush
+O 0 34757 1 33805       a sticker bush
+O 0 34757 1 33806       a sticker bush
+O 0 34757 1 33807       a sticker bush
+O 0 34757 1 33808       a sticker bush
+
+**
+* firepit/clearing
+**
+O 0 34758 3 33813       a large boulder
+O 0 34759 1 33813      a paladin corpse
+O 0 34758 1 33809       a large boulder
+O 0 34758 1 33811       a large boulder
+O 0 34758 1 33812       a large boulder
+O 0 34758 1 33814       a large boulder
+O 0 34758 1 33815       a large boulder
+O 0 34758 1 33816       a large boulder
+O 0 34757 1 33820       a sticker bush
+O 0 34757 1 33822       a sticker bush
+
+M 0 33808 5 33813       the cyclops fire tender
+? 0 2 0 G
+G 1 34754 9999           a bloody leather mailbag
+? 0 2 0 E
+E 1 34752 9999 5          a postman's hat [head]
+? 0 2 0 E
+E 1 34753 9999 19         a pointy stick [hold-left]
+Z 0 2 2                   monohog hide set
+
+M 0 33812 2 33813       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33812 4 33813       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+**
+* sleeping area
+**
+O 0 34760 1 33823       a shallow sleeping pit
+O 0 34760 1 33824       a shallow sleeping pit
+O 0 34760 1 33825       a shallow sleeping pit
+O 0 34760 1 33826       a shallow sleeping pit
+
+M 0 33810 1 33823       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33810 1 33824       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33810 1 33825       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33810 1 33826       a dreaded cyclops
+Z 0 0 2                   thick cyclopshide set
+
+**
+* monohog pen
+**
+O 0 34757 1 33827       a sticker bush
+O 0 34758 1 33828       a large boulder
+
+M 0 33809 3 33828       a monohog
+M 0 33809 5 33828       a monohog
+M 0 33809 5 33828       a monohog
+
+M 0 33807 10 33828      the monohog keeper
+? 0 2 0 E
+E 1 33827 9999 18         a whip made from a monohog tail [hold-right] 
+Z 0 2 2                   monohog hide set
+
+
+**
+* butcher
+**
+O 0 34761 1 33821       a pile of bloody bones and bits of gore
+
+M 0 33806 1 33821       a blind cyclops butcher
+? 0 2 0 E
+E 1 33826 9999 5          a hairy eye-patch [head]
+? 0 2 0 E
+E 1 33824 9999 18         a heavily notched butcher's knife [hold-right]
+? 0 2 0 E
+E 1 33825 9999 19         a severed monohog leg [hold-left]
+Z 0 2 2                   monohog hide set
+
+**
+* sewing area
+**
+M 0 33813 1 33818       the cylopean seamstress boss
+? 0 2 0 E
+E 1 34755 9999 5          a crude extra large monocle [head]
+Z 0 2 2                   monohog hide set
+
+M 0 33811 4 33818       a cyclopean seamstress
+? 0 2 0 E
+E 1 33828 9999 19         a crude bone needle [hold-left]
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33811 7 33818       a cyclopean seamstress
+? 0 2 0 E
+E 1 33828 9999 19         a crude bone needle [hold-left]
+Z 0 0 2                   thick cyclopshide set
+
+M 0 33811 10 33818      a cyclopean seamstress
+? 0 2 0 E
+E 1 33828 9999 19         a crude bone needle [hold-left]
+Z 0 0 2                   thick cyclopshide set
+
+**
+* chief's area
+**
+O 0 34760 3 33800       a shallow sleeping pit
+O 0 34758 2 33800      a large boulder
+
+M 0 33805 1 33800	a subjugated paladin
+
+M 0 33803 2 33800       a dreaded cyclops chief
+? 0 2 0 E
+E 1 33829 9999 19         a tree trunk [hold-left] 
+Z 0 1 2                   trollhide set
+
+M 0 33804 4 33800       an battle hardened cyclops
+? 0 2 0 E
+E 1 34751 9999 19         a large boulder [hold-left]
+Z 0 1 2                   trollhide set
+
+M 0 33804 6 33800       an battle hardened cyclops
+? 0 2 0 E
+E 1 34751 9999 19         a large boulder [hold-left]
+Z 0 1 2                   trollhide set
+
+M 0 33804 1 33829       an battle hardened cyclops
+? 0 2 0 E
+E 1 34751 9999 19         a large boulder [hold-left]
+Z 0 1 2                   trollhide set
+
+
+S
