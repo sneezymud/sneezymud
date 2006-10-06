@@ -2334,7 +2334,7 @@ void bootTheShops()
     shop_index.push_back(sd);
   }
 
-  db.query("select shop_nr from shop where tax_nr is null");
+  db.query("select shop_nr from shopowned where tax_nr is null");
 
   while(db.fetchRow()){
     vlogf(LOG_LOW, fmt("Shop %s is untaxed.") % db["shop_nr"]);
