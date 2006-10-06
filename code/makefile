@@ -10736,7 +10736,8 @@ objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
-objs/db.o: liquids.h obj_card_deck.h obj_suitcase.h
+objs/db.o: liquids.h obj_card_deck.h obj_suitcase.h obj_saddle.h
+objs/db.o: obj_harness.h obj_saddlebag.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -21238,6 +21239,7 @@ objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
 objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
 objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
 objs/inventory.o: obj_potion.h obj_base_cup.h obj_card_deck.h obj_suitcase.h
+objs/inventory.o: obj_bed.h
 objs/limbs.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/limbs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/limbs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -25005,7 +25007,7 @@ objs/obj_base_clothing.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_base_clothing.o: colorstring.h format.h shop.h obj_base_clothing.h
 objs/obj_base_clothing.o: shopowned.h corporation.h obj_suitcase.h
 objs/obj_base_clothing.o: obj_expandable_container.h obj_open_container.h
-objs/obj_base_clothing.o: obj_base_container.h
+objs/obj_base_clothing.o: obj_base_container.h obj_saddle.h obj_harness.h
 objs/obj_base_container.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_base_container.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_base_container.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -25143,6 +25145,7 @@ objs/obj_base_container.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_base_container.o: colorstring.h format.h obj_base_container.h
 objs/obj_base_container.o: obj_player_corpse.h obj_base_corpse.h
 objs/obj_base_container.o: obj_open_container.h obj_food.h obj_opal.h
+objs/obj_base_container.o: obj_saddlebag.h obj_expandable_container.h
 objs/obj_base_corpse.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -28868,6 +28871,132 @@ objs/obj_handgonne.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_handgonne.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/obj_handgonne.o: format.h obj_handgonne.h obj_gun.h obj_general_weapon.h
 objs/obj_handgonne.o: obj_base_weapon.h range.h obj_arrow.h obj_tool.h
+objs/obj_harness.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/obj_harness.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_harness.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/obj_harness.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/obj_harness.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/obj_harness.o: /usr/include/bits/wordsize.h
+objs/obj_harness.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+objs/obj_harness.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_harness.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_harness.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/obj_harness.o: /usr/include/bits/stdio_lim.h
+objs/obj_harness.o: /usr/include/bits/sys_errlist.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/obj_harness.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/obj_harness.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/obj_harness.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/obj_harness.o: /usr/include/bits/mathcalls.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/obj_harness.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_harness.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/obj_harness.o: /usr/include/pthread.h /usr/include/sched.h
+objs/obj_harness.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/obj_harness.o: /usr/include/bits/sigset.h
+objs/obj_harness.o: /usr/include/bits/pthreadtypes.h
+objs/obj_harness.o: /usr/include/bits/initspin.h
+objs/obj_harness.o: /usr/include/bits/sigthread.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cwchar
+objs/obj_harness.o: /usr/include/c++/3.3.4/memory
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/climits
+objs/obj_harness.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/obj_harness.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/obj_harness.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/obj_harness.o: /usr/include/c++/3.3.4/exception
+objs/obj_harness.o: /usr/include/c++/3.3.4/iosfwd
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/obj_harness.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/obj_harness.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/obj_harness.o: /usr/include/libintl.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/algorithm
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/vector
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/map
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/list
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/iostream
+objs/obj_harness.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/streambuf
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/locale
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/limits
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/typeinfo
+objs/obj_harness.o: /usr/include/c++/3.3.4/istream
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/sstream
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/fstream
+objs/obj_harness.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_harness.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_harness.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_harness.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_harness.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_harness.o: task.h weather.h sound.h create.h thing.h obj.h
+objs/obj_harness.o: spec_objs.h room.h connect.h obj_drug.h charfile.h
+objs/obj_harness.o: being.h guild.h person.h monster.h paths.h account.h
+objs/obj_harness.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/obj_harness.o: colorstring.h format.h obj_base_clothing.h obj_harness.h
 objs/obj_jewelry.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -31277,6 +31406,261 @@ objs/obj_quiver.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_quiver.o: colorstring.h format.h disc_looting.h obj_quiver.h
 objs/obj_quiver.o: obj_expandable_container.h obj_open_container.h
 objs/obj_quiver.o: obj_base_container.h
+objs/obj_saddle.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/obj_saddle.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_saddle.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/obj_saddle.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/obj_saddle.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/obj_saddle.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/obj_saddle.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/obj_saddle.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/obj_saddle.o: /usr/include/gconv.h
+objs/obj_saddle.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/obj_saddle.o: /usr/include/bits/stdio_lim.h
+objs/obj_saddle.o: /usr/include/bits/sys_errlist.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/obj_saddle.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/obj_saddle.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/obj_saddle.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/obj_saddle.o: /usr/include/bits/mathcalls.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/obj_saddle.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_saddle.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/obj_saddle.o: /usr/include/pthread.h /usr/include/sched.h
+objs/obj_saddle.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/obj_saddle.o: /usr/include/bits/sigset.h
+objs/obj_saddle.o: /usr/include/bits/pthreadtypes.h
+objs/obj_saddle.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cwchar
+objs/obj_saddle.o: /usr/include/c++/3.3.4/memory
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/climits
+objs/obj_saddle.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/obj_saddle.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/obj_saddle.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/obj_saddle.o: /usr/include/c++/3.3.4/exception
+objs/obj_saddle.o: /usr/include/c++/3.3.4/iosfwd
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/obj_saddle.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/obj_saddle.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/obj_saddle.o: /usr/include/libintl.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/algorithm
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/vector
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/map
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/list
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/iostream
+objs/obj_saddle.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/streambuf
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/locale
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/limits
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/typeinfo
+objs/obj_saddle.o: /usr/include/c++/3.3.4/istream
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/sstream
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/fstream
+objs/obj_saddle.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_saddle.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_saddle.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_saddle.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_saddle.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_saddle.o: task.h weather.h sound.h create.h thing.h obj.h
+objs/obj_saddle.o: spec_objs.h room.h connect.h obj_drug.h charfile.h being.h
+objs/obj_saddle.o: guild.h person.h monster.h paths.h account.h extern.h
+objs/obj_saddle.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/obj_saddle.o: colorstring.h format.h obj_base_clothing.h obj_saddle.h
+objs/obj_saddlebag.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/obj_saddlebag.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_saddlebag.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/obj_saddlebag.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/obj_saddlebag.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/obj_saddlebag.o: /usr/include/bits/wordsize.h
+objs/obj_saddlebag.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+objs/obj_saddlebag.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_saddlebag.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_saddlebag.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/obj_saddlebag.o: /usr/include/bits/stdio_lim.h
+objs/obj_saddlebag.o: /usr/include/bits/sys_errlist.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/obj_saddlebag.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/obj_saddlebag.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/obj_saddlebag.o: /usr/include/bits/huge_val.h
+objs/obj_saddlebag.o: /usr/include/bits/mathdef.h
+objs/obj_saddlebag.o: /usr/include/bits/mathcalls.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/obj_saddlebag.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_saddlebag.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/obj_saddlebag.o: /usr/include/pthread.h /usr/include/sched.h
+objs/obj_saddlebag.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/obj_saddlebag.o: /usr/include/bits/sigset.h
+objs/obj_saddlebag.o: /usr/include/bits/pthreadtypes.h
+objs/obj_saddlebag.o: /usr/include/bits/initspin.h
+objs/obj_saddlebag.o: /usr/include/bits/sigthread.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cwchar
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/memory
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/climits
+objs/obj_saddlebag.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/obj_saddlebag.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/obj_saddlebag.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/exception
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/iosfwd
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/obj_saddlebag.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/obj_saddlebag.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/obj_saddlebag.o: /usr/include/libintl.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/algorithm
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/vector
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/map
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/list
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/iostream
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/ostream
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/ios
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/streambuf
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/locale
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/limits
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/typeinfo
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/istream
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/sstream
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/fstream
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_saddlebag.o: enum.h spells.h structs.h parse.h immunity.h
+objs/obj_saddlebag.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/obj_saddlebag.o: client.h response.h faction.h comm.h toggle.h
+objs/obj_saddlebag.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/obj_saddlebag.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/obj_saddlebag.o: sound.h create.h thing.h obj.h spec_objs.h room.h
+objs/obj_saddlebag.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/obj_saddlebag.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/obj_saddlebag.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/obj_saddlebag.o: format.h obj_saddlebag.h obj_expandable_container.h
+objs/obj_saddlebag.o: obj_open_container.h obj_base_container.h
 objs/obj_scroll.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_scroll.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_scroll.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
