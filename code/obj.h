@@ -126,6 +126,9 @@ enum itemTypeT {
     ITEM_TRASH_PILE,
     ITEM_CARD_DECK,
     ITEM_SUITCASE,
+    ITEM_SADDLE,
+    ITEM_HARNESS,
+    ITEM_SADDLEBAG,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);

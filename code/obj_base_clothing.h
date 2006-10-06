@@ -44,6 +44,7 @@ class TBaseClothing : public virtual TObj
     void armorPercs(double *, double *) const;
 
     bool isSaddle() const;
+    bool isHarness() const;
     bool isShield() const;
     bool isBarding() const;
 

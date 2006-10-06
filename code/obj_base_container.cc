@@ -14,6 +14,7 @@
 #include "obj_open_container.h"
 #include "obj_food.h"
 #include "obj_opal.h"
+#include "obj_saddlebag.h"
 
 TBaseContainer::TBaseContainer() :
   TObj()
@@ -413,10 +414,9 @@ bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
 
 int TBaseContainer::isSaddle() const
 {
-  if (isname("saddle",name) && (isname("panier",name) || isname("pack",name) || isname("bag",name))) {
+  if(dynamic_cast<const TSaddlebag *>(this))
     if (isname ("[CAN_RIDE]",name))
       return 1;
     else return 2;
-  }
   return FALSE;
 }

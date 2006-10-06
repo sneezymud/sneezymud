@@ -2077,6 +2077,8 @@ int TBeing::doSaddle(sstring arg)
   TThing *t;
   TObj *saddle;
   sstring arg1, arg2;
+  wearSlotT slot;
+  unsigned int slot2;
 
   argument_interpreter(arg, arg1, arg2);
 
@@ -2108,22 +2110,30 @@ int TBeing::doSaddle(sstring arg)
   }
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(saddle);
   TBaseContainer *tbc2 = dynamic_cast<TBaseContainer *>(saddle);
-  if (!(tbc && tbc->isSaddle()) &&  !(tbc2 && tbc2->isSaddle())) {
-    act("$p is not a saddle.",
+  if((tbc && tbc->isSaddle()) ||
+     (tbc2 && tbc2->isSaddle())){
+    slot=WEAR_BACK;
+    slot2=ITEM_WEAR_BACK;
+  } else if((tbc && tbc->isHarness())){
+    slot=WEAR_NECK;
+    slot2=ITEM_WEAR_NECK;
+  } else {
+    act("$p is not a saddle or a harness.",
           FALSE, this, saddle, horse , TO_CHAR);
     return FALSE;
   }
-  if (!saddle->canWear(ITEM_WEAR_BACK)) {
-    act("$p is not wearable as a saddle.",
+
+  if (!saddle->canWear(slot2)) {
+    act("$p is not wearable as a saddle or harness.",
           FALSE, this, saddle, horse , TO_CHAR);
     return FALSE;
   }
-  if (!horse->hasPart(WEAR_BACK)) {
+  if (!horse->hasPart(slot)) {
     act("$N seems to be lacking a place to put $p",
           FALSE, this, saddle, horse , TO_CHAR);
     return FALSE;
   }
-  if (horse->equipment[WEAR_BACK]) {
+  if (horse->equipment[slot]) {
     act("$N already wears something there.",
           FALSE, this, saddle, horse , TO_CHAR);
     return FALSE;
@@ -2141,7 +2151,7 @@ int TBeing::doSaddle(sstring arg)
       FALSE, this, saddle, horse, TO_VICT);
 
   --(*saddle);
-  horse->equipChar(saddle, WEAR_BACK);
+  horse->equipChar(saddle, slot);
   return TRUE;
 }
 

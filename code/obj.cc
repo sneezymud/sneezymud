@@ -255,6 +255,12 @@ itemTypeT mapFileToItemType(int num)
       return ITEM_CARD_DECK;
     case 70:
       return ITEM_SUITCASE;
+    case 71:
+      return ITEM_SADDLE;
+    case 72:
+      return ITEM_HARNESS;
+    case 73:
+      return ITEM_SADDLEBAG;
   }
   vlogf(LOG_BUG, fmt("Unknown type %d in map file") %  num);
   return ITEM_UNDEFINED;
@@ -405,6 +411,12 @@ int mapItemTypeToFile(itemTypeT itt)
       return 69;
     case ITEM_SUITCASE:
       return 70;
+    case ITEM_SADDLE:
+      return 71;
+    case ITEM_HARNESS:
+      return 72;
+    case ITEM_SADDLEBAG:
+      return 73;
     case MAX_OBJ_TYPES:
       break;
   }

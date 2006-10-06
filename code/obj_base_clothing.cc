@@ -8,6 +8,8 @@
 #include "shopowned.h"
 #include "corporation.h"
 #include "obj_suitcase.h"
+#include "obj_saddle.h"
+#include "obj_harness.h"
 
 TBaseClothing::TBaseClothing() :
   TObj()
@@ -83,7 +85,16 @@ void TBaseClothing::lowCheck()
 
 bool TBaseClothing::isSaddle() const
 {
-  return isname("saddle", name);
+  if(dynamic_cast<const TSaddle *>(this))
+    return true;
+  return false;
+}
+
+bool TBaseClothing::isHarness() const
+{
+  if(dynamic_cast<const THarness *>(this))
+    return true;
+  return false;
 }
 
 bool TBaseClothing::isShield() const

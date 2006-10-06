@@ -641,7 +641,22 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume bag can hold", 10000000, 1);
-     
+  ItemInfo[ITEM_SADDLE] = new itemInfo("Saddle","a saddle",
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0);
+  ItemInfo[ITEM_HARNESS] = new itemInfo("Harness","a harness",
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0);
+  ItemInfo[ITEM_SADDLEBAG] = new itemInfo("Saddlebag","a saddlebag",
+     "Weight bag can hold", 50000, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume bag can hold", 10000000, 1);
+
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =
