@@ -244,7 +244,6 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   // write the object
   is.setFile(fp);
   is.raw_write_item(o);
-  fclose(fp);
 
   // Save the repair number so we can keep up with it.
   save_game_stats();
