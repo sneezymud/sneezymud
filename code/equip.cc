@@ -2071,6 +2071,11 @@ int TBeing::doUnsaddle(sstring arg)
   return TRUE;
 }
 
+void TBeing::doTie(const sstring &arg)
+{
+  sendTo("Not yet implemented.\n\r");
+}
+
 int TBeing::doSaddle(sstring arg)
 {
   TBeing *horse;

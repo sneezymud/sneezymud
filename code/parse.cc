@@ -712,6 +712,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	doPoint(newarg);
 	addToLifeforce(1);
 	break;
+      case CMD_TIE:
+	doTie(newarg);
+	addToLifeforce(1);
+	break;
       case CMD_PAINT:
 	doPaint(newarg);
 	addToLifeforce(1);
@@ -2861,6 +2865,8 @@ void buildCommandArray(void)
   commandArray[CMD_JUGGLE] = new commandInfo("juggle", POSITION_RESTING, 0);
   commandArray[CMD_SHUFFLE] = new commandInfo("shuffle", POSITION_RESTING, 0);
   commandArray[CMD_PAINT] = new commandInfo("paint", POSITION_RESTING, 0);
+  commandArray[CMD_TIE] = new commandInfo("tie", POSITION_RESTING, 0);
+
 }
 
 bool _parse_name(const char *arg, char *name)

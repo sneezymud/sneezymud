@@ -573,6 +573,7 @@ enum cmdTypeT {
      CMD_BONEBREAK,
      CMD_SHUFFLE,
      CMD_PAINT,
+     CMD_TIE,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow
