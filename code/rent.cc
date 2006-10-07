@@ -1477,7 +1477,7 @@ void TMonster::saveItems(const sstring &filepath)
   // shopkeeper specific stuff - save gold
   if(isShopkeeper()){
     TDatabase db(DB_SNEEZY);
-    db.query("update shop set gold=%i where shop_nr=%i",
+    db.query("update shopowned set gold=%i where shop_nr=%i",
 	     getMoney(), find_shop_nr(number));
   }
 }

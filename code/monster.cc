@@ -383,7 +383,7 @@ int TMonster::calculateGoldFromConstant()
     }
 
     TDatabase db(DB_SNEEZY);
-    db.query("select gold from shop where shop_nr=%i", shop_nr);
+    db.query("select gold from shopowned where shop_nr=%i", shop_nr);
     
     if(db.fetchRow()){
       the_gold = convertTo<int>(db["gold"]);

@@ -869,7 +869,7 @@ void TBeing::saveChar(int load_room)
       }
       
       TDatabase db(DB_SNEEZY);
-      db.query("update shop set gold=%i where shop_nr=%i",
+      db.query("update shopowned set gold=%i where shop_nr=%i",
 	       getMoney(), shop_nr);
     }
 

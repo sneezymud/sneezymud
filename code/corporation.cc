@@ -147,7 +147,7 @@ vector <corp_list_data> getCorpListingData(void)
   vector <corp_list_data> corp_list;
   corp_list_data corp_list_item;
 
-  db.query("select c.corp_id, c.name, sum(s.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from (((corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id and c.bank=b.shop_nr)) left outer join shopowned sob on (sob.shop_nr=c.bank)) left outer join shopowned so on (c.corp_id=so.corp_id)) left outer join shop s on (so.shop_nr=s.shop_nr) group by c.corp_id, c.name, b.talens, sob.corp_id order by sum(s.gold)+b.talens desc");
+  db.query("select c.corp_id, c.name, sum(so.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from (((corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id and c.bank=b.shop_nr)) left outer join shopowned sob on (sob.shop_nr=c.bank)) left outer join shopowned so on (c.corp_id=so.corp_id)) left outer join shop s on (so.shop_nr=s.shop_nr) group by c.corp_id, c.name, b.talens, sob.corp_id order by sum(so.gold)+b.talens desc");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);

@@ -1,5 +1,6 @@
 CREATE TABLE shopowned (
     shop_nr integer DEFAULT '0' NOT NULL,
+    gold integer,
     profit_buy double precision DEFAULT '0.00' NOT NULL,
     profit_sell double precision DEFAULT '0.00' NOT NULL,
     max_num integer,

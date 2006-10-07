@@ -3794,7 +3794,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   ////////////////////////////
   // broke shops
-  db.query("select count(*) as count from shop where gold<100000");
+  db.query("select count(*) as count from shopowned where gold<100000");
 
   if(db.fetchRow())
     ch->sendTo(fmt("%s shops have less than 100000 talens.\n\r") % db["count"]);
@@ -3802,14 +3802,14 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   /////////////////////////////
   // average talens
-  db.query("select round(avg(gold)) as gold from shop");
+  db.query("select round(avg(gold)) as gold from shopowned");
 
   if(db.fetchRow())
     ch->sendTo(fmt("Average talens per shop is %s.\n\r") % db["gold"]);
   
   ////////////////////////////
   // top ten shops
-  db.query("select in_room, gold from shop order by gold desc limit 10");
+  db.query("select s.in_room, so.gold from shop s, shopowned so where s.shop_nr=so.shop_nr order by gold desc limit 10");
 
   TRoom *tr=NULL;
   int i=1;

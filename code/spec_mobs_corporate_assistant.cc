@@ -120,7 +120,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   }
   
   db.query("\
-  select c.name, sum(s.gold) as gold, b.talens as banktalens, \
+  select c.name, sum(so.gold) as gold, b.talens as banktalens, \
     count(s.shop_nr) as shops, bank, sob.corp_id as bankowner \
   from shopowned sob, \
     corporation c left outer join shopownedcorpbank b on(c.corp_id=b.corp_id),\
@@ -185,7 +185,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   }
 
   // shops    
-  db.query("select s.shop_nr, s.in_room, s.gold from shop s, shopowned so where s.shop_nr=so.shop_nr and so.corp_id=%i order by s.gold desc", corp_id);
+  db.query("select s.shop_nr, s.in_room, so.gold from shop s, shopowned so where s.shop_nr=so.shop_nr and so.corp_id=%i order by so.gold desc", corp_id);
   
   me->doTell(ch->getName(), "The following shops are owned by this corporation:");
   

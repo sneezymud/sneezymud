@@ -18,6 +18,5 @@ CREATE TABLE shop (
     close1 integer DEFAULT '0' NOT NULL,
     open2 integer DEFAULT '0' NOT NULL,
     close2 integer DEFAULT '0' NOT NULL,
-    gold integer,
     expense_ratio double precision
 );
