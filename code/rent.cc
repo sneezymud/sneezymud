@@ -3721,8 +3721,6 @@ float old_ac_lev = mob->getACLevel();
       delete mob;
     }
   }
-  if(fp2_open)
-    fclose(fp2);
 }
 
 // this routine simply tracks items and mobs held in rent by players.
