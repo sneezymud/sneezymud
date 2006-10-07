@@ -1941,9 +1941,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   }
 
-  if(shop_nr==2)
-    vlogf(LOG_PEEL, "got here");
-
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
       vlogf(LOG_BUG, fmt("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
@@ -2069,9 +2066,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
-  if(shop_nr==2)
-    vlogf(LOG_PEEL, "got here2");
-
     TThing *t, *t2;
     if (::number(0,10))
       return FALSE;
