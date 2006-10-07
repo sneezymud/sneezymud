@@ -4279,9 +4279,6 @@ bool TBeing::saveFollowers(bool rent_time)
   }
   fclose(fp);
 
-  if(fp2_open)
-    fclose(fp2);
-
   if (!found) {
     wipeFollowersFile(tmp->name);
     return FALSE;
