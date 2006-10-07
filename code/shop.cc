@@ -1941,6 +1941,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   }
 
+  if(shop_nr==2)
+    vlogf(LOG_PEEL, "got here");
+
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
       vlogf(LOG_BUG, fmt("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
@@ -2066,7 +2069,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
-    // have items in shop slowly repair themselves...
+  if(shop_nr==2)
+    vlogf(LOG_PEEL, "got here2");
+
     TThing *t, *t2;
     if (::number(0,10))
       return FALSE;
@@ -2077,39 +2082,17 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
         continue;
 
       if(IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_RECYCLE) &&
-	 !shop_index[shop_nr].isProducing(obj) && !::number(0,499)){
+	 !shop_index[shop_nr].isProducing(obj) && !::number(0,499) ){
 	// resolution 220, the fun restoration initiative
 	int val=(int)(obj->getValue() * 0.25);
 
-	myself->addToMoney(val, GOLD_SHOP);
-	shoplog(shop_nr, myself, myself, obj->getName(), val, "recycling");
+	TShopOwned tso(shop_nr, myself, myself);
+	tso.doBuyTransaction(val, obj->getName(), "recycling");
 
 	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
 
 	delete obj;
 	continue;
-      }
-
-
-      if (!::number(0,99) && !shop_index[shop_nr].isProducing(obj) &&
-	  !shop_index[shop_nr].isOwned()) {
-        // random recycling
-	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s") %  myself->getName() % shop_nr % obj->getName());
-        delete obj;
-        continue;
-      }
-      if (::number(0,3))
-        continue;
-#if 0
-      if (obj->getMaxStructPoints() >= 0 &&
-          obj->getStructPoints() < obj->getMaxStructPoints()) {
-#else
-      // this keeps ithe fixing limited by depreciation
-      if (obj->getMaxStructPoints() >= 0 &&
-          obj->getStructPoints() < obj->maxFix(NULL, DEPRECIATION_YES) &&
-	  !shop_index[shop_nr].isOwned()) {
-#endif
-        obj->addToStructPoints(1);
       }
     }
     return FALSE;
