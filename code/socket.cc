@@ -49,6 +49,8 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "process.h"
 #include "liquids.h"
 #include "obj_pool.h"
+#include "shop.h"
+#include "shopaccounting.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -1356,6 +1358,21 @@ void procCheckTriggerUsers::run(int) const
   }
 }
 
+procCloseAccountingBooks::procCloseAccountingBooks(const int &p)
+{
+  trigger_pulse=p;
+  name="procCloseAccountingBooks";
+}
+
+void procCloseAccountingBooks::run(int) const
+{
+  // close out the accounting year.
+  for(unsigned int shop_nr=0;shop_nr<shop_index.size();shop_nr++){
+    TShopJournal tsj(shop_nr, time_info.year-1);
+    tsj.closeTheBooks();
+  }
+}
+
 
 int TMainSocket::gameLoop()
 {
@@ -1409,6 +1426,7 @@ int TMainSocket::gameLoop()
   // pulse mudday   (3456 seconds (57.6 mins))
   scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
   scheduler.add(new procBankInterest(PULSE_MUDDAY));
+  scheduler.add(new procCloseAccountingBooks(PULSE_MUDDAY));
 
   // pulse realhour
 //  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved

@@ -11,9 +11,6 @@
 #include "stdsneezy.h"
 #include "obj_trash_pile.h"
 #include "process.h"
-#include "shopowned.h"
-#include "shop.h"
-#include "shopaccounting.h"
 
 // what stage is moon in?  (0 - 31) 
 int moontype;
@@ -202,12 +199,6 @@ void anotherHour()
           time_info.year++;
           buf = fmt("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
           descriptor_list->worldSend(buf, NULL);
-
-	  // close out the accounting year.
-	  for(unsigned int shop_nr=0;shop_nr<shop_index.size();shop_nr++){
-	    TShopJournal tsj(shop_nr, time_info.year-1);
-	    tsj.closeTheBooks();
-	  }
         }
       }
   

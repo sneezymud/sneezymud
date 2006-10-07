@@ -91,9 +91,27 @@ void TShopJournal::closeTheBooks()
 {
   TDatabase db(DB_SNEEZY);
 
+  // we have to assume here that all of the journal entries for the
+  // specified year exist in the shoplogjournal table
+
+  if(year == time_info.year){
+    vlogf(LOG_BUG, "closeTheBooks() called for current year!");
+    return;
+  }
+
+  db.query("select 1 from shoplog_retained_earnings where shop_nr=%i and sneezy_year=%i", shop_nr, year);
+  
+  if(db.fetchRow()){
+    // seems as the books have already been closed.
+    //    vlogf(LOG_BUG, "closeTheBooks() called when retained earnings already set!");
+    return;
+  }
+
+
   db.query("insert into shoplog_retained_earnings (shop_nr, retained_earnings, sneezy_year) values (%i, %i, %i)", shop_nr, getRetainedEarnings(), year);  
-  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and year=%i", shop_nr, year);
-  db.query("delete from shoplogjournal where shop_nr=%i and year=%i", shop_nr, year);
+
+  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
+  db.query("delete from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
 }
 
 

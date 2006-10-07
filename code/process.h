@@ -18,6 +18,11 @@ class TProcess {
 
 
 //// processes
+class procCloseAccountingBooks : public TProcess {
+ public:
+  void run(int) const;
+  procCloseAccountingBooks(const int &);
+};
 
 class procCheckTriggerUsers : public TProcess {
  public:
