@@ -82,28 +82,13 @@ rotate_files()
   echo "Copying obj and room data from sneezyq to sneezy."
 
   for i in obj objextra objaffect \
-           shopproducing shopmaterial shoptype \
+           shop shopproducing shopmaterial shoptype \
            room roomexit roomextra itemtype;
   do 
     echo Copying $i table.
     mysqldump sneezyq $i | mysql sneezy
   done
 
-
-
-  mysql sneezy<<EOF
-drop table if exists shopgoldtmp;
-create table shopgoldtmp (shop_nr int, gold int);
-insert into shopgoldtmp select shop_nr, gold from shop;
-truncate shop;
-EOF
-
-  mysqldump sneezyq shop | mysql sneezy
-
-  mysql sneezy<<EOF
-update shop, shopgoldtmp set shop.gold=shopgoldtmp.gold where shop.shop_nr=shopgoldtmp.shop_nr;
-drop table shopgoldtmp;
-EOF
 
   # Copy the binary
   if [ -f ${SNEEZY}.2 ]
