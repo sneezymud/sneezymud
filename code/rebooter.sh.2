@@ -173,9 +173,10 @@ handle_core()
   if [ -f "${PROD_CORE}" ]
   then
     {
+    echo -n "SUBJ=Stacktrace of core.${DATE_STAMP}&"
     echo -n "MSG="
     gdb -q -x core_display.txt "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d"
-    } | curl --max-time 30 -d "SUBJ=Stacktrace of core.${DATE_STAMP}" --data-binary @- http://forums.sneezymud.com/post/core.php
+    } | curl --max-time 30 --data-binary @- http://forums.sneezymud.com/post/core.php
   fi
 
 }
