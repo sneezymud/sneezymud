@@ -605,7 +605,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
         (t->getName() && getName() &&
          !strcmp(t->getName(), getName()))) {
       total += 1;
-      if (total >= max_num) {
+      if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
         keeper->doTell(ch->name, "I already have plenty of those.");
         return TRUE;
       }
