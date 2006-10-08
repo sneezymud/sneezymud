@@ -76,7 +76,7 @@ sstring TOrganic::statObjInfo() const
     "Coral",
     "Silk",
     "Wool",
-    "Herbal Ingrediant",
+    "Herbal Ingredient",
     "General Purpose"};
 
   sprintf(Buf, "Type: %s (%d)  Units: %d  Level: %d  AEffect: %d",
