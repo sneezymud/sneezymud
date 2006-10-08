@@ -2033,8 +2033,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if(myself->getMoney() < cost)
 	continue;
 
-      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
-	    myself->getName() % o->getName());
+      //      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
+      //	    myself->getName() % o->getName());
 
       *myself += *o;
 
