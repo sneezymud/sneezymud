@@ -2022,14 +2022,25 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	continue;
       }
 
+
+      int cost=o->getValue();
+
+      // obviously we shouldn't have to pay a million talens to create a
+      // million talen casino chip
+      if(dynamic_cast<TCasinoChip *>(o))
+	cost=1;
+
+      if(myself->getMoney() < cost)
+	continue;
+
       vlogf(LOG_LOW, fmt("%s loading produced object %s") %
 	    myself->getName() % o->getName());
 
       *myself += *o;
 
       // money goes to sba
-      tso.doSellTransaction(o->getValue(), o->getName(), "producing", o);
-      shoplog(sba_nr, myself, sba, o->getName(), o->getValue(), "producing");
+      tso.doSellTransaction(cost, o->getName(), "producing", o);
+      shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
       sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % sba_nr);
     }
 
