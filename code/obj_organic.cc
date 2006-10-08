@@ -181,7 +181,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   nocName = getNameNOC(ch);
   // If it's a 'unit' item, then treat it as such.
   if (getUnits() > 0) {
-    if (num > getUnits() && !shop_index[shop_nr].isProducing(this)) {
+    if (num > getUnits()) {
       num = getUnits();
       keeper->doTell(ch->getName(), fmt("I don't have that much of %s.  Here's the %d that I do have.") % nocName % num);
     }
@@ -205,11 +205,10 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   }
   strcpy(Buf[1], shortDescr);
 
-  if (!shop_index[shop_nr].isProducing(this))
-    --(*this);
+  --(*this);
 
   // more 'unit' special code.
-  if (getUnits() > 0 && !shop_index[shop_nr].isProducing(this)) {
+  if (getUnits() > 0) {
     int num2 = getUnits() - num;
     if (num2) {
       setVolume(max(1, (int) (getVolume()/getUnits()*num2)));
@@ -239,12 +238,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
     } else {
       // Must not have been a unit item, just give them the item in question.
-      if (!shop_index[shop_nr].isProducing(this))
-        *ch += *this;
-      else {
-        obj2 = read_object(this->objVnum(), VIRTUAL);
-        *ch += *obj2;
-      }
+      *ch += *this;
       keeper->doTell(ch->getName(), "Here ya go.  Thanks for shopping with us.");
       act("$n buys $p.", TRUE, ch, this, keeper, TO_NOTVICT);
     }
@@ -411,7 +405,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     if (getUnits() > 0) {
       *keeper += *obj2;
       delete this;
-    } else if (!shop_index[shop_nr].isProducing(this))
+    } else 
       *keeper += *this;
   }
 
@@ -474,18 +468,10 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
   }
 
   if (getUnits() > 0) {
-    if (shop_index[shop_nr].isProducing(this)) {
-      tString = "unlim";
-      usePlural = true;
-    } else {
-      tString = fmt("%5d") % getUnits();
-      usePlural = (getUnits() > 1 ? true : false);
-    }
+    tString = fmt("%5d") % getUnits();
+    usePlural = (getUnits() > 1 ? true : false);
   } else {
-    if (shop_index[shop_nr].isProducing(this))
-      tString = "unlimited";
-    else
-      tString = fmt("%d") % num;
+    tString = fmt("%d") % num;
 
     usePlural = (cost > 1 ? true : false);
   }

@@ -188,7 +188,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     journalize_debit(100, customer, name, amt, true);
     // PIC
     journalize_credit(300, customer, name, amt);
-  } else if(action == "selling"){ 
+  } else if(action == "selling" || action == "producing"){ 
     // player selling something, so shop is buying inventory
     // inventory
     journalize_debit(130, customer, name, amt, true);

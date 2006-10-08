@@ -3032,65 +3032,48 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     return -1;
   }
 
-  if (shop_index[tShop].isProducing(this)) {
+  int charges = getComponentCharges();
+  
+  if (tNum > charges) {
+    tKeeper->doTell(ch->getName(), fmt("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
+    tNum  = charges;
+    tCost = shopPrice(tNum, tShop, tChr, ch);
+  }
+  
+  if (charges == tNum) {
+    tObj = this;
+    --(*tObj);
+  } else {
     if (!(tObj = read_object(number, REAL))) {
-      vlogf(LOG_MISC, fmt("Shop producing unlimited of an item not in db!  [%d]") %  number);
+      vlogf(LOG_MISC, fmt("Shop with item not in db!  [%d]") %  number);
       return -1;
     }
-
-    tObj->purchaseMe(ch, tKeeper, tCost, tShop);
-    tKeeper->doTell(ch->name, fmt(shop_index[tShop].message_buy) % tCost);
-
-    ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
-            sstring(getName()).uncap() % tNum);
-    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
-    *ch += *tObj;
-    ch->logItem(tObj, CMD_BUY);
-    tValue++;
-  } else {
-    int charges = getComponentCharges();
-
-    if (tNum > charges) {
-      tKeeper->doTell(ch->getName(), fmt("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
-      tNum  = charges;
-      tCost = shopPrice(tNum, tShop, tChr, ch);
+    
+    if (TComponent *tComponent = dynamic_cast<TComponent *>(tObj)) {
+      int cost_per;
+      
+      cost_per = tComponent->pricePerUnit();
+      tComponent->setComponentCharges(tNum);
+      addToComponentCharges(-tNum);
+      
+      tComponent->obj_flags.cost = tNum * cost_per;
+      obj_flags.cost = getComponentCharges() * cost_per;
     }
-
-    if (charges == tNum) {
-      tObj = this;
-      --(*tObj);
-    } else {
-      if (!(tObj = read_object(number, REAL))) {
-        vlogf(LOG_MISC, fmt("Shop with item not in db!  [%d]") %  number);
-        return -1;
-      }
-
-      if (TComponent *tComponent = dynamic_cast<TComponent *>(tObj)) {
-        int cost_per;
-
-        cost_per = tComponent->pricePerUnit();
-        tComponent->setComponentCharges(tNum);
-        addToComponentCharges(-tNum);
-
-        tComponent->obj_flags.cost = tNum * cost_per;
-        obj_flags.cost = getComponentCharges() * cost_per;
-      }
-    }
-
-    tObj->purchaseMe(ch, tKeeper, tCost, tShop);
-    tKeeper->doTell(ch->name, fmt(shop_index[tShop].message_buy) % tCost);
-
-    ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
-            sstring(getName()).uncap() % tNum);
-    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
-
-    *ch += *tObj;
-    ch->logItem(tObj, CMD_BUY);
-    tValue++;
-
-    tString = fmt("%s/%d") % SHOPFILE_PATH % tShop;
-    tKeeper->saveItems(tString);
   }
+  
+  tObj->purchaseMe(ch, tKeeper, tCost, tShop);
+  tKeeper->doTell(ch->name, fmt(shop_index[tShop].message_buy) % tCost);
+  
+  ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
+	     sstring(getName()).uncap() % tNum);
+  act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
+  
+  *ch += *tObj;
+  ch->logItem(tObj, CMD_BUY);
+  tValue++;
+  
+  tString = fmt("%s/%d") % SHOPFILE_PATH % tShop;
+  tKeeper->saveItems(tString);
 
   if (!tValue)
     return -1;
@@ -3179,10 +3162,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   if (num == getComponentCharges()) {
     --(*this);
 
-    if (shop_index[tShop].isProducing(this)) {
-      delete this;
-    } else
-      *tKeeper += *this;
+    *tKeeper += *this;
   } else {
     int tValue = 0;
     // double tCost = 0.0;

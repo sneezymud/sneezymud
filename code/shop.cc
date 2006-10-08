@@ -439,151 +439,80 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return -1;
   }
   
-  if (shop_index[shop_nr].isProducing(this) &&
-      number_objects_in_list(this, (TObj *) keeper->getStuff()) <= 1){
-
-    chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
-    chr = max((float)1.0,chr);
-
-    cost = shopPrice(1, shop_nr, chr, ch);
-
-    while (num-- > 0) {
-      TObj *temp1;
-
-      if(keeper->getMoney() < getValue()){
-	keeper->doTell(ch->name, shop_index[shop_nr].missing_cash1);
+  tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
+  if (num > tmp) {
+    keeper->doTell(ch->name, fmt("I don't have %d of that item. Here %s the %d I do have.") %
+		   num  % ((tmp > 1) ? "are" : "is") % tmp);
+  } else
+    tmp = num;
+  
+  strcpy(argm, name);
+  
+  strcpy(argm, add_bars(argm).c_str());
+  chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
+  chr = max((float)1.0,chr);
+  
+  cost = shopPrice(1, shop_nr, chr, ch);
+  
+  for (i = 0; i < tmp; i++) {
+    TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
+    TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
+      
+#if !(NO_DAMAGED_ITEMS_SHOP)
+    while (!temp1->isShopSimilar(this)) {
+      // it's the same item, but in a different condition
+      // keep scrolling through list
+      if (temp1->nextThing) {
+	t_temp1 = searchLinkedListVis(ch, argm, temp1->nextThing);
+	temp1 = dynamic_cast<TObj *>(t_temp1);
+	if (!temp1) {
+	  vlogf(LOG_BUG, "Error (2) in buyMe()");
+	  break;
+	}
+      } else {
+	vlogf(LOG_BUG, "Error (1) in buyMe()");
 	break;
       }
-
-
-
-      temp1 = read_object(number, REAL);
-
-      if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
-        keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
-    
-        switch (shop_index[shop_nr].temper1) {
-          case 0:
-            keeper->doAction(ch->name, CMD_SMILE);
-            break;
-          case 1:
-            act("$n grins happily.", 0, keeper, 0, 0, TO_ROOM);
-            break;
-          default:
-            break;
-        }
-        delete temp1;
-        temp1 = NULL;
-        break;
-      }
-      *ch += *temp1;
-
-      temp1->purchaseMe(ch, keeper, cost, shop_nr);
-      // for unlimited items, charge the shopkeeper for production
-      if(!dynamic_cast<TCasinoChip *>(this) &&
-	 objVnum() != OBJ_LOTTERY_TICKET){
-	// find the sba shopkeeper
-	TBeing *t;
-	TMonster *sba;
-	int sba_nr=160;
-	for(t=character_list;t;t=t->next){
-	  if(t->number==shop_index[sba_nr].keeper)
-	    break;
-	}
-	
-	if(t && (sba=dynamic_cast<TMonster *>(t))){
-	  keeper->giveMoney(sba, getValue(), GOLD_SHOP);
-
-	  shoplog(shop_nr, sba, keeper, getName(), -getValue(), "producing");
-	  shoplog(sba_nr, keeper, sba, getName(), getValue(), "producing");
-	  sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-
-	  // just tax the profit
-	  TShopOwned tso(shop_nr, keeper, ch);
-	  tso.chargeTax(max(cost, cost-getValue()), getName(), this);
-	}
-      }
-
-      ch->logItem(temp1, CMD_BUY);
-      count++;
     }
-    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-    keeper->saveItems(buf);
-  } else {
-    tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
-    if (num > tmp) {
-      keeper->doTell(ch->name, fmt("I don't have %d of that item. Here %s the %d I do have.") %
-		     num  % ((tmp > 1) ? "are" : "is") % tmp);
-    } else
-      tmp = num;
-
-    strcpy(argm, name);
-
-    strcpy(argm, add_bars(argm).c_str());
-    chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
-    chr = max((float)1.0,chr);
-
-    cost = shopPrice(1, shop_nr, chr, ch);
-
-    for (i = 0; i < tmp; i++) {
-      TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
-      TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
-
-#if !(NO_DAMAGED_ITEMS_SHOP)
-      while (!temp1->isShopSimilar(this)) {
-        // it's the same item, but in a different condition
-        // keep scrolling through list
-        if (temp1->nextThing) {
-          t_temp1 = searchLinkedListVis(ch, argm, temp1->nextThing);
-          temp1 = dynamic_cast<TObj *>(t_temp1);
-          if (!temp1) {
-            vlogf(LOG_BUG, "Error (2) in buyMe()");
-            break;
-          }
-        } else {
-          vlogf(LOG_BUG, "Error (1) in buyMe()");
-          break;
-        }
-      }
 #endif
-
-      if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
-        keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
-
-        switch (shop_index[shop_nr].temper1) {
-          case 0:
-            keeper->doAction(ch->name, CMD_SMILE);
-            break;
-          case 1:
-            act("$n grins happily.", 0, keeper, 0, 0, TO_ROOM);
-            break;
-          default:
-            break;
-        }
-        // PC can't afford item, so just leave it on the keeper
-        break;
+      
+    if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
+      keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
+	
+      switch (shop_index[shop_nr].temper1) {
+	case 0:
+	  keeper->doAction(ch->name, CMD_SMILE);
+	  break;
+	case 1:
+	  act("$n grins happily.", 0, keeper, 0, 0, TO_ROOM);
+	  break;
+	default:
+	  break;
       }
-
-      if (!temp1 || !temp1) break;
-      --(*temp1);
-      *ch += *temp1;
-
-      temp1->purchaseMe(ch, keeper, cost, shop_nr);
-
-      ch->logItem(temp1, CMD_BUY);
-      count++;
+      // PC can't afford item, so just leave it on the keeper
+      break;
     }
-    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-    keeper->saveItems(buf);
+
+    if (!temp1 || !temp1) break;
+    --(*temp1);
+    *ch += *temp1;
+
+    temp1->purchaseMe(ch, keeper, cost, shop_nr);
+
+    ch->logItem(temp1, CMD_BUY);
+    count++;
   }
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
+  keeper->saveItems(buf);
+
   if (!count)
     return -1;
 
   keeper->doTell(ch->name, fmt(shop_index[shop_nr].message_buy) %
-          (cost * count));
+		 (cost * count));
 
   ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d).\n\r") % 
-          sstring(getName()).uncap() % count);
+	     sstring(getName()).uncap() % count);
   if (count == 1) 
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
   else {
@@ -1347,11 +1276,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
 
   // display spells on things like scrolls
   // don't show the "level" of weaps/armor though
-  if (shop_index[shop_nr].isProducing(this) &&
-      dynamic_cast<const TMagicItem *>(this)) {
-    sprintf(capbuf, "%s", getNameForShow(false, false, ch).c_str());
-  } else
-    sprintf(capbuf, "%s", getNameNOC(ch).c_str());
+  sprintf(capbuf, "%s", getNameNOC(ch).c_str());
 
   sprintf(atbuf, "%d", num);
 
@@ -1452,13 +1377,9 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   } 
 
   if (tComp) {
-    if (shop_index[shop_nr].isProducing(this)){
-      sprintf(buf4, "[%s]", "Unlimited");
-    } else {
-      sprintf(buf4, "[%d]", tComp->getComponentCharges());
-    }
+    sprintf(buf4, "[%d]", tComp->getComponentCharges());
   } else {
-    sprintf(buf4, "[%s]", (shop_index[shop_nr].isProducing(this) ? "Unlimited" : atbuf));
+    sprintf(buf4, "[%s]", atbuf);
   }
   found = FALSE;
   char equipCond[256];
@@ -1811,10 +1732,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     }
   }
   sstring str = "You examine ";
-  if (shop_index[shop_nr].isProducing(temp1)) {
-    str += temp1->getNameForShow(true, false, ch);
-  } else
-    str += temp1->getName();
+  str += temp1->getName();
   str += " sold by $N.";
 
   act(str, FALSE, ch, temp1, keeper, TO_CHAR);
@@ -1955,39 +1873,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     }
     myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
-    vector<int>::iterator iter;
-    TObj *o;
-    bool found=false;
-
-    for(iter=shop_index[shop_nr].producing.begin();
-	iter!=shop_index[shop_nr].producing.end();++iter){
-      if(*iter <= -1)
-	continue;
-      
-      found=false;
-      for(TThing *t=myself->getStuff();t;t=t->nextThing){
-	if(t->number == *iter){
-	  found=true;
-	  break;
-	}
-      }
-
-      if(found)
-	continue;
-
-      if (!(o = read_object(*iter, REAL))) {
-        vlogf(LOG_BUG, fmt("Shopkeeper %d couldn't load produced item.") %  
-	      shop_nr);
-        return FALSE;
-      }
-
-      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
-	    myself->getName() % o->getName());
-
-      
-      *myself += *o;
-    }
-
     return FALSE;
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
@@ -2067,8 +1952,11 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
     TThing *t, *t2;
+
     if (::number(0,10))
       return FALSE;
+
+
     for (t = myself->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TObj * obj = dynamic_cast<TObj *>(t);
@@ -2089,6 +1977,62 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	continue;
       }
     }
+
+    // produce new items
+    
+    vector<int>::iterator iter;
+    TObj *o;
+    int count=0;
+    // find the sba shopkeeper
+    TMonster *sba=NULL;
+    int sba_nr=160;
+    for(TBeing *t=character_list;t;t=t->next){
+      if(t->number==shop_index[sba_nr].keeper){
+	sba=dynamic_cast<TMonster *>(t);
+	break;
+      }
+    }
+    if(!sba)
+      return FALSE;
+    
+    
+    TShopOwned tso(shop_nr, myself, sba);
+
+    for(iter=shop_index[shop_nr].producing.begin();
+	iter!=shop_index[shop_nr].producing.end();++iter){
+      if(*iter <= -1)
+	continue;
+
+      if (!(o = read_object(*iter, REAL))) {
+        vlogf(LOG_BUG, fmt("Shopkeeper %d couldn't load produced item.") %  
+	      shop_nr);
+        return FALSE;
+      }
+      
+      // count how many shopkeeper has
+      count=0;
+      for(TThing *t=myself->getStuff();t;t=t->nextThing){
+	if(dynamic_cast<TObj *>(t) &&
+	   dynamic_cast<TObj *>(t)->number == *iter){
+	  count++;
+	}
+      }
+      if(count >= tso.getMaxNum(o)){
+	delete o;
+	continue;
+      }
+
+      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
+	    myself->getName() % o->getName());
+
+      *myself += *o;
+
+      // money goes to sba
+      tso.doSellTransaction(o->getValue(), o->getName(), "producing", o);
+      shoplog(sba_nr, myself, sba, o->getName(), o->getValue(), "producing");
+      sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % sba_nr);
+    }
+
     return FALSE;
   } else if (cmd >= MAX_CMD_LIST)
     return FALSE;
