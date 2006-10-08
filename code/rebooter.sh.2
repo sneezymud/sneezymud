@@ -172,11 +172,10 @@ handle_core()
   # Post core analysis to forums
   if [ -f "${PROD_CORE}" ]
   then
-    DUMP=$(gdb "${SNEEZY}" "${PROD_CORE}" <<- EOF
-      list
-      bt
-    EOF)
-    curl -F "SUBJ=Stacktrace of core.${DATE_STAMP}" -F "MSG=$DUMP" http://forums.sneezymud.com/smf/post-core.php
+    {
+    echo -n "MSG="
+    gdb -q -x core_display.txt "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d"
+    } | curl --max-time 30 -d "SUBJ=Stacktrace of core.${DATE_STAMP}" --data-binary @- http://forums.sneezymud.com/post/core.php
   fi
 
 }
