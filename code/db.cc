@@ -1603,6 +1603,34 @@ cached_object *TObjectCache::operator[](int nr)
 
 void log_object(TObj *obj)
 {
+  // Don't log objects that are flagged as newbie
+  if (obj->isObjStat(ITEM_NEWBIE)) {
+    return;
+  }
+  // Don't log tools
+  if (dynamic_cast<TTool *>(obj)) {
+    return;
+  }
+  // Don't log commodities
+  if (dynamic_cast<TCommodity *>(obj)) {
+    return;
+  }
+  // Don't log treasures
+  if (dynamic_cast<TTreasure *>(obj)) {
+    return;
+  }
+  // Don't log food
+  if (dynamic_cast<TFood *>(obj)) {
+    return;
+  }
+  // Don't log other
+  if (dynamic_cast<TOtherObj *>(obj)) {
+    return;
+  }
+  // Don't log trash
+  if (dynamic_cast<TTrash *>(obj)) {
+    return;
+  }
   TDatabase db(DB_SNEEZY);
   db.query("insert into objlog values (%i, now(), %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
 }
