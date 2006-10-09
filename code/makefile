@@ -19,8 +19,8 @@ VERSION_FILE = lib/txt/version.new
 # GPROFF=1    # Use with care, mud stays up for about 45 minutes with this on.
 # USECRYPT=1  # Uncomment to have all the crypt stuff
 
-CC = /usr/bin/g++32
-#CC = /usr/local/bin/g++41
+#CC = /usr/bin/g++32
+CC = /usr/bin/g++
 
 ###############################################################################
 #                    Base Values (Do Not Modify/Add Here)                     #
@@ -120,7 +120,6 @@ LDFLAGS += -L/usr/local/lib
 # postgresql database lib
 #LDFLAGS +=-lpq++
 #LDFLAGS +=-lpq
-LDFLAGS += -L/usr/local/lib/mysql
 LDFLAGS += -lmysqlclient
 
 LDFLAGS +=-lares
