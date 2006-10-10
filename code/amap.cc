@@ -531,7 +531,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   int newloc, cellx, celly;
   char *mapdata, buff[256], *newmap;
   int i=0, j, k, l, tmp;
-  FILE *out=fopen("imageout.raw", "wb");
+  FILE *out=fopen("imageout", "wb");
   const int CELLSIZE=3;
   map <int,int> roomcount;
   int max=0;
@@ -692,10 +692,15 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
 
   fwrite(newmap, mapsize, 1, out);
   fclose(out);
-  sprintf(buff, "/usr/local/bin/rawtoppm -rgb %i %i imageout.raw | /usr/local/bin/pnmflip -tb | /usr/local/bin/ppmtojpeg > %s", mapwidth, mapheight, outputfile.c_str());
+  sprintf(buff, "convert -size %ix%i -depth 8 rgb:imageout tmp-%s", mapwidth, mapheight, outputfile.c_str());
   printf("%s\n", buff);
   system(buff);
-  system("rm -f imageout.raw");
+  sprintf(buff, "convert -flip -bordercolor black -border 10x10 tmp-%s %s", outputfile.c_str(), outputfile.c_str());
+  printf("%s\n", buff);
+  system(buff);
+  sprintf(buff, "rm -rf imageout tmp-%s", outputfile.c_str());
+  printf("%s\n", buff);
+  system(buff);
 
   free(mapdata);
   free(newmap);
