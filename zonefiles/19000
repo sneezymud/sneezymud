@@ -230,6 +230,10 @@ Z 0 0 100                vicious pirate local set
 M 0 19008 10 19010       a vicious & bloodthirsty pirate
 Z 0 0 100                vicious pirate local set
 
+* powder room
+M 0 19009 1 19009        the quartermaster
+Z 0 3 100                the quartermaster's local set
+
 S
 
 
