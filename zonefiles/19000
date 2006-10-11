@@ -1,5 +1,235 @@
 #19000
 Peel/Deirdre/Metrohep - The Tequila Sunrise (25 rooms)~
-19024 25 2 0
+19024 30 2 0
+
+*********
+* doors *
+*********
+
+* hatch to private deck
+D 0 19003 5 2        Center Deck -> The Tequila Sunrise Common Room
+D 0 19007 4 2        The Tequila Sunrise Common Room -> Center Deck
+
+D 0 19007 0 1        The Tequila Sunrise Common Room -> Powder Room
+D 0 19009 2 1        Powder Room -> The Tequila Sunrise Common Room
+
+D 0 19007 2 1        The Tequila Sunrise Common Room -> Captain's Cabin
+D 0 19011 0 1        Captain's Cabin -> The Tequila Sunrise Common Room
+
+*********
+* props *
+*********
+
+* poop deck [center]
+O 0 19014 2 19000       a sun-bleached hammock
+O 0 19009 1 19000       a large brass lamp
+O 0 19000 1 19000       the helm of the Tequila Sunrise
+
+* poop deck [starboard]
+O 0 19014 2 19001       a sun-bleached hammock
+
+* poop deck [port]
+O 0 19014 2 19006       a sun-bleached hammock
+
+* center deck
+O 0 19018 1 19003       a circular bench of blackbutt wood
+
+* foredeck
+O 0 19012 4 19004       an ash wood and leather deck chair
+O 0 19013 1 19004       a ship's capstan
+O 0 19009 1 19004       a large brass lamp
+O 0 19004 1 19004       a bar
+P 0 19016 5 19004       a paper pirate hat - add on repop, up to 5
+
+* common room
+O 0 19005 2 19007      a sturdy water barrel
+O 0 19007 6 19007      a sturdy barrel
+O 0 19012 4 19007      an ash wood and leather deck chair
+O 0 19019 1 19007      a well-built wooden table
+O 0 19009 1 19007      a large brass lamp
+
+* crew quarters [starboard]
+O 0 19010 10 19008      an ironbound footlocker
+O 0 19008 5 19008       a small stinky cot
+O 0 19009 1 19008       a large brass lamp
+
+* powder room
+O 0 19009 1 19009       a large brass lamp
+
+* crew quarters [port]
+O 0 19010 10 19010      an ironbound footlocker
+O 0 19008 5 19010       a small stinky cot
+O 0 19009 1 19010       a large brass lamp
+
+* captain's cabin
+O 0 19012 2 19011       an ash wood and leather deck chair
+O 0 19021 2 19011       a polished mahogany desk
+O 0 19022 2 19011       a shellacked armoire
+O 0 19011 2 19011       a small brass-framed bed
+O 0 19009 1 19011       a large brass lamp
+O 0 19006 1 19011       a small box containing notes and quills
+O 0 19020 1 19011       a smudged tactical map
+O 0 34160 1 19011       a window to the south
+V 1 0 0			window looks into room 0 (location of ship)
+
+**************
+* local sets *
+**************
+
+* vicious & bloodthirsty pirate
+X 0 5 19041            Some coils of braided silk [head]
+X 0 3 19043            A medallion with an engraved rising sun [neck]
+X 0 4 19040            A laced linen shirt [body]
+X 0 14 19042           A waistcoat [back]
+X 0 16 19044           A leather bracer wrapped in brass wire [wrist-right]
+X 0 17 19044           A leather bracer wrapped in brass wire [wrist-left]
+X 0 15 19045           A red baldric [waist]
+X 0 6 19046            A pair of loose ankle trousers [leg-right]
+X 0 8 19047            A leather boot [foot-right]
+X 0 9  19047           A leather boot [foot-left]
+
+* scurvy sailor
+X 1 5 19048            A weather-stained kerchief [head]
+X 1 3 19049            A well-worn scarf [neck]
+X 1 4 19040            A laced linen shirt [body]
+X 1 15 19050           A belt [waist]
+X 1 6 19051            A pair of canvas breeches [leg-right]
+X 1 8 19052            A laced shoe of soft leather [foot-right]
+X 1 9  19052           A laced shoe of soft leather [foot-left]
+
+* Captain Matho
+X 2 5 19053            A tricorne hat with red ostrich plumes [head]
+X 2 3 19054            A lanyard and flask with an engraved rising sun [neck]
+X 2 4 19055            An embroidered jacket [body]
+X 2 14 19056           A great cloak [back]
+X 2 16 19057           A bracelet of gold filigree [wrist-right]
+X 2 17 19057           A bracelet of gold filigree [wrist-left]
+X 2 15 19058           A silk sash [waist]
+X 2 6 19051            A pair of canvas breeches [leg-right]
+X 2 8 19059            A black bucket boot [foot-right]
+X 2 9  19059           A black bucket boot [foot-left]
+X 2 18 19060           A brass mariner's astrolabe [hold-right]
+
+* quartermaster
+X 3 5 19067            A broad brimmed wide-awake hat [head]
+X 3 3 19068            A silver whistle on a leather thong [neck]
+X 3 4 19040            A laced linen shirt [body]
+X 3 15 19050           A belt [waist]
+X 3 6 19051            A pair of canvas breeches [leg-right]
+X 3 8 19052            A laced shoe of soft leather [foot-right]
+X 3 9  19052           A laced shoe of soft leather [foot-left]
+
+* Hapke, the cabinboy
+X 4 5 19053            A fish skeleton comb adorned with wilted flowers [head]
+X 4 3 19054            A yellow bandana [neck]
+X 4 4 19055            A short orange kaftan [body]
+X 4 15 19058           A caulk and poop-stained apron [waist]
+X 4 6 19051            A pair of torn breeches [leg-right]
+X 4 8 19059            A rag [foot-right]
+X 4 9  19059           A rag [foot-left]
+X 4 18 19076           A mop [hold-right]
+
+* "Bunks" McBenn
+X 5 5 19069            A panama hat draped with mosquito netting [head]
+X 5 3 19070            A pendant of the rising sun pierced by a corkscrew [neck]
+X 5 4 19071            A ruffled black shirt with silver embroidery [body]
+X 5 14 19072           A bandolier of limes [back]
+X 5 15 19073           A rhinestone studded belt [waist]
+X 5 6 19046            A pair of loose ankle trousers [leg-right]
+X 5 8 19074            A buckled black shoe [foot-right]
+X 5 9  19074           A buckled black shoe [foot-left]
+
+********
+* mobs *
+********
+
+* poop deck [center]
+M 0 19000 1 19000        the fearsome Captain Matho
+? 0 2 0 E
+E 1 19075 9999 19        a tasseled saber dripping with tequila [hold-left]
+Z 0 2 100                Matho's local set
+
+* foredeck
+M 0 19004 1 19004        "Bunks" McBenn
+Z 0 5 100                Bunks' local set
+
+* crow's nest
+M 0 19003 1 19013        a scurvy sailor
+Z 0 1 100                scurvy sailor's local set
+
+* random on upper deck
+A 0 19000 19006
+M 0 19003 2 -99          a scurvy sailor
+Z 0 1 100                scurvy sailor's local set
+A 0 19000 19006
+M 0 19003 2 -99          a scurvy sailor
+Z 0 1 100                scurvy sailor's local set
+A 0 19000 19006
+M 0 19002 2 -99          a scurvy sailor
+Z 0 1 100                scurvy sailor's local set
+A 0 19000 19006
+M 0 19002 2 -99          a scurvy sailor
+Z 0 1 100                scurvy sailor's local set
+
+A 0 19000 19006
+M 0 19005 1 -99          Tequila, the fishing cat
+H 1 2 41                 hates rodents
+* ? 0 100 0 E            flask harness should load 100% of the time
+E 1 19017 9999 14        a tiny harness with a flask holster [back]
+P 1 19026 1 19017        a silver flask engraved with a bloody sunrise
+
+
+A 0 19000 19006
+M 0 19006 1 -99          a black ship rat
+
+* captain's cabin
+M 0 19011 1 19011        Hapke, the cabinboy
+Z 0 4 100                Hapke's local set
+
+* crew quarters [starboard]
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19008       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+
+* crew quarters [port]
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+M 0 19008 10 19010       a vicious & bloodthirsty pirate
+Z 0 0 100                vicious pirate local set
+
 S
+
 
