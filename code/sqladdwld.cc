@@ -51,7 +51,7 @@ int main(int argc, char **argv)
       db_immo.query("select vnum, name, description from roomextra where owner='%s' and vnum=%i and block=%s", immortal.c_str(), vnums[t], block.c_str());
 
       while(db_immo.fetchRow()){
-	db_beta.query("insert into roomextra (vnum, name, description) values (%s, %s, %s)", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+	db_beta.query("insert into roomextra (vnum, name, description) values (%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
       }      
 
     
