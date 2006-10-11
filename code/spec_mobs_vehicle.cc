@@ -3,7 +3,7 @@
 #include "pathfinder.h"
 #include "obj_casino_chip.h"
 #include "games.h"
-
+#include "database.h"
 
 int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
@@ -143,8 +143,10 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
 
   // find the boat
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    if((*iter)->objVnum() == boatnum)
+    if((*iter)->objVnum() == boatnum){
+      boat=(*iter);
       break;
+    }
   }
   if(!boat)
     return FALSE;
@@ -384,3 +386,153 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   myself->doDrop("", o);
   return false;
 }
+
+int shipCaptain(TBeing *, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+{
+  // captain, destination <keyword>
+  // captain, sail <keyword>
+  const int boatnum=15345;
+  TObj *boat=NULL;
+  int *job=NULL;
+  int i;
+  TVehicle *vehicle=NULL;
+  TPathFinder path;
+  path.setUsePortals(false);
+  path.setThruDoors(false);
+  sstring argument=arg;
+  TDatabase db(DB_SNEEZY);
+
+  if(cmd != CMD_GENERIC_PULSE &&
+     !((cmd == CMD_SAY || cmd == CMD_SAY2) && 
+       argument.word(0).lower()=="captain,"))
+    return FALSE;
+
+
+  // find the boat
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((*iter)->objVnum() == boatnum){
+      boat=(*iter);
+      break;
+    }
+  }
+  if(!boat)
+    return FALSE;
+
+  if(!(vehicle=dynamic_cast<TVehicle *>(boat))){
+    vlogf(LOG_BUG, "couldn't cast boat to vehicle!");
+    return FALSE;
+  }
+
+
+  // first, get our action pointer, which tells us which way to go
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new int)) {
+     perror("failed new of ship.");
+     exit(0);
+    }
+    job = static_cast<int *>(myself->act_ptr);
+    *job=0;
+  } else {
+    job = static_cast<int *>(myself->act_ptr);
+  }
+
+
+  //// commands
+  if(cmd == CMD_SAY || cmd == CMD_SAY2){
+    if(argument.word(1) == "destination"){
+      myself->doSay(fmt("Aye aye, this 'ere be %s") % argument.word(2));
+      db.query("delete from ship_destinations where vnum=%i and name='%s'",
+	       myself->mobVnum(), argument.word(2).c_str());
+      db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
+    } else if(argument.word(1) == "sail"){
+      myself->doSay(fmt("Aye aye, settin' sail for %s") % argument.word(2));
+      
+      db.query("select room from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+      if(!db.fetchRow()){
+	myself->doSay("What the..?!  I've never 'eard of that!");
+	return TRUE;
+      }
+
+      *job = convertTo<int>(db["room"]);
+    } else if(argument.word(1) == "stop"){
+      myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
+      myself->doDrive("stop");
+      *job=0;
+    } else {
+      myself->doSay("Arr what are ye talkin' about?");
+    }
+    return TRUE;
+  }
+
+  //// sailing
+
+  if(!has_key(myself, vehicle->getPortalKey())){
+    return FALSE;
+  }
+
+  vehicle->unlockMe(myself);
+  vehicle->openMe(myself);
+
+  // ok, let's sail
+
+
+  // no destination
+  if(!*job)
+    return FALSE;
+
+  if(boat->in_room == *job){
+    myself->doDrive("stop");
+    myself->doSay("Avast!  We have reached arrr destination.");
+
+    *job=0;
+    return TRUE;
+  }
+
+  i=path.findPath(boat->in_room, findRoom(*job));
+
+  if(i==DIR_NONE){
+    vlogf(LOG_BUG, "ship lost");
+    return FALSE;
+  }
+
+  switch(::number(0,99)){
+    case 0:
+      myself->doSay("Bother someone else, ye drivelswigger!");
+      break;
+    case 1:
+      myself->doSay("Bah!  Go swing the lead elsewhere, Jack Tar!");
+      break;
+    case 2:
+      myself->doSay("Go take a caulk a few fathoms yonder, landlubber!");
+      break;
+    case 3:
+      myself->doSay("Empty yer black jack in a rullock, picaroon!");
+      break;
+    case 4:
+      myself->doSay("Aye, powder monkey, get back below decks where ye belong!");
+      break;
+    case 5:
+      myself->doSay("Scuttle up the shrouds with yer duffle, scallywag!");
+      break;
+    case 6:
+      myself->doEmote("whistles a sea shanty.");
+      break;
+    case 7:
+      myself->doSay("Sailor, get over here and swab this deck!");
+      break;
+    case 8:
+      myself->doEmote("hums a sea shanty.");
+      break;
+  }
+	
+
+  if(vehicle->getDir() != i)
+    myself->doDrive(dirs[i]);
+
+  myself->doDrive("20");
+
+  return TRUE;
+}
+
+
+

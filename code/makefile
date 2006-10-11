@@ -35246,6 +35246,7 @@ objs/other.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
 objs/other.o: /usr/include/mysql/mysql_time.h
 objs/other.o: /usr/include/mysql/mysql_version.h /usr/include/mysql/typelib.h
 objs/other.o: /usr/include/mysql/my_list.h /usr/include/mysql/my_alloc.h
+objs/other.o: liquids.h
 objs/parse.o: /usr/include/unistd.h /usr/include/features.h
 objs/parse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/parse.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -43917,7 +43918,14 @@ objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/deque.tcc
 objs/spec_mobs_vehicle.o: obj_casino_chip.h games.h game_crazyeights.h
-objs/spec_mobs_vehicle.o: game_drawpoker.h
+objs/spec_mobs_vehicle.o: game_drawpoker.h database.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/mysql.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/mysql_com.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/mysql_time.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/mysql_version.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/typelib.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/my_list.h
+objs/spec_mobs_vehicle.o: /usr/include/mysql/my_alloc.h
 objs/spec_objs.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_objs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_objs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h

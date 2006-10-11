@@ -6629,6 +6629,7 @@ extern int fishingBoatCaptain(TBeing *, cmdTypeT, const char *, TMonster *, TObj
 extern int casinoElevatorOperator(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int casinoElevatorGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int trolleyBoatCaptain(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int shipCaptain(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 
 // combat procs, these are (mostly) in spec_mobs_combat.cc
@@ -6896,6 +6897,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "hero faerie", heroFaerie},
   {FALSE,"Brick Collector", brickCollector},
   {FALSE, "caretaker", caretaker},
+  {FALSE, "ship captain", shipCaptain},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

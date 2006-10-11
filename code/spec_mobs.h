@@ -192,7 +192,8 @@ const int SPEC_BEE_DEATH          =205;
 const int SPEC_HERO_FAERIE        =206;
 const int SPEC_BRICK_COLLECTOR    =207;
 const int SPEC_CARETAKER          =208;
-const int NUM_MOB_SPECIALS        =208;
+const int SPEC_SHIP_CAPTAIN       =209;
+const int NUM_MOB_SPECIALS        =209;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
