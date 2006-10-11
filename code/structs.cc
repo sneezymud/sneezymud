@@ -1089,6 +1089,11 @@ TThing::~TThing()
     setCaster(NULL);
   }
 
+  if(tied_to){
+    tied_to->tied_to=NULL;
+    tied_to=NULL;
+  }
+
   if (act_ptr) {
     vlogf(LOG_BUG, fmt("Memory leaked: act_ptr on %s") %  getName()); 
 #if 0
@@ -1124,6 +1129,7 @@ TThing::TThing() :
   descr(NULL),
   stuckIn(NULL),
   equippedBy(NULL),
+  tied_to(NULL),
   eq_pos(WEAR_NOWHERE),
   eq_stuck(WEAR_NOWHERE),
   act_ptr(NULL),
@@ -1481,12 +1487,13 @@ TThing::TThing(const TThing &a) :
   weight(a.weight), light(a.light), material_type(a.material_type),
     carried_weight(a.carried_weight), carried_volume(a.carried_volume),
     the_caster(a.the_caster),
-  stuff(a.stuff),
+    stuff(a.stuff),
     descr(a.descr),
     stuckIn(a.stuckIn),
     equippedBy(a.equippedBy),
+    tied_to(a.tied_to),
     eq_pos(a.eq_pos), 
-  eq_stuck(a.eq_stuck), act_ptr(a.act_ptr),
+    eq_stuck(a.eq_stuck), act_ptr(a.act_ptr),
     max_exist(a.max_exist), in_room(a.in_room), spec(a.spec),
     number(a.number), height(a.height),
     canBeSeen(a.canBeSeen), name(a.name), shortDescr(a.shortDescr),
@@ -1524,6 +1531,7 @@ TThing & TThing::operator=(const TThing &a)
   the_caster = a.the_caster;
   stuckIn = a.stuckIn;
   equippedBy = a.equippedBy;
+  tied_to = a.tied_to;
   nextThing = a.nextThing;
   nextBorn = a.nextBorn;
   stuff = a.stuff;

@@ -13,6 +13,7 @@
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
 #include "obj_jewelry.h"
+#include "obj_harness.h"
 
 int GetItemClassRestrictions(const TObj *obj)
 {
@@ -2071,9 +2072,45 @@ int TBeing::doUnsaddle(sstring arg)
   return TRUE;
 }
 
+// currently this is only for tying a harnessed horse to an object
 void TBeing::doTie(const sstring &arg)
 {
-  sendTo("Not yet implemented.\n\r");
+  TBeing *horse;
+  TObj *obj;
+
+  if(!isImmortal()){
+    sendTo("Not implemented yet.\n\r");
+    return;
+  }
+
+  if(!(horse=generic_find_being(arg.word(0), FIND_CHAR_ROOM, this))){
+    sendTo("Can't find that horse.\n\r");
+    return;
+  }
+
+  if(!dynamic_cast<THarness *>(horse->equipment[WEAR_NECK])){
+    sendTo("That horse isn't harnessed.\n\r");
+    return;
+  }
+  
+  if(horse->tied_to){
+    sendTo("That horse is already tied to something.\n\r");
+    return;
+  }
+
+  if(!(obj=generic_find_obj(arg.word(1), FIND_OBJ_ROOM, this))){
+    sendTo("Can't find that object.\n\r");
+    return;
+  }
+
+  if(obj->tied_to){
+    sendTo("That object is already tied to something.\n\r");
+    return;
+  }
+
+  sendTo(fmt("You tied %s to %s.\n\r") % horse->getName() % obj->getName());
+  horse->tied_to=obj;
+  obj->tied_to=horse;
 }
 
 int TBeing::doSaddle(sstring arg)

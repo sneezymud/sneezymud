@@ -12,8 +12,6 @@
 
 
 class THarness : public TBaseClothing {
-  TObj *harnessed_to;
-
   private:
   public:
     virtual void assignFourValues(int, int, int, int);

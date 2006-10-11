@@ -51,6 +51,7 @@ class TThing {
     const char *real_descr;        // used with disguise/polymorph
     TBeing *stuckIn;
     TThing *equippedBy;
+    TThing *tied_to;
     wearSlotT eq_pos;                 // what is the equip. pos?
     wearSlotT eq_stuck;
     void *act_ptr;

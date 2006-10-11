@@ -946,6 +946,11 @@ int TBeing::rawMove(dirTypeT dir)
     --(*riding);
     thing_to_room(riding, new_r);
 
+    // if harnessed and tied to something, move it too
+    if(1){
+    }
+
+
     TBeing *tbt = dynamic_cast<TBeing *>(riding);
     if (tbt) {
       rc = tbt->bumpHeadDoor(from_here->dir_option[dir], &iHeight);

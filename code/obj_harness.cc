@@ -13,8 +13,7 @@
 #include "obj_harness.h"
 
 THarness::THarness() :
-  TBaseClothing(),
-  harnessed_to(NULL)
+  TBaseClothing()
 {
 }
 
