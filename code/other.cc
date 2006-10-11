@@ -61,6 +61,7 @@ extern "C" {
 #include "database.h"
 #include "disc_cures.h"
 #include "format.h"
+#include "liquids.h"
 
 void TBeing::doGuard(const sstring &argument)
 {
@@ -2083,6 +2084,14 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
   int duration = (level << 2) * UPDATES_PER_MUDHOUR;
   affectedData aff, aff5[5];
   statTypeT whichStat;
+
+  // if it's an alcoholic liquid, put it in their bloodstream
+  if(liquidInfo[liq]->drunk > 0){
+    vict->gainCondition(DRUNK, (liquidInfo[liq]->drunk / 10));
+    // use leftover as chance to go 1 more unit up/down
+    if (::number(0,9) < (abs(liquidInfo[liq]->drunk) % 10))
+      vict->gainCondition(DRUNK, (liquidInfo[liq]->drunk > 0 ? 1 : -1));
+  }
 
 
   switch(liq){
