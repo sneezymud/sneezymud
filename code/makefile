@@ -320,8 +320,9 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
 	spec_objs_ballot_box.o		spec_objs_casting.o		\
 	spec_mobs_property_clerk.o	spec_mobs_leper_hunter.o	\
-	spec_mobs_auctioneer.o		spec_mobs_loan_manager.o \
-	spec_mobs_herofaeries.o		spec_objs_setcasts.o 
+	spec_mobs_auctioneer.o		spec_mobs_loan_manager.o 	\
+	spec_mobs_herofaeries.o		spec_objs_setcasts.o 		\
+	spec_objs_tequila_cutlass.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -18144,6 +18145,7 @@ objs/equip.o: charfile.h being.h guild.h person.h monster.h paths.h account.h
 objs/equip.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/equip.o: colorstring.h format.h obj_base_container.h obj_bandaid.h
 objs/equip.o: obj_base_weapon.h obj_armor.h obj_base_clothing.h obj_jewelry.h
+objs/equip.o: obj_harness.h
 objs/faction.o: /usr/include/unistd.h /usr/include/features.h
 objs/faction.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/faction.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -39031,7 +39033,7 @@ objs/socket.o: obj_open_container.h obj_base_container.h obj_base_cup.h
 objs/socket.o: pathfinder.h /usr/include/c++/3.3.4/deque
 objs/socket.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/socket.o: /usr/include/c++/3.3.4/bits/deque.tcc timing.h process.h
-objs/socket.o: liquids.h obj_pool.h
+objs/socket.o: liquids.h obj_pool.h shop.h shopaccounting.h
 objs/sound.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sound.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sound.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -46042,6 +46044,159 @@ objs/spec_objs_sweeps.o: person.h monster.h paths.h account.h extern.h
 objs/spec_objs_sweeps.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/spec_objs_sweeps.o: colorstring.h format.h spec_objs_sweeps.h
 objs/spec_objs_sweeps.o: disc_sorcery.h
+objs/spec_objs_tequila_cutlass.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/features.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/sys/cdefs.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/gnu/stubs.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cstddef
+objs/spec_objs_tequila_cutlass.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/stdio.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/types.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/wordsize.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/typesizes.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/libio.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/_G_config.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/wchar.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/wchar.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/gconv.h
+objs/spec_objs_tequila_cutlass.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/stdio_lim.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/sys_errlist.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cstdlib
+objs/spec_objs_tequila_cutlass.o: /usr/include/stdlib.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/ctime
+objs/spec_objs_tequila_cutlass.o: /usr/include/time.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/time.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/sys/types.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cctype
+objs/spec_objs_tequila_cutlass.o: /usr/include/ctype.h /usr/include/endian.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/endian.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cassert
+objs/spec_objs_tequila_cutlass.o: /usr/include/assert.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cstring
+objs/spec_objs_tequila_cutlass.o: /usr/include/string.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cmath
+objs/spec_objs_tequila_cutlass.o: /usr/include/math.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/huge_val.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/mathdef.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/mathcalls.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cerrno
+objs/spec_objs_tequila_cutlass.o: /usr/include/errno.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/errno.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/linux/errno.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/asm/errno.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/string
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/pthread.h /usr/include/sched.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/sched.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/signal.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/sigset.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/pthreadtypes.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/initspin.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/sigthread.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cwchar
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/memory
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/climits
+objs/spec_objs_tequila_cutlass.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/spec_objs_tequila_cutlass.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/limits.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/new
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/exception
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/iosfwd
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/clocale
+objs/spec_objs_tequila_cutlass.o: /usr/include/locale.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/bits/locale.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/langinfo.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/nl_types.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/iconv.h /usr/include/libintl.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/algorithm
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/vector
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/map
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/list
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/iostream
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/ostream
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/ios
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/streambuf
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/cwctype
+objs/spec_objs_tequila_cutlass.o: /usr/include/wctype.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/locale
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/limits
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/typeinfo
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/istream
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/sstream
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/fstream
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/fstream.tcc
+objs/spec_objs_tequila_cutlass.o: sstring.h low.h enum.h spells.h structs.h
+objs/spec_objs_tequila_cutlass.o: parse.h immunity.h discipline.h spell2.h
+objs/spec_objs_tequila_cutlass.o: db.h ansi.h cmd_dissect.h client.h
+objs/spec_objs_tequila_cutlass.o: response.h faction.h comm.h toggle.h
+objs/spec_objs_tequila_cutlass.o: wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_objs_tequila_cutlass.o: body.h race.h skills.h disease.h trap.h
+objs/spec_objs_tequila_cutlass.o: task.h weather.h sound.h create.h thing.h
+objs/spec_objs_tequila_cutlass.o: obj.h spec_objs.h room.h connect.h
+objs/spec_objs_tequila_cutlass.o: obj_drug.h charfile.h being.h guild.h
+objs/spec_objs_tequila_cutlass.o: person.h monster.h paths.h account.h
+objs/spec_objs_tequila_cutlass.o: extern.h handler.h obj_money.h spec_mobs.h
+objs/spec_objs_tequila_cutlass.o: materials.h colorstring.h format.h
+objs/spec_objs_tequila_cutlass.o: obj_base_weapon.h
 objs/spec_objs_unholy_cutlass.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -53872,7 +54027,6 @@ objs/weather.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/weather.o: spec_mobs.h materials.h colorstring.h format.h
 objs/weather.o: obj_trash_pile.h obj_expandable_container.h
 objs/weather.o: obj_open_container.h obj_base_container.h process.h
-objs/weather.o: shopowned.h shop.h shopaccounting.h
 objs/wiz_data.o: /usr/include/unistd.h /usr/include/features.h
 objs/wiz_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/wiz_data.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h

@@ -381,6 +381,7 @@ enum liqTypeT {
      LIQ_POT_QUICKSILVER, // 130
      LIQ_POT_MYSTERY,
      LIQ_MUD,
+     LIQ_TEQUILA,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);

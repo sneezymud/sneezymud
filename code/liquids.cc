@@ -35,6 +35,7 @@ liqInfoT::liqInfoT()
   liquids[LIQ_MEAD]                 = new liqEntry(2,  2,  4, false, false, "<k>black<1>", "<k>mead<1>", 0);
   liquids[LIQ_VODKA]                = new liqEntry(12, -3, -1, false, false, "clear", "vodka", 0);
   liquids[LIQ_RUM]                  = new liqEntry(11, -3, -1, false, false, "clear", "rum", 0);
+  liquids[LIQ_TEQUILA]              = new liqEntry(13, -3, -1, false, false, "golden", "tequila", 0);
   liquids[LIQ_BRANDY]               = new liqEntry(8,  1,  3, false, false, "<o>brown<1>", "<o>brandy<1>", 0);
   liquids[LIQ_RED_WINE]             = new liqEntry(7, -1,  6, false, false, "<R>red<1>", "<R>red wine<1>", 0);
   liquids[LIQ_WARM_MEAD]            = new liqEntry(2,  1,  5, false, false, "<k>black<1>", "<k>warm mead<1>", 0);

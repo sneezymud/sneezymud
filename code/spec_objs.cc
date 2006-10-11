@@ -5723,6 +5723,7 @@ extern int weaponLightningRod(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponJambiyaSpecial(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int tequilaCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int holyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
@@ -5827,7 +5828,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "poison sap dagger", poisonSap},  
   {FALSE, "blinder weapon", weaponBlinder},
   {FALSE, "mana drain weapon", weaponManaDrainer}, // 45
-  {FALSE, "BOGUS", bogusObjProc},  
+  {FALSE, "tequila cutlass", tequilaCutlass},
   {FALSE, "daySword", daySword},  
   {FALSE, "nightBlade", nightBlade},  
   {TRUE, "Lightning Rod", weaponLightningRod},
