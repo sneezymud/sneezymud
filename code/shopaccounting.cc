@@ -106,16 +106,16 @@ void TShopJournal::closeTheBooks()
 
   // carryover entry for cash
   tso.journalize_debit(100, "Accountant", "Year End Accounting", 
-			getValue("Cash"));
+			getValue("Cash"), true);
   // carryover entry for inventory
   tso.journalize_debit(130, "Accountant", "Year End Accounting", 
-			getValue("Inventory"), true);
+			getValue("Inventory"));
   // carryover entry for PIC
   tso.journalize_credit(300, "Accountant", "Year End Accounting", 
-			getValue("Paid-in Capital"), true);
+			getValue("Paid-in Capital"));
   // carryover entry for RE
   tso.journalize_credit(800, "Accountant", "Year End Accounting", 
-			getRetainedEarnings(), true);
+			getRetainedEarnings());
 
   // move old journal into archive
   db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
@@ -291,6 +291,8 @@ void TShopOwned::giveStatements(sstring arg)
     buf=fmt("Income statement for '%s', year ending %i.\n\r") % 
       name % year;
 
+  sstring prev_re=fmt("Retained earnings %i") % (year-1);
+
   buf+="-----------------------------------------------------------------\n\r";
   buf+=fmt("%-36s %10s %10i\n\r") % 
     "Sales revenue" % "" % tsj.getValue("Sales");
@@ -309,6 +311,8 @@ void TShopOwned::giveStatements(sstring arg)
     "Net income" % "" % tsj.getNetIncome();
   buf+=fmt("%-36s %10s %10i\n\r") %
     "Dividends" % "" % tsj.getValue("Dividends");
+  buf+=fmt("%-36s %10s %10i\n\r") %
+    prev_re % "" % tsj.getValue("Retained Earnings");
   buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
   buf+=fmt("%-36s %10s %10i\n\r") %
     "Retained earnings" % "" % tsj.getRetainedEarnings();
