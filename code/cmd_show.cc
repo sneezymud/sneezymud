@@ -483,7 +483,7 @@ void TPerson::doShow(const sstring &argument)
     for (zone = 0; zone < zone_table.size(); zone++) {
       zoneData &zd = zone_table[zone];
       if (my_arg.empty() ||
-           isname(my_arg, zd.name) ||
+	  (((sstring)zd.name).find(my_arg) != sstring::npos) ||
 	  (is_abbrev(my_arg, "disabled") && !zd.enabled) ||
 	  (is_abbrev(my_arg, "active") && zd.zone_value==-1)) {
         if (zd.enabled)
