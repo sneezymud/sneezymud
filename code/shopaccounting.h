@@ -11,7 +11,6 @@ class TShopJournal {
 
   int getExpenses();
   int getNetIncome();
-  int getPrevRetainedEarnings();
   int getRetainedEarnings();
   int getAssets();
   int getLiabilities();

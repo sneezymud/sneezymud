@@ -11,9 +11,9 @@ TShopJournal::TShopJournal(int shop, int y)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select 1 from shoplog_retained_earnings where shop_nr=%i and sneezy_year=%i", shop, y);
+  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop, y);
 
-  if(!db.fetchRow()){
+  if(db.fetchRow()){
     db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
   } else {
     db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by a.name", y, shop);
@@ -47,6 +47,7 @@ int TShopJournal::getValue(const sstring &val)
   return values[val];
 }
 
+
 int TShopJournal::getExpenses()
 {
   return values["COGS"]+values["Tax"]+values["Expenses"];
@@ -54,22 +55,13 @@ int TShopJournal::getExpenses()
 
 int TShopJournal::getNetIncome()
 {
-  return values["Sales"]-getExpenses();
+  return (values["Sales"]+values["Recycling"])-getExpenses();
 }
 
-int TShopJournal::getPrevRetainedEarnings()
-{
-  TDatabase db(DB_SNEEZY);
-  
-  db.query("select retained_earnings from shoplog_retained_earnings where shop_nr=%i and sneezy_year=%i", shop_nr, year-1);
-  db.fetchRow();
-
-  return convertTo<int>(db["retained_earnings"]);
-}
 
 int TShopJournal::getRetainedEarnings()
 {
-  return (getNetIncome()+getPrevRetainedEarnings())-values["Dividends"];
+  return (getNetIncome()+values["Retained Earnings"])-values["Dividends"];
 }
 
 int TShopJournal::getAssets()
@@ -101,17 +93,31 @@ void TShopJournal::closeTheBooks()
     return;
   }
 
-  db.query("select 1 from shoplog_retained_earnings where shop_nr=%i and sneezy_year=%i", shop_nr, year);
+  // shouldn't be an entries for last year in here if books have been closed
+  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
   
-  if(db.fetchRow()){
+  if(!db.fetchRow()){
     // seems as the books have already been closed.
     //    vlogf(LOG_BUG, "closeTheBooks() called when retained earnings already set!");
     return;
   }
 
+  TShopOwned tso(shop_nr, NULL, NULL);
 
-  db.query("insert into shoplog_retained_earnings (shop_nr, retained_earnings, sneezy_year) values (%i, %i, %i)", shop_nr, getRetainedEarnings(), year);  
+  // carryover entry for cash
+  tso.journalize_debit(100, "Accountant", "Year End Accounting", 
+			getValue("Cash"));
+  // carryover entry for inventory
+  tso.journalize_debit(130, "Accountant", "Year End Accounting", 
+			getValue("Inventory"), true);
+  // carryover entry for PIC
+  tso.journalize_credit(300, "Accountant", "Year End Accounting", 
+			getValue("Paid-in Capital"), true);
+  // carryover entry for RE
+  tso.journalize_credit(800, "Accountant", "Year End Accounting", 
+			getRetainedEarnings(), true);
 
+  // move old journal into archive
   db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
   db.query("delete from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
 }

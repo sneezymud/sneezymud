@@ -146,6 +146,9 @@ int getShopAccess(int shop_nr, TBeing *ch){
   int access=0;
   TDatabase db(DB_SNEEZY);
 
+  if(!ch)
+    return 0;
+
   db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
   
   if(db.fetchRow())

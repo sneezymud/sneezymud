@@ -11,3 +11,4 @@ insert into shoplogaccountchart values (500, 'Sales');
 insert into shoplogaccountchart values (510, 'Recycling');
 insert into shoplogaccountchart values (600, 'COGS');
 insert into shoplogaccountchart values (700, 'Tax');
+insert into shoplogaccountchart values (800, 'Retained Earnings');
