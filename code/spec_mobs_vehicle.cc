@@ -387,11 +387,11 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   return false;
 }
 
-int shipCaptain(TBeing *, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+// this function can be easily adapted for multiple use
+// you just need to add a mechanism to store mobvnum, boatnum and owners
+// for each use. database already stores by mobvnum.
+int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
-  // captain, destination <keyword>
-  // captain, sail <keyword>
-  const int boatnum=15345;
   TObj *boat=NULL;
   int *job=NULL;
   int i;
@@ -401,10 +401,15 @@ int shipCaptain(TBeing *, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   path.setThruDoors(false);
   sstring argument=arg;
   TDatabase db(DB_SNEEZY);
-
+  const int boatnum=19077;
+  
   if(cmd != CMD_GENERIC_PULSE &&
      !((cmd == CMD_SAY || cmd == CMD_SAY2) && 
-       argument.word(0).lower()=="captain,"))
+       (argument.word(0).lower()=="captain,") && ch &&
+       (ch->desc->account->name == "trav" ||
+	ch->desc->account->name == "scout" ||
+	ch->desc->account->name == "laren" ||
+	ch->desc->account->name == "ekeron")))
     return FALSE;
 
 
