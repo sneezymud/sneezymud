@@ -23,9 +23,10 @@ class TVehicle : public TPortal {
   dirTypeT dir;
   int speed;
   int type;
-  bool whole_zone;
 
  public:
+  bool whole_zone;
+
   void setSpeed(int s) { speed=s; }
   int getSpeed() const { return speed; }
   void setType(int s) { type=s; }

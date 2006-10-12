@@ -235,6 +235,37 @@ void TVehicle::changeObjValue3(TBeing *ch)
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
+void update_exits(TVehicle *vehicle)
+{
+  TRoom *vehicleroom=real_roomp(vehicle->getTarget());
+
+  if(!vehicle->whole_zone){
+    if(!vehicle->roomp){
+      if(vehicle->parent && vehicle->parent->roomp){
+	// update the exit even if we're being carried or something
+	vehicleroom=real_roomp(vehicle->getTarget());
+	for(int i=MIN_DIR;i<MAX_DIR;++i){
+	  if(vehicleroom->dir_option[i])
+	    vehicleroom->dir_option[i]->to_room=vehicle->parent->roomp->number;
+	}
+      }
+      return;
+    }
+    
+    
+    // update exits
+    // we update here just to be sure they are correct
+    // we update below again, after the move if one takes place
+    vehicleroom=real_roomp(vehicle->getTarget());
+    for(int i=MIN_DIR;i<MAX_DIR;++i){
+      if(vehicleroom->dir_option[i])
+	vehicleroom->dir_option[i]->to_room=vehicle->roomp->number;
+    }
+  } else {
+
+  }
+}
+
 void TVehicle::vehiclePulse(int pulse)
 {
   TThing *t;
@@ -243,34 +274,12 @@ void TVehicle::vehiclePulse(int pulse)
   sstring buf;
   char shortdescr[256];
   vector<TBeing *>tBeing(0);
-  TRoom *vehicleroom;
 
-  // check 4-val 3 to see if it is 1 room vehicle or whole zone
+  // check whole_zone to see if it is 1 room vehicle or whole zone
   // 1 room, update all exits in current room
   // whole zone, update all exits in zone that are external
+  update_exits(this);
 
-
-  if(!troom){
-    if(parent && parent->roomp){
-      // update the exit even if we're being carried or something
-      vehicleroom=real_roomp(getTarget());
-      for(int i=MIN_DIR;i<MAX_DIR;++i){
-	if(vehicleroom->dir_option[i])
-	  vehicleroom->dir_option[i]->to_room=parent->roomp->number;
-      }
-    }
-    return;
-  }
-
-
-  // update exits
-  // we update here just to be sure they are correct
-  // we update below again, after the move if one takes place
-  vehicleroom=real_roomp(getTarget());
-  for(int i=MIN_DIR;i<MAX_DIR;++i){
-    if(vehicleroom->dir_option[i])
-      vehicleroom->dir_option[i]->to_room=roomp->number;
-  }
 
   if(getSpeed()==0)
     return;
@@ -410,13 +419,7 @@ void TVehicle::vehiclePulse(int pulse)
   }
   
   // update exits
-  vehicleroom=real_roomp(getTarget());
-
-  for(int i=MIN_DIR;i<MAX_DIR;++i){
-    if(vehicleroom->dir_option[i])
-      vehicleroom->dir_option[i]->to_room=roomp->number;
-  }
-
+  update_exits(this);
 
   // send message to people in vehicle
   troom=real_roomp(getTarget());
