@@ -13,7 +13,8 @@
 TVehicle::TVehicle() :
   TPortal(),
   dir(DIR_NONE),
-  speed(0)
+  speed(0),
+  whole_zone(false)
 {
 }
 
@@ -41,6 +42,10 @@ void TVehicle::assignFourValues(int x1, int x2, int x3, int x4)
   setTarget(x1);
   setType(x2);
 
+  if(x3)
+    whole_zone=true;
+  else
+    whole_zone=false;
 
   setPortalKey(GET_BITS(x4, 23, 24));
   setPortalFlags(GET_BITS(x4, 31, 8));
@@ -50,6 +55,11 @@ void TVehicle::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1=getTarget();
   *x2=getType();
+  
+  if(whole_zone)
+    *x3=1;
+  else
+    *x3=0;
 
   int r = *x4;
   SET_BITS(r, 23, 24, getPortalKey());
@@ -208,6 +218,23 @@ bool TVehicle::isAllowedPath(int rnum)
   return false;
 }
 
+
+void TVehicle::changeObjValue3(TBeing *ch)
+{
+  int x1, x2, x3, x4;
+  getFourValues(&x1, &x2, &x3, &x4);
+
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
+       ItemInfo[itemType()]->val2_info);
+  ch->specials.edit = CHANGE_OBJ_VALUE3;
+
+  ch->sendTo(fmt("Value 3 for %s : %d\n\r\n\r") %
+       sstring(getName()).uncap() % x3);
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo("Enter new value.\n\r--> ");
+}
+
 void TVehicle::vehiclePulse(int pulse)
 {
   TThing *t;
@@ -217,6 +244,11 @@ void TVehicle::vehiclePulse(int pulse)
   char shortdescr[256];
   vector<TBeing *>tBeing(0);
   TRoom *vehicleroom;
+
+  // check 4-val 3 to see if it is 1 room vehicle or whole zone
+  // 1 room, update all exits in current room
+  // whole zone, update all exits in zone that are external
+
 
   if(!troom){
     if(parent && parent->roomp){

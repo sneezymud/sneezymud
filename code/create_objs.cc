@@ -2376,6 +2376,7 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
+
 void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTypeT type)
 {
   int loc_update, row;

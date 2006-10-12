@@ -23,6 +23,7 @@ class TVehicle : public TPortal {
   dirTypeT dir;
   int speed;
   int type;
+  bool whole_zone;
 
  public:
   void setSpeed(int s) { speed=s; }
@@ -36,6 +37,7 @@ class TVehicle : public TPortal {
   bool isAllowedPath(int rnum);
   virtual void assignFourValues(int, int, int, int);
   virtual void getFourValues(int *, int *, int *, int *) const;
+  virtual void changeObjValue3(TBeing *);
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }
   unsigned char getPortalType() const;
   char getPortalNumCharges() const;

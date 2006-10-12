@@ -256,7 +256,8 @@ enum editorChangeTypeT {
      SEDIT_DISPLAY,
      CHANGE_EGG_VALUE1,
      CHANGE_EGG_TOUCHED,
-     CHANGE_EGG_FILL
+     CHANGE_EGG_FILL,
+     CHANGE_VEHICLE_VALUE3,
 };
 
 #endif

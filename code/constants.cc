@@ -586,7 +586,7 @@ void assign_item_info()
   ItemInfo[ITEM_VEHICLE] = new itemInfo("Vehicle", "a vehicle",
      "Inside room of vehicle", 0, 0,
      "Vehicle type", 1, 0,
-     "unused", 0, 0,
+     "0=one room vehicle, 1=whole zone vehicle", 1, 0,
      "Special: portal states & key number", 0, 0);
   ItemInfo[ITEM_CASINO_CHIP] = new itemInfo("Casino Chip","a casino chip",
      "Unused", 0, 0,
