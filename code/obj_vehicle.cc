@@ -61,6 +61,7 @@ void TVehicle::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   else
     *x3=0;
 
+
   int r = *x4;
   SET_BITS(r, 23, 24, getPortalKey());
   SET_BITS(r, 31, 8, getPortalFlags());
@@ -243,7 +244,6 @@ void update_exits(TVehicle *vehicle)
     if(!vehicle->roomp){
       if(vehicle->parent && vehicle->parent->roomp){
 	// update the exit even if we're being carried or something
-	vehicleroom=real_roomp(vehicle->getTarget());
 	for(int i=MIN_DIR;i<MAX_DIR;++i){
 	  if(vehicleroom->dir_option[i])
 	    vehicleroom->dir_option[i]->to_room=vehicle->parent->roomp->number;
@@ -251,18 +251,51 @@ void update_exits(TVehicle *vehicle)
       }
       return;
     }
-    
-    
-    // update exits
-    // we update here just to be sure they are correct
-    // we update below again, after the move if one takes place
-    vehicleroom=real_roomp(vehicle->getTarget());
+        
     for(int i=MIN_DIR;i<MAX_DIR;++i){
       if(vehicleroom->dir_option[i])
 	vehicleroom->dir_option[i]->to_room=vehicle->roomp->number;
     }
   } else {
+    // update all exits in this zone that go outside this zone
+    TRoom *rp;
+    int zone_num=vehicleroom->getZoneNum();
 
+    if(!vehicle->roomp){
+      if(vehicle->parent && vehicle->parent->roomp){
+	// update the exit even if we're being carried or something
+	for(int r=zone_table[zone_num].bottom;
+	    r<=zone_table[zone_num].top;++r){
+	  rp=real_roomp(r);
+
+	  if(rp){
+	    for(int i=MIN_DIR;i<MAX_DIR;++i){
+	      if(rp->dir_option[i] && 
+		 (rp->dir_option[i]->to_room < zone_table[zone_num].bottom ||
+		  rp->dir_option[i]->to_room > zone_table[zone_num].top))
+		rp->dir_option[i]->to_room=vehicle->parent->roomp->number;
+	    }
+	  }
+	}
+      }
+      return;
+    }
+
+
+    for(int r=zone_table[zone_num].bottom;
+	r<=zone_table[zone_num].top;++r){
+      rp=real_roomp(r);
+
+      if(rp){
+	for(int i=MIN_DIR;i<MAX_DIR;++i){
+	  if(rp->dir_option[i] && 
+	     (rp->dir_option[i]->to_room < zone_table[zone_num].bottom ||
+	      rp->dir_option[i]->to_room > zone_table[zone_num].top)){
+	    rp->dir_option[i]->to_room=vehicle->roomp->number;
+	  }
+	}
+      }
+    }
   }
 }
 
@@ -275,11 +308,7 @@ void TVehicle::vehiclePulse(int pulse)
   char shortdescr[256];
   vector<TBeing *>tBeing(0);
 
-  // check whole_zone to see if it is 1 room vehicle or whole zone
-  // 1 room, update all exits in current room
-  // whole zone, update all exits in zone that are external
   update_exits(this);
-
 
   if(getSpeed()==0)
     return;

@@ -534,7 +534,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
 
-  myself->doDrive("20");
+  myself->doDrive("50");
 
   return TRUE;
 }
