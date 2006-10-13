@@ -85,7 +85,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
           TRUE, caster, NULL, NULL, TO_ROOM);
     }
     if (!found) {
-      caster->sendTo("Nothing in the vicinity appears to have been further discomfited by your ritual.\n\r");
+      caster->sendTo("Nothing in the vicinity appears to have been further discomforted by your ritual.\n\r");
     //  return SPELL_FAIL;
     }
     return SPELL_SUCCESS;
