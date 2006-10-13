@@ -222,7 +222,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       journalize_debit(630, customer, name, expenses);
       // cash
       journalize_credit(100, customer, name, expenses);
-    } else if(action == "buying"){
+    } else if(action == "buying" || action == "recycling"){
       // now we have to calculate COGS for this item
       // (COGS = cost of goods sold)
       COGS=COGS_get(name);
