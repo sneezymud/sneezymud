@@ -154,8 +154,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 1, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo(fmt("<R>BOOM!<1>  A loud cannon shot echoes around.\n\r") %
-				   ch->in_room);
+      ch->roomp->getZone()->sendTo(fmt("<R>BOOM!<1>  A loud cannon shot echoes around.\n\r"));
 
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
@@ -249,7 +248,7 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 		   cannon->shortDescr;
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  buf = fmt("$n pour some powder from $p into %s.") %
+	  buf = fmt("$n pours some powder from $p into %s.") %
 		   cannon->shortDescr;
           act(buf, FALSE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
