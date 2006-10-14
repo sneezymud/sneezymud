@@ -1,5 +1,175 @@
 #33485
 Damescena - Eastern Farmlands~
-33549 25 2 0
-S
+33549 30 2 0
+D 0 33497 2 1        A Road through the Valley -> In Fields on a Farm
+D 0 33499 0 2        Inside a Farmhouse -> A Bedroom
+D 0 33499 1 2        Inside a Farmhouse -> A Bedroom
+D 0 33499 2 2        Inside a Farmhouse -> A Bedroom
+D 0 33500 2 2        A Bedroom -> Inside a Farmhouse
+D 0 33501 0 2        A Bedroom -> Inside a Farmhouse
+D 0 33502 3 2        A Bedroom -> Inside a Farmhouse
+D 0 33503 0 2        An Upstairs Hallway -> A Bedroom
+D 0 33503 1 2        An Upstairs Hallway -> A Bedroom
+D 0 33503 2 2        An Upstairs Hallway -> A Bedroom
+D 0 33504 2 2        A Bedroom -> An Upstairs Hallway
+D 0 33505 3 2        A Bedroom -> An Upstairs Hallway
+D 0 33506 0 2        A Bedroom -> An Upstairs Hallway
+D 0 33508 1 2        Inside a Farmhouse -> A Bedroom
+D 0 33508 2 2        Inside a Farmhouse -> A Bedroom
+D 0 33508 3 2        Inside a Farmhouse -> A Bedroom
+D 0 33509 0 2        A Bedroom -> Inside a Farmhouse
+D 0 33510 3 2        A Bedroom -> Inside a Farmhouse
+D 0 33511 1 2        A Bedroom -> Inside a Farmhouse
+D 0 33512 1 2        An Upstairs Hallway -> A Bedroom
+D 0 33512 2 2        An Upstairs Hallway -> A Bedroom
+D 0 33512 3 2        An Upstairs Hallway -> A Bedroom
+D 0 33513 3 2        A Bedroom -> An Upstairs Hallway
+D 0 33514 0 2        A Bedroom -> An Upstairs Hallway
+D 0 33515 1 2        A Bedroom -> An Upstairs Hallway
+D 0 33517 0 2        Inside a Farmhouse -> A Bedroom
+D 0 33517 1 2        Inside a Farmhouse -> A Bedroom
+D 0 33517 3 2        Inside a Farmhouse -> A Bedroom
+D 0 33518 1 2        A Bedroom -> Inside a Farmhouse
+D 0 33519 3 2        A Bedroom -> Inside a Farmhouse
+D 0 33520 2 2        A Bedroom -> Inside a Farmhouse
+D 0 33521 0 2        An Upstairs Hallway -> A Bedroom
+D 0 33521 1 2        An Upstairs Hallway -> A Bedroom
+D 0 33521 3 2        An Upstairs Hallway -> A Bedroom
+D 0 33522 1 2        A Bedroom -> An Upstairs Hallway
+D 0 33523 3 2        A Bedroom -> An Upstairs Hallway
+D 0 33524 2 2        A Bedroom -> An Upstairs Hallway
+D 0 33533 0 1        In Fields on a Farm -> A Road through the Valley
+D 0 33538 1 1        A Road through the Valley -> In a Pasture
+D 0 33541 3 1        In a Pasture -> A Road through the Valley
 
+O 0 33498 4 33498       a rose bush
+O 0 8965 2 33499        a brass oil lamp
+O 0 31482 1 33499       a table
+O 0 8965 2 33500        a brass oil lamp
+O 0 33521 1 33500       a large bed
+O 0 33503 1 33500       a wooden dresser
+O 0 33512 1 33500       a closet
+O 0 8965 2 33501        a brass oil lamp
+O 0 33521 1 33501       a large bed
+O 0 33512 1 33501       a closet
+O 0 33503 1 33501       a wooden dresser
+O 0 8965 2 33502        a brass oil lamp
+O 0 33512 1 33502       a closet
+O 0 33503 1 33502       a wooden dresser
+O 0 33521 1 33502       a large bed
+O 0 8965 2 33503        a brass oil lamp
+O 0 10117 1 33503       a couch
+O 0 8965 2 33504        a brass oil lamp
+O 0 33521 1 33504       a large bed
+O 0 33503 1 33504       a wooden dresser
+O 0 33512 1 33504       a closet
+O 0 8965 2 33505        a brass oil lamp
+O 0 33503 1 33505       a wooden dresser
+O 0 33512 1 33505       a closet
+O 0 33521 1 33505       a large bed
+O 0 8965 2 33506        a brass oil lamp
+O 0 33512 1 33506       a closet
+O 0 33503 1 33506       a wooden dresser
+O 0 33521 1 33506       a large bed
+O 0 33498 4 33507       a rose bush
+O 0 8965 2 33508        a brass oil lamp
+O 0 31482 1 33508       a table
+O 0 33512 1 33509       a closet
+O 0 33503 1 33509       a wooden dresser
+O 0 8965 2 33509        a brass oil lamp
+O 0 33521 1 33509       a large bed
+O 0 8965 2 33510        a brass oil lamp
+O 0 33512 1 33510       a closet
+O 0 33503 1 33510       a wooden dresser
+O 0 33521 1 33510       a large bed
+O 0 8965 2 33511        a brass oil lamp
+O 0 33512 1 33511       a closet
+O 0 33503 1 33511       a wooden dresser
+O 0 33521 1 33511       a large bed
+O 0 8965 2 33512        a brass oil lamp
+O 0 10117 1 33512       a couch
+O 0 33512 1 33513       a closet
+O 0 8965 2 33513        a brass oil lamp
+O 0 33503 1 33513       a wooden dresser
+O 0 33521 1 33513       a large bed
+O 0 8965 2 33514        a brass oil lamp
+O 0 33512 1 33514       a closet
+O 0 33503 1 33514       a wooden dresser
+O 0 33521 1 33514       a large bed
+O 0 8965 2 33515        a brass oil lamp
+O 0 33503 1 33515       a wooden dresser
+O 0 33512 1 33515       a closet
+O 0 33521 1 33515       a large bed
+O 0 33516 4 33516       a dead rose bush
+O 0 8965 2 33517        a brass oil lamp
+O 0 31482 1 33517       a table
+O 0 8965 2 33518        a brass oil lamp
+O 0 33521 1 33518       a large bed
+O 0 33512 1 33518       a closet
+O 0 33503 1 33518       a wooden dresser
+O 0 8965 2 33519        a brass oil lamp
+O 0 33512 1 33519       a closet
+O 0 33503 1 33519       a wooden dresser
+O 0 33521 1 33519       a large bed
+O 0 33521 1 33520       a large bed
+O 0 33512 1 33520       a closet
+O 0 33503 1 33520       a wooden dresser
+O 0 8965 2 33520        a brass oil lamp
+O 0 8965 2 33521        a brass oil lamp
+O 0 23661 1 33521       a beat-up couch
+O 0 8965 2 33522        a brass oil lamp
+O 0 33512 1 33522       a closet
+O 0 33503 1 33522       a wooden dresser
+O 0 33521 1 33522       a large bed
+O 0 8965 2 33523        a brass oil lamp
+O 0 33512 1 33523       a closet
+O 0 33503 1 33523       a wooden dresser
+O 0 33521 1 33523       a large bed
+O 0 8965 2 33524        a brass oil lamp
+O 0 33503 1 33524       a wooden dresser
+O 0 33512 1 33524       a closet
+O 0 33521 1 33524       a large bed
+O 0 27103 1 33545       an ancient willow tree
+
+M 0 33497 1 33492       a tinker
+M 0 33498 1 33493       a teenage farmgirl
+C 1 33496 1 33493       a teenage boy
+A 0 33485 33490
+M 0 33485 5 -99       a plateau road watchman
+? 0 10 0 E
+E 1 9960 9999 19        obsidian long sword
+Y 0 8 5                 studded leather
+A 0 33485 33490
+M 0 33485 5 -99       a plateau road watchman
+? 0 10 0 E
+E 1 304 9999 19         simple short sword
+Y 0 8 5                 studded leather
+A 0 33485 33490
+M 0 33485 5 -99       a plateau road watchman
+? 0 10 0 E
+E 1 6117 9999 18        tarnished steel broad sword
+Y 0 8 5                 studded leather 
+A 0 33525 33528
+M 0 33520 1 -99       a farm boy
+A 0 33525 33528
+M 0 33519 1 -99       a slovenly farmhand
+A 0 33525 33528
+M 0 33518 2 -99       a farmer
+G 1 13886 1               money seeds
+A 0 33529 33532
+M 0 33509 1 -99       a farmer
+G 1 33526 1               pumpkin seeds
+G 1 35485 1               turnip seeds
+A 0 33533 33536
+M 0 33500 1 -99       a farmer
+G 1 35499 1               lettuce seeds
+G 1 13880 1               tomato seeds
+A 0 33541 33544
+M 0 33544 1 -99       an angus bull
+A 0 33541 33544
+M 0 33503 1 -99       a veterinarian
+A 0 33541 33544
+M 0 33545 1 -99       an arabian horse
+M 0 33498 1 33545       a teenage farmgirl
+C 1 33496 1 33545       a teenage boy
+S
