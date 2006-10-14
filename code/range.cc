@@ -1238,17 +1238,23 @@ int TBeing::doShoot(const char *arg)
     strcpy(arg1, arg2);
     dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
   }
+
   if (checkPeaceful("You feel much too peaceful to contemplate violence.\n\r"))
     return FALSE;
+
   if (!(t = equipment[getPrimaryHold()])) {
-    sendTo("You are not holding a bow to shoot!\n\r");
-    return FALSE;
+    if(!(t=generic_find_obj("cannon", FIND_OBJ_ROOM, this))){
+      sendTo("You are not holding a bow to shoot!\n\r");
+      return FALSE;
+    }
   }
+
   if (getSkillValue(SKILL_RANGED_PROF) <= 0 && !dynamic_cast<TGun *>(t)) {
     sendTo("You almost shoot yourself in the foot!\n\r");
     sendTo("You realize you don't have any clue what you're doing...get some training.\n\r");
     return FALSE;
   }
+
   if (arg1 && *arg1 &&
    !(targ = get_char_vis_direction(this, arg1, dir, iDist, TRUE, &count))) {
     sendTo("No creature with that name in that room.\n\r");

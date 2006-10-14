@@ -219,7 +219,7 @@ TaskEntry tasks[NUM_TASKS] =
   {"butchering", "You are too busy butchering a corpse.\n\r", task_butchering},
   {"cooking", "You are too busy cooking.\n\r", task_cook},
   {"loading a handgonne", "You are too busy loading your handgonne.\n\r", task_handgonne_load},
-  {"loading a cannon", "You are too busy loading your cannon.\n\r", task_handgonne_load},
+  {"loading a cannon", "You are too busy loading your cannon.\n\r", task_cannon_load},
   {"trapping an arrow", "You are too busy trapping your arrow.\n\r", task_trap_arrow},
   {"riding", "You are too busy riding.\n\r", task_ride},
 };

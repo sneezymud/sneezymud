@@ -123,8 +123,13 @@ void TBeing::doGload(sstring arg)
   }
   
   if(arg1 != "unload"){
-    generic_find(arg1.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
-    
+
+    for(int i=1;i<=100;++i){
+      generic_find((fmt("%i.%s") % i % arg1).c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
+      if(bow && dynamic_cast<TGun *>(bow))
+	break;
+    }
+
     if(!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
       return;

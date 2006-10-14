@@ -70,6 +70,7 @@ extern int task_logging     (TBeing *, cmdTypeT, const char *, int, TRoom *, TOb
 extern int task_extinguish_my_ass (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_handgonne_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_cannon_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_arrow(TBeing *, cmdTypeT cmd, const char *, int, TRoom *, TObj *);
 extern int task_ride          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_painting          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);

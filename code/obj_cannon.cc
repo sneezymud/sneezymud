@@ -94,7 +94,8 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     return FALSE;
   }
 
-  if((!ch->roomp->isIndoorSector() && weather_info.sky==SKY_RAINING) ||
+  if((!ch->roomp->isIndoorSector() && weather_info.sky==SKY_RAINING &&
+      !::number(0,3)) ||
      ch->roomp->isUnderwaterSector()){
     act("Nothing happens, $N has been fouled by wet weather!",
 	TRUE, ch, NULL, this, TO_CHAR);
@@ -111,7 +112,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     }
 
     // grab a bullet object and adjust for damage
-    bullet=read_object(31869, VIRTUAL);
+    bullet=read_object(19090, VIRTUAL);
     TArrow *tmp=dynamic_cast<TArrow *>(bullet);
     if(tmp){
       tmp->setWeapDamLvl(getWeapDamLvl());
@@ -153,7 +154,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 1, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo(fmt("<R>BOOM!<1>  A loud cannon shot echoes in the distance.\n\r") %
+      ch->roomp->getZone()->sendTo(fmt("<R>BOOM!<1>  A loud cannon shot echoes around.\n\r") %
 				   ch->in_room);
 
     // delete the bullet afterwards, arbitrary decision
@@ -181,8 +182,9 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
   TCannon *cannon=dynamic_cast<TCannon *>(o);
   TAmmo *shot;
   TTool *powder;
-  TThing *t;
+  TThing *t, *ss;
   sstring buf;
+  int m;
 
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
@@ -197,44 +199,7 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
     return FALSE; // returning FALSE lets command be interpreted
   }
 
-  // find powder
-  TThing *ss=ch->getStuff();
 
-  t=findPowder(ss, 12);
-  
-  int m=WEAR_NOWHERE;
-  while(!t && m<MAX_WEAR){
-    ++m;
-    t=findPowder(ch->equipment[m], 12);
-  }
-
-  powder=dynamic_cast<TTool *>(t);
-
-  if(!powder){
-    ch->sendTo("You need to have a full flask of black powder.\n\r");
-    ch->stopTask();
-    return FALSE;
-  }
-
-  // find shot
-  ss=ch->getStuff();
-
-  t=findShot(ss, AMMO_CANNON_BALL);
-  
-  m=WEAR_NOWHERE;
-  while(!t && m<MAX_WEAR){
-    ++m;
-    t=findShot(ch->equipment[m], AMMO_CANNON_BALL);
-  }
-
-  shot=dynamic_cast<TAmmo *>(t);
-
-  if(!shot && !cannon->getAmmo()){
-    ch->sendTo("You need to have a cannon ball.\n\r");
-    ch->stopTask();
-    return FALSE;
-  }
-  
 
   if (ch->task && ch->task->timeLeft < 0){
     ch->sendTo("You stop loading.\n\r");
@@ -250,10 +215,10 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	case 5:
 	  buf = fmt("You clear out the barrel of %s.") %
 		   cannon->shortDescr;
-	  act(buf, FALSE, ch, powder, cannon, TO_CHAR);
+	  act(buf, FALSE, ch, NULL, cannon, TO_CHAR);
 	  buf = fmt("$n clears out the barrel of %s.") %
 		   cannon->shortDescr;
-	  act(buf, FALSE, ch, powder, cannon, TO_ROOM);
+	  act(buf, FALSE, ch, NULL, cannon, TO_ROOM);
 
 	  ch->task->timeLeft--;
 	  break;
@@ -261,11 +226,23 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	  // powder
 	  cannon->addToFlags(GUN_FLAG_FOULED);
 
-	  powder->addToToolUses(-1);
-	  if (powder->getToolUses() <= 0) {
-	    act("You use the last of your powder.",
-		FALSE, ch, NULL, 0, TO_CHAR);
-	    delete powder;
+	  // find powder
+	 ss=ch->getStuff();
+	  
+	  t=findPowder(ss, 12);
+	  
+	 m=WEAR_NOWHERE;
+	  while(!t && m<MAX_WEAR){
+	    ++m;
+	    t=findPowder(ch->equipment[m], 12);
+	  }
+	  
+	  powder=dynamic_cast<TTool *>(t);
+	  
+	  if(!powder){
+	    ch->sendTo("You need to have a full flask of black powder.\n\r");
+	    ch->stopTask();
+	    return FALSE;
 	  }
 
 	  buf = fmt("You pour some powder from $p into %s.") %
@@ -276,24 +253,54 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 		   cannon->shortDescr;
           act(buf, FALSE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
+
+	  powder->addToToolUses(-12);
+	  if (powder->getToolUses() <= 0) {
+	    act("You use the last of your powder.",
+		FALSE, ch, NULL, 0, TO_CHAR);
+	    delete powder;
+	  }
+
+
           break;
 	case 3:
 	  act("You pack down the charge in $N with a <o>ramrod<1>.",
-	      FALSE, ch, powder, cannon, TO_CHAR);
+	      FALSE, ch, NULL, cannon, TO_CHAR);
 	  act("$n packs down the charge in $N with a <o>ramrod<1>.",
-	      FALSE, ch, powder, cannon, TO_ROOM);
+	      FALSE, ch, NULL, cannon, TO_ROOM);
 	  ch->task->timeLeft--;
 	  break;
 	case 2:
 	  // plug
 	  act("You shove a <W>ball of wadding<1> down the barrel of $N.",
-	      FALSE, ch, shot, cannon, TO_CHAR);
+	      FALSE, ch, NULL, cannon, TO_CHAR);
 	  act("$n shoves a <W>ball of wadding<1> down the barrel of $N.",
-	      FALSE, ch, shot, cannon, TO_ROOM);
+	      FALSE, ch, NULL, cannon, TO_ROOM);
 	  ch->task->timeLeft--;
 	  break;
 	case 1:
 	  // shot
+
+	  // find shot
+	  ss=ch->getStuff();
+	  
+	  t=findShot(ss, AMMO_CANNON_BALL);
+	  
+	  m=WEAR_NOWHERE;
+	  while(!t && m<MAX_WEAR){
+	    ++m;
+	    t=findShot(ch->equipment[m], AMMO_CANNON_BALL);
+	  }
+	  
+	  shot=dynamic_cast<TAmmo *>(t);
+	  
+	  if(!shot && !cannon->getAmmo()){
+	    ch->sendTo("You need to have a cannon ball.\n\r");
+	    ch->stopTask();
+	    return FALSE;
+	  }
+  
+
 	  --(*shot);
 	  cannon->setAmmo(shot);
 
@@ -305,9 +312,9 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	case 0:
 	  // primer
 	  act("You pour priming powder into the touchhole of $N.",
-	      FALSE, ch, shot, cannon, TO_CHAR);
+	      FALSE, ch, NULL, cannon, TO_CHAR);
 	  act("$n pours priming powder into the touchhole of $N.",
-	      FALSE, ch, shot, cannon, TO_ROOM);
+	      FALSE, ch, NULL, cannon, TO_ROOM);
 
 	  ch->sendTo(COLOR_BASIC, fmt("You have finished loading %s.\n\r") % cannon->shortDescr);
 	  cannon->remFromFlags(GUN_FLAG_FOULED);
