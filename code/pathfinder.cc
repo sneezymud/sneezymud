@@ -396,8 +396,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	  // check stay_zone criteria
 	  if (stay_zone && (hp->getZoneNum() != rp->getZoneNum()))
 	    continue;
-	  
-	  if(ship_only && !hp->isWaterSector())
+
+	  if(ship_only && (!hp->isWaterSector() && !rp->isWaterSector()))
 	    continue;
 
 	  // do we have this room already?
