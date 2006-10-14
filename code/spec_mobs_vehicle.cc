@@ -400,6 +400,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   path.setUsePortals(false);
   path.setThruDoors(false);
   path.setNoMob(false);
+  path.setShipOnly(true);
   sstring argument=arg;
   TDatabase db(DB_SNEEZY);
   const int boatnum=19077;

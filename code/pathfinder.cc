@@ -315,6 +315,7 @@ TPathFinder::TPathFinder()
   range=5000;
   stay_zone=false;
   no_mob=true;
+  ship_only=false;
   dest=ROOM_NOWHERE;
 }
 
@@ -393,10 +394,12 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
 	    (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
 	  // check stay_zone criteria
-	  if (stay_zone && (hp->getZoneNum() != rp->getZoneNum())) {
+	  if (stay_zone && (hp->getZoneNum() != rp->getZoneNum()))
 	    continue;
-	  }
 	  
+	  if(ship_only && !hp->isWaterSector())
+	    continue;
+
 	  // do we have this room already?
 	  map<int, pathData *>::const_iterator CT;
 	  CT = path_map.find(exitp->to_room);

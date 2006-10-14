@@ -151,6 +151,7 @@ class TPathFinder {
   int range;
   bool stay_zone;
   bool no_mob;
+  bool ship_only;
 
   int dest;
   int dist;
@@ -163,6 +164,7 @@ class TPathFinder {
   void setStayZone(bool t){ stay_zone=t; }
   void setUsePortals(bool t){ use_portals=t; }
   void setNoMob(bool t){ no_mob=t; }
+  void setShipOnly(bool t){ ship_only=t; }
 
   int getDest(){ return dest; }
   int getDist(){ return dist; }
