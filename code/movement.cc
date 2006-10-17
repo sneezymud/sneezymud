@@ -397,25 +397,26 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
       thing_to_room(this, new_r);
       
       // eventually should be a movement penalty here unless it's a wagon
-      act("$p is pulled along.", 0, rider, tied, 0, TO_CHAR);
-      act("You pull $p along.", 0, rider, tied, 0, TO_VICT);
+      act("$p is pulled along.", 0, rider, tied, this, TO_CHAR);
+      act("You pull $p along.", 0, rider, tied, this, TO_VICT);
       --(*tied);
       thing_to_room(tied, new_r);
     } else {
       // eventually should be a movement penalty here unless it's a wagon
-      act("$p is pulled along.", 0, this, tied, 0, TO_CHAR);
-      act("You pull $p along.", 0, this, tied, 0, TO_VICT);
+      act("You pull $p along.", 0, this, tied, 0, TO_CHAR);
       --(*tied);
       thing_to_room(tied, new_r);
     }
   } else {
     // this is here because if mount moves by itself, rider needs to know
-    sprintf(tmp, "You ride %s.", dirs[dir]);
-    act(tmp, 0, rider, 0, 0, TO_CHAR);
+    if(rider){
+      sprintf(tmp, "You ride %s.", dirs[dir]);
+      act(tmp, 0, rider, 0, 0, TO_CHAR);
     
-    sprintf(tmp, "$n and you ride %s.", dirs[dir]);
-    act(tmp, FALSE, rider, 0, this, TO_VICT);
-    
+      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
+      act(tmp, FALSE, rider, 0, this, TO_VICT);
+    }    
+
     --(*this);
     thing_to_room(this, new_r);
   }
@@ -1382,6 +1383,18 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 #endif
 
         act(tmp, FALSE, this, riding, ch, TO_VICT);
+
+	for (TThing *t2 = rp2->getStuff(); t2; t2 = t2->nextThing) {
+	  TObj *obj = dynamic_cast<TObj *>(t2);
+	  if (!obj)
+	    continue;
+	  
+	  if(obj->tied_to && obj->tied_to==this){
+	    act("$N is pulled out of the room.", 
+		TRUE, this, NULL, obj, TO_ROOM);
+	  }
+	}
+
       }
     }
   }
@@ -1469,9 +1482,21 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 #endif
 
         act(tmp, FALSE, this, riding, tbt, TO_VICT);
+	
+	for (TThing *t2 = rp2->getStuff(); t2; t2 = t2->nextThing) {
+	  TObj *obj = dynamic_cast<TObj *>(t2);
+	  if (!obj)
+	    continue;
+	  
+	  if(obj->tied_to && obj->tied_to==this){
+	    act("$N is pulled into the room.", 
+		TRUE, this, NULL, obj, TO_ROOM);
+	  }
+	}
       }
     }
   }
+
 
   // everybody in room has now seen me come into room and leave old room
 
