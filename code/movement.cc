@@ -363,6 +363,68 @@ void TBeing::putOutLightsInWater()
   }
 }
 
+bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
+{
+  char tmp[256];
+
+  // if harnessed and tied to something, move it too
+  if(equipment[WEAR_NECK] && 
+     dynamic_cast<THarness *>(equipment[WEAR_NECK]) &&
+     tied_to){
+    TObj *tied=dynamic_cast<TObj *>(tied_to);
+
+    // optimally I'd like to move the conditions in doDrag to a canDrag
+    // function and use that here
+    // also, should be able to drag more with a wagon.  standard drag is
+    // 5.0 multiplier, so maybe 10.0 or 15.0 with a proper wagon
+    if(!tied || !tied->canWear(ITEM_TAKE) || 
+       dynamic_cast<TTrap *>(tied) ||
+       compareWeights(tied->getTotalWeight(TRUE), 
+		      (5.0 * (carryWeightLimit() - getCarriedWeight())))==-1){
+      if(rider)
+	rider->sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % getName() % (tied?tied->getName():"that"));
+      sendTo(COLOR_BASIC, fmt("You strain against the harness but can't pull %s.\n\r") % (tied?tied->getName():"that"));
+      return false;
+    }
+
+    if(rider){
+      // this is here because if mount moves by itself, rider needs to know
+      sprintf(tmp, "You ride %s.", dirs[dir]);
+      act(tmp, 0, rider, 0, 0, TO_CHAR);
+      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
+      act(tmp, FALSE, rider, 0, this, TO_VICT);
+      --(*this);
+      thing_to_room(this, new_r);
+      
+      // eventually should be a movement penalty here unless it's a wagon
+      act("$p is pulled along.", 0, rider, tied, 0, TO_CHAR);
+      act("You pull $p along.", 0, rider, tied, 0, TO_VICT);
+      --(*tied);
+      thing_to_room(tied, new_r);
+    } else {
+      // eventually should be a movement penalty here unless it's a wagon
+      act("$p is pulled along.", 0, this, tied, 0, TO_CHAR);
+      act("You pull $p along.", 0, this, tied, 0, TO_VICT);
+      --(*tied);
+      thing_to_room(tied, new_r);
+    }
+  } else {
+    // this is here because if mount moves by itself, rider needs to know
+    sprintf(tmp, "You ride %s.", dirs[dir]);
+    act(tmp, 0, rider, 0, 0, TO_CHAR);
+    
+    sprintf(tmp, "$n and you ride %s.", dirs[dir]);
+    act(tmp, FALSE, rider, 0, this, TO_VICT);
+    
+    --(*this);
+    thing_to_room(this, new_r);
+  }
+
+
+  return true;
+}
+
+
 // returns DELETE_THIS
 // A note on mounts:
 // we will never be a horse in this function.
@@ -940,48 +1002,8 @@ int TBeing::rawMove(dirTypeT dir)
   if (riding) {
     TBeing *tbt = dynamic_cast<TBeing *>(riding);
 
-    // if harnessed and tied to something, move it too
-    if(tbt->equipment[WEAR_NECK] && 
-       dynamic_cast<THarness *>(tbt->equipment[WEAR_NECK]) &&
-       tbt->tied_to){
-      TObj *tied=dynamic_cast<TObj *>(tbt->tied_to);
-
-      // optimally I'd like to move the conditions in doDrag to a canDrag
-      // function and use that here
-      // also, should be able to drag more with a wagon.  standard drag is
-      // 5.0 multiplier, so maybe 10.0 or 15.0 with a proper wagon
-      if(!tied || !tied->canWear(ITEM_TAKE) || 
-	 dynamic_cast<TTrap *>(tied) ||
-	 compareWeights(tied->getTotalWeight(TRUE), 
-	   (5.0 * (tbt->carryWeightLimit() - tbt->getCarriedWeight())))==-1){
-	sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % tbt->getName() % (tied?tied->getName():"that"));
-	return FALSE;
-      }
-
-      // this is here because if mount moves by itself, rider needs to know
-      sprintf(tmp, "You ride %s.", dirs[dir]);
-      act(tmp, 0, this, 0, 0, TO_CHAR);
-      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
-      act(tmp, FALSE, this, 0, riding, TO_VICT);
-      --(*riding);
-      thing_to_room(riding, new_r);
-
-      // eventually should be a movement penalty here unless it's a wagon
-      act("$p is pulled along.", 0, this, tied, 0, TO_CHAR);
-      act("You pull $p along.", 0, this, tied, 0, TO_VICT);
-      --(*tied);
-      thing_to_room(tied, new_r);
-    } else {
-      // this is here because if mount moves by itself, rider needs to know
-      sprintf(tmp, "You ride %s.", dirs[dir]);
-      act(tmp, 0, this, 0, 0, TO_CHAR);
-      
-      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
-      act(tmp, FALSE, this, 0, riding, TO_VICT);
-      
-      --(*riding);
-      thing_to_room(riding, new_r);
-    }
+    if(!tbt->rawMoveTied(dir, new_r))
+      return FALSE;
 
     if (tbt) {
       rc = tbt->bumpHeadDoor(from_here->dir_option[dir], &iHeight);
@@ -992,6 +1014,9 @@ int TBeing::rawMove(dirTypeT dir)
       if (tbt)
         tbt->doLook("", CMD_LOOK);
     }
+  } else {
+    if(!rawMoveTied(dir, new_r))
+      return FALSE;
   }
 
   if(isPc())

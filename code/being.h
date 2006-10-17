@@ -1137,6 +1137,7 @@ class TBeing : public TThing {
     int displayGroupMove(dirTypeT, int, int);
     int displayMove(dirTypeT, int, int);
     virtual float getTotalWeight(bool) const;
+    bool rawMoveTied(dirTypeT, int);
     int rawMove(dirTypeT);
     int rawSummon(TBeing *);
     void rawBlind(int, int, saveTypeT);
