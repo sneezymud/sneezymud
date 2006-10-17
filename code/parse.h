@@ -574,6 +574,7 @@ enum cmdTypeT {
      CMD_SHUFFLE,
      CMD_PAINT,
      CMD_TIE,
+     CMD_UNTIE,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

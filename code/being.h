@@ -1896,6 +1896,7 @@ class TBeing : public TThing {
     void doFish(sstring);
     void doPaint(sstring);
     void doTie(const sstring &);
+    void doUntie(const sstring &);
     void doHistory();
     int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);

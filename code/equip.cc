@@ -2072,33 +2072,55 @@ int TBeing::doUnsaddle(sstring arg)
   return TRUE;
 }
 
-// currently this is only for tying a harnessed horse to an object
-void TBeing::doTie(const sstring &arg)
+void TBeing::doUntie(const sstring &arg)
 {
   TBeing *horse;
-  TObj *obj;
-
-  if(!isImmortal()){
-    sendTo("Not implemented yet.\n\r");
-    return;
-  }
 
   if(!(horse=generic_find_being(arg.word(0), FIND_CHAR_ROOM, this))){
-    sendTo("Can't find that horse.\n\r");
+    sendTo("Can't find that mount.\n\r");
     return;
   }
 
   if(!dynamic_cast<THarness *>(horse->equipment[WEAR_NECK])){
-    sendTo("That horse isn't harnessed.\n\r");
+    sendTo("That mount isn't harnessed.\n\r");
+    return;
+  }
+  
+  if(!horse->tied_to){
+    sendTo("That mount isn't tied to anything.\n\r");
+    return;
+  }
+
+  horse->tied_to->tied_to=NULL;
+  horse->tied_to=NULL;
+  
+  sendTo(COLOR_BASIC, fmt("You untie %s.\n\r") % horse->getName());
+}
+
+// currently this is only for tying a harnessed horse to an object
+void TBeing::doTie(const sstring &arg)
+{
+  TBeing *horse;
+  TThing *obj;
+
+  if(!(horse=generic_find_being(arg.word(0), FIND_CHAR_ROOM, this))){
+    sendTo("Can't find that mount.\n\r");
+    return;
+  }
+
+  if(!dynamic_cast<THarness *>(horse->equipment[WEAR_NECK])){
+    sendTo("That mount isn't harnessed.\n\r");
     return;
   }
   
   if(horse->tied_to){
-    sendTo("That horse is already tied to something.\n\r");
+    sendTo("That mount is already tied to something.\n\r");
     return;
   }
 
-  if(!(obj=generic_find_obj(arg.word(1), FIND_OBJ_ROOM, this))){
+  if(!(obj=generic_find_obj(arg.word(1), FIND_OBJ_ROOM, this)) &&
+     !(isImmortal() && 
+       (obj=generic_find_being(arg.word(1), FIND_CHAR_ROOM, this)))){
     sendTo("Can't find that object.\n\r");
     return;
   }

@@ -28,6 +28,7 @@
 #include "obj_key.h"
 #include "obj_portal.h"
 #include "obj_harness.h"
+#include "obj_trap.h"
 #include "pathfinder.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
@@ -945,8 +946,15 @@ int TBeing::rawMove(dirTypeT dir)
        tbt->tied_to){
       TObj *tied=dynamic_cast<TObj *>(tbt->tied_to);
 
-      if(!tied || !canGet(tbt->tied_to, SILENT_YES)){
-	sendTo(COLOR_BASIC, fmt("Your mount strains against the harness but can't pull %s.\n\r") % tied->getName());
+      // optimally I'd like to move the conditions in doDrag to a canDrag
+      // function and use that here
+      // also, should be able to drag more with a wagon.  standard drag is
+      // 5.0 multiplier, so maybe 10.0 or 15.0 with a proper wagon
+      if(!tied || !tied->canWear(ITEM_TAKE) || 
+	 dynamic_cast<TTrap *>(tied) ||
+	 compareWeights(tied->getTotalWeight(TRUE), 
+	   (5.0 * (tbt->carryWeightLimit() - tbt->getCarriedWeight())))==-1){
+	sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % tbt->getName() % (tied?tied->getName():"that"));
 	return FALSE;
       }
 
@@ -957,7 +965,8 @@ int TBeing::rawMove(dirTypeT dir)
       act(tmp, FALSE, this, 0, riding, TO_VICT);
       --(*riding);
       thing_to_room(riding, new_r);
-      
+
+      // eventually should be a movement penalty here unless it's a wagon
       act("$p is pulled along.", 0, this, tied, 0, TO_CHAR);
       act("You pull $p along.", 0, this, tied, 0, TO_VICT);
       --(*tied);
