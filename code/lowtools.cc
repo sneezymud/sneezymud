@@ -91,6 +91,12 @@ map <sstring,sstring> parse_data_file(const sstring &file, int num)
 	val+=buf;
 	val+="\n";
       }
+      // this handles the stuff on the line with the ~
+      if(buf[0]!='~' && buf[0]!='\n'){
+	// strip ~
+	buf.erase(buf.size()-1, 1);
+	val+=buf;
+      }
     } else {
       if((loc=buf.find_first_of(":"))==sstring::npos)
 	continue;
