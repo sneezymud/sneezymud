@@ -27,6 +27,7 @@
 #include "obj_keyring.h"
 #include "obj_key.h"
 #include "obj_portal.h"
+#include "obj_harness.h"
 #include "pathfinder.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
@@ -936,22 +937,43 @@ int TBeing::rawMove(dirTypeT dir)
   }
 
   if (riding) {
-    // this is here because if mount moves by itself, rider needs to know
-    sprintf(tmp, "You ride %s.", dirs[dir]);
-    act(tmp, 0, this, 0, 0, TO_CHAR);
-
-    sprintf(tmp, "$n and you ride %s.", dirs[dir]);
-    act(tmp, FALSE, this, 0, riding, TO_VICT);
-
-    --(*riding);
-    thing_to_room(riding, new_r);
+    TBeing *tbt = dynamic_cast<TBeing *>(riding);
 
     // if harnessed and tied to something, move it too
-    if(1){
+    if(tbt->equipment[WEAR_NECK] && 
+       dynamic_cast<THarness *>(tbt->equipment[WEAR_NECK]) &&
+       tbt->tied_to){
+      TObj *tied=dynamic_cast<TObj *>(tbt->tied_to);
+
+      if(!tied || !canGet(tbt->tied_to, SILENT_YES)){
+	sendTo(COLOR_BASIC, fmt("Your mount strains against the harness but can't pull %s.\n\r") % tied->getName());
+	return FALSE;
+      }
+
+      // this is here because if mount moves by itself, rider needs to know
+      sprintf(tmp, "You ride %s.", dirs[dir]);
+      act(tmp, 0, this, 0, 0, TO_CHAR);
+      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
+      act(tmp, FALSE, this, 0, riding, TO_VICT);
+      --(*riding);
+      thing_to_room(riding, new_r);
+      
+      act("$p is pulled along.", 0, this, tied, 0, TO_CHAR);
+      act("You pull $p along.", 0, this, tied, 0, TO_VICT);
+      --(*tied);
+      thing_to_room(tied, new_r);
+    } else {
+      // this is here because if mount moves by itself, rider needs to know
+      sprintf(tmp, "You ride %s.", dirs[dir]);
+      act(tmp, 0, this, 0, 0, TO_CHAR);
+      
+      sprintf(tmp, "$n and you ride %s.", dirs[dir]);
+      act(tmp, FALSE, this, 0, riding, TO_VICT);
+      
+      --(*riding);
+      thing_to_room(riding, new_r);
     }
 
-
-    TBeing *tbt = dynamic_cast<TBeing *>(riding);
     if (tbt) {
       rc = tbt->bumpHeadDoor(from_here->dir_option[dir], &iHeight);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {

@@ -2108,7 +2108,7 @@ void TBeing::doTie(const sstring &arg)
     return;
   }
 
-  sendTo(fmt("You tied %s to %s.\n\r") % horse->getName() % obj->getName());
+  sendTo(COLOR_OBJECTS, fmt("You tie %s to %s.\n\r") % horse->getName() % obj->getName());
   horse->tied_to=obj;
   obj->tied_to=horse;
 }
