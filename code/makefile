@@ -23474,7 +23474,8 @@ objs/movement.o: /usr/include/c++/3.3.4/bits/deque.tcc game_crazyeights.h
 objs/movement.o: game_drawpoker.h disc_looting.h obj_base_corpse.h
 objs/movement.o: obj_base_container.h obj_keyring.h
 objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
-objs/movement.o: obj_portal.h obj_seethru.h pathfinder.h
+objs/movement.o: obj_portal.h obj_seethru.h obj_harness.h obj_base_clothing.h
+objs/movement.o: obj_trap.h pathfinder.h
 objs/mudmail.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
