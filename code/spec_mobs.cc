@@ -5739,6 +5739,81 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   return TRUE;
 }
 
+// this uses some hardcoded values, so don't reuse without tweaking
+// for general use
+int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+{
+  bool fighting=false;
+  TThing *t;
+  TMonster *tmons;
+  int rc;
+  sstring argument=arg;
+
+  if(cmd != CMD_GENERIC_PULSE &&
+     !((cmd == CMD_SAY || cmd == CMD_SAY2) && 
+       ((argument.word(0).lower()=="pirates,") ||
+	(argument.word(0).lower()=="pirate,")) && ch &&
+       (ch->desc->account->name == "trav" ||
+	ch->desc->account->name == "scout" ||
+	ch->desc->account->name == "laren" ||
+	ch->desc->account->name == "ekeron")))
+    return FALSE;
+  
+  if(cmd==CMD_GENERIC_PULSE){
+    // if fighting return false
+    if(myself->fight()){
+      fighting=true;
+    } else {
+      for (followData *f = myself->followers; f; f = f->next){
+	if(myself->inGroup(*f->follower) && 
+	   (f->follower->fight() || f->follower->spelltask)){
+	  fighting=true;
+	}
+      }
+    }
+    
+    if(fighting)
+      return FALSE;
+    
+    // if mob in room that isn't in my group
+    //   if within my level range (my level + 10 or lower?)
+    //     attack
+    for(t=myself->roomp->getStuff();t;t=t->nextThing){
+      if((tmons=dynamic_cast<TMonster *>(t)) &&
+	 !tmons->inGroup(*myself)){
+
+	// don't attack mobs from my friendly zones
+	if((tmons->mobVnum() >= 19000 && tmons->mobVnum() <= 19024) ||
+	   (tmons->mobVnum() >= 26850 && tmons->mobVnum() <= 26899))
+	  continue;
+
+	rc = myself->takeFirstHit(*tmons);
+	if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	  delete tmons;
+	  tmons = NULL;
+	}
+	if (IS_SET_DELETE(rc, DELETE_THIS)) 
+	  return DELETE_VICT;
+      }
+    }
+    return TRUE;
+  } else {
+    if(cmd == CMD_SAY || cmd == CMD_SAY2){
+      if(argument.word(1) == "follow"){
+	myself->doAction(add_bars(ch->getName()), CMD_SALUTE);
+	myself->doFollow(add_bars(ch->getName()).c_str());
+      } else if(argument.word(1) == "stay"){
+	myself->doAction(add_bars(ch->getName()), CMD_SALUTE);
+	myself->doFollow("self");
+      }
+    }
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+
 int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   bool fighting=false;
@@ -6898,6 +6973,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Brick Collector", brickCollector},
   {FALSE, "caretaker", caretaker},
   {FALSE, "ship captain", shipCaptain},
+  {FALSE, "aggro follower", aggroFollower}, // 210
 // replace non-zero, bogus_mob_procs above before adding
 };
 
