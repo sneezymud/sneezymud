@@ -452,15 +452,31 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	       myself->mobVnum(), argument.word(2).c_str());
       db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
     } else if(argument.word(1) == "sail"){
-      myself->doSay(fmt("Aye aye, settin' sail for %s") % argument.word(2));
-      
-      db.query("select room from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
-      if(!db.fetchRow()){
-	myself->doSay("What the..?!  I've never 'eard of that!");
-	return TRUE;
-      }
+      if(argument.word(2).empty()){
+	myself->doSay("Where ye be wantin' to sail?");
+	
+	db.query("select name from ship_destinations where vnum=%i", myself->mobVnum());
 
-      *job = convertTo<int>(db["room"]);
+	sstring buf;
+	while(db.fetchRow()){
+	  if(buf.empty())
+	    buf=db["name"];
+	  else
+	    buf=fmt("%s, %s") % buf % db["name"];
+	}
+
+	myself->doSay(fmt("I think I knows the way to %s") % buf);
+      } else {
+	myself->doSay(fmt("Aye aye, settin' sail for %s") % argument.word(2));
+	
+	db.query("select room from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+	if(!db.fetchRow()){
+	  myself->doSay("What the..?!  I've never 'eard of that!");
+	  return TRUE;
+	}
+	
+	*job = convertTo<int>(db["room"]);
+      }
     } else if(argument.word(1) == "stop"){
       myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
       myself->doDrive("stop");
