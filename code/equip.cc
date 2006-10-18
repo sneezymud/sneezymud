@@ -14,6 +14,8 @@
 #include "obj_base_clothing.h"
 #include "obj_jewelry.h"
 #include "obj_harness.h"
+#include "obj_saddle.h"
+#include "obj_saddlebag.h"
 
 int GetItemClassRestrictions(const TObj *obj)
 {
@@ -2030,17 +2032,16 @@ int TBeing::doUnsaddle(sstring arg)
           FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
   }
-  saddle = horse->equipment[WEAR_BACK];
-  TBaseClothing *tbc = NULL;
-  TBaseContainer *tbc2 = NULL;
-  if (saddle) {
-    tbc = dynamic_cast<TBaseClothing *>(saddle);
-    tbc2 = dynamic_cast<TBaseContainer *>(saddle); //for saddlepacks etc 10-21-00, -dash
-  }
-  if (!(saddle) ||
-      !(tbc  && tbc->isSaddle()) &&  //two checks for two kinds of saddles
-      !(tbc2 && tbc2->isSaddle())) {              
-    act("$N is not wearing a saddle.",
+
+  saddle = (horse->equipment[WEAR_BACK]?
+	    horse->equipment[WEAR_BACK]:
+	    horse->equipment[WEAR_NECK]);
+  TSaddle *tbc = dynamic_cast<TSaddle *>(saddle);
+  TSaddlebag *tbc2 = dynamic_cast<TSaddlebag *>(saddle);
+  THarness *tbc3 = dynamic_cast<THarness *>(saddle);
+
+  if(!tbc && !tbc2 && !tbc3){
+    act("$N is not wearing a saddle or harness.",
           FALSE, this, 0, horse , TO_CHAR);
     return FALSE;
   }
@@ -2060,14 +2061,20 @@ int TBeing::doUnsaddle(sstring arg)
     return FALSE;
   }
 
-  act("You unsaddle $p from $N.",
-          FALSE, this, saddle, horse , TO_CHAR);
-  act("$n unsaddles $p from $N.",
-          FALSE, this, saddle, horse , TO_NOTVICT);
-  act("$n unsaddles your $p.",
-          FALSE, this, saddle, horse , TO_VICT);
+  act(fmt("You %s $p from $N.") % 
+      (dynamic_cast<THarness *>(saddle)?"unharness":"unsaddle"),
+      FALSE, this, saddle, horse , TO_CHAR);
+  act(fmt("$n unsaddles $p from $N.") %
+      (dynamic_cast<THarness *>(saddle)?"unharnesses":"unsaddles"),
+      FALSE, this, saddle, horse , TO_NOTVICT);
+  act(fmt("$n unsaddles your $p.") %
+      (dynamic_cast<THarness *>(saddle)?"unharnesses":"unsaddles"),
+      FALSE, this, saddle, horse , TO_VICT);
 
-  *this += *(horse->unequip(WEAR_BACK));
+  if(dynamic_cast<THarness *>(saddle))
+    *this += *(horse->unequip(WEAR_NECK));
+  else
+    *this += *(horse->unequip(WEAR_BACK));
 
   return TRUE;
 }
