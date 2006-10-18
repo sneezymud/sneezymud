@@ -2101,7 +2101,12 @@ void TBeing::doUntie(const sstring &arg)
   horse->tied_to->tied_to=NULL;
   horse->tied_to=NULL;
   
-  sendTo(COLOR_BASIC, fmt("You untie %s.\n\r") % horse->getName());
+  act("You untie $N.",
+      FALSE, this, 0, horse, TO_CHAR);
+  act("$n unties $N.",
+      FALSE, this, 0, horse, TO_NOTVICT);
+  act("$n unties you.",
+      FALSE, this, 0, horse, TO_VICT);
 }
 
 // currently this is only for tying a harnessed horse to an object
@@ -2136,8 +2141,14 @@ void TBeing::doTie(const sstring &arg)
     sendTo("That object is already tied to something.\n\r");
     return;
   }
+  
+  act("You tie $N to $p.",
+      FALSE, this, obj, horse, TO_CHAR);
+  act("$n ties $N to $p.",
+      FALSE, this, obj, horse, TO_NOTVICT);
+  act("$n ties you to $p.",
+      FALSE, this, obj, horse, TO_VICT);
 
-  sendTo(COLOR_OBJECTS, fmt("You tie %s to %s.\n\r") % horse->getName() % obj->getName());
   horse->tied_to=obj;
   obj->tied_to=horse;
 }
