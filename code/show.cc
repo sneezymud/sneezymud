@@ -506,6 +506,9 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
     act(buf, FALSE, me, 0, ch, TO_VICT);
   }
 
+  if (me->tied_to)
+    act(".....$n is tied to $p.", FALSE, me, me->tied_to, ch, TO_VICT);
+
   if (me->isAffected(AFF_MUNCHING_CORPSE))
     act(".....$n is munching on a corpse!", FALSE, me, 0, ch, TO_VICT);
 
