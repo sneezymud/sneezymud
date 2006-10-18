@@ -931,6 +931,11 @@ TThing& TThing::operator -- ()
       tmp->nextThing = nextThing;
     }
 
+    if(tied_to){
+      tied_to->tied_to=NULL;
+      tied_to=NULL;
+    }
+
     // adjust room light levels 
     rp->addToLight(-getLight());
 
@@ -957,7 +962,6 @@ TThing& TThing::operator -- ()
       rp->decrementWindow();
     }
   
-    
     if (dynamic_cast<TObj *>(this) &&
         rp->isRoomFlag(ROOM_SAVE_ROOM))
       rp->saveItems("");
