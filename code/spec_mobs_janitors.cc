@@ -16,7 +16,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
     return false;
 
   // don't let them pick up 3000 pound wagons because that's retarded
-  if(compareWeights(myself->getTotalWeight(TRUE), 
+  if(compareWeights(obj->getTotalWeight(TRUE), 
 	      (myself->carryWeightLimit() - myself->getCarriedWeight()))==-1)
     return false;
 
