@@ -5807,7 +5807,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	myself->doFollow("self");
       }
     }
-    return TRUE;
+    return FALSE;
   }
 
   return FALSE;
