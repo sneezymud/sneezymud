@@ -41,14 +41,15 @@ give { "-#OBJCOST(43,20)#";
 	give harness %n;
 }
 
-give { "-#OBJCOST(44,20)#";
-	checkload 44;
-	say You could haul a whole PILE of hooker corpses with this baby!;
-	drop wagon;
-}
 
 give { "-5000";
 	loadmob 185;
 	toroom $n leads a draft horse in from the back.;
 	say Here you go.  This one could pull a huge load!;
+}
+
+give { "-#OBJCOST(44,20)#";
+	checkload 44;
+	say You could haul a whole PILE of hooker corpses with this baby!;
+	drop wagon;
 }
