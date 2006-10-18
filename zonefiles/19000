@@ -1,6 +1,6 @@
 #19000
 Peel/Deirdre/Metrohep - The Tequila Sunrise (25 rooms)~
-19024 30 2 0
+19024 30 2 1
 
 *********
 * doors *
@@ -31,6 +31,12 @@ O 0 19014 2 19001       a sun-bleached hammock
 * poop deck [port]
 O 0 19014 2 19006       a sun-bleached hammock
 
+* port deck
+O 0 19098 1 19005       an iron cannon cast like a dragon
+
+* starboard deck
+O 0 19098 1 19002       an iron cannon cast like a dragon
+
 * center deck
 O 0 19018 1 19003       a circular bench of blackbutt wood
 
@@ -39,14 +45,17 @@ O 0 19012 4 19004       an ash wood and leather deck chair
 O 0 19013 1 19004       a ship's capstan
 O 0 19009 1 19004       a large brass lamp
 O 0 19004 1 19004       a bar
-P 0 19016 5 19004       a paper pirate hat - add on repop, up to 5
+P 0 19015 5 19004       a paper pirate hat - add on repop, up to 5
+P 0 19080 12 19004      a paper cup - add on repop, up to 12
 
 * common room
 O 0 19005 2 19007      a sturdy water barrel
 O 0 19007 6 19007      a sturdy barrel
+P 0 433 100 19007      100 limes
 O 0 19012 4 19007      an ash wood and leather deck chair
 O 0 19019 1 19007      a well-built wooden table
 O 0 19009 1 19007      a large brass lamp
+
 
 * crew quarters [starboard]
 O 0 19010 10 19008      an ironbound footlocker
@@ -69,8 +78,10 @@ O 0 19011 2 19011       a small brass-framed bed
 O 0 19009 1 19011       a large brass lamp
 O 0 19006 1 19011       a small box containing notes and quills
 O 0 19020 1 19011       a smudged tactical map
-O 0 34160 1 19011       a window to the south
-V 1 0 0			window looks into room 0 (location of ship)
+
+* no code to update windows for vehicle movement... yet
+*O 0 34160 1 19011       a window to the south
+*V 1 0 0			window looks into room 0 (location of ship)
 
 **************
 * local sets *
@@ -120,13 +131,13 @@ X 3 8 19052            A laced shoe of soft leather [foot-right]
 X 3 9  19052           A laced shoe of soft leather [foot-left]
 
 * Hapke, the cabinboy
-X 4 5 19053            A fish skeleton comb adorned with wilted flowers [head]
-X 4 3 19054            A yellow bandana [neck]
-X 4 4 19055            A short orange kaftan [body]
-X 4 15 19058           A caulk and poop-stained apron [waist]
-X 4 6 19051            A pair of torn breeches [leg-right]
-X 4 8 19059            A rag [foot-right]
-X 4 9  19059           A rag [foot-left]
+X 4 5 19061            A fish skeleton comb adorned with wilted flowers [head]
+X 4 3 19062            A yellow bandana [neck]
+X 4 4 19063            A short orange kaftan [body]
+X 4 15 19064           A caulk and poop-stained apron [waist]
+X 4 6 19065            A pair of torn breeches [leg-right]
+X 4 8 19066            A rag [foot-right]
+X 4 9  19066           A rag [foot-left]
 X 4 18 19076           A mop [hold-right]
 
 * "Bunks" McBenn
@@ -148,6 +159,10 @@ M 0 19000 1 19000        the fearsome Captain Matho
 ? 0 2 0 E
 E 1 19075 9999 19        a tasseled saber dripping with tequila [hold-left]
 Z 0 2 100                Matho's local set
+
+* no code to update windows for vehicle movement
+*O 0 19079 1 19000       the rigging
+*V 1 0 0            rigging looks into room 0 (location of ship)
 
 * foredeck
 M 0 19004 1 19004        "Bunks" McBenn
