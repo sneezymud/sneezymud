@@ -30,6 +30,7 @@
 #include "obj_harness.h"
 #include "obj_trap.h"
 #include "pathfinder.h"
+#include "obj_wagon.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {
@@ -373,16 +374,21 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
      tied_to){
     TObj *tied=dynamic_cast<TObj *>(tied_to);
 
+    // if we're pulling a wagon, we can pull a lot more weight
+    int weight_limit=0;
+    if(dynamic_cast<TWagon *>(tied))
+      weight_limit=(int)(25.0 * (carryWeightLimit() - getCarriedWeight()));
+    else
+      weight_limit=(int)(5.0 * (carryWeightLimit() - getCarriedWeight()));
+
+
     // optimally I'd like to move the conditions in doDrag to a canDrag
     // function and use that here
-    // also, should be able to drag more with a wagon.  standard drag is
-    // 5.0 multiplier, so maybe 10.0 or 15.0 with a proper wagon
     if(!tied || !tied->canWear(ITEM_TAKE) || 
        dynamic_cast<TTrap *>(tied) ||
-       compareWeights(tied->getTotalWeight(TRUE), 
-		      (5.0 * (carryWeightLimit() - getCarriedWeight())))==-1){
+       compareWeights(tied->getTotalWeight(TRUE), weight_limit)==-1){
       if(rider)
-	rider->sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % getName() % (tied?tied->getName():"that"));
+	rider->sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % ((sstring)getName()).cap() % (tied?tied->getName():"that"));
       sendTo(COLOR_BASIC, fmt("You strain against the harness but can't pull %s.\n\r") % (tied?tied->getName():"that"));
       return false;
     }
@@ -401,11 +407,20 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
       act("You pull $p along.", 0, rider, tied, this, TO_VICT);
       --(*tied);
       thing_to_room(tied, new_r);
+
+      // removing the targets from the room clears the tied_to, so reset it
+      tied_to=tied;
+      tied->tied_to=this;
+
     } else {
       // eventually should be a movement penalty here unless it's a wagon
       act("You pull $p along.", 0, this, tied, 0, TO_CHAR);
       --(*tied);
       thing_to_room(tied, new_r);
+
+      // removing the targets from the room clears the tied_to, so reset it
+      tied_to=tied;
+      tied->tied_to=this;
     }
   } else {
     // this is here because if mount moves by itself, rider needs to know

@@ -226,7 +226,8 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_cannon.o		obj_tooth_necklace.o	\
 	obj_trash_pile.o	obj_card_deck.o		\
 	obj_suitcase.o		obj_saddle.o		\
-	obj_harness.o		obj_saddlebag.o
+	obj_harness.o		obj_saddlebag.o		\
+	obj_wagon.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -10737,7 +10738,7 @@ objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
 objs/db.o: liquids.h obj_card_deck.h obj_suitcase.h obj_saddle.h
-objs/db.o: obj_harness.h obj_saddlebag.h
+objs/db.o: obj_harness.h obj_saddlebag.h obj_wagon.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -18145,7 +18146,8 @@ objs/equip.o: charfile.h being.h guild.h person.h monster.h paths.h account.h
 objs/equip.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/equip.o: colorstring.h format.h obj_base_container.h obj_bandaid.h
 objs/equip.o: obj_base_weapon.h obj_armor.h obj_base_clothing.h obj_jewelry.h
-objs/equip.o: obj_harness.h
+objs/equip.o: obj_harness.h obj_saddle.h obj_saddlebag.h
+objs/equip.o: obj_expandable_container.h obj_open_container.h
 objs/faction.o: /usr/include/unistd.h /usr/include/features.h
 objs/faction.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/faction.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -23475,7 +23477,7 @@ objs/movement.o: game_drawpoker.h disc_looting.h obj_base_corpse.h
 objs/movement.o: obj_base_container.h obj_keyring.h
 objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
 objs/movement.o: obj_portal.h obj_seethru.h obj_harness.h obj_base_clothing.h
-objs/movement.o: obj_trap.h pathfinder.h
+objs/movement.o: obj_trap.h pathfinder.h obj_wagon.h
 objs/mudmail.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -33934,6 +33936,129 @@ objs/obj_vial.o: connect.h obj_drug.h charfile.h being.h guild.h person.h
 objs/obj_vial.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/obj_vial.o: spec_mobs.h materials.h colorstring.h format.h obj_vial.h
 objs/obj_vial.o: obj_base_cup.h
+objs/obj_wagon.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/obj_wagon.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_wagon.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/obj_wagon.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/obj_wagon.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/obj_wagon.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/obj_wagon.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/obj_wagon.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/obj_wagon.o: /usr/include/gconv.h
+objs/obj_wagon.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/obj_wagon.o: /usr/include/bits/stdio_lim.h
+objs/obj_wagon.o: /usr/include/bits/sys_errlist.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/obj_wagon.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/obj_wagon.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/obj_wagon.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/obj_wagon.o: /usr/include/bits/mathcalls.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/obj_wagon.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/obj_wagon.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/obj_wagon.o: /usr/include/pthread.h /usr/include/sched.h
+objs/obj_wagon.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/obj_wagon.o: /usr/include/bits/sigset.h /usr/include/bits/pthreadtypes.h
+objs/obj_wagon.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cwchar /usr/include/c++/3.3.4/memory
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/climits
+objs/obj_wagon.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/obj_wagon.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/obj_wagon.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/obj_wagon.o: /usr/include/c++/3.3.4/exception
+objs/obj_wagon.o: /usr/include/c++/3.3.4/iosfwd
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/obj_wagon.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/obj_wagon.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/obj_wagon.o: /usr/include/libintl.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/algorithm
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/vector
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/map
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/list
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/iostream
+objs/obj_wagon.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/streambuf
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/locale
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/limits
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/typeinfo
+objs/obj_wagon.o: /usr/include/c++/3.3.4/istream
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/sstream
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/fstream
+objs/obj_wagon.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_wagon.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_wagon.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_wagon.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/obj_wagon.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/obj_wagon.o: task.h weather.h sound.h create.h thing.h obj.h spec_objs.h
+objs/obj_wagon.o: room.h connect.h obj_drug.h charfile.h being.h guild.h
+objs/obj_wagon.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/obj_wagon.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
+objs/obj_wagon.o: obj_wagon.h obj_open_container.h obj_base_container.h
 objs/obj_wand.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_wand.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_wand.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h

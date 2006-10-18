@@ -339,12 +339,14 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       return FALSE;
 
     switch(cmd) {
+      case CMD_UNHARNESS:
       case CMD_UNSADDLE:
 	doUnsaddle(newarg);
 	break;
       case CMD_SPRINGLEAP:
 	doSpringleap(newarg, true, dynamic_cast<TBeing *>(vict));
 	break;
+      case CMD_HARNESS:
       case CMD_SADDLE:
 	doSaddle(newarg);
 	break;
@@ -2781,6 +2783,8 @@ void buildCommandArray(void)
   commandArray[CMD_DESCEND] = new commandInfo("descend", POSITION_STANDING, 0);
   commandArray[CMD_SORT] = new commandInfo("sort", POSITION_SITTING, 0);
   commandArray[CMD_SADDLE] = new commandInfo("saddle", POSITION_STANDING, 0);
+  commandArray[CMD_HARNESS] = new commandInfo("harness", POSITION_STANDING, 0);
+  commandArray[CMD_UNHARNESS] = new commandInfo("unharness", POSITION_STANDING, 0);
   commandArray[CMD_UNSADDLE]=new commandInfo("unsaddle", POSITION_STANDING, 0);
   commandArray[CMD_SHOULDER_THROW] = new commandInfo("shoulder throw", POSITION_FIGHTING, 0);
   commandArray[CMD_CHOP] = new commandInfo("chop", POSITION_FIGHTING, 0);

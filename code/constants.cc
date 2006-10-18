@@ -656,6 +656,11 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume bag can hold", 10000000, 1);
+  ItemInfo[ITEM_WAGON] = new itemInfo("Wagon","a wagon",
+     "Max weight inside", 5000, 1,
+     "Special - container flags", 0, 0,
+     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+     "Volume wagon can hold", 500000, 1);
 
 };
 

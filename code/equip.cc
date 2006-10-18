@@ -840,7 +840,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 	if (tbc2 && tbc2->isSaddle()){
 	  sendTo("You have to be saddled to put that on.\n\r");
 	  return FALSE;
-	} else if (tbc && tbc->isSaddle()) {
+	} else if (tbc && (tbc->isSaddle() || tbc->isHarness())) {
           sendTo("You have to be saddled to put that on.\n\r");
           return FALSE;
         } else if (validEquipSlot(WEAR_BACK)) {
@@ -2214,12 +2214,22 @@ int TBeing::doSaddle(sstring arg)
           FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
   }
-  act("You saddle $N with $p.",
-      FALSE, this, saddle, horse, TO_CHAR);
-  act("$n saddles $N with $p.",
-      FALSE, this, saddle, horse, TO_NOTVICT);
-  act("$n saddles you with $p.",
-      FALSE, this, saddle, horse, TO_VICT);
+
+  if(dynamic_cast<THarness *>(saddle)){
+    act("You harness $N with $p.",
+	FALSE, this, saddle, horse, TO_CHAR);
+    act("$n harnesses $N with $p.",
+	FALSE, this, saddle, horse, TO_NOTVICT);
+    act("$n harness you with $p.",
+	FALSE, this, saddle, horse, TO_VICT);
+  } else {
+    act("You saddle $N with $p.",
+	FALSE, this, saddle, horse, TO_CHAR);
+    act("$n saddles $N with $p.",
+	FALSE, this, saddle, horse, TO_NOTVICT);
+    act("$n saddles you with $p.",
+	FALSE, this, saddle, horse, TO_VICT);
+  }
 
   --(*saddle);
   horse->equipChar(saddle, slot);

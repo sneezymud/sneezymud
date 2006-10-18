@@ -97,6 +97,7 @@
 #include "obj_saddle.h"
 #include "obj_harness.h"
 #include "obj_saddlebag.h"
+#include "obj_wagon.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3301,6 +3302,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new THarness();
     case ITEM_SADDLEBAG:
       return new TSaddlebag();
+    case ITEM_WAGON:
+      return new TWagon();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
