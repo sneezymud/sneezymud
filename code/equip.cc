@@ -2064,10 +2064,10 @@ int TBeing::doUnsaddle(sstring arg)
   act(fmt("You %s $p from $N.") % 
       (dynamic_cast<THarness *>(saddle)?"unharness":"unsaddle"),
       FALSE, this, saddle, horse , TO_CHAR);
-  act(fmt("$n unsaddles $p from $N.") %
+  act(fmt("$n %s $p from $N.") %
       (dynamic_cast<THarness *>(saddle)?"unharnesses":"unsaddles"),
       FALSE, this, saddle, horse , TO_NOTVICT);
-  act(fmt("$n unsaddles your $p.") %
+  act(fmt("$n %s your $p.") %
       (dynamic_cast<THarness *>(saddle)?"unharnesses":"unsaddles"),
       FALSE, this, saddle, horse , TO_VICT);
 
