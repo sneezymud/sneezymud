@@ -15,6 +15,11 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   if (!myself->canSee(obj) || (obj->in_room == ROOM_DONATION))
     return false;
 
+  // don't let them pick up 3000 pound wagons because that's retarded
+  if(compareWeights(myself->getTotalWeight(TRUE), 
+	      (myself->carryWeightLimit() - myself->getCarriedWeight()))==-1)
+    return false;
+
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   // Don't let them try corpses in gh at all - there are other mobs for that
   if ((myself->mobVnum() == MOB_SWEEPER || myself->mobVnum() == MOB_SWEEPER2)
