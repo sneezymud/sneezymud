@@ -393,7 +393,6 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
 int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
   TObj *boat=NULL;
-  int *job=NULL;
   int i;
   TVehicle *vehicle=NULL;
   TPathFinder path;
@@ -430,17 +429,26 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   }
 
+  struct sail_data {
+    int room[10];
+    int cur;
+    bool cruise;
+  } *job;
+
 
   // first, get our action pointer, which tells us which way to go
   if (!myself->act_ptr) {
-    if (!(myself->act_ptr = new int)) {
+    if (!(myself->act_ptr = new struct sail_data)) {
      perror("failed new of ship.");
      exit(0);
     }
-    job = static_cast<int *>(myself->act_ptr);
-    *job=0;
+    job = static_cast<struct sail_data *>(myself->act_ptr);
+    for(int i=0;i<10;++i)
+      job->room[i]=0;
+    job->cur=-1;
+    job->cruise=false;
   } else {
-    job = static_cast<int *>(myself->act_ptr);
+    job = static_cast<struct sail_data *>(myself->act_ptr);
   }
 
 
@@ -451,7 +459,8 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.query("delete from ship_destinations where vnum=%i and name='%s'",
 	       myself->mobVnum(), argument.word(2).c_str());
       db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
-    } else if(argument.word(1) == "sail"){
+    } else if(argument.word(1) == "sail" ||
+	      argument.word(1) == "cruise"){
       if(argument.word(2).empty()){
 	myself->doSay("Where ye be wantin' to sail?");
 	
@@ -468,19 +477,41 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doSay(fmt("I think I knows the way to %s") % buf);
       } else {
 	myself->doSay(fmt("Aye aye, settin' sail for %s") % argument.word(2));
-	
-	db.query("select room from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+
+	// parse list of destnations and add to buf in sql format
+	sstring buf;
+	for(int i=2;i<12;++i){
+	  if(!argument.word(i).empty() && argument.word(i).isWord()){
+	    if(buf.empty())
+	      buf=fmt("'%s'") % argument.word(i);
+	    else
+	      buf=fmt("%s, '%s'") % buf % argument.word(i);
+	  }
+	}
+
+	// %r should be save here because we used isWord() above
+	db.query("select room from ship_destinations where vnum=%i and name in (%r)", myself->mobVnum(), buf.c_str());
 	if(!db.fetchRow()){
 	  myself->doSay("What the..?!  I've never 'eard of that!");
 	  return TRUE;
 	}
-	
-	*job = convertTo<int>(db["room"]);
+
+	int i=0;
+	do {
+	  job->room[i++] = convertTo<int>(db["room"]);
+	} while(db.fetchRow());
+	job->cur=0;
+	if(argument.word(1)=="cruise")
+	  job->cruise=true;
+	else
+	  job->cruise=false;
       }
     } else if(argument.word(1) == "stop"){
       myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
       myself->doDrive("stop");
-      *job=0;
+      for(int i=0;i<10;++i)
+	job->room[i]=0;
+      job->cur=0;
     } else if(argument.word(1) == "take" &&
 	      argument.word(2) == "five"){
       myself->doSay("Take care of 'er.");
@@ -505,18 +536,27 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 
   // no destination
-  if(!*job)
+  if(!job || job->cur==-1)
     return FALSE;
 
-  if(boat->in_room == *job){
+  if(boat->in_room == job->room[job->cur]){
     myself->doDrive("stop");
     myself->doSay("Avast!  We have reached arrr destination.");
 
-    *job=0;
+
+    if(job->cur==9 || !job->room[job->cur+1]){
+      if(job->cruise)
+	job->cur=0;
+      else
+	job->cur=-1;
+    } else {
+      ++job->cur;
+    }
+
     return TRUE;
   }
 
-  i=path.findPath(boat->in_room, findRoom(*job));
+  i=path.findPath(boat->in_room, findRoom(job->room[job->cur]));
 
   if(i==DIR_NONE){
     vlogf(LOG_BUG, "ship lost");
