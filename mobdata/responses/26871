@@ -1,0 +1,16 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
+# drunken pirate - 26871
+# on the balcony of the usurped faction mansion
+# created by Metrohep
+
+
+
+pulse { "";
+        checkroom 26871;
+	toroom wobbles as he fumbles with his breeches.;
+	toroom $n haphazardly <y>pisses<1> off the balcony.
+}
+

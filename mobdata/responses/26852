@@ -1,0 +1,10 @@
+# pirate cook - 26852
+# in the kitchen of the usurped faction mansion
+# created by Metrohep
+
+pulse { "";
+        checkroom 26870;
+	toroom $n says, "Look here, he needs be cut to suitable chunks...";
+	toroom $n says, "Flanks in the oven, legs on the fire and head for garnish!";
+}
+

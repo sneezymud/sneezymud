@@ -1,0 +1,12 @@
+# rookie cityguard - 26884
+# guarding the side road into the usurped faction mansion
+# created by Metrohep
+
+
+pulse { "";
+        checkroom 26884;
+	toroom $n says, "Steer clear of this here Side Road!";
+	point south;
+}
+
+

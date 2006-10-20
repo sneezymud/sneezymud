@@ -1,0 +1,16 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
+# the cook's mate - 26853
+# in the kitchen of the usurped faction mansion
+# created by Metrohep
+
+
+
+pulse { "";
+        checkroom 26870;
+	toroom $n insists, "No-no-no no! Keep shoving, he'll fit!";
+	poke chef;
+}
+
