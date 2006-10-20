@@ -1,8 +1,9 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 #
 # SneezyMUD rebooter watchdog script, run via cron
 #
-# January, 2005
+# January, 2005 - initial version
+# October, 2006 - modified for linux
 
 cd /mud/prod
 
@@ -36,13 +37,13 @@ then
     # we have a problem, REBOOTER_PID isn't running anymore
     DATE_STAMP=$(date +%Y%m%d.%H%M)
     echo "${DATE_STAMP}: ${REBOOTER}, pid=$stored_pid was dead!  Spawning new rebooter." >> ${REBOOTER_WATCHDOG_LOG}
-    exec ${PROD_DIR}/${REBOOTER} &
+    exec "${PROD_DIR}/${REBOOTER}"
   fi
 else
   # $REBOOTER_PID is not here or empty at this point, we have a problem
   DATE_STAMP=$(date +%Y%m%d.%H%M)
   echo "${DATE_STAMP}: ${REBOOTER} wasn't running!  Spawning new rebooter." >> ${REBOOTER_WATCHDOG_LOG}
-  exec "${PROD_DIR}/${REBOOTER}" &
+  exec "${PROD_DIR}/${REBOOTER}"
 fi
 
 exit 0
