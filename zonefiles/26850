@@ -1,116 +1,301 @@
 #26850
-Syl - Faction Mansion~
+Metrohep/Peel/Syl - Usurped Faction Mansion~
 26899 30 2 1
 
-D 0 26860 2 1          Main entrance of mansion (close)
-D 0 26863 0 1
-D 0 26863 1 1          Door from courtyard to servant quarters (close)
-D 0 26864 3 1
-D 0 26863 2 1          Door from courtyard to mansion proper (close)
-D 0 26866 0 1
-D 0 26863 3 1          Door from courtyard to bathhouse (close)
-D 0 26862 1 1
-D 0 26866 1 1          Door from lounge to feast hall (close)
-D 0 26867 3 1
-D 0 26866 2 2          Door from lounge to main conference room (close)(locked)
-D 0 26869 0 1
-D 0 26866 3 1          Door from lounge to guard room (close)
-D 0 26865 1 1
-D 0 26867 2 1          Door from feast hall to kitchen (close)
-D 0 26870 0 1
-D 0 26865 2 1          Door from guard room to caretaker's office (close)
-D 0 26868 0 1
-D 0 26873 0 1          Door from hallway to balcony (close)
-D 0 26871 2 1
-D 0 26874 1 1          Door from foyer to galek conference room (close)
-D 0 26879 3 1
-D 0 26877 1 1          Door from foyer to unaffilliated conference room (close)
-D 0 26880 3 1
-D 0 26872 3 1          Door from foyer to logrus conference room (close)
-D 0 26882 1 1
-D 0 26875 3 1          Door from foyer to serpent conference room (close)
-D 0 26881 1 1
-O 0 26850 1 26866       Staircases
-O 0 26851 1 26873 
-O 0 26852 1 26862       portal doors
-O 0 26853 1 26878 
-O 0 26854 1 26885       portal back to Grimhaven
-O 0 26855 1 26860       lion statues
-O 0 26856 1 26863 
-O 0 26857 1 26878       sauna furnace
-P 1 26858 5 26857      sauna stones
-P 1 26858 5 26857
-P 1 26858 5 26857
-P 1 26858 5 26857
-P 1 26858 5 26857
-O 0 26859 1 26867       wooden bench
-O 0 26859 1 26864 
-O 0 26860 1 26872       padded benches
-O 0 26860 1 26874 
-O 0 26860 1 26875 
-O 0 26860 1 26877 
-O 0 26861 1 26867       dining table
-O 0 26862 1 26867       stuffed bear head
-O 0 26863 1 26870       kitchen fireplace
-O 0 26864 1 26870       kitchen table
-O 0 26865 1 26865       weapon rack
-O 0 26866 1 26870       stone oven
-O 0 26867 1 26882       tapestry
-O 0 26868 1 26881       serpent statue
-O 0 26869 1 26879       rug
-O 0 26870 1 26880       ornamental axe
-O 0 26871 1 26880       ornamental necklace
-O 0 26872 1 26880       ornamental mirror
-O 0 26873 1 26876       snack cart
-P 1 440 1 26873        pies, pies galore
-P 1 1346 1 26873
-P 1 14340 1 26873
-P 1 14341 1 26873
-P 1 14342 1 26873
-P 1 7037 1 26873
-P 1 7036 1 26873
-P 1 5746 1 26873
-P 1 24440 1 26873
-O 0 351 1 26878         sauna bench
-O 0 2851 1 26866        web bar
-O 0 10205 1 26864       simple wooden table
-O 0 2850 1 26864        beds to sleep on
-O 0 2850 1 26865 
-O 0 2850 1 26868 
-O 0 21 1 26866          generic couch
-O 0 21 1 26876 
-O 0 8434 1 26866        cherry wood table
-O 0 461 1 26866         chandelier
-O 0 461 1 26879 
-O 0 23650 1 26868       oil lamp
-O 0 23650 1 26865 
-O 0 23650 1 26864 
-O 0 8721 1 26867        sconced torch
-O 0 8721 1 26869 
-O 0 8721 1 26873 
-O 0 8721 1 26872 
-O 0 8721 1 26874 
-O 0 8721 1 26875 
-O 0 8721 1 26877 
-O 0 8721 1 26876 
-O 0 8721 1 26882 
-O 0 8721 1 26881 
-O 0 8721 1 26880 
-O 0 10757 1 26868       solid oak desk
-P 1 26874 1 8434       strange note
-O 0 7515 1 26882        bookshelf
-O 0 5704 1 26882        cabinet
-M 0 351 1 26870        cook
-M 0 26850 1 26860      Kludge
-M 0 26851 1 26872      Kanas
-M 0 26852 1 26874      Belfur
-M 0 26854 1 26875      Faeloar
-M 0 26853 1 26877      Jesan
-M 0 26855 1 26864      servant
-M 0 26855 1 26866
-M 0 26855 1 26867
-M 0 26855 1 26876
-M 0 26856 1 26868      caretaker
-G 1 26875 1
+*********
+* doors *
+*********
+
+* downstairs
+D 0 26860 1 1        Front Lawn -> The Garden
+D 0 26861 3 1        The Garden -> Front Lawn
+
+D 0 26863 0 1        Courtyard -> Front Lawn
+D 0 26860 2 1        Front Lawn -> Courtyard
+
+D 0 26863 3 1        Courtyard -> Bathhouse
+D 0 26862 1 1        Bathhouse -> Courtyard
+
+D 0 26863 1 1        Courtyard -> Ransacked Servants' Quarters
+D 0 26864 3 1        Ransacked Servants' Quarters -> Courtyard
+
+D 0 26863 2 1        Courtyard -> Uncomfortable Lounge
+D 0 26866 0 1        Uncomfortable Lounge -> Courtyard
+
+D 0 26862 3 1        Bathhouse -> Bathhouse Sauna
+D 0 26878 1 1        Bathhouse Sauna -> Bathhouse
+
+D 0 26866 1 1        Uncomfortable Lounge -> Feast Hall
+D 0 26867 3 1        Feast Hall -> Uncomfortable Lounge
+
+D 0 26867 2 1        Feast Hall -> Vandalized Kitchen
+D 0 26870 0 1        Vandalized Kitchen -> Feast Hall
+
+D 0 26865 2 1        Guard Room -> Caretaker's Room
+D 0 26868 0 1        Caretaker's Room -> Guard Room
+
+
+* upstairs
+D 0 26871 2 1        Balcony -> Veranda
+D 0 26873 0 1        Veranda -> Balcony
+
+* apartments
+D 0 26872 3 2        Foyer -> Cult of Logrus Conference Room
+D 0 26882 1 2        Cult of Logrus Conference Room -> Foyer
+
+D 0 26874 1 2        Foyer -> Brotherhood of Galek Conference Room
+D 0 26879 3 2        Brotherhood of Galek Conference Room -> Foyer
+
+D 0 26877 1 2        Foyer -> Unaffiliated Conference Room
+D 0 26880 3 2        Unaffiliated Conference Room -> Foyer
+
+D 0 26875 3 2        Foyer -> Serpent Order Conference Room
+D 0 26881 1 2        Serpent Order Conference Room -> Foyer
+
+
+
+*********
+* props *
+*********
+
+* side road
+O 0 26897 1 26883       a scarecrow of a huge, berzerk pirate
+
+* garden
+O 0 26854 1 26854       a pile of uprooted rose bushes
+
+* front lawn
+O 0 26860 1 26860       a lion statue wearing a paper pirate hat
+
+* courtyard
+O 0 26863 1 26863       a lion statue with a cannonball embedded in its chest
+
+* bathhouse
+O 0 26862 1 26862       a marble hot tub of filthy water
+
+* bathhouse sauna
+O 0 26871 1 26878       a glowing furnace
+O 0 26878 1 26878       a stained sauna bench
+O 0 26884 1 26878       a wooden bucket
+
+* ransacked servants' quarters
+O 0 26851 1 26864       an oil lamp
+V 1 3 1                 light the lamp
+O 0 26855 2 26864       a bedframe stripped of its mattress
+
+* uncomfortable lounge
+O 0 26850 1 26866       a tall candelabrum peaked with elk antlers
+O 0 26899 1 26866       a shattered chandelier
+O 0 26887 1 26866       an emptied wet bar
+O 0 26883 1 26866       an antique table impaled with a dirty cutlass
+O 0 26886 1 26866       a hobbled couch soaked with ale
+
+* ruined conference room
+O 0 26869 1 26869       the remnants of a conference table
+
+* feast hall
+O 0 26850 1 26867       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
+O 0 26861 1 26867       a large banquet table
+O 0 26852 10 26867      an elegantly carved chair
+O 0 26867 1 26867       a stuffed bear head wearing a paper pirate hat
+
+* vandalized kitchen
+O 0 132 1 26870         a window
+V 1 0 2409              window looks into room 2409 (kranor river)
+O 0 26851 1 26870       an oil lamp
+V 1 3 1                 light the lamp
+O 0 26858 1 26870       a large fireplace
+O 0 26870 1 26870       a large stone oven
+O 0 26853 1 26870       a kitchen table
+P 1 26866 1 26853       a pumpkin pie with a hole poked into the center
+
+
+
+* guard room
+O 0 26851 2 26865       an oil lamp
+V 1 3 1                 light the lamp
+O 0 19019 1 26865       a well-built wooden table
+
+O 0 26856 1 26865       a folding chair
+P 1 26889 4 26856       the corpse of a guard
+
+O 0 26856 1 26865       a folding chair
+P 1 26889 4 26856       the corpse of a guard
+
+O 0 26856 1 26865       a folding chair
+P 1 26889 4 26856       the corpse of a guard
+
+O 0 26856 1 26865       a folding chair
+P 1 26889 4 26856       the corpse of a guard
+
+* caretaker's room
+O 0 132 1 26868         a window
+V 1 0 2411              window looks into room 2409 (kranor river)
+O 0 26851 1 26868       an oil lamp
+V 1 3 1                 light the lamp
+O 0 19011 1 26868       a small brass-framed bed
+O 0 26857 1 26868       a wooden desk
+O 0 26856 4 26868       a folding chair
+
+* veranda
+O 0 26851 1 26873       an oil lamp
+V 1 3 1                 light the lamp
+
+* solarium
+O 0 26864 1 26876       a solarium
+O 0 26850 1 26876       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
+O 0 26876 2 26876       a plundered snack cart
+
+* foyers
+O 0 26851 1 26872       an oil lamp
+V 1 3 1                 light the lamp
+O 0 26851 1 26874       an oil lamp
+V 1 3 1                 light the lamp
+O 0 26851 1 26875       an oil lamp
+V 1 3 1                 light the lamp
+O 0 26851 1 26877       an oil lamp
+V 1 3 1                 light the lamp
+
+* brotherhood of galek conference room
+O 0 26865 2 26879       a glass chandelier
+V 1 3 1                 light the chandelier
+O 0 26888 1 26879       a white shag rug marked with four black spots
+
+* unaffiliated conference room
+O 0 26850 1 26880       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
+O 0 26872 3 26880       a delicate mirror wearing a paper pirate hat
+O 0 26873 2 26880       A dirty cutlass sticking from the wall
+O 0 26868 1 26880       a large round table
+
+* serpent order conference room
+O 0 26850 1 26881       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
+O 0 26859 2 26881       a serpent statue wearing a paper pirate hat
+O 0 26868 1 26881       a large round table
+
+* cult of logrus conference room
+O 0 26850 1 26882       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
+O 0 26875 2 26882       a huge black velvet tapestry
+O 0 26874 1 26882       an obsidian table
+
+* center of the rose garden
+O 0 26885 1 26885       a gap in a scorched rose bush
+
+
+**************
+* local sets *
+**************
+
+* basic pirate crew
+X 0 5 19048            A weather-stained kerchief [head]
+X 0 3 19049            A well-worn scarf [neck]
+X 0 4 19040            A laced linen shirt [body]
+X 0 15 19045           A red baldric [waist]
+X 0 6 19046            A pair of loose ankle trousers [leg-right]
+X 0 8 19047            A leather boot [foot-right]
+X 0 9  19047           A leather boot [foot-left]
+
+
+********
+* mobs *
+********
+
+* side road
+M 0 26883 1 26884       a rookie cityguard
+E 1 26896 9999 19       a glazed donut [hold-left]
+Y 0 7 5                 5% chance of hard leather
+
+M 0 26884 1 26884       a rookie cityguard
+Y 0 7 5                 5% chance of hard leather
+
+* garden
+M 0 26856 1 26855       a salt encrusted pirate
+
+M 0 26851 1 26851       a small pig
+
+M 0 26851 1 26859       a small pig
+
+M 0 26854 2 26854       a gaunt pirate
+E 1 26890 9999 19       a roasted pigeon on a stick [hold-left]
+M 0 26854 2 26854       a gaunt pirate
+E 1 26890 9999 19       a roasted pigeon on a stick [hold-left]
+
+* bathhouse
+M 0 26862 1 26862       a small pig
+
+* bathhouse sauna
+M 0 26860 1 26878       Kludge
+M 0 26878 1 26878       an uncouth pirate
+E 1 26891 9999 15       a roasted pigeon on a stick [hold-left]
+
+* servants' quarters
+M 0 26864 1 26864       an exhausted servant
+
+* uncomfortable lounge
+M 0 26862 1 26866       a small pig
+
+* feast hall
+M 0 26863 2 26867       a wildly cheering pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26863 2 26867       a wildly cheering pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26872 1 26867       a servant
+E 1 26892 9999 5        a powdered wig [head]
+M 0 26867 1 26867       a servant
+E 1 26892 9999 5        a powdered wig [head]
+
+* vandalized kitchen
+M 0 26853 1 26870       the cook's mate
+Z 0 1 100               basic pirate crew local set
+M 0 26852 1 26870       a pirate cook
+E 1 26895 9999 15       a butcher's saw [hold-left]
+Z 0 1 100               basic pirate crew local set
+M 0 26870 1 26870       the mansion's chef
+
+* caretaker's room
+M 0 26865 1 26868       a gambling pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26869 2 26868       a gambling pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26869 2 26868       a gambling pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26868 1 26868       the caretaker
+E 1 26894 9999 5        a green poker visor [head]
+
+* solarium
+M 0 26876 2 26876       an engorged pirate
+Z 0 1 100               basic pirate crew local set
+M 0 26876 2 26876       an engorged pirate
+Z 0 1 100               basic pirate crew local set
+
+* balcony
+M 0 26871 1 26871       a drunken pirate
+Z 0 1 100               basic pirate crew local set
+
+* brotherhood of galek conference room
+M 0 26882 1 26879       a trained monkey
+E 1 19015 9999 5        a paper pirate hat [head]
+
+* unaffiliated conference room
+M 0 26882 1 26880       a trained monkey
+E 1 19015 9999 5        a paper pirate hat [head]
+
+* serpent order conference room
+M 0 26882 1 26881       a trained monkey
+E 1 19015 9999 5        a paper pirate hat [head]
+
+* cult of logrus conference room
+M 0 26882 1 26882       a trained monkey
+E 1 19015 9999 5        a paper pirate hat [head]
+
+* center of the rose garden
+M 0 26885 1 26885       a disoriented pirate
+Z 0 1 100               basic pirate crew local set
+
+
 S
 
