@@ -434,6 +434,67 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 
       break;
     case DRUG_OPIUM:
+      if(!istick){
+	if(ch->desc->drugs[drug].current_consumed>(potency*3)){
+	  act("You feel like you are smoking too much opium.",
+	      TRUE,ch,0,0,TO_CHAR);
+	}
+
+	switch(consumed){
+	  case 0: case 1:
+	    act("You feel relaxed.",
+		TRUE,ch,0,0,TO_CHAR);
+	    break;
+	  case 4:
+	    act("You feel really great.",
+		TRUE,ch,0,0,TO_CHAR);
+	    break;
+	  default:
+	    act("You feel euphoric.",
+		TRUE,ch,0,0,TO_CHAR);
+	    break;
+	  case 2: case 3: case 5: case 6: case 8: case 9:
+	    break;
+	}
+      }
+
+      aff.modifier = consumed;
+      aff.duration = duration1hit * consumed;
+
+      if(!(affptr=findDrugAffect(ch, DRUG_OPIUM, APPLY_KAR))){
+	aff.location = APPLY_SPE;
+	ch->affectTo(&aff, -1);
+      } else {
+	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
+      }
+      if(!(affptr=findDrugAffect(ch, DRUG_OPIUM, APPLY_CHA))){
+	aff.location = APPLY_KAR;
+	ch->affectTo(&aff, -1);
+      } else {
+	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
+      }
+
+      aff.modifier = -(consumed);
+      aff.duration = duration1hit * consumed;
+
+      if(!(affptr=findDrugAffect(ch, DRUG_OPIUM, APPLY_DEX))){
+	aff.location = APPLY_CHA;
+	ch->affectTo(&aff, -1);
+      } else {
+	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
+      }
+      if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))){
+	aff.location = APPLY_FOC;
+	ch->affectTo(&aff, -1);
+      } else {
+	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
+      }
+
+      break;
     case DRUG_NONE:
     case MAX_DRUG:
       break;
