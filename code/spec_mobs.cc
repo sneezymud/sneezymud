@@ -5780,7 +5780,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     //     attack
     for(t=myself->roomp->getStuff();t;t=t->nextThing){
       if((tmons=dynamic_cast<TMonster *>(t)) &&
-	 !tmons->inGroup(*myself)){
+	 !tmons->inGroup(*myself) && !tmons->isImmortal()){
 
 	// don't attack mobs from my friendly zones
 	if((tmons->mobVnum() >= 19000 && tmons->mobVnum() <= 19024) ||

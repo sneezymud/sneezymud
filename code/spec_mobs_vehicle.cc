@@ -481,6 +481,11 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
       myself->doDrive("stop");
       *job=0;
+    } else if(argument.word(1) == "take" &&
+	      argument.word(2) == "five"){
+      myself->doSay("Take care of 'er.");
+      myself->doGive(fmt("gilt %s") % ch->getName());
+      myself->doEmote("begins untangling his salt encrusted beard.");
     } else {
       myself->doSay("Arr what are ye talkin' about?");
     }
