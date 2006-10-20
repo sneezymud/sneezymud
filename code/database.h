@@ -120,9 +120,16 @@ class TDatabaseConnection
 
  public:
   MYSQL *getSneezyDB(){
-    if(!sneezydb || mysql_ping(sneezydb)){
+    int res=0;
+
+    if(!sneezydb || (res=mysql_ping(sneezydb))){
       const char * dbconnectstr = NULL;
       
+      if(res){
+	vlogf(LOG_DB, "mysql_ping() returned non-zero");
+	vlogf(LOG_DB, fmt("mysql_error(): %s") % mysql_error(sneezydb));
+      }
+
       if(gamePort == PROD_GAMEPORT){
 	dbconnectstr="sneezy";
       } else if(gamePort == BUILDER_GAMEPORT){
