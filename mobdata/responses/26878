@@ -1,7 +1,3 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
 # uncouth pirate - 26878
 # abusing kludge in the sauna of usurped faction mansion
 # created by Metrohep
@@ -14,14 +10,13 @@ pulse { "";
 }
 
 say { "strap-on";
-	tovict $n $N
-	tonotvict $n 
+	tovict $n grabs your behind, not without tenderness.;
+	tonotvict $n grabs $N's behind, holding on a little too long.;
 	toroom $n says, "Like it? Maybe yer decks need a li'l caulkin, huh?";
 }
 
 say { "strap on";
-	toroom $n rubs her hands together.;
+	tovict $n grabs your behind, not without tenderness.;
+	tonotvict $n grabs $N's behind, holding on a little too long.;
 	toroom $n says, "Like it? Maybe yer decks need a li'l caulkin, huh?";
 }
-
-
