@@ -5681,6 +5681,41 @@ int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }  
 
+int pirateHatDispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBaseContainer *tbc=dynamic_cast<TBaseContainer *>(o);
+
+  if(cmd!=CMD_PULL)
+    return FALSE;
+  
+  if(!tbc || !ch || !arg)
+    return FALSE;
+
+  if(!isname(arg, o->name)){
+    return FALSE;
+  }
+
+  if(tbc->getStuff()){
+    ch->sendTo("The dispenser is full already.\n\r");
+    return TRUE;
+  }
+    
+
+  TObj *pirate_hat=read_object(19015, VIRTUAL);
+
+  act("You pull the handle on $p.",
+      TRUE, ch, o, 0, TO_CHAR);
+  act("You hear gears turning, then there is a soft thud as $p lands in the dispensing slot.", 
+      TRUE, ch, pirate_hat, 0, TO_CHAR);
+
+  act("$n pulls the handle on $p",
+      TRUE, ch, o, 0, TO_ROOM);
+  act("There is a soft thud as $p lands in the dispensing slot.",
+      TRUE, ch, pirate_hat, 0, TO_ROOM);
+
+  *tbc += *pirate_hat;
+  return true;
+}
 
 int regeneration(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
@@ -5821,7 +5856,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Bloodspike", bloodspike}, 
   {FALSE, "behir horn item", behirHornItem},
   {FALSE, "Newbie Helper", newbieHelperWProc},
-  {FALSE, "BOGUS", bogusObjProc},
+  {FALSE, "pirate hat dispenser", pirateHatDispenser},
   {FALSE, "Blood Bowl", bowl_of_blood},  // 40
   {FALSE, "feather fall", featherFallItem},
   {FALSE, "wicked dagger", wickedDagger},  
