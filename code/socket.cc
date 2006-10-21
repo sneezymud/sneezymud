@@ -446,9 +446,13 @@ struct timeval TMainSocket::handleTimeAndSockets()
   }
 
   // this regulates the speed of the mud
-  if (select(0, 0, 0, 0, &timeout) < 0) {
-    perror("Error in select (sleep)");
-  }
+  sleep(timeout.tv_sec);
+  usleep(timeout.tv_usec);
+
+  // this isn't working under linux
+  //  if (select(0, 0, 0, 0, &timeout) < 0) {
+  //    perror("Error in select (sleep)");
+  //  }
 
   sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
