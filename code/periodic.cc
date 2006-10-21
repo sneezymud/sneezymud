@@ -413,6 +413,7 @@ bool TObj::isTrash()
      !canWear(ITEM_TAKE) || 
      !roomp ||
      getStuff() ||
+     rider ||
      roomp->isWaterSector() ||
      roomp->isAirSector() ||
      isObjStat(ITEM_BURNING) ||
