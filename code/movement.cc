@@ -368,6 +368,12 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
 {
   char tmp[256];
 
+  // if tied up but not wearing a harness, untie
+  if(!dynamic_cast<THarness *>(equipment[WEAR_NECK]) && tied_to){
+    tied_to->tied_to=NULL;
+    tied_to=NULL;
+  }
+
   // if harnessed and tied to something, move it too
   if(equipment[WEAR_NECK] && 
      dynamic_cast<THarness *>(equipment[WEAR_NECK]) &&

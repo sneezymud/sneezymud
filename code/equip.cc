@@ -2071,9 +2071,14 @@ int TBeing::doUnsaddle(sstring arg)
       (dynamic_cast<THarness *>(saddle)?"unharnesses":"unsaddles"),
       FALSE, this, saddle, horse , TO_VICT);
 
-  if(dynamic_cast<THarness *>(saddle))
+  if(dynamic_cast<THarness *>(saddle)){
+    if(horse->tied_to){
+      horse->tied_to->tied_to=NULL;
+      horse->tied_to=NULL;
+    }
+
     *this += *(horse->unequip(WEAR_NECK));
-  else
+  } else
     *this += *(horse->unequip(WEAR_BACK));
 
   return TRUE;
