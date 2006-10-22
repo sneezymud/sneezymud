@@ -889,6 +889,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             return TRUE;
           } else {
             speaker->addToMoney(-value, GOLD_SHOP);
+            responseTransaction(speaker, this, -value);
 
             for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
               parsedArgs = parseResponse(speaker, cmd->args);
