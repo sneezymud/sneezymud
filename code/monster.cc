@@ -370,7 +370,9 @@ int TMonster::calculateGoldFromConstant()
   double the_gold = rlev * max(20.0,rlev) * moneyConst * 7.5 / 10;
 
   // adjust for global gold modifier...
-  the_gold *= gold_modifier[GOLD_INCOME].getVal();
+  int CENTRAL_BANK=123;
+  the_gold *= shop_index[CENTRAL_BANK].getProfitSell(NULL, NULL);
+  //  the_gold *= gold_modifier[GOLD_INCOME].getVal();
 
   if (isShopkeeper()){
     unsigned int shop_nr;
