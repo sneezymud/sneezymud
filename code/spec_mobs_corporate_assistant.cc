@@ -13,17 +13,20 @@ void corpListing(TBeing *ch, TMonster *me)
   corp_list=getCorpListingData();
 
   for(unsigned int i=0;i<corp_list.size();++i){
-    m.insert(pair<int,sstring>(corp_list[i].rank,fmt("%-2i| <r>%s<1>") % corp_list[i].corp_id % corp_list[i].name));
-    m.insert(pair<int,sstring>(corp_list[i].rank,fmt("  | %s talens, %s in assets") %
-			       talenDisplay(corp_list[i].gold) % 
+    m.insert(pair<int,sstring>(corp_list[i].rank,
+		 fmt("%-2i| <r>%-38s<1> | %6s talens  %6s in assets\n\r") % 
+			       corp_list[i].corp_id % corp_list[i].name %
+			       talenDisplay(corp_list[i].gold) %
 			       talenDisplay(corp_list[i].assets)));
-
   }
 
   me->doTell(ch->getName(), "I know about the following corporations:");
 
+  sstring buf;
   for(it=m.begin();it!=m.end();++it)
-    me->doTell(ch->getName(), (*it).second);
+    buf += (*it).second;
+
+  ch->desc->page_string(buf);
 }
 
 void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
