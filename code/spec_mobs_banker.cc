@@ -233,6 +233,43 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   return TRUE;
 }
 
+int centralBanker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+{
+  int shop_nr;
+  TDatabase db(DB_SNEEZY);
+  TDatabase db2(DB_SNEEZY);
+  sstring buf;
+
+  if((cmd != CMD_WHISPER &&
+      cmd != CMD_LIST) ||
+     !ch || !myself)
+    return FALSE;
+
+  if(!(shop_nr=find_shop_nr(myself->number)))
+    return FALSE;
+  
+  if(cmd==CMD_WHISPER)
+    return shopWhisper(ch, myself, shop_nr, arg);
+
+  if(cmd==CMD_LIST){
+    db.query("select s.shop_nr, r.name from room r, shop s, shopownedcentralbank socb where socb.centralbank=%i and s.shop_nr=socb.bank and r.vnum=s.in_room", shop_nr);
+    
+    while(db.fetchRow()){
+      db2.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", db["shop_nr"].c_str(), db["shop_nr"].c_str());
+
+      if(db2.fetchRow()){
+	buf += fmt("<c>%s - %s accounts, %s in deposits.<1>\n\r") % 
+	  db["name"] % db2["c"] %
+	  talenDisplay(convertTo<int>(db["t"]));
+      }
+    }
+    ch->desc->page_string(buf);
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 
 int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
