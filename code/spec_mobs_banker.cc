@@ -64,16 +64,22 @@ void procBankInterest::run(int pulse) const
       // doll out earned interest that isn't fractional
       in.query("update shopownedcorpbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
 
+      TShopOwned tso(shop_nr, NULL, NULL);
 
       // log player gains
       in.query("select p.name as name, sob.player_id as player_id, sob.talens as talens from shopownedbank sob, player p where shop_nr=%i and sob.player_id=p.id",
 	       shop_nr);
       while(in.fetchRow()){
 	if((convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])]) != 0){
+	  int amt=convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])];
+
+	  tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
+
 	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
 		    in["name"].c_str(),
-		    convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])],
+		    amt,
 		    convertTo<int>(in["talens"]));
+
 	}
       }
 
@@ -81,10 +87,14 @@ void procBankInterest::run(int pulse) const
       in.query("select c.name, sob.corp_id, sob.talens from shopownedcorpbank sob, corporation c where c.corp_id=sob.corp_id and sob.shop_nr=%i",
 	       shop_nr);
       while(in.fetchRow()){
-	if((convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["player_id"])]) != 0){
+	if((convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])]) != 0){
+	  int amt=convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])];
+
+	  tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
+
 	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
 		    in["name"].c_str(),
-		    convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])],
+		    amt,
 		    convertTo<int>(in["talens"]));
 	}	
       }
@@ -125,13 +135,12 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
   }
 
   teller->doTell(ch->getName(), "Thank you.");
-  myself->giveMoney(ch, money, GOLD_XFER);
-  myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-  
-  
+
+  TShopOwned tso(shop_nr, teller, ch);
+  tso.doSellTransaction(money, "talens", TX_WITHDRAWAL);
+
   db.query("update shopownedbank set talens=talens-%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
   
-  shoplog(shop_nr, ch, myself, "talens", -money, "withdrawal");
 
   return TRUE;
 }
@@ -164,12 +173,12 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   }
   
   teller->doTell(ch->getName(), "Thank you.");
-  ch->giveMoney(myself, money, GOLD_XFER);
-  myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+
+  TShopOwned tso(shop_nr, teller, ch);
+  tso.doBuyTransaction(money, "talens", TX_DEPOSIT);
   
   db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
   
-  shoplog(shop_nr, ch, myself, "talens", money, "deposit");
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
 

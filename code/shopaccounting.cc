@@ -50,7 +50,7 @@ int TShopJournal::getValue(const sstring &val)
 
 int TShopJournal::getExpenses()
 {
-  return values["COGS"]+values["Tax"]+values["Expenses"];
+  return values["COGS"]+values["Tax"]+values["Expenses"]+values["Interest"];
 }
 
 int TShopJournal::getNetIncome()
@@ -71,8 +71,7 @@ int TShopJournal::getAssets()
 
 int TShopJournal::getLiabilities()
 {
-  // no debt or anything yet!  no liabilities
-  return 0;
+  return values["Deposits"];
 }
 
 int TShopJournal::getShareholdersEquity()
@@ -178,87 +177,120 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 {
   TDatabase db(DB_SNEEZY);
 
-  if(action == TX_RECEIVING_TALENS){
-    // shop giving money to owner
-    // we might want to record this as salary or something?
-    // perhaps we need a way for owners to differentiate between PIC and salary
-    // withdrawals
-
-    // PIC
-    journalize_debit(300, customer, name, amt, true);
-    // cash
-    journalize_credit(100, customer, name, amt);
-  } if(action == TX_GIVING_TALENS){
-    // owner giving money to the shop
-    // cash
-    journalize_debit(100, customer, name, amt, true);
-    // PIC
-    journalize_credit(300, customer, name, amt);
-  } else if(action == TX_SELLING || action == TX_PRODUCING){ 
-    // player selling something, so shop is buying inventory
-    // inventory
-    journalize_debit(130, customer, name, amt, true);
-    // cash
-    journalize_credit(100, customer, name, amt);
-    
-    // record COGS
-    COGS_add(name, amt);
-  } else if(action == TX_BUYING_SERVICE || 
-	    action == TX_BUYING ||
-	    action == TX_RECYCLING){
-    // first the easy part
-    // cash
-    journalize_debit(100, customer, name, amt, true);
-    // sales
-    if(action == TX_RECYCLING)
-      journalize_credit(510, customer, name, amt);
-    else
-      journalize_credit(500, customer, name, amt);
-
-    int COGS=0;
-
-    if(action == TX_BUYING_SERVICE){
-      // expenses
-      journalize_debit(630, customer, name, expenses);
-      // cash
-      journalize_credit(100, customer, name, expenses);
-    } else if(action == TX_BUYING || action == TX_RECYCLING){
-      // now we have to calculate COGS for this item
-      // (COGS = cost of goods sold)
-      COGS=COGS_get(name);
-
-      // now log it
-      // COGS
-      journalize_debit(600, customer, name, COGS);
-      // inventory
-      journalize_credit(130, customer, name, COGS);
-    }
-
-    // now log the sales tax
-    if(tax){
-      // tax
-      journalize_debit(700, customer, name, tax);
-      // cash
-      journalize_credit(100, customer, name, tax);
-    }      
-
-      // now log the corporate cash flow
-    if(corp_cash > 0){
-      // receiving money from corp, this counts as PIC
-      // cash
-      journalize_debit(100, customer, name, corp_cash);
+  switch(action){
+    case TX_RECEIVING_TALENS:
+      // shop giving money to owner
+      // we might want to record this as salary or something?
+      // perhaps we need a way for owners to differentiate between PIC and 
+      // salary withdrawals
+      
       // PIC
-      journalize_credit(300, customer, name, corp_cash);
-    } else if (corp_cash < 0) {
-      // giving money to corp, this counts as dividends
-      // dividends
-      journalize_debit(101, customer, name, -corp_cash);
+      journalize_debit(300, customer, name, amt, true);
       // cash
-      journalize_credit(100, customer, name, -corp_cash);
-    }
+      journalize_credit(100, customer, name, amt);
+      break;
+    case TX_GIVING_TALENS:
+      // owner giving money to the shop
+      // cash
+      journalize_debit(100, customer, name, amt, true);
+      // PIC
+      journalize_credit(300, customer, name, amt);
+      break;
+    case TX_DEPOSIT:
+      // cash
+      journalize_debit(100, customer, name, amt, true);
+      // deposits
+      journalize_credit(310, customer, name, amt);
+      break;
+    case TX_WITHDRAWAL:
+      // deposits
+      journalize_debit(310, customer, name, amt, true);
+      // cash
+      journalize_credit(100, customer, name, amt);
+      break;
+    case TX_PAYING_INTEREST:
+      // interest
+      journalize_debit(610, customer, name, amt, true);      
+      // cash
+      journalize_credit(100, customer, name, amt);      
+      break;
+    case TX_SELLING:
+    case TX_PRODUCING:
+      // player selling something, so shop is buying inventory
+      // inventory
+      journalize_debit(130, customer, name, amt, true);
+      // cash
+      journalize_credit(100, customer, name, amt);
+      
+      // record COGS
+      COGS_add(name, amt);
+      break;
+    case TX_BUYING_SERVICE:
+    case TX_BUYING:
+    case TX_RECYCLING:
+      // first the easy part
+      // cash
+      journalize_debit(100, customer, name, amt, true);
+      // sales
+      if(action == TX_RECYCLING)
+	journalize_credit(510, customer, name, amt);
+      else
+	journalize_credit(500, customer, name, amt);
+      
+      int COGS=0;
+      
+      if(action == TX_BUYING_SERVICE){
+      } else if(action == TX_BUYING || action == TX_RECYCLING){
+	// now we have to calculate COGS for this item
+	// (COGS = cost of goods sold)
+	COGS=COGS_get(name);
+	
+	// now log it
+	// COGS
+	journalize_debit(600, customer, name, COGS);
+	// inventory
+	journalize_credit(130, customer, name, COGS);
+      }
+      
+      
+      // now log COGS
+      COGS_remove(name);
+      break;
+  }
 
-    // now log COGS
-    COGS_remove(name);
+  // now we log miscellaneous things that apply to everything if passed
+
+
+  ///// log any expenses
+  if(expenses){
+    // expenses
+    journalize_debit(630, customer, name, expenses);
+    // cash
+    journalize_credit(100, customer, name, expenses);
+  }
+
+  ///// now log the sales tax
+  if(tax){
+    // tax
+    journalize_debit(700, customer, name, tax);
+    // cash
+    journalize_credit(100, customer, name, tax);
+  }      
+
+
+  ///// now log the corporate cash flow
+  if(corp_cash > 0){
+    // receiving money from corp, this counts as PIC
+    // cash
+    journalize_debit(100, customer, name, corp_cash);
+    // PIC
+    journalize_credit(300, customer, name, corp_cash);
+  } else if (corp_cash < 0) {
+    // giving money to corp, this counts as dividends
+    // dividends
+    journalize_debit(101, customer, name, -corp_cash);
+    // cash
+    journalize_credit(100, customer, name, -corp_cash);
   }
 }
 
@@ -296,14 +328,19 @@ void TShopOwned::giveStatements(sstring arg)
   buf+="-----------------------------------------------------------------\n\r";
   buf+=fmt("%-36s %10s %10i\n\r") % 
     "Sales revenue" % "" % tsj.getValue("Sales");
-  buf+=fmt("%-36s %10s %10i\n\r") % 
-    "Recycling revenue" % "" % tsj.getValue("Recycling");
+  if(tsj.getValue("Recycling"))
+    buf+=fmt("%-36s %10s %10i\n\r") % 
+      "Recycling revenue" % "" % tsj.getValue("Recycling");
   buf+=fmt("  %-34s %10i\n\r") %
     "Cost of goods sold" % tsj.getValue("COGS");
   buf+=fmt("  %-34s %10i\n\r") %
     "Sales tax" % tsj.getValue("Tax");
-  buf+=fmt("  %-34s %10i\n\r") %
-    "Service expenses" % tsj.getValue("Expenses");
+  if(tsj.getValue("Expenses"))
+    buf+=fmt("  %-34s %10i\n\r") %
+      "Service expenses" % tsj.getValue("Expenses");
+  if(tsj.getValue("Interest"))
+    buf+=fmt("  %-34s %10i\n\r") %
+      "Interest expense" % tsj.getValue("Interest");
   buf+=fmt("%-36s %10s %10i\n\r") %
     "Total expenses" % "" % tsj.getExpenses();
   buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
@@ -349,10 +386,13 @@ void TShopOwned::giveStatements(sstring arg)
   buf+="-----------------------------------------------------------------\n\r";
   buf+=fmt("%-36s | %-25s\n\r") %
     "" % "Liabilities";
-  buf+=fmt("%-25s %10i | %31s\n") %
-    "Cash" % tsj.getValue("Cash") % "";
+  buf+=fmt("%-25s %10i | %-25s %10i\n") %
+    "Cash" % tsj.getValue("Cash") % 
+    "  Deposits" % tsj.getValue("Deposits");
   buf+=fmt("%-25s %10i | %-36s\n\r") %
-    "Inventory" % tsj.getValue("Inventory") % "Shareholders' equity";
+    "Inventory" % tsj.getValue("Inventory") % "";
+  buf+=fmt("%-36s | %-36s\n\r") %
+    "" % "Shareholders' equity";
   buf+=fmt("%-36s | %-25s %10i\n\r") %
     "" % "  Paid-in capital" % tsj.getValue("Paid-in Capital");
   buf+=fmt("%-36s | %-25s %10i\n\r") %

@@ -51,6 +51,12 @@ sstring transactionToString(transactionTypeT action)
       return "receiving talens";
     case TX_GIVING_TALENS:
       return "giving talens";
+    case TX_PAYING_INTEREST:
+      return "paying interest";
+    case TX_WITHDRAWAL:
+      return "withdrawal";
+    case TX_DEPOSIT:
+      return "deposit";
   }
   return "unknown";
 }
@@ -96,11 +102,15 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   shoplog(shop_nr, ch, keeper, name, cashCost, transactionToString(action));
 
   if(owned){
-    int corp_cash=0;
+    int corp_cash=0, tax=0;
     corp_cash+=doDividend(cashCost, name);
     corp_cash+=doReserve();
-    int tax=chargeTax(cashCost, name, obj);
-    journalize(ch->getName(), name, action, cashCost, tax, corp_cash, expenses);
+
+    if(action != TX_DEPOSIT) // don't tax bank deposits
+      tax=chargeTax(cashCost, name, obj);
+
+    journalize(ch->getName(), name, action, cashCost, tax, 
+	       corp_cash, expenses);
   }
   
   // save
