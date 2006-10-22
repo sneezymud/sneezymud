@@ -674,13 +674,13 @@ bool TBaseClothing::isPluralItem() const
 void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doBuyTransaction(cost, getName(), "buying", this);
+  tso.doBuyTransaction(cost, getName(), TX_BUYING, this);
 }
 
 void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doSellTransaction(cost, getName(), "selling", this);
+  tso.doSellTransaction(cost, getName(), TX_SELLING, this);
 }
 
 int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)

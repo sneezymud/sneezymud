@@ -1,6 +1,17 @@
 #ifndef __SHOPOWNED_H
 #define __SHOPOWNED_H
 
+enum transactionTypeT {
+  TX_BUYING,
+  TX_BUYING_SERVICE,
+  TX_RECYCLING,
+  TX_SELLING,
+  TX_PRODUCING,
+  TX_GIVING_TALENS,
+  TX_RECEIVING_TALENS,
+};
+
+
 class TShopOwned {
   int shop_nr;
   TMonster *keeper;
@@ -14,8 +25,8 @@ class TShopOwned {
   int getPurchasePrice(int, int);
   int getCorpID();
 
-  void doBuyTransaction(int, const sstring &, const sstring &, TObj *obj=NULL);
-  void doSellTransaction(int, const sstring &, const sstring &, TObj *obj=NULL);
+  void doBuyTransaction(int, const sstring &, transactionTypeT, TObj *obj=NULL);
+  void doSellTransaction(int, const sstring &, transactionTypeT, TObj *obj=NULL);
 
   double getExpenseRatio();
   int doExpenses(int, TObj *);
@@ -50,7 +61,7 @@ class TShopOwned {
 
   // accounting stuff
   void giveStatements(sstring);
-  void journalize(const sstring &, const sstring &, const sstring &, 
+  void journalize(const sstring &, const sstring &, transactionTypeT, 
 		  int, int, int, int);
   void journalize_debit(int post_ref, const sstring &customer,
 			const sstring &name, int amt, bool new_id=false);

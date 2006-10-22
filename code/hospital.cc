@@ -368,7 +368,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, fmt("regenerating %s") % 
 				 ch->describeBodySlot(i),
-				 "buying service");
+				 TX_BUYING_SERVICE);
 
             buf=fmt("$n waves $s hands, utters many magic phrases and regenerates $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -408,7 +408,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 		TShopOwned tso(shop_nr, me, ch);
 		tso.doBuyTransaction(cashCost, fmt("mending %s") % 
 				     ch->describeBodySlot(i),
-				     "buying service");
+				     TX_BUYING_SERVICE);
 
                 buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
                 act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -446,7 +446,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, fmt("healing %s") % 
 				 ch->describeBodySlot(i),
-				 "buying service");
+				 TX_BUYING_SERVICE);
 
             buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -480,7 +480,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, fmt("expelling %s") % 
 				 ch->describeBodySlot(i),
-				 "buying service");
+				 TX_BUYING_SERVICE);
 
             buf=fmt("$n skillfully removes $p from $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, stuck, ch, TO_NOTVICT);
@@ -522,7 +522,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      TShopOwned tso(shop_nr, me, ch);
 	      tso.doBuyTransaction(cashCost, fmt("curing disease %s") %
 				   DiseaseInfo[affToDisease(*aff)].name,
-				   "buying service");
+				   TX_BUYING_SERVICE);
 	      
 	      act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
 	      act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
@@ -557,7 +557,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      TShopOwned tso(shop_nr, me, ch);
 	      tso.doBuyTransaction(cashCost, fmt("curing blindness %i") %
 				   ch->describeBodySlot(i),
-				   "buying service");
+				   TX_BUYING_SERVICE);
 
               act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
               act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
@@ -662,7 +662,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	}
 
 	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
-	tso.doBuyTransaction(cost, "healing", "buying service");
+	tso.doBuyTransaction(cost, "healing", TX_BUYING_SERVICE);
 
         healed->sendTo("The hospital works wonders on your body.\n\r");
         healed->addToHit(num);
@@ -745,7 +745,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full heal", "buying service");
+	  tso.doBuyTransaction(cost, "full heal", TX_BUYING_SERVICE);
           break;
         case 2:
           ch->setMana(ch->manaLimit());
@@ -754,7 +754,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full mana", "buying service");
+	  tso.doBuyTransaction(cost, "full mana", TX_BUYING_SERVICE);
           break;
         case 3:
           ch->setLifeforce(500);
@@ -763,7 +763,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full life force", "buying service");
+	  tso.doBuyTransaction(cost, "full life force", TX_BUYING_SERVICE);
           break;
         default:
           ch->sendTo("That's not available at THIS hospital!\n\r");

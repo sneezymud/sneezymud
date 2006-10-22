@@ -4269,7 +4269,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
 	TShopOwned tso(find_shop_nr(me->number), me, ch);
 	tso.doBuyTransaction(cost, fmt("engraving %s") % item->getName(), 
-			     "buying service");
+			     TX_BUYING_SERVICE);
 
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
@@ -5389,7 +5389,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
       tso=new TShopOwned(find_shop_nr(me->number), 
 			 dynamic_cast<TMonster *>(me), ch);
-      tso->doBuyTransaction(cost, "divination", "buying service");
+      tso->doBuyTransaction(cost, "divination", TX_BUYING_SERVICE);
 
       ch->sendTo(COLOR_BASIC, fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(fmt("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
@@ -6743,6 +6743,7 @@ extern int paladinPatrol(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int leperHunter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int centralBanker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int statSurgeon(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6974,6 +6975,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "caretaker", caretaker},
   {FALSE, "ship captain", shipCaptain},
   {FALSE, "aggro follower", aggroFollower}, // 210
+  {FALSE, "central banker", centralBanker},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

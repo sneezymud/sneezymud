@@ -34,16 +34,37 @@ bool sameAccount(sstring buf, int shop_nr){
   return FALSE;
 }
 
+sstring transactionToString(transactionTypeT action)
+{
+  switch(action){
+    case TX_BUYING:
+      return "buying";
+    case TX_BUYING_SERVICE:
+      return "buying service";
+    case TX_RECYCLING:
+      return "recycling";
+    case TX_SELLING:
+      return "selling";
+    case TX_PRODUCING:
+      return "producing";
+    case TX_RECEIVING_TALENS:
+      return "receiving talens";
+    case TX_GIVING_TALENS:
+      return "giving talens";
+  }
+  return "unknown";
+}
 
-// player selling to shop
+
+// player selling to shop (receiving money from shop)
 void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
-				   const sstring &action, TObj *obj)
+				   transactionTypeT action, TObj *obj)
 {
   // sell gives money to the buyer
   keeper->giveMoney(ch, cashCost, GOLD_SHOP);
 
   // log the sale
-  shoplog(shop_nr, ch, keeper, name, -cashCost, action);
+  shoplog(shop_nr, ch, keeper, name, -cashCost, transactionToString(action));
 
   if(owned){
     int corp_cash=doReserve();
@@ -55,10 +76,10 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
   ch->doSave(SILENT_YES);
 }
 
-// player buying from shop
+// player buying from shop (giving money to shop)
 // obj is optional
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
-			       const sstring &action, TObj *obj)
+			       transactionTypeT action, TObj *obj)
 {
   int expenses=0;
   // take the expense cut out
@@ -66,13 +87,13 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
     return;
 
   // buyer gives money to seller
-  if(action != "recycling")
+  if(action != TX_RECYCLING)
     ch->giveMoney(keeper, cashCost, GOLD_SHOP);
   else
     ch->addToMoney(cashCost, GOLD_SHOP);
 
   // log the sale
-  shoplog(shop_nr, ch, keeper, name, cashCost, action);
+  shoplog(shop_nr, ch, keeper, name, cashCost, transactionToString(action));
 
   if(owned){
     int corp_cash=0;
@@ -619,9 +640,13 @@ void TShopOwned::showInfo()
       keeper->doTell(ch->getName(), fmt("My equity value is %i talens.") %
 		     (keeper->getMoney()-convertTo<int>(db["talens"])));
     }
-    
-
-
+  } else if(keeper->spec==SPEC_CENTRAL_BANKER){
+    keeper->doTell(ch->getName(),
+		   fmt("The reserve deposit requirement is %f.") %
+		   (shop_index[shop_nr].profit_buy));
+    keeper->doTell(ch->getName(),
+		   fmt("The rate of new money printed is %f.") %
+		   (shop_index[shop_nr].profit_sell));
   } else {
     keeper->doTell(ch->getName(),
 		   fmt("My profit_buy is %f and my profit_sell is %f.") %
@@ -1069,8 +1094,8 @@ int TShopOwned::giveMoney(sstring arg){
     ch->setMoney(ch->getMoney()+amount);
     ch->saveChar(ROOM_AUTO_RENT);
     
-    shoplog(shop_nr, ch, keeper, "talens", -amount, "receiving");
-    journalize(ch->getName(), "talens", "receiving", amount, 0, 0, 0);
+    shoplog(shop_nr, ch, keeper, "talens", -amount, transactionToString(TX_RECEIVING_TALENS));
+    journalize(ch->getName(), "talens", TX_RECEIVING_TALENS, amount, 0, 0, 0);
     
     buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");

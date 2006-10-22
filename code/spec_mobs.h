@@ -194,7 +194,8 @@ const int SPEC_BRICK_COLLECTOR    =207;
 const int SPEC_CARETAKER          =208;
 const int SPEC_SHIP_CAPTAIN       =209;
 const int SPEC_AGGRO_FOLLOWER     =210;
-const int NUM_MOB_SPECIALS        =210;
+const int SPEC_CENTRAL_BANKER     =211;
+const int NUM_MOB_SPECIALS        =211;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

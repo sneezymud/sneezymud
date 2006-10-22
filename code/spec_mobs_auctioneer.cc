@@ -257,8 +257,8 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   db.query("insert into shopownedauction (shop_nr, ticket, current_bid, max_bid, bidder, buyout, days, seller) values (%i, %i, %i, %i, %i, %i, %i, %i)",
 	   shop_nr, ticket, min_bid, min_bid, ch->getPlayerID(), buyout, days, ch->getPlayerID());
 
-  int fee=(int)shop_index[shop_nr].getProfitBuy(obj, ch) * days;
-  tso.doBuyTransaction(fee, "listing fee", "paying");
+  //  int fee=(int)shop_index[shop_nr].getProfitBuy(obj, ch) * days;
+  //  tso.doBuyTransaction(fee, "listing fee", "paying");
 
   delete obj;
   
@@ -307,7 +307,7 @@ void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
     TObj *obj=il.raw_read_item();
     
     TShopOwned tso(shop_nr, myself, ch);
-    tso.doBuyTransaction(bid, obj->getName(), "buying", obj);
+    tso.doBuyTransaction(bid, obj->getName(), TX_BUYING, obj);
 
     myself->addToMoney(-(bid-fee), GOLD_SHOP);
     db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", (bid-fee), ch->getPlayerID(), corp.getBank());
@@ -393,6 +393,7 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
 
 int auctioneer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
+#if 0
   TDatabase db(DB_SNEEZY);
   int shop_nr;
 
@@ -420,6 +421,6 @@ int auctioneer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
     default:
       break;
   }
-
+#endif
   return true;
 }

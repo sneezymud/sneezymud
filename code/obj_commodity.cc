@@ -154,7 +154,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.doBuyTransaction(price, getName(), "buying", obj2);
+    tso.doBuyTransaction(price, getName(), TX_BUYING, obj2);
 
   } else {
     // this happens with sub zero weight components
@@ -220,7 +220,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     --(*this);
 
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.doSellTransaction(price, obj2->getName(), "selling", obj2);
+    tso.doSellTransaction(price, obj2->getName(), TX_SELLING, obj2);
 
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);

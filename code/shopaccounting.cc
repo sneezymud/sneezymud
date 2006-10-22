@@ -173,12 +173,12 @@ int TShopOwned::COGS_get(const sstring &name)
 }
 
 void TShopOwned::journalize(const sstring &customer, const sstring &name, 
-			    const sstring &action, 
+			    transactionTypeT action, 
 			    int amt, int tax, int corp_cash, int expenses)
 {
   TDatabase db(DB_SNEEZY);
 
-  if(action == "receiving"){
+  if(action == TX_RECEIVING_TALENS){
     // shop giving money to owner
     // we might want to record this as salary or something?
     // perhaps we need a way for owners to differentiate between PIC and salary
@@ -188,13 +188,13 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     journalize_debit(300, customer, name, amt, true);
     // cash
     journalize_credit(100, customer, name, amt);
-  } if(action == "giving"){
+  } if(action == TX_GIVING_TALENS){
     // owner giving money to the shop
     // cash
     journalize_debit(100, customer, name, amt, true);
     // PIC
     journalize_credit(300, customer, name, amt);
-  } else if(action == "selling" || action == "producing"){ 
+  } else if(action == TX_SELLING || action == TX_PRODUCING){ 
     // player selling something, so shop is buying inventory
     // inventory
     journalize_debit(130, customer, name, amt, true);
@@ -203,26 +203,26 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     
     // record COGS
     COGS_add(name, amt);
-  } else if(action == "buying service" || 
-	    action == "buying" ||
-	    action == "recycling"){
+  } else if(action == TX_BUYING_SERVICE || 
+	    action == TX_BUYING ||
+	    action == TX_RECYCLING){
     // first the easy part
     // cash
     journalize_debit(100, customer, name, amt, true);
     // sales
-    if(action == "recycling")
+    if(action == TX_RECYCLING)
       journalize_credit(510, customer, name, amt);
     else
       journalize_credit(500, customer, name, amt);
 
     int COGS=0;
 
-    if(action == "buying service"){
+    if(action == TX_BUYING_SERVICE){
       // expenses
       journalize_debit(630, customer, name, expenses);
       // cash
       journalize_credit(100, customer, name, expenses);
-    } else if(action == "buying" || action == "recycling"){
+    } else if(action == TX_BUYING || action == TX_RECYCLING){
       // now we have to calculate COGS for this item
       // (COGS = cost of goods sold)
       COGS=COGS_get(name);

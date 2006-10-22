@@ -328,7 +328,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
 
     TShopOwned tso(find_shop_nr(me->number), 
 		   dynamic_cast<TMonster *>(me), ch);
-    tso.doBuyTransaction(cost, "sharpening", "buying service");
+    tso.doBuyTransaction(cost, "sharpening", TX_BUYING_SERVICE);
 
     job->cost = cost;
     job->char_name = mud_str_dup(ch->getName());
@@ -1641,13 +1641,13 @@ sstring TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *c
 void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doBuyTransaction(cost, getName(), "buying", this);
+  tso.doBuyTransaction(cost, getName(), TX_BUYING, this);
 }
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doSellTransaction(cost, getName(), "selling", this);
+  tso.doSellTransaction(cost, getName(), TX_SELLING, this);
 }
 
 bool TBaseWeapon::isPoisoned() const

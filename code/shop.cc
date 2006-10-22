@@ -1969,7 +1969,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	int val=(int)(obj->getValue() * 0.25);
 
 	TShopOwned tso(shop_nr, myself, myself);
-	tso.doBuyTransaction(val, obj->getName(), "recycling");
+	tso.doBuyTransaction(val, obj->getName(), TX_RECYCLING);
 
 	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
 
@@ -2039,7 +2039,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       *myself += *o;
 
       // money goes to sba
-      tso.doSellTransaction(cost, o->getName(), "producing", o);
+      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING, o);
       shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
       sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % sba_nr);
     }

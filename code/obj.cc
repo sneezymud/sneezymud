@@ -508,13 +508,13 @@ double TObj::objLevel() const
 void TObj::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doBuyTransaction(cost, getName(), "buying", this);
+  tso.doBuyTransaction(cost, getName(), TX_BUYING, this);
 }
 
 void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doSellTransaction(cost, getName(), "selling", this);
+  tso.doSellTransaction(cost, getName(), TX_SELLING, this);
 }
 
 void TObj::peeOnMe(const TBeing *ch)
