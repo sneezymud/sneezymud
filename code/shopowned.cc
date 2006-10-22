@@ -277,6 +277,9 @@ void TShopOwned::setReserve(sstring arg)
   db.query("update shopowned set reserve_min=%i, reserve_max=%i where shop_nr=%i", min, max, shop_nr);
 
   keeper->doTell(ch->getName(), fmt("Ok, the minimum reserve is now %i and the maximum reserve is %i.") % min % max);
+
+  shoplog(shop_nr, ch, keeper, fmt("%i-%i") % min % max, 0, "set reserve");
+
 }
 
 int TShopOwned::getMinReserve()
@@ -413,6 +416,8 @@ void TShopOwned::setQuality(sstring arg)
   db.query("update shopownedrepair set quality=%f where shop_nr=%i", f, shop_nr);
 
   keeper->doTell(ch->getName(), fmt("Ok, the quality percentage has been set to %f.") % f);
+
+  shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set quality");
 }
 
 
@@ -436,6 +441,9 @@ void TShopOwned::setSpeed(sstring arg)
   db.query("update shopownedrepair set speed=%f where shop_nr=%i", f, shop_nr);
 
   keeper->doTell(ch->getName(), fmt("Ok, the speed modifier has been set to %f.") % f);
+
+  shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set speed");
+
 }
 
 
@@ -495,6 +503,8 @@ void TShopOwned::setDividend(sstring arg)
   db.query("update shopowned set dividend=%f where shop_nr=%i", f, shop_nr);
 
   keeper->doTell(ch->getName(), fmt("Ok, the dividend percentage has been set to %f.") % f);
+
+  shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set dividend");
 }
 
 double TShopOwned::getDividend()
@@ -700,6 +710,7 @@ int TShopOwned::setRates(sstring arg)
       db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
       db.query("delete from shopownedplayer where shop_nr=%i", shop_nr);
       keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
+      shoplog(shop_nr, ch, keeper, "all", 0, "clear setrates");
       return TRUE;
     } else if(buf == "player"){
       arg = one_argument(arg, buf);
@@ -708,6 +719,7 @@ int TShopOwned::setRates(sstring arg)
 	       shop_nr, buf.c_str());
       
       keeper->doTell(ch->getName(), "Done.");
+      shoplog(shop_nr, ch, keeper, buf, 0, "clear setrates");
       return TRUE;
     } else if(buf == "match"){
       arg = one_argument(arg, buf);
@@ -716,6 +728,8 @@ int TShopOwned::setRates(sstring arg)
 	       shop_nr, buf.c_str());
       
       keeper->doTell(ch->getName(), "Done.");
+      shoplog(shop_nr, ch, keeper, fmt("match %s") % buf, 0, "clear setrates");
+  
       return TRUE;
     } else {
       // find item in inventory matching keywords in arg
@@ -733,6 +747,9 @@ int TShopOwned::setRates(sstring arg)
 	       shop_nr, o->objVnum());
       
       keeper->doTell(ch->getName(), "Done.");
+      shoplog(shop_nr, ch, keeper, fmt("item %s") % 
+	      o->getName(), 0, "clear setrates");
+
       return TRUE;
     }
   }
@@ -815,6 +832,11 @@ int TShopOwned::setRates(sstring arg)
 		   fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i.") % 
 		   shop_index[shop_nr].profit_buy %
 		   shop_index[shop_nr].profit_sell % max_num);
+
+    shoplog(shop_nr, ch, keeper, 
+	    fmt("default %f %f %i") % shop_index[shop_nr].profit_buy %
+	    shop_index[shop_nr].profit_sell % max_num, 0, "set setrates");
+
   } else if(buf == "match"){ /////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
@@ -830,6 +852,10 @@ int TShopOwned::setRates(sstring arg)
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
+
+    shoplog(shop_nr, ch, keeper, fmt("match %s, %f %f %i") % 
+	    buf % profit_buy % profit_sell % max_num, 0, "set setrates");
+
   } else if(buf == "player"){ ////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
@@ -845,6 +871,9 @@ int TShopOwned::setRates(sstring arg)
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for player %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
+    shoplog(shop_nr, ch, keeper, fmt("player %s, %f %f %i") %
+	    buf % profit_buy % profit_sell % max_num, 0, "set setrates");
+
   } else if(buf == "loanrate"){
     db.query("select 1 from shopownedloanrate where shop_nr=%i", shop_nr);
 
@@ -857,6 +886,9 @@ int TShopOwned::setRates(sstring arg)
 
     keeper->doTell(ch->getName(), 
 		   fmt("Ok, my loanrate X value is now %f, my Y value is now %f and my max term is %i.") % profit_buy % profit_sell % max_num);
+    shoplog(shop_nr, ch, keeper, fmt("loanrate %f %f %i") %
+	    profit_buy % profit_sell % max_num, 0, "set setrates");
+  
   } else if(buf == "repair"){
     db.query("select 1 from shopownedrepair where shop_nr=%i", shop_nr);
 
@@ -869,6 +901,8 @@ int TShopOwned::setRates(sstring arg)
 
     keeper->doTell(ch->getName(), 
 		   fmt("Ok, my quality percentage is now %f and my speed modifier is now %f.") % profit_buy % profit_sell);
+
+    shoplog(shop_nr, ch, keeper, fmt("repair %f %f") % profit_buy % profit_sell, 0, "set setrates");
 
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
@@ -894,6 +928,10 @@ int TShopOwned::setRates(sstring arg)
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is %i, all for %s.") %
 		   profit_buy % profit_sell % max_num % o->getName());
+    
+    shoplog(shop_nr, ch, keeper, fmt("item %s, %f %f %i") % 
+	    o->getName() % profit_buy % profit_sell % max_num, 
+	    0, "set setrates");
   }
   
   return TRUE;
@@ -965,6 +1003,8 @@ int TShopOwned::buyShop(sstring arg){
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
   shop_index[shop_nr].owned=true;
 
+  shoplog(shop_nr, ch, keeper, fmt("%i") % value, 0, "bought shop");
+
   return TRUE;
 }
   
@@ -1033,6 +1073,8 @@ int TShopOwned::setString(sstring arg)
 	   which.c_str(), s.c_str(), shop_nr);
 
   keeper->doTell(ch->getName(), "Alright, I changed that response.");
+
+  shoplog(shop_nr, ch, keeper, which, 0, "set sstring");
   
   return TRUE;
 }
@@ -1065,6 +1107,8 @@ int TShopOwned::sellShop(){
   
   keeper->doTell(ch->getName(), "Ok, you no longer own this shop.");
   shop_index[shop_nr].owned=false;
+
+  shoplog(shop_nr, ch, keeper, fmt("%i") % value, 0, "sold shop");
   
   return TRUE;
 }
@@ -1129,6 +1173,9 @@ int TShopOwned::setAccess(sstring arg)
     
     if(convertTo<int>(buf2) != 0)
       db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), convertTo<int>(buf2));
+
+    shoplog(shop_nr, ch, keeper, fmt("%s: %s") % buf % buf2, 0, "set access");
+
   } else {
     if(!buf.empty()){
       db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
