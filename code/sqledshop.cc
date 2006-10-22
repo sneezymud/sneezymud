@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 
   
       
-      db.query("insert into shop (shop_nr,profit_buy,profit_sell,no_such_item1,no_such_item2,do_not_buy,missing_cash1,missing_cash2,message_buy,message_sell,temper1,temper2,keeper,flags,in_room,open1,close1,open2,close2) values (%s,%s,%s,'%s','%s','%s','%s','%s','%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+      db.query("insert into shop (shop_nr,profit_buy,profit_sell,no_such_item1,no_such_item2,do_not_buy,missing_cash1,missing_cash2,message_buy,message_sell,temper1,temper2,keeper,flags,in_room,open1,close1,open2,close2) values (%s,%s,%s,'%s','%s','%s','%s','%s','%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 	       val["shop_nr"].c_str(),val["profit_buy"].c_str(),val["profit_sell"].c_str(),val["no_such_item1"].c_str(),val["no_such_item2"].c_str(),val["do_not_buy"].c_str(),val["missing_cash1"].c_str(),val["missing_cash2"].c_str(),val["message_buy"].c_str(),val["message_sell"].c_str(),val["temper1"].c_str(),val["temper2"].c_str(),val["keeper"].c_str(),val["flags"].c_str(),val["in_room"].c_str(),val["open1"].c_str(),val["close1"].c_str(),val["open2"].c_str(),val["close2"].c_str());
     } else if(val["DATATYPE"]=="shoptype"){
       printf("replacing shoptype %s\n", val["shop_nr"].c_str());
