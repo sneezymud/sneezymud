@@ -2507,6 +2507,9 @@ void TComponent::decayMe()
      (!::number(0,50))){
     setComponentCharges(getComponentCharges()-1);
 
+    if(getComponentCharges() <= 0)
+      obj_flags.decay_time=0;
+
     // don't actually use the decay code, because we now have comp
     // charge merging.  it doesn't make sense to kill the whole comp.
     //    obj_flags.decay_time--;
