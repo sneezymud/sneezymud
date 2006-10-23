@@ -85,6 +85,7 @@ O 0 26855 2 26864       a bedframe stripped of its mattress
 
 * uncomfortable lounge
 O 0 26850 1 26866       a tall candelabrum peaked with elk antlers
+V 1 3 1                 light the candelabrum
 O 0 26899 1 26866       a shattered chandelier
 O 0 26887 1 26866       an emptied wet bar
 O 0 26883 1 26866       an antique table impaled with a dirty cutlass
@@ -110,24 +111,11 @@ O 0 26870 1 26870       a large stone oven
 O 0 26853 1 26870       a kitchen table
 P 1 26866 1 26853       a pumpkin pie with a hole poked into the center
 
-
-
 * guard room
-O 0 26851 2 26865       an oil lamp
+O 0 26851 1 26865       an oil lamp
 V 1 3 1                 light the lamp
 O 0 19019 1 26865       a well-built wooden table
-
-O 0 26856 1 26865       a folding chair
-P 1 26889 4 26856       the corpse of a guard
-
-O 0 26856 1 26865       a folding chair
-P 1 26889 4 26856       the corpse of a guard
-
-O 0 26856 1 26865       a folding chair
-P 1 26889 4 26856       the corpse of a guard
-
-O 0 26856 1 26865       a folding chair
-P 1 26889 4 26856       the corpse of a guard
+O 1 26889 4 26865       the corpse of a guard
 
 * caretaker's room
 O 0 132 1 26868         a window
@@ -142,11 +130,14 @@ O 0 26856 4 26868       a folding chair
 O 0 26851 1 26873       an oil lamp
 V 1 3 1                 light the lamp
 
+* balcony
+O 0 26877 1 26871       a railing
+
 * solarium
 O 0 26864 1 26876       a solarium
 O 0 26850 1 26876       a tall candelabrum peaked with elk antlers
 V 1 3 1                 light the candelabrum
-O 0 26876 2 26876       a plundered snack cart
+O 0 26876 1 26876       a plundered snack cart
 
 * foyers
 O 0 26851 1 26872       an oil lamp
@@ -159,28 +150,36 @@ O 0 26851 1 26877       an oil lamp
 V 1 3 1                 light the lamp
 
 * brotherhood of galek conference room
-O 0 26865 2 26879       a glass chandelier
+O 0 26865 1 26879       a glass chandelier
 V 1 3 1                 light the chandelier
 O 0 26888 1 26879       a white shag rug marked with four black spots
+O 0 19022 1 26879       a huge iron bound treasure chest
+V 1 2 26879             locks with room key
 
 * unaffiliated conference room
 O 0 26850 1 26880       a tall candelabrum peaked with elk antlers
 V 1 3 1                 light the candelabrum
-O 0 26872 3 26880       a delicate mirror wearing a paper pirate hat
-O 0 26873 2 26880       A dirty cutlass sticking from the wall
+O 0 26872 1 26880       a delicate mirror wearing a paper pirate hat
+O 0 26873 1 26880       A dirty cutlass sticking from the wall
 O 0 26868 1 26880       a large round table
+O 0 19022 1 26880       a huge iron bound treasure chest
+V 1 2 26880             locks with room key
 
 * serpent order conference room
 O 0 26850 1 26881       a tall candelabrum peaked with elk antlers
 V 1 3 1                 light the candelabrum
-O 0 26859 2 26881       a serpent statue wearing a paper pirate hat
+O 0 26859 1 26881       a serpent statue wearing a paper pirate hat
 O 0 26868 1 26881       a large round table
+O 0 19022 1 26881       a huge iron bound treasure chest
+V 1 2 26881             locks with room key
 
 * cult of logrus conference room
 O 0 26850 1 26882       a tall candelabrum peaked with elk antlers
 V 1 3 1                 light the candelabrum
-O 0 26875 2 26882       a huge black velvet tapestry
+O 0 26875 1 26882       a huge black velvet tapestry
 O 0 26874 1 26882       an obsidian table
+O 0 19022 1 26882       a huge iron bound treasure chest
+V 1 2 26882             locks with room key
 
 * center of the rose garden
 O 0 26885 1 26885       a gap in a scorched rose bush
@@ -206,7 +205,7 @@ X 0 9  19047           A leather boot [foot-left]
 
 * side road
 M 0 26883 1 26884       a rookie cityguard
-E 1 26896 9999 19       a glazed donut [hold-left]
+E 1 26896 9999 18       a glazed donut [hold-right]
 Y 0 7 5                 5% chance of hard leather
 
 M 0 26884 1 26884       a rookie cityguard
@@ -214,6 +213,7 @@ Y 0 7 5                 5% chance of hard leather
 
 * garden
 M 0 26856 1 26855       a salt encrusted pirate
+Z 0 0 100               basic pirate crew local set
 
 M 0 26851 1 26851       a small pig
 
@@ -221,8 +221,10 @@ M 0 26851 1 26859       a small pig
 
 M 0 26854 2 26854       a gaunt pirate
 E 1 26890 9999 19       a roasted pigeon on a stick [hold-left]
+Z 0 0 100               basic pirate crew local set
 M 0 26854 2 26854       a gaunt pirate
 E 1 26890 9999 19       a roasted pigeon on a stick [hold-left]
+Z 0 0 100               basic pirate crew local set
 
 * bathhouse
 M 0 26862 1 26862       a small pig
@@ -240,9 +242,9 @@ M 0 26862 1 26866       a small pig
 
 * feast hall
 M 0 26863 2 26867       a wildly cheering pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26863 2 26867       a wildly cheering pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26872 1 26867       a servant
 E 1 26892 9999 5        a powdered wig [head]
 M 0 26867 1 26867       a servant
@@ -250,32 +252,31 @@ E 1 26892 9999 5        a powdered wig [head]
 
 * vandalized kitchen
 M 0 26853 1 26870       the cook's mate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26852 1 26870       a pirate cook
 E 1 26895 9999 15       a butcher's saw [hold-left]
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26870 1 26870       the mansion's chef
 
 * caretaker's room
 M 0 26865 1 26868       a gambling pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26869 2 26868       a gambling pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26869 2 26868       a gambling pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26868 1 26868       the caretaker
 E 1 26894 9999 5        a green poker visor [head]
 
 * solarium
 M 0 26876 2 26876       an engorged pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 M 0 26876 2 26876       an engorged pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 
 * balcony
 M 0 26871 1 26871       a drunken pirate
-Z 0 1 100               basic pirate crew local set
-O 0 26877 1 26871       a railing
+Z 0 0 100               basic pirate crew local set
 
 * brotherhood of galek conference room
 M 0 26882 1 26879       a trained monkey
@@ -295,8 +296,7 @@ E 1 19015 9999 5        a paper pirate hat [head]
 
 * center of the rose garden
 M 0 26885 1 26885       a disoriented pirate
-Z 0 1 100               basic pirate crew local set
+Z 0 0 100               basic pirate crew local set
 
 
 S
-
