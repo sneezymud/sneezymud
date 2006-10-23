@@ -5,6 +5,6 @@
 
 roomenter { "";
         checkroom 26884;
-	tovict says, "Steer clear of this here Side Road!";
+	tovict $n says, "Steer clear of this here Side Road!";
 	point south;
 }
