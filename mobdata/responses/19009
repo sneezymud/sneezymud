@@ -1,4 +1,4 @@
-# the quartermaster
+# the quartermaster - 19009
 # quartermaster to the Tequila Sunrise
 # created by Metrohep
 
@@ -72,14 +72,14 @@ buy { "#OBJCOST(13867, 25)# 5 elite-deepsea-fishing-rod";
 
 buy { "#OBJCOST(19081, 25)# 6 hobbit-fingers";
 	checkroom 19009;
-	load 19083;
+	load 19081;
 	give bait %n;
 	toroom $n makes a mark in his ledger.;
 }
 
 buy { "#OBJCOST(19082, 25)# 7 albatross-eyes";
 	checkroom 19009;
-	load 19083;
+	load 19082;
 	give bait %n;
 	toroom $n makes a mark in his ledger.;
 }
