@@ -7,6 +7,9 @@
 
 cd /mud/prod
 
+# Close stdin so that this process can spawn daemons better
+exec 0<&-
+
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 export PATH
 
