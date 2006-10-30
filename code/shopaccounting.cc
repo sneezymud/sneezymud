@@ -36,7 +36,11 @@ TShopJournal::TShopJournal(int shop)
   db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
 
   while(db.fetchRow()){
-    values[db["name"]]=abs(convertTo<int>(db["amt"]));
+    if(db["name"] == "Retained Earnings"){
+      values[db["name"]]=convertTo<int>(db["amt"]);
+    } else {
+      values[db["name"]]=abs(convertTo<int>(db["amt"]));
+    }
   }
   
   shop_nr=shop;
@@ -113,8 +117,14 @@ void TShopJournal::closeTheBooks()
   tso.journalize_credit(300, "Accountant", "Year End Accounting", 
 			getValue("Paid-in Capital"));
   // carryover entry for RE
-  tso.journalize_credit(800, "Accountant", "Year End Accounting", 
-			getRetainedEarnings());
+  // sometimes RE can be negative, so debit if needed
+  if(getRetainedEarnings() >= 0){
+    tso.journalize_credit(800, "Accountant", "Year End Accounting", 
+			  getRetainedEarnings());
+  } else {
+    tso.journalize_debit(800, "Accountant", "Year End Accounting", 
+			  getRetainedEarnings());
+  }
 
   // move old journal into archive
   db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
