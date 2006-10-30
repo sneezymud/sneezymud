@@ -245,8 +245,9 @@ M 0 26863 2 26867       a wildly cheering pirate
 Z 0 0 100               basic pirate crew local set
 M 0 26863 2 26867       a wildly cheering pirate
 Z 0 0 100               basic pirate crew local set
-M 0 26872 1 26867       a servant
+M 0 26872 1 26867       a chambermaid
 E 1 26892 9999 5        a powdered wig [head]
+E 1 26898 9999 4        the robes of a Galekian priest [body]
 M 0 26867 1 26867       a servant
 E 1 26892 9999 5        a powdered wig [head]
 
