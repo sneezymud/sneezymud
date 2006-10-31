@@ -295,6 +295,21 @@ void TShopOwned::setReserve(sstring arg)
 int TShopOwned::getMinReserve()
 {
   TDatabase db(DB_SNEEZY);
+
+  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
+  
+  // works with a central bank, so check reserve requirement
+  if(db.fetchRow()){
+    float reserve=shop_index[convertTo<int>(db["centralbank"])].getProfitBuy(NULL, NULL);
+    
+    // so we want the total of deposits * the reserver
+    db.query("select ((sb.t+sbc.t)*%f) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", reserve, shop_nr, shop_nr);
+
+    db.fetchRow();
+    
+    return convertTo<int>(db["t"]);
+  }
+
   db.query("select reserve_min from shopowned where shop_nr=%i", shop_nr);
 
   if(db.fetchRow())
@@ -306,10 +321,20 @@ int TShopOwned::getMinReserve()
 int TShopOwned::getMaxReserve()
 {
   TDatabase db(DB_SNEEZY);
+
+  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
+
+  // if they are part of a centralbank, then we will take reserve_max
+  // as the reserve ABOVE the required min reserve
+  int centralbank_min=0;
+  if(db.fetchRow()){
+    centralbank_min=getMinReserve();
+  }
+
   db.query("select reserve_max from shopowned where shop_nr=%i", shop_nr);
 
   if(db.fetchRow())
-    return convertTo<int>(db["reserve_max"]);
+    return centralbank_min + convertTo<int>(db["reserve_max"]);
   
   return 0;  
 }
@@ -345,7 +370,6 @@ int TShopOwned::doReserve()
 
     if(amt==0)
       return 0;
-
 
     corp.setMoney(corp.getMoney() - amt);
     corp.corpLog(keeper->getName(), "reserve", -amt);
