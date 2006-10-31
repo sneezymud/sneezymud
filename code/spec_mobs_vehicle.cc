@@ -559,7 +559,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   i=path.findPath(boat->in_room, findRoom(job->room[job->cur]));
 
   if(i==DIR_NONE){
-    vlogf(LOG_BUG, "ship lost");
+    //    vlogf(LOG_BUG, "ship lost");
     return FALSE;
   }
 
