@@ -183,6 +183,11 @@ bool TDatabase::query(const char *query,...)
 
   t.end();
 
+  if(t.getElapsed() > 1.0){
+    vlogf(LOG_DB, fmt("Query took %f seconds.") % t.getElapsed());
+    vlogf(LOG_DB, fmt("%s") % buf);
+  }
+
   // this saves the queries (without args) and the execution time
   // it slows things down pretty significantly though
   if(toggleInfo.isLoaded() && toggleInfo[TOG_DBTIMING]->toggle){
