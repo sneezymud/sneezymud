@@ -6,7 +6,7 @@
 roomenter { "";
         checkroom 26884;
 	tell %n Steer clear of this here Side Road!;
-	tell %n We got a little <k>pirate<1> situation in the old mansion...";
+	tell %n We got a little <k>pirate<1> situation in the old mansion...;
 }
 
 say { "pirate";
@@ -14,9 +14,9 @@ say { "pirate";
 	load 26896;
 	hold donut;
 	point;
-	toroom says, "That's right, a wretched bunch done set up shop south of here.";
-	toroom says, "Now move along or I'll have to shackle you to a tree.";
+	toroom $n says, "That's right, a wretched bunch done set up shop south of here.";
+	toroom $n says, "Now move along or I'll have to shackle you to a tree.";
 	eat donut;
-	toroom says, "For your own safety, of course...";
+	toroom $n says, "For your own safety, of course...";
 
 }
