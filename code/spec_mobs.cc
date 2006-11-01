@@ -4616,8 +4616,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
 
       if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db["weight"]))){
-	buf=fmt("Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)") %
-	  db["name"] % o->shortDescr % o->getWeight() % 
+	buf=fmt("Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %i!  Very nice! (%i talens)") %
+	  db["name"] % o->shortDescr % (int)o->getWeight() % 
 	  (int)(o->getWeight()*100);
 
 	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
@@ -4625,8 +4625,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 	myself->doSay(buf);
 	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
-	buf=fmt("Ok, I tallied your fish, weighing in at %f.  Nice one! (%i talens)") %
-	  o->getWeight() % (int)(o->getWeight()*2);
+	buf=fmt("Ok, I tallied your fish, weighing in at %i.  Nice one! (%i talens)") %
+	  (int)o->getWeight() % (int)(o->getWeight()*2);
 	myself->doSay(buf);
 	ch->addToMoney((int)(o->getWeight()*2), GOLD_COMM);
       }
@@ -4664,8 +4664,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 	db.query("select name, type, weight from fishlargest order by weight desc");
 
 	while(db.fetchRow()){
-	  buf=fmt("%s caught %s weighing in at %f.") %
-	    db["name"] % db["type"] % convertTo<float>(db["weight"]);
+	  buf=fmt("%s caught %s weighing in at %i.") %
+	    db["name"] % db["type"] % (int)(convertTo<float>(db["weight"]));
 	  myself->doSay(buf);
 	}
 
@@ -4677,7 +4677,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 
         while (db.fetchRow()) {
           if (db["name"] == ch->getName()) {
-            buf = fmt("You caught %s weighing in at %f.") % db["type"] % convertTo<float>(db["weight"]);
+            buf = fmt("You caught %s weighing in at %i.") % db["type"] % (int)(convertTo<float>(db["weight"]));
             myself->doSay(buf);
             iPerCount++;
           }
@@ -4693,15 +4693,24 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
         }
 
       } else {
+	sstring weight="0";
+	bool topten=false;
 	if(buf=="topten"){
 	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
+	  topten=true;
 	} else {
 	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf.c_str());
 	}
 	
 	while(db.fetchRow()){
-	  buf=fmt("%s has %f pounds of fish and %i records.") %
-	    db["name"] % convertTo<float>(db["weight"]) %
+	  if(topten){
+	    weight=talenDisplay((int)(convertTo<float>(db["weight"])));
+	  } else {
+	    weight=fmt("%i") % (int)(convertTo<float>(db["weight"]));
+	  }
+
+	  buf=fmt("%s has %s pounds of fish and %i records.") %
+	    db["name"] % weight %
 	    convertTo<int>(db["count"]);
 	  myself->doSay(buf);
 	}      
