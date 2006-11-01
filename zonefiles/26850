@@ -1,6 +1,6 @@
 #26850
 Metrohep/Peel/Syl - Usurped Faction Mansion~
-26899 30 2 0
+26899 30 2 1
 
 *********
 * doors *
@@ -255,7 +255,7 @@ E 1 26892 9999 5        a powdered wig [head]
 M 0 26853 1 26870       the cook's mate
 Z 0 0 100               basic pirate crew local set
 M 0 26852 1 26870       a pirate cook
-E 1 26895 9999 15       a butcher's saw [hold-left]
+E 1 26895 9999 19       a butcher's saw [hold-left]
 Z 0 0 100               basic pirate crew local set
 M 0 26870 1 26870       the mansion's chef
 
@@ -284,15 +284,15 @@ M 0 26882 1 26879       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * unaffiliated conference room
-M 0 26882 1 26880       a trained monkey
+M 0 26886 1 26880       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * serpent order conference room
-M 0 26882 1 26881       a trained monkey
+M 0 26887 1 26881       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * cult of logrus conference room
-M 0 26882 1 26882       a trained monkey
+M 0 26888 1 26882       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * center of the rose garden
