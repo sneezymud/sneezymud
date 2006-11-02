@@ -102,7 +102,7 @@ int TMonster::mobVnum() const
 int number(int from, int to)
 {
   if (to - from + 1) 
-    return ((random() % (to - from + 1)) + from);
+    return ((rand() % (to - from + 1)) + from);
   else
     return (from);
 }
@@ -121,7 +121,7 @@ int dice(int number, int size)
     return (0);
 
   for (r = 1; r <= number; r++) 
-    sum += ((random() % size) + 1);
+    sum += ((rand() % size) + 1);
   
   return (sum);
 }
