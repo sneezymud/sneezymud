@@ -20,7 +20,11 @@ TShopJournal::TShopJournal(int shop, int y)
   }
 
   while(db.fetchRow()){
-    values[db["name"]]=abs(convertTo<int>(db["amt"]));
+    if(db["name"] == "Retained Earnings"){
+      values[db["name"]]=convertTo<int>(db["amt"]);
+    } else {
+      values[db["name"]]=abs(convertTo<int>(db["amt"]));
+    }
   }
 
   shop_nr=shop;
@@ -123,7 +127,7 @@ void TShopJournal::closeTheBooks()
 			  getRetainedEarnings());
   } else {
     tso.journalize_debit(800, "Accountant", "Year End Accounting", 
-			  getRetainedEarnings());
+			  -getRetainedEarnings());
   }
 
   // move old journal into archive
