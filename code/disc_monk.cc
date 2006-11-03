@@ -280,6 +280,9 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
     return FALSE;
   }
 
+  if (caster->noHarmCheck(victim))
+    return FALSE;
+
   percent =  0;
   int bKnown = caster->getSkillValue(SKILL_SPRINGLEAP);
 
