@@ -545,14 +545,14 @@ int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const sstring &tSai
   nRc = checkResponsesReal(tBeing, tThing, tSaid, tCmd);
 
   if (tTask) {
-    act("You resume you're task.",
+    act("You resume your task.",
         FALSE, this, NULL, tThing, TO_CHAR);
 
     task = tTask;
   }
 
   if (tSpell) {
-    act("You resume you're spell.",
+    act("You resume your spell.",
         FALSE, this, NULL, tThing, TO_CHAR);
 
     spelltask = tSpell;
