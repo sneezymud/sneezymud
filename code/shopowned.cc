@@ -1151,12 +1151,14 @@ int TShopOwned::sellShop(){
 
 int TShopOwned::giveMoney(sstring arg){
   sstring buf;
+  TDatabase db(DB_SNEEZY);
 
   if(!hasAccess(SHOPACCESS_GIVE)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return FALSE;
   }
-  
+
+
   arg = one_argument(arg, buf);
   int amount=convertTo<int>(buf);
 
@@ -1165,6 +1167,15 @@ int TShopOwned::giveMoney(sstring arg){
     keeper->doTell(ch->getName(), "Don't be an idiot.");
     return FALSE;
   }  
+
+  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
+
+  if(db.fetchRow()){
+    if((keeper->getMoney() - getMinReserve()) < amount){
+      keeper->doTell(ch->getName(), "I wouldn't have enough cash to cover the central bank reserve requirement.");
+      return FALSE;
+    }
+  }
 
   if(keeper->getMoney()>=amount){
     keeper->setMoney(keeper->getMoney()-amount);
