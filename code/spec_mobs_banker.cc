@@ -269,7 +269,7 @@ int centralBanker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       if(db2.fetchRow()){
 	buf += fmt("<c>%s - %s accounts, %s in deposits.<1>\n\r") % 
 	  db["name"] % db2["c"] %
-	  talenDisplay(convertTo<int>(db["t"]));
+	  talenDisplay(convertTo<int>(db2["t"]));
       }
     }
     ch->desc->page_string(buf);
