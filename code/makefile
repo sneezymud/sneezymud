@@ -83,7 +83,7 @@ CXXFLAGS += -I/usr/local/include
 ###############################################################################
 #                                   LDFLAGS                                   #
 ###############################################################################
-LDFLAGS=-g # enable core debugging
+LDFLAGS =  # empty
 #LDFLAGS +=-L/usr/lib # specify this directory to look in
 # LDFLAGS +=-L/usr/pubsw/lib # specify this directory to look in
 # **** libg++ and libm seem to be equivalent for Gnu 2.7.2 and before
@@ -114,6 +114,8 @@ LDFLAGS +=/usr/lib/libcrypt.a # enable for insight
 endif
 ifdef GPROFF
 LDFLAGS +=-pg #              gprof mapping
+else
+LDFLAGS +=-g # enable core debugging
 endif
 LDFLAGS += -L/usr/local/lib
 #LDFLAGS +=-fhandle-exceptions
