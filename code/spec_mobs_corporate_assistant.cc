@@ -112,7 +112,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 {
   TDatabase db(DB_SNEEZY);
-  int value=0, gold=0, shopcount=0, banktalens=0, bank=4, bankowner=0;
+  int value=0, gold=0, banktalens=0, bank=4, bankowner=0;
   sstring buf;
   TRoom *tr=NULL;
 
@@ -153,7 +153,6 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   gold=convertTo<int>(db["gold"]);
   TCorporation corp(corp_id);
   value=corp.getAssets();
-  shopcount=convertTo<int>(db["shops"]);
 
   // we own the bank, so don't count our money twice
   if(bankowner == corp_id)
@@ -165,10 +164,8 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 	     (fmt("%i") % gold).comify());
   me->doTell(ch->getName(), fmt("Assets:      %12s") % 
 	     (fmt("%i") % value).comify());
-  me->doTell(ch->getName(), fmt("Shops (x1M): %12s") % 
-	     (fmt("%i") % (shopcount*1000000)).comify());
   me->doTell(ch->getName(), fmt("Total value: %12s") %
-	     (fmt("%i") % (banktalens+gold+value+(shopcount * 1000000))).comify());
+	     (fmt("%i") % (banktalens+gold+value)).comify());
 
 
   // officers

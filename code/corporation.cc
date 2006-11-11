@@ -143,7 +143,7 @@ int TCorporation::getAssets()
 vector <corp_list_data> getCorpListingData(void)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0, val=0, gold=0, shopval=0, bankowner=0, bankgold=0;
+  int corp_id=0, val=0, gold=0, bankowner=0, bankgold=0;
   vector <corp_list_data> corp_list;
   corp_list_data corp_list_item;
 
@@ -153,7 +153,6 @@ vector <corp_list_data> getCorpListingData(void)
     corp_id=convertTo<int>(db["corp_id"]);
     gold=convertTo<int>(db["gold"]);
     bankgold=convertTo<int>(db["bankgold"]);
-    shopval=convertTo<int>(db["shopcount"]) * 1000000;
     bankowner=convertTo<int>(db["bankowner"]);
 
     TCorporation corp(corp_id);
@@ -163,13 +162,13 @@ vector <corp_list_data> getCorpListingData(void)
     if(bankowner!=corp_id)
       gold += bankgold;
 
-    val=gold+corp.getAssets()+shopval;
+    val=gold+corp.getAssets();
 
     corp_list_item.rank=val;
     corp_list_item.corp_id=corp_id;
     corp_list_item.name=db["name"];
     corp_list_item.gold=gold;
-    corp_list_item.assets=corp.getAssets()+shopval;
+    corp_list_item.assets=corp.getAssets();
     corp_list.push_back(corp_list_item);
   }
 
