@@ -143,9 +143,10 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
       return;
     }
   }
+
+  me->doTell(ch->getName(), "This is what I know about that corporation:");
   
-  me->doTell(ch->getName(), fmt("%-3i| %s") %
-	     corp_id % db["name"]);
+  ch->sendTo(COLOR_BASIC, fmt("%-3i| <r>%s<1>\n\r") % corp_id % db["name"]);
 
   bank=convertTo<int>(db["bank"]);
   bankowner=convertTo<int>(db["bankowner"]);
@@ -157,14 +158,14 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   // we own the bank, so don't count our money twice
   if(bankowner == corp_id)
     gold -= banktalens;
-  
-  me->doTell(ch->getName(), fmt("Bank Talens: %12s") %
-	     (fmt("%i") % banktalens).comify());
-  me->doTell(ch->getName(), fmt("Talens:      %12s") % 
+
+  ch->sendTo(COLOR_BASIC, fmt("<r>Bank Talens:<1> %12s\n\r") %
+  	     (fmt("%i") % banktalens).comify());
+  ch->sendTo(COLOR_BASIC, fmt("<r>Talens:<1>      %12s\n\r") % 
 	     (fmt("%i") % gold).comify());
-  me->doTell(ch->getName(), fmt("Assets:      %12s") % 
+  ch->sendTo(COLOR_BASIC, fmt("<r>Assets:<1>      %12s\n\r") % 
 	     (fmt("%i") % value).comify());
-  me->doTell(ch->getName(), fmt("Total value: %12s") %
+  ch->sendTo(COLOR_BASIC, fmt("<r>Total value:<1> %12s\n\r") %
 	     (fmt("%i") % (banktalens+gold+value)).comify());
 
 
@@ -174,25 +175,25 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   buf="";
   while(db.fetchRow()){
     buf+=" ";
-    buf+=db["name"];
+    buf+=db["name"].cap();
   }
-  me->doTell(ch->getName(), fmt("Corporate officers are:%s") % buf);
+  ch->sendTo(COLOR_BASIC, fmt("Corporate officers are:<r>%s<1>\n\r") % buf);
 
   // bank
   if((tr=real_roomp(shop_index[bank].in_room))){
-    me->doTell(ch->getName(), "Corporate bank is:");
-    me->doTell(ch->getName(), fmt("%-3i| %s") % bank % tr->getName());
+    ch->sendTo(COLOR_BASIC, "Corporate bank is:\n\r");
+    ch->sendTo(COLOR_BASIC, fmt("%-3i| <r>%s<1>\n\r") % bank % tr->getName());
   }
 
   // shops    
   db.query("select s.shop_nr, s.in_room, so.gold from shop s, shopowned so where s.shop_nr=so.shop_nr and so.corp_id=%i order by so.gold desc", corp_id);
   
-  me->doTell(ch->getName(), "The following shops are owned by this corporation:");
+  ch->sendTo(COLOR_BASIC, "The following shops are owned by this corporation:\n\r");
   
   while(db.fetchRow()){
     if((tr=real_roomp(convertTo<int>(db["in_room"])))){
       gold=convertTo<int>(db["gold"]);
-      me->doTell(ch->getName(), fmt("%-3s| %s with %s talens.") %
+      ch->sendTo(COLOR_BASIC, fmt("%-3s| <r>%s<1> with %s talens.\n\r") %
 		 db["shop_nr"] % tr->getName() % talenDisplay(gold));
     }
   }
