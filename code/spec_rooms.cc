@@ -502,48 +502,59 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
   }
 
-  // 50% chance of death
-
   if (cmd != CMD_ROOM_ENTERED)
    return FALSE;
 
   if (ch->isImmortal())
     return FALSE;
 
+
+  // normal damage is 0 - 25% max hp
+  int dam = ::number(0, ch->hitLimit()/4);
+
+  // 50% chance of extra damage
   if ((ch->getRace() == RACE_DWARF) || (::number(1,100) <= 50)) {
-    act("The whirlpool tears $n limb from limb.", TRUE, ch, 0, 0, TO_ROOM);
-    ch->sendTo("The whirlpool tears you limb from limb.\n\r");
-    ch->rawKill(DAMAGE_WHIRLPOOL);
-    return DELETE_THIS;
+    act("The whirlpool tears $n limb from limb before spitting you out.", 
+	TRUE, ch, 0, 0, TO_ROOM);
+    ch->sendTo("The whirlpool tears you limb from limb before spitting you out.\n\r");
+    
+    // double damage, ie 0-05% max hp
+    dam*=2;
   } else {
     act("$n miraculously manages to swim out of the whirlpool's clutches.", TRUE, ch, 0, 0, TO_ROOM);
     ch->sendTo("Miraculously, you somehow manage to escape the whirlpool's clutches!\n\r");
     ch->sendTo("You desparately swim for the surface with your lungs burning for a breath!\n\r");
-    if (ch->riding) {
-      rc = ch->fallOffMount(ch->riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        return DELETE_THIS;
-      }
-    }
-    while ((t = ch->rider)) {
-      rc = t->fallOffMount(ch, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete t;
-        t = NULL;
-      }
-    }
-
-    --(*ch);
-
-    for (new_room = ::number(12500, 13100);;new_room = ::number(12500, 13100)) {
-      if (!(rp2 = real_roomp(new_room)) || 
-          !(rp2->isWaterSector()))
-        continue;
-      break;
-    }
-    *rp2 += *ch;
-    return TRUE;
   }
+
+  if (ch->riding) {
+    rc = ch->fallOffMount(ch->riding, POSITION_STANDING);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    }
+  }
+  while ((t = ch->rider)) {
+    rc = t->fallOffMount(ch, POSITION_STANDING);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete t;
+      t = NULL;
+    }
+  }
+  
+  --(*ch);
+  
+  for (new_room = ::number(12500, 13100);;new_room = ::number(12500, 13100)) {
+    if (!(rp2 = real_roomp(new_room)) || 
+	!(rp2->isWaterSector()))
+      continue;
+    break;
+  }
+  *rp2 += *ch;
+  
+  // do the damage
+  if (ch->reconcileDamage(ch, dam, DAMAGE_WHIRLPOOL) == -1)
+    return DELETE_THIS;
+  
+  return TRUE;
 }
 
 int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
