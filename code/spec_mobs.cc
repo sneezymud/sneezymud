@@ -6699,6 +6699,26 @@ int caretaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 }
 
 
+int cannonLoader(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
+{
+  if(!((cmd == CMD_SAY || cmd == CMD_SAY2) && ch &&
+       (ch->desc->account->name == "trav" ||
+	ch->desc->account->name == "scout" ||
+	ch->desc->account->name == "laren" ||
+	ch->desc->account->name == "ekeron")))
+    return FALSE;
+  
+  sstring argument=arg;
+
+  if(argument.lower() != "load the cannons!")
+    return FALSE;
+
+  me->doGload("cannon-iron-dragon");
+  
+  return FALSE;
+}
+
+
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
 extern int janitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6985,6 +7005,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "ship captain", shipCaptain},
   {FALSE, "aggro follower", aggroFollower}, // 210
   {FALSE, "central banker", centralBanker},
+  {FALSE, "cannon loader", cannonLoader},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

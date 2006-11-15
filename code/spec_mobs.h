@@ -195,7 +195,8 @@ const int SPEC_CARETAKER          =208;
 const int SPEC_SHIP_CAPTAIN       =209;
 const int SPEC_AGGRO_FOLLOWER     =210;
 const int SPEC_CENTRAL_BANKER     =211;
-const int NUM_MOB_SPECIALS        =211;
+const int SPEC_CANNON_LOADER      =212;
+const int NUM_MOB_SPECIALS        =212;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
