@@ -2432,6 +2432,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case TYPE_KICK:
     case TYPE_MAUL:
     case TYPE_SHOOT:
+    case TYPE_CANNON:
     case TYPE_MAX_HIT:
     case AFFECT_TRANSFORMED_HANDS:
     case AFFECT_TRANSFORMED_ARMS:

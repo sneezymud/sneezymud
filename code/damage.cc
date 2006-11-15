@@ -281,7 +281,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
     if (percent < 0)
       vlogf(LOG_BUG, fmt("Error: %% < 0 in applyDamage() : %s fighting %s.") %  getName() %v->getName());
-    else 
+    else if(dmg_type!=TYPE_CANNON)
       gainExpPerHit(v, percent, dam);
   } else {
     // this == v

@@ -1158,6 +1158,7 @@ int mapSpellnumToFile(spellNumT stt)
     case TYPE_KICK:
     case TYPE_MAUL:
     case TYPE_SHOOT:
+    case TYPE_CANNON:
     case TYPE_MAX_HIT:
     case LAST_ODDBALL_AFFECT:
     case ABSOLUTE_MAX_SKILL:

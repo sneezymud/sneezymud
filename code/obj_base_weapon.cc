@@ -596,6 +596,8 @@ spellNumT getWtype_kluge(weaponT t)
       return TYPE_BEAR_CLAW;
     case WEAPON_TYPE_SHOOT:
       return TYPE_SHOOT;
+    case WEAPON_TYPE_CANNON:
+      return TYPE_CANNON;
     default:
       return TYPE_HIT;
   }
@@ -1379,6 +1381,8 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
   if (dynamic_cast<TArrow *>(this)){
     if(objVnum() == 31864 || objVnum() == 31869)
       damtype = TYPE_SHOOT;
+    else if(objVnum() == 19090)
+      damtype = TYPE_CANNON;
     else
       damtype = DAMAGE_ARROWS;
   } else
@@ -1490,6 +1494,10 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 
         // d *= mdist - range + 1;  // modify for point blank range - bat
 	// worst idea ever - peel
+
+	// cannonball
+	if(damtype == TYPE_CANNON)
+	  d *= 10;
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
 	

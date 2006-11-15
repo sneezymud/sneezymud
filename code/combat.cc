@@ -80,6 +80,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"kick", "kicks", "kicking"},
   {"maul", "mauls", "mauling"},
   {"shoot", "shoots", "shooting"},
+  {"fire", "fires", "firing"},
 };
 
 struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
@@ -118,6 +119,7 @@ struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"BOOT", "BOOTZ", "BOOTIN"},
   {"MAUL", "MAULZ", "MAULING"},
   {"SHOOT", "SHOOTS", "SHOOTING"},
+  {"FIRE", "FIRES", "FIRING"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
@@ -2820,7 +2822,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         }
         break;
     }
-  } else if (wtype == TYPE_SHOOT){
+  } else if (wtype == TYPE_SHOOT || wtype == TYPE_CANNON){
     if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM))
       act("You shoot at $N, but miss.", FALSE, this, 0, v, TO_CHAR);
     if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
@@ -4772,6 +4774,8 @@ spellNumT TGenWeapon::getWtype() const
       return TYPE_BEAR_CLAW;
     case WEAPON_TYPE_SHOOT:
       return TYPE_SHOOT;
+    case WEAPON_TYPE_CANNON:
+      return TYPE_CANNON;
     default:
       return TYPE_HIT;
   }
@@ -5427,6 +5431,7 @@ bool bluntType(spellNumT wtype)
     case TYPE_CLUB:
     case TYPE_WHIP:
     case TYPE_MAUL:
+    case TYPE_CANNON:
       return TRUE;
     default:
       return FALSE;

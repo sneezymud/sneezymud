@@ -427,6 +427,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case TYPE_BEAK:
         sprintf(buf, "Many tiny peck wounds cover %s's dead form.",getName());
         break;
+      case TYPE_CANNON:
+	sprintf(buf, "A hole the size of a <k>cannonball<1> has been punched through %s's corpse's chest.", getName());
+	break;
       case TYPE_SHOOT:
         sprintf(buf, "%s's corpse lies in a pool of blood, riddled with bullet holes.", namebuf);
 	break;
