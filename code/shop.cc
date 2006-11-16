@@ -323,7 +323,6 @@ bool shopData::willBuy(const TObj *item)
 bool shopData::isProducing(const TObj *item)
 {
   int counter, max_prod=0;
-  TObj *o;
 
   if (item->number < 0)
     return FALSE;
@@ -335,17 +334,10 @@ bool shopData::isProducing(const TObj *item)
       continue;
 
     if (producing[counter] == item->number) {
-      if (!(o = read_object(producing[counter], REAL))) {
-        vlogf(LOG_BUG, fmt("Major problems with shopkeeper number %d and item number %d.") %  shop_nr % item->number);
-        return FALSE;
-      }
-      if (o->getName() && item->getName() && !strcmp(o->getName(), item->getName())) {
-        delete o;
-        o = NULL;
+      if(obj_index[producing[counter]].name && item->name && 
+	 !strcmp(obj_index[producing[counter]].name, item->name)){
         return TRUE;
       }
-      delete o;
-      o = NULL;
     }
   }
   return FALSE;
