@@ -333,19 +333,22 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    return FALSE;
 	  }
 
-
-	  buf = fmt("You bait %s with $p.") % pole->shortDescr;
-	  act(buf, FALSE, ch, bait, 0, TO_CHAR);
-
-	  buf = fmt("$n baits %s with $p.") % pole->shortDescr;
-          act(buf, TRUE, ch, bait, 0, TO_ROOM);
+	  if(!ch->isPlayerAction(PLR_BRIEF)){
+	    buf = fmt("You bait %s with $p.") % pole->shortDescr;
+	    act(buf, FALSE, ch, bait, 0, TO_CHAR);
+	    
+	    buf = fmt("$n baits %s with $p.") % pole->shortDescr;
+	    act(buf, TRUE, ch, bait, 0, TO_ROOM);
+	  }
           ch->task->timeLeft--;
           break;
 	case 1:
-          act("You cast your line out.",
-              FALSE, ch, NULL, 0, TO_CHAR);
-	  act("$n casts $s line out.",
-              TRUE, ch, NULL, 0, TO_ROOM);
+	  if(!ch->isPlayerAction(PLR_BRIEF)){
+	    act("You cast your line out.",
+		FALSE, ch, NULL, 0, TO_CHAR);
+	    act("$n casts $s line out.",
+		TRUE, ch, NULL, 0, TO_ROOM);
+	  }
           ch->task->timeLeft--;
           break;
 	case 0:
