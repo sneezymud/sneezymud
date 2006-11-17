@@ -724,6 +724,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_APPLY_HERBS:
       case SKILL_DIVINATION:
       case SKILL_ENCAMP:
+      case SKILL_FISHLORE:
       case SPELL_HEAL_LIGHT_DEIKHAN:
       case SKILL_CHIVALRY:
       case SPELL_ARMOR_DEIKHAN:

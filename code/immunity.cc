@@ -653,6 +653,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_DIVINATION:
     case SKILL_APPLY_HERBS:
     case SKILL_ENCAMP:
+    case SKILL_FISHLORE:
     case SKILL_CHIVALRY:
     case SKILL_RESCUE_DEIKHAN:
     case SKILL_TAUNT:

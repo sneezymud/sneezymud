@@ -333,24 +333,52 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    return FALSE;
 	  }
 
-	  if(!ch->isPlayerAction(PLR_BRIEF)){
-	    buf = fmt("You bait %s with $p.") % pole->shortDescr;
-	    act(buf, FALSE, ch, bait, 0, TO_CHAR);
-	    
-	    buf = fmt("$n baits %s with $p.") % pole->shortDescr;
-	    act(buf, TRUE, ch, bait, 0, TO_ROOM);
-	  }
           ch->task->timeLeft--;
-          break;
+	  
+	  if(ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
+	    // fishlore success
+	    if(!ch->isPlayerAction(PLR_BRIEF)){
+	      buf = fmt("You <c>smoothly<1> bait %s with $p in one fluid motion.") % pole->shortDescr;
+	      act(buf, FALSE, ch, bait, 0, TO_CHAR);
+	      
+	      buf = fmt("$n <c>smoothly<1> baits %s with $p in one fluid motion.") % pole->shortDescr;
+	      act(buf, TRUE, ch, bait, 0, TO_ROOM);
+	    }
+	    // no break here, fall through
+	  } else {
+	    // normal
+	    if(!ch->isPlayerAction(PLR_BRIEF)){
+	      buf = fmt("You bait %s with $p.") % pole->shortDescr;
+	      act(buf, FALSE, ch, bait, 0, TO_CHAR);
+	      
+	      buf = fmt("$n baits %s with $p.") % pole->shortDescr;
+	      act(buf, TRUE, ch, bait, 0, TO_ROOM);
+	    }
+
+	    break;
+	  }
 	case 1:
-	  if(!ch->isPlayerAction(PLR_BRIEF)){
-	    act("You cast your line out.",
-		FALSE, ch, NULL, 0, TO_CHAR);
-	    act("$n casts $s line out.",
-		TRUE, ch, NULL, 0, TO_ROOM);
-	  }
           ch->task->timeLeft--;
-          break;
+
+	  if(ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
+	    // fishlore success
+	    if(!ch->isPlayerAction(PLR_BRIEF)){
+	      act("You spot a <c>ripple in the water<1> and cast your line right at it.",
+		  FALSE, ch, NULL, 0, TO_CHAR);
+	      act("$n casts $s line out right at a <c>ripple in the water<1>.",
+		  TRUE, ch, NULL, 0, TO_ROOM);
+	    }
+	    // no break, fall through
+	  } else {
+	    // normal
+	    if(!ch->isPlayerAction(PLR_BRIEF)){
+	      act("You cast your line out.",
+		  FALSE, ch, NULL, 0, TO_CHAR);
+	      act("$n casts $s line out.",
+		  TRUE, ch, NULL, 0, TO_ROOM);
+	    }
+	    break;
+	  }
 	case 0:
 	  baitchance=(int)(((float)((float)(bait->obj_flags.cost*2)/(float)baitmax))*25);
 	  polechance=(int)(((float)((float)(pole->obj_flags.cost*2)/(float)polemax))*25);
@@ -395,14 +423,11 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    act("$n doesn't catch anything.",
 		TRUE, ch, NULL, 0, TO_ROOM);
 
-            // Don't reveal to the fisherman that there isn't any more fish
-            // in the room.
-            /*
-	    if(rp->getFished()>10){
-	      act("This place seems all fished out.",
+	    if(rp->getFished()>10 && 
+	       ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
+	      act("<c>This place seems all fished out.<1>",
 		  FALSE, ch, NULL, 0, TO_CHAR);
 	    }
-            */
 	  }
 	  ch->stopTask();
           break;
@@ -417,8 +442,13 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
-      ch->sendTo("You have not yet mastered the art of fighting while fishing.\n\r");
-      ch->stopTask();
+      if(ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
+	ch->sendTo(COLOR_BASIC, "You <c>focus your fishlore<1> and maintain your concentration.\n\r");
+	ch->sendTo("You continue fishing while fighting.\n\r");
+      } else {
+	ch->sendTo("You have not yet mastered the art of fighting while fishing.\n\r");
+	ch->stopTask();
+      }
       break;
     default:
       if (cmd < MAX_CMD_LIST)

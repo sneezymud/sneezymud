@@ -1064,6 +1064,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdvAdventuring *) cd)->skDivination;
     case SKILL_ENCAMP:  //                    393
       return &((CDAdvAdventuring *) cd)->skEncamp;
+    case SKILL_FISHLORE:
+      return &((CDAdvAdventuring *) cd)->skFishlore;
 
       
       // adventuring
