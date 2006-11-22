@@ -1,5 +1,91 @@
-#34775
-Magdalena - Outcast Cave~
-34799 25 2 0
+# 34775
+The Outcast's Cave - Magdalena~
+34799 30 2 0
+D 0 34788 0 2            Prisca's Secret
+D 0 34791 2 2
+D 0 34784 0 1            Feanis's Peephole
+D 0 34795 2 1
+O 0 34775 1 34775    Torches
+O 0 34775 1 34776
+O 0 34775 1 34778
+O 0 34775 1 34779
+O 0 34775 1 34780
+O 0 34775 1 34781
+O 0 34775 1 34782
+O 0 34775 1 34783
+O 0 34775 1 34784
+O 0 34775 1 34785
+O 0 34755 1 34786
+O 0 34775 1 34787
+O 0 34775 1 34788
+O 0 34775 1 34789
+O 0 34775 1 34790
+O 0 34775 1 34791
+O 0 34775 6 34792
+O 0 34775 1 34793
+O 0 34775 1 34794
+O 0 34775 1 34796
+O 0 34776 3 34786    3-wick Candle
+O 0 34777 2 34786    Slabs of stone
+O 0 34789 1 34789    Chest of Heavy Granite
+P 1 34788 1 34789         A human skull in a Chest of Heavy Granite
+O 0 34790 1 34790    Ogre bed
+O 0 34791 1 34791    Bed of Hay
+O 0 34792 1 34792    Pipeweed Bush
+O 0 30996 1 34796    Small Table
+P 1 34796 1 30996        Crude stone compass on table
+O 0 15405 1 34784    Rocking Chair
+O 0 15904 1 34793    Stone Couch
+O 0 24419 1 34794    Gnome Bed
+O 0 34798 1 34795    Peephole
+M 0 34775 1 34775   Dorgim
+? 0 12 0 G
+G 1 34778 9999               small whale bladder
+? 0 12 0 G
+G 1 34781 9999              large piranha-skin waterskin
+? 0 12 0 G
+G 1 34782 9999               leopard-skin waterskin
+? 0 12 0 G
+G 1 34784 9999               hairy, wrinkly leather waterskin
+? 0 12 0 G
+G 1 34785 9999               batwing waterskin
+? 0 12 0 G
+G 1 34793 9999              rainbow colored waterskin
+M 0 34777 1 34782   Gnewell
+? 0 5 0 G
+G 1 34786 9999                mystifying gem
+M 0 34779 1 34790   Zombie Faerie
+M 0 34781 1 34777   Gnatalie
+? 0 5 0 G
+G 1 34786 9999                   mystifying gem
+M 0 34783 1 34783   Bruthed
+? 0 5 0 E
+E 1 34783 9999 3                  fuzzy beard 
+M 0 34784 1 34784   Feanis
+M 0 34788 1 34788   Prisca
+G 1 34797  9999                 timber key
+M 0 34789 1 34789   Klancy
+M 0 34790 1 34790   Wegort
+? 0 5 0 E
+E 1 34779 9999 5                 faerie face mask
+? 0 3 0 E
+E 1 34780 1 14               pixie skin wings
+M 0 34791 1 34791   Primula
+? 0 5 0 E
+E 1 34795 9999 6                 stretched faerie skin pants
+M 0 34792 1 34792   Jane
+? 0 10 0 G
+G 1 34787 9999                      boho bag
+M 0 34794 1 34794   Gnara
+? 0 5 0 E
+E 1 34794 9999 3                    feathered scarf
+M 0 34796 1 34796   Baulder
 S
+
+
+
+	
+
+
+
 
