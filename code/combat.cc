@@ -3938,7 +3938,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
 	act("Lightning fast, $n shifts $s balance and launches another strike.", 
 	    FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
-	act("Lighting fast, $n shifts $s balance and launches another strike.", 
+	act("Lightning fast, $n shifts $s balance and launches another strike.", 
 	    FALSE, this, 0, vict, TO_NOTVICT);
 	
 	*f += 1; // one extra attack
