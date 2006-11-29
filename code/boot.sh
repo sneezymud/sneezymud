@@ -21,6 +21,9 @@ case $USER in
   dash)
     PORT=6996
     ;;
+  garthagk)
+    PORT=6903
+    ;;
 
 esac
 
