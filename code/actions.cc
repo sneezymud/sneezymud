@@ -967,9 +967,11 @@ int TBeing::doBite(const sstring &arg)
     reconcileDamage(b, 0, DAMAGE_DRAIN);
     
     if((((b->hitLimit() < hitLimit()) && 
-	(GetMaxLevel()>b->GetMaxLevel()+10)) &&
-	hits(b, attackRound(b) - b->defendRound(this))) ||
-       isImmortal()){
+	 ((GetMaxLevel()>b->GetMaxLevel()+10) ||
+	  ((GetMaxLevel()>b->GetMaxLevel()) &&
+	   b->isDumbAnimal() && GetMaxLevel()<=10)) &&
+	 hits(b, attackRound(b) - b->defendRound(this))) ||
+	isImmortal())){
       act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!",
 	  FALSE, this, NULL, b, TO_CHAR);
       act("$n sinks $s fangs deep into $N's neck and sucks $S <r>blood<1>!",
