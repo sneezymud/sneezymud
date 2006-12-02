@@ -901,7 +901,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	    continue;
 	  }
 	} else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
-		  !::number(0,4)){
+		  !::number(0,40)){
 	  act("Exposure to sunlight makes your skin itch.",
 	      FALSE, tmp_ch, NULL, NULL, TO_CHAR);
 	}
