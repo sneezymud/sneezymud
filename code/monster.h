@@ -487,7 +487,7 @@ class TMonster : public TBeing {
     bool checkResponsesPossible(cmdTypeT, const sstring &, TBeing *);
     int  checkResponses(TBeing*, TThing *, const sstring &, cmdTypeT);
     int  checkResponsesReal(TBeing*, TThing *, const sstring &, cmdTypeT);
-    resp *readCommand(FILE *fp);
+    resp *readCommand(istringstream &);
     void createWealth();
     int dynamicComponentLoader(spellNumT, int);
     void thiefLootLoader();

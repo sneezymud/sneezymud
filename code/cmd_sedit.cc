@@ -576,7 +576,7 @@ void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent)
 {
   FILE *tFile;
   char  tValue[256];
-  resp *respIndex = NULL;
+  //  resp *respIndex = NULL;
 
   if (seditCanModify(ch, tMonster) != 1) {
     ch->sendTo("I'm sorry.  This mob is active so it is forbidden for you to do this.\n\r");
@@ -604,6 +604,7 @@ void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent)
 
     tMonster->resps = new Responses();
 
+#if 0
     while ((respIndex = tMonster->readCommand(tFile))) {
       if (respIndex->cmd == CMD_RESP_ROOM_ENTER &&
           respIndex->args && *respIndex->args == '\"')
@@ -612,6 +613,7 @@ void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent)
       respIndex->next = tMonster->resps->respList;
       tMonster->resps->respList = respIndex;
     }
+#endif
 
     fclose(tFile);
   }

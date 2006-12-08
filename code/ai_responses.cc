@@ -4,6 +4,7 @@
 #include "obj_potion.h"
 #include "pathfinder.h"
 #include "shop.h"
+#include "database.h"
 
 static char	responseFile[32];
 
@@ -11,30 +12,31 @@ static int specificCode(TMonster *, TBeing *, int, const resp *);
 
 void TMonster::loadResponses(int virt)
 {
-  FILE  *fp;
   resp *tmp = NULL;
+  TDatabase db(DB_SNEEZY);
 
-  sprintf(responseFile, "mobdata/responses/%d", virt);
+  db.query("select response from mobresponses where vnum=%i", virt);
+
   //
   //    Open the response file.
   //
-  if( (fp=fopen( responseFile, "r")) == NULL)
+  if(!db.fetchRow())
     return;  // no responses
 
   mud_assert(resps == NULL, "Mob (%s) already had Responses.", getName());
     
   resps = new Responses();
   mud_assert(resps != NULL, "Mob (%s) failed initing Responses.", getName());
-  
+
   //
   //    Read the response.
   //
-  while ((tmp = readCommand(fp)) != 0) {
+  istringstream is(db["response"]);
+
+  while ((tmp = readCommand(is)) != 0) {
     tmp->next = resps->respList;
     resps->respList = tmp;
   }
-
-  fclose( fp);
 }
 
 // returns RET_STOP_PARSING if no further response parsing should occur
@@ -1131,30 +1133,41 @@ sstring TMonster::parseResponse( TBeing *speaker, const char *sstring)
   return respBuf;
 }
 
-void cleanInputBuffer( FILE *fp)
+
+void cleanInputBuffer(istringstream &is)
 {
   int c;
-  if( !feof( fp)) {
-    while( (c=fgetc( fp)) != 0 && isspace( c));
-    ungetc( c, fp);
+  if(!is.eof()){
+    while( (c=is.get()) != 0 && isspace( c));
+    is.unget();
   }
 }
 
-int readToChar( FILE *fp, char *buf, char chr)
+// chr is always ' ' or ';'
+// buf is empty buffer for result?
+// so - read everything into buf until encountering:
+// end of file, chr, or '}'
+
+// should be able to convert this to sstring and find() etc
+int readToChar(istringstream &is, char *buf, char chr)
 {
   char *ptr = buf;
   int c;
 
   *ptr = 0;
-  if (!feof(fp)) {
-    cleanInputBuffer( fp);
-    while (((c=fgetc( fp)) != EOF) && c != chr && c != '}')
+  if (!is.eof()){
+    cleanInputBuffer(is);
+
+    while (((c=is.get()) != EOF) && c != chr && c != '}')
       *ptr++ = c;
+
     if (c == '}' && ptr != buf) {
-      vlogf(LOG_LOW, fmt("Responses::readToChar(): Missing '%c' in %s on line '%s'") % 
+      vlogf(LOG_LOW, 
+	    fmt("Responses::readToChar(): Missing '%c' in %s on line '%s'") % 
              chr % responseFile % buf);
       return -1;  // return error, notifies for delete of response
     }
+
     if (c == EOF) {
       vlogf(LOG_LOW, fmt("Responses::readToChar(): hit EOF in %s while expecting '%c' on line '%s'") % 
              responseFile % chr % buf);
@@ -1256,29 +1269,30 @@ static void sstringTranslate(char *buf)
   }
 }
 
-resp * TMonster::readCommand( FILE *fp)
+resp * TMonster::readCommand(istringstream &is)
 {
   char		*args, cmdStr[32], buf[1024];
   int		c, i;
   command	*newCmd=0, *prev = NULL;
   resp		*newResp=0;
+  
 
-  cleanInputBuffer( fp);
+  cleanInputBuffer(is);
 
   //
   //  Get the trigger command for the mob to look for.
   //
-  readToChar( fp, cmdStr, ' ');
+  readToChar( is, cmdStr, ' ');
   
   if( *cmdStr == 0)
      return 0;
 
   while (*cmdStr == '#') {
     // ignore this line, skip to next and continue
-    while ((c = fgetc(fp)) != '\n');
+    while ((c = is.get()) != '\n');
 
     // recheck
-    readToChar(fp, cmdStr, ' ');
+    readToChar(is, cmdStr, ' ');
     if (*cmdStr == 0)
       return 0;
   }
@@ -1286,8 +1300,8 @@ resp * TMonster::readCommand( FILE *fp)
   //
   //  Get the { from the file.
   //
-  cleanInputBuffer( fp);
-  if( (c=fgetc( fp)) != '{') {
+  cleanInputBuffer( is);
+  if( (c=is.get()) != '{') {
     vlogf(LOG_LOW, fmt("Responses::readCommand(): Parse error in %s. Error after '%s'. Expected '{' but found '%c'") % 
             responseFile % cmdStr % c);
     return 0;
@@ -1295,7 +1309,7 @@ resp * TMonster::readCommand( FILE *fp)
 
   //  If it's a say command we need to get what to look for.
   // all commands will have some sort of argment sstring
-  readToChar(fp, buf, ';');
+  readToChar(is, buf, ';');
   cleanString(buf);
 
   // this parses trigger arguments for special sstrings, etc
@@ -1330,7 +1344,7 @@ resp * TMonster::readCommand( FILE *fp)
   //  Ok, time to grab the commands.
   //
   prev = NULL;
-  if (readToChar( fp, buf, ';') == -1) {
+  if (readToChar(is, buf, ';') == -1) {
     delete newResp;
     newResp = NULL;
     return 0;
@@ -1338,7 +1352,7 @@ resp * TMonster::readCommand( FILE *fp)
   while( *buf != 0) {
     if (*buf == '#') {
       // skip and proceed
-      if (readToChar( fp, buf, ';') == -1) {
+      if (readToChar(is, buf, ';') == -1) {
         delete newResp;
         newResp = NULL;
         return 0;
@@ -1432,7 +1446,7 @@ resp * TMonster::readCommand( FILE *fp)
     if( prev != 0)
       prev->next = newCmd;
     prev = newCmd;
-    if (readToChar( fp, buf, ';') == -1) {
+    if (readToChar(is, buf, ';') == -1) {
       delete newResp;
       newResp = NULL;
       return 0;
