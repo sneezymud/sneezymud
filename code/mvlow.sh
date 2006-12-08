@@ -21,7 +21,7 @@ cd $PROD_MUD_ROOT/lib/zonefiles
 svn update
 )
 
-echo Updating response and rumor data
+echo Updating rumor data
 (
 cd $PROD_MUD_ROOT/lib/mobdata
 svn update

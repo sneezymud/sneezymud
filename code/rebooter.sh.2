@@ -83,7 +83,7 @@ rotate_files()
 
   for i in obj objextra objaffect \
            shop shopproducing shopmaterial shoptype \
-           room roomexit roomextra itemtype;
+           room roomexit roomextra itemtype mobresponses;
   do 
     echo Copying $i table.
     mysqldump sneezyq $i | mysql sneezy
