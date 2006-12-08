@@ -39,10 +39,9 @@ svn update
 
 # note that we've removed indexes from sneezyq for speed, so pg_restore 
 # will complain about missing constraints
-echo '***** Note that "XXX_pkey does not exist" errors are ok - ignore them.'
 for i in obj objextra objaffect \
          shop shopproducing shopmaterial shoptype \
-         room roomexit roomextra itemtypes;
+         room roomexit roomextra itemtypes mobresponses;
 do 
   echo Copying $i table.
   mysqldump -u sneezy -h db.sneezymud.com sneezybeta $i | mysql -u sneezy -h db.sneezymud.com sneezyq
