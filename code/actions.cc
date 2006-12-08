@@ -969,7 +969,7 @@ int TBeing::doBite(const sstring &arg)
     if((((b->hitLimit() < hitLimit()) && 
 	 ((GetMaxLevel()>b->GetMaxLevel()+10) ||
 	  ((GetMaxLevel()>b->GetMaxLevel()) &&
-	   b->isDumbAnimal() && GetMaxLevel()<=10 &&
+	   b->isDumbAnimal() && b->GetMaxLevel()<=10 &&
 	   (b->getHit() < (int)(b->hitLimit()/4.0)))) &&
 	 hits(b, attackRound(b) - b->defendRound(this))) ||
 	isImmortal())){
