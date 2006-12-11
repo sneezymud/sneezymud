@@ -3484,13 +3484,20 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
               found = TRUE;
           }
         } else {
-          char slopedData[256] = "\0";
+	  sstring slopedData="";
 
           if (door != DIR_UP && door != DIR_DOWN)
             if ((exitdata->condition & EX_SLOPED_UP))
-              strcpy(slopedData, " (ascending)");
+	      slopedData += " (ascending)";
             else if ((exitdata->condition & EX_SLOPED_DOWN))
-              strcpy(slopedData, " (descending)");
+	      slopedData += " (descending)";
+	  
+	  if(rp->isIndoorSector() ||
+	     rp->isRoomFlag(ROOM_INDOORS))
+	    slopedData += " (indoors)";
+	  else
+	    slopedData += " (outside)";
+
 
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
             if (hasColorStrings(NULL, rp->getName(), 2)) {
