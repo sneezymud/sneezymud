@@ -464,6 +464,12 @@ objeditor.cgi:	$(LIBS) objs/objeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@$(CC) -o objeditor.cgi objs/objeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip objeditor.cgi
 
+respeditor.cgi:	$(LIBS) objs/respeditor.cgi.o objs/lowtools.o objs/session.cgi.o
+	@echo \*\*\* Making Final Link: respeditor.cgi
+	@echo \*\*\* Linking against prod libs!
+	@$(CC) -o respeditor.cgi objs/respeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
+	@/usr/bin/strip respeditor.cgi
+
 eqcalc.cgi:	$(LIBS) objs/eqcalc.cgi.o objs/lowtools.o objs/session.cgi.o
 	@echo \*\*\* Making Final Link: eqcalc.cgi
 	@echo \*\*\* Linking against prod libs!
