@@ -5745,6 +5745,25 @@ int stickerBush(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }
 
+int rechargingWand(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TWand *tw;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(!(tw=dynamic_cast<TWand *>(o)))
+    return FALSE;
+
+  if(::number(0,99))
+      return FALSE;
+
+  if(tw->getCurCharges() < tw->getMaxCharges())
+    tw->addToCurCharges(1);
+
+  return TRUE;
+}
+
 
 //MARKER: END OF SPEC PROCS
 
@@ -5837,7 +5856,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Glowing Cutlass", glowCutlass},
   {TRUE, "poison whip", poisonWhip},
   {TRUE, "magic gills", magicGills},
-  {FALSE, "BOGUS", bogusObjProc},      // 20
+  {FALSE, "recharging wand", rechargingWand},      // 20
   {FALSE, "rainbow bridge", rainbowBridge},
   {FALSE, "Hunting Dagger", daggerOfHunting}, 
   {TRUE, "flame weapon", flameWeapon}, 
