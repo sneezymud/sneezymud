@@ -1110,6 +1110,17 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   discNumT discipline;
   classIndT accclass=(classIndT)-1;
 
+  if (cmd == CMD_GENERIC_CREATED && me){
+    if(me->GetMaxLevel() != 60 &&
+       me->GetMaxLevel() != 100){
+      // trainers should be level 60 or level 100
+      // this determines the maximum amount they can train, and
+      // basic trainers go to 60%, second trainers to 100%
+      vlogf(LOG_LOW, fmt("%s: trainer with inappropriate level (%i)") %
+	    me->getName() % me->GetMaxLevel());
+    }
+  }
+
   if (cmd == CMD_GENERIC_PULSE)
     dynamic_cast<TMonster *>(ch)->aiMaintainCalm();
 
