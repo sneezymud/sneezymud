@@ -1513,6 +1513,8 @@ int TPool::thawObject(TBeing *ch, int perc)
 
   updateDesc();
   if(ch){
+    if (equippedBy)
+      *ch += *ch->unequip(eq_pos);
     // if it's in a bag or something, put it in inventory so they can drop it
     --(*this);
     *ch += *this;
