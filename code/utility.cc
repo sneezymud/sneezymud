@@ -1650,6 +1650,9 @@ void TBeing::addToMoney(int money, moneyTypeT type)
   int amount;
   TDatabase db(DB_SNEEZY);
 
+  vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
+	getName() % money);
+
   points.money += money;
  
   // due to the way the stats are set up, don't try to change this 60 to
