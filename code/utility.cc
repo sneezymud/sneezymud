@@ -1650,8 +1650,9 @@ void TBeing::addToMoney(int money, moneyTypeT type)
   int amount;
   TDatabase db(DB_SNEEZY);
 
-  vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
-	getName() % money);
+  if(money && !bootTime)
+    vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
+	  getName() % money);
 
   points.money += money;
  

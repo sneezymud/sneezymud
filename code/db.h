@@ -22,6 +22,7 @@
 // also: SNEEZY_ADMIN
 extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
+extern bool bootTime;
 
 const int MAX_OBJ_AFFECT = 5;
 

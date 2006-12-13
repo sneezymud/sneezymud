@@ -1440,8 +1440,9 @@ int TBeing::getMoney() const
 
 void TBeing::setMoney(int money)
 {
-  vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
-	getName() % (money - points.money));
+  if((money - points.money) && !bootTime)
+    vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
+	  getName() % (money - points.money));
 	
   points.money = money;
 }
