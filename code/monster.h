@@ -483,7 +483,7 @@ class TMonster : public TBeing {
       return (!mob_index[getMobIndex()].getNumber());
     }
     virtual void purgeMe(TBeing *);
-    void loadResponses(int);
+    void loadResponses(int, const sstring & = "");
     bool checkResponsesPossible(cmdTypeT, const sstring &, TBeing *);
     int  checkResponses(TBeing*, TThing *, const sstring &, cmdTypeT);
     int  checkResponsesReal(TBeing*, TThing *, const sstring &, cmdTypeT);

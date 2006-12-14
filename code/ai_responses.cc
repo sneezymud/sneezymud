@@ -10,18 +10,21 @@ static char	responseFile[32];
 
 static int specificCode(TMonster *, TBeing *, int, const resp *);
 
-void TMonster::loadResponses(int virt)
+void TMonster::loadResponses(int virt, const sstring &immortal)
 {
   resp *tmp = NULL;
   TDatabase db(DB_SNEEZY);
 
-  db.query("select response from mobresponses where vnum=%i", virt);
-
-  //
-  //    Open the response file.
-  //
-  if(!db.fetchRow())
-    return;  // no responses
+  if(immortal.empty()){
+    db.query("select response from mobresponses where vnum=%i", virt);
+    if(!db.fetchRow())
+      return;  // no responses
+  } else {
+    db.setDB(DB_IMMORTAL);
+    db.query("select response from mobresponses where vnum=%i and owner='%s'", virt, immortal.c_str());
+    if(!db.fetchRow())
+      return;  // no responses
+  }
 
   mud_assert(resps == NULL, "Mob (%s) already had Responses.", getName());
     

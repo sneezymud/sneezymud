@@ -210,6 +210,9 @@ static void TBeingLoad(TBeing *ch, int vnum)
     return;
   }
 
+  // mod for imm
+  mob->loadResponses(vnum, ch->name);
+
   act(ch->msgVariables(MSG_MEDIT, mob), TRUE, ch, 0, 0, TO_ROOM);
 
   if ((mob->getRace() == RACE_HORSE) || (mob->getRace() == RACE_DRAGON)) {
