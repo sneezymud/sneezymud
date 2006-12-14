@@ -400,10 +400,21 @@ sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
 	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqladdobjs
 
+sqladdresp: $(LIBS) objs/sqladdresp.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqladdresp
+	@$(CC) -o sqladdresp objs/sqladdresp.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqladdresp
+
+
 sqledobj: $(LIBS) objs/sqledobj.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqledobj
 	@$(CC) -o sqledobj objs/sqledobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqledobj
+
+sqledresp: $(LIBS) objs/sqledresp.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledresp
+	@$(CC) -o sqledresp objs/sqledresp.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledresp
 
 sqledimmobj: $(LIBS) objs/sqledimmobj.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqledimmobj
@@ -427,8 +438,8 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld sqladdresp sqledresp
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld sqladdresp sqledresp /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
