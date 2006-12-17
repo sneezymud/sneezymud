@@ -148,7 +148,7 @@ void delResp(Cgicc cgi, int account_id)
     return;
   }
 
-  db.query("delete from mobresponse where vnum=%s and owner='%s'",
+  db.query("delete from mobresponses where vnum=%s and owner='%s'",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str());
 }
@@ -164,13 +164,11 @@ void makeNewResp(Cgicc cgi, int account_id, bool power_load)
     return;
   }
   
-  db_sneezy.query("select response from mobresponses where vnum=%s", (**(cgi.getElement("template"))).c_str());
-  db_sneezy.fetchRow();
 
-  db.query("insert into mobresponses (ownerm vnum, response) values ('%s', %s, '%s')",
+  db.query("insert into mobresponses (owner, vnum, response) values ('%s', %s, '')",
 	   (**(cgi.getElement("owner"))).c_str(),
-	   (**(cgi.getElement("vnum"))).c_str(),
-	   db_sneezy["response"].c_str());
+	   (**(cgi.getElement("vnum"))).c_str());
+
 
 }
 
@@ -203,10 +201,10 @@ void sendShowResp(int account_id, int vnum, bool wizard)
 
   assign_item_info();
 
-  db.query("select owner, vnum, response from mobresonses where vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
+  db.query("select owner, vnum, response from mobresponses where vnum=%i and owner in (%r)", vnum, getPlayerNames(account_id).c_str());
   db.fetchRow();
 
-  cout << "<form method=post action=objeditor.cgi>" << endl;
+  cout << "<form method=post action=respeditor.cgi>" << endl;
   cout << "<table width=100%><tr>";
   cout << "<td align=left><button name=state value=logout type=submit>logout</button></td>";
   cout << "<td align=left><button name=state value=main type=submit>response list</button></td>";
@@ -231,10 +229,8 @@ void sendShowResp(int account_id, int vnum, bool wizard)
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#146;");
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "response" % "response" % buf;
+  cout << fmt("<tr><td>%s</td><td><textarea name='%s' cols=90 rows=30>%s</textarea></td></tr>\n") % "response" % "response" % buf;
 
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
-    mudColorToHTML(db["response"]);
 
 
   cout << "</table>";
@@ -262,7 +258,7 @@ void sendResplist(int account_id){
 
   sstring buildername;
 
-  db.query("select owner, max(vnum)+1 as nvnum from resp where lower(owner) in (%r) group by owner",
+  db.query("select owner, max(vnum)+1 as nvnum from mobresponses where lower(owner) in (%r) group by owner",
 	   getPlayerNames(account_id).c_str());
   
   if(db.fetchRow())
@@ -278,7 +274,6 @@ void sendResplist(int account_id){
   cout << "<form method=post action=respeditor.cgi>" << endl;
   cout << "<button name=state value=newresp type=submit>new resp</button>";
   cout << "vnum <input type=text name=vnum value=" << db["nvnum"] << ">";
-  cout << "template <input type=text name=template value=1>";
   cout << "<input type=hidden name=owner value='" << buildername << "'>";
   cout << "</form>";
   cout << endl;
@@ -288,9 +283,9 @@ void sendResplist(int account_id){
   cout << "<input type=hidden name=state>" << endl;
 
   cout << "<table border=1>";
-  cout << "<tr><td>vnum</td><td>name</td><td>short_desc</td><td>extras</td><td>affects</td></tr>";
+  cout << "<tr><td>vnum</td></tr>";
 
-  db.query("select vnum, name, short_desc from resp o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
+  db.query("select vnum, response from mobresponses where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
   
 
   while(db.fetchRow()){
