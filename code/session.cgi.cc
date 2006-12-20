@@ -38,7 +38,7 @@ void TSession::sendLoginPage(sstring url)
   cout << "<form action=\"" << url << "\" method=post>" << endl;
   cout << "<table>" << endl;
   cout << "<tr><td colspan=2>" << endl;
-  cout << "<img src=\"http://sneezy.saw.net/sneezy_forum_logo.gif\">" << endl;
+  cout << "<img src=\"/sneezy_forum_logo.gif\">" << endl;
   cout << "<tr><td>Account</td>" << endl;
   cout << "<td><input type=text name=account></td></tr>" << endl;
   cout << "<tr><td>Password</td>" << endl;
