@@ -46,8 +46,7 @@ void TSession::sendLoginPage(sstring url)
   }
 
   cout << HTTPHTMLHeader() << endl;
-  //  cout << html() << head() << title("SneezyMUD Web Login") << endl;
-  cout << html() << head() << title(env.getUserAgent()) << endl;
+  cout << html() << head() << title("SneezyMUD Web Login") << endl;
   cout << head() << body() << endl;
 
   cout << "<form action=\"" << url << "\" method=post>" << endl;
