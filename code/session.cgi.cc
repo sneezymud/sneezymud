@@ -31,8 +31,23 @@ bool TSession::hasWizPower(wizPowerT wp)
 
 void TSession::sendLoginPage(sstring url)
 {
+  cgicc::CgiEnvironment env = cgi->getEnvironment();
+
+
+  if((env.getUserAgent().find("MSIE")) != string::npos){
+    cout << HTTPRedirectHeader("http://www.mozilla.com/en-US/firefox/switch.html");
+    cout << endl;
+    cout << html() << head() << title("Broken Browser") << endl;
+    cout << head() << body() << endl;
+    cout << "Microsoft's Internet Explorer does not conform to web standards.  Please use a proper browser.<p><hr><p>" << endl;
+    cout << body() << endl;
+    cout << html() << endl;
+    return;
+  }
+
   cout << HTTPHTMLHeader() << endl;
-  cout << html() << head() << title("SneezyMUD Web Login") << endl;
+  //  cout << html() << head() << title("SneezyMUD Web Login") << endl;
+  cout << html() << head() << title(env.getUserAgent()) << endl;
   cout << head() << body() << endl;
 
   cout << "<form action=\"" << url << "\" method=post>" << endl;
