@@ -495,12 +495,12 @@ roomeditor.cgi:	$(LIBS) objs/roomeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 
 
 # make all cgi program
-cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi eqcalc.cgi
-	@/bin/cp -f shopinfo.cgi /mud/web
-	@/bin/cp -f mudmail.cgi /mud/web
-	@/bin/cp -f objeditor.cgi /mud/web
-	@/bin/cp -f eqcalc.cgi /mud/web
-	@/bin/cp -f roomeditor.cgi /mud/web
+cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi eqcalc.cgi respeditor.cgi
+# 	@/bin/cp -f shopinfo.cgi /mud/web
+# 	@/bin/cp -f mudmail.cgi /mud/web
+# 	@/bin/cp -f objeditor.cgi /mud/web
+# 	@/bin/cp -f eqcalc.cgi /mud/web
+# 	@/bin/cp -f roomeditor.cgi /mud/web
 	@echo Finished making cgi programs
 
 
@@ -528,165 +528,6 @@ $(OBJDIR)%.o : %.cc
 
 # DO NOT DELETE
 
-objs/actions.accounting_convert.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
-objs/actions.accounting_convert.o: /usr/include/features.h
-objs/actions.accounting_convert.o: /usr/include/sys/cdefs.h
-objs/actions.accounting_convert.o: /usr/include/gnu/stubs.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstddef
-objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
-objs/actions.accounting_convert.o: /usr/include/stdio.h
-objs/actions.accounting_convert.o: /usr/include/bits/types.h
-objs/actions.accounting_convert.o: /usr/include/bits/wordsize.h
-objs/actions.accounting_convert.o: /usr/include/bits/typesizes.h
-objs/actions.accounting_convert.o: /usr/include/libio.h
-objs/actions.accounting_convert.o: /usr/include/_G_config.h
-objs/actions.accounting_convert.o: /usr/include/wchar.h
-objs/actions.accounting_convert.o: /usr/include/bits/wchar.h
-objs/actions.accounting_convert.o: /usr/include/gconv.h
-objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
-objs/actions.accounting_convert.o: /usr/include/bits/stdio_lim.h
-objs/actions.accounting_convert.o: /usr/include/bits/sys_errlist.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstdlib
-objs/actions.accounting_convert.o: /usr/include/stdlib.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ctime
-objs/actions.accounting_convert.o: /usr/include/time.h
-objs/actions.accounting_convert.o: /usr/include/bits/time.h
-objs/actions.accounting_convert.o: /usr/include/sys/types.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cctype
-objs/actions.accounting_convert.o: /usr/include/ctype.h /usr/include/endian.h
-objs/actions.accounting_convert.o: /usr/include/bits/endian.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cassert
-objs/actions.accounting_convert.o: /usr/include/assert.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cstring
-objs/actions.accounting_convert.o: /usr/include/string.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cmath
-objs/actions.accounting_convert.o: /usr/include/math.h
-objs/actions.accounting_convert.o: /usr/include/bits/huge_val.h
-objs/actions.accounting_convert.o: /usr/include/bits/mathdef.h
-objs/actions.accounting_convert.o: /usr/include/bits/mathcalls.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/cmath.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cerrno
-objs/actions.accounting_convert.o: /usr/include/errno.h
-objs/actions.accounting_convert.o: /usr/include/bits/errno.h
-objs/actions.accounting_convert.o: /usr/include/linux/errno.h
-objs/actions.accounting_convert.o: /usr/include/asm/errno.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/string
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stringfwd.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/char_traits.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/fpos.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
-objs/actions.accounting_convert.o: /usr/include/pthread.h
-objs/actions.accounting_convert.o: /usr/include/sched.h
-objs/actions.accounting_convert.o: /usr/include/bits/sched.h
-objs/actions.accounting_convert.o: /usr/include/signal.h
-objs/actions.accounting_convert.o: /usr/include/bits/sigset.h
-objs/actions.accounting_convert.o: /usr/include/bits/pthreadtypes.h
-objs/actions.accounting_convert.o: /usr/include/bits/initspin.h
-objs/actions.accounting_convert.o: /usr/include/bits/sigthread.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cwchar
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/memory
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/climits
-objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
-objs/actions.accounting_convert.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
-objs/actions.accounting_convert.o: /usr/include/limits.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/new
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/exception
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/iosfwd
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/clocale
-objs/actions.accounting_convert.o: /usr/include/locale.h
-objs/actions.accounting_convert.o: /usr/include/bits/locale.h
-objs/actions.accounting_convert.o: /usr/include/langinfo.h
-objs/actions.accounting_convert.o: /usr/include/nl_types.h
-objs/actions.accounting_convert.o: /usr/include/iconv.h
-objs/actions.accounting_convert.o: /usr/include/libintl.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/functexcept.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/exception_defines.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_pair.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/type_traits.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/concept_check.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_threads.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_construct.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_function.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_string.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/algorithm
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_algo.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_heap.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/vector
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_vector.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/vector.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/map
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_tree.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_map.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/list
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/stl_list.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/list.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/iostream
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ostream
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/ios
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/localefwd.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/ios_base.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_classes.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/streambuf
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_ios.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_facets.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/cwctype
-objs/actions.accounting_convert.o: /usr/include/wctype.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/codecvt.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/ostream.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/locale
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/limits
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/typeinfo
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/istream
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/istream.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/sstream
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/sstream.tcc
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/fstream
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
-objs/actions.accounting_convert.o: /usr/include/c++/3.3.4/bits/fstream.tcc
-objs/actions.accounting_convert.o: sstring.h low.h enum.h spells.h structs.h
-objs/actions.accounting_convert.o: parse.h immunity.h discipline.h spell2.h
-objs/actions.accounting_convert.o: db.h ansi.h cmd_dissect.h client.h
-objs/actions.accounting_convert.o: response.h faction.h comm.h toggle.h
-objs/actions.accounting_convert.o: wiz_powers.h cmd_message.h stats.h limbs.h
-objs/actions.accounting_convert.o: body.h race.h skills.h disease.h trap.h
-objs/actions.accounting_convert.o: task.h weather.h sound.h create.h thing.h
-objs/actions.accounting_convert.o: obj.h spec_objs.h room.h connect.h
-objs/actions.accounting_convert.o: obj_drug.h charfile.h being.h guild.h
-objs/actions.accounting_convert.o: person.h monster.h paths.h account.h
-objs/actions.accounting_convert.o: extern.h handler.h obj_money.h spec_mobs.h
-objs/actions.accounting_convert.o: materials.h colorstring.h format.h
-objs/actions.accounting_convert.o: obj_pool.h obj_base_cup.h obj_plant.h
-objs/actions.accounting_convert.o: obj_expandable_container.h
-objs/actions.accounting_convert.o: obj_open_container.h obj_base_container.h
-objs/actions.accounting_convert.o: disc_sorcery.h liquids.h shop.h
-objs/actions.accounting_convert.o: shopowned.h
 objs/actions.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/actions.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/actions.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -1325,7 +1166,14 @@ objs/ai_responses.o: materials.h colorstring.h format.h combat.h obj_symbol.h
 objs/ai_responses.o: obj_potion.h obj_base_cup.h pathfinder.h
 objs/ai_responses.o: /usr/include/c++/3.3.4/deque
 objs/ai_responses.o: /usr/include/c++/3.3.4/bits/stl_deque.h
-objs/ai_responses.o: /usr/include/c++/3.3.4/bits/deque.tcc shop.h
+objs/ai_responses.o: /usr/include/c++/3.3.4/bits/deque.tcc shop.h database.h
+objs/ai_responses.o: /usr/include/mysql/mysql.h
+objs/ai_responses.o: /usr/include/mysql/mysql_com.h
+objs/ai_responses.o: /usr/include/mysql/mysql_time.h
+objs/ai_responses.o: /usr/include/mysql/mysql_version.h
+objs/ai_responses.o: /usr/include/mysql/typelib.h
+objs/ai_responses.o: /usr/include/mysql/my_list.h
+objs/ai_responses.o: /usr/include/mysql/my_alloc.h
 objs/ai_utility.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/ai_utility.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/ai_utility.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37157,6 +37005,166 @@ objs/repair.o: /usr/include/mysql/mysql_com.h /usr/include/mysql/mysql_time.h
 objs/repair.o: /usr/include/mysql/mysql_version.h
 objs/repair.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/repair.o: /usr/include/mysql/my_alloc.h shopowned.h rent.h
+objs/respeditor.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/respeditor.cgi.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/respeditor.cgi.o: /usr/include/gnu/stubs.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cstddef
+objs/respeditor.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/respeditor.cgi.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/respeditor.cgi.o: /usr/include/bits/wordsize.h
+objs/respeditor.cgi.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+objs/respeditor.cgi.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/respeditor.cgi.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/respeditor.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/respeditor.cgi.o: /usr/include/bits/stdio_lim.h
+objs/respeditor.cgi.o: /usr/include/bits/sys_errlist.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/respeditor.cgi.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/respeditor.cgi.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/respeditor.cgi.o: /usr/include/bits/huge_val.h
+objs/respeditor.cgi.o: /usr/include/bits/mathdef.h
+objs/respeditor.cgi.o: /usr/include/bits/mathcalls.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/respeditor.cgi.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/respeditor.cgi.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/respeditor.cgi.o: /usr/include/pthread.h /usr/include/sched.h
+objs/respeditor.cgi.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/respeditor.cgi.o: /usr/include/bits/sigset.h
+objs/respeditor.cgi.o: /usr/include/bits/pthreadtypes.h
+objs/respeditor.cgi.o: /usr/include/bits/initspin.h
+objs/respeditor.cgi.o: /usr/include/bits/sigthread.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cwchar
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/memory
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/climits
+objs/respeditor.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/respeditor.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/respeditor.cgi.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/exception
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/iosfwd
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/respeditor.cgi.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/respeditor.cgi.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/respeditor.cgi.o: /usr/include/libintl.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/algorithm
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/vector
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/map
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/list
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/iostream
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/ostream
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/ios
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/streambuf
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/locale
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/limits
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/typeinfo
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/istream
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/sstream
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/fstream
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h
+objs/respeditor.cgi.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/respeditor.cgi.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/respeditor.cgi.o: client.h response.h faction.h comm.h toggle.h
+objs/respeditor.cgi.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/respeditor.cgi.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/respeditor.cgi.o: sound.h create.h thing.h obj.h spec_objs.h room.h
+objs/respeditor.cgi.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/respeditor.cgi.o: person.h monster.h paths.h account.h extern.h
+objs/respeditor.cgi.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/respeditor.cgi.o: colorstring.h format.h database.h
+objs/respeditor.cgi.o: /usr/include/mysql/mysql.h
+objs/respeditor.cgi.o: /usr/include/mysql/mysql_com.h
+objs/respeditor.cgi.o: /usr/include/mysql/mysql_time.h
+objs/respeditor.cgi.o: /usr/include/mysql/mysql_version.h
+objs/respeditor.cgi.o: /usr/include/mysql/typelib.h
+objs/respeditor.cgi.o: /usr/include/mysql/my_list.h
+objs/respeditor.cgi.o: /usr/include/mysql/my_alloc.h session.cgi.h
+objs/respeditor.cgi.o: /usr/include/cgicc/Cgicc.h
+objs/respeditor.cgi.o: /usr/include/cgicc/CgiDefs.h
+objs/respeditor.cgi.o: /usr/include/cgicc/FormEntry.h
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/cfloat
+objs/respeditor.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/float.h
+objs/respeditor.cgi.o: /usr/include/cgicc/CgiUtils.h
+objs/respeditor.cgi.o: /usr/include/cgicc/FormFile.h
+objs/respeditor.cgi.o: /usr/include/cgicc/CgiInput.h
+objs/respeditor.cgi.o: /usr/include/cgicc/CgiEnvironment.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPCookie.h
+objs/respeditor.cgi.o: /usr/include/cgicc/MStreamable.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPHTMLHeader.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPContentHeader.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPHeader.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPPlainHeader.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLClasses.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLAtomicElement.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLElement.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLAttributeList.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLAttribute.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTMLDoctype.h
+objs/respeditor.cgi.o: /usr/include/cgicc/HTTPRedirectHeader.h
 objs/response.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/response.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/response.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -47674,6 +47682,136 @@ objs/sqladdobjs.o: /usr/include/mysql/mysql_time.h
 objs/sqladdobjs.o: /usr/include/mysql/mysql_version.h
 objs/sqladdobjs.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/sqladdobjs.o: /usr/include/mysql/my_alloc.h lowtools.h
+objs/sqladdresp.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/sqladdresp.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/sqladdresp.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/sqladdresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/sqladdresp.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/sqladdresp.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/sqladdresp.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/sqladdresp.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/sqladdresp.o: /usr/include/gconv.h
+objs/sqladdresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/sqladdresp.o: /usr/include/bits/stdio_lim.h
+objs/sqladdresp.o: /usr/include/bits/sys_errlist.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/sqladdresp.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/sqladdresp.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/sqladdresp.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/sqladdresp.o: /usr/include/bits/mathcalls.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/sqladdresp.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/sqladdresp.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/sqladdresp.o: /usr/include/pthread.h /usr/include/sched.h
+objs/sqladdresp.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/sqladdresp.o: /usr/include/bits/sigset.h
+objs/sqladdresp.o: /usr/include/bits/pthreadtypes.h
+objs/sqladdresp.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cwchar
+objs/sqladdresp.o: /usr/include/c++/3.3.4/memory
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/climits
+objs/sqladdresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/sqladdresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/sqladdresp.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/sqladdresp.o: /usr/include/c++/3.3.4/exception
+objs/sqladdresp.o: /usr/include/c++/3.3.4/iosfwd
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/sqladdresp.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/sqladdresp.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/sqladdresp.o: /usr/include/libintl.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/algorithm
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/vector
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/map
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/list
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/iostream
+objs/sqladdresp.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/streambuf
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/locale
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/limits
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/typeinfo
+objs/sqladdresp.o: /usr/include/c++/3.3.4/istream
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/sstream
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/fstream
+objs/sqladdresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/sqladdresp.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/sqladdresp.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/sqladdresp.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/sqladdresp.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/sqladdresp.o: task.h weather.h sound.h create.h thing.h obj.h
+objs/sqladdresp.o: spec_objs.h room.h connect.h obj_drug.h charfile.h being.h
+objs/sqladdresp.o: guild.h person.h monster.h paths.h account.h extern.h
+objs/sqladdresp.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/sqladdresp.o: colorstring.h format.h database.h
+objs/sqladdresp.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/sqladdresp.o: /usr/include/mysql/mysql_time.h
+objs/sqladdresp.o: /usr/include/mysql/mysql_version.h
+objs/sqladdresp.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/sqladdresp.o: /usr/include/mysql/my_alloc.h lowtools.h
 objs/sqladdwld.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sqladdwld.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sqladdwld.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -48064,6 +48202,136 @@ objs/sqledobj.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/sqledobj.o: /usr/include/mysql/my_alloc.h lowtools.h
 objs/sqledobj.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
 objs/sqledobj.o: /usr/include/bits/confname.h
+objs/sqledresp.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/sqledresp.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/sqledresp.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/sqledresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/sqledresp.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/sqledresp.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/sqledresp.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/sqledresp.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/sqledresp.o: /usr/include/gconv.h
+objs/sqledresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/sqledresp.o: /usr/include/bits/stdio_lim.h
+objs/sqledresp.o: /usr/include/bits/sys_errlist.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/sqledresp.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/sqledresp.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/sqledresp.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/sqledresp.o: /usr/include/bits/mathcalls.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/sqledresp.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/sqledresp.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/sqledresp.o: /usr/include/pthread.h /usr/include/sched.h
+objs/sqledresp.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/sqledresp.o: /usr/include/bits/sigset.h /usr/include/bits/pthreadtypes.h
+objs/sqledresp.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cwchar /usr/include/c++/3.3.4/memory
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/climits
+objs/sqledresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/sqledresp.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/sqledresp.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/sqledresp.o: /usr/include/c++/3.3.4/exception
+objs/sqledresp.o: /usr/include/c++/3.3.4/iosfwd
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/sqledresp.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/sqledresp.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/sqledresp.o: /usr/include/libintl.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/algorithm
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/vector
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/map
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/list
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/iostream
+objs/sqledresp.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/streambuf
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/locale
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/limits
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/typeinfo
+objs/sqledresp.o: /usr/include/c++/3.3.4/istream
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/sstream
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/fstream
+objs/sqledresp.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/sqledresp.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/sqledresp.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/sqledresp.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/sqledresp.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/sqledresp.o: task.h weather.h sound.h create.h thing.h obj.h spec_objs.h
+objs/sqledresp.o: room.h connect.h obj_drug.h charfile.h being.h guild.h
+objs/sqledresp.o: person.h monster.h paths.h account.h extern.h handler.h
+objs/sqledresp.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
+objs/sqledresp.o: database.h /usr/include/mysql/mysql.h
+objs/sqledresp.o: /usr/include/mysql/mysql_com.h
+objs/sqledresp.o: /usr/include/mysql/mysql_time.h
+objs/sqledresp.o: /usr/include/mysql/mysql_version.h
+objs/sqledresp.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/sqledresp.o: /usr/include/mysql/my_alloc.h lowtools.h
+objs/sqledresp.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/sqledresp.o: /usr/include/bits/confname.h
 objs/sqledshop.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sqledshop.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sqledshop.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
