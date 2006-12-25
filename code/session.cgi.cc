@@ -33,7 +33,6 @@ void TSession::sendLoginPage(sstring url)
 {
   cgicc::CgiEnvironment env = cgi->getEnvironment();
 
-
   if((env.getUserAgent().find("MSIE")) != string::npos){
     cout << HTTPRedirectHeader("http://www.mozilla.com/en-US/firefox/switch.html");
     cout << endl;
@@ -104,7 +103,6 @@ void TSession::sendLoginCheck(Cgicc cgi, sstring url)
     createSession(60*60*24*365);
   }
 
-  
   cout << HTTPRedirectHeader(url).setCookie(getCookie());
   cout << endl;
   cout << html() << head() << title("Login") << endl;
@@ -254,8 +252,6 @@ sstring TSession::generateSessionID()
   int length=16;
   int seed[4];
 
-  //  srandomdev();
-
   seed[0]=time(NULL);
   seed[1]=random();
   seed[2]=getpid();
@@ -268,7 +264,16 @@ sstring TSession::generateSessionID()
     }
   }
 
-  return (char *) MD5(data, length, NULL);
+  sstring md5=(char *)MD5(data, length, NULL);
+  sstring ret="";
+  char buf[16];
+
+  for(unsigned int i=0;i<md5.length();++i){
+    sprintf(buf, "%x", (unsigned char)md5[i]);
+    ret+=buf;
+  }
+
+  return ret;
 }
 
 
