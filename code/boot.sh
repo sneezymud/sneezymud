@@ -24,6 +24,9 @@ case $USER in
   garthagk)
     PORT=6903
     ;;
+  metrohep)
+    PORT=6904
+	;;
 
 esac
 

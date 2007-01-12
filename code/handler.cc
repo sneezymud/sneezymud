@@ -904,6 +904,12 @@ bool TBeing::affectedBySpell(spellNumT skill) const
       return TRUE;
     if(skill==SPELL_PLASMA_MIRROR && hjp->type == AFFECT_DASH_BLESSING)
       return TRUE;
+    if(skill==SPELL_CELERITE && hjp->type == AFFECT_DEIRDRE_BLESSING)
+      return TRUE;
+    if(skill==SPELL_SANCTUARY && hjp->type == AFFECT_GARTHAGK_BLESSING)
+      return TRUE;
+    if(skill==SPELL_TRAIL_SEEK && hjp->type == AFFECT_MERCURY_BLESSING)
+      return TRUE;
   }
   return FALSE;
 }

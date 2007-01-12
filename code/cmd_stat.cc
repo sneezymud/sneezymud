@@ -1866,6 +1866,30 @@ void TBeing::statBeing(TBeing *k)
 	apply_types[aff->location].name % aff->modifier;
       str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
       break;
+      case AFFECT_DEIRDRE_BLESSING:
+	str += "Deirdre's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_GARTHAGK_BLESSING:
+	str += "Garthagk's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_MERCURY_BLESSING:
+	str += "Mercury's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
+      case AFFECT_METROHEP_BLESSING:
+	str += "Metrohep's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
     case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:

@@ -1827,6 +1827,31 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       }
       break;
 
+    case AFFECT_DEIRDRE_BLESSING:
+      if(show){
+	str+=fmt("Affected: Deirdre's Blessing.  Approx. duration : %s\n\r") %
+	  describeDuration(this, aff->duration);
+      }
+      break;
+    case AFFECT_GARTHAGK_BLESSING:
+      if(show){
+	str+=fmt("Affected: Garthagk's Blessing.  Approx. duration : %s\n\r") %
+	  describeDuration(this, aff->duration);
+      }
+      break;
+    case AFFECT_MERCURY_BLESSING:
+      if(show){
+	str+=fmt("Affected: Mercury's Blessing.  Approx. duration : %s\n\r") %
+	  describeDuration(this, aff->duration);
+      }
+      break;
+    case AFFECT_METROHEP_BLESSING:
+      if(show){
+	str+=fmt("Affected: Metrohep's Blessing.  Approx. duration : %s\n\r") %
+	  describeDuration(this, aff->duration);
+      }
+      break;
+	  
       case AFFECT_BITTEN_BY_VAMPIRE:
 	// secret!
 	break;
