@@ -908,7 +908,7 @@ bool TBeing::affectedBySpell(spellNumT skill) const
       return TRUE;
     if(skill==SPELL_SANCTUARY && hjp->type == AFFECT_GARTHAGK_BLESSING)
       return TRUE;
-    if(skill==SPELL_TRAIL_SEEK && hjp->type == AFFECT_MERCURY_BLESSING)
+    if(skill==SPELL_ENLIVEN && hjp->type == AFFECT_MERCURY_BLESSING)
       return TRUE;
   }
   return FALSE;

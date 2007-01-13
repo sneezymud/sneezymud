@@ -55,7 +55,7 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
   blessings[AFFECT_CORAL_BLESSING]=
     ego_imm_blessing("Coral",
 		     AFFECT_CORAL_BLESSING,
-		     APPLY_PER,
+		     APPLY_CON,
 		     "<B>exploration<1>");
   blessings[AFFECT_ANGUS_BLESSING]=
     ego_imm_blessing("Angus",
@@ -92,7 +92,7 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		ego_imm_blessing("Deirdre",
 		AFFECT_DEIRDRE_BLESSING,
 		APPLY_KAR,
-		"<w>the rabbit<1>");
+		"<o>the rabbit<1>");
 	blessings[AFFECT_GARTHAGK_BLESSING]=
 		ego_imm_blessing("Garthagk",
 		AFFECT_GARTHAGK_BLESSING,
@@ -101,12 +101,12 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 	blessings[AFFECT_MERCURY_BLESSING]=
 		ego_imm_blessing("Mercury",
 		AFFECT_MERCURY_BLESSING,
-		APPLY_STR,
-		"<r>the hunter<1>");
+		APPLY_BRA,
+		"<r>resilience<1>");
 	blessings[AFFECT_METROHEP_BLESSING]=
 		ego_imm_blessing("Metrohep",
 		AFFECT_METROHEP_BLESSING,
-		APPLY_CON,
+		APPLY_STR,
 		"<k>the hippo<1>");
 
   return blessings;
@@ -179,14 +179,15 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   } else if(which==AFFECT_GARTHAGK_BLESSING){
     // TBeing::affectedBySpell - sanct
   } else if(which==AFFECT_MERCURY_BLESSING){
-    // TBeing::affectedBySpell - trailseek
+    // TBeing::affectedBySpell - enliven
   } else if(which==AFFECT_METROHEP_BLESSING){
-    aff.type=AFFECT_METROHEP_BLESSING;
-    aff.location=APPLY_IMMUNITY;
-    aff.modifier=IMMUNE_NONMAGIC;
-    aff.modifier2=5;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - ac, like the barkskin fairy
+	aff.type = AFFECT_METROHEP_BLESSING;
+    aff.location = APPLY_ARMOR;
+	aff.modifier = -90;
+	aff.modifier2 = 0;
+    aff.bitvector = 0;
+	v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);		  
  }
 
   affectedData *afp;

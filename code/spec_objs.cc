@@ -5765,9 +5765,180 @@ int rechargingWand(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+
+int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{	
+	if (cmd != CMD_GENERIC_PULSE && cmd != CMD_OBJ_GOTTEN)
+		return FALSE;
+	
+	if (cmd == CMD_GENERIC_PULSE){
+		// if item on ground -> wander
+		// if item in inventory -> jump free
+		// if item equipped -> wiggle
+		// if item in a carried, closed container -> wiggle
+		// if item in open container (carried or in room) -> jump free
+		
+		if (::number(0, 5))
+			return FALSE;
+		
+		sstring msg;
+		dirTypeT use_dir;
+		
+		if (o && o->roomp){
+			// #### on the ground -> wander the object
+
+			// find permissible exits - must be open
+			vector <dirTypeT> possible_exits;
+			for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
+				if (o->roomp->exitDir(use_dir) && !IS_SET(o->roomp->exitDir(use_dir)->condition, EX_CLOSED))
+					possible_exits.push_back(use_dir);
+			}
+			
+			if (!possible_exits.size()){
+				msg = fmt("$n spins around in a circle.");
+				act(msg, FALSE, o, 0, 0, TO_ROOM);
+				return TRUE;
+			}
+			
+			// grab a random exit and move through it
+			use_dir = possible_exits[::number(0, possible_exits.size() - 1)];
+			TRoom *rp2 = real_roomp(o->roomp->exitDir(use_dir)->to_room);
+			
+			// movement out of room
+			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
+				msg = fmt("$n swims %s.") % dirs[use_dir];
+			} else {
+				msg = fmt("$n skitters %s.") % dirs[use_dir];
+			}
+			act(msg, FALSE, o, 0, 0, TO_ROOM);
+			
+			--(*o);
+			*rp2 += *o;
+			
+			// movement into room
+			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
+				msg = fmt("$n swims in from the %s.") % dirs[rev_dir[use_dir]];
+			} else {
+				msg = fmt("$n skitters in from the %s.") % dirs[rev_dir[use_dir]];
+			}
+			act(msg, FALSE, o, 0, 0, TO_ROOM);
+			
+			return TRUE;
+		}
+		
+		TBeing *ch2;
+		
+		if (o && (ch2 = dynamic_cast<TBeing *>(o->equippedBy))){
+			// ########## equipped -> wriggle
+			act("Your $o wriggles around frantically, but cannot break free.", FALSE, ch2, o, 0, TO_CHAR, NULL);
+			return TRUE;
+		}
+		
+		
+		if (o && (ch2 = dynamic_cast<TBeing *>(o->parent))){
+			// ############ in someone's inventory -> jump out
+			
+			if (::number(0, 2)){
+				act("Your $o wriggles around frantically, but cannot escape.", FALSE, ch2, o, 0, TO_CHAR, NULL);
+			} else {
+				act("$p wriggles free of $n and falls to the $g!", FALSE, ch2, o, 0, TO_ROOM, NULL);
+				act("$p wriggles free and falls to the $g!", FALSE, ch2, o, 0, TO_CHAR, NULL);
+				
+				--(*o);
+				*ch2->roomp += *o;
+			}
+			return TRUE;
+		}
+		
+		TBaseContainer *container;
+		TOpenContainer *open_container;
+		
+		if (o && (container = dynamic_cast<TBaseContainer *>(o->parent))){
+			// ######### in a container somewhere
+			
+			if ((ch = dynamic_cast<TBeing *>(container->parent))){
+				// container is on someone
+				
+				if ((open_container = dynamic_cast<TOpenContainer *>(container))){
+					// closable container
+					if (open_container->isClosed() || ::number(0, 1)){
+						// container closed -> just wriggle
+						act("Something is wriggling around in your $o.", FALSE, ch, open_container, 0, TO_CHAR, NULL);
+						return TRUE;
+					} else {
+						// container is open -> jump out
+						msg = fmt("$p leaps from your %s and falls to the $g!") % fname(open_container->name);
+						act(msg, FALSE, ch, o, 0, TO_CHAR, NULL);
+						act("$p wriggles itself free from $n and falls to the $g!", FALSE, ch, o, 0, TO_ROOM, NULL);
+						
+						--(*o);
+						*ch->roomp += *o;
+						return TRUE;
+					}
+				} else {
+					// this means its an always open container? -> jump out
+					if (::number(0, 1)){
+						msg = fmt("$p leaps from your %s and falls to the $g!") % fname(container->name);
+						act(msg, FALSE, ch, o, 0, TO_CHAR, NULL);
+						act("$p wriggles itself free from $n and falls to the $g!", FALSE, ch, o, 0, TO_ROOM, NULL);
+						
+						--(*o);
+						*ch->roomp += *o;
+						return TRUE;
+					} else {
+						act("Something is wriggling around in your $s.", FALSE, ch, container, 0, TO_CHAR, NULL);
+						return TRUE;
+					}
+				}
+			} else if (::number(0, 1)){
+				// container is on ground -> jump out if open
+				if ((open_container = dynamic_cast<TOpenContainer *>(container))){
+					if (!open_container->isClosed()){
+						// container is open -> jump out
+						act("$p wriggles itself free from $n and falls to the $g!", FALSE, open_container, o, 0, TO_ROOM, NULL);
+						--(*o);
+						*open_container->roomp += *o;
+						return TRUE;
+					}
+				} else {
+					// this means its an always open container? -> jump out
+					act("$p wriggles itself free from $n and falls to the $g!", FALSE, container, o, 0, TO_ROOM, NULL);
+					
+					--(*o);
+					*container->roomp += *o;
+					return TRUE;
+				}
+			}
+			
+			return FALSE;
+		}
+		// container parent is not TBeing
+		return FALSE;
+		
+	}
+	
+
+	if (cmd == CMD_OBJ_GOTTEN && ch){
+		if (::number(0, 2))
+			return FALSE;
+		
+		// escape!!!
+		act("$p wriggles free from $n's grasp and falls to the $g!", FALSE, ch, o, 0, TO_ROOM, NULL);
+		act("$p wriggles free of your grasp and falls to the $g!", FALSE, ch, o, 0, TO_CHAR, NULL);
+		
+		--(*o);
+		*ch->roomp += *o;
+		
+		return TRUE;
+	}
+	
+	return FALSE;
+}
+
 //MARKER: END OF SPEC PROCS
 
 
+extern int skittishObject(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int stickerBush(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int ballotBox(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -5986,5 +6157,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Portal", objWornPortal},
   {FALSE, "brick quest scorecard", brickScorecard},
   {FALSE, "EQ Combo Casting", comboEQCast},
+  {FALSE, "Skittish Object", skittishObject}, //150
   {FALSE, "last proc", bogusObjProc}
 };
