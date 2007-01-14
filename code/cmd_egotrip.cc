@@ -181,7 +181,6 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   } else if(which==AFFECT_MERCURY_BLESSING){
     // TBeing::affectedBySpell - enliven
   } else if(which==AFFECT_METROHEP_BLESSING){
-    // TBeing::affectedBySpell - ac, like the barkskin fairy
 	aff.type = AFFECT_METROHEP_BLESSING;
     aff.location = APPLY_ARMOR;
 	aff.modifier = -90;
@@ -206,7 +205,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
       if( (afp->type==AFFECT_IMMORTAL_BLESSING && afp->location != APPLY_IMMUNITY) ||
 	 afp->type==AFFECT_ANGUS_BLESSING ||
 	 afp->type==AFFECT_PEEL_BLESSING ||
-	 afp->type==AFFECT_VASCO_BLESSING ||
+	 (afp->type==AFFECT_VASCO_BLESSING && afp->location != APPLY_NOISE) ||
 	 afp->type==AFFECT_CORAL_BLESSING ||
 	 afp->type==AFFECT_DAMESCENA_BLESSING ||
 	 afp->type==AFFECT_JESUS_BLESSING ||
@@ -215,7 +214,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
          afp->type==AFFECT_DEIRDRE_BLESSING ||
          afp->type==AFFECT_GARTHAGK_BLESSING ||
          afp->type==AFFECT_MERCURY_BLESSING ||
-         afp->type==AFFECT_METROHEP_BLESSING ||
+         (afp->type==AFFECT_METROHEP_BLESSING && afp->location != APPLY_ARMOR) ||
    (afp->type==AFFECT_MAROR_BLESSING && afp->location != APPLY_CRIT_FREQUENCY) ){
 	afp->modifier =(int)((float)afp->modifier * 1.5);
 	

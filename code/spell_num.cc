@@ -2106,8 +2106,16 @@ spellNumT mapFileToSpellnum(int stt)
       return AFFECT_BUMP_BLESSING;
     case 2537:
       return AFFECT_MAROR_BLESSING;
-  case 2538:
-    return AFFECT_DASH_BLESSING;
+    case 2538:
+      return AFFECT_DASH_BLESSING;
+    case 2539:
+      return AFFECT_DEIRDRE_BLESSING;
+    case 2540:
+      return AFFECT_GARTHAGK_BLESSING;
+    case 2541:
+      return AFFECT_MERCURY_BLESSING;
+    case 2542:
+      return AFFECT_METROHEP_BLESSING;
     default:
       break;
   }
