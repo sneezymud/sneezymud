@@ -44,6 +44,9 @@ rotate_files()
     )
   fi
 
+  # Safely nuke follower files as they currently cause reboot loops
+  mv -f ${PROD_DIR}/lib/rent/*/*.fol /tmp/
+
   # Copy new wiznews
   if [ -f "${PROD_LIB_DIR}/txt/wiznews.new" ]
   then
