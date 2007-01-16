@@ -1371,9 +1371,14 @@ procCloseAccountingBooks::procCloseAccountingBooks(const int &p)
 void procCloseAccountingBooks::run(int) const
 {
   // close out the accounting year.
+  TDatabase db(DB_SNEEZY);
   for(unsigned int shop_nr=0;shop_nr<shop_index.size();shop_nr++){
-    TShopJournal tsj(shop_nr, time_info.year-1);
-    tsj.closeTheBooks();
+    // Added this chec:k to prevent queries on the archive table when not necessary - Metrohep
+	db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, time_info.year-1);
+	if (db.fetchRow()){
+      TShopJournal tsj(shop_nr, time_info.year-1);
+      tsj.closeTheBooks();
+	}
   }
 }
 
