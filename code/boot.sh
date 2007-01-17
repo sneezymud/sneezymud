@@ -26,6 +26,9 @@ case $USER in
     ;;
   metrohep)
     PORT=6904
+    ;;
+  coral)
+    PORT=6905
 	;;
 
 esac
