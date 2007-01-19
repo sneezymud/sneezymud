@@ -698,6 +698,7 @@ void TPerson::doTitle(const char *argument)
 
 void TBeing::doQuit()
 {
+  sendTo(fmt("To leave SneezyMUD, please %srent%s at the nearest inn.  To find the nearest inn, type \"goto inn\".\n\r") % red() % norm());
   sendTo(fmt("%sQuitting%s from the game will make you lose %sALL%s equipment and talens.\n\r") %
            red() % norm() % blue() % norm());
   sendTo(fmt("If you are sure you would like to do this, type %squit!%s instead of quit.\n\r") %
