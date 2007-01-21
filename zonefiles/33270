@@ -31,6 +31,20 @@ O 0 185   1 33292 	chest
 O 0 22404 1 33292	chest
 O 0 18695 1 33292 	chest
 
+D 0 33293 4 2		door from shop to faction room
+D 0 33294 5 2
+
+D 0 33294 0 2		secret from faction room to bedroom
+D 0 33295 2 2
+
+D 0 33270 4 2		door from overlords bedroom to hammer and fist
+D 0 33295 5 2
+
+O 0 33294 1 33294		serpent chest in serpent faction room
+O 0 33292 1 33295		bed in overlord bedroom
+
+M 0 33294 1 33294		inkeeper mob in serpent faction room
+
 S
 
 
