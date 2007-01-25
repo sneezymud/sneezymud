@@ -1372,16 +1372,11 @@ void procCloseAccountingBooks::run(int) const
 {
   // close out the accounting year.
   TDatabase db(DB_SNEEZY);
-
-  // if there is data for shops in the current journal table for the 
-  // *previous* year, then that data needs to be closed out
-  db.query("select distinct shop_nr from shoplogjournal where sneezy_year=%i",
-	   time_info.year-1);
-  
-  while(db.fetchRow()){
-    TShopJournal tsj(convertTo<int>(db["shop_nr"]), time_info.year-1);
-    tsj.closeTheBooks();
-  }    
+  db.query("select distinct shop_nr from shoplogjournal where sneezy_year=%i order by shop_nr", time_info.year-1);
+  while (db.fetchRow()){
+      TShopJournal tsj(convertTo<int>(db["shop_nr"]), time_info.year-1);
+      tsj.closeTheBooks();
+  }
 }
 
 

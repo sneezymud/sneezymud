@@ -5797,7 +5797,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			if (!possible_exits.size()){
 				msg = fmt("$n spins around in a circle.");
 				act(msg, FALSE, o, 0, 0, TO_ROOM);
-				return TRUE;
+				return FALSE;
 			}
 			
 			// grab a random exit and move through it
@@ -5823,7 +5823,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			}
 			act(msg, FALSE, o, 0, 0, TO_ROOM);
 			
-			return TRUE;
+			return FALSE;
 		}
 		
 		TBeing *ch2;
@@ -5831,7 +5831,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 		if (o && (ch2 = dynamic_cast<TBeing *>(o->equippedBy))){
 			// ########## equipped -> wriggle
 			act("Your $o wriggles around frantically, but cannot break free.", FALSE, ch2, o, 0, TO_CHAR, NULL);
-			return TRUE;
+			return FALSE;
 		}
 		
 		
@@ -5847,7 +5847,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				--(*o);
 				*ch2->roomp += *o;
 			}
-			return TRUE;
+			return FALSE;
 		}
 		
 		TBaseContainer *container;
@@ -5864,7 +5864,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 					if (open_container->isClosed() || ::number(0, 1)){
 						// container closed -> just wriggle
 						act("Something is wriggling around in your $o.", FALSE, ch, open_container, 0, TO_CHAR, NULL);
-						return TRUE;
+						return FALSE;
 					} else {
 						// container is open -> jump out
 						msg = fmt("$p leaps from your %s and falls to the $g!") % fname(open_container->name);
@@ -5873,7 +5873,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 						
 						--(*o);
 						*ch->roomp += *o;
-						return TRUE;
+						return FALSE;
 					}
 				} else {
 					// this means its an always open container? -> jump out
@@ -5884,10 +5884,10 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 						
 						--(*o);
 						*ch->roomp += *o;
-						return TRUE;
+						return FALSE;
 					} else {
 						act("Something is wriggling around in your $s.", FALSE, ch, container, 0, TO_CHAR, NULL);
-						return TRUE;
+						return FALSE;
 					}
 				}
 			} else if (::number(0, 1)){
@@ -5898,7 +5898,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 						act("$p wriggles itself free from $n and falls to the $g!", FALSE, open_container, o, 0, TO_ROOM, NULL);
 						--(*o);
 						*open_container->roomp += *o;
-						return TRUE;
+						return FALSE;
 					}
 				} else {
 					// this means its an always open container? -> jump out
@@ -5906,7 +5906,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 					
 					--(*o);
 					*container->roomp += *o;
-					return TRUE;
+					return FALSE;
 				}
 			}
 			
@@ -5929,7 +5929,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 		--(*o);
 		*ch->roomp += *o;
 		
-		return TRUE;
+		return FALSE;
 	}
 	
 	return FALSE;

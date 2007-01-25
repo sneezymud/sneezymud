@@ -57,7 +57,7 @@ const char * const CLASSHELP        ="help/classes overview";
 const char * const RACEHELP         ="help/races overview";
 const char * const STATHELP         ="help/characteristics overview";
 
-const char * const MUDADMIN_EMAIL   ="mudadmin@sneezy.saw.net";
+const char * const MUDADMIN_EMAIL   ="mudadmin@sneezymud.com";
 const char * const CODERS_EMAIL     ="coders@sneezy.saw.net";
 
 /* public procedures in db.c */

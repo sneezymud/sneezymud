@@ -5422,12 +5422,23 @@ int Descriptor::sendLogin(const sstring &arg)
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s :\n\r", MUD_NAME_VERS, buf);
+      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s:\n\r", MUD_NAME_VERS, buf);
       fclose(fp);
     }
-    sprintf(buf2 + strlen(buf2), "Celebrating FOURTEEN years of quality mudding (est. 5-1-1992)\n\r\n\r");
+	
+    tm current_date;
+    time_t conv_time;
+    conv_time = time(&conv_time);
+    localtime_r(&conv_time, &current_date);
+    int years_of_service = current_date.tm_year;
+    if ((current_date.tm_mon < 4) || (current_date.tm_mon == 4 && current_date.tm_mday <= 5)){
+      years_of_service -=  93;
+    } else {
+      years_of_service -=  92;
+    }
+    sprintf(buf2 + strlen(buf2), "Celebrating %d years of quality mudding (est. 1 May 1992)\n\r\n\r", years_of_service);
     sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r");
-    sprintf(buf2 + strlen(buf2), "If you need assistance you may email mudadmin@sneezy.saw.net.\n\r\n\r");
+    sprintf(buf2 + strlen(buf2), "If you need assistance you may email %s.\n\r\n\r", MUDADMIN_EMAIL);
     sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
     output.putInQ(buf2);
     return FALSE;
