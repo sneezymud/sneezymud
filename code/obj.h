@@ -383,6 +383,7 @@ enum liqTypeT {
      LIQ_POT_MYSTERY,
      LIQ_MUD,
      LIQ_TEQUILA,
+     LIQ_POT_ENLIVEN,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);

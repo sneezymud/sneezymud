@@ -102,6 +102,7 @@ liqInfoT::liqInfoT()
   liquids[LIQ_POT_CLARITY]           = new liqEntry(-1, -1, 1, true, false, "fizzling", "fizzling potion", 3696);
   liquids[LIQ_POT_BOILING_BLOOD]           = new liqEntry(-1, -1, 1, true, false, "<r>scarlet<1>", "<r>scarlet potion<1>", 3696);
   liquids[LIQ_POT_STUPIDITY]           = new liqEntry(-1, -1, 1, true, false, "transparent", "transparent potion", 3696);
+  liquids[LIQ_POT_ENLIVEN]           = new liqEntry(-1, -1, 1, true, false, "<w>frothy<1> <o>brown<1>", "<w>frothy<1> <o>brown<1> potion", 3696);
   liquids[LIQ_POT_SLUMBER]           = new liqEntry(-1, -1, 1, true, false, "<W>milky white<1>", "<W>milky white potion<1>", 276);
   liquids[LIQ_POT_HEAL2]           = new liqEntry(-1, -1, 1, true, false, "<r>red<1>", "<r>red potion<1>", 1209);
   liquids[LIQ_POT_FEATHERY_DESCENT2]           = new liqEntry(-1, -1, 1, true, false, "<Y>yellow<1>", "<Y>yellow potion<1>", 92);

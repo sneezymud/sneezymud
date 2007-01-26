@@ -2617,6 +2617,9 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	}
       }
       break;
+    case LIQ_POT_ENLIVEN:
+      enliven(ch,vict,level,learn);
+      break;
     default:
       rc=0;
   }
