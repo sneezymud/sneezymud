@@ -264,9 +264,9 @@ O 0 3089 1 2            note & quill
 O 0 3097 1 27         Builder board (Dolgan's Office)
 O 0 31024 1 67        Board (cactus) (Maror's office)
 
-O 0 10550 1 42 	     Balance board (Rixanne's Office)
+*O 0 10550 1 42 	     Balance board (Rixanne's Office)
 
-O 0 23270 1 42 		Factions Board  (Rix)
+*O 0 23270 1 42 		Factions Board  (Rix)
 O 0 23270 1 53 				(Gringar)
 
 O 0 31 1 13        Jacuzzi batopr
