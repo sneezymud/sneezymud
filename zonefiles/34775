@@ -28,10 +28,10 @@ O 0 34775 1 34793
 O 0 34775 1 34794
 O 0 34775 1 34796
 
-O 0 34776 3 34786    3-wick Candle
-O 0 34777 2 34786    Slabs of stone
+O 0 34776 3 34777    3-wick Candle
+O 0 34777 2 34777    Slabs of stone
 O 0 34789 1 34789    Chest of Heavy Granite
-P 1 34788 1 34789         A human skull in a Chest of Heavy Granite
+? P 1 34788 1 34789         A human skull in a Chest of Heavy Granite
 
 O 0 34790 1 34790    Ogre bed
 O 0 34791 1 34791    Bed of Hay
@@ -85,7 +85,7 @@ E 1 34779 9999 5                 faerie face mask
 ? 0 3 0 E
 E 1 34780 1 14               pixie skin wings
 
-M 0 34791 1 34791   Primula
+M 0 34791 9999 34791   Primula
 ? 0 5 0 E
 E 1 34795 9999 6                 stretched faerie skin pants
 

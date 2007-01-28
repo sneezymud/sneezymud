@@ -271,8 +271,8 @@ O 0 23270 1 53 				(Gringar)
 
 O 0 31 1 13        Jacuzzi batopr
 
-O 0 23661 1 4        Kriebly's couch (arena)
-O 0 10123 1 4                  basin (elf)
+*O 0 23661 1 4        Kriebly's couch (arena) gave office to magdalena
+*O 0 10123 1 4                  basin (elf)
 
 O 0 11073 1 20        Marsh Diamond Throne (cloud)
 
@@ -308,7 +308,6 @@ O 0 3089 1 20000           note dispenser
 O 0 3098 1 5 
 
 O 0 3098 1 7 
-O 0 3098 1 4 
 
 O 0 10551 1 8       Enforcement/Reimbursement Board
 O 1 3089 1 8           Note & Quill Dispenser
