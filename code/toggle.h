@@ -486,7 +486,42 @@ const int TOG_HOOK_HAND_L                      = 305;
 
 const int TOG_KILLED_PALADIN                   = 306;
 
-const int MAX_TOG_INDEX       = 307;  // move and change
+
+// February Quest Toggles - Deirdre
+const int TOG_GAVE_CANDY_HEART1                = 307;
+const int TOG_GAVE_CANDY_HEART2                = 308;
+const int TOG_GAVE_CANDY_HEART3                = 309;
+const int TOG_GAVE_CANDY_HEART4                = 310;
+
+const int TOG_GAVE_CHOC_BOX1                   = 311;
+const int TOG_GAVE_CHOC_BOX2                   = 312;
+const int TOG_GAVE_CHOC_BOX3                   = 313;
+const int TOG_GAVE_CHOC_BOX4                   = 314;
+const int TOG_GAVE_CHOC_BOX5                   = 315;
+
+const int TOG_GAVE_TULIP1                      = 316;
+const int TOG_GAVE_TULIP2                      = 317;
+const int TOG_GAVE_TULIP3                      = 318;
+const int TOG_GAVE_TULIP4                      = 319;
+const int TOG_GAVE_TULIP5                      = 320;
+
+const int TOG_GAVE_BALLOON1                    = 321;
+const int TOG_GAVE_BALLOON2                    = 322;
+const int TOG_GAVE_BALLOON3                    = 323;
+const int TOG_GAVE_BALLOON4                    = 324;
+const int TOG_GAVE_BALLOON5                    = 325;
+
+const int TOG_GAVE_TEDDY_BEAR1                 = 326;
+const int TOG_GAVE_TEDDY_BEAR2                 = 327;
+const int TOG_GAVE_TEDDY_BEAR3                 = 328;
+const int TOG_GAVE_TEDDY_BEAR4                 = 329;
+const int TOG_GAVE_TEDDY_BEAR5                 = 330;
+
+const int TOG_GAVE_BOTTLE_PORT1                = 331;
+const int TOG_GAVE_BOTTLE_PORT2                = 332;
+
+
+const int MAX_TOG_INDEX       = 333;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;
