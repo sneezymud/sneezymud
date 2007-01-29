@@ -1,6 +1,123 @@
 #34600
-Pobre - A Smokey Burrow~
-34624 25 2 0
+Pobre - Cockfighting Club~
+34624 30 2 0
+
+* Doors
+
+D 0 34601 2 1        A Security Checkpoint -> Entrance to a Cockfighting Club
+D 0 34624 0 1        Entrance to a Cockfighting Club -> A Security Checkpoint
+D 0 34604 1 2        Spectator's Balcony -> Betting Alcove
+D 0 34620 3 2        Betting Alcove -> Spectator's Balcony
+D 0 34615 3 1        Outside the VIP Room -> The VIP Room
+D 0 34616 1 1        The VIP Room -> Outside the VIP Room
+D 0 34619 3 1        A Small Tidy Office -> Ringside Before a Small Office
+D 0 34614 1 1	    Ringside Before a Small Office -> A Small Tidy Office
+
+* Local Sets
+X 0 19 325	    A training dagger - to be loaded on graffiti artist when his dagger doesn't load
+
+* Props
+*	Upstairs
+O 0 34601 2 34601       a torch on an iron stand
+O 0 34601 2 34624       a torch on an iron stand
+O 0 34606 1 34602	flickering wall torch
+O 0 34606 1 34603	flickering wall torch
+O 0 34606 1 34604	flickering wall torch
+O 0 34606 1 34605	flickering wall torch
+O 0 34606 1 34606	flickering wall torch
+O 0 34606 1 34607	flickering wall torch
+O 0 34606 1 34608	flickering wall torch
+O 0 34606 1 34609	flickering wall torch
+O 0 34606 1 34620	flickering wall torch
+O 0 34600 1 34601       a sturdy wooden stool
+O 0 34602 1 34602       a hole in the balcony down to the ring below
+O 0 34602 1 34603       a hole in the balcony down to the ring below
+O 0 34602 1 34604       a hole in the balcony down to the ring below
+O 0 34602 1 34605       a hole in the balcony down to the ring below
+O 0 34602 1 34606       a hole in the balcony down to the ring below
+O 0 34602 1 34607       a hole in the balcony down to the ring below
+O 0 34602 1 34608       a hole in the balcony down to the ring below
+O 0 34602 1 34609       a hole in the balcony down to the ring below
+O 0 34607 1 34604	a small barred window
+O 0 34608 1 34620	a small barred window
+
+O 0 34620 1 34620       a small iron safe
+P 1 802 2 34620		2 golden potions in safe - load always on reboot
+? 0 50 0 P
+P 1 35 1 34620		500 talens - loads half of the time. 
+
+*	Downstairs
+O 0 34622 1 34610       a window looking into a well-furnished room
+O 0 34610 1 34610       a ring of hay bales
+O 0 34624 1 34610       a large hanging light
+O 0 34601 2 34616       a torch on an iron stand
+O 0 34615 5 34616       a comfortable cherrywood chair
+O 0 34616 1 34616      a thick glass window looking out onto the ring
+O 0 34618 3 34618       a dilapidated wooden bench
+O 0 34611 1 34618       a pile of wood
+O 0 34601 2 34619       a torch on an iron stand
+O 0 34615 1 34619       a comfortable cherrywood chair
+O 0 34619 1 34619       a wooden table
+O 0 34606 1 34611	flickering wall torch
+O 0 34606 1 34612	flickering wall torch
+O 0 34606 1 34613	flickering wall torch
+O 0 34606 1 34618	flickering wall torch
+O 0 34606 1 34614	flickering wall torch
+O 0 34606 1 34617	flickering wall torch
+O 0 34606 1 34615	flickering wall torch
+
+
+
+* Mobs and Eq
+
+* Upstairs
+M 0 34605 1 34601       a tired ogre bouncer
+M 0 34601 2 34602       a compulsive gambler
+M 0 34601 4 34604       a compulsive gambler
+M 0 34602 1 34602       an eager spectator
+M 0 34604 2 34607	a golden treasure boy 
+M 0 34611 2 34607       a graffiti artist
+? 0 2 0 E
+E 1 34605 9999 19         a crude metal shank [hold-left]
+Z 0 0 100		Loads training dagger when shank doesn't load
+M 0 34624 1 34605       a corpulent food vendor
+M 0 34602 2 34605       an eager spectator
+M 0 34609 3 34603       an off-duty city watchman
+M 0 34606 4 34605       a bet taker
+G 1 34621 9999           a mildly worn key
+E 1 34614 9999 3          a bet-takers sign [neck]
+M 0 34610 5 34603       a lady-of-the-evening
+M 0 34601 4 34605       a compulsive gambler
+M 0 34609 1 34606       an off-duty city watchman
+M 0 34602 1 34606	an eager spectator
+M 0 34617 1 34608       a rowdy drunk
+M 0 34601 1 34608       a compulsive gambler
+M 0 34602 2 34624       an eager spectator
+M 0 34612 1 34620       Munch
+
+
+* downstairs
+M 0 34615 1 34610       a prize gamecock
+M 0 34603 1 34610       an angry gamecock
+M 0 34620 1 34610       the announcer
+M 0 34616 1 34613       a proud gamecock
+M 0 34621 1 34612       an eccentric handler
+? 0 2 0 E
+E 1 34604 9999 13         a rooster feathered armband [arm-left]
+M 0 34608 1 34613       a gnomish handler
+M 0 34600 1 34613       a sly handler
+? 0 2 0 E
+E 1 34612 9999 2          a cockspur [finger-left]
+M 0 34614 2 34617       a young gamecock
+M 0 34622 1 34612       a strange-looking gamecock
+M 0 34613 1 34616       a visiting nobleman
+M 0 34618 1 34616       a visiting noblewoman
+M 0 34607 1 34618       a dejected handler
+? 0 2 0 E
+E 1 34613 9999 11         a padded leather glove [hand-left]
+M 0 34619 1 34619       the manager
+E 1 34623 9999 2          a cockspur key [finger-left]
+? 0 2 0 E
+E 1 34617 9999 19         a brass handled cane [hold-left]
+
 S
-
-
