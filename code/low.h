@@ -411,6 +411,12 @@ const int MOB_SPIRIT_FATHER = 31314;
 const int MOB_GANDOLFO = 31315;
 const int MOB_STRANGE_LIZARD = 31316;
 const int MOB_ENSLAVED_PALADIN = 33805;
+const int MOB_GYPSY_ROMANTIC = 29405;
+const int MOB_FLORIST_BUSY = 29406;
+const int MOB_CLOWN_SCARY = 29407;
+const int MOB_MIME_ANIMATED = 29408;
+const int MOB_GUY_LAZY = 29409;
+const int MOB_WIFE_FARMER = 29416;
 #endif
 
 

@@ -505,23 +505,29 @@ const int TOG_GAVE_TULIP3                      = 318;
 const int TOG_GAVE_TULIP4                      = 319;
 const int TOG_GAVE_TULIP5                      = 320;
 
-const int TOG_GAVE_BALLOON1                    = 321;
-const int TOG_GAVE_BALLOON2                    = 322;
-const int TOG_GAVE_BALLOON3                    = 323;
-const int TOG_GAVE_BALLOON4                    = 324;
-const int TOG_GAVE_BALLOON5                    = 325;
+const int TOG_GAVE_BOUQET1                     = 321;
+const int TOG_GAVE_BOUQET2                     = 322;
+const int TOG_GAVE_BOUQET3                     = 323;
+const int TOG_GAVE_BOUQET4                     = 324;
+const int TOG_GAVE_BOUQET5                     = 325;
 
-const int TOG_GAVE_TEDDY_BEAR1                 = 326;
-const int TOG_GAVE_TEDDY_BEAR2                 = 327;
-const int TOG_GAVE_TEDDY_BEAR3                 = 328;
-const int TOG_GAVE_TEDDY_BEAR4                 = 329;
-const int TOG_GAVE_TEDDY_BEAR5                 = 330;
+const int TOG_GAVE_BALLOON1                    = 326;
+const int TOG_GAVE_BALLOON2                    = 327;
+const int TOG_GAVE_BALLOON3                    = 328;
+const int TOG_GAVE_BALLOON4                    = 329;
+const int TOG_GAVE_BALLOON5                    = 330;
 
-const int TOG_GAVE_BOTTLE_PORT1                = 331;
-const int TOG_GAVE_BOTTLE_PORT2                = 332;
+const int TOG_GAVE_TEDDY_BEAR1                 = 331;
+const int TOG_GAVE_TEDDY_BEAR2                 = 332;
+const int TOG_GAVE_TEDDY_BEAR3                 = 333;
+const int TOG_GAVE_TEDDY_BEAR4                 = 334;
+const int TOG_GAVE_TEDDY_BEAR5                 = 335;
+
+const int TOG_GAVE_BOTTLE_PORT1                = 336;
+const int TOG_GAVE_BOTTLE_PORT2                = 337;
 
 
-const int MAX_TOG_INDEX       = 333;  // move and change
+const int MAX_TOG_INDEX       = 338;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

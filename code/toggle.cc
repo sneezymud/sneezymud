@@ -320,32 +320,37 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Has Right Hook Hand", MOB_NONE},
   {"Has Left Hook Hand", MOB_NONE},
   {"Cyclops Camp Quest: killed paladin", MOB_NONE},
-  {"February Quest: Gave 1 Candy Heart", MOB_NONE},  //307
-  {"February Quest: Gave 2 Candy Hearts", MOB_NONE},
-  {"February Quest: Gave 3 Candy Hearts", MOB_NONE},
-  {"February Quest: Gave 4 Candy Hearts", MOB_NONE}, //310
-  {"February Quest: Gave 1 box of chocolate", MOB_NONE},
-  {"February Quest: Gave 2 boxes of chocolates", MOB_NONE},
-  {"February Quest: Gave 3 boxes of chocolates", MOB_NONE},
-  {"February Quest: Gave 4 boxes of chocolates", MOB_NONE},
-  {"February Quest: Gave 5 boxes of chocolates", MOB_NONE}, //315
-  {"February Quest: Gave 1 tulip", MOB_NONE},
-  {"February Quest: Gave 2 tulips", MOB_NONE},
-  {"February Quest: Gave 3 tulips", MOB_NONE},
-  {"February Quest: Gave 4 tulips", MOB_NONE},
-  {"February Quest: Gave 5 tulips", MOB_NONE}, //320
-  {"February Quest: Gave 1 balloon", MOB_NONE},
-  {"February Quest: Gave 2 balloons", MOB_NONE},
-  {"February Quest: Gave 3 balloons", MOB_NONE},
-  {"February Quest: Gave 4 balloons", MOB_NONE},
-  {"February Quest: Gave 5 balloons", MOB_NONE}, //325
-  {"February Quest: Gave 1 teddy bear", MOB_NONE},
-  {"February Quest: Gave 2 teddy bears", MOB_NONE},
-  {"February Quest: Gave 3 teddy bears", MOB_NONE},
-  {"February Quest: Gave 4 teddy bears", MOB_NONE},
-  {"February Quest: Gave 5 teddy bears", MOB_NONE}, //330
-  {"February Quest: Gave 1 bottle of port", MOB_NONE},
-  {"February Quest: Gave 2 bottles of port", MOB_NONE},//332
+  {"February Quest: Gave 1 Candy Heart", 29405},  //307
+  {"February Quest: Gave 2 Candy Hearts", 29405},
+  {"February Quest: Gave 3 Candy Hearts", 29405},
+  {"February Quest: Gave 4 Candy Hearts", 29405}, //310
+  {"February Quest: Gave 1 box of chocolate", 29406},
+  {"February Quest: Gave 2 boxes of chocolates", 29406},
+  {"February Quest: Gave 3 boxes of chocolates", 29406},
+  {"February Quest: Gave 4 boxes of chocolates", 29406},
+  {"February Quest: Gave 5 boxes of chocolates", 29406}, //315
+  {"February Quest: Gave 1 tulip", 29416},
+  {"February Quest: Gave 2 tulips", 29416},
+  {"February Quest: Gave 3 tulips", 29416},
+  {"February Quest: Gave 4 tulips", 29416},
+  {"February Quest: Gave 5 tulips", 29416}, //320
+  {"February Quest: Gave 1 bouquet", 29407}, 
+  {"February Quest: Gave 2 bouquets", 29407},
+  {"February Quest: Gave 3 bouquets", 29407},
+  {"February Quest: Gave 4 bouquets", 29407},
+  {"February Quest: Gave 5 bouquets", 29407},//325
+  {"February Quest: Gave 1 balloon", 29408},
+  {"February Quest: Gave 2 balloons", 29408},
+  {"February Quest: Gave 3 balloons", 29408},
+  {"February Quest: Gave 4 balloons", 29408},
+  {"February Quest: Gave 5 balloons", 29408}, //330
+  {"February Quest: Gave 1 teddy bear", 29409},
+  {"February Quest: Gave 2 teddy bears", 29409},
+  {"February Quest: Gave 3 teddy bears", 29409},
+  {"February Quest: Gave 4 teddy bears", 29409},
+  {"February Quest: Gave 5 teddy bears", 29409}, //335
+  {"February Quest: Gave 1 bottle of port", 29410},
+  {"February Quest: Gave 2 bottles of port", 29410},//337
   {"", MOB_NONE}, 
 };
 
