@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 		  immortal.c_str(), vnums[t]);
     
     if(db_immo.fetchRow()){
-      printf("Adding %i ('%s')\n", vnums[t], db_immo["name"].c_str());
+      printf("Adding %i ('%s')\n", vnums[t], db_immo["vnum"].c_str());
 
       db_beta.query("delete from mobresponses where vnum=%i", vnums[t]);
       db_beta.query("insert into mobresponses (vnum, response) values (%s,'%s')",
