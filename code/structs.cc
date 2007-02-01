@@ -740,7 +740,7 @@ TThing& TThing::operator += (TThing& t)
       // Compute the decay value of the to-be merged component by performing
       // a weighted average based on charges
       int c_decay = (c->obj_flags.decay_time * c->getComponentCharges() +
-        tComp->obj_flags.decay_time * tComp->getComponentCharges()) / (c->getComponentCharges() + tComp->getComponentCharges());
+        tComp->obj_flags.decay_time * tComp->getComponentCharges()) / max(1, (c->getComponentCharges() + tComp->getComponentCharges()));
       c->addToComponentCharges(tComp->getComponentCharges());
       c->obj_flags.cost += tComp->obj_flags.cost;
       c->obj_flags.decay_time = c_decay;

@@ -52,7 +52,7 @@ class TTable;
 class TBaseContainer;
 class TOpenContainer;
 class TSuitcase;
-class boardStruct;
+class TBoard;
 class liqInfoT;
 
 const int MAX_BUF_LENGTH              = 240;

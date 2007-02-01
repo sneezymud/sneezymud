@@ -372,8 +372,8 @@ void bootDb(void)
   vlogf(LOG_MISC, "   Shopkeepers.");
   bootTheShops();
 
-  bootPulse("Initializing boards.");
-  InitBoards();
+  //bootPulse("Initializing boards.");
+  //InitBoards();
   
   bootPulse("Initializing room specials.");
   assign_rooms();

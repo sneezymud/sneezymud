@@ -262,7 +262,7 @@ class TThing {
     virtual void logMe(const TBeing *, const char *) const;
     virtual int powerstoneMe(TBeing *, int, byte);
     virtual int divineMe(TBeing *, int, byte);
-    virtual void postMe(TBeing *, const char *, boardStruct *);
+    virtual void postMe(TBeing *, const char *, TBoard *);
     virtual void giveToRepairNote(TMonster *, TBeing *, int *) {}
     virtual void describeMe(TBeing *) const {}
 
