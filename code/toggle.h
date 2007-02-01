@@ -505,11 +505,11 @@ const int TOG_GAVE_TULIP3                      = 318;
 const int TOG_GAVE_TULIP4                      = 319;
 const int TOG_GAVE_TULIP5                      = 320;
 
-const int TOG_GAVE_BOUQET1                     = 321;
-const int TOG_GAVE_BOUQET2                     = 322;
-const int TOG_GAVE_BOUQET3                     = 323;
-const int TOG_GAVE_BOUQET4                     = 324;
-const int TOG_GAVE_BOUQET5                     = 325;
+const int TOG_GAVE_BOUQUET1                    = 321;
+const int TOG_GAVE_BOUQUET2                    = 322;
+const int TOG_GAVE_BOUQUET3                    = 323;
+const int TOG_GAVE_BOUQUET4                    = 324;
+const int TOG_GAVE_BOUQUET5                    = 325;
 
 const int TOG_GAVE_BALLOON1                    = 326;
 const int TOG_GAVE_BALLOON2                    = 327;
