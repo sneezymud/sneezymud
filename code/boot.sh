@@ -29,7 +29,10 @@ case $USER in
     ;;
   coral)
     PORT=6905
-	;;
+    ;;
+  deirdre)
+    PORT=6942
+    ;;
 
 esac
 
