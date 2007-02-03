@@ -873,7 +873,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 
   buf=db["name"];
   while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
+    buf.replace(buf.find("'"), 1, "&#39;");
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % buf;
   buf=fmt("%s%s") % 
     getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
@@ -883,7 +883,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 
   buf=db["description"];
   while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
+    buf.replace(buf.find("'"), 1, "&#39;");
   cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
   buf=fmt("%s%s") % 
     getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %

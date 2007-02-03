@@ -527,7 +527,7 @@ void sendShowExtra(int account_id, int vnum)
 
     sstring buf=db["description"];
     while (buf.find("'") != sstring::npos)
-      buf.replace(buf.find("'"), 1, "&#146;");
+      buf.replace(buf.find("'"), 1, "&#39;");
 
     cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
 
@@ -758,7 +758,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   sstring buf=db["short_desc"];
   while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
+    buf.replace(buf.find("'"), 1, "&#39;");
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
 
@@ -767,7 +767,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   buf=db["long_desc"];
   while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
+    buf.replace(buf.find("'"), 1, "&#39;");
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
 

@@ -227,7 +227,7 @@ void sendShowResp(int account_id, int vnum, bool wizard)
 
   sstring buf=db["response"];
   while (buf.find("'") != sstring::npos)
-    buf.replace(buf.find("'"), 1, "&#146;");
+    buf.replace(buf.find("'"), 1, "&#39;");
 
   cout << fmt("<tr><td>%s</td><td><textarea name='%s' cols=90 rows=30>%s</textarea></td></tr>\n") % "response" % "response" % buf;
 
