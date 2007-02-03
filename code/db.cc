@@ -98,6 +98,7 @@
 #include "obj_harness.h"
 #include "obj_saddlebag.h"
 #include "obj_wagon.h"
+#include "timing.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -293,8 +294,13 @@ void assign_rooms()
 
 void bootDb(void)
 {
+  TTiming t;
+  t.start();
+
   bootTime=true;
   bootPulse("Boot db -- BEGIN.");
+
+  vlogf(LOG_MISC, "Boot timing: begin");
 
   bootPulse("Resetting the game time.");
   reset_time();
@@ -335,6 +341,9 @@ void bootDb(void)
   bootPulse("Initializing Terrains.");
   assignTerrainInfo();
 
+  vlogf(LOG_MISC, fmt("Boot timing: misc 1: %.2f seconds") % 
+	(t.getElapsedReset()));
+
   bootPulse("Opening mobile file.");
   if (!(mob_f = fopen(MOB_FILE, "r"))) {
     perror("boot");
@@ -347,8 +356,12 @@ void bootDb(void)
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
 
+  vlogf(LOG_MISC, fmt("Boot timing: mob/obj indexes: %.2f seconds") % (t.getElapsedReset()));
+
   bootPulse("Pre-loading object cache.");
   obj_cache.preload();
+
+  vlogf(LOG_MISC, fmt("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
@@ -363,14 +376,20 @@ void bootDb(void)
   bootPulse("Loading drug-type information.");
   assign_drug_info();
 
+  vlogf(LOG_MISC, fmt("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
+
   unsigned int i;
   bootPulse("Loading rooms:", false);
   bootWorld();
   bootPulse(NULL, true);
 
+  vlogf(LOG_MISC, fmt("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
+
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
   bootTheShops();
+
+  vlogf(LOG_MISC, fmt("Boot timing: shops: %.2f seconds") % (t.getElapsedReset()));
 
   //bootPulse("Initializing boards.");
   //InitBoards();
@@ -400,6 +419,8 @@ void bootDb(void)
   bootPulse("Building whittle information.");
   initWhittle();
 
+  vlogf(LOG_MISC, fmt("Boot timing: misc 3: %.2f seconds") % (t.getElapsedReset()));
+
   bootPulse("Updating characters with saved items:", false);
   updateRentFiles();
   bootPulse("Processing shop-save files.");
@@ -410,6 +431,8 @@ void bootDb(void)
   updateSavedRoomItems();
   bootPulse("Processing corpse-save files.");
   processCorpseFiles();
+
+  vlogf(LOG_MISC, fmt("Boot timing: save files: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Calculating number of items in rent.");
   vlogf(LOG_MISC, "Totals on limited items:");
@@ -439,6 +462,8 @@ void bootDb(void)
     ++tIter;
   }
 
+  vlogf(LOG_MISC, fmt("Boot timing: load potentials: %.2f seconds") % (t.getElapsedReset()));
+
   for (i = 0; i < zone_table.size(); i++) {
     int d, e;
     d = (i ? (zone_table[i - 1].top + 1) : 0);
@@ -463,6 +488,7 @@ void bootDb(void)
   }
   bootPulse(NULL, true);
 
+  vlogf(LOG_MISC, fmt("Boot timing: zones and shop rent: %.2f seconds") % (t.getElapsedReset()));
 
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
@@ -470,6 +496,7 @@ void bootDb(void)
 	mob_index[mobnum].setMaxNumber(mob_index[mobnum].getNumber());
     }
   }
+
 
   bootPulse("Collecting object count statistics.");
   object_stats();
@@ -484,6 +511,8 @@ void bootDb(void)
   sunriseAndSunset();
 
   r_q.head = r_q.tail = 0;
+
+  vlogf(LOG_MISC, fmt("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Boot -- DONE.");
   bootTime=false;
