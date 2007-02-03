@@ -19,11 +19,12 @@ class fmt : public sstring {
 
 template <class T> sstring fmt::doFormat(const sstring &fmt, const T &x)
 {
-  char buf[MAX_STRING_LENGTH];
+  unsigned int MY_MAX_STRING_LENGTH=MAX_STRING_LENGTH * 2;
+  char buf[MY_MAX_STRING_LENGTH];
 
-  snprintf(buf, MAX_STRING_LENGTH, fmt.c_str(), x);
+  snprintf(buf, MY_MAX_STRING_LENGTH, fmt.c_str(), x);
 
-  if(strlen(buf) == MAX_STRING_LENGTH - 1){
+  if(strlen(buf) == MY_MAX_STRING_LENGTH - 1){
     vlogf(LOG_BUG, "fmt::doFormat(): buffer reached MAX_STRING_LENGTH");
 
     // can't use fmt here of course
