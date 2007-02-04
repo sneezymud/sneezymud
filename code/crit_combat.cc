@@ -1080,7 +1080,14 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
             act("You hold the ghostly organ above your head in triumph!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
             act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
             act("$n reaches into $N's chest and rips out what appears to be $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  } else {
+	  } else if (v_vnum == 29412) {
+            // adding candy heart rip for february '07 quest
+            buf = fmt("With your %s, you reach into $N's chest and rip out $S <P>candy heart<1><o>!<1>") % limbStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    act("You hold the sticky heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	    act("$n reaches into your chest and rips out your <P>candy heart<1><r>!<1>", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    act("$n reaches into $N's chest and rips out $S <P>candy heart<1><b>!<1>", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          } else {
 	    buf = fmt("With your %s, you reach into $N's chest and rip out $S heart!") % limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 	    act("You hold the still beating heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
@@ -1090,9 +1097,23 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 
           if (IS_SET(v->specials.act, ACT_GHOST))
             act("The ghostly heart of $N fades as quickly as you removed it.", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-	  else {
+	  else if (v_vnum == 29412) {
+            // adding candy heart rip for february '07 quest
+            TObj *candy;
+            if ((candy = read_object(29405, VIRTUAL))) {
+  	      buf = fmt("the lifeless <P>candy heart<1> of %s") % v->getName();
+	      candy->shortDescr = mud_str_dup(buf);
+	    
+	      buf = fmt("The lifeless <P>candy heart<1> of %s lies here.") % v->getName();
+	      candy->setDescr(mud_str_dup(buf));
+	      if(!heldInPrimHand())
+	        equipChar(candy, getPrimaryHold(), SILENT_YES);
+	      else
+	        equipChar(candy, getSecondaryHold(), SILENT_YES);
+            }
+          } else {
   	    TDrinkCon *corpse;
-
+            
 	    corpse = new TDrinkCon();
             buf = fmt("heart %s [%d]") % v->name % v_vnum;
 
