@@ -1458,35 +1458,6 @@ int TBeing::moneyMeBeing(TThing *mon, TThing *sub)
   return FALSE;
 }
 
-int ObjFromCorpse(TObj *c)
-{
-  TThing *t, *t2, *t3;
-  int rc;
-
-  for (t = c->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
-    --(*t);
-
-    TObj *tobj = dynamic_cast<TObj *>(t);
-    if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
-          (c->in_room > 80) && (c->in_room != ROOM_DONATION)) {
-      sendrpf(c->roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
-      delete tobj;
-      tobj = NULL;
-      continue;
-    }
-
-    if ((t3 = c->parent)) {
-      *(t3) += *t;
-      rc = t3->moneyMeBeing(t, c);
-      if (IS_SET_DELETE(rc, DELETE_ITEM))
-        delete t;
-    } else if (c->in_room != ROOM_NOWHERE)
-      *c->roomp += *t;
-  }
-  return TRUE;
-}
-
 void TBeing::classSpecificStuff()
 {
   if (hasClass(CLASS_WARRIOR)) 

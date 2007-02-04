@@ -179,7 +179,6 @@ extern void MakeRoomNoise(TMonster *, int room, const char *local_snd, const cha
 extern void MakeNoise(int room, const char *local_snd, const char *distant_snd);
 extern bool has_healthy_body(TBeing *);
 extern int RecGetObjRoom(const TThing *);
-extern int ObjFromCorpse(TObj *c);
 extern void break_bone(TBeing *, wearSlotT which);
 extern void dirwalk(const sstring &dir, void (*fcn) (const char *));
 extern void dirwalk_fullname(const char *dir, void (*fcn) (const char *));

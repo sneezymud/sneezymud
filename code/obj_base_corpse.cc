@@ -13,6 +13,7 @@
 #include "obj_base_corpse.h"
 #include "obj_base_clothing.h"
 #include "obj_tooth_necklace.h"
+#include "obj_table.h"
 
 TBaseCorpse::TBaseCorpse() :
   TBaseContainer(),
@@ -48,35 +49,76 @@ TBaseCorpse & TBaseCorpse::operator=(const TBaseCorpse &a)
 
 TBaseCorpse::~TBaseCorpse()
 {
-  for (; getStuff(); ) {
-    // assumption that corpse is not in another container
-    // assumption that corpse is also not stuck in someone, or equipped
-    TThing * t = getStuff();
-    --(*t);
-    if (parent)
-      *parent += *t;
-    else if (riding)
-      t->mount(riding);
-    else if (roomp)
-      *roomp += *t;
+  // reconcile a decayed corpse's inventory
+  // assumption that corpse is not in another container
+  // assumption that corpse is also not stuck in someone
+  // should handle corpses on ground, chairs/beds, tables, inventory or equipped
+  TThing *t, *t2, *p, *r;
+  TTable *ttab;
+  int rc;
+  
+  // 1st, drop the corpse from bed/chair rider list
+  ttab = dynamic_cast<TTable *>(riding);
+  if (riding && !ttab){
+    if (riding->rider == this)
+      riding->rider = nextRider;
     else {
-      // the corpse wasn't owned by anything
-      // this can happen if an immortal holds a corpse and quits
-      //    as in: "Here, let me help you get rid of this stuff"
-      // seems best solution (given how this can happen), is to junk stuff
+      for (r = riding->rider; r; r = r->nextRider) {
+        if (r->nextRider == this){
+          r->nextRider = r->nextRider->nextRider;
+          break;
+        }
+      }
+    }
+  }
+  
+  // relocate inventory
+  for (t = this->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    --(*t);
+    
+    // junk newbie objects
+    TObj *o = dynamic_cast<TObj *>(t);
+    if (o && o->isObjStat(ITEM_NEWBIE) && !o->getStuff() && (this->in_room > 80) && (this->in_room != ROOM_DONATION)){
+      sendrpf(this->roomp, "The %s explodes in a flash of white light!\n\r", fname(o->name).c_str());
+      delete o;
+      o = NULL;
+      continue;
+    }
+    
+    if ((p = this->parent) || (p = this->equippedBy)) {
+      *(p) += *t;
+      rc = p->moneyMeBeing(t, this);
+      if (IS_SET_DELETE(rc, DELETE_ITEM))
+        delete t;
+        
+    } else if (this->riding) {
+      if ((ttab = dynamic_cast<TTable *>(riding))) {
+        t->mount(riding);
+      } else if (riding->roomp) {
+        *riding->roomp += *t;
+      } else {
+        // i dunno... how about we junk it?
+        vlogf(LOG_BUG, fmt("Corpse (%s) decayed on %s, deleting %s") % this->getName() % riding->getName() % t->getName());
+        delete t;
+      }
+ 
+    } else if (this->roomp) {
+      *this->roomp += *t;
+      
+    } else {
+      vlogf(LOG_BUG, fmt("Unowned corpse decayed: %s - deleting: %s") % this->getName() % t->getName());
       delete t;
     }
   }
-
+  
   if (tDissections) {
     dissectInfo *tNextDissect = tDissections;
-
     for (; tNextDissect; tNextDissect = tDissections) {
       tDissections = tNextDissect->tNext;
       delete tNextDissect;
       tNextDissect = NULL;
     }
-
     tDissections = NULL;
   }
 }
@@ -334,20 +376,17 @@ int TBaseCorpse::objectDecay()
     act("$p disintegrates in your hands.", FALSE, parent, this, 0, TO_CHAR);
   else if (roomp && roomp->getStuff()) {
     if (getMaterial() == MAT_POWDER) {
-      sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r",
-getName());
-//      act("A gust of wind scatters $n.", TRUE, this, 0, 0, TO_ROOM);
+      sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r", getName());
     } else {
+      if (!::number(0, 4) && Races[getCorpseRace()]->isHumanoid()){
+        act("$n sits up and lets out a ghastly gasp!", TRUE, this, 0, 0, TO_ROOM);
+      }
       sendrpf(COLOR_OBJECTS, roomp, "Flesh-eaters dissolve %s.\n\r", getName());
-//      act("Flesh-eaters dissolve $n.", TRUE, this, 0, 0, TO_ROOM);
     }
   }
-  ObjFromCorpse(this);
 
   if(dynamic_cast<TPCorpse *>(this))
-    vlogf(LOG_MISC, fmt("PCorpse '%s' decayed in '%s' with %f exp.") %
-	  getName() % (roomp?roomp->getName():"(null roomp)") %
-	  dynamic_cast<TPCorpse *>(this)->getExpLost());
+    vlogf(LOG_MISC, fmt("PCorpse '%s' decayed in '%s' with %f exp.") % getName() % (roomp?roomp->getName():"(null roomp)") % dynamic_cast<TPCorpse *>(this)->getExpLost());
 
   return DELETE_THIS;
 }
