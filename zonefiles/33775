@@ -1,8 +1,10 @@
 #33775
 Selene - Icy Wastelands~
-33799 25 1 0
+33799 25 1 1
+
 D 0 33795 5 1        secret boulders 33795 33775
 D 0 33775 4 1
+
 A 0 33780 33798      ice-frosted brush randomly in the valley
 O 0 33778 1 -99
 A 0 33780 33798
@@ -25,23 +27,30 @@ A 0 33780 33798
 O 0 33776 1 -99
 A 0 33780 33798
 O 0 33776 1 -99
+
 O 0 33775 1 33789    twisted tree
 O 0 33775 1 33791
+
 M 0 33780 1 33775    dappled fawn
+
 A 0 33780 33798      snow white rabbit randomly in the valley
 M 0 33777 3 -99
 A 0 33780 33798
 M 0 33777 3 -99
 A 0 33780 33798
 M 0 33777 3 -99
+
 A 0 33780 33798      white stag randomly in the valley
 M 0 33778 1 -99
+
 A 0 33780 33798      white doe randomly in the valley
 M 0 33779 1 -99
+
 M 0 33775 1 33791    grizzled wolf (leader)
 K 1 33776 3 33791    white wolf (follower)
 K 1 33776 3 33791    white wolf (follower)
 K 1 33776 3 33791    white wolf (follower)
+
 M 0 33781 1 33790    quiet caretaker 
-Y 0 XXX 3              3% chance at frost-tipped fur
+Y 0 140 5              3% chance at frost-tipped fur
 S
