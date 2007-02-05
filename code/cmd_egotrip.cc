@@ -55,8 +55,8 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
   blessings[AFFECT_CORAL_BLESSING]=
     ego_imm_blessing("Coral",
 		     AFFECT_CORAL_BLESSING,
-		     APPLY_CON,
-		     "<B>exploration<1>");
+		     APPLY_FOC,
+		     "<B>reflection<1>");
   blessings[AFFECT_ANGUS_BLESSING]=
     ego_imm_blessing("Angus",
 		     AFFECT_ANGUS_BLESSING,
@@ -85,8 +85,8 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
   blessings[AFFECT_DASH_BLESSING]=
     ego_imm_blessing("Dash",
 		     AFFECT_DASH_BLESSING,
-		     APPLY_FOC,
-		     "<c>reflection<1>");
+		     APPLY_CON,
+		     "<c>exploration<1>");
 
 	blessings[AFFECT_DEIRDRE_BLESSING]=
 		ego_imm_blessing("Deirdre",
@@ -150,8 +150,8 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_CORAL_BLESSING){
-    aff.type=AFFECT_CORAL_BLESSING;
+  } else if(which==AFFECT_DASH_BLESSING){
+    aff.type=AFFECT_DASH_BLESSING;
     aff.location=APPLY_NONE;
     aff.modifier=0;
     aff.modifier2=0;
@@ -172,7 +172,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.modifier2 = 0;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_DASH_BLESSING){
+  } else if(which==AFFECT_CORAL_BLESSING){
     // TBeing::affectedBySpell - plasma mirror
   } else if(which==AFFECT_DEIRDRE_BLESSING){
     // TBeing::affectedBySpell - celerite
