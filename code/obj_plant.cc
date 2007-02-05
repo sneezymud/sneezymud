@@ -154,8 +154,8 @@ void TPlant::updateDesc()
     "<G>lettuce<1> plant",
     "<g>marijuana<1> plant",
     "<p>catnip<1> <g>plant<1>",
-	"<P>candy heart<1> tree",
-	"vine of <k>gray grapes<1>"
+    "<P>candy heart<1> tree",
+    "vine of <k>gray grapes<1>"
   };
   const char *planttypeskeywords [] =
   {
@@ -172,8 +172,8 @@ void TPlant::updateDesc()
     "lettuce plant",
     "marijuana plant",
     "catnip plant",
-	"candy heart tree",
-	"gray grape vine"
+    "candy heart tree",
+    "gray grape vine"
   };
   int plantfruits [] =
   {
@@ -190,16 +190,36 @@ void TPlant::updateDesc()
     33525,
     33601,
     34737,
-	29405,
-	34215
+    29405,
+    34215
   };
 
-
+  // considering a plant ages an average of 2 'age' points each mud hour, 
+  // a plant will age to 17520 in a mud year
+  int plantlifeexpectancy [] =
+  {
+    175200, // 10 years
+    262800, // 15 years 
+    219000,  // 12.5 years
+    262800,  // 15 years
+    262800,  // 15 years
+    219000,  // 12.5 years
+    35040,  // 2 years
+    17520,  // 1 year
+    8760, // 1/2 year
+    8760, // 1/2 year
+    8760, // bah
+    17520, // 1 year
+    17520, // 1 year
+    3456, // 3 real days
+    262800 // 15 years 
+  };
+  
   // really old plants should wither and die
-  if(getAge() > 1000000){
+  if(getAge() > plantlifeexpectancy[getType()]){
     plantindex=4;
     if(obj_flags.decay_time <= -1)
-      obj_flags.decay_time=10;
+      obj_flags.decay_time=168;
   }
 
   if (isObjStat(ITEM_STRUNG)) {
