@@ -263,7 +263,7 @@ void TPlant::updateDesc()
     setDescr(mud_str_dup(buf));
   }
 
-  if(plantindex>=3 && !::number(0,3)){
+  if(plantindex = 3 && !::number(0,3)){
     TThing *t;
     int count=0;
 
@@ -277,6 +277,19 @@ void TPlant::updateDesc()
     }
   }
 
+  if(plantindex = 4 && !::number(0,11)){
+    TThing *t;
+    int count=0;
+
+    for(t=getStuff();t;t=t->nextThing){
+      ++count;
+    }
+    
+    if(count<=2){
+      t=read_object(plantfruits[getType()], VIRTUAL);
+      *this += *t;
+    }
+  }
 }
 
 
