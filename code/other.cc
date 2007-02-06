@@ -2620,6 +2620,9 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_ENLIVEN:
       enliven(ch,vict,level,learn);
       break;
+    case LIQ_POT_PLASMA_MIRROR:
+      plasmaMirror(ch,level,learn);
+      break;
     default:
       rc=0;
   }
