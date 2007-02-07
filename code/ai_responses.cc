@@ -303,7 +303,21 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         return rc;
       break;
     case CMD_JUNK:
-      rc = doCommand(cmd, arg, NULL, FALSE);
+      // rc = doCommand(cmd, arg, NULL, FALSE);
+      tStObj=tStArgument.word(0);
+      tStSucker=tStArgument.word(1);
+
+      TThing *tThing = searchLinkedList(tStObj, getStuff(), TYPEOBJ);
+
+      if (!mob || !tThing)
+        vlogf(LOG_BUG, fmt("Error in response script junk command:%s%s Mob[%s]") % 
+              (mob ? "" : " !mob") %
+              (tThing ? "" : " !tThing") %
+              getNameNOC(this));
+
+      if (tThing && tThing->parent == this)
+        delete tThing;
+      
       break;
     case CMD_GIVE:
 #if 0
