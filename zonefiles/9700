@@ -15,5 +15,21 @@ D 0 9708 1 2          Obscure entryway to home
 D 0 9723 3 2          
 O 0 15970 2 9723      Light
 
+
+
+D 0 9724 3 1         A Precipice on the Northern Face of a Volcano -> A Steep Path Up The Volcano
+D 0 7510 1 1         A Steep Path Up The Volcano -> A Precipice on the Northern Face of a Volcano
+
+O 0 33653 1 9724        a black cosmos flower
+
+* farer's and icky's apartment
+* butler is loading in zonefile 0
+D 0 9724 8 2         A Precipice on the Northern Face of a Volcano -> A Hollow Magma Chamber
+D 0 9725 7 2         A Hollow Magma Chamber -> A Precipice on the Northern Face of a Volcano
+
+O 0 33654 1 9725        a pit of red hot stones
+O 0 33655 2 9725        a cast iron treasure chest
+O 0 33656 2 9725        an armor display case
+
 S
 
