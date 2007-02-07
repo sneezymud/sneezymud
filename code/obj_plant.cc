@@ -219,7 +219,7 @@ void TPlant::updateDesc()
   if(getAge() > plantlifeexpectancy[getType()]){
     plantindex=4;
     if(obj_flags.decay_time <= -1)
-      obj_flags.decay_time=168;
+      obj_flags.decay_time=300;
   }
 
   if (isObjStat(ITEM_STRUNG)) {
@@ -263,7 +263,7 @@ void TPlant::updateDesc()
     setDescr(mud_str_dup(buf));
   }
 
-  if(plantindex = 3 && !::number(0,3)){
+  if(plantindex == 3 && !::number(0,3)){
     TThing *t;
     int count=0;
 
@@ -277,7 +277,7 @@ void TPlant::updateDesc()
     }
   }
 
-  if(plantindex = 4 && !::number(0,11)){
+  if(plantindex == 4 && !::number(0,11)){
     TThing *t;
     int count=0;
 
