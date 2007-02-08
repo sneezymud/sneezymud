@@ -652,7 +652,8 @@ bool UtilMobProc(TBeing *ch)
     return TRUE;
   if (ch->isShopkeeper())
     return TRUE;
-
+  if (ch->spec == SPEC_BUTLER)
+    return TRUE;
   return UtilProcs(ch->spec);
 }
 
