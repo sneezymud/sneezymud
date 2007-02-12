@@ -12,6 +12,7 @@ TPlant::TPlant() :
 {
   setType(0);
   setAge(0);
+  setYield(0);
   setCarryWeightLimit(100.0);
   setCarryVolumeLimit(10000);
 }
@@ -20,17 +21,19 @@ TPlant::TPlant(const TPlant &a) :
   TExpandableContainer(a)
 {
 }
-void TPlant::assignFourValues(int x1, int x2, int, int)
+
+void TPlant::assignFourValues(int x1, int x2, int x3, int)
 {
   setType(x1);
   setAge(x2);
+  setYield(x3);
 }
 
 void TPlant::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = getType();
   *x2 = getAge();
-  *x3 = 0;
+  *x3 = getYield();
   *x4 = 0;
 }
 
@@ -43,6 +46,7 @@ TPlant & TPlant::operator=(const TPlant &a)
 
 TPlant::~TPlant()
 {
+  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i.") % this->getName() % this->getYield());
 }
 
 int TPlant::putSomethingInto(TBeing *ch, TThing *)
@@ -57,7 +61,7 @@ int TPlant::putSomethingInto(TBeing *ch, TThing *)
 sstring TPlant::statObjInfo() const
 {
   char buf[256];
-  sprintf(buf, "Type: %i Age: %i", getType(), getAge());
+  sprintf(buf, "Type: %i Age: %i Total Yield: %i", getType(), getAge(), getYield());
   sstring a(buf);
   return a;
 }
@@ -274,6 +278,7 @@ void TPlant::updateDesc()
     if(count<=4){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
+      setYield(getYield() + 1);
     }
   }
 
@@ -288,6 +293,7 @@ void TPlant::updateDesc()
     if(count<=2){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
+      setYield(getYield() + 1);
     }
   }
 }

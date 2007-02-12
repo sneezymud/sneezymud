@@ -153,7 +153,7 @@ int TBeing::doSeedPlant(sstring arg){
   }
 
   if(roomp->isFallSector() || roomp->isWaterSector() || 
-     roomp->isIndoorSector()){
+     roomp->isIndoorSector() || roomp->isUnderwaterSector()){
     sendTo("You can't plant anything here.\n\r");
     return FALSE;
   }
