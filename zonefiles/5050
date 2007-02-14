@@ -1,5 +1,83 @@
 #5050
-Magdalena - Psychoward~
-5099 25 2 0
+Repo Swamp - Magdalena~
+5099 30 2 0
+
+D 0 5050 4 1		Door out of zone
+*D 0 4377 5 1		door command needed for bullywug swamp exit
+
+D 0 5050 2 1		Door out of main room
+D 0 5051 0 1				
+D 0 5066 1 1		Door into Fern Niche
+D 0 5067 3 1
+D 0 5082 2 1		Door into Padalin/Dalia.Pantin		
+D 0 5068 0 1
+D 0 5059 0 1		Door into Fern Niche
+D 0 5060 2 1
+D 0 5060 0 1		Door into Fern Niche
+D 0 5078 2 1 
+D 0 5086 2 1		Door into Undisturbed Niche	
+D 0 5087 0 1
+D 0 5096 5 1		Door into Under the Rubble
+D 0 5069 4 1
+
+M 0 5050 1 5050	a curious Bullywug
+M 0 5051 1 5053	Ex-repo thief
+M 0 5051 1 5083	Ex-repo thief
+M 0 5052 1 5052	Ex-repo warrior
+M 0 5052 1 5058	Ex-repo warrior
+M 0 5053 1 5063	Ex-repo cleric
+M 0 5053 1 5082	Ex-repo cleric
+M 0 5054 1 5056	Ex-repo deikhan
+M 0 5054 1 5061	Ex-repo deikhan
+M 0 5055 1 5055	a fluffy duck
+M 0 5056 1 5086	Ex-repo monk
+M 0 5056 1 5071	Ex-repo monk
+M 0 5057 1 5075	an aspiring dwarven repo mob
+M 0 5057 1 5051	as aspiring dwarven repo mob
+
+M 0 5058 1 5060	Hefty Tim Slate
+? 0 10 0 E
+E 1 5058 9999 3		a bump-raised torque
+
+M 0 5059 1 5064	a crooked ninja
+? 0 10 0 E
+E 1 5059 9999 5		a muggers hood
+
+M 0 5062 1 5062	a muskrat
+M 0 5065 1 5076	Ex-repo mage
+M 0 5065 1 5065	Ex-repo mage
+
+M 0 5067 1 5067	a fragile ogre pirate
+? 0 10 0 E
+E 1 5067 9999 1		a terbium ring
+
+M 0 5068 1 5068	Ergnar
+
+M 0 5069 1 5069	an old sea hag
+? 0 10 0 E
+E 1 5069 9999 3		a fish bladder necklace
+
+M 0 5072 1 5072	a small speckled frog
+
+M 0 5078 1 5078	Karus
+? 0 10 0 E
+E 1 5078 9999 1		a cubic zirconia ring
+
+M 0 5082 1 5070	a lost Bullywug
+M 0 5093 1 5093	Trout Hunter
+
+M 0 5090 1 5090	Padalin
+? 0 10 0 G
+G 1 5090 9999			a pious holy symbol
+
+M 0 5091 1 5091	Dalia.Pantin
+? 0 10 0 G
+G 1 5091 9999			an unholy powerstone
+
+M 0 5095 1 5095	a blind dragonfly
+M 0 5096 1 5096	Walter the catfish
+M 0 5098 1 5084	an aging mermaid
+M 0 5098 1 5098	an aging mermaid
+M 0 5099 1 5099	Gill the goldfish
 S
 
