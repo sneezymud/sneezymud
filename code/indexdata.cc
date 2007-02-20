@@ -297,7 +297,7 @@ void generate_mob_index()
 
   // to prevent constant resizing (slows boot), declare an appropriate initial
   // size.  Should be smallest power of 2 that will hold everything
-  mob_index.reserve(4096);
+  mob_index.reserve(8192);
 
   rewind(mob_f);
 
