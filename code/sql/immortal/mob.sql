@@ -41,7 +41,9 @@ create table mob (
   skin int not null,
   vision int not null,
   can_be_seen int not null,
-  max_exist int not null
+  max_exist int not null,
+  local_sound char(127),
+  adjacent_sound char(127)
 );
 
 create table mob_imm (
