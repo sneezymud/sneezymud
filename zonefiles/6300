@@ -2,4 +2,1665 @@
 City of Xanesla - Bump~
 6599 35 2 0
 
+* Doors 
+D 0 6356 1 1 	Foreign Embassy
+D 0 6370 3 1 
+
+D 0 6307 0 1 	Storage Room
+D 0 6322 2 1 
+
+D 0 6307 4 1 	Top of the Lighthouse 
+D 0 6308 5 1 
+
+D 0 6322 1 1 	Cluttered Office
+D 0 6328 3 1 
+
+D 0 6355 1 1 	Courthouse
+D 0 6369 3 1 
+
+D 0 6368 1 1 	Courtroom
+D 0 6381 3 1 
+
+D 0 6381 2 1 	Judge's Chambers
+D 0 6382 0 1 
+
+D 0 6352 1 1 	Jail 
+D 0 6366 3 1 
+
+D 0 6366 1 2 	Cell
+D 0 6379 3 2
+
+D 0 6366 2 2 	Cell
+D 0 6367 0 2
+
+D 0 6366 8 2 	Cell
+D 0 6380 7 2 
+
+D 0 6359 1 1 	Quaint Cottage
+D 0 6373 3 1 
+
+D 0 6360 1 1 	Beachfront Cottage
+D 0 6374 3 1 
+
+D 0 6362 1 1 	Museum Entrance
+D 0 6376 3 1 
+
+D 0 6364 1 1 	Marine Lab
+D 0 6378 3 1
+
+D 0 6399 1 1 	Stork Field 
+D 0 6412 3 1
+
+D 0 6414 1 1 	Palatial Room
+D 0 6427 3 1
+
+D 0 6450 0 1 	Hospital Entrance
+D 0 6449 2 1
+
+D 0 6450 5 1 	City Sewer
+D 0 6546 4 1 
+
+D 0 6452 1 1 	Trash Strewn Cottage
+D 0 6465 3 1
+
+D 0 6453 1 1 	Small Cottage
+D 0 6466 3 1
+
+D 0 6454 1 1 	Stuffy Apartment 
+D 0 6467 3 1
+
+D 0 6455 1 1 	Overcrowded Apartment
+D 0 6468 3 1
+
+D 0 6476 1 1 	Church Entrance
+D 0 6489 3 1
+
+D 0 6491 1 1 	Back of the Church
+D 0 6505 3 1
+
+D 0 6504 4 1 	Belltower
+D 0 6503 5 1
+
+D 0 6500 0 1 	Classroom
+D 0 6499 2 1 
+
+D 0 6500 1 1 	Classroom
+D 0 6528 3 1
+
+D 0 6500 2 1 	Classroom
+D 0 6501 0 1 
+
+D 0 6500 8 1 	Science Laboratory 
+D 0 6529 7 1
+
+D 0 6500 9 1 	Classroom
+D 0 6488 6 1 
+
+D 0 6471 3 1 	Ocean's Arena
+D 0 6458 1 1
+
+D 0 6471 1 1 	Mission Entrance
+D 0 6484 3 1 
+
+D 0 6498 1 1 	Mission Garden
+D 0 6526 3 1
+
+D 0 6483 1 2 	Tower Entrance
+D 0 6496 3 1
+
+D 0 6510 1 2 	Narrow Hallway
+D 0 6514 3 2 
+
+D 0 6511 4 2 	Narrow Corridor
+D 0 6523 5 2 
+
+D 0 6517 2 2 	King's Bedroom
+D 0 6518 0 2 
+
+D 0 6551 8 1 	Sewer Tunnel 
+D 0 6552 7 1 
+
+D 0 6551 4 1 	Skid Row
+D 0 6553 5 1 
+
+D 0 6557 1 1 	Temple Entrance
+D 0 6558 3 1
+
+D 0 6572 1 1 	Sarcophagus
+D 0 6573 0 1 
+
+D 0 6577 1 1 	Dark Crypt
+D 0 6578 3 1
+
+D 0 6564 1 1 	Underground Mausoleum
+D 0 6570 3 1
+
+D 0 6564 3 1 	Burial Chamber
+D 0 6569 1 1 
+
+D 0 6345 9 1 	Stench Filled Lagoon
+D 0 6342 6 1 
+
+* Furniture at boot time 
+O 0 20 1 6310 	Chair
+O 0 20 1 6381 	Chair
+O 0 20 1 6382 	Chair
+O 0 20 1 6383 	Chair
+O 0 20 1 6384 	Chair
+O 0 20 5 6467 	Chair
+O 0 21 1 6443 	Couch
+O 0 22 1 6310 	Bed
+O 0 22 1 6373 	Bed
+O 0 100 1 6314 	Lamppost
+O 0 100 1 6315 	Lamppost
+O 0 635 1 6374 	Night stand
+O 0 1200 1 6381 	Lamp
+O 0 1200 1 6382 	Lamp
+O 0 1200 1 6383 	Lamp
+O 0 1200 1 6384 	Lamp
+O 0 2366 2 6368 	Couch
+O 0 2366 1 6375 	Couch leather
+O 0 3530 7 6409 	Stool
+O 0 6300 4 6300	Kelp
+O 0 6300 4 6301 	Kelp
+O 0 6300 4 6595 	Kelp
+O 0 6301 1 6300 	Reef
+O 0 6301 1 6595 	Reef
+O 0 6302 1 6302 	Buoy
+O 0 6302 1 6303 	Buoy
+O 0 6302 1 6304 	Buoy
+O 0 6302 1 6305 	Buoy
+O 0 6302 1 6306 	Buoy
+O 0 6302 1 6323 	Buoy
+O 0 6302 1 6324 	Buoy
+O 0 6302 1 6329 	Buoy
+O 0 6302 1 6330 	Buoy
+O 0 6302 1 6333 	Buoy
+O 0 6399 3 6405 	Burner incense
+O 0 6418 1 6428 	Fire fake
+O 0 6418 1 6429 	Fire fake
+O 0 6418 1 6440 	Fire fake
+O 0 6418 1 6441 	Fire fake
+O 0 6418 1 6442 	Fire fake
+O 0 6483 3 6502 	Pew
+O 0 6483 3 6504 	Pew
+O 0 6483 3 6505 	Pew
+O 0 6560 1 6374 	WaterBed
+O 0 6567 1 6558 	Fountain blood
+O 0 14153 5 6462 	Decaying oak chair
+O 0 14297 3 6526 	Flower
+O 0 14362 1 6310 	Desk
+O 0 14362 1 6328 	Desk
+O 0 14362 1 6366 	Desk
+O 0 14362 1 6381 	Desk
+O 0 14362 1 6382 	Desk
+O 0 14362 1 6383 	Desk
+O 0 14362 1 6384 	Desk
+O 0 14362 1 6448 	Desk
+O 0 14362 1 6449 	Desk
+O 0 14362 1 6467 	Desk
+O 0 14385 1 6366 	Lamp
+O 0 14385 1 6406 	Lamp
+O 0 14385 1 6407 	Lamp
+O 0 14385 1 6408 	Lamp
+O 0 14385 1 6409 	Lamp
+O 0 14385 1 6410 	Lamp
+O 0 14385 1 6418 	Lamp
+O 0 14385 1 6419 	Lamp
+O 0 14385 1 6420 	Lamp
+O 0 14385 1 6421 	Lamp
+O 0 14385 1 6422 	Lamp
+O 0 14385 1 6423 	Lamp
+O 0 14385 1 6427 	Lamp
+O 0 14385 1 6430 	Lamp
+O 0 14385 1 6443 	Lamp
+O 0 14385 1 6467 	Lamp
+O 0 14385 1 6468 	Lamp
+O 0 14385 1 6469 	Lamp
+O 0 14385 1 6470 	Lamp
+O 0 14397 3 6525 	Flower
+O 0 27199 1 6316 	Cauldron
+O 0 27199 1 6317 	Cauldron
+O 0 27199 1 6321 	Cauldron
+O 0 27199 1 6327 	Cauldron
+O 0 27199 1 6332 	Cauldron
+O 0 27199 1 6337 	Cauldron
+O 0 27199 1 6351 	Cauldron
+O 0 27199 1 6352 	Cauldron
+O 0 27199 1 6353 	Cauldron
+O 0 27199 1 6354 	Cauldron
+O 0 27199 1 6355 	Cauldron
+O 0 27199 1 6356 	Cauldron
+O 0 27199 1 6357 	Cauldron
+O 0 27199 1 6358 	Cauldron
+O 0 27199 1 6359 	Cauldron
+O 0 27199 1 6360 	Cauldron
+O 0 27199 1 6361 	Cauldron
+O 0 27199 1 6362 	Cauldron
+O 0 27199 1 6363 	Cauldron
+O 0 27199 1 6364 	Cauldron
+O 0 27199 1 6365 	Cauldron
+O 0 27199 1 6372 	Cauldron
+O 0 27199 1 6377 	Cauldron
+O 0 27199 1 6378 	Cauldron
+O 0 27199 1 6385 	Cauldron
+O 0 27199 1 6392 	Cauldron
+O 0 27199 1 6393 	Cauldron
+O 0 27199 1 6394 	Cauldron
+O 0 27199 1 6395 	Cauldron
+O 0 27199 1 6396 	Cauldron
+O 0 27199 1 6397 	Cauldron
+O 0 27199 1 6398 	Cauldron
+O 0 27199 1 6399 	Cauldron
+O 0 27199 1 6400 	Cauldron
+O 0 27199 1 6401 	Cauldron
+O 0 27199 1 6402 	Cauldron
+O 0 27199 1 6403 	Cauldron
+O 0 27199 1 6404 	Cauldron
+O 0 27199 1 6411 	Cauldron
+O 0 27199 1 6424 	Cauldron
+O 0 27199 1 6431 	Cauldron
+O 0 27199 1 6432 	Cauldron
+O 0 27199 1 6433 	Cauldron
+O 0 27199 1 6434 	Cauldron
+O 0 27199 1 6435 	Cauldron
+O 0 27199 1 6436 	Cauldron
+O 0 27199 1 6437 	Cauldron
+O 0 27199 1 6447 	Cauldron
+O 0 27199 1 6452 	Cauldron
+O 0 27199 1 6453 	Cauldron
+O 0 27199 1 6454 	Cauldron
+O 0 27199 1 6455 	Cauldron
+O 0 27199 1 6456 	Cauldron
+O 0 27199 1 6457 	Cauldron
+O 0 27199 1 6461 	Cauldron
+O 0 27199 1 6464 	Cauldron
+O 0 27199 1 6471 	Cauldron
+O 0 27199 1 6472 	Cauldron
+O 0 27199 1 6473 	Cauldron
+O 0 27199 1 6474 	Cauldron
+O 0 27199 1 6475 	Cauldron
+O 0 27199 1 6476 	Cauldron
+O 0 27199 1 6477 	Cauldron
+O 0 27199 1 6478 	Cauldron
+O 0 27199 1 6479 	Cauldron
+O 0 27199 1 6480 	Cauldron
+O 0 27199 1 6481 	Cauldron
+O 0 27199 1 6482 	Cauldron
+O 0 27199 1 6483 	Cauldron
+O 0 27199 1 6625 	Cauldron
+O 0 27199 1 6626 	Cauldron
+O 0 27311 1 6368 	Torch
+O 0 27311 4 6369 	Torch
+O 0 27311 4 6370 	Torch
+O 0 27311 1 6371 	Torch
+O 0 27311 1 6373 	Torch
+O 0 27311 1 6374 	Torch
+O 0 27311 1 6375 	Torch
+O 0 27311 1 6376 	Torch
+O 0 27311 1 6388 	Torch
+O 0 27311 1 6389 	Torch
+O 0 27311 1 6448 	Torch
+O 0 27311 1 6449 	Torch
+O 0 27311 1 6462 	Torch
+O 0 27311 1 6463 	Torch
+O 0 27311 4 6484 	Torch
+O 0 27311 4 6485 	Torch
+O 0 27311 4 6486 	Torch
+O 0 27311 4 6487 	Torch
+O 0 27311 4 6488 	Torch
+O 0 27311 4 6489 	Torch
+O 0 27311 4 6490 	Torch
+O 0 27311 4 6491 	Torch
+O 0 27311 2 6493 	Torch
+O 0 27311 2 6495 	Torch
+O 0 27311 2 6496 	Torch
+O 0 27311 2 6497 	Torch
+O 0 27311 2 6498 	Torch
+O 0 27311 2 6499 	Torch
+O 0 27311 2 6500 	Torch
+O 0 27311 2 6501 	Torch
+O 0 27311 2 6502 	Torch
+O 0 27311 2 6503 	Torch
+O 0 27311 2 6504 	Torch
+O 0 27311 2 6505 	Torch
+O 0 27311 2 6507 	Torch
+O 0 27311 2 6508 	Torch
+O 0 27311 2 6509 	Torch
+O 0 27311 2 6510 	Torch
+O 0 27311 2 6511 	Torch
+O 0 27311 2 6512 	Torch
+O 0 27311 2 6513 	Torch
+O 0 27311 2 6514 	Torch
+O 0 27311 2 6515 	Torch
+O 0 27311 2 6516 	Torch
+O 0 27311 2 6517 	Torch
+O 0 27311 2 6518 	Torch
+O 0 27311 2 6519 	Torch
+O 0 27311 2 6520 	Torch
+O 0 27311 2 6521 	Torch
+O 0 27311 2 6522 	Torch
+O 0 27311 2 6523 	Torch
+O 0 27311 2 6524 	Torch
+O 0 27311 2 6527 	Torch
+O 0 27311 2 6528 	Torch
+O 0 27311 2 6530 	Torch
+O 0 27311 2 6531 	Torch
+O 0 27311 2 6532 	Torch
+O 0 27311 2 6594 	Torch
+
+* Mobs
+
+M 0 6304 1 6304 	Diver Abalone
+? 0 4 0 E
+E 1 6303 9999 19 		Knife Diving
+? 0 4 0 E
+E 1 6304 9999 3 		Medallion Shark Tooth
+
+M 0 6304 1 6305 	Diver Abalone
+? 0 4 0 E
+E 1 6303 9999 19 		Knife Diving
+? 0 4 0 E
+E 1 6304 9999 3 		Medallion Shark Tooth
+
+M 0 6304 1 6306 	Diver Abalone
+? 0 4 0 E
+E 1 6303 9999 19 		Knife Diving
+? 0 4 0 E
+E 1 6304 9999 3 		Medallion Shark Tooth
+
+M 0 6306 1 6307	Lighthouse Keeper
+? 0 6 0 E
+E 1 6305 9999 19 		Falchion Whale Bone
+? 0 6 0 E
+E 1 6306 9999 1 		Ring White Coral
+
+*DISSECT EQUIP
+  *finger severed demon finger 6558
+  *ribcage demonic 6559
+M 0 6539 1 6308 	Demon Light
+? 0 2 0 E
+E 1 6548 9999 14 		Cloak Bleached
+? 0 2 0 E
+E 1 6549 9999 5 		Cap Bleached
+? 0 2 0 E
+E 1 6550 9999 4 		Vest Bleached
+? 0 2 0 E
+E 1 6551 9999 15 		Belt Bleached
+? 0 2 0 E
+E 1 6552 9999 8 		Slipper Bleached
+? 0 2 0 E
+E 1 6553 9999 6 		Knickers Bleached
+? 0 2 0 E
+E 1 6554 9999 12 		Sleeve Bleached 
+? 0 2 0 E
+E 1 6555 9999 16 		Wrist Band Bleached
+? 0 2 0 E
+E 1 6556 9999 11 		Work Glove Bleached
+? 0 2 0 E
+E 1 6557 9999 3 		Rosary Demonic
+
+M 0 6308 1 6310 	Urthadar
+? 0 2 0 E
+E 1 6317 1 19 		Sword Watery Death
+Y 0 142 3		Turtle shell set
+
+M 0 6309 1 6311 	Fiddle Harbor Guard
+? 0 6 0 E
+E 1 6318 9999 19 		Dagger Emerald Hilted
+
+M 0 6312 1 6313 	Mermaid Enchanting
+C 1 6311 1 6313 	Captain Shipwrecked
+
+M 0 6313 1 6314 	Assistant Lighthouse Keeper
+
+M 0 6314 1 6314 	Casandra
+? 0 6 0 E
+E 1 6319 9999 3 		Pendant Hope White
+
+M 0 6315 1 6315 	Hagnus Harbor Guard
+? 0 6 0 E
+E 1 6320 1 4 		Breastplate Dragonbone
+? 0 6 0 E
+E 1 6321 1 18 		Shield Dragonbone	
+
+M 0 6317 1 6316 	Amshor harbormaster
+? 0 5 0 E
+E 1 6322 9999 2 		Ring Blue Mithril
+? 0 2 0 E
+E 1 6323 9999 5 		Hat Harbormaster
+? 0 2 0 E
+E 1 6324 9999 3		Necklace Winged
+
+M 0 7494 2 6316 	Lascar Salty 
+
+M 0 6550 1 6317 	Ferrajar Schooner Captain
+? 0 6 0 E
+E 1 6325 9999 2 		Ring Captains
+
+M 0 7496 2 6317 	Swabbie 
+? 0 4 0 E
+E 1 7443 9999 19 		Rusted Gaff
+
+M 0 6318 1 6319 	Drigosean Cityguard
+Y 0 143 2		Xanesla set
+
+M 0 6319 1 6320 	Biologist Marine 
+? 0 5 0 E
+E 1 6338 9999 1 		Ring Fish Bladder
+
+M 0 6321 1 6321 	Fisherman Lonely 
+? 0 5 0 E
+E 1 6339 9999 4 		Vest Fishing
+? 0 5 0 E
+E 1 6340 9999 5 	Hat Fishing
+
+M 0 6322 1 6322 	Ghost Transparent
+? 0 5 0 E
+E 1 6341 9999 4 		Vest Ghost
+? 0 5 0 E
+E 1 6342 9999 5 		Hat Ghost
+
+M 0 6323 1 6325 	Master Yoga
+? 0 5 0 E
+E 1 6343 9999 5 		Headband Masters
+
+
+M 0 6325 1 6326 	Joey
+? 0 5 0 E
+E 1 7435 9999 5 		Snorkel
+? 0 5 0 E
+E 1 7436 9999 6 		Trunks Swim
+
+M 0 6326 1 6327 	Witchdoctor 
+? 0 5 0 E
+E 1 6344 9999 3 		Necklace Fishbone
+
+
+M 0 6327 1 6329 	Fisherman Lonely 
+G 1 14393 9999 		raft 
+
+M 0 6305 1 6329 	Seagull
+
+M 0 6302 1 6330 	Halibut
+
+M 0 6327 1 6330 	Fisherman Lonely 
+G 1 14393 9999 		raft 
+
+
+M 0 6329 1 6332 	Babe Beach 
+? 0 5 0 E
+E 1 6345 9999 19		Handbag
+
+
+M 0 7481 1 6332	Collector Tax
+? 0 5 0 E
+E 1 7426 9999 5		 Bifocals Flimsy
+
+M 0 6302 1 6333 	Halibut	
+
+M 0 6327 1 6333 	Fisherman Lonely 
+G 1 14393 9999		raft
+
+M 0 6332 1 6334 	Scout Bullywug 
+? 0 3 0 E
+E 1 6346 9999 4 		tunic shadow
+? 0 3 0 E
+E 1 6347 9999 19 		shank turtle shell 
+
+
+M 0 6332 1 6334 	Scout Bullywug 
+? 0 3 0 E
+E 1 6346 9999 4 		tunic shadow
+? 0 3 0 E
+E 1 6347 9999 19 		shank turtle shell
+
+
+M 0 6334 1 6337 	Yanic Cityguard	
+Y 0 144 2		Malachite set
+
+M 0 7482 1 6337 	Chief Police
+? 0 6 0 E 
+E 1 7427 9999 3 		Bib Ducky
+
+M 0 6335 1 6337 	Teebo
+? 0 6 0 E 
+E 1 6371 9999 2 		Ring Chaos
+? 0 6 0 E 
+E 1 6370 9999 19 		Dagger Rusted
+
+
+M 0 6337 1 6340 	Two Headed Serpent
+G 1 27936 9999 		Treasure
+
+M 0 6338 1 6341 	Frog Festering
+M 0 6338 1 6342 	Frog Festering
+M 0 6333 1 6342 	Explorer Bullywug
+
+M 0 6339 1 6343 	Zigmund
+? 0 6 0 E
+E 1 6372 9999 1 		Ring Vengeance 
+
+M 0 6340 1 6344 	Student Angry
+
+M 0 6341 1 6345 	Kimlash 
+? 0 6 0 E 
+E 1 6373 9999 4 		Shell Turtle Carapace
+
+
+M 0 6345 1 6350 	Grumash Ogre
+? 0 5 0 E 
+E 1 6374 1 5 		Helm War
+
+M 0 6346 2 6351 	Archer Vigilant
+? 0 2 0 E 	
+E 1 6376 9999 5 		Spectacles Peering
+
+M 0 7483 1 6351 	Slojup
+? 0 2 0 E 
+E 1 7428 9999 19 		Stick Black Wooden
+? 0 2 0 E 
+E 1 7429 9999 11 		Glove Black and White
+? 0 2 0 E 
+E 1 7430 9999 12 		Sleeve red
+? 0 2 0 E 
+E 1 7431 9999 1 		Ring Championship
+? 0 2 0 E 
+E 1 7432 9999 5 		Cap Bird Emblem
+? 0 2 0 E 
+E 1 7433 9999 6 		Pants White Short
+? 0 2 0 E 
+E 1 7434 9999 4 		Shirt Bird Emblem 
+
+
+M 0 6350 1 6353 	Zeekial
+? 0 2 0 E 
+E 1 6377 9999 4 		Vest Blood Stained
+? 0 2 0 E 
+E 1 6378 9999 19 		Dagger Shimmering
+
+M 0 7485 1 6363 	Hauser
+? 0 4 0 E
+E 1 7437 9999 5 		Fedora Dusty
+? 0 4 0 E
+E 1 7438 9999 17 		Watch Broken
+? 0 4 0 E
+E 1 7439 9999 16 		Bracelet Friendship
+
+
+M 0 7486 1 6354 	Mason
+? 0 4 0 E
+E 1 7440 9999 19 		Trowel Masonry 
+? 0 4 0 E
+ E 1 7441 9999 5 		Mask Paper
+? 0 4 0 E
+E 1 7442 9999 6 		Kneepads
+
+
+M 0 6355 1 6356 	Perry Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6357 1 6357 	Agent Private Security
+? 0 2 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6357 1 6358 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6359 3 6358 	Protestor Angry
+? 0 10 0 G
+G 1 6380 9999 		Granola
+
+M 0 6357 1 6359 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6360 1 6359 	Gardner 
+? 0 4 0 E 	
+E 1 6381 9999 19 		Sheers Garden
+
+M 0 6357 1 6360 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6361 1 6360 	Woman Snotty
+? 0 4 0 E 
+E 1 6382 9999 3 		Necklace Pearl Blue
+
+M 0 6357 1 6361 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6363 3 6361 	Cleaner Street
+
+M 0 6364 1 6361 	Tycoon Real Estate
+? 0 4 0 E
+E 1 6383 9999 14		 Cape Garish
+
+M 0 6357 1 6363 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 7488 1 6363 	Winger
+K 1 7489 1 6363 	Ziskey
+
+M 0 6357 1 6364 	Agent Private Security
+? 0 1 0 E 
+E 1 6379 9999 4 		Shirt Security Agent
+
+M 0 6346 2 6365 	Archer Vigilant
+? 0 2 0 E 	
+E 1 6376 9999 5 		Spectacles Peering
+
+M 0 6368 1 6366 	Quigley 
+G 1 7495 9999 		Key Jail
+
+M 0 6372 1 6369 	Client Stoned
+? 0 25 0 G
+G 1 34212 9999 		Pipeweed
+
+M 0 6378 1 6372 	Cityguard 
+Y 0 144 2		Malachite set
+
+M 0 6379 1 6373 	Woman Senile
+? 0 5 0 E 
+E 1 6384 9999 14 		Shawl Stiched
+
+M 0 6384 1 6375 	Manager Strip Club
+? 0 5 0 E 
+E 1 6375 1 19 		Axe Brain Cleaver
+
+M 0 6385 1 6376 	Bouncer Strip Club 
+	
+M 0 6392 1 6382 	Honorable Finney Albert
+? 0 5 0 E 
+E 1 6385 9999 19 		Hand Justice
+? 0 5 0 E 
+E 1 6386 9999 4 		Robes Judicial
+
+M 0 6378 1 6385 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6403 1 6392 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 7491 1 6392 	Wiley
+? 0 3 0 E
+E 1 7444 9999 3 		Goldfish bowl on a string
+
+
+M 0 6403 1 6394 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6440 1 6395	 Merchant Drow
+Y 0 145 2		Black Chain set
+
+M 0 6413 1 6398 	Elder Town 
+Y 0 146 3		Ceremonial set
+? 0 100 0 G
+G 1 431 9999		Donut
+K 1 6413 3 6398 	Elder Town
+Y 0 146 3		Ceremonial set
+? 0 100 0 G
+G 1 431 9999		Donut
+K 1 6413 1 6398 	Elder Town
+Y 0 146 3		Ceremonial set
+
+M 0 6403 1 6402 	Cityguard 		
+Y 0 144 2		Malachite set
+
+M 0 6439 1 6423 	Inspector Health
+? 0 2 0 E 
+E 1 6403 9999 10 		Glove Starched White
+? 0 2 0 E 
+E 1 6403 9999 11 		Glove Starched White	
+
+M 0 6416 1 6424 	Horse Grey
+
+M 0 6378 1 6424 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6440 1 6424 	Merchant Drow 
+Y 0 145 2		Black Chain set
+
+M 0 6442 1 6426 	Gabe
+? 0 4 0 E
+E 1 6414 9999 3 		Necklace Black Shale
+
+M 0 6407 1 6426 	Dwarf Agitated	
+	
+M 0 6443 1 6427 	Hooker Princess
+? 0 4 0 E
+E 1 6415 9999 19 		Shank Crystal	
+? 0 4 0 E
+E 1 6416 9999 4 		Shirt Fake Diamond
+
+M 0 6444 1 6427 	Man Disguised Kings Advisor
+? 0 4 0 E 
+E 1 6417 9999 5 		Hat Disguises
+
+M 0 6445 1 6428 	Hooker Cave Woman
+? 0 4 0 E
+E 1 6419 9999 4 		Shirt Leopard Print
+? 0 4 0 E
+E 1 6420 9999 19 		Club Wooden
+
+M 0 6446 1 6428 	Caveman Disguised
+? 0 4 0 E
+E 1 6421 9999 5 		Skull Tiger
+
+
+M 0 6449 1 6430 	Daria
+? 0 4 0 G
+G 1 6422 9999 		Briefcase
+? 0 4 0 E
+E 1 6423 9999 19 		Opener Letter
+? 0 4 0 E
+E 1 6424 9999 19 		paperweight
+? 0 4 0 E
+E 1 6425 9999 5 		Glasses Reading
+? 0 4 0 E
+E 1 6426 9999 1 		Ring Attorney 
+
+M 0 6403 1 6431 	Cityguard 		
+Y 0 144 2		Malachite set
+
+M 0 6378 1 6450 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6378 1 6464 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6440 1 6437 	Merchant Drow 
+Y 0 145 2		Black Chain set
+
+M 0 6458 1 6441 	Hooker Kwal'ish
+Y 0 147 3		White marble set
+? 0 100 0 G
+G 1 15309 9999		edible lacy panties
+C 1 6459 1 6441 	Man Depraved
+
+
+M 0 6461 1 6444 	Gladiator Xanesla
+? 0 1 0 E 
+E 1 6440 9999 4 		Suit Dented
+
+M 0 6461 1 6445 	Gladiator Xanesla
+? 0 1 0 E 
+E 1 6440 9999 4 		Suit Dented
+
+M 0 6462 1 6445 	Scedium
+? 0 4 0 E
+E 1 6439 1 19 		Sword Champions
+
+M 0 6461 1 6446 	Gladiator Xanesla
+? 0 4 0 E 
+E 1 6440 9999 4 		Suit Dented	
+	
+M 0 6440 1 6447 	Merchant Drow 
+Y 0 145 2		Black Chain set
+		
+M 0 6440 1 6461 	Merchant Drow 
+Y 0 145 2		Black Chain set
+
+M 0 6469 1 6467 	Collector
+Y 0 148 3		Cluttered set
+
+M 0 6470 1 6468 	Student Female
+? 0 3 0 E 
+E 1 6450 9999 5 		Tiara Fashionable
+? 0 3 0 E 
+E 1 6451 9999 3 		Necklace Pearl Gold
+? 0 3 0 E 
+E 1 6452 9999 1 		Ring Birthstone
+
+M 0 6378 1 6480 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6378 1 6481 	Cityguard
+Y 0 144 2		Malachite set
+
+M 0 6378 1 6471 	Cityguard 		
+Y 0 144 2		Malachite set
+
+M 0 6378 1 6475 	Cityguard 		
+Y 0 144 2		Malachite set
+
+M 0 6475 1 6476 	Gretchen
+Y 0 149 4 		Shady set
+
+M 0 6487 1 6483 	Guard Tower
+? 0 2 0 E
+E 1 6462 9999 15 		Girth Diamond 
+? 0 2 0 E
+E 1 6463 9999 14 		Cloak Diamond Studded
+? 0 2 0 E
+E 1 6464 9999 8 		Boot Diamond
+? 0 2 0 E
+E 1 6465 9999 4 		Vest Diamond
+? 0 2 0 E
+E 1 6466 9999 5 		Helm Diamond
+? 0 2 0 E
+E 1 6467 9999 19 		Sword Ceremonial
+? 0 100 0 G
+G 1 10029 9999		packaged ration
+K 1 6488 1 6483 		Tower Guard
+? 0 100 0 G
+G 1 7496 9999 		Key Tower
+? 0 2 0 E
+E 1 6462 9999 15 		Girth Diamond 
+? 0 2 0 E
+E 1 6463 9999 14 		Cloak	Diamond Studded
+? 0 2 0 E
+E 1 6464 9999 8 		Boot Diamond
+? 0 2 0 E
+E 1 6465 9999 4 		Vest Diamond
+? 0 2 0 E
+E 1 6466 9999 5 		Helm Diamond
+? 0 2 0 E
+E 1 6467 9999 19 		Sword Ceremonial 
+
+M 0 6492 1 6486 	Professor Xanesla
+? 0 5 0 E
+E 1 6468 9999 5 		Cap Thinking
+? 0 5 0 E
+E 1 6469 9999 19 		Ruler Diamond Edged
+? 0 5 0 E
+E 1 6470 9999 14 		Cloak Curious
+
+M 0 6493 1 6487 	Student Activist
+? 0 25 0 G
+G 1 6380 9999 		Granola
+
+M 0 6494 1 6487 	Student Activist
+
+M 0 6495 1 6488 	Student Beautiful
+? 0 5 0 E
+E 1 6471 9999 15 		Skirt Black Leather
+? 0 5 0 E
+E 1 6472 9999 4 		Corset Black Leather
+
+
+M 0 6500 1 6492 	Collector Garbage
+? 0 3 0 E
+E 1 6473 9999 14 		Cloak Grimy
+? 0 3 0 E
+E 1 6474 9999 5 		Hat Grimy
+? 0 3 0 E
+E 1 6475 9999 15 		Skirt Grimy
+? 0 3 0 E
+E 1 6476 9999 11 		Mitten tattered 
+? 0 3 0 E
+E 1 6477 9999 4 J		Jacket Stained Dinner
+
+
+M 0 6495 1 6499 	Student Beautiful
+? 0 5 0 E
+E 1 6471 9999 15 		Skirt Black Leather
+? 0 5 0 E
+E 1 6472 9999 4 		Corset Black Leather
+
+M 0 6507 1 6500 	Student Activist
+? 0 25 0 G
+G 1 6380 9999 		Granola
+
+
+M 0 6506 1 6501 	Professor Stern
+? 0 3 0 E
+E 1 6478 9999 14 		Cape Professors
+? 0 3 0 E
+E 1 6479 9999 4 		Robe Professors
+? 0 3 0 E
+E 1 6480 9999 5 		Shawl Professors
+? 0 3 0 E
+E 1 6481 9999 19 		Ruler Onyx
+? 0 3 0 E
+E 1 6483 9999 3 		Pendant Professor
+
+
+M 0 6509 1 6502 	Knight Church
+Y 0 150 1		Crusader set
+
+M 0 6510 1 6503 	Ringer Bell
+? 0 5 0 E
+E 1 6496 9999 10 		Glove Tattered ? 0 5 0 E
+E 1 6497 9999 16 		Wrist Guard
+
+
+M 0 6509 1 6504 	Knight Church
+Y 0 150 1		Crusader set
+
+M 0 6509 1 6505 	Knight Church
+Y 0 150 1		Crusader set
+
+M 0 6511 1 6506 	Vagrant Annoying
+? 0 3 0 E
+E 1 6498 9999 19 		Shard glass
+
+M 0 6512 1 6507 	Prince Andrew
+? 0 5 0 E
+E 1 6499 9999 1 		Ring Royal Crest
+
+
+M 0 6501 1 6510 	Tower Guard Ornery
+G 1 6356 9999 		Key tower
+
+M 0 6514 1 6511 	Alinon
+? 0 4 0 E
+E 1 6500 9999 5 		Shawl Purple
+? 0 4 0 E
+E 1 6501 9999 14 		Cloak Purple
+? 0 4 0 E
+E 1 6502 9999 1 		Ring Royal Crest
+
+
+M 0 6502 1 6514 	Guard Elite Tower	
+G 1 6357 9999 		Key tower
+
+
+M 0 6515 1 6517 	Security Head Tower
+G 1 6358 9999 		Key bedroom
+? 0 4 0 E
+E 1 6561 1 18 		Shield Deathward 
+
+M 0 6516 1 6518 	King Xanesla
+? 0 2 0 E
+E 1 6503 1 14 		Cape King Xanesla
+? 0 2 0 E
+E 1 6504 1 5 		Crown King Xanesla
+? 0 2 0 E
+E 1 6505 1 4 		Tunic King Xanesla
+? 0 2 0 E
+E 1 6506 1 15 		Codpiece King Xanesla
+? 0 2 0 E
+E 1 6507 1 1 		Ring King Xanesla
+
+
+M 0 6518 1 6522 	Queen Xanesla
+Y 0 151 5 		Purple mithril set
+? 0 100 0 G
+G 1 26896 9999		Donut 
+K 1 6517 3 6522 	Handmaiden Royal
+
+
+M 0 6522 1 6527 	Dean Student Affairs
+? 0 5 0 E
+E 1 6519 9999 1 		Ring Class
+? 0 5 0 E
+E 1 6520 9999 3 		Necklace Birthstone
+? 0 5 0 E
+E 1 6521 9999 5 		Crown Magic
+
+
+M 0 6495 1 6528 	Student Beautiful
+? 0 5 0 E
+E 1 6471 9999 15 		Skirt Black Leather
+? 0 5 0 E
+E 1 6472 9999 4 		Corset Black Leather
+
+M 0 6523 1 6528 	Chancellor University
+? 0 5 0 E
+E 1 6522 9999 14 		Frock Chancellors
+? 0 5 0 E
+E 1 6523 9999 4 		Blouse Chancellors
+? 0 5 0 E
+E 1 6524 9999 5 		Beret Chancellors
+? 0 5 0 E
+E 1 6525 9999 15 		Skirt Chancellors
+
+
+M 0 6509 1 6530 	Knight Church
+Y 0 150 1		Crusader set
+
+M 0 6509 1 6532 	Knight Church
+Y 0 150 1		Crusader set
+M 0 6511 1 6533 	Vagrant Annoying
+? 0 3 0 E
+E 1 6498 9999 19 		Shard glass
+
+M 0 6526 1 6534 	Student Ghost Hazed
+? 0 5 0 E
+E 1 6526 9999 1 		Ring Ghostly
+? 0 5 0 E
+E 1 6527 9999 3 		Collar Ring
+
+
+M 0 6529 1 6537 	Wraith Black 
+? 0 5 0 E 
+E 1 6528 9999 5 		Crown Ghostly
+
+M 0 6530 1 6538 	Wizard Sewer
+? 0 5 0 E
+E 1 6529 9999 4 		Robe Filthy 
+
+M 0 6531 2 6538 	Man Homeless
+? 0 5 0 E
+E 1 6530 9999 19 		Dagger Rusted Filthy
+
+M 0 6532 1 6539 	Ice Demon
+? 0 4 0 E
+E 1 6531 9999 15 		Belt Black Ice
+? 0 4 0 E
+E 1 6532 9999 5 		Helm Black Ice
+
+M 0 6533 1 6539 	Imp Devilish   
+Y 0 152 0 2		Shadowy fire set
+
+M 0 6552 1 6540 	Tracker Great 
+? 0 5 0 E
+E 1 6542 9999 19 		Sword Great Silver
+
+M 0 6535 1 6541 	Student Lost
+? 0 5 0 E
+E 1 6543 9999 16 		Bracelet Charm
+
+M 0 6536 1 6542 	Engineer City
+? 0 5 0 E
+E 1 6544 9999 5 		Cap Engineer
+
+M 0 6537 1 6543 	Copperpot
+? 0 5 0 E
+E 1 6545 9999 18 		Shield Dwarven Defender
+? 0 5 0 E
+E 1 6546 9999 19 		Hammer Dwarven Defender
+
+M 0 6369 1 6544 	Assassin elf Aquatic
+? 0 5 0 E
+E 1 6547 9999 19 		Dagger Black Coral
+
+
+M 0 6541 1 6546 	Jeff
+? 0 5 0 E 
+E 1 6562 9999 15 		Belt W emblem
+
+
+M 0 6545 1 6548 	Skeleton Festering
+? 0 5 0 E
+E 1 6563 9999 19 		Arm Severed
+
+
+M 0 6547 1 6551 	Derelict
+? 0 5 0 E
+E 1 6564 9999 19 		Needle Rusty
+
+
+M 0 6554 1 6554 	Thulsa 
+? 0 5 0 E
+E 1 6565 9999 19 		Scepter Serpentine 
+
+M 0 6556 1 6555 	Demon Sultry
+
+M 0 6557 1 6555 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999	 	ceremonial drinking bladder	
+ 
+M 0 6557 1 6556 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999		ceremonial drinking bladder
+
+M 0 6560 1 6560 	Imp Blood 
+? 0 5 0 E
+E 1 6568 9999 19 		Skull Baby 
+M 0 6561 1 6561 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+M 0 6566 1 6561 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6566 1 6563 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6557 1 6563 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999 		ceremonial drinking bladder
+
+M 0 6562 1 6564 	Demon Blood Guard
+? 0 2 0 E
+E 1 6573 9999 3 		Pendant Blood
+
+M 0 6557 1 6565 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999 		bladder Drinking
+
+M 0 6561 1 6566 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+M 0 6561 1 6567 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+
+M 0 6566 1 6568 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6563 6 6569 	Demon Spawned
+? 0 1 0 E
+E 1 6570 9999 4 		Vest Demon Spawn
+
+M 0 6564 1 6569 	Priestess Blood
+? 0 5 0 E
+E 1 6571 9999 18 		Shield Demon Skull
+? 0 5 0 E
+E 1 6572 9999 19		 Flail Demon Forged
+
+M 0 6562 1 6570 	Demon Blood Guard
+? 0 2 0 E
+E 1 6573 9999 3 		Pendant Blood
+
+M 0 6561 1 6571 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+M 0 6566 1 6572 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6567 1 6573 	Vampire Lord
+? 0 5 0 E
+E 1 6575 9999 16 		heart beating
+? 0 5 0 E
+E 1 6576 9999 3 		Cross Inverted
+? 0 5 0 E	
+E 1 6577 9999 1 		Ring Pentagram
+
+M 0 6561 1 6574 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+M 0 6566 1 6574 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6566 1 6575 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6561 1 6575 	Albino Bald
+? 0 2 0 E
+E 1 6569 9999 10 		Gauntlet Skull 
+
+
+M 0 6557 1 6576 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999 		bladder Drinking
+
+
+M 0 6557 1 6577 	Demon Worshipper
+? 0 2 0 G
+G 1 6566 9999 		bladder Drinking
+
+M 0 6568 1 6578	 Belia
+? 0 5 0 E
+E 1 6578 9999 3 		Prism Souls
+
+M 0 6566 1 6578 	Warlock Blood
+? 0 2 0 E
+E 1 6574 9999 19 		Shiv Blood
+
+M 0 6569 1 6579 	Ovola
+? 0 5 0 E
+E 1 6579 9999 15 		Skirt devil hide
+
+M 0 6580 1 6580 	Leukocyte
+? 0 3 0 E
+E 1 6580 9999 14 		Cloak Corpuscles
+? 0 3 0 E
+E 1 6581 9999 8 		Boot Corpuscles
+? 0 3 0 E
+E 1 6582 9999 5 		Hood Corpuscles
+? 0 3 0 E
+E 1 6583 9999 4 		Shirt Corpuscles
+? 0 3 0 E	
+E 1 6584 9999 15 		Sash Corpuscles
+
+M 0 6581 1 6582 	Navrip
+? 0 99 0 E
+E 1 305 9999 19		Dagger small
+
+M 0 6585 1 6583 	Warg
+R 1 6583 1 6583 	Falutin
+
+M 0 6585 1 6584 	Warg
+R 1 6584 1 6584 	Falihyla
+
+M 0 6585 1 6585 	Warg
+R 1 6586 1 6585 	Ealila
+
+M 0 6585 1 6586 	Warg
+R 1 6587 1 6586 	Eehian
+
+M 0 6588 1 6587 	Maynard
+? 0 4 0 E
+E 1 6585 9999 10 		Glove Smelly
+? 0 4 0 E
+E 1 6586 9999 14 		Cloak Iridescent
+? 0 4 0 E
+E 1 6587 9999 15 		Diaper Soiled
+? 0 4 0 E
+E 1 6588 9999 19 		Pipe Sewer
+
+
+M 0 6590 1 6588 	Pugmork 
+Y 0 153 0 2		Jellyfish set
+? 0 2 0 E
+E 1 7402 9999 19 		Petrified Jellyfish stingers
+
+
+M 0 6594 1 6589 	Pipe Fitter
+? 0 5 0 E
+E 1 7404 9999 19 		Pipe Wrench
+? 0 5 0 E
+E 1 7405 9999 19 		Coupling
+
+M 0 6595 1 6590 	Staley
+? 0 3 0 E
+E 1 7406 9999 4 		Breastplate Mithril Blue Green
+? 0 3 0 E
+E 1 7407 9999 5 		Helm Mithril Blue Green
+? 0 3 0 E
+E 1 7408 9999 14 		Cloak	Mithril Blue Green
+? 0 3 0 E
+E 1 7409 9999 15 		Belt Mithril Blue Green
+? 0 3 0 E
+E 1 7410 9999 12 		Sleeve Mithril Blue Green
+? 0 3 0 E
+E 1 7411 9999 16 		Bracer Mithril Blue Green
+
+M 0 6596 1 6590 	Contrell
+? 0 3 0 E
+E 1 7412 9999 5 		Shawl SeaWeed 
+? 0 3 0 E
+E 1 7413 9999 4 		Tunic SeaWeed 
+? 0 3 0 E
+E 1 7414 9999 14 		Poncho SeaWeed 
+? 0 3 0 E
+E 1 7415 9999 15 		Cummerbund SeaWeed 
+? 0 3 0 E
+E 1 7416 9999 6 		Knickers SeaWeed 
+
+M 0 6597 1 6591 	Revenant Opaque
+? 0 5 0 E
+E 1 7417 9999 1 		Ring Opaque
+? 0 5 0 E
+E 1 7418 9999 3 		Rosary Opaque
+
+M 0 6598 1 6591 	Skeleton Minotaur
+? 0 5 0 E
+E 1 7420 9999 14 		Cloak Minotaur Flesh
+? 0 5 0 E
+E 1 7421 9999 4 		Shirt Minotaur Flesh
+? 0 5 0 E
+E 1 7422 9999 5 		Cap Minotaur Flesh
+? 0 5 0 E
+E 1 7423 9999 16 		String Minotaur Flesh
+
+M 0 6599 1 6592 	Nomad
+? 0 5 0 E 
+E 1 7424 9999 8 		Sock Stinky
+? 0 5 0 E 
+E 1 7425 9999 4 		Jacket Grimy
+
+*Mobs without loads
+
+M 0 6300 2 6300 	Mako Shark
+M 0 6303 2 6300 	Nurse Shark
+M 0 6301 1 6301 	Giant Squid
+M 0 6302 3 6302 	Halibut
+M 0 6303 2 6302 	Nurse Shark
+M 0 6305 1 6302 	Seagull 
+M 0 6302 1 6303 	Halibut
+M 0 6300 1 6303 	Mako Shark
+M 0 6305 1 6303 	Seagull
+M 0 6302 1 6304 	Halibut
+M 0 6303 1 6304 	Nurse Shark
+M 0 6302 1 6305 	Halibut
+M 0 6305 1 6305 	Seagull
+M 0 6302 1 6306 	Halibut
+M 0 6307 1 6309 	Turtle Giant
+M 0 6303 1 6309 	Nurse Shark
+M 0 6310 1 6311 	Walcott 
+M 0 6303 1 6312 	Nurse Shark
+M 0 6307 1 6312 	Turtle Giant
+M 0 6316 1 6315	Chendor Unemployed Sailor
+M 0 7493 2 6315 	Seaman
+M 0 7495 1 6315 	Coxswain
+M 0 6307 1 6318 	Turtle Massive
+M 0 6303 1 6318 	Shark Nurse
+M 0 6320 1 6319 	Coyote Mangy 
+M 0 6320 1 6319 	Coyote Mangy 
+M 0 7484 1 6321 	Earl 
+M 0 6305 1 6321 	Seagull
+M 0 6307 1 6323 	Turtle Massive
+M 0 6303 1 6323 	Shark Nurse
+M 0 6303 1 6324 	Shark Nurse
+M 0 6305 1 6324 	Seagull
+M 0 6302 1 6324 	Halibut
+M 0 6324 1 6326 	Susie
+M 0 6305 1 6327 	Seagull
+M 0 7497 1 6327 	Fisherman Stymied	
+M 0 7498 1 6328 	Digger Gold
+M 0 6302 1 6329 	Halibut
+M 0 6328 2 6331 	Lion Mountain	
+M 0 6330 1 6332 	Weightlifter
+M 0 6331 1 6334 	Skeeter 
+M 0 6331 1 6335 	Skeeter
+M 0 6331 1 6336 	Skeeter
+M 0 6333 1 6336 	Explorer Bullywug
+M 0 6331 1 6338 	Skeeter
+M 0 6333 1 6338 	Explorer Bullywug
+M 0 6336 1 6339 	Turtle Monstrous 
+M 0 6343 1 6347 	Dwarf Bruised
+M 0 6344 1 6348 	Ogress Bulbous
+M 0 6344 1 6349 	Ogress Bulbous
+M 0 6347 2 6352 	Hooker Strung Out
+M 0 6348 2 6352 	Peace Protestor
+M 0 6349 1 6353 	Pimp Stylish 
+M 0 6351 1 6353 	Drunk Staggering
+M 0 6352 2 6354 	Sailor Leave
+M 0 6353 1 6354 	Thief Young
+M 0 6354 1 6354 	Missionary Pompous
+M 0 6353 1 6355 	Thief Young
+M 0 6348 2 6355 	Protestor Peace
+M 0 6356 1 6356 	Humbrick Punk Young
+M 0 6358 2 6357 	Tourist Annoying
+M 0 6358 2 6359 	Tourist Annoying
+M 0 6362 1 6360 	Sally
+M 0 6363 2 6362 	Cleaner Street
+M 0 6358 2 6362 	Tourist Annoying 
+M 0 6365 1 6362 	Businessman Lonely
+M 0 6366 1 6362 	Barker Museum
+M 0 6358 2 6363 	Tourist Annoying 
+M 0 6367 2 6363 	Student Stoned
+M 0 6363 2 6364 	Cleaner Street
+M 0 6369 1 6367 	Assassin Aquatic Elf
+M 0 6370 1 6368 	Juror Professional
+M 0 6371 1 6368 	Rusty
+M 0 6373 1 6369 	Lawyer Slimy 
+M 0 6374 1 6370 	Ambassador Logrus
+M 0 6375 1 6370 	Ambassador Brightmoon
+M 0 6376 1 6371 	Ambassador Amber		
+M 0 6377 1 6372 	Student
+M 0 6380 1 6374 	Bachelor Tacky
+M 0 6381 1 6374 	Jai
+M 0 6382 2 6375 	Dancer Exotic Blond
+M 0 6383 2 6375 	Dancer Exotic Brunette
+M 0 6386 1 6377 	Scientist Scrawny
+M 0 6387 1 6377 	Overseer Military
+M 0 6386 1 6378 	Scientist Scrawny
+M 0 6387 1 6378 	Overseer Military
+M 0 6388 1 6379 	Dwarf Hungover
+M 0 6389 1 6380 	Sailor
+M 0 6390 1 6381 	Geldoff
+M 0 6391 1 6381 	Curry
+M 0 6393 1 6383 	Immigrant Hobbit
+M 0 6394 1 6383 	Guard Embassy
+M 0 6395 1 6384 	Immigrant Brightmoon
+M 0 6396 1 6385 	Musician
+M 0 6397 1 6388 	Ecstasy
+M 0 6398 1 6388 	Announcer Club 
+M 0 6399 3 6389 	Customers
+M 0 6400 1 6389 	Waitress
+M 0 6401 1 6390 	Shark Mutated
+M 0 6402 1 6391 	Squid Mutated
+M 0 6377 1 6392 	Student
+M 0 7490 1 6392 	Dr. Marvin
+M 0 6404 1 6393 	Musician
+M 0 6405 1 6393 	Male Citizen
+M 0 6406 1 6393 	Female Citizen
+M 0 6480 1 6393 	Man Elderly
+M 0 6485 1 6393 	Man Elderly
+M 0 6483 1 6393 	Man Elderly
+M 0 6409 1 6394 	Sailor Drunk 
+M 0 6410 1 6394 	Norm
+M 0 6481 1 6394 	Man Elderly
+M 0 6478 1 6394 	Man Elderly
+M 0 6477 1 6394 	Man Elderly
+M 0 6411 1 6395 	Protestor Hobbit
+M 0 6406 1 6395 	Female Citizen 
+M 0 6363 1 6395 	Cleaner Street
+M 0 6406 1 6396 	Female Citizen
+M 0 6407 1 6396 	Dwarf Agitated
+M 0 6408 1 6396 	Hobbit Smiley
+M 0 7492 1 6396 	Siggy 
+M 0 6412 1 6397 	Girl Local Snotty
+M 0 6405 1 6397 	Male Citizen
+M 0 6406 1 6397 	Female Citizen
+M 0 6414 1 6399 	Beggar Blind
+M 0 6409 1 6399 	Sailor Drunk
+M 0 6415 1 6399 	Gremlin Civilized
+M 0 6484 1 6399 	Man Elderly
+M 0 6479 1 6399 	Man Elderly
+M 0 6403 1 6400 	Student
+M 0 6408 1 6400 	Hobbit Smiley
+M 0 6412 1 6400 	Girl Local Snotty
+M 0 6363 1 6401 	Cleaner Street
+M 0 6396 1 6401 	Musician Street
+M 0 6416 1 6401 	Horse Grey
+M 0 6417 1 6401 	Terrier Bull  
+M 0 6377 1 6402 	Student
+M 0 6415 1 6402 	Gremlin Civilized
+M 0 6418 1 6403 	Junkie
+M 0 6419 1 6403 	Musician Street
+M 0 6363 1 6403 	Cleaner Street
+M 0 6409 1 6403 	Sailor Drunk
+M 0 6416 1 6404 	Horse Grey
+M 0 6409 1 6404 	Sailor Drunk	
+M 0 6415 1 6404 	Gremlin Civilized
+M 0 6412 1 6404 	Girl Local Snotty
+M 0 6420 1 6405 	Cynthia
+M 0 6421 1 6406 	Crab 
+M 0 6422 1 6407 	Salty
+M 0 6423 1 6408 	Bulfrus
+M 0 6424 1 6409 	Flo
+M 0 6425 1 6410 	Mary
+M 0 6405 1 6411 	Male Citizen
+M 0 6406 1 6411 	Female Citizen
+M 0 6407 1 6411 	Dwarf Agitated
+M 0 6408 1 6411 	Hobbit Smiley
+M 0 6426 3 6412 	Student Drunk
+M 0 6427 1 6412 	Prowler
+M 0 6428 1 6412 	Jogger
+M 0 6426 3 6413 	Student Drunk
+M 0 6427 1 6413 	Prowler
+M 0 6428 1 6413 	Jogger
+M 0 6429 1 6413 	Environmentalist
+M 0 6430 1 6414 	Bouncer Brothel
+M 0 6431 1 6415 	Janitor Brothel
+M 0 6432 1 6417 	Doorman Brothel
+M 0 6433 1 6418 	Lester
+M 0 6434 1 6419 	Jenoa
+M 0 6435 1 6420 	Eldon
+M 0 6436 1 6421 	Jules
+M 0 6437 1 6422 	Postmaster
+M 0 6438 1 6423 	Alberto 
+M 0 6441 1 6425 	Student Lonely
+M 0 6406 1 6425 	Female Citizen
+M 0 6412 1 6425 	Girl Local Snotty
+M 0 6447 1 6429 	Cowboy Fake
+M 0 6448 1 6429 	Hooker Annie
+M 0 6406 1 6431 	Female Citizen
+M 0 6450 1 6432 	Mage Traveling
+M 0 6451 1 6432 	Man Homeless
+M 0 6452 1 6432 	Beggar Scruffy
+M 0 6407 1 6433 	Dwarf Agitated
+M 0 6408 1 6433 	Hobbit Smiley
+M 0 6409 1 6433 	Sailor Drunk
+M 0 6453 1 6434 	Gossip
+M 0 6452 1 6435 	Beggar Scruffy
+M 0 6377 1 6435 	Student
+M 0 6451 1 6440 	Man Homeless
+M 0 6454 1 6436 	Student Visiting
+M 0 6363 1 6436 	Cleaner Student
+M 0 6450 1 6436 	Mage Traveling
+M 0 6455 3 6437 	Brother Fraternity
+M 0 6456 4 6437 	Sister Sorority
+M 0 6455 3 6438 	Brother Fraternity
+M 0 6456 4 6438 	Sister Sorority
+M 0 6406 1 6439 	Citizen Female
+M 0 6412 1 6439 	Girl Local Snotty
+M 0 6457 1 6440 	Robin hooker
+M 0 6460 1 6442 	Scyra
+M 0 6415 1 6447 	Gremlin Civilized
+M 0 6363 1 6447 	Cleaner Street
+M 0 6450 1 6447 	Mage Traveling
+M 0 6463 1 6448 	Patchet Nurse
+M 0 6407 1 6450 	Dwarf Agitated	
+M 0 6409 1 6450 	Sailor Drunk	
+M 0 6464 1 6452 	Monk Wandering
+M 0 6450 1 6452 	Mage Traveling
+M 0 6464 1 6453 	Monk Wandering
+M 0 6450 1 6453 	Mage Traveling
+M 0 6452 1 6454 	Beggar Scruffy
+M 0 6377 1 6454 	Student
+M 0 6406 1 6455 	Citizen Female
+M 0 6415 1 6456 	Gremlin Civilized
+M 0 6363 1 6456 	Cleaner Street
+M 0 6408 1 6457 	Hobbit Smiley
+M 0 6465 2 6458 	Gladiator Midget
+M 0 6461 1 6458 	Gladiator
+M 0 6465 2 6459 	Gladiator Midget
+M 0 6465 1 6460 	Gladiator Midget
+M 0 6464 1 6461 	Monk Wandering
+M 0 6466 1 6463 	Doctor Xanesla
+M 0 6467 2 6464 	Wife Frumpy
+M 0 6468 4 6465 	Student Drunk
+M 0 6471 1 6469 	Bry
+M 0 6472 1 6470 	Tealeaf
+M 0 6415 1 6471 	Gremlin Civilized
+M 0 6452 1 6472 	Beggar Scruffy
+M 0 6377 1 6472 	Student
+M 0 6451 1 6472 	Man Homeless
+M 0 6477 1 6472 	Man Elderly
+M 0 6485 1 6472 	Man Elderly
+M 0 6396 1 6473 	Musician 
+M 0 6405 1 6473 	Citizen Male
+M 0 6406 1 6473 	Citizen Female
+M 0 6408 1 6473 	Hobbit Smiley
+M 0 6473 5 6474 	Child Noisy
+M 0 6406 1 6474 	Citizen female
+M 0 6407 1 6474 	Dwarf Agitated
+M 0 6409 1 6474 	Sailor Drunk 
+M 0 6450 1 6475 	Mage Traveling
+M 0 6440 1 6475 	Drow Merchant
+M 0 6474 1 6476 	Crier Church 
+M 0 6479 1 6476 	Man Elderly
+M 0 6478 1 6476 	Man Elderly
+M 0 6476 1 6477 	Vigilante Roaming
+M 0 6363 1 6477 	Cleaner Street
+M 0 6450 1 6477 	Mage Traveling
+M 0 6481 1 6478 	Man Elderly
+M 0 6484 1 6478 	Man Elderly
+M 0 6480 1 6479 	Man Elderly
+M 0 6483 1 6479 	Man Elderly
+M 0 6377 1 6480 	Student
+M 0 6363 1 6480 	Cleaner Street
+M 0 6486 1 6481 	Orc Educated
+M 0 6363 1 6481 	Cleaner Street
+M 0 6407 1 6482 	Dwarf Agitated
+M 0 6408 1 6482 	Hobbit Smiley
+M 0 6489 2 6484 	Guide Tour
+M 0 6490 1 6485 	Male Tourist
+M 0 6491 1 6485 	Guard Mission
+M 0 6496 1 6488 	Student Advanced
+M 0 6497 2 6488 	Student Young
+M 0 6498 1 6489 	Priest Xanesla
+M 0 6498 1 6490 	Priest Xanesla
+M 0 6499 3 6491 	Child Xanesla
+M 0 6501 1 6493 	Guard Tower Ornery
+M 0 6501 1 6495 	Guard Tower Ornery
+M 0 6502 1 6495 	Guard Elite Tower
+M 0 6501 1 6496 	Guard Tower Ornery
+M 0 6504 2 6497 	Tourist Annoying
+M 0 6496 2 6499 	Student Advanced
+M 0 6497 2 6499 	Student Young
+M 0 6505 1 6500 	Student Panicked
+M 0 6496 2 6501 	Student Advanced
+M 0 6497 2 6501 	Student Young
+M 0 6498 1 6502 	Priest Xanesla
+M 0 6498 1 6504 	Priest Xanesla
+M 0 6508 2 6504 	Person Devote
+M 0 6498 1 6505 	Priest Xanesla
+M 0 6508 2 6505 	Person Devote
+M 0 6501 1 6508 	Guard Tower Ornery 
+M 0 6502 1 6508 	Guard Tower Elite
+M 0 6513 1 6509 	Tower Servant
+M 0 6513 1 6510 	Tower Servant
+M 0 6502 1 6511 	Guard Elite Tower
+M 0 6502 1 6512 	Guard Elite Tower	
+M 0 6501 1 6513 	Tower Guard Ornery
+M 0 6513 1 6513 	Tower Servant	
+M 0 6501 1 6514 	Tower Guard Ornery
+M 0 6502 1 6515 	Guard Elite Tower	
+M 0 6502 1 6516 	Guard Elite Tower	
+M 0 6501 1 6519 	Guard Tower Ornery
+M 0 6513 1 6519 	Servant Tower
+M 0 6502 1 6520 	Guard Elite Tower
+M 0 6501 1 6521 	Guard Tower Ornery
+M 0 6502 1 6523 	Guard Tower Elite
+M 0 6519 1 6524 	Advisor Queen's		
+M 0 6520 1 6525 	Caretaker Garden
+M 0 6521 1 6525 	Artist Gnome
+M 0 6504 1 6526 	Tourist Annoying
+M 0 6490 1 6526 	Tourist Male
+M 0 6491 1 6526 	Guard Mission
+M 0 6496 2 6527 	Student Advanced
+M 0 6497 2 6527 	Student Young
+M 0 6496 2 6528 	Student Advanced
+M 0 6497 2 6528 	Student Young
+M 0 6524 1 6529 	Scientist Deformed	
+M 0 6498 1 6530 	Priest Xanesla
+M 0 6508 2 6530 	Person Devote 
+M 0 6525 1 6532 	Reverend Cleophus
+M 0 6498 1 6532 	Priest Xanesla
+M 0 6527 2 6535 	Crocodile Mutant
+M 0 6528 2 6536 	Moccasin Water
+M 0 6534 2 6540 	Werebear
+M 0 6540 1 6545 	Elf Munitions
+M 0 6542 1 6546 	Woman Snickering
+M 0 6543 1 6547 	Slime Green
+M 0 6544 1 6548 	Leech Giant
+M 0 6546 2 6549 	Bat Vampire
+M 0 6546 1 6550 	Bat Vampire
+M 0 6548 1 6552 	Elf Aquatic Scout
+M 0 6549 1 6552 	Elf Messenger Scout
+M 0 6553 1 6553 	Golem Stone
+M 0 6553 1 6556 	Golem Stone
+M 0 6558 1 6557 	Woman Scarred
+M 0 6559 1 6558 	Vampire Female
+M 0 6559 1 6562 	Vampire Female
+M 0 6558 1 6562 	Woman Scarred
+M 0 6556 1 6565 	Demon Sultry
+M 0 6558 1 6566 	Woman Scarred
+M 0 6558 1 6567 	Woman Scarred
+M 0 6558 1 6568 	Woman Scarred
+M 0 6559 1 6571 	Vampire Female
+M 0 6556 1 6576 	Demon Sultry
+M 0 6556 1 6577	Demon Sultry
+M 0 6582 1 6582 	Mrs. Bybbuk
+M 0 6589 1 6587 	Ozgur
+M 0 6592 1 6588 	Farsia
+M 0 6593 1 6589 	Aeldon 
+M 0 7477 1 6592 	Drifter
+M 0 6367 2 6593 	Student Stoned
+M 0 6358 1 6593 	Tourist Annoying
+M 0 6502 1 6594 	Guard Palace Elite
+M 0 6300 1 6595	Shark Mako
+M 0 6303 1 6595 	Shark Nurse
+M 0 7480 1 6595 	Eel Electric
+M 0 6540 1 6596 	Elf Munitions
+M 0 7478 1 6596 	Elf Engineer
+M 0 7480 1 6596 	Eel Electric
+M 0 7479 1 6597 	Crab Giant			
+M 0 7480 1 6597 	Eel Electric
+M 0 6540 1 6598 	Elf Munitions
+M 0 7478 1 6598 	Elf Engineer
+M 0 7480 1 6598 	Eel Electric
+
+
 S
