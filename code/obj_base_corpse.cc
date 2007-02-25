@@ -378,8 +378,10 @@ int TBaseCorpse::objectDecay()
     if (getMaterial() == MAT_POWDER) {
       sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r", getName());
     } else {
-      if (!::number(0, 4) && Races[getCorpseRace()]->isHumanoid()){
-        act("$n sits up and lets out a ghastly gasp!", TRUE, this, 0, 0, TO_ROOM);
+      // check to see if corpse should do a 'last gasp' or whatever before decaying
+      // getCorpseVnum() returns -1 for severed body parts
+      if (!::number(0, 4) && getCorpseVnum() >= 0 && Races[getCorpseRace()]->isHumanoid()){
+        act("$n sits up and emits a ghastly moan!", TRUE, this, 0, 0, TO_ROOM);
       }
       sendrpf(COLOR_OBJECTS, roomp, "Flesh-eaters dissolve %s.\n\r", getName());
     }

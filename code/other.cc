@@ -3366,31 +3366,58 @@ void TBeing::doLight(const sstring & argument)
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
-
+  
+  // WARNING: the room and equipped lists do not stack
+  // meaning that if there are 2 lanterns in the room and 2 equipped, light 4.lantern will not find any lantern.
+  // thus the room and held arguments are needed, and supplying a numbered 1st arg without a 2nd arg can produce odd results.
+  // one could write a routine to count objects in the linked list, but perhaps one would then want to reconcile seen vs unseen objects for non-lights.
   roomOnly = is_abbrev(arg2, "room");
   heldOnly = is_abbrev(arg2, "held");
   
   if (arg1.empty()) {
     sendTo("Light what?\n\r");
     return;
-  } else {
-    if (!(num = get_number(&tmp)))
-      return;
+  }
+  
+  if (!(num = get_number(&tmp)))
+    return;
 
-    // searchLinkedList not searchLinkedListVis so newbies can light lampposts
-    if (heldOnly || !(t = searchLinkedList(arg1, roomp->getStuff()))) {
-      if (roomOnly || (!(t = heldInPrimHand())) ||
-          !isname(tmp, t->name) || (num == 2)) {
-        if (roomOnly || (!(t = heldInSecHand())) ||
-            !isname(tmp, t->name) || (num > 2)) {
-          sendTo("You can only light objects that are in the room or held.\n\r");
+  // no visibility checks
+  // look in room first
+  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->getStuff()))) {
+    if (roomOnly) {
+      sendTo("You cannot find any such object in your surroundings.\n\r");
+      return;
+    }
+  }
+  
+  if (!t) {
+    // check eq
+    int stack_num = 1; // keep track of which object they are trying to light
+    for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+      if ((t = equipment[i]) && isname(tmp, t->name)) {
+        // keep looking unless name and number argument match
+        if (num != stack_num) {
+          ++stack_num;
+          continue;
+        } else {
+          // don't allow the burning of the clothes on your back -
+          // so, if the item is equipped, it can only be lit if it is a light
+          if (dynamic_cast<TLight *>(t)){
+            t->lightMe(this, SILENT_NO);
+          } else {
+            act("You cannot light $p while equipped.", FALSE, this, t, 0, TO_CHAR);
+          }
           return;
         }
       }
     }
-    // Do the various checks to see if this object can be lit. - Russ
+    sendTo("You cannot find any such object.\n\r");
+    return;
+  } else {
     t->lightMe(this, SILENT_NO);
   }
+  
 }
 
 void TObj::setBurning(TBeing *ch){
@@ -3421,8 +3448,7 @@ void TThing::extinguishMe(TBeing *ch)
   TObj *o;
 
   if (!(o=dynamic_cast<TObj *>(this)) || !o->isObjStat(ITEM_BURNING)) {
-    ch->sendTo("Can't find anything burning in the room or in your hand.\n\r");
-    ch->sendTo("Assuming you meant an item your wearing. You begin to extinguish yourself.\n\r");
+    ch->sendTo("You begin to extinguish yourself.\n\r");
     act("You stop, drop, and roll on the ground.", FALSE, ch, 0, 0, TO_CHAR);
     act("$n stops, drops, and rolls on the ground.", FALSE, ch, 0, 0, TO_ROOM);
     start_task(ch, 0, 0, TASK_EXTINGUISH_MY_ASS, "", 2, ch->inRoom(), 0, 0, 5);
@@ -3460,21 +3486,38 @@ void TBeing::doExtinguish(const sstring & argument)
   if (arg1.empty()) {
     sendTo("Extinguish what?\n\r");
     return;
-  } else {
-    if (!(num = get_number(&tmp)))
-      return;
+  }
+  
+  if (!(num = get_number(&tmp)))
+    return;
 
-    // searchLinkedList not searchLinkedListVis so newbies can light lampposts
-    if (heldOnly || !(t = searchLinkedList(arg1, roomp->getStuff()))) {
-      if (roomOnly || (!(t = heldInPrimHand())) ||
-          !isname(tmp, t->name) || (num == 2)) {
-        if (roomOnly || (!(t = heldInSecHand())) ||
-            !isname(tmp, t->name) || (num > 2)) {
-          sendTo("You can only extinguish objects that are in the room or held.\n\r");
+  // no visibility checks
+  // look in room first
+  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->getStuff()))) {
+    if (roomOnly) {
+      sendTo("You cannot find any such object in your surroundings.\n\r");
+      return;
+    }
+  }
+  
+  if (!t) {
+    // check eq
+    int stack_num = 1; // keep track of which object they are trying to extinguish
+    for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+      if ((t = equipment[i]) && isname(tmp, t->name)) {
+        // keep looking unless name and number argument match
+        if (num != stack_num) {
+          ++stack_num;
+          continue;
+        } else {
+          t->extinguishMe(this);
           return;
         }
       }
     }
+    sendTo("You cannot find any such object.\n\r");
+    return;
+  } else {
     t->extinguishMe(this);
   }
 }
