@@ -84,6 +84,7 @@ D 0 6503 5 1
 D 0 6500 0 1 	Classroom
 D 0 6499 2 1 
 
+
 D 0 6500 1 1 	Classroom
 D 0 6528 3 1
 
@@ -161,7 +162,7 @@ O 0 1200 1 6384 	Lamp
 O 0 2366 2 6368 	Couch
 O 0 2366 1 6375 	Couch leather
 O 0 3530 7 6409 	Stool
-O 0 6300 4 6300	Kelp
+O 0 6300 4 6300		Kelp
 O 0 6300 4 6301 	Kelp
 O 0 6300 4 6595 	Kelp
 O 0 6301 1 6300 	Reef
@@ -169,6 +170,7 @@ O 0 6301 1 6595 	Reef
 O 0 6302 1 6302 	Buoy
 O 0 6302 1 6303 	Buoy
 O 0 6302 1 6304 	Buoy
+
 O 0 6302 1 6305 	Buoy
 O 0 6302 1 6306 	Buoy
 O 0 6302 1 6323 	Buoy
@@ -369,7 +371,7 @@ E 1 6303 9999 19 		Knife Diving
 ? 0 4 0 E
 E 1 6304 9999 3 		Medallion Shark Tooth
 
-M 0 6306 1 6307	Lighthouse Keeper
+M 0 6306 1 6307		Lighthouse Keeper
 ? 0 6 0 E
 E 1 6305 9999 19 		Falchion Whale Bone
 ? 0 6 0 E
@@ -402,8 +404,8 @@ E 1 6557 9999 3 		Rosary Demonic
 
 M 0 6308 1 6310 	Urthadar
 ? 0 2 0 E
-E 1 6317 1 19 		Sword Watery Death
-Y 0 142 3		Turtle shell set
+E 1 6317 1 19 			Sword Watery Death
+Y 0 142 3			Turtle shell set
 
 M 0 6309 1 6311 	Fiddle Harbor Guard
 ? 0 6 0 E
@@ -422,7 +424,7 @@ M 0 6315 1 6315 	Hagnus Harbor Guard
 ? 0 6 0 E
 E 1 6320 1 4 		Breastplate Dragonbone
 ? 0 6 0 E
-E 1 6321 1 18 		Shield Dragonbone	
+E 1 6321 1 18 		Shield Dragonbone
 
 M 0 6317 1 6316 	Amshor harbormaster
 ? 0 5 0 E
@@ -493,14 +495,14 @@ M 0 6329 1 6332 	Babe Beach
 E 1 6345 9999 19		Handbag
 
 
-M 0 7481 1 6332	Collector Tax
+M 0 7481 1 6332		Collector Tax
 ? 0 5 0 E
 E 1 7426 9999 5		 Bifocals Flimsy
 
 M 0 6302 1 6333 	Halibut	
 
 M 0 6327 1 6333 	Fisherman Lonely 
-G 1 14393 9999		raft
+G 1 14393 9999			raft
 
 M 0 6332 1 6334 	Scout Bullywug 
 ? 0 3 0 E
@@ -517,7 +519,7 @@ E 1 6347 9999 19 		shank turtle shell
 
 
 M 0 6334 1 6337 	Yanic Cityguard	
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 7482 1 6337 	Chief Police
 ? 0 6 0 E 
@@ -549,6 +551,7 @@ E 1 6373 9999 4 		Shell Turtle Carapace
 
 
 M 0 6345 1 6350 	Grumash Ogre
+
 ? 0 5 0 E 
 E 1 6374 1 5 		Helm War
 
@@ -561,6 +564,7 @@ M 0 7483 1 6351 	Slojup
 E 1 7428 9999 19 		Stick Black Wooden
 ? 0 2 0 E 
 E 1 7429 9999 11 		Glove Black and White
+
 ? 0 2 0 E 
 E 1 7430 9999 12 		Sleeve red
 ? 0 2 0 E 
@@ -598,7 +602,7 @@ E 1 7442 9999 6 		Kneepads
 
 
 M 0 6355 1 6356 	Perry Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6357 1 6357 	Agent Private Security
 ? 0 2 0 E 
@@ -654,14 +658,14 @@ M 0 6346 2 6365 	Archer Vigilant
 E 1 6376 9999 5 		Spectacles Peering
 
 M 0 6368 1 6366 	Quigley 
-G 1 7495 9999 		Key Jail
+G 1 7495 9999 			Key Jail
 
 M 0 6372 1 6369 	Client Stoned
 ? 0 25 0 G
 G 1 34212 9999 		Pipeweed
 
 M 0 6378 1 6372 	Cityguard 
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6379 1 6373 	Woman Senile
 ? 0 5 0 E 
@@ -680,10 +684,10 @@ E 1 6385 9999 19 		Hand Justice
 E 1 6386 9999 4 		Robes Judicial
 
 M 0 6378 1 6385 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6403 1 6392 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 7491 1 6392 	Wiley
 ? 0 3 0 E
@@ -691,24 +695,27 @@ E 1 7444 9999 3 		Goldfish bowl on a string
 
 
 M 0 6403 1 6394 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
-M 0 6440 1 6395	 Merchant Drow
-Y 0 145 2		Black Chain set
+M 0 6440 1 6395	 	Merchant Drow
+Y 0 145 2			Black Chain set
+
+M 0 6440 1 6475 	Drow Merchant
+Y 0 145 2			Black Chain set
 
 M 0 6413 1 6398 	Elder Town 
-Y 0 146 3		Ceremonial set
+Y 0 146 3			Ceremonial set
 ? 0 100 0 G
-G 1 431 9999		Donut
+G 1 431 9999			Donut
 K 1 6413 3 6398 	Elder Town
-Y 0 146 3		Ceremonial set
+Y 0 146 3			Ceremonial set
 ? 0 100 0 G
-G 1 431 9999		Donut
+G 1 431 9999			Donut
 K 1 6413 1 6398 	Elder Town
-Y 0 146 3		Ceremonial set
+Y 0 146 3			Ceremonial set
 
 M 0 6403 1 6402 	Cityguard 		
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6439 1 6423 	Inspector Health
 ? 0 2 0 E 
@@ -719,10 +726,10 @@ E 1 6403 9999 11 		Glove Starched White
 M 0 6416 1 6424 	Horse Grey
 
 M 0 6378 1 6424 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6440 1 6424 	Merchant Drow 
-Y 0 145 2		Black Chain set
+Y 0 145 2			Black Chain set
 
 M 0 6442 1 6426 	Gabe
 ? 0 4 0 E
@@ -764,21 +771,23 @@ E 1 6425 9999 5 		Glasses Reading
 E 1 6426 9999 1 		Ring Attorney 
 
 M 0 6403 1 6431 	Cityguard 		
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6378 1 6450 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6378 1 6464 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6440 1 6437 	Merchant Drow 
-Y 0 145 2		Black Chain set
+Y 0 145 2			Black Chain set
 
 M 0 6458 1 6441 	Hooker Kwal'ish
-Y 0 147 3		White marble set
+? 0 4 0 E
+E 1 6427 9999 19        Ax Admantium
+Y 0 147 3			White marble set
 ? 0 100 0 G
-G 1 15309 9999		edible lacy panties
+G 1 15309 9999			edible lacy panties
 C 1 6459 1 6441 	Man Depraved
 
 
@@ -802,10 +811,10 @@ M 0 6440 1 6447 	Merchant Drow
 Y 0 145 2		Black Chain set
 		
 M 0 6440 1 6461 	Merchant Drow 
-Y 0 145 2		Black Chain set
+Y 0 145 2			Black Chain set
 
 M 0 6469 1 6467 	Collector
-Y 0 148 3		Cluttered set
+Y 0 148 3			Cluttered set
 
 M 0 6470 1 6468 	Student Female
 ? 0 3 0 E 
@@ -816,19 +825,19 @@ E 1 6451 9999 3 		Necklace Pearl Gold
 E 1 6452 9999 1 		Ring Birthstone
 
 M 0 6378 1 6480 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6378 1 6481 	Cityguard
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6378 1 6471 	Cityguard 		
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6378 1 6475 	Cityguard 		
-Y 0 144 2		Malachite set
+Y 0 144 2			Malachite set
 
 M 0 6475 1 6476 	Gretchen
-Y 0 149 4 		Shady set
+Y 0 149 4 			Shady set
 
 M 0 6487 1 6483 	Guard Tower
 ? 0 2 0 E
@@ -871,7 +880,7 @@ E 1 6470 9999 14 		Cloak Curious
 
 M 0 6493 1 6487 	Student Activist
 ? 0 25 0 G
-G 1 6380 9999 		Granola
+G 1 6380 9999 			Granola
 
 M 0 6494 1 6487 	Student Activist
 
@@ -903,7 +912,7 @@ E 1 6472 9999 4 		Corset Black Leather
 
 M 0 6507 1 6500 	Student Activist
 ? 0 25 0 G
-G 1 6380 9999 		Granola
+G 1 6380 9999 			Granola
 
 
 M 0 6506 1 6501 	Professor Stern
@@ -916,11 +925,11 @@ E 1 6480 9999 5 		Shawl Professors
 ? 0 3 0 E
 E 1 6481 9999 19 		Ruler Onyx
 ? 0 3 0 E
-E 1 6483 9999 3 		Pendant Professor
+E 1 6482 9999 3 		Pendant Professor
 
 
 M 0 6509 1 6502 	Knight Church
-Y 0 150 1		Crusader set
+Y 0 150 1			Crusader set
 
 M 0 6510 1 6503 	Ringer Bell
 ? 0 5 0 E
@@ -929,10 +938,10 @@ E 1 6497 9999 16 		Wrist Guard
 
 
 M 0 6509 1 6504 	Knight Church
-Y 0 150 1		Crusader set
+Y 0 150 1			Crusader set
 
 M 0 6509 1 6505 	Knight Church
-Y 0 150 1		Crusader set
+Y 0 150 1			Crusader set
 
 M 0 6511 1 6506 	Vagrant Annoying
 ? 0 3 0 E
@@ -944,7 +953,7 @@ E 1 6499 9999 1 		Ring Royal Crest
 
 
 M 0 6501 1 6510 	Tower Guard Ornery
-G 1 6356 9999 		Key tower
+G 1 6356 9999 			Key tower
 
 M 0 6514 1 6511 	Alinon
 ? 0 4 0 E
@@ -956,31 +965,31 @@ E 1 6502 9999 1 		Ring Royal Crest
 
 
 M 0 6502 1 6514 	Guard Elite Tower	
-G 1 6357 9999 		Key tower
+G 1 6357 9999 			Key tower
 
 
 M 0 6515 1 6517 	Security Head Tower
-G 1 6358 9999 		Key bedroom
+G 1 6358 9999 			Key bedroom
 ? 0 4 0 E
-E 1 6561 1 18 		Shield Deathward 
+E 1 6561 1 18 			Shield Deathward 
 
 M 0 6516 1 6518 	King Xanesla
 ? 0 2 0 E
-E 1 6503 1 14 		Cape King Xanesla
+E 1 6503 1 14 			Cape King Xanesla
 ? 0 2 0 E
-E 1 6504 1 5 		Crown King Xanesla
+E 1 6504 1 5 			Crown King Xanesla
 ? 0 2 0 E
-E 1 6505 1 4 		Tunic King Xanesla
+E 1 6505 1 4 			Tunic King Xanesla
 ? 0 2 0 E
-E 1 6506 1 15 		Codpiece King Xanesla
+E 1 6506 1 15 			Codpiece King Xanesla
 ? 0 2 0 E
-E 1 6507 1 1 		Ring King Xanesla
+E 1 6507 1 1 			Ring King Xanesla
 
 
 M 0 6518 1 6522 	Queen Xanesla
-Y 0 151 5 		Purple mithril set
+Y 0 151 5 			Purple mithril set
 ? 0 100 0 G
-G 1 26896 9999		Donut 
+G 1 26896 9999			Donut 
 K 1 6517 3 6522 	Handmaiden Royal
 
 
@@ -999,6 +1008,7 @@ E 1 6471 9999 15 		Skirt Black Leather
 ? 0 5 0 E
 E 1 6472 9999 4 		Corset Black Leather
 
+
 M 0 6523 1 6528 	Chancellor University
 ? 0 5 0 E
 E 1 6522 9999 14 		Frock Chancellors
@@ -1011,10 +1021,11 @@ E 1 6525 9999 15 		Skirt Chancellors
 
 
 M 0 6509 1 6530 	Knight Church
-Y 0 150 1		Crusader set
+Y 0 150 1			Crusader set
 
 M 0 6509 1 6532 	Knight Church
-Y 0 150 1		Crusader set
+Y 0 150 1			Crusader set
+
 M 0 6511 1 6533 	Vagrant Annoying
 ? 0 3 0 E
 E 1 6498 9999 19 		Shard glass
@@ -1045,7 +1056,7 @@ E 1 6531 9999 15 		Belt Black Ice
 E 1 6532 9999 5 		Helm Black Ice
 
 M 0 6533 1 6539 	Imp Devilish   
-Y 0 152 0 2		Shadowy fire set
+Y 0 152 0 2			Shadowy fire set
 
 M 0 6552 1 6540 	Tracker Great 
 ? 0 5 0 E
@@ -1065,7 +1076,7 @@ E 1 6545 9999 18 		Shield Dwarven Defender
 ? 0 5 0 E
 E 1 6546 9999 19 		Hammer Dwarven Defender
 
-M 0 6369 1 6544 	Assassin elf Aquatic
+M 0 6368 1 6544 	Assassin elf Aquatic
 ? 0 5 0 E
 E 1 6547 9999 19 		Dagger Black Coral
 
@@ -1093,11 +1104,11 @@ M 0 6556 1 6555 	Demon Sultry
 
 M 0 6557 1 6555 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999	 	ceremonial drinking bladder	
+G 1 6566 9999	 		ceremonial drinking bladder	
  
 M 0 6557 1 6556 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999		ceremonial drinking bladder
+G 1 6566 9999			ceremonial drinking bladder
 
 M 0 6560 1 6560 	Imp Blood 
 ? 0 5 0 E
@@ -1110,13 +1121,15 @@ M 0 6566 1 6561 	Warlock Blood
 ? 0 2 0 E
 E 1 6574 9999 19 		Shiv Blood
 
+M 0 6565 1 6563     	Guard Blood
+         
 M 0 6566 1 6563 	Warlock Blood
 ? 0 2 0 E
 E 1 6574 9999 19 		Shiv Blood
 
 M 0 6557 1 6563 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999 		ceremonial drinking bladder
+G 1 6566 9999 			ceremonial drinking bladder
 
 M 0 6562 1 6564 	Demon Blood Guard
 ? 0 2 0 E
@@ -1124,7 +1137,7 @@ E 1 6573 9999 3 		Pendant Blood
 
 M 0 6557 1 6565 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999 		bladder Drinking
+G 1 6566 9999 			bladder Drinking
 
 M 0 6561 1 6566 	Albino Bald
 ? 0 2 0 E
@@ -1188,14 +1201,14 @@ E 1 6569 9999 10 		Gauntlet Skull
 
 M 0 6557 1 6576 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999 		bladder Drinking
+G 1 6566 9999 			bladder Drinking
 
 
 M 0 6557 1 6577 	Demon Worshipper
 ? 0 2 0 G
-G 1 6566 9999 		bladder Drinking
+G 1 6566 9999 			bladder Drinking
 
-M 0 6568 1 6578	 Belia
+M 0 6568 1 6578	 	Belia
 ? 0 5 0 E
 E 1 6578 9999 3 		Prism Souls
 
@@ -1221,7 +1234,7 @@ E 1 6584 9999 15 		Sash Corpuscles
 
 M 0 6581 1 6582 	Navrip
 ? 0 99 0 E
-E 1 305 9999 19		Dagger small
+E 1 305 9999 19			Dagger small
 
 M 0 6585 1 6583 	Warg
 R 1 6583 1 6583 	Falutin
@@ -1247,7 +1260,7 @@ E 1 6588 9999 19 		Pipe Sewer
 
 
 M 0 6590 1 6588 	Pugmork 
-Y 0 153 0 2		Jellyfish set
+Y 0 153 0 2			Jellyfish set
 ? 0 2 0 E
 E 1 7402 9999 19 		Petrified Jellyfish stingers
 
@@ -1458,6 +1471,7 @@ M 0 6421 1 6406 	Crab
 M 0 6422 1 6407 	Salty
 M 0 6423 1 6408 	Bulfrus
 M 0 6424 1 6409 	Flo
+M 0 6551 1 6409
 M 0 6425 1 6410 	Mary
 M 0 6405 1 6411 	Male Citizen
 M 0 6406 1 6411 	Female Citizen
@@ -1472,6 +1486,7 @@ M 0 6428 1 6413 	Jogger
 M 0 6429 1 6413 	Environmentalist
 M 0 6430 1 6414 	Bouncer Brothel
 M 0 6431 1 6415 	Janitor Brothel
+M 0 6342 1 6416         Customer Exhausted 
 M 0 6432 1 6417 	Doorman Brothel
 M 0 6433 1 6418 	Lester
 M 0 6434 1 6419 	Jenoa
@@ -1512,6 +1527,7 @@ M 0 6450 1 6447 	Mage Traveling
 M 0 6463 1 6448 	Patchet Nurse
 M 0 6407 1 6450 	Dwarf Agitated	
 M 0 6409 1 6450 	Sailor Drunk	
+
 M 0 6464 1 6452 	Monk Wandering
 M 0 6450 1 6452 	Mage Traveling
 M 0 6464 1 6453 	Monk Wandering
@@ -1547,7 +1563,6 @@ M 0 6406 1 6474 	Citizen female
 M 0 6407 1 6474 	Dwarf Agitated
 M 0 6409 1 6474 	Sailor Drunk 
 M 0 6450 1 6475 	Mage Traveling
-M 0 6440 1 6475 	Drow Merchant
 M 0 6474 1 6476 	Crier Church 
 M 0 6479 1 6476 	Man Elderly
 M 0 6478 1 6476 	Man Elderly
@@ -1637,6 +1652,7 @@ M 0 6559 1 6562 	Vampire Female
 M 0 6558 1 6562 	Woman Scarred
 M 0 6556 1 6565 	Demon Sultry
 M 0 6558 1 6566 	Woman Scarred
+
 M 0 6558 1 6567 	Woman Scarred
 M 0 6558 1 6568 	Woman Scarred
 M 0 6559 1 6571 	Vampire Female
