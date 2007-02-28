@@ -27,8 +27,6 @@ O 0 32889 1 32888       a window
 O 0 32888 1 32891       a window
 O 0 8447 1 32892        a small night-stand
 O 0 27152 1 32892       a partially burned wax candle
-O 0 14365 1 32892       a wooden wardrobe cabinet
-P 1 32895 1 14365         a pretty pink ribbon
 O 0 26 1 32892          a bed
 O 0 32891 1 32892       some pictures
 O 0 11467 1 32893       a wooden desk
@@ -40,6 +38,8 @@ O 0 32896 1 32896       the balcony
 O 0 8447 1 32898        a small night-stand
 O 0 26 1 32898          a bed
 O 0 32896 1 32899       the balcony
+O 0 14365 1 32892       a wooden wardrobe cabinet
+P 1 32895 1 14365         a pretty pink ribbon
 
 A 0 32805 32880         
 M 0 32880 3 -99         weary traveler
