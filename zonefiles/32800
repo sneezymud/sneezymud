@@ -1,5 +1,77 @@
 #32800
-East GH Road - Coral~
-32899 25 2 0
-S
+Coral - East GH Road and Lodge~
+32899 30 2 0
 
+D 0 32888 9 1        Front Porch -> Main Room
+D 0 32890 1 1        Main Room -> Kitchen
+D 0 32890 6 1        Main Room -> Front Porch
+D 0 32890 8 1        Main Room -> Bathroom
+D 0 32891 3 1        Kitchen -> Main Room
+D 0 32892 1 2        Backroom -> Reception
+D 0 32893 3 2        Reception -> Backroom
+D 0 32894 7 1        Bathroom -> Main Room
+D 0 32895 1 1        Guest Room -> Balcony
+D 0 32895 2 1        Guest Room -> Hall
+D 0 32896 3 1        Balcony -> Guest Room
+D 0 32897 0 1        Hall -> Guest Room
+D 0 32897 1 1        Hall -> Guest Room
+D 0 32898 1 1        Guest Room -> Balcony
+D 0 32898 3 1        Guest Room -> Hall
+D 0 32899 3 1        Balcony -> Guest Room
+
+O 0 35495 1 32886       a small stone fireplace
+O 0 23661 1 32886       a beat-up couch
+O 0 32888 1 32887       a window
+O 0 32887 1 32888       a window
+O 0 32889 1 32888       a window
+O 0 32888 1 32891       a window
+O 0 8447 1 32892        a small night-stand
+P 0 27152 1 8447          a partially burned wax candle
+O 0 14365 1 32892       a wooden wardrobe cabinet
+P 0 32895 1 14365         a pretty pink ribbon
+O 0 26 1 32892          a bed
+O 0 32891 1 32892       some pictures
+O 0 11467 1 32893       a wooden desk
+O 0 32894 1 32893       a picture
+O 0 32893 1 32893       a window
+O 0 26 1 32895          a bed
+O 0 8447 1 32895        a small night-stand
+O 0 32896 1 32896       the balcony
+O 0 8447 1 32898        a small night-stand
+O 0 26 1 32898          a bed
+O 0 32896 1 32899       the balcony
+
+A 0 32805 32880         
+M 0 32880 3 -99         weary traveler
+A 0 32805 32880
+M 0 32880 3 -99
+A 0 32805 32880
+M 0 32880 3 -99
+
+A 0 32805 32880
+M 0 32883 3 -99         rabbit wild
+A 0 32805 32880
+M 0 32883 3 -99         
+A 0 32805 32880
+M 0 32883 3 -99         
+
+A 0 32805 32880
+M 0 32884 3 -99         camp-robber bird
+A 0 32805 32880
+M 0 32884 3 -99         
+A 0 32805 32880
+M 0 32884 3 -99         
+
+A 0 32805 32880
+M 0 32887 3 -99         missionary traveling
+A 0 32805 32880
+M 0 32887 3 -99         
+A 0 32805 32880
+M 0 32887 3 -99         
+
+M 0 32895 1 32895       hobbit guest
+M 0 32892 1 32890       dog furry
+M 0 32893 1 32893       malinor ms ogre lodge owner
+G 1 32892 9999            key to the backdoor
+
+S
