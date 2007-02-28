@@ -238,7 +238,8 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
         if ((nRc = vict->doMove(DIR_UP)) == FALSE)
           return TRUE;
-
+		
+		act("$n climbs in from below.",TRUE,vict,o,0,TO_ROOM);
         return nRc;
       }
     }
@@ -260,7 +261,7 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
         act("$n climbs down $p.",TRUE,vict,o,0,TO_ROOM);
         if ((nRc = vict->doMove(DIR_DOWN)) == FALSE)
           return TRUE;
-
+		act("$n climbs in from above.",TRUE,vict,o,0,TO_ROOM);
         return nRc;
       }
     }
@@ -1004,8 +1005,8 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
       ch->sendTo(fmt("You turn off your %s, trying to be very discrete about it.\n\r") % fname(o->getName()));
       job->isOn = FALSE;
     } else {
-      act("$n turns on $s $o, causing it to beep obnoxiously.", FALSE, ch, o, 0, TO_ROOM);
-      ch->sendTo(fmt("You turn on your %s, producing a series of annoying beeps.\n\r") % fname(o->getName()));
+      act("$n turns on $s $o, causing it to beep obnoxiously....", FALSE, ch, o, 0, TO_ROOM);
+      ch->sendTo(fmt("You turn on your %s, producing a series of annoying beeps....\n\r") % fname(o->getName()));
       job->isOn = TRUE;
     }
     return TRUE;
@@ -1020,12 +1021,12 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     strcpy(capbuf, tbob2->getName());
 
     if (t->hasColor())
-      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager.\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
+      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager....\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
     else if (t->vt100())
-      t->sendTo(fmt("%s%s%s tells you \"%s\" % triggering your pager.\n\r") %
+      t->sendTo(fmt("%s%s%s tells you \"%s\" % triggering your pager....\n\r") %
              t->bold() % sstring(capbuf).cap() % t->norm() % arg);
     else
-      t->sendTo(fmt("%s tells you \"%s\" % triggering your pager.\n\r") %
+      t->sendTo(fmt("%s tells you \"%s\" % triggering your pager....\n\r") %
               sstring(capbuf).cap() % arg);
 
     tbob2->sendTo(COLOR_MOBS, fmt("You tell %s \"%s\".\n\r") % t->getName() % arg);
@@ -5935,10 +5936,199 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	return FALSE;
 }
 
+int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  // item can only be equipped by dwarves and harms any elves that attempt to equip it
+  // if applied to a weapon, does a bone breaker thing to elven victims
+  // if applied to a wearable item, will occasionally knock the wearer's opponent down (if opponent is elven)
+  
+  TBeing *ch;
+  
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+  
+  if (ch->getRace() != RACE_DWARF) {
+    if (ch->getRace() == RACE_ELVEN || ch->getRace() == RACE_DROW) {
+      // give them a little damage, but don't kill them
+      // then drop the item
+      act("A cold, invisible force crushes your hand as you grip $p.", TRUE, ch, o, 0, TO_CHAR, NULL);
+      act("Your hand throbs with pain as $p falls from your grasp!", TRUE, ch, o, 0, TO_CHAR, NULL);
+      act("Wincing, $n loses $s grip on $p and it falls to the $g.", TRUE, ch, o, 0, TO_ROOM, NULL);
+      ch->addToHit(-::number(1, 5));
+      if (ch->getHit() <= 0) {
+        ch->setHit(0);
+        ch->setPosition(POSITION_STUNNED);
+		act("You are stunned!", TRUE, ch, o, 0, TO_CHAR, NULL);
+		act("$n is stunned!", TRUE, ch, o, 0, TO_ROOM, NULL);
+      }
+    } else {
+      // just drop the item
+      act("A cold, invisible force pries your fingers from $p.", TRUE, ch, o, 0, TO_CHAR, NULL);
+      act("$p falls from your grasp!", TRUE, ch, o, 0, TO_CHAR, NULL);
+      act("$n loses $s grip on $p and it falls to the $g.", TRUE, ch, o, 0, TO_ROOM, NULL);
+    }
+    *ch->roomp += *ch->unequip(o->eq_pos);
+    return TRUE;
+  }
+  
+  // other affects only trigger if vict is elven
+  
+  // bone break stuff - for weapons
+  if (cmd == CMD_OBJ_HIT) {
+    if (!vict || (vict->getRace() != RACE_ELVEN && vict->getRace() != RACE_DROW))
+      return FALSE;
+    
+    // using weaponBreaker as a rough guideline: it triggers 2% of the time whether ch hits or not, and almost always finds a breakable limb
+    // dwarfPower triggers after a successful hit on a breakable body part
+    // so; assuming a 100% hit rate, that's about 1/3 of the breaks (considering 34% of hits land on breakable limbs - this might be wrong tho)
+    // i'm going with an assumed hit rate of 80%, which is higher than is likely for any fight where the user doesn't entirely outclass the victim
+    // if my math is anywhere near right, ch would have to land an average of 42 blows for a break, compared to 1 in 50 regardless of hitroll
+    if (::number(0, 13))
+      return FALSE;
+    
+    if (!ch->canBoneBreak(vict, SILENT_YES))
+      return FALSE;
+      
+    wearSlotT part = wearSlotT(int(arg));
+    
+    if (notBreakSlot(part, FALSE))
+      return FALSE;
+    
+    if (vict->isImmune(IMMUNE_BONE_COND, part))
+      return FALSE;
+    
+    // ok, break that bone
+    vict->addToLimbFlags(part, PART_BROKEN);
+    
+    sstring limb = vict->describeBodySlot(part);
+
+    act("<o>You hear a muffled SNAP as $n<o>'s " + fname(o->name) + "<1> <Y>flashes<1> <r>angrily<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+    act("<o>Intense pain shoots through your " + limb + "!<1>\n\r<o>Your " + limb + " has been broken and is now useless!<1>", FALSE, vict, NULL, NULL, TO_CHAR, NULL);
+
+    act("<o>Your " + fname(o->name) + "<1> <Y>flashes<1> <r>angrily<1> <o>upon contact with $N<o>'s " + limb + ".<1>", FALSE, ch, o, vict, TO_CHAR, NULL);
+    
+    act("<o>$n<o>'s " + fname(o->name) + "<1> <Y>flashes<1> <r>angrily<1> <o>upon contact with $N<o>'s " + limb + ".<1>", FALSE, ch, o, vict, TO_NOTVICT, NULL);
+
+    act("<o>You hear a muffled SNAP as $n <o>clutches $s " + limb + " in pain!<1>", FALSE, vict, NULL, NULL, TO_ROOM, NULL);
+
+    vict->dropWeapon(part);
+    
+    return TRUE;
+  }
+    
+  // guardian spirit thing - intended for worn items or armor
+  if (cmd == CMD_OBJ_BEEN_HIT) {
+    if (!vict || (vict->getRace() != RACE_ELVEN && vict->getRace() != RACE_DROW))
+      return FALSE;
+      
+    // making this up- behirHornItem triggers 1 in 4
+    // success scales on opponent and item level, base 66% hit rate
+    // this is also spammy and quirky enough to be annoying, so i'll just say...
+    if (::number(0, 6))
+      return FALSE;
+    
+	int rc;
+	
+    // ok, do a some kind of level check and try to knock them over or kick them while down
+    TBaseClothing *armor;
+    double item_level;
+    
+    if (armor = dynamic_cast<TBaseClothing *>(o)) {
+      item_level = armor->armorLevel(ARMOR_LEV_REAL);
+    } else {
+      // this part is meant for worn gear
+      return FALSE;
+    }
+	double base_chance = 66.7;
+    int level_diff = (int) (item_level - vict->GetMaxLevel());
+    int chance;
+	if (level_diff == 0) {
+	  chance = (int) base_chance;
+	} else {
+	  // coding out of my ass here, but if item is equal to victim in level give it a 66% chance of success
+	  // a level 40 item should go auto success/fail against level 14/75 victims with this curve...
+      double abs_diff = abs(level_diff);
+	  chance = (int) (base_chance + ((double) level_diff * (log(abs_diff / 10.0+2) / ((item_level / abs_diff) * .75))));
+      // never say never...
+	  chance = min(95, chance);
+	  chance = max(1, chance);
+	}
+
+    switch (::number(1, 3)) {
+      case 1:
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and quickly tags you.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and quickly tags $n<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
+        break;
+      case 2:
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and winks mightily at you.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and winks mightily at $n<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
+        break;
+      default:
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and motions for you to stand back.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr appears and motions for $n<o> to stand back.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
+        break;
+    }
+
+    // spirit's hitroll
+	if (::number(1, 100) <= chance) {
+      // spirit success - knock vict over or do a little damage if already down
+      if (vict->getPosition() <= POSITION_SITTING || !vict->hasLegs()) {
+	    act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr executes a<1> <c>flying<1> <o>knee drop on $n<1><o>!<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr executes a<1> <c>flying<1> <o>knee drop on you!<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+		vict->addToWait(combatRound(1));
+		rc = vict->reconcileDamage(vict, ::number(1, max((int) item_level / 3, 1)), SKILL_CHOP);
+        if (IS_SET_DELETE(rc, DELETE_VICT)) {
+          // spirit killed the vict
+          act("<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
+          act("<o>The<1> <k>wrathful spirit<1> <o>high-fives $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
+          ch->dropSmoke(6);
+          return DELETE_VICT;
+        }
+	  } else {
+	    act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr shoves $n<1><o> to the $g<1><o>!<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr shoves you to the $g<1><o>!<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+        vict->setPosition(POSITION_SITTING);
+        vict->addToWait(2 * combatRound(1));
+        vict->cantHit += vict->loseRound(0.6);
+	  }
+      if (vict->riding) {
+        rc = vict->fallOffMount(vict->riding, POSITION_SITTING, FALSE);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          // spirit killed the vict
+          act("<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
+          act("<o>The<1> <k>wrathful spirit<1> <o>high-fives $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
+          ch->dropSmoke(6);
+          return DELETE_VICT;
+        }
+      }
+      vict->addToDistracted(1, FALSE);
+      act("<o>The<1> <k>wrathful spirit<1> <o>flips its beard at $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+      act("<o>The<1> <k>wrathful spirit<1> <o>flips its beard at you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+      vict->dropSmoke(6);
+      
+    } else {
+      // spirit missed
+      act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr hurls itself at $n<1><o>!<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+      act("<o>The<1> <k>wrathful spirit<1> <o>of a dwarven martyr hurls itself at you!<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+      if (::number(0, 1)) {
+        act("<o>The<1> <k>wrathful spirit<1> <o>careens wide and disappears in a cloud of<1> <k>smoke<1><o>.<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>careens wide and disappears in a cloud of<1> <k>smoke<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+      } else {
+        act("<o>The<1> <k>wrathful spirit<1> <o>caroms off $n<1><o> and dissolves into a plume of<1> <k>smoke<1><o>.<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
+        act("<o>The<1> <k>wrathful spirit<1> <o>caroms off you and dissolves into a plume of<1> <k>smoke<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
+      }
+      vict->addToDistracted(1, FALSE);
+      vict->dropSmoke(12);
+    }
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+
 //MARKER: END OF SPEC PROCS
 
-
-extern int skittishObject(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int stickerBush(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int ballotBox(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -6009,11 +6199,11 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
 {
   {TRUE, "BOGUS", bogusObjProc},  // 0
   {TRUE, "ballot box", ballotBox},
-  {FALSE, "bulletin board", board},
+  {TRUE, "bulletin board", board},
   {TRUE, "note dispenser", dispenser},
   {TRUE, "statue of feeding", statue_of_feeding},
-  {TRUE, "pager", pager},          // 5
-  {TRUE, "ear muffs", ear_muffs},
+  {FALSE, "pager", pager},          // 5
+  {FALSE, "ear muffs", ear_muffs},
   {FALSE, "Jewel of Judgment", JewelJudgment},   
   {FALSE, "Gwarthir", Gwarthir},
   {FALSE, "vending machine", vending_machine},
@@ -6158,5 +6348,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "brick quest scorecard", brickScorecard},
   {FALSE, "EQ Combo Casting", comboEQCast},
   {FALSE, "Skittish Object", skittishObject}, //150
+  {FALSE, "Dwarf Power", dwarfPower}, 
   {FALSE, "last proc", bogusObjProc}
 };
