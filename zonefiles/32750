@@ -1,5 +1,184 @@
 #32750
-Destiny - Hobbit Outcast Camp~
+Amberbock - Hobbit Outcast Camp~
 32799 25 2 0
+
+**
+* doors
+**
+D 0 32754 0 1		The inside of a very small tent
+D 0 32785 2 1
+
+D 0 32754 2 1		The inside of a very small tent
+D 0 32786 0 1
+
+D 0 32755 0 1		The inside of a very small tent
+D 0 32787 2 1		
+
+D 0 32755 2 1		The inside of a very small tent
+D 0 32784 0 1
+
+D 0 32756 0 1		The inside of a very small tent
+D 0 32782 2 1
+
+D 0 32756 2 1		The inside of a very small tent
+D 0 32783 0 1
+
+D 0 32759 5 2		A small dining area
+D 0 32781 4 2
+
+D 0 32761 5 2		A Hollowed-out Vault
+D 0 32762 4 2		
+
+**
+*Local Sets
+**
+X 0 5 32773		a ragged cap [head]
+X 0 3 32774		a ragged collar [neck]
+X 0 4 32775		a ragged coat [body]
+X 0 14 32776		a ragged cape [back]
+X 0 12 32777		a ragged sleeve [arm-right]
+X 0 13 32777		a ragged sleeve [arm-left]
+X 0 16 32778		a ragged bracer [wrist-right]
+X 0 17 32778		a ragged bracer	[wrist-left]	
+X 0 10 32779		a ragged glove [hand-right]
+X 0 11 32779		a ragged glove [hand-left]
+X 0 1 32780		a ragged ring [finger-right]
+X 0 2 32780		a ragged ring [finger-left]
+X 0 15 32781		a ragged piece of rope [waist]
+X 0 6 32782		a ragged legging [leg-right]
+X 0 7 32782		a ragged legging [leg-left]
+
+**
+* Objects
+**
+O 0 32754 1 32788	leaves bed
+
+O 0 32755 1 32759	fire pot rabbit stew
+
+O 0 32758 1 32760	table bedside small
+P 1 32759 1 32760		note
+P 1 32763 1 32760		glass iced-tea
+
+O 0 32760 1 32760	bed mahogany 4-poster
+
+O 0 32761 1 32762	diamond pedestal
+P 1 32762 1 32762		glove power
+
+O 0 32756 1 32757	well small shoddy
+
+O 0 32767 2 32782	cot small
+O 0 32767 2 32783
+O 0 32767 2 32784
+O 0 32767 2 32785
+O 0 32767 2 32786
+O 0 32767 2 32787
+
+O 0 32771 2 32788	stump tree
+O 0 32771 2 32789
+O 0 32771 2 32790
+O 0 32771 2 32791
+O 0 32771 2 32792
+O 0 32771 2 32793
+
+O 0 32769 2 32781	chair
+
+O 0 32770 1 32781	table
+
+O 0 32768 1 32761	shelves
+
+O 0 32772 1 32793	bonfire
+
+
+**
+*Mobs
+**
+A 0 32788 32793
+M 0 32752 1 -99		outcast hobbit girl thief
+A 0 32788 32793
+M 0 32752 1 -99		outcast hobbit girl thief
+
+A 0 32788 32793
+M 0 32753 1 -99		outcast hobbit boy thief
+A 0 32788 32793
+M 0 32753 1 -99		outcast hobbit boy thief
+
+A 0 32788 32793
+M 0 32754 1 -99		outcast female hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32788 32793
+M 0 32754 1 -99		outcast female hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32782 32787
+M 0 32754 1 -99		outcast female hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32782 32787
+M 0 32754 1 -99		outcast female hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32754 32756
+M 0 32755 1 -99		outcast hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32754 32756
+M 0 32755 1 -99		outcast hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32782 32787
+M 0 32755 1 -99		outcast hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+A 0 32782 32787
+M 0 32755 1 -99		outcast hobbit thief
+? 0 75 0 E
+E 1 32783 9999 19		plain dagger
+Z 0 0 2
+
+M 0 32758 1 32760	 	catrina hobbit thief
+? 0 2 0 E
+E 1 32751 9999 19		dagger sajigor
+Z 0 0 2
+
+M 0 32759 1 32761		guard timid hobbit warrior
+G 1 32765 1			plain key
+? 0 2 0 E
+E 1 32757 9999 19		blade hobbit guard
+
+M 0 32760 1 32761		guard timid hobbit cleric
+? 0 2 0 E
+E 1 32753 9999 3		symbol holy hobbit guard
+
+M 0 32761 1 32761		guard timid hobbit mage
+? 0 2 0 E
+E 1 32752 9999 19		staff hobbit guard
+
+M 0 32762 3 32762		guard deranged spirit hobbit
+
+M 0 32757 1 32781		waiter nervous hobbit thief
+? 0 2 0 E
+E 1 32750 9999 15		cummberbund orange
+Z 0 0 2
+
+M 0 32756 1 32759		cook camp gnome
+G 1 32764 1			plain key
+? 0 2 0 E
+E 1 32766 9999 15		apron tattered
+
 S
 
