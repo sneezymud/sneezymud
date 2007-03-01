@@ -870,16 +870,16 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     TGenWeapon *wpn = new TGenWeapon();
     
     // x0 - current and max sharpness
-    cout << fmt("<tr><td>%s<br><input type=text size=15 name='%s' value='%s'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
     cout << fmt("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max;
     
     // x1 - damage level and damage precision
-    cout << fmt("<tr><td>%s<br><input type=text size=15 name='%s' value='%s'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
     cout << fmt("<td>Damage level <input type='text' size='15' maxlength='4' name='dam_lev' value='%i' onchange='compute_weap_x1()'> (no <b style='color:red'>NOT</b> multiply by 4 here)\n<br>Damage deviation <input type='text' size='15' maxlength='3' name='dam_dev' value='%i' onchange='compute_weap_x1()'></td></tr>\n") % dam_lev % dam_dev;
     cout << fmt("<script>weap_dam();</script>\n");
     
     // x2 - attack rate 1 and attack rate 2
-    cout << fmt("<tr><td>%s<br><input type=text size=15 name='%s' value='%s'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
     cout << fmt("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>");
     for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
       wpn->setWeaponType(wt);
@@ -888,7 +888,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
         cout << fmt(" selected");
       cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
     }
-    cout << fmt("</select> Frequency 1 <input type='text' size='15' maxlength='4' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'>") % weap_freq_1;
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1;
     cout << fmt("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>");
     for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
       wpn->setWeaponType(wt);
@@ -897,10 +897,10 @@ void sendShowObj(int account_id, int vnum, bool wizard)
         cout << fmt(" selected");
       cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
     }
-    cout << fmt("</select> Frequency 2<input type='text' size='15' maxlength='4' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'></td></tr>") % weap_freq_2;
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 2 <input type='text' size='5' maxlength='3' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'> %</td></tr>") % weap_freq_2;
     
     // x3 - attack rate 3
-    cout << fmt("<tr><td>%s<br><input type=text size=15 name='%s' value='%s'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
     cout << fmt("<td>Type 3 <select type='select' name='weap_type_3' onchange='compute_weap_x3()'><option value='0'>None</option>");
     for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
       wpn->setWeaponType(wt);
@@ -909,7 +909,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
         cout << fmt(" selected");
       cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
     }
-    cout << fmt("</select> Frequency 3 <input type='text' size='15' maxlength='4' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'></td></tr>") % weap_freq_3;
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 3 <input type='text' size='5' maxlength='3' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'> %</td></tr>") % weap_freq_3;
 
   } else {
 
