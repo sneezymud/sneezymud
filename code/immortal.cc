@@ -5625,69 +5625,92 @@ int TBeing::doExec()
 
 void TBeing::doResize(const char *arg)
 {
-  TBeing *targ;
+  TBeing *targ = NULL;
   TObj *obj = NULL;
-  char objbuf[80], charbuf[80], racebuf[80];
-  sstring buf, buf2;
-  int race=0;
-
+  char arg_obj[80], arg_type[80], arg_type_val[80];
+  sstring buf, feedback;
+  int race = 0;
+  int height = 0;
+  
   if (!hasWizPower(POWER_RESIZE)) {
     sendTo("You don't have that power.\n\r");
     return;
   }
 
-  arg = one_argument(arg,objbuf);
-  arg = one_argument(arg,charbuf);
-  if (!*objbuf || !*charbuf) {
+  arg = one_argument(arg, arg_obj);
+  arg = one_argument(arg, arg_type);
+  if (!*arg_obj || !*arg_type) {
     sendTo("Syntax: resize <object> <character>\n\r");
 	sendTo("        resize <object> race <race number>\n\r");
+	sendTo("        resize <object> height <height>\n\r");
     return;
   }
-  if (!strcmp(charbuf, "race")) {
-    arg = one_argument(arg,racebuf);
-    race=convertTo<int>(racebuf);
+  
+  if (!strcmp(arg_type, "race")) {
+    // they are resizing for a specific race
+    arg = one_argument(arg, arg_type_val);
+    race = convertTo<int>(arg_type_val);
     if(race >= MAX_RACIAL_TYPES || race < 0){
       sendTo(fmt("Race number %i doesn't exist.\n\r") % race);
       return;
     }
+  } else if (!strcmp(arg_type, "height")) {
+    // they are resizing for a specific height
+    arg = one_argument(arg, arg_type_val);
+	height = convertTo<int>(arg_type_val);
+  }
+  if (!race && !height) {
+    // they are resizing to a specific character
+    targ = get_pc_world(this, arg_type, EXACT_NO);
+	if (!targ) {
+      sendTo("Could not find that person online.\n\r");
+	  return;
+	}
   }
 
-  TThing *t_obj = searchLinkedList(objbuf, getStuff());
+  TThing *t_obj = searchLinkedList(arg_obj, getStuff());
   obj = dynamic_cast<TObj *>(t_obj);
   if (!obj) {
-    sendTo(fmt("Sorry, You don't seem to have the %s.\n\r") % objbuf);
+    sendTo(fmt("You do not seem to have the %s.\n\r") % arg_obj);
     return;
   }
-  if (!(targ = get_pc_world(this, charbuf, EXACT_NO)) && !race) { 
-    sendTo(fmt("I can't seem to find %s.\n\r") %charbuf);
-    return;
-  }
+  
+#if 0
+  // i don't see the point of this...
   if (obj->objVnum() != -1 &&
       obj_index[obj->getItemIndex()].max_exist <= 10){
     sendTo("Sorry, that artifact is too rare to be resized.\n\r");
     return;
   }
+#endif
+
   if (dynamic_cast<TBaseClothing *>(obj)) {
     wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
     int new_volume;
+	
     if (race_vol_constants[mapSlotToFile(slot)]) {
 	  if (race) {
-	    Race *targ_race = new Race((race_t)race);
-		// if avg height is stored anywhere, i missed it
+		// if average height for each race is aleady stored someplace, i missed it
 		// also, it looks like only base male height is public
+		Race *targ_race = new Race((race_t)race);
 		double avg_height = (double) targ_race->getBaseMaleHeight() + (((double) targ_race->getMaleHtNumDice() + (double) targ_race->getMaleHtDieSize()) / 2.0);
 		new_volume = (int) (avg_height * race_vol_constants[mapSlotToFile(slot)]);
-		buf2 = fmt("Target height: %i New volume: %i") % (int) avg_height % new_volume;
+		feedback = fmt("Your target's average height is %i inches.  Item volume is now %i cubic inches.") % (int) avg_height % new_volume;
 		delete targ_race;
+      } else if (height) {
+	    // resize based on requested height
+	    new_volume = (int) ((double) height * race_vol_constants[mapSlotToFile(slot)]);
+		feedback = fmt("Your target height is %i inches.  Item volume is now %i cubic inches.") % height % new_volume;
 	  } else if (targ) {
 	    // use targ's height
         new_volume = (int) ((double) targ->getHeight() * race_vol_constants[mapSlotToFile(slot)]);
-		buf2 = fmt("Target height: %i New volume: %i") % targ->getHeight() % new_volume;
+		feedback = fmt("Your target's height is %i inches.  Item volume is now %i cubic inches.") % targ->getHeight() % new_volume;
 	  } else {
         // shouldn't have gotten here
-        vlogf(LOG_BUG, "Bug in TBeing::doResize - no player or race to resize to.");
+        vlogf(LOG_BUG, "Bug in TBeing::doResize - no player, race or height to resize to.");
 		return;
 	  }
+	  // do the resize
 	  obj->setVolume(new_volume);
     } else {
 	  vlogf(LOG_BUG, fmt("Missing race_vol_constant[] while resizing %s.") % obj->getName());
@@ -5697,28 +5720,36 @@ void TBeing::doResize(const char *arg)
     // disassociate from global memory
     obj->swapToStrung();
 
-    //  Remake the obj name.  
-    if (!race && obj->objVnum() != -1) {
+    //  flag the object as having been resized for an individual 
+    if (targ && obj->objVnum() != -1) {
       buf = fmt("%s [resized]") % obj->name;
       delete [] obj->name;
       obj->name = mud_str_dup(buf.c_str());
     }
+  } else {
+    // else, it is not clothing
+	sendTo("Only clothing or armor may be resized.\n\r");
+	return;
   }
 
-
-  // Personalize it
-  if (!race) {
+  // finish up
+  if (targ) {
+  	// personalize it
     buf = fmt("This is the personalized object of %s") % targ->getName();
     delete [] obj->action_description;
     obj->action_description = mud_str_dup(buf.c_str());
-    
-    act("You just resized $p to for $N.", FALSE, this, obj, targ, TO_CHAR);
-  } else {
-    buf = fmt("You just resized $p for %s.") % RaceNames[race] % race;
+    act("You have resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
+  } else if (race) {
+    // resized for a specific race
+    buf = fmt("You have resized $p for %s.") % RaceNames[race];
     act(buf, FALSE, this, obj, 0, TO_CHAR);
+  } else if (height) {
+    // resized for a specific height
+	act("You have resized $p to center on a specific height.", FALSE, this, obj, 0, TO_CHAR);
   }
-  // tack on the target height and new volume message
-  act(buf2, FALSE, this, obj, 0, TO_CHAR);
+  // tack on the target height and new volume feedback message
+  act(feedback, FALSE, this, obj, 0, TO_CHAR);
+  return;
 }
 
 void TBeing::doHeaven(const sstring &arg)
