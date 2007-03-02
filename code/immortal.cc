@@ -5628,7 +5628,7 @@ void TBeing::doResize(const char *arg)
   TBeing *targ;
   TObj *obj = NULL;
   char objbuf[80], charbuf[80], racebuf[80];
-  sstring buf;
+  sstring buf, buf2;
   int race=0;
 
   if (!hasWizPower(POWER_RESIZE)) {
@@ -5640,6 +5640,7 @@ void TBeing::doResize(const char *arg)
   arg = one_argument(arg,charbuf);
   if (!*objbuf || !*charbuf) {
     sendTo("Syntax: resize <object> <character>\n\r");
+	sendTo("        resize <object> race <race number>\n\r");
     return;
   }
   if (!strcmp(charbuf, "race")) {
@@ -5654,7 +5655,7 @@ void TBeing::doResize(const char *arg)
   TThing *t_obj = searchLinkedList(objbuf, getStuff());
   obj = dynamic_cast<TObj *>(t_obj);
   if (!obj) {
-    sendTo(fmt("Sorry, You don't seem to have the %s.\n\r") %objbuf);
+    sendTo(fmt("Sorry, You don't seem to have the %s.\n\r") % objbuf);
     return;
   }
   if (!(targ = get_pc_world(this, charbuf, EXACT_NO)) && !race) { 
@@ -5668,16 +5669,36 @@ void TBeing::doResize(const char *arg)
   }
   if (dynamic_cast<TBaseClothing *>(obj)) {
     wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
-
+    int new_volume;
     if (race_vol_constants[mapSlotToFile(slot)]) {
-      obj->setVolume((int)((double)getHeight() * race_vol_constants[mapSlotToFile(slot)]));
-    }
+	  if (race) {
+	    Race *targ_race = new Race((race_t)race);
+		// if avg height is stored anywhere, i missed it
+		// also, it looks like only base male height is public
+		double avg_height = (double) targ_race->getBaseMaleHeight() + (((double) targ_race->getMaleHtNumDice() + (double) targ_race->getMaleHtDieSize()) / 2.0);
+		new_volume = (int) (avg_height * race_vol_constants[mapSlotToFile(slot)]);
+		buf2 = fmt("Target height: %i New volume: %i") % (int) avg_height % new_volume;
+		delete targ_race;
+	  } else if (targ) {
+	    // use targ's height
+        new_volume = (int) ((double) targ->getHeight() * race_vol_constants[mapSlotToFile(slot)]);
+		buf2 = fmt("Target height: %i New volume: %i") % targ->getHeight() % new_volume;
+	  } else {
+        // shouldn't have gotten here
+        vlogf(LOG_BUG, "Bug in TBeing::doResize - no player or race to resize to.");
+		return;
+	  }
+	  obj->setVolume(new_volume);
+    } else {
+	  vlogf(LOG_BUG, fmt("Missing race_vol_constant[] while resizing %s.") % obj->getName());
+	  return;
+	}
     
     // disassociate from global memory
     obj->swapToStrung();
 
     //  Remake the obj name.  
-    if (obj->objVnum() != -1) {
+    if (!race && obj->objVnum() != -1) {
       buf = fmt("%s [resized]") % obj->name;
       delete [] obj->name;
       obj->name = mud_str_dup(buf.c_str());
@@ -5691,11 +5712,13 @@ void TBeing::doResize(const char *arg)
     delete [] obj->action_description;
     obj->action_description = mud_str_dup(buf.c_str());
     
-    act("You just resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
+    act("You just resized $p to for $N.", FALSE, this, obj, targ, TO_CHAR);
   } else {
-    buf = fmt("You just resized $p for race %i.") % race;
+    buf = fmt("You just resized $p for %s.") % RaceNames[race] % race;
     act(buf, FALSE, this, obj, 0, TO_CHAR);
   }
+  // tack on the target height and new volume message
+  act(buf2, FALSE, this, obj, 0, TO_CHAR);
 }
 
 void TBeing::doHeaven(const sstring &arg)
