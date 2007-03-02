@@ -5951,21 +5951,21 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     if (ch->getRace() == RACE_ELVEN || ch->getRace() == RACE_DROW) {
       // give them a little damage, but don't kill them
       // then drop the item
-      act("A cold, invisible force crushes your hand as you grip $p.", TRUE, ch, o, 0, TO_CHAR, NULL);
-      act("Your hand throbs with pain as $p falls from your grasp!", TRUE, ch, o, 0, TO_CHAR, NULL);
-      act("Wincing, $n loses $s grip on $p and it falls to the $g.", TRUE, ch, o, 0, TO_ROOM, NULL);
+      act("A cold, invisible force crushes your hand as you grip $p.", FALSE, ch, o, 0, TO_CHAR, NULL);
+      act("Your hand throbs with pain as $p falls from your grasp!", FALSE, ch, o, 0, TO_CHAR, NULL);
+      act("Wincing, $n loses $s grip on $p and it falls to the $g.", FALSE, ch, o, 0, TO_ROOM, NULL);
       ch->addToHit(-::number(1, 5));
       if (ch->getHit() <= 0) {
         ch->setHit(0);
         ch->setPosition(POSITION_STUNNED);
-		act("You are stunned!", TRUE, ch, o, 0, TO_CHAR, NULL);
-		act("$n is stunned!", TRUE, ch, o, 0, TO_ROOM, NULL);
+		act("You are stunned!", FALSE, ch, 0, 0, TO_CHAR, NULL);
+		act("$n is stunned!", FALSE, ch, 0, 0, TO_ROOM, NULL);
       }
     } else {
       // just drop the item
-      act("A cold, invisible force pries your fingers from $p.", TRUE, ch, o, 0, TO_CHAR, NULL);
-      act("$p falls from your grasp!", TRUE, ch, o, 0, TO_CHAR, NULL);
-      act("$n loses $s grip on $p and it falls to the $g.", TRUE, ch, o, 0, TO_ROOM, NULL);
+      act("A cold, invisible force pries your fingers from $p.", FALSE, ch, o, 0, TO_CHAR, NULL);
+      act("$p falls from your grasp!", FALSE, ch, o, 0, TO_CHAR, NULL);
+      act("$n loses $s grip on $p and it falls to the $g.", FALSE, ch, o, 0, TO_ROOM, NULL);
     }
     *ch->roomp += *ch->unequip(o->eq_pos);
     return TRUE;
@@ -6125,7 +6125,72 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
+int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont)
+{
+  /* this proc spawns 3 guards when the item is taken from the table */
+  /* for destiny's zone */
+  if (cmd != CMD_OBJ_GOTTEN || !cont || !ch || !me)
+    return FALSE;
+  
+#if 0 
+/* screw it */
+  // look for the proc flag in the name
+  // it will contain the number of seconds since it was first grabbed, as recorded at the time
+  sstring proc_flag = me->name;
+  size_t found = proc_flag.find("[proc_152-");
+  if ((int) found > -1) {
+    size_t end = proc_flag.find("]", found + 1);
+    proc_flag.assign(proc_flag, found + 10, end - 1);
+    double grabbed = convertTo<double>(proc_flag);
+    if (grabbed) {
+      if ((double) time(NULL) - grabbed > 2629743) {
+        // decay the object after one real month
+        
+        // equipped, inventory, on ground, on table, in a bag... yeesh
+        if (ch) {
+          act("Your $p goes poof.", FALSE, ch, me, 0, TO_CHAR, NULL);
+          return TRUE;
+        } else if (me->roomp) {
+          // on the ground i guess
+          act("$n goes poof.", FALSE, o, 0, 0, TO_ROOM);
+        }
+        
+      }
+    }
+    return FALSE;
+  }
+#endif
 
+  // check to see if it is indeed the right table they are getting the glove from
+  int table_vnum = 32761; // diamond pedestal
+  if (cont->objVnum() != table_vnum)
+    return FALSE;
+  
+  // check to see if it has already been taken from the table
+  sstring proc_flag = me->name;
+  size_t found = proc_flag.find("[proc_152-");
+  if ((int) found > -1)
+    return FALSE;
+  
+  // first time grab, flag it
+  me->name = mud_str_dup(fmt("%s [proc_152-%d]") % me->name % time(NULL));
+  
+  // spawn the 3 mobs
+  int mob_vnum = 32762; // guard deranged spirit hobbit
+  for (int loop = 0; loop < 3; loop = loop + 1) {
+    TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
+    if (!mob) {
+      vlogf(LOG_PROC, fmt("Proc mobSpawnGrab failing to grab spawn mob #%i in room %i.") % mob_vnum % ch->in_room);
+      return FALSE;
+    }
+    *ch->roomp += *mob;
+    colorAct(COLOR_MOBS, 
+            ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
+            mob->ex_description->findExtraDesc("repop") :
+            "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);
+  }
+  return TRUE;
+}
 
 //MARKER: END OF SPEC PROCS
 
@@ -6349,5 +6414,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "EQ Combo Casting", comboEQCast},
   {FALSE, "Skittish Object", skittishObject}, //150
   {FALSE, "Dwarf Power", dwarfPower}, 
+  {FALSE, "Mob Spawn Grab", mobSpawnGrab}, 
   {FALSE, "last proc", bogusObjProc}
 };
