@@ -32,7 +32,7 @@ bool TSession::hasWizPower(wizPowerT wp)
 void TSession::sendLoginPage(sstring url)
 {
   cgicc::CgiEnvironment env = cgi->getEnvironment();
-
+/* killing this for now. hopefully i can get IE to cooperate with the various tools
   if((env.getUserAgent().find("MSIE")) != string::npos){
     cout << HTTPRedirectHeader("http://www.mozilla.com/en-US/firefox/switch.html");
     cout << endl;
@@ -43,7 +43,7 @@ void TSession::sendLoginPage(sstring url)
     cout << html() << endl;
     return;
   }
-
+*/
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("SneezyMUD Web Login") << endl;
   cout << head() << body() << endl;
