@@ -213,7 +213,7 @@ class resetQElement
   }
 };
 
-const int WORLD_SIZE = 40000;
+const int WORLD_SIZE = 50000;
 const int ZONE_ROOM_RANDOM = -99;
 
 #endif

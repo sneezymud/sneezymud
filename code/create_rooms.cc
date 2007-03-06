@@ -2923,7 +2923,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   rend = end;
 
   if (((rstart <= -1) || (rend <= -1)) ||
-      ((rstart > 40000) || (rend > 40000))) {
+      ((rstart > WORLD_SIZE) || (rend > WORLD_SIZE))) {
     ch->sendTo("I don't know those room #s.  Make sure they are all contiguous.\n\r");
     return;
   }
@@ -3218,7 +3218,10 @@ void CreateOneRoom(int loc_nr)
   rp->initLight();
 
   rp->setSectorType(SECT_ASTRAL_ETHREAL);
-
+  
+  // default the save room flag to 'on'
+  rp->setRoomFlagBit(ROOM_SAVE_ROOM);
+  
   roomCount++;
 }
 
