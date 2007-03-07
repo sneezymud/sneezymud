@@ -34,6 +34,9 @@ playerData::playerData() :
   time.logon = ::time(0);
   time.played = 0;
   time.last_logon = ::time(0);
+  
+  account_id = 0;
+  player_id = 0;
 }
 
 playerData::playerData(const playerData &a) :
@@ -44,7 +47,7 @@ playerData::playerData(const playerData &a) :
 {
   // just assign by default, this gets overridden in TBeing stuff
   longDescr = a.longDescr;
-
+  
   classIndT i;
   for (i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++) {
     level[i] = a.level[i];
@@ -54,6 +57,9 @@ playerData::playerData(const playerData &a) :
   time.logon = a.time.logon;
   time.played = a.time.played;
   time.last_logon = a.time.last_logon;
+  
+  account_id = a.account_id;
+  player_id = a.player_id;
 }
 
 playerData & playerData::operator=(const playerData &a)
@@ -80,6 +86,10 @@ playerData & playerData::operator=(const playerData &a)
   time.logon = a.time.logon;
   time.played = a.time.played;
   time.last_logon = a.time.last_logon;
+  
+  account_id = a.account_id;
+  player_id = a.player_id;
+  
   return *this;
 }
 
@@ -588,7 +598,8 @@ TAccount::TAccount() :
   term(TERM_NONE),
   desc(NULL),
   time_adjust(0),
-  flags(0)
+  flags(0),
+  account_id(0)
 {
   name = "";
   passwd = "";
@@ -602,7 +613,8 @@ TAccount::TAccount(const TAccount &a) :
   term(a.term),
   desc(a.desc),
   time_adjust(a.time_adjust),
-  flags(a.flags)
+  flags(a.flags),
+  account_id(a.account_id)
 {
   name=a.name;
   passwd=a.passwd;
@@ -622,6 +634,7 @@ TAccount & TAccount::operator=(const TAccount &a)
   status = a.status;
   time_adjust = a.time_adjust;
   flags = a.flags;
+  account_id = a.account_id;
   return *this;
 }
 
@@ -634,10 +647,11 @@ bool TAccount::read(const sstring &aname)
   TDatabase db(DB_SNEEZY);
   bool res;
 
-  res=db.query("select email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
+  res=db.query("select account_id, email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
 
   db.fetchRow();
 
+  account_id = convertTo<int>(db["account_id"]);
   email=db["email"];
   passwd=db["passwd"];
   name=db["name"];
@@ -856,11 +870,12 @@ int TBeing::getPlayerID() const
     myname=getName();
   }
 
-  db.query("select id from player where lower(name)=lower('%s')", myname.c_str());
+  db.query("select id from player where lower(name) = lower('%s') and account_id is not null", myname.c_str());
 
   if(db.fetchRow()){
     playerID=convertTo<int>(db["id"]);
   } else {
+    // this might be where the null account_id's are coming from...
     vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
 
     db.query("insert into player (name) values (lower('%s'))", myname.c_str());
@@ -880,6 +895,8 @@ int TBeing::getPlayerID() const
 
   return playerID;
 }
+
+
 
 void TBeing::showMultTo(const TThing *t, showModeT i, unsigned int n)
 {

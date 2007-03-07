@@ -691,6 +691,8 @@ void TPerson::loadFromSt(charFile *st)
   player.time.logon = time(0);
   player.time.last_logon = st->last_logon;
 
+  
+  
   strcpy(lastHost, st->lastHost);
 
   setWeight(st->weight);
@@ -805,10 +807,12 @@ void TPerson::loadFromSt(charFile *st)
     } 
   }
 
-  db.query("select load_room from player where id=%i", getPlayerID());
+  // tacked on account and player id here
+  db.query("select id as player_id, account_id, load_room from player where id = %i", getPlayerID());
   db.fetchRow();
   in_room = convertTo<int>(db["load_room"]);
-
+  player.account_id = convertTo<int>(db["account_id"]);
+  player.player_id = convertTo<int>(db["player_id"]);
   if(!in_room && st->load_room)
     in_room = st->load_room;
 

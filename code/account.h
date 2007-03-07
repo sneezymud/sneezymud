@@ -46,6 +46,7 @@ class TAccount
     Descriptor *desc;
     byte time_adjust;
     unsigned int flags;
+	int account_id;
     time_t last_logon;
 
     bool fileRead(const sstring &);

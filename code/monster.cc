@@ -15,6 +15,8 @@
 charList::charList() :
   name(NULL),
   iHateStrength(0),
+  account_id(0),
+  player_id(0),
   next(NULL)
 {
 }
@@ -23,7 +25,9 @@ charList::charList(const charList &a)
 {
   name = mud_str_dup(a.name);
   iHateStrength = a.iHateStrength;
-
+  account_id = a.account_id;
+  player_id = a.player_id;
+  
   if (a.next)
     next = new charList(*a.next);
   else
@@ -36,7 +40,9 @@ charList & charList::operator=(const charList &a)
 
   name = mud_str_dup(a.name);
   iHateStrength = a.iHateStrength;
-
+  account_id = a.account_id;
+  player_id = a.player_id;
+  
   charList *c, *n;
   for (c = next; c; c = n) {
     n = c->next;

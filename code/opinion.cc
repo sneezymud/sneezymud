@@ -60,13 +60,30 @@ bool TMonster::addHated(TBeing *hatee)
   if (hatee) {
     if (Hates(hatee, NULL))	/* hate someone only once - SG */
       return FALSE;
+    // so it won't add someone to the hate list if they have other reasons (racial, etc) to hate
 
+    bool silent_multi_hate = TRUE;
+    if (this->in_room == hatee->in_room)
+      silent_multi_hate = FALSE;
+    
+    if (multiHates(hatee, silent_multi_hate)) {
+      // mob is hating a new player from the same account as an existing hatee
+      // checking room in case hate has other causes, like a god setting hatred
+      // player can probably work around this using a ranged weapon, but whatever
+      
+      if (!silent_multi_hate) {
+        doAction(fname(hatee->name), CMD_ACCUSE);
+      }
+    }
+    
     if (!awake())               /* don't add to the list if mob is !awake */
       return FALSE;
 
     charList *list = new charList();
     list->name          = mud_str_dup(hatee->name);
     list->next          = hates.clist;
+    list->account_id    = hatee->player.account_id;
+    list->player_id    = hatee->player.player_id;
 
     /*
       Times: (Game Hours)
@@ -150,10 +167,47 @@ int TMonster::remHatred(unsigned short bitv)
   return TRUE;
 }
 
+bool TMonster::multiHates(const TBeing *v, bool silent)
+{
+  if (!hatefield)
+    return FALSE;
+    
+  if (isPc() || !v->isPc())
+    return FALSE;    
+ 
+  if (this == v)
+    return FALSE;
+  
+  if (!v->player.account_id || !v->player.player_id)
+    return FALSE;
+    
+  bool multi = FALSE;
+  // loop over the hated list, looking for matching account id
+  if (IS_SET(hatefield, HATE_CHAR)) {
+    if (hates.clist) {
+      TBeing *m = dynamic_cast<TBeing *>(this);
+      charList *i;
+      for (i = hates.clist; i; i = i->next) {
+        if (i->account_id == v->player.account_id && i->player_id != v->player.player_id) {
+          // shout it, log it
+          if (!silent) {
+            if (m)
+              m->doShout(fmt("%s smells so much like %s it's creepy.") % v->getName() % i->name);
+          }
+          
+          vlogf(LOG_CHEAT, fmt("MULTIPLAY: Players %s and %s are both hated by %s.") % v->getName() % i->name % getName());
+          multi = TRUE;
+        }
+      }
+    }
+  }
+  return multi;
+}
+
 bool TMonster::Hates(const TBeing *v, const char *n) const
 {
   if (!hatefield)
-    return false;
+    return FALSE;
 
   sstring namebuf;
 

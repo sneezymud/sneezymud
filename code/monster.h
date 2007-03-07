@@ -27,6 +27,9 @@ class charList {
   public:
   const char *name;
   long iHateStrength;
+  int account_id;
+  int player_id;
+  
   charList *next;
 
   charList();
@@ -450,6 +453,7 @@ class TMonster : public TBeing {
     int remHated(const TBeing *, const char *);
     int remFeared(const TBeing *, const char *);
     int remHatred(unsigned short);
+	bool multiHates(const TBeing *, bool);
     bool Hates(const TBeing *, const char *) const;
     bool Fears(const TBeing *, const char *) const;
     TBeing *findAHatee();

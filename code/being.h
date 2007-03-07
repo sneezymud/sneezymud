@@ -305,6 +305,10 @@ class playerData
    short hometown;  
    territoryT hometerrain;
    struct time_data time;
+   
+   int player_id;
+   int account_id;
+   
    playerData();
    playerData(const playerData &a);
    playerData & operator=(const playerData &a);
