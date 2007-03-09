@@ -105,6 +105,17 @@ class zoneData
     double min_mob_level;
     double max_mob_level;
 
+    // the following stat_* variables are intended to be used for zone reporting in the stat zone command
+    // they are not air-tight counts and should not be treated as such
+    map<int, int> stat_mobs; // key: real mob number, value: count of that mob loading in the zonefile
+    map<int, int> stat_objs; // key: real obj number, value: count of that obj loading in the zonefile
+    // note the count value for stat_objs ignores things like load rates so is pretty useless info
+    // it also doesn't contain global suitset objs and doesn't check to see if local suitsets actually load, so...
+    
+    int stat_mobs_total;     // total # of mobs loading in the zonefile
+    int stat_mobs_unique;    // unique # of mobs loading in the zonefile
+    int stat_objs_unique;    // unique # of objects loading in the zonefile
+    
     bool isEmpty(void);
     void resetZone(bool bootTime, bool findLoadPotential=false);
     void closeDoors(void);

@@ -1164,6 +1164,10 @@ void zoneData::renumCmd(void)
   else
     zone_value = -1;
   
+  // clear the stat reporting maps
+  stat_mobs.clear();
+  stat_objs.clear();
+  
   for (comm = 0; cmd[comm].command != 'S'; comm++) {
     resetCom *rs = &cmd[comm];
     switch (rs->command) {
@@ -1179,13 +1183,18 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_mobile(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('C', "mobile",comm, value);
+    else 
+      ++stat_mobs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('C', "room",comm, rs->arg3);
+    
 	break;
       case 'K':
 	rs->arg1 = real_mobile(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('K', "mobile",comm, value);
+    else 
+      ++stat_mobs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('K', "room",comm, rs->arg3);
 	break;
@@ -1193,6 +1202,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_mobile(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('M', "mobile",comm, value);
+    else 
+      ++stat_mobs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('M', "room",comm, rs->arg3);
 	break;
@@ -1200,6 +1211,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_mobile(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('R', "mobile",comm, value);
+    else 
+      ++stat_mobs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('R', "room",comm, rs->arg3);
 	break;
@@ -1207,6 +1220,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_object(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('O', "object",comm, value);
+    else 
+      ++stat_objs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('O', "room",comm, rs->arg3);
 	break;
@@ -1214,6 +1229,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_object(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('G', "object",comm, value);
+    else 
+      ++stat_objs[rs->arg1];
 	break;
       case 'X': // X <set num> <slot> <vnum>
 	if (rs->arg3 < 0 || rs->arg3 > 15)
@@ -1221,6 +1238,9 @@ void zoneData::renumCmd(void)
 	rs->arg1 = mapFileToSlot(value = rs->arg1); 
 	if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
 	  logError('X', "bogus slot",comm, value);
+    rs->arg2 = real_object(value = rs->arg2);
+    if (rs->arg2 >= 0)
+      ++stat_objs[rs->arg2];
 	break;
       case 'Z': // Z <if flag> <set num> <perc chance>
 	if (rs->arg1 < 0 || rs->arg1 > 15)
@@ -1239,6 +1259,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_object(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('E', "object",comm, value);
+    else 
+      ++stat_objs[rs->arg1];
 	rs->arg3 = mapFileToSlot(value = rs->arg3); 
 	if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR)
 	  logError('E', "bogus slot",comm, value);
@@ -1247,6 +1269,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_object(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('P', "object",comm, value);
+    else 
+      ++stat_objs[rs->arg1];
 	rs->arg3 = real_object(rs->arg3);
 	if (rs->arg3 < 0)
 	  logError('P', "container",comm, rs->arg3);
@@ -1259,6 +1283,8 @@ void zoneData::renumCmd(void)
 	rs->arg1 = real_object(value = rs->arg1);
 	if (rs->arg1 < 0)
 	  logError('B', "object",comm, value);
+    else 
+      ++stat_objs[rs->arg1];
 	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
 	  logError('B', "room",comm, rs->arg3);
 	break;
@@ -1275,6 +1301,19 @@ void zoneData::renumCmd(void)
 	}
 	break;
     }
+  }
+  
+  // set the object and mob tallies in zoneData
+  map<int,int>::iterator iter;
+  stat_mobs_total = 0;
+  stat_mobs_unique = 0;
+  for (iter = stat_mobs.begin(); iter != stat_mobs.end(); iter++ ) {
+    ++stat_mobs_unique;
+    stat_mobs_total += iter->second;
+  }
+  stat_objs_unique = 0;
+  for (iter = stat_objs.begin(); iter != stat_objs.end(); iter++ ) {
+    ++stat_objs_unique;
   }
 }
 
@@ -3397,6 +3436,9 @@ zoneData::zoneData() :
   mob_levels(0),
   min_mob_level(128),
   max_mob_level(0),
+  stat_mobs_total(0),
+  stat_mobs_unique(0),
+  stat_objs_unique(0),
   cmd(0)
 {
 }
@@ -3414,6 +3456,11 @@ zoneData::zoneData(const zoneData &t) :
   mob_levels(t.mob_levels),
   min_mob_level(t.min_mob_level),
   max_mob_level(t.max_mob_level),
+  stat_mobs(t.stat_mobs),
+  stat_objs(t.stat_objs),
+  stat_mobs_total(t.stat_mobs_total),
+  stat_mobs_unique(t.stat_mobs_unique),
+  stat_objs_unique(t.stat_objs_unique),
   cmd(t.cmd)
 {
   name = mud_str_dup(t.name);
@@ -3423,6 +3470,8 @@ zoneData::~zoneData()
 {
   delete [] name;
   cmd.erase(cmd.begin(), cmd.end());
+  stat_mobs.clear();
+  stat_objs.clear();
 }
 
 zoneData & zoneData::operator= (const zoneData &t)
@@ -3444,7 +3493,13 @@ zoneData & zoneData::operator= (const zoneData &t)
   mob_levels = t.mob_levels;
   min_mob_level = t.min_mob_level;
   max_mob_level = t.max_mob_level;
-
+  stat_mobs.clear();
+  stat_mobs = t.stat_mobs;
+  stat_objs.clear();
+  stat_objs = t.stat_objs;
+  stat_mobs_total = t.stat_mobs_total;
+  stat_mobs_unique = t.stat_mobs_unique;
+  stat_objs_unique = t.stat_objs_unique;
   cmd.erase(cmd.begin(), cmd.end());
   cmd = t.cmd;
 

@@ -17,124 +17,185 @@ extern int ageHpMod(const TPerson *);
 
 void TBeing::statZone(const sstring &zoneNumber)
 {
-  int zNum,
-    cnDesc[3]  = {0, 0, 0},
-    cnTitle[3] = {0, 0, 0},
-    cnExtra[2] = {0, 0},
-    cnFlags[7] = {0, 0, 0, 0, 0, 0, 0},
-    rzCount    = 0;
-  sstring sb("");
-  unsigned long int rNums[2] = {0, 0}, Runner = 0;
-  TRoom *curRoomCntr;
-
+  // this probably has the potential to be wildly innaccurate now
+  
+  int zone_num;
+  int count_descriptions = 0;
+  int count_titles = 0;
+  int count_extras = 0;
+  int count_flags[7] = {0, 0, 0, 0, 0, 0, 0};
+  int count_rooms = 0;
+  int room_start, room_end;
+  // int count_non_ethereal = 0;
+  int room_loop = 0;
+  sstring out("");
+  TRoom *roomp_current;
+  
+  int count_mobs_in_block = 0;
+  int count_objs_in_block = 0;
+  
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
-
-    zNum = roomp->getZoneNum();
+    zone_num = roomp->getZoneNum();
   } else {
-    zNum = convertTo<int>(zoneNumber);
+    zone_num = convertTo<int>(zoneNumber);
   }
 
-  if (zNum < 0 || zNum >= (signed int) zone_table.size()) {
+  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-
-  zoneData &zne = zone_table[zNum];
-
-  Runner = rNums[0] = (zNum ? zone_table[zNum - 1].top + 1 : 0);
-  rNums[1] = zne.top;
-
-  sb += "Basic Information:\n\r--------------------\n\r";
-  sb += fmt("Zone Num: %3d     Active: %s\n\r") %
-    zNum % (zne.enabled ? "Enabled" : "Disabled");
-
-  for (; Runner < (rNums[1] + 1); Runner++)
-    if ((curRoomCntr = real_roomp(Runner))) {
-      rzCount++;
-
-      if (curRoomCntr->getDescr()) {// Count Descriptions
-        cnDesc[0]++;
-
-        if (!strncmp(curRoomCntr->getDescr(), "Empty", 5)) {
-          cnDesc[2]++;
-        }
-      } else {
-        cnDesc[1]++;
+  
+  zoneData zoned = zone_table[zone_num];
+  
+  room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
+  room_end = zoned.top;
+  
+  for (room_loop = room_start; room_loop < (room_end + 1); room_loop++) {
+    if ((roomp_current = real_roomp(room_loop))) {
+      ++count_rooms;
+      
+      if (roomp_current->getDescr() && strncmp(roomp_current->getDescr(), "Empty", 5)) {
+        // count of non 'Empty' descriptions
+        ++count_descriptions;
       }
-
-      if (curRoomCntr->name) {// Count Titles
-        sstring tString;
-
-        cnTitle[0]++;
-        tString = fmt("%d") % curRoomCntr->number;
-
-        if (tString.find(curRoomCntr->name) != sstring::npos) {
-          cnTitle[2]++;
+      
+      if (roomp_current->name) {
+        // count titles
+        sstring name_num = fmt("%d") % roomp_current->number;
+        if (name_num.find(roomp_current->name) != sstring::npos) {
+          // the room name is the same as the room vnum... consider it untitled
+        } else {
+          ++count_titles;
         }
-      } else {
-        cnTitle[1]++;
       }
-
-      if (curRoomCntr->ex_description)// Count Rooms with extra descriptions
-        cnExtra[0]++;
-      else
-        cnExtra[1]++;
-
-      if (curRoomCntr->isRoomFlag(ROOM_DEATH    ))// Count DEATH_ROOM flags
-        cnFlags[0]++;
-      if (curRoomCntr->isRoomFlag(ROOM_NO_FLEE  ))// Count NO_FLEE flags
-        cnFlags[1]++;
-      if (curRoomCntr->isRoomFlag(ROOM_PEACEFUL ))// Count PEACEFUL flags
-        cnFlags[2]++;
-      if (curRoomCntr->isRoomFlag(ROOM_NO_HEAL  ))// Count NO_HEAL flags
-        cnFlags[3]++;
-      if (curRoomCntr->isRoomFlag(ROOM_SAVE_ROOM))// Count SAVE_ROOM flags
-        cnFlags[4]++;
-      if (curRoomCntr->isRoomFlag(ROOM_INDOORS  ))// Count INDOOR flags
-        cnFlags[5]++;
-      if (curRoomCntr->isRoomFlag(ROOM_PEACEFUL) &&
-          !curRoomCntr->isRoomFlag(ROOM_NO_HEAL))// If is Peaceful should ALWAYS be no-heal
-        cnFlags[6]++;
+      
+      if (roomp_current->ex_description) {
+        // count extra descriptions
+        ++count_extras;
+      }
+      
+      if (roomp_current->isRoomFlag(ROOM_DEATH    ))// Count DEATH_ROOM flags
+        count_flags[0]++;
+      if (roomp_current->isRoomFlag(ROOM_NO_FLEE  ))// Count NO_FLEE flags
+        count_flags[1]++;
+      if (roomp_current->isRoomFlag(ROOM_PEACEFUL ))// Count PEACEFUL flags
+        count_flags[2]++;
+      if (roomp_current->isRoomFlag(ROOM_NO_HEAL  ))// Count NO_HEAL flags
+        count_flags[3]++;
+      if (roomp_current->isRoomFlag(ROOM_SAVE_ROOM))// Count SAVE_ROOM flags
+        count_flags[4]++;
+      if (roomp_current->isRoomFlag(ROOM_INDOORS  ))// Count INDOOR flags
+        count_flags[5]++;
+      if (roomp_current->isRoomFlag(ROOM_PEACEFUL) &&
+          !roomp_current->isRoomFlag(ROOM_NO_HEAL))// If is Peaceful should ALWAYS be no-heal
+        count_flags[6]++;
+      
+      // if (roomp_current->getSectorType() != SECT_ASTRAL_ETHREAL) {
+      //   ++count_non_ethereal;
+      // }
     }
-
-  sb += fmt("S-Room: %5lu     E-Room: %5lu     Total:(%lu/%d)\n\r") %
-    rNums[0] % rNums[1] % (rNums[1] - rNums[0] + 1) % rzCount;
-  sb += "Key Information:\n\r--------------------\n\r";
-  sb += fmt("DescrCount: %3d     NoDescr: %3d     InDescr: %3d\n\r") %
-    cnDesc[0] % cnDesc[1] % cnDesc[2];
-  sb += fmt("TitleCount: %3d     NoTitle: %3d     InTitle: %3d\n\r") %
-    cnTitle[0] % cnTitle[1] % cnTitle[2];
-  sb += fmt("ExtraCount: %3d     NoExtra: %3d     (Room Counts)\n\r") %
-    cnExtra[0] % cnExtra[1];
-  sb += "Key Flags:\n\r--------------------\n\r";
-  if (cnFlags[0]) {
-    sb += fmt("Death-Rooms: %3d\n\r") % cnFlags[0];
   }
-  if (cnFlags[1]) {
-    sb += fmt("No-Flee    : %3d\n\r") % cnFlags[1];
+  
+  int mob_lvl_avg_block = 0;
+  int mob_lvl_low_block = 0;
+  int mob_lvl_high_block = 0;
+  for (unsigned int mi = 0; mi < mob_index.size(); mi++) {
+    if (mob_index[mi].virt < room_start || mob_index[mi].virt > room_end)
+      continue;
+    // sendTo(fmt("Mob %u %i %s\n\r") % mi % mob_index[mi].virt % mob_index[mi].short_desc);
+    if (!mob_lvl_low_block)
+      mob_lvl_low_block = (int) mob_index[mi].level;
+    mob_lvl_avg_block += (int) mob_index[mi].level;
+    mob_lvl_low_block = min(mob_lvl_low_block, (int) mob_index[mi].level);
+    mob_lvl_high_block = max(mob_lvl_high_block, (int) mob_index[mi].level);
+    ++count_mobs_in_block;
   }
-  if (cnFlags[2]) {
-    sb += fmt("Peaceful   : %3d\n\r") % cnFlags[2];
+  if (count_mobs_in_block)
+    mob_lvl_avg_block /= count_mobs_in_block;
+  
+  for (unsigned int oi = 0; oi < obj_index.size(); oi++) {
+    if (obj_index[oi].virt < room_start || obj_index[oi].virt > room_end)
+      continue;
+    // sendTo(fmt("Obj %u %i %s\n\r") % oi % obj_index[oi].virt % obj_index[oi].short_desc);
+    ++count_objs_in_block;
   }
-  if (cnFlags[3]) {
-    sb += fmt("No-Heal    : %3d\n\r") % cnFlags[3];
+  
+  out += "<g>General Zone Info<1>\n\r";
+  out += fmt("Name:         <c>%-s<1>\n\r") % zoned.name;
+  out += fmt("Zone Num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+  out += fmt("Start room:   <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
+  sstring reset_mode;
+  switch (zoned.reset_mode) {
+    case 0:
+      reset_mode = "<c>Never reset<1>";
+      break;
+    case 1:
+      reset_mode = "<c>Reset when empty<1>";
+      break;
+    case 2:
+      reset_mode = "<c>Reset at lifespan<1>";
+      break;
+    default:
+      reset_mode = fmt("<r>Unknown mode<1> <R>%i<1>") % zoned.reset_mode;
+      break;
   }
-  if (cnFlags[6]) {
-    sb += fmt("...CRITICAL: +Peaceful !No-Heal: %3d\n\r") % cnFlags[6];
+  out += fmt("Reset mode:   %s\n\r") % reset_mode;
+  out += fmt("Lifespan:     <c>%-4d<1>      Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r") % zoned.lifespan % ((room_end - room_start) + 1) % count_rooms;
+  
+  out += "<g>Room Info<1>\n\r";
+  out += fmt("Descriptions: <c>%-d<1>\n\r") % count_descriptions;
+  out += fmt("Titles:       <c>%-d<1>\n\r") % count_titles;
+  out += fmt("Extras:       <c>%-d<1>\n\r") % count_extras;
+  out += fmt("Indoors:      <c>%-d<1>\n\r\n\r") % count_flags[5];
+  //out += fmt("Non-ethereal sectors: <c>%d<1>\n\r\n\r") % count_non_ethereal;
+  
+  int mob_lvl_low = 0;
+  int mob_lvl_high = 0;
+  int mob_lvl_avg_unique = 0;
+  int mob_lvl_avg_total = 0;
+  
+  map<int,int>::iterator iter;
+  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
+    if (!mob_lvl_low)
+      mob_lvl_low = (int) mob_index[iter->first].level;
+    mob_lvl_low = min(mob_lvl_low, (int) mob_index[iter->first].level);
+    mob_lvl_high = max(mob_lvl_high, (int) mob_index[iter->first].level);
+    mob_lvl_avg_unique += (int) mob_index[iter->first].level;
+    mob_lvl_avg_total += ((int) mob_index[iter->first].level) * iter->second;
   }
-  if (cnFlags[4]) {
-    sb += fmt("Save-Room%c : %3d\n\r") %
-      (cnFlags[4] > 1 ? 's' : ' ') % cnFlags[4];
+  if (zoned.stat_mobs_unique)
+    mob_lvl_avg_unique /= zoned.stat_mobs_unique;
+  if (zoned.stat_mobs_total)
+    mob_lvl_avg_total /= zoned.stat_mobs_total;
+  out += "<g>Mob Info<1>\n\r";
+  out += fmt("Unique mobs in zonefile:    <c>%-4d<1>  Low/avg/high: <c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") % zoned.stat_mobs_unique % mob_lvl_low % mob_lvl_avg_unique % mob_lvl_high;
+  out += fmt("Total mobs in zonefile:     <c>%-4d<1>  Avg:          <c>%d<1>\n\r") % zoned.stat_mobs_total % mob_lvl_avg_total;
+  out += fmt("Unique mobs in block:       <c>%-4d<1>  Low/avg/high: <c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") % count_mobs_in_block % mob_lvl_low_block % mob_lvl_avg_block % mob_lvl_high_block;
+  TBeing *b;
+  TMonster *monst;
+  int response_scripts_block = 0;
+  int response_scripts_zonefile = 0;
+  for (b = character_list; b; b = b->next) {
+    if ((monst = dynamic_cast<TMonster *>(b)) && monst->resps && monst->resps->respList) {
+      if (!(monst->mobVnum() < room_start || monst->mobVnum() > room_end)) {
+        ++response_scripts_block;
+      }
+      if (zoned.stat_mobs[monst->getMobIndex()]) {
+        ++response_scripts_zonefile;
+      }
+    }
   }
-  if (cnFlags[5]) {
-    sb += fmt("Indoors    : %3d\n\r") % cnFlags[5];
-  }
-
-  desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+  out += fmt("Response mobs in zonefile:  <c>%-4d<1>  Response mobs in block: <c>%-4d<1>\n\r\n\r") % response_scripts_zonefile % response_scripts_block;
+  
+  out += "<g>Object Info<1>\n\r";
+  out += fmt("Unique objects in zonefile: <c>%-d<1>\n\r") % zoned.stat_objs_unique;
+  out += fmt("Unique objects in block:    <c>%-d<1>\n\r") % count_objs_in_block;
+  
+  desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 void TBeing::statRoom(TRoom *rmp)
@@ -2248,7 +2309,13 @@ void TPerson::doStat(const sstring &argument)
     statRoom(roomp);
     return;
   } else if (buf == "zone") {
-    statZone(skbuf);
+    if (is_abbrev(skbuf, "mobs")) {
+      sendTo("Stat zone mobs not yet implemented.\n\r");
+    } else if (is_abbrev(skbuf, "objs")) {
+      sendTo("Stat zone objs not yet implemented.\n\r");
+    } else {
+      statZone(skbuf);
+    }
     return;
   } else {
     count = 1;
