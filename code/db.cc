@@ -1167,6 +1167,7 @@ void zoneData::renumCmd(void)
   // clear the stat reporting maps
   stat_mobs.clear();
   stat_objs.clear();
+  int argbuf;
   
   for (comm = 0; cmd[comm].command != 'S'; comm++) {
     resetCom *rs = &cmd[comm];
@@ -1238,9 +1239,9 @@ void zoneData::renumCmd(void)
 	rs->arg1 = mapFileToSlot(value = rs->arg1); 
 	if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
 	  logError('X', "bogus slot",comm, value);
-    rs->arg2 = real_object(value = rs->arg2);
-    if (rs->arg2 >= 0)
-      ++stat_objs[rs->arg2];
+    argbuf = real_object(value = rs->arg2);
+    if (argbuf >= 0)
+      ++stat_objs[argbuf];
 	break;
       case 'Z': // Z <if flag> <set num> <perc chance>
 	if (rs->arg1 < 0 || rs->arg1 > 15)

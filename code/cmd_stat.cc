@@ -198,6 +198,149 @@ void TBeing::statZone(const sstring &zoneNumber)
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
+void TBeing::statZoneMobs(sstring zoneNumber)
+{
+  int zone_num;
+  bool read_zonefile = TRUE; // false reads from zone's vnum block, true reads zonefile summaries (default)
+  sstring out("");
+  bool this_zone = FALSE;
+  
+  if (zoneNumber.substr(0, 0) == "b") {
+    // doing a zonefile read
+    read_zonefile = FALSE;
+    zoneNumber = zoneNumber.substr(1);
+  } else if (zoneNumber.substr(0, 0) == "z") {
+    // reading from the zone's vnum range
+    zoneNumber = zoneNumber.substr(1);
+  }
+  
+  if (zoneNumber.empty()) {
+    if (!roomp) {
+      vlogf(LOG_BUG, "statZone called by being with no current room.");
+      return;
+    }
+    this_zone = TRUE;
+    zone_num = roomp->getZoneNum();
+  } else {
+    zone_num = convertTo<int>(zoneNumber);
+  }
+  
+  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
+    sendTo("Zone number incorrect.\n\r");
+    return;
+  }
+  
+  zoneData zoned = zone_table[zone_num];
+  int room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
+  int room_end = zoned.top;
+  int count = 0;
+  if (read_zonefile) {
+    map<int,int>::iterator iter;
+    out += "<g>Mobs present in<1> <G>zonefile<1>\n\r";
+    if (this_zone)
+      out += "<g>To read from the zone vnum range use<1> <c>stat zone mobs b<1>\n\r\n\r";
+    else 
+      out += fmt("<g>To read from the zone vnum range use<1> <c>stat zone mobs b%d<1>\n\r\n\r") % zone_num;
+    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
+    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+    out += "     <c>VNum   Short description<1>\n\r";
+    for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
+      ++count;
+      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[iter->first].virt % mob_index[iter->first].short_desc;
+    }
+    
+  } else {
+    out += "<g>Mobs present in<1> <G>zone vnum range<1>\n\r";
+    if (this_zone)
+      out += "<g>To read from the zonefile use<1> <c>stat zone mobs<1>\n\r\n\r";
+    else 
+      out += fmt("<g>To read from the zonefile use<1> <c>stat zone mobs %d<1>\n\r\n\r") % zone_num;
+    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
+    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+    out += fmt("Start room: <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
+    out += "     <c>VNum   Short description<1>\n\r";
+    for (unsigned int mi = 0; mi < mob_index.size(); mi++) {
+      if (mob_index[mi].virt < room_start || mob_index[mi].virt > room_end)
+        continue;
+      ++count;
+      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[mi].virt % mob_index[mi].short_desc;
+    }
+  }
+  
+  desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
+}
+
+void TBeing::statZoneObjs(sstring zoneNumber)
+{
+  int zone_num;
+  bool read_zonefile = TRUE; // false reads from zone's vnum block, true reads zonefile summaries (default)
+  sstring out("");
+  bool this_zone = FALSE;
+  
+  if (zoneNumber.substr(0, 0) == "b") {
+    // doing a zonefile read
+    read_zonefile = FALSE;
+    zoneNumber = zoneNumber.substr(1);
+  } else if (zoneNumber.substr(0, 0) == "z") {
+    // reading from the zone's vnum range
+    zoneNumber = zoneNumber.substr(1);
+  }
+  
+  if (zoneNumber.empty()) {
+    if (!roomp) {
+      vlogf(LOG_BUG, "statZone called by being with no current room.");
+      return;
+    }
+    this_zone = TRUE;
+    zone_num = roomp->getZoneNum();
+  } else {
+    zone_num = convertTo<int>(zoneNumber);
+  }
+  
+  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
+    sendTo("Zone number incorrect.\n\r");
+    return;
+  }
+  
+  zoneData zoned = zone_table[zone_num];
+  int room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
+  int room_end = zoned.top;
+  int count = 0;
+  if (read_zonefile) {
+    map<int,int>::iterator iter;
+    out += "<g>Objects present in<1> <G>zonefile<1>\n\r";
+    if (this_zone)
+      out += "<g>To read from the zone vnum range use<1> <c>stat zone objs b<1>\n\r\n\r";
+    else 
+      out += fmt("<g>To read from the zone vnum range use<1> <c>stat zone objs b%d<1>\n\r\n\r") % zone_num;
+    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
+    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+    out += "     <c>VNum   Short description<1>\n\r";
+    for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++ ) {
+      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % obj_index[iter->first].virt % obj_index[iter->first].short_desc;
+    }
+    
+  } else {
+    out += "<g>Objects present in<1> <G>zone vnum range<1>\n\r\n\r";
+    if (this_zone)
+      out += "<g>To read from the zonefile use<1> <c>stat zone objs<1>\n\r\n\r";
+    else 
+      out += fmt("<g>To read from the zonefile use<1> <c>stat zone objs %d<1>\n\r\n\r") % zone_num;
+    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
+    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+    out += fmt("Start room: <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
+    out += "     <c>VNum   Short description<1>\n\r";
+    for (unsigned int oi = 0; oi < obj_index.size(); oi++) {
+      if (mob_index[oi].virt < room_start || mob_index[oi].virt > room_end)
+        continue;
+      ++count;
+      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % obj_index[oi].virt % obj_index[oi].short_desc;
+    }
+  }
+  
+  desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
+}
+
 void TBeing::statRoom(TRoom *rmp)
 {
   sstring str;
@@ -2310,9 +2453,9 @@ void TPerson::doStat(const sstring &argument)
     return;
   } else if (buf == "zone") {
     if (is_abbrev(skbuf, "mobs")) {
-      sendTo("Stat zone mobs not yet implemented.\n\r");
+      statZoneMobs(namebuf);
     } else if (is_abbrev(skbuf, "objs")) {
-      sendTo("Stat zone objs not yet implemented.\n\r");
+      statZoneObjs(namebuf);
     } else {
       statZone(skbuf);
     }

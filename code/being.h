@@ -1530,6 +1530,8 @@ class TBeing : public TThing {
     virtual void doStat(const sstring &);
     void statRoom(TRoom *);
     void statZone(const sstring &);
+    void statZoneMobs(sstring);
+    void statZoneObjs(sstring);
     void statObj(const TObj *);
     void statObjForDivman(const TObj *);
     void statBeing(TBeing *);
