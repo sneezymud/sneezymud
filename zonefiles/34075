@@ -1,10 +1,10 @@
 #34075
 Magdalena - Maze of the Faerie Folk~
-34109 30 2 0
+34109 30 2 1
 
 
 D 0 34094 2 1                    Gate into the Maze
-*D 0 <room number> 0 1                              gate entrance to maze
+D 0 5305 0 1                     gate entrance to maze
 
 D 0 34109 4 1                    Wegort room          
 D 0 34075 5 1
