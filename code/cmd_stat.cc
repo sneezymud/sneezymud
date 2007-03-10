@@ -14,6 +14,7 @@ extern int eqHpBonus(const TPerson *);
 extern int baseHp();
 extern float classHpPerLevel(const TPerson *);
 extern int ageHpMod(const TPerson *);
+extern int getObjLoadPotential(const int obj_num);
 
 void TBeing::statZone(const sstring &zoneNumber)
 {
@@ -126,7 +127,7 @@ void TBeing::statZone(const sstring &zoneNumber)
   
   out += "<g>General Zone Info<1>\n\r";
   out += fmt("Name:         <c>%-s<1>\n\r") % zoned.name;
-  out += fmt("Zone Num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+  out += fmt("Zone num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
   out += fmt("Start room:   <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
   sstring reset_mode;
   switch (zoned.reset_mode) {
@@ -201,25 +202,13 @@ void TBeing::statZone(const sstring &zoneNumber)
 void TBeing::statZoneMobs(sstring zoneNumber)
 {
   int zone_num;
-  bool read_zonefile = TRUE; // false reads from zone's vnum block, true reads zonefile summaries (default)
   sstring out("");
-  bool this_zone = FALSE;
-  
-  if (zoneNumber.substr(0, 0) == "b") {
-    // doing a zonefile read
-    read_zonefile = FALSE;
-    zoneNumber = zoneNumber.substr(1);
-  } else if (zoneNumber.substr(0, 0) == "z") {
-    // reading from the zone's vnum range
-    zoneNumber = zoneNumber.substr(1);
-  }
   
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
-    this_zone = TRUE;
     zone_num = roomp->getZoneNum();
   } else {
     zone_num = convertTo<int>(zoneNumber);
@@ -231,40 +220,48 @@ void TBeing::statZoneMobs(sstring zoneNumber)
   }
   
   zoneData zoned = zone_table[zone_num];
-  int room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
-  int room_end = zoned.top;
+  
   int count = 0;
-  if (read_zonefile) {
-    map<int,int>::iterator iter;
-    out += "<g>Mobs present in<1> <G>zonefile<1>\n\r";
-    if (this_zone)
-      out += "<g>To read from the zone vnum range use<1> <c>stat zone mobs b<1>\n\r\n\r";
-    else 
-      out += fmt("<g>To read from the zone vnum range use<1> <c>stat zone mobs b%d<1>\n\r\n\r") % zone_num;
-    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
-    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-    out += "     <c>VNum   Short description<1>\n\r";
-    for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
-      ++count;
-      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[iter->first].virt % mob_index[iter->first].short_desc;
+  map<int,int>::iterator iter;
+  
+  out += "<g>Zonefile Mobile Report<1>\n\r";
+  out += fmt("<g>Zone name:<1>  %-s\n\r") % zoned.name;
+  out += fmt("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+  
+  out += "      <c>Vnum   Max Count Class    Level Name<1>\n\r";
+  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
+    ++count;
+    // grab the class data, do funny stuff to display possible multi-classes with abbreviations
+    sstring classy;
+    bool got_class = FALSE;
+    bool reset = FALSE;
+    for (classIndT cl = MIN_CLASS_IND; cl < MAX_CLASSES; cl++) {
+      if (IS_SET((int) mob_index[iter->first].Class, 1<<cl)) {
+        if (got_class && !reset) {
+          // mob is multi-classed, erase and start over with abbreviations
+          cl = MIN_CLASS_IND;
+          classy.clear();
+          reset = TRUE;
+        }
+        if (got_class) {
+          classy.append(classInfo[cl].abbr);
+        } else {
+          classy = classInfo[cl].name;
+        }
+        got_class = TRUE;
+      }
+    }
+    if (classy.size() == 0) {
+      classy = fmt("<R>%-8d<1>") % mob_index[iter->first].Class;
+      vlogf(LOG_BUG, fmt("Unknown class bit (%d) in TBeing::statZoneMobs.") % mob_index[iter->first].Class);
     }
     
-  } else {
-    out += "<g>Mobs present in<1> <G>zone vnum range<1>\n\r";
-    if (this_zone)
-      out += "<g>To read from the zonefile use<1> <c>stat zone mobs<1>\n\r\n\r";
-    else 
-      out += fmt("<g>To read from the zonefile use<1> <c>stat zone mobs %d<1>\n\r\n\r") % zone_num;
-    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
-    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-    out += fmt("Start room: <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
-    out += "     <c>VNum   Short description<1>\n\r";
-    for (unsigned int mi = 0; mi < mob_index.size(); mi++) {
-      if (mob_index[mi].virt < room_start || mob_index[mi].virt > room_end)
-        continue;
-      ++count;
-      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[mi].virt % mob_index[mi].short_desc;
-    }
+    // output the row
+    out += fmt("<c>%-4d<1> %5d %5d %5d %-8s %5ld %s\n\r") % count 
+    % mob_index[iter->first].virt % mob_index[iter->first].max_exist 
+    % mob_index[iter->first].getNumber() % classy
+    % mob_index[iter->first].level % mob_index[iter->first].name;
+    // out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[iter->first].virt % mob_index[iter->first].short_desc;
   }
   
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
@@ -273,25 +270,13 @@ void TBeing::statZoneMobs(sstring zoneNumber)
 void TBeing::statZoneObjs(sstring zoneNumber)
 {
   int zone_num;
-  bool read_zonefile = TRUE; // false reads from zone's vnum block, true reads zonefile summaries (default)
   sstring out("");
-  bool this_zone = FALSE;
-  
-  if (zoneNumber.substr(0, 0) == "b") {
-    // doing a zonefile read
-    read_zonefile = FALSE;
-    zoneNumber = zoneNumber.substr(1);
-  } else if (zoneNumber.substr(0, 0) == "z") {
-    // reading from the zone's vnum range
-    zoneNumber = zoneNumber.substr(1);
-  }
   
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
-    this_zone = TRUE;
     zone_num = roomp->getZoneNum();
   } else {
     zone_num = convertTo<int>(zoneNumber);
@@ -303,41 +288,50 @@ void TBeing::statZoneObjs(sstring zoneNumber)
   }
   
   zoneData zoned = zone_table[zone_num];
-  int room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
-  int room_end = zoned.top;
+  
   int count = 0;
-  if (read_zonefile) {
-    map<int,int>::iterator iter;
-    out += "<g>Objects present in<1> <G>zonefile<1>\n\r";
-    if (this_zone)
-      out += "<g>To read from the zone vnum range use<1> <c>stat zone objs b<1>\n\r\n\r";
-    else 
-      out += fmt("<g>To read from the zone vnum range use<1> <c>stat zone objs b%d<1>\n\r\n\r") % zone_num;
-    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
-    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-    out += "     <c>VNum   Short description<1>\n\r";
-    for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++ ) {
-      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % obj_index[iter->first].virt % obj_index[iter->first].short_desc;
-    }
-    
+  map<int,int>::iterator iter;
+  out += "<g>Zonefile Object Report<1>\n\r";
+  out += fmt("<g>Zone name:<1>  %-s\n\r") % zoned.name;
+  out += fmt("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+  
+  if (!hasWizPower(POWER_SHOW_TRUSTED)) {
+    out += "      <c>Vnum Type              Name<1>\n\r";
   } else {
-    out += "<g>Objects present in<1> <G>zone vnum range<1>\n\r\n\r";
-    if (this_zone)
-      out += "<g>To read from the zonefile use<1> <c>stat zone objs<1>\n\r\n\r";
-    else 
-      out += fmt("<g>To read from the zonefile use<1> <c>stat zone objs %d<1>\n\r\n\r") % zone_num;
-    out += fmt("Zone name:  <c>%-s<1>\n\r") % zoned.name;
-    out += fmt("Zone Num:   <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-    out += fmt("Start room: <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
-    out += "     <c>VNum   Short description<1>\n\r";
-    for (unsigned int oi = 0; oi < obj_index.size(); oi++) {
-      if (mob_index[oi].virt < room_start || mob_index[oi].virt > room_end)
-        continue;
-      ++count;
-      out += fmt("<c>%3d)<1> %5d  %s\n\r") % count % obj_index[oi].virt % obj_index[oi].short_desc;
+    out += "      <c>Vnum   Max Count  Value Type              Level Name<1>\n\r";
+  }
+  for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++ ) {
+    ++count;
+    
+    // try to speed things up - don't init an object unless we really need to
+    // it's only used to determine level for certain item types
+    // leaving the rest blank also helps with readability
+    sstring olevel;
+    if (obj_index[iter->first].itemtype == ITEM_WEAPON
+        || obj_index[iter->first].itemtype == ITEM_ARMOR
+        || obj_index[iter->first].itemtype == ITEM_WORN
+        || obj_index[iter->first].itemtype == ITEM_HANDGONNE
+        || obj_index[iter->first].itemtype == ITEM_HOLY_SYM
+        || obj_index[iter->first].itemtype == ITEM_MARTIAL_WEAPON
+        || obj_index[iter->first].itemtype == ITEM_JEWELRY
+        || obj_index[iter->first].itemtype == ITEM_CANNON
+        || obj_index[iter->first].itemtype == ITEM_GUN
+        || obj_index[iter->first].itemtype == ITEM_ARROW) {
+      TObj *obj = read_object(obj_index[iter->first].virt, VIRTUAL);
+      olevel = fmt("%d") % (int) obj->objLevel();
+      delete obj;
+    }
+    sstring itype = ItemInfo[obj_index[iter->first].itemtype]->name;
+    
+    if (!hasWizPower(POWER_SHOW_TRUSTED)) {
+      out += fmt("<c>%-4d<1> %5d %-17s %s\n\r") % count % obj_index[iter->first].virt % itype % obj_index[iter->first].name;
+    } else {
+      out += fmt("<c>%-4d<1> %5d %5d %5d %6d %-17s %5s %s\n\r") % count 
+        % obj_index[iter->first].virt % obj_index[iter->first].max_exist
+        % obj_index[iter->first].getNumber() % obj_index[iter->first].value
+        % itype % olevel % obj_index[iter->first].name;
     }
   }
-  
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
@@ -2452,6 +2446,8 @@ void TPerson::doStat(const sstring &argument)
     statRoom(roomp);
     return;
   } else if (buf == "zone") {
+    // mobs and objs options added to spit out items from the zonefile
+    // kind of like show mobs or show objs does it based on the zone's vnum range
     if (is_abbrev(skbuf, "mobs")) {
       statZoneMobs(namebuf);
     } else if (is_abbrev(skbuf, "objs")) {

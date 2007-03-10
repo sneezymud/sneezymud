@@ -202,6 +202,7 @@ struct class_info
   discNumT sec_disc;
   double prac_tweak;
   double hp_per_level;
+  sstring abbr;
 };
       
 #endif
