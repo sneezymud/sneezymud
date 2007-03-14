@@ -2245,268 +2245,367 @@ void TBeing::doStat(const sstring &)
 
 void TPerson::doStat(const sstring &argument)
 {
-  sstring arg1, buf, buf2, skbuf, namebuf;
+  sstring arg1, arg2, arg3;
   sstring tmp_arg;
   TBeing *k = NULL;
   TObj *j = NULL;
   int count, parm = 0;
   int foundNum = FALSE;
 
-  if (!hasWizPower(POWER_STAT)) {
-    sendTo("Sorry, you lack the power to stat things.\n\r");
+  if (!isImmortal()) {
+    incorrectCommand();
     return;
   }
-
-  if (!isImmortal())
-    return;
-
+  
   if (!desc)
     return;
-
-  tmp_arg = argument;
-  tmp_arg = one_argument(tmp_arg, buf);
-  tmp_arg = one_argument(tmp_arg, skbuf);
-  tmp_arg = one_argument(tmp_arg, namebuf);
-  arg1 = argument;
-
-  if (arg1.empty()) {
-    sendTo("Stats on who or what?\n\r");
+  
+  if (!hasWizPower(POWER_STAT)) {
+    sendTo("Sorry, you lack the power to use the stat command.\n\r");
     return;
-  } else if (is_abbrev(skbuf, "skill")) {
-    if (!hasWizPower(POWER_STAT_SKILL)) {
-      sendTo("You can not type stat <argument> <skill>.\n\r");
+  }
+  
+  if (argument.empty()) {
+    sendTo("Usage :\n\r");
+    sendTo("        stat mob <name or vnum>\n\r");
+    sendTo("        stat obj <name or vnum>\n\r");
+    sendTo("        stat room\n\r");
+    sendTo("        stat zone <number>\n\r");
+    sendTo("        stat zone mobs <number>\n\r");
+    sendTo("        stat zone objs <number>\n\r");
+    sendTo("        stat <name>\n\r");
+    sendTo("        stat <name> discipline <name or number>\n\r");
+    sendTo("        stat <name> skill <name or number>\n\r");
+    sendTo("        stat <name> donebasic\n\r");
+    return;
+  }
+  
+  tmp_arg = argument;
+  tmp_arg = one_argument(tmp_arg, arg1);
+  tmp_arg = one_argument(tmp_arg, arg2);
+  tmp_arg = one_argument(tmp_arg, arg3);
+
+  if (arg1 == "mob") {
+    // ***** begin stat mob
+    if (!hasWizPower(POWER_STAT_MOBILES)) {
+      sendTo("Sorry, you lack the power to stat mobiles.\n\r");
       return;
     }
-    if (namebuf.empty()) {
-      sendTo("Syntax: stat <char name> <skill> <value>\n\r");
+    if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
+      // check by vnum
+      TMonster *tMonster;
+      unsigned int rnum = real_mobile(parm);
+      if (rnum >= 0 && rnum < mob_index.size()) {
+        if ((tMonster = read_mobile(rnum, REAL))) {
+          statBeing(tMonster);
+          delete tMonster;
+          tMonster = NULL;
+          return;
+        } else {
+          sendTo("No mobile found with that vnum.\n\r");
+          return;
+        }
+      }
+      sendTo("Bad value for mobile vnum.\n\r");
+      return;
+    }
+    // check by name
+    count = 1; // looks like not all of the get_ routines incrememnt count
+    if (!(k = get_char_room(arg2, in_room))) {
+      if (!(k = get_char_vis_world(this, arg2, &count, EXACT_YES))) {
+        if (!(k = get_char_vis_world(this, arg2, &count, EXACT_NO))) {
+          sendTo("No mobile by that name in The World.\n\r");
+          return;
+        }
+      }
+    }
+    statBeing(k);
+    return;
+    // ***** end stat mob
+    
+  } else if (arg1 == "obj") {
+    // ***** begin stat obj
+    if (!hasWizPower(POWER_STAT_OBJECT)) {
+      sendTo("Sorry, you lack the power to stat objects.\n\r");
+      return;
+    }
+    if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
+      // check by vnum
+      TObj *tObj;
+      unsigned int rnum = real_object(parm);
+      if (rnum >= 0 && rnum < obj_index.size()) {
+        if ((tObj = read_object(rnum, REAL))) {
+          statObj(tObj);
+          delete tObj;
+          tObj = NULL;
+          return;
+        } else {
+          sendTo("No object found with that vnum.\n\r");
+          return;
+        }
+      }
+      sendTo("Bad value for object vnum.\n\r");
       return;
     }
     count = 1;
-    if (!(k = get_char_room(buf, in_room))) {
-      if (!(k = get_pc_world(this, buf, EXACT_NO))) {
-        if (!(k = get_char_vis_world(this, buf, &count, EXACT_YES))) {
-          if (!(k = get_char_vis_world(this, buf, &count, EXACT_NO))) {
-            sendTo("Syntax: stat <char name> <skill> <value>\n\r");
-            return;
+    if ((j = get_obj_vis_accessible(this, arg2)) || (j = get_obj_vis(this, arg2.c_str(), &count, EXACT_NO))) {
+      statObj(j);
+      return;
+    } else {
+      sendTo("No object by that name in the World.\n\r");
+      return;
+    }
+    // ***** end stat obj
+    
+  } else if (arg1 == "room") {
+    // ***** begin stat room
+    statRoom(roomp);
+    return;
+    // ***** end stat room
+    
+  } else if (arg1 == "zone") {
+    // ***** begin stat zone
+    if (!hasWizPower(POWER_STAT_OBJECT) || !hasWizPower(POWER_STAT_MOBILES)) {
+      sendTo("Sorry, you lack the power to stat zones.\n\r");
+      return;
+    }
+    // mobs and objs options added to spit out items from the zonefile
+    // kind of like show mobs or show objs does it based on the zone's vnum range
+    if (is_abbrev(arg2, "mobs")) {
+      statZoneMobs(arg3);
+    } else if (is_abbrev(arg2, "objs")) {
+      statZoneObjs(arg3);
+    } else {
+      statZone(arg2);
+    }
+    return;
+    // ***** end stat zone
+    
+  } else {
+    // // ***** begin stat player
+    if (!hasWizPower(POWER_STAT_SKILL)) {
+      sendTo("Sorry, you lack the power to stat players.\n\r");
+      return;
+    }
+    count = 1;
+    if (is_abbrev(arg2, "discipline")) {
+      // ***** begin stat discipline
+      // search in mob room, pc in world, mob in world
+      if (!(k = get_char_room(arg1, in_room))) {
+        if (!(k = get_pc_world(this, arg1, EXACT_NO))) {
+          if (!(k = get_char_vis_world(this, arg1, &count, EXACT_YES))) {
+            if (!(k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
+              sendTo("That person could not be found in the World.\n\r");
+              return;
+            }
           }
         }
       }
-    }
-
-    spellNumT snt;
-    if ((parm = convertTo<int>(namebuf))) {
-      snt = spellNumT(parm);
-    } else {
-      foundNum = FALSE;
-      for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
-        if (hideThisSpell(snt)) {
-          continue;
-        }
-        if (is_exact_name(namebuf, discArray[snt]->name)) {
-          if (!(k->getSkill(snt))) {
+      sstring cap_name = k->getName();
+      cap_name = cap_name.cap();
+      if (!k->discs) {
+        sendTo(COLOR_MOBS, fmt("%s does not have any disciplines allocated yet.\n\r") % cap_name);
+        return;
+      }
+      discNumT dnt;
+      CDiscipline *cd;
+      if (arg3.empty()) {
+        // discipline summary
+        sendTo(COLOR_MOBS, fmt("%s has the following disciplines:\n\r\n\r") % cap_name);
+        for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
+          if (!(cd = k->getDiscipline(dnt))) {
             continue;
           }
-          foundNum = TRUE;
-          break;
+          sendTo(COLOR_MOBS, fmt("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness());
+        }
+        return;
+      }
+      
+      if (is_number(arg3) && (parm = convertTo<int>(arg3))) {
+        // search by number
+        if (parm < MIN_DISC || parm >= MAX_DISCS) {
+          sendTo("Not a valid discipline number.\n\r");
+          return;
+        } else {
+          dnt = mapFileToDisc(parm);
+        }
+      } else {
+        // search by name
+        foundNum = FALSE;
+        // search for exact name
+        for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
+          if (is_exact_name(arg3, discNames[dnt].name)) {
+            foundNum = TRUE;
+            break;
+          }
+        }
+        // search by abbr name (probably need to account for disciplines with similar names here)
+        if (!foundNum) {
+          for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
+            if (isname(arg3, discNames[dnt].name)) {
+              foundNum = TRUE;
+              break;
+            }
+          } 
+        }
+        if (!foundNum) {
+          sendTo("No discipline by that name found.\n\r");
+          return;
         }
       }
-      if (!foundNum) {
+      
+      if (!(cd = k->getDiscipline(dnt))) {
+        sendTo(COLOR_MOBS, fmt("%s does not appear to have <c>%s<1>.\n\r") % cap_name % discNames[dnt].properName);
+        return;
+      }
+      sendTo(COLOR_MOBS, fmt("%s's learning in <c>%s<1>: Current (%d) Natural (%d).\n\r") % cap_name % discNames[dnt].properName % cd->getLearnedness() % cd->getNatLearnedness());
+      return;
+      
+      // ***** end stat discipline
+    } else if (is_abbrev(arg2, "skill")) {
+      // ***** begin stat skill
+      // search in mob room, pc in world, mob in world
+      if (!(k = get_char_room(arg1, in_room))) {
+        if (!(k = get_pc_world(this, arg1, EXACT_NO))) {
+          if (!(k = get_char_vis_world(this, arg1, &count, EXACT_YES))) {
+            if (!(k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
+              sendTo("That person could not be found in the World.\n\r");
+              return;
+            }
+          }
+        }
+      }
+      sstring cap_name = k->getName();
+      cap_name = cap_name.cap();
+      spellNumT snt;
+      if (is_number(arg3) && (parm = convertTo<int>(arg3))) {
+        // search by number
+        if ((parm < MIN_SPELL) || (parm >= MAX_SKILL)) {
+          sendTo("Not a valid skill number.\n\r");
+          return;
+        }
+        snt = spellNumT(parm);
+      } else {
+        // search by name
+        foundNum = FALSE;
         for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
           if (hideThisSpell(snt)) {
             continue;
           }
-          buf2 = discArray[snt]->name;
-          // kludge since chivalry < chi  in discarray
-          if ((namebuf == "chi") && (buf2 != "chi")) {
-            continue;
-          }
-          // kludge since stealth < steal in discarray
-          if ((namebuf == "steal") && (buf2 != "steal")) {
-            continue;
-          }
-          // kludge since paralyze limb < paralyze in discarray
-          if ((namebuf == "paralyze") && (buf2 != "paralyze")) {
-            continue;
-          }
-          if (isname(namebuf, discArray[snt]->name)) {
-            if (!(k->getSkill(snt))) {
-              continue;
-            }
+          if (is_exact_name(arg3, discArray[snt]->name)) {
+            foundNum = TRUE;
             break;
           }
-        } 
-      }
-    }
-    if ((snt < MIN_SPELL) || (snt >= MAX_SKILL)) {
-      sendTo(fmt("Not a good skill number (%d) or the being doesnt have the skill!\n\r") % snt);
-      sendTo("Syntax: stat <char name> <skill> <value>\n\r");
-      return;
-    }
-
-    if (!k->doesKnowSkill(snt)) {
-      if (discArray[snt]) {
-        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
-      } else {
-        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
-      }
-      return;
-    }
-    CSkill *sk = k->getSkill(snt);
-    if (!sk) {
-      if (discArray[snt]) {
-        sendTo(COLOR_MOBS, fmt("%s doesnt appear to have that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
-      } else {
-        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
-      }
-      return;
-    }
-    sendTo(COLOR_MOBS, fmt("%s's %s Raw (stored) Learning: Current (%d) Natural (%d).\n\r") % k->getName() % discArray[snt]->name % k->getRawSkillValue(snt) % k->getRawNatSkillValue(snt));
-    sendTo(COLOR_MOBS, fmt("%s's %s Actual (used) Learning: Current (%d) Natural (%d) Max (%d).\n\r") % k->getName() % discArray[snt]->name % k->getSkillValue(snt) % k->getNatSkillValue(snt) % k->getMaxSkillValue(snt));
-
-    time_t ct = sk->lastUsed;
-    char *tmstr = (char *) asctime(localtime(&ct));
-    *(tmstr + strlen(tmstr) - 1) = '\0';
-    sendTo(COLOR_MOBS, fmt("%s's %s Last Increased: %s\n\r") % k->getName() % discArray[snt]->name % tmstr);
-
-    return;
-  } else if (is_abbrev(skbuf, "discipline")) {
-    if (!hasWizPower(POWER_STAT_SKILL)) {
-      sendTo("You can not type stat <argument> <discipline>.\n\r");
-      return;
-    }
-
-    count = 1;
-
-    if (!(k = get_char_room(buf, in_room))) {
-      if (!(k = get_pc_world(this, buf, EXACT_NO))) {
-        if (!(k = get_char_vis_world(this, buf, &count, EXACT_NO))) {
-          sendTo("Syntax: stat <char name> <discipline> <value>\n\r");
+        }
+        if (!foundNum) {
+          sstring buf;
+          for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
+            if (hideThisSpell(snt)) {
+              continue;
+            }
+            buf = discArray[snt]->name;
+            // kludge since chivalry < chi  in discarray
+            if ((arg3 == "chi") && (buf != "chi")) {
+              continue;
+            }
+            // kludge since stealth < steal in discarray
+            if ((arg3 == "steal") && (buf != "steal")) {
+              continue;
+            }
+            // kludge since paralyze limb < paralyze in discarray
+            if ((arg3 == "paralyze") && (buf != "paralyze")) {
+              continue;
+            }
+            if (isname(arg3, discArray[snt]->name)) {
+              foundNum = TRUE;
+              break;
+            }
+          } 
+        }
+        if (!foundNum) {
+          sendTo("No skill by that name found.\n\r");
           return;
         }
       }
-    }
-
-    CDiscipline *cd;
-    
-    if (namebuf.empty() && !k->isPc() && !k->desc) {
-      sendTo(COLOR_MOBS, fmt("%s has the following disciplines:\n\r\n\r") % k->getName());
-      discNumT dnt;
-      for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
-        if (!(cd = k->getDiscipline(dnt))) {
-          break;
+      
+      if (!k->doesKnowSkill(snt)) {
+        if (discArray[snt]) {
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>).\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+        } else {
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know that skill.\n\r") % cap_name);
         }
-        sendTo(COLOR_MOBS, fmt("Discpline %20.20s : Current (%d) Natural (%d).\n\r") % discNames[dnt].name % cd->getLearnedness()  % cd->getNatLearnedness());
+        return;
       }
-      return;
-    } else if (namebuf.empty()) {
-      sendTo("Syntax: stat <char name> <discipline> <value>\n\r");
-      return;
-    }
+      CSkill *sk = k->getSkill(snt);
+      if (!sk) {
+        if (discArray[snt]) {
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>).\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+        } else {
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know that skill.\n\r") % cap_name);
+        }
+        return;
+      }
+      sendTo(COLOR_MOBS, fmt("%s's <c>%s<1>: Raw (stored) learning:  Current (%d) Natural (%d).\n\r") % cap_name % discArray[snt]->name % k->getRawSkillValue(snt) % k->getRawNatSkillValue(snt));
+      sendTo(COLOR_MOBS, fmt("%s's <c>%s<1>: Actual (used) learning: Current (%d) Natural (%d) Max (%d).\n\r") % cap_name % discArray[snt]->name % k->getSkillValue(snt) % k->getNatSkillValue(snt) % k->getMaxSkillValue(snt));
 
-    discNumT dnt = mapFileToDisc(convertTo<int>(namebuf));
-    if (dnt == DISC_NONE) {
-      sendTo("Not a good discipline!\n\r");
+      time_t ct = sk->lastUsed;
+      char *tmstr = (char *) asctime(localtime(&ct));
+      *(tmstr + strlen(tmstr) - 1) = '\0';
+      sendTo(COLOR_MOBS, fmt("%s's <c>%s<1>: Last increased:         %s\n\r") % cap_name % discArray[snt]->name % tmstr);
       return;
-    }
-
-    if (!k->discs) {
-      sendTo(COLOR_MOBS, fmt("%s does not have disciplines allocated yet!\n\r") % k->getName());
-      return;
-    }
-
-    if (!(cd = k->getDiscipline(dnt))) {
-       sendTo(COLOR_MOBS, fmt("%s doesnt appear to have that disipline.\n\r") % k->getName());
-       return;
-    }
-    sendTo(COLOR_MOBS, fmt("%s's %s Used Learning: Current (%d) Natural (%d).\n\r") % k->getName() % discNames[dnt].name % cd->getLearnedness() % cd->getNatLearnedness());
-    return;
-  } else if (is_abbrev(skbuf, "donebasic")) {
-    if (!hasWizPower(POWER_STAT_SKILL)) {
-      sendTo("You can not type stat <argument> <donebasic>.\n\r");
-      return;
-    }
-    if (namebuf.empty()) {
-      sendTo("Syntax: stat <char name> <donebasic>\n\r");
-      return;
-    }
-    count = 1;
-    if (!(k = get_char_room(buf, in_room))) {
-      if (!(k = get_pc_world(this, buf, EXACT_NO))) {
-        if (!(k = get_char_vis_world(this, buf, &count, EXACT_NO))) {
-          sendTo("Syntax: stat <char name> <donebasic>\n\r");
+      // ***** end stat skill
+      
+    } else if (is_abbrev(arg2, "donebasic")) {
+      // ***** begin stat donebasic
+      // search for pc in world
+      if (!(k = get_pc_world(this, arg1, EXACT_YES))) {
+        if (!(k = get_pc_world(this, arg1, EXACT_NO))) {
+          // add an object search maybe
+          sendTo("That person could not be found in the World.\n\r");
           return;
         }
       }
-    }
-    for (count = 0; count < MAX_CLASSES; count++) {
-      sendTo(fmt("%-25.25s  :  %d\n\r") % classInfo[count].name.cap() % k->player.doneBasic[count]);
-    }
-    return;
-  } else if (arg1 == "room") {
-    statRoom(roomp);
-    return;
-  } else if (buf == "zone") {
-    // mobs and objs options added to spit out items from the zonefile
-    // kind of like show mobs or show objs does it based on the zone's vnum range
-    if (is_abbrev(skbuf, "mobs")) {
-      statZoneMobs(namebuf);
-    } else if (is_abbrev(skbuf, "objs")) {
-      statZoneObjs(namebuf);
+      sstring cap_name = k->getName();
+      cap_name = cap_name.cap();
+      sendTo(COLOR_MOBS, fmt("Basic discipline completion data for %s.\n\r") % k->getName());
+      sendTo("Lvl    Class\n\r");
+      sstring buf;
+      for (count = 0; count < MAX_CLASSES; count++) {
+        if (!hasClass(count))
+          continue;
+        if (k->player.doneBasic[count]) {
+          buf = fmt("%d") % k->player.doneBasic[count];
+        } else {
+          buf = "NA";
+        }
+        sendTo(fmt("<c>%2s<1>  :  %s\n\r") % buf % classInfo[count].name.cap());
+      }
+      return;
+      // ***** end stat donebasic
     } else {
-      statZone(skbuf);
-    }
-    return;
-  } else {
-    count = 1;
-
-    if (((j = get_obj_vis_accessible(this, arg1)) ||
-          (j = get_obj_vis(this, arg1.c_str(), &count, EXACT_NO))) &&
-          ((k = get_char_room(arg1, in_room)) == NULL) &&
-          ((k = get_pc_world(this, arg1, EXACT_NO)) == NULL)) {
-      if (!hasWizPower(POWER_STAT_OBJECT)) {
-        sendTo("Sorry, you lack the power to stat objects.\n\r");
-        return;
+      // empty or invalid arg2
+      // look in room for mob, room for obj, world for mob, world for obj
+      if (!(k = get_char_room(arg1, in_room))) {
+        if (!(j = get_obj_vis_accessible(this, arg1))) {
+          if (!(k = get_pc_world(this, arg1, EXACT_NO))) {
+            if (!(k = get_char_vis_world(this, arg1, &count, EXACT_YES))) {
+              if (!(k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
+                if (!(j = get_obj_vis(this, arg1.c_str(), &count, EXACT_NO))) {
+                  sendTo("No such mobile or object could be found in the World.\n\r");
+                  return;
+                }
+              }
+            }
+          }
+        }
       }
-      statObj(j);
-      return;
-    }
-
-    if ((k = get_char_room(arg1, in_room)) || 
-        (k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
-      if (!hasWizPower(POWER_STAT_MOBILES)) {
-        sendTo("Sorry, you lack the power to stat mobiles.\n\r");
-        return;
-      }
-      statBeing(k);
-      return;
-    }
-
-    if (is_number(arg1)) {
-      TObj         *tObj=NULL;
-      TMonster     *tMonster=NULL;
-      unsigned int  tValue;
-
-      if (hasWizPower(POWER_STAT_OBJECT) &&
-          ((tValue = real_object(convertTo<int>(arg1))) < obj_index.size()) &&
-          tValue >= 0 && (tObj = read_object(tValue, REAL))) {
-        statObj(tObj);
-        delete tObj;
-        tObj = NULL;
-
-        return;
-      }
-
-      if (hasWizPower(POWER_STAT_MOBILES) &&
-          ((tValue = real_mobile(convertTo<int>(arg1))) < mob_index.size()) &&
-          tValue >= 0 && (tMonster = read_mobile(tValue, REAL))) {
-        statBeing(tMonster);
-        delete tMonster;
-        tMonster = NULL;
-
-        return;
+      if (k) {
+        statBeing(k);
+      } else if (j) {
+        statObj(j);
+      } else {
+        vlogf(LOG_BUG, fmt("doStat fell through looking for %s.") % arg1);
       }
     }
-
-    sendTo("No mobile or object by that name in The World.\n\r");
-  }
+  }  
 }
