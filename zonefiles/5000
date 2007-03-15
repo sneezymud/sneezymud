@@ -195,10 +195,10 @@ K 1 5015 1 5019        white wolf (follower)
 K 1 5015 1 5019        white wolf (follower)
 
 A 0 5000 5049
-M 0 5017 3 5010         a white stag
+M 0 5017 3 -99         a white stag
 
 A 0 5000 5049
-M 0 5018 3 5011         a white doe
+M 0 5018 3 -99         a white doe
 
 S
 
