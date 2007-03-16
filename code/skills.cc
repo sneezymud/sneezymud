@@ -1358,6 +1358,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
   case AFFECT_GARTHAGK_BLESSING:
   case AFFECT_MERCURY_BLESSING:
   case AFFECT_METROHEP_BLESSING:
+  case AFFECT_MAGDALENA_BLESSING:
     case ABSOLUTE_MAX_SKILL:
       break;
   }

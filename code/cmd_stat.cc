@@ -2088,6 +2088,12 @@ void TBeing::statBeing(TBeing *k)
           apply_types[aff->location].name % aff->modifier;
 	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
+      case AFFECT_MAGDALENA_BLESSING:
+	str += "Magdalena's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+	str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+	break;
     case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:
@@ -2416,6 +2422,8 @@ void TPerson::doStat(const sstring &argument)
           if (!(cd = k->getDiscipline(dnt))) {
             continue;
           }
+          if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0) 
+            continue;
           sendTo(COLOR_MOBS, fmt("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness());
         }
         return;
@@ -2539,7 +2547,7 @@ void TPerson::doStat(const sstring &argument)
       CSkill *sk = k->getSkill(snt);
       if (!sk) {
         if (discArray[snt]) {
-          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>).\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>.\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
         } else {
           sendTo(COLOR_MOBS, fmt("%s does not appear to know that skill.\n\r") % cap_name);
         }
