@@ -2,5 +2,209 @@
 Coral - Nomad Camp~
 5049 25 2 0
 
+A 0 5000 5049
+O 0 5014 1 -99		large boulder
+A 0 5000 5049
+O 0 5014 1 -99		large boulder
+A 0 5000 5049
+O 0 5014 1 -99		large boulder
+
+A 0 5000 5049
+O 0 5015 1 -99		small boulder
+A 0 5000 5049
+O 0 5015 1 -99		small boulder
+A 0 5000 5049
+O 0 5015 1 -99		small boulder
+A 0 5000 5049
+O 0 5015 1 -99		small boulder
+A 0 5000 5049
+O 0 5015 1 -99		small boulder
+
+A 0 5000 5049
+O 0 5023 1 -99		frosted bush
+A 0 5000 5049
+O 0 5023 1 -99		frosted bush
+A 0 5000 5049
+O 0 5023 1 -99		frosted bush
+A 0 5000 5049
+O 0 5023 1 -99		frosted bush
+
+O 0 5013 1 5000		mattress
+O 0 5013 1 5002		mattress
+O 0 5013 1 5005		mattress
+O 0 5013 1 5010		mattress
+O 0 5013 1 5015		mattress
+O 0 5013 1 5016		mattress
+
+O 0 5021 1 5001		carcass
+O 0 5022 1 5001		fire
+
+O 0 5024 1 5011		tree
+O 0 5024 1 5020		tree
+O 0 5024 1 5033		tree
+
+M 0 5008 1 5005		nomad leader
+? 0 3 0 E
+E 1 5012 9999 18		leader badge
+
+M 0 5011 1 5001		nomad butcher
+? 0 3 0 E
+E 1 33824 9999 19			notched butcher knife
+
+M 0 5009 1 5001		cook nomad ogress
+? 0 3 0 E
+E 1 5028 9999 4			greasy apron
+
+M 0 5012 1 5015		elderly nomad
+M 0 5012 1 5010		elderly nomad
+
+M 0 5005 1 5002		seamstress ogress nomad
+? 0 3 0 E
+E 1 5000 9999 19			needle stone large [prop weapon]
+
+M 0 5005 1 5016		seamstress ogress nomad
+? 0 3 0 E
+E 1 5000 9999 19			needle stone large [prop weapon]
+
+A 0 5000 5049
+M 0 5000 3 -99		quiet caretaker
+Y 0 140 3				frost tipped set
+
+A 0 5000 5049
+M 0 5000 3 -99		quiet caretaker
+Y 0 140 3				frost tipped set
+
+A 0 5000 5049
+M 0 5000 3 -99		quiet caretaker
+Y 0 140 3				frost tipped set
+
+A 0 5000 5049
+M 0 5001 3  -99		hunter nomad ogre
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5001 3  -99		hunter nomad ogre
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5001 3  -99		hunter nomad ogre
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5002 3  -99		forager nomad ogre
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5002 3  -99		forager nomad ogre
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5002 3  -99		forager nomad ogre
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5003 3  -99		forager nomad ogress
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5003 3  -99		forager nomad ogress
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5003 3  -99		forager nomad ogress
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5004 3  -99		hunter nomad ogress
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5004 3  -99		hunter nomad ogress
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5004 3  -99		hunter nomad ogress
+? 0 3 0 E
+E 1 5011 9999 19			hunting knife
+? 0 3 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
+Y 0 146 3				grizzled set
+
+A 0 5000 5049
+M 0 5013 3 -99		medic nomad ogress
+
+A 0 5000 5049
+M 0 5013 3 -99		medic nomad ogress
+
+A 0 5000 5049
+M 0 5013 3 -99		medic nomad ogress
+
+M 0 5019 1 5038 		witch nomad
+C 1 5029 1 5038		black cat
+
+M 0 5010 3 5023		mom nomad
+K 1 5006 3 5023		nomad child male
+G 1 5016 9999 			pickled elf tongue
+K 1 5007 3 5023		nomad child female
+G 1 5016 9999 			pickled elf tongue
+
+M 0 5010 3 5013		mom nomad
+K 1 5006 3 5013		nomad child male
+G 1 5016 9999 			pickled elf tongue
+K 1 5007 3 5013		nomad child female
+G 1 5016 9999 			pickled elf tongue
+
+M 0 5010 3 5028		mom nomad
+K 1 5006 3 5028		nomad child male
+G 1 5016 9999 			pickled elf tongue
+K 1 5007 3 5028		nomad child female
+G 1 5016 9999 			pickled elf tongue
+
+M 0 5014 2 5019		grizzled wolf
+K 1 5015 4 5019		white wolf
+K 1 5015 4 5019		white wolf
+
+M 0 5014 2 5019		grizzled wolf
+K 1 5015 4 5019		white wolf
+K 1 5015 4 5019		white wolf
+
+A 0 5000 5049
+M 0 5016 5 -99		white rabbit
+
+A 0 5000 5049
+M 0 5016 5 -99		white rabbit
+
+A 0 5000 5049
+M 0 5016 5 -99		white rabbit
+
+A 0 5000 5049
+M 0 5017 3 -99		white stag
+
+A 0 5000 5049
+M 0 5017 3 -99		white stag
+
+A 0 5000 5049
+M 0 5018 1 -99		white doe
+
 S
 
