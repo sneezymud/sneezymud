@@ -165,19 +165,19 @@ C 1 5029 1 5038		black cat
 M 0 5010 3 5023		mom nomad
 K 1 5006 3 5023		nomad child male
 G 1 5016 9999 			pickled elf tongue
-K 1 5007 3 5023		nomad child female
+K 1 5021 3 5023		nomad child female
 G 1 5016 9999 			pickled elf tongue
 
 M 0 5010 3 5013		mom nomad
 K 1 5006 3 5013		nomad child male
 G 1 5016 9999 			pickled elf tongue
-K 1 5007 3 5013		nomad child female
+K 1 5021 3 5013		nomad child female
 G 1 5016 9999 			pickled elf tongue
 
 M 0 5010 3 5028		mom nomad
 K 1 5006 3 5028		nomad child male
 G 1 5016 9999 			pickled elf tongue
-K 1 5007 3 5028		nomad child female
+K 1 5021 3 5028		nomad child female
 G 1 5016 9999 			pickled elf tongue
 
 M 0 5014 2 5019		grizzled wolf
