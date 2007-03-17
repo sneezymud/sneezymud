@@ -1,23 +1,6 @@
 #3900
-Unused - 200 rooms old underground maze~
+Deirdre - Miscelaneous~
 4099 35 2 0
 
-M 0 910 1 3905  ; Chimera
-M 0 910 1 3952  ; Chimera
-M 0 910 1 3977  ; Chimera
-M 0 910 1 4015  ; Chimera
-M 0 910 1 3995  ; Chimera
-M 0 910 1 3990  ; Chimera
-M 0 912 1 3930  ; Demogorgon
-G 1 1400 99        ; give him a ruby
-
-M 0 916 1 3908  ; Ettin
-M 0 916 1 3945  ; Ettin
-M 0 916 1 3971  ; Ettin
-M 0 916 1 4012  ; Ettin
-M 0 920 1 3915  ; Ghost
-M 0 920 1 4012  ; Ghost
-M 0 946 1 3954  ; Roper
-M 0 946 1 4007  ; Roper
 S
 
