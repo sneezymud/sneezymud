@@ -568,3 +568,89 @@ bool TObj::isMonogrammed() const
     return true;
   return false;
 }
+
+sstring TObj::wear_flags_to_sentence() const
+{
+  // i know, this is ridiculous but we get a complete sentence out of it...
+  sstring msg_wear_flag = "";
+  bool worn = FALSE;
+  bool ok_or = FALSE;
+  int wf = obj_flags.wear_flags; 
+  if (IS_SET(wf, 1<<0)) {
+    // take flag
+    msg_wear_flag = "It may be taken";
+    if (IS_SET(wf, 1<<14)) {
+      // hold
+      msg_wear_flag += " and held";
+      ok_or = TRUE;
+    }
+    if (IS_SET(wf, 1<<15)) {
+      // throwable
+      msg_wear_flag += " and thrown";
+      ok_or = TRUE;
+    }
+    for (int x = 1; x < 14; ++x) {
+      if (IS_SET(wf, 1<<x) && *wear_bits[x]) {
+        if (!worn) {
+          if (ok_or) {
+            msg_wear_flag += " or worn on the";
+          } else {
+            msg_wear_flag += " and worn on the";
+          }
+          worn = TRUE;
+        } else {
+          msg_wear_flag += " and";
+        }
+        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+      }
+    }
+  } else if (IS_SET(wf, 1<<14)) {
+    // hold
+    msg_wear_flag = "It may be held";
+    if (IS_SET(wf, 1<<15)) {
+      // throwable
+      msg_wear_flag += " and thrown";
+    }
+    for (int x = 1; x < 14; ++x) {
+      if (IS_SET(wf, 1<<x) && *wear_bits[x-1]) {
+        if (!worn) {
+          msg_wear_flag += " or worn on the";
+          worn = TRUE;
+        } else {
+          msg_wear_flag += " and";
+        }
+        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+      }
+    }
+  } else if (IS_SET(wf, 1<<15)) {
+    // throwable
+    msg_wear_flag = "It may be thrown";
+    for (int x = 1; x < 14; ++x) {
+      if (IS_SET(wf, 1<<x) && *wear_bits[x-1]) {
+        if (!worn) {
+          msg_wear_flag += " or worn on the";
+          worn = TRUE;
+        } else {
+          msg_wear_flag += " and";
+        }
+        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+      }
+    }
+  } else {
+    msg_wear_flag = "It cannot be worn at all.";
+    for (int x = 1; x < 14; ++x) {
+      if (IS_SET(wf, 1<<x) && *wear_bits[x]) {
+        if (!worn) {
+          msg_wear_flag = "It may be worn on the";
+          worn = TRUE;
+        } else {
+          msg_wear_flag += " and";
+        }
+        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+      }
+    }
+  }
+  msg_wear_flag += ".\n\r";
+  return msg_wear_flag;
+}
+

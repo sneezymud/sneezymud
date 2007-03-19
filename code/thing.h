@@ -368,7 +368,7 @@ class TThing {
     virtual void show_me_mult_to_char(TBeing *, showModeT, unsigned int) const {}
     virtual void show_me_to_char(TBeing *, showModeT) const {}
 
-    virtual spellNumT getWtype() const;
+    virtual spellNumT getWtype(int which=-1) const;
     virtual bool isBluntWeapon() const { return TRUE; }   // generic things = blunt?
     virtual bool isSlashWeapon() const { return FALSE; }
     virtual bool isPierceWeapon() const { return FALSE; }

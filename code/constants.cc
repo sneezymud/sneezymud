@@ -851,6 +851,7 @@ const char * const affected_bits[] =
  "Silent",
  "",
  "Aggressor",
+ "Clarity",
  "\n"
 };
 

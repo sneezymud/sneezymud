@@ -285,7 +285,7 @@ int TArrow::throwMe(TBeing *ch, dirTypeT, const char *)
   return FALSE;
 }
 
-spellNumT TArrow::getWtype() const
+spellNumT TArrow::getWtype(int which) const
 {
   if(objVnum() == 31864 || objVnum() == 31869)
     return TYPE_SHOOT;

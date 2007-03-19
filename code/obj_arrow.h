@@ -46,7 +46,7 @@ class TArrow : public TBaseWeapon {
     bool isArrowFlag(unsigned short);
     void addArrowFlags(unsigned short);
 
-    virtual spellNumT getWtype() const;
+    virtual spellNumT getWtype(int which=-1) const;
     virtual void evaluateMe(TBeing *) const;
     virtual bool engraveMe(TBeing *, TMonster *, bool);
     virtual void bloadBowArrow(TBeing *, TThing *);

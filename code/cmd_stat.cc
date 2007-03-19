@@ -651,7 +651,7 @@ void TBeing::statObj(const TObj *j)
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        str += fmt("   Affects:  %s: %s by %ld\n\r") %
+        str += fmt("    Affect:  %s: %s by %ld\n\r") %
           apply_types[j->affected[i].location].name %
           discArray[j->affected[i].modifier]->name %
           j->affected[i].modifier2;
@@ -661,7 +661,7 @@ void TBeing::statObj(const TObj *j)
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
       if (discNames[j->affected[i].modifier].disc_num) {
-        str += fmt("   Affects:  %s: %s by %ld\n\r") %
+        str += fmt("    Affect:  %s: %s by %ld\n\r") %
           apply_types[j->affected[i].location].name %
           discNames[j->affected[i].modifier].name %
           j->affected[i].modifier2;
@@ -670,14 +670,28 @@ void TBeing::statObj(const TObj *j)
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      str += fmt("   Affects:  %s: %s by %ld\n\r") %
+      str += fmt("    Affect:  %s: %s by %ld\n\r") %
         apply_types[j->affected[i].location].name %
         immunity_names[j->affected[i].modifier] %
         j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
-      str += fmt("   Affects:  %s by %ld\n\r") %
-        apply_types[j->affected[i].location].name %
-        j->affected[i].modifier;
+      if (!strcmp(apply_types[j->affected[i].location].name, "Magic Affect")) {
+        for (unsigned long nr = 0; ; ++nr) {
+          // loop over all item perma-affect flags
+          if (*affected_bits[nr] == '\n')
+            break;
+          if (1<<nr & j->affected[i].modifier) {
+            // item has affect
+            if (*affected_bits[nr]) {
+              str += fmt("    Affect:  %s (%d)\n\r") % affected_bits[nr] % (1<<nr);
+            } else {
+              str += fmt("    Affect:  %d\n\r") % (1<<nr);
+            }
+          }
+        }
+      } else {
+        str += fmt("    Affect:  %s by %d\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+      }
     }
   }
   desc->page_string(str);
@@ -687,97 +701,94 @@ void TBeing::statObj(const TObj *j)
 void TBeing::statObjForDivman(const TObj *j)
 {
   TThing *t;
-  int i;
-  sstring str = "";
-
-
+  sstring str = "\n\r";
+  sstring sitem = j->shortDescr;
+  
+  str += fmt("%s is %s made of %s.\n\r") % sitem.cap() % ItemInfo[j->itemType()]->common_name % material_nums[j->getMaterial()].mat_name;
+  
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
-      str += fmt("The item is from %s.\n\r") % zone_table[zone].name;
+    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top) {
+      str += fmt("It is from %s.\n\r") % zone_table[zone].name;
       break;
     }    
   }
-
-  str += "\n\r";
-  str += j->shortDescr;
-  str += " is a ";
-  str += ItemInfo[j->itemType()]->name;
-  str += "\n\r";
-
-  str += "It can be worn on: ";
-  str += sprintbit(j->obj_flags.wear_flags, wear_bits);
-  str += ".\n\r";
-
-  str += "The item sets the character bits: ";
-  str += sprintbit(j->obj_flags.bitvector, affected_bits);
-  str += ".\n\r";
-
-  str += "It's extra flags are: ";
-  str += sprintbit(j->getObjStat(), extra_bits);
-  str += ".\n\r";
-
-  str += j->shortDescr;
-  str += fmt(" modifies can be seen by %d.\n\r") % j->canBeSeen;
-
-  str += fmt("It has a volume of %d, it weighs %.1f, and has a value of %d talens.\n\r") %
-    j->getVolume() % j->getWeight() % j->obj_flags.cost;
-
-  str += fmt("It will decay in %d, and its structure is %d/%d.\n\r") %
-    j->obj_flags.decay_time % j->getStructPoints() %
-    j->getMaxStructPoints();
-
-  str += fmt("Light is modified by %3d and %s is made of %s.\n\r") %
-    j->getLight() % j->shortDescr % material_nums[j->getMaterial()].mat_name;
-
+  
+  str += (j->wear_flags_to_sentence());
+  
+  str += "Its extra flags are: " + sprintbit(j->getObjStat(), extra_bits) + "\n\r\n\r";
+  
+  str += fmt("%s modifies light by %d.\n\r") % sitem.cap() % j->getLight();
+  str += fmt("At least %d units of light are needed to see it.\n\r") % j->canBeSeen;
+  if (j->obj_flags.decay_time < 0) {
+    str += "It will not decay.\n\r";
+  } else {
+    str += fmt("It will decay in approximately %d MUD hours.\n\r") % j->obj_flags.decay_time;
+  }
+  str += fmt("Current structure:    %-5d  Weight in pounds:       %-10.2f  \n\r") % j->getStructPoints() % j->getWeight();
+  str += fmt("Maximum structure:    %-5d  Volume in cubic inches: %d\n\r") % j->getMaxStructPoints() % j->getVolume();
+  str += fmt("Base value in talens: %d\n\r") % j->obj_flags.cost;
   str += j->statObjInfo();
-
-  str += fmt("\n\rIt has %s for a special procedure.\n\r") %
-    (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");
-
-  if (!j->getStuff())
-    str += "It contains nothing...\n\r";
-  else {
-    str += "The item contains: \n\r";
+  if (j->spec) {
+    str += fmt("It possesses the special trait known as %s.\n\r\n\r") % objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name;
+  } else {
+    str += "It has not been imbued with with any special traits.\n\r\n\r";
+  }
+  
+  if (j->getStuff()) { 
+    str += sitem.cap() + " contains:\n\r";
     for (t = j->getStuff(); t; t = t->nextThing) {
-      str += fname(t->name);
+      str += t->shortDescr;
       str += "\n\r";
     }
+    str += "\n\r";
   }
-
-  str += "The item can affect you by:\n\r";
-  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+  
+  sstring buf = "";
+  for (int i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        str += fmt("   Affects:  %s: %s by %ld.\n\r") %
-          apply_types[j->affected[i].location].name %
-          discArray[j->affected[i].modifier]->name %
-          j->affected[i].modifier2;
+        buf += fmt("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % discArray[j->affected[i].modifier]->name % j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
-        str += fmt("   Affects:  %s: %s by %ld.\n\r") %
-          apply_types[j->affected[i].location].name %
-          discNames[j->affected[i].modifier].name %
-          j->affected[i].modifier2;
+        buf += fmt("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % discNames[j->affected[i].modifier].name % j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      str += fmt("   Affects:  %s: %s by %ld.\n\r") %
-        apply_types[j->affected[i].location].name %
-        immunity_names[j->affected[i].modifier] %
-        j->affected[i].modifier2;
+      buf += fmt("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
-      str += fmt("   Affects:  %s by %ld.\n\r") %
-        apply_types[j->affected[i].location].name %
-        j->affected[i].modifier;
+      if (!strcmp(apply_types[j->affected[i].location].name, "Magic Affect")) {
+        for (unsigned long nr = 0; ; ++nr) {
+          // loop over all item perma-affect flags
+          if (*affected_bits[nr] == '\n')
+            break;
+          if (1<<nr & j->affected[i].modifier) {
+            // item has affect
+            if (*affected_bits[nr]) {
+              buf += fmt("    Affect:  %s\n\r") % affected_bits[nr];
+            } else {
+              buf += fmt("    Affect:  %d\n\r") % (1<<nr);
+            }
+          }
+        }
+      } else {
+        buf += fmt("    Affect:  %s by %d\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+      }
     }
   }
-  str += "\n\r";
+  if (buf.empty()) {
+    str += "It has no other affects.\n\r";
+  } else {
+    str += "It can affect you with:\n\r";
+    str += buf;
+  }
+  
+  str += "\n\r";       
   str += "The cloud of smoke is quickly dispersed and the air is clear.\n\r";
   desc->page_string(str);
   return;
@@ -2460,6 +2471,7 @@ void TPerson::doStat(const sstring &argument)
           sendTo("No discipline by that name found.\n\r");
           return;
         }
+        sendTo(COLOR_MOBS, fmt("<c>%s<1> is discipline number <c>%d<1>.\n\r") % discNames[dnt].properName % dnt);
       }
       
       if (!(cd = k->getDiscipline(dnt))) {
@@ -2534,11 +2546,12 @@ void TPerson::doStat(const sstring &argument)
           sendTo("No skill by that name found.\n\r");
           return;
         }
+        sendTo(COLOR_MOBS, fmt("<c>%s<1> is skill number <c>%d<1>.\n\r") % convertTo<sstring>(discArray[snt]->name ? discArray[snt]->name : "unknown").cap() % snt);
       }
       
       if (!k->doesKnowSkill(snt)) {
         if (discArray[snt]) {
-          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>).\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+          sendTo(COLOR_MOBS, fmt("%s does not appear to know <c>%s<1>.\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
         } else {
           sendTo(COLOR_MOBS, fmt("%s does not appear to know that skill.\n\r") % cap_name);
         }

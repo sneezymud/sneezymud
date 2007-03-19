@@ -256,57 +256,59 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
   if (caster->bSuccess(bKnown, SPELL_DIVINATION)) {
     buf=obj->shortDescr;
     caster->sendTo(COLOR_OBJECTS, fmt("Your mind analyzes %s...\n\r") % buf.uncap());
-
+    caster->sendTo(fmt("It is %s.\n\r") % ItemInfo[obj->itemType()]->common_name);
+    caster->sendTo(obj->wear_flags_to_sentence());
     caster->sendTo(fmt("%s\n\r") % obj->statObjInfo());
-
     obj->divinateMe(caster);
-
-    caster->sendTo("It will give you following abilities when equipped:  ");
-    buf=sprintbit(obj->obj_flags.bitvector, affected_bits);
-    buf+="\n\r";
-    caster->sendTo(buf);
+    
+    // caster->sendTo("It will give you following abilities when equipped:  ");
+    // buf=sprintbit(obj->obj_flags.bitvector, affected_bits);
+    // buf+="\n\r";
+    // caster->sendTo(buf);
     found = FALSE;
     for (i = 0; i < MAX_OBJ_AFFECT; i++) {
       if ((obj->affected[i].location != APPLY_NONE) && (obj->affected[i].modifier || obj->affected[i].modifier2)) {
         if (!found) {
-          caster->sendTo("Can affect you as :\n\r");
+          caster->sendTo("It can affect you with:\n\r");
           found = TRUE;
         }
         if (obj->affected[i].location == APPLY_SPELL) {
           if (discArray[obj->affected[i].modifier])
-            caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
-                apply_types[obj->affected[i].location].name %
-                discArray[obj->affected[i].modifier]->name %
-                obj->affected[i].modifier2);
+            caster->sendTo(fmt("    Affect:  %s: %s by %ld\n\r") % apply_types[obj->affected[i].location].name % discArray[obj->affected[i].modifier]->name %obj->affected[i].modifier2);
           else
-            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %
-                  obj->getName());
+            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier % obj->getName());
         } else if (obj->affected[i].location == APPLY_DISCIPLINE) {
           if (discNames[obj->affected[i].modifier].name)
-            caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
-                apply_types[obj->affected[i].location].name %
-                discNames[obj->affected[i].modifier].name %
-                obj->affected[i].modifier2);
+            caster->sendTo(fmt("    Affect:  %s: %s by %ld\n\r") % apply_types[obj->affected[i].location].name % discNames[obj->affected[i].modifier].name % obj->affected[i].modifier2);
           else
-            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %
-                  obj->getName());
+            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier % obj->getName());
 
         } else if (obj->affected[i].location == APPLY_IMMUNITY) {
-          caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
-            apply_types[obj->affected[i].location].name %
-            immunity_names[obj->affected[i].modifier] %
-            obj->affected[i].modifier2);
+          caster->sendTo(fmt("    Affect:  %s: %s by %ld\n\r") % apply_types[obj->affected[i].location].name % immunity_names[obj->affected[i].modifier] % obj->affected[i].modifier2);
         } else {
-          caster->sendTo(fmt("   Affects:  %s by %ld\n\r") %
-              apply_types[obj->affected[i].location].name %
-              obj->affected[i].modifier);
+          
+          if (!strcmp(apply_types[obj->affected[i].location].name, "Magic Affect")) {
+            for (unsigned long nr = 0; ; ++nr) {
+              // loop over all item perma-affect flags
+              if (*affected_bits[nr] == '\n')
+                break;
+              if (1<<nr & obj->affected[i].modifier) {
+                // item has affect
+                if (*affected_bits[nr]) {
+                  caster->sendTo(fmt("    Affect:  %s\n\r") % affected_bits[nr]);
+                } else {
+                  caster->sendTo(fmt("    Affect:  %d\n\r") % (1<<nr));
+                }
+              }
+            }
+          } else {
+            caster->sendTo(fmt("    Affect:  %s by %d\n\r") % apply_types[obj->affected[i].location].name % obj->affected[i].modifier);
+          }
         }
       }
     }
-
     // seems silly, but the use of "%" in this text makes it necessary
     caster->sendTo(COLOR_OBJECTS, fmt("%s") % describeMaterial(obj));
-
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();

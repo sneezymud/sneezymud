@@ -104,58 +104,33 @@ void TGenWeapon::setWeaponFreq(int n, int which)
 
 sstring TGenWeapon::statObjInfo() const
 {
-  char buf[256];
-
-  sprintf(buf, "Maximum %s: %d  Current %s: %d\n\r",
-              ((isBluntWeapon() ? "bluntness" :
-               (isPierceWeapon() ? "pointiness" :
-               "sharpness"))),
-              getMaxSharp(),
-              ((isBluntWeapon() ? "bluntness" :
-               (isPierceWeapon() ? "pointiness" :
-               "sharpness"))),
-               getCurSharp());
-  sstring a(buf);
-
-  sprintf(buf, "Damage Level: %.2f, Damage Deviation: %d\n\r",
-               getWeapDamLvl() / 4.0,
-               getWeapDamDev());
-  a += buf;
-
+  sstring a = "";
+  
+  a += fmt("Current %-11s %-7d  Damage Level:     %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % (int) (getWeapDamLvl() / 4.0);
+  a += fmt("Maximum %-11s %-7d  Damage Deviation: %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % getWeapDamDev();
+  
   double base = baseDamage();
   double flux = base * getWeapDamDev() / 10;
-  sprintf(buf, "Damage When Swung: %d-%d, Average Damage: %d\n\r",
-               (int) (base - (int) flux),
-               (int) (base + (int) flux),
-               (int) baseDamage());
-  a += buf;
-
-  sprintf(buf, "Damage When Thrown: %d\n\r",
-           (int) damageLevel());
-  a += buf;
-
-  if (toggleInfo[TOG_TWINK]->toggle) {
-    sprintf(buf, "Type : %s (%d)\n\r",
-	    attack_hit_text_twink[(getWtype() - TYPE_MIN_HIT)].singular,
-	    getWeaponType());
-    a += buf;
-  } else {
-    sprintf(buf, "Type : %s (%d)\n\r",
-	    attack_hit_text[(getWtype() - TYPE_MIN_HIT)].singular,
-	    getWeaponType());
-    a += buf;
+  sstring buf = fmt("%d-%d") % (int) (base - (int) flux) % (int) (base + (int) flux);
+  a += fmt("Damage When Swung:  %-7s  Average Damage:   %d\n\r") % buf % (int) baseDamage();
+  
+  a += fmt("Damage When Thrown: %d\n\r") % (int) damageLevel();
+  
+  for (int wt = 0; wt < 3; ++wt) {
+    if (!getWeaponType(wt))
+      continue;
+    if (toggleInfo[TOG_TWINK]->toggle) {
+      a += fmt("Attack Type:        %-8s") % attack_hit_text_twink[getWtype(wt) - TYPE_MIN_HIT].singular;
+    } else {
+      a += fmt("Attack Type:        %-8s") % attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
+    }
+    if (getWeaponFreq(wt))
+      a += fmt(" Attack Frequeny:  %d%") % getWeaponFreq(wt);
+    a += "\n\r";
   }
-
   if(isPoisoned()){
-    sprintf(buf, "Poisoned : %s (%i)",
-	    liquidInfo[getPoison()]->name, (int)getPoison());
-    a += buf;
+    a += fmt("Poisoned with:      %s\n\r") % liquidInfo[getPoison()]->name;
   }
-
-  //  sprintf(buf, "New weapons system stats:\n\r Weapon type: %d\n\r Weapon quality: %d\n\r",
-  //	  getWeapType(),
-  //	  getWeapQual());
-
   return a;
 }
 

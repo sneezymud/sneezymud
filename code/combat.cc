@@ -4700,14 +4700,14 @@ spellNumT TBeing::getAttackType(const TThing *wielded, primaryTypeT prim) const
   return dtype;
 }
 
-spellNumT TThing::getWtype() const
+spellNumT TThing::getWtype(int which) const
 {
   return TYPE_SMITE;
 }
 
-spellNumT TGenWeapon::getWtype() const
+spellNumT TGenWeapon::getWtype(int which) const
 {
-  switch (getWeaponType()) {
+  switch (getWeaponType(which)) {
     case WEAPON_TYPE_NONE:
       return TYPE_SMITE;
     case WEAPON_TYPE_STAB:

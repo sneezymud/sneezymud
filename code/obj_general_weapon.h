@@ -22,7 +22,7 @@ class TGenWeapon : public TBaseWeapon {
     virtual itemTypeT itemType() const { return ITEM_WEAPON; }
     virtual int smiteWithMe(TBeing *, TBeing *);
 
-    virtual spellNumT getWtype() const;
+    virtual spellNumT getWtype(int which=-1) const;
     virtual float blowCountSplitter(const TBeing *, bool) const;
     virtual void lowCheck();
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;

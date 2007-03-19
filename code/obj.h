@@ -738,6 +738,7 @@ class TObj : public TThing {
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual int taskChargeMe(TBeing *, spellNumT, int &);
     virtual int getValue() const; 
+    virtual sstring wear_flags_to_sentence() const;
 };
 
 #endif

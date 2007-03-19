@@ -686,7 +686,7 @@ int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
   int i;
 
   if (isObjStat(ITEM_MAGIC)) {
-    caster->sendTo("Uhh, you can't enhance weapons that are already enchanted...\n\r");
+    caster->sendTo("You can't enhance weapons that are already enchanted...\n\r");
     act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
@@ -1100,7 +1100,7 @@ int TBaseWeapon::wieldMe(TBeing *ch, char *arg2)
         return DELETE_THIS;
     } else {
       ch->sendTo("That is a two handed weapon. It has to be wielded in both hands.\n\r");
-      ch->sendTo("To wield it, clear both hands and type wield <sword name>\n\r");
+      ch->sendTo("To wield it, clear both hands and type wield <weapon name>\n\r");
       return 0;
     }
   }
