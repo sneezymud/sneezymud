@@ -375,9 +375,9 @@ bool Descriptor::checkForMultiplay()
         vlogf(LOG_CHEAT, fmt("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
 #if FORCE_MULTIPLAY_COMPLIANCE
+        character->sendTo(fmt("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
         character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-        character->sendTo("Access denied.  Please log off your other characters and then\n\r");
-        character->sendTo("try again.\n\r");
+        character->sendTo("Please log off your other character and then try again.\n\r");
         outputProcessing();  // gotta write this to them, before we sever  :)
 #endif
         return TRUE;
@@ -473,10 +473,9 @@ bool Descriptor::checkForMultiplay()
 
           fclose(tFile);
 #if 1
-          character->sendTo("You have at least one linkdead player online.\n\r");
+		  character->sendTo(fmt("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
           character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-          character->sendTo("Access denied.  Please log one (or more) of your other characters off and then\n\r");
-          character->sendTo("try again.\n\r");
+          character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
           outputProcessing();  // gotta write this to them, before we sever  :)
           return TRUE;
 #else
