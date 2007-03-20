@@ -295,9 +295,9 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
               if (1<<nr & obj->affected[i].modifier) {
                 // item has affect
                 if (*affected_bits[nr]) {
-                  caster->sendTo(fmt("    Affect:  %s\n\r") % affected_bits[nr]);
+                  caster->sendTo(fmt("    Affect:  Magic Affect of %s\n\r") % affected_bits[nr]);
                 } else {
-                  caster->sendTo(fmt("    Affect:  %d\n\r") % (1<<nr));
+                  caster->sendTo(fmt("    Affect:  Magic Affect of %d\n\r") % (1<<nr));
                 }
               }
             }

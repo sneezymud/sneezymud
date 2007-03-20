@@ -4102,69 +4102,200 @@ void TBeing::doEvaluate(const char *argument)
     return;
   }
   if (is_abbrev(arg, "room")) {
-    if (!roomp)
+    // room evaluation
+    // spit out some info giving hints as to sector type and some room flags
+    // get it very general
+    if (!roomp) {
+      sendTo("You have no idea where you are, do you...\n\r");
+      vlogf(LOG_BUG, fmt("Player without room called evaluate room.  [%s]") %  getName());
       return;
-
+    }
     if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
       sendTo("You can't see a damn thing -- you're blinded!\n\r");
       return;
     }
-
-
-    if (!roomp) {
-      sendTo("You have no idea where you are do you...\n\r");
-      vlogf(LOG_BUG, fmt("Player without room called evaluate room.  [%s]") %  getName());
-    } else if (roomp->isCitySector())
-      sendTo("You assume you are in a city by the way things look.\n\r");
-    else if (roomp->isRoadSector())
-      sendTo("It seems to be a well traveled road.\n\r");
+    // go over the basic sector groups
+    if (roomp->isCitySector())
+      sendTo("You are in a city.\n\r");
     else if (roomp->isFlyingSector())
-      sendTo("It seems as if you could just fly around here.\n\r");
+      sendTo("You are floating around in mid-air.\n\r");
     else if (roomp->isVertSector())
-      sendTo("You seem to be scaling something.\n\r");
+      sendTo("The ground here is too sheer to stand on.\n\r");
     else if (roomp->isUnderwaterSector())
-      sendTo("\"Glub glub glub\" seem to best explain your current location.\n\r");
+      sendTo("You are underwater.\n\r");
     else if (roomp->isSwampSector())
-      sendTo("The swampy marsh gently rolls over you.\n\r");
+      sendTo("You are in a swamp.\n\r");
     else if (roomp->isBeachSector())
-      sendTo("A nice beach with a good view\n\r");
+      sendTo("You are on a beach.\n\r");
     else if (roomp->isHillSector())
-      sendTo("A simple hill, nothing special.\n\r");
+      sendTo("You are on a hill.\n\r");
+    else if (roomp->getSectorType() == SECT_VOLCANO_LAVA)
+      sendTo("You are on a hill.\n\r");
+    else if (roomp->getSectorType() == SECT_DESERT)
+      sendTo("You are in a desert.\n\r");
     else if (roomp->isMountainSector())
-      sendTo("This appears to be a mountain.\n\r");
-    else if (roomp->isForestSector())
-      sendTo("Judging by the trees you bet you're in a forest.\n\r");
+      sendTo("You are on a mountain.\n\r");
+    else if (roomp->getSectorType() == SECT_DEAD_WOODS)
+      sendTo("You are in a dead forest.\n\r");
+    else if (roomp->isForestSector()) {
+      if (roomp->getSectorType() == SECT_JUNGLE)
+        sendTo("You are in a jungle.\n\r");
+      else if (roomp->getSectorType() == SECT_RAINFOREST_ROAD)
+        sendTo("You are on a road in a rainforest.\n\r");
+      else if (roomp->getSectorType() == SECT_RAINFOREST)
+        sendTo("You are in a rainforest.\n\r");
+      else if (roomp->getSectorType() == SECT_TEMPERATE_FOREST_ROAD || roomp->getSectorType() == SECT_ARCTIC_FOREST_ROAD)
+        sendTo("You are on a road in a forest.\n\r");
+      else 
+        sendTo("You are in a forest.\n\r");
+    } else if (roomp->getSectorType() == SECT_FIRE_ATMOSPHERE)
+      sendTo("You are up in the air surrounded by fire.\n\r");
     else if (roomp->isAirSector())
-      sendTo("You are up in the air, are you sure you should be here?\n\r");
-    else if (roomp->isOceanSector())
-      sendTo("You are in the ocean, going on a sea cruise?\n\r");
-    else if (roomp->isRiverSector()) {
+      sendTo("You are up in the air.\n\r");
+    else if (roomp->isOceanSector()) {
+      if (roomp->getSectorType() == SECT_ICEFLOW)
+        sendTo("You are in icy waters.\n\r");
+      else 
+        sendTo("You are on a body of water.\n\r");
       if (roomp->getRiverSpeed() >= 30)
-        sendTo("The river flows swifly towards the distance.\n\r");
+        sendTo(fmt("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() >= 15)
-        sendTo("The river flows steadily towards the distance.\n\r");
+        sendTo(fmt("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() > 0)
-        sendTo("The river gently flows towards the distance.\n\r");
+        sendTo(fmt("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else
-        sendTo("The river seems to be standing still.\n\r");
-    } else if (roomp->isArcticSector())
-      sendTo("The arctic winds around you seem to tell it all.\n\r");
-    else if (roomp->isTropicalSector())
-      sendTo("The tropical world around you makes you hot and sweaty.\n\r");
-    else if (roomp->isWildernessSector() || roomp->isNatureSector())
-      sendTo("You would appear to be in area draped with nature and the natural wilds.\n\r");
-    else
-      sendTo("You are somewhere...But damned if you can figure it out.\n\r");
-
-
-    if(roomp && (roomp->isIndoorSector() ||
-		 roomp->isRoomFlag(ROOM_INDOORS))){
-      sendTo("You are indoors.\n\r");
+        sendTo("There is no noticable current.\n\r");
+    } else if (roomp->isRiverSector()) {
+      if (roomp->getSectorType() == SECT_ARCTIC_RIVER_SURFACE)
+        sendTo("You are on an icy river.\n\r");
+      else 
+        sendTo("You are on a river.\n\r");
+      if (roomp->getRiverSpeed() >= 30)
+        sendTo(fmt("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+      else if (roomp->getRiverSpeed() >= 15)
+        sendTo(fmt("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+      else if (roomp->getRiverSpeed() > 0)
+        sendTo(fmt("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+      else
+        sendTo("There is no noticable current.\n\r");
+        
+    } else if (roomp->getSectorType() == SECT_TEMPERATE_CAVE
+        || roomp->getSectorType() == SECT_TROPICAL_CAVE
+        || roomp->getSectorType() == SECT_ARCTIC_CAVE) {
+      sendTo("You are spelunking.\n\r");
+    } else if (roomp->isIndoorSector())
+      sendTo("You are in a building.\n\r");
+    else if (roomp->getSectorType() == SECT_INSIDE_MOB)
+      sendTo("You are inside something very strange, something alive.\n\r");
+    else if (roomp->getSectorType() == SECT_SOLID_ROCK)
+      sendTo("You are in an area surrounded by solid rock.\n\r");
+    else if (roomp->getSectorType() == SECT_SOLID_ICE)
+      sendTo("You are in an area surrounded by solid ice.\n\r");
+    else if (roomp->getSectorType() == SECT_FIRE)
+      sendTo("You are in a room of fire.\n\r");
+    else if (roomp->isRoadSector())
+      sendTo("You are on a well traveled road.\n\r");
+    else if (roomp->isNatureSector()) {
+      // catch a bunch of other naturey sectors - plains, grasslands, savannah, veldt
+      sendTo("You are in an open area.\n\r");
+    } else if (roomp->getSectorType() == SECT_ASTRAL_ETHREAL) {
+      sendTo("You are in an area without substance.\n\r");
     } else {
-      sendTo("You are outside.\n\r");
+      // fell all the way through
+      vlogf(LOG_MISC, fmt("Sector type fell through on eval room. Room: (%d) Sector: (%d)") % roomp->in_room % ((int) roomp->getSectorType()));
+      sendTo("Unrecognized room type...\n\r");
     }
-
-
+    
+    // indoors, not a cave
+    if (roomp->isRoomFlag(ROOM_INDOORS) && !roomp->isIndoorSector() && roomp->getSectorType() != SECT_INSIDE_MOB)
+      sendTo("You are indoors.\n\r");
+    else if (!roomp->isIndoorSector() && roomp->getSectorType() != SECT_INSIDE_MOB)
+      sendTo("You are outside.\n\r");
+    
+    
+    // climatey stuff
+    if (roomp->isArcticSector())
+      sendTo("It is freezing cold here.\n\r");
+    else if (roomp->isTropicalSector())
+      sendTo("It is hot and humid here.\n\r");
+    else if (roomp->getSectorType() == SECT_DESERT)
+      sendTo("It is hot and dry here.\n\r");
+      
+    // some room flag messages
+    if (roomp->isRoomFlag(ROOM_ON_FIRE))
+      sendTo("There is an out-of-control fire here.\n\r");
+    if (roomp->isRoomFlag(ROOM_FLOODED))
+      sendTo("The room is flooded with water.\n\r");
+    
+    // advanced adventuring conditions
+    // should probably make a more modular isGreatOutdoorsSector() check or something...
+    if (doesKnowSkill(SKILL_ENCAMP)) {
+      bool can_do = TRUE;
+      if (!(roomp->isForestSector()
+          || roomp->isBeachSector()
+          || roomp->isHillSector()
+          || roomp->isMountainSector()
+          || roomp->isNatureSector()
+          || roomp->isRoadSector())) {
+        can_do = FALSE;
+      } else if (roomp->isIndoorSector() 
+          || roomp->isRoomFlag(ROOM_INDOORS) 
+          || roomp->isArcticSector() 
+          || roomp->isRoomFlag(ROOM_FLOODED) 
+          || roomp->isRoomFlag(ROOM_ON_FIRE)) {
+        can_do = FALSE;
+      } else if (roomp->isRoomFlag(ROOM_NO_FLEE)
+          || roomp->isRoomFlag(ROOM_NO_ESCAPE)
+          || roomp->isRoomFlag(ROOM_NO_HEAL)
+          || roomp->isRoomFlag(ROOM_HAVE_TO_WALK)) {
+        can_do = FALSE;
+      }
+      if (can_do)
+        sendTo("You may camp here.\n\r");
+    }
+    
+    if (doesKnowSkill(SKILL_FORAGE)) {
+      bool can_do = TRUE;
+      if (!(roomp->isForestSector()
+          || roomp->isBeachSector()
+          || roomp->isHillSector()
+          || roomp->isMountainSector()
+          || roomp->isNatureSector()
+          || roomp->isRoadSector())) {
+        can_do = FALSE;
+      } else if (roomp->isIndoorSector() 
+          || roomp->isRoomFlag(ROOM_INDOORS) 
+          || roomp->isArcticSector() 
+          || roomp->isRoomFlag(ROOM_FLOODED) 
+          || roomp->isRoomFlag(ROOM_ON_FIRE)) {
+        can_do = FALSE;
+      }
+      if (can_do)
+        sendTo("You may forage here.\n\r");
+    }
+    
+    if (doesKnowSkill(SKILL_DIVINATION)) {
+      bool can_do = TRUE;
+      if (!(roomp->isForestSector()
+          || roomp->isBeachSector()
+          || roomp->isHillSector()
+          || roomp->isMountainSector()
+          || roomp->isNatureSector()
+          || roomp->isRoadSector())) {
+        can_do = FALSE;
+      } else if (roomp->isIndoorSector() 
+          || roomp->isRoomFlag(ROOM_INDOORS) 
+          || roomp->isArcticSector() 
+          || roomp->isRoomFlag(ROOM_FLOODED) 
+          || roomp->isRoomFlag(ROOM_ON_FIRE)) {
+        can_do = FALSE;
+      }
+      if (can_do)
+        sendTo("You may divine for water here.\n\r");
+    }
+    
+    
+    
     if (!hasClass(CLASS_RANGER))
       return;
 

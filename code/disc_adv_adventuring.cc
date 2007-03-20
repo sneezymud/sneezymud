@@ -30,11 +30,29 @@ int forage(TBeing *caster, byte bKnown)
     caster->sendTo("You know nothing about foraging for food!\n\r");
     return SPELL_FAIL;
   }
-  if (caster->roomp->notRangerLandSector() && 
-      !caster->roomp->isForestSector()) {
+  
+  if (!(caster->roomp->isForestSector()
+      || caster->roomp->isBeachSector()
+      || caster->roomp->isHillSector()
+      || caster->roomp->isMountainSector()
+      || caster->roomp->isNatureSector()
+      || caster->roomp->isRoadSector())) {
     caster->sendTo("You need to be in nature to forage.\n\r");
     return SPELL_FAIL;
+  } else if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
+    caster->sendTo("You need to be outside to forage.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isArcticSector() ) {
+    caster->sendTo("It is too cold to forage here.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
+    caster->sendTo("The flood in here needs to subside before you can forage.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
+    caster->sendTo("The raging fire here needs to be controlled before you can forage.\n\r");
+    return SPELL_FAIL;
   }
+  
   if (caster->checkForSkillAttempt(SKILL_FORAGE)) {
     act("You tried foraging recently and are not prepared to try again so soon.", FALSE, caster, NULL, NULL, TO_CHAR);
     return SPELL_FAIL;
@@ -781,16 +799,39 @@ int encamp(TBeing * caster)
   int bKnown = caster->getSkillValue(SKILL_ENCAMP);
 
   if (caster->affectedBySpell(SKILL_ENCAMP)) {
-    caster->sendTo("You are already camping.\n\r");
+    caster->sendTo("You already have a camp set up here.\n\r");
     return FALSE;
   }
-
-  if (caster->roomp->notRangerLandSector() &&
-      !caster->roomp->isForestSector()) {
+  
+  if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
+    caster->sendTo("The raging fire here needs to be controlled before setting up camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
+    caster->sendTo("The flood in here needs to subside before setting up camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
+    caster->sendTo("You need to be under an open sky to camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (!(caster->roomp->isForestSector()
+      || caster->roomp->isBeachSector()
+      || caster->roomp->isHillSector()
+      || caster->roomp->isMountainSector()
+      || caster->roomp->isNatureSector()
+      || caster->roomp->isRoadSector())) {
     caster->sendTo("You need to be in nature to camp.\n\r");
     return SPELL_FAIL;
   }
-
+  if (caster->roomp->isRoomFlag(ROOM_NO_FLEE)
+      || caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)
+      || caster->roomp->isRoomFlag(ROOM_NO_HEAL)
+      || caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK)) {
+    caster->sendTo("This room is unfit for a camp.\n\r");
+    return SPELL_FAIL;
+  }
+  
   aff.duration = PERMANENT_DURATION;
   aff.level = level;
   aff.type = SKILL_ENCAMP;
@@ -835,10 +876,26 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
 {
   affectedData aff;
   int units;
-
-  if (caster->roomp->notRangerLandSector() && 
-      !caster->roomp->isForestSector()) {
-    caster->sendTo("You need to be in nature to divine.\n\r");
+  
+  if (!(caster->roomp->isForestSector()
+      || caster->roomp->isBeachSector()
+      || caster->roomp->isHillSector()
+      || caster->roomp->isMountainSector()
+      || caster->roomp->isNatureSector()
+      || caster->roomp->isRoadSector())) {
+    caster->sendTo("You need to be in nature to forage.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isIndoorSector() || roomp->isRoomFlag(ROOM_INDOORS)) {
+    caster->sendTo("You need to be outside to divine.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isArcticSector() ) {
+    caster->sendTo("It is too cold to divine here.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
+    caster->sendTo("The flood in here needs to subside before you can divine.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
+    caster->sendTo("The raging fire here needs to be controlled before you can divine.\n\r");
     return SPELL_FAIL;
   }
 

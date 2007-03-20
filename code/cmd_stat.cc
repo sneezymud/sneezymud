@@ -683,9 +683,9 @@ void TBeing::statObj(const TObj *j)
           if (1<<nr & j->affected[i].modifier) {
             // item has affect
             if (*affected_bits[nr]) {
-              str += fmt("    Affect:  %s (%d)\n\r") % affected_bits[nr] % (1<<nr);
+              str += fmt("    Affect:  Magic Affect of %s (%d)\n\r") % affected_bits[nr] % (1<<nr);
             } else {
-              str += fmt("    Affect:  %d\n\r") % (1<<nr);
+              str += fmt("    Affect:  Magic Affect of %d\n\r") % (1<<nr);
             }
           }
         }
@@ -770,9 +770,9 @@ void TBeing::statObjForDivman(const TObj *j)
           if (1<<nr & j->affected[i].modifier) {
             // item has affect
             if (*affected_bits[nr]) {
-              buf += fmt("    Affect:  %s\n\r") % affected_bits[nr];
+              buf += fmt("    Affect:  Magic Affect of %s\n\r") % affected_bits[nr];
             } else {
-              buf += fmt("    Affect:  %d\n\r") % (1<<nr);
+              buf += fmt("    Affect:  Magic Affect of %d\n\r") % (1<<nr);
             }
           }
         }

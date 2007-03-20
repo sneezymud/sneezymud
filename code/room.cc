@@ -31,7 +31,6 @@ bool TRoom::isFlyingSector() const
   }
 }
 
-
 bool TRoom::isRoadSector() const
 {
   switch (getSectorType()) {
@@ -85,6 +84,7 @@ bool TRoom::isNatureSector() const
     case SECT_ARCTIC_FOREST:
     case SECT_ARCTIC_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
+    case SECT_DESERT: // adding desert
       return TRUE;
     default:
       return FALSE;
@@ -217,10 +217,10 @@ bool TRoom::isArcticSector() const
 
 bool TRoom::isTropicalSector() const
 {
-  return ((getSectorType() >= SECT_DESERT &&
-           getSectorType() < SECT_ASTRAL_ETHREAL) ||
-          getSectorType() == SECT_FIRE ||
-          getSectorType() == SECT_FIRE_ATMOSPHERE);
+  // changing this from getSectorType() >= SECT_DESERT
+  // will probably mess something up but really... desert = tropical?
+  // also killing getSectorType() == SECT_FIRE and SECT_FIRE_ATMOSPHERE
+  return (getSectorType() >= SECT_TROPICAL_CITY && getSectorType() < SECT_ASTRAL_ETHREAL);
 }
 
 bool TRoom::isWierdSector() const
