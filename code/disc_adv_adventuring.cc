@@ -9,41 +9,60 @@
 #include "obj_drinkcon.h"
 #include "pathfinder.h"
 
-
-static const int FORAGE_BEGIN = 276;
-static const int FORAGE_END   = 281;
-
 void forage(TBeing * caster)
 {
   forage(caster, caster->getSkillValue(SKILL_FORAGE));
 }
 
+static const int FORAGE_BEGIN = 276, FORAGE_END = 281;
+static const int FORAGE_ARCTIC_BEGIN = 276, FORAGE_ARCTIC_END = 281;
+static const int FORAGE_CAVE_BEGIN = 276, FORAGE_CAVE_END = 281;
+// waiting until we can mvlow...
+// static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
+// static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
+
 int forage(TBeing *caster, byte bKnown)
 {
   TObj *obj = NULL;
-  int forgeItem;
+  int forageItem;
   affectedData aff;
 
   spellNumT skill = caster->getSkillNum(SKILL_FORAGE);
 
+  if (!caster->roomp) {
+      vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+  }
+  
   if (!caster->doesKnowSkill(skill)) {
     caster->sendTo("You know nothing about foraging for food!\n\r");
     return SPELL_FAIL;
   }
   
-  if (!(caster->roomp->isForestSector()
+  if (caster->roomp->isCitySector()
+      || !(caster->roomp->isForestSector()
       || caster->roomp->isBeachSector()
       || caster->roomp->isHillSector()
       || caster->roomp->isMountainSector()
       || caster->roomp->isNatureSector()
-      || caster->roomp->isRoadSector())) {
+      || caster->roomp->isRoadSector()
+      || caster->roomp->isSwampSector()
+      || caster->roomp->isArcticSector()
+      || caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE
+      || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE
+      || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
     caster->sendTo("You need to be in nature to forage.\n\r");
+    return SPELL_FAIL;
+  } else if (caster->roomp->isFlyingSector()
+      || caster->roomp->isVertSector()
+      || caster->roomp->isUnderwaterSector()
+      || caster->roomp->isAirSector()
+      || caster->roomp->isOceanSector()
+      || caster->roomp->isRiverSector()) {
+    // being safe here - allowing arctic allows a bunch of undesired sector types
+    caster->sendTo("You cannot forage here.\n\r");
     return SPELL_FAIL;
   } else if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
     caster->sendTo("You need to be outside to forage.\n\r");
-    return SPELL_FAIL;
-  } else if (caster->roomp->isArcticSector() ) {
-    caster->sendTo("It is too cold to forage here.\n\r");
     return SPELL_FAIL;
   } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
     caster->sendTo("The flood in here needs to subside before you can forage.\n\r");
@@ -70,12 +89,18 @@ int forage(TBeing *caster, byte bKnown)
   caster->addToMove(-forage_move);
 
   if (caster->bSuccess(bKnown, SKILL_FORAGE)) {
-    forgeItem = ::number(FORAGE_BEGIN,FORAGE_END);
-    obj = read_object(forgeItem, VIRTUAL);
+    if (caster->roomp->isArcticSector())
+      forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
+    else if (caster->roomp->isIndoorSector())
+      forageItem = ::number(FORAGE_CAVE_BEGIN, FORAGE_CAVE_END);
+    else 
+      forageItem = ::number(FORAGE_BEGIN, FORAGE_END);
+    
+    obj = read_object(forageItem, VIRTUAL);
 
     if (!obj) {
       caster->sendTo("Something went wrong, bug Cosmo.\n\r");
-      vlogf(LOG_BUG,"Forage tried to load a NULL object");
+      vlogf(LOG_BUG, fmt("Forage tried to load a NULL object (%d)") % forageItem);
       return SPELL_FAIL;
     }
 
@@ -764,7 +789,7 @@ int TBeing::inCamp() const
     if (inGroup(*ch)) {
       for (aff = ch->affected; aff; aff = aff->next) {
         if (aff->type == SKILL_ENCAMP)
-          // make sure to return no0n-zero here
+          // make sure to return non-zero here
           return max(1, (aff->level/ 2));
       }
     }
@@ -811,17 +836,35 @@ int encamp(TBeing * caster)
     caster->sendTo("The flood in here needs to subside before setting up camp.\n\r");
     return SPELL_FAIL;
   }
-  if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
-    caster->sendTo("You need to be under an open sky to camp.\n\r");
+  if (caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
+    caster->sendTo("You cannot camp indoors.\n\r");
     return SPELL_FAIL;
   }
-  if (!(caster->roomp->isForestSector()
+  if (caster->roomp->isCitySector()
+      || !(caster->roomp->isForestSector()
       || caster->roomp->isBeachSector()
       || caster->roomp->isHillSector()
       || caster->roomp->isMountainSector()
       || caster->roomp->isNatureSector()
-      || caster->roomp->isRoadSector())) {
+      || caster->roomp->isRoadSector()
+      || caster->roomp->isSwampSector()
+      || caster->roomp->isArcticSector()
+      || caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE
+      || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE
+      || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
     caster->sendTo("You need to be in nature to camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isFlyingSector()
+      || caster->roomp->isVertSector()
+      || caster->roomp->isUnderwaterSector()
+      || caster->roomp->isAirSector()
+      || caster->roomp->isOceanSector()
+      || caster->roomp->isRiverSector()) {
+    caster->sendTo("This is not a good spot for a camp.\n\r");
     return SPELL_FAIL;
   }
   if (caster->roomp->isRoomFlag(ROOM_NO_FLEE)
@@ -877,15 +920,19 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
   affectedData aff;
   int units;
   
+  if (!caster || !caster->roomp)
+    return SPELL_FAIL;
+  
   if (!(caster->roomp->isForestSector()
       || caster->roomp->isBeachSector()
       || caster->roomp->isHillSector()
       || caster->roomp->isMountainSector()
       || caster->roomp->isNatureSector()
-      || caster->roomp->isRoadSector())) {
-    caster->sendTo("You need to be in nature to forage.\n\r");
+      || caster->roomp->isRoadSector()
+      || caster->roomp->isSwampSector())) {
+    caster->sendTo("You need to be in nature to divine for water.\n\r");
     return SPELL_FAIL;
-  } else if (caster->roomp->isIndoorSector() || roomp->isRoomFlag(ROOM_INDOORS)) {
+  } else if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
     caster->sendTo("You need to be outside to divine.\n\r");
     return SPELL_FAIL;
   } else if (caster->roomp->isArcticSector() ) {

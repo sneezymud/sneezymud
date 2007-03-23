@@ -5784,7 +5784,11 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 		
 		sstring msg;
 		dirTypeT use_dir;
-		
+		if (!o)
+      return FALSE;
+    
+    sstring oname(o->getName());
+    
 		if (o && o->roomp){
 			// #### on the ground -> wander the object
 
@@ -5796,7 +5800,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			}
 			
 			if (!possible_exits.size()){
-				msg = fmt("$n spins around in a circle.");
+				msg = fmt("$s spins around in a circle.") % oname.cap();
 				act(msg, FALSE, o, 0, 0, TO_ROOM);
 				return FALSE;
 			}
@@ -5805,11 +5809,19 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			use_dir = possible_exits[::number(0, possible_exits.size() - 1)];
 			TRoom *rp2 = real_roomp(o->roomp->exitDir(use_dir)->to_room);
 			
+      if (rp2->isFlyingSector()
+          || rp2->isUnderwaterSector()
+          || rp2->isAirSector()) {
+				msg = fmt("%s spins around in a circle.") % oname.cap();
+				act(msg, FALSE, o, 0, 0, TO_ROOM);
+				return FALSE;
+      }
+      
 			// movement out of room
-			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = fmt("$n swims %s.") % dirs[use_dir];
+			if (o->roomp->isWaterSector()){
+				msg = fmt("%s swims %s.") % oname.cap() % dirs[use_dir];
 			} else {
-				msg = fmt("$n skitters %s.") % dirs[use_dir];
+				msg = fmt("$s skitters %s.") % oname.cap() % dirs[use_dir];
 			}
 			act(msg, FALSE, o, 0, 0, TO_ROOM);
 			
@@ -5818,9 +5830,9 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			
 			// movement into room
 			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = fmt("$n swims in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = fmt("%s swims in from the %s.") % oname.cap() % dirs[rev_dir[use_dir]];
 			} else {
-				msg = fmt("$n skitters in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = fmt("%s skitters in from the %s.") % oname.cap() % dirs[rev_dir[use_dir]];
 			}
 			act(msg, FALSE, o, 0, 0, TO_ROOM);
 			

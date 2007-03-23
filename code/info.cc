@@ -4231,16 +4231,30 @@ void TBeing::doEvaluate(const char *argument)
     // should probably make a more modular isGreatOutdoorsSector() check or something...
     if (doesKnowSkill(SKILL_ENCAMP)) {
       bool can_do = TRUE;
-      if (!(roomp->isForestSector()
+      if (roomp->isCitySector()
+          || !(roomp->isForestSector()
           || roomp->isBeachSector()
           || roomp->isHillSector()
           || roomp->isMountainSector()
           || roomp->isNatureSector()
-          || roomp->isRoadSector())) {
+          || roomp->isRoadSector()
+          || roomp->isSwampSector()
+          || roomp->isArcticSector()
+          || roomp->getSectorType() == SECT_TEMPERATE_CAVE
+          || roomp->getSectorType() == SECT_TROPICAL_CAVE
+          || roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
         can_do = FALSE;
-      } else if (roomp->isIndoorSector() 
+      } else if (roomp->isFlyingSector()
+          || roomp->isVertSector()
+          || roomp->isUnderwaterSector()
+          || roomp->isAirSector()
+          || roomp->isOceanSector()
+          || roomp->isRiverSector()) {
+        can_do = FALSE;
+      } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING
+          || roomp->getSectorType() == SECT_TROPICAL_BUILDING
+          || roomp->getSectorType() == SECT_ARCTIC_BUILDING
           || roomp->isRoomFlag(ROOM_INDOORS) 
-          || roomp->isArcticSector() 
           || roomp->isRoomFlag(ROOM_FLOODED) 
           || roomp->isRoomFlag(ROOM_ON_FIRE)) {
         can_do = FALSE;
@@ -4256,16 +4270,31 @@ void TBeing::doEvaluate(const char *argument)
     
     if (doesKnowSkill(SKILL_FORAGE)) {
       bool can_do = TRUE;
-      if (!(roomp->isForestSector()
+      if (roomp->isCitySector()
+          || !(roomp->isForestSector()
           || roomp->isBeachSector()
           || roomp->isHillSector()
           || roomp->isMountainSector()
           || roomp->isNatureSector()
-          || roomp->isRoadSector())) {
+          || roomp->isRoadSector()
+          || roomp->isSwampSector()
+          || roomp->isArcticSector()
+          || roomp->getSectorType() == SECT_TEMPERATE_CAVE
+          || roomp->getSectorType() == SECT_TROPICAL_CAVE
+          || roomp->getSectorType() == SECT_ARCTIC_CAVE
+          )) {
         can_do = FALSE;
-      } else if (roomp->isIndoorSector() 
+      } else if (roomp->isFlyingSector()
+          || roomp->isVertSector()
+          || roomp->isUnderwaterSector()
+          || roomp->isAirSector()
+          || roomp->isOceanSector()
+          || roomp->isRiverSector()) {
+        can_do = FALSE;
+      } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING
+          || roomp->getSectorType() == SECT_TROPICAL_BUILDING
+          || roomp->getSectorType() == SECT_ARCTIC_BUILDING
           || roomp->isRoomFlag(ROOM_INDOORS) 
-          || roomp->isArcticSector() 
           || roomp->isRoomFlag(ROOM_FLOODED) 
           || roomp->isRoomFlag(ROOM_ON_FIRE)) {
         can_do = FALSE;
@@ -4281,11 +4310,12 @@ void TBeing::doEvaluate(const char *argument)
           || roomp->isHillSector()
           || roomp->isMountainSector()
           || roomp->isNatureSector()
-          || roomp->isRoadSector())) {
+          || roomp->isRoadSector()
+          || roomp->isSwampSector())) {
         can_do = FALSE;
       } else if (roomp->isIndoorSector() 
-          || roomp->isRoomFlag(ROOM_INDOORS) 
           || roomp->isArcticSector() 
+          || roomp->isRoomFlag(ROOM_INDOORS) 
           || roomp->isRoomFlag(ROOM_FLOODED) 
           || roomp->isRoomFlag(ROOM_ON_FIRE)) {
         can_do = FALSE;
