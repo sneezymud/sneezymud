@@ -229,7 +229,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
       if(obj->objVnum() == OBJ_PILE_OFFAL)
@@ -303,7 +303,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
       if(obj->objVnum() == OBJ_PILE_OFFAL)
@@ -374,7 +374,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
       if(obj->objVnum() == OBJ_PILE_OFFAL)
@@ -452,7 +452,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up some trash.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
       if(obj->objVnum() == OBJ_PILE_OFFAL)

@@ -5789,7 +5789,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     
     sstring oname(o->getName());
     
-		if (o && o->roomp){
+		if (o->roomp){
 			// #### on the ground -> wander the object
 
 			// find permissible exits - must be open
@@ -5800,8 +5800,8 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			}
 			
 			if (!possible_exits.size()){
-				msg = fmt("$s spins around in a circle.") % oname.cap();
-				act(msg, FALSE, o, 0, 0, TO_ROOM);
+				msg = fmt("$p spins around in a circle.");
+				act(msg, FALSE, o, o, 0, TO_ROOM);
 				return FALSE;
 			}
 			
@@ -5812,29 +5812,29 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       if (rp2->isFlyingSector()
           || rp2->isUnderwaterSector()
           || rp2->isAirSector()) {
-				msg = fmt("%s spins around in a circle.") % oname.cap();
-				act(msg, FALSE, o, 0, 0, TO_ROOM);
+				msg = fmt("$p spins around in a circle.");
+				act(msg, FALSE, o, o, 0, TO_ROOM);
 				return FALSE;
       }
       
 			// movement out of room
 			if (o->roomp->isWaterSector()){
-				msg = fmt("%s swims %s.") % oname.cap() % dirs[use_dir];
+				msg = fmt("$p swims %s.") % dirs[use_dir];
 			} else {
-				msg = fmt("$s skitters %s.") % oname.cap() % dirs[use_dir];
+				msg = fmt("$p skitters %s.") % dirs[use_dir];
 			}
-			act(msg, FALSE, o, 0, 0, TO_ROOM);
+			act(msg, FALSE, o, o, 0, TO_ROOM);
 			
 			--(*o);
 			*rp2 += *o;
 			
 			// movement into room
 			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = fmt("%s swims in from the %s.") % oname.cap() % dirs[rev_dir[use_dir]];
+				msg = fmt("$p swims in from the %s.") % dirs[rev_dir[use_dir]];
 			} else {
-				msg = fmt("%s skitters in from the %s.") % oname.cap() % dirs[rev_dir[use_dir]];
+				msg = fmt("$p skitters in from the %s.") % dirs[rev_dir[use_dir]];
 			}
-			act(msg, FALSE, o, 0, 0, TO_ROOM);
+			act(msg, FALSE, o, o, 0, TO_ROOM);
 			
 			return FALSE;
 		}

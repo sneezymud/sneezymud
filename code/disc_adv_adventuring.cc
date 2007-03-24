@@ -17,7 +17,6 @@ void forage(TBeing * caster)
 static const int FORAGE_BEGIN = 276, FORAGE_END = 281;
 static const int FORAGE_ARCTIC_BEGIN = 276, FORAGE_ARCTIC_END = 281;
 static const int FORAGE_CAVE_BEGIN = 276, FORAGE_CAVE_END = 281;
-// waiting until we can mvlow...
 // static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
 // static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
 
@@ -30,7 +29,8 @@ int forage(TBeing *caster, byte bKnown)
   spellNumT skill = caster->getSkillNum(SKILL_FORAGE);
 
   if (!caster->roomp) {
-      vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+    vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+    return SPELL_FAIL;
   }
   
   if (!caster->doesKnowSkill(skill)) {
@@ -61,7 +61,7 @@ int forage(TBeing *caster, byte bKnown)
     // being safe here - allowing arctic allows a bunch of undesired sector types
     caster->sendTo("You cannot forage here.\n\r");
     return SPELL_FAIL;
-  } else if (caster->roomp->isIndoorSector() || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
+  } else if (caster->roomp->isRoomFlag(ROOM_INDOORS) && !(caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
     caster->sendTo("You need to be outside to forage.\n\r");
     return SPELL_FAIL;
   } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
@@ -89,30 +89,33 @@ int forage(TBeing *caster, byte bKnown)
   caster->addToMove(-forage_move);
 
   if (caster->bSuccess(bKnown, SKILL_FORAGE)) {
-    if (caster->roomp->isArcticSector())
-      forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
-    else if (caster->roomp->isIndoorSector())
-      forageItem = ::number(FORAGE_CAVE_BEGIN, FORAGE_CAVE_END);
-    else 
-      forageItem = ::number(FORAGE_BEGIN, FORAGE_END);
-    
-    obj = read_object(forageItem, VIRTUAL);
-
-    if (!obj) {
-      caster->sendTo("Something went wrong, bug Cosmo.\n\r");
-      vlogf(LOG_BUG, fmt("Forage tried to load a NULL object (%d)") % forageItem);
-      return SPELL_FAIL;
+    int foodpile = 1000;
+    while (::number(0, 999) < foodpile) {
+      if (caster->roomp->isArcticSector())
+        forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
+      else if (caster->roomp->isIndoorSector())
+        forageItem = ::number(FORAGE_CAVE_BEGIN, FORAGE_CAVE_END);
+      else 
+        forageItem = ::number(FORAGE_BEGIN, FORAGE_END);
+      
+      obj = read_object(forageItem, VIRTUAL);
+  
+      if (!obj) {
+        caster->sendTo("Something went wrong, bug Cosmo.\n\r");
+        vlogf(LOG_BUG, fmt("Forage tried to load a NULL object (%d)") % forageItem);
+        return SPELL_FAIL;
+      }
+  
+      act("You find $p.", FALSE, caster, obj, NULL, TO_CHAR);
+      *caster->roomp += *obj;
+      foodpile /= 3;
     }
-
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;
     aff.duration = 4 * UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
     aff.modifier = 0;
     caster->affectTo(&aff, -1);
-
-    act("You find $p.", FALSE, caster, obj, NULL, TO_CHAR);
-    *caster->roomp += *obj;
     return SPELL_SUCCESS;
   } else {
     aff.type = AFFECT_SKILL_ATTEMPT;
@@ -839,7 +842,7 @@ int encamp(TBeing * caster)
   if (caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
       || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
       || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
-      || caster->roomp->isRoomFlag(ROOM_INDOORS)) {
+      || (caster->roomp->isRoomFlag(ROOM_INDOORS) && !(caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE))) {
     caster->sendTo("You cannot camp indoors.\n\r");
     return SPELL_FAIL;
   }

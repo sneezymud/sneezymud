@@ -4254,7 +4254,7 @@ void TBeing::doEvaluate(const char *argument)
       } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING
           || roomp->getSectorType() == SECT_TROPICAL_BUILDING
           || roomp->getSectorType() == SECT_ARCTIC_BUILDING
-          || roomp->isRoomFlag(ROOM_INDOORS) 
+          || (roomp->isRoomFlag(ROOM_INDOORS) && !(roomp->getSectorType() == SECT_TEMPERATE_CAVE || roomp->getSectorType() == SECT_TROPICAL_CAVE || roomp->getSectorType() == SECT_ARCTIC_CAVE))
           || roomp->isRoomFlag(ROOM_FLOODED) 
           || roomp->isRoomFlag(ROOM_ON_FIRE)) {
         can_do = FALSE;
@@ -4294,7 +4294,7 @@ void TBeing::doEvaluate(const char *argument)
       } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING
           || roomp->getSectorType() == SECT_TROPICAL_BUILDING
           || roomp->getSectorType() == SECT_ARCTIC_BUILDING
-          || roomp->isRoomFlag(ROOM_INDOORS) 
+          || (roomp->isRoomFlag(ROOM_INDOORS) && !(roomp->getSectorType() == SECT_TEMPERATE_CAVE || roomp->getSectorType() == SECT_TROPICAL_CAVE || roomp->getSectorType() == SECT_ARCTIC_CAVE))
           || roomp->isRoomFlag(ROOM_FLOODED) 
           || roomp->isRoomFlag(ROOM_ON_FIRE)) {
         can_do = FALSE;

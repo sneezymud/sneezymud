@@ -623,6 +623,7 @@ int TMonster::superScavenger()
   TThing *t;
   TObj *best_o = NULL;
   TPCorpse *corpse = NULL;
+  TBaseCorpse *bcorpse = NULL;
   int rc;
   char buf[256];
 
@@ -696,6 +697,7 @@ int TMonster::superScavenger()
       return TRUE;
     }
   }
+  
   // best_o = NULL here, check room for goodies
   for (t = roomp->getStuff();t; t = t->nextThing) {
     rc = t->scavengeMe(this, &best_o);
@@ -707,17 +709,25 @@ int TMonster::superScavenger()
   if (!best_o)
     return FALSE;
 
+  // don't pick up entire, unlooted corpses
+  bcorpse = dynamic_cast<TBaseCorpse *>(best_o);
+  if (bcorpse && bcorpse->getStuff())
+    return FALSE;
+  
   if (best_o->parent) {
     // arbitrarily cast it to a corpse, non-corpses will be NULL
     // if we loot a corpse, we need to update save file
     corpse = dynamic_cast<TPCorpse *>(best_o->parent);
     --(*best_o);
-    if (corpse) 
+    if (corpse) {
+	    vlogf(LOG_MOB_AI, fmt("Mob superScavenger: %s looting %s from %s in room (%d)") % this->name % best_o->name % corpse->name % (roomp ? roomp->in_room : 0));
       corpse->saveCorpseToFile();
-    
+    }
     *roomp += *best_o;
   }
+
   if (best_o) {
+    vlogf(LOG_MOB_AI, fmt("Mob superScavenger: %s picking up %s in room (%d)") % this->name % best_o->name % (roomp ? roomp->in_room : 0));
     strcpy(buf, best_o->name);
     strcpy(buf, add_bars(buf).c_str());
     rc = doGet(buf);
@@ -3318,6 +3328,7 @@ int TMonster::scavenge()
   TObj *best_obj = 0, *obj = 0;
   int iMax;
   int rc;
+  TBaseCorpse *corpse;
   
   if (in_room == ROOM_DONATION)
     return FALSE;
@@ -3325,17 +3336,23 @@ int TMonster::scavenge()
     return FALSE;
   if (!hasHands() && !isHumanoid())
     return FALSE;
-
+  
   if (roomp->getStuff() && !::number(0, 5)) {
     TThing *t;
     best_obj = NULL;
     for (iMax = 1, t = roomp->getStuff(); t; t = t->nextThing) {
       if (!(obj = dynamic_cast<TObj *>(t)))
         continue;
+      
+      // skip over unlooted corpses
+      corpse = dynamic_cast<TBaseCorpse *>(t);
+      if (corpse && corpse->getStuff())
+        continue;
+      
       if (obj->canWear(ITEM_TAKE) && canCarry(obj, SILENT_YES) &&
           canSee(obj) && 
           !obj->action_description &&   // checks for personalized
-          (!dynamic_cast<TBaseCorpse *>(obj) || !obj->getStuff())) {
+          !obj->getStuff()) {
         if (obj->obj_flags.cost > iMax) {
           best_obj = obj;
           iMax = obj->obj_flags.cost;
@@ -3351,6 +3368,7 @@ int TMonster::scavenge()
 
       --(*best_obj);
       *this += *best_obj;
+      vlogf(LOG_MOB_AI, fmt("Mob scavenge: %s picking up %s in room (%d)") % this->name % best_obj->name % (roomp ? roomp->in_room : 0));
       act("$n gets $p.", FALSE, this, best_obj, 0, TO_ROOM);
       act("You get $p.", FALSE, this, best_obj, 0, TO_CHAR);
       return TRUE;
@@ -4415,6 +4433,8 @@ int TMonster::findABetterWeapon()
     return FALSE;
 
   for (t = roomp->getStuff(); t; t = t->nextThing) {
+    if (!(dynamic_cast<TBaseWeapon *>(t)))
+      continue;
     if (!(o = dynamic_cast<TObj *>(t)))
       continue;
     if (dynamic_cast<TBow *>(o) || dynamic_cast<TArrow *>(o))
@@ -4483,7 +4503,8 @@ int TMonster::findABetterWeapon()
 #endif
 
   // pick it up if we don't possess it
-  if ((best->equippedBy != this) && (best->parent != this)) {
+  if ((best->equippedBy != this) && (best->parent != this)) { 
+    vlogf(LOG_MOB_AI, fmt("Mob weapon grab: %s picking up %s in room (%d)") % this->name % best->name % (roomp ? roomp->in_room : 0));
     rc = doGet(fname(best->name).c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
