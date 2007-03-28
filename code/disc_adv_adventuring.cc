@@ -15,10 +15,8 @@ void forage(TBeing * caster)
 }
 
 static const int FORAGE_BEGIN = 276, FORAGE_END = 281;
-static const int FORAGE_ARCTIC_BEGIN = 276, FORAGE_ARCTIC_END = 281;
-static const int FORAGE_CAVE_BEGIN = 276, FORAGE_CAVE_END = 281;
-// static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
-// static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
+static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
+static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
 
 int forage(TBeing *caster, byte bKnown)
 {
