@@ -1931,32 +1931,31 @@ void TBeing::statBeing(TBeing *k)
         break;
 
       case AFFECT_COMBAT:
-        str += fmt("Combat: '%s'\n\r") % 
-          (aff->be ? aff->be->getName() : "No aff->be!");
+        str += fmt("Combat: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
         str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
           aff->duration % aff->level;
         break;
 
       case AFFECT_PET:
-        str += fmt("pet of: '%s'\n\r") % aff->be->getName();
+        str += fmt("Pet of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
         str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
           aff->duration % aff->level;
         break;
 
       case AFFECT_CHARM:
-        str += fmt("charm of: '%s'\n\r") % aff->be->getName();
+        str += fmt("Charm of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
         str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
           aff->duration % aff->level;
         break;
 
       case AFFECT_THRALL:
-        str += fmt("thrall of: '%s'\n\r") % aff->be->getName();
+        str += fmt("Thrall of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
         str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
           aff->duration % aff->level;
         break;
 
       case AFFECT_ORPHAN_PET:
-        str += fmt("orphan pet of: '%s'\n\r") % aff->be->getName();
+        str += fmt("Orphan pet of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
         str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
           aff->duration % aff->level;
         break;

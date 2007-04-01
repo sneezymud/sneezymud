@@ -87,7 +87,7 @@ void eggSpoiled(TEgg *egg, TBeing *ch, int dur)
 void TEgg::eatMe(TBeing *ch)
 {
   if ((ch->getCond(FULL) > 20) && !ch->isImmortal()) {
-    ch->sendTo("You try to stuff another egg food into your mouth, but alas, you are full!\n\r");
+  	act("You try to stuff another $o into your mouth, but alas, you are full!", FALSE, ch, this, 0, TO_CHAR);
     return;
   }
   if (isFoodFlag(FOOD_SPOILED) && ch->isPerceptive()) {
@@ -335,8 +335,7 @@ void TEgg::hatch(TRoom *rp)
     aff.modifier = 0;   // to be used for elemental skill level
     aff.bitvector = 0;
 
-    char * tmp = mud_str_dup(ch->name);
-    aff.be = (TThing *) tmp;
+	aff.be = static_cast<TThing *>((void *) mud_str_dup(ch->getName()));
 
     mob->affectTo(&aff, -1);
   } 
