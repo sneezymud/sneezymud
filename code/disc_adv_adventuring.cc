@@ -104,7 +104,8 @@ int forage(TBeing *caster, byte bKnown)
         return SPELL_FAIL;
       }
   
-      act("You find $p.", FALSE, caster, obj, NULL, TO_CHAR);
+      act("You rustle up $p.", FALSE, caster, obj, NULL, TO_CHAR);
+      act("$n rustles up $p.", TRUE, caster, obj, NULL, TO_ROOM);
       *caster->roomp += *obj;
       foodpile /= 3;
     }

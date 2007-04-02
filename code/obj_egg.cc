@@ -49,9 +49,9 @@ void eggPoisoned(TEgg *egg, TBeing *ch, int dur)
   if (egg->isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
     if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
-      act("That tasted rather strange, but you don't think it had any ill-effect!!", FALSE, ch, 0, 0, TO_CHAR);
+      act("That tasted rather strange, but you don't think it had any ill-effect!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
-      act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
+      act("That tasted rather strange!", FALSE, ch, 0, 0, TO_CHAR);
       act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
       af.duration = dur * UPDATES_PER_MUDHOUR;
@@ -69,8 +69,10 @@ void eggSpoiled(TEgg *egg, TBeing *ch, int dur)
 
   if (egg->isFoodFlag(FOOD_SPOILED)) {
     if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
-      ch->sendTo("BLAH!  That was a very rotten egg.  Hopefully you won't have any ill-effect.\n\r");
+      act("Blarg!  That $o was rotten!  Hopefully it won't have any ill-effects.", FALSE, ch, egg, 0, TO_CHAR);
     } else {
+      act("Blarg!  That $o was rotten!  Your stomach begins to churn.", FALSE, ch, egg, 0, TO_CHAR);
+      act("$n begins to look glassy eyed and pale.", FALSE, ch, 0, 0, TO_ROOM);
       af.type = AFFECT_DISEASE;
       af.level = 0;
      // Added /4 because of player complaints of food poisoning - Russ 04/28/96
@@ -123,7 +125,7 @@ void TEgg::eatMe(TBeing *ch)
 void TEgg::tasteMe(TBeing *ch)
 {
   if (ch->hasDisease(DISEASE_FOODPOISON)) {
-    ch->sendTo("Uggh, your stomach feels just horrible and the thought of eggs nauseates you.\n\r");
+    ch->sendTo("Uggh, your stomach feels just horrible and the thought of eating nauseates you.\n\r");
     ch->sendTo("You decide to skip this meal until you feel better.\n\r");
     return;
   }
@@ -143,7 +145,7 @@ void TEgg::tasteMe(TBeing *ch)
     eggPoisoned(this, ch, 1);
   }
   if (isFoodFlag(FOOD_SPOILED)) {
-    ch->sendTo("Blah, that egg is spoiled!\n\r");
+    act("Blarg!  That $o is spoiled!", FALSE, ch, this, 0, TO_CHAR);
     ch->sendTo("No point in keeping it around now...\n\r");
     delete this;
     return;
