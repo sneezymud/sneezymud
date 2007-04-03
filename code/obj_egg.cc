@@ -319,7 +319,7 @@ void TEgg::hatch(TRoom *rp)
     TRUE, mob, this, NULL, TO_ROOM);
 
  
-  if(!IS_SET(mob->specials.act, ACT_AGGRESSIVE) && parent && 
+  if(parent && 
      (ch=dynamic_cast<TBeing *>(parent)) && ch->isPc() &&
      mob->GetMaxLevel() < ch->GetMaxLevel() && 
      !ch->tooManyFollowers(mob, FOL_PET)){

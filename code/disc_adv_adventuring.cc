@@ -17,6 +17,7 @@ void forage(TBeing * caster)
 static const int FORAGE_BEGIN = 276, FORAGE_END = 281;
 static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
 static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
+static const int FORAGE_DESERT_BEGIN = 37137, FORAGE_DESERT_END = 37140;
 
 int forage(TBeing *caster, byte bKnown)
 {
@@ -93,6 +94,8 @@ int forage(TBeing *caster, byte bKnown)
         forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
       else if (caster->roomp->isIndoorSector())
         forageItem = ::number(FORAGE_CAVE_BEGIN, FORAGE_CAVE_END);
+      else if (caster->roomp->getSectorType() == SECT_DESERT)
+        forageItem = ::number(FORAGE_DESERT_BEGIN, FORAGE_DESERT_END);
       else 
         forageItem = ::number(FORAGE_BEGIN, FORAGE_END);
       
