@@ -1760,13 +1760,16 @@ int TObj::objectTickUpdate(int pulse)
     if (egg->getEggTouched()) {
       int myTimer=egg->eggIncubate();
       TRoom *rp;
-
-      if (!(rp = roomp)) {
-        if (!(rp = parent->roomp)) {
-          rp = parent->parent->roomp;
+      TBeing *ch;
+	  if (ch = dynamic_cast<TBeing *>(egg->equippedBy)) {
+        rp = ch->roomp;
+      } else {
+        if (!(rp = roomp)) {
+	      if (!(rp = parent->roomp)) {
+            rp = parent->parent->roomp;
+          }
         }
       }
-
       if (myTimer == 1) {
         if (rp) {
           sendrpf(COLOR_BASIC, rp, "%s begins to wiggle a bit.\n\r", sstring(shortDescr).cap().c_str());

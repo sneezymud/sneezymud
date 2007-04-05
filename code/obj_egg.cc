@@ -318,11 +318,12 @@ void TEgg::hatch(TRoom *rp)
   act("With a final push, $n emerges from $p!",
     TRUE, mob, this, NULL, TO_ROOM);
 
- 
-  if(parent && 
-     (ch=dynamic_cast<TBeing *>(parent)) && ch->isPc() &&
-     mob->GetMaxLevel() < ch->GetMaxLevel() && 
-     !ch->tooManyFollowers(mob, FOL_PET)){
+  if (
+  	  ((parent && (ch=dynamic_cast<TBeing *>(parent)))
+      || (equippedBy && (ch = dynamic_cast<TBeing *>(equippedBy))))
+      && ch->isPc() 
+      && mob->GetMaxLevel() < ch->GetMaxLevel() 
+      && !ch->tooManyFollowers(mob, FOL_PET)) {
     // this code was cut and pasted from the pet buying code, sorry :(
     mob->doAction(ch->name, CMD_STARE);
 
