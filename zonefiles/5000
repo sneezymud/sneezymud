@@ -84,7 +84,7 @@ M 0 5001 3  -99		hunter nomad ogre
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5001 3  -99		hunter nomad ogre
@@ -92,7 +92,7 @@ M 0 5001 3  -99		hunter nomad ogre
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5001 3  -99		hunter nomad ogre
@@ -100,31 +100,31 @@ M 0 5001 3  -99		hunter nomad ogre
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5002 3  -99		forager nomad ogre
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5002 3  -99		forager nomad ogre
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5002 3  -99		forager nomad ogre
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5003 3  -99		forager nomad ogress
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5003 3  -99		forager nomad ogress
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5003 3  -99		forager nomad ogress
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
@@ -132,7 +132,7 @@ M 0 5004 3  -99		hunter nomad ogress
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
@@ -140,7 +140,7 @@ M 0 5004 3  -99		hunter nomad ogress
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
@@ -148,7 +148,7 @@ M 0 5004 3  -99		hunter nomad ogress
 E 1 5011 9999 19			hunting knife
 ? 0 3 0 E
 E 1 5010 9999 19 			rough hunting knife [prop weapon]
-Y 0 146 3				grizzled set
+Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5013 3 -99		medic nomad ogress
