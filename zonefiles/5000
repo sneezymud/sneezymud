@@ -43,7 +43,7 @@ O 0 5024 1 5011		tree
 O 0 5024 1 5020		tree
 O 0 5024 1 5033		tree
 
-M 0 5008 1 5005		nomad leader
+M 0 5022 1 5005		nomad leader
 ? 0 3 0 E
 E 1 5012 9999 18		leader badge
 
@@ -160,7 +160,7 @@ A 0 5000 5049
 M 0 5013 3 -99		medic nomad ogress
 
 M 0 5019 1 5038 		witch nomad
-C 1 5029 1 5038		black cat
+C 1 5020 1 5038		black cat
 
 M 0 5010 3 5023		mom nomad
 K 1 5006 3 5023		nomad child male
