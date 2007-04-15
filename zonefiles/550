@@ -8,6 +8,9 @@ D 0 580 5 2
 D 0 580 3 1
 D 0 581 1 1
 
+* apartment above Tanni's
+D 0 565 4 2          Tanni's Jewelry Store -> Cramped Attic
+
 * windows
 O 0 624 1 580
 O 0 625 1 580

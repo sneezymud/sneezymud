@@ -154,7 +154,8 @@ D 0 1393   9    1 ; ""
 D 0 1393   3    1 ; ""
 D 0 1370   2    1 ; Arena
 
-
+* Apartment above Pahoran's
+D 0 1399 4 2         Magical Nexus -> Galek Armory
 
 O 0 104 1 1364     Window in Huma's Beastiary
 V 1 0 1397                    looking into room 1397
