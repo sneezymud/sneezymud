@@ -1,5 +1,31 @@
 #16700
 Player Homes~
 16799 25 2 0
-S
 
+D 0 16700 5 2        Cramped Attic -> Tanni's Jewelry Store
+D 0 16701 5 2        Galek Armory -> Magical Nexus
+
+O 0 16703 1 16700       a bright blue portal
+O 0 16711 2 16700       a stiff bed
+O 0 16710 3 16700       a short dinner table
+O 0 16705 4 16700       a leaky wash basin
+O 0 16707 5 16700       a large black anvil
+O 0 152 6 16700         a large forge
+O 0 16706 7 16700       a sturdy workbench
+O 0 16709 8 16700       a marble altar
+O 0 16708 9 16700       an operating table
+O 0 577 10 16700        a pentagram inscribed with chalk
+O 0 16704 11 16700      an obsidian toolbox
+
+O 0 16702 1 16701       a bright blue portal
+O 0 16712 2 16701       an equipment rack
+O 0 16713 3 16701       a ranger's quiver
+O 0 16714 4 16701       a holy altar
+O 0 16715 6 16701       a medicine cabinet
+O 0 16716 7 16701       a bag of tricks
+O 0 16717 8 16701       a magic dispenser
+O 0 16718 9 16701       a shiny curio cabinet
+O 0 16715 11 16701      a waste basket
+
+M 0 16700 1 16700       a latchkey kid
+S
