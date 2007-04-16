@@ -1233,7 +1233,7 @@ E 1 6583 9999 4 		Shirt Corpuscles
 E 1 6584 9999 15 		Sash Corpuscles
 
 M 0 6581 1 6582 	Navrip
-? 0 99 0 E
+? 0 100 0 E
 E 1 305 9999 19			Dagger small
 
 M 0 6585 1 6583 	Warg
