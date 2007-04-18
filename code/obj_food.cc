@@ -131,7 +131,7 @@ int TBaseCup::drinkMe(TBeing *ch)
 { 
   char buf[256];
   int amount;
-  affectedData af, aff2;
+  affectedData af, aff2, aff3;
 
   if (ch->hasDisease(DISEASE_FOODPOISON)) {
     ch->sendTo("Uggh, your stomach is queasy and the thought of doing that is unappetizing.\n\r");
@@ -281,16 +281,33 @@ int TBaseCup::drinkMe(TBeing *ch)
 
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
-
+  
+  TPool * tPool = dynamic_cast<TPool *>(this);
+  if (tPool && getDrinkType() == LIQ_WATER && !ch->isImmune(IMMUNE_DISEASE, WEAR_BODY) && !ch->hasDisease(DISEASE_DYSENTERY)) {
+    // drinking from standing water: chance for dysentery
+    if (!::number(0, 100 / max(1, amount))) {
+      aff3.type = AFFECT_DISEASE;
+      aff3.level = 0;
+      aff3.location = APPLY_NONE;
+      aff3.bitvector = 0;
+      aff3.duration = ch->GetMaxLevel() * UPDATES_PER_MUDHOUR / 3;
+      aff3.duration *= (100 - ch->getImmunity(IMMUNE_DISEASE));
+      aff3.duration /= 100;
+      aff3.modifier = DISEASE_DYSENTERY;
+      aff3.modifier2 = ch->GetMaxLevel();
+      if (aff3.duration > 0) {
+        act("Uh oh! Standing water isn't always the safest to drink...", FALSE, ch, 0, 0, TO_CHAR);
+        ch->affectTo(&aff3);
+        disease_start(ch, &aff3);
+      }
+    }
+  }
   if (getDrinkUnits() <= 0) {
-    TPool * tPool = dynamic_cast<TPool *>(this);
-
     if (!tPool) {
       act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
       act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
-
       return DELETE_THIS;
     }
   }

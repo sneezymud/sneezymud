@@ -603,6 +603,16 @@ void TBeing::doPoop(void)
     return;
   }
 
+  if (hasDisease(DISEASE_SCURVY) || hasDisease(DISEASE_FLU)) {
+    // take a beautiful thing and make it ugly
+    act("$n unleashes $s <o>filth<1> upon the $g.", TRUE, this, NULL, NULL, TO_ROOM);
+    act("You unleash your <o>filth<1> upon the $g<1>.  You don't feel so good.", TRUE, this, NULL, NULL, TO_CHAR);
+    dropPool(getCond(POOP), LIQ_POT_FILTH);
+    setCond(THIRST, max(0, (int) getCond(THIRST) - ((int) getCond(POOP) / 2)));
+    setCond(POOP, 0);
+    return;
+  }
+
   if(!(obj=read_object(OBJ_PILE_OFFAL, VIRTUAL))){
     vlogf(LOG_BUG, "problem loading offal in doPoop()");
     return;

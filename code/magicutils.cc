@@ -1387,32 +1387,33 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save)
 }
 
 // take a given limb and determine how much blood to drop, then call dropPool
+// dropping these values a bunch... 20 ounces of blood?!
 int TBeing::dropBloodLimb(wearSlotT limb)
 {
   int amt;
 
   switch(limb){
-    case WEAR_HEAD:      amt=5; break;
-    case WEAR_NECK:      amt=9; break;
+    case WEAR_HEAD:      amt=3; break;
+    case WEAR_NECK:      amt=4; break;
     case WEAR_BODY:
-    case WEAR_BACK:      amt=20; break;
+    case WEAR_BACK:      amt=4; break;
     case WEAR_ARM_R:
-    case WEAR_ARM_L:     amt=9; break;
+    case WEAR_ARM_L:     amt=3; break;
     case WEAR_WRIST_R:
-    case WEAR_WRIST_L:   amt=3; break;
+    case WEAR_WRIST_L:   amt=1; break;
     case WEAR_HAND_R:
-    case WEAR_HAND_L:    amt=3; break;
+    case WEAR_HAND_L:    amt=1; break;
     case WEAR_FINGER_R:
     case WEAR_FINGER_L:  amt=1; break;
-    case WEAR_WAIST:    amt=10; break;
+    case WEAR_WAIST:    amt=4; break;
     case WEAR_LEG_R:
-    case WEAR_LEG_L:    amt=9; break;
+    case WEAR_LEG_L:    amt=3; break;
     case WEAR_FOOT_R:
-    case WEAR_FOOT_L:    amt=3; break;
+    case WEAR_FOOT_L:    amt=1; break;
     case WEAR_EX_LEG_R:
-    case WEAR_EX_LEG_L:  amt=9; break;
+    case WEAR_EX_LEG_L:  amt=3; break;
     case WEAR_EX_FOOT_R:
-    case WEAR_EX_FOOT_L: amt=3; break;
+    case WEAR_EX_FOOT_L: amt=1; break;
     default: return FALSE;
   }
 
@@ -1430,9 +1431,13 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   affectedData aff;
   char buf[256];
 
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR && 
-             pos != HOLD_RIGHT && pos != HOLD_LEFT &&
-             slotChance(pos), "Bogus slot on raw bruise");
+  if (pos < MIN_WEAR || pos >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("rawBruise called with bad slot: %i on %s") % pos % getName());
+    return FALSE;
+  }
+  if (!hasPart(pos) || isLimbFlags(pos, PART_BRUISED)) {
+    return FALSE;
+  }
 
   // not sure what this is for???
   if (immcheck) {
@@ -1454,6 +1459,8 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
 
   if(hasQuestBit(TOG_IS_HEMOPHILIAC))
     aff.duration*=10;
+  else if (hasDisease(DISEASE_SCURVY) || isLimbFlags(pos, PART_LEPROSED))
+    aff.duration*=2;
 
   affectTo(&aff);
   disease_start(this, &aff);
@@ -1474,9 +1481,13 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   affectedData aff;
   char buf[256];
 
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR && 
-             pos != HOLD_RIGHT && pos != HOLD_LEFT &&
-             slotChance(pos), "Bogus slot on raw bleed");
+  if (pos < MIN_WEAR || pos >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("rawBleed called with bad slot: %i on %s") % pos % getName());
+    return FALSE;
+  }
+  if (!hasPart(pos) || isLimbFlags(pos, PART_BLEEDING)) {
+    return FALSE;
+  }
 
   // not sure what this is for???
   if (immcheck) {
@@ -1515,28 +1526,40 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
 }
 
 // assumes you have already checked for immunities, etc
-int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
+int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck, int level)
 {
   affectedData aff;
   char buf[256];
 
   if (immcheck) {
-    if (isImmune(IMMUNE_DISEASE, pos))
+    if (isImmune(IMMUNE_SKIN_COND, pos))
       return FALSE;
   }
-
+  if (pos < MIN_WEAR || pos >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("rawInfect called with bad slot: %i on %s") % pos % getName());
+    return FALSE;
+  }
+  if (!hasPart(pos) || isLimbFlags(pos, PART_INFECTED)) {
+    return FALSE;
+  }
+  if (!level)
+    level = GetMaxLevel();
   aff.type = AFFECT_DISEASE;
   aff.level = pos;
   aff.duration = duration;
   aff.modifier = DISEASE_INFECTION;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
+  aff.modifier2 = level; // important for infect, it determines damage rate
 
   // we've already applied a raw immunity check to prevent entirely
   // however, let immunities also decrease duration
-  aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
-  aff.duration /= 100;
-
+  // affect is permanent when gangrene is present, for as long as gangrene is present
+  // (it is reduced once gangrene is removed)
+  if (aff.duration != PERMANENT_DURATION) {
+    aff.duration *= (100 - getImmunity(IMMUNE_SKIN_COND));
+    aff.duration /= 100;
+  }
   affectTo(&aff);
   disease_start(this, &aff);
 
@@ -1545,7 +1568,46 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
     sprintf(buf, "$n's %s has become totally infected!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
   }
+  return TRUE;
+}
 
+int TBeing::rawGangrene(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck, int level)
+{
+  affectedData aff;
+
+  if (immcheck) {
+    if (isImmune(IMMUNE_DISEASE, pos))
+      return FALSE;
+  }
+  if (pos < MIN_WEAR || pos >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("rawGangrene called with bad slot: %i on %s") % pos % getName());
+    return FALSE;
+  }
+  if (!hasPart(pos) || isLimbFlags(pos, PART_GANGRENOUS)) {
+    return FALSE;
+  }
+  if (!level)
+    level = GetMaxLevel();
+  aff.type = AFFECT_DISEASE;
+  aff.level = pos;
+  aff.duration = duration;
+  aff.modifier = DISEASE_GANGRENE;
+  aff.location = APPLY_NONE;
+  aff.bitvector = 0;
+  aff.modifier2 = level; // important to pass onto the infection that this will cause
+
+	if (aff.duration != PERMANENT_DURATION) {
+	  // we've already applied a raw immunity check to prevent entirely
+	  // however, let immunities also decrease duration
+	  aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
+	  aff.duration /= 100;
+	} 
+  affectTo(&aff);
+  disease_start(this, &aff);
+
+  if (!silent) {
+	  // start message handled in disease_gangrene()
+  }
   return TRUE;
 }
 
@@ -1881,7 +1943,7 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
 	break;
       case 17:
 	if (!silent_caster)
-	  act("DAMN! Screwed up again!.",
+	  act("DAMN! Screwed up again!",
 	      FALSE, this, NULL, NULL, TO_CHAR);
 	act("Chant...Chant...Wave hands...Wave hands...Mages suck!",
 	    FALSE, this, NULL, NULL, TO_ROOM);
@@ -1952,42 +2014,100 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
   return success;
 }
 
-bool genericDisease(TBeing *vict, int level)
+bool genericDisease(TBeing *caster, TBeing *vict, int level)
 {
   // assumes check for isImmune already made
   affectedData aff;
-
   aff.type = AFFECT_DISEASE;
   aff.level = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
   aff.duration = level * UPDATES_PER_MUDHOUR / 3;
-
-  vector <diseaseTypeT> diseases;
-
-  if(!vict->hasDisease(DISEASE_COLD))
+  aff.modifier2 = level;
+	
+  vector <diseaseTypeT> diseases; // possible disease types
+  // starting with most potent... order matters
+  if(!vict->hasDisease(DISEASE_GANGRENE) && level >= 50)
+    diseases.push_back(DISEASE_GANGRENE);
+  if(!vict->hasDisease(DISEASE_LEPROSY) && level >= 40)
+	diseases.push_back(DISEASE_LEPROSY);
+  if(!vict->hasDisease(DISEASE_PNEUMONIA) && level >= 30)
+	diseases.push_back(DISEASE_PNEUMONIA);
+  if(!vict->hasDisease(DISEASE_FLU) && level >= 20)
+	diseases.push_back(DISEASE_FLU);
+  if(!vict->hasDisease(DISEASE_DYSENTERY) && level >= 10)
+    diseases.push_back(DISEASE_DYSENTERY);
+  if (!vict->hasDisease(DISEASE_COLD))
     diseases.push_back(DISEASE_COLD);
+  if (!diseases.size())
+    return FALSE;
 
-  if(!vict->hasDisease(DISEASE_FLU) && level >=15)
-    diseases.push_back(DISEASE_FLU);
+  // reverse the probability loop depending on level diff
+  double level_diff = (double) (vict->GetMaxLevel() - level);
+  if (level_diff < 0) {
+    reverse(diseases.begin(), diseases.end());
+    level_diff = abs(level_diff);
+  }
+  // this scales depending on the number of diseases available
+  // higher level diseases will be  harder to land (on higher level targets) depending on the what the slope is set to
+  // conversely, against lower level targets, it will be easier to land a more potent disease
+  unsigned int step;
+  int roll_size = 0;
+  double scaler = max(1.0, (double) diseases.size() - 1.0); // scales according to number of diseases available
+  double slope = 6.0; // change to a higher number to even out the chances to land any particular disease
+  for (step = 0; step < diseases.size(); step++) {
+    roll_size += max(1, (int) (((level_diff / slope) / scaler) * (double) step));
+    // vlogf(LOG_MISC, fmt("%s- Step: %d Chance: %d") % DiseaseInfo[diseases[step]].name % step % max(1, (int) (((level_diff / slope) / scaler) * (double) step)));
+  }
+  int total = 0;
+  int roll = ::number(1, roll_size);
+  for (step = 0; step < diseases.size(); step++) {
+    total += max(1, (int) (((level_diff / slope) / scaler) * (double) step));
+    if (roll <= total) {
+      aff.modifier = diseases[step];
+      break;
+    }
+  }
+  // vlogf(LOG_MISC, fmt("%d of %d for %s.") % roll % roll_size % DiseaseInfo[diseases[step]].name);
+  if (aff.modifier == DISEASE_GANGRENE) {
+    // find a random slot for it
+  	wearSlotT slot;
+    bool found = false; // need to make sure this doesn't loop 4ever, right?
+    for (int i = 0; i < 20; ++i) {
+      slot = pickRandomLimb();
+      if (notBleedSlot(slot))
+        continue;
+      if (!vict->hasPart(slot))
+        continue;
+      if (vict->isLimbFlags(slot, PART_GANGRENOUS))
+        continue;
+      if (vict->isImmune(IMMUNE_DISEASE, slot))
+       continue;
+      found = TRUE;
+      break;
+    }
+    if (!found)
+	    return FALSE;
+	  aff.level = slot;
+  }
 
-  if(!vict->hasDisease(DISEASE_LEPROSY) && level >= 30)
-    diseases.push_back(DISEASE_LEPROSY);
-  
-  if(!diseases.size())
-    return false;
-
-  aff.modifier = diseases[::number(0,diseases.size()-1)];
-  
-  // we've already applied a raw immunity check to prevent entirely
-  // however, let immunities also decrease duration
-  aff.duration *= (100 - vict->getImmunity(IMMUNE_DISEASE));
-  aff.duration /= 100;
-
+  // make leprosy & gangrene permanent
+  if (aff.modifier == DISEASE_LEPROSY || aff.modifier == DISEASE_GANGRENE) {
+    aff.duration = PERMANENT_DURATION;
+  } else {
+    // we've already applied a raw immunity check to prevent entirely
+    // however, let immunities also decrease duration
+    aff.duration *= (100 - vict->getImmunity(IMMUNE_DISEASE));
+    aff.duration /= 100;
+  }
+  if (caster) {
+    act("$d breathes a fetid cloud into $N's body.", FALSE, caster, 0, vict, TO_CHAR);
+    act("$d breathes a fetid cloud into your body.", FALSE, caster, 0, vict, TO_VICT);
+    act("$d breathes a fetid cloud into $N's body.", FALSE, caster, 0, vict, TO_NOTVICT);
+  }
   vict->affectTo(&aff);
   disease_start(vict, &aff);
-
-  return true;
+  return TRUE;
 }
 
 void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)

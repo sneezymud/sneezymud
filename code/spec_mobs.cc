@@ -3808,7 +3808,8 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   TBeing *t;
   TThing *t1, *t2;
   int rc;
- 
+  affectedData aff;
+
   if ((cmd != CMD_GENERIC_PULSE) || !me)
     return FALSE;
   if (!me->riding) {
@@ -3844,15 +3845,43 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       continue;
     if (t->rider)
       continue;
-    act("Your throat tightens as $N causes a great thirst!",TRUE,t,0,
-        me, TO_CHAR);
-    act("$N causes you to slowly starve!!!!",TRUE,t,0,me, TO_CHAR);
-    t->setCond(THIRST, 0);
-    t->setCond(FULL, 0);
-    t->findFood();
-    if (t->reconcileDamage(t,number(5,8),DAMAGE_STARVATION) == -1) {
-      delete t;
-      t = NULL;
+    switch (number(0, 1)) {
+      // put the scurvy on, or fall through & starve them
+      case 0:
+        // i don't think scurvy is a really a pathogenic disease, but whatever
+        if (!t->hasDisease(DISEASE_SCURVY)
+            && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
+          aff.type = AFFECT_DISEASE;
+          aff.level = 0;
+          aff.duration = 500;
+          aff.location = APPLY_NONE;
+          aff.bitvector = 0;
+          aff.modifier2 = t->GetMaxLevel();
+          aff.modifier = DISEASE_SCURVY;
+          aff.duration *= (100 - t->getImmunity(IMMUNE_DISEASE));
+          aff.duration /= 100;
+          if (aff.modifier && aff.duration > 0) {
+            act("$N's presence drains your body of something essential.", TRUE, me, 0, t, TO_VICT);
+            act("You sap the vitamin C from $n's blood!", TRUE, me, 0, t, TO_CHAR);
+            t->affectTo(&aff);
+						disease_start(t, &aff);
+            break;
+          }
+        }
+      case 1:
+        act("Your throat tightens as $N causes a great thirst!", TRUE, t, 0, me, TO_CHAR);
+        act("$N causes you to slowly starve!!!!", TRUE, t, 0, me, TO_CHAR);
+        t->setCond(THIRST, 0);
+        t->setCond(FULL, 0);
+        t->findFood();
+        if (t->reconcileDamage(t,number(5,8),DAMAGE_STARVATION) == -1) {
+          delete t;
+          t = NULL;
+        }
+        break;
+      default:
+        // doesn't fall through
+        break;
     }
   }
   return FALSE;
@@ -3862,7 +3891,7 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   affectedData aff;
   TBeing *t;
-  int num = number(1,100);
+  int num;
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || !me)
@@ -3877,33 +3906,49 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       return DELETE_THIS;
   }
 
-  if ((t = me->fight())) {
+  if ((t = me->fight()) 
+      && !number(0, 3)
+      && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
     // plagues them
     aff.type = AFFECT_DISEASE;
     aff.level = 0;
     aff.duration = 500;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
-    if (num <= 40)
+    aff.modifier2 = me->GetMaxLevel();
+    num = number(1,100);
+    if (num <= 30 && !t->hasDisease(DISEASE_COLD))
       aff.modifier = DISEASE_COLD;
-    else if (num <= 70)
+    else if (num <= 50 && !t->hasDisease(DISEASE_DYSENTERY))
+      aff.modifier = DISEASE_DYSENTERY;
+    else if (num <= 65 && !t->hasDisease(DISEASE_FLU))
       aff.modifier = DISEASE_FLU;
-    else if (num <= 90)
+    else if (num <= 80 && !t->hasDisease(DISEASE_PNEUMONIA))
+      aff.modifier = DISEASE_PNEUMONIA;
+    else if (num <= 90 && !t->hasDisease(DISEASE_LEPROSY))
       aff.modifier = DISEASE_LEPROSY;
-    else
+    else if (!t->hasDisease(DISEASE_PLAGUE))
       aff.modifier = DISEASE_PLAGUE;
-    if (!number(0,3))
+    aff.duration *= (100 - t->getImmunity(IMMUNE_DISEASE));
+    aff.duration /= 100;
+    if (aff.modifier && aff.duration > 0) {
       t->affectTo(&aff);
+      disease_start(t, &aff);
+    }
   }
 
   // casts disease on everybody
   TThing *t1, *t2;
   for (t1 = me->roomp->getStuff();t1; t1 = t2) {
     t2 = t1->nextThing;
+    if (number(0,14))
+      continue;
     t = dynamic_cast<TBeing *>(t1);
     if (!t)
       continue;
     if (t->isImmortal())
+      continue;
+    if (t->isImmune(IMMUNE_DISEASE, WEAR_BODY))
       continue;
     if (t == me)
       continue;
@@ -3919,18 +3964,28 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     aff.duration = 500;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
-    if (num <= 60)
+    aff.modifier2 = t->GetMaxLevel();
+    num = number(1,100);
+    if (num <= 30 && !t->hasDisease(DISEASE_COLD))
       aff.modifier = DISEASE_COLD;
-    else if (num <= 85)
+    else if (num <= 50 && !t->hasDisease(DISEASE_DYSENTERY))
+      aff.modifier = DISEASE_DYSENTERY;
+    else if (num <= 70 && !t->hasDisease(DISEASE_FLU))
       aff.modifier = DISEASE_FLU;
-    else if (num <= 95)
+    else if (num <= 85 && !t->hasDisease(DISEASE_PNEUMONIA))
+      aff.modifier = DISEASE_PNEUMONIA;
+    else if (num <= 95 && !t->hasDisease(DISEASE_LEPROSY))
       aff.modifier = DISEASE_LEPROSY;
-    else
+    else if (!t->hasDisease(DISEASE_PLAGUE))
       aff.modifier = DISEASE_PLAGUE;
-    if (!number(0,9)) {
-      act("$n gazes across the land.", TRUE,me,0,0,TO_ROOM);
-      act("Vermin and disease follow in $s wake.", TRUE,me,0,0,TO_ROOM);
+    aff.duration *= (100 - t->getImmunity(IMMUNE_DISEASE));
+    aff.duration /= 100;
+		if (aff.modifier && aff.duration > 0) {
+      act("$N gazes upon you with lidless white eyes.", TRUE, me, 0, t, TO_VICT);
+      act("You gaze upon $n.", TRUE, me, 0, t, TO_CHAR);
+      act("$n gasps and exhales a plume of dank vapors.", TRUE, me, 0, 0, TO_ROOM);
       t->affectTo(&aff);
+      disease_start(t, &aff);
     }
   }
   return FALSE;

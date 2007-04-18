@@ -1530,8 +1530,8 @@ const char * const body_flags[] =
   "leprosed",
   "transformed",
   "entangled",
-  "infected with syphilis",
   "bruised",
+  "gangrenous"
   "\n"
 };
 

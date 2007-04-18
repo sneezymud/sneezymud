@@ -299,7 +299,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	  if (ch->GetMaxLevel() < 12) {
 	    me->doTell(ch->getName(), "Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r");
 	  }
-	  buf=fmt("%d) You have %s (%d talens).\n\r") %
+	  buf=fmt("%d) You have %s. (%d talens)") %
 	    ++count % DiseaseInfo[affToDisease(*aff)].name %
 	    doctorCost(shop_nr, ch, affToDisease(*aff));
 	  me->doTell(ch->getName(), buf);

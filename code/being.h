@@ -192,8 +192,9 @@ const unsigned short int PART_LEPROSED     = (1<<8);
 const unsigned short int PART_TRANSFORMED  = (1<<9);
 const unsigned short int PART_ENTANGLED    = (1<<10);
 const unsigned short int PART_BRUISED      = (1<<11);
+const unsigned short int PART_GANGRENOUS   = (1<<12);
 
-const int MAX_PARTS          = 11;       // move and change
+const int MAX_PARTS          = 12;       // move and change
 
 typedef struct _app_typ {
   bool assignable;
@@ -1150,7 +1151,8 @@ class TBeing : public TThing {
     int rawBruise(wearSlotT, int, silentTypeT, checkImmunityT);
     int dropPool(int, liqTypeT);
     int dropBloodLimb(wearSlotT);
-    int rawInfect(wearSlotT, int, silentTypeT, checkImmunityT);
+    int rawInfect(wearSlotT, int, silentTypeT, checkImmunityT, int level = 0);
+    int rawGangrene(wearSlotT, int, silentTypeT, checkImmunityT, int level = 0);
     int tooTired();
     void deathCry();
     void appear();

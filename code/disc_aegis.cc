@@ -185,10 +185,10 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
   int s1 = 0, u1 = 0, mod;
   int i;
   
-  if (spell==SKILL_WOHLIN || 
+  if (spell == SKILL_WOHLIN || 
       caster->bSuccess(learn, caster->getPerc(), spell)) {
   
-    for (i=1; i <= 6; i++) {
+    for (i=1; i <= 10; i++) {
       switch (i) {
         case 1:
           disease = DISEASE_COLD;
@@ -196,27 +196,47 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
           u1 = 5;
           break;
         case 2:
+          disease = DISEASE_DYSENTERY;
+          s1 = 10;
+          u1 = 5;
+          break;
+        case 3:
           disease = DISEASE_FLU;
           s1 = 15;
           u1 = 4;
           break;
-        case 3:
+        case 4:
+          disease = DISEASE_PNEUMONIA;
+          s1 = 40;
+          u1 = 3;
+          break;
+        case 5:
+          disease = DISEASE_SCURVY;
+          s1 = 30;
+          u1 = 4;
+          break;
+        case 6:
           disease = DISEASE_FROSTBITE;
           s1 = 30;
           u1 = 4;
           break;
-        case 4:
+        case 7:
           disease = DISEASE_LEPROSY;
           s1 = 50;
           u1 = 3;
           break;
-        case 5:
-          disease = DISEASE_PLAGUE;
+        case 8:
+          disease = DISEASE_GANGRENE;
           s1 = 75;
           u1 = 2;
           break;
-        case 6:
+        case 9:
           disease = DISEASE_SYPHILIS;
+          s1 = 75;
+          u1 = 2;
+          break;
+        case 10:
+          disease = DISEASE_PLAGUE;
           s1 = 75;
           u1 = 2;
           break;
@@ -225,29 +245,23 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
         mod = min(((learn - s1 + 1) * u1), (int) MAX_SKILL_LEARNEDNESS);
         found = TRUE;
   
-        if (::number(1,100) > mod && spell!=SKILL_WOHLIN) {
-          sprintf(buf, "$d fails to hear your plea to cure %s.",
-                 DiseaseInfo[disease].name);
+        if (::number(1,100) > mod && spell != SKILL_WOHLIN) {
+          sprintf(buf, "$d fails to hear your plea to cure %s.", DiseaseInfo[disease].name);
           act(buf, FALSE, caster, 0, 0, TO_CHAR);
           sprintf(buf, "$d fails to hear $s pleas.");
           act(buf, FALSE, caster, 0, 0, TO_ROOM);
         } else {
           if (caster == victim) {
-            sprintf(buf, "You remove %s inflicting you.", 
-               DiseaseInfo[disease].name);
+            sprintf(buf, "You remove %s inflicting you.", DiseaseInfo[disease].name);
             act(buf, FALSE, caster, 0, 0, TO_CHAR);
-            sprintf(buf, "$n removes %s inflicting $m.", 
-                 DiseaseInfo[disease].name);
+            sprintf(buf, "$n removes %s inflicting $m.", DiseaseInfo[disease].name);
             act(buf, FALSE, caster, 0, 0, TO_ROOM);
           } else {
-            sprintf(buf, "You remove %s inflicting $N.", 
-                 DiseaseInfo[disease].name);
+            sprintf(buf, "You remove %s inflicting $N.", DiseaseInfo[disease].name);
             act(buf, FALSE, caster, 0, victim, TO_CHAR);
-            sprintf(buf, "$n removes %s inflicting you.", 
-                 DiseaseInfo[disease].name);
+            sprintf(buf, "$n removes %s inflicting you.", DiseaseInfo[disease].name);
             act(buf, FALSE, caster, 0, victim, TO_VICT);
-            sprintf(buf, "$n removes %s inflicting $N.", 
-                 DiseaseInfo[disease].name);
+            sprintf(buf, "$n removes %s inflicting $N.", DiseaseInfo[disease].name);
             act(buf, FALSE, caster, 0, victim, TO_NOTVICT);
           }
           victim->diseaseFrom(disease);
@@ -262,20 +276,44 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
     if ((spell != SKILL_WOHLIN) || !found)
       for (wearSlotT iLimb = MIN_WEAR; iLimb < MAX_WEAR; iLimb++) {
         if (iLimb == HOLD_RIGHT || iLimb == HOLD_LEFT)
-	  continue;
+          continue;
 
         if (!victim->slotChance(iLimb))
-	  continue;
-
+          continue;
+	  
+        if (victim->isLimbFlags(iLimb, PART_GANGRENOUS)) {
+          // 10% chance max
+          mod = min(((learn - 50 + 1) * 3), (int) MAX_SKILL_LEARNEDNESS);
+          found = TRUE;
+          if (::number(1, 1000) > mod) {
+            if (spell != SKILL_WOHLIN) {
+              act("$d fails to hear your plea to cure the gangrene!", FALSE, caster, 0, 0, TO_CHAR);
+              act("$d fails to hear $n's plea.", FALSE, caster, 0, 0, TO_ROOM);
+            }
+          } else {
+            if (caster == victim) {
+              act("You remove the gangrene inflicting you.", FALSE, caster, 0, 0, TO_CHAR);
+              act("$m removes the gangrene inflicting $m.", FALSE, caster, 0, 0, TO_ROOM);
+            } else {
+              act("You remove the gangrene inflicting $N.", FALSE, caster, 0, victim, TO_CHAR);
+              act("$n removes the gangrene inflicting you.", FALSE, caster, 0, victim, TO_VICT);
+              act("$n removes the gangrene inflicting $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+            }
+            victim->remLimbFlags(iLimb, PART_GANGRENOUS);
+            if (spell == SKILL_WOHLIN)
+              break;
+          }
+        }
+		
         if (victim->isLimbFlags(iLimb, PART_LEPROSED)) {
           mod = min(((learn - 50 + 1) * 3), (int)MAX_SKILL_LEARNEDNESS);
-	  found = TRUE;
+          found = TRUE;
 
           // While we now allow this we do not want it easy to do.  10% chance at most, sounds good to me. -Lapsos
           if (::number(1, 1000) > mod) {
             if (spell != SKILL_WOHLIN) {
               act("$d fails to hear your plea to cure the leprosy!", FALSE, caster, 0, 0, TO_CHAR);
-              act("$d fails to hear $s pleas.", FALSE, caster, 0, 0, TO_ROOM);
+              act("$d fails to hear $n's plea.", FALSE, caster, 0, 0, TO_ROOM);
             }
           } else {
             if (caster == victim) {

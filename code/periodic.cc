@@ -709,29 +709,24 @@ int TBeing::updateAffects()
           ((af->type >= FIRST_ODDBALL_AFFECT) && (af->type < LAST_ODDBALL_AFFECT))) {
         if (af->shouldGenerateText() ||
             (af->next->duration > 0)) {
-          spellNumT k = af->type;
-          if (k == AFFECT_DISEASE)
-            diseaseStop(af);
-          else {
-            rc = spellWearOff(k);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-          }
+          rc = spellWearOff(af->type);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
         }
 
-	if(af->type == AFFECT_BITTEN_BY_VAMPIRE){
-	  if(!hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
-	     !hasQuestBit(TOG_VAMPIRE)){
-	    sendTo(COLOR_BASIC, "<r>A strange feeling of <1><k>forboding<1><r> comes over you.<1>\n\r");
-	    sendTo(COLOR_BASIC, "<r>You shiver briefly, as your blood runs cold.<1>\n\r");
-	    sendTo(COLOR_BASIC, "<r>In a moment, the feeling has passed.<1>\n\r");
-	    setQuestBit(TOG_BITTEN_BY_VAMPIRE);
-	  }
-
+        if (af->type == AFFECT_DISEASE)
+          diseaseStop(af);
+				
+        if(af->type == AFFECT_BITTEN_BY_VAMPIRE){
+          if(!hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
+             !hasQuestBit(TOG_VAMPIRE)){
+            sendTo(COLOR_BASIC, "<r>A strange feeling of <1><k>forboding<1><r> comes over you.<1>\n\r");
+            sendTo(COLOR_BASIC, "<r>You shiver briefly, as your blood runs cold.<1>\n\r");
+            sendTo(COLOR_BASIC, "<r>In a moment, the feeling has passed.<1>\n\r");
+            setQuestBit(TOG_BITTEN_BY_VAMPIRE);
+          }
           affectRemove(af);
-	}
-
-
+        }
 
         if ((af->type == SPELL_POLYMORPH) || 
             (af->type == SKILL_DISGUISE) ||
@@ -961,7 +956,7 @@ int TBeing::updateBodyParts()
       if (IS_SET(flags, PART_MISSING)) {
         // remove extraneous
         setLimbFlags(i, PART_MISSING);
-      } else if (IS_SET(flags, (unsigned short int) (PART_BLEEDING | PART_LEPROSED | PART_INFECTED | PART_PARALYZED | PART_USELESS | PART_BRUISED))) {
+      } else if (IS_SET(flags, (unsigned short int) (PART_BLEEDING | PART_LEPROSED | PART_INFECTED | PART_PARALYZED | PART_USELESS | PART_BRUISED | PART_GANGRENOUS))) {
         // change these bits to broken;
         setLimbFlags(i, PART_BROKEN);
       }
@@ -972,7 +967,7 @@ int TBeing::updateBodyParts()
       if (::number(0,1)) {
         addCurLimbHealth(i, -1);
         if (getCurLimbHealth(i) <= 0) {
-          sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
+          sendTo(fmt("The gangrene in your %s causes it to fall off!!\n\r") %
                describeBodySlot(i));
           makePartMissing(i, TRUE);
         }
@@ -987,7 +982,7 @@ int TBeing::updateBodyParts()
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         }
-        if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
+        if (isCritPart(i)) {
           vlogf(LOG_BUG, fmt("%s killed by lack of a critical body spot (%d:1) at %s (%d)") % 
             getName() % i % roomp->getName() % inRoom());
           rc = die(DAMAGE_NORMAL);
@@ -999,15 +994,22 @@ int TBeing::updateBodyParts()
     }
 
     // normal critters follow
-    if (isLimbFlags(i, PART_LEPROSED) && hasPart(i)) {
+	
+    // **removed leprosy limb damage**
+    // The big idea being that leprotic limbs do not actually fall off of their own accord.
+    // Instead, combat damage vs. leprotic limbs is increased and they do not heal.
+    // This was done both to prevent clerics from cooking off limbs for riskless kills
+    // and to keep leprosy a little more in line with its real world affects.
+    // Gangrene replaces it as a limb-rotter.
+    if (isLimbFlags(i, PART_GANGRENOUS) && hasPart(i)) {
       addCurLimbHealth(i, -2);
       if (getCurLimbHealth(i) <= 0) {
         if (isCritPart(i)) {
           // let go to 0, but don't cause "neck to fall off"
           setCurLimbHealth(i, 0);
         } else {
-          sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
-               describeBodySlot(i));
+          vlogf(LOG_COMBAT, fmt("Gangrene rotting off the %s of %s.") % describeBodySlot(i) % getName());
+          act(fmt("The <k>gangrene<1> in your %s causes it to fall off!") % describeBodySlot(i), FALSE, this, 0, 0, TO_CHAR);
           makePartMissing(i, TRUE);
         }
       }
@@ -1031,13 +1033,13 @@ int TBeing::updateBodyParts()
           return DELETE_THIS;
       }
     }
-    if (IS_SET(flags, (unsigned short int) (PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED | PART_BRUISED)))
+    if (IS_SET(flags, (unsigned short int) (PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED | PART_BRUISED | PART_GANGRENOUS)))
       continue;
 
     if (getCurLimbHealth(i) < getMaxLimbHealth(i) &&
-          !::number(0,1) && !fight()) 
-      addCurLimbHealth(i,
-           ((flags & PART_BANDAGED) ? 1 + conLimbBonus : conLimbBonus));
+          !::number(0,1) && !fight()) {
+      addCurLimbHealth(i, ((flags & PART_BANDAGED) ? 1 + conLimbBonus : conLimbBonus));
+    }
   }
   return TRUE;
 }
@@ -1719,6 +1721,10 @@ int TObj::objectTickUpdate(int pulse)
           if (ch->rawInfect(eq_stuck, 200, SILENT_YES, CHECK_IMMUNITY_YES)) 
             ch->sendTo(COLOR_OBJECTS, fmt("Your %s has been infected by %s.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
         }
+      }
+      if (::number(0, ch->getConShock()) < 2) {
+        if (ch->isLimbFlags(eq_stuck, PART_INFECTED) && !ch->isLimbFlags(eq_stuck, PART_GANGRENOUS))
+          ch->rawGangrene(eq_stuck, 500, SILENT_NO, CHECK_IMMUNITY_YES);
       }
       if (ch->reconcileDamage(ch, (int) baseDamage(), SPELL_INFECT) == -1) {
         delete ch;

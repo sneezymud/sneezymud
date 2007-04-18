@@ -24,7 +24,9 @@ void TBeing::addCurLimbHealth(wearSlotT slot, int num)
   int tmp = body_parts[slot].getHealth() + num;
   if (tmp > getMaxLimbHealth(slot))
     body_parts[slot].setHealth(getMaxLimbHealth(slot));
-  else
+  else if (tmp < 0)
+    body_parts[slot].setHealth(0);
+  else 
     body_parts[slot].addHealth(num);
 }
 
@@ -386,8 +388,7 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
 
   corpse->setWeight(getWeight() / 32.0);
 
-  act("$p creaks once before falling to the $g and begins to decay.",
-       TRUE,this,corpse,0,TO_ROOM);
+  act("$p creaks once before falling to the $g!", TRUE,this,corpse,0,TO_ROOM);
   *roomp += *corpse;
 
   if (!isPc()) {
@@ -446,7 +447,7 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
         continue;
       if (!slotChance(slot))
         continue;
-      if (isLimbFlags(slot, PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED)) { 
+      if (isLimbFlags(slot, PART_MISSING | PART_PARALYZED | PART_BROKEN | PART_BLEEDING | PART_INFECTED | PART_USELESS | PART_LEPROSED | PART_TRANSFORMED | PART_GANGRENOUS)) { 
         switch (limb) {
           case WEAR_ARM_R:
           case WEAR_ARM_L:

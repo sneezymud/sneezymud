@@ -716,7 +716,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       act("You shake off the effects of that disease-spewing $o.",
           FALSE, ch, me, 0, TO_CHAR);
     } else
-      genericDisease(ch, level);
+      genericDisease(NULL, ch, level);
     genericCurse(ch, ch, level, SPELL_CURSE);
 
     return TRUE;

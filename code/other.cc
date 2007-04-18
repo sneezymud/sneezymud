@@ -2623,6 +2623,23 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_PLASMA_MIRROR:
       plasmaMirror(ch,level,learn);
       break;
+    case LIQ_POT_FILTH:
+      ch->sendTo("Your stomach twists into a knot and you feel like wretching.\r\n");
+      if (ch->hasDisease(DISEASE_DYSENTERY))
+        break;
+      if (::number(1, 100) <= ch->getImmunity(IMMUNE_DISEASE)) {
+        ch->sendTo("Something tries to sour your guts, but you fight it off.\r\n");
+        break;
+      }
+      aff.type = AFFECT_DISEASE;
+      aff.level = 0;
+      aff.duration = 250 + ::number(-50, 50);
+      aff.modifier = DISEASE_DYSENTERY;
+      aff.location = APPLY_NONE;
+      aff.bitvector = 0;
+      ch->affectTo(&aff);
+      disease_start(ch, &aff);
+      break;
     default:
       rc=0;
   }

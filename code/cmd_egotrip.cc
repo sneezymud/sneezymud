@@ -264,6 +264,7 @@ void TBeing::doEgoTrip(const char *arg)
   badsyn += "crit - forces a target mob to do the number crit if fighting\n\r";
   badsyn += "portal - creates a portal to the target mob/player\n\r";
   badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
+  badsyn += "disease <target> <disease> - makes someone feel bad.\n\r";
 
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
@@ -271,7 +272,101 @@ void TBeing::doEgoTrip(const char *arg)
     sendTo(badsyn);
     return;
   }
-  if(is_abbrev(argument, "teleport")){
+  if (is_abbrev(argument, "disease")) {
+    sstring target, disease;
+    restarg = one_argument(restarg, target);
+    restarg = one_argument(restarg, disease);
+    if (target.empty() || disease.empty()) {
+      sendTo("Syntax:\n\r     egotrip disease <target> <disease>\n\r");
+      sendTo("Viable cruelties include:\n\r");
+      sendTo(COLOR_OBJECTS, "     <c>cold<1>, <c>dysentery<1>, <c>flu<1>, <c>pneumonia<1>, <c>leprosy<1>, <c>gangrene<1>, <c>plague<1> & <c>scurvy<1>\n\r");
+      return;
+    }
+    TBeing *sufferer = get_char_vis_world(this, target, NULL, EXACT_NO);
+    if (!sufferer) {
+      sendTo("Could not locate the ersatz sufferer.\n\r");
+      sendTo("Syntax:\n\r     egotrip disease <target> <disease>\n\r");
+      return;
+    }
+    
+    if (sufferer->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
+      sendTo("Bummer, they're immune.\n\r");
+      return;
+    }
+    
+    affectedData aff;
+    aff.type = AFFECT_DISEASE;
+    aff.level = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = 0;
+    aff.duration = min((int) sufferer->GetMaxLevel(), (int) GetMaxLevel()) * UPDATES_PER_MUDHOUR / 3;
+    aff.modifier2 = sufferer->GetMaxLevel();
+    
+    if (is_abbrev(disease, "cold")) {
+      aff.modifier = DISEASE_COLD;
+    } else if (is_abbrev(disease, "dysentery")) {
+      aff.modifier = DISEASE_DYSENTERY;
+    } else if (is_abbrev(disease, "flu")) {
+      aff.modifier = DISEASE_FLU;
+    } else if (is_abbrev(disease, "pneumonia")) {
+      aff.modifier = DISEASE_PNEUMONIA;
+    } else if (is_abbrev(disease, "leprosy")) {
+      aff.modifier = DISEASE_LEPROSY;
+    } else if (is_abbrev(disease, "gangrene")) {
+      aff.modifier = DISEASE_GANGRENE;
+      // find a random slot for it
+      wearSlotT slot;
+      bool found = false; // need to make sure this doesn't loop 4ever, right?
+      for (int i = 0; i < 20; ++i) {
+        slot = pickRandomLimb();
+        if (notBleedSlot(slot))
+          continue;
+        if (!sufferer->hasPart(slot))
+          continue;
+        if (sufferer->isLimbFlags(slot, PART_GANGRENOUS))
+          continue;
+        if (sufferer->isImmune(IMMUNE_DISEASE, slot))
+         continue;
+        found = TRUE;
+        break;
+      }
+      if (!found) {
+        sendTo("Hm... could not find an available slot for gangrene.\n\r");
+        sendTo("Keep trying if you're sure they have one left...\n\r");
+        return;
+      }
+      aff.level = slot;
+    } else if (is_abbrev(disease, "plague")) {
+      aff.modifier = DISEASE_PLAGUE;
+    } else if (is_abbrev(disease, "scurvy")) {
+      aff.modifier = DISEASE_SCURVY;
+    } else {
+      sendTo("Syntax:\n\r     egotrip disease <target> <disease>\n\r");
+      sendTo("Viable cruelties include:\n\r");
+      sendTo(COLOR_OBJECTS, "     <c>cold<1>, <c>dysentery<1>, <c>flu<1>, <c>pneumonia<1>, <c>leprosy<1>, <c>gangrene<1>, <c>plague<1> & <c>scurvy<1>\n\r");
+      return;
+    }
+    if (sufferer->hasDisease((diseaseTypeT) aff.modifier)) {
+      sendTo("Bummer, they already have that one.\n\r");
+      return;
+    }
+    // make leprosy & gangrene permanent
+    if (aff.modifier == DISEASE_LEPROSY || aff.modifier == DISEASE_GANGRENE) {
+      aff.duration = PERMANENT_DURATION;
+    } else {
+      // we've already applied a raw immunity check to prevent entirely
+      // however, let immunities also decrease duration
+      aff.duration *= (100 - sufferer->getImmunity(IMMUNE_DISEASE));
+      aff.duration /= 100;
+    }
+    act("You breathe a fetid cloud into $N's body.", TRUE, this, 0, sufferer, TO_CHAR);
+    act("Someone around here doesn't like you.", TRUE, this, 0, sufferer, TO_VICT);
+    act("Someone around here doesn't like $N.", TRUE, this, 0, sufferer, TO_NOTVICT);
+    sufferer->affectTo(&aff);
+    disease_start(sufferer, &aff);
+    return;
+    
+  } else if(is_abbrev(argument, "teleport")){
     sstring target, buf;
     restarg = one_argument(restarg, target);
     if (target.empty()) {

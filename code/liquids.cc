@@ -153,6 +153,7 @@ liqInfoT::liqInfoT()
   liquids[LIQ_POT_QUICKSILVER]            = new liqEntry(-1,  -1,  -1, true, false, "shiny silver", "a shiny silver potion", 9999);  
   liquids[LIQ_POT_MYSTERY]                = new liqEntry(-1,-1,1, true, false, "<G>bright glowing green<1>", "<G>mystery potion<1>", 20000);
   liquids[LIQ_MUD] = new liqEntry(-1,-1,1,false, false, "<o>brown<1>", "<o>mud<1>", 0);
+  liquids[LIQ_POT_FILTH] = new liqEntry(-1,-1,1,true, false, "<o>brown<1>", "<o>filth<1>", 0);
 }
 
 

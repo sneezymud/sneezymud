@@ -2547,6 +2547,10 @@ static spellNumT get_cleric_heal_spell(TMonster &ch, TBeing &targ)
        targ.hasDisease(DISEASE_FROSTBITE) ||
        targ.hasDisease(DISEASE_LEPROSY) ||
        targ.hasDisease(DISEASE_PLAGUE) ||
+       targ.hasDisease(DISEASE_PNEUMONIA) ||
+       targ.hasDisease(DISEASE_DYSENTERY) ||
+       targ.hasDisease(DISEASE_GANGRENE) ||
+       targ.hasDisease(DISEASE_SCURVY) ||
        targ.hasDisease(DISEASE_SYPHILIS)){
       return SPELL_CURE_DISEASE;
     }

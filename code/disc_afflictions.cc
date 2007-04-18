@@ -14,11 +14,11 @@ static int injureLimbs(TBeing *ch, TBeing *victim, spellNumT skill, int level, i
   dam = max(dam, 10);
 
   act("$d aids you to a lesser extent, damaging $N's limbs!",
-          false, ch, 0, victim, TO_CHAR);
+          FALSE, ch, 0, victim, TO_CHAR);
   act("$d blasts you, damaging your limbs!",
-          false, ch, 0, victim, TO_VICT);
+          FALSE, ch, 0, victim, TO_VICT);
   act("$d blasts $N, damaging $S limbs!",
-          false, ch, 0, victim, TO_NOTVICT);
+          FALSE, ch, 0, victim, TO_NOTVICT);
 
   int num = 0;
   wearSlotT slot;
@@ -26,7 +26,7 @@ static int injureLimbs(TBeing *ch, TBeing *victim, spellNumT skill, int level, i
     int num2 = 0;  // prevent endless loops
     for (slot = MIN_WEAR; slot < MAX_WEAR && num2 < 10; slot++) {
       num2++;
-      if (!victim->slotChance(slot))
+      if (!victim->hasPart(slot))
         continue;
       if (!victim->getCurLimbHealth(slot))
         continue;
@@ -100,8 +100,7 @@ int harm(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
 
     act("$N buckles from the pain!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N buckles from the pain!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("You buckle from the pain! You could swear you're about to die!",
-                  FALSE, caster, NULL, victim, TO_VICT);
+    act("You buckle from the pain!  You could swear you're about to die!", FALSE, caster, NULL, victim, TO_VICT);
     if (caster->reconcileDamage(victim, dam, spell) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -138,7 +137,7 @@ int harm(TBeing * caster, TBeing * victim, TMagicItem *obj, spellNumT spell)
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
 
-  ret=harm(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
+  ret = harm(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness(), spell, 0);
 
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -172,7 +171,7 @@ int harm(TBeing * caster, TBeing * victim)
           FALSE, caster, 0, 0, TO_ROOM);
   }
 
-  int ret=harm(caster,victim,level,caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
+  int ret = harm(caster, victim, level, caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
 
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -190,7 +189,7 @@ int poison(TBeing * caster, TObj * obj, int, byte bKnown, spellNumT spell)
     if (rc) {
       return SPELL_SUCCESS;
     }
-    caster->sendTo("You can't poison non-consummables.\n\r");
+    caster->sendTo("You can't poison non-consumables.\n\r");
     return SPELL_FAIL;
   } else {
     return SPELL_FAIL;
@@ -208,9 +207,8 @@ void poison(TBeing * caster, TObj * obj)
 
   int ret=poison(caster,obj,level,caster->getSkillValue(spell), spell);
   if (ret == SPELL_SUCCESS) {
-    act("You succeed in poisoning $p.", TRUE, caster, obj, 0, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);  // intentional  :)
-    vlogf(LOG_MISC, fmt("%s poisoned %s.") %  caster->getName() % obj->getName());
+    act("You succeed in poisoning $p.", FALSE, caster, obj, 0, TO_CHAR);
+    act("$n poisons $p!", FALSE, caster, obj, 0, TO_ROOM);
   } else {
     caster->deityIgnore();
   }
@@ -220,11 +218,10 @@ int poison(TBeing * caster, TObj * target, TMagicItem *obj, spellNumT spell)
 {
   int ret;
 
-  ret=poison(caster,target,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
+  ret = poison(caster, target, obj->getMagicLevel(), obj->getMagicLearnedness(), spell);
   if (ret == SPELL_SUCCESS) {
-    act("You succeed in poisoning $p.", TRUE, caster, obj, 0, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    vlogf(LOG_MISC, fmt("%s poisoned %s.") %  caster->getName() % obj->getName());
+    act("You succeed in poisoning $p.", FALSE, caster, target, 0, TO_CHAR);
+    act("$n poisons $p!", FALSE, caster, target, 0, TO_ROOM);
   } else {
     caster->deityIgnore();
   }
@@ -235,31 +232,26 @@ int poison(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 {
   affectedData aff, aff2;
 
+  if (caster->isNotPowerful(victim, level, spell, SILENT_YES)) {
+    act("You invoke $d to poison $N.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("It looks like you didn't pray hard enough!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to poison you!  Luckily, $e is too feeble.", FALSE, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+    return SPELL_FALSE;
+  }
+  
   if (victim->isImmune(IMMUNE_POISON, WEAR_BODY)) {
-    act("Your prayer seems to have no affect on $N!", 
-        FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to poison you. Luckily you are immune.", 
-        FALSE, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
+    act("Your pious poison seems to have no effect on $N!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to poison you!  Luckily, you are immune.", FALSE, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
 
   if (victim->affectedBySpell(SPELL_POISON) ||
       victim->affectedBySpell(SPELL_POISON_DEIKHAN)) {
-    act("You can't poison $N. $E is already poisoned!", 
-        FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to poison you again!", 
-        FALSE, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
-    return SPELL_FALSE;
-  }
-
-  if (caster->isNotPowerful(victim, level, spell, SILENT_YES)) {
-    act("Your prayer seems to have little or no affect on $N!", 
-        FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to poison you. Lucky $e was so weak.", 
-        FALSE, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
+    act("You can't poison $N.  $E is already poisoned!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to poison you again!", FALSE, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
 
@@ -341,11 +333,11 @@ void poison(TBeing * caster, TBeing * victim)
 
   int level = caster->getSkillLevel(spell);
 
-  int ret=poison(caster,victim,level,caster->getSkillValue(spell), spell);
+  int ret = poison(caster, victim, level, caster->getSkillValue(spell), spell);
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
     if (caster != victim) {
-      sprintf(gender_desc, "%s", (!caster->getSex() ? "eunic" : (caster->getSex() == 1 ? "bastard" : "bitch")));
+      sprintf(gender_desc, "%s", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "bastard" : "bitch")));
       sprintf(buf, "That %s $n just poisoned $N!", gender_desc);
       act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
       sprintf(buf, "That %s $n just poisoned you!", gender_desc);
@@ -354,33 +346,33 @@ void poison(TBeing * caster, TBeing * victim)
     } else {
       caster->sendTo("Way to go!  You've poisoned yourself!!\n\r");
       act("$n looks sheepish as $e realizes $e just poisoned $mself.",
-          TRUE, caster, 0, 0, TO_ROOM);
+          FALSE, caster, 0, 0, TO_ROOM);
     }
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
     if (caster != victim) {
-      sprintf(gender_desc, "%s", (!caster->getSex() ? "eunic" : (caster->getSex() == 1 ? "bastard" : "bitch")));
-      sprintf(buf, "That %s $n just poisoned $N seriously!", gender_desc);
+      sprintf(gender_desc, "%s", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "bastard" : "bitch")));
+      sprintf(buf, "That %s $n just seriously poisoned $N!", gender_desc);
       act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-      sprintf(buf, "That %s $n just poisoned you seriously!", gender_desc);
+      sprintf(buf, "That %s $n just seriously poisoned you!", gender_desc);
       act(buf, FALSE, caster, NULL, victim, TO_VICT);
       act("You fill $N's veins with a serious poison!", FALSE, caster, NULL, victim, TO_CHAR);
     } else {
       act("Way to go!  You've poisoned yourself badly!", 
           FALSE, caster, NULL, NULL, TO_VICT);
-      act("$n looks sheepish as $e realizes $e just poisoned $mself seriously.",          TRUE, caster, 0, 0, TO_ROOM);
+      act("$n looks sheepish as $e realizes $e just poisoned $mself seriously.", FALSE, caster, 0, 0, TO_ROOM);
     }
   } else if (IS_SET(ret, SPELL_SAVE)) {
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
     act("$n seems to have poisoned $mself!", 
           FALSE, caster, NULL, caster, TO_NOTVICT);
-    act("Oh no! You seem to have poisoned yourself!", 
+    act("Oh no!  You seem to have poisoned yourself!", 
           FALSE, caster, NULL, NULL, TO_CHAR);
     act("That poison was intended for you!", 
           FALSE, caster, NULL, victim, TO_VICT);
   } else if (IS_SET(ret, SPELL_FAIL)) {
     caster->sendTo("You fail to poison your enemy.\n\r");
-    act("$n just tried to poison you!", FALSE, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore();
+    act("$n just failed to poison you!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
   } else {
   }
   if (!victim->isPc()) {
@@ -393,48 +385,47 @@ int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 {
   int ret;
 
-  ret=poison(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
+  ret = poison(caster, victim,obj->getMagicLevel(), obj->getMagicLearnedness(), spell);
   if (IS_SET(ret, SPELL_SUCCESS)) {
     if (caster == victim) {
-      caster->sendTo("Don't you feel stupid for poisoning yourself.\n\r");
+      caster->sendTo("Don't you feel stupid for poisoning yourself?\n\r");
       act("$n looks sheepish as $e realizes $e just poisoned $mself.",
-         TRUE, caster, 0, 0, TO_ROOM);
+         FALSE, caster, 0, 0, TO_ROOM);
     } else {
       act("Poison courses through your veins!",
           FALSE, victim, 0, 0, TO_CHAR);
       act("Poison courses through $n's veins!",
           FALSE, victim, 0, 0, TO_ROOM);
-
     }
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
     if (caster == victim) {
-      caster->sendTo("Don't you feel stupid for poisoning yourself.\n\r");
+      caster->sendTo("Don't you feel stupid for poisoning yourself?\n\r");
       act("$n looks sheepish as $e realizes $e just poisoned $mself.",
-         TRUE, caster, 0, 0, TO_ROOM);
+         FALSE, caster, 0, 0, TO_ROOM);
     } else {
       act("Poison courses through your veins!",
           FALSE, victim, 0, 0, TO_CHAR);
       act("Poison courses through $n's veins!",
           FALSE, victim, 0, 0, TO_ROOM);
-
     }
   } else if (IS_SET(ret, SPELL_SAVE)) {
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    caster->sendTo("Oops!  it backfired on you and now you're poisoned!\n\r");
-    act("Oops!  it backfired on you and now you're poisoned!", 
-          TRUE, caster, 0, victim, TO_CHAR);
+    act("Oops!  It backfired on you and now you're poisoned!", 
+          FALSE, caster, 0, victim, TO_CHAR);
     act("$n just tried to poison you!", 
-          TRUE, caster, 0, victim, TO_VICT);
-    act("$n's action backfired on $m and now $e is poisoned.",
-          TRUE, caster, 0, victim, TO_NOTVICT);
+        FALSE, caster, 0, victim, TO_VICT);
+    act("The funny part is, $e poisoned $mself instead!", 
+        FALSE, caster, 0, victim, TO_VICT);
+    act("$n fails miserably and poisons $mself.",
+        FALSE, caster, 0, victim, TO_NOTVICT);
   } else if (IS_SET(ret, SPELL_FAIL)){
-    act("Nothing seems to happen. You fail to cast poison successfully.", 
-          TRUE, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.  You fail to invoke the poison.", 
+        FALSE, caster, 0, 0, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
   } else {
-    // where various falses return that we dont want messages
+    // ??
   }
-  if (!victim->isPc()) {
+  if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return FALSE;  
@@ -443,22 +434,23 @@ int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 int blindness(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
   int ret = 0;
-
-  if (victim->affectedBySpell(SPELL_BLINDNESS)) {
-    act("You can't blind $N since $E is already blind!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to blind you again!", 0, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
+  if (caster->isNotPowerful(victim, level, SPELL_BLINDNESS, SILENT_YES)) {
+    act("You invoke $d to blind $N!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("Alas, your prayer is too feeble.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to blind you!  Luckily, $e is too weak.", FALSE, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
   if (victim->isAffected(AFF_TRUE_SIGHT) || victim->isAffected(AFF_CLARITY)) {
     act("$N's vision is much too clear to be blinded!",FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
+		act("$n just tried to blind you, but your vision is too clear!", 0, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
-  if (caster->isNotPowerful(victim, level, SPELL_BLINDNESS, SILENT_YES)) {
-    act("You can't blind $N!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to blind you!", FALSE, caster, NULL, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
+  if (victim->affectedBySpell(SPELL_BLINDNESS)) {
+    act("You can't blind $N since $E is already blind!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to blind you again!", FALSE, caster, NULL, victim, TO_VICT);
+		act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
 
@@ -504,7 +496,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
   int ret;
   int duration, level = obj->getMagicLevel();
 
-  ret=blindness(caster,victim,level,obj->getMagicLearnedness());
+  ret = blindness(caster, victim, level, obj->getMagicLearnedness());
 
   duration = (obj->getMagicLevel()/10 + 1) * UPDATES_PER_MUDHOUR;
   saveTypeT save = SAVE_NO;
@@ -523,7 +515,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
               FALSE, caster, obj, victim, TO_NOTVICT);
       act("You have used $p to blind $N -- $E's virtually helpless!",
               FALSE, caster, obj, victim, TO_CHAR);
-      act("$n has used $p to blind you! You're virtually helpless!",
+      act("$n has used $p to blind you!  You're virtually helpless!",
               FALSE, caster, obj, victim, TO_VICT);
     } else {
       act("A thin cloudy film appears over your eyes.",
@@ -548,7 +540,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
               TRUE, caster, obj, victim, TO_NOTVICT);
       act("You have used $p to blind $N -- $E's virtually helpless!",
               FALSE, caster, obj, victim, TO_CHAR);
-      act("$n has used $p to blind you! You're virtually helpless!",
+      act("$n has used $p to blind you!  You're virtually helpless!",
               FALSE, caster, obj, victim, TO_VICT);
     } else {
       act("A dense dark film appears over your eyes.",
@@ -563,11 +555,11 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
     duration *= 2;
     victim->rawBlind(level, duration, save);
   } else if (IS_SET(ret, SPELL_FAIL)) {
-    act("Poor $n...can't even figure out how to use $p right!",
+    act("Poor $n can't even figure out how to use $p right!",
             FALSE, caster, obj, victim, TO_NOTVICT);
-    act("Hmm, $N doesn't seem to be blinded by $p.",
+    act("$N doesn't seem to be blinded by $p.",
             TRUE, caster, obj, victim, TO_CHAR);
-    act("$n was trying to harm you with $p !",
+    act("$n was trying to harm you with $p!",
             TRUE, caster, obj, victim, TO_VICT);
 
     if (IS_SET(ret, SPELL_CRIT_FAIL)) {
@@ -580,7 +572,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
   } else if (IS_SET(ret, SPELL_FALSE)) {
   }
 
-  if (!victim->isPc()) {
+  if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return;
@@ -593,7 +585,7 @@ void blindness(TBeing * caster, TBeing * victim)
 
   int level = caster->getSkillLevel(SPELL_BLINDNESS);
 
-  int ret=blindness(caster,victim,level,caster->getSkillValue(SPELL_BLINDNESS));
+  int ret = blindness(caster, victim, level, caster->getSkillValue(SPELL_BLINDNESS));
 
   int duration = (level/10 + 1) * UPDATES_PER_MUDHOUR;
   duration = (int) (caster->percModifier() * duration);
@@ -613,7 +605,7 @@ void blindness(TBeing * caster, TBeing * victim)
         TRUE, caster, NULL, victim, TO_NOTVICT);
     act("You have blinded $N -- $E's virtually helpless!",
         FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n has blinded you! You're virtually helpless!",
+    act("$n has blinded you!  You're virtually helpless!",
         FALSE, caster, NULL, victim, TO_VICT);
     victim->rawBlind(level, duration, save);
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
@@ -627,12 +619,12 @@ void blindness(TBeing * caster, TBeing * victim)
         TRUE, caster, NULL, victim, TO_NOTVICT);
     act("You have blinded $N -- $E's virtually helpless!",
         FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n has blinded you! You're virtually helpless!",
+    act("$n has blinded you!  You're virtually helpless!",
         FALSE, caster, NULL, victim, TO_VICT);
     duration *= 2;
     victim->rawBlind(level, duration, save);
   } else if (IS_SET(ret, SPELL_FAIL)) {
-    act("Poor $n...can't even invoke a little prayer!",
+    act("Poor $n can't even invoke a little prayer!",
         FALSE, caster, NULL, victim, TO_NOTVICT);
     act("Hmm, your attempt to blind $N failed.",
         FALSE, caster, NULL, victim, TO_CHAR);
@@ -650,7 +642,7 @@ void blindness(TBeing * caster, TBeing * victim)
   if (IS_SET(ret, SPELL_FALSE)) {
   }
 
-  if (!victim->isPc()) {
+  if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return;
@@ -719,7 +711,7 @@ int harmLight(TBeing * caster, TBeing * victim, TMagicItem *obj, spellNumT spell
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
 
-  ret=harmLight(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
+  ret = harmLight(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness(), spell, 0);
 
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -752,7 +744,7 @@ int harmLight(TBeing * caster, TBeing * victim)
     act("$n invokes an injurious prayer against $mself.",
           FALSE, caster, 0, 0, TO_ROOM);
   }
-  int ret=harmLight(caster,victim,level,caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
+  int ret = harmLight(caster, victim, level, caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
   } else {
@@ -816,7 +808,7 @@ int harmCritical(TBeing * caster, TBeing * victim, TMagicItem *obj, spellNumT sp
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
 
-  ret=harmCritical(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
+  ret = harmCritical(caster, victim,obj->getMagicLevel(), obj->getMagicLearnedness(), spell, 0);
 
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -849,7 +841,7 @@ int harmCritical(TBeing * caster, TBeing * victim)
     act("$n invokes an injurious prayer against $mself.",
           FALSE, caster, 0, 0, TO_ROOM);
   }
-  int ret=harmCritical(caster,victim,level,caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
+  int ret = harmCritical(caster, victim, level, caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
   } else {
@@ -914,7 +906,7 @@ int harmSerious(TBeing * caster, TBeing * victim, TMagicItem *obj, spellNumT spe
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
 
-  ret=harmSerious(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
+  ret = harmSerious(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness(), spell, 0);
 
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -947,7 +939,7 @@ int harmSerious(TBeing * caster, TBeing * victim)
     act("$n invokes an injurious prayer against $mself.",
           FALSE, caster, 0, 0, TO_ROOM);
   }
-  int ret=harmSerious(caster,victim,level,caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
+  int ret = harmSerious(caster, victim, level, caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
   } else {
@@ -964,44 +956,22 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
   int save1, ret;
   affectedData aff;
 
-  if (victim->isUndead()) {
-    act("The Undead completely ignore the affects of paralyzation.",
-         FALSE,caster,0,0,TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    return SPELL_FALSE;
-  }
-
-  if (victim->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
-    act("Your prayer seems to have no effect on $N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    victim->failPara(caster);
-    return SPELL_FALSE;
-  }
-
   if (caster->isNotPowerful(victim, level, SPELL_PARALYZE, SILENT_YES)) {
-    act("$N's movements stop for a split second but $E recovers quickly!", 
-        FALSE, caster, NULL, victim, TO_CHAR);      
-    act("$N's movements stop for a split second but $E recovers quickly!", 
-        FALSE, caster, NULL, victim, TO_NOTVICT);
-    victim->failPara(caster);
+    act("Your prayer is feeble and $N is unaffected!", FALSE, caster, NULL, victim, TO_CHAR);     
+    act("$n just tried to paralyze you!  Luckily, $e is too weak.", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
-
+  if (victim->isUndead() || victim->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
+    act("$d responds to your prayer, but $N does not!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to paralyze you.  That tickled!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
+    return SPELL_FALSE;
+  }
   if (victim->isAffected(AFF_PARALYSIS)) {
-    act("Someone must really want you to be paralyzed!", 
-        FALSE, caster, NULL, victim, TO_VICT);
-    act("Try paralyzing someone who can still move.", 
-        FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    return SPELL_FALSE;
-  }
-
-  if (victim->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
-    act("Your prayer seems to have little or no effect on $N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    victim->failPara(caster);
+    act("Try paralyzing someone who can still move.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n must really want you to be paralyzed!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
 
@@ -1046,7 +1016,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
     aff.duration *= (100 - victim->getImmunity(IMMUNE_PARALYSIS));
     aff.duration /= 100;
 
-    victim->affectTo(&aff);
+    victim->affectTo(&aff, 0, SILENT_YES);
 
     if (victim->riding && dynamic_cast<TBeing *>(victim->riding))
       victim->fallOffMount(victim->riding, POSITION_STUNNED);
@@ -1063,11 +1033,11 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
           aff.duration *= (100 - caster->getImmunity(IMMUNE_PARALYSIS));
           aff.duration /= 100;
 
-          caster->affectTo(&aff);
+          caster->affectTo(&aff, 0, SILENT_YES);
           caster->setPosition(POSITION_STUNNED);
           return SPELL_CRIT_FAIL;
         } else {
-        return SPELL_FAIL;
+          return SPELL_FAIL;
         }
         break;
       case CRIT_F_NONE:
@@ -1081,7 +1051,7 @@ void paralyze(TBeing * caster, TBeing * victim, TMagicItem * obj)
 {
   int ret;
 
-  ret = paralyze(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  ret = paralyze(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
     act("A thin cloud of icy air has surrounded $N!", 
             FALSE, caster, NULL, victim, TO_NOTVICT);
@@ -1128,16 +1098,17 @@ void paralyze(TBeing * caster, TBeing * victim, TMagicItem * obj)
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
     act("$n just paralyzed $mself!", 
             FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("Ack! The affects of the prayer have misfired.",
+    act("Ack!  The affects of the prayer have misfired.",
             FALSE, caster, NULL, victim, TO_CHAR);
     act("Your limbs freeze in place!", 
             FALSE, caster, NULL, victim, TO_CHAR);
-    act("Hey, $n was trying to paralyze you but got $mself instead!", 
+    act("$n was trying to paralyze you but got $mself instead!", 
             FALSE, caster, NULL, victim, TO_VICT);
   } else if (IS_SET(ret, SPELL_FALSE)) {
+    // messages in the main paralyze routine
   }
 
-  if (!victim->isPc()) {
+  if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return;
@@ -1152,7 +1123,7 @@ void paralyze(TBeing * caster, TBeing * victim)
 
   level = caster->getSkillLevel(SPELL_PARALYZE);
 
-  ret=paralyze(caster,victim,level,caster->getSkillValue(SPELL_PARALYZE));
+  ret = paralyze(caster, victim, level, caster->getSkillValue(SPELL_PARALYZE));
   if (IS_SET(ret, SPELL_SUCCESS)) {
     act("A thin cloud of icy air surrounds $n!",
         FALSE, victim, NULL, NULL, TO_ROOM);
@@ -1166,7 +1137,7 @@ void paralyze(TBeing * caster, TBeing * victim)
         FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N stops moving -- you have paralyzed $M!", 
             FALSE, caster, NULL, victim, TO_CHAR);
-    act("You fall down!\n\rYour limbs freeze in place -- $n has paralyzed you!",        FALSE, caster, NULL, victim, TO_VICT);
+    act("You fall down!\n\rYour limbs freeze in place -- $n has paralyzed you!", FALSE, caster, NULL, victim, TO_VICT);
   }
   if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
     act("A large icy white cloud of air totally encases $n!",
@@ -1202,17 +1173,17 @@ void paralyze(TBeing * caster, TBeing * victim)
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
     act("$n just paralyzed $mself!",
         FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("Ack! Your prayer affects misfired on you.",
+    act("Ack!  Your prayer backfired on you!",
         FALSE, caster, NULL, victim, TO_CHAR);
     act("Your limbs freeze in place!",
         FALSE, caster, NULL, victim, TO_CHAR);
-    act("Hey, $n was trying to paralyze you but got $mself instead!",
+    act("$n was trying to paralyze you but got $mself instead!  Ha!",
         FALSE, caster, NULL, victim, TO_VICT);
   }
   if (IS_SET(ret, SPELL_FALSE)) {
   } 
 
-  if (!victim->isPc()) {
+  if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return;
@@ -1224,9 +1195,9 @@ bool notBreakSlot(wearSlotT slot, bool avoid)
           slot == WEAR_BACK || slot == WEAR_BODY ||
           slot == WEAR_WAIST ||
           slot == HOLD_RIGHT || slot == HOLD_LEFT)
-    return true;
+    return TRUE;
   else if (!avoid)
-    return false;
+    return FALSE;
   else {
     switch (slot) {
       case WEAR_ARM_R:
@@ -1239,10 +1210,10 @@ bool notBreakSlot(wearSlotT slot, bool avoid)
       case WEAR_FINGER_L:
         // avoid to great extent
         if (::number(0,9))
-          return true;
-        return false;
+          return TRUE;
+        return FALSE;
       default:
-        return false;
+        return FALSE;
     }
   }
 }
@@ -1251,7 +1222,7 @@ bool TBeing::canBoneBreak(TBeing *victim, silentTypeT silent)
 {
   if (victim->raceHasNoBones()) {
     if (!silent) {
-      act("$N has no bones worth breaking.", FALSE, this, 0, victim, TO_CHAR);
+      act("$N has no bones of note worth breaking.", FALSE, this, 0, victim, TO_CHAR);
       deityIgnore(SILENT_YES);
     }
     return false;
@@ -1259,11 +1230,10 @@ bool TBeing::canBoneBreak(TBeing *victim, silentTypeT silent)
 
   if (checkForTorment(victim)) {
     if (!silent) {
-      act("$d refuses to torment $N any further.",
-           false, this, 0, victim, TO_CHAR);
+      act("$d refuses to torment $N any further.", FALSE, this, 0, victim, TO_CHAR);
       deityIgnore(SILENT_YES);
     }
-    return false;
+    return FALSE;
   }
 
   bool found = FALSE;
@@ -1274,32 +1244,27 @@ bool TBeing::canBoneBreak(TBeing *victim, silentTypeT silent)
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBreakSlot(slot, false))
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     found |= victim->isLimbFlags(slot, PART_BROKEN);
     ok = TRUE;
   }
   if (!ok) {
-    // has no unbroken limbs left
-    if (!silent) {
-      act("Belatedly, you realize you can not break any more limbs on $N!", FALSE, this, NULL, victim, TO_CHAR);
-      act("Your prayer goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
-      deityIgnore(SILENT_YES);
-    }
-    return false;
+    act("$N doesn't have a limb left to break!", FALSE, this, NULL, victim, TO_CHAR);
+    act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+    act("$n just tried to break your bones!", FALSE, this, NULL, victim, TO_VICT);
+    act("Luckily, you have no limbs to break.", FALSE, this, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    return FALSE;
   }
   if (found) {
-    if (!silent) {
-      act("$d refuses to let you break another of $N's limbs!",
-            FALSE, this, NULL, victim, TO_CHAR);
-      act("Your attack goes for naught.",
-            FALSE, this, NULL, victim, TO_CHAR);
-      deityIgnore(SILENT_YES);
-    }
-    return false;
+    act("$d refuses to break another of $N's limbs!", FALSE, this, NULL, victim, TO_CHAR);
+    act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+    act("$n just tried to break another bone!", FALSE, this, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    return FALSE;
   }
-
-  return true;
+  return TRUE;
 }
 
 int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
@@ -1308,51 +1273,42 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
   int ret;
   wearSlotT slot;
 
-  if (!caster->canBoneBreak(victim, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  if (caster->isNotPowerful(victim, level, SPELL_BONE_BREAKER, SILENT_YES)) {
+    act("You invoke $d to break $N's bones!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("You did not pray hard enough.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to break your bones!  Luckily, $e is too feeble.", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
-
-  if (caster->isNotPowerful(victim, level, SPELL_BONE_BREAKER, SILENT_YES)) {
-    act("You see a glow around $N's limbs but it disappears fast.",
-            FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  
+  if (!caster->canBoneBreak(victim, SILENT_NO)) {
     return SPELL_FALSE;
   }
   
   // find a suitable bone to break 
   for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
-    if (notBreakSlot(slot, true))
+    if (notBreakSlot(slot, TRUE))
       continue;
-    if (!victim->slotChance(slot) || victim->isLimbFlags(slot, PART_BROKEN))
+    if (!victim->hasPart(slot) || victim->isLimbFlags(slot, PART_BROKEN))
       continue;
     break;
   }
 
   if (victim->isImmune(IMMUNE_BONE_COND, slot)) {
-    act("You see a glow around $N's limbs but it has no effect.", 
-           FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("You pray for $N's broken bones!  And they do not break.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to break your unbreakable bones!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
 
-  int dam = number(1, (level / 5));
+  int dam = ::number(1, (level / 5));
   dam = (int) (caster->percModifier() * dam);
-  dam = max(1,dam);
+  dam = max(1, dam);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BONE_BREAKER)) {
     addTorment(victim, SPELL_BONE_BREAKER);
 
     caster->reconcileHurt(victim, discArray[SPELL_BONE_BREAKER]->alignMod);
-
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_BROKEN);
@@ -1375,9 +1331,9 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
           dam *= 2;
         if (!victim->isImmune(IMMUNE_PARALYSIS, slot)) {
           victim->addToLimbFlags(slot, PART_PARALYZED);
-          sprintf(buf, "In fact, you can't even move your %s! You fear it may be paralyzed!", limb);
+          sprintf(buf, "In fact, you can't even move your %s!  It may be paralyzed!", limb);
           act(buf, FALSE, caster, NULL, victim, TO_VICT);
-          sprintf(buf, "$n's %s is hanging there uselessly! It's been paralyzed as well!", limb);
+          sprintf(buf, "$n's %s is hanging uselessly!  It's been paralyzed as well!", limb);
           act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
           ret = SPELL_CRIT_SUCCESS;
         }
@@ -1389,27 +1345,20 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     victim->dropWeapon(slot);
     if (caster->reconcileDamage(victim, dam, SPELL_BONE_BREAKER) == -1)
       ret += VICTIM_DEAD;
-
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-
     return ret;
   } else {
     switch (critFail(caster, SPELL_BONE_BREAKER)) {
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_BONE_BREAKER);
-	for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
-	  if (notBreakSlot(slot, false))
-	    continue;
-	  if (!caster->slotChance(slot) ||
-              caster->isLimbFlags(slot, PART_BROKEN))
-	    continue;
-	  break;
-	}
+      	for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+      	  if (notBreakSlot(slot, false))
+      	    continue;
+      	  if (!caster->hasPart(slot) || caster->isLimbFlags(slot, PART_BROKEN))
+      	    continue;
+      	  break;
+      	}
         if (!caster->isImmune(IMMUNE_BONE_COND, slot)) {
-            
           act("Your prayer backfires on you!", FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(limb, "%s", caster->describeBodySlot(slot).c_str());
           caster->addToLimbFlags(slot, PART_BROKEN);
@@ -1417,21 +1366,11 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
           act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(buf, "You hear a muffled SNAP as $n clutches $s %s in extreme pain!", limb);
           act(buf, FALSE, caster, NULL, NULL, TO_ROOM);
-
-          if (!victim->isPc()) {
-            dynamic_cast<TMonster *>(victim)->addHated(caster);
-          }
           return SPELL_CRIT_FAIL;
         } else {
-          if (!victim->isPc()) {
-            dynamic_cast<TMonster *>(victim)->addHated(caster);
-          }
           break;
         }
       case CRIT_F_NONE:
-        if (!victim->isPc()) {
-          dynamic_cast<TMonster *>(victim)->addHated(caster);
-        }
         break;
     }
 
@@ -1441,10 +1380,6 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       int rc = injureLimbs(caster, victim, SPELL_BONE_BREAKER, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
-
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
-      }
       return SPELL_FAIL;
     }
 
@@ -1459,14 +1394,28 @@ int boneBreaker(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
   ret=boneBreaker(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
   if (IS_SET(ret, SPELL_SUCCESS)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_SAVE)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+    // backfire
   } else if (IS_SET(ret, SPELL_FAIL)) {
-    act("$p fails to break any of $N's limbs!", 
-              FALSE, caster, obj, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+    act("$p fails to break any of $N's bones!", FALSE, caster, obj, victim, TO_CHAR);
+    act("$n's $o fails to break any of your bones!", FALSE, caster, obj, victim, TO_VICT);
+    act("$n's $o fails to break any of $N's bones!", FALSE, caster, obj, victim, TO_NOTVICT);
   } else {
+    // ??
   }
 
   if (IS_SET(ret, VICTIM_DEAD))
@@ -1486,16 +1435,30 @@ int boneBreaker(TBeing * caster, TBeing * victim)
 
   level = caster->getSkillLevel(SPELL_BONE_BREAKER);
 
-  ret=boneBreaker(caster,victim,level,caster->getSkillValue(SPELL_BONE_BREAKER), caster->getAdvLearning(SPELL_BONE_BREAKER));
+  ret = boneBreaker(caster, victim, level, caster->getSkillValue(SPELL_BONE_BREAKER), caster->getAdvLearning(SPELL_BONE_BREAKER));
   if (IS_SET(ret, SPELL_SUCCESS)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_SAVE)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+    // backfire
   } else if (IS_SET(ret, SPELL_FAIL)) {
-    act("Your prayer fails to break any of $N's limbs!", 
-           FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+    act("Your prayer fails to break any of $N's bones!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n's prayer fails to break any of your bones!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer fails to break any of $N's bones!", FALSE, caster, NULL, victim, TO_NOTVICT);
   } else {
+    // ??
   }
 
   if (IS_SET(ret, VICTIM_DEAD))
@@ -1518,16 +1481,25 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
   wearSlotT slot;
   int duration;
 
-  if (victim->isUndead()) {
-    act("Undead tend not to have beating hearts, so can't bleed.", 
-        FALSE, caster,0,0,TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    return FALSE;
+  if (caster->isNotPowerful(victim, level, SPELL_BLEED, SILENT_YES) ||
+      victim->isLucky(caster->spellLuckModifier(SPELL_BLEED))) {
+    act("You pray for $N's blood, but you do not pray hard enough.", FALSE, caster, NULL, victim,TO_CHAR);
+    act("$n just tried to bleed your bloodless body!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
+    return SPELL_FAIL; 
   }
-
+  if (victim->isUndead()) {
+    act("You pray for $N's blood, but $E doesn't seem to have any.", FALSE, caster, NULL, victim,TO_CHAR);
+    act("$n just tried to bleed your bloodless body!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
+    return SPELL_FAIL;
+  }
+  if (victim->isImmune(IMMUNE_BLEED, slot)) {
+    act("You try to bleed $N, but $S veins are like iron!", FALSE, caster, NULL, victim,TO_CHAR);
+    act("$n just tried to bleed you!  Luckily, you are immune.", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
+    return SPELL_FAIL;
+  }
 
   // check whether or not there is a slot left to bleed 
   // Added check for paralyzed limb so only one limb can be
@@ -1535,85 +1507,60 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBleedSlot(slot))
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     if ((found = (victim->isLimbFlags(slot, PART_BLEEDING)))) {
       break;
     }
   }
 
-  if (victim->isImmune(IMMUNE_BLEED, slot)) {
-    act("Your prayer seems to have no effect on $N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    return FALSE;
-  }
-  if (caster->isNotPowerful(victim, level, SPELL_BLEED, SILENT_YES) ||
-      victim->isLucky(caster->spellLuckModifier(SPELL_BLEED))) {
-    act("A small welt appears on $n but it subsides quickly.",
-        TRUE, victim, 0,0,TO_ROOM);
-    act("A small welt appears on your body but it subsides quickly.",
-        TRUE, victim, 0,0,TO_CHAR);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    return FALSE; 
-  }
   caster->reconcileHurt(victim, discArray[SPELL_BLEED]->alignMod);
   if (slot < MAX_WEAR) {
     act("$N is already bleeding!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Your prayer goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("$n just tried to bleed you again!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
 
-  int dam = 0;
-
+  ret = SPELL_SUCCESS;
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BLEED)) {
     // find a suitable slot to bleed 
     for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
       if (notBleedSlot(slot))
         continue;
-      if (!victim->slotChance(slot))
+      if (!victim->hasPart(slot))
         continue;
       if (victim->isLimbFlags(slot, PART_BLEEDING))
         continue;
       break;
     }
 
-    sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
-
-    sprintf(buf, "A gaping gash opens up on your %s!\n\rBright red blood begins to course out!", limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
-    sprintf(buf, "The flesh on $n's %s opens up and begins to bleed profusely!",
- limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
-
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    ret = SPELL_SUCCESS;
-    duration = (level * 3) + 100;
-    victim->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_NO);
-
-    switch(critSuccess(caster, SPELL_BLEED)) {
-      case CRIT_S_KILL:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_DOUBLE:
-        CS(SPELL_BLEED);
-        victim->rawInfect(slot, duration, SILENT_NO, CHECK_IMMUNITY_YES);
-        ret = SPELL_CRIT_SUCCESS;
+    // damage is pretty weak on this, so adding chance for multiple wounds
+    int bloodfest = 1000 + (10 * level);
+    while (::number(0, 999) < bloodfest) {
+      sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
+      sprintf(buf, "A gaping gash opens up on your %s and <R>bright<1> <r>red blood<1> begins to course out!", limb);
+      act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+      sprintf(buf, "The flesh on $n's %s opens up and begins to bleed profusely!", limb);
+      act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+      duration = (level * 4) + 150 + ::number(-(level), level);
+      victim->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_NO);
+      found = 0;
+      for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+        if (notBleedSlot(slot))
+          continue;
+        if (!victim->hasPart(slot))
+          continue;
+        if (victim->isLimbFlags(slot, PART_BLEEDING))
+          continue;
+        found = TRUE;
         break;
-      case CRIT_S_NONE:
+      }
+      if (!found)
         break;
+      bloodfest /= 3;
     }
-    if (caster->reconcileDamage(victim, dam, SPELL_BLEED) == -1)
-      ret +=  VICTIM_DEAD;
     return ret;
   } else {
     switch (critFail(caster, SPELL_BLEED)) {
@@ -1623,28 +1570,18 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
         for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
           if (notBleedSlot(slot))
             continue;
-          if (!caster->slotChance(slot))
+          if (!caster->hasPart(slot))
             continue;
           if (caster->isLimbFlags(slot, PART_BLEEDING))
             continue;
           break;
         }
-
         sprintf(limb, "%s", caster->describeBodySlot(slot).c_str());
-
-        duration = (level * 3) + 100;
+        duration = (level * 4) + 150;
         duration = (int) (caster->percModifier() * duration);
         caster->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES);
-        if (caster->reconcileDamage(caster, dam, SPELL_BLEED) == -1)
-          return SPELL_CRIT_FAIL + CASTER_DEAD;
-        if (!victim->isPc()) {
-          dynamic_cast<TMonster *>(victim)->addHated(caster);
-        }
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
-        if (!victim->isPc()) {
-          dynamic_cast<TMonster *>(victim)->addHated(caster);
-        }
         return SPELL_FAIL;
         break;
     }
@@ -1657,25 +1594,33 @@ int bleed(TBeing * caster, TBeing * victim, TMagicItem * obj)
   int ret = 0;
   int rc = 0;
 
-  ret=bleed(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  ret = bleed(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-  } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
-      act("Oh no! There are living creatures in the wound! It's infected!",               FALSE, caster, NULL, victim, TO_VICT);
-      act("What luck! $p also managed to infect it!", 
-          FALSE, caster, obj, NULL, TO_CHAR);
-  } else if (IS_SET(ret, SPELL_SAVE)) {
-  } else {
-    if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-      act("You scream in agony as $p turns on you starting your limb to bleeding.", TRUE, caster, obj, 0, TO_CHAR);
-   act("$n grimaces in surprise as $e skin rends and $e starts to bleed.", TRUE, caster, 0, 0, TO_ROOM);
-
-    } else if (IS_SET(ret, SPELL_FAIL)) {
-      act("$p fails to make $N bleed!",
-          FALSE, caster, obj, victim, TO_CHAR);
-      caster->deityIgnore(SILENT_YES);
-    } else {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
     }
   }
+  /* removed crit success in favor of multiple bleed chances 
+  else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    act("Oh no!  There are living creatures in the wound!  It's infected!", FALSE, caster, NULL, victim, TO_VICT);
+    act("What luck!  $p also managed to infect it!", FALSE, caster, obj, NULL, TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  } */
+  else if (IS_SET(ret, SPELL_SAVE)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+    act("You see red as $p betrays you and you begin to bleed.", FALSE, caster, obj, 0, TO_CHAR);
+    act("$n is in shock as the blood begins to course from $s body.", FALSE, caster, 0, 0, TO_ROOM);
+  } else if (IS_SET(ret, SPELL_FAIL)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
+
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -1690,29 +1635,34 @@ int bleed(TBeing * caster, TBeing * victim)
 
   if (!bPassClericChecks(caster,SPELL_BLEED))
     return FALSE;
-
+  
   level = caster->getSkillLevel(SPELL_BLEED);
-
-  ret=bleed(caster,victim,level,caster->getSkillValue(SPELL_BLEED));
+  ret = bleed(caster, victim, level, caster->getSkillValue(SPELL_BLEED));
   if (IS_SET(ret, SPELL_SUCCESS)) {
-  } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
-    act("Oh no! There are living creatures in the wound! It's infected!",
-         FALSE, caster, NULL, victim, TO_VICT);
-    act("What luck! Your spell also managed to infect it!",
-        FALSE, caster, NULL, NULL, TO_CHAR);
-  } else if (IS_SET(ret, SPELL_SAVE)) {
-  } else {
-    if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-      caster->sendTo("You scream in agony as your own prayer turns on you starting your limb to bleeding.\n\r");
-      act("$n grimaces in surprise as $e skin rends and $e starts to bleed.", TRUE, caster, 0, 0, TO_ROOM);
-    } else if (IS_SET(ret, SPELL_FAIL)) {
-      act("Your prayer fails to make $N bleed!",
-           FALSE, caster, NULL, victim, TO_CHAR);
-      caster->deityIgnore(SILENT_YES);
-    } else {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
     }
   }
-
+  /* removed crit success in favor of multiple bleed chances
+  else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    act("Oh no!  There are living creatures in the wound!  It's infected!", FALSE, caster, NULL, victim, TO_VICT);
+    act("What luck!  Your spell also managed to infect it!", FALSE, caster, NULL, NULL, TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  } */
+  else if (IS_SET(ret, SPELL_SAVE)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+    act("You see red as your prayer backfires and you begin to bleed.", FALSE, caster, 0, 0, TO_CHAR);
+    act("$n is in shock as blood begins to course from $s body.", FALSE, caster, 0, 0, TO_ROOM);
+  } else if (IS_SET(ret, SPELL_FAIL)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -1722,48 +1672,56 @@ int bleed(TBeing * caster, TBeing * victim)
 
 bool TBeing::canWither(TBeing *victim, silentTypeT silent)
 {
-  if (checkForTorment(victim)) {
-    act("$d refuses to torment $N any further.",
-           false, this, 0, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
-  }
-
   if (victim->isUndead()) {
-    act("You can't wither the undead.", FALSE, this,0,0,TO_CHAR);
-    act("The undead tend to be immune to withering.", FALSE, this,0,0,TO_ROOM);
-    return false;
+    if (!silent) {
+      act("Your attempt to wither $N is futile!", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n thinks $e can wither you!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
-
+  if (checkForTorment(victim)) {
+    if (!silent) {
+      act("$d refuses to torment $N any further.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to wither you!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
+  }
+  
   bool found = false;
   bool ok = false;
   wearSlotT slot;
-
   // check whether or not there is a limb left to wither 
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBreakSlot(slot, false))  // same ones, right?
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     found |= (victim->isLimbFlags(slot, PART_USELESS));
     ok = TRUE;
   }
   if (!ok) {
-    act("Belatedly, you realize $N doesn't have a limb left to wither!", FALSE, this, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("$N has no limbs you can wither!", FALSE, this, NULL, victim, TO_CHAR);
+      act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to wither you!", FALSE, this, NULL, victim, TO_VICT);
+      act("Luckily, you have no limbs to wither.", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
   if (found) {
-    act("$d refuses to let you wither another of $N's limbs!",
-          FALSE, this, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.",
-          FALSE, this, NULL, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("$d refuses to let you wither another of $N's limbs!", FALSE, this, NULL, victim, TO_CHAR);
+      act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to wither you again!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
 
-  return true;
+  return TRUE;
 }
 
 int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
@@ -1771,17 +1729,10 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
   char buf[256], limb[256];
   wearSlotT slot;
 
-  if (!caster->canWither(victim, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  if (caster->isNotPowerful(victim, level, SPELL_WITHER_LIMB, SILENT_NO)) {
     return SPELL_FAIL;
   }
-
-  if (caster->isNotPowerful(victim, level, SPELL_WITHER_LIMB, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  if (!caster->canWither(victim, SILENT_NO)) {
     return SPELL_FAIL;
   }
 
@@ -1794,7 +1745,7 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
     for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
       if (notBreakSlot(slot, true))
         continue;
-      if (!victim->slotChance(slot))
+      if (!victim->hasPart(slot))
         continue;
       if (victim->isLimbFlags(slot, PART_USELESS))
         continue;
@@ -1803,15 +1754,12 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_USELESS);
-    sprintf(buf, "Suddenly the strength starts to drains from your %s!\n\rIt's withering up into a useless twig!", limb);
+    sprintf(buf, "Suddenly the strength drains from your %s!\n\rIt's withering up into a useless twig!", limb);
     act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
     sprintf(buf, "You watch in horror as $n's %s withers up into a useless twig!", limb);
     act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
 
     victim->dropWeapon(slot);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
 
     return SPELL_SUCCESS;
   } else {
@@ -1821,15 +1769,9 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
       int rc = injureLimbs(caster, victim, SPELL_WITHER_LIMB, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
-      }
       return SPELL_FAIL;
     }
     caster->deityIgnore();
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 }
@@ -1841,9 +1783,13 @@ int witherLimb(TBeing *caster, TBeing *victim, TMagicItem *obj)
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
 
-  int rc = witherLimb(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
+  int rc = witherLimb(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness(), 0);
   int retCode = 0;
-
+  if (rc == SPELL_SUCCESS || rc == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
   if (IS_SET(rc, VICTIM_DEAD))
     ADD_DELETE(retCode, DELETE_VICT);
   return retCode;
@@ -1857,10 +1803,13 @@ int witherLimb(TBeing * caster, TBeing * victim)
     return FALSE;
 
   level = caster->getSkillLevel(SPELL_WITHER_LIMB);
-
-  int ret=witherLimb(caster,victim,level,caster->getSkillValue(SPELL_WITHER_LIMB), caster->getAdvLearning(SPELL_WITHER_LIMB));
+  int ret = witherLimb(caster, victim, level, caster->getSkillValue(SPELL_WITHER_LIMB), caster->getAdvLearning(SPELL_WITHER_LIMB));
   int retCode = 0;
-
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(retCode, DELETE_VICT);
   return retCode;
@@ -1879,7 +1828,7 @@ int TBeing::canBeParalyzeLimbed()
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBreakSlot(slot, false))  // same ones, right?
       continue;
-    if (!slotChance(slot))
+    if (!hasPart(slot))
       continue;
     if (isLimbFlags(slot, PART_PARALYZED))
       SET_BIT(ok, 1);
@@ -1891,36 +1840,43 @@ int TBeing::canBeParalyzeLimbed()
 bool TBeing::canParalyzeLimb(TBeing *victim, silentTypeT silent)
 {
   if (victim->isUndead()) {
-    act("Undead completely ignore the affects of paralyzation.", 
-         FALSE, this, 0, 0, TO_ROOM);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("Your attempt to paralyze $N is futile!", FALSE, this, NULL, victim, TO_ROOM);
+      act("$n thinks $e can paralyze you!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
-
   if (checkForTorment(victim)) {
-    act("$d refuses to torment $N any further.",
-           false, this, 0, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("$d refuses to torment $N any further.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to paralyze you!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
-
+  
   int rc = victim->canBeParalyzeLimbed();
   if (!rc) {
-    act("$N has no limbs you can paralyze!",
-         FALSE, this, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("$N has no limbs you can paralyze!", FALSE, this, NULL, victim, TO_CHAR);
+      act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to paralyze you!", FALSE, this, NULL, victim, TO_VICT);
+      act("Luckily, you have no limbs to paralyze.", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
   if (IS_SET(rc, 1)) {
-    act("$d refuses to let you paralyze another of $N's limbs!",
-          FALSE, this, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
-    deityIgnore(SILENT_YES);
-    return false;
+    if (!silent) {
+      act("$d refuses to let you paralyze another of $N's limbs!", FALSE, this, NULL, victim, TO_CHAR);
+      act("Your attack goes for naught.", FALSE, this, NULL, victim, TO_CHAR);
+      act("$n just tried to paralyze you again!", FALSE, this, NULL, victim, TO_VICT);
+      act("$n's prayer seems to have no effect on $N.", FALSE, this, NULL, victim, TO_NOTVICT);
+    }
+    return FALSE;
   }
-
-  return true;
+  return TRUE;
 }
 
 int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
@@ -1928,17 +1884,11 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   char buf[256], limb[256];
   wearSlotT slot;
 
-  if (!caster->canParalyzeLimb(victim, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) {
     return SPELL_FAIL;
   }
-
-  if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+  
+  if (!caster->canParalyzeLimb(victim, SILENT_NO)) {
     return SPELL_FAIL;
   }
 
@@ -1946,19 +1896,15 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
     if (notBreakSlot(slot, true))  // same ones, right?
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     if (victim->isLimbFlags(slot, PART_PARALYZED))
       continue;
     break;
   }
 
-
   if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
     caster->deityIgnore();
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 
@@ -1966,8 +1912,6 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
 
   if (caster->bSuccess(bKnown, caster->getPerc(),SPELL_PARALYZE_LIMB)) {
     addTorment(victim, SPELL_PARALYZE_LIMB);
-
-
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_PARALYZED);
     sprintf(buf, "Suddenly the feeling disappears from your %s!\n\rIt's been paralyzed! You can't use your %s!", limb, limb);
@@ -1977,10 +1921,6 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   
     victim->dropWeapon(slot);
 
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-
     return SPELL_SUCCESS;
   } else {
     // turn some "failures" into successes
@@ -1989,16 +1929,10 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
       int rc = injureLimbs(caster, victim, SPELL_PARALYZE_LIMB, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
-      }
       return SPELL_FAIL;
     }
 
     caster->deityIgnore();
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 }
@@ -2012,7 +1946,11 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, TMagicItem *obj)
 
   int ret = paralyzeLimb(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
   int retCode = 0;
-
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
   if (IS_SET_DELETE(ret, VICTIM_DEAD))
     ADD_DELETE(retCode, VICTIM_DEAD);
 
@@ -2028,14 +1966,13 @@ int paralyzeLimb(TBeing * caster, TBeing * v)
     return FALSE;
 
   level = caster->getSkillLevel(SPELL_PARALYZE_LIMB);
-
-  ret=paralyzeLimb(caster,v,level,caster->getSkillValue(SPELL_PARALYZE_LIMB), caster->getAdvLearning(SPELL_PARALYZE_LIMB));
-  if (ret == SPELL_SUCCESS) {
-  } else {
-    caster->deityIgnore();
+  ret = paralyzeLimb(caster, v, level, caster->getSkillValue(SPELL_PARALYZE_LIMB), caster->getAdvLearning(SPELL_PARALYZE_LIMB));
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!v->isPc()) {
+      dynamic_cast<TMonster *>(v)->addHated(caster);
+    }
   }
   int retCode = 0;
-
   if (IS_SET_DELETE(ret, VICTIM_DEAD))
     ADD_DELETE(retCode, VICTIM_DEAD);
 
@@ -2051,67 +1988,43 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
   if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
     return SPELL_FAIL;
   }
-
   if (victim->isUndead()) {
-    act("Being undead, they can't get much more numb.", FALSE, caster,0,0,TO_CHAR);
-    act("Being undead, they can't get much more numb.", FALSE,caster,0,0,TO_ROOM);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    caster->deityIgnore();
     return SPELL_FAIL;
   }
-
+  if (checkForTorment(victim)) {
+    act("$d refuses to torment $N any further.", false, caster, 0, victim, TO_CHAR);
+    act("$n just tried to numb you!", TRUE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
+    return SPELL_FAIL;
+  }
   // check whether or not there is a limb left to paralyze 
   int found, ok;
   found = ok = FALSE;
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBreakSlot(slot, false))  // same ones, right?
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     found |= victim->isLimbFlags(slot, PART_PARALYZED);
     ok = TRUE;
   }
-
-  if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
-    caster->deityIgnore();
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    return SPELL_FAIL;
-  }
-
-  if (checkForTorment(victim)) {
-    act("$d refuses to torment $N any further.",
-           false, caster, 0, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
-    return SPELL_FAIL;
-  }
-
-
   if (!ok) {
-    act("Belatedly, you realize $N doesn't have a limb left to paralyze!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N doesn't have a limb left to numb!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Your attack goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("$n just tried to numb you!", FALSE, caster, NULL, victim, TO_VICT);
+    act("Luckily, you have no limbs to numb.", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
   if (found) {
-    act("$d refuses to let you paralyze another of $N's limbs!",
-          FALSE, caster, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.",
-          FALSE, caster, NULL, victim, TO_CHAR);
-    caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("$d refuses to numb another of $N's limbs!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("Your attack goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n just tried to numb you again!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
-
+  
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     caster->reconcileHurt(victim, discArray[spell]->alignMod);
     addTorment(victim, spell);
@@ -2120,13 +2033,18 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
       if (notBreakSlot(slot, true))  // same ones, right?
         continue;
-      if (!victim->slotChance(slot))
+      if (!victim->hasPart(slot))
         continue;
       if (victim->isLimbFlags(slot, PART_PARALYZED))
         continue;
       break;
     }
 
+    if (victim->isImmune(IMMUNE_PARALYSIS, slot)) {
+      caster->deityIgnore();
+      return SPELL_FAIL;
+    }
+    
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     sprintf(buf, "Suddenly the feeling disappears from your %s!\n\rIt's been paralyzed! You can't use your %s!", limb, limb);
     act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
@@ -2139,7 +2057,6 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     aff.modifier = DISEASE_NUMB; 
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
-
     aff.duration = (int) (caster->percModifier() * aff.duration);
     if (critSuccess(caster, spell)) {
       CS(spell);
@@ -2149,15 +2066,9 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     // we've made raw immunity check, but allow it to reduce effects too
     aff.duration *= (100 - victim->getImmunity(IMMUNE_PARALYSIS));
     aff.duration /= 100;
-
     victim->affectTo(&aff);                                                  
     disease_start(victim, &aff); 
-
     victim->dropWeapon(slot);
-
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_SUCCESS;
   } else {
     // turn some "failures" into successes
@@ -2166,16 +2077,10 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
       int rc = injureLimbs(caster, victim, spell, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
-      }
       return SPELL_FAIL;
     }
 
     caster->deityIgnore();
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 }
@@ -2186,10 +2091,14 @@ int numb(TBeing *caster, TBeing *victim, TMagicItem *obj, spellNumT spell)
         FALSE, victim, obj, 0, TO_CHAR);
   act("$p invokes an injurious prayer against $n.",
         FALSE, victim, obj, 0, TO_ROOM);
- 
-  int rc = numb(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
-  int retCode = 0;
 
+  int rc = numb(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell, 0);
+  if (rc == SPELL_SUCCESS || rc == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
+  int retCode = 0;
   if (IS_SET(rc, VICTIM_DEAD))
     ADD_DELETE(retCode, DELETE_VICT);
   return retCode;
@@ -2203,13 +2112,13 @@ int numb(TBeing *caster, TBeing *victim)
     return FALSE;
 
   int level = caster->getSkillLevel(spell);
-
-  int ret=numb(caster,victim,level,caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
-  if (ret == SPELL_SUCCESS) {
-  } else {
+  int ret = numb(caster, victim, level, caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   }
   int retCode = 0;
-
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(retCode, DELETE_VICT);
   return retCode;
@@ -2217,35 +2126,27 @@ int numb(TBeing *caster, TBeing *victim)
 
 int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
+  if (caster->isNotPowerful(victim, level, SPELL_DISEASE, SILENT_NO)) {
+    return SPELL_FAIL;
+  }
+
   if (victim->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
-    act("$N shakes off the effects as if immune.",
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("You shake off the effects of that disease-spewing $n.",
-        FALSE, caster, 0, victim, TO_VICT);
-    caster->deityIgnore(SILENT_YES);
+    act("$N shakes off the effects as if immune.", FALSE, caster, 0, victim, TO_CHAR);
+    act("$n just tried to burden you with disease!", FALSE, caster, 0, victim, TO_VICT);
+    act("You shake off the effects with ease.", FALSE, caster, 0, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_DISEASE)){
     caster->reconcileHurt(victim, discArray[SPELL_DISEASE]->alignMod);
-
-    if(!genericDisease(victim, level)){
-      act("$d refuses to disease $N any more.",
-	  FALSE, caster, 0, victim, TO_CHAR);
-      act("$d refuses to disease you any more.",
-	  FALSE, caster, 0, victim, TO_VICT);
-      act("$d refuses to disease $N any more.",
-	  FALSE, caster, 0, victim, TO_NOTVICT);
-
+    if(!genericDisease(caster, victim, level)){
+	    act("$d refuses to further disease $N.", FALSE, caster, NULL, victim, TO_CHAR);
+	    act("$d refuses $n's request to further disease you.", FALSE, caster, NULL, victim, TO_VICT);
+	    act("$n's prayer seems to have no effect on $N.", FALSE, caster, 0, victim, TO_NOTVICT);
       return SPELL_FAIL;
     } else {
-      act("$d brings forth diseased vermin to impair $N.",
-	  FALSE, caster, 0, victim, TO_CHAR);
-      act("$d brings forth diseased vermin to impair you.",
-	  FALSE, caster, 0, victim, TO_VICT);
-      act("$d brings forth diseased vermin to impair $N.",
-	  FALSE, caster, 0, victim, TO_NOTVICT);
-
+      // messages handled in genericDisease() - they need to appear before the disease starts
       return SPELL_SUCCESS;
     }
   } else {
@@ -2256,17 +2157,14 @@ int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
 void disease(TBeing *caster, TBeing *victim, TMagicItem *obj)
 {
-  act("$p invokes an injurious prayer against you.",
-        FALSE, victim, obj, 0, TO_CHAR);
-  act("$p invokes an injurious prayer against $n.",
-        FALSE, victim, obj, 0, TO_ROOM);
- 
-  disease(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-
-  if (!victim->isPc()) {
-    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  act("$p invokes an injurious prayer against you.", FALSE, victim, obj, 0, TO_CHAR);
+  act("$p invokes an injurious prayer against $n.", FALSE, victim, obj, 0, TO_ROOM);
+  int ret = disease(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   }
- 
   return;
 }
 
@@ -2278,13 +2176,11 @@ void disease(TBeing *caster, TBeing *victim)
     return;
 
   level = caster->getSkillLevel(SPELL_DISEASE);
-
-  ret=disease(caster,victim,level,caster->getSkillValue(SPELL_DISEASE));
-  if (ret == SPELL_SUCCESS) {
-  } else {
-  }
-  if (!victim->isPc()) {
-    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  ret = disease(caster, victim, level, caster->getSkillValue(SPELL_DISEASE));
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   }
   return;
 }
@@ -2297,18 +2193,13 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
   int duration;
 
   if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 
   if (victim->isUndead()) {
-    act("Seeing they are undead, infectation is the least of their worries.", FALSE, caster,0,0,TO_CHAR);
-    act("The undead tend to be immune to infection.", FALSE,caster,0,0,TO_ROOM);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("$N takes no notice.  An infection is the least of $S worries.", FALSE, caster, 0, victim, TO_CHAR);
+    act("$n thinks $e can infect you!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
 
@@ -2318,33 +2209,28 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBleedSlot(slot))  // same ones, right?
       continue;
-    if (!victim->slotChance(slot))
+    if (!victim->hasPart(slot))
       continue;
     if ((found = (victim->isLimbFlags(slot, PART_INFECTED)))) {
       break;
     }
   }
   if (slot < MAX_WEAR) {
-    act("$N is already infected! Don't get too near $M!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-    act("Your attack goes for naught.", FALSE, caster, NULL, NULL, TO_CHAR);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
+    act("$N is already infected.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$d shows mercy!  Your attack goes for naught.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("$n just tried to infect you again.", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
 
-  int dam = 0;
-
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     caster->reconcileHurt(victim, discArray[spell]->alignMod);
-
     if (!victim->isLucky(caster->spellLuckModifier(spell))) {
       // find a suitable slot to infect 
       for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
         if (notBleedSlot(slot))  // same ones, right?
           continue;
-        if (!victim->slotChance(slot))
+        if (!victim->hasPart(slot))
           continue;
         if (victim->isLimbFlags(slot, PART_INFECTED))
           continue;
@@ -2353,36 +2239,27 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 
       sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
 
-      duration = (level * 3) + 100;
+      duration = 500;
       duration = (int) (caster->percModifier() * duration);
-
       if (!victim->isLimbFlags(slot, PART_BLEEDING)) {
         if (victim->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-  
-          sprintf(buf, "A small cut opens up on your %s!\n\rBright red blood begins to spit out!", limb);
+          sprintf(buf, "A nasty cut opens up on your %s and bright red blood begins to spit out.", limb);
           act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
           sprintf(buf, "The flesh on $n's %s cracks open and begins to bleed!", limb);
           act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
         }
       }
       if (!victim->isLimbFlags(slot, PART_INFECTED)) {
-        if (victim->rawInfect(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-    
-          sprintf(buf, "Magical green germs materialize in the bloody wound on your %s!\nIt's infected! You'd better get that cleaned up as soon as possible!", limb);
+        if (victim->rawInfect(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES, level)) {
+          sprintf(buf, "Your %s swells and begins to throb with pain.  It's infected!\n\rYou'd better get that cleaned up as soon as possible.", limb);
           act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
-          sprintf(buf, "$n looks at the bloody wound on $s %s and screams in terror!\nYou can virtually see the little green germs infesting it!", limb);
+          sprintf(buf, "$n recoils as $s %s swells with a vile infection.\n\rYou can virtually see the little green germs infesting it!", limb);
           act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
         }
-      }
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
       }
       return SPELL_SUCCESS;
     } else {
       // Victim passed luck/save
-      if (!victim->isPc()) {
-        dynamic_cast<TMonster *>(victim)->addHated(caster);
-      }
       return SPELL_FAIL;
     }
   } else {
@@ -2393,28 +2270,21 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
         for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
           if (notBleedSlot(slot))  // same ones, right?
             continue;
-          if (!caster->slotChance(slot))
+          if (!caster->hasPart(slot))
             continue;
           if (caster->isLimbFlags(slot, PART_INFECTED))
             continue;
           break;
         }
   
-       sprintf(limb, "%s", caster->describeBodySlot(slot).c_str());
+        sprintf(limb, "%s", caster->describeBodySlot(slot).c_str());
 
-        duration = (level * 3) + 100;
+        duration = (level * 4) + 150;
         duration = (int) (caster->percModifier() * duration);
 
-        if (caster->rawInfect(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-
-          caster->sendTo("You scream in agony as your own attack turns on you infecting your limb!\n\r");
-          act("$n grimaces in surprise as $e skin becomes infected!", 
-             TRUE, caster, 0, 0, TO_ROOM);
-        }
-        if (caster->reconcileDamage(caster, dam, spell) == -1)
-          return SPELL_CRIT_FAIL + CASTER_DEAD;
-        if (!victim->isPc()) {
-          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        if (caster->rawInfect(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES, level)) {
+          caster->sendTo("You recoil in shock as you infect yourself!\n\r");
+          act("$n recoils in shock as $e infects $mself!", FALSE, caster, 0, 0, TO_ROOM);
         }
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
@@ -2422,22 +2292,20 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
     }
     caster->sendTo("You fail to harm your victim.\n\r");
     caster->deityIgnore(SILENT_YES);
-    if (!victim->isPc()) {
-      dynamic_cast<TMonster *>(victim)->addHated(caster);
-    }
     return SPELL_FAIL;
   }
 }
 
 void infect(TBeing *caster, TBeing *victim, TMagicItem *obj, spellNumT spell) 
 {
-  act("$p invokes an injurious prayer against you.",
-        FALSE, victim, obj, 0, TO_CHAR);
-  act("$p invokes an injurious prayer against $n.",
-        FALSE, victim, obj, 0, TO_ROOM);
- 
-  infect(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
- 
+  act("$p invokes an injurious prayer against you.", FALSE, victim, obj, 0, TO_CHAR);
+  act("$p invokes an injurious prayer against $n.", FALSE, victim, obj, 0, TO_ROOM);
+  int ret = infect(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness(), spell);
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
+  }
   return;
 }
 
@@ -2449,8 +2317,10 @@ void infect(TBeing * caster, TBeing * victim)
     return;
 
   int level = caster->getSkillLevel(spell);
-
-  int ret=infect(caster,victim,level,caster->getSkillValue(spell), spell);
-  if (ret== SPELL_SUCCESS) {
+  int ret = infect(caster, victim, level, caster->getSkillValue(spell), spell);
+  if (ret == SPELL_SUCCESS || ret == SPELL_FAIL) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
   }
 }

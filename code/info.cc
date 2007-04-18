@@ -3986,7 +3986,7 @@ void TBeing::doLimbs(const sstring & argument)
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_INFECTED)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s infected with many germs!\n\r") %
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s infected with many <o>germs<1>!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
@@ -3999,7 +3999,12 @@ void TBeing::doLimbs(const sstring & argument)
     }
     if (v->isLimbFlags(i, PART_LEPROSED)) {
       sendTo(COLOR_BASIC, fmt("Leprosy has set into %s %s%s%s!\n\r") %
-          who % red() %v->describeBodySlot(i) %norm());
+          who.uncap() % red() %v->describeBodySlot(i) %norm());
+      found = TRUE;
+    }
+    if (v->isLimbFlags(i, PART_GANGRENOUS)) {
+      sendTo(COLOR_BASIC, fmt("<k>Gangrene<1> has set into %s %s%s%s!\n\r") %
+          who.uncap() % red() %v->describeBodySlot(i) %norm());
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_TRANSFORMED)) {
@@ -4010,7 +4015,7 @@ void TBeing::doLimbs(const sstring & argument)
     if ((t = v->getStuckIn(i))) {
       if (canSee(t)) {
         sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
-        sstring(t->getName()).cap() % who % v->describeBodySlot(i));
+        sstring(t->getName()).cap() % who.uncap() % v->describeBodySlot(i));
       }
     }
   }

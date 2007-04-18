@@ -919,7 +919,8 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
  // 1) Base damage of the weapon.           (dam)                     
  // 2) Strength in limb(How healthy it is)  (body_parts[].health)     
  // 3) Constitution                         (getConShock())         
- // 4) Skin type                            (getMaterial())           
+ // 4) Skin type                            (getMaterial())   
+ // adding 5)                               disease state of limb (infected, leprosed, bruised, gangrenous...)
  // The healtheir the limb, the less chance of this happening, and    
  // the more damage, the more chance of it happening. - Russ          
 
@@ -976,24 +977,39 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       v->reformGroup();
       return DELETE_VICT;
     }
-
+    // if bleeding or infected or leprosed or gangrenous, take extra dam
+    if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED | PART_LEPROSED | PART_GANGRENOUS)) {
+      *dam *= 2;
+    }
     rc = v->hurtLimb(*dam, part_hit);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
-
-    // if bleeding or infected, take extra dam
-    if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED)) {
-      rc = v->hurtLimb(*dam, part_hit);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
-    } 
-
-    // Chance to cut and start bleeding, or if already bleeding infect wound 
+    
+    // regarding chances to bleed & bruise
+    // changed the levelLuckModifier from a static 5 to use attacker level (capped at victim level +10)
+    // why wouldn't 2 high level combatants cut & bruise each other as much as 2 low level ones?
+    // also lowered bleed duration... long fights could get nasty
     if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
+      // Chance to cut and start bleeding, or if already bleeding infect wound 
       if (!::number(0, 8)) {
         // Infection rocks! - Russ 
         v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
       }
+    // if the attacker is barehanded, then lets reduce chance  -- bat
+    } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) && 
+               (weapon || !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) &&
+               !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
+      v->rawBleed(part_hit, ((*dam) * 10), SILENT_NO, CHECK_IMMUNITY_YES);
+      vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s in %d") % ((*dam) * 10) % v->getName() % v->in_room);
+    }
+    if(!v->isLimbFlags(part_hit, PART_BRUISED) 
+	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
+	   && !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10))) &&
+       !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
+      v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
+      vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s in %d") % ((*dam) * 20) % v->getName() % v->in_room);
+    }
+/*
     } else if (::number(0, 400) < (sharp / 2) && 
                (weapon || !v->isLucky(levelLuckModifier(5))) &&
                !v->isLucky(levelLuckModifier(5))) {
@@ -1007,7 +1023,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
        !v->isLucky(levelLuckModifier(5))){
       v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
     }
-    
+*/
     
   } else
     *dam = 0;
