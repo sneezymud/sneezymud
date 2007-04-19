@@ -1871,7 +1871,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
       TThing *i = getStuff();
       --(*i);
       TObj *tobj = dynamic_cast<TObj *>(i);
-      if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
+        if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
           (in_room > 80) && (in_room != ROOM_DONATION)) {
         delete tobj;
         tobj = NULL;
@@ -1893,7 +1893,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
 
           // seeing that the item is also saved in rent and we are NOT trying
           // to alter the counters, make appropriate allowances
-          if (tobj && tobj->number)
+          if (tobj && tobj->number && tobj->number > 0)
             obj_index[tobj->number].addToNumber(1);
 
           delete i;

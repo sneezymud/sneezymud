@@ -90,10 +90,10 @@ int forage(TBeing *caster, byte bKnown)
   if (caster->bSuccess(bKnown, SKILL_FORAGE)) {
     int foodpile = 1000;
     while (::number(0, 999) < foodpile) {
-      if (caster->roomp->isArcticSector())
-        forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
-      else if (caster->roomp->isIndoorSector())
+      if (caster->roomp->isIndoorSector())
         forageItem = ::number(FORAGE_CAVE_BEGIN, FORAGE_CAVE_END);
+      else if (caster->roomp->isArcticSector())
+        forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
       else if (caster->roomp->getSectorType() == SECT_DESERT)
         forageItem = ::number(FORAGE_DESERT_BEGIN, FORAGE_DESERT_END);
       else 
