@@ -873,17 +873,8 @@ int knitBone(TBeing * caster, TBeing * victim, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-// changed order 1/19/98 it should check for broken bones before entering the for 
-// loop. - Rix
-
-  // What Rix did on 1/19 was buggy, needed to go through list first to see if 
-  // something was broken before checking slot - Russ 1/19/98 (next 4 lines)
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (victim->slotChance(slot) && victim->isLimbFlags(slot, PART_BROKEN))
-      break;
-  }
-
-  if (slot >= MAX_WEAR) {
+  slot = victim->getRandomPart(PART_BROKEN, FALSE, TRUE);
+  if (slot == WEAR_NOWHERE) {
     if (caster == victim)
       caster->sendTo("You have no broken bones to knit!\n\r");
     else
@@ -896,12 +887,6 @@ int knitBone(TBeing * caster, TBeing * victim, int, byte bKnown)
   // If we got here, we know that there is a broken slot, and the next
   // for loop will not go infinite or crash - Russ 01/19/98
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_KNIT_BONE)) {
-    // find a suitable slot to knit 
-    for (slot = pickRandomLimb();
-        ((!victim->slotChance(slot)) ||
-         !victim->isLimbFlags(slot, PART_BROKEN));
-        slot = pickRandomLimb());
-
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_BROKEN);
     sprintf(buf, "The broken bones in your %s miraculously knit together!", limb);
@@ -941,17 +926,11 @@ int clot(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spell)
   wearSlotT slot;
 
   // find a bleeding slot 
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (!victim->slotChance(slot))
-      continue;
-    if (victim->isLimbFlags(slot, PART_BLEEDING))
-      break;
-  }
-
-  if(slot >= MAX_WEAR && spell==SKILL_WOHLIN)
+  slot = victim->getRandomPart(PART_BLEEDING, FALSE, TRUE);
+  if(slot == WEAR_NOWHERE && spell==SKILL_WOHLIN)
     return SPELL_FAIL;
 
-  if (slot >= MAX_WEAR) {
+  if (slot == WEAR_NOWHERE) {
     caster->sendTo("Uhm, are they bleeding???\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
@@ -959,11 +938,6 @@ int clot(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spell)
 
   if (spell==SKILL_WOHLIN || 
       caster->bSuccess(bKnown, caster->getPerc(), spell)) {
-    /* find a suitable slot to clot */
-    for (slot = pickRandomLimb();
-     ((!victim->slotChance(slot)) || (!victim->isLimbFlags(slot, PART_BLEEDING)));
-       slot = pickRandomLimb());
-
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_BLEEDING);
     sprintf(buf, "The gash on your %s slowly stops bleeding and the flesh closes up!", limb);
@@ -1007,16 +981,9 @@ int restoreLimb(TBeing *caster, TBeing *victim, int, byte bKnown)
   wearSlotT slot, num;
   wearSlotT j;
 
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (!victim->slotChance(slot))
-      continue;
-    if (!victim->isLimbFlags(slot, PART_USELESS | PART_PARALYZED))
-      continue;
+  slot = victim->getRandomPart(PART_USELESS | PART_PARALYZED, FALSE, TRUE);
 
-    break;
-  }
-
-  if (slot >= MAX_WEAR) {
+  if (slot == WEAR_NOWHERE) {
     if (caster == victim)
       caster->sendTo("You don't have any limbs that need restoring!\n\r");
     else
@@ -1108,18 +1075,12 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
   wearSlotT slot;
 
   // find an infected slot 
-  for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
-    if (!victim->slotChance(slot))
-      continue;
-    if (!victim->isLimbFlags(slot, PART_INFECTED)) 
-      continue;
-    break;
-  }
-
-  if(slot>=MAX_WEAR && spell==SKILL_WOHLIN)
+  slot = victim->getRandomPart(PART_INFECTED, FALSE, TRUE);
+  
+  if (slot == WEAR_NOWHERE && spell == SKILL_WOHLIN)
     return SPELL_FAIL;
 
-  if (slot >= MAX_WEAR) {
+  if (slot == WEAR_NOWHERE) {
     if (caster == victim)
       act("You need no sterilization.", FALSE, caster, NULL, NULL, TO_CHAR);
     else
@@ -1131,12 +1092,6 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
 
   if (spell==SKILL_WOHLIN || 
       caster->bSuccess(bKnown, caster->getPerc(), spell)) {
-    /* find a suitable slot to disinfect */
-    for (slot = pickRandomLimb();
-       (!victim->slotChance(slot) ||
-        !victim->isLimbFlags(slot, PART_INFECTED));
-       slot = pickRandomLimb());
-
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_INFECTED);
     sprintf(buf, "The infection in your %s has been killed!", limb);
@@ -1174,49 +1129,60 @@ void sterilize(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spe
 
 int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell)
 {
-  int fixed = 0, max_am;
+  int hurting = 0, soothing = 0, fixed = 0;
   wearSlotT slot;
-  char buf[256];
-
-  max_am = 1 + (level * number(1,6)/2);
+  char buf[256]; 
+  int max_am = 1 + (level * number(1,6)/2);
 
   if (spell==SKILL_WOHLIN ||
       caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if(spell!=SKILL_WOHLIN)
       LogDam(caster, spell, max_am);
 
-    for (slot=MIN_WEAR; slot < MAX_WEAR; slot++) {
-      if (!victim->slotChance(slot))
-        continue;
-      if (victim->getCurLimbHealth(slot) >= victim->getMaxLimbHealth(slot))
-        continue;
-      while (victim->getCurLimbHealth(slot) < victim->getMaxLimbHealth(slot)) {
-        if (fixed > max_am)
-          break;
-        fixed++;
-        victim->addCurLimbHealth(slot, 1);
+    while (fixed < max_am) {
+      slot = victim->getRandomHurtPart();
+      if (slot == WEAR_NOWHERE)
+        break;
+      hurting = victim->getMaxLimbHealth(slot) - victim->getCurLimbHealth(slot); 
+      if (hurting > 0) {
+        soothing = min(hurting, max_am - fixed);
+        victim->addCurLimbHealth(slot, soothing);
+        fixed += soothing;
+      } else {
+        // this shouldn't happen, as getRandomHurtPart should only return hurting parts
+        break;
       }
       if (victim->getCurLimbHealth(slot) >= victim->getMaxLimbHealth(slot))
-        victim->sendTo(fmt("Your %s has been completely healed.\n\r") %victim->describeBodySlot(slot));
+        victim->sendTo(fmt("Your %s has been completely healed.\n\r") % victim->describeBodySlot(slot));
       else
-        victim->sendTo(fmt("Your %s has been partially healed.\n\r") %victim->describeBodySlot(slot));
-    
-      if (fixed > max_am)
-        break;
+        victim->sendTo(fmt("Your %s has been partially healed.\n\r") % victim->describeBodySlot(slot));
+      if (max_am > fixed)
+        continue;
+      break;
     }
+    slot = victim->getRandomHurtPart();
     if (caster != victim) {
-      sprintf(buf, "You salve %s of $N's wounds.", (fixed > max_am) ? "some" : "all");
-      act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-      sprintf(buf, "$n salves %s of $N's wounds.", (fixed > max_am) ? "some" : "all");
-      act(buf, TRUE, caster, NULL, victim, TO_NOTVICT);
+      if (fixed) {
+        sprintf(buf, "You salve %s of $N's wounds.", slot ? "some" : "all");
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "$n salves %s of $N's wounds.", slot ? "some" : "all");
+        act(buf, TRUE, caster, NULL, victim, TO_NOTVICT);
+        if (slot == WEAR_NOWHERE)
+          act("All of your wounds have been salved.", FALSE, caster, NULL, victim, TO_VICT);
+      } else {
+        act("You bestow a gratuitous salve upon $N.", FALSE, caster, NULL, victim, TO_CHAR);
+        act("Your wounds don't need salved, but that doesn't stop $n.", FALSE, caster, NULL, victim, TO_VICT);
+        act("$n just graciously salved $N, needlessly.", TRUE, caster, NULL, victim, TO_NOTVICT);
+      }
     } else {
       if (spell != SKILL_WOHLIN) {
         if (!fixed)
           caster->sendTo("You didn't need any salving, dummy.\n\r");
-	act("$n salves $s wounds.", TRUE, caster, NULL, victim, TO_ROOM);
+        else if (slot == WEAR_NOWHERE)
+          caster->sendTo("All of your wounds have been salved.\n\r");
+        act("$n salves $s wounds.", TRUE, caster, NULL, victim, TO_ROOM);
       }
     }
-    
     if (fixed) {
       caster->reconcileHelp(victim,discArray[spell]->alignMod);
       checkFactionHelp(caster,victim);
@@ -1224,21 +1190,21 @@ int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, spell) == CRIT_F_HITSELF) {
-      do {
-        slot = wearSlotT(::number(WEAR_HEAD,WEAR_FOOT_L));
-      } while (!victim->slotChance(slot));
-      if (IS_SET(victim->getLimbFlags(slot), PART_BLEEDING) || 
+      slot = victim->getRandomPart(PART_USELESS, TRUE);
+      if (slot) {
+        if (IS_SET(victim->getLimbFlags(slot), PART_BLEEDING) || 
               (!caster->isLucky(levelLuckModifier(victim->GetMaxLevel())) && 
               !::number(0,2) && 
               (::number(0, victim->plotStat(STAT_CURRENT, STAT_BRA, 50, 100, 75)) >  
               caster->plotStat(STAT_CURRENT, STAT_BRA, 0, 50, 25)))) {
-        caster->setLimbFlags(slot, PART_USELESS);
-      } else {
-        victim->rawBleed(slot, (level * 3) + 100, SILENT_YES, CHECK_IMMUNITY_YES);
+          caster->setLimbFlags(slot, PART_USELESS);
+        } else {
+          victim->rawBleed(slot, (level * 3) + 100, SILENT_YES, CHECK_IMMUNITY_YES);
+        }
+        act("$n screams.  Something went terribly wrong.", FALSE, caster, NULL, 0, TO_ROOM);
+        act("You scream as something goes terribly wrong.", FALSE, caster, NULL, 0, TO_CHAR);
+        return SPELL_CRIT_FAIL;
       }
-      act("$n screams.  Something went terribly wrong.", FALSE, caster, NULL, 0, TO_ROOM);
-      act("You scream as something goes terribly wrong.", FALSE, caster, NULL, 0, TO_CHAR);
-      return SPELL_CRIT_FAIL;
     }
     caster->deityIgnore();
     return SPELL_FAIL;

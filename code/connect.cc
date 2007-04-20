@@ -915,7 +915,7 @@ void ShowNewNews(TBeing * tBeing)
           tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
-            tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
+            tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
             break;
           }
         }
@@ -951,7 +951,7 @@ void ShowNewNews(TBeing * tBeing)
           tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
-            tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
+            tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
             break;
           }
         }

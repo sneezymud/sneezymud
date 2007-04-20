@@ -1551,6 +1551,8 @@ class TBeing : public TThing {
     bool isNaked() const;
     bool isWieldingWeapon();
     bool hasPart(wearSlotT) const;
+    wearSlotT getRandomPart(int = 0, bool = FALSE, bool = FALSE);
+    wearSlotT getRandomHurtPart();
     void doResetMargins();
     void doWeather(const char *);
     void doHeaven(const sstring &);

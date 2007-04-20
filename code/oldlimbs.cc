@@ -227,6 +227,52 @@ bool TBeing::hasPart(wearSlotT part) const
   return TRUE;
 }
 
+wearSlotT TBeing::getRandomPart(int limbflags, bool skipcritpart, bool lookforlimbflag) {
+  // exclude pegs/hooks, missing limbs
+  // this is to find fleshy parts
+  // when lookforlimbflag is false (by default) if passes over that flag(s)
+  // when true it returns only limbs with a matching flag(s)
+  wearSlotT possibles[MAX_WEAR - 1];
+  int x = 0;
+  for (wearSlotT p = MIN_WEAR; p < MAX_WEAR; p++) {
+    if (!hasPart(p))
+      continue;
+    if (lookforlimbflag && !isLimbFlags(p, limbflags))
+      continue;
+    if (!lookforlimbflag && isLimbFlags(p, limbflags))
+      continue;
+    if (skipcritpart && isCritPart(p))
+      continue;
+    if (notBleedSlot(p))
+      continue;
+    possibles[x] = p;
+    ++x;
+  }
+  if (x == 0)
+    return WEAR_NOWHERE;
+  return possibles[::number(0, x - 1)];
+}
+
+wearSlotT TBeing::getRandomHurtPart() {
+  // exclude pegs/hooks, missing limbs
+  // this is to find random limbs for salve
+  wearSlotT possibles[MAX_WEAR - 1];
+  int x = 0;
+  for (wearSlotT p = MIN_WEAR; p < MAX_WEAR; p++) {
+    if (!hasPart(p))
+      continue;
+    if (getMaxLimbHealth(p) - getCurLimbHealth(p) < 1)
+      continue;
+    if (notBleedSlot(p))
+      continue;
+    possibles[x] = p;
+    ++x;
+  }
+  if (x == 0)
+    return WEAR_NOWHERE;
+  return possibles[::number(0, x - 1)];
+}
+
 int TBeing::getPosHeight() const
 {
   int iHeight = getHeight();
