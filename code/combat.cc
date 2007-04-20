@@ -889,7 +889,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
 {
   int rc = 0;
   int hardness, sharp = 0;
-
+  int wound_duration;
   // These areas take off main hp. We still check to see if            
   // damage was done, but we return false, because main hp are taken   
   // off with hit to these vital body parts. - Russ                    
@@ -999,15 +999,17 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) && 
                (weapon || !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) &&
                !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
-      v->rawBleed(part_hit, ((*dam) * 10), SILENT_NO, CHECK_IMMUNITY_YES);
-      vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s in %d") % ((*dam) * 10) % v->getName() % v->in_room);
+      wound_duration = min((*dam) * 10, (int) GetMaxLevel() * 10);
+      v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+      vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
     if(!v->isLimbFlags(part_hit, PART_BRUISED) 
 	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
 	   && !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10))) &&
        !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
-      v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
-      vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s in %d") % ((*dam) * 20) % v->getName() % v->in_room);
+      wound_duration = min(((*dam) * 20) + 200, (int) GetMaxLevel() * 20);
+      v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+      vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
 /*
     } else if (::number(0, 400) < (sharp / 2) && 
