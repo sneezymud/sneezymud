@@ -1449,7 +1449,7 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
       wearSlotT slot;
       TObj *corpse;
       TCorpse *tooth;
-      switch (number(0, 250)) {
+      switch (number(0, 500)) {
         case 0:
           // tooth falls out
           if (victim->getMyRace()->hasNoBones())
@@ -1596,7 +1596,7 @@ int disease_dysentery(TBeing *victim, int message, affectedData *af)
                victim->sendTo("Your stomach is gripped by a dreadful spasm and you cannot contain yourself.\n\r");
                act("You <o>besmirch<1> yourself!", FALSE, victim, NULL, NULL, TO_CHAR);
                act("The air around $n is woefully befouled as $e <o>besmirches<1> $mself.", FALSE, victim, NULL, NULL, TO_ROOM);
-               victim->dropPool(victim->getCond(POOP), LIQ_POT_FILTH);
+               victim->dropPool(min((int) victim->getWeight() / 10, (int) victim->getCond(POOP)), LIQ_POT_FILTH);
                victim->setCond(THIRST, max(0, ((int) (victim->getCond(THIRST) - (2 * (int) victim->getCond(POOP))))));
                victim->setCond(POOP, 0);
             }
