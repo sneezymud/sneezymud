@@ -314,7 +314,7 @@ int disease_cold(TBeing *victim, int message, affectedData *)
 {
   affectedData vaf;
   int rc = 0;
-
+  int spread_chance = 500;
   if (message == DISEASE_PULSE) {
     if (victim->isHumanoid()) {
       rc = victim->dummyCold();
@@ -327,14 +327,17 @@ int disease_cold(TBeing *victim, int message, affectedData *)
     vaf.modifier = DISEASE_COLD;
     vaf.location = APPLY_NONE;
     vaf.bitvector = 0;
-    spread_affect(victim, 500, FALSE, FALSE, &vaf);
+    // cold epidemics in gh go on forever....
+    if (victim->isPc() && victim->GetMaxLevel() < 6)
+      spread_chance = 200;
+    spread_affect(victim, spread_chance, FALSE, FALSE, &vaf);
   } else if (message == DISEASE_BEGUN) {
     act("$n doesn't look very well.", TRUE, victim, NULL, NULL, TO_ROOM);
     victim->sendTo("You don't feel very well at all.\n\r");
     return FALSE;
   } else if (message == DISEASE_DONE) {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("Some color has returned to $n's.", TRUE, victim, NULL, NULL, TO_ROOM);
+      act("Some color has returned to $n.", TRUE, victim, NULL, NULL, TO_ROOM);
       victim->sendTo("You're feeling much better.\n\r");
     }
     return FALSE;

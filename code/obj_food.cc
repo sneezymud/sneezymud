@@ -290,7 +290,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       aff3.level = 0;
       aff3.location = APPLY_NONE;
       aff3.bitvector = 0;
-      aff3.duration = ch->GetMaxLevel() * UPDATES_PER_MUDHOUR / 3;
+      aff3.duration = amount * 3 * UPDATES_PER_MUDHOUR;
       aff3.duration *= (100 - ch->getImmunity(IMMUNE_DISEASE));
       aff3.duration /= 100;
       aff3.modifier = DISEASE_DYSENTERY;

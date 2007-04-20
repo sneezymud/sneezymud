@@ -3845,6 +3845,8 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       continue;
     if (t->rider)
       continue;
+    if (!t->isHumanoid())
+       continue;
     switch (number(0, 1)) {
       // put the scurvy on, or fall through & starve them
       case 0:
@@ -3862,7 +3864,7 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
           aff.duration /= 100;
           if (aff.modifier && aff.duration > 0) {
             act("$N's presence drains your body of something essential.", TRUE, me, 0, t, TO_VICT);
-            act("You sap the vitamin C from $n's blood!", TRUE, me, 0, t, TO_CHAR);
+            act("You sap the good parts from $n's blood!", TRUE, me, 0, t, TO_CHAR);
             t->affectTo(&aff);
 						disease_start(t, &aff);
             break;
