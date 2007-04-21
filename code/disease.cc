@@ -1465,7 +1465,7 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             tooth->setCorpseVnum(victim->mobVnum());
           }
           delete corpse->name;
-          buf = fmt("tooth rotten %s lost limb") % victim->name;
+          buf = fmt("tooth rotten %s") % victim->name;
           corpse->name = mud_str_dup(buf);
 
           delete corpse->shortDescr;

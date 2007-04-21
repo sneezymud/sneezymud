@@ -985,10 +985,8 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
     
-    // regarding chances to bleed & bruise
-    // changed the levelLuckModifier from a static 5 to use attacker level (capped at victim level +10)
-    // why wouldn't 2 high level combatants cut & bruise each other as much as 2 low level ones?
-    // also lowered bleed duration... long fights could get nasty
+    // cuts & bruises
+    // would be nice if attack type was available, to check for blunt vs slash/pierce
     if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
       // Chance to cut and start bleeding, or if already bleeding infect wound 
       if (!::number(0, 8)) {
@@ -999,7 +997,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) && 
                (weapon || !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) &&
                !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
-      wound_duration = min((*dam) * 10, (int) GetMaxLevel() * 10);
+      wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
       v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
       vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
@@ -1007,7 +1005,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
 	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
 	   && !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10))) &&
        !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
-      wound_duration = min(((*dam) * 20) + 200, (int) GetMaxLevel() * 20);
+      wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
       v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
       vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
