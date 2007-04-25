@@ -333,9 +333,11 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     v_vnum = -2;
     
   corpse = new TCorpse();
-  sbuf = fmt("%s lost limb [%d]") % describeBodySlot(pos) % v_vnum;
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb [%s]") % sbuf % opp->getName();
+    sbuf = fmt("%s lost limb [%s] [%d] [%d] [%d] [%s]") % describeBodySlot(pos) % describeBodySlot(pos) % (int) pos % GetMaxLevel() % v_vnum % opp->getName();
+  else
+    sbuf = fmt("%s lost limb") % describeBodySlot(pos);
+  
   corpse->name = mud_str_dup(sbuf);
   
   if (getMaterial(pos) > MAT_GEN_MINERAL) {
@@ -385,9 +387,13 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
     v_vnum = -2;
     
   corpse = new TCorpse();
-  sbuf = fmt("%s lost limb [%d]") % (single ? single : part) % v_vnum;
+
+  
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb [%s]") % sbuf % opp->getName();
+    sbuf = fmt("%s lost limb [eyeballs] [0] [%d] [%d] [%s]") % (single ? single : part) % GetMaxLevel() % v_vnum % opp->getName();
+  else 
+    sbuf = fmt("%s lost limb") % (single ? single : part);
+  
   corpse->name = mud_str_dup(sbuf);
 
   sprintf(buf, "%s's bloody %s", getName(),single ? single : part);

@@ -999,7 +999,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
                !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
       wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
       v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
+      // vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
     if(!v->isLimbFlags(part_hit, PART_BRUISED) 
 	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
@@ -1007,7 +1007,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
        !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
       wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
       v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
+      // vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
 /*
     } else if (::number(0, 400) < (sharp / 2) && 

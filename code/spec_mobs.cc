@@ -3855,7 +3855,7 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
             && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
           aff.type = AFFECT_DISEASE;
           aff.level = 0;
-          aff.duration = 500;
+          aff.duration = ::number(500, 1000);
           aff.location = APPLY_NONE;
           aff.bitvector = 0;
           aff.modifier2 = t->GetMaxLevel();

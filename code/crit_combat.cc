@@ -1027,14 +1027,14 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	  tooth->setCorpseVnum(v->mobVnum());
 	}
 
-	buf = fmt("tooth %s lost limb [%d]") % v->name % v_vnum;
-
-        if (dynamic_cast<TPerson *>(this))
-          buf = fmt("%s [%s]") % buf % getName();
+  if (dynamic_cast<TPerson *>(this))
+    buf = fmt("tooth lost limb %s [tooth] [-1] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+  else
+    buf = fmt("tooth lost limb %s") % v->name;
 
 	delete corpse->name;
 	corpse->name = mud_str_dup(buf);
-	      
+	
 	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	delete corpse->shortDescr;
 	corpse->shortDescr = mud_str_dup(buf);
@@ -1070,71 +1070,49 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	if (doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
 	    v->hasPart(WEAR_BODY) && !weapon && bSuccess(SKILL_CRIT_HIT) && 
 	    !::number(0,4) && !IS_SET(v->specials.act, ACT_SKELETON)) {
-
-          // Rip out the heart instead of head crush whee fancy.
-          // ...But make it a bit fancier on ghosts, zombies and skeletons.
-
-          if (IS_SET(v->specials.act, ACT_GHOST)) {
-            buf = fmt("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-            act("You hold the ghostly organ above your head in triumph!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-            act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
-            act("$n reaches into $N's chest and rips out what appears to be $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  } else if (v_vnum == 29412) {
-            // adding candy heart rip for february '07 quest
-            buf = fmt("With your %s, you reach into $N's chest and rip out $S <P>candy heart<1><o>!<1>") % limbStr;
-	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	    act("You hold the sticky heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-	    act("$n reaches into your chest and rips out your <P>candy heart<1><r>!<1>", FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	    act("$n reaches into $N's chest and rips out $S <P>candy heart<1><b>!<1>", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          } else {
+  
+    // Rip out the heart instead of head crush whee fancy.
+    // ...But make it a bit fancier on ghosts, zombies and skeletons.
+  
+    if (IS_SET(v->specials.act, ACT_GHOST)) {
+      buf = fmt("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
+      act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+      act("You hold the ghostly organ above your head in triumph!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+      act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+      act("$n reaches into $N's chest and rips out what appears to be $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  } else {
 	    buf = fmt("With your %s, you reach into $N's chest and rip out $S heart!") % limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 	    act("You hold the still beating heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
 	    act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
 	    act("$n reaches into $N's chest and rips out $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          }
+    }
 
-          if (IS_SET(v->specials.act, ACT_GHOST))
-            act("The ghostly heart of $N fades as quickly as you removed it.", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-	  else if (v_vnum == 29412) {
-            // adding candy heart rip for february '07 quest
-            TObj *candy;
-            if ((candy = read_object(29405, VIRTUAL))) {
-  	      buf = fmt("the lifeless <P>candy heart<1> of %s") % v->getName();
-	      candy->shortDescr = mud_str_dup(buf);
-	    
-	      buf = fmt("The lifeless <P>candy heart<1> of %s lies here.") % v->getName();
-	      candy->setDescr(mud_str_dup(buf));
-	      if(!heldInPrimHand())
-	        equipChar(candy, getPrimaryHold(), SILENT_YES);
-	      else
-	        equipChar(candy, getSecondaryHold(), SILENT_YES);
-            }
-          } else {
-  	    TDrinkCon *corpse;
-            
-	    corpse = new TDrinkCon();
-            buf = fmt("heart %s [%d]") % v->name % v_vnum;
+    if (IS_SET(v->specials.act, ACT_GHOST))
+      act("The ghostly heart of $N fades as quickly as you removed it.", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+    else {
+      TDrinkCon *corpse;
+      corpse = new TDrinkCon();
+      if (dynamic_cast<TPerson *>(this))
+        buf = fmt("heart lost limb %s [heart] [0] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+      else
+        buf = fmt("heart lost limb %s") % v->name;
 
-            if (dynamic_cast<TPerson *>(this))
-              buf = fmt("%s [%s]") % buf % getName();
+      corpse->name = mud_str_dup(buf);
 
-            corpse->name = mud_str_dup(buf);
+      if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
+        buf = fmt("the putrid <r>heart<1> of %s") % v->getName();
+        corpse->shortDescr = mud_str_dup(buf);
 
-            if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
-              buf = fmt("the putrid <r>heart<1> of %s") % v->getName();
-              corpse->shortDescr = mud_str_dup(buf);
+        buf = fmt("The putrid <r>heart<1> of %s lies here.") % v->getName();
+        corpse->setDescr(mud_str_dup(buf));
+      } else {
+        buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
+        corpse->shortDescr = mud_str_dup(buf);
 
-              buf = fmt("The putrid <r>heart<1> of %s lies here.") % v->getName();
-              corpse->setDescr(mud_str_dup(buf));
-	    } else {
-  	      buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
-	      corpse->shortDescr = mud_str_dup(buf);
-	    
-	      buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
-	      corpse->setDescr(mud_str_dup(buf));
-	    }
+        buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
+        corpse->setDescr(mud_str_dup(buf));
+      }
 
 	    corpse->setStuff(NULL);
 	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
@@ -1149,13 +1127,13 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	    corpse->setMaxDrinkUnits(5);
 	    corpse->setDrinkUnits(5);
 
-            if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
-              corpse->setDrinkType(LIQ_POISON_VIOLET_FUNGUS);
-              dropPool(9, LIQ_POISON_VIOLET_FUNGUS);
-            } else {
-	      corpse->setDrinkType(LIQ_BLOOD);
-              dropPool(9, LIQ_BLOOD);
-            }
+      if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
+        corpse->setDrinkType(LIQ_POISON_VIOLET_FUNGUS);
+        dropPool(9, LIQ_POISON_VIOLET_FUNGUS);
+      } else {
+        corpse->setDrinkType(LIQ_BLOOD);
+        dropPool(9, LIQ_BLOOD);
+      }
 
 	    if(!heldInPrimHand())
 	      equipChar(corpse, getPrimaryHold(), SILENT_YES);
@@ -1670,9 +1648,10 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  TCorpse *corpse;
 		
 	  corpse = new TCorpse();
-    buf = fmt("genitalia %s lost limb [%d]") % v->name % v_vnum;
     if (dynamic_cast<TPerson *>(this)) 
-      buf = fmt("%s [%s]") % buf % getName();
+      buf = fmt("genitalia lost limb %s [jumblies] [0] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+    else
+      buf = fmt("genitalia lost limb %s") % v->name;
     corpse->name = mud_str_dup(buf);
 		
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {

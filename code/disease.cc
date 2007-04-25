@@ -1465,14 +1465,14 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             tooth->setCorpseVnum(victim->mobVnum());
           }
           delete corpse->name;
-          buf = fmt("tooth rotten %s") % victim->name;
+          buf = fmt("tooth lost limb rotten %s") % victim->name;
           corpse->name = mud_str_dup(buf);
 
           delete corpse->shortDescr;
           buf = fmt("a <k>rotten<1> tooth of %s") % victim->getName();
           corpse->shortDescr = mud_str_dup(buf);
 
-          delete corpse->descr;   
+          delete corpse->descr;
           buf = fmt("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
           corpse->setDescr(mud_str_dup(buf));
 
@@ -1511,14 +1511,15 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
           }
           if (!found)
             return FALSE;
-          if (victim->rawBruise(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO)) {
+          if (victim->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_NO)) {
             // note: bruise duration is doubled in rawBruise for all you scurvy coves
-            act(fmt("Your %s feels painfully tender and a <p>dark<1> <P>bruise<1> blooms.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
-            act(fmt("A dark bruise forms on $n's %s.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
+            act(fmt("Your %s feels painfully tender and a <p>mottled<1> <P>bruise<1> blooms.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+            act(fmt("A mottled bruise forms on $n's %s.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
           }
           break;
         case 5:
         case 6:
+        case 7:
           if (!victim->isUndead()) {
             // start bleeding
             // find a suitable slot to bleed 
@@ -1597,7 +1598,7 @@ int disease_dysentery(TBeing *victim, int message, affectedData *af)
               }
             } else {
                victim->sendTo("Your stomach is gripped by a dreadful spasm and you cannot contain yourself.\n\r");
-               act("You <o>besmirch<1> yourself!", FALSE, victim, NULL, NULL, TO_CHAR);
+               act("You have <o>besmirched<1> yourself!", FALSE, victim, NULL, NULL, TO_CHAR);
                act("The air around $n is woefully befouled as $e <o>besmirches<1> $mself.", FALSE, victim, NULL, NULL, TO_ROOM);
                victim->dropPool(min((int) victim->getWeight() / 10, (int) victim->getCond(POOP)), LIQ_POT_FILTH);
                victim->setCond(THIRST, max(0, ((int) (victim->getCond(THIRST) - (2 * (int) victim->getCond(POOP))))));
@@ -1616,7 +1617,7 @@ int disease_dysentery(TBeing *victim, int message, affectedData *af)
 								break;
               case 1:
                 victim->sendTo("Your stomach is gripped by a dreadful spasm and you cannot contain yourself.\n\r");
-                act("You <o>besmirch<1> yourself!", FALSE, victim, NULL, NULL, TO_CHAR);
+                act("You have <o>besmirched<1> yourself!", FALSE, victim, NULL, NULL, TO_CHAR);
                 act("The air around $n is woefully befouled as $e <o>besmirches<1> $mself.", FALSE, victim, NULL, NULL, TO_ROOM);
                 victim->dropPool(::number(2, 6), LIQ_POT_FILTH);
 								break;

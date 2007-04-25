@@ -3,6 +3,7 @@
 #include "obj_drinkcon.h"
 #include "obj_trash.h"
 #include "mail.h"
+#include "database.h"
 
 const int CART_VNUM = 33313;
 const int CONTENTS_VNUM = 33314;
@@ -120,46 +121,96 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     mob->doSay("Whoa, now!  I'll have none of those dodgy goods!");
     return TRUE;
   }
-/*  
-  if (ch->getMoney() < FEE) {
-    act("$n quickly covers over the cart.", TRUE, mob, NULL, 0, TO_ROOM);
-    mob->doSay("If you can't afford my services, then you can carry it to the dump yourself.");
-    return TRUE;
-  }
-*/  
+
   act("You put $N into $p's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
   act("$n puts $N into $p's cart.", TRUE, ch, mob, bodypart, TO_ROOM); 
   sstring stmp = fmt("There's your %d talen, compliments of our most generous and sanitary King.") % FEE;
   mob->doSay(stmp);
   
   ch->addToMoney(FEE, GOLD_SHOP_RESPONSES);
-/* LOGGING ON  (Next time:  add logging of mob level, use database)
- */
-  sstring partname = bodypart->name;
-  vector <sstring> partinfo;
-  split_string(partname, " []\n\r\t", partinfo);
-  sstring chopper = partinfo.back();
-  while(chopper.length() == 0 and partinfo.size() > 0) {
-    partinfo.erase(partinfo.end()-1);
-    chopper = partinfo.back();
-  }
-  sstring mob_vnum = "";
-  while (mob_vnum.length() == 0 and partinfo.size() > 0) {
-    partinfo.erase(partinfo.end()-1);
-    mob_vnum = partinfo.back();
-  }
   
-  if (chopper.isNumber())
-    chopper = "UNKNOWN";
-  if (partname.find("diseased") == sstring::npos &&
+  /* record data for the limb quest */
+  sstring partname = bodypart->name;
+
+  if (!tooth &&
+      partname.find("diseased") == sstring::npos &&
       partname.find("corpse of a") == sstring::npos &&
-      partname.find("pile of dust") == sstring::npos ){
-    time_t lt = time(0);
-    sstring buf = fmt("%s chopped by %s, vnum %s, deposited by %s at %s") 
-      % bodypart->getName() % chopper % mob_vnum
-      % ch->getName() % asctime(localtime(&lt));
- //   autoMail(NULL, "bump", buf.c_str());
-    vlogf(LOG_MAROR, fmt("%s") % buf);
+      partname.find("pile of dust") == sstring::npos &&
+      partname.find("rotten") == sstring::npos) {
+    // record stuff for limb questing
+    bool record_part = TRUE;
+    vector <sstring> partinfo;
+    split_string(partname, " []\n\r\t", partinfo);
+    
+    // we're expecting the end of the partname to be [bodypart] [slot #] [mob level] [mob vnum] [player that chopped it]
+    
+    // who chopped it
+    sstring chopper = partinfo.back();
+    while (chopper.length() == 0 and partinfo.size() > 0) {
+      partinfo.erase(partinfo.end()-1);
+      chopper = partinfo.back();
+    }
+    if (chopper.isNumber())
+      chopper = "UNKNOWN";
+    
+    // mob vnum
+    sstring mob_vnum = "";
+    while (mob_vnum.length() == 0 and partinfo.size() > 0) {
+      partinfo.erase(partinfo.end()-1);
+      mob_vnum = partinfo.back();
+    }
+    int m_vnum;
+    if (is_number(mob_vnum))
+      m_vnum = convertTo<int>(mob_vnum);
+    else {
+      record_part = FALSE;
+    }
+    
+    // mob level
+    sstring mob_level = "";
+    while (mob_level.length() == 0 and partinfo.size() > 0) {
+      partinfo.erase(partinfo.end()-1);
+      mob_level = partinfo.back();
+    }
+    int m_level;
+    if (is_number(mob_level))
+      m_level = convertTo<int>(mob_level);
+    else {
+      record_part = FALSE;
+    }
+    
+    // slot # (or 0 for hearts, eyes)
+    sstring slot_num = "";
+    while (slot_num.length() == 0 and partinfo.size() > 0) {
+      partinfo.erase(partinfo.end()-1);
+      slot_num = partinfo.back();
+    }
+    int slot;
+    if (is_number(slot_num))
+      slot = convertTo<int>(slot_num);
+    else {
+      record_part = FALSE;
+    }
+    
+    // part name
+    sstring mob_part = "";
+    while (mob_part.length() == 0 and partinfo.size() > 0) {
+      partinfo.erase(partinfo.end()-1);
+      mob_part = partinfo.back();
+    }
+
+    if (chopper.length() > 80 || mob_part.length() > 80) {
+      record_part = FALSE;
+    }
+    
+    if (record_part) {
+      vlogf(LOG_MAROR, fmt("Chop shop: %s") % partname);
+      TDatabase db(DB_SNEEZY);
+      sstring qry = fmt("insert quest_limbs (mob_vnum, mob_level, player, slot_name, slot_num) select %d, %d, '%s', '%s', %d") % m_vnum % m_level % chopper % mob_part % slot;
+      db.query("insert quest_limbs (mob_vnum, mob_level, player, slot_name, slot_num) select %i, %i, '%s', '%s', %i", m_vnum, m_level, chopper.c_str(), mob_part.c_str(), slot);
+    } else {
+      vlogf(LOG_MAROR, fmt("Chop shop not logged: %s") % partname);
+    }
   }
   delete bodypart;
   bodypart=NULL;
