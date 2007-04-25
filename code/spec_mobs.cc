@@ -3852,7 +3852,8 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       case 0:
         // i don't think scurvy is a really a pathogenic disease, but whatever
         if (!t->hasDisease(DISEASE_SCURVY)
-            && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
+            && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)
+            && t->isHumanoid()) {
           aff.type = AFFECT_DISEASE;
           aff.level = 0;
           aff.duration = ::number(500, 1000);
@@ -3910,7 +3911,8 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   if ((t = me->fight()) 
       && !number(0, 3)
-      && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
+      && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)
+      && t->isHumanoid()) {
     // plagues them
     aff.type = AFFECT_DISEASE;
     aff.level = 0;
@@ -3957,6 +3959,8 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     if (!t->isPc() && UtilMobProc(t))
       continue;
     if (t->rider)
+      continue;
+    if (!t->isHumanoid())
       continue;
     // protect newbies 
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
