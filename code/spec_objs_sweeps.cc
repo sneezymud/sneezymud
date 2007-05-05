@@ -75,8 +75,6 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
   if (newtile) { // delete tile and load item
     wearSlotT pos = o->eq_pos;
-    delete o;
-    o = NULL;
     sstring buf5 = fmt("tile %s") % buf3;
     sstring buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
     newtile->swapToStrung();
@@ -84,7 +82,9 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     newtile->shortDescr = mud_str_dup(buf6);
     act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
     newtile->obj_flags.decay_time = o->obj_flags.decay_time;
-      
+    delete o;
+    o = NULL;
+  
     ch->equipChar(newtile, pos, SILENT_YES);
   } else {
     ch->sendTo("Something has gone horribly wrong with your tile.\n\r");
