@@ -58,7 +58,6 @@ then
   then
     mv -f sneezy.2 sneezy >& /dev/null
     rm -f file
-    cp lib/tinyworld.mob lib/tinymob.use
     echo "Booting ./sneezy $PORT."
     ./sneezy $FLAGS $PORT >& file &
     pid=$(pgrep -U $USER -f "sneezy $PORT")

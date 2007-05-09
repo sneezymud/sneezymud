@@ -292,177 +292,100 @@ void generate_obj_index()
 // generate index table for monster file 
 void generate_mob_index()
 {
-  char buf[256];
   mobIndexData *tmpi = NULL;
-
+  TDatabase db(DB_SNEEZY);
+  
   // to prevent constant resizing (slows boot), declare an appropriate initial
   // size.  Should be smallest power of 2 that will hold everything
   mob_index.reserve(8192);
 
-  rewind(mob_f);
-
   // start by reading
-  if (fgets(buf, sizeof(buf)-1, mob_f) == NULL)
-    return;
+  db.query("select * from mob");
 
-  for (;;) {
-    int bc;
-    if (*buf == '#') {
-      if (tmpi) {
-        // push the previous one into the stack
-        mob_index.push_back(*tmpi);
-        delete tmpi;
-      }
-      sscanf(buf, "#%d", &bc);
-      if (bc >= 99999)  // terminator
-        break;
-
-      // start a new data member
-      tmpi = new mobIndexData();
-      if (!tmpi) {
-        perror("mobIndexData");
-        exit(0);
-      }
-
-
-      tmpi->virt = bc;
-      tmpi->pos = ftell(mob_f);
-
-      // read the sstrings
-      tmpi->name = fread_string(mob_f);
-      tmpi->short_desc = fread_string(mob_f);
-      tmpi->long_desc = fread_string(mob_f);
-      tmpi->description = fread_string(mob_f);
-
-
-      int rc;
-      long spac;
-      long spaf;
-      long fac;
-      float facp;
-      char let;
-      float mult;
-      rc = fscanf(mob_f, "%ld %ld %ld %f %c %f\n",
-         &spac, &spaf, &fac, &facp, &let, &mult);
-      if (rc != 6) {
-        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(1) %d") %  bc);
-        exit(0);
-      }
-
-      tmpi->faction = fac;
- 
-      long Class;
-      long lev;
-      long hitr;
-      float arm;
-      float hp;
-      float daml;
-      int damp;
-      rc = fscanf(mob_f, "%ld %ld %ld %f %f %f+%d \n",
-          &Class, &lev, &hitr, &arm, &hp, &daml, &damp);
-      if (rc != 7) {
-        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(2) %d (rc=%d)") %  bc % rc);
-        exit(0);
-      }
-
-      lev = (long)((arm + hp + daml) / 3);
-
-      tmpi->Class = Class;
-      tmpi->level = lev;
-
-      long mon;
-      long race;
-      long wgt;
-      long hgt;
-      rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
-          &mon, &race, &wgt, &hgt);
-      if (rc != 4) {
-        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(3) %d") %  bc);
-        exit(0);
-      }
-
-      tmpi->race = race;
-      tmpi->weight = wgt;
-
-      long some_stat;
-      statTypeT local_stat;
-      for (local_stat = MIN_STAT; local_stat < MAX_STATS_USED; local_stat++)
-        fscanf(mob_f, " %ld ", &some_stat);
-
-      long mpos;
-      long dpos;
-      long sex;
-      long spec;
-      rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
-          &mpos, &dpos, &sex, &spec);
-      if (rc != 4) {
-        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(4) %d") %  bc);
-        exit(0);
-      }
-
-      tmpi->spec = spec;
-
-      long some_imm;
-      immuneTypeT local_imm;
-      for (local_imm = MIN_IMMUNE; local_imm < MAX_IMMUNES; local_imm++)
-        fscanf(mob_f, " %ld ", &some_imm);
-
-      long mat;
-      long cbs;
-      long vis;
-      long maxe;
-      rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
-          &mat, &cbs, &vis, &maxe);
-      if (rc != 4) {
-        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(5) %d") %  bc);
-        exit(0);
-      }
-
-      tmpi->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : maxe);
-
-      // check for sounds and just account for them if found
-      if (let == 'L') {
-        char * snds = fread_string(mob_f);
-        char * dsts = fread_string(mob_f);
-        delete [] snds;
-        delete [] dsts;
-      }
-
-      // handle some stat counters
-      if (lev <= 5) {
-        stats.mobs_1_5++;
-      } else if (lev <= 10) {
-        stats.mobs_6_10++;
-      } else if (lev <= 15) {
-        stats.mobs_11_15++;
-      } else if (lev <= 20) {
-        stats.mobs_16_20++;
-      } else if (lev <= 25) {
-        stats.mobs_21_25++;
-      } else if (lev <= 30) {
-        stats.mobs_26_30++;
-      } else if (lev <= 40) {
-        stats.mobs_31_40++;
-      } else if (lev <= 50) {
-        stats.mobs_41_50++;
-      } else if (lev <= 60) {
-        stats.mobs_51_60++;
-      } else if (lev <= 70) {
-        stats.mobs_61_70++;
-      } else if (lev <= 100) {
-        stats.mobs_71_100++;
-      } else {
-        stats.mobs_101_127++;
-      }
-      // end stat counters
+  while(db.fetchRow()){
+    if (tmpi) {
+      // push the previous one into the stack
+      mob_index.push_back(*tmpi);
+      delete tmpi;
     }
 
-      // setup for next critter
-    if (fgets(buf, sizeof(buf)-1, mob_f) == NULL) {
-      vlogf(LOG_BUG, fmt("Error during mobIndexSetup(6) %d") %  bc);
+    // start a new data member
+    tmpi = new mobIndexData();
+    if (!tmpi) {
+      perror("mobIndexData");
       exit(0);
     }
+    
+    tmpi->virt = convertTo<int>(db["vnum"]);;
+    
+    // read the sstrings
+    tmpi->name = mud_str_dup(db["name"]);
+    tmpi->short_desc = mud_str_dup(db["short_desc"]);
+    tmpi->long_desc = mud_str_dup(db["long_desc"]);
+    tmpi->description = mud_str_dup(db["description"]);
+    
+    long fac=convertTo<int>(db["faction"]);
+    
+    tmpi->faction = fac;
+    
+    long Class=convertTo<int>(db["class"]);
+    long lev=convertTo<int>(db["level"]);
+    float arm=convertTo<int>(db["ac"]);
+    float hp=convertTo<int>(db["hpbonus"]);
+    float daml=convertTo<int>(db["damage_level"]);
+    
+    lev = (long)((arm + hp + daml) / 3);
+    
+    tmpi->Class = Class;
+    tmpi->level = lev;
+    
+    long race=convertTo<int>(db["race"]);
+    long wgt=convertTo<int>(db["weight"]);
+    
+    tmpi->race = race;
+    tmpi->weight = wgt;
+    
+    long spec=convertTo<int>(db["spec_proc"]);
+    
+    tmpi->spec = spec;
+        
+    long maxe=convertTo<int>(db["max_exist"]);
+    
+    tmpi->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : maxe);
+    
+    // handle some stat counters
+    if (lev <= 5) {
+      stats.mobs_1_5++;
+    } else if (lev <= 10) {
+      stats.mobs_6_10++;
+    } else if (lev <= 15) {
+      stats.mobs_11_15++;
+    } else if (lev <= 20) {
+      stats.mobs_16_20++;
+    } else if (lev <= 25) {
+      stats.mobs_21_25++;
+    } else if (lev <= 30) {
+      stats.mobs_26_30++;
+    } else if (lev <= 40) {
+      stats.mobs_31_40++;
+    } else if (lev <= 50) {
+      stats.mobs_41_50++;
+    } else if (lev <= 60) {
+      stats.mobs_51_60++;
+    } else if (lev <= 70) {
+      stats.mobs_61_70++;
+    } else if (lev <= 100) {
+      stats.mobs_71_100++;
+    } else {
+      stats.mobs_101_127++;
+    }
+    // end stat counters
   }
+  // and push the last one into the stack
+  mob_index.push_back(*tmpi);
+  delete tmpi;
+  
+
   return;
 }
 

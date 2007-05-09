@@ -15,6 +15,7 @@ extern "C" {
 #include "mail.h"
 #include "combat.h"
 #include "statistics.h"
+#include "database.h"
 
 static void stripSpellAffects(TBeing * mob)
 {
@@ -187,27 +188,28 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
 static void TBeingLoad(TBeing *ch, int vnum)
 {
   TMonster *mob;
-  FILE *mob_f;
-  char buf[256];
-  int rc, num;
+  int rc; //, num;
 
-  sprintf(buf, "immortals/%s/mobs/%d", ch->name, vnum);
-  if (!(mob_f = fopen(buf, "r"))) {
-    ch->sendTo("Couldn't open that file.\n\r");
-    return;
-  }
   mob = new TMonster();
+  ch->sendTo(fmt("Loading mob number %d.\n\r") % vnum);
 
-  // This stuff was ripped out of db.c - Russ
+  // do this here to avoid the 'deleted & not found in character_list' assertion 
+  // in ~TMonster if readMobFromDB fails or returns delete
+  mob->next = character_list;
+  character_list = mob;
   
-  fscanf(mob_f, "#%d\n", &num);
-  ch->sendTo(fmt("Loading mob number %d.\n\r") % num);
-
-  rc = mob->readMobFromFile(mob_f, TRUE);
+  rc = mob->readMobFromDB(vnum, TRUE, ch);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     ch->sendTo("Mob deleted by initializer.\n\r");
     delete mob;
     return;
+  } else if (!rc) {
+    ch->sendTo(fmt("Mob %d not found in the builder database.\n\r") % vnum);
+    delete mob;
+    return;
+  } else {
+    act("$n pulls $N from $s immortal oven.", TRUE, ch, mob, 0, TO_ROOM);
+    act("You pull $N from your immortal oven.", TRUE, ch, mob, 0, TO_CHAR);
   }
 
   // mod for imm
@@ -221,7 +223,7 @@ static void TBeingLoad(TBeing *ch, int vnum)
   }
 
   mob->convertAbilities();
-  mob->snum = num;
+  mob->snum = vnum;
 
   wearSlotT ij;
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {        // Initializing 
@@ -233,15 +235,9 @@ static void TBeingLoad(TBeing *ch, int vnum)
   mob->desc = 0;
   mob->riding = NULL;
 
-  // insert in list 
-  mob->next = character_list;
-  character_list = mob;
-
   mobCount++;
 
   *ch->roomp += *mob;
-
-  fclose(mob_f);
 
   mob->checkMobStats(TINYFILE_NO);
 
@@ -251,122 +247,137 @@ static void TBeingLoad(TBeing *ch, int vnum)
 
 static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
 {
-  FILE *fp;
-  char buf[255], temp[4096];
-  int j, k;
-
-  if (!mob->name || !mob->getDescr() || 
-      !mob->shortDescr || !mob->getLongDesc()) {
-    ch->sendTo("Your mob is missing one or more sstrings.\n\r");
-    ch->sendTo(fmt("Please update the follwing before saving:%s%s%s%s\n\r") %
-               (mob->name                 ? "" : " Name") %
-               (mob->getDescr()           ? "" : " Description") %
-               (mob->shortDescr           ? "" : " Short-Description") %
-               (mob->getLongDesc() ? "" : " Long-Description"));
+  if (!mob->name || !mob->getDescr() || !mob->shortDescr || !mob->getLongDesc()) {
+    ch->sendTo("Your mob is missing one or more important strings.\n\r");
+    ch->sendTo(fmt("Please update the following before saving:%s%s%s%s\n\r")
+               % (mob->name                 ? "" : " Name")
+               % (mob->shortDescr           ? "" : " Short description")
+               % (mob->getLongDesc()        ? "" : " Long description")
+               % (mob->getDescr()           ? "" : " Description"));
     return;
   }
 
-  // make sure they have a mob directory 
-  sprintf(buf, "immortals/%s/mobs", ch->getName());
-  if (!(fp = fopen(buf, "r"))) {
-    if (mkdir(buf, 0770)) {
-      ch->sendTo("Unable to create a mobs directory for you.  Bug a coder.\n\r");
-      return;
-    } else
-      ch->sendTo("Mobile directory created...\n\r");
-  }
-  if (fp)
-    fclose(fp);
+  char name[128], short_desc[128], long_desc[256], description[MAX_STRING_LENGTH];
+  char local_sound[128], adjacent_sound[128];
 
-  sprintf(buf, "immortals/%s/mobs/%d", ch->name, vnum);
-  if (!(fp = fopen(buf, "w"))) {
-    ch->sendTo("Problem writing to disk. Maybe try again later.\n\r");
-    return;
+  // make sure all of our breaks are \n\r
+  // most of these will never have a line break, but this is just the save routine so whatever...
+  int f, u;
+  for (f = 0, u = 0; u < (int) strlen(mob->name); u++) {
+    if (mob->name[u] == 10) {
+      name[f++] = 10;
+      name[f++] = 13;
+    } else if (mob->name[u] != 13) {
+      name[f++] = mob->name[u];
+    }
   }
+  name[f] = '\0';
+  
+  for (f = 0, u = 0; u < (int) strlen(mob->shortDescr); u++) {
+    if (mob->shortDescr[u] == 10) {
+      short_desc[f++] = 10;
+      short_desc[f++] = 13;
+    } else if (mob->shortDescr[u] != 13) {
+      short_desc[f++] = mob->shortDescr[u];
+    }
+  }
+  short_desc[f] = '\0';
+
+  for (f = 0, u = 0; u < (int) strlen(mob->getLongDesc()); u++) {
+    if (mob->getLongDesc()[u] == 10) {
+      long_desc[f++] = 10;
+      long_desc[f++] = 13;
+    } else if (mob->getLongDesc()[u] != 13) {
+      long_desc[f++] = mob->getLongDesc()[u];
+    }
+  }
+  long_desc[f] = '\0';
+
+  for (f = 0, u = 0; u < (int) strlen(mob->getDescr()); u++) {
+    if (mob->getDescr()[u] == 10) {
+      description[f++] = 10;
+      description[f++] = 13;
+    } else if (mob->getDescr()[u] != 13) {
+      description[f++] = mob->getDescr()[u];
+    }
+  }
+  description[f] = '\0';
+  
+  if (mob->sounds) {
+    for (f = 0, u = 0; u < (int) strlen(mob->sounds); u++) {
+      if (mob->sounds[u] == 10) {
+        local_sound[f++] = 10;
+        local_sound[f++] = 13;
+      } else if (mob->sounds[u] != 13) {
+        local_sound[f++] = mob->sounds[u];
+      }
+    }
+    local_sound[f] = '\0';
+  }
+  
+  if (mob->distantSnds) {
+    for (f = 0, u = 0; u < (int) strlen(mob->distantSnds); u++) {
+      if (mob->distantSnds[u] == 10) {
+        adjacent_sound[f++] = 10;
+        adjacent_sound[f++] = 13;
+      } else if (mob->distantSnds[u] != 13) {
+        adjacent_sound[f++] = mob->distantSnds[u];
+      }
+    }
+    adjacent_sound[f] = '\0';
+  }
+
   ch->sendTo("Saving.\n\r");
-  for (j = 0, k = 0; k <= (int) strlen(mob->name); k++) {
-    if (mob->name[k] != 13)
-      temp[j++] = mob->name[k];
-  }
-  temp[j] = '\0';
-  fprintf(fp, "#%d\n%s~\n", vnum, temp);
-  for (j = 0, k = 0; k <= (int) strlen(mob->shortDescr); k++) {
-    if (mob->shortDescr[k] != 13)
-      temp[j++] = mob->shortDescr[k];
-  }
-  temp[j] = '\0';
-  fprintf(fp, "%s~\n", temp);
-  for (j = 0, k = 0; k <= (int) strlen(mob->getLongDesc()); k++) {
-    if (mob->getLongDesc()[k] != 13)
-      temp[j++] = mob->getLongDesc()[k];
-  }
-  temp[j] = '\0';
-  fprintf(fp, "%s~\n", temp);
-  for (j = 0, k = 0; k <= (int) strlen(mob->getDescr()); k++) {
-    if (mob->getDescr()[k] != 13)
-      temp[j++] = mob->getDescr()[k];
-  }
-  temp[j] = '\0';
-  fprintf(fp, "%s~\n", temp);
-  fprintf(fp, "%ld %ld %d %.1f %s %.1f\n",
-        mob->specials.act,
-        mob->specials.affectedBy,
-        mob->getFaction(), (double) mob->getPerc(),
-          (mob->sounds ? "L" : "A"),
-        mob->getMult());
-  fprintf(fp, "%d %d %d %.1f %.1f %.1f+%d\n",
-        mob->getClass(),
-        mob->GetMaxLevel(),
-        mob->getHitroll(),
-        mob->getACLevel(),
-        mob->getHPLevel(),
-        mob->getDamLevel(), 
-        mob->getDamPrecision());
-  fprintf(fp, "%d %d %d %d\n",
-        mob->moneyConst, mob->getRace(), (int) mob->getWeight(), mob->getHeight());
-
-  statTypeT local_stat;
-  for(local_stat=MIN_STAT;local_stat<MAX_STATS_USED;local_stat++)
-    fprintf(fp, "%d ", mob->getStat(STAT_CHOSEN, local_stat));
-  fprintf(fp, "\n");
-
-  fprintf(fp, "%d %d %d %d\n",
-        mapPosToFile(mob->getPosition()),
-        mapPosToFile(mob->default_pos),
-      mob->getSex(), mob->spec);
-
+  TDatabase db(DB_IMMORTAL);
+  db.query("delete from mob where owner = '%s' and vnum = %i", ch->name, vnum);
+  // (owner, vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound)
+  db.query("insert into mob values ('%s', %i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
+      ch->name, vnum, 
+      name, short_desc, long_desc, description, 
+      mob->specials.act, mob->specials.affectedBy, mob->getFaction(), static_cast<int>(mob->getPerc()), 
+      ((mob->sounds || mob->distantSnds) ? "L" : "A"), (float) mob->getMult(), 
+      mob->getClass(), mob->GetMaxLevel(), mob->getHitroll(), 
+      mob->getACLevel(), mob->getHPLevel(), mob->getDamLevel(), 
+      mob->getDamPrecision(), mob->moneyConst, mob->getRace(), static_cast<int>(mob->getWeight()), mob->getHeight(), 
+      mob->getStat(STAT_CHOSEN, STAT_STR), 
+      mob->getStat(STAT_CHOSEN, STAT_BRA), 
+      mob->getStat(STAT_CHOSEN, STAT_CON), 
+      mob->getStat(STAT_CHOSEN, STAT_DEX), 
+      mob->getStat(STAT_CHOSEN, STAT_AGI), 
+      mob->getStat(STAT_CHOSEN, STAT_INT), 
+      mob->getStat(STAT_CHOSEN, STAT_WIS), 
+      mob->getStat(STAT_CHOSEN, STAT_FOC), 
+      mob->getStat(STAT_CHOSEN, STAT_PER), 
+      mob->getStat(STAT_CHOSEN, STAT_CHA), 
+      mob->getStat(STAT_CHOSEN, STAT_KAR), 
+      mob->getStat(STAT_CHOSEN, STAT_SPE), 
+      mapPosToFile(mob->getPosition()), mapPosToFile(mob->default_pos), mob->getSex(), mob->spec, 
+      mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist, 
+      (mob->sounds ? local_sound : ""), (mob->distantSnds ? adjacent_sound : ""));
+  
+  // immunties
+  db.query("delete from mob_imm where owner = '%s' and vnum = %i", ch->name, vnum);
   immuneTypeT ij;
-  for (ij=MIN_IMMUNE;ij < 14;ij++)
-    fprintf(fp, "%d ",mob->getImmunity(ij));
-  fprintf(fp,"\n");
-  for (;ij < MAX_IMMUNES;ij++)
-    fprintf(fp, "%d ",mob->getImmunity(ij));
-  fprintf(fp,"\n");
+  for (ij=MIN_IMMUNE;ij < MAX_IMMUNES;ij++) {
+    if (mob->getImmunity(ij) != 0)
+      db.query("insert into mob_imm (owner, vnum, type, amt) values ('%s', %i, %i, %i)", ch->name, vnum, (int) ij, mob->getImmunity(ij));
+  }
 
-  fprintf(fp, "%d %d %d %d\n",
-        mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist);
-
-  if (mob->sounds || mob->distantSnds)
-    fprintf(fp, "%s~\n%s~\n", mob->sounds ? mob->sounds : "", mob->distantSnds ? mob->distantSnds : "");
-
+  // extra messages (repop, bamfout, etc)
+  db.query("delete from mob_extra where owner = '%s' and vnum = %i", ch->name, vnum);
   extraDescription *tExDescr;
-
   for (tExDescr = mob->ex_description; tExDescr; tExDescr = tExDescr->next) {
-    int tMarker = 0;
-
-    if (tExDescr->description) {
+    if (strlen(tExDescr->description)) {
+      /*
+      int tMarker = 0;
       for (unsigned int tPos = 0; tPos <= strlen(tExDescr->description); tPos++)
         if (tExDescr->description[tPos] != 13)
-          temp[tMarker++] = tExDescr->description[tPos];
-
-      temp[tMarker] = '\0';
-
-      fprintf(fp, "E\n%s~\n%s~\n", tExDescr->keyword, tExDescr->description);
+          description[tMarker++] = tExDescr->description[tPos];
+      description[tMarker] = '\0';
+      */
+      db.query("insert into mob_imm (owner, vnum, keyword, description) values ('%s', %i, '%s', '%i')", ch->name, vnum, tExDescr->keyword, tExDescr->description);
     }
-    // No else.  if we didn't have text then something went wrong.  We Do Not save this one.
   }
-
-  fclose(fp);
 }
 
 static void msave(TBeing *ch, char *argument)
@@ -502,50 +513,51 @@ static void medit(TBeing *ch, char *arg)
   update_mob_menu(ch, ch->desc->mob);
 }
 
-static void mlist(TPerson *ch)
+static void mlist(TPerson *ch, bool zone=false)
 {
-  char buf[256];
-  FILE *fp = NULL;
-
-  // remove old temporary file, if any 
-  sprintf(buf, "tmp/%s.tempfile", ch->getName());
-  unlink(buf);
-
-  // make sure they have an mob directory 
-  sprintf(buf, "immortals/%s/mobs", ch->getName());
-  if (!(fp = fopen(buf, "r"))) {
-    if (mkdir(buf, 0770)) {
-      ch->sendTo("Unable to create a mobs directory for you.  Bug Brutius.\n\r");
-      return;
-    } else
-      ch->sendTo("Mobile directory created...\n\r");
+  // list the mobs from a player's immortal file
+  TDatabase db = DB_IMMORTAL;
+  sstring longstr;
+  
+  if(zone){
+    db.query("select vnum, name, short_desc from mob where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name, zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
+  } else {
+    db.query("select vnum, name, short_desc from mob where owner = '%s' order by vnum", ch->name);
   }
-  if (fp)
-    fclose(fp);
 
-  if (!safe_to_be_in_system(ch->getName()))
+  if(!db.isResults()){
+    ch->sendTo("No mobs found.\n\r");
     return;
+  }
+  
+  longstr = "<c>Vnum   Short description<1>\n\r";
+  while(db.fetchRow()){
+    longstr += fmt("%-6s %-s\n\r") % db["vnum"] % db["short_desc"];
+  }
 
-  // create the listing 
-#if 0
-  sprintf(buf, "(cd immortals/%s/mobs;ls -C * > ../../../tmp/%s.tempfile)", ch->getName(), ch->getName());
-  vsystem(buf);
-
-  sprintf(buf, "tmp/%s.tempfile", ch->getName());
-  ch->desc->start_page_file(buf, "No mobs found!\n\r");
-#else
-  generic_dirlist(buf, ch);
-#endif
+  ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 
 static void mremove(TBeing *ch, int vnum)
 {
-  char buf[256];
+  // delete a mob from a player's immortal file
+  TDatabase db(DB_IMMORTAL);
+  
+  db.query("select vnum from mob where vnum=%i and owner='%s'", vnum, ch->name);
 
-  sprintf(buf, "immortals/%s/mobs/%d", ch->getName(), vnum);
-  if (unlink(buf))
-    ch->sendTo("Unable to remove that mobile.  Sure you got the # right?\n\r");
+  if(!db.isResults()){
+    ch->sendTo("Mob not found.\n\r");
+    return;
+  }
+
+  if(!db.query("delete from mob where vnum=%i and owner='%s'", vnum, ch->name) ||
+     !db.query("delete from mob_imm where vnum=%i and owner='%s'", vnum, ch->name) ||
+     !db.query("delete from mob_extra where vnum=%i and owner='%s'", vnum, ch->name)){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  } else
+    ch->sendTo("Removed.\n\r");
 }
 
 static void change_mob_name(TBeing *ch, TMonster *mob, const char *arg, editorEnterTypeT type)
@@ -2013,44 +2025,49 @@ int mapPosToFile(positionTypeT pos)
   return -1;
 }
 
-int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
+int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 {
-  long tmp, tmp2;
-  int tmp3, calc_level;
-  float att;
+  long tmp; //, tmp2;
+  int calc_level; // tmp3, 
+  // float att;
   int rc;
   char letter;
-  char buf[256];
+  TDatabase db;
+  
+  if (ch && should_alloc) {
+    db = DB_IMMORTAL;
+    db.query("select * from mob where owner = '%s' and vnum = %i", ch->name, virt);
+  } else {
+    db = DB_SNEEZY;
+    db.query("select * from mob where vnum = %i", virt);
+  }
+  if (!db.fetchRow()) {
+    if (!should_alloc) {
+      vlogf(LOG_LOW, fmt("Failure to load mob vnum %d from database.") % virt);
+    }
+    return FALSE;
+  }
 
   if (should_alloc) {
     number = -1;
-
-    name = fread_string(fp);
-    shortDescr = fread_string(fp);
-    player.longDescr = fread_string(fp);
-    setDescr(fread_string(fp));
+    name = mud_str_dup(db["name"]);
+    shortDescr = mud_str_dup(db["short_desc"]);
+    player.longDescr = mud_str_dup(db["long_desc"]);
+    setDescr(mud_str_dup(db["description"]));
   } else {
     name = mob_index[number].name;
     shortDescr = mob_index[number].short_desc;
     player.longDescr = mob_index[number].long_desc;
     setDescr(mob_index[number].description);
-
-    // We allocated the names and sstrings in the indeces, don't do it again!
-    readStringNoAlloc(fp);
-    readStringNoAlloc(fp);
-    readStringNoAlloc(fp);
-    readStringNoAlloc(fp);
   }
-
+  
   setMult(1.0);
 
-  fscanf(fp, "%ld ", &tmp);
-  specials.act = tmp;
+  specials.act = convertTo<int>(db["actions"]);
   if (should_alloc)
     SET_BIT(specials.act, ACT_STRINGS_CHANGED);
 
-  fscanf(fp, " %ld ", &tmp);
-  specials.affectedBy = tmp;
+  specials.affectedBy = convertTo<int>(db["affects"]);
 
   if (isAffected(AFF_SANCTUARY)) {
     REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
@@ -2067,62 +2084,31 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     // setProtection(50);
   }
 
-  fscanf(fp, " %ld ", &tmp);
+  tmp=convertTo<int>(db["faction"]);
   mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
   setFaction(factionTypeT(tmp));
 
-  fscanf(fp, " %f ", &att);
-  setPerc((double) att);
+  setPerc((double) convertTo<double>(db["fact_perc"]));
 
-  fscanf(fp, " %c ", &letter);
+  letter=convertTo<char>(db["letter"]);
 
   if ((letter == 'A') || (letter == 'L')) {
-    fscanf(fp, " %f ", &att);
-    setMult((double) att);
+    setMult((double) convertTo<double>(db["attacks"]));
 
-    fscanf(fp, "\n");
+    setClass(convertTo<int>(db["class"]));
+    fixLevels(convertTo<int>(db["level"]));
+    // int lvl = convertTo<int>(db["level"]);
 
-    fscanf(fp, " %ld ", &tmp);
-    setClass(tmp);
-    fscanf(fp, " %ld ", &tmp);
-    fixLevels(tmp);
-    int lvl = tmp;
+    setHitroll(convertTo<int>(db["tohit"]));
 
-    fscanf(fp, " %ld ", &tmp);
-    setHitroll(tmp);
-
-    fscanf(fp, " %f ", &att);
-    setACLevel(att);
+    setACLevel(convertTo<float>(db["ac"]));
     setACFromACLevel();
 
-    fscanf(fp, " %f ", &att);
-    setHPLevel(att);
+    setHPLevel(convertTo<float>(db["hpbonus"]));
     setHPFromHPLevel();
 
-    bool oldStyle = false;
-    rc = fscanf(fp, " %f+%d \n", &att, &tmp3);
-    if (rc == 2) {
-      // correct, new style
-      setDamLevel(att);
-      setDamPrecision(tmp3);
-    } else {
-      vlogf(LOG_EDIT, fmt("Old style mob (%s).  Please fix AC/Dam/HP.") %  getName());
-      oldStyle = true;
-      setDamLevel(lvl);
-      setDamPrecision(20);
-      setACLevel(lvl);
-      setACFromACLevel();
-      setHPLevel(lvl);
-      setHPFromHPLevel();
-
-      // lets try to put filepos on correct path
-      if (rc == 1) {
-        // old format was %dd%d+%d, we read the first %d
-        rc = fscanf(fp, "d%ld+%ld \n", &tmp, &tmp2);
-        if (rc != 2)
-          vlogf(LOG_EDIT, fmt("Unable to self-correct old style mob (rc=%d)") %  rc);
-      }
-    }
+    setDamLevel(convertTo<float>(db["damage_level"]));
+    setDamPrecision(convertTo<int>(db["damage_precision"]));
     
     calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
     
@@ -2132,51 +2118,30 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     setMaxMove(50 + 10*GetMaxLevel());
     setMove(moveLimit());
 
-    fscanf(fp, " %ld ", &tmp);
-    if (tmp > 10) {
-      vlogf(LOG_EDIT, fmt("Old style mob (%s) for mone y constant.  Please reset money.") %  getName());
-      // using calc_level here isn't ideal, because it won't end up
-      // being the final level for guildmasters and such folks,
-      // but it's fine for now and better than using the level set
-      // in the mobfile, which is pretty off in most cases
-      tmp = tmp * 10 / 4 / calc_level / calc_level;
-      tmp = min(max(1, (int) tmp), 10);
-    }
-    moneyConst = (ubyte) tmp;
 
-    if (oldStyle) {
-      fscanf(fp, " %ld ", &tmp);
-      // use to be a expBonus, ignored now
-    }
+    moneyConst = (ubyte) convertTo<ubyte>(db["gold"]);
     setExp(0);
 
-    fscanf(fp, " %ld ", &tmp);
-    setRace(race_t(tmp));
-    fscanf(fp, " %ld ", &tmp);
-    setWeight(tmp);
-    fscanf(fp, " %ld ", &tmp);
-    setHeight(tmp);
+    setRace(race_t(convertTo<int>(db["race"])));
+    setWeight(convertTo<float>(db["weight"]));
+    setHeight(convertTo<int>(db["height"]));
 
-    long pos = ftell(fp);
-    statTypeT local_stat;
-    fgets(buf, 255, fp);
-    if (sscanf(buf, "%ld/%ld", &tmp, &tmp2) == 2) {
-      vlogf(LOG_EDIT, fmt("Old style mob loaded (%s).  converting characteristics") % 
-              getName());
-      for(local_stat=MIN_STAT;local_stat<MAX_STATS_USED;local_stat++) {
-        setStat(STAT_CHOSEN, local_stat, 0);
-      }
-      max_exist = 9999;
-    } else {
-      fseek(fp, pos, SEEK_SET);
-      for(local_stat=MIN_STAT;local_stat<MAX_STATS_USED;local_stat++) {
-        fscanf(fp, " %ld ", &tmp);
-        setStat(STAT_CHOSEN, local_stat, tmp);
-      }
-    }
+    // statTypeT local_stat;
 
-    fscanf(fp, " %ld ", &tmp);
-    setPosition(mapFileToPos(tmp));
+    setStat(STAT_CHOSEN, STAT_STR, convertTo<int>(db["str"]));
+    setStat(STAT_CHOSEN, STAT_BRA, convertTo<int>(db["bra"]));
+    setStat(STAT_CHOSEN, STAT_CON, convertTo<int>(db["con"]));
+    setStat(STAT_CHOSEN, STAT_DEX, convertTo<int>(db["dex"]));
+    setStat(STAT_CHOSEN, STAT_AGI, convertTo<int>(db["agi"]));
+    setStat(STAT_CHOSEN, STAT_INT, convertTo<int>(db["intel"]));
+    setStat(STAT_CHOSEN, STAT_WIS, convertTo<int>(db["wis"]));
+    setStat(STAT_CHOSEN, STAT_FOC, convertTo<int>(db["foc"]));
+    setStat(STAT_CHOSEN, STAT_PER, convertTo<int>(db["per"]));
+    setStat(STAT_CHOSEN, STAT_CHA, convertTo<int>(db["cha"]));
+    setStat(STAT_CHOSEN, STAT_KAR, convertTo<int>(db["kar"]));
+    setStat(STAT_CHOSEN, STAT_SPE, convertTo<int>(db["spe"]));
+
+    setPosition(mapFileToPos(convertTo<int>(db["pos"])));
 
     if (getPosition() == POSITION_DEAD) {
       // can happen.  no legs and trying to set resting, etc
@@ -2184,14 +2149,11 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
           getName());
     }
 
-    fscanf(fp, " %ld ", &tmp);
-    default_pos = mapFileToPos(tmp);
+    default_pos = mapFileToPos(convertTo<int>(db["def_position"]));
 
-    fscanf(fp, " %ld ", &tmp);
-    setSexUnsafe(tmp);
+    setSexUnsafe(convertTo<int>(db["sex"]));
 
-    fscanf(fp, " %ld ", &tmp);
-    spec = tmp;
+    spec = convertTo<int>(db["spec_proc"]);
 
     if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
 //    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
@@ -2206,31 +2168,13 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     // gold isn't calculated until here either...
     addToExp(determineExp());
 
-    immuneTypeT ij;
-    for (ij = MIN_IMMUNE; ij< MAX_IMMUNES; ij++) {
-      fscanf(fp, " %ld ", &tmp);
-      setImmunity(ij, tmp);
-    }
+    setMaterial(convertTo<int>(db["skin"]));
 
-    if (fscanf(fp, " %ld ", &tmp) == 1)
-      setMaterial(tmp);
-    else
-      setMaterial(MAT_UNDEFINED);
+    canBeSeen = convertTo<int>(db["can_be_seen"]);
 
-    if (fscanf(fp, " %ld ", &tmp) == 1)
-      canBeSeen = tmp;
-    else
-      canBeSeen = 0;
+    visionBonus = convertTo<int>(db["vision"]);
 
-    if (fscanf(fp, " %ld ", &tmp) == 1)
-      visionBonus = tmp;
-    else
-      canBeSeen = 0;
-
-    if (fscanf(fp, " %ld ", &tmp) == 1)
-      max_exist = tmp;
-    else
-      max_exist = 0;
+    max_exist = convertTo<int>(db["max_exist"]);
 
     if (!should_alloc) {
       rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
@@ -2239,28 +2183,24 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
         return DELETE_THIS;
       }
     }
+    if (db["local_sound"].length() > 0)
+      sounds=mud_str_dup(db["local_sound"]);
+    if (db["adjacent_sound"].length() > 0)
+      distantSnds=mud_str_dup(db["adjacent_sound"]);
 
-    if (letter == 'L') {
-      sounds = fread_string(fp);
-      if (sounds && *sounds)
-        distantSnds = fread_string(fp);
-    } else {
-      sounds = NULL;
-      distantSnds = NULL;
+    db.query("select * from mob_imm where vnum=%i", virt);
+    while(db.fetchRow()){
+      setImmunity((immuneTypeT) convertTo<int>(db["type"]), convertTo<int>(db["amt"]));
     }
-
+    
+    db.query("select * from mob_extra where vnum=%i", virt);
     extraDescription *tExDescr;
-    long tCurOffSet = ftell(fp);
-
-    // First condition should Always be true (!0).  We only do it so it's done every turn.
-    while (!fscanf(fp, "E\n") && !feof(fp) && tCurOffSet != ftell(fp)) {
+    while(db.fetchRow()){
       tExDescr              = new extraDescription();
-      tExDescr->keyword     = fread_string(fp);
-      tExDescr->description = fread_string(fp);
+      tExDescr->keyword     = mud_str_dup(db["keyword"]);
+      tExDescr->description = mud_str_dup(db["description"]);
       tExDescr->next        = ex_description;
       ex_description        = tExDescr;
-
-      tCurOffSet = ftell(fp);
     }
 
     player.time.birth = time(0);
@@ -2421,8 +2361,13 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 4:        // list 
-      mlist(this);
+      sscanf(sstring, "%s", mobile);
+      if(!strcmp(mobile, "zone"))
+        mlist(this, true);
+      else
+        mlist(this, false);
       return;
+
       break;
     case 5:        // remove 
       if (sscanf(sstring, "%d", &vnum) != 1) {

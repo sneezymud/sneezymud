@@ -480,8 +480,7 @@ class TMonster : public TBeing {
       wait = amt;
     }
     virtual void addToWait(int amt);
-    int writeMobToFile(FILE *);
-    int readMobFromFile(FILE *, bool);
+    int readMobFromDB(int, bool, TBeing * = NULL);
     int getMobIndex() const { return (number < 0 ? 0 : number); }
     bool isUnique() {
       return (!mob_index[getMobIndex()].getNumber());

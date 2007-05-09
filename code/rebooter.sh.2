@@ -75,18 +75,12 @@ rotate_files()
     cp -fp "${PROD_LIB_DIR}/tinyworld.obj" "${PROD_LIB_DIR}/tinyobj.use"
   fi
 
-  # Copy new mobs
-  if [ -f "${PROD_LIB_DIR}/tinyworld.mob" ]
-  then
-    echo "Copying new tinyworld.mob."
-    cp -fp "${PROD_LIB_DIR}/tinyworld.mob" "${PROD_LIB_DIR}/tinymob.use"
-  fi
-
-  echo "Copying obj and room data from sneezyq to sneezy."
+  echo "Copying obj & room & mob data from sneezyq to sneezy."
 
   for i in obj objextra objaffect \
            shop shopproducing shopmaterial shoptype \
-           room roomexit roomextra itemtype mobresponses;
+           room roomexit roomextra itemtype \
+           mob mob_imm mob_extra mobresponses;
   do 
     echo Copying $i table.
     mysqldump sneezyq $i | mysql sneezy

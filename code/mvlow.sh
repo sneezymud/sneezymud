@@ -12,9 +12,6 @@ if [ -a $TOUCHFILE ]; then
 fi
 
 # copy the latest tiny files
-echo Copying tinyworld.mob
-cp $BUILD_MUD_ROOT/lib/tinyworld.mob $PROD_MUD_ROOT/lib/tinyworld.mob
-
 echo Updating zonefiles data
 (
 cd $PROD_MUD_ROOT/lib/zonefiles
@@ -41,7 +38,8 @@ svn update
 # will complain about missing constraints
 for i in obj objextra objaffect \
          shop shopproducing shopmaterial shoptype \
-         room roomexit roomextra itemtypes mobresponses;
+         room roomexit roomextra itemtypes \
+         mob mob_imm mob_extra mobresponses;
 do 
   echo Copying $i table.
   mysqldump -u sneezy -h db.sneezymud.com sneezybeta $i | mysql -u sneezy -h db.sneezymud.com sneezyq

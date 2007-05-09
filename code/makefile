@@ -436,10 +436,14 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@$(CC) -o amap objs/amap.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip amap
 
+sqladdmobs: $(LIBS) objs/sqladdmobs.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqladdmobs
+	@$(CC) -o sqladdmobs objs/sqladdmobs.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqladdmobs
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld sqladdresp sqledresp
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld sqladdresp sqledresp /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld sqladdresp sqledresp sqladdmobs
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld sqladdresp sqledresp sqladdmobs /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
@@ -9809,6 +9813,12 @@ objs/create_mobs.o: spec_objs.h room.h connect.h obj_drug.h charfile.h
 objs/create_mobs.o: being.h guild.h person.h monster.h paths.h account.h
 objs/create_mobs.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/create_mobs.o: colorstring.h format.h mail.h combat.h statistics.h
+objs/create_mobs.o: database.h /usr/include/mysql/mysql.h
+objs/create_mobs.o: /usr/include/mysql/mysql_com.h
+objs/create_mobs.o: /usr/include/mysql/mysql_time.h
+objs/create_mobs.o: /usr/include/mysql/mysql_version.h
+objs/create_mobs.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/create_mobs.o: /usr/include/mysql/my_alloc.h
 objs/create_objs.o: /usr/include/unistd.h /usr/include/features.h
 objs/create_objs.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/create_objs.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -10605,7 +10615,9 @@ objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
 objs/db.o: liquids.h obj_card_deck.h obj_suitcase.h obj_saddle.h
-objs/db.o: obj_harness.h obj_saddlebag.h obj_wagon.h
+objs/db.o: obj_harness.h obj_saddlebag.h obj_wagon.h timing.h
+objs/db.o: /usr/include/sys/time.h /usr/include/sys/select.h
+objs/db.o: /usr/include/bits/select.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -17372,6 +17384,7 @@ objs/disease.o: weather.h sound.h create.h thing.h obj.h spec_objs.h room.h
 objs/disease.o: connect.h obj_drug.h charfile.h being.h guild.h person.h
 objs/disease.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/disease.o: spec_mobs.h materials.h colorstring.h format.h obj_tool.h
+objs/disease.o: obj_corpse.h obj_base_corpse.h obj_base_container.h
 objs/doors.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/doors.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/doors.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -21110,6 +21123,164 @@ objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
 objs/inventory.o: obj_arrow.h obj_base_weapon.h obj_tooth_necklace.h
 objs/inventory.o: obj_potion.h obj_base_cup.h obj_card_deck.h obj_suitcase.h
 objs/inventory.o: obj_bed.h
+objs/limb_quest.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/limb_quest.cgi.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/limb_quest.cgi.o: /usr/include/gnu/stubs.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cstddef
+objs/limb_quest.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/limb_quest.cgi.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/limb_quest.cgi.o: /usr/include/bits/wordsize.h
+objs/limb_quest.cgi.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+objs/limb_quest.cgi.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/limb_quest.cgi.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/limb_quest.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/limb_quest.cgi.o: /usr/include/bits/stdio_lim.h
+objs/limb_quest.cgi.o: /usr/include/bits/sys_errlist.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/limb_quest.cgi.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/limb_quest.cgi.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/limb_quest.cgi.o: /usr/include/bits/huge_val.h
+objs/limb_quest.cgi.o: /usr/include/bits/mathdef.h
+objs/limb_quest.cgi.o: /usr/include/bits/mathcalls.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/limb_quest.cgi.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/limb_quest.cgi.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/limb_quest.cgi.o: /usr/include/pthread.h /usr/include/sched.h
+objs/limb_quest.cgi.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/limb_quest.cgi.o: /usr/include/bits/sigset.h
+objs/limb_quest.cgi.o: /usr/include/bits/pthreadtypes.h
+objs/limb_quest.cgi.o: /usr/include/bits/initspin.h
+objs/limb_quest.cgi.o: /usr/include/bits/sigthread.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cwchar
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/memory
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/climits
+objs/limb_quest.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/limb_quest.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/limb_quest.cgi.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/exception
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/iosfwd
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/limb_quest.cgi.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/limb_quest.cgi.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/limb_quest.cgi.o: /usr/include/libintl.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/algorithm
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/vector
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/map
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/list
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/iostream
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/ostream
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/ios
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/streambuf
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/locale
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/limits
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/typeinfo
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/istream
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/sstream
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/fstream
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h
+objs/limb_quest.cgi.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/limb_quest.cgi.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/limb_quest.cgi.o: client.h response.h faction.h comm.h toggle.h
+objs/limb_quest.cgi.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/limb_quest.cgi.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/limb_quest.cgi.o: sound.h create.h thing.h obj.h spec_objs.h room.h
+objs/limb_quest.cgi.o: connect.h obj_drug.h charfile.h being.h guild.h
+objs/limb_quest.cgi.o: person.h monster.h paths.h account.h extern.h
+objs/limb_quest.cgi.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/limb_quest.cgi.o: colorstring.h format.h database.h
+objs/limb_quest.cgi.o: /usr/include/mysql/mysql.h
+objs/limb_quest.cgi.o: /usr/include/mysql/mysql_com.h
+objs/limb_quest.cgi.o: /usr/include/mysql/mysql_time.h
+objs/limb_quest.cgi.o: /usr/include/mysql/mysql_version.h
+objs/limb_quest.cgi.o: /usr/include/mysql/typelib.h
+objs/limb_quest.cgi.o: /usr/include/mysql/my_list.h
+objs/limb_quest.cgi.o: /usr/include/mysql/my_alloc.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/Cgicc.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/CgiDefs.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/FormEntry.h
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/cfloat
+objs/limb_quest.cgi.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/float.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/CgiUtils.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/FormFile.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/CgiInput.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/CgiEnvironment.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTTPCookie.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/MStreamable.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTTPHTMLHeader.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTTPContentHeader.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTTPHeader.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLClasses.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLAtomicElement.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLElement.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLAttributeList.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLAttribute.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLBooleanElement.h
+objs/limb_quest.cgi.o: /usr/include/cgicc/HTMLDoctype.h
 objs/limbs.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/limbs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/limbs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -25151,6 +25322,7 @@ objs/obj_base_corpse.o: colorstring.h format.h obj_base_corpse.h
 objs/obj_base_corpse.o: obj_base_container.h obj_player_corpse.h
 objs/obj_base_corpse.o: obj_base_clothing.h obj_tooth_necklace.h
 objs/obj_base_corpse.o: obj_expandable_container.h obj_open_container.h
+objs/obj_base_corpse.o: obj_table.h
 objs/obj_base_cup.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -25790,7 +25962,12 @@ objs/obj_board.o: task.h weather.h sound.h create.h thing.h obj.h spec_objs.h
 objs/obj_board.o: room.h connect.h obj_drug.h charfile.h being.h guild.h
 objs/obj_board.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_board.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
-objs/obj_board.o: obj_board.h obj_note.h
+objs/obj_board.o: obj_board.h obj_note.h database.h
+objs/obj_board.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/obj_board.o: /usr/include/mysql/mysql_time.h
+objs/obj_board.o: /usr/include/mysql/mysql_version.h
+objs/obj_board.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/obj_board.o: /usr/include/mysql/my_alloc.h
 objs/obj_boat.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_boat.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_boat.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -34441,8 +34618,8 @@ objs/objeditor.cgi.o: /usr/include/cgicc/FormFile.h
 objs/objeditor.cgi.o: /usr/include/cgicc/CgiInput.h
 objs/objeditor.cgi.o: /usr/include/cgicc/CgiEnvironment.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTTPCookie.h
-objs/objeditor.cgi.o: /usr/include/cgicc/MStreamable.h
-objs/objeditor.cgi.o: /usr/include/cgicc/HTTPHTMLHeader.h
+objs/objeditor.cgi.o: /usr/include/cgicc/MStreamable.h obj_general_weapon.h
+objs/objeditor.cgi.o: obj_base_weapon.h /usr/include/cgicc/HTTPHTMLHeader.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTTPContentHeader.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTTPHeader.h
 objs/objeditor.cgi.o: /usr/include/cgicc/HTTPPlainHeader.h
@@ -42047,7 +42224,14 @@ objs/spec_mobs_limbDispo.o: paths.h account.h extern.h handler.h obj_money.h
 objs/spec_mobs_limbDispo.o: spec_mobs.h materials.h colorstring.h format.h
 objs/spec_mobs_limbDispo.o: obj_corpse.h obj_base_corpse.h
 objs/spec_mobs_limbDispo.o: obj_base_container.h obj_drinkcon.h
-objs/spec_mobs_limbDispo.o: obj_base_cup.h obj_trash.h mail.h
+objs/spec_mobs_limbDispo.o: obj_base_cup.h obj_trash.h mail.h database.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/mysql.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/mysql_com.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/mysql_time.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/mysql_version.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/typelib.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/my_list.h
+objs/spec_mobs_limbDispo.o: /usr/include/mysql/my_alloc.h
 objs/spec_mobs_loan_manager.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -47552,6 +47736,136 @@ objs/spelltask.o: disc_spirit.h disc_water.h disc_aegis.h disc_wrath.h
 objs/spelltask.o: disc_shaman.h disc_afflictions.h disc_hand_of_god.h
 objs/spelltask.o: disc_deikhan.h disc_ranger.h disc_animal.h disc_leverage.h
 objs/spelltask.o: disc_ranged.h combat.h obj_symbol.h
+objs/sqladdmobs.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/sqladdmobs.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/sqladdmobs.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/sqladdmobs.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/sqladdmobs.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/sqladdmobs.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/sqladdmobs.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/sqladdmobs.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/sqladdmobs.o: /usr/include/gconv.h
+objs/sqladdmobs.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/sqladdmobs.o: /usr/include/bits/stdio_lim.h
+objs/sqladdmobs.o: /usr/include/bits/sys_errlist.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/sqladdmobs.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/sqladdmobs.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/sqladdmobs.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/sqladdmobs.o: /usr/include/bits/mathcalls.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/sqladdmobs.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/sqladdmobs.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/sqladdmobs.o: /usr/include/pthread.h /usr/include/sched.h
+objs/sqladdmobs.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/sqladdmobs.o: /usr/include/bits/sigset.h
+objs/sqladdmobs.o: /usr/include/bits/pthreadtypes.h
+objs/sqladdmobs.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cwchar
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/memory
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/climits
+objs/sqladdmobs.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/sqladdmobs.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/sqladdmobs.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/exception
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/iosfwd
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/sqladdmobs.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/sqladdmobs.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/sqladdmobs.o: /usr/include/libintl.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/algorithm
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/vector
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/map
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/list
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/iostream
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/streambuf
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/locale
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/limits
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/typeinfo
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/istream
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/sstream
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/fstream
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/sqladdmobs.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/sqladdmobs.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/sqladdmobs.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/sqladdmobs.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/sqladdmobs.o: task.h weather.h sound.h create.h thing.h obj.h
+objs/sqladdmobs.o: spec_objs.h room.h connect.h obj_drug.h charfile.h being.h
+objs/sqladdmobs.o: guild.h person.h monster.h paths.h account.h extern.h
+objs/sqladdmobs.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/sqladdmobs.o: colorstring.h format.h database.h
+objs/sqladdmobs.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/sqladdmobs.o: /usr/include/mysql/mysql_time.h
+objs/sqladdmobs.o: /usr/include/mysql/mysql_version.h
+objs/sqladdmobs.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/sqladdmobs.o: /usr/include/mysql/my_alloc.h lowtools.h
 objs/sqladdobjs.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
