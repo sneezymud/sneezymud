@@ -2118,8 +2118,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
     setMaxMove(50 + 10*GetMaxLevel());
     setMove(moveLimit());
 
+    moneyConst = (ubyte) convertTo<int>(db["gold"]);
 
-    moneyConst = (ubyte) convertTo<ubyte>(db["gold"]);
     setExp(0);
 
     setRace(race_t(convertTo<int>(db["race"])));
