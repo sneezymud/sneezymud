@@ -230,10 +230,20 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   if(hasAccess(SHOPACCESS_OWNER))
     return 0;
 
+  // due to the small profit margins, casino can't pay tax
+  if(shop_nr==122)
+    return 0;
+
   tax_office=getTaxShopNr();
 
+  // no tax office, don't charge tax
+  if(tax_office==0){
+    vlogf(LOG_BUG, fmt("shop (%i) has no tax entry") % shop_nr);
+    return 0;
+  }
+
   cost = (int)((float)cost * shop_index[tax_office].getProfitBuy(o, ch));
-  
+
   TBeing *t;
   for(t=character_list;t;t=t->next){
     if(t->mobVnum()==mob_index[shop_index[tax_office].keeper].virt)
