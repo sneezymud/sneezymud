@@ -1028,7 +1028,8 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	}
 
   if (dynamic_cast<TPerson *>(this))
-    buf = fmt("tooth lost limb %s [tooth] [-1] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+    // set the 2nd bracketed value to 0 during the limb quest so we can differentiate from old, saved teeth 
+    buf = fmt("tooth lost limb %s [tooth] [-1] [%d] [%s]") % v->name % v_vnum % getName();
   else
     buf = fmt("tooth lost limb %s") % v->name;
 
@@ -1094,7 +1095,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       TDrinkCon *corpse;
       corpse = new TDrinkCon();
       if (dynamic_cast<TPerson *>(this))
-        buf = fmt("heart lost limb %s [heart] [0] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+        buf = fmt("heart lost limb %s [heart] [0] [%d] [%s]") % v->name % v_vnum % getName();
       else
         buf = fmt("heart lost limb %s") % v->name;
 
@@ -1649,7 +1650,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 		
 	  corpse = new TCorpse();
     if (dynamic_cast<TPerson *>(this)) 
-      buf = fmt("genitalia lost limb %s [jumblies] [0] [%d] [%d] [%s]") % v->name % v->GetMaxLevel() % v_vnum % getName();
+      buf = fmt("genitalia lost limb %s [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
     else
       buf = fmt("genitalia lost limb %s") % v->name;
     corpse->name = mud_str_dup(buf);

@@ -334,9 +334,9 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     
   corpse = new TCorpse();
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb [%s] [%d] [%d] [%d] [%s]") % describeBodySlot(pos) % describeBodySlot(pos) % (int) pos % GetMaxLevel() % v_vnum % opp->getName();
+    sbuf = fmt("%s lost limb %s [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos) % (int) pos % v_vnum % opp->getName();
   else
-    sbuf = fmt("%s lost limb") % describeBodySlot(pos);
+    sbuf = fmt("%s lost limb %s") % describeBodySlot(pos) % name;
   
   corpse->name = mud_str_dup(sbuf);
   
@@ -390,13 +390,13 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
 
   
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb [eyeballs] [0] [%d] [%d] [%s]") % (single ? single : part) % GetMaxLevel() % v_vnum % opp->getName();
+    sbuf = fmt("%s lost limb %s [eyeballs] [0] [%d] [%s]") % (single ? single : part) % name % v_vnum % opp->getName();
   else 
-    sbuf = fmt("%s lost limb") % (single ? single : part);
+    sbuf = fmt("%s lost limb %s") % (single ? single : part) % name;
   
   corpse->name = mud_str_dup(sbuf);
 
-  sprintf(buf, "%s's bloody %s", getName(),single ? single : part);
+  sprintf(buf, "%s's bloody %s", getName(), single ? single : part);
   corpse->shortDescr = mud_str_dup(buf);
 
   sprintf(buf, "%s's bloody and ichor coated %s %s here.",
@@ -421,10 +421,9 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
   char buf[256];
  
   corpse = new TCorpse();
-  sprintf(buf, "%s lost limb", describeBodySlot(pos).c_str());
+  sprintf(buf, "%s lost limb %s", describeBodySlot(pos).c_str(), name);
   corpse->name = mud_str_dup(buf);
-  sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName())
-;
+  sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName());
   corpse->shortDescr = mud_str_dup(buf);
 
   sprintf(buf, "The diseased, puss-covered %s of %s is lying here.",

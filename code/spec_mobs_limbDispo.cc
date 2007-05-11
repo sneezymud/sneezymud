@@ -138,11 +138,11 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       partname.find("pile of dust") == sstring::npos &&
       partname.find("rotten") == sstring::npos) {
     // record stuff for limb questing
-    bool record_part = TRUE;
     vector <sstring> partinfo;
     split_string(partname, " []\n\r\t", partinfo);
+    bool record_part = TRUE;
     
-    // we're expecting the end of the partname to be [bodypart] [slot #] [mob level] [mob vnum] [player that chopped it]
+    // we're expecting the end of the partname to be [bodypart] [slot #] [mob vnum] [player that chopped it]
     
     // who chopped it
     sstring chopper = partinfo.back();
@@ -150,8 +150,10 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       partinfo.erase(partinfo.end()-1);
       chopper = partinfo.back();
     }
-    if (chopper.isNumber())
+    if (chopper.isNumber()) {
       chopper = "UNKNOWN";
+      record_part = FALSE;
+    }
     
     // mob vnum
     sstring mob_vnum = "";
@@ -159,38 +161,25 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       partinfo.erase(partinfo.end()-1);
       mob_vnum = partinfo.back();
     }
-    int m_vnum;
+    int m_vnum = 0;
     if (is_number(mob_vnum))
       m_vnum = convertTo<int>(mob_vnum);
-    else {
+    else
       record_part = FALSE;
-    }
     
-    // mob level
-    sstring mob_level = "";
-    while (mob_level.length() == 0 and partinfo.size() > 0) {
-      partinfo.erase(partinfo.end()-1);
-      mob_level = partinfo.back();
-    }
-    int m_level;
-    if (is_number(mob_level))
-      m_level = convertTo<int>(mob_level);
-    else {
-      record_part = FALSE;
-    }
-    
-    // slot # (or 0 for hearts, eyes)
+    // slot # (expect 0 for hearts, eyes, genitals)
+    // a tooth should be 0 or -1 if it was collected from before the limb quest
+    // assuming the tooth generating code was updated in crit_combat.cc at start/finish of quest
     sstring slot_num = "";
     while (slot_num.length() == 0 and partinfo.size() > 0) {
       partinfo.erase(partinfo.end()-1);
       slot_num = partinfo.back();
     }
-    int slot;
+    int slot = 0;
     if (is_number(slot_num))
       slot = convertTo<int>(slot_num);
-    else {
+    else
       record_part = FALSE;
-    }
     
     // part name
     sstring mob_part = "";
@@ -204,14 +193,42 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     }
     
     if (record_part) {
-      vlogf(LOG_MAROR, fmt("Chop shop: %s") % partname);
       TDatabase db(DB_SNEEZY);
-      sstring qry = fmt("insert quest_limbs (mob_vnum, mob_level, player, slot_name, slot_num) select %d, %d, '%s', '%s', %d") % m_vnum % m_level % chopper % mob_part % slot;
-      db.query("insert quest_limbs (mob_vnum, mob_level, player, slot_name, slot_num) select %i, %i, '%s', '%s', %i", m_vnum, m_level, chopper.c_str(), mob_part.c_str(), slot);
+      // get team affiliation for cutesy message below
+      sstring team;
+      bool samaritan = FALSE;
+      db.query("select (select team from quest_limbs_team where player = '%s') as chopper_team, (select team from quest_limbs_team where player = '%s') as caddy_team", chopper.c_str(), ch->name);
+      if (db.fetchRow()) {
+        team = db["chopper_team"];
+        if (chopper.compare(ch->name)) {
+          // turning in someone else's limb
+          samaritan = TRUE;
+        }
+      }
+      else
+        team = "";
+      db.query("insert quest_limbs (mob_vnum, player, slot_name, slot_num, team) select %i, '%s', '%s', %i, '%s'", m_vnum, chopper.c_str(), mob_part.c_str(), slot, team.c_str());
+      vlogf(LOG_MAROR, fmt("Chop shop: %s") % partname);
+      
+      if (!team.empty()) {
+        if (samaritan) {
+          mob->doWhisper(fmt("%s Why ain't you thoughtful, picking up after %s's mess!") % ch->name % chopper);
+          if (team.compare(db["caddy_team"]))
+            mob->doWhisper(fmt("%s I'll make sure their gang, <o>%s<1>, gets the blame for this one.") % ch->name % team);
+          else
+            mob->doWhisper(fmt("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
+        } else {
+          mob->doWhisper(fmt("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
+        }
+        delete bodypart;
+        bodypart=NULL;
+        return TRUE;
+      }
     } else {
-      vlogf(LOG_MAROR, fmt("Chop shop not logged: %s") % partname);
+      vlogf(LOG_MAROR, fmt("Chop shop not recorded in db: %s") % partname);
     }
   }
+  
   delete bodypart;
   bodypart=NULL;
 
