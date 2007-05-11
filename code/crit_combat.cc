@@ -14,7 +14,7 @@
 #include "obj_gun.h"
 #include "obj_trash.h"
 #include "obj_drinkcon.h"
-
+#include "database.h"
 
 // returns DELETE_THIS
 // return ONEHIT_MESS_CRIT_S if oneHit should abort and no further oneHits should occur
@@ -1027,19 +1027,25 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	  tooth->setCorpseVnum(v->mobVnum());
 	}
 
-  if (dynamic_cast<TPerson *>(this))
-    // set the 2nd bracketed value to 0 during the limb quest so we can differentiate from old, saved teeth 
-    buf = fmt("tooth lost limb %s [tooth] [-1] [%d] [%s]") % v->name % v_vnum % getName();
-  else
+  if (dynamic_cast<TPerson *>(this)) {
+    // check to see if this should be a limb quest tooth
+    int limb_quest = -1;
+    TDatabase db(DB_SNEEZY);
+    db.query("select team from quest_limbs_team where player = '%s'", getName());
+    if (db.fetchRow())
+      limb_quest = 0;
+    buf = fmt("tooth lost limb %s [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
+  } else{
     buf = fmt("tooth lost limb %s") % v->name;
-
+  }
+  
 	delete corpse->name;
 	corpse->name = mud_str_dup(buf);
 	
 	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	delete corpse->shortDescr;
 	corpse->shortDescr = mud_str_dup(buf);
-	      
+	
 	buf = fmt("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
 	delete corpse->descr;
 	corpse->setDescr(mud_str_dup(buf));
