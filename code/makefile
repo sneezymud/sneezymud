@@ -497,14 +497,21 @@ roomeditor.cgi:	$(LIBS) objs/roomeditor.cgi.o objs/lowtools.o objs/session.cgi.o
 	@$(CC) -o roomeditor.cgi objs/roomeditor.cgi.o objs/session.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
 	@/usr/bin/strip roomeditor.cgi
 
+limb_quest.cgi:	$(LIBS) objs/limb_quest.cgi.o
+	@echo \*\*\* Making Final Link: limb_quest.cgi
+	@echo \*\*\* Linking against prod libs!
+	@$(CC) -o limb_quest.cgi objs/limb_quest.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc -lssl
+	@/usr/bin/strip limb_quest.cgi
+
 
 # make all cgi program
-cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi eqcalc.cgi respeditor.cgi
+cgi:	objlog.cgi corpinfo.cgi mudmail.cgi shopinfo.cgi objeditor.cgi roomeditor.cgi eqcalc.cgi respeditor.cgi limb_quest.cgi
 # 	@/bin/cp -f shopinfo.cgi /mud/web
 # 	@/bin/cp -f mudmail.cgi /mud/web
 # 	@/bin/cp -f objeditor.cgi /mud/web
 # 	@/bin/cp -f eqcalc.cgi /mud/web
 # 	@/bin/cp -f roomeditor.cgi /mud/web
+#   @/bin/cp -f limb_quest.cgi /mud/web
 	@echo Finished making cgi programs
 
 
@@ -10223,7 +10230,12 @@ objs/crit_combat.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/crit_combat.o: colorstring.h format.h combat.h statistics.h obj_corpse.h
 objs/crit_combat.o: obj_base_corpse.h obj_base_container.h obj_gun.h
 objs/crit_combat.o: obj_general_weapon.h obj_base_weapon.h obj_trash.h
-objs/crit_combat.o: obj_drinkcon.h obj_base_cup.h
+objs/crit_combat.o: obj_drinkcon.h obj_base_cup.h database.h
+objs/crit_combat.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/crit_combat.o: /usr/include/mysql/mysql_time.h
+objs/crit_combat.o: /usr/include/mysql/mysql_version.h
+objs/crit_combat.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/crit_combat.o: /usr/include/mysql/my_alloc.h
 objs/damage.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/damage.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/damage.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
