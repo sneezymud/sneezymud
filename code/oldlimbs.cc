@@ -334,7 +334,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     
   corpse = new TCorpse();
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb %s [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos) % (int) pos % v_vnum % opp->getName();
+    sbuf = fmt("%s lost limb %s [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos).replaceString(" ", "-") % (int) pos % v_vnum % opp->getName();
   else
     sbuf = fmt("%s lost limb %s") % describeBodySlot(pos) % name;
   

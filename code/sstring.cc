@@ -221,6 +221,15 @@ const bool sstring::startsVowel() const
   return false;
 } 
 
+const sstring sstring::replaceString(sstring find, sstring replace) const
+{
+  sstring str = *this;
+  while(str.find(find)!=sstring::npos){
+    str.replace(str.find(find), find.size(), replace);
+  }
+  return str;
+}
+
 const sstring & sstring::operator=(fmt &a)
 {
   this->assign(a);

@@ -187,6 +187,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       partinfo.erase(partinfo.end()-1);
       mob_part = partinfo.back();
     }
+    mob_part = mob_part.replaceString("-", " ");
 
     if (chopper.length() > 80 || mob_part.length() > 80) {
       record_part = FALSE;
@@ -207,7 +208,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       }
       else
         team = "";
-      db.query("insert quest_limbs (mob_vnum, player, slot_name, slot_num, team) select %i, '%s', '%s', %i, '%s'", m_vnum, chopper.c_str(), mob_part.c_str(), slot, team.c_str());
+      db.query("insert quest_limbs (player, team, mob_vnum, slot_num, slot_name) select '%s', '%s', %i, %i, '%s'", chopper.c_str(), team.c_str(), m_vnum, slot, mob_part.c_str());
       vlogf(LOG_MAROR, fmt("Chop shop: %s") % partname);
       
       if (!team.empty()) {
