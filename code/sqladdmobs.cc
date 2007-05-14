@@ -34,9 +34,8 @@ int main(int argc, char **argv)
       
       // fix strung bit
       actions=convertTo<int>(db_immo["actions"]);
-      if(!(actions & (1<<0))){
-        actions=actions - (1<<0);
-      }
+      if (actions & 1<<0)
+        actions = actions & ~1<<0;
       
       db_beta.query("delete from mob where vnum=%i", vnums[t]);
       db_beta.query("insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",

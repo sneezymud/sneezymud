@@ -327,6 +327,10 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
     adjacent_sound[f] = '\0';
   }
 
+  unsigned long actions = mob->specials.act;
+  if (!actions & 1<<0)
+    actions = actions & ~1<<0;
+  
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
   db.query("delete from mob where owner = '%s' and vnum = %i", ch->name, vnum);
@@ -334,7 +338,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   db.query("insert into mob values ('%s', %i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
       ch->name, vnum, 
       name, short_desc, long_desc, description, 
-      mob->specials.act, mob->specials.affectedBy, mob->getFaction(), static_cast<int>(mob->getPerc()), 
+      actions, mob->specials.affectedBy, mob->getFaction(), static_cast<int>(mob->getPerc()), 
       ((mob->sounds || mob->distantSnds) ? "L" : "A"), (float) mob->getMult(), 
       mob->getClass(), mob->GetMaxLevel(), mob->getHitroll(), 
       mob->getACLevel(), mob->getHPLevel(), mob->getDamLevel(), 
