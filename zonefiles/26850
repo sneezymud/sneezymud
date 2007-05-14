@@ -280,19 +280,19 @@ M 0 26871 1 26871       a drunken pirate
 Z 0 0 100               basic pirate crew local set
 
 * brotherhood of galek conference room
-M 0 26882 1 26879       a trained monkey
+M 0 26879 1 26879       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * unaffiliated conference room
-M 0 26886 1 26880       a trained monkey
+M 0 26880 1 26880       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * serpent order conference room
-M 0 26887 1 26881       a trained monkey
+M 0 26881 1 26881       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * cult of logrus conference room
-M 0 26888 1 26882       a trained monkey
+M 0 26882 1 26882       a trained monkey
 E 1 19015 9999 5        a paper pirate hat [head]
 
 * center of the rose garden
