@@ -25,79 +25,75 @@ void procBankInterest::run(int pulse) const
   db.query("update shopownedbank set talens=0 where talens is null");
   db.query("update shopownedcorpbank set talens=0 where talens is null");
 
-
-  db.query("select shop_nr, keeper from shop");
-  
+  db.query("select s1.shop_nr, s1.keeper from shop s1 join mob m1 on s1.keeper = m1.vnum where spec_proc = %i", SPEC_BANKER);
   while(db.fetchRow()){
-    if(mob_index[real_mobile(convertTo<int>(db["keeper"]))].spec==SPEC_BANKER){
-      shop_nr=convertTo<int>(db["shop_nr"]);
-      profit_sell=shop_index[shop_nr].profit_sell;
+    vlogf(LOG_MAROR, fmt("Interest for banker shop_nr: %s") % db["shop_nr"]);
+    shop_nr=convertTo<int>(db["shop_nr"]);
+    profit_sell=shop_index[shop_nr].profit_sell;
 
-      if(profit_sell==1.0)
-	continue;
+    if(profit_sell==1.0)
+      continue;
 
+    // make a list of current player talens
+    in.query("select player_id, talens from shopownedbank where shop_nr=%i", shop_nr);
+    while(in.fetchRow())
+      player_gain[convertTo<int>(in["player_id"])]=convertTo<int>(in["talens"]);
 
-      // make a list of current player talens
-      in.query("select player_id, talens from shopownedbank where shop_nr=%i",
-	       shop_nr);
-      while(in.fetchRow())
-	player_gain[convertTo<int>(in["player_id"])]=convertTo<int>(in["talens"]);
+    // make a list of current corporate talens
+    in.query("select corp_id, talens from shopownedcorpbank where shop_nr=%i", shop_nr);
+    while(in.fetchRow())
+      corp_gain[convertTo<int>(in["corp_id"])]=convertTo<int>(in["talens"]);
 
-      // make a list of current corporate talens
-      in.query("select corp_id, talens from shopownedcorpbank where shop_nr=%i",
-	       shop_nr);
-      while(in.fetchRow())
-	corp_gain[convertTo<int>(in["corp_id"])]=convertTo<int>(in["talens"]);
+    // calculate interest
+    in.query("update shopownedbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
 
+    // doll out earned interest that isn't fractional
+    in.query("update shopownedbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
 
-      // calculate interest
-      in.query("update shopownedbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
+    // calculate interest
+    in.query("update shopownedcorpbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
 
-      // doll out earned interest that isn't fractional
-      in.query("update shopownedbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
+    // doll out earned interest that isn't fractional
+    in.query("update shopownedcorpbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
 
+    TShopOwned tso(shop_nr, NULL, NULL);
 
+    vlogf(LOG_MAROR, fmt("Got to logging player gains"));
+    // log player gains
+    in.query("select p.name as name, sob.player_id as player_id, sob.talens as talens from shopownedbank sob, player p where shop_nr=%i and sob.player_id=p.id", shop_nr);
+    while(in.fetchRow()){
+      vlogf(LOG_MAROR, fmt("Player gain: %s") % in["player_id"]);
+      if((convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])]) != 0){
+        int amt=convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])];
 
-      // calculate interest
-      in.query("update shopownedcorpbank set earned_interest=earned_interest + (talens * (%f / 365.0)) where shop_nr=%i", profit_sell, shop_nr);
+        tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
-      // doll out earned interest that isn't fractional
-      in.query("update shopownedcorpbank set talens=talens + truncate(earned_interest,0), earned_interest=earned_interest - truncate(earned_interest,0) where shop_nr=%i", shop_nr);
+        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", 
+            shop_nr, 
+            in["name"].c_str(),
+            amt,
+            convertTo<int>(in["talens"]));
 
-      TShopOwned tso(shop_nr, NULL, NULL);
-
-      // log player gains
-      in.query("select p.name as name, sob.player_id as player_id, sob.talens as talens from shopownedbank sob, player p where shop_nr=%i and sob.player_id=p.id",
-	       shop_nr);
-      while(in.fetchRow()){
-	if((convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])]) != 0){
-	  int amt=convertTo<int>(in["talens"]) - player_gain[convertTo<int>(in["player_id"])];
-
-	  tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
-
-	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
-		    in["name"].c_str(),
-		    amt,
-		    convertTo<int>(in["talens"]));
-
-	}
       }
+    }
 
-      // log corporate gains
-      in.query("select c.name, sob.corp_id, sob.talens from shopownedcorpbank sob, corporation c where c.corp_id=sob.corp_id and sob.shop_nr=%i",
-	       shop_nr);
-      while(in.fetchRow()){
-	if((convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])]) != 0){
-	  int amt=convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])];
+    vlogf(LOG_MAROR, fmt("Got to logging corp gains"));
+    // log corporate gains
+    in.query("select c.name, sob.corp_id, sob.talens from shopownedcorpbank sob, corporation c where c.corp_id=sob.corp_id and sob.shop_nr=%i",
+       shop_nr);
+    while(in.fetchRow()){
+      vlogf(LOG_MAROR, fmt("Corp gain: %s") % in["corp_id"]);
+      if((convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])]) != 0){
+        int amt=convertTo<int>(in["talens"]) - corp_gain[convertTo<int>(in["corp_id"])];
 
-	  tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
+        tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
-	  out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", shop_nr, 
-		    in["name"].c_str(),
-		    amt,
-		    convertTo<int>(in["talens"]));
-	}	
-      }
+        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", 
+            shop_nr, 
+            in["name"].c_str(),
+            amt,
+            convertTo<int>(in["talens"]));
+      }	
     }
   }
 }
