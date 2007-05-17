@@ -361,7 +361,7 @@ void TBeing::doEgoTrip(const char *arg)
     }
     act("You breathe a fetid cloud into $N's body.", TRUE, this, 0, sufferer, TO_CHAR);
     act("Someone around here doesn't like you.", TRUE, this, 0, sufferer, TO_VICT);
-    act("Someone around here doesn't like $N.", TRUE, this, 0, sufferer, TO_NOTVICT);
+    act("Someone around here doesn't like $N.", TRUE, sufferer, 0, this, TO_ROOM);
     sufferer->affectTo(&aff);
     disease_start(sufferer, &aff);
     return;

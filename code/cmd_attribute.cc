@@ -537,6 +537,24 @@ void TBeing::doAttribute(const char *arg)
 	   (sstring(home_terrains[player.hometerrain]).startsVowel()?"an":"a")%
 	   home_terrains[player.hometerrain] % getBaseAge());
 
+    sstring gender;
+    switch (getSex()) {
+      case SEX_NEUTER:
+        gender = "a neuter";
+        break;
+      case SEX_FEMALE:
+        gender = "a female";
+        break;
+      case SEX_MALE:
+        gender = "a male";
+        break;
+      default:
+        gender = "an unsexed";
+        vlogf(LOG_BUG, fmt("%s is sexless!") % getName());
+        break;
+    }
+    sendTo(fmt("You are %s %s.\n\r") % gender % getMyRace()->getSingularName());
+    
     sendTo(fmt("You are %d years and %d months old, %d inches tall, and you weigh %d lbs.\n\r") %
         age()->year % age()->month % getHeight() % (int) getWeight());
     if (!age()->month && !age()->day)
@@ -925,11 +943,11 @@ void TBeing::doAttribute(const char *arg)
     if (cmdbuf=="reset")
       desc->session.setToZero();
     else {
-      sendTo("This is a critical thing.  It resets all of your current session statis.\n\r");
-      sendTo("You must enter the entire  reset  to do this.\n\r");
+      sendTo("This will reset all of your current session stats.\n\r");
+      sendTo("Enter the entire option, <c>reset<1>, to do this.\n\r");
     }
   } else {
-    sendTo("Syntax: attribute <statistics | personal | condition | reset>\n\r");
+    sendTo("Syntax: attribute <statistics | personal | condition | drugs | reset>\n\r");
     return;
   }
 }
