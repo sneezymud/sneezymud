@@ -2299,8 +2299,15 @@ void TPerson::doStat(const sstring &argument)
   tmp_arg = argument;
   tmp_arg = one_argument(tmp_arg, arg1);
   tmp_arg = one_argument(tmp_arg, arg2);
-  tmp_arg = one_argument(tmp_arg, arg3);
-
+  sstring whitespace = " \n\r\t";
+  size_t start = tmp_arg.find_first_not_of(whitespace);
+  if (start != string::npos) {
+    size_t end = tmp_arg.find_last_not_of(whitespace);
+    arg3 = tmp_arg.substr(start, end - start + 1);
+  } else {
+    arg3 = "";
+  }
+  
   if (arg1 == "mob") {
     // ***** begin stat mob
     if (!hasWizPower(POWER_STAT_MOBILES)) {
@@ -2428,24 +2435,28 @@ void TPerson::doStat(const sstring &argument)
       if (arg3.empty()) {
         // discipline summary
         sendTo(COLOR_MOBS, fmt("%s has the following disciplines:\n\r\n\r") % cap_name);
+        sendTo(COLOR_MOBS, "                    <c>Discipline Num   Current Natural<1>\n\r");
         for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
           if (!(cd = k->getDiscipline(dnt))) {
             continue;
           }
           if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0) 
             continue;
-          sendTo(COLOR_MOBS, fmt("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness());
+          sendTo(COLOR_MOBS, fmt("%30s %3d :     %3d     %3d\n\r") % discNames[dnt].properName % mapDiscToFile(dnt) % cd->getLearnedness()  % cd->getNatLearnedness());
+          /* sendTo(COLOR_MOBS, fmt("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness()); */
         }
         return;
       }
       
-      if (is_number(arg3) && (parm = convertTo<int>(arg3))) {
+      if (is_number(arg3)) {
         // search by number
-        if (parm < MIN_DISC || parm >= MAX_DISCS) {
+        // should search by mapped disc number because that's what someone would probably be entering here, no?
+        // why are these mapped, anyway?
+        parm = convertTo<int>(arg3);
+        dnt = mapFileToDisc(parm);
+        if (dnt < MIN_DISC || dnt >= MAX_DISCS) {
           sendTo("Not a valid discipline number.\n\r");
           return;
-        } else {
-          dnt = mapFileToDisc(parm);
         }
       } else {
         // search by name
@@ -2457,7 +2468,7 @@ void TPerson::doStat(const sstring &argument)
             break;
           }
         }
-        // search by abbr name (probably need to account for disciplines with similar names here)
+        // search by abbr name (probably need to account for disciplines that are partial names of others somehow)
         if (!foundNum) {
           for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
             if (isname(arg3, discNames[dnt].name)) {
@@ -2470,8 +2481,9 @@ void TPerson::doStat(const sstring &argument)
           sendTo("No discipline by that name found.\n\r");
           return;
         }
-        sendTo(COLOR_MOBS, fmt("<c>%s<1> is discipline number <c>%d<1>.\n\r") % discNames[dnt].properName % dnt);
       }
+      
+      sendTo(COLOR_MOBS, fmt("<c>%s<1> is discipline number <c>%d<1>.\n\r") % discNames[dnt].properName % mapDiscToFile(dnt));
       
       if (!(cd = k->getDiscipline(dnt))) {
         sendTo(COLOR_MOBS, fmt("%s does not appear to have <c>%s<1>.\n\r") % cap_name % discNames[dnt].properName);
@@ -2497,8 +2509,9 @@ void TPerson::doStat(const sstring &argument)
       sstring cap_name = k->getName();
       cap_name = cap_name.cap();
       spellNumT snt;
-      if (is_number(arg3) && (parm = convertTo<int>(arg3))) {
+      if (is_number(arg3)) {
         // search by number
+        parm = convertTo<int>(arg3);
         if ((parm < MIN_SPELL) || (parm >= MAX_SKILL)) {
           sendTo("Not a valid skill number.\n\r");
           return;
