@@ -423,14 +423,7 @@ void TBeing::doToggle(const char *arg2)
     
     for (int i = 0;i < MAX_AUTO;i++) {
       if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-	++i;
-      if (i<MAX_AUTO && *auto_name[i]) {
-        sendTo(COLOR_BASIC, fmt("%-17s : %s  | ") %               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
-               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
-      }
-      ++i;
-      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-	++i;
+        ++i;
       if (i<MAX_AUTO && *auto_name[i]) {
         sendTo(COLOR_BASIC, fmt("%-17s : %s  | ") %
                (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
@@ -438,7 +431,15 @@ void TBeing::doToggle(const char *arg2)
       }
       ++i;
       if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-	++i;
+        ++i;
+      if (i<MAX_AUTO && *auto_name[i]) {
+        sendTo(COLOR_BASIC, fmt("%-17s : %s  | ") %
+               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
+               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
+      }
+      ++i;
+      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
+        ++i;
       if (i<MAX_AUTO && *auto_name[i]) {
         sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
                (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
@@ -453,9 +454,8 @@ void TBeing::doToggle(const char *arg2)
     else
       sendTo(COLOR_BASIC, "Wimpy             : <R>off <1> | ");
 
-    
     sendTo(COLOR_BASIC, fmt("Deny Corpse Loot  : %s\n\r") % on_or_off(isPlayerAction(PLR_DENY_LOOT)));
-
+    
     sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s  | ") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
     sendTo(COLOR_BASIC, fmt("Anonymous         : %s\n\r") % on_or_off(isPlayerAction(PLR_ANONYMOUS)));
@@ -1007,6 +1007,14 @@ void TBeing::doToggle(const char *arg2)
     } else {
       sendTo("You will now head automatically toward things you are hunting.\n\r");
       SET_BIT(desc->autobits, AUTO_HUNT);
+    }
+  } else if (is_abbrev(arg, "no-hero-sprites") || is_abbrev(arg, "hero-sprites") || is_abbrev(arg, "sprites") ) {
+    if (IS_SET(desc->autobits, AUTO_NOSPRITE)) {
+      sendTo("Hero sprites will now follow you, if you are eligible.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOSPRITE);
+    } else {
+      sendTo("Hero sprites will no longer follow you.\n\r");
+      SET_BIT(desc->autobits, AUTO_NOSPRITE);
     }
   } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;

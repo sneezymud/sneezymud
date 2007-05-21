@@ -144,8 +144,9 @@ const unsigned int AUTO_LIMBS          = (1<<18);
 const unsigned int AUTO_TIPS           = (1<<19);
 const unsigned int AUTO_TROPHY         = (1<<20);
 const unsigned int AUTO_PG13           = (1<<21);
+const unsigned int AUTO_NOSPRITE       = (1<<22);
 
-const int MAX_AUTO        = 22;    // move and change
+const int MAX_AUTO        = 23;    // move and change
 
 const unsigned long PLR_BRIEF      = (1<<0);
 const unsigned long PLR_COMPACT    = (1<<1);
