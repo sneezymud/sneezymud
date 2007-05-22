@@ -367,7 +367,7 @@ void TBed::restMe(TBeing *ch)
     case POSITION_CRAWLING:
       act("You crawl into the $o and rest your tired bones.",
           TRUE,ch,this,0,TO_CHAR);
-      act("$n crawls into the $o and rest your tired bones.",
+      act("$n crawls into the $o and rests $s tired bones.",
           TRUE,ch,this,0,TO_ROOM);
       ch->setPosition(POSITION_RESTING);
       if (ch->isPc())

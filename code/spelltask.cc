@@ -1160,7 +1160,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
      return FALSE;
    case SPELL_ENSORCER:
       if (victim == caster) {
-        sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunic" : (caster->getSex() == 1 ? "guy" : "gal")));
+        sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "guy" : "gal")));
         act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
 	act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
        return TRUE;

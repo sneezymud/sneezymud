@@ -107,7 +107,6 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         act("Your sacrifice is being accepted by the loa.", 
             FALSE, ch, 0, 0, TO_CHAR);
         ch->addToLifeforce(factor);
-        ch->updatePos();
       } else {
         ch->addToLifeforce(-factor2);
         act("Your sacrificial attempts aren't pleasing the loa.", 
@@ -117,7 +116,9 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
           act("The loa demands that you cease this vain sacrifice, and you comply.", 
               FALSE, ch, 0, 0, TO_CHAR);
           ch->addToHit(-2);
-          ch->updatePos();
+          // let's not allow this to stun them, cuz it deletes the task and crashes the damn mud
+          if (ch->getHit() < 1)
+            ch->setHit(1);
           ch->task->timeLeft = -1;
         }
       }
@@ -164,7 +165,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
             ch->task->timeLeft--;
           break;
         case -1:
-          act("You feel the loa ignoring your vain attempt and feel completed to stop.",
+          act("You feel the loa ignoring your vain attempt and feel compelled to stop.",
               false, ch, 0, 0, TO_CHAR);
           act("$n has stopped $s ritual sacrifice of $p.", 
               TRUE, ch, corpse, 0, TO_ROOM);

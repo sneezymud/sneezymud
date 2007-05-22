@@ -3790,7 +3790,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
           (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
         TRUE, this, NULL, v, TO_CHAR);
-    act("$n strains with all $s might to drag $N out of the room buts fails.",
+    act("$n strains with all $s might to drag $N out of the room but fails.",
         TRUE, this, NULL, v, TO_ROOM);
     return;
   }
@@ -3927,7 +3927,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
 	      (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
 	TRUE, this, NULL, o, TO_CHAR);
-    act("$n strains with all $s might to drag $N out of the room buts fails.",
+    act("$n strains with all $s might to drag $N out of the room but fails.",
         TRUE, this, NULL, o, TO_ROOM);
     return;
   }
@@ -4331,7 +4331,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
           (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
         TRUE, this, NULL, v, TO_CHAR);
-    act("$n strains with all $s might to roll $N out of the room buts fails.",
+    act("$n strains with all $s might to roll $N out of the room but fails.",
         TRUE, this, NULL, v, TO_ROOM);
     return;
   }
@@ -4466,7 +4466,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
 	      (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
 	TRUE, this, NULL, o, TO_CHAR);
-    act("$n strains with all $s might to roll $N out of the room buts fails.",
+    act("$n strains with all $s might to roll $N out of the room but fails.",
         TRUE, this, NULL, o, TO_ROOM);
     return;
   }

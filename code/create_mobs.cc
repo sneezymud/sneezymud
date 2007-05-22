@@ -189,7 +189,6 @@ static void TBeingLoad(TBeing *ch, int vnum)
 {
   TMonster *mob;
   int rc; //, num;
-
   mob = new TMonster();
   ch->sendTo(fmt("Loading mob number %d.\n\r") % vnum);
 
@@ -207,9 +206,6 @@ static void TBeingLoad(TBeing *ch, int vnum)
     ch->sendTo(fmt("Mob %d not found in the builder database.\n\r") % vnum);
     delete mob;
     return;
-  } else {
-    act("$n pulls $N from $s immortal oven.", TRUE, ch, mob, 0, TO_ROOM);
-    act("You pull $N from your immortal oven.", TRUE, ch, mob, 0, TO_CHAR);
   }
 
   // mod for imm
@@ -243,6 +239,12 @@ static void TBeingLoad(TBeing *ch, int vnum)
 
   // Prevent super med mobs.
   mob->setExp(0.0);
+  
+  TBeing *bufferbeing;
+  if ((bufferbeing = dynamic_cast<TBeing *>(mob))) {
+    act("$n pulls $N from $s immortal oven.", TRUE, ch, 0, bufferbeing, TO_ROOM);
+    act("You pull $N from your immortal oven.", TRUE, ch, 0, bufferbeing, TO_CHAR);
+  }
 }
 
 static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)

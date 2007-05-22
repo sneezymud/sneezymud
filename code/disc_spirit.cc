@@ -373,7 +373,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
   char buf[256];
 
   if (victim == caster) {
-    sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunic" : (caster->getSex() == 1 ? "guy" : "gal")));
+    sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "guy" : "gal")));
     act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -528,7 +528,7 @@ int ensorcer(TBeing *caster, TBeing *victim)
   level = caster->getSkillLevel(SPELL_ENSORCER);
 
   if (victim == caster) {
-    sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunic" : (caster->getSex() == 1 ? "guy" : "gal")));
+    sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "guy" : "gal")));
     act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
