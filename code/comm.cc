@@ -567,6 +567,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
         (to->canSee(t1) || !hide) &&
 	to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
         !(to->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
+      x = 0; // used to determine whether or not to capitalize the substitution at start of line
       for (strp = str.c_str(), point = buf;;) {
         x = x + 1;
         codes = strp;
