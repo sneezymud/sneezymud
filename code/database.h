@@ -76,6 +76,12 @@
 //
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
+// 
+// long rowCount() - added to return affected or retrieved row counts
+// This should include affected counts for inserts, updates and deletes
+// as well as standard result set sizes for select statements.
+// Result of -1 means the query returned an error.
+// Although, the docs claim that the my_ulonglong datatype is unsigned so who knows?
 
 enum dbTypeT {
   DB_SNEEZY,
@@ -102,7 +108,7 @@ class TDatabase
   bool fetchRow();
   const sstring operator[] (const sstring &) const;
   bool isResults();
-
+  long rowCount();
 
   TDatabase();
   TDatabase(dbTypeT);

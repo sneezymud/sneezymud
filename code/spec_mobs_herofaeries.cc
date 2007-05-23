@@ -247,7 +247,6 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   
   // put faerie and master in the same room
   if (myself->master && myself->roomp != myself->master->roomp) {
-    vlogf(LOG_PROC, fmt("Master %s not in same room.") % myself->master->name);
     act("$N left without you!  Can't have that!  *pop*", FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);

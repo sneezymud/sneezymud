@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 #include "process.h"
+#include "database.h"
 
 map <int, bool> mRoomsFished;
 
@@ -88,7 +89,7 @@ vector <int> marinefishes()
   f.push_back(13808);
   f.push_back(13809);
   f.push_back(13810);
-  f.push_back(13811);
+//  f.push_back(13811); duplicate flounder! see 13829
   f.push_back(13812);
   f.push_back(13813);
   f.push_back(13815);
@@ -458,6 +459,46 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   return TRUE;
 }
 
+void initialize_fish_records()
+{
+  // put a row into the fishlargest table for any new, uncaught fish
+  TDatabase db(DB_SNEEZY);
+  unsigned int step;
+  vector <int> fishious;
+  
+  fishious = freshfishes();
+  for (step = 0; step < fishious.size(); step++) {
+    db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
+    if (!db.isResults())
+      db.query("insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0", fishious[step]);
+  }
+  fishious.clear();
+  
+  fishious = marinefishes();
+  for (step = 0; step < fishious.size(); step++) {
+    db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
+    if (!db.isResults())
+      db.query("insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0", fishious[step]);
+  }
+  fishious.clear();
+  
+  fishious = icefishes();
+  for (step = 0; step < fishious.size(); step++) {
+    db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
+    if (!db.isResults())
+      db.query("insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0", fishious[step]);
+  }
+  fishious.clear();
+  
+  fishious = fishworldfishes();
+  for (step = 0; step < fishious.size(); step++) {
+    db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
+    if (!db.isResults())
+      db.query("insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0", fishious[step]);
+  }
+}
+
+
 // procFishRespawning
 procFishRespawning::procFishRespawning(const int &p)
 {
@@ -499,3 +540,5 @@ void procFishRespawning::run(int pulse) const
     ++tIter;
   }
 }
+
+

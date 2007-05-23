@@ -169,6 +169,8 @@ static void bootZones(void);
 static void bootWorld(void);
 static void reset_time(void);
 
+// fish init
+void initialize_fish_records(void);
 
 struct reset_q_type
 {
@@ -367,6 +369,9 @@ void bootDb(void)
   bootPulse("Loading drug-type information.");
   assign_drug_info();
 
+  bootPulse("Checking for new species of fish.");
+  initialize_fish_records();
+  
   vlogf(LOG_MISC, fmt("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
 
   unsigned int i;

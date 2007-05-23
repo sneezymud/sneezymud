@@ -221,3 +221,12 @@ bool TDatabase::isResults(){
 
   return FALSE;
 }
+
+long TDatabase::rowCount(){
+  // return # of affected or retrieved rows
+  // -1 if query returned an error
+  if (db)
+    return (long) mysql_affected_rows(db);
+  
+  return 0;
+}

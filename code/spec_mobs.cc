@@ -4654,44 +4654,32 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
   switch(cmd){
     case CMD_MOB_GIVEN_ITEM:
       if(!o || !isname("caughtfish", o->name)){
-	return FALSE;
+        return FALSE;
+      }
+      
+      // update total weight caught for player
+      db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
+      if (db.rowCount() == 0) {
+        // probably no row for user (first fish!) so try an insert instead
+        db.query("insert into fishkeeper values ('%s', %f)", ch->name, o->getWeight());
       }
 
-      db.query("select 1 from fishkeeper where name='%s'", ch->name);
-      if(!db.fetchRow()){
-	db.query("insert into fishkeeper values ('%s', %f)", 
-		 ch->name, o->getWeight());
+      // check for record
+      db.query("update fishlargest set name = '%s', weight = %f where vnum = %i and weight < %f", 
+          ch->getName(), o->getWeight(), o->objVnum(), o->getWeight());
+
+      if (db.rowCount() > 0) {
+        myself->doSay(fmt("Oh my, you've broken the record for %s!") % o->shortDescr);
+        buf=fmt("This the largest I've seen, weighing in at %i!  Very nice! (%i talens)") 
+            % (int)o->getWeight() % (int)(o->getWeight()*100);
+        myself->doSay(buf);
+        ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
-	db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
+        buf=fmt("Ok, I tallied your fish, weighing in at %i.  Nice one! (%i talens)") %
+            (int)o->getWeight() % (int)(o->getWeight()*2);
+        myself->doSay(buf);
+        ch->addToMoney((int)(o->getWeight()*2), GOLD_COMM);
       }
-
-      // create new entry for fish if one doesn't exist
-      db.query("select 1 from fishlargest where type='%s'", o->shortDescr);
-      if(!db.fetchRow()){
-	db.query("insert into fishlargest values ('no one', '%s', 0.0)", 
-		 o->shortDescr);
-      }
-
-
-      // check for largest
-      db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
-
-      if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db["weight"]))){
-	buf=fmt("Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %i!  Very nice! (%i talens)") %
-	  db["name"] % o->shortDescr % (int)o->getWeight() % 
-	  (int)(o->getWeight()*100);
-
-	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
-
-	myself->doSay(buf);
-	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
-      } else {
-	buf=fmt("Ok, I tallied your fish, weighing in at %i.  Nice one! (%i talens)") %
-	  (int)o->getWeight() % (int)(o->getWeight()*2);
-	myself->doSay(buf);
-	ch->addToMoney((int)(o->getWeight()*2), GOLD_COMM);
-      }
-
 
       /*
       -- 08/04/2004 -- Was causing crashes and corruption, changed to a standard 'return DELETE_ITEM' to fix. -Lapsos
@@ -4717,24 +4705,23 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       arg = one_argument(arg, buf);
       
       if(!isname(buf, myself->name))
-	return FALSE;
+        return FALSE;
 
       arg = one_argument(arg, buf);
 
       if(buf=="records"){
-	db.query("select name, type, weight from fishlargest order by weight desc");
+        db.query("select f1.name, o1.short_desc as type, f1.weight from fishlargest f1 join obj o1 on f1.vnum = o1.vnum order by f1.weight desc");
 
-	while(db.fetchRow()){
-	  buf=fmt("%s caught %s weighing in at %i.") %
-	    db["name"] % db["type"] % (int)(convertTo<float>(db["weight"]));
-	  myself->doSay(buf);
-	}
+      	while(db.fetchRow()){
+      	  buf=fmt("%s caught %s weighing in at %i.") 
+      	      % db["name"] % db["type"] % (int)(convertTo<float>(db["weight"]));
+      	  myself->doSay(buf);
+      	}
 
       } else if (buf == "score") {
-        int iTotCount = 0,
-	    iPerCount = 0;
+        int iTotCount = 0, iPerCount = 0;
 
-        db.query("select name, type, weight from fishlargest order by weight desc");
+        db.query("select f1.name, o1.short_desc as type, f1.weight from fishlargest f1 join obj o1 on f1.vnum = o1.vnum order by f1.weight desc");
 
         while (db.fetchRow()) {
           if (db["name"] == ch->getName()) {
@@ -4754,27 +4741,26 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
         }
 
       } else {
-	sstring weight="0";
-	bool topten=false;
-	if(buf=="topten"){
-	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
-	  topten=true;
-	} else {
-	  db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf.c_str());
-	}
+        sstring weight="0";
+        bool topten=false;
+        if(buf=="topten"){
+          db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
+          topten=true;
+        } else {
+          db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf.c_str());
+        }
 	
-	while(db.fetchRow()){
-	  if(topten){
-	    weight=talenDisplay((int)(convertTo<float>(db["weight"])));
-	  } else {
-	    weight=fmt("%i") % (int)(convertTo<float>(db["weight"]));
-	  }
+        while(db.fetchRow()){
+          if(topten){
+            weight=talenDisplay((int)(convertTo<float>(db["weight"])));
+          } else {
+            weight=fmt("%i") % (int)(convertTo<float>(db["weight"]));
+          }
 
-	  buf=fmt("%s has %s pounds of fish and %i records.") %
-	    db["name"] % weight %
-	    convertTo<int>(db["count"]);
-	  myself->doSay(buf);
-	}      
+          buf=fmt("%s has %s pounds of fish and %i records.") 
+              % db["name"] % weight % convertTo<int>(db["count"]);
+          myself->doSay(buf);
+        }      
       }
 
       break;
