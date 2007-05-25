@@ -79,7 +79,8 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 
   // save
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-  ch->doSave(SILENT_YES);
+  if (!ch->delaySave)
+    ch->doSave(SILENT_YES);
 }
 
 // player buying from shop (giving money to shop)

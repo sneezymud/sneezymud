@@ -615,7 +615,8 @@ class TBeing : public TThing {
     polyTypeT polyed;         
     sh_int hunt_dist;    // used by track, mob-hunting, etc
     short wimpy;        
-
+    bool delaySave; // used as a hack to get around saving a char multiple times when doing things like sell all.commod 
+    
     immunityData immunities;
     playerData player;      
     specialData specials;  

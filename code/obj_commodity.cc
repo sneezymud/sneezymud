@@ -150,7 +150,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     obj2->describeTreasure(buf2, num, cost_per);
     *ch += *obj2;
     keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d units of %s.") %
-		   num % buf2);
+       num % buf2);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
     TShopOwned tso(shop_nr, keeper, ch);
@@ -233,7 +233,8 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     }
     delete this;
   }
-  ch->doSave(SILENT_YES);
+  if (!ch->delaySave)
+    ch->doSave(SILENT_YES);
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
   return;

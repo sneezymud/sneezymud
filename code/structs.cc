@@ -49,6 +49,7 @@ TBeing::TBeing() :
   polyed(POLY_TYPE_NONE),
   hunt_dist(0),
   wimpy(0),
+  delaySave(FALSE),
   immunities(),
   player(),
   specials(),
@@ -1308,6 +1309,7 @@ TBeing::TBeing(const TBeing &a) :
   polyed(a.polyed),
   hunt_dist(a.hunt_dist),
   wimpy(a.wimpy),
+  delaySave(a.delaySave),
   immunities(a.immunities),
   player(a.player),
   specials(a.specials),
@@ -1433,7 +1435,7 @@ TBeing & TBeing::operator=(const TBeing &a)
   polyed = a.polyed;
   hunt_dist = a.hunt_dist;
   wimpy = a.wimpy;
-
+  delaySave = a.delaySave;
   immunities = a.immunities;
 
   // if player.longDescr is not shared, it has to be deleted

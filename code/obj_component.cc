@@ -3200,7 +3200,8 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
   buf = fmt("%s/%d") % SHOPFILE_PATH % tShop;
   tKeeper->saveItems(buf);
-  ch->doSave(SILENT_YES);
+  if (!ch->delaySave)
+    ch->doSave(SILENT_YES);
 }
 
 int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *ch)

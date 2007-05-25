@@ -976,6 +976,10 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     return FALSE;
   } else {
     if (is_abbrev(argm, "all.commodity")) {
+      // TCommodity::sellMe does a check before saving
+      // hopefully this will help with the sell lag
+      ch->delaySave = TRUE;
+      
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         // there's a chance to be moved (teleport moneypouch) so this is here
         if (!ch->sameRoom(*tKeeper))
@@ -1012,8 +1016,11 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           return DELETE_THIS;
         }
       }
+      ch->delaySave = FALSE;
+      ch->doSave(SILENT_YES);
       return FALSE;
     } else if (is_abbrev(argm, "all.components")) {
+      ch->delaySave = TRUE;
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         if (!(t = ch->equipment[i]))
           continue;
@@ -1061,6 +1068,8 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_VICT)) 
           return DELETE_THIS;
       }
+      ch->delaySave = FALSE;
+      ch->doSave(SILENT_YES);
       return FALSE;
     } else if (is_abbrev(argm, "all.hide") || is_abbrev(argm, "all.skin")) {
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {

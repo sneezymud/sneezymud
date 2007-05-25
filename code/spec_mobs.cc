@@ -4693,8 +4693,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 	}
       }
       */
-
-      ch->doSave(SILENT_YES);
+      // ch already gets saved from the give command
+      // ch->doSave(SILENT_YES);
 
       return DELETE_ITEM;
 

@@ -231,7 +231,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     return FALSE;
   
   if (myself->master && myself->roomp == myself->master->roomp && ::number(0,119)
-      && !(myself->master->desc->autobits & AUTO_NOSPRITE)) {
+      && !(myself->master->desc && myself->master->desc->autobits & AUTO_NOSPRITE)) {
     // want it on most of the time but not too spammy
     return FALSE;
   }
