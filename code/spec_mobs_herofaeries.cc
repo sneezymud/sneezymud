@@ -258,7 +258,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   }
 
   bool stop_following = FALSE;
-  if (myself->master && myself->master->desc->autobits & AUTO_NOSPRITE) {
+  if (myself->master && myself->master->desc && myself->master->desc->autobits & AUTO_NOSPRITE) {
     myself->doSay("Oh, so it's like that!");
     stop_following = TRUE;
   }
