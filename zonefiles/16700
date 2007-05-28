@@ -3,6 +3,7 @@ Player Homes~
 16799 30 2 1
 D 0 16700 5 2        Cramped Attic -> Tanni's Jewelry Store
 D 0 16701 5 2        Galek Armory -> Magical Nexus
+D 0 16702 5 2        Gon's House -> Barracks
 
 O 0 16703 1 16700       a bright blue portal
 O 0 16701 1 16700       a plain looking chair
@@ -29,5 +30,16 @@ O 0 16717 1 16701       a magic dispenser
 O 0 16718 1 16701       a shiny curio cabinet
 O 0 16719 1 16701       a waste basket
 
+O 0 16723 3 16702       a walnut wood wardrobe with lapis lazuli inlay
+O 0 16712 3 16702       an equipment rack
+O 0 16722 1 16702       a wall-mounted lantern
+O 0 9057 1 16702        a plush oak chair
+O 0 34619 1 16702       a wooden table
+O 0 8448 1 16702        a large fur covered bed
+O 0 10209 1 16702       a fireplace
+O 0 16725 1 16701       a window
+
 M 0 16700 1 16700       a latchkey kid
+M 0 16701 1 16702       a penguin
+
 S
