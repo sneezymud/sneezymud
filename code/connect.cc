@@ -6415,7 +6415,7 @@ void Descriptor::sendMotd(int wiz)
   if (iter != sstring::npos)
     version.erase(iter+1);
 
-  sprintf(motd + strlen(motd), "     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
+  sprintf(motd + strlen(motd), "\n\r\n\r     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
 
   file_to_sstring(MOTD_FILE, version);
   // swap color sstrings
