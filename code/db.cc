@@ -1521,7 +1521,8 @@ void bootZones(void)
   int zon=0, tmp;
   multimap <int, sstring, std::less<int> > files;
   multimap <int, sstring, std::less<int> >::iterator it;
-    
+  TDatabase db(DB_SNEEZY);
+  
   if(!(dfd=opendir("zonefiles"))){
     vlogf(LOG_BUG, "couldn't open zonefiles directory");
     perror("bootZones");
@@ -1542,16 +1543,26 @@ void bootZones(void)
 
     files.insert(pair<int,sstring>(tmp, dp->d_name));
   }
-
+  
+  db.query("update zone set util_flag = 0");
   for(it=files.begin();it!=files.end();++it){
     zoneData zd;
     if(zd.bootZone((*it).first)){
       zd.renumCmd();
       vlogf(LOG_MISC, fmt("booting zone %d") % zon);
       zd.zone_nr=zon++;
+      // note that a zone's zone_nr may change over time if a new zone is inserted before it
+      // so update all records in the zone table
+      db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name, (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
+      if (db.rowCount() == 0) {
+        // unsuccessful update, do an insert
+        db.query("insert zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) select %i, '%s', %i, %i, %i, %i, %i, 1", zd.zone_nr, zd.name, (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
+      }
       zone_table.push_back(zd);
     }
   }
+  // trim off any extra entries (zones have been removed since last boot, presumably)
+  db.query("delete from zone where util_flag = 0");
 }
 
 TMonster *read_mobile(int nr, readFileTypeT type)

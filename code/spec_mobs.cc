@@ -4710,7 +4710,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       arg = one_argument(arg, buf);
 
       if(buf=="records"){
-        db.query("select f1.name, o1.short_desc as type, f1.weight from fishlargest f1 join obj o1 on f1.vnum = o1.vnum order by f1.weight desc");
+        db.query("select f1.name, o1.short_desc as type, f1.weight from fishlargest f1 join obj o1 on f1.vnum = o1.vnum where f1.weight > 0 order by f1.weight desc");
 
       	while(db.fetchRow()){
       	  buf=fmt("%s caught %s weighing in at %i.") 
