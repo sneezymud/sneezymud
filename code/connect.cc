@@ -47,7 +47,7 @@ const int ALLOW_TRAITS = 1;
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
 const char * const MUD_NAME_VERS = "SneezyMUD v5.2";
-static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be interesting!\n\r\n\r";
+static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be enjoyable!\n\r\n\r";
 
 static const char * const TER_HUMAN_HELP = "help/territory help human";
 static const char * const TER_ELF_HELP = "help/territory help elf";
@@ -6415,11 +6415,7 @@ void Descriptor::sendMotd(int wiz)
   if (iter != sstring::npos)
     version.erase(iter+1);
 
-  strcpy(motd, "/****************************************************************************/\n\r");
   sprintf(motd + strlen(motd), "     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
-  sprintf(motd + strlen(motd), "     Running on a dual processor Linux machine at sneezymud.com.\n\r\n\r"
-	                       "     We have recently moved from our old location at saw.net.\n\r\n\r"
-	                       "     Please update your clients and/or bookmarks to reflect this change.\n\r\n\r");
 
   file_to_sstring(MOTD_FILE, version);
   // swap color sstrings
