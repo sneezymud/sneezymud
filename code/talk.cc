@@ -872,6 +872,65 @@ const sstring RandomWord()
   return (str[number(0, 49)]);
 }
 
+const sstring RandomVerb()
+{
+  // guaranteed insensible
+  static sstring str[50] =
+  {
+    "hoist", 
+    "pinch", 
+    "decorate", 
+    "besmirch", 
+    "conflagrate",              // 5
+    "snook", 
+    "pilfer", 
+    "parlay", 
+    "flummox", 
+    "tender",                   // 10
+    "archive", 
+    "hail", 
+    "ploot", 
+    "castigate", 
+    "micturate",                // 15
+    "tuck", 
+    "strap", 
+    "absolve", 
+    "flagellate", 
+    "abnegate",                 // 20
+    "bowdlerize", 
+    "mesmerize", 
+    "simonize", 
+    "levitate", 
+    "orate",                    // 25
+    "ration", 
+    "finesse", 
+    "enrapture", 
+    "declaim", 
+    "canoodle",                 // 30
+    "atomize", 
+    "massage", 
+    "poeticize", 
+    "criticize", 
+    "harbor",                   // 35
+    "unravel", 
+    "demystify", 
+    "lobby", 
+    "swive", 
+    "scrump",                   // 40
+    "deride", 
+    "remune", 
+    "addle", 
+    "brindle", 
+    "coddle",                   // 45
+    "succor", 
+    "embarrass", 
+    "dominate", 
+    "envalorize", 
+    "encapitate"                // 50
+  };
+  return (str[number(0, 49)]);
+}
+
 
 int TBeing::doSign(const sstring &arg)
 {

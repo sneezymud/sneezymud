@@ -260,6 +260,7 @@ class TMonster : public TBeing {
     int aiWimpCheck(TBeing *);
     int aiWimpSwitch(TBeing *);
     int aiSteal(TBeing *);
+    int aiToastedAt(TBeing *);
     int aiBounce(TBeing *, TBeing *, aiTarg);
     int aiBlink(TBeing *, TBeing *, aiTarg);
     int aiDance(TBeing *, TBeing *, aiTarg);
@@ -416,6 +417,7 @@ class TMonster : public TBeing {
     int aiPet(TBeing *, TBeing *, aiTarg);
     int aiGrimace(TBeing *, TBeing *, aiTarg);
     int aiScruff(TBeing *, TBeing *, aiTarg);
+    int aiToast(TBeing *, TBeing *, aiTarg);
     int aiShoveReact(TBeing *, bool, dirTypeT);
     int findABetterWeapon();
     bool isRetrainable();

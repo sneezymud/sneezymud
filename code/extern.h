@@ -410,6 +410,7 @@ extern void recvTextHandler(const char *);
 extern void mudRecvMessage();
 extern void perform_violence(int pulse);
 extern const sstring RandomWord();
+extern const sstring RandomVerb();
 extern const sstring getSectorNameColor(sectorTypeT, TRoom *);
 extern const sstring getSectorDescrColor(sectorTypeT, TRoom *);
 }

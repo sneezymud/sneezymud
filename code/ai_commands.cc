@@ -988,7 +988,7 @@ int TMonster::aiGrin (TBeing *doer, TBeing *, aiTarg cond)
     case TARGET_OTHER:
       US(4);
       if (!::number(0,2))
-        doSay("uh oh.");
+        doSay("Uh oh.");
       break;
   }
   return FALSE;
@@ -3517,6 +3517,39 @@ int TMonster::aiRazz(TBeing *, TBeing *, aiTarg cond)
     case TARGET_SELF:
     case TARGET_MOB:
     case TARGET_OTHER:
+      break;
+  }
+  return FALSE;
+}
+
+int TMonster::aiToast(TBeing *doer, TBeing *other, aiTarg cond)
+{
+  // this get's triggered by the doToast routine, not aiSocialSwitch
+  if (!isHumanoid()) {
+    switch (::number(0, 3)) {
+      case 0:
+        doAction(add_bars(doer->name), CMD_LICK);
+        break;
+      default:
+        break;
+    }
+    return FALSE;
+  }
+  switch (cond) {
+    case TARGET_NONE:
+      if (!::number(0, 3))
+        doSay("Jolly good times!");
+      break;
+    case TARGET_SELF:
+      if (!::number(0, 3))
+        doAction(add_bars(doer->name), CMD_ROLL);
+      break;
+    case TARGET_OTHER:
+      break;
+    case TARGET_MOB:
+      aiToastedAt(doer);
+      break;
+    default:
       break;
   }
   return FALSE;

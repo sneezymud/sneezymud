@@ -11,6 +11,7 @@
 #include "obj_plant.h"
 #include "disc_sorcery.h"
 #include "liquids.h"
+#include "obj_drinkcon.h"
 
 class socialMessg {
   public:
@@ -224,6 +225,22 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       case CMD_PAINT:
       case CMD_TIE:
       case CMD_UNTIE:
+        
+      // really, if we can hug, comfort and pull hair - why not these?
+      // a check to see if char is riding same mount/object as vict would be nice for some of these...
+      case CMD_PINCH:
+      case CMD_NOOGIE:
+      case CMD_TICKLE:
+      case CMD_MASSAGE:
+      case CMD_NUZZLE:
+      case CMD_WORSHIP:
+      case CMD_SQUEEZE:
+      case CMD_KISS:
+      case CMD_GROPE:
+      case CMD_SNUGGLE:
+      case CMD_FRENCH:
+      case CMD_RUFFLE:
+      
         if (fight())  {
           sendTo("You cannot perform that action while fighting!\n\r");
           return FALSE;
@@ -1107,7 +1124,187 @@ int TBeing::doBite(const sstring &arg)
     }
   }
 
-  sendTo("How about biting someone?.\n\r");
+  sendTo("How about biting someone?\n\r");
 
   return FALSE;
+}
+
+void TBeing::doToast(const sstring &arg)
+{
+  TThing *t = NULL;
+  TBeing *vict = NULL;
+  TMonster *ai = NULL;
+  TDrinkCon *dc1, *dc2 = NULL;
+  sstring sb;
+  sstring clink = "<o>*thunk*<1>"; // the sound the toast makes
+  int spill_chance = 0;
+  int roll;
+  
+  if (!roomp)
+    return;
+
+  if (!((dc1 = dynamic_cast<TDrinkCon *>(heldInPrimHand())) || (dc1 = dynamic_cast<TDrinkCon *>(heldInSecHand())))) {
+    sendTo("You cannot toast without a drink in your hand!\n\r");
+    return;
+  }
+
+  if (arg.empty()) {
+    act("You lift your $o and nod knowingly.", FALSE, this, dc1, NULL, TO_CHAR);
+    act("$n raises $s $o in a strange and deliberate gesture.", TRUE, this, dc1, NULL, TO_ROOM);
+    // check for spillage
+    spill_chance = 7;
+  } else {
+    // toast with someone
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
+      if (isname(arg, t->name)) {
+        vict = dynamic_cast<TBeing *>(t);
+        if (vict) {
+          if (vict == this) {
+            act("You lift your $o and nod knowingly at it.", FALSE, this, dc1, NULL, TO_CHAR);
+            act("$n raises $p and agrees with it.", TRUE, this, dc1, NULL, TO_ROOM);
+            spill_chance = 7;
+          } else {
+            // check for vict drink for clink
+            if (((dc2 = dynamic_cast<TDrinkCon *>(vict->heldInPrimHand())) || (dc2 = dynamic_cast<TDrinkCon *>(vict->heldInSecHand())))) {
+              // clink!
+              if (dc1->isMineral() && dc2->isMineral())
+                clink = "<c>*clink*<1>";
+              else if ((dc1->isMetal() || dc1->isMineral()) && (dc2->isMetal() || dc2->isMineral()))
+                clink = "<w>*clunk*<1>";
+              sb = fname(dc2->name);
+              act(fmt("You raise your $o and knock it against $N's %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_CHAR);
+              act(fmt("$n raises $s $o and knocks it against your %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_VICT);
+              act(fmt("$n and $N knock their drinks together. %s") % clink, FALSE, this, dc1, vict, TO_NOTVICT);
+              spill_chance = 14;
+            } else {
+              // vict has no drink
+              act("You raise your $o to $N and nod knowingly.", FALSE, this, dc1, vict, TO_CHAR);
+              act("$n raises $s $o to you and tries to look profound.", TRUE, this, dc1, vict, TO_VICT);
+              act("$n raises $s $o to $N and nods knowingly.", TRUE, this, dc1, vict, TO_NOTVICT);
+              spill_chance = 7;
+            }
+          }
+        }
+      }
+    }
+  }
+  if (spill_chance > 0) {
+    if (!isImmortal() 
+        && !(dynamic_cast<TMonster *>(this)) 
+        && dc1->getDrinkUnits() > 0
+        && !dc1->isDrinkConFlag(DRINK_FROZEN)) {
+      // checking dc1, the toaster's drink container
+      if (vict && vict->isImmortal() && dc1->isDrinkConFlag(DRINK_PERM)) {
+        // toasting with an immortal, guaranteed spill but luckily it's a bottomless cup
+        act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+        act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+        dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
+      } else if (vict && vict->isImmortal()) {
+        // toasting with an immortal, guaranteed to spill out everything
+        act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+        act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+        dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
+        dc1->genericEmpty();
+        dc1->updateDesc();
+      } else if (!dc1->isDrinkConFlag(DRINK_PERM)) {
+        // non-bottomless drink, spill normally
+        roll = ::number(1, 100);
+        if (roll <= spill_chance + (getCond(DRUNK) * 5)) {
+          roll = min(dc1->getDrinkUnits(), roll / 10);
+          dropPool(roll, dc1->getDrinkType());
+          if (roll < dc1->getDrinkUnits()) {
+            act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+            act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+            dc1->addToDrinkUnits(-roll);
+            dc1->updateDesc();
+            dc1->weightCorrection();
+          } else {
+            act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+            act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+            dc1->genericEmpty();
+            dc1->updateDesc();
+          }
+        }
+      } else {
+        roll = ::number(1, 100);
+        if (roll <= spill_chance + (getCond(DRUNK) * 5)) {
+          // bottomless drink, spill but don't change liquid amount
+          roll = min(dc1->getDrinkUnits(), roll / 10);
+          dropPool(roll, dc1->getDrinkType());
+          act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+          act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+        }
+      }
+    }
+    
+    if (dc2 && vict) {
+      // check this one too
+      if (!vict->isImmortal() 
+          && !(dynamic_cast<TMonster *>(vict)) 
+          && dc2->getDrinkUnits() > 0
+          && !dc2->isDrinkConFlag(DRINK_FROZEN)) {
+        // checking dc2, the toastee's drink container
+        if (this->isImmortal() && dc2->isDrinkConFlag(DRINK_PERM)) {
+          // toasting with an immortal, guaranteed spill but luckily it's a bottomless cup
+          act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+          act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+          vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
+        } else if (this->isImmortal()) {
+          // toasting with an immortal, guaranteed to spill out everything
+          act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+          act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+          vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
+          dc2->genericEmpty();
+          dc2->updateDesc();
+        } else if (!dc2->isDrinkConFlag(DRINK_PERM)) {
+          // non-bottomless drink, spill normally
+          roll = ::number(1, 100);
+          if (roll <= spill_chance + (vict->getCond(DRUNK) * 5)) {
+            roll = min(dc2->getDrinkUnits(), roll / 10);
+            vict->dropPool(roll, dc2->getDrinkType());
+            if (roll < dc2->getDrinkUnits()) {
+              act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+              act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+              dc2->addToDrinkUnits(-roll);
+              dc2->updateDesc();
+              dc2->weightCorrection();
+            } else {
+              act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+              act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+              dc2->genericEmpty();
+              dc2->updateDesc();
+            }
+          }
+        } else {
+          roll = ::number(1, 100);
+          if (roll <= spill_chance + (vict->getCond(DRUNK) * 5)) {
+            // bottomless drink, spill but don't change liquid amount
+            roll = min(dc2->getDrinkUnits(), roll / 10);
+            vict->dropPool(roll, dc2->getDrinkType());
+            act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+            act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+          }
+        }
+      }
+    }
+    
+    // trigger TMonster::aiToast...
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
+      ai = dynamic_cast<TMonster *>(t);
+      if (!ai)
+        continue;
+      if (ai->fight() || !ai->awake())
+        continue;
+      
+      if (!vict)
+        ai->aiToast(this, NULL, TARGET_NONE);
+      else if (vict == this)
+        ai->aiToast(this, this, TARGET_SELF);
+      else if (vict == ai)
+        ai->aiToast(this, vict, TARGET_MOB);
+    }
+    return;
+  }
+  // If we got here, the person toasted someone that wasnt in the room
+  sendTo("Do you often share a toast with someone that isn't there?\n\r");
 }

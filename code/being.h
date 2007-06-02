@@ -1433,6 +1433,7 @@ class TBeing : public TThing {
     void doShuffle(const sstring &);
     void doPunch(const sstring &);
     int doTaunt(const sstring &);
+    void doToast(const sstring &);
     int doBite(const sstring &);
     int doJump(const sstring &);
     int doPick(const char *);

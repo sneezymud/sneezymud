@@ -1204,3 +1204,37 @@ bool TMonster::aiLoveNonHumanoid(TBeing *doer, aiTarg cond)
 
   return true;
 }
+
+int TMonster::aiToastedAt(TBeing *doer)
+{
+  sstring bs;
+  switch (::number(0,4)) {
+    case 0:
+      doSay("You are really too kind!");
+      return TRUE;
+      break;
+    case 1:
+    case 2:
+      switch (::number(1, 4)) {
+        case 1:
+          bs = "Hoo-ee!";
+          break;
+        case 2:
+          bs = "Oh my!";
+          break;
+        case 3:
+          bs = fname(deities[::number(DEITY_NONE + 1, MAX_DEITIES - 1)]);
+          bs += "'s wounds!";
+          break;
+        default:
+          bs = "Aye!";
+          break;
+      }
+      doSay(fmt("%s  Did you see me %s that %s?") % bs % RandomVerb() % RandomWord());
+      return TRUE;
+      break;
+    default:
+      break;
+  }
+  return FALSE;
+}

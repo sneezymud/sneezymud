@@ -986,6 +986,9 @@ int TMonster::aiSocialSwitch (TBeing *doer,TBeing *other, cmdTypeT cmd, aiTarg c
     case CMD_GRIMACE:
       rc = aiGrimace(doer,other,cond);
       break;
+    case CMD_TOAST:
+      rc = aiToast(doer,other,cond);
+      break;
     default:
       vlogf(LOG_MOB_AI, fmt("doAction mob_AI loop called with cmd of %d and type %d") % cmd %cond);
       US(1);
