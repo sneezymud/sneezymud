@@ -1056,7 +1056,7 @@ E 1 6531 9999 15 		Belt Black Ice
 E 1 6532 9999 5 		Helm Black Ice
 
 M 0 6533 1 6539 	Imp Devilish   
-Y 0 152 0 2			Shadowy fire set
+Y 0 152 2			Shadowy fire set
 
 M 0 6552 1 6540 	Tracker Great 
 ? 0 5 0 E
@@ -1260,7 +1260,7 @@ E 1 6588 9999 19 		Pipe Sewer
 
 
 M 0 6590 1 6588 	Pugmork 
-Y 0 153 0 2			Jellyfish set
+Y 0 153 2			Jellyfish set
 ? 0 2 0 E
 E 1 7402 9999 19 		Petrified Jellyfish stingers
 

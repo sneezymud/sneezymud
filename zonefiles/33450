@@ -17,18 +17,22 @@ D 0 33481 2 1 Tainted Summoning Chamber -> The Ossuary
 D 0 33482 4 1 The Mouth of a Wide Tunnel -> The Ossuary 
 D 0 33483 1 1 A Blocked Off Tunnel -> The Den of a Large Beast 
 D 0 33484 3 1 The Den of a Large Beast -> A Blocked Off Tunnel 
+
 M 0 33481 1 33450 Colonel Vaud 
 ? 0 5 0 E 
 E 1 33464 1 19 The Sword of the Lightbearer [hold-left] 
 Y 0 15 5 gleaming set 
-G 0 1576 9999 
+? 0 100 0 G
+G 1 1576 9999 
 K 0 33470 1 33450 Hutir 
 Y 0 34 5 emerald 
-G 0 31367 9999 
+? 0 100 0 G
+G 1 31367 9999 
 K 0 33471 1 33450 Hulhash 
 ? 0 5 0 E 
 E 1 33466 9999 19 a spike-covered femur from a large troll [hold-left] 
 Y 0 63 5 sturdy iron set 
+
 M 0 33469 1 33453 Hexus 
 ? 0 5 0 E 
 E 1 33467 1 19 The Name of Needles [hold-left] 
@@ -88,7 +92,8 @@ M 0 33450 2 33465 a steadfast guardian
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 4 33465 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -97,7 +102,8 @@ M 0 33450 2 33466 a steadfast guardian
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 4 33466 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -106,7 +112,8 @@ M 0 33450 2 33467 a steadfast guardian
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 4 33467 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -123,7 +130,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33468 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -140,7 +148,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33469 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -157,7 +166,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+G 1 31394 9999 
+? 0 100 0 G
 K 1 33450 2 33470 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33454 9999 16 bracelet eternium bangles [wrist] 
@@ -172,7 +182,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33471 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -189,7 +200,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33472 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -208,7 +220,8 @@ E 1 33454 9999 16 bracelet eternium bangles [wrist]
 ? 0 5 0 E 
 E 1 33454 9999 17 bracelet eternium bangles [wrist] 
 Y 0 135 5 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33473 a steadfast guardian 
 ? 0 5 0 E 
 E 1 33465 9999 19 thin eternium shortsword 
@@ -232,7 +245,8 @@ E 1 33472 9999 14 a backplate of eternium thread [back]
 E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
 ? 0 5 0 E 
 E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33474 a steadfast guardian 
 Y 0 135 5 
 M 0 33459 1 33475 Keethrax 
@@ -246,7 +260,8 @@ E 1 33472 9999 14 a backplate of eternium thread [back]
 E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
 ? 0 5 0 E 
 E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33475 a steadfast guardian 
 Y 0 135 5 
 M 0 33460 1 33476 Akate 
@@ -260,7 +275,8 @@ E 1 33472 9999 14 a backplate of eternium thread [back]
 E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
 ? 0 5 0 E 
 E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
-G 0 31394 9999 
+? 0 100 0 G
+G 1 31394 9999 
 K 1 33450 2 33476 a steadfast guardian 
 Y 0 135 5 
 M 0 33450 1 33477 a steadfast guardian 
