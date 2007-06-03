@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   sstring team = ce.getQueryString();
   replaceString(team, "%20", " ");
   
-  int level, avg_level, max_level, part_num;
+  int level, avg_level, max_level, part_num, tmp;
   
   cout << HTTPHTMLHeader() << endl;
   cout << html() << endl;
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     // show list of available teams
     vector <sstring> teams; // for the team summaries
     cout << "<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td valign=\"top\" colspan=\"4\" align=\"center\"><h3><a href=\"limb_quest.cgi\">Welcome to SneezyMUD: Quest for Limbs III</a></h3></td></tr>" << endl;
-    cout << "<tr><td colspan=\"2\"><img src=\"http://www.sneezymud.com/Metrohep/handy.jpg\"></td><td colspan=\"2\">" << endl;
+    cout << "<tr><td colspan=\"2\" align=\"right\"><img src=\"http://www.sneezymud.com/Metrohep/handy.jpg\"></td><td colspan=\"2\" align=\"left\">" << endl;
     db.query("select distinct team from quest_limbs_team order by team");
     if(!db.isResults()){
       cout << "There are no teams designated right now." << endl;
@@ -68,8 +68,12 @@ int main(int argc, char **argv)
     for (unsigned int step = 0; step < teams.size(); step++) {
       db.query("select player from quest_limbs_team where team = '%s' order by player", teams[step].c_str());
       cout << fmt("<tr><td colspan=\"4\">&nbsp;</td></tr><tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey;\"><b style=\"color:red;\">%s</b><br>") % teams[step] << endl;
+      tmp = 0;
       while (db.fetchRow()) {
+        tmp++;
         cout << " " << db["player"] << endl;
+        if (!(tmp % 7))
+        cout << "<br>" << endl;
       }
       cout << "</td></tr><tr><td colspan=\"4\">&nbsp;</td></tr>" << endl;
       db.query("select case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'tooth' then -3 when 'eyeballs' then -4 else q1.slot_num end as slot_num, round(avg((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as avg_level, round(max((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as max_level, count(*) as tally from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' group by case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'eyeballs' then -3 else q1.slot_num end order by slot_num", teams[step].c_str());

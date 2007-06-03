@@ -240,6 +240,8 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       case CMD_SNUGGLE:
       case CMD_FRENCH:
       case CMD_RUFFLE:
+      case CMD_CUDDLE:
+      case CMD_FONDLE:
       
         if (fight())  {
           sendTo("You cannot perform that action while fighting!\n\r");
@@ -1302,6 +1304,8 @@ void TBeing::doToast(const sstring &arg)
         ai->aiToast(this, this, TARGET_SELF);
       else if (vict == ai)
         ai->aiToast(this, vict, TARGET_MOB);
+      else
+        ai->aiToast(this, vict, TARGET_OTHER);
     }
     return;
   }

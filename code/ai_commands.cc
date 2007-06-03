@@ -3545,6 +3545,10 @@ int TMonster::aiToast(TBeing *doer, TBeing *other, aiTarg cond)
         doAction(add_bars(doer->name), CMD_ROLL);
       break;
     case TARGET_OTHER:
+      if (!::number(0, 5))
+        doSay("Jolly good times!");
+      else if (!::number(0, 3) && other)
+        doSay(fmt("%s is the %s!") % stripColorCodes(sstring(other->getName()).cap()) % RandomWord());
       break;
     case TARGET_MOB:
       aiToastedAt(doer);

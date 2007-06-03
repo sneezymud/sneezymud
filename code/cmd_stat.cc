@@ -30,6 +30,7 @@ void TBeing::statZone(const sstring &zoneNumber)
   // int count_non_ethereal = 0;
   int room_loop = 0;
   sstring out("");
+  sstring sb;
   TRoom *roomp_current;
   
   int count_mobs_in_block = 0;
@@ -145,7 +146,8 @@ void TBeing::statZone(const sstring &zoneNumber)
       break;
   }
   out += fmt("Reset mode:   %s\n\r") % reset_mode;
-  out += fmt("Lifespan:     <c>%-4d<1>      Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r") % zoned.lifespan % ((room_end - room_start) + 1) % count_rooms;
+  sb = fmt("<c>%i<1>/<c>%i<1>") % zoned.lifespan % zoned.age;
+  out += fmt("Lifespan/age: %-21s Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r")  % sb % ((room_end - room_start) + 1) % count_rooms;
   
   out += "<g>Room Info<1>\n\r";
   out += fmt("Descriptions: <c>%-d<1>\n\r") % count_descriptions;
