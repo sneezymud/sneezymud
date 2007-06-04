@@ -155,7 +155,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_DASH_BLESSING){
+  } else if(which==AFFECT_CORAL_BLESSING){
     aff.type=AFFECT_DASH_BLESSING;
     aff.location=APPLY_NONE;
     aff.modifier=0;
@@ -177,7 +177,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.modifier2 = 0;
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_CORAL_BLESSING){
+  } else if(which==AFFECT_DASH_BLESSING){
     // TBeing::affectedBySpell - plasma mirror
   } else if(which==AFFECT_DEIRDRE_BLESSING){
     // TBeing::affectedBySpell - celerite
