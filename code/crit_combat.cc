@@ -1034,7 +1034,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
     db.query("select team from quest_limbs_team where player = '%s'", getName());
     if (db.fetchRow())
       limb_quest = 0;
-    buf = fmt("tooth lost limb %s [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
+    buf = fmt("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
   } else{
     buf = fmt("tooth lost limb %s") % v->name;
   }
@@ -1101,7 +1101,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       TDrinkCon *corpse;
       corpse = new TDrinkCon();
       if (dynamic_cast<TPerson *>(this))
-        buf = fmt("heart lost limb %s [heart] [0] [%d] [%s]") % v->name % v_vnum % getName();
+        buf = fmt("heart lost limb %s [q] [heart] [0] [%d] [%s]") % v->name % v_vnum % getName();
       else
         buf = fmt("heart lost limb %s") % v->name;
 
@@ -1656,7 +1656,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 		
 	  corpse = new TCorpse();
     if (dynamic_cast<TPerson *>(this)) 
-      buf = fmt("genitalia lost limb %s [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
+      buf = fmt("genitalia lost limb %s [q] [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
     else
       buf = fmt("genitalia lost limb %s") % v->name;
     corpse->name = mud_str_dup(buf);

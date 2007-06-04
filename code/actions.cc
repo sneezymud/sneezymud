@@ -1186,6 +1186,7 @@ void TBeing::doToast(const sstring &arg)
               spill_chance = 7;
             }
           }
+          break;
         }
       }
     }

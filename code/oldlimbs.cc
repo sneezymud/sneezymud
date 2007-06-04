@@ -334,7 +334,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     
   corpse = new TCorpse();
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb %s [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos).replaceString(" ", "-") % (int) pos % v_vnum % opp->getName();
+    sbuf = fmt("%s lost limb %s [q] [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos).replaceString(" ", "-") % (int) pos % v_vnum % opp->getName();
   else
     sbuf = fmt("%s lost limb %s") % describeBodySlot(pos) % name;
   
@@ -390,7 +390,7 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
 
   
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb %s [eyeballs] [0] [%d] [%s]") % (single ? single : part) % name % v_vnum % opp->getName();
+    sbuf = fmt("%s lost limb %s [q] [eyeballs] [0] [%d] [%s]") % (single ? single : part) % name % v_vnum % opp->getName();
   else 
     sbuf = fmt("%s lost limb %s") % (single ? single : part) % name;
   

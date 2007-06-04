@@ -132,17 +132,16 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   /* record data for the limb quest */
   sstring partname = bodypart->name;
 
-  if (!tooth &&
-      partname.find("diseased") == sstring::npos &&
-      partname.find("corpse of a") == sstring::npos &&
-      partname.find("pile of dust") == sstring::npos &&
-      partname.find("rotten") == sstring::npos) {
+  // look for the chopped limb quest flag
+  // we don't want any other stuff to enter this block
+  if (partname.find("[q]") != sstring::npos) {
     // record stuff for limb questing
     vector <sstring> partinfo;
     split_string(partname, " []\n\r\t", partinfo);
     bool record_part = TRUE;
     
     // we're expecting the end of the partname to be [bodypart] [slot #] [mob vnum] [player that chopped it]
+    // parsing from the end to the beginning
     
     // who chopped it
     sstring chopper = partinfo.back();
