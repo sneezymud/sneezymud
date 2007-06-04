@@ -156,7 +156,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_CORAL_BLESSING){
-    aff.type=AFFECT_DASH_BLESSING;
+    aff.type=AFFECT_CORAL_BLESSING;
     aff.location=APPLY_NONE;
     aff.modifier=0;
     aff.modifier2=0;
