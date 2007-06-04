@@ -52,11 +52,11 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		     AFFECT_VASCO_BLESSING,
 		     APPLY_DEX,
 		     "<k>stealth<1>");
-  blessings[AFFECT_CORAL_BLESSING]=
-    ego_imm_blessing("Coral",
-		     AFFECT_CORAL_BLESSING,
+  blessings[AFFECT_DASH_BLESSING]=
+    ego_imm_blessing("Dash",
+		     AFFECT_DASH_BLESSING,
 		     APPLY_FOC,
-		     "<B>reflection<1>");
+		     "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
   blessings[AFFECT_ANGUS_BLESSING]=
     ego_imm_blessing("Angus",
 		     AFFECT_ANGUS_BLESSING,
@@ -82,9 +82,9 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		     AFFECT_MAROR_BLESSING,
 		     APPLY_KAR,
 		     "<Y>luck<1>");
-  blessings[AFFECT_DASH_BLESSING]=
-    ego_imm_blessing("Dash",
-		     AFFECT_DASH_BLESSING,
+  blessings[AFFECT_CORAL_BLESSING]=
+    ego_imm_blessing("Coral",
+		     AFFECT_CORAL_BLESSING,
 		     APPLY_CON,
 		     "<c>exploration<1>");
 
