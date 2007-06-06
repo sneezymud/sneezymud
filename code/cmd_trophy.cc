@@ -63,25 +63,22 @@ void procTrophyDecay::run(int) const
   }
 }
 
-
-
 void TTrophy::addToCount(int vnum, double add){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
   int player_id=parent->getPlayerID();
 
-  db->query("select * from trophy where player_id=%i and mobvnum=%i",
-	    player_id, vnum);
-  if(!db->fetchRow()){
+  // in most cases we just want to do an update, so start with that
+  db->query("update trophy set count=count+%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
+      add, (add>0 ? add : 0), player_id, vnum);
+  if (db->rowCount() == 0) {
+    // no row for this player & mob so do an insert instead
     db->query("insert into trophy values (%i, %i, %f, %f)",
-	      player_id, vnum, add, (add>0 ? add : 0));
-  } else {
-    db->query("update trophy set count=count+%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
-	      add, (add>0 ? add : 0), player_id, vnum);
+        player_id, vnum, add, (add>0 ? add : 0));
   }
-
+  
   db->query("update trophyplayer set total=total+%f where player_id=%i",
-	   add, player_id);
+     add, player_id);
 }
 
 
