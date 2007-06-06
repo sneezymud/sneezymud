@@ -69,7 +69,8 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     return FALSE;
 
   // basic tasky safechecking
-  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)){
+  // adding the learning check - we had an arithmetic exception trying to divide...
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || learning == 0){
     act("You cease your deforestation activities.",
         FALSE, ch, 0, 0, TO_CHAR);
     act("$n stops $s deforestation activities.",

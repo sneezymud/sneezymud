@@ -165,6 +165,10 @@ int rainbowBridge(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   TPortal *por = dynamic_cast<TPortal *>(o);
   if (!por) return FALSE;
 
+  // objects with movement proc seem to get caught here
+  if (!dynamic_cast<TBeing *>(vict))
+    return FALSE;
+  
   rc = vict->doEnter(NULL, por);
   if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS)) {
     return DELETE_VICT | DELETE_THIS;
@@ -190,6 +194,10 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
       (cmd != CMD_CLIMB) && (cmd != CMD_DESCEND)) 
     return FALSE;
 
+  // objects with movement proc can probably get caught here
+  if (!dynamic_cast<TBeing *>(vict))
+    return FALSE;
+  
   if (!vict->canSee(o))
     return FALSE;
 
@@ -5808,6 +5816,9 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			// grab a random exit and move through it
 			use_dir = possible_exits[::number(0, possible_exits.size() - 1)];
 			TRoom *rp2 = real_roomp(o->roomp->exitDir(use_dir)->to_room);
+			
+			if (!rp2)
+			  return FALSE;
 			
       if (rp2->isFlyingSector()
           || rp2->isUnderwaterSector()
