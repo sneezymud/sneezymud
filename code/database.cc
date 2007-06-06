@@ -202,7 +202,7 @@ bool TDatabase::query(const char *query,...)
       buf += *query++;
     }
 
-    buf = fmt("insert into querytimes values ('%s', %f)") % 
+    buf = fmt("insert into querytimes (query, secs) values ('%s', %f)") % 
       buf % t.getElapsed();
 
     mysql_query(db, buf.c_str());

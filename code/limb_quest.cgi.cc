@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     cout << fmt("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team 
          << "<tr><td colspan=\"4\">&nbsp;</td></tr>"
          << endl;
-    db.query("select t1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 join quest_limbs_team t1 on q1.player = t1.player and t1.team = '%s' left join mob m1 on q1.mob_vnum = m1.vnum order by q1.date_submitted desc, q1.slot_num", team.c_str());
+    db.query("select q1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' order by q1.date_submitted desc, q1.slot_num;", team.c_str());
     if(!db.isResults()){
       cout << fmt("<tr><td colspan=\"4\">No limbs submitted. Get to work, %s!</td></tr>") % team << endl;
     } else {
