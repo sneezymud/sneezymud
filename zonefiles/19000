@@ -35,6 +35,7 @@ O 0 19014 2 19006       a sun-bleached hammock
 O 0 19098 1 19005       an iron cannon cast like a dragon
 O 0 19086 1 19005       a caged storm lamp
 O 0 19085 1 19005       a large tub for collecting fish
+O 0 19012 4 19005       an ash wood and leather deck chair
 M 0 19001 1 19005        a gun loader
 Z 0 1 100                scurvy sailor's local set
 G 1 19099 9999
@@ -104,11 +105,13 @@ O 0 19009 1 19010       a large brass lamp
 * captain's cabin
 O 0 19012 2 19011       an ash wood and leather deck chair
 O 0 19021 2 19011       a polished mahogany desk
-O 0 19022 2 19011       a shellacked armoire
+O 0 19022 4 19011       a huge iron bound treasure chest
 O 0 19011 2 19011       a small brass-framed bed
 O 0 19009 1 19011       a large brass lamp
 O 0 19006 1 19011       a small box containing notes and quills
 O 0 19020 1 19011       a smudged tactical map
+O 0 16728 1 19011       Davy Jones' Locker
+
 
 * no code to update windows for vehicle movement... yet
 *O 0 34160 1 19011       a window to the south
