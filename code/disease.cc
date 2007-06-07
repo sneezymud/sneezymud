@@ -75,7 +75,9 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
   affectedData vaf;
   if (ch->inRoom() == ROOM_NOCTURNAL_STORAGE)
     return;
-
+  int spread_controller = 1; // to reduce rate of spreading in crowds. it gets out of hand.
+  int effective_chance = chance_to_spread; // to store the original chance
+  
   // Do not spread disease in peacful zones, this can become real hairy.
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_PEACEFUL))
     return;
@@ -88,7 +90,11 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
       continue;
     if (v->isImmune(IMMUNE_DISEASE, WEAR_BODY))
       continue;
-    if (number(1,50000) >= chance_to_spread)
+    
+    if (effective_chance > 50)
+      effective_chance = chance_to_spread / spread_controller++;
+    vlogf(LOG_MISC, fmt("Chance: %d to %s") % effective_chance % v->name);
+    if (number(1,50000) >= effective_chance)
       continue;
     if (race && (v->getRace() != race))
       continue;
@@ -314,7 +320,7 @@ int disease_cold(TBeing *victim, int message, affectedData *)
 {
   affectedData vaf;
   int rc = 0;
-  int spread_chance = 500;
+  int spread_chance = 250;
   if (message == DISEASE_PULSE) {
     if (victim->isHumanoid()) {
       rc = victim->dummyCold();
@@ -327,9 +333,6 @@ int disease_cold(TBeing *victim, int message, affectedData *)
     vaf.modifier = DISEASE_COLD;
     vaf.location = APPLY_NONE;
     vaf.bitvector = 0;
-    // cold epidemics in gh go on forever....
-    if (victim->isPc() && victim->GetMaxLevel() < 6)
-      spread_chance = 200;
     spread_affect(victim, spread_chance, FALSE, FALSE, &vaf);
   } else if (message == DISEASE_BEGUN) {
     act("$n doesn't look very well.", TRUE, victim, NULL, NULL, TO_ROOM);
