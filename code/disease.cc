@@ -93,7 +93,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
     
     if (effective_chance > 50)
       effective_chance = chance_to_spread / spread_controller++;
-    vlogf(LOG_MISC, fmt("Chance: %d to %s") % effective_chance % v->name);
+
     if (number(1,50000) >= effective_chance)
       continue;
     if (race && (v->getRace() != race))

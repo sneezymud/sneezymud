@@ -161,16 +161,21 @@ void ObjLoad(TBeing *ch, int vnum)
   db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name);
 
   if(!db.isResults()){
-    ch->sendTo("Object not found\n\r");
+    ch->sendTo("Object not found.\n\r");
     return;
   }
 
   if(!db.fetchRow())
     return;
 
-  ch->sendTo(fmt("Loading saved object number %d\n\r") % vnum);
+  ch->sendTo(fmt("Loading saved object number %d.\n\r") % vnum);
 
   o = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
+  if (!o) {
+    vlogf(LOG_BUG, fmt("%s failed to load vnum %d from immortal.obj.") % ch->name % vnum);
+    ch->sendTo("Bad news.  Couldn't load that.\n\r");
+    return;
+  }
   o->snum   = vnum;
   o->number = -1;
 
