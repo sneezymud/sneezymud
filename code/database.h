@@ -101,6 +101,7 @@ class TDatabase
   MYSQL_RES *res;
   MYSQL_ROW row;
   MYSQL *db;
+  long row_count;
   
  public:
   void setDB(dbTypeT);

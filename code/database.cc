@@ -10,6 +10,7 @@ TDatabase::TDatabase() :
   row(NULL),
   db(NULL)
 {
+  row_count = 0;
   //  vlogf(LOG_DB, "constructor");
 }
 
@@ -19,6 +20,7 @@ TDatabase::TDatabase(dbTypeT tdb) :
   db(NULL)
 {
   setDB(tdb);
+  row_count = 0;
   //  vlogf(LOG_DB, "constructor setDB");
 }
 
@@ -180,6 +182,9 @@ bool TDatabase::query(const char *query,...)
       mysql_free_result(res);
     res=restmp;
   }
+  
+  // capture rowcount here, because the db pointer state changes when db timing is on
+  row_count = (long) mysql_affected_rows(db);
 
   t.end();
 
@@ -225,8 +230,8 @@ bool TDatabase::isResults(){
 long TDatabase::rowCount(){
   // return # of affected or retrieved rows
   // -1 if query returned an error
-  if (db)
-    return (long) mysql_affected_rows(db);
   
-  return 0;
+  // this gets set in TDatabase::query
+  // because the db pointer will have changed state if query timing is on
+  return row_count;
 }
