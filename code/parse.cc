@@ -1277,6 +1277,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   doToast(newarg.c_str());
   addToLifeforce(1);
   break;
+      case CMD_BESTOW:
+  doBestow(newarg);
+  break;
       case CMD_SCRATCH:
 	doScratch(newarg.c_str());
 	break;
@@ -2881,6 +2884,7 @@ void buildCommandArray(void)
   commandArray[CMD_TIE] = new commandInfo("tie", POSITION_RESTING, 0);
   commandArray[CMD_UNTIE] = new commandInfo("untie", POSITION_RESTING, 0);
   commandArray[CMD_TOAST] = new commandInfo("toast", POSITION_RESTING, 0);
+  commandArray[CMD_BESTOW] = new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
 
 }
 

@@ -145,6 +145,7 @@ class TPerson : public TBeing {
     void startLevels();
     void advanceLevel(classIndT);
     void doHPGainForLev(classIndT);
+    virtual void doBestow(const sstring &);
 };
 
 #endif

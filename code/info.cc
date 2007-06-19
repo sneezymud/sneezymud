@@ -2283,6 +2283,7 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_SYSTEM:
       return POWER_SYSTEM;
       break;
+    case CMD_BESTOW:
     case CMD_SET:
       return POWER_SET;
       break;
@@ -2603,30 +2604,40 @@ void TPerson::doUsers(const sstring &argument)
 void TBeing::doInventory(const char *argument)
 {
   TBeing *victim;
-  char arg[80];
-
-  one_argument(argument, arg);
-
-  if (isImmortal() && *argument) {
-    if (powerCheck(POWER_AT)) {
-      vlogf(LOG_MISC, fmt("%s just tried to do: inventory %s") % getName() % argument);
-      return;
-    }
-
-    if (!(victim = get_char_vis_world(this, arg, NULL, EXACT_YES))) {
-      victim = get_char_vis_world(this, arg, NULL, EXACT_NO);
+  sstring sarg, arg1, arg2;
+  sarg = argument;
+  sarg = one_argument(sarg, arg1);
+  sarg = one_argument(sarg, arg2);
+  
+  if (isImmortal() && !powerCheck(POWER_AT) && !arg1.empty()) {
+    // immortal inventory check
+    
+    // find the target first
+    if (!(victim = get_char_vis_world(this, arg1.c_str(), NULL, EXACT_YES))) {
+      victim = get_char_vis_world(this, arg1.c_str(), NULL, EXACT_NO);
     }
     if (victim) {
       act("$N is carrying:", FALSE, this, NULL, victim, TO_CHAR);
-      list_in_heap(victim->getStuff(), this, 1, 100);
+      if (!arg2.empty()) {
+        list_in_heap_filtered(victim->getStuff(), this, arg2, 1);
+      } else {
+        list_in_heap(victim->getStuff(), this, 1, 100);
+      }
     } else {
       sendTo("No such being exists.\n\r");
     }
   } else {
+    // checking own inventory
+    
     if (isAffected(AFF_TRUE_SIGHT) || isAffected(AFF_CLARITY) || !isAffected(AFF_BLIND)) {
       sendTo("You are carrying:\n\r");
-      list_in_heap(getStuff(), this, 0, 100);
-
+      
+      if (!arg1.empty()) {
+        list_in_heap_filtered(getStuff(), this, arg1, 0);
+      } else {
+        list_in_heap(getStuff(), this, 0, 100);
+      }
+      
       if (GetMaxLevel() > 10) {
         sendTo(fmt("\n\r%3.f%c volume, %3.f%c weight.\n\r") %
                (((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0) % '%' %

@@ -569,6 +569,12 @@ bool TObj::isMonogrammed() const
   return false;
 }
 
+bool TObj::deMonogram()
+{
+  
+  return TRUE;
+}
+
 sstring TObj::wear_flags_to_sentence() const
 {
   // i know, this is ridiculous but we get a complete sentence out of it...

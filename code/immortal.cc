@@ -6284,3 +6284,119 @@ bool TBeing::inQuest() const
 {
   return (isPlayerAction(PLR_SOLOQUEST) || isPlayerAction(PLR_GRPQUEST));
 }
+
+void TBeing::doBestow(const sstring &argument)
+{
+  sendTo("Mobs can't bestow.\n\r");
+}
+
+void TPerson::doBestow(const sstring &argument)
+{
+  if (!isImmortal()) {
+    incorrectCommand();
+    return;
+  }
+  
+  if (!desc)
+    return;
+  
+  if (powerCheck(POWER_TRANSFER)) {
+    sendTo("No can do.\n\r");
+    return;
+  }
+  
+  sstring tmp_arg, arg1, arg2, arg3, arg4;
+  TBeing *ch = NULL;
+  // char cleaned_name[100];
+  // TTreasure coin = NULL;
+  TObj *obj = NULL;
+  
+  // argument parsing
+  tmp_arg = argument;
+  tmp_arg = one_argument(tmp_arg, arg1);
+  tmp_arg = one_argument(tmp_arg, arg2);
+  tmp_arg = one_argument(tmp_arg, arg3);
+  
+  // and stuff anything left into arg4
+  sstring whitespace = " \n\r\t";
+  size_t start = tmp_arg.find_first_not_of(whitespace);
+  if (start != string::npos) {
+    size_t end = tmp_arg.find_last_not_of(whitespace);
+    arg4 = tmp_arg.substr(start, end - start + 1);
+  } else {
+    arg4 = "";
+  }
+  
+  if (argument.empty() || arg1.empty() || arg2.empty()) {
+    sendTo("Usage :\n\r");
+    sendTo("        bestow coins <name> <number>\n\r");
+    sendTo("        bestow redeem <name> <number>\n\r");
+    sendTo("        bestow demonogram <item>\n\r");
+    sendTo("        bestow tattoo <name> <body-part> <tattoo>\n\r");
+    return;
+  }
+
+  // find the target
+  if (!is_abbrev(arg1, "demonogram")) {
+    if (!(ch = get_pc_world(this, arg2, EXACT_YES))) {
+      if (!(ch = get_pc_world(this, arg2, EXACT_NO))) {
+        sendTo("That person could not be found in the World.\n\r");
+        return;
+      }
+    }
+  } else {
+    // look in inventory for item to de-monogram
+    TThing *tobj = searchLinkedList(arg2, getStuff(), TYPEOBJ);
+    obj = dynamic_cast<TObj *>(tobj);
+    if (!obj) {
+      sendTo("You do not seem to have anything like that.\n\r");
+      return;
+    }
+  }
+  
+  // perform the command
+  if (is_abbrev(arg1, "coins")) {
+    if (!is_number(arg3)) {
+      sendTo("Usage :\n\r");
+      sendTo("        bestow coins <name> <number>\n\r");
+      return;
+    }
+    sendTo(fmt("Make coins for %s.\n\r") % ch->getName());
+    return;
+    
+  } else if (is_abbrev(arg1, "redeem")) {
+    if (!is_number(arg3)) {
+      sendTo("Usage :\n\r");
+      sendTo("        bestow redeem <name> <number>\n\r");
+      return;
+    }
+    sendTo(fmt("Redeem coins for %s.\n\r") % ch->getName());
+    return;
+    
+  } else if (is_abbrev(arg1, "demonogram")) {
+    if (obj->deMonogram()) {
+      sendTo(fmt("De-monogrammed %s.\n\r") % obj->getName());
+    } else {
+      sendTo(fmt("Did not de-monogram %s.\n\r") % obj->getName());
+    }
+    return;
+    
+  } else if (is_abbrev(arg1, "tattoo")) {
+    if (arg3.empty()) {
+      sendTo("Usage :\n\r");
+      sendTo("        bestow tattoo <name> <body-part> <tattoo>\n\r");
+      return;
+    }
+    sendTo(fmt("Tattooing %s.\n\r") % ch->getName());
+    return;
+    
+  } else {
+    sendTo("Usage :\n\r");
+    sendTo("        bestow coins <name> <number>\n\r");
+    sendTo("        bestow redeem <name> <number>\n\r");
+    sendTo("        bestow demonogram <item>\n\r");
+    sendTo("        bestow tattoo <name> <body-part> <tattoo>\n\r");
+    return;
+  }
+  sendTo("You bestow nothing on no one.\n\r");
+}

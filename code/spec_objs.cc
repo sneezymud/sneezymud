@@ -5914,7 +5914,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 						return FALSE;
 					}
 				}
-			} else if (::number(0, 1)){
+			} else if (container->roomp && ::number(0, 1)){
 				// container is on ground -> jump out if open
 				if ((open_container = dynamic_cast<TOpenContainer *>(container))){
 					if (!open_container->isClosed()){

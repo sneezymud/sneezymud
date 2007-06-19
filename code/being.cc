@@ -1938,3 +1938,10 @@ sstring TBeing::thirdPerson(const int pos)
   vlogf(LOG_BUG, fmt("thirdPerson called on %s in strange circumstance") % name);
   return "???";
 }
+
+bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat)
+{
+  
+  
+  return TRUE;
+}

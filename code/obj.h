@@ -542,6 +542,7 @@ class TObj : public TThing {
     // END VIRTUAL FUNCTIONS
 
     bool isMonogrammed() const;
+    bool deMonogram();
     int objectTickUpdate(int);
     int updateBurning(void);
     bool isObjStat(unsigned int num) const;

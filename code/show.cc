@@ -22,6 +22,8 @@
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "database.h"
+#include "obj_base_container.h"
+#include "obj_open_container.h"
 
 void TThing::showMe(TBeing *ch) const
 {
@@ -403,6 +405,67 @@ void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc)
     } else
       ch->showTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV);
   }
+}
+
+bool list_in_heap_filtered (TThing *list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent)
+{
+  // used for applying a filter argument to an inventory list
+  // for example, "inventory tool" will show only items matching "tool"
+  
+  // returns false if any items are found, so we know when to suppress the "nothing" sendTo
+  // silent also flags any recursive instances to suppress the "nothing" sendTo
+  // so only the first list_in_heap_filtered called will send a "nothing" to the user, if nothing was found
+  
+  TThing *i;
+  vector<const TThing *>cond_ptr(0);
+  vector<unsigned int>cond_tot(0);
+  unsigned int k;
+  bool suppress_nothing = FALSE; // the return value
+  
+  for (i = list; i; i = i->nextThing) {
+    
+    if (ch->canSee(i)) {
+      if (isname(filter, i->name)) {
+        suppress_nothing = TRUE;
+        for (k = 0; k < cond_ptr.size(); k++) {
+          if (i->isSimilar(cond_ptr[k])) {
+            cond_tot[k] += 1;
+            break;
+          }
+        }
+        if (k >= cond_ptr.size()) {
+          cond_ptr.push_back(i);
+          cond_tot.push_back(1);
+        }
+      }
+    }
+    if (show_all && i->getStuff()) {
+      suppress_nothing = list_in_heap_filtered(i->getStuff(), ch, filter, TRUE, SILENT_YES) || suppress_nothing;
+    } else if (i->getStuff()) {
+      // TThing *ii = const_cast<TThing * const>(i);
+      if (dynamic_cast<TBaseContainer *>(i)) {
+        // check to see if it's a closed container
+        TOpenContainer *oc = dynamic_cast<TOpenContainer *>(i);
+        if (!(oc && oc->isClosed())) {
+          // if it's open, look into it
+          suppress_nothing = list_in_heap_filtered(i->getStuff(), ch, filter, FALSE, SILENT_YES) || suppress_nothing;
+        }
+      }
+    }
+  } // for loop
+
+  if (!suppress_nothing && silent == SILENT_NO)
+    ch->sendTo("Nothing.\n\r");
+
+//  int Num_Inventory = 1;
+  for (k = 0; k < cond_ptr.size(); k++) {
+    if (cond_tot[k] > 1) {
+//      Num_Inventory += cond_tot[k] - 1;
+      ch->showMultTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV, cond_tot[k]);
+    } else
+      ch->showTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV);
+  }
+  return suppress_nothing;
 }
 
 void list_thing_on_heap(const TThing *list, TBeing *ch, bool show_all)

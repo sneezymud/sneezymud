@@ -215,6 +215,9 @@ extern void list_thing_on_heap(const TThing *, TBeing *ch, bool);
 // ch can not be const, due to showTo
 extern void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc);
 
+extern bool list_in_heap_filtered(TThing *list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent = SILENT_NO);
+
+
 extern void update_world_weather();
 extern bool pierceType(spellNumT);
 extern bool bluntType(spellNumT);

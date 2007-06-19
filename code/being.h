@@ -917,6 +917,8 @@ class TBeing : public TThing {
     int addToStat(statSetT whichSet, statTypeT whichStat, int modifier);
     int getStat(statSetT fromSet,statTypeT whichStat) const;
     
+    bool applyTattoo(wearSlotT, const sstring &);
+    
     double plotStat(statSetT, statTypeT, double, double, double, double n = 1.4) const;
     int plotStat(statSetT, statTypeT, int a, int b, int c, double n = 1.4) const;
     float plotStat(statSetT, statTypeT, float a, float b, float c, double n = 1.4) const;
@@ -1434,6 +1436,7 @@ class TBeing : public TThing {
     void doPunch(const sstring &);
     int doTaunt(const sstring &);
     void doToast(const sstring &);
+    virtual void doBestow(const sstring &);
     int doBite(const sstring &);
     int doJump(const sstring &);
     int doPick(const char *);
