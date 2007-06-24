@@ -416,6 +416,7 @@ extern const sstring RandomWord();
 extern const sstring RandomVerb();
 extern const sstring getSectorNameColor(sectorTypeT, TRoom *);
 extern const sstring getSectorDescrColor(sectorTypeT, TRoom *);
+extern spellNumT mapWeaponT(weaponT w);
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib

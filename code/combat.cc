@@ -4723,78 +4723,7 @@ spellNumT TThing::getWtype(int which) const
 
 spellNumT TGenWeapon::getWtype(int which) const
 {
-  switch (getWeaponType(which)) {
-    case WEAPON_TYPE_NONE:
-      return TYPE_SMITE;
-    case WEAPON_TYPE_STAB:
-      return TYPE_STAB;
-    case WEAPON_TYPE_WHIP:
-      return TYPE_WHIP;
-    case WEAPON_TYPE_SLASH:
-      return TYPE_SLASH;
-    case WEAPON_TYPE_SMASH:
-      return TYPE_SMASH;
-    case WEAPON_TYPE_CLEAVE:
-      return TYPE_CLEAVE;
-    case WEAPON_TYPE_CRUSH:
-      return TYPE_CRUSH;
-    case WEAPON_TYPE_BLUDGEON:
-      return TYPE_BLUDGEON;
-    case WEAPON_TYPE_CLAW:
-      return TYPE_CLAW;
-    case WEAPON_TYPE_BITE:
-      return TYPE_BITE;
-    case WEAPON_TYPE_STING:
-      return TYPE_STING;
-    case WEAPON_TYPE_PIERCE:
-      return TYPE_PIERCE;
-    case WEAPON_TYPE_PUMMEL:
-      return TYPE_PUMMEL;
-    case WEAPON_TYPE_FLAIL:
-      return TYPE_FLAIL;
-    case WEAPON_TYPE_BEAT:
-      return TYPE_BEAT;
-    case WEAPON_TYPE_THRASH:
-      return TYPE_THRASH;
-    case WEAPON_TYPE_THUMP:
-      return TYPE_THUMP;
-    case WEAPON_TYPE_WALLOP:
-      return TYPE_WALLOP;
-    case WEAPON_TYPE_BATTER:
-      return TYPE_BATTER;
-    case WEAPON_TYPE_STRIKE:
-      return TYPE_STRIKE;
-    case WEAPON_TYPE_CLUB:
-      return TYPE_CLUB;
-    case WEAPON_TYPE_SLICE:
-      return TYPE_SLICE;
-    case WEAPON_TYPE_POUND:
-      return TYPE_POUND;
-    case WEAPON_TYPE_THRUST:
-      return TYPE_THRUST;
-    case WEAPON_TYPE_SPEAR:
-      return TYPE_SPEAR;
-    case WEAPON_TYPE_SMITE:
-      return TYPE_SMITE;
-    case WEAPON_TYPE_BEAK:
-      return TYPE_BEAK;
-    case WEAPON_TYPE_AIR:
-      return TYPE_AIR;
-    case WEAPON_TYPE_EARTH:
-      return TYPE_EARTH;
-    case WEAPON_TYPE_FIRE:
-      return TYPE_FIRE;
-    case WEAPON_TYPE_WATER:
-      return TYPE_WATER;
-    case WEAPON_TYPE_BEAR_CLAW:
-      return TYPE_BEAR_CLAW;
-    case WEAPON_TYPE_SHOOT:
-      return TYPE_SHOOT;
-    case WEAPON_TYPE_CANNON:
-      return TYPE_CANNON;
-    default:
-      return TYPE_HIT;
-  }
+  return mapWeaponT(getWeaponType(which));
 }
 
 int TBeing::skipImmortals(int amnt) const
