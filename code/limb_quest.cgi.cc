@@ -76,7 +76,7 @@ int main(int argc, char **argv)
         cout << "<br>" << endl;
       }
       cout << "</td></tr><tr><td colspan=\"4\">&nbsp;</td></tr>" << endl;
-      db.query("select case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'tooth' then -3 when 'eyeballs' then -4 else q1.slot_num end as slot_num, round(avg((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as avg_level, round(max((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as max_level, count(*) as tally from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' group by case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'eyeballs' then -3 else q1.slot_num end order by slot_num", teams[step].c_str());
+      db.query("select case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'tooth' then -3 when 'eyeballs' then -4 else q1.slot_num end as slot_num, round(avg((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as avg_level, round(max((m1.ac + m1.hpbonus + m1.damage_level) / 3)) as max_level, count(*) as tally from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' and q1.date_submitted < '2007-06-25' group by case q1.slot_name when 'heart' then -1 when 'jumblies' then -2 when 'eyeballs' then -3 else q1.slot_num end order by slot_num", teams[step].c_str());
       if(!db.isResults()){
         cout << "<tr><td colspan=\"4\">This team is lazy, and has no limbs yet.</td></tr>" << endl;
       } else {
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     cout << fmt("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team 
          << "<tr><td colspan=\"4\">&nbsp;</td></tr>"
          << endl;
-    db.query("select q1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' order by q1.date_submitted desc, q1.slot_num;", team.c_str());
+    db.query("select q1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' and q1.date_submitted < '2007-06-25' order by q1.date_submitted desc, q1.slot_num;", team.c_str());
     if(!db.isResults()){
       cout << fmt("<tr><td colspan=\"4\">No limbs submitted. Get to work, %s!</td></tr>") % team << endl;
     } else {

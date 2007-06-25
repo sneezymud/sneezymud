@@ -1,7 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
 #include "session.cgi.h"
-#include "obj_general_weapon.h"
 
 #include <vector>
 #include <map>
@@ -39,7 +38,7 @@ void sendShowAffect(int, int);
 void saveAffect(Cgicc, int);
 void makeNewAffect(Cgicc, int);
 void delAffect(Cgicc, int);
-
+spellNumT mapWeaponT(weaponT w); // i'm an idiot and can't figure out how to link the sneezy global version of this routine
 
 bool checkPlayerName(int account_id, sstring name)
 {
@@ -799,13 +798,11 @@ void sendShowObj(int account_id, int vnum, bool wizard)
   cout << "<tr><td>wear_flag</td><td><table><tr>" << endl;
   int wear_flag=convertTo<int>(db["wear_flag"]);
   for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+    cout << fmt("<td><input type=checkbox %s name='%s'> %s</td>") %
       ((wear_flag & (1<<i))?"checked":"") % wear_bits[i] % wear_bits[i];
 
-    cout << "</td>";
-
     if(!((i+1) % 8))
-      cout << "</tr><tr>";
+      cout << "</tr><tr>" << endl;
   }
   cout <<"</tr></table></td></tr>";
   
@@ -852,7 +849,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     cout << fmt("  flux = parseInt(base * val_check(document.saveobj.dam_dev.value, 'dam_dev') / 10);\n");
     cout << fmt("  document.saveobj.weap_dam.value = parseInt(base - flux) + ' - ' + parseInt(base + flux) + ' avg of ' + parseInt(base);\n");
     cout << fmt("}\n");
-    cout << fmt("</script>\n");
+    cout << fmt("</script>\n") << endl;
 
     // wtf is up with javascript? multiplied values by 1 so it knows not to use the + operator for string concatenation
     
@@ -867,49 +864,38 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     int weap_type_3 = GET_BITS(convertTo<int>(db["val3"]), 7, 8);
     int weap_freq_3 = GET_BITS(convertTo<int>(db["val3"]), 15, 8);
     weaponT wt;
-    TGenWeapon *wpn = new TGenWeapon();
     
     // x0 - current and max sharpness
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
-    cout << fmt("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max;
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"] << endl;
+    cout << fmt("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max << endl;
     
     // x1 - damage level and damage precision
     cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
     cout << fmt("<td>Damage level <input type='text' size='15' maxlength='4' name='dam_lev' value='%i' onchange='compute_weap_x1()'> (no <b style='color:red'>NOT</b> multiply by 4 here)\n<br>Damage deviation <input type='text' size='15' maxlength='3' name='dam_dev' value='%i' onchange='compute_weap_x1()'></td></tr>\n") % dam_lev % dam_dev;
-    cout << fmt("<script>weap_dam();</script>\n");
+    cout << fmt("<script>weap_dam();</script>") << endl;
     
     // x2 - attack rate 1 and attack rate 2
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
-    cout << fmt("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>");
-    for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      wpn->setWeaponType(wt);
-      cout << fmt("<option value='%i'") % (int) wt;
-      if ((int) wt == weap_type_1)
-        cout << fmt(" selected");
-      cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
-    }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1;
-    cout << fmt("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>");
-    for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      wpn->setWeaponType(wt);
-      cout << fmt("<option value='%i'") % (int) wt;
-      if ((int) wt == weap_type_2)
-        cout << fmt(" selected");
-      cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
-    }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 2 <input type='text' size='5' maxlength='3' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'> %</td></tr>") % weap_freq_2;
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"] << endl;
     
-    // x3 - attack rate 3
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
-    cout << fmt("<td>Type 3 <select type='select' name='weap_type_3' onchange='compute_weap_x3()'><option value='0'>None</option>");
-    for(wt = WEAPON_TYPE_NONE; wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      wpn->setWeaponType(wt);
-      cout << fmt("<option value='%i'") % (int) wt;
-      if ((int) wt == weap_type_3)
-        cout << fmt(" selected");
-      cout << fmt(">%s</option>\n") % attack_hit_text[(wpn->getWtype() - TYPE_MIN_HIT)].singular;
+    cout << fmt("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
+    for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
+      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_1) ? " selected" : "") % attack_hit_text[(int) ((mapWeaponT(wt) - TYPE_MIN_HIT))].singular << endl;
     }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 3 <input type='text' size='5' maxlength='3' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'> %</td></tr>") % weap_freq_3;
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1 << endl;
+    
+    cout << fmt("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
+    for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
+      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_2) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
+    }
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 2 <input type='text' size='5' maxlength='3' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'> %</td></tr>") % weap_freq_2 << endl;
+
+    // x3 - attack rate 3
+    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
+    cout << fmt("<td>Type 3 <select type='select' name='weap_type_3' onchange='compute_weap_x3()'><option value='0'>None</option>");
+    for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
+      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_3) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
+    }
+    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 3 <input type='text' size='5' maxlength='3' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'> %</td></tr>") % weap_freq_3 << endl;
 
   } else {
 
@@ -919,9 +905,9 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
     cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"];
+    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
   }
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
+  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"] << endl;
 
   cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "price" % "price" % db["price"];
 
@@ -1111,5 +1097,82 @@ sstring mudColorToHTML(sstring str, bool spacer)
     spacing_strip="";
 
   return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
+}
+
+spellNumT mapWeaponT(weaponT w) 
+{
+  // divorced this from TGenWeapon
+  switch (w) {
+    case WEAPON_TYPE_NONE:
+      return TYPE_SMITE;
+    case WEAPON_TYPE_STAB:
+      return TYPE_STAB;
+    case WEAPON_TYPE_WHIP:
+      return TYPE_WHIP;
+    case WEAPON_TYPE_SLASH:
+      return TYPE_SLASH;
+    case WEAPON_TYPE_SMASH:
+      return TYPE_SMASH;
+    case WEAPON_TYPE_CLEAVE:
+      return TYPE_CLEAVE;
+    case WEAPON_TYPE_CRUSH:
+      return TYPE_CRUSH;
+    case WEAPON_TYPE_BLUDGEON:
+      return TYPE_BLUDGEON;
+    case WEAPON_TYPE_CLAW:
+      return TYPE_CLAW;
+    case WEAPON_TYPE_BITE:
+      return TYPE_BITE;
+    case WEAPON_TYPE_STING:
+      return TYPE_STING;
+    case WEAPON_TYPE_PIERCE:
+      return TYPE_PIERCE;
+    case WEAPON_TYPE_PUMMEL:
+      return TYPE_PUMMEL;
+    case WEAPON_TYPE_FLAIL:
+      return TYPE_FLAIL;
+    case WEAPON_TYPE_BEAT:
+      return TYPE_BEAT;
+    case WEAPON_TYPE_THRASH:
+      return TYPE_THRASH;
+    case WEAPON_TYPE_THUMP:
+      return TYPE_THUMP;
+    case WEAPON_TYPE_WALLOP:
+      return TYPE_WALLOP;
+    case WEAPON_TYPE_BATTER:
+      return TYPE_BATTER;
+    case WEAPON_TYPE_STRIKE:
+      return TYPE_STRIKE;
+    case WEAPON_TYPE_CLUB:
+      return TYPE_CLUB;
+    case WEAPON_TYPE_SLICE:
+      return TYPE_SLICE;
+    case WEAPON_TYPE_POUND:
+      return TYPE_POUND;
+    case WEAPON_TYPE_THRUST:
+      return TYPE_THRUST;
+    case WEAPON_TYPE_SPEAR:
+      return TYPE_SPEAR;
+    case WEAPON_TYPE_SMITE:
+      return TYPE_SMITE;
+    case WEAPON_TYPE_BEAK:
+      return TYPE_BEAK;
+    case WEAPON_TYPE_AIR:
+      return TYPE_AIR;
+    case WEAPON_TYPE_EARTH:
+      return TYPE_EARTH;
+    case WEAPON_TYPE_FIRE:
+      return TYPE_FIRE;
+    case WEAPON_TYPE_WATER:
+      return TYPE_WATER;
+    case WEAPON_TYPE_BEAR_CLAW:
+      return TYPE_BEAR_CLAW;
+    case WEAPON_TYPE_SHOOT:
+      return TYPE_SHOOT;
+    case WEAPON_TYPE_CANNON:
+      return TYPE_CANNON;
+    default:
+      return TYPE_HIT;
+  }
 }
 
