@@ -33,6 +33,10 @@ case $USER in
   deirdre)
     PORT=6942
     ;;
+  brutius)
+    PORT=6906
+    ;;
+
 
 esac
 
