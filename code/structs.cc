@@ -791,7 +791,7 @@ TThing& TRoom::operator += (TThing& t)
   if (dynamic_cast<TObj *>(&t) && isRoomFlag(ROOM_SAVE_ROOM))
     saveItems("");
 
-  if (t.isPc()) {
+  if (t.isPc() && ( getZoneNum() >= 0 && getZoneNum() < ((signed int) zone_table.size()) )) {
     zoneData &zd = zone_table[getZoneNum()];
     if ((zd.zone_value == 0) &&
          zd.enabled) {

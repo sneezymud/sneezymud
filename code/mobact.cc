@@ -4157,8 +4157,8 @@ int TMonster::factionAggroCheck()
 	if (IS_SET_DELETE(rc, DELETE_VICT)) {
 	  delete tmp_ch;
 	  tmp_ch = NULL;
-	}
-	if (IS_SET_DELETE(rc, DELETE_THIS)) 
+	  return DELETE_VICT;
+	} else if (IS_SET_DELETE(rc, DELETE_THIS)) 
 	  return DELETE_THIS;
 	
 	return TRUE;
@@ -4178,8 +4178,14 @@ int TMonster::aggroCheck(bool mobpulse)
   numtargets = 0;
   bool hasWandered = FALSE;
 
-  if(factionAggroCheck())
+  rc = factionAggroCheck();
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    return DELETE_VICT;
+  } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    return DELETE_THIS;
+  } else if (rc) {
     return TRUE;
+  }
 
   if (fight())
     return FALSE;
@@ -4194,7 +4200,7 @@ int TMonster::aggroCheck(bool mobpulse)
   // set up to make sure high level aggro mobs don't go and fuck
   // lowbies up, but should also make mobs act like they should under
   // normal circumstances ok, lets do it. -Dash 4/7/01
-  
+
   TRoom *rp1 = NULL, *rp2 = NULL;
 
   if (!(rp1 = roomp) || !(rp2 = real_roomp(brtRoom)))
@@ -4291,24 +4297,24 @@ int TMonster::aggroCheck(bool mobpulse)
               if (IS_SET_DELETE(rc, DELETE_VICT)) {
                 delete tmp_ch;
                 tmp_ch = NULL;
-              }
-              if (IS_SET_DELETE(rc, DELETE_THIS)) 
+                return DELETE_VICT;
+              } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 return DELETE_THIS;
-              
+              }
               return TRUE;
             }
             continue;
           } else {
             stats.aggro_successes++;
-	    act("$n snarls angrily and attacks!",TRUE,this,0,0,TO_ROOM);
+            act("$n snarls angrily and attacks!",TRUE,this,0,0,TO_ROOM);
             rc = takeFirstHit(*tmp_ch);
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
               delete tmp_ch;
               tmp_ch = NULL;
-            }
-            if (IS_SET_DELETE(rc, DELETE_THIS)) 
+              return DELETE_VICT;
+            } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
               return DELETE_THIS;
-              
+            }
             return TRUE;
           }
         }

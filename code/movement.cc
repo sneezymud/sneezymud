@@ -1654,9 +1654,12 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
       //per group. roughly, sort of. its a hack, so sue me.
       rc = tmons->aggroCheck(false);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	delete tmons;
-	tmons = NULL;
+      	delete tmons;
+      	tmons = NULL;
+      } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        return DELETE_THIS;
       }
+      
       if (rc)
 	continue;
     }
