@@ -5,8 +5,9 @@ PROD_MUD_ROOT="/mud/prod"
 TOUCHFILE=$BUILD_MUD_ROOT/mvlow.lock
 
 umask 002
-if [ -a $TOUCHFILE ]; then
-  echo "LOW move aborted at request of Damescena."
+if [ -e $TOUCHFILE ]; then
+  LOWUSER=`ls -la $TOUCHFILE | awk '{print $3}'`
+  echo "LOW move aborted at request of $LOWUSER."
   echo "...busy screwing stuff up, please don't move LOW."
   exit
 fi
