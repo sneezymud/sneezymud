@@ -36,7 +36,9 @@ case $USER in
   brutius)
     PORT=6906
     ;;
-
+  magdalena)
+    PORT=6907
+    ;;
 
 esac
 
