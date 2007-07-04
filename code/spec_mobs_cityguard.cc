@@ -408,7 +408,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   ///////////////////////////////////////////////////////////////
   // not fighting stuff
   //
-
+  
   for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
     t2 = t1->nextThing;
     tch = dynamic_cast<TBeing *>(t1);
@@ -427,70 +427,95 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
     if (tch->isImmortal() && tch->isPlayerAction(PLR_NOHASSLE))
       continue;
-
+    
+    // to prevent certain aggresive behaviors when outside of ch's birthzone (or guard station)
+    // we don't want people using guards as free tanks
+    TRoom *rp1 = NULL, *rp2 = NULL;
+    bool hasWandered = FALSE;
+    if ((rp1 = ch->roomp) && (rp2 = real_roomp(ch->brtRoom))) {
+      if (IS_SET(ch->specials.act, ACT_STAY_ZONE) && rp1->getZoneNum() != rp2->getZoneNum())
+        hasWandered = TRUE;
+      if (IS_SET(ch->specials.act, ACT_SENTINEL) && rp1 != rp2)
+        hasWandered = TRUE;
+    }
+    
     if (!ch->isUndead() && !ch->isDiabolic()) {
       //TObj *amulet = NULL; // something special for my amulet - dash
       //      if (tch->isUndead() && 
       //	  (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) && 
       //	  obj_index[amulet->getItemIndex()].virt != 9597)
       //	continue;
-
-      if ((tch->isUndead() || tch->isDiabolic()) && 
-	  (!tch->inGrimhaven() || tch->isPc())){
-        if (!ch->checkSoundproof())
-          act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);
-
-        rc = ch->takeFirstHit(*tch);
-        if (IS_SET_DELETE(rc, DELETE_VICT)) {
-          delete tch;
-          tch = NULL;
-        } else if (IS_SET_DELETE(rc, DELETE_THIS)) 
-          return DELETE_THIS;
-        
+      
+      if ((tch->isUndead() || tch->isDiabolic()) && (!tch->inGrimhaven() || tch->isPc())){
+        if (!hasWandered) {
+          if (!ch->checkSoundproof())
+            act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);
+  
+          rc = ch->takeFirstHit(*tch);
+          if (IS_SET_DELETE(rc, DELETE_VICT)) {
+            delete tch;
+            tch = NULL;
+          } else if (IS_SET_DELETE(rc, DELETE_THIS)) 
+            return DELETE_THIS;
+        } else if (!::number(0, 9)) {
+          // far from home reaction...
+          ch->doAction(fname(tch->name), CMD_GLARE);
+        }
         return TRUE;
-      } else if((tch->hasDisease(DISEASE_LEPROSY) || 
-		 tch->spec==SPEC_LEPER) && 
-		 !tch->isPc()){
-	if(!ch->checkSoundproof())
-	  act("$n screams 'There is no mercy for your kind, leper!'", FALSE, ch, 0, 0, TO_ROOM);
-
-	rc=ch->takeFirstHit(*tch);
-	
-
-        if (IS_SET_DELETE(rc, DELETE_VICT)) {
-          delete tch;
-          tch = NULL;
-        } else if (IS_SET_DELETE(rc, DELETE_THIS)) 
-          return DELETE_THIS;
-	return TRUE;
+        
+      } else if ((tch->hasDisease(DISEASE_LEPROSY) || tch->spec==SPEC_LEPER) && !tch->isPc()) {
+        if (!hasWandered) {
+        	if(!ch->checkSoundproof())
+        	  act("$n screams 'There is no mercy for your kind, leper!'", FALSE, ch, 0, 0, TO_ROOM);
+  
+        	rc=ch->takeFirstHit(*tch);
+          if (IS_SET_DELETE(rc, DELETE_VICT)) {
+            delete tch;
+            tch = NULL;
+          } else if (IS_SET_DELETE(rc, DELETE_THIS)) 
+            return DELETE_THIS;
+        } else if (!::number(0, 9)) {
+          // far from home reaction...
+          ch->doAction(fname(tch->name), CMD_GLARE);
+        }
+        return TRUE;
       }
 
     } else {
       // an undead or demon guard
       if (!tch->isUndead() && !tch->isDiabolic()) {
-        if (!ch->checkSoundproof())
-          act("$n screams 'This place belongs to the UnLiving!!!!'", FALSE, ch, 0, 0, TO_ROOM);
+        if (!hasWandered) {
+          if (!ch->checkSoundproof())
+            act("$n screams 'This place belongs to the UnLiving!!!!'", FALSE, ch, 0, 0, TO_ROOM);
+  
+          if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
+            delete tch;
+            tch = NULL;
+          } else if (rc == DELETE_THIS) 
+            return DELETE_THIS;
+        } else if (!::number(0, 9)) {
+          // far from home reaction...
+          ch->doAction(fname(tch->name), CMD_GLARE);
+        }
+        return TRUE;
+      }
+    }
 
+    if (ch->roomp->isCitySector() && !(ch->specials.act & ACT_AGGRESSIVE) && 
+         (tch->specials.act & ACT_AGGRESSIVE) && 
+         !(tch->specials.act & ACT_WIMPY) && ch->canSee(tch)) {
+      if (!hasWandered) {
+        if (!ch->checkSoundproof())
+          act("$n screams 'Protect the innocent!!!'",FALSE,ch,0,0,TO_ROOM);
         if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
           delete tch;
           tch = NULL;
         } else if (rc == DELETE_THIS) 
           return DELETE_THIS;
-        
-        return TRUE;
+      } else if (!::number(0, 9)) {
+        // far from home reaction...
+        ch->doAction(fname(tch->name), CMD_GLARE);
       }
-    }
-    if (ch->roomp->isCitySector() && !(ch->specials.act & ACT_AGGRESSIVE) && 
-         (tch->specials.act & ACT_AGGRESSIVE) && 
-         !(tch->specials.act & ACT_WIMPY) && ch->canSee(tch)) {
-      if (!ch->checkSoundproof())
-        act("$n screams 'Protect the innocent!!!'",FALSE,ch,0,0,TO_ROOM);
-      if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
-        delete tch;
-        tch = NULL;
-      } else if (rc == DELETE_THIS) 
-        return DELETE_THIS;
-      
       return TRUE;
     }
   }
