@@ -3642,7 +3642,6 @@ float old_ac_lev = mob->getACLevel();
           break;
         fp2_open = true;
       }
-      ItemLoad il;
       il.setFile(fp2); // the ItemLoad destructor will close this
       il.setVersion(version);
       if ((new_obj = il.raw_read_item())) {
