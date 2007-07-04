@@ -1080,7 +1080,7 @@ int Descriptor::nanny(sstring arg)
           writeToQ("*                                                                       *\n\r");
           writeToQ("*  It is expected that you will familiarize yourself with the rules     *\n\r");
           writeToQ("*  detailed in the help files. Be sure to read HELP RULES and all       *\n\r");
-          writeToQ("*  pertinant help files listed within.                                  *\n\r");
+          writeToQ("*  pertinent help files listed within.                                  *\n\r");
           writeToQ("*************************************************************************\n\r");
 	  writeToQ("\n\r\n\r");
 	  writeToQ("Do you agree to the above terms and conditions regarding the rules? [Y/N]\n\r");
@@ -2913,7 +2913,7 @@ int TPerson::genericLoadPC()
         rp = real_roomp(player.hometown);
         if (!rp) {
           vlogf(LOG_LOW, fmt("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
-          rp = real_roomp(ROOM_CS);
+          rp = real_roomp(ROOM_GH_INN);
         }
 
         if (!rp) {
@@ -2923,7 +2923,7 @@ int TPerson::genericLoadPC()
 
         *rp += *this;
       } else {
-        rp = real_roomp(ROOM_CS);
+        rp = real_roomp(ROOM_GH_INN);
 
         if (!rp) {
           vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
@@ -2931,7 +2931,7 @@ int TPerson::genericLoadPC()
         }
 
         *rp += *this;
-        player.hometown = ROOM_CS;
+        player.hometown = ROOM_GH_INN;
       }
     } else {
       wizFileRead(); // Needed for office
@@ -3067,7 +3067,7 @@ int TPerson::genericLoadPC()
         *rp += *this;
         player.hometown = in_room;
       } else {
-        rp = real_roomp(ROOM_CS);
+        rp = real_roomp(ROOM_GH_INN);
 
         if (!rp) {
           vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
@@ -3076,7 +3076,7 @@ int TPerson::genericLoadPC()
 
         in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
-        player.hometown = ROOM_CS;
+        player.hometown = ROOM_GH_INN;
       }
     } else {
       rp = real_roomp(ROOM_HELL);
@@ -3493,21 +3493,22 @@ void Descriptor::sendDoneScreen()
 
   writeToQ("Upon connecting, you will want to check your initial terminal options.\n\r");
   writeToQ("Know that the game will automatically set some of these options for you.\n\r");
-  writeToQ("These include: prompts, automatic actions, terminal size, color.\n\r");
+  writeToQ("These include: prompts, toggles, terminal size, color.\n\r");
   writeToQ("Your initial settings are just defaults and you can change them easily.\n\r");
-  buf = fmt("Good help files to read are <%sCOLOR%s>, <%sPROMPTS%s> and <%sAUTO%s>.\n\r\n\r") % orange() % norm() % orange() % norm() % orange() % norm();
+  buf = fmt("Good help files to read are <%sTOGGLE%s>, <%sPROMPT%s> and <%sCOLOR%s>.\n\r\n\r") % orange() % norm() % orange() % norm() % orange() % norm();
   writeToQ(buf);
   buf = fmt("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % orange() % norm() % orange() % norm();
   writeToQ(buf);
 
   writeToQ("For further orientation, use the help system, newbie helpers and immortal staff.\n\r");
+  writeToQ("Check the SneezyMUD website's Help section for more: http://www.sneezymud.com\n\r");
   writeToQ("In contacting immortals, be aware that our immortal staff is not\n\r");
   writeToQ("allowed to help you discover The World.  However, they are allowed\n\r");
   writeToQ("and encouraged to help you with command problems and general orientation.\n\r\n\r");
 
-  buf = fmt("The gods and implementors of %s hope that you enjoy your stay.\n\r") % MUD_NAME;
+  buf = fmt("The staff of %s hope that you enjoy your stay.\n\r") % MUD_NAME;
   writeToQ(buf);
-  writeToQ("You may also wish to check out our mud client, web site and listserver.\n\r\n\r");
+  writeToQ("You may also wish to check out our web site, forums and newsletter.\n\r\n\r");
   buf = fmt("When you are ready, (%sE%s)%snter%s the game or '%s/%s' %sto go back a menu%s.\n\r\n\r--> ") % cyan() % norm() % cyan() % norm() % cyan() % norm() % cyan() % norm();
   writeToQ(buf);
 }
@@ -5621,7 +5622,7 @@ int Descriptor::doAccountStuff(char *arg)
       }
       account->email=arg;
 
-      sprintf(buf, "%s is presently based in California (Pacific Time)\n\r", MUD_NAME);
+      sprintf(buf, "%s is presently based in Washington state (Pacific Time)\n\r", MUD_NAME);
       writeToQ(buf);
       writeToQ("For purposes of keeping track of time, please enter the difference\n\r");
       writeToQ("between your home site and Pacific Time.  For instance, players on\n\r");

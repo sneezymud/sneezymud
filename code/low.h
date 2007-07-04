@@ -21,6 +21,7 @@ const int ROOM_CORPSE_STORAGE    = 73;
 const int ROOM_NOCTURNAL_STORAGE = 74;
 const int ROOM_Q_STORAGE         = 76;
 const int ROOM_CS                = 100;
+const int ROOM_GH_INN            = 557;
 const int ROOM_MORGUE            = 433;
 const int ROOM_GREEN_DRAGON_INN  = 553;
 const int ROOM_KINDRED_INN       = 556;
@@ -46,7 +47,7 @@ const int ROOM_WARD_1            = 13142;
 const int ROOM_WARD_2            = 9734;
 const int ROOM_TREE_BRIDGE       = 15277;
 const int ROOM_SLEEPTAG_CONTROL  = 23599;
-const int ROOM_GUILD_BUREAU    = 395;
+const int ROOM_GUILD_BUREAU      = 395;
 const int ROOM_TROLLEY           = 15344;
 
 // ------------------------- OBJS
