@@ -562,17 +562,42 @@ void TObj::onObjLoad()
 bool TObj::isMonogrammed() const 
 {
   char namebuf[MAX_INPUT_LENGTH];
-
+  /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
+  /* so %*s might read 'personalized' or 'immortalized' */
   if(action_description && 
-     (sscanf(action_description, "This is the personalized object of %s.", namebuf) == 1))
+     (sscanf(action_description, "This is the %*s object of %s.", namebuf) == 1))
     return true;
+
   return false;
 }
 
-bool TObj::deMonogram()
+bool TObj::isImmMonogrammed() const 
 {
+  char namebuf[MAX_INPUT_LENGTH];
+  /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
+  /* so %*s might read 'personalized' or 'immortalized' */
+  if(action_description && 
+     (sscanf(action_description, "This is the immortalized object of %s.", namebuf) == 1))
+    return true;
+
+  return false;
+}
+
+bool TObj::deMonogram(bool erase_imm_monogram)
+{
+  /* this is a stub, to be completed for the immortal coin reward stuff */
   
-  return TRUE;
+  if (isMonogrammed()) {
+    if (isImmMonogrammed() && !erase_imm_monogram) {
+      return FALSE;
+    }
+    
+    // remove it and return!
+    delete [] action_description;
+    return TRUE;
+    
+  }
+  return FALSE; // or we could return true to indicate that it's clean. whatever.
 }
 
 sstring TObj::wear_flags_to_sentence() const

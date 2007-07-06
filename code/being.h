@@ -917,7 +917,7 @@ class TBeing : public TThing {
     int addToStat(statSetT whichSet, statTypeT whichStat, int modifier);
     int getStat(statSetT fromSet,statTypeT whichStat) const;
     
-    bool applyTattoo(wearSlotT, const sstring &);
+    bool applyTattoo(wearSlotT, const sstring &, silentTypeT);
     
     double plotStat(statSetT, statTypeT, double, double, double, double n = 1.4) const;
     int plotStat(statSetT, statTypeT, int a, int b, int c, double n = 1.4) const;

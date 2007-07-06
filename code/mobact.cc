@@ -612,7 +612,8 @@ int TMoney::scavengeMe(TBeing *, TObj **best_o)
 
 int TTreasure::scavengeMe(TBeing *, TObj **best_o)
 {
-  *best_o = this;
+  if (!objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN)
+    *best_o = this;
   return FALSE;
 }
 

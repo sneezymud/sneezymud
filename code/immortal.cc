@@ -36,6 +36,8 @@ extern "C" {
 #include "database.h"
 #include "rent.h"
 #include "obj_suitcase.h"
+#include "obj_treasure.h"
+
 
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
@@ -6287,29 +6289,35 @@ bool TBeing::inQuest() const
 
 void TBeing::doBestow(const sstring &argument)
 {
-  sendTo("Mobs can't bestow.\n\r");
+  incorrectCommand();
 }
 
 void TPerson::doBestow(const sstring &argument)
 {
+  /* this isn't done yet, we're in hawaii */
+  
+  /* to do: 
+   * deal with immortal vs regular monogramming in the rest of the code
+   * test stuff
+   */
+  
   if (!isImmortal()) {
     incorrectCommand();
     return;
   }
   
-  if (!desc)
+  if (!desc) {
+    // this seems unlikely, eh?
+    vlogf(LOG_MISC, fmt("How did %s get to doBestow without a desc?") % getName());
     return;
+  }
   
-  if (powerCheck(POWER_TRANSFER)) {
+  if (!hasWizPower(POWER_SET_IMP_POWER)) {
     sendTo("No can do.\n\r");
     return;
   }
   
   sstring tmp_arg, arg1, arg2, arg3, arg4;
-  TBeing *ch = NULL;
-  // char cleaned_name[100];
-  // TTreasure coin = NULL;
-  TObj *obj = NULL;
   
   // argument parsing
   tmp_arg = argument;
@@ -6336,8 +6344,11 @@ void TPerson::doBestow(const sstring &argument)
     return;
   }
 
-  // find the target
-  if (!is_abbrev(arg1, "demonogram")) {
+  TBeing *ch = NULL;
+  TObj *obj = NULL;
+  
+  // find target when a person is needed
+  if (!(is_abbrev(arg1, "demonogram") || arg1 == "deimm")) {
     if (!(ch = get_pc_world(this, arg2, EXACT_YES))) {
       if (!(ch = get_pc_world(this, arg2, EXACT_NO))) {
         sendTo("That person could not be found in the World.\n\r");
@@ -6354,40 +6365,199 @@ void TPerson::doBestow(const sstring &argument)
     }
   }
   
-  // perform the command
+  // target looks ok, now go over the command switches
+  
+  int number_needed = 0;
+  int number_tried = 0;
+  int number_done = 0;
+  int coin_uid = 0;
+  TTreasure *coin = NULL;
+  TDatabase db(DB_SNEEZY);
+  
   if (is_abbrev(arg1, "coins")) {
-    if (!is_number(arg3)) {
+    /*** bestow coins ***/
+    if (!(is_number(arg3) && (number_needed = convertTo<int>(arg3)) && number_needed > 0)) {
       sendTo("Usage :\n\r");
       sendTo("        bestow coins <name> <number>\n\r");
       return;
     }
-    sendTo(fmt("Make coins for %s.\n\r") % ch->getName());
+    
+    while (number_tried < number_needed) {
+      number_tried++;
+      if (obj = read_object(OBJ_IMMORTAL_EXCHANGE_COIN, VIRTUAL)) {
+        // load coin
+        coin = dynamic_cast<TTreasure *>(obj);
+        if (!coin) {
+          sendTo("You begin to mint a coin, but the immortal clay seems to be unusable...\n\r");
+          continue;
+        }
+        coin_uid = 0;
+        db.query("insert immortal_exchange_coin (created_by, created_for) select %i, %i", getPlayerID(), ch->getPlayerID());
+        if (db.rowCount() == 1) {
+          // insert succeeded
+          db.query("select max(k_coin) as k_coin from immortal_exchange_coin");
+          if (db.fetchRow())
+            coin_uid = convertTo<int>(db["k_coin"]);
+        }
+        if (!coin_uid) {
+          sendTo("You tried to mint a coin, but the clay wouldn't take the stamp.\n\r");
+          continue;
+        }
+        
+        coin->setSerialNumber(coin_uid);
+        
+        act("$n mints $p.", TRUE, this, coin, NULL, TO_ROOM);
+        act(fmt("You mint $p, serial number %i.") % coin->getSerialNumber(), TRUE, this, coin, NULL, TO_CHAR);
+        *this += *coin;
+        logItem(coin, CMD_LOAD);
+        number_done++;
+      } else {
+        // problem
+        sendTo("Coins? What coins?\n\r");
+      }
+    }
+    if (number_done == number_needed) {
+      act(fmt("<c>You successfully minted<1> <W>%i<1> <c>coin%s for<1> <W>%s<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
+    } else {
+      act(fmt("You minted <R>%i<1> coin%s for %s!") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
+    }
+    if (number_done)
+      doSave(SILENT_NO);
     return;
     
   } else if (is_abbrev(arg1, "redeem")) {
-    if (!is_number(arg3)) {
+    /*** redeem coins ***/
+    if (!(is_number(arg3) && (number_needed = convertTo<int>(arg3)) && number_needed > 0)) {
       sendTo("Usage :\n\r");
       sendTo("        bestow redeem <name> <number>\n\r");
       return;
     }
-    sendTo(fmt("Redeem coins for %s.\n\r") % ch->getName());
+    
+    TThing *t, *n;
+    bool redeem = TRUE;
+    for (t = getStuff(); t; t = n) {
+      n = t->nextThing;
+      coin = dynamic_cast<TTreasure *>(t);
+      if (coin && coin->objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN) {
+        /* validity check then redeem the coin */
+        number_tried++;
+        redeem = TRUE;
+        if (!coin->getSerialNumber()) {
+          sendTo("Unstamped coin!  Destroying!!\n\r");
+          redeem = FALSE;
+        } else {
+          db.query("select date_redeemed from immortal_exchange_coin where k_coin = %i", coin->getSerialNumber());
+          if (db.fetchRow()) {
+            if (db["date_redeemed"].length() > 0) {
+              // already redeemed, possible duped object
+              sendTo(fmt("Coin #%i already redeemed!  Counterfeit!!  Destroying!!!\n\r") % coin->getSerialNumber());
+              redeem = FALSE;
+            }
+          } else {
+            // no record in the db?! that's pretty bad, since it got a serial number somehow...
+            sendTo(fmt("Coin with an unknown serial number: %i!  Destroying!!\n\r") % coin->getSerialNumber());
+            redeem = FALSE;
+          }
+        }
+        
+        if (redeem) {
+          db.query("update immortal_exchange_coin set redeemed_by = %i, redeemed_for = %i, date_redeemed = CURRENT_TIMESTAMP where k_coin = %i", getPlayerID(), ch->getPlayerID(), coin->getSerialNumber());
+          sendTo(fmt("Coin number %i crumbles with immortal redemption.\n\r") % coin->getSerialNumber());
+          number_done++;
+        }
+        
+        // no matter what happened, we're getting rid of the coin
+        delete coin;
+        coin = NULL;
+
+        if (number_tried == number_needed)
+          break;
+      }
+    }
+    
+    if (number_tried == 0) {
+      sendTo("Well, you don't have any coins...\n\r");
+    } else if (number_done < number_needed) {
+      act(fmt("You redeemed <R>%d<1> coin%s for $n.") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+    } else {
+      act(fmt("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$n<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+    }
+    if (number_tried)
+      doSave(SILENT_NO);
     return;
     
-  } else if (is_abbrev(arg1, "demonogram")) {
-    if (obj->deMonogram()) {
-      sendTo(fmt("De-monogrammed %s.\n\r") % obj->getName());
+  } else if (is_abbrev(arg1, "demonogram") || arg1 == "deimm") {
+    /*** remove object monogramming/engraving/personalization ***/
+    if (obj->isMonogrammed()) {
+      if (obj->isImmMonogrammed() && arg1 != "deimm") {
+        act("$p is has an <c>immortal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+        act("Use <c>bestow deimm <item><1> if you still want to remove it.", TRUE, this, obj, NULL, TO_CHAR);
+        return;
+      } else if (obj->isImmMonogrammed() && arg1 == "deimm") {
+        act("$p is has an <w>immortal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+      } else {
+        act("$p is has a <w>normal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+      }
     } else {
-      sendTo(fmt("Did not de-monogram %s.\n\r") % obj->getName());
+      act("$p was not monogrammed, so you leave it as you found it.", TRUE, this, obj, NULL, TO_CHAR);
+      return;
+    }
+    
+    if (obj->deMonogram(FALSE)) {
+      act("You remove the monogram from $p.", TRUE, this, obj, NULL, TO_CHAR);
+    } else {
+      act("You fail to remove the monogram from $p.", TRUE, this, obj, NULL, TO_CHAR);
     }
     return;
     
   } else if (is_abbrev(arg1, "tattoo")) {
+    /*** add/remove tattoos ***/
     if (arg3.empty()) {
       sendTo("Usage :\n\r");
       sendTo("        bestow tattoo <name> <body-part> <tattoo>\n\r");
       return;
     }
-    sendTo(fmt("Tattooing %s.\n\r") % ch->getName());
+    
+    // figure out what body part we're dealing with
+    int tmp_slot = search_block(arg3, bodyParts, FALSE);
+    if (tmp_slot < 1) {
+      sendTo("Bad body part!\n\r");
+      return;
+    }
+    wearSlotT slot = wearSlotT(tmp_slot);
+    if (!ch->hasPart(slot) || notBleedSlot(slot)) {
+      sendTo("Unavailable body part!\n\r");
+      return;
+    }
+    
+    // form the possessive
+    sstring name_buffer;
+    if (this == ch)
+      name_buffer = "your";
+    else {
+      name_buffer = ch->getName();
+      name_buffer += fmt("'%s") % (name_buffer.at(name_buffer.size() - 1) == 's' ? "" : "s");
+    }
+    
+    // are we adding or removing a tattoo?
+    if (ch->applyTattoo(slot, arg4, SILENT_NO)) {
+      if (arg4.length() > 0) {
+        // adding
+        act(fmt("<r>You tattoo %s %s with:<1> %s<1><r>.<1>") % name_buffer % ch->describeBodySlot(slot) % arg4, TRUE, this, NULL, ch, TO_CHAR);
+        act(fmt("You feel a <r>piercing<1> sensation on your %s.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
+      } else {
+        // removing
+        act(fmt("You remove the tattoo from %s %s.") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
+        act(fmt("Your %s feels <r>raw<1>.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
+      }
+      // bruising, for kicks
+      ch->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_YES);
+    } else if (arg4.length() == 0) {
+      act(fmt("Are you sure %s %s was tattooed?") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
+    } else {
+      sendTo("Well, that didn't work...\n\r");
+    }
+    
     return;
     
   } else {

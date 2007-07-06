@@ -1939,9 +1939,23 @@ sstring TBeing::thirdPerson(const int pos)
   return "???";
 }
 
-bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat)
+bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat, silentTypeT silent)
 {
-  
-  
-  return TRUE;
+  /* add or remove a tattoo to a being */
+  if (!hasPart(slot) || notBleedSlot(slot))
+    return FALSE;
+
+  TDatabase db(DB_SNEEZY);
+  if (tat.length() == 0) {
+    // removal
+    db.query("delete from tattoos where name = '%s' and location = %i", getName(), int(slot));
+    if (db.rowCount() > 0)
+      return TRUE;
+  } else if (tat.length() <= 128) {
+    // new tat
+    db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i", getName(), tat.c_str(), int(slot));
+    if (db.rowCount() > 0)
+      return TRUE;
+  }
+  return FALSE;
 }

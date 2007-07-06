@@ -612,7 +612,7 @@ void TMonster::makeNoise()
       if (getPosition() > POSITION_SLEEPING) 
         MakeRoomNoise(this, in_room, sounds, distantSnds);
       else if (getPosition() == POSITION_SLEEPING) {
-        sprintf(buffer, "%s snores loudly.\n\r", getName());
+        sprintf(buffer, "%s snores loudly.\n\r", mud_str_dup(sstring(getName()).cap()));
         MakeRoomNoise(this, in_room, buffer, "You hear a loud snore nearby.\n\r");
       }
     } else if (getPosition() == default_pos)
