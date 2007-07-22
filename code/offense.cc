@@ -1303,7 +1303,7 @@ int TObj::burnObject(TBeing *ch, int perc)
   if(burndam<=0) burndam=1;
 
   if(material_nums[getMaterial()].flammability &&
-     burndam > getStructPoints()){
+     burndam >= getStructPoints()){
     // destroyed
     setStructPoints(0);
     if (ch) {
@@ -1319,21 +1319,27 @@ int TObj::burnObject(TBeing *ch, int perc)
     while ((t = getStuff())) {
       (*t)--;
       if (parent)
-	*parent += *t;
+        *parent += *t;
       else if (roomp)
-	*roomp += *t;
+        *roomp += *t;
       else
-	vlogf(LOG_BUG, fmt("Bad struct on burnObj %s") %  t->name);
+        vlogf(LOG_BUG, fmt("Bad struct on burnObj %s") %  t->name);
       TObj * tot = dynamic_cast<TObj *>(t);
       if (tot) {
-	rc = tot->burnObject(ch, 100);
-	if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	  delete tot;
-	  tot = NULL;
-	}
+        rc = tot->burnObject(ch, 100);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          delete tot;
+          tot = NULL;
+        }
       }
     }
-    return DELETE_THIS; 
+    if (isMonogrammed()){
+      scrapMonogrammed();
+      return TRUE;
+    } else {
+      makeScraps();
+      return DELETE_THIS;
+    }
   } else {
     setStructPoints(getStructPoints()-burndam);
     

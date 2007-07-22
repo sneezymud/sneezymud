@@ -1100,11 +1100,13 @@ int TObj::damageItem(sh_int amt)
 void TObj::scrapMonogrammed()
 {
   TThing *x = NULL, *tmp = NULL, *ch = NULL;
-  char buf[256];
-  char buf2[256];
   TBaseCup *tbc=dynamic_cast<TBaseCup *>(this);
   TBeing *cht;
-
+  
+  // make sure it gets snuffed out
+  if (isObjStat(ITEM_BURNING))
+    remBurning(NULL);
+  
   // if it's a liquid container, drop the liquid in the room
   if(tbc){
     if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
@@ -1112,6 +1114,7 @@ void TObj::scrapMonogrammed()
     } else if(roomp){
       roomp->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
     }
+    tbc->setDrinkUnits(0);
   }
 
 
@@ -1127,38 +1130,32 @@ void TObj::scrapMonogrammed()
         if (ch->roomp)
           *ch->roomp += *x;
         else
-          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") %
-		ch->getName());
+          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") % ch->getName());
       }
     }
   }
 
   if (((ch = parent) && parent->roomp) || 
       (ch = equippedBy) || (ch = stuckIn)) {
-    act("$p falls to the $g.",
-	TRUE, ch, this, NULL, TO_ROOM);
-    act("Your $o falls to the $g.", 
-	FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
+    act("$p falls to the $g.", TRUE, ch, this, NULL, TO_ROOM);
+    act("Your $o falls to the $g.", FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
     vlogf(LOG_COMBAT, fmt("%s's (monogrammed) %s just scrapped.") %
 	  ch->getName() % getName());
   } else {
     if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
-      sprintf(buf, "$p falls to the $g.");
-      sprintf(buf2, "Your $o falls to the $g.");
       while (tmp) {
         if (tmp->roomp) {
-          act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
-          act(buf, TRUE, tmp, this, NULL, TO_ROOM);
+          act("Your $o falls to the $g.", TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
+          act("$p falls to the $g.", TRUE, tmp, this, NULL, TO_ROOM);
           break;
         }
         tmp = tmp->parent;
       }
     } else if (roomp) {
-      sprintf(buf, "$n falls to the ground.");
-      act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+      act("$n is destroyed.", TRUE, this, NULL, NULL, TO_ROOM);
     } else 
-      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isnt in a room %s.") %  getName());
+      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isn't in a room %s.") %  getName());
   }
 
   TBeing *chb;
@@ -1199,9 +1196,6 @@ void TObj::scrapMonogrammed()
     --(*x);
     *roomp += *x;
   }
-  if (roomp)
-    *roomp += *this;
-
 }
 
 // all calls to this function should delete obj afterwards
