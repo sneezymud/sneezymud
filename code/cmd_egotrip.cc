@@ -84,9 +84,9 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		     "<Y>luck<1>");
   blessings[AFFECT_CORAL_BLESSING]=
     ego_imm_blessing("Coral",
-		     AFFECT_CORAL_BLESSING,
-		     APPLY_CON,
-		     "<c>exploration<1>");
+		AFFECT_CORAL_BLESSING,
+		APPLY_CON,
+		"<r>inferno<1>");
 
 	blessings[AFFECT_DEIRDRE_BLESSING]=
 		ego_imm_blessing("Deirdre",
@@ -156,12 +156,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     aff.bitvector = 0;
     v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   } else if(which==AFFECT_CORAL_BLESSING){
-    aff.type=AFFECT_CORAL_BLESSING;
-    aff.location=APPLY_NONE;
-    aff.modifier=0;
-    aff.modifier2=0;
-    aff.bitvector = AFF_LEVITATING;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    // TBeing::affectedBySpell - flaming flesh 
   } else if(which==AFFECT_ANGUS_BLESSING){
     // TBeing::affectedBySpell - sanc
   } else if(which==AFFECT_DAMESCENA_BLESSING){
