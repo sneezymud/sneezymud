@@ -1,11 +1,12 @@
 #16700
 Player Homes~
 16799 30 2 1
-D 0 16700 5 2        Cramped Attic -> Tanni's Jewelry Store
-D 0 16701 5 2        Galek Armory -> Magical Nexus
+D 0 16700 5 2        Cramped Attic (Sage's house) -> Tanni's Jewelry Store
+D 0 16701 5 2        Galek Armory (Sage's house) -> Magical Nexus
 D 0 16702 5 2        Gon's House -> Barracks
+D 0 16705 5 2        Raven's Nest -> Above a Treetop
 
-O 0 16703 1 16700       a bright blue portal
+O 0 16703 1 16700       a bright blue portal - SAGE'S HOUSE ABOVE TANNI'S
 O 0 16701 1 16700       a plain looking chair
 O 0 16711 1 16700       a stiff bed
 O 0 16710 1 16700       a short dinner table
@@ -18,7 +19,7 @@ O 0 16708 1 16700       an operating table
 O 0 16721 1 16700       a pentagram inscribed with chalk
 O 0 16704 1 16700       an obsidian toolbox
 
-O 0 16702 1 16701       a bright blue portal
+O 0 16702 1 16701       a bright blue portal - SAGE'S HOUSE IN BRIGHTMOON
 O 0 1200 1 16701        a wall lamp
 O 0 16701 1 16701       a plain looking chair
 O 0 16712 3 16701       an equipment rack
@@ -30,7 +31,7 @@ O 0 16717 3 16701       a magic dispenser
 O 0 16718 1 16701       a shiny curio cabinet
 O 0 16719 1 16701       a waste basket
 
-O 0 16723 3 16702       a walnut wood wardrobe with lapis lazuli inlay
+O 0 16723 3 16702       a walnut wood wardrobe with lapis lazuli inlay - GON'S HOUSE
 O 0 16712 3 16702       an equipment rack
 O 0 16722 1 16702       a wall-mounted lantern
 O 0 9057 1 16702        a plush oak chair
@@ -39,7 +40,12 @@ O 0 8448 1 16702        a large fur covered bed
 O 0 10209 1 16702       a fireplace
 O 0 16725 1 16702       a window
 
-M 0 16700 1 16700       a latchkey kid
-M 0 16701 1 16702       a penguin
+O 0 16744 1 16705       a large bird bath - RAVEN'S HOUSE
+O 0 16743 1 16705       a branch bench
+O 0 16742 3 16705       a slightly cracked egg - container
+
+M 0 16700 1 16700       a latchkey kid - SAGE'S BUTLER
+M 0 16701 1 16702       a penguin - GON'S BUTLER
+M 0 16702 1 16705       a baby bird  - RAVEN'S BUTLER
 
 S
