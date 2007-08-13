@@ -21,9 +21,6 @@ case $USER in
   dash)
     PORT=6996
     ;;
-  garthagk)
-    PORT=6903
-    ;;
   metrohep)
     PORT=6904
     ;;
@@ -38,6 +35,9 @@ case $USER in
     ;;
   magdalena)
     PORT=6907
+    ;;
+  macross)
+    PORT=6999
     ;;
 
 esac
