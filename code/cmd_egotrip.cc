@@ -113,6 +113,11 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		AFFECT_MAGDALENA_BLESSING,
 		APPLY_BRA,
 		"<k>hard rock<1>");
+        blessings[AFFECT_MACROSS_BLESSING]=
+                ego_imm_blessing("Macross",
+                AFFECT_MACROSS_BLESSING,
+                APPLY_FOC,
+                "<k>'serenity now'<1>");
 
   return blessings;
 }
@@ -182,6 +187,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     // TBeing::affectedBySpell - enliven
   } else if(which==AFFECT_MAGDALENA_BLESSING){
     // TBeing::affectedBySpell - stoneskin
+  } else if(which==AFFECT_MACROSS_BLESSING){
   } else if(which==AFFECT_GARTHAGK_BLESSING){
   } else if(which==AFFECT_METROHEP_BLESSING){
 	aff.type = AFFECT_METROHEP_BLESSING;
@@ -218,6 +224,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
          afp->type==AFFECT_GARTHAGK_BLESSING ||
          afp->type==AFFECT_MERCURY_BLESSING ||
          afp->type==AFFECT_MAGDALENA_BLESSING ||
+         afp->type==AFFECT_MACROSS_BLESSING ||
          (afp->type==AFFECT_METROHEP_BLESSING && afp->location != APPLY_ARMOR) ||
    (afp->type==AFFECT_MAROR_BLESSING && afp->location != APPLY_CRIT_FREQUENCY) ){
 	afp->modifier =(int)((float)afp->modifier * 1.5);
