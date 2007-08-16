@@ -6,7 +6,8 @@ D 0 16701 5 2        Galek Armory (Sage's house) -> Magical Nexus
 D 0 16702 5 2        Gon's House -> Barracks
 D 0 16705 5 2        Raven's Nest -> Above a Treetop
 
-O 0 16703 1 16700       a bright blue portal - SAGE'S HOUSE ABOVE TANNI'S
+* Sage's house in Grimhaven, above Tanni's
+O 0 16703 1 16700       a bright blue portal
 O 0 16701 1 16700       a plain looking chair
 O 0 16711 1 16700       a stiff bed
 O 0 16710 1 16700       a short dinner table
@@ -19,7 +20,8 @@ O 0 16708 1 16700       an operating table
 O 0 16721 1 16700       a pentagram inscribed with chalk
 O 0 16704 1 16700       an obsidian toolbox
 
-O 0 16702 1 16701       a bright blue portal - SAGE'S HOUSE IN BRIGHTMOON
+* Sage's house in Brightmoon
+O 0 16702 1 16701       a bright blue portal
 O 0 1200 1 16701        a wall lamp
 O 0 16701 1 16701       a plain looking chair
 O 0 16712 3 16701       an equipment rack
@@ -31,21 +33,52 @@ O 0 16717 3 16701       a magic dispenser
 O 0 16718 1 16701       a shiny curio cabinet
 O 0 16719 1 16701       a waste basket
 
-O 0 16723 3 16702       a walnut wood wardrobe with lapis lazuli inlay - GON'S HOUSE
-O 0 16712 3 16702       an equipment rack
+* Gon's house, Foyer
 O 0 16722 1 16702       a wall-mounted lantern
-O 0 9057 1 16702        a plush oak chair
-O 0 34619 1 16702       a wooden table
-O 0 8448 1 16702        a large fur covered bed
 O 0 10209 1 16702       a fireplace
 O 0 16725 1 16702       a window
+O 0 16736 1 16702       doormat
+O 0 16737 1 16702       coat rack
+O 0 23171 1 16702       small table
+P 1 16738 1 23171       vase on a small table
+O 0 16740 1 16702       wastebasket
 
-O 0 16744 1 16705       a large bird bath - RAVEN'S HOUSE
+* Gon's house, Bedroom
+O 0 16723 6 16703       a walnut wood wardrobe with lapis lazuli inlay
+O 0 16712 6 16703       an equipment rack
+O 0 16722 1 16703       a wall-mounted lantern
+O 0 9057 1 16703        a plush oak chair
+O 0 34619 1 16703       a wooden table
+O 0 8448 1 16703        a large fur covered bed
+O 0 10209 1 16703       a fireplace
+
+* Gon's house, Lounge
+O 0 16731 1 16704       a loveseat
+O 0 16732 1 16704       a glass coffee table
+P 1 31781 1 16732       a cookbook on the coffee table
+P 1 22407 1 16732       the gnome book of wisdom on the coffee table
+P 1 10712 1 16732       a book with an obsidian binding on the coffee table
+O 0 16733 1 16704       a telesope
+O 0 16734 1 16704       a keg of beer
+O 0 16735 3 16704       a blue and white striped hammock
+O 0 21 1 16704          a couch
+O 0 23171 1 16704       a small table
+P 1 19080 8 23171       a paper cup * in the table
+P 1 13879 4 23171       a chunk of ice * in the table
+P 1 11430 12 23171      an ice cream bar * in the table
+O 0 10209 1 16704       a fireplace
+
+* Raven's nest (in Grimhaven Park)
+O 0 16742 3 16705       a slightly cracked egg
+O 0 16744 1 16705       a large bird bath
 O 0 16743 1 16705       a branch bench
-O 0 16742 3 16705       a slightly cracked egg - container
 
-M 0 16700 1 16700       a latchkey kid - SAGE'S BUTLER
-M 0 16701 1 16702       a penguin - GON'S BUTLER
-M 0 16702 1 16705       a baby bird  - RAVEN'S BUTLER
+* Sage's Butler
+M 0 16700 1 16700       a latchkey kid 
+* Gon's Butler
+M 0 16701 1 16702       a penguin
+* Raven's Butler
+M 0 16702 1 16705       a baby bird 
+
 
 S
