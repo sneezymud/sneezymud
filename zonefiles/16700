@@ -58,41 +58,49 @@ O 0 16732 1 16704       a glass coffee table
 P 1 31781 1 16732       a cookbook on the coffee table
 P 1 22407 1 16732       the gnome book of wisdom on the coffee table
 P 1 10712 1 16732       a book with an obsidian binding on the coffee table
-O 0 16733 1 16704       a telesope
+O 0 16733 1 16704       a telescope
+O 0 16739 1 16704       atelescope
 O 0 16734 1 16704       a keg of beer
 O 0 16735 3 16704       a blue and white striped hammock
 O 0 21 1 16704          a couch
 O 0 23171 1 16704       a small table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 19080 8 23171       a paper cup * in the table
-P 1 13879 4 23171       a chunk of ice * in the table
-P 1 13879 4 23171       a chunk of ice * in the table
-P 1 13879 4 23171       a chunk of ice * in the table
-P 1 13879 4 23171       a chunk of ice * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
-P 1 11430 12 23171      an ice cream bar * in the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+P 1 19080 12 23171      a paper cup - add on pop, up to 12, on the table
+O 0 16745 1 16704       a steel ice chest
+P 1 13879 4 16745       a chunk of ice in the ice chest up to 4
+P 1 13879 4 16745       a chunk of ice in the ice chest up to 4
+P 1 13879 4 16745       a chunk of ice in the ice chest up to 4
+P 1 13879 4 16745       a chunk of ice in the ice chest up to 4
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
+P 1 11430 12 16745      an ice cream bar in the ice chest up to 12
 O 0 10209 1 16704       a fireplace
 
 * Raven's nest (in Grimhaven Park)
 O 0 16744 1 16705       a large bird bath
 O 0 16743 1 16705       a branch bench
 O 0 16742 1 16705       a slightly cracked egg
+O 0 16746 1 16705       a slightly cracked egg
+O 0 16747 1 16705       a slightly cracked egg
 
 * Sage's Butler
 M 0 16700 1 16700       a latchkey kid 
