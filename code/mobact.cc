@@ -868,23 +868,28 @@ int TMonster::senseWimps()
           stopFighting();
           setCharFighting(tmp_victim);
           return TRUE;
-        } else return FALSE;
+        } else continue;
       } else if (!tmp_victim->rider) {
         if (tmp_victim->isPc() && tmp_victim->task &&
             (tmp_victim->getStat(STAT_CURRENT, STAT_FOC) >= ::number(-10, 270))) {
           act("You feel nudged but you stay focused on your task.",
               TRUE, this, NULL, tmp_victim, TO_VICT);
-          return FALSE;
-	} else if(tmp_victim->doesKnowSkill(SKILL_BRAWL_AVOIDANCE) &&
-		  tmp_victim->bSuccess(SKILL_BRAWL_AVOIDANCE)){
-	  act("You are nearly pulled into the brawl, but manage to avoid it.",
-	      TRUE, this, 0, tmp_victim,TO_VICT);
-	  return FALSE;
+          continue;
+        } else if (!tmp_victim->isPc() && ::number(1, 100) < min(99, max(GetMaxLevel(), tmp_victim->GetMaxLevel()) - 1)) {
+          // added to reduce chance of brawling as mob level increases
+          // % chance of avoiding brawl is equal to brawler or brawlee level (whichever is higher)
+          continue;
+        } else if(tmp_victim->doesKnowSkill(SKILL_BRAWL_AVOIDANCE) &&
+            tmp_victim->bSuccess(SKILL_BRAWL_AVOIDANCE)){
+          act("You are nearly pulled into the brawl, but manage to avoid it.",
+              TRUE, this, 0, tmp_victim,TO_VICT);
+          continue;
         } else {
           act("Suddenly, $N finds $Mself involved in the brawl.",
-                   TRUE, this, 0, tmp_victim,TO_NOTVICT);
+                   TRUE, this, 0, tmp_victim, TO_NOTVICT);
           act("Suddenly, you find yourself involved in the brawl.",
-                   TRUE, this, 0, tmp_victim,TO_VICT);
+                   TRUE, this, 0, tmp_victim, TO_VICT);
+          vlogf(LOG_MOB_AI, fmt("Brawl! %s (%d) brawls %s (%d) in %d") % tmp_victim->name % tmp_victim->GetMaxLevel() % this->name % this->GetMaxLevel() % (roomp ? roomp->in_room : 0));
           if (getPosition() == POSITION_RESTING ||  getPosition() == POSITION_SITTING)
             doStand();
 
@@ -892,7 +897,7 @@ int TMonster::senseWimps()
           return TRUE;
         }
       }
-    } 
+    }
     // end of random switch
 
     score = tmp_victim->getHit() + tmp_victim->hitLimit();
@@ -982,10 +987,19 @@ int TMonster::senseWimps()
       act("You feel nudged but you stay focused on your task.",
           TRUE, this, NULL, wimp, TO_VICT);
       return FALSE;
+    } else if (!wimp->isPc() && ::number(1, 100) < min(99, max(GetMaxLevel(), wimp->GetMaxLevel()) - 1)) {
+        // added to reduce chance of brawling as mob level increases
+        // % chance of avoiding brawl is equal to brawler or brawlee level (whichever is higher)
+        return FALSE;
+    } else if (wimp->doesKnowSkill(SKILL_BRAWL_AVOIDANCE) &&
+        wimp->bSuccess(SKILL_BRAWL_AVOIDANCE)){
+      act("You are nearly pulled into the brawl, but manage to avoid it.",
+          TRUE, this, 0, wimp, TO_VICT);
+      return FALSE;
     } else {
-      act("Suddenly, $N finds $Mself involved in the brawl.", TRUE, this, 0, wimp,TO_NOTVICT);
-      act("Suddenly, you find yourself involved in the brawl.", TRUE, this, 0, wimp,TO_VICT);
-
+      act("Suddenly, $N finds $Mself involved in the brawl.", TRUE, this, 0, wimp, TO_NOTVICT);
+      act("Suddenly, you find yourself involved in the brawl.", TRUE, this, 0, wimp, TO_VICT);
+      vlogf(LOG_MOB_AI, fmt("Brawl! %s (%d) lured to %s (%d) in (%d)") % wimp->name % wimp->GetMaxLevel() % this->name % this->GetMaxLevel() % (roomp ? roomp->in_room : 0));
       if (getPosition() == POSITION_RESTING ||  getPosition() == POSITION_SITTING)
         doStand();
 
@@ -4363,7 +4377,7 @@ int TMonster::assistFriend()
       // don't assist if he's flipping out
       if (!tmp_ch->isPc() && (dynamic_cast<TMonster *>(tmp_ch)->anger() > 40))
         continue;
-
+      
       if (isPolice() && !fight()) {
         if (!tmp_ch->fight()->isAnimal()) {
           if (tmp_ch->fight()->isPolice()) {
@@ -4399,10 +4413,17 @@ int TMonster::assistFriend()
           }
         }
       }
+      
       if ((tbeTarg = tmp_ch->findAnAttacker())) {
         if (tbeTarg == master || inGroup(*tbeTarg) || !canSee(tbeTarg))
           continue;
 
+        if (!tbeTarg->isPc() && ::number(1, 100) < min(99, max(GetMaxLevel(), tbeTarg->GetMaxLevel()) - 1)) {
+          // added to reduce chance of brawling as mob level increases
+          // % chance of avoiding brawl is equal to brawler or brawlee level (whichever is higher)
+          continue;
+        }
+        
         if (tbeTarg->isPc()) {
           final = tbeTarg;
           break;
@@ -4417,6 +4438,7 @@ int TMonster::assistFriend()
   if (final) {
     act("$n attacks $N.", FALSE, this, 0, final, TO_NOTVICT);
     act("$n attacks you!", FALSE, this, 0, final, TO_VICT, ANSI_ORANGE);
+    vlogf(LOG_MOB_AI, fmt("Brawl! %s (%d) attacks %s (%d) in %d") % this->name % this->GetMaxLevel() % final->name % final->GetMaxLevel() % (roomp ? roomp->in_room : 0));
     rc = hit(final);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete final;
