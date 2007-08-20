@@ -329,5 +329,16 @@ D 0 3872 8 1         Inside the Spire -> A Balcony Overlooking the City
 
 O 0 8721 2 3866      Lights in Adrielz
 O 0 8721 2 3869      Lights in Skull Duggory's
+
+* Private home objects
+
+O 0 16712 2 3870     Equipment rack in a private home
+O 0 16712 2 3867     Equipment rack in a private home    
+O 0 16712 2 3872     Equipment rack in a private home    
+O 0 16712 2 3868     Equipment rack in a private home    
+O 0 16712 1 3873     Equipment rack in a private home    
+
+O 0 31888 1 3871     Christmas Chest in private home
+
 S
 
