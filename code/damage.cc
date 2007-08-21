@@ -758,7 +758,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // added for information to other players that haven't died but
 	  // didn't want to write an information channel etc
 	  // should be fun to come up with new shouts
-	  int chance = ::number(1,20);
+	  int chance = ::number(1,26);
 	  if (chance == 1) {
 	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  } else if (chance == 2) {
@@ -772,11 +772,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  } else if (chance == 6) {
 	    taunt_buf=fmt("HAHAHA! Hey %s! How much to next level NOW?!?") % v->getName();
 	  } else if (chance == 7) {
-	    taunt_buf=fmt("It's time to remind %s that SneezyMUD is...Awe hell, can't remind the dead!") % v->getName();
+	    taunt_buf=fmt("It's time to remind %s that SneezyMUD is... Aw hell, can't remind the dead!") % v->getName();
 	  } else if (chance == 8) {
 	    taunt_buf=fmt("SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...") % v->getName();
 	  } else if (chance == 9) {
-	    taunt_buf=fmt("There once was a player named %s...once...") % v->getName();
+	    taunt_buf=fmt("There once was a player named %s... once...") % v->getName();
 	  } else if (chance == 10) {
 	    taunt_buf=fmt("Dime a dozen, %s failed, who's next to die to my hand?") % v->getName();
 	  } else if (chance == 11) {
@@ -799,6 +799,18 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	    taunt_buf=fmt("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s.") % v->getName();
 	  } else if (chance == 20) {
 	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName() % v->getName();
+    } else if (chance == 21) {
+      taunt_buf=fmt("This is what it sounds like, when %s dies!") % v->getName();
+    } else if (chance == 22) {
+      taunt_buf=fmt("Well, %s is dead. Who could have forseen that?!") % v->getName();
+    } else if (chance == 23) {
+      taunt_buf=fmt("Quick, summon %s! Or, well, maybe next time...") % v->getName();
+    } else if (chance == 24) {
+      taunt_buf=fmt("Your pets will love new %s brand kibble!") % v->getName();
+    } else if (chance == 25) {
+      taunt_buf=fmt("%s-lite, now with 100% less hitpoints!") % v->getName();
+    } else if (chance == 26) {
+      taunt_buf=fmt("Ouch! Does someone have a relive for %s?") % v->getName();
 	  } else {
 	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
 	  }
