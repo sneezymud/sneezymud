@@ -39,6 +39,9 @@ case $USER in
   macross)
     PORT=6999
     ;;
+  vasco)
+    PORT=6908
+    ;;
 
 esac
 
