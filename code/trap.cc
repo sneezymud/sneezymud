@@ -849,7 +849,10 @@ int TBeing::triggerDoorTrap(dirTypeT door)
   exitp = exitDir(door);
   dam = dice(exitp->trap_dam, 8);
 
-  rawOpenDoor(door);
+  // door traps can be triggered by means other than opening
+  // eg trying to set another trap
+  //  rawOpenDoor(door);
+  
   REMOVE_BIT(exitp->condition, EX_TRAPPED);
   if ((rp = real_roomp(exitp->to_room)) &&
       (back = rp->dir_option[rev_dir[door]])) {

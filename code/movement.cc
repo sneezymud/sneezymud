@@ -1845,19 +1845,21 @@ int TBeing::doOpen(const char *argument)
       sendTo("It's already open!\n\r");
     else if (IS_SET(exitp->condition, EX_LOCKED))
       sendTo("It seems to be locked.\n\r");
-    else if (IS_SET(exitp->condition, EX_TRAPPED)) {
-      if (doesKnowSkill(SKILL_DETECT_TRAP)) {
-        if (detectTrapDoor(this, door)) {
-          sendTo(fmt("You start to open the %s, but then notice an insidious %s trap...\n\r") %
-               sstring(exitp->getName()) % sstring(trap_types[exitp->trap_info]).uncap());
-          return FALSE;
-        }
-      }
-      rc = triggerDoorTrap(door);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-    } else 
+    else {
+      if (IS_SET(exitp->condition, EX_TRAPPED)) {
+	if (doesKnowSkill(SKILL_DETECT_TRAP)) {
+	  if (detectTrapDoor(this, door)) {
+	    sendTo(fmt("You start to open the %s, but then notice an insidious %s trap...\n\r") %
+		   sstring(exitp->getName()) % sstring(trap_types[exitp->trap_info]).uncap());
+	    return FALSE;
+	  }
+	}
+	rc = triggerDoorTrap(door);
+	if (IS_SET_DELETE(rc, DELETE_THIS))
+	  return DELETE_THIS;
+      } 
       rawOpenDoor(door);
+    }
   }
   return FALSE;
 }
