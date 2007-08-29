@@ -132,10 +132,10 @@ wearSlotT getChangePos(TObj *o)
       pos=WEAR_NOWHERE;
     case WEAR_KEY_FINGERS:
       if(!fingers){
-	fingers++;
-	pos=WEAR_FINGER_L;
+  fingers++;
+  pos=WEAR_FINGER_L;
       } else {
-	pos=WEAR_FINGER_R;
+  pos=WEAR_FINGER_R;
       }
       break;
     case WEAR_KEY_NECK:
@@ -149,34 +149,34 @@ wearSlotT getChangePos(TObj *o)
       break;
     case WEAR_KEY_LEGS:
       if(!legs){
-	legs++;
-	pos=WEAR_LEG_L;
+  legs++;
+  pos=WEAR_LEG_L;
       } else {
-	pos=WEAR_LEG_R;
+  pos=WEAR_LEG_R;
       }
       break;
     case WEAR_KEY_FEET:
       if(!feet){
-	feet++;
-	pos=WEAR_FOOT_L;
+  feet++;
+  pos=WEAR_FOOT_L;
       } else {
-	pos=WEAR_FOOT_R;
+  pos=WEAR_FOOT_R;
       }
       break;
     case WEAR_KEY_HANDS:
       if(!hands){
-	++hands;
-	pos=WEAR_HAND_L;
+  ++hands;
+  pos=WEAR_HAND_L;
       } else {
-	pos=WEAR_HAND_R;
+  pos=WEAR_HAND_R;
       }
       break;
     case WEAR_KEY_ARMS:
       if(!arms){
-	++arms;
-	pos=WEAR_ARM_L;
+  ++arms;
+  pos=WEAR_ARM_L;
       } else {
-	pos=WEAR_ARM_R;
+  pos=WEAR_ARM_R;
       }
       break;
     case WEAR_KEY_BACK:
@@ -187,10 +187,10 @@ wearSlotT getChangePos(TObj *o)
       break;
     case WEAR_KEY_WRISTS:
       if(!wrists){
-	++wrists;
-	pos=WEAR_WRIST_L;
+  ++wrists;
+  pos=WEAR_WRIST_L;
       } else {
-	pos=WEAR_WRIST_R;
+  pos=WEAR_WRIST_R;
       }
       break;
     case WEAR_KEY_HOLD:
@@ -247,20 +247,20 @@ void TBeing::doChangeOutfit(const char *argument)
       removed = unequip(pos);
       *suitcase += *removed;
       sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
-	     removed->getName() % suitcase->getName());
+       removed->getName() % suitcase->getName());
 
       if(o->isPaired()){
-	if(pos==WEAR_LEG_L && equipment[WEAR_LEG_R]){
-	  removed = unequip(WEAR_LEG_R);
-	  *suitcase += *removed;
-	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
-		 removed->getName() % suitcase->getName());	
-	} else if(pos==WEAR_LEG_R && equipment[WEAR_LEG_L]){
-	  removed = unequip(WEAR_LEG_L);
-	  *suitcase += *removed;
-	  sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
-		 removed->getName() % suitcase->getName());
-	}
+  if(pos==WEAR_LEG_L && equipment[WEAR_LEG_R]){
+    removed = unequip(WEAR_LEG_R);
+    *suitcase += *removed;
+    sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+     removed->getName() % suitcase->getName()); 
+  } else if(pos==WEAR_LEG_R && equipment[WEAR_LEG_L]){
+    removed = unequip(WEAR_LEG_L);
+    *suitcase += *removed;
+    sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+     removed->getName() % suitcase->getName());
+  }
       }
     }
 
@@ -421,19 +421,19 @@ void TBeing::doHighfive(const sstring &argument)
         switch(::number(1,3)) {
           case 1:
             mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
-	      name % tch->name;
+        name % tch->name;
             break;
           case 2:
             mess = fmt("Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r") %
-	      name % tch->name;
-	    break;
+        name % tch->name;
+      break;
           case 3:
             mess = fmt("The world shakes as %s and %s high five.\n\r") %
-	      name % tch->name;
+        name % tch->name;
             break;
           default:
             mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
-	      name % tch->name;
+        name % tch->name;
             break;
         }
         descriptor_list->worldSend(mess, this);
@@ -1012,8 +1012,8 @@ void TPerson::doTrans(const char *argument)
         return;
       }
       if(!limitPowerCheck(CMD_TRANSFER,(victim->isPc()) ? -1 : victim->number)) {
-	sendTo("You are not allowed to transfer that being.\n\r");
-	return;
+  sendTo("You are not allowed to transfer that being.\n\r");
+  return;
       }
       // used to track down: XXX trans'd me outta inn and got me killed!
       vlogf(LOG_SILENT, fmt("%s transferring %s from %d to %d.") %  getName() % victim->getName() % victim->inRoom() % inRoom());
@@ -1253,10 +1253,10 @@ int TBeing::doGoto(const sstring & argument)
         sendTo("No room exists with that number.\n\r");
         return FALSE;
       } else {
-	if (!limitPowerCheck(CMD_GOTO, loc_nr)) {
-	  sendTo("You are currently forbidden from going there.\n\r");
-	  return FALSE;
-	} else if (loc_nr < WORLD_SIZE) {
+  if (!limitPowerCheck(CMD_GOTO, loc_nr)) {
+    sendTo("You are currently forbidden from going there.\n\r");
+    return FALSE;
+  } else if (loc_nr < WORLD_SIZE) {
           sendTo("You form order out of chaos.\n\r");
           CreateOneRoom(loc_nr);
         } else {
@@ -1863,7 +1863,7 @@ void TBeing::doTransformDrop(wearSlotT slot)
           } else {
             act("You hear a small grinding sound coming from your new limb as something drops to the $g.", TRUE,this,0,0,TO_CHAR);
             act("You hear a grinding sound coming from $n and something drops to the $g.", TRUE,this,0,0,TO_ROOM);
-	    unequip(slot);
+      unequip(slot);
             *roomp += *tmp;
           }
           return;
@@ -2367,8 +2367,8 @@ void TPerson::doLoad(const char *argument)
 
     while(count--){
       if (!(mob = read_mobile(numx, REAL))) {
-	sendTo("You suck.  You can't load that!\n\r");
-	return;
+  sendTo("You suck.  You can't load that!\n\r");
+  return;
       }
       *roomp += *mob;
       mob->oldRoom = inRoom();
@@ -2404,12 +2404,12 @@ void TPerson::doLoad(const char *argument)
         case STATS_POTION:
           sendTo("Stat potions are unloadable.\n\r");
           return;
-	case LEARNING_POTION:
-	  sendTo("Learning potions are unloadable.\n\r");
-	  return;
-	case MYSTERY_POTION:
-	  sendTo("Mystery potions are unloadable.\n\r");
-	  return;
+  case LEARNING_POTION:
+    sendTo("Learning potions are unloadable.\n\r");
+    return;
+  case MYSTERY_POTION:
+    sendTo("Mystery potions are unloadable.\n\r");
+    return;
         case CRAPS_DICE:
           sendTo("These dice are unloadable by anyone but Brutius. More than one pair in the game could wreck havok!\n\r");
           return;
@@ -2419,17 +2419,17 @@ void TPerson::doLoad(const char *argument)
     while(count--){
       if ((obj_index[numx].getNumber() >= obj_index[numx].max_exist) &&
           !hasWizPower(POWER_LOAD_LIMITED)) {
-	sendTo("Sorry, all of those items are presently in use in the game.\n\r");
-	sendTo("You are unable to load extraneous artifacts at your level.\n\r");
-	return;
+  sendTo("Sorry, all of those items are presently in use in the game.\n\r");
+  sendTo("You are unable to load extraneous artifacts at your level.\n\r");
+  return;
       }
       if (!(obj = read_object(numx, REAL))) {
-	vlogf(LOG_BUG, "Error finding object.");
-	return;
+  vlogf(LOG_BUG, "Error finding object.");
+  return;
       }
       if (obj_index[numx].getNumber() > obj_index[numx].max_exist) {
-	sendTo("WARNING!  This item is in excess of the defined max_exist.\n\r");
-	sendTo("Please don't let this item fall into mortal hands.\n\r");
+  sendTo("WARNING!  This item is in excess of the defined max_exist.\n\r");
+  sendTo("Please don't let this item fall into mortal hands.\n\r");
       }
       act("$n makes a strange magical gesture.", TRUE, this, 0, 0, TO_ROOM);
       act(msgVariables(MSG_LOAD_OBJ, obj), TRUE, this, obj, 0, TO_ROOM);
@@ -2439,10 +2439,10 @@ void TPerson::doLoad(const char *argument)
 
       // let builder load a real obj, but make it proto
       if (!hasWizPower(POWER_LOAD_NOPROTOS)) {
-	if (!obj->isObjStat(ITEM_PROTOTYPE)) {
-	  obj->addObjStat(ITEM_PROTOTYPE);
-	  sendTo("Changing the object to a prototype.\n\r");
-	}
+  if (!obj->isObjStat(ITEM_PROTOTYPE)) {
+    obj->addObjStat(ITEM_PROTOTYPE);
+    sendTo("Changing the object to a prototype.\n\r");
+  }
       }
     }
   } else if (is_abbrev(type, "set") || is_abbrev(type, "suit")) {
@@ -2705,7 +2705,7 @@ void TPerson::doPurge(const char *argument)
         int oldnum = mobCount;
         for (zone = 1; zone < zone_table.size(); zone++) {
           if (zone_table[zone].zone_value > 0 && 
-	      zone_table[zone].isEmpty()) {
+        zone_table[zone].isEmpty()) {
             zone_table[zone].nukeMobs();
             zone_table[zone].zone_value = 0;
           }
@@ -3189,7 +3189,7 @@ int TBeing::genericRestore(restoreTypeT partial)
           return DELETE_THIS;
         affectRemove(aff);
       } else {
-	affectRemove(aff);
+  affectRemove(aff);
       }
     }
   }
@@ -3256,23 +3256,23 @@ void TBeing::doRestore(const char *argument)
     
     while(strcmp(buf, "END")) {
       if (fgets(buf,60,fp) == NULL) {
-	vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
-	fclose(fp);
-	return;
+  vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
+  fclose(fp);
+  return;
       }
       if (!strcmp(buf, "END")) //end of list
-	break;
+  break;
       if (sscanf(buf,"%d %s\n", &pracs, name) != 2) {
         vlogf(LOG_FILE,"ERROR: bad format of reimbursement list");
         fclose(fp);
-	return;
+  return;
       }
       if (!strcmp(name, victim->getName())) {
-	found = TRUE;
-	strncpy(name2, name, sizeof(name));
-	pracs2 = pracs;
+  found = TRUE;
+  strncpy(name2, name, sizeof(name));
+  pracs2 = pracs;
       } else {
-	fprintf(fp2,buf);
+  fprintf(fp2,buf);
       }
     }
     strncpy(name, name2, sizeof(name2));
@@ -3486,19 +3486,19 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
               found = TRUE;
           }
         } else {
-	  sstring slopedData="";
+    sstring slopedData="";
 
           if (door != DIR_UP && door != DIR_DOWN)
             if ((exitdata->condition & EX_SLOPED_UP))
-	      slopedData += " (ascending)";
+        slopedData += " (ascending)";
             else if ((exitdata->condition & EX_SLOPED_DOWN))
-	      slopedData += " (descending)";
-	  
-	  if(rp->isIndoorSector() ||
-	     rp->isRoomFlag(ROOM_INDOORS))
-	    slopedData += " (indoors)";
-	  else
-	    slopedData += " (outside)";
+        slopedData += " (descending)";
+    
+    if(rp->isIndoorSector() ||
+       rp->isRoomFlag(ROOM_INDOORS))
+      slopedData += " (indoors)";
+    else
+      slopedData += " (outside)";
 
 
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
@@ -3719,7 +3719,7 @@ void TPerson::doAccess(const sstring &arg)
           sendTo("Syntax : access <player> passwd <newpasswd>\n\r");
           return;
         }
-	npasswd = arg3;
+  npasswd = arg3;
         if (npasswd.length() > 10) {
           sendTo("Password must be <= 10 characters.\n\r");
           return;
@@ -3734,9 +3734,9 @@ void TPerson::doAccess(const sstring &arg)
           return;
         }
 
-	account.read(st.aname);
-	account.passwd=pass;
-	account.write(st.aname);
+  account.read(st.aname);
+  account.passwd=pass;
+  account.write(st.aname);
 
         sendTo("Password changed successfully.\n\r");
         vlogf(LOG_MISC, fmt("%s changed password on %s account") %  getName() % st.aname);
@@ -3828,7 +3828,7 @@ void TPerson::doAccess(const sstring &arg)
     arg2 = fmt("%s/comment") % arg1;
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
-	buf+=filebuf;
+  buf+=filebuf;
       fclose(fp);
     }
 
@@ -3921,7 +3921,7 @@ void TBeing::doReplace(const sstring &argument)
        getName() % arg1 % dir2);
 
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
-	    dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());
+      dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());
     vsystem(buf);
     // Make sure that the player file hard link is still intact, if
     // not, saves will be inconsistent - Russ 04-19-96
@@ -4145,29 +4145,29 @@ void TBeing::doInfo(const char *arg)
       int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
       
       for(i=0;i<MAX_OBJ_TYPES;++i)
-	count[i]=0;
+  count[i]=0;
 
       for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter)
-	count[(*iter)->itemType()]++;
+  count[(*iter)->itemType()]++;
 
       // BUBBLESORT IS L33T!!!
       while(1){
-	for(i=0;i<MAX_OBJ_TYPES;++i){
-	  if(count[i]>count[li])
-	    li=i;
-	}
+  for(i=0;i<MAX_OBJ_TYPES;++i){
+    if(count[i]>count[li])
+      li=i;
+  }
 
-	if(count[li]==-1)
-	  break;
+  if(count[li]==-1)
+    break;
 
-	buf = fmt("%s[%6i] %-17s\n\r") %
-		buf % count[li] % ItemInfo[li]->name;
-	total += count[li];
-	count[li]=-1;
+  buf = fmt("%s[%6i] %-17s\n\r") %
+    buf % count[li] % ItemInfo[li]->name;
+  total += count[li];
+  count[li]=-1;
       }
 
       buf = fmt("%s[%6i] %-17s\n\r") %
-	buf % total % "Total";
+  buf % total % "Total";
 
       desc->page_string(buf);
     }
@@ -4177,24 +4177,24 @@ void TBeing::doInfo(const char *arg)
       sstring tbuf;
 
       for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-	obj=*iter;
-	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
-	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
-	  tbuf=fmt("[%6i] %-17s\n\r") %
-		   i++ % obj->getNameNOC(this);
-	  buf+=tbuf;
-	}
+  obj=*iter;
+  if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
+     !obj->equippedBy && !obj->stuckIn && !obj->riding){
+    tbuf=fmt("[%6i] %-17s\n\r") %
+       i++ % obj->getNameNOC(this);
+    buf+=tbuf;
+  }
       }
       
       TBeing *tb;
 
       for(tb=character_list;tb;tb=tb->next){
-	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
-	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
-	  tbuf =fmt("[%6i] %-17s\n\r") %
-	    i++ % tb->getNameNOC(this);
-	  buf+=tbuf;
-	}	
+  if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
+     !tb->equippedBy && !tb->stuckIn && !tb->riding){
+    tbuf =fmt("[%6i] %-17s\n\r") %
+      i++ % tb->getNameNOC(this);
+    buf+=tbuf;
+  } 
       }
 
       desc->page_string(buf);
@@ -4202,20 +4202,20 @@ void TBeing::doInfo(const char *arg)
     else if (is_abbrev(arg1, "tweak")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You should not attempt to change that.\n\r");
-	return;
+  return;
       }
       char arg2[80];
       arg = one_argument(arg,arg2);
       if (is_abbrev(arg2, "loadrate")) {
         char opt[80];
-	arg = one_argument(arg,opt);
-	if (is_abbrev(opt, "up"))
-	  stats.equip += .05;
-	else
-	  stats.equip -= .05;
-	save_game_stats();
+  arg = one_argument(arg,opt);
+  if (is_abbrev(opt, "up"))
+    stats.equip += .05;
+  else
+    stats.equip -= .05;
+  save_game_stats();
       } else {
-	sendTo(fmt("loadrate is %f\n\r") % stats.equip);
+  sendTo(fmt("loadrate is %f\n\r") % stats.equip);
       }
     } 
       else if (is_abbrev(arg1, "deaths")) {
@@ -5643,8 +5643,8 @@ void TBeing::doResize(const char *arg)
   arg = one_argument(arg, arg_type);
   if (!*arg_obj || !*arg_type) {
     sendTo("Syntax: resize <object> <character>\n\r");
-	sendTo("        resize <object> race <race number>\n\r");
-	sendTo("        resize <object> height <height>\n\r");
+  sendTo("        resize <object> race <race number>\n\r");
+  sendTo("        resize <object> height <height>\n\r");
     return;
   }
   
@@ -5659,15 +5659,15 @@ void TBeing::doResize(const char *arg)
   } else if (!strcmp(arg_type, "height")) {
     // they are resizing for a specific height
     arg = one_argument(arg, arg_type_val);
-	height = convertTo<int>(arg_type_val);
+  height = convertTo<int>(arg_type_val);
   }
   if (!race && !height) {
     // they are resizing to a specific character
     targ = get_pc_world(this, arg_type, EXACT_NO);
-	if (!targ) {
+  if (!targ) {
       sendTo("Could not find that person online.\n\r");
-	  return;
-	}
+    return;
+  }
   }
 
   TThing *t_obj = searchLinkedList(arg_obj, getStuff());
@@ -5689,35 +5689,35 @@ void TBeing::doResize(const char *arg)
   if (dynamic_cast<TBaseClothing *>(obj)) {
     wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
     int new_volume;
-	
+  
     if (race_vol_constants[mapSlotToFile(slot)]) {
-	  if (race) {
-		// if average height for each race is aleady stored someplace, i missed it
-		// also, it looks like only base male height is public
-		Race *targ_race = new Race((race_t)race);
-		double avg_height = (double) targ_race->getBaseMaleHeight() + (((double) targ_race->getMaleHtNumDice() + (double) targ_race->getMaleHtDieSize()) / 2.0);
-		new_volume = (int) (avg_height * race_vol_constants[mapSlotToFile(slot)]);
-		feedback = fmt("Your target's average height is %i inches.  Item volume is now %i cubic inches.") % (int) avg_height % new_volume;
-		delete targ_race;
+    if (race) {
+    // if average height for each race is aleady stored someplace, i missed it
+    // also, it looks like only base male height is public
+    Race *targ_race = new Race((race_t)race);
+    double avg_height = (double) targ_race->getBaseMaleHeight() + (((double) targ_race->getMaleHtNumDice() + (double) targ_race->getMaleHtDieSize()) / 2.0);
+    new_volume = (int) (avg_height * race_vol_constants[mapSlotToFile(slot)]);
+    feedback = fmt("Your target's average height is %i inches.  Item volume is now %i cubic inches.") % (int) avg_height % new_volume;
+    delete targ_race;
       } else if (height) {
-	    // resize based on requested height
-	    new_volume = (int) ((double) height * race_vol_constants[mapSlotToFile(slot)]);
-		feedback = fmt("Your target height is %i inches.  Item volume is now %i cubic inches.") % height % new_volume;
-	  } else if (targ) {
-	    // use targ's height
+      // resize based on requested height
+      new_volume = (int) ((double) height * race_vol_constants[mapSlotToFile(slot)]);
+    feedback = fmt("Your target height is %i inches.  Item volume is now %i cubic inches.") % height % new_volume;
+    } else if (targ) {
+      // use targ's height
         new_volume = (int) ((double) targ->getHeight() * race_vol_constants[mapSlotToFile(slot)]);
-		feedback = fmt("Your target's height is %i inches.  Item volume is now %i cubic inches.") % targ->getHeight() % new_volume;
-	  } else {
+    feedback = fmt("Your target's height is %i inches.  Item volume is now %i cubic inches.") % targ->getHeight() % new_volume;
+    } else {
         // shouldn't have gotten here
         vlogf(LOG_BUG, "Bug in TBeing::doResize - no player, race or height to resize to.");
-		return;
-	  }
-	  // do the resize
-	  obj->setVolume(new_volume);
+    return;
+    }
+    // do the resize
+    obj->setVolume(new_volume);
     } else {
-	  vlogf(LOG_BUG, fmt("Missing race_vol_constant[] while resizing %s.") % obj->getName());
-	  return;
-	}
+    vlogf(LOG_BUG, fmt("Missing race_vol_constant[] while resizing %s.") % obj->getName());
+    return;
+  }
     
     // disassociate from global memory
     obj->swapToStrung();
@@ -5730,13 +5730,13 @@ void TBeing::doResize(const char *arg)
     }
   } else {
     // else, it is not clothing
-	sendTo("Only clothing or armor may be resized.\n\r");
-	return;
+  sendTo("Only clothing or armor may be resized.\n\r");
+  return;
   }
 
   // finish up
   if (targ) {
-  	// personalize it
+    // personalize it
     buf = fmt("This is the personalized object of %s") % targ->getName();
     delete [] obj->action_description;
     obj->action_description = mud_str_dup(buf.c_str());
@@ -5747,7 +5747,7 @@ void TBeing::doResize(const char *arg)
     act(buf, FALSE, this, obj, 0, TO_CHAR);
   } else if (height) {
     // resized for a specific height
-	act("You have resized $p to center on a specific height.", FALSE, this, obj, 0, TO_CHAR);
+  act("You have resized $p to center on a specific height.", FALSE, this, obj, 0, TO_CHAR);
   }
   // tack on the target height and new volume feedback message
   act(feedback, FALSE, this, obj, 0, TO_CHAR);
@@ -6110,7 +6110,7 @@ static bool verifyName(const sstring tStString)
 
   TDatabase db(DB_SNEEZY);
   db.query("select 1 from wizpower w, player p where p.id=w.player_id and p.name='%s' and w.wizpower=%i",
-	   tStString.lower().c_str(), mapWizPowerToFile(POWER_WIZARD));
+     tStString.lower().c_str(), mapWizPowerToFile(POWER_WIZARD));
   if (!db.fetchRow())
     isNotCreator = true;
 
@@ -6294,11 +6294,9 @@ void TBeing::doBestow(const sstring &argument)
 
 void TPerson::doBestow(const sstring &argument)
 {
-  /* this isn't done yet, we're in hawaii */
-  
   /* to do: 
    * deal with immortal vs regular monogramming in the rest of the code
-   * test stuff
+   * immortal exchange computer
    */
   
   if (!isImmortal()) {
@@ -6340,6 +6338,7 @@ void TPerson::doBestow(const sstring &argument)
     sendTo("        bestow coins <name> <number>\n\r");
     sendTo("        bestow redeem <name> <number>\n\r");
     sendTo("        bestow demonogram <item>\n\r");
+    sendTo("        bestow deimm <item>\n\r");    
     sendTo("        bestow tattoo <name> <body-part> <tattoo>\n\r");
     return;
   }
@@ -6356,7 +6355,7 @@ void TPerson::doBestow(const sstring &argument)
       }
     }
   } else {
-    // look in inventory for item to de-monogram
+    // look in inventory for item to de-monogram, de-immortalize
     TThing *tobj = searchLinkedList(arg2, getStuff(), TYPEOBJ);
     obj = dynamic_cast<TObj *>(tobj);
     if (!obj) {
@@ -6375,7 +6374,7 @@ void TPerson::doBestow(const sstring &argument)
   TDatabase db(DB_SNEEZY);
   
   if (is_abbrev(arg1, "coins")) {
-    /*** bestow coins ***/
+    /*** make coins ***/
     if (!(is_number(arg3) && (number_needed = convertTo<int>(arg3)) && number_needed > 0)) {
       sendTo("Usage :\n\r");
       sendTo("        bestow coins <name> <number>\n\r");
@@ -6388,7 +6387,7 @@ void TPerson::doBestow(const sstring &argument)
         // load coin
         coin = dynamic_cast<TTreasure *>(obj);
         if (!coin) {
-          sendTo("You begin to mint a coin, but the immortal clay seems to be unusable...\n\r");
+          sendTo("You begin to mint a coin, but the clay seems to be unusable...\n\r");
           continue;
         }
         coin_uid = 0;
@@ -6435,6 +6434,7 @@ void TPerson::doBestow(const sstring &argument)
     
     TThing *t, *n;
     bool redeem = TRUE;
+    /* iterate over inventory to find coins */
     for (t = getStuff(); t; t = n) {
       n = t->nextThing;
       coin = dynamic_cast<TTreasure *>(t);
@@ -6478,9 +6478,9 @@ void TPerson::doBestow(const sstring &argument)
     if (number_tried == 0) {
       sendTo("Well, you don't have any coins...\n\r");
     } else if (number_done < number_needed) {
-      act(fmt("You redeemed <R>%d<1> coin%s for $n.") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+      act(fmt("You redeemed <R>%d<1> coin%s for $N.") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
     } else {
-      act(fmt("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$n<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+      act(fmt("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$N<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
     }
     if (number_tried)
       doSave(SILENT_NO);
@@ -6494,16 +6494,16 @@ void TPerson::doBestow(const sstring &argument)
         act("Use <c>bestow deimm <item><1> if you still want to remove it.", TRUE, this, obj, NULL, TO_CHAR);
         return;
       } else if (obj->isImmMonogrammed() && arg1 == "deimm") {
-        act("$p is has an <w>immortal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+        act("$p has an <w>immortal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
       } else {
-        act("$p is has a <w>normal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+        act("$p has a <w>normal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
       }
     } else {
       act("$p was not monogrammed, so you leave it as you found it.", TRUE, this, obj, NULL, TO_CHAR);
       return;
     }
     
-    if (obj->deMonogram(FALSE)) {
+    if (obj->deMonogram(TRUE)) {
       act("You remove the monogram from $p.", TRUE, this, obj, NULL, TO_CHAR);
     } else {
       act("You fail to remove the monogram from $p.", TRUE, this, obj, NULL, TO_CHAR);
@@ -6543,7 +6543,7 @@ void TPerson::doBestow(const sstring &argument)
     if (ch->applyTattoo(slot, arg4, SILENT_NO)) {
       if (arg4.length() > 0) {
         // adding
-        act(fmt("<r>You tattoo %s %s with:<1> %s<1><r>.<1>") % name_buffer % ch->describeBodySlot(slot) % arg4, TRUE, this, NULL, ch, TO_CHAR);
+        act(fmt("<r>You tattoo %s %s with:<1> %s<1>") % name_buffer % ch->describeBodySlot(slot) % arg4, TRUE, this, NULL, ch, TO_CHAR);
         act(fmt("You feel a <r>piercing<1> sensation on your %s.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
       } else {
         // removing
