@@ -525,6 +525,7 @@ class TMonster : public TBeing {
     int wanderAround();
     void quickieDefend();
     void saveItems(const sstring &);
+    void saveItems(int);
     void loadItems(const sstring &);
     bool isSmartMob(int) const;
     bool aiLoveNonHumanoid(TBeing *, aiTarg);

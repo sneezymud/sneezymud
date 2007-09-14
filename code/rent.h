@@ -126,5 +126,19 @@ class ItemSave {
   ~ItemSave();
 };
 
+class ItemSaveDB {
+  sstring owner_type;
+  int owner;
+
+ public:
+  void clearRent();
+  int raw_write_item(TObj *, int, int);
+  void objsToStore(signed char, TObj *, TBeing *, bool, bool, int);
+
+  ItemSaveDB(sstring, int);
+  ~ItemSaveDB();
+};
+
+
 
 #endif

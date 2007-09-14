@@ -473,6 +473,7 @@ void ItemSave::writeFooter()
   fwrite(&i, sizeof(i), 1, fp);
 }
 
+
 bool ItemLoad::readHeader()
 {
   int ret=fread(&st, sizeof(rentHeader), 1, fp);
@@ -490,6 +491,7 @@ bool ItemSave::writeVersion()
   // prepare the rent file header and write it out
   return (fwrite(&st.version, sizeof(st.version), 1, fp)==1);
 }
+
 
 ItemLoad::ItemLoad()
 {
@@ -525,6 +527,18 @@ ItemSave::~ItemSave()
   fp=NULL;
 }
 
+
+ItemSaveDB::ItemSaveDB(sstring ot, int o) :
+  owner_type(ot),
+  owner(o)
+{
+}
+
+ItemSaveDB::~ItemSaveDB()
+{
+}
+
+
 bool ItemSave::openFile(const sstring &filepath)
 {
   if (!(fp = fopen(filepath.c_str(), "w+b"))) {
@@ -532,6 +546,7 @@ bool ItemSave::openFile(const sstring &filepath)
   }
   return true;
 }
+
 
 
 bool ItemLoad::openFile(const sstring &filepath)
@@ -640,6 +655,50 @@ bool ItemSave::raw_write_item(TObj *o)
   }
   return TRUE;
 }
+
+int ItemSaveDB::raw_write_item(TObj *o, int slot, int container)
+{
+  TDatabase db(DB_SNEEZY);
+  int a0, a1, a2,a3;
+  o->getFourValues(&a0, &a1, &a2, &a3);
+
+  db.query("insert into rent (owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values ('%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
+	   owner_type.c_str(), owner, obj_index[o->getItemIndex()].virt, slot,
+	   container,
+	   a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
+	   o->obj_flags.bitvector, o->obj_flags.decay_time,
+	   o->obj_flags.struct_points, o->obj_flags.max_struct_points,
+	   o->getMaterial(), o->obj_flags.volume, o->obj_flags.cost,
+	   o->getDepreciation());
+  
+  db.query("select last_insert_id() as rent_id from rent");
+  db.fetchRow();
+  int rent_id=convertTo<int>(db["rent_id"]);
+  int modifier=0;
+
+  
+
+  for (int j = 0; j < MAX_OBJ_AFFECT; j++) {
+    if (applyTypeShouldBeSpellnum(o->affected[j].location))
+      modifier = mapSpellnumToFile(spellNumT(o->affected[j].modifier));
+    else
+      modifier = o->affected[j].modifier;
+    
+    db.query("insert into rent_obj_aff (type, level, duration, renew, modifier, location, modifier2, bitvector, rent_id) values (%i, %i, %i, %i, %i, %i, %i, %i, %i)", 
+	     mapSpellnumToFile(o->affected[j].type), o->affected[j].level,
+	     o->affected[j].duration, o->affected[j].renew, modifier,
+	     mapApplyToFile(o->affected[j].location),
+	     o->affected[j].modifier2, o->affected[j].bitvector, rent_id);
+  }
+
+  if (IS_SET(o->getObjStat(), ITEM_STRUNG)) {
+    db.query("insert into rent_strung (rent_id, name, short_desc, long_desc, action_desc) values (%i, '%s', '%s', '%s', '%s')",
+	     rent_id, o->name, o->shortDescr, o->getDescr(),
+	     o->action_description);
+  }
+  return rent_id;
+}
+
 
 TObj *ItemLoad::raw_read_item()
 {
@@ -1155,6 +1214,65 @@ void ItemSave::objsToStore(signed char slot, TObj *o,
   }
 }
 
+
+void ItemSaveDB::objsToStore(signed char slot, TObj *o, 
+			   TBeing *ch, bool d, bool corpse = FALSE,
+			     int container=0)
+{
+  if (!o)
+    return;
+
+  // ignore beings
+  TThing *ttt = o;
+  int rent_id=0;
+  if (dynamic_cast<TBeing *>(ttt)) {
+    // TRoom::saveItems  calls this, we don't want to save beings that might
+    // be hanging out in the room
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
+    // if it's not rentable, save what it contains and
+    // move on to the next item in the list
+  } else if (!o->isRentable()) {
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse, container);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
+    // normal item, save it
+  } else {
+    // write out the item
+    rent_id=raw_write_item(o, slot, container);
+
+    // save the contents
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse, rent_id);
+
+    // if there's something else in the list
+    if (o->nextThing) {
+      // and it has a name, store it
+      if (o->nextThing->getName()) {
+        objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
+      } else {
+        o->nextThing = NULL;
+        vlogf(LOG_BUG, fmt("Error saving %s's objects -- nextThing.") % 
+          ((ch) ? ch->getName() : "UNKNOWN"));
+      }
+    }
+  }
+
+  // delete the item if d is specified
+  if (d) {
+    if (o->parent)
+      --(*o);
+    if (o->riding) {
+      // on a table?
+      vlogf(LOG_BUG, "Error in table doing save");
+    }
+    ch->logItem(o, CMD_RENT);
+    if (o->number >= 0)
+      obj_index[o->number].addToNumber(1);
+
+    delete o;
+    o = NULL;
+  }
+}
+
+
 void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
 {
   int temp;
@@ -1319,7 +1437,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     sprintf(buf, "$n tells you, \"Sorry, but I can't store more than %d items.\n\rYou have %d items.\"", MAX_OBJ_SAVE, cost->no_carried);
     if (recep)
       act(buf, FALSE, recep, 0, this, TO_VICT);
-
+    
     return FALSE;
   }
   if (recep && hasClass(CLASS_MONK) && ((cost->no_carried-cost->lowrentobjs) > 35)) {
@@ -1391,7 +1509,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       sprintf(buf, "$n tells you 'The current rent multiplier is %.2f.'", gold_modifier[GOLD_RENT].getVal());
       act(buf, FALSE, recep, 0, this, TO_VICT);
 #endif
-
+      
       sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
       act(buf, FALSE, recep, 0, this, TO_VICT);
       
@@ -1433,14 +1551,28 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (recep && !FreeRent) 
       act("$n tells you \"You can afford to rent as long as you'd like.\"", FALSE, recep, 0, this, TO_VICT);
   }
-  if (client && recep) {
+      
+      if (client && recep) {
     processStringForClient(str);
-
+    
     desc->clientf(fmt("%d") % CLIENT_RENT);
     sendTo(str);
     desc->clientf(fmt("%d") % CLIENT_RENT_END);
   }
-  return TRUE;
+      
+      return TRUE;
+}
+  
+void ItemSaveDB::clearRent()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("delete rof from rent_obj_aff rof, rent r where r.rent_id=rof.rent_id and r.owner_type='%s' and r.owner=%i", owner_type.c_str(), owner);
+  
+  db.query("delete rs from rent r, rent_strung rs where r.owner=%i and r.owner_type='%s' and r.rent_id=rs.rent_id", owner, owner_type.c_str());
+
+  db.query("delete r from rent r where r.owner=%i and r.owner_type='%s'", owner, owner_type.c_str());
+
 }
 
 void TMonster::saveItems(const sstring &filepath)
@@ -1473,6 +1605,38 @@ void TMonster::saveItems(const sstring &filepath)
 
   // write the rent file footer
   is.writeFooter();
+
+  // shopkeeper specific stuff - save gold
+  if(isShopkeeper()){
+    TDatabase db(DB_SNEEZY);
+    db.query("update shopowned set gold=%i where shop_nr=%i",
+	     getMoney(), find_shop_nr(number));
+  }
+}
+
+
+void TMonster::saveItems(int shop_nr)
+{
+  TObj *obj;
+  ItemSaveDB is("shop", shop_nr);
+
+  is.clearRent();
+
+  // store worn objects
+  wearSlotT ij;
+  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
+    obj = dynamic_cast<TObj *>(equipment[ij]);
+    if (!obj)
+      continue;
+    if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
+          ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
+          ((ij == HOLD_LEFT) && obj->isPaired()))) {
+      is.objsToStore(mapSlotToFile(ij), obj, this, FALSE);
+    }
+  }
+
+  // store inventory objects
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, FALSE);
 
   // shopkeeper specific stuff - save gold
   if(isShopkeeper()){
