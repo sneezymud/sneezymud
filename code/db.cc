@@ -147,7 +147,7 @@ struct cached_object { int number;map <sstring, sstring> s; };
 
 class TObjectCache {
 public:
-  vector<cached_object *>cache;
+  map<int, cached_object *>cache;
 
   void preload(void);
   cached_object *operator[](int);
@@ -1676,12 +1676,16 @@ TMonster *read_mobile(int nr, readFileTypeT type)
 
 cached_object *TObjectCache::operator[](int nr)
 {
-  for(int i=cache.size()-1;i>=0;--i){
-    if(cache[i]->number == nr)
-      return cache[i];
-  }
+  map<int, cached_object *>::iterator tIter;
+  cached_object *ret;
 
-  return NULL;
+  tIter = cache.find(nr);
+  if (tIter != cache.end()) {
+    ret = tIter->second;
+  } else {
+    ret = NULL;
+  }
+  return ret;
 }
 
 void log_object(TObj *obj)
@@ -1744,8 +1748,8 @@ void TObjectCache::preload()
     c->s["volume"]=db["volume"];
     c->s["material"]=db["material"];
     c->s["max_exist"]=db["max_exist"];
-    
-    cache.push_back(c);
+
+    cache[c->number]=c;
   }
 }
 
@@ -1880,8 +1884,7 @@ TObj *read_object(int nr, readFileTypeT type)
     c->s["material"]=db["material"];
     c->s["max_exist"]=db["max_exist"];
 
-    obj_cache.cache.push_back(c);
-
+    obj_cache.cache[c->number]=c;
   }
 
   return obj;
