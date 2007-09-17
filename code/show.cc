@@ -125,8 +125,10 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
     buf = fmt(" %s(charred)%s") % ch->blackBold() % ch->norm();
     buffer += buf;
   }
-
-
+  if(isObjStat(ITEM_RUSTY)){
+    buf = fmt(" %s(rusty)%s") % ch->orange() % ch->norm();
+    buffer += buf;
+  }
   if (parent && dynamic_cast<TObj *>(parent)) {
     buf = fmt(" (in %s)") % sstring(parent->getName()).uncap();
     buffer += buf;
@@ -208,6 +210,11 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
       tmp = fmt(" %s(charred)%s") % ch->blackBold() % ch->norm();
       buffer += tmp;
     }
+    if (isObjStat(ITEM_RUSTY)){
+      tmp = fmt(" %s(rusty)%s") % ch->orange() % ch->norm();
+      buffer += tmp;
+    }
+
     
   }
   if (num > 1) {

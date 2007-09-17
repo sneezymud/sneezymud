@@ -1748,7 +1748,14 @@ int TObj::meltObject(TBeing *ch, int perc)
   if (ch && ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
 
-  if (!canRust())
+
+  if (getMaxStructPoints() < 0)
+    return FALSE;
+  if (getStructPoints() < 0)
+    return FALSE;
+  if (material_nums[getMaterial()].acid_susc <= 0)
+    return FALSE;
+  if (!isMetal())
     return FALSE;
   if (::number(1,100) > perc)
     return FALSE;

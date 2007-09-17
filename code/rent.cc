@@ -820,6 +820,10 @@ TObj *ItemLoad::raw_read_item()
     
     if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
       o->addObjStat(ITEM_CHARRED); // preserve charred
+
+    if ((item.extra_flags & ITEM_RUSTY) && !o->isObjStat(ITEM_RUSTY))
+      o->addObjStat(ITEM_RUSTY);
+
   }
     
   if (o->isObjStat(ITEM_STRUNG)) {

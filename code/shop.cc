@@ -542,6 +542,10 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy fire damaged goods.");
     return TRUE;
   }
+  if(temp1->isObjStat(ITEM_RUSTY)){
+    keeper->doTell(ch->getName(), "I'm sorry, I don't buy rusty goods.");
+    return TRUE;
+  }
 
   if (shop_index[shop_nr].isOwned() && temp1->isObjStat(ITEM_NORENT)){
     keeper->doTell(ch->getName(), "This shop is privately owned and we don't purchase non-rentable items.");

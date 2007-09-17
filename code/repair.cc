@@ -443,6 +443,11 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
       repair->doTell(fname(ch->name), "I can repair this, but it is very badly fire-damaged.");
     }
   }
+  if (obj->isObjStat(ITEM_RUSTY)){
+    if(!silent){
+      repair->doTell(fname(ch->name), "This is a little rusty, but I can polish it up.");
+    }
+  }
   if (obj_index[obj->getItemIndex()].getNumber() > 
       obj_index[obj->getItemIndex()].max_exist) {
     // item over max-exist, never supposed to happen, but could

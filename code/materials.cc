@@ -287,13 +287,24 @@ bool TObj::canRust()
     return FALSE;
   if (!isMetal())
     return FALSE;
+  
   switch (getMaterial()) {
-    case MAT_CLOTH:
-    case MAT_SILK:
+    case MAT_GEN_METAL:
+    case MAT_BANDED_MAIL:
+    case MAT_CHAIN_MAIL:
+    case MAT_PLATE:
+    case MAT_IRON:
+    case MAT_STEEL:
+    case MAT_RINGMAIL:
+    case MAT_GNOMEMAIL:
+    case MAT_ELVENMAIL:
+    case MAT_ELVENSTEEL:
+      return TRUE;
+    default:
       return FALSE;
   }
  
-  return TRUE;
+  return FALSE;
 }
 
 
