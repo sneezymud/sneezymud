@@ -57,6 +57,7 @@
 #include "obj_player_corpse.h"
 #include "obj_tool.h"
 #include "obj_plant.h"
+#include "obj_note.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -6765,6 +6766,61 @@ int cannonLoader(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *
   return FALSE;
 }
 
+int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
+{
+  int amt;
+
+  if(cmd != CMD_MOB_GIVEN_COINS)
+    return FALSE;
+
+  amt=(int)o;
+
+  if(amt < 50){
+    me->doSay("Uh... thanks for the tip.  If you want an ID card it'll be 50 talens.");
+    return FALSE;
+  }
+
+  struct time_info_data birth_data;
+  mudTimePassed(ch->player.time.birth, BEGINNING_OF_TIME, &birth_data);
+  birth_data.year += YEAR_ADJUST;
+  birth_data.year -= ch->getBaseAge();
+  
+  int day = birth_data.day + 1;        // day in [1..35] 
+  
+  sstring dob=fmt("%s %s, %d") % 
+    month_name[birth_data.month] % 
+    numberAsString(day) % 
+    birth_data.year;
+
+  sstring buf="";
+
+  buf += fmt("+-------------------------------------+\n\r");
+  buf += fmt("|                                     |\n\r");
+  buf += fmt("|        Kingdom of Grimhaven         |\n\r");
+  buf += fmt("|            Official ID              |\n\r");
+  buf += fmt("|                                     |\n\r");
+  buf += fmt("|  ID Number     :  %-18i|\n\r") % ch->getPlayerID();
+  buf += fmt("|  Name          :  %-18s|\n\r") % ch->getName();
+  buf += fmt("|  DOB           :  %-18s|\n\r") % dob;
+  buf += fmt("|  Profession    :  %-18s|\n\r") % ch->getProfName();
+  buf += fmt("|                                     |\n\r");
+  buf += fmt("+-------------------------------------+\n\r");
+
+  TNote *card = createNote(mud_str_dup(buf));
+  delete [] card->name;
+  card->name = mud_str_dup("card paper id");
+  delete [] card->shortDescr;
+  card->shortDescr = mud_str_dup("<W>an ID card<1>"); 
+  delete [] card->getDescr();
+  card->setDescr(mud_str_dup("<W>An official Kingdom of Grimhaven ID card lies here.<1>"));
+
+  *me += *card;
+  me->doSay("Alright, here you are!");
+  me->doGive(fmt("%s %s") % add_bars(card->name) % add_bars(ch->name),
+	     GIVE_FLAG_IGN_DEX_TEXT);
+  return FALSE;
+}
+
 
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
@@ -7053,6 +7109,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "aggro follower", aggroFollower}, // 210
   {FALSE, "central banker", centralBanker},
   {FALSE, "cannon loader", cannonLoader},
+  {FALSE, "id card provider", idCardProvider},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
