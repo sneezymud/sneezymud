@@ -695,6 +695,10 @@ void TShopOwned::showInfo()
       keeper->doTell(ch->getName(), fmt("My equity value is %i talens.") %
 		     (keeper->getMoney()-convertTo<int>(db["talens"])));
     }
+  } else if(keeper->spec==SPEC_TAXMAN){
+    keeper->doTell(ch->getName(),
+		   fmt("My interest rate paid out is %f.") %
+		   (shop_index[shop_nr].profit_buy));
   } else if(keeper->spec==SPEC_CENTRAL_BANKER){
     keeper->doTell(ch->getName(),
 		   fmt("The reserve deposit requirement is %f.") %
