@@ -525,9 +525,9 @@ const int TOG_GAVE_TEDDY_BEAR5                 = 335;
 
 const int TOG_GAVE_BOTTLE_PORT1                = 336;
 const int TOG_GAVE_BOTTLE_PORT2                = 337;
+const int TOG_OCTOBER_QUEST_PARTICIPANT        = 338;
 
-
-const int MAX_TOG_INDEX       = 338;  // move and change
+const int MAX_TOG_INDEX       = 339;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

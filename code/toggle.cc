@@ -351,6 +351,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"February Quest: Gave 5 teddy bears", MOB_GUY_LAZY}, //335
   {"February Quest: Gave 1 bottle of port", MOB_DRUNK_TRADER_RICH},
   {"February Quest: Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//337
+  {"October Quest: Participant", MOB_NONE}, //338
   {"", MOB_NONE}, 
 };
 
