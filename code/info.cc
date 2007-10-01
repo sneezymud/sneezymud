@@ -5433,8 +5433,8 @@ sstring describeMaterial(int mat)
   str += fmt("%s is %sconsidered a conductive material.\n\r") %
     mat_name % (material_nums[mat].conductivity ? "" : "not ");
 
-  str += fmt("%s is worth %i talens per pound.\n\r") %
-    mat_name % (material_nums[mat].price*10);
+  str += fmt("%s is worth %f talens per unit.\n\r") %
+    mat_name % material_nums[mat].price;
 
   return str;
 }
