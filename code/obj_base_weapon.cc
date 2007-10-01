@@ -1127,7 +1127,7 @@ int TBaseWeapon::suggestedPrice() const
 
   // plug level into price formula
   // this formula is derived in balance document
-  price = (int) (weapon_lev * max(weapon_lev, 20.0) * 30.75);
+  price += (int) (weapon_lev * max(weapon_lev, 20.0) * 30.75);
 
   int tohit = 0, todam = 0;
   for (int i = 0;i < MAX_OBJ_AFFECT;i++) {
@@ -1231,6 +1231,9 @@ int TBaseWeapon::suggestedPrice() const
     num *= 100;  // cost per unit of light
     price += num;
   }
+
+  // add material value
+  price += TObj::suggestedPrice();
 
   return price;
 }

@@ -967,7 +967,8 @@ void TFood::remFoodFlags(unsigned int r)
 int TFood::suggestedPrice() const
 {
   int decay = obj_flags.decay_time < 1 ? 5000 : obj_flags.decay_time;
-  return (int) (pow(getFoodFill(), .75) * pow(decay, .35));
+  return (int) ((pow(getFoodFill(), .75) * pow(decay, .35)) +
+		TObj::suggestedPrice());
 }
 
 void TFood::lowCheck()

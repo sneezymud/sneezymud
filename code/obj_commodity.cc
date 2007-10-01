@@ -71,7 +71,7 @@ void TCommodity::lowCheck()
 
 int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
 {
-  int cost_per;
+  float cost_per;
   int price;
 
   cost_per = pricePerUnit();
@@ -88,7 +88,7 @@ int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
 
 int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
-  int cost_per;
+  float cost_per;
   int price;
 
   cost_per = pricePerUnit();
@@ -102,7 +102,8 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
   char buf[256];
   char buf2[80];
-  int price, cost_per, vnum;
+  int price, vnum;
+  float cost_per;
   TObj *obj2;
 
   if (parent != keeper) {
@@ -214,7 +215,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   num = max(min(num, 10000), 0);
 
   if (num) {
-    int cost_per = pricePerUnit();
+    float cost_per = pricePerUnit();
     obj2->describeTreasure(buf2, num, cost_per);
     *keeper += *obj2;
     --(*this);
@@ -288,11 +289,11 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int, int k, unsigned long int) const
 {
   char buf[256];
-  int cost = pricePerUnit();
+  float cost = pricePerUnit();
 
-  sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %5d talens (per unit)\n\r",
+  sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %5f talens (per unit)\n\r",
             k + 1, fname(name).c_str(),
-            (int) (numUnits()), (int) cost);
+            (int) (numUnits()),  cost);
   if (arg.empty() && min_amt == 999999)     /* everything */
   /* specific item */
     return buf;
@@ -312,15 +313,7 @@ int TCommodity::numUnits() const
   return (int) (10.0 * getWeight());
 }
 
-int TCommodity::pricePerUnit() const
+float TCommodity::pricePerUnit() const
 {
-  int num = numUnits();
-  int price = (int) (num ? obj_flags.cost / num : 0);
-
-  if (obj_flags.cost) {
-    price = max(price, 1);
-//    obj_flags.cost = price * num;  // just correct it
-  }
-
-  return price;
+  return material_nums[getMaterial()].price;
 }

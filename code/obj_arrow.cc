@@ -363,8 +363,9 @@ void TArrow::bloadBowArrow(TBeing *ch, TThing *bow)
 
 int TArrow::suggestedPrice() const
 {
-  int amt = TBaseWeapon::suggestedPrice();
-  return amt / 10;
+  // don't divide the TObj cost, so subtract it, then divide, then re-add
+  int amt = TBaseWeapon::suggestedPrice()-TObj::suggestedPrice();
+  return (amt / 10) + TObj::suggestedPrice();
 }
 
 void TArrow::changeObjValue3(TBeing *ch)

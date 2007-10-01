@@ -81,6 +81,21 @@ bool TObj::fitInShop(const char *buf3, const TBeing *) const
           !strcmp(buf3, "primary only"));
 }
 
+int TObj::suggestedPrice() const
+{
+  return 0;
+
+  float units=10.0 * getWeight();
+  float price_per_unit=material_nums[getMaterial()].price;
+  int price=(int)(units*price_per_unit);
+
+  vlogf(LOG_PEEL, fmt("base price calculated for '%s' = %i") %
+  	getName() % price);
+
+  return price;
+}
+
+
 void TObj::swapToStrung()
 {
   if (isObjStat(ITEM_STRUNG))

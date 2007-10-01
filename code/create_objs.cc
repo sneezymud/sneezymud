@@ -3229,7 +3229,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
   ch->sendTo("Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
 }
 
-void TObj::describeTreasure(const char *arg,int num, int price)
+void TObj::describeTreasure(const char *arg,int num, float price)
 {
   char type[80];
   char buf[160];
@@ -3277,7 +3277,7 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   setDescr(mud_str_dup(buf));
   
   //  set value and rent 
-  obj_flags.cost = num * price;
+  obj_flags.cost = (int)(num * price);
 
   setWeight((float) (num + 0.5)/10.0);
 }

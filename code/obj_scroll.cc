@@ -185,6 +185,10 @@ int TScroll::suggestedPrice() const
 
     tot += value;
   }
+
+  // add material value
+  tot += TObj::suggestedPrice();
+
   return tot;
 }
 

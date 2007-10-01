@@ -185,6 +185,9 @@ int TGun::suggestedPrice() const
   pricetmp *= getROF();
   pricetmp /= 10;
 
+  // add material value
+  pricetmp += TObj::suggestedPrice();
+
   return pricetmp;
 }
 

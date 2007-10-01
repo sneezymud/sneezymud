@@ -69,7 +69,8 @@ int TArmorWand::rentCost() const
 
 int TArmorWand::suggestedPrice() const
 {
-  return TArmor::suggestedPrice() + TWand::suggestedPrice();
+  // TObj::suggestedPrice() will get added twice, so remove one
+  return TArmor::suggestedPrice() + TWand::suggestedPrice() - TObj::suggestedPrice();
 }
 
 void TArmorWand::objMenu(const TBeing *ch) const

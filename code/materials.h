@@ -137,7 +137,7 @@ struct material_type_numbers
   ubyte conductivity;
   int flammability;
   ubyte acid_susc;
-  int price;
+  float price;
   int availability;
   int (*repair_proc)(TBeing *,TObj *o);
   char mat_name[20];

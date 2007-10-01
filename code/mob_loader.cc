@@ -11,12 +11,12 @@
 #include "obj_component.h"
 #include "obj_potion.h"
 
-static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
+static void treasureCreate(int prob, float cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
 {
   if (!::number(0,prob) && (wealth >= cost)) {
-    int num = min(20, ::number(0,wealth/cost));
+    int num = min(20, ::number(0,(int)(wealth/cost)));
     if (num) {
-      wealth -= num * cost;
+      wealth -= (int)(num * cost);
       TObj * obj = read_object(vnum, VIRTUAL);
       obj->describeTreasure(str,num,cost);
       if (bag)
@@ -302,38 +302,38 @@ void TMonster::createWealth(void)
   int wealth = getMoney();
 
      // higher prob_ --> less chance of it loading
-  int prob_athanor = 15,             
-      cost_athanor = obj_index[real_object(TREASURE_ATHANOR)].value;
-  int prob_mithril = 50,             
-      cost_mithril = obj_index[real_object(TREASURE_MITHRIL)].value;
-  int prob_admantium = 50,           
-      cost_admantium = obj_index[real_object(TREASURE_ADMANTIUM)].value;
-  int prob_obsidian = 50,            
-      cost_obsidian = obj_index[real_object(TREASURE_OBSIDIAN)].value;
-  int prob_titanium = 9,             
-      cost_titanium = obj_index[real_object(TREASURE_TITANIUM)].value;
-  int prob_platinum = 9,             
-      cost_platinum = obj_index[real_object(TREASURE_PLATINUM)].value;
-  int prob_gold = 5,                 
-      cost_gold = obj_index[real_object(TREASURE_GOLD)].value;
-  int prob_silver = 4,               
-      cost_silver = obj_index[real_object(TREASURE_SILVER)].value;
-  int prob_electrum = 5,             
-      cost_electrum = obj_index[real_object(TREASURE_ELECTRUM)].value;
-  int prob_steel = 4,                
-      cost_steel = obj_index[real_object(TREASURE_STEEL)].value;
-  int prob_iron = 4,                 
-      cost_iron = obj_index[real_object(TREASURE_IRON)].value;
-  int prob_bronze = 4,               
-      cost_bronze = obj_index[real_object(TREASURE_BRONZE)].value;
-  int prob_brass = 4,                
-      cost_brass = obj_index[real_object(TREASURE_BRASS)].value;
-  int prob_copper = 3,               
-      cost_copper = obj_index[real_object(TREASURE_COPPER)].value;
-  int prob_aluminum = 4,             
-      cost_aluminum = obj_index[real_object(TREASURE_ALUMINUM)].value;
-  int prob_tin = 6,                  
-      cost_tin = obj_index[real_object(TREASURE_TIN)].value;
+  int prob_athanor = 15;
+  float cost_athanor = material_nums[MAT_ATHANOR].price;
+  int prob_mithril = 50;
+  float cost_mithril = material_nums[MAT_MITHRIL].price;
+  int prob_admantium = 50;
+  float cost_admantium = material_nums[MAT_ADAMANTITE].price;
+  int prob_obsidian = 50;
+  float cost_obsidian = material_nums[MAT_OBSIDIAN].price;
+  int prob_titanium = 9;
+  float cost_titanium = material_nums[MAT_TITANIUM].price;
+  int prob_platinum = 9;
+  float cost_platinum = material_nums[MAT_PLATINUM].price;
+  int prob_gold = 5;
+  float cost_gold = material_nums[MAT_GOLD].price;
+  int prob_silver = 4;
+  float cost_silver = material_nums[MAT_SILVER].price;
+  int prob_electrum = 5;
+  float cost_electrum = material_nums[MAT_ELECTRUM].price;
+  int prob_steel = 4;
+  float cost_steel = material_nums[MAT_STEEL].price;
+  int prob_iron = 4;
+  float cost_iron = material_nums[MAT_IRON].price;
+  int prob_bronze = 4;
+  float cost_bronze = material_nums[MAT_BRONZE].price;
+  int prob_brass = 4;
+  float cost_brass = material_nums[MAT_BRASS].price;
+  int prob_copper = 3;
+  float cost_copper = material_nums[MAT_COPPER].price;
+  int prob_aluminum = 4;
+  float cost_aluminum = material_nums[MAT_ALUMINUM].price;
+  int prob_tin = 6;
+  float cost_tin = material_nums[MAT_TIN].price;
 
   // might want some sort of a switch here for propensity to have
   // items of a certain type
@@ -347,38 +347,54 @@ void TMonster::createWealth(void)
 
   int num = 0;
 
-  treasureCreate(prob_athanor, cost_athanor, wealth, TREASURE_ATHANOR, 
+  treasureCreate(prob_athanor, cost_athanor, wealth, 
+		 material_nums[MAT_ATHANOR].availability, 
          "athanor", bag, this);
-  treasureCreate(prob_mithril, cost_mithril, wealth, TREASURE_MITHRIL, 
-         "mithril", bag, this);
-  treasureCreate(prob_obsidian, cost_obsidian, wealth, TREASURE_OBSIDIAN,
-         "obsidian", bag, this);
-  treasureCreate(prob_admantium, cost_admantium, wealth, TREASURE_ADMANTIUM,
-         "admantium", bag, this);
-  treasureCreate(prob_titanium, cost_titanium, wealth, TREASURE_TITANIUM,
-         "titanium", bag, this);
-  treasureCreate(prob_platinum, cost_platinum, wealth, TREASURE_PLATINUM,
-         "platinum", bag, this);
-  treasureCreate(prob_gold, cost_gold, wealth, TREASURE_GOLD,
-         "gold", bag, this);
-  treasureCreate(prob_silver, cost_silver, wealth, TREASURE_SILVER,
-         "silver", bag, this);
-  treasureCreate(prob_electrum, cost_electrum, wealth, TREASURE_ELECTRUM,
-         "electrum", bag, this);
-  treasureCreate(prob_steel, cost_steel, wealth, TREASURE_STEEL,
-         "steel", bag, this);
-  treasureCreate(prob_iron, cost_iron, wealth, TREASURE_IRON,
-         "iron", bag, this);
-  treasureCreate(prob_bronze, cost_bronze, wealth, TREASURE_BRONZE,
-         "bronze", bag, this);
-  treasureCreate(prob_brass, cost_brass, wealth, TREASURE_BRASS,
-         "brass", bag, this);
-  treasureCreate(prob_copper, cost_copper, wealth, TREASURE_COPPER,
-         "copper", bag, this);
-  treasureCreate(prob_aluminum, cost_aluminum, wealth, TREASURE_ALUMINUM,
-         "aluminum", bag, this);
-  treasureCreate(prob_tin, cost_tin, wealth, TREASURE_TIN,
-         "tin", bag, this);
+  treasureCreate(prob_mithril, cost_mithril, wealth, 
+		 material_nums[MAT_MITHRIL].availability, 
+		 "mithril", bag, this);
+  treasureCreate(prob_obsidian, cost_obsidian, wealth, 
+		 material_nums[MAT_OBSIDIAN].availability,
+		 "obsidian", bag, this);
+  treasureCreate(prob_admantium, cost_admantium, wealth, 
+		 material_nums[MAT_ADAMANTITE].availability,
+		 "admantium", bag, this);
+  treasureCreate(prob_titanium, cost_titanium, wealth, 
+		 material_nums[MAT_TITANIUM].availability,
+		 "titanium", bag, this);
+  treasureCreate(prob_platinum, cost_platinum, wealth, 
+		 material_nums[MAT_PLATINUM].availability,
+		 "platinum", bag, this);
+  treasureCreate(prob_gold, cost_gold, wealth, 
+		 material_nums[MAT_GOLD].availability,
+		 "gold", bag, this);
+  treasureCreate(prob_silver, cost_silver, wealth, 
+		 material_nums[MAT_SILVER].availability,
+		 "silver", bag, this);
+  treasureCreate(prob_electrum, cost_electrum, wealth, 
+		 material_nums[MAT_ELECTRUM].availability,
+		 "electrum", bag, this);
+  treasureCreate(prob_steel, cost_steel, wealth, 
+		 material_nums[MAT_STEEL].availability,
+		 "steel", bag, this);
+  treasureCreate(prob_iron, cost_iron, wealth, 
+		 material_nums[MAT_IRON].availability,
+		 "iron", bag, this);
+  treasureCreate(prob_bronze, cost_bronze, wealth, 
+		 material_nums[MAT_BRONZE].availability,
+		 "bronze", bag, this);
+  treasureCreate(prob_brass, cost_brass, wealth, 
+		 material_nums[MAT_BRASS].availability,
+		 "brass", bag, this);
+  treasureCreate(prob_copper, cost_copper, wealth, 
+		 material_nums[MAT_COPPER].availability,
+		 "copper", bag, this);
+  treasureCreate(prob_aluminum, cost_aluminum, wealth, 
+		 material_nums[MAT_ALUMINUM].availability,
+		 "aluminum", bag, this);
+  treasureCreate(prob_tin, cost_tin, wealth, 
+		 material_nums[MAT_TIN].availability,
+		 "tin", bag, this);
 
   // trap bag sometimes
   if (bag) {

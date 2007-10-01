@@ -28,7 +28,7 @@ class TCommodity : public TObj {
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int, int, float, const TBeing *);
 
-    int pricePerUnit() const;
+    float pricePerUnit() const;
     int numUnits() const;
 
     TCommodity();

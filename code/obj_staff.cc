@@ -213,6 +213,10 @@ int TStaff::suggestedPrice() const
     if (curspell == SPELL_FLY)
       value *= 4;
   }
+
+  // add material value
+  value += TObj::suggestedPrice();
+
   return value;
 }
 

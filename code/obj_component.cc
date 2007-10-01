@@ -2865,6 +2865,9 @@ int TComponent::suggestedPrice() const
 
   value = (int) (value * priceMultiplier());
 
+  // add material value
+  value += TObj::suggestedPrice();
+
   return value;
 }
 

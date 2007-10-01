@@ -164,7 +164,7 @@ int TOpal::suggestedPrice() const
   
   // first term increases based on how charged the powerstone is
   // second term is simply to make larger opals more expensive
-  return (80 * str * str * str) + (100 * psGetCarats());
+  return (80 * str * str * str) + (100 * psGetCarats()) + TObj::suggestedPrice();
 }
 
 void TOpal::lowCheck()

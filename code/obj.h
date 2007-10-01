@@ -599,7 +599,7 @@ class TObj : public TThing {
     }
     void releaseObject(TBeing *);
     virtual int checkFalling();
-    void describeTreasure(const char *, int, int);
+    void describeTreasure(const char *, int, float);
     void checkObjStats();
     virtual void update(int);
     virtual bool isBluntWeapon() const;
@@ -734,7 +734,7 @@ class TObj : public TThing {
     virtual void setBurning(TBeing *);
     virtual void remBurning(TBeing *);
     wearKeyT getWearKey() const;
-    virtual int suggestedPrice() const { return 0; }
+    virtual int suggestedPrice() const;
     void addGlowEffects();
     bool checkOwnersList(const TPerson *, bool = false);
     virtual double objLevel() const;

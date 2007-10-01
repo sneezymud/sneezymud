@@ -550,6 +550,9 @@ int TBaseClothing::suggestedPrice() const
   adjustments = (int) (adjustments * lev / 40.0);
   price += adjustments;
 
+  // add value of raw material
+  price += TObj::suggestedPrice();
+
   return price;
 }
 

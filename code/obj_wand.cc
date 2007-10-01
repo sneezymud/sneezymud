@@ -196,6 +196,10 @@ int TWand::suggestedPrice() const
       value *= 4;
 
   }
+
+  // add material value
+  value += TObj::suggestedPrice();
+
   return value;
 }
 

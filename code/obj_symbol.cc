@@ -237,6 +237,10 @@ int TSymbol::suggestedPrice() const
   int num = (int) (15 * (float) getSymbolMaxStrength() / 1000 + 0.5);
   if (canWear(ITEM_WEAR_NECK))
     num = (int) (num * 1.1);
+
+  // add material value
+  num += TObj::suggestedPrice();
+
   return num;
 }
 
