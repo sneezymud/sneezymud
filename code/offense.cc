@@ -592,7 +592,7 @@ int TBeing::doOrder(const char *argument)
     sendTo("Your superior would not approve of you giving orders.\n\r");
     return FALSE;
   }
-  if (v->player.playerid) {
+  if (v->player.player_id) {
     sendTo("Sorry, you can't boss other players around like that.\n\r");
     return FALSE;
   }
