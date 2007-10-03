@@ -1216,6 +1216,58 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
   }  
 #endif
 
+//October Critter Quest food commodity loads - berries
+#if 1
+  if (!::number(0,4) && wealth > 0)
+  {
+    TObj *berries = read_object(276, VIRTUAL);
+    if (berries)
+      *this += *berries;
+  }
+#endif
+
+//October Critter Quest food commodity loads - mushrooms
+#if 1
+  if (!::number(0,4) && wealth > 0)
+  {
+    TObj *mushrooms = read_object(281, VIRTUAL);
+    if (mushrooms)
+      *this += *mushrooms;
+  }
+#endif
+
+//October Critter Quest food commodity loads - roots
+#if 1
+  if (!::number(0,4) && wealth > 0)
+  {
+    TObj *roots = read_object(277, VIRTUAL);
+    if (roots)
+      *this += *roots;
+  }
+#endif
+
+//October Critter Quest food commodity loads - egg  
+#if 1
+  if (!::number(0,4) && wealth > 0)
+  {
+    TObj *egg = read_object(37130, VIRTUAL);
+    if (egg)
+      *this += *egg;
+  }
+#endif
+
+//October Critter Quest food commodity loads - steak    
+#if 1
+  if (!::number(0,9) && wealth > 0)
+  {
+    TObj *steak = read_object(405, VIRTUAL);
+    if (steak)
+      *this += *steak;
+  }
+#endif
+
+
+
   if (GetMaxLevel() < 9)
     return;
   if (!isHumanoid())
