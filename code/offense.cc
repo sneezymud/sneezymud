@@ -592,11 +592,12 @@ int TBeing::doOrder(const char *argument)
     sendTo("Your superior would not approve of you giving orders.\n\r");
     return FALSE;
   }
-  if (v->player.player_id) {
-    sendTo("Sorry, you can't boss other players around like that.\n\r");
-    return FALSE;
-  }
   if (v) {
+    // We don't allow players to order one another around
+    if (v->player.player_id) {
+      sendTo("Sorry, you can't boss other players around like that.\n\r");
+      return FALSE;
+    }
     sprintf(buf, "$N orders you to '%s'", message);
     act(buf, FALSE, v, 0, this, TO_CHAR);
     act("$n gives $N an order.", FALSE, this, 0, v, TO_NOTVICT);
