@@ -3239,19 +3239,19 @@ void TObj::describeTreasure(const char *arg,int num, float price)
       vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
       return;  
     } else if (num <= 2) 
-      sprintf(type,"tiny piece of");
+      sprintf(type,"tiny piece of rough");
     else if (num <= 4)
-      sprintf(type,"small piece of");
+      sprintf(type,"small piece of rough");
     else if (num <= 6)
-      sprintf(type,"piece of");
+      sprintf(type,"piece of rough");
     else if (num <= 8)
-      sprintf(type,"large piece of");
+      sprintf(type,"large piece of rough");
     else if (num <= 10)
-      sprintf(type,"huge piece of");
+      sprintf(type,"huge piece of rough");
     else if (num <= 15)
-      sprintf(type,"gigantic piece of");
+      sprintf(type,"gigantic piece of rough");
     else 
-      sprintf(type,"massive piece of");
+      sprintf(type,"massive piece of rough");
   } else { // isMetal()
     if (num == 0) {
       vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
