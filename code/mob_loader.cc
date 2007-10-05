@@ -11,20 +11,27 @@
 #include "obj_component.h"
 #include "obj_potion.h"
 
-static void treasureCreate(int prob, float cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
+static void treasureCreate(int num, float cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
 {
-  if (!::number(0,prob) && (wealth >= cost)) {
-    int num = min(20, ::number(0,(int)(wealth/cost)));
-    if (num) {
-      wealth -= (int)(num * cost);
-      TObj * obj = read_object(vnum, VIRTUAL);
-      obj->describeTreasure(str,num,cost);
-      if (bag)
-        *bag += *obj;
-      else
-        *ch += *obj;
-    }
+  // make sure they can afford it
+  if(wealth < cost)
+    return;
+
+  if(num<=0)
+    return;
+
+  if((num * cost) < 1.0){
+    return;
   }
+
+  wealth -= (int)(num * cost);
+  TObj * obj = read_object(vnum, VIRTUAL);
+    
+  obj->describeTreasure(str,num,cost);
+  if (bag)
+    *bag += *obj;
+  else
+    *ch += *obj;
 }
 
 void potionLoader(TMonster *tmons)
@@ -298,103 +305,36 @@ void TMonster::createWealth(void)
   genericMobLoader(&bag);
   potionLoader(this);
 
-  // convert some money into commoditys
-  int wealth = getMoney();
+  // convert up to 50% of cash into commodities (normal dist. around 25%)
+  int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * getMoney());
 
-     // higher prob_ --> less chance of it loading
-  int prob_athanor = 15;
-  float cost_athanor = material_nums[MAT_ATHANOR].price;
-  int prob_mithril = 50;
-  float cost_mithril = material_nums[MAT_MITHRIL].price;
-  int prob_admantium = 50;
-  float cost_admantium = material_nums[MAT_ADAMANTITE].price;
-  int prob_obsidian = 50;
-  float cost_obsidian = material_nums[MAT_OBSIDIAN].price;
-  int prob_titanium = 9;
-  float cost_titanium = material_nums[MAT_TITANIUM].price;
-  int prob_platinum = 9;
-  float cost_platinum = material_nums[MAT_PLATINUM].price;
-  int prob_gold = 5;
-  float cost_gold = material_nums[MAT_GOLD].price;
-  int prob_silver = 4;
-  float cost_silver = material_nums[MAT_SILVER].price;
-  int prob_electrum = 5;
-  float cost_electrum = material_nums[MAT_ELECTRUM].price;
-  int prob_steel = 4;
-  float cost_steel = material_nums[MAT_STEEL].price;
-  int prob_iron = 4;
-  float cost_iron = material_nums[MAT_IRON].price;
-  int prob_bronze = 4;
-  float cost_bronze = material_nums[MAT_BRONZE].price;
-  int prob_brass = 4;
-  float cost_brass = material_nums[MAT_BRASS].price;
-  int prob_copper = 3;
-  float cost_copper = material_nums[MAT_COPPER].price;
-  int prob_aluminum = 4;
-  float cost_aluminum = material_nums[MAT_ALUMINUM].price;
-  int prob_tin = 6;
-  float cost_tin = material_nums[MAT_TIN].price;
+  int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY,
+                   MAT_MITHRIL, MAT_ATHANOR, MAT_OBSIDIAN, MAT_ADAMANTITE,
+		   MAT_TITANIUM, MAT_PLATINUM, MAT_GOLD, MAT_SILVER,
+		   MAT_ELECTRUM, MAT_TERBIUM, MAT_BRONZE, MAT_STEEL, MAT_IRON,
+		   MAT_BRASS, MAT_COPPER, MAT_TIN, MAT_ALUMINUM, -1};
 
-  // might want some sort of a switch here for propensity to have
-  // items of a certain type
-  if ((getRace() == RACE_ELVEN) ||(getRace() == RACE_DROW)) {
-    prob_mithril = 7;
-    cost_mithril /= 2;
-  } else if (getRace() == RACE_DWARF) {
-    prob_admantium = 7;
-    cost_admantium /= 2;
+  int max_units=20;
+  int initial_wealth=wealth;
+
+  for(int i=0;base_mats[i]!=-1;++i){
+    // amount of current commod we can afford
+    int n_afford=min(max_units, (int)(wealth / material_nums[base_mats[i]].price));
+    // probability of loading is based on initial wealth
+    int probability=min(max_units, (int)(initial_wealth / material_nums[base_mats[i]].price));
+
+    // if we can afford LESS, then there is a higher chance we'll buy it
+    // the idea being we prefer to buy expensive commods
+    // very wealthy mobs prefer to have cash
+    if(probability <= ::number(0, max_units) && n_afford > 0){
+      treasureCreate(::number(n_afford/2, n_afford),
+		     material_nums[base_mats[i]].price, wealth, 
+		     material_nums[base_mats[i]].availability,
+		     material_nums[base_mats[i]].mat_name, bag, this);
+    }
   }
 
   int num = 0;
-
-  treasureCreate(prob_athanor, cost_athanor, wealth, 
-		 material_nums[MAT_ATHANOR].availability, 
-         "athanor", bag, this);
-  treasureCreate(prob_mithril, cost_mithril, wealth, 
-		 material_nums[MAT_MITHRIL].availability, 
-		 "mithril", bag, this);
-  treasureCreate(prob_obsidian, cost_obsidian, wealth, 
-		 material_nums[MAT_OBSIDIAN].availability,
-		 "obsidian", bag, this);
-  treasureCreate(prob_admantium, cost_admantium, wealth, 
-		 material_nums[MAT_ADAMANTITE].availability,
-		 "admantium", bag, this);
-  treasureCreate(prob_titanium, cost_titanium, wealth, 
-		 material_nums[MAT_TITANIUM].availability,
-		 "titanium", bag, this);
-  treasureCreate(prob_platinum, cost_platinum, wealth, 
-		 material_nums[MAT_PLATINUM].availability,
-		 "platinum", bag, this);
-  treasureCreate(prob_gold, cost_gold, wealth, 
-		 material_nums[MAT_GOLD].availability,
-		 "gold", bag, this);
-  treasureCreate(prob_silver, cost_silver, wealth, 
-		 material_nums[MAT_SILVER].availability,
-		 "silver", bag, this);
-  treasureCreate(prob_electrum, cost_electrum, wealth, 
-		 material_nums[MAT_ELECTRUM].availability,
-		 "electrum", bag, this);
-  treasureCreate(prob_steel, cost_steel, wealth, 
-		 material_nums[MAT_STEEL].availability,
-		 "steel", bag, this);
-  treasureCreate(prob_iron, cost_iron, wealth, 
-		 material_nums[MAT_IRON].availability,
-		 "iron", bag, this);
-  treasureCreate(prob_bronze, cost_bronze, wealth, 
-		 material_nums[MAT_BRONZE].availability,
-		 "bronze", bag, this);
-  treasureCreate(prob_brass, cost_brass, wealth, 
-		 material_nums[MAT_BRASS].availability,
-		 "brass", bag, this);
-  treasureCreate(prob_copper, cost_copper, wealth, 
-		 material_nums[MAT_COPPER].availability,
-		 "copper", bag, this);
-  treasureCreate(prob_aluminum, cost_aluminum, wealth, 
-		 material_nums[MAT_ALUMINUM].availability,
-		 "aluminum", bag, this);
-  treasureCreate(prob_tin, cost_tin, wealth, 
-		 material_nums[MAT_TIN].availability,
-		 "tin", bag, this);
 
   // trap bag sometimes
   if (bag) {

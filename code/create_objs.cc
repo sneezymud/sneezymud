@@ -3234,23 +3234,43 @@ void TObj::describeTreasure(const char *arg,int num, float price)
   char type[80];
   char buf[160];
 
-  if (num == 0) {
-    vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
-    return;  
-  } else if (num <= 2) 
-    sprintf(type,"bit");
-  else if (num <= 4)
-    sprintf(type,"nugget");
-  else if (num <= 6)
-    sprintf(type,"ingot");
-  else if (num <= 8)
-    sprintf(type,"sovereign");
-  else if (num <= 10)
-    sprintf(type,"bar");
-  else if (num <= 15)
-    sprintf(type,"bullion");
-  else 
-    sprintf(type,"pile");
+  if(isMineral()){
+    if (num == 0) {
+      vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
+      return;  
+    } else if (num <= 2) 
+      sprintf(type,"tiny piece of");
+    else if (num <= 4)
+      sprintf(type,"small piece of");
+    else if (num <= 6)
+      sprintf(type,"piece of");
+    else if (num <= 8)
+      sprintf(type,"large piece of");
+    else if (num <= 10)
+      sprintf(type,"huge piece of");
+    else if (num <= 15)
+      sprintf(type,"gigantic piece of");
+    else 
+      sprintf(type,"massive piece of");
+  } else { // isMetal()
+    if (num == 0) {
+      vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
+      return;  
+    } else if (num <= 2) 
+      sprintf(type,"bit of");
+    else if (num <= 4)
+      sprintf(type,"nugget of");
+    else if (num <= 6)
+      sprintf(type,"ingot of");
+    else if (num <= 8)
+      sprintf(type,"sovereign of");
+    else if (num <= 10)
+      sprintf(type,"bar of");
+    else if (num <= 15)
+      sprintf(type,"bullion");
+    else 
+      sprintf(type,"pile of");
+  }
 
   swapToStrung();
 
@@ -3260,7 +3280,7 @@ void TObj::describeTreasure(const char *arg,int num, float price)
   name = mud_str_dup(buf);
 
   //  Remake the short description.  
-  sprintf(buf,"%s %s of %s", 
+  sprintf(buf,"%s %s %s", 
     sstring(type).startsVowel() ? "an" : "a",
      type, arg);
   if (!strcmp(type,"bullion"))
@@ -3279,7 +3299,7 @@ void TObj::describeTreasure(const char *arg,int num, float price)
   //  set value and rent 
   obj_flags.cost = (int)(num * price);
 
-  setWeight((float) (num + 0.5)/10.0);
+  setWeight((float) (num /10.0));
 }
 
 
