@@ -140,7 +140,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   --(*this);
   int num2 = (int) (numUnits()) - num;
   if (num2) {
-    describeTreasure(buf2, num2, cost_per);
+    setWeight(num2/10.0);
     *keeper += *this;
   } else {
     delete this;
@@ -148,7 +148,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   if (num) {
     obj2 = read_object(vnum, VIRTUAL);
-    obj2->describeTreasure(buf2, num, cost_per);
+    obj2->setWeight(num/10.0);
     *ch += *obj2;
     keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d units of %s.") %
        num % buf2);
@@ -215,8 +215,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   num = max(min(num, 10000), 0);
 
   if (num) {
-    float cost_per = pricePerUnit();
-    obj2->describeTreasure(buf2, num, cost_per);
+    obj2->setWeight(num/10.0);
     *keeper += *obj2;
     --(*this);
 
