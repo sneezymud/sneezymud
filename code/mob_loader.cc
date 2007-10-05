@@ -311,6 +311,7 @@ void TMonster::createWealth(void)
 
   // convert up to 50% of cash into commodities (normal dist. around 25%)
   int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * getMoney());
+  setMoney(getMoney()-wealth);
 
   // this should be roughly in order of value
   int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY, MAT_SAPPHIRE,
@@ -336,6 +337,10 @@ void TMonster::createWealth(void)
 		     wealth, bag, this);
     }
   }
+  
+  // add the leftover cash back
+  setMoney(getMoney()+wealth);
+
 
   int num = 0;
 
@@ -463,7 +468,6 @@ void TMonster::createWealth(void)
     }
   }
 
-  setMoney(wealth);
   return;
 }
 
