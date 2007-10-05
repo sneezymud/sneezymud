@@ -1843,6 +1843,7 @@ TObj *read_object(int nr, readFileTypeT type)
   obj_index[nr].addToNumber(1);
   
   obj->weightCorrection();
+  obj->updateDesc();
 
   rc = obj->checkSpec(NULL, CMD_GENERIC_CREATED, "", NULL);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {

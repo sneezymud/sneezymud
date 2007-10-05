@@ -315,5 +315,133 @@ int TCommodity::numUnits() const
 
 float TCommodity::pricePerUnit() const
 {
+  if(!material_nums[getMaterial()].price)
+    vlogf(LOG_BUG, fmt("commodity '%s' has no price for material %i") %
+	  getName() % getMaterial());
+
+
   return material_nums[getMaterial()].price;
+}
+
+int TCommodity::getSizeIndex() const
+{
+  int weight=numUnits();
+
+  if(weight<=2){
+    return 0;
+  } else if(weight<=4){
+    return 1;
+  } else if(weight<=6){
+    return 2;
+  } else if(weight<=8){ 
+    return 3;
+  } else if(weight<=10){
+    return 4;
+  } else if(weight<=15){
+    return 5;
+  } else {
+    return 6;
+  }
+}
+
+
+
+void TCommodity::updateDesc()
+{
+  int sizeindex=getSizeIndex();
+  char buf[256];
+  
+  const char *metalname [] =
+  {
+    "bit",
+    "nugget",
+    "ingot",
+    "sovereign",
+    "chunk",
+    "bar",
+    "pile"
+  };
+
+  const char *mineralname [] =
+  {
+    "tiny piece",
+    "small piece",
+    "piece",
+    "large piece",
+    "huge piece",
+    "gigantic piece",
+    "massive piece"
+  };
+
+  
+  if (isObjStat(ITEM_STRUNG)) {
+    delete [] name;
+    delete [] shortDescr;
+    delete [] descr;
+
+    extraDescription *exd;
+    while ((exd = ex_description)) {
+      ex_description = exd->next;
+      delete exd;
+    }
+    ex_description = NULL;
+    delete [] action_description;
+    action_description = NULL;
+  } else {
+    addObjStat(ITEM_STRUNG);
+    ex_description = NULL;
+    action_description = NULL;
+  }
+
+  if(isMineral()){
+    sprintf(buf, (fmt("commodity %s %s") % mineralname[sizeindex] %
+	    material_nums[getMaterial()].mat_name).c_str());
+    name = mud_str_dup(buf);
+    
+    sprintf(buf, (fmt("a %s of rough %s") % mineralname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    shortDescr = mud_str_dup(buf);
+    
+    sprintf(buf, (fmt("A %s of rough %s has been left here.  What luck!") %
+		  mineralname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    setDescr(mud_str_dup(buf));
+  } else {
+    sprintf(buf, (fmt("commodity %s %s") % metalname[sizeindex] %
+	    material_nums[getMaterial()].mat_name).c_str());
+    name = mud_str_dup(buf);    
+
+    sprintf(buf, (fmt("a %s of %s") % metalname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    shortDescr = mud_str_dup(buf);
+    
+    sprintf(buf, (fmt("A %s of %s has been left here.  What luck!") %
+		  metalname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    setDescr(mud_str_dup(buf));
+  }
+  obj_flags.cost = suggestedPrice();
+
+}
+
+int TCommodity::suggestedPrice() const 
+{
+  return (int)(numUnits() * pricePerUnit());
+};
+
+
+void TCommodity::setWeight(const float w)
+{
+  TObj::setWeight(w);
+
+  if(!bootTime)
+    updateDesc();
+}
+
+void TCommodity::setMaterial(ubyte num)
+{
+  TObj::setMaterial(num);
+
+  if(!bootTime)
+    updateDesc();
 }

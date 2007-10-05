@@ -20,6 +20,7 @@
 #include "obj_base_clothing.h"
 #include "obj_worn.h"
 #include "pathfinder.h"
+#include "obj_commodity.h"
 
 double balanceCorrectionForLevel(double level)
 {
@@ -869,6 +870,7 @@ void TObj::checkObjStats()
   if (isObjStat(ITEM_STRUNG) && 
       !dynamic_cast<TPool *>(this) && 
       !dynamic_cast<TSmoke *>(this) &&
+      !dynamic_cast<TCommodity *>(this) &&
       !dynamic_cast<TBaseCup *>(this) &&
       spec!=SPEC_GRAFFITI) {
     vlogf(LOG_LOW, fmt("Item %s has been set strung, fix! (%d)") %  getName() % objVnum());

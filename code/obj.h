@@ -621,6 +621,7 @@ class TObj : public TThing {
     int getItemIndex() const { return (number < 0 ? 0 : number); }
     virtual bool isPluralItem() const;
 
+    virtual void updateDesc(){};
     virtual void weightCorrection() {}
     virtual bool monkRestrictedItem(const TBeing *ch) const;
     virtual bool shamanRestrictedItem(const TBeing *ch) const;

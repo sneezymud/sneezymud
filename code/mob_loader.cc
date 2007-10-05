@@ -308,6 +308,7 @@ void TMonster::createWealth(void)
   // convert up to 50% of cash into commodities (normal dist. around 25%)
   int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * getMoney());
 
+  // this should be roughly in order of value
   int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY,
                    MAT_MITHRIL, MAT_ATHANOR, MAT_OBSIDIAN, MAT_ADAMANTITE,
 		   MAT_TITANIUM, MAT_PLATINUM, MAT_GOLD, MAT_SILVER,

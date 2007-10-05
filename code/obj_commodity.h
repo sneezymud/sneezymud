@@ -18,6 +18,12 @@ class TCommodity : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_RAW_MATERIAL; }
 
+    void updateDesc();
+    int getSizeIndex() const;
+    virtual int suggestedPrice() const;
+    virtual void setWeight(const float);
+    virtual void setMaterial(ubyte num);
+
     virtual void lowCheck();
     virtual void logMe(const TBeing *, const char *) const {}
     virtual int buyMe(TBeing *, TMonster *, int, int);
