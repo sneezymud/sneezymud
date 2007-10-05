@@ -6048,10 +6048,11 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     commod=read_object(material_nums[v->getMaterial()].availability, VIRTUAL);
 
+    /*
     commod->describeTreasure(material_nums[v->getMaterial()].mat_name,
 		      (int)(v->obj_flags.cost/material_nums[v->getMaterial()].price),
 			     material_nums[v->getMaterial()].price);
-
+    */
     me->doSay("Alright, here you go!");
 
     delete v;
