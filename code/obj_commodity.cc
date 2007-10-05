@@ -357,7 +357,7 @@ void TCommodity::updateDesc()
     "nugget",
     "ingot",
     "sovereign",
-    "chunk",
+    "rod",
     "bar",
     "pile"
   };

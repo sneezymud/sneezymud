@@ -11,8 +11,10 @@
 #include "obj_component.h"
 #include "obj_potion.h"
 
-static void treasureCreate(int num, float cost, int &wealth, int vnum, const char *str, TObj *bag, TMonster *ch)
+static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *ch)
 {
+  float cost=material_nums[mat].price;
+
   // make sure they can afford it
   if(wealth < cost)
     return;
@@ -25,9 +27,11 @@ static void treasureCreate(int num, float cost, int &wealth, int vnum, const cha
   }
 
   wealth -= (int)(num * cost);
-  TObj * obj = read_object(vnum, VIRTUAL);
+  TObj * obj = read_object(GENERIC_COMMODITY, VIRTUAL);
     
-  obj->describeTreasure(str,num,cost);
+  obj->setWeight(num / 10.0);
+  obj->setMaterial(mat);
+
   if (bag)
     *bag += *obj;
   else
@@ -309,7 +313,7 @@ void TMonster::createWealth(void)
   int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * getMoney());
 
   // this should be roughly in order of value
-  int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY,
+  int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY, MAT_SAPPHIRE,
                    MAT_MITHRIL, MAT_ATHANOR, MAT_OBSIDIAN, MAT_ADAMANTITE,
 		   MAT_TITANIUM, MAT_PLATINUM, MAT_GOLD, MAT_SILVER,
 		   MAT_ELECTRUM, MAT_TERBIUM, MAT_BRONZE, MAT_STEEL, MAT_IRON,
@@ -328,10 +332,8 @@ void TMonster::createWealth(void)
     // the idea being we prefer to buy expensive commods
     // very wealthy mobs prefer to have cash
     if(probability <= ::number(0, max_units) && n_afford > 0){
-      treasureCreate(::number(n_afford/2, n_afford),
-		     material_nums[base_mats[i]].price, wealth, 
-		     material_nums[base_mats[i]].availability,
-		     material_nums[base_mats[i]].mat_name, bag, this);
+      treasureCreate(::number(n_afford/2, n_afford), base_mats[i],
+		     wealth, bag, this);
     }
   }
 

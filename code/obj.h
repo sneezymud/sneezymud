@@ -599,7 +599,6 @@ class TObj : public TThing {
     }
     void releaseObject(TBeing *);
     virtual int checkFalling();
-    void describeTreasure(const char *, int, float);
     void checkObjStats();
     virtual void update(int);
     virtual bool isBluntWeapon() const;

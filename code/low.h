@@ -59,6 +59,7 @@ const int OBJ_ROSEPETAL        = 10;
 const int GENERIC_TALEN        = 13;
 const int OBJ_BATS_JACUZZI     = 31;
 const int GENERIC_TOOTH        = 39;
+const int GENERIC_COMMODITY    = 50;
 const int OBJ_SALTPILE         = 99;
 const int GENERIC_FLARE        = 199;
 const int WEAPON_L_SWORD       = 300;
