@@ -290,8 +290,8 @@ const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min
   char buf[256];
   float cost = pricePerUnit();
 
-  sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %5f talens (per unit)\n\r",
-            k + 1, fname(name).c_str(),
+  sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %.2f talens (per unit)\n\r",
+            k + 1, material_nums[getMaterial()].mat_name,
             (int) (numUnits()),  cost);
   if (arg.empty() && min_amt == 999999)     /* everything */
   /* specific item */
