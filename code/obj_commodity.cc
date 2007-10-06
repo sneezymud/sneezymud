@@ -202,7 +202,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     if (!obj2)
       continue;
 
-    if (obj2->objVnum() == objVnum())
+    if (obj2->getMaterial() == getMaterial())
       break;
   }
   if (!t) {
