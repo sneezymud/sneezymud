@@ -314,10 +314,11 @@ int TCommodity::numUnits() const
 
 float TCommodity::pricePerUnit() const
 {
+  /*
   if(!material_nums[getMaterial()].price)
     vlogf(LOG_BUG, fmt("commodity '%s' has no price for material %i") %
 	  getName() % getMaterial());
-
+  */
 
   return material_nums[getMaterial()].price;
 }
@@ -433,7 +434,7 @@ void TCommodity::setWeight(const float w)
 {
   TObj::setWeight(w);
 
-  if(!bootTime)
+  //  if(!bootTime)
     updateDesc();
 }
 
@@ -441,6 +442,6 @@ void TCommodity::setMaterial(ubyte num)
 {
   TObj::setMaterial(num);
 
-  if(!bootTime)
+  //  if(!bootTime)
     updateDesc();
 }

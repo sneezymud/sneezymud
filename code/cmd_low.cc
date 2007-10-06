@@ -21,6 +21,9 @@
 #include "obj_worn.h"
 #include "pathfinder.h"
 #include "obj_commodity.h"
+#include "obj_plant.h"
+#include "obj_tooth_necklace.h"
+#include "obj_trash_pile.h"
 
 double balanceCorrectionForLevel(double level)
 {
@@ -866,12 +869,17 @@ void TObj::checkObjStats()
     remObjStat(ITEM_PROTOTYPE);
   }
 
+
   // TPool strings itself during constructor, so bypass this
+  // these are all classes that implement updateDesc()
   if (isObjStat(ITEM_STRUNG) && 
       !dynamic_cast<TPool *>(this) && 
       !dynamic_cast<TSmoke *>(this) &&
       !dynamic_cast<TCommodity *>(this) &&
       !dynamic_cast<TBaseCup *>(this) &&
+      !dynamic_cast<TTrashPile *>(this) &&
+      !dynamic_cast<TPlant *>(this) &&
+      !dynamic_cast<TToothNecklace *>(this) &&
       spec!=SPEC_GRAFFITI) {
     vlogf(LOG_LOW, fmt("Item %s has been set strung, fix! (%d)") %  getName() % objVnum());
     remObjStat(ITEM_STRUNG);

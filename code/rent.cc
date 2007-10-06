@@ -793,6 +793,7 @@ TObj *ItemLoad::raw_read_item()
     o->setDepreciation(item.depreciation);
     
     o->obj_flags.cost = item.cost;
+    o->updateDesc();
     
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
@@ -887,6 +888,8 @@ TObj *ItemLoad::raw_read_item()
     o->setDepreciation(item.depreciation);
     
     o->obj_flags.cost = item.cost;
+    o->updateDesc();
+
     
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       o->affected[j].type = mapFileToSpellnum(item.affected[j].type);

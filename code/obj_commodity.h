@@ -18,7 +18,7 @@ class TCommodity : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_RAW_MATERIAL; }
 
-    void updateDesc();
+    virtual void updateDesc();
     int getSizeIndex() const;
     virtual int suggestedPrice() const;
     virtual void setWeight(const float);
