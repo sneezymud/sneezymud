@@ -3420,7 +3420,8 @@ void TBeing::doLight(const sstring & argument)
         } else {
           // don't allow the burning of the clothes on your back -
           // so, if the item is equipped, it can only be lit if it is a light
-          if (dynamic_cast<TLight *>(t)){
+          if (dynamic_cast<TLight *>(t) ||
+	      dynamic_cast<TDrugContainer *>(t)){
             t->lightMe(this, SILENT_NO);
           } else {
             act("You cannot light $p while equipped.", FALSE, this, t, 0, TO_CHAR);
