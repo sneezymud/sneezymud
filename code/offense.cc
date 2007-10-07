@@ -506,13 +506,6 @@ bool TBeing::isOrderAllowed(const char *argument)
 // returns DELETE_VICT (vict)
 static int applyOrder(TBeing *ch, TBeing *vict, const char * message, silentTypeT silent)
 {
-  // We don't allow players to order one another around
-  if (vict->player.player_id) {
-    if (!silent)
-      ch->sendTo("Sorry, you can't boss other players around like that.\n\r");
-    return FALSE;
-  }
-  
   int rc;
 
   if (!silent)
