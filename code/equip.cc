@@ -1888,6 +1888,9 @@ void TBeing::wearNTear(void)
 	    i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
           if (isLevitating())
             return; // If they are levitating, they will not hurt their feet.
+	  // animals and such don't have this problem
+	  if(!isHumanoid())
+	    return;
 
           act("<r>Your feet are getting sore from walking around barefoot.<1>",
 	      TRUE,this,NULL,0,TO_CHAR);
