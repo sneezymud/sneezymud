@@ -138,7 +138,6 @@ struct material_type_numbers
   int flammability;
   ubyte acid_susc;
   float price;
-  int availability;
   int (*repair_proc)(TBeing *,TObj *o);
   char mat_name[20];
 };

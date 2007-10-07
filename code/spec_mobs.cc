@@ -6038,15 +6038,14 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
   } else if(cmd == CMD_MOB_GIVEN_ITEM){
     v=o;
 
-    if(material_nums[v->getMaterial()].price <= 0 ||
-       material_nums[v->getMaterial()].availability == 0){
+    if(material_nums[v->getMaterial()].price <= 0){
       me->doSay("That isn't a valuable commodity - I can't convert that.");
       --(*v);
       *ch+=*v;
       return TRUE;
     }
 
-    commod=read_object(material_nums[v->getMaterial()].availability, VIRTUAL);
+    //    commod=read_object(material_nums[v->getMaterial()].availability, VIRTUAL);
 
     /*
     commod->describeTreasure(material_nums[v->getMaterial()].mat_name,
