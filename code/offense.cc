@@ -570,7 +570,7 @@ int TBeing::doOrder(const char *argument)
     return FALSE;
   }
 
-if (roomp && roomp->isRoomFlag(ROOM_NO_ORDER)) {
+  if (roomp && roomp->isRoomFlag(ROOM_NO_ORDER)) {
     sendTo("A mystical force prevents your order from being uttered here.\n\r");
     return FALSE;
   }
