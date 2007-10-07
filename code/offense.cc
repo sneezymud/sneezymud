@@ -565,7 +565,12 @@ int TBeing::doOrder(const char *argument)
   if (applySoundproof())
     return FALSE;
 
-  if (roomp && roomp->isRoomFlag(ROOM_NO_ORDER)) {
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("It's hard to order people around when you can't talk.");
+    return FALSE;
+  }
+
+if (roomp && roomp->isRoomFlag(ROOM_NO_ORDER)) {
     sendTo("A mystical force prevents your order from being uttered here.\n\r");
     return FALSE;
   }
