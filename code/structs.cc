@@ -400,8 +400,11 @@ TObj::~TObj()
       new_pos = tbt->getPosition();
     rider->dismount(new_pos);
   }
-  
-  object_list.erase(find(object_list.begin(), object_list.end(), this));
+
+  TObjIter iter=find(object_list.begin(), object_list.end(), this);
+  object_list.erase(iter);
+
+  //  object_list.erase(find(object_list.begin(), object_list.end(), this));
   //  object_list.remove(this);
 
   if (number >= 0) {
