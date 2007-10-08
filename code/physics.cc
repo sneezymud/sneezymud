@@ -726,7 +726,7 @@ rp->isFlyingSector())) {
         sendTo("You fall un-scathed into the refreshing waters.\n\r");
       } else {
         act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
+        sendTo(COLOR_ROOMS, fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
       }
       return TRUE;
     }

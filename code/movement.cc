@@ -3306,7 +3306,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)){
     setPosition(POSITION_STANDING);
     act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-    sendTo(fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
     dam=false;
   } else {
 // Flying person
