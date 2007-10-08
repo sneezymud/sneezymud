@@ -30,6 +30,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <deque>
 
 #include <iostream>
 #include <sstream>

@@ -23,6 +23,7 @@
 #include "obj_potion.h"
 #include "obj_base_cup.h"
 //#include "liquids.h"
+#include "timing.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -391,6 +392,7 @@ TObj::~TObj()
     dismount(new_pos);
   }
 
+
   while (rider) {
     positionTypeT new_pos = POSITION_DEAD;
     TBeing *tbt = dynamic_cast<TBeing *>(rider);
@@ -399,7 +401,8 @@ TObj::~TObj()
     rider->dismount(new_pos);
   }
   
-  object_list.remove(this);
+  object_list.erase(find(object_list.begin(), object_list.end(), this));
+  //  object_list.remove(this);
 
   if (number >= 0) {
     mud_assert(number < (signed int) obj_index.size(), "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number, obj_index.size(), name);
@@ -407,6 +410,7 @@ TObj::~TObj()
   }
   
   objCount--;
+
 
   // if thing is using shared sstrings, temporarily assign it new sstrings
   // so that TThing delete can clean up without problem
@@ -429,6 +433,7 @@ TObj::~TObj()
 
   delete [] owners;
   owners = NULL;
+
 
 }
 

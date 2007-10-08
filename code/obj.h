@@ -27,8 +27,8 @@ class objCost {
 
 extern vector<objIndexData>obj_index;
 
-typedef list<TObj *> TObjList;
-typedef list<TObj *>::iterator TObjIter;
+typedef deque<TObj *> TObjList;
+typedef deque<TObj *>::iterator TObjIter;
 
 extern TObjList object_list;
 
