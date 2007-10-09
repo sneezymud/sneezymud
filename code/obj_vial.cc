@@ -88,7 +88,7 @@ int TVial::suggestedPrice() const
     return TBaseCup::suggestedPrice();
 
   return (int) ((133.34 * (float) getMaxDrinkUnits() + 0.5) +
-		TObj::suggestedPrice());
+		(int)(10.0 * getWeight() * material_nums[getMaterial()].price));
 }
 
 void TVial::lowCheck()

@@ -69,8 +69,8 @@ int TArmorWand::rentCost() const
 
 int TArmorWand::suggestedPrice() const
 {
-  // TObj::suggestedPrice() will get added twice, so remove one
-  return TArmor::suggestedPrice() + TWand::suggestedPrice() - TObj::suggestedPrice();
+  // (int)(10.0 * getWeight() * material_nums[getMaterial()].price) will get added twice, so remove one
+  return TArmor::suggestedPrice() + TWand::suggestedPrice() - (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 }
 
 void TArmorWand::objMenu(const TBeing *ch) const

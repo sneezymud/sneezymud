@@ -186,7 +186,7 @@ int TGun::suggestedPrice() const
   pricetmp /= 10;
 
   // add material value
-  pricetmp += TObj::suggestedPrice();
+  pricetmp += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return pricetmp;
 }

@@ -551,7 +551,7 @@ int TBaseClothing::suggestedPrice() const
   price += adjustments;
 
   // add value of raw material
-  price += TObj::suggestedPrice();
+  price += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return price;
 }

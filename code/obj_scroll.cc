@@ -187,7 +187,7 @@ int TScroll::suggestedPrice() const
   }
 
   // add material value
-  tot += TObj::suggestedPrice();
+  tot += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return tot;
 }

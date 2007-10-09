@@ -239,7 +239,7 @@ int TSymbol::suggestedPrice() const
     num = (int) (num * 1.1);
 
   // add material value
-  num += TObj::suggestedPrice();
+  num += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return num;
 }

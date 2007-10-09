@@ -198,7 +198,7 @@ int TWand::suggestedPrice() const
   }
 
   // add material value
-  value += TObj::suggestedPrice();
+  value += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return value;
 }

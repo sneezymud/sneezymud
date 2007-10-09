@@ -1853,12 +1853,11 @@ TObj *read_object(int nr, readFileTypeT type)
   }
 
 
-#if 1
   // use suggested price if available, otherwise use the set price
   if((tmpcost = obj->suggestedPrice())){
     obj->obj_flags.cost = tmpcost;
   }
-#endif
+  
 
   obj->checkObjStats();
 

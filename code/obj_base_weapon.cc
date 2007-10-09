@@ -1233,7 +1233,7 @@ int TBaseWeapon::suggestedPrice() const
   }
 
   // add material value
-  price += TObj::suggestedPrice();
+  price += (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
 
   return price;
 }
