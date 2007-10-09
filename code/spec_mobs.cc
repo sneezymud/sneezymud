@@ -58,6 +58,7 @@
 #include "obj_tool.h"
 #include "obj_plant.h"
 #include "obj_note.h"
+#include "obj_commodity.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -6010,52 +6011,92 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 {
   float value;
-  char buf[256];
-  TObj *v = NULL;
+  sstring buf;
   TObj *commod=NULL;
+  int shop_nr=find_shop_nr(me->number);
+  TThing *ts = NULL;
+
+  if(cmd == CMD_WHISPER)
+    return shopWhisper(ch, me, shop_nr, arg);
+
+  if(cmd != CMD_VALUE && cmd != CMD_MOB_GIVEN_ITEM)
+    return FALSE;
 
   if(cmd == CMD_VALUE){
-    TThing *ts = NULL;
     if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
-	!(v = dynamic_cast<TObj *>(ts))) {
+	!(o = dynamic_cast<TObj *>(ts))) {
       me->doTell(ch->getName(), "You don't have that item.");
       return TRUE;
     }
 
-    if(material_nums[v->getMaterial()].price <= 0){
-      me->doSay("That isn't a valuable commodity - I can't convert that.");
+    if(material_nums[o->getMaterial()].price <= 0){
+      me->doTell(ch->getName(), "That isn't a valuable - I can't convert that.");
+      return TRUE;
+    }
+    
+    if(dynamic_cast<TCommodity *>(ts)){
+      me->doTell(ch->getName(), "That's already a commodity.");
       return TRUE;
     }
 
-    value = v->getWeight() * 0.75;
-    value *= (float) material_nums[v->getMaterial()].price;
+    if(!o->isMetal() && !o->isMineral()){
+      me->doTell(ch->getName(), "I can only work with metals and minerals.");
+      return TRUE;
+    }
+    
 
-    sprintf(buf, "I can turn that into %i pounds of %s, worth %i talens.",
-	    (int)v->getWeight(), material_nums[v->getMaterial()].mat_name,
-	    (int)value);
-    me->doSay(buf);
+    value = o->getWeight() * 10.0; // convert to units
+    value *= 0.90; // subtract some for wastage
+    value *= (float) material_nums[o->getMaterial()].price;
+
+    me->doTell(ch->getName(), fmt("I can turn that into %i units of %s.") %
+	       (int)(o->getWeight() * 10.0) %
+	       material_nums[o->getMaterial()].mat_name);
+    me->doTell(ch->getName(), fmt("My fee for this is %i talens.") %
+	       (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value));
+
     return TRUE;
   } else if(cmd == CMD_MOB_GIVEN_ITEM){
-    v=o;
-
-    if(material_nums[v->getMaterial()].price <= 0){
-      me->doSay("That isn't a valuable commodity - I can't convert that.");
-      --(*v);
-      *ch+=*v;
+    if(material_nums[o->getMaterial()].price <= 0){
+      me->doTell(ch->getName(), "That isn't a valuable commodity - I can't convert that.");
+      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      return TRUE;
+    }
+    
+    if(dynamic_cast<TCommodity *>(ts)){
+      me->doTell(ch->getName(), "That's already a commodity.");
+      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
       return TRUE;
     }
 
-    //    commod=read_object(material_nums[v->getMaterial()].availability, VIRTUAL);
+    if(!o->isMetal() && !o->isMineral()){
+      me->doTell(ch->getName(), "I can only work with metals and minerals.");
+      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      return TRUE;
+    }
 
-    /*
-    commod->describeTreasure(material_nums[v->getMaterial()].mat_name,
-		      (int)(v->obj_flags.cost/material_nums[v->getMaterial()].price),
-			     material_nums[v->getMaterial()].price);
-    */
-    me->doSay("Alright, here you go!");
+    value = o->getWeight() * 10.0; // convert to units
+    value *= 0.90; // subtract some for wastage
+    value *= (float) material_nums[o->getMaterial()].price;
+    value *= shop_index[shop_nr].getProfitBuy(o, ch);
 
-    delete v;
-    *ch += *commod;
+    if(ch->getMoney() < (int)value){
+      me->doTell(ch->getName(), "You can't afford it!");
+      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      return TRUE;
+    }
+    ch->addToMoney((int)-value, GOLD_SHOP);
+
+    commod = read_object(GENERIC_COMMODITY, VIRTUAL);
+    
+    commod->setWeight(o->getWeight());
+    commod->setMaterial(o->getMaterial());
+
+    me->doTell(ch->getName(), "Alright, here you go!");
+
+    *me += *commod;
+    me->doGive(ch,commod, GIVE_FLAG_IGN_DEX_TEXT);
+    delete o;
   }
 
 
