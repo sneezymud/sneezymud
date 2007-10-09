@@ -703,7 +703,7 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container)
 TObj *ItemLoad::raw_read_item()
 {
   rentObject item;
-  int j;
+  int j, tmpcost;
   TObj *o;
   char *name = NULL, *shortDescr = NULL, *description = NULL,
   *action_description = NULL;
@@ -793,6 +793,7 @@ TObj *ItemLoad::raw_read_item()
     o->setDepreciation(item.depreciation);
     
     o->obj_flags.cost = item.cost;
+    
     o->updateDesc();
     
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
@@ -921,6 +922,10 @@ TObj *ItemLoad::raw_read_item()
       (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
       (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
     version=oldversion;
+  }
+
+  if((tmpcost = o->suggestedPrice())){
+    o->obj_flags.cost = tmpcost;
   }
 
 
