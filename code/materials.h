@@ -119,8 +119,9 @@ const int    MAT_ADMINTITE       =173;
 const int    MAT_TERBIUM         =174;
 const int    MAT_ELVENMAIL       =175;
 const int    MAT_ELVENSTEEL      =176;
+const int    MAT_ETERNIUM        =177;
 
-const int    MAX_MAT_METAL       =27;      //Move and change  (max+1 - 150)
+const int    MAX_MAT_METAL       =28;      //Move and change  (max+1 - 150)
 
 struct material_type_numbers
 {
