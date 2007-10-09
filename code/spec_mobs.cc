@@ -6087,7 +6087,12 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
       return TRUE;
     }
-    ch->addToMoney((int)-value, GOLD_SHOP);
+
+
+    TShopOwned tso(shop_nr, me, ch);
+    tso.doBuyTransaction((int)value, fmt("deconstructing %s") % 
+			 o->getName(),
+			 TX_BUYING_SERVICE);
 
     commod = read_object(GENERIC_COMMODITY, VIRTUAL);
     
