@@ -6011,6 +6011,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 {
   float value;
+  int amt;
   sstring buf;
   TObj *commod=NULL;
   int shop_nr=find_shop_nr(me->number);
@@ -6047,11 +6048,11 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     value = o->getWeight() * 10.0; // convert to units
     value *= 0.90; // subtract some for wastage
+    amt=(int)value;
     value *= (float) material_nums[o->getMaterial()].price;
 
     me->doTell(ch->getName(), fmt("I can turn that into %i units of %s.") %
-	       (int)(o->getWeight() * 10.0) %
-	       material_nums[o->getMaterial()].mat_name);
+	       amt % material_nums[o->getMaterial()].mat_name);
     me->doTell(ch->getName(), fmt("My fee for this is %i talens.") %
 	       (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value));
 
@@ -6077,6 +6078,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     value = o->getWeight() * 10.0; // convert to units
     value *= 0.90; // subtract some for wastage
+    amt=(int)value;
     value *= (float) material_nums[o->getMaterial()].price;
     value *= shop_index[shop_nr].getProfitBuy(o, ch);
 
@@ -6089,7 +6091,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     commod = read_object(GENERIC_COMMODITY, VIRTUAL);
     
-    commod->setWeight(o->getWeight());
+    commod->setWeight(amt/10.0);
     commod->setMaterial(o->getMaterial());
 
     me->doTell(ch->getName(), "Alright, here you go!");
