@@ -6064,7 +6064,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       return TRUE;
     }
     
-    if(dynamic_cast<TCommodity *>(ts)){
+    if(dynamic_cast<TCommodity *>(o)){
       me->doTell(ch->getName(), "That's already a commodity.");
       me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
       return TRUE;
