@@ -18,11 +18,12 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
       sendTo("You know nothing about stomping.\n\r");
     return FALSE;
   }
-  if (!isHumanoid()) {
-    if (!silent)
-      sendTo("Only humanoids can stomp.\n\r");
-    return FALSE;
-  }
+// I don't see why animals with legs can't stomp.
+//  if (!isHumanoid()) {
+//    if (!silent)
+//      sendTo("Only humanoids can stomp.\n\r");
+//    return FALSE;
+//  }
   if (!hasLegs()) {
     if (!silent)
       sendTo("You need legs to stomp.\n\r");
