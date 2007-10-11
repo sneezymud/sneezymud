@@ -1424,7 +1424,7 @@ int task_blacksmithing_advanced(TBeing *ch, cmdTypeT cmd, const char *, int puls
     maxrepair = 85;
   } else {
     skill = SKILL_BLACKSMITHING_ADVANCED;
-    maxrepair = 70;
+    maxrepair = 95;
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
