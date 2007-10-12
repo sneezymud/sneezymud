@@ -211,6 +211,30 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   access=getShopAccess(shop_nr, ch);
 }
 
+TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
+{
+  this->shop_nr=shop_nr;
+  this->ch=ch;
+
+  for(TBeing *t=character_list;t;t=t->next){
+    if(t->number==shop_index[shop_nr].keeper){
+      keeper=dynamic_cast<TMonster *>(t);
+      break;
+    }
+  }
+}
+
+TShopOwned::TShopOwned(TMonster *keeper, TBeing *ch)
+{
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
+  
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
+    shop_nr=0;
+  }
+}
+
+
 int TShopOwned::getTaxShopNr()
 {
   TDatabase db(DB_SNEEZY);

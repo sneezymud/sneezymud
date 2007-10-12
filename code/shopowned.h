@@ -16,7 +16,7 @@ enum transactionTypeT {
 
 
 class TShopOwned {
-  int shop_nr;
+  unsigned int shop_nr;
   TMonster *keeper;
   TBeing *ch;
   bool owned;
@@ -76,6 +76,8 @@ class TShopOwned {
 
 
   TShopOwned(int, TMonster *, TBeing *);
+  TShopOwned(TMonster *, TBeing *);
+  TShopOwned(int, TBeing *);
   ~TShopOwned();
 };
 
