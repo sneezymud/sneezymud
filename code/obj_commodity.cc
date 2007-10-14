@@ -12,13 +12,94 @@
 #include "obj_commodity.h"
 #include "shopowned.h"
 
+
+bool TCommodity::willMerge(TMergeable *tm)
+{
+  TCommodity *tCommod;
+
+  if(!(tCommod=dynamic_cast<TCommodity *>(tm)) ||
+     tCommod==this ||
+     tCommod->getMaterial() != getMaterial())
+    return false;
+
+  return true;
+}
+
+void TCommodity::doMerge(TMergeable *tm)
+{
+  TCommodity *tCommod;
+  
+  if(!(tCommod=dynamic_cast<TCommodity *>(tm)) || !willMerge(tm))
+    return;
+
+  setWeight(getWeight() + tCommod->getWeight());
+  updateDesc();
+
+  --(*tCommod);
+  delete tCommod;
+}
+
+
+bool TCommodity::splitMe(TBeing *ch, const sstring &tString)
+{
+  int         tCount = 0,
+              tValue = 0;
+  TCommodity *tCommod;
+  sstring      tStString(""),
+              tStBuffer("");
+
+
+  tStString=tString.word(0);
+  tStBuffer=tString.word(1);
+
+  if (tString.empty() || ((tCount = convertTo<int>(tStBuffer)) <= 0)) {
+    ch->sendTo("Syntax: split <commodity> <units>\n\r");
+    return true;
+  }
+
+  if (tCount >= numUnits()) {
+    ch->sendTo(fmt("Units must be between 1 and %d.\n\r") %
+               (numUnits()-1));
+    return true;
+  }
+
+  if (!obj_flags.cost || objVnum() < 0) {
+    ch->sendTo("This commodity is special, it can not be split up.\n\r");
+    return true;
+  }
+
+  if ((tValue = real_object(objVnum())) < 0 || 
+      tValue > (signed) obj_index.size() ||
+      !(tCommod = dynamic_cast<TCommodity *>(read_object(tValue, REAL)))) {
+    ch->sendTo("For some reason that commodity resists being split up.\n\r");
+    return true;
+  }
+
+  tCommod->setMaterial(MAT_UNDEFINED); // this is to prevent merge
+  *ch += *tCommod;
+
+  tCommod->setMaterial(getMaterial());
+  tCommod->setWeight(tCount/10.0);
+  setWeight(getWeight()-(tCount/10.0));
+  tCommod->updateDesc();
+  updateDesc();
+
+  act("You split $N into two pieces.",
+      FALSE, ch, this, this, TO_CHAR);
+  act("$n splits $N into two pieces.",
+      FALSE, ch, this, this, TO_ROOM);
+
+  return true;
+}
+
+
 TCommodity::TCommodity() :
-  TObj()
+  TMergeable()
 {
 }
 
 TCommodity::TCommodity(const TCommodity &a) :
-  TObj(a)
+  TMergeable(a)
 {
 }
 

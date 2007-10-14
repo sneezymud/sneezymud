@@ -8,9 +8,9 @@
 #ifndef __OBJ_COMMODITY_H
 #define __OBJ_COMMODITY_H
 
-#include "obj.h"
+#include "obj_mergeable.h"
 
-class TCommodity : public TObj {
+class TCommodity : public TMergeable {
   private:
   public:
     virtual void assignFourValues(int, int, int, int);
@@ -18,11 +18,15 @@ class TCommodity : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_RAW_MATERIAL; }
 
+    virtual bool willMerge(TMergeable *);
+    virtual void doMerge(TMergeable *);
+
     virtual void updateDesc();
     int getSizeIndex() const;
     virtual int suggestedPrice() const;
     virtual void setWeight(const float);
     virtual void setMaterial(ubyte num);
+    virtual bool splitMe(TBeing *, const sstring &);
 
     virtual void lowCheck();
     virtual void logMe(const TBeing *, const char *) const {}
