@@ -14,10 +14,67 @@
 #include "obj_component.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "obj_mergeable.h"
 
 vector<compPlace>component_placement(0);
 vector<compInfo>CompInfo(0);
 vector<COMPINDEX>CompIndex(0);
+
+
+bool TComponent::willMerge(TMergeable *tm)
+{
+  TComponent *tComp;
+
+
+  // Basically find another component of the same type that is:
+  // Same VNum.
+  // Has a cost greater than 0 (ignore comps from leveling)
+  if(!(tComp=dynamic_cast<TComponent *>(tm)) ||
+     tComp==this || 
+     (tComp->objVnum() != objVnum()) ||
+     tComp->obj_flags.cost <= 0 ||  // ignore "free" comps from GM
+     obj_flags.cost <= 0){
+    return false;
+  }
+  return true;
+}
+
+void TComponent::doMerge(TMergeable *tm)
+{
+  TRoom *rp = NULL;
+  TComponent *tComp;
+
+
+  if(!(tComp=dynamic_cast<TComponent *>(tm)))
+    return;
+  
+  if (!(rp = roomp)) {
+    if (parent) {
+      rp = parent->roomp;
+    } else {
+      if (!(rp = tComp->roomp)) {
+	if (tComp->parent) {
+	  rp = tComp->parent->roomp;
+	}
+      }
+    }
+  }
+  if (rp) {
+    sstring str = sstring(shortDescr);
+    sendrpf(COLOR_BASIC, rp, "%s glows brightly and merges with %s.\n\r", str.cap().c_str(), str.c_str());
+  }
+  // Compute the decay value of the to-be merged component by performing
+  // a weighted average based on charges
+  int c_decay = (obj_flags.decay_time * getComponentCharges() +
+		 tComp->obj_flags.decay_time * tComp->getComponentCharges()) /
+    max(1, (getComponentCharges() + tComp->getComponentCharges()));
+  addToComponentCharges(tComp->getComponentCharges());
+  obj_flags.cost += tComp->obj_flags.cost;
+  obj_flags.decay_time = c_decay;
+  --(*tComp);
+  delete tComp;
+}
+
 
 void assign_component_placement()
 {
@@ -2144,7 +2201,7 @@ void buildComponentArray()
 }
 
 TComponent::TComponent() :
-  TObj(),
+  TMergeable(),
   charges(0),
   comp_spell(TYPE_UNDEFINED),
   comp_type(0)
@@ -2152,7 +2209,7 @@ TComponent::TComponent() :
 }
 
 TComponent::TComponent(const TComponent &a) :
-  TObj(a),
+  TMergeable(a),
   charges(a.charges),
   comp_spell(a.comp_spell), 
   comp_type(a.comp_type)

@@ -73,6 +73,7 @@ using namespace std;
 #include "create.h"
 #include "thing.h"
 #include "obj.h"
+#include "obj_mergeable.h"
 #include "room.h"
 #include "connect.h"
 //#include "being.h"

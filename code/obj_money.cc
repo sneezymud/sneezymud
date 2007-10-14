@@ -9,14 +9,41 @@
 #include "obj_player_corpse.h"
 #include "obj_money.h"
 
+
+bool TMoney::willMerge(TMergeable *tm)
+{
+  TMoney *tMoney;
+
+  if(!(tMoney=dynamic_cast<TMoney *>(tm)) ||
+     this==tMoney)
+    return false;
+
+  return true;
+}
+
+void TMoney::doMerge(TMergeable *tm)
+{
+  TMoney *tMoney;
+
+  if(!(tMoney=dynamic_cast<TMoney *>(tm)))
+    return;
+
+  // set m to the full amount
+  setMoney(getMoney() + tMoney->getMoney());
+  
+  // ditch the pile we picked up
+  --(*tMoney);
+  delete tMoney;
+}
+
 TMoney::TMoney() :
-  TObj(),
+  TMergeable(),
   money(0)
 {
 }
 
 TMoney::TMoney(const TMoney &a) :
-  TObj(a),
+  TMergeable(a),
   money(a.money)
 {
 }

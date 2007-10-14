@@ -286,7 +286,7 @@ extern vector<COMPINDEX>CompIndex;
 extern vector<compInfo>CompInfo;
 
 
-class TComponent : public TObj {
+class TComponent : public TMergeable {
   private:
     int charges;
     spellNumT comp_spell;
@@ -331,6 +331,9 @@ class TComponent : public TObj {
     virtual void valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1);
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int, int, float, const TBeing *);
+
+    virtual bool willMerge(TMergeable *);
+    virtual void doMerge(TMergeable *);
 
     int getComponentCharges() const;
     void setComponentCharges(int n);

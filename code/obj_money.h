@@ -10,7 +10,7 @@
 
 #include "obj.h"
 
-class TMoney : public TObj {
+class TMoney : public TMergeable {
   private:
     int money;
   public:
@@ -18,6 +18,9 @@ class TMoney : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_MONEY; }
+
+    virtual bool willMerge(TMergeable *);
+    virtual void doMerge(TMergeable *);
 
     virtual int scavengeMe(TBeing *, TObj **);
     virtual int getMe(TBeing *, TThing *);

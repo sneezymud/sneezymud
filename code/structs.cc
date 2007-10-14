@@ -698,65 +698,19 @@ TThing& TThing::operator += (TThing& t)
 
   TThing *i;
 
-  TMoney *m=dynamic_cast<TMoney *>(&t);
-  if(m){
-    for (i = getStuff(); i; i = i->nextThing) {
-      TMoney *tMoney;
 
-      if (i == m || !(tMoney = dynamic_cast<TMoney *>(i)))
-        continue;
-
-      // set m to the full amount
-      m->setMoney(m->getMoney() + tMoney->getMoney());
-
-      // ditch the pile we picked up
-      --(*tMoney);
-      delete tMoney;
-
+  TMergeable *tm=dynamic_cast<TMergeable *>(&t);
+  if(tm){
+    for(i=getStuff();i;i=i->nextThing){
+      TMergeable *tMerge=dynamic_cast<TMergeable *>(i);
+      
+      if(tMerge && tm->willMerge(tMerge)){
+	tm->doMerge(tMerge);
+	break;
+      }
     }
   }
 
-  TComponent *c = dynamic_cast<TComponent *>(&t);
-  if (c) {
-    for (i = getStuff(); i; i = i->nextThing) {
-      TComponent *tComp;
-      // Basically find another component of the same type that is:
-      // Same VNum.
-      // Has a cost greater than 0 (ignore comps from leveling)
-      if (i == c || !(tComp = dynamic_cast<TComponent *>(i)) ||
-          (tComp->objVnum() != c->objVnum()) || tComp->obj_flags.cost <= 0 ||
-          c->obj_flags.cost <= 0) {
-        continue;
-      }
-
-      TRoom *rp = NULL;
-
-      if (!(rp = roomp)) {
-        if (parent) {
-          rp = parent->roomp;
-        } else {
-          if (!(rp = tComp->roomp)) {
-            if (tComp->parent) {
-              rp = tComp->parent->roomp;
-            }
-          }
-        }
-      }
-      if (rp) {
-        sstring str = sstring(c->shortDescr);
-        sendrpf(COLOR_BASIC, rp, "%s glows brightly and merges with %s.\n\r", str.cap().c_str(), str.c_str());
-      }
-      // Compute the decay value of the to-be merged component by performing
-      // a weighted average based on charges
-      int c_decay = (c->obj_flags.decay_time * c->getComponentCharges() +
-        tComp->obj_flags.decay_time * tComp->getComponentCharges()) / max(1, (c->getComponentCharges() + tComp->getComponentCharges()));
-      c->addToComponentCharges(tComp->getComponentCharges());
-      c->obj_flags.cost += tComp->obj_flags.cost;
-      c->obj_flags.decay_time = c_decay;
-      --(*tComp);
-      delete tComp;
-    }
-  }
   return *this;
 }
 
