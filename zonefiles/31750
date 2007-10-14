@@ -55,10 +55,10 @@ X 0 19 31760         a security guard's nightstick [hold-left]
 
 O 0 31764 1 31764    warning sign
 
-*M 0 31761 1 31758      captain of the money train
-*? 0 5 0 E
-*E 1 303 300 19		 broadsword
-*Y 0 11 1                 platemail
+M 0 31761 1 31758      captain of the money train
+? 0 5 0 E
+E 1 303 300 19		 broadsword
+Y 0 11 1                 platemail
 
 M 0 31750 1 31752      a bank teller
 G 1 31751 9999           a small silver key
