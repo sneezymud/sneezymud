@@ -150,33 +150,85 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
+float TCommodity::demandCurvePrice(int num, float price, int total_units) const
 {
-  float cost_per;
-  int price;
+  // maximum number of units shop will hold. price=0 at this quantity
+  int shop_capacity=10000;
 
-  cost_per = pricePerUnit();
-  price = (int) (numUnits() * cost_per * shop_index[shop_nr].getProfitSell(this,ch));
+  // elasticity; commods are worth their base price at half shop capacity
+  float E = ((shop_capacity / 2.0) / (price * price));
 
-  if (obj_flags.cost <= 1) {
-    price = max(0, price);
-  } else {
-    price = max(1, price);
+  // now calculate the dynamic price at each level for the
+  // requested number of units to be sold
+  float total_price=0;
+  for(int i=1;i<=num;++i){
+    total_price+=sqrt((shop_capacity - (total_units+i)) / E);
   }
 
-  return price;
+  return total_price;
+
+  // base price of 30 (gold), shop capacity of 10000, example prices:
+  // 10000 =  0.0
+  //  9000 = 13.4 (45%)
+  //  7500 = 21.2 (71%)
+  //  5000 = 30.0 (100%)
+  //  2500 = 36.7 (122%)
+  //  1000 = 40.3 (134%) 
+  //     0 = 42.4 (141%)
+
+}
+
+int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
+{
+  float price;
+
+  price = (pricePerUnit() * shop_index[shop_nr].getProfitSell(this,ch));
+
+  TShopOwned tso(shop_nr, NULL);
+  TCommodity *tc;
+  
+  int total_units=0;
+  for(TThing *t=tso.getStuff();t;t=t->nextThing){
+    if((tc=dynamic_cast<TCommodity *>(t)) && 
+       tc->getMaterial()==getMaterial()){
+      total_units+=tc->numUnits();
+    }
+  }
+
+  price=demandCurvePrice(num, price, total_units);
+
+
+  if (obj_flags.cost <= 1) {
+    price = max(0,(int) price);
+  } else {
+    price = max(1, (int) price);
+  }
+
+  return (int)price;
 }
 
 int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
-  float cost_per;
-  int price;
+  float price;
 
-  cost_per = pricePerUnit();
-  price = (int) (num * cost_per * shop_index[shop_nr].getProfitBuy(this, ch));
-  price = max(1, price);
+  price = (pricePerUnit() * shop_index[shop_nr].getProfitBuy(this, ch));
 
-  return price;
+  TShopOwned tso(shop_nr, NULL);
+  TCommodity *tc;
+  
+  int total_units=0;
+  for(TThing *t=tso.getStuff();t;t=t->nextThing){
+    if((tc=dynamic_cast<TCommodity *>(t)) && 
+       tc->getMaterial()==getMaterial()){
+      total_units+=tc->numUnits();
+    }
+  }
+
+  price=demandCurvePrice(num, price, total_units);
+
+  price = max(1, (int)price);
+
+  return (int)price;
 }
 
 int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
@@ -224,7 +276,9 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     setWeight(num2/10.0);
     *keeper += *this;
   } else {
-    delete this;
+    setWeight(0);
+    *keeper += *this;
+    //    delete this;
   }
 
   if (num) {
@@ -257,7 +311,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   char buf[256], buf2[80];
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1, ch);
+  price = sellPrice(numUnits(), shop_nr, -1, ch);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -355,21 +409,22 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   char buf2[80];
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1, ch);
+  price = sellPrice(numUnits(), shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
 
-  keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for that.") % price);
+  keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
   return;
 }
 
-const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int, int k, unsigned long int) const
+const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int shop_nr, int k, unsigned long int) const
 {
   char buf[256];
-  float cost = pricePerUnit();
+  float cost = shopPrice(1, shop_nr, -1, ch);
+
 
   sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %.2f talens (per unit)\n\r",
             k + 1, material_nums[getMaterial()].mat_name,

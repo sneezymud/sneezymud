@@ -34,6 +34,7 @@ class TShopOwned {
   double getExpenseRatio();
   int doExpenses(int, TObj *);
 
+  TThing *getStuff();
 
   void setDividend(sstring);
   double getDividend();

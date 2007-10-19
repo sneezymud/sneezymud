@@ -62,6 +62,15 @@ sstring transactionToString(transactionTypeT action)
 }
 
 
+TThing *TShopOwned::getStuff()
+{
+  if(keeper)
+    return keeper->getStuff();
+
+  return NULL;
+
+}
+
 // player selling to shop (receiving money from shop)
 void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 				   transactionTypeT action, TObj *obj)
