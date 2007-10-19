@@ -423,8 +423,11 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int shop_nr, int k, unsigned long int) const
 {
   char buf[256];
-  float cost = shopPrice(1, shop_nr, -1, ch);
 
+  // this isn't really the right way to do this because of the demand curve
+  // stuff, but it's easier than converting shopPrice to return float
+  float cost = shopPrice(100, shop_nr, -1, ch);
+  cost/=100.0;
 
   sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %.2f talens (per unit)\n\r",
             k + 1, material_nums[getMaterial()].mat_name,
