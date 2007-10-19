@@ -284,6 +284,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (num) {
     obj2 = read_object(vnum, VIRTUAL);
     obj2->setWeight(num/10.0);
+    obj2->setMaterial(getMaterial());
     *ch += *obj2;
     keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d units of %s.") %
        num % buf2);
@@ -344,6 +345,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     TObj *to = read_object(objVnum(), VIRTUAL);
     obj2 = dynamic_cast<TCommodity *>(to);
     obj2->setWeight(0.0);
+    obj2->setMaterial(getMaterial());
   } else
     --(*obj2);
   num = obj2->numUnits() + numUnits();
@@ -351,6 +353,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   if (num) {
     obj2->setWeight(num/10.0);
+    obj2->setMaterial(getMaterial());
     *keeper += *obj2;
     --(*this);
 
