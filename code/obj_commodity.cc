@@ -158,13 +158,18 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units) const
   // elasticity; commods are worth their base price at half shop capacity
   float E = ((shop_capacity / 2.0) / (price * price));
 
+
   // now calculate the dynamic price at each level for the
   // requested number of units to be sold
   float total_price=0;
-  for(int i=1;i<=num;++i){
-    total_price+=sqrt((shop_capacity - (total_units+i)) / E);
+  for(int i=1;i<=abs(num);++i){
+    // positive num means we're selling commodities, so our total units
+    // goes DOWN with each one sold.  negative num means the opposite.
+    if(num >= 0)
+      total_price+=sqrt((shop_capacity - (total_units-i)) / E);
+    else
+      total_price+=sqrt((shop_capacity - (total_units+i)) / E);
   }
-
   return total_price;
 
   // base price of 30 (gold), shop capacity of 10000, example prices:
@@ -195,8 +200,7 @@ int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
     }
   }
 
-  price=demandCurvePrice(num, price, total_units);
-
+  price=demandCurvePrice(-num, price, total_units);
 
   if (obj_flags.cost <= 1) {
     price = max(0,(int) price);
@@ -215,7 +219,7 @@ int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 
   TShopOwned tso(shop_nr, NULL);
   TCommodity *tc;
-  
+
   int total_units=0;
   for(TThing *t=tso.getStuff();t;t=t->nextThing){
     if((tc=dynamic_cast<TCommodity *>(t)) && 
@@ -286,8 +290,8 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     obj2->setWeight(num/10.0);
     obj2->setMaterial(getMaterial());
     *ch += *obj2;
-    keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d units of %s.") %
-       num % buf2);
+    keeper->doTell(ch->getName(), fmt("That'll be %i.  Here's %d units of %s.") %
+		   price % num % material_nums[getMaterial()].mat_name);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
     TShopOwned tso(shop_nr, keeper, ch);
