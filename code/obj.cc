@@ -87,7 +87,7 @@ int TObj::suggestedPrice() const
   float price_per_unit=material_nums[getMaterial()].price;
   int price=(int)(units*price_per_unit);
 
-  return price + obj_flags.cost;
+  return price + obj_index[getItemIndex()].value;
 }
 
 
