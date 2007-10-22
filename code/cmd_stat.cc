@@ -608,8 +608,8 @@ void TBeing::statObj(const TObj *j)
     j->getVolume() % j->getWeight() %
     j->obj_flags.cost % j->rentCost();
 
-  str += fmt("Indexd Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
-    j->obj_flags.cost % j->suggestedPrice() %
+  str += fmt("Indexed Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
+    obj_index[j->getItemIndex()].value % j->suggestedPrice() %
     (int)(j->getWeight() * 10.0 * material_nums[j->getMaterial()].price);
 
 
