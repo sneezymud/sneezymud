@@ -608,6 +608,11 @@ void TBeing::statObj(const TObj *j)
     j->getVolume() % j->getWeight() %
     j->obj_flags.cost % j->rentCost();
 
+  str += fmt("Indexd Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
+    j->obj_flags.cost % j->suggestedPrice() %
+    (int)(j->getWeight() * 10.0 * material_nums[j->getMaterial()].price);
+
+
   str += fmt("Decay: %d, Max Struct: %d, Struct Left: %d, Depreciation: %d\n\r") %
     j->obj_flags.decay_time % j->getMaxStructPoints() %
     j->getStructPoints() % j->getDepreciation();
