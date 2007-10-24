@@ -59,14 +59,32 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   // pre assumes that it needs repairing.
   int gsp = obj_flags.cost;
 
+  // subtract the cost of the material repair portion
+  gsp -= (int)(getWeight() * 10.0 * material_nums[getMaterial()].price);
+
+  // how much of the structure is being repaired
+  float perc_repaired = 
+    ((float)((maxFix(repair, dep_done) - getStructPoints())/
+	     (float) getMaxStructPoints()));
+
   // ideally, this price will be < gsp, but gold_mod should handle that for us
   int price = (int) (gsp * gold_modifier[GOLD_REPAIR].getVal());
 
-  price *= maxFix(repair, dep_done) - getStructPoints();
-  price /= getMaxStructPoints();
+  // scale full repair price by the amount actually being repaired
+  price = (int)(price * perc_repaired);
 
+  // "destroyed" items are super expensive to repair
   if(getStructPoints() <= 0)
     price *= 5;
+
+  // units of material needed to repair
+  int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
+
+  // add in the price of the raw material
+  int mat_price=(int)(mats_needed * material_nums[getMaterial()].price);
+  price += mat_price;
+
+  //  vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
 
 
 #if FACTIONS_IN_USE
