@@ -42,6 +42,9 @@ case $USER in
   vasco)
     PORT=6908
     ;;
+  pappy)
+    PORT=1337
+    ;;
 
 esac
 
