@@ -230,13 +230,15 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   if(chr != -1)
     cost *= chr;
 
-  // multiply by the number of items
-  cost *= num;
-
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int) cost;
+  // cast this back to an int so that we can multiple without inflating the price
+  int singleCost = (int) cost;
+
+  // finally do the multiplication for number of items
+  // we do this last so that the actual price is the same as the single-object quoted price * num 
+  return singleCost * num;
 }
 
 
@@ -986,18 +988,18 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
       
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         // there's a chance to be moved (teleport moneypouch) so this is here
+        if (!(t = ch->equipment[i]))
+          continue;
         if (!ch->sameRoom(*tKeeper))
           break;
         // check for sleep pouches
         if (!ch->awake())
           break;
-        if (!(t = ch->equipment[i]))
-          continue;
+
         rc = t->sellCommod(ch, tKeeper, shop_nr, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
-          continue;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
@@ -1014,7 +1016,6 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
-          continue;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;

@@ -1862,6 +1862,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         str+=fmt("Affected: Macross's Blessing.  Approx. duration : %s\n\r") %
           describeDuration(this, aff->duration);
       }
+    case AFFECT_PAPPY_BLESSING:
+      if(show){
+        str+=fmt("Affected: Pappy's Blessing.  Approx. duration : %s\n\r") %
+          describeDuration(this, aff->duration);
+      }
       break;
  
 	  

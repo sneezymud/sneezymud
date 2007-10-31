@@ -914,7 +914,8 @@ bool TBeing::affectedBySpell(spellNumT skill) const
       return TRUE;
     if(skill==SPELL_FLAMING_FLESH && hjp->type == AFFECT_CORAL_BLESSING)
       return TRUE;
-
+    if(skill==SPELL_INFRAVISION && hjp->type == AFFECT_PAPPY_BLESSING)
+      return TRUE;
   }
   return FALSE;
 }

@@ -118,15 +118,26 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       if (tsSuccess && (fdd = ch->roomp->dir_option[eDirection]) &&
           IS_SET(fdd->condition, EX_SECRET) &&
           IS_SET(fdd->condition, EX_CLOSED) &&
+		  fdd->keyword && 
           strcmp(fdd->keyword, "_unique_door_")) {
-        ch->sendTo(fmt("Secret %s found %s!\n\r") %
-                   (fdd->keyword ? fname(fdd->keyword) : "NO NAME.  TELL A GOD") %
-                   dirs[eDirection]);
-        sprintf(buf, "$n exclaims, \"Look!  A Secret %s found %s!\"\n\r",
-                (fdd->keyword ? fname(fdd->keyword).c_str() : "NO NAME.  TELL A GOD"),
-                dirs[eDirection]);
+
+        const char * foundPrint = "Secret %s found %s!\n\r";
+        const char * toRoomPrint = "$n exclaims, \"Look!  A Secret %s found %s!\"\n\r";
+		sstring doorName = fname(fdd->keyword);
+
+        // if the doorname is empty, use a different foundPrint & doorName
+        // this is valid if, the door was only opened via room proc, like 'press button' or 'twist lid off'
+        if (doorName.empty() || doorName == " ") {
+            foundPrint = "Secret exit found %s%s, but you can't determine how it is opened!\n\r";
+            toRoomPrint = "$n exclaims, \"Look!  A Secret exit %s%s!\"\n\r";
+            doorName = "";
+		}
+
+        sprintf(buf, foundPrint, doorName.c_str(), dirs[eDirection]);
+        ch->sendTo(buf);
+        sprintf(buf, toRoomPrint, doorName.c_str(), dirs[eDirection]);
         act(buf, FALSE, ch, 0, 0, TO_ROOM);
-      }
+	  }
       // We remove the moves here, just in case we checked the last direction.
       ch->setMove(max(0, (ch->getMove() - moveCost)));
       // Here is where we increase our current direction marker and see if we've
