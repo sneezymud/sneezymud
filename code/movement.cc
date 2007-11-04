@@ -1657,6 +1657,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
       	delete tmons;
       	tmons = NULL;
       } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		vlogf(LOG_BUG, "PAPPY: Suspiciously returning DELETE_THIS from a mob aggro check which returned DELETE_VICT - are we guaranteed VICT = us?");
         return DELETE_THIS;
       }
       

@@ -3907,7 +3907,11 @@ int TMonster::mobileActivity(int pulse)
          (!isPc() || hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)))) {
         rc = doBite(tmp_ch->name);
         if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
+		{
+			if (IS_SET_DELETE(rc, DELETE_VICT))
+				vlogf(LOG_BUG, "PAPPY: Why return DELETE_THIS if DELETE_VICT?");
+			return DELETE_THIS;
+		}
         else if (rc)
           return TRUE;
       }

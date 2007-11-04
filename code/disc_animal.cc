@@ -17,6 +17,7 @@ int beastSoother(TBeing *caster, TBeing *victim, TMagicItem *tObj)
   return tReturn;
 }
 
+
 int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
 {
   int rc;
@@ -25,14 +26,16 @@ int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
     if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SOOTHER), victim, CHECK_ONLY_NO))
       return FALSE;
 
-  if (!victim->awake()) {
-    act("$N looks sound asleep.  Oops!", TRUE, caster, NULL, victim, TO_CHAR);
+  TMonster *tmons = dynamic_cast<TMonster *>(victim);
+
+  if (victim->fight() || !victim->isDumbAnimal() || !tmons || tmons->isPc()) {
+    act("$N seems indifferent.", TRUE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
 
-  if (victim->fight() || !victim->isDumbAnimal()) {
-    act("$N seems indifferent.", TRUE, caster, NULL, victim, TO_CHAR);
+  if (!victim->awake()) {
+    act("$N looks sound asleep.  Oops!", TRUE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
@@ -41,8 +44,7 @@ int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
     if (IS_SET(victim->specials.act, ACT_HUNTING))
       REMOVE_BIT(victim->specials.act, ACT_HUNTING);
 
-    TMonster *tmons = dynamic_cast<TMonster *>(victim);
-    if (!tmons->isPc() && IS_SET(tmons->specials.act, ACT_AGGRESSIVE)) {
+    if (IS_SET(tmons->specials.act, ACT_AGGRESSIVE)) {
       REMOVE_BIT(tmons->specials.act, ACT_AGGRESSIVE);
       tmons->setDefMalice(tmons->defmalice() - min(10, tmons->defmalice()));
       tmons->setMalice(tmons->defmalice());

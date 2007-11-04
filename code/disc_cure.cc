@@ -1127,6 +1127,34 @@ void sterilize(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spe
   sterilize(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
 }
 
+/* ---------------------------------------------------------
+   salve_bruise
+   returns true if a bruise was healed, false if not
+--------------------------------------------------------- */
+bool salve_bruise(TBeing * caster, TBeing * victim, byte bKnown, spellNumT spell)
+{
+  char buf[256];
+
+  wearSlotT slot = victim->getRandomPart(PART_BRUISED, FALSE, TRUE);
+  if (slot == WEAR_NOWHERE)
+	  return false;
+
+  if (spell != SKILL_WOHLIN && !caster->bSuccess(bKnown, caster->getPerc(), spell))
+  {
+    caster->deityIgnore();
+    return false;
+  }
+  
+  victim->remLimbFlags(slot, PART_BRUISED);
+  sprintf(buf, "The bruise on your %s has been removed!", victim->describeBodySlot(slot).c_str());
+  act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+  sprintf(buf, "The bruise on $n's %s has been removed!", victim->describeBodySlot(slot).c_str());
+  act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+
+  return true;
+}
+
+
 int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell)
 {
   int hurting = 0, soothing = 0, fixed = 0;
@@ -1140,6 +1168,10 @@ int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
       LogDam(caster, spell, max_am);
 
     while (fixed < max_am) {
+      if (salve_bruise(caster, victim, bKnown, spell)) {
+        fixed += BRUISE_HEAL_AMOUNT;
+        continue;
+      }
       slot = victim->getRandomHurtPart();
       if (slot == WEAR_NOWHERE)
         break;

@@ -132,4 +132,7 @@ private:
     void expel(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int expel(TBeing *, TBeing *, int, byte, spellNumT);
 
+// this is the amount of healing a removing bruise is equivalent to
+#define BRUISE_HEAL_AMOUNT 7
+
 #endif
