@@ -403,7 +403,7 @@ int TPortal::enterMe(TBeing *ch)
     if (tbt) {
       if (!tbt->affectedBySpell(SPELL_FLY) && !tbt->isAffected(AFF_FLYING)) {
         if (tbt->isFlying()) {
-          ch->sendTo("Your mount stop flying around.\n\r");
+          ch->sendTo("Your mount stops flying around.\n\r");
           tbt->setPosition(POSITION_STANDING);
         }
       }
@@ -485,7 +485,7 @@ TPortal * TPortal::findMatchingPortal() const
     TPortal *tp = dynamic_cast<TPortal *>(t);
     if (!tp)
       continue;
-    if ((tp->getTarget() == inRoom()))
+    if ((tp->getTarget() == inRoom()) && tp != this)
       return tp;
   }
   return NULL;
