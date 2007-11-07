@@ -12,6 +12,7 @@
 
 class TCommodity : public TMergeable {
   private:
+    bool disableMerge;
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;

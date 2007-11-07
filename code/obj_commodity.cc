@@ -19,7 +19,9 @@ bool TCommodity::willMerge(TMergeable *tm)
 
   if(!(tCommod=dynamic_cast<TCommodity *>(tm)) ||
      tCommod==this ||
-     tCommod->getMaterial() != getMaterial())
+     tCommod->getMaterial() != getMaterial() ||
+     disableMerge ||
+     tCommod->disableMerge)
     return false;
 
   return true;
@@ -96,11 +98,13 @@ bool TCommodity::splitMe(TBeing *ch, const sstring &tString)
 TCommodity::TCommodity() :
   TMergeable()
 {
+  disableMerge = false;
 }
 
 TCommodity::TCommodity(const TCommodity &a) :
   TMergeable(a)
 {
+  disableMerge = false;
 }
 
 TCommodity & TCommodity::operator=(const TCommodity &a)
@@ -345,6 +349,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     if (obj2->getMaterial() == getMaterial())
       break;
   }
+
   if (!t) {
     TObj *to = read_object(objVnum(), VIRTUAL);
     obj2 = dynamic_cast<TCommodity *>(to);
@@ -390,7 +395,11 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
     *ch += *ch->unequip(eq_pos);
 
   if (bag && bag != ch) {
+
+    disableMerge = true;
     rc = get(ch, this, bag, GETOBJOBJ, true);
+    disableMerge = false;
+
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       return DELETE_THIS;
     }
