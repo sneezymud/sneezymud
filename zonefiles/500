@@ -51,6 +51,8 @@ D 0 549 2 1
 D 0 535 0 1		blastproof door
 D 0 532 2 1
 
+D 0 534 0 2             Ragamuffin home's door
+
 O 0 521 1 509 		potter's wheel
 O 0 522 1 503 	silvery cauldron
 O 0 523 2 528 	meditation pillow

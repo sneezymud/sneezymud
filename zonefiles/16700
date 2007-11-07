@@ -105,6 +105,15 @@ O 0 16747 1 16705       a slightly cracked egg
 * October Critter Quest prize rent-room (A Comfortable Barn)
 O 0 16750 1 16706       a softly glowing portal
 
+* Ragamuffin's house in the Mage Academy
+O 0 26857 1 16707       a wooden desk
+O 0 20 1 16707          a chair
+O 0 16722 1 16707       a wall mounted lantern
+O 0 16751 1 16707       a large clothing trunk
+O 0 16752 1 16707       bed - a large pile of newspaper rags
+O 0 16753 1 16707       stack of books - anvil item
+O 0 16754 1 16707       a chained salamander - forge item
+
 * Sage's Butler
 M 0 16700 1 16700       a latchkey kid 
 * Gon's Butler
@@ -113,5 +122,7 @@ M 0 16701 1 16702       a penguin
 M 0 16702 1 16705       a baby bird 
 * October Critter Quest's Butler
 M 0 16703 1 16706       a jovial farmer
+* Ragamuffin's Butler
+M 0 16704 1 16707       an opal statue
 
 S
