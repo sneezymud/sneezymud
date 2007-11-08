@@ -12,6 +12,8 @@
 #include "obj_commodity.h"
 #include "shopowned.h"
 
+// maximum number of units shop will hold. price=0 at this quantity
+const int shop_capacity = 100000;
 
 bool TCommodity::willMerge(TMergeable *tm)
 {
@@ -156,12 +158,9 @@ void TCommodity::lowCheck()
 
 float TCommodity::demandCurvePrice(int num, float price, int total_units) const
 {
-  // maximum number of units shop will hold. price=0 at this quantity
-  int shop_capacity=10000;
 
   // elasticity; commods are worth their base price at half shop capacity
   float E = ((shop_capacity / 2.0) / (price * price));
-
 
   // now calculate the dynamic price at each level for the
   // requested number of units to be sold
@@ -358,7 +357,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   } else
     --(*obj2);
   num = obj2->numUnits() + numUnits();
-  num = max(min(num, 10000), 0);
+  num = max(min(num, shop_capacity), 0);
 
   if (num) {
     obj2->setWeight(num/10.0);
