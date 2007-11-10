@@ -10,6 +10,7 @@
 #include "database.h"
 #include "shopowned.h"
 #include "rent.h"
+#include "obj_commodity.h"
 
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
@@ -50,8 +51,73 @@ int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
   return amount;
 }
 
-int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTypeT dep_done) const
+
+int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, ubyte mat, int &mats_needed, bool purchase)
 {
+  TThing *t;
+  TCommodity *commod;
+  int mat_price=0;
+  unsigned int commod_shop=15;
+
+  // optimally we'd go with the physically nearest commod shop
+  // for now this will work, but it leaves out some commod shops.
+  TShopOwned repairshop(shop_nr, buyer);
+  switch(repairshop.getCorpID()){
+    case 27: // amber
+      commod_shop=56;
+      break;
+    case 28: // logrus
+      commod_shop=58;
+      break;
+    case 29: // bm
+      commod_shop=57;
+      break;
+    case 21: // gh
+    default:
+      commod_shop=15;
+  }
+
+  TShopOwned tso(commod_shop, repair);
+
+  // look through the commod shop inventory
+  for(t=tso.getStuff();t;t=t->nextThing){
+    // find the appropriate commodity
+    if((commod=dynamic_cast<TCommodity *>(t)) &&
+       commod->getMaterial() == mat){
+
+      // get the price of the commods we need
+      if(commod->numUnits() > mats_needed){
+	mat_price += commod->shopPrice(mats_needed, 15, 0, buyer);
+	if(purchase){
+	  tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+	  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
+
+	  commod->setWeight(commod->getWeight() - mats_needed/10.0);
+	}
+	mats_needed=0;
+      } else {
+	mat_price += commod->shopPrice(commod->numUnits(), 15, 0, buyer);
+	if(purchase){
+	  tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+	  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
+	  delete commod;
+	}
+	mats_needed-=commod->numUnits();
+      }
+      break;
+    }
+  }
+
+  return mat_price;
+}
+
+
+int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done, bool purchase=false) const
+{
+  unsigned int shop_nr=0;
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
+
   // dep_done will be true if depreciation accounted for
   // since value doesn't dep o, we need to fudge it
 
@@ -79,9 +145,13 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
 
   // units of material needed to repair
   int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
+  int mat_price=0;
 
   // add in the price of the raw material
-  int mat_price=(int)(mats_needed * material_nums[getMaterial()].price);
+  mat_price+=findRepairMaterials(shop_nr, repair, buyer, getMaterial(), mats_needed, purchase);
+
+  // 200% base cost for materials that we can't purchase
+  mat_price+=(int)(mats_needed * material_nums[getMaterial()].price * 2);
   price += mat_price;
 
   //  vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
@@ -95,10 +165,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
 #endif
 
   // check for shop setting
-  unsigned int shop_nr=0;
   TDatabase db(DB_SNEEZY);
-
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
   
   if (shop_nr >= shop_index.size()) {
     vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
@@ -149,8 +216,8 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
     price = (int)((double) price * profit_buy);
   }
 
-
-  price = (price * 75) / 100;
+  // I don't know why this is here and it's causing problems
+  //  price = (price * 75) / 100;
 
   return (price);
 }
@@ -246,7 +313,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
     return;
   }
 
-  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES);
+  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES, true);
   if (fwrite(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing cost for repairman_file!");
     fclose(fp);
@@ -688,6 +755,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
     return;
 
   repair->doTell(fname(buyer->name), fmt("It'll cost you %d talens to repair %s to a status of %s.") % (repairPrice(repair, buyer, DEPRECIATION_YES)) % getName() % equip_condition(maxFix(repair, DEPRECIATION_YES)));
+
   when_ready = ct + repair_time(repair, this);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
@@ -700,6 +768,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   ticket = make_ticket(repair, buyer, this, when_ready, repair_number);
   *buyer += *ticket;
   save_repairman_file(repair, buyer, this, when_ready, repair_number);
+
   // vlogf(LOG_DASH, fmt("%s repairing %s - str %d/%d, lev %d.  Repair time: %s.") %  
   //fname(buyer->name).c_str() % getName() % (int)getStructPoints() % (int)getMaxStructPoints() %
   //(int)(this->objLevel()*1) % secsToString(when_ready-ct).c_str());
