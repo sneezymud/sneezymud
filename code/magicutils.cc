@@ -466,8 +466,8 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
             FALSE, this, NULL, m, TO_CHAR);
       }
 
+      doDrop("all talens" , NULL);
       doDrop("all" , NULL);
-
 
       return DELETE_THIS;
     }

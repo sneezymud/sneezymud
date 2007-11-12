@@ -285,12 +285,15 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
     sendTo("Drop what?!?\n\r");
     return FALSE;
   }
-  if (!tng && is_number(arg.c_str())) {
-    amount = convertTo<int>(arg);
-    if (!is_abbrev(arg2, "talens")) {
+  if (!tng && is_abbrev(arg2, "talens")) {   
+
+    if (!is_number(arg.c_str()) && arg.lower() != "all") {
       sendTo("Sorry, you can't do that (yet)...\n\r");
       return FALSE;
-    }
+      }
+
+    amount = (arg.lower() == "all") ? getMoney() : convertTo<int>(arg);
+
     if (amount <= 0) {
       sendTo("Sorry, you can't do that!\n\r");
       return FALSE;
@@ -817,8 +820,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
   bool badWeight = 0, badVol = 0;
 
   argument = one_argument(argument, obj_name);
-  if (is_number(obj_name)) {
-    amount = convertTo<int>(obj_name);
+  if (is_number(obj_name) || obj_name.lower() == "all") {
+    amount = (obj_name.lower() == "all") ? getMoney() : convertTo<int>(obj_name);
     argument = one_argument(argument, arg);
     if (!is_abbrev(arg,"talens")) {
       sendTo("Syntax: give <amount> talens <person>\n\r");
