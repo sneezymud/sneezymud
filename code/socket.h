@@ -86,6 +86,7 @@ class TMainSocket {
   int gameLoop();
   int objectPulse(TPulseList &, int);
   int characterPulse(TPulseList &, int);
+  void dequeueBeing(TBeing* being);
 
   TMainSocket();
   ~TMainSocket();

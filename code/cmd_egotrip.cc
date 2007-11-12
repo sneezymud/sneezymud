@@ -122,7 +122,7 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 		ego_imm_blessing("Pappy",
 		AFFECT_PAPPY_BLESSING,
 		APPLY_VISION,
-		"<O>of the mole<1>");
+		"<O>the mole<1>");
 
   return blessings;
 }

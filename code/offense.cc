@@ -2083,6 +2083,12 @@ bool TBeing::noHarmCheck(TBeing *vict)
     sendTo("If you have a problem with this newbie please see a god for action.\n\r");
     return TRUE;
   }
+
+  // Check for multiplay - you can't harm mobs using multiplay tatics
+  TMonster *tmons = dynamic_cast<TMonster*>(vict);
+  if (tmons && tmons->isAttackerMultiplay(this))
+    return TRUE;
+
   return FALSE;
 }
 

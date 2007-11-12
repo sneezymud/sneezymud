@@ -533,6 +533,7 @@ class TMonster : public TBeing {
     int lookForHorse();
     void balanceMakeNPCLikePC();
     int lookForEngaged(const TBeing *);
+    bool isAttackerMultiplay(TBeing *aggressor);
 };
 
 #endif  // inclusion sandwich

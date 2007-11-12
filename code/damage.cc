@@ -95,8 +95,8 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
   if (how2 >= MIN_SPELL && how2 < MAX_SKILL && this != v) 
     LogDam(this, how2, dam2);
 
+  TMonster *tmons = dynamic_cast<TMonster *>(v);
   if (!v->isPc()) {
-    TMonster *tmons = dynamic_cast<TMonster *>(v);
     if (tmons && !tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       tmons->developHatred(this);
 
@@ -116,8 +116,13 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
     }
   }
 
+  // Anti-Multiplay code, Pappy 11/7/2007
+  // We don't allow damage to mobs via multiplay attacks
+  if (tmons && tmons->isAttackerMultiplay(this))
+    return 0;
 
   rc = applyDamage(v, dam, how);
+
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
 //    if (desc);
 //    this doesnt look right 10/99 cos

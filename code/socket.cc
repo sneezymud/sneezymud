@@ -1710,6 +1710,12 @@ int TMainSocket::newDescriptor(int t_sock)
   return 1;
 }
 
+void TMainSocket::dequeueBeing(TBeing* being)
+{
+  if (being && tmp_ch == being)
+    tmp_ch = being->next;
+}
+
 int TSocket::writeToSocket(const char *txt)
 {
   int sofar, thisround, total;

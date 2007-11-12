@@ -23,6 +23,7 @@
 #include "obj_potion.h"
 #include "obj_base_cup.h"
 //#include "liquids.h"
+#include "socket.h"
 #include "timing.h"
 
 TBeing::TBeing() :
@@ -279,6 +280,10 @@ TBeing::~TBeing()
         vlogf(LOG_BUG, fmt("%s (being) deleted without removal from character_list connected = (%d)") %  getName() % desc->connected);
     }
   }
+
+  if (gSocket)
+    gSocket->dequeueBeing(this);
+
   //  setArmor(1000);
 
   // OK, technically, this is all Descriptor maintained stuff...

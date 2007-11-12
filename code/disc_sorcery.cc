@@ -1386,6 +1386,7 @@ int ret,level;
 int teleport(TBeing *caster, TBeing *victim, int, byte bKnown) 
 {
   int rc;
+  TMonster *tmons = dynamic_cast<TMonster *>(victim);
 
   if ((caster != victim) && victim->isImmortal()) {
     act("You can't do that to $N -- $E's a god!", FALSE,caster,NULL,victim,TO_CHAR);
@@ -1410,7 +1411,11 @@ int teleport(TBeing *caster, TBeing *victim, int, byte bKnown)
       } else {
         SV(SPELL_TELEPORT);
         caster->nothingHappens(SILENT_YES);
-	if (dynamic_cast<TMonster *>(victim)) {
+	if (tmons) {
+	  if (tmons->isAttackerMultiplay(caster)) {
+	    caster->nothingHappens(SILENT_NO);
+	    return SPELL_FAIL;
+	  }
 	  caster->reconcileHurt(victim, discArray[SPELL_TELEPORT]->alignMod);
 	  if (!victim->isPc()) {
 	    // piss the mob off for shooting at it 
