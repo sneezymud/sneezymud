@@ -265,6 +265,14 @@ void TMonster::thiefLootLoader()
     delete obj;
 }
 
+struct mat_sort
+{
+  bool operator()(const int &a, const int &b)
+  {
+    return material_nums[a].price > material_nums[b].price;
+  }
+};
+
 void TMonster::createWealth(void)
 {
   TOpenContainer *bag;
@@ -314,16 +322,18 @@ void TMonster::createWealth(void)
   setMoney(getMoney()-wealth);
 
   // this should be roughly in order of value
-  int base_mats[]={MAT_DIAMOND, MAT_EMERALD, MAT_RUBY, MAT_SAPPHIRE,
-                   MAT_MITHRIL, MAT_ATHANOR, MAT_OBSIDIAN, MAT_ADAMANTITE,
-		   MAT_TITANIUM, MAT_PLATINUM, MAT_GOLD, MAT_SILVER,
-		   MAT_ELECTRUM, MAT_TERBIUM, MAT_BRONZE, MAT_STEEL, MAT_IRON,
-		   MAT_BRASS, MAT_COPPER, MAT_TIN, MAT_ALUMINUM, -1};
+  vector <int> base_mats;
+  for (int i=0; i<200; ++i){
+    if (material_nums[i].mat_name[0] && i>=MAT_GEN_MINERAL){
+      base_mats.push_back(i);
+    }
+  }
+  std::sort(base_mats.begin(), base_mats.end(), mat_sort());
 
   int max_units=20;
   int initial_wealth=wealth;
 
-  for(int i=0;base_mats[i]!=-1;++i){
+  for(unsigned int i=0;i<base_mats.size();++i){
     // amount of current commod we can afford
     int n_afford=min(max_units, (int)(wealth / material_nums[base_mats[i]].price));
     // probability of loading is based on initial wealth
