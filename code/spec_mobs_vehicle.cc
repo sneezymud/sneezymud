@@ -459,6 +459,10 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.query("delete from ship_destinations where vnum=%i and name='%s'",
 	       myself->mobVnum(), argument.word(2).c_str());
       db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
+    } else if(argument.word(1) == "forget"){
+      myself->doSay(fmt("Arr like I never even heard of it!"));
+      db.query("delete from ship_destinations where vnum=%i and name='%s'",
+	       myself->mobVnum(), argument.word(2).c_str());
     } else if(argument.word(1) == "sail" ||
 	      argument.word(1) == "cruise"){
       if(argument.word(2).empty()){
