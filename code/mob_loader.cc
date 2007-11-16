@@ -324,7 +324,7 @@ void TMonster::createWealth(void)
   // this should be roughly in order of value
   vector <int> base_mats;
   for (int i=0; i<200; ++i){
-    if (material_nums[i].mat_name[0] && i>=MAT_GEN_MINERAL){
+    if (material_nums[i].mat_name[0]){
       base_mats.push_back(i);
     }
   }

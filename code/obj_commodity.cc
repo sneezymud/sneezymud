@@ -506,27 +506,37 @@ void TCommodity::updateDesc()
   char buf[256];
   
   const char *metalname [] =
-  {
-    "bit",
-    "nugget",
-    "ingot",
-    "sovereign",
-    "rod",
-    "bar",
-    "pile"
-  };
-
+    {
+      "bit",
+      "nugget",
+      "ingot",
+      "sovereign",
+      "rod",
+      "bar",
+      "pile"
+    };
+  
   const char *mineralname [] =
-  {
-    "tiny piece",
-    "small piece",
-    "piece",
-    "large piece",
-    "huge piece",
-    "gigantic piece",
-    "massive piece"
-  };
+    {
+      "tiny piece",
+      "small piece",
+      "piece",
+      "large piece",
+      "huge piece",
+      "gigantic piece",
+      "massive piece"
+    };
 
+  const char *miscname [] =
+    {
+      "bit",
+      "tiny pile",
+      "small",
+      "pile",
+      "big pile",
+      "large pile",
+      "huge pile"
+    };
   
   if (isObjStat(ITEM_STRUNG)) {
     delete [] name;
@@ -560,7 +570,7 @@ void TCommodity::updateDesc()
 		  mineralname[sizeindex] %
 		  material_nums[getMaterial()].mat_name).c_str());
     setDescr(mud_str_dup(buf));
-  } else {
+  } else if (isMetal()) {
     sprintf(buf, (fmt("commodity %s %s") % metalname[sizeindex] %
 	    material_nums[getMaterial()].mat_name).c_str());
     name = mud_str_dup(buf);    
@@ -573,6 +583,20 @@ void TCommodity::updateDesc()
 		  metalname[sizeindex] %
 		  material_nums[getMaterial()].mat_name).c_str());
     setDescr(mud_str_dup(buf));
+  } else {
+    sprintf(buf, (fmt("commodity %s %s") % miscname[sizeindex] %
+	    material_nums[getMaterial()].mat_name).c_str());
+    name = mud_str_dup(buf);    
+
+    sprintf(buf, (fmt("a %s of %s") % miscname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    shortDescr = mud_str_dup(buf);
+    
+    sprintf(buf, (fmt("A %s of %s has been left here.  What luck!") %
+		  miscname[sizeindex] %
+		  material_nums[getMaterial()].mat_name).c_str());
+    setDescr(mud_str_dup(buf));
+
   }
   obj_flags.cost = suggestedPrice();
 

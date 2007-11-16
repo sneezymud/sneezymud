@@ -212,11 +212,11 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
 bool TThing::isMetal() const
 {
   switch (getMaterial()) {
-    case MAT_GEN_METAL:
+    //    case MAT_GEN_METAL:
     case MAT_COPPER:
-    case MAT_BANDED_MAIL:
-    case MAT_CHAIN_MAIL:
-    case MAT_PLATE:
+      //    case MAT_BANDED_MAIL:
+      //    case MAT_CHAIN_MAIL:
+      //    case MAT_PLATE:
     case MAT_BRONZE:
     case MAT_BRASS:
     case MAT_IRON:
@@ -227,14 +227,14 @@ bool TThing::isMetal() const
     case MAT_TITANIUM:
     case MAT_MITHRIL:
     case MAT_ALUMINUM:
-    case MAT_RINGMAIL:
-    case MAT_GNOMEMAIL:
+      //    case MAT_RINGMAIL:
+      //    case MAT_GNOMEMAIL:
     case MAT_ELECTRUM:
     case MAT_ATHANOR:
     case MAT_TIN:
     case MAT_TERBIUM:
-    case MAT_ELVENMAIL:
-    case MAT_ELVENSTEEL:
+      //    case MAT_ELVENMAIL:
+      //    case MAT_ELVENSTEEL:
       return TRUE;
     default:
       return FALSE;
@@ -247,7 +247,7 @@ bool TThing::isMineral() const
     case MAT_GLASS:
     case MAT_PORCELAIN:
     case MAT_GEN_MINERAL:
-    case MAT_JEWELED:
+      //    case MAT_JEWELED:
     case MAT_RUNED:
     case MAT_CRYSTAL:
     case MAT_DIAMOND:
@@ -289,16 +289,16 @@ bool TObj::canRust()
     return FALSE;
   
   switch (getMaterial()) {
-    case MAT_GEN_METAL:
-    case MAT_BANDED_MAIL:
-    case MAT_CHAIN_MAIL:
-    case MAT_PLATE:
+    //    case MAT_GEN_METAL:
+    //    case MAT_BANDED_MAIL:
+    //    case MAT_CHAIN_MAIL:
+      //    case MAT_PLATE:
     case MAT_IRON:
     case MAT_STEEL:
-    case MAT_RINGMAIL:
-    case MAT_GNOMEMAIL:
-    case MAT_ELVENMAIL:
-    case MAT_ELVENSTEEL:
+      //    case MAT_RINGMAIL:
+      //    case MAT_GNOMEMAIL:
+      //    case MAT_ELVENMAIL:
+      //    case MAT_ELVENSTEEL:
       return TRUE;
     default:
       return FALSE;
