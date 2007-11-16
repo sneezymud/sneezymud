@@ -531,7 +531,7 @@ void TCommodity::updateDesc()
     {
       "bit",
       "tiny pile",
-      "small",
+      "small pile",
       "pile",
       "big pile",
       "large pile",
