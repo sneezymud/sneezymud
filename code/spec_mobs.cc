@@ -6040,11 +6040,11 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       return TRUE;
     }
 
-    if(!o->isMetal() && !o->isMineral()){
-      me->doTell(ch->getName(), "I can only work with metals and minerals.");
+    if(!ts->isRentable()){
+      me->doTell(ch->getName(), "That isn't rentable so I can't convert it.");
       return TRUE;
     }
-    
+
 
     value = o->getWeight() * 10.0; // convert to units
     value *= 0.90; // subtract some for wastage
@@ -6070,9 +6070,8 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       return TRUE;
     }
 
-    if(!o->isMetal() && !o->isMineral()){
-      me->doTell(ch->getName(), "I can only work with metals and minerals.");
-      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+    if(!o->isRentable()){
+      me->doTell(ch->getName(), "That isn't rentable so I can't convert it.");
       return TRUE;
     }
 
