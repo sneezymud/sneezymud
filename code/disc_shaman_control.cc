@@ -26,6 +26,12 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    caster->sendTo("You can't resurrect that - someone is sacrificing it!\n\r");
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    return SPELL_FAIL;
+  }
+
   if (caster->getMoney() < 2500) {
     caster->sendTo("You need 2500 talens to make the resurrection sacrifice.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
@@ -128,6 +134,11 @@ int castResurrection(TBeing * caster, TObj * obj)
     caster->sendTo("There isn't enough left to resurrect.\n\r");
     return FALSE;
   }
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    caster->sendTo("You can't resurrect that while someone is sacrificing it!\n\r");
+    return SPELL_FAIL;
+  }
+
   act("You direct a strange beam of energy at $p.",
           FALSE, caster, obj, 0, TO_CHAR);
   act("$n directs a strange beam of energy at $p.",
