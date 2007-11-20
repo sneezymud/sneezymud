@@ -29,8 +29,8 @@ TGarble GarbleData[GARBLE_MAX] = {
   { "wahwah", "Makes the character cry like a little baby", false, GARBLE_SCOPE_EVERYONE, garble_wahwah, SPEECH_FLAG_VERBAL },
   { "blahblah", "Interjects blah blah into the player's shouts", false, GARBLE_SCOPE_EVERYONE, garble_blahblah, SPEECH_FLAG_SHOUT },
   { "drunk", "Makes the character talk (and view room) drunkenly", true, GARBLE_SCOPE_EVERYONEANDSELF, garble_drunk, SPEECH_FLAG_VERBAL | SPEECH_FLAG_ROOMDESC },
-  { "pg13out", "Makes the character tone down their swear words (to other people)", true, GARBLE_SCOPE_EVERYONE, garble_PG13filter, SPEECH_FLAG_NONWRITE },
-  { "pg13in", "Makes the character not get or say any swear words", true, GARBLE_SCOPE_INDIVIDUAL, garble_PG13filter, SPEECH_FLAG_NONWRITE },
+  { "pg13out", "Makes the character tone down their swear words (to other people)", true, GARBLE_SCOPE_INDIVIDUAL, garble_PG13filter, SPEECH_FLAG_NONWRITE },
+  { "pg13all", "Makes the character not get or say any swear words", true, GARBLE_SCOPE_EVERYONE, garble_PG13filter, SPEECH_FLAG_NONWRITE },
   { "glubglub", "Makes the character say glub glub", true, GARBLE_SCOPE_EVERYONE, garble_glubglub, SPEECH_FLAG_VERBAL }
 };
 
