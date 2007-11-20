@@ -64,224 +64,6 @@ void TBeing::disturbMeditation(TBeing *vict) const
   }
 }
 
-// Deal with whiney bitches
-sstring TBeing::blahblah(const sstring &arg) const
-{
-  sstring obuf, buf, blah, word;
-
-  if (arg.empty())
-    return "";
-
-  unsigned int loc;
-  buf=obuf=arg;
-
-  for(int i=0;!arg.word(i).empty();++i){
-    word=arg.word(i);
-
-    // remove color codes at the beginning
-    while(word.length()>2 && word[0]=='<' && word[2]=='>'){
-      word.erase(0, 3);
-    }
-
-    // make sure we have something left to play with
-    if(word.length()<2)
-      continue;
-
-    // find punctuation at the end of the word and remove
-    for(loc=word.length()-1;loc>0;--loc){
-      if(isalpha(word[loc]) || word[loc]=='>')
-  break;
-    }
-    word.erase(loc, word.length()-loc);
-
-    // make sure we have something left to play with
-    if(word.length()<2)
-      continue;
-
-    // swap out with a random word sometimes
-    if (::number(0, 4)) {
-      blah="blah";
-    } else {
-      blah=word;
-    }
-
-    if(isupper(word[0]))
-      blah[0]=toupper(blah[0]);
-
-    // replace the original word in obuf with whitespace
-    // replace the original word in buf with the new word
-    loc=obuf.find(word, 0);
-    if(loc != sstring::npos){
-      obuf.erase(loc, word.length());
-      obuf.insert(loc, blah.length(), ' ');
-      buf.erase(loc, word.length());
-      buf.insert(loc, blah);
-    }
-  }
-  return buf;
-}
-
-sstring TBeing::PG13filter(const sstring &arg) const
-{
-  sstring output, word, ilname;
-  unsigned int random;
-
-  for(int i=0; !arg.word(i).empty();++i) {
-    word = arg.word(i);
-    for(int j=0; j < 25; j++) {
-      ilname = illegalnames[j];
-      if(ilname[0] == '*')
-  ilname.erase(0, 1);
-      if((int)(word.find(ilname, 0)) >= 0) {
-  for(int k=0; k < (int)word.size(); k++)
-    {
-      random = ::number(9,0);
-      random %= 10;
-      switch(random){
-        case 0:
-    word.replace(k,1,"!");
-    break;
-        case 1:
-    word.replace(k,1,"@");
-    break;
-        case 2:
-    word.replace(k,1,"#");
-    break;
-        case 3:
-    word.replace(k,1,"$");
-    break;
-        case 4:
-    word.replace(k,1,"%");
-    break;
-        case 5:
-    word.replace(k,1,"^");
-    break;
-        case 6:
-    word.replace(k,1,"&");
-    break;
-        case 7:
-    word.replace(k,1,"*");
-    break;
-        case 8: 
-    word.replace(k,1,"|");
-    break;
-        case 9:
-    word.replace(k,1,"?");
-    break;
-       }
-    } 
-  break;
-      }
-    }
-    output += word;
-    output += ' ';
-  }
-  output.erase((output.length()-1), 1);
-  return (output);
-}
-
-// Make drunk people garble their words!
-sstring TBeing::garble(const sstring &arg, int chance) const
-{
-  sstring obuf, buf, latin, word;
-
-  if (arg.empty())
-    return "";
-
-  if (chance <= 9)
-    return arg;
-
-  unsigned int loc;
-  buf=obuf=arg;
-
-  // first, lets turn things into pig latin, word by word
-  for(int i=0;!arg.word(i).empty();++i){
-    word=arg.word(i);
-
-    // remove color codes at the beginning
-    while(word.length()>2 && word[0]=='<' && word[2]=='>'){
-      word.erase(0, 3);
-    }
-
-    // make sure we have something left to play with
-    if(word.length()<2)
-      continue;
-
-    // find punctuation at the end of the word and remove
-    for(loc=word.length()-1;loc>0;--loc){
-      if(isalpha(word[loc]) || word[loc]=='>')
-  break;
-    }
-    word.erase(loc, word.length()-loc);
-
-    // make sure we have something left to play with
-    if(word.length()<2)
-      continue;
-
-    // swap out with a random word sometimes
-    if (::number(0, chance) >= 14){
-      latin=RandomWord();
-    } else {
-      latin=word;
-    }
-
-    // pig latinize sometimes
-    if (::number(0, chance) >= 10){
-      if(isupper(word[0]))
-  latin[0]=tolower(word[0]);
-
-      latin = fmt("%s%cay") % latin.substr(1,latin.length()-1) % latin[0];
-    }
-
-    if(isupper(word[0]))
-      latin[0]=toupper(latin[0]);
-
-
-    // replace the original word in obuf with whitespace
-    // replace the original word in buf with the new word
-    loc=obuf.find(word, 0);
-    if(loc != sstring::npos){
-      obuf.erase(loc, word.length());
-      obuf.insert(loc, latin.length(), ' ');
-      buf.erase(loc, word.length());
-      buf.insert(loc, latin);
-    }
-  }
-  
-  // change some letters randomly
-  for(unsigned int i=0;i<buf.length()-1;++i){
-    // skip color codes
-    if(buf[i-1]=='<' && buf[i+1]=='>')
-      continue;
-
-    if (::number(0, chance) >= 18) {
-      switch (buf[i]) {
-        case 'a':
-        case 'e':
-        case 'i':
-        case 'o':
-        case 'u':
-        case 'A':
-        case 'E':
-        case 'I':
-        case 'O':
-        case 'U':
-          break;
-        case 'z':
-        case 'Z':
-          buf[i] = 'y';
-          break;
-        default:
-          if (isalpha(buf[i]))
-            (buf[i])++;
-          break;
-      }
-    }
-  }
-  return buf;
-}
-
-
 
 // uses printf style arguments
 int TBeing::doSay(const char *fmt, ...)
@@ -301,12 +83,11 @@ int TBeing::doSay(const char *fmt, ...)
 // may return DELETE_THIS
 int TBeing::doSay(const sstring &arg)
 {
-  sstring buf, garbed, capbuf, tmpbuf, nameBuf, garbedBuf, pgbuf, pgstore;
+  sstring capbuf, tmpbuf, nameBuf, garbedBuf, garbleRoom;
   TThing *tmp, *tmp2;
   TBeing *mob = NULL;
   int rc;
   Descriptor *d;
-  int doneonce = 0;
 
   if (desc)
     desc->talkCount = time(0);
@@ -336,13 +117,10 @@ int TBeing::doSay(const sstring &arg)
     return FALSE;
   }
 
-  garbed=garble(arg, getCond(DRUNK));
-  
-  if (hasDisease(DISEASE_DROWNING)) 
-    garbed="Glub glub glub.";
+  garbleRoom = garble(NULL, arg, SPEECH_SAY, GARBLE_SCOPE_EVERYONE);
   
   sendTo(COLOR_COMM, fmt("<g>You say, <z>\"%s%s\"\n\r") % 
-   colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) %
+   colorString(this, desc, garbleRoom, NULL, COLOR_BASIC, FALSE) %
    norm());
 
   // show everyone in room the say.
@@ -360,36 +138,31 @@ int TBeing::doSay(const sstring &arg)
     tmpbuf = fmt("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE); 
     
     if (mob->isPc()) {
-      if(IS_SET(tmp->desc->autobits, AUTO_PG13)) {
-        pgbuf =  garbed;
-        if(doneonce == 0){
-          doneonce = 1;
-          pgstore = PG13filter(pgbuf);
-        }
-        garbed = pgstore;
-      }
-      
+
+      // note: this means only PCs get individualed garbles in a 'say'
+      sstring garbleTo = garble(mob, garbleRoom, SPEECH_SAY, GARBLE_SCOPE_INDIVIDUAL);
+
       if (hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
           tmpbuf = fmt("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_MOBS, FALSE);
-          mob->sendTo(COLOR_COMM, fmt("%s says, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
+          mob->sendTo(COLOR_COMM, fmt("%s says, \"%s%s\"\n\r") % tmpbuf % garbleTo % mob->norm());
           if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
-            garbedBuf = fmt("%s") % colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
+            garbedBuf = fmt("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
             d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
           }
         } else {
-          mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbed);
+          mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo);
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               nameBuf = fmt("<c>%s<z>") % tmpbuf;
-              garbedBuf = fmt("%s") % colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
+              garbedBuf = fmt("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
               d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) % garbedBuf);
             }
         }
       } else {
-        mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbed);
+        mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo);
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
           nameBuf = fmt("<c>%s<z>") % tmpbuf;
-          garbedBuf = fmt("%s") % colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
+          garbedBuf = fmt("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
           d->clientf(fmt("%d|%s|%s") 
               % CLIENT_SAY 
               % colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) 
@@ -398,14 +171,10 @@ int TBeing::doSay(const sstring &arg)
       }
     } else {
       mob->sendTo(COLOR_COMM, fmt("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
-            colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
+            colorString(this, mob->desc, garbleRoom, NULL, COLOR_COMM, FALSE));
       if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
         d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
-       colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
-      }
-    
-    if(IS_SET(tmp->desc->autobits, AUTO_PG13)){
-      garbed = pgbuf;
+       colorString(this, mob->desc, garbleRoom, NULL, COLOR_NONE, FALSE));
       }
     }
   }
@@ -423,7 +192,7 @@ int TBeing::doSay(const sstring &arg)
     if (isPc() && !mob->isPc()) { 
       TMonster *tmons = dynamic_cast<TMonster *>(mob);
       tmons->aiSay(this, NULL);
-      rc = tmons->checkResponses(this, 0, garbed, CMD_SAY);
+      rc = tmons->checkResponses(this, 0, garbleRoom, CMD_SAY);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmons;
         tmons = NULL;
@@ -439,7 +208,12 @@ int TBeing::doSay(const sstring &arg)
 void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 {
   Descriptor *i;
-  bool blah=false;
+  const char *action = "shouts";
+  int garbleFlags = ch->getGarbles(NULL);
+  if (garbleFlags & GARBLE_FLAG_BLAHBLAH)
+    action = "whines";
+  else if (garbleFlags & GARBLE_FLAG_WAHWAH)
+    action = "cries";
 
   for (i = descriptor_list; i; i = i->next) {
     if (i->connected != CON_PLYNG)
@@ -454,8 +228,6 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
       continue;
     if (b->isPlayerAction(PLR_MAILING | PLR_BUGGING))
       continue;
-    if (ch->hasQuestBit(TOG_BLAHBLAH))
-      blah=true;
 
     // don't use awake(), paralyzed should hear, asleep should not
     if (b->getPosition() <= POSITION_SLEEPING)
@@ -487,11 +259,7 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 
       sstring namebuf, namebufc, argbuf, messagebuf;
 
-      if (IS_SET(i->autobits, AUTO_PG13)) {
-  argbuf = b->PG13filter(arg);
-      } else {
-  argbuf = arg;
-      }
+      argbuf = ch->garble(b, arg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
 
       namebufc = colorString(b, i, shouter.cap(), NULL, COLOR_NONE, FALSE);
       if (hasColorStrings(NULL, shouter, 2)) {
@@ -522,17 +290,13 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
         i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % namebufc % messagebuf);
 
       b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s%s\"\n\r") %
-        namebuf %
-        (blah ? "whines" : "shouts") %
-        messagebuf % norm());
+        namebuf % action %  messagebuf % norm());
     }
   }
 }
 
 void TBeing::doShout(const sstring &arg)
 {
-  sstring garbed;
-
   if (desc)
     desc->talkCount = time(0);
 
@@ -596,14 +360,11 @@ void TBeing::doShout(const sstring &arg)
     //sendTo("Shout? Yes! Fine! Shout we must, but WHAT??\n\r");
     return;
   }
-  if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
-       !isImmortal())
-    garbed="Glub glub glub.";
-  else
-    garbed=garble(arg, getCond(DRUNK));
+
+  sstring garbled = garble(NULL, arg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
 
   sendTo(COLOR_COMM, fmt("<g>You shout<Z>, \"%s%s\"\n\r") % 
-   colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
+   colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
 
   loseSneak();
@@ -613,20 +374,14 @@ void TBeing::doShout(const sstring &arg)
 
   addToWait(combatRound(0.5));
 
-  if (hasQuestBit(TOG_BLAHBLAH)) {
-    garbed=blahblah(arg);
-    descriptor_list->sendShout(this, garbed);
-  } else {
-    descriptor_list->sendShout(this, garbed);
-  }
+  descriptor_list->sendShout(this, garbled);
 }
 
 void TBeing::doGrouptell(const sstring &arg)
 {
-  sstring buf, garbed, pgbuff, pgstore;
+  sstring buf, garbled, garbledTo;
   followData *f;
   TBeing *k;
-  int substitute = 0;
 
   if (desc)
     desc->talkCount = time(0);
@@ -660,40 +415,35 @@ void TBeing::doGrouptell(const sstring &arg)
     sendTo("Grouptell is a good command, but you need to tell your group SOMEthing!\n\r");
     return;
   } else {
-    garbed = garble(arg, getCond(DRUNK));
 
-    if(k->desc && IS_SET(k->desc->autobits, AUTO_PG13))
-      garbed = PG13filter(garbed);
+    garbled = garble(NULL, arg, SPEECH_GROUPTELL, GARBLE_SCOPE_EVERYONE);
 
-    convertStringColor("<r>", garbed);
+    convertStringColor("<r>", garbled);
 
-    sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
+    sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
     if (k->desc && (k->desc->m_bIsClient || IS_SET(k->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) && (k != this)) {
-      k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, k->desc, garbed, NULL, COLOR_NONE, FALSE));
+      k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, k->desc, garbled, NULL, COLOR_NONE, FALSE));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
-    buf = fmt("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbed, NULL, COLOR_COMM, FALSE) % k->norm();
+    garbledTo = garble(k, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
+    buf = fmt("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
     act(buf, 0, this, 0, k, TO_VICT);
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
-      if (f->follower->desc && IS_SET(f->follower->desc->autobits, AUTO_PG13)){
-  pgbuff = garbed;
-  garbed = PG13filter(garbed);
-  substitute = 1;
-      }
+
+      // garble this string for the individual recipient
+      garbledTo = garble(f->follower, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
+
       if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
-        f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE));
+        f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_NONE, FALSE));
       }
-      buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE) % f->follower->norm();
+      buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       act(buf, 0, this, 0, f->follower, TO_VICT);
-      if(substitute) {
-  substitute = 0;
-  garbed = pgbuff;
-      }
+
     }
   }
 }
@@ -814,124 +564,6 @@ void TBeing::doCommune(const sstring &arg)
   return;
 }
 
-const sstring RandomWord()
-{
-  static sstring str[50] =
-  {
-    "argle",
-    "bargle",
-    "glop",
-    "glyph",
-    "hussamah",                 // 5 
-    "rodina",
-    "mustafah",
-    "angina",
-    "the",
-    "fribble",                  // 10 */
-    "fnort",
-    "frobozz",
-    "zarp",
-    "ripple",
-    "yrk",                      // 15 */
-    "yid",
-    "yerf",
-    "oork",
-    "beavis",
-    "butthead",                 // 20 */
-    "rod",
-    "johnson",
-    "tool",
-    "ftagn",
-    "hastur",                   // 25 */
-    "brob",
-    "gnort",
-    "lram",
-    "truck",
-    "kill",                     // 30 */
-    "cthulhu",
-    "huzzah",
-    "fish",
-    "chicken",
-    "summah",                   // 35 */
-    "hummah",
-    "cookies",
-    "stan",
-    "will",
-    "wadapatang",               // 40 */
-    "pterodactyl",
-    "frob",
-    "yuma",
-    "gumma",
-    "lo-pan",                   // 45 */
-    "sushi",
-    "yaya",
-    "yoyodine",
-    "your",
-    "mother"                    // 50 */
-  };
-  return (str[number(0, 49)]);
-}
-
-const sstring RandomVerb()
-{
-  // guaranteed insensible
-  static sstring str[50] =
-  {
-    "hoist", 
-    "pinch", 
-    "decorate", 
-    "besmirch", 
-    "conflagrate",              // 5
-    "snook", 
-    "pilfer", 
-    "parlay", 
-    "flummox", 
-    "tender",                   // 10
-    "archive", 
-    "hail", 
-    "ploot", 
-    "castigate", 
-    "micturate",                // 15
-    "tuck", 
-    "strap", 
-    "absolve", 
-    "flagellate", 
-    "abnegate",                 // 20
-    "bowdlerize", 
-    "mesmerize", 
-    "simonize", 
-    "levitate", 
-    "orate",                    // 25
-    "ration", 
-    "finesse", 
-    "enrapture", 
-    "declaim", 
-    "canoodle",                 // 30
-    "atomize", 
-    "massage", 
-    "poeticize", 
-    "criticize", 
-    "harbor",                   // 35
-    "unravel", 
-    "demystify", 
-    "lobby", 
-    "swive", 
-    "scrump",                   // 40
-    "deride", 
-    "remune", 
-    "addle", 
-    "brindle", 
-    "coddle",                   // 45
-    "succor", 
-    "embarrass", 
-    "dominate", 
-    "envalorize", 
-    "encapitate"                // 50
-  };
-  return (str[number(0, 49)]);
-}
-
-
 int TBeing::doSign(const sstring &arg)
 {
   sstring word, buf;
@@ -966,25 +598,7 @@ int TBeing::doSign(const sstring &arg)
     return FALSE;
   }
 
-  // work through the arg, word by word.  if you fail your
-  //  skill roll, the word comes out garbled. */
-
-  unsigned int pos=0;
-
-  while(pos!=sstring::npos){
-    word=arg.substr(pos, arg.find_first_of(whitespace,pos)-pos);
-    
-    if(bSuccess(getSkillValue(SKILL_SIGN) - buf.length(), SKILL_SIGN))
-      buf+=word;
-    else
-      buf+=RandomWord();
-
-    // skip past the whitespace to the beginning of the next word
-    pos=arg.find_first_of(whitespace,pos);
-    if(pos!=sstring::npos)
-      buf+=arg.substr(pos, arg.find_first_not_of(whitespace,pos)-pos);
-    pos=arg.find_first_not_of(whitespace,pos);
-  }
+  buf = garble(NULL, arg, SPEECH_SIGN, GARBLE_SCOPE_EVERYONE);
 
   sendTo(fmt("You sign, \"%s\"\n\r") % arg);
   if (buf!=arg)
@@ -1002,7 +616,10 @@ int TBeing::doSign(const sstring &arg)
       continue;
     if (ch != this && ch->doesKnowSkill(SKILL_SIGN)) {
       if (bSuccess(SKILL_SIGN))
-        act(buf, TRUE, this, 0, ch, TO_VICT);
+      {
+        sstring bufToVict = garble(ch, buf, SPEECH_SIGN, GARBLE_SCOPE_INDIVIDUAL);
+        act(bufToVict, TRUE, this, 0, ch, TO_VICT);
+      }
         if (isPc() && !ch->isPc()) { 
           TMonster *tmons = dynamic_cast<TMonster *>(ch);
           tmons->aiSay(this, NULL);
@@ -1119,7 +736,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   int drunkNum = getCond(DRUNK);
   sstring garbed;
-  garbed = garble(message, drunkNum);
+  garbed = garble(vict, message, SPEECH_TELL);
 
   if(vict->isImmortal() && drunkNum>0)
     garbed=message;
@@ -1128,15 +745,12 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     delete vict;
     vict = NULL;
   }
+
   if (IS_SET_DELETE(rc, DELETE_VICT)) 
     return DELETE_THIS;
 
   if (rc)
     return FALSE;
-
-  if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
-       !isImmortal() && !vict->isImmortal())
-    garbed = "Glub glub glub.";
 
   capbuf=vict->pers(this);
 
@@ -1163,8 +777,6 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // the stuff we send to the teller.
   convertStringColor("<c>", garbed);
 
-  if(vict->desc && IS_SET(vict->desc->autobits, AUTO_PG13))
-    garbed = PG13filter(garbed);
   if(vict->isImmortal() && drunkNum>0){
     vict->sendTo(COLOR_COMM, fmt("%s drunkenly tells you, \"<c>%s<z>\"\n\r") %
      nameBuf % garbed);
@@ -1249,9 +861,7 @@ int TBeing::doWhisper(const sstring &arg)
   }
 
   sstring garbed;
-  garbed= garble(message, getCond(DRUNK));
-  if(vict->desc && IS_SET(vict->desc->autobits, AUTO_PG13))
-    garbed = PG13filter(garbed);
+  garbed= garble(vict, message, SPEECH_WHISPER);
 
   buf = fmt("$n whispers to you, \"%s\"") % colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE);
 
@@ -1330,7 +940,7 @@ int TBeing::doAsk(const sstring &arg)
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
-    garbled=garble(message, getCond(DRUNK));
+    garbled=garble(vict, message, SPEECH_ASK);
 
     buf = fmt("$n asks you, \"%s\"") % garbled;
     act(buf, TRUE, this, 0, vict, TO_VICT);

@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "disc_psionics.h"
+#include "garble.h"
 
 CDPsionics::CDPsionics() :
   CDiscipline(),
@@ -97,7 +98,7 @@ static void convertStringColor(const sstring replacement, sstring & str)
 int TBeing::doPTell(const char *arg, bool visible){
   TBeing *vict;
   char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];
-  int rc, drunkNum=0;
+  int rc;
 
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
@@ -163,13 +164,7 @@ int TBeing::doPTell(const char *arg, bool visible){
     return FALSE;
   }
 
-  if(!bSuccess(SKILL_PSITELEPATHY))
-    drunkNum=20;
-  else 
-    drunkNum = getCond(DRUNK);
-
-  sstring garbed;
-  garbed = garble(message, drunkNum);
+  sstring garbed = garble(vict, message, SPEECH_TELL);
 
   rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -241,7 +236,6 @@ int TBeing::doPSay(const char *arg){
   char capbuf[256];
   char tmpbuf[256], nameBuf[256], garbedBuf[256];
   Descriptor *d;
-  int drunkNum=0;
 
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
@@ -267,12 +261,8 @@ int TBeing::doPSay(const char *arg){
   if (!*arg)
     sendTo("Yes, but WHAT do you want to say telepathically?\n\r");
   else {
-    if(!bSuccess(SKILL_PSITELEPATHY))
-      drunkNum=20;
-    else 
-      drunkNum=getCond(DRUNK);
 
-    mud_str_copy(garbed, garble(arg, drunkNum), 256);
+    mud_str_copy(garbed, garble(NULL, arg, SPEECH_SAY), 256);
 
     sendTo(COLOR_COMM, fmt("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
     // show everyone in room the say.
@@ -363,7 +353,6 @@ int TBeing::doPSay(const char *arg){
 void TBeing::doPShout(const char *msg){
   Descriptor *i;
   char garbed[256];
-  int drunkNum=0;
   
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
@@ -385,13 +374,7 @@ void TBeing::doPShout(const char *msg){
     sendTo("What do you wish to broadcast to the world?\n\r");
     return;
   } else {
-    if(!bSuccess(SKILL_PSITELEPATHY))
-      drunkNum=20;
-    else 
-      drunkNum=getCond(DRUNK);
-    
-    mud_str_copy(garbed, garble(msg, drunkNum), 256);
-
+    mud_str_copy(garbed, garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE), 256);
 
     sendTo(COLOR_SPELLS, fmt("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
     for (i = descriptor_list; i; i = i->next) {
@@ -400,8 +383,10 @@ void TBeing::doPShout(const char *msg){
 	  (dynamic_cast<TMonster *>(i->character) ||
 	   (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
 	   !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
+	     char garbed_individual[256];
+	     mud_str_copy(garbed_individual, garble(i->character, garbed, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL), 256);
 	i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
-	i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % garbed % i->character->norm());
+	i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
       }
     }
   }

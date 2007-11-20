@@ -6,6 +6,7 @@
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_magic_item.h"
+#include "garble.h"
 
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
@@ -1218,6 +1219,7 @@ int rombler(TBeing *caster, int, byte bKnown)
     return SPELL_FAIL;
   }
 
+  msg = caster->garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
 
   if (caster->bSuccess(bKnown, SPELL_ROMBLER)) {
     if (msg.size() < 0) {
@@ -1231,19 +1233,13 @@ int rombler(TBeing *caster, int, byte bKnown)
             (dynamic_cast<TMonster *>(i->character) ||
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
-	  if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
-            if(IS_SET(i->autobits, AUTO_PG13)){
-	      pgbuff = i->character->PG13filter(msg);
-	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
+        if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
 
-	      if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-		i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
-	    } else {
-	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() %  msg % i->character->norm());
+          pgbuff = caster->garble(i->character, msg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+          i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
+          if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+            i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
 
-              if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-                i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, msg, NULL, COLOR_NONE, FALSE));
-	    }
           } else {
 	    int num = ::number(0,3);
 	    if (num == 0) {

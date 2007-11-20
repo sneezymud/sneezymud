@@ -39,6 +39,7 @@ TBeing::TBeing() :
   invisLevel(0),
   my_protection(0),
   combatMode(ATTACK_NORMAL),
+  my_garbleFlags(0),
   faction(),
   discs(NULL),
   inPraying(0), 
@@ -1265,6 +1266,7 @@ TBeing::TBeing(const TBeing &a) :
   invisLevel(a.invisLevel),
   my_protection(a.my_protection),
   combatMode(a.combatMode),
+  my_garbleFlags(a.my_garbleFlags),
   faction(a.faction),
   inPraying(a.inPraying),
   inQuaffUse(a.inQuaffUse),
@@ -1376,6 +1378,7 @@ TBeing & TBeing::operator=(const TBeing &a)
   m_craps = a.m_craps;
   invisLevel = a.invisLevel;
   my_protection = a.my_protection;
+  my_garbleFlags = a.my_garbleFlags;
   equipment = a.equipment;
 
   for (i = 1; i< MAX_TOG_INDEX; i++) {

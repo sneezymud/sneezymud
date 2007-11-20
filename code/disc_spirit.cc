@@ -1722,7 +1722,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
 {
   Descriptor *i;
   const char *msg = caster->spelltask->orig_arg;
-  sstring pgbuf;
+  sstring garbled, pgbuf;
 
   for (; isspace(*msg); msg++);
 
@@ -1738,6 +1738,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
       caster->sendTo("Telepathy is a nice spell, but you need to send some sort of message!\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
+      garbled = caster->garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
       caster->sendTo(COLOR_SPELLS, fmt("You telepathically send the message, \"%s<z>\"\n\r") % msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
@@ -1746,23 +1747,12 @@ int telepathy(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 
-	  i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
-	  //	  if (!strcmp(caster->name, "Frobozz") || !strcmp(caster->name, "Belannaer"))
-	  //	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \")I abused telepath % and I'm a loser!%s\"\n\r" % i->character->norm());
-	  //	  else
-	  if(IS_SET(i->autobits, AUTO_PG13)){
-	    pgbuf = msg;
-	    pgbuf = i->character->PG13filter(pgbuf);
-	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
+          i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
+          pgbuf = caster->garble(i->character, garbled, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+          i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
+          if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+          i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
 
-	    if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-	      i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
-	  } else {
-	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % msg % i->character->norm());
-
-	    if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-	      i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, msg, NULL, COLOR_NONE, FALSE));
-          }
         }
       }
       caster->addToMove(-5);

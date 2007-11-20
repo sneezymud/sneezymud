@@ -22,6 +22,7 @@ public:
   const sstring word(int) const;
   const sstring comify() const;
   const sstring replaceString(sstring, sstring) const;
+  const sstring trim() const;
 
   // other functions
   const bool hasDigit() const;

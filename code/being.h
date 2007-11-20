@@ -52,7 +52,12 @@
 #include "structs.h"
 #endif
 
+#ifndef __GARBLE_H
+#include "garble.h"
+#endif
+
 #include "guild.h"
+
 
 class TTrophy;
 class TWindow;
@@ -601,6 +606,7 @@ class TBeing : public TThing {
     byte my_protection;       // % reduction for sanct
     bodyPartsDamage body_parts[MAX_WEAR];
     attack_mode_t combatMode;      
+    int my_garbleFlags;
 
   public:
     factionData faction;
@@ -2044,9 +2050,6 @@ class TBeing : public TThing {
     const sstring addColorRoom(TRoom *, int) const;
     sstring autoFormatDesc(const sstring &, bool) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
-    sstring garble(const sstring &, int) const;
-    sstring PG13filter(const sstring &)const;
-    sstring blahblah(const sstring &) const;
     void doLook(const sstring &, cmdTypeT, TThing *specific = NULL);
     void lookDark();
     void lookDir(int);
@@ -2156,6 +2159,12 @@ class TBeing : public TThing {
     int get_spirit_tools(TTool **, TTool **, TTool **);
 
     void addToRandomStat(int);
+
+    // Garble code, contained in garble.h and garble.cc
+    int getGarbles(TBeing *to) const;
+    int toggleGarble(GARBLETYPE garble);
+    sstring garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GARBLESCOPE garbleScope = GARBLE_SCOPE_ALL) const;
+
 };
 
 #endif

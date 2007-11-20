@@ -463,7 +463,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   if (isImmortal()) {
     garbled = regStr;
   } else {
-    garbled = garble(regStr, getCond(DRUNK));
+    garbled = garble(NULL, regStr, SPEECH_ROOMDESC, GARBLE_SCOPE_SELF);
   }
   
   if ( (garbled.find("   ")) != sstring::npos) {

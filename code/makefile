@@ -162,7 +162,8 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	toggle.o 		trap.o  		utility.o          \
 	weather.o 		sys_loot.o 		wiz_data.o         \
 	wiz_powers.o 		shopowned.o		corporation.o	   \
-	liquids.o		guild.o			shopaccounting.o
+	liquids.o		guild.o			shopaccounting.o  \
+	garble.o  
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
@@ -20541,6 +20542,128 @@ objs/games.o: connect.h obj_drug.h charfile.h being.h guild.h person.h
 objs/games.o: monster.h paths.h account.h extern.h handler.h obj_money.h
 objs/games.o: spec_mobs.h materials.h colorstring.h format.h games.h
 objs/games.o: game_crazyeights.h game_drawpoker.h obj_casino_chip.h
+objs/garble.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/garble.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/garble.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/garble.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/garble.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/garble.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/garble.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/garble.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/garble.o: /usr/include/gconv.h
+objs/garble.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/garble.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+objs/garble.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/garble.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/garble.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/garble.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/garble.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/garble.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/garble.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/garble.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/garble.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/garble.o: /usr/include/bits/mathcalls.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/garble.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/garble.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/garble.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/garble.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/garble.o: /usr/include/pthread.h /usr/include/sched.h
+objs/garble.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/garble.o: /usr/include/bits/sigset.h /usr/include/bits/pthreadtypes.h
+objs/garble.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/garble.o: /usr/include/c++/3.3.4/cwchar /usr/include/c++/3.3.4/memory
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/garble.o: /usr/include/c++/3.3.4/climits
+objs/garble.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/garble.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/garble.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/garble.o: /usr/include/c++/3.3.4/exception /usr/include/c++/3.3.4/iosfwd
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/garble.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/garble.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/garble.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/garble.o: /usr/include/libintl.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/garble.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/garble.o: /usr/include/c++/3.3.4/algorithm
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/garble.o: /usr/include/c++/3.3.4/vector
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/garble.o: /usr/include/c++/3.3.4/map
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/garble.o: /usr/include/c++/3.3.4/list
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/garble.o: /usr/include/c++/3.3.4/deque
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_deque.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/garble.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
+objs/garble.o: /usr/include/c++/3.3.4/ios
+objs/garble.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/garble.o: /usr/include/c++/3.3.4/streambuf
+objs/garble.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/garble.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/garble.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/garble.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/garble.o: /usr/include/c++/3.3.4/locale
+objs/garble.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/garble.o: /usr/include/c++/3.3.4/limits
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/garble.o: /usr/include/c++/3.3.4/typeinfo /usr/include/c++/3.3.4/istream
+objs/garble.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/garble.o: /usr/include/c++/3.3.4/sstream
+objs/garble.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/garble.o: /usr/include/c++/3.3.4/fstream
+objs/garble.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/garble.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h enum.h
+objs/garble.o: spells.h structs.h parse.h immunity.h discipline.h spell2.h
+objs/garble.o: db.h ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/garble.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/garble.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/garble.o: create.h thing.h obj.h spec_objs.h obj_mergeable.h room.h
+objs/garble.o: connect.h obj_drug.h charfile.h being.h guild.h person.h
+objs/garble.o: monster.h paths.h account.h extern.h handler.h obj_money.h
+objs/garble.o: spec_mobs.h materials.h colorstring.h format.h garble.h
 objs/guild.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/guild.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/guild.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -38199,6 +38322,7 @@ objs/repair.o: /usr/include/mysql/mysql_com.h /usr/include/mysql/mysql_time.h
 objs/repair.o: /usr/include/mysql/mysql_version.h
 objs/repair.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/repair.o: /usr/include/mysql/my_alloc.h shopowned.h rent.h
+objs/repair.o: obj_commodity.h
 objs/respeditor.cgi.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -50670,8 +50794,8 @@ objs/structs.o: game_crazyeights.h game_drawpoker.h obj_base_corpse.h
 objs/structs.o: obj_base_container.h obj_table.h obj_seethru.h cmd_trophy.h
 objs/structs.o: obj_open_container.h obj_component.h obj_tooth_necklace.h
 objs/structs.o: obj_expandable_container.h obj_potion.h obj_base_cup.h
-objs/structs.o: timing.h /usr/include/sys/time.h /usr/include/sys/select.h
-objs/structs.o: /usr/include/bits/select.h
+objs/structs.o: socket.h timing.h /usr/include/sys/time.h
+objs/structs.o: /usr/include/sys/select.h /usr/include/bits/select.h
 objs/sys_loot.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sys_loot.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sys_loot.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h

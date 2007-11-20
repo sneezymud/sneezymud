@@ -276,6 +276,7 @@ void TBeing::doEgoTrip(const char *arg)
   badsyn += "portal - creates a portal to the target mob/player\n\r";
   badsyn += "teleport - teleports the targeted mob/player, ignoring room flags\n\r";
   badsyn += "disease <target> <disease> - makes someone feel bad.\n\r";
+  badsyn += "garble [<target>] [<garble>] - garbles someones speech.\n\r";
 
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
@@ -735,6 +736,47 @@ void TBeing::doEgoTrip(const char *arg)
     }
 
     return;
+  } else if (is_abbrev(argument, "garble")) {
+
+    sstring target, garble;
+    TBeing *garblePerson = NULL;
+    restarg = one_argument(restarg, target);
+    restarg = one_argument(restarg, garble);
+
+    if (!target.empty())
+      garblePerson = get_char_vis_world(this, target, NULL, EXACT_NO);
+
+    // list garbles if target is empty
+    if (garblePerson == NULL) {
+      sendTo("The list of available garbles to apply:\n\r");
+      for (int iGarble=0; iGarble < GARBLE_MAX; iGarble++)
+        sendTo(fmt(GarbleData[iGarble].automatic ? "  %s : %s (auto)\n\r" : "  %s : %s \n\r") % GarbleData[iGarble].name % GarbleData[iGarble].description);
+      return;
+    }
+
+    // toggle that persons garbles
+    if (!garble.empty()) {
+      for (int iToggGarble=0; iToggGarble < GARBLE_MAX; iToggGarble++) {
+        if (is_abbrev(garble, GarbleData[iToggGarble].name)) {
+          sendTo(fmt("Toggling garble \"%s\" on %s.\n\r") % GarbleData[iToggGarble].name % garblePerson->name);
+          garblePerson->toggleGarble((GARBLETYPE)iToggGarble);
+          break;
+        }
+      }
+    }
+
+    // list the target's garbles
+    string printout = fmt("%s has the following set of garbles applied: ") % garblePerson->name;
+    int garbles = garblePerson->getGarbles(NULL);
+    for (int iTargetGarble=0; iTargetGarble < GARBLE_MAX; iTargetGarble++) {
+      if (garbles & (1<<iTargetGarble)) {
+        printout += GarbleData[iTargetGarble].name;
+        printout += GarbleData[iTargetGarble].automatic ? "* " : " ";
+      }
+    }
+    printout += "\n\r";
+    sendTo(printout);
+
   } else {
     sendTo(badsyn);
     return;

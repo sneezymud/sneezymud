@@ -236,5 +236,18 @@ const sstring & sstring::operator=(fmt &a)
   return *this;
 }
 
+// removes leading and trailing whitespace
+const sstring sstring::trim() const
+{
+  unsigned int iStart, iEnd;
+  sstring whitespace = " \f\n\r\t\v"; // same as word whitespace
 
+  iStart = find_first_not_of(whitespace);
+  iEnd = find_last_not_of(whitespace);
+
+  if (iStart == sstring::npos)
+    return *this;
+
+  return substr(iStart, iEnd-iStart);
+}
 
