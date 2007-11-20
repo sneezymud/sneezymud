@@ -16,6 +16,17 @@ D 0 19009 2 1        Powder Room -> The Tequila Sunrise Common Room
 D 0 19007 2 1        The Tequila Sunrise Common Room -> Captain's Cabin
 D 0 19011 0 1        Captain's Cabin -> The Tequila Sunrise Common Room
 
+* hatch to brig
+D 0 19007 5 2        The Tequila Sunrise Common Room -> Filthy Brig
+D 0 19014 4 2        Filthy Brig -> The Tequila Sunrise Common Room
+
+* brig to cells
+D 0 19014 0 2        Filthy Brig -> Disgusting Cell
+D 0 19015 2 2        Disgusting Cell -> Filthy Brig
+
+D 0 19014 2 2        Filthy Brig -> Disgusting Cell
+D 0 19016 0 2        Disgusting Cell -> Filthy Brig
+
 *********
 * props *
 *********
@@ -284,6 +295,20 @@ Z 0 0 100                vicious pirate local set
 * powder room
 M 0 19009 1 19009        the quartermaster
 Z 0 3 100                the quartermaster's local set
+
+* filthy brig
+M 0 19016 1 19014        a snoozing guard
+
+* disgusting cells
+M 0 19012 1 19015        a sailor doomed to keelhauling
+M 0 19013 1 19015        a shamed pirate
+M 0 19014 1 19015        a sassy lass
+M 0 19017 1 19015        a mess of fleas
+
+M 0 19012 1 19016        a sailor doomed to keelhauling
+M 0 19013 1 19016        a shamed pirate
+M 0 19014 1 19016        a sassy lass
+M 0 19017 1 19016        a mess of fleas
 
 S
 
