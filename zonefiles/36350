@@ -1,6 +1,8 @@
 #36350
-Vasco -~
-36426 30 2 0
+Vasco - Gnomish Wonders - Ladybird Den~
+36426 30 2 1
+
+* there are a million doors in this zone
 D 0 36356 1 2        Tunnel Through Molten Lava -> Brick-walled Antechamber
 D 0 36357 3 2        Brick-walled Antechamber -> Tunnel Through Molten Lava
 D 0 36358 1 2        A Cavernous Underground Room -> A Musty Underground Prison
@@ -28,15 +30,30 @@ D 0 36403 5 1        Long Spiral Staircase -> Throne Room
 D 0 36407 4 1        Top of a Long Spiral Staircase -> The Top of a Colossal Tower
 D 0 36408 2 2        Before a Set of Large Wooden Doors -> Quiet Marble Hall
 D 0 36418 1 1        Path Between a Large Tower and a Mountain -> Before A Hole In A Large Log
+
+* props and portals
 O 0 36378 1 36369       a glowing portal
 O 0 36379 1 36402       a huge throne
 O 0 36377 1 36406       a glowing portal
+
+* mobs without eq loads
 M 0 36353 1 36350       an ominous-looking jellyfish
 M 0 36352 2 36350       a huge red fish with a gigantic mouth
 M 0 36352 1 36352       a huge red fish with a gigantic mouth
 M 0 36353 1 36355       an ominous-looking jellyfish
 M 0 36352 2 36355       a huge red fish with a gigantic mouth
 M 0 36355 1 36358       Vermithrax
+M 0 36359 1 36361       Princess Clementine
+M 0 36351 1 36366       a flying fish
+M 0 36351 2 36377       a flying fish
+M 0 36353 4 36377       an ominous-looking jellyfish
+M 0 36351 2 36377       a flying fish
+M 0 36353 8 36377       an ominous-looking jellyfish
+M 0 36366 1 36406       Gnefrod, the royal gnome mage
+M 0 36350 1 36381       a mushroom warrior
+M 0 36350 1 36382       a mushroom warrior
+
+* mobs with eq loads
 M 0 36354 2 36359       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -60,6 +77,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36354 4 36359       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -83,6 +101,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36356 1 36360       Tarfox, Captain of the Green Ladybirds
 ? 0 3 0 E
 E 1 36403 9999 5          a skullcap of dark green leather [head]
@@ -107,7 +126,7 @@ E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
 ? 0 3 0 E
 E 1 34036 9999 19         a vampiric dagger [hold-left]
-M 0 36359 1 36361       Princess Clementine
+
 M 0 36367 1 36362       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -133,6 +152,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36367 1 36363       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -158,6 +178,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36367 1 36364       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -183,6 +204,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36367 1 36365       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -208,7 +230,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
-M 0 36351 1 36366       a flying fish
+
 M 0 36369 1 36368       the ghost of an Elite Gnome Cadre soldier
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -234,6 +256,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36354 1 36369       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -257,6 +280,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36354 2 36370       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -280,6 +304,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36354 4 36370       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -303,6 +328,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36354 1 36371       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -326,6 +352,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36369 1 36375       the ghost of an Elite Gnome Cadre soldier
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -351,6 +378,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36370 1 36376       the ghost of Gnario, captain of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -376,10 +404,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
-M 0 36351 2 36377       a flying fish
-M 0 36353 4 36377       an ominous-looking jellyfish
-M 0 36351 2 36377       a flying fish
-M 0 36353 8 36377       an ominous-looking jellyfish
+
 M 0 36369 1 36378       the ghost of an Elite Gnome Cadre soldier
 E 1 36362 9999 5          a fine gnomemail helm [head]
 ? 0 3 0 E
@@ -404,6 +429,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36361 1 36380       a hunched gnome shaman
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -430,7 +456,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
-M 0 36350 1 36381       a mushroom warrior
+
 M 0 36361 2 36381       a hunched gnome shaman
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -457,7 +483,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
-M 0 36350 1 36382       a mushroom warrior
+
 M 0 36362 2 36382       an entranced shaman
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -484,6 +510,7 @@ E 1 36417 9999 7          a panther skin legging [leg-left]
 E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+
 M 0 36363 2 36383       a wild-eyed shaman
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -510,6 +537,7 @@ E 1 36417 9999 7          a panther skin legging [leg-left]
 E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+
 M 0 36363 4 36383       a wild-eyed shaman
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -536,6 +564,7 @@ E 1 36417 9999 7          a panther skin legging [leg-left]
 E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+
 M 0 36363 1 36384       a wild-eyed shaman
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -562,6 +591,7 @@ E 1 36417 9999 7          a panther skin legging [leg-left]
 E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+
 M 0 36363 1 36385       a wild-eyed shaman
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -588,6 +618,7 @@ E 1 36417 9999 7          a panther skin legging [leg-left]
 E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+
 M 0 36367 1 36387       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -613,6 +644,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36365 1 36391       a burly gnome savage
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -639,6 +671,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+
 M 0 36365 1 36393       a burly gnome savage
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -665,6 +698,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+
 M 0 36365 1 36395       a burly gnome savage
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -691,6 +725,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+
 M 0 36365 1 36396       a burly gnome savage
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -717,6 +752,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+
 M 0 36354 2 36397       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -742,6 +778,7 @@ E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 ? 0 3 0 E
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
 ? 0 3 0 E
+
 M 0 36354 4 36397       a member of The Green Ladybirds
 E 1 36427 9999 19         a short black dirk [hold-left]
 ? 0 3 0 E
@@ -765,6 +802,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36358 1 36398       Mortis, second lieutenant of the Green Ladybirds
 ? 0 3 0 E
 E 1 36403 9999 5          a skullcap of dark green leather [head]
@@ -789,6 +827,7 @@ E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
 ? 0 3 0 E
 E 1 36411 9999 19         a short black mace [hold-left]
+
 M 0 36360 1 36399       Noefris, third lieutentant of the Green Ladybirds
 ? 0 3 0 E
 E 1 36403 9999 5          a skullcap of dark green leather [head]
@@ -812,6 +851,7 @@ E 1 36406 9999 15         a wide belt of dark green leather [waist]
 ? 0 3 0 E
 E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
 E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -837,6 +877,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -863,6 +904,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36367 1 36402       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -888,6 +930,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36371 1 36402       a shaken soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -913,6 +956,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 36368 1 36402       King Gnumble
 ? 0 3 0 E
 E 1 36365 9999 5          a helm with a frog-faced visor [head]
@@ -942,7 +986,7 @@ E 1 36372 9999 9          an oversized boot of green platemail [foot-left]
 E 1 36368 9999 18         a spiked turtle shell [hold-right]
 ? 0 3 0 E
 E 1 36382 9999 19         an ice-covered flail [hold-left]
-M 0 36366 1 36406       Gnefrod, the royal gnome mage
+
 M 0 36367 1 36408       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -969,6 +1013,7 @@ E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
 ? 0 3 0 E
+
 M 0 36367 1 36408       a soldier of the Elite Gnome Cadre
 ? 0 3 0 E
 E 1 36362 9999 5          a fine gnomemail helm [head]
@@ -994,6 +1039,7 @@ E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
 E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
 ? 0 3 0 E
 E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+
 M 0 34038 1 36418       Rothwar
 ? 0 3 0 E
 E 1 34062 9999 5          a bizarre headband [head]
@@ -1021,6 +1067,7 @@ E 1 34054 9999 9          a bizarre ankle-wrap [foot-left]
 E 1 34052 9999 18         a bizarre shield [hold-right]
 ? 0 3 0 E
 E 1 34063 9999 19         a dull, wide saber [hold-left]
+
 M 0 36372 2 36421       an intense-looking shaman
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
@@ -1047,6 +1094,7 @@ E 1 36416 9999 9          a small boot of panther skin [foot-left]
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers 
 E 1 36413 9999 19         a holy spear ornamented with feathers
+
 M 0 36372 4 36421       an intense-looking shaman
 ? 0 3 0 E
 E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
