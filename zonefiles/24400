@@ -55,6 +55,8 @@ D 0 24465 3 1   Toymaker's Shop to Residence
 D 0 24466 1 1
 D 0 24466 3 1   Toymaker's Residence to a Small Home
 D 0 24467 1 1
+D 0 24453 2 1   Door for connection to Gnomish Wonders
+
 *
 * LOADING LAMPPOSTS AND LIGHT FIXTURES
 O 0 24425 1 24401 	Lamppost
