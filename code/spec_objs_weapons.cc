@@ -2331,11 +2331,11 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
         temp = tmp_victim->next;
         if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim) &&
-            (!tmp_victim->isImmortal())) {
+            (!tmp_victim->isImmortal()) && !ch->noHarmCheck(tmp_victim) ) {
           dmg = ::number(1,max(1,ch->getWeaponDam(tmp_victim, o, hand)));
       if (vict->getRace() == RACE_GNOME)
         dmg += dmg/2;
-          if (ch->inGroup(*tmp_victim)) {
+          if (ch->inGroup(*tmp_victim) || (tmp_victim->master && ch->inGroup(*(tmp_victim->master)))) {
             // protect group members
             act("You feel a deep silence descend around you.",
               false, tmp_victim, o, vict, TO_CHAR, ANSI_CYAN);
@@ -2370,7 +2370,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
         temp = tmp_victim->next;
         if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim) &&
             (!tmp_victim->isImmortal())) {
-          if (ch->inGroup(*tmp_victim)) {
+          if (ch->inGroup(*tmp_victim) || (tmp_victim->master && ch->inGroup(*(tmp_victim->master)))) {
             act("The deep silence lifts from around you.",
               false, tmp_victim, o, vict, TO_CHAR, ANSI_CYAN);
             continue;

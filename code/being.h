@@ -1746,7 +1746,7 @@ class TBeing : public TThing {
     void setBank(int bank);
     int getMoney() const;
     void setMoney(int money);
-    void addToMoney(int money, moneyTypeT type);
+    void addToMoney(int money, moneyTypeT type, bool allowTithe = true);
     void giveMoney(TBeing *, int money, moneyTypeT);
     sexTypeT getSex() const;
     void setSexUnsafe(int sex);

@@ -39,8 +39,8 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
   }
   caster->addToMoney(-2500, GOLD_HOSPITAL);
 
-  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESURRECTION)) {
-    victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL);
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESURRECTION) &&
+    (victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
     *caster->roomp += *victim;
     victim->genericCharmFix();
     victim->setHit(1);

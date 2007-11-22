@@ -930,6 +930,27 @@ int clot(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spell)
   if(slot == WEAR_NOWHERE && spell==SKILL_WOHLIN)
     return SPELL_FAIL;
 
+  // internal bleeding
+  if (slot == WEAR_NOWHERE && victim->hasDisease(DISEASE_HEMORRAGE)) {
+    // we mimic the check for cure disease here to make it harder to cure this powerful malady
+    // curing internal bleeding is the same difficulty as curing DISEASE_LEPROSY
+    int chance = min((caster->getSkillValue(spell) - 50 + 1) * 3, (int)MAX_SKILL_LEARNEDNESS);
+
+    if (::number(1,(int)MAX_SKILL_LEARNEDNESS) > chance ||
+        !caster->bSuccess(bKnown, caster->getPerc(), spell)) {
+      caster->deityIgnore();
+      return SPELL_FAIL;
+    }
+    victim->diseaseFrom(DISEASE_HEMORRAGE);
+    act("Your internal bleeding halts and you feel you can breath a bit easier!", FALSE, victim, NULL, NULL, TO_CHAR);
+    act("$n's seems to breath easier as their internal bleeding is cured!", FALSE, victim, NULL, NULL, TO_ROOM);
+    caster->reconcileHelp(victim,discArray[spell]->alignMod);
+    checkFactionHelp(caster,victim);
+
+    victim->doSave(SILENT_YES);
+    return SPELL_SUCCESS;
+  }
+
   if (slot == WEAR_NOWHERE) {
     caster->sendTo("Uhm, are they bleeding???\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);

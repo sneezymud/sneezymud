@@ -649,7 +649,7 @@ class TObj : public TThing {
     virtual void describeMe(TBeing *) const;
     virtual void giveToRepair(TMonster *, TBeing *, int *);
     int maxFix(const TBeing *, depreciationTypeT) const;
-    int repairPrice(TBeing *, TBeing *, depreciationTypeT, bool) const;
+    int repairPrice(TBeing *, TBeing *, depreciationTypeT, bool, int *) const;
     virtual void writeAffects(int, FILE *) const;
     virtual int addApply(TBeing *, applyTypeT);
     virtual void noteMe(TMonster *, TBeing*, TObj *, time_t, int) {}

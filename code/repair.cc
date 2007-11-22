@@ -82,27 +82,24 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
   // look through the commod shop inventory
   for(t=tso.getStuff();t;t=t->nextThing){
     // find the appropriate commodity
-    if((commod=dynamic_cast<TCommodity *>(t)) &&
-       commod->getMaterial() == mat){
-
+    if((commod=dynamic_cast<TCommodity *>(t)) && commod->getMaterial() == mat){
       // get the price of the commods we need
       if(commod->numUnits() > mats_needed){
-	mat_price += commod->shopPrice(mats_needed, 15, 0, buyer);
-	if(purchase){
-	  tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-	  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
-
-	  commod->setWeight(commod->getWeight() - mats_needed/10.0);
-	}
-	mats_needed=0;
+        mat_price += commod->shopPrice(mats_needed, 15, 0, buyer);
+        if(purchase){
+          tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+          shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
+          commod->setWeight(commod->getWeight() - mats_needed/10.0);
+        }
+        mats_needed=0;
       } else {
-	mat_price += commod->shopPrice(commod->numUnits(), 15, 0, buyer);
-	if(purchase){
-	  tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-	  shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
-	  delete commod;
-	}
-	mats_needed-=commod->numUnits();
+        mat_price += commod->shopPrice(commod->numUnits(), 15, 0, buyer);
+        if(purchase){
+          tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+          shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
+          delete commod;
+        }
+        mats_needed-=commod->numUnits();
       }
       break;
     }
@@ -112,7 +109,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
 }
 
 
-int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done, bool purchase=false) const
+int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done, bool purchase=false, int *pmatCost = NULL) const
 {
   unsigned int shop_nr=0;
 
@@ -152,7 +149,6 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
 
   // 200% base cost for materials that we can't purchase
   mat_price+=(int)(mats_needed * material_nums[getMaterial()].price * 2);
-  price += mat_price;
 
   //  vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
 
@@ -212,23 +208,27 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
 	profit_buy *= quality;
     }
     
-
+    mat_price = (int)((double) mat_price * profit_buy);
     price = (int)((double) price * profit_buy);
   }
+
+  if (pmatCost)
+    *pmatCost = mat_price;
 
   // I don't know why this is here and it's causing problems
   //  price = (price * 75) / 100;
 
-  return (price);
+  return (mat_price+price);
 }
 
 // time it will take to repair an item in seconds 
 static int repair_time(TBeing *keeper, const TObj *o)
 {
   int structs;
-  double percDam;
+//  double percDam;
   double iTime;
-  int MINS_AT_60TH = 60; // maximum (full repair) for 60TH level eq
+  float speed = 0;
+//  int MINS_AT_60TH = 60; // maximum (full repair) for 60TH level eq
   unsigned int shop_nr=0;
   TDatabase db(DB_SNEEZY);
 
@@ -243,16 +243,18 @@ static int repair_time(TBeing *keeper, const TObj *o)
     db.query("select speed from shopownedrepair where shop_nr=%i", shop_nr);
     
     if(db.fetchRow()){
-      float speed=convertTo<float>(db["speed"]);
+      speed=convertTo<float>(db["speed"]);
 
-      if(speed <= 5.0 && speed > 0)
-	MINS_AT_60TH=(int)((float)MINS_AT_60TH * speed);
+//      if(speed <= 5.0 && speed > 0)
+//	MINS_AT_60TH=(int)((float)MINS_AT_60TH * speed);
     }
   }
 
 
   if (!(structs = (o->getMaxStructPoints() - o->getStructPoints())))
     return (0);
+
+#ifdef OLDSCHOOL
   percDam = ((double)(structs*75) / (double)(o->getMaxStructPoints())) + 25.0;
   double levmod = (double)(o->objLevel() * o->objLevel());
 #if 1
@@ -261,6 +263,23 @@ static int repair_time(TBeing *keeper, const TObj *o)
   iTime *= (double)MINS_AT_60TH;
   // max repair time * % damage to object
 #endif
+#endif // OLDSCHOOL
+#if 1 // NEWSCHOOL
+  // try to mimic speeds of player repair, with a healthy dose of extra waiting
+  // player repair is 4 + success(struct) + fail(struct) (okay this is loose, since fails will require another success)
+  // where success is skillcheck > (rand(1,101)-dexbonus*3) and 101 always fails
+  // so if we say mob repairs are skilled at around 65% and their dexbonus is 0
+  // it should be 4 + struct / 0.3 as the average amount of ticks to repair the object
+  // because the approximate average here is 2 * (successrate - .5)  (we ignore the 1/101 chance of failure)
+  iTime = 4 + (structs / 0.3);
+  iTime *= (PULSE_MOBACT/ONE_SECOND); // seconds per player repair pulse
+
+  // adjust this time by a const to represent the lameness of paying for something you should do yourself
+  iTime *= 1.25;
+
+  if (speed <= 5.0 && speed > 0)
+    iTime *= speed;
+#endif // NEWSCHOOL
 
   iTime = max(1.0,iTime);
 
@@ -581,13 +600,20 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 
       if (valued)
         if (!will_not_repair(buyer, repair, valued, SILENT_YES)) {
+          int matCost = 0;
+          int repairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, &matCost);
+          const char* plural = matCost != 1 ? "s" : "";
           repair->doTell(fname(buyer->name),
                          fmt("It'll cost you %d talens to repair %s to a status of %s.") %
-                         (valued->repairPrice(repair, buyer, DEPRECIATION_NO)) %
+                         repairCost %
                          valued->getName() %
                          valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
+          repair->doTell(fname(buyer->name),
+                         fmt("%d talen%s of that cost is for raw materials.") %
+                         matCost %
+                         plural);
 
-          iCostForAll += valued->repairPrice(repair, buyer, DEPRECIATION_NO);
+          iCostForAll += repairCost;
         }
 
       tListHead = tListHead->nextThing;
@@ -612,11 +638,18 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
     return;
 
+  int singleMatCost = 0;
+  int singleRepairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, &singleMatCost);
+  const char* costPlural = singleMatCost != 1 ? "s" : "";
   repair->doTell(fname(buyer->name),
-     fmt("It'll cost you %d talens to repair %s to a status of %s.") %
-		 (valued->repairPrice(repair, buyer, DEPRECIATION_NO)) %
-		 valued->getName() %
-		 valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
+                 fmt("It'll cost you %d talens to repair %s to a status of %s.") %
+                 singleRepairCost %
+                 valued->getName() %
+                 valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
+  repair->doTell(fname(buyer->name),
+                 fmt("%d talen%s of that cost is for raw materials.") %
+                 singleMatCost %
+                 costPlural);
 
   when_ready = ct + repair_time(repair, valued);
   ready = asctime(localtime(&when_ready));

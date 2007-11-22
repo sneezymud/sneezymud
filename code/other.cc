@@ -2688,6 +2688,11 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     }
   }
 
+  // check noharm - otherwise players can use this item to get around noharm checks
+  if (victim && SPELL_GUST <= spell && spell <= MAX_SKILL &&
+    discArray[spell]->targets & TAR_VIOLENT && caster->noHarmCheck(victim))
+    return 0;
+
   switch (spell) {
     case SPELL_GUST:
       rc = gust(caster, victim, obj);

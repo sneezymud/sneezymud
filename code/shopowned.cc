@@ -224,6 +224,7 @@ TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
 {
   this->shop_nr=shop_nr;
   this->ch=ch;
+  this->keeper = NULL;
 
   for(TBeing *t=character_list;t;t=t->next){
     if(t->number==shop_index[shop_nr].keeper){

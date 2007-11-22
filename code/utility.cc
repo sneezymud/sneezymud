@@ -1644,7 +1644,7 @@ void TBeing::giveMoney(TBeing *ch, int money, moneyTypeT type)
 }
 
 
-void TBeing::addToMoney(int money, moneyTypeT type)
+void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
 {
   int lev = 0;
   int amount;
@@ -1668,7 +1668,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         gold_positive[GOLD_INCOME][lev-1] += max(money, 0);
 
         // figure out tithe
-        if (money > 0) {
+        if (money > 0 && allowTithe) {
           amount = (int) (money * FactionInfo[getFaction()].faction_tithe / 100.0);
           // subtract the tithe amount from me
           points.money -= amount;

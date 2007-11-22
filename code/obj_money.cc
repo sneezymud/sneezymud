@@ -210,7 +210,8 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   if (amount == 1) {
     ch->sendTo("There was one talen.\n\r");
   } else {
-    int amt2 = 0;
+    ch->sendTo(fmt("There were %d talens.\n\r") % amount);
+    /*int amt2 = 0;
     if (!isMyCorpse && !ch->isImmortal())
       amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
 
@@ -220,7 +221,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
       ch->sendTo(fmt("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
       // BUGFIX: tithing was creating money 
       amount = amount - amt2;
-    }
+    }*/
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
@@ -242,7 +243,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   if (sub && isname("slot", sub->name))
     ch->addToMoney(amount, GOLD_GAMBLE);
   else if (isMyCorpse) {
-    ch->addToMoney(amount, GOLD_INCOME);
+    ch->addToMoney(amount, GOLD_INCOME, !isMyCorpse && !ch->isImmortal());
 
     // a queer issue, and mostly a kludge
     // corpse create: removed money from being
@@ -252,7 +253,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     if (ch->isPc() && ch->GetMaxLevel() <= 60)
       gold_positive[GOLD_INCOME][ch->GetMaxLevel()-1] -= amount;
   } else
-    ch->addToMoney(amount, GOLD_INCOME);
+    ch->addToMoney(amount, GOLD_INCOME, !isMyCorpse && !ch->isImmortal());
 
   // don't split coins from my own corpse
   if (!sub || !isname(fname(ch->name), sub->name)) {

@@ -420,9 +420,9 @@ void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
     act("You remove $p from $P, as it glows red hot.", FALSE, ch, o, forge, TO_CHAR);
     ch->task->status++;
   } else {
-    act("$n pounds $p on an anvil with $s hammer.",
+    act(fmt("$n pounds $p on %s with $s hammer.") % anvil->getName(),
             FALSE, ch, o, 0, TO_ROOM);
-    act("You pound $p on an anvil with your hammer.",
+    act(fmt("You pound $p on %s with your hammer.") % ch->objs(anvil),
             FALSE, ch, o, 0, TO_CHAR);
     addToToolUses(-1);
     if (getToolUses() <= 0) {
@@ -546,8 +546,8 @@ int task_blacksmithing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom 
 	  }
 	  ch->task->status++;
 	} else {
-	  act("$n pounds $p on an anvil with $s $O.", FALSE, ch, o, hammer, TO_ROOM);
-	  act("You pound $p on an anvil with your $O.", FALSE, ch, o, hammer, TO_CHAR);
+	  act(fmt("$n pounds $p on %s with $s $O.") % anvil->getName(), FALSE, ch, o, hammer, TO_ROOM);
+	  act(fmt("You pound $p on %s with your $O.") % ch->objs(anvil), FALSE, ch, o, hammer, TO_CHAR);
 	  hammer->addToToolUses(-1);
 	  if (hammer->getToolUses() <= 0) {
 	    act("Your $o breaks due to overuse.", FALSE, ch, hammer, hammer, TO_CHAR);
