@@ -109,10 +109,14 @@ M 0 28876 1 28876
 
 *TOWN CRIER LOADS
 
-M 0 111 1 100 	Town Crier (Center Square)
-M 0 1200 1 1336 Town Crier (Brightlaughter Tavern)
-M 0 3708 1 3770 Town Crier (Logrus Tavern)
-M 0 8736 1 8797 Town Crier (Amber Tavern)
+* Deirdre disabled the Town Criers until they can be updated and remotely useful again.
+* Right now, their "news" is pathetically out of date, so they're just annoying and 
+* fill up the tell history.  11/24/07
+
+*M 0 111 1 100 	Town Crier (Center Square)
+*M 0 1200 1 1336 Town Crier (Brightlaughter Tavern)
+*M 0 3708 1 3770 Town Crier (Logrus Tavern)
+*M 0 8736 1 8797 Town Crier (Amber Tavern)
 
 *O 0 0 1 13	BEGIN SHOPKEEPER LOADS
 M 0 150 1 559 		Weaponsmith GH 			(shop 0)
