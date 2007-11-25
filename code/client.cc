@@ -488,6 +488,14 @@ int Descriptor::read_client(char *str2)
     case CLIENT_RENT: {
       objCost cost;
       int save_room;
+
+      // if disguised or transformed, we mimic the TMonster::doRent return
+      if (character && dynamic_cast<TPerson *>(character) == NULL)
+      {
+        character->sendTo("You're a mob.  You can't rent!\n\r");
+        return 0;
+      }
+
       character->recepOffer(NULL, &cost);
       dynamic_cast<TPerson *>(character)->saveRent(&cost, TRUE, 2);
       save_room = character->in_room;        // backup what room the PC was in
