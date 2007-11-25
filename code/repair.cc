@@ -109,7 +109,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
 }
 
 
-int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done, bool purchase=false, int *pmatCost = NULL) const
+int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done, bool purchase, int *pmatCost) const
 {
   unsigned int shop_nr=0;
 
@@ -332,7 +332,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
     return;
   }
 
-  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES, true);
+  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES, true, NULL);
   if (fwrite(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing cost for repairman_file!");
     fclose(fp);
@@ -601,7 +601,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
       if (valued)
         if (!will_not_repair(buyer, repair, valued, SILENT_YES)) {
           int matCost = 0;
-          int repairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, &matCost);
+          int repairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, false, &matCost);
           const char* plural = matCost != 1 ? "s" : "";
           repair->doTell(fname(buyer->name),
                          fmt("It'll cost you %d talens to repair %s to a status of %s.") %
@@ -639,7 +639,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     return;
 
   int singleMatCost = 0;
-  int singleRepairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, &singleMatCost);
+  int singleRepairCost = valued->repairPrice(repair, buyer, DEPRECIATION_NO, false, &singleMatCost);
   const char* costPlural = singleMatCost != 1 ? "s" : "";
   repair->doTell(fname(buyer->name),
                  fmt("It'll cost you %d talens to repair %s to a status of %s.") %
@@ -706,7 +706,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
         tobj->giveToRepair(repair, buyer, &rc5);
         if (IS_SET_DELETE(rc5, DELETE_THIS)) {
           found = TRUE;
-          total += tobj->repairPrice(repair, buyer, DEPRECIATION_YES);
+          total += tobj->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL);
           delete tobj;
           tobj = NULL;
           buyer->doSave(SILENT_YES);
@@ -787,7 +787,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   if (will_not_repair(buyer, repair, this, SILENT_NO))
     return;
 
-  repair->doTell(fname(buyer->name), fmt("It'll cost you %d talens to repair %s to a status of %s.") % (repairPrice(repair, buyer, DEPRECIATION_YES)) % getName() % equip_condition(maxFix(repair, DEPRECIATION_YES)));
+  repair->doTell(fname(buyer->name), fmt("It'll cost you %d talens to repair %s to a status of %s.") % (repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL)) % getName() % equip_condition(maxFix(repair, DEPRECIATION_YES)));
 
   when_ready = ct + repair_time(repair, this);
   ready = asctime(localtime(&when_ready));
@@ -1099,7 +1099,7 @@ void TNote::noteMe(TMonster *repair, TBeing *buyer, TObj *repaired, time_t when_
 
   sprintf(buf, "Ticket number %d from %s's shop:\n\r\n\r", tick_num, repair->getName());
   sprintf(buf + strlen(buf), "Item being repaired : %s\n\r", repaired->shortDescr);
-  sprintf(buf + strlen(buf), "Estimated cost : %d talens.\n\r", repaired->repairPrice(repair, buyer, DEPRECIATION_YES));
+  sprintf(buf + strlen(buf), "Estimated cost : %d talens.\n\r", repaired->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL));
   sprintf(buf + strlen(buf), "Condition after repair : %s.\n\r", 
           repaired->equip_condition(repaired->maxFix(repair, DEPRECIATION_YES)).c_str());
   

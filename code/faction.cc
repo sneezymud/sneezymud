@@ -500,10 +500,11 @@ void TBeing::doDisband()
 #endif
 }
 
-void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
+void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
 {
   Descriptor *d, *d_next;
   TBeing *tmpch;
+  sstring garble;
 
   for (d = descriptor_list; d; d = d_next) {
     d_next = d->next;
@@ -516,8 +517,10 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
       continue;
 
+    garble = who->garble(tmpch, arg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+
     d->character->sendTo(COLOR_SHOUTS, fmt("<g>%s <c>%s<1>: %s\n\r") %
-			 FactionInfo[fnum].faction_name % who % arg);
+			 FactionInfo[fnum].faction_name % who->name % garble);
 
     if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
       if (d->character->isImmortal())
@@ -622,8 +625,9 @@ void TBeing::doSend(sstring arg)
 
   addToWait(combatRound(0.5));
 
+  msg = garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
 
-  sendToFaction(fnum, getName(), msg.c_str());
+  sendToFaction(fnum, this, msg.c_str());
 }
 
 void TBeing::doRelease(const sstring & arg)

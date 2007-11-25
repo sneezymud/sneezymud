@@ -148,4 +148,6 @@ extern const struct material_type_numbers material_nums[200];
 extern sstring describeMaterial(const int);
 extern sstring describeMaterial(const TThing *);
 
+extern ubyte convertV9MaterialToV10(ubyte oldMat);
+
 #endif

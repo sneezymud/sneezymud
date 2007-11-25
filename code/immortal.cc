@@ -2565,6 +2565,9 @@ void nukeLdead(TBeing *vict)
   wearSlotT ij;
   TThing *t, *t2;
 
+  // force a save here - this allows us to avoid various duping bugs
+  vict->doSave(SILENT_YES);
+
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
     TObj *obj = dynamic_cast<TObj *>(vict->equipment[ij]);
     if (obj) {

@@ -562,10 +562,11 @@ int TBeing::doPut(const char *argument)
 {
   char arg1[128], arg2[128], newarg[100];
   char tmpname[MAX_INPUT_LENGTH], *tmp;
-  TObj *obj, *sub;
+  TObj *obj = NULL, *sub = NULL;
   TThing *t, *t2;
   int num, p, i, j, iNumb;
   int rc, amount;
+  TBeing *horse = NULL;
 
   if (gGin.check(this)) {
     if (gGin.move_card(this, argument))
@@ -635,7 +636,6 @@ int TBeing::doPut(const char *argument)
 	
 	if (!sub) {
 	  TObj *tmpobj;
-	  TBeing *horse;
 	  int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
 	  if (bits)
 	    if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
@@ -706,7 +706,6 @@ int TBeing::doPut(const char *argument)
 	    sub = dynamic_cast<TObj *>( get_obj_vis_accessible(this, arg2));
 	    if (!sub) {
 	      TObj *tmpobj;
-	      TBeing *horse;
 	      int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
 	      if (bits)
 		if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
@@ -755,6 +754,10 @@ int TBeing::doPut(const char *argument)
       sendTo(fmt("Put %s in what?\n\r") % arg1);
   } else
     sendTo("Put what in what?\n\r");
+
+  doSave(SILENT_YES);
+  if (horse && horse != this)
+    horse->doSave(SILENT_YES);
 
   return FALSE;
 }

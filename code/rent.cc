@@ -21,6 +21,7 @@
 #include "obj_open_container.h"
 #include "corporation.h"
 #include "shopowned.h"
+#include "materials.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
@@ -928,6 +929,13 @@ TObj *ItemLoad::raw_read_item()
     o->obj_flags.cost = tmpcost;
   }
 
+  // update the item's material type
+  if (CURRENT_RENT_VERSION > 9 &&
+    convertV9MaterialToV10(o->getMaterial()) != o->getMaterial())
+  {
+    vlogf(LOG_OBJ, fmt("Object %s converting from material type %d to %d") %  o->getName() % o->getMaterial() % convertV9MaterialToV10(o->getMaterial()));
+    o->setMaterial(convertV9MaterialToV10(o->getMaterial()));
+  }
 
   return o;
 }

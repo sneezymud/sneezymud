@@ -228,3 +228,10 @@ int TPCorpse::getMe(TBeing *ch, TThing *sub)
   return TRUE;
 }
 
+int TPCorpse::scavengeMe(TBeing *ch, TObj **)
+{
+  return FALSE;
+}
+
+
+

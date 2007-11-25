@@ -211,12 +211,10 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
 
 bool TThing::isMetal() const
 {
-  switch (getMaterial()) {
-    //    case MAT_GEN_METAL:
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
     case MAT_COPPER:
-      //    case MAT_BANDED_MAIL:
-      //    case MAT_CHAIN_MAIL:
-      //    case MAT_PLATE:
     case MAT_BRONZE:
     case MAT_BRASS:
     case MAT_IRON:
@@ -227,14 +225,10 @@ bool TThing::isMetal() const
     case MAT_TITANIUM:
     case MAT_MITHRIL:
     case MAT_ALUMINUM:
-      //    case MAT_RINGMAIL:
-      //    case MAT_GNOMEMAIL:
     case MAT_ELECTRUM:
     case MAT_ATHANOR:
     case MAT_TIN:
     case MAT_TERBIUM:
-      //    case MAT_ELVENMAIL:
-      //    case MAT_ELVENSTEEL:
       return TRUE;
     default:
       return FALSE;
@@ -243,11 +237,12 @@ bool TThing::isMetal() const
 
 bool TThing::isMineral() const
 {
-  switch (getMaterial()) {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
     case MAT_GLASS:
     case MAT_PORCELAIN:
     case MAT_GEN_MINERAL:
-      //    case MAT_JEWELED:
     case MAT_RUNED:
     case MAT_CRYSTAL:
     case MAT_DIAMOND:
@@ -279,26 +274,20 @@ bool TThing::isMineral() const
 
 bool TObj::canRust()
 {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
   if (getMaxStructPoints() < 0)
     return FALSE;
   if (getStructPoints() < 0)
     return FALSE;
-  if (material_nums[getMaterial()].acid_susc <= 0)
+  if (material_nums[mat].acid_susc <= 0)
     return FALSE;
   if (!isMetal())
     return FALSE;
   
-  switch (getMaterial()) {
-    //    case MAT_GEN_METAL:
-    //    case MAT_BANDED_MAIL:
-    //    case MAT_CHAIN_MAIL:
-      //    case MAT_PLATE:
+  switch (mat) {
     case MAT_IRON:
     case MAT_STEEL:
-      //    case MAT_RINGMAIL:
-      //    case MAT_GNOMEMAIL:
-      //    case MAT_ELVENMAIL:
-      //    case MAT_ELVENSTEEL:
       return TRUE;
     default:
       return FALSE;
@@ -307,6 +296,30 @@ bool TObj::canRust()
   return FALSE;
 }
 
+ubyte convertV9MaterialToV10(ubyte oldMat)
+{
+  switch (oldMat)
+  {
+  case 101: // MAT_JEWELED
+    return MAT_GEN_MINERAL;
 
+  case 150: // MAT_GEN_METAL
+  case 152: // MAT_SCALE_MAIL
+  case 153: // MAT_BANDED_MAIL
+  case 154: // MAT_CHAIN_MAIL
+  case 155: // MAT_PLATE
+  case 167: // MAT_RINGMAIL
+  case 168: // MAT_GNOMEMAIL
+    return MAT_STEEL;
+
+  case 175: // MAT_ELVENMAIL
+  case 176: // MAT_ELVENSTEEL
+    return MAT_MITHRIL;
+
+  default:
+    break;
+  }
+  return oldMat;
+}
 
 

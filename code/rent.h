@@ -8,7 +8,7 @@
 #ifndef __RENT_H
 #define __RENT_H
 
-const int CURRENT_RENT_VERSION     =9;
+const int CURRENT_RENT_VERSION     =10;
 // 0        3.x - initial version
 // 1        4.1 rev 61  - changed weight from int to float
 // 2        pre 4.5 - added depreciation to rentObject structure
@@ -18,6 +18,7 @@ const int CURRENT_RENT_VERSION     =9;
 // 6        5.0 : Jan 19 1999 : More of the same
 // 7        5.1 : April 16 1999 : More of the same
 // 8        5.2 : June 4 2002 : shuffled 4vals for weapons
+// 9........5.2 : November 23, 2007 : Update/Consolidation of material types
 
 // This was 200, but i see no technical reason to not be able to increase it
 const int MAX_OBJ_SAVE =10000;

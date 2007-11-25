@@ -1044,6 +1044,9 @@ static int rob_blind(TBeing *ch, TBeing *vict)
     t2 = t->nextThing;
     if (::number(0,4) || !ch->canSee(t))
       continue;
+    TObj *tmp_obj = dynamic_cast<TObj *>(t);
+    if (tmp_obj && tmp_obj->isMonogrammed())
+      continue;
     name=fname(t->name);
     buf=fmt("%s %s") % name % fname(vict->name);
     if (ch->getRace() == RACE_HOBBIT) 
@@ -2401,7 +2404,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (faction != FACT_NONE) {
       sprintf(buf, "A caravan has formed bound for %s.", 
              CaravanDestination(-faction - 1));
-      sendToFaction(faction, myself->getName(), buf);
+      sendToFaction(faction, myself, buf);
     }
     save_factions();
 
@@ -2423,7 +2426,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     
     if (faction != FACT_NONE) {
       sprintf(buf, "A caravan has arrived successfully in %s.", CaravanDestination(-faction - 1));
-      sendToFaction(faction, myself->getName(), buf);
+      sendToFaction(faction, myself, buf);
     }
     save_factions();
 

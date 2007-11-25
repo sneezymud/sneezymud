@@ -639,6 +639,8 @@ int TMonster::superScavenger()
     TBaseClothing *o = NULL;
     if (!(o = dynamic_cast<TBaseClothing *>(t)))
       continue;
+    if (o->isMonogrammed()) // can't wear monogrammed items
+      continue;
     sl = slot_from_bit(o->obj_flags.wear_flags);
     TObj *tobj = dynamic_cast<TObj *>(equipment[sl]);
     if (o->itemAC() < (tobj ?  tobj->itemAC() : 0)) {
@@ -714,11 +716,18 @@ int TMonster::superScavenger()
   bcorpse = dynamic_cast<TBaseCorpse *>(best_o);
   if (bcorpse && bcorpse->getStuff())
     return FALSE;
-  
+  corpse = dynamic_cast<TPCorpse *>(best_o);
+  if (corpse)
+    return FALSE;
+
   if (best_o->parent) {
     // arbitrarily cast it to a corpse, non-corpses will be NULL
     // if we loot a corpse, we need to update save file
+    // for now, mobs should not be looting PCorpses
     corpse = dynamic_cast<TPCorpse *>(best_o->parent);
+    if (corpse)
+      return FALSE;
+
     --(*best_o);
     if (corpse) {
 	    vlogf(LOG_MOB_AI, fmt("Mob superScavenger: %s looting %s from %s in room (%d)") % this->name % best_o->name % corpse->name % (roomp ? roomp->in_room : 0));
@@ -4492,7 +4501,7 @@ int TMonster::findABetterWeapon()
       continue;
     if (!canSee(o))
       continue;
-    if (!canUseEquipment(o, SILENT_YES))
+    if (!canUseEquipment(o, SILENT_YES) || o->isMonogrammed())
       continue;
     if (!best || (o->baseDamage() >= best->baseDamage()))
       best = o;

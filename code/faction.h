@@ -143,6 +143,6 @@ extern spellNumT your_deity_val;
 extern int bestFactionPower();
 extern void recalcFactionPower();
 extern void launch_caravans();
-extern void sendToFaction(factionTypeT, const char *, const char *);
+extern void sendToFaction(factionTypeT, const TBeing *, const char *);
 
 #endif
