@@ -993,7 +993,7 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
         (cmd == CMD_DROP)) {
       if (!*arg)
         return FALSE;
-      one_argument(arg, dice_buf);
+      one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
         ch->sendTo("Doing that to the dice is not permitted!\n\r")
 ;
@@ -1017,7 +1017,7 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
     } else if (cmd == CMD_THROW || cmd == CMD_ROLL) {
       if (!*arg)
 	return FALSE;
-      one_argument(arg, dice_buf);
+      one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
         if (ch->m_craps) {
           if (ch->m_craps->rollDice()) {

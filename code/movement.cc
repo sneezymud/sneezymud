@@ -1743,14 +1743,14 @@ int AddToCharHeap(TBeing *heap[50], int *top, int total[50], TBeing *k)
 int TBeing::doOpen(const char *argument)
 {
   dirTypeT door;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   char buf[256];
   const char *tmpdesc;
   roomDirData *exitp;
   TObj *obj;
   int rc;
 
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!hasHands() || bothHandsHurt()) {
     sendTo("Pretty tough to do without working hands.\n\r");
@@ -1869,11 +1869,11 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
 {
   int rc;
   dirTypeT door;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   char buf[256];
   const char *tmpdesc;
   roomDirData *exitp;
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (checkHoldem()) {
     gHoldem.raise(this, argument);
@@ -1960,13 +1960,13 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
 void TBeing::doClose(const char *argument)
 {
   dirTypeT door;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   char buf[256];
   const char *tmpdesc;
   roomDirData *exitp;
   TObj *obj;
 
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!*type)
     sendTo("Close what?\n\r");
@@ -2031,12 +2031,12 @@ int TBeing::doLower(const char *argument)
 {
   dirTypeT door;
   int rc;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   char buf[256];
   const char *tmpdesc;
   roomDirData *exitp;
  
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
  
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal, you don't understand things like this!\n\r");
@@ -2162,13 +2162,13 @@ bool has_key(TBeing *ch, int key)
 void TBeing::doLock(const char *argument)
 {
   dirTypeT door;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   const char *tmpdesc;
   roomDirData *back, *exitp;
   TObj *obj;
   TRoom *rp;
 
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!*type)
     sendTo("Lock what?\n\r");
@@ -2220,13 +2220,13 @@ void TBeing::doLock(const char *argument)
 void TBeing::doUnlock(const char *argument)
 {
   dirTypeT door;
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[256], dir[256];
   const char *tmpdesc;
   roomDirData *back, *exitp;
   TObj *obj;
   TRoom *rp;
 
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!*type)
     sendTo("Unlock what?\n\r");
@@ -2305,7 +2305,7 @@ int TBeing::doEnter(const char *argument, TPortal *por)
     return FALSE;
   }
 
-  one_argument(argument, buf);
+  one_argument(argument, buf, cElements(buf));
 
   if (*buf) {
     TThing *tto = searchLinkedListVis(this, buf, roomp->getStuff(), &dummy, TYPEOBJ);
@@ -2353,7 +2353,7 @@ int TBeing::portalLeaveCheck(char *argum, cmdTypeT cmd)
   TPortal *o = NULL;
   char arg[80];
 
-  one_argument(argum, arg);
+  one_argument(argum, arg, cElements(arg));
   for (t = roomp->getStuff(); t; t = t->nextThing) {
     o = dynamic_cast<TPortal *>(t);
     if (o &&
@@ -2386,7 +2386,7 @@ int TBeing::doLeave(const char *argument)
   char arg[80];
 
   *arg = '\0';
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
   if (arg || *arg) {
     rc = portalLeaveCheck(arg, CMD_LEAVE);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -2824,7 +2824,7 @@ void TBeing::doWake(const char *argument)
     sendTo("Why don't we land first...\n\r");
     return;
   }
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   if (*arg) {
     if (getPosition() == POSITION_SLEEPING)

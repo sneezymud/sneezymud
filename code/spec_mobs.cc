@@ -232,7 +232,7 @@ int factionFaery(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     return FALSE;
 
   } else if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    one_argument(arg, buf);
+    one_argument(arg, buf, cElements(buf));
 
     if (strcmp(buf, "help"))
       return FALSE;
@@ -456,7 +456,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   if (!me->awake())
     return FALSE;
   
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
 
   if (!strcmp(buf, "newbie")) 
     books = 1;
@@ -2738,7 +2738,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     me->doTell(ch->getName(), "If you see something you'd like, VALUE <mob> and I'll tell you the price.");
     return TRUE;
   } else if (cmd == CMD_BUY) {
-    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf, cElements(buf));
     price = 0;
     
     TBeing *tbt = get_char_room(buf, rp->number);
@@ -2830,7 +2830,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     pet->affectTo(&aff, -1);
     return TRUE;
   } else if (cmd == CMD_VALUE) {
-    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf, cElements(buf));
     price = 0;
     TBeing *tbt = get_char_room(buf, rp->number);
     TMonster *pet = dynamic_cast<TMonster *>(tbt);
@@ -4372,7 +4372,7 @@ int fireMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   if (cmd != CMD_ENTER)
     return FALSE;
 
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
   if (!isname(buf, obj_index[real_object(OBJ_FLAMING_PORTAL)].name))
     return FALSE;
 
@@ -4401,7 +4401,7 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return TRUE;
   }
 
-  arg = one_argument(arg, obj_name);
+  arg = one_argument(arg, obj_name, cElements(obj_name));
 
   if (!*obj_name || strcmp(obj_name,"ticket")) {
     me->doTell(fname(ch->name), "Buy what?!?");
@@ -6381,11 +6381,11 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
 {
   char buf[256];
   
-  arg = one_argument(arg, buf);
+  arg = one_argument(arg, buf, cElements(buf));
   if(!isname(buf, myself->name))
     return FALSE;
   
-  arg = one_argument(arg, buf);
+  arg = one_argument(arg, buf, cElements(buf));
   
   TShopOwned tso(shop_nr, myself, ch);
   

@@ -1091,7 +1091,7 @@ void TBeing::doExamine(const char *argument, TThing * specific)
     return;
   }
 
-  one_argument(argument, caName);
+  one_argument(argument, caName, cElements(caName));
 
   if (!*caName) {
     sendTo("Examine what?\n\r");
@@ -2132,7 +2132,7 @@ void TBeing::doWeather(const char *arg)
   char buffer[256];
   changeWeatherT change = WEATHER_CHANGE_NONE;
  
-  arg = one_argument(arg, buffer);
+  arg = one_argument(arg, buffer, cElements(buffer));
 
   if (!*buffer || !isImmortal()) {
     if (roomp->getWeather() == WEATHER_SNOWY)
@@ -2200,7 +2200,7 @@ void TBeing::doWeather(const char *arg)
         weather_info.pressure = 960;
       }
     } else if (is_abbrev(buffer, "month")) {
-      arg = one_argument(arg, buffer);
+      arg = one_argument(arg, buffer, cElements(buffer));
       if (!*buffer) {
         sendTo("Syntax: weather month <num>\n\r");
         return;
@@ -2215,7 +2215,7 @@ void TBeing::doWeather(const char *arg)
       sendTo(fmt("You set the month to: %s\n\r") % month_name[time_info.month]);
       return;
     } else if (is_abbrev(buffer, "moon")) {
-      arg = one_argument(arg, buffer);
+      arg = one_argument(arg, buffer, cElements(buffer));
       if (!*buffer) {
         sendTo("Syntax: weather moon <num>\n\r");
         return;
@@ -3042,7 +3042,7 @@ void TBeing::doWhere(const char *argument)
 	char tTmpString[256];
 
         while (tTmpBuffer && *tTmpBuffer) {
-          tTmpBuffer = one_argument(tTmpBuffer, tTmpString);
+          tTmpBuffer = one_argument(tTmpBuffer, tTmpString, cElements(tTmpString));
 
           if (!tTmpString || !*tTmpString)
             continue;

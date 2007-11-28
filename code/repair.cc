@@ -666,17 +666,17 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   char obj_amt[MAX_INPUT_LENGTH];
   TThing *t, *t2;
 
-  arg = one_argument(arg, obj_name);
+  arg = one_argument(arg, obj_name, cElements(obj_name));
 
   if (convertTo<int>(obj_name) && (obj_name[1] != '.') && (obj_name[2] != '.')) {
     strcpy(obj_amt, obj_name);
-    arg = one_argument(arg, obj_name);
+    arg = one_argument(arg, obj_name, cElements(obj_name));
   } else
     *obj_amt = '\0';
 
-  arg = one_argument(arg, rep_name);
+  arg = one_argument(arg, rep_name, cElements(rep_name));
   if (*rep_name && !strcmp(rep_name, "to"))
-    arg = one_argument(arg, rep_name);
+    arg = one_argument(arg, rep_name, cElements(rep_name));
 
   if (!*obj_name || !*rep_name) {
     buyer->sendTo("Give WHAT to WHOM?!?\n\r");
@@ -1027,7 +1027,7 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
 
       return TRUE;
     case CMD_REMOVE:
-      one_argument(arg, buf);
+      one_argument(arg, buf, cElements(buf));
       if (is_abbrev(buf, "all.damaged")) {
         act("$N helps you decide what equipment you own that $E can fix.", 0, buyer, 0, repair, TO_CHAR);
         for (j = MIN_WEAR; j < MAX_WEAR; j++) {

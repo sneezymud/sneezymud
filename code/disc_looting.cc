@@ -131,7 +131,7 @@ int TBeing::disarmTrap(const char *arg, TObj *tp)
     return FALSE;
   }
 
-  argument_interpreter(arg, type, dir);
+  argument_interpreter(arg, type, cElements(type), dir, cElements(dir));
 
   if ((trap = tp) || (trap = get_obj_vis_accessible(this, type))) {
     rc = disarmTrapObj(this, trap);

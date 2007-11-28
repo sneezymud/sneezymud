@@ -1266,7 +1266,7 @@ int get_number(char **name)
 
   if ((ppos = (char *) strchr(*name, '.')) && ppos[1]) {
     *ppos++ = '\0';
-    strcpy(numx, *name);
+    strncpy(numx, *name, cElements(numx));
     strcpy(*name, ppos);
 
     for (i = 0; *(numx + i); i++) {
@@ -1676,7 +1676,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
   if (name.empty() || !ch->roomp)
     return NULL;
 
-  strcpy(tmpname, name.c_str());
+  strncpy(tmpname, name.c_str(), cElements(tmpname));
   tmp = tmpname;
 
   if (!(numx = get_number(&tmp)))
@@ -2088,7 +2088,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
   if (name.empty())
     return NULL;
 
-  strcpy(tmpname, name.c_str());
+  strncpy(tmpname, name.c_str(), cElements(tmpname));
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return NULL;
@@ -2180,7 +2180,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
     "at",
     "\n"
   };
-  int i;
+  unsigned int i;
   bool found = FALSE;
   int count = 0, numx = 0;
   char name[256];
@@ -2193,7 +2193,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 
 
 //  strcpy(tmpname, name);
-  strcpy(tmpname, arg);
+  strncpy(tmpname, arg, cElements(tmpname));
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);
@@ -2201,7 +2201,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   while (*arg && !found) {
     for (; *arg == ' '; arg++);
 
-    for (i = 0; (name[i] = *(arg + i)) && (name[i] != ' '); i++);
+    for (i = 0; i < (cElements(name)-1) && (name[i] = *(arg + i)) && (name[i] != ' '); i++);
     name[i] = 0;
     arg += i;
     if (search_block(name, ignore, TRUE) > -1)
@@ -2210,7 +2210,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   if (!name[0])
     return (0);
 
-  strcpy(tmpname, name);
+  strncpy(tmpname, name, cElements(tmpname));
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);

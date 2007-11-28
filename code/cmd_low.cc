@@ -1058,8 +1058,8 @@ void TBeing::doCompare(const char *arg)
   sstring errMsg = "Syntax: compare <mob1> <mob2>\n\r";
 
   char mArg1[256], mArg2[256];
-  arg = one_argument(arg, mArg1);
-  one_argument(arg, mArg2);
+  arg = one_argument(arg, mArg1, cElements(mArg1));
+  one_argument(arg, mArg2, cElements(mArg2));
 
   TBeing *mob1, *mob2 = NULL;
   if (mArg1 && *mArg1) {
@@ -1347,7 +1347,7 @@ void TBeing::lowRace(const char *arg)
   sstring str;
   bool show_stat=true;
 
-  arg = one_argument(arg, buf2);
+  arg = one_argument(arg, buf2, cElements(buf2));
   race_num = convertTo<int>(buf2);
   if ((race_num < 0) || (race_num > MAX_RACIAL_TYPES)) {
     sendTo("Syntax: low race <racial index>\n\r");
@@ -1675,7 +1675,7 @@ void TBeing::lowObjs(const char *arg)
   sstring str;
   vector<int>objList(0);
 
-  arg = one_argument(arg, buf2);
+  arg = one_argument(arg, buf2, cElements(buf2));
   if (!*buf2) {
     sendTo("Syntax: low obj <body slot>\n\r");
     return;
@@ -1719,11 +1719,11 @@ void TBeing::lowObjs(const char *arg)
     sendTo("bogus body slot.\n\r");
     return;
   }
-  arg=one_argument(arg, buf2);
+  arg=one_argument(arg, buf2, cElements(buf2));
   if (is_abbrev(buf2, "value"))
     val_sort = TRUE;
   if (is_abbrev(buf2, "race")){
-    one_argument(arg, buf2);
+    one_argument(arg, buf2, cElements(buf2));
     sort_race=convertTo<int>(buf2);
 
     tmp=Races[sort_race]->getBaseMaleHeight()+
@@ -1906,7 +1906,7 @@ void TBeing::lowWeaps(const char *arg)
   bool sort_val = false;
   sstring str;
 
-  one_argument(arg, buf2);
+  one_argument(arg, buf2, cElements(buf2));
   if (!*buf2) {
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
     return;
@@ -1922,7 +1922,7 @@ void TBeing::lowWeaps(const char *arg)
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
     return;
   }
-  one_argument(arg, buf2);
+  one_argument(arg, buf2, cElements(buf2));
   if (is_abbrev(buf2, "value"))
     sort_val = TRUE;
 

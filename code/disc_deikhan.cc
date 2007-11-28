@@ -147,7 +147,7 @@ int TBeing::doLayHands(const char *arg)
     sendTo("You are unable to lay hands again at this time.\n\r");
     return FALSE;
   }
-  one_argument(arg, name_buf);
+  one_argument(arg, name_buf, cElements(name_buf));
   if (!*name_buf)
     vict = this;
 

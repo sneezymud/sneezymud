@@ -235,7 +235,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
     for (; isspace(*arg); arg++);
 
     tArg = arg;
-    tArg = one_argument(tArg, tString);
+    tArg = one_argument(tArg, tString, cElements(tString));
   }
 
   if (tChance == 101){
@@ -246,7 +246,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
 
       pString = tArg;
       for (; isspace(*pString); pString++);
-      tArg = one_argument(pString, zString);
+      tArg = one_argument(pString, zString, cElements(zString));
 
       if (*zString) {
         int tPart;
@@ -283,11 +283,11 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
       unsigned short int tTotal = 0,
                          tPosbl = 0;
 
-      cArg = one_argument(cArg, tString);
+      cArg = one_argument(cArg, tString, cElements(tString));
       for (tArg = tString; isspace(*tArg); tArg++);
 
       if (*tArg)
-        for (; ; cArg = one_argument(cArg, tString)) {
+        for (; ; cArg = one_argument(cArg, tString, cElements(tString))) {
           for (tArg = tString; isspace(*tArg); tArg++);
 
           if (!*tArg)
@@ -415,7 +415,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
           const char * tSuitShortMark;
 
           tSuitShortMark = suitSets.suits[suitIndex].name;
-          one_argument(tSuitShortMark, suitNameShort);
+          one_argument(tSuitShortMark, suitNameShort, cElements(suitNameShort));
           sprintf(tString, "[%3d] %-15s   [%7s]   Lvl:%6.2f %s\n\r",
                   (suitIndex + 1), suitNameShort,
                   suitTypeRaces[max(0, min(7, (int)suitSets.suits[suitIndex].suitRace))],
@@ -532,7 +532,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
         const char * tSuitShortMark;
 
         tSuitShortMark = suitSets.suits[suitIndex].name;
-        one_argument(tSuitShortMark, suitNameShort);
+        one_argument(tSuitShortMark, suitNameShort, cElements(suitNameShort));
 
         sprintf(tString, "     [%3d] %-15s", ++tCount, suitNameShort);
         StString += tString;
@@ -652,15 +652,15 @@ void loadSetClass::SetupLoadSetSuits()
       tPiece = 0;
 
       for (; isspace(*tArg); tArg++);
-      tArg = one_argument(tArg, tBuffer); // get limb name.
+      tArg = one_argument(tArg, tBuffer, cElements(tBuffer)); // get limb name.
 
       bisect_arg(tBuffer, &tPiece, tString, suitPieceNames);
       tPiece--;
 
       for (; isspace(*tArg); tArg++);
-      tArg = one_argument(tArg, tBuffer); // get rid of the = in the line.
+      tArg = one_argument(tArg, tBuffer, cElements(tBuffer)); // get rid of the = in the line.
       for (; isspace(*tArg); tArg++);
-      tArg = one_argument(tArg, tBuffer); // grab the <vnum> of the item.
+      tArg = one_argument(tArg, tBuffer, cElements(tBuffer)); // grab the <vnum> of the item.
 
       if (tPiece >= 0 && tPiece < LST_MAX && is_number(tBuffer))
         equipment[tPiece] = convertTo<int>(tBuffer);

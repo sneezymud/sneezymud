@@ -4937,7 +4937,7 @@ void TBeing::doAttack(const char *argument)
   char arg[MAX_INPUT_LENGTH];
   attack_mode_t new_combat;
 
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   if (!*arg || is_abbrev(arg, "?")) {
     sendTo(fmt("You are in %s%s%s attack mode.\n\r") %

@@ -263,11 +263,11 @@ bool getall(const char *name, char *newname)
 
   *arg = *tmpname = *otname = '\0';
 
-  sscanf(name, "%s ", otname);	
+  sscanf(name, "%79s ", otname);	
   if (strlen(otname) < 5)
     return FALSE;
 
-  sscanf(otname, "%3s%c%s", arg, &prd, tmpname);
+  sscanf(otname, "%3s%c%79s", arg, &prd, tmpname);
 
   if (prd != '.')
     return FALSE;
@@ -281,7 +281,7 @@ bool getall(const char *name, char *newname)
 
   name++;
 
-  for (; (*newname = *name); name++, newname++);
+  strcpy(newname, name);
 
   return TRUE;
 }
@@ -291,7 +291,7 @@ int getabunch(const char *name, char *newname)
   int num = 0;
   char tmpname[80] = "\0";
 
-  sscanf(name, "%d*%s", &num, tmpname);
+  sscanf(name, "%d*%79s", &num, tmpname);
   if (tmpname[0] == '\0')
     return FALSE;
   if (num < 1)
@@ -304,7 +304,7 @@ int getabunch(const char *name, char *newname)
 
   name++;
 
-  for (; (*newname = *name); name++, newname++);
+  strcpy(newname, name);
 
   return (num);
 }

@@ -33,7 +33,7 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
   char action[20];
   char action2[20];
   char dir[64];
-  strcpy(dir, direct);
+  strncpy(dir, direct, cElements(dir));
 
   if (!strcasecmp(dir, "ne"))
     strcpy(dir, "northeast");
@@ -871,7 +871,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
   char buf[255];
 
-  one_argument(arg,buf);
+  one_argument(arg,buf,cElements(buf));
   switch (rp->number) {
     case 450:
       if ((cmd != CMD_CLOSE) && (cmd != CMD_PUSH))

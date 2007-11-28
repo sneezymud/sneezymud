@@ -288,7 +288,7 @@ void Race::initRace(const char *whichRace)
   const char *buf2;
   
   while (fgets(buf, 256, raceFile)) {
-    buf2 = one_argument(buf, keyword);
+    buf2 = one_argument(buf, keyword, cElements(keyword));
     strcpy(buf, buf2);
     if (!keyword || !*keyword || *keyword == '#')
       continue;
@@ -310,7 +310,7 @@ void Race::initRace(const char *whichRace)
 
     //Lore
     else if (!strcasecmp(keyword, "lore")) {
-      one_argument(buf, value);
+      one_argument(buf, value, cElements(value));
       if (!strcasecmp(value, "animal"))
 	Kingdom = LORE_ANIMAL;
       else if (!strcasecmp(value, "veggie"))
@@ -335,7 +335,7 @@ void Race::initRace(const char *whichRace)
 
     // talents
     else if (!strcasecmp(keyword, "talent")) {
-      one_argument(buf, value);
+      one_argument(buf, value, cElements(value));
       if (!strcasecmp(value, "fast_regen"))
 	addToTalents(TALENT_FAST_REGEN);
     }
@@ -423,7 +423,7 @@ void Race::initRace(const char *whichRace)
 
     // Body stuff
     else if (!strcasecmp(keyword, "body")) {
-      one_argument(buf, value);
+      one_argument(buf, value, cElements(value));
       if (!strcasecmp(value, "humanoid"))
         bodyType = BODY_HUMANOID;
       else if (!strcasecmp(value, "otyugh"))

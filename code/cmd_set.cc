@@ -32,9 +32,9 @@ void TPerson::doSet(const char *argument)
     sendTo("You don't have the power to @set\n\r");
     return;
   }
-  argument = one_argument(argument, field);
-  argument = one_argument(argument, namebuf);
-  argument = one_argument(argument, parmstr);
+  argument = one_argument(argument, field, cElements(field));
+  argument = one_argument(argument, namebuf, cElements(namebuf));
+  argument = one_argument(argument, parmstr, cElements(parmstr));
 
   if (!(mob = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) && 
       !(mob = get_char_vis_world(this, namebuf, NULL, EXACT_NO))) {
@@ -52,14 +52,14 @@ void TPerson::doSet(const char *argument)
       sendTo("Syntax: @set character <char name> <level> <class> <learn>(optional)\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set character <char name> <level> <class> <learn>(optional)\n\r");
       return;
     }
 
     if (*argument) {
-      argument = one_argument(argument, parmstr);
+      argument = one_argument(argument, parmstr, cElements(parmstr));
       if (sscanf(parmstr, "%d", &parm3) != 1) {
         sendTo("Syntax: @set character <char name> <level> <class> <learn>(optional)\n\r");
        return;
@@ -280,7 +280,7 @@ void TPerson::doSet(const char *argument)
       sendTo("Syntax: @set power <x> <faction> <new power>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     sscanf(parmstr, "%f", &percent);
     if (percent < 0.0) {
       sendTo("Invalid power.  Positive only.\n\r");
@@ -297,10 +297,10 @@ void TPerson::doSet(const char *argument)
       sendTo("Syntax: @set leader <x> <faction> Noone <leader slot>\n\r");
       return;
     }
-    argument = one_argument(argument, namebuf);
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, namebuf, cElements(namebuf));
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     parm = convertTo<int>(parmstr);
-    strcpy(namebuf, sstring(namebuf).cap().c_str());
+    strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
 
     if (strcmp("Noone", namebuf) && !load_char(namebuf, &st)) {
       sendTo("No such person exists.\n\r");
@@ -422,7 +422,7 @@ void TPerson::doSet(const char *argument)
       sendTo("Syntax: @set discipline <char name> <discipline> <value>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, " %d ", &parm2) != 1) {
       sendTo("Syntax: @set discipline <char name> <discipline> <value>\n\r");
       return;
@@ -458,7 +458,7 @@ void TPerson::doSet(const char *argument)
       sendTo("Syntax: @set limb <char name> <limb#> <value>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set limb <char name> <limb#> <value>\n\r");
       return;
@@ -510,7 +510,7 @@ void TPerson::doSet(const char *argument)
 
 //    vlogf(LOG_MISC, fmt("parmstr is %s, argument is %s") %  parmstr % argument);
     while (sscanf(argument, "%d", &parm2) != 1) {
-      argument=one_argument(argument, buf2);
+      argument=one_argument(argument, buf2, cElements(buf2));
       buf=buf2;
       sprintf(buf2," %s",buf.c_str());
       strcat(parmstr,buf2);
@@ -578,7 +578,7 @@ mob->getName());
       sendTo("Syntax: @set practices <char name> <number> <class number>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set practices <char name> <number> <class number>\n\r");
       return;
@@ -611,7 +611,7 @@ mob->getName());
       sendTo("Syntax: @set level <char name> <level> <class number>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set level <char name> <level> <class number>\n\r");
       return;
@@ -740,7 +740,7 @@ mob->getName());
       sendTo("Syntax: @set donebasic <char name> <level> <class number>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set donebasic <char name> <level> <class number>\n\r");
       return;
@@ -1005,7 +1005,7 @@ mob->getName());
       sendTo("Syntax : @set stuck <playername> <object> <body part>\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm) != 1) {
       sendTo("Syntax : @set stuck <playername> <object> <body part>\n\r");
       return;
@@ -1060,7 +1060,7 @@ mob->getName());
       sendTo(fmt("Invalid value (%d) for modifier.\n\r") % parm);
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, " %f ", &percent) != 1) {
       sendTo("Syntax: @set gold_modifier <char name> <modifier> <new_value>.\n\r");
       return;
@@ -1075,7 +1075,7 @@ mob->getName());
       sendTo("Syntax: @set bodyflags <char name> <part #> <flags>.\n\r");
       return;
     }
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
     if (sscanf(parmstr, "%d", &parm2) != 1) {
       sendTo("Syntax: @set bodyflags <char name> <part #> <flags>.\n\r");
       return;
@@ -1115,7 +1115,7 @@ mob->getName());
       return;
     }
 
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
 
     if (sscanf(parmstr, "%d", &parm2) < 1) {
       sendTo("Syntax: @set blocka <char name> <start-room:0 to remove> <end-room>\n\r");
@@ -1140,7 +1140,7 @@ mob->getName());
       return;
     }
 
-    argument = one_argument(argument, parmstr);
+    argument = one_argument(argument, parmstr, cElements(parmstr));
 
     if (sscanf(parmstr, "%d", &parm2) < 1) {
       sendTo("Syntax: @set blockb <char name> <start-room:0 to remove> <end-room>\n\r");

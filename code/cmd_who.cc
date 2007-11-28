@@ -220,7 +220,7 @@ void TBeing::doWho(const char *argument)
 
     return;
   } else {
-    argument = one_argument(argument, arg);
+    argument = one_argument(argument, arg, cElements(arg));
     if (*arg == '-') {
       if (strchr(arg, '?')) {
         if (isImmortal()) {

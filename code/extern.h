@@ -50,7 +50,8 @@ extern int MountEgoCheck(TBeing *, TBeing *);
 extern bool getall(const char *, char *);
 extern int getabunch(const char *, char *);
 extern bool is_number(const sstring &);
-extern void bisect_arg(const char *, int *, char *, const char * const array[]);
+extern void bisect_arg_safe(const char *, int *, char *, unsigned int, const char * const array[]);
+#define bisect_arg(in, nt, out, ar) bisect_arg_safe(in, nt, out, cElements(out), ar)
 
   extern const char * heraldcolors[];
   extern const char * heraldcodes[];
@@ -129,7 +130,7 @@ extern void extract_edit_char(TMonster *);
 extern void obj_edit(TBeing *, const char *arg);
 extern void room_edit(TBeing *, const char *arg);
 extern void mob_edit(TBeing *, const char *);
-extern void seditCore(TBeing *, char *);
+extern void seditCore(TBeing *, const char *);
 extern void help_edit(TBeing *, char *arg);
 extern void call_room_specials(void);
 extern int DetermineExp(TBeing *mob);

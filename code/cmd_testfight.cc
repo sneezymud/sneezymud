@@ -276,8 +276,8 @@ void TBeing::doTestFight(const char *arg)
   }
 
   char cmob1[256], cmob2[256];
-  arg = one_argument(arg, cmob1);
-  arg = one_argument(arg, cmob2);
+  arg = one_argument(arg, cmob1, cElements(cmob1));
+  arg = one_argument(arg, cmob2, cElements(cmob2));
 
   if (*cmob1 && is_abbrev(cmob1, "automated")) {
     automated = !automated;

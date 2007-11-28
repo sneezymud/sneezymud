@@ -284,7 +284,7 @@ void TBeing::doMakeLeader(const char *arg)
   TBeing *vict;
   bool doNoone = FALSE; 
 
-  arg = one_argument(arg, namebuf);
+  arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
     sendTo("Whom do you wish to make a leader??\n\r");
     sendTo("Syntax: makeleader <name> <leader slot>\n\r");
@@ -366,7 +366,7 @@ void TBeing::doNewMember(const char *arg)
     return;
   }
 
-  arg = one_argument(arg, namebuf);
+  arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
     sendTo("Whom do you wish to make a member of your faction??\n\r");
     sendTo("Syntax: newmember <name>\n\r");
@@ -415,7 +415,7 @@ void TBeing::doRMember(const char *arg)
   factionTypeT fnum = getFaction();
   int j;
   
-  arg = one_argument(arg, namebuf);
+  arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
     sendTo("Whom do you wish to remove as a member?\n\r");
     sendTo("Syntax: RMember <name>\n\r");
@@ -891,7 +891,7 @@ void TBeing::doAdjust(const char *arg)
        ADJ_CARAVAN
   };
 
-  arg = one_argument(arg, tmpbuf);
+  arg = one_argument(arg, tmpbuf, cElements(tmpbuf));
   if (is_abbrev(tmpbuf, "help")) {
     hval = ADJ_HELP;
   } else if (is_abbrev(tmpbuf, "harm")) {
@@ -948,8 +948,8 @@ void TBeing::doAdjust(const char *arg)
       sendTo("You lack the authority to change caravan parameters.\n\r");
       return;
     }
-    arg = one_argument(arg, tmpbuf);
-    arg = one_argument(arg, tmpbuf2);
+    arg = one_argument(arg, tmpbuf, cElements(tmpbuf));
+    arg = one_argument(arg, tmpbuf2, cElements(tmpbuf2));
     if (is_abbrev(tmpbuf, "interval")) {
       if (!*tmpbuf2) {
         sendTo("Specify an interval.\n\r");
@@ -1085,7 +1085,7 @@ void TBeing::doAdjust(const char *arg)
     return;
   }
   if (hval == ADJ_HELP || hval == ADJ_HURT) {
-    arg = one_argument(arg, tmpbuf);
+    arg = one_argument(arg, tmpbuf, cElements(tmpbuf));
     if ((verses = factionNumber(tmpbuf)) == -1) {
       sendTo("That faction doesn't exist.\n\r");
       sendTo("Syntax: adjust <help | harm> <verses faction> <value>\n\r");

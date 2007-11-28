@@ -32,5 +32,10 @@ public:
 
 };
 
+// used for easily defining buffer sizes
+#ifndef cElements
+#define cElements(x) (sizeof(x)/sizeof(x[0]))
+#endif
+
 
 #endif

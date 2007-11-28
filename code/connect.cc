@@ -4088,7 +4088,7 @@ bool Descriptor::page_file(const char *the_input)
     } else
       return FALSE;
   }
-  one_argument(the_input, buffer);
+  one_argument(the_input, buffer, cElements(buffer));
 
   if (*buffer) {
     if (*buffer == 'r' || *buffer == 'R') {
@@ -4199,7 +4199,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
     tot_pages += 1;
     cur_page = 0;
   }
-  one_argument(the_input, buf);
+  one_argument(the_input, buf, cElements(buf));
 
   if (*buf) {
     if (*buf == 'r' || *buf == 'R') {

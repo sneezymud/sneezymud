@@ -19,7 +19,7 @@ int TBeing::doSneak(const char *argument)
   char arg[80];
 
   spellNumT skill = getSkillNum(SKILL_SNEAK);
-  argument = one_argument(argument, arg);
+  argument = one_argument(argument, arg, cElements(arg));
 
   if (!doesKnowSkill(skill)) {
     sendTo("You know nothing about sneaking.\n\r");
@@ -168,7 +168,7 @@ int TBeing::doSubterfuge(const char *arg)
     sendTo("You know nothing about the art of subterfuge.\n\r");
     return FALSE;
   }
-  one_argument(arg, name_buf);
+  one_argument(arg, name_buf, cElements(name_buf));
   if (!(victim = get_char_room_vis(this, name_buf))) {
     sendTo("No one here by that name.\n\r");
     return FALSE;
@@ -244,7 +244,7 @@ int subterfuge(TBeing *thief, TBeing *victim)
 
 int TBeing::doPick(const char *argument)
 {
-  char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
+  char type[80], dir[80];
   int rc;
 
   // Gin Game Command, not Thief skill
@@ -257,7 +257,7 @@ int TBeing::doPick(const char *argument)
     return FALSE;
   }
   // Thief skill
-  argument_interpreter(argument, type, dir);
+  argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!*type) {
     sendTo("Pick what?\n\r");

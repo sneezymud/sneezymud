@@ -45,7 +45,7 @@ bool newsFileSorter::operator() (const newsFileList &x, const newsFileList &y) c
 void TBeing::doNews(const char *argument)
 {
   char arg[MAX_INPUT_LENGTH];
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   // check files mod times and see what has changed recently
   DIR *dfd;

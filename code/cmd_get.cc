@@ -258,7 +258,7 @@ int TBeing::doGet(const char *argument)
     *tptr='\0';
   }
 
-  argument_interpreter(argument, arg1, arg2);
+  argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
 
   if (checkHearts()) {
     if (gHearts.get_pass(this, arg1))

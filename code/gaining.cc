@@ -1139,7 +1139,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     }
   }
 
-  arg = one_argument(arg, discbuf);
+  arg = one_argument(arg, discbuf, cElements(discbuf));
   if (!discbuf || !*discbuf || !is_abbrev(discbuf , TrainerInfo[offset].abbrev)) {
     sprintf(buf, "I teach %s.", TrainerInfo[offset].art);
     me->doSay(buf);
@@ -1149,7 +1149,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     me->doSay(buf);
     return FALSE;
   }
-  arg = one_argument(arg, pracbuf);
+  arg = one_argument(arg, pracbuf, cElements(pracbuf));
   if (!*pracbuf || !(pracs = convertTo<int>(pracbuf))) {
     sprintf(buf,
          "Type \"practice %s <number> <class>\" to learn this discipline.", 
@@ -1164,7 +1164,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     act("$n growls, \"Don't tick me off, $N.  You won't like me when I'm mad.\"", TRUE, me, 0, ch, TO_ROOM);
     return TRUE;
   }
-  arg = one_argument(arg, classbuf);
+  arg = one_argument(arg, classbuf, cElements(classbuf));
 
   if (!IS_SET(TrainerInfo[offset].accclass, ch->getClass())) {
     /* none of my classes match up */

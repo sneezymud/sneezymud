@@ -414,7 +414,7 @@ void TBeing::doToggle(const char *arg2)
   }
 
   for (; isspace(*arg2); arg2++);
-  arg2=one_argument(arg2, arg);
+  arg2=one_argument(arg2, arg, cElements(arg));
   for (; isspace(*arg2); arg2++);
 
 

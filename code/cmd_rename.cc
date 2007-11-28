@@ -46,8 +46,8 @@ void TBeing::doNameChange(const char *argument)
   TBeing *vict;
   FILE *fp;
 
-  argument = one_argument(argument, orig_name);
-  argument = one_argument(argument, new_name);
+  argument = one_argument(argument, orig_name, cElements(orig_name));
+  argument = one_argument(argument, new_name, cElements(new_name));
 
   if (!orig_name || !*orig_name || !new_name || !*new_name) {
     sendTo("Syntax: rename <person> <new_name>\n\r");
@@ -112,10 +112,10 @@ void TBeing::doNameChange(const char *argument)
 
     // remake the short desc
     sprintf(tmpbuf2, stripColorCodes(mons->getName()).c_str());
-    one_argument(tmpbuf2, arg);
+    one_argument(tmpbuf2, arg, cElements(arg));
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
       tmpbuf=fmt("\"%s\", the %s") % sstring(new_name).cap() %
-	one_argument(tmpbuf2, arg);
+	one_argument(tmpbuf2, arg, cElements(arg));
     else
       tmpbuf = fmt("\"%s\", %s") % sstring(new_name).cap() % mons->getName();
 

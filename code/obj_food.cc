@@ -456,7 +456,7 @@ void TBeing::doEat(const char *argument)
 {
   char buf[100];
 
-  one_argument(argument, buf);
+  one_argument(argument, buf, cElements(buf));
 
   if (fight() && !isImmortal()) {
     sendTo("You are too busy fending off your foes!\n\r");
@@ -551,13 +551,12 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
 
 int TBeing::doPour(const char *argument)
 {
-  char arg1[132];
-  char arg2[132];
+  char arg1[256], arg2[256];
   TObj *from_obj;
   TObj *to_obj;
   int  rc;
 
-  argument_interpreter(argument, arg1, arg2);
+  argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
 
   if (!*arg1) {
     act("What do you want to pour from?", FALSE, this, 0, 0, TO_CHAR);
@@ -707,7 +706,7 @@ void TBeing::doSip(const char *argument)
   char arg[256];
   TObj *temp;
 
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   if (fight()) {
     sendTo("You are too busy fending off your foes!\n\r");
@@ -773,7 +772,7 @@ void TBeing::doTaste(const char *argument)
   char arg[80];
   TObj *temp;
 
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   if (fight()) {
     sendTo("You are too busy fending off your foes!\n\r");
@@ -814,14 +813,13 @@ void TBeing::foodNDrink(sectorTypeT sector, int modifier)
 
 void TBeing::doFill(const char *arg)
 {
-  char arg1[132];
-  char arg2[132];
+  char arg1[256], arg2[256];
   int bits;
   TObj *obj1;
   TObj *obj2;
   TBeing *tmp;
 
-  argument_interpreter(arg, arg1, arg2);
+  argument_interpreter(arg, arg1, cElements(arg1), arg2, cElements(arg2));
   // we use to check for FIND_OBJ_EQUIP too
   // since doDrink doesn't check for stuff in equip, neither should this
   bits = generic_find(arg1, FIND_OBJ_INV | FIND_OBJ_ROOM, 

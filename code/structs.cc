@@ -558,7 +558,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
 
   if (!ch->hasWizPower(POWER_WIZARD))
     while (tmpbuf && *tmpbuf) {
-      tmpbuf = one_argument(tmpbuf, indiv);
+      tmpbuf = one_argument(tmpbuf, indiv, cElements(indiv));
       if (!indiv || !*indiv)
         continue;
 

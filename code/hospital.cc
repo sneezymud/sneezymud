@@ -715,7 +715,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     ch->sendTo(fmt("Any of these for %d talens.\n\r") % cost);
     return TRUE;
   } else if (cmd == CMD_BUY) {        /* Buy */
-    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf, cElements(buf));
     opt = convertTo<int>(buf);
     if (cost > ch->getMoney()) {
       ch->sendTo("Sorry, no medicare, medicaid or insurance allowed.\n\r");

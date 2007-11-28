@@ -1278,7 +1278,7 @@ void TBeing::doWear(const char *argument)
     sendTo("How do you expect to do that without any hands?!?\n\r");
     return;
   }
-  argument_interpreter(argument, arg1, arg2);
+  argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
 
   if (*arg1) {
     if (!strcmp(arg1, "all")) {

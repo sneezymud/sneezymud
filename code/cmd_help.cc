@@ -117,7 +117,7 @@ void TBeing::doHelp(const char *arg)
 
   char searchBuf[256];
 
-  one_argument(arg, searchBuf);
+  one_argument(arg, searchBuf, cElements(searchBuf));
 
   if (!strncmp(searchBuf, "-l", 2)) {
     sendTo(COLOR_BASIC, "<r>Help search functionality currently disabled.<1>\n\r");

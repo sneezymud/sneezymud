@@ -1305,9 +1305,9 @@ void fixup_players(void)
   fprintf(fp, "-----------------------\n");
   if (strlen(wiz->buf1) > 2) {
     vlogf(LOG_MISC, "Creating wizlist entry: Creator");
-    cArg = one_argument(wiz->buf1, tString);
+    cArg = one_argument(wiz->buf1, tString, cElements(tString));
 
-    for (tIter = 0; ; cArg = one_argument(cArg, tString)) {
+    for (tIter = 0; ; cArg = one_argument(cArg, tString, cElements(tString))) {
       fprintf(fp, "%-13s", tString);
 
       if ((++tIter % 6) == 0)
@@ -1326,9 +1326,9 @@ void fixup_players(void)
   fprintf(fp, "-----------------------\n");
   if (strlen(wiz->buf2) > 2) {
     vlogf(LOG_MISC, "Creating wizlist entry: Gods");
-    cArg = one_argument(wiz->buf2, tString);
+    cArg = one_argument(wiz->buf2, tString, cElements(tString));
 
-    for (tIter = 0; ; cArg = one_argument(cArg, tString)) {
+    for (tIter = 0; ; cArg = one_argument(cArg, tString, cElements(tString))) {
       fprintf(fp, "%-13s", tString);
 
       if ((++tIter % 6) == 0)
@@ -1347,9 +1347,9 @@ void fixup_players(void)
   fprintf(fp, "-----------------------\n");
   if (strlen(wiz->buf3) > 2) {
     vlogf(LOG_MISC, "Creating wizlist entry: Demigods");
-    cArg = one_argument(wiz->buf3, tString);
+    cArg = one_argument(wiz->buf3, tString, cElements(tString));
 
-    for (tIter = 0; ; cArg = one_argument(cArg, tString)) {
+    for (tIter = 0; ; cArg = one_argument(cArg, tString, cElements(tString))) {
       fprintf(fp, "%-13s", tString);
 
       if ((++tIter % 6) == 0)

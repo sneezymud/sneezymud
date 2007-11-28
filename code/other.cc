@@ -467,7 +467,7 @@ void TBeing::doSplit(const char *argument, bool tell)
   if (!isPc())
     return;
 
-  one_argument(argument, buf);
+  one_argument(argument, buf, cElements(buf));
 
   if (is_number(buf)) {
     int amount = 0;
@@ -855,11 +855,11 @@ void TBeing::doPractice(const char *argument)
     d->page_string(buf);
     return;
   }
-  argument = one_argument(argument, arg);
+  argument = one_argument(argument, arg, cElements(arg));
 
   if (is_abbrev(arg, "class")) {
     int which = 0;
-    argument = one_argument(argument, arg);
+    argument = one_argument(argument, arg, cElements(arg));
 
     for(int j=0;j<MAX_CLASSES;++j){
       if(is_abbrev(arg, classInfo[j].name)){
@@ -899,7 +899,7 @@ void TBeing::doPractice(const char *argument)
   }
 
   if (is_abbrev(arg, "discipline")) {
-    argument = one_argument(argument, arg);
+    argument = one_argument(argument, arg, cElements(arg));
     if (!*arg) {
       sendTo("You need to specify a discipline: practice discipline <discipline> <class>.\n\r");
       return;
@@ -1550,7 +1550,7 @@ void TBeing::doGroup(const char *argument)
   TThing *t;
   int tmp_share;
 
-  argument = one_argument(argument, namebuf);
+  argument = one_argument(argument, namebuf, cElements(namebuf));
 
   if (!*namebuf) {
     if (!isAffected(AFF_GROUP))
@@ -1710,12 +1710,12 @@ void TBeing::doGroup(const char *argument)
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
     }
-    argument = one_argument(argument, namebuf);
+    argument = one_argument(argument, namebuf, cElements(namebuf));
     if (!namebuf || !*namebuf) {
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
     }
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
     if (!buf || !*buf) {
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
@@ -1770,7 +1770,7 @@ void TBeing::doGroup(const char *argument)
     }
   } else if (is_abbrev(namebuf, "seeksgroup")) {
     char typebuf[256]; 
-    one_argument(argument, typebuf);
+    one_argument(argument, typebuf, cElements(typebuf));
     if (!*typebuf) {
       if (isPlayerAction(PLR_SEEKSGROUP)) {
         remPlayerAction(PLR_SEEKSGROUP);
@@ -3202,7 +3202,7 @@ int TBeing::doRecite(const char *argument)
   TThing *t;
   int rc;
 
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
 
   if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = heldInPrimHand();
@@ -3662,7 +3662,7 @@ void TBeing::doContinue(const char *argument)
     return;
 
   spellType = getSpellType(discArray[spelltask->spell]->typ);
-  argument = one_argument(argument, arg);
+  argument = one_argument(argument, arg, cElements(arg));
 
   if ((spellType == SPELL_PRAYER)) {
     if (!reconcilePiety(spelltask->spell, TRUE)) {
@@ -4097,7 +4097,7 @@ void TBeing::doEmail(const char *arg)
 {
   char buf[256];
 
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
 
   if (!desc || !desc->account)
     return;

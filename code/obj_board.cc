@@ -63,7 +63,7 @@ int TBoard::readPost(TBeing *ch, const char *arg)
     return TRUE;
   }
 
-  one_argument(arg, numb);
+  one_argument(arg, numb, cElements(numb));
   
   // "read" or "read mail"
   if (!*numb || !isdigit(*numb))
@@ -136,12 +136,12 @@ int TBoard::lookBoard(TBeing *ch, const char *arg)
   char flagsbuf[MAX_INPUT_LENGTH], boardname[MAX_INPUT_LENGTH];
   bool reverse = false;
   
-  arg = one_argument(arg, boardname);
+  arg = one_argument(arg, boardname, cElements(boardname));
   
   if (!*boardname || !isname(boardname, this->name)) 
     return FALSE;
 
-  one_argument(arg, flagsbuf);
+  one_argument(arg, flagsbuf, cElements(flagsbuf));
   
   if (*flagsbuf && is_abbrev(flagsbuf, "reverse"))
     reverse = true;
@@ -287,7 +287,7 @@ int TBoard::removeFromBoard(TBeing *ch, const char *arg)
   int post_num;
   char numb[MAX_INPUT_LENGTH];
 
-  one_argument(arg, numb);
+  one_argument(arg, numb, cElements(numb));
 
   if (!*numb || !isdigit(*numb))
     return FALSE;

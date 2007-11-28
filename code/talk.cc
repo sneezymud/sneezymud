@@ -1005,9 +1005,9 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
 void TBeing::doWrite(const char *arg)
 {
   TThing *paper = NULL, *pen = NULL;
-  char papername[MAX_INPUT_LENGTH], penname[MAX_INPUT_LENGTH];
+  char papername[256], penname[256];
 
-  argument_interpreter(arg, papername, penname);
+  argument_interpreter(arg, papername, cElements(papername), penname, cElements(penname));
 
   if (!desc)
     return;

@@ -75,7 +75,7 @@ void TBeing::doMortalQuest(const char *tArg)
 
   if (GetMaxLevel() > MAX_MORT) {
     char buf[256];
-    const char * t2 = one_argument(tArg, buf);
+    const char * t2 = one_argument(tArg, buf, cElements(buf));
     char   questPath[256];
     sstring tStString("");
 

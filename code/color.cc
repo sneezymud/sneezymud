@@ -644,7 +644,7 @@ void TPerson::doColor(const char *buf)
     sendTo("Mobs can't have color.\n\r");
     return;
   } 
-  buf = one_argument(buf, arg);
+  buf = one_argument(buf, arg, cElements(arg));
   strcpy(arg2, buf);
 
   if (!*arg) {

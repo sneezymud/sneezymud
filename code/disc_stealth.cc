@@ -161,7 +161,7 @@ int TBeing::doDisguise(const char *arg)
     sendTo("You can't disguise yourself while going berserk.\n\r");
     return FALSE;
   }
-  one_argument(arg, name_buf);
+  one_argument(arg, name_buf, cElements(name_buf));
 
   rc = disguise(this, name_buf);
   if (rc)

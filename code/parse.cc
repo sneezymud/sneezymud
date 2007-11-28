@@ -2010,13 +2010,16 @@ static bool fill_word(const char * argument)
   return (search_block(argument, filler_word, TRUE) >= 0);
 }
 
-void argument_interpreter(const char *argument, char *first_arg, char *second_arg)
+
+void argument_interpreter(const char *argument, char *first_arg, unsigned int first_arg_size, char *second_arg, unsigned int second_arg_size)
 {
   try {
     sstring tf1, tf2;
     argument_interpreter(argument, tf1, tf2);
-    strcpy(first_arg, tf1.c_str());
-    strcpy(second_arg, tf2.c_str());
+    strncpy(first_arg, tf1.c_str(), first_arg_size);
+    first_arg[first_arg_size-1] = '\0';
+    strncpy(second_arg, tf2.c_str(), second_arg_size);
+    second_arg[second_arg_size-1] = '\0';
   } catch (...) {
     mud_assert(0, "Failure in argument_interpreter");
   }
@@ -2042,14 +2045,14 @@ bool is_number(const sstring &str)
   return (1);
 }
 
-const char *one_argument(const char *argument, char *first_arg)
+const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size)
 {
  // char * temp;
   sstring s;
   sstring tmp_fa;
   try {
     s = one_argument(sstring(argument), tmp_fa);
-    strcpy(first_arg, tmp_fa.c_str());
+    strncpy(first_arg, tmp_fa.c_str(), first_arg_size);
   
     // we should return a pointer into argument equivalent to s.c_str
     if (s.empty())
@@ -2192,13 +2195,19 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
 }
 
 // return first 'word' plus trailing subsstring of input sstring 
-void half_chop(const char *sstring, char *arg1, char *arg2)
+void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len, char *arg2, unsigned int arg2Len)
 {
+  for (; *sstring && isspace(*sstring); sstring++);
+  const char* firstWordStart = sstring;
+  for (; *sstring && !isspace(*sstring); sstring++);
+  const char* firstWordEnd = sstring;
   for (; isspace(*sstring); sstring++);
-  for (; *sstring && !isspace(*arg1 = *sstring); sstring++, arg1++);
-  *arg1 = '\0';
-  for (; isspace(*sstring); sstring++);
-  for (; (*arg2 = *sstring); sstring++, arg2++);
+
+  arg1Len = min<unsigned int>(arg1Len-1, firstWordEnd-firstWordStart); 
+  strncpy(arg1, firstWordStart, arg1Len);
+  arg1[arg1Len] = '\0';
+
+  strncpy(arg2, sstring, arg2Len);
 }
 
 sstring add_bars(const sstring &s){
@@ -2888,7 +2897,7 @@ void buildCommandArray(void)
 
 }
 
-bool _parse_name(const char *arg, char *name)
+bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
 {
   char buf[80];
   unsigned int i;
@@ -2909,7 +2918,7 @@ bool _parse_name(const char *arg, char *name)
   }
   if (!toggleInfo[TOG_MOBNAMES]->toggle) {
     for (i= 0; i < mob_index.size(); i++) {
-      sprintf(buf, fname(mob_index[i].name).c_str());
+      snprintf(buf, cElements(buf), fname(mob_index[i].name).c_str());
       if (!strcasecmp(buf, arg))
         return TRUE;
     }
@@ -2921,7 +2930,7 @@ bool _parse_name(const char *arg, char *name)
       return TRUE;
   }
 #endif    
-  for (i = 0; (*name = *arg); arg++, i++, name++)
+  for (i = 0; i < nameLen && (*name = *arg); arg++, i++, name++)
     if ((*arg < 0) || !isalpha(*arg) || i > 15)
       return TRUE;
 
@@ -3126,16 +3135,16 @@ char *strstr(const char *s1, const char *s2)
 
 // I redid this function to make it more flexible. It has a new argument  
 // for the array, making it useful with any array.  - Russ                
-void bisect_arg(const char *arg, int *field, char *sstring, const char * const array[])
+void bisect_arg_safe(const char *arg, int *field, char *sstring, unsigned int sstringLen, const char * const array[])
 {
   char buf[MAX_INPUT_LENGTH];
 
-  arg = one_argument(arg, buf);
+  arg = one_argument(arg, buf, cElements(buf));
   if (!(*field = old_search_block(buf, 0, strlen(buf), array, 0)))
     return;
 
   for (; isspace(*arg); arg++);
-  for (; (*sstring = *arg); arg++, sstring++);
+  strncpy(sstring, arg, sstringLen);
 
   return;
 }
@@ -3200,6 +3209,9 @@ sstring nextToken(char delim, unsigned int maxSize, char *str)
 {
   char retbuf[256];
   char *cp;
+  
+  if (maxSize >= cElements(retbuf))
+    maxSize = cElements(retbuf)-1;
 
   for (cp = str; *cp && (*cp != delim); cp++);
   if ((cp - str) > (int) maxSize) {
@@ -3229,13 +3241,14 @@ char *mud_str_dup(const char *buf)
 char * mud_str_dup(const sstring &buf)
 {
   char *tmp = NULL;
+  unsigned int len = buf.length() + 1;
 
   try {
-    tmp = new char[buf.length() + 1];
+    tmp = new char[len];
   } catch (...) {
     mud_assert(0, "exception caught in mud_str_dup");
   }
-  strcpy(tmp, buf.c_str());
+  strncpy(tmp, buf.c_str(), len);
   return tmp;
 }
 

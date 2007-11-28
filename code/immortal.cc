@@ -299,29 +299,29 @@ void TPerson::doChange(const char *argument)
   
 
   if (is_abbrev(argument, "questvar1")) {
-    argument = one_argument(argument, buf);
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
+    argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar1 = val;
     sendTo(fmt("You have changed QuestVar1 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar2")) {
-    argument = one_argument(argument, buf);
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
+    argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar2 = val;
     sendTo(fmt("You have changed QuestVar2 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar3")) {
-    argument = one_argument(argument, buf);
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
+    argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar3 = val;
     sendTo(fmt("You have changed QuestVar3 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar4")) {
-    argument = one_argument(argument, buf);
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
+    argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar4 = val;
     sendTo(fmt("You have changed QuestVar4 to %d.") % val);
@@ -462,7 +462,7 @@ void TBeing::doWizlock(const char *argument)
     sendTo("You cannot WizLock.\n\r");
     return;
   }
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
 
   if (!*buf) {
     sendTo("Wizlock {all | off | add <host> | rem <host> | list  | message}\n\r");
@@ -488,7 +488,7 @@ void TBeing::doWizlock(const char *argument)
       WizLock = FALSE;
     }
   } else if (!strcmp(buf, "add")) {
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
     if (!*buf) {
       sendTo("Wizlock add <host_name>\n\r");
       return;
@@ -513,7 +513,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("Host list is empty.\n\r");
       return;
     }
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
 
     if (!*buf) {
       sendTo("Wizlock rem <host_name>\n\r");
@@ -1460,7 +1460,7 @@ void TPerson::doShutdown(const char *argument)
   if (powerCheck(POWER_SHUTDOWN))
     return;
 
-  argument = one_argument(argument, arg);
+  argument = one_argument(argument, arg, cElements(buf));
 
   if (!*arg) {
     if (gamePort == PROD_GAMEPORT || gamePort == BUILDER_GAMEPORT) {
@@ -2320,7 +2320,7 @@ void TPerson::doLoad(const char *argument)
   if (powerCheck(POWER_LOAD))
     return;
 
-  argument = one_argument(argument, type);
+  argument = one_argument(argument, type, cElements(type));
 
   strcpy(num, argument);
 
@@ -2490,7 +2490,7 @@ void TPerson::doCutlink(const char *argument)
   if (powerCheck(POWER_CUTLINK))
     return;
 
-  argument = one_argument(argument, name_buf);
+  argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (!*name_buf) {
     for (d = descriptor_list; d; d = d->next) {
@@ -2673,7 +2673,7 @@ void TPerson::doPurge(const char *argument)
   if (powerCheck(POWER_PURGE))
     return;
 
-  argument = one_argument(argument, name_buf);
+  argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (*name_buf) {    // argument supplied. destroy single object or char 
     if (!strcmp(name_buf, "links") && hasWizPower(POWER_PURGE_LINKS)) {
@@ -2850,13 +2850,13 @@ void TPerson::doPurge(const char *argument)
         if (powerCheck(POWER_PURGE_ROOM))
           return;
 
-        argument = one_argument(argument, name_buf);
+        argument = one_argument(argument, name_buf, cElements(name_buf));
         if (!isdigit(*name_buf)) {
           sendTo("purge room start [end]\n\r");
           return;
         }
         range[0] = convertTo<int>(name_buf);
-        argument = one_argument(argument, name_buf);
+        argument = one_argument(argument, name_buf, cElements(name_buf));
         if (isdigit(*name_buf))
           range[1] = convertTo<int>(name_buf);
         else
@@ -3446,7 +3446,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   *buf = '\0';
   memset(nameBuf, '\0', sizeof(nameBuf));
 
-  one_argument(argument, buf);
+  one_argument(argument, buf, cElements(buf));
   if (buf && *buf ) {
     int rc = portalLeaveCheck(buf, cmd);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4114,7 +4114,7 @@ void TBeing::doInfo(const char *arg)
   if (!isImmortal())
     return;
 
-  arg = one_argument(arg, arg1);
+  arg = one_argument(arg, arg1, cElements(arg1));
   sstring str = "Information available to you : \n\r";
   str += "commands    : how many times certain commands were used.\n\r";
   str += "objects     : how many objects exist of each time.\n\r";
@@ -4208,10 +4208,10 @@ void TBeing::doInfo(const char *arg)
   return;
       }
       char arg2[80];
-      arg = one_argument(arg,arg2);
+      arg = one_argument(arg,arg2, cElements(arg2));
       if (is_abbrev(arg2, "loadrate")) {
         char opt[80];
-  arg = one_argument(arg,opt);
+  arg = one_argument(arg,opt, cElements(opt));
   if (is_abbrev(opt, "up"))
     stats.equip += .05;
   else
@@ -4838,7 +4838,7 @@ void TBeing::doInfo(const char *arg)
       }
       desc->page_string(buf);
     } else if (is_abbrev(arg1, "skills")) {
-      arg = one_argument(arg, arg1);
+      arg = one_argument(arg, arg1, cElements(arg1));
 
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information at your level.\n\r");
@@ -4982,7 +4982,7 @@ void TBeing::doInfo(const char *arg)
          discArray[which]->learnAdvDiscSuccess);
       buf += buf2;
 
-      one_argument(arg, arg1);
+      one_argument(arg, arg1, cElements(arg1));
       if (*arg1 && is_abbrev(arg1, "note")) {
         TNote *note = createNote(mud_str_dup(buf));
         if (!note) {
@@ -5296,13 +5296,13 @@ void TBeing::doHostlog(const char *argument)
     sendTo("You cannot log hosts.\n\r");
     return;
   }
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
 
   if (!*buf) {
     sendTo("Syntax: hostlog {add <host> | rem <host> | list}\n\r");
     return;
   } else if (!strcmp(buf, "add")) {
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
     if (!*buf) {
       sendTo("hostlog add <host_name>\n\r");
       return;
@@ -5327,7 +5327,7 @@ void TBeing::doHostlog(const char *argument)
       sendTo("Host list is empty.\n\r");
       return;
     }
-    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf, cElements(buf));
 
     if (!*buf) {
       sendTo("Hostlog rem <host_name>\n\r");
@@ -5375,7 +5375,7 @@ void TBeing::doQuest(const char *argument)
     return;
   }
 
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
 
   if (!*buf) {
     sendTo("Syntax: quest <victim> <message>\n\r");
@@ -5642,8 +5642,8 @@ void TBeing::doResize(const char *arg)
     return;
   }
 
-  arg = one_argument(arg, arg_obj);
-  arg = one_argument(arg, arg_type);
+  arg = one_argument(arg, arg_obj, cElements(arg_obj));
+  arg = one_argument(arg, arg_type, cElements(arg_type));
   if (!*arg_obj || !*arg_type) {
     sendTo("Syntax: resize <object> <character>\n\r");
   sendTo("        resize <object> race <race number>\n\r");
@@ -5653,7 +5653,7 @@ void TBeing::doResize(const char *arg)
   
   if (!strcmp(arg_type, "race")) {
     // they are resizing for a specific race
-    arg = one_argument(arg, arg_type_val);
+    arg = one_argument(arg, arg_type_val, cElements(arg_type_val));
     race = convertTo<int>(arg_type_val);
     if(race >= MAX_RACIAL_TYPES || race < 0){
       sendTo(fmt("Race number %i doesn't exist.\n\r") % race);
@@ -5661,7 +5661,7 @@ void TBeing::doResize(const char *arg)
     }
   } else if (!strcmp(arg_type, "height")) {
     // they are resizing for a specific height
-    arg = one_argument(arg, arg_type_val);
+    arg = one_argument(arg, arg_type_val, cElements(arg_type_val));
   height = convertTo<int>(arg_type_val);
   }
   if (!race && !height) {
@@ -6199,7 +6199,7 @@ int TBeing::doAs(const char *arg)
 
   // we are guaranteed to be a switched critter here
 
-  arg = one_argument(arg, namebuf);
+  arg = one_argument(arg, namebuf, cElements(namebuf));
   // theoretically, we could insure that they are As'ing as right char
   // but lets just ignore that
   
@@ -6246,7 +6246,7 @@ void TBeing::doComment(const char *argument)
   if (powerCheck(POWER_COMMENT))
     return;
 
-  one_argument(argument, arg);
+  one_argument(argument, arg, cElements(arg));
 
   if (!*arg) {
     sendTo("Syntax: comment <player>\n\r");

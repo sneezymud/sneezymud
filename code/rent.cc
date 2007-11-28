@@ -3230,7 +3230,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   } else if (cmd == CMD_OFFER) {
 
     // get an offer on someone else...
-    one_argument(arg, buf);
+    one_argument(arg, buf, cElements(buf));
     if (ch->isImmortal() && *buf) {
       TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
       if (vict) {

@@ -788,7 +788,7 @@ int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
   
 
   if(cmd == CMD_SWITCH) {
-    arg = one_argument(arg, parg);
+    arg = one_argument(arg, parg, cElements(parg));
     isname(parg, weap->getName());
     act("<c>You deftly change your grip on $p<c> to use it in a different style!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
     act("<c>$n deftly changes $s grip on $p to use it in a different style!<1>",TRUE,ch,o,vict,TO_ROOM,NULL);    

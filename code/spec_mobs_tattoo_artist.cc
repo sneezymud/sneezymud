@@ -37,14 +37,14 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
 
     return TRUE;
   } else if(cmd==CMD_BUY){
-    arg=one_argument(arg, buf);
+    arg=one_argument(arg, buf, cElements(buf));
 
     if(!(i=convertTo<int>(buf)) || i>ntattoos){
       myself->doTell(ch->getName(), "I don't understand, which tattoo do you want?");
       return FALSE;
     }
 
-    one_argument(arg, buf);
+    one_argument(arg, buf, cElements(buf));
     
     wearSlotT slot=WEAR_NOWHERE;
     int slot_i;

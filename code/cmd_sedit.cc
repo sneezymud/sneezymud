@@ -1071,7 +1071,7 @@ void seditPurge(TBeing *ch)
   ch->sendTo("Scripts Directory Purged of *ALL* Scripts.\n\r");
 }
 
-void seditCore(TBeing *ch, char *tArg)
+void seditCore(TBeing *ch, const char *tArg)
 {
   if (!ch->desc) {
     ch->desc->connected = CON_PLYNG;

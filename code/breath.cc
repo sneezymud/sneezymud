@@ -396,7 +396,7 @@ void TBeing::doBreath(const char *argument)
     return;
   }
 
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
 
   if (!*buf) {
     sendTo("Syntax: breathe <acid | fire | frost | lightning | chlorine> <victim>\n\r");
@@ -417,7 +417,7 @@ void TBeing::doBreath(const char *argument)
     sendTo("Syntax: breathe <acid | fire | frost | lightning | chlorine> <victim>\n\r");
     return;
   }
-  argument = one_argument(argument, buf);
+  argument = one_argument(argument, buf, cElements(buf));
   if (!*buf) {
     sendTo("Breathe on whom?\n\r");
     return;

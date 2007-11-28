@@ -1010,7 +1010,7 @@ void TBeing::doDivine(const char *arg)
     return;
   }
  
-  one_argument(arg, arg2);
+  one_argument(arg, arg2, cElements(arg2));
   if (!(obj = get_thing_char_using(this, arg2, 0, FALSE, FALSE))) {
     sendTo("You don't have that drink container in your inventory!\n\r");
     sendTo("Syntax: divine <drink container>\n\r");

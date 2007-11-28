@@ -832,7 +832,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   }
 
   if (cmd == CMD_ENTER) {
-    one_argument(arg, buf);
+    one_argument(arg, buf, cElements(buf));
     if (is_abbrev(buf, "circle")) {
       if (mob_index[mobnum].getNumber() != 0)
         return FALSE;   // already loaded
@@ -1112,7 +1112,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       vlogf(LOG_PROC,fmt("char %s not in proper room (SecretPortalDoors)") % ch->getName());
       return FALSE;
     }
-    one_argument(arg,buf);
+    one_argument(arg,buf, cElements(buf));
   }
 
   switch (rp->number) {

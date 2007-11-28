@@ -314,7 +314,7 @@ int TWand::foodItemUsed(TBeing *ch, const char *arg)
   char buffer[256];
   TBeing *vict = NULL;
 
-  one_argument(arg, buffer);
+  one_argument(arg, buffer, cElements(buffer));
   if (!(vict = get_char_room_vis(ch, buffer))) {
     ch->sendTo("That person isn't here.\n\r");
     return FALSE;
@@ -388,7 +388,7 @@ int foodItem(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   if (!arg || !*arg)
     return FALSE;
-  arg = one_argument(arg, buffer);
+  arg = one_argument(arg, buffer, cElements(buffer));
 
   if (isname(buffer, o->getName())) {
     return o->foodItemUsed(ch, arg);
@@ -413,10 +413,10 @@ int orbOfDestruction(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!arg || !*arg)
     return FALSE;
 
-  one_argument(arg, buffer);
+  one_argument(arg, buffer, cElements(buffer));
 
   if (cmd == CMD_USE || (cmd == CMD_PUSH && is_abbrev(buffer, "button"))) {
-    arg = one_argument(arg, buffer);
+    arg = one_argument(arg, buffer, cElements(buffer));
     if (isname(buffer, o->getName())) {
       if (ch->getStat(STAT_CURRENT, STAT_PER) < 90) {
         ch->sendTo("You can't figure out how to use it.\n\r");
@@ -477,10 +477,10 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
   if (!arg || !*arg)
     return FALSE;
 
-  one_argument(arg, buffer);
+  one_argument(arg, buffer, cElements(buffer));
 
   if (cmd == CMD_USE || (cmd == CMD_PUSH && is_abbrev(buffer, "button"))) {
-    arg = one_argument(arg, buffer);
+    arg = one_argument(arg, buffer, cElements(buffer));
     if (isname(buffer, o->getName())) {
       if (ch->getStat(STAT_CURRENT, STAT_PER) < 90) {
         ch->sendTo("You can't figure out how to use it.\n\r");
@@ -599,7 +599,7 @@ int statue_of_feeding(TBeing *ch, cmdTypeT cmd, const char *argum, TObj *me, TOb
   if (cmd != CMD_PRAY)
     return FALSE;
 
-  one_argument(argum, arg);
+  one_argument(argum, arg, cElements(arg));
   
   if (*arg && !isname(arg, me->getName()))
     return FALSE;
@@ -854,9 +854,9 @@ int vending_machine2(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *o
       return TRUE;
     }
   } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
-    arg = one_argument(arg, arg1);
-    arg = one_argument(arg, arg2);
-    arg = one_argument(arg, arg3);
+    arg = one_argument(arg, arg1, cElements(arg1));
+    arg = one_argument(arg, arg2, cElements(arg2));
+    arg = one_argument(arg, arg3, cElements(arg3));
     if ((is_abbrev(arg1, "button") || is_abbrev(arg1, "machine") || is_abbrev(arg1, "vending")) &&
 	(!is_abbrev(arg2, "button") || !is_abbrev(arg2, "machine") || !is_abbrev(arg2, "vending")) && arg2)
       strncpy(drink, arg2, sizeof(drink));
@@ -1126,11 +1126,11 @@ int crystal_ball(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     case CMD_SAY:
     case CMD_SAY2:
       c = arg;
-      c = one_argument(c, buf2);
+      c = one_argument(c, buf2, cElements(buf2));
       if (is_abbrev(buf2, "show")) {
-        c = one_argument(c, buf2);
+        c = one_argument(c, buf2, cElements(buf2));
         if (is_abbrev(buf2, "me")) {
-          c = one_argument(c, buf2);
+          c = one_argument(c, buf2, cElements(buf2));
         } else {
           ch->doSay(arg);
           obj_act("says '$n, you must speak the words correctly!'", 
@@ -1140,7 +1140,7 @@ int crystal_ball(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
           return TRUE;
         }
       } else if (is_abbrev(buf2, "where")) {
-        c = one_argument(c, buf2);
+        c = one_argument(c, buf2, cElements(buf2));
       } else
         return FALSE;
 
@@ -1169,7 +1169,7 @@ int crystal_ball(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       }
       break;
     case CMD_WHERE:
-      one_argument(arg, buf2);
+      one_argument(arg, buf2, cElements(buf2));
       if (!(victim = get_char_vis_world(ch, buf2, NULL, EXACT_YES))) {
         ch->doSay(arg);
         obj_act("says 'Sorry $n, I have trouble finding that person.'", 
@@ -1288,7 +1288,7 @@ bool genericPotion(TBeing *ch, TObj *me, cmdTypeT cmd, const char *arg, int &rc)
     return true;
   }
 
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
   if (!isname(buf, me->getName())) {
     rc = FALSE;
     return true;
@@ -1478,7 +1478,7 @@ int stoneAltar(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *obj, TObj *)
     return FALSE;
 
   char buf[256];
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
   if (is_abbrev(buf, "eye") || is_abbrev(buf, "diamond")) {
     TOpenContainer *trc = dynamic_cast<TOpenContainer *>(obj);
     if (!trc)
@@ -1566,8 +1566,8 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
       (!ch->isImmortal() && (ch->GetMaxLevel() > 4)))
     return FALSE;
 
-  Parg = one_argument(Parg, PargA);
-  Parg = one_argument(Parg, Topic);
+  Parg = one_argument(Parg, PargA, cElements(PargA));
+  Parg = one_argument(Parg, Topic, cElements(Topic));
   ch->sendTo(fmt("Newbie Weapon Info: %s %s\n\r") % PargA % Topic);
 
   switch (cmd) {
@@ -2116,7 +2116,7 @@ int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
     return FALSE;
   if (((o->equippedBy != ch) && (o->parent != ch)))
     return FALSE;
-  Parg = one_argument(Parg, Target);
+  Parg = one_argument(Parg, Target, cElements(Target));
   if (!(cmd == CMD_SHOOT))
     return FALSE;
   if (!gun) {
@@ -2255,7 +2255,7 @@ int keyInKnife(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   }
  
-  one_argument(arg, buf);
+  one_argument(arg, buf, cElements(buf));
   
   
   if(!strcmp(buf,"panel")) {
@@ -2281,7 +2281,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (cmd != CMD_THROW) 
     return FALSE;
   strcpy(objname,o->getName());
-  one_argument(one_argument(one_argument(objname,buf),buf),buf); //vial
+  one_argument(one_argument(one_argument(objname,buf, cElements(buf)),buf, cElements(buf)),buf, cElements(buf)); //vial
 
   if (sscanf(buf,"%d",&targetroom) != 1) {
     act("Teleport vial with no target room. How crappy.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -2417,7 +2417,7 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  arg = one_argument(arg, target);
+  arg = one_argument(arg, target, cElements(target));
   int bits = generic_find(target, FIND_CHAR_ROOM | FIND_OBJ_ROOM, ch, &victim, &corpse);
   if(!bits)
     return FALSE;
@@ -2511,7 +2511,7 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  arg = one_argument(arg, target);
+  arg = one_argument(arg, target, cElements(target));
   int bits = generic_find(target, FIND_CHAR_ROOM | FIND_OBJ_ROOM, ch, &vict, &obj);
   if(!bits)
     return FALSE;
@@ -2869,9 +2869,9 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       return FALSE;
   }
   if (cmd == CMD_SIT) {
-    arg = one_argument(arg, arg1);
-    arg = one_argument(arg, arg2);
-    arg = one_argument(arg, arg3);
+    arg = one_argument(arg, arg1, cElements(arg1));
+    arg = one_argument(arg, arg2, cElements(arg2));
+    arg = one_argument(arg, arg3, cElements(arg3));
     if ((is_abbrev(arg1, "minecart") || is_abbrev(arg1, "cart")) && job->speed >=2 ) {
       ch->sendTo("The mine cart is moving much too fast to get on now!\n\r");
       return TRUE;
@@ -2879,9 +2879,9 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       return FALSE;
   }
   if (cmd == CMD_PUSH || cmd == CMD_PULL || cmd == CMD_OPERATE || cmd == CMD_USE) {
-    arg = one_argument(arg, arg1);
-    arg = one_argument(arg, arg2);
-    arg = one_argument(arg, arg3);
+    arg = one_argument(arg, arg1, cElements(arg1));
+    arg = one_argument(arg, arg2, cElements(arg2));
+    arg = one_argument(arg, arg3, cElements(arg3));
     if (is_abbrev(arg1, "handbrake") || is_abbrev(arg1, "brake")) {
       if (ch->riding != myself) {
         act("You must be sitting on $p to operate the handbrake.", TRUE, ch, o, NULL, TO_CHAR);

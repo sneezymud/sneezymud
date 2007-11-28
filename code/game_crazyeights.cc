@@ -514,12 +514,12 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
     return;
   }
 
-  tArg = one_argument(tArg, tString);
+  tArg = one_argument(tArg, tString, cElements(tString));
   cardPlayed = convertTo<int>(tString);
 
   for (; isspace(*tArg); tArg++);
   if (*tArg)
-    tArg = one_argument(tArg, tString);
+    tArg = one_argument(tArg, tString, cElements(tString));
   else
     tString[0] = '\0';
 

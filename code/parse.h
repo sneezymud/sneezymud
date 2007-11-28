@@ -11,9 +11,9 @@
 
 int search_block(const sstring &arg, const char * const *, bool);
 int old_search_block(const char *, int, int, const char * const *, bool);
-void argument_interpreter(const char *, char *, char *);
 void argument_interpreter(sstring, sstring &, sstring &);
-extern const char *one_argument(const char *argument, char *first_arg);
+void argument_interpreter(const char *argument, char *first_arg, unsigned int first_arg_size, char *second_arg, unsigned int second_arg_size);
+extern const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size);
 extern sstring one_argument(sstring argument, sstring & first_arg);
 
 class commandInfo {
@@ -669,8 +669,10 @@ const cmdTypeT MIN_CMD = cmdTypeT(0);
 
 extern commandInfo *commandArray[MAX_CMD_LIST];
 extern cmdTypeT searchForCommandNum(const sstring &);
-extern void half_chop(const char *sstring, char *arg1, char *arg2);
-extern bool _parse_name(const char *arg, char *name);
+extern void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len, char *arg2, unsigned int arg2Len);
+#define half_chop(s, a1, a2) half_chop_safe(s, a1, cElements(a1), a2, cElements(a2))
+extern bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen);
+#define _parse_name(a, n) _parse_name_safe(a, n, cElements(n))
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern bool is_abbrev(const sstring &, const sstring &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern char *fread_string(FILE *);

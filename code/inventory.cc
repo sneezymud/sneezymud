@@ -560,8 +560,8 @@ int put(TBeing *ch, TThing *obj, TThing *sub)
 
 int TBeing::doPut(const char *argument)
 {
-  char arg1[128], arg2[128], newarg[100];
-  char tmpname[MAX_INPUT_LENGTH], *tmp;
+  char arg1[256], arg2[256], newarg[256];
+  char tmpname[256], *tmp;
   TObj *obj = NULL, *sub = NULL;
   TThing *t, *t2;
   int num, p, i, j, iNumb;
@@ -588,7 +588,7 @@ int TBeing::doPut(const char *argument)
     sendTo("You can't quite reach from here, so you sit up.\n\r");
     doSit("");
   }
-  argument_interpreter(argument, arg1, arg2);
+  argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
   if (*arg1) {
     if (*arg2) {
       if (is_number(arg1)) {
@@ -598,9 +598,9 @@ int TBeing::doPut(const char *argument)
           return FALSE;
         }
         // reparse to get target
-        argument = one_argument(argument, arg1);  // amount
-        argument = one_argument(argument, arg1);  // talens
-        argument = one_argument(argument, arg2);  // bag
+        argument = one_argument(argument, arg1, cElements(arg1));  // amount
+        argument = one_argument(argument, arg1, cElements(arg1));  // talens
+        argument = one_argument(argument, arg2, cElements(arg2));  // bag
 
         if (amount <= 0) {
           sendTo("Sorry, you can't do that!\n\r");
@@ -621,11 +621,11 @@ int TBeing::doPut(const char *argument)
       if (getall(arg1, newarg)) {
         // put all.xx xx
         num = 200;  // limit them to 200 items at a time
-        strcpy(arg1, newarg);
+        strncpy(arg1, newarg, cElements(arg1));
       } else if ((p = getabunch(arg1, newarg))) {
         // put 5*xx xx
         num = p;
-        strcpy(arg1, newarg);
+        strncpy(arg1, newarg, cElements(arg1));
       } else
         num = 1;
 
@@ -687,7 +687,7 @@ int TBeing::doPut(const char *argument)
           return FALSE;
         }
       } else {
-        strcpy(tmpname, arg1);
+        strncpy(tmpname, arg1, cElements(tmpname));
         tmp = tmpname;
 
         if (!(iNumb = get_number(&tmp))) {

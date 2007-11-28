@@ -137,7 +137,7 @@ int TBeing::doCreate(const char *tArg)
       if (!*tArg)
         dCrError = true;
       else {
-        tArg = one_argument(tArg, chCeType);
+        tArg = one_argument(tArg, chCeType, cElements(chCeType));
 
              if (is_abbrev("balm"  , chCeType))
           ceType = CEMH_AS_BALM;

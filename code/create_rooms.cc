@@ -640,11 +640,11 @@ void TPerson::doEdit(const char *arg)
         char sstringB[2][256];
         const char *sstringC;
         sstringC = sstring;
-        sstringC = one_argument(sstringC, sstringB[0]); // rawbv/flag-name
-                  one_argument(sstringC, sstringB[1]); // on/off
+        sstringC = one_argument(sstringC, sstringB[0], cElements(sstringB[0])); // rawbv/flag-name
+                  one_argument(sstringC, sstringB[1], cElements(sstringB[1])); // on/off
         // Old style edit fs ???  format.
         if (is_abbrev(sstringB[0], "rawbv")) {
-          sstringC = one_argument(sstringC, sstringB[1]);
+          sstringC = one_argument(sstringC, sstringB[1], cElements(sstringB[1]));
           if (sscanf(sstringB[1], "%lu", &r_flags) != 1) {
             sendTo("I'm afraid flags must be a number...\n\r");
             return;

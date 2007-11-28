@@ -623,7 +623,7 @@ int TBeing::doPray(const char *argument)
   char arg[256];
   char *n;
   int spaces = 0;
-  char buf[80], buf2[80], buf3[80], argbak[256];
+  char buf[256], buf2[256], buf3[256], argbak[256];
 
 // why can't mobs call this command?
 //  if (!isPc() && !desc)
@@ -651,7 +651,7 @@ int TBeing::doPray(const char *argument)
     return FALSE;
   
   // Eat spaces off the end and off the beginning
-  strcpy(arg, argument);
+  strncpy(arg, argument, cElements(arg));
   while (isspace(*arg))
     strcpy(arg, &arg[1]);
 
@@ -675,11 +675,11 @@ int TBeing::doPray(const char *argument)
     spaces--;
     n--;
   }
-  one_argument(arg, kludge);
+  one_argument(arg, kludge, cElements(kludge));
   if (is_abbrev(kludge, "paralyze")) {
     strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf));   // buf == paralyze
-    strcpy(arg, one_argument(arg, buf2));  // buf2 == NULL, target, "limb"
+    strcpy(arg, one_argument(arg, buf, cElements(buf)));   // buf == paralyze
+    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));  // buf2 == NULL, target, "limb"
 
     if (!*buf2) {
       // pray paralyze - target on fight()
@@ -698,7 +698,7 @@ int TBeing::doPray(const char *argument)
         return FALSE;
       }
 
-      strcpy(arg,  one_argument(arg, buf3));  // buf3 = NULL, or targ
+      strcpy(arg,  one_argument(arg, buf3, cElements(buf3)));  // buf3 = NULL, or targ
       if (!*buf3) {
         // pray paralyze limb - target on fight()
         if (!fight()) {
@@ -717,8 +717,8 @@ int TBeing::doPray(const char *argument)
     }
   } if (is_abbrev(kludge, "heal")) {
     strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf));  // buf == heal
-    strcpy(arg, one_argument(arg, buf2));
+    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == heal
+    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
     // pray heal <targ>
     // pray heal spray
     // pray heal light <targ>
@@ -786,7 +786,7 @@ int TBeing::doPray(const char *argument)
       }
     } else {
       // buf2 = serious/crit
-      one_argument(arg, buf3);
+      one_argument(arg, buf3, cElements(buf3));
       // buf3 = spray or targets-name
       if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
         if (is_abbrev(buf2, "critical")) {
@@ -835,8 +835,8 @@ int TBeing::doPray(const char *argument)
     return FALSE;
   } if (is_abbrev(kludge, "harm")) {
     strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf));  // buf == harm
-    strcpy(arg, one_argument(arg, buf2));
+    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == harm
+    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
 
     // pray harm <targ>
     // pray harm light <targ>
@@ -928,7 +928,7 @@ int TBeing::doPray(const char *argument)
       }
     } else {
       // buf2 = serious/crit
-      one_argument(arg, buf3);
+      one_argument(arg, buf3, cElements(buf3));
       // buf3 = spray or targets-name
 #if 0
       if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
@@ -1035,9 +1035,9 @@ spellNumT TBeing::parseSpellNum(char *arg)
     spaces--;
     n--;
   }
-  one_argument(arg, kludge);
+  one_argument(arg, kludge, cElements(kludge));
   if (isname(kludge, "telepathy")) {
-    strcpy(arg, one_argument(arg, kludge));
+    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
     if (!doesKnowSkill(SPELL_TELEPATHY)) {
       sendTo("You don't know that spell!\n\r");
       return TYPE_UNDEFINED;
@@ -1045,7 +1045,7 @@ spellNumT TBeing::parseSpellNum(char *arg)
     return SPELL_TELEPATHY;
   }
   if (isname(kludge, "romble")) {
-    strcpy(arg, one_argument(arg, kludge));
+    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
     if (!doesKnowSkill(SPELL_ROMBLER)) {
       sendTo("You don't know that spell!\n\r");
       return TYPE_UNDEFINED;
@@ -1148,7 +1148,8 @@ int TBeing::doCast(const char *argument)
   if(!preCastCheck())
     return FALSE;
   
-  strcpy(arg, argument);
+  strncpy(arg, argument, cElements(arg));
+  arg[cElements(arg)-1] = '\0';
 
   if((which=parseSpellNum(arg))==TYPE_UNDEFINED)
     return FALSE;
@@ -1427,7 +1428,8 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
   if(!preDiscCheck(which))
     return FALSE;
 
-  strcpy(arg, n);
+  strncpy(arg, n, cElements(arg));
+  arg[cElements(arg)-1] = '\0';
   if(!parseTarget(which, arg, &t))
     return FALSE;
 
