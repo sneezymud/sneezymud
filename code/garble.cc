@@ -223,6 +223,10 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
   unsigned int loc;
   buf=obuf=arg;
 
+  // if this garble was applied without us being drunk, assume an average drunkenness
+  if (chance < 9)
+    chance = 15;
+
   // first, lets turn things into pig latin, word by word
   for(int i=0;!arg.word(i).empty();++i)
   {

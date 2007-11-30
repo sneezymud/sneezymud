@@ -23,10 +23,20 @@ public:
   spellNumT aff_type;
   applyTypeT prim_apply;
   sstring msg;
+  bool hasSecondApply;
+  applyTypeT second_apply;
+  long second_mod;
+  long second_mod2;
 
   // vector stuff
   ego_imm_blessing(sstring n, spellNumT a, applyTypeT p, sstring m) :
-    name(n), aff_type(a), prim_apply(p), msg(m){}
+    name(n), aff_type(a), prim_apply(p), msg(m), hasSecondApply(false){}
+
+  ego_imm_blessing(sstring n, spellNumT a, applyTypeT p, sstring m,
+    applyTypeT sec_p, long sec_mod, long sec_mod2) :
+    name(n), aff_type(a), prim_apply(p), msg(m), hasSecondApply(true),
+    second_apply(sec_p), second_mod(sec_mod), second_mod2(sec_mod2)
+    {}
 
   ego_imm_blessing() {}
 };
@@ -38,218 +48,164 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
   
   blessings[AFFECT_IMMORTAL_BLESSING]=
     ego_imm_blessing("immortal",
-		     AFFECT_IMMORTAL_BLESSING,
-		     APPLY_SPELL_HITROLL,
-		     "immortals");
-
+        AFFECT_IMMORTAL_BLESSING,
+        APPLY_SPELL_HITROLL,
+        "immortals",
+        APPLY_IMMUNITY,
+        IMMUNE_NONMAGIC,
+        5);
   blessings[AFFECT_PEEL_BLESSING]=
     ego_imm_blessing("Peel",
-		     AFFECT_PEEL_BLESSING,
-		     APPLY_SPE, 
-		     "<r>speed<1>");
+        AFFECT_PEEL_BLESSING,
+        APPLY_SPE, 
+        "<r>speed<1>");
   blessings[AFFECT_VASCO_BLESSING]=
     ego_imm_blessing("Vasco",
-		     AFFECT_VASCO_BLESSING,
-		     APPLY_DEX,
-		     "<k>stealth<1>");
+        AFFECT_VASCO_BLESSING,
+        APPLY_DEX,
+        "<k>stealth<1>",
+        APPLY_NOISE,
+        -40,
+        0);
   blessings[AFFECT_DASH_BLESSING]=
     ego_imm_blessing("Dash",
-		     AFFECT_DASH_BLESSING,
-		     APPLY_FOC,
-		     "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
+        AFFECT_DASH_BLESSING,
+        APPLY_FOC,
+        "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
   blessings[AFFECT_ANGUS_BLESSING]=
     ego_imm_blessing("Angus",
-		     AFFECT_ANGUS_BLESSING,
-		     APPLY_WIS,
-		     "<g>wisdom<1>");
+        AFFECT_ANGUS_BLESSING,
+        APPLY_WIS,
+        "<g>wisdom<1>");
   blessings[AFFECT_DAMESCENA_BLESSING]=
     ego_imm_blessing("Damescena",
-		     AFFECT_DAMESCENA_BLESSING,
-		     APPLY_CON,
-		     "<W>healing<1>");
+        AFFECT_DAMESCENA_BLESSING,
+        APPLY_CON,
+        "<W>healing<1>");
   blessings[AFFECT_JESUS_BLESSING]=
     ego_imm_blessing("Jesus",
-		     AFFECT_JESUS_BLESSING,
-		     APPLY_STR,
-		     "<w>power<1>");
+        AFFECT_JESUS_BLESSING,
+        APPLY_STR,
+        "<w>power<1>");
   blessings[AFFECT_BUMP_BLESSING]=
     ego_imm_blessing("Bump",
-		     AFFECT_BUMP_BLESSING,
-		     APPLY_AGI,
-		     "<W>flexibility<1>");
+        AFFECT_BUMP_BLESSING,
+        APPLY_AGI,
+        "<W>flexibility<1>");
   blessings[AFFECT_MAROR_BLESSING]=
     ego_imm_blessing("Maror",
-		     AFFECT_MAROR_BLESSING,
-		     APPLY_KAR,
-		     "<Y>luck<1>");
+        AFFECT_MAROR_BLESSING,
+        APPLY_KAR,
+        "<Y>luck<1>",
+        APPLY_CRIT_FREQUENCY,
+        2,
+        0);
   blessings[AFFECT_CORAL_BLESSING]=
     ego_imm_blessing("Coral",
-		AFFECT_CORAL_BLESSING,
-		APPLY_CON,
-		"<r>inferno<1>");
-
-	blessings[AFFECT_DEIRDRE_BLESSING]=
-		ego_imm_blessing("Deirdre",
-		AFFECT_DEIRDRE_BLESSING,
-		APPLY_KAR,
-		"<o>the rabbit<1>");
-	blessings[AFFECT_GARTHAGK_BLESSING]=
-		ego_imm_blessing("Garthagk",
-		AFFECT_GARTHAGK_BLESSING,
-		APPLY_WIS,
-		"<g>wisdom<1>");
-	blessings[AFFECT_MERCURY_BLESSING]=
-		ego_imm_blessing("Mercury",
-		AFFECT_MERCURY_BLESSING,
-		APPLY_BRA,
-		"<r>resilience<1>");
-	blessings[AFFECT_METROHEP_BLESSING]=
-		ego_imm_blessing("Metrohep",
-		AFFECT_METROHEP_BLESSING,
-		APPLY_STR,
-		"<k>the hippo<1>");
-	blessings[AFFECT_MAGDALENA_BLESSING]=
-		ego_imm_blessing("Magdalena",
-		AFFECT_MAGDALENA_BLESSING,
-		APPLY_BRA,
-		"<k>hard rock<1>");
-	blessings[AFFECT_MACROSS_BLESSING]=
-		ego_imm_blessing("Macross",
-		AFFECT_MACROSS_BLESSING,
-		APPLY_FOC,
-		"<k>'serenity now'<1>");
-	blessings[AFFECT_PAPPY_BLESSING]=
-		ego_imm_blessing("Pappy",
-		AFFECT_PAPPY_BLESSING,
-		APPLY_VISION,
-		"<O>the mole<1>");
+        AFFECT_CORAL_BLESSING,
+        APPLY_CON,
+        "<r>inferno<1>");
+  blessings[AFFECT_DEIRDRE_BLESSING]=
+    ego_imm_blessing("Deirdre",
+        AFFECT_DEIRDRE_BLESSING,
+        APPLY_KAR,
+        "<o>the rabbit<1>");
+  blessings[AFFECT_GARTHAGK_BLESSING]=
+    ego_imm_blessing("Garthagk",
+        AFFECT_GARTHAGK_BLESSING,
+        APPLY_WIS,
+        "<g>wisdom<1>");
+  blessings[AFFECT_MERCURY_BLESSING]=
+    ego_imm_blessing("Mercury",
+        AFFECT_MERCURY_BLESSING,
+        APPLY_BRA,
+        "<r>resilience<1>");
+  blessings[AFFECT_METROHEP_BLESSING]=
+    ego_imm_blessing("Metrohep",
+        AFFECT_METROHEP_BLESSING,
+        APPLY_STR,
+        "<k>the hippo<1>",
+        APPLY_ARMOR,
+        -90,
+        0);
+  blessings[AFFECT_MAGDALENA_BLESSING]=
+    ego_imm_blessing("Magdalena",
+        AFFECT_MAGDALENA_BLESSING,
+        APPLY_BRA,
+        "<k>hard rock<1>");
+  blessings[AFFECT_MACROSS_BLESSING]=
+    ego_imm_blessing("Macross",
+        AFFECT_MACROSS_BLESSING,
+        APPLY_FOC,
+        "<k>'serenity now'<1>");
+  blessings[AFFECT_PAPPY_BLESSING]=
+    ego_imm_blessing("Pappy",
+        AFFECT_PAPPY_BLESSING,
+        APPLY_VISION,
+        "<O>the mole<1>");
 
   return blessings;
 }
 
+// egoAffect
+// adds an egotrip blessing to a particular being
 void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 {
   affectedData aff;
-  map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
-  bool success=false;
+  affectedData *afp;
+  map <spellNumT,ego_imm_blessing> blessings = init_ego_imm_blessing();
+  bool success = false;
 
-  aff.level=level;
-  aff.duration=(1+level)*UPDATES_PER_MUDHOUR;
+  // all durations & level are the same
+  aff.level = level;
+  aff.duration = (1+level)*UPDATES_PER_MUDHOUR;
 
   // each imm blessing is a spell affect + a stat modifier
-  // some of the spell affects are set in TBeing::affectedBySpell
-
   // apply stat modifier first
-  aff.type=which;
-  aff.location=blessings[which].prim_apply;
-  aff.modifier=13;
-  aff.modifier2=0;
-  aff.bitvector=0;
-  success=v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  aff.type = which;
+  aff.location = blessings[which].prim_apply;
+  aff.modifier = 19;
+  aff.modifier2 = 0;
+  aff.bitvector = 0;
+  success = v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
-  // now do the second custom part
-  if(which==AFFECT_IMMORTAL_BLESSING){
-    // default non-custom blessing
-    aff.type=AFFECT_IMMORTAL_BLESSING;
-    aff.location=APPLY_IMMUNITY;
-    aff.modifier=IMMUNE_NONMAGIC;
-    aff.modifier2=5;
-    aff.bitvector=0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_PEEL_BLESSING){
-    // TBeing::affectedBySpell - haste
-  } else if(which==AFFECT_VASCO_BLESSING){
-    aff.type = AFFECT_VASCO_BLESSING;
-    aff.modifier = -40;
-    aff.modifier2=0;
-    aff.location = APPLY_NOISE;
+  // now do the second spell effect part
+  // some of the spell affects are set in TBeing::affectedBySpell
+  if (success && blessings[which].hasSecondApply)
+  {
+    // aff.type stays the same since its the same spell
+    aff.location = blessings[which].second_apply;
+    aff.modifier = blessings[which].second_mod;
+    aff.modifier2 = blessings[which].second_mod2;
     aff.bitvector = 0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_CORAL_BLESSING){
-    // TBeing::affectedBySpell - flaming flesh 
-  } else if(which==AFFECT_ANGUS_BLESSING){
-    // TBeing::affectedBySpell - sanc
-  } else if(which==AFFECT_DAMESCENA_BLESSING){
-    // TBeing::affectedBySpell - enliven
-  } else if(which==AFFECT_JESUS_BLESSING){
-    // TBeing::affectedBySpell - true sight
-  } else if(which==AFFECT_BUMP_BLESSING){
-    // none
-  } else if(which==AFFECT_MAROR_BLESSING){
-    aff.type=AFFECT_MAROR_BLESSING;
-    aff.location=APPLY_CRIT_FREQUENCY;
-    aff.modifier = 2;
-    aff.modifier2 = 0;
-    aff.bitvector = 0;
-    v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
-  } else if(which==AFFECT_DASH_BLESSING){
-    // TBeing::affectedBySpell - plasma mirror
-  } else if(which==AFFECT_DEIRDRE_BLESSING){
-    // TBeing::affectedBySpell - celerite
-  } else if(which==AFFECT_GARTHAGK_BLESSING){
-    // TBeing::affectedBySpell - sanct
-  } else if(which==AFFECT_MERCURY_BLESSING){
-    // TBeing::affectedBySpell - enliven
-  } else if(which==AFFECT_MAGDALENA_BLESSING){
-    // TBeing::affectedBySpell - stoneskin
-  } else if(which==AFFECT_MACROSS_BLESSING){
-  } else if(which==AFFECT_GARTHAGK_BLESSING){
-  } else if(which==AFFECT_METROHEP_BLESSING){
-	aff.type = AFFECT_METROHEP_BLESSING;
-    aff.location = APPLY_ARMOR;
-	aff.modifier = -90;
-	aff.modifier2 = 0;
-    aff.bitvector = 0;
-	v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);		  
-  }
-  else if(which==AFFECT_PAPPY_BLESSING){
-    // TBeing::affectedBySpell - infravision
+    success = v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
   }
 
-  affectedData *afp;
+  // if we failed, forget bonus blessings
+  if(!success)
+    return;
 
   // now, each time a blessing is applied, increase the power of all
-  // the other blessings.
-  // EXCEPTION: not Maror's blessing -- it is a multipler and gets too high
-  // ANOTHER EXCEPTION: not the generic immunity blessing - this would change which
-  //                    immunity is applied, not the strength of it.
-  // ** this only appears to increase the generic blessing nonmagic immunity
-  // and vasco's noise modifier -- is that the intention?  almost irrelevant
-  // d: this should only increase the primary stat effects, not the 2ndary stuff
+  // the other blessings.  Do not increase the secondary effects
+  // Pappy 11/20/07 - removed the ability to bonus your own blessing
+  for(afp = v->affected; afp; afp = afp->next)
+  {
+    // not an egotrip blessing or its my own blessing
+    if (afp->type == which || blessings.find(afp->type) == NULL)
+      continue;
+    // dont bonus for secondary apply of the blessing
+    if (blessings[afp->type].hasSecondApply && blessings[which].second_apply == afp->location)
+      continue;
 
-  if(success){
-    for(afp = v->affected; afp; afp = afp->next){
-      if( (afp->type==AFFECT_IMMORTAL_BLESSING && afp->location != APPLY_IMMUNITY) ||
-	 afp->type==AFFECT_ANGUS_BLESSING ||
-	 afp->type==AFFECT_PEEL_BLESSING ||
-	 (afp->type==AFFECT_VASCO_BLESSING && afp->location != APPLY_NOISE) ||
-	 afp->type==AFFECT_CORAL_BLESSING ||
-	 afp->type==AFFECT_DAMESCENA_BLESSING ||
-	 afp->type==AFFECT_JESUS_BLESSING ||
-	 afp->type==AFFECT_BUMP_BLESSING ||
-         afp->type==AFFECT_DASH_BLESSING ||
-         afp->type==AFFECT_DEIRDRE_BLESSING ||
-         afp->type==AFFECT_GARTHAGK_BLESSING ||
-         afp->type==AFFECT_MERCURY_BLESSING ||
-         afp->type==AFFECT_MAGDALENA_BLESSING ||
-         afp->type==AFFECT_MACROSS_BLESSING ||
-         afp->type==AFFECT_PAPPY_BLESSING ||
-         (afp->type==AFFECT_METROHEP_BLESSING && afp->location != APPLY_ARMOR) ||
-   (afp->type==AFFECT_MAROR_BLESSING && afp->location != APPLY_CRIT_FREQUENCY) ){
-	afp->modifier =(int)((float)afp->modifier * 1.5);
-	
-	// increase the new spell too, but don't announce it - redundant
-	if(afp->type != which){
-	  v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!\n\r")%
-		    blessings[afp->type].name);
-	}
-      }
-    }
+    // bonus modifier is a 50% gain, then add the effect and add to the set power (so it gets removed properly)
+    int bonus = (afp->modifier / 2);
+    v->affectModify(afp->location, bonus, afp->modifier2, afp->bitvector, true, SILENT_YES);
+    afp->modifier += bonus;
+
+    // yay having multiple gods on is awesome!
+    v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!\n\r")% blessings[afp->type].name);
   }
-
 }
-
-	
 
 
 void TBeing::doEgoTrip(const char *arg)
