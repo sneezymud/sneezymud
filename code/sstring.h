@@ -23,6 +23,7 @@ public:
   const sstring comify() const;
   const sstring replaceString(sstring, sstring) const;
   const sstring trim() const;
+  const sstring capitalizeSentences() const;
 
   // other functions
   const bool hasDigit() const;

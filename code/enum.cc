@@ -82,6 +82,8 @@ int mapApplyToFile(applyTypeT att)
       return 40;
     case APPLY_CRIT_FREQUENCY:
       return 41;
+    case APPLY_GARBLE:
+      return 42;
     case MAX_APPLY_TYPES:
       break;
   }
@@ -170,6 +172,8 @@ applyTypeT mapFileToApply(int att)
       return APPLY_CURRENT_HIT;
     case 41:
       return APPLY_CRIT_FREQUENCY;
+    case 42:
+      return APPLY_GARBLE;
     default:
       break;
   }

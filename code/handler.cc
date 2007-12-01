@@ -448,6 +448,22 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
     case APPLY_PROTECTION:
       addToProtection(mod);
       return;
+    case APPLY_GARBLE:
+      // keep this code in line with toggleGarble
+      int myGarbles = my_garbleFlags;
+      if (hasQuestBit(TOG_BLAHBLAH))
+        myGarbles |= GARBLE_FLAG_BLAHBLAH;
+      if (desc && IS_SET(desc->autobits, AUTO_PG13))
+        myGarbles |= GARBLE_PG13OUT;
+      // add or remove the bit as needed
+      if (mod < 0)
+        myGarbles &= ~(1<<(-mod)); // remove bit
+      else
+        myGarbles |= (1<<mod); // add bit
+      // if we added or removed a garble
+      if (myGarbles != my_garbleFlags)
+        toggleGarble(mod > 0? (GARBLETYPE)mod : (GARBLETYPE)-mod);
+      return;
     case MAX_APPLY_TYPES:
       break;
   }

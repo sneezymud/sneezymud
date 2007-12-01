@@ -601,7 +601,8 @@ int TBeing::doEmote(const sstring &argument)
   if (argument.empty())
     sendTo("Yes.. But what?\n\r");
   else {
-    buf = fmt("$n %s<z>") % argument;
+    sstring garbled = garble(NULL, argument, SPEECH_EMOTE, GARBLE_SCOPE_EVERYONE);
+    buf = fmt("$n %s<z>") % garbled;
     tmpbuf = fmt("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
     for (t = roomp->getStuff(); t ; t = t2) {
@@ -613,8 +614,10 @@ int TBeing::doEmote(const sstring &argument)
                       (ch->canSee(this)) && ch->awake() && 
                       (ch->desc->connected <= 20) && 
                       !(ch->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
-        tmpbuf = fmt("%s") % nameColorString(ch, ch->desc, buf, NULL, COLOR_COMM, FALSE);
-        act(tmpbuf, TRUE, this, 0, ch, TO_VICT);
+        sstring garbledTo = garble(ch, garbled, SPEECH_EMOTE, GARBLE_SCOPE_INDIVIDUAL);
+        garbledTo = fmt("$n %s<z>") % garbledTo;
+        garbledTo = fmt("%s") % nameColorString(ch, ch->desc, garbledTo, NULL, COLOR_COMM, FALSE);
+        act(garbledTo, TRUE, this, 0, ch, TO_VICT);
       }
 #if 0
 // Commented out..cosmo..we dont break it for say we shouldnt for emote

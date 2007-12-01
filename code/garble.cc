@@ -19,19 +19,22 @@ sstring garble_excited(const TBeing *from, const TBeing *to, const sstring &arg,
 sstring garble_glubglub(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_ghost(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-
+sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 
 TGarble GarbleData[GARBLE_MAX] = {
   { "innuendo", "Makes the character end sentences, if you know what I mean", false, GARBLE_SCOPE_EVERYONE, garble_innuendo, SPEECH_FLAG_VERBAL },
   { "excited", "Makes the character end phrases with exclamations!!", false, GARBLE_SCOPE_EVERYONE, garble_excited, SPEECH_FLAG_VERBAL },
   { "sign", "Applies to signing, if the character's skill level < maxed", true, GARBLE_SCOPE_EVERYONE, garble_sign, SPEECH_FLAG_SIGN },
-  { "ghost", "Makes the character talk OOooooo scary!", false, GARBLE_SCOPE_EVERYONE, garble_ghost, SPEECH_FLAG_VERBAL },
-  { "wahwah", "Makes the character cry like a little baby", false, GARBLE_SCOPE_EVERYONE, garble_wahwah, SPEECH_FLAG_VERBAL },
+  { "ghost", "Makes the character talk OOooooo scary!", false, GARBLE_SCOPE_EVERYONE, garble_ghost, SPEECH_FLAG_VERBALEM },
+  { "wahwah", "Makes the character cry like a little baby", false, GARBLE_SCOPE_EVERYONE, garble_wahwah, SPEECH_FLAG_VERBALEM },
   { "blahblah", "Interjects blah blah into the player's shouts", false, GARBLE_SCOPE_EVERYONE, garble_blahblah, SPEECH_FLAG_SHOUT },
   { "drunk", "Makes the character talk (and view room) drunkenly", true, GARBLE_SCOPE_EVERYONEANDSELF, garble_drunk, SPEECH_FLAG_VERBAL | SPEECH_FLAG_ROOMDESC },
   { "pg13out", "Makes the character tone down their swear words (to other people)", true, GARBLE_SCOPE_INDIVIDUAL, garble_PG13filter, SPEECH_FLAG_NONWRITE },
   { "pg13all", "Makes the character not get or say any swear words", true, GARBLE_SCOPE_EVERYONE, garble_PG13filter, SPEECH_FLAG_NONWRITE },
-  { "glubglub", "Makes the character say glub glub", true, GARBLE_SCOPE_EVERYONE, garble_glubglub, SPEECH_FLAG_VERBAL }
+  { "glubglub", "Makes the character say glub glub", true, GARBLE_SCOPE_EVERYONE, garble_glubglub, SPEECH_FLAG_VERBALEM },
+  { "pirate", "Makes the character talk like a pirate", false, GARBLE_SCOPE_EVERYONE, garble_pirate, SPEECH_FLAG_VERBAL },
+  { "freshprince", "Makes the character do the fresh prince of Brightmoon rap", false, GARBLE_SCOPE_EVERYONE, garble_freshprince, SPEECH_FLAG_SAY }
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
@@ -75,6 +78,8 @@ int TBeing::toggleGarble(GARBLETYPE garble)
 
   if (hasQuestBit(TOG_BLAHBLAH))
     garbles |= GARBLE_FLAG_BLAHBLAH;
+  if (desc && IS_SET(desc->autobits, AUTO_PG13))
+    garbles |= GARBLE_PG13OUT;
 
   garbles ^= (1<<garble);
 
@@ -136,22 +141,23 @@ sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg
   unsigned int loc;
   buf=obuf=arg;
 
-  for(int i=0;!arg.word(i).empty();++i){
+  for(int i=0;!arg.word(i).empty();++i)
+  {
     word=arg.word(i);
 
     // remove color codes at the beginning
-    while(word.length()>2 && word[0]=='<' && word[2]=='>'){
+    while(word.length()>2 && word[0]=='<' && word[2]=='>')
       word.erase(0, 3);
-    }
 
     // make sure we have something left to play with
     if(word.length()<2)
       continue;
 
     // find punctuation at the end of the word and remove
-    for(loc=word.length()-1;loc>0;--loc){
+    for(loc=word.length()-1;loc>0;--loc)
+    {
       if(isalpha(word[loc]) || word[loc]=='>')
-  break;
+        break;
     }
     word.erase(loc, word.length()-loc);
 
@@ -160,11 +166,10 @@ sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg
       continue;
 
     // swap out with a random word sometimes
-    if (::number(0, 4)) {
+    if (::number(0, 4))
       blah="blah";
-    } else {
+    else
       blah=word;
-    }
 
     if(isupper(word[0]))
       blah[0]=toupper(blah[0]);
@@ -172,7 +177,8 @@ sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg
     // replace the original word in obuf with whitespace
     // replace the original word in buf with the new word
     loc=obuf.find(word, 0);
-    if(loc != sstring::npos){
+    if(loc != sstring::npos)
+    {
       obuf.erase(loc, word.length());
       obuf.insert(loc, blah.length(), ' ');
       buf.erase(loc, word.length());
@@ -454,10 +460,205 @@ sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, 
   return buf;
 }
 
+// This garble makes the target talk like a pirate
+// returns the garbled string
+sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring pirate_replace[][2] = {
+    // escape punctuation
+    { ",", " *,* " },
+    { ";", " *;* " },
+    { ".", " *.* " },
+    { "!", " *!* " },
+    { "?", " *?* " },
+
+    // first, turn prases that would get replaced into tokens
+    { " are not ", " *beno* " },
+    { " oh my god ", " *omg* " },
+    { " omg ", " *omg* " },
+    { " what's up ", " *whatup* " },
+    { " whats up ", " *whatup* " },
+    { " what up ", " *whatup* " },
+    { " whatup ", " *whatup* " },
+    { " it is ", " *itis* " },
+    { " its ", " *itis* " },
+    { " it's ", " *itis* " },
+    { " i mean ", " *sezi* " },
+
+    // phrase fixup
+    { " they're ", " they are " },
+    { " theyre ", " they are " },
+    { " we're ", " we are " },
+    { " were ", " we are " },
+    { " you're ", " you are " },
+    { " youre ", " you are " },
+
+    // apply simple word replacements
+    { " my ", " me " },
+    { " is ", " be " },
+    { " are ", " be " },
+    { " am ", " be " },
+    { " and ", " 'n " },
+    { "&", " 'n " },
+    { " nd ", " 'n " },
+    { " your ", " yer " },
+    { " you ", " ye " },
+    { " there ", " thar " },
+    { " their ", " thar " },
+    { " ya ", " yar " },
+    { " yes ", " aye " },
+    { " sure ", " aye " },
+    { " ok ", " aye " },
+    { " okay ", " aye " },
+    { " k ", " aye " },
+    { " kk ", " aye " },
+    { " mkay ", " yar " },
+    { " m'kay ", " yar " },
+    { " no ", " nay " },
+    { " aren't ", " t'ain't " },
+    { " arent ", " ain't " },
+    { " hey ", " yar " },
+    { " man ", " matey " },
+    { " men ", " mateys " },
+    { " guy ", " matey " },
+    { " guys ", " mateys " },
+    { " she ", " the lass " },
+    { " gal ", " lass " },
+    { " gals ", " lasses " },
+    { " lady ", " lass " },
+    { " ladies ", " lasses " },
+    { " girl ", " poppet " },
+    { " girls ", " poppets " },
+    { " woman ", " wench " },
+    { " women ", " wenches " },
+    { " bud ", " matey " },
+    { " buds ", " mateys " },
+    { " buddy ", " matey " },
+    { " buddies ", " mateys " },
+    { " haha ", " bar har har " },
+    { " hah ", " har " },
+    { "haha", " har " },
+    { " rofl ", " bar har har " },
+    { " hehe ", " bar har har " },
+    { " heh ", " har " },
+    { "hehe", " har " },
+    { " lolo ", " har " },
+    { " lol ", " har " },
+    { " ass ", " arse " },
+    { " asses ", " arses " },
+    { " allright ", " all be right " },
+    { " clean ", " swab " },
+    { " cleaned ", " swabbed " },
+    { " cleaning ", " swabbing " },
+    { " wash ", " swab " },
+    { " washed ", " swabbed " },
+    { " washing ", " swabbing " },
+
+    // apply prefix and suffix replacements
+    { "ing ", "in' " },
+    { " you", " ye" },
+    { " jerk", " lubber" },
+    { " dork", " lubber" },
+    { " loser", " lubber" },
+    { " them", " 'em" },
+
+    // un-tokenize the tokens for our pirate phrases
+    { " *beno* ", " be no " },
+    { " *omg* ", " shiver me timbers " },
+    { " *whatup* ", " yar matey " },
+    { " *itis* ", " 'tis " },
+    { " *sezi* ", " says I " },
+
+    // replace punctuation we escaped
+    { " *,* ", "," },
+    { " *;* ", ";" },
+    { " *.* ", "." },
+    { " *!* ", "!" },
+    { " *?* ", "?" },
+
+    // pretty us up a bit
+    { " i ", " I " },
+    };
+  sstring garble = " ";
+  garble += arg.lower();
+  garble += " ";
+
+  // do all of the string replacements, yar!
+  string::size_type start = 0;
+  for(unsigned int iReplace = 0; iReplace < cElements(pirate_replace);)
+  {
+    start = garble.find(pirate_replace[iReplace][0], start);
+
+    // nothing found? go to the next word
+    if (start == string::npos)
+    {
+      iReplace++;
+      start = 0;
+      continue;
+    }
+
+    // if we need more buffer, lets resize
+    if (pirate_replace[iReplace][0].length() < pirate_replace[iReplace][1].length())
+      garble.resize(garble.size() + pirate_replace[iReplace][1].length() - pirate_replace[iReplace][0].length(), ' ');
+
+    // replace it, and step forward
+    garble.replace(start, pirate_replace[iReplace][0].length(), pirate_replace[iReplace][1]);
+    start += pirate_replace[iReplace][1].length();
+
+    // if we end the replace with a space, backup one so that we can overlap word replacements
+    if (pirate_replace[iReplace][1][pirate_replace[iReplace][1].length()-1] == ' ')
+      start--;
+  }
+
+  // perhaps here, add in some pirate exclamations
+
+  // now caps the first char and first of each sentence and trim
+  return garble.capitalizeSentences().trim();
+}
+
+
+// no garble is complete without a fresh prince parody (Brightmoon)
+sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring lyrics[] =
+  {
+    "Now this is the story all about how,",
+    "My life got flipped, turned upside down.",
+    "And I’d like to take a minute won't go past noon,",
+    "I’ll tell you how I became the prince of a town called Brightmoon.",
+
+    "In low-rent Grimhaven, born and raised.",
+    "On the parklands is where I spent most of my days.",
+    "Chilling out, maxing, relaxing all cool,",
+    "And all shooting some large rats outside of the school,",
+    "When a couple of guys who were up to no good,",
+    "Started making trouble in my neighborhood.",
+    "I got in one little fight but my mom hates goons,",
+    "And said 'you’re moving with your aunte and uncle in Brightmoon'.",
+
+    "I whistled for a trolley and when it arrived, the",
+    "Horses name was 'fresh' and had a gnome for a driver.",
+    "If anything I could say that this cart was doomed,",
+    "But I thought naw forget it, yo holmes to Brightmoon!",
+
+    "I pulled up to the house about seven or eight.",
+    "And I yelled to the trolley 'yo, holmes smell you later'!",
+    "Looked at my kingdom I'll be on top soon,",
+    "To settle my throne as the prince of Brightmoon."
+  };
+
+  // this function means its global, so 2 people can have the same garble and end up rhyming together
+  static unsigned int stringIndex = 0;
+  if (stringIndex >= cElements(lyrics))
+    stringIndex = 0;
+  return lyrics[stringIndex++];
+}
+
+
 
 const sstring RandomWord()
 {
-  static sstring str[] =
+  static const sstring str[] =
   {
     "argle",
     "bargle",
@@ -516,7 +717,7 @@ const sstring RandomWord()
 const sstring RandomVerb()
 {
   // guaranteed insensible
-  static sstring str[] =
+  static const sstring str[] =
   {
     "hoist", 
     "pinch", 

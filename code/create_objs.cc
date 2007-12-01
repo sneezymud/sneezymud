@@ -35,6 +35,7 @@ extern "C" {
 #include "obj_staff.h"
 #include "obj_wand.h"
 #include "obj_egg.h"
+#include "garble.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {
@@ -1415,6 +1416,12 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       return;
     } else if ((att == APPLY_IMMUNITY) && (number1 < 0 || number1 >= MAX_IMMUNES)) {
       ch->sendTo("Illegal immunity!\n\r");
+      return;
+    } else if (att == APPLY_GARBLE && num != 2) {
+      ch->sendTo("Syntax: %d <garble number>\n\r");
+      return;
+    } else if (att == APPLY_GARBLE && (number1 < 0 || number1 >= GARBLE_MAX)) {
+      ch->sendTo(fmt("Illegal Garble!  Please choose a number between 0 and %d\n\r") % (GARBLE_MAX-1));
       return;
     } else if (num == 2) 
       number2 = 0;

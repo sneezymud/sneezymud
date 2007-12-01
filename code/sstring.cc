@@ -245,9 +245,32 @@ const sstring sstring::trim() const
   iStart = find_first_not_of(whitespace);
   iEnd = find_last_not_of(whitespace);
 
-  if (iStart == sstring::npos)
+  if (iStart == sstring::npos && iEnd == sstring::npos)
     return *this;
+  if (iStart == sstring::npos)
+    iStart = 0;
+  if (iEnd == sstring::npos)
+    iEnd = length();
+  else
+    iEnd++;
 
   return substr(iStart, iEnd-iStart);
 }
+
+
+// converts each beginning char of each sentence to uppercase
+const sstring sstring::capitalizeSentences() const
+{
+  sstring str = *this;
+  size_t st = str.find_first_not_of(" ");
+  while(st != sstring::npos)
+  {
+    str[st] = toupper(str[st]);
+    st = str.find_first_of(".!?", st);
+    if (st != sstring::npos)
+      st = str.find_first_not_of(" ", st+1);
+  }
+  return str;
+}
+
 

@@ -298,6 +298,7 @@ enum applyTypeT {
      APPLY_SPELL_HITROLL,
      APPLY_CURRENT_HIT,
      APPLY_CRIT_FREQUENCY,
+     APPLY_GARBLE,
      MAX_APPLY_TYPES
 };
 const applyTypeT MIN_APPLY = applyTypeT(0);

@@ -15,6 +15,7 @@
 #include "disc_spirit.h"
 #include "disease.h"
 #include "obj_portal.h"
+#include "garble.h"
 
 
 class ego_imm_blessing {

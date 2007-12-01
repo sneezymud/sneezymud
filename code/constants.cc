@@ -893,6 +893,7 @@ APP_type apply_types[MAX_APPLY_TYPES] =
   {FALSE, "Spell Hitroll"},
   {FALSE, "Hit Points"},
   {TRUE, "Crit. Frequency"},
+  {TRUE, "Garbled Speech"},
 };
 
 
