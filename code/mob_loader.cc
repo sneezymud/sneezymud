@@ -1174,7 +1174,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
 //October Critter Quest food commodity loads - berries
-#if 1
+#if 0
   if (!::number(0,4) && wealth > 0)
   {
     TObj *berries = read_object(276, VIRTUAL);
@@ -1184,7 +1184,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
 //October Critter Quest food commodity loads - mushrooms
-#if 1
+#if 0
   if (!::number(0,4) && wealth > 0)
   {
     TObj *mushrooms = read_object(281, VIRTUAL);
@@ -1194,7 +1194,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
 //October Critter Quest food commodity loads - roots
-#if 1
+#if 0
   if (!::number(0,4) && wealth > 0)
   {
     TObj *roots = read_object(277, VIRTUAL);
@@ -1204,7 +1204,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
 //October Critter Quest food commodity loads - egg  
-#if 1
+#if 0
   if (!::number(0,4) && wealth > 0)
   {
     TObj *egg = read_object(37130, VIRTUAL);
@@ -1214,7 +1214,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 #endif
 
 //October Critter Quest food commodity loads - steak    
-#if 1
+#if 0
   if (!::number(0,9) && wealth > 0)
   {
     TObj *steak = read_object(405, VIRTUAL);
