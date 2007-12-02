@@ -230,9 +230,13 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
 
   if (getStuff()) {
     ch->sendTo("That bow has already been loaded, so you hold it.\n\r");
-    --(*this);
-    ch->equipChar(this, ch->getPrimaryHold());
-    ch->addToWait(combatRound(1));
+    if (!equippedBy)
+    {
+      mud_assert(equippedBy == ch, "TBow::bloadArrowBow (re)equipping bow which was equipped by another person!");
+      --(*this);
+      ch->equipChar(this, ch->getPrimaryHold());
+      ch->addToWait(combatRound(1));
+    }
     return;
   }
 
@@ -405,6 +409,10 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
     
+    // stop if we were unable to remove the bow for some reason
+    if (!rc)
+      break;
+
     the_arrow = dynamic_cast<TObj *>(ch->findArrow(buf, SILENT_NO));
     if (the_arrow)
       the_arrow->bloadBowArrow(ch, this);
