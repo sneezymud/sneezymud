@@ -220,6 +220,9 @@ int TBeing::doSkySpirit(const char *argument)
     return FALSE;
   }
 
+  if (noHarmCheck(victim))
+    return FALSE;
+
   int lev = getSkillLevel(SPELL_SKY_SPIRIT);
   int bKnown= getSkillValue(SPELL_SKY_SPIRIT);
   
