@@ -1107,17 +1107,16 @@ int TBeing::updateHalfTickStuff()
     setPosition(POSITION_SLEEPING);
   }
 
-  if(hasQuestBit(TOG_IS_NECROPHOBIC) && !::number(0,3)){
+  if(hasQuestBit(TOG_IS_NECROPHOBIC) && (getPosition() > POSITION_SLEEPING) && !::number(0,3)){
     TBeing *tb;
     for(TThing *t=roomp->getStuff();t;t=t->nextThing){
-      if(dynamic_cast<TBaseCorpse *>(t) ||
-	 ((tb=dynamic_cast<TBeing *>(t)) && tb->isUndead())){
-	sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")%
-	       t->getName());
-	doFlee("");
-	addCommandToQue("flee");
-	addCommandToQue("flee");
-	break;
+      if(dynamic_cast<TBaseCorpse *>(t) || ((tb=dynamic_cast<TBeing *>(t)) && tb->isUndead()))
+      {
+        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% t->getName());
+        doFlee("");
+        addCommandToQue("flee");
+        addCommandToQue("flee");
+        break;
       }
     }
   }
