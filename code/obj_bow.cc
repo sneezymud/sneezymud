@@ -232,7 +232,6 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
     ch->sendTo("That bow has already been loaded, so you hold it.\n\r");
     if (!equippedBy)
     {
-      mud_assert(equippedBy == ch, "TBow::bloadArrowBow (re)equipping bow which was equipped by another person!");
       --(*this);
       ch->equipChar(this, ch->getPrimaryHold());
       ch->addToWait(combatRound(1));
