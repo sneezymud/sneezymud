@@ -1052,6 +1052,7 @@ int Descriptor::nanny(sstring arg)
   int num_fifties=0, bonus_pts=0;
   sstring aw = arg.word(0); // first word of argument, space delimited
   char ac = aw[0];
+  int iTrait = 0;
 
   switch (connected) {
     case CON_MULTIWARN:
@@ -2090,7 +2091,7 @@ int Descriptor::nanny(sstring arg)
 
     case CON_TRAITS1:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-
+      iTrait = convertTo<int>(aw);
       if(ac == '~'){
         return DELETE_THIS;
       } else if(ac == '/'){
@@ -2099,16 +2100,16 @@ int Descriptor::nanny(sstring arg)
         character->cls();
         connected = CON_TRAITS2;
         sendTraitsList(2);
-      } else if(atoi(&ac) < 1 || atoi(&ac) > MAX_TRAITS){
+      } else if(iTrait < 1 || iTrait > MAX_TRAITS){
         character->cls();
         sendTraitsList(1);
       } else {
-        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
-          character->remQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        if(character->hasQuestBit(traits[iTrait].tog)){
+          character->remQuestBit(traits[iTrait].tog);
+          bonus_points.total-=traits[iTrait].points;
         } else {
-          character->setQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total+=traits[convertTo<int>(aw)].points;
+          character->setQuestBit(traits[iTrait].tog);
+          bonus_points.total+=traits[iTrait].points;
         }
         character->cls();
         sendTraitsList(1);
@@ -2118,7 +2119,7 @@ int Descriptor::nanny(sstring arg)
       
     case CON_TRAITS2:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-
+      iTrait = convertTo<int>(aw);
       if(ac == '~'){
         return DELETE_THIS;
       } else if(ac == '/'){
@@ -2127,16 +2128,16 @@ int Descriptor::nanny(sstring arg)
         character->cls();
         connected = CON_TRAITS3;
         sendTraitsList(3);
-      } else if(atoi(&ac) < 1 || atoi(& ac) > MAX_TRAITS){
+      } else if(iTrait < 1 || iTrait > MAX_TRAITS){
         character->cls();
         sendTraitsList(2);
       } else {
-        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
-          character->remQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        if(character->hasQuestBit(traits[iTrait].tog)){
+          character->remQuestBit(traits[iTrait].tog);
+          bonus_points.total-=traits[iTrait].points;
         } else {
-          character->setQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total+=traits[convertTo<int>(aw)].points;
+          character->setQuestBit(traits[iTrait].tog);
+          bonus_points.total+=traits[iTrait].points;
         }
         character->cls();
         sendTraitsList(2);
@@ -2147,7 +2148,7 @@ int Descriptor::nanny(sstring arg)
 
     case CON_TRAITS3:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
-
+      iTrait = convertTo<int>(aw);
       if(ac == '~'){
         return DELETE_THIS;
       } else if(ac == '/'){
@@ -2205,16 +2206,16 @@ int Descriptor::nanny(sstring arg)
         character->cls();
         connected = CON_QCLASS;
         sendClassList(FALSE);
-      } else if(atoi(&ac) < 1 || atoi(&ac) > MAX_TRAITS){
+      } else if(iTrait < 1 || iTrait > MAX_TRAITS){
         character->cls();
         sendTraitsList(3);
       } else {
-        if(character->hasQuestBit(traits[convertTo<int>(aw)].tog)){
-          character->remQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total-=traits[convertTo<int>(aw)].points;
+        if(character->hasQuestBit(traits[iTrait].tog)){
+          character->remQuestBit(traits[iTrait].tog);
+          bonus_points.total-=traits[iTrait].points;
         } else {
-          character->setQuestBit(traits[convertTo<int>(aw)].tog);
-          bonus_points.total+=traits[convertTo<int>(aw)].points;
+          character->setQuestBit(traits[iTrait].tog);
+          bonus_points.total+=traits[iTrait].points;
         }
         character->cls();
         sendTraitsList(3);
