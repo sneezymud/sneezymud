@@ -192,10 +192,10 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   for(afp = v->affected; afp; afp = afp->next)
   {
     // not an egotrip blessing or its my own blessing
-    if (afp->type == which || blessings.find(afp->type) == NULL)
+    if (afp->type == which || blessings.find(afp->type) == blessings.end())
       continue;
     // dont bonus for secondary apply of the blessing
-    if (blessings[afp->type].hasSecondApply && blessings[which].second_apply == afp->location)
+    if (blessings[afp->type].hasSecondApply && blessings[afp->type].second_apply == afp->location)
       continue;
 
     // bonus modifier is a 50% gain, then add the effect and add to the set power (so it gets removed properly)
