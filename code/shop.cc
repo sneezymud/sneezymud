@@ -194,6 +194,23 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
     }
   }
 
+  // check for speed and quality for repair shops
+  db.query("select speed, quality from shopownedrepair where shop_nr=%i",
+	   shop_nr);
+  
+  if(db.fetchRow()){
+    float speed=convertTo<float>(db["speed"]);
+    float quality=convertTo<float>(db["quality"]);
+    
+    if(speed>0)
+      profit_buy /= speed;
+    
+    if(quality>0)
+      profit_buy *= quality;
+  }
+  ///
+  
+
   return profit_buy;
 }
 

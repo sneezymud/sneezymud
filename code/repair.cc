@@ -161,56 +161,11 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
 #endif
 
   // check for shop setting
-  TDatabase db(DB_SNEEZY);
-  
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
-  } else {
-    float profit_buy=-1;
+  float profit_buy=shop_index[shop_nr].getProfitBuy(NULL, buyer);
 
-    // if the shop is player owned, we check custom pricing
-    if(shop_index[shop_nr].isOwned()){  
-      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-      if(db.fetchRow())
-	profit_buy=convertTo<float>(db["profit_buy"]);
-      
-      if(profit_buy==-1){
-	// ok, shop is owned and there is no ratio set for this specific object
-	// so check keywords
-	db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
-	
-	while(db.fetchRow()){
-	  if(isname(db["match_str"], name)){
-	    profit_buy=convertTo<float>(db["profit_buy"]);
-	    break;
-	  }
-	}
-      }
-    }
-
-    // no custom price found, so use the normal shop pricing
-    if(profit_buy == -1)
-      profit_buy=shop_index[shop_nr].profit_buy;
-
-
-    // check for speed and quality
-    db.query("select speed, quality from shopownedrepair where shop_nr=%i",
-	     shop_nr);
     
-    if(db.fetchRow()){
-      float speed=convertTo<float>(db["speed"]);
-      float quality=convertTo<float>(db["quality"]);
-
-      if(speed>0)
-	profit_buy /= speed;
-
-      if(quality>0)
-	profit_buy *= quality;
-    }
-    
-    mat_price = (int)((double) mat_price * profit_buy);
-    price = (int)((double) price * profit_buy);
-  }
+  mat_price = (int)((double) mat_price * profit_buy);
+  price = (int)((double) price * profit_buy);
 
   if (pmatCost)
     *pmatCost = mat_price;
