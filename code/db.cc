@@ -1848,6 +1848,9 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     --(*cheapest);
     buyer->addToMoney(cheapest_price, GOLD_XFER); // this is to offset cost
     tso.doBuyTransaction(cheapest_price, cheapest->getName(), TX_BUYING, cheapest);
+    vlogf(LOG_PEEL, fmt("%s purchased %s from shop %i for %i talens.") %
+	  buyer->getName() % cheapest->getName() % shop_nr % cheapest_price);
+
     return cheapest;
   } else if(cheapest_commod){
     TShopOwned tso(commod_shop_nr, buyer);
@@ -1856,6 +1859,9 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 			 TX_BUYING, cheapest_commod);
 
     cheapest_commod->setWeight(cheapest_commod->getWeight() - weight);
+    vlogf(LOG_PEEL, fmt("%s purchased %s (%i) from shop %i for %i talens.") %
+	  buyer->getName() % cheapest_commod->getName() % (int)(weight*10) %
+	  commod_shop_nr % commod_price);
     return read_object(nr, REAL);    
   }
 
