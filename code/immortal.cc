@@ -2704,6 +2704,7 @@ void TPerson::doPurge(const char *argument)
       return;
     } else if (is_abbrev(name_buf, "zone")) {
       unsigned int zone = 0;
+      bool old_nuke_inactive_mobs=nuke_inactive_mobs;
 
       for (; isspace(*argument); argument++);
 
@@ -2712,7 +2713,9 @@ void TPerson::doPurge(const char *argument)
         for (zone = 1; zone < zone_table.size(); zone++) {
           if (zone_table[zone].zone_value > 0 && 
         zone_table[zone].isEmpty()) {
+	    nuke_inactive_mobs=true;
             zone_table[zone].nukeMobs();
+	    nuke_inactive_mobs=old_nuke_inactive_mobs;
             zone_table[zone].zone_value = 0;
           }
         }
@@ -2727,7 +2730,9 @@ void TPerson::doPurge(const char *argument)
         return;
       }
 
+      nuke_inactive_mobs=true;
       zone_table[zone].nukeMobs();
+      nuke_inactive_mobs=old_nuke_inactive_mobs;
       sendTo("Mobs nuked.\n\r");
       zone_table[zone].zone_value = 0;
       return;
