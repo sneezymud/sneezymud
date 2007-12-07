@@ -22,6 +22,7 @@
 #include "shop.h"
 #include "process.h"
 #include "database.h"
+#include "shopowned.h"
 #include "obj_spellbag.h"
 #include "obj_player_corpse.h"
 #include "obj_open_container.h"
@@ -1753,6 +1754,115 @@ void TObjectCache::preload()
   }
 }
 
+
+// the idea here is to search all shops for the object we want to load
+// and if we find it at a decent price, buy it.
+// if we can't find it, then try to buy some commods to "make it".
+// failing that, just load it.
+TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
+{
+
+  if(bootTime){
+    //    vlogf(LOG_BUG, "read_object_buy_build() called during bootTime");
+    return read_object(nr, type);
+  }
+
+  if (type == VIRTUAL)
+    nr = real_object(nr);
+
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select material, weight, short_desc, type from obj where vnum=%i",
+	   obj_index[nr].virt);
+  if(!db.fetchRow()){
+    vlogf(LOG_BUG, fmt("didn't find object %i in query") % obj_index[nr].virt);
+    return read_object(nr, type);
+  }
+
+  int material=convertTo<int>(db["material"]);
+  unsigned int item_type=convertTo<int>(db["type"]);
+  float weight=convertTo<float>(db["weight"]);
+  sstring name=db["short_desc"];
+
+  // check shops for item available < basePrice
+  vector <shopData>::iterator iter;
+  TThing *t;
+  TObj *o, *cheapest=NULL;
+  TCommodity *commod, *cheapest_commod=NULL;
+  int price, cheapest_price=0, shop_nr=0;
+  int basePrice=0;
+  int commod_price=0, commod_shop_nr=0;
+  bool is_commod_shop=false, is_ok_shop=false;
+
+  for(iter=shop_index.begin();iter!=shop_index.end();++iter){
+    TShopOwned tso((*iter).shop_nr, buyer);
+
+    // check shop type
+    is_commod_shop=is_ok_shop=false;
+    for(unsigned int i=0;i<shop_index[(*iter).shop_nr].type.size();++i){
+      if(shop_index[(*iter).shop_nr].type[i] == ITEM_RAW_MATERIAL)
+	is_commod_shop=true;
+      if(shop_index[(*iter).shop_nr].type[i] == item_type)
+	is_ok_shop=true;
+    }
+
+    // doesn't deal in commods or the item type we want, so skip it
+    if(!is_commod_shop && !is_ok_shop)
+      continue;
+
+    // go through the shop inventory
+    for(t=tso.getStuff();t;t=t->nextThing){
+      if(!(o=dynamic_cast<TObj *>(t)))
+	continue;
+      
+      // check if this object is one we can buy
+      if(o->objVnum() == obj_index[nr].virt){
+	price = o->shopPrice(1, (*iter).shop_nr, -1, buyer);
+	basePrice=o->suggestedPrice();
+
+	if(price <= basePrice &&
+	   (price <= cheapest_price || cheapest_price==0)){
+	  cheapest_price=price;
+	  cheapest=o;
+	  shop_nr=(*iter).shop_nr;
+	}
+      }
+
+      // check if this object is a commod we can use to make our object
+      if((commod=dynamic_cast<TCommodity *>(t)) && is_commod_shop){
+	price=commod->shopPrice((int)(weight*10), 
+				       (*iter).shop_nr, -1, buyer);
+	if(commod->getMaterial() == material &&
+	   commod->getWeight() >= weight &&
+	   (price <= commod_price || commod_price==0)){
+	  commod_shop_nr=(*iter).shop_nr;
+	  commod_price=price;
+	  cheapest_commod=commod;
+	}
+      }
+    }
+  }
+
+  if(cheapest){
+    TShopOwned tso(shop_nr, buyer);
+    --(*cheapest);
+    buyer->addToMoney(cheapest_price, GOLD_XFER); // this is to offset cost
+    tso.doBuyTransaction(cheapest_price, cheapest->getName(), TX_BUYING, cheapest);
+    return cheapest;
+  } else if(cheapest_commod){
+    TShopOwned tso(commod_shop_nr, buyer);
+    buyer->addToMoney(commod_price, GOLD_XFER); // this is to offset cost
+    tso.doBuyTransaction(commod_price, cheapest_commod->getName(), 
+			 TX_BUYING, cheapest_commod);
+
+    cheapest_commod->setWeight(cheapest_commod->getWeight() - weight);
+    return read_object(nr, REAL);    
+  }
+
+
+  return read_object(nr, REAL);
+}
+
 TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
@@ -2870,9 +2980,10 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           // chance of loading an object.  This has to be taken into account
           // when computing the odds of the normalized load potential.
           // vlogf(LOG_MISC, fmt("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
-          if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-              (::number(0, 9999999) < (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip)) &&  
-              (obj = read_object(rs.arg1, REAL))) {
+          if((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
+              (::number(0, 9999999) < 
+	       (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)) &&
+	     (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
             // vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
             if (!mob) {
               vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%s)") %  obj->getName());
