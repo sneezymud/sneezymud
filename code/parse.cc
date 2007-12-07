@@ -3144,7 +3144,7 @@ void bisect_arg_safe(const char *arg, int *field, char *sstring, unsigned int ss
     return;
 
   for (; isspace(*arg); arg++);
-  strncpy(sstring, arg, sstringLen);
+  for (;sstringLen-- > 0 && (*sstring = *arg); arg++, sstring++);
 
   return;
 }
