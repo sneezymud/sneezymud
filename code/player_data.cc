@@ -22,6 +22,9 @@ extern "C" {
 TAccountStats accStat;
 wizListInfo *wiz;
 
+// defined in gaining.cc
+int CalcRaiseDisc(int natLearn, CDiscipline *disc, bool drop);
+
 void TBeing::initDescStuff(charFile *st)
 {
   Descriptor *d;
@@ -1488,15 +1491,87 @@ void TBeing::checkForStr(silentTypeT silent)
   }
 }
 
+// This function can retrieve the total number of practices spent by the character
+// and reset it to 0, returning those used practices.
+// Pass false for reset to just get the number of pracs into practices
+// returns true if a reset is possible and practices were counted
+// returns false if practices could not be reset for this character
+bool TBeing::resetPractices(classIndT resetClass, int &practices, bool reset)
+{
+  discNumT dnt;
+  practices = 0;
+
+  if (!hasClass(1<<resetClass))
+    return false;
+
+  // loop disciplines, gather spent practices and reset if needed
+  for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++)
+  {
+    CDiscipline *cd = getDiscipline(dnt);
+    if (!cd || cd->isAutomatic())
+      continue;
+
+    // skip these disciplines which arent in the class to be reset
+    if (discNames[dnt].class_num != resetClass &&
+       !(cd->ok_for_class & (1<<resetClass)))
+      continue;
+
+    // get my learnedness in this disc
+    int natLearn = cd->getNatLearnedness();
+    int pracLearn = 0;
+    if (natLearn <= 0)
+      continue;
+
+    // get expected max number of pracs
+    int newPracs = 0;
+    int discPracs = 0;
+    if (cd->isBasic())
+      discPracs = 100;
+    else if (cd->isFast())
+      discPracs = 20;
+    else
+      discPracs = 60;
+
+    // try to get to the same level of learnedness
+    while(discPracs > 0 && pracLearn < natLearn)
+    {
+      pracLearn += CalcRaiseDisc(pracLearn, cd, false);
+      newPracs++;
+      discPracs--;
+    }
+    practices += newPracs;
+
+    if (!reset)
+      continue;
+
+    vlogf(LOG_MISC, fmt("Resetting practices for %s, disc %d, was %d%% learned, got %d pracs.") %  name % dnt % natLearn % newPracs);
+    cd->setNatLearnedness(0);
+    cd->setLearnedness(0);
+  }
+
+  if (practices == 0)
+    return false;
+
+  if (reset)
+  {
+    // have to set the doneBasic so this is reset for the player
+    player.doneBasic[resetClass] = 0;
+    setPracs(getPracs(resetClass) + practices, resetClass);
+    resetEffectsChar();
+    doSave(SILENT_YES);
+  }
+
+  return true;
+}
+
+
 void TBeing::doReset(sstring arg)
 {
-  sh_int pracs = 0;
   int j, num;
-  classIndT Class;
   sstring buf;
   TMonster *keeper;
   TThing *tmp;
-  int zone, temp;
+  int zone;
 
   arg = one_argument(arg, buf);
 
@@ -1504,82 +1579,38 @@ void TBeing::doReset(sstring arg)
     sendTo("What do you want to reset?\n\r");
     return;
   }
-  if (is_abbrev(buf, "practices")) {
-#if 0
-    
-#else
-    // THIS WORKS but restricts choice.  People only get prac as though
-    // they delayed practicing weapon specialties till after basic was done
-    // This means that they will get less than they might otherwise have gotten
 
-    if (affectedBySpell(AFFECT_DUMMY)) {
-      sendTo("You have recently reset practices already.\n\r");
-      sendTo("Sorry, you are only entitled to one reset.\n\r");
-      return;
-    }
-
-    discNumT dnt;
-    for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
-      CDiscipline *cd = getDiscipline(dnt);
-      if (!cd)
-        continue;
-     if (dnt == DISC_ADVENTURING || dnt == DISC_RITUALISM || dnt == DISC_WIZARDRY || dnt == DISC_FAITH) 
-        continue;
-      cd->setNatLearnedness(0);
-      cd->setLearnedness(0);
-    }
-    spellNumT snt;
-    for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
-      if (!discArray[snt] || !*discArray[snt]->name)
-        continue;
-      temp = discArray[snt]->disc;
-      if (temp == DISC_ADVENTURING || temp == DISC_RITUALISM || temp == DISC_WIZARDRY || temp == DISC_FAITH)
-        continue;
-      setSkillValue(snt, SKILL_MIN);
-    }
-
-    for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-      pracs = 0;
-      if (!hasClass(1<<Class))
-        continue;
-      // a new char is started at level 0 and advanced 1 level automatically
-      // have to set the doneBasic
-      player.doneBasic[Class] = 0;
-
-      int i;
-      for (i = 1; i <= getLevel(Class); i++) {
-        if (pracs >= 200)
-          pracs += calcNewPracs(Class, true);
-        else 
-          pracs += calcNewPracs(Class, false);
-      }
-      sendTo(fmt("Class: %s: %d practices reset.\n\r") % classInfo[Class].name.cap() % pracs);
-      setPracs(pracs, Class);
-    }
-    resetEffectsChar();
-    // set an affect to prevent them from resetting over and over
-    affectedData af;
-    af.type = AFFECT_DUMMY;
-    af.level = 0;
-    // roughly 12 hours
-    af.duration = 12 * UPDATES_PER_MUDHOUR;
-
-    affectTo(&af);
+  if (!hasWizPower(POWER_RESET)) {
+    sendTo("You lack the power to reset.\n\r");
     return;
-#endif
-  } else if (is_abbrev(buf, "gold") && isImmortal()) {
-    if (!hasWizPower(POWER_RESET)) {
-      sendTo("You lack the power to reset.\n\r");
+  }
+
+  if (is_abbrev(buf, "practices")) {
+    TBeing *player = NULL;
+
+    // get player name
+    arg = one_argument(arg, buf);
+    if (buf.empty() || !(player = get_char_vis_world(this, buf, NULL, EXACT_NO))) {
+      sendTo(fmt("Could not find %s.\n\r") % buf);
+      sendTo("Syntax:\n\r     reset practices <target>\n\r");
       return;
     }
+    // reset the practices of this character
+    for (classIndT resetClass = MIN_CLASS_IND; resetClass < MAX_CLASSES; resetClass++) {
+      int practices = 0;
+      if (player->resetPractices(resetClass, practices, true)) {
+        sendTo(fmt("You have reset %ss %s practices.  %d practices were returned.\n\r") % player->name % classInfo[resetClass].name % practices);
+        player->sendTo(fmt("%s has reset your %s practices.  %d practices were returned.\n\r") % name % classInfo[resetClass].name % practices);
+      }
+    }
+
+  } else if (is_abbrev(buf, "gold") && isImmortal()) {
+
     memset(&gold_statistics, 0, sizeof(gold_statistics));
     memset(&gold_positive, 0, sizeof(gold_positive));
     sendTo("Global statistics tracking gold (info gold) reset.\n\r");
   } else if (is_abbrev(buf, "shops") && isImmortal()) {
-    if (!hasWizPower(POWER_RESET)) {
-      sendTo("You lack the power to reset.\n\r");
-      return;
-    }
+
     if(buf.lower() != "shops"){
       sendTo("You must type out the whole word <r>shops<z> to use this.\n\r");
       return;
@@ -1601,10 +1632,7 @@ void TBeing::doReset(sstring arg)
     sendTo("You may also want to do: \"purge shops\" to clear fluxuating prices.\n\r");
     return;
   } else if (is_abbrev(buf, "zone") && isImmortal()) {
-    if (!hasWizPower(POWER_RESET)) {
-      sendTo("You lack the power to reset.\n\r");
-      return;
-    }
+
     one_argument(arg, buf);
     if (buf.empty()){
       zone = (roomp ? roomp->getZoneNum() : 0);
@@ -1640,10 +1668,7 @@ void TBeing::doReset(sstring arg)
     sendTo("Level stat information reset.\n\r");
     return;
   } else if (is_abbrev(buf, "logins") && isImmortal()) {
-    if (!hasWizPower(POWER_RESET)) {
-      sendTo("You lack the power to reset.\n\r");
-      return;
-    }
+
     time_t tnow;
     time(&tnow);
     stats.first_login = tnow;
@@ -1651,10 +1676,7 @@ void TBeing::doReset(sstring arg)
     sendTo("Login information reset.\n\r");
     return;
   } else {
-    if (hasWizPower(POWER_RESET))
       sendTo("Syntax: reset <\"practices\" | \"shops\" | \"gold\" | \"zone\" | \"logins\" | \"levels\">\n\r");
-    else
-      sendTo("Syntax: reset practices\n\r");
     return;
   }
 }

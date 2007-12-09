@@ -5,6 +5,7 @@
 #include "obj_component.h"
 #include "database.h"
 
+#define REPRAC_COST_PER_PRAC 400
 
 // if logic changes, please change some of the duplicate code in pracsBetween()
 void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTypeT silent) 
@@ -102,24 +103,43 @@ void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTy
   return;
 }
 
+
 // this function determines how many pracs each disc requires
-int TBeing::calcRaiseDisc(discNumT which, bool drop) const
+int CalcRaiseDisc(int natLearn, CDiscipline *disc, bool drop)
 {
-  int L, i_inc;
-  CDiscipline *cd=getDiscipline(which);
-
-  L = cd->getNatLearnedness();
-  if (!drop && (L >= MAX_DISC_LEARNEDNESS)) {
+  if (!drop && (natLearn >= MAX_DISC_LEARNEDNESS)) {
     return 0;
   }
-  if (drop && (L <= 0)) {
+  if (drop && (natLearn <= 0)) {
     return 0;
   }
 
-  if(cd->isBasic())
+  if(disc->isBasic())
     return 1;
-  else if(cd->isFast())
-    return min(5, (MAX_DISC_LEARNEDNESS - L));
+  else if(disc->isFast())
+    return min(5, (MAX_DISC_LEARNEDNESS - natLearn));
+
+  // Pappy 12-08-2007
+  // Because it is now possible to reset your practices, I am making the number of pracs spent
+  // to be deterministic always.  With Battys below formula, the gain of skill given 60 pracs
+  // would fluctuate between 123 and 94 because it would treat decimal gains as a percentage to gain 1.
+  // This means that often it was possible to get to 100% on an advanced disc with 54 to 65 pracs,
+  // given your luck.  I am applying the same formula as was previously used, however I'm making the
+  // 'chances' deterministic, so that it always takes 60 pracs to get to 100.  This keeps players
+  // from skewing their practices by repeatedly practicing and resetting practices.
+  // The formula remains the same.  The number of pracs needed to hit 100 now is always just 60.
+  natLearn = min(max(0, natLearn), (int)MAX_DISC_LEARNEDNESS);
+  if (natLearn >= MAX_DISC_LEARNEDNESS)
+    return 0;
+  else if (natLearn <= 15)
+    return 3;
+  else if (natLearn <= 72)
+    return 2;
+  else
+    return 1;
+
+#ifdef OLDSCHOOL_PRACS
+  int L, i_inc;
 
   // this logic gets a bit involved.  I am writing it all down for
   // posterity and incase someone decides to screw things up later.
@@ -154,7 +174,7 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
   // have spent).  The value we have stored is the present learning in the
   // so we need to work backwards a bit
   // L = f(p) = A/2 p^2 + Cp
-  L = getDiscipline(which)->getNatLearnedness();
+  L = natLearn;
 
   // A/2 p^2 + Cp - L = 0
   // quadratic formula solves this for us for 2 values of p
@@ -179,19 +199,37 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
   // prevent overflow
   i_inc = min(i_inc, MAX_DISC_LEARNEDNESS - L);
 
+  return i_inc;
+#endif
+}
+
+// this function determines how many pracs each disc requires, given this beings learnedness
+int TBeing::calcRaiseDisc(discNumT which, bool drop) const
+{
+  int i_inc = CalcRaiseDisc(getDiscipline(which)->getNatLearnedness(), getDiscipline(which), drop);
+
   // people report practicing and getting no gain, trap this event.
   if (i_inc <= 0)
-    vlogf(LOG_BUG, fmt("Bad discipline increase - did %s prac and get nothing from it?")
-      % getName());
+    vlogf(LOG_BUG, fmt("Bad discipline increase - did %s prac and get nothing from it?") % getName());
 
   return i_inc;
 }
+
+
 
 // this will return negative if over target
 int TBeing::pracsBetween(discNumT which, int target) const
 {
   int num;
+  int learnedness = getDiscipline(which)->getNatLearnedness();
+  target = min(target, (int)MAX_DISC_LEARNEDNESS);
 
+  for (num = 0;learnedness < target;num++)
+    learnedness += CalcRaiseDisc(learnedness, getDiscipline(which), false);
+
+  return num;
+
+#ifdef OLDSCHOOL_PRACS
   // see the raiseDisc commentary for what all these numbers mean
   // Batopr 8-6-96
 
@@ -223,6 +261,7 @@ int TBeing::pracsBetween(discNumT which, int target) const
     num = 1;
 
   return num;
+#endif
 }
 
 void TBeing::raiseDiscOnce(discNumT which)
@@ -1337,11 +1376,11 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
   
 int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accclass, discNumT discipline, int pracs) const
 {
-  int bakpracs = 0;
+  return ch->pracsBetween(discipline, me->GetMaxLevel());
+
+  /*
   int trainLevel = 0, discLearn = 0;
-//  char buf[256];
-  if (accclass && pracs) {
-  }
+
   trainLevel = me->GetMaxLevel();
   discLearn = ch->getDiscipline(discipline)->getNatLearnedness();
 
@@ -1366,7 +1405,7 @@ int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accc
   } else {
     bakpracs = ch->pracsBetween(discipline, me->GetMaxLevel());
   }
-  return bakpracs;
+  return bakpracs;*/
 }
 
 int TBeing::checkTrainDeny(const TBeing *ch, TMonster *me, discNumT discipline, int pracs) const
@@ -1890,6 +1929,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   classIndT cit=me->bestClass();
   ush_int Class=me->getClass();
   sstring argument=arg;
+  int practices = 0;
 
   if (!ch->hasClass(Class)) {
     sstring buf;
@@ -1910,11 +1950,32 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (ch->getLevel(cit) < (me->GetMaxLevel()/2)){
     TPerson *tp;
 
+    ch->resetPractices(cit, practices, false);
+
+    if (is_abbrev(arg, "reset")) {
+      int cost = practices * REPRAC_COST_PER_PRAC;
+
+      if (ch->getMoney() < cost) {
+        me->doSay(fmt("I'm sorry, you don't have enough money for me to reset your spent practices.  The cost is %d talens.") % cost);
+      } else if (ch->resetPractices(cit, practices, true)) {
+        me->doSay(fmt("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);
+        ch->giveMoney(me, cost, GOLD_SHOP_RESPONSES);
+      } else
+        me->doSay("I cannot reset any of your practices at this time.");
+
+      return TRUE;
+    }
+
     if ((tp = dynamic_cast<TPerson *>(ch)))
       tp->setSelectToggles(me, cit, SILENT_NO);
 
     me->doSay("Let me give you a little advice...");
     ch->pracPath(me, cit);
+
+    if (practices > 0) {
+      me->doSay(fmt("I could also reset all of your %d spent practices for you.") % practices);
+      me->doSay(fmt("To do so, type 'gain reset'.  There will be a fee of %d talens.") % (practices * REPRAC_COST_PER_PRAC));
+    }
 
   } else if (ch->getLevel(cit) < MAX_MORT)
     act("$n sighs, \"I cannot teach you, $N.  You MUST find your next guildmaster.\"", FALSE, me, 0, ch, TO_ROOM);

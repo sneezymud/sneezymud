@@ -2165,6 +2165,9 @@ class TBeing : public TThing {
     int toggleGarble(GARBLETYPE garble);
     sstring garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GARBLESCOPE garbleScope = GARBLE_SCOPE_ALL) const;
 
+    // used by doReset
+    bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
+
 };
 
 #endif
