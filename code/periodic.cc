@@ -1741,11 +1741,16 @@ int TObj::objectTickUpdate(int pulse)
       roomp && roomp->isWaterSector() &&
       !dynamic_cast<TSeeThru *>(this)) {
     if (dice(1, 10) <= (material_nums[getMaterial()].water_susc % 10)) {
-      if ((obj_flags.struct_points -= (material_nums[getMaterial()].water_susc / 10)) <= 0) {
+      if ((obj_flags.struct_points - (material_nums[getMaterial()].water_susc / 10)) <= 0) {
         sendrpf(roomp, "%s sinks into the water and is gone.\n\r", sstring(shortDescr).cap().c_str());
-        return DELETE_THIS;
-      } else
+	TRoom *briny_deep=real_roomp(19024);
+	--(*this);
+	*briny_deep += *this;
+	//        return DELETE_THIS;
+      } else{
         sendrpf(roomp, "%s becomes water-logged and is damaged.\n\r", sstring(shortDescr).cap().c_str());
+	obj_flags.struct_points -=(material_nums[getMaterial()].water_susc / 10);
+      }
     }
   }
   

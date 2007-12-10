@@ -199,18 +199,38 @@ TObj *catch_a_fish(TRoom *rp)
       fishlist.push_back(freshfish[i]);    
   }
 
-  num=::number(0, fishlist.size()-1);
-  fish=read_object(fishlist[num], VIRTUAL);
 
-  if(num != 12445){ // don't do this for seaweed
-    fish->setWeight(fish->getWeight()*weightmod);
-    fish->setVolume((int)(fish->getWeight()*200));
+  if(0 && ::number(0, 24)){
+    num=::number(0, fishlist.size()-1);
+    fish=read_object(fishlist[num], VIRTUAL);
+    
+    if(num != 12445){ // don't do this for seaweed
+      fish->setWeight(fish->getWeight()*weightmod);
+      fish->setVolume((int)(fish->getWeight()*200));
+    }
+    
+    rp->setFished(rp->getFished()+1);
+    
+    if (mRoomsFished.find(rp->number) == mRoomsFished.end())
+      mRoomsFished[rp->number] = true;
+  } else {
+    // grab a random item from room 19024
+    TRoom *briny_deep=real_roomp(19024);
+    int count=0;
+
+    for(TThing *t=briny_deep->getStuff();t;t=t->nextThing)
+      ++count;
+
+    count=::number(0,count-1);
+
+    for(TThing *t=briny_deep->getStuff();t;t=t->nextThing){
+      if(!count-- && (fish=dynamic_cast<TObj *>(t))){
+	sendrpf(briny_deep, "A fishing line with a hook attached descends from above and pulls up %s!\n\r", fish->getName());
+	--(*fish);
+	break;
+      }
+    }
   }
-
-  rp->setFished(rp->getFished()+1);
-
-  if (mRoomsFished.find(rp->number) == mRoomsFished.end())
-    mRoomsFished[rp->number] = true;
 
   return fish;
 }
