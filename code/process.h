@@ -18,6 +18,12 @@ class TProcess {
 
 
 //// processes
+class procRecordCommodPrices: public TProcess {
+ public:
+  void run(int) const;
+  procRecordCommodPrices(const int &);
+};
+
 class procCloseAccountingBooks : public TProcess {
  public:
   void run(int) const;

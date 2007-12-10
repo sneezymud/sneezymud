@@ -177,7 +177,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 
 
   // check for player specific modifiers
-  if(shop_index[shop_nr].isOwned()){
+  if(shop_index[shop_nr].isOwned() && ch){
     if(cached_shop_nr==shop_nr){
       for(iter=player_cache.begin();iter!=player_cache.end();++iter){
 	if((*iter).first == (sstring) ch->name){

@@ -51,6 +51,8 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_pool.h"
 #include "shop.h"
 #include "shopaccounting.h"
+#include "shopowned.h"
+#include "obj_commodity.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -1379,6 +1381,37 @@ void procCloseAccountingBooks::run(int) const
   }
 }
 
+procRecordCommodPrices::procRecordCommodPrices(const int &p)
+{
+  trigger_pulse=p;
+  name="procRecordCommodPrices";
+}
+
+void procRecordCommodPrices::run(int) const
+{
+  // close out the accounting year.
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select shop_nr from shoptype where type=%i", 
+	   ITEM_RAW_MATERIAL);
+
+  while(db.fetchRow()){
+    unsigned int shop_nr=convertTo<int>(db["shop_nr"]);
+    TShopOwned tso(shop_nr, NULL);
+    TCommodity *commod;
+    
+    for(TThing *t=tso.getStuff();t;t=t->nextThing){
+      if((commod=dynamic_cast<TCommodity *>(t))){
+	db.query("insert into commodprices values (now(), %i, %i, %i)",
+		 shop_nr, commod->getMaterial(), 
+		 commod->shopPrice(1, shop_nr, -1, NULL));
+      }
+    }
+  }
+}
+
+
+
 
 int TMainSocket::gameLoop()
 {
@@ -1433,6 +1466,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
   scheduler.add(new procBankInterest(PULSE_MUDDAY));
   scheduler.add(new procCloseAccountingBooks(PULSE_MUDDAY));
+  scheduler.add(new procRecordCommodPrices(PULSE_MUDDAY));
 
   // pulse realhour
 //  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved

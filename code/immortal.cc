@@ -37,7 +37,8 @@ extern "C" {
 #include "rent.h"
 #include "obj_suitcase.h"
 #include "obj_treasure.h"
-
+#include "shopowned.h"
+#include "obj_commodity.h"
 
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
@@ -4142,7 +4143,40 @@ void TBeing::doInfo(const char *arg)
     sendTo("What would you like info on?\n\r");
     sendTo(str);
   } else {
-    if (is_abbrev(arg1, "commands")) {
+    if(is_abbrev(arg1, "commodity")){
+      char arg2[80];
+      
+      arg = one_argument(arg,arg2, cElements(arg2));
+
+      TDatabase db(DB_SNEEZY);
+      
+      db.query("select shop_nr from shoptype where type=%i", 
+	       ITEM_RAW_MATERIAL);
+      int total=0;
+      sstring name=arg2;
+      
+      while(db.fetchRow()){
+	unsigned int shop_nr=convertTo<int>(db["shop_nr"]);
+	TShopOwned tso(shop_nr, this);
+	TCommodity *commod=NULL;
+
+	for(TThing *t=tso.getStuff();t;t=t->nextThing){
+	  if((commod=dynamic_cast<TCommodity *>(t)) &&
+	     isname(arg2, commod->name)){
+	    sendTo(fmt("Shop %i: %i units of %s at %i talens per unit.\n\r")%
+		   shop_nr % commod->numUnits() % 
+		   material_nums[commod->getMaterial()].mat_name %
+		   commod->shopPrice(1, shop_nr, -1, this));
+	    total+=commod->numUnits();
+	    name=material_nums[commod->getMaterial()].mat_name;
+	  }
+	}
+      }
+      sendTo(fmt("-- Total amount of %s available: %i units.\n\r") %
+	     name % total);
+
+
+    } else if (is_abbrev(arg1, "commands")) {
       sendTo("Command access information:\n\r");
       sendTo(fmt("  News file accessed %d times.\n\r") % news_used_num);
       sendTo(fmt("  Wiznews file accessed %d times.\n\r") % wiznews_used_num);
@@ -4156,80 +4190,80 @@ void TBeing::doInfo(const char *arg)
       int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
       
       for(i=0;i<MAX_OBJ_TYPES;++i)
-  count[i]=0;
-
+	count[i]=0;
+      
       for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter)
-  count[(*iter)->itemType()]++;
-
+	count[(*iter)->itemType()]++;
+      
       // BUBBLESORT IS L33T!!!
       while(1){
-  for(i=0;i<MAX_OBJ_TYPES;++i){
-    if(count[i]>count[li])
-      li=i;
-  }
-
-  if(count[li]==-1)
-    break;
-
-  buf = fmt("%s[%6i] %-17s\n\r") %
-    buf % count[li] % ItemInfo[li]->name;
-  total += count[li];
-  count[li]=-1;
+	for(i=0;i<MAX_OBJ_TYPES;++i){
+	  if(count[i]>count[li])
+	    li=i;
+	}
+	
+	if(count[li]==-1)
+	  break;
+	
+	buf = fmt("%s[%6i] %-17s\n\r") %
+	  buf % count[li] % ItemInfo[li]->name;
+	total += count[li];
+	count[li]=-1;
       }
-
+      
       buf = fmt("%s[%6i] %-17s\n\r") %
-  buf % total % "Total";
-
+	buf % total % "Total";
+      
       desc->page_string(buf);
     }
     else if(is_abbrev(arg1, "unlinked")){
       TObj *obj;
       int i=1;
       sstring tbuf;
-
+      
       for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-  obj=*iter;
-  if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
-     !obj->equippedBy && !obj->stuckIn && !obj->riding){
-    tbuf=fmt("[%6i] %-17s\n\r") %
-       i++ % obj->getNameNOC(this);
-    buf+=tbuf;
-  }
+	obj=*iter;
+	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
+	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
+	  tbuf=fmt("[%6i] %-17s\n\r") %
+	    i++ % obj->getNameNOC(this);
+	  buf+=tbuf;
+	}
       }
       
       TBeing *tb;
-
+      
       for(tb=character_list;tb;tb=tb->next){
-  if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
-     !tb->equippedBy && !tb->stuckIn && !tb->riding){
-    tbuf =fmt("[%6i] %-17s\n\r") %
-      i++ % tb->getNameNOC(this);
-    buf+=tbuf;
-  } 
+	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
+	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
+	  tbuf =fmt("[%6i] %-17s\n\r") %
+	    i++ % tb->getNameNOC(this);
+	  buf+=tbuf;
+	} 
       }
-
+      
       desc->page_string(buf);
     }
     else if (is_abbrev(arg1, "tweak")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You should not attempt to change that.\n\r");
-  return;
+	return;
       }
       char arg2[80];
       arg = one_argument(arg,arg2, cElements(arg2));
       if (is_abbrev(arg2, "loadrate")) {
         char opt[80];
-  arg = one_argument(arg,opt, cElements(opt));
-  if (is_abbrev(opt, "up"))
-    stats.equip += .05;
-  else
-    stats.equip -= .05;
-  save_game_stats();
+	arg = one_argument(arg,opt, cElements(opt));
+	if (is_abbrev(opt, "up"))
+	  stats.equip += .05;
+	else
+	  stats.equip -= .05;
+	save_game_stats();
       } else {
-  sendTo(fmt("loadrate is %f\n\r") % stats.equip);
+	sendTo(fmt("loadrate is %f\n\r") % stats.equip);
       }
     } 
-      else if (is_abbrev(arg1, "deaths")) {
+    else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information.\n\r");
         return;
@@ -4274,7 +4308,7 @@ void TBeing::doInfo(const char *arg)
           ci++;
       }
       sendTo(fmt("  Beings with initialized disciplines: %d of %d (%d%c)\n\r") % 
-            ci % j %  (ci * 100/ j) % '%');
+	     ci % j %  (ci * 100/ j) % '%');
 
     } else if (is_abbrev(arg1, "gold")) {
       buf.erase();
@@ -4323,20 +4357,20 @@ void TBeing::doInfo(const char *arg)
       float tot_drain = tot_gold - net_gold;
 
       sprintf(buf2, "Shop  : modifier: %.2f        (factor  : %.2f%%)\n\r",
-           gold_modifier[GOLD_SHOP].getVal(),
-           100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
+	      gold_modifier[GOLD_SHOP].getVal(),
+	      100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
       buf += buf2;
       sprintf(buf2, "Income: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_INCOME].getVal(),
-            100.0 * net_gold_budget / tot_gold_budget);
+	      gold_modifier[GOLD_INCOME].getVal(),
+	      100.0 * net_gold_budget / tot_gold_budget);
       buf += buf2;
       sprintf(buf2, "Repair: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_REPAIR].getVal(),
-            100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
+	      gold_modifier[GOLD_REPAIR].getVal(),
+	      100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
       buf += buf2;
       sprintf(buf2, "Equip: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            stats.equip,
-            100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
+	      stats.equip,
+	      100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
       buf += buf2;
       buf += "\n\r";
 
@@ -4397,109 +4431,109 @@ void TBeing::doInfo(const char *arg)
       buf += "\n\rGold Income/Outlay statistics:\n\r\n\r";
       for (j=0; j < MAX_IMMORT; j++ ) {
         long amount = gold_statistics[GOLD_INCOME][j] + 
-                 gold_statistics[GOLD_COMM][j] +
-                 gold_statistics[GOLD_GAMBLE][j] +
-                 gold_statistics[GOLD_REPAIR][j] +
-                 gold_statistics[GOLD_SHOP][j] +
-                 gold_statistics[GOLD_DUMP][j] +
-                 gold_statistics[GOLD_SHOP_ARMOR][j] +
-                 gold_statistics[GOLD_SHOP_WEAPON][j] +
-                 gold_statistics[GOLD_SHOP_PET][j] +
-                 gold_statistics[GOLD_SHOP_COMPONENTS][j] +
-                 gold_statistics[GOLD_SHOP_FOOD][j] +
-                 gold_statistics[GOLD_SHOP_RESPONSES][j] +
-                 gold_statistics[GOLD_SHOP_SYMBOL][j] +
-                 gold_statistics[GOLD_RENT][j] +
-                 gold_statistics[GOLD_HOSPITAL][j] +
-                 gold_statistics[GOLD_TITHE][j];
+	  gold_statistics[GOLD_COMM][j] +
+	  gold_statistics[GOLD_GAMBLE][j] +
+	  gold_statistics[GOLD_REPAIR][j] +
+	  gold_statistics[GOLD_SHOP][j] +
+	  gold_statistics[GOLD_DUMP][j] +
+	  gold_statistics[GOLD_SHOP_ARMOR][j] +
+	  gold_statistics[GOLD_SHOP_WEAPON][j] +
+	  gold_statistics[GOLD_SHOP_PET][j] +
+	  gold_statistics[GOLD_SHOP_COMPONENTS][j] +
+	  gold_statistics[GOLD_SHOP_FOOD][j] +
+	  gold_statistics[GOLD_SHOP_RESPONSES][j] +
+	  gold_statistics[GOLD_SHOP_SYMBOL][j] +
+	  gold_statistics[GOLD_RENT][j] +
+	  gold_statistics[GOLD_HOSPITAL][j] +
+	  gold_statistics[GOLD_TITHE][j];
         unsigned long pos = gold_positive[GOLD_INCOME][j] + 
-                 gold_positive[GOLD_COMM][j] +
-                 gold_positive[GOLD_GAMBLE][j] +
-                 gold_positive[GOLD_REPAIR][j] +
-                 gold_positive[GOLD_SHOP][j] +
-                 gold_positive[GOLD_DUMP][j] +
-                 gold_positive[GOLD_SHOP_SYMBOL][j] +
-                 gold_positive[GOLD_SHOP_ARMOR][j] +
-                 gold_positive[GOLD_SHOP_WEAPON][j] +
-                 gold_positive[GOLD_SHOP_PET][j] +
-                 gold_positive[GOLD_SHOP_RESPONSES][j] +
-                 gold_positive[GOLD_SHOP_COMPONENTS][j] +
-                 gold_positive[GOLD_SHOP_FOOD][j] +
-                 gold_positive[GOLD_RENT][j] +
-                 gold_positive[GOLD_HOSPITAL][j] +
-                 gold_positive[GOLD_TITHE][j];
+	  gold_positive[GOLD_COMM][j] +
+	  gold_positive[GOLD_GAMBLE][j] +
+	  gold_positive[GOLD_REPAIR][j] +
+	  gold_positive[GOLD_SHOP][j] +
+	  gold_positive[GOLD_DUMP][j] +
+	  gold_positive[GOLD_SHOP_SYMBOL][j] +
+	  gold_positive[GOLD_SHOP_ARMOR][j] +
+	  gold_positive[GOLD_SHOP_WEAPON][j] +
+	  gold_positive[GOLD_SHOP_PET][j] +
+	  gold_positive[GOLD_SHOP_RESPONSES][j] +
+	  gold_positive[GOLD_SHOP_COMPONENTS][j] +
+	  gold_positive[GOLD_SHOP_FOOD][j] +
+	  gold_positive[GOLD_RENT][j] +
+	  gold_positive[GOLD_HOSPITAL][j] +
+	  gold_positive[GOLD_TITHE][j];
         sprintf(buf2, "   %sLevel %2d:%s\n\r",
-          cyan(),j+1, norm());
+		cyan(),j+1, norm());
         buf += buf2;
         sprintf(buf2, "         %sPos  : %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), pos, norm(),
-          100.0 * pos / tot_gold);
+		cyan(), pos, norm(),
+		100.0 * pos / tot_gold);
         buf += buf2;
         sprintf(buf2, "         %sNet  : %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), amount, norm(),
-          100.0 * amount / net_gold);
+		cyan(), amount, norm(),
+		100.0 * amount / net_gold);
         buf += buf2;
         sprintf(buf2, "         %sDrain: %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), pos - amount, norm(),
-          100.0 * (pos - amount) / (tot_gold - net_gold));
+		cyan(), pos - amount, norm(),
+		100.0 * (pos - amount) / (tot_gold - net_gold));
         buf += buf2;
 
         sprintf(buf2, "      income     : %8ld, comm       : %8ld, gamble     : %8ld\n\r",
-              gold_statistics[GOLD_INCOME][j], 
-              gold_statistics[GOLD_COMM][j], 
-              gold_statistics[GOLD_GAMBLE][j]);
+		gold_statistics[GOLD_INCOME][j], 
+		gold_statistics[GOLD_COMM][j], 
+		gold_statistics[GOLD_GAMBLE][j]);
         buf += buf2;
 
         sprintf(buf2, "      shop       : %8ld, respon shop: %8ld, repair     : %8ld\n\r",
-              gold_statistics[GOLD_SHOP][j], 
-              gold_statistics[GOLD_SHOP_RESPONSES][j], 
-              gold_statistics[GOLD_REPAIR][j]);
+		gold_statistics[GOLD_SHOP][j], 
+		gold_statistics[GOLD_SHOP_RESPONSES][j], 
+		gold_statistics[GOLD_REPAIR][j]);
         buf += buf2;
 
         sprintf(buf2, "      armor shop : %8ld, weapon shop: %8ld, pet shop   : %8ld\n\r",
-              gold_statistics[GOLD_SHOP_ARMOR][j], 
-              gold_statistics[GOLD_SHOP_WEAPON][j], 
-              gold_statistics[GOLD_SHOP_PET][j]);
+		gold_statistics[GOLD_SHOP_ARMOR][j], 
+		gold_statistics[GOLD_SHOP_WEAPON][j], 
+		gold_statistics[GOLD_SHOP_PET][j]);
         buf += buf2;
 
         sprintf(buf2, "      symbol shop: %8ld, compon shop: %8ld, food shop  : %8ld\n\r",
-              gold_statistics[GOLD_SHOP_SYMBOL][j],
-              gold_statistics[GOLD_SHOP_COMPONENTS][j],
-              gold_statistics[GOLD_SHOP_FOOD][j]);
+		gold_statistics[GOLD_SHOP_SYMBOL][j],
+		gold_statistics[GOLD_SHOP_COMPONENTS][j],
+		gold_statistics[GOLD_SHOP_FOOD][j]);
         buf += buf2;
 
         sprintf(buf2, "      rent       : %8ld, hospit     : %8ld, tithe      : %8ld\n\r",
-              gold_statistics[GOLD_RENT][j], 
-              gold_statistics[GOLD_HOSPITAL][j], 
-              gold_statistics[GOLD_TITHE][j]);
+		gold_statistics[GOLD_RENT][j], 
+		gold_statistics[GOLD_HOSPITAL][j], 
+		gold_statistics[GOLD_TITHE][j]);
         buf += buf2;
 
         sprintf(buf2, "      dump       : %8ld\n\r",
-              gold_statistics[GOLD_DUMP][j]);
+		gold_statistics[GOLD_DUMP][j]);
         buf += buf2;
       }
       desc->page_string(buf);
 #elif 1
       unsigned int tTotalGold[MAX_MONEY_TYPE],
-                   tTotalGlobal = getPosGoldGlobal(),
-                   tTotalShops  = getPosGoldShops(),
-                   tTotalRent   = getPosGold(GOLD_RENT),
-                   tTotalBudget = getPosGoldBudget();
-               int tNetGold[MAX_MONEY_TYPE],
-                   tNetGlobal   = getNetGoldGlobal(),
-                   tNetShops    = getNetGoldShops(),
-                   tNetBudget   = getNetGoldBudget(),
-                   tNetRent     = getNetGold(GOLD_RENT);
-               int tTotalDrain  = tTotalGlobal - tNetGlobal;
+	tTotalGlobal = getPosGoldGlobal(),
+	tTotalShops  = getPosGoldShops(),
+	tTotalRent   = getPosGold(GOLD_RENT),
+	tTotalBudget = getPosGoldBudget();
+      int tNetGold[MAX_MONEY_TYPE],
+	tNetGlobal   = getNetGoldGlobal(),
+	tNetShops    = getNetGoldShops(),
+	tNetBudget   = getNetGoldBudget(),
+	tNetRent     = getNetGold(GOLD_RENT);
+      int tTotalDrain  = tTotalGlobal - tNetGlobal;
 
       if (!arg || !*arg) {
         char tNames[MAX_MONEY_TYPE][20] =
-        { "X-Fer"         , "Income"  , "Repair"     , "Shop",
-          "Commodities"   , "Hospital", "Gamble"     , "Rent",
-          "Dump"          , "Tithe"   , "Shop-Symbol", "Shop-Weapon",
-          "Shop-Armor"    , "Shop-Pet", "Shop-Food"  , "Shop-Components",
-          "Shop-Responses"
-        };
+	  { "X-Fer"         , "Income"  , "Repair"     , "Shop",
+	    "Commodities"   , "Hospital", "Gamble"     , "Rent",
+	    "Dump"          , "Tithe"   , "Shop-Symbol", "Shop-Weapon",
+	    "Shop-Armor"    , "Shop-Pet", "Shop-Food"  , "Shop-Components",
+	    "Shop-Responses"
+	  };
 
         sprintf(buf2, "Modifier: Shop  : %2.2f (Factor: %6.2f%%)\n\r",
                 gold_modifier[GOLD_SHOP].getVal(),
@@ -4560,7 +4594,7 @@ void TBeing::doInfo(const char *arg)
           break;
 
         unsigned long tPosTotal = 0;
-                 long tStaTotal = 0;
+	long tStaTotal = 0;
 
         for (moneyTypeT tMoney = GOLD_INCOME; tMoney < MAX_MONEY_TYPE; tMoney++) {
           tPosTotal += gold_positive[tMoney][j];
@@ -4658,20 +4692,20 @@ void TBeing::doInfo(const char *arg)
       int tot_drain = tot_gold - net_gold;
 
       sprintf(buf2, "Shop  : modifier: %.2f        (factor  : %.2f%%)\n\r",
-           gold_modifier[GOLD_SHOP].getVal(),
-           100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
+	      gold_modifier[GOLD_SHOP].getVal(),
+	      100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
       buf += buf2;
       sprintf(buf2, "Income: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_INCOME].getVal(),
-            100.0 * net_gold_budget / tot_gold_budget);
+	      gold_modifier[GOLD_INCOME].getVal(),
+	      100.0 * net_gold_budget / tot_gold_budget);
       buf += buf2;
       sprintf(buf2, "Repair: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            gold_modifier[GOLD_REPAIR].getVal(),
-            100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
+	      gold_modifier[GOLD_REPAIR].getVal(),
+	      100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
       buf += buf2;
       sprintf(buf2, "Equip: modifier: %.2f        (factor  : %.2f%%)\n\r",
-            stats.equip,
-            100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
+	      stats.equip,
+	      100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
       buf += buf2;
       buf += "\n\r";
 
@@ -4730,85 +4764,85 @@ void TBeing::doInfo(const char *arg)
       buf += "\n\rGold Income/Outlay statistics:\n\r\n\r";
       for (j=0; j < MAX_IMMORT; j++ ) {
         long amount = gold_statistics[GOLD_INCOME][j] + 
-                 gold_statistics[GOLD_COMM][j] +
-                 gold_statistics[GOLD_GAMBLE][j] +
-                 gold_statistics[GOLD_REPAIR][j] +
-                 gold_statistics[GOLD_SHOP][j] +
-                 gold_statistics[GOLD_DUMP][j] +
-                 gold_statistics[GOLD_SHOP_ARMOR][j] +
-                 gold_statistics[GOLD_SHOP_WEAPON][j] +
-                 gold_statistics[GOLD_SHOP_PET][j] +
-                 gold_statistics[GOLD_SHOP_COMPONENTS][j] +
-                 gold_statistics[GOLD_SHOP_FOOD][j] +
-                 gold_statistics[GOLD_SHOP_RESPONSES][j] +
-                 gold_statistics[GOLD_SHOP_SYMBOL][j] +
-                 gold_statistics[GOLD_RENT][j] +
-                 gold_statistics[GOLD_HOSPITAL][j] +
-                 gold_statistics[GOLD_TITHE][j];
+	  gold_statistics[GOLD_COMM][j] +
+	  gold_statistics[GOLD_GAMBLE][j] +
+	  gold_statistics[GOLD_REPAIR][j] +
+	  gold_statistics[GOLD_SHOP][j] +
+	  gold_statistics[GOLD_DUMP][j] +
+	  gold_statistics[GOLD_SHOP_ARMOR][j] +
+	  gold_statistics[GOLD_SHOP_WEAPON][j] +
+	  gold_statistics[GOLD_SHOP_PET][j] +
+	  gold_statistics[GOLD_SHOP_COMPONENTS][j] +
+	  gold_statistics[GOLD_SHOP_FOOD][j] +
+	  gold_statistics[GOLD_SHOP_RESPONSES][j] +
+	  gold_statistics[GOLD_SHOP_SYMBOL][j] +
+	  gold_statistics[GOLD_RENT][j] +
+	  gold_statistics[GOLD_HOSPITAL][j] +
+	  gold_statistics[GOLD_TITHE][j];
         unsigned long pos = gold_positive[GOLD_INCOME][j] + 
-                 gold_positive[GOLD_COMM][j] +
-                 gold_positive[GOLD_GAMBLE][j] +
-                 gold_positive[GOLD_REPAIR][j] +
-                 gold_positive[GOLD_SHOP][j] +
-                 gold_positive[GOLD_DUMP][j] +
-                 gold_positive[GOLD_SHOP_SYMBOL][j] +
-                 gold_positive[GOLD_SHOP_ARMOR][j] +
-                 gold_positive[GOLD_SHOP_WEAPON][j] +
-                 gold_positive[GOLD_SHOP_PET][j] +
-                 gold_positive[GOLD_SHOP_RESPONSES][j] +
-                 gold_positive[GOLD_SHOP_COMPONENTS][j] +
-                 gold_positive[GOLD_SHOP_FOOD][j] +
-                 gold_positive[GOLD_RENT][j] +
-                 gold_positive[GOLD_HOSPITAL][j] +
-                 gold_positive[GOLD_TITHE][j];
+	  gold_positive[GOLD_COMM][j] +
+	  gold_positive[GOLD_GAMBLE][j] +
+	  gold_positive[GOLD_REPAIR][j] +
+	  gold_positive[GOLD_SHOP][j] +
+	  gold_positive[GOLD_DUMP][j] +
+	  gold_positive[GOLD_SHOP_SYMBOL][j] +
+	  gold_positive[GOLD_SHOP_ARMOR][j] +
+	  gold_positive[GOLD_SHOP_WEAPON][j] +
+	  gold_positive[GOLD_SHOP_PET][j] +
+	  gold_positive[GOLD_SHOP_RESPONSES][j] +
+	  gold_positive[GOLD_SHOP_COMPONENTS][j] +
+	  gold_positive[GOLD_SHOP_FOOD][j] +
+	  gold_positive[GOLD_RENT][j] +
+	  gold_positive[GOLD_HOSPITAL][j] +
+	  gold_positive[GOLD_TITHE][j];
         sprintf(buf2, "   %sLevel %2d:%s\n\r",
-          cyan(),j+1, norm());
+		cyan(),j+1, norm());
         buf += buf2;
         sprintf(buf2, "         %sPos  : %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), pos, norm(),
-          100.0 * pos / tot_gold);
+		cyan(), pos, norm(),
+		100.0 * pos / tot_gold);
         buf += buf2;
         sprintf(buf2, "         %sNet  : %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), amount, norm(),
-          100.0 * amount / net_gold);
+		cyan(), amount, norm(),
+		100.0 * amount / net_gold);
         buf += buf2;
         sprintf(buf2, "         %sDrain: %9ld%s  (%.2f%% of total)\n\r",
-          cyan(), pos - amount, norm(),
-          100.0 * (pos - amount) / (tot_gold - net_gold));
+		cyan(), pos - amount, norm(),
+		100.0 * (pos - amount) / (tot_gold - net_gold));
         buf += buf2;
 
         sprintf(buf2, "      income     : %8ld, comm       : %8ld, gamble     : %8ld\n\r",
-              gold_statistics[GOLD_INCOME][j], 
-              gold_statistics[GOLD_COMM][j], 
-              gold_statistics[GOLD_GAMBLE][j]);
+		gold_statistics[GOLD_INCOME][j], 
+		gold_statistics[GOLD_COMM][j], 
+		gold_statistics[GOLD_GAMBLE][j]);
         buf += buf2;
 
         sprintf(buf2, "      shop       : %8ld, respon shop: %8ld, repair     : %8ld\n\r",
-              gold_statistics[GOLD_SHOP][j], 
-              gold_statistics[GOLD_SHOP_RESPONSES][j], 
-              gold_statistics[GOLD_REPAIR][j]);
+		gold_statistics[GOLD_SHOP][j], 
+		gold_statistics[GOLD_SHOP_RESPONSES][j], 
+		gold_statistics[GOLD_REPAIR][j]);
         buf += buf2;
 
         sprintf(buf2, "      armor shop : %8ld, weapon shop: %8ld, pet shop   : %8ld\n\r",
-              gold_statistics[GOLD_SHOP_ARMOR][j], 
-              gold_statistics[GOLD_SHOP_WEAPON][j], 
-              gold_statistics[GOLD_SHOP_PET][j]);
+		gold_statistics[GOLD_SHOP_ARMOR][j], 
+		gold_statistics[GOLD_SHOP_WEAPON][j], 
+		gold_statistics[GOLD_SHOP_PET][j]);
         buf += buf2;
 
         sprintf(buf2, "      symbol shop: %8ld, compon shop: %8ld, food shop  : %8ld\n\r",
-              gold_statistics[GOLD_SHOP_SYMBOL][j],
-              gold_statistics[GOLD_SHOP_COMPONENTS][j],
-              gold_statistics[GOLD_SHOP_FOOD][j]);
+		gold_statistics[GOLD_SHOP_SYMBOL][j],
+		gold_statistics[GOLD_SHOP_COMPONENTS][j],
+		gold_statistics[GOLD_SHOP_FOOD][j]);
         buf += buf2;
 
         sprintf(buf2, "      rent       : %8ld, hospit     : %8ld, tithe      : %8ld\n\r",
-              gold_statistics[GOLD_RENT][j], 
-              gold_statistics[GOLD_HOSPITAL][j], 
-              gold_statistics[GOLD_TITHE][j]);
+		gold_statistics[GOLD_RENT][j], 
+		gold_statistics[GOLD_HOSPITAL][j], 
+		gold_statistics[GOLD_TITHE][j]);
         buf += buf2;
 
         sprintf(buf2, "      dump       : %8ld\n\r",
-              gold_statistics[GOLD_DUMP][j]);
+		gold_statistics[GOLD_DUMP][j]);
         buf += buf2;
       }
       desc->page_string(buf);
@@ -4833,15 +4867,15 @@ void TBeing::doInfo(const char *arg)
         if (!(discArray[snt]->disc == which))
           continue;
         sprintf(buf2,"%-20.20s: %5d %6.2f %6.2f %5d %6.2f %3d/%-3d %4d/%-4d %3d\n\r",
-              discArray[snt]->name,
-              discArray[snt]->uses,
-              (float) (discArray[snt]->uses == 0 ? 0 : (float) discArray[snt]->levels/(float) discArray[snt]->uses),
-              (float) (discArray[snt]->victims == 0 ? 0 : (float) discArray[snt]->damage/(float) discArray[snt]->victims),
-              discArray[snt]->victims,
-              (float) (discArray[snt]->uses == 0 ? 0 : (float) discArray[snt]->learned/(float) discArray[snt]->uses),
-              discArray[snt]->crits,discArray[snt]->critf,
-              discArray[snt]->success,discArray[snt]->fail,
-              discArray[snt]->saves);
+		discArray[snt]->name,
+		discArray[snt]->uses,
+		(float) (discArray[snt]->uses == 0 ? 0 : (float) discArray[snt]->levels/(float) discArray[snt]->uses),
+		(float) (discArray[snt]->victims == 0 ? 0 : (float) discArray[snt]->damage/(float) discArray[snt]->victims),
+		discArray[snt]->victims,
+		(float) (discArray[snt]->uses == 0 ? 0 : (float) discArray[snt]->learned/(float) discArray[snt]->uses),
+		discArray[snt]->crits,discArray[snt]->critf,
+		discArray[snt]->success,discArray[snt]->fail,
+		discArray[snt]->saves);
         buf += buf2;
       }
       desc->page_string(buf);
@@ -4888,34 +4922,34 @@ void TBeing::doInfo(const char *arg)
       sprintf(buf2, "DIFFICULTY: %s\tLAG: %d rounds\n\r", displayDifficulty(which).c_str(),  discArray[which]->lag);
       buf += buf2;
       sprintf(buf2, "USES:     %d\tMOBUSES: %d\tIMMUSES: %d\n\r", 
-           discArray[which]->uses,
-           discArray[which]->mobUses,
-           discArray[which]->immUses);
+	      discArray[which]->uses,
+	      discArray[which]->mobUses,
+	      discArray[which]->immUses);
       buf += buf2;
       sprintf(buf2, "LEVEL:    %.2f\tMOBLVL:  %.2f\tIMMLVL:  %.2f\n\r", 
-           discArray[which]->uses ? (float) discArray[which]->levels / discArray[which]->uses : 0,
-           discArray[which]->mobUses ? (float) discArray[which]->mobLevels / discArray[which]->mobUses : 0,
-           discArray[which]->immUses ? (float) discArray[which]->immLevels / discArray[which]->immUses : 0);
+	      discArray[which]->uses ? (float) discArray[which]->levels / discArray[which]->uses : 0,
+	      discArray[which]->mobUses ? (float) discArray[which]->mobLevels / discArray[which]->mobUses : 0,
+	      discArray[which]->immUses ? (float) discArray[which]->immLevels / discArray[which]->immUses : 0);
       buf += buf2;
       sprintf(buf2, "LEARN:    %.2f\tMOBLRN:  %.2f\tIMMLRN:  %.2f\n\r", 
-           discArray[which]->uses ? (float) discArray[which]->learned / discArray[which]->uses : 0,
-           discArray[which]->mobUses ? (float) discArray[which]->mobLearned / discArray[which]->mobUses : 0,
-           discArray[which]->immUses ? (float) discArray[which]->immLearned / discArray[which]->immUses : 0);
+	      discArray[which]->uses ? (float) discArray[which]->learned / discArray[which]->uses : 0,
+	      discArray[which]->mobUses ? (float) discArray[which]->mobLearned / discArray[which]->mobUses : 0,
+	      discArray[which]->immUses ? (float) discArray[which]->immLearned / discArray[which]->immUses : 0);
       buf += buf2;
       sprintf(buf2, "SUCCESS:  %d\tMOBSUCC: %d\tIMMSUCC: %d\n\r", 
-           discArray[which]->success,
-           discArray[which]->mobSuccess,
-           discArray[which]->immSuccess);
+	      discArray[which]->success,
+	      discArray[which]->mobSuccess,
+	      discArray[which]->immSuccess);
       buf += buf2;
       sprintf(buf2, "FAILS:    %d\tMOBFAIL: %d\tIMMFAIL: %d\n\r", 
-           discArray[which]->fail,
-           discArray[which]->mobFail,
-           discArray[which]->immFail);
+	      discArray[which]->fail,
+	      discArray[which]->mobFail,
+	      discArray[which]->immFail);
       buf += buf2;
       sprintf(buf2, "POTIONS:  %d\tMOB-POT: %d\tIMM-POT: %d\n\r", 
-           discArray[which]->potSuccess,
-           discArray[which]->potSuccessMob,
-           discArray[which]->potSuccessImm);
+	      discArray[which]->potSuccess,
+	      discArray[which]->potSuccessMob,
+	      discArray[which]->potSuccessImm);
       buf += buf2;
       // we will keep the potion successes out of this calculation
       // as we basically want to use it to look at if a naturally used skill
@@ -4924,70 +4958,70 @@ void TBeing::doInfo(const char *arg)
       int mobtot = discArray[which]->mobSuccess + discArray[which]->mobFail;
       int immtot = discArray[which]->immSuccess + discArray[which]->immFail;
       sprintf(buf2, "RATE :    %.1f%%\tMOBRATE: %.1f%%\tIMMRATE: %.1f%%\n\r", 
-           tot ? discArray[which]->success * 100.0 / tot : 0,
-           mobtot ? discArray[which]->mobSuccess * 100.0 / mobtot : 0,
-           immtot ? discArray[which]->immSuccess * 100.0 / immtot : 0);
+	      tot ? discArray[which]->success * 100.0 / tot : 0,
+	      mobtot ? discArray[which]->mobSuccess * 100.0 / mobtot : 0,
+	      immtot ? discArray[which]->immSuccess * 100.0 / immtot : 0);
       buf += buf2;
       sprintf(buf2, "SAVES:    %d\tMOBSAVE: %d\tIMMSAVE: %d\n\r", 
-           discArray[which]->saves,
-           discArray[which]->mobSaves,
-           discArray[which]->immSaves);
+	      discArray[which]->saves,
+	      discArray[which]->mobSaves,
+	      discArray[which]->immSaves);
       buf += buf2;
       sprintf(buf2, "CRIT-SUC: %d\tMOBCSUC: %d\tIMMCSUC: %d\n\r", 
-           discArray[which]->crits,
-           discArray[which]->mobCrits,
-           discArray[which]->immCrits);
+	      discArray[which]->crits,
+	      discArray[which]->mobCrits,
+	      discArray[which]->immCrits);
       buf += buf2;
       sprintf(buf2, "CRIT-FAI: %d\tMOBCFAI: %d\tIMMCFAI: %d\n\r", 
-           discArray[which]->critf,
-           discArray[which]->mobCritf,
-           discArray[which]->immCritf);
+	      discArray[which]->critf,
+	      discArray[which]->mobCritf,
+	      discArray[which]->immCritf);
       buf += buf2;
       sprintf(buf2, "VICTIMS:  %d\tMOBVICT: %d\tIMMVICT: %d\n\r", 
-           discArray[which]->victims,
-           discArray[which]->mobVictims,
-           discArray[which]->immVictims);
+	      discArray[which]->victims,
+	      discArray[which]->mobVictims,
+	      discArray[which]->immVictims);
       buf += buf2;
       sprintf(buf2, "DAMAGE:   %.2f\tMOBDAM:  %.2f\tIMMDAM:  %.2f\n\r", 
-           discArray[which]->victims ? (float) discArray[which]->damage / discArray[which]->victims : 0,
-           discArray[which]->mobVictims ? (float) discArray[which]->mobDamage / discArray[which]->mobVictims : 0,
-           discArray[which]->immVictims ? (float) discArray[which]->immDamage / discArray[which]->immVictims : 0);
+	      discArray[which]->victims ? (float) discArray[which]->damage / discArray[which]->victims : 0,
+	      discArray[which]->mobVictims ? (float) discArray[which]->mobDamage / discArray[which]->mobVictims : 0,
+	      discArray[which]->immVictims ? (float) discArray[which]->immDamage / discArray[which]->immVictims : 0);
       buf += buf2;
       sprintf(buf2, "FOCUS:    %.2f\n\r", 
-           discArray[which]->uses ? (float) discArray[which]->focusValue / discArray[which]->uses : 0);
+	      discArray[which]->uses ? (float) discArray[which]->focusValue / discArray[which]->uses : 0);
       buf += buf2;
       sprintf(buf2, "Potential Victims:  %ld, Potential Damage %.2f, Potential Level %.2f\n\r", 
-           discArray[which]->pot_victims,
-           discArray[which]->pot_victims ? (float) discArray[which]->pot_damage / discArray[which]->pot_victims : 0,
-           discArray[which]->pot_victims ? (float) discArray[which]->pot_level / discArray[which]->pot_victims : 0);
+	      discArray[which]->pot_victims,
+	      discArray[which]->pot_victims ? (float) discArray[which]->pot_damage / discArray[which]->pot_victims : 0,
+	      discArray[which]->pot_victims ? (float) discArray[which]->pot_level / discArray[which]->pot_victims : 0);
       buf += buf2;
 
       buf += "\n\rAttempts Breakdown:\n\r";
       sprintf(buf2, "New: %d, low: %d, mid: %d, good: %d, high: %d\n\r",
-         discArray[which]->newAttempts,
-         discArray[which]->lowAttempts,
-         discArray[which]->midAttempts,
-         discArray[which]->goodAttempts,
-         discArray[which]->highAttempts);
+	      discArray[which]->newAttempts,
+	      discArray[which]->lowAttempts,
+	      discArray[which]->midAttempts,
+	      discArray[which]->goodAttempts,
+	      discArray[which]->highAttempts);
       buf += buf2;
 
       buf += "Failure Breakdown:\n\r";
       sprintf(buf2, "General: %d, Focus: %d, Engage: %d\n\r",
-         discArray[which]->genFail,
-         discArray[which]->focFail,
-         discArray[which]->focFail);
+	      discArray[which]->genFail,
+	      discArray[which]->focFail,
+	      discArray[which]->focFail);
       buf += buf2;
 
       buf += "Learning Info:\n\r";
       sprintf(buf2, "Attempts: %ld, Successes: %d, Fails: %d\n\rLearning: %d, Level: %d, Boost: %ld\n\rDisc Success: %d, Adv Success: %d\n\r",
-         discArray[which]->learnAttempts,
-         discArray[which]->learnSuccess,
-         discArray[which]->learnFail,
-         discArray[which]->learnLearn,
-         discArray[which]->learnLevel,
-         discArray[which]->learnBoost,
-         discArray[which]->learnDiscSuccess,
-         discArray[which]->learnAdvDiscSuccess);
+	      discArray[which]->learnAttempts,
+	      discArray[which]->learnSuccess,
+	      discArray[which]->learnFail,
+	      discArray[which]->learnLearn,
+	      discArray[which]->learnLevel,
+	      discArray[which]->learnBoost,
+	      discArray[which]->learnDiscSuccess,
+	      discArray[which]->learnAdvDiscSuccess);
       buf += buf2;
 
       one_argument(arg, arg1, cElements(arg1));
@@ -5022,15 +5056,15 @@ void TBeing::doInfo(const char *arg)
         if (!(discArray[snt]->disc == which))
           continue;
         sprintf(buf2,"%-20.20s: %5d %6.2f %6.2f %5d %6.2f %3d/%-3d %4d/%-4d %3d\n\r",
-              discArray[snt]->name,
-              discArray[snt]->mobUses,
-              (float) (discArray[snt]->mobUses == 0 ? 0 : (float) discArray[snt]->mobLevels/(float) discArray[snt]->mobUses),
-              (float) (discArray[snt]->mobVictims == 0 ? 0 : (float) discArray[snt]->mobDamage/(float) discArray[snt]->mobVictims),
-              discArray[snt]->mobVictims,
-              (float) (discArray[snt]->mobUses == 0 ? 0 : (float) discArray[snt]->mobLearned/(float) discArray[snt]->mobUses),
-              discArray[snt]->mobCrits, discArray[snt]->mobCritf,
-              discArray[snt]->mobSuccess, discArray[snt]->mobFail,
-              discArray[snt]->mobSaves);
+		discArray[snt]->name,
+		discArray[snt]->mobUses,
+		(float) (discArray[snt]->mobUses == 0 ? 0 : (float) discArray[snt]->mobLevels/(float) discArray[snt]->mobUses),
+		(float) (discArray[snt]->mobVictims == 0 ? 0 : (float) discArray[snt]->mobDamage/(float) discArray[snt]->mobVictims),
+		discArray[snt]->mobVictims,
+		(float) (discArray[snt]->mobUses == 0 ? 0 : (float) discArray[snt]->mobLearned/(float) discArray[snt]->mobUses),
+		discArray[snt]->mobCrits, discArray[snt]->mobCritf,
+		discArray[snt]->mobSuccess, discArray[snt]->mobFail,
+		discArray[snt]->mobSaves);
         buf += buf2;
       }
       desc->page_string(buf);
@@ -5054,23 +5088,23 @@ void TBeing::doInfo(const char *arg)
         if (!(discArray[snt]->disc == which))
           continue;
         sprintf(buf2,"%-20.20s: %5d %6.2f %6.2f %5d %6.2f %3d/%-3d %4d/%-4d %3d\n\r",
-              discArray[snt]->name,
-              discArray[snt]->immUses,
-              (float) (discArray[snt]->immUses == 0 ? 0 : (float) discArray[snt]->immLevels/(float) discArray[snt]->immUses),
-              (float) (discArray[snt]->immVictims == 0 ? 0 : (float) discArray[snt]->immDamage/(float) discArray[snt]->immVictims),
-              discArray[snt]->immVictims,
-              (float) (discArray[snt]->immUses == 0 ? 0 : (float) discArray[snt]->immLearned/(float) discArray[snt]->immUses),
-              discArray[snt]->immCrits,discArray[snt]->immCritf,
-              discArray[snt]->immSuccess,discArray[snt]->immFail,
-              discArray[snt]->immSaves);
-          buf += buf2;
+		discArray[snt]->name,
+		discArray[snt]->immUses,
+		(float) (discArray[snt]->immUses == 0 ? 0 : (float) discArray[snt]->immLevels/(float) discArray[snt]->immUses),
+		(float) (discArray[snt]->immVictims == 0 ? 0 : (float) discArray[snt]->immDamage/(float) discArray[snt]->immVictims),
+		discArray[snt]->immVictims,
+		(float) (discArray[snt]->immUses == 0 ? 0 : (float) discArray[snt]->immLearned/(float) discArray[snt]->immUses),
+		discArray[snt]->immCrits,discArray[snt]->immCritf,
+		discArray[snt]->immSuccess,discArray[snt]->immFail,
+		discArray[snt]->immSaves);
+	buf += buf2;
       }
       desc->page_string(buf);
     } else {
       sendTo("What would you like info on?\n\r");
       sendTo(str);
     }
-}
+  }
 }
 
 static int deltatime;
