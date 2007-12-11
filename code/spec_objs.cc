@@ -80,6 +80,7 @@
 #include "obj_note.h"
 #include "pathfinder.h"
 #include "liquids.h"
+#include "obj_chest.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -6257,6 +6258,8 @@ void rotate_side(char side[3][3], bool top_or_bottom)
       for(int j=0;j<3;++j)
 	side[i][j]=buf[i][j];
   }
+
+
 }
 
 void twist_front_top(rubiks_cube *rc)
@@ -6447,6 +6450,11 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
   // of me right now, but are otherwise meaningless
   rubiks_cube *rc=NULL;
   
+  TChest *cube;
+
+  if(!(cube=dynamic_cast<TChest *>(myself)))
+    return false;
+
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new rubiks_cube)) {
       perror("failed new of rubiks cube.");
@@ -6469,6 +6477,8 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       }
     }
     randomize_cube(rc);
+    cube->addContainerFlag(CONT_LOCKED);
+    cube->addContainerFlag(CONT_CLOSED);
   } else {
     if(!(rc=(rubiks_cube *) myself->act_ptr)){
       perror("failed assign of rubiks cube.");
@@ -6491,6 +6501,8 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       } else if(buf.word(2) == "right"){
 	twist_front_right(rc);
       }
+
+      ch->sendTo(COLOR_BASIC, "You give it a twist...\n\r");
     } else if(buf.word(1) == "back"){
       if(buf.word(2) == "top"){
 	twist_back_top(rc);
@@ -6499,14 +6511,30 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       } else if(buf.word(2) == "right"){
 	twist_back_right(rc);
       }
+
+      ch->sendTo(COLOR_BASIC, "You give it a twist...\n\r");
     } else if(buf.word(1) == "mix"){
       randomize_cube(rc);
+      cube->addContainerFlag(CONT_LOCKED);
+      cube->addContainerFlag(CONT_CLOSED);
+    } else if(buf.word(1) == "solve" && ch->isImmortal()){
+      for(int i=0;i<3;++i){
+	for(int j=0;j<3;++j){
+	  rc->blue[i][j]='b';
+	  rc->yellow[i][j]='Y';
+	  rc->red[i][j]='r';
+	  rc->orange[i][j]='o';
+	  rc->white[i][j]='W';
+	  rc->green[i][j]='g';
+	}
+      }
+    } else {
+      ch->sendTo(COLOR_BASIC, "Usage: twist puzzle <front|back> <top|left|right>\n\r");
     }
 
-    ch->sendTo(COLOR_BASIC, "You give it a twist...\n\r");
   }
 
-  if(cmd==CMD_LOOK || cmd==CMD_TWIST){
+  if((cmd==CMD_LOOK && isname(arg, myself->name)) || cmd==CMD_TWIST){
     // oh god my eyes my eyes my brain my brain
     ch->sendTo(COLOR_BASIC, 
 	       fmt("       <%c>#<1>                   <%c>#<1>             \n\r") %
@@ -6547,6 +6575,25 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 	       fmt("      <%c>#<1> <%c>#<1>                 <%c>#<1> <%c>#<1>          \n\r") %
 	       rc->red[2][0] % rc->white[0][0] %
 	       rc->green[2][0] % rc->orange[0][0]);
+    
+    bool solved=true;
+    
+    for(int i=0;i<3;++i){
+      for(int j=0;j<3;++j){
+	if(rc->blue[i][j]!=rc->blue[0][0] ||
+	   rc->red[i][j]!=rc->red[0][0] ||
+	   rc->white[i][j]!=rc->white[0][0] ||
+	   rc->yellow[i][j]!=rc->yellow[0][0] ||
+	   rc->green[i][j]!=rc->green[0][0] ||
+	   rc->orange[i][j]!=rc->orange[0][0])
+	  solved=false;
+      }
+    }
+
+    if(solved){
+      ch->sendTo("The puzzle solved, the lock clicks open.\n\r");
+      cube->remContainerFlag(CONT_LOCKED);
+    }
     return true;
   }
   
