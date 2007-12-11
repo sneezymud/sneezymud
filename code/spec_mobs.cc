@@ -59,6 +59,7 @@
 #include "obj_plant.h"
 #include "obj_note.h"
 #include "obj_commodity.h"
+#include "obj_component.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -6048,6 +6049,10 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       return TRUE;
     }
 
+    if(dynamic_cast<TComponent *>(o)){
+      me->doTell(ch->getName(), "Sorry, I cannot convert magical components.");
+      return TRUE;
+    }
 
     value = o->getWeight() * 10.0; // convert to units
     value *= 0.90; // subtract some for wastage
@@ -6075,6 +6080,11 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     if(!o->isRentable()){
       me->doTell(ch->getName(), "That isn't rentable so I can't convert it.");
+      return TRUE;
+    }
+
+    if(dynamic_cast<TComponent *>(o)){
+      me->doTell(ch->getName(), "Sorry, I cannot convert magical components.");
       return TRUE;
     }
 
