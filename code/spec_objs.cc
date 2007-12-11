@@ -6215,6 +6215,345 @@ int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont
   return TRUE;
 }
 
+struct rubiks_cube {
+  char blue[3][3], yellow[3][3], red[3][3];
+  char orange[3][3], white[3][3], green[3][3];
+};
+
+void rotate_side(char side[3][3], bool top_or_bottom)
+{
+  char buf[3][3];
+
+  if(top_or_bottom){
+    buf[2][0]=side[0][0];
+    buf[1][0]=side[0][1];
+    buf[0][0]=side[0][2];
+    
+    buf[2][1]=side[1][0];
+    buf[1][1]=side[1][1];
+    buf[0][1]=side[1][2];
+    
+    buf[2][2]=side[2][0];
+    buf[1][2]=side[2][1];
+    buf[0][2]=side[2][2];
+   
+    for(int i=0;i<3;++i)
+      for(int j=0;j<3;++j)
+	side[i][j]=buf[i][j];    
+  } else {
+    buf[0][2]=side[0][0];
+    buf[1][2]=side[0][1];
+    buf[2][2]=side[0][2];
+    
+    buf[0][1]=side[1][0];
+    buf[1][1]=side[1][1];
+    buf[2][1]=side[1][2];
+    
+    buf[0][0]=side[2][0];
+    buf[1][0]=side[2][1];
+    buf[2][0]=side[2][2];
+    
+    for(int i=0;i<3;++i)
+      for(int j=0;j<3;++j)
+	side[i][j]=buf[i][j];
+  }
+}
+
+void twist_front_top(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->white[0][2];
+  rc->white[0][2]=rc->red[0][2];
+  rc->red[0][2]=rc->green[2][0];
+  rc->green[2][0]=rc->orange[2][0];
+  rc->orange[2][0]=buf;
+
+  buf=rc->white[1][2];
+  rc->white[1][2]=rc->red[1][2];
+  rc->red[1][2]=rc->green[1][0];
+  rc->green[1][0]=rc->orange[1][0];
+  rc->orange[1][0]=buf;
+  
+  buf=rc->white[2][2];
+  rc->white[2][2]=rc->red[2][2];
+  rc->red[2][2]=rc->green[0][0];
+  rc->green[0][0]=rc->orange[0][0];
+  rc->orange[0][0]=buf;
+  
+  rotate_side(rc->blue, true);
+}
+
+void twist_front_left(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->white[0][2];
+  rc->white[0][2]=rc->blue[0][0];
+  rc->blue[0][0]=rc->green[0][2];
+  rc->green[0][2]=rc->yellow[0][2];
+  rc->yellow[0][2]=buf;
+
+  buf=rc->white[0][1];
+  rc->white[0][1]=rc->blue[1][0];
+  rc->blue[1][0]=rc->green[0][1];
+  rc->green[0][1]=rc->yellow[0][1];
+  rc->yellow[0][1]=buf;
+
+  buf=rc->white[0][0];
+  rc->white[0][0]=rc->blue[2][0];
+  rc->blue[2][0]=rc->green[0][0];
+  rc->green[0][0]=rc->yellow[0][0];
+  rc->yellow[0][0]=buf;
+
+  rotate_side(rc->red, false);
+}
+
+void twist_front_right(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->blue[2][0];
+  rc->blue[2][0]=rc->red[2][0];
+  rc->red[2][0]=rc->yellow[2][2];
+  rc->yellow[2][2]=rc->orange[2][0];
+  rc->orange[2][0]=buf;
+
+  buf=rc->blue[2][1];
+  rc->blue[2][1]=rc->red[2][1];
+  rc->red[2][1]=rc->yellow[1][2];
+  rc->yellow[1][2]=rc->orange[2][1];
+  rc->orange[2][1]=buf;
+
+  buf=rc->blue[2][2];
+  rc->blue[2][2]=rc->red[2][2];
+  rc->red[2][2]=rc->yellow[0][2];
+  rc->yellow[0][2]=rc->orange[2][2];
+  rc->orange[2][2]=buf;
+
+  rotate_side(rc->white, false);
+}
+
+
+
+void twist_back_top(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->orange[0][2];
+  rc->orange[0][2]=rc->green[0][2];
+  rc->green[0][2]=rc->red[2][0];
+  rc->red[2][0]=rc->white[2][0];
+  rc->white[2][0]=buf;
+
+  buf=rc->orange[1][2];
+  rc->orange[1][2]=rc->green[1][2];
+  rc->green[1][2]=rc->red[1][0];
+  rc->red[1][0]=rc->white[1][0];
+  rc->white[1][0]=buf;
+  
+  buf=rc->orange[2][2];
+  rc->orange[2][2]=rc->green[2][2];
+  rc->green[2][2]=rc->red[0][0];
+  rc->red[0][0]=rc->white[0][0];
+  rc->white[0][0]=buf;
+  
+  rotate_side(rc->yellow, true);
+}
+
+void twist_back_left(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->orange[0][2];
+  rc->orange[0][2]=rc->yellow[0][0];
+  rc->yellow[0][0]=rc->red[0][2];
+  rc->red[0][2]=rc->blue[0][2];
+  rc->blue[0][2]=buf;
+
+  buf=rc->orange[0][1];
+  rc->orange[0][1]=rc->yellow[1][0];
+  rc->yellow[1][0]=rc->red[0][1];
+  rc->red[0][1]=rc->blue[0][1];
+  rc->blue[0][1]=buf;
+
+  buf=rc->orange[0][0];
+  rc->orange[0][0]=rc->yellow[2][0];
+  rc->yellow[2][0]=rc->red[0][0];
+  rc->red[0][0]=rc->blue[0][0];
+  rc->blue[0][0]=buf;
+
+  rotate_side(rc->green, false);
+}
+
+void twist_back_right(rubiks_cube *rc)
+{
+  char buf;
+
+  buf=rc->yellow[2][0];
+  rc->yellow[2][0]=rc->green[2][0];
+  rc->green[2][0]=rc->blue[2][2];
+  rc->blue[2][2]=rc->white[2][0];
+  rc->white[2][0]=buf;
+
+  buf=rc->yellow[2][1];
+  rc->yellow[2][1]=rc->green[2][1];
+  rc->green[2][1]=rc->blue[1][2];
+  rc->blue[1][2]=rc->white[2][1];
+  rc->white[2][1]=buf;
+
+  buf=rc->yellow[2][2];
+  rc->yellow[2][2]=rc->green[2][2];
+  rc->green[2][2]=rc->blue[0][2];
+  rc->blue[0][2]=rc->white[2][2];
+  rc->white[2][2]=buf;
+
+  rotate_side(rc->orange, false);
+}
+
+
+void randomize_cube(rubiks_cube *rc)
+{
+  // randomize
+  for(int i=0;i<100;++i){
+    switch(::number(0,5)){
+      case 0:
+	twist_front_top(rc);
+	break;
+      case 1:
+	twist_front_left(rc);
+	break;
+      case 2:
+	twist_front_right(rc);
+	break;
+      case 3:
+	twist_back_top(rc);
+	break;
+      case 4:
+	twist_back_left(rc);
+	break;
+      case 5:
+	twist_back_right(rc);
+	break;
+    }
+  }
+}
+
+// for the love I god I hope no one ever has to debug this proc
+int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
+{ 
+  // I went with colors instead of orientation to make it easier for me
+  // the names of the arrays only correspond to the solved cube in front
+  // of me right now, but are otherwise meaningless
+  rubiks_cube *rc=NULL;
+  
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new rubiks_cube)) {
+      perror("failed new of rubiks cube.");
+      exit(0);
+    }
+
+    if(!(rc=(rubiks_cube *) myself->act_ptr)){
+      perror("failed assign of rubiks cube.");
+      exit(0);
+    }
+    
+    for(int i=0;i<3;++i){
+      for(int j=0;j<3;++j){
+	rc->blue[i][j]='b';
+	rc->yellow[i][j]='Y';
+	rc->red[i][j]='r';
+	rc->orange[i][j]='o';
+	rc->white[i][j]='W';
+	rc->green[i][j]='g';
+      }
+    }
+    randomize_cube(rc);
+  } else {
+    if(!(rc=(rubiks_cube *) myself->act_ptr)){
+      perror("failed assign of rubiks cube.");
+      exit(0);
+    }
+  }
+  
+
+  if(cmd == CMD_TWIST){
+    sstring buf = sstring(arg);
+
+    if(!isname(buf.word(0), myself->name))
+       return false;
+
+    if(buf.word(1) == "front"){
+      if(buf.word(2) == "top"){
+	twist_front_top(rc);
+      } else if(buf.word(2) == "left"){
+	twist_front_left(rc);
+      } else if(buf.word(2) == "right"){
+	twist_front_right(rc);
+      }
+    } else if(buf.word(1) == "back"){
+      if(buf.word(2) == "top"){
+	twist_back_top(rc);
+      } else if(buf.word(2) == "left"){
+	twist_back_left(rc);
+      } else if(buf.word(2) == "right"){
+	twist_back_right(rc);
+      }
+    } else if(buf.word(1) == "mix"){
+      randomize_cube(rc);
+    }
+
+    ch->sendTo(COLOR_BASIC, "You give it a twist...\n\r");
+  }
+
+  if(cmd==CMD_LOOK || cmd==CMD_TWIST){
+    // oh god my eyes my eyes my brain my brain
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("       <%c>#<1>                   <%c>#<1>             \n\r") %
+	       rc->blue[0][2] % rc->yellow[0][2]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("    <%c>#<1>     <%c>#<1>             <%c>#<1>     <%c>#<1>         \n\r") %
+	       rc->blue[0][1] % rc->blue[1][2] %
+	       rc->yellow[0][1] % rc->yellow[1][2]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("  <%c>#<1>    <%c>#<1>    <%c>#<1>         <%c>#<1>    <%c>#<1>    <%c>#<1>    \n\r") %
+	       rc->blue[0][0] % rc->blue[1][1] % rc->blue[2][2] %
+	       rc->yellow[0][0] % rc->yellow[1][1] % rc->yellow[2][2]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("<%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>\n\r") %
+	       rc->red[0][2] % rc->blue[1][0] % rc->blue[2][1] % rc->white[2][2] %
+	       rc->green[0][2] % rc->yellow[1][0] % rc->yellow[2][1] % rc->orange[2][2]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("   <%c>#<1>   <%c>#<1>   <%c>#<1>           <%c>#<1>   <%c>#<1>   <%c>#<1>     \n\r") %
+	       rc->red[1][2] % rc->blue[2][0] % rc->white[1][2] %
+	       rc->green[1][2] % rc->yellow[2][0] % rc->orange[1][2]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
+	       rc->red[0][1] % rc->red[2][2] % rc->white[0][2] % rc->white[2][1] %
+	       rc->green[0][1] % rc->green[2][2] % rc->orange[0][2] % rc->orange[2][1]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
+	       rc->red[1][1] % rc->white[1][1] %
+	       rc->green[1][1] % rc->orange[1][1]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
+	       rc->red[0][0] % rc->red[2][1] % rc->white[0][1] % rc->white[2][0] %
+	       rc->green[0][0] % rc->green[2][1] % rc->orange[0][1] % rc->orange[2][0]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
+	       rc->red[1][0] % rc->white[1][0] %
+	       rc->green[1][0] % rc->orange[1][0]);
+    ch->sendTo(COLOR_BASIC, 
+	       fmt("      <%c>#<1> <%c>#<1>                 <%c>#<1> <%c>#<1>          \n\r") %
+	       rc->red[2][0] % rc->white[0][0] %
+	       rc->green[2][0] % rc->orange[0][0]);
+    return true;
+  }
+  
+  return false;
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 extern int stickerBush(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -6438,5 +6777,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Skittish Object", skittishObject}, //150
   {FALSE, "Dwarf Power", dwarfPower}, 
   {FALSE, "Mob Spawn Grab", mobSpawnGrab}, 
+  {FALSE, "rubik's cube", rubiksCube},
   {FALSE, "last proc", bogusObjProc}
 };
