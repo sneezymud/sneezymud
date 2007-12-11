@@ -200,7 +200,7 @@ TObj *catch_a_fish(TRoom *rp)
   }
 
 
-  if(0 && ::number(0, 24)){
+  if(::number(0, 24)){
     num=::number(0, fishlist.size()-1);
     fish=read_object(fishlist[num], VIRTUAL);
     
