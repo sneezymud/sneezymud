@@ -730,7 +730,7 @@ void TPerson::fixPracs()
   
   // figure out the right number of pracs
   sh_int expected = expectedPracs();
-  actual = meanPracsSoFar();
+  actual = pracsSoFar();
   diff = expected-actual; // >0 if they didn't get enough pracs
         
   // compare it to how many pracs the person got
@@ -738,6 +738,7 @@ void TPerson::fixPracs()
   if (-diff > max(5,level/2) && hasQuestBit(TOG_PRACS_FIXED)) {
     vlogf(LOG_BUG, fmt("%s was eligible to have practices corrected, but has already had that done and was skipped.") % getName());
   } else if (diff > level/10) {
+    vlogf(LOG_MISC, fmt("%s is having practices corrected, got an extra %d pracs.  Had %d unspent.") % getName() % diff % getPracs(Class));
     addPracs(diff, Class);
     sendTo(fmt("%sYou have gained %d practices as a result of an account update.%s\n\r") % redBold() % diff % norm() );
     setQuestBit(TOG_PRACS_FIXED);
@@ -788,8 +789,9 @@ sh_int TBeing::pracsSoFar()
     pracs += getPracs(Class);
 
     // get used pracs
-    resetPractices(Class, spentPracs, false);
-    pracs += spentPracs;
+    spentPracs = 0;
+    if (resetPractices(Class, spentPracs, false))
+      pracs += spentPracs;
   }
 
   return pracs;
