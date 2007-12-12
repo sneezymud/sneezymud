@@ -416,6 +416,7 @@ bool TObj::isTrash()
      rider ||
      roomp->isWaterSector() ||
      roomp->isAirSector() ||
+     roomp->number==19024 ||  // briny deep, don't want people catching piles
      isObjStat(ITEM_BURNING) ||
      isname("log commodity wood", getName()) ||
      dynamic_cast<TBaseCorpse *>(this))
