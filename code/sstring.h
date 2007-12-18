@@ -25,12 +25,14 @@ public:
   const sstring trim() const;
   const sstring capitalizeSentences() const;
 
+  // call this function with NULL data to get alloc size, then agian with alloc'd array
+  int split(const char delimit, sstring *data) const;
+
   // other functions
   const bool hasDigit() const;
   const bool isNumber() const;
   const bool isWord() const;
   const bool startsVowel() const;
-
 };
 
 // used for easily defining buffer sizes

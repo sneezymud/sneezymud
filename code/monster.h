@@ -96,6 +96,7 @@ class TMonster : public TBeing {
     float damLevel;
     ubyte damPrecision;
     float acLevel;
+    sstring procData;
 
     positionTypeT default_pos;
 

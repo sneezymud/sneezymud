@@ -6830,6 +6830,104 @@ sessionData::~sessionData()
 {
 }
 
+sessionData & sessionData::operator=(const sessionData &assign)
+{
+  if (this == &assign)
+    return *this;
+
+  connect = assign.connect;
+  kills = assign.kills;
+  groupKills = assign.groupKills;
+  xp = assign.xp;
+  perc = assign.perc;
+  group_share = assign.group_share;
+  groupName = assign.groupName;
+  amGroupTank = assign.amGroupTank;
+  skill_success_attempts = assign.skill_success_attempts;
+  skill_success_pass = assign.skill_success_pass;
+  spell_success_attempts = assign.spell_success_attempts;
+  spell_success_pass = assign.spell_success_pass;
+  prayer_success_attempts = assign.prayer_success_attempts;
+  prayer_success_pass = assign.prayer_success_pass;
+  hones = assign.hones;
+
+  attack_mode_t i;
+  for (i= ATTACK_NORMAL; i < MAX_ATTACK_MODE_TYPE; i++)
+  {
+    hits[i] = assign.hits[i];
+    swings[i] = assign.swings[i];
+    rounds[i] = assign.rounds[i];
+    combat_dam_done[i] = assign.combat_dam_done[i];
+    combat_dam_received[i] = assign.combat_dam_received[i];
+    potential_dam_done[i] = assign.potential_dam_done[i];
+    potential_dam_received[i] = assign.potential_dam_received[i];
+    skill_dam_done[i] = assign.skill_dam_done[i];
+    skill_dam_received[i] = assign.skill_dam_received[i];
+    swings_received[i] = assign.swings_received[i];
+    hits_received[i] = assign.hits_received[i];
+    rounds_received[i] = assign.rounds_received[i];
+    level_attacked[i] = assign.level_attacked[i];
+    mod_done[i] = assign.mod_done[i];
+    mod_received[i] = assign.mod_received[i];
+  }
+
+  return *this;
+}
+
+
+void sessionData::minus(sessionData &sd, const sessionData &first, const sessionData &second)
+{
+  sd.connect = first.connect - second.connect;
+  sd.kills = first.kills - second.kills;
+  sd.groupKills = first.groupKills - second.groupKills;
+  sd.xp = first.xp - second.xp;
+  sd.perc = first.perc - second.perc;
+  sd.group_share = first.group_share - second.group_share;
+  sd.groupName = first.groupName;
+  sd.amGroupTank = first.amGroupTank;
+  sd.skill_success_attempts = first.skill_success_attempts - second.skill_success_attempts;
+  sd.skill_success_pass = first.skill_success_pass - second.skill_success_pass;
+  sd.spell_success_attempts = first.spell_success_attempts - second.spell_success_attempts;
+  sd.spell_success_pass = first.spell_success_pass - second.spell_success_pass;
+  sd.prayer_success_attempts = first.prayer_success_attempts - second.prayer_success_attempts;
+  sd.prayer_success_pass = first.prayer_success_pass - second.prayer_success_pass;
+  sd.hones = first.hones - second.hones;
+
+  attack_mode_t i;
+  for (i= ATTACK_NORMAL; i < MAX_ATTACK_MODE_TYPE; i++)
+  {
+    sd.hits[i] = first.hits[i] - second.hits[i];
+    sd.swings[i] = first.swings[i] - second.swings[i];
+    sd.rounds[i] = first.rounds[i] - second.rounds[i];
+    sd.combat_dam_done[i] = first.combat_dam_done[i] - second.combat_dam_done[i];
+    sd.combat_dam_received[i] = first.combat_dam_received[i] - second.combat_dam_received[i];
+    sd.potential_dam_done[i] = first.potential_dam_done[i] - second.potential_dam_done[i];
+    sd.potential_dam_received[i] = first.potential_dam_received[i] - second.potential_dam_received[i];
+    sd.skill_dam_done[i] = first.skill_dam_done[i] - second.skill_dam_done[i];
+    sd.skill_dam_received[i] = first.skill_dam_received[i] - second.skill_dam_received[i];
+    sd.swings_received[i] = first.swings_received[i] - second.swings_received[i];
+    sd.hits_received[i] = first.hits_received[i] - second.hits_received[i];
+    sd.rounds_received[i] = first.rounds_received[i] - second.rounds_received[i];
+    sd.level_attacked[i] = first.level_attacked[i] - second.level_attacked[i];
+    sd.mod_done[i] = first.mod_done[i] - second.mod_done[i];
+    sd.mod_received[i] = first.mod_received[i] - second.mod_received[i];
+  }
+}
+
+sessionData sessionData::operator-(const sessionData &that)
+{
+  sessionData sd;
+  minus(sd, *this, that);
+  return sd;
+}
+
+sessionData & sessionData::operator-=(const sessionData &that)
+{
+  minus(*this, *this, that);
+  return *this;
+}
+
+
 promptData::promptData() :
   type(0),
   prompt(NULL),

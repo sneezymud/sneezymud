@@ -197,7 +197,8 @@ const int SPEC_AGGRO_FOLLOWER     =210;
 const int SPEC_CENTRAL_BANKER     =211;
 const int SPEC_CANNON_LOADER      =212;
 const int SPEC_ID_CARD_PROVIDER   =213;
-const int NUM_MOB_SPECIALS        =213;
+const int SPEC_TARGET_DUMMY       =214;
+const int NUM_MOB_SPECIALS        =214;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -250,6 +251,7 @@ extern int archer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *, bool login=false);
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
 extern int brickCollector(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int targetDummy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 class attune_struct {
   public:

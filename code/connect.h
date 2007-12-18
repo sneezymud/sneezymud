@@ -329,9 +329,13 @@ class sessionData
     unsigned int spell_success_pass;
     unsigned int prayer_success_attempts;
     unsigned int prayer_success_pass;
+    unsigned int hones;
  
     sessionData();
     ~sessionData();
+    sessionData & operator=(const sessionData &assign);
+    sessionData operator-(const sessionData &that);
+    sessionData & operator-=(const sessionData &that);
 
     void setToZero() {
       connect = time(0);
@@ -348,6 +352,7 @@ class sessionData
       spell_success_pass = 0;
       prayer_success_attempts = 0;
       prayer_success_pass = 0;
+      hones = 0;
 
       attack_mode_t i;
       for (i= ATTACK_NORMAL; i < MAX_ATTACK_MODE_TYPE; i++) {
@@ -368,6 +373,10 @@ class sessionData
         mod_received[i] = 0;
       }
     }
+
+private:
+  void minus(sessionData &sd, const sessionData &first, const sessionData &second);
+
 };
 
 class promptData

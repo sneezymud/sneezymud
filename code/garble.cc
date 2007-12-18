@@ -196,11 +196,12 @@ sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &a
   for(int i=0; !arg.word(i).empty();++i)
   {
     word = arg.word(i);
-    for(int j=0; j < 25; j++)
+    for(int j=0; j < 24; j++) // up to but excluding "ass" (otherwise you can't say 'class', 'assist', 'seabass')
     {
       ilname = illegalnames[j];
       if(ilname[0] == '*')
         ilname.erase(0, 1);
+
       if(!((int)(word.find(ilname, 0)) >= 0))
         continue;
 
@@ -487,6 +488,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " its ", " *itis* " },
     { " it's ", " *itis* " },
     { " i mean ", " *sezi* " },
+    { " btw ", " *btw* " },
 
     // phrase fixup
     { " they're ", " they are " },
@@ -495,19 +497,22 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " were ", " we are " },
     { " you're ", " you are " },
     { " youre ", " you are " },
+    { " thats ", " that is " },
+    { " that's ", " that is " },
     { " well *,* ", " arr *,* " },
 
     // apply simple word replacements
-    { " my ", " me " },
     { " is ", " be " },
     { " are ", " be " },
     { " am ", " be " },
     { " of ", " o' " },
     { " to ", " t' " },
+    { " or ", " 'r " },
     { " and ", " 'n " },
     { " the ", " th' " },
     { "&", " 'n " },
     { " nd ", " 'n " },
+    { " that ", " thar " },
     { " there ", " thar " },
     { " theres ", " thars " },
     { " their ", " thar " },
@@ -532,6 +537,8 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " hello ", " ahoy " },
     { " man ", " mate " },
     { " men ", " hearties " },
+    { " friend ", " mate " },
+    { " friends ", " hearties " },
     { " guy ", " matey " },
     { " guys ", " mateys " },
     { " she ", " th' lass " },
@@ -597,9 +604,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " talens ", " dubloons " },
     { " coin ", " dubloon " },
     { " coins ", " dubloons " },
-    { " chest ", " coffer " },
     { " left ", " port " },
-    //{ " right ", " starboard " }, Can't use since 'right' has multiple meanings
     { " forward ", " fore " },
     { " back ", " stern " },
     { " rear ", " aft " },
@@ -610,8 +615,11 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " drink ", " draught " },
     { " uhh ", " arr " },
     { " uh ", " arr " },
+    { " oh ", " arr " },
+    { " ohh ", " arr " },
     { " idea ", " idear " },
     { " boat ", " ship " },
+    { " stand ", " stands " },
 
     // apply prefix and suffix replacements
     { "ing ", "in' " },
@@ -621,6 +629,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " loser", " lubber" },
     { " them", " 'em" },
     { " our", " 'r" },
+    { " my", " me" },
 
     // un-tokenize the tokens for our pirate phrases
     { " *beno* ", " be no " },
@@ -629,6 +638,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " *whatup* ", " yar matey " },
     { " *itis* ", " 'tis " },
     { " *sezi* ", " says I " },
+    { " *btw* ", "  " },
 
     // replace punctuation we escaped
     { " *,* ", "," },

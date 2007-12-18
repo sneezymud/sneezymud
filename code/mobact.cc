@@ -3899,8 +3899,8 @@ int TMonster::mobileActivity(int pulse)
     }
 
     // a lot of specs are combat-related, trigger these
-    if (spec && ::number(0,2)) {
-      rc = checkSpec(this, CMD_MOB_COMBAT, "", NULL);
+    if (spec) {
+      rc = checkSpec(this, (::number(0,2)) ? CMD_MOB_COMBAT : CMD_MOB_COMBAT2, "", NULL);
       if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       else if (rc)

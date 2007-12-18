@@ -19,8 +19,14 @@
 // -1 = v is dead, needs to go bye-bye
 int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 {
-  int rc;
+  int rc = 0;
   spellNumT how2;
+
+  // trigger specials for starting a fight
+  if (fight() != v && (rc = checkSpec(v, CMD_MOB_COMBAT_ONATTACK, NULL, NULL)))
+    return rc;
+  if (fight() != v && (rc = v->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL)))
+    return rc;
 
   if (desc && !fight()) {
     SET_BIT(specials.affectedBy, AFF_AGGRESSOR);

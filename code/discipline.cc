@@ -3179,6 +3179,7 @@ static void learnSuccessLog(const TBeing *caster, spellNumT spell, int boost)
   if (caster->desc && caster->isPc()) {
     discArray[spell]->learnSuccess++;
     discArray[spell]->learnBoost += boost;
+    caster->desc->session.hones++;
   }
 }
 

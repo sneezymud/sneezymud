@@ -294,6 +294,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   }
 
   if (myself->master && stop_following) {
+    vlogf(LOG_PROC, fmt("Hero Faerie stopping follow in room %d.") % myself->in_room);
     myself->stopFollower(FALSE);
   }
   
@@ -345,6 +346,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!newMaster) {
     act("You can't find a master, so you go on your way. *pop*", FALSE, myself, 0, NULL, TO_CHAR);
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
+    vlogf(LOG_PROC, fmt("Hero Faerie clearing follower: was %s") % (myself->master ? myself->master->getName() : "None"));
     if (myself->master)
       myself->stopFollower(FALSE);
     --(*myself);
@@ -357,6 +359,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (myself->master) {
       act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
           TRUE, myself, 0, myself->master, TO_VICT);
+      vlogf(LOG_PROC, fmt("Hero Faerie switching follower: was %s") % (myself->master ? myself->master->getName() : "None"));
       myself->stopFollower(FALSE);
     }
     

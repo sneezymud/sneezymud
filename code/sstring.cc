@@ -273,4 +273,28 @@ const sstring sstring::capitalizeSentences() const
   return str;
 }
 
+// splits a string into an array of strings, given a delimiter
+// pass NULL for data to get the amount of split strings
+// like this:
+//   int c = s.split(';', NULL);
+//   sstring *commands = new sstring[c];
+//   s.split(';', commands);
+//   delete[] commands;
+int sstring::split(const char delimit, sstring *data) const
+{
+  int iFound = 0;
+  size_t iPos = 0, iPosLast = 0;
+
+  while(sstring::npos != (iPos = find(delimit, iPos)))
+  {
+    if (data)
+      data[iFound] = substr(iPosLast, iPos);
+    iFound++;
+    iPosLast = ++iPos;
+  }
+  if (data)
+    data[iFound] = substr(iPosLast, length());
+  return iFound + 1;
+}
+
 

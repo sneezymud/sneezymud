@@ -130,13 +130,18 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
         return FALSE;
       }
 
+    // trigger specials for starting a fight
+    if (rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL))
+      return rc;
+    if (rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL))
+      return rc;
 
-//    if (!victim->fight()) 
-// put if statement back in if doesnt work right
+    // put if statement back in if doesnt work right
     if (!isAffected(AFF_AGGRESSOR))
       SET_BIT(specials.affectedBy, AFF_AGGRESSOR);
-// this line is only if they have been sent back engaged by doEngagedhit
-// this will stopthemfighting and return it o here
+
+    // this line is only if they have been sent back engaged by doEngagedhit
+    // this will stopthemfighting and return it o here
     if (isAffected(AFF_ENGAGER)) {
       act("You engage $N in battle.", TRUE, this, 0, victim, TO_CHAR, ANSI_YELLOW);
       act("$n engages you in battle.", TRUE, this, 0, victim, TO_VICT, ANSI_YELLOW);
@@ -180,6 +185,13 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
         if (bSuccess(skill)) {
           stopFighting();
           if (victim->attackers < MAX_COMBAT_ATTACKERS) {
+
+            // trigger specials for starting a fight (switching counts as a new attack)
+            if (rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL))
+              return rc;
+            if (rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL))
+              return rc;
+
             if (isAffected(AFF_ENGAGER)) {
               doEngage("", victim);
               sendTo("You switch opponents.\n\r");
@@ -398,6 +410,13 @@ int TBeing::doEngage(const char *argument, TBeing *vict)
           FALSE, this, 0, victim, TO_CHAR);
       return FALSE;
     }
+
+    // trigger specials for starting a fight
+    int rc = 0;
+    if (fight() != victim && (rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL)))
+      return rc;
+    if (fight() != victim && (rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL)))
+      return rc;
 
     SET_BIT(specials.affectedBy, AFF_ENGAGER);
     SET_BIT(specials.affectedBy, AFF_AGGRESSOR);

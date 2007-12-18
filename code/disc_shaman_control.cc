@@ -32,6 +32,14 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
+  // note: we have this here to keep people from dissecting mobs (or butchering), then resurrecting agian
+  if (corpse->isCorpseFlag(CORPSE_NO_DISSECT) || corpse->isCorpseFlag(CORPSE_NO_BUTCHER) ||
+      corpse->isCorpseFlag(CORPSE_NO_SKIN)) {
+    caster->sendTo("This corpse appears too mutilated to resurrect!\n\r");
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    return SPELL_FAIL;
+  }
+
   if (caster->getMoney() < 2500) {
     caster->sendTo("You need 2500 talens to make the resurrection sacrifice.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);

@@ -6925,6 +6925,7 @@ extern int poisonHit(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int belimus(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int paralyzeGaze(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int poisonBite(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int targetDummy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // misc external procs
 extern int loanManager(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7170,6 +7171,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "central banker", centralBanker},
   {FALSE, "cannon loader", cannonLoader},
   {FALSE, "id card provider", idCardProvider},
+  {TRUE, "Target dummy", targetDummy},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

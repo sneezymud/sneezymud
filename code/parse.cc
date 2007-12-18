@@ -1837,6 +1837,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_TASK_FIGHTING:
       case CMD_TASK_CONTINUE:
       case CMD_OBJ_OWNER_HIT:
+      case CMD_MOB_COMBAT2:
+      case CMD_MOB_COMBAT_ONATTACK:
+      case CMD_MOB_COMBAT_ONATTACKED:
         sendTo(fmt("doCommand:incorrectCommand: [%d]\n\r") % cmd);
   incorrectCommand();
   return FALSE;

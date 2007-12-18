@@ -95,7 +95,7 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
     sprintf(tStringOut[9], "%d", obj->getStructPoints());
     strcpy(tStringOut[10], material_nums[obj->getMaterial()].mat_name);
     sprintf(tStringOut[11], "%d", obj->canBeSeen);
-    strcpy(tStringOut[12], ((obj->spec < NUM_OBJ_SPECIALS) ? (obj->spec <= 0 ? "Proc: none" : objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name) : "Confused..."));
+    strcpy(tStringOut[12], ((obj->spec <= NUM_OBJ_SPECIALS) ? (obj->spec <= 0 ? "Proc: none" : objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name) : "Confused..."));
     sprintf(tStringOut[13], "%d", obj->max_exist);
 
     for (int tMsgIndex = 0; tMsgIndex < 14; tMsgIndex++)

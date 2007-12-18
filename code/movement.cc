@@ -1115,6 +1115,13 @@ int TBeing::moveGroup(dirTypeT dir)
         n = k->next;
         TBeing *tft = k->follower;
 
+        // sanity check - this should not occur, however the hero faerie proc seems to be causing issues
+        if (!tft)
+        {
+          vlogf(LOG_BUG, fmt("ERROR: NULL follower for %s in TBeing::moveGroup") % getName());
+          continue;
+        }
+
         // sanity check, necessary cuz things going whacky occasionally
         // bat - 11/19/99
         if (tft->master != this) {

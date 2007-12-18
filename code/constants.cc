@@ -1640,7 +1640,6 @@ const char * const illegalnames[] =
   "*nigger",
   "*penis",
   "*crap",
-  "ass",
   "jackmeoff",
   "piss",
   "pee",
@@ -1649,6 +1648,7 @@ const char * const illegalnames[] =
   "butt",
   "suck",
   "crotch",
+  "ass",
 
   // IMM NAME SIMILARITY
   "brutus",

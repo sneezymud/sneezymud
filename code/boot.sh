@@ -56,14 +56,41 @@ then
   FLAGS="-t";
 elif [ "$2" ]
 then
- echo "Usage: $0 <start|stop> <beta|lite (optional)>";
+ echo "Usage: $0 <start|stop|restart> <beta|lite (optional)>";
  exit
 fi
 
 if [ "$1" = "" ]
 then
-  echo "Usage: $0 <start|stop> <beta|lite (optional)>";
-elif [ "$1" = "start" ]
+  echo "Usage: $0 <start|stop|restart> <beta|lite (optional)>";
+  exit
+fi
+
+if [[ "$1" = "stop" || "$1" = "restart" ]]
+then
+  pid=$(pgrep -U $USER -f "sneezy $PORT")
+  if [ "$pid" != "" ]
+  then
+    echo "Killing process $pid."
+    kill $pid
+  else
+    pid=$(pgrep -U $USER -f "sneezy -t $PORT")
+    if [ "$pid" != "" ]
+    then
+      echo "Killing process $pid."
+      kill $pid
+    else
+      echo "Sneezy process not found running on port $PORT."
+    fi
+  fi
+fi
+
+if [ "$1" = "restart" ]
+then
+  sleep 2
+fi
+
+if [[ "$1" = "start" || "$1" = "restart" ]]
 then
   pid=$(pgrep -U $USER -f "sneezy $PORT")
   if [ "$pid" == "" ]
@@ -72,27 +99,11 @@ then
     rm -f file
     echo "Booting ./sneezy $PORT."
     ./sneezy $FLAGS $PORT >& file &
+    sleep 2
     pid=$(pgrep -U $USER -f "sneezy $PORT")
     echo "Running as process $pid.";
   else
     echo "Sneezy already running on port $PORT."
-  fi
-elif [ "$1" = "stop" ]
-then
-  pid=$(pgrep -U $USER -f "sneezy $PORT")
-  if [ "$pid" != "" ]
-  then
-    echo "Killing process $pid."
-    kill $pid
-  else
-      pid=$(pgrep -U $USER -f "sneezy -t $PORT")
-      if [ "$pid" != "" ]
-	  then
-	  echo "Killing process $pid."
-	  kill $pid
-      else
-	  echo "Sneezy process not found running on port $PORT."
-      fi
   fi
 fi
 

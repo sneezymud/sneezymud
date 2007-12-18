@@ -125,7 +125,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     int tHeight = (int)(tMon->getHeight() / 12);
     sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
     sprintf(tStringOut[18], "%.0f (lbs)", tMon->getWeight());
-    strcpy(tStringOut[19], ((tMon->spec < NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "Proc: none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
+    strcpy(tStringOut[19], ((tMon->spec <= NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "Proc: none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
     sprintf(tStringOut[20], "%d", tMon->visionBonus);
     sprintf(tStringOut[21], "%d", tMon->canBeSeen);
 

@@ -663,6 +663,10 @@ enum cmdTypeT {
 
        CMD_TASK_FIGHTING,
        CMD_TASK_CONTINUE,
+
+       CMD_MOB_COMBAT2, // called every round whenever CMD_MOB_COMBAT is not called
+       CMD_MOB_COMBAT_ONATTACK, // called when you begin a fight
+       CMD_MOB_COMBAT_ONATTACKED, // called when someone starts a fight with you
 };
 extern cmdTypeT & operator++(cmdTypeT &c, int);
 const cmdTypeT MIN_CMD = cmdTypeT(0);

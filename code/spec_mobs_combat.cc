@@ -998,3 +998,232 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return TRUE;
 
 }
+
+/* -------------------------------------------------------------------
+  Target Dummy Proc (Pappy)
+  the target dummy is used for target practice.  It should be used sparingly
+  on mobs, since it auto-heals itself every round.
+------------------------------------------------------------------- */
+int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *myself, TObj *)
+{
+  if (!myself)
+    return FALSE;
+
+  static map<sstring, sessionData> s_beginningSession;
+
+  sstring sargIn = argIn;
+
+  // general cleanup code - don't allow us to fight real mobs!
+  if (((cmd == CMD_MOB_COMBAT || cmd == CMD_MOB_COMBAT2) && myself->fight() && !myself->fight()->isPc()) ||
+      (cmd == CMD_MOB_COMBAT_ONATTACKED && !character->isPc()))
+  {
+    myself->doSay("Magical error!  Recalibrate thaumaturgical plane conduits and restart incantation!");
+    return DELETE_THIS;
+  }
+
+  // initialize logic
+  if (cmd == CMD_GENERIC_INIT)
+  {
+    myself->setExp(0);
+    return FALSE;
+  }
+
+  // we are ending practice combat
+  if ((cmd == CMD_GENERIC_DESTROYED ||
+      (cmd == CMD_GENERIC_PULSE && !myself->fight())) && !myself->procData.empty())
+  {
+    // restore agian, just in case
+    myself->genericRestore(RESTORE_FULL);
+
+    // we will wait for 4 generic ticks before printing status report (we use spaces as tick marks)
+    if (cmd == CMD_GENERIC_PULSE && string::npos == myself->procData.find("    ", myself->procData.length()-4))
+    {
+      myself->procData += " ";
+      return TRUE;
+    }
+
+    // clear hate list
+    REMOVE_BIT(myself->specials.act, ACT_HUNTING);
+    REMOVE_BIT(myself->specials.act, ACT_HATEFUL);
+    while (myself->hates.clist)
+      myself->remHated(NULL, myself->hates.clist->name);
+    while (myself->fears.clist)
+      myself->remFeared(NULL, myself->fears.clist->name);
+    myself->setSusp(myself->defsusp());
+
+    // get list of players to report to
+    int cPlayers = myself->procData.trim().split(',', NULL);
+    if (cPlayers < 1)
+      return TRUE;
+
+    sstring *players = new sstring[cPlayers];
+    myself->procData.split(',', players);
+
+    for(int iPlayer = 0;iPlayer < cPlayers;iPlayer++)
+    {
+      if (players[iPlayer].empty())
+        continue;
+      TBeing *player = get_pc_world(NULL, players[iPlayer], EXACT_YES, INFRA_YES, false);
+      if (NULL == player)
+        continue;
+
+      // first, get the descriptor of our last target
+      sessionData sdOriginal = s_beginningSession[players[iPlayer]];
+      s_beginningSession[players[iPlayer]].setToZero();
+
+      // then, compare with the original session data
+      sessionData sdCompare = player->desc->session - sdOriginal;
+
+      int roundstotalout = 0, roundstotalin = 0;
+      int specialtotalout = 0, specialtotalin = 0, meleetotalout = 0, meleetotalin = 0;
+      int swingstotalout = 0, swingstotalin = 0, hitstotalout = 0, hitstotalin = 0;
+      int potentialdamin = 0, potentialdamout = 0;
+
+      for(attack_mode_t iMode = ATTACK_NORMAL;iMode < MAX_ATTACK_MODE_TYPE; iMode++)
+      {
+        roundstotalout += sdCompare.rounds[iMode];
+        roundstotalin += sdCompare.rounds_received[iMode];
+        meleetotalout += sdCompare.combat_dam_done[iMode];
+        meleetotalin += sdCompare.combat_dam_received[iMode];
+        specialtotalout += sdCompare.skill_dam_done[iMode];
+        specialtotalin += sdCompare.skill_dam_received[iMode];
+        swingstotalout += sdCompare.swings[iMode];
+        swingstotalin += sdCompare.swings_received[iMode];
+        hitstotalout += sdCompare.hits[iMode];
+        hitstotalin += sdCompare.hits_received[iMode];
+        potentialdamout += sdCompare.potential_dam_done[iMode];
+        potentialdamin += sdCompare.potential_dam_received[iMode];
+      }
+
+      float meleedprout = 0, specialdprout = 0, meleedprin = 0, specialdprin = 0;
+      float dprout = 0, dprin = 0;
+      int specialperout = 0, meleeperout = 0, specialperin = 0, meleeperin = 0;
+      int hitperout = 0, hitperin = 0;
+
+      if (roundstotalout > 0)
+      {
+        meleedprout = meleetotalout / roundstotalout;
+        specialdprout = specialtotalout / roundstotalout;
+      }
+      if (roundstotalin > 0)
+      {
+        meleedprin = meleetotalin / roundstotalin;
+        specialdprin = specialtotalin / roundstotalin;
+      }
+      dprout = meleedprout + specialdprout;
+      dprin = meleedprin + specialdprin;
+      if ((meleetotalout + specialtotalout) > 0)
+      {
+        specialperout = int((float(specialtotalout) / float(meleetotalout + specialtotalout)) * 100.0);
+        meleeperout =  int((float(meleetotalout) / float(meleetotalout + specialtotalout)) * 100.0);
+      }
+      if ((meleetotalin + specialtotalin) > 0)
+      {
+        specialperin = int((float(specialtotalin) / float(meleetotalin + specialtotalin)) * 100.0);
+        meleeperin =  int((float(meleetotalin) / float(meleetotalin + specialtotalin)) * 100.0);
+      }
+      if (swingstotalout > 0)
+        hitperout = int((float(hitstotalout) / float(swingstotalout)) * 100.0);
+      if (swingstotalin > 0)
+        hitperin = int((float(hitstotalin) / float(swingstotalin)) * 100.0);
+
+      // then, print it all out
+      // total dam given, total received, rounds
+      // DPR, hit %
+      // APR, avoid %
+      player->sendTo("You feel a magical voice in your head.  It says:\n\r");
+      player->sendTo(fmt("Training session ending: Status report.\n\r"));
+      player->sendTo(fmt("You did %d damage total, received %d damage total over %d rounds.\n\r") % (meleetotalout + specialtotalout) % (meleetotalin + specialtotalin) % roundstotalout);
+      player->sendTo(fmt("Average %.1f damage per round, %d% hit chance.\n\r") % dprout % hitperout);
+      player->sendTo(fmt("Average %.1f damage taken per round, %d% of hits avoided.\n\r") % dprin % (100 - hitperin));
+      if (sdCompare.hones > 0)
+        player->sendTo(fmt("You also honed your combat skills %d times.\n\r") % sdCompare.hones);
+    }
+
+    // clear the targets list
+    delete[] players;
+    myself->procData.clear();
+
+    return TRUE;
+  }
+
+  // our opponent is asking us to stop fighting
+  if ((cmd == CMD_SAY || cmd == CMD_SAY2) && character == myself->fight() &&
+    (sargIn.lower() == "stop" || sargIn.lower() == "halt"))
+  {
+    if (myself->fight() == character)
+      myself->stopFighting();
+
+    if (character && character->fight() == myself)
+      character->stopFighting();
+
+    // clear hate
+    REMOVE_BIT(myself->specials.act, ACT_HUNTING);
+    REMOVE_BIT(myself->specials.act, ACT_HATEFUL);
+    while (myself->hates.clist)
+      myself->remHated(NULL, myself->hates.clist->name);
+    while (myself->fears.clist)
+      myself->remFeared(NULL, myself->fears.clist->name);
+    myself->setSusp(myself->defsusp());
+
+    // set tick marks so we report right away
+    myself->procData += "    ";
+
+    myself->doSay("Dequeuing magical imperitave: Halting training session!  SIGTHAUM fault.");
+
+    return FALSE; // returning true will cancel the speak
+  }
+
+  // we are beginning practice combat
+  if ((cmd == CMD_MOB_COMBAT_ONATTACKED && string::npos == myself->procData.find(character->name)) ||
+      ((cmd == CMD_MOB_COMBAT || cmd == CMD_MOB_COMBAT2) && myself->fight() && string::npos == myself->procData.find(myself->fight()->name)))
+  {
+    TBeing *attacker = (cmd == CMD_MOB_COMBAT_ONATTACKED) ? character : myself->fight();
+    sstring attackerName = attacker->name;
+    if (!attacker || !attacker->desc)
+    {
+      vlogf(LOG_PROC, "targetDummy proc being attacked by invalid attacker (mob)!");
+      return FALSE;
+    }
+
+    // save the target
+    if (!myself->procData.empty())
+      myself->procData += ",";
+    myself->procData += attacker->name;
+
+    // save the session data
+    s_beginningSession[attackerName] = attacker->desc->session;
+
+    myself->doSay("Dequeuing magical imperitave: Training session beginning!");
+    myself->doSay("Please issue the 'halt' or 'stop' commands to re-initialize thaumaturgical conduits.");
+  }
+
+  // anything other than combat?  just stop now
+  if (cmd != CMD_MOB_COMBAT && cmd != CMD_MOB_COMBAT2)
+    return FALSE;
+
+  // clear out tick marks
+  myself->procData = myself->procData.trim();
+
+  // heal us up
+  //reporting damage here can be misleading, so we'll not do that for now.
+  int damage = myself->hitLimit() - myself->getHit();
+  if (damage > 0)
+  {
+    act("The wounds on $n magically heal!", TRUE, myself, NULL, NULL, TO_ROOM);
+    act("The wounds on your body completely heal!", TRUE, myself, NULL, NULL, TO_CHAR);
+    myself->genericRestore(RESTORE_FULL);
+  }
+  damage = !myself->fight() ? 0 : myself->fight()->hitLimit() - myself->fight()->getHit();
+  if (damage > 0 && myself->fight()->fight() == myself)
+  {
+    act("The wounds on $n magically heal!", TRUE, myself->fight(), NULL, NULL, TO_ROOM);
+    act("The wounds on your body completely heal!", TRUE, myself->fight(), NULL, NULL, TO_CHAR);
+    myself->fight()->genericRestore(RESTORE_FULL);
+  }
+
+  return TRUE; // returning true from here will cancel normal mob class-based moves
+}
+
+
+
