@@ -24,8 +24,9 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 #include <dirent.h>
-#include <sys/stat.h>                                                           
-#include <sys/wait.h>                                                           
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <execinfo.h>
 
 pid_t vfork(void);
 
@@ -575,6 +576,24 @@ void TPerson::logf(const char * tString, ...)
           tTime->tm_year + 1900, tTime->tm_mon + 1, tTime->tm_mday,
           tTime->tm_hour, tTime->tm_min, tTime->tm_sec, tBuffer);
   fflush(tLogFile);
+}
+
+
+void vlogf_trace(logTypeT tError, const sstring &errorMsg)
+{
+  void *trace[5];
+  size_t cTrace;
+  char **trace_symbols;
+
+  vlogf(tError, errorMsg);
+
+  cTrace = backtrace(trace, cElements(trace));
+  trace_symbols = backtrace_symbols(trace, cTrace);
+
+  for(size_t iFrame= 0;iFrame < cTrace; iFrame++)
+    vlogf(tError, fmt("\tat function: %s") % trace_symbols[iFrame]);
+
+  free(trace_symbols);
 }
 
 

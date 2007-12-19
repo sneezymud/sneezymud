@@ -514,6 +514,8 @@ class TObj : public TThing {
 
     const char *action_description;      /* What to write when used          */
     const char * owners;
+private:
+    bool isTasked;
 
   protected:
     TObj();
@@ -598,6 +600,15 @@ class TObj : public TThing {
     void addToDepreciation(byte num) {
       obj_flags.depreciation += num;
     }
+
+    // if an object is being used by a task currently
+    bool isTaskObj() const {
+      return isTasked;
+    }
+    void setIsTaskObj(bool t) {
+      isTasked = t;
+    }
+
     void releaseObject(TBeing *);
     virtual int checkFalling();
     void checkObjStats();

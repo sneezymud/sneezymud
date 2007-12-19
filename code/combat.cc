@@ -1256,6 +1256,7 @@ void TObj::makeScraps()
         sprintf(buf, "$p is destroyed.");
         sprintf(buf2, "Your $o is destroyed.");
       }
+      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  ch->getName() % getName());
       while (tmp) {
         if (tmp->roomp) {
           act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
@@ -1270,6 +1271,7 @@ void TObj::makeScraps()
       else
         sprintf(buf, "$n is destroyed.");
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  ch->getName() % getName());
     } else 
       vlogf(LOG_COMBAT, fmt("Something in make scraps isnt in a room %s.") %  getName());
   }

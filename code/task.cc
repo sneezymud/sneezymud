@@ -99,6 +99,9 @@ taskData::~taskData()
 {
   delete [] orig_arg;
   orig_arg = NULL;
+
+  if (obj)
+    obj->setIsTaskObj(false);
 }
 
 void taskData::calcNextUpdate(int pulse, int interval) 
@@ -114,6 +117,9 @@ void TBeing::stopTask()
 
   delete [] task->orig_arg;
   task->orig_arg = NULL;
+
+  if (task->obj)
+    task->obj->setIsTaskObj(false);
 
   delete task;
   task = NULL;
@@ -142,6 +148,10 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
   ch->task->status = status;
   ch->task->flags = flags;
   ch->task->nextUpdate = nextUpdate;
+
+  if (ch->task->obj)
+    ch->task->obj->setIsTaskObj(true);
+
   return TRUE;
 }
 

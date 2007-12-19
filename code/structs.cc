@@ -341,7 +341,8 @@ TObj::TObj() :
   TThing(),
   obj_flags(), 
   action_description(NULL),
-  owners(NULL)
+  owners(NULL),
+  isTasked(false)
 {
   // change the default value here
   number = -1;
@@ -405,6 +406,21 @@ TObj::~TObj()
     if (tbt)
       new_pos = tbt->getPosition();
     rider->dismount(new_pos);
+  }
+
+  // we must cancel any tasks which are running using this object
+  // this may be super-slow if we are destroying alot of objects
+  // so hide it behind a flag
+  if (isTaskObj())
+  {
+    for(TBeing *owner = character_list; owner; owner = owner->next)
+    {
+      if (!owner->task || owner->task->obj != this)
+        continue;
+
+      vlogf(LOG_MISC, fmt("Cancelling task from ~TObj, object %s is being destroyed and is tasked by %s") %  getName() % owner->getName());
+      owner->stopTask();
+    }
   }
 
   TObjIter iter=find(object_list.begin(), object_list.end(), this);
@@ -1526,7 +1542,8 @@ TThing & TThing::operator=(const TThing &a)
 
 TObj::TObj(const TObj &a) :
   TThing(a),
-  obj_flags(a.obj_flags)
+  obj_flags(a.obj_flags),
+  isTasked(a.isTasked)
 {
   int i;
 
@@ -1586,6 +1603,7 @@ TObj & TObj::operator= (const TObj &a)
   // in the object list
 
   owners = mud_str_dup(a.owners);
+  isTasked = a.isTasked;
 
   return *this;
 }
