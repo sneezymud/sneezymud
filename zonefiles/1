@@ -538,6 +538,12 @@ M 0 3901 9999 13700      a cheery holiday elf (level 10)
 G 1 3961 9999                 candy cane
 M 0 3901 9999 13700      a cheery holiday elf (level 10)
 G 1 3961 9999                 candy cane
+M 0 3901 9999 13700      a cheery holiday elf (level 10)
+G 1 3961 9999                 candy cane
+M 0 3901 9999 13700      a cheery holiday elf (level 10)
+G 1 3961 9999                 candy cane
+M 0 3901 9999 13700      a cheery holiday elf (level 10)
+G 1 3961 9999                 candy cane
 
 * * Low level holiday elves, with a candy cane and champagne
 M 0 3901 9999 13700      a cheery holiday elf (level 10)
@@ -558,6 +564,12 @@ M 0 3902 9999 13700      a cheery holiday elf (level 25)
 M 0 3902 9999 13700      a cheery holiday elf (level 25)
 
 * Mid level holiday elves, with a candy cane
+M 0 3902 9999 13700      a cheery holiday elf (level 25)
+G 1 3961 9999                 candy cane
+M 0 3902 9999 13700      a cheery holiday elf (level 25)
+G 1 3961 9999                 candy cane
+M 0 3902 9999 13700      a cheery holiday elf (level 25)
+G 1 3961 9999                 candy cane
 M 0 3902 9999 13700      a cheery holiday elf (level 25)
 G 1 3961 9999                 candy cane
 M 0 3902 9999 13700      a cheery holiday elf (level 25)
@@ -604,6 +616,16 @@ M 0 3903 9999 13700      a cheery holiday elf (level 40)
 G 1 3961 9999                 candy cane
 M 0 3903 9999 13700      a cheery holiday elf (level 40)
 G 1 3961 9999                 candy cane
+M 0 3903 9999 13700      a cheery holiday elf (level 40)
+G 1 3961 9999                 candy cane
+M 0 3903 9999 13700      a cheery holiday elf (level 40)
+G 1 3961 9999                 candy cane
+M 0 3903 9999 13700      a cheery holiday elf (level 40)
+G 1 3961 9999                 candy cane
+M 0 3903 9999 13700      a cheery holiday elf (level 40)
+G 1 3961 9999                 candy cane
+M 0 3903 9999 13700      a cheery holiday elf (level 40)
+G 1 3961 9999                 candy cane
 
 * Mid-high level holiday elves, with a candy cane and potion of mystery
 M 0 3903 9999 13700      a cheery holiday elf (level 40)
@@ -634,6 +656,17 @@ M 0 3904 9999 13700      a cheery holiday elf (level 60)
 G 1 3961 9999                 candy cane
 M 0 3904 9999 13700      a cheery holiday elf (level 60)
 G 1 3961 9999                 candy cane
+M 0 3904 9999 13700      a cheery holiday elf (level 60)
+G 1 3961 9999                 candy cane
+M 0 3904 9999 13700      a cheery holiday elf (level 60)
+G 1 3961 9999                 candy cane
+M 0 3904 9999 13700      a cheery holiday elf (level 60)
+G 1 3961 9999                 candy cane
+M 0 3904 9999 13700      a cheery holiday elf (level 60)
+G 1 3961 9999                 candy cane
+M 0 3904 9999 13700      a cheery holiday elf (level 60)
+G 1 3961 9999                 candy cane
+
 
 * High level holiday elves, with a candy cane and potion of mystery
 M 0 3904 9999 13700      a cheery holiday elf (level 60)
@@ -655,8 +688,42 @@ M 0 10202 9999 13700     a reindeer
 M 0 10202 9999 13700     a reindeer
 M 0 10202 9999 13700     a reindeer
 M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
+M 0 10202 9999 13700     a reindeer
 
 * Reindeer (jingle bell collars)
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
+M 0 10202 9999 13700     a reindeer
+E 1 3960 9999 3              a jingle bell collar
 M 0 10202 9999 13700     a reindeer
 E 1 3960 9999 3              a jingle bell collar
 M 0 10202 9999 13700     a reindeer
