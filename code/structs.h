@@ -400,6 +400,17 @@ inline int GET_BITS(int a, int p, int n)
   return x & y;
 }
 
+inline int GET_BITS_CORRECT(int a, int p, int n) 
+{
+// return ((a >> (p + 1 - n)) & ~(~0 << n)); }
+  int x, y;
+  x = (a >> (p+1-n));
+  y = ~(~0 <<n);
+  if (n > 7 && x & 1<<n-1) // preserve negative values for bytes and up
+    return (x & y) ^ ~y;
+  return x & y;
+}
+
 inline void SET_BITS(int& a, int p, int n, const int y)
 {
 // a = ((a & ~(~(~0 << n) << (p+1-n))) | (y << (p+1-n))); }
@@ -409,6 +420,19 @@ inline void SET_BITS(int& a, int p, int n, const int y)
   s = (a & ~r);
   x = (y <<(p+1-n));
   a = (s | x);
+  return;
+}
+
+inline void SET_BITS_CORRECT(int& a, int p, int n, const int y)
+{
+// a = ((a & ~(~(~0 << n) << (p+1-n))) | (y << (p+1-n))); }
+  int q,r,s,x;
+  q = (~0 << n);
+  r = (~q << (p+1-n));
+  s = (a & ~r);
+  x = (y <<(p+1-n));
+// x gets &'d with r to keep from clobbering higher-order bits with a y=-1
+  a = (s | (x & r));
   return;
 }
 

@@ -620,8 +620,6 @@ void TBeing::affectTotal()
       if (!cd->getNatLearnedness() || (cd->getNatLearnedness() < discArray[num]->start)) {
         // use NatLearning above, if never learned never learned
         // may have to reevaluate but for now it looks right 122297 cos
-
-        setNatSkillValue(num, SKILL_MIN);
         setSkillValue(num, SKILL_MIN);
         continue;
       }
@@ -630,7 +628,7 @@ void TBeing::affectTotal()
         setNatSkillValue(num, SKILL_MIN);
         setSkillValue(num, SKILL_MIN);
         continue;
-      } 
+      }
 
 // First skills that are not learn by doing
       if (discArray[num]->startLearnDo < 0) {
@@ -641,6 +639,7 @@ void TBeing::affectTotal()
                   (cd->getNatLearnedness() - discArray[num]->start + 1);
         value = max(value, 1);
         value = max(value, discArray[num]->learn);
+        value = max(value, (int) getRawNatSkillValue(num));
         value = min(value, (int) MAX_SKILL_LEARNEDNESS);
         setNatSkillValue(num, value);
 
@@ -663,7 +662,7 @@ void TBeing::affectTotal()
         value = discArray[num]->learn *
                   (cd->getNatLearnedness() - discArray[num]->start + 1);
         value = min(value, (int) discArray[num]->startLearnDo);
-        value = max((int) getRawNatSkillValue(num), value);
+        value = max(value, (int) getRawNatSkillValue(num));
         value = max(value, 1);
         value = min(value, (int) MAX_SKILL_LEARNEDNESS);
 

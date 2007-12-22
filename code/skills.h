@@ -22,19 +22,20 @@ class CSkill {
     ~CSkill();
 
     int getLearnedness() {
-      return (GET_BITS(value, 7, 8));
+      return (GET_BITS_CORRECT(value, 7, 8));
     }
     void setLearnedness(int n) {
-      SET_BITS(value, 7, 8, n);
+      SET_BITS_CORRECT(value, 7, 8, n);
     }
     int getNatLearnedness() {
-      return (GET_BITS(value, 15, 8));
+      return (GET_BITS_CORRECT(value, 15, 8));
     }
     void setNatLearnedness(int n) {
-      SET_BITS(value, 15, 8, n);
+      SET_BITS_CORRECT(value, 15, 8, n);
     }
 
 };
+
 
 extern bool bPassMageChecks(TBeing * , spellNumT, TThing *);
 extern bool bPassShamanChecks(TBeing * , spellNumT, TThing *);

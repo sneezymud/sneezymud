@@ -420,7 +420,7 @@ void TPerson::storeToSt(charFile *st)
   for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
     int mappedskill = mapSpellnumToFile(snt);
     if(discArray[snt])
-      st->skills[mappedskill] = getNatSkillValue(snt);
+      st->skills[mappedskill] = getRawNatSkillValue(snt);
   }
 
   st->birth = player.time.birth;

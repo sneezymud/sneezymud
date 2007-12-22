@@ -737,7 +737,7 @@ void TPerson::fixPracs()
   // if the person is under by more than level/10 and this is their first time, give them a second chance
   if (-diff > max(5,level/2) && hasQuestBit(TOG_PRACS_FIXED)) {
     vlogf(LOG_BUG, fmt("%s was eligible to have practices corrected, but has already had that done and was skipped.") % getName());
-  } else if (diff > level/10) {
+  } else if (diff > level/10 && !hasQuestBit(TOG_PRACS_FIXED)) {
     vlogf(LOG_MISC, fmt("%s is having practices corrected, got an extra %d pracs.  Had %d unspent.") % getName() % diff % getPracs(Class));
     addPracs(diff, Class);
     sendTo(fmt("%sYou have gained %d practices as a result of an account update.%s\n\r") % redBold() % diff % norm() );
