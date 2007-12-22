@@ -532,21 +532,18 @@ const int TOG_GAVE_CANDY_CANE1                 = 339;
 const int TOG_GAVE_CANDY_CANE2                 = 340;
 const int TOG_GAVE_CANDY_CANE3                 = 341;
 const int TOG_GAVE_CANDY_CANE4                 = 342;
-const int TOG_GAVE_CANDY_CANE5                 = 343;
 
-const int TOG_GAVE_JINGLE_BELL1                = 344;
-const int TOG_GAVE_JINGLE_BELL2                = 345;
-const int TOG_GAVE_JINGLE_BELL3                = 346;
-const int TOG_GAVE_JINGLE_BELL4                = 347;
-const int TOG_GAVE_JINGLE_BELL5                = 348;
+const int TOG_GAVE_JINGLE_BELL1                = 343;
+const int TOG_GAVE_JINGLE_BELL2                = 344;
+const int TOG_GAVE_JINGLE_BELL3                = 345;
+const int TOG_GAVE_JINGLE_BELL4                = 346;
 
-const int TOG_GAVE_SCROLL_CASE1                = 349;
-const int TOG_GAVE_SCROLL_CASE2                = 350;
-const int TOG_GAVE_SCROLL_CASE3                = 351;
-const int TOG_GAVE_SCROLL_CASE4                = 352;
-const int TOG_GAVE_SCROLL_CASE5                = 353;
+const int TOG_GAVE_SCROLL_CASE1                = 347;
+const int TOG_GAVE_SCROLL_CASE2                = 348;
+const int TOG_GAVE_SCROLL_CASE3                = 349;
+const int TOG_GAVE_SCROLL_CASE4                = 350;
 
-const int MAX_TOG_INDEX       = 354;  // move and change
+const int MAX_TOG_INDEX       = 351;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;
