@@ -405,6 +405,9 @@ const int MOB_MIME_ANIMATED  =29408;
 const int MOB_GUY_LAZY       =29409;
 const int MOB_WIFE_FARMER    =29416;
 const int MOB_DRUNK_TRADER_RICH =29410; 
+const int MOB_FAT_ELF_1      =3905;
+const int MOB_FAT_ELF_2      =3906;
+const int MOB_FAT_ELF_3      =3907;
 #endif
 
 
