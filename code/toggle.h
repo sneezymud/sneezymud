@@ -527,7 +527,26 @@ const int TOG_GAVE_BOTTLE_PORT1                = 336;
 const int TOG_GAVE_BOTTLE_PORT2                = 337;
 const int TOG_OCTOBER_QUEST_PARTICIPANT        = 338;
 
-const int MAX_TOG_INDEX       = 339;  // move and change
+//December quest toggles:
+const int TOG_GAVE_CANDY_CANE1                 = 339;
+const int TOG_GAVE_CANDY_CANE2                 = 340;
+const int TOG_GAVE_CANDY_CANE3                 = 341;
+const int TOG_GAVE_CANDY_CANE4                 = 342;
+const int TOG_GAVE_CANDY_CANE5                 = 343;
+
+const int TOG_GAVE_JINGLE_BELL1                = 344;
+const int TOG_GAVE_JINGLE_BELL2                = 345;
+const int TOG_GAVE_JINGLE_BELL3                = 346;
+const int TOG_GAVE_JINGLE_BELL4                = 347;
+const int TOG_GAVE_JINGLE_BELL5                = 348;
+
+const int TOG_GAVE_SCROLL_CASE1                = 349;
+const int TOG_GAVE_SCROLL_CASE2                = 350;
+const int TOG_GAVE_SCROLL_CASE3                = 351;
+const int TOG_GAVE_SCROLL_CASE4                = 352;
+const int TOG_GAVE_SCROLL_CASE5                = 353;
+
+const int MAX_TOG_INDEX       = 354;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

@@ -352,6 +352,21 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"February Quest: Gave 1 bottle of port", MOB_DRUNK_TRADER_RICH},
   {"February Quest: Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//337
   {"October Quest: Participant", MOB_NONE}, //338
+  {"December Quest: Gave 1 candy cane", MOB_FAT_ELF_1},//339
+  {"December Quest: Gave 2 candy canes", MOB_FAT_ELF_1},//340
+  {"December Quest: Gave 3 candy canes", MOB_FAT_ELF_1},//341
+  {"December Quest: Gave 4 candy canes", MOB_FAT_ELF_1},//342
+  {"December Quest: Gave 5 candy canes", MOB_FAT_ELF_1},//343
+  {"December Quest: Gave 1 jingle bell collar", MOB_FAT_ELF_2}, //344
+  {"December Quest: Gave 2 jingle bell collars", MOB_FAT_ELF_2}, //345
+  {"December Quest: Gave 3 jingle bell collars", MOB_FAT_ELF_2}, //346
+  {"December Quest: Gave 4 jingle bell collars", MOB_FAT_ELF_2}, //347
+  {"December Quest: Gave 5 jingle bell collars", MOB_FAT_ELF_2}, //348
+  {"December Quest: Gave 1 scroll case", MOB_FAT_ELF_3}, //349
+  {"December Quest: Gave 2 scroll cases", MOB_FAT_ELF_3}, //350
+  {"December Quest: Gave 3 scroll cases", MOB_FAT_ELF_3}, //351
+  {"December Quest: Gave 4 scroll cases", MOB_FAT_ELF_3}, //352
+  {"December Quest: Gave 5 scroll cases", MOB_FAT_ELF_3}, //353
   {"", MOB_NONE}, 
 };
 
