@@ -80,7 +80,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
   TObj *sub = NULL;
 
 
-  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING)) {
+  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) || !ch->task) {
     ch->stopTask();
     return FALSE;
   }
