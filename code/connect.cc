@@ -3126,10 +3126,32 @@ void Descriptor::go_back_menu(connectStateT con_state)
       break;
     case CON_QCLASS:
       if(ALLOW_TRAITS){
-	connected = CON_TRAITS3;
-  character->cls();
-  sendTraitsList(3);
-	break;
+
+        // clear the split up points (total remains same)
+        bonus_points.combat = bonus_points.combat2 = bonus_points.learn = bonus_points.util = 0;
+
+        // clear chosen
+        character->chosenStats.values[STAT_STR] =
+          character->chosenStats.values[STAT_BRA] =
+          character->chosenStats.values[STAT_CON] =
+          character->chosenStats.values[STAT_DEX] =
+          character->chosenStats.values[STAT_AGI] =
+          character->chosenStats.values[STAT_INT] =
+          character->chosenStats.values[STAT_WIS] =
+          character->chosenStats.values[STAT_FOC] =
+          character->chosenStats.values[STAT_PER] =
+          character->chosenStats.values[STAT_CHA] =
+          character->chosenStats.values[STAT_KAR] =
+          character->chosenStats.values[STAT_SPE] = 0;
+
+        // remove fae toggle
+        if (character->hasQuestBit(TOG_FAE_TOUCHED))
+          character->remQuestBit(TOG_FAE_TOUCHED);
+
+        connected = CON_TRAITS3;
+        character->cls();
+        sendTraitsList(3);
+        break;
       }
       // fall through
     case CON_TRAITS1:
