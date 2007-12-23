@@ -683,66 +683,86 @@ G 1 3961 9999                 candy cane
 G 1 3958 9999                 cheery holiday flask (potion of mystery)
 
 * Reindeer (no loads)
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+
 
 * Reindeer (jingle bell collars)
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
-M 0 10202 9999 13700     a reindeer
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
+? 0 100 0 E                  load collar 100% of the time
+E 1 3960 9999 3              a jingle bell collar
+M 0 3908 9999 13700     a reindeer
 ? 0 100 0 E                  load collar 100% of the time
 E 1 3960 9999 3              a jingle bell collar
 
