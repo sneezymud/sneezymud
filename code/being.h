@@ -64,6 +64,7 @@ class TWindow;
 class TGenWeapon;
 class TBaseClothing;
 class TQuiver;
+class TCommodity;
 
 class objCost;
 extern TBeing *character_list;
@@ -2143,6 +2144,7 @@ class TBeing : public TThing {
     void makeOutputPaged();
     TThing * findArrow(const char *, silentTypeT) const;
     
+    TCommodity *getRepairMaterial(ubyte);
     int get_metal_tools(TTool **, TTool **, TTool **, TTool **);
     int get_dead_tools(TTool **, TTool **, TTool **);
     int get_wood_tools(TTool **, TTool **);
