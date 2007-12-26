@@ -1402,9 +1402,9 @@ void procRecordCommodPrices::run(int) const
     
     for(TThing *t=tso.getStuff();t;t=t->nextThing){
       if((commod=dynamic_cast<TCommodity *>(t))){
-	db.query("insert into commodprices values (now(), %i, %i, %i)",
+	db.query("insert into commodprices values (now(), %i, %i, %f)",
 		 shop_nr, commod->getMaterial(), 
-		 commod->shopPrice(1, shop_nr, -1, NULL));
+		 commod->shopPriceFloat(1, shop_nr, -1, NULL));
       }
     }
   }

@@ -37,6 +37,7 @@ class TCommodity : public TMergeable {
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
+    virtual float shopPriceFloat(int, int, float, const TBeing *) const;
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int, int, float, const TBeing *);
 

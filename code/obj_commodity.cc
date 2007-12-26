@@ -214,7 +214,7 @@ int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
   return (int)price;
 }
 
-int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
+float TCommodity::shopPriceFloat(int num, int shop_nr, float, const TBeing *ch) const
 {
   float price;
 
@@ -233,9 +233,12 @@ int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 
   price=demandCurvePrice(num, price, total_units);
 
-  price = max(1, (int)price);
+  return price;
+}
 
-  return (int)price;
+int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
+{
+  return (int)shopPriceFloat(num, shop_nr, 0, ch);
 }
 
 int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
