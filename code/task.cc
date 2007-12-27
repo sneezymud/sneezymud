@@ -149,7 +149,8 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
   ch->task->flags = flags;
   ch->task->nextUpdate = nextUpdate;
 
-  if (ch->task->obj)
+  // TASK_GET_ALL is wierd and doesn't use standard tasking processing - skip tracking of objs
+  if (task != TASK_GET_ALL && ch->task->obj)
     ch->task->obj->setIsTaskObj(true);
 
   return TRUE;
