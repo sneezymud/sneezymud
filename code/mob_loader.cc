@@ -104,125 +104,63 @@ void potionLoader(TMonster *tmons)
     delete obj;
 }
 
+// Note: this doesn't load multi-tools for multi-class mobs.
 void loadRepairItems(TMonster *tmons)
 {
-  int tool = 0;
-  int tool2 = 0;
-  int tool3 = 0;
-  int tool4 = 0;
-  int tool5 = 0;
+  if (tmons->GetMaxLevel() <= 15 || tmons->bestClass() >= MAX_CLASSES)
+    return;
 
-  if(tmons->GetMaxLevel() > 40) {
-    if(tmons->hasClass(CLASS_MAGE)) {
-      tool = 576;
-      tool2 = 580;
-      tool3 = 582;
-      tool4 = 584;
-      tool5 = 572; // chalk
-    }
-    if(tmons->hasClass(CLASS_CLERIC)) {
-      tool = 2347;
-      tool2 = 2349;
-    }
-    if(tmons->hasClass(CLASS_THIEF)) {
-      tool = 587;
-      tool2 = 589;
-    }
-    if(tmons->hasClass(CLASS_WARRIOR)) {
-      tool = 150;
-      tool2 = 560;
-      tool3 = 157;
-      tool4 = 156;
-    }
-    /*
-    if(tmons->hasClass(CLASS_RANGER)) {
-      tool = 568;
-      tool2 = 570;
-      tool3 = 574;
-    }
-    */
-    if(tmons->hasClass(CLASS_MONK)) {
-      tool = 591;
-      tool2 = 593;
-      tool3 = 568;
-      tool4 = 570;
-      tool5 = 574;
-    }
-    if(tmons->hasClass(CLASS_SHAMAN)) {
-      tool = 564;
-      tool2 = 566;
-    }
-    if(tmons->hasClass(CLASS_DEIKHAN)) {
-      tool = 2347;
-      tool2 = 2349;
-    } 
-  } else if(tmons->GetMaxLevel() > 15) {
-    if(tmons->hasClass(CLASS_MAGE)) {
-      tool = 575;
-      tool2 = 579;
-      tool3 = 581;
-      tool4 = 582;
-      tool5 = 571; // chalk
-    }
-    if(tmons->hasClass(CLASS_CLERIC)) {
-      tool = 2346;
-      tool2 = 2348;
-    }
-    if(tmons->hasClass(CLASS_THIEF)) {
-      tool = 586;
-      tool2 = 588;
-    }
-    if(tmons->hasClass(CLASS_WARRIOR)) {
-      tool = 150;
-      tool2 = 559;
-      tool3 = 153;
-      tool4 = 155;
-    }
-    /*
-    if(tmons->hasClass(CLASS_RANGER)) {
-      tool = 567;
-      tool2 = 569;
-      tool3 = 573;
-    }
-    */
-    if(tmons->hasClass(CLASS_MONK)) {
-      tool = 590;
-      tool2 = 592;
-      tool3 = 567;
-      tool4 = 569;
-      tool5 = 573;
-    }
-    if(tmons->hasClass(CLASS_SHAMAN)) {
-      tool = 563;
-      tool2 = 565;
-    }
-    if(tmons->hasClass(CLASS_DEIKHAN)) {
-      tool = 2346;
-      tool2 = 2348;      
-    }
-  }
+  static int crappyTools[MAX_CLASSES][5] = {
+    // chalk, runes, spike, chisel, silica
+    { 571, 575, 579, 581, 583 }, // Mage
+    // brush, resin
+    { 2346, 2348, 0, 0, 0 }, // Cleric
+    // hammer, whetstone, file, tongs
+    { 150, 153, 155, 559, 0 }, // Warrior
+    // loupe, pliers
+    { 586, 588, 0, 0, 0 }, // Thief
+    // scalpel, forceps
+    { 563, 565, 0, 0, 0 }, // Shaman
+    // brush, resin
+    { 2346, 2348, 0, 0, 0 }, // Deikhan
+    // ladle, manure, oil, punch, cording
+    { 567, 569, 573, 590, 592 }, // Monk
+    { 0, 0, 0, 0, 0 }, // Ranger
+    { 0, 0, 0, 0, 0 }  // Commoner
+  };
 
+  static int powerTools[MAX_CLASSES][5] = {
+    // chalk, runes, orb, chisel, silica
+    { 572, 576, 580, 582, 584 }, // Mage
+    // brush, resin
+    { 2347, 2349, 0, 0, 0 }, // Cleric
+    // hammer, whetstone, file, tongs
+    { 150, 156, 157, 560, 0 }, // Warrior
+    // loupe, pliers
+    { 587, 589, 0, 0, 0 }, // Thief
+    // scalpel, forceps
+    { 564, 566, 0, 0, 0 }, // Shaman
+    // brush, resin
+    { 2347, 2349, 0, 0, 0 }, // Deikhan
+    // ladle, ash, oil, punch, cording
+    { 568, 570, 574, 591, 593 }, // Monk
+    { 0, 0, 0, 0, 0 }, // Ranger
+    { 0, 0, 0, 0, 0 }  // Commoner
+  };
 
-  TObj *obj=NULL;
-  if (tool && !::number(0,49) && (obj = read_object(tool,VIRTUAL))){
-    *tmons += *obj;
-    tmons->logItem(obj, CMD_LOAD);
-  }
-  if (tool2 && !::number(0,49) && (obj = read_object(tool2,VIRTUAL))){
-    *tmons += *obj;
-    tmons->logItem(obj, CMD_LOAD);
-  }
-  if (tool3 && !::number(0,49) && (obj = read_object(tool3,VIRTUAL))){
-    *tmons += *obj;
-    tmons->logItem(obj, CMD_LOAD);
-  }
-  if (tool4 && !::number(0,49) && (obj = read_object(tool4,VIRTUAL))){
-    *tmons += *obj;
-    tmons->logItem(obj, CMD_LOAD);
-  }
-  if (tool5 && !::number(0,49) && (obj = read_object(tool5,VIRTUAL))){
-    *tmons += *obj;
-    tmons->logItem(obj, CMD_LOAD);
+  int * myTools = crappyTools[tmons->bestClass()];
+  
+  if (tmons->GetMaxLevel() > 40)
+    myTools = powerTools[tmons->bestClass()];
+
+  for (int iTool = 0; iTool < 5 && myTools[iTool]; iTool++)
+  {
+    TObj * obj;
+    if (!::number(0,49) && (obj = read_object(myTools[iTool], VIRTUAL)))
+    {
+      *tmons += *obj;
+      tmons->logItem(obj, CMD_LOAD);
+    }
   }
 }
 

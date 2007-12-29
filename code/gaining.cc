@@ -2034,7 +2034,7 @@ wizardryLevelT TBeing::getWizardryLevel() const
 
   if (!doesKnowSkill(SKILL_WIZARDRY))
     return WIZ_LEV_NONE;
-  else if ((skill = getSkillValue(SKILL_WIZARDRY)) < 15)
+  else if ((skill = getSkillValue(SKILL_WIZARDRY)) < 15 && !isAmbidextrous())
     return WIZ_LEV_COMP_PRIM_OTHER_FREE;
   else if (skill < 30)
     return WIZ_LEV_COMP_EITHER_OTHER_FREE;
@@ -2062,7 +2062,7 @@ ritualismLevelT TBeing::getRitualismLevel() const
 
   if (!doesKnowSkill(SKILL_RITUALISM))
     return RIT_LEV_NONE;
-  else if ((skill = getSkillValue(SKILL_RITUALISM)) < 15)
+  else if ((skill = getSkillValue(SKILL_RITUALISM)) < 15 && !isAmbidextrous())
     return RIT_LEV_COMP_PRIM_OTHER_FREE;
   else if (skill < 30)
     return RIT_LEV_COMP_EITHER_OTHER_FREE;
@@ -2090,7 +2090,7 @@ devotionLevelT TBeing::getDevotionLevel() const
 
   if (!doesKnowSkill(SKILL_DEVOTION))
     return DEV_LEV_NONE;
-  else if ((skill = getSkillValue(SKILL_DEVOTION)) < 15)
+  else if ((skill = getSkillValue(SKILL_DEVOTION)) < 15 && !isAmbidextrous())
     return DEV_LEV_SYMB_PRIM_OTHER_FREE;
   else if (skill < 30)
     return DEV_LEV_SYMB_EITHER_OTHER_FREE;

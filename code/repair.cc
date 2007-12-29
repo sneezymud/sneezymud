@@ -12,6 +12,8 @@
 #include "rent.h"
 #include "obj_commodity.h"
 
+extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
+
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
 
@@ -164,7 +166,7 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
   float profit_buy=shop_index[shop_nr].getProfitBuy(NULL, buyer);
 
     
-  mat_price = (int)((double) mat_price * profit_buy);
+  //raw materials aren't modified by profit rates
   price = (int)((double) price * profit_buy);
 
   if (pmatCost)
@@ -902,50 +904,9 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       work->number_finished = counter_done;
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
-      if (dynamic_cast<TBeing *>(buyer->riding)) {
-        sprintf(buf, "Hey, get that damn %s out of my shop!", fname(buyer->riding->name).c_str());
-        repair->doSay(buf);
 
-        if (!dynamic_cast<TMonster *>(buyer)) {
-          act("You throw $N out.", FALSE, repair, 0, buyer, TO_CHAR);
-          act("$n throws you out of $s shop.", FALSE, buyer, 0, buyer, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, buyer, 0, buyer, TO_NOTVICT);
-          --(*buyer->riding);
-          thing_to_room(buyer->riding, (int) o);
-          --(*buyer);
-          thing_to_room(buyer, (int) o);
-	} else {
-	  // Just kick out the mount, not the mobile. -Lapsos
-          TThing *tMount = buyer->riding;
+      return kick_mobs_from_shop(repair, buyer, (int)o);
 
-          act("You throw $N out.", FALSE, repair, 0, buyer, TO_CHAR);
-          act("$n throws your mount out of $s shop.", FALSE, repair, 0, buyer, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, repair, 0, buyer->riding, TO_NOTVICT);
-
-	  buyer->dismount(POSITION_STANDING);
-
-          --(*tMount);
-          thing_to_room(tMount, (int)o);
-	}
-
-        return TRUE;
-      } else if (dynamic_cast<TBeing *>(buyer->rider)) {
-        if (!dynamic_cast<TMonster *>(buyer->rider)) {
-          --(*buyer->rider);
-          thing_to_room(buyer->rider, (int) o);
-          --(*buyer);
-          thing_to_room(buyer, (int) o);
-	} else {
-	  // Just kick out the mount, not the mobile. -Lapsos
-	  buyer->rider->dismount(POSITION_STANDING);
-
-	  --(*buyer);
-	  thing_to_room(buyer, (int)o);
-	}
-
-	return TRUE;
-      }
-      return FALSE;
     case CMD_MOB_VIOLENCE_PEACEFUL:
       repair->doSay("Hey!  Take it outside.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {

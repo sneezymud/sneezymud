@@ -681,6 +681,70 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   return TRUE;
 }
 
+// really, this should be using doMove or moveOne
+void move_thing_forshop(TThing *what, int to)
+{
+  TThing *tied = what->tied_to;
+  if (tied)
+  {
+    --(*tied);
+    thing_to_room(tied, to);
+  }
+
+  --(*what);
+  thing_to_room(what, to);
+
+  what->tied_to = tied;
+  if (tied)
+    tied->tied_to = what;
+}
+
+// shared function to kick horses and junk from your shop
+int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room)
+{
+  if (dynamic_cast<TBeing *>(ch->riding)) {
+    sstring buf;
+    buf = fmt("Hey, get that damn %s out of my shop!") % fname(ch->riding->name);
+    myself->doSay(buf);
+
+    if (!dynamic_cast<TMonster *>(ch)) {
+      act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
+      act("$n throws you out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
+      act("$n throws $N out of $s shop.", FALSE, myself, 0, ch, TO_NOTVICT);
+
+      move_thing_forshop(ch->riding, from_room);
+      move_thing_forshop(ch, from_room);
+
+    } else {
+      // Just kick out the mount, not the mobile. -Lapsos
+      TThing *tMount = ch->riding;
+
+      act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
+      act("$n throws your mount out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
+      act("$n throws $N out of $s shop.", FALSE, myself, 0, ch->riding, TO_NOTVICT);
+
+      ch->dismount(POSITION_STANDING);
+      move_thing_forshop(tMount, from_room);
+    }
+
+    return TRUE;
+  } else if (dynamic_cast<TBeing *>(ch->rider)) {
+    if (!dynamic_cast<TMonster *>(ch->rider)) {
+      move_thing_forshop(ch, from_room);
+      move_thing_forshop(ch->rider, from_room);
+    } else {
+      // Just kick out the mount, not the mobile. -Lapsos
+      ch->rider->dismount(POSITION_STANDING);
+      move_thing_forshop(ch, from_room);
+    }
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+
 int librarian(TBeing *ch, cmdTypeT cmd, const char * arg, TMonster *myself, TObj *)
 {
   affectedData aff;
@@ -1023,7 +1087,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  level/5 * PULSE_COMBAT;
+    aff.duration  =  8 * level * UPDATES_PER_MUDHOUR;
 
     vict->affectTo(&aff);
   }
@@ -3360,50 +3424,9 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
-      if (dynamic_cast<TBeing *>(ch->riding)) {
-        sprintf(buf, "Hey, get that damn %s out of my shop!", fname(ch->riding->name).c_str());
-        me->doSay(buf);
 
-        if (!dynamic_cast<TMonster *>(ch)) {
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws you out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          --(*ch->riding);
-          thing_to_room(ch->riding, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          TThing *tMount = ch->riding;
+      return kick_mobs_from_shop(me, ch, (int)o);
 
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws your mount out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch->riding, TO_NOTVICT);
-
-	  ch->dismount(POSITION_STANDING);
-
-          --(*tMount);
-          thing_to_room(tMount, (int)o);
-        }
-
-        return TRUE;
-      } else if (dynamic_cast<TBeing *>(ch->rider)) {
-        if (!dynamic_cast<TMonster *>(ch->rider)) {
-          --(*ch->rider);
-          thing_to_room(ch->rider, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          ch->rider->dismount(POSITION_STANDING);
-
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        }
-
-        return TRUE;
-      }
-      return FALSE;
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
       tbt = dynamic_cast<TBeing *>(ttt);
@@ -4065,50 +4088,9 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
-      if (dynamic_cast<TBeing *>(ch->riding)) {
-        sprintf(buf, "Hey, get that damn %s out of my shop!", fname(ch->riding->name).c_str());
-        me->doSay(buf);
 
-        if (!dynamic_cast<TMonster *>(ch)) {
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws you out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          --(*ch->riding);
-          thing_to_room(ch->riding, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          TThing *tMount = ch->riding;
+        return kick_mobs_from_shop(me, ch, (int)o);
 
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws your mount out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch->riding, TO_NOTVICT);
-
-	  ch->dismount(POSITION_STANDING);
-
-          --(*tMount);
-          thing_to_room(tMount, (int)o);
-        }
-
-        return TRUE;
-      } else if (dynamic_cast<TBeing *>(ch->rider)) {
-        if (!dynamic_cast<TMonster *>(ch->rider)) {
-          --(*ch->rider);
-          thing_to_room(ch->rider, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          ch->rider->dismount(POSITION_STANDING);
-
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        }
-
-        return TRUE;
-      }
-      return FALSE;
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
       tbt = dynamic_cast<TBeing *>(ttt);
@@ -5320,50 +5302,9 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
-      if (dynamic_cast<TBeing *>(ch->riding)) {
-        sprintf(buf, "Hey, get that damn %s out of my shop!", fname(ch->riding->name).c_str());
-        me->doSay(buf);
 
-        if (!dynamic_cast<TMonster *>(ch)) {
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws you out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          --(*ch->riding);
-          thing_to_room(ch->riding, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          TThing *tMount = ch->riding;
+      return kick_mobs_from_shop(me, ch, (int)o);
 
-          act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
-          act("$n throws your mount out of $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N out of $s shop.", FALSE, me, 0, ch->riding, TO_NOTVICT);
-
-	  ch->dismount(POSITION_STANDING);
-
-          --(*tMount);
-          thing_to_room(tMount, (int)o);
-        }
-
-        return TRUE;
-      } else if (dynamic_cast<TBeing *>(ch->rider)) {
-        if (!dynamic_cast<TMonster *>(ch->rider)) {
-          --(*ch->rider);
-          thing_to_room(ch->rider, (int) o);
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        } else {
-          // Just kick out the mount, not the mobile. -Lapsos
-          ch->rider->dismount(POSITION_STANDING);
-
-          --(*ch);
-          thing_to_room(ch, (int) o);
-        }
-
-        return TRUE;
-      }
-      return FALSE;
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
       tbt = dynamic_cast<TBeing *>(ttt);
