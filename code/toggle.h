@@ -373,8 +373,8 @@ const int TOG_FINISHED_WARRIOR_L41 = 223; //b
 const int TOG_ELIGIBLE_JUJU = 224;
 const int TOG_GET_THONG = 225;
 const int TOG_MARE_HIDE = 226;
-const int TOG_GET_SINEW = 227;
-const int TOG_GET_BEADS = 228;
+const int TOG_GET_BEADS = 227;
+const int TOG_HAS_ORB = 228;
 const int TOG_DONE_JUJU = 229;
 
 
