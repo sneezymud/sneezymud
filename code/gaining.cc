@@ -577,8 +577,8 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
             !hasQuestBit(TOG_ELIGIBLE_JUJU) &&
             !hasQuestBit(TOG_GET_THONG) &&
             !hasQuestBit(TOG_MARE_HIDE) &&
-            !hasQuestBit(TOG_GET_SINEW) &&
             !hasQuestBit(TOG_GET_BEADS) &&
+            !hasQuestBit(TOG_HAS_ORB) &&
             !hasQuestBit(TOG_DONE_JUJU)) {
 	if(!silent){
 	  gm->doAction(name, CMD_BEAM);
