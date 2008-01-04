@@ -346,9 +346,11 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!newMaster) {
     act("You can't find a master, so you go on your way. *pop*", FALSE, myself, 0, NULL, TO_CHAR);
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
-    vlogf(LOG_PROC, fmt("Hero Faerie clearing follower: was %s") % (myself->master ? myself->master->getName() : "None"));
     if (myself->master)
+    {
+      vlogf(LOG_PROC, fmt("Hero Faerie clearing follower: was %s") % myself->master->getName());
       myself->stopFollower(FALSE);
+    }
     --(*myself);
     // reinsert at birth room
     thing_to_room(myself, myself->brtRoom);

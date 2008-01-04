@@ -87,7 +87,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
     if((commod=dynamic_cast<TCommodity *>(t)) && commod->getMaterial() == mat){
       // get the price of the commods we need
       if(commod->numUnits() > mats_needed){
-        mat_price += commod->shopPrice(mats_needed, 15, 0, buyer);
+        mat_price += commod->shopPrice(mats_needed, commod_shop, 0, buyer);
         if(purchase){
           tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
           shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
@@ -95,7 +95,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
         }
         mats_needed=0;
       } else {
-        mat_price += commod->shopPrice(commod->numUnits(), 15, 0, buyer);
+        mat_price += commod->shopPrice(commod->numUnits(), commod_shop, 0, buyer);
         if(purchase){
           tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
           shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
@@ -143,14 +143,17 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
     price *= 5;
 
   // units of material needed to repair
-  int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
   int mat_price=0;
+
+#ifdef REPAIR_USES_MATS
+  int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
 
   // add in the price of the raw material
   mat_price+=findRepairMaterials(shop_nr, repair, buyer, getMaterial(), mats_needed, purchase);
 
   // 200% base cost for materials that we can't purchase
   mat_price+=(int)(mats_needed * material_nums[getMaterial()].price * 2);
+#endif
 
   //  vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
 
