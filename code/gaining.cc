@@ -1990,6 +1990,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
       } else if (ch->resetPractices(cit, practices, true)) {
         me->doSay(fmt("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);
         ch->giveMoney(me, cost, GOLD_SHOP_RESPONSES);
+        ch->remQuestBit(resetQuest);
       } else
         me->doSay("I cannot reset any of your practices at this time.");
 
