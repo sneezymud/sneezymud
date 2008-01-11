@@ -19,6 +19,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
   TThing *t, *n;
   TMonster * victim;
   TBaseCorpse *corpse;
+  float shamLvl = caster->getLevel(SHAMAN_LEVEL_IND);
 
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     caster->sendTo("You can't resurrect something that's not a corpse!\n\r");
@@ -47,12 +48,33 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
   }
   caster->addToMoney(-2500, GOLD_HOSPITAL);
 
+  if (shamLvl < 1)
+    shamLvl = caster->getLevel(caster->bestClass()) / 2;
+
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESURRECTION) &&
     (victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
+
+    // switch to warrior - this way charmies dont use their procs/caster AI
+    if (victim->player.Class != CLASS_WARRIOR)
+    {
+      ubyte oldLevel = victim->GetMaxLevel();
+      victim->fixLevels(0);
+      victim->setClass(CLASS_WARRIOR);
+      victim->fixLevels(oldLevel);
+      delete victim->discs;
+      victim->discs = NULL;
+      victim->assignDisciplinesClass();
+    }
+
+    victim->setExp(0);
+    victim->spec = 0;
+    victim->elementalFix(caster, SPELL_RESURRECTION, 0);
+
     *caster->roomp += *victim;
-    victim->genericCharmFix();
+
     victim->setHit(1);
     victim->setPosition(POSITION_STUNNED);
+
     act("$N slowly rises from the $g.", FALSE, caster, 0, victim, TO_ROOM);
     caster->reconcileHelp(victim,discArray[SPELL_RESURRECTION]->alignMod);
       

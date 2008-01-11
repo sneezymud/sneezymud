@@ -1121,6 +1121,16 @@ int TBeing::moveGroup(dirTypeT dir)
           vlogf(LOG_BUG, fmt("ERROR: NULL follower for %s in TBeing::moveGroup") % getName());
           continue;
         }
+        else
+        {
+          followData *found = NULL;
+          for (found = followers; found && found->follower != tft; found = found->next);
+          if (!found)
+          {
+            vlogf(LOG_BUG, fmt("ERROR: corrupt follower for %s in TBeing::moveGroup.  Was this object deleted from followers improperly?") % getName());
+            return FALSE;
+          }
+        }
 
         // sanity check, necessary cuz things going whacky occasionally
         // bat - 11/19/99

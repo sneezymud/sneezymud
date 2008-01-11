@@ -1276,6 +1276,8 @@ int TObj::burnObject(TBeing *ch, int perc)
     return FALSE;
   if (dynamic_cast<TBag *>(this))
     return FALSE;
+  if (getLocked())
+    return FALSE;
 
   if (ch && (ch == equippedBy) &&
       material_nums[getMaterial()].conductivity) {
@@ -1572,6 +1574,8 @@ int TObj::freezeObject(TBeing *ch, int perc)
   if (getStructPoints() < 0)
     return FALSE;
   if (::number(1,100) > perc)
+    return FALSE;
+  if (getLocked())
     return FALSE;
 
   if (ch && (ch == equippedBy) && material_nums[getMaterial()].conductivity) {

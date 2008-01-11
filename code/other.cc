@@ -3289,7 +3289,9 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
 	max_lag=discArray[the_spell]->lag;
       
 
+      setLocked(true);
       rc=doObjSpell(ch,victim,this,obj,argument,the_spell);
+      setLocked(false);
       if (IS_SET_DELETE(rc, DELETE_VICT) && victim != ch) {
         delete victim;
         victim = NULL;
@@ -4285,14 +4287,14 @@ void TBeing::doAfk()
 
 bool TBeing::isWary() const
 {
-  return affectedBySpell(AFFECT_WARY);  
+  return affectedBySpell(AFFECT_WARY);
 }
 
 void TBeing::makeWary()
 {
   if (isPc())
     return;
-  
+
   affectedData aff;
 
   aff.type = AFFECT_WARY;

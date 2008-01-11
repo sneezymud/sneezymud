@@ -516,6 +516,7 @@ class TObj : public TThing {
     const char * owners;
 private:
     bool isTasked;
+    bool isLocked; // set if the object should be protected from damage temporarily
 
   protected:
     TObj();
@@ -607,6 +608,14 @@ private:
     }
     void setIsTaskObj(bool t) {
       isTasked = t;
+    }
+
+    // locks an object from taking damage temporarily
+    bool getLocked() const {
+      return isLocked;
+    }
+    void setLocked(bool l) {
+      isLocked = l;
     }
 
     void releaseObject(TBeing *);

@@ -543,7 +543,11 @@ const int TOG_GAVE_SCROLL_CASE2                = 348;
 const int TOG_GAVE_SCROLL_CASE3                = 349;
 const int TOG_GAVE_SCROLL_CASE4                = 350;
 
-const int MAX_TOG_INDEX       = 351;  // move and change
+const int TOG_RESET_PRAC_LEVEL15               = 351;
+const int TOG_RESET_PRAC_LEVEL40               = 352;
+const int TOG_RESET_PRAC_LEVEL50               = 353;
+
+const int MAX_TOG_INDEX       = 354;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

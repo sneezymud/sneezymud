@@ -1207,6 +1207,7 @@ void TObj::makeScraps()
   char buf2[256];
   TBaseCup *tbc=dynamic_cast<TBaseCup *>(this);
   TBeing *cht;
+  TBeing *owner = NULL;
 
   // if it's a liquid container, drop the liquid in the room
   if(tbc){
@@ -1235,6 +1236,17 @@ void TObj::makeScraps()
     }
   }
 
+  // get owner name
+  owner = dynamic_cast<TBeing *>(parent); // inventory
+  if (!owner)
+    owner = dynamic_cast<TBeing *>(equippedBy); // worn
+  if (!owner)
+    owner = stuckIn; // embedded
+  if (!owner && parent && parent->parent) // in a container
+    owner = dynamic_cast<TBeing *>(parent->parent);
+  if (!owner && parent && parent->equippedBy) // in a worn container
+    owner = dynamic_cast<TBeing *>(parent->equippedBy);
+
   if (((ch = parent) && parent->roomp) || (ch = equippedBy) || (ch = stuckIn)) {
     if (isMineral()) {
       sprintf(buf, "$p shatters and falls to the $g.");
@@ -1246,7 +1258,8 @@ void TObj::makeScraps()
     act(buf, TRUE, ch, this, NULL, TO_ROOM);
     act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
-    vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  (ch ? ch->getName() : "Nobodys") % getName());
+    if (owner)
+      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
   } else {
     if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
       if (isMineral()) {
@@ -1256,7 +1269,8 @@ void TObj::makeScraps()
         sprintf(buf, "$p is destroyed.");
         sprintf(buf2, "Your $o is destroyed.");
       }
-      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  (ch ? ch->getName() : "Nobodys") % getName());
+      if (owner)
+        vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
       while (tmp) {
         if (tmp->roomp) {
           act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
@@ -1271,7 +1285,8 @@ void TObj::makeScraps()
       else
         sprintf(buf, "$n is destroyed.");
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  (ch ? ch->getName() : "Nobodys") % getName());
+      if (owner)
+        vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
     } else 
       vlogf(LOG_COMBAT, fmt("Something in make scraps isnt in a room %s.") %  getName());
   }

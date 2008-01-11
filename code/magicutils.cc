@@ -1175,31 +1175,28 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe)
 void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
 {
   int level;
+  float hplevel = 1.0;
+  float aclevel = 1.0;
+  float damlevel = 1.0;
 
   level = caster->GetMaxLevel();
   level = ::number(level-3, level);
   level = max(level, 4);
 
-  float elemmod = 1.0;
-
   switch (spell) {
     case SPELL_CONJURE_AIR:
       // air elems fly, so let's account for this and make uhm weak
       level = (int) (0.8 * level);
-      //      elemmod = 0.9;
       break;
     case SPELL_CONJURE_FIRE:
       // fire elms fly, so let's account for this and also make them weak
       level = (int) (0.8 * level);
-      //      elemmod = 0.8;
       break;
     case SPELL_CONJURE_EARTH:
-      //      elemmod = 1.1;
       level = (int) (0.8 * level);
       break;
     case SPELL_CONJURE_WATER:
       level = (int) (0.8 * level);
-      //      elemmod = 1.0;
       break;
     case SPELL_ENTHRALL_SPECTRE:
       level = (int) (0.8 * level);
@@ -1225,6 +1222,12 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
     case SPELL_CREATE_DIAMOND_GOLEM:
       level = (int) (1.0 * level);
       break;
+    case SPELL_RESURRECTION:
+      level = (int) (1.0 * min((int)GetMaxLevel(), level));
+      hplevel = (getHPLevel()/(int)GetMaxLevel());
+      aclevel = (getACLevel()/(int)GetMaxLevel());
+      damlevel = (getDamLevel()/(int)GetMaxLevel());
+      break;
     default:
       vlogf(LOG_BUG, fmt("Bad spellNumT (%d) to elementalFix") %  spell);
       break;
@@ -1236,21 +1239,19 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
 
   calcMaxLevel();
 
-  float lvl = level;
+  // modify everything by level
+  hplevel = level * hplevel;
+  aclevel = level * aclevel;
+  damlevel = level * damlevel;
 
-  // elemmod here is a tweak to make elems slighly less favorable tanks... cause it sucks to have them
-  // taking the place of good fighter tanks.
-
-  setHPLevel(lvl * elemmod);
+  setHPLevel(hplevel);
   setHPFromHPLevel();
-  setACLevel(lvl * elemmod);
+  setACLevel(aclevel);
   setACFromACLevel();
-  setDamLevel(lvl / elemmod);
+  setDamLevel(damlevel);
 
   setHitroll(0);
 
-  if (flags) {
-  }
   genericCharmFix();
   return;
 }

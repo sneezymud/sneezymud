@@ -708,7 +708,6 @@ TObj *ItemLoad::raw_read_item()
   TObj *o;
   char *name = NULL, *shortDescr = NULL, *description = NULL,
   *action_description = NULL;
-  unsigned char oldversion=CURRENT_RENT_VERSION;
 
   if (!raw_read_rentObject(fp, &item, &name, &shortDescr, &description, &action_description, version)) {
     vlogf(LOG_BUG, "Error reading object from rent.");
@@ -733,34 +732,14 @@ TObj *ItemLoad::raw_read_item()
     item.decay_time = 0;
   }
 
-  // update these items - maror, 12-29-03
-  // this isn't really a good way to do this
-  // there's an if statement below to set back to current version
-  if ((item.item_number >= 1120 && item.item_number <= 1131) || //admantium
-      (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
-      (item.item_number >= 9600 && item.item_number <= 9611) || //whale
-      (item.item_number == 9624) || // whale hood
-      (item.item_number == 27109) || // hawk ring
-      (item.item_number >= 10049 && item.item_number <= 10062) || //emerald
-      (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
-      (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
-      (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
-    oldversion=version;
-    version = 6;
-  }
-
-      
-
   if (!(o = read_object(item.item_number, VIRTUAL))) {
     vlogf(LOG_BUG, fmt("Unable to load object Vnum = %d from rent.") %  item.item_number);
     return NULL;
   }
 
-// old items should reflect current tiny file
-  if (version >= 7 || 
-      // discard 0-cost components and symbols due to overhaul
-      dynamic_cast<TNote *>(o)) {
-
+  // old items should reflect current tiny file
+  // discard 0-cost components and symbols due to overhaul
+  if (version >= 7 || dynamic_cast<TNote *>(o)) {
 
     if(version<9 && dynamic_cast<TOpenContainer *>(o)){
       item.value[1]=((item.value[1]>>8)<<16) ^ ((item.value[1]<<24)>>24);
@@ -805,17 +784,16 @@ TObj *ItemLoad::raw_read_item()
       o->affected[j].location = mapFileToApply(item.affected[j].location);
       
       if (applyTypeShouldBeSpellnum(o->affected[j].location))
-	o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
+        o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
       else
-	o->affected[j].modifier = item.affected[j].modifier;
+        o->affected[j].modifier = item.affected[j].modifier;
       
       o->affected[j].modifier2 = item.affected[j].modifier2;
       o->affected[j].bitvector = item.affected[j].bitvector;
     }
     // version 7 or less
   } else {
-    if ((item.extra_flags & ITEM_STRUNG) &&
-	!o->isObjStat(ITEM_STRUNG))
+    if ((item.extra_flags & ITEM_STRUNG) && !o->isObjStat(ITEM_STRUNG))
       o->addObjStat(ITEM_STRUNG);  // preserve strung
     
     // deal with structure
@@ -826,7 +804,6 @@ TObj *ItemLoad::raw_read_item()
 
     if ((item.extra_flags & ITEM_RUSTY) && !o->isObjStat(ITEM_RUSTY))
       o->addObjStat(ITEM_RUSTY);
-
   }
     
   if (o->isObjStat(ITEM_STRUNG)) {
@@ -836,7 +813,7 @@ TObj *ItemLoad::raw_read_item()
       o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
     
     if (shortDescr)
-	o->shortDescr = shortDescr;
+      o->shortDescr = shortDescr;
     else
       o->shortDescr = mud_str_dup(obj_index[o->getItemIndex()].short_desc);
     
@@ -853,13 +830,11 @@ TObj *ItemLoad::raw_read_item()
       o->action_description = NULL;
     
     if (obj_index[o->getItemIndex()].ex_description)
-      o->ex_description =
-	new extraDescription(*obj_index[o->getItemIndex()].ex_description);
+      o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
     else
       o->ex_description = NULL;
 
-//strung objects keep everything
-#if 1 
+    //strung objects keep everything
     if(version<9 && dynamic_cast<TOpenContainer *>(o)){
       item.value[1]=((item.value[1]>>8)<<16) ^ ((item.value[1]<<24)>>24);
 
@@ -901,29 +876,16 @@ TObj *ItemLoad::raw_read_item()
       o->affected[j].location = mapFileToApply(item.affected[j].location);
       
       if (applyTypeShouldBeSpellnum(o->affected[j].location))
-	o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
+        o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
       else
-	o->affected[j].modifier = item.affected[j].modifier;
+        o->affected[j].modifier = item.affected[j].modifier;
       
       o->affected[j].modifier2 = item.affected[j].modifier2;
       o->affected[j].bitvector = item.affected[j].bitvector;
     }
-#endif 
   }
   // if they had a lantern lit, set light appropriately
   o->adjustLight();
-  
-  if ((item.item_number >= 1120 && item.item_number <= 1131) || //admantium
-      (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
-      (item.item_number >= 9600 && item.item_number <= 9611) || //whale
-      (item.item_number == 9624) || // whale hood
-      (item.item_number == 27109) || // hawk ring
-      (item.item_number >= 10049 && item.item_number <= 10062) || //emerald
-      (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
-      (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
-      (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
-    version=oldversion;
-  }
 
   if((tmpcost = o->suggestedPrice())){
     o->obj_flags.cost = tmpcost;
