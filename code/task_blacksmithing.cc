@@ -459,9 +459,9 @@ void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
     if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
       percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
     TCommodity *mat;
     int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+    mats_needed = (int)(repair_mats_ratio * mats_needed);
     if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
        mat->numUnits() < mats_needed){
       act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -471,7 +471,6 @@ void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
     mat->setWeight(mat->getWeight() - (mats_needed/10.0));
     if(mat->numUnits() <= 0)
       delete mat;
-#endif
 
     if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
       o->addToStructPoints(1);
@@ -590,9 +589,9 @@ int task_blacksmithing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom 
 	  if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	    percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
 	TCommodity *mat;
 	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
 	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
 	   mat->numUnits() < mats_needed){
 	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -602,7 +601,6 @@ int task_blacksmithing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom 
 	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
 	if(mat->numUnits() <= 0)
 	  delete mat;
-#endif
 
 	  if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
 	    o->addToStructPoints(1);
@@ -756,9 +754,9 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
 	TCommodity *mat;
 	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
 	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
 	   mat->numUnits() < mats_needed){
 	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -768,7 +766,6 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
 	if(mat->numUnits() <= 0)
 	  delete mat;
-#endif
 
 	if (percent < ch->getSkillValue(SKILL_REPAIR_SHAMAN))
 	  o->addToStructPoints(1);
@@ -928,9 +925,9 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
 	TCommodity *mat;
 	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
 	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
 	   mat->numUnits() < mats_needed){
 	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -940,7 +937,6 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
 	if(mat->numUnits() <= 0)
 	  delete mat;
-#endif
 
 	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
 	  o->addToStructPoints(1);
@@ -1106,9 +1102,9 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
 	TCommodity *mat;
 	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
 	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
 	   mat->numUnits() < mats_needed){
 	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1118,7 +1114,6 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
 	if(mat->numUnits() <= 0)
 	  delete mat;
-#endif
 
 	
 	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
@@ -1276,9 +1271,9 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
         TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
         if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
            mat->numUnits() < mats_needed){
           act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1288,7 +1283,6 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
         mat->setWeight(mat->getWeight() - (mats_needed/10.0));
         if(mat->numUnits() <= 0)
           delete mat;
-#endif
 
         if (percent < ch->getSkillValue(SKILL_REPAIR_MAGE))
           o->addToStructPoints(1);
@@ -1444,9 +1438,9 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
         TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
         if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
            mat->numUnits() < mats_needed){
           act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1456,7 +1450,6 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         mat->setWeight(mat->getWeight() - (mats_needed/10.0));
         if(mat->numUnits() <= 0)
           delete mat;
-#endif
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
@@ -1604,9 +1597,9 @@ int task_blacksmithing_advanced(TBeing *ch, cmdTypeT cmd, const char *, int puls
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
         TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
         if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
            mat->numUnits() < mats_needed){
           act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1616,7 +1609,6 @@ int task_blacksmithing_advanced(TBeing *ch, cmdTypeT cmd, const char *, int puls
         mat->setWeight(mat->getWeight() - (mats_needed/10.0));
         if(mat->numUnits() <= 0)
           delete mat;
-#endif
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
@@ -1762,9 +1754,9 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
       TCommodity *mat;
       int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+      mats_needed = (int)(repair_mats_ratio * mats_needed);
       if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
          mat->numUnits() < mats_needed){
         act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1774,7 +1766,6 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       mat->setWeight(mat->getWeight() - (mats_needed/10.0));
       if(mat->numUnits() <= 0)
         delete mat;
-#endif
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
@@ -1947,9 +1938,9 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-#ifdef REPAIR_USES_MATS
         TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+	mats_needed = (int)(repair_mats_ratio * mats_needed);
         if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
            mat->numUnits() < mats_needed){
           act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
@@ -1959,7 +1950,6 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         mat->setWeight(mat->getWeight() - (mats_needed/10.0));
         if(mat->numUnits() <= 0)
           delete mat;
-#endif
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);

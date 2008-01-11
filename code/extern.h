@@ -52,6 +52,7 @@ extern int getabunch(const char *, char *);
 extern bool is_number(const sstring &);
 extern void bisect_arg_safe(const char *, int *, char *, unsigned int, const char * const array[]);
 #define bisect_arg(in, nt, out, ar) bisect_arg_safe(in, nt, out, cElements(out), ar)
+  extern const float repair_mats_ratio;
 
   extern const char * heraldcolors[];
   extern const char * heraldcodes[];

@@ -19,6 +19,8 @@ int counter_work;  // Global variable used to count # of undone items/man
 
 static int global_repair = 0;
 
+const float repair_mats_ratio=0.0;
+
 int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
 {
   int amount = getMaxStructPoints() - getDepreciation();
@@ -145,17 +147,16 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
   // units of material needed to repair
   int mat_price=0;
 
-#ifdef REPAIR_USES_MATS
   int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
+  mats_needed = (int)(repair_mats_ratio * mats_needed);
 
   // add in the price of the raw material
   mat_price+=findRepairMaterials(shop_nr, repair, buyer, getMaterial(), mats_needed, purchase);
 
   // 200% base cost for materials that we can't purchase
   mat_price+=(int)(mats_needed * material_nums[getMaterial()].price * 2);
-#endif
 
-  //  vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
+  //    vlogf(LOG_PEEL, fmt("gsp=%i, perc_repaired=%f, price=%i, mats_needed=%i, mat_price=%i") % gsp % perc_repaired % price % mats_needed % mat_price);
 
 
 #if FACTIONS_IN_USE
