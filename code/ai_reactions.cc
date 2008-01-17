@@ -332,7 +332,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf3 = "freak of nature";
       break;
   }
-  switch (::number(1,20)) {
+  switch (::number(1,50)) {
     case 1:
       buf = fmt("You %s %s") %buf2 % buf3;
       break;
@@ -358,14 +358,14 @@ sstring TBeing::getInsult(TBeing *vict)
       buf = fmt("Mangy %s") %buf3;
       break;
     case 9:
-      buf="Faggot";
+      buf="Gnollish arsehat";
       break;
     case 10:
       buf="Hey dirt-for-brains, bite me";
       break;
     case 11:
       if (getRace() != vict->getRace()) {
-        buf = fmt("All %s are faeries") % vict->getMyRace()->getProperName();
+        buf = fmt("All %s are idiots") % vict->getMyRace()->getProperName();
         break;
       } // else fall through
     case 12:
@@ -394,7 +394,97 @@ sstring TBeing::getInsult(TBeing *vict)
       break;
     case 20:
       buf = "The best part of you rolled down the back of a horses leg!";
+      break;
+    case 21:
+      buf = "Blah blah blah";
       break;  
+    case 22:
+      buf = "PFFFfffffftttt";
+      break;
+    case 23:
+      buf = "Feh! Meh! Plahhhh";
+      break;
+    case 24:
+      buf = "Midos loving crap hugging piece of apple pie";
+      break;
+    case 25:
+      buf = "Ha ha ha ha hahahahaha!! Hahahahahaha";
+      break;
+    case 26:
+      buf = "Argle ripple yrk";
+      break;
+    case 27:
+      buf = "Man the minefields! Secure the fritters! Batten down the pancakes";
+      break;
+    case 28:
+      buf = "Ripple zarp rod, tool ftagn truck";
+      break;
+    case 29:
+      buf = "Fish huzzah glyph frbble fnort";
+      break;
+    case 30:
+      buf = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!!";
+      break;
+    case 31:
+      buf = "What are you looking at, ugly?";
+      break;
+    case 32:
+      buf = "Oh, run home to your mother, why don't you?";
+      break;
+    case 33:
+      buf = "Take a picture, it'll last longer";
+      break;
+    case 34:
+      buf = "Cthulhu johnson yerf cookies frob yuma gumma SUSHI";
+      break;
+    case 35:
+      buf = "Put that in your hula hoop and smoke it";
+      break;
+    case 36:
+      buf = "KILL EVERYTHING, KILL IT ALL RIGHT NOW DIE DIE DIE";
+      break;
+    case 37:
+      buf = "What is your problem exactly, anyway?";
+      break;
+    case 38:
+      buf = "Is there a point to all your talking?";
+      break;
+    case 39:
+      buf = "When are you going to stop going in circles?";
+      break;
+    case 40:
+      buf = fmt("We should go kill Mobatsu, %s is tanking") % fname(vict->name);
+      break;
+    case 41:
+      buf = "Why? Why? Why? WHY? WHY??";
+      break;
+    case 42:
+      buf = "Yoyodine mother hastur brob lram cookies";
+      break;
+    case 43:
+      buf = "Big whoop";
+      break;
+    case 44:
+      buf = "Here's a ladder, get over yourself";
+      break;
+    case 45:
+      buf = "You're such a whiner";
+      break;
+    case 46:
+      buf = "Stop it";
+      break;
+    case 47:
+      buf = fmt("Stop wasting precious oxygen, you %s %s") %buf2 % buf3;
+      break;
+    case 48:
+      buf = "Your butt is on fire";
+      break;
+    case 49:
+      buf = "Look out behind you";
+      break;
+    case 50:
+      buf = "Ugh, here's a tissue. Cover your face with it";
+      break;
     default:
       return FALSE;
   }
