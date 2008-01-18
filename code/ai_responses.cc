@@ -458,6 +458,20 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       }
       return RET_STOP_PARSING;
       break;
+    case CMD_RESP_CHECKCLASS:
+      {
+        if (!mob->hasClass(arg.c_str(), EXACT_YES))
+          return RET_STOP_PARSING;
+        return FALSE;
+        break;
+      }
+    case CMD_RESP_CHECKNOTCLASS:
+      {
+        if (mob->hasClass(arg.c_str(), EXACT_YES))
+          return RET_STOP_PARSING;
+        return FALSE;
+        break;
+      }
     case CMD_RESP_DONERAND:
     case CMD_RESP_RANDOM:
     case CMD_RESP_RANDOPTION:
@@ -1443,6 +1457,10 @@ resp * TMonster::readCommand(istringstream &is)
       newCmd = new command(CMD_RESP_DESTINATION, args);
     else if (is_abbrev(buf, "checkperson"))
       newCmd = new command(CMD_RESP_CHECKPERSON, args);
+    else if (is_abbrev(buf, "checkclass"))
+      newCmd = new command( CMD_RESP_CHECKCLASS, args);
+    else if (is_abbrev(buf, "checknotclass"))
+      newCmd = new command( CMD_RESP_CHECKNOTCLASS, args);
     else {
       if ((cmd=searchForCommandNum( buf)) >= MAX_CMD_LIST) {
         vlogf(LOG_MOB_RS,fmt("Responses::readCommand(): Parse error in %s. Unknown command %s.") % 

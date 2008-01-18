@@ -3716,7 +3716,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
        victimCanAttack = TRUE;
     }
 
-    if (victimCanAttack && ((tarLevel - myLevel) < (10 + (tarLevel / 5)))) {
+    if (victimCanAttack) {
       if (canAttack(isprimary)) {
         if (vict->hasClass(CLASS_WARRIOR)) {
           vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (120 - (2 * myLevel)));

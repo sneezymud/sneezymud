@@ -672,6 +672,12 @@ cmdTypeT seditCmdFromText(sstring tStString, bool checkMini)
   if (is_abbrev(tStString, "loadmob") && tStString.length() > 4)
     return CMD_RESP_LOADMOB;
 
+  if (is_abbrev(tStString, "checkclass"))
+    return CMD_RESP_CHECKCLASS;
+
+  if (is_abbrev(tStString, "checknotclass"))
+    return CMD_RESP_CHECKNOTCLASS;
+
   return searchForCommandNum(tStString);
 }
 
@@ -728,6 +734,12 @@ sstring seditExtraWords(cmdTypeT tCmd)
         break;
       case CMD_RESP_LOADMOB:
         return "loadmob";
+        break;
+      case CMD_RESP_CHECKCLASS:
+        return "checkclass";
+        break;
+      case CMD_RESP_CHECKNOTCLASS:
+        return "checknotclass";
         break;
       default:
         return "Unknown";

@@ -1790,6 +1790,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_RESP_RANDOM:
       case CMD_RESP_RANDOPTION:
       case CMD_RESP_DONERAND:
+      case CMD_RESP_CHECKCLASS:
+      case CMD_RESP_CHECKNOTCLASS:
       case CMD_GENERIC_PULSE:
       case CMD_GENERIC_QUICK_PULSE:
       case CMD_GENERIC_CREATED:

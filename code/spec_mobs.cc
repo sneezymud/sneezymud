@@ -1087,7 +1087,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  8 * level * UPDATES_PER_MUDHOUR;
+    aff.duration  =  level/5 * PULSE_COMBAT;
 
     vict->affectTo(&aff);
   }
