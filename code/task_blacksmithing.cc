@@ -459,18 +459,20 @@ void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
     if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
       percent -= ch->getDexReaction() * 3;
 
-    TCommodity *mat;
     int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
     mats_needed = (int)(repair_mats_ratio * mats_needed);
-    if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-       mat->numUnits() < mats_needed){
-      act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-      ch->stopTask();
-      return;
+    if(mats_needed) {
+      TCommodity *mat;
+      if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+        mat->numUnits() < mats_needed){
+        act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+        ch->stopTask();
+        return;
+      }
+      mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+      if(mat->numUnits() <= 0)
+        delete mat;
     }
-    mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-    if(mat->numUnits() <= 0)
-      delete mat;
 
     if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
       o->addToStructPoints(1);
@@ -478,11 +480,17 @@ void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
       o->addToStructPoints(-1);
 
     if (o->getStructPoints() <= 1) {
-      act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, forge, TO_ROOM);
-      act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, forge, TO_CHAR);
-      makeScraps();
+      if (!o->isMonogrammed()) {
+        act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+        act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+        o->makeScraps();
+        delete o;
+      } else {
+        act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+        act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+        o->scrapMonogrammed();
+      }
       ch->stopTask();
-      delete o;
       return;
     }
     // task can continue forever, so don't bother decrementing the timer
@@ -589,32 +597,40 @@ int task_blacksmithing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom 
 	  if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	    percent -= ch->getDexReaction() * 3;
 
-	TCommodity *mat;
-	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-	   mat->numUnits() < mats_needed){
-	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-	  ch->stopTask();
-	  return FALSE;
-	}
-	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-	if(mat->numUnits() <= 0)
-	  delete mat;
+    int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+    mats_needed = (int)(repair_mats_ratio * mats_needed);
+    if(mats_needed) {
+      TCommodity *mat;
+      if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+        mat->numUnits() < mats_needed){
+        act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+        ch->stopTask();
+        return FALSE;
+      }
+      mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+      if(mat->numUnits() <= 0)
+        delete mat;
+    }
 
 	  if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
 	    o->addToStructPoints(1);
 	  else
 	    o->addToStructPoints(-1);
 
-	  if (o->getStructPoints() < 1) {
-	    act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, forge, TO_ROOM);
-	    act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, forge, TO_CHAR);
-	    o->makeScraps();
-	    ch->stopTask();
-	    delete o;
-	    return FALSE;
-	  }
+    if (o->getStructPoints() <= 1) {
+      if (!o->isMonogrammed()) {
+        act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+        act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+        o->makeScraps();
+        delete o;
+      } else {
+        act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+        act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+        o->scrapMonogrammed();
+      }
+      ch->stopTask();
+      return FALSE;
+    }
 	  // task can continue forever, so don't bother decrementing the timer
 	}
 	
@@ -754,32 +770,40 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-	TCommodity *mat;
-	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-	   mat->numUnits() < mats_needed){
-	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-	  ch->stopTask();
-	  return FALSE;
-	}
-	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-	if(mat->numUnits() <= 0)
-	  delete mat;
+  int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+  mats_needed = (int)(repair_mats_ratio * mats_needed);
+  if(mats_needed) {
+    TCommodity *mat;
+    if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+      mat->numUnits() < mats_needed){
+      act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+      ch->stopTask();
+      return FALSE;
+    }
+    mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+    if(mat->numUnits() <= 0)
+      delete mat;
+  }
 
 	if (percent < ch->getSkillValue(SKILL_REPAIR_SHAMAN))
 	  o->addToStructPoints(1);
 	else
 	  o->addToStructPoints(-1);
 	
-	if (o->getStructPoints() < 1) {
-	  act("$n screws up operating on $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-	  act("You screw up the operation on $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-	  o->makeScraps();
-	  ch->stopTask();
-	  delete o;
-	  return FALSE;
-	}
+  if (o->getStructPoints() <= 1) {
+    if (!o->isMonogrammed()) {
+      act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+      act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+      o->makeScraps();
+      delete o;
+    } else {
+      act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+      act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+      o->scrapMonogrammed();
+    }
+    ch->stopTask();
+    return FALSE;
+  }
 	// task can continue forever, so don't bother decrementing the timer
       }
       
@@ -925,32 +949,40 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-	TCommodity *mat;
-	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-	   mat->numUnits() < mats_needed){
-	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-	  ch->stopTask();
-	  return FALSE;
-	}
-	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-	if(mat->numUnits() <= 0)
-	  delete mat;
+  int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+  mats_needed = (int)(repair_mats_ratio * mats_needed);
+  if(mats_needed) {
+    TCommodity *mat;
+    if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+      mat->numUnits() < mats_needed){
+      act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+      ch->stopTask();
+      return FALSE;
+    }
+    mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+    if(mat->numUnits() <= 0)
+      delete mat;
+  }
 
 	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
 	  o->addToStructPoints(1);
 	else
 	  o->addToStructPoints(-1);
 	
-	if (o->getStructPoints() < 1) {
-	  act("$n screws up regrowing $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-	  act("You screw up regrowing $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-	  o->makeScraps();
-	  ch->stopTask();
-	  delete o;
-	  return FALSE;
-	}
+  if (o->getStructPoints() <= 1) {
+    if (!o->isMonogrammed()) {
+      act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+      act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+      o->makeScraps();
+      delete o;
+    } else {
+      act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+      act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+      o->scrapMonogrammed();
+    }
+    ch->stopTask();
+    return FALSE;
+  }
 	// task can continue forever, so don't bother decrementing the timer
       }
       
@@ -1102,18 +1134,20 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 
-	TCommodity *mat;
-	int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-	if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-	   mat->numUnits() < mats_needed){
-	  act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-	  ch->stopTask();
-	  return FALSE;
-	}
-	mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-	if(mat->numUnits() <= 0)
-	  delete mat;
+  int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+  mats_needed = (int)(repair_mats_ratio * mats_needed);
+  if(mats_needed) {
+    TCommodity *mat;
+    if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+      mat->numUnits() < mats_needed){
+      act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+      ch->stopTask();
+      return FALSE;
+    }
+    mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+    if(mat->numUnits() <= 0)
+      delete mat;
+  }
 
 	
 	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
@@ -1271,30 +1305,38 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-        TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-        if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-           mat->numUnits() < mats_needed){
-          act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-          ch->stopTask();
-          return FALSE;
+        mats_needed = (int)(repair_mats_ratio * mats_needed);
+        if(mats_needed) {
+          TCommodity *mat;
+          if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+            mat->numUnits() < mats_needed){
+            act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+            ch->stopTask();
+            return FALSE;
+          }
+          mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+          if(mat->numUnits() <= 0)
+            delete mat;
         }
-        mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-        if(mat->numUnits() <= 0)
-          delete mat;
 
         if (percent < ch->getSkillValue(SKILL_REPAIR_MAGE))
           o->addToStructPoints(1);
         else
           o->addToStructPoints(-1);
 
-        if (o->getStructPoints() < 1) {
-          act("$n screws up while refocusing the energy in $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-          act("You screw up while refocusing the energy in $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-          o->makeScraps();
+        if (o->getStructPoints() <= 1) {
+          if (!o->isMonogrammed()) {
+            act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+            o->makeScraps();
+            delete o;
+          } else {
+            act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+            o->scrapMonogrammed();
+          }
           ch->stopTask();
-          delete o;
           return FALSE;
         }
         // task can continue forever, so don't bother decrementing the timer
@@ -1438,30 +1480,38 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-        TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-        if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-           mat->numUnits() < mats_needed){
-          act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-          ch->stopTask();
-          return FALSE;
+        mats_needed = (int)(repair_mats_ratio * mats_needed);
+        if(mats_needed) {
+          TCommodity *mat;
+          if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+            mat->numUnits() < mats_needed){
+            act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+            ch->stopTask();
+            return FALSE;
+          }
+          mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+          if(mat->numUnits() <= 0)
+            delete mat;
         }
-        mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-        if(mat->numUnits() <= 0)
-          delete mat;
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
         else
           o->addToStructPoints(-1);
 
-        if (o->getStructPoints() < 1) {
-          act("$n screws up while reforming the crystals in $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-          act("You screw up while reforming the crystals in $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-          o->makeScraps();
+        if (o->getStructPoints() <= 1) {
+          if (!o->isMonogrammed()) {
+            act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+            o->makeScraps();
+            delete o;
+          } else {
+            act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+            o->scrapMonogrammed();
+          }
           ch->stopTask();
-          delete o;
           return FALSE;
         }
         // task can continue forever, so don't bother decrementing the timer
@@ -1597,30 +1647,38 @@ int task_blacksmithing_advanced(TBeing *ch, cmdTypeT cmd, const char *, int puls
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-        TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-        if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-           mat->numUnits() < mats_needed){
-          act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-          ch->stopTask();
-          return FALSE;
+        mats_needed = (int)(repair_mats_ratio * mats_needed);
+        if(mats_needed) {
+          TCommodity *mat;
+          if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+            mat->numUnits() < mats_needed){
+            act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+            ch->stopTask();
+            return FALSE;
+          }
+          mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+          if(mat->numUnits() <= 0)
+            delete mat;
         }
-        mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-        if(mat->numUnits() <= 0)
-          delete mat;
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
         else
           o->addToStructPoints(-1);
 
-        if (o->getStructPoints() < 1) {
-          act("$n screws up while rearranging the gems in $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-          act("You screw up while rearranging the gems in $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-          o->makeScraps();
+        if (o->getStructPoints() <= 1) {
+          if (!o->isMonogrammed()) {
+            act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+            o->makeScraps();
+            delete o;
+          } else {
+            act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+            o->scrapMonogrammed();
+          }
           ch->stopTask();
-          delete o;
           return FALSE;
         }
         // task can continue forever, so don't bother decrementing the timer
@@ -1754,30 +1812,38 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-      TCommodity *mat;
-      int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-      mats_needed = (int)(repair_mats_ratio * mats_needed);
-      if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-         mat->numUnits() < mats_needed){
-        act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-        ch->stopTask();
-        return FALSE;
-      }
-      mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-      if(mat->numUnits() <= 0)
-        delete mat;
+        int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+        mats_needed = (int)(repair_mats_ratio * mats_needed);
+        if(mats_needed) {
+          TCommodity *mat;
+          if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+            mat->numUnits() < mats_needed){
+            act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+            ch->stopTask();
+            return FALSE;
+          }
+          mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+          if(mat->numUnits() <= 0)
+            delete mat;
+        }
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
         else
           o->addToStructPoints(-1);
 
-        if (o->getStructPoints() < 1) {
-          act("$n screws up while mending $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-          act("You screw up while mending $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-          o->makeScraps();
+        if (o->getStructPoints() <= 1) {
+          if (!o->isMonogrammed()) {
+            act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+            o->makeScraps();
+            delete o;
+          } else {
+            act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+            o->scrapMonogrammed();
+          }
           ch->stopTask();
-          delete o;
           return FALSE;
         }
         // task can continue forever, so don't bother decrementing the timer
@@ -1938,30 +2004,38 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
           percent -= ch->getDexReaction() * 3;
 
-        TCommodity *mat;
         int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
-	mats_needed = (int)(repair_mats_ratio * mats_needed);
-        if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
-           mat->numUnits() < mats_needed){
-          act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
-          ch->stopTask();
-          return FALSE;
+        mats_needed = (int)(repair_mats_ratio * mats_needed);
+        if(mats_needed) {
+          TCommodity *mat;
+          if(!(mat=ch->getRepairMaterial(o->getMaterial())) ||
+            mat->numUnits() < mats_needed){
+            act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, ch, o, 0, TO_CHAR);
+            ch->stopTask();
+            return FALSE;
+          }
+          mat->setWeight(mat->getWeight() - (mats_needed/10.0));
+          if(mat->numUnits() <= 0)
+            delete mat;
         }
-        mat->setWeight(mat->getWeight() - (mats_needed/10.0));
-        if(mat->numUnits() <= 0)
-          delete mat;
 
         if (percent < ch->getSkillValue(skill))
           o->addToStructPoints(1);
         else
           o->addToStructPoints(-1);
 
-        if (o->getStructPoints() < 1) {
-          act("$n screws up while mending $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
-          act("You screw up while mending $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
-          o->makeScraps();
+        if (o->getStructPoints() <= 1) {
+          if (!o->isMonogrammed()) {
+            act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, NULL, TO_CHAR);
+            o->makeScraps();
+            delete o;
+          } else {
+            act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, ch, o, NULL, TO_ROOM);
+            act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, ch, o, NULL, TO_CHAR);
+            o->scrapMonogrammed();
+          }
           ch->stopTask();
-          delete o;
           return FALSE;
         }
         // task can continue forever, so don't bother decrementing the timer
