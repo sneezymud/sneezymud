@@ -353,6 +353,12 @@ O 0 27311 2 6594 	Torch
 
 * Mobs
 
+* DD Added these on 1/21/08 at Bump's request.
+* Apparently these mobs were missing from the zonefile.
+M 0 7499 1 6357 Uncle Willie
+M 0 7487 1 6356 Mrs. Deegle
+* End DD edit
+
 M 0 6304 1 6304 	Diver Abalone
 ? 0 4 0 E
 E 1 6303 9999 19 		Knife Diving
