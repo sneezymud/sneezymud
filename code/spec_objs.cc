@@ -6600,6 +6600,77 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
   return false;
 }
 
+int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+	// immortal exchange computer
+	// should provide a comprehensive account of all coins made, redeemed
+	
+	if (!(cmd == CMD_SAY || cmd == CMD_SAY2)) {
+		return FALSE;
+	}
+	
+	if (!o->roomp || sstring(arg).word(0).lower() != "computron!") {
+		return FALSE;
+	}
+	
+	if (!ch->isImmortal() || !ch->hasWizPower(POWER_SET_IMP_POWER)) {
+		act("$p intones, \"Computron does not suffer such fools.\"", FALSE, o, o, 0, TO_ROOM);
+		act("$p dims slightly.", FALSE, o, o, 0, TO_ROOM);
+	    return TRUE;
+	}
+	sstring arg2 = sstring(arg).word(1).lower();
+	
+	if (arg2 == "show") {
+		sstring arg3 = sstring(arg).word(2).lower();
+		if (is_abbrev(arg3, "created") || is_abbrev(arg3, "redeemed")) {
+			TNote *note;
+			TDatabase db(DB_SNEEZY);
+			if (is_abbrev(arg3, "redeemed")) {
+				sstring contents = "<o>Immortal Exchange Coin Redemption<1>\n\r";
+				db.query("select p1.name as redeemed_for, p2.name as redeemed_by, count(*) as coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed from immortal_exchange_coin c1 left join player p1 on p1.id = c1.redeemed_for left join player p2 on c1.redeemed_by = p2.id group by p1.name, p2.name order by p1.name, p2.name;");
+				if (db.fetchRow()) {
+					contents += fmt("<o>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
+					contents += fmt("<o>%-25s %-25s %8s<1>\n\r") % "Redeemed for" % "Redeemed by" % "Coins";
+					contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
+					while (db.fetchRow()) {
+						contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
+					}
+				} else {
+					contents += "\n\r<c>No coins on record!<1>\n\r";
+				}
+				note = createNote(mud_str_dup(contents));
+			} else {
+				sstring contents = "<g>Immortal Exchange Coin Distribution<1>\n\r";
+				db.query("select p1.name as created_for, p2.name as created_by, count(*) as coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed from immortal_exchange_coin c1 left join player p1 on p1.id = c1.created_for left join player p2 on c1.created_by = p2.id group by p1.name, p2.name order by p1.name, p2.name;");
+				if (db.fetchRow()) {
+					contents += fmt("<g>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
+					contents += fmt("<g>%-25s %-25s %8s<1>\n\r") % "Created for" % "Created by" % "Coins";
+					contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
+					while (db.fetchRow()) {
+						contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
+					}
+				} else {
+					contents += "\n\r<c>No coins on record!<1>\n\r";
+				}
+				note = createNote(mud_str_dup(contents));
+			}
+			act("A thin arm extends from $p.", FALSE, o, o, 0, TO_ROOM);
+			act("$p gives a note to $n.", FALSE, ch, o, 0, TO_ROOM);
+			act("$p gives you a <o>note<1>.", FALSE, ch, o, 0, TO_CHAR);
+			*ch += *note;
+			act("$p belches a puff of <k>smoke<1>.", FALSE, o, o, 0, TO_ROOM);
+			o->dropSmoke(1);
+			return TRUE;
+		}
+	}
+	// we've fallen through, show viable options
+	act("$p intones, \"I respond to <c>computron! show created<1>.\".", FALSE, o, o, 0, TO_ROOM);
+	act("$p intones, \"I respond to <c>computron! show redeemed<1>.\".", FALSE, o, o, 0, TO_ROOM);
+	act("You hear the sound of a spring breaking.", FALSE, o, o, 0, TO_ROOM);
+	
+	return TRUE;
+}
+
 
 //MARKER: END OF SPEC PROCS
 
@@ -6825,5 +6896,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Dwarf Power", dwarfPower}, 
   {FALSE, "Mob Spawn Grab", mobSpawnGrab}, 
   {FALSE, "rubik's cube", rubiksCube},
+  {FALSE, "Immortal Exchange Computer", ieComputer}, 
   {FALSE, "last proc", bogusObjProc}
 };
