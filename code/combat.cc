@@ -3830,19 +3830,17 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     }
   } else {
     if (vict->isPc() && vict->desc) {
-      if ((tarLevel - myLevel) < (10 + (tarLevel / 5))) {
-        if (canAttack(isprimary)) {
-          if (victimCanAttack) {
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (200 - (2 * myLevel)));
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (200 - (2 * myLevel)));
-          } else {
-            if (vict->hasClass(CLASS_WARRIOR)) {
-              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
-              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
-            } else { 
-              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (450 - (2 * myLevel)));
-              vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (450 - (2 * myLevel)));
-	    }
+      if (canAttack(isprimary)) {
+        if (victimCanAttack) {
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (200 - (2 * myLevel)));
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (200 - (2 * myLevel)));
+        } else {
+          if (vict->hasClass(CLASS_WARRIOR)) {
+            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
+            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
+          } else { 
+            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (450 - (2 * myLevel)));
+            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (450 - (2 * myLevel)));
           }
         }
       }
@@ -5081,6 +5079,23 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     vlogf(LOG_COMBAT, fmt("gainExpPerHit: removed %f exp from %s (hitter: %s)") %
 	  exp_received % v->getName() % getName());
 
+  // throw this exp away - it cannot be handed out due to the restrict XP affect
+  if (v->affectedBySpell(AFFECT_COMBAT))
+  {
+    affectedData *combatCheck = NULL;
+    for (affectedData *afScan = v->affected; afScan; afScan = afScan->next)
+      if (afScan->type == AFFECT_COMBAT && afScan->modifier == COMBAT_RESTRICT_XP)
+        combatCheck = afScan;
+
+    if (combatCheck && combatCheck->be)
+    {
+      const char *restrictName = (char *)combatCheck->be;
+      TBeing *owner = get_pc_world(this, sstring(restrictName), EXACT_YES, INFRA_NO, FALSE, TRUE);
+      if (!owner || !inGroup(*owner))
+        return;
+    }
+  }
+
   // I am the only groupmember in the room
   if (tank == this || inGroup(*tank)) {
     // I am tanking so I can get experience.
@@ -5705,5 +5720,25 @@ attack_mode_t TBeing::getCombatMode() const
 bool TBeing::isCombatMode(attack_mode_t n) const
 {
   return combatMode == n;
+}
+
+// restricts victim's XP payout for duration to caster or caster's group
+bool restrict_xp(const TBeing *caster, TBeing *victim, int duration)
+{
+  if (!caster || !victim)
+    return false;
+
+  affectedData aff;
+  aff.type = AFFECT_COMBAT;
+  aff.modifier = COMBAT_RESTRICT_XP;
+  aff.location = APPLY_NONE;
+  aff.duration = duration;
+  if (caster->desc && caster->desc->original)
+    aff.be = static_cast<TThing *>((void *)mud_str_dup(caster->desc->original->getName()));
+  else
+    aff.be = static_cast<TThing *>((void *)mud_str_dup(caster->getName()));
+
+  victim->affectTo(&aff, -1, SILENT_YES);
+  return true;
 }
 

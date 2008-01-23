@@ -1802,7 +1802,7 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
   return NULL;
 }
 
-TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible)
+TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible, bool checkPoly)
 {
   TBeing *i;
 
@@ -1817,6 +1817,14 @@ TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, in
             return i;
         } else
           return i; 
+      } else if (checkPoly && i->desc && i->desc->original) {
+        if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
+          if (visible) {
+            if (ch->canSee(i->desc->original, infra))
+              return i->desc->original;
+          } else
+            return i->desc->original; 
+        }
       }
     }
   }

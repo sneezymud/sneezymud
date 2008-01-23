@@ -13,7 +13,7 @@
 #include "spelltask.h"
 #include "disc_shaman_spider.h"
 #include "obj_magic_item.h"
-
+#include "combat.h"
 
 int transfix(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
@@ -604,6 +604,10 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,byte bKnown)
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, aff.duration);
+
     if (!victim->isPc())
       dynamic_cast<TMonster *>(victim)->genericCharmFix();
 
@@ -838,6 +842,10 @@ ANSI_RED_BOLD);
     aff.type = AFFECT_CHARM;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, aff.duration);
 
     if (!victim->isPc())
       dynamic_cast<TMonster *>(victim)->genericCharmFix();

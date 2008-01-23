@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "spec_rooms.h"
+#include "combat.h"
 
 extern int eqHpBonus(const TPerson *);
 extern int baseHp();
@@ -1938,9 +1939,13 @@ void TBeing::statBeing(TBeing *k)
         break;
 
       case AFFECT_COMBAT:
-        str += fmt("Combat: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
-        str += fmt("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+        if (aff->modifier == COMBAT_SOLO_KILL) {
+          str += fmt("Combat: '%s'\n\r") % (aff->be ? static_cast<TBeing *>(aff->be)->getName() : "No aff->be!");
+          str += fmt("     Expires in %d updates.  Status = %d.\n\r") % aff->duration % aff->level;
+        }else if (aff->modifier == COMBAT_RESTRICT_XP) {
+          str += fmt("Restricted Experience: '%s'\n\r") % (aff->be ? static_cast<char *>((void*)aff->be) : "No aff->be!");
+          str += fmt("     Expires in %d updates.\n\r") % aff->duration;
+        }
         break;
 
       case AFFECT_PET:

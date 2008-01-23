@@ -22,6 +22,7 @@
 #include "corporation.h"
 #include "shopowned.h"
 #include "materials.h"
+#include "combat.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
@@ -1536,7 +1537,10 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       
       if (client && recep) {
     processStringForClient(str);
-    
+   
+    if (str.length() > 25000) // max send length for the clients rent dialog is somewhere between 25k and 50k
+      str.resize(25000);
+
     desc->clientf(fmt("%d") % CLIENT_RENT);
     sendTo(str);
     desc->clientf(fmt("%d") % CLIENT_RENT_END);
@@ -3847,7 +3851,8 @@ float old_ac_lev = mob->getACLevel();
         if ((aff->type == AFFECT_PET) || 
             (aff->type == AFFECT_CHARM) ||
             (aff->type == AFFECT_THRALL) ||
-            (aff->type == AFFECT_ORPHAN_PET)) {
+            (aff->type == AFFECT_ORPHAN_PET) ||
+            (aff->type == AFFECT_COMBAT && aff->modifier == COMBAT_RESTRICT_XP)) {
           char * tmp = mud_str_dup(ch->name);
           aff->be = (TThing *) tmp;
         }

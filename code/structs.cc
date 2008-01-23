@@ -2056,7 +2056,8 @@ affectedData::affectedData(const affectedData &a) :
   if ((type == AFFECT_PET) || 
       (type == AFFECT_CHARM) ||
       (type == AFFECT_THRALL) ||
-      (type == AFFECT_ORPHAN_PET)) {
+      (type == AFFECT_ORPHAN_PET) ||
+      (type == AFFECT_COMBAT && modifier == COMBAT_RESTRICT_XP)) {
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
@@ -2109,7 +2110,8 @@ affectedData & affectedData::operator=(const affectedData &a)
   if ((type == AFFECT_PET) || 
       (type == AFFECT_CHARM) ||
       (type == AFFECT_THRALL) ||
-      (type == AFFECT_ORPHAN_PET)) {
+      (type == AFFECT_ORPHAN_PET) ||
+      (type == AFFECT_COMBAT && modifier == COMBAT_RESTRICT_XP)) {
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
@@ -2126,7 +2128,8 @@ affectedData::~affectedData()
   if ((type == AFFECT_PET) || 
       (type == AFFECT_CHARM) ||
       (type == AFFECT_THRALL) ||
-      (type == AFFECT_ORPHAN_PET)) {
+      (type == AFFECT_ORPHAN_PET) ||
+      (type == AFFECT_COMBAT && modifier == COMBAT_RESTRICT_XP)) {
     char * tmp = (char *) be;
     be = NULL;
     delete [] tmp;

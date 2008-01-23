@@ -12,6 +12,7 @@
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_magic_item.h"
+#include "combat.h"
 
 int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
 {
@@ -107,6 +108,10 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     caster->addFollower(victim);
     for (t = corpse->getStuff(); t; t = n) {
@@ -232,6 +237,10 @@ int enthrallDemon(TBeing * caster, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
@@ -360,6 +369,10 @@ int createWoodGolem(TBeing * caster, int level, byte bKnown)
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
+
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
 
@@ -480,6 +493,10 @@ int createRockGolem(TBeing * caster, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
@@ -604,6 +621,10 @@ int createIronGolem(TBeing * caster, int level, byte bKnown)
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
+
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
 
@@ -725,6 +746,10 @@ int createDiamondGolem(TBeing * caster, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());

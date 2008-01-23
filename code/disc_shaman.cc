@@ -7,6 +7,7 @@
 #include "obj_tool.h"
 #include "obj_magic_item.h"
 #include "garble.h"
+#include "combat.h"
 
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
@@ -129,6 +130,11 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     mob->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, mob, PERMANENT_DURATION);
+
     delete corpse;
     return SPELL_SUCCESS + VICTIM_DEAD;
   } else {
@@ -303,6 +309,11 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     mob->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, mob, PERMANENT_DURATION);
+
     delete corpse;
     return SPELL_SUCCESS + VICTIM_DEAD;
   } else {
@@ -476,6 +487,10 @@ int enthrallSpectre(TBeing * caster, int level, byte bKnown)
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
+
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
 
@@ -595,6 +610,10 @@ int enthrallGhast(TBeing * caster, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
@@ -2248,6 +2267,10 @@ int enthrallGhoul(TBeing * caster, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
+
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
 
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());

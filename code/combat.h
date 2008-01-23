@@ -22,9 +22,12 @@ const int GUARANTEED_FAILURE = -1;
 const int GUARANTEED_SUCCESS = -2;
 
 const int COMBAT_SOLO_KILL     = 1;
+const int COMBAT_RESTRICT_XP     = 2;
 
 const int MAX_COMBAT_ATTACKERS   = 9999;
 
 extern TBeing *gCombatList;
+
+bool restrict_xp(const TBeing *caster, TBeing *victim, int duration);
 
 #endif

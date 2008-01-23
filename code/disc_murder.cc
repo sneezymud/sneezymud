@@ -9,6 +9,7 @@
 #include "obj_base_cup.h"
 #include "obj_arrow.h"
 #include "liquids.h"
+#include "combat.h"
 
 static void playBackstab(const TRoom *rp)
 {
@@ -1301,8 +1302,12 @@ int cudgel(TBeing *thief, TBeing *victim)
       aff.type = SKILL_CUDGEL;
       aff.duration = UPDATES_PER_MUDHOUR / 3;
       aff.bitvector = AFF_STUNNED;
-
       victim->affectTo(&aff, -1);
+
+      // Add the restrict XP affect, so that you cannot twink newbies with this skill
+      // this affect effectively 'marks' the mob as yours
+      restrict_xp(thief, victim, UPDATES_PER_MUDHOUR / 3);
+
       return TRUE;
     }
   }

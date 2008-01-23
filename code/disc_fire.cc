@@ -1275,6 +1275,10 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
+    // Add the restrict XP affect, so that you cannot twink newbies with this skill
+    // this affect effectively 'marks' the mob as yours
+    restrict_xp(caster, victim, PERMANENT_DURATION);
+
     /* Add hp for higher levels - Russ */
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());

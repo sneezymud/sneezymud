@@ -43,7 +43,7 @@ TBeing *get_char(const char *name, exactTypeT exact);
 TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count = NULL, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
 TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT = INFRA_NO);
 TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTypeT = INFRA_NO);
-TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT = INFRA_NO, bool visible = TRUE);
+TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT = INFRA_NO, bool visible = TRUE, bool checkPoly = FALSE);
 TBeing * get_best_char_room(const TBeing *, const char *, visibleTypeT vis = VISIBLE_YES, infraTypeT inf = INFRA_NO);
 
 TObj *generic_find_obj(sstring, int, TBeing *);
