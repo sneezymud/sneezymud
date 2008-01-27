@@ -364,9 +364,11 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"December Quest: Gave 2 scroll cases", MOB_FAT_ELF_3}, //348
   {"December Quest: Gave 3 scroll cases", MOB_FAT_ELF_3}, //349
   {"December Quest: Gave 4 scroll cases", MOB_FAT_ELF_3}, //350
-  {"Practice Reset: Level15", MOB_NONE}, //348
-  {"Practice Reset: Level40", MOB_NONE}, //349
-  {"Practice Reset: Level50", MOB_NONE}, //350
+  {"Practice Reset: Level15", MOB_NONE}, //351
+  {"Practice Reset: Level40", MOB_NONE}, //352
+  {"Practice Reset: Level50", MOB_NONE}, //353
+  {"February Quest3 Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//354
+  {"February Quest4 Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//355
   {"", MOB_NONE}, 
 };
 
