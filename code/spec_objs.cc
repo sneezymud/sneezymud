@@ -6613,6 +6613,8 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 		return FALSE;
 	}
 	
+	ch->doSay(arg);
+	
 	if (!ch->isImmortal() || !ch->hasWizPower(POWER_SET_IMP_POWER)) {
 		act("$p intones, \"Computron does not suffer such fools.\"", FALSE, o, o, 0, TO_ROOM);
 		act("$p dims slightly.", FALSE, o, o, 0, TO_ROOM);
