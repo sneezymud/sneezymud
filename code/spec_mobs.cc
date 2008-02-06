@@ -6830,7 +6830,7 @@ extern int prisonJanitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int amberJanitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int brightmoonJanitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int garbageConvoy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
-
+extern int fruitScavenger(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // vehicle related procs, mostly in spec_mobs_vehicle.cc
 extern int fishingBoatCaptain(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7113,6 +7113,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "cannon loader", cannonLoader},
   {FALSE, "id card provider", idCardProvider},
   {TRUE, "Target dummy", targetDummy},
+  {TRUE, "fruit scavenger", fruitScavenger}, // 215
 // replace non-zero, bogus_mob_procs above before adding
 };
 

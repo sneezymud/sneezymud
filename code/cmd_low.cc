@@ -658,6 +658,25 @@ bool UtilMobProc(TBeing *ch)
     return TRUE;
   if (ch->spec == SPEC_BUTLER)
     return TRUE;
+  if (IS_SET(ch->specials.act, ACT_IMMORTAL)) {
+	    vlogf(LOG_MISC, fmt("Immortal %s (%d)") % ch->getName() % ch->mobVnum());
+	  return TRUE;
+  }
+  /*
+  switch (ch->mobVnum()) {
+  	// february quest mobs, we don't want them picking things up...
+  	case MOB_GYPSY_ROMANTIC:
+  	case MOB_FLORIST_BUSY:
+  	case MOB_CLOWN_SCARY:
+  	case MOB_MIME_ANIMATED:
+  	case MOB_GUY_LAZY:
+  	case MOB_WIFE_FARMER:
+  	case MOB_DRUNK_TRADER_RICH:
+  		return TRUE;
+  	default:
+  		break;
+  } 
+  */ 
   return UtilProcs(ch->spec);
 }
 

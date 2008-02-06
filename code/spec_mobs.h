@@ -198,7 +198,8 @@ const int SPEC_CENTRAL_BANKER     =211;
 const int SPEC_CANNON_LOADER      =212;
 const int SPEC_ID_CARD_PROVIDER   =213;
 const int SPEC_TARGET_DUMMY       =214;
-const int NUM_MOB_SPECIALS        =214;
+const int SPEC_FRUIT_SCAVENGER    =215;
+const int NUM_MOB_SPECIALS        =215;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

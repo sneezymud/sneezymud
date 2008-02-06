@@ -15,7 +15,7 @@ extern int seed_to_plant(int vnum);
 
 class TPlant : public TExpandableContainer {
   private:
-  int planttype, plantage, plantyield;
+  int planttype, plantage, plantyield, verminated;
 
   public:
     virtual void assignFourValues(int, int, int, int);
@@ -32,6 +32,8 @@ class TPlant : public TExpandableContainer {
     int getAge() const { return plantage; }
     void setYield(int t){ plantyield=t; }
     int getYield() const { return plantyield; }
+    void setVerminated(int t){ verminated=t; }
+    int getVerminated() const { return verminated; }
     void peeOnMe(const TBeing *);
 
     TPlant();

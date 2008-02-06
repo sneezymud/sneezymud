@@ -22,11 +22,12 @@ TPlant::TPlant(const TPlant &a) :
 {
 }
 
-void TPlant::assignFourValues(int x1, int x2, int x3, int)
+void TPlant::assignFourValues(int x1, int x2, int x3, int x4)
 {
   setType(x1);
   setAge(x2);
   setYield(x3);
+  setVerminated(x4);
 }
 
 void TPlant::getFourValues(int *x1, int *x2, int *x3, int *x4) const
@@ -34,7 +35,7 @@ void TPlant::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x1 = getType();
   *x2 = getAge();
   *x3 = getYield();
-  *x4 = 0;
+  *x4 = getVerminated();
 }
 
 TPlant & TPlant::operator=(const TPlant &a)
@@ -46,7 +47,10 @@ TPlant & TPlant::operator=(const TPlant &a)
 
 TPlant::~TPlant()
 {
-  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i.") % this->getName() % this->getYield());
+  if (this->getVerminated())
+	  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i, %i lost to vermin.") % this->getName() % this->getYield() % this->getVerminated());
+  else
+	  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i.") % this->getName() % this->getYield());
 }
 
 int TPlant::putSomethingInto(TBeing *ch, TThing *)
@@ -57,11 +61,13 @@ int TPlant::putSomethingInto(TBeing *ch, TThing *)
   return 2;
 }
 
-
 sstring TPlant::statObjInfo() const
 {
   char buf[256];
-  sprintf(buf, "Type: %i Age: %i Total Yield: %i", getType(), getAge(), getYield());
+  if (this->getVerminated())
+	  sprintf(buf, "Type: %i Age: %i Total Yield: %i To Vermin: %i", getType(), getAge(), getYield(), getVerminated());
+  else 
+	  sprintf(buf, "Type: %i Age: %i Total Yield: %i", getType(), getAge(), getYield());  
   sstring a(buf);
   return a;
 }
@@ -215,7 +221,7 @@ void TPlant::updateDesc()
     8760, // bah
     17520, // 1 year
     17520, // 1 year
-    2074, // 2ish real days, not sure
+    2304, // 2 real days
     262800 // 15 years 
   };
   
@@ -295,6 +301,39 @@ void TPlant::updateDesc()
       *this += *t;
       setYield(getYield() + 1);
     }
+  }
+  
+  if (roomp && getType() == 13 && plantindex > 1) {
+	  // candy trees spawn rainbow-rats, which eat the candy
+	  if (plantindex > 2) {
+		  TThing *tcount;
+		  TPlant *tree;
+		  double tree_count = 0.0;
+		  for(tcount = roomp->getStuff(); tcount; tcount = tcount->nextThing) {
+			tree = dynamic_cast<TPlant *>(tcount);
+		    if(tree && tree->getType() == getType()) {
+		      // looking for same type of trees
+		      // let's only count trees with stuff in them, to avoid over-population of vermin
+		      if (tree->getStuff())
+		    	  ++tree_count;
+		    }
+		  }
+		  if (tree_count > 1 && ::number(1,100000) < (int) ((tree_count / 16) * 1000)) {
+			// this is about a 60% chance per real hour for a room of 8 laden trees
+			// 20% for a room of 2 trees
+			int mob_vnum = MOB_CANDY_HEART_EATER; // sugar-toothed weasel
+		    TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
+		    if (!mob) {
+		      // vlogf(LOG_PROC, fmt("Failed attempt to spawn a fruit scavenger (%i) in room %i.") % mob_vnum % in_room);
+		      return;
+		    }
+		    *roomp += *mob;
+		    colorAct(COLOR_MOBS, 
+		            ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
+		            mob->ex_description->findExtraDesc("repop") :
+		            "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);
+		  }
+	  }
   }
 }
 

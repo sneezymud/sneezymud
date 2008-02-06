@@ -5,7 +5,7 @@
 #include "obj_pool.h"
 #include "combat.h"
 #include "pathfinder.h"
-
+#include "obj_plant.h"
 
 bool okForJanitor(TMonster *myself, TObj *obj)
 {
@@ -862,4 +862,78 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   return 0;
 }
 
+int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+	if ((cmd != CMD_GENERIC_PULSE) || !myself->awake() || myself->fight())
+		return FALSE;
 
+	if (::number(0, 14))
+		return FALSE;
+
+	int seek_tree = 13; // candy heart tree type
+	int seek_fruit = 29405; // candy heart seed
+	
+	TPlant *tree;
+	TObj *fruit;
+	TThing *t, *t2;
+	
+	for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+
+		fruit = dynamic_cast<TObj *>(t);
+		if (fruit && fruit->objVnum() == seek_fruit) {
+			// eat it and return
+			act("$n eats $p.", TRUE, myself, fruit, 0, TO_ROOM);
+			act("You eat $p.", FALSE, myself, fruit, 0, TO_CHAR);
+			delete fruit;
+			return TRUE;
+		}
+		
+		tree = dynamic_cast<TPlant *>(t);
+		if (tree && tree->getType() == seek_tree) {
+			// find fruit inside and eat it
+			for (t2 = tree->getStuff(); t2; t2 = t2->nextThing) {
+				fruit = dynamic_cast<TObj *>(t2);
+				if (fruit && fruit->objVnum() == seek_fruit) {
+					act(fmt("$n eats %s from $p.") % fruit->getName(), TRUE, myself, tree, 0, TO_ROOM);
+					act(fmt("You eat %s from a $p.") % fruit->getName(), FALSE, myself, tree, 0, TO_CHAR);
+					tree->setVerminated(tree->getVerminated() + 1);
+					delete fruit;
+					return TRUE;
+				}
+			}
+		}
+	}
+	
+	// find nearby trees or fruits and go to them
+	vector <dirTypeT> possible_exits;
+	TRoom *rp;
+	dirTypeT use_dir;
+	for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
+		if (myself->roomp->exitDir(use_dir) && !IS_SET(myself->roomp->exitDir(use_dir)->condition, EX_CLOSED)) {
+			rp = real_roomp(myself->roomp->exitDir(use_dir)->to_room);
+			if (!rp)
+				continue;
+			for (t = rp->getStuff(); t; t = t->nextThing) {
+				fruit = dynamic_cast<TObj *>(t);
+				if (fruit && fruit->objVnum() == seek_fruit) {
+					possible_exits.push_back(use_dir);
+					break;
+				}
+				tree = dynamic_cast<TPlant *>(t);
+				if (tree && tree->getType() == seek_tree) {
+					possible_exits.push_back(use_dir);
+					break;
+				}
+			}
+		}
+	}
+	
+	if (!possible_exits.size()){
+		act("$n lifts its nose and sniffs.", TRUE, myself, 0, 0, TO_ROOM);
+		act("You lift your nose and sniff, but can't smell any candy.", FALSE, myself, 0, 0, TO_CHAR);
+		return TRUE;
+	}
+	myself->doMove(possible_exits[::number(0, possible_exits.size() - 1)]);
+	return TRUE;
+
+}
