@@ -659,7 +659,6 @@ bool UtilMobProc(TBeing *ch)
   if (ch->spec == SPEC_BUTLER)
     return TRUE;
   if (IS_SET(ch->specials.act, ACT_IMMORTAL)) {
-	    vlogf(LOG_MISC, fmt("Immortal %s (%d)") % ch->getName() % ch->mobVnum());
 	  return TRUE;
   }
   /*
