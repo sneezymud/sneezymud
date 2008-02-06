@@ -215,7 +215,7 @@ void TPlant::updateDesc()
     8760, // bah
     17520, // 1 year
     17520, // 1 year
-    3456, // 3 real days
+    2074, // 2ish real days, not sure
     262800 // 15 years 
   };
   
