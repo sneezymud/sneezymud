@@ -174,14 +174,14 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       nMoveCost++;
 
     if (to_here->isWaterSector()) {
-      ch->sendTo("Your mount refuses to charge into the water, your forced to stop.\n\r");
+      ch->sendTo("Your mount refuses to charge into the water, you're forced to stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
     }
 
     if (from_here->isWaterSector()) {
-      ch->sendTo("Your mount refuses to charge out of the water, your forced to stop.\n\r");
+      ch->sendTo("Your mount refuses to charge out of the water, you're forced to stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
@@ -347,7 +347,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (to_here->isVertSector()) {
-      ch->sendTo("Your mount refuses to charge in that direction, your forced to stop.\n\r");
+      ch->sendTo("Your mount refuses to charge in that direction, you're forced to stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
