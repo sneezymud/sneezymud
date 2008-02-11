@@ -1032,6 +1032,7 @@ void TBeing::doScan(const char *argument)
   }
   max_range -= TerrainInfo[roomp->getSectorType()]->thickness;
   max_range += (visionBonus / 10);
+  max_range += race->getLOS();
 
   // Let weather conditions play a part in range - Russ 10/14/98
   // silly immortal check, but imms gripe about it

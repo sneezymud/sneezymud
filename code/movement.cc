@@ -533,6 +533,12 @@ int TBeing::rawMove(dirTypeT dir)
     need_movement += 20;
   }
 
+  // great swimmers dont have to work as hard in water
+  if (isAffected(AFF_SWIM) && roomp->isWaterSector())
+    need_movement = need_movement / 2;
+  else if (isAffected(AFF_SWIM) && roomp->isUnderwaterSector())
+    need_movement = need_movement / 4;
+
   if (!riding && !isFlying()) {
     if (bothLegsHurt()) {
       if (!bothArmsHurt() && getPosition() == POSITION_CRAWLING) {
@@ -829,8 +835,10 @@ int TBeing::rawMove(dirTypeT dir)
         sendTo("You urge your mount out into the water.\n\r");
       else if (isLevitating() || isFlying())
          sendTo("If it weren't for your magic, your feet would be wet now.\n\r");
-      else if (!has_boat)
+      else if (!has_boat && !isAffected(AFF_SWIM))
           sendTo("You wade out into the water.  I hope you can swim...\n\r");
+      else if (!has_boat && isAffected(AFF_SWIM))
+          sendTo("You gracefully slip into the water.\n\r");
       else
         sendTo("You push your boat out into the water.\n\r");
     } else {
@@ -849,7 +857,7 @@ int TBeing::rawMove(dirTypeT dir)
         } else {
           if (!has_boat) {
             if ((rc = canSwim(dir)) > 0) {
-              sendTo("You swim valiantly through the water.\n\r");
+              sendTo(fmt("You swim %s through the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
             } else {
               sendTo("You try to swim, but fail to make any headway.\n\r");
               if (rc == -1)
@@ -893,7 +901,7 @@ int TBeing::rawMove(dirTypeT dir)
     if (from_here->isUnderwaterSector()) {
       if (!isAffected(AFF_WATERBREATH)) {
         if ((rc = canSwim(dir)) > 0) {
-          sendTo("You swim valiantly under the water.\n\r");
+          sendTo(fmt("You swim %s under the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
         } else {
           sendTo("You try to swim under the water, but fail to make any headway.\n\r");
           if (rc == -1)
@@ -3234,6 +3242,10 @@ void TBeing::doFly()
   }
   if (roomp && roomp->isUnderwaterSector()) {
     sendTo("It hurts your brain too much even contemplating how to fly underwater?!?\n\r");
+    return;
+  }
+  if (race->isWinged() && race->isFeathered() && !isAffected(AFF_FLIGHTWORTHY)) {
+    sendTo("Your flight feathers are too dirty to fly properly.  You need to keep up on your preening.\n\r");
     return;
   }
   act("You take to the air and start flying about.", TRUE, this, 0, 0, TO_CHAR);

@@ -369,6 +369,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Practice Reset: Level50", MOB_NONE}, //353
   {"February Quest: Gave 3 bottles of port", MOB_DRUNK_TRADER_RICH},//354
   {"February Quest: Gave 4 bottles of port", MOB_DRUNK_TRADER_RICH},//355
+  {"Trait: Pyrophobia", MOB_NONE}, // 356
   {"", MOB_NONE}, 
 };
 

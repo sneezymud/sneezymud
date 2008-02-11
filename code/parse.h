@@ -579,6 +579,7 @@ enum cmdTypeT {
      CMD_UNHARNESS,
      CMD_TOAST,
      CMD_BESTOW,
+     CMD_PREEN,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

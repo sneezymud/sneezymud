@@ -1430,6 +1430,26 @@ int TBeing::flameEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
+
+  if (hasQuestBit(TOG_HAS_PYROPHOBIA))
+  {
+    act("<R>FIRE!  There is FIRE everywhere!  Oh, the HORROR!!<1>",TRUE,this,0,0,TO_CHAR);
+    if (::number(0, 1))
+    {
+      act("You faint from the shock!",TRUE,this,0,0,TO_CHAR);
+      if (riding)
+      {
+        act("$n sways then crumples as $e faints.",FALSE,this,0,0,TO_ROOM);
+        res = fallOffMount(riding, POSITION_RESTING);
+        if (IS_SET_DELETE(res, DELETE_THIS))
+          return DELETE_THIS;
+      }
+      else
+        act("$n stumbles then crumples as $e faints.",FALSE,this,0,0,TO_ROOM);
+      setPosition(POSITION_SLEEPING);
+    }
+  }
+
   return 1;
 }
 

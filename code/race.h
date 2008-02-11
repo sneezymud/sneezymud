@@ -22,12 +22,12 @@ class TCorpse;
 
 enum race_t {
 /* Race -- Npc, otherwise */
-  RACE_NORACE,          /*   0 */	RACE_HUMAN,     /*   1 */
+  RACE_NORACE,          /*   0 */       RACE_HUMAN,     /*   1 */
   RACE_ELVEN,           /*   2 */       RACE_DWARF,     /*   3 */
   RACE_HOBBIT,          /*   4 */       RACE_GNOME,     /*   5 */
   RACE_OGRE,            /*   6 */
 
-/* end of player races */
+/* end of basic player races */
 
   RACE_PEGASUS,         /*   7 */       RACE_LYCANTH,   /*   8 */
   RACE_DRAGON,          /*   9 */       RACE_UNDEAD,    /*  10 */
@@ -82,13 +82,13 @@ enum race_t {
   RACE_GOPHER,          /* 107 */       RACE_LAMIA,     /* 108 */
   RACE_SAHUAGIN,        /* 109 */       RACE_BAT,       /* 110 */
   RACE_PYGMY,           /* 111 */       RACE_WYVERN,    /* 112 */
-  RACE_KUOTOA,          /* 113 */	RACE_BAANTA,    /* 114 */
+  RACE_KUOTOA,          /* 113 */       RACE_BAANTA,    /* 114 */
   RACE_GNOLL,           /* 115 */       RACE_HOBGOBLIN, /* 116 */
   RACE_MIMIC,           /* 117 */       RACE_MEDUSA,    /* 118 */
   RACE_PENGUIN,         /* 119 */       RACE_OSTRICH,   /* 120 */
   RACE_TROG,            /* 121 */       RACE_COATL,     /* 122 */
   RACE_SIMAL,           /* 123 */       RACE_WYVELIN,   /* 124 */
-  RACE_FLYINSECT,       /* 125 */	RACE_RATMEN,    /* 126 */
+  RACE_FLYINSECT,       /* 125 */       RACE_RATMEN,    /* 126 */
   // see remove list in oldrace.cc before adding here
 
   MAX_RACIAL_TYPES
@@ -112,6 +112,7 @@ const unsigned int FOURLEGGED  = (1<<6);
 const unsigned int COLDBLOODED = (1<<7);
 const unsigned int RIDABLE     = (1<<8);
 const unsigned int MAGICFLY    = (1<<9);
+const unsigned int FEATHERED   = (1<<10);
 
 enum lore_t {
   LORE_ANIMAL,
@@ -130,10 +131,16 @@ extern const char * const Lores[MAX_LORES];
 void listRaces(TBeing *caller);
 
 const unsigned int TALENT_FAST_REGEN = (1<<0);
+const unsigned int TALENT_FISHEATER  = (1<<1);
+const unsigned int TALENT_MEATEATER  = (1<<2);
 
-const unsigned int MAX_TALENTS = 1;  // move and change
+
+const unsigned int MAX_TALENTS = 3;  // move and change
 
 extern const char * const talents[MAX_TALENTS];
+
+// these are regular toggles from toggle.h, but ever being from that race automatically gets it
+const unsigned int MAX_RACIAL_TOGGLES = 3;
 
 class Race {
   friend class TBeing;
@@ -190,6 +197,7 @@ public:
   bool isColdBlooded() const;
   bool isRidable() const;
   bool isDumbAnimal() const;
+  bool isFeathered() const;
 
   const char *moveIn() const;
   const char *moveOut() const;
@@ -227,6 +235,12 @@ public:
 
   const Immunities & getImmunities() const;
   
+  int getBaseArmor() const; // gets the basic armor class of this race (usually 1000)
+
+  int getGarbles() const; // gets the garbles which members of this race have by default
+
+  void applyToggles(TBeing *character) const; // applies toggles common to all members of this race to character
+
 private:
   float corpse_const;
   sstring singular_name;
@@ -235,6 +249,9 @@ private:
   race_t raceType;
   lore_t Kingdom;
   unsigned int talents;
+  unsigned int garbles;
+  unsigned int toggles[MAX_RACIAL_TOGGLES];
+  unsigned int cToggles;
 
   // Dimensions base + NumDice d DieSize
   int baseAge;		int ageNumDice;		int ageDieSize;

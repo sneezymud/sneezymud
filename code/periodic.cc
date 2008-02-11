@@ -22,6 +22,7 @@
 #include "process.h"
 #include "obj_pool.h"
 #include "database.h"
+#include "obj_light.h"
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD=20000;
@@ -347,7 +348,7 @@ int TBeing::riverFlow(int)
     return FALSE;
 
   if ((rc = canSwim(rd)) > 0) {
-    sendTo("You swim valiantly against the current.\n\r");
+    sendTo(fmt("You swim %s against the current.\n\r") % (isAffected(AFF_SWIM) ? "effortlessly" : "valiantly"));
     return FALSE;
   }
 
@@ -849,6 +850,12 @@ int TBeing::updateTickStuff()
       }
     }
 
+    // the feathered races automatically poop.  Its a cultural thing.
+    if (getMyRace()->isFeathered() && !fight() && getPosition() > POSITION_SLEEPING &&
+      (getCond(PEE) + getCond(POOP)) && !::number(0,2))
+    {
+      doPoop();
+    }
 
     if (desc && (desc->character != this))
       vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
@@ -1114,6 +1121,47 @@ int TBeing::updateHalfTickStuff()
       if(dynamic_cast<TBaseCorpse *>(t) || ((tb=dynamic_cast<TBeing *>(t)) && tb->isUndead()))
       {
         sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% t->getName());
+        doFlee("");
+        addCommandToQue("flee");
+        addCommandToQue("flee");
+        break;
+      }
+    }
+  }
+
+  // player is scared of flame (exempt or lessen for mobs?)
+  if(hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) && !::number(0,2)){
+    bool flee = false;
+
+    for(TThing *t=roomp->getStuff();!flee && t;t=t->nextThing){
+      TThing *fleeing = t;
+      TObj *tObj = dynamic_cast<TObj *>(t);
+      TLight *tLight = dynamic_cast<TLight *>(t);
+      TBeing *tBeing = dynamic_cast<TBeing *>(t);
+
+      // check for burning/lit objects in room
+      // perhaps later check for objects made of flame (flares)
+      flee = ((tObj && tObj->isObjStat(ITEM_BURNING)) || (tLight && tLight->isLit()));
+
+      // check for burning/lit objects on being
+      if (!flee && tBeing)
+      {
+        for(wearSlotT iWear = MIN_WEAR; !flee && iWear < MAX_WEAR; iWear++){
+          if (!tBeing->equipment[iWear])
+            continue;
+          fleeing = tBeing->equipment[iWear];
+          tObj = dynamic_cast<TObj *>(tBeing->equipment[iWear]);
+          tLight = dynamic_cast<TLight *>(tBeing->equipment[iWear]);
+          flee = ((tObj && tObj->isObjStat(ITEM_BURNING)) || (tLight && tLight->isLit()));
+        }
+      }
+
+      if (flee)
+      {
+        if (tBeing && tBeing != this)
+          sendTo(fmt("You lose your cool at the sight of %s's %s and freak out!\n\r")% tBeing->getName() % fleeing->getName());
+        else
+          sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% fleeing->getName());
         doFlee("");
         addCommandToQue("flee");
         addCommandToQue("flee");

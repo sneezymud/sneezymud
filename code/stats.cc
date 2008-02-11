@@ -55,6 +55,22 @@ void Stats::zero()
     values[stat]=0;
 }
 
+int Stats::total() const
+{
+  int total = 0;
+  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+    total += values[stat];
+  return total;
+}
+
+bool Stats::isDefault() const
+{
+  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+    if (values[stat] != 0)
+      return false;
+  return true;
+}
+
 sstring Stats::showStats(TBeing *caller)
 {
   byte level = caller->GetMaxLevel();
@@ -633,6 +649,10 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
   // cha and kar will trade off directly
   // cha will raise if high contact with others
   // kar drops for same reason (damage to soul from cynacism)
+
+  // for the later races, we just have a slot for every territory, so adjust to fit the human model
+  if (ter >= HOME_TER_GOBLIN_URBAN)
+    ter = territoryT(1+ ((ter - HOME_TER_GOBLIN_URBAN) % 8));
 
   switch (ter) {
     case HOME_TER_NONE:

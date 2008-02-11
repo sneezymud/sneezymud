@@ -28,11 +28,12 @@ const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);
 
 const int HISTORY_SIZE=10;
 
-const int MAX_TRAITS=16;
+const int MAX_TRAITS=17;
 
 struct TTraits {
   int tog, points;
   sstring name, desc;
+  int num50race, num50any;
 };
 
 enum termTypeT {
@@ -47,16 +48,10 @@ enum connectStateT {
        CON_NMECNF,
        CON_PWDNRM,
        CON_PWDCNF,
-       CON_QSEX,
        CON_RMOTD,
-       CON_QCLASS,
        CON_PWDNCNF,
        CON_WIZLOCK,
-       CON_QRACE,
        CON_DELETE,
-       CON_STAT_COMBAT,
-       CON_STAT_COMBAT2,
-       CON_QHANDS,
        CON_DISCON,
        CON_NEWACT,
        CON_ACTPWD,
@@ -71,39 +66,46 @@ enum connectStateT {
        CON_DELCHAR,
        CON_ACTDELCNF,
        CON_EDITTING,
-       CON_DISCLAIMER,
        CON_TIME,
        CON_CHARDELCNF,
-       CON_DISCLAIMER2,
-       CON_DISCLAIMER3,
        CON_WIZLOCKNEW,
-       CON_STAT_LEARN,
-       CON_STAT_UTIL,
-       CON_CREATE_DONE,
-       CON_STATS_START,
-       CON_ENTER_DONE,
-       CON_STATS_RULES,
-       CON_STATS_RULES2,
-       CON_HOME_HUMAN,
-       CON_HOME_ELF,
-       CON_HOME_DWARF,
-       CON_HOME_GNOME,
-       CON_HOME_OGRE,
-       CON_HOME_HOBBIT,
-       CON_MULTIWARN,
-       CON_TRAITS1,
-       CON_TRAITS2,
-       CON_TRAITS3,
-       CON_FAE_TOUCHED,
-// if adding more here, update connected_types array as well
+
+       // new states for streamlined character creation
+       CON_CREATION_ERROR,
+       CON_CREATION_START,
+       CON_CREATION_NAME = CON_CREATION_START,
+       CON_CREATION_DISCLAIM1,
+       CON_CREATION_DISCLAIM2,
+       CON_CREATION_DISCLAIM3,
+       CON_CREATION_MULTIWARN,
+       CON_CREATION_RESET,
+       CON_CREATION_LAUNCHPAD,
+       CON_CREATION_RENAME,
+       CON_CREATION_SEX,
+       CON_CREATION_HANDS,
+       CON_CREATION_RACE,
+       CON_CREATION_HOMETERRAIN,
+       CON_CREATION_CLASS,
+       CON_CREATION_TRAITS1,
+       CON_CREATION_TRAITS2,
+       CON_CREATION_TRAITS3,
+       CON_CREATION_CUSTOMIZE_START,
+       CON_CREATION_CUSTOMIZE_COMBAT,
+       CON_CREATION_CUSTOMIZE_COMBAT2,
+       CON_CREATION_CUSTOMIZE_LEARN,
+       CON_CREATION_CUSTOMIZE_UTIL,
+       CON_CREATION_DONE,
+       CON_CREATION_MAX,
+
+       // if adding more here, update connected_types array as well
        MAX_CON_STATUS,
-// these are intentionally higher than MAX_CON
+       // these are intentionally higher than MAX_CON_STATUS
        CON_REDITING,
        CON_OEDITING,
        CON_MEDITING,
        CON_HELP,
        CON_WRITING,
-       CON_SEDITING
+       CON_SEDITING,
 };
 
 class TAccount;
@@ -411,6 +413,7 @@ class bonusStatPoints {
   int util;
 
   bonusStatPoints();
+  void clear();
 };
 
 
@@ -504,35 +507,19 @@ class Descriptor
     void saveAccount();
     int doAccountMenu(const char *);
     void add_to_history_list(const char *);
-    int getFreeStat(connectStateT);
     int nanny(sstring);
+    int creation_nanny(sstring);
     void sendMotd(int);
-    void go_back_menu(connectStateT);
     void EchoOn();
     void EchoOff();
-    void sendHomeList();
-    void sendStartStatList();
-    void sendDoneScreen();
-    void sendFaeMessage(int, bool);
     void sendPermaDeathMessage();
-    const char *getStatDescription(int);
-    void sendStatList(int, int);
-    void sendStatRules(int);
-    void sendRaceList();
-    void sendClassList(int);
-    void sendTraitsList(int);
     bool start_page_file(const char *, const char *);
-    bool canChooseClass(int, bool multi = FALSE, bool triple = FALSE);
     int client_nanny(char *);
     void writeToQ(const sstring &arg);
     void clientf(const sstring &msg);
     bool page_file(const char *);
     void page_string(const sstring &, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
     void show_string(const char *, showNowT, allowReplaceT);
-    const sstring badClassMessage(int Class, bool multi = FALSE, bool triple = FALSE);
-#if 0
-    char *badRaceMessage(int race);
-#endif
     void send_client_motd();
     void send_client_inventory();
     void send_client_room_people();
@@ -556,6 +543,15 @@ class Descriptor
     void beep() {
       writeToQ("");
     }
+
+    // used for character creation
+    void zeroChosenStats();
+    void setChosenStat(statTypeT stat, int val);
+    int totalChosenStats() const;
+    bool isDefaultChosenStats() const;
+    int getChosenStat(statTypeT stat) const;
+    int getRacialStat(statTypeT stat) const;
+    int getTerritoryStat(statTypeT stat) const;
 
     const sstring doColorSub() const;
     const sstring ansi_color_bold(const char *s) const;

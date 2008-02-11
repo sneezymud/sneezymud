@@ -21,6 +21,8 @@ sstring garble_ghost(const TBeing *from, const TBeing *to, const sstring &arg, S
 sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 
 TGarble GarbleData[GARBLE_MAX] = {
   { "innuendo", "Makes the character end sentences, if you know what I mean", false, GARBLE_SCOPE_EVERYONE, garble_innuendo, SPEECH_FLAG_VERBAL },
@@ -34,7 +36,9 @@ TGarble GarbleData[GARBLE_MAX] = {
   { "pg13all", "Makes the character not get or say any swear words", true, GARBLE_SCOPE_EVERYONE, garble_PG13filter, SPEECH_FLAG_NONWRITE },
   { "glubglub", "Makes the character say glub glub", true, GARBLE_SCOPE_EVERYONE, garble_glubglub, SPEECH_FLAG_VERBALEM },
   { "pirate", "Makes the character talk like a pirate", false, GARBLE_SCOPE_EVERYONE, garble_pirate, SPEECH_FLAG_VERBAL },
-  { "freshprince", "Makes the character do the fresh prince of Brightmoon rap", false, GARBLE_SCOPE_EVERYONE, garble_freshprince, SPEECH_FLAG_SAY }
+  { "freshprince", "Makes the character do the fresh prince of Brightmoon rap", false, GARBLE_SCOPE_EVERYONE, garble_freshprince, SPEECH_FLAG_SAY },
+  { "fishtalk", "Makes the character talk like they are a fish to non-fish", false, GARBLE_SCOPE_INDIVIDUAL, garble_fishtalk, SPEECH_FLAG_VERBALEM },
+  { "lolcats", "Makes the character do a lolcats talk (used for trolls)", false, GARBLE_SCOPE_INDIVIDUAL, garble_lolcats, SPEECH_FLAG_VERBALEM },
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
@@ -63,6 +67,12 @@ int TBeing::getGarbles(TBeing *to) const
 
   if (hasQuestBit(TOG_BLAHBLAH))
     garbleFlags |= GARBLE_FLAG_BLAHBLAH;
+
+  if (to && to->getMyRace()->getGarbles() != getMyRace()->getGarbles() &&
+    to->getStat(STAT_CURRENT, STAT_INT) < 180)
+  {
+    garbleFlags |= getMyRace()->getGarbles();
+  }
 
   return garbleFlags;
 }
@@ -725,6 +735,176 @@ sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &
   return lyrics[stringIndex++];
 }
 
+// makes the character talk like a fish - used for the fishman/fishmen race
+// compiled by watching countless hours of He-Man clips for Mer-man speaking parts.
+// Heres a spoiler: there aren't many.
+sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring watery[] =
+  {
+    "glug", "glub", "gug", "glurg",
+    "gurgle", "guggle", "glubble", "glurble",
+    "blug", "bluggle", "blurgle", "rgrle",
+    "rglurg", "aahhrrgl", "glglrraa", "bloop",
+    "gloop", "goop", "grloop",
+  };
+  sstring out;
+  int iWord = 0;
+  sstring word = arg.word(iWord);
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(; !word.empty(); word = arg.word(++iWord))
+  {
+    if (!out.empty())
+      out += ' ';
+    // replace randomly a word
+    if (chance > number(0, 100))
+      out += watery[number(0, cElements(watery))].matchCase(word);
+    else
+    {
+      // roll r's
+      if (chance > number(0, 100))
+      {
+        word.inlineReplaceString("r", "rr");
+        word.inlineReplaceString("R", "Rr");
+      }
+
+      // g sounds are growled (add r's)
+      if (chance > number(0, 100))
+      {
+        word.inlineReplaceString("g", "gr");
+        word.inlineReplaceString("G", "Gr");
+      }
+
+      // l sounds are gurgled
+      if (chance > number(0, 100))
+      {
+        word.inlineReplaceString("l", "gl");
+        word.inlineReplaceString("L", "gl");
+      }
+
+      // th sounds are 'wr'
+      if (chance > number(0, 100))
+      {
+        word.inlineReplaceString("th", "wr");
+        word.inlineReplaceString("Th", "Wr");
+      }
+
+      // t sounds are 'w'
+      if (chance > number(0, 100))
+      {
+        word.inlineReplaceString("t", "w");
+        word.inlineReplaceString("T", "W");
+      }
+
+      out += word;
+    }
+  }
+
+  return out;
+}
+
+// submitted by Vasco - used by the troll race as its base talk
+sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring lolcats_replace[][2] = {
+    { ",", " *,* " },
+    { ";", " *;* " },
+    { ".", " *.* " },
+    { "!", " *!* " },
+    { "?", " *?* " },
+
+    { " am ", " iz " },
+    { " are ", " iz " },
+    { " am ", " iz " },
+    { " is ", " iz " },
+    { " you ", " u " },
+    { " you're ", " ur " },
+    { " youre ", " ur " },
+    { " your ", " ur " },
+    { " have ", " haz " },
+    { " my ", " mai " },
+    { " the ", " da " },
+    { " this ", " diz " },
+    { " that ", " dat " },
+    { " them ", " dem " },
+    { " doesnt ", " dont " },
+    { " dont ", " dun " },
+    { " doesn't ", " dont " },
+    { " don't ", " dun " },
+    { " myself ", " me " },
+
+    { "tion ", "shun " },
+    { "tial ", "shal " },
+    { "ight ", "ite " },
+    { "ever ", "evar " },
+    { "pped ", "opt " },
+
+    { "ude ", "ewd " },
+    { "ith ", "if " },
+    { "ies ", "eez " },
+    { "ood ", "ud " },
+    { "tia ", "shiay " },
+    { "ger ", "guh " },
+    { "ove ", "uv " },
+    { "cks ", "x " },
+    { "ear ", "eer " },
+    { "ets ", "itz " },
+    { "ing ", "in " },
+
+    { "ty ", "teh " },
+    { " qu", " kw" },
+    { "ow ", "ao " },
+    { "en ", "eh " },
+    { "es ", "z " },
+    { "ck ", "kk " },
+    { "le ", "el " },
+    { "ed ", "d " },
+    { "x ", "ks " },
+    { "s ", "z " },
+
+    { "c", "k" },
+    { "wr", "r" },
+
+    { " *,* ", "," },
+    { " *;* ", ";" },
+    { " *.* ", "." },
+    { " *!* ", "!" },
+    { " *?* ", "?" },
+  };
+
+  sstring out;
+  int iWord = 0;
+  sstring word = arg.word(iWord);
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(; !word.empty(); word = arg.word(++iWord))
+  {
+    if (!out.empty())
+      out += ' ';
+
+    vlogf(LOG_BUG, sstring("processing word: ") + word);
+
+    if (chance > number(0, 100) || chance > number(0, 100))
+    {
+      sstring munged = " ";
+      munged += word.lower();
+      munged += ' ';
+
+      for(int iReplace = 0; iReplace < (int)cElements(lolcats_replace); iReplace++)
+        munged.inlineReplaceString(lolcats_replace[iReplace][0], lolcats_replace[iReplace][1]);
+
+    vlogf(LOG_BUG, sstring("word munged: <") + munged + sstring(">"));
+
+    vlogf(LOG_BUG, sstring("adding: <") + munged.trim().matchCase(word) + sstring("> to out: ") + out);
+      out += munged.trim().matchCase(word);
+    }
+    else
+      out += word;
+  }
+
+  return out;
+}
 
 
 const sstring RandomWord()

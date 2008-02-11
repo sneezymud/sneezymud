@@ -53,10 +53,6 @@ const char * const SPELL_HELP_PATH  ="help/_spells";
 const char * const HELP_PAGE_FILE   ="help/general";  /* for HELP <CR> */
 const char * const WIZLIST_FILE     ="txt/wizlist";   /* for WIZLIST   */
 
-const char * const CLASSHELP        ="help/classes overview";
-const char * const RACEHELP         ="help/races overview";
-const char * const STATHELP         ="help/characteristics overview";
-
 const char * const MUDADMIN_EMAIL   ="mudadmin@sneezymud.com";
 const char * const CODERS_EMAIL     ="mudadmin@sneezymud.com";
 

@@ -1438,38 +1438,37 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       if (att == APPLY_LIGHT)
         o->addToLight(number1);
 
-      int i;
-      for (i = 0; (!done && (i < MAX_OBJ_AFFECT)); i++) {
-	if (num == 2 && !number1) {
-	  if (o->affected[i].location == att) {
-	    o->affected[i].location = APPLY_NONE;
-	    o->affected[i].modifier = 0;
-            o->affected[i].modifier2 = 0;
-	    done = TRUE;
-	  }
+      bool remove = (num == 2 && !number1) || (num == 3 && !number2);
+      // for garbles, we are 'toggling'.  A zero number1 is not a 'remove'
+      if (att == APPLY_GARBLE) {
+        remove = false;
+        for (int j = 0; !remove && j < MAX_OBJ_AFFECT; j++)
+          remove = o->affected[j].location == att && o->affected[j].modifier == number1;
+      }
+
+      for (int i = 0; (!done && (i < MAX_OBJ_AFFECT)); i++) {
+        // remove affect
+        if (remove && o->affected[i].location == att) {
+          o->affected[i].location = APPLY_NONE;
+          o->affected[i].modifier = 0;
+          o->affected[i].modifier2 = 0;
+          done = TRUE;
+        // re-use armor slot
         } else if (att == APPLY_ARMOR && o->affected[i].location == APPLY_ARMOR) {
-	  o->affected[i].modifier = number1;
-	  o->affected[i].modifier2 = number2;
-	  done = TRUE;
-	} else if (!number2 && num == 3) {
-	  if (o->affected[i].location == att) {
-	    o->affected[i].location = APPLY_NONE;
-	    o->affected[i].modifier = 0;
-            o->affected[i].modifier2 = 0;
-	    done = TRUE;
-	  }
-	} else {
-	  if (o->affected[i].location == APPLY_NONE) {
-	    o->affected[i].location = att;
-	    o->affected[i].modifier = number1;
-            o->affected[i].modifier2 = number2;
-	    done = TRUE;
-	  }
-	}
+          o->affected[i].modifier = number1;
+          o->affected[i].modifier2 = number2;
+          done = TRUE;
+        // add affect
+        } else if (o->affected[i].location == APPLY_NONE) {
+          o->affected[i].location = att;
+          o->affected[i].modifier = number1;
+          o->affected[i].modifier2 = number2;
+          done = TRUE;
+        }
       }
       if (!done) {
-	ch->sendTo("Sorry, you can only have 5 applys. Remove an apply if you want another.\n\r");
-	return;
+        ch->sendTo("Sorry, you can only have 5 applys. Remove an apply if you want another.\n\r");
+        return;
       }
       change_obj_applys(ch, o, "", ENTER_CHECK);
       return;

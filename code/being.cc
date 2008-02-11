@@ -1602,7 +1602,7 @@ int getIronFleshArmor(wearSlotT slot){
 
 sh_int TBeing::getArmor() const
 {
-  sh_int armor=1000;
+  sh_int armor= getMyRace()->getBaseArmor();
   affectedData *af;
   TObj *to;
   int i;
@@ -1656,7 +1656,7 @@ void TBeing::setArmor(sh_int armor)
   //  points.armor = armor;
 }
 
-bool TBeing::isAffected(unsigned long bv) const
+bool TBeing::isAffected(uint64_t bv) const
 {
   if (!this) 
     {

@@ -3552,6 +3552,13 @@ int TMonster::notFightingMove(int pulse)
     }   
   }
 
+  // if I need to preen to be able to fly, let's keep ourselves flight-ready
+  if (!(pulse%(9*PULSE_MOBACT)) && !spelltask && !task && canFly() &&
+    race->isWinged() && race->isFeathered() && !isAffected(AFF_FLIGHTWORTHY)) {
+    sstring self = "";
+    doPreen(self);
+  }
+
   return FALSE;
 }
 

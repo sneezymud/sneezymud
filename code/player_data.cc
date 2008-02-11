@@ -892,7 +892,7 @@ void TBeing::saveChar(int load_room)
     if (!desc)
       return;
 
-    if ((desc->connected != CON_PLYNG)  && (desc->connected != CON_QCLASS))
+    if ((desc->connected != CON_PLYNG))
       return;
 
     tmp = NULL;
@@ -2296,7 +2296,7 @@ int numFifties(race_t race, bool perma, sstring account_name)
     for (classIndT i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++)
       max_level = max(max_level, st.level[i]);
 
-    if (max_level == 50 && st.race == race)
+    if (max_level == 50 && (race == RACE_NORACE || st.race == race))
       num_fifties += 1;
   }
   closedir(dfd);

@@ -1860,7 +1860,7 @@ void TBeing::statBeing(TBeing *k)
             apply_types[aff->location].name % aff->modifier;
         }
         str += fmt("     Expires in %6d updates, Bits set: %s\n\r\n\r") %
-          aff->duration % sprintbit(aff->bitvector, affected_bits);
+          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
 
       case AFFECT_DISEASE:
@@ -1981,7 +1981,7 @@ void TBeing::statBeing(TBeing *k)
         str += fmt("     Modifies %s by %ld points\n\r") %
           apply_types[aff->location].name % aff->modifier;
         str += fmt("     Expires in %6d updates, Bits set: %s\n\r") %
-          aff->duration % sprintbit(aff->bitvector, affected_bits);
+          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
 
       case AFFECT_GROWTH_POTION:
@@ -1989,7 +1989,7 @@ void TBeing::statBeing(TBeing *k)
         str += fmt("     Modifies %s by %ld points\n\r") %
           apply_types[aff->location].name % aff->modifier;
         str += fmt("     Expires in %6d updates, Bits set: %s\n\r") %
-          aff->duration % sprintbit(aff->bitvector, affected_bits);
+          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
 	
       case AFFECT_WARY:
@@ -2123,13 +2123,18 @@ void TBeing::statBeing(TBeing *k)
         str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
         break;
       case AFFECT_PAPPY_BLESSING:
-		str += "Pappy's Blessing.\n\r";
-		str += fmt("     Modifies %s by %ld points\n\r") %
-		apply_types[aff->location].name % aff->modifier;
-		str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
-
-    case LAST_ODDBALL_AFFECT:
+        str += "Pappy's Blessing.\n\r";
+        str += fmt("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+      case AFFECT_PREENED:
+        str += "Preened.\n\r";
+        str += fmt("     Enables %s for winged, feathered winged creatures.\n\r") %
+          sprintbit_64(aff->bitvector, affected_bits);
+        str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+      case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:
       case DAMAGE_GUST:

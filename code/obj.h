@@ -387,6 +387,7 @@ enum liqTypeT {
      LIQ_POT_ENLIVEN,
      LIQ_POT_PLASMA_MIRROR, // 135
      LIQ_POT_FILTH,
+     LIQ_GUANO,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);
@@ -401,6 +402,8 @@ const unsigned int DRINK_FROZEN  = (1<<3);
 /* special addition for drinks */
 const unsigned int FOOD_POISON   = (1<<0);
 const unsigned int FOOD_SPOILED  = (1<<1);
+const unsigned int FOOD_FISHED   = (1<<2);
+const unsigned int FOOD_BUTCHERED= (1<<3);
 
 /* special addition for corpses */
 const unsigned int CORPSE_NO_REGEN       = (1<<0);

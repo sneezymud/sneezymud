@@ -595,7 +595,8 @@ bool TBeing::hasHands() const
           isDiabolic() ||
           bod == BODY_FROGMAN ||
           bod == BODY_CENTAUR ||
-          bod == BODY_SIMAL) ;
+          bod == BODY_SIMAL ||
+          bod == BODY_FISHMAN) ;
 }
 
 const sstring TBeing::describeTransBodySlot(wearSlotT i) const

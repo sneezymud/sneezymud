@@ -1874,6 +1874,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	// secret!
 	break;
 
+    case AFFECT_PREENED:
+      if(show)
+        str+=fmt("Affected : 'Preened'\t: Time Left : %s\n\r") % describeDuration(this, aff->duration);
+      break;
+
       // cases beyond here are considered BOGUs
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:

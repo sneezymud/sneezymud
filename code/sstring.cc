@@ -224,9 +224,7 @@ const bool sstring::startsVowel() const
 const sstring sstring::replaceString(sstring find, sstring replace) const
 {
   sstring str = *this;
-  while(str.find(find)!=sstring::npos){
-    str.replace(str.find(find), find.size(), replace);
-  }
+  str.inlineReplaceString(find, replace);
   return str;
 }
 
@@ -297,4 +295,43 @@ int sstring::split(const char delimit, sstring *data) const
   return iFound + 1;
 }
 
+// given a sentence, try to match to the same case structure
+const sstring sstring::matchCase(const sstring match) const
+{
+  string out = *this;
+  int iOut = 0, iMatch = 0;
+
+  while(iMatch < (int)match.length() && iOut < (int)out.length())
+  {
+    // skip to next word to match case on
+    if (match[iMatch] == ' ')
+    {
+      while (iMatch < (int)match.length() && match[iMatch] == ' ') iMatch++;
+      if (out[iOut] != ' ')
+        while (iOut < (int)out.length() && out[iOut] != ' ') iOut++;
+      while (iOut < (int)out.length() && out[iOut] == ' ') iOut++;
+      continue;
+    }
+
+    // we're done with our word, skip to see next match
+    if (out[iOut] == ' ')
+    {
+      while (iOut < (int)out.length() && out[iOut] == ' ') iOut++;
+      if (out[iOut] != ' ')
+        while (iMatch < (int)match.length() && match[iMatch] != ' ') iMatch++;
+      while (iMatch < (int)match.length() && match[iMatch] == ' ') iMatch++;
+      continue;
+    }
+
+    // match yon case
+    if (isupper(match[iMatch]) && !isupper(out[iOut]))
+      out[iOut] = toupper(out[iOut]);
+    else if (islower(match[iMatch]) && !islower(out[iOut]))
+      out[iOut] = tolower(out[iOut]);
+    iMatch++;
+    iOut++;
+  }
+
+  return out;
+}
 

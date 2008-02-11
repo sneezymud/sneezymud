@@ -125,9 +125,9 @@ bool is_exact_name(const sstring &str, const sstring &namelist)
   return TRUE;
 }
 
-void TBeing::affectChange(unsigned long original, silentTypeT silent)
+void TBeing::affectChange(uint64_t original, silentTypeT silent)
 {
-  unsigned long current = specials.affectedBy;
+  uint64_t current = specials.affectedBy;
   int rc;
 
   if (silent)
@@ -272,7 +272,7 @@ void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
   vlogf(LOG_BUG, fmt("Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)") %  getName() % skillNum); 
 }
 
-void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bitv, bool add, silentTypeT silent)
+void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bool add, silentTypeT silent)
 {
   int tmpInt;
   CDiscipline *cd;
@@ -832,11 +832,11 @@ void TBeing::affectTo(affectedData *af, int renew, silentTypeT silent)
 void TBeing::affectRemove(affectedData *af, silentTypeT silent)
 {
   affectedData *af2;
-  int origamt = specials.affectedBy;
+  uint64_t origamt = specials.affectedBy;
 
   if (!affected) {
     vlogf(LOG_BUG, fmt("Affect removed from char (%s) without affect") %  getName());
-    vlogf(LOG_BUG, fmt("Location : %d, Modifier %d, Bitvector %d") %  af->location % af->modifier % af->bitvector);
+    vlogf(LOG_BUG, fmt("Location : %d, Modifier %d, Bitvector %llu") %  af->location % af->modifier % af->bitvector);
     return;
   } else
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector, FALSE, silent);
@@ -1201,7 +1201,7 @@ TThing *TBeing::unequip(wearSlotT pos)
   o->eq_pos = WEAR_NOWHERE;
   o->eq_stuck = WEAR_NOWHERE;
 
-  int origamt = specials.affectedBy;
+  uint64_t origamt = specials.affectedBy;
   TObj *to = dynamic_cast<TObj *>(o);
   if (to &&
      ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_HOLD))) {

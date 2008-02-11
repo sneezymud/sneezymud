@@ -71,6 +71,8 @@ class Stats {
   sh_int add(statTypeT stat, sh_int mod);
 
   void zero();
+  int total() const;
+  bool isDefault() const;
 
   sstring showStats(TBeing *caller);
 

@@ -2624,6 +2624,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       plasmaMirror(ch,level,learn);
       break;
     case LIQ_POT_FILTH:
+    case LIQ_GUANO:
       ch->sendTo("Your stomach twists into a knot and you feel like wretching.\r\n");
       if (ch->hasDisease(DISEASE_DYSENTERY))
         break;

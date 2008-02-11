@@ -518,6 +518,7 @@ int TBeing::validEquipSlot(wearSlotT i)
     case BODY_DEMON:
     case BODY_FROGMAN:
     case BODY_MEDUSA:
+    case BODY_FISHMAN:
       return ((i == WEAR_HAND_R) || (i == WEAR_HAND_L) ||
               (i == WEAR_WRIST_R) || (i == WEAR_WRIST_L) ||
               (i == WEAR_ARM_R) || (i == WEAR_ARM_L) ||
@@ -891,6 +892,29 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
           return "tail";
         case WEAR_FOOT_R:
           return "tail fin";
+        default:
+          return default_body_slot(i);
+      }
+    case BODY_FISHMAN:
+      switch (i) {
+        case HOLD_LEFT:
+        case WEAR_HAND_L:
+          return "finned, left hand";
+        case HOLD_RIGHT:
+        case WEAR_HAND_R:
+          return "finned, right hand";
+        case WEAR_FOOT_L:
+          return "finned, left foot";
+        case WEAR_FOOT_R:
+          return "finned, right foot";
+        case WEAR_NECK:
+          return "gilled neck";
+        case WEAR_BODY:
+          return "scaled body";
+        case WEAR_BACK:
+          return "scaled back";
+        case WEAR_HEAD:
+          return "scaled head";
         default:
           return default_body_slot(i);
       }
@@ -2055,6 +2079,31 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
           return "Worn on tail";
         case WEAR_FOOT_R:
           return "Worn on tail fin";
+        default:
+          return defaultEquipmentSlot(i);
+      }
+    case BODY_FISHMAN:
+      switch (i) {
+        case HOLD_LEFT:
+          return "Held in finned, left hand";
+        case HOLD_RIGHT:
+          return "Held in finned, right hand";
+        case WEAR_HAND_L:
+          return "Worn on finned, left hand";
+        case WEAR_HAND_R:
+          return "Worn on finned, right hand";
+        case WEAR_FOOT_L:
+          return "Worn on finned, left foot";
+        case WEAR_FOOT_R:
+          return "Worn on finned, right foot";
+        case WEAR_NECK:
+          return "Worn on gilled neck";
+        case WEAR_BODY:
+          return "Worn on scaled body";
+        case WEAR_BACK:
+          return "Worn on scaled back";
+        case WEAR_HEAD:
+          return "Worn on scaled head";
         default:
           return defaultEquipmentSlot(i);
       }
@@ -3406,6 +3455,7 @@ int TBeing::limbConnections(wearSlotT slot)
     case BODY_DJINN:
     case BODY_MERMAID:
     case BODY_FROGMAN:
+    case BODY_FISHMAN:
       return defaultLimbConnections(slot);
     case BODY_MANTICORE:
     case BODY_GRIFFON:

@@ -223,38 +223,40 @@ const ush_int CLASS_COMMONER     = (1<<8);   // 256
 const ush_int CLASS_ALL          = (1<<9)-1;
 
 /* Bitvector for 'affected_by' */
-const unsigned long AFF_BLIND             = (1<<0);        // 1
-const unsigned long AFF_INVISIBLE         = (1<<1);        // 2
-const unsigned long AFF_SWIM              = (1<<2);        // 4
-const unsigned long AFF_DETECT_INVISIBLE  = (1<<3);        // 8
-const unsigned long AFF_DETECT_MAGIC      = (1<<4);        // 16
-const unsigned long AFF_SENSE_LIFE        = (1<<5);        // 32
-const unsigned long AFF_LEVITATING        = (1<<6);        // 64
-const unsigned long AFF_SANCTUARY         = (1<<7);        // 128
-const unsigned long AFF_GROUP             = (1<<8);        // 256
-const unsigned long AFF_WEB               = (1<<9);        // 512
-const unsigned long AFF_CURSE             = (1<<10);       // 1024
-const unsigned long AFF_FLYING            = (1<<11);       // 2048
-const unsigned long AFF_POISON            = (1<<12);       // 4096
-const unsigned long AFF_STUNNED           = (1<<13);       // 8192
-const unsigned long AFF_PARALYSIS         = (1<<14);       // 16384
-const unsigned long AFF_INFRAVISION       = (1<<15);       // 32768
-const unsigned long AFF_WATERBREATH       = (1<<16);       // 65536
-const unsigned long AFF_SLEEP             = (1<<17);       // 131072
-const unsigned long AFF_SCRYING           = (1<<18);       // 262144
-const unsigned long AFF_SNEAK             = (1<<19);       // 524288
-const unsigned long AFF_HIDE              = (1<<20);       // 1048576
-const unsigned long AFF_SHOCKED           = (1<<21);       // 2097152
-const unsigned long AFF_CHARM             = (1<<22);       // 4194304
-const unsigned long AFF_SYPHILIS          = (1<<23);       // 8388608
-const unsigned long AFF_SHADOW_WALK       = (1<<24);       // 16777216
-const unsigned long AFF_TRUE_SIGHT        = (1<<25);       // 33554432
-const unsigned long AFF_MUNCHING_CORPSE   = (1<<26);       // 67108864
-const unsigned long AFF_RIPOSTE           = (1<<27);       // 134217728
-const unsigned long AFF_SILENT            = (1<<28);       // 268435456
-const unsigned long AFF_ENGAGER           = (1<<29);       // 436870912
-const unsigned long AFF_AGGRESSOR         = (1<<30);       // 873741824 (set automatically)
-const unsigned long AFF_CLARITY           = (unsigned)(1<<31);
+const uint64_t AFF_BLIND             = uint64_t(1<<0);
+const uint64_t AFF_INVISIBLE         = uint64_t(1<<1);
+const uint64_t AFF_SWIM              = uint64_t(1<<2);
+const uint64_t AFF_DETECT_INVISIBLE  = uint64_t(1<<3);
+const uint64_t AFF_DETECT_MAGIC      = uint64_t(1<<4);
+const uint64_t AFF_SENSE_LIFE        = uint64_t(1<<5);
+const uint64_t AFF_LEVITATING        = uint64_t(1<<6);
+const uint64_t AFF_SANCTUARY         = uint64_t(1<<7);
+const uint64_t AFF_GROUP             = uint64_t(1<<8);
+const uint64_t AFF_WEB               = uint64_t(1<<9);
+const uint64_t AFF_CURSE             = uint64_t(1<<10);
+const uint64_t AFF_FLYING            = uint64_t(1<<11);
+const uint64_t AFF_POISON            = uint64_t(1<<12);
+const uint64_t AFF_STUNNED           = uint64_t(1<<13);
+const uint64_t AFF_PARALYSIS         = uint64_t(1<<14);
+const uint64_t AFF_INFRAVISION       = uint64_t(1<<15);
+const uint64_t AFF_WATERBREATH       = uint64_t(1<<16);
+const uint64_t AFF_SLEEP             = uint64_t(1<<17);
+const uint64_t AFF_SCRYING           = uint64_t(1<<18);
+const uint64_t AFF_SNEAK             = uint64_t(1<<19);
+const uint64_t AFF_HIDE              = uint64_t(1<<20);
+const uint64_t AFF_SHOCKED           = uint64_t(1<<21);
+const uint64_t AFF_CHARM             = uint64_t(1<<22);
+const uint64_t AFF_SYPHILIS          = uint64_t(1<<23);
+const uint64_t AFF_SHADOW_WALK       = uint64_t(1<<24);
+const uint64_t AFF_TRUE_SIGHT        = uint64_t(1<<25);
+const uint64_t AFF_MUNCHING_CORPSE   = uint64_t(1<<26);
+const uint64_t AFF_RIPOSTE           = uint64_t(1<<27);
+const uint64_t AFF_SILENT            = uint64_t(1<<28);
+const uint64_t AFF_ENGAGER           = uint64_t(1<<29);
+const uint64_t AFF_AGGRESSOR         = uint64_t(1<<30); // (set automatically)
+const uint64_t AFF_CLARITY           = uint64_t(0x0000000080000000LLU); // switch to literals to avoid bitshift cast to 32-bit long
+const uint64_t AFF_FLIGHTWORTHY      = uint64_t(0x0000000100000000LLU);
+const int AFF_MAX                    = 33;
 
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done
@@ -364,7 +366,7 @@ class specialData {
     TBeing *fighting; 
     TBeing *hunting;  
     
-    unsigned long affectedBy;  
+    uint64_t affectedBy;  
   
     positionTypeT position;              
     dirTypeT last_direction;       
@@ -966,8 +968,8 @@ class TBeing : public TThing {
     int GetTotLevel() const;
     void affectTo(affectedData *, int renew = 0, silentTypeT = SILENT_NO);
     void affectTotal();
-    void affectModify(applyTypeT, long, long, unsigned long, bool, silentTypeT);
-    void affectChange(unsigned long, silentTypeT);
+    void affectModify(applyTypeT, long, long, uint64_t, bool, silentTypeT);
+    void affectChange(uint64_t, silentTypeT);
     void affectRemove(affectedData *, silentTypeT = SILENT_NO);
     void affectFrom(spellNumT);
     void addObjUsed(TObj *, int);
@@ -1489,6 +1491,7 @@ class TBeing : public TThing {
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);
+    void doPreen(sstring &argument);
 
     void setGuildID(int);
     void setGuildRank(int);
@@ -1790,7 +1793,7 @@ class TBeing : public TThing {
 	      equipment[HOLD_LEFT] : 
 	      equipment[HOLD_RIGHT]);
     }
-    bool isAffected(unsigned long bv) const;
+    bool isAffected(uint64_t bv) const;
     unsigned int rentCredit() const;
     byte getProtection() const;
     void setProtection(byte num);

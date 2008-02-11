@@ -2971,6 +2971,7 @@ void TPerson::doStart()
   setHeight(race->generateHeight(getSex()));
   setWeight(race->generateWeight(getSex()));
   setBaseAge(race->generateAge());
+  race->applyToggles(this);
 
   if (desc->account->term == TERM_VT100) 
     doToggle("term vt100");

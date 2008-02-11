@@ -550,7 +550,9 @@ const int TOG_RESET_PRAC_LEVEL50               = 353;
 const int TOG_GAVE_BOTTLE_PORT3                = 354;
 const int TOG_GAVE_BOTTLE_PORT4                = 355;
 
-const int MAX_TOG_INDEX       = 356;  // move and change
+const int TOG_HAS_PYROPHOBIA                   = 356;
+
+const int MAX_TOG_INDEX                        = 357;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

@@ -10,8 +10,6 @@
 
 void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
 {
-  int r_num;
-  TObj *obj;
   race_t raceNum;
   ush_int classNum;
 
@@ -39,437 +37,49 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
     return;
   }
 
-  if (raceNum == RACE_HOBBIT) {  // munchkin 
-    if ((r_num = real_object(980)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj; 
-    }
-    if ((r_num = real_object(982)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(983)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(984)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(985)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(986)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(987)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-#if 0
-// munchkin boots, hobbits can't wear feet stuff
-    if ((r_num = real_object(988)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-#endif
-    if ((r_num = real_object(989)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
+  // basic races
+  int hobbitGear[] = {980, 982, 105, 983, 983, 984, 984, 985, 986, 986, 987, 989, 1001, 1009, 1009, 1010, 0};
+  int dwarfGear[] = {990, 992, 105, 993, 993, 994, 994, 995, 996, 996, 997, 998, 998, 999, 1001, 1009, 1009, 1010, 0};
+  int ogreGear[] = {970, 972, 105, 973, 973, 974, 974, 975, 976, 976, 977, 978, 978, 979, 1001, 1009, 1009, 1010, 0};
+  int gnomeGear[] = {960, 962, 105, 963, 963, 964, 964, 965, 966, 966, 967, 968, 968, 969, 1001, 1009, 1010, 0};
+  int elvenGear[] = {950, 952, 105, 953, 953, 954, 954, 955, 956, 956, 957, 958, 958, 959, 1001, 1009, 1009, 1010, 0};
+  int humanGear[] = {1000, 1002, 105, 1003, 1003, 1004, 1004, 1005, 1006, 1006, 1007, 1008, 1008, 1011, 1001, 1009, 1009, 1010, 0};
 
-    }
-  } else if (raceNum == RACE_DWARF) {  // dwarven 
-    if ((r_num = real_object(990)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(992)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(993)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(994)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(995)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(996)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(997)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(998)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(999)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
+  // advanced races
+  int trollGear[] = {30924, 30925, 30926, 30926, 30927, 30927, 30928, 30928, 30929, 30930, 30931, 30931, 30932, 30932, 30933, 30934, 30935, 0};
 
-    }
-  } else if (raceNum == RACE_OGRE) {  // ogre 
-    if ((r_num = real_object(970)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(972)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(973)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(974)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(975)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(976)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(977)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(978)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(979)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
+  int races[] = { RACE_HUMAN, RACE_HOBBIT, RACE_DWARF, RACE_OGRE, RACE_GNOME, RACE_ELVEN,
+                  RACE_GOBLIN, RACE_ORC, RACE_TROG, RACE_GNOLL, RACE_FISHMAN, RACE_FROGMAN, RACE_BIRDMAN, RACE_TROLL };
+  int *gear[] = { humanGear, hobbitGear, dwarfGear, ogreGear, gnomeGear, elvenGear,
+                  gnomeGear, humanGear, hobbitGear, ogreGear, dwarfGear, elvenGear, humanGear, trollGear };
+  int *myGear = humanGear; // default to humans
 
+  for(unsigned int iRace = 0;iRace < cElements(races); iRace++)
+    if (raceNum == races[iRace])
+    {
+      myGear = gear[iRace];
+      break;
     }
-  } else if (raceNum == RACE_GNOME) {       // horsehair stuff
-    if ((r_num = real_object(960)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(962)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(963)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(964)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(965)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(966)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(967)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(968)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(969)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-  } else if (raceNum == RACE_ELVEN) {       // rep cloth stuff
-    if ((r_num = real_object(950)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(952)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(953)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(954)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(955)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(956)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(957)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(958)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(959)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-  } else  {  // normal 
-    if ((r_num = real_object(1000)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1002)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-    if ((r_num = real_object(105)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1003)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1004)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1005)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1006)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1007)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1008)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1011)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1001)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if (((!(classNum & CLASS_MONK) && !initNum) || !hasClass(CLASS_MONK)) && (r_num = real_object(1009)) >= 0) {
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-      obj = read_object(r_num, REAL);
-      *this += *obj;
-    }
-    if ((r_num = real_object(1010)) >= 0) {
-      obj = read_object(r_num, REAL);
-      if (!canUseEquipment(obj, SILENT_YES)) {
-        delete obj;
-        obj = NULL;
-      } else
-        *this += *obj;
-    }
-  }  // end of racial if-then equipment loading 
+
+  for(int iGear = 0; myGear[iGear]; iGear++)
+  {
+    // rings never loaded for monks
+    if ((myGear[iGear] == 1009 || myGear[iGear] == 30926) &&
+      (((classNum & CLASS_MONK) && initNum) || hasClass(CLASS_MONK)))
+      continue;
+
+    int realNum = real_object(myGear[iGear]);
+    if (realNum <= 0)
+      continue;
+    TObj *newbieObj = read_object(realNum, REAL);
+    if (!newbieObj)
+      continue;
+
+    if (!canUseEquipment(newbieObj, SILENT_YES))
+      delete newbieObj;
+    else
+      *this += *newbieObj;
+  }
+
+  return;
 }

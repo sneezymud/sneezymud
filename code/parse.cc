@@ -1761,6 +1761,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_PSIDRAIN:
   rc = doPsidrain(newarg.c_str());
   break;
+      case CMD_PREEN:
+    doPreen(newarg);
+  break;
       case MAX_CMD_LIST:
       case CMD_RESP_TOGGLE:
       case CMD_RESP_UNTOGGLE:
@@ -2899,6 +2902,7 @@ void buildCommandArray(void)
   commandArray[CMD_UNTIE] = new commandInfo("untie", POSITION_RESTING, 0);
   commandArray[CMD_TOAST] = new commandInfo("toast", POSITION_RESTING, 0);
   commandArray[CMD_BESTOW] = new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_PREEN] = new commandInfo("preen", POSITION_RESTING, 0);
 
 }
 
@@ -3096,6 +3100,27 @@ sstring sprintbit(unsigned long vektor, const char * const names[])
       if (*names[nr]) {
   result += names[nr];
   result += " ";
+      }
+    if (*names[nr] != '\n')
+      nr++;
+  }
+
+  if (result.empty())
+    result="NOBITS";
+
+  return result;
+}
+
+sstring sprintbit_64(uint64_t vektor, const char * const names[])
+{
+  long nr;
+  sstring result;
+
+  for (nr = 0; vektor; vektor >>= 1) {
+    if (IS_SET(vektor, 0x0000000000000001LLU))
+      if (*names[nr]) {
+        result += names[nr];
+        result += " ";
       }
     if (*names[nr] != '\n')
       nr++;

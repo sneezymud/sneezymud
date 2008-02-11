@@ -24,6 +24,7 @@ public:
   const sstring replaceString(sstring, sstring) const;
   const sstring trim() const;
   const sstring capitalizeSentences() const;
+  const sstring matchCase(const sstring match) const;
 
   // call this function with NULL data to get alloc size, then agian with alloc'd array
   int split(const char delimit, sstring *data) const;
@@ -33,6 +34,17 @@ public:
   const bool isNumber() const;
   const bool isWord() const;
   const bool startsVowel() const;
+
+  // inlines
+  void inlineReplaceString(const string f, const string r) {
+    string::size_type start = 0;
+    while(string::npos != (start = find(f, start)))
+    {
+      replace(start, f.length(), r.c_str(), r.length());
+      start += r.length();
+    }
+  }
+
 };
 
 // used for easily defining buffer sizes

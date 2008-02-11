@@ -336,6 +336,62 @@ void TTool::butcherMe(TBeing *ch, const char *arg)
   start_task(ch, corpse, NULL, TASK_BUTCHER, "", pulse, ch->in_room, 1, 0, 40);
 }
 
+void bareHandButcherMe(TBeing *ch, const char *arg)
+{
+  TObj *obj;
+  TBaseCorpse *corpse;
+  TBeing *dummy;
+  int num, pulse;
+
+  if (!arg || !*arg) {
+    ch->sendTo("You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't be lame and lazy and not supply an argument!!!\n\r");
+    return;
+  }
+
+  // Check to see if argument passed exists in room
+  if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
+    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    return;
+  }
+  // Check to see if corpse is a corpse
+  
+  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
+    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
+    return;
+  }
+  if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
+    // a body part or something
+    act("$p: You aren't able to butcher that.",
+          FALSE, ch, corpse, 0, TO_CHAR);    return;
+  }
+  if (corpse->isCorpseFlag(CORPSE_NO_BUTCHER)) {
+    act("$p: It can't be butchered further.",
+          FALSE, ch, corpse, 0, TO_CHAR);
+    return;
+  }
+  if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING)) {
+    act("$p: Someone else is already butchering this.",
+        FALSE, ch, corpse, 0, TO_CHAR);
+    return;
+  }
+  corpse->addCorpseFlag(CORPSE_PC_BUTCHERING);
+  if (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)) {
+    act("$p: This has been partly butchered, only half the meat remains.",
+        FALSE, ch, corpse, 0, TO_CHAR);
+  }
+
+  ch->sendTo("You start butchering the corpse.\n\r");
+  act("$n begins tearing at a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
+
+  num         = max(1, (int) (ch->getSkillValue(SKILL_BUTCHER)/25));
+  pulse = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1);
+  int lev = ch->getSkillLevel(SKILL_BUTCHER);
+  pulse = 5+
+    min(max((int) (lev*2)+((ch->getSkillValue(SKILL_BUTCHER)-70)/10), 4),
+    (int) (((((corpse->getWeight()*.10)/2)/pulse)+1)/num));
+  start_task(ch, corpse, NULL, TASK_BUTCHER, "", pulse, ch->in_room, 1, 0, 40);
+}
+
 void TBeing::doButcher(const char *arg)
 {
   TThing *tobj;
@@ -349,7 +405,10 @@ void TBeing::doButcher(const char *arg)
 
   tobj = heldInPrimHand();
 
-  if (!tobj || (!tobj->isPierceWeapon() && !tobj->isSlashWeapon())) {
+  if (!tobj && getMyRace()->hasTalent(TALENT_MEATEATER)) {
+    bareHandButcherMe(this, arg);
+    return;
+  } else if (!tobj || (!tobj->isPierceWeapon() && !tobj->isSlashWeapon())) {
     sendTo("You must be holding a slash or pierce weapon to perform this task.\n\r");
     return;
   } else if (tobj->getVolume() > 6000) {

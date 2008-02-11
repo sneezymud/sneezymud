@@ -2,6 +2,7 @@
 #include "obj_tool.h"
 #include "process.h"
 #include "database.h"
+#include "obj_food.h"
 
 map <int, bool> mRoomsFished;
 
@@ -19,14 +20,14 @@ void TBeing::doFish(sstring direction){
   }
 
   if(rp->isUnderwaterSector()){
-    sendTo("You can't fish underwater!\n\r");
-    return;
-  }
-  if(!rp->isWaterSector()){
+    if (!getMyRace()->hasTalent(TALENT_FISHEATER)) {
+      sendTo("You can't fish underwater!\n\r");
+      return;
+    }
+  } else if(!rp->isWaterSector()){
     sendTo("You can't fish on land!\n\r");
     return;
   }
-
 
   if(task){
     stopTask();
@@ -207,6 +208,8 @@ TObj *catch_a_fish(TRoom *rp)
     if(num != 12445){ // don't do this for seaweed
       fish->setWeight(fish->getWeight()*weightmod);
       fish->setVolume((int)(fish->getWeight()*200));
+      if (dynamic_cast<TFood*>(fish))
+        dynamic_cast<TFood*>(fish)->setFoodFlags(FOOD_FISHED);
     }
     
     rp->setFished(rp->getFished()+1);
@@ -268,6 +271,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   int baitmax=1000, baitchance=0;
   int polemax=5000, polechance=0;
   int catchchance=0;
+  bool awesomeFisher = ch->getMyRace()->hasTalent(TALENT_FISHEATER);
+  wearSlotT fishHand = ch->getPrimaryHold();
 
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
@@ -296,41 +301,66 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 
   bait=dynamic_cast<TTool *>(t);
 
-  if(!bait){
+  if(!bait && !awesomeFisher){
     ch->sendTo("You need to have some bait to fish.\n\r");
     ch->stopTask();
     return FALSE;
   }
   
   // find our pole here
-  if((!(tpole=ch->heldInPrimHand()) && !(tpole = ch->heldInSecHand())) ||
-     !isname("fishingpole", tpole->name)){
+  if(!awesomeFisher && ((!(tpole=ch->heldInPrimHand()) && !(tpole = ch->heldInSecHand())) ||
+     !isname("fishingpole", tpole->name))){
     ch->sendTo("You need to hold a fishing pole to fish!\n\r");
     ch->stopTask();
     return FALSE;
   }
-  if(!(pole=dynamic_cast<TObj *>(tpole))){
+  if(!awesomeFisher && !(pole=dynamic_cast<TObj *>(tpole))){
     vlogf(LOG_BUG, "Hmm got a fishing pole that isn't a TObj");
     ch->sendTo("You need to hold a fishing pole to fish!\n\r");
     ch->stopTask();
     return FALSE;
   }
+  if (awesomeFisher && NULL == pole && 
+    !ch->canUseHand(true) && (!ch->isAmbidextrous() || ch->bothHandsHurt()))
+  {
+    ch->sendTo(fmt("Fish with what?  Your %s is too damaged.\n\r") % ch->describeBodySlot(ch->getPrimaryHand()));
+    ch->stopTask();
+    return FALSE;
+  }
+  if (awesomeFisher && NULL == pole)
+  {
+    if (ch->equipment[ch->getPrimaryHold()] && ch->isAmbidextrous())
+      fishHand = ch->getSecondaryHold();
 
-
+    if (ch->equipment[fishHand])
+    {
+      ch->sendTo("Your primary hand must be free to fish!\n\r");
+      ch->stopTask();
+      return FALSE;
+    }
+  }
 
   /*
     do generic checks here
    */
 
-
-  if(rp && !rp->isWaterSector()){
+  if (rp && rp->isUnderwaterSector()) {
+    if (!awesomeFisher) {
+      ch->sendTo("You can't fish underwater!\n\r");
+      ch->stopTask();
+      return FALSE;
+    }
+  } else if(rp && !rp->isWaterSector()){
     ch->sendTo("You can't fish on land!\n\r");
     ch->stopTask();
     return FALSE;
   }
 
   if (ch->task && ch->task->timeLeft < 0){
-    ch->sendTo("You pack up and stop fishing.\n\r");
+    if (awesomeFisher)
+      ch->sendTo("You give up and stop fishing.\n\r");
+    else
+      ch->sendTo("You pack up and stop fishing.\n\r");
     ch->stopTask();
     return FALSE;
   }
@@ -342,67 +372,77 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 
       switch (ch->task->timeLeft) {
 	case 2:
-	  // check for out of bait
-	  bait->addToToolUses(-1);
-	  if (bait->getToolUses() <= 0) {
-	    act("Oops, you're out of bait.",
-		FALSE, ch, NULL, 0, TO_CHAR);
-	    act("$n looks startled as $e realizes that $e is out of bait.",
-		FALSE, ch, NULL, 0, TO_ROOM);
-	    ch->stopTask();
-	    delete bait;
-	    return FALSE;
-	  }
+    {
+      // check for out of bait
+      if (!awesomeFisher)
+      {
+        bait->addToToolUses(-1);
+        if (bait->getToolUses() <= 0) {
+          act("Oops, you're out of bait.", FALSE, ch, NULL, 0, TO_CHAR);
+          act("$n looks startled as $e realizes that $e is out of bait.", FALSE, ch, NULL, 0, TO_ROOM);
+          ch->stopTask();
+          delete bait;
+          return FALSE;
+        }
+      }
 
-          ch->task->timeLeft--;
-	  
-	  if(ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
-	    // fishlore success
-	    if(!ch->isPlayerAction(PLR_BRIEF)){
-	      buf = fmt("You <c>smoothly<1> bait %s with $p in one fluid motion.") % pole->shortDescr;
-	      act(buf, FALSE, ch, bait, 0, TO_CHAR);
-	      
-	      buf = fmt("$n <c>smoothly<1> baits %s with $p in one fluid motion.") % pole->shortDescr;
-	      act(buf, TRUE, ch, bait, 0, TO_ROOM);
-	    }
-	    // no break here, fall through
-	  } else {
-	    // normal
-	    if(!ch->isPlayerAction(PLR_BRIEF)){
-	      buf = fmt("You bait %s with $p.") % pole->shortDescr;
-	      act(buf, FALSE, ch, bait, 0, TO_CHAR);
-	      
-	      buf = fmt("$n baits %s with $p.") % pole->shortDescr;
-	      act(buf, TRUE, ch, bait, 0, TO_ROOM);
-	    }
+      ch->task->timeLeft--;
 
-	    break;
-	  }
+      sstring toChar, toRoom;
+      bool fishlore = ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20;
+      if (ch->isPlayerAction(PLR_BRIEF))
+        break;
+
+      if (!awesomeFisher && fishlore) {
+        toChar = fmt("You <c>smoothly<1> bait %s with $p in one fluid motion.") % pole->shortDescr;
+        toRoom = fmt("$n <c>smoothly<1> baits %s with $p in one fluid motion.") % pole->shortDescr;
+      } else if (awesomeFisher) {
+        toChar = "You scan the surrounding water for prey.";
+        toRoom = "$n scans the water looking for prey.";
+      } else {
+        toChar = fmt("You bait %s with $p.") % pole->shortDescr;
+        toRoom = fmt("$n baits %s with $p.") % pole->shortDescr;
+      }
+
+      act(toChar, FALSE, ch, bait, 0, TO_CHAR);
+      act(toRoom, TRUE, ch, bait, 0, TO_ROOM);
+      break;
+    }
 	case 1:
-          ch->task->timeLeft--;
+    {
+      ch->task->timeLeft--;
 
-	  if(ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){
-	    // fishlore success
-	    if(!ch->isPlayerAction(PLR_BRIEF)){
-	      act("You spot a <c>ripple in the water<1> and cast your line right at it.",
-		  FALSE, ch, NULL, 0, TO_CHAR);
-	      act("$n casts $s line out right at a <c>ripple in the water<1>.",
-		  TRUE, ch, NULL, 0, TO_ROOM);
-	    }
-	    // no break, fall through
-	  } else {
-	    // normal
-	    if(!ch->isPlayerAction(PLR_BRIEF)){
-	      act("You cast your line out.",
-		  FALSE, ch, NULL, 0, TO_CHAR);
-	      act("$n casts $s line out.",
-		  TRUE, ch, NULL, 0, TO_ROOM);
-	    }
-	    break;
-	  }
+      sstring toChar, toRoom;
+      bool fishlore = ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20;
+      if (ch->isPlayerAction(PLR_BRIEF))
+        break;
+
+      if (!awesomeFisher && fishlore) {
+        toChar = "You spot a <c>ripple in the water<1> and cast your line right at it.";
+        toRoom = "$n casts $s line out right at a <c>ripple in the water<1>.";
+      } else if (awesomeFisher && fishlore) {
+        toChar = "You spot a <c>ripple in the water<1> and reach towards it.";
+        toRoom = "$n reaches toward a <c>ripple in the water<1>.";
+      } else if (awesomeFisher) {
+        toChar = fmt("You search around the water with your %s.") % ch->describeBodySlot(fishHand);
+        toRoom = fmt("$n gropes around the water with $s %s.") % ch->describeBodySlot(fishHand);
+      } else {
+        toChar = "You cast your line out.";
+        toRoom = "$n casts $s line out.";
+      }
+
+      act(toChar, FALSE, ch, NULL, 0, TO_CHAR);
+      act(toRoom, TRUE, ch, NULL, 0, TO_ROOM);
+      break;
+    }
 	case 0:
-	  baitchance=(int)(((float)((float)(bait->obj_flags.cost*2)/(float)baitmax))*25);
-	  polechance=(int)(((float)((float)(pole->obj_flags.cost*2)/(float)polemax))*25);
+    if (awesomeFisher) {
+      baitchance= ch->plotStat(STAT_CURRENT, STAT_PER, 0, 5, 2) + ch->plotStat(STAT_CURRENT, STAT_KAR, 0, 5, 3);
+      polechance= ch->GetMaxLevel();
+    } else {
+      baitchance=(int)(((float)((float)(bait->obj_flags.cost*2)/(float)baitmax))*25);
+      polechance=(int)(((float)((float)(pole->obj_flags.cost*2)/(float)polemax))*25);
+    }
 	  catchchance=::number(1,100);
 	  
 
@@ -431,18 +471,23 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 
 	    ch->doSave(SILENT_YES);
 
-	    act("You reel in $p!",
-		FALSE, ch, fish, 0, TO_CHAR);
-	    act("$n reels in $p!",
-		TRUE, ch, fish, 0, TO_ROOM);
+      if (awesomeFisher)
+      {
+        act("You snatch up $p!", FALSE, ch, fish, 0, TO_CHAR);
+        act("$n snatches $p!", TRUE, ch, fish, 0, TO_ROOM);
+      }
+      else
+      {
+        act("You reel in $p!", FALSE, ch, fish, 0, TO_CHAR);
+        act("$n reels in $p!", TRUE, ch, fish, 0, TO_ROOM);
+      }
+
 	  } else {
 	    if(fish)
 	      delete fish;
 
-	    act("You didn't catch anything.",
-		FALSE, ch, NULL, 0, TO_CHAR);
-	    act("$n doesn't catch anything.",
-		TRUE, ch, NULL, 0, TO_ROOM);
+	    act("You didn't catch anything.", FALSE, ch, NULL, 0, TO_CHAR);
+	    act("$n doesn't catch anything.", TRUE, ch, NULL, 0, TO_ROOM);
 
 	    if(rp->getFished()>10 && 
 	       ch->bSuccess(SKILL_FISHLORE) && ::number(0,99)<20){

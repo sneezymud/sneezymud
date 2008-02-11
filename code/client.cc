@@ -1494,28 +1494,16 @@ int Descriptor::clientCreateChar(char *arg)
   // Class
   switch (*(nextToken('|', 1024, arg).c_str())) {        
     case '1':
-      if (canChooseClass(CLASS_WARRIOR)) {
-        ch->setClass(CLASS_WARRIOR);
-      } else {
-      }
+      ch->setClass(CLASS_WARRIOR);
       break;
     case '2':
-      if (canChooseClass(CLASS_CLERIC)) {
-        ch->setClass(CLASS_CLERIC);
-      } else {
-      }
+      ch->setClass(CLASS_CLERIC);
       break;
     case '3':
-      if (canChooseClass(CLASS_MAGE)) {
-        ch->setClass(CLASS_MAGE);
-      } else {
-      }
+      ch->setClass(CLASS_MAGE);
       break;
     case '4':
-      if (canChooseClass(CLASS_THIEF)) {
-        ch->setClass(CLASS_THIEF);
-      } else {
-      }
+      ch->setClass(CLASS_THIEF);
       break;
     default:
       //Send Client error message
@@ -1589,7 +1577,6 @@ int Descriptor::clientCreateChar(char *arg)
   delete ch;
   delete account;
   account = NULL;
-
   return TRUE;
 }
 

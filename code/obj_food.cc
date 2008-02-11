@@ -435,12 +435,31 @@ void TFood::eatMe(TBeing *ch)
   act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
   act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
 
+  sstring msg;
+  float adjust = 1.0;
+
+  // race-based food preferences
   if(ch->isVampire()){
-    ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
-  } else {
-    if (ch->getCond(FULL) > -1)
-      ch->gainCondition(FULL, getFoodFill());
-  }    
+    msg = "You eat the mortal food, but it has no affect on you.\n\r";
+    adjust = 0;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && isFoodFlag(FOOD_FISHED)) {
+    msg = "You savor this delicious fishy bite!\n\r";
+    adjust = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && !isFoodFlag(FOOD_FISHED)) {
+    msg = "This food tastes bland and unappetizing.  You miss the raw and wriggly texture of fish.\n\r";
+    adjust = 0.5;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Mmmmhhh!  Finally, some raw meat!\n\r";
+    adjust = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && !isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Pfwah!  This food tastes horrible!\n\r";
+    adjust = 0.5;
+  }
+
+  if (!msg.empty())
+    ch->sendTo(msg);
+  if (ch->getCond(FULL) > -1 && adjust > 0)
+    ch->gainCondition(FULL, (int)(getFoodFill() * adjust));
 
   if (ch->getCond(FULL) > 20)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
@@ -735,11 +754,31 @@ void TFood::tasteMe(TBeing *ch)
   act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
   act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
 
+  sstring msg;
+  int amt = 1;
+
+  // race-based food preferences
   if(ch->isVampire()){
-    ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
-  } else {
-    ch->gainCondition(FULL, 1);
+    msg = "You eat the mortal food, but it has no affect on you.\n\r";
+    amt = 0;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && isFoodFlag(FOOD_FISHED)) {
+    msg = "You savor this delicious fishy bite!\n\r";
+    amt = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && !isFoodFlag(FOOD_FISHED)) {
+    msg = "This food tastes bland and unappetizing.  You miss the raw and wriggly texture of fish.\n\r";
+    amt = 0;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Mmmmhhh!  Finally, some raw meat!\n\r";
+    amt = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && !isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Pfwah!  This food tastes horrible!\n\r";
+    amt = 0;
   }
+
+  if (!msg.empty())
+    ch->sendTo(msg);
+  if (amt)
+    ch->gainCondition(FULL, amt);
 
   if (ch->getCond(FULL) > 20)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
@@ -757,7 +796,8 @@ void TFood::tasteMe(TBeing *ch)
   // we filled them "1 unit"
   // let's actually remove "1+ unit" so that we insure that taste isn't
   // better at filling than outright eating
-  setFoodFill(getFoodFill() - 2);
+  if (amt)
+    setFoodFill(getFoodFill() - 2);
 
   if (getFoodFill() <= 0) {    /* Nothing left */
     act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);

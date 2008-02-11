@@ -175,7 +175,7 @@ LIBSYS=	ansi.o		database.o   	socket.o		\
 	connect.o      	signals.o    	sstring.o		\
 	format.o	pathfinder.o	process.o		\
 	proc_check_mail.o		proc_check_repo.o	\
-	rewrite_obj_file.o
+	rewrite_obj_file.o	create_character.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 
@@ -297,7 +297,7 @@ LIBTASK=task_attune.o	       	task_sacrifice.o	\
 	task_plant.o	       	task_trap.o		\
 	task_rest.o	       	task_whittle.o 		\
 	task_logging.o		task_ride.o		\
-	task_painting.o
+	task_painting.o		task_preen.o
 LIBTASK := $(sort $(addprefix $(OBJDIR), $(LIBTASK)))
 
 LIBSPEC=spec_mobs.o		    	spec_objs.o			\
@@ -7410,7 +7410,7 @@ objs/cmd_stat.o: weather.h sound.h create.h thing.h obj.h spec_objs.h
 objs/cmd_stat.o: obj_mergeable.h room.h connect.h obj_drug.h charfile.h
 objs/cmd_stat.o: being.h garble.h guild.h person.h monster.h paths.h
 objs/cmd_stat.o: account.h extern.h handler.h obj_money.h spec_mobs.h
-objs/cmd_stat.o: materials.h colorstring.h format.h spec_rooms.h
+objs/cmd_stat.o: materials.h colorstring.h format.h spec_rooms.h combat.h
 objs/cmd_steal.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/cmd_steal.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/cmd_steal.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -9799,6 +9799,173 @@ objs/corporation.o: /usr/include/mysql/mysql_time.h
 objs/corporation.o: /usr/include/mysql/mysql_version.h
 objs/corporation.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/corporation.o: /usr/include/mysql/my_alloc.h corporation.h
+objs/create_character.o: /usr/include/c++/3.3.4/csignal /usr/include/signal.h
+objs/create_character.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/create_character.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
+objs/create_character.o: /usr/include/c++/3.3.4/cstdarg
+objs/create_character.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/create_character.o: /usr/include/dirent.h /usr/include/bits/types.h
+objs/create_character.o: /usr/include/bits/wordsize.h
+objs/create_character.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/create_character.o: /usr/include/bits/typesizes.h
+objs/create_character.o: /usr/include/bits/dirent.h /usr/include/unistd.h
+objs/create_character.o: /usr/include/bits/posix_opt.h
+objs/create_character.o: /usr/include/bits/confname.h
+objs/create_character.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
+objs/create_character.o: /usr/include/sys/types.h /usr/include/time.h
+objs/create_character.o: /usr/include/bits/time.h /usr/include/bits/uio.h
+objs/create_character.o: /usr/include/bits/socket.h
+objs/create_character.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/create_character.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/create_character.o: /usr/include/limits.h /usr/include/bits/sockaddr.h
+objs/create_character.o: /usr/include/asm/socket.h /usr/include/asm/sockios.h
+objs/create_character.o: /usr/include/netinet/in.h /usr/include/stdint.h
+objs/create_character.o: /usr/include/bits/wchar.h /usr/include/bits/in.h
+objs/create_character.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/create_character.o: /usr/include/bits/byteswap.h /usr/include/sys/wait.h
+objs/create_character.o: /usr/include/sys/resource.h
+objs/create_character.o: /usr/include/bits/resource.h
+objs/create_character.o: /usr/include/bits/waitflags.h
+objs/create_character.o: /usr/include/bits/waitstatus.h /usr/include/netdb.h
+objs/create_character.o: /usr/include/bits/netdb.h /usr/include/fcntl.h
+objs/create_character.o: /usr/include/bits/fcntl.h /usr/include/sys/syscall.h
+objs/create_character.o: /usr/include/asm/unistd.h
+objs/create_character.o: /usr/include/bits/syscall.h /usr/include/sys/param.h
+objs/create_character.o: /usr/include/linux/limits.h
+objs/create_character.o: /usr/include/linux/param.h /usr/include/asm/param.h
+objs/create_character.o: /usr/include/arpa/telnet.h /usr/include/arpa/inet.h
+objs/create_character.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+objs/create_character.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/create_character.o: /usr/include/c++/3.3.4/cstddef /usr/include/stdio.h
+objs/create_character.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/create_character.o: /usr/include/wchar.h /usr/include/gconv.h
+objs/create_character.o: /usr/include/bits/stdio_lim.h
+objs/create_character.o: /usr/include/bits/sys_errlist.h
+objs/create_character.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/create_character.o: /usr/include/c++/3.3.4/ctime
+objs/create_character.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/create_character.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/create_character.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/create_character.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/create_character.o: /usr/include/bits/huge_val.h
+objs/create_character.o: /usr/include/bits/mathdef.h
+objs/create_character.o: /usr/include/bits/mathcalls.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/create_character.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/create_character.o: /usr/include/asm/errno.h
+objs/create_character.o: /usr/include/c++/3.3.4/string
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/create_character.o: /usr/include/pthread.h /usr/include/sched.h
+objs/create_character.o: /usr/include/bits/sched.h
+objs/create_character.o: /usr/include/bits/pthreadtypes.h
+objs/create_character.o: /usr/include/bits/initspin.h
+objs/create_character.o: /usr/include/bits/sigthread.h
+objs/create_character.o: /usr/include/c++/3.3.4/cwchar
+objs/create_character.o: /usr/include/c++/3.3.4/memory
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/create_character.o: /usr/include/c++/3.3.4/climits
+objs/create_character.o: /usr/include/c++/3.3.4/new
+objs/create_character.o: /usr/include/c++/3.3.4/exception
+objs/create_character.o: /usr/include/c++/3.3.4/iosfwd
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/create_character.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/create_character.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/create_character.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/create_character.o: /usr/include/libintl.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/create_character.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/create_character.o: /usr/include/c++/3.3.4/algorithm
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/vector
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/map
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/create_character.o: /usr/include/c++/3.3.4/list
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/deque
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_deque.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/iostream
+objs/create_character.o: /usr/include/c++/3.3.4/ostream
+objs/create_character.o: /usr/include/c++/3.3.4/ios
+objs/create_character.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/create_character.o: /usr/include/c++/3.3.4/streambuf
+objs/create_character.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/create_character.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/locale
+objs/create_character.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/limits
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/create_character.o: /usr/include/c++/3.3.4/typeinfo
+objs/create_character.o: /usr/include/c++/3.3.4/istream
+objs/create_character.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/sstream
+objs/create_character.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/fstream
+objs/create_character.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/create_character.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h
+objs/create_character.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/create_character.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/create_character.o: client.h response.h faction.h comm.h toggle.h
+objs/create_character.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/create_character.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/create_character.o: sound.h create.h thing.h obj.h spec_objs.h
+objs/create_character.o: obj_mergeable.h room.h connect.h obj_drug.h
+objs/create_character.o: charfile.h being.h garble.h guild.h person.h
+objs/create_character.o: monster.h paths.h account.h extern.h handler.h
+objs/create_character.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/create_character.o: format.h statistics.h socket.h mail.h games.h
+objs/create_character.o: game_crazyeights.h game_drawpoker.h cmd_trophy.h
+objs/create_character.o: database.h /usr/include/mysql/mysql.h
+objs/create_character.o: /usr/include/mysql/mysql_com.h
+objs/create_character.o: /usr/include/mysql/mysql_time.h
+objs/create_character.o: /usr/include/mysql/mysql_version.h
+objs/create_character.o: /usr/include/mysql/typelib.h
+objs/create_character.o: /usr/include/mysql/my_list.h
+objs/create_character.o: /usr/include/mysql/my_alloc.h
 objs/create_engine.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/create_engine.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/create_engine.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -10873,7 +11040,7 @@ objs/db.o: obj_component.h loadset.h sys_loot.h shop.h process.h database.h
 objs/db.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
 objs/db.o: /usr/include/mysql/mysql_time.h /usr/include/mysql/mysql_version.h
 objs/db.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
-objs/db.o: /usr/include/mysql/my_alloc.h obj_spellbag.h
+objs/db.o: /usr/include/mysql/my_alloc.h shopowned.h obj_spellbag.h
 objs/db.o: obj_expandable_container.h obj_open_container.h
 objs/db.o: obj_base_container.h obj_player_corpse.h obj_base_corpse.h
 objs/db.o: obj_corpse.h obj_quiver.h obj_keyring.h obj_chest.h obj_bag.h
@@ -21218,7 +21385,8 @@ objs/immortal.o: /usr/include/mysql/mysql_version.h
 objs/immortal.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/immortal.o: /usr/include/mysql/my_alloc.h rent.h obj_suitcase.h
 objs/immortal.o: obj_expandable_container.h obj_open_container.h
-objs/immortal.o: obj_base_container.h obj_treasure.h
+objs/immortal.o: obj_base_container.h obj_treasure.h shopowned.h
+objs/immortal.o: obj_commodity.h
 objs/immunity.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/immunity.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/immunity.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37071,7 +37239,7 @@ objs/periodic.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
 objs/periodic.o: /usr/include/mysql/mysql_time.h
 objs/periodic.o: /usr/include/mysql/mysql_version.h
 objs/periodic.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
-objs/periodic.o: /usr/include/mysql/my_alloc.h
+objs/periodic.o: /usr/include/mysql/my_alloc.h obj_light.h obj_base_light.h
 objs/pets.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -38237,7 +38405,7 @@ objs/rent.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
 objs/rent.o: obj_bag.h obj_expandable_container.h obj_open_container.h
 objs/rent.o: obj_symbol.h obj_component.h obj_note.h obj_magic_item.h
 objs/rent.o: obj_wand.h obj_general_weapon.h obj_base_weapon.h corporation.h
-objs/rent.o: shopowned.h
+objs/rent.o: shopowned.h combat.h
 objs/repair.o: /usr/include/unistd.h /usr/include/features.h
 objs/repair.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/repair.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -40602,7 +40770,7 @@ objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
 objs/socket.o: obj_trash_pile.h obj_expandable_container.h
 objs/socket.o: obj_open_container.h obj_base_container.h obj_base_cup.h
 objs/socket.o: pathfinder.h timing.h process.h liquids.h obj_pool.h shop.h
-objs/socket.o: shopaccounting.h
+objs/socket.o: shopaccounting.h shopowned.h obj_commodity.h
 objs/sound.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/sound.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/sound.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -40863,7 +41031,7 @@ objs/spec_mobs.o: obj_drinkcon.h obj_base_cup.h corporation.h shopowned.h
 objs/spec_mobs.o: pathfinder.h shop.h obj_base_corpse.h obj_base_container.h
 objs/spec_mobs.o: obj_player_corpse.h obj_tool.h obj_plant.h
 objs/spec_mobs.o: obj_expandable_container.h obj_open_container.h obj_note.h
-objs/spec_mobs.o: obj_commodity.h
+objs/spec_mobs.o: obj_commodity.h obj_component.h
 objs/spec_mobs_archer.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -45733,7 +45901,7 @@ objs/spec_objs.o: obj_base_clothing.h obj_trap.h obj_portal.h obj_seethru.h
 objs/spec_objs.o: obj_symbol.h obj_general_weapon.h obj_base_weapon.h
 objs/spec_objs.o: obj_drinkcon.h obj_base_cup.h obj_potion.h obj_staff.h
 objs/spec_objs.o: obj_magic_item.h obj_wand.h disc_fire.h obj_note.h
-objs/spec_objs.o: pathfinder.h liquids.h
+objs/spec_objs.o: pathfinder.h liquids.h obj_chest.h
 objs/spec_objs_ballot_box.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -51632,7 +51800,7 @@ objs/task_blacksmithing.o: obj_mergeable.h room.h connect.h obj_drug.h
 objs/task_blacksmithing.o: charfile.h being.h garble.h guild.h person.h
 objs/task_blacksmithing.o: monster.h paths.h account.h extern.h handler.h
 objs/task_blacksmithing.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/task_blacksmithing.o: format.h obj_tool.h
+objs/task_blacksmithing.o: format.h obj_tool.h obj_commodity.h
 objs/task_brew.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/task_brew.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/task_brew.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -52564,7 +52732,7 @@ objs/task_fishing.o: /usr/include/mysql/mysql_time.h
 objs/task_fishing.o: /usr/include/mysql/mysql_version.h
 objs/task_fishing.o: /usr/include/mysql/typelib.h
 objs/task_fishing.o: /usr/include/mysql/my_list.h
-objs/task_fishing.o: /usr/include/mysql/my_alloc.h
+objs/task_fishing.o: /usr/include/mysql/my_alloc.h obj_food.h
 objs/task_get.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/task_get.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/task_get.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -53613,6 +53781,134 @@ objs/task_plant.o: paths.h account.h extern.h handler.h obj_money.h
 objs/task_plant.o: spec_mobs.h materials.h colorstring.h format.h obj_tool.h
 objs/task_plant.o: obj_plant.h obj_expandable_container.h
 objs/task_plant.o: obj_open_container.h obj_base_container.h
+objs/task_preen.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/task_preen.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/task_preen.o: /usr/include/gnu/stubs.h /usr/include/c++/3.3.4/cstddef
+objs/task_preen.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/task_preen.o: /usr/include/stdio.h /usr/include/bits/types.h
+objs/task_preen.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/task_preen.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/task_preen.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/task_preen.o: /usr/include/gconv.h
+objs/task_preen.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/task_preen.o: /usr/include/bits/stdio_lim.h
+objs/task_preen.o: /usr/include/bits/sys_errlist.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cstdlib /usr/include/stdlib.h
+objs/task_preen.o: /usr/include/c++/3.3.4/ctime /usr/include/time.h
+objs/task_preen.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cctype /usr/include/ctype.h
+objs/task_preen.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cassert /usr/include/assert.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cstring /usr/include/string.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cmath /usr/include/math.h
+objs/task_preen.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/task_preen.o: /usr/include/bits/mathcalls.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/cerrno /usr/include/errno.h
+objs/task_preen.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/task_preen.o: /usr/include/asm/errno.h /usr/include/c++/3.3.4/string
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/task_preen.o: /usr/include/pthread.h /usr/include/sched.h
+objs/task_preen.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/task_preen.o: /usr/include/bits/sigset.h
+objs/task_preen.o: /usr/include/bits/pthreadtypes.h
+objs/task_preen.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cwchar
+objs/task_preen.o: /usr/include/c++/3.3.4/memory
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/task_preen.o: /usr/include/c++/3.3.4/climits
+objs/task_preen.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/task_preen.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/task_preen.o: /usr/include/limits.h /usr/include/c++/3.3.4/new
+objs/task_preen.o: /usr/include/c++/3.3.4/exception
+objs/task_preen.o: /usr/include/c++/3.3.4/iosfwd
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/task_preen.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/task_preen.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/task_preen.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/task_preen.o: /usr/include/libintl.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/task_preen.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/task_preen.o: /usr/include/c++/3.3.4/algorithm
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/vector
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/map
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/task_preen.o: /usr/include/c++/3.3.4/list
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/deque
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_deque.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/iostream
+objs/task_preen.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/task_preen.o: /usr/include/c++/3.3.4/streambuf
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/task_preen.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/locale
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/limits
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/task_preen.o: /usr/include/c++/3.3.4/typeinfo
+objs/task_preen.o: /usr/include/c++/3.3.4/istream
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/sstream
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/fstream
+objs/task_preen.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/task_preen.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/task_preen.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/task_preen.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/task_preen.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/task_preen.o: task.h weather.h sound.h create.h thing.h obj.h
+objs/task_preen.o: spec_objs.h obj_mergeable.h room.h connect.h obj_drug.h
+objs/task_preen.o: charfile.h being.h garble.h guild.h person.h monster.h
+objs/task_preen.o: paths.h account.h extern.h handler.h obj_money.h
+objs/task_preen.o: spec_mobs.h materials.h colorstring.h format.h process.h
 objs/task_rest.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/task_rest.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/task_rest.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -56236,10 +56532,10 @@ objs/utility.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
 objs/utility.o: /usr/include/sys/param.h /usr/include/linux/limits.h
 objs/utility.o: /usr/include/linux/param.h /usr/include/asm/param.h
 objs/utility.o: /usr/include/dirent.h /usr/include/bits/dirent.h
-objs/utility.o: /usr/include/sys/stat.h /usr/include/bits/stat.h shop.h
-objs/utility.o: combat.h statistics.h socket.h games.h game_crazyeights.h
-objs/utility.o: game_drawpoker.h mail.h database.h /usr/include/mysql/mysql.h
-objs/utility.o: /usr/include/mysql/mysql_com.h
+objs/utility.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+objs/utility.o: /usr/include/execinfo.h shop.h combat.h statistics.h socket.h
+objs/utility.o: games.h game_crazyeights.h game_drawpoker.h mail.h database.h
+objs/utility.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
 objs/utility.o: /usr/include/mysql/mysql_time.h
 objs/utility.o: /usr/include/mysql/mysql_version.h
 objs/utility.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h

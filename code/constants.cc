@@ -376,7 +376,7 @@ void assign_item_info()
      "Number of hours filled", 24, 0,
      "Unused", 0, 0,
      "Unused", 0, 0,
-     "1 = Poisoned, 2 = Spoiled, 3 = both", 3, 0);
+     "1 = Poisoned, 2 = Spoiled, 4 = Fished, 8 = Butchered. (can be added)", 3, 0);
   ItemInfo[ITEM_MONEY] = new itemInfo("Money","a pile of money",
      "Number of talens in money pile", 50000, 0,
      "Unused", 0, 0,
@@ -819,7 +819,7 @@ const char * const door_types[] =
   "Hatch",
 };
 
-const char * const affected_bits[] =
+const char * const affected_bits[AFF_MAX+1] =
 {"Blind",
  "Invisible",
  "Swimming",
@@ -852,6 +852,7 @@ const char * const affected_bits[] =
  "",
  "Aggressor",
  "Clarity",
+ "Flightworthy",
  "\n"
 };
 
@@ -1067,59 +1068,57 @@ const sstring position_types[] =
 
 const char * const connected_types[MAX_CON_STATUS] =
 {
-  "Playing",                  // 0
+  "Playing",
   "Get name",
   "Confirm name",
   "Read Password",
-  "Confirm password", 
-  "Get sex",                  // 5
+  "Confirm password",
   "Read motd",
-  "Get class",    
   "Confirm changed pword",
   "Wizlock",
-  "Get race",                 // 10
   "General Delete",
-  "Physical Stats",
-  "Physical Stats",
-  "Choose handedness",   
-  "Disconnection",            //15
+  "Disconnection",
   "New account", 
   "Account Password",
   "New login",
-  "New account Password",   
-  "Account email",            // 20
+  "New account Password",
+  "Account email",
   "Account terminal", 
   "Account connection",
   "Account change password",
-  "Account change password",   
-  "Account change password",  // 25
-  "Account delete character", 
+  "Account change password",
+  "Account change password",
+  "Account delete character",
   "Account delete account",
   "Editing",
-  "Disclaimer",   
-  "Timezone",                 // 30
+  "Timezone",
   "Delete confirmation",
-  "Disclaimer page 2",
-  "Disclaimer page 3",    
   "Wizlock New",
-  "Mental Stats",             // 35
-  "Utility Stats",
-  "Done Creation",
-  "Stats Start",   
-  "Done Enter",
-  "Stats rules",              // 40
-  "Stats rules 2",
-  "Hometown : human",
-  "Hometown : elf", 
-  "Hometown : dwarf",
-  "Hometown : gnome",         // 45
-  "Hometown : ogre", 
-  "Hometown : hobbit",
-  "Multiplay Rules Prompt", 
-  "Traits 1",
-  "Traits 2",                 // 50
-  "Traits 3",
-  "Fae-Touched",
+
+  "Error in Character Creation",
+  "Character Creation: Name",
+  "Character Creation: Disclaimer",
+  "Character Creation: Disclaimer",
+  "Character Creation: Disclaimer",
+  "Character Creation: Multiplay",
+  "Character Creation: Resetting",
+  "Character Creation: Launchpad",
+  "Character Creation: Rename",
+  "Character Creation: Sex",
+  "Character Creation: Hands",
+  "Character Creation: Race",
+  "Character Creation: Terrain",
+  "Character Creation: Class",
+  "Character Creation: Traits",
+  "Character Creation: Traits",
+  "Character Creation: Traits",
+  "Character Creation: Stats",
+  "Character Creation: Stats",
+  "Character Creation: Stats",
+  "Character Creation: Stats",
+  "Character Creation: Stats",
+  "Character Creation: Done",
+  "Character Creation: Max"
 };
 
 
@@ -1932,7 +1931,9 @@ const struct disc_names_data discNames[MAX_DISCS] =
 const char* const home_terrains[MAX_HOME_TERS] =
 {
   "unknown",
-  "urban dweller",  // human
+
+  // human
+  "urban dweller",
   "villager",
   "plains person",
   "recluse",
@@ -1940,31 +1941,121 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "mountaineer",
   "forester",
   "mariner",
-  "urban dweller", //elf
+
+  //elf
+  "urban dweller",
   "tribal villager",
   "plains elf",
   "snow elf",
   "recluse",
   "wood elf",
   "sea elf",
-  "urban dweller",  // dwarf
+
+  // dwarf
+  "urban dweller",
   "villager",
   "recluse",
   "hill dwarf",
   "mountain dwarf",
-  "urban dweller",  // gnome
+
+  // gnome
+  "urban dweller",
   "villager",
   "hill gnome",
   "swamp gnome",
-  "villager",   // ogre
+
+  // ogre
+  "villager",
   "plains ogre",
   "hill ogre",
-  "urban dweller",  // hobbit
+
+  // hobbit
+  "urban dweller",
   "shire hobbit",
   "grasslands hobbit",
   "hill hobbit",
   "woodland hobbit",
   "maritime hobbit",
+
+  // goblin
+  "HOME_TER_GOBLIN_URBAN",
+  "HOME_TER_GOBLIN_VILLAGER",
+  "HOME_TER_GOBLIN_PLAINS",
+  "HOME_TER_GOBLIN_RECLUSE",
+  "HOME_TER_GOBLIN_HILL",
+  "HOME_TER_GOBLIN_MOUNTAIN",
+  "HOME_TER_GOBLIN_FOREST",
+  "HOME_TER_GOBLIN_MARINER",
+
+  // gnoll
+  "HOME_TER_GNOLL_URBAN",
+  "HOME_TER_GNOLL_VILLAGER",
+  "HOME_TER_GNOLL_PLAINS",
+  "HOME_TER_GNOLL_RECLUSE",
+  "HOME_TER_GNOLL_HILL",
+  "HOME_TER_GNOLL_MOUNTAIN",
+  "HOME_TER_GNOLL_FOREST",
+  "HOME_TER_GNOLL_MARINER",
+
+  // troglodyte
+  "HOME_TER_TROG_URBAN",
+  "HOME_TER_TROG_VILLAGER",
+  "HOME_TER_TROG_PLAINS",
+  "HOME_TER_TROG_RECLUSE",
+  "HOME_TER_TROG_HILL",
+  "HOME_TER_TROG_MOUNTAIN",
+  "HOME_TER_TROG_FOREST",
+  "HOME_TER_TROG_MARINER",
+
+  // orc
+  "HOME_TER_ORC_URBAN",
+  "HOME_TER_ORC_VILLAGER",
+  "HOME_TER_ORC_PLAINS",
+  "HOME_TER_ORC_RECLUSE",
+  "HOME_TER_ORC_HILL",
+  "HOME_TER_ORC_MOUNTAIN",
+  "HOME_TER_ORC_FOREST",
+  "HOME_TER_ORC_MARINER",
+
+  // frogman
+  "HOME_TER_FROGMAN_URBAN",
+  "HOME_TER_FROGMAN_VILLAGER",
+  "HOME_TER_FROGMAN_PLAINS",
+  "HOME_TER_FROGMAN_RECLUSE",
+  "HOME_TER_FROGMAN_HILL",
+  "HOME_TER_FROGMAN_MOUNTAIN",
+  "HOME_TER_FROGMAN_FOREST",
+  "HOME_TER_FROGMAN_MARINER",
+
+  // fishman
+  "schooler fishman",
+  "reefer fishman",
+  "UNUSED",
+  "hermit fishman",
+  "UNUSED",
+  "trencher fishman",
+  "kelper fishman",
+  "nomad fishman",
+
+  // birdman
+  "colony birdman",
+  "flocker birdman",
+  "UNUSED",
+  "UNUSED",
+  "UNUSED",
+  "cliff-nester birdman",
+  "tree-nester birdman",
+  "coastal birdman",
+
+  // troll
+  "clan troll",
+  "pack troll",
+  "UNUSED",
+  "wandering troll",
+  "cave troll",
+  "deep troll",
+  "UNUSED",
+  "UNUSED",
 };
 
 const char * const corpse_flags[MAX_CORPSE_FLAGS] =

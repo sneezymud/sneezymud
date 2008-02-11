@@ -316,7 +316,7 @@ class affectedData {
     long modifier;
     long modifier2;
     applyTypeT location;
-    unsigned long bitvector;
+    uint64_t bitvector;
     TThing *be;
     affectedData *next;
 

@@ -388,6 +388,12 @@ void TPerson::doSet(const char *argument)
         sendTo("Bad value for hobbit territory type.\n\r");
         return;
       }
+    } else if (mob->getRace() == RACE_FISHMAN) {
+      if ((parm != HOME_TER_NONE) && 
+          ((parm < HOME_TER_FISHMAN_URBAN) || (parm > HOME_TER_FISHMAN_MARINER))) {
+        sendTo("Bad value for fishman territory type.\n\r");
+        return;
+      }
     } else {
       if ((parm != HOME_TER_NONE)) {
         sendTo("Bad value for non-civilized territory type.\n\r");

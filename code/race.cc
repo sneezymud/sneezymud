@@ -10,6 +10,7 @@
 #include "race.h"
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"
+#include "garble.h"
 
 
 const char * RaceNames[MAX_RACIAL_TYPES] = {
@@ -59,7 +60,9 @@ const char * const Lores[MAX_LORES] =
 
 const char * const talents[MAX_TALENTS] =
 {
-  "fast regen",
+  "fast_regen",
+  "fish_eater",
+  "meat_eater",
 };
 
 Race *Races[MAX_RACIAL_TYPES];
@@ -96,6 +99,8 @@ Race::Race(race_t aRace) :
   raceType(aRace),
   Kingdom(LORE_OTHER),
   talents(0),
+  garbles(0),
+  cToggles(0),
   baseAge(0),
   ageNumDice(0),
   ageDieSize(0),
@@ -138,6 +143,8 @@ Race::Race() :
   raceType(RACE_NORACE),
   Kingdom(LORE_OTHER),
   talents(0),
+  garbles(0),
+  cToggles(0),
   baseAge(0),
   ageNumDice(0),
   ageDieSize(0),
@@ -179,6 +186,7 @@ Race::Race(const Race &a) :
   raceType(a.raceType),
   Kingdom(a.Kingdom),
   talents(a.talents),
+  garbles(a.garbles),
   baseAge(a.baseAge),
   ageNumDice(a.ageNumDice),
   ageDieSize(a.ageDieSize),
@@ -209,6 +217,9 @@ Race::Race(const Race &a) :
   naturalImmunities(a.naturalImmunities),
   baseStats(a.baseStats)
 {
+  // copy racial toggles
+  for(cToggles = 0;a.cToggles && cToggles < a.cToggles; cToggles++)
+    toggles[cToggles] = a.toggles[cToggles];
 }
 
 Race & Race::operator=(const Race &a)
@@ -251,6 +262,11 @@ Race & Race::operator=(const Race &a)
   bodyType = a.bodyType;
   naturalImmunities = a.naturalImmunities;
   baseStats = a.baseStats;
+  garbles = a.garbles;
+
+  // copy racial toggles
+  for(cToggles = 0;a.cToggles && cToggles < a.cToggles; cToggles++)
+    toggles[cToggles] = a.toggles[cToggles];
 
   return *this;
 }
@@ -336,8 +352,26 @@ void Race::initRace(const char *whichRace)
     // talents
     else if (!strcasecmp(keyword, "talent")) {
       one_argument(buf, value, cElements(value));
-      if (!strcasecmp(value, "fast_regen"))
-	addToTalents(TALENT_FAST_REGEN);
+      for(unsigned int iTalent=0; iTalent < MAX_TALENTS; iTalent++)
+        if (!strcasecmp(value, ::talents[iTalent]))
+        {
+          addToTalents(1 << iTalent);
+          break;
+        }
+    }
+    // garbles
+    else if (!strcasecmp(keyword, "garble")) {
+      one_argument(buf, value, cElements(value));
+      int iGarble = convertTo<int>(value);
+      if (iGarble >= 0 && iGarble < GARBLE_MAX)
+        garbles |= (1<<iGarble);
+    }
+    // toggles
+    else if (!strcasecmp(keyword, "toggle")) {
+      one_argument(buf, value, cElements(value));
+      int iTogg = convertTo<int>(value);
+      if (iTogg >= 0 && iTogg < MAX_TOG_INDEX && cToggles < MAX_RACIAL_TOGGLES)
+        toggles[cToggles++] = iTogg;
     }
 
     // Dimensional stuff.  Used to set individual values later.
@@ -414,6 +448,8 @@ void Race::initRace(const char *whichRace)
       racialCharacteristics |= COLDBLOODED;
     else if (!strcasecmp(keyword, "ridable"))
       racialCharacteristics |= RIDABLE;
+    else if (!strcasecmp(keyword, "feathered"))
+      racialCharacteristics |= FEATHERED;
 
     // Movement Messages
     else if (!strcasecmp(keyword, "movein"))
@@ -542,6 +578,8 @@ void Race::initRace(const char *whichRace)
         bodyType = BODY_PEGASUS;
       else if (!strcasecmp(value, "ant"))
         bodyType = BODY_ANT;
+      else if (!strcasecmp(value, "fishman"))
+        bodyType = BODY_FISHMAN;
       else {
         vlogf(LOG_LOW, fmt("Unknown body on %s") %  whichRace);
         bodyType = BODY_HUMANOID;
@@ -927,6 +965,7 @@ const sstring Race::getBodyLimbBlunt() const
     case BODY_MIMIC:
     case BODY_MEDUSA:
     case BODY_GOLEM:
+    case BODY_FISHMAN:
     case MAX_BODY_TYPES:
       return "hand";
   }
@@ -1011,6 +1050,7 @@ const sstring Race::getBodyLimbPierce(TBeing *tb) const
     case BODY_FROG:
     case BODY_MIMIC:
     case BODY_MEDUSA:
+    case BODY_FISHMAN:
     case MAX_BODY_TYPES:
       return "teeth";
   }
@@ -1085,6 +1125,7 @@ const sstring Race::getBodyLimbSlash() const
     case BODY_FROG:
     case BODY_MIMIC:
     case BODY_MEDUSA:
+    case BODY_FISHMAN:
     case MAX_BODY_TYPES:
       return "claw";
   }
@@ -1338,6 +1379,30 @@ bool Race::isRidable() const
 bool Race::isDumbAnimal() const
 {
   return racialCharacteristics & DUMBANIMAL;
+}
+
+bool Race::isFeathered() const
+{
+  return racialCharacteristics & FEATHERED;
+}
+
+int Race::getBaseArmor() const
+{
+  if (getRace() == RACE_FISHMAN)
+    return 900;
+  return 1000;
+}
+
+int Race::getGarbles() const
+{
+  return garbles;
+}
+
+// applies racial toggles to the character
+void Race::applyToggles(TBeing *character) const
+{
+  for (unsigned int iTogg = 0; iTogg < cToggles; iTogg++)
+    character->setQuestBit(toggles[iTogg]);
 }
 
 

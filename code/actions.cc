@@ -608,7 +608,7 @@ void TBeing::doPoop(void)
   }
 #endif
 
-  if(getCond(POOP) <= 0 && !isImmortal()){
+  if(getCond(POOP) <= 0 && !isImmortal() && !(race->isFeathered() && getCond(PEE) > 0)){
     sendTo("You don't have to go poop right now.\n\r");
     return;
   }
@@ -618,7 +618,8 @@ void TBeing::doPoop(void)
     return;
   }
 
-  if(equipment[WEAR_WAIST]||equipment[WEAR_LEG_R]||equipment[WEAR_LEG_L]){
+  if(!getMyRace()->isFeathered() &&
+    (equipment[WEAR_WAIST]||equipment[WEAR_LEG_R]||equipment[WEAR_LEG_L])){
     sendTo("You can't go poop with pants or a belt on!\n\r");
     return;
   }
@@ -629,6 +630,15 @@ void TBeing::doPoop(void)
     act("You unleash your <o>filth<1> upon the $g<1>.  You don't feel so good.", TRUE, this, NULL, NULL, TO_CHAR);
     dropPool(min((int) getWeight() / 10, (int) getCond(POOP)), LIQ_POT_FILTH);
     setCond(THIRST, max(0, (int) getCond(THIRST) - ((int) getCond(POOP) / 2)));
+    setCond(POOP, 0);
+    return;
+  }
+
+  if (race->isFeathered()) {
+    act("$n fluffs up, ruffles $s tail feathers and squeezes out some droppings.", TRUE, this, NULL, NULL, TO_ROOM);
+    act("Ahh, you feel a little bit lighter.", TRUE, this, NULL, NULL, TO_CHAR);
+    dropPool((int)(getCond(POOP) + getCond(PEE)), LIQ_GUANO);
+    setCond(PEE, 0);
     setCond(POOP, 0);
     return;
   }
@@ -698,6 +708,12 @@ void TBeing::doPee(const sstring &argument)
     return;
   
   if (!hasWizPower(POWER_PEE)){
+
+    if (getMyRace()->isFeathered()) {
+      sendTo("You can't pee, you dont have the proper physiology!\n\r");
+      return;
+    }
+
     amt=getCond(PEE);
     if(amt <= 0){
       sendTo("You don't have to go pee right now.\n\r");
@@ -1314,3 +1330,4 @@ void TBeing::doToast(const sstring &arg)
   // If we got here, the person toasted someone that wasnt in the room
   sendTo("Do you often share a toast with someone that isn't there?\n\r");
 }
+

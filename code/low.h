@@ -176,7 +176,7 @@ const int OBJ_GENERIC_PLANT = 15347;
 const int OBJ_ANGEL_HEART = 9634;
 const int MYSTERY_POTION = 31300;
 const int OBJ_IMMORTAL_EXCHANGE_COIN = 37142;
-
+const int OBJ_PREEN_FEATHER = 10739;
 // ------------------------- MOBS
 
 const int MOB_NONE           = 0;

@@ -18,7 +18,7 @@ const char *bodyNames[MAX_BODY_TYPES]={"BODY_NONE","HUMANOID",
     "TURTLE", "FOUR_HOOF", "BAANTA", "AMPHIBEAN", "FROG",
     "MIMIC", "MEDUSA", "FELINE", "DINOSAUR", "REPTILE",
     "ELEPHANT", "OTYUGH", "OWLBEAR", "MINOTAUR", "GOLEM",
-    "COATL", "SIMAL", "PEGASUS", "ANT",
+    "COATL", "SIMAL", "PEGASUS", "ANT", "FISHMAN"
 };
 
 // Constructor.
@@ -308,6 +308,8 @@ const ubyte slot_chance[MAX_BODY_TYPES][MAX_WEAR] =
    0, 5, 25, 0, 0, 0, 0, 5, 5, 5, 5},       // BODY_ANT
   {0, 0, 0, 6, 38, 8, 5, 5, 3, 3, 0, 0, 7,
    7, 7, 5, 0, 0, 2, 2, 5, 5, 3, 3},        // BODY_WYVELIN
+  {0, 1, 1, 4, 26, 7, 3, 3, 2, 2, 3, 3, 5,
+   5, 10, 5, 3, 3, 7, 7, 0, 0, 0, 0},       // BODY_FISHMAN
 };
 // unused, fing, fing, neck, body, head, leg, leg, foot, foot, hand, hand, arm
 // arm, back, waist, wrist, wrist, hold, hold, leg, leg, foot, foot

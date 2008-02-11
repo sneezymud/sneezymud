@@ -43,7 +43,7 @@ static bool isBadForActFlags(int update)
   }
 }
 
-static bool isBadForAffectFlags(int update)
+static bool isBadForAffectFlags(uint64_t update)
 {
   switch (1<<update) {
     case AFF_GROUP:
@@ -749,7 +749,6 @@ static void change_mob_affect_flags(TBeing *ch, TMonster *mob, const char *arg, 
 {
   int row, update;
   char buf[256];
-  unsigned long i;
 
   if (type != ENTER_CHECK)
     if (!*arg || (*arg == '\n')) {
@@ -761,18 +760,18 @@ static void change_mob_affect_flags(TBeing *ch, TMonster *mob, const char *arg, 
   update--;
 
   if (type != ENTER_CHECK) {
-    if (update < 0 || update > 28)
+    if (update < 0 || update >= AFF_MAX)
       return;
     if (isBadForAffectFlags(update)) {
       ch->sendTo("That flag cannot be changed.\n\r");
       return;
     }
-    i = 1 << update;
+    uint64_t bitflag = uint64_t(1 << update);
 
-    if (IS_SET(mob->specials.affectedBy, i))
-      REMOVE_BIT(mob->specials.affectedBy, i);
+    if (IS_SET(mob->specials.affectedBy, bitflag))
+      REMOVE_BIT(mob->specials.affectedBy, bitflag);
     else
-      SET_BIT(mob->specials.affectedBy, i);
+      SET_BIT(mob->specials.affectedBy, bitflag);
     // this changes exp and level
     mob->setExp(mob->determineExp());
   }
@@ -780,13 +779,13 @@ static void change_mob_affect_flags(TBeing *ch, TMonster *mob, const char *arg, 
   ch->sendTo("Mobile affected by flags :");
 
   row = 0;
-  for (i = 0; i < 28; i++) {
+  for (int i = 0; i < AFF_MAX; i++) {
     sprintf(buf, VT_CURSPOS, row + 4, ((i & 1) ? 45 : 5));
     if (i & 1)
       row++;
     ch->sendTo(buf);
     ch->sendTo(fmt("%2d [%s] %s") % (i + 1) % 
-        ((mob->specials.affectedBy & (1 << i)) ? "X" : " ") % affected_bits[i]);
+        ((mob->specials.affectedBy & uint64_t(1 << i)) ? "X" : " ") % affected_bits[i]);
   }
   ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Select number to toggle, <ENTER> to return to the main menu.\n\r--> ");
