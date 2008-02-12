@@ -867,7 +867,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 	if ((cmd != CMD_GENERIC_PULSE) || !myself->awake() || myself->fight())
 		return FALSE;
 
-	if (::number(0, 14))
+	if (::number(0, 25))
 		return FALSE;
 
 	int seek_tree = 13; // candy heart tree type

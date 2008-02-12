@@ -318,9 +318,9 @@ void TPlant::updateDesc()
 		    	  ++tree_count;
 		    }
 		  }
-		  if (tree_count > 1 && ::number(1,100000) < (int) ((tree_count / 16) * 1000)) {
-			// this is about a 60% chance per real hour for a room of 8 laden trees
-			// 20% for a room of 2 trees
+		  if (tree_count > 1 && ::number(1, 100000) < (int) ((tree_count / 16) * 200)) {
+			// this is about a 17% chance per MUD day for a room of 8 laden trees
+			// 5% for a room of 2 trees
 			int mob_vnum = MOB_CANDY_HEART_EATER; // sugar-toothed weasel
 		    TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
 		    if (!mob) {
