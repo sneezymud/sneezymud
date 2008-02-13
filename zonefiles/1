@@ -342,206 +342,270 @@ M 0 29408 1 11016	animated mime - trade balloon
 M 0 29409 1 13106 	lazy guy - trade teddy bear
 M 0 29410 1 3177 	drunk trader - trade bottle of port
 *
+
+** Sugar toothed weasels **
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+M 0 37138 500 13700    a sugar toothed weasel
+
+
 ** Candy heart loading mobs in astral pocket
-M 0 29415 1000 13700	thieving squirrel
+M 0 29415 500 13700	thieving squirrel
 G 1 29405 9999		candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
+M 0 29415 500 13700	thieving squirrel
 G 1 29405 9999		candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
+M 0 29415 500 13700	thieving squirrel
 G 1 29405 9999		candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-M 0 29415 1000 13700	thieving squirrel
-G 1 29405 9999		candy heart
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
 *
-* Non loading quest mobs
-M 0 29415 1000 13700    thieving squirrel
-M 0 29415 1000 13700    thieving squirrel
-M 0 29415 1000 13700    thieving squirrel
-M 0 29415 1000 13700    thieving squirrel
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
+*
+M 0 29415 500 13700     thieving squirrel
+G 1 29405 9999          candy heart
+*
 
 
-M 0 29412 1000 13700	sticky child
+M 0 29412 500 13700	sticky child
 G 1 29405 9999          candy heart
 G 1 29405 9999
 *
-M 0 29412 1000 13700	sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
 *
-M 0 29412 1000 13700    sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
+*
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
+*
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
+*
+M 0 29412 500 13700     sticky child
+G 1 29405 9999          candy heart 
+G 1 29405 9999          
+*
 
-*Non loading quest mobs
-M 0 29412 1000 13700    sticky child
-M 0 29412 1000 13700    sticky child
-M 0 29412 1000 13700    sticky child
-M 0 29412 1000 13700    sticky child
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+M 0 29411 500 13700    lovestruck teen
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999          
+*
+**
+M 0 29413 500 13700	depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999
+G 1 29405 9999
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
+M 0 29413 500 13700     depressed lovelorn
+G 1 29405 9999          candy heart
+G 1 29405 9999          
+G 1 29405 9999          
+G 1 29405 9999
+*
 
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29411 1000 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-*
-*Non loading quest mobs
-M 0 29411 1000 13700    lovestruck teen
-M 0 29411 1000 13700    lovestruck teen
-M 0 29411 1000 13700    lovestruck teen
-M 0 29411 1000 13700    lovestruck teen
 
-
-*
-M 0 29413 9999 13700	depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-*
-M 0 29413 9999 13700    depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
-
-* Non loading quest mobs
-M 0 29413 9999 13700    depressed lovelorn
-M 0 29413 9999 13700    depressed lovelorn
-M 0 29413 9999 13700    depressed lovelorn
-M 0 29413 9999 13700    depressed lovelorn
-
-
-
-* December holiday quest
+**************************
+* December holiday quest *
+**************************
 
 * Trader elves
 *M 0 3905 1 238           a fat helper elf (1 - candy cane trader) 
