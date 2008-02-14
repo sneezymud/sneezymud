@@ -395,7 +395,6 @@ void TPerson::storeToSt(charFile *st)
       st->affected[j].location = mapApplyToFile(APPLY_NONE);
       st->affected[j].modifier = 0;
       st->affected[j].bitvector = 0;
-      st->affected[j].unused1 = 0;
       st->affected[j].unused2 = 0;
       if (af)
         af = af->next;

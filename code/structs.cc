@@ -1997,7 +1997,6 @@ saveAffectedData::saveAffectedData() :
   modifier2(0),
   location(0),
   bitvector(0),
-  unused1(NULL),
   unused2(NULL)
 {
 }
@@ -2017,7 +2016,6 @@ saveAffectedData & saveAffectedData::operator=(const affectedData &a)
 
   modifier2 = a.modifier2;
   bitvector = a.bitvector;
-  unused1 = NULL;
   unused2 = NULL;
 
   return *this;

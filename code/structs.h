@@ -340,8 +340,7 @@ class saveAffectedData {
     long modifier;
     long modifier2;
     byte location;
-    unsigned long bitvector;
-    void *unused1;  // should be removed 
+    uint64_t bitvector;
     void *unused2;
 
     saveAffectedData();

@@ -3244,7 +3244,8 @@ void TBeing::doFly()
     sendTo("It hurts your brain too much even contemplating how to fly underwater?!?\n\r");
     return;
   }
-  if (race->isWinged() && race->isFeathered() && !isAffected(AFF_FLIGHTWORTHY)) {
+  if (race->isWinged() && race->isFeathered() && !isAffected(AFF_FLIGHTWORTHY) &&
+    !isAffected(AFF_FLYING) && !isImmortal()) {
     sendTo("Your flight feathers are too dirty to fly properly.  You need to keep up on your preening.\n\r");
     return;
   }

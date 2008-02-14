@@ -11,7 +11,7 @@ void preen_social(TBeing *ch, TThing *target)
       return;
   }
   act("You clean $N up a bit.  Well, as much as you can.", FALSE, ch, NULL, target, TO_CHAR);
-  act("Cleans you up a bit.  Well, isn't that nice?", FALSE, ch, NULL, target, TO_VICT);
+  act("$n cleans you up a bit.  Well, isn't that nice?", FALSE, ch, NULL, target, TO_VICT);
   act("$n cleans $N up a bit.  Well, isn't that nice?", TRUE, ch, NULL, target, TO_NOTVICT);
 }
 
@@ -183,8 +183,8 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
       act(preenAct[index++], TRUE, ch, NULL, target, TO_VICT);
       act(preenAct[index++], TRUE, ch, NULL, target, TO_NOTVICT);
 
-      // random chance to drop a feather during grooming (7% chance)
-      if (ch->task->timeLeft < 3 && ch->task->timeLeft > 0 && !::number(0, 14))
+      // random chance to drop a feather during grooming (3% chance)
+      if (ch->task->timeLeft < 3 && ch->task->timeLeft > 0 && !::number(0, 29))
       {
         TObj *obj = read_object(OBJ_PREEN_FEATHER, VIRTUAL);
         if(!obj)
@@ -200,7 +200,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
 
       if (ch->task->timeLeft <= 0)
       {
-        int duration = UPDATES_PER_MUDHOUR * 4;
+        int duration = UPDATES_PER_MUDHOUR * 8;
         if (target != ch)
           duration *= 2;
 
@@ -221,7 +221,10 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
           // clobber durations of preened with new preen time
           for (affectedData *hjp = target->affected; hjp; hjp = hjp->next)
             if (hjp->type == AFFECT_PREENED && hjp->location == APPLY_NONE && hjp->duration < duration)
+            {
+              hjp->bitvector = AFF_FLIGHTWORTHY;
               hjp->duration = duration;
+            }
         }
 
         ch->stopTask();

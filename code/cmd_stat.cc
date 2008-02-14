@@ -596,7 +596,7 @@ void TBeing::statObj(const TObj *j)
   str += "\n\r";
 
   str += "Set char bits : ";
-  str += sprintbit(j->obj_flags.bitvector, affected_bits);
+  str += sprintbit_64(j->obj_flags.bitvector, affected_bits);
   str += "\n\r";
 
   str += "Extra flags   : ";
@@ -1319,7 +1319,7 @@ void TBeing::statBeing(TBeing *k)
   }
 
   str += fmt("%sAffected by:%s ") % cyan() % norm();
-  str += sprintbit(k->specials.affectedBy, affected_bits);
+  str += sprintbit_64(k->specials.affectedBy, affected_bits);
   str += "\n\r\n\r";
 
   str += fmt("%sBody part          Hth Max Flgs  StuckIn%s\n\r") %
@@ -2130,7 +2130,7 @@ void TBeing::statBeing(TBeing *k)
       break;
       case AFFECT_PREENED:
         str += "Preened.\n\r";
-        str += fmt("     Enables %s for winged, feathered winged creatures.\n\r") %
+        str += fmt("     Enables %s for winged, feathered creatures.\n\r") %
           sprintbit_64(aff->bitvector, affected_bits);
         str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
       break;

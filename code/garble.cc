@@ -23,6 +23,13 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
 sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 
 TGarble GarbleData[GARBLE_MAX] = {
   { "innuendo", "Makes the character end sentences, if you know what I mean", false, GARBLE_SCOPE_EVERYONE, garble_innuendo, SPEECH_FLAG_VERBAL },
@@ -39,6 +46,13 @@ TGarble GarbleData[GARBLE_MAX] = {
   { "freshprince", "Makes the character do the fresh prince of Brightmoon rap", false, GARBLE_SCOPE_EVERYONE, garble_freshprince, SPEECH_FLAG_SAY },
   { "fishtalk", "Makes the character talk like they are a fish to non-fish", false, GARBLE_SCOPE_INDIVIDUAL, garble_fishtalk, SPEECH_FLAG_VERBALEM },
   { "lolcats", "Makes the character do a lolcats talk (used for trolls)", false, GARBLE_SCOPE_INDIVIDUAL, garble_lolcats, SPEECH_FLAG_VERBALEM },
+  { "vampire", "Makes the character talk like a vampire", false, GARBLE_SCOPE_EVERYONE, garble_vampire, SPEECH_FLAG_VERBALEM },
+  { "igor", "Makes the character talk like an igor", false, GARBLE_SCOPE_EVERYONE, garble_igor, SPEECH_FLAG_VERBALEM },
+  { "olddrunk", "Makes the character talk in the old-school drunk code", false, GARBLE_SCOPE_EVERYONEANDSELF, garble_olddrunk, SPEECH_FLAG_VERBAL | SPEECH_FLAG_ROOMDESC },
+  { "irish", "Makes the character talk with an irish accent", false, GARBLE_SCOPE_EVERYONE, garble_irish, SPEECH_FLAG_VERBALEM },
+  { "trolltalk", "Makes the character talk like a troll to non-trolls", false, GARBLE_SCOPE_INDIVIDUAL, garble_trolltalk, SPEECH_FLAG_VERBALEM },
+  { "frogtalk", "Makes the character talk like a frogman to non-frogs", false, GARBLE_SCOPE_INDIVIDUAL, garble_frogtalk, SPEECH_FLAG_VERBALEM },
+  { "birdtalk", "Makes the character talk like a birdman to non-birdmen", false, GARBLE_SCOPE_INDIVIDUAL, garble_birdtalk, SPEECH_FLAG_VERBALEM },
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
@@ -233,7 +247,7 @@ sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &a
 }
 
 // Make drunk people garble their words!
-sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   int chance = from->getCond(DRUNK);
   sstring obuf, buf, latin, word;
@@ -748,6 +762,26 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
     "rglurg", "aahhrrgl", "glglrraa", "bloop",
     "gloop", "goop", "grloop",
   };
+  static const sstring replace[][2] = {
+    { ",", "*,*" },
+    { ";", "*;*" },
+    { ".", "*.*" },
+    { "!", "*!*" },
+    { "?", "*?*" },
+
+    { "R", "Rr", }, // roll r's
+    { "G", "Gr", }, // g sounds are growled (add r's)
+    { "L", "Gl", },// l sounds are gurgled
+    { "Th", "Wr", }, // th sounds are 'wr'
+    { "TH", "WR", },// th sounds are 'wr'
+    { "T", "W", },// t sounds are 'w'
+
+    { "*,*", "," },
+    { "*;*", ";" },
+    { "*.*", "." },
+    { "*!*", "!" },
+    { "*?*", "?" },
+  };
   sstring out;
   int iWord = 0;
   sstring word = arg.word(iWord);
@@ -758,47 +792,20 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
     if (!out.empty())
       out += ' ';
     // replace randomly a word
-    if (chance > number(0, 100))
-      out += watery[number(0, cElements(watery))].matchCase(word);
-    else
+    if (chance/2 > number(0, 100))
     {
-      // roll r's
-      if (chance > number(0, 100))
-      {
-        word.inlineReplaceString("r", "rr");
-        word.inlineReplaceString("R", "Rr");
-      }
-
-      // g sounds are growled (add r's)
-      if (chance > number(0, 100))
-      {
-        word.inlineReplaceString("g", "gr");
-        word.inlineReplaceString("G", "Gr");
-      }
-
-      // l sounds are gurgled
-      if (chance > number(0, 100))
-      {
-        word.inlineReplaceString("l", "gl");
-        word.inlineReplaceString("L", "gl");
-      }
-
-      // th sounds are 'wr'
-      if (chance > number(0, 100))
-      {
-        word.inlineReplaceString("th", "wr");
-        word.inlineReplaceString("Th", "Wr");
-      }
-
-      // t sounds are 'w'
-      if (chance > number(0, 100))
-      {
-        word.inlineReplaceString("t", "w");
-        word.inlineReplaceString("T", "W");
-      }
-
-      out += word;
+      word = watery[number(0, cElements(watery)-1)].matchCase(word);
     }
+    else if (chance*1.3 > number(0, 100))
+    {
+      for(int i=0;i < (int)cElements(replace);i++)
+      {
+        // assume replace strings are in upper case
+        word.inlineReplaceString(replace[i][0], replace[i][1]);
+        word.inlineReplaceString(replace[i][0].lower(), replace[i][1].lower());
+      }
+    }
+    out += word;
   }
 
   return out;
@@ -883,9 +890,7 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
     if (!out.empty())
       out += ' ';
 
-    vlogf(LOG_BUG, sstring("processing word: ") + word);
-
-    if (chance > number(0, 100) || chance > number(0, 100))
+    if (chance > number(0, 100))
     {
       sstring munged = " ";
       munged += word.lower();
@@ -894,13 +899,260 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
       for(int iReplace = 0; iReplace < (int)cElements(lolcats_replace); iReplace++)
         munged.inlineReplaceString(lolcats_replace[iReplace][0], lolcats_replace[iReplace][1]);
 
-    vlogf(LOG_BUG, sstring("word munged: <") + munged + sstring(">"));
-
-    vlogf(LOG_BUG, sstring("adding: <") + munged.trim().matchCase(word) + sstring("> to out: ") + out);
       out += munged.trim().matchCase(word);
     }
     else
       out += word;
+  }
+
+  return out;
+}
+
+// talk like the sesamestreet count vampire
+sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  sstring out = arg.lower();
+
+  out.inlineReplaceString("wha", "vhu");
+  out.inlineReplaceString("w", "v");
+
+  return out.matchCase(arg);
+}
+
+// talk like an igor henchman : Replace every s and ss with th
+sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  sstring out = arg.lower();
+
+  out.inlineReplaceString("ss", "th");
+  out.inlineReplaceString("s", "th");
+
+  return out.matchCase(arg);
+}
+
+
+sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+/*
+Barely Drunk
+any word which has repeating character subsets will have a chance of repeating the subset agian 1-3 times.  "Banana" has a repeating "an" in it, so if it repeats 1 time, itll go "Bananana".  You do this: take the length, divide by two -> n.  From n down to 2 in length, look for substrings in the string of that length which repeat.  If so, find the end of the repeating substring and repeat it.
+
+"Grapeape" -> "Grapeapeape"
+"Banana" -> "Bananana"
+"Pompom" -> "Pompompom"
+"Mississippi" -> "Mississississippi"
+
+Sortof Drunk
+Words are replaced 10% chance per word by a random word.
+
+Solidly Drunk
+all 'ss' in words is replaced with 'shh'
+and 's' is replaces by 'sh'
+and 'ce' is replaecd by 'she'
+words which are longer than 4 characters sometimes will just end in ellipses at around 5 to 8 characters in.  So "Replacement Derrigible" becomes "Replash... Derrig..."  this can also happen from the front end too: "...shement ...ible" but never both.
+
+Quite Drunk
+Sometimes add in the phrase: "I love you guys", "I love you man", "Hey where's the <random word>?", "What?", "Huh?", "Woo!", "Woohoo!" (this gets added before the text changes above)
+If you say 'lol' 'hah' 'heh' 'chuckle' 'rofl' 'laugh' or something, it has a 25% chance of just making your whole text laughter.
+
+Really Really Drunk
+Every word has a 10% chance of being replaced by *burp*.  Which also causes the character to burp.  Another 10% is replaced by *hic* which causes you to hiccup.
+
+*/
+
+  return arg;
+}
+
+// Irish accent!
+sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring replace[][2] = {
+    { ",", " *,* " },
+    { ";", " *;* " },
+    { ".", " *.* " },
+    { "!", " *!* " },
+    { "?", " *?* " },
+
+    { "or", "ar"},
+    { "er", "ar"},
+    { " o", " oo"},
+    { " ha", " 'a"},
+    { " he", " 'e"},
+    { " hi", " 'i"},
+    { " ho", " 'o"},
+    { " hu", " 'u"},
+    { " hy", " 'y"},
+    { " u ", " ye "},
+    { " my", " me"},
+    { " out", " oot"},
+    { "out ", "oot "},
+    { " my ", " me "},
+    { " no ", " nay "},
+    { " to ", " t' "},
+    { "your", "yur"},
+    { "ever", "e'er"},
+    { " of ", " o' "},
+    { " be ", " b' "},
+    { " ack", " och"},
+    { " ack ", " och "},
+    { " you ", " ye "},
+    { " your", " yur"},
+    { " its ", " tis "},
+    { " it's ", " 'tis "},
+    { " yes ", " aye "},
+    { " nod ", " aye "},
+    { " not ", " na "},
+    { " the ", " th' "},
+    { " out ", " oot "},
+    { " sir ", " sirrah "},
+    { " and ", " an' "},
+    { " boy ", " lad "},
+    { " with", " wi'"},
+    { " your ", " yur "},
+    { " girl ", " lass "},
+    { " very ", " ver' "},
+    { " yeah ", " aye "},
+    { " ever ", " e'er "},
+    { " even ", " e'en "},
+    { " auld ", " auld "},
+    { " with ", " wi' "},
+    { " isn't ", " is na "},
+    { " isnt ", " is na "},
+    { " it is ", " 'tis "},
+    { " can't ", " canna "},
+    { " don't ", " dunna "},
+    { " cant ", " canna "},
+    { " dont ", " dunna "},
+    { " maybe ", " may'ap "},
+    { " about ", " aboot "},
+    { " won't ", " will na "},
+    { " wont ", " will na "},
+    { " today ", " t'day "},
+    { " fairy ", " faerie "},
+    { " aren't ", " are na "},
+    { " arent ", " are na "},
+    { " cannot ", " canna "},
+    { " little ", " wee "},
+    { " at all ", " a'tall "},
+    { " do not ", " dunna "},
+    { " didn't ", " dinna "},
+    { " didnt ", " dinna "},
+    { " myself ", " meself "},
+    { " milord ", " m'lord "},
+    { "perfect", "parfect"},
+    { " before ", " afore "},
+    { " it was ", " twas "},
+    { " i think ", " methinks "},
+    { " can not ", " canna "},
+    { " did not ", " dinna "},
+    { " perfect ", " parfect "},
+    { " my lord ", " m'lord "},
+    { " morning ", " marnin' "},
+    { " between ", " atwixt "},
+    { " ireland ", " eire "},
+    { " it would ", " twood "},
+    { " tomorrow ", " t'morrow "},
+    { " thank you", " thankee"},
+    { " thanks ", " thankee "},
+
+    { " *,* ", "," },
+    { " *;* ", ";" },
+    { " *.* ", "." },
+    { " *!* ", "!" },
+    { " *?* ", "?" },
+  };
+
+  sstring out = " ";
+  out += arg.lower();
+  out += " ";
+
+  for(int i=0;i < (int)cElements(replace);i++)
+  {
+    out.inlineReplaceString(replace[i][0], replace[i][1]);
+  }
+
+  return out.trim().matchCase(arg);
+}
+
+
+sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+
+  return arg;
+}
+
+
+sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+
+  return arg;
+}
+
+
+sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring birdsquak_prefix[] = { "mwr","bwr","wr","buk","pwr","squ" };
+  static const sstring birdsquak_suffix[] = { "awk","aah","awr","awrk","ak" };
+  static const sstring replace[][2] = {
+    { ",", "*,*" },
+    { ";", "*;*" },
+    { ".", "*.*" },
+    { "!", "*!*" },
+    { "?", "*?*" },
+
+    { "gh", "k", },
+    { "Gh", "K", },
+    { "ww", "wr", },
+    { "th", "t'", },
+    { "Th", "T'", },
+    { "sh", "s'", },
+    { "Sh", "S'", },
+    { "st", "'t", },
+    { "St", "'T", },
+    { "''", "'", },
+    { "'s", "'", },
+    { "ts", "t'", },
+    { "sp", "s'", },
+    { "Sp", "S'", },
+    { "ng", "'", },
+    { "wh", "w'", },
+    { "Wh", "W'", },
+    { "'''", "'", },
+    { "''", "'", },
+
+    { "*,*", "," },
+    { "*;*", ";" },
+    { "*.*", "." },
+    { "*!*", "!" },
+    { "*?*", "?" },
+  };
+
+  sstring out;
+  int iWord = 0;
+  sstring word = arg.word(iWord);
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(; !word.empty(); word = arg.word(++iWord))
+  {
+    if (!out.empty())
+      out += ' ';
+    // replace randomly a word
+    if (chance/2 > number(0, 100))
+    {
+      word = sstring(birdsquak_prefix[number(0, cElements(birdsquak_prefix)-1)] +
+              birdsquak_suffix[number(0, cElements(birdsquak_suffix)-1)]).matchCase(word);
+    }
+    else if (chance*1.3 > number(0, 100))
+    {
+      for(int i=0;i < (int)cElements(replace);i++)
+      {
+        // assume replace strings are in lower case
+        word.inlineReplaceString(replace[i][0], replace[i][1]);
+        word.inlineReplaceString(replace[i][0].upper(), replace[i][1].upper());
+      }
+    }
+
+    out += word;
   }
 
   return out;

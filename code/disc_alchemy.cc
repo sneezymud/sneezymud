@@ -185,7 +185,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
 
   str += "Affected by: ";
 
-  str += sprintbit(victim->specials.affectedBy, affected_bits);;
+  str += sprintbit_64(victim->specials.affectedBy, affected_bits);;
   str += "\n\r";
 
   str += caster->describeAffects(victim, show);
