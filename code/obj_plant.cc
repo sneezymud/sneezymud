@@ -302,7 +302,7 @@ void TPlant::updateDesc()
       setYield(getYield() + 1);
     }
   }
-  
+  /*
   if (roomp && getType() == 13 && plantindex > 1) {
 	  // candy trees spawn rainbow-rats, which eat the candy
 	  if (plantindex > 2) {
@@ -335,6 +335,7 @@ void TPlant::updateDesc()
 		  }
 	  }
   }
+  */
 }
 
 
