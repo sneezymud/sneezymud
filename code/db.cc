@@ -107,6 +107,8 @@ TRoom *room_db[WORLD_SIZE];
 
 TObjList object_list; // the global linked list of obj's 
 
+int commod_index[200];
+
 TBeing *character_list = 0; // global l-list of chars          
 TMonster *pawnman = NULL;
 TPCorpse *pc_corpse_list = NULL;
@@ -178,6 +180,48 @@ struct reset_q_type
   resetQElement *head;
   resetQElement *tail;
 } r_q;
+
+void update_commod_index()
+{
+  TCommodity *comm;
+  TDatabase db(DB_SNEEZY);
+  TMonster *keeper, *tm;
+  TBeing *tb;
+  int count=0;
+
+  for(int i=0;i<200;++i)
+    commod_index[i]=0;
+
+  // we want to use this at boot time, and the shop tables aren't setup yet
+  db.query("select s.keeper as keeper from shoptype st, shop s where st.type=42 and s.shop_nr=st.shop_nr");
+
+  while(db.fetchRow()){
+    count++;
+    keeper=NULL;
+    for(tb=character_list;tb;tb=tb->next){
+
+      if((tm=dynamic_cast<TMonster *>(tb))){
+	if(tm->mobVnum()==convertTo<int>(db["keeper"])){
+	  keeper=tm;
+	  break;
+	}
+      }
+    }
+
+    if(!keeper)
+      continue;
+
+    for(TThing *t=keeper->getStuff();t;t=t->nextThing){
+      if((comm=dynamic_cast<TCommodity *>(t))){
+	commod_index[comm->getMaterial()]+=comm->numUnits();
+      }
+    }
+  }
+
+  for(int i=0;i<200;++i)
+    commod_index[i]/=count;
+
+}
 
 int getObjLoadPotential(const int obj_num)
 {
@@ -472,7 +516,9 @@ void bootDb(void)
     } else if (i==1) {
       bootPulse(NULL, true);
       bootPulse("Resetting zones:", false);
+      update_commod_index();
     }
+
 
     vlogf(LOG_MISC, fmt("Performing boot-time reset of %s (rooms %d-%d).") % zone_table[i].name % d % e);
     zone_table[i].resetZone(TRUE);
@@ -1395,7 +1441,6 @@ void TBeing::doBoot(const sstring &arg)
 
 
 
-
 bool zoneData::bootZone(int zone_nr)
 {
   int tmp;
@@ -2281,6 +2326,10 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
       vlogf(LOG_MISC, "*** Zone was disabled.");
     return;
   }
+
+  if(!bootTime)
+     update_commod_index();
+
   storageRoom = real_roomp(ROOM_NOCTURNAL_STORAGE);
   for (cmd_no = 0;; cmd_no++) {
     resetCom &rs = this->cmd[cmd_no];

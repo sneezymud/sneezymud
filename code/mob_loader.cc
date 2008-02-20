@@ -10,10 +10,11 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "obj_potion.h"
+#include "obj_commodity.h"
 
 static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *ch)
 {
-  float cost=material_nums[mat].price;
+  float cost=TCommodity::demandCurvePrice(1,0,commod_index[mat]);
 
   // make sure they can afford it
   if(wealth < cost)
@@ -36,6 +37,67 @@ static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *c
     *bag += *obj;
   else
     *ch += *obj;
+}
+
+struct mat_sort
+{
+  bool operator()(const int &a, const int &b)
+  {
+    float pa=TCommodity::demandCurvePrice(1,0,commod_index[a]) - material_nums[a].price;
+    float pb=TCommodity::demandCurvePrice(1,0,commod_index[b]) - material_nums[b].price;
+
+
+    // we're sorting on the difference between the average price based on
+    // global supply versus the base price
+    // the idea being that the first in the list is the most in-demand
+    // commodity and thus loaded first; but skewed towards the base value
+    // in theory, this should keep our commodities having relative values
+    // sort of, like diamond should usually be higher priced than cat fur,
+    // because mobs will ignore diamond and load cat fur until they reach
+    // their base prices
+
+    return pa > pb;
+    
+    //    return material_nums[a].price > material_nums[b].price;
+  }
+};
+
+void commodLoader(TMonster *tmons, TObj *bag)
+{
+  // convert up to 50% of cash into commodities (normal dist. around 25%)
+  int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * tmons->getMoney());
+  tmons->setMoney(tmons->getMoney()-wealth);
+
+  vector <int> base_mats;
+  for (int i=0; i<200; ++i){
+    if (material_nums[i].mat_name[0]){
+      base_mats.push_back(i);
+    }
+  }
+
+  std::sort(base_mats.begin(), base_mats.end(), mat_sort());
+
+  int max_units=20;
+  int initial_wealth=wealth;
+
+  for(unsigned int i=0;i<base_mats.size();++i){
+    // amount of current commod we can afford
+    int n_afford=min(max_units, (int)(wealth / TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]])));
+    // probability of loading is based on initial wealth
+    int probability=min(max_units, (int)(initial_wealth /  TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]])));
+
+    // if we can afford LESS, then there is a higher chance we'll buy it
+    // the idea being we prefer to buy expensive commods
+    // very wealthy mobs prefer to have cash
+    if(probability <= ::number(0, max_units) && n_afford > 0){
+      treasureCreate(::number(n_afford/2, n_afford), base_mats[i],
+		     wealth, bag, tmons);
+    }
+  }
+  
+  // add the leftover cash back
+  tmons->setMoney(tmons->getMoney()+wealth);
+
 }
 
 void potionLoader(TMonster *tmons)
@@ -203,13 +265,6 @@ void TMonster::thiefLootLoader()
     delete obj;
 }
 
-struct mat_sort
-{
-  bool operator()(const int &a, const int &b)
-  {
-    return material_nums[a].price > material_nums[b].price;
-  }
-};
 
 void TMonster::createWealth(void)
 {
@@ -254,40 +309,8 @@ void TMonster::createWealth(void)
   buffMobLoader();
   genericMobLoader(&bag);
   potionLoader(this);
+  commodLoader(this, bag);
 
-  // convert up to 50% of cash into commodities (normal dist. around 25%)
-  int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * getMoney());
-  setMoney(getMoney()-wealth);
-
-  // this should be roughly in order of value
-  vector <int> base_mats;
-  for (int i=0; i<200; ++i){
-    if (material_nums[i].mat_name[0]){
-      base_mats.push_back(i);
-    }
-  }
-  std::sort(base_mats.begin(), base_mats.end(), mat_sort());
-
-  int max_units=20;
-  int initial_wealth=wealth;
-
-  for(unsigned int i=0;i<base_mats.size();++i){
-    // amount of current commod we can afford
-    int n_afford=min(max_units, (int)(wealth / material_nums[base_mats[i]].price));
-    // probability of loading is based on initial wealth
-    int probability=min(max_units, (int)(initial_wealth / material_nums[base_mats[i]].price));
-
-    // if we can afford LESS, then there is a higher chance we'll buy it
-    // the idea being we prefer to buy expensive commods
-    // very wealthy mobs prefer to have cash
-    if(probability <= ::number(0, max_units) && n_afford > 0){
-      treasureCreate(::number(n_afford/2, n_afford), base_mats[i],
-		     wealth, bag, this);
-    }
-  }
-  
-  // add the leftover cash back
-  setMoney(getMoney()+wealth);
 
 
   int num = 0;

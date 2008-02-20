@@ -157,8 +157,10 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-float TCommodity::demandCurvePrice(int num, float price, int total_units) const
+float TCommodity::demandCurvePrice(int num, float price, int total_units)
 {
+  if(!total_units)
+    total_units=1;
 
   float multiplier=-(max_commod_price / log(shop_capacity));
 

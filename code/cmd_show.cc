@@ -18,6 +18,7 @@
 #include "obj_component.h"
 #include "liquids.h"
 #include "database.h"
+#include "obj_commodity.h"
 
 extern int getObjLoadPotential(const int obj_num);
 
@@ -915,7 +916,20 @@ void TPerson::doShow(const sstring &argument)
     int matnum=-1, i;
 
     buf2 = my_arg;
-    if (!buf2.empty()) {  
+    if(is_abbrev(buf2, "index")){
+      sb += "Material Material           Material\n\r";
+      sb += "Number   Name               Amount   Base Price Avg Price Diff\n\r";
+      sb += "--------------------------------------------------------------\n\r";
+      for(i=0;i<200;++i){
+	if(material_nums[i].mat_name[0]){
+	  sb += fmt("%-8i %-18s %-8i %-10f %-9i %i\n\r") % i %
+	    sstring(material_nums[i].mat_name).uncap() % 
+	    commod_index[i] % material_nums[i].price %
+	    (int)TCommodity::demandCurvePrice(1,0,commod_index[i]) %
+	    (int)(TCommodity::demandCurvePrice(1,0,commod_index[i])-material_nums[i].price);
+	}
+      }
+    } else if (!buf2.empty()) {  
       // one material
       for (i=0; i<200; ++i){
 	if (material_nums[i].mat_name[0] &&
