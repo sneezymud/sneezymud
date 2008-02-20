@@ -1,4 +1,98 @@
-#44825
-Vasco - Aerie Treehouse, Pt. 2~
-44854 25 2 0
+44825
+Vasco - Aerie Treehouse, Treetop Village~
+44854 30 2 0
+M 0 44829 1 44825       a male Treetop sentry
+Y 0 7 5
+M 0 44828 1 44825       a female Treetop sentry
+Y 0 7 5
+M 0 44829 1 44826       a male Treetop sentry
+Y 0 7 5
+M 0 44828 1 44826       a female Treetop sentry
+Y 0 7 5
+M 0 44835 1 44827       a Treetop hatchling
+Y 0 7 5
+M 0 44834 1 44827       a female fledgling of Treetop
+Y 0 7 5
+M 0 44834 1 44827       a female fledgling of Treetop
+Y 0 7 5
+M 0 44829 1 44828       a male Treetop sentry
+Y 0 7 5
+M 0 44828 1 44828       a female Treetop sentry
+Y 0 7 5
+M 0 44835 1 44829       a Treetop hatchling
+M 0 44833 1 44829       a male fledgling of Treetop
+M 0 44833 1 44829       a male fledgling of Treetop
+M 0 44829 1 44830       a male Treetop sentry
+Y 0 7 5
+M 0 44828 1 44830       a female Treetop sentry
+Y 0 7 5
+M 0 44829 1 44831       a male Treetop sentry
+Y 0 7 5
+M 0 44828 1 44831       a female Treetop sentry
+Y 0 7 5
+M 0 44827 1 44832       a Treetop village guardian
+Y 0 7 5
+M 0 44827 1 44832       a Treetop village guardian
+Y 0 7 5
+M 0 44830 1 44834       Snoktek, the chief of Treetop
+? 0 5 0 E
+E 1 44838 9999 14         a backplate of woven reeds [back]
+? 0 5 0 E
+E 1 44844 9999 13         a sleeve of woven reeds [arm-left]
+? 0 5 0 E
+E 1 44841 9999 17         a bracelet of woven reeds 
+[wrist-left]
+? 0 5 0 E
+E 1 44843 9999 11         a glove of woven reeds [hand-left]
+? 0 5 0 E
+E 1 44842 9999 15         a belt of woven reeds [waist]
+? 0 5 0 E
+E 1 44840 9999 6          a pair of pants woven from reeds 
+[leg-right]
+? 0 5 0 E
+E 1 44840 9999 7          a pair of pants woven from reeds 
+[leg-left]
+? 0 5 0 E
+E 1 44839 9999 9          a boot of woven reeds [foot-left]
+? 0 5 0 E
+E 1 20612 9999 19         a short reed spear [hold-left]
+M 0 44825 1 44835       a male villager of Treetop
+Y 0 7 5
+M 0 44826 1 44835       a female villager of Treetop
+Y 0 7 5
+M 0 44826 1 44836       a female villager of Treetop
+Y 0 7 5
+M 0 44825 1 44836       a male villager of Treetop
+Y 0 7 5
+M 0 44826 1 44838       a female villager of Treetop
+Y 0 7 5
+M 0 44825 1 44838       a male villager of Treetop
+Y 0 7 5
+M 0 44836 1 44839       an elder villager of Treetop
+Y 0 7 5
+M 0 44836 1 44839       an elder villager of Treetop
+Y 0 7 5
+M 0 44832 1 44840       Tloktok, the Treetop shaman
+Y 0 7 5
+M 0 44831 1 44841       Trrilkets, the healer of Treetop
+Y 0 7 5
+M 0 44836 1 44842       an elder villager of Treetop
+Y 0 7 5
+M 0 44836 1 44842       an elder villager of Treetop
+Y 0 7 5
+M 0 44836 1 44843       an elder villager of Treetop
+Y 0 7 5
+M 0 44836 1 44843       an elder villager of Treetop
+Y 0 7 5
+M 0 44837 1 44846       a Treetop village guardian
+Y 0 7 5
+M 0 44837 1 44848       a Treetop village guardian
+Y 0 7 5
+M 0 44837 1 44850       a Treetop village guardian
+Y 0 7 5
+M 0 44837 1 44851       a Treetop village guardian
+Y 0 7 5
+S
+
+
 S
