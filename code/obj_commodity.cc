@@ -14,6 +14,7 @@
 
 // maximum number of units shop will hold. price=0 at this quantity
 const int shop_capacity = 100000;
+const float max_commod_price = 250;
 
 bool TCommodity::willMerge(TMergeable *tm)
 {
@@ -159,8 +160,7 @@ void TCommodity::lowCheck()
 float TCommodity::demandCurvePrice(int num, float price, int total_units) const
 {
 
-  // elasticity; commods are worth their base price at half shop capacity
-  float E = ((shop_capacity / 2.0) / (price * price));
+  float multiplier=-(max_commod_price / log(shop_capacity));
 
   // now calculate the dynamic price at each level for the
   // requested number of units to be sold
@@ -168,21 +168,32 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units) const
   for(int i=1;i<=abs(num);++i){
     // positive num means we're selling commodities, so our total units
     // goes DOWN with each one sold.  negative num means the opposite.
-    if(num >= 0)
-      total_price+=sqrt((shop_capacity - (total_units-i)) / E);
+    if(!(total_units-i)) // can't take log(0)
+      total_price+=max_commod_price;
+    else if(num >= 0)
+      total_price+=(multiplier * log(total_units-i) + max_commod_price);
     else
-      total_price+=sqrt((shop_capacity - (total_units+i)) / E);
+      total_price+=(multiplier * log(total_units+i) + max_commod_price);
   }
+
   return total_price;
 
-  // base price of 30 (gold), shop capacity of 10000, example prices:
-  // 10000 =  0.0
-  //  9000 = 13.4 (45%)
-  //  7500 = 21.2 (71%)
-  //  5000 = 30.0 (100%)
-  //  2500 = 36.7 (122%)
-  //  1000 = 40.3 (134%) 
-  //     0 = 42.4 (141%)
+  // p = desired price
+  // e = 2.718281828
+  // N = e ^ ((p-1000) / multiplier)
+
+
+  // example prices:
+  // max price = 1000, shop capacity = 100000
+  // 100000 =  0.0
+  //  90000 =  9.15
+  //  75000 = 24.99 
+  //  50000 = 60.21 
+  //  25000 = 120.41
+  //  10000 = 200.00
+  //   5000 = 260.21
+  //   1000 = 400.00
+  //      1 = 1000.00
 
 }
 
@@ -442,10 +453,7 @@ const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min
 {
   char buf[256];
 
-  // this isn't really the right way to do this because of the demand curve
-  // stuff, but it's easier than converting shopPrice to return float
-  float cost = shopPrice(100, shop_nr, -1, ch);
-  cost/=100.0;
+  float cost = shopPriceFloat(1, shop_nr, -1, ch);
 
   sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %.2f talens (per unit)\n\r",
             k + 1, material_nums[getMaterial()].mat_name,
