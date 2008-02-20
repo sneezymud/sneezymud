@@ -49,7 +49,7 @@ const int ROOM_TREE_BRIDGE       = 15277;
 const int ROOM_SLEEPTAG_CONTROL  = 23599;
 const int ROOM_GUILD_BUREAU      = 395;
 const int ROOM_TROLLEY           = 15344;
-
+const int ROOM_AERIE_INN         = 44853;
 // ------------------------- OBJS
 
 const int DEITY_TOKEN          = 2;
@@ -176,7 +176,7 @@ const int OBJ_GENERIC_PLANT = 15347;
 const int OBJ_ANGEL_HEART = 9634;
 const int MYSTERY_POTION = 31300;
 const int OBJ_IMMORTAL_EXCHANGE_COIN = 37142;
-const int OBJ_PREEN_FEATHER = 10739;
+const int OBJ_PREEN_FEATHER = 44845;
 // ------------------------- MOBS
 
 const int MOB_NONE           = 0;

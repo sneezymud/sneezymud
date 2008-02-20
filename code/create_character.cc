@@ -91,6 +91,7 @@ typedef struct _TPlayerRace
   int num50any;
   territoryT *territories;
   int cTerritories;
+  short hometown;
   const sstring terrHelp;
   const sstring accounts;
 } TPlayerRace;
@@ -98,24 +99,24 @@ typedef struct _TPlayerRace
 // our list of playable races
 TPlayerRace nannyRaces[] = {
   // base races
-  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), "help/territory help human", ""},
-  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), "help/territory help gnome", ""},
-  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), "help/territory help elf", ""},
-  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), "help/territory help ogre", ""},
-  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), "help/territory help dwarf", ""},
-  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), "help/territory help hobbit", ""},
+  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_GH_INN, "help/territory help human", ""},
+  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_GH_INN, "help/territory help gnome", ""},
+  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_GH_INN, "help/territory help elf", ""},
+  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_GH_INN, "help/territory help ogre", ""},
+  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_GH_INN, "help/territory help dwarf", ""},
+  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_GH_INN, "help/territory help hobbit", ""},
 
   // extended races
-  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, "},
+  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, "},
 
   // advanced races
-  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_FISHMAN, "Fishman", 1, fishmanTerr, cElements(fishmanTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_BIRDMAN, "Birdman", 1, birdmanTerr, cElements(birdmanTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_FISHMAN, "Fishman", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, "},
+  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
 };
 
 // a struct for holding data about customizable stats
@@ -532,6 +533,7 @@ connectStateT nannyRace_input(Descriptor * desc, sstring & output, const sstring
     {
       desc->character->setRace(nannyRaces[races[iChoice]].race);
       output = fmt("Okay Race set to %s.") % nannyRaces[races[iChoice]].name;
+      desc->character->player.hometown = nannyRaces[races[iChoice]].hometown;
       desc->character->player.hometerrain = nannyRaces[races[iChoice]].territories[0];
       return (connectStateT)(desc->connected+1);
     }

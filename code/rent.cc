@@ -57,6 +57,7 @@ struct SInnkeeperHate {
   {14323, RACE_GNOME, false, "I'm afraid our Inn is setup for those of Gnome or Hobbit stature."},
   {24442, RACE_GNOME, false, "I'm afraid our Inn is designed for those of Gnome or Hobbit stature."},
   {24442, RACE_HOBBIT, false, "I'm afraid our Inn is designed for those of Gnome or Hobbit stature."},
+  {44845, RACE_BIRDMAN, true, "How would a creature like you nest here?"},
 
   {0, RACE_NORACE, false, "Leave!"} // Add all new entries BEFORE this line.
 };
@@ -4606,7 +4607,7 @@ int TPerson::doRent(const sstring &argument)
   }
 
   objCost cost;
-  sh_int save_room;
+  unsigned short save_room;
 
   // note this is sort of a special case
   // special procedures (innkeeper, personalHouse) have already been

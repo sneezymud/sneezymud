@@ -312,7 +312,7 @@ class playerData
 
    ush_int Class;
    byte doneBasic[MAX_SAVED_CLASSES];
-   short hometown;  
+   unsigned short hometown;  
    territoryT hometerrain;
    struct time_data time;
    

@@ -2037,15 +2037,15 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "kelper fishman",
   "nomad fishman",
 
-  // birdman
-  "colony birdman",
-  "flocker birdman",
+  // aarakocra
+  "colony aarakocra",
+  "flocker aarakocra",
   "UNUSED",
   "UNUSED",
   "UNUSED",
-  "cliff-nester birdman",
-  "tree-nester birdman",
-  "coastal birdman",
+  "cliff-nester aarakocra",
+  "tree-nester aarakocra",
+  "coastal aarakocra",
 
   // troll
   "clan troll",

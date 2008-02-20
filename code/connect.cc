@@ -1431,7 +1431,7 @@ int TPerson::genericLoadPC()
       *rp += *this;
       player.hometown = ROOM_HELL;
     } else if (GetMaxLevel() <= MAX_MORT) {
-      if (player.hometown >= 0) {
+      if (player.hometown != 0xFFFF) {
         rp = real_roomp(player.hometown);
         if (!rp) {
           vlogf(LOG_LOW, fmt("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);

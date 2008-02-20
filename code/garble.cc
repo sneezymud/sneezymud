@@ -30,6 +30,8 @@ sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, S
 sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 
 TGarble GarbleData[GARBLE_MAX] = {
   { "innuendo", "Makes the character end sentences, if you know what I mean", false, GARBLE_SCOPE_EVERYONE, garble_innuendo, SPEECH_FLAG_VERBAL },
@@ -45,14 +47,16 @@ TGarble GarbleData[GARBLE_MAX] = {
   { "pirate", "Makes the character talk like a pirate", false, GARBLE_SCOPE_EVERYONE, garble_pirate, SPEECH_FLAG_VERBAL },
   { "freshprince", "Makes the character do the fresh prince of Brightmoon rap", false, GARBLE_SCOPE_EVERYONE, garble_freshprince, SPEECH_FLAG_SAY },
   { "fishtalk", "Makes the character talk like they are a fish to non-fish", false, GARBLE_SCOPE_INDIVIDUAL, garble_fishtalk, SPEECH_FLAG_VERBALEM },
-  { "lolcats", "Makes the character do a lolcats talk (used for trolls)", false, GARBLE_SCOPE_INDIVIDUAL, garble_lolcats, SPEECH_FLAG_VERBALEM },
+  { "lolcats", "Makes the character do a lolcats talk (used for gnolls)", false, GARBLE_SCOPE_INDIVIDUAL, garble_lolcats, SPEECH_FLAG_VERBALEM },
   { "vampire", "Makes the character talk like a vampire", false, GARBLE_SCOPE_EVERYONE, garble_vampire, SPEECH_FLAG_VERBALEM },
   { "igor", "Makes the character talk like an igor", false, GARBLE_SCOPE_EVERYONE, garble_igor, SPEECH_FLAG_VERBALEM },
   { "olddrunk", "Makes the character talk in the old-school drunk code", false, GARBLE_SCOPE_EVERYONEANDSELF, garble_olddrunk, SPEECH_FLAG_VERBAL | SPEECH_FLAG_ROOMDESC },
   { "irish", "Makes the character talk with an irish accent", false, GARBLE_SCOPE_EVERYONE, garble_irish, SPEECH_FLAG_VERBALEM },
   { "trolltalk", "Makes the character talk like a troll to non-trolls", false, GARBLE_SCOPE_INDIVIDUAL, garble_trolltalk, SPEECH_FLAG_VERBALEM },
   { "frogtalk", "Makes the character talk like a frogman to non-frogs", false, GARBLE_SCOPE_INDIVIDUAL, garble_frogtalk, SPEECH_FLAG_VERBALEM },
-  { "birdtalk", "Makes the character talk like a birdman to non-birdmen", false, GARBLE_SCOPE_INDIVIDUAL, garble_birdtalk, SPEECH_FLAG_VERBALEM },
+  { "birdtalk", "Makes the character talk like an aarakocra to non-aarakocra", false, GARBLE_SCOPE_INDIVIDUAL, garble_birdtalk, SPEECH_FLAG_VERBALEM },
+  { "gutter", "Makes the character talk a bit cockney (used for goblins and orcs)", false, GARBLE_SCOPE_INDIVIDUAL, garble_gutter, SPEECH_FLAG_VERBALEM },
+  { "trogtalk", "Makes the character talk like a troglodyte to non-trogs", false, GARBLE_SCOPE_INDIVIDUAL, garble_trogtalk, SPEECH_FLAG_VERBALEM },
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
@@ -708,7 +712,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
   // perhaps here, add in some pirate exclamations
 
   // now caps the first char and first of each sentence and trim
-  return garble.capitalizeSentences().trim();
+  return garble.trim().matchCase(arg);
 }
 
 
@@ -763,24 +767,12 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
     "gloop", "goop", "grloop",
   };
   static const sstring replace[][2] = {
-    { ",", "*,*" },
-    { ";", "*;*" },
-    { ".", "*.*" },
-    { "!", "*!*" },
-    { "?", "*?*" },
-
     { "R", "Rr", }, // roll r's
     { "G", "Gr", }, // g sounds are growled (add r's)
     { "L", "Gl", },// l sounds are gurgled
     { "Th", "Wr", }, // th sounds are 'wr'
     { "TH", "WR", },// th sounds are 'wr'
     { "T", "W", },// t sounds are 'w'
-
-    { "*,*", "," },
-    { "*;*", ";" },
-    { "*.*", "." },
-    { "*!*", "!" },
-    { "*?*", "?" },
   };
   sstring out;
   int iWord = 0;
@@ -794,7 +786,11 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
     // replace randomly a word
     if (chance/2 > number(0, 100))
     {
+      char punct = word[word.length()-1];
       word = watery[number(0, cElements(watery)-1)].matchCase(word);
+      // sad hack to keep trailing , ? ! . on this word
+      if (ispunct(punct))
+        word += punct;
     }
     else if (chance*1.3 > number(0, 100))
     {
@@ -911,12 +907,14 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
 // talk like the sesamestreet count vampire
 sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
-  sstring out = arg.lower();
+  sstring out = " ";
+  out += arg.lower();
+  out += " ";
 
-  out.inlineReplaceString("wha", "vhu");
-  out.inlineReplaceString("w", "v");
+  out.inlineReplaceString(" wha", " vhu");
+  out.inlineReplaceString(" w", " v");
 
-  return out.matchCase(arg);
+  return out.trim().matchCase(arg);
 }
 
 // talk like an igor henchman : Replace every s and ss with th
@@ -1074,18 +1072,88 @@ sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, S
   return out.trim().matchCase(arg);
 }
 
-
+// a sad atempt to make trolls sound like klingons:
+// no soft 'h' -> gh or g' like a gargle
+// all q's are a hard 'K' at back of throat
+// klingons like apostrophes
+// no 'c' soft -> 'k'
+// no 'ss' or 's' soft
+// regular z's, are kz
+// no f's or f sounds
+// no th sound
 sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
+  static const sstring replace[][2] = {
+    { "ph", "'" },
+    { "ch", "*^*" },
+    { "h", "g'" },
+    { "z", "kz" },
+    { "qu", "kw" },
+    { "q", "k" },
+    { "ck", "k" },
+    { "c", "k" },
+    { "*^*", "ch" },
+    { " s", " ch" },
+    { "ss", "auch" },
+    { "es ", "'k " },
+    { "s ", "'k " },
+    { "s", "'" },
+    { "fr", "r" },
+    { "fl", "l" },
+    { "of", "uv" },
+    { "f", "'" },
+    { "'''", "'" },
+    { "''", "'" },
+  };
 
-  return arg;
+  sstring out = " ";
+  out += arg.lower();
+  out += " ";
+  int chance = 100;//from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(int i=0;i < (int)cElements(replace);i++)
+  {
+    if (!(chance*1.3 > number(0, 100)))
+      continue;
+    out.inlineReplaceString(replace[i][0], replace[i][1]);
+  }
+
+  return out.trim().matchCase(arg);
 }
 
-
+// frogs have a soft pallate, and talk as if they have 2 fingers holding their tounge down
 sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
+  static const sstring replace[][2] = {
+    { "ll", "y" },
+    { "l", "y" },
+    { "rr", "y" },
+    { "r", "y" },
+    { "cc", "k" },
+    { "ck", "k" },
+    { "ch", "sh" },
+    { "c", "s" },
+    { "st", "ss" },
+    { "ts", "ss" },
+    { "tt", "sh" },
+    { "th", "ph" },
+    { "tt", "sh" },
+    { "t", "s" },
+  };
 
-  return arg;
+  sstring out = " ";
+  out += arg.lower();
+  out += " ";
+  int chance = 100;//from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(int i=0;i < (int)cElements(replace);i++)
+  {
+    if (!(chance*1.3 > number(0, 100)))
+      continue;
+    out.inlineReplaceString(replace[i][0], replace[i][1]);
+  }
+
+  return out.trim().matchCase(arg);
 }
 
 
@@ -1094,12 +1162,6 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
   static const sstring birdsquak_prefix[] = { "mwr","bwr","wr","buk","pwr","squ" };
   static const sstring birdsquak_suffix[] = { "awk","aah","awr","awrk","ak" };
   static const sstring replace[][2] = {
-    { ",", "*,*" },
-    { ";", "*;*" },
-    { ".", "*.*" },
-    { "!", "*!*" },
-    { "?", "*?*" },
-
     { "gh", "k", },
     { "Gh", "K", },
     { "ww", "wr", },
@@ -1119,12 +1181,6 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
     { "Wh", "W'", },
     { "'''", "'", },
     { "''", "'", },
-
-    { "*,*", "," },
-    { "*;*", ";" },
-    { "*.*", "." },
-    { "*!*", "!" },
-    { "*?*", "?" },
   };
 
   sstring out;
@@ -1139,8 +1195,12 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
     // replace randomly a word
     if (chance/2 > number(0, 100))
     {
+      char punct = word[word.length()-1];
       word = sstring(birdsquak_prefix[number(0, cElements(birdsquak_prefix)-1)] +
               birdsquak_suffix[number(0, cElements(birdsquak_suffix)-1)]).matchCase(word);
+      // sad hack to keep trailing , ? ! . on this word
+      if (ispunct(punct))
+        word += punct;
     }
     else if (chance*1.3 > number(0, 100))
     {
@@ -1156,6 +1216,79 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
   }
 
   return out;
+}
+
+
+sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+  static const sstring replace[][2] = {
+    { " this ", " dis " },
+    { " that", " dat" },
+    { " their ", " deys " },
+    { " theirs ", " deys " },
+    { " they", " dey" },
+    { " them", " dem" },
+    { " the ", " de " },
+    { " there ", " dere " },
+    { " are ", " is " },
+    { "yre ", "'s " },
+    { "'re ", "'s " },
+    { "d'nt ", "n' " },
+    { "'nt ", "n' " },
+    { " wha", " who" },
+    { " th", " f" },
+    { "th ", "f " },
+    { "th", "v" },
+    { " its ", " s'/* " },
+    { " it's ", " s'/* " },
+    { "nd", "n'" },
+    { " h", " '" },
+    { "er ", "a " },
+    { "ing ", "in' " },
+    { "ool ", "oo' " },
+    { "oll ", "oe " },
+    { "ol ", "o' " },
+    { "al ", "ow " },
+    { "all ", "aoe " },
+    { "ill ", "iw " },
+    { "il ", "ew " },
+    { "le ", "ow " },
+    { " all", " au" },
+    { " al", " au" },
+    { " oll", " ow" },
+    { " ol", " ow" },
+    { " ill", " ew" },
+    { " il", " ew" },
+    { "tt", "h'" },
+    { "te ", "' " },
+    { "it ", "ih' " },
+    { "ot ", "oh' " },
+    { "at ", "ah' " },
+    { "et ", "eh' " },
+    { "er ", "ah " },
+    { "'''", "'" },
+  };
+  sstring out = " ";
+  out += arg.lower();
+  out += " ";
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+
+  for(int i=0;i < (int)cElements(replace);i++)
+  {
+    if (i > 9 && !(chance*1.3 > number(0, 100)))
+      continue;
+    out.inlineReplaceString(replace[i][0], replace[i][1]);
+  }
+  out.inlineReplaceString("/* ", "");
+
+  return out.trim().matchCase(arg);
+}
+
+
+sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+{
+
+  return arg;
 }
 
 
