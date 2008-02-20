@@ -170,12 +170,17 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units)
   for(int i=1;i<=abs(num);++i){
     // positive num means we're selling commodities, so our total units
     // goes DOWN with each one sold.  negative num means the opposite.
-    if(!(total_units-i)) // can't take log(0)
-      total_price+=max_commod_price;
-    else if(num >= 0)
-      total_price+=(multiplier * log(total_units-i) + max_commod_price);
-    else
-      total_price+=(multiplier * log(total_units+i) + max_commod_price);
+    if(num >= 0){
+      if(!(total_units-i))
+	total_price+=max_commod_price;
+      else
+	total_price+=(multiplier * log(total_units-i) + max_commod_price);
+    } else {
+      if(!(total_units-i))
+	total_price+=0;
+      else
+	total_price+=(multiplier * log(total_units+i) + max_commod_price);
+    }
   }
 
   return total_price;
