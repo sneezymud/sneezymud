@@ -19,7 +19,7 @@ int counter_work;  // Global variable used to count # of undone items/man
 
 static int global_repair = 0;
 
-const float repair_mats_ratio=0.0;
+const float repair_mats_ratio=0.10;
 
 int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
 {
