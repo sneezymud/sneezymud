@@ -5502,12 +5502,14 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
   ch->remQuestBit(TOG_LYCANTHROPE);
 
+  int returnVal = FALSE;
   if(ch->desc && ch->desc->original) {
     TBeing *per = ch->desc->original;
     ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
     act("A whispy wolf-like form detaches itself from your body and then dissipates.", TRUE, per, NULL, NULL, TO_CHAR, NULL);
     act("A whispy wolf-like form detaches itself from $n's body and then dissipates.",
       TRUE, per, NULL, NULL, TO_ROOM, NULL);
+    returnVal = 1; // since we doReturn, we must stop all interaction with ch (it got modified)
   } else {
 
     act("A whispy wolf-like form detaches itself from your body and then dissipates.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
@@ -5515,7 +5517,7 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       TRUE, ch, NULL, NULL, TO_ROOM, NULL);
   }
 
-  return FALSE;  // return false here so that the glop goes away
+  return returnVal;  // return false here so that the glop goes away
 }
 
 
