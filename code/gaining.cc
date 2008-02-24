@@ -1972,20 +1972,21 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     TPerson *tp;
 
     // the specific quest required for a reset, given the guildmaster level
-    int resetQuest = TOG_RESET_PRAC_LEVEL15;
-    if ((me->GetMaxLevel()/2) > 40)
-      resetQuest = TOG_RESET_PRAC_LEVEL50;
-    if ((me->GetMaxLevel()/2) > 15)
-      resetQuest = TOG_RESET_PRAC_LEVEL40;
+    int resetQuest = TOG_RESET_PRAC_LEVEL50;
+    int myTrainerLevel = (me->GetMaxLevel()/2);
+    if (myTrainerLevel < 50)
+      resetQuest--;
+    if (myTrainerLevel < 40)
+      resetQuest--;
 
     ch->resetPractices(cit, practices, false);
 
     if (is_abbrev(arg, "reset")) {
       int cost = practices * REPRAC_COST_PER_PRAC;
 
-      if (!ch->hasQuestBit(resetQuest))
-        me->doSay("I'm sorry, you're going to have to do me a small favor before I help you retrain all of your learning.");
-      else if (ch->getMoney() < cost) {
+      if (!ch->hasQuestBit(resetQuest)) {
+        me->doSay("I'm sorry, you're going to have to do me a small <c>favor<1> before I help you retrain all of your learning.");
+      } else if (ch->getMoney() < cost) {
         me->doSay(fmt("I'm sorry, you don't have enough money for me to reset your spent practices.  The cost is %d talens.") % cost);
       } else if (ch->resetPractices(cit, practices, true)) {
         me->doSay(fmt("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);

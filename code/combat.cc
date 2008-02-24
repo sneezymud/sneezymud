@@ -5090,7 +5090,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     if (combatCheck && combatCheck->be)
     {
       const char *restrictName = (char *)combatCheck->be;
-      TBeing *owner = get_pc_world(this, sstring(restrictName), EXACT_YES, INFRA_NO, FALSE, TRUE);
+      TBeing *owner = get_pc_room(this, sstring(restrictName), EXACT_YES, INFRA_NO, FALSE, TRUE);
       if (!owner || !inGroup(*owner))
         return;
     }

@@ -179,6 +179,7 @@ const int OBJ_IMMORTAL_EXCHANGE_COIN = 37142;
 const int OBJ_PREEN_FEATHER = 44845;
 // ------------------------- MOBS
 
+const int MOB_ANY            = -1;
 const int MOB_NONE           = 0;
 const int FIRE_ELEMENTAL     = 16;
 const int WATER_ELEMENTAL    = 17;

@@ -9,6 +9,9 @@
 #include "stdsneezy.h"
 #include "garble.h"
 
+// utility functions defined below
+const sstring RandomPhrase(bool allowRecursivePhrase);
+
 // Garble functions - defined here so peeps dont reference them outside of this file
 sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
@@ -928,37 +931,117 @@ sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SP
   return out.matchCase(arg);
 }
 
-
+// makes you talk drunk
+// 9 barely drunk
+// 15 really drunk
+// 20 super drunk
+// 25 wasted
 sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
-/*
-Barely Drunk
-any word which has repeating character subsets will have a chance of repeating the subset agian 1-3 times.  "Banana" has a repeating "an" in it, so if it repeats 1 time, itll go "Bananana".  You do this: take the length, divide by two -> n.  From n down to 2 in length, look for substrings in the string of that length which repeat.  If so, find the end of the repeating substring and repeat it.
+  static const sstring replace[][2] = {
+    { "ss", "\255s" },
+    { "s", "sh" },
+    { "ce", "she" },
+    { "\255", "s" },
+  };
 
-"Grapeape" -> "Grapeapeape"
-"Banana" -> "Bananana"
-"Pompom" -> "Pompompom"
-"Mississippi" -> "Mississississippi"
+  sstring in = arg;
+  sstring out;
+  int iWord = 0;
+  sstring word = in.word(iWord);
+  int chance = from->getCond(DRUNK);
+  TBeing * tFrom = const_cast<TBeing *>(from);
+  bool emoted = false;
 
-Sortof Drunk
-Words are replaced 10% chance per word by a random word.
+  // if this garble was applied without us being drunk, assume an average drunkenness
+  if (chance < 9)
+    chance = 15;
 
-Solidly Drunk
-all 'ss' in words is replaced with 'shh'
-and 's' is replaces by 'sh'
-and 'ce' is replaecd by 'she'
-words which are longer than 4 characters sometimes will just end in ellipses at around 5 to 8 characters in.  So "Replacement Derrigible" becomes "Replash... Derrig..."  this can also happen from the front end too: "...shement ...ible" but never both.
+  // 15% chance of total random phrase during speech (not room descriptions)
+  if (speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 7))
+  {
+    out = RandomPhrase(true);
+    for(int iReplace = 0; iReplace < (int)cElements(replace); iReplace++)
+      out.inlineReplaceString(replace[iReplace][0], replace[iReplace][1]);
+    return out;
+  }
 
-Quite Drunk
-Sometimes add in the phrase: "I love you guys", "I love you man", "Hey where's the <random word>?", "What?", "Huh?", "Woo!", "Woohoo!" (this gets added before the text changes above)
-If you say 'lol' 'hah' 'heh' 'chuckle' 'rofl' 'laugh' or something, it has a 25% chance of just making your whole text laughter.
+  for(; !word.empty(); word = arg.word(++iWord))
+  {
+    if (!out.empty())
+      out += ' ';
 
-Really Really Drunk
-Every word has a 10% chance of being replaced by *burp*.  Which also causes the character to burp.  Another 10% is replaced by *hic* which causes you to hiccup.
+    // 10% chance of random word
+    if (chance > 14 && !::number(0, 9))
+      word = RandomWord().matchCase(word);
 
-*/
+    // 10% chance of just belching or something
+    if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 9))
+    {
+      word = "*burp*";
+      tFrom->doAction("", CMD_BURP);
+      emoted = true;
+    }
+    else if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 9))
+    {
+      word = "*hic*";
+      tFrom->doAction("", CMD_HICCUP);
+      emoted = true;
+    }
 
-  return arg;
+    // slurred speech always on for really drunk, 25% for slightly drunk
+    if (chance > 14 || !::number(0, 3))
+    {
+      sstring munged = " ";
+      munged += word.lower();
+      munged += ' ';
+
+      for(int iReplace = 0; iReplace < (int)cElements(replace); iReplace++)
+        munged.inlineReplaceString(replace[iReplace][0], replace[iReplace][1]);
+
+      word = munged.trim().matchCase(word);
+    }
+
+    // trunc long words 20% of the time
+    if (word.length() > 8 && (!::number(0, 4) || chance > 14))
+    {
+      if (!::number(0, 1))
+        word = sstring("...") + word.substr(word.length() - ::number(3, 4), word.length()-1);
+      else
+        word = word.substr(0, word.length() - ::number(4, 5)) + sstring("...");
+    }
+
+    // any word which has repeating character subsets will have a chance of repeating
+    // the subset agian 1-3 times.  "Banana" has a repeating "an" in it, so if it repeats
+    // 1 time, itll go "Bananana".  You do this: take the length, divide by two -> n.
+    // From n down to 2 in length, look for substrings in the string of that length which repeat.
+    // If so, find the end of the repeating substring and repeat it.
+    int iStart = 0, cSub = 0;
+    bool match = false;
+    for(cSub = (int)word.length()/2; !match && cSub > 1;cSub--)
+      for(iStart = 0; !match && iStart+cSub+cSub <= (int)word.length(); iStart++)
+      {
+        match = true;
+        for (int iScan = 0; match && iScan < cSub; iScan++)
+          match = word[iStart+iScan] == word[iStart+cSub+iScan];
+      }
+    if (match)
+    {
+      cSub++;
+      iStart--;
+      sstring munged = word.substr(0, iStart);
+      munged += word.substr(iStart, cSub);
+      munged += word.substr(iStart, cSub);
+      if (::number(0,1))
+        munged += word.substr(iStart, cSub);
+      munged += word.substr(iStart+cSub, word.length());
+      word = munged;
+    }
+
+    out += word;
+  }
+
+  return out;
 }
 
 // Irish accent!
@@ -1085,14 +1168,14 @@ sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &ar
 {
   static const sstring replace[][2] = {
     { "ph", "'" },
-    { "ch", "*^*" },
+    { "ch", "\254\255" },
     { "h", "g'" },
     { "z", "kz" },
     { "qu", "kw" },
     { "q", "k" },
     { "ck", "k" },
     { "c", "k" },
-    { "*^*", "ch" },
+    { "\254\255", "ch" },
     { " s", " ch" },
     { "ss", "auch" },
     { "es ", "'k " },
@@ -1109,7 +1192,7 @@ sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &ar
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = 100;//from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1144,7 +1227,7 @@ sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = 100;//from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1350,6 +1433,122 @@ const sstring RandomWord()
   return (str[number(0, (cElements(str)-1))]);
 }
 
+const sstring RandomNoun()
+{
+  static const sstring str[] =
+  {
+    // silly words
+    "glop",
+    "glyph",
+    "fribble",
+    "fjord",
+    "regina",
+    "angina",
+    "pterodactyl",
+    "lo-pan",
+    "tangibles",
+    "hootenanny",
+    "pocket",
+
+    // suggestive words
+    "thingy",
+    "whazzit",
+    "whatchyamacallit",
+    "johnson",
+    "tool",
+    "claymore",
+    "helmet",
+    "longstaff",
+    "poodle",
+    "pussycat",
+
+    // foods
+    "fish",
+    "chicken",
+    "beef",
+    "meat",
+    "pork",
+    "vittles",
+    "muffin",
+    "cookies",
+    "sushi",
+    "vittles",
+
+    // people/beings
+    "gimp",
+    "brother",
+    "sister",
+    "cousin",
+    "father",
+    "mother",
+    "uncle",
+    "aunt",
+    "dude",
+    "lady",
+    "monster",
+    "beast",
+  };
+  return (str[number(0, (cElements(str)-1))]);
+}
+
+const sstring RandomAdjective()
+{
+  static const sstring str[] =
+  {
+    // synonyms/antonyms
+    "hot",
+    "cold",
+    "warm",
+    "cool",
+    "hard",
+    "soft",
+    "firm",
+    "stiff",
+    "flacid",
+    "limp",
+    "strong",
+    "weak",
+    "wimpy",
+    "tender",
+    "pathetic",
+    "powerful",
+    "quiet",
+    "loud",
+    "noisy",
+    "silent",
+    "beautiful",
+    "ugly",
+    "cute",
+    "revolting",
+    "plain",
+    "scary",
+    "comforting",
+    "stupid",
+    "smart",
+    "stupendous",
+    "ordinary",
+    "obstreperous",
+    "accommodating",
+    "malodorous",
+    "aromatic",
+    "honorable",
+    "nefarious",
+    "chaste",
+    "perverted",
+
+    // eq adjectives
+    "glowing",
+    "pulsing",
+    "shadowy",
+    "humming",
+    "charmed",
+    "charred",
+    "sparkling",
+  };
+  return (str[number(0, (cElements(str)-1))]);
+}
+
+
 const sstring RandomVerb()
 {
   // guaranteed insensible
@@ -1404,10 +1603,61 @@ const sstring RandomVerb()
     "embarrass", 
     "dominate", 
     "envalorize", 
-    "encapitate"                // 50
+    "encapitate",
+    "kill",
+    "taste",
+    "tidy",
+    "polish",
   };
   return (str[number(0, (cElements(str)-1))]);
 }
 
+const sstring RandomPhrase(bool allowPhrase)
+{
+  // random drunk phrase
+  static const sstring str[] =
+  {
+    // terminating phrases
+    "Party!",
+    "What?",
+    "Huh?",
+    "Woo!",
+    "Woohoo!",
+    "Remember that time?",
+    "Hey, listen to this!",
+    "Hey, how you doin'?",
+    "I am sooooo drunk.",
+    "On the spot!!!",
+    "I love you guys.",
+    "I hate you guys.",
 
+    // piecemeal
+    "Hey where's the {noun}?",
+    "Could someone {verb} my {adj} {noun}?",
+    "Hey!  Who here wants to {verb} the {adj} {noun}?",
+    "Who left their {noun} here?",
+    "Okay {verb} me a {noun}.",
+    "Don't make me {verb} you in the {noun}!",
+    "Is it because you {noun} {verb} that you are so {adj}?",
+
+    // conjunctives
+    "Wait...  {phrase}",
+    "Oh man...  {phrase}",
+    "Yo!  {phrase}",
+    "Oh!  {phrase}",
+    "Hehehe.  You said \"{phrase}\"",
+    "At first I was like, \"{phrase}\" but now I'm like \"{phrase}\"",
+    "If you say \"{phrase}\" one more time, I swear I'm going to lose it!",
+  };
+  int cSize = allowPhrase ? (cElements(str)-8) : (cElements(str)-1);
+  sstring out = str[number(0, cSize)];
+  out.inlineReplaceString("{verb}", RandomVerb());
+  out.inlineReplaceString("{adj}", RandomAdjective());
+  out.inlineReplaceString("{noun}", RandomNoun());
+  if (allowPhrase)
+    out.inlineReplaceString("{phrase}", RandomPhrase(false));
+  if (out.length() > 250)
+    return RandomPhrase(allowPhrase);
+  return out;
+}
 

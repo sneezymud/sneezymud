@@ -1831,6 +1831,43 @@ TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, in
   return NULL;
 }
 
+
+TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible, bool checkPoly)
+{
+  TBeing *i;
+
+  if (name.empty())
+    return NULL;
+
+  if (ch->roomp == NULL)
+    return NULL;
+
+  for (TThing *thing = ch->roomp->getStuff(); thing; thing = thing->nextThing) {
+    i = dynamic_cast<TBeing*>(thing);
+    if (i == NULL)
+      continue;
+    if (i->isPc()) {
+      if ((!exact && isname(name, i->name)) || (exact && is_exact_name(name, i->name))) {
+        if (visible) {
+          if (ch->canSee(i, infra))
+            return i;
+        } else
+          return i; 
+      } else if (checkPoly && i->desc && i->desc->original) {
+        if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
+          if (visible) {
+            if (ch->canSee(i->desc->original, infra))
+              return i->desc->original;
+          } else
+            return i->desc->original; 
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
+
 // get a character from anywhere in the world, doesn't care much about
 // being in the same room... 
 TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)

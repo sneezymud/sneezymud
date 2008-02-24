@@ -213,7 +213,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
                 name % cmd % arg);
         return FALSE;
       }
-      if (TogIndex[value].togmob != mobVnum()) {
+      if (TogIndex[value].togmob != MOB_ANY && TogIndex[value].togmob != mobVnum()) {
         vlogf(LOG_MOB_RS, fmt("Wrong mob (%s:%d) toggling toggle %d.") % 
                 getName() % mobVnum() % value);
         mob->sendTo("Something bad happened, tell a god.\n\r");
