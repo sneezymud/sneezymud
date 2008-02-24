@@ -3641,7 +3641,20 @@ int TBeing::doMortalGoto(const sstring & argument)
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
     }
-    sendTo(COLOR_ROOMS, fmt("You can get to %s by going %s.\n\r") % rp->getName() % dirs[dir]); 
+    sendTo(COLOR_MOBS, fmt("You can get to %s by going ") % rp->getName());
+
+    for(unsigned int i=1;i<path.path.size()-1;++i){
+      if(path.path[i]->direct >= 10)
+	sendTo(COLOR_MOBS, "enter portal, ");
+      else
+	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+    }
+    if(path.path[path.path.size()-1]->direct >= 10)
+      sendTo(COLOR_MOBS, "enter portal.\n\r");
+    else
+      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+
+    //    sendTo(COLOR_ROOMS, fmt("You can get to %s by going %s.\n\r") % rp->getName() % dirs[dir]); 
   } else {
     int rn = real_mobile(targ_ch);
     if (rn < 0) {
@@ -3683,7 +3696,21 @@ int TBeing::doMortalGoto(const sstring & argument)
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
     }
-    sendTo(COLOR_MOBS, fmt("You can get to %s by going %s.\n\r") % ch->getName() % dirs[dir]); 
+
+    sendTo(COLOR_MOBS, fmt("You can get to %s by going ") % ch->getName());
+
+    for(unsigned int i=1;i<path.path.size()-1;++i){
+      if(path.path[i]->direct >= 10)
+	sendTo(COLOR_MOBS, "enter portal, ");
+      else
+	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+    }
+    if(path.path[path.path.size()-1]->direct >= 10)
+      sendTo(COLOR_MOBS, "enter portal.\n\r");
+    else
+      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+
+    //    sendTo(COLOR_MOBS, fmt("You can get to %s by going %s.\n\r") % ch->getName() % dirs[dir]); 
   }
 
   return FALSE;
