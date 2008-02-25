@@ -1,4 +1,30 @@
 #44765
-Despair - Underground Zone~
-44779 25 2 0
+Amberbock - Underground Channel~
+44779 35 2 1
+
+O 0 44766 1 44765   glowing stone channel
+O 0 44766 1 44766
+O 0 44766 1 44767
+O 0 44766 1 44768
+O 0 44766 1 44769
+O 0 44766 1 44771
+O 0 44766 1 44772
+O 0 44766 1 44777
+O 0 44766 1 44778
+
+O 0 44765 1 44773   glowing stone reservoir
+O 0 44765 1 44774
+O 0 44765 1 44775
+O 0 44765 1 44776
+
+M 0 44765 15 44774   small minnow
+M 0 44766 1 44772   muscular fishman
+M 0 44767 1 44770   Sophie
+M 0 44768 1 44776   teacher
+M 0 44769 1 44775   hooded priest
+M 0 44770 1 44779   scholarly theologian
+M 0 44771 1 44770   mutated moth
+M 0 44771 1 44779
+M 0 44772 2 44765   glowing fish
+M 0 44773 2 44771   one-legged frog
 S
