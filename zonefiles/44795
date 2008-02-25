@@ -13,6 +13,12 @@ O 0 2303 1 44812        a recently-built nest
 O 0 10560 1 44820       a big cloud of smoke
 B 0 7044 1 44824        a makeshift cot
 B 0 3907 2 44824        a tiny splint
+O 0 34080 1 44802       berry bush
+P 1 34076 1 34080
+O 0 34080 1 44805
+P 1 34076 1 34080
+O 0 34080 1 44798
+P 1 34076 1 34080
 M 0 44815 1 44796         Boktetok
 M 0 44795 1 44800       Grekka
 ? 0 12 0 E
