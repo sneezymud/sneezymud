@@ -591,6 +591,16 @@ void TBeing::doTrack(const char *argument)
     addPlayerAction(PLR_HUNTING);
     specials.hunting = get_char_room(namebuf, targrm);
     skill = 0;
+
+    if (hasQuestBit(TOG_IS_CRAVEN))
+      skill -= 25;
+    if (specials.hunting && specials.hunting->hasQuestBit(TOG_IS_CRAVEN))
+      skill -= 25;
+    if (hasQuestBit(TOG_IS_VICIOUS))
+      skill += 25;
+    if (specials.hunting && specials.hunting->hasQuestBit(TOG_IS_VICIOUS))
+      skill += 25;
+
     for (Vaff = specials.hunting->affected; Vaff; Vaff = Vaff->next)
       if (Vaff->type == SKILL_CONCEALMENT)
         skill = -Vaff->modifier;

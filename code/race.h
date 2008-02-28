@@ -133,9 +133,9 @@ void listRaces(TBeing *caller);
 const unsigned int TALENT_FAST_REGEN = (1<<0);
 const unsigned int TALENT_FISHEATER  = (1<<1);
 const unsigned int TALENT_MEATEATER  = (1<<2);
+const unsigned int TALENT_TATTOOED   = (1<<3);
 
-
-const unsigned int MAX_TALENTS = 3;  // move and change
+const unsigned int MAX_TALENTS = 4;  // move and change
 
 extern const char * const talents[MAX_TALENTS];
 

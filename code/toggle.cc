@@ -370,6 +370,8 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"February Quest: Gave 3 bottles of port", MOB_DRUNK_TRADER_RICH},//354
   {"February Quest: Gave 4 bottles of port", MOB_DRUNK_TRADER_RICH},//355
   {"Trait: Pyrophobia", MOB_NONE}, // 356
+  {"Trait: Vicious", MOB_NONE}, // 357
+  {"Trait: Craven", MOB_NONE}, // 358
   {"", MOB_NONE}, 
 };
 
@@ -703,24 +705,38 @@ void TBeing::doToggle(const char *arg2)
       }
     }
   } else if (is_abbrev(arg, "wimpy")) {
-    int hl = hitLimit();
-    int wimplimit = hl / 2 + hl % 2;
+
+    int wimplimit = maxWimpy();
+    int cravenlimit = wimplimit/2 + wimplimit%2;
     int num=0;
 
-    if (is_abbrev(arg2, "max") || hasQuestBit(TOG_IS_COWARD)) {
+    if (hasQuestBit(TOG_IS_VICIOUS)) {
+      sendTo("Wimpy!?  You are too vicious to even contemplate such an idea!\n\r");
+      setWimpy(0);
+      return;
+    } else if (is_abbrev(arg2, "max") || hasQuestBit(TOG_IS_COWARD)) {
       if(hasQuestBit(TOG_IS_COWARD)){
-	sendTo("You can't change your wimpy setting, you're a coward!\n\r");
+        sendTo("You can't change your wimpy setting, you're a coward!\n\r");
       } else {
-	sendTo(fmt("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
+        sendTo(fmt("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
       }
       num = wimplimit - 1;
     } else if (is_abbrev(arg2, "off") || (num = convertTo<int>(arg2)) <= 0) {
-      sendTo("Turning wimpy mode off.\n\r");
-      setWimpy(0);
-      wimpy = 0;
-      return;
+      if(hasQuestBit(TOG_IS_CRAVEN)){
+        sendTo("You just can't contemplate never fleeing from danger!\n\r");
+        num = max(num, cravenlimit);
+      } else {
+        sendTo("Turning wimpy mode off.\n\r");
+        setWimpy(0);
+        return;
+      }
     }
     
+    if (hasQuestBit(TOG_IS_CRAVEN) && num < cravenlimit){
+      sendTo("You just can't muster the bravery to fight that long!\n\r");
+      num = cravenlimit;
+    }
+
     if ((num < 0) || (wimplimit <= num)) {
       sendTo(fmt("Please enter a number between 0-%d.\n\r") % (wimplimit-1));
       return;

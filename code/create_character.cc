@@ -70,10 +70,12 @@ territoryT gnomeTerr[] = { HOME_TER_GNOME_URBAN, HOME_TER_GNOME_VILLAGER, HOME_T
 territoryT ogreTerr[] = { HOME_TER_OGRE_VILLAGER, HOME_TER_OGRE_PLAINS, HOME_TER_OGRE_HILL };
 territoryT hobbitTerr[] = { HOME_TER_HOBBIT_URBAN, HOME_TER_HOBBIT_SHIRE, HOME_TER_HOBBIT_GRASSLANDS,
                         HOME_TER_HOBBIT_HILL, HOME_TER_HOBBIT_WOODLAND, HOME_TER_HOBBIT_MARITIME };
-territoryT goblinTerr[] = { HOME_TER_GOBLIN_URBAN };
+territoryT goblinTerr[] = { HOME_TER_GOBLIN_URBAN, HOME_TER_GOBLIN_VILLAGER, HOME_TER_GOBLIN_RECLUSE,
+                            HOME_TER_GOBLIN_MOUNTAIN, HOME_TER_GOBLIN_FOREST };
 territoryT gnollTerr[] = { HOME_TER_GNOLL_URBAN };
 territoryT troglodyteTerr[] = { HOME_TER_TROG_URBAN };
-territoryT orcTerr[] = { HOME_TER_ORC_URBAN };
+territoryT orcTerr[] = { HOME_TER_ORC_URBAN, HOME_TER_ORC_VILLAGER, HOME_TER_ORC_RECLUSE, HOME_TER_ORC_MOUNTAIN,
+                          HOME_TER_ORC_FOREST };
 territoryT frogmanTerr[] = { HOME_TER_FROGMAN_URBAN };
 territoryT fishmanTerr[] = { HOME_TER_FISHMAN_URBAN, HOME_TER_FISHMAN_VILLAGER, HOME_TER_FISHMAN_RECLUSE,
                         HOME_TER_FISHMAN_MOUNTAIN, HOME_TER_FISHMAN_FOREST, HOME_TER_FISHMAN_MARINER };
@@ -81,7 +83,6 @@ territoryT birdmanTerr[] = { HOME_TER_BIRDMAN_URBAN, HOME_TER_BIRDMAN_VILLAGER, 
                           HOME_TER_BIRDMAN_FOREST, HOME_TER_BIRDMAN_MARINER };
 territoryT trollTerr[] = { HOME_TER_TROLL_URBAN, HOME_TER_TROLL_VILLAGER, HOME_TER_TROLL_RECLUSE,
                           HOME_TER_TROLL_HILL, HOME_TER_TROLL_MOUNTAIN };
-
 
 // struct for holding race-specific data
 typedef struct _TPlayerRace
@@ -94,29 +95,30 @@ typedef struct _TPlayerRace
   short hometown;
   const sstring terrHelp;
   const sstring accounts;
+  int disableTrait; // change to array if more are needed
 } TPlayerRace;
 
 // our list of playable races
 TPlayerRace nannyRaces[] = {
   // base races
-  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_GH_INN, "help/territory help human", ""},
-  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_GH_INN, "help/territory help gnome", ""},
-  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_GH_INN, "help/territory help elf", ""},
-  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_GH_INN, "help/territory help ogre", ""},
-  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_GH_INN, "help/territory help dwarf", ""},
-  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_GH_INN, "help/territory help hobbit", ""},
+  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_GH_INN, "help/territory help human", "", 0},
+  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_GH_INN, "help/territory help gnome", "", 0},
+  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_GH_INN, "help/territory help elf", "", 0},
+  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_GH_INN, "help/territory help ogre", "", 0},
+  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_GH_INN, "help/territory help dwarf", "", 0},
+  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_GH_INN, "help/territory help hobbit", "", 0},
 
   // extended races
-  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, "},
+  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 1},
+  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
+  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
+  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, ", 1},
 
   // advanced races
-  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_FISHMAN, "Fishman", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
-  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, "},
-  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, "},
+  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
+  { RACE_FISHMAN, "Fishman", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
+  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, ", 0},
+  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
 };
 
 // a struct for holding data about customizable stats
@@ -631,6 +633,11 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
                   nannyRaces[iRace].name;
         return false;
       }
+      else if (nannyRaces[iRace].disableTrait == iTrait)
+      {
+        output = fmt("The %s trait is not allowed for %ss.") % traits[iTrait].name % nannyRaces[iRace].name;
+        return false;
+      }
 
   // check for negative stats
   int extra = desc->bonus_points.total - desc->totalChosenStats();
@@ -777,16 +784,25 @@ void nannyTraits_output(Descriptor * desc)
   int endval = min(startval+TRAIT_GROUP_SIZE-1, MAX_TRAITS);
   int num50race = numFifties(desc->character->getRace(), desc->character->hasQuestBit(TOG_PERMA_DEATH_CHAR), desc->account->name);
   int num50any = numFifties(RACE_NORACE, false, desc->account->name);
+  int iRace;
 
   buf="You may choose some distinct traits for your character if you wish.\n\r";
   buf+="You will receive bonus (or penalty) points to apply to your statistics.\n\r";
   buf+="Traits you have selected are marked with an 'X', unavailable have a '*'.\n\r\n\r";
 
+  // get our current race
+  for(iRace = 0; iRace < (int)cElements(nannyRaces); iRace++)
+    if (desc->character->getRace() == nannyRaces[iRace].race)
+      break;
+  if (iRace >= (int)cElements(nannyRaces))
+    return;
+
+  // show traits
   for(int i=startval;i<=endval;++i){
     char check = ' ';
     if (desc->character->hasQuestBit(traits[i].tog))
       check = 'X';
-    else if (traits[i].num50any > num50any || traits[i].num50race > num50race)
+    else if (traits[i].num50any > num50any || traits[i].num50race > num50race || nannyRaces[iRace].disableTrait == i)
       check = '*';
     buf+=fmt("[%c] %2i. %-12s (%3i points)\n\r        %s\n\r") %
       check % i %

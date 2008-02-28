@@ -1978,14 +1978,14 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "maritime hobbit",
 
   // goblin
-  "HOME_TER_GOBLIN_URBAN",
-  "HOME_TER_GOBLIN_VILLAGER",
-  "HOME_TER_GOBLIN_PLAINS",
-  "HOME_TER_GOBLIN_RECLUSE",
-  "HOME_TER_GOBLIN_HILL",
-  "HOME_TER_GOBLIN_MOUNTAIN",
-  "HOME_TER_GOBLIN_FOREST",
-  "HOME_TER_GOBLIN_MARINER",
+  "gutter goblin",
+  "garrison goblin",
+  "UNUSED",
+  "outcast goblin",
+  "UNUSED",
+  "rock goblin",
+  "forest goblin",
+  "UNUSED",
 
   // gnoll
   "HOME_TER_GNOLL_URBAN",
@@ -2008,14 +2008,14 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "HOME_TER_TROG_MARINER",
 
   // orc
-  "HOME_TER_ORC_URBAN",
-  "HOME_TER_ORC_VILLAGER",
-  "HOME_TER_ORC_PLAINS",
-  "HOME_TER_ORC_RECLUSE",
-  "HOME_TER_ORC_HILL",
-  "HOME_TER_ORC_MOUNTAIN",
-  "HOME_TER_ORC_FOREST",
-  "HOME_TER_ORC_MARINER",
+  "streetwise orc",
+  "skirmish orc",
+  "UNUSED",
+  "lone orc",
+  "UNUSED",
+  "boulder orc",
+  "deforester orc",
+  "UNUSED",
 
   // frogman
   "HOME_TER_FROGMAN_URBAN",

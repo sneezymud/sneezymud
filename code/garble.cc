@@ -976,13 +976,13 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
       word = RandomWord().matchCase(word);
 
     // 10% chance of just belching or something
-    if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 9))
+    if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 19))
     {
       word = "*burp*";
       tFrom->doAction("", CMD_BURP);
       emoted = true;
     }
-    else if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 9))
+    else if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 19))
     {
       word = "*hic*";
       tFrom->doAction("", CMD_HICCUP);
@@ -1472,7 +1472,7 @@ const sstring RandomNoun()
     "muffin",
     "cookies",
     "sushi",
-    "vittles",
+    "tacos",
 
     // people/beings
     "gimp",
@@ -1620,14 +1620,11 @@ const sstring RandomPhrase(bool allowPhrase)
     // terminating phrases
     "Party!",
     "What?",
-    "Huh?",
-    "Woo!",
     "Woohoo!",
     "Remember that time?",
-    "Hey, listen to this!",
-    "Hey, how you doin'?",
+    "Listen to this!",
+    "How you doin'?",
     "I am sooooo drunk.",
-    "On the spot!!!",
     "I love you guys.",
     "I hate you guys.",
 
@@ -1638,18 +1635,19 @@ const sstring RandomPhrase(bool allowPhrase)
     "Who left their {noun} here?",
     "Okay {verb} me a {noun}.",
     "Don't make me {verb} you in the {noun}!",
-    "Is it because you {noun} {verb} that you are so {adj}?",
+    "Is it because you {verb} {noun} that you are so {adj}?",
 
     // conjunctives
     "Wait...  {phrase}",
     "Oh man...  {phrase}",
     "Yo!  {phrase}",
     "Oh!  {phrase}",
+    "Hey, {phrase}",
     "Hehehe.  You said \"{phrase}\"",
     "At first I was like, \"{phrase}\" but now I'm like \"{phrase}\"",
     "If you say \"{phrase}\" one more time, I swear I'm going to lose it!",
   };
-  int cSize = allowPhrase ? (cElements(str)-8) : (cElements(str)-1);
+  int cSize = allowPhrase ? (cElements(str)-1) : (cElements(str)-8);
   sstring out = str[number(0, cSize)];
   out.inlineReplaceString("{verb}", RandomVerb());
   out.inlineReplaceString("{adj}", RandomAdjective());

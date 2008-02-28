@@ -212,8 +212,8 @@ int TBeing::doPTell(const char *arg, bool visible){
 
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
-  if (vict->desc && isPc() && vict->canSee(this, INFRA_YES))
-    strcpy(vict->desc->last_teller, this->name);
+  if (vict->desc && isPc() && vict->canSee(this, INFRA_YES) && isPc())
+    strncpy(vict->desc->last_teller, this->name, cElements(vict->desc->last_teller));
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);

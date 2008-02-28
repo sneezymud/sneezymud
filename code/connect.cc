@@ -1378,11 +1378,15 @@ int Descriptor::nanny(sstring arg)
 	}
       }
 
-  // this has to be set AFTER skill assignment, which happens somewhere
-  // between genericLoadPC and here
-  if(character->hasQuestBit(TOG_IS_COWARD)){
-    character->wimpy=character->maxWimpy();
-  }
+      // this has to be set AFTER skill assignment, which happens somewhere
+      // between genericLoadPC and here
+      if(character->hasQuestBit(TOG_IS_COWARD)){
+        character->wimpy=character->maxWimpy();
+      } else if (character->hasQuestBit(TOG_IS_VICIOUS)){
+        character->wimpy=0;
+      } else if (character->hasQuestBit(TOG_IS_CRAVEN)){
+        character->wimpy=character->maxWimpy()/2 + character->maxWimpy()%2;
+      }
 
       break;
     default:

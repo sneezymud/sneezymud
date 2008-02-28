@@ -18,16 +18,20 @@ void TBeing::setRacialStuff()
   // set immunities from race
   immuneTypeT itt;
   for (itt = MIN_IMMUNE; itt < MAX_IMMUNES; itt++) {
-    // we already applied the immunity from the tinyfile when we get here
-    // apply the better of the values
-    // this theoretically creates a problem if one says -100 (susceptible)
-    // and other is 0, but i guess it's best to err on side of not letting
-    // mob take extra damage foolishly.
-    // trying to fix the above with some sort of abs() check would then
-    // have problem of what if one is -100, other is 100
-    // too silly to contemplate i guess, give mob best value possible
-    // bat - 4/9/99
-    int amt = max(getImmunity(itt), getMyRace()->getImmunities().getImmunity(itt));
+    // default to the base racial setting.
+    // if they are both negative, use the most negative.
+    // if they are both positive, use the most positive
+    // if they oppose, add the two (so they can cancel eath other out)
+    byte amt = getMyRace()->getImmunities().getImmunity(itt);
+    if (amt == 0)
+      amt = getImmunity(itt);
+    else if (amt < 0 && getImmunity(itt) < 0)
+      amt = min(amt, getImmunity(itt));
+    else if (amt > 0 && getImmunity(itt) > 0)
+      amt = max(amt, getImmunity(itt));
+    else
+      amt = max(min(100, amt + getImmunity(itt)), -100);
+
     setImmunity(itt, amt);
   }
 
@@ -222,13 +226,13 @@ void TBeing::setRacialStuff()
   }
 
   // faction checking
-  if (getMyRace()->getRace() == RACE_ORC ||
+  if (/*getMyRace()->getRace() == RACE_ORC ||*/
       getMyRace()->getRace() == RACE_KOBOLD) {
     if (!isCult())
       vlogf(LOG_LOW, fmt("%s: Bad faction for race %s (should be 2)") %  getName() %
                getMyRace()->getSingularName());
   }
-  if (getMyRace()->getRace() == RACE_TROLL ||
+  if (/*getMyRace()->getRace() == RACE_TROLL ||*/
       getMyRace()->getRace() == RACE_TYTAN) {
     if (!isBrother())
       vlogf(LOG_LOW, fmt("%s: Bad faction for race %s (should be 1)") %  getName() %

@@ -2946,8 +2946,74 @@ void TPerson::doStart()
   int r_num;
   TObj *obj;
   char buf[256];
+  // these tattoos are mostly used for Orcs, and should reflect 'badass meanness'
+  static const sstring tattoo_adj[] = {
+    // really really generic adjectives that could describe ANY object tattood
+    "<p>pink",
+    "<k>black",
+    "<r>red",
+    "<g>green",
+    "<p>purple",
+    "<y>golden",
+    "<W>pale",
+    "<W>ghostly",
+    "<r>burning",
+    "<r>bloody",
+    "<r>fiery",
+    "<W>smoldering",
+    "<W>steaming",
+  };
+  static const sstring tattoo_noun[] = {
+    // random objects that you'd tattoo to yourself
+    "dagger",
+    "fang",
+    "skull",
+    //"flames", fiery flames?
+    //"snake", faction reference?
+    "fist",
+    "sword",
+    "axe",
+    "spear",
+    "shield",
+    "flexed arm",
+    "looped chain",
+    "spiked mace",
+    "curved sword",
+    "barbed whip",
+    "morning star",
+    "barbed arrow",
+    "horned helm",
+    "spiked shield",
+    "melting face",
+    "severed hand",
+    "severed head",
+    "necklace of teeth",
+    "skeleton",
+    "branding iron",
+    "curved horn",
+    "falling meteor",
+    "bolt of lightning",
+    "withered corpse",
+  };
+  static const wearSlotT tattoo_slot[] = {
+    WEAR_BODY,
+    WEAR_NECK,
+    WEAR_BACK,
+    WEAR_ARM_R,
+    WEAR_ARM_L,
+    WEAR_HAND_R,
+    WEAR_HAND_L,
+    WEAR_WAIST,
+    WEAR_LEG_R,
+    WEAR_LEG_L,
+    WEAR_FOOT_R,
+    WEAR_FOOT_L,
+    WEAR_EX_LEG_R,
+    WEAR_EX_LEG_L,
+    WEAR_EX_FOOT_R,
+    WEAR_EX_FOOT_L,
+  };
 
-  
   doToggle("term none");
   doCls(false);
   // I'm leaving rooms off this list intentionally - bat
@@ -2972,6 +3038,24 @@ void TPerson::doStart()
   setWeight(race->generateWeight(getSex()));
   setBaseAge(race->generateAge());
   race->applyToggles(this);
+
+  // generate random tattoo
+  if (race->hasTalent(TALENT_TATTOOED))
+  {
+    int cBodypartCheck = 0;
+    sstring tattoo;
+    sstring adj = tattoo_adj[::number(0, cElements(tattoo_adj)-1)];
+    sstring noun = tattoo_noun[::number(0, cElements(tattoo_noun)-1)];
+    wearSlotT location = tattoo_slot[::number(0, cElements(tattoo_slot)-1)];
+    while(!hasPart(location) && ++cBodypartCheck < 15)
+      location = tattoo_slot[::number(0, cElements(tattoo_slot)-1)];
+    if (::number(0,1))
+      tattoo = fmt("A tattoo of a %s %s<1>.") % adj % noun;
+    else
+      tattoo = fmt("A tattoo of a %s.") % noun;
+    if (cBodypartCheck < 15)
+      applyTattoo(location, tattoo, SILENT_YES);
+  }
 
   if (desc->account->term == TERM_VT100) 
     doToggle("term vt100");

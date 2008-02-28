@@ -552,7 +552,10 @@ const int TOG_GAVE_BOTTLE_PORT4                = 355;
 
 const int TOG_HAS_PYROPHOBIA                   = 356;
 
-const int MAX_TOG_INDEX                        = 357;  // move and change
+const int TOG_IS_VICIOUS                       = 357;
+const int TOG_IS_CRAVEN                        = 358;
+
+const int MAX_TOG_INDEX                        = 359;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

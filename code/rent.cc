@@ -57,7 +57,7 @@ struct SInnkeeperHate {
   {14323, RACE_GNOME, false, "I'm afraid our Inn is setup for those of Gnome or Hobbit stature."},
   {24442, RACE_GNOME, false, "I'm afraid our Inn is designed for those of Gnome or Hobbit stature."},
   {24442, RACE_HOBBIT, false, "I'm afraid our Inn is designed for those of Gnome or Hobbit stature."},
-  {44845, RACE_BIRDMAN, true, "How would a creature like you nest here?"},
+  {44845, RACE_BIRDMAN, false, "How would a creature like you nest here?"},
 
   {0, RACE_NORACE, false, "Leave!"} // Add all new entries BEFORE this line.
 };
@@ -1539,8 +1539,8 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       if (client && recep) {
     processStringForClient(str);
    
-    if (str.length() > 25000) // max send length for the clients rent dialog is somewhere between 25k and 50k
-      str.resize(25000);
+    if (str.length() > 9000) // max send length for the clients rent dialog is somewhere under 10k
+      str.resize(9000);
 
     desc->clientf(fmt("%d") % CLIENT_RENT);
     sendTo(str);

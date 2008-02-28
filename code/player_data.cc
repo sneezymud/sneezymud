@@ -107,12 +107,6 @@ void TPerson::resetChar()
     SET_BIT(specials.affectedBy, AFF_BLIND);
   }
 
-  // can't do this here - hp are based on skills, and they aren't assigned yet
-  /*
-  if(hasQuestBit(TOG_IS_COWARD)){
-    wimpy=maxWimpy();
-  }
-  */
   if ((getRace() == RACE_HOBBIT) && getNatSkillValue(SKILL_STEAL) < 23) {
     setNatSkillValue(SKILL_STEAL,23);
     setSkillValue(SKILL_STEAL,23);
