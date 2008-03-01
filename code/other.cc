@@ -813,6 +813,37 @@ static const sstring describe_practices(TBeing *ch)
   return buf;
 }
 
+
+sstring print_discipline(TBeing *tb, discNumT i)
+{
+  CDiscipline *cd=tb->getDiscipline(i);
+  sstring buf="";
+  sstring col;
+
+  if (cd && (tb->isImmortal() || cd->ok_for_class || cd->getLearnedness())) {
+    if (cd->getLearnedness()) {
+      if(cd->getLearnedness()==100){
+	col="<Y>";
+      } else {
+	col="<o>";
+      }
+
+      if (cd->getLearnedness() == cd->getNatLearnedness()) {
+	buf+=fmt("%30s : Learnedness: %s%3d%s<1>\n\r") %
+	  discNames[i].properName % col % cd->getLearnedness() % "%";
+      } else {
+	buf+=fmt("%30s : Learnedness: Current (%1%3d%s<1>) Natural (%3d%s)\n\r") %
+	  discNames[i].properName % col % cd->getLearnedness() % "%" %
+	  cd->getNatLearnedness() % "%";
+      }
+    } else {
+      buf+=fmt("%30s : Learnedness: <k>Unlearned<1>\n\r") %
+	discNames[i].properName;
+    }
+  }
+  return buf;
+}
+
 void TBeing::doPractice(const char *argument)
 {
   char buf[MAX_STRING_LENGTH * 2];
@@ -834,25 +865,34 @@ void TBeing::doPractice(const char *argument)
   for (; isspace(*argument); argument++);
 
   if (!argument || !*argument) {
-    sprintf(buf, "The following disciplines are valid:\n\r");
+    sstring sbuf;
+    sbuf="<r>Basic disciplines:<1>\n\r";
+    sbuf+=print_discipline(this, classInfo[bestClass()].base_disc);
+    sbuf+=print_discipline(this, classInfo[bestClass()].sec_disc);
+    sbuf+=print_discipline(this, DISC_COMBAT);
+
+    sbuf+="<r>Automatically learned disciplines:<1>\n\r";
+    sbuf+=print_discipline(this, DISC_ADVENTURING);
+    sbuf+=print_discipline(this, DISC_FAITH);
+    sbuf+=print_discipline(this, DISC_RITUALISM);
+    sbuf+=print_discipline(this, DISC_WIZARDRY);
+
+
+    sbuf+="<r>Advanced disciplines:<1>\n\r";
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
-      cd = getDiscipline(i);
-      if (cd && (isImmortal() || cd->ok_for_class || cd->getLearnedness())) {
-        if (cd->getLearnedness()) {
-          if (cd->getLearnedness() == cd->getNatLearnedness()) {
-            sprintf(buf + strlen(buf), "%30s : Learnedness: %3d%%\n\r",
-                discNames[i].properName, cd->getLearnedness());
-          } else {
-            sprintf(buf + strlen(buf), "%30s : Learnedness: Current (%3d%%) Natural (%3d%%)\n\r", discNames[i].properName, cd->getLearnedness(), cd->getNatLearnedness());
-          }
-        } else {
-          sprintf(buf + strlen(buf), "%30s : Learnedness: Unlearned\n\r",
-                  discNames[i].properName);
-        }
+      if(i!=classInfo[bestClass()].base_disc &&
+	 i!=classInfo[bestClass()].sec_disc &&
+	 i!=DISC_COMBAT &&
+	 i!=DISC_ADVENTURING &&
+	 i!=DISC_FAITH &&
+	 i!=DISC_RITUALISM &&
+	 i!=DISC_WIZARDRY){
+	sbuf+=print_discipline(this, i);
       }
     }
-    sprintf(buf + strlen(buf), "%s", describe_practices(this).c_str());
-    d->page_string(buf);
+
+    sbuf+=describe_practices(this);
+    d->page_string(sbuf);
     return;
   }
   argument = one_argument(argument, arg, cElements(arg));
