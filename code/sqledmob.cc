@@ -73,8 +73,8 @@ int main(int argc, char **argv)
       buf = fmt("vision: %s\n") % db["vision"];  sbuf+=buf;
       buf = fmt("can_be_seen: %s\n") % db["can_be_seen"];  sbuf+=buf;
       buf = fmt("max_exist: %s\n") % db["max_exist"];  sbuf+=buf;
-      buf = fmt("local_sound: %s\n") % db["local_sound"];  sbuf+=buf;
-      buf = fmt("adjacent_sound: %s\n") % db["adjacent_sound"];  sbuf+=buf;
+      buf = fmt("local_sound~:\n%s~\n") % db["local_sound"];  sbuf+=buf;
+      buf = fmt("adjacent_sound~:\n%s~\n") % db["adjacent_sound"];  sbuf+=buf;
 
 
       buf = fmt("\n"); sbuf+=buf;
