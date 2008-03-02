@@ -71,6 +71,12 @@ TThing *TShopOwned::getStuff()
 
 }
 
+TMonster *TShopOwned::getKeeper()
+{
+  return keeper;
+}
+
+
 // player selling to shop (receiving money from shop)
 void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 				   transactionTypeT action, TObj *obj)
