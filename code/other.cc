@@ -816,6 +816,9 @@ static const sstring describe_practices(TBeing *ch)
 
 sstring print_discipline(TBeing *tb, discNumT i)
 {
+  if(i==-1)
+    return "";
+
   CDiscipline *cd=tb->getDiscipline(i);
   sstring buf="";
   sstring col;
