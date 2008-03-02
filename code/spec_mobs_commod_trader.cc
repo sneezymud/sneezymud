@@ -3,9 +3,50 @@
 #include "obj_commodity.h"
 #include "shop.h"
 #include "shopowned.h"
+#include "obj_open_container.h"
 
 // shop rooms 558,8734,1393,3709
 
+TObj *findCart(TBeing *myself)
+{
+  TObj *cart=NULL;
+  int cartnum=33296;
+
+  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
+    if((cart=dynamic_cast<TObj *>(t)) && cart->objVnum()==cartnum)
+      break;
+  }
+  if(!cart){
+    // ok cart isn't in our current room, so find out if it's in the world
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      if(*iter && (cart=*iter) && (cart->objVnum()==cartnum)){
+	--(*cart);
+	*myself->roomp+=*cart;
+	break;
+      }
+      cart=NULL;
+    }
+
+    if(!cart){
+      // no cart in the world, gotta create a new one
+      cart=read_object(cartnum, VIRTUAL);
+      *myself->roomp+=*cart;
+    }
+  }
+
+  if(!cart){
+    vlogf(LOG_BUG, "commodity trader couldn't find or make a cart");
+    return NULL;
+  }
+
+  TOpenContainer *toc;
+  if((toc=dynamic_cast<TOpenContainer *>(cart))){
+    toc->addContainerFlag(CONT_CLOSED);
+    toc->addContainerFlag(CONT_LOCKED);
+  }
+
+  return cart;
+}
 
 int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
@@ -16,9 +57,9 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TPathFinder path;
   TCommodity *commod;
   int materials[200];
-  //  TShopOwned homebase(250, myself);
-  TShopOwned homebase(16, myself);
   int price=0;
+  TObj *cart=NULL;
+  TShopOwned homebase(250, myself);
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<int *>(myself->act_ptr);
@@ -44,19 +85,37 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return TRUE;
   }
 
+  // find our cart
+  cart=findCart(myself);
+  if(!cart)
+    return TRUE;
+ 
   if(myself->in_room == commod_shops[*target_shop_idx]){
     TShopOwned tso(commod_shop_nr[*target_shop_idx], myself);
+    TThing *t2;
+
+    // get stuff from the cart
+    for(TThing *t=cart->getStuff();t;t=t2){
+      t2=t->nextThing;
+
+      --(*t);
+      *myself+=*t;
+    }
 
     // sell commods
-    TThing *t2;
     for(TThing *t=myself->getStuff();t;t=t2){
       t2=t->nextThing;
       if((commod=dynamic_cast<TCommodity *>(t))){
-	price=commod->sellPrice(commod->numUnits(), commod_shop_nr[*target_shop_idx], -1, myself);
-	homebase.doSellTransaction(-price, commod->getName(), TX_SELLING, commod);
-	commod->sellMe(myself, tso.getKeeper(), commod_shop_nr[*target_shop_idx], 1);
-	homebase.getKeeper()->setMoney(homebase.getKeeper()->getMoney()+myself->getMoney());
-	myself->setMoney(0);
+	price=commod->sellPrice(commod->numUnits(), 
+				commod_shop_nr[*target_shop_idx], -1, myself);
+	homebase.doBuyTransaction(price, 
+		     fmt("%s x %i") % commod->getName() % commod->numUnits(), 
+				   TX_SELLING, commod);
+	commod->sellMe(myself, tso.getKeeper(), 
+		       commod_shop_nr[*target_shop_idx], 1);
+	sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
+	homebase.getKeeper()->saveItems(buf);
+
       }
     }
 
@@ -66,6 +125,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	materials[commod->getMaterial()]=commod->numUnits();
       }
     }
+
     for(int i=0;i<4;++i){
       if(i==*target_shop_idx)
 	continue;
@@ -74,20 +134,37 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       
       for(TThing *t=tsot.getStuff();t;t=t->nextThing){
 	if((commod=dynamic_cast<TCommodity *>(t))){
-	  if((commod->numUnits()+1000) < materials[commod->getMaterial()]){
+	  int diff=materials[commod->getMaterial()]-commod->numUnits();
+
+	  // risk mediation, for robbings etc
+	  diff=min(1000, diff);
+
+	  if(diff >= 100){
 	    // do buy
 	    int buy_mat=commod->getMaterial();
-	    
+
 	    for(TThing *tt=tso.getStuff();tt;tt=tt->nextThing){
 	      if((commod=dynamic_cast<TCommodity *>(tt)) &&
 		 commod->getMaterial()==buy_mat){
-		price=commod->shopPrice(1000, commod_shop_nr[*target_shop_idx], -1, myself);
-		myself->setMoney(myself->getMoney()+price);
-		homebase.getKeeper()->setMoney(homebase.getKeeper()->getMoney()-price);
-		homebase.doBuyTransaction(-price, commod->getName(), TX_BUYING, commod);
-		commod->buyMe(myself, tso.getKeeper(), 1000, 
+		price=commod->shopPrice(diff/2, 
+			  commod_shop_nr[*target_shop_idx], -1, myself);
+		homebase.doSellTransaction(price, 
+				fmt("%s x %i") % commod->getName() % (diff/2), 
+					  TX_BUYING, commod);
+		commod->buyMe(myself, tso.getKeeper(), diff/2, 
 			      commod_shop_nr[*target_shop_idx]);
 		*target_shop_idx=i;
+
+		TThing *ttt2;
+		for(TThing *ttt=myself->getStuff();ttt;ttt=ttt2){
+		  ttt2=ttt->nextThing;
+		  if(dynamic_cast<TCommodity *>(ttt)){
+		    --(*ttt);
+		    *cart += *ttt;
+		  }
+		}
+		sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
+		homebase.getKeeper()->saveItems(buf);
 		return TRUE;
 	      }
 	    }
@@ -95,11 +172,16 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	}
       }
     }
-    
 
+    // didn't find any deals
+    *target_shop_idx=::number(0,3);
   } else {
-    dirTypeT dir=path.findPath(myself->in_room, findRoom(commod_shops[*target_shop_idx]));
+    dirTypeT dir=path.findPath(myself->in_room, 
+			       findRoom(commod_shops[*target_shop_idx]));
     myself->goDirection(dir);
+    --(*cart);
+    *myself->roomp += *cart;
+    myself->roomp->saveItems("");
   }
 
 #endif
