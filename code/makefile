@@ -326,7 +326,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_property_clerk.o	spec_mobs_leper_hunter.o	\
 	spec_mobs_auctioneer.o		spec_mobs_loan_manager.o 	\
 	spec_mobs_herofaeries.o		spec_objs_setcasts.o 		\
-	spec_objs_tequila_cutlass.o
+	spec_objs_tequila_cutlass.o	spec_mobs_commod_trader.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -412,6 +412,12 @@ sqledobj: $(LIBS) objs/sqledobj.o objs/lowtools.o
 	@$(CC) -o sqledobj objs/sqledobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqledobj
 
+sqledmob: $(LIBS) objs/sqledmob.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledmob
+	@$(CC) -o sqledmob objs/sqledmob.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledmob
+
+
 sqledresp: $(LIBS) objs/sqledresp.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqledresp
 	@$(CC) -o sqledresp objs/sqledresp.o objs/lowtools.o $(LIBS) $(LDFLAGS)
@@ -443,8 +449,8 @@ sqladdmobs: $(LIBS) objs/sqladdmobs.o objs/lowtools.o
 	@/usr/bin/strip sqladdmobs
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld sqladdresp sqledresp sqladdmobs
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld sqladdresp sqledresp sqladdmobs /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledshop sqladdwld sqladdresp sqledresp sqladdmobs sqledmob
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqledshop sqladdwld sqladdresp sqledresp sqladdmobs sqledmob /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution

@@ -6869,6 +6869,7 @@ extern int poisonBite(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int targetDummy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // misc external procs
+extern int commodTrader(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanManager(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int auctioneer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int propertyClerk(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7114,6 +7115,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "id card provider", idCardProvider},
   {TRUE, "Target dummy", targetDummy},
   {TRUE, "fruit scavenger", fruitScavenger}, // 215
+  {FALSE, "commodity trader", commodTrader},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
