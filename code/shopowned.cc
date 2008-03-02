@@ -279,7 +279,7 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   tax_office=getTaxShopNr();
 
   // no tax office, don't charge tax
-  if(tax_office==0){
+  if(tax_office<=0){
     vlogf(LOG_BUG, fmt("shop (%i) has no tax entry") % shop_nr);
     return 0;
   }
@@ -303,11 +303,12 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
 					      SHOPFILE_PATH % tax_office);
-  
+
   shoplog(shop_nr, keeper, keeper, name, 
 	  -cost, "paying tax");
   shoplog(tax_office, keeper, dynamic_cast<TMonster *>(taxman),
 	  name, cost, "tax");
+
 
   TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
   tso.doReserve();
