@@ -12,6 +12,15 @@ class TPathTarget {
   virtual ~TPathTarget(){};
 };
 
+class findFairFight : public TPathTarget {
+ private:
+  TBeing *myself;
+
+ public:
+  findFairFight(TBeing *);
+  bool isTarget(int) const;
+};
+
 
 // findRoom(int vnum) = find room specified by vnum
 class findRoom : public TPathTarget {

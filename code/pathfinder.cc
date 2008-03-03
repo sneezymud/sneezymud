@@ -3,6 +3,34 @@
 #include "obj_portal.h"
 #include "obj_base_corpse.h"
 
+findFairFight::findFairFight(TBeing *tb)
+{
+  myself=tb;
+}
+
+bool findFairFight::isTarget(int room) const
+{
+  TRoom *rp = real_roomp(room);
+  if (!rp->inGrimhaven())
+    return false;
+  if(rp->isRoomFlag(ROOM_PEACEFUL))
+    return false;
+
+  TThing *t;
+  for (t = rp->getStuff(); t; t = t->nextThing) {
+    TMonster *tmon=dynamic_cast<TMonster *>(t);
+    if (!tmon)
+      continue;
+
+    vlogf(LOG_PEEL, fmt("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
+
+    if((int)((tmon->getRealLevel()+0.5)-myself->GetMaxLevel()))
+      return false;
+
+    return true;
+  }
+  return false;
+}
 
 // findRoom
 findRoom::findRoom(int d)

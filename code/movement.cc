@@ -3364,6 +3364,7 @@ int TBeing::doMortalGoto(const sstring & argument)
   TRoom *rp;
   TBeing *ch;
   sstring arg;
+  bool fair_fight=false;
 
   one_argument(argument, arg);
 
@@ -3386,6 +3387,7 @@ int TBeing::doMortalGoto(const sstring & argument)
     sendTo("You can't see well enough to get your bearings.\n\r");
     return FALSE;
   }
+
   if (is_abbrev(arg, "trainer")) {
     if (hasClass(CLASS_WARRIOR)) {
       arg = "warrior_trainer";
@@ -3425,7 +3427,9 @@ int TBeing::doMortalGoto(const sstring & argument)
     }
   }
 
-  if (is_abbrev(arg, "cs") || is_abbrev(arg, "center")) {
+  if(is_abbrev(arg, "fairfight")){
+    fair_fight=true;
+  } else if (is_abbrev(arg, "cs") || is_abbrev(arg, "center")) {
     targ_rm = ROOM_CS;
   } else if (is_abbrev(arg, "mail") || is_abbrev(arg, "postoffice")) {
     targ_rm = 406;
@@ -3626,7 +3630,34 @@ int TBeing::doMortalGoto(const sstring & argument)
     return FALSE;
   }
 
-  if (targ_rm) {
+  if(fair_fight){
+    TPathFinder path;
+    path.setNoMob(false);
+    dir=path.findPath(in_room, findFairFight(this));
+
+    if(path.getDest()==inRoom()){
+      sendTo("There's already a fair fight here.\n\r");
+      return FALSE;
+    }
+
+    if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
+      sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
+      return FALSE;
+    }
+    sendTo(COLOR_MOBS, fmt("You can get to a fair fight by going "));
+
+    for(unsigned int i=1;i<path.path.size()-1;++i){
+      if(path.path[i]->direct >= 10)
+	sendTo(COLOR_MOBS, "enter portal, ");
+      else
+	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+    }
+    if(path.path[path.path.size()-1]->direct >= 10)
+      sendTo(COLOR_MOBS, "enter portal.\n\r");
+    else
+      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+
+  } else if (targ_rm) {
     if (inRoom() == targ_rm) {
       sendTo("Uhm, not for nothing, but I think you are already there...\n\r");
       return FALSE;
