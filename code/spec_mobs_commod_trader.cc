@@ -85,6 +85,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return TRUE;
   }
 
+
   // find our cart
   cart=findCart(myself);
   if(!cart)
@@ -176,9 +177,16 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     // didn't find any deals
     *target_shop_idx=::number(0,3);
   } else {
+    // speed
+    if(::number(0,2))
+      return FALSE;
+
+    path.setNoMob(false);
     dirTypeT dir=path.findPath(myself->in_room, 
 			       findRoom(commod_shops[*target_shop_idx]));
+
     myself->goDirection(dir);
+
     --(*cart);
     *myself->roomp += *cart;
     myself->roomp->saveItems("");

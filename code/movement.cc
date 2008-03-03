@@ -237,13 +237,14 @@ bool TBeing::validMove(dirTypeT cmd)
     sendTo("Sorry, there is no room to get in there.\n\r");
     return FALSE;
   }
-  if (!isPc() && rp->isRoomFlag(ROOM_NO_MOB)) {
+  if (!isPc() && rp->isRoomFlag(ROOM_NO_MOB)){
     if (!master && !(specials.act & ACT_HUNTING) && !rider && 
         !riding && 
         (spec != SPEC_BOUNTY_HUNTER) &&
         (spec != SPEC_LAMPBOY) &&
         (spec != SPEC_JANITOR) &&
-        (spec != SPEC_CARAVAN)
+        (spec != SPEC_CARAVAN) &&
+	(spec != SPEC_COMMOD_TRADER)
         ) {
       sendTo("Sorry, seems to be a no-mob room that-a-way.\n\r");
       return FALSE;
