@@ -11,7 +11,8 @@ enum transactionTypeT {
   TX_RECEIVING_TALENS,
   TX_PAYING_INTEREST,
   TX_WITHDRAWAL,
-  TX_DEPOSIT
+  TX_DEPOSIT,
+  TX_FACTORY,
 };
 
 
@@ -80,6 +81,7 @@ class TShopOwned {
   TShopOwned(int, TMonster *, TBeing *);
   TShopOwned(TMonster *, TBeing *);
   TShopOwned(int, TBeing *);
+  TShopOwned(int);
   ~TShopOwned();
 };
 

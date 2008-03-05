@@ -57,6 +57,8 @@ sstring transactionToString(transactionTypeT action)
       return "withdrawal";
     case TX_DEPOSIT:
       return "deposit";
+    case TX_FACTORY:
+      return "factory production";
   }
   return "unknown";
 }
@@ -239,6 +241,22 @@ TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
     }
   }
 }
+
+TShopOwned::TShopOwned(int shop_nr)
+{
+  this->shop_nr=shop_nr;
+  this->keeper = NULL;
+
+  for(TBeing *t=character_list;t;t=t->next){
+    if(t->number==shop_index[shop_nr].keeper){
+      keeper=dynamic_cast<TMonster *>(t);
+      break;
+    }
+  }
+
+  this->ch=keeper;
+}
+
 
 TShopOwned::TShopOwned(TMonster *keeper, TBeing *ch)
 {
