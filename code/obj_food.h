@@ -28,6 +28,7 @@ class TFood : public TObj {
     virtual itemTypeT itemType() const { return ITEM_FOOD; }
     virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual int suggestedPrice() const;
+    virtual int productionPrice() const;
 
     virtual bool poisonObject();
     virtual void nukeFood();

@@ -230,6 +230,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       break;
     case TX_SELLING:
     case TX_PRODUCING:
+    case TX_FACTORY:
       // player selling something, so shop is buying inventory
       // inventory
       journalize_debit(130, customer, name, amt, true);

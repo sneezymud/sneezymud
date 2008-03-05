@@ -1471,6 +1471,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procBankInterest(PULSE_MUDDAY));
   scheduler.add(new procCloseAccountingBooks(PULSE_MUDDAY));
   scheduler.add(new procRecordCommodPrices(PULSE_MUDDAY));
+  scheduler.add(new procFactoryProduction(PULSE_MUDDAY));
 
   // pulse realhour
 //  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved

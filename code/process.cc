@@ -1,8 +1,28 @@
 #include "stdsneezy.h"
 #include "process.h"
 #include "timing.h"
+#include "database.h"
+#include "shop.h"
 
 ///////////
+
+// procFactoryProduction
+procFactoryProduction::procFactoryProduction(const int &p)
+{
+  trigger_pulse=p;
+  name="procFactoryProduction";
+}
+
+void procFactoryProduction::run(int pulse) const
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select shop_nr from factory");
+
+  while(db.fetchRow()){
+    factoryProduction(convertTo<int>(db["shop_nr"]));
+  }
+}
 
 // procSaveFactions
 procSaveFactions::procSaveFactions(const int &p)

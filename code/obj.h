@@ -761,6 +761,7 @@ private:
     virtual void remBurning(TBeing *);
     wearKeyT getWearKey() const;
     virtual int suggestedPrice() const;
+    virtual int productionPrice() const;
     void addGlowEffects();
     bool checkOwnersList(const TPerson *, bool = false);
     virtual double objLevel() const;

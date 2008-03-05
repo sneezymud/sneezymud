@@ -18,7 +18,13 @@ class TProcess {
 
 
 //// processes
-class procRecordCommodPrices: public TProcess {
+class procFactoryProduction : public TProcess {
+ public:
+  void run(int) const;
+  procFactoryProduction(const int &);
+};
+
+class procRecordCommodPrices : public TProcess {
  public:
   void run(int) const;
   procRecordCommodPrices(const int &);

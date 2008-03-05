@@ -1009,6 +1009,19 @@ int TFood::suggestedPrice() const
 		(int)(10.0 * getWeight() * material_nums[getMaterial()].price));
 }
 
+int TFood::productionPrice() const
+{
+  // who comes up with these formulas, christ
+  int decay = obj_flags.decay_time < 1 ? 5000 : obj_flags.decay_time;
+  int p=suggestedPrice();
+  float x=pow(getFoodFill(), .75);
+  float y=pow(decay, .35);
+  float m=(int)(10.0 * getWeight() * material_nums[getMaterial()].price);
+
+  // basically just subtraction the portion allocated to food fill
+  return (int)(p - ((p-m) * (x / (x+y))));
+}
+
 void TFood::lowCheck()
 {
   if (getFoodFill() <= 0)

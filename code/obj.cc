@@ -90,6 +90,16 @@ int TObj::suggestedPrice() const
   return price + obj_index[getItemIndex()].value;
 }
 
+// this is the cost to produce outside of the raw materials
+// default is simply value of item - material cost
+// some types may have a special cost structure, eg food goes by
+// "makes full" rather than weight
+int TObj::productionPrice() const
+{
+  // just the indexed cost
+  return obj_index[getItemIndex()].value;  
+}
+
 
 void TObj::swapToStrung()
 {
