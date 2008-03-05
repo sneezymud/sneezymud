@@ -200,7 +200,8 @@ const int SPEC_ID_CARD_PROVIDER   =213;
 const int SPEC_TARGET_DUMMY       =214;
 const int SPEC_FRUIT_SCAVENGER    =215;
 const int SPEC_COMMOD_TRADER      =216;
-const int NUM_MOB_SPECIALS        =216;
+const int SPEC_RATION_FACTORY     =217;
+const int NUM_MOB_SPECIALS        =217;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

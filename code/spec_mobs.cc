@@ -60,6 +60,7 @@
 #include "obj_note.h"
 #include "obj_commodity.h"
 #include "obj_component.h"
+#include "obj_food.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -6822,6 +6823,58 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   return FALSE;
 }
 
+int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
+{
+  TDatabase db(DB_SNEEZY);
+  int factory_shop=251;
+  TShopOwned tso(factory_shop, me, ch);
+  TFood *food;
+  int maxsupply=36*100;
+
+  // the cost of the foodstuff for rations and provs is 1.85 and 2.5
+  // respectively.  i precalculated this on current prices (cheating).
+  // since the factory will produce one of each production pulse,
+  // then we can average these prices to get the actual supply cost.
+  float base_price=2.175; 
+
+  if(cmd != CMD_MOB_GIVEN_ITEM)
+    return FALSE;
+
+  db.query("select supplyamt from factory where shop_nr=%i", factory_shop);
+  
+  if(!db.fetchRow()){
+    vlogf(LOG_BUG, "ration factory missing db entry");
+    return FALSE;
+  }
+	
+  if(convertTo<int>(db["supplyamr"]) >= maxsupply){
+    me->doSay("I have enough meat right now.");
+    me->doDrop("", o);
+    return FALSE;
+  }
+
+  if(!o || !o->objVnum()==GENERIC_STEAK || 
+     !(food=dynamic_cast<TFood *>(o))){
+    me->doSay("What the hell is this?!  That's not going into a ration.");
+    me->doDrop("", o);
+    return FALSE;
+  }
+
+  float price=base_price * shop_index[factory_shop].getProfitSell(o, ch);
+  price *= food->getFoodFill();
+
+  me->doSay("Now that's a nice cut of steak!  Here you go.");
+  me->doEmote(fmt("hands you %i talens.") % (int)price);
+  
+  tso.doSellTransaction((int)price, 
+			fmt("%s x %i") % o->getName() % food->getFoodFill(), 
+			TX_SELLING, o);
+
+  db.query("update factory set supplyamt=supplyamt+%i where shop_nr=%i", food->getFoodFill(), factory_shop);
+
+  return TRUE;
+}
+
 
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
@@ -7116,6 +7169,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "Target dummy", targetDummy},
   {TRUE, "fruit scavenger", fruitScavenger}, // 215
   {FALSE, "commodity trader", commodTrader},
+  {FALSE, "ration factory", rationFactory},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
