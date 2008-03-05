@@ -80,7 +80,6 @@ M 0 18672    1 18663    a vacationing dwarf (female)
 M 0 18673    1 18663    a vacationing dwarf (child)
 M 0 18673    1 18663    a vacationing dwarf (child)
 
-
 * fireplace
 O 0 18707 1 18689     burning log rack
 
@@ -92,6 +91,9 @@ P 1 18676 9999 18677    a dart
 P 1 18676 9999 18677    a dart
 P 1 18676 9999 18677    a dart
 O 0 18675 1 18664     a dart board
+M 0 18674 1 18664     a bartender
+M 0 18675 1 18664     an elite cutyguard
+M 0 18676 1 18664     a frontier guardsman
 
 * misc lamps
 O 0 18666 1 18665     a sturdy brass oil lamp
@@ -112,6 +114,8 @@ O 0 18680 2 18667     a plain wooden bench
 O 0 18679 3 18669     a steel locker
 O 0 18666 1 18669     a sturdy brass oil lamp
 O 0 18680 2 18669     a plain wooden bench
+M 0 18677 1 18669     an erect naked man
+M 0 18678 1 18669     a wet naked woman
 
 * hot springs
 O 0 18683 1 18670     an outcropping of rock
