@@ -34,7 +34,7 @@ int main(int argc, char **argv)
       buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
       buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
       buf = fmt("short_desc: %s\n") % db["short_desc"];  sbuf+=buf;
-      buf = fmt("long_desc: %s\n") % db["long_desc"];  sbuf+=buf;
+      buf = fmt("long_desc~:\n%s~\n") % db["long_desc"];  sbuf+=buf;
       buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
       buf = fmt("actions: %s\n") % db["actions"];  sbuf+=buf;
       buf = fmt("affects: %s\n") % db["affects"];  sbuf+=buf;
@@ -146,7 +146,23 @@ int main(int argc, char **argv)
       db.query("delete from mob_imm where vnum=%s",
 	       val["vnum"].c_str());
 
-      
+      if(val["long_desc"][val["long_desc"].size()-1] == '\n'){
+	val["long_desc"]+="\r";
+      }
+
+      if(val["long_desc"][val["long_desc"].size()-1] != '\r' &&
+	 val["long_desc"][val["long_desc"].size()-2] != '\n'){
+	val["long_desc"]+="\n\r";
+      }
+      if(val["description"][val["description"].size()-1] == '\n'){
+	val["description"]+="\r";
+      }
+
+      if(val["description"][val["description"].size()-1] != '\r' &&
+	 val["description"][val["description"].size()-2] != '\n'){
+	val["description"]+="\n\r";
+      }
+
       db.query("insert into mob (vnum,name,short_desc,long_desc,description,actions,affects,faction,fact_perc,letter,attacks,class,level,tohit,ac,hpbonus,damage_level,damage_precision,gold,race,weight,height,str,bra,con,dex,agi,intel,wis,foc,per,cha,kar,spe,pos,def_position,sex,spec_proc,skin,vision,can_be_seen,max_exist,local_sound,adjacent_sound) values (%s,'%s','%s','%s','%s',%s, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",
 	       val["vnum"].c_str(),val["name"].c_str(),val["short_desc"].c_str(),val["long_desc"].c_str(),val["description"].c_str(),val["actions"].c_str(),val["affects"].c_str(),val["faction"].c_str(),val["fact_perc"].c_str(),val["letter"].c_str(),val["attacks"].c_str(),val["class"].c_str(),val["level"].c_str(),val["tohit"].c_str(),val["ac"].c_str(),val["hpbonus"].c_str(),val["damage_level"].c_str(),val["damage_precision"].c_str(),val["gold"].c_str(),val["race"].c_str(),val["weight"].c_str(),val["height"].c_str(),val["str"].c_str(),val["bra"].c_str(),val["con"].c_str(),val["dex"].c_str(),val["agi"].c_str(),val["intel"].c_str(),val["wis"].c_str(),val["foc"].c_str(),val["per"].c_str(),val["cha"].c_str(),val["kar"].c_str(),val["spe"].c_str(),val["pos"].c_str(),val["def_position"].c_str(),val["sex"].c_str(),val["spec_proc"].c_str(),val["skin"].c_str(),val["vision"].c_str(),val["can_be_seen"].c_str(),val["max_exist"].c_str(),val["local_sound"].c_str(),val["adjacent_sound"].c_str());
       
