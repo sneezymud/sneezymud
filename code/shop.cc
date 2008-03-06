@@ -2504,8 +2504,10 @@ void factoryProduction(int shop_nr)
     // place in shop
     *keeper += *obj;
 
+    keeper->setMoney(keeper->getMoney()-obj->productionPrice());
     tso.doSellTransaction(obj->productionPrice(),
 			  obj->getName(), TX_FACTORY, obj);
+
 
     // --avail amt
     avail_amt -= supplyamt;
