@@ -1678,8 +1678,6 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   }
   mob_index[nr].addToNumber(1);
 
-  mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
-
   if (mob->GetMaxLevel() >= 70) {
     if (!::number(0, 2)) {
       // Make all mobs level 70+ have TS automatically 1/3 of the time
@@ -1715,6 +1713,18 @@ TMonster *read_mobile(int nr, readFileTypeT type)
     stats.act_71_100++;
   else
     stats.act_101_127++;
+
+  rc = mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete mob;
+    return NULL;
+  }
+  rc = mob->checkResponses(mob, 0, "", CMD_GENERIC_CREATED);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete mob;
+    return NULL;
+  }
+
 
   return (mob);
 }

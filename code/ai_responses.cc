@@ -102,8 +102,8 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
 
       if(value<0){
-	setMoney(getMoney()+(-value));
-	return TRUE;
+        setMoney(getMoney()+(-value));
+        return TRUE;
       }
 
       if (value <= 0 || 
@@ -150,41 +150,55 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       *this += *obj;
       return FALSE;
     case CMD_RESP_LOADMOB:
-      if (mobVnum() < 0) {
-        doTell(mob->getNameNOC(this), "I would load it, but i'm a prototype.  Sorry.");
-        return FALSE; // continue the script, even tho this is a 'dummy' trigger.
-      }
-      value = convertTo<int>(arg);
+      {
+        if (mobVnum() < 0) {
+          doTell(mob->getNameNOC(this), "I would load it, but i'm a prototype.  Sorry.");
+          return FALSE; // continue the script, even tho this is a 'dummy' trigger.
+        }
 
-      if (value <= 0 || 
-          ((rc = real_mobile(value)) <= 0)) {
-        vlogf(LOG_MOB_RS, fmt("Problem in script (3).  Trying to load %d on %s") % value %getName());
-        return FALSE;
-      }
-      if (!(tMonster = read_mobile(rc, REAL))) {
-        vlogf(LOG_MOB_RS, fmt("Problem in script (4).  Trying to load %d on %s") % value %getName());
-        return FALSE;
-      }
-      if (mob_index[rc].getNumber() > mob_index[rc].max_exist) {
-        vlogf(LOG_MOB_RS, fmt("Quest mob (%s:%d) loading mob (%s:%d) when over max_exist.") % 
-              getName() % mobVnum() %
-              tMonster->getName() % tMonster->mobVnum());
-      }
-      if (mob_index[rc].spec == SPEC_SHOPKEEPER) {
-        vlogf(LOG_MOB_RS, fmt("Problem in script.  %s trying to load %d which is a shopkeeper.") % 
-              getName() % value);
-        delete tMonster;
-        return FALSE;
-      }
-      if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
-        vlogf(LOG_MOB_RS, fmt("Problem in script.  %s trying to load %d which is a newbie helper.") % 
-              getName() % value);
-        delete tMonster;
-        return FALSE;
-      }
+        arg2=arg;
+        arg2=one_argument(arg2, buf);
+        value = convertTo<int>(buf);
+        arg2=one_argument(arg2, buf);
+        int rnum = convertTo<int>(buf);
 
-      *roomp += *tMonster;
-      return FALSE;
+        TRoom *room = roomp;
+        if (rnum > 0)
+          room = real_roomp(rnum);
+        if (room == NULL)
+          room = roomp;
+
+        if (value <= 0 || 
+            ((rc = real_mobile(value)) <= 0)) {
+          vlogf(LOG_MOB_RS, fmt("Problem in script (3).  Trying to load %d on %s") % value %getName());
+          return FALSE;
+        }
+        if (!(tMonster = read_mobile(rc, REAL))) {
+          vlogf(LOG_MOB_RS, fmt("Problem in script (4).  Trying to load %d on %s") % value %getName());
+          return FALSE;
+        }
+        if (mob_index[rc].getNumber() > mob_index[rc].max_exist) {
+          vlogf(LOG_MOB_RS, fmt("Quest mob (%s:%d) loading mob (%s:%d) when over max_exist.") % 
+                getName() % mobVnum() %
+                tMonster->getName() % tMonster->mobVnum());
+        }
+        if (mob_index[rc].spec == SPEC_SHOPKEEPER) {
+          vlogf(LOG_MOB_RS, fmt("Problem in script.  %s trying to load %d which is a shopkeeper.") % 
+                getName() % value);
+          delete tMonster;
+          return FALSE;
+        }
+        if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
+          vlogf(LOG_MOB_RS, fmt("Problem in script.  %s trying to load %d which is a newbie helper.") % 
+                getName() % value);
+          delete tMonster;
+          return FALSE;
+        }
+
+        if (room && tMonster)
+          *room += *tMonster;
+        return FALSE;
+      }
     case CMD_RESP_PERSONALIZE:
       value = convertTo<int>(arg);
 
@@ -279,6 +293,14 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         cmd_val = CMD_RESP_PACKAGE;
       } else if (buf.lower() == "pulse"){
         cmd_val = CMD_RESP_PULSE;
+      } else if (buf.lower() == "created"){
+        cmd_val = CMD_GENERIC_CREATED;
+      } else if (buf.lower() == "killed"){
+        cmd_val = CMD_RESP_KILLED;
+      } else if (buf.lower() == "endmode"){
+        cmd_val = CMD_RESP_ENDMODE;
+      } else if (buf.lower() == "startfight"){
+        cmd_val = CMD_RESP_STARTFIGHT;
       } else {
         cmd_val=searchForCommandNum(buf);
         if (cmd_val >= MAX_CMD_LIST) {
@@ -472,6 +494,51 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         return FALSE;
         break;
       }
+    case CMD_RESP_SETMODE:
+      {
+        if (arg == "soloquest")
+        {
+          int myVnum = mobVnum();
+          affectedData newAffect;
+          affectedData *checkAffect;
+
+          for (checkAffect = affected; checkAffect && checkAffect->type == AFFECT_COMBAT &&
+            checkAffect->modifier == COMBAT_SOLO_KILL && checkAffect->level == myVnum;
+            checkAffect = checkAffect->next);
+
+          // if the mob is already fighting or it doesnt have this affect, stop
+          if (fight() || getHit() < hitLimit() || checkAffect)
+            return RET_STOP_PARSING;
+
+          newAffect.type = AFFECT_COMBAT;
+          newAffect.modifier = COMBAT_SOLO_KILL;
+          newAffect.level = myVnum;
+          newAffect.duration = PERMANENT_DURATION;
+          newAffect.location = APPLY_NONE;
+          newAffect.bitvector = 0;
+          newAffect.be = this;
+          mob->affectTo(&newAffect, -1);
+
+          if (!mob->fight())
+            mob->setFighting(this, 0, FALSE);
+        }
+        break;
+      }
+    case CMD_RESP_TRIGGER:
+      {
+        // find all mobs, and run the trigger command on them with the same arg
+        for (TBeing * t = character_list; t; t = t->next)
+        {
+          TMonster * m = dynamic_cast<TMonster *>(t);
+          if (!m || t->isPc() || t->polyed != POLY_TYPE_NONE)
+            continue;
+          rc = m->checkResponses(mob, NULL, arg, CMD_RESP_TRIGGER);
+          if (IS_SET(rc, DELETE_THIS | DELETE_VICT))
+            break;
+        }
+
+        break;
+      }
     case CMD_RESP_DONERAND:
     case CMD_RESP_RANDOM:
     case CMD_RESP_RANDOPTION:
@@ -490,8 +557,19 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
 
 bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBeing *tBeing)
 {
-  if (desc || !resps || !resps->respList || !tBeing->isPc() || fight())
+  if (desc || !resps || !resps->respList)
     return false;
+  
+  // NPCs cannot trigger response scripts?
+  if (!tBeing->isPc() && tCmd != CMD_RESP_ENDMODE && tCmd != CMD_RESP_KILLED &&
+    tCmd != CMD_RESP_STARTFIGHT && tCmd != CMD_GENERIC_CREATED)
+    return false;
+
+  // only some commands are allowable to be processed furing a fight
+  if (fight() && tCmd != CMD_RESP_ENDMODE && tCmd != CMD_RESP_KILLED &&
+    tCmd != CMD_RESP_STARTFIGHT && tCmd != CMD_RESP_TRIGGER)
+    return false;
+
   resp *tResp;
 
   if (tCmd == CMD_WHISPER || tCmd == CMD_ASK || tCmd == CMD_SIGN)
@@ -509,6 +587,9 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBein
   for (tResp = resps->respList; tResp; tResp = tResp->next)
     if (tResp->cmd == tCmd)
       if (tCmd == CMD_SAY) {
+        if (strcasestr(tSaid.c_str(), tResp->args))
+          return true;
+      } else if (tCmd == CMD_RESP_TRIGGER) {
         if (strcasestr(tSaid.c_str(), tResp->args))
           return true;
       } else
@@ -676,15 +757,11 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
   if (!resps || !resps->respList)
     return FALSE;
 
-  // remove this at your hazard
-  if (!speaker->isPc())
-    return FALSE;
+  // speaker->isPc() is already checked in CheckResponsesPossible
+  // fight() is already checked in CheckResponsesPossible
 
   // trying to drop something while casting is problematic
   if (spelltask)
-    return FALSE;
-
-  if (fight())
     return FALSE;
 
   if (trig_cmd == CMD_WHISPER || trig_cmd == CMD_ASK || trig_cmd == CMD_SIGN)
@@ -885,7 +962,16 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           }
         }
         break;
+
+      case CMD_GENERIC_CREATED:
       case CMD_RESP_PULSE:
+      case CMD_RESP_ENDMODE:
+      case CMD_RESP_KILLED:
+      case CMD_RESP_STARTFIGHT:
+      case CMD_RESP_TRIGGER:
+        // args must match
+        if (said != respo->args)
+          break;
         for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
           parsedArgs = parseResponse(speaker, cmd->args);
             skip = doRandCmd(cmd->cmd, skip, parsedArgs);
@@ -942,6 +1028,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           }
         }
         break;
+
       case CMD_BOUNCE:
       case CMD_DANCE:
       case CMD_SMILE:
@@ -1357,6 +1444,16 @@ resp * TMonster::readCommand(istringstream &is)
     cmd = CMD_RESP_PACKAGE;
   } else if (!strcasecmp(cmdStr, "pulse")) {
     cmd = CMD_RESP_PULSE;
+  } else if (!strcasecmp(cmdStr, "created")) {
+    cmd = CMD_GENERIC_CREATED;
+  } else if (!strcasecmp(cmdStr, "killed")) {
+    cmd = CMD_RESP_KILLED;
+  } else if (!strcasecmp(cmdStr, "endmode")) {
+    cmd = CMD_RESP_ENDMODE;
+  } else if (!strcasecmp(cmdStr, "startfight")) {
+    cmd = CMD_RESP_STARTFIGHT;
+  } else if (!strcasecmp(cmdStr, "trigger")) {
+    cmd = CMD_RESP_TRIGGER;
   } else {
     cmd=searchForCommandNum(cmdStr);
     if (cmd >= MAX_CMD_LIST) {
@@ -1461,6 +1558,10 @@ resp * TMonster::readCommand(istringstream &is)
       newCmd = new command( CMD_RESP_CHECKCLASS, args);
     else if (is_abbrev(buf, "checknotclass"))
       newCmd = new command( CMD_RESP_CHECKNOTCLASS, args);
+    else if (is_abbrev(buf, "setmode"))
+      newCmd = new command( CMD_RESP_SETMODE, args);
+    else if (is_abbrev(buf, "trigger"))
+      newCmd = new command( CMD_RESP_TRIGGER, args);
     else {
       if ((cmd=searchForCommandNum( buf)) >= MAX_CMD_LIST) {
         vlogf(LOG_MOB_RS,fmt("Responses::readCommand(): Parse error in %s. Unknown command %s.") % 

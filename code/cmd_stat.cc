@@ -1351,6 +1351,16 @@ void TBeing::statBeing(TBeing *k)
           str += "roomenter\n\r";
         } else if (respy->cmd == CMD_RESP_PACKAGE) {
           str += fmt("package %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_RESP_KILLED) {
+          str += fmt("killed %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_GENERIC_CREATED) {
+          str += fmt("created %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_RESP_TRIGGER) {
+          str += fmt("trigger %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_RESP_STARTFIGHT) {
+          str += fmt("startfight %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_RESP_ENDMODE) {
+          str += fmt("endmode %s\n\r") % respy->args;
         } else {
           str += fmt("%d %s\n\r") % respy->cmd % respy->args;
         }

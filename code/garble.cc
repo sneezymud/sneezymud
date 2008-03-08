@@ -945,20 +945,20 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
     { "\255", "s" },
   };
 
-  sstring in = arg;
-  sstring out;
+  sstring out = arg;
   int iWord = 0;
-  sstring word = in.word(iWord);
+  sstring word = out.word(iWord);
   int chance = from->getCond(DRUNK);
   TBeing * tFrom = const_cast<TBeing *>(from);
   bool emoted = false;
+  unsigned int iReplace = 0;
 
   // if this garble was applied without us being drunk, assume an average drunkenness
   if (chance < 9)
     chance = 15;
 
-  // 15% chance of total random phrase during speech (not room descriptions)
-  if (speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 7))
+  // chance of total random phrase during speech (not room descriptions)
+  if (speechType != SPEECH_ROOMDESC && ::number(15 - chance, 14) < 0)
   {
     out = RandomPhrase(true);
     for(int iReplace = 0; iReplace < (int)cElements(replace); iReplace++)
@@ -968,11 +968,33 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
 
   for(; !word.empty(); word = arg.word(++iWord))
   {
-    if (!out.empty())
-      out += ' ';
+    // set this is we expect word to be modified
+    bool modified = false;
+    sstring original = word;
+    sstring head = "", tail;
+    int loc;
+
+    // preserve color codes at the beginning
+    while(word.length() > 2 && word[0] == '<' && word[2]=='>')
+    {
+      head += word.substr(0, 3);
+      word.erase(0, 3);
+    }
+
+    while(word.length() > 1 && word[0] == '<' && word[2]=='>')
+    {
+      head += word.substr(0, 3);
+      word.erase(0, 3);
+    }
+
+    // find punctuation at the end of the word and preserve
+    for(loc = word.length()-1; loc > 0 && (!isalpha(word[loc]) || word[loc-1] == '<');loc--)
+      tail = word[loc] + tail;
+    if (tail.length() > 0)
+      word.erase(loc+1, tail.length());
 
     // 10% chance of random word
-    if (chance > 14 && !::number(0, 9))
+    if (chance > 14 && word.length() > 2 && !::number(0, 9))
       word = RandomWord().matchCase(word);
 
     // 10% chance of just belching or something
@@ -980,13 +1002,13 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
     {
       word = "*burp*";
       tFrom->doAction("", CMD_BURP);
-      emoted = true;
+      modified = emoted = true;
     }
     else if (!emoted && speechType != SPEECH_ROOMDESC && chance > 20 && !::number(0, 19))
     {
       word = "*hic*";
       tFrom->doAction("", CMD_HICCUP);
-      emoted = true;
+      modified = emoted = true;
     }
 
     // slurred speech always on for really drunk, 25% for slightly drunk
@@ -1000,6 +1022,7 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
         munged.inlineReplaceString(replace[iReplace][0], replace[iReplace][1]);
 
       word = munged.trim().matchCase(word);
+      modified = true;
     }
 
     // trunc long words 20% of the time
@@ -1009,6 +1032,7 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
         word = sstring("...") + word.substr(word.length() - ::number(3, 4), word.length()-1);
       else
         word = word.substr(0, word.length() - ::number(4, 5)) + sstring("...");
+      modified = true;
     }
 
     // any word which has repeating character subsets will have a chance of repeating
@@ -1036,9 +1060,24 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
         munged += word.substr(iStart, cSub);
       munged += word.substr(iStart+cSub, word.length());
       word = munged;
+      modified = true;
     }
 
-    out += word;
+    // maintain all original formatting
+    if (modified)
+    {
+      word = head + word;
+      word += tail;
+
+      // replace original with new word
+      unsigned int iFound = out.find(original, iReplace);
+      if(iFound != sstring::npos)
+      {
+        out.erase(iFound, original.length());
+        out.insert(iFound, word);
+        iReplace += word.length();
+      }
+    }
   }
 
   return out;
@@ -1636,6 +1675,11 @@ const sstring RandomPhrase(bool allowPhrase)
     "Okay {verb} me a {noun}.",
     "Don't make me {verb} you in the {noun}!",
     "Is it because you {verb} {noun} that you are so {adj}?",
+    "My {noun} {verb}s in a {adj} way.",
+    "I think I'll {verb} your {noun}",
+    "My {noun} is more {adj} than your {noun}",
+    "I can {verb} that {adj} {noun} way better then you.",
+    "Can anyone here {verb} a {adj} {noun}?",
 
     // conjunctives
     "Wait...  {phrase}",
@@ -1643,17 +1687,21 @@ const sstring RandomPhrase(bool allowPhrase)
     "Yo!  {phrase}",
     "Oh!  {phrase}",
     "Hey, {phrase}",
+    "Uh Oh.  {phrase}",
     "Hehehe.  You said \"{phrase}\"",
-    "At first I was like, \"{phrase}\" but now I'm like \"{phrase}\"",
+    "At first I was like, \"{phrase}\" but now I'm like \"{phrase2}\"",
     "If you say \"{phrase}\" one more time, I swear I'm going to lose it!",
   };
-  int cSize = allowPhrase ? (cElements(str)-1) : (cElements(str)-8);
+  int cSize = allowPhrase ? (cElements(str)-1) : (cElements(str)-10);
   sstring out = str[number(0, cSize)];
   out.inlineReplaceString("{verb}", RandomVerb());
   out.inlineReplaceString("{adj}", RandomAdjective());
   out.inlineReplaceString("{noun}", RandomNoun());
   if (allowPhrase)
+  {
     out.inlineReplaceString("{phrase}", RandomPhrase(false));
+    out.inlineReplaceString("{phrase2}", RandomPhrase(false));
+  }
   if (out.length() > 250)
     return RandomPhrase(allowPhrase);
   return out;

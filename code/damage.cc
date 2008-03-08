@@ -202,6 +202,12 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
         if (af->type == AFFECT_COMBAT && af->modifier == COMBAT_SOLO_KILL) {
           TBeing *tbt = dynamic_cast<TBeing *>(af->be);
           if (tbt && tbt != this) {
+
+            if (dynamic_cast<TMonster*>(v))
+              rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "soloquest", CMD_RESP_ENDMODE);
+            if (rc)
+              questmob = 0;
+
             // Receiving help
 //            vlogf(LOG_BUG, fmt("%s received help from %s killing %s") %  tbt->getName() % getName() % v->getName());
             switch (questmob) {
@@ -403,7 +409,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
   char buf[256], buf2[256];
   sstring taunt_buf;
-  int rc, questmob;
+  int rc = 0, questmob;
   TBeing *k=NULL;
   followData *f;
   TThing *t, *t2;
@@ -556,10 +562,17 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         vlogf(LOG_MISC, fmt("%s successfully killed %s") %  getName() % v->getName());
         vlogf(LOG_MISC, fmt("Removing combat bit (%d) from: %s") %  af->level % v->getName());
         v->affectRemove(af);
+
+        if (dynamic_cast<TMonster*>(v))
+          rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "soloquest", CMD_RESP_KILLED);
+        if (rc)
+          break;
+       // assert for no DELETE_THIS, DELETE_TARGET
+
         switch (questmob) {
-	  case MOB_ENSLAVED_PALADIN:
-	    setQuestBit(TOG_KILLED_PALADIN);
-	    break;
+          case MOB_ENSLAVED_PALADIN:
+            setQuestBit(TOG_KILLED_PALADIN);
+            break;
           case MOB_TROLL_GIANT:
             setQuestBit(TOG_AVENGER_SOLO);
             remQuestBit(TOG_AVENGER_HUNTING);
@@ -573,22 +586,22 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             remQuestBit(TOG_VINDICATOR_HUNTING_2);
             setQuestBit(TOG_VINDICATOR_SOLO_2);
             break;
-  	  case MOB_JOHN_RUSTLER:
-	    setQuestBit(TOG_RANGER_FIRST_KILLED_OK);
-	    remQuestBit(TOG_RANGER_FIRST_FARMHAND);
-	    break;
-    	  case MOB_ORC_MAGI:
-	    setQuestBit(TOG_KILLED_ORC_MAGI);
-	    remQuestBit(TOG_SEEKING_ORC_MAGI);
-	    break;
-	  case MOB_CLERIC_VOLCANO:
-	    setQuestBit(TOG_KILLED_CLERIC_V);
-	    remQuestBit(TOG_STARTED_RANGER_L21);
-	    break;
-	  case MOB_CLERIC_ARDEN:
-	    setQuestBit(TOG_KILLED_CLERIC_A);
-	    remQuestBit(TOG_SEEKING_CLERIC_A);
-  	    break;
+          case MOB_JOHN_RUSTLER:
+            setQuestBit(TOG_RANGER_FIRST_KILLED_OK);
+            remQuestBit(TOG_RANGER_FIRST_FARMHAND);
+            break;
+          case MOB_ORC_MAGI:
+            setQuestBit(TOG_KILLED_ORC_MAGI);
+            remQuestBit(TOG_SEEKING_ORC_MAGI);
+            break;
+          case MOB_CLERIC_VOLCANO:
+            setQuestBit(TOG_KILLED_CLERIC_V);
+            remQuestBit(TOG_STARTED_RANGER_L21);
+            break;
+          case MOB_CLERIC_ARDEN:
+            setQuestBit(TOG_KILLED_CLERIC_A);
+            remQuestBit(TOG_SEEKING_CLERIC_A);
+            break;
           default:
             break;
         }
@@ -599,6 +612,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   // PC died while fighting quest mob..with checks.
   if (!isPc() && v->getPosition() == POSITION_DEAD) {
     questmob = mobVnum();
+    if (dynamic_cast<TMonster*>(this) && affectedBySpell(AFFECT_COMBAT))
+      rc = dynamic_cast<TMonster*>(this)->checkResponses(v, 0, "soloquest", CMD_RESP_ENDMODE);
+    if (rc)
+      questmob = 0;
+
     switch (questmob) {
       case MOB_TROLL_GIANT:
         if (v->hasQuestBit(TOG_AVENGER_HUNTING)) {
@@ -1005,6 +1023,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       }
 
       // more quest stuff
+      if (dynamic_cast<TMonster*>(v))
+        rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
+      if (!rc)
+      {
+
       tp=dynamic_cast<TPerson *>(this);
       if (tp && v->mobVnum()==MOB_LEPER) {
 	if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4)) {
@@ -1022,7 +1045,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_STARTED)) {
 	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
 	  tp->remQuestBit(TOG_MONK_PURPLE_STARTED);
-	}
+  }
+      }
       }
       //
       if ((getPosition() != POSITION_MOUNTED) &&

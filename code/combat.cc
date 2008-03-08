@@ -1485,7 +1485,9 @@ void TBeing::setFighting(TThing *vict, int dam, bool inFight)
 
   // this is special code for questmob stuff
   if (!tbv->isPc() && isPc()) {
-    checkForQuestTog(tbv);
+    if (dynamic_cast<TMonster*>(tbv) &&
+      !dynamic_cast<TMonster*>(tbv)->checkResponses(this, 0, "", CMD_RESP_STARTFIGHT))
+      checkForQuestTog(tbv);
   }
   specials.fighting = tbv;
 
