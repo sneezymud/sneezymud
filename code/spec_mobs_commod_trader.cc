@@ -116,7 +116,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 		       commod_shop_nr[*target_shop_idx], 1);
 	sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
 	homebase.getKeeper()->saveItems(buf);
-
+	cart->roomp->saveItems("");
       }
     }
 
@@ -166,6 +166,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 		}
 		sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
 		homebase.getKeeper()->saveItems(buf);
+		cart->roomp->saveItems("");
 		return TRUE;
 	      }
 	    }
