@@ -2459,36 +2459,35 @@ shopData & shopData::operator =(const shopData &t)
 
 void factoryProduction(int shop_nr)
 {
+  TDatabase db_vnum(DB_SNEEZY);
   TDatabase db(DB_SNEEZY);
   TShopOwned tso(shop_nr);
-  int vnum, supplyamt, count;
+  int vnum, count;
   TObj *obj;
   TMonster *keeper=tso.getKeeper();
+  bool ready=false;
 
-  db.query("select sum(fb.supplyamt) as needed, f.supplyamt as amt from factory f, factoryproducing fp, factoryblueprint fb where f.shop_nr = fp.shop_nr and fp.vnum=fb.vnum and f.shop_nr=%i group by fb.supplyamt, f.supplyamt", shop_nr);
+  db_vnum.query("select fp.vnum from factoryproducing fp where shop_nr=%i", shop_nr);
 
-  if(!db.fetchRow())
-    return;
+  while(db_vnum.fetchRow()){
+    vnum=convertTo<int>(db_vnum["vnum"]);
 
-  int needed_amt=convertTo<int>(db["needed"]);
-  int avail_amt=convertTo<int>(db["amt"]);
-  
-  if(needed_amt > avail_amt)
-    return;
+    db.query("select fb.supplyamt as required, fs.supplyamt as avail from factoryblueprint fb, factorysupplies fs where fb.vnum=%i and fs.shop_nr=%i and fs.supplytype=fb.supplytype", vnum, shop_nr);
 
-  db.query("select fb.vnum as vnum, fb.supplyamt as supplyamt from factoryblueprint fb, factory f, factoryproducing fp where f.shop_nr = fp.shop_nr and fp.vnum=fb.vnum and f.shop_nr=%i", shop_nr);
-
-
-  while(db.fetchRow()){
-    vnum=convertTo<int>(db["vnum"]);
-    supplyamt=convertTo<int>(db["supplyamt"]);
-
+    ready=true;
+    while(db.fetchRow() && ready){
+      if(convertTo<int>(db["required"]) > convertTo<int>(db["avail"]))
+	ready=false;
+    }
+     
+    if(!ready)
+      continue;
+    
     count=0;
     for(TThing *t=tso.getStuff();t;t=t->nextThing){
       if((obj=dynamic_cast<TObj *>(t)) && obj->objVnum()==vnum)
 	++count;
     }
-
 
     // read object
     if (!(obj = read_object(vnum, VIRTUAL))) {
@@ -2508,15 +2507,11 @@ void factoryProduction(int shop_nr)
     tso.doSellTransaction(obj->productionPrice(),
 			  obj->getName(), TX_FACTORY, obj);
 
-
-    // --avail amt
-    avail_amt -= supplyamt;
+    // save avail amt
+    db.query("update factorysupplies, factoryblueprint set factorysupplies.supplyamt=factorysupplies.supplyamt-factoryblueprint.supplyamt where factorysupplies.shop_nr=%i and factoryblueprint.vnum=%i and factorysupplies.supplytype=factoryblueprint.supplytype", shop_nr, vnum);
 
   }
   
-  // save avail amt
-  db.query("update factory set supplyamt=%i where shop_nr=%i", 
-	   avail_amt, shop_nr);
 }
 
 

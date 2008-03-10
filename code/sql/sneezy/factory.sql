@@ -1,7 +1,7 @@
-CREATE TABLE factory (
+CREATE TABLE factorysupplies (
   shop_nr int,
   supplytype int,
-  supplyamt int
+  supplyamt int  
 );
 
 CREATE TABLE factoryproducing (
@@ -14,3 +14,4 @@ CREATE TABLE factoryblueprint (
   supplytype int,
   supplyamt int
 );
+
