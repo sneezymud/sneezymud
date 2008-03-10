@@ -372,6 +372,18 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Trait: Pyrophobia", MOB_NONE}, // 356
   {"Trait: Vicious", MOB_NONE}, // 357
   {"Trait: Craven", MOB_NONE}, // 358
+  {"Newbie: Doing Newbie Quest", MOB_DEE}, //359
+  {"Newbie: Finding Class Trainer", MOB_DEE}, //360
+  {"Newbie: Found Class Trainer", MOB_ANY}, //361
+  {"Newbie: Finding Secondary Basic Trainer", MOB_DEE}, //362
+  {"Newbie: Found Secondary Basic Trainer", MOB_ANY}, //363
+  {"Newbie: Running First Errand", MOB_DEE}, //364
+  {"Newbie: Ran First Errand", MOB_ANY}, //365
+  {"Newbie: Running Second Errand", MOB_DEE}, //366
+  {"Newbie: Ran Second Errand", MOB_ANY}, //367
+  {"Newbie: Fighting Mouse", MOB_DEE}, //368
+  {"Newbie: Killed Mouse", MOB_ANY}, //369
+  {"Newbie: Has Completed Newbie Quest", MOB_DEE}, //370
   {"", MOB_NONE}, 
 };
 

@@ -555,7 +555,21 @@ const int TOG_HAS_PYROPHOBIA                   = 356;
 const int TOG_IS_VICIOUS                       = 357;
 const int TOG_IS_CRAVEN                        = 358;
 
-const int MAX_TOG_INDEX                        = 359;  // move and change
+// Newbie quest toggles:
+const int TOG_NOOB_DOING_QUEST                 = 359;
+const int TOG_NOOB_FINDING_1_TRAINER	       = 360;
+const int TOG_NOOB_FOUND_1_TRAINER	       = 361;
+const int TOG_NOOB_FINDING_2_TRAINER	       = 362;
+const int TOG_NOOB_FOUND_2_TRAINER	       = 363;
+const int TOG_NOOB_RUNNING_1_ERRAND	       = 364;
+const int TOG_NOOB_RAN_1_ERRAND	  	       = 365;
+const int TOG_NOOB_RUNNING_2_ERRAND	       = 366;
+const int TOG_NOOB_RAN_2_ERRAND		       = 367;
+const int TOG_NOOB_FIGHTING_MOUSE  	       = 368;
+const int TOG_NOOB_KILLED_MOUSE		       = 369;
+const int TOG_NOOB_COMPLETED_QUEST	       = 370;
+
+const int MAX_TOG_INDEX                        = 371;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;
