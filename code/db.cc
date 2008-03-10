@@ -1827,7 +1827,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("select material, weight, short_desc, type from obj where vnum=%i",
+  db.query("select material, weight, short_desc, type, price from obj where vnum=%i",
 	   obj_index[nr].virt);
   if(!db.fetchRow()){
     vlogf(LOG_BUG, fmt("didn't find object %i in query") % obj_index[nr].virt);
@@ -1838,6 +1838,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   unsigned int item_type=convertTo<int>(db["type"]);
   float weight=convertTo<float>(db["weight"]);
   sstring name=db["short_desc"];
+  int indexed_cost=convertTo<int>(db["price"]);
 
   // check shops for item available < basePrice
   vector <shopData>::iterator iter;
@@ -1875,7 +1876,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 	price = o->shopPrice(1, (*iter).shop_nr, -1, buyer);
 	basePrice=o->suggestedPrice();
 
-	if(price <= basePrice &&
+	if(/*price <= basePrice &&*/
 	   (price <= cheapest_price || cheapest_price==0)){
 	  cheapest_price=price;
 	  cheapest=o;
@@ -1898,7 +1899,10 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     }
   }
 
-  if(cheapest){
+  // if we have a cheap item, and no commodity to consider, OR
+  // we do have a commod and it's more expensive...
+  if(cheapest && (!cheapest_commod || 
+		  (cheapest_price <= (commod_price+indexed_cost)))){
     TShopOwned tso(shop_nr, buyer);
     --(*cheapest);
     buyer->addToMoney(cheapest_price, GOLD_XFER); // this is to offset cost
@@ -1907,6 +1911,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 	  buyer->getName() % cheapest->getName() % shop_nr % cheapest_price);
 
     return cheapest;
+  // otherwise buy the commod if it is available
   } else if(cheapest_commod){
     TShopOwned tso(commod_shop_nr, buyer);
     buyer->addToMoney(commod_price, GOLD_XFER); // this is to offset cost
@@ -2853,6 +2858,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
               last_cmd = 1;
               log_object(newobj);
             } else {
+	      delete newobj;
               last_cmd = 0;
             }
           } else
@@ -2915,7 +2921,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           }
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
-              (obj = read_object(rs.arg1, REAL))) {
+              (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
 
             *mob += *obj;
             obj->onObjLoad();
