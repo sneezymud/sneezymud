@@ -409,6 +409,7 @@ const int MOB_CANDY_HEART_EATER=37138;
 const int MOB_FAT_ELF_1      =3905;
 const int MOB_FAT_ELF_2      =3906;
 const int MOB_FAT_ELF_3      =3907;
+const int MOB_DEE            =7600;
 #endif
 
 
