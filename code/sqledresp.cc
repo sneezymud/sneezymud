@@ -8,7 +8,7 @@ int main(int argc, char **argv)
   TDatabase db(DB_SNEEZYBETA);
   vector<int>vnums;
   map<sstring,sstring>val;
-  char file[]="/tmp/sqledwldXXXXXX";
+  char file[]="/tmp/sqledrespXXXXXX";
   FILE *tmpfile;
   sstring buf, sbuf;
   int answer;
