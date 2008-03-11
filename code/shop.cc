@@ -103,6 +103,14 @@ float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
   return profit_sell;
 }
 
+bool shopData::isRepairShop()
+{
+  if(shop_nr >= 127 and shop_nr <= 134)
+    return true;
+
+  return false;
+}
+
 float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 {
   float profit_buy=-1;
@@ -197,18 +205,20 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
   }
 
   // check for speed and quality for repair shops
-  db.query("select speed, quality from shopownedrepair where shop_nr=%i",
-	   shop_nr);
-  
-  if(db.fetchRow()){
-    float speed=convertTo<float>(db["speed"]);
-    float quality=convertTo<float>(db["quality"]);
+  if(isRepairShop()){
+    db.query("select speed, quality from shopownedrepair where shop_nr=%i",
+	     shop_nr);
     
-    if(speed>0)
-      profit_buy /= speed;
-    
-    if(quality>0)
-      profit_buy *= quality;
+    if(db.fetchRow()){
+      float speed=convertTo<float>(db["speed"]);
+      float quality=convertTo<float>(db["quality"]);
+      
+      if(speed>0)
+	profit_buy /= speed;
+      
+      if(quality>0)
+	profit_buy *= quality;
+    }
   }
   ///
   

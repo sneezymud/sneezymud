@@ -1872,7 +1872,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 	continue;
       
       // check if this object is one we can buy
-      if(o->objVnum() == obj_index[nr].virt){
+      if(o->objVnum() == obj_index[nr].virt && is_ok_shop){
 	price = o->shopPrice(1, (*iter).shop_nr, -1, buyer);
 	basePrice=o->suggestedPrice();
 

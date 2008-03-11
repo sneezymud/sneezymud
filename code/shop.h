@@ -87,6 +87,7 @@ class shopData {
     bool willBuy(const TObj *item);
     float getProfitBuy(const TObj *, const TBeing *);
     float getProfitSell(const TObj *, const TBeing *);
+    bool isRepairShop();
 
     shopData();
     ~shopData();
