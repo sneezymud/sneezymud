@@ -17,7 +17,7 @@ void procFactoryProduction::run(int pulse) const
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select shop_nr from factory");
+  db.query("select distinct shop_nr from factoryproducing");
 
   while(db.fetchRow()){
     factoryProduction(convertTo<int>(db["shop_nr"]));
