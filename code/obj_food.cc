@@ -361,6 +361,7 @@ int TBeing::doDrink(const char *argument)
   return FALSE;
 }
 
+
 void TThing::eatMe(TBeing *ch)
 {
   if (!ch->isImmortal()) {
@@ -374,13 +375,56 @@ void TThing::eatMe(TBeing *ch)
   return;
 }
 
+
+void TObj::eatMe(TBeing *ch)
+{
+  if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
+    if (isMonogrammed()) {
+      ch->sendTo("You can't eat that, its been monogrammed!\n\r");
+      return;
+    } else if (!isOrganic()) {
+      ch->sendTo("Even you wouldn't consider eathing that!\n\r");
+      return;
+    } else if (getStuff()) {
+      ch->sendTo("You can't eat that - its full of something!\n\r");
+      return;
+    } else if (isObjStat(ITEM_NODROP)) {
+      ch->sendTo("You can't eat that - its been cursed!\n\r");
+      return;
+    } else if (isObjStat(ITEM_NOJUNK_PLAYER)) {
+      ch->sendTo("You can't eat an object that's been marked no-junk.\n\r");
+      return;
+    } else if (isObjStat(ITEM_BURNING) || isObjStat(ITEM_PROTOTYPE) ||
+              isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_NORENT)) {
+      ch->sendTo("You can't eat that, it just wouldn't be right!\n\r");
+      return;
+    }
+
+    ch->gainCondition(FULL, getStructPoints());
+    if (ch->getCond(FULL) > 20)
+      act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+
+  } else if (!ch->isImmortal()) {
+    ch->sendTo("That item is impossible to eat!\n\r");
+    return;
+  }
+  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+
+  delete this;
+  return;
+}
+
+
 void foodPoisoned(TFood *food, TBeing *ch, int dur)
 {
   affectedData af;
 
   if (food->isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
+    if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
+      act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
+    } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act("That tasted rather strange, but you don't think it had any ill-effect!!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
       act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
@@ -400,7 +444,9 @@ void foodSpoiled(TFood *food, TBeing *ch, int dur)
   affectedData af;
 
   if (food->isFoodFlag(FOOD_SPOILED)) {
-    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
+    if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
+      ch->sendTo("Mmm, that was tangy!\n\r");
+    } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       ch->sendTo("BLAH!  That was some rotten food.  Hopefully you won't have any ill-effect.\n\r");
     } else {
       af.type = AFFECT_DISEASE;
@@ -422,7 +468,8 @@ void TFood::eatMe(TBeing *ch)
     ch->sendTo("You try to stuff more food into your mouth, but alas, you are full!\n\r");
     return;
   }
-  if (isFoodFlag(FOOD_SPOILED) && ch->isPerceptive()) {
+  if (isFoodFlag(FOOD_SPOILED) && !ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) &&
+    ch->isPerceptive()) {
     act("You notice some spoilage on $p and discard it instead.", TRUE, ch, this, 0, TO_CHAR);
     act("$n disposes of some spoiled $o.", TRUE, ch, this, 0, TO_ROOM);
 
@@ -741,6 +788,21 @@ void TBeing::doSip(const char *argument)
 
 void TObj::tasteMe(TBeing *ch)
 {
+  if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && isOrganic()) {
+    if (isMonogrammed()) {
+        act("Taste that?!? It's monogrammed!", FALSE, ch, 0, 0, TO_CHAR);
+        return;
+    }
+    act("You take a bite out of the $o, damaging it.", FALSE, ch, this, NULL, TO_CHAR);
+    act("$n takes a bite from the $o, damaging it.", TRUE, ch, this, 0, TO_ROOM);
+    ch->gainCondition(FULL, 1);
+    setStructPoints(getStructPoints()-2);
+    if (getStructPoints() <= 0) {
+      act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);
+      delete this;
+    }
+    return;
+  }
   act("Taste that?!? Your stomach refuses!", FALSE, ch, 0, 0, TO_CHAR);
 }
 

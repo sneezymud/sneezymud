@@ -553,6 +553,20 @@ TThing& TObj::operator += (TThing& t)
   return *this;
 }
 
+
+// tables dont hold stuff, they just 'mount' it
+TThing& TTable::operator += (TThing& t) 
+{
+  if (t.parent)
+    --t;
+  t.mount(this);
+
+  vlogf(LOG_LOW, fmt("Object (%s) put onto table (%s) using += and not putSomethingIntoTable") % t.getName() % getName());
+
+  return *this;
+}
+
+
 // if tPreserve is set true we don't vlogf nor do we add to the 'owners'
 // list.  This is primarly used to catch portal cheaters.
 bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
@@ -773,7 +787,7 @@ TThing& TRoom::operator += (TThing& t)
     incrementWindow();
   }
 
-  if (dynamic_cast<TObj *>(&t) && isRoomFlag(ROOM_SAVE_ROOM))
+  if (dynamic_cast<TObj *>(&t) && !dynamic_cast<TObj *>(&t)->isObjStat(ITEM_NORENT) && isRoomFlag(ROOM_SAVE_ROOM))
     saveItems("");
 
   if (t.isPc() && ( getZoneNum() >= 0 && getZoneNum() < ((signed int) zone_table.size()) )) {
@@ -949,6 +963,7 @@ TThing& TThing::operator -- ()
     }
   
     if (dynamic_cast<TObj *>(this) &&
+        !dynamic_cast<TObj *>(this)->isObjStat(ITEM_NORENT) &&
         rp->isRoomFlag(ROOM_SAVE_ROOM))
       rp->saveItems("");
 

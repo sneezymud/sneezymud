@@ -184,24 +184,24 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         // Are we seeking water?  Must be if we don't have a hunt target.
         if (!ch->specials.hunting) {
           if (isSW){
-	    TPathFinder path(ch->hunt_dist);
-	    
-	    code=path.findPath(ch->in_room, findWater());
-	    targetRm=path.getDest();
-	  } else {
+            TPathFinder path(ch->hunt_dist);
+            
+            code=path.findPath(ch->in_room, findWater());
+            targetRm=path.getDest();
+          } else {
             vlogf(LOG_BUG, "problem in task_track()");
             stop_tracking(ch);
             return TRUE;
           }
         } else {
           // Guess we have a hunt target, lets find them.
-          if (ch->isImmortal())
-            code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
-          else if ((ch->GetMaxLevel() >= MIN_GLOB_TRACK_LEV) || ch->affectedBySpell(SPELL_TRAIL_SEEK)
-		   || !ch->isPc())
-            code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
-          else
-            code = choose_exit_in_zone(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
+          TPathFinder path;
+
+          path.setRange(ch->hunt_dist);
+          path.setStayZone(ch->GetMaxLevel() < MIN_GLOB_TRACK_LEV && !ch->affectedBySpell(SPELL_TRAIL_SEEK) && ch->isPc());
+          path.setThruDoors(true);
+
+          code = path.findPath(ch->in_room, findRoom(ch->specials.hunting->in_room));
         }
         // This is actually checked in track(), which should have been called before
         // us.  But you never know, bad things Do happen.

@@ -1820,6 +1820,8 @@ void TTable::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
     new_pos = tbt->getPosition();
   obj->dismount(new_pos);
 
+  if (obj->parent)
+    --(*obj);
   *ch += *obj;
 
   TObj *tobj = dynamic_cast<TObj *>(obj);

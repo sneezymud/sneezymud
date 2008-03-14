@@ -42,13 +42,16 @@ TEgg::~TEgg()
 {
 }
 
+// why is this different from foodPoisoned?!
 void eggPoisoned(TEgg *egg, TBeing *ch, int dur)
 {
   affectedData af;
 
   if (egg->isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
+    if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
+      act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
+    } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act("That tasted rather strange, but you don't think it had any ill-effect!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
       act("That tasted rather strange!", FALSE, ch, 0, 0, TO_CHAR);
@@ -63,12 +66,15 @@ void eggPoisoned(TEgg *egg, TBeing *ch, int dur)
   }
 }
 
+// why is this different from foodSpoiled?!
 void eggSpoiled(TEgg *egg, TBeing *ch, int dur)
 {
   affectedData af;
 
   if (egg->isFoodFlag(FOOD_SPOILED)) {
-    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
+    if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
+      ch->sendTo("Mmm, that was tangy!\n\r");
+    } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act("Blarg!  That $o was rotten!  Hopefully it won't have any ill-effects.", FALSE, ch, egg, 0, TO_CHAR);
     } else {
       act("Blarg!  That $o was rotten!  Your stomach begins to churn.", FALSE, ch, egg, 0, TO_CHAR);
@@ -132,11 +138,31 @@ void TEgg::tasteMe(TBeing *ch)
   act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
   act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
 
+  sstring msg;
+  int amt = 1;
+
+  // race-based food preferences
   if(ch->isVampire()){
-    ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
-  } else {
-    ch->gainCondition(FULL, 1);
+    msg = "You eat the mortal food, but it has no affect on you.\n\r";
+    amt = 0;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && isFoodFlag(FOOD_FISHED)) {
+    msg = "You savor this delicious fishy egg bite!\n\r";
+    amt = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && !isFoodFlag(FOOD_FISHED)) {
+    msg = "This food tastes bland and unappetizing.  You miss the raw and wriggly texture of fish.\n\r";
+    amt = 0;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Mmmmhhh!  Finally, some raw eggy meat!\n\r";
+    amt = 2;
+  } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && !isFoodFlag(FOOD_BUTCHERED)) {
+    msg = "Pfwah!  This food tastes horrible!\n\r";
+    amt = 0;
   }
+
+  if (!msg.empty())
+    ch->sendTo(msg);
+  if (amt)
+    ch->gainCondition(FULL, amt);
 
   if (ch->getCond(FULL) > 20)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);

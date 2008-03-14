@@ -93,7 +93,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
   if (!ch->task || ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom))
   {
     act("You stop your preening.",FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops $s preeening.",TRUE, ch, 0, 0, TO_ROOM);
+    act("$n stops $s preening.",TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
     return FALSE;
   }

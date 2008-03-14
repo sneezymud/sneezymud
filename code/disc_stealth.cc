@@ -227,12 +227,6 @@ int disguise(TBeing *caster, char * buffer)
   affectedData aff2;
   affectedData aff3;
 
-  if (!caster->isImmortal() && caster->checkForSkillAttempt(SKILL_DISGUISE)) {
-    act("You are not prepared to try to disguise yourself again so soon.",
-         FALSE, caster, NULL, NULL, TO_CHAR);
-    return SPELL_FAIL;
-  }
-
   if(!*buffer)
     caster->sendTo("You know how to apply the following disguises:\n\r");
 
@@ -272,6 +266,12 @@ int disguise(TBeing *caster, char * buffer)
   if(!*buffer){
     caster->sendTo("\n\r");
     return FALSE;
+  }
+
+  if (!caster->isImmortal() && caster->checkForSkillAttempt(SKILL_DISGUISE)) {
+    act("You are not prepared to try to disguise yourself again so soon.",
+         FALSE, caster, NULL, NULL, TO_CHAR);
+    return SPELL_FAIL;
   }
 
   if (i >= LAST_DISGUISE_MOB) {

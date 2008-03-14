@@ -1988,14 +1988,14 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "UNUSED",
 
   // gnoll
-  "HOME_TER_GNOLL_URBAN",
-  "HOME_TER_GNOLL_VILLAGER",
-  "HOME_TER_GNOLL_PLAINS",
-  "HOME_TER_GNOLL_RECLUSE",
-  "HOME_TER_GNOLL_HILL",
-  "HOME_TER_GNOLL_MOUNTAIN",
-  "HOME_TER_GNOLL_FOREST",
-  "HOME_TER_GNOLL_MARINER",
+  "UNUSED",
+  "tribal gnoll",
+  "savanna gnoll",
+  "scavenger gnoll", // UNUSED
+  "ruins gnoll",
+  "UNUSED",
+  "jungle gnoll",
+  "warf gnoll",
 
   // troglodyte
   "HOME_TER_TROG_URBAN",

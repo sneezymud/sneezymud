@@ -64,6 +64,7 @@ const char * const talents[MAX_TALENTS] =
   "fish_eater",
   "meat_eater",
   "tattooed",
+  "garbage_eater",
 };
 
 Race *Races[MAX_RACIAL_TYPES];

@@ -16,9 +16,9 @@ static int charge(TBeing *ch, TBeing *vict)
     ch->sendTo("You must be mounted to charge!\n\r");
     return FALSE;
   }
-  if(ch->doesKnowSkill(mount->mountSkillType()) &&
-     ch->advancedRidingBonus(mount)<50
-     && mount->getRace() != RACE_HORSE) {
+
+  if (mount->getRace() != RACE_HORSE &&
+    (!ch->doesKnowSkill(mount->mountSkillType()) || ch->advancedRidingBonus(mount) < 50)) {
     ch->sendTo("You lack the skill to charge with this mount.\n\r");
     return FALSE;
   }

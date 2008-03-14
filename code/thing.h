@@ -177,6 +177,7 @@ class TThing {
 
     bool isMetal() const;
     bool isMineral() const;
+    bool isOrganic() const;
 
     void newOwner(TThing *);
     const char *objs(const TThing *t) const;

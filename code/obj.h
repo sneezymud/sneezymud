@@ -753,6 +753,7 @@ private:
     virtual void describeCondition(const TBeing *) const;
     virtual int drinkMe(TBeing *);
     virtual void sipMe(TBeing *);
+    virtual void eatMe(TBeing *);
     virtual void tasteMe(TBeing *);
     virtual void logMe(const TBeing *, const char *) const;
     virtual void extinguishWater(TBeing *);

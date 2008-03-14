@@ -61,7 +61,7 @@ void TSmoke::doDrift()
   TThing *t, *t2;
   TPortal *tp;
 
-  if(!roomp)
+//  if(!roomp)
     return;
 
   // move up if possible
@@ -310,6 +310,7 @@ int TThing::dropSmoke(int amt)
     REMOVE_BIT(smoke->obj_flags.wear_flags, ITEM_TAKE);
     smoke->canBeSeen = 1;
     smoke->setMaterial(MAT_GHOSTLY);
+    smoke->setObjStat(ITEM_NORENT);
 
     sprintf(buf, "smoke cloud");
     delete [] smoke->name;

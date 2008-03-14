@@ -34,6 +34,7 @@ class TTable : public TObj {
     TTable();
     TTable(const TTable &a);
     TTable & operator=(const TTable &a);
+    virtual TThing& operator+= (TThing& t);
     virtual ~TTable();
 };
 

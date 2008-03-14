@@ -272,6 +272,52 @@ bool TThing::isMineral() const
   }
 }
 
+bool TThing::isOrganic() const
+{
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_PAPER:
+    case MAT_CLOTH:
+    case MAT_WAX:
+    case MAT_WOOD:
+    case MAT_SILK:
+    case MAT_FOODSTUFF:
+    case MAT_RUBBER:
+    case MAT_CARDBOARD:
+    case MAT_STRING:
+    case MAT_TOUGH_CLOTH:
+    case MAT_CORAL:
+    case MAT_HORSEHAIR:
+    case MAT_HAIR:
+    case MAT_GEN_ORG:
+    case MAT_LEATHER:
+    case MAT_TOUGH_LEATHER:
+    case MAT_DRAGON_SCALE:
+    case MAT_WOOL:
+    case MAT_FUR:
+    case MAT_FEATHERED:
+    case MAT_STRAW:
+    case MAT_PEARL:
+    case MAT_HUMAN_FLESH:
+    case MAT_FUR_CAT:
+    case MAT_FUR_DOG:
+    case MAT_FUR_RABBIT:
+    case MAT_GHOSTLY:
+    case MAT_DWARF_LEATHER:
+    case MAT_SOFT_LEATHER:
+    case MAT_FISHSCALE:
+    case MAT_OGRE_HIDE:
+    case MAT_HEMP:
+    case MAT_BONE:
+    case MAT_IVORY:
+    case MAT_DRAGONBONE:
+      return TRUE;
+    default:
+      return FALSE;
+  }
+}
+
 bool TObj::canRust()
 {
   ubyte mat = convertV9MaterialToV10(getMaterial());
