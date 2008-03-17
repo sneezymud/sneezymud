@@ -1188,7 +1188,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     sprintf(buf, "I teach %s.", TrainerInfo[offset].art);
     me->doSay(buf);
     sprintf(buf,
-         "Type \"practice %s <number> <class>\" to learn this discipline.", 
+         "Type \"practice %s <number>\" to learn this discipline.", 
          TrainerInfo[offset].abbrev);
     me->doSay(buf);
     return FALSE;
@@ -1196,7 +1196,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   arg = one_argument(arg, pracbuf, cElements(pracbuf));
   if (!*pracbuf || !(pracs = convertTo<int>(pracbuf))) {
     sprintf(buf,
-         "Type \"practice %s <number> <class>\" to learn this discipline.", 
+         "Type \"practice %s <number>\" to learn this discipline.", 
          TrainerInfo[offset].abbrev);
     me->doSay(buf);
     return FALSE;
@@ -1240,7 +1240,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     /* more than 1 class is appropriate, user needs to specify */
     me->doTell(fname(ch->name), "You need to specify a class.");
     sprintf(buf,
-         "Type \"practice %s <number> <class>\" to learn this discipline.", 
+         "Type \"practice %s <number>\" to learn this discipline.", 
          TrainerInfo[offset].abbrev);
     me->doSay(buf);
     return TRUE;

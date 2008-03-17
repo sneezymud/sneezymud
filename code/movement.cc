@@ -3482,12 +3482,50 @@ int TBeing::doMortalGoto(const sstring & argument)
     targ_rm = 569;
   } else if (is_abbrev(arg, "donation") || is_abbrev(arg, "surplus")) {
     targ_rm = ROOM_DONATION;
-  } else if (is_abbrev(arg, "dump")) {
+  } else if (is_abbrev(arg, "dump") || is_abbrev(arg, "maurice")) {
     targ_rm = 600;
   } else if (is_abbrev(arg, "newbie") || is_abbrev(arg, "park")) {
     targ_rm = 25400;  // entrance to the park
   } else if (is_abbrev(arg, "attuner") || is_abbrev(arg, "karalina")) {
     targ_ch = 343;
+  } else if (is_abbrev(arg, "dee") || is_abbrev(arg, "aunt-dee")){
+    targ_rm = 584;
+  } else if (is_abbrev(arg, "welfare") || is_abbrev(arg, "agent")){
+    targ_rm = 570;
+  } else if (is_abbrev(arg, "yun") || is_abbrev(arg, "grocer")) {
+    targ_rm = 579;
+  } else if (is_abbrev(arg, "tanni") || is_abbrev(arg, "jewelry")) {
+    targ_rm = 565;
+  } else if (is_abbrev(arg, "delayn")) {
+    targ_rm = 572;
+  } else if (is_abbrev(arg, "frobozz") || is_abbrev(arg, "lucre")) {
+    targ_rm = 583;
+  } else if (is_abbrev(arg, "felicia")) {
+    targ_rm = 628;
+  } else if (is_abbrev(arg, "torkyn")) {
+    targ_rm = 627;
+  } else if (is_abbrev(arg, "sian")) {
+    targ_rm = 633;
+  } else if (is_abbrev(arg, "kystin")) {
+    targ_rm = 648;
+  } else if (is_abbrev(arg, "koftic")) {
+    targ_rm = 630;
+  } else if (is_abbrev(arg, "buzz")) {
+    targ_rm = 607;
+  } else if (is_abbrev(arg, "nynaeve")) {
+    targ_rm = 610;
+  } else if (is_abbrev(arg, "otheym")) {
+    targ_rm = 613;
+  } else if (is_abbrev(arg, "sanford")) {
+    targ_rm = 608;
+  } else if (is_abbrev(arg, "jennica")) {
+    targ_rm = 634;
+  } else if (is_abbrev(arg, "milo")) {
+    targ_rm = 616;
+  } else if (is_abbrev(arg, "senzei")) {
+    targ_rm = 647;
+  } else if (is_abbrev(arg, "casino")) {
+    targ_rm = 624;
   } else if (is_abbrev(arg, "mage")) {
     targ_ch = 200;
   } else if (is_abbrev(arg, "cleric")) {
