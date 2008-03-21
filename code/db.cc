@@ -2921,7 +2921,9 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           }
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
-              (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
+              (obj = read_object(rs.arg1, REAL))) {
+
+	    //              (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
 
             *mob += *obj;
             obj->onObjLoad();
