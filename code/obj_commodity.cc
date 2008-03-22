@@ -161,6 +161,8 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units)
 {
   if(!total_units)
     total_units=1;
+  if(total_units > shop_capacity)
+    total_units=shop_capacity;
 
   float multiplier=-(max_commod_price / log(shop_capacity));
 
@@ -187,7 +189,9 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units)
 
   // p = desired price
   // e = 2.718281828
-  // N = e ^ ((p-1000) / multiplier)
+  // N = e ^ (
+
+  // N = e ^ ((p-max_price) / multiplier)
 
 
   // example prices:
