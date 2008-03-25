@@ -271,6 +271,22 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   float cost_per;
   TObj *obj2;
 
+  // note that commods have a constant volume, so this check isn't needed
+  // however, this should be changed in the future, and when it is changed
+  // someone will probably find this code trying to figure out why no one
+  // has enough volume to buy commods. :)
+  if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
+    ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
+    return -1;
+  }
+  // obj-weight > free ch limit
+  if (compareWeights(num/10.0,
+       (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
+    ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
+    return -1;
+  }
+
+
   if (parent != keeper) {
     vlogf(LOG_BUG, "Error: buy_treasure():shop.cc  obj not on keeper");
     return -1;
