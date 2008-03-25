@@ -6010,13 +6010,13 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
   } else if(cmd == CMD_MOB_GIVEN_ITEM){
     if(material_nums[o->getMaterial()].price <= 0){
       me->doTell(ch->getName(), "That isn't a valuable commodity - I can't convert that.");
-      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
     
     if(dynamic_cast<TCommodity *>(o)){
       me->doTell(ch->getName(), "That's already a commodity.");
-      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
 
@@ -6038,7 +6038,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     if(ch->getMoney() < (int)value){
       me->doTell(ch->getName(), "You can't afford it!");
-      me->doGive(ch,o, GIVE_FLAG_IGN_DEX_TEXT);
+      me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
 
@@ -6056,7 +6056,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     me->doTell(ch->getName(), "Alright, here you go!");
 
     *me += *commod;
-    me->doGive(ch,commod, GIVE_FLAG_IGN_DEX_TEXT);
+    me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
     delete o;
   }
 
