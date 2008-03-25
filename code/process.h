@@ -18,6 +18,12 @@ class TProcess {
 
 
 //// processes
+class procWeightVolumeFumble : public TProcess {
+ public:
+  void run(int) const;
+  procWeightVolumeFumble(const int &);
+};
+
 class procFactoryProduction : public TProcess {
  public:
   void run(int) const;

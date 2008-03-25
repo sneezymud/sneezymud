@@ -1393,7 +1393,6 @@ procRecordCommodPrices::procRecordCommodPrices(const int &p)
 
 void procRecordCommodPrices::run(int) const
 {
-  // close out the accounting year.
   TDatabase db(DB_SNEEZY);
 
   db.query("select shop_nr from shoptype where type=%i", 
@@ -1410,6 +1409,37 @@ void procRecordCommodPrices::run(int) const
 		 shop_nr, commod->getMaterial(), 
 		 commod->shopPriceFloat(1, shop_nr, -1, NULL));
       }
+    }
+  }
+}
+
+
+
+procWeightVolumeFumble::procWeightVolumeFumble(const int &p)
+{
+  trigger_pulse=p;
+  name="procWeightVolumeFumble";
+}
+
+void procWeightVolumeFumble::run(int) const
+{
+  Descriptor *d;
+  TBeing *ch;
+  TThing *t;
+
+  for (d = descriptor_list; d; d = d->next) {
+    if(!(ch=d->character) || d->connected || 
+       !d->character->roomp || d->character->isImmortal())
+      continue;
+
+    if(ch->getCarriedVolume() > ch->carryVolumeLimit() ||
+       ch->getCarriedWeight() > ch->carryWeightLimit())
+      ch->sendTo("You are carrying too much and lose control of your inventory!\n\r");
+
+    while(ch->getCarriedVolume() > ch->carryVolumeLimit() ||
+	  ch->getCarriedWeight() > ch->carryWeightLimit()){
+      t=ch->getStuff();
+      ch->doDrop("", t, true);
     }
   }
 }
@@ -1436,6 +1466,7 @@ int TMainSocket::gameLoop()
 
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));
+  scheduler.add(new procWeightVolumeFumble(PULSE_COMBAT));
 
   // pulse update  (36 seconds)
   scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));
