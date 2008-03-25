@@ -13,10 +13,7 @@ D 0 565 4 2          Tanni's Jewelry Store -> Cramped Attic
 
 * Newbie training stuff:
 * Training room above the inn:
-D 0 584 0 2          A Pleasantly Decorated Alcove -> A Room in the Roaring Lion Inn (7600)
-
 M 0 7600 1 584       Aunt Dee, the newbie trainer
-G 1 7600 1                a small metal key (to room 7600)
 
 * A tiny mouse in surplus:
 M 0 7601 1 563       A tiny mouse
